@@ -73,7 +73,7 @@
       || canvas.getContext('experimental-webgl')) {
 
       this.renderer = new THREE.WebGLRenderer({
-        antialias: true,
+        // antialias: true,
         canvas: canvas
       });
       params.type = Two.TYPES.webgl;
@@ -237,26 +237,20 @@
      */
     Rectangle: function(x, y, width, height) {
 
-      this.geometry = new THREE.CubeGeometry(width, height, 0);
-      this.material = new THREE.MeshBasicMaterial({ color: 0x000000 });
-      this.mesh = new THREE.Mesh(this.geometry, this.material);
+      var hw = width / 2;
+      var hh = height / 2;
 
-      this.mesh.position.x = x;
-      this.mesh.position.y = y;
+      var a = x - hw;
+      var b = y - hh;
+      var c = x + hw;
+      var d = y + hh;
 
-      var half_width = width / 2;
-      var half_height = height / 2;
-
-      this.outline = new Two.Line(
-        - half_width, - half_height,
-          half_width, - half_height,
-          half_width,   half_height,
-        - half_width,   half_height,
-        - half_width, - half_height
-      );
-      this.mesh.add(this.outline.mesh);
-
-      objects.push(this);
+      Two.Polygon.call(this, [
+        new THREE.Vector3(a, b, 0),
+        new THREE.Vector3(c, b, 0),
+        new THREE.Vector3(c, d, 0),
+        new THREE.Vector3(a, d, 0)
+      ]);
 
     },
 
@@ -265,26 +259,15 @@
      */
     Circle: function(x, y, radius) {
 
-      this.geometry = new THREE.CylinderGeometry(radius, radius, 0, Two.RESOLUTION);
-      this.material = new THREE.MeshBasicMaterial({ color: 0x000000 });
-      this.mesh = new THREE.Mesh(this.geometry, this.material);
+      var resolution = Two.RESOLUTION;
 
-      this.mesh.position.x = x;
-      this.mesh.position.y = y;
-      this.mesh.rotation.x = HALF_PI;
-
-      var points = _.map(_.range(Two.RESOLUTION), function(i) {
-        var p = (i / Two.RESOLUTION);
-        var a = TWO_PI * p;
-        return new THREE.Vector3(radius * Math.cos(a) - radius / 2, 0, radius * Math.sin(a));
-      });
-
-      points.push(points[0]);
-
-      this.outline = new Two.Line(points);
-      this.mesh.add(this.outline.mesh);
-
-      objects.push(this);
+      Two.Polygon.call(this, _.map(_.range(resolution), function(i) {
+        var pct = i / resolution;
+        var angle = TWO_PI * pct;
+        var xpos = radius * Math.cos(angle) + x;
+        var ypos = radius * Math.sin(angle) + y;
+        return new THREE.Vector3(xpos, ypos, 0);
+      }));
 
     },
     /**
@@ -320,12 +303,36 @@
 
       var first = points[0].clone();
 
-      _.each(points, function(p) {
+      var shape = new THREE.Shape();
+
+      _.each(points, function(p, i) {
         p.subSelf(first);
+        if (i === 0) {
+          shape.moveTo(p.x, p.y);
+        } else {
+          shape.lineTo(p.x, p.y);
+        }
       });
 
-      var shape = new THREE.Shape(points);
-      this.geometry = new THREE.ExtrudeGeometry(shape, { amount: 0 });
+      if (!_.isEqual(points[0], points[points.length - 1])) {
+        points.push(points[0]);
+      }
+
+      // var bb = shape.getBoundingBox();
+      // 
+      // var center = new THREE.Shape();
+      // 
+      // _.each(points, function(p, i) {
+      //   p.x -= bb.centroid.x;
+      //   p.y -= bb.centroid.y;
+      //   if (i === 0) {
+      //     center.moveTo(p.x, p.y);
+      //   } else {
+      //     center.lineTo(p.x, p.y);
+      //   }
+      // });
+
+      this.geometry = new THREE.ExtrudeGeometry(shape, { amount: 10 });
       this.material = new THREE.MeshBasicMaterial({ color: 0x000000 });
 
       this.mesh = new THREE.Mesh(this.geometry, this.material);
@@ -333,8 +340,6 @@
       this.mesh.rotation.z = -HALF_PI;
       this.mesh.position.x = first.x;
       this.mesh.position.y = first.y;
-
-      points.push(points[0]);
 
       this.outline = new Two.Line(points);
       this.mesh.add(this.outline.mesh);
