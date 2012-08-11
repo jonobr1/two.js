@@ -201,6 +201,9 @@
     addLine: function(x1, y1, x2, y2) {
 
       var line = new Two.Line(x1, y1, x2, y2);
+      // TODO: Hack
+      line.mesh.position.x = x1;
+      line.mesh.position.y = y1;
       this.scene.add(line.mesh);
       return line;
 
@@ -292,8 +295,8 @@
       this.material = new THREE.LineBasicMaterial({ color: 0x000000 });
       this.mesh = new THREE.Line(this.geometry, this.material);
 
-      this.mesh.position.x = x1;
-      this.mesh.position.y = y1;
+      // this.mesh.position.x = x1;
+      // this.mesh.position.y = y1;
 
       objects.push(this);
 
@@ -301,45 +304,42 @@
 
     Polygon: function(points) {
 
-      var first = points[0].clone();
+      var shape = new THREE.Shape(points);
 
-      var shape = new THREE.Shape();
+      var bb = shape.getBoundingBox();
+      var center = new THREE.Shape();
 
       _.each(points, function(p, i) {
-        p.subSelf(first);
+        p.x -= bb.centroid.x;
+        p.y -= bb.centroid.y;
         if (i === 0) {
-          shape.moveTo(p.x, p.y);
+          center.moveTo(p.x, p.y);
         } else {
-          shape.lineTo(p.x, p.y);
+          center.lineTo(p.x, p.y);
         }
       });
 
-      if (!_.isEqual(points[0], points[points.length - 1])) {
-        points.push(points[0]);
+      var first = points[0];
+
+      // Close the shape
+      if (!_.isEqual(first, points[points.length - 1])) {
+        points.push(first);
       }
 
-      // var bb = shape.getBoundingBox();
-      // 
-      // var center = new THREE.Shape();
-      // 
-      // _.each(points, function(p, i) {
-      //   p.x -= bb.centroid.x;
-      //   p.y -= bb.centroid.y;
-      //   if (i === 0) {
-      //     center.moveTo(p.x, p.y);
-      //   } else {
-      //     center.lineTo(p.x, p.y);
-      //   }
-      // });
-
-      this.geometry = new THREE.ExtrudeGeometry(shape, { amount: 10 });
+      this.geometry = new THREE.ExtrudeGeometry(center, { amount: 10 });
       this.material = new THREE.MeshBasicMaterial({ color: 0x000000 });
 
       this.mesh = new THREE.Mesh(this.geometry, this.material);
-      this.mesh.rotation.x = PI;
-      this.mesh.rotation.z = -HALF_PI;
-      this.mesh.position.x = first.x;
-      this.mesh.position.y = first.y;
+      this.mesh.position.x = bb.centroid.x;
+      this.mesh.position.y = bb.centroid.y;
+
+      // first = first.clone();
+      // 
+      // _.each(points, function(p) {
+      //   p.subSelf(first);
+      // });
+      // 
+      // console.log(points[0]);
 
       this.outline = new Two.Line(points);
       this.mesh.add(this.outline.mesh);
