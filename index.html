@@ -11,7 +11,10 @@
     <script type="text/javascript" src="./Two.js"></script>
     <script type="text/javascript">
 
-      var two = new Two({ fullscreen: true }).appendTo(document.body);
+      var two = new Two({
+        // type: Two.TYPES.canvas2d,
+        fullscreen: true
+      }).appendTo(document.body);
 
       var rectangle = two.addRectangle(two.width / 2, two.height / 2, 50 ,50);
       var circle = two.addCircle(two.width / 2, two.height / 2 + 50, 25);

@@ -68,12 +68,12 @@
     this.scene.add(this.camera);
 
     var canvas = document.createElement('canvas');
-    if (params.types === Two.TYPES.webgl
-      && canvas.getContext('webgl')
-      || canvas.getContext('experimental-webgl')) {
+    if (params.type === Two.TYPES.webgl
+      && (canvas.getContext('webgl')
+      || canvas.getContext('experimental-webgl'))) {
 
       this.renderer = new THREE.WebGLRenderer({
-        // antialias: true,
+        antialias: true,
         canvas: canvas
       });
       params.type = Two.TYPES.webgl;
