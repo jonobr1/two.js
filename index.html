@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+  <head>
+    <title>A Cross Context 2D Drawing API</title>
+  </head>
+  <body>
+    <script type="text/javascript" src="./third-party/Three.js/build/Three.js"></script>
+    <script type="text/javascript" src="./third-party/underscore.js"></script>
+    <script type="text/javascript" src="./Two.js"></script>
+    <script type="text/javascript">
+
+      var two = new Two({ fullscreen: true }).appendTo(document.body);
+
+      var rectangle = two.addRectangle(two.width / 2, two.height / 2, 50 ,50);
+      var circle = two.addCircle(two.width / 2, two.height / 2 + 50, 25);
+      var line = two.addLine(two.width / 2 - 25, two.height / 2 - 75, two.width / 2 + 25, two.height / 2 - 25)
+      var poly = two.addPolygon(
+        two.width / 2, two.height / 2 - 125,
+        two.width / 2 + 25, two.height / 2 - 75,
+        two.width / 2 - 25, two.height / 2 - 75
+      );
+
+      two.onResize(function(width, height) {
+
+        rectangle.position(width / 2, height / 2);
+        circle.position(width / 2, height / 2 + 50);
+        line.position(width / 2 - 25, height / 2 - 75);
+        poly.position(width / 2, height / 2 - 125);
+
+      });
+
+      line.update(function() {
+
+        this.rotate(Date.now() / (Math.PI * 12.0));
+
+      });
+
+      poly.stroke(1, 0, 0);
+      circle.stroke(0).strokeWeight(4);
+      rectangle.stroke(0, 1, 0).strokeWeight(4);
+
+      window.addEventListener('mousemove', function(e) {
+
+        var x = e.pageX;
+        var y = e.pageY;
+
+        rectangle.rotate((x / two.width) * Math.PI * 2.0);
+        poly.rotate((y / two.height) * Math.PI * 2.0);
+        line.strokeWeight((1 - (x * y) / (two.width * two.height)) * 10);
+        circle.fill((x * y) / (two.width * two.height), 0, 0, 1.0);
+
+      });
+
+    </script>
+  </body>
+</html>
