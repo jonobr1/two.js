@@ -201,9 +201,6 @@
     addLine: function(x1, y1, x2, y2) {
 
       var line = new Two.Line(x1, y1, x2, y2);
-      // TODO: Hack
-      line.mesh.position.x = x1;
-      line.mesh.position.y = y1;
       this.scene.add(line.mesh);
       return line;
 
@@ -295,8 +292,8 @@
       this.material = new THREE.LineBasicMaterial({ color: 0x000000 });
       this.mesh = new THREE.Line(this.geometry, this.material);
 
-      // this.mesh.position.x = x1;
-      // this.mesh.position.y = y1;
+      this.mesh.position.x = x1;
+      this.mesh.position.y = y1;
 
       objects.push(this);
 
@@ -307,11 +304,11 @@
       var shape = new THREE.Shape(points);
 
       var bb = shape.getBoundingBox();
+      var centroid = new THREE.Vector3(bb.centroid.x, bb.centroid.y, 0);
       var center = new THREE.Shape();
 
       _.each(points, function(p, i) {
-        p.x -= bb.centroid.x;
-        p.y -= bb.centroid.y;
+        p.subSelf(centroid);
         if (i === 0) {
           center.moveTo(p.x, p.y);
         } else {
@@ -323,26 +320,22 @@
 
       // Close the shape
       if (!_.isEqual(first, points[points.length - 1])) {
-        points.push(first);
+        points.push(first.clone());
       }
 
-      this.geometry = new THREE.ExtrudeGeometry(center, { amount: 10 });
+      this.geometry = new THREE.ExtrudeGeometry(center, { amount: 0 });
       this.material = new THREE.MeshBasicMaterial({ color: 0x000000 });
 
       this.mesh = new THREE.Mesh(this.geometry, this.material);
       this.mesh.position.x = bb.centroid.x;
       this.mesh.position.y = bb.centroid.y;
 
-      // first = first.clone();
-      // 
-      // _.each(points, function(p) {
-      //   p.subSelf(first);
-      // });
-      // 
-      // console.log(points[0]);
-
       this.outline = new Two.Line(points);
       this.mesh.add(this.outline.mesh);
+
+      // Normalize to parent-child relationship
+      this.outline.mesh.position.x = 0;
+      this.outline.mesh.position.y = 0;
 
       objects.push(this);
 
