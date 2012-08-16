@@ -8,7 +8,7 @@
   var root = this;
   var objects = [];
 
-  var twos = [];
+  var twos = [], looped;
 
   /**
    * Constants
@@ -46,7 +46,7 @@
 
   /**
    * Two.js is a two-dimensional drawing api built on top of Three.js
-   * meant for the browser.
+   * meant for modern browsers.
    *
    * @class
    */
@@ -68,9 +68,10 @@
     this.scene.add(this.camera);
 
     var canvas = document.createElement('canvas');
+
     if (params.type === Two.TYPES.webgl
       && (canvas.getContext('webgl')
-      || canvas.getContext('experimental-webgl'))) {
+        || canvas.getContext('experimental-webgl'))) {
 
       this.renderer = new THREE.WebGLRenderer({
         antialias: true,
@@ -147,6 +148,13 @@
      * Controls
      */
 
+    onUpdate: function(func) {
+
+      this.__onUpdate = func;
+      return this;
+
+    },
+
     play: function() {
 
       this.__playing = true;
@@ -171,11 +179,9 @@
         return this;
       }
 
-      _.each(objects, function(object) {
-        if (_.isFunction(object.__onUpdate)) {
-          object.__onUpdate();
-        }
-      });
+      if (_.isFunction(this.__onUpdate)) {
+        this.__onUpdate();
+      }
 
       this.renderer.render(this.scene, this.camera);
       return this;
@@ -231,6 +237,29 @@
     },
 
     RESOLUTION: 32,
+
+    INSTANCES: twos,
+
+    /**
+     * Controls
+     */
+
+    autostart: function() {
+      if (looped) {
+        return this;
+      }
+      looped = true;
+      loop();
+      return this;
+    },
+
+    stop: function() {
+      if (!looped) {
+        return this;
+      }
+      looped = false;
+      return this;
+    },
 
     /**
      *
@@ -344,11 +373,6 @@
   });
 
   var ShapeProto = {
-
-    update: function(func) {
-      this.__onUpdate = func;
-      return this;
-    },
 
     scale: function(amt) {
 
@@ -474,10 +498,10 @@
     _.each(twos, function(two) {
       two.render();
     });
-    requestAnimationFrame(loop);
+    if (looped) {
+      requestAnimationFrame(loop);
+    }
   }
-
-  loop();
 
   /**
    * Export

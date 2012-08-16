@@ -11,8 +11,10 @@
     <script type="text/javascript" src="./Two.js"></script>
     <script type="text/javascript">
 
+      Two.autostart();
+
       var two = new Two({
-        // type: Two.TYPES.canvas2d,
+        type: Two.TYPES.canvas2d,
         fullscreen: true
       }).appendTo(document.body);
 
@@ -25,20 +27,20 @@
         two.width / 2 - 25, two.height / 2 - 75
       );
 
-      two.onResize(function(width, height) {
+      two
+        .onResize(function(width, height) {
 
-        rectangle.position(width / 2, height / 2);
-        circle.position(width / 2, height / 2 + 50);
-        line.position(width / 2 - 25, height / 2 - 75);
-        poly.position(width / 2, height / 2 - 125);
+          rectangle.position(width / 2, height / 2);
+          circle.position(width / 2, height / 2 + 50);
+          line.position(width / 2 - 25, height / 2 - 75);
+          poly.position(width / 2, height / 2 - 125);
 
-      });
+        })
+        .onUpdate(function() {
 
-      line.update(function() {
+          line.rotate(Date.now() / (Math.PI * 12.0));
 
-        this.rotate(Date.now() / (Math.PI * 12.0));
-
-      });
+        });
 
       poly.stroke(1, 0, 0);
       circle.stroke(0).strokeWeight(4);
