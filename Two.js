@@ -63,10 +63,7 @@
     this.__playing = params.autoplay;
 
     this.scene = new THREE.Scene();
-    this.camera = new THREE.OrthographicCamera(0, params.width, 0, params.height, 0);
-    // this.camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, -100, 10000 );
-    // this.camera.position.set( window.innerWidth, window.innerHeight, 500 );
-    // this.camera.lookAt(new THREE.Vector3(0,0,0));
+    this.camera = new THREE.OrthographicCamera(0, params.width, 0, params.height, -10000);
 
     this.scene.add(this.camera);
 
