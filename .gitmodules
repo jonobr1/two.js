@@ -1,3 +1,0 @@
-[submodule "third-party/Three.js"]
-	path = third-party/Three.js
-	url = https://github.com/jonobr1/three.js.git

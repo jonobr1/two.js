@@ -64,6 +64,9 @@
 
     this.scene = new THREE.Scene();
     this.camera = new THREE.OrthographicCamera(0, params.width, 0, params.height, 0);
+    // this.camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, -100, 10000 );
+    // this.camera.position.set( window.innerWidth, window.innerHeight, 500 );
+    // this.camera.lookAt(new THREE.Vector3(0,0,0));
 
     this.scene.add(this.camera);
 
@@ -352,12 +355,18 @@
         points.push(first.clone());
       }
 
-      this.geometry = new THREE.ExtrudeGeometry(center, { amount: 0 });
+      var extrude_settings = {
+        amount: 0,  bevelEnabled: true, bevelSegments: 2, steps: 2
+      };
+
+      this.geometry = center.extrude(extrude_settings);
       this.material = new THREE.MeshBasicMaterial({ color: 0x000000 });
 
       this.mesh = new THREE.Mesh(this.geometry, this.material);
       this.mesh.position.x = bb.centroid.x;
       this.mesh.position.y = bb.centroid.y;
+
+      this.mesh.doubleSided = true;
 
       this.outline = new Two.Line(points);
       this.mesh.add(this.outline.mesh);
