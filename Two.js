@@ -148,7 +148,7 @@
      * Controls
      */
 
-    onUpdate: function(func) {
+    draw: function(func) {
 
       this.__onUpdate = func;
       return this;
