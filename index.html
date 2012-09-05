@@ -11,23 +11,24 @@
     <script type="text/javascript" src="./deedee.js"></script>
     <script type="text/javascript">
 
-      DD.autostart();
+      DD.start();
 
-      var two = new DD({
-        type: DD.TYPES.canvas2d,
+      var dd = new DD({
+        // type: DD.TYPES.canvas2d,
         fullscreen: true
       }).appendTo(document.body);
 
-      var rectangle = two.addRectangle(two.width / 2, two.height / 2, 50 ,50);
-      var circle = two.addCircle(two.width / 2, two.height / 2 + 50, 25);
-      var line = two.addLine(two.width / 2 - 25, two.height / 2 - 75, two.width / 2 + 25, two.height / 2 - 25)
-      var poly = two.addPolygon(
-        two.width / 2, two.height / 2 - 125,
-        two.width / 2 + 25, two.height / 2 - 75,
-        two.width / 2 - 25, two.height / 2 - 75
+      var rectangle = dd.addRectangle(dd.width / 2, dd.height / 2, 50 ,50);
+      var circle = dd.addCircle(dd.width / 2, dd.height / 2 + 50, 25);
+      var line = dd.addLine(dd.width / 2 - 25, dd.height / 2 - 75, dd.width / 2 + 25, dd.height / 2 - 25)
+      var poly = dd.addPolygon(
+        dd.width / 2, dd.height / 2 - 125,
+        dd.width / 2 + 25, dd.height / 2 - 75,
+        dd.width / 2 - 25, dd.height / 2 - 75
       );
+      var ellipse = dd.addEllipse(dd.width / 2, dd.height / 2 + 100, 25, 10);
 
-      two
+      dd
         .onResize(function(width, height) {
 
           rectangle.translate(width / 2, height / 2);
@@ -45,16 +46,17 @@
       poly.stroke(1, 0, 0);
       circle.stroke(0).strokeWeight(4);
       rectangle.stroke(0, 1, 0).strokeWeight(4);
+      ellipse.fill(.5, .5, .5);
 
       window.addEventListener('mousemove', function(e) {
 
         var x = e.pageX;
         var y = e.pageY;
 
-        rectangle.rotate((x / two.width) * Math.PI * 2.0);
-        poly.rotate((y / two.height) * Math.PI * 2.0);
-        line.strokeWeight((1 - (x * y) / (two.width * two.height)) * 10);
-        circle.fill((x * y) / (two.width * two.height), 0, 0, 1.0);
+        rectangle.rotate((x / dd.width) * Math.PI * 2.0);
+        poly.rotate((y / dd.height) * Math.PI * 2.0);
+        line.strokeWeight((1 - (x * y) / (dd.width * dd.height)) * 10);
+        circle.fill((x * y) / (dd.width * dd.height), 0, 0, 1.0);
 
       });
 

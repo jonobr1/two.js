@@ -8,7 +8,7 @@
   var root = this;
   var objects = [];
 
-  var twos = [], looped;
+  var dds = [], looped;
 
   /**
    * Constants
@@ -116,7 +116,7 @@
 
     }
 
-    twos.push(this);
+    dds.push(this);
 
   };
 
@@ -197,6 +197,14 @@
 
     },
 
+    addEllipse: function(x, y, width, height) {
+
+      var ellipse = new DD.Ellipse(x, y, width, height);
+      this.scene.add(ellipse.mesh);
+      return ellipse;
+
+    },
+
     addCircle: function(x, y, radius) {
 
       var circle = new DD.Circle(x, y, radius);
@@ -239,7 +247,7 @@
 
     RESOLUTION: 32,
 
-    INSTANCES: twos,
+    INSTANCES: dds,
 
     DEFAULTS: {
       extrudeSettings: {
@@ -251,7 +259,7 @@
      * Controls
      */
 
-    autostart: function() {
+    start: function() {
       if (looped) {
         return this;
       }
@@ -269,7 +277,7 @@
     },
 
     /**
-     *
+     * @class
      */
     Rectangle: function(x, y, width, height) {
 
@@ -291,24 +299,33 @@
     },
 
     /**
-     *
+     * @class
      */
     Circle: function(x, y, radius) {
+
+      DD.Ellipse.call(this, x, y, radius, radius);
+
+    },
+
+    /**
+     * @class
+     */
+    Ellipse: function(x, y, width, height) {
 
       var resolution = DD.RESOLUTION;
 
       DD.Polygon.call(this, _.map(_.range(resolution), function(i) {
         var pct = i / resolution;
         var angle = TWO_PI * pct;
-        var xpos = radius * Math.cos(angle) + x;
-        var ypos = radius * Math.sin(angle) + y;
+        var xpos = width * Math.cos(angle) + x;
+        var ypos = height * Math.sin(angle) + y;
         return new THREE.Vector3(xpos, ypos, 0);
       }));
 
     },
 
     /**
-     * 
+     * @class
      */
     Line: function(x1, y1, x2, y2) {
 
@@ -338,6 +355,9 @@
 
     },
 
+    /**
+     * @class
+     */
     Polygon: function(points) {
 
       var shape = new THREE.Shape(points);
@@ -363,13 +383,17 @@
       }
 
       this.geometry = center.extrude(DD.DEFAULTS.extrudeSettings);
-      this.material = new THREE.MeshBasicMaterial({ color: 0x000000 });
+      this.material = new THREE.MeshBasicMaterial({
+        color: 0xffffff,
+        overdraw: true // Hack: for canvas rendering
+      });
 
       this.mesh = new THREE.Mesh(this.geometry, this.material);
       this.mesh.position.x = bb.centroid.x;
       this.mesh.position.y = bb.centroid.y;
 
       this.mesh.doubleSided = true;
+      this.mesh.renderDepth = getRenderDepth();
 
       this.outline = new DD.Line(this.geometry.vertices);
       this.mesh.add(this.outline.mesh);
@@ -377,7 +401,6 @@
       // Normalize to parent-child relationship
       this.outline.mesh.position.x = 0;
       this.outline.mesh.position.y = 0;
-      this.outline.mesh.renderDepth = this.mesh.renderDepth = getRenderDepth();
 
       objects.push(this);
 
@@ -483,7 +506,8 @@
   _.extend(DD.Polygon.prototype, ShapeProto, FillProto, StrokeProto);
   _.extend(DD.Line.prototype, ShapeProto, StrokeProto);
   _.extend(DD.Rectangle.prototype, DD.Polygon.prototype);
-  _.extend(DD.Circle.prototype, DD.Polygon.prototype);
+  _.extend(DD.Ellipse.prototype, DD.Polygon.prototype);
+  _.extend(DD.Circle.prototype, DD.Ellipse.prototype);
 
   function getRenderDepth() {
     var depth = RENDER_DEPTH;
@@ -514,7 +538,7 @@
   }
 
   function loop() {
-    _.each(twos, function(two) {
+    _.each(dds, function(two) {
       two.render();
     });
     if (looped) {
