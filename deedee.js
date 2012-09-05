@@ -46,15 +46,15 @@
   };
 
   /**
-   * Two.js is a two-dimensional drawing api built on top of Three.js
+   * deedee.js is a two-dimensional drawing api built on top of Three.js
    * meant for modern browsers.
    *
    * @class
    */
-  var Two = function(params) {
+  var DD = function(params) {
 
     var params = _.defaults(params || {}, {
-      type: Two.TYPES.webgl,
+      type: DD.TYPES.webgl,
       autoplay: true,
       width: 640,
       height: 480,
@@ -70,7 +70,7 @@
 
     var canvas = document.createElement('canvas');
 
-    if (params.type === Two.TYPES.webgl
+    if (params.type === DD.TYPES.webgl
       && (canvas.getContext('webgl')
         || canvas.getContext('experimental-webgl'))) {
 
@@ -78,14 +78,14 @@
         antialias: true,
         canvas: canvas
       });
-      params.type = Two.TYPES.webgl;
+      params.type = DD.TYPES.webgl;
 
     } else {
 
       this.renderer = new THREE.CanvasRenderer({
         canvas: canvas
       });
-      params.type = Two.TYPES.canvas2d;
+      params.type = DD.TYPES.canvas2d;
 
     }
 
@@ -120,7 +120,7 @@
 
   };
 
-  _.extend(Two.prototype, {
+  _.extend(DD.prototype, {
 
     /**
      * DOM
@@ -191,7 +191,7 @@
 
     addRectangle: function(x, y, width, height) {
 
-      var rect = new Two.Rectangle(x, y, width, height);
+      var rect = new DD.Rectangle(x, y, width, height);
       this.scene.add(rect.mesh);
       return rect;
 
@@ -199,7 +199,7 @@
 
     addCircle: function(x, y, radius) {
 
-      var circle = new Two.Circle(x, y, radius);
+      var circle = new DD.Circle(x, y, radius);
       this.scene.add(circle.mesh);
       return circle;
 
@@ -207,7 +207,7 @@
 
     addLine: function(x1, y1, x2, y2) {
 
-      var line = new Two.Line(x1, y1, x2, y2);
+      var line = new DD.Line(x1, y1, x2, y2);
       this.scene.add(line.mesh);
       return line;
 
@@ -220,7 +220,7 @@
         points.push(new THREE.Vector3(arguments[i], arguments[i + 1], 0));
       }
 
-      var poly = new Two.Polygon(points);
+      var poly = new DD.Polygon(points);
       this.scene.add(poly.mesh);
       return poly;
 
@@ -228,7 +228,7 @@
 
   });
 
-  _.extend(Two, {
+  _.extend(DD, {
 
     VERSION: 0.1,
 
@@ -281,7 +281,7 @@
       var c = x + hw;
       var d = y + hh;
 
-      Two.Polygon.call(this, [
+      DD.Polygon.call(this, [
         new THREE.Vector3(a, b, 0),
         new THREE.Vector3(c, b, 0),
         new THREE.Vector3(c, d, 0),
@@ -295,9 +295,9 @@
      */
     Circle: function(x, y, radius) {
 
-      var resolution = Two.RESOLUTION;
+      var resolution = DD.RESOLUTION;
 
-      Two.Polygon.call(this, _.map(_.range(resolution), function(i) {
+      DD.Polygon.call(this, _.map(_.range(resolution), function(i) {
         var pct = i / resolution;
         var angle = TWO_PI * pct;
         var xpos = radius * Math.cos(angle) + x;
@@ -362,7 +362,7 @@
         points.push(first.clone());
       }
 
-      this.geometry = center.extrude(Two.DEFAULTS.extrudeSettings);
+      this.geometry = center.extrude(DD.DEFAULTS.extrudeSettings);
       this.material = new THREE.MeshBasicMaterial({ color: 0x000000 });
 
       this.mesh = new THREE.Mesh(this.geometry, this.material);
@@ -371,7 +371,7 @@
 
       this.mesh.doubleSided = true;
 
-      this.outline = new Two.Line(this.geometry.vertices);
+      this.outline = new DD.Line(this.geometry.vertices);
       this.mesh.add(this.outline.mesh);
 
       // Normalize to parent-child relationship
@@ -415,9 +415,9 @@
 
   /**
    * Prototype for all objects have fill-like material
-   * Two.Rectangle
-   * Two.Circle
-   * TWo.Polygon
+   * DD.Rectangle
+   * DD.Circle
+   * DD.Polygon
    */
   var FillProto = {
 
@@ -438,7 +438,7 @@
 
   /**
    * Prototype for all objects that have stroke-like material
-   * Two.Line
+   * DD.Line
    */
   var StrokeProto = {
 
@@ -472,7 +472,7 @@
   };
 
   /**
-   * Prototype for Two.Polygon
+   * Prototype for DD.Polygon
    */
   var PolyProto = {
 
@@ -480,10 +480,10 @@
 
   };
 
-  _.extend(Two.Polygon.prototype, ShapeProto, FillProto, StrokeProto);
-  _.extend(Two.Line.prototype, ShapeProto, StrokeProto);
-  _.extend(Two.Rectangle.prototype, Two.Polygon.prototype);
-  _.extend(Two.Circle.prototype, Two.Polygon.prototype);
+  _.extend(DD.Polygon.prototype, ShapeProto, FillProto, StrokeProto);
+  _.extend(DD.Line.prototype, ShapeProto, StrokeProto);
+  _.extend(DD.Rectangle.prototype, DD.Polygon.prototype);
+  _.extend(DD.Circle.prototype, DD.Polygon.prototype);
 
   function getRenderDepth() {
     var depth = RENDER_DEPTH;
@@ -525,6 +525,6 @@
   /**
    * Export
    */
-  root['Two'] = Two;
+  root['DD'] = DD;
 
 })();
