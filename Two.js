@@ -15,7 +15,8 @@
    */
   var PI = Math.PI,
     TWO_PI = Math.PI * 2.0,
-    HALF_PI = Math.PI * 0.5;
+    HALF_PI = Math.PI * 0.5,
+    RENDER_DEPTH = 0;
 
   /**
    * Cross browser events.
@@ -240,6 +241,12 @@
 
     INSTANCES: twos,
 
+    DEFAULTS: {
+      extrudeSettings: {
+        amount: 0,  bevelEnabled: false
+      }
+    },
+
     /**
      * Controls
      */
@@ -299,6 +306,7 @@
       }));
 
     },
+
     /**
      * 
      */
@@ -323,6 +331,8 @@
 
       this.mesh.position.x = x1;
       this.mesh.position.y = y1;
+
+      this.mesh.renderDepth = getRenderDepth();
 
       objects.push(this);
 
@@ -352,11 +362,7 @@
         points.push(first.clone());
       }
 
-      var extrude_settings = {
-        amount: 0,  bevelEnabled: true, bevelSegments: 2, steps: 2
-      };
-
-      this.geometry = center.extrude(extrude_settings);
+      this.geometry = center.extrude(Two.DEFAULTS.extrudeSettings);
       this.material = new THREE.MeshBasicMaterial({ color: 0x000000 });
 
       this.mesh = new THREE.Mesh(this.geometry, this.material);
@@ -365,12 +371,13 @@
 
       this.mesh.doubleSided = true;
 
-      this.outline = new Two.Line(points);
+      this.outline = new Two.Line(this.geometry.vertices);
       this.mesh.add(this.outline.mesh);
 
       // Normalize to parent-child relationship
       this.outline.mesh.position.x = 0;
       this.outline.mesh.position.y = 0;
+      this.outline.mesh.renderDepth = this.mesh.renderDepth = getRenderDepth();
 
       objects.push(this);
 
@@ -395,7 +402,7 @@
 
     },
 
-    position: function(x, y) {
+    translate: function(x, y) {
 
       this.mesh.position.x = x;
       this.mesh.position.y = y;
@@ -473,10 +480,16 @@
 
   };
 
-  _.extend(Two.Rectangle.prototype, ShapeProto, FillProto, StrokeProto);
-  _.extend(Two.Circle.prototype, ShapeProto, FillProto, StrokeProto);
   _.extend(Two.Polygon.prototype, ShapeProto, FillProto, StrokeProto);
   _.extend(Two.Line.prototype, ShapeProto, StrokeProto);
+  _.extend(Two.Rectangle.prototype, Two.Polygon.prototype);
+  _.extend(Two.Circle.prototype, Two.Polygon.prototype);
+
+  function getRenderDepth() {
+    var depth = RENDER_DEPTH;
+    RENDER_DEPTH++;
+    return depth;
+  }
 
   function fitToWindow() {
 
