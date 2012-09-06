@@ -47,7 +47,8 @@
 
   /**
    * deedee.js is a two-dimensional drawing api built on top of Three.js
-   * meant for modern browsers.
+   * meant for modern browsers. Because it's in two-dimensions deedee handles
+   * the canvas, renderer, scene, and camera for you.
    *
    * @class
    */
@@ -68,7 +69,7 @@
 
     this.scene.add(this.camera);
 
-    var canvas = document.createElement('canvas');
+    var canvas = params.canvas || document.createElement('canvas');
 
     if (params.type === DD.TYPES.webgl
       && (canvas.getContext('webgl')
@@ -126,6 +127,9 @@
      * DOM
      */
 
+    /**
+     * @param {Element} the parent element to append deedee's dom element.
+     */
     appendTo: function(elem) {
 
       if (!_.isElement(elem)) {
@@ -138,6 +142,9 @@
 
     },
 
+    /**
+     * @param {Function} callback to be fired when deedee's resize triggers.
+     */
     onResize: function(func) {
 
       this.__onResize = func;
@@ -149,6 +156,10 @@
      * Controls
      */
 
+    /**
+     * @param {Function} callback to be fired when deedee renders shapes to the
+     * browser.
+     */
     draw: function(func) {
 
       this.__onUpdate = func;
@@ -156,6 +167,9 @@
 
     },
 
+    /**
+     * Add this deedee to the Request Animation Frame loop.
+     */
     play: function() {
 
       this.__playing = true;
@@ -163,6 +177,9 @@
 
     },
 
+    /**
+     * Remove this deedee from the Request Animation Frame loop.
+     */
     pause: function() {
 
       this.__playing = false;
@@ -174,6 +191,9 @@
      * Rendering
      */
 
+    /**
+     * Render everything to deedee's canvas.
+     */
     render: function() {
 
       if (!this.__playing) {
@@ -188,6 +208,10 @@
       return this;
 
     },
+
+    /**
+     * Convenience methods for adding shapes.
+     */
 
     addRectangle: function(x, y, width, height) {
 
@@ -259,6 +283,9 @@
      * Controls
      */
 
+    /**
+     * Turns on Request Animation Frame.
+     */
     start: function() {
       if (looped) {
         return this;
@@ -268,6 +295,9 @@
       return this;
     },
 
+    /**
+     * Stop Request Animation Frame.
+     */
     stop: function() {
       if (!looped) {
         return this;
@@ -277,7 +307,14 @@
     },
 
     /**
+     * DD.Rectangle is a ready-to-be-added-to-the-scene class.
+     * @extends DD.Polygon
      * @class
+     * 
+     * @param {Number} x position of upperleft-corner coordinate.
+     * @param {Number} y position of upperleft-corner coordinate.
+     * @param {Number} width of rectangle.
+     * @param {Number} height of rectangle.
      */
     Rectangle: function(x, y, width, height) {
 
@@ -299,7 +336,13 @@
     },
 
     /**
+     * Circle is a ready-to-be-added-to-the-scene class.
+     * @extends DD.Ellipse
      * @class
+     * 
+     * @param {Number} x position of center coordinate.
+     * @param {Number} y position of center coordinate.
+     * @param {Number} radius of circle.
      */
     Circle: function(x, y, radius) {
 
@@ -308,7 +351,14 @@
     },
 
     /**
+     * DD.Ellipse is a ready-to-be-added-to-the-scene class.
+     * @extends DD.Polygon
      * @class
+     *
+     * @param {Number} x position of center coordinate.
+     * @param {Number} y position of center coordinate.
+     * @param {Number} width of ellipse.
+     * @param {Number} height of ellipse.
      */
     Ellipse: function(x, y, width, height) {
 
@@ -325,6 +375,12 @@
     },
 
     /**
+     * DD.Line is a ready-to-be-added-to-the-scene class.
+     * 
+     * @param {Number} x position of first coordinate.
+     * @param {Number} y position of first coordinate.
+     * @param {Number} x position of final coordinate.
+     * @param {Number} y position of final coordinate.
      * @class
      */
     Line: function(x1, y1, x2, y2) {
@@ -356,9 +412,13 @@
     },
 
     /**
+     * DD.Polygon is a ready-to-be added to the scene class.
+     * 
+     * @param {Array} an array of x, y objects to define the shape.
+     * @param {Boolean} describe whether the shape is open, true, or closed.
      * @class
      */
-    Polygon: function(points) {
+    Polygon: function(points, open) {
 
       var shape = new THREE.Shape(points);
 
@@ -378,7 +438,7 @@
       var first = points[0];
 
       // Close the shape
-      if (!_.isEqual(first, points[points.length - 1])) {
+      if (!_.isEqual(first, points[points.length - 1]) && !open) {
         points.push(first.clone());
       }
 
@@ -410,14 +470,25 @@
 
   var ShapeProto = {
 
-    scale: function(amt) {
+    /**
+     * Scale the shape. Pass one argument for a uniform scale, two arguments for
+     * x, y transform.
+     */
+    scale: function(x, y) {
 
-      this.mesh.scale.x = amt;
-      this.mesh.scale.y = amt;
+      if (arguments.length === 1) {
+        y = x;
+      }
+
+      this.mesh.scale.x = x;
+      this.mesh.scale.y = y;
       return this;
 
     },
 
+    /**
+     * Rotate the shape in radians.
+     */
     rotate: function(radians) {
 
       this.mesh.rotation.z = radians;
@@ -425,6 +496,9 @@
 
     },
 
+    /**
+     * Position a shape somewhere in two-dimensions.
+     */
     translate: function(x, y) {
 
       this.mesh.position.x = x;
@@ -444,6 +518,19 @@
    */
   var FillProto = {
 
+    /**
+     * Remove the visibility of a fill.
+     */
+    noFill: function() {
+
+      this.fill(0, 0, 0, 0);
+      return this;
+
+    },
+
+    /**
+     * Define the filled color of a shape.
+     */
     fill: function(r, g, b, a) {
       var length = arguments.length;
       if (length <= 1) {
@@ -465,6 +552,19 @@
    */
   var StrokeProto = {
 
+    /**
+     * Remove the visibility of a stroke.
+     */
+    noStroke: function() {
+
+      this.strokeWeight(0).stroke(0, 0, 0, 0);
+      return this;
+
+    },
+
+    /**
+     * Define the color of a stroke.
+     */
     stroke: function(r, g, b, a) {
       var length = arguments.length;
       if (length <= 1) {
@@ -483,6 +583,9 @@
       return this;
     },
 
+    /**
+     * Define the weight or thickness of a stroke.
+     */
     strokeWeight: function(n) {
       if (_.isObject(this.outline)) {
         this.outline.material.linewidth = n;
