@@ -8,7 +8,7 @@
   var root = this;
   var objects = [];
 
-  var dds = [], looped;
+  var dds = [], looped, millis = 0;
 
   /**
    * Constants
@@ -205,7 +205,7 @@
       }
 
       if (_.isFunction(this.__onUpdate)) {
-        this.__onUpdate();
+        this.__onUpdate(millis);
       }
 
       this.renderer.render(this.scene, this.camera);
@@ -669,6 +669,7 @@
     _.each(dds, function(two) {
       two.render();
     });
+    millis++;
     if (looped) {
       requestAnimationFrame(loop);
     }

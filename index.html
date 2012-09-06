@@ -13,7 +13,6 @@
 
       DD.start();
 
-      var frames = 0;
       var dd = new DD({
         type: DD.TYPES.webgl,
         fullscreen: true
@@ -38,12 +37,12 @@
           poly.translate(width / 2, height / 2 - 125);
 
         })
-        .draw(function() {
+        .draw(function(millis) {
 
-          line.rotate(Date.now() / (Math.PI * 12.0));
+          line.rotate(millis / (Math.PI * 12.0));
 
-          circle.scale(1.5 * Math.sin(frames / (Math.PI * 4.0)) + 1);
-          ellipse.scale(1.5 * Math.sin(frames / (Math.PI * 4.0)) + 1);
+          circle.scale(1.5 * Math.sin(millis / (Math.PI * 4.0)) + 1);
+          ellipse.scale(1.5 * Math.sin(millis / (Math.PI * 4.0)) + 1);
 
           frames++;
 
