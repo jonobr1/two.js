@@ -81,6 +81,10 @@
       });
       params.type = DD.TYPES.webgl;
 
+    } else if (params.type === DD.TYPES.svg) {
+
+      this.renderer = new THREE.SVGRenderer({});
+
     } else {
 
       this.renderer = new THREE.CanvasRenderer({
@@ -266,7 +270,8 @@
 
     TYPES: {
       webgl: 'webgl',
-      canvas2d: 'canvas2d'
+      canvas2d: 'canvas2d',
+      // svg: 'svg' // TODO
     },
 
     RESOLUTION: 32,
@@ -503,6 +508,26 @@
 
       this.mesh.position.x = x;
       this.mesh.position.y = y;
+
+      return this;
+
+    },
+
+    /**
+     * getter-setter for udpating the z-index of an object
+     */
+    zIndex: function(z) {
+
+      if (arguments.length <= 0) {
+        return this.mesh.renderDepth;
+      }
+
+      this.mesh.renderDepth = z;
+
+      // Always make sure the stroke is above the fill.
+      if (this.outline) {
+        this.outline.mesh.renderDepth = z + 1;
+      }
 
       return this;
 

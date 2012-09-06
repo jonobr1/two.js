@@ -13,12 +13,14 @@
 
       DD.start();
 
+      var frames = 0;
       var dd = new DD({
-        // type: DD.TYPES.canvas2d,
+        type: DD.TYPES.webgl,
         fullscreen: true
       }).appendTo(document.body);
 
       var rectangle = dd.addRectangle(dd.width / 2, dd.height / 2, 50 ,50);
+      var ellipse = dd.addEllipse(dd.width / 2, dd.height / 2 + 100, 25, 10);
       var circle = dd.addCircle(dd.width / 2, dd.height / 2 + 50, 25);
       var line = dd.addLine(dd.width / 2 - 25, dd.height / 2 - 75, dd.width / 2 + 25, dd.height / 2 - 25)
       var poly = dd.addPolygon(
@@ -26,7 +28,6 @@
         dd.width / 2 + 25, dd.height / 2 - 75,
         dd.width / 2 - 25, dd.height / 2 - 75
       );
-      var ellipse = dd.addEllipse(dd.width / 2, dd.height / 2 + 100, 25, 10);
 
       dd
         .onResize(function(width, height) {
@@ -41,12 +42,17 @@
 
           line.rotate(Date.now() / (Math.PI * 12.0));
 
+          circle.scale(1.5 * Math.sin(frames / (Math.PI * 4.0)) + 1);
+          ellipse.scale(1.5 * Math.sin(frames / (Math.PI * 4.0)) + 1);
+
+          frames++;
+
         });
 
       poly.stroke(1, 0, 0);
-      circle.stroke(0).strokeWeight(4);
+      circle.stroke(0).fill(0).strokeWeight(4);
       rectangle.stroke(0, 1, 0).strokeWeight(4);
-      ellipse.fill(.5, .5, .5);
+      ellipse.noStroke().fill(.75, .75, .75);
 
       window.addEventListener('mousemove', function(e) {
 
