@@ -14,7 +14,7 @@
       DD.start();
 
       var dd = new DD({
-        type: DD.TYPES.webgl,
+        // type: DD.TYPES.canvas2d,
         fullscreen: true
       }).appendTo(document.body);
 
@@ -36,6 +36,11 @@
           line.translate(width / 2 - 25, height / 2 - 75);
           poly.translate(width / 2, height / 2 - 125);
 
+          // _.each(poly.geometry.vertices, function(vert) {
+          //   vert.x += Math.random() * 5 - 10;
+          //   vert.y += Math.random() * 5 - 10;
+          // });
+
         })
         .draw(function(millis) {
 
@@ -43,8 +48,6 @@
 
           circle.scale(1.5 * Math.sin(millis / (Math.PI * 4.0)) + 1);
           ellipse.scale(1.5 * Math.sin(millis / (Math.PI * 4.0)) + 1);
-
-          frames++;
 
         });
 
