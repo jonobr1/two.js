@@ -95,6 +95,7 @@
     }
 
     this.type = params.type;
+    this.domElement = this.renderer.domElement;
 
     if (params.fullscreen) {
 
@@ -251,14 +252,26 @@
 
     addPolygon: function() {
 
-      var points = [];
-      for (var i = 0, l = arguments.length; i < l; i+=2) {
+      var points = [], l = arguments.length;
+      for (var i = 0, l = l; i < l; i+=2) {
+        if (!_.isNumber(arguments[i])) {
+          break;
+        }
         points.push(new THREE.Vector3(arguments[i], arguments[i + 1], 0));
       }
 
-      var poly = new DD.Polygon(points);
+      var poly = new DD.Polygon(points, !!arguments[l - 1]);
       this.scene.add(poly.mesh);
       return poly;
+
+    },
+
+    addGroup: function() {
+
+      var objects = arguments;
+      var group = new DD.Group(objects);
+      this.scene.add(group);
+      return group;
 
     }
 
@@ -440,18 +453,21 @@
         }
       });
 
-      var first = points[0];
-
-      // Close the shape
-      if (!_.isEqual(first, points[points.length - 1]) && !open) {
-        points.push(first.clone());
-      }
-
       this.geometry = center.extrude(DD.DEFAULTS.extrudeSettings);
       this.material = new THREE.MeshBasicMaterial({
         color: 0xffffff,
         overdraw: true // Hack: for canvas rendering
       });
+      this.material.side = THREE.DoubleSide;
+
+      var vlength = this.geometry.vertices.length;
+      var v1 = this.geometry.vertices[0];
+      var v2 = this.geometry.vertices[vlength - 1];
+
+      // Close the shape
+      if (!_.isEqual(v1, v2) && !open) {
+        this.geometry.vertices.push(v1);
+      }
 
       this.mesh = new THREE.Mesh(this.geometry, this.material);
       this.mesh.position.x = bb.centroid.x;
@@ -469,6 +485,42 @@
 
       objects.push(this);
 
+    },
+
+    /**
+     * 
+     */
+    Group: function(children) {
+
+      this.mesh = new THREE.Object3D();
+
+      _.each(children, function(child) {
+        this.mesh.add(child);
+      }, this);
+
+    },
+
+    /**
+     * DD.Vector is a primitive vector class for use with Three.js with
+     * conveniences to neglect the z property.
+     * 
+     * @extends THREE.Vector3
+     * @class
+     */
+    Vector: function(a, b, c) {
+
+      var l = arguments.length;
+
+      if (l <= 1 && _.isObject(a)) {
+        this.x = a.x || 0;
+        this.y = a.y || 0;
+        this.z = a.z || 0;
+      } else {
+        this.x = a || 0;
+        this.y = b || 0;
+        this.z = c || 0;
+      }
+
     }
 
   });
@@ -476,12 +528,63 @@
   var ShapeProto = {
 
     /**
+     * Get the vertex coordinates of a shape.
+     * @param {Boolean} Return the actual array, or a clone.
+     * @return {Array} of objects with x, y, z position of each coordinate.
+     */
+    getVertices: function(clone) {
+
+      return clone ? _.toArray(this.geometry.vertices) : this.geometry.vertices;
+
+    },
+
+    /**
+     * Force boolean updates to make THREE calculate the new vertex positions.
+     */
+    updateVertexFlags: function() {
+
+      this.geometry.verticesNeedUpdate = true;
+      if (this.outline) {
+        this.outline.geometry.verticesNeedUpdate = true;
+      }
+
+      return this;
+
+    },
+
+    /**
+     * Set new coordinate positions for vertices of a given shape.
+     * @param {Array} an array of vertices. Does not need to be complete and
+     * does not need to be the same length.
+     * @param {Boolean} set whether you don't want to update the rendering of
+     * the shape. Not usually desired.
+     */
+    setVertices: function(vertices, silent) {
+
+      _.each(vertices, function(v, i) {
+        var vertex = this.geometry.vertices[i];
+        if (_.isUndefined(vertex)) {
+          vertex = new THREE.Vector3();
+          this.geometry.vertices[i] = vertex;
+        }
+        vertex.set(v.x, v.y, v.z || 0);
+      }, this);
+
+      return !!silent ? this : this.updateVertexFlags();
+
+    },
+
+    /**
      * Scale the shape. Pass one argument for a uniform scale, two arguments for
      * x, y transform.
      */
     scale: function(x, y) {
 
-      if (arguments.length === 1) {
+      var l = arguments.length;
+
+      if (l <= 0) {
+        return this.mesh.scale;
+      } else if (l <= 1) {
         y = x;
       }
 
@@ -496,6 +599,12 @@
      */
     rotate: function(radians) {
 
+      var l = arguments.length;
+
+      if (l <= 0) {
+        return this.mesh.rotation.z;
+      }
+
       this.mesh.rotation.z = radians;
       return this;
 
@@ -505,6 +614,12 @@
      * Position a shape somewhere in two-dimensions.
      */
     translate: function(x, y) {
+
+      var l = arguments.length;
+
+      if (l <= 0) {
+        return this.mesh.position;
+      }
 
       this.mesh.position.x = x;
       this.mesh.position.y = y;
@@ -527,6 +642,100 @@
       // Always make sure the stroke is above the fill.
       if (this.outline) {
         this.outline.mesh.renderDepth = z + 1;
+      }
+
+      return this;
+
+    }
+
+  };
+
+  var GroupProto = {
+
+    scale: ShapeProto.scale,
+
+    rotate: ShapeProto.rotate,
+
+    translate: ShapeProto.translate,
+
+    /**
+     * getter-setter for udpating the z-index of an object
+     */
+    zIndex: function(z) {
+
+      if (arguments.length <= 0) {
+        return this.mesh.renderDepth;
+      }
+
+      this.mesh.renderDepth = z;
+
+      // Update the children as well
+      _.each(this.mesh.children, function(child, i) {
+        child.renderDepth = z + i;
+      }, this);
+
+      return this;
+
+    },
+
+    /**
+     *
+     */
+    stroke: function(r, g, b, a) {
+
+      var length = arguments.length;
+
+      if (length <= 1) {
+        g = b = r;
+        a = 1.0;
+      } else if (length <= 3) {
+        a = 1.0;
+      }
+
+      for (var i = 0, l = this.mesh.children.length; i < l; i++) {
+
+        var child = this.mesh.children[i];
+        var material = child.material;
+
+        if (!(material instanceof THREE.BasicLineMaterial)) {
+          continue;
+        }
+
+        material.color.setRGB(r, g, b);
+        material.opacity = a;
+
+      }
+
+      return this;
+
+    },
+
+    /**
+     *
+     */
+    fill: function() {
+
+      var length = arguments.length;
+
+      if (length <= 1) {
+        g = b = r;
+        a = 1.0;
+      } else if (length <= 3) {
+        a = 1.0;
+      }
+
+      for (var i = 0, l = this.mesh.children.length; i < l; i++) {
+
+        var child = this.mesh.children[i];
+        var material = child.material;
+
+        if (!(material instanceof THREE.MeshBasicMaterial)) {
+          continue;
+        }
+
+        material.color.setRGB(r, g, b);
+        material.opacity = a;
+
       }
 
       return this;
@@ -636,6 +845,22 @@
   _.extend(DD.Rectangle.prototype, DD.Polygon.prototype);
   _.extend(DD.Ellipse.prototype, DD.Polygon.prototype);
   _.extend(DD.Circle.prototype, DD.Ellipse.prototype);
+  _.extend(DD.Vector.prototype, THREE.Vector3.prototype);
+  _.extend(DD.Group.prototype, THREE.Object3D.prototype, GroupProto);
+
+  // Super THREE.Vector3.prototype on DD.Vector
+  _.each(THREE.Vector3.prototype, function(v, k) {
+    if (_.isFunction(v)) {
+      DD.Vector.prototype[k] = function() {
+        v.apply(this, arguments);
+        if (_.isUndefined(this.z)) {
+          this.z = 0;
+        }
+      };
+    } else {
+      DD.Vector.prototype[k] = v;
+    }
+  });
 
   function getRenderDepth() {
     var depth = RENDER_DEPTH;

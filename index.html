@@ -4,69 +4,128 @@
     <title>A Cross Context 2D Drawing API</title>
   </head>
   <body>
-    <div style="top: 0; left: 0; z-index: -1; position: fixed; width: 50%; height: 100%; border: 1px solid #ccc;"></div>
-    <div style="top: 0; left: 0; z-index: -1; position: fixed; width: 100%; height: 50%; border: 1px solid #ccc;"></div>
-    <script type="text/javascript" src="./third-party/Three.js/build/three.js"></script>
+    <script type="text/javascript" src="./third-party/Tween.js"></script>
+    <script type="text/javascript" src="./third-party/Three.js/build/three.min.js"></script>
     <script type="text/javascript" src="./third-party/underscore.js"></script>
     <script type="text/javascript" src="./deedee.js"></script>
     <script type="text/javascript">
 
       DD.start();
 
+      // Global variables
       var dd = new DD({
         // type: DD.TYPES.canvas2d,
         fullscreen: true
       }).appendTo(document.body);
 
-      var rectangle = dd.addRectangle(dd.width / 2, dd.height / 2, 50 ,50);
-      var ellipse = dd.addEllipse(dd.width / 2, dd.height / 2 + 100, 25, 10);
-      var circle = dd.addCircle(dd.width / 2, dd.height / 2 + 50, 25);
-      var line = dd.addLine(dd.width / 2 - 25, dd.height / 2 - 75, dd.width / 2 + 25, dd.height / 2 - 25)
-      var poly = dd.addPolygon(
-        dd.width / 2, dd.height / 2 - 125,
-        dd.width / 2 + 25, dd.height / 2 - 75,
-        dd.width / 2 - 25, dd.height / 2 - 75
+      var width = dd.width,
+        height = dd.height,
+        half_width = width / 2,
+        half_height = height / 2,
+        quart_width = half_width / 2,
+        quart_height = half_height / 2;
+
+      // Background color
+      dd.domElement.style.background = '#f3d4b6';
+
+      /**
+       * Let's make the face.
+       */
+
+      var eyes = [
+        makeEye(half_width - quart_width, half_height, quart_height / 2),
+        makeEye(half_width + quart_width, half_height, quart_height / 2)
+      ];
+
+      var nose = dd.addPolygon(
+        half_width - 12, half_height + 60,
+        half_width + 50, half_height + 15,
+        half_width, half_height + 130,
+        true
       );
-
-      dd
-        .onResize(function(width, height) {
-
-          rectangle.translate(width / 2, height / 2);
-          circle.translate(width / 2, height / 2 + 50);
-          line.translate(width / 2 - 25, height / 2 - 75);
-          poly.translate(width / 2, height / 2 - 125);
-
-          // _.each(poly.geometry.vertices, function(vert) {
-          //   vert.x += Math.random() * 5 - 10;
-          //   vert.y += Math.random() * 5 - 10;
-          // });
-
-        })
-        .draw(function(millis) {
-
-          line.rotate(millis / (Math.PI * 12.0));
-
-          circle.scale(1.5 * Math.sin(millis / (Math.PI * 4.0)) + 1);
-          ellipse.scale(1.5 * Math.sin(millis / (Math.PI * 4.0)) + 1);
-
-        });
-
-      poly.stroke(1, 0, 0);
-      circle.stroke(0).fill(0).strokeWeight(4);
-      rectangle.stroke(0, 1, 0).strokeWeight(4);
-      ellipse.noStroke().fill(.75, .75, .75);
+      nose.noFill().stroke(0).strokeWeight(5);
 
       window.addEventListener('mousemove', function(e) {
 
-        var x = e.pageX;
-        var y = e.pageY;
+        // var x = e.pageX;
+        // var y = e.pageY;
+        // 
+        // _.each(eyes, function(eye) {
+        // 
+        //   var pupil = eye.pupil;
+        //   var white = eye.white;
+        // 
+        //   var dx = x - white.translate().x;
+        //   var dy = y - white.translate().y;
+        // 
+        //   var angle = Math.atan2(dx, dy);// - Math.PI / 2;
+        //   pupil.translate(
+        //     (quart_height / 4) * Math.cos(angle) + white.translate().x,
+        //     (quart_height / 4) * Math.sin(angle) + white.translate().y
+        //   );
 
-        rectangle.rotate((x / dd.width) * Math.PI * 2.0);
-        poly.rotate((y / dd.height) * Math.PI * 2.0);
-        line.strokeWeight((1 - (x * y) / (dd.width * dd.height)) * 10);
-        circle.fill((x * y) / (dd.width * dd.height), 0, 0, 1.0);
+        // });
 
       });
+
+      function makeEye(x, y, r) {
+
+        // Make lashes
+
+        var w = r;
+        var h = r * 1.125;
+
+        var whites = dd.addEllipse(x, y, w, h);
+        var pupil = dd.addCircle(x, y, r / 2);
+
+        whites.stroke(0).strokeWeight(7).fill(1);
+        pupil.noStroke().fill(.64, .75, 1.0);
+
+        var g = dd.addGroup(whites, pupil);
+
+        var verts = whites.getVertices();
+
+        var dist = w * .75;
+        var angle = Math.PI * .36 + Math.PI;
+
+        var lashes = [
+          dd.addLine(
+            r * Math.cos(angle) + x,
+            h * Math.sin(angle) + y,
+            (dist + r) * Math.cos(angle) + x,
+            (dist + h) * Math.sin(angle) + y
+          ),
+          dd.addLine(
+            r * Math.cos(angle + Math.PI / 8) + x,
+            h * Math.sin(angle + Math.PI / 8) + y,
+            (dist + r) * Math.cos(angle + Math.PI / 8) + x,
+            (dist + h) * Math.sin(angle + Math.PI / 8) + y
+          ),
+          dd.addLine(
+            r * Math.cos(angle + Math.PI / 4) + x,
+            h * Math.sin(angle + Math.PI / 4) + y,
+            (dist + r) * Math.cos(angle + Math.PI / 4) + x,
+            (dist + h) * Math.sin(angle + Math.PI / 4) + y
+          )
+        ];
+
+        _.each(lashes, function(lash) {
+          lash.stroke(0).strokeWeight(1.5);
+          g.add(lash);
+        });
+
+        g.pupil = pupil;
+        g.white = whites;
+
+        g.blink = function() {
+
+          
+
+        };
+
+        return g;
+
+      }
 
     </script>
   </body>
