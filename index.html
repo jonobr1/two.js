@@ -7,26 +7,34 @@
     <script type="text/javascript" src="./third-party/Tween.js"></script>
     <script type="text/javascript" src="./third-party/Three.js/build/three.min.js"></script>
     <script type="text/javascript" src="./third-party/underscore.js"></script>
-    <script type="text/javascript" src="./deedee.js"></script>
+    <script type="text/javascript" src="./src/two.js"></script>
     <script type="text/javascript">
 
-      DD.start();
+      var TWO_PI = Math.PI * 2.0;
+
+      Two.onUpdate(function() {
+        TWEEN.update();
+      }).start();
 
       // Global variables
-      var dd = new DD({
-        // type: DD.TYPES.canvas2d,
+      var two = new Two({
+        // type: Two.TYPES.canvas2d,
         fullscreen: true
       }).appendTo(document.body);
 
-      var width = dd.width,
-        height = dd.height,
+      two.draw(function() {
+
+      });
+
+      var width = two.width,
+        height = two.height,
         half_width = width / 2,
         half_height = height / 2,
         quart_width = half_width / 2,
         quart_height = half_height / 2;
 
       // Background color
-      dd.domElement.style.background = '#f3d4b6';
+      two.domElement.style.background = '#f3d4b6';
 
       /**
        * Let's make the face.
@@ -37,7 +45,7 @@
         makeEye(half_width + quart_width, half_height, quart_height / 2)
       ];
 
-      var nose = dd.addPolygon(
+      var nose = two.addPolygon(
         half_width - 12, half_height + 60,
         half_width + 50, half_height + 15,
         half_width, half_height + 130,
@@ -68,58 +76,230 @@
 
       });
 
+      window.addEventListener('click', function(e) {
+
+        _.each(eyes, function(eye) {
+          eye.blink();
+        });
+
+      });
+
       function makeEye(x, y, r) {
 
         // Make lashes
 
+        var in_time = 75;
+        var out_time = 125;
+        var easing = TWEEN.Easing.Circular.Out;
+
         var w = r;
         var h = r * 1.125;
 
-        var whites = dd.addEllipse(x, y, w, h);
-        var pupil = dd.addCircle(x, y, r / 2);
+        var whites = two.addEllipse(x, y, w, h);
+        var pupil = two.addCircle(x, y, r / 2);
 
         whites.stroke(0).strokeWeight(7).fill(1);
         pupil.noStroke().fill(.64, .75, 1.0);
 
-        var g = dd.addGroup(whites, pupil);
+        var g = two.addGroup(whites, pupil);
 
         var verts = whites.getVertices();
+        var l = verts.length - 1;
 
         var dist = w * .75;
         var angle = Math.PI * .36 + Math.PI;
 
-        var lashes = [
-          dd.addLine(
-            r * Math.cos(angle) + x,
-            h * Math.sin(angle) + y,
-            (dist + r) * Math.cos(angle) + x,
-            (dist + h) * Math.sin(angle) + y
-          ),
-          dd.addLine(
-            r * Math.cos(angle + Math.PI / 8) + x,
-            h * Math.sin(angle + Math.PI / 8) + y,
-            (dist + r) * Math.cos(angle + Math.PI / 8) + x,
-            (dist + h) * Math.sin(angle + Math.PI / 8) + y
-          ),
-          dd.addLine(
-            r * Math.cos(angle + Math.PI / 4) + x,
-            h * Math.sin(angle + Math.PI / 4) + y,
-            (dist + r) * Math.cos(angle + Math.PI / 4) + x,
-            (dist + h) * Math.sin(angle + Math.PI / 4) + y
-          )
-        ];
+        var lashes = (function() {
 
-        _.each(lashes, function(lash) {
-          lash.stroke(0).strokeWeight(1.5);
-          g.add(lash);
-        });
+          // Each lash
+
+          var l1a = new Two.Vector(r * Math.cos(angle) + x, h * Math.sin(angle) + y);
+          var l1b = new Two.Vector((dist + r) * Math.cos(angle) + x, (dist + h) * Math.sin(angle) + y);
+
+          var l2a = new Two.Vector(r * Math.cos(angle + Math.PI / 8) + x, h * Math.sin(angle + Math.PI / 8) + y);
+          var l2b = new Two.Vector((dist + r) * Math.cos(angle + Math.PI / 8) + x, (dist + h) * Math.sin(angle + Math.PI / 8) + y);
+
+          var l3a = new Two.Vector(r * Math.cos(angle + Math.PI / 4) + x, h * Math.sin(angle + Math.PI / 4) + y);
+          var l3b = new Two.Vector((dist + r) * Math.cos(angle + Math.PI / 4) + x, (dist + h) * Math.sin(angle + Math.PI / 4) + y);
+
+          var lashes = [
+            two.addLine(
+              l1a.x, l1a.y,
+              l1b.x, l1b.y
+            ),
+            two.addLine(
+              l2a.x, l2a.y,
+              l2b.x, l2b.y
+            ),
+            two.addLine(
+              l3a.x, l3a.y,
+              l3b.x, l3b.y
+            )
+          ];
+
+          _.each(lashes, function(lash) {
+            lash.stroke(0).strokeWeight(1.5);
+            g.add(lash);
+          });
+
+          // Destination position for each lash
+
+          var tweens = [
+            new TWEEN.Tween(l1a).to({
+              x: r * Math.cos(TWO_PI - angle) + x - l1a.x,
+              y: h * Math.sin(TWO_PI - angle) + y - l1a.y
+            }, in_time).easing(easing),
+            new TWEEN.Tween(l1b).to({
+              x: (dist + r) * Math.cos(TWO_PI - angle) + x - l1a.x,
+              y: (dist + h) * Math.sin(TWO_PI - angle) + y - l1a.y
+            }, in_time).easing(easing),
+            new TWEEN.Tween(l2a).to({
+              x: r * Math.cos(TWO_PI - (angle + Math.PI / 8)) + x - l2a.x,
+              y: h * Math.sin(TWO_PI - (angle + Math.PI / 8)) + y - l2a.y
+            }, in_time).easing(easing),
+            new TWEEN.Tween(l2b).to({
+              x: (dist + r) * Math.cos(TWO_PI - (angle + Math.PI / 8)) + x - l2a.x,
+              y: (dist + h) * Math.sin(TWO_PI - (angle + Math.PI / 8)) + y - l2a.y
+            }, in_time).easing(easing),
+            new TWEEN.Tween(l3a).to({
+              x: r * Math.cos(TWO_PI - (angle + Math.PI / 4)) + x - l3a.x,
+              y: h * Math.sin(TWO_PI - (angle + Math.PI / 4)) + y - l3a.y
+            }, in_time).easing(easing),
+            new TWEEN.Tween(l3b).to({
+              x: (dist + r) * Math.cos(TWO_PI - (angle + Math.PI / 4)) + x - l3a.x,
+              y: (dist + h) * Math.sin(TWO_PI - (angle + Math.PI / 4)) + y - l3a.y
+            }, in_time).easing(easing)
+          ];
+
+          var rtweens = [
+            new TWEEN.Tween(l1a).to({
+              x: 0,
+              y: 0
+            }, out_time).easing(easing),
+            new TWEEN.Tween(l1b).to({
+              x: l1b.x - l1a.x,
+              y: l1b.y - l1a.y
+            }, out_time).easing(easing),
+            new TWEEN.Tween(l2a).to({
+              x: 0,
+              y: 0
+            }, out_time).easing(easing),
+            new TWEEN.Tween(l2b).to({
+              x: l2b.x - l2a.x,
+              y: l2b.y - l2a.y
+            }, out_time).easing(easing),
+            new TWEEN.Tween(l3a).to({
+              x: 0,
+              y: 0
+            }, out_time).easing(easing),
+            new TWEEN.Tween(l3b).to({
+              x: l3b.x - l3a.x,
+              y: l3b.y - l3a.y
+            }, out_time).easing(easing)
+          ];
+
+          var verts = lashes[0].getVertices();
+
+          // Revert back to vertex position.
+
+          l1a.copy(verts[0]);
+          l1b.copy(verts[1]);
+
+          verts = lashes[1].getVertices();
+
+          l2a.copy(verts[0]);
+          l2b.copy(verts[1]);
+
+          verts = lashes[2].getVertices();
+
+          l3a.copy(verts[0]);
+          l3b.copy(verts[1]);
+
+          rtweens[rtweens.length - 1]
+            .onUpdate(function() {
+              lashes[0].setVertices([l1a, l1b]);
+              lashes[1].setVertices([l2a, l2b]);
+              lashes[2].setVertices([l3a, l3b]);
+            });
+
+          tweens[tweens.length - 1]
+            .onUpdate(function() {
+              lashes[0].setVertices([l1a, l1b]);
+              lashes[1].setVertices([l2a, l2b]);
+              lashes[2].setVertices([l3a, l3b]);
+            })
+            .onComplete(function() {
+              _.each(rtweens, function(t) {
+                t.start();
+              })
+            });
+
+          g.lashes = lashes;
+
+          return tweens;
+
+        })();
 
         g.pupil = pupil;
         g.white = whites;
 
+        var blink_tweens = (function() {
+
+          var rest_states = [];
+          var dest_states = [];
+          var tweens = [];
+          var rtweens = [];
+
+          _.each(verts, function(v, i) {
+
+            rest_states.push(v.clone());
+            dest_states.push(v.clone());
+
+            var rest_state = rest_states[i];
+            var dest_state = dest_states[i];
+
+            if (i < l / 2) {
+              dest_state.copy(verts[Math.min(l - i, l - 1)]);
+            }
+
+            tweens.push(new TWEEN.Tween(v)
+              .easing(TWEEN.Easing.Circular.Out)
+              .to(dest_state, in_time));
+
+            rtweens.push(new TWEEN.Tween(v)
+              .easing(TWEEN.Easing.Circular.Out)
+              .to(rest_state, out_time));
+
+          });
+
+          rtweens[l - 1]
+            .onUpdate(function() {
+              whites.setVertices(verts);
+            });
+
+          tweens[l - 1]
+            .onUpdate(function() {
+              whites.setVertices(verts);
+            })
+            .onComplete(function() {
+              _.each(rtweens, function(t) {
+                t.start();
+              })
+            });
+
+            return tweens;
+
+        })();
+
         g.blink = function() {
 
-          
+          _.each(blink_tweens, function(t) {
+            t.start();
+          });
+
+          _.each(lashes, function(l) {
+            l.start();
+          });
 
         };
 

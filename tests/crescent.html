@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Test THREE.ExtrudeGeometry Fills on Crescent</title>
+    <script type="text/javascript" src="https://raw.github.com/mrdoob/three.js/master/build/three.min.js"></script>
+  </head>
+  <body>
+    <p>This should be a crescent</p>
+    <canvas id="webgl" width="400" height="400"></canvas>
+    <canvas id="canvas2d" width="400" height="400"></canvas>
+    <p style="width: 800px;">
+      <span style="margin-left: 50px;">
+        THREE.WebGLRenderer
+      </span>
+      <span style="margin-left: 232px;">
+        THREE.CanvasRenderer
+      </span>
+    </p>
+    <script type="text/javascript">
+
+      var scene = new THREE.Scene();
+      var camera = new THREE.OrthographicCamera(0, 400, 0, 400, -10000);
+
+      scene.add(camera);
+
+      var crescent = new THREE.Shape();
+
+      for (var i = 0, l = 32; i < l; i++) {
+
+        var pct = i / l;
+        var x = 100 * Math.cos(pct * Math.PI * 2.0) + 200;
+        var y = 100 * Math.sin(pct * Math.PI * 2.0) + 200;
+
+        if (i < l / 2) {
+          x = 100 * Math.cos(pct * Math.PI * 2.0) + 200;
+          y = -50 * Math.sin(pct * Math.PI * 2.0) + 200;
+        }
+
+        if (i === 0) {
+          crescent.moveTo(x, y);
+        } else {
+          crescent.lineTo(x, y);
+        }
+
+      }
+
+      var extrude_settings = {
+        amount: 0, bevelEnabled: false
+      };
+
+      (function() {
+
+        var geometry = crescent.extrude(extrude_settings);
+        var material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+        var mesh = new THREE.Mesh(geometry, material);
+
+        mesh.renderDepth = 0;
+
+        scene.add(mesh);
+
+      })();
+
+      (function() {
+
+        var canvas = document.querySelector('#webgl');
+        var renderer = new THREE.WebGLRenderer({
+          canvas: canvas
+        });
+        renderer.setSize(canvas.width, canvas.height);
+
+        renderer.render(scene, camera);
+
+      })();
+
+      (function() {
+
+        var canvas = document.querySelector('#canvas2d');
+        var renderer = new THREE.CanvasRenderer({
+          canvas: canvas
+        });
+        renderer.setSize(canvas.width, canvas.height);
+
+        renderer.render(scene, camera);
+
+      })();
+
+    </script>
+  </body>
+</html>

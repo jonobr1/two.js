@@ -8,7 +8,10 @@
   var root = this;
   var objects = [];
 
-  var dds = [], looped, millis = 0;
+  /**
+   * Globals
+   */
+  var dds = [], looped, millis = 0, on_update;
 
   /**
    * Constants
@@ -52,10 +55,10 @@
    *
    * @class
    */
-  var DD = function(params) {
+  var Two = function(params) {
 
     var params = _.defaults(params || {}, {
-      type: DD.TYPES.webgl,
+      type: Two.TYPES.webgl,
       autoplay: true,
       width: 640,
       height: 480,
@@ -71,7 +74,7 @@
 
     var canvas = params.canvas || document.createElement('canvas');
 
-    if (params.type === DD.TYPES.webgl
+    if (params.type === Two.TYPES.webgl
       && (canvas.getContext('webgl')
         || canvas.getContext('experimental-webgl'))) {
 
@@ -79,9 +82,9 @@
         antialias: true,
         canvas: canvas
       });
-      params.type = DD.TYPES.webgl;
+      params.type = Two.TYPES.webgl;
 
-    } else if (params.type === DD.TYPES.svg) {
+    } else if (params.type === Two.TYPES.svg) {
 
       this.renderer = new THREE.SVGRenderer({});
 
@@ -90,7 +93,7 @@
       this.renderer = new THREE.CanvasRenderer({
         canvas: canvas
       });
-      params.type = DD.TYPES.canvas2d;
+      params.type = Two.TYPES.canvas2d;
 
     }
 
@@ -122,11 +125,13 @@
 
     }
 
+    this.renderer.sortElements = false;
+
     dds.push(this);
 
   };
 
-  _.extend(DD.prototype, {
+  _.extend(Two.prototype, {
 
     /**
      * DOM
@@ -220,7 +225,7 @@
 
     addRectangle: function(x, y, width, height) {
 
-      var rect = new DD.Rectangle(x, y, width, height);
+      var rect = new Two.Rectangle(x, y, width, height);
       this.scene.add(rect.mesh);
       return rect;
 
@@ -228,7 +233,7 @@
 
     addEllipse: function(x, y, width, height) {
 
-      var ellipse = new DD.Ellipse(x, y, width, height);
+      var ellipse = new Two.Ellipse(x, y, width, height);
       this.scene.add(ellipse.mesh);
       return ellipse;
 
@@ -236,7 +241,7 @@
 
     addCircle: function(x, y, radius) {
 
-      var circle = new DD.Circle(x, y, radius);
+      var circle = new Two.Circle(x, y, radius);
       this.scene.add(circle.mesh);
       return circle;
 
@@ -244,7 +249,7 @@
 
     addLine: function(x1, y1, x2, y2) {
 
-      var line = new DD.Line(x1, y1, x2, y2);
+      var line = new Two.Line(x1, y1, x2, y2);
       this.scene.add(line.mesh);
       return line;
 
@@ -257,10 +262,10 @@
         if (!_.isNumber(arguments[i])) {
           break;
         }
-        points.push(new THREE.Vector3(arguments[i], arguments[i + 1], 0));
+        points.push(new Two.Vector(arguments[i], arguments[i + 1]));
       }
 
-      var poly = new DD.Polygon(points, !!arguments[l - 1]);
+      var poly = new Two.Polygon(points, !!arguments[l - 1]);
       this.scene.add(poly.mesh);
       return poly;
 
@@ -269,7 +274,7 @@
     addGroup: function() {
 
       var objects = arguments;
-      var group = new DD.Group(objects);
+      var group = new Two.Group(objects);
       this.scene.add(group);
       return group;
 
@@ -277,7 +282,7 @@
 
   });
 
-  _.extend(DD, {
+  _.extend(Two, {
 
     VERSION: 0.1,
 
@@ -313,6 +318,11 @@
       return this;
     },
 
+    onUpdate: function(func) {
+      on_update = func;
+      return this;
+    },
+
     /**
      * Stop Request Animation Frame.
      */
@@ -325,8 +335,8 @@
     },
 
     /**
-     * DD.Rectangle is a ready-to-be-added-to-the-scene class.
-     * @extends DD.Polygon
+     * Two.Rectangle is a ready-to-be-added-to-the-scene class.
+     * @extends Two.Polygon
      * @class
      * 
      * @param {Number} x position of upperleft-corner coordinate.
@@ -344,18 +354,18 @@
       var c = x + hw;
       var d = y + hh;
 
-      DD.Polygon.call(this, [
-        new THREE.Vector3(a, b, 0),
-        new THREE.Vector3(c, b, 0),
-        new THREE.Vector3(c, d, 0),
-        new THREE.Vector3(a, d, 0)
+      Two.Polygon.call(this, [
+        new Two.Vector(a, b),
+        new Two.Vector(c, b),
+        new Two.Vector(c, d),
+        new Two.Vector(a, d)
       ]);
 
     },
 
     /**
      * Circle is a ready-to-be-added-to-the-scene class.
-     * @extends DD.Ellipse
+     * @extends Two.Ellipse
      * @class
      * 
      * @param {Number} x position of center coordinate.
@@ -364,13 +374,13 @@
      */
     Circle: function(x, y, radius) {
 
-      DD.Ellipse.call(this, x, y, radius, radius);
+      Two.Ellipse.call(this, x, y, radius, radius);
 
     },
 
     /**
-     * DD.Ellipse is a ready-to-be-added-to-the-scene class.
-     * @extends DD.Polygon
+     * Two.Ellipse is a ready-to-be-added-to-the-scene class.
+     * @extends Two.Polygon
      * @class
      *
      * @param {Number} x position of center coordinate.
@@ -380,20 +390,20 @@
      */
     Ellipse: function(x, y, width, height) {
 
-      var resolution = DD.RESOLUTION;
+      var resolution = Two.RESOLUTION;
 
-      DD.Polygon.call(this, _.map(_.range(resolution), function(i) {
-        var pct = i / resolution;
+      Two.Polygon.call(this, _.map(_.range(resolution), function(i) {
+        var pct = (i + 1) / resolution;
         var angle = TWO_PI * pct;
         var xpos = width * Math.cos(angle) + x;
         var ypos = height * Math.sin(angle) + y;
-        return new THREE.Vector3(xpos, ypos, 0);
+        return new Two.Vector(xpos, ypos);
       }));
 
     },
 
     /**
-     * DD.Line is a ready-to-be-added-to-the-scene class.
+     * Two.Line is a ready-to-be-added-to-the-scene class.
      * 
      * @param {Number} x position of first coordinate.
      * @param {Number} y position of first coordinate.
@@ -410,14 +420,18 @@
         y1 = points[0].y;
       } else {
         for (var i = 0, l = arguments.length; i < l; i+=2) {
-          points.push(new THREE.Vector3(arguments[i] - x1, arguments[i + 1] - y1, 0));
+          points.push(new Two.Vector(arguments[i] - x1, arguments[i + 1] - y1));
         }
       }
 
       this.geometry = new THREE.Geometry();
       this.geometry.vertices = points;
 
-      this.material = new THREE.LineBasicMaterial({ color: 0x000000 });
+      this.material = new THREE.LineBasicMaterial({
+        color: 0x000000,
+        transparent: true,
+        overdraw: true
+      });
       this.mesh = new THREE.Line(this.geometry, this.material);
 
       this.mesh.position.x = x1;
@@ -430,7 +444,7 @@
     },
 
     /**
-     * DD.Polygon is a ready-to-be added to the scene class.
+     * Two.Polygon is a ready-to-be added to the scene class.
      * 
      * @param {Array} an array of x, y objects to define the shape.
      * @param {Boolean} describe whether the shape is open, true, or closed.
@@ -441,7 +455,7 @@
       var shape = new THREE.Shape(points);
 
       var bb = shape.getBoundingBox();
-      var centroid = new THREE.Vector3(bb.centroid.x, bb.centroid.y, 0);
+      var centroid = new Two.Vector(bb.centroid.x, bb.centroid.y);
       var center = new THREE.Shape();
 
       _.each(points, function(p, i) {
@@ -453,10 +467,11 @@
         }
       });
 
-      this.geometry = center.extrude(DD.DEFAULTS.extrudeSettings);
+      this.geometry = center.extrude(Two.DEFAULTS.extrudeSettings);
       this.material = new THREE.MeshBasicMaterial({
         color: 0xffffff,
-        overdraw: true // Hack: for canvas rendering
+        transparent: true, // Hack: for WebGL Rendering
+        overdraw: true // Hack: for canvas Rendering
       });
       this.material.side = THREE.DoubleSide;
 
@@ -476,7 +491,7 @@
       this.mesh.doubleSided = true;
       this.mesh.renderDepth = getRenderDepth();
 
-      this.outline = new DD.Line(this.geometry.vertices);
+      this.outline = new Two.Line(this.geometry.vertices);
       this.mesh.add(this.outline.mesh);
 
       // Normalize to parent-child relationship
@@ -501,7 +516,7 @@
     },
 
     /**
-     * DD.Vector is a primitive vector class for use with Three.js with
+     * Two.Vector is a primitive vector class for use with Three.js with
      * conveniences to neglect the z property.
      * 
      * @extends THREE.Vector3
@@ -532,9 +547,11 @@
      * @param {Boolean} Return the actual array, or a clone.
      * @return {Array} of objects with x, y, z position of each coordinate.
      */
-    getVertices: function(clone) {
+    getVertices: function(original) {
 
-      return clone ? _.toArray(this.geometry.vertices) : this.geometry.vertices;
+      return original ? this.geometry.vertices : _.map(this.geometry.vertices, function(v) {
+        return new Two.Vector(v.x, v.y);
+      });
 
     },
 
@@ -564,7 +581,7 @@
       _.each(vertices, function(v, i) {
         var vertex = this.geometry.vertices[i];
         if (_.isUndefined(vertex)) {
-          vertex = new THREE.Vector3();
+          vertex = new Two.Vector();
           this.geometry.vertices[i] = vertex;
         }
         vertex.set(v.x, v.y, v.z || 0);
@@ -746,9 +763,9 @@
 
   /**
    * Prototype for all objects have fill-like material
-   * DD.Rectangle
-   * DD.Circle
-   * DD.Polygon
+   * Two.Rectangle
+   * Two.Circle
+   * Two.Polygon
    */
   var FillProto = {
 
@@ -782,7 +799,7 @@
 
   /**
    * Prototype for all objects that have stroke-like material
-   * DD.Line
+   * Two.Line
    */
   var StrokeProto = {
 
@@ -832,7 +849,7 @@
   };
 
   /**
-   * Prototype for DD.Polygon
+   * Prototype for Two.Polygon
    */
   var PolyProto = {
 
@@ -840,31 +857,43 @@
 
   };
 
-  _.extend(DD.Polygon.prototype, ShapeProto, FillProto, StrokeProto);
-  _.extend(DD.Line.prototype, ShapeProto, StrokeProto);
-  _.extend(DD.Rectangle.prototype, DD.Polygon.prototype);
-  _.extend(DD.Ellipse.prototype, DD.Polygon.prototype);
-  _.extend(DD.Circle.prototype, DD.Ellipse.prototype);
-  _.extend(DD.Vector.prototype, THREE.Vector3.prototype);
-  _.extend(DD.Group.prototype, THREE.Object3D.prototype, GroupProto);
+  var VectorProto = {
 
-  // Super THREE.Vector3.prototype on DD.Vector
+    clone: function() {
+
+      return new Two.Vector(this.x, this.y);
+
+    }
+
+  };
+
+  _.extend(Two.Polygon.prototype, ShapeProto, FillProto, StrokeProto);
+  _.extend(Two.Line.prototype, ShapeProto, StrokeProto);
+  _.extend(Two.Rectangle.prototype, Two.Polygon.prototype);
+  _.extend(Two.Ellipse.prototype, Two.Polygon.prototype);
+  _.extend(Two.Circle.prototype, Two.Ellipse.prototype);
+  _.extend(Two.Vector.prototype, THREE.Vector3.prototype);
+  _.extend(Two.Group.prototype, THREE.Object3D.prototype, GroupProto);
+
+  // Super THREE.Vector3.prototype on Two.Vector
   _.each(THREE.Vector3.prototype, function(v, k) {
     if (_.isFunction(v)) {
-      DD.Vector.prototype[k] = function() {
+      Two.Vector.prototype[k] = function() {
         v.apply(this, arguments);
         if (_.isUndefined(this.z)) {
           this.z = 0;
         }
       };
     } else {
-      DD.Vector.prototype[k] = v;
+      Two.Vector.prototype[k] = v;
     }
   });
 
+  _.extend(Two.Vector.prototype, VectorProto);
+
   function getRenderDepth() {
     var depth = RENDER_DEPTH;
-    RENDER_DEPTH++;
+    RENDER_DEPTH--;
     return depth;
   }
 
@@ -891,6 +920,9 @@
   }
 
   function loop() {
+    if (_.isFunction(on_update)) {
+      on_update(millis);
+    }
     _.each(dds, function(two) {
       two.render();
     });
@@ -903,6 +935,6 @@
   /**
    * Export
    */
-  root['DD'] = DD;
+  root['Two'] = Two;
 
 })();
