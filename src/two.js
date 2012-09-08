@@ -26,7 +26,7 @@
    */
   var dom = {
 
-    hasEventListeners: _.isFunction(document.body.addEventListener),
+    hasEventListeners: _.isFunction(root.addEventListener),
 
     bind: function(elem, event, func, bool) {
       if (this.hasEventListeners) {
@@ -255,14 +255,19 @@
 
     },
 
-    addPolygon: function() {
+    addPolygon: function(points) {
 
-      var points = [], l = arguments.length;
-      for (var i = 0, l = l; i < l; i+=2) {
-        if (!_.isNumber(arguments[i])) {
-          break;
+      var l = arguments.length;
+      if (_.isArray(arguments[0])) {
+        points = arguments[0];
+      } else {
+        points = [];
+        for (var i = 0, l = l; i < l; i+=2) {
+          if (!_.isNumber(arguments[i])) {
+            break;
+          }
+          points.push(new Two.Vector(arguments[i], arguments[i + 1]));
         }
-        points.push(new Two.Vector(arguments[i], arguments[i + 1]));
       }
 
       var poly = new Two.Polygon(points, !!arguments[l - 1]);
@@ -346,6 +351,9 @@
      */
     Rectangle: function(x, y, width, height) {
 
+      this.__width = width;
+      this.__height = height;
+
       var hw = width / 2;
       var hh = height / 2;
 
@@ -374,6 +382,8 @@
      */
     Circle: function(x, y, radius) {
 
+      this.__radius = radius;
+
       Two.Ellipse.call(this, x, y, radius, radius);
 
     },
@@ -389,6 +399,9 @@
      * @param {Number} height of ellipse.
      */
     Ellipse: function(x, y, width, height) {
+
+      this.__width = width;
+      this.__height = height;
 
       var resolution = Two.RESOLUTION;
 
@@ -688,7 +701,7 @@
 
       // Update the children as well
       _.each(this.mesh.children, function(child, i) {
-        child.renderDepth = z + i;
+        child.renderDepth = z - i;
       }, this);
 
       return this;
@@ -857,6 +870,150 @@
 
   };
 
+  var RectProto = {
+
+    width: function(width) {
+
+      var l = arguments.length;
+      if (l <= 0) {
+        return this.__width;
+      }
+
+      this.__width = width;
+
+      var vertices = this.getVertices(true);
+      var last = vertices.length - 1;
+      var hw = width / 2;
+
+      _.each(vertices, function(v, i) {
+        if (i > 0 && i < last) {
+          v.x = hw;
+        } else {
+          v.x = -hw;
+        }
+      }, this);
+
+      return this.updateVertexFlags();
+
+    },
+
+    height: function(height) {
+
+      var l = arguments.length;
+      if (l <= 0) {
+        return this.__height;
+      }
+
+      this.__height = height;
+
+      var vertices = this.getVertices(true);
+      var last = vertices.length - 1;
+      var hh = height / 2;
+
+      _.each(vertices, function(v, i) {
+        if (i < 2) {
+          v.y = -hh;
+        } else {
+          v.y = hh;
+        }
+      }, this);
+
+      return this.updateVertexFlags();
+
+    }
+
+  }
+
+  var EllipseProto = {
+
+    width: function(width) {
+
+      var l = arguments.length;
+      if (l <= 0) {
+        return this.__width;
+      }
+
+      this.__width = width;
+
+      var vertices = this.getVertices(true);
+      var amount = vertices.length;
+      var w = width, h = this.__height;
+
+      _.each(vertices, function(v, i) {
+
+        var pct = i / amount;
+        var x = w * Math.cos(pct * TWO_PI);
+        var y = h * Math.sin(pct * TWO_PI);
+
+        v.x = x;
+        v.y = y;
+
+      }, this);
+
+      return this.updateVertexFlags();
+
+    },
+
+    height: function(height) {
+
+      var l = arguments.length;
+      if (l <= 0) {
+        return this.__height;
+      }
+
+      this.__height = height;
+
+      var vertices = this.getVertices(true);
+      var amount = vertices.length;
+      var w = this.__width, h = height;
+
+      _.each(vertices, function(v, i) {
+
+        var pct = i / amount;
+        var x = w * Math.cos(pct * TWO_PI);
+        var y = h * Math.sin(pct * TWO_PI);
+
+        v.x = x;
+        v.y = y;
+
+      }, this);
+
+      return this.updateVertexFlags();
+
+    }
+
+  };
+
+  var CircleProto = {
+
+    radius: function(radius) {
+
+      var l = arguments.length;
+      if (l <= 0) {
+        return this.__radius;
+      }
+      this.__radius = radius;
+
+      var vertices = this.getVertices(true);
+      var amount = vertices.length;
+
+      _.each(vertices, function(v, i) {
+
+        var pct = i / amount;
+        var x = radius * Math.cos(pct * TWO_PI);
+        var y = radius * Math.sin(pct * TWO_PI);
+
+        v.x = x;
+        v.y = y;
+
+      }, this);
+
+      return this.updateVertexFlags();
+
+    }
+
+  }
+
   var VectorProto = {
 
     clone: function() {
@@ -869,9 +1026,9 @@
 
   _.extend(Two.Polygon.prototype, ShapeProto, FillProto, StrokeProto);
   _.extend(Two.Line.prototype, ShapeProto, StrokeProto);
-  _.extend(Two.Rectangle.prototype, Two.Polygon.prototype);
-  _.extend(Two.Ellipse.prototype, Two.Polygon.prototype);
-  _.extend(Two.Circle.prototype, Two.Ellipse.prototype);
+  _.extend(Two.Rectangle.prototype, Two.Polygon.prototype, RectProto);
+  _.extend(Two.Ellipse.prototype, Two.Polygon.prototype, EllipseProto);
+  _.extend(Two.Circle.prototype, Two.Ellipse.prototype, CircleProto);
   _.extend(Two.Vector.prototype, THREE.Vector3.prototype);
   _.extend(Two.Group.prototype, THREE.Object3D.prototype, GroupProto);
 

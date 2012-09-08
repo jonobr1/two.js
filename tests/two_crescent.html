@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Two.Polygon fills on crescent shapes</title>
+    <script type="text/javascript" src="../third-party/Three.js/build/three.min.js"></script>
+    <script type="text/javascript" src="../third-party/underscore.js"></script>
+    <script type="text/javascript" src="../third-party/Tween.js"></script>
+    <script type="text/javascript" src="../src/two.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript">
+
+      (function() {
+
+        Two
+          .onUpdate(function() {
+            TWEEN.update();
+          })
+          .start();
+
+        var two = new Two({
+            fullscreen: true
+          })
+          .appendTo(document.body);
+
+        var circle = two.addCircle(two.width / 4, two.height / 2, 100)
+          .fill(1, 1, .5)
+          .strokeWeight(10);
+
+        var vertices = circle.getVertices();
+        var amount = vertices.length;
+        var radius = circle.radius();
+
+        _.each(vertices, function(v, i) {
+
+          // Reproject at a different radius to make the crescent
+          if (i < amount / 2) {
+
+            var radius = circle.radius();
+            var angle = Math.acos(v.x / radius) || 0;
+            var x = (radius / 2) * Math.cos(angle);
+            var y = (radius / 2) * Math.sin(angle);
+
+            v.set(x, y);
+
+          }
+
+          if (i === amount - 1) {
+            v.copy(vertices[0]);
+          }
+
+        });
+
+        circle.setVertices(vertices, true);
+
+
+        var amount = Two.RESOLUTION;
+        var points = _.map(_.range(amount), function(i) {
+          var pct = i / amount;
+          var r = 100;
+          if (i < amount / 2) {
+            r = -50;
+          }
+          var x = r * Math.cos(pct * Math.PI * 2) + two.width * .75;
+          var y = r * Math.sin(pct * Math.PI * 2) + two.height / 2;
+          return new Two.Vector(x, y);
+        });
+        var poly = two.addPolygon(points)
+          .fill(.23, .98, .81)
+          .strokeWeight(5);
+
+        two.onResize(function() { 
+
+          circle.translate(two.width / 2, two.height / 2);
+
+        });
+
+      })();
+
+    </script>
+  </body>
+</html>

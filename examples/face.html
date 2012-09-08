@@ -4,11 +4,13 @@
     <title>A Cross Context 2D Drawing API</title>
   </head>
   <body>
-    <script type="text/javascript" src="./third-party/Tween.js"></script>
-    <script type="text/javascript" src="./third-party/Three.js/build/three.min.js"></script>
-    <script type="text/javascript" src="./third-party/underscore.js"></script>
-    <script type="text/javascript" src="./src/two.js"></script>
+    <script type="text/javascript" src="../third-party/Tween.js"></script>
+    <script type="text/javascript" src="../third-party/Three.js/build/three.min.js"></script>
+    <script type="text/javascript" src="../third-party/underscore.js"></script>
+    <script type="text/javascript" src="../src/two.js"></script>
     <script type="text/javascript">
+
+      // Update Three.js submodule to jonobr1/three.js dev version.
 
       var TWO_PI = Math.PI * 2.0;
 
@@ -71,7 +73,7 @@
         //     (quart_height / 4) * Math.cos(angle) + white.translate().x,
         //     (quart_height / 4) * Math.sin(angle) + white.translate().y
         //   );
-
+        // 
         // });
 
       });
@@ -260,6 +262,8 @@
 
             if (i < l / 2) {
               dest_state.copy(verts[Math.min(l - i, l - 1)]);
+            } else if (i === l - 1) {
+              dest_state.copy(dest_states[0]);
             }
 
             tweens.push(new TWEEN.Tween(v)
