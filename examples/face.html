@@ -5,7 +5,7 @@
   </head>
   <body>
     <script type="text/javascript" src="../third-party/Tween.js"></script>
-    <script type="text/javascript" src="../third-party/Three.js/build/three.min.js"></script>
+    <script type="text/javascript" src="../third-party/Three.js"></script>
     <script type="text/javascript" src="../third-party/underscore.js"></script>
     <script type="text/javascript" src="../src/two.js"></script>
     <script type="text/javascript">
@@ -46,6 +46,8 @@
         makeEye(half_width - quart_width, half_height, quart_height / 2),
         makeEye(half_width + quart_width, half_height, quart_height / 2)
       ];
+
+      console.log('hello');
 
       var nose = two.addPolygon(
         half_width - 12, half_height + 60,

@@ -257,6 +257,8 @@
 
     addPolygon: function(points) {
 
+      console.log(points);
+
       var l = arguments.length;
       if (_.isArray(arguments[0])) {
         points = arguments[0];
@@ -269,6 +271,8 @@
           points.push(new Two.Vector(arguments[i], arguments[i + 1]));
         }
       }
+
+      console.log(points);
 
       var poly = new Two.Polygon(points, !!arguments[l - 1]);
       this.scene.add(poly.mesh);
