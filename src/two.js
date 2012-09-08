@@ -255,24 +255,20 @@
 
     },
 
-    addPolygon: function(points) {
+    addPolygon: function(p) {
 
-      console.log(points);
-
-      var l = arguments.length;
-      if (_.isArray(arguments[0])) {
-        points = arguments[0];
-      } else {
+      var l = arguments.length, points = p;
+      if (!_.isArray(p)) {
         points = [];
-        for (var i = 0, l = l; i < l; i+=2) {
-          if (!_.isNumber(arguments[i])) {
+        for (var i = 0; i < l; i+=2) {
+          var x = arguments[i];
+          if (!_.isNumber(x)) {
             break;
           }
-          points.push(new Two.Vector(arguments[i], arguments[i + 1]));
+          var y = arguments[i + 1];
+          points.push(new Two.Vector(x, y));
         }
       }
-
-      console.log(points);
 
       var poly = new Two.Polygon(points, !!arguments[l - 1]);
       this.scene.add(poly.mesh);
