@@ -1,6 +1,6 @@
 /**
  * @author jonobr1 / http://jonobr1.com/
- * Dependent on Three.js and underscore.js
+ * At the moment dependent on Three.js and underscore.js
  */
 
 (function() {
@@ -11,7 +11,7 @@
   /**
    * Globals
    */
-  var dds = [], looped, millis = 0, on_update;
+  var twos = [], looped, millis = 0, on_update;
 
   /**
    * Constants
@@ -49,8 +49,8 @@
   };
 
   /**
-   * deedee.js is a two-dimensional drawing api built on top of Three.js
-   * meant for modern browsers. Because it's in two-dimensions deedee handles
+   * two.js is a two-dimensional drawing api built on top of Three.js
+   * meant for modern browsers. Because it's in two-dimensions two handles
    * the canvas, renderer, scene, and camera for you.
    *
    * @class
@@ -127,7 +127,7 @@
 
     this.renderer.sortElements = false;
 
-    dds.push(this);
+    twos.push(this);
 
   };
 
@@ -138,7 +138,7 @@
      */
 
     /**
-     * @param {Element} the parent element to append deedee's dom element.
+     * @param {Element} the parent element to append two's dom element.
      */
     appendTo: function(elem) {
 
@@ -153,7 +153,7 @@
     },
 
     /**
-     * @param {Function} callback to be fired when deedee's resize triggers.
+     * @param {Function} callback to be fired when two's resize triggers.
      */
     onResize: function(func) {
 
@@ -167,7 +167,7 @@
      */
 
     /**
-     * @param {Function} callback to be fired when deedee renders shapes to the
+     * @param {Function} callback to be fired when two renders shapes to the
      * browser.
      */
     draw: function(func) {
@@ -178,7 +178,7 @@
     },
 
     /**
-     * Add this deedee to the Request Animation Frame loop.
+     * Add this two to the Request Animation Frame loop.
      */
     play: function() {
 
@@ -188,7 +188,7 @@
     },
 
     /**
-     * Remove this deedee from the Request Animation Frame loop.
+     * Remove this two from the Request Animation Frame loop.
      */
     pause: function() {
 
@@ -202,7 +202,7 @@
      */
 
     /**
-     * Render everything to deedee's canvas.
+     * Render everything to two's canvas.
      */
     render: function() {
 
@@ -293,19 +293,14 @@
 
     TYPES: {
       webgl: 'webgl',
-      canvas2d: 'canvas2d',
-      // svg: 'svg' // TODO
+      canvas2d: 'canvas2d'
     },
 
     RESOLUTION: 32,
 
-    INSTANCES: dds,
+    INSTANCES: twos,
 
-    DEFAULTS: {
-      extrudeSettings: {
-        amount: 0,  bevelEnabled: false
-      }
-    },
+    DEFAULTS: {},
 
     /**
      * Controls
@@ -480,11 +475,11 @@
         }
       });
 
-      this.geometry = center.extrude(Two.DEFAULTS.extrudeSettings);
+      this.geometry = center.makeGeometry();
       this.material = new THREE.MeshBasicMaterial({
         color: 0xffffff,
         transparent: true, // Hack: for WebGL Rendering
-        overdraw: true // Hack: for canvas Rendering
+        overdraw: true     // Hack: for canvas Rendering
       });
       this.material.side = THREE.DoubleSide;
 
@@ -743,7 +738,7 @@
     /**
      *
      */
-    fill: function() {
+    fill: function(r, g, b, a) {
 
       var length = arguments.length;
 
@@ -1080,7 +1075,7 @@
     if (_.isFunction(on_update)) {
       on_update(millis);
     }
-    _.each(dds, function(two) {
+    _.each(twos, function(two) {
       two.render();
     });
     millis++;
