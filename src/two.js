@@ -6,6 +6,7 @@
 (function() {
 
   var root = this;
+  var previousTwo = this.TWO || {};
   var objects = [];
 
   /**
@@ -132,6 +133,14 @@
   };
 
   _.extend(Two.prototype, {
+
+    /**
+     * Returns the previous attached object bound to the window's scope.
+     * Make's sure there is no object / property collision.
+     */
+    noConflict: function() {
+      return previousTwo;
+    },
 
     /**
      * DOM
