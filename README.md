@@ -9,3 +9,4 @@ __This is considered pre-alpha grade__. two.js is a two-dimensional drawing api 
 + Figure out build procedure
 + More examples
 + Way to do unit tests? I'm thinking still image comparisons...
++ How do we deal with tweens? Morph targets are able to throw this logic onto the GPU, but I'm not sure if it makes sense to include TWEEN into TWO.
