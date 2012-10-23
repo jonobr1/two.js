@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Example of all drawable primitives</title>
+  </head>
+  <body>
+    <script type="text/javascript" src="../third-party/Tween.js"></script>
+    <script type="text/javascript" src="../third-party/Three.js"></script>
+    <script type="text/javascript" src="../third-party/underscore.js"></script>
+    <script type="text/javascript" src="../src/two.js"></script>
+    <script type="text/javascript">
+
+      (function() {
+
+        var two = new Two({ fullscreen: true }).appendTo(document.body);
+
+        var rect = two.addRectangle(50, 50, 100, 100);
+        var arc = two.addArc(200, 100, 50, 0, Math.PI / 2);
+        var ellipse = two.addEllipse(150, 200, 100, 50);
+        var circle = two.addCircle(300, 200, 50);
+        // var line = two.addLine();
+        // var polygon = two.addPolygon();
+
+        var group = two.addGroup(rect, arc, ellipse, circle);//, line, polygon);
+
+        two.draw(function() {
+
+          // Something to do on update
+
+        }).play();
+
+      })();
+
+    </script>
+  </body>
+</html>

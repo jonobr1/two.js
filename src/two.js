@@ -6,7 +6,7 @@
 (function() {
 
   var root = this;
-  var previousTwo = this.TWO || {};
+  var previousTwo = this.Two || {};
   var objects = [];
 
   /**
@@ -191,6 +191,10 @@
      */
     play: function() {
 
+      if (!looped) {
+        Two.start();
+      }
+
       this.__playing = true;
       return this;
 
@@ -229,38 +233,47 @@
     },
 
     /**
-     * Convenience methods for adding shapes.
+     * Add a two primitive to the scene.
+     */
+    add: function(object) {
+      this.scene.add(object.mesh);
+      return object;
+    },
+
+    /**
+     * Convenience methods for constructing and adding shapes.
      */
 
     addRectangle: function(x, y, width, height) {
 
       var rect = new Two.Rectangle(x, y, width, height);
-      this.scene.add(rect.mesh);
-      return rect;
+      return this.add(rect);
 
+    },
+
+    addArc: function(x, y, radius, startAngle, endAngle, ccw) {
+      var arc = new Two.Arc(x, y, radius, startAngle, endAngle, ccw);
+      return this.add(arc);
     },
 
     addEllipse: function(x, y, width, height) {
 
       var ellipse = new Two.Ellipse(x, y, width, height);
-      this.scene.add(ellipse.mesh);
-      return ellipse;
+      return this.add(ellipse);
 
     },
 
     addCircle: function(x, y, radius) {
 
       var circle = new Two.Circle(x, y, radius);
-      this.scene.add(circle.mesh);
-      return circle;
+      return this.add(circle);
 
     },
 
     addLine: function(x1, y1, x2, y2) {
 
       var line = new Two.Line(x1, y1, x2, y2);
-      this.scene.add(line.mesh);
-      return line;
+      return this.add(line);
 
     },
 
@@ -280,8 +293,7 @@
       }
 
       var poly = new Two.Polygon(points, !!arguments[l - 1]);
-      this.scene.add(poly.mesh);
-      return poly;
+      return this.add(poly);
 
     },
 
@@ -289,8 +301,7 @@
 
       var objects = arguments;
       var group = new Two.Group(objects);
-      this.scene.add(group);
-      return group;
+      return this.add(group);
 
     }
 
@@ -372,6 +383,40 @@
         new Two.Vector(c, d),
         new Two.Vector(a, d)
       ]);
+
+    },
+
+    /**
+     * Two.Arc is a ready-to-be-added-to-the-scene class.
+     * @extends Two.Polygon
+     * @class
+     *
+     * @param {Number} x position of center/origin of arc.
+     * @param {Number} y position of center/origin of arc.
+     * @param {Number} radius of arc.
+     * @param {Number} startAngle where the arc begins.
+     * @param {Number} endAngle where the arc ends.
+     * @param {Boolean} is the arc counter-clockwise.
+     */
+    Arc: function(x, y, radius, startAngle, endAngle, ccw) {
+
+      this.__radius = radius;
+
+      var phi = Math.min(Math.abs(endAngle - startAngle), TWO_PI);
+      var pct = phi / TWO_PI;
+      var step = phi / (Two.RESOLUTION * pct);
+      var angles = !!ccw ? _.range(-endAngle, -startAngle + step, step)
+        : _.range(startAngle, endAngle + step, step);
+
+      var points = _.map(angles, function(theta) {
+        var xpos = radius * Math.cos(theta) + x;
+        var ypos = radius * Math.sin(theta) + y;
+        return new Two.Vector(xpos, ypos);
+      });
+
+      points.push(new Two.Vector(x, y));
+
+      Two.Polygon.call(this, points);
 
     },
 
@@ -781,7 +826,9 @@
   /**
    * Prototype for all objects have fill-like material
    * Two.Rectangle
+   * Two.Arc
    * Two.Circle
+   * Two.Ellipse
    * Two.Polygon
    */
   var FillProto = {
@@ -1016,14 +1063,28 @@
 
     }
 
-  }
+  };
+
+  var ArcProto = {
+
+    radius: function(radius) {
+
+      var l = arguments.length;
+      if (l <= 0) {
+        return this.__radius;
+      }
+
+      var vertices = this.getVertices(true);
+      var amount = vertices.length;
+
+    }
+
+  };
 
   var VectorProto = {
 
     clone: function() {
-
       return new Two.Vector(this.x, this.y);
-
     }
 
   };
@@ -1031,8 +1092,9 @@
   _.extend(Two.Polygon.prototype, ShapeProto, FillProto, StrokeProto);
   _.extend(Two.Line.prototype, ShapeProto, StrokeProto);
   _.extend(Two.Rectangle.prototype, Two.Polygon.prototype, RectProto);
+  _.extend(Two.Arc.prototype, Two.Polygon.prototype, ArcProto);
   _.extend(Two.Ellipse.prototype, Two.Polygon.prototype, EllipseProto);
-  _.extend(Two.Circle.prototype, Two.Ellipse.prototype, CircleProto);
+  _.extend(Two.Circle.prototype, Two.Polygon.prototype, CircleProto);
   _.extend(Two.Vector.prototype, THREE.Vector3.prototype);
   _.extend(Two.Group.prototype, THREE.Object3D.prototype, GroupProto);
 
