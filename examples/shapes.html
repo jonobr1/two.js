@@ -23,11 +23,19 @@
 
         var group = two.addGroup(rect, arc, ellipse, circle);//, line, polygon);
 
+        console.log(group);
+
         two.draw(function() {
 
           // Something to do on update
 
         }).play();
+
+        window.addEventListener('mousemove', function(e) {
+
+          group.rotate(e.pageX / 1000, e.pageY);
+
+        });
 
       })();
 

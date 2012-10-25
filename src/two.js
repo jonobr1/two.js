@@ -569,11 +569,10 @@
      */
     Group: function(children) {
 
+      this.children = children;
       this.mesh = new THREE.Object3D();
 
-      _.each(children, function(child) {
-        this.mesh.add(child);
-      }, this);
+      this.add.apply(this, children);
 
     },
 
@@ -738,6 +737,23 @@
     translate: ShapeProto.translate,
 
     /**
+     *
+     */
+    add: function() {
+
+      var objects = arguments;
+
+      _.each(objects, function(object) {
+        this.mesh.add(object.mesh);
+      }, this);
+
+      this.update();
+
+      return this;
+
+    },
+
+    /**
      * getter-setter for udpating the z-index of an object
      */
     zIndex: function(z) {
@@ -816,6 +832,56 @@
         material.opacity = a;
 
       }
+
+      return this;
+
+    },
+
+    /**
+     * Update internal variables and calculations.
+     */
+    update: function() {
+
+      var minX = Infinity, minY = Infinity, maxX = 0, maxY = 0;
+
+      _.each(this.mesh.children, function(child) {
+
+        var left = child.position.x - child.boundRadius;
+        var right = child.position.x + child.boundRadius;
+        var top = child.position.y - child.boundRadius;
+        var bottom = child.position.y + child.boundRadius;
+
+        // console.log(left, right, top, bottom);
+
+        minX = Math.min(minX, left);
+        maxX = Math.max(maxX, right);
+        minY = Math.min(minY, top);
+        maxY = Math.max(maxY, bottom);
+
+      }, this);
+
+      this.width = maxX - minX;
+      this.height = maxY - minY;
+
+      // Update the positions of the children to orient them
+      // in the center of the Two.Group
+
+      // console.log(this.width, this.height);
+
+      // _.each(this.children, function(child) {
+
+      //   var x, y;
+
+      //   if (_.isUndefined(child.__x) || _.isUndefined(child.__y)) {
+      //     child.__x = child.mesh.position.x;
+      //     child.__y = child.mesh.position.y;
+      //   }
+
+      //   console.log(child.__x - this.width / 2, child.__y - this.height / 2);
+
+      //   child.mesh.position.set(child.__x - this.width / 2, child.__y - this.height / 2);
+
+      // }, this);
 
       return this;
 
@@ -1096,7 +1162,7 @@
   _.extend(Two.Ellipse.prototype, Two.Polygon.prototype, EllipseProto);
   _.extend(Two.Circle.prototype, Two.Polygon.prototype, CircleProto);
   _.extend(Two.Vector.prototype, THREE.Vector3.prototype);
-  _.extend(Two.Group.prototype, THREE.Object3D.prototype, GroupProto);
+  _.extend(Two.Group.prototype, GroupProto);
 
   // Super THREE.Vector3.prototype on Two.Vector
   _.each(THREE.Vector3.prototype, function(v, k) {
