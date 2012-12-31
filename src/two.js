@@ -572,47 +572,11 @@
      */
     Group: function(children) {
 
+      this.children = [];
       this.mesh = new THREE.Object3D();
 
-      var rect = { left: Infinity, right: -Infinity, top: Infinity, bottom: -Infinity };
-
-      _.each(children, function(child) {
-
-        var bb = child.mesh.geometry.shapebb;
-        var p = child.mesh.position;
-
-        var r = bb.maxX + p.x;
-        var l = bb.minX + p.x;
-        var t = bb.minY + p.y;
-        var b = bb.maxY + p.y;
-
-        rect.left = Math.min(rect.left, l);
-        rect.top = Math.min(rect.top, t);
-        rect.right = Math.max(rect.right, r);
-        rect.bottom = Math.max(rect.bottom, b);
-
-        this.mesh.add(child.mesh);
-
-      }, this);
-
-      // Apply the new positioning to be anchored center.
-
-      rect.centroid = {
-        x: rect.left + (rect.right - rect.left) / 2,
-        y: rect.top + (rect.bottom - rect.top) / 2
-      };
-
-      _.each(children, function(child) {
-
-        child.mesh.position.x -= rect.centroid.x;
-        child.mesh.position.y -= rect.centroid.y;
-
-      }, this);
-
-      // Finally update the group so that the current shapes
-      // haven't appeared to move.
-
-      this.translate(rect.centroid.x, rect.centroid.y);
+      this.add.apply(this, children);
+      this.center();
 
     },
 
@@ -777,6 +741,23 @@
     translate: ShapeProto.translate,
 
     /**
+     *
+     */
+    add: function() {
+
+      var objects = _.toArray(arguments);
+
+      _.each(objects, function(object) {
+        this.mesh.add(object.mesh);
+      }, this);
+
+      this.children = this.children.concat(objects);
+
+      return this;
+
+    },
+
+    /**
      * getter-setter for udpating the z-index of an object
      */
     zIndex: function(z) {
@@ -857,6 +838,68 @@
       }
 
       return this;
+
+    },
+
+    /**
+     * Update internal variables and calculations.
+     */
+    center: function() {
+
+      var rect = this.getBoundingClientRect();
+
+      // Apply the new positioning to be anchored center.
+
+      rect.centroid = {
+        x: rect.left + rect.width / 2,
+        y: rect.top + rect.height / 2
+      };
+
+      console.log(rect);
+
+      _.each(this.children, function(child) {
+
+        child.mesh.position.x -= rect.centroid.x;
+        child.mesh.position.y -= rect.centroid.y;
+
+      }, this);
+
+      // Finally update the group so that the current shapes
+      // haven't appeared to move.
+
+      this.translate(rect.centroid.x, rect.centroid.y);
+
+      return this;
+
+    },
+
+    getBoundingClientRect: function() {
+
+      var rect = { left: Infinity, right: -Infinity, top: Infinity, bottom: -Infinity };
+
+      _.each(this.children, function(child) {
+
+        var bb = child.mesh.geometry.shapebb;
+        var p = child.mesh.position;
+
+        var r = bb.maxX + p.x;
+        var l = bb.minX + p.x;
+        var t = bb.minY + p.y;
+        var b = bb.maxY + p.y;
+
+        rect.left = Math.min(rect.left, l);
+        rect.top = Math.min(rect.top, t);
+        rect.right = Math.max(rect.right, r);
+        rect.bottom = Math.max(rect.bottom, b);
+
+        // this.mesh.add(child.mesh);
+
+      }, this);
+
+      rect.width = rect.right - rect.left;
+      rect.height = rect.bottom - rect.top;
+
+      return rect;
 
     }
 
@@ -1135,7 +1178,7 @@
   _.extend(Two.Ellipse.prototype, Two.Polygon.prototype, EllipseProto);
   _.extend(Two.Circle.prototype, Two.Polygon.prototype, CircleProto);
   _.extend(Two.Vector.prototype, THREE.Vector3.prototype);
-  _.extend(Two.Group.prototype, THREE.Object3D.prototype, GroupProto);
+  _.extend(Two.Group.prototype, GroupProto);
 
   // Super THREE.Vector3.prototype on Two.Vector
   _.each(THREE.Vector3.prototype, function(v, k) {
