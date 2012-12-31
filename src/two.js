@@ -565,15 +565,54 @@
     },
 
     /**
-     * 
+     * Two.Group is a ready-to-be-added to the scene class. It takes any number
+     * of child Two.Shapes and wraps them into a group.
+     *
+     * @param {Array} child shapes to be added to the group.
      */
     Group: function(children) {
 
       this.mesh = new THREE.Object3D();
 
+      var rect = { left: Infinity, right: -Infinity, top: Infinity, bottom: -Infinity };
+
       _.each(children, function(child) {
-        this.mesh.add(child);
+
+        var bb = child.mesh.geometry.shapebb;
+        var p = child.mesh.position;
+
+        var r = bb.maxX + p.x;
+        var l = bb.minX + p.x;
+        var t = bb.minY + p.y;
+        var b = bb.maxY + p.y;
+
+        rect.left = Math.min(rect.left, l);
+        rect.top = Math.min(rect.top, t);
+        rect.right = Math.max(rect.right, r);
+        rect.bottom = Math.max(rect.bottom, b);
+
+        this.mesh.add(child.mesh);
+
       }, this);
+
+      // Apply the new positioning to be anchored center.
+
+      rect.centroid = {
+        x: rect.left + (rect.right - rect.left) / 2,
+        y: rect.top + (rect.bottom - rect.top) / 2
+      };
+
+      _.each(children, function(child) {
+
+        child.mesh.position.x -= rect.centroid.x;
+        child.mesh.position.y -= rect.centroid.y;
+
+      }, this);
+
+      // Finally update the group so that the current shapes
+      // haven't appeared to move.
+
+      this.translate(rect.centroid.x, rect.centroid.y);
 
     },
 
