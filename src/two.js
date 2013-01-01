@@ -615,7 +615,7 @@
     getVertices: function(original) {
 
       return original ? this.geometry.vertices : _.map(this.geometry.vertices, function(v) {
-        return new Two.Vector(v.x, v.y);
+        return v.clone();
       });
 
     },
@@ -1159,6 +1159,8 @@
       var vertices = this.getVertices(true);
       var amount = vertices.length;
 
+      // TODO: Incomplete
+
     }
 
   };
@@ -1170,6 +1172,8 @@
     }
 
   };
+
+  // Extensions
 
   _.extend(Two.Polygon.prototype, ShapeProto, FillProto, StrokeProto);
   _.extend(Two.Line.prototype, ShapeProto, StrokeProto);
@@ -1185,7 +1189,7 @@
     if (_.isFunction(v)) {
       Two.Vector.prototype[k] = function() {
         v.apply(this, arguments);
-        if (_.isUndefined(this.z)) {
+        if (!this.z) {
           this.z = 0;
         }
       };
