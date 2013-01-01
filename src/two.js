@@ -1,6 +1,5 @@
 /**
  * @author jonobr1 / http://jonobr1.com/
- * At the moment dependent on Three.js and underscore.js
  */
 
 (function() {
