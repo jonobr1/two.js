@@ -7,7 +7,7 @@ __This is considered alpha grade__. two.js is a two-dimensional drawing api buil
 + ~~Add `Two.Arc`~~
 + ~~Add `Two.Group`~~
 + Figure out how spline / curves are going to be handled
-+ Figure out build procedure
++ ~~Figure out build procedure~~
 + More examples
 + Way to do unit tests? I'm thinking still image comparisons...
 + How do we deal with tweens? Morph targets are able to throw this logic onto the GPU, but I'm not sure if it makes sense to include `TWEEN` into `Two`.
