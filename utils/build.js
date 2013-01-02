@@ -3,7 +3,7 @@
 var compressor = require('node-minify');
 
 var files = [
-  '../src/license.txt',
+  '../license.txt',
   '../third-party/underscore.js',
   '../third-party/Three.js',
   '../src/two.js'
