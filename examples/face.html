@@ -47,7 +47,7 @@
         makeEye(half_width + quart_width, half_height, quart_height / 2)
       ];
 
-      var nose = two.addPolygon(
+      var nose = two.makePolygon(
         half_width - 12, half_height + 60,
         half_width + 50, half_height + 15,
         half_width, half_height + 130,
@@ -97,13 +97,13 @@
         var w = r;
         var h = r * 1.125;
 
-        var whites = two.addEllipse(x, y, w, h);
-        var pupil = two.addCircle(x, y, r / 2);
+        var whites = two.makeEllipse(x, y, w, h);
+        var pupil = two.makeCircle(x, y, r / 2);
 
         whites.stroke(0).strokeWeight(7).fill(1);
         pupil.noStroke().fill(.64, .75, 1.0);
 
-        var g = two.addGroup(whites, pupil);
+        var g = two.makeGroup(whites, pupil);
 
         var verts = whites.getVertices();
         var l = verts.length - 1;
@@ -125,15 +125,15 @@
           var l3b = new Two.Vector((dist + r) * Math.cos(angle + Math.PI / 4) + x, (dist + h) * Math.sin(angle + Math.PI / 4) + y);
 
           var lashes = [
-            two.addLine(
+            two.makeLine(
               l1a.x, l1a.y,
               l1b.x, l1b.y
             ),
-            two.addLine(
+            two.makeLine(
               l2a.x, l2a.y,
               l2b.x, l2b.y
             ),
-            two.addLine(
+            two.makeLine(
               l3a.x, l3a.y,
               l3b.x, l3b.y
             )

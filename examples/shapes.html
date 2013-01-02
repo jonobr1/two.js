@@ -14,14 +14,14 @@
 
         var two = new Two({ fullscreen: true }).appendTo(document.body);
 
-        var rect = two.addRectangle(50, 50, 100, 100);
-        var arc = two.addArc(200, 100, 50, 0, Math.PI / 2);
-        var ellipse = two.addEllipse(150, 200, 100, 50);
-        var circle = two.addCircle(300, 200, 50);
-        // var line = two.addLine();
-        // var polygon = two.addPolygon();
+        var rect = two.makeRectangle(50, 50, 100, 100);
+        var arc = two.makeArc(200, 100, 50, 0, Math.PI / 2);
+        var ellipse = two.makeEllipse(150, 200, 100, 50);
+        var circle = two.makeCircle(300, 200, 50);
+        // var line = two.makeLine();
+        // var polygon = two.makePolygon();
 
-        var group = two.addGroup(rect, arc, ellipse, circle);//, line, polygon);
+        var group = two.makeGroup(rect, arc, ellipse, circle);//, line, polygon);
 
         two.draw(function(time) {
 

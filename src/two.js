@@ -243,40 +243,40 @@
      * Convenience methods for constructing and adding shapes.
      */
 
-    addRectangle: function(x, y, width, height) {
+    makeRectangle: function(x, y, width, height) {
 
       var rect = new Two.Rectangle(x, y, width, height);
       return this.add(rect);
 
     },
 
-    addArc: function(x, y, radius, startAngle, endAngle, ccw) {
+    makeArc: function(x, y, radius, startAngle, endAngle, ccw) {
       var arc = new Two.Arc(x, y, radius, startAngle, endAngle, ccw);
       return this.add(arc);
     },
 
-    addEllipse: function(x, y, width, height) {
+    makeEllipse: function(x, y, width, height) {
 
       var ellipse = new Two.Ellipse(x, y, width, height);
       return this.add(ellipse);
 
     },
 
-    addCircle: function(x, y, radius) {
+    makeCircle: function(x, y, radius) {
 
       var circle = new Two.Circle(x, y, radius);
       return this.add(circle);
 
     },
 
-    addLine: function(x1, y1, x2, y2) {
+    makeLine: function(x1, y1, x2, y2) {
 
       var line = new Two.Line(x1, y1, x2, y2);
       return this.add(line);
 
     },
 
-    addPolygon: function(p) {
+    makePolygon: function(p) {
 
       var l = arguments.length, points = p;
       if (!_.isArray(p)) {
@@ -296,7 +296,7 @@
 
     },
 
-    addGroup: function() {
+    makeGroup: function() {
 
       var objects = arguments;
       var group = new Two.Group(objects);
@@ -727,10 +727,22 @@
 
       return this;
 
+    },
+
+    /**
+     * Add a morph target state to a shape.
+     */
+    addState: function() {
+
+      
+
     }
 
   };
 
+  /**
+   * Prototype for Group
+   */
   var GroupProto = {
 
     scale: ShapeProto.scale,
@@ -747,6 +759,7 @@
       var objects = _.toArray(arguments);
 
       _.each(objects, function(object) {
+        object.mesh.position.subSelf(this.mesh.position); // Orient object correctly
         this.mesh.add(object.mesh);
       }, this);
 
@@ -854,8 +867,6 @@
         y: rect.top + rect.height / 2
       };
 
-      console.log(rect);
-
       _.each(this.children, function(child) {
 
         child.mesh.position.x -= rect.centroid.x;
@@ -905,7 +916,7 @@
   };
 
   /**
-   * Prototype for all objects have fill-like material
+   * Prototype for all objects that have fill-like material
    * Two.Rectangle
    * Two.Arc
    * Two.Circle
