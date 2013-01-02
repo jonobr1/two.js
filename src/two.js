@@ -580,6 +580,45 @@
     },
 
     /**
+     * Two.State is an object that represents the state of vertices for a
+     * a shape.
+     *
+     * @param {Two.Shape} a reference to the Two.Shape that you'd like to morph.
+     * @param {Array} array of vertices of the new state.
+     * @param {String} optional paramater to set name of the state.
+     */
+    State: function(object, vertices, name) {
+
+      if (object.geometry.vertices.length !== vertices.length) {
+        throw 'Two error: vertice amount mismatch.';
+      }
+
+      if (!object.material.morphTargets) {
+        object.mesh.material.morphTargets = true;
+      }
+
+      this.object = object;
+
+      this.index = object.geometry.morphTargets.length;
+      this.name = name || 'Two.State-' + this.index;
+
+      object.geometry.morphTargets.push({
+        name: this.name,
+        vertices: vertices
+      });
+
+      if (object.outline) {
+        if (!object.outline.material.morphTargets) {
+          // object.outline.material.morphTargets = true;
+        }
+        object.outline.geometry.morphTargets.push(object.geometry.morphTargets[this.index]);
+      }
+
+      this.updateMorphTargets();
+
+    },
+
+    /**
      * Two.Vector is a primitive vector class for use with Three.js with
      * conveniences to neglect the z property.
      * 
@@ -613,7 +652,7 @@
      */
     getVertices: function(original) {
 
-      return original ? this.geometry.vertices : _.map(this.geometry.vertices, function(v) {
+      return !!original ? this.geometry.vertices : _.map(this.geometry.vertices, function(v) {
         return v.clone();
       });
 
@@ -732,9 +771,106 @@
     /**
      * Add a morph target state to a shape.
      */
-    addState: function() {
+    addState: function(vertices, name) {
 
-      
+      var state = new Two.State(this, vertices, name);
+
+      if (!_.isArray(this.states)) {
+        this.states = [];
+      }
+
+      this.states.push(state);
+
+      return state;
+
+    }
+
+  };
+
+  var StateProto = {
+
+    getVertices: function(original) {
+
+      var vertices = this.object.geometry.morphTargets[this.index].vertices;
+      return !!original ? vertices : vertices.slice(0);
+
+    },
+
+    setVertices: function(vertices) {
+
+      if (this.object.geometry.vertices.length !== vertices.length) {
+        throw 'Two error: vertice amount mismatch.';
+      }
+
+      this.object.geometry.morphTargets[this.index].vertices = vertices;
+
+      if (this.object.outline) {
+        this.object.outline.geometry.morphTargets.push(this.object.mesh.geometry.morphTargets[this.index]);
+      }
+
+      this.updateMorphTargets();
+
+      return this;
+
+    },
+
+    lerp: function(amt) {
+
+      this.object.mesh.morphTargetInfluences[this.index] = amt;
+
+      if (this.object.outline) {
+        this.object.outline.mesh.morphTargetInfluences[this.index] = amt;
+      }
+
+      return this;
+
+    },
+
+    /**
+     * Until Three can do this we have a wrapper for Two.State to do it.
+     * TODO: Currently resets everytime a new state is added — it should
+     * gracefully update.
+     */
+    updateMorphTargets: function() {
+
+      var l = this.object.geometry.morphTargets.length;
+      var mesh = this.object.mesh;
+
+      if (l) {
+
+        mesh.morphTargetBase = -1;
+        mesh.morphTargetForcedOrder = [];
+        mesh.morphTargetInfluences = [];
+        mesh.morphTargetDictionary = {};
+
+        for (var m = 0; m < l; m++) {
+
+          mesh.morphTargetInfluences.push(0);
+          mesh.morphTargetDictionary[mesh.geometry.morphTargets[m].name] = m;
+
+        }
+
+        // Do it for the outline as well
+
+        var outline = this.object.outline;
+
+        if (outline) {
+
+          outline.mesh.morphTargetBase = -1;
+          outline.mesh.morphTargetForcedOrder = [];
+          outline.mesh.morphTargetInfluences = [];
+          outline.mesh.morphTargetDictionary = {};
+
+          for (var m = 0; m < l; m++) {
+
+            outline.mesh.morphTargetInfluences.push(0);
+            outline.mesh.morphTargetDictionary[mesh.geometry.morphTargets[m].name] = m;
+
+          }
+
+        }
+
+      }
 
     }
 
@@ -1193,6 +1329,7 @@
   _.extend(Two.Circle.prototype, Two.Polygon.prototype, CircleProto);
   _.extend(Two.Vector.prototype, THREE.Vector3.prototype);
   _.extend(Two.Group.prototype, GroupProto);
+  _.extend(Two.State.prototype, StateProto);
 
   // Super THREE.Vector3.prototype on Two.Vector
   _.each(THREE.Vector3.prototype, function(v, k) {

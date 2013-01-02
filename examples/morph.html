@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Example of morphing a shape</title>
+  </head>
+  <body>
+    <script type="text/javascript" src="../third-party/Tween.js"></script>
+    <script type="text/javascript" src="../third-party/Three.js"></script>
+    <script type="text/javascript" src="../third-party/underscore.js"></script>
+    <script type="text/javascript" src="../src/two.js"></script>
+    <script type="text/javascript">
+
+      (function() {
+
+        var two = new Two({ fullscreen: true }).appendTo(document.body);
+
+        var x = 300;
+        var y = 200;
+        var r = 50;
+
+        var circle = two.makeCircle(x, y, r).fill(255, 0, 0);
+        var vertices = circle.getVertices();
+        _.each(vertices, function(v, i) {
+          var dx = v.x;
+          var dy = v.y;
+          var theta = Math.atan2(dy, dx);
+          var radius = 100 * Math.random();
+          v.x = radius * Math.cos(theta);
+          v.y = radius * Math.sin(theta);
+        });
+
+        var state = circle.addState(vertices);
+
+        two.draw(function(time) {
+
+          // Something to do on update
+          state.lerp(Math.abs(Math.cos(time / 100)));
+
+        }).play();
+
+      })();
+
+    </script>
+  </body>
+</html>
