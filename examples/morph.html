@@ -20,21 +20,36 @@
 
         var circle = two.makeCircle(x, y, r).fill(255, 0, 0);
         var vertices = circle.getVertices();
+        var length = vertices.length;
+
         _.each(vertices, function(v, i) {
+
           var dx = v.x;
           var dy = v.y;
           var theta = Math.atan2(dy, dx);
-          var radius = 100 * Math.random();
+          var radius = 100;
+
           v.x = radius * Math.cos(theta);
-          v.y = radius * Math.sin(theta);
+          v.y = i < length / 2 ? - (radius - 1) * Math.sin(theta) : radius * Math.sin(theta);
+
         });
 
-        var state = circle.addState(vertices);
+        var m1 = circle.makeMorph(vertices);
+        // console.log(crescent.getVertices().length, circle.getVertices().length);
+        // var m2 = crescent.makeMorph(circle.getVertices());
+
+        vertices.pop();
+
+        var crescent = two.makePolygon(vertices).fill(255, 0, 0).translate(x * 2, y);
+        var v = circle.getVertices();
+        v.pop();
+        var m2 = crescent.makeMorph(v);
 
         two.draw(function(time) {
 
           // Something to do on update
-          state.lerp(Math.abs(Math.cos(time / 100)));
+          m1.influence(Math.abs(Math.cos(time / 100)));
+          m2.influence(Math.abs(Math.cos(time / 100)));
 
         }).play();
 

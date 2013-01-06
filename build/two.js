@@ -35666,7 +35666,10 @@ THREE.ShaderSprite = {
       autoplay: true,
       width: 640,
       height: 480,
-      fullscreen: false
+      fullscreen: false,
+      parameters: {
+        antialias: true
+      }
     });
 
     this.__playing = params.autoplay;
@@ -35678,14 +35681,15 @@ THREE.ShaderSprite = {
 
     var canvas = params.canvas || document.createElement('canvas');
 
+    _.extend(params.parameters, {
+      canvas: canvas
+    });
+
     if (params.type === Two.TYPES.webgl
       && (canvas.getContext('webgl')
         || canvas.getContext('experimental-webgl'))) {
 
-      this.renderer = new THREE.WebGLRenderer({
-        antialias: true,
-        canvas: canvas
-      });
+      this.renderer = new THREE.WebGLRenderer(params.parameters);
       params.type = Two.TYPES.webgl;
 
     } else if (params.type === Two.TYPES.svg) {
@@ -35694,9 +35698,7 @@ THREE.ShaderSprite = {
 
     } else {
 
-      this.renderer = new THREE.CanvasRenderer({
-        canvas: canvas
-      });
+      this.renderer = new THREE.CanvasRenderer(params.parameters);
       params.type = Two.TYPES.canvas2d;
 
     }
@@ -36135,9 +36137,21 @@ THREE.ShaderSprite = {
       this.geometry = center.makeGeometry();
       this.material = new THREE.MeshBasicMaterial({
         color: 0xffffff,
+        // wireframe: true,
         transparent: true, // Hack: for WebGL Rendering
         overdraw: true     // Hack: for canvas Rendering
       });
+
+      // Conversation with doob about possible masking options.
+
+      // Part of this discussion is also here:
+      // http://mrdoob.com/projects/htmleditor/#B/bVRtT9swEP5cfsWtfAmoOFkZEusL0wYdTBoaAiS0j058TTwSO3Mcyov633d2kq7Zajmxfff43s+zdxc/zu9/3iwgs0V+tjdrlsEsQy5oHcwKtBySjJsK7XxY2+XR6dAzKvuSo9sNYi1e4M3tBjFPHlOjayWOEp1rM4H9pR9Tzy64SaWaQNQc9ROaZa5XE8ikEKg8de2Eh530WdhaMnNaGsWJkaWFyiTzYWZtOQnDwgitY5ZKm9UxS3QR2swgsl9VGNcyF+2xkIpIwzMS72VsiTvbc7rDEFbaPHLvASy1Ic+NLhDiOiUjG2WJFshSrdMcvaoy9CBZF6GsqhqrUFDMZP5JivnxycfTaD95P3bS5RICWEkl9IpJpdA8SGEzmM/nEMEBvO3iQckNKrtFm/ZgVyjTzP6Da4hTWPso03DrEydveIGGj6BKUOEI6IZAg2ba8VMkZ615GUHBLRrJc9phlU19dKSSNjjwYK6kQ7iTOy5rlVipFTSQthj8r1FJBipcwf3V7WLBbtBUJdKFJzz33ACOT0Y7vA93uDqC9zSjiCI23VLASl1JZwJ7JV2O31g28K721N85Smf5oHO5DykzistlywpgHEUj+EDfmD6a19xm7OYbHMK4dw5h3JnVBbAn95pi+YVXMrluuQFlvW2U6DnyA9bQ2eZC/9/9YEeWOqXeWcaFCHzaNoK6RPeEPWB8+f225bR53SAZtfudfMUdBTvaVYCdJqGTunCF6NqV8bIkeecZtWCwqTYmdLHI0aG6a+t+FW2qiwqpteo39ZX97OmE+Goo6UGH68WLGW09hj2Tt0dwQQCm9IqEHULEKMAn07/VubGp2QRdZ7RVu23e1qMxC5vHiB4n91z+AQ==
+
+      // this.material.blending = THREE.CustomBlending;
+      // this.material.blendSrc = THREE.ZeroFactor;
+      // this.material.blendDst = THREE.SrcColorFactor;
+      // this.material.blendEquation = THREE.AddEquation;
+
       this.material.side = THREE.DoubleSide;
 
       var vlength = this.geometry.vertices.length;
@@ -36184,6 +36198,46 @@ THREE.ShaderSprite = {
     },
 
     /**
+     * Two.Morph is an object that represents the morph of vertices for a
+     * a shape.
+     *
+     * @param {Two.Shape} a reference to the Two.Shape that you'd like to morph.
+     * @param {Array} array of vertices of the new morph.
+     * @param {Integer} optional index position of the morph target. TODO
+     * @param {String} optional paramater to set name of the morph.
+     */
+    Morph: function(object, vertices, index, name) {
+
+      if (object.geometry.vertices.length !== vertices.length) {
+        throw 'Two Error: vertex amount mismatch.';
+      }
+
+      if (!object.material.morphTargets) {
+        object.mesh.material.morphTargets = true;
+      }
+
+      this.object = object;
+
+      this.index = object.geometry.morphTargets.length;
+      this.name = name || 'Two.Morph-' + this.index;
+
+      object.geometry.morphTargets.push({
+        name: this.name,
+        vertices: vertices
+      });
+
+      if (object.outline) {
+        if (!object.outline.material.morphTargets) {
+          // object.outline.material.morphTargets = true;
+        }
+        object.outline.geometry.morphTargets.push(object.geometry.morphTargets[this.index]);
+      }
+
+      this.updateMorphTargets();
+
+    },
+
+    /**
      * Two.Vector is a primitive vector class for use with Three.js with
      * conveniences to neglect the z property.
      * 
@@ -36217,7 +36271,7 @@ THREE.ShaderSprite = {
      */
     getVertices: function(original) {
 
-      return original ? this.geometry.vertices : _.map(this.geometry.vertices, function(v) {
+      return !!original ? this.geometry.vertices : _.map(this.geometry.vertices, function(v) {
         return v.clone();
       });
 
@@ -36334,11 +36388,125 @@ THREE.ShaderSprite = {
     },
 
     /**
-     * Add a morph target state to a shape.
+     * Add a morph to a shape.
      */
-    addState: function() {
+    makeMorph: function(vertices, index, name) {
 
-      
+      var morph = new Two.Morph(this, vertices, index, name);
+
+      if (!_.isArray(this.morphs)) {
+        this.morphs = [];
+      }
+
+      this.morphs.push(morph);
+
+      return morph;
+
+    },
+
+    /**
+     * Remove an element from its scene.
+     */
+    remove: function() {
+
+      var parent = this.mesh.parent;
+      if (parent) {
+        parent.remove(this.mesh);
+        if (this.outline) {
+          parent.remove(this.outline);
+        }
+      }
+
+      return this;
+
+    }
+
+  };
+
+  var MorphProto = {
+
+    getVertices: function(original) {
+
+      var vertices = this.object.geometry.morphTargets[this.index].vertices;
+      return !!original ? vertices : vertices.slice(0);
+
+    },
+
+    setVertices: function(vertices) {
+
+      if (this.object.geometry.vertices.length !== vertices.length) {
+        throw 'Two error: vertex amount mismatch.';
+      }
+
+      this.object.geometry.morphTargets[this.index].vertices = vertices;
+
+      if (this.object.outline) {
+        this.object.outline.geometry.morphTargets.push(this.object.mesh.geometry.morphTargets[this.index]);
+      }
+
+      this.updateMorphTargets();
+
+      return this;
+
+    },
+
+    influence: function(amt) {
+
+      this.object.mesh.morphTargetInfluences[this.index] = amt;
+
+      if (this.object.outline) {
+        this.object.outline.mesh.morphTargetInfluences[this.index] = amt;
+      }
+
+      return this;
+
+    },
+
+    /**
+     * Until Three can do this we have a wrapper for Two.Morph to do it.
+     * TODO: Currently resets everytime a new morph is added — it should
+     * gracefully update.
+     */
+    updateMorphTargets: function() {
+
+      var l = this.object.geometry.morphTargets.length;
+      var mesh = this.object.mesh;
+
+      if (l) {
+
+        mesh.morphTargetBase = -1;
+        mesh.morphTargetForcedOrder = [];
+        mesh.morphTargetInfluences = [];
+        mesh.morphTargetDictionary = {};
+
+        for (var m = 0; m < l; m++) {
+
+          mesh.morphTargetInfluences.push(0);
+          mesh.morphTargetDictionary[mesh.geometry.morphTargets[m].name] = m;
+
+        }
+
+        // Do it for the outline as well
+
+        var outline = this.object.outline;
+
+        if (outline) {
+
+          outline.mesh.morphTargetBase = -1;
+          outline.mesh.morphTargetForcedOrder = [];
+          outline.mesh.morphTargetInfluences = [];
+          outline.mesh.morphTargetDictionary = {};
+
+          for (var m = 0; m < l; m++) {
+
+            outline.mesh.morphTargetInfluences.push(0);
+            outline.mesh.morphTargetDictionary[mesh.geometry.morphTargets[m].name] = m;
+
+          }
+
+        }
+
+      }
 
     }
 
@@ -36797,6 +36965,7 @@ THREE.ShaderSprite = {
   _.extend(Two.Circle.prototype, Two.Polygon.prototype, CircleProto);
   _.extend(Two.Vector.prototype, THREE.Vector3.prototype);
   _.extend(Two.Group.prototype, GroupProto);
+  _.extend(Two.Morph.prototype, MorphProto);
 
   // Super THREE.Vector3.prototype on Two.Vector
   _.each(THREE.Vector3.prototype, function(v, k) {

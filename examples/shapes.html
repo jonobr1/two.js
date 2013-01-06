@@ -28,6 +28,8 @@
           // Something to do on update
           group.rotate(time / 100);
 
+          circle.scale(Math.abs(Math.cos(time / 100)));
+
         }).play();
 
         window.addEventListener('mousemove', function(e) {

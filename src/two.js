@@ -62,7 +62,10 @@
       autoplay: true,
       width: 640,
       height: 480,
-      fullscreen: false
+      fullscreen: false,
+      parameters: {
+        antialias: true
+      }
     });
 
     this.__playing = params.autoplay;
@@ -74,14 +77,15 @@
 
     var canvas = params.canvas || document.createElement('canvas');
 
+    _.extend(params.parameters, {
+      canvas: canvas
+    });
+
     if (params.type === Two.TYPES.webgl
       && (canvas.getContext('webgl')
         || canvas.getContext('experimental-webgl'))) {
 
-      this.renderer = new THREE.WebGLRenderer({
-        antialias: true,
-        canvas: canvas
-      });
+      this.renderer = new THREE.WebGLRenderer(params.parameters);
       params.type = Two.TYPES.webgl;
 
     } else if (params.type === Two.TYPES.svg) {
@@ -90,9 +94,7 @@
 
     } else {
 
-      this.renderer = new THREE.CanvasRenderer({
-        canvas: canvas
-      });
+      this.renderer = new THREE.CanvasRenderer(params.parameters);
       params.type = Two.TYPES.canvas2d;
 
     }
@@ -531,9 +533,21 @@
       this.geometry = center.makeGeometry();
       this.material = new THREE.MeshBasicMaterial({
         color: 0xffffff,
+        // wireframe: true,
         transparent: true, // Hack: for WebGL Rendering
         overdraw: true     // Hack: for canvas Rendering
       });
+
+      // Conversation with doob about possible masking options.
+
+      // Part of this discussion is also here:
+      // http://mrdoob.com/projects/htmleditor/#B/bVRtT9swEP5cfsWtfAmoOFkZEusL0wYdTBoaAiS0j058TTwSO3Mcyov633d2kq7Zajmxfff43s+zdxc/zu9/3iwgs0V+tjdrlsEsQy5oHcwKtBySjJsK7XxY2+XR6dAzKvuSo9sNYi1e4M3tBjFPHlOjayWOEp1rM4H9pR9Tzy64SaWaQNQc9ROaZa5XE8ikEKg8de2Eh530WdhaMnNaGsWJkaWFyiTzYWZtOQnDwgitY5ZKm9UxS3QR2swgsl9VGNcyF+2xkIpIwzMS72VsiTvbc7rDEFbaPHLvASy1Ic+NLhDiOiUjG2WJFshSrdMcvaoy9CBZF6GsqhqrUFDMZP5JivnxycfTaD95P3bS5RICWEkl9IpJpdA8SGEzmM/nEMEBvO3iQckNKrtFm/ZgVyjTzP6Da4hTWPso03DrEydveIGGj6BKUOEI6IZAg2ba8VMkZ615GUHBLRrJc9phlU19dKSSNjjwYK6kQ7iTOy5rlVipFTSQthj8r1FJBipcwf3V7WLBbtBUJdKFJzz33ACOT0Y7vA93uDqC9zSjiCI23VLASl1JZwJ7JV2O31g28K721N85Smf5oHO5DykzistlywpgHEUj+EDfmD6a19xm7OYbHMK4dw5h3JnVBbAn95pi+YVXMrluuQFlvW2U6DnyA9bQ2eZC/9/9YEeWOqXeWcaFCHzaNoK6RPeEPWB8+f225bR53SAZtfudfMUdBTvaVYCdJqGTunCF6NqV8bIkeecZtWCwqTYmdLHI0aG6a+t+FW2qiwqpteo39ZX97OmE+Goo6UGH68WLGW09hj2Tt0dwQQCm9IqEHULEKMAn07/VubGp2QRdZ7RVu23e1qMxC5vHiB4n91z+AQ==
+
+      // this.material.blending = THREE.CustomBlending;
+      // this.material.blendSrc = THREE.ZeroFactor;
+      // this.material.blendDst = THREE.SrcColorFactor;
+      // this.material.blendEquation = THREE.AddEquation;
+
       this.material.side = THREE.DoubleSide;
 
       var vlength = this.geometry.vertices.length;
@@ -580,17 +594,18 @@
     },
 
     /**
-     * Two.State is an object that represents the state of vertices for a
+     * Two.Morph is an object that represents the morph of vertices for a
      * a shape.
      *
      * @param {Two.Shape} a reference to the Two.Shape that you'd like to morph.
-     * @param {Array} array of vertices of the new state.
-     * @param {String} optional paramater to set name of the state.
+     * @param {Array} array of vertices of the new morph.
+     * @param {Integer} optional index position of the morph target. TODO
+     * @param {String} optional paramater to set name of the morph.
      */
-    State: function(object, vertices, name) {
+    Morph: function(object, vertices, index, name) {
 
       if (object.geometry.vertices.length !== vertices.length) {
-        throw 'Two error: vertice amount mismatch.';
+        throw 'Two Error: vertex amount mismatch.';
       }
 
       if (!object.material.morphTargets) {
@@ -600,7 +615,7 @@
       this.object = object;
 
       this.index = object.geometry.morphTargets.length;
-      this.name = name || 'Two.State-' + this.index;
+      this.name = name || 'Two.Morph-' + this.index;
 
       object.geometry.morphTargets.push({
         name: this.name,
@@ -769,25 +784,42 @@
     },
 
     /**
-     * Add a morph target state to a shape.
+     * Add a morph to a shape.
      */
-    addState: function(vertices, name) {
+    makeMorph: function(vertices, index, name) {
 
-      var state = new Two.State(this, vertices, name);
+      var morph = new Two.Morph(this, vertices, index, name);
 
-      if (!_.isArray(this.states)) {
-        this.states = [];
+      if (!_.isArray(this.morphs)) {
+        this.morphs = [];
       }
 
-      this.states.push(state);
+      this.morphs.push(morph);
 
-      return state;
+      return morph;
+
+    },
+
+    /**
+     * Remove an element from its scene.
+     */
+    remove: function() {
+
+      var parent = this.mesh.parent;
+      if (parent) {
+        parent.remove(this.mesh);
+        if (this.outline) {
+          parent.remove(this.outline);
+        }
+      }
+
+      return this;
 
     }
 
   };
 
-  var StateProto = {
+  var MorphProto = {
 
     getVertices: function(original) {
 
@@ -799,7 +831,7 @@
     setVertices: function(vertices) {
 
       if (this.object.geometry.vertices.length !== vertices.length) {
-        throw 'Two error: vertice amount mismatch.';
+        throw 'Two error: vertex amount mismatch.';
       }
 
       this.object.geometry.morphTargets[this.index].vertices = vertices;
@@ -814,7 +846,7 @@
 
     },
 
-    lerp: function(amt) {
+    influence: function(amt) {
 
       this.object.mesh.morphTargetInfluences[this.index] = amt;
 
@@ -827,8 +859,8 @@
     },
 
     /**
-     * Until Three can do this we have a wrapper for Two.State to do it.
-     * TODO: Currently resets everytime a new state is added — it should
+     * Until Three can do this we have a wrapper for Two.Morph to do it.
+     * TODO: Currently resets everytime a new morph is added — it should
      * gracefully update.
      */
     updateMorphTargets: function() {
@@ -1329,7 +1361,7 @@
   _.extend(Two.Circle.prototype, Two.Polygon.prototype, CircleProto);
   _.extend(Two.Vector.prototype, THREE.Vector3.prototype);
   _.extend(Two.Group.prototype, GroupProto);
-  _.extend(Two.State.prototype, StateProto);
+  _.extend(Two.Morph.prototype, MorphProto);
 
   // Super THREE.Vector3.prototype on Two.Vector
   _.each(THREE.Vector3.prototype, function(v, k) {
