@@ -8,6 +8,7 @@ __This is considered alpha grade__. two.js is a two-dimensional drawing api buil
 + ~~Add `Two.Group`~~
 + ~~Figure out how spline / curves are going to be handled~~
   + Still need to figure out how morph works with this.
+  + How to do animate-in-out of lines a la [motion graphics](http://www.redgiantsoftware.com/products/all/trapcode-3d-stroke/).
 + ~~Figure out build procedure~~
 + More examples
 + ~~Way to do unit tests? I'm thinking still image comparisons...~~
