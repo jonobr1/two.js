@@ -35,21 +35,16 @@
         });
 
         var m1 = circle.makeMorph(vertices);
-        // console.log(crescent.getVertices().length, circle.getVertices().length);
-        // var m2 = crescent.makeMorph(circle.getVertices());
-
-        vertices.pop();
-
         var crescent = two.makePolygon(vertices).fill(255, 0, 0).translate(x * 2, y);
+
         var v = circle.getVertices();
-        v.pop();
         var m2 = crescent.makeMorph(v);
 
         two.draw(function(time) {
 
           // Something to do on update
-          m1.influence(Math.abs(Math.cos(time / 100)));
-          m2.influence(Math.abs(Math.cos(time / 100)));
+          m1.influence(Math.abs(Math.cos(time / 50)));
+          m2.influence(Math.abs(Math.cos(time / 50)));
 
         }).play();
 

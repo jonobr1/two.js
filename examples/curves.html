@@ -24,7 +24,7 @@
           var y = (height / 4) * Math.cos(pct * Math.PI * 8) + (height / 2);
 
           two.makeCircle(x, y, 7)
-            .fill(0.0, 0.8, 1.0, 0.5)
+            .fill(0.0, 0.8, 1.0, 0.3)
             .noStroke();
 
           return new Two.Vector(x, y);
@@ -32,13 +32,28 @@
         });
 
         var curve = two.makeCurve(points)
-          .strokeWeight(5)
+          .strokeWeight(3)
           .noFill()
           .zIndex(0);
+
+        curve.end(0);
 
         two.draw(function(time) {
 
           // Something to do on update
+
+          var t = time % 200;
+          var b = (t % 100) / 100;
+
+          if (t < 100) {
+            curve.end(b);
+          } else {
+            curve.begin(b);
+          }
+
+          if (!t) {
+            curve.begin(0).end(0);
+          }
 
         }).play();
 
