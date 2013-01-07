@@ -1,5 +1,6 @@
 /**
  * @author jonobr1 / http://jonobr1.com/
+ * Dependent on Three.js and Underscore.js
  */
 
 (function() {
@@ -1231,7 +1232,8 @@
 
   var CurveProto = {
 
-    
+    // lineIn, lineOut
+    // Special morph?
 
   };
 
