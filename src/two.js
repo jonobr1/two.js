@@ -271,6 +271,26 @@
 
     },
 
+    makeCurve: function(p) {
+
+      var l = arguments.length, points = p;
+      if (!_.isArray(p)) {
+        for (var i = 0; i < l; i+=2) {
+          var x = arguments[i];
+          if (!_.isNumber(x)) {
+            break;
+          }
+          var y = arguments[i + 1];
+          points.push(new Two.Vector(x, y));
+        }
+      }
+
+      var last = arguments[l - 1];
+      var curve = new Two.Curve(points, _.isBoolean(last) ? last : undefined);
+      return this.add(curve);
+
+    },
+
     makeLine: function(x1, y1, x2, y2) {
 
       var line = new Two.Line(x1, y1, x2, y2);
@@ -293,7 +313,8 @@
         }
       }
 
-      var poly = new Two.Polygon(points, !!arguments[l - 1]);
+      var last = arguments[l - 1];
+      var poly = new Two.Polygon(points, _.isBoolean(last) ? last : undefined);
       return this.add(poly);
 
     },
@@ -462,6 +483,28 @@
         var ypos = height * Math.sin(angle) + y;
         return new Two.Vector(xpos, ypos);
       }));
+
+    },
+
+    /**
+     * Two.Curve is a curved polygon with catmull-rom interpolation.
+     */
+    Curve: function(points, closed) {
+
+      // TODO: This is up for debate still.
+      // if (!open && !_.isEqual(points[points.length - 1], points[0])) {
+      //   points.push(points[0]);
+      // }
+
+      var spline3d = new THREE.Spline(points);
+      var length = points.length * Two.RESOLUTION;
+
+      var curve = _.map(_.range(length), function(i) {
+        var p = spline3d.getPoint(i / length);
+        return new Two.Vector(p.x, p.y);
+      }, this);
+
+      Two.Polygon.call(this, curve, !closed);
 
     },
 
@@ -982,6 +1025,7 @@
 
         material.color.setRGB(r, g, b);
         material.opacity = a;
+        child.visible = a > 0;
 
       }
 
@@ -1014,6 +1058,7 @@
 
         material.color.setRGB(r, g, b);
         material.opacity = a;
+        child.visible = a > 0;
 
       }
 
@@ -1116,6 +1161,7 @@
       }
       this.material.color.setRGB(r, g, b);
       this.material.opacity = a;
+      this.mesh.visible = a > 0;
       return this;
     }
 
@@ -1151,9 +1197,11 @@
       if (_.isObject(this.outline)) {
         this.outline.material.color.setRGB(r, g, b);
         this.outline.material.opacity = a;
+        this.outline.mesh.visible = a > 0;
       } else {
         this.material.color.setRGB(r, g, b);
         this.material.opacity = a;
+        this.mesh.visible = a > 0;
       }
       return this;
     },
@@ -1176,6 +1224,12 @@
    * Prototype for Two.Polygon
    */
   var PolyProto = {
+
+    
+
+  };
+
+  var CurveProto = {
 
     
 
@@ -1353,8 +1407,9 @@
 
   // Extensions
 
-  _.extend(Two.Polygon.prototype, ShapeProto, FillProto, StrokeProto);
+  _.extend(Two.Polygon.prototype, ShapeProto, FillProto, StrokeProto, PolyProto);
   _.extend(Two.Line.prototype, ShapeProto, StrokeProto);
+  _.extend(Two.Curve.prototype, Two.Polygon.prototype, CurveProto);
   _.extend(Two.Rectangle.prototype, Two.Polygon.prototype, RectProto);
   _.extend(Two.Arc.prototype, Two.Polygon.prototype, ArcProto);
   _.extend(Two.Ellipse.prototype, Two.Polygon.prototype, EllipseProto);

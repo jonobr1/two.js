@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Example of all drawable primitives</title>
+  </head>
+  <body>
+    <script type="text/javascript" src="../third-party/Tween.js"></script>
+    <script type="text/javascript" src="../third-party/Three.js"></script>
+    <script type="text/javascript" src="../third-party/underscore.js"></script>
+    <script type="text/javascript" src="../src/two.js"></script>
+    <script type="text/javascript">
+
+      (function() {
+
+        var two = new Two({ fullscreen: true }).appendTo(document.body);
+
+        var width = two.width, height = two.height;
+
+        var points = _.map(_.range(32), function(i) {
+
+          var pct = i / 31;
+
+          var x = pct * (width / 2) + (width / 4);
+          var y = (height / 4) * Math.cos(pct * Math.PI * 8) + (height / 2);
+
+          two.makeCircle(x, y, 7)
+            .fill(0.0, 0.8, 1.0, 0.5)
+            .noStroke();
+
+          return new Two.Vector(x, y);
+
+        });
+
+        var curve = two.makeCurve(points)
+          .strokeWeight(5)
+          .noFill()
+          .zIndex(0);
+
+        two.draw(function(time) {
+
+          // Something to do on update
+
+        }).play();
+
+      })();
+
+    </script>
+  </body>
+</html>
