@@ -35604,6 +35604,7 @@ THREE.ShaderSprite = {
 };
 /**
  * @author jonobr1 / http://jonobr1.com/
+ * Dependent on Three.js and Underscore.js
  */
 
 (function() {
@@ -36100,11 +36101,11 @@ THREE.ShaderSprite = {
       //   points.push(points[0]);
       // }
 
-      var spline3d = new THREE.Spline(points);
+      this.spline = new THREE.SplineCurve(points);  // As reference
       var length = points.length * Two.RESOLUTION;
 
       var curve = _.map(_.range(length), function(i) {
-        var p = spline3d.getPoint(i / length);
+        var p = this.spline.getPoint(i / length);
         return new Two.Vector(p.x, p.y);
       }, this);
 
@@ -36136,6 +36137,7 @@ THREE.ShaderSprite = {
 
       this.geometry = new THREE.Geometry();
       this.geometry.vertices = points;
+      this.__vertices = points.slice(0);
 
       this.material = new THREE.LineBasicMaterial({
         color: 0x000000,
@@ -36351,6 +36353,8 @@ THREE.ShaderSprite = {
         }
         vertex.set(v.x, v.y, v.z || 0);
       }, this);
+
+      this.__vertices = this.geometry.vertices.slice(0);
 
       return !!silent ? this : this.updateVertexFlags();
 
@@ -36778,6 +36782,14 @@ THREE.ShaderSprite = {
   var StrokeProto = {
 
     /**
+     * Internal private-ish vars for animating in-and-out shapes.
+     */
+
+    beginning: 0.0,
+
+    ending: 1.0,
+
+    /**
      * Remove the visibility of a stroke.
      */
     noStroke: function() {
@@ -36820,6 +36832,89 @@ THREE.ShaderSprite = {
         this.material.linewidth = n;
       }
       return this;
+    },
+
+    /**
+     * State the position as a percentage of the first point in the stroke.
+     * Particularly useful for animating lines in-and-out.
+     * Default is 0.0
+     */
+    begin: function(amt) {
+
+      this.beginning = Math.min(Math.max(amt, 0.0), 1.0);
+
+      this.updateStroke();
+
+      return this;
+
+    },
+
+    /**
+     * State the position as a percentage of the last point in the stroke.
+     * Particularly useful for animating lines in-and-out.
+     * Default is 1.0
+     */
+    end: function(amt) {
+
+      this.ending = Math.max(Math.min(amt, 1.0), 0.0);
+
+      this.updateStroke();
+
+      return this;
+
+    },
+
+    /**
+     * TODO:
+     * Activate is the underlying function to trigger visible line segments.
+     * It takes a series of [min, max] arrays as its arguments.
+     */
+    activate: function() {
+
+      return this;
+
+    },
+
+    /**
+     * function to update the filled-out-ness of a stroke. This is similar
+     * to After Effect's plugin Trapcode's Stroke 3D.
+     */
+    updateStroke: function() {
+
+      var stroke = _.isObject(this.outline) ? this.outline : this;
+      var verts = stroke.__vertices;
+      var length = verts.length;
+      var last = length - 1;
+
+      var a, b;
+
+      if (this.ending > this.beginning) {
+        a = this.ending;
+        b = this.beginning;
+      } else if (this.ending < this.beginning) {
+        a = this.beginning;
+        b = this.ending;
+      } else {
+        a = b = this.ending = this.beginning;
+      }
+
+      var ia = Math.min(Math.round((1 - a) * length), last);
+      var ib = Math.min(Math.round((1 - b) * length), last);
+
+      var v = verts[ia];
+
+      for (var i = 0; i < ia; i++) {
+        stroke.geometry.vertices[i] = v;
+      }
+
+      v = verts[ib];
+
+      for (var i = ib; i < length; i++) {
+        stroke.geometry.vertices[i] = v;
+      }
+
+      return this.updateVertexFlags();
+
     }
 
   };
@@ -36835,7 +36930,8 @@ THREE.ShaderSprite = {
 
   var CurveProto = {
 
-    
+    // lineIn, lineOut
+    // Special morph?
 
   };
 
