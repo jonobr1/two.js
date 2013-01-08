@@ -4,6 +4,7 @@ two.js
 __This is considered alpha grade__. two.js is a two-dimensional drawing api built on top of [three.js](http://threejs.org) meant for modern browsers. Because it's in two-dimensions two handles the canvas, renderer, scene, and camera for you.
 
 ## Things to do before making documentation site:
++ Standardize `getter` and `setter` functions.
 + ~~Add `Two.Arc`~~
 + ~~Add `Two.Group`~~
 + ~~Figure out how spline / curves are going to be handled~~

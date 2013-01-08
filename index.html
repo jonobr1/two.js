@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Two.js</title>
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <div class="scripts">
+      <script src="./third-party/three.js"></script>
+      <script src="./third-party/underscore.js"></script>
+      <script src="./third-party/stats.js"></script>
+      <script src="./src/two.js"></script>
+      <script>
+
+        // Add Stats
+        var stats = new Stats();
+        _.extend(stats.domElement.style, {
+          position: 'absolute',
+          left: 0,
+          top: 0
+        });
+        document.body.appendChild(stats.domElement);
+
+        Two.start();
+
+        var two = new Two({ fullscreen: true }).appendTo(document.body);
+
+        var width = 44, height = 64;
+        var half_width = width / 2;
+        var quart_width = half_width / 2;
+        var half_height = height / 2;
+        var quart_height = half_height / 2;
+
+        // Make T
+        var t = makeT(1, 0.25, 0.25).scale(0).translate(- width, 0);
+
+        // Make W
+        var w = makeW(1.0, 0.5, 0).scale(0).translate(width * .33, 0);
+
+        // Make O
+        var o = makeO(0.0, 0.75, 0.66).scale(0).translate(width * 1.66, 0);
+
+        var group = two.makeGroup(t, w, o)
+          .translate(two.width / 2, two.height / 2)
+          .scale(6);
+
+        var letters = addRandomAmountsOfLetters();
+
+        _.defer(function() {
+
+          two
+            .onResize(function() {
+
+              group.translate(two.width / 2, two.height / 2);
+
+            })
+            .draw(function(frames) {
+
+              stats.update();
+
+              if (frames < 120) {
+                return;
+              }
+
+              var tScale = t.scale();
+
+              if (tScale >= 1.0) {
+                return;
+              }
+
+              var s = tScale + (1.0 - tScale) * 0.2;
+              t.scale(s);
+              w.scale(s);
+              o.scale(s);
+
+            })
+            .play();
+
+        });
+
+        function makeT(r, g, b) {
+          var a = two.makeRectangle(half_width, half_height, width, quart_width);
+          var c = two.makeRectangle(half_width, half_height, quart_width, width);
+          return two.makeGroup(a, c)
+            .fill(r, g, b, 0.33)
+            .stroke(r, g, b);
+        }
+
+        function makeW(r, g, b) {
+          a = two.makePolygon(half_width, height * 0.75, width, height * 0.125, 0, height * 0.125);
+          c = a.clone().translate(a.mesh.position.x + width / 2, a.mesh.position.y);
+          return two.makeGroup(a, c)
+            .fill(r, g, b, 0.33)
+            .stroke(r, g, b);
+        }
+
+        function makeO(r, g, b) {
+          a = two.makeCircle(0, 0, half_width);
+          c = two.makeCircle(0, 0, width * 0.125);
+          return two.makeGroup(a, c)
+            .fill(r, g, b, 0.33)
+            .stroke(r, g, b);
+        }
+
+        function addRandomAmountsOfLetters() {
+
+          var fs = [makeT, makeW, makeO];
+
+          return _.map(_.range(100), function(i) {
+            var x = Math.random() * two.width;
+            var y = Math.random() * two.height;
+            var r = Math.random() * Math.PI * 2;
+            var f = i % fs.length;
+            return fs[f](0, 0, 0)
+              .fill(0, 0, 0, 0.025)
+              .noStroke()
+              .scale(2)
+              .translate(x, y)
+              .rotate(r);
+          });
+
+        }
+
+      </script>
+    </div>
+  </body>
+</html>

@@ -41,10 +41,12 @@
         var v = circle.getVertices();
         var m2 = crescent.makeMorph(v);
 
+        // m2.influence(0.66);
+
         two.draw(function(time) {
 
           // Something to do on update
-          m1.influence(Math.abs(Math.cos(time / 50)));
+          // m1.influence(Math.abs(Math.cos(time / 50)));
           m2.influence(Math.abs(Math.cos(time / 50)));
 
         }).play();

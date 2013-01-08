@@ -765,7 +765,8 @@
       var l = arguments.length;
 
       if (l <= 0) {
-        return this.mesh.scale;
+        var scale = this.mesh.scale;
+        return scale.x === scale.y ? scale.x : { x: scale.x, y: scale.y };
       } else if (l <= 1) {
         y = x;
       }
@@ -861,6 +862,15 @@
       }
 
       return this;
+
+    },
+
+    clone: function() {
+
+      var clone = new this.constructor(this.getVertices());
+      clone.mesh.position.copy(this.mesh.position);
+      this.mesh.parent.add(clone.mesh);
+      return clone;
 
     }
 
@@ -1004,6 +1014,43 @@
 
     },
 
+    noStroke: function() {
+
+      return this.stroke(0, 0, 0, 0);
+
+    },
+
+    noFill: function() {
+
+      return this.fill(0, 0, 0, 0);
+
+    },
+
+    strokeWeight: function(n) {
+
+      for (var i = 0, l = this.mesh.children.length; i < l; i++) {
+
+        var child = this.mesh.children[i];
+        var material = child.material;
+
+        // Delve deeper if children nested.
+        if (child.children.length > 0) {
+          this.strokeWeight.call({ mesh: child, strokeWeight: this.strokeWeight }, n);
+        }
+
+        if (!material || !(material instanceof THREE.LineBasicMaterial)) {
+          continue;
+        }
+
+        material.linewidth = n;
+        child.visible = n > 0;
+
+      }
+
+      return this;
+
+    },
+
     /**
      *
      */
@@ -1023,7 +1070,12 @@
         var child = this.mesh.children[i];
         var material = child.material;
 
-        if (!(material instanceof THREE.BasicLineMaterial)) {
+        // Delve deeper if children nested.
+        if (child.children.length > 0) {
+          this.stroke.call({ mesh: child, stroke: this.stroke }, r, g, b, a);
+        }
+
+        if (!material || !(material instanceof THREE.LineBasicMaterial)) {
           continue;
         }
 
@@ -1055,6 +1107,11 @@
 
         var child = this.mesh.children[i];
         var material = child.material;
+
+        // Delve deeper if children nested.
+        if (child.children.length > 0) {
+          this.fill.call({ mesh: child, fill: this.fill }, r, g, b, a);
+        }
 
         if (!(material instanceof THREE.MeshBasicMaterial)) {
           continue;
@@ -1106,8 +1163,23 @@
 
       _.each(this.children, function(child) {
 
-        var bb = child.mesh.geometry.shapebb;
-        var p = child.mesh.position;
+        var mesh = child.mesh;
+        var bb, p = child.mesh.position;
+
+        // Are we a group or a shape?
+        if (_.isUndefined(mesh.geometry)) {
+          // If we're a group just get the bounding rect and put it in a
+          // format that is the same as bb.
+          var r = child.getBoundingClientRect();
+          bb = {
+            minY: r.top,
+            minX: r.left,
+            maxX: r.right,
+            maxY: r.bottom
+          };
+        } else {
+          bb = child.mesh.geometry.shapebb;
+        }
 
         var r = bb.maxX + p.x;
         var l = bb.minX + p.x;
@@ -1156,17 +1228,22 @@
      * Define the filled color of a shape.
      */
     fill: function(r, g, b, a) {
+
       var length = arguments.length;
+
       if (length <= 1) {
         g = b = r;
         a = 1.0;
       } else if (length <= 3) {
         a = 1.0;
       }
+
       this.material.color.setRGB(r, g, b);
       this.material.opacity = a;
       this.mesh.visible = a > 0;
+
       return this;
+
     }
 
   };
@@ -1222,12 +1299,25 @@
      * Define the weight or thickness of a stroke.
      */
     strokeWeight: function(n) {
-      if (_.isObject(this.outline)) {
+
+      var outline = _.isObject(this.outline);
+
+      // Getter
+      if (_.isUndefined(n)) {
+        return outline ? this.outline.material.linewidth : this.material.linewidth;
+      }
+
+      // Setter
+      if (outline) {
         this.outline.material.linewidth = n;
+        this.outline.mesh.visible = n > 0;
       } else {
         this.material.linewidth = n;
+        this.mesh.visible = n > 0;
       }
+
       return this;
+
     },
 
     /**
