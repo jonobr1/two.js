@@ -5,6 +5,7 @@ __This is considered alpha grade__. two.js is a two-dimensional drawing api buil
 
 ## Things to do before making documentation site:
 + Standardize `getter` and `setter` functions.
++ ~~Make logo~~
 + ~~Add `Two.Arc`~~
 + ~~Add `Two.Group`~~
 + ~~Figure out how spline / curves are going to be handled~~
