@@ -12,7 +12,7 @@
 
       (function() {
 
-        var two = new Two({ fullscreen: true }).appendTo(document.body);
+        var two = new Two({ fullscreen: true, type: Two.TYPES.canvas2d }).appendTo(document.body);
 
         var width = two.width, height = two.height;
 
@@ -38,11 +38,11 @@
 
         // curve.begin(0.25).end(0.75);
 
-        two.draw(function(time) {
+        two.draw(function(frames) {
 
           // Something to do on update
 
-          var t = time % 200;
+          var t = frames % 200;
           var b = (t % 100) / 100;
 
           if (t < 100) {

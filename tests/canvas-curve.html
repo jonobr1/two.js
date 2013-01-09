@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Two.Curve's with Canvas2d Renderer</title>
+  </head>
+  <body>
+    <div class="scripts">
+      <script src="../third-party/three.js"></script>
+      <script src="../third-party/underscore.js"></script>
+      <script src="../src/two.js"></script>
+      <script>
+
+        Two.start();
+
+        var two = new Two({ fullscreen: true, type: Two.TYPES.canvas2d }).appendTo(document.body);
+
+        var points = _.map(_.range(10), function(i) {
+          var r = two.height / 4;
+          var t = (i / 10) * Math.PI;
+          var x = r * Math.cos(t) + two.width / 2;
+          var y = r * Math.sin(t) + two.height / 2;
+          return new Two.Vector(x, y);
+        });
+
+        var poly = two.makePolygon(points)
+          .fill(0, 0, 0, 0.1)
+          .strokeWeight(5)
+          .translate(two.width / 4, two.height / 2);
+
+        var curve = two.makeCurve(points)
+          .fill(0, 0, 0, 0.1)
+          .strokeWeight(5)
+          .translate(two.width * 0.75, two.height / 2);
+
+        two.draw(function(frames) {
+
+          var t = frames % 200;
+          var b = (t % 100) / 100;
+
+          if (t < 100) {
+            poly.end(b);
+            curve.end(b);
+          } else {
+            poly.begin(b);
+            curve.begin(b);
+          }
+
+          if (!t) {
+            poly.begin(0).end(0);
+            curve.begin(0).end(0);
+          }
+
+        }).play();
+
+      </script>
+    </div>
+  </body>
+</html>

@@ -36823,8 +36823,7 @@ THREE.ShaderSprite = {
      */
     noFill: function() {
 
-      this.fill(0, 0, 0, 0);
-      return this;
+      return this.fill(0, 0, 0, 0);
 
     },
 
@@ -36844,7 +36843,7 @@ THREE.ShaderSprite = {
 
       this.material.color.setRGB(r, g, b);
       this.material.opacity = a;
-      this.mesh.visible = a > 0;
+      this.mesh.visible = a > 0 || _.isObject(this.outline);
 
       return this;
 
