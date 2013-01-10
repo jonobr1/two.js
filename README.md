@@ -19,3 +19,4 @@ __This is considered alpha grade__. two.js is a two-dimensional drawing api buil
   + __Won't fix__: Decided to use morph targets and let people use their own animation on top.
 + Is motion blur a possibility? Check out http://www.cse.yorku.ca/~shuryork/MotionBlurTest.html
 + Documentation / Tutorials
++ Object.defineProperty is not `_.extend`able ruh roh... :(

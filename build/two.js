@@ -36436,9 +36436,18 @@ THREE.ShaderSprite = {
     /**
      * Add a morph to a shape.
      */
-    makeMorph: function(vertices, index, name) {
+    makeMorph: function(vertices, index, name, reindex) {
 
-      var vertices = vertices.slice(0).reverse(); // Copy out, just in case.
+      var vertices = vertices.slice(0);//.reverse(); // Copy out, just in case.;
+
+      // HACK: to order morph verts properly
+      if (!reindex) {
+        vertices = vertices.reverse();
+        vertices.pop();
+        var first = vertices.shift();
+        vertices.push(first, vertices[0]);
+      }
+
       var morph = new Two.Morph(this, vertices, index, name);
 
       if (!_.isArray(this.morphs)) {
@@ -37095,18 +37104,26 @@ THREE.ShaderSprite = {
     /**
      * A morph with a catmull-rom interpolation.
      */
-    makeMorph: function(vertices, index, name) {
+    makeMorph: function(vertices, index, name, reindex) {
 
-      var vertices = vertices.slice(0).reverse(); // Copy out, just in case.
+      var vertices = vertices.slice(0);
       var length = this.getVertices().length;
       var spline = new THREE.SplineCurve(vertices);
+
+      // HACK: to order morph verts properly
+      if (!reindex) {
+        vertices = vertices.reverse();
+        vertices.pop();
+        var first = vertices.shift();
+        vertices.push(first, vertices[0]);
+      }
 
       var points = _.map(_.range(length), function(i) {
         var p = spline.getPoint(i / length);
         return new Two.Vector(p.x, p.y);
-      }, this).reverse();
+      }, this);//.reverse();
 
-      return ShapeProto.makeMorph.call(this, points, index, name);
+      return ShapeProto.makeMorph.call(this, points, index, name, true);
 
     }
 

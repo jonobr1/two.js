@@ -41,27 +41,46 @@ btn.addEventListener('click', function(e) {
 
 // Test each shape
 
-asyncTest('Draw Rectangle Test', function() {
+/**
+ * Two.Rectangle
+ *------------------------------------------------------------------------------
+ */
 
-  var rect = two.makeRectangle(two.width / 2, two.height / 2, two.height / 4, two.height / 4)
-    .fill(255, 0, 0);
+var hw = two.width / 2, hh = two.height / 2, qw = hw / 2, qh = hh / 2;
 
-  var string = toDataURL(two.domElement);
+test('Rectangle Getters and Setters', function() {
 
-  imagePathToDataURL('../tests/images/canvas/1.png', function(dataURL) {
+  var rect = two.makeRectangle(hw, hh, qh, qh)
+    .fill(1.0, 0, 0);
 
-    console.log(string, dataURL);
+  console.log(rect.width, qh, rect);
 
-    ok(string == dataURL, 'Does image match referenced image?');
-
-    // Clean up after ourselves
-    // rect.remove();
-
-    start();
-
-  });
+  ok(rect.width === qh, 'Passed!');
+  // ok(rect.height === qh);
 
 });
+
+// asyncTest('Draw Rectangle Test', function() {
+// 
+//   var rect = two.makeRectangle(two.width / 2, two.height / 2, two.height / 4, two.height / 4)
+//     .fill(255, 0, 0);
+// 
+//   var string = toDataURL(two.domElement);
+// 
+//   imagePathToDataURL('../tests/images/canvas/1.png', function(dataURL) {
+// 
+//     console.log(string, dataURL);
+// 
+//     ok(string == dataURL, 'Does image match referenced image?');
+// 
+//     // Clean up after ourselves
+//     // rect.remove();
+// 
+//     start();
+// 
+//   });
+// 
+// });
 
 // Helper functions
 
