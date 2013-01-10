@@ -15,7 +15,7 @@
   /**
    * Globals
    */
-  var twos = [], looped, millis = 0, on_update;
+  var twos = [], looped, frameCount = 0, on_update;
 
   /**
    * Constants
@@ -229,7 +229,7 @@
       }
 
       if (_.isFunction(this.__onUpdate)) {
-        this.__onUpdate(millis);
+        this.__onUpdate(frameCount);
       }
 
       this.renderer.render(this.scene, this.camera);
@@ -1738,12 +1738,12 @@
 
   function loop() {
     if (_.isFunction(on_update)) {
-      on_update(millis);
+      on_update(frameCount);
     }
     _.each(twos, function(two) {
       two.render();
     });
-    millis++;
+    frameCount++;
     if (looped) {
       requestAnimationFrame(loop);
     }

@@ -35605,6 +35605,9 @@ THREE.ShaderSprite = {
 /**
  * @author jonobr1 / http://jonobr1.com/
  * Dependent on Three.js and Underscore.js
+ * 
+ * Baseline browsers are currently thought to be:
+ * http://robertnyman.com/javascript/#javascript-getters-setters-object-defineproperty-compatibility
  */
 
 (function() {
@@ -35616,7 +35619,7 @@ THREE.ShaderSprite = {
   /**
    * Globals
    */
-  var twos = [], looped, millis = 0, on_update;
+  var twos = [], looped, frameCount = 0, on_update;
 
   /**
    * Constants
@@ -35830,7 +35833,7 @@ THREE.ShaderSprite = {
       }
 
       if (_.isFunction(this.__onUpdate)) {
-        this.__onUpdate(millis);
+        this.__onUpdate(frameCount);
       }
 
       this.renderer.render(this.scene, this.camera);
@@ -35851,10 +35854,8 @@ THREE.ShaderSprite = {
      */
 
     makeRectangle: function(x, y, width, height) {
-
       var rect = new Two.Rectangle(x, y, width, height);
       return this.add(rect);
-
     },
 
     makeArc: function(x, y, radius, startAngle, endAngle, ccw) {
@@ -35863,17 +35864,13 @@ THREE.ShaderSprite = {
     },
 
     makeEllipse: function(x, y, width, height) {
-
       var ellipse = new Two.Ellipse(x, y, width, height);
       return this.add(ellipse);
-
     },
 
     makeCircle: function(x, y, radius) {
-
       var circle = new Two.Circle(x, y, radius);
       return this.add(circle);
-
     },
 
     makeCurve: function(p) {
@@ -35897,10 +35894,8 @@ THREE.ShaderSprite = {
     },
 
     makeLine: function(x1, y1, x2, y2) {
-
       var line = new Two.Line(x1, y1, x2, y2);
       return this.add(line);
-
     },
 
     makePolygon: function(p) {
@@ -35925,11 +35920,8 @@ THREE.ShaderSprite = {
     },
 
     makeGroup: function() {
-
-      var objects = arguments;
-      var group = new Two.Group(objects);
+      var group = new Two.Group(arguments);
       return this.add(group);
-
     }
 
   });
@@ -36273,6 +36265,7 @@ THREE.ShaderSprite = {
 
       if (object.outline) {
         if (!object.outline.material.morphTargets) {
+          // https://github.com/mrdoob/three.js/issues/2875
           // object.outline.material.morphTargets = true;
         }
         object.outline.geometry.morphTargets.push(object.geometry.morphTargets[this.index]);
@@ -36323,20 +36316,6 @@ THREE.ShaderSprite = {
     },
 
     /**
-     * Force boolean updates to make THREE calculate the new vertex positions.
-     */
-    updateVertexFlags: function() {
-
-      this.geometry.verticesNeedUpdate = true;
-      if (this.outline) {
-        this.outline.geometry.verticesNeedUpdate = true;
-      }
-
-      return this;
-
-    },
-
-    /**
      * Set new coordinate positions for vertices of a given shape.
      * @param {Array} an array of vertices. Does not need to be complete and
      * does not need to be the same length.
@@ -36361,8 +36340,22 @@ THREE.ShaderSprite = {
     },
 
     /**
-     * Scale the shape. Pass one argument for a uniform scale, two arguments for
-     * x, y transform.
+     * Force boolean updates to make THREE calculate the new vertex positions.
+     */
+    updateVertexFlags: function() {
+
+      this.geometry.verticesNeedUpdate = true;
+      if (this.outline) {
+        this.outline.geometry.verticesNeedUpdate = true;
+      }
+
+      return this;
+
+    },
+
+    /**
+     * getter-setter to scale the shape. Pass one argument for a uniform scale,
+     * two arguments for x, y transform.
      */
     scale: function(x, y) {
 
@@ -36382,7 +36375,7 @@ THREE.ShaderSprite = {
     },
 
     /**
-     * Rotate the shape in radians.
+     * getter-setter to rotate the shape in radians.
      */
     rotate: function(radians) {
 
@@ -36398,14 +36391,17 @@ THREE.ShaderSprite = {
     },
 
     /**
-     * Position a shape somewhere in two-dimensions.
+     * getter-setter to position a shape somewhere in two-dimensions.
      */
     translate: function(x, y) {
 
       var l = arguments.length;
 
       if (l <= 0) {
-        return this.mesh.position;
+        return {
+          x: this.mesh.position.x,
+          y: this.mesh.position.y
+        };
       }
 
       this.mesh.position.x = x;
@@ -36469,11 +36465,25 @@ THREE.ShaderSprite = {
 
     },
 
-    clone: function() {
+    /**
+     * Make's a copy of itself and returns the copy.
+     * @param {Boolean} pass true if you don't want the cloned shape to be added
+     * to the scene.
+     *
+     * TODO: Incomplete, needs to inherit other properties like color, opacity,
+     * stroke weight.
+     */
+    clone: function(silent) {
 
       var clone = new this.constructor(this.getVertices());
       clone.mesh.position.copy(this.mesh.position);
-      this.mesh.parent.add(clone.mesh);
+      clone.mesh.rotation.copy(this.mesh.rotation);
+      clone.mesh.scale.copy(this.mesh.scale);
+
+      if (!silent) {
+        this.mesh.parent.add(clone.mesh);
+      }
+
       return clone;
 
     }
@@ -36522,7 +36532,7 @@ THREE.ShaderSprite = {
     /**
      * Until Three can do this we have a wrapper for Two.Morph to do it.
      * TODO: Currently resets everytime a new morph is added — it should
-     * gracefully update.
+     * gracefully update. This will be available in r54.
      */
     updateMorphTargets: function() {
 
@@ -36611,25 +36621,39 @@ THREE.ShaderSprite = {
 
       // Update the children as well
       _.each(this.mesh.children, function(child, i) {
-        child.renderDepth = z - i;
+        // Do we set all children to same z-depth, or lesser, or do we need
+        // to set it at all?
+        child.renderDepth = z - i;  // TODO: Needs to be tested.
       }, this);
 
       return this;
 
     },
 
+    /** 
+     * Remove stroke from rendering of shapes.
+     */
     noStroke: function() {
 
       return this.stroke(0, 0, 0, 0);
 
     },
 
+    /**
+     * Remove fill from rendering of shapes.
+     */
     noFill: function() {
 
       return this.fill(0, 0, 0, 0);
 
     },
 
+    /**
+     * Set the strokeWeight of all children of the group to a certain amount.
+     *
+     * @param {Number} the thickness, weight, or sometimes referred to as width
+     * of a line.
+     */
     strokeWeight: function(n) {
 
       for (var i = 0, l = this.mesh.children.length; i < l; i++) {
@@ -36656,7 +36680,12 @@ THREE.ShaderSprite = {
     },
 
     /**
+     * Set the stroke color and alpha of all children to the group.
      *
+     * @param {Number} 0 - 1 value of red.
+     * @param {Number} 0 - 1 value of green.
+     * @param {Number} 0 - 1 value of blue.
+     * @param {Number} 0 - 1 value of alpha.
      */
     stroke: function(r, g, b, a) {
 
@@ -36694,7 +36723,12 @@ THREE.ShaderSprite = {
     },
 
     /**
+     * Set the fill color and alpha of all children to the group.
      *
+     * @param {Number} 0 - 1 value of red.
+     * @param {Number} 0 - 1 value of green.
+     * @param {Number} 0 - 1 value of blue.
+     * @param {Number} 0 - 1 value of alpha.
      */
     fill: function(r, g, b, a) {
 
@@ -36732,7 +36766,8 @@ THREE.ShaderSprite = {
     },
 
     /**
-     * Update internal variables and calculations.
+     * Update internal variables and calculations to align all shapes to the
+     * center of the bounding box of the group.
      */
     center: function() {
 
@@ -36761,6 +36796,10 @@ THREE.ShaderSprite = {
 
     },
 
+    /** 
+     * Convenience method to return the left, right, top, bottom, width,
+     * and height of a group.
+     */
     getBoundingClientRect: function() {
 
       var rect = { left: Infinity, right: -Infinity, top: Infinity, bottom: -Infinity };
@@ -36828,13 +36867,21 @@ THREE.ShaderSprite = {
     },
 
     /**
-     * Define the filled color of a shape.
+     * getter-setter to define the fill's color and opacity of a shape.
+     *
+     * @param {Number} 0 - 1 value of red.
+     * @param {Number} 0 - 1 value of green.
+     * @param {Number} 0 - 1 value of blue.
+     * @param {Number} 0 - 1 value of alpha.
      */
     fill: function(r, g, b, a) {
 
       var length = arguments.length;
 
-      if (length <= 1) {
+      if (length <= 0) {
+        var c = this.material.color;
+        return { r: c.b, g: c.g, b: c.b, a: this.material.opacity };
+      } else if (length <= 1) {
         g = b = r;
         a = 1.0;
       } else if (length <= 3) {
@@ -36876,16 +36923,29 @@ THREE.ShaderSprite = {
     },
 
     /**
-     * Define the color of a stroke.
+     * getter-setter to define the color and opacity of a stroke.
+     *
+     * @param {Number} 0 - 1 value of red.
+     * @param {Number} 0 - 1 value of green.
+     * @param {Number} 0 - 1 value of blue.
+     * @param {Number} 0 - 1 value of alpha.
      */
     stroke: function(r, g, b, a) {
+
       var length = arguments.length;
-      if (length <= 1) {
+      var outline = _.isObject(this.outline);
+
+      if (length <= 0) {
+        var material = (outline ? this.outline : this).material;
+        var c = material.color;
+        return { r: c.r, g: c.g, b: c.b, a: material.opacity };
+      } if (length <= 1) {
         g = b = r;
         a = 1.0;
       } else if (length <= 3) {
         a = 1.0;
       }
+
       if (_.isObject(this.outline)) {
         this.outline.material.color.setRGB(r, g, b);
         this.outline.material.opacity = a;
@@ -36895,11 +36955,14 @@ THREE.ShaderSprite = {
         this.material.opacity = a;
         this.mesh.visible = a > 0;
       }
+
       return this;
+
     },
 
     /**
-     * Define the weight or thickness of a stroke.
+     * getter-setter to define the weight, thickness, or sometimes referred to
+     * as width of a stroke.
      */
     strokeWeight: function(n) {
 
@@ -36927,6 +36990,9 @@ THREE.ShaderSprite = {
      * State the position as a percentage of the first point in the stroke.
      * Particularly useful for animating lines in-and-out.
      * Default is 0.0
+     *
+     * @param {Number} 0 - 1 value of where the first point should lie
+     * on the line.
      */
     begin: function(amt) {
 
@@ -36942,6 +37008,9 @@ THREE.ShaderSprite = {
      * State the position as a percentage of the last point in the stroke.
      * Particularly useful for animating lines in-and-out.
      * Default is 1.0
+     *
+     * @param {Number} 0 - 1 value of where the last point should lie
+     * on the line.
      */
     end: function(amt) {
 
@@ -36955,8 +37024,8 @@ THREE.ShaderSprite = {
 
     /**
      * TODO:
-     * Activate is the underlying function to trigger visible line segments.
-     * It takes a series of [min, max] arrays as its arguments.
+     * Activate will be the underlying function to trigger visible line
+     * segments. It takes a series of [min, max] arrays as its arguments.
      */
     activate: function() {
 
@@ -37019,19 +37088,24 @@ THREE.ShaderSprite = {
 
   var CurveProto = {
 
-    // lineIn, lineOut
-    // Special morph?
+    // TODO: Special morph? A morph but with curves.
 
   };
 
-  var RectProto = {
+  /**
+   * Simple getter-setters with ecmascript 5 syntax.
+   * Should we do something if your parser isn't 5?
+   */
 
-    width: function(width) {
+  var RectProto = {};
 
-      var l = arguments.length;
-      if (l <= 0) {
-        return this.__width;
-      }
+  Object.defineProperty(RectProto, 'width', {
+
+    get: function() {
+      return this.__width;
+    },
+
+    set: function(width) {
 
       this.__width = width;
 
@@ -37049,14 +37123,17 @@ THREE.ShaderSprite = {
 
       return this.updateVertexFlags();
 
+    }
+
+  });
+
+  Object.defineProperty(RectProto, 'height', {
+
+    get: function() {
+      return this.__height;
     },
 
-    height: function(height) {
-
-      var l = arguments.length;
-      if (l <= 0) {
-        return this.__height;
-      }
+    set: function(height) {
 
       this.__height = height;
 
@@ -37076,16 +37153,17 @@ THREE.ShaderSprite = {
 
     }
 
-  }
+  });
 
-  var EllipseProto = {
+  var EllipseProto = {};
 
-    width: function(width) {
+  Object.defineProperty(EllipseProto, 'width', {
 
-      var l = arguments.length;
-      if (l <= 0) {
-        return this.__width;
-      }
+    get: function() {
+      return this.__width;
+    },
+
+    set: function(width) {
 
       this.__width = width;
 
@@ -37106,14 +37184,17 @@ THREE.ShaderSprite = {
 
       return this.updateVertexFlags();
 
+    }
+
+  });
+
+  Object.defineProperty(EllipseProto, 'height', {
+
+    get: function() {
+      return this.__height;
     },
 
-    height: function(height) {
-
-      var l = arguments.length;
-      if (l <= 0) {
-        return this.__height;
-      }
+    set: function(height) {
 
       this.__height = height;
 
@@ -37136,16 +37217,18 @@ THREE.ShaderSprite = {
 
     }
 
-  };
+  });
 
-  var CircleProto = {
+  var CircleProto = {};
 
-    radius: function(radius) {
+  Object.defineProperty(CircleProto, 'radius', {
 
-      var l = arguments.length;
-      if (l <= 0) {
-        return this.__radius;
-      }
+    get: function() {
+      return this.__radius;
+    },
+
+    set: function(radius) {
+
       this.__radius = radius;
 
       var vertices = this.getVertices(true);
@@ -37166,11 +37249,17 @@ THREE.ShaderSprite = {
 
     }
 
-  };
+  });
 
-  var ArcProto = {
+  var ArcProto = {};
 
-    radius: function(radius) {
+  Object.defineProperty(ArcProto, 'radius', {
+
+    get: function() {
+      return this.__radius;
+    },
+
+    set: function(radius) {
 
       var l = arguments.length;
       if (l <= 0) {
@@ -37184,7 +37273,7 @@ THREE.ShaderSprite = {
 
     }
 
-  };
+  });
 
   var VectorProto = {
 
@@ -37253,12 +37342,12 @@ THREE.ShaderSprite = {
 
   function loop() {
     if (_.isFunction(on_update)) {
-      on_update(millis);
+      on_update(frameCount);
     }
     _.each(twos, function(two) {
       two.render();
     });
-    millis++;
+    frameCount++;
     if (looped) {
       requestAnimationFrame(loop);
     }
