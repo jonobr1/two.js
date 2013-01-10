@@ -48,15 +48,53 @@ btn.addEventListener('click', function(e) {
 
 var hw = two.width / 2, hh = two.height / 2, qw = hw / 2, qh = hh / 2;
 
-test('Rectangle Getters and Setters', function() {
+test('Two.Rectangle Getters and Setters', function() {
 
-  var rect = two.makeRectangle(hw, hh, qh, qh)
+  var shape = two.makeRectangle(hw, hh, qh, qh)
     .fill(1.0, 0, 0);
 
-  console.log(rect.width, qh, rect);
+  ok(shape.width === qh, 'Two.Rectangle width getter tested.');
+  ok(shape.height === qh, 'Two.Rectangle height getter tested.');
 
-  ok(rect.width === qh, 'Passed!');
-  // ok(rect.height === qh);
+  // Need to back-check against an image.
+  shape.width = qw;
+  shape.height = qw;
+  ok(shape.width === qw, 'Two.Rectangle width setter tested.');
+  ok(shape.height === qw, 'Two.Rectangle height setter tested.')
+
+  ok(_.isEqual(shape.fill(), { r: 1.0, g: 0.0, b: 0.0, a: 1.0 }), 'Two.Rectangle fill getter tested.');
+  ok(_.isEqual(shape.stroke(), { r: 0.0, g: 0.0, b: 0.0, a: 1.0 }), 'Two.Rectangle stroke getter tested.');
+
+  shape.fill(0, 1.0, 0.0);
+  ok(_.isEqual(shape.fill(), { r: 0, g: 1.0, b: 0.0, a: 1.0 }), 'Two.Rectangle fill setter green tested.');
+  shape.fill(0, 0, 1.0);
+  ok(_.isEqual(shape.fill(), { r: 0, g: 0, b: 1.0, a: 1.0 }), 'Two.Rectangle fill setter blue tested.');
+  shape.fill(0, 0, 0, 0.5);
+  ok(_.isEqual(shape.fill(), { r: 0, g: 0, b: 0, a: 0.5 }), 'Two.Rectangle fill alpha tested.');
+
+  shape.stroke(0.0, 1.0, 0.0);
+  ok(_.isEqual(shape.stroke(), { r: 0, g: 1, b: 0, a: 1 }), 'Two.Rectangle stroke setter green tested.');
+  shape.stroke(0, 0, 1);
+  ok(_.isEqual(shape.stroke(), { r: 0, g: 0, b: 1, a: 1}), 'Two.Rectangle stroke setter blue tested.');
+  shape.stroke(0, 0, 0, 1);
+  ok(_.isEqual(shape.stroke(), { r: 0, g: 0, b: 0, a: 1 }), 'Two.Rectangle stroke setter alpha tested.');
+
+  ok(shape.strokeWeight() === 1, 'Two.Rectangle strokeWeight tested.');
+  shape.strokeWeight(5);
+  ok(shape.strokeWeight() === 5, 'Two.Rectangle strokeWeight tested.');
+
+  ok(shape.zIndex() === 0, 'Two.Rectangle z-index getter tested.');
+  shape.zIndex(100);
+  ok(shape.zIndex() === 100, 'Two.Rectangle z-index setter tested.');
+
+  shape.noFill();
+  ok(_.isEqual(shape.fill(), { r: 0, g: 0, b: 0, a: 0 }), 'Two.Rectangle noFill tested.');
+  shape.fill(0, 0, 0, 0.5);
+  shape.noStroke();
+  ok(_.isEqual(shape.stroke(), { r: 0, g: 0, b: 0, a: 0 }) && !shape.outline.visible, 'Two.Rectangle noStroke tested.');
+  shape.stroke(0, 0, 0, 1);
+
+  // TODO: Test getVertices and setVertices...
 
 });
 

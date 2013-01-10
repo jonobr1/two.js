@@ -36892,7 +36892,7 @@ THREE.ShaderSprite = {
 
       if (length <= 0) {
         var c = this.material.color;
-        return { r: c.b, g: c.g, b: c.b, a: this.material.opacity };
+        return { r: c.r, g: c.g, b: c.b, a: this.material.opacity };
       } else if (length <= 1) {
         g = b = r;
         a = 1.0;
