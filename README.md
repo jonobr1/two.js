@@ -4,7 +4,8 @@ two.js
 __This is considered alpha grade__. two.js is a two-dimensional drawing api built on top of [three.js](http://threejs.org) meant for modern browsers. Because it's in two-dimensions two handles the canvas, renderer, scene, and camera for you.
 
 ## Things to do before making documentation site:
-+ Standardize `getter` and `setter` functions.
++ ~~Standardize `getter` and `setter` functions.~~
+  + ~~Object.defineProperty is not `_.extend`able ruh roh... :(~~
 + ~~Make logo~~
 + ~~Add `Two.Arc`~~
 + ~~Add `Two.Group`~~
@@ -19,4 +20,3 @@ __This is considered alpha grade__. two.js is a two-dimensional drawing api buil
   + __Won't fix__: Decided to use morph targets and let people use their own animation on top.
 + Is motion blur a possibility? Check out http://www.cse.yorku.ca/~shuryork/MotionBlurTest.html
 + Documentation / Tutorials
-+ Object.defineProperty is not `_.extend`able ruh roh... :(
