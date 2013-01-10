@@ -1532,7 +1532,7 @@
 
   var RectProto = {};
 
-  Object.defineProperty(RectProto, 'width', {
+  Object.defineProperty(Two.Rectangle.prototype, 'width', {
 
     get: function() {
       return this.__width;
@@ -1560,7 +1560,7 @@
 
   });
 
-  Object.defineProperty(RectProto, 'height', {
+  Object.defineProperty(Two.Rectangle.prototype, 'height', {
 
     get: function() {
       return this.__height;
@@ -1590,7 +1590,7 @@
 
   var EllipseProto = {};
 
-  Object.defineProperty(EllipseProto, 'width', {
+  Object.defineProperty(Two.Ellipse.prototype, 'width', {
 
     get: function() {
       return this.__width;
@@ -1621,7 +1621,7 @@
 
   });
 
-  Object.defineProperty(EllipseProto, 'height', {
+  Object.defineProperty(Two.Ellipse.prototype, 'height', {
 
     get: function() {
       return this.__height;
@@ -1654,7 +1654,7 @@
 
   var CircleProto = {};
 
-  Object.defineProperty(CircleProto, 'radius', {
+  Object.defineProperty(Two.Circle.prototype, 'radius', {
 
     get: function() {
       return this.__radius;
@@ -1686,7 +1686,7 @@
 
   var ArcProto = {};
 
-  Object.defineProperty(ArcProto, 'radius', {
+  Object.defineProperty(Two.Arc.prototype, 'radius', {
 
     get: function() {
       return this.__radius;
