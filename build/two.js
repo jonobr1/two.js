@@ -35619,7 +35619,7 @@ THREE.ShaderSprite = {
   /**
    * Globals
    */
-  var twos = [], looped, frameCount = 0, on_update;
+  var twos = [], looped, frameCount = 0, on_update, morphIndex = 0;
 
   /**
    * Constants
@@ -36086,7 +36086,7 @@ THREE.ShaderSprite = {
     /**
      * Two.Curve is a curved polygon with catmull-rom interpolation.
      */
-    Curve: function(points, closed) {
+    Curve: function(points, open) {
 
       // TODO: This is up for debate still.
       // if (!open && !_.isEqual(points[points.length - 1], points[0])) {
@@ -36101,7 +36101,7 @@ THREE.ShaderSprite = {
         return new Two.Vector(p.x, p.y);
       }, this);
 
-      Two.Polygon.call(this, curve, !closed);
+      Two.Polygon.call(this, curve, !!open);
 
     },
 
@@ -36256,7 +36256,7 @@ THREE.ShaderSprite = {
       this.object = object;
 
       this.index = object.geometry.morphTargets.length;
-      this.name = name || 'Two.Morph-' + this.index;
+      this.name = name || 'Two.Morph-' + morphIndex;
 
       object.geometry.morphTargets.push({
         name: this.name,
@@ -36272,6 +36272,8 @@ THREE.ShaderSprite = {
       }
 
       this.updateMorphTargets();
+
+      morphIndex++;
 
     },
 
@@ -36436,6 +36438,7 @@ THREE.ShaderSprite = {
      */
     makeMorph: function(vertices, index, name) {
 
+      var vertices = vertices.slice(0).reverse(); // Copy out, just in case.
       var morph = new Two.Morph(this, vertices, index, name);
 
       if (!_.isArray(this.morphs)) {
@@ -37088,7 +37091,24 @@ THREE.ShaderSprite = {
 
   var CurveProto = {
 
-    // TODO: Special morph? A morph but with curves.
+
+    /**
+     * A morph with a catmull-rom interpolation.
+     */
+    makeMorph: function(vertices, index, name) {
+
+      var vertices = vertices.slice(0).reverse(); // Copy out, just in case.
+      var length = this.getVertices().length;
+      var spline = new THREE.SplineCurve(vertices);
+
+      var points = _.map(_.range(length), function(i) {
+        var p = spline.getPoint(i / length);
+        return new Two.Vector(p.x, p.y);
+      }, this).reverse();
+
+      return ShapeProto.makeMorph.call(this, points, index, name);
+
+    }
 
   };
 
