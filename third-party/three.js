@@ -13035,7 +13035,7 @@ THREE.CanvasRenderer = function ( parameters ) {
 
 			if ( det === 0 ) return;
 
-			idet = 1 / Math.sqrt( det );
+			idet = 1 / Math.sqrt( det * 32 );
 
 			x *= idet; y *= idet;
 
