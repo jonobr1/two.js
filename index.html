@@ -1,0 +1,45 @@
+<!doctype html>
+  <head lang="en">
+    <title>Two.js</title>
+  </head>
+  <body>
+    <div class="scripts">
+      <script src="./third-party/underscore.js"></script>
+      <script src="./third-party/events.js"></script>
+      <script src="./third-party/requestAnimationFrame.js"></script>
+      <script src="./src/two.js"></script>
+      <script src="./src/renderer/svg.js"></script>
+      <script src="./src/vector.js"></script>
+      <script src="./src/shape.js"></script>
+      <script src="./src/group.js"></script>
+      <script src="./src/polygon.js"></script>
+      <script>
+
+        (function() {
+
+          var two = new Two({
+            fullscreen: true
+          }).appendTo(document.body);
+          var tri = new Two.Polygon([
+            new Two.Vector(50, -50),
+            new Two.Vector(50, 50),
+            new Two.Vector(-50, 50),
+            new Two.Vector(-50, -50)
+          ], true);
+
+          tri.translation.x = two.width / 2;
+          tri.translation.y = two.height / 2;
+
+          two.scene.add(tri);
+
+          two.bind('update', function() {
+            tri.rotation += 1;
+            tri.scale = Math.sin(tri.rotation / Math.PI);
+          });
+
+        })();
+
+      </script>
+    </div>
+  </body>
+</html>
