@@ -43,6 +43,10 @@
 
         if (_.indexOf(children, object) < 0) {
           children.push(object);
+          if (!object.id) {
+            this.renderer.add(object);
+          }
+          this.domElement.appendChild(object.domElement);
         }
 
       }, this);
