@@ -40,6 +40,12 @@
       return this;
     },
 
+    /**
+     * Turn a set of vertices into a string for the d property of a path
+     * element. It is imperative that the string collation is as fast as
+     * possible, because this call will be happening multiple times a 
+     * second.
+     */
     toString: function(points, closed, curved) {
 
       var length = points.length,

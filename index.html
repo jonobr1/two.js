@@ -31,6 +31,8 @@
           tri.translation.y = two.height / 2;
 
           two.scene.add(tri);
+          tri.fill = 'red';
+          tri.linewidth = 10;
 
           two.bind('update', function() {
             tri.rotation += Math.PI / 32;
