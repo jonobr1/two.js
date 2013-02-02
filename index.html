@@ -37,7 +37,7 @@
           two.bind('update', function() {
             tri.rotation += Math.PI / 32;
             tri.scale = Math.sin(tri.rotation / Math.PI);
-            tri.translation.x = Math.sin(tri.rotation / Math.PI) + two.width / 2;
+            tri.translation.x = 100 * Math.sin(tri.rotation / Math.PI) + two.width / 2;
           });
 
         })();
