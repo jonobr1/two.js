@@ -5,6 +5,16 @@
    */
   var OBJECT_COUNT = 0;
 
+  /**
+   * Constants
+   */
+  var sin = Math.sin,
+    cos = Math.cos,
+    atan2 = Math.atan2,
+    sqrt = Math.sqrt
+    PI = Math.PI,
+    HALF_PI = PI / 2;
+
   var svg = {
 
     version: 1.1,
@@ -48,8 +58,8 @@
      */
     toString: function(points, closed, curved) {
 
-      var length = points.length,
-        last = length - 1;
+      var l = points.length,
+        last = l - 1;
 
       if (!curved) {
         return _.map(points, function(v, i) {
@@ -67,15 +77,55 @@
         }).join(' ');
       }
 
-      // TODO: Curved lines
-      var curves = catmull(curves);
-      return '';
+      var curve = getCurveFromPoints(points, closed);
 
-    },
+      return _.map(curve, function(b, i) {
 
-    catmull: function() {
+        var command;
+        var prev = closed ? mod(i - 1, l) : Math.max(i - 1, 0);
+        var next = closed ? mod(i + 1, l) : Math.min(i + 1, last);
 
-      
+        var a = curve[prev];
+        var c = curve[next];
+
+        var vx = a.v.x;
+        var vy = a.v.y;
+
+        var ux = b.u.x;
+        var uy = b.u.y;
+
+        var x = b.x;
+        var y = b.y;
+
+        if (i <= 0) {
+          command = 'M ' + x + ' ' + y;
+        } else {
+          command = 'C '
+            + ' ' + vx + ' ' + vy + ' ' + ux + ' ' + uy + ' ' + x + ' ' + y;
+        }
+
+        // Add a final point and close it off
+
+        if (i >= last && closed) {
+
+          vx = b.v.x;
+          vy = b.v.y;
+
+          ux = c.u.x;
+          uy = c.u.y;
+
+          x = c.x;
+          y = c.y;
+
+          command += 
+            ' C ' + vx + ' ' + vy + ' ' + ux + ' ' + uy + ' ' + x + ' ' + y;
+
+          command += ' Z';
+        }
+
+        return command;
+
+      }).join(' ');
 
     }
 
@@ -318,6 +368,118 @@
     var count = OBJECT_COUNT;
     OBJECT_COUNT++;
     return count;
+  }
+
+  /**
+   * Creates a set of points that have u, v values for anchor positions
+   */
+  function getCurveFromPoints(points, closed) {
+
+    var curve = [], l = points.length, last = l - 1;
+
+    for (var i = 0; i < l; i++) {
+
+      var p = points[i];
+      var point = { x: p.x, y: p.y };
+      curve.push(point);
+
+      var prev = closed ? mod(i - 1, l) : Math.max(i - 1, 0);
+      var next = closed ? mod(i + 1, l) : Math.min(i + 1, last);
+
+      var a = points[prev];
+      var b = point;
+      var c = points[next];
+      getControlPoints(a, b, c);
+
+      if (!b.u.x && !b.u.y) {
+        b.u.x = b.x;
+        b.u.y = b.y;
+      }
+
+      if (!b.v.x && !b.v.y) {
+        b.v.x = b.x;
+        b.v.y = b.y;
+      }
+
+    }
+
+    return curve;
+
+  }
+
+  /**
+   * Given three coordinates return the control points for the middle, b,
+   * vertex.
+   */
+  function getControlPoints(a, b, c) {
+
+    var a1 = angleBetween(a, b);
+    var a2 = angleBetween(c, b);
+
+    var d1 = distanceBetween(a, b) * 0.33;  // Why 0.33?
+    var d2 = distanceBetween(c, b) * 0.33;
+
+    var mid = (a1 + a2) / 2;
+
+    // So we know which angle corresponds to which side.
+
+    if (a2 < a1) {
+      mid += HALF_PI;
+    } else {
+      mid -= HALF_PI;
+    }
+
+    var u = {
+      x: b.x + cos(mid) * d1,
+      y: b.y + sin(mid) * d1
+    };
+
+    mid -= PI;
+
+    var v = {
+      x: b.x + cos(mid) * d2,
+      y: b.y + sin(mid) * d2
+    };
+
+    b.u = u;
+    b.v = v;
+
+    return b;
+
+  }
+
+  function angleBetween(A, B) {
+
+    var dx = A.x - B.x;
+    var dy = A.y - B.y;
+
+    return atan2(dy, dx);
+
+  }
+
+  function distanceBetweenSquared(p1, p2) {
+
+    var dx = p1.x - p2.x;
+    var dy = p1.y - p2.y;
+
+    return dx * dx + dy * dy;
+
+  }
+
+  function distanceBetween(p1, p2) {
+
+    return sqrt(distanceBetweenSquared(p1, p2));
+
+  }
+
+  function mod(v, l) {
+
+    while (v < 0) {
+      v += l;
+    }
+
+    return v % l;
+
   }
 
 })();

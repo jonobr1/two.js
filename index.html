@@ -29,15 +29,20 @@
           return new Two.Vector(x, y);
         });
 
-        var p = two.makePolygon(points);
-        p.translation.set(two.width / 2, two.height / 2);
+        // var p = two.makePolygon(points);
+        // p.translation.set(two.width / 2, two.height / 2);
+
+        var c = two.makeCurve(points);
+        c.translation.set(two.width / 2, two.height / 2);
+        c.scale = 4;
 
         two
           .bind('update', function(count) {
 
           })
           .bind('resize', function() {
-            p.translation.set(two.width / 2, two.height / 2);
+            // p.translation.set(two.width / 2, two.height / 2);
+            c.translation.set(two.width / 2, two.height / 2);
           });
 
       </script>

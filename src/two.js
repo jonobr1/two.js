@@ -180,6 +180,30 @@
      * Convenience Methods
      */
 
+    makeCurve: function(p) {
+
+      var l = arguments.length, points = p;
+      if (!_.isArray(p)) {
+        points = [];
+        for (var i = 0; i < l; i+=2) {
+          var x = arguments[i];
+          if (!_.isNumber(x)) {
+            break;
+          }
+          var y = arguments[i + 1];
+          points.push(new Two.Vector(x, y));
+        }
+      }
+
+      var last = arguments[l - 1];
+      var poly = new Two.Polygon(points, !(_.isBoolean(last) ? last : undefined), true);
+
+      this.scene.add(poly);
+
+      return poly;
+
+    },
+
     /**
      * Convenience method to make and draw a Two.Polygon.
      */
