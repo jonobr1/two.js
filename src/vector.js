@@ -1,15 +1,37 @@
 (function() {
 
   var Vector = Two.Vector = function(x, y) {
-    this.x = x || 0;
-    this.y = y || 0;
+
+    var x = x || 0;
+    var y = y || 0;
+
+    Object.defineProperty(this, 'x', {
+      get: function() {
+        return x;
+      },
+      set: function(v) {
+        x = v;
+        this.trigger('change', 'x');
+      }
+    });
+
+    Object.defineProperty(this, 'y', {
+      get: function() {
+        return y;
+      },
+      set: function(v) {
+        y = v;
+        this.trigger('change', 'y');
+      }
+    });
+
   };
 
-  _.extend(Vector, Backbone.Events, {
+  _.extend(Vector, {
 
   });
 
-  _.extend(Vector.prototype, {
+  _.extend(Vector.prototype, Backbone.Events, {
 
     set: function(x, y) {
       this.x = x;

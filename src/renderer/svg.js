@@ -150,7 +150,7 @@
           tag = 'path'
         }
 
-        elem = object.domElement = svg.createElement(tag, getStyles(object));
+        elem = svg.createElement(tag, getStyles(object));
 
         domElement.appendChild(elem);
         elements.push(elem);
@@ -273,9 +273,9 @@
           + ') scale(' + value + ') rotate(' + closed.rotation + ')';
         break;
       case 'translation':
-        // property = 'transform';
-        // value = 'translate(' + translation.x + ',' + translation.y
-        //   + ') scale(' + scale + ') rotate(' + rotation + ')';
+        property = 'transform';
+        value = 'translate(' + value.x + ',' + value.y
+          + ') scale(' + closed.scale + ') rotate(' + closed.rotation + ')';
         break;
       case 'visible':
         property = 'stroke-linejoin';

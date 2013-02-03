@@ -16,7 +16,7 @@
 
     makeGetterSetter(this);
 
-    this.translation = new Two.Vector();  // TODO
+    this.translation = new Two.Vector();
     this.rotation = 0.0;
     this.scale = 1.0;
 
@@ -28,6 +28,11 @@
 
     this.join = 'round';
     this.miter = 'round';
+
+    // Bind to translation
+    this.translation.bind('change', _.bind(function(property) {
+      this.trigger('change', this.id, 'translation', this.translation, this);
+    }, this));
 
   };
 
@@ -44,8 +49,6 @@
     _.each(properties, function(k) {
 
       var secret = '__' + k;
-
-      shape[secret];
 
       Object.defineProperty(shape, k, {
         get: function() {
