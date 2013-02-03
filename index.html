@@ -1,6 +1,13 @@
 <!doctype html>
   <head lang="en">
     <title>Two.js</title>
+    <style>
+
+      body {
+        background: #999;
+      }
+
+    </style>
   </head>
   <body>
     <div class="scripts">
@@ -32,9 +39,28 @@
         // var p = two.makePolygon(points);
         // p.translation.set(two.width / 2, two.height / 2);
 
-        var c = two.makeCurve(points);
-        c.translation.set(two.width / 2, two.height / 2);
-        c.scale = 4;
+        var circle = two.makeCurve(points);
+        circle.translation.set(two.width / 2, two.height / 2);
+        circle.scale = 4;
+        circle.fill = 'rgb(255, 100, 100)';
+        circle.linewidth = 0;
+
+        var phi = 10;
+        amount = 100;
+        var points = _.map(_.range(amount), function(i) {
+          var pct = i / amount;
+          var theta = pct * Math.PI * phi;
+          var x = pct * 250 - 250 / 2;
+          var y = radius * Math.sin(theta);
+          return new Two.Vector(x, y);
+        });
+
+        var wave = two.makeCurve(points, true);
+        wave.translation.set(two.width / 2, two.height / 2);
+        wave.linewidth = 5;
+        wave.scale = 3;
+        wave.stroke = 'rgb(255, 200, 255)';
+        wave.fill = 'rgba(0, 0, 0, 0)';
 
         two
           .bind('update', function(count) {
@@ -42,7 +68,8 @@
           })
           .bind('resize', function() {
             // p.translation.set(two.width / 2, two.height / 2);
-            c.translation.set(two.width / 2, two.height / 2);
+            circle.translation.set(two.width / 2, two.height / 2);
+            wave.translation.copy(circle.translation);
           });
 
       </script>

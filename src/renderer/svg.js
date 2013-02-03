@@ -101,7 +101,7 @@
           command = 'M ' + x + ' ' + y;
         } else {
           command = 'C '
-            + ' ' + vx + ' ' + vy + ' ' + ux + ' ' + uy + ' ' + x + ' ' + y;
+            + vx + ' ' + vy + ' ' + ux + ' ' + uy + ' ' + x + ' ' + y;
         }
 
         // Add a final point and close it off
