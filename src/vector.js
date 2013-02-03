@@ -5,7 +5,7 @@
     this.y = y || 0;
   };
 
-  _.extend(Vector, {
+  _.extend(Vector, Backbone.Events, {
 
   });
 

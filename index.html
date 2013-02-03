@@ -15,32 +15,28 @@
       <script src="./src/polygon.js"></script>
       <script>
 
-        (function() {
+        var two = new Two({
+          fullscreen: true
+        }).appendTo(document.body);
+        var tri = new Two.Polygon([
+          new Two.Vector(50, -50),
+          new Two.Vector(50, 50),
+          new Two.Vector(-50, 50),
+          new Two.Vector(-50, -50)
+        ], true);
 
-          var two = new Two({
-            fullscreen: true
-          }).appendTo(document.body);
-          var tri = new Two.Polygon([
-            new Two.Vector(50, -50),
-            new Two.Vector(50, 50),
-            new Two.Vector(-50, 50),
-            new Two.Vector(-50, -50)
-          ], true);
+        tri.translation.x = two.width / 2;
+        tri.translation.y = two.height / 2;
 
-          tri.translation.x = two.width / 2;
-          tri.translation.y = two.height / 2;
+        two.scene.add(tri);
+        tri.fill = 'red';
+        tri.linewidth = 10;
 
-          two.scene.add(tri);
-          tri.fill = 'red';
-          tri.linewidth = 10;
-
-          two.bind('update', function() {
-            tri.rotation += Math.PI / 32;
-            tri.scale = Math.sin(tri.rotation / Math.PI);
-            tri.translation.x = 100 * Math.sin(tri.rotation / Math.PI) + two.width / 2;
-          });
-
-        })();
+        two.bind('update', function() {
+          tri.rotation += Math.PI / 32;
+          tri.scale = Math.sin(tri.rotation / Math.PI);
+          tri.translation.x = 100 * Math.sin(tri.rotation / Math.PI) + two.width / 2;
+        });
 
       </script>
     </div>

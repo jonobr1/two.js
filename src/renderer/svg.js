@@ -81,14 +81,19 @@
   /**
    * @class
    */
-  var Renderer = Two[Two.types.svg] = function() {
+  var Renderer = Two[Two.Types.svg] = function(two) {
+
+    this.two = two;
 
     this.domElement = svg.createElement('svg');
-    this.children = [];
+    this.elements = [];
+    this.commands = [];
 
   };
 
   _.extend(Renderer, {
+
+    Identifier: 'two-'
 
   });
 
@@ -111,11 +116,18 @@
     /**
      * Add an object or objects to the renderer.
      */
-    add: function(object) {
+    add: function(o) {
 
-      var objects = _.isArray(object) ? object : arguments;
-      var domElement = this.domElement;
-      var children = this.children;
+      var l = arguments.length,
+        objects = o,
+        elements = this.elements,
+        domElement = this.domElement;
+
+      if (!_.isArray(o)) {
+        objects = _.map(arguments, function(a) {
+          return a;
+        });
+      }
 
       _.each(objects, function(object) {
 
@@ -129,7 +141,11 @@
 
         if (object instanceof Two.Group) {
           tag = 'g';
-          object.renderer = this;
+          if (_.isUndefined(object.parent)) { // For the "scene".
+            object.parent = this;
+            object.unbind(Two.Events.change)
+              .bind(Two.Events.change, _.bind(this.update, this));
+          }
         } else {
           tag = 'path'
         }
@@ -137,7 +153,7 @@
         elem = object.domElement = svg.createElement(tag, getStyles(object));
 
         domElement.appendChild(elem);
-        children.push(object);
+        elements.push(elem);
 
       }, this);
 
@@ -145,13 +161,44 @@
 
     },
 
+    update: function(id, property, value) {
+
+      this.commands.push(arguments);
+
+      return this;
+
+    },
+
     render: function() {
 
-      _.each(this.children, function(c) {
+      var elements = this.elements,
+        selector = Renderer.Identifier;
 
-        svg.setAttributes(c.domElement, getStyles(c));
+      _.each(this.commands, function(command) {
 
-      });
+        var i = command[0],
+          property = command[1],
+          value = command[2],
+          closed = command[3],  // Only exists for "d/vertices" property
+          curved = command[4],
+          elem = elements[i];
+
+        switch (property) {
+
+          case Two.Properties.hierarchy:
+            _.each(value, function(j) {
+              elem.appendChild(elements[j]);
+            });
+            break;
+          default:
+            css(elem, property, value, closed, curved);
+        }
+
+      }, this);
+
+      this.commands.length = 0;
+
+      return this;
 
     }
 
@@ -176,7 +223,7 @@
       vertices = o.vertices;
 
     if (o.id) {
-      styles.id = o.id;
+      styles.id = Renderer.Identifier + o.id;
     }
     if (translation && _.isNumber(scale) && _.isNumber(rotation)) {
       styles.transform = 'translate(' + translation.x + ',' + translation.y
@@ -211,9 +258,58 @@
 
   }
 
+  function css(elem, property, value, closed, curved) {
+
+    switch (property) {
+
+      case 'rotation':
+        property = 'transform';
+        value = 'translate(' + closed.translation.x + ',' + closed.translation.y
+          + ') scale(' + closed.scale + ') rotate(' + value + ')';
+        break;
+      case 'scale':
+        property = 'transform';
+        value = 'translate(' + closed.translation.x + ',' + closed.translation.y
+          + ') scale(' + value + ') rotate(' + closed.rotation + ')';
+        break;
+      case 'translation':
+        // property = 'transform';
+        // value = 'translate(' + translation.x + ',' + translation.y
+        //   + ') scale(' + scale + ') rotate(' + rotation + ')';
+        break;
+      case 'visible':
+        property = 'stroke-linejoin';
+        break;
+      case 'join':
+        property = 'stroke-linejoin';
+        break;
+      case 'miter':
+        property = 'stroke-miterlimit';
+        break;
+      case 'linewidth':
+        property = 'stroke-width';
+        break;
+      case 'vertices':
+        property = 'd';
+        value = svg.toString(value, closed, curved);
+        break;
+      case 'opacity':
+        svg.setAttributes(elem, {
+          'stroke-opacity': opacity,
+          'fill-opacity': opacity
+        });
+        return;
+
+    }
+
+    elem.setAttribute(property, value);
+
+  }
+
   function generateId() {
+    var count = OBJECT_COUNT;
     OBJECT_COUNT++;
-    return 'two-' + Two.types.svg.toLowerCase() + '-' + OBJECT_COUNT;
+    return count;
   }
 
 })();

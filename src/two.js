@@ -49,11 +49,12 @@
       fullscreen: false,
       width: 400,
       height: 400,
-      type: Two.types.svg,
+      type: Two.Types.svg,
       autostart: true
     });
 
-    this.renderer = new Two[params.type]();
+    this.type = params.type;
+    this.renderer = new Two[this.type](this);
     this.playing = params.autostart;
 
     if (params.fullscreen) {
@@ -84,19 +85,32 @@
     this.scene = new Two.Group();
     this.renderer.add(this.scene);
 
-    Two.instances.push(this);
+    Two.Instances.push(this);
 
   };
 
   _.extend(Two, {
 
-    types: {
+    Types: {
       webgl: 'WebGLRenderer',
       svg: 'SVGRenderer',
       canvas: 'CanvasRenderer'
     },
 
-    instances: [],
+    Properties: {
+      hierarchy: 'hierarchy'
+    },
+
+    Events: {
+      play: 'play',
+      pause: 'pause',
+      update: 'update',
+      render: 'render',
+      resize: 'resize',
+      change: 'change'
+    },
+
+    Instances: [],
 
     noConflict: function() {
       root.Two = previousTwo;
@@ -118,7 +132,7 @@
 
       this.playing = true;
 
-      return this.trigger('play');
+      return this.trigger(Two.Events.play);
 
     },
 
@@ -126,7 +140,7 @@
 
       this.playing = false;
 
-      return this.trigger('pause');
+      return this.trigger(Two.Events.pause);
 
     },
 
@@ -147,7 +161,7 @@
         renderer.height = height;
       }
 
-      return this.trigger('update');
+      return this.trigger(Two.Events.update);
 
     },
 
@@ -158,7 +172,7 @@
 
       this.renderer.render();
 
-      return this.trigger('render');
+      return this.trigger(Two.Events.render);
 
     }
 
@@ -172,7 +186,7 @@
     var height = this.height = wr.height;
 
     this.renderer.setSize(width, height);
-    this.trigger('resize', width, height);
+    this.trigger(Two.Events.resize, width, height);
 
   }
 
@@ -180,7 +194,7 @@
 
   (function() {
 
-    _.each(Two.instances, function(t) {
+    _.each(Two.Instances, function(t) {
 
       if (t.playing) {
         t.update().render();
