@@ -11,7 +11,7 @@
     var closed = !!closed;
     var curved = !!curved;
 
-    var updateVertices = _.debounce(_.bind(function(property) {
+    var updateVertices = _.debounce(_.bind(function(property) { // Call only once a frame.
       this.trigger(Two.Events.change, this.id, 'vertices', this.vertices, this.closed, this.curved);
     }, this), 0);
 

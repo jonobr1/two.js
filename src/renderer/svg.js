@@ -68,11 +68,14 @@
       }
 
       // TODO: Curved lines
+      var curves = catmull(curves);
       return '';
 
     },
 
     catmull: function() {
+
+      
 
     }
 
