@@ -17,6 +17,8 @@
       this.add(_.map(arguments, function(a) {
         return a;
       }));
+    } else {
+      this.add(o);
     }
 
   };

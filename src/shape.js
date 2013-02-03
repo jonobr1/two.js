@@ -1,20 +1,8 @@
 (function() {
 
-  var properties = [
-    'rotation',
-    'scale',
-    'fill',
-    'stroke',
-    'linewidth',
-    'opacity',
-    'visible',
-    'join',
-    'miter'
-  ];
-
   var Shape = Two.Shape = function() {
 
-    makeGetterSetter(this);
+    Shape.MakeGetterSetter(this, Shape.Properties);
 
     this.translation = new Two.Vector();
     this.rotation = 0.0;
@@ -29,7 +17,8 @@
     this.join = 'round';
     this.miter = 'round';
 
-    // Bind to translation
+    // Extra bind for translation
+
     this.translation.bind('change', _.bind(function(property) {
       this.trigger('change', this.id, 'translation', this.translation, this);
     }, this));
@@ -38,30 +27,46 @@
 
   _.extend(Shape, {
 
+    Properties: [
+      'rotation',
+      'scale',
+      'fill',
+      'stroke',
+      'linewidth',
+      'opacity',
+      'visible',
+      'join',
+      'miter'
+    ],
+
+    MakeGetterSetter: function(shape, properties) {
+
+      if (!_.isArray(properties)) {
+        properties = [properties];
+      }
+
+      _.each(properties, function(k) {
+
+        var secret = '_' + k;
+
+        Object.defineProperty(shape, k, {
+          get: function() {
+            return this[secret];
+          },
+          set: function(v) {
+            this[secret] = v;
+            this.trigger(Two.Events.change, this.id, k, v, this);
+          }
+        });
+
+      });
+
+    }
+
   });
 
   _.extend(Shape.prototype, Backbone.Events, {
 
   });
-
-  function makeGetterSetter(shape) {
-
-    _.each(properties, function(k) {
-
-      var secret = '__' + k;
-
-      Object.defineProperty(shape, k, {
-        get: function() {
-          return this[secret];
-        },
-        set: function(v) {
-          this[secret] = v;
-          this.trigger('change', this.id, k, v, this);
-        }
-      });
-
-    });
-
-  }
 
 })();

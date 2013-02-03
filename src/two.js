@@ -47,8 +47,8 @@
 
     var params = _.defaults(options || {}, {
       fullscreen: false,
-      width: 400,
-      height: 400,
+      width: 640,
+      height: 480,
       type: Two.Types.svg,
       autostart: true
     });
@@ -56,6 +56,7 @@
     this.type = params.type;
     this.renderer = new Two[this.type](this);
     this.playing = params.autostart;
+    this.frameCount = 0;
 
     if (params.fullscreen) {
 
@@ -149,19 +150,18 @@
      */
     update: function() {
 
+      this.frameCount++;
+
       var width = this.width;
       var height = this.height;
       var renderer = this.renderer;
 
       // Update width / height for the renderer
-      if (width !== renderer.width) {
-        renderer.width = width;
-      }
-      if (height !== renderer.height) {
-        renderer.height = height;
+      if (width !== renderer.width || height !== renderer.height) {
+        renderer.setSize(width, height);
       }
 
-      return this.trigger(Two.Events.update);
+      return this.trigger(Two.Events.update, this.frameCount);
 
     },
 
@@ -172,7 +172,38 @@
 
       this.renderer.render();
 
-      return this.trigger(Two.Events.render);
+      return this.trigger(Two.Events.render, this.frameCount);
+
+    },
+
+    /**
+     * Convenience Methods
+     */
+
+    /**
+     * Convenience method to make and draw a Two.Polygon.
+     */
+    makePolygon: function(p) {
+
+      var l = arguments.length, points = p;
+      if (!_.isArray(p)) {
+        points = [];
+        for (var i = 0; i < l; i+=2) {
+          var x = arguments[i];
+          if (!_.isNumber(x)) {
+            break;
+          }
+          var y = arguments[i + 1];
+          points.push(new Two.Vector(x, y));
+        }
+      }
+
+      var last = arguments[l - 1];
+      var poly = new Two.Polygon(points, !(_.isBoolean(last) ? last : undefined));
+
+      this.scene.add(poly);
+
+      return poly;
 
     }
 

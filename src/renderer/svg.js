@@ -289,6 +289,11 @@
       case 'linewidth':
         property = 'stroke-width';
         break;
+      case 'closed':
+        // Similar but different to vertices
+        property = 'd';
+        value = svg.toString(value, closed, curved);
+        break;
       case 'vertices':
         property = 'd';
         value = svg.toString(value, closed, curved);
