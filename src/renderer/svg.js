@@ -11,7 +11,8 @@
   var sin = Math.sin,
     cos = Math.cos,
     atan2 = Math.atan2,
-    sqrt = Math.sqrt
+    sqrt = Math.sqrt,
+    round = Math.round,
     PI = Math.PI,
     HALF_PI = PI / 2;
 
@@ -69,7 +70,7 @@
           } else {
             command = 'L';
           }
-          command += ' ' + v.x + ' ' + v.y;
+          command += ' ' + v.x.toFixed(3) + ' ' + v.y.toFixed(3);
           if (i >= last && closed) {
             command += ' Z';
           }
@@ -88,14 +89,14 @@
         var a = curve[prev];
         var c = curve[next];
 
-        var vx = a.v.x;
-        var vy = a.v.y;
+        var vx = a.v.x.toFixed(3);
+        var vy = a.v.y.toFixed(3);
 
-        var ux = b.u.x;
-        var uy = b.u.y;
+        var ux = b.u.x.toFixed(3);
+        var uy = b.u.y.toFixed(3);
 
-        var x = b.x;
-        var y = b.y;
+        var x = b.x.toFixed(3);
+        var y = b.y.toFixed(3);
 
         if (i <= 0) {
           command = 'M ' + x + ' ' + y;
@@ -108,14 +109,14 @@
 
         if (i >= last && closed) {
 
-          vx = b.v.x;
-          vy = b.v.y;
+          vx = b.v.x.toFixed(3);
+          vy = b.v.y.toFixed(3);
 
-          ux = c.u.x;
-          uy = c.u.y;
+          ux = c.u.x.toFixed(3);
+          uy = c.u.y.toFixed(3);
 
-          x = c.x;
-          y = c.y;
+          x = c.x.toFixed(3);
+          y = c.y.toFixed(3);
 
           command += 
             ' C ' + vx + ' ' + vy + ' ' + ux + ' ' + uy + ' ' + x + ' ' + y;
@@ -416,12 +417,23 @@
     var a1 = angleBetween(a, b);
     var a2 = angleBetween(c, b);
 
-    var d1 = distanceBetween(a, b) * 0.33;  // Why 0.33?
-    var d2 = distanceBetween(c, b) * 0.33;
+    var d1 = distanceBetween(a, b);
+    var d2 = distanceBetween(c, b);
 
     var mid = (a1 + a2) / 2;
 
     // So we know which angle corresponds to which side.
+
+    var u, v;
+
+    if (d1 < 0.0001 || d2 < 0.0001) {
+      b.u = { x: b.x, y: b.y };
+      b.v = { x: b.x, y: b.y };
+      return b;
+    }
+
+    d1 *= 0.33; // Why 0.33?
+    d2 *= 0.33;
 
     if (a2 < a1) {
       mid += HALF_PI;
@@ -429,14 +441,14 @@
       mid -= HALF_PI;
     }
 
-    var u = {
+    u = {
       x: b.x + cos(mid) * d1,
       y: b.y + sin(mid) * d1
     };
 
     mid -= PI;
 
-    var v = {
+    v = {
       x: b.x + cos(mid) * d2,
       y: b.y + sin(mid) * d2
     };
