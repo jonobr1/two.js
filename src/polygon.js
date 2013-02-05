@@ -73,7 +73,7 @@
         return beginning;
       },
       set: function(v) {
-        beginning = min(max(v, 0), ending);
+        beginning = min(max(v, 0.0), 1.0);
         strokeChanged = true;
         updateVertices();
       }
@@ -84,7 +84,7 @@
         return ending;
       },
       set: function(v) {
-        ending = min(max(v, beginning), 1);
+        ending = min(max(v, 0.0), 1);
         strokeChanged = true;
         updateVertices();
       }

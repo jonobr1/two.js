@@ -26,7 +26,7 @@
           fullscreen: true
         }).appendTo(document.body);
 
-        var amount = 16;
+        var amount = 64;
         var radius = 50;
         var points = _.map(_.range(amount), function(i) {
           var pct = i / amount;
@@ -44,7 +44,7 @@
 
         var phi = 6;
         var offset = Math.PI / 2;
-        amount = 64;
+        // amount = 64;
         var points = _.map(_.range(amount), function(i) {
           var pct = i / amount;
           var theta = pct * Math.PI * phi;
@@ -61,7 +61,22 @@
         wave.fill = 'rgba(0, 0, 0, 0)';
 
         two
-          .bind('update', function(count) {
+          .bind('update', function(frames) {
+
+            // Something to do on update
+
+            var t = frames % 200;
+            var b = (t % 100) / 100;
+
+            if (t < 100) {
+              wave.ending = b;
+            } else {
+              wave.beginning = b;
+            }
+
+            if (!t) {
+              wave.beginning = wave.ending = 0;
+            }
 
           })
           .bind('resize', function() {
