@@ -11,33 +11,24 @@
   </head>
   <body>
     <div class="scripts">
-      <script src="./third-party/underscore.js"></script>
-      <script src="./third-party/events.js"></script>
-      <script src="./third-party/requestAnimationFrame.js"></script>
-      <script src="./src/two.js"></script>
-      <script src="./src/renderer/svg.js"></script>
-      <script src="./src/vector.js"></script>
-      <script src="./src/shape.js"></script>
-      <script src="./src/group.js"></script>
-      <script src="./src/polygon.js"></script>
+      <script src="./build/two.js"></script>
+      <script src="./third-party/stats.js"></script>
       <script>
+
+        var stats = new Stats();
+        _.extend(stats.domElement.style, {
+          position: 'absolute',
+          top: 0,
+          left: 0
+        });
+        document.body.appendChild(stats.domElement);
 
         var two = new Two({
           fullscreen: true
         }).appendTo(document.body);
 
-        var amount = 8;
         var radius = 50;
-        var points = _.map(_.range(amount), function(i) {
-          var pct = i / amount;
-          var theta = pct * Math.PI * 2;
-          var x = radius * Math.cos(theta)
-          var y = radius * Math.sin(theta);
-          return new Two.Vector(x, y);
-        });
-
-        var circle = two.makeCurve(points);
-        circle.translation.set(two.width / 2, two.height / 2);
+        var circle = two.makeCircle(two.width / 2, two.height / 2, radius);
         circle.scale = 4;
         circle.fill = 'rgb(255, 100, 100)';
         circle.linewidth = 0;
@@ -78,6 +69,8 @@
             if (!t) {
               wave.beginning = wave.ending = 0;
             }
+
+            stats.update();
 
           })
           .bind('resize', function() {

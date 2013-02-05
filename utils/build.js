@@ -5,8 +5,14 @@ var compressor = require('node-minify');
 var files = [
   '../license.txt',
   '../third-party/underscore.js',
-  '../third-party/three.js',
-  '../src/two.js'
+  '../third-party/events.js',
+  '../third-party/requestAnimationFrame.js',
+  '../src/two.js',
+  '../src/renderer/svg.js',
+  '../src/vector.js',
+  '../src/shape.js',
+  '../src/group.js',
+  '../src/polygon.js'
 ];
 
 // Concatenated

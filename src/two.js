@@ -9,7 +9,10 @@
 
   var PI = Math.PI,
     TWO_PI = PI * 2,
-    HALF_PI = PI * 0.5;
+    HALF_PI = PI * 0.5,
+    abs = Math.abs,
+    cos = Math.cos,
+    sin = Math.sin;
 
   /**
    * Cross browser dom events.
@@ -111,6 +114,8 @@
       change: 'change'
     },
 
+    Resolution: 8,
+
     Instances: [],
 
     noConflict: function() {
@@ -180,6 +185,77 @@
      * Convenience Methods
      */
 
+    makeLine: function(x1, y1, x2, y2) {
+
+      var width = x2 - x1;
+      var height = y2 - y1;
+
+      var w2 = width / 2;
+      var h2 = height / 2;
+
+      var points = [
+        new Two.Vector(- w2, - h2),
+        new Two.Vector(w2, h2)
+      ];
+
+      // Center line and translate to desired position.
+
+      var line = new Two.Polygon(points).noFill();
+      line.translation.set(x1 + w2, y1 + h2);
+
+      this.scene.add(line);
+      return line;
+
+    },
+
+    makeArc: function(ox, oy, r, start, end, cw) {
+
+      var da = end - start;
+
+      var points = _.map(_.range(Two.Resolution), function(i) {
+        var pct = i / Two.Resolution;
+        var theta = pct * da + start;
+        var x = r * cos(theta) + ox;
+        var y = r * sin(theta) + oy;
+        return new Two.Vector(x, y);
+      }, this);
+
+      var arc = new Two.Polygon(points, false, true);
+      arc.translation.set(ox, oy);
+
+      this.scene.add(arc);
+
+      return arc;
+
+    },
+
+    makeCircle: function(ox, oy, r) {
+
+      return this.makeEllipse(ox, oy, r, r);
+
+    },
+
+    makeEllipse: function(ox, oy, width, height) {
+
+      var amount = Two.Resolution;
+
+      var points = _.map(_.range(amount), function(i) {
+        var pct = i / amount;
+        var theta = pct * TWO_PI;
+        var x = width * cos(theta);
+        var y = height * sin(theta);
+        return new Two.Vector(x, y);
+      }, this);
+
+      var ellipse = new Two.Polygon(points, true, true);
+      ellipse.translation.set(ox, oy);
+
+      this.scene.add(ellipse);
+
+      return ellipse;
+
+    },
+
     makeCurve: function(p) {
 
       var l = arguments.length, points = p;
@@ -195,8 +271,39 @@
         }
       }
 
+      var left = Infinity, right = 0, top = Infinity, bottom = 0;
+      _.each(points, function(p) {
+
+        var x = p.x, y = p.y;
+
+        if (x < left) {
+          left = x;
+        }
+        if (x > right) {
+          right = x;
+        }
+        if (y < top) {
+          top = y;
+        }
+        if (y > bottom) {
+          bottom = y;
+        }
+      });
+
+      var width = right - left;
+      var height = bottom - top;
+
+      var w2 = width / 2;
+      var h2 = height / 2;
+
+      _.each(points, function(p) {
+        p.x -= w2 + left;
+        p.y -= h2 + top;
+      });
+
       var last = arguments[l - 1];
       var poly = new Two.Polygon(points, !(_.isBoolean(last) ? last : undefined), true);
+      poly.translation.set(w2 + left, h2 + right);
 
       this.scene.add(poly);
 
@@ -222,8 +329,39 @@
         }
       }
 
+      var left = Infinity, right = 0, top = Infinity, bottom = 0;
+      _.each(points, function(p) {
+
+        var x = p.x, y = p.y;
+
+        if (x < left) {
+          left = x;
+        }
+        if (x > right) {
+          right = x;
+        }
+        if (y < top) {
+          top = y;
+        }
+        if (y > bottom) {
+          bottom = y;
+        }
+      });
+
+      var width = right - left;
+      var height = bottom - top;
+
+      var w2 = width / 2;
+      var h2 = height / 2;
+
+      _.each(points, function(p) {
+        p.x -= w2 + left;
+        p.y -= h2 + top;
+      });
+
       var last = arguments[l - 1];
       var poly = new Two.Polygon(points, !(_.isBoolean(last) ? last : undefined));
+      poly.translation.set(w2 + left, h2 + right);
 
       this.scene.add(poly);
 

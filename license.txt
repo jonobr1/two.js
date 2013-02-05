@@ -1,9 +1,10 @@
 /**
  * two.js
- * a two-dimensional drawing api built on top of three.js meant for
- * modern browsers.
+ * a two-dimensional drawing api meant for modern browsers. It is renderer 
+ * agnostic enabling the same api for rendering in multiple contexts: webgl, 
+ * canvas2d, and svg.
  *
- * Copyright (c) 2012 jonobr1
+ * Copyright (c) 2012 - 2013 jonobr1
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal

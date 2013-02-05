@@ -70,12 +70,12 @@
   _.extend(Shape.prototype, Backbone.Events, {
 
     noFill: function() {
-      this.fill = 'rgba(0, 0, 0, 0)';
+      this.fill = 'none';
       return this;
     },
 
     noStroke: function() {
-      this.stroke = 'rgba(0, 0, 0, 0)';
+      this.stroke = 'none';
       return this;
     },
 
