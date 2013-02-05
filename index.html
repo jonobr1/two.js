@@ -59,6 +59,7 @@
         wave.scale = 3;
         wave.stroke = 'rgb(255, 200, 255)';
         wave.fill = 'rgba(0, 0, 0, 0)';
+        wave.ending = 0;
 
         two
           .bind('update', function(frames) {
@@ -69,9 +70,9 @@
             var b = (t % 100) / 100;
 
             if (t < 100) {
-              wave.ending = b;
+              wave.ending = b + 1 / 100;
             } else {
-              wave.beginning = b;
+              wave.beginning = b + 1 / 100;
             }
 
             if (!t) {
