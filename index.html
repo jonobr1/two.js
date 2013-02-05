@@ -79,7 +79,7 @@
             var c = two.makeRectangle(0, 0, quart_width, width);
             a.fill = c.fill = 'rgba(' + r +',' + g + ',' + b + ',' + 0.33 + ')';
             a.stroke = c.stroke = 'rgb(' + r +',' + g + ',' + b + ')';
-            a.linewidth = c.linewidth = 0.5;
+            a.linewidth = c.linewidth = 0.25;
             return two.makeGroup(a, c);
           }
 
@@ -90,7 +90,7 @@
             c.translation.set(a.translation.x + half_width, a.translation.y);
             a.fill = c.fill = 'rgba(' + r +',' + g + ',' + b + ',' + 0.33 + ')';
             a.stroke = c.stroke = 'rgb(' + r +',' + g + ',' + b + ')';
-            a.linewidth = c.linewidth = 0.5;
+            a.linewidth = c.linewidth = 0.25;
             return two.makeGroup(a, c);
           }
 
@@ -99,7 +99,7 @@
             var c = two.makeCircle(0, 0, width * 0.125);
             a.fill = c.fill = 'rgba(' + r +',' + g + ',' + b + ',' + 0.33 + ')';
             a.stroke = c.stroke = 'rgb(' + r +',' + g + ',' + b + ')';
-            a.linewidth = c.linewidth = 0.5;
+            a.linewidth = c.linewidth = 0.25;
             return two.makeGroup(a, c);
           }
 
