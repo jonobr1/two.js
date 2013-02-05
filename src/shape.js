@@ -14,6 +14,7 @@
     this.opacity = 1.0;
     this.visible = true;
 
+    this.cap = 'round';
     this.join = 'round';
     this.miter = 'round';
 
@@ -35,6 +36,7 @@
       'linewidth',
       'opacity',
       'visible',
+      'cap',
       'join',
       'miter'
     ],
@@ -66,6 +68,25 @@
   });
 
   _.extend(Shape.prototype, Backbone.Events, {
+
+    noFill: function() {
+      this.fill = 'rgba(0, 0, 0, 0)';
+      return this;
+    },
+
+    noStroke: function() {
+      this.stroke = 'rgba(0, 0, 0, 0)';
+      return this;
+    },
+
+    clone: function() {
+      var clone = new Shape();
+      clone.translation.copy(this.translation);
+      _.each(Shape.Properties, function(k) {
+        clone[k] = this[k];
+      }, this);
+      return this;
+    }
 
   });
 

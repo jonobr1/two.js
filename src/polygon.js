@@ -1,5 +1,11 @@
 (function() {
 
+  /**
+   * Constants
+   */
+
+  var min = Math.min, max = Math.max, round = Math.round;
+
   var Polygon = Two.Polygon = function(vertices, closed, curved) {
 
     Two.Shape.call(this);
@@ -10,9 +16,36 @@
 
     var closed = !!closed;
     var curved = !!curved;
+    var beginning = 0.0;
+    var ending = 1.0;
+    var strokeChanged = false;
 
     var updateVertices = _.debounce(_.bind(function(property) { // Call only once a frame.
-      this.trigger(Two.Events.change, this.id, 'vertices', this.vertices, this.closed, this.curved);
+
+      var l, ia, ib, last;
+
+      if (strokeChanged) {
+
+        l = this.vertices.length;
+        last = l - 1;
+
+        ia = round((beginning) * last);
+        ib = round((ending) * last);
+
+        vertices.length = 0;
+
+        for (var i = ia; i < ib + 1; i++) {
+          var v = this.vertices[i];
+          vertices.push({ x: v.x, y: v.y });
+        }
+
+        strokeChanged = false;
+
+      }
+
+      this.trigger(Two.Events.change,
+        this.id, 'vertices', vertices, this.closed, this.curved);
+
     }, this), 0);
 
     Object.defineProperty(this, 'closed', {
@@ -35,9 +68,31 @@
       }
     });
 
+    Object.defineProperty(this, 'beginning', {
+      get: function() {
+        return beginning;
+      },
+      set: function(v) {
+        beginning = min(max(v, 0), ending);
+        strokeChanged = true;
+        updateVertices();
+      }
+    });
+
+    Object.defineProperty(this, 'ending', {
+      get: function() {
+        return ending;
+      },
+      set: function(v) {
+        ending = min(max(v, beginning), 1);
+        strokeChanged = true;
+        updateVertices();
+      }
+    });
+
     // At the moment cannot alter the array itself, just it's points.
 
-    this.vertices = vertices;
+    this.vertices = vertices.slice(0);
 
     _.each(this.vertices, function(v) {
 

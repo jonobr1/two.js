@@ -185,7 +185,7 @@
 
       _.each(objects, function(object) {
 
-        var elem, tag;
+        var elem, tag, styles;
 
         if (_.isUndefined(object.id)) {
           object.id = generateId();
@@ -200,11 +200,21 @@
             object.unbind(Two.Events.change)
               .bind(Two.Events.change, _.bind(this.update, this));
           }
+          styles = getStyles(object);
+          delete styles.stroke;
+          delete styles.fill;
+          delete styles['fill-opacity'];
+          delete styles['stroke-opacity'];
+          delete styles['stroke-linecap'];
+          delete styles['stroke-linejoin'];
+          delete styles['stroke-miterlimit'];
+          delete styles['stroke-width'];
         } else {
-          tag = 'path'
+          tag = 'path';
+          styles = getStyles(object);
         }
 
-        elem = svg.createElement(tag, getStyles(object));
+        elem = svg.createElement(tag, styles);
 
         domElement.appendChild(elem);
         elements.push(elem);
@@ -270,6 +280,7 @@
       fill = o.fill,
       opacity = o.opacity,
       visible = o.visible,
+      cap = o.cap,
       join = o.join,
       miter = o.miter,
       curved = o.curved,
@@ -293,7 +304,10 @@
       styles['stroke-opacity'] = styles['fill-opacity'] = opacity;
     }
     if (visible) {
-      styles.visibility = visible;
+      styles.visibility = visible ? 'visible' : 'hidden';
+    }
+    if (cap) {
+      styles['stroke-linecap'] = cap;
     }
     if (join) {
       styles['stroke-linejoin'] = join;
@@ -332,7 +346,11 @@
           + ') scale(' + closed.scale + ') rotate(' + closed.rotation + ')';
         break;
       case 'visible':
-        property = 'stroke-linejoin';
+        property = 'visibility';
+        value = value ? 'visible' : 'hidden';
+        break;
+      case 'cap':
+        property = 'stroke-linecap';
         break;
       case 'join':
         property = 'stroke-linejoin';
@@ -342,11 +360,6 @@
         break;
       case 'linewidth':
         property = 'stroke-width';
-        break;
-      case 'closed':
-        // Similar but different to vertices
-        property = 'd';
-        value = svg.toString(value, closed, curved);
         break;
       case 'vertices':
         property = 'd';

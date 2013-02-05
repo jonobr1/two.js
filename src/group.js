@@ -6,9 +6,12 @@
 
     delete this.stroke;
     delete this.fill;
+    delete this.linewidth;
+    delete this.opacity;
+
+    delete this.cap;
     delete this.join;
     delete this.miter;
-    delete this.opacity;
 
     this.children = {};
 
