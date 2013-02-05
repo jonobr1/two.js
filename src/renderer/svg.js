@@ -23,6 +23,9 @@
     ns: 'http://www.w3.org/2000/svg',
     xlink: 'http://www.w3.org/1999/xlink',
 
+    /**
+     * Create an svg namespaced element.
+     */
     createElement: function(name, attrs) {
       var tag = name.toLowerCase();
       var elem = document.createElementNS(this.ns, tag);
@@ -37,6 +40,9 @@
       return elem;
     },
 
+    /**
+     * Add attributes from an svg element.
+     */
     setAttributes: function(elem, attrs) {
       _.each(attrs, function(v, k) {
         this.setAttribute(k, v);
@@ -44,6 +50,9 @@
       return this;
     },
 
+    /**
+     * Remove attributes from an svg element.
+     */
     removeAttributes: function(elem, attrs) {
       _.each(attrs, function(a) {
         this.removeAttribute(a);
@@ -201,6 +210,7 @@
               .bind(Two.Events.change, _.bind(this.update, this));
           }
           styles = getStyles(object);
+          // Remove unnecessary fluff from group
           delete styles.stroke;
           delete styles.fill;
           delete styles['fill-opacity'];
