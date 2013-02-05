@@ -15,15 +15,6 @@
 
     this.children = {};
 
-    var l = arguments.length, objects = o;
-    if (!_.isArray(o)) {
-      this.add(_.map(arguments, function(a) {
-        return a;
-      }));
-    } else {
-      this.add(o);
-    }
-
   };
 
   _.extend(Group, {

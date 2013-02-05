@@ -1,17 +1,19 @@
 <!doctype html>
   <head lang="en">
     <title>Two.js</title>
-    <style>
-
-      body {
-        background: #999;
-      }
-
-    </style>
   </head>
   <body>
     <div class="scripts">
-      <script src="./build/two.js"></script>
+      <!-- // <script src="./build/two.js"></script> -->
+      <script src="./third-party/underscore.js"></script>
+      <script src="./third-party/events.js"></script>
+      <script src="./third-party/requestAnimationFrame.js"></script>
+      <script src="./src/two.js"></script>
+      <script src="./src/renderer/svg.js"></script>
+      <script src="./src/vector.js"></script>
+      <script src="./src/shape.js"></script>
+      <script src="./src/group.js"></script>
+      <script src="./src/polygon.js"></script>
       <script src="./third-party/stats.js"></script>
       <script>
 
@@ -27,56 +29,79 @@
           fullscreen: true
         }).appendTo(document.body);
 
-        var radius = 50;
-        var circle = two.makeCircle(two.width / 2, two.height / 2, radius);
-        circle.scale = 4;
-        circle.fill = 'rgb(255, 100, 100)';
-        circle.linewidth = 0;
+        var width = 44, height = 64;
+        var half_width = width / 2;
+        var quart_width = half_width / 2;
+        var half_height = height / 2;
+        var quart_height = half_height / 2;
 
-        var phi = 6;
-        var offset = Math.PI / 2;
-        amount = 64;
-        var points = _.map(_.range(amount), function(i) {
-          var pct = i / amount;
-          var theta = pct * Math.PI * phi;
-          var x = pct * 250 - 250 / 2;
-          var y = radius * Math.sin(theta + offset);
-          return new Two.Vector(x, y);
-        });
+        var t = makeT(255, 64, 64);
+        t.scale = 0;
+        t.translation.x = - width * 1.33;
 
-        var wave = two.makeCurve(points, true);
-        wave.translation.set(two.width / 2, two.height / 2);
-        wave.linewidth = 5;
-        wave.scale = 3;
-        wave.stroke = 'rgb(255, 200, 255)';
-        wave.fill = 'rgba(0, 0, 0, 0)';
-        wave.ending = 0;
+        var w = makeW(255, 128, 0);
+        w.scale = 0;
+        w.translation.x = 0;
+
+        var o = makeO(0, 191, 168);
+        o.scale = 0;
+        o.translation.x = width * 1.33;
+
+        var group = two.makeGroup(t, w, o);
+        group.translation.set(two.width / 2, two.height / 2);
+        group.scale = 6;
 
         two
           .bind('update', function(frames) {
 
-            // Something to do on update
-
-            var t = frames % 200;
-            var b = (t % 100) / 100;
-
-            if (t < 100) {
-              wave.ending = b + 1 / 100;
-            } else {
-              wave.beginning = b + 1 / 100;
-            }
-
-            if (!t) {
-              wave.beginning = wave.ending = 0;
-            }
-
             stats.update();
+
+            var tScale = t.scale;
+
+            if (tScale >= 1.0 - 0.0001) {
+              return;
+            }
+
+            var s = tScale + (1.0 - tScale) * 0.2;
+            t.scale = s;
+            w.scale = s;
+            o.scale = s;
 
           })
           .bind('resize', function() {
-            circle.translation.set(two.width / 2, two.height / 2);
-            wave.translation.copy(circle.translation);
+
+            group.translation.set(two.width / 2, two.height / 2);
+
           });
+
+          function makeT(r, g, b) {
+            var a = two.makeRectangle(0, 0, width, quart_width);
+            var c = two.makeRectangle(0, 0, quart_width, width);
+            a.fill = c.fill = 'rgba(' + r +',' + g + ',' + b + ',' + 0.33 + ')';
+            a.stroke = c.stroke = 'rgb(' + r +',' + g + ',' + b + ')';
+            a.linewidth = c.linewidth = 0.5;
+            return two.makeGroup(a, c);
+          }
+
+          function makeW(r, g, b) {
+            var a = two.makePolygon(0, height * 0.3125, half_width, - height * 0.3125, - half_width, - height * 0.3125);
+            var c = two.makePolygon(0, height * 0.3125, half_width, - height * 0.3125, - half_width, - height * 0.3125);
+            a.translation.x = - width * 0.25;
+            c.translation.set(a.translation.x + half_width, a.translation.y);
+            a.fill = c.fill = 'rgba(' + r +',' + g + ',' + b + ',' + 0.33 + ')';
+            a.stroke = c.stroke = 'rgb(' + r +',' + g + ',' + b + ')';
+            a.linewidth = c.linewidth = 0.5;
+            return two.makeGroup(a, c);
+          }
+
+          function makeO(r, g, b) {
+            var a = two.makeCircle(0, 0, half_width);
+            var c = two.makeCircle(0, 0, width * 0.125);
+            a.fill = c.fill = 'rgba(' + r +',' + g + ',' + b + ',' + 0.33 + ')';
+            a.stroke = c.stroke = 'rgb(' + r +',' + g + ',' + b + ')';
+            a.linewidth = c.linewidth = 0.5;
+            return two.makeGroup(a, c);
+          }
 
       </script>
     </div>

@@ -1,6 +1,6 @@
 /**
  * two.js
- * a two-dimensional drawing api meant for modern browsers. It is renderer  
+ * a two-dimensional drawing api meant for modern browsers. It is renderer 
  * agnostic enabling the same api for rendering in multiple contexts: webgl, 
  * canvas2d, and svg.
  *
@@ -1478,24 +1478,23 @@ var Backbone = Backbone || {};
 
     },
 
-    makeArc: function(ox, oy, r, start, end, cw) {
+    makeRectangle: function(x, y, width, height) {
 
-      var da = end - start;
+      var w2 = width / 2;
+      var h2 = height / 2;
 
-      var points = _.map(_.range(Two.Resolution), function(i) {
-        var pct = i / Two.Resolution;
-        var theta = pct * da + start;
-        var x = r * cos(theta) + ox;
-        var y = r * sin(theta) + oy;
-        return new Two.Vector(x, y);
-      }, this);
+      var points = [
+        new Two.Vector(w2, h2),
+        new Two.Vector(-w2, h2),
+        new Two.Vector(-w2, -h2),
+        new Two.Vector(w2, -h2)
+      ];
 
-      var arc = new Two.Polygon(points, false, true);
-      arc.translation.set(ox, oy);
+      var rect = new Two.Polygon(points);
+      rect.translation.set(x1, y1);
 
-      this.scene.add(arc);
-
-      return arc;
+      this.scene.add(rect);
+      return rect;
 
     },
 
@@ -1636,6 +1635,15 @@ var Backbone = Backbone || {};
       this.scene.add(poly);
 
       return poly;
+
+    },
+
+    makeGroup: function() {
+
+      var group = new Two.Group(_.toArray(arguments));
+      this.scene.add(group);
+
+      return group;
 
     }
 

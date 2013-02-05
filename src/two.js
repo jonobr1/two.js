@@ -208,24 +208,23 @@
 
     },
 
-    makeArc: function(ox, oy, r, start, end, cw) {
+    makeRectangle: function(x, y, width, height) {
 
-      var da = end - start;
+      var w2 = width / 2;
+      var h2 = height / 2;
 
-      var points = _.map(_.range(Two.Resolution), function(i) {
-        var pct = i / Two.Resolution;
-        var theta = pct * da + start;
-        var x = r * cos(theta) + ox;
-        var y = r * sin(theta) + oy;
-        return new Two.Vector(x, y);
-      }, this);
+      var points = [
+        new Two.Vector(w2, h2),
+        new Two.Vector(-w2, h2),
+        new Two.Vector(-w2, -h2),
+        new Two.Vector(w2, -h2)
+      ];
 
-      var arc = new Two.Polygon(points, false, true);
-      arc.translation.set(ox, oy);
+      var rect = new Two.Polygon(points, true);
+      rect.translation.set(x, y);
 
-      this.scene.add(arc);
-
-      return arc;
+      this.scene.add(rect);
+      return rect;
 
     },
 
@@ -271,39 +270,39 @@
         }
       }
 
-      var left = Infinity, right = 0, top = Infinity, bottom = 0;
-      _.each(points, function(p) {
-
-        var x = p.x, y = p.y;
-
-        if (x < left) {
-          left = x;
-        }
-        if (x > right) {
-          right = x;
-        }
-        if (y < top) {
-          top = y;
-        }
-        if (y > bottom) {
-          bottom = y;
-        }
-      });
-
-      var width = right - left;
-      var height = bottom - top;
-
-      var w2 = width / 2;
-      var h2 = height / 2;
-
-      _.each(points, function(p) {
-        p.x -= w2 + left;
-        p.y -= h2 + top;
-      });
+      // var left = Infinity, right = 0, top = Infinity, bottom = 0;
+      // _.each(points, function(p) {
+      // 
+      //   var x = p.x, y = p.y;
+      // 
+      //   if (x < left) {
+      //     left = x;
+      //   }
+      //   if (x > right) {
+      //     right = x;
+      //   }
+      //   if (y < top) {
+      //     top = y;
+      //   }
+      //   if (y > bottom) {
+      //     bottom = y;
+      //   }
+      // });
+      // 
+      // var width = right - left;
+      // var height = bottom - top;
+      // 
+      // var w2 = width / 2;
+      // var h2 = height / 2;
+      // 
+      // _.each(points, function(p) {
+      //   p.x -= w2 + left;
+      //   p.y -= h2 + top;
+      // });
 
       var last = arguments[l - 1];
       var poly = new Two.Polygon(points, !(_.isBoolean(last) ? last : undefined), true);
-      poly.translation.set(w2 + left, h2 + right);
+      // poly.translation.set(w2 + left, h2 + top);
 
       this.scene.add(poly);
 
@@ -329,43 +328,53 @@
         }
       }
 
-      var left = Infinity, right = 0, top = Infinity, bottom = 0;
-      _.each(points, function(p) {
-
-        var x = p.x, y = p.y;
-
-        if (x < left) {
-          left = x;
-        }
-        if (x > right) {
-          right = x;
-        }
-        if (y < top) {
-          top = y;
-        }
-        if (y > bottom) {
-          bottom = y;
-        }
-      });
-
-      var width = right - left;
-      var height = bottom - top;
-
-      var w2 = width / 2;
-      var h2 = height / 2;
-
-      _.each(points, function(p) {
-        p.x -= w2 + left;
-        p.y -= h2 + top;
-      });
+      // var left = Infinity, right = 0, top = Infinity, bottom = 0;
+      // _.each(points, function(p) {
+      // 
+      //   var x = p.x, y = p.y;
+      // 
+      //   if (x < left) {
+      //     left = x;
+      //   }
+      //   if (x > right) {
+      //     right = x;
+      //   }
+      //   if (y < top) {
+      //     top = y;
+      //   }
+      //   if (y > bottom) {
+      //     bottom = y;
+      //   }
+      // });
+      // 
+      // var width = right - left;
+      // var height = bottom - top;
+      // 
+      // var w2 = width / 2;
+      // var h2 = height / 2;
+      // 
+      // _.each(points, function(p) {
+      //   p.x -= w2 + left;
+      //   p.y -= h2 + top;
+      // });
 
       var last = arguments[l - 1];
       var poly = new Two.Polygon(points, !(_.isBoolean(last) ? last : undefined));
-      poly.translation.set(w2 + left, h2 + right);
+      // poly.translation.set(w2 + left, h2 + top);
 
       this.scene.add(poly);
 
       return poly;
+
+    },
+
+    makeGroup: function() {
+
+      var group = new Two.Group();
+      this.scene.add(group);
+      group.add(_.toArray(arguments));
+
+      return group;
 
     }
 

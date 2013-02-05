@@ -194,7 +194,7 @@
 
       _.each(objects, function(object) {
 
-        var elem, tag, styles;
+        var elem, tag, styles, isGroup = object instanceof Two.Group;
 
         if (_.isUndefined(object.id)) {
           object.id = generateId();
@@ -202,7 +202,7 @@
 
         // Generate an SVG equivalent element here.
 
-        if (object instanceof Two.Group) {
+        if (isGroup) {
           tag = 'g';
           if (_.isUndefined(object.parent)) { // For the "scene".
             object.parent = this;
