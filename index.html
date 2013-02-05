@@ -26,7 +26,7 @@
           fullscreen: true
         }).appendTo(document.body);
 
-        var amount = 64;
+        var amount = 8;
         var radius = 50;
         var points = _.map(_.range(amount), function(i) {
           var pct = i / amount;
@@ -44,7 +44,7 @@
 
         var phi = 6;
         var offset = Math.PI / 2;
-        // amount = 64;
+        amount = 64;
         var points = _.map(_.range(amount), function(i) {
           var pct = i / amount;
           var theta = pct * Math.PI * phi;
