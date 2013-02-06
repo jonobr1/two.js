@@ -108,6 +108,24 @@
 
   _.extend(Polygon.prototype, Two.Shape.prototype, {
 
+    clone: function() {
+
+      var points = _.map(this.vertices, function(v) {
+        return new Two.Vector(v.x, v.y);
+      });
+
+      var clone = new Polygon(points, this.closed, this.curved);
+
+      _.each(Two.Shape.Properties, function(k) {
+        clone[k] = this[k];
+      }, this);
+
+      clone.translation.copy(this.translation);
+
+      return clone;
+
+    }
+
   });
 
 })();

@@ -32,9 +32,7 @@
         ids = [];
 
       if (!_.isArray(o)) {
-        objects = _.map(arguments, function(a) {
-          return a;
-        });
+        objects = _.toArray(arguments);
       }
 
       // A bubbled up version of 'change' event for the children.

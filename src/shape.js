@@ -69,6 +69,11 @@
 
   _.extend(Shape.prototype, Backbone.Events, {
 
+    addTo: function(group) {
+      group.add(this);
+      return this;
+    },
+
     noFill: function() {
       this.fill = 'none';
       return this;
