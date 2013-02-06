@@ -73,6 +73,44 @@
 
       return this;
 
+    },
+
+    getBoundingClientRect: function() {
+
+      var left = Infinity, right = -Infinity, top = Infinity, bottom = -Infinity;
+      var x = this.translation.x, y = this.translation.y;
+      var scale = this.scale;
+
+      _.each(this.children, function(child) {
+
+        var rect = child.getBoundingClientRect();
+
+        top = Math.min(rect.top, top);
+        left = Math.min(rect.left, left);
+        right = Math.max(rect.right, right);
+        bottom = Math.max(rect.bottom, bottom);
+
+      }, this);
+
+      top *= scale;
+      left *= scale;
+      right *= scale;
+      bottom *= scale;
+
+      top += y;
+      left += x;
+      right += x;
+      bottom += y;
+
+      return {
+        top: top,
+        left: left,
+        right: right,
+        bottom: bottom,
+        width: right - left,
+        height: bottom - top
+      };
+
     }
 
   });

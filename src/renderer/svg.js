@@ -340,20 +340,9 @@
 
     switch (property) {
 
-      case 'rotation':
+      case 'matrix':
         property = 'transform';
-        value = 'translate(' + closed.translation.x + ',' + closed.translation.y
-          + ') scale(' + closed.scale + ') rotate(' + value + ')';
-        break;
-      case 'scale':
-        property = 'transform';
-        value = 'translate(' + closed.translation.x + ',' + closed.translation.y
-          + ') scale(' + value + ') rotate(' + closed.rotation + ')';
-        break;
-      case 'translation':
-        property = 'transform';
-        value = 'translate(' + value.x + ',' + value.y
-          + ') scale(' + closed.scale + ') rotate(' + closed.rotation + ')';
+        value = 'matrix(' + value + ')';
         break;
       case 'visible':
         property = 'visibility';

@@ -95,6 +95,12 @@
 
   _.extend(Two, {
 
+    /**
+     * Primitive
+     */
+
+    Array: root.Float32Array || Array,
+
     Types: {
       webgl: 'WebGLRenderer',
       svg: 'SVGRenderer',

@@ -2,7 +2,43 @@
 
   var Shape = Two.Shape = function() {
 
+    this._matrix = new Two.Matrix();
+
+    var updateMatrix = _.debounce(_.bind(function() {
+      var transform = this._matrix
+        .identity()
+        .translate(this.translation.x, this.translation.y)
+        .scale(this.scale)
+        .rotate(this.rotation)
+        .toString();
+      this.trigger(Two.Events.change, this.id, 'matrix', transform);
+    }, this), 0);
+
     Shape.MakeGetterSetter(this, Shape.Properties);
+
+    this._rotation = 'rotation';
+
+    Object.defineProperty(this, 'rotation', {
+      get: function() {
+        return this._rotation;
+      },
+      set: function(v) {
+        this._rotation = v;
+        updateMatrix();
+      }
+    });
+
+    this._scale = 'scale';
+
+    Object.defineProperty(this, 'scale', {
+      get: function() {
+        return this._scale;
+      },
+      set: function(v) {
+        this._scale = v;
+        updateMatrix();
+      }
+    });
 
     this.translation = new Two.Vector();
     this.rotation = 0.0;
@@ -20,17 +56,13 @@
 
     // Extra bind for translation
 
-    this.translation.bind('change', _.bind(function(property) {
-      this.trigger('change', this.id, 'translation', this.translation, this);
-    }, this));
+    this.translation.bind(Two.Events.change, updateMatrix);
 
   };
 
   _.extend(Shape, {
 
     Properties: [
-      'rotation',
-      'scale',
       'fill',
       'stroke',
       'linewidth',

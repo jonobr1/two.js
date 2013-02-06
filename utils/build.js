@@ -10,6 +10,7 @@ var files = [
   '../src/two.js',
   '../src/renderer/svg.js',
   '../src/vector.js',
+  '../src/matrix.js',
   '../src/shape.js',
   '../src/group.js',
   '../src/polygon.js'

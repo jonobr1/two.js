@@ -121,8 +121,51 @@
       }, this);
 
       clone.translation.copy(this.translation);
+      clone.rotation = this.rotation;
+      clone.scale = this.scale;
 
       return clone;
+
+    },
+
+    getBoundingClientRect: function() {
+
+      var left = Infinity, right = -Infinity, top = Infinity, bottom = -Infinity;
+      var x = this.translation.x, y = this.translation.y;
+      var border = this.linewidth;
+      var scale = this.scale;
+
+      _.each(this.vertices, function(v) {
+        var x = v.x, y = v.y;
+        top = Math.min(y, top);
+        left = Math.min(x, left);
+        right = Math.max(x, right);
+        bottom = Math.max(y, bottom);
+      });
+
+      top -= border;
+      left -= border;
+      right += border;
+      bottom += border;
+
+      top *= scale;
+      left *= scale;
+      right *= scale;
+      bottom *= scale;
+
+      top += y;
+      left += x;
+      right += x;
+      bottom += y;
+
+      return {
+        top: top,
+        left: left,
+        right: right,
+        bottom: bottom,
+        width: right - left,
+        height: bottom - top
+      };
 
     }
 
