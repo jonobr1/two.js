@@ -99,6 +99,23 @@
 
       }
 
+      if (l <= 3) { // Multiply Vector
+
+        var x, y, z;
+        var a = a || 0, b = b || 0, c = c || 0;
+        var e = this.elements;
+
+        // Go down rows first
+        // a, d, g, b, e, h, c, f, i
+
+        var x = e[0] * a + e[1] * b + e[2] * c;
+        var y = e[3] * a + e[4] * b + e[5] * c;
+        var z = e[6] * a + e[7] * b + e[8] * c;
+
+        return { x: x, y: y, z: z };
+
+      }
+
       // Multiple matrix
 
       var A = this.elements;

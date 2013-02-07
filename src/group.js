@@ -77,9 +77,8 @@
 
     getBoundingClientRect: function() {
 
-      var left = Infinity, right = -Infinity, top = Infinity, bottom = -Infinity;
-      var x = this.translation.x, y = this.translation.y;
-      var scale = this.scale;
+      var left = Infinity, right = -Infinity,
+        top = Infinity, bottom = -Infinity;
 
       _.each(this.children, function(child) {
 
@@ -92,23 +91,16 @@
 
       }, this);
 
-      top *= scale;
-      left *= scale;
-      right *= scale;
-      bottom *= scale;
-
-      top += y;
-      left += x;
-      right += x;
-      bottom += y;
+      var ul = this._matrix.multiply(left, top, 1);
+      var ll = this._matrix.multiply(right, bottom, 1);
 
       return {
-        top: top,
-        left: left,
-        right: right,
-        bottom: bottom,
-        width: right - left,
-        height: bottom - top
+        top: ul.y,
+        left: ul.x,
+        right: ll.x,
+        bottom: ll.y,
+        width: ll.x - ul.x,
+        height: ll.y - ul.y
       };
 
     }
