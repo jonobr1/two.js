@@ -199,7 +199,7 @@
       var f = elements[5].toFixed(3);
 
       return [
-        a, d, b, e, c, f
+        a, d, b, e, c, f  // Specific format see LN:19
       ].join(' ');
 
     },
