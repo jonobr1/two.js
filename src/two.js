@@ -288,39 +288,19 @@
         }
       }
 
-      // var left = Infinity, right = 0, top = Infinity, bottom = 0;
-      // _.each(points, function(p) {
-      // 
-      //   var x = p.x, y = p.y;
-      // 
-      //   if (x < left) {
-      //     left = x;
-      //   }
-      //   if (x > right) {
-      //     right = x;
-      //   }
-      //   if (y < top) {
-      //     top = y;
-      //   }
-      //   if (y > bottom) {
-      //     bottom = y;
-      //   }
-      // });
-      // 
-      // var width = right - left;
-      // var height = bottom - top;
-      // 
-      // var w2 = width / 2;
-      // var h2 = height / 2;
-      // 
-      // _.each(points, function(p) {
-      //   p.x -= w2 + left;
-      //   p.y -= h2 + top;
-      // });
-
       var last = arguments[l - 1];
       var poly = new Two.Polygon(points, !(_.isBoolean(last) ? last : undefined), true);
-      // poly.translation.set(w2 + left, h2 + top);
+      var rect = poly.getBoundingClientRect();
+
+      var cx = rect.left + rect.width / 2;
+      var cy = rect.top + rect.height / 2;
+
+      _.each(poly.vertices, function(v) {
+        v.x -= cx;
+        v.y -= cy;
+      });
+
+      poly.translation.set(cx, cy);
 
       this.scene.add(poly);
 
@@ -346,39 +326,19 @@
         }
       }
 
-      // var left = Infinity, right = 0, top = Infinity, bottom = 0;
-      // _.each(points, function(p) {
-      // 
-      //   var x = p.x, y = p.y;
-      // 
-      //   if (x < left) {
-      //     left = x;
-      //   }
-      //   if (x > right) {
-      //     right = x;
-      //   }
-      //   if (y < top) {
-      //     top = y;
-      //   }
-      //   if (y > bottom) {
-      //     bottom = y;
-      //   }
-      // });
-      // 
-      // var width = right - left;
-      // var height = bottom - top;
-      // 
-      // var w2 = width / 2;
-      // var h2 = height / 2;
-      // 
-      // _.each(points, function(p) {
-      //   p.x -= w2 + left;
-      //   p.y -= h2 + top;
-      // });
-
       var last = arguments[l - 1];
       var poly = new Two.Polygon(points, !(_.isBoolean(last) ? last : undefined));
-      // poly.translation.set(w2 + left, h2 + top);
+      var rect = poly.getBoundingClientRect();
+
+      var cx = rect.left + rect.width / 2;
+      var cy = rect.top + rect.height / 2;
+
+      _.each(poly.vertices, function(v) {
+        v.x -= cx;
+        v.y -= cy;
+      });
+
+      poly.translation.set(cx, cy);
 
       this.scene.add(poly);
 

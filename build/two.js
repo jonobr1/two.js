@@ -1558,39 +1558,19 @@ var Backbone = Backbone || {};
         }
       }
 
-      // var left = Infinity, right = 0, top = Infinity, bottom = 0;
-      // _.each(points, function(p) {
-      // 
-      //   var x = p.x, y = p.y;
-      // 
-      //   if (x < left) {
-      //     left = x;
-      //   }
-      //   if (x > right) {
-      //     right = x;
-      //   }
-      //   if (y < top) {
-      //     top = y;
-      //   }
-      //   if (y > bottom) {
-      //     bottom = y;
-      //   }
-      // });
-      // 
-      // var width = right - left;
-      // var height = bottom - top;
-      // 
-      // var w2 = width / 2;
-      // var h2 = height / 2;
-      // 
-      // _.each(points, function(p) {
-      //   p.x -= w2 + left;
-      //   p.y -= h2 + top;
-      // });
-
       var last = arguments[l - 1];
       var poly = new Two.Polygon(points, !(_.isBoolean(last) ? last : undefined), true);
-      // poly.translation.set(w2 + left, h2 + top);
+      var rect = poly.getBoundingClientRect();
+
+      var cx = rect.left + rect.width / 2;
+      var cy = rect.top + rect.height / 2;
+
+      _.each(poly.vertices, function(v) {
+        v.x -= cx;
+        v.y -= cy;
+      });
+
+      poly.translation.set(cx, cy);
 
       this.scene.add(poly);
 
@@ -1616,39 +1596,19 @@ var Backbone = Backbone || {};
         }
       }
 
-      // var left = Infinity, right = 0, top = Infinity, bottom = 0;
-      // _.each(points, function(p) {
-      // 
-      //   var x = p.x, y = p.y;
-      // 
-      //   if (x < left) {
-      //     left = x;
-      //   }
-      //   if (x > right) {
-      //     right = x;
-      //   }
-      //   if (y < top) {
-      //     top = y;
-      //   }
-      //   if (y > bottom) {
-      //     bottom = y;
-      //   }
-      // });
-      // 
-      // var width = right - left;
-      // var height = bottom - top;
-      // 
-      // var w2 = width / 2;
-      // var h2 = height / 2;
-      // 
-      // _.each(points, function(p) {
-      //   p.x -= w2 + left;
-      //   p.y -= h2 + top;
-      // });
-
       var last = arguments[l - 1];
       var poly = new Two.Polygon(points, !(_.isBoolean(last) ? last : undefined));
-      // poly.translation.set(w2 + left, h2 + top);
+      var rect = poly.getBoundingClientRect();
+
+      var cx = rect.left + rect.width / 2;
+      var cy = rect.top + rect.height / 2;
+
+      _.each(poly.vertices, function(v) {
+        v.x -= cx;
+        v.y -= cy;
+      });
+
+      poly.translation.set(cx, cy);
 
       this.scene.add(poly);
 
@@ -2460,6 +2420,23 @@ var Backbone = Backbone || {};
 
       }
 
+      if (l <= 3) { // Multiply Vector
+
+        var x, y, z;
+        var a = a || 0, b = b || 0, c = c || 0;
+        var e = this.elements;
+
+        // Go down rows first
+        // a, d, g, b, e, h, c, f, i
+
+        var x = e[0] * a + e[1] * b + e[2] * c;
+        var y = e[3] * a + e[4] * b + e[5] * c;
+        var z = e[6] * a + e[7] * b + e[8] * c;
+
+        return { x: x, y: y, z: z };
+
+      }
+
       // Multiple matrix
 
       var A = this.elements;
@@ -2560,7 +2537,7 @@ var Backbone = Backbone || {};
       var f = elements[5].toFixed(3);
 
       return [
-        a, d, b, e, c, f
+        a, d, b, e, c, f  // Specific format see LN:19
       ].join(' ');
 
     },
@@ -2786,9 +2763,8 @@ var Backbone = Backbone || {};
 
     getBoundingClientRect: function() {
 
-      var left = Infinity, right = -Infinity, top = Infinity, bottom = -Infinity;
-      var x = this.translation.x, y = this.translation.y;
-      var scale = this.scale;
+      var left = Infinity, right = -Infinity,
+        top = Infinity, bottom = -Infinity;
 
       _.each(this.children, function(child) {
 
@@ -2801,23 +2777,16 @@ var Backbone = Backbone || {};
 
       }, this);
 
-      top *= scale;
-      left *= scale;
-      right *= scale;
-      bottom *= scale;
-
-      top += y;
-      left += x;
-      right += x;
-      bottom += y;
+      var ul = this._matrix.multiply(left, top, 1);
+      var ll = this._matrix.multiply(right, bottom, 1);
 
       return {
-        top: top,
-        left: left,
-        right: right,
-        bottom: bottom,
-        width: right - left,
-        height: bottom - top
+        top: ul.y,
+        left: ul.x,
+        right: ll.x,
+        bottom: ll.y,
+        width: ll.x - ul.x,
+        height: ll.y - ul.y
       };
 
     }
@@ -2957,10 +2926,9 @@ var Backbone = Backbone || {};
 
     getBoundingClientRect: function() {
 
-      var left = Infinity, right = -Infinity, top = Infinity, bottom = -Infinity;
-      var x = this.translation.x, y = this.translation.y;
       var border = this.linewidth;
-      var scale = this.scale;
+      var left = Infinity, right = -Infinity,
+        top = Infinity, bottom = -Infinity;
 
       _.each(this.vertices, function(v) {
         var x = v.x, y = v.y;
@@ -2970,28 +2938,23 @@ var Backbone = Backbone || {};
         bottom = Math.max(y, bottom);
       });
 
+      // Expand borders
+
       top -= border;
       left -= border;
       right += border;
       bottom += border;
 
-      top *= scale;
-      left *= scale;
-      right *= scale;
-      bottom *= scale;
-
-      top += y;
-      left += x;
-      right += x;
-      bottom += y;
+      var ul = this._matrix.multiply(left, top, 1);
+      var ll = this._matrix.multiply(right, bottom, 1);
 
       return {
-        top: top,
-        left: left,
-        right: right,
-        bottom: bottom,
-        width: right - left,
-        height: bottom - top
+        top: ul.y,
+        left: ul.x,
+        right: ll.x,
+        bottom: ll.y,
+        width: ll.x - ul.x,
+        height: ll.y - ul.y
       };
 
     }
