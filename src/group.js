@@ -31,8 +31,6 @@
 
         var secret = '_' + k;
 
-        console.log(group);
-
         Object.defineProperty(group, k, {
           get: function() {
             return this[secret];
