@@ -2556,7 +2556,10 @@ var Backbone = Backbone || {};
 })();
 (function() {
 
-  var Shape = Two.Shape = function() {
+  var Shape = Two.Shape = function(limited) {
+
+    // Define matrix properties which all inherited
+    // objects of Shape have.
 
     this._matrix = new Two.Matrix();
 
@@ -2569,8 +2572,6 @@ var Backbone = Backbone || {};
         .toString();
       this.trigger(Two.Events.change, this.id, 'matrix', transform);
     }, this), 0);
-
-    Shape.MakeGetterSetter(this, Shape.Properties);
 
     this._rotation = 'rotation';
 
@@ -2600,6 +2601,16 @@ var Backbone = Backbone || {};
     this.rotation = 0.0;
     this.scale = 1.0;
 
+    this.translation.bind(Two.Events.change, updateMatrix);
+
+    if (!!limited) {
+      return this;
+    }
+
+    // Style properties
+
+    Shape.MakeGetterSetter(this, Shape.Properties);
+
     this.fill = '#fff';
     this.stroke = '#000';
     this.linewidth = 1.0;
@@ -2609,10 +2620,6 @@ var Backbone = Backbone || {};
     this.cap = 'round';
     this.join = 'round';
     this.miter = 'round';
-
-    // Extra bind for translation
-
-    this.translation.bind(Two.Events.change, updateMatrix);
 
   };
 
@@ -2688,7 +2695,7 @@ var Backbone = Backbone || {};
 
   var Group = Two.Group = function(o) {
 
-    Two.Shape.call(this);
+    Two.Shape.call(this, true);
 
     delete this.stroke;
     delete this.fill;
@@ -2699,11 +2706,41 @@ var Backbone = Backbone || {};
     delete this.join;
     delete this.miter;
 
+    Group.MakeGetterSetter(this, Two.Shape.Properties);
+
     this.children = {};
 
   };
 
   _.extend(Group, {
+
+    MakeGetterSetter: function(group, properties) {
+
+      if (!_.isArray(properties)) {
+        properties = [properties];
+      }
+
+      _.each(properties, function(k) {
+
+        var secret = '_' + k;
+
+        console.log(group);
+
+        Object.defineProperty(group, k, {
+          get: function() {
+            return this[secret];
+          },
+          set: function(v) {
+            this[secret] = v;
+            _.each(this.children, function(child) {
+              child[k] = v;
+            });
+          }
+        });
+
+      });
+
+    }
 
   });
 

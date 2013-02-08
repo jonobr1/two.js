@@ -1,6 +1,9 @@
 (function() {
 
-  var Shape = Two.Shape = function() {
+  var Shape = Two.Shape = function(limited) {
+
+    // Define matrix properties which all inherited
+    // objects of Shape have.
 
     this._matrix = new Two.Matrix();
 
@@ -13,8 +16,6 @@
         .toString();
       this.trigger(Two.Events.change, this.id, 'matrix', transform);
     }, this), 0);
-
-    Shape.MakeGetterSetter(this, Shape.Properties);
 
     this._rotation = 'rotation';
 
@@ -44,6 +45,16 @@
     this.rotation = 0.0;
     this.scale = 1.0;
 
+    this.translation.bind(Two.Events.change, updateMatrix);
+
+    if (!!limited) {
+      return this;
+    }
+
+    // Style properties
+
+    Shape.MakeGetterSetter(this, Shape.Properties);
+
     this.fill = '#fff';
     this.stroke = '#000';
     this.linewidth = 1.0;
@@ -53,10 +64,6 @@
     this.cap = 'round';
     this.join = 'round';
     this.miter = 'round';
-
-    // Extra bind for translation
-
-    this.translation.bind(Two.Events.change, updateMatrix);
 
   };
 

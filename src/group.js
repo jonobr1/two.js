@@ -2,7 +2,7 @@
 
   var Group = Two.Group = function(o) {
 
-    Two.Shape.call(this);
+    Two.Shape.call(this, true);
 
     delete this.stroke;
     delete this.fill;
@@ -13,11 +13,41 @@
     delete this.join;
     delete this.miter;
 
+    Group.MakeGetterSetter(this, Two.Shape.Properties);
+
     this.children = {};
 
   };
 
   _.extend(Group, {
+
+    MakeGetterSetter: function(group, properties) {
+
+      if (!_.isArray(properties)) {
+        properties = [properties];
+      }
+
+      _.each(properties, function(k) {
+
+        var secret = '_' + k;
+
+        console.log(group);
+
+        Object.defineProperty(group, k, {
+          get: function() {
+            return this[secret];
+          },
+          set: function(v) {
+            this[secret] = v;
+            _.each(this.children, function(child) {
+              child[k] = v;
+            });
+          }
+        });
+
+      });
+
+    }
 
   });
 
