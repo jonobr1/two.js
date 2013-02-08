@@ -37,7 +37,7 @@
           },
           set: function(v) {
             this[secret] = v;
-            _.each(this.children, function(child) {
+            _.each(this.children, function(child) { // Trickle down styles
               child[k] = v;
             });
           }
