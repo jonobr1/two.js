@@ -144,9 +144,7 @@
   /**
    * @class
    */
-  var Renderer = Two[Two.Types.svg] = function(two) {
-
-    this.two = two;
+  var Renderer = Two[Two.Types.svg] = function() {
 
     this.domElement = svg.createElement('svg');
     this.elements = [];
