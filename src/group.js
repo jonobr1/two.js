@@ -37,7 +37,7 @@
           },
           set: function(v) {
             this[secret] = v;
-            _.each(this.children, function(child) {
+            _.each(this.children, function(child) { // Trickle down styles
               child[k] = v;
             });
           }
@@ -51,6 +51,9 @@
 
   _.extend(Group.prototype, Two.Shape.prototype, {
 
+    /**
+     * Add an object to the group.
+     */
     add: function(o) {
 
       var l = arguments.length,
@@ -103,6 +106,10 @@
 
     },
 
+    /**
+     * Return an object with top, left, right, bottom, width, and height
+     * parameters of the group.
+     */
     getBoundingClientRect: function() {
 
       var left = Infinity, right = -Infinity,
@@ -131,6 +138,26 @@
         height: ll.y - ul.y
       };
 
+    },
+
+    /**
+     * Trickle down of noFill
+     */
+    noFill: function() {
+      _.each(this.children, function(child) {
+        child.noFill();
+      });
+      return this;
+    },
+
+    /**
+     * Trickle down of noStroke
+     */
+    noStroke: function() {
+      _.each(this.children, function(child) {
+        child.noStroke();
+      });
+      return this;
     }
 
   });
