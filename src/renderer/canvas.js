@@ -62,9 +62,9 @@
         // necessary information to draw to the canvas successfully.
 
         if (isGroup) {
-
+          // Kind of represents a matrix, save and restore set.
         } else {
-          
+          // Has styles and draw commands.
         }
 
       }, this);
