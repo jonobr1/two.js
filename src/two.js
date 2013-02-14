@@ -354,6 +354,14 @@
 
       return group;
 
+    },
+
+    // Utility Functions
+
+    importSVG: function(svg) {
+
+      
+
     }
 
   });

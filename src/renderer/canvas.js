@@ -1,5 +1,10 @@
 (function() {
 
+  /**
+   *
+   */
+  var OBJECT_COUNT = 0;
+
   var Renderer = Two[Two.Types.canvas] = function() {
 
     this.domElement = document.createElement('canvas');
@@ -34,10 +39,46 @@
 
     add: function(o) {
 
-      
+      var l = arguments.length,
+        objects = o,
+        elements = this.elements,
+        domElement = this.domElement;
+
+      if (!_.isArray(o)) {
+        objects = _.map(arguments, function(a) {
+          return a;
+        });
+      }
+
+      _.each(objects, function(object) {
+
+        var elem, tag, styles, isGroup = object instanceof Two.Group;
+
+        if (_.isUndefined(object.id)) {
+          object.id = generateId();
+        }
+
+        // Generate an element, a JavaScript object, that holds all the
+        // necessary information to draw to the canvas successfully.
+
+        if (isGroup) {
+
+        } else {
+          
+        }
+
+      }, this);
+
+      return this;
 
     }
 
   });
+
+  function generateId() {
+    var count = OBJECT_COUNT;
+    OBJECT_COUNT++;
+    return count;
+  }
 
 })();

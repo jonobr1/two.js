@@ -7,9 +7,11 @@ __This is considered alpha grade__. A two-dimensional drawing api meant for mode
 + Make webgl renderer
 + Make canvas2d renderer
   + Make sure it only redraws only where it needs to
++ Add svg import
 + Add a `z-index` property to `Two.Shape`
 
 ### Up for discussion:
 + add `width` and `height` properties to `Two.Polygon`
 + add `radius` to `Two.Circle`
-+ standardized way to apply other types of transformations — namely `skew`
++ add `Two.Arc`
++ standardized way to apply other types of transformations — namely `skewX`, `skewY` `scaleX`, `scaleY`
