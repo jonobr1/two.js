@@ -1616,13 +1616,26 @@ var Backbone = Backbone || {};
 
     },
 
-    makeGroup: function() {
+    makeGroup: function(o) {
+
+      var objects = o;
+      if (!_.isArray(o)) {
+        objects = _.toArray(arguments);
+      }
 
       var group = new Two.Group();
       this.scene.add(group);
-      group.add(_.toArray(arguments));
+      group.add(objects);
 
       return group;
+
+    },
+
+    // Utility Functions
+
+    importSVG: function(svg) {
+
+      
 
     }
 
@@ -1803,9 +1816,7 @@ var Backbone = Backbone || {};
   /**
    * @class
    */
-  var Renderer = Two[Two.Types.svg] = function(two) {
-
-    this.two = two;
+  var Renderer = Two[Two.Types.svg] = function() {
 
     this.domElement = svg.createElement('svg');
     this.elements = [];

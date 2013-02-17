@@ -190,6 +190,14 @@ TWEEN.Tween = function ( object ) {
 
 	};
 
+	this.getOnComplete = function () {
+
+		return _onCompleteCallback;
+
+	};
+
+  console.log('added get on complete');
+
 	this.update = function ( time ) {
 
 		if ( time < _startTime ) {
