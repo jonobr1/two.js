@@ -19,6 +19,7 @@
     var beginning = 0.0;
     var ending = 1.0;
     var strokeChanged = false;
+    var renderedVertices = [];
 
     var updateVertices = _.debounce(_.bind(function(property) { // Call only once a frame.
 
@@ -32,11 +33,11 @@
         ia = round((beginning) * last);
         ib = round((ending) * last);
 
-        vertices.length = 0;
+        renderedVertices.length = 0;
 
         for (var i = ia; i < ib + 1; i++) {
           var v = this.vertices[i];
-          vertices.push({ x: v.x, y: v.y });
+          renderedVertices.push({ x: v.x, y: v.y });
         }
 
         strokeChanged = false;
@@ -44,7 +45,7 @@
       }
 
       this.trigger(Two.Events.change,
-        this.id, 'vertices', vertices, this.closed, this.curved);
+        this.id, 'vertices', renderedVertices, this.closed, this.curved);
 
     }, this), 0);
 
