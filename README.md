@@ -10,6 +10,10 @@ __This is considered alpha grade__. A two-dimensional drawing api meant for mode
 + Add svg import
 + Add a `z-index` property to `Two.Shape`
 
+### Concerns:
++ How does `canvas2d` perform on `ctx.fillStyle` and `ctx.setStyle` at high volumes of particles.
++ How to convert all css applicable color styles to `webgl` renderer.
+
 ### Up for discussion:
 + add `width` and `height` properties to `Two.Polygon`
 + add `radius` to `Two.Circle`
