@@ -19,7 +19,7 @@
     var beginning = 0.0;
     var ending = 1.0;
     var strokeChanged = false;
-    var renderedVertices = [];
+    var renderedVertices = vertices.slice(0);
 
     var updateVertices = _.debounce(_.bind(function(property) { // Call only once a frame.
 
@@ -100,6 +100,8 @@
       v.bind(Two.Events.change, updateVertices);
 
     }, this);
+
+    updateVertices();
 
   };
 

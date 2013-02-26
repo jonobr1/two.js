@@ -18,4 +18,4 @@ __This is considered alpha grade__. A two-dimensional drawing api meant for mode
 + add `width` and `height` properties to `Two.Polygon`
 + add `radius` to `Two.Circle`
 + add `Two.Arc`
-+ standardized way to apply other types of transformations — namely `skewX`, `skewY` `scaleX`, `scaleY`
++ standardized way to apply other types of transformations — namely `skewX`, `skewY`, `scaleX`, `scaleY`
