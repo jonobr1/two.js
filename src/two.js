@@ -498,15 +498,9 @@
 
       return group;
 
-    },
-
-    // Utility Functions
-
-    importSVG: function(svg) {
-
-      
-
     }
+
+    // Utility Functions will go here.
 
   });
 
