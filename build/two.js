@@ -1277,12 +1277,15 @@ var Backbone = Backbone || {};
    * Constants
    */
 
-  var PI = Math.PI,
-    TWO_PI = PI * 2,
-    HALF_PI = PI * 0.5,
-    abs = Math.abs,
+  var sin = Math.sin,
     cos = Math.cos,
-    sin = Math.sin;
+    atan2 = Math.atan2,
+    sqrt = Math.sqrt,
+    round = Math.round,
+    abs = Math.abs,
+    PI = Math.PI,
+    TWO_PI = PI * 2,
+    HALF_PI = PI / 2;
 
   /**
    * Cross browser dom events.
@@ -1323,7 +1326,7 @@ var Backbone = Backbone || {};
       width: 640,
       height: 480,
       type: Two.Types.svg,
-      autostart: true
+      autostart: false
     });
 
     this.type = params.type;
@@ -1397,9 +1400,145 @@ var Backbone = Backbone || {};
     noConflict: function() {
       root.Two = previousTwo;
       return this;
+    },
+
+    Utils: {
+
+      /**
+       * Creates a set of points that have u, v values for anchor positions
+       */
+      getCurveFromPoints: function(points, closed) {
+
+        var curve = [], l = points.length, last = l - 1;
+
+        for (var i = 0; i < l; i++) {
+
+          var p = points[i];
+          var point = { x: p.x, y: p.y };
+          curve.push(point);
+
+          var prev = closed ? mod(i - 1, l) : Math.max(i - 1, 0);
+          var next = closed ? mod(i + 1, l) : Math.min(i + 1, last);
+
+          var a = points[prev];
+          var b = point;
+          var c = points[next];
+          getControlPoints(a, b, c);
+
+          if (!b.u.x && !b.u.y) {
+            b.u.x = b.x;
+            b.u.y = b.y;
+          }
+
+          if (!b.v.x && !b.v.y) {
+            b.v.x = b.x;
+            b.v.y = b.y;
+          }
+
+        }
+
+        return curve;
+
+      },
+
+      /**
+       * Given three coordinates return the control points for the middle, b,
+       * vertex.
+       */
+      getControlPoints: function(a, b, c) {
+
+        var a1 = angleBetween(a, b);
+        var a2 = angleBetween(c, b);
+
+        var d1 = distanceBetween(a, b);
+        var d2 = distanceBetween(c, b);
+
+        var mid = (a1 + a2) / 2;
+
+        // So we know which angle corresponds to which side.
+
+        var u, v;
+
+        if (d1 < 0.0001 || d2 < 0.0001) {
+          b.u = { x: b.x, y: b.y };
+          b.v = { x: b.x, y: b.y };
+          return b;
+        }
+
+        d1 *= 0.33; // Why 0.33?
+        d2 *= 0.33;
+
+        if (a2 < a1) {
+          mid += HALF_PI;
+        } else {
+          mid -= HALF_PI;
+        }
+
+        u = {
+          x: b.x + cos(mid) * d1,
+          y: b.y + sin(mid) * d1
+        };
+
+        mid -= PI;
+
+        v = {
+          x: b.x + cos(mid) * d2,
+          y: b.y + sin(mid) * d2
+        };
+
+        b.u = u;
+        b.v = v;
+
+        return b;
+
+      },
+
+      angleBetween: function(A, B) {
+
+        var dx = A.x - B.x;
+        var dy = A.y - B.y;
+
+        return atan2(dy, dx);
+
+      },
+
+      distanceBetweenSquared: function(p1, p2) {
+
+        var dx = p1.x - p2.x;
+        var dy = p1.y - p2.y;
+
+        return dx * dx + dy * dy;
+
+      },
+
+      distanceBetween: function(p1, p2) {
+
+        return sqrt(distanceBetweenSquared(p1, p2));
+
+      },
+
+      mod: function(v, l) {
+
+        while (v < 0) {
+          v += l;
+        }
+
+        return v % l;
+
+      }
+
     }
 
   });
+
+  // Localize utils
+
+  var distanceBetween = Two.Utils.distanceBetween,
+    distanceBetweenSquared = Two.Utils.distanceBetweenSquared,
+    angleBetween = Two.Utils.angleBetween,
+    getControlPoints = Two.Utils.getControlPoints,
+    getCurveFromPoints = Two.Utils.getCurveFromPoints,
+    mod = Two.Utils.mod;
 
   _.extend(Two.prototype, Backbone.Events, {
 
@@ -1677,16 +1816,9 @@ var Backbone = Backbone || {};
    */
   var OBJECT_COUNT = 0;
 
-  /**
-   * Constants
-   */
-  var sin = Math.sin,
-    cos = Math.cos,
-    atan2 = Math.atan2,
-    sqrt = Math.sqrt,
-    round = Math.round,
-    PI = Math.PI,
-    HALF_PI = PI / 2;
+  // Localize variables
+  var getCurveFromPoints = Two.Utils.getCurveFromPoints,
+    mod = Two.Utils.mod;
 
   var svg = {
 
@@ -1822,6 +1954,12 @@ var Backbone = Backbone || {};
     this.elements = [];
     this.commands = [];
 
+    this.domElement.style.visibility = 'hidden';
+
+    this.unveil = _.once(_.bind(function() {
+      this.domElement.style.visibility = 'visible';
+    }, this));
+
   };
 
   _.extend(Renderer, {
@@ -1915,6 +2053,8 @@ var Backbone = Backbone || {};
 
     render: function() {
 
+      this.unveil();
+
       var elements = this.elements,
         selector = Renderer.Identifier;
 
@@ -1967,8 +2107,8 @@ var Backbone = Backbone || {};
       closed = o.closed,
       vertices = o.vertices;
 
-    if (o.id) {
-      styles.id = Renderer.Identifier + o.id;
+    if (id) {
+      styles.id = Renderer.Identifier + id;
     }
     if (translation && _.isNumber(scale) && _.isNumber(rotation)) {
       styles.transform = 'translate(' + translation.x + ',' + translation.y
@@ -1983,9 +2123,9 @@ var Backbone = Backbone || {};
     if (opacity) {
       styles['stroke-opacity'] = styles['fill-opacity'] = opacity;
     }
-    if (visible) {
-      styles.visibility = visible ? 'visible' : 'hidden';
-    }
+    // if (visible) {
+    styles.visibility = visible ? 'visible' : 'hidden';
+    // }
     if (cap) {
       styles['stroke-linecap'] = cap;
     }
@@ -2012,7 +2152,7 @@ var Backbone = Backbone || {};
 
       case 'matrix':
         property = 'transform';
-        value = 'matrix(' + value + ')';
+        value = 'matrix(' + value.toString() + ')';
         break;
       case 'visible':
         property = 'visibility';
@@ -2051,129 +2191,6 @@ var Backbone = Backbone || {};
     var count = OBJECT_COUNT;
     OBJECT_COUNT++;
     return count;
-  }
-
-  /**
-   * Creates a set of points that have u, v values for anchor positions
-   */
-  function getCurveFromPoints(points, closed) {
-
-    var curve = [], l = points.length, last = l - 1;
-
-    for (var i = 0; i < l; i++) {
-
-      var p = points[i];
-      var point = { x: p.x, y: p.y };
-      curve.push(point);
-
-      var prev = closed ? mod(i - 1, l) : Math.max(i - 1, 0);
-      var next = closed ? mod(i + 1, l) : Math.min(i + 1, last);
-
-      var a = points[prev];
-      var b = point;
-      var c = points[next];
-      getControlPoints(a, b, c);
-
-      if (!b.u.x && !b.u.y) {
-        b.u.x = b.x;
-        b.u.y = b.y;
-      }
-
-      if (!b.v.x && !b.v.y) {
-        b.v.x = b.x;
-        b.v.y = b.y;
-      }
-
-    }
-
-    return curve;
-
-  }
-
-  /**
-   * Given three coordinates return the control points for the middle, b,
-   * vertex.
-   */
-  function getControlPoints(a, b, c) {
-
-    var a1 = angleBetween(a, b);
-    var a2 = angleBetween(c, b);
-
-    var d1 = distanceBetween(a, b);
-    var d2 = distanceBetween(c, b);
-
-    var mid = (a1 + a2) / 2;
-
-    // So we know which angle corresponds to which side.
-
-    var u, v;
-
-    if (d1 < 0.0001 || d2 < 0.0001) {
-      b.u = { x: b.x, y: b.y };
-      b.v = { x: b.x, y: b.y };
-      return b;
-    }
-
-    d1 *= 0.33; // Why 0.33?
-    d2 *= 0.33;
-
-    if (a2 < a1) {
-      mid += HALF_PI;
-    } else {
-      mid -= HALF_PI;
-    }
-
-    u = {
-      x: b.x + cos(mid) * d1,
-      y: b.y + sin(mid) * d1
-    };
-
-    mid -= PI;
-
-    v = {
-      x: b.x + cos(mid) * d2,
-      y: b.y + sin(mid) * d2
-    };
-
-    b.u = u;
-    b.v = v;
-
-    return b;
-
-  }
-
-  function angleBetween(A, B) {
-
-    var dx = A.x - B.x;
-    var dy = A.y - B.y;
-
-    return atan2(dy, dx);
-
-  }
-
-  function distanceBetweenSquared(p1, p2) {
-
-    var dx = p1.x - p2.x;
-    var dy = p1.y - p2.y;
-
-    return dx * dx + dy * dy;
-
-  }
-
-  function distanceBetween(p1, p2) {
-
-    return sqrt(distanceBetweenSquared(p1, p2));
-
-  }
-
-  function mod(v, l) {
-
-    while (v < 0) {
-      v += l;
-    }
-
-    return v % l;
-
   }
 
 })();
@@ -2539,6 +2556,15 @@ var Backbone = Backbone || {};
      */
     toString: function() {
 
+      return this.toArray().join(' ');
+
+    },
+
+    /**
+     * Create a transform array to be used with rendering apis.
+     */
+    toArray: function() {
+
       var elements = this.elements;
       var a = elements[0].toFixed(3);
       var b = elements[1].toFixed(3);
@@ -2549,7 +2575,7 @@ var Backbone = Backbone || {};
 
       return [
         a, d, b, e, c, f  // Specific format see LN:19
-      ].join(' ');
+      ];
 
     },
 
@@ -2579,8 +2605,7 @@ var Backbone = Backbone || {};
         .identity()
         .translate(this.translation.x, this.translation.y)
         .scale(this.scale)
-        .rotate(this.rotation)
-        .toString();
+        .rotate(this.rotation);
       this.trigger(Two.Events.change, this.id, 'matrix', transform);
     }, this), 0);
 
@@ -2888,7 +2913,7 @@ var Backbone = Backbone || {};
     var beginning = 0.0;
     var ending = 1.0;
     var strokeChanged = false;
-    var renderedVertices = [];
+    var renderedVertices = vertices.slice(0);
 
     var updateVertices = _.debounce(_.bind(function(property) { // Call only once a frame.
 
@@ -2969,6 +2994,8 @@ var Backbone = Backbone || {};
       v.bind(Two.Events.change, updateVertices);
 
     }, this);
+
+    updateVertices();
 
   };
 
