@@ -10,6 +10,7 @@
       <script src="./third-party/requestAnimationFrame.js"></script>
       <script src="./src/two.js"></script>
       <script src="./src/renderer/svg.js"></script>
+      <script src="./src/renderer/canvas.js"></script>
       <script src="./src/vector.js"></script>
       <script src="./src/matrix.js"></script>
       <script src="./src/shape.js"></script>
@@ -27,6 +28,7 @@
         document.body.appendChild(stats.domElement);
 
         var two = new Two({
+          type: Two.Types.canvas,
           fullscreen: true
         }).appendTo(document.body);
 
@@ -52,6 +54,8 @@
         group.translation.set(two.width / 2, two.height / 2);
         group.scale = 6;
 
+        t.scale = w.scale = o.scale = 0;
+
         two
           .bind('update', function(frames) {
 
@@ -73,7 +77,8 @@
 
             group.translation.set(two.width / 2, two.height / 2);
 
-          });
+          })
+          .play();
 
           function makeT(r, g, b) {
 

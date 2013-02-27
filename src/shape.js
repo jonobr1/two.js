@@ -12,8 +12,7 @@
         .identity()
         .translate(this.translation.x, this.translation.y)
         .scale(this.scale)
-        .rotate(this.rotation)
-        .toString();
+        .rotate(this.rotation);
       this.trigger(Two.Events.change, this.id, 'matrix', transform);
     }, this), 0);
 

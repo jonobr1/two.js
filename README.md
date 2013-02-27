@@ -5,8 +5,6 @@ __This is considered alpha grade__. A two-dimensional drawing api meant for mode
 
 ### Roadmap:
 + Make webgl renderer
-+ Make canvas2d renderer
-  + Make sure it only redraws only where it needs to
 + Add svg import
 + Add a `z-index` property to `Two.Shape`
 

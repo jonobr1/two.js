@@ -207,6 +207,15 @@
      */
     toString: function() {
 
+      return this.toArray().join(' ');
+
+    },
+
+    /**
+     * Create a transform array to be used with rendering apis.
+     */
+    toArray: function() {
+
       var elements = this.elements;
       var a = elements[0].toFixed(3);
       var b = elements[1].toFixed(3);
@@ -217,7 +226,7 @@
 
       return [
         a, d, b, e, c, f  // Specific format see LN:19
-      ].join(' ');
+      ];
 
     },
 

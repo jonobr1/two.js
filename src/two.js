@@ -7,12 +7,15 @@
    * Constants
    */
 
-  var PI = Math.PI,
-    TWO_PI = PI * 2,
-    HALF_PI = PI * 0.5,
-    abs = Math.abs,
+  var sin = Math.sin,
     cos = Math.cos,
-    sin = Math.sin;
+    atan2 = Math.atan2,
+    sqrt = Math.sqrt,
+    round = Math.round,
+    abs = Math.abs,
+    PI = Math.PI,
+    TWO_PI = PI * 2,
+    HALF_PI = PI / 2;
 
   /**
    * Cross browser dom events.
@@ -53,7 +56,7 @@
       width: 640,
       height: 480,
       type: Two.Types.svg,
-      autostart: true
+      autostart: false
     });
 
     this.type = params.type;
@@ -127,9 +130,145 @@
     noConflict: function() {
       root.Two = previousTwo;
       return this;
+    },
+
+    Utils: {
+
+      /**
+       * Creates a set of points that have u, v values for anchor positions
+       */
+      getCurveFromPoints: function(points, closed) {
+
+        var curve = [], l = points.length, last = l - 1;
+
+        for (var i = 0; i < l; i++) {
+
+          var p = points[i];
+          var point = { x: p.x, y: p.y };
+          curve.push(point);
+
+          var prev = closed ? mod(i - 1, l) : Math.max(i - 1, 0);
+          var next = closed ? mod(i + 1, l) : Math.min(i + 1, last);
+
+          var a = points[prev];
+          var b = point;
+          var c = points[next];
+          getControlPoints(a, b, c);
+
+          if (!b.u.x && !b.u.y) {
+            b.u.x = b.x;
+            b.u.y = b.y;
+          }
+
+          if (!b.v.x && !b.v.y) {
+            b.v.x = b.x;
+            b.v.y = b.y;
+          }
+
+        }
+
+        return curve;
+
+      },
+
+      /**
+       * Given three coordinates return the control points for the middle, b,
+       * vertex.
+       */
+      getControlPoints: function(a, b, c) {
+
+        var a1 = angleBetween(a, b);
+        var a2 = angleBetween(c, b);
+
+        var d1 = distanceBetween(a, b);
+        var d2 = distanceBetween(c, b);
+
+        var mid = (a1 + a2) / 2;
+
+        // So we know which angle corresponds to which side.
+
+        var u, v;
+
+        if (d1 < 0.0001 || d2 < 0.0001) {
+          b.u = { x: b.x, y: b.y };
+          b.v = { x: b.x, y: b.y };
+          return b;
+        }
+
+        d1 *= 0.33; // Why 0.33?
+        d2 *= 0.33;
+
+        if (a2 < a1) {
+          mid += HALF_PI;
+        } else {
+          mid -= HALF_PI;
+        }
+
+        u = {
+          x: b.x + cos(mid) * d1,
+          y: b.y + sin(mid) * d1
+        };
+
+        mid -= PI;
+
+        v = {
+          x: b.x + cos(mid) * d2,
+          y: b.y + sin(mid) * d2
+        };
+
+        b.u = u;
+        b.v = v;
+
+        return b;
+
+      },
+
+      angleBetween: function(A, B) {
+
+        var dx = A.x - B.x;
+        var dy = A.y - B.y;
+
+        return atan2(dy, dx);
+
+      },
+
+      distanceBetweenSquared: function(p1, p2) {
+
+        var dx = p1.x - p2.x;
+        var dy = p1.y - p2.y;
+
+        return dx * dx + dy * dy;
+
+      },
+
+      distanceBetween: function(p1, p2) {
+
+        return sqrt(distanceBetweenSquared(p1, p2));
+
+      },
+
+      mod: function(v, l) {
+
+        while (v < 0) {
+          v += l;
+        }
+
+        return v % l;
+
+      }
+
     }
 
   });
+
+  // Localize utils
+
+  var distanceBetween = Two.Utils.distanceBetween,
+    distanceBetweenSquared = Two.Utils.distanceBetweenSquared,
+    angleBetween = Two.Utils.angleBetween,
+    getControlPoints = Two.Utils.getControlPoints,
+    getCurveFromPoints = Two.Utils.getCurveFromPoints,
+    mod = Two.Utils.mod;
 
   _.extend(Two.prototype, Backbone.Events, {
 

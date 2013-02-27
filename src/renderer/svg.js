@@ -5,16 +5,9 @@
    */
   var OBJECT_COUNT = 0;
 
-  /**
-   * Constants
-   */
-  var sin = Math.sin,
-    cos = Math.cos,
-    atan2 = Math.atan2,
-    sqrt = Math.sqrt,
-    round = Math.round,
-    PI = Math.PI,
-    HALF_PI = PI / 2;
+  // Localize variables
+  var getCurveFromPoints = Two.Utils.getCurveFromPoints,
+    mod = Two.Utils.mod;
 
   var svg = {
 
@@ -150,6 +143,12 @@
     this.elements = [];
     this.commands = [];
 
+    this.domElement.style.visibility = 'hidden';
+
+    this.unveil = _.once(_.bind(function() {
+      this.domElement.style.visibility = 'visible';
+    }, this));
+
   };
 
   _.extend(Renderer, {
@@ -243,6 +242,8 @@
 
     render: function() {
 
+      this.unveil();
+
       var elements = this.elements,
         selector = Renderer.Identifier;
 
@@ -295,8 +296,8 @@
       closed = o.closed,
       vertices = o.vertices;
 
-    if (o.id) {
-      styles.id = Renderer.Identifier + o.id;
+    if (id) {
+      styles.id = Renderer.Identifier + id;
     }
     if (translation && _.isNumber(scale) && _.isNumber(rotation)) {
       styles.transform = 'translate(' + translation.x + ',' + translation.y
@@ -311,9 +312,9 @@
     if (opacity) {
       styles['stroke-opacity'] = styles['fill-opacity'] = opacity;
     }
-    if (visible) {
-      styles.visibility = visible ? 'visible' : 'hidden';
-    }
+    // if (visible) {
+    styles.visibility = visible ? 'visible' : 'hidden';
+    // }
     if (cap) {
       styles['stroke-linecap'] = cap;
     }
@@ -340,7 +341,7 @@
 
       case 'matrix':
         property = 'transform';
-        value = 'matrix(' + value + ')';
+        value = 'matrix(' + value.toString() + ')';
         break;
       case 'visible':
         property = 'visibility';
@@ -379,129 +380,6 @@
     var count = OBJECT_COUNT;
     OBJECT_COUNT++;
     return count;
-  }
-
-  /**
-   * Creates a set of points that have u, v values for anchor positions
-   */
-  function getCurveFromPoints(points, closed) {
-
-    var curve = [], l = points.length, last = l - 1;
-
-    for (var i = 0; i < l; i++) {
-
-      var p = points[i];
-      var point = { x: p.x, y: p.y };
-      curve.push(point);
-
-      var prev = closed ? mod(i - 1, l) : Math.max(i - 1, 0);
-      var next = closed ? mod(i + 1, l) : Math.min(i + 1, last);
-
-      var a = points[prev];
-      var b = point;
-      var c = points[next];
-      getControlPoints(a, b, c);
-
-      if (!b.u.x && !b.u.y) {
-        b.u.x = b.x;
-        b.u.y = b.y;
-      }
-
-      if (!b.v.x && !b.v.y) {
-        b.v.x = b.x;
-        b.v.y = b.y;
-      }
-
-    }
-
-    return curve;
-
-  }
-
-  /**
-   * Given three coordinates return the control points for the middle, b,
-   * vertex.
-   */
-  function getControlPoints(a, b, c) {
-
-    var a1 = angleBetween(a, b);
-    var a2 = angleBetween(c, b);
-
-    var d1 = distanceBetween(a, b);
-    var d2 = distanceBetween(c, b);
-
-    var mid = (a1 + a2) / 2;
-
-    // So we know which angle corresponds to which side.
-
-    var u, v;
-
-    if (d1 < 0.0001 || d2 < 0.0001) {
-      b.u = { x: b.x, y: b.y };
-      b.v = { x: b.x, y: b.y };
-      return b;
-    }
-
-    d1 *= 0.33; // Why 0.33?
-    d2 *= 0.33;
-
-    if (a2 < a1) {
-      mid += HALF_PI;
-    } else {
-      mid -= HALF_PI;
-    }
-
-    u = {
-      x: b.x + cos(mid) * d1,
-      y: b.y + sin(mid) * d1
-    };
-
-    mid -= PI;
-
-    v = {
-      x: b.x + cos(mid) * d2,
-      y: b.y + sin(mid) * d2
-    };
-
-    b.u = u;
-    b.v = v;
-
-    return b;
-
-  }
-
-  function angleBetween(A, B) {
-
-    var dx = A.x - B.x;
-    var dy = A.y - B.y;
-
-    return atan2(dy, dx);
-
-  }
-
-  function distanceBetweenSquared(p1, p2) {
-
-    var dx = p1.x - p2.x;
-    var dy = p1.y - p2.y;
-
-    return dx * dx + dy * dy;
-
-  }
-
-  function distanceBetween(p1, p2) {
-
-    return sqrt(distanceBetweenSquared(p1, p2));
-
-  }
-
-  function mod(v, l) {
-
-    while (v < 0) {
-      v += l;
-    }
-
-    return v % l;
-
   }
 
 })();
