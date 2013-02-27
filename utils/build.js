@@ -9,6 +9,7 @@ var files = [
   '../third-party/requestAnimationFrame.js',
   '../src/two.js',
   '../src/renderer/svg.js',
+  '../src/renderer/canvas.js',
   '../src/vector.js',
   '../src/matrix.js',
   '../src/shape.js',
