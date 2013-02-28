@@ -6,36 +6,17 @@
   var OBJECT_COUNT = 0;
 
   // Localize variables
-  var getCurveFromPoints = Two.Utils.getCurveFromPoints,
+  var CanvasRenderer = Two[Two.Types.canvas],
+    getCurveFromPoints = Two.Utils.getCurveFromPoints,
     mod = Two.Utils.mod;
 
   var Group = function(styles) {
 
-    _.each(styles, function(v, k) {
-      this[k] = v;
-    }, this);
-
-    this.children = {};
+    CanvasRenderer.Group.call(this, styles);
 
   };
 
-  _.extend(Group.prototype, {
-
-    appendChild: function() {
-
-      var parent = elem.parent;
-      var id = elem.id;
-
-      if (!_.isUndefined(parent)) {
-        delete parent.children[id];
-      }
-
-      this.children[id] = elem;
-      elem.parent = this;
-
-      return this;
-
-    },
+  _.extend(Group.prototype, CanvasRenderer.Group.prototype, {
 
     render: function() {
 
@@ -45,13 +26,11 @@
 
   var Element = function(styles) {
 
-    _.each(styles, function(v, k) {
-      this[k] = v;
-    }, this);
+    CanvasRenderer.Element.call(this, styles);
 
   };
 
-  _.extend(Element.prototype, {
+  _.extend(Element.prototype, CanvasRenderer.Element.prototype, {
 
     render: function() {
 
@@ -65,7 +44,7 @@
    */
   var Renderer = Two[Two.Types.webgl] = function() {
 
-    Two[Two.Types.canvas].call(this);
+    CanvasRenderer.call(this);
 
     this.ctx = this.domElement.getContext('webgl')
       || this.domElement.getContext('experimental-webgl');
@@ -84,7 +63,7 @@
 
   });
 
-  _.extend(Renderer.prototype, Backbone.Events, Two[Two.Types.canvas].prototype, {
+  _.extend(Renderer.prototype, Backbone.Events, CanvasRenderer.prototype, {
 
     render: function() {
 
