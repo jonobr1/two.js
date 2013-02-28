@@ -11,17 +11,51 @@
 
   var Group = function(styles) {
 
+    _.each(styles, function(v, k) {
+      this[k] = v;
+    }, this);
+
+    this.children = {};
+
   };
 
   _.extend(Group.prototype, {
+
+    appendChild: function() {
+
+      var parent = elem.parent;
+      var id = elem.id;
+
+      if (!_.isUndefined(parent)) {
+        delete parent.children[id];
+      }
+
+      this.children[id] = elem;
+      elem.parent = this;
+
+      return this;
+
+    },
+
+    render: function() {
+
+    }
 
   });
 
   var Element = function(styles) {
 
+    _.each(styles, function(v, k) {
+      this[k] = v;
+    }, this);
+
   };
 
   _.extend(Element.prototype, {
+
+    render: function() {
+
+    }
 
   });
 
