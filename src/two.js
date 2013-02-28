@@ -255,11 +255,21 @@
 
         return v % l;
 
+      },
+
+      // Custom Error Throwing for Two.js
+
+      Error: function(message) {
+        this.name = 'two.js';
+        this.message = message;
       }
 
     }
 
   });
+
+  Two.Utils.Error.prototype = new Error();
+  Two.Utils.Error.prototype.constructor = Two.Utils.Error;
 
   // Localize utils
 

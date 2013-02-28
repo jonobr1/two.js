@@ -239,6 +239,14 @@
 
   });
 
+  _.extend(Renderer, {
+
+    Group: Group,
+
+    Element: Element
+
+  });
+
   _.extend(Renderer.prototype, Backbone.Events, {
 
     setSize: function(width, height) {
@@ -257,10 +265,18 @@
 
     add: function(o) {
 
+      var proto = Object.getPrototypeOf(this);
+        constructor = proto.constructor;
+
       var l = arguments.length,
         objects = o,
         elements = this.elements,
-        domElement = this.domElement;
+        domElement = this.domElement,
+
+        // For extensibility with WebGlRenderer
+
+        Group = constructor.Group,
+        Element = constructor.Element;
 
       if (!_.isArray(o)) {
         objects = _.map(arguments, function(a) {
