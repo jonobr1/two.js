@@ -38,6 +38,12 @@
 
   });
 
+  var webgl = {
+
+    
+
+  };
+
   /**
    * Webgl Renderer inherits from the Canvas 2d Renderer
    * with additional modifications.
