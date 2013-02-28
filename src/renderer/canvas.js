@@ -243,7 +243,11 @@
 
     Group: Group,
 
-    Element: Element
+    Element: Element,
+
+    getStyles: getStyles,
+
+    setStyles: setStyles
 
   });
 
@@ -276,7 +280,8 @@
         // For extensibility with WebGlRenderer
 
         Group = constructor.Group,
-        Element = constructor.Element;
+        Element = constructor.Element,
+        getStyles = constructor.getStyles;
 
       if (!_.isArray(o)) {
         objects = _.map(arguments, function(a) {
@@ -335,6 +340,9 @@
 
     update: function(id, property, value) {
 
+      var proto = Object.getPrototypeOf(this);
+      var constructor = proto.constructor;
+
       var elements = this.elements;
       var elem = elements[id];
 
@@ -345,7 +353,7 @@
           });
           break;
         default:
-          css(elem, property, value);
+          constructor.setStyles(elem, property, value);
       }
 
       return this;
@@ -432,7 +440,7 @@
 
   }
 
-  function css(elem, property, value) {
+  function setStyles(elem, property, value) {
 
     switch (property) {
 

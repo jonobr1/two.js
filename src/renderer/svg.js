@@ -264,7 +264,7 @@
             });
             break;
           default:
-            css(elem, property, value, closed, curved);
+            setStyles(elem, property, value, closed, curved);
         }
 
       }, this);
@@ -335,7 +335,7 @@
 
   }
 
-  function css(elem, property, value, closed, curved) {
+  function setStyles(elem, property, value, closed, curved) {
 
     switch (property) {
 
