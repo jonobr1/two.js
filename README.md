@@ -5,13 +5,13 @@ __This is considered alpha grade__. A two-dimensional drawing api meant for mode
 
 ### Roadmap:
 + Make webgl renderer
++ Optimize Tessellation for integration with two.js
+  + Remove Tessellation.Point and integrate Two.Vector
 
 ### Concerns:
 + How does `canvas2d` perform on `ctx.fillStyle` and `ctx.setStyle` at high volumes of particles.
 + How to convert all css applicable color styles to `webgl` renderer. See notes.
 + Add a `z-index` property to `Two.Shape`
-+ Optimize Tessellation for integration with two.js
-  + Remove Tessellation.Point and integrate Two.Vector
 
 ### Up for discussion:
 + add `width` and `height` properties to `Two.Polygon`

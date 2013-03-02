@@ -23,120 +23,15 @@
     }
   };
 
-  // ------------------------------------------------------------------------Point
-  tessellation.Point = function() {
-
-    this.x = null;
-    this.y = null;
-
-    if (arguments.length == 0) {
-      this.x = 0.0;
-      this.y = 0.0;
-    } else if (arguments.length == 2) {
-      this.x = arguments[0];
-      this.y = arguments[1];
-    } else {
-      alert('Invalid tessellation.Point constructor call!');
-    }
-
-    // The edges this point constitutes an upper ending point
-    this.edge_list = [];
-
-  };
 
   /**
-   * Set this Point instance to the origo. <code>(0; 0)</code>
+   * Utility functions for Vectors.
    */
-  tessellation.Point.prototype.set_zero = function() {
-    this.x = 0.0;
-    this.y = 0.0;
-  };
 
   /**
-   * Set the coordinates of this instance.
-   * @param   x   number.
-   * @param   y   number;
-   */
-  tessellation.Point.prototype.set = function(x, y) {
-    this.x = x;
-    this.y = y;
-  };
-
-  /**
-   * Negate this Point instance. (component-wise)
-   */
-  tessellation.Point.prototype.negate = function() {
-    this.x = -this.x;
-    this.y = -this.y;
-  };
-
-  /**
-   * Add another Point object to this instance. (component-wise)
-   * @param   n   Point object.
-   */
-  tessellation.Point.prototype.add = function(n) {
-    this.x += n.x;
-    this.y += n.y;
-  };
-
-  /**
-   * Subtract this Point instance with another point given. (component-wise)
-   * @param   n   Point object.
-   */
-  tessellation.Point.prototype.sub = function(n) {
-    this.x -= n.x;
-    this.y -= n.y;
-  };
-
-  /**
-   * Multiply this Point instance by a scalar. (component-wise)
-   * @param   s   scalar.
-   */
-  tessellation.Point.prototype.mul = function(s) {
-    this.x *= s;
-    this.y *= s;
-  };
-
-  /**
-   * Return the distance of this Point instance from the origo.
-   */
-  tessellation.Point.prototype.length = function() {
-    return Math.sqrt(this.x*this.x + this.y*this.y);
-  };
-
-  /**
-   * Normalize this Point instance (as a vector).
-   * @return The original distance of this instance from the origo.
-   */
-  tessellation.Point.prototype.normalize = function() {
-    var len = this.length();
-    this.x /= len;
-    this.y /= len;
-    return len;
-  };
-
-  /**
-   * Test this Point object with another for equality.
-   * @param   p   Point object.
-   * @return <code>True</code> if <code>this == p</code>, <code>false</code> otherwise.
-   */
-  tessellation.Point.prototype.equals = function(p) {
-    return tessellation.equals(this, p);
-  };
-
-  /**
-   * Negate a point component-wise and return the result as a new Point object.
-   * @param   p   Point object.
-   * @return the resulting Point object.
-   */
-  tessellation.negate = function(p) {
-    return new tessellation.Point(-p.x, -p.y);
-  };
-
-  /**
-   * Compare two points component-wise.
-   * @param   a   Point object.
-   * @param   b   Point object.
+   * Compare two Two.Vectors component-wise.
+   * @param   a   Two.Vector object.
+   * @param   b   Two.Vector object.
    * @return <code>-1</code> if <code>a &lt; b</code>, <code>1</code> if
    *     <code>a &gt; b</code>, <code>0</code> otherwise.
    */
@@ -149,89 +44,21 @@
   };
 
   /**
-   * Add two points component-wise and return the result as a new Point object.
-   * @param   a   Point object.
-   * @param   b   Point object.
-   * @return the resulting Point object.
-   */
-  tessellation.add = function(a, b) {
-    return new tessellation.Point(a.x+b.x, a.y+b.y);
-  };
-
-  /**
-   * Subtract two points component-wise and return the result as a new Point object.
-   * @param   a   Point object.
-   * @param   b   Point object.
-   * @return the resulting Point object.
-   */
-  tessellation.sub = function(a, b) {
-    return new tessellation.Point(a.x-b.x, a.y-b.y);
-  };
-
-  /**
-   * Multiply a point by a scalar and return the result as a new Point object.
-   * @param   s   the scalar (a number).
-   * @param   p   Point object.
-   * @return the resulting Point object.
-   */
-  tessellation.mul = function(s, p) {
-    return new tessellation.Point(s*p.x, s*p.y);
-  };
-
-  /**
-   * Test two Point objects for equality.
-   * @param   a   Point object.
-   * @param   b   Point object.
+   * Test two Two.Vector objects for equality.
+   * @param   a   Two.Vector object.
+   * @param   b   Two.Vector object.
    * @return <code>True</code> if <code>a == b</code>, <code>false</code> otherwise.
    */
   tessellation.equals = function(a, b) {
     return a.x == b.x && a.y == b.y;
   };
 
-  /**
-   * Peform the dot product on two vectors.
-   * @param   a   Point object.
-   * @param   b   Point object.
-   * @return The dot product (as a number).
-   */
-  tessellation.dot = function(a, b) {
-    return a.x*b.x + a.y*b.y;
-  };
 
   /**
-   * Perform the cross product on either two points (this produces a scalar)
-   * or a point and a scalar (this produces a point).
-   * This function requires two parameters, either may be a Point object or a
-   * number.
-   * @return a Point object or a number, depending on the parameters.
+   * Edge
    */
-  tessellation.cross = function() {
-    var a0_p = false;
-    var a1_p = false;
-    if (arguments.length == 2) {
-      if (typeof(arguments[0]) == 'number') {
-        a0_p = true;
-      }
-      if (typeof(arguments[1] == 'number')) {
-        a1_p = true;
-      }
-
-      if (a0_p) {
-        if (a1_p) return arguments[0].x*arguments[1].y - arguments[0].y*arguments[1].x;
-        else return new tessellation.Point(arguments[1]*arguments[0].y, -arguments[1]*arguments[0].x);
-      } else {
-        if (a1_p) return new tessellation.Point(-arguments[0]*arguments[1].y, arguments[0]*arguments[1].x);
-        else return arguments[0]*arguments[1];
-      }
-    } else {
-      alert('Invalid tessellation.cross call!');
-      return undefined;
-    }
-  };
-
-
-  // -------------------------------------------------------------------------Edge
   tessellation.Edge = function() {
+
     this.p = null;
     this.q = null;
 
@@ -257,60 +84,66 @@
       alert('Invalid tessellation.Edge constructor call!');
     }
 
-    this.q.edge_list.push(this);
+    if (this.p && !_.isArray(this.p.edges)) {
+      this.p.edges = [];
+    }
+    if (this.q && !_.isArray(this.q.edges)) {
+      this.q.edges = [];
+    }
+
+    this.q.edges.push(this);
   };
 
-  // ---------------------------------------------------------------------Triangle
   /**
-   * Triangle class.<br>
+   * Triangle<br>
    * Triangle-based data structures are known to have better performance than
    * quad-edge structures.
    * See: J. Shewchuk, "Triangle: Engineering a 2D Quality Mesh Generator and
    * Delaunay Triangulator", "Triangulations in CGAL"
    * 
-   * @param   p1  Point object.
-   * @param   p2  Point object.
-   * @param   p3  Point object.
+   * @param   p1  Two.Vector object.
+   * @param   p2  Two.Vector object.
+   * @param   p3  Two.Vector object.
    */
   tessellation.Triangle = function(p1, p2, p3) {
     // Triangle points
-    this.points_ = [ null, null, null ];
+    this.points = [ null, null, null ];
     // Neighbor list
-    this.neighbors_ = [ null, null, null ];
+    this.neighbors = [ null, null, null ];
     // Has this triangle been marked as an interior triangle?
-    this.interior_ = false;
+    this.interior = false;
     // Flags to determine if an edge is a Constrained edge
     this.constrained_edge = [ false, false, false ];
     // Flags to determine if an edge is a Delauney edge
     this.delaunay_edge = [ false, false, false ];
 
     if (arguments.length == 3) {
-      this.points_[0] = p1;
-      this.points_[1] = p2;
-      this.points_[2] = p3;
+      this.points[0] = p1;
+      this.points[1] = p2;
+      this.points[2] = p3;
     }
   };
 
   tessellation.Triangle.prototype.GetPoint = function(index) {
-    return this.points_[index];
+    return this.points[index];
   };
 
   tessellation.Triangle.prototype.GetNeighbor = function(index) {
-    return this.neighbors_[index];
+    return this.neighbors[index];
   };
 
   /**
-   * Test if this Triangle contains the Point objects given as parameters as its
+   * Test if this Triangle contains the Two.Vector objects given as parameters as its
    * vertices.
-   * @return <code>True</code> if the Point objects are of the Triangle's vertices,
+   * @return <code>True</code> if the Two.Vector objects are of the Triangle's vertices,
    *     <code>false</code> otherwise.
    */
   tessellation.Triangle.prototype.ContainsP = function() {
     var back = true;
     for (var aidx=0; aidx < arguments.length; ++aidx) {
-      back = back && (arguments[aidx].equals(this.points_[0]) ||
-              arguments[aidx].equals(this.points_[1]) ||
-              arguments[aidx].equals(this.points_[2])
+      back = back && (arguments[aidx].equals(this.points[0]) ||
+              arguments[aidx].equals(this.points[1]) ||
+              arguments[aidx].equals(this.points[2])
       );
     }
     return back;
@@ -332,10 +165,10 @@
 
   tessellation.Triangle.prototype.IsInterior = function() {
     if (arguments.length == 0) {
-      return this.interior_;
+      return this.interior;
     } else {
-      this.interior_ = arguments[0];
-      return this.interior_;
+      this.interior = arguments[0];
+      return this.interior;
     }
   };
 
@@ -343,8 +176,8 @@
    * Update neighbor pointers.<br>
    * This method takes either 3 parameters (<code>p1</code>, <code>p2</code> and
    * <code>t</code>) or 1 parameter (<code>t</code>).
-   * @param   p1  Point object.
-   * @param   p2  Point object.
+   * @param   p1  Two.Vector object.
+   * @param   p2  Two.Vector object.
    * @param   t   Triangle object.
    */
   tessellation.Triangle.prototype.MarkNeighbor = function() {
@@ -354,22 +187,22 @@
       var p2 = arguments[1];
       t = arguments[2];
 
-      if ((p1.equals(this.points_[2]) && p2.equals(this.points_[1])) || (p1.equals(this.points_[1]) && p2.equals(this.points_[2]))) this.neighbors_[0] = t;
-      else if ((p1.equals(this.points_[0]) && p2.equals(this.points_[2])) || (p1.equals(this.points_[2]) && p2.equals(this.points_[0]))) this.neighbors_[1] = t;
-      else if ((p1.equals(this.points_[0]) && p2.equals(this.points_[1])) || (p1.equals(this.points_[1]) && p2.equals(this.points_[0]))) this.neighbors_[2] = t;
+      if ((p1.equals(this.points[2]) && p2.equals(this.points[1])) || (p1.equals(this.points[1]) && p2.equals(this.points[2]))) this.neighbors[0] = t;
+      else if ((p1.equals(this.points[0]) && p2.equals(this.points[2])) || (p1.equals(this.points[2]) && p2.equals(this.points[0]))) this.neighbors[1] = t;
+      else if ((p1.equals(this.points[0]) && p2.equals(this.points[1])) || (p1.equals(this.points[1]) && p2.equals(this.points[0]))) this.neighbors[2] = t;
       else alert('Invalid tessellation.Triangle.MarkNeighbor call (1)!');
     } else if (arguments.length == 1) {
       // exhaustive search to update neighbor pointers
       t = arguments[0];
-      if (t.ContainsP(this.points_[1], this.points_[2])) {
-        this.neighbors_[0] = t;
-        t.MarkNeighbor(this.points_[1], this.points_[2], this);
-      } else if (t.ContainsP(this.points_[0], this.points_[2])) {
-        this.neighbors_[1] = t;
-        t.MarkNeighbor(this.points_[0], this.points_[2], this);
-      } else if (t.ContainsP(this.points_[0], this.points_[1])) {
-        this.neighbors_[2] = t;
-        t.MarkNeighbor(this.points_[0], this.points_[1], this);
+      if (t.ContainsP(this.points[1], this.points[2])) {
+        this.neighbors[0] = t;
+        t.MarkNeighbor(this.points[1], this.points[2], this);
+      } else if (t.ContainsP(this.points[0], this.points[2])) {
+        this.neighbors[1] = t;
+        t.MarkNeighbor(this.points[0], this.points[2], this);
+      } else if (t.ContainsP(this.points[0], this.points[1])) {
+        this.neighbors[2] = t;
+        t.MarkNeighbor(this.points[0], this.points[1], this);
       }
     } else {
       alert('Invalid tessellation.Triangle.MarkNeighbor call! (2)');
@@ -377,9 +210,9 @@
   };
 
   tessellation.Triangle.prototype.ClearNeigbors = function() {
-    this.neighbors_[0] = null;
-    this.neighbors_[1] = null;
-    this.neighbors_[2] = null;
+    this.neighbors[0] = null;
+    this.neighbors[1] = null;
+    this.neighbors[2] = null;
   };
 
   tessellation.Triangle.prototype.ClearDelunayEdges = function() {
@@ -389,65 +222,65 @@
   };
 
   /**
-   * Return the point clockwise to the given point.
+   * Return the Two.Vector clockwise to the given Two.Vector.
    */
   tessellation.Triangle.prototype.PointCW = function(p) {
-    if (p.equals(this.points_[0])) {
-      return this.points_[2];
-    } else if (p.equals(this.points_[1])) {
-      return this.points_[0];
-    } else if (p.equals(this.points_[2])) {
-      return this.points_[1];
+    if (p.equals(this.points[0])) {
+      return this.points[2];
+    } else if (p.equals(this.points[1])) {
+      return this.points[0];
+    } else if (p.equals(this.points[2])) {
+      return this.points[1];
     } else {
       return null;
     }
   };
 
   /**
-   * Return the point counter-clockwise to the given point.
+   * Return the Two.Vector counter-clockwise to the given Two.Vector.
    */
   tessellation.Triangle.prototype.PointCCW = function(p) {
-    if (p.equals(this.points_[0])) {
-      return this.points_[1];
-    } else if (p.equals(this.points_[1])) {
-      return this.points_[2];
-    } else if (p.equals(this.points_[2])) {
-      return this.points_[0];
+    if (p.equals(this.points[0])) {
+      return this.points[1];
+    } else if (p.equals(this.points[1])) {
+      return this.points[2];
+    } else if (p.equals(this.points[2])) {
+      return this.points[0];
     } else {
       return null;
     }
   };
 
   /**
-   * Return the neighbor clockwise to given point.
+   * Return the neighbor clockwise to given Two.Vector.
    */
   tessellation.Triangle.prototype.NeighborCW = function(p) {
-    if (p.equals(this.points_[0])) {
-      return this.neighbors_[1];
-    } else if (p.equals(this.points_[1])) {
-      return this.neighbors_[2];
+    if (p.equals(this.points[0])) {
+      return this.neighbors[1];
+    } else if (p.equals(this.points[1])) {
+      return this.neighbors[2];
     } else {
-      return this.neighbors_[0];
+      return this.neighbors[0];
     }
   };
 
   /**
-   * Return the neighbor counter-clockwise to given point.
+   * Return the neighbor counter-clockwise to given Two.Vector.
    */
   tessellation.Triangle.prototype.NeighborCCW = function(p) {
-    if (p.equals(this.points_[0])) {
-      return this.neighbors_[2];
-    } else if (p.equals(this.points_[1])) {
-      return this.neighbors_[0];
+    if (p.equals(this.points[0])) {
+      return this.neighbors[2];
+    } else if (p.equals(this.points[1])) {
+      return this.neighbors[0];
     } else {
-      return this.neighbors_[1];
+      return this.neighbors[1];
     }
   };
 
   tessellation.Triangle.prototype.GetConstrainedEdgeCW = function(p) {
-    if (p.equals(this.points_[0])) {
+    if (p.equals(this.points[0])) {
       return this.constrained_edge[1];
-    } else if (p.equals(this.points_[1])) {
+    } else if (p.equals(this.points[1])) {
       return this.constrained_edge[2];
     } else {
       return this.constrained_edge[0];
@@ -455,9 +288,9 @@
   };
 
   tessellation.Triangle.prototype.GetConstrainedEdgeCCW = function(p) {
-    if (p.equals(this.points_[0])) {
+    if (p.equals(this.points[0])) {
       return this.constrained_edge[2];
-    } else if (p.equals(this.points_[1])) {
+    } else if (p.equals(this.points[1])) {
       return this.constrained_edge[0];
     } else {
       return this.constrained_edge[1];
@@ -465,9 +298,9 @@
   };
 
   tessellation.Triangle.prototype.SetConstrainedEdgeCW = function(p, ce) {
-    if (p.equals(this.points_[0])) {
+    if (p.equals(this.points[0])) {
       this.constrained_edge[1] = ce;
-    } else if (p.equals(this.points_[1])) {
+    } else if (p.equals(this.points[1])) {
       this.constrained_edge[2] = ce;
     } else {
       this.constrained_edge[0] = ce;
@@ -475,9 +308,9 @@
   };
 
   tessellation.Triangle.prototype.SetConstrainedEdgeCCW = function(p, ce) {
-    if (p.equals(this.points_[0])) {
+    if (p.equals(this.points[0])) {
       this.constrained_edge[2] = ce;
-    } else if (p.equals(this.points_[1])) {
+    } else if (p.equals(this.points[1])) {
       this.constrained_edge[0] = ce;
     } else {
       this.constrained_edge[1] = ce;
@@ -485,9 +318,9 @@
   };
 
   tessellation.Triangle.prototype.GetDelaunayEdgeCW = function(p) {
-    if (p.equals(this.points_[0])) {
+    if (p.equals(this.points[0])) {
       return this.delaunay_edge[1];
-    } else if (p.equals(this.points_[1])) {
+    } else if (p.equals(this.points[1])) {
       return this.delaunay_edge[2];
     } else {
       return this.delaunay_edge[0];
@@ -495,9 +328,9 @@
   };
 
   tessellation.Triangle.prototype.GetDelaunayEdgeCCW = function(p) {
-    if (p.equals(this.points_[0])) {
+    if (p.equals(this.points[0])) {
       return this.delaunay_edge[2];
-    } else if (p.equals(this.points_[1])) {
+    } else if (p.equals(this.points[1])) {
       return this.delaunay_edge[0];
     } else {
       return this.delaunay_edge[1];
@@ -505,9 +338,9 @@
   };
 
   tessellation.Triangle.prototype.SetDelaunayEdgeCW = function(p, e) {
-    if (p.equals(this.points_[0])) {
+    if (p.equals(this.points[0])) {
       this.delaunay_edge[1] = e;
-    } else if (p.equals(this.points_[1])) {
+    } else if (p.equals(this.points[1])) {
       this.delaunay_edge[2] = e;
     } else {
       this.delaunay_edge[0] = e;
@@ -515,9 +348,9 @@
   };
 
   tessellation.Triangle.prototype.SetDelaunayEdgeCCW = function(p, e) {
-    if (p.equals(this.points_[0])) {
+    if (p.equals(this.points[0])) {
       this.delaunay_edge[2] = e;
-    } else if (p.equals(this.points_[1])) {
+    } else if (p.equals(this.points[1])) {
       this.delaunay_edge[0] = e;
     } else {
       this.delaunay_edge[1] = e;
@@ -528,12 +361,12 @@
    * The neighbor across to given point.
    */
   tessellation.Triangle.prototype.NeighborAcross = function(p) {
-    if (p.equals(this.points_[0])) {
-      return this.neighbors_[0];
-    } else if (p.equals(this.points_[1])) {
-      return this.neighbors_[1];
+    if (p.equals(this.points[0])) {
+      return this.neighbors[0];
+    } else if (p.equals(this.points[1])) {
+      return this.neighbors[1];
     } else {
-      return this.neighbors_[2];
+      return this.neighbors[2];
     }
   };
 
@@ -550,23 +383,23 @@
    */
   tessellation.Triangle.prototype.Legalize = function() {
     if (arguments.length == 1) {
-      this.Legalize(this.points_[0], arguments[0]);
+      this.Legalize(this.points[0], arguments[0]);
     } else if (arguments.length == 2) {
       var opoint = arguments[0];
       var npoint = arguments[1];
 
-      if (opoint.equals(this.points_[0])) {
-        this.points_[1] = this.points_[0];
-        this.points_[0] = this.points_[2];
-        this.points_[2] = npoint;
-      } else if (opoint.equals(this.points_[1])) {
-        this.points_[2] = this.points_[1];
-        this.points_[1] = this.points_[0];
-        this.points_[0] = npoint;
-      } else if (opoint.equals(this.points_[2])) {
-        this.points_[0] = this.points_[2];
-        this.points_[2] = this.points_[1];
-        this.points_[1] = npoint;
+      if (opoint.equals(this.points[0])) {
+        this.points[1] = this.points[0];
+        this.points[0] = this.points[2];
+        this.points[2] = npoint;
+      } else if (opoint.equals(this.points[1])) {
+        this.points[2] = this.points[1];
+        this.points[1] = this.points[0];
+        this.points[0] = npoint;
+      } else if (opoint.equals(this.points[2])) {
+        this.points[0] = this.points[2];
+        this.points[2] = this.points[1];
+        this.points[1] = npoint;
       } else {
         alert('Invalid tessellation.Triangle.Legalize call!');
       }
@@ -576,29 +409,29 @@
   };
 
   tessellation.Triangle.prototype.Index = function(p) {
-    if (p.equals(this.points_[0])) return 0;
-    else if (p.equals(this.points_[1])) return 1;
-    else if (p.equals(this.points_[2])) return 2;
+    if (p.equals(this.points[0])) return 0;
+    else if (p.equals(this.points[1])) return 1;
+    else if (p.equals(this.points[2])) return 2;
     else return -1;
   };
 
   tessellation.Triangle.prototype.EdgeIndex = function(p1, p2) {
-    if (p1.equals(this.points_[0])) {
-      if (p2.equals(this.points_[1])) {
+    if (p1.equals(this.points[0])) {
+      if (p2.equals(this.points[1])) {
         return 2;
-      } else if (p2.equals(this.points_[2])) {
+      } else if (p2.equals(this.points[2])) {
         return 1;
       }
-    } else if (p1.equals(this.points_[1])) {
-      if (p2.equals(this.points_[2])) {
+    } else if (p1.equals(this.points[1])) {
+      if (p2.equals(this.points[2])) {
         return 0;
-      } else if (p2.equals(this.points_[0])) {
+      } else if (p2.equals(this.points[0])) {
         return 2;
       }
-    } else if (p1.equals(this.points_[2])) {
-      if (p2.equals(this.points_[0])) {
+    } else if (p1.equals(this.points[2])) {
+      if (p2.equals(this.points[0])) {
         return 1;
-      } else if (p2.equals(this.points_[1])) {
+      } else if (p2.equals(this.points[1])) {
         return 0;
       }
     }
@@ -608,7 +441,7 @@
   /**
    * Mark an edge of this triangle as constrained.<br>
    * This method takes either 1 parameter (an edge index or an Edge instance) or
-   * 2 parameters (two Point instances defining the edge of the triangle).
+   * 2 parameters (two Two.Vector instances defining the edge of the triangle).
    */
   tessellation.Triangle.prototype.MarkConstrainedEdge = function() {
     if (arguments.length == 1) {
@@ -620,11 +453,11 @@
     } else if (arguments.length == 2) {
       var p = arguments[0];
       var q = arguments[1];
-      if ((q.equals(this.points_[0]) && p.equals(this.points_[1])) || (q.equals(this.points_[1]) && p.equals(this.points_[0]))) {
+      if ((q.equals(this.points[0]) && p.equals(this.points[1])) || (q.equals(this.points[1]) && p.equals(this.points[0]))) {
         this.constrained_edge[2] = true;
-      } else if ((q.equals(this.points_[0]) && p.equals(this.points_[2])) || (q.equals(this.points_[2]) && p.equals(this.points_[0]))) {
+      } else if ((q.equals(this.points[0]) && p.equals(this.points[2])) || (q.equals(this.points[2]) && p.equals(this.points[0]))) {
         this.constrained_edge[1] = true;
-      } else if ((q.equals(this.points_[1]) && p.equals(this.points_[2])) || (q.equals(this.points_[2]) && p.equals(this.points_[1]))) {
+      } else if ((q.equals(this.points[1]) && p.equals(this.points[2])) || (q.equals(this.points[2]) && p.equals(this.points[1]))) {
         this.constrained_edge[0] = true;
       }
     } else {
@@ -702,7 +535,6 @@
     return true;
   };
 
-  // ---------------------------------------------------------------AdvancingFront
   tessellation.Node = function() {
     this.point = null; // Point
     this.triangle = null; // Triangle
@@ -724,54 +556,41 @@
     }
   };
 
+  /**
+   * Advancing Front
+   */
   tessellation.AdvancingFront = function(head, tail) {
-    this.head_ = head; // Node
-    this.tail_ = tail; // Node
-    this.search_node_ = head; // Node
-  };
-
-  tessellation.AdvancingFront.prototype.head = function() {
-    return this.head_;
-  };
-
-  tessellation.AdvancingFront.prototype.set_head = function(node) {
-    this.head_ = node;
-  };
-
-  tessellation.AdvancingFront.prototype.tail = function() {
-    return this.tail_;
-  };
-
-  tessellation.AdvancingFront.prototype.set_tail = function(node) {
-    this.tail_ = node;
+    this.head = head; // Node
+    this.tail = tail; // Node
+    this.search_node = head; // Node
   };
 
   tessellation.AdvancingFront.prototype.search = function() {
-    return this.search_node_;
+    return this.search_node;
   };
 
   tessellation.AdvancingFront.prototype.set_search = function(node) {
-    this.search_node_ = node;
+    this.search_node = node;
   };
 
   tessellation.AdvancingFront.prototype.FindSearchNode = function(x) {
-    return this.search_node_;
+    return this.search_node;
   };
 
   tessellation.AdvancingFront.prototype.LocateNode = function(x) {
-    var node = this.search_node_;
+    var node = this.search_node;
 
     if (x < node.value) {
       while ((node = node.prev) != null) {
         if (x >= node.value) {
-          this.search_node_ = node;
+          this.search_node = node;
           return node;
         }
       }
     } else {
       while ((node = node.next) != null) {
         if (x < node.value) {
-          this.search_node_ = node.prev;
+          this.search_node = node.prev;
           return node.prev;
         }
       }
@@ -806,11 +625,13 @@
       }
     }
 
-    if (node != null) this.search_node_ = node;
+    if (node != null) this.search_node = node;
     return node;
   };
 
-  // ------------------------------------------------------------------------Basin
+  /**
+   * Basin
+   */
   tessellation.Basin = function() {
     this.left_node = null; // Node
     this.bottom_node = null; // Node
@@ -827,84 +648,68 @@
     this.left_highest = false;
   };
 
-  // --------------------------------------------------------------------EdgeEvent
+  /**
+   * EdgeEvent
+   */
   tessellation.EdgeEvent = function() {
     this.constrained_edge = null; // Edge
     this.right = false;
   };
 
-  // -----------------------------------------------------------------SweepContext
+  /**
+   * SweepContext
+   */
   tessellation.SweepContext = function(polyline) {
-    this.triangles_ = [];
-    this.map_ = [];
-    this.points_ = polyline;
-    this.edge_list = [];
+    this.triangles = [];
+    this.map = [];
+    this.points = polyline;
+    this.edges = [];
 
     // Advancing front
-    this.front_ = null; // AdvancingFront
+    this.front = null; // AdvancingFront
     // head point used with advancing front
-    this.head_ = null; // Point
+    this.head = null; // Point
     // tail point used with advancing front
-    this.tail_ = null; // Point
+    this.tail = null; // Point
 
-    this.af_head_ = null; // Node
+    this.af_head = null; // Node
     this.af_middle_ = null; // Node
-    this.af_tail_ = null; // Node
+    this.af_tail = null; // Node
 
     this.basin = new tessellation.Basin();
     this.edge_event = new tessellation.EdgeEvent();
 
-    this.InitEdges(this.points_);
+    this.InitEdges(this.points);
   };
 
   tessellation.SweepContext.prototype.AddHole = function(polyline) {
     this.InitEdges(polyline);
     for (var i in polyline) {
-      this.points_.push(polyline[i]);
+      this.points.push(polyline[i]);
     }
   };
 
-  tessellation.SweepContext.prototype.front = function() {
-    return this.front_;
-  };
-
   tessellation.SweepContext.prototype.point_count = function() {
-    return this.points_.length;
-  };
-
-  tessellation.SweepContext.prototype.head = function() {
-    return this.head_;
-  };
-
-  tessellation.SweepContext.prototype.set_head = function(p1) {
-    this.head_ = p1;
-  };
-
-  tessellation.SweepContext.prototype.tail = function() {
-    return this.tail_;
-  };
-
-  tessellation.SweepContext.prototype.set_tail = function(p1) {
-    this.tail_ = p1;
+    return this.points.length;
   };
 
   tessellation.SweepContext.prototype.GetTriangles = function() {
-    return this.triangles_;
+    return this.triangles;
   };
 
   tessellation.SweepContext.prototype.GetMap = function() {
-    return this.map_;
+    return this.map;
   };
 
   tessellation.SweepContext.prototype.InitTriangulation = function() {
-    var xmax = this.points_[0].x;
-    var xmin = this.points_[0].x;
-    var ymax = this.points_[0].y;
-    var ymin = this.points_[0].y;
+    var xmax = this.points[0].x;
+    var xmin = this.points[0].x;
+    var ymax = this.points[0].y;
+    var ymin = this.points[0].y;
 
     // Calculate bounds
-    for (var i in this.points_) {
-      var p = this.points_[i];
+    for (var i in this.points) {
+      var p = this.points[i];
       if (p.x > xmax) xmax = p.x;
       if (p.x < xmin) xmin = p.x;
       if (p.y > ymax) ymax = p.y;
@@ -913,29 +718,29 @@
 
     var dx = tessellation.kAlpha * (xmax - xmin);
     var dy = tessellation.kAlpha * (ymax - ymin);
-    this.head_ = new tessellation.Point(xmax + dx, ymin - dy);
-    this.tail_ = new tessellation.Point(xmin - dy, ymin - dy);
+    this.head = new Two.Vector(xmax + dx, ymin - dy);
+    this.tail = new Two.Vector(xmin - dy, ymin - dy);
 
     // Sort points along y-axis
-    this.points_.sort(tessellation.cmp);
+    this.points.sort(tessellation.cmp);
   };
 
   tessellation.SweepContext.prototype.InitEdges = function(polyline) {
     for (var i=0; i < polyline.length; ++i) {
-      this.edge_list.push(new tessellation.Edge(polyline[i], polyline[(i+1) % polyline.length]));
+      this.edges.push(new tessellation.Edge(polyline[i], polyline[(i+1) % polyline.length]));
     }
   };
 
   tessellation.SweepContext.prototype.GetPoint = function(index) {
-    return this.points_[index];
+    return this.points[index];
   };
 
   tessellation.SweepContext.prototype.AddToMap = function(triangle) {
-    this.map_.push(triangle);
+    this.map.push(triangle);
   };
 
   tessellation.SweepContext.prototype.LocateNode = function(point) {
-    return this.front_.LocateNode(point.x);
+    return this.front.LocateNode(point.x);
   };
 
   tessellation.SweepContext.prototype.CreateAdvancingFront = function() {
@@ -943,15 +748,15 @@
     var middle;
     var tail;
     // Initial triangle
-    var triangle = new tessellation.Triangle(this.points_[0], this.tail_, this.head_);
+    var triangle = new tessellation.Triangle(this.points[0], this.tail, this.head);
 
-    this.map_.push(triangle);
+    this.map.push(triangle);
 
     head = new tessellation.Node(triangle.GetPoint(1), triangle);
     middle = new tessellation.Node(triangle.GetPoint(0), triangle);
     tail = new tessellation.Node(triangle.GetPoint(2));
 
-    this.front_ = new tessellation.AdvancingFront(head, tail);
+    this.front = new tessellation.AdvancingFront(head, tail);
 
     head.next = middle;
     middle.next = tail;
@@ -966,7 +771,7 @@
   tessellation.SweepContext.prototype.MapTriangleToNodes = function(t) {
     for (var i=0; i<3; ++i) {
       if (t.GetNeighbor(i) == null) {
-        var n = this.front_.LocatePoint(t.PointCW(t.GetPoint(i)));
+        var n = this.front.LocatePoint(t.PointCW(t.GetPoint(i)));
         if (n != null) {
           n.triangle = t;
         }
@@ -975,9 +780,9 @@
   };
 
   tessellation.SweepContext.prototype.RemoveFromMap = function(triangle) {
-    for (var i in this.map_) {
-      if (this.map_[i] == triangle) {
-        delete this.map_[i];
+    for (var i in this.map) {
+      if (this.map[i] == triangle) {
+        delete this.map[i];
         break;
       }
     }
@@ -986,7 +791,7 @@
   tessellation.SweepContext.prototype.MeshClean = function(triangle) {
     if (triangle != null && !triangle.IsInterior()) {
       triangle.IsInterior(true);
-      this.triangles_.push(triangle);
+      this.triangles.push(triangle);
       for (var i=0; i<3; ++i) {
         if (!triangle.constrained_edge[i]) {
           this.MeshClean(triangle.GetNeighbor(i));
@@ -995,7 +800,9 @@
     }
   };
 
-  // ------------------------------------------------------------------------Sweep
+  /**
+   * sweep
+   */
   tessellation.sweep = {};
 
   /**
@@ -1015,16 +822,16 @@
     for (var i=1; i < tcx.point_count(); ++i) {
       var point = tcx.GetPoint(i);
       var node = tessellation.sweep.PointEvent(tcx, point);
-      for (var j=0; j < point.edge_list.length; ++j) {
-        tessellation.sweep.EdgeEvent(tcx, point.edge_list[j], node);
+      for (var j=0; j < point.edges.length; ++j) {
+        tessellation.sweep.EdgeEvent(tcx, point.edges[j], node);
       }
     }
   };
 
   tessellation.sweep.FinalizationPolygon = function(tcx) {
     // Get an Internal triangle to start with
-    var t = tcx.front().head().next.triangle;
-    var p = tcx.front().head().next.point;
+    var t = tcx.front.head.next.triangle;
+    var p = tcx.front.head.next.point;
     while (!t.GetConstrainedEdgeCW(p)) {
       t = t.NeighborCCW(p);
     }
@@ -1034,7 +841,7 @@
   };
 
   /**
-   * Find closes node to the left of the new point and
+   * Find closes node to the left of the new Two.Vector and
    * create a new triangle. If needed new holes and basins
    * will be filled to.
    */
@@ -1042,7 +849,7 @@
     var node = tcx.LocateNode(point);
     var new_node = tessellation.sweep.NewFrontTriangle(tcx, point, node);
 
-    // Only need to check +epsilon since point never have smaller
+    // Only need to check +epsilon since Two.Vector never have smaller
     // x value than node due to how we fetch nodes from the front
     if (point.x <= node.point.x + (tessellation.EPSILON)) {
       tessellation.sweep.Fill(tcx, node);
@@ -1281,7 +1088,7 @@
           if (not_legalized) tcx.MapTriangleToNodes(ot);
 
           // Reset the Delaunay edges, since they only are valid Delaunay edges
-          // until we add a new triangle or point.
+          // until we add a new triangle or Two.Vector.
           // XXX: need to think about this. Can these edges be tried after we
           //    return to previous recursive level?
           t.delaunay_edge[i] = false;
@@ -1314,10 +1121,10 @@
    *  a,b and c<br>
    *  d is outside B if orient2d(a,b,d) or orient2d(c,a,d) is CW<br>
    *  This preknowledge gives us a way to optimize the incircle test
-   * @param pa - triangle point, opposite d
-   * @param pb - triangle point
-   * @param pc - triangle point
-   * @param pd - point opposite a
+   * @param pa - triangle Two.Vector, opposite d
+   * @param pb - triangle Two.Vector
+   * @param pc - triangle Two.Vector
+   * @param pd - Two.Vector opposite a
    * @return true if d is inside circle, false if on circle edge
    */
   tessellation.sweep.Incircle = function(pa, pb, pc, pd) {
