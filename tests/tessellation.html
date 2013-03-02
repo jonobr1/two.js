@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+  </head>
+  <body>
+    <div class="scripts">
+      <script src="../build/two.js"></script>
+      <script src="../third-party/tessellation.js"></script>
+      <script>
+
+        /**
+         * Benchmark Statistics:
+         * Vertex Amount, Time (ms)
+         * 
+         * Chrome 25  | Safari 6   | Firefox 19
+         * ------------------------------------
+         * 3,       3 | 3,       3 | 3,       2
+         * ------------------------------------
+         * 6,       4 | 6,       5 | 6,       3
+         * ------------------------------------
+         * 12,      4 | 12,      6 | 12,      4
+         * ------------------------------------
+         * 25,      5 | 25,     11 | 25,      9
+         * ------------------------------------
+         * 50,      6 | 50,     17 | 50,     15
+         * ------------------------------------
+         * 100,    11 | 100,    32 | 100,    21
+         * ------------------------------------
+         * 200,    19 | 200,    56 | 200,    23
+         * ------------------------------------
+         * 400,    30 | 400,   120 | 400,    32
+         * ------------------------------------
+         * 800,    49 | 800,   272 | 800,    46
+         * ------------------------------------
+         * 1600,   57 |            | 1600,   79
+         * ------------------------------------
+         * 3200,   91 |            | 3200,  154
+         * ------------------------------------
+         * 10000, 497 |            | 10000, 740
+         * ------------------------------------
+         *
+         */
+
+        var amount = 10;//Math.round(Math.random() * 250);
+        var radius = 50;
+        var points = _.map(_.range(amount), function(i) {
+          var pct = i / amount;
+          var theta = Math.PI * 2 * pct;
+          var x = radius * Math.cos(theta);
+          var y = radius * Math.sin(theta);
+          return new tessellation.Point(x, y);
+        });
+
+        var start = Date.now();
+
+        var triangulation = new tessellation.SweepContext(points);
+        tessellation.sweep.Triangulate(triangulation);
+
+        console.log('Tessellation benchmark execution took ', Date.now() - start, 'ms for', amount, 'particles.');
+
+        var two = new Two({ fullscreen: true, autostart: true }).appendTo(document.body);
+
+        var triangles = _.map(triangulation.triangles_, function(t) {
+
+          var points = t.points_;
+          var color = getRandomColor();
+          var triangle = two.makePolygon(
+            points[0].x, points[0].y,
+            points[1].x, points[1].y,
+            points[2].x, points[2].y
+          );
+          triangle.fill = color;
+          triangle.noStroke();
+
+          return triangle;
+
+        });
+
+        var group = two.makeGroup(triangles);
+        group.translation.set(two.width / 2, two.height / 2);
+        group.scale = 5;
+
+        function getRandomColor() {
+          return 'rgb('
+            + Math.round(Math.random() * 255) + ','
+            + Math.round(Math.random() * 255) + ','
+            + Math.round(Math.random() * 255) + ')';
+        }
+
+      </script>
+    </div>
+  </body>
+</html>
