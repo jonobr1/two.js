@@ -465,7 +465,9 @@
     }
   };
 
-  // ------------------------------------------------------------------------utils
+  /**
+   * Utils
+   */
   tessellation.PI_3div4 = 3 * Math.PI / 4;
   tessellation.PI_2 = Math.PI / 2;
   tessellation.EPSILON = 1e-12;
