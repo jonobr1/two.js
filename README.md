@@ -6,6 +6,7 @@ __This is considered alpha grade__. A two-dimensional drawing api meant for mode
 ### Roadmap:
 + Make webgl renderer.
 + Add ability to remove shapes from a scene.
++ Make `Two.Group` center its children
 
 ### Concerns:
 + How does `canvas2d` perform on `ctx.fillStyle` and `ctx.setStyle` at high volumes of particles.

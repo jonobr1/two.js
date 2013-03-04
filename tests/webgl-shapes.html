@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <style>
+
+      * {
+        margin: 0;
+        padding: 0;
+      }
+
+    </style>
+  </head>
+  <body>
+    <div class="scripts">
+      <!-- Third Party -->
+      <script src="../third-party/underscore.js"></script>
+      <script src="../third-party/events.js"></script>
+      <script src="../third-party/requestAnimationFrame.js"></script>
+      <script src="../third-party/tessellation.js"></script>
+      <!-- First Party -->
+      <script src="../src/two.js"></script>
+      <script src="../src/renderer/svg.js"></script>
+      <script src="../src/renderer/canvas.js"></script>
+      <script src="../src/renderer/webgl.js"></script>
+      <script src="../src/vector.js"></script>
+      <script src="../src/matrix.js"></script>
+      <script src="../src/shape.js"></script>
+      <script src="../src/group.js"></script>
+      <script src="../src/polygon.js"></script>
+      <script>
+
+        // var renderer = new Two[Two.Types.webgl]();
+        // document.body.appendChild(renderer.domElement);
+        // renderer.setSize(window.innerWidth, window.innerHeight);
+        // renderer.render();
+
+        var two = new Two({
+          fullscreen: true,
+          autostart: true,
+          type: Two.Types.webgl
+        }).appendTo(document.body);
+
+        var rect = two.makeRectangle(50, 50, 100, 100);
+
+      </script>
+    </div>
+  </body>
+</html>
