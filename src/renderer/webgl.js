@@ -13,12 +13,12 @@
 
   _.extend(Group.prototype, CanvasRenderer.Group.prototype, {
 
-    render: function(gl, colorLocation, matrices) {
+    render: function(gl, colorLocation, matrixLocation, matrices) {
 
       // Apply matrices here somehow...
 
       _.each(this.children, function(child) {
-        child.render(gl, colorLocation);
+        child.render(gl, colorLocation, matrixLocation);
       });
 
     }
@@ -33,13 +33,18 @@
 
   _.extend(Element.prototype, CanvasRenderer.Element.prototype, {
 
-    render: function(gl, colorLocation, matrices) {
+    render: function(gl, colorLocation, matrixLocation, matrices) {
 
-      setRectangle(gl, 60, 60, 100, 100);
+      // Draws the fill
 
-      // draw
+      // Move this to an update function.
+      // setRectangle(gl, 0, 0, 100, 100); // Debug
+
+      // Somehow translation is not respected :(
+
+      gl.uniformMatrix3fv(matrixLocation, false, this.matrix);
       gl.uniform4f(colorLocation, Math.random(), Math.random(), Math.random(), 1);
-      gl.drawArrays(gl.TRIANGLES, 0, 6);
+      gl.drawArrays(gl.TRIANGLES, 0, 6);  // The 6 is how many triangles there are.
 
     }
 
@@ -120,11 +125,12 @@
 
       vertex: [
         'attribute vec2 position;',
-        '',
+        'uniform mat3 matrix;',
         'uniform vec2 resolution;',
         '',
         'void main() {',
-        '   vec2 normal = position / resolution;',
+        '   vec2 projected = (matrix * vec3(position, 1)).xy;',
+        '   vec2 normal = projected / resolution;',
         '   vec2 clipspace = (normal * 2.0) - 1.0;',
         '',
         '   gl_Position = vec4(clipspace * vec2(1.0, -1.0), 0.0, 1.0);',
@@ -158,8 +164,14 @@
     // Everything drawn on the canvas needs to come from the stage.
     this.stage = null;
 
-    this.ctx = this.domElement.getContext('webgl')
-      || this.domElement.getContext('experimental-webgl');
+    // http://games.greggman.com/game/webgl-and-alpha/
+    var params = {
+       premultipliedAlpha: false,  // Ask non-premultiplied alpha
+       alpha: false
+    };
+
+    this.ctx = this.domElement.getContext('webgl', params)
+      || this.domElement.getContext('experimental-webgl', params);
 
     if (!this.ctx) {
       throw new Two.Utils.Error('unable to create a webgl context. Try using another renderer.');
@@ -179,6 +191,7 @@
     // look up where the vertex data needs to go.
     var positionLocation = this.ctx.getAttribLocation(this.program, 'position');
     this.colorLocation = this.ctx.getUniformLocation(this.program, 'color');
+    this.matrixLocation = this.ctx.getUniformLocation(this.program, 'matrix');
 
     // Create a buffer and put a single clipspace rectangle in
     // it (2 triangles)
@@ -186,6 +199,9 @@
     this.ctx.bindBuffer(this.ctx.ARRAY_BUFFER, buffer);
     this.ctx.enableVertexAttribArray(positionLocation);
     this.ctx.vertexAttribPointer(positionLocation, 2, this.ctx.FLOAT, false, 0, 0);
+
+    setRectangle(this.ctx, 0, 0, 100, 100); // Debug
+    setRectangle(this.ctx, 0, 0, 150, 150);
 
   };
 
@@ -230,7 +246,7 @@
 
       gl.clear(gl.COLOR_BUFFER_BIT);
 
-      this.stage.render(gl, this.colorLocation);
+      this.stage.render(gl, this.colorLocation, this.matrixLocation);
 
       return this;
 
@@ -273,7 +289,7 @@
       styles.id = id;
     }
     if (_.isObject(matrix)) {
-      styles.matrix = matrix.toArray();
+      styles.matrix = matrix.toArray(true);
     }
     if (stroke) {
       styles.stroke = webgl.interpret(stroke); // Interpret color
@@ -313,7 +329,7 @@
 
       case 'matrix':
         property = 'matrix';
-        value = value.toArray();
+        value = value.toArray(true);
         break;
       case 'stroke':
         // interpret color

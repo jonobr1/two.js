@@ -214,15 +214,27 @@
     /**
      * Create a transform array to be used with rendering apis.
      */
-    toArray: function() {
+    toArray: function(fullMatrix) {
 
       var elements = this.elements;
-      var a = elements[0].toFixed(3);
-      var b = elements[1].toFixed(3);
-      var c = elements[2].toFixed(3);
-      var d = elements[3].toFixed(3);
-      var e = elements[4].toFixed(3);
-      var f = elements[5].toFixed(3);
+
+      var a = parseFloat(elements[0].toFixed(3));
+      var b = parseFloat(elements[1].toFixed(3));
+      var c = parseFloat(elements[2].toFixed(3));
+      var d = parseFloat(elements[3].toFixed(3));
+      var e = parseFloat(elements[4].toFixed(3));
+      var f = parseFloat(elements[5].toFixed(3));
+
+      if (!!fullMatrix) {
+
+        var g = parseFloat(elements[6].toFixed(3));
+        var h = parseFloat(elements[7].toFixed(3));
+        var i = parseFloat(elements[8].toFixed(3));
+
+        return [
+          a, d, g, b, e, h, c, f, i
+        ];
+      }
 
       return [
         a, d, b, e, c, f  // Specific format see LN:19
