@@ -301,8 +301,10 @@
       var triangulation = new tessellation.SweepContext(points);
       tessellation.sweep.Triangulate(triangulation);
 
+      var triangleAmount = triangulation.triangles.length * 3 * 2;
+
       // Return the triangles array.
-      var triangles = reuseTriangles || new Two.Array(triangulation.triangles.length * 3 * 2);
+      var triangles = (!!reuseTriangles && triangleAmount <= reuseTriangles.length) ? reuseTriangles : new Two.Array(triangleAmount);
       _.each(triangulation.triangles, function(tri, i) {
 
         var points = tri.points;
@@ -320,7 +322,9 @@
 
       });
 
-      var vertices = reuseVertices || new Two.Array(triangulation.edges.length * 4);
+      var vertexAmount = triangulation.edges.length * 4;
+
+      var vertices = (!!reuseVertices && vertexAmount <= reuseVertices.length) ? reuseVertices : new Two.Array(vertexAmount);
       _.each(triangulation.edges, function(edge, i) {
         var p = edge.p, q = edge.q;
         var index = i * 4;
@@ -332,7 +336,9 @@
 
       return {
         triangles: triangles,
-        vertices: vertices
+        vertices: vertices,
+        triangleAmount: triangleAmount / 2,
+        vertexAmount: vertexAmount / 2
       };
 
     },
@@ -559,8 +565,8 @@
 
       styles.triangles = t.triangles;
       styles.vertices = t.vertices;
-      styles.vertexAmount = styles.vertices.length / 2;
-      styles.triangleAmount = styles.triangles.length / 2;
+      styles.vertexAmount = t.vertexAmount;
+      styles.triangleAmount = t.triangleAmount;
 
     }
     styles.visible = !!visible;
@@ -593,7 +599,8 @@
         var t = webgl.tessellate(vertices, elem.curved, elem.closed, elem.triangles, elem.vertices);
         value = t.triangles;
         elem.vertices = t.vertices;
-        elem.vertexAmount = elem.vertices.length / 2;
+        elem.vertexAmount = t.vertexAmount;
+        elem.triangleAmount = t.triangleAmount;
         break;
     }
 
@@ -601,7 +608,7 @@
 
     if (property === 'triangles') {
       webgl.updateBuffer(this.ctx, elem, this.positionLocation);
-      elem.triangleAmount = elem.triangles.length / 2;
+      // elem.triangleAmount = elem.triangles.length / 2;
     }
 
   }

@@ -67,7 +67,7 @@
           circle.scale = Math.sin(frames / 60) + 1;
           rect.rotation += 1 / 20;
           if (!(frames % 12)) {
-            _.each(poly.vertices, function(v) {
+            _.each(circle.vertices, function(v) {
               v.setLength(Math.random() * 50 + 50);
             });
           }
