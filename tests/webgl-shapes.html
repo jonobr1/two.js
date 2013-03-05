@@ -60,18 +60,17 @@
         }));
         poly.fill = 'violet';
         poly.translation.set(two.width * 0.25, two.height / 2);
-
-        _.each(poly.vertices, function(v) {
-          var circle = two.makeCircle(v.x, v.y, 2);
-          circle.translation.x += two.width  * 0.25;
-          circle.translation.y += two.height / 2;
-          circle.fill = 'red';
-        });
+        poly.linewidth = 4;
 
         two.bind('update', function(frames) {
           stats.update();
           circle.scale = Math.sin(frames / 60) + 1;
-          poly.rotation += 1 / 60;
+          rect.rotation += 1 / 20;
+          if (!(frames % 12)) {
+            _.each(poly.vertices, function(v) {
+              v.setLength(Math.random() * 50 + 50);
+            });
+          }
         });
 
         _.defer(function() {
