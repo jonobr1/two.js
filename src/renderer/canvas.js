@@ -303,7 +303,7 @@
 
         if (isGroup) {
           // Kind of represents a matrix, save and restore set.
-          styles = getStyles(object);
+          styles = getStyles.call(this, object);
           delete styles.stroke;
           delete styles.fill;
           delete styles.opacity;
@@ -324,7 +324,7 @@
           }
         } else {
           // Has styles and draw commands.
-          elem = new Element(getStyles(object));
+          elem = new Element(getStyles.call(this, object));
         }
 
         elements.push(elem);
@@ -353,7 +353,7 @@
           });
           break;
         default:
-          constructor.setStyles(elem, property, value);
+          constructor.setStyles.call(this, elem, property, value);
       }
 
       return this;

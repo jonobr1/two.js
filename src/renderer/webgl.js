@@ -5,6 +5,139 @@
     getCurveFromPoints = Two.Utils.getCurveFromPoints,
     mod = Two.Utils.mod;
 
+  /**
+   * CSS Color interpretation from
+   * https://github.com/brehaut/color-js/blob/master/color.js
+   * Copyright (c) 2008-2010, Andrew Brehaut, Tim Baumann, Matt Wilson
+   * All rights reserved.
+   */
+
+  // css_colors maps color names onto their hex values
+  // these names are defined by W3C
+  var css_colors = {aliceblue:'#F0F8FF',antiquewhite:'#FAEBD7',aqua:'#00FFFF',aquamarine:'#7FFFD4',azure:'#F0FFFF',beige:'#F5F5DC',bisque:'#FFE4C4',black:'#000000',blanchedalmond:'#FFEBCD',blue:'#0000FF',blueviolet:'#8A2BE2',brown:'#A52A2A',burlywood:'#DEB887',cadetblue:'#5F9EA0',chartreuse:'#7FFF00',chocolate:'#D2691E',coral:'#FF7F50',cornflowerblue:'#6495ED',cornsilk:'#FFF8DC',crimson:'#DC143C',cyan:'#00FFFF',darkblue:'#00008B',darkcyan:'#008B8B',darkgoldenrod:'#B8860B',darkgray:'#A9A9A9',darkgrey:'#A9A9A9',darkgreen:'#006400',darkkhaki:'#BDB76B',darkmagenta:'#8B008B',darkolivegreen:'#556B2F',darkorange:'#FF8C00',darkorchid:'#9932CC',darkred:'#8B0000',darksalmon:'#E9967A',darkseagreen:'#8FBC8F',darkslateblue:'#483D8B',darkslategray:'#2F4F4F',darkslategrey:'#2F4F4F',darkturquoise:'#00CED1',darkviolet:'#9400D3',deeppink:'#FF1493',deepskyblue:'#00BFFF',dimgray:'#696969',dimgrey:'#696969',dodgerblue:'#1E90FF',firebrick:'#B22222',floralwhite:'#FFFAF0',forestgreen:'#228B22',fuchsia:'#FF00FF',gainsboro:'#DCDCDC',ghostwhite:'#F8F8FF',gold:'#FFD700',goldenrod:'#DAA520',gray:'#808080',grey:'#808080',green:'#008000',greenyellow:'#ADFF2F',honeydew:'#F0FFF0',hotpink:'#FF69B4',indianred:'#CD5C5C',indigo:'#4B0082',ivory:'#FFFFF0',khaki:'#F0E68C',lavender:'#E6E6FA',lavenderblush:'#FFF0F5',lawngreen:'#7CFC00',lemonchiffon:'#FFFACD',lightblue:'#ADD8E6',lightcoral:'#F08080',lightcyan:'#E0FFFF',lightgoldenrodyellow:'#FAFAD2',lightgray:'#D3D3D3',lightgrey:'#D3D3D3',lightgreen:'#90EE90',lightpink:'#FFB6C1',lightsalmon:'#FFA07A',lightseagreen:'#20B2AA',lightskyblue:'#87CEFA',lightslategray:'#778899',lightslategrey:'#778899',lightsteelblue:'#B0C4DE',lightyellow:'#FFFFE0',lime:'#00FF00',limegreen:'#32CD32',linen:'#FAF0E6',magenta:'#FF00FF',maroon:'#800000',mediumaquamarine:'#66CDAA',mediumblue:'#0000CD',mediumorchid:'#BA55D3',mediumpurple:'#9370D8',mediumseagreen:'#3CB371',mediumslateblue:'#7B68EE',mediumspringgreen:'#00FA9A',mediumturquoise:'#48D1CC',mediumvioletred:'#C71585',midnightblue:'#191970',mintcream:'#F5FFFA',mistyrose:'#FFE4E1',moccasin:'#FFE4B5',navajowhite:'#FFDEAD',navy:'#000080',oldlace:'#FDF5E6',olive:'#808000',olivedrab:'#6B8E23',orange:'#FFA500',orangered:'#FF4500',orchid:'#DA70D6',palegoldenrod:'#EEE8AA',palegreen:'#98FB98',paleturquoise:'#AFEEEE',palevioletred:'#D87093',papayawhip:'#FFEFD5',peachpuff:'#FFDAB9',peru:'#CD853F',pink:'#FFC0CB',plum:'#DDA0DD',powderblue:'#B0E0E6',purple:'#800080',red:'#FF0000',rosybrown:'#BC8F8F',royalblue:'#4169E1',saddlebrown:'#8B4513',salmon:'#FA8072',sandybrown:'#F4A460',seagreen:'#2E8B57',seashell:'#FFF5EE',sienna:'#A0522D',silver:'#C0C0C0',skyblue:'#87CEEB',slateblue:'#6A5ACD',slategray:'#708090',slategrey:'#708090',snow:'#FFFAFA',springgreen:'#00FF7F',transparent:'#000',steelblue:'#4682B4',tan:'#D2B48C',teal:'#008080',thistle:'#D8BFD8',tomato:'#FF6347',turquoise:'#40E0D0',violet:'#EE82EE',wheat:'#F5DEB3',white:'#FFFFFF',whitesmoke:'#F5F5F5',yellow:'#FFFF00',yellowgreen:'#9ACD32"'};
+
+  // CSS value regexes, according to http://www.w3.org/TR/css3-values/
+  var css_integer = '(?:\\+|-)?\\d+';
+  var css_float = '(?:\\+|-)?\\d*\\.\\d+';
+  var css_number = '(?:' + css_integer + ')|(?:' + css_float + ')';
+  css_integer = '(' + css_integer + ')';
+  css_float = '(' + css_float + ')';
+  css_number = '(' + css_number + ')';
+  var css_percentage = css_number + '%';
+  var css_whitespace = '\\s*?';
+
+  // http://www.w3.org/TR/2003/CR-css3-color-20030514/
+  var hsl_hsla_regex = new RegExp([
+    '^hsl(a?)\\(', css_number, ',', css_percentage, ',', css_percentage, '(,', css_number, ')?\\)$'
+  ].join(css_whitespace) );
+  var rgb_rgba_integer_regex = new RegExp([
+    '^rgb(a?)\\(', css_integer, ',', css_integer, ',', css_integer, '(,', css_number, ')?\\)$'
+  ].join(css_whitespace) );
+  var rgb_rgba_percentage_regex = new RegExp([
+    '^rgb(a?)\\(', css_percentage, ',', css_percentage, ',', css_percentage, '(,', css_number, ')?\\)$'
+  ].join(css_whitespace) );
+
+  var hslToRgb = function(h, s, l) {
+
+    var r, g, b;
+
+    if (s == 0) {
+      r = g = b = l; // achromatic
+    } else {
+
+      function hue2rgb(p, q, t){
+        if(t < 0) t += 1;
+        if(t > 1) t -= 1;
+        if(t < 1 / 6) return p + (q - p) * 6 * t;
+        if(t < 1 / 2) return q;
+        if(t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+        return p;
+      }
+
+      var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+      var p = 2 * l - q;
+    }
+
+    return {
+      r: hue2rgb(p, q, h + 1 / 3),
+      g: hue2rgb(p, q, h),
+      b: hue2rgb(p, q, h - 1 / 3)
+    };
+  }
+
+  var stringParsers = [
+    // CSS RGB(A) literal
+    function(css) {
+
+      css = trim(css);
+
+      var withInteger = match(rgb_rgba_integer_regex, 255);
+      if (withInteger) {
+        return withInteger;
+      }
+
+      return match(rgb_rgba_percentage_regex, 100);
+
+      function match(regex, max_value) {
+        var colorGroups = css.match(regex);
+
+        if (!colorGroups || (!!colorGroups[1] + !!colorGroups[5] === 1)) {
+          return;
+        }
+
+        return {
+          r: Math.min(1, Math.max(0, colorGroups[2] / max_value)),
+          g: Math.min(1, Math.max(0, colorGroups[3] / max_value)),
+          b: Math.min(1, Math.max(0, colorGroups[4] / max_value))
+        };
+
+      }
+
+    },
+
+    function(css) {
+
+      var lower = css.toLowerCase();
+      if (lower in css_colors) {
+        css = css_colors[lower];
+      }
+
+      if (!css.match(/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/)) {
+        return;
+      }
+
+      css = css.replace(/^#/, '');
+      var bytes = css.length / 3;
+      var max = Math.pow(16, bytes) - 1;
+
+      return {
+        r: parseInt(css.slice(0, bytes), 16) / max,
+        g: parseInt(css.slice(bytes * 1,bytes * 2), 16) / max,
+        b: parseInt(css.slice(bytes * 2), 16) / max
+      };
+
+    },
+
+    // css HSL(A) literal
+    function(css) {
+
+      var colorGroups = trim(css).match(hsl_hsla_regex);
+
+      // if there is an "a" after "hsl", there must be a fourth parameter and the other way round
+      if (!colorGroups || (!!colorGroups[1] + !!colorGroups[5] === 1)) {
+        return null;
+      }
+
+      var h = ((colorGroups[2] % 360 + 360) % 360) / 360;
+      var s = Math.max(0, Math.min(parseInt(colorGroups[3], 10) / 100, 1));
+      var l = Math.max(0, Math.min(parseInt(colorGroups[4], 10) / 100, 1));
+
+      return hslToRgb(h, s, l);
+
+    }
+
+  ];
+
   var Group = function(styles) {
 
     CanvasRenderer.Group.call(this, styles);
@@ -13,12 +146,12 @@
 
   _.extend(Group.prototype, CanvasRenderer.Group.prototype, {
 
-    render: function(gl, colorLocation, matrixLocation, matrices) {
+    render: function(gl, position, matrix, color, matrices) {
 
       // Apply matrices here somehow...
 
       _.each(this.children, function(child) {
-        child.render(gl, colorLocation, matrixLocation);
+        child.render(gl, position, matrix, color, matrices);
       });
 
     }
@@ -33,18 +166,37 @@
 
   _.extend(Element.prototype, CanvasRenderer.Element.prototype, {
 
-    render: function(gl, colorLocation, matrixLocation, matrices) {
+    render: function(gl, position, matrix, color, matrices) {
 
-      // Draws the fill
+      if (!this.visible || !this.fillBuffer || !this.strokeBuffer) {
+        return this;
+      }
 
-      // Move this to an update function.
-      // setRectangle(gl, 0, 0, 100, 100); // Debug
+      // Fill
 
-      // Somehow translation is not respected :(
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.fillBuffer);
 
-      gl.uniformMatrix3fv(matrixLocation, false, this.matrix);
-      gl.uniform4f(colorLocation, Math.random(), Math.random(), Math.random(), 1);
-      gl.drawArrays(gl.TRIANGLES, 0, 6);  // The 6 is how many triangles there are.
+      gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
+
+      gl.uniformMatrix3fv(matrix, false, this.matrix);
+      gl.uniform4f(color, this.fill.r, this.fill.g, this.fill.b, this.opacity);
+      gl.drawArrays(gl.TRIANGLES, 0, this.triangleAmount);
+
+      // Stroke
+
+      if (this.linewidth <= 0) {
+        return this;
+      }
+
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.strokeBuffer);
+
+      gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
+      gl.uniformMatrix3fv(matrix, false, this.matrix);
+      gl.uniform4f(color, this.stroke.r, this.stroke.g, this.stroke.b, this.opacity);
+      gl.lineWidth(this.linewidth);
+      gl.drawArrays(gl.LINES, 0, this.vertexAmount);
+
+      return this;
 
     }
 
@@ -52,25 +204,136 @@
 
   var webgl = {
 
+    updateBuffer: function(gl, elem, positionLocation) {
+
+      // Handle Fill
+
+      if (_.isObject(elem.fillBuffer)) {
+        gl.deleteBuffer(elem.fillBuffer);
+      }
+
+      elem.fillBuffer = gl.createBuffer();
+
+      gl.bindBuffer(gl.ARRAY_BUFFER, elem.fillBuffer);
+      gl.enableVertexAttribArray(positionLocation);
+
+      gl.bufferData(gl.ARRAY_BUFFER, elem.triangles, gl.STATIC_DRAW);
+
+      // Handle Stroke
+
+      if (_.isObject(elem.strokeBuffer)) {
+        gl.deleteBuffer(elem.strokeBuffer);
+      }
+
+      elem.strokeBuffer = gl.createBuffer();
+
+      gl.bindBuffer(gl.ARRAY_BUFFER, elem.strokeBuffer);
+      gl.enableVertexAttribArray(positionLocation);
+
+      gl.bufferData(gl.ARRAY_BUFFER, elem.vertices, gl.STATIC_DRAW);
+
+    },
+
     /**
      * Interpret a css color string and return an object of normalized
      * r, g, b color values.
      */
     interpret: function(v) {
-      return v;
+
+      for (var i = 0, l = stringParsers.length; i < l; i++) {
+        var color = stringParsers[i](v);
+        if (color) {
+          return color;
+        }
+      }
+
+      /**
+       * Default to black if can't find a color.
+       */
+      return {
+        r: 0, g: 0, b: 0 
+      };
+
+    },
+
+    /**
+     * Takes an array of vertices and converts them into a subdvided array
+     * of vertices that express the hull of a given shape accurately for the
+     * webgl renderer.
+     */
+    toArray: function(points, curved, closed) {
+
+      if (!curved) {
+        return points;
+      }
+
+      // If curved, then subdivide the path and update the points.
+
+      var curve = getCurveFromPoints(points, closed);
+      var length = curve.length;
+      var last = length - 1;
+      var divided = [];
+
+      _.each(curve, function(p, i) {
+
+        if (closed || !closed && i < last) {
+          var q = curve[(i + 1) % length];
+          var subdivision = Two.Utils.subdivide(
+            p.x, p.y, p.v.x, p.v.y, q.u.x, q.u.y, q.x, q.y);
+          divided = divided.concat(subdivision);
+        }
+
+      });
+
+      return divided;
+
     },
 
     /**
      * Takes an array of vertices and converts them into an array of
-     * triangles ready to be fed to the webgl renderer.
+     * triangles and array of outline verts ready to be fed to the webgl
+     * renderer.
      */
-    toArray: function(points, curved, closed) {
-
-      // If curved, then subdivide the path.
+    tessellate: function(points, curved, closed, reuseTriangles, reuseVertices) {
 
       // Tesselate the points.
 
+      var triangulation = new tessellation.SweepContext(points);
+      tessellation.sweep.Triangulate(triangulation);
+
       // Return the triangles array.
+      var triangles = reuseTriangles || new Two.Array(triangulation.triangles.length * 3 * 2);
+      _.each(triangulation.triangles, function(tri, i) {
+
+        var points = tri.points;
+        var a = points[0];
+        var b = points[1];
+        var c = points[2];
+        var index = i * 6;
+
+        triangles[index + 0] = a.x;
+        triangles[index + 1] = a.y;
+        triangles[index + 2] = b.x;
+        triangles[index + 3] = b.y;
+        triangles[index + 4] = c.x;
+        triangles[index + 5] = c.y;
+
+      });
+
+      var vertices = reuseVertices || new Two.Array(triangulation.edges.length * 4);
+      _.each(triangulation.edges, function(edge, i) {
+        var p = edge.p, q = edge.q;
+        var index = i * 4;
+        vertices[index] = p.x;
+        vertices[index + 1] = p.y;
+        vertices[index + 2] = q.x;
+        vertices[index + 3] = q.y;
+      });
+
+      return {
+        triangles: triangles,
+        vertices: vertices
+      };
 
     },
 
@@ -165,9 +428,10 @@
     this.stage = null;
 
     // http://games.greggman.com/game/webgl-and-alpha/
+    // http://www.khronos.org/registry/webgl/specs/latest/#5.2
     var params = {
-       premultipliedAlpha: false,  // Ask non-premultiplied alpha
-       alpha: false
+      antialias: true,
+      premultipliedAlpha: false
     };
 
     this.ctx = this.domElement.getContext('webgl', params)
@@ -189,19 +453,9 @@
     // Create and bind the drawing buffer
 
     // look up where the vertex data needs to go.
-    var positionLocation = this.ctx.getAttribLocation(this.program, 'position');
+    this.positionLocation = this.ctx.getAttribLocation(this.program, 'position');
     this.colorLocation = this.ctx.getUniformLocation(this.program, 'color');
     this.matrixLocation = this.ctx.getUniformLocation(this.program, 'matrix');
-
-    // Create a buffer and put a single clipspace rectangle in
-    // it (2 triangles)
-    var buffer = this.ctx.createBuffer();
-    this.ctx.bindBuffer(this.ctx.ARRAY_BUFFER, buffer);
-    this.ctx.enableVertexAttribArray(positionLocation);
-    this.ctx.vertexAttribPointer(positionLocation, 2, this.ctx.FLOAT, false, 0, 0);
-
-    setRectangle(this.ctx, 0, 0, 100, 100); // Debug
-    setRectangle(this.ctx, 0, 0, 150, 150);
 
   };
 
@@ -246,27 +500,13 @@
 
       gl.clear(gl.COLOR_BUFFER_BIT);
 
-      this.stage.render(gl, this.colorLocation, this.matrixLocation);
+      this.stage.render(gl, this.positionLocation, this.matrixLocation, this.colorLocation);
 
       return this;
 
     }
 
   });
-
-  function setRectangle(gl, x, y, width, height) {
-    var x1 = x - width / 2;
-    var x2 = x + width / 2;
-    var y1 = y - height / 2;
-    var y2 = y + height / 2;
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
-       x1, y1,
-       x2, y1,
-       x1, y2,
-       x1, y2,
-       x2, y1,
-       x2, y2]), gl.STATIC_DRAW);
-  }
 
   function getStyles(o) {
 
@@ -313,7 +553,15 @@
       styles.linewidth = linewidth;
     }
     if (vertices) {
-      styles.triangles = webgl.toArray(vertices, curved, closed);
+
+      var vertices = webgl.toArray(vertices, curved, closed);
+      var t = webgl.tessellate(vertices, curved, closed);
+
+      styles.triangles = t.triangles;
+      styles.vertices = t.vertices;
+      styles.vertexAmount = styles.vertices.length / 2;
+      styles.triangleAmount = styles.triangles.length / 2;
+
     }
     styles.visible = !!visible;
     styles.curved = !!curved;
@@ -341,12 +589,25 @@
         break;
       case 'vertices':
         property = 'triangles';
-        value = webgl.toArray(value, elem.curved, elem.closed);
+        var vertices = webgl.toArray(value, elem.curved, elem.closed);
+        var t = webgl.tessellate(vertices, elem.curved, elem.closed, elem.triangles, elem.vertices);
+        value = t.triangles;
+        elem.vertices = t.vertices;
+        elem.vertexAmount = elem.vertices.length / 2;
         break;
     }
 
     elem[property] = value;
 
+    if (property === 'triangles') {
+      webgl.updateBuffer(this.ctx, elem, this.positionLocation);
+      elem.triangleAmount = elem.triangles.length / 2;
+    }
+
+  }
+
+  function trim(str) {
+    return str.replace(/^\s+|\s+$/g, '');
   }
 
 })();

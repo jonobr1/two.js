@@ -37,7 +37,7 @@
 
         for (var i = ia; i < ib + 1; i++) {
           var v = this.vertices[i];
-          renderedVertices.push({ x: v.x, y: v.y });
+          renderedVertices.push(new Two.Vector(v.x, v.y));
         }
 
         strokeChanged = false;

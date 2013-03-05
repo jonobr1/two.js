@@ -47,8 +47,8 @@
         var points = _.map(_.range(amount), function(i) {
           var pct = i / amount;
           var theta = Math.PI * 2 * pct;
-          var x = radius * Math.cos(theta);
-          var y = radius * Math.sin(theta);
+          var x = radius /* Math.random() */ * Math.cos(theta);
+          var y = radius /* Math.random() */ * Math.sin(theta);
           return new Two.Vector(x, y);
         });
 
@@ -80,6 +80,13 @@
         var group = two.makeGroup(triangles);
         group.translation.set(two.width / 2, two.height / 2);
         group.scale = 5;
+
+        _.each(points, function(p) {
+          var circle = two.makeCircle(p.x * 5, p.y * 5, 10);
+          circle.fill = 'black';
+          circle.translation.x += two.width / 2;
+          circle.translation.y += two.height / 2;
+        });
 
         function getRandomColor() {
           return 'rgb('

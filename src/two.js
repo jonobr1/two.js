@@ -15,7 +15,8 @@
     abs = Math.abs,
     PI = Math.PI,
     TWO_PI = PI * 2,
-    HALF_PI = PI / 2;
+    HALF_PI = PI / 2,
+    pow = Math.pow;
 
   /**
    * Cross browser dom events.
@@ -133,6 +134,180 @@
     },
 
     Utils: {
+
+      Curve: {
+
+        CollinearityEpsilon: pow(10, -30),
+
+        RecursionLimit: 32,
+
+        CuspLimit: 0,
+
+        Tolerance: {
+          distance: 0.25,
+          angle: 0,
+          epsilon: 0.01
+        }
+
+      },
+
+      /**
+       * Given 2 points (a, b) and corresponding control point for each
+       * return an array of points that represent an Adaptive Subdivision
+       * of Bezier Curves. Founded in the online article:
+       *
+       * http://www.antigrain.com/research/adaptive_bezier/index.html
+       *
+       * Where level represents how many levels deep the function has
+       * already recursed.
+       *
+       */
+      subdivide: function(x1, y1, x2, y2, x3, y3, x4, y4, level) {
+
+        // Constants
+        var epsilon = Two.Utils.Curve.CollinearityEpsilon,
+          limit = Two.Utils.Curve.RecursionLimit,
+          cuspLimit = Two.Utils.Curve.CuspLimit,
+          tolerance = Two.Utils.Curve.Tolerance;
+
+        var level = level || 0;
+
+        var x12 = (x1 + x2) / 2,
+            y12 = (y1 + y2) / 2,
+            x23 = (x2 + x3) / 2,
+            y23 = (y2 + y3) / 2,
+            x34 = (x3 + x4) / 2,
+            y34 = (y3 + y4) / 2,
+            x123  = (x12 + x23) / 2,
+            y123  = (y12 + y23) / 2,
+            x234  = (x23 + x34) / 2,
+            y234  = (y23 + y34) / 2,
+            x1234 = (x123 + x234) / 2,
+            y1234 = (y123 + y234) / 2;
+
+        if (level > 0) {
+
+          // Try to approximate the full cubic curve by a single straight line.
+          var dx = x4 - x1;
+          var dy = y4 - y1;
+
+          var d2 = abs(((x2 - x4) * dy - (y2 - y4) * dx));
+          var d3 = abs(((x3 - x4) * dy - (y3 - y4) * dx));
+
+          var da1, da2;
+
+          if (d2 > epsilon && d3 > epsilon) {
+
+            if ((d2 + d3) * (d2 + d3) <= tolerance.distance * (dx * dx + dy * dy)) {
+
+              if (tolerance.angle < tolerance.epsilon) {
+                return [new Two.Vector(x1234, y1234)];
+              }
+
+              var a23 = atan2(y3 - y2, x3 - x2);
+              da1 = abs(a23 - atan2(y2 - y1, x2 - x1));
+              da2 = abs(atan2(y4 - y3, x4 - x3) - a23);
+
+              if (da1 >= PI) da1 = TWO_PI - da1;
+              if (da2 >= PI) da2 = TWO_PI - da2;
+
+              if (da1 + da2 < tolerance.angle) {
+                return [new Two.Vector(x1234, y1234)];
+              }
+
+              if (cuspLimit !== 0) {
+
+                if (da1 > cuspLimit) {
+                  return [new Two.Vector(x2, y2)];
+                }
+
+                if (da2 > cuspLimit) {
+                  return [new Two.Vector(x3, y3)];
+                }
+
+              }
+
+            }
+
+          }
+
+        } else {
+
+          if (d2 > epsilon) {
+
+            if (d2 * d2 <= tolerance.distance * (dx * dx + dy * dy)) {
+
+              if (tolerance.angle < tolerance.epsilon) {
+                return [new Two.Vector(x1234, y1234)];
+              }
+
+              da1 = abs(atan2(y3 - y2, x3 - x2) - atan2(y2 - y1, x2 - x1));
+              if (da1 >= PI) da1 = TWO_PI - da1;
+
+              if (da1 < tolerance.angle) {
+                return [
+                  new Two.Vector(x2, y2),
+                  new Two.Vector(x3, y3)
+                ];
+              }
+
+              if (cuspLimit !== 0) {
+
+                if (da1 > cuspLimit) {
+                  return [new Two.Vector(x2, y2)];
+                }
+
+              }
+
+            } else if (d3 > epsilon) {
+
+              if (d3 * d3 <= tolerance.distance * (dx * dx + dy * dy)) {
+
+                if (tolerance.angle < tolerance.epsilon) {
+                  return [new Two.Vector(x1234, y1234)];
+                }
+
+                da1 = abs(atan2(y4 - y3, x4 - x3) - atan2(y3 - y2, x3 - x2));
+                if (da1 >= PI) da1 = TWO_PI - da1;
+
+                if (da1 < tolerance.angle) {
+                  return [
+                    new Two.Vector(x2, y2),
+                    new Two.Vector(x3, y3)
+                  ];
+                }
+
+                if (cuspLimit !== 0) {
+
+                  if (da1 > cuspLimit) {
+                    return [new Two.Vector2(x3, y3)];
+                  }
+
+                }
+
+              }
+
+            } else {
+
+              dx = x1234 - (x1 + x4) / 2;
+              dy = y1234 - (y1 + y4) / 2;
+              if (dx * dx + dy * dy <= tolerance.distance) {
+                return [new Two.Vector(x1234, y1234)];
+              }
+
+            }
+
+          }
+
+        }
+
+        return Two.Utils.subdivide(
+          x1, y1, x12, y12, x123, y123, x1234, y1234, level + 1
+        ).concat(Two.Utils.subdivide(
+          x1234, y1234, x234, y234, x34, y34, x4, y4, level + 1
+        ));
+
+      },
 
       /**
        * Creates a set of points that have u, v values for anchor positions

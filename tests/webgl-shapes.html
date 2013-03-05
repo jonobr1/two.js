@@ -30,19 +30,38 @@
       <script src="../src/polygon.js"></script>
       <script>
 
-        // var renderer = new Two[Two.Types.webgl]();
-        // document.body.appendChild(renderer.domElement);
-        // renderer.setSize(window.innerWidth, window.innerHeight);
-        // renderer.render();
-
         var two = new Two({
           fullscreen: true,
-          autostart: true,
           type: Two.Types.webgl
         }).appendTo(document.body);
 
         var rect = two.makeRectangle(50, 50, 100, 100);
+        rect.fill = 'sandybrown';
         rect.translation.set(two.width / 2, two.height / 2);
+
+        var circle = two.makeCircle(0, 0, 150);
+        circle.fill = 'aquamarine';
+        circle.translation.set(two.width * 0.75, two.height / 2);
+
+        var poly = two.makeCurve(_.map(_.range(32), function(i) {
+          var theta = (i / 32) * Math.PI * 2;
+          var x = (50 + Math.random() * 50) * Math.cos(theta);
+          var y = (50 + Math.random() * 50) * Math.sin(theta);
+          return new Two.Vector(x, y);
+        }));
+        poly.fill = 'violet';
+        poly.translation.set(two.width * 0.25, two.height / 2);
+
+        _.each(poly.vertices, function(v) {
+          var circle = two.makeCircle(v.x, v.y, 2);
+          circle.translation.x += two.width  * 0.25;
+          circle.translation.y += two.height / 2;
+          circle.fill = 'red';
+        });
+
+        _.defer(function() {
+          two.play();
+        });
 
       </script>
     </div>
