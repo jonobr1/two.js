@@ -28,7 +28,16 @@
       <script src="../src/shape.js"></script>
       <script src="../src/group.js"></script>
       <script src="../src/polygon.js"></script>
+      <script src="../third-party/stats.js"></script>
       <script>
+
+        var stats = new Stats();
+        _.extend(stats.domElement.style, {
+          position: 'absolute',
+          top: 0,
+          left: 0
+        });
+        document.body.appendChild(stats.domElement);
 
         var two = new Two({
           fullscreen: true,
@@ -57,6 +66,12 @@
           circle.translation.x += two.width  * 0.25;
           circle.translation.y += two.height / 2;
           circle.fill = 'red';
+        });
+
+        two.bind('update', function(frames) {
+          stats.update();
+          circle.scale = Math.sin(frames / 60) + 1;
+          poly.rotation += 1 / 60;
         });
 
         _.defer(function() {
