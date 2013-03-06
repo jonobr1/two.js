@@ -141,7 +141,7 @@
 
         RecursionLimit: 32,
 
-        CuspLimit: 2,
+        CuspLimit: 0,
 
         Tolerance: {
           distance: 0.25,
