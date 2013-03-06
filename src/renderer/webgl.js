@@ -414,17 +414,79 @@
         'void main() {',
         '  gl_FragColor = color;',
         '}'
+      ].join('\n'),
+
+      mrtFragment: [
+        'precision mediump float;',
+        '',
+        'uniform vec4 color;',
+        '',
+        'void main() {',
+        '  gl_FragData[0] = color;',
+        '  gl_FragData[1] = vec4(1.0,0.0,0.0,1.0);',
+        '}'
+      ].join('\n'),
+
+      postVertex: [
+        'attribute vec2 position;',
+        'varying vec2 uv;',
+        '',
+        'void main() {',
+        '   uv = position/2.0+vec2(0.5);',
+        '   gl_Position = vec4(position, 0.0, 1.0);',
+        '}'
+      ].join('\n'),
+
+      postFragment: [
+        'precision mediump float;',
+        '',
+        'uniform sampler2D Sampler0;',
+        'uniform sampler2D Sampler1;',
+        'uniform sampler2D Sampler2;',
+        'uniform vec2 targetSize;',
+        'uniform vec2 resolution;',
+        'varying vec2 uv;',
+        '',
+        'void main() {',
+        '  gl_FragColor = vec4(texture2D(Sampler0, uv*resolution/targetSize).rgb,1.0);',
+        '}'
       ].join('\n')
 
     }
 
   };
 
+  var RenderTarget = function(gl, width, height){
+    
+    this.width = width;
+    this.height = height;
+
+    this.frameBuffer = gl.createFramebuffer();
+    gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer);
+    this.texture = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, this.texture);
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST);
+
+    gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,width,height,0,gl.RGBA,gl.UNSIGNED_BYTE,null);
+    this.renderBuffer = gl.createRenderbuffer();
+    gl.bindRenderbuffer(gl.RENDERBUFFER,this.renderBuffer);
+    gl.renderbufferStorage(gl.RENDERBUFFER,gl.DEPTH_COMPONENT16,width,height);
+    gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.COLOR_ATTACHMENT0,gl.TEXTURE_2D,this.texture,0);
+    gl.framebufferRenderbuffer(gl.FRAMEBUFFER,gl.DEPTH_ATTACHMENT,gl.RENDERBUFFER,this.renderBuffer);
+
+    this.bind = function(glTextureAddress){
+      gl.activeTexture(glTextureAddress);
+      gl.bindTexture(gl.TEXTURE_2D,this.texture);
+    }
+
+  }
+
   /**
    * Webgl Renderer inherits from the Canvas 2d Renderer
    * with additional modifications.
    */
-  var Renderer = Two[Two.Types.webgl] = function() {
+  var Renderer = Two[Two.Types.webgl] = function(params) {
 
     this.domElement = document.createElement('canvas');
 
@@ -435,12 +497,8 @@
 
     // http://games.greggman.com/game/webgl-and-alpha/
     // http://www.khronos.org/registry/webgl/specs/latest/#5.2
-    var params = {
-      antialias: true,
-      premultipliedAlpha: false
-    };
 
-    this.ctx = this.domElement.getContext('webgl', params)
+    var gl = this.ctx = this.domElement.getContext('webgl', params)
       || this.domElement.getContext('experimental-webgl', params);
 
     if (!this.ctx) {
@@ -453,15 +511,43 @@
     var fs = webgl.shaders.create(
       this.ctx, webgl.shaders.fragment, webgl.shaders.types.fragment);
 
-    this.program = webgl.program.create(this.ctx, [vs, fs]);
-    this.ctx.useProgram(this.program);
+    if (params.motionblur) {
+      if(!this.ctx.getExtension( "EXT_draw_buffers" )) {
+        console.log( "No EXT_draw_buffers support for multiple render targets!" );
+      } else {
 
-    // Create and bind the drawing buffer
+        fs = webgl.shaders.create(
+          gl, webgl.shaders.mrtFragment, webgl.shaders.types.fragment);
+        var postVs = webgl.shaders.create(
+          this.ctx, webgl.shaders.postVertex, webgl.shaders.types.vertex);
+        var postFs = webgl.shaders.create(
+          this.ctx, webgl.shaders.postFragment, webgl.shaders.types.fragment);
+        this.postProgram = webgl.program.create(gl, [postVs, postFs]);
+        gl.useProgram(this.postProgram);
+        gl.uniform1i(gl.getUniformLocation(this.postProgram,'Sampler0'),0);
+        gl.uniform1i(gl.getUniformLocation(this.postProgram,'Sampler1'),1);
+        gl.uniform1i(gl.getUniformLocation(this.postProgram,'Sampler2'),2);
+
+        this.renderTarget = [];
+        this.renderTarget.width = 4096;
+        this.renderTarget.height = 4096;
+
+        this.renderTarget.push(new RenderTarget(gl, this.renderTarget.width, this.renderTarget.height));
+
+        this.quad = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.quad);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([1,1,-1,1,1,-1,1,-1,-1,1,-1,-1]), gl.STATIC_DRAW);
+
+      }
+    }
+
+    this.program = webgl.program.create(gl, [vs, fs]);
+    gl.useProgram(this.program);
 
     // look up where the vertex data needs to go.
-    this.positionLocation = this.ctx.getAttribLocation(this.program, 'position');
-    this.colorLocation = this.ctx.getUniformLocation(this.program, 'color');
-    this.matrixLocation = this.ctx.getUniformLocation(this.program, 'matrix');
+    this.positionLocation = gl.getAttribLocation(this.program, 'position');
+    this.colorLocation = gl.getUniformLocation(this.program, 'color');
+    this.matrixLocation = gl.getUniformLocation(this.program, 'matrix');
 
   };
 
@@ -480,6 +566,9 @@
   _.extend(Renderer.prototype, Backbone.Events, CanvasRenderer.prototype, {
 
     setSize: function(width, height) {
+
+      this.width = width;
+      this.height = height;
 
       CanvasRenderer.prototype.setSize.apply(this, arguments);
 
@@ -504,9 +593,33 @@
       var gl = this.ctx,
         program = this.program;
 
+      if (this.renderTarget) {
+        gl.bindFramebuffer(gl.FRAMEBUFFER,this.renderTarget[0].frameBuffer);
+        this.ctx.viewport(0, 0, Math.min(this.width,this.renderTarget.width), Math.min(this.height,this.renderTarget.height));
+      } else {
+        gl.bindFramebuffer(gl.FRAMEBUFFER,null);
+      }
+      
+      gl.useProgram(this.program);
       gl.clear(gl.COLOR_BUFFER_BIT);
-
       this.stage.render(gl, this.positionLocation, this.matrixLocation, this.colorLocation);
+
+      if (this.renderTarget) {
+        gl.bindFramebuffer(gl.FRAMEBUFFER,null);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        this.ctx.viewport(0, 0, this.width, this.height);
+
+        gl.useProgram(this.postProgram);
+        
+        this.renderTarget[0].bind(gl.TEXTURE0);
+        
+        gl.uniform2f(gl.getUniformLocation(this.postProgram,'resolution'), Math.min(this.width,this.renderTarget.width), Math.min(this.height,this.renderTarget.height));
+        gl.uniform2f(gl.getUniformLocation(this.postProgram,'targetSize'), this.renderTarget.width, this.renderTarget.height);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.quad);
+        gl.vertexAttribPointer(gl.getAttribLocation(this.postProgram, 'position'), 2, gl.FLOAT, false, 0, 0);
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+      }
 
       return this;
 

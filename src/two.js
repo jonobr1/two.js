@@ -57,11 +57,15 @@
       width: 640,
       height: 480,
       type: Two.Types.svg,
-      autostart: false
+      autostart: false,
+      antialias: true,
+      premultipliedAlpha: false,
+      motionblur: true
     });
 
     this.type = params.type;
-    this.renderer = new Two[this.type](this);
+
+    this.renderer = new Two[this.type](params);
     this.playing = params.autostart;
     this.frameCount = 0;
 

@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <style>
+
+      * {
+        margin: 0;
+        padding: 0;
+      }
+
+    </style>
+  </head>
+  <body>
+    <div class="scripts">
+      <!-- Third Party -->
+      <script src="../third-party/underscore.js"></script>
+      <script src="../third-party/events.js"></script>
+      <script src="../third-party/requestAnimationFrame.js"></script>
+      <script src="../third-party/tessellation.js"></script>
+      <!-- First Party -->
+      <script src="../src/two.js"></script>
+      <script src="../src/renderer/svg.js"></script>
+      <script src="../src/renderer/canvas.js"></script>
+      <script src="../src/renderer/webgl.js"></script>
+      <script src="../src/vector.js"></script>
+      <script src="../src/matrix.js"></script>
+      <script src="../src/shape.js"></script>
+      <script src="../src/group.js"></script>
+      <script src="../src/polygon.js"></script>
+      <script src="../third-party/stats.js"></script>
+      <script>
+
+        var stats = new Stats();
+        _.extend(stats.domElement.style, {
+          position: 'absolute',
+          top: 0,
+          left: 0
+        });
+        document.body.appendChild(stats.domElement);
+
+        var two = new Two({
+          fullscreen: true,
+          type: Two.Types.webgl,
+          motionblur: true
+        }).appendTo(document.body);
+
+        var rect = two.makeRectangle(50, 50, 100, 100);
+        rect.fill = 'sandybrown';
+        rect.translation.set(two.width / 2, two.height / 2);
+
+        two.bind('update', function(frames) {
+          stats.update();
+          rect.rotation += 1 / 20;
+          rect.translation.x = Math.sin(frames/200)*100 + two.width / 2;
+          }
+        );
+
+        _.defer(function() {
+          two.play();
+        });
+
+      </script>
+    </div>
+  </body>
+</html>
