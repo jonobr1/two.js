@@ -51,8 +51,9 @@
 
         two.bind('update', function(frames) {
           stats.update();
-          rect.rotation += 1 / 20;
-          rect.translation.x = Math.sin(frames/200)*100 + two.width / 2;
+          //rect.rotation += 1 / 50;
+          rect.translation.x = Math.sin(frames/50)*100 + two.width / 2;
+          rect.translation.y = Math.cos(frames/20)*100 + two.width / 2;
           }
         );
 

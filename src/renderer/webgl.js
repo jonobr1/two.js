@@ -166,7 +166,7 @@
 
   _.extend(Element.prototype, CanvasRenderer.Element.prototype, {
 
-    render: function(gl, position, matrix, color, matrices) {
+    render: function(gl, position, matrix, matrixOld, color, matrices) {
 
       if (!this.visible || !this.fillBuffer || !this.strokeBuffer) {
         return this;
@@ -175,8 +175,12 @@
       // Fill
 
       gl.bindBuffer(gl.ARRAY_BUFFER, this.fillBuffer);
-
       gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
+
+      console.log(this.matrixOld == this.matrix);
+      this.matrixOld = this.matrix;
+      gl.uniformMatrix3fv(matrixOld, false, this.matrixOld);
+      
 
       gl.uniformMatrix3fv(matrix, false, this.matrix);
       gl.uniform4f(color, this.fill.r, this.fill.g, this.fill.b, this.opacity);
@@ -189,9 +193,7 @@
       }
 
       gl.bindBuffer(gl.ARRAY_BUFFER, this.strokeBuffer);
-
       gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
-      gl.uniformMatrix3fv(matrix, false, this.matrix);
       gl.uniform4f(color, this.stroke.r, this.stroke.g, this.stroke.b, this.opacity);
       gl.lineWidth(this.linewidth);
       gl.drawArrays(gl.LINES, 0, this.vertexAmount);
@@ -406,6 +408,24 @@
         '}'
       ].join('\n'),
 
+      mrtVertex: [
+        'attribute vec2 position;',
+        'uniform mat3 matrix;',
+        'uniform mat3 matrixOld;',
+        'uniform vec2 resolution;',
+        'varying vec2 velocity;',
+        '',
+        'void main() {',
+        '   vec2 projected = (matrix * vec3(position, 1)).xy;',
+        '   vec2 normal = projected / resolution;',
+        '   vec2 clipspace = (normal * 2.0) - 1.0;',
+        '   vec2 projectedOld = (matrixOld * vec3(position, 1)).xy;',
+        '',
+        '   velocity = (projected -  projectedOld)*0.1;',
+        '   gl_Position = vec4(clipspace * vec2(1.0, -1.0), 0.0, 1.0);',
+        '}'
+      ].join('\n'),
+
       fragment: [
         'precision mediump float;',
         '',
@@ -420,9 +440,10 @@
         'precision mediump float;',
         '',
         'uniform vec4 color;',
+        'varying vec2 velocity;',
         '',
         'void main() {',
-        '  gl_FragData[0] = color;',
+        '  gl_FragData[0] = vec4(velocity, 0.0, 1.0);',
         '  gl_FragData[1] = vec4(1.0,0.0,0.0,1.0);',
         '}'
       ].join('\n'),
@@ -516,6 +537,8 @@
         console.log( "No EXT_draw_buffers support for multiple render targets!" );
       } else {
 
+        vs = webgl.shaders.create(
+          gl, webgl.shaders.mrtVertex, webgl.shaders.types.vertex);
         fs = webgl.shaders.create(
           gl, webgl.shaders.mrtFragment, webgl.shaders.types.fragment);
         var postVs = webgl.shaders.create(
@@ -548,6 +571,7 @@
     this.positionLocation = gl.getAttribLocation(this.program, 'position');
     this.colorLocation = gl.getUniformLocation(this.program, 'color');
     this.matrixLocation = gl.getUniformLocation(this.program, 'matrix');
+    this.matrixOldLocation = gl.getUniformLocation(this.program, 'matrixOld');
 
   };
 
@@ -602,7 +626,7 @@
       
       gl.useProgram(this.program);
       gl.clear(gl.COLOR_BUFFER_BIT);
-      this.stage.render(gl, this.positionLocation, this.matrixLocation, this.colorLocation);
+      this.stage.render(gl, this.positionLocation, this.matrixLocation, this.matrixOldLocation, this.colorLocation);
 
       if (this.renderTarget) {
         gl.bindFramebuffer(gl.FRAMEBUFFER,null);
@@ -649,6 +673,7 @@
     }
     if (_.isObject(matrix)) {
       styles.matrix = matrix.toArray(true);
+      styles.matrixOld = matrix.toArray(true);
     }
     if (stroke) {
       styles.stroke = webgl.interpret(stroke); // Interpret color
