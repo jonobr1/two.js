@@ -9,11 +9,11 @@ var files = [
   '../third-party/requestAnimationFrame.js',
   '../third-party/tessellation.js',
   '../src/two.js',
+  '../src/vector.js',
+  '../src/matrix.js',
   '../src/renderer/svg.js',
   '../src/renderer/canvas.js',
   '../src/renderer/webgl.js',
-  '../src/vector.js',
-  '../src/matrix.js',
   '../src/shape.js',
   '../src/group.js',
   '../src/polygon.js'

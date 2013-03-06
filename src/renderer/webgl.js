@@ -3,7 +3,8 @@
   // Localize variables
   var CanvasRenderer = Two[Two.Types.canvas],
     getCurveFromPoints = Two.Utils.getCurveFromPoints,
-    mod = Two.Utils.mod;
+    mod = Two.Utils.mod,
+    multiplyMatrix = Two.Matrix.Multiply;
 
   /**
    * CSS Color interpretation from
@@ -36,8 +37,9 @@
   var rgb_rgba_percentage_regex = new RegExp([
     '^rgb(a?)\\(', css_percentage, ',', css_percentage, ',', css_percentage, '(,', css_number, ')?\\)$'
   ].join(css_whitespace) );
+  var remove_comma_regex = /^,\s*/;
 
-  var hslToRgb = function(h, s, l) {
+  var hslToRgb = function(h, s, l, a) {
 
     var r, g, b;
 
@@ -58,10 +60,13 @@
       var p = 2 * l - q;
     }
 
+    var alpha = _.isUndefined(a) || _.isNull(a) ? 1.0 : a.replace(remove_comma_regex, '');
+
     return {
       r: hue2rgb(p, q, h + 1 / 3),
       g: hue2rgb(p, q, h),
-      b: hue2rgb(p, q, h - 1 / 3)
+      b: hue2rgb(p, q, h - 1 / 3),
+      a: alpha
     };
   }
 
@@ -79,16 +84,20 @@
       return match(rgb_rgba_percentage_regex, 100);
 
       function match(regex, max_value) {
+
         var colorGroups = css.match(regex);
 
         if (!colorGroups || (!!colorGroups[1] + !!colorGroups[5] === 1)) {
           return;
         }
 
+        var alpha = _.isUndefined(colorGroups[5]) ? 1.0 : colorGroups[5].replace(remove_comma_regex, '');
+
         return {
           r: Math.min(1, Math.max(0, colorGroups[2] / max_value)),
           g: Math.min(1, Math.max(0, colorGroups[3] / max_value)),
-          b: Math.min(1, Math.max(0, colorGroups[4] / max_value))
+          b: Math.min(1, Math.max(0, colorGroups[4] / max_value)),
+          a: Math.min(1, Math.max(alpha, 0))
         };
 
       }
@@ -113,7 +122,8 @@
       return {
         r: parseInt(css.slice(0, bytes), 16) / max,
         g: parseInt(css.slice(bytes * 1,bytes * 2), 16) / max,
-        b: parseInt(css.slice(bytes * 2), 16) / max
+        b: parseInt(css.slice(bytes * 2), 16) / max,
+        a: 1.0
       };
 
     },
@@ -132,7 +142,7 @@
       var s = Math.max(0, Math.min(parseInt(colorGroups[3], 10) / 100, 1));
       var l = Math.max(0, Math.min(parseInt(colorGroups[4], 10) / 100, 1));
 
-      return hslToRgb(h, s, l);
+      return hslToRgb(h, s, l, colorGroups[5]);
 
     }
 
@@ -146,12 +156,40 @@
 
   _.extend(Group.prototype, CanvasRenderer.Group.prototype, {
 
-    render: function(gl, position, matrix, color, matrices) {
+    appendChild: function() {
+
+      CanvasRenderer.Group.prototype.appendChild.apply(this, arguments);
+
+      this.updateMatrix();
+
+      return this;
+
+    },
+
+    updateMatrix: function(parentMatrix) {
+
+      var matrix = parentMatrix || this.parent && this.parent.matrix;
+
+      if (!matrix) {
+        return this;
+      }
+
+      this._matrix = multiplyMatrix(this.matrix, matrix);
+
+      _.each(this.children, function(child) {
+        child.updateMatrix(this._matrix);
+      }, this)
+
+      return this;
+
+    },
+
+    render: function(gl, position, matrix, color) {
 
       // Apply matrices here somehow...
 
       _.each(this.children, function(child) {
-        child.render(gl, position, matrix, color, matrices);
+        child.render(gl, position, matrix, color);
       });
 
     }
@@ -166,7 +204,21 @@
 
   _.extend(Element.prototype, CanvasRenderer.Element.prototype, {
 
-    render: function(gl, position, matrix, color, matrices) {
+    updateMatrix: function(parentMatrix) {
+
+      var matrix = parentMatrix || this.parent && this.parent.matrix
+
+      if (!matrix) {
+        return this;
+      }
+
+      this._matrix = multiplyMatrix(this.matrix, matrix);
+
+      return this;
+
+    },
+
+    render: function(gl, position, matrix, color) {
 
       if (!this.visible || !this.fillBuffer || !this.strokeBuffer) {
         return this;
@@ -174,25 +226,29 @@
 
       // Fill
 
-      gl.bindBuffer(gl.ARRAY_BUFFER, this.fillBuffer);
+      if (this.fill.a > 0) {
 
-      gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.fillBuffer);
 
-      gl.uniformMatrix3fv(matrix, false, this.matrix);
-      gl.uniform4f(color, this.fill.r, this.fill.g, this.fill.b, this.opacity);
-      gl.drawArrays(gl.TRIANGLES, 0, this.triangleAmount);
+        gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
+
+        gl.uniformMatrix3fv(matrix, false, this._matrix);
+        gl.uniform4f(color, this.fill.r, this.fill.g, this.fill.b, this.fill.a);// * this.opacity);
+        gl.drawArrays(gl.TRIANGLES, 0, this.triangleAmount);
+
+      }
 
       // Stroke
 
-      if (this.linewidth <= 0) {
+      if (this.linewidth <= 0 || this.stroke.a <= 0) {
         return this;
       }
 
       gl.bindBuffer(gl.ARRAY_BUFFER, this.strokeBuffer);
 
       gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
-      gl.uniformMatrix3fv(matrix, false, this.matrix);
-      gl.uniform4f(color, this.stroke.r, this.stroke.g, this.stroke.b, this.opacity);
+      gl.uniformMatrix3fv(matrix, false, this._matrix);
+      gl.uniform4f(color, this.stroke.r, this.stroke.g, this.stroke.b, this.stroke.a);// * this.opacity);
       gl.lineWidth(this.linewidth);
       gl.drawArrays(gl.LINES, 0, this.vertexAmount);
 
@@ -248,10 +304,10 @@
       }
 
       /**
-       * Default to black if can't find a color.
+       * Default to invisible black if can't find a color.
        */
       return {
-        r: 0, g: 0, b: 0 
+        r: 0, g: 0, b: 0, a: 0
       };
 
     },
@@ -463,6 +519,11 @@
     this.colorLocation = this.ctx.getUniformLocation(this.program, 'color');
     this.matrixLocation = this.ctx.getUniformLocation(this.program, 'matrix');
 
+    // Setup some initial statements of the gl context
+    this.ctx.enable(this.ctx.BLEND);
+    this.ctx.disable(this.ctx.DEPTH_TEST);
+    this.ctx.blendFunc(this.ctx.ONE, this.ctx.SRC_ALPHA);
+
   };
 
   _.extend(Renderer, {
@@ -535,7 +596,7 @@
       styles.id = id;
     }
     if (_.isObject(matrix)) {
-      styles.matrix = matrix.toArray(true);
+      styles.matrix = styles._matrix = matrix.toArray(true);
     }
     if (stroke) {
       styles.stroke = webgl.interpret(stroke); // Interpret color
@@ -606,9 +667,12 @@
 
     elem[property] = value;
 
+    // Try moving this to switch statement
     if (property === 'triangles') {
       webgl.updateBuffer(this.ctx, elem, this.positionLocation);
-      // elem.triangleAmount = elem.triangles.length / 2;
+    }
+    if (property === 'matrix') {
+      elem.updateMatrix();
     }
 
   }
