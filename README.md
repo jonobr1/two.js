@@ -5,7 +5,6 @@ __This is considered alpha grade__. A two-dimensional drawing api meant for mode
 
 ### Roadmap:
 + Figure out how fill / stroke `alpha` is applied with opacity and set the proper blend mode.
-+ Tessellation breaks if there’s a loop, maybe it’s how holes are dealt with? Posted a question at [poly2tri](https://groups.google.com/forum/?fromgroups=#!topic/poly2tri/d0UL8Kew8dY).
 + Add ability to remove shapes from a scene.
 + Make `Two.Group` center its children
 
@@ -22,3 +21,4 @@ __This is considered alpha grade__. A two-dimensional drawing api meant for mode
 + Add svg import. This requires smart subdivision of compound paths.
 
 ### Notes:
++ More information on triangulation [here](https://groups.google.com/forum/?fromgroups=#!topic/poly2tri/d0UL8Kew8dY).

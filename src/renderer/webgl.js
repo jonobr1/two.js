@@ -4,7 +4,8 @@
   var CanvasRenderer = Two[Two.Types.canvas],
     getCurveFromPoints = Two.Utils.getCurveFromPoints,
     mod = Two.Utils.mod,
-    multiplyMatrix = Two.Matrix.Multiply;
+    multiplyMatrix = Two.Matrix.Multiply,
+    decoupleShapes = Two.Utils.decoupleShapes;
 
   /**
    * CSS Color interpretation from
@@ -352,47 +353,45 @@
      */
     tessellate: function(points, curved, closed, reuseTriangles, reuseVertices) {
 
-      // Tesselate the points.
+      var shapes = flatten(decoupleShapes(points, closed));
+      var triangles = [], vertices = [], triangleAmount = 0, vertexAmount = 0;
 
-      var triangulation = new tessellation.SweepContext(points);
-      tessellation.sweep.Triangulate(triangulation);
+      _.each(shapes, function(points, i) {
 
-      var triangleAmount = triangulation.triangles.length * 3 * 2;
+        // Tessellate the current set of points.
 
-      // Return the triangles array.
-      var triangles = (!!reuseTriangles && triangleAmount <= reuseTriangles.length) ? reuseTriangles : new Two.Array(triangleAmount);
-      _.each(triangulation.triangles, function(tri, i) {
+        var triangulation = new tessellation.SweepContext(points);
+        tessellation.sweep.Triangulate(triangulation);
 
-        var points = tri.points;
-        var a = points[0];
-        var b = points[1];
-        var c = points[2];
-        var index = i * 6;
+        triangleAmount += triangulation.triangles.length * 3 * 2;
+        _.each(triangulation.triangles, function(tri, i) {
 
-        triangles[index + 0] = a.x;
-        triangles[index + 1] = a.y;
-        triangles[index + 2] = b.x;
-        triangles[index + 3] = b.y;
-        triangles[index + 4] = c.x;
-        triangles[index + 5] = c.y;
+          var points = tri.points;
+          var a = points[0];
+          var b = points[1];
+          var c = points[2];
+
+          triangles.push(a.x, a.y, b.x, b.y, c.x, c.y);
+
+        });
+
+        vertexAmount += triangulation.edges.length * 4;
+        _.each(triangulation.edges, function(edge, i) {
+          var p = edge.p, q = edge.q;
+          vertices.push(p.x, p.y, q.x, q.y);
+        });
 
       });
 
-      var vertexAmount = triangulation.edges.length * 4;
+      var triangles_32 = (!!reuseTriangles && triangleAmount <= reuseTriangles.length) ? reuseTriangles : new Two.Array(triangleAmount);
+      var vertices_32 = (!!reuseVertices && vertexAmount <= reuseVertices.length) ? reuseVertices : new Two.Array(vertexAmount);
 
-      var vertices = (!!reuseVertices && vertexAmount <= reuseVertices.length) ? reuseVertices : new Two.Array(vertexAmount);
-      _.each(triangulation.edges, function(edge, i) {
-        var p = edge.p, q = edge.q;
-        var index = i * 4;
-        vertices[index] = p.x;
-        vertices[index + 1] = p.y;
-        vertices[index + 2] = q.x;
-        vertices[index + 3] = q.y;
-      });
+      triangles_32.set(triangles);
+      vertices_32.set(vertices);
 
       return {
-        triangles: triangles,
-        vertices: vertices,
+        triangles: triangles_32,
+        vertices: vertices_32,
         triangleAmount: triangleAmount / 2,
         vertexAmount: vertexAmount / 2
       };
@@ -493,6 +492,7 @@
     // http://www.khronos.org/registry/webgl/specs/latest/#5.2
     var params = {
       antialias: true,
+      // alpha: false,
       premultipliedAlpha: false
     };
 
@@ -522,7 +522,7 @@
     // Setup some initial statements of the gl context
     this.ctx.enable(this.ctx.BLEND);
     this.ctx.disable(this.ctx.DEPTH_TEST);
-    this.ctx.blendFunc(this.ctx.ONE, this.ctx.SRC_ALPHA);
+    // this.ctx.blendFunc(this.ctx.SRC_ALPHA, this.ctx.ONE_MINUS_SRC_ALPHA);
 
   };
 
@@ -566,8 +566,16 @@
         program = this.program;
 
       gl.clear(gl.COLOR_BUFFER_BIT);
+      // gl.clearColor(1.0, 1.0, 1.0, 0.0);
 
       this.stage.render(gl, this.positionLocation, this.matrixLocation, this.colorLocation);
+
+    // Set the backbuffer's alpha to 1.0
+      // gl.clearColor(1, 1, 1, 1);
+      // gl.colorMask(false, false, false, true);
+      // gl.clear(gl.COLOR_BUFFER_BIT);
+
+      // gl.colorMask(true, true, true, false);
 
       return this;
 
@@ -674,6 +682,27 @@
     if (property === 'matrix') {
       elem.updateMatrix();
     }
+
+  }
+
+  /**
+   * Remove nested arrays and place all arrays as shallow as possible.
+   */
+  function flatten(array) {
+
+    var result = [];
+
+    _.each(array, function(v) {
+
+      if (_.isArray(v) && _.isArray(v[0])) {
+        result = result.concat(flatten(v));
+      } else {
+        result.push(v);
+      }
+
+    });
+
+    return result;
 
   }
 

@@ -764,6 +764,7 @@
     middle.next = tail;
     middle.prev = head;
     tail.prev = middle;
+
   };
 
   tessellation.SweepContext.prototype.RemoveNode = function(node) {

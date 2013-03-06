@@ -4,7 +4,7 @@
  * agnostic enabling the same api for rendering in multiple contexts: webgl, 
  * canvas2d, and svg.
  *
- * Copyright (c) 2012 - 2013 jonobr1
+ * Copyright (c) 2012 - 2013 jonobr1 / http://jonobr1.com
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -2034,6 +2034,7 @@ var Backbone = Backbone || {};
     middle.next = tail;
     middle.prev = head;
     tail.prev = middle;
+
   };
 
   tessellation.SweepContext.prototype.RemoveNode = function(node) {
@@ -2968,6 +2969,103 @@ var Backbone = Backbone || {};
       },
 
       /**
+       * Given an array of points. Go through the points as line-segments,
+       * check for intersections, if one is found separate the points in
+       * question into separate shapes and return a new array of array of points
+       * representing the new subdivision.
+       */
+      decoupleShapes: function(points, closed, depth) {
+
+        var depth = depth || 0;
+
+        for (var i = 0, l = points.length; i < l; i++) {
+
+          if (!closed && i >= l - 1) {
+            continue;
+          }
+
+          var ii = mod(i + 1, l);
+          var a = points[i];
+          var b = points[ii];
+
+          for (var j = l - 1; j > i + 1; j--) {
+
+            if (j >= l - 1) {
+              continue;
+            }
+
+            var jj = mod(j + 1, l);
+            var c = points[j];
+            var d = points[jj];
+
+            var intersection = solveSegmentIntersection(a, b, c, d);
+
+            if (intersection) {
+
+              var s1, s2, f1 = [intersection], f2 = [intersection.clone()];
+              var test = _.range(l);
+
+              s1 = points.slice(0, ii).concat(f1, points.slice(jj, l));
+              s2 = points.slice(ii, jj).concat(f2);
+
+              return [
+                decoupleShapes(s1, closed, depth + 1),
+                decoupleShapes(s2, closed, depth + 1)
+              ];
+
+            }
+
+          }
+
+        }
+
+        return [points];
+
+      },
+
+      /**
+       * a   d
+       *  \ /
+       *  / \
+       * c   b
+       * where a is (x1, y1), b is (x2, y2), c is (x3, y3), and d is (x4, y4)
+       * Solves for an intersection, returns null if none found, otherwise
+       * returns Two.Vector.
+       * http://www.kevlindev.com/gui/math/intersection/Intersection.js
+       */
+      solveSegmentIntersection: function(a1, a2, b1, b2) {
+
+        var result;
+        
+        var ua_t = (b2.x - b1.x) * (a1.y - b1.y) - (b2.y - b1.y) * (a1.x - b1.x);
+        var ub_t = (a2.x - a1.x) * (a1.y - b1.y) - (a2.y - a1.y) * (a1.x - b1.x);
+        var u_b  = (b2.y - b1.y) * (a2.x - a1.x) - (b2.x - b1.x) * (a2.y - a1.y);
+
+        if ( u_b != 0 ) {
+            var ua = ua_t / u_b;
+            var ub = ub_t / u_b;
+
+            if ( 0 <= ua && ua <= 1 && 0 <= ub && ub <= 1 ) {
+              return new Two.Vector(
+                a1.x + ua * (a2.x - a1.x),
+                a1.y + ua * (a2.y - a1.y)
+              );
+            } else {
+              result = null;
+            }
+        } else {
+            if ( ua_t == 0 || ub_t == 0 ) {
+                result = null;//new Intersection("Coincident");
+            } else {
+                result = null;
+            }
+        }
+
+        return result;
+
+      },
+
+      /**
        * Given 2 points (a, b) and corresponding control point for each
        * return an array of points that represent an Adaptive Subdivision
        * of Bezier Curves. Founded in the online article:
@@ -3269,6 +3367,8 @@ var Backbone = Backbone || {};
     angleBetween = Two.Utils.angleBetween,
     getControlPoints = Two.Utils.getControlPoints,
     getCurveFromPoints = Two.Utils.getCurveFromPoints,
+    solveSegmentIntersection = Two.Utils.solveSegmentIntersection,
+    decoupleShapes = Two.Utils.decoupleShapes,
     mod = Two.Utils.mod;
 
   _.extend(Two.prototype, Backbone.Events, {
@@ -4828,7 +4928,8 @@ var Backbone = Backbone || {};
   var CanvasRenderer = Two[Two.Types.canvas],
     getCurveFromPoints = Two.Utils.getCurveFromPoints,
     mod = Two.Utils.mod,
-    multiplyMatrix = Two.Matrix.Multiply;
+    multiplyMatrix = Two.Matrix.Multiply,
+    decoupleShapes = Two.Utils.decoupleShapes;
 
   /**
    * CSS Color interpretation from
@@ -5176,47 +5277,45 @@ var Backbone = Backbone || {};
      */
     tessellate: function(points, curved, closed, reuseTriangles, reuseVertices) {
 
-      // Tesselate the points.
+      var shapes = flatten(decoupleShapes(points, closed));
+      var triangles = [], vertices = [], triangleAmount = 0, vertexAmount = 0;
 
-      var triangulation = new tessellation.SweepContext(points);
-      tessellation.sweep.Triangulate(triangulation);
+      _.each(shapes, function(points, i) {
 
-      var triangleAmount = triangulation.triangles.length * 3 * 2;
+        // Tessellate the current set of points.
 
-      // Return the triangles array.
-      var triangles = (!!reuseTriangles && triangleAmount <= reuseTriangles.length) ? reuseTriangles : new Two.Array(triangleAmount);
-      _.each(triangulation.triangles, function(tri, i) {
+        var triangulation = new tessellation.SweepContext(points);
+        tessellation.sweep.Triangulate(triangulation);
 
-        var points = tri.points;
-        var a = points[0];
-        var b = points[1];
-        var c = points[2];
-        var index = i * 6;
+        triangleAmount += triangulation.triangles.length * 3 * 2;
+        _.each(triangulation.triangles, function(tri, i) {
 
-        triangles[index + 0] = a.x;
-        triangles[index + 1] = a.y;
-        triangles[index + 2] = b.x;
-        triangles[index + 3] = b.y;
-        triangles[index + 4] = c.x;
-        triangles[index + 5] = c.y;
+          var points = tri.points;
+          var a = points[0];
+          var b = points[1];
+          var c = points[2];
+
+          triangles.push(a.x, a.y, b.x, b.y, c.x, c.y);
+
+        });
+
+        vertexAmount += triangulation.edges.length * 4;
+        _.each(triangulation.edges, function(edge, i) {
+          var p = edge.p, q = edge.q;
+          vertices.push(p.x, p.y, q.x, q.y);
+        });
 
       });
 
-      var vertexAmount = triangulation.edges.length * 4;
+      var triangles_32 = (!!reuseTriangles && triangleAmount <= reuseTriangles.length) ? reuseTriangles : new Two.Array(triangleAmount);
+      var vertices_32 = (!!reuseVertices && vertexAmount <= reuseVertices.length) ? reuseVertices : new Two.Array(vertexAmount);
 
-      var vertices = (!!reuseVertices && vertexAmount <= reuseVertices.length) ? reuseVertices : new Two.Array(vertexAmount);
-      _.each(triangulation.edges, function(edge, i) {
-        var p = edge.p, q = edge.q;
-        var index = i * 4;
-        vertices[index] = p.x;
-        vertices[index + 1] = p.y;
-        vertices[index + 2] = q.x;
-        vertices[index + 3] = q.y;
-      });
+      triangles_32.set(triangles);
+      vertices_32.set(vertices);
 
       return {
-        triangles: triangles,
-        vertices: vertices,
+        triangles: triangles_32,
+        vertices: vertices_32,
         triangleAmount: triangleAmount / 2,
         vertexAmount: vertexAmount / 2
       };
@@ -5317,6 +5416,7 @@ var Backbone = Backbone || {};
     // http://www.khronos.org/registry/webgl/specs/latest/#5.2
     var params = {
       antialias: true,
+      // alpha: false,
       premultipliedAlpha: false
     };
 
@@ -5346,7 +5446,7 @@ var Backbone = Backbone || {};
     // Setup some initial statements of the gl context
     this.ctx.enable(this.ctx.BLEND);
     this.ctx.disable(this.ctx.DEPTH_TEST);
-    this.ctx.blendFunc(this.ctx.ONE, this.ctx.SRC_ALPHA);
+    // this.ctx.blendFunc(this.ctx.SRC_ALPHA, this.ctx.ONE_MINUS_SRC_ALPHA);
 
   };
 
@@ -5390,8 +5490,16 @@ var Backbone = Backbone || {};
         program = this.program;
 
       gl.clear(gl.COLOR_BUFFER_BIT);
+      // gl.clearColor(1.0, 1.0, 1.0, 0.0);
 
       this.stage.render(gl, this.positionLocation, this.matrixLocation, this.colorLocation);
+
+    // Set the backbuffer's alpha to 1.0
+      // gl.clearColor(1, 1, 1, 1);
+      // gl.colorMask(false, false, false, true);
+      // gl.clear(gl.COLOR_BUFFER_BIT);
+
+      // gl.colorMask(true, true, true, false);
 
       return this;
 
@@ -5498,6 +5606,27 @@ var Backbone = Backbone || {};
     if (property === 'matrix') {
       elem.updateMatrix();
     }
+
+  }
+
+  /**
+   * Remove nested arrays and place all arrays as shallow as possible.
+   */
+  function flatten(array) {
+
+    var result = [];
+
+    _.each(array, function(v) {
+
+      if (_.isArray(v) && _.isArray(v[0])) {
+        result = result.concat(flatten(v));
+      } else {
+        result.push(v);
+      }
+
+    });
+
+    return result;
 
   }
 
