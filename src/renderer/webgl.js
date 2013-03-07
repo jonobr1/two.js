@@ -7,6 +7,7 @@
     multiplyMatrix = Two.Matrix.Multiply,
     matrixDeterminant = Two.Matrix.Determinant,
     decoupleShapes = Two.Utils.decoupleShapes,
+    subdivide = Two.Utils.subdivide,
     abs = Math.abs;
 
   /**
@@ -326,7 +327,7 @@
     toArray: function(points, curved, closed) {
 
       if (!curved) {
-        return points;
+        return points.slice(0);
       }
 
       // If curved, then subdivide the path and update the points.
@@ -340,7 +341,7 @@
 
         if (closed || !closed && i < last) {
           var q = curve[(i + 1) % length];
-          var subdivision = Two.Utils.subdivide(
+          var subdivision = subdivide(
             p.x, p.y, p.v.x, p.v.y, q.u.x, q.u.y, q.x, q.y);
           divided = divided.concat(subdivision);
         }

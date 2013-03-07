@@ -69,32 +69,32 @@
         rect.fill = 'sandybrown';
         rect.translation.set(two.width / 2, two.height / 2);
 
-        var circle = two.makeCircle(0, 0, 150);
-        circle.fill = 'aquamarine';
-        circle.translation.set(two.width * 0.75, two.height / 2);
-
-        var poly = two.makeCurve(_.map(_.range(32), function(i) {
-          var theta = (i / 32) * Math.PI * 2;
-          var x = (50 + Math.random() * 50) * Math.cos(theta);
-          var y = (50 + Math.random() * 50) * Math.sin(theta);
-          return new Two.Vector(x, y);
-        }));
-        poly.translation.set(two.width * 0.25, two.height / 2);
-        poly.fill = 'violet';
-
-        two.bind('update', function(frames) {
-          stats.update();
-          circle.scale = Math.sin(frames / 60) + 1;
-          rect.rotation += 1 / 20;
-          if (!(frames % 12)) {
-            _.each(circle.vertices, function(v) {
-              v.setLength(Math.random() * 50 + 10);
-            });
-            _.each(poly.vertices, function(v) {
-              v.setLength(Math.random() * 50 + 50);
-            });
-          }
-        });
+        // var circle = two.makeCircle(0, 0, 150);
+        // circle.fill = 'aquamarine';
+        // circle.translation.set(two.width * 0.75, two.height / 2);
+        // 
+        // var poly = two.makeCurve(_.map(_.range(32), function(i) {
+        //   var theta = (i / 32) * Math.PI * 2;
+        //   var x = (50 + Math.random() * 50) * Math.cos(theta);
+        //   var y = (50 + Math.random() * 50) * Math.sin(theta);
+        //   return new Two.Vector(x, y);
+        // }));
+        // poly.translation.set(two.width * 0.25, two.height / 2);
+        // poly.fill = 'violet';
+        // 
+        // two.bind('update', function(frames) {
+        //   stats.update();
+        //   circle.scale = Math.sin(frames / 60) + 1;
+        //   rect.rotation += 1 / 20;
+        //   if (!(frames % 12)) {
+        //     _.each(circle.vertices, function(v) {
+        //       v.setLength(Math.random() * 50 + 10);
+        //     });
+        //     _.each(poly.vertices, function(v) {
+        //       v.setLength(Math.random() * 50 + 50);
+        //     });
+        //   }
+        // });
 
         two.play();
 

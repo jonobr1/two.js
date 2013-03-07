@@ -3037,7 +3037,7 @@ var Backbone = Backbone || {};
       solveSegmentIntersection: function(a1, a2, b1, b2) {
 
         var result;
-        
+
         var ua_t = (b2.x - b1.x) * (a1.y - b1.y) - (b2.y - b1.y) * (a1.x - b1.x);
         var ub_t = (a2.x - a1.x) * (a1.y - b1.y) - (a2.y - a1.y) * (a1.x - b1.x);
         var u_b  = (b2.y - b1.y) * (a2.x - a1.x) - (b2.x - b1.x) * (a2.y - a1.y);
@@ -4980,6 +4980,7 @@ var Backbone = Backbone || {};
     multiplyMatrix = Two.Matrix.Multiply,
     matrixDeterminant = Two.Matrix.Determinant,
     decoupleShapes = Two.Utils.decoupleShapes,
+    subdivide = Two.Utils.subdivide,
     abs = Math.abs;
 
   /**
@@ -5299,7 +5300,7 @@ var Backbone = Backbone || {};
     toArray: function(points, curved, closed) {
 
       if (!curved) {
-        return points;
+        return points.slice(0);
       }
 
       // If curved, then subdivide the path and update the points.
@@ -5313,7 +5314,7 @@ var Backbone = Backbone || {};
 
         if (closed || !closed && i < last) {
           var q = curve[(i + 1) % length];
-          var subdivision = Two.Utils.subdivide(
+          var subdivision = subdivide(
             p.x, p.y, p.v.x, p.v.y, q.u.x, q.u.y, q.x, q.y);
           divided = divided.concat(subdivision);
         }
