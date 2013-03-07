@@ -324,7 +324,7 @@
      * of vertices that express the hull of a given shape accurately for the
      * webgl renderer.
      */
-    toArray: function(points, curved, closed) {
+    toArray: function(points, closed, curved) {
 
       if (!curved) {
         return points.slice(0);
@@ -357,16 +357,16 @@
      * triangles and array of outline verts ready to be fed to the webgl
      * renderer.
      */
-    tessellate: function(points, curved, closed, reuseTriangles, reuseVertices) {
+    tessellate: function(points, closed, curved, reuseTriangles, reuseVertices) {
 
       var shapes = flatten(decoupleShapes(points, closed));
       var triangles = [], vertices = [], triangleAmount = 0, vertexAmount = 0;
 
-      _.each(shapes, function(points, i) {
+      _.each(shapes, function(coords, i) {
 
         // Tessellate the current set of points.
 
-        var triangulation = new tessellation.SweepContext(points);
+        var triangulation = new tessellation.SweepContext(coords);
         tessellation.sweep.Triangulate(triangulation);
 
         triangleAmount += triangulation.triangles.length * 3 * 2;
@@ -631,8 +631,8 @@
     }
     if (vertices) {
 
-      var vertices = webgl.toArray(vertices, curved, closed);
-      var t = webgl.tessellate(vertices, curved, closed);
+      var vertices = webgl.toArray(vertices, closed, curved);
+      var t = webgl.tessellate(vertices, closed, curved);
 
       styles.triangles = t.triangles;
       styles.vertices = t.vertices;
@@ -670,11 +670,11 @@
         break;
       case 'vertices':
         property = 'triangles';
-        elem.curved = curved;
         elem.closed = closed;
+        elem.curved = curved;
 
-        var vertices = webgl.toArray(value, elem.curved, elem.closed);
-        var t = webgl.tessellate(vertices, elem.curved, elem.closed, elem.triangles, elem.vertices);
+        var vertices = webgl.toArray(value, closed, curved);
+        var t = webgl.tessellate(vertices, closed, curved, elem.triangles, elem.vertices);
 
         value = t.triangles;
         elem.vertices = t.vertices;

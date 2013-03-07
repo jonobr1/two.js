@@ -1631,6 +1631,9 @@ var Backbone = Backbone || {};
    * The neighbor across to given point.
    */
   tessellation.Triangle.prototype.NeighborAcross = function(p) {
+    if (!p) {
+      return this.neighbors[2]; // @jonobr1 hack.
+    }
     if (p.equals(this.points[0])) {
       return this.neighbors[0];
     } else if (p.equals(this.points[1])) {
@@ -2192,7 +2195,7 @@ var Backbone = Backbone || {};
         tessellation.sweep.FlipEdgeEvent(tcx, ep, eq, triangle, point);
       }
     } else {
-      alert('Invalid tessellation.sweep.EdgeEvent call!');
+      // alert('Invalid tessellation.sweep.EdgeEvent call!');
     }
   };
 
@@ -2977,7 +2980,11 @@ var Backbone = Backbone || {};
        */
       decoupleShapes: function(points, closed, depth) {
 
-        var depth = depth || 0;
+        var depth = depth || 0, l = points.length;
+
+        if (l <= 3 || depth > Two.Utils.Curve.RecursionLimit) {
+          return points;
+        }
 
         for (var i = 0, l = points.length; i < l; i++) {
 
@@ -2989,25 +2996,30 @@ var Backbone = Backbone || {};
           var a = points[i];
           var b = points[ii];
 
-          for (var j = l - 1; j > i + 1; j--) {
-
-            if (j >= l - 1) {
-              continue;
-            }
+          for (var k = 0, j = mod(i + 1, l); k < l; k++) {
 
             var jj = mod(j + 1, l);
             var c = points[j];
             var d = points[jj];
+
+            if (j == i || j == ii || jj == i || jj == ii) {
+              j = mod(j + 1, l);
+              continue;
+            }
 
             var intersection = solveSegmentIntersection(a, b, c, d);
 
             if (intersection) {
 
               var s1, s2, f1 = [intersection], f2 = [intersection.clone()];
-              var test = _.range(l);
+              s1 = points.slice(0, ii).concat(f1);
+              s2 = points.slice(ii, j + 1).concat(f2);
 
-              s1 = points.slice(0, ii).concat(f1, points.slice(jj, l));
-              s2 = points.slice(ii, jj).concat(f2);
+              if (jj > ii) {
+                s1 = s1.concat(points.slice(jj, l));
+              } else if (jj > 0) {
+                s2 = s2.concat(points.slice(jj, l));
+              }
 
               return [
                 decoupleShapes(s1, closed, depth + 1),
@@ -3015,6 +3027,8 @@ var Backbone = Backbone || {};
               ];
 
             }
+
+            j = mod(j + 1, l);
 
           }
 
@@ -5297,7 +5311,7 @@ var Backbone = Backbone || {};
      * of vertices that express the hull of a given shape accurately for the
      * webgl renderer.
      */
-    toArray: function(points, curved, closed) {
+    toArray: function(points, closed, curved) {
 
       if (!curved) {
         return points.slice(0);
@@ -5330,16 +5344,16 @@ var Backbone = Backbone || {};
      * triangles and array of outline verts ready to be fed to the webgl
      * renderer.
      */
-    tessellate: function(points, curved, closed, reuseTriangles, reuseVertices) {
+    tessellate: function(points, closed, curved, reuseTriangles, reuseVertices) {
 
       var shapes = flatten(decoupleShapes(points, closed));
       var triangles = [], vertices = [], triangleAmount = 0, vertexAmount = 0;
 
-      _.each(shapes, function(points, i) {
+      _.each(shapes, function(coords, i) {
 
         // Tessellate the current set of points.
 
-        var triangulation = new tessellation.SweepContext(points);
+        var triangulation = new tessellation.SweepContext(coords);
         tessellation.sweep.Triangulate(triangulation);
 
         triangleAmount += triangulation.triangles.length * 3 * 2;
@@ -5604,8 +5618,8 @@ var Backbone = Backbone || {};
     }
     if (vertices) {
 
-      var vertices = webgl.toArray(vertices, curved, closed);
-      var t = webgl.tessellate(vertices, curved, closed);
+      var vertices = webgl.toArray(vertices, closed, curved);
+      var t = webgl.tessellate(vertices, closed, curved);
 
       styles.triangles = t.triangles;
       styles.vertices = t.vertices;
@@ -5643,11 +5657,11 @@ var Backbone = Backbone || {};
         break;
       case 'vertices':
         property = 'triangles';
-        elem.curved = curved;
         elem.closed = closed;
+        elem.curved = curved;
 
-        var vertices = webgl.toArray(value, elem.curved, elem.closed);
-        var t = webgl.tessellate(vertices, elem.curved, elem.closed, elem.triangles, elem.vertices);
+        var vertices = webgl.toArray(value, closed, curved);
+        var t = webgl.tessellate(vertices, closed, curved, elem.triangles, elem.vertices);
 
         value = t.triangles;
         elem.vertices = t.vertices;

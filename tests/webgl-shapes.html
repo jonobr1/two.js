@@ -44,17 +44,17 @@
           type: Two.Types.webgl
         }).appendTo(document.body);
 
-        // var phi = 6;
-        // var points = _.map(_.range(120), function(i) {
-        //   var pct = i / 120;
-        //   var theta = pct * Math.PI * 2;
-        //   var x = i * 5;
-        //   var y = 50 * Math.sin(theta * phi);
-        //   return new Two.Vector(x, y);
-        // });
-        // var squiggle = two.makePolygon(points);
-        // squiggle.translation.set(two.width / 2, two.height / 2);
-        // squiggle.fill = 'lightblue';
+        var phi = 6;
+        var points = _.map(_.range(120), function(i) {
+          var pct = i / 120;
+          var theta = pct * Math.PI * 2;
+          var x = i * 5;
+          var y = 50 * Math.sin(theta * phi);
+          return new Two.Vector(x, y);
+        });
+        var squiggle = two.makeCurve(points);
+        squiggle.translation.set(two.width / 2, two.height / 2);
+        squiggle.fill = 'lightblue';
 
         // two.bind('update', function(frames) {
         // 
@@ -65,10 +65,10 @@
         // 
         // });
 
-        var rect = two.makeRectangle(50, 50, 100, 100);
-        rect.fill = 'sandybrown';
-        rect.translation.set(two.width / 2, two.height / 2);
-
+        // var rect = two.makeRectangle(50, 50, 100, 100);
+        // rect.fill = 'sandybrown';
+        // rect.translation.set(two.width / 2, two.height / 2);
+        // 
         // var circle = two.makeCircle(0, 0, 150);
         // circle.fill = 'aquamarine';
         // circle.translation.set(two.width * 0.75, two.height / 2);

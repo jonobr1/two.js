@@ -361,6 +361,9 @@
    * The neighbor across to given point.
    */
   tessellation.Triangle.prototype.NeighborAcross = function(p) {
+    if (!p) {
+      return this.neighbors[2]; // @jonobr1 hack.
+    }
     if (p.equals(this.points[0])) {
       return this.neighbors[0];
     } else if (p.equals(this.points[1])) {
@@ -922,7 +925,7 @@
         tessellation.sweep.FlipEdgeEvent(tcx, ep, eq, triangle, point);
       }
     } else {
-      alert('Invalid tessellation.sweep.EdgeEvent call!');
+      // alert('Invalid tessellation.sweep.EdgeEvent call!');
     }
   };
 

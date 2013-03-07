@@ -160,7 +160,11 @@
        */
       decoupleShapes: function(points, closed, depth) {
 
-        var depth = depth || 0;
+        var depth = depth || 0, l = points.length;
+
+        if (l <= 3 || depth > Two.Utils.Curve.RecursionLimit) {
+          return points;
+        }
 
         for (var i = 0, l = points.length; i < l; i++) {
 
@@ -172,25 +176,30 @@
           var a = points[i];
           var b = points[ii];
 
-          for (var j = l - 1; j > i + 1; j--) {
-
-            if (j >= l - 1) {
-              continue;
-            }
+          for (var k = 0, j = mod(i + 1, l); k < l; k++) {
 
             var jj = mod(j + 1, l);
             var c = points[j];
             var d = points[jj];
+
+            if (j == i || j == ii || jj == i || jj == ii) {
+              j = mod(j + 1, l);
+              continue;
+            }
 
             var intersection = solveSegmentIntersection(a, b, c, d);
 
             if (intersection) {
 
               var s1, s2, f1 = [intersection], f2 = [intersection.clone()];
-              var test = _.range(l);
+              s1 = points.slice(0, ii).concat(f1);
+              s2 = points.slice(ii, j + 1).concat(f2);
 
-              s1 = points.slice(0, ii).concat(f1, points.slice(jj, l));
-              s2 = points.slice(ii, jj).concat(f2);
+              if (jj > ii) {
+                s1 = s1.concat(points.slice(jj, l));
+              } else if (jj > 0) {
+                s2 = s2.concat(points.slice(jj, l));
+              }
 
               return [
                 decoupleShapes(s1, closed, depth + 1),
@@ -198,6 +207,8 @@
               ];
 
             }
+
+            j = mod(j + 1, l);
 
           }
 
