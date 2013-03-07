@@ -163,7 +163,7 @@
         var depth = depth || 0, l = points.length;
 
         if (l <= 3 || depth > Two.Utils.Curve.RecursionLimit) {
-          return points;
+          return [points];
         }
 
         for (var i = 0, l = points.length; i < l; i++) {

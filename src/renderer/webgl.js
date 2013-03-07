@@ -367,7 +367,7 @@
         // Tessellate the current set of points.
 
         var triangulation = new tessellation.SweepContext(coords);
-        tessellation.sweep.Triangulate(triangulation);
+        tessellation.sweep.Triangulate(triangulation, true);
 
         triangleAmount += triangulation.triangles.length * 3 * 2;
         _.each(triangulation.triangles, function(tri, i) {
@@ -497,12 +497,12 @@
     // http://games.greggman.com/game/webgl-and-alpha/
     // http://www.khronos.org/registry/webgl/specs/latest/#5.2
     var params = _.defaults(options || {}, {
-      antialias: true,
-      alpha: false,
-      premultipliedAlpha: false
+      antialias: false,
+      alpha: true,
+      premultipliedAlpha: true,
+      stencil: true,
+      preserveDrawingBuffer: false
     });
-
-    this.domElement.style.background = '#efefef';
 
     this.ctx = this.domElement.getContext('webgl', params)
       || this.domElement.getContext('experimental-webgl', params);
@@ -527,10 +527,13 @@
     this.colorLocation = this.ctx.getUniformLocation(this.program, 'color');
     this.matrixLocation = this.ctx.getUniformLocation(this.program, 'matrix');
 
+    // Copied from Three.js WebGLRenderer
+    this.ctx.disable(this.ctx.DEPTH_TEST);
+
     // Setup some initial statements of the gl context
     this.ctx.enable(this.ctx.BLEND);
-    this.ctx.disable(this.ctx.DEPTH_TEST);
-    this.ctx.blendFunc(this.ctx.SRC_ALPHA, this.ctx.ONE_MINUS_SRC_ALPHA);
+    this.ctx.blendEquationSeparate(this.ctx.FUNC_ADD, this.ctx.FUNC_ADD);
+    this.ctx.blendFuncSeparate(this.ctx.SRC_ALPHA, this.ctx.ONE_MINUS_SRC_ALPHA, this.ctx.ONE, this.ctx.ONE_MINUS_SRC_ALPHA );
 
   };
 
@@ -572,9 +575,6 @@
 
       var gl = this.ctx,
         program = this.program;
-
-      gl.clearColor(1.0, 1.0, 1.0, 0.0);
-      gl.clear(gl.COLOR_BUFFER_BIT);
 
       this.stage.render(gl, this.positionLocation, this.matrixLocation, this.colorLocation);
 
