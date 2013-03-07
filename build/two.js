@@ -5103,7 +5103,7 @@ var Backbone = Backbone || {};
 
       _.each(this.children, function(child) {
         child.updateMatrix(this._matrix);
-      }, this)
+      }, this);
 
       return this;
 
@@ -5139,6 +5139,9 @@ var Backbone = Backbone || {};
 
       this._matrix = multiplyMatrix(this.matrix, matrix);
 
+      // Also update linewidth
+      this._linewidth = this.linewidth * getScale(this._matrix);
+
       return this;
 
     },
@@ -5165,7 +5168,7 @@ var Backbone = Backbone || {};
 
       // Stroke
 
-      if (this.linewidth <= 0 || this.stroke.a <= 0) {
+      if (this._linewidth <= 0 || this.stroke.a <= 0) {
         return this;
       }
 
@@ -5174,7 +5177,7 @@ var Backbone = Backbone || {};
       gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
       gl.uniformMatrix3fv(matrix, false, this._matrix);
       gl.uniform4f(color, this.stroke.r, this.stroke.g, this.stroke.b, this.stroke.a);// * this.opacity);
-      gl.lineWidth(this.linewidth);
+      gl.lineWidth(this._linewidth);
       gl.drawArrays(gl.LINES, 0, this.vertexAmount);
 
       return this;
@@ -5403,7 +5406,7 @@ var Backbone = Backbone || {};
    * Webgl Renderer inherits from the Canvas 2d Renderer
    * with additional modifications.
    */
-  var Renderer = Two[Two.Types.webgl] = function() {
+  var Renderer = Two[Two.Types.webgl] = function(options) {
 
     this.domElement = document.createElement('canvas');
 
@@ -5414,11 +5417,13 @@ var Backbone = Backbone || {};
 
     // http://games.greggman.com/game/webgl-and-alpha/
     // http://www.khronos.org/registry/webgl/specs/latest/#5.2
-    var params = {
+    var params = _.defaults(options || {}, {
       antialias: true,
-      // alpha: false,
+      alpha: false,
       premultipliedAlpha: false
-    };
+    });
+
+    this.domElement.style.background = '#efefef';
 
     this.ctx = this.domElement.getContext('webgl', params)
       || this.domElement.getContext('experimental-webgl', params);
@@ -5446,7 +5451,7 @@ var Backbone = Backbone || {};
     // Setup some initial statements of the gl context
     this.ctx.enable(this.ctx.BLEND);
     this.ctx.disable(this.ctx.DEPTH_TEST);
-    // this.ctx.blendFunc(this.ctx.SRC_ALPHA, this.ctx.ONE_MINUS_SRC_ALPHA);
+    this.ctx.blendFunc(this.ctx.SRC_ALPHA, this.ctx.ONE_MINUS_SRC_ALPHA);
 
   };
 
@@ -5489,17 +5494,10 @@ var Backbone = Backbone || {};
       var gl = this.ctx,
         program = this.program;
 
+      gl.clearColor(1.0, 1.0, 1.0, 0.0);
       gl.clear(gl.COLOR_BUFFER_BIT);
-      // gl.clearColor(1.0, 1.0, 1.0, 0.0);
 
       this.stage.render(gl, this.positionLocation, this.matrixLocation, this.colorLocation);
-
-    // Set the backbuffer's alpha to 1.0
-      // gl.clearColor(1, 1, 1, 1);
-      // gl.colorMask(false, false, false, true);
-      // gl.clear(gl.COLOR_BUFFER_BIT);
-
-      // gl.colorMask(true, true, true, false);
 
       return this;
 
@@ -5550,6 +5548,7 @@ var Backbone = Backbone || {};
     }
     if (linewidth) {
       styles.linewidth = linewidth;
+      styles._linewidth = linewidth * getScale(styles._matrix);
     }
     if (vertices) {
 
@@ -5577,6 +5576,10 @@ var Backbone = Backbone || {};
       case 'matrix':
         property = 'matrix';
         value = value.toArray(true);
+        break;
+      case 'linewidth':
+        property = 'linewidth';
+        elem._linewidth = value * getScale(elem._matrix);
         break;
       case 'stroke':
         // interpret color
@@ -5628,6 +5631,10 @@ var Backbone = Backbone || {};
 
     return result;
 
+  }
+
+  function getScale(matrix) {
+    return matrix[0];
   }
 
   function trim(str) {
