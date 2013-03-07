@@ -11,6 +11,7 @@ __This is considered alpha grade__. A two-dimensional drawing api meant for mode
 + How does `canvas2d` perform on `ctx.fillStyle` and `ctx.setStyle` at high volumes of particles.
 + How to do stroke properties, namely `miter`, `cap`, and `join`, in `webgl`.
 + `webgl` does not composite document content behind it. The canvas is an opaque element.
++ Tessellation still isn't perfect. `beginning`, `end`, and `closed` don't work in `webgl`.
 
 ### Up for discussion:
 + Add `width` and `height` properties to `Two.Polygon`.
