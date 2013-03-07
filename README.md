@@ -4,8 +4,7 @@ two.js
 __This is considered alpha grade__. A two-dimensional drawing api meant for modern browsers. It is renderer agnostic enabling the same api to render in multiple contexts: webgl, canvas2d, and svg.
 
 ### Roadmap:
-+ Make `Two.Group` work in `webgl`.
-+ Make `webgl` respect `alpha` for css colors.
++ Figure out how fill / stroke `alpha` is applied with opacity and set the proper blend mode.
 + Tessellation breaks if there’s a loop, maybe it’s how holes are dealt with?
 + Add ability to remove shapes from a scene.
 + Make `Two.Group` center its children

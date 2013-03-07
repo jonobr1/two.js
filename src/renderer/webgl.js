@@ -3,7 +3,8 @@
   // Localize variables
   var CanvasRenderer = Two[Two.Types.canvas],
     getCurveFromPoints = Two.Utils.getCurveFromPoints,
-    mod = Two.Utils.mod;
+    mod = Two.Utils.mod,
+    multiplyMatrix = Two.Matrix.Multiply;
 
   /**
    * CSS Color interpretation from
@@ -36,8 +37,9 @@
   var rgb_rgba_percentage_regex = new RegExp([
     '^rgb(a?)\\(', css_percentage, ',', css_percentage, ',', css_percentage, '(,', css_number, ')?\\)$'
   ].join(css_whitespace) );
+  var remove_comma_regex = /^,\s*/;
 
-  var hslToRgb = function(h, s, l) {
+  var hslToRgb = function(h, s, l, a) {
 
     var r, g, b;
 
@@ -58,10 +60,13 @@
       var p = 2 * l - q;
     }
 
+    var alpha = _.isUndefined(a) || _.isNull(a) ? 1.0 : a.replace(remove_comma_regex, '');
+
     return {
       r: hue2rgb(p, q, h + 1 / 3),
       g: hue2rgb(p, q, h),
-      b: hue2rgb(p, q, h - 1 / 3)
+      b: hue2rgb(p, q, h - 1 / 3),
+      a: alpha
     };
   }
 
@@ -79,16 +84,20 @@
       return match(rgb_rgba_percentage_regex, 100);
 
       function match(regex, max_value) {
+
         var colorGroups = css.match(regex);
 
         if (!colorGroups || (!!colorGroups[1] + !!colorGroups[5] === 1)) {
           return;
         }
 
+        var alpha = _.isUndefined(colorGroups[5]) ? 1.0 : colorGroups[5].replace(remove_comma_regex, '');
+
         return {
           r: Math.min(1, Math.max(0, colorGroups[2] / max_value)),
           g: Math.min(1, Math.max(0, colorGroups[3] / max_value)),
-          b: Math.min(1, Math.max(0, colorGroups[4] / max_value))
+          b: Math.min(1, Math.max(0, colorGroups[4] / max_value)),
+          a: Math.min(1, Math.max(alpha, 0))
         };
 
       }
@@ -113,7 +122,8 @@
       return {
         r: parseInt(css.slice(0, bytes), 16) / max,
         g: parseInt(css.slice(bytes * 1,bytes * 2), 16) / max,
-        b: parseInt(css.slice(bytes * 2), 16) / max
+        b: parseInt(css.slice(bytes * 2), 16) / max,
+        a: 1.0
       };
 
     },
@@ -132,7 +142,7 @@
       var s = Math.max(0, Math.min(parseInt(colorGroups[3], 10) / 100, 1));
       var l = Math.max(0, Math.min(parseInt(colorGroups[4], 10) / 100, 1));
 
-      return hslToRgb(h, s, l);
+      return hslToRgb(h, s, l, colorGroups[5]);
 
     }
 
@@ -146,12 +156,40 @@
 
   _.extend(Group.prototype, CanvasRenderer.Group.prototype, {
 
-    render: function(gl, position, matrix, color, matrices) {
+    appendChild: function() {
+
+      CanvasRenderer.Group.prototype.appendChild.apply(this, arguments);
+
+      this.updateMatrix();
+
+      return this;
+
+    },
+
+    updateMatrix: function(parentMatrix) {
+
+      var matrix = parentMatrix || this.parent && this.parent.matrix;
+
+      if (!matrix) {
+        return this;
+      }
+
+      this._matrix = multiplyMatrix(this.matrix, matrix);
+
+      _.each(this.children, function(child) {
+        child.updateMatrix(this._matrix);
+      }, this)
+
+      return this;
+
+    },
+
+    render: function(gl, program) {
 
       // Apply matrices here somehow...
 
       _.each(this.children, function(child) {
-        child.render(gl, position, matrix, color, matrices);
+        child.render(gl, program);
       });
 
     }
@@ -166,35 +204,53 @@
 
   _.extend(Element.prototype, CanvasRenderer.Element.prototype, {
 
-    render: function(gl, position, matrix, matrixOld, color, matrices) {
+    updateMatrix: function(parentMatrix) {
+
+      var matrix = parentMatrix || this.parent && this.parent.matrix
+
+      if (!matrix) {
+        return this;
+      }
+
+      this._matrixOld = this._matrix;
+      this._matrix = multiplyMatrix(this.matrix, matrix);
+
+      return this;
+
+    },
+
+    render: function(gl, program) {
 
       if (!this.visible || !this.fillBuffer || !this.strokeBuffer) {
         return this;
       }
 
+      //position, matrix, matrixOld, color
+
+      // Temp
+      gl.uniform1f(program.id, Math.random());
+      gl.uniformMatrix3fv(program.matrixOld, false, this._matrixOld);
+
       // Fill
+      if (this.fill.a > 0) {
 
-      gl.bindBuffer(gl.ARRAY_BUFFER, this.fillBuffer);
-      gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.fillBuffer);
+        gl.vertexAttribPointer(program.position, 2, gl.FLOAT, false, 0, 0);
+        gl.uniformMatrix3fv(program.matrix, false, this._matrix);
+        gl.uniform4f(program.color, this.fill.r, this.fill.g, this.fill.b, this.fill.a);
+        gl.drawArrays(gl.TRIANGLES, 0, this.triangleAmount);
 
-      console.log(this.matrixOld == this.matrix);
-      this.matrixOld = this.matrix;
-      gl.uniformMatrix3fv(matrixOld, false, this.matrixOld);
-      
-
-      gl.uniformMatrix3fv(matrix, false, this.matrix);
-      gl.uniform4f(color, this.fill.r, this.fill.g, this.fill.b, this.opacity);
-      gl.drawArrays(gl.TRIANGLES, 0, this.triangleAmount);
+      }
 
       // Stroke
 
-      if (this.linewidth <= 0) {
+      if (this.linewidth <= 0 || this.stroke.a <= 0) {
         return this;
       }
 
       gl.bindBuffer(gl.ARRAY_BUFFER, this.strokeBuffer);
-      gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
-      gl.uniform4f(color, this.stroke.r, this.stroke.g, this.stroke.b, this.opacity);
+      gl.vertexAttribPointer(program.position, 2, gl.FLOAT, false, 0, 0);
+      gl.uniform4f(program.color, this.stroke.r, this.stroke.g, this.stroke.b, this.stroke.a);
       gl.lineWidth(this.linewidth);
       gl.drawArrays(gl.LINES, 0, this.vertexAmount);
 
@@ -250,10 +306,10 @@
       }
 
       /**
-       * Default to black if can't find a color.
+       * Default to invisible black if can't find a color.
        */
       return {
-        r: 0, g: 0, b: 0 
+        r: 0, g: 0, b: 0, a: 0
       };
 
     },
@@ -416,13 +472,17 @@
         'varying vec2 velocity;',
         '',
         'void main() {',
-        '   vec2 projected = (matrix * vec3(position, 1)).xy;',
-        '   vec2 normal = projected / resolution;',
-        '   vec2 clipspace = (normal * 2.0) - 1.0;',
-        '   vec2 projectedOld = (matrixOld * vec3(position, 1)).xy;',
+        '  const float m = 0.2;',
+        '  vec2 projected = (matrix * vec3(position, 1)).xy;',
+        '  vec2 normal = projected / resolution;',
+        '  vec2 clipspace = (normal * 2.0) - 1.0;',
+        '  vec2 projectedOld = (matrixOld * vec3(position, 1)).xy;',
         '',
-        '   velocity = (projected -  projectedOld)*0.1;',
-        '   gl_Position = vec4(clipspace * vec2(1.0, -1.0), 0.0, 1.0);',
+        '  velocity = (projected-projectedOld)/100.0;',
+        '  velocity.x = -velocity.x;',
+        '  velocity.x = max(min(velocity.x, m), -m)+0.5;',
+        '  velocity.y = max(min(velocity.y, m), -m)+0.5;',
+        '  gl_Position = vec4(clipspace * vec2(1.0, -1.0), 0.0, 1.0);',
         '}'
       ].join('\n'),
 
@@ -440,20 +500,24 @@
         'precision mediump float;',
         '',
         'uniform vec4 color;',
+        'uniform float id;',
         'varying vec2 velocity;',
         '',
         'void main() {',
-        '  gl_FragData[0] = vec4(velocity, 0.0, 1.0);',
-        '  gl_FragData[1] = vec4(1.0,0.0,0.0,1.0);',
+        '  gl_FragData[0] = color;',
+        '  gl_FragData[1] = vec4(velocity, 0.0, 1.0);',
+        '  gl_FragData[2] = vec4(id, id, id, 1.0);',
         '}'
       ].join('\n'),
 
       postVertex: [
         'attribute vec2 position;',
+        'uniform vec2 targetSize;',
+        'uniform vec2 resolution;',
         'varying vec2 uv;',
         '',
         'void main() {',
-        '   uv = position/2.0+vec2(0.5);',
+        '   uv = (position/2.0+vec2(0.5))*resolution/targetSize;',
         '   gl_Position = vec4(position, 0.0, 1.0);',
         '}'
       ].join('\n'),
@@ -464,18 +528,68 @@
         'uniform sampler2D Sampler0;',
         'uniform sampler2D Sampler1;',
         'uniform sampler2D Sampler2;',
-        'uniform vec2 targetSize;',
-        'uniform vec2 resolution;',
         'varying vec2 uv;',
         '',
         'void main() {',
-        '  gl_FragColor = vec4(texture2D(Sampler0, uv*resolution/targetSize).rgb,1.0);',
+        '',
+        '  const float s = 32.0;',
+        '  vec4 color = texture2D(Sampler0, uv);',
+        '  vec2 velocity = texture2D(Sampler1, uv).xy - vec2(0.5);',
+        '  if (velocity == vec2(-0.5)){',
+        '    velocity = vec2(0.);',
+        '  }',
+        '  velocity /= 50.;',
+        '  vec2 uv2 = uv - velocity * s/4.;',  
+        '  for(float i = 1.; i < s; ++i)',
+        '  {',
+        '    uv2 += velocity*0.5;',
+        '    color += texture2D(Sampler0, uv2);',
+        '  }',
+        '  gl_FragColor = color / s;',
         '}'
       ].join('\n')
 
     }
 
   };
+
+  function makeColorAttachmentArray(gl, lenght) {
+    var array = []
+    for (var ii = 0; ii < length; ++ii) {
+      array.push(gl.COLOR_ATTACHMENT0 + ii);
+    }
+    return array;
+  }
+
+  function makeTextureArray(gl, length, width, height) {
+
+    ext = gl.getExtension( "EXT_draw_buffers" );
+
+    var attatchments = []
+    for (var i = 0; i < length; ++i) {
+      attatchments.push(gl.COLOR_ATTACHMENT0 + i);
+    }
+    ext.drawBuffersEXT(attatchments);
+
+    var textures = []
+    for (var j = 0; j < length; ++j) {
+      
+      var texture = gl.createTexture();
+      gl.bindTexture(gl.TEXTURE_2D, texture);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      gl.framebufferTexture2D(gl.FRAMEBUFFER, attatchments[j], gl.TEXTURE_2D, texture, 0);
+
+      textures.push(texture);
+
+    }
+
+    return textures;
+
+  }
 
   var RenderTarget = function(gl, width, height){
     
@@ -484,22 +598,8 @@
 
     this.frameBuffer = gl.createFramebuffer();
     gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer);
-    this.texture = gl.createTexture();
-    gl.bindTexture(gl.TEXTURE_2D, this.texture);
-    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST);
 
-    gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,width,height,0,gl.RGBA,gl.UNSIGNED_BYTE,null);
-    this.renderBuffer = gl.createRenderbuffer();
-    gl.bindRenderbuffer(gl.RENDERBUFFER,this.renderBuffer);
-    gl.renderbufferStorage(gl.RENDERBUFFER,gl.DEPTH_COMPONENT16,width,height);
-    gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.COLOR_ATTACHMENT0,gl.TEXTURE_2D,this.texture,0);
-    gl.framebufferRenderbuffer(gl.FRAMEBUFFER,gl.DEPTH_ATTACHMENT,gl.RENDERBUFFER,this.renderBuffer);
-
-    this.bind = function(glTextureAddress){
-      gl.activeTexture(glTextureAddress);
-      gl.bindTexture(gl.TEXTURE_2D,this.texture);
-    }
+    this.texture = makeTextureArray(gl, 3, width, height);
 
   }
 
@@ -526,36 +626,45 @@
       throw new Two.Utils.Error('unable to create a webgl context. Try using another renderer.');
     }
 
-    // Compile Base Shaders to draw in pixel space.
-    var vs = webgl.shaders.create(
-      this.ctx, webgl.shaders.vertex, webgl.shaders.types.vertex);
-    var fs = webgl.shaders.create(
-      this.ctx, webgl.shaders.fragment, webgl.shaders.types.fragment);
+    if (!params.motionblur) {
+      
+      // Compile Base Shaders to draw in pixel space.
+      var vs = webgl.shaders.create(
+        this.ctx, webgl.shaders.vertex, webgl.shaders.types.vertex);
+      var fs = webgl.shaders.create(
+        this.ctx, webgl.shaders.fragment, webgl.shaders.types.fragment);
+      this.program = webgl.program.create(gl, [vs, fs]);
 
-    if (params.motionblur) {
-      if(!this.ctx.getExtension( "EXT_draw_buffers" )) {
+    } else {
+
+      if(!gl.getExtension( "EXT_draw_buffers" )) {
         console.log( "No EXT_draw_buffers support for multiple render targets!" );
       } else {
 
-        vs = webgl.shaders.create(
+        var vs = webgl.shaders.create(
           gl, webgl.shaders.mrtVertex, webgl.shaders.types.vertex);
-        fs = webgl.shaders.create(
+        var fs = webgl.shaders.create(
           gl, webgl.shaders.mrtFragment, webgl.shaders.types.fragment);
+
+        this.program = webgl.program.create(gl, [vs, fs]);
+        this.program.matrixOld = gl.getUniformLocation(this.program, 'matrixOld');
+        this.program.id = gl.getUniformLocation(this.program, 'id');
+
         var postVs = webgl.shaders.create(
           this.ctx, webgl.shaders.postVertex, webgl.shaders.types.vertex);
         var postFs = webgl.shaders.create(
           this.ctx, webgl.shaders.postFragment, webgl.shaders.types.fragment);
+
         this.postProgram = webgl.program.create(gl, [postVs, postFs]);
+        this.postProgram.resolution = gl.getUniformLocation(this.postProgram,'resolution');
+        this.postProgram.targetSize = gl.getUniformLocation(this.postProgram,'targetSize');
+        this.postProgram.position = gl.getAttribLocation(this.postProgram, 'position');
         gl.useProgram(this.postProgram);
         gl.uniform1i(gl.getUniformLocation(this.postProgram,'Sampler0'),0);
         gl.uniform1i(gl.getUniformLocation(this.postProgram,'Sampler1'),1);
         gl.uniform1i(gl.getUniformLocation(this.postProgram,'Sampler2'),2);
 
-        this.renderTarget = [];
-        this.renderTarget.width = 4096;
-        this.renderTarget.height = 4096;
-
-        this.renderTarget.push(new RenderTarget(gl, this.renderTarget.width, this.renderTarget.height));
+        this.renderTarget = new RenderTarget(gl, 4096, 4096);
 
         this.quad = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, this.quad);
@@ -564,14 +673,18 @@
       }
     }
 
-    this.program = webgl.program.create(gl, [vs, fs]);
     gl.useProgram(this.program);
 
     // look up where the vertex data needs to go.
-    this.positionLocation = gl.getAttribLocation(this.program, 'position');
-    this.colorLocation = gl.getUniformLocation(this.program, 'color');
-    this.matrixLocation = gl.getUniformLocation(this.program, 'matrix');
-    this.matrixOldLocation = gl.getUniformLocation(this.program, 'matrixOld');
+    this.program.position = gl.getAttribLocation(this.program, 'position');
+    this.program.color = gl.getUniformLocation(this.program, 'color');
+    this.program.matrix = gl.getUniformLocation(this.program, 'matrix');
+    
+
+    // Setup some initial statements of the gl context
+    this.ctx.enable(this.ctx.BLEND);
+    this.ctx.disable(this.ctx.DEPTH_TEST);
+    this.ctx.blendFunc(this.ctx.SRC_ALPHA, this.ctx.ONE_MINUS_SRC_ALPHA);
 
   };
 
@@ -600,6 +713,7 @@
 
       var resolutionLocation = this.ctx.getUniformLocation(
         this.program, 'resolution');
+      this.ctx.useProgram(this.program);
       this.ctx.uniform2f(resolutionLocation, width, height);
 
       return this;
@@ -617,31 +731,43 @@
       var gl = this.ctx,
         program = this.program;
 
-      if (this.renderTarget) {
-        gl.bindFramebuffer(gl.FRAMEBUFFER,this.renderTarget[0].frameBuffer);
-        this.ctx.viewport(0, 0, Math.min(this.width,this.renderTarget.width), Math.min(this.height,this.renderTarget.height));
-      } else {
-        gl.bindFramebuffer(gl.FRAMEBUFFER,null);
-      }
-      
       gl.useProgram(this.program);
-      gl.clear(gl.COLOR_BUFFER_BIT);
-      this.stage.render(gl, this.positionLocation, this.matrixLocation, this.matrixOldLocation, this.colorLocation);
 
-      if (this.renderTarget) {
+      if (!this.renderTarget) {
+
         gl.bindFramebuffer(gl.FRAMEBUFFER,null);
         gl.clear(gl.COLOR_BUFFER_BIT);
-        this.ctx.viewport(0, 0, this.width, this.height);
+        this.stage.render(gl, this.program);
 
+      } else {
+
+        //Color Target
+        this.ctx.viewport(0, 0, Math.min(this.width,this.renderTarget.width), Math.min(this.height,this.renderTarget.height));
+        
+        gl.bindFramebuffer(gl.FRAMEBUFFER,this.renderTarget.frameBuffer);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        this.stage.render(gl, this.program);
+
+        
+        this.ctx.viewport(0, 0, this.width, this.height);
+        gl.bindFramebuffer(gl.FRAMEBUFFER,null);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+
+
+        // COMP
         gl.useProgram(this.postProgram);
         
-        this.renderTarget[0].bind(gl.TEXTURE0);
-        
-        gl.uniform2f(gl.getUniformLocation(this.postProgram,'resolution'), Math.min(this.width,this.renderTarget.width), Math.min(this.height,this.renderTarget.height));
-        gl.uniform2f(gl.getUniformLocation(this.postProgram,'targetSize'), this.renderTarget.width, this.renderTarget.height);
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, this.renderTarget.texture[0]);
+        gl.activeTexture(gl.TEXTURE1);
+        gl.bindTexture(gl.TEXTURE_2D, this.renderTarget.texture[1]);
+        gl.activeTexture(gl.TEXTURE2);
+        gl.bindTexture(gl.TEXTURE_2D, this.renderTarget.texture[2]);
 
+        gl.uniform2f(this.postProgram.resolution, Math.min(this.width,this.renderTarget.width), Math.min(this.height,this.renderTarget.height));
+        gl.uniform2f(this.postProgram.targetSize, this.renderTarget.width, this.renderTarget.height);
         gl.bindBuffer(gl.ARRAY_BUFFER, this.quad);
-        gl.vertexAttribPointer(gl.getAttribLocation(this.postProgram, 'position'), 2, gl.FLOAT, false, 0, 0);
+        gl.vertexAttribPointer(this.postProgram.position, 2, gl.FLOAT, false, 0, 0);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
       }
 
@@ -672,8 +798,8 @@
       styles.id = id;
     }
     if (_.isObject(matrix)) {
-      styles.matrix = matrix.toArray(true);
-      styles.matrixOld = matrix.toArray(true);
+      styles.matrix = styles._matrix = matrix.toArray(true);
+      styles._matrixOld = styles.matrix;
     }
     if (stroke) {
       styles.stroke = webgl.interpret(stroke); // Interpret color
@@ -744,9 +870,12 @@
 
     elem[property] = value;
 
+    // Try moving this to switch statement
     if (property === 'triangles') {
       webgl.updateBuffer(this.ctx, elem, this.positionLocation);
-      // elem.triangleAmount = elem.triangles.length / 2;
+    }
+    if (property === 'matrix') {
+      elem.updateMatrix();
     }
 
   }
