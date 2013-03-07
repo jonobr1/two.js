@@ -99,7 +99,50 @@
       }, this);
 
       if (ids.length > 0) {
-        this.trigger(Two.Events.change, this.id, 'hierarchy', ids);
+        this.trigger(Two.Events.change, this.id, Two.Properties.hierarchy, ids);
+      }
+
+      return this;
+
+    },
+
+    /**
+     * Remove an object from the group.
+     */
+    remove: function(o) {
+
+      var l = arguments.length,
+        objects = o,
+        children = this.children,
+        grandparent = this.parent,
+        ids = [];
+
+      if (l <= 0 && grandparent) {
+        grandparent.remove(this);
+        return this;
+      }
+
+      if (!_.isArray(o)) {
+        objects = _.toArray(arguments);
+      }
+
+      _.each(objects, function(object) {
+
+        var id = object.id, grandchildren = object.children;
+
+        if (!(id in children)) {
+          return;
+        }
+
+        delete children[id];
+        object.unbind(Two.Events.change);
+
+        ids.push(id);
+
+      });
+
+      if (ids.length > 0) {
+        this.trigger(Two.Events.change, this.id, Two.Properties.demotion, ids);
       }
 
       return this;

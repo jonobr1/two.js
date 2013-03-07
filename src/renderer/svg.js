@@ -263,6 +263,11 @@
               elem.appendChild(elements[j]);
             });
             break;
+          case Two.Properties.demotion:
+            _.each(value, function(j) {
+              elem.removeChild(elements[j]);
+            });
+            break;
           default:
             setStyles(elem, property, value, closed, curved);
         }

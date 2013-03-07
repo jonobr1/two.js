@@ -4,8 +4,8 @@ two.js
 __This is considered alpha grade__. A two-dimensional drawing api meant for modern browsers. It is renderer agnostic enabling the same api to render in multiple contexts: webgl, canvas2d, and svg.
 
 ### Roadmap:
-+ Add ability to remove shapes from a scene.
-+ Make `Two.Group` center its children
++ `Two.Group` unable to re-add.
++ Make `Two.Group` center its children.
 + Add svg import.
 
 ### Concerns:

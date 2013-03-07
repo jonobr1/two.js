@@ -2929,7 +2929,8 @@ var Backbone = Backbone || {};
     },
 
     Properties: {
-      hierarchy: 'hierarchy'
+      hierarchy: 'hierarchy',
+      demotion: 'demotion'
     },
 
     Events: {
@@ -4334,6 +4335,11 @@ var Backbone = Backbone || {};
               elem.appendChild(elements[j]);
             });
             break;
+          case Two.Properties.demotion:
+            _.each(value, function(j) {
+              elem.removeChild(elements[j]);
+            });
+            break;
           default:
             setStyles(elem, property, value, closed, curved);
         }
@@ -4491,6 +4497,14 @@ var Backbone = Backbone || {};
 
       this.children[id] = elem;
       elem.parent = this;
+
+      return this;
+
+    },
+
+    removeChild: function(elem) {
+
+      delete this.children[elem.id];
 
       return this;
 
@@ -4808,6 +4822,11 @@ var Backbone = Backbone || {};
             elem.appendChild(elements[j]);
           });
           break;
+        case Two.Properties.demotion:
+          _.each(value, function(j) {
+            elem.removeChild(elements[j]);
+            this.elements[j] = null;
+          }, this);
         default:
           constructor.setStyles.call(this, elem, property, value);
       }
@@ -5879,7 +5898,50 @@ var Backbone = Backbone || {};
       }, this);
 
       if (ids.length > 0) {
-        this.trigger(Two.Events.change, this.id, 'hierarchy', ids);
+        this.trigger(Two.Events.change, this.id, Two.Properties.hierarchy, ids);
+      }
+
+      return this;
+
+    },
+
+    /**
+     * Remove an object from the group.
+     */
+    remove: function(o) {
+
+      var l = arguments.length,
+        objects = o,
+        children = this.children,
+        grandparent = this.parent,
+        ids = [];
+
+      if (l <= 0 && grandparent) {
+        grandparent.remove(this);
+        return this;
+      }
+
+      if (!_.isArray(o)) {
+        objects = _.toArray(arguments);
+      }
+
+      _.each(objects, function(object) {
+
+        var id = object.id, grandchildren = object.children;
+
+        if (!(id in children)) {
+          return;
+        }
+
+        delete children[id];
+        object.unbind(Two.Events.change);
+
+        ids.push(id);
+
+      });
+
+      if (ids.length > 0) {
+        this.trigger(Two.Events.change, this.id, Two.Properties.demotion, ids);
       }
 
       return this;
@@ -6073,6 +6135,21 @@ var Backbone = Backbone || {};
       clone.scale = this.scale;
 
       return clone;
+
+    },
+
+    /**
+     * Remove self from the scene / parent.
+     */
+    remove: function() {
+
+      if (!this.parent) {
+        return this;
+      }
+
+      this.parent.remove(this);
+
+      return this;
 
     },
 

@@ -40,6 +40,14 @@
 
     },
 
+    removeChild: function(elem) {
+
+      delete this.children[elem.id];
+
+      return this;
+
+    },
+
     render: function(ctx) {
 
       var matrix = this.matrix;
@@ -352,6 +360,11 @@
             elem.appendChild(elements[j]);
           });
           break;
+        case Two.Properties.demotion:
+          _.each(value, function(j) {
+            elem.removeChild(elements[j]);
+            this.elements[j] = null;
+          }, this);
         default:
           constructor.setStyles.call(this, elem, property, value);
       }

@@ -112,7 +112,8 @@
     },
 
     Properties: {
-      hierarchy: 'hierarchy'
+      hierarchy: 'hierarchy',
+      demotion: 'demotion'
     },
 
     Events: {

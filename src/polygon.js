@@ -131,6 +131,21 @@
 
     },
 
+    /**
+     * Remove self from the scene / parent.
+     */
+    remove: function() {
+
+      if (!this.parent) {
+        return this;
+      }
+
+      this.parent.remove(this);
+
+      return this;
+
+    },
+
     getBoundingClientRect: function() {
 
       var border = this.linewidth;
