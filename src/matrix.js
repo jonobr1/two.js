@@ -54,6 +54,23 @@
      */
     Multiply: function(A, B) {
 
+      if (B.length <= 3) { // Multiply Vector
+
+        var x, y, z;
+        var a = B[0] || 0, b = B[1] || 0, c = B[2] || 0;
+        var e = A;
+
+        // Go down rows first
+        // a, d, g, b, e, h, c, f, i
+
+        var x = e[0] * a + e[1] * b + e[2] * c;
+        var y = e[3] * a + e[4] * b + e[5] * c;
+        var z = e[6] * a + e[7] * b + e[8] * c;
+
+        return { x: x, y: y, z: z };
+
+      }
+
       var A0 = A[0], A1 = A[1], A2 = A[2];
       var A3 = A[3], A4 = A[4], A5 = A[5];
       var A6 = A[6], A7 = A[7], A8 = A[8];

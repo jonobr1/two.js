@@ -8,7 +8,8 @@
     matrixDeterminant = Two.Matrix.Determinant,
     decoupleShapes = Two.Utils.decoupleShapes,
     subdivide = Two.Utils.subdivide,
-    abs = Math.abs;
+    abs = Math.abs,
+    sqrt = Math.sqrt;
 
   /**
    * CSS Color interpretation from
@@ -256,6 +257,7 @@
       gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
       gl.uniformMatrix3fv(matrix, false, this._matrix);
       gl.uniform4f(color, this.stroke.r, this.stroke.g, this.stroke.b, this.stroke.a);// * this.opacity);
+      // console.log(this._linewidth);
       gl.lineWidth(this._linewidth);
       gl.drawArrays(gl.LINES, 0, this.vertexAmount);
 
@@ -718,7 +720,17 @@
   }
 
   function getScale(matrix) {
-    return matrixDeterminant.apply(this, matrix);
+
+    var a = matrix[0];
+    var b = matrix[1];
+    var c = matrix[2];
+    var d = matrix[3];
+    var e = matrix[4];
+    var f = matrix[5];
+
+    var v = multiplyMatrix([a, b, c, d, e, f, 0, 0, 1], [1, 0, 1]);
+    return sqrt(v.x * v.x + v.y * v.y);
+
   }
 
   function trim(str) {

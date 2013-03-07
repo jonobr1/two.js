@@ -2983,7 +2983,7 @@ var Backbone = Backbone || {};
         var depth = depth || 0, l = points.length;
 
         if (l <= 3 || depth > Two.Utils.Curve.RecursionLimit) {
-          return points;
+          return [points];
         }
 
         for (var i = 0, l = points.length; i < l; i++) {
@@ -3857,6 +3857,23 @@ var Backbone = Backbone || {};
      * Multiply two matrix 3x3 arrays
      */
     Multiply: function(A, B) {
+
+      if (B.length <= 3) { // Multiply Vector
+
+        var x, y, z;
+        var a = B[0] || 0, b = B[1] || 0, c = B[2] || 0;
+        var e = A;
+
+        // Go down rows first
+        // a, d, g, b, e, h, c, f, i
+
+        var x = e[0] * a + e[1] * b + e[2] * c;
+        var y = e[3] * a + e[4] * b + e[5] * c;
+        var z = e[6] * a + e[7] * b + e[8] * c;
+
+        return { x: x, y: y, z: z };
+
+      }
 
       var A0 = A[0], A1 = A[1], A2 = A[2];
       var A3 = A[3], A4 = A[4], A5 = A[5];
@@ -4995,7 +5012,8 @@ var Backbone = Backbone || {};
     matrixDeterminant = Two.Matrix.Determinant,
     decoupleShapes = Two.Utils.decoupleShapes,
     subdivide = Two.Utils.subdivide,
-    abs = Math.abs;
+    abs = Math.abs,
+    sqrt = Math.sqrt;
 
   /**
    * CSS Color interpretation from
@@ -5243,6 +5261,7 @@ var Backbone = Backbone || {};
       gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
       gl.uniformMatrix3fv(matrix, false, this._matrix);
       gl.uniform4f(color, this.stroke.r, this.stroke.g, this.stroke.b, this.stroke.a);// * this.opacity);
+      // console.log(this._linewidth);
       gl.lineWidth(this._linewidth);
       gl.drawArrays(gl.LINES, 0, this.vertexAmount);
 
@@ -5354,7 +5373,7 @@ var Backbone = Backbone || {};
         // Tessellate the current set of points.
 
         var triangulation = new tessellation.SweepContext(coords);
-        tessellation.sweep.Triangulate(triangulation);
+        tessellation.sweep.Triangulate(triangulation, true);
 
         triangleAmount += triangulation.triangles.length * 3 * 2;
         _.each(triangulation.triangles, function(tri, i) {
@@ -5484,12 +5503,12 @@ var Backbone = Backbone || {};
     // http://games.greggman.com/game/webgl-and-alpha/
     // http://www.khronos.org/registry/webgl/specs/latest/#5.2
     var params = _.defaults(options || {}, {
-      antialias: true,
-      alpha: false,
-      premultipliedAlpha: false
+      antialias: false,
+      alpha: true,
+      premultipliedAlpha: true,
+      stencil: true,
+      preserveDrawingBuffer: false
     });
-
-    this.domElement.style.background = '#efefef';
 
     this.ctx = this.domElement.getContext('webgl', params)
       || this.domElement.getContext('experimental-webgl', params);
@@ -5514,10 +5533,13 @@ var Backbone = Backbone || {};
     this.colorLocation = this.ctx.getUniformLocation(this.program, 'color');
     this.matrixLocation = this.ctx.getUniformLocation(this.program, 'matrix');
 
+    // Copied from Three.js WebGLRenderer
+    this.ctx.disable(this.ctx.DEPTH_TEST);
+
     // Setup some initial statements of the gl context
     this.ctx.enable(this.ctx.BLEND);
-    this.ctx.disable(this.ctx.DEPTH_TEST);
-    this.ctx.blendFunc(this.ctx.SRC_ALPHA, this.ctx.ONE_MINUS_SRC_ALPHA);
+    this.ctx.blendEquationSeparate(this.ctx.FUNC_ADD, this.ctx.FUNC_ADD);
+    this.ctx.blendFuncSeparate(this.ctx.SRC_ALPHA, this.ctx.ONE_MINUS_SRC_ALPHA, this.ctx.ONE, this.ctx.ONE_MINUS_SRC_ALPHA );
 
   };
 
@@ -5559,9 +5581,6 @@ var Backbone = Backbone || {};
 
       var gl = this.ctx,
         program = this.program;
-
-      gl.clearColor(1.0, 1.0, 1.0, 0.0);
-      gl.clear(gl.COLOR_BUFFER_BIT);
 
       this.stage.render(gl, this.positionLocation, this.matrixLocation, this.colorLocation);
 
@@ -5705,7 +5724,17 @@ var Backbone = Backbone || {};
   }
 
   function getScale(matrix) {
-    return matrixDeterminant.apply(this, matrix);
+
+    var a = matrix[0];
+    var b = matrix[1];
+    var c = matrix[2];
+    var d = matrix[3];
+    var e = matrix[4];
+    var f = matrix[5];
+
+    var v = multiplyMatrix([a, b, c, d, e, f, 0, 0, 1], [1, 0, 1]);
+    return sqrt(v.x * v.x + v.y * v.y);
+
   }
 
   function trim(str) {
