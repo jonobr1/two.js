@@ -102,6 +102,28 @@
         this.trigger(Two.Events.change, this.id, Two.Properties.hierarchy, ids);
       }
 
+      return this.center();
+
+    },
+
+    /**
+     * Anchors all children around the center of the group.
+     */
+    center: function() {
+
+      var rect = this.getBoundingClientRect();
+
+      rect.centroid = {
+        x: rect.left + rect.width / 2,
+        y: rect.top + rect.height / 2
+      };
+
+      _.each(this.children, function(child) {
+        child.translation.subSelf(rect.centroid);
+      });
+
+      this.translation.copy(rect.centroid);
+
       return this;
 
     },
@@ -145,7 +167,7 @@
         this.trigger(Two.Events.change, this.id, Two.Properties.demotion, ids);
       }
 
-      return this;
+      return this.center();
 
     },
 

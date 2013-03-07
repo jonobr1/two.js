@@ -5,7 +5,6 @@ __This is considered alpha grade__. A two-dimensional drawing api meant for mode
 
 ### Roadmap:
 + `Two.Group` unable to re-add.
-+ Make `Two.Group` center its children.
 + Add svg import.
 
 ### Concerns:
