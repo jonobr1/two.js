@@ -5,7 +5,9 @@
     getCurveFromPoints = Two.Utils.getCurveFromPoints,
     mod = Two.Utils.mod,
     multiplyMatrix = Two.Matrix.Multiply,
-    decoupleShapes = Two.Utils.decoupleShapes;
+    matrixDeterminant = Two.Matrix.Determinant,
+    decoupleShapes = Two.Utils.decoupleShapes,
+    abs = Math.abs;
 
   /**
    * CSS Color interpretation from
@@ -645,7 +647,7 @@
 
   }
 
-  function setStyles(elem, property, value) {
+  function setStyles(elem, property, value, closed, curved) {
 
     switch (property) {
 
@@ -667,12 +669,17 @@
         break;
       case 'vertices':
         property = 'triangles';
+        elem.curved = curved;
+        elem.closed = closed;
+
         var vertices = webgl.toArray(value, elem.curved, elem.closed);
         var t = webgl.tessellate(vertices, elem.curved, elem.closed, elem.triangles, elem.vertices);
+
         value = t.triangles;
         elem.vertices = t.vertices;
         elem.vertexAmount = t.vertexAmount;
         elem.triangleAmount = t.triangleAmount;
+
         break;
     }
 
@@ -710,7 +717,7 @@
   }
 
   function getScale(matrix) {
-    return matrix[0];
+    return matrixDeterminant.apply(this, matrix);
   }
 
   function trim(str) {

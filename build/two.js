@@ -3833,6 +3833,12 @@ var Backbone = Backbone || {};
       0, 0, 1
     ],
 
+    Determinant: function(a, b, c, d, e, f, g, h, i) {
+
+      return a * e * i - a * f * h - b * d * i + b * f * g + c * d * h - c * e * g;
+
+    },
+
     /**
      * Multiply two matrix 3x3 arrays
      */
@@ -3962,6 +3968,21 @@ var Backbone = Backbone || {};
     },
 
     /**
+     * Return the determinant of the matrix.
+     */
+    determinant: function() {
+
+      var te = this.elements;
+
+      var a = te[0], b = te[1], c = te[2],
+          d = te[3], e = te[4], f = te[5],
+          g = te[6], h = te[7], i = te[8];
+
+      return a * e * i - a * f * h - b * d * i + b * f * g + c * d * h - c * e * g;
+
+    },
+
+    /**
      * Set a scalar onto the matrix.
      */
     scale: function(sx, sy) {
@@ -4063,7 +4084,14 @@ var Backbone = Backbone || {};
      */
     clone: function() {
 
-      return new Two.Matrix(this.elements.slice(0));
+      var a = this.elements[0],
+          b = this.elements[1],
+          c = this.elements[2],
+          d = this.elements[3],
+          e = this.elements[4],
+          f = this.elements[5];
+
+      return new Two.Matrix(a, b, c, d, e, f);
 
     }
 
@@ -4808,7 +4836,7 @@ var Backbone = Backbone || {};
 
     },
 
-    update: function(id, property, value) {
+    update: function(id, property, value, closed, curved) {
 
       var proto = Object.getPrototypeOf(this);
       var constructor = proto.constructor;
@@ -4828,7 +4856,7 @@ var Backbone = Backbone || {};
             this.elements[j] = null;
           }, this);
         default:
-          constructor.setStyles.call(this, elem, property, value);
+          constructor.setStyles.call(this, elem, property, value, closed, curved);
       }
 
       return this;
@@ -4915,7 +4943,7 @@ var Backbone = Backbone || {};
 
   }
 
-  function setStyles(elem, property, value) {
+  function setStyles(elem, property, value, closed, curved) {
 
     switch (property) {
 
@@ -4925,6 +4953,8 @@ var Backbone = Backbone || {};
         break;
       case 'vertices':
         property = 'commands';
+        elem.curved = curved;
+        elem.closed = closed;
         value = canvas.toArray(value, elem.curved, elem.closed);
         break;
 
@@ -4948,7 +4978,9 @@ var Backbone = Backbone || {};
     getCurveFromPoints = Two.Utils.getCurveFromPoints,
     mod = Two.Utils.mod,
     multiplyMatrix = Two.Matrix.Multiply,
-    decoupleShapes = Two.Utils.decoupleShapes;
+    matrixDeterminant = Two.Matrix.Determinant,
+    decoupleShapes = Two.Utils.decoupleShapes,
+    abs = Math.abs;
 
   /**
    * CSS Color interpretation from
@@ -5588,7 +5620,7 @@ var Backbone = Backbone || {};
 
   }
 
-  function setStyles(elem, property, value) {
+  function setStyles(elem, property, value, closed, curved) {
 
     switch (property) {
 
@@ -5610,12 +5642,17 @@ var Backbone = Backbone || {};
         break;
       case 'vertices':
         property = 'triangles';
+        elem.curved = curved;
+        elem.closed = closed;
+
         var vertices = webgl.toArray(value, elem.curved, elem.closed);
         var t = webgl.tessellate(vertices, elem.curved, elem.closed, elem.triangles, elem.vertices);
+
         value = t.triangles;
         elem.vertices = t.vertices;
         elem.vertexAmount = t.vertexAmount;
         elem.triangleAmount = t.triangleAmount;
+
         break;
     }
 
@@ -5653,7 +5690,7 @@ var Backbone = Backbone || {};
   }
 
   function getScale(matrix) {
-    return matrix[0];
+    return matrixDeterminant.apply(this, matrix);
   }
 
   function trim(str) {
@@ -6074,7 +6111,7 @@ var Backbone = Backbone || {};
       }
 
       this.trigger(Two.Events.change,
-        this.id, 'vertices', renderedVertices, this.closed, this.curved);
+        this.id, 'vertices', renderedVertices, closed, curved);
 
     }, this), 0);
 

@@ -346,7 +346,7 @@
 
     },
 
-    update: function(id, property, value) {
+    update: function(id, property, value, closed, curved) {
 
       var proto = Object.getPrototypeOf(this);
       var constructor = proto.constructor;
@@ -366,7 +366,7 @@
             this.elements[j] = null;
           }, this);
         default:
-          constructor.setStyles.call(this, elem, property, value);
+          constructor.setStyles.call(this, elem, property, value, closed, curved);
       }
 
       return this;
@@ -453,7 +453,7 @@
 
   }
 
-  function setStyles(elem, property, value) {
+  function setStyles(elem, property, value, closed, curved) {
 
     switch (property) {
 
@@ -463,6 +463,8 @@
         break;
       case 'vertices':
         property = 'commands';
+        elem.curved = curved;
+        elem.closed = closed;
         value = canvas.toArray(value, elem.curved, elem.closed);
         break;
 

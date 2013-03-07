@@ -45,7 +45,7 @@
       }
 
       this.trigger(Two.Events.change,
-        this.id, 'vertices', renderedVertices, this.closed, this.curved);
+        this.id, 'vertices', renderedVertices, closed, curved);
 
     }, this), 0);
 
