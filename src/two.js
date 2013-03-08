@@ -162,7 +162,7 @@
        * question into separate shapes and return a new array of array of points
        * representing the new subdivision.
        */
-      decoupleShapes: function(points, closed, depth) {
+      decoupleShapes: function(points, depth) {
 
         var depth = depth || 0, l = points.length;
 
@@ -171,10 +171,6 @@
         }
 
         for (var i = 0, l = points.length; i < l; i++) {
-
-          if (!closed && i >= l - 1) {
-            continue;
-          }
 
           var ii = mod(i + 1, l);
           var a = points[i];
@@ -206,8 +202,8 @@
               }
 
               return [
-                decoupleShapes(s1, closed, depth + 1),
-                decoupleShapes(s2, closed, depth + 1)
+                decoupleShapes(s1, depth + 1),
+                decoupleShapes(s2, depth + 1)
               ];
 
             }
