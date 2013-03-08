@@ -236,23 +236,26 @@
       // Temp
       gl.uniform1f(program.id, Math.random());
       gl.uniformMatrix3fv(program.matrixOld, false, this._matrixOld);
-
       gl.uniformMatrix3fv(program.matrix, false, this._matrix);
-      gl.uniform4f(program.color, this.fill.r, this.fill.g, this.fill.b, this.fill.a * this.opacity);
 
       // Fill
       if (this.fill.a > 0 && this.triangleAmount > 0) {
+
         gl.bindBuffer(gl.ARRAY_BUFFER, this.fillBuffer);
         gl.vertexAttribPointer(program.position, 2, gl.FLOAT, false, 0, 0);
+        gl.uniform4f(program.color, this.fill.r, this.fill.g, this.fill.b, this.fill.a * this.opacity);
         gl.drawArrays(gl.TRIANGLES, 0, this.triangleAmount);
+
       }
 
       // Stroke
       if (this._linewidth <= 0 || this.stroke.a <= 0 || this.vertexAmount < 4) {
         return this;
       }
+
       gl.bindBuffer(gl.ARRAY_BUFFER, this.strokeBuffer);
       gl.vertexAttribPointer(program.position, 2, gl.FLOAT, false, 0, 0);
+      gl.uniform4f(program.color, this.stroke.r, this.stroke.g, this.stroke.b, this.stroke.a * this.opacity);
       gl.lineWidth(this._linewidth);
       gl.drawArrays(gl.LINES, 0, this.vertexAmount);
 
