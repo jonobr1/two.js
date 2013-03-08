@@ -57,10 +57,7 @@
       width: 640,
       height: 480,
       type: Two.Types.svg,
-      autostart: false,
-      antialias: true,
-      premultipliedAlpha: false,
-      motionblur: true
+      autostart: false
     });
 
     this.type = params.type;
