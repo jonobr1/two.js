@@ -323,9 +323,10 @@
     /**
      * Takes an array of vertices and converts them into a subdvided array
      * of vertices that express the hull of a given shape accurately for the
-     * webgl renderer.
+     * webgl renderer. It also returns the last index for properly drawing
+     * a closed or open stroke.
      */
-    toArray: function(coords, closed, curved) {
+    extrapolate: function(coords, closed, curved) {
 
       var points = coords.slice(0);
 
@@ -649,7 +650,7 @@
     }
     if (vertices) {
 
-      var pointData = webgl.toArray(vertices, closed, curved)
+      var pointData = webgl.extrapolate(vertices, closed, curved)
       var vertices = pointData.vertices;
       var t = webgl.tessellate(vertices, closed, curved, pointData.last);
 
@@ -692,7 +693,7 @@
         elem.closed = closed;
         elem.curved = curved;
 
-        var pointData = webgl.toArray(value, closed, curved);
+        var pointData = webgl.extrapolate(value, closed, curved);
         var vertices = pointData.vertices;
         var t = webgl.tessellate(vertices, closed, curved, pointData.last, elem.triangles, elem.vertices);
 

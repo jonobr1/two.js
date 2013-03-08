@@ -1,4 +1,4 @@
-/*
+/**
  * Tessellation is a revised JavaScript port of poly2tri optimized for
  * use with two.js.
  *
