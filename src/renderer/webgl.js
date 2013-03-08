@@ -492,13 +492,13 @@
         'varying vec2 velocity;',
         '',
         'void main() {',
-        '  const float m = 0.2;',
+        '  const float m = 0.5;',
         '  vec2 projected = (matrix * vec3(position, 1)).xy;',
         '  vec2 normal = projected / resolution;',
         '  vec2 clipspace = (normal * 2.0) - 1.0;',
         '  vec2 projectedOld = (matrixOld * vec3(position, 1)).xy;',
         '',
-        '  velocity = (projected-projectedOld)/100.0;',
+        '  velocity = (projected-projectedOld)/50.0;',
         '  velocity.x = -velocity.x;',
         '  velocity.x = max(min(velocity.x, m), -m)+0.5;',
         '  velocity.y = max(min(velocity.y, m), -m)+0.5;',
@@ -555,10 +555,10 @@
         '  const float s = 32.0;',
         '  vec4 color = texture2D(Sampler0, uv);',
         '  vec2 velocity = texture2D(Sampler1, uv).xy - vec2(0.5);',
-        '  if (velocity == vec2(-0.5)){',
+        '  if (velocity == vec2(0.5)){',
         '    velocity = vec2(0.);',
         '  }',
-        '  velocity /= 50.;',
+        '  velocity /= 200.;',
         '  vec2 uv2 = uv - velocity * s/4.;',  
         '  for(float i = 1.; i < s; ++i)',
         '  {',
@@ -713,8 +713,6 @@
     this.ctx.blendEquationSeparate(this.ctx.FUNC_ADD, this.ctx.FUNC_ADD);
     this.ctx.blendFuncSeparate(this.ctx.SRC_ALPHA, this.ctx.ONE_MINUS_SRC_ALPHA,
       this.ctx.ONE, this.ctx.ONE_MINUS_SRC_ALPHA );
-    // this.ctx.blendEquation(this.ctx.FUNC_ADD);
-    // this.ctx.blendFunc(this.ctx.SRC_ALPHA, this.ctx.ONE_MINUS_SRC_ALPHA );
 
   };
 
@@ -766,7 +764,6 @@
       if (!this.renderTarget) {
 
         gl.bindFramebuffer(gl.FRAMEBUFFER,null);
-        //gl.clear(gl.COLOR_BUFFER_BIT);
         this.stage.render(gl, this.program);
 
       } else {
@@ -775,13 +772,12 @@
         this.ctx.viewport(0, 0, Math.min(this.width,this.renderTarget.width), Math.min(this.height,this.renderTarget.height));
         
         gl.bindFramebuffer(gl.FRAMEBUFFER,this.renderTarget.frameBuffer);
+        gl.clearColor(1.0,1.0,1.0,1.0);
         gl.clear(gl.COLOR_BUFFER_BIT);
         this.stage.render(gl, this.program);
-
         
         this.ctx.viewport(0, 0, this.width, this.height);
         gl.bindFramebuffer(gl.FRAMEBUFFER,null);
-        //gl.clear(gl.COLOR_BUFFER_BIT);
 
         // POST
         gl.useProgram(this.postProgram);
