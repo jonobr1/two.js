@@ -234,30 +234,29 @@
 
       // Fill
 
-      if (this.fill.a > 0) {
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.fillBuffer);
 
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.fillBuffer);
+      if (this.fill.a > 0 && this.triangleAmount > 0) {
 
         gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
 
         gl.uniformMatrix3fv(matrix, false, this._matrix);
-        gl.uniform4f(color, this.fill.r, this.fill.g, this.fill.b, this.fill.a);// * this.opacity);
+        gl.uniform4f(color, this.fill.r, this.fill.g, this.fill.b, this.fill.a * this.opacity);
         gl.drawArrays(gl.TRIANGLES, 0, this.triangleAmount);
 
       }
 
       // Stroke
 
-      if (this._linewidth <= 0 || this.stroke.a <= 0) {
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.strokeBuffer);
+
+      if (this._linewidth <= 0 || this.stroke.a <= 0 || this.vertexAmount < 4) {
         return this;
       }
 
-      gl.bindBuffer(gl.ARRAY_BUFFER, this.strokeBuffer);
-
       gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
       gl.uniformMatrix3fv(matrix, false, this._matrix);
-      gl.uniform4f(color, this.stroke.r, this.stroke.g, this.stroke.b, this.stroke.a);// * this.opacity);
-      // console.log(this._linewidth);
+      gl.uniform4f(color, this.stroke.r, this.stroke.g, this.stroke.b, this.stroke.a * this.opacity);
       gl.lineWidth(this._linewidth);
       gl.drawArrays(gl.LINES, 0, this.vertexAmount);
 
@@ -326,31 +325,40 @@
      * of vertices that express the hull of a given shape accurately for the
      * webgl renderer.
      */
-    toArray: function(points, closed, curved) {
+    toArray: function(coords, closed, curved) {
+
+      var points = coords.slice(0);
 
       if (!curved) {
-        return points.slice(0);
+        return {
+          vertices: points,
+          last: points.length - 1
+        };
       }
 
       // If curved, then subdivide the path and update the points.
 
-      var curve = getCurveFromPoints(points, closed);
+      var curve = getCurveFromPoints(points, true);
       var length = curve.length;
       var last = length - 1;
       var divided = [];
+      var finalVertex = curve.length;
 
       _.each(curve, function(p, i) {
-
-        if (closed || !closed && i < last) {
-          var q = curve[(i + 1) % length];
-          var subdivision = subdivide(
-            p.x, p.y, p.v.x, p.v.y, q.u.x, q.u.y, q.x, q.y);
-          divided = divided.concat(subdivision);
+        var q = curve[mod(i + 1, length)];
+        var subdivision = subdivide(
+          p.x, p.y, p.v.x, p.v.y, q.u.x, q.u.y, q.x, q.y);
+        // Calculate index of last "vertex" as well.
+        if (i >= last) {
+          finalVertex = divided.length - 2;
         }
-
+        divided = divided.concat(subdivision);
       });
 
-      return divided;
+      return {
+        vertices: divided,
+        last: finalVertex
+      };
 
     },
 
@@ -359,16 +367,22 @@
      * triangles and array of outline verts ready to be fed to the webgl
      * renderer.
      */
-    tessellate: function(points, closed, curved, reuseTriangles, reuseVertices) {
+    tessellate: function(points, closed, curved, finalVertex, reuseTriangles, reuseVertices) {
 
-      var shapes = flatten(decoupleShapes(points, closed));
+      var shapes = flatten(decoupleShapes(points));
       var triangles = [], vertices = [], triangleAmount = 0, vertexAmount = 0;
 
       _.each(shapes, function(coords, i) {
 
+        if (coords.length < 3) {
+          return;
+        }
+
         // Tessellate the current set of points.
 
-        var triangulation = new tessellation.SweepContext(coords);
+        var triangulation = new tessellation.SweepContext(_.map(coords, function(c) {
+          return new Two.Vector(c.x, c.y);
+        }));
         tessellation.sweep.Triangulate(triangulation, true);
 
         triangleAmount += triangulation.triangles.length * 3 * 2;
@@ -383,12 +397,13 @@
 
         });
 
-        vertexAmount += triangulation.edges.length * 4;
-        _.each(triangulation.edges, function(edge, i) {
-          var p = edge.p, q = edge.q;
-          vertices.push(p.x, p.y, q.x, q.y);
-        });
+      });
 
+      var pointLength = points.length;
+      vertexAmount = pointLength * 4;
+      _.each(points, function(p, i) {
+        var q = points[mod(i + 1, pointLength)];
+        vertices.push(p.x, p.y, q.x, q.y);
       });
 
       var triangles_32 = (!!reuseTriangles && triangleAmount <= reuseTriangles.length) ? reuseTriangles : new Two.Array(triangleAmount);
@@ -401,7 +416,7 @@
         triangles: triangles_32,
         vertices: vertices_32,
         triangleAmount: triangleAmount / 2,
-        vertexAmount: vertexAmount / 2
+        vertexAmount: closed ? vertexAmount / 2 : finalVertex * 2
       };
 
     },
@@ -535,7 +550,8 @@
     // Setup some initial statements of the gl context
     this.ctx.enable(this.ctx.BLEND);
     this.ctx.blendEquationSeparate(this.ctx.FUNC_ADD, this.ctx.FUNC_ADD);
-    this.ctx.blendFuncSeparate(this.ctx.SRC_ALPHA, this.ctx.ONE_MINUS_SRC_ALPHA, this.ctx.ONE, this.ctx.ONE_MINUS_SRC_ALPHA );
+    this.ctx.blendFuncSeparate(this.ctx.SRC_ALPHA, this.ctx.ONE_MINUS_SRC_ALPHA,
+      this.ctx.ONE, this.ctx.ONE_MINUS_SRC_ALPHA );
 
   };
 
@@ -633,8 +649,9 @@
     }
     if (vertices) {
 
-      var vertices = webgl.toArray(vertices, closed, curved);
-      var t = webgl.tessellate(vertices, closed, curved);
+      var pointData = webgl.toArray(vertices, closed, curved)
+      var vertices = pointData.vertices;
+      var t = webgl.tessellate(vertices, closed, curved, pointData.last);
 
       styles.triangles = t.triangles;
       styles.vertices = t.vertices;
@@ -675,8 +692,9 @@
         elem.closed = closed;
         elem.curved = curved;
 
-        var vertices = webgl.toArray(value, closed, curved);
-        var t = webgl.tessellate(vertices, closed, curved, elem.triangles, elem.vertices);
+        var pointData = webgl.toArray(value, closed, curved);
+        var vertices = pointData.vertices;
+        var t = webgl.tessellate(vertices, closed, curved, pointData.last, elem.triangles, elem.vertices);
 
         value = t.triangles;
         elem.vertices = t.vertices;

@@ -898,14 +898,16 @@
       }
 
       var p1 = triangle.PointCCW(point);
-      var o1 = tessellation.Orient2d(eq, p1, ep);
+      // @jonobr1: || statement is a hack
+      var o1 = tessellation.Orient2d(eq, p1, ep) || tessellation.Orientation.CW;
       if (o1 == tessellation.Orientation.COLLINEAR) {
         alert('tessellation.sweep.EdgeEvent: Collinear not supported!');
         return;
       }
 
       var p2 = triangle.PointCW(point);
-      var o2 = tessellation.Orient2d(eq, p2, ep);
+      // @jonobr1: || statement is a hack
+      var o2 = tessellation.Orient2d(eq, p2, ep) || tessellation.Orientation.CW;
       if (o2 == tessellation.Orientation.COLLINEAR) {
         alert('tessellation.sweep.EdgeEvent: Collinear not supported!');
         return;
