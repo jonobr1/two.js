@@ -4,7 +4,12 @@
   var CanvasRenderer = Two[Two.Types.canvas],
     getCurveFromPoints = Two.Utils.getCurveFromPoints,
     mod = Two.Utils.mod,
-    multiplyMatrix = Two.Matrix.Multiply;
+    multiplyMatrix = Two.Matrix.Multiply,
+    matrixDeterminant = Two.Matrix.Determinant,
+    decoupleShapes = Two.Utils.decoupleShapes,
+    subdivide = Two.Utils.subdivide,
+    abs = Math.abs,
+    sqrt = Math.sqrt;
 
   /**
    * CSS Color interpretation from
@@ -178,7 +183,7 @@
 
       _.each(this.children, function(child) {
         child.updateMatrix(this._matrix);
-      }, this)
+      }, this);
 
       return this;
 
@@ -215,6 +220,9 @@
       this._matrixOld = this._matrix;
       this._matrix = multiplyMatrix(this.matrix, matrix);
 
+      // Also update linewidth
+      this._linewidth = this.linewidth * getScale(this._matrix);
+
       return this;
 
     },
@@ -244,14 +252,16 @@
 
       // Stroke
 
-      if (this.linewidth <= 0 || this.stroke.a <= 0) {
+      if (this._linewidth <= 0 || this.stroke.a <= 0) {
         return this;
       }
 
       gl.bindBuffer(gl.ARRAY_BUFFER, this.strokeBuffer);
+
       gl.vertexAttribPointer(program.position, 2, gl.FLOAT, false, 0, 0);
       gl.uniform4f(program.color, this.stroke.r, this.stroke.g, this.stroke.b, this.stroke.a);
-      gl.lineWidth(this.linewidth);
+      gl.lineWidth(this._linewidth);
+
       gl.drawArrays(gl.LINES, 0, this.vertexAmount);
 
       return this;
@@ -319,10 +329,10 @@
      * of vertices that express the hull of a given shape accurately for the
      * webgl renderer.
      */
-    toArray: function(points, curved, closed) {
+    toArray: function(points, closed, curved) {
 
       if (!curved) {
-        return points;
+        return points.slice(0);
       }
 
       // If curved, then subdivide the path and update the points.
@@ -336,7 +346,7 @@
 
         if (closed || !closed && i < last) {
           var q = curve[(i + 1) % length];
-          var subdivision = Two.Utils.subdivide(
+          var subdivision = subdivide(
             p.x, p.y, p.v.x, p.v.y, q.u.x, q.u.y, q.x, q.y);
           divided = divided.concat(subdivision);
         }
@@ -352,49 +362,47 @@
      * triangles and array of outline verts ready to be fed to the webgl
      * renderer.
      */
-    tessellate: function(points, curved, closed, reuseTriangles, reuseVertices) {
+    tessellate: function(points, closed, curved, reuseTriangles, reuseVertices) {
 
-      // Tesselate the points.
+      var shapes = flatten(decoupleShapes(points, closed));
+      var triangles = [], vertices = [], triangleAmount = 0, vertexAmount = 0;
 
-      var triangulation = new tessellation.SweepContext(points);
-      tessellation.sweep.Triangulate(triangulation);
+      _.each(shapes, function(coords, i) {
 
-      var triangleAmount = triangulation.triangles.length * 3 * 2;
+        // Tessellate the current set of points.
 
-      // Return the triangles array.
-      var triangles = (!!reuseTriangles && triangleAmount <= reuseTriangles.length) ? reuseTriangles : new Two.Array(triangleAmount);
-      _.each(triangulation.triangles, function(tri, i) {
+        var triangulation = new tessellation.SweepContext(coords);
+        tessellation.sweep.Triangulate(triangulation, true);
 
-        var points = tri.points;
-        var a = points[0];
-        var b = points[1];
-        var c = points[2];
-        var index = i * 6;
+        triangleAmount += triangulation.triangles.length * 3 * 2;
+        _.each(triangulation.triangles, function(tri, i) {
 
-        triangles[index + 0] = a.x;
-        triangles[index + 1] = a.y;
-        triangles[index + 2] = b.x;
-        triangles[index + 3] = b.y;
-        triangles[index + 4] = c.x;
-        triangles[index + 5] = c.y;
+          var points = tri.points;
+          var a = points[0];
+          var b = points[1];
+          var c = points[2];
+
+          triangles.push(a.x, a.y, b.x, b.y, c.x, c.y);
+
+        });
+
+        vertexAmount += triangulation.edges.length * 4;
+        _.each(triangulation.edges, function(edge, i) {
+          var p = edge.p, q = edge.q;
+          vertices.push(p.x, p.y, q.x, q.y);
+        });
 
       });
 
-      var vertexAmount = triangulation.edges.length * 4;
+      var triangles_32 = (!!reuseTriangles && triangleAmount <= reuseTriangles.length) ? reuseTriangles : new Two.Array(triangleAmount);
+      var vertices_32 = (!!reuseVertices && vertexAmount <= reuseVertices.length) ? reuseVertices : new Two.Array(vertexAmount);
 
-      var vertices = (!!reuseVertices && vertexAmount <= reuseVertices.length) ? reuseVertices : new Two.Array(vertexAmount);
-      _.each(triangulation.edges, function(edge, i) {
-        var p = edge.p, q = edge.q;
-        var index = i * 4;
-        vertices[index] = p.x;
-        vertices[index + 1] = p.y;
-        vertices[index + 2] = q.x;
-        vertices[index + 3] = q.y;
-      });
+      triangles_32.set(triangles);
+      vertices_32.set(vertices);
 
       return {
-        triangles: triangles,
-        vertices: vertices,
+        triangles: triangles_32,
+        vertices: vertices_32,
         triangleAmount: triangleAmount / 2,
         vertexAmount: vertexAmount / 2
       };
@@ -506,7 +514,7 @@
         'void main() {',
         '  gl_FragData[0] = color;',
         '  gl_FragData[1] = vec4(velocity, 0.0, 1.0);',
-        '  gl_FragData[2] = vec4(id, id, id, 1.0);',
+        '  gl_FragData[2] = vec4(id, 0.0 \, 0.0, 1.0);',
         '}'
       ].join('\n'),
 
@@ -563,13 +571,11 @@
 
   function makeTextureArray(gl, length, width, height) {
 
-    ext = gl.getExtension( "EXT_draw_buffers" );
-
     var attatchments = []
     for (var i = 0; i < length; ++i) {
       attatchments.push(gl.COLOR_ATTACHMENT0 + i);
     }
-    ext.drawBuffersEXT(attatchments);
+    gl.mrt.drawBuffersEXT(attatchments);
 
     var textures = []
     for (var j = 0; j < length; ++j) {
@@ -607,7 +613,8 @@
    * Webgl Renderer inherits from the Canvas 2d Renderer
    * with additional modifications.
    */
-  var Renderer = Two[Two.Types.webgl] = function(params) {
+
+  var Renderer = Two[Two.Types.webgl] = function(options) {
 
     this.domElement = document.createElement('canvas');
 
@@ -619,14 +626,24 @@
     // http://games.greggman.com/game/webgl-and-alpha/
     // http://www.khronos.org/registry/webgl/specs/latest/#5.2
 
+    var params = _.defaults(options || {}, {
+      antialias: false,
+      alpha: true,
+      premultipliedAlpha: true,
+      stencil: true,
+      preserveDrawingBuffer: false,
+      motionblur: false
+    });
+
     var gl = this.ctx = this.domElement.getContext('webgl', params)
       || this.domElement.getContext('experimental-webgl', params);
+    gl.mrt = gl.getExtension( "EXT_draw_buffers" );
 
     if (!this.ctx) {
       throw new Two.Utils.Error('unable to create a webgl context. Try using another renderer.');
     }
 
-    if (!params.motionblur) {
+    if (!params.motionblur || !gl.mrt) {
       
       // Compile Base Shaders to draw in pixel space.
       var vs = webgl.shaders.create(
@@ -636,10 +653,6 @@
       this.program = webgl.program.create(gl, [vs, fs]);
 
     } else {
-
-      if(!gl.getExtension( "EXT_draw_buffers" )) {
-        console.log( "No EXT_draw_buffers support for multiple render targets!" );
-      } else {
 
         var vs = webgl.shaders.create(
           gl, webgl.shaders.mrtVertex, webgl.shaders.types.vertex);
@@ -670,7 +683,6 @@
         gl.bindBuffer(gl.ARRAY_BUFFER, this.quad);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([1,1,-1,1,1,-1,1,-1,-1,1,-1,-1]), gl.STATIC_DRAW);
 
-      }
     }
 
     gl.useProgram(this.program);
@@ -681,10 +693,15 @@
     this.program.matrix = gl.getUniformLocation(this.program, 'matrix');
     
 
+    // Copied from Three.js WebGLRenderer
+    this.ctx.disable(this.ctx.DEPTH_TEST);
+
     // Setup some initial statements of the gl context
     this.ctx.enable(this.ctx.BLEND);
-    this.ctx.disable(this.ctx.DEPTH_TEST);
-    this.ctx.blendFunc(this.ctx.SRC_ALPHA, this.ctx.ONE_MINUS_SRC_ALPHA);
+    this.ctx.blendEquationSeparate(this.ctx.FUNC_ADD, this.ctx.FUNC_ADD);
+    this.ctx.blendFuncSeparate(this.ctx.SRC_ALPHA, this.ctx.ONE_MINUS_SRC_ALPHA, this.ctx.ONE, this.ctx.ONE_MINUS_SRC_ALPHA );
+    // this.ctx.blendEquation(this.ctx.FUNC_ADD);
+    // this.ctx.blendFunc(this.ctx.SRC_ALPHA, this.ctx.ONE_MINUS_SRC_ALPHA );
 
   };
 
@@ -736,12 +753,12 @@
       if (!this.renderTarget) {
 
         gl.bindFramebuffer(gl.FRAMEBUFFER,null);
-        gl.clear(gl.COLOR_BUFFER_BIT);
+        //gl.clear(gl.COLOR_BUFFER_BIT);
         this.stage.render(gl, this.program);
 
       } else {
 
-        //Color Target
+        //MRT first pass
         this.ctx.viewport(0, 0, Math.min(this.width,this.renderTarget.width), Math.min(this.height,this.renderTarget.height));
         
         gl.bindFramebuffer(gl.FRAMEBUFFER,this.renderTarget.frameBuffer);
@@ -751,10 +768,9 @@
         
         this.ctx.viewport(0, 0, this.width, this.height);
         gl.bindFramebuffer(gl.FRAMEBUFFER,null);
-        gl.clear(gl.COLOR_BUFFER_BIT);
+        //gl.clear(gl.COLOR_BUFFER_BIT);
 
-
-        // COMP
+        // POST
         gl.useProgram(this.postProgram);
         
         gl.activeTexture(gl.TEXTURE0);
@@ -821,11 +837,12 @@
     }
     if (linewidth) {
       styles.linewidth = linewidth;
+      styles._linewidth = linewidth * getScale(styles._matrix);
     }
     if (vertices) {
 
-      var vertices = webgl.toArray(vertices, curved, closed);
-      var t = webgl.tessellate(vertices, curved, closed);
+      var vertices = webgl.toArray(vertices, closed, curved);
+      var t = webgl.tessellate(vertices, closed, curved);
 
       styles.triangles = t.triangles;
       styles.vertices = t.vertices;
@@ -841,13 +858,17 @@
 
   }
 
-  function setStyles(elem, property, value) {
+  function setStyles(elem, property, value, closed, curved) {
 
     switch (property) {
 
       case 'matrix':
         property = 'matrix';
         value = value.toArray(true);
+        break;
+      case 'linewidth':
+        property = 'linewidth';
+        elem._linewidth = value * getScale(elem._matrix);
         break;
       case 'stroke':
         // interpret color
@@ -859,12 +880,17 @@
         break;
       case 'vertices':
         property = 'triangles';
-        var vertices = webgl.toArray(value, elem.curved, elem.closed);
-        var t = webgl.tessellate(vertices, elem.curved, elem.closed, elem.triangles, elem.vertices);
+        elem.closed = closed;
+        elem.curved = curved;
+
+        var vertices = webgl.toArray(value, closed, curved);
+        var t = webgl.tessellate(vertices, closed, curved, elem.triangles, elem.vertices);
+
         value = t.triangles;
         elem.vertices = t.vertices;
         elem.vertexAmount = t.vertexAmount;
         elem.triangleAmount = t.triangleAmount;
+
         break;
     }
 
@@ -877,6 +903,41 @@
     if (property === 'matrix') {
       elem.updateMatrix();
     }
+
+  }
+
+  /**
+   * Remove nested arrays and place all arrays as shallow as possible.
+   */
+  function flatten(array) {
+
+    var result = [];
+
+    _.each(array, function(v) {
+
+      if (_.isArray(v) && _.isArray(v[0])) {
+        result = result.concat(flatten(v));
+      } else {
+        result.push(v);
+      }
+
+    });
+
+    return result;
+
+  }
+
+  function getScale(matrix) {
+
+    var a = matrix[0];
+    var b = matrix[1];
+    var c = matrix[2];
+    var d = matrix[3];
+    var e = matrix[4];
+    var f = matrix[5];
+
+    var v = multiplyMatrix([a, b, c, d, e, f, 0, 0, 1], [1, 0, 1]);
+    return sqrt(v.x * v.x + v.y * v.y);
 
   }
 

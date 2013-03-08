@@ -116,7 +116,8 @@
     },
 
     Properties: {
-      hierarchy: 'hierarchy'
+      hierarchy: 'hierarchy',
+      demotion: 'demotion'
     },
 
     Events: {
@@ -152,6 +153,114 @@
           angle: 0,
           epsilon: 0.01
         }
+
+      },
+
+      /**
+       * Given an array of points. Go through the points as line-segments,
+       * check for intersections, if one is found separate the points in
+       * question into separate shapes and return a new array of array of points
+       * representing the new subdivision.
+       */
+      decoupleShapes: function(points, closed, depth) {
+
+        var depth = depth || 0, l = points.length;
+
+        if (l <= 3 || depth > Two.Utils.Curve.RecursionLimit) {
+          return [points];
+        }
+
+        for (var i = 0, l = points.length; i < l; i++) {
+
+          if (!closed && i >= l - 1) {
+            continue;
+          }
+
+          var ii = mod(i + 1, l);
+          var a = points[i];
+          var b = points[ii];
+
+          for (var k = 0, j = mod(i + 1, l); k < l; k++) {
+
+            var jj = mod(j + 1, l);
+            var c = points[j];
+            var d = points[jj];
+
+            if (j == i || j == ii || jj == i || jj == ii) {
+              j = mod(j + 1, l);
+              continue;
+            }
+
+            var intersection = solveSegmentIntersection(a, b, c, d);
+
+            if (intersection) {
+
+              var s1, s2, f1 = [intersection], f2 = [intersection.clone()];
+              s1 = points.slice(0, ii).concat(f1);
+              s2 = points.slice(ii, j + 1).concat(f2);
+
+              if (jj > ii) {
+                s1 = s1.concat(points.slice(jj, l));
+              } else if (jj > 0) {
+                s2 = s2.concat(points.slice(jj, l));
+              }
+
+              return [
+                decoupleShapes(s1, closed, depth + 1),
+                decoupleShapes(s2, closed, depth + 1)
+              ];
+
+            }
+
+            j = mod(j + 1, l);
+
+          }
+
+        }
+
+        return [points];
+
+      },
+
+      /**
+       * a   d
+       *  \ /
+       *  / \
+       * c   b
+       * where a is (x1, y1), b is (x2, y2), c is (x3, y3), and d is (x4, y4)
+       * Solves for an intersection, returns null if none found, otherwise
+       * returns Two.Vector.
+       * http://www.kevlindev.com/gui/math/intersection/Intersection.js
+       */
+      solveSegmentIntersection: function(a1, a2, b1, b2) {
+
+        var result;
+
+        var ua_t = (b2.x - b1.x) * (a1.y - b1.y) - (b2.y - b1.y) * (a1.x - b1.x);
+        var ub_t = (a2.x - a1.x) * (a1.y - b1.y) - (a2.y - a1.y) * (a1.x - b1.x);
+        var u_b  = (b2.y - b1.y) * (a2.x - a1.x) - (b2.x - b1.x) * (a2.y - a1.y);
+
+        if ( u_b != 0 ) {
+            var ua = ua_t / u_b;
+            var ub = ub_t / u_b;
+
+            if ( 0 <= ua && ua <= 1 && 0 <= ub && ub <= 1 ) {
+              return new Two.Vector(
+                a1.x + ua * (a2.x - a1.x),
+                a1.y + ua * (a2.y - a1.y)
+              );
+            } else {
+              result = null;
+            }
+        } else {
+            if ( ua_t == 0 || ub_t == 0 ) {
+                result = null;//new Intersection("Coincident");
+            } else {
+                result = null;
+            }
+        }
+
+        return result;
 
       },
 
@@ -457,6 +566,8 @@
     angleBetween = Two.Utils.angleBetween,
     getControlPoints = Two.Utils.getControlPoints,
     getCurveFromPoints = Two.Utils.getCurveFromPoints,
+    solveSegmentIntersection = Two.Utils.solveSegmentIntersection,
+    decoupleShapes = Two.Utils.decoupleShapes,
     mod = Two.Utils.mod;
 
   _.extend(Two.prototype, Backbone.Events, {

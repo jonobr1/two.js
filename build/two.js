@@ -4,7 +4,7 @@
  * agnostic enabling the same api for rendering in multiple contexts: webgl, 
  * canvas2d, and svg.
  *
- * Copyright (c) 2012 - 2013 jonobr1
+ * Copyright (c) 2012 - 2013 jonobr1 / http://jonobr1.com
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -1631,6 +1631,9 @@ var Backbone = Backbone || {};
    * The neighbor across to given point.
    */
   tessellation.Triangle.prototype.NeighborAcross = function(p) {
+    if (!p) {
+      return this.neighbors[2]; // @jonobr1 hack.
+    }
     if (p.equals(this.points[0])) {
       return this.neighbors[0];
     } else if (p.equals(this.points[1])) {
@@ -2034,6 +2037,7 @@ var Backbone = Backbone || {};
     middle.next = tail;
     middle.prev = head;
     tail.prev = middle;
+
   };
 
   tessellation.SweepContext.prototype.RemoveNode = function(node) {
@@ -2191,7 +2195,7 @@ var Backbone = Backbone || {};
         tessellation.sweep.FlipEdgeEvent(tcx, ep, eq, triangle, point);
       }
     } else {
-      alert('Invalid tessellation.sweep.EdgeEvent call!');
+      // alert('Invalid tessellation.sweep.EdgeEvent call!');
     }
   };
 
@@ -2928,7 +2932,8 @@ var Backbone = Backbone || {};
     },
 
     Properties: {
-      hierarchy: 'hierarchy'
+      hierarchy: 'hierarchy',
+      demotion: 'demotion'
     },
 
     Events: {
@@ -2964,6 +2969,114 @@ var Backbone = Backbone || {};
           angle: 0,
           epsilon: 0.01
         }
+
+      },
+
+      /**
+       * Given an array of points. Go through the points as line-segments,
+       * check for intersections, if one is found separate the points in
+       * question into separate shapes and return a new array of array of points
+       * representing the new subdivision.
+       */
+      decoupleShapes: function(points, closed, depth) {
+
+        var depth = depth || 0, l = points.length;
+
+        if (l <= 3 || depth > Two.Utils.Curve.RecursionLimit) {
+          return [points];
+        }
+
+        for (var i = 0, l = points.length; i < l; i++) {
+
+          if (!closed && i >= l - 1) {
+            continue;
+          }
+
+          var ii = mod(i + 1, l);
+          var a = points[i];
+          var b = points[ii];
+
+          for (var k = 0, j = mod(i + 1, l); k < l; k++) {
+
+            var jj = mod(j + 1, l);
+            var c = points[j];
+            var d = points[jj];
+
+            if (j == i || j == ii || jj == i || jj == ii) {
+              j = mod(j + 1, l);
+              continue;
+            }
+
+            var intersection = solveSegmentIntersection(a, b, c, d);
+
+            if (intersection) {
+
+              var s1, s2, f1 = [intersection], f2 = [intersection.clone()];
+              s1 = points.slice(0, ii).concat(f1);
+              s2 = points.slice(ii, j + 1).concat(f2);
+
+              if (jj > ii) {
+                s1 = s1.concat(points.slice(jj, l));
+              } else if (jj > 0) {
+                s2 = s2.concat(points.slice(jj, l));
+              }
+
+              return [
+                decoupleShapes(s1, closed, depth + 1),
+                decoupleShapes(s2, closed, depth + 1)
+              ];
+
+            }
+
+            j = mod(j + 1, l);
+
+          }
+
+        }
+
+        return [points];
+
+      },
+
+      /**
+       * a   d
+       *  \ /
+       *  / \
+       * c   b
+       * where a is (x1, y1), b is (x2, y2), c is (x3, y3), and d is (x4, y4)
+       * Solves for an intersection, returns null if none found, otherwise
+       * returns Two.Vector.
+       * http://www.kevlindev.com/gui/math/intersection/Intersection.js
+       */
+      solveSegmentIntersection: function(a1, a2, b1, b2) {
+
+        var result;
+
+        var ua_t = (b2.x - b1.x) * (a1.y - b1.y) - (b2.y - b1.y) * (a1.x - b1.x);
+        var ub_t = (a2.x - a1.x) * (a1.y - b1.y) - (a2.y - a1.y) * (a1.x - b1.x);
+        var u_b  = (b2.y - b1.y) * (a2.x - a1.x) - (b2.x - b1.x) * (a2.y - a1.y);
+
+        if ( u_b != 0 ) {
+            var ua = ua_t / u_b;
+            var ub = ub_t / u_b;
+
+            if ( 0 <= ua && ua <= 1 && 0 <= ub && ub <= 1 ) {
+              return new Two.Vector(
+                a1.x + ua * (a2.x - a1.x),
+                a1.y + ua * (a2.y - a1.y)
+              );
+            } else {
+              result = null;
+            }
+        } else {
+            if ( ua_t == 0 || ub_t == 0 ) {
+                result = null;//new Intersection("Coincident");
+            } else {
+                result = null;
+            }
+        }
+
+        return result;
 
       },
 
@@ -3269,6 +3382,8 @@ var Backbone = Backbone || {};
     angleBetween = Two.Utils.angleBetween,
     getControlPoints = Two.Utils.getControlPoints,
     getCurveFromPoints = Two.Utils.getCurveFromPoints,
+    solveSegmentIntersection = Two.Utils.solveSegmentIntersection,
+    decoupleShapes = Two.Utils.decoupleShapes,
     mod = Two.Utils.mod;
 
   _.extend(Two.prototype, Backbone.Events, {
@@ -3732,10 +3847,33 @@ var Backbone = Backbone || {};
       0, 0, 1
     ],
 
+    Determinant: function(a, b, c, d, e, f, g, h, i) {
+
+      return a * e * i - a * f * h - b * d * i + b * f * g + c * d * h - c * e * g;
+
+    },
+
     /**
      * Multiply two matrix 3x3 arrays
      */
     Multiply: function(A, B) {
+
+      if (B.length <= 3) { // Multiply Vector
+
+        var x, y, z;
+        var a = B[0] || 0, b = B[1] || 0, c = B[2] || 0;
+        var e = A;
+
+        // Go down rows first
+        // a, d, g, b, e, h, c, f, i
+
+        var x = e[0] * a + e[1] * b + e[2] * c;
+        var y = e[3] * a + e[4] * b + e[5] * c;
+        var z = e[6] * a + e[7] * b + e[8] * c;
+
+        return { x: x, y: y, z: z };
+
+      }
 
       var A0 = A[0], A1 = A[1], A2 = A[2];
       var A3 = A[3], A4 = A[4], A5 = A[5];
@@ -3861,6 +3999,21 @@ var Backbone = Backbone || {};
     },
 
     /**
+     * Return the determinant of the matrix.
+     */
+    determinant: function() {
+
+      var te = this.elements;
+
+      var a = te[0], b = te[1], c = te[2],
+          d = te[3], e = te[4], f = te[5],
+          g = te[6], h = te[7], i = te[8];
+
+      return a * e * i - a * f * h - b * d * i + b * f * g + c * d * h - c * e * g;
+
+    },
+
+    /**
      * Set a scalar onto the matrix.
      */
     scale: function(sx, sy) {
@@ -3962,7 +4115,14 @@ var Backbone = Backbone || {};
      */
     clone: function() {
 
-      return new Two.Matrix(this.elements.slice(0));
+      var a = this.elements[0],
+          b = this.elements[1],
+          c = this.elements[2],
+          d = this.elements[3],
+          e = this.elements[4],
+          f = this.elements[5];
+
+      return new Two.Matrix(a, b, c, d, e, f);
 
     }
 
@@ -4234,6 +4394,11 @@ var Backbone = Backbone || {};
               elem.appendChild(elements[j]);
             });
             break;
+          case Two.Properties.demotion:
+            _.each(value, function(j) {
+              elem.removeChild(elements[j]);
+            });
+            break;
           default:
             setStyles(elem, property, value, closed, curved);
         }
@@ -4391,6 +4556,14 @@ var Backbone = Backbone || {};
 
       this.children[id] = elem;
       elem.parent = this;
+
+      return this;
+
+    },
+
+    removeChild: function(elem) {
+
+      delete this.children[elem.id];
 
       return this;
 
@@ -4694,7 +4867,7 @@ var Backbone = Backbone || {};
 
     },
 
-    update: function(id, property, value) {
+    update: function(id, property, value, closed, curved) {
 
       var proto = Object.getPrototypeOf(this);
       var constructor = proto.constructor;
@@ -4708,8 +4881,13 @@ var Backbone = Backbone || {};
             elem.appendChild(elements[j]);
           });
           break;
+        case Two.Properties.demotion:
+          _.each(value, function(j) {
+            elem.removeChild(elements[j]);
+            this.elements[j] = null;
+          }, this);
         default:
-          constructor.setStyles.call(this, elem, property, value);
+          constructor.setStyles.call(this, elem, property, value, closed, curved);
       }
 
       return this;
@@ -4796,7 +4974,7 @@ var Backbone = Backbone || {};
 
   }
 
-  function setStyles(elem, property, value) {
+  function setStyles(elem, property, value, closed, curved) {
 
     switch (property) {
 
@@ -4806,6 +4984,8 @@ var Backbone = Backbone || {};
         break;
       case 'vertices':
         property = 'commands';
+        elem.curved = curved;
+        elem.closed = closed;
         value = canvas.toArray(value, elem.curved, elem.closed);
         break;
 
@@ -4828,7 +5008,12 @@ var Backbone = Backbone || {};
   var CanvasRenderer = Two[Two.Types.canvas],
     getCurveFromPoints = Two.Utils.getCurveFromPoints,
     mod = Two.Utils.mod,
-    multiplyMatrix = Two.Matrix.Multiply;
+    multiplyMatrix = Two.Matrix.Multiply,
+    matrixDeterminant = Two.Matrix.Determinant,
+    decoupleShapes = Two.Utils.decoupleShapes,
+    subdivide = Two.Utils.subdivide,
+    abs = Math.abs,
+    sqrt = Math.sqrt;
 
   /**
    * CSS Color interpretation from
@@ -5002,7 +5187,7 @@ var Backbone = Backbone || {};
 
       _.each(this.children, function(child) {
         child.updateMatrix(this._matrix);
-      }, this)
+      }, this);
 
       return this;
 
@@ -5038,6 +5223,9 @@ var Backbone = Backbone || {};
 
       this._matrix = multiplyMatrix(this.matrix, matrix);
 
+      // Also update linewidth
+      this._linewidth = this.linewidth * getScale(this._matrix);
+
       return this;
 
     },
@@ -5064,7 +5252,7 @@ var Backbone = Backbone || {};
 
       // Stroke
 
-      if (this.linewidth <= 0 || this.stroke.a <= 0) {
+      if (this._linewidth <= 0 || this.stroke.a <= 0) {
         return this;
       }
 
@@ -5073,7 +5261,8 @@ var Backbone = Backbone || {};
       gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
       gl.uniformMatrix3fv(matrix, false, this._matrix);
       gl.uniform4f(color, this.stroke.r, this.stroke.g, this.stroke.b, this.stroke.a);// * this.opacity);
-      gl.lineWidth(this.linewidth);
+      // console.log(this._linewidth);
+      gl.lineWidth(this._linewidth);
       gl.drawArrays(gl.LINES, 0, this.vertexAmount);
 
       return this;
@@ -5141,10 +5330,10 @@ var Backbone = Backbone || {};
      * of vertices that express the hull of a given shape accurately for the
      * webgl renderer.
      */
-    toArray: function(points, curved, closed) {
+    toArray: function(points, closed, curved) {
 
       if (!curved) {
-        return points;
+        return points.slice(0);
       }
 
       // If curved, then subdivide the path and update the points.
@@ -5158,7 +5347,7 @@ var Backbone = Backbone || {};
 
         if (closed || !closed && i < last) {
           var q = curve[(i + 1) % length];
-          var subdivision = Two.Utils.subdivide(
+          var subdivision = subdivide(
             p.x, p.y, p.v.x, p.v.y, q.u.x, q.u.y, q.x, q.y);
           divided = divided.concat(subdivision);
         }
@@ -5174,49 +5363,47 @@ var Backbone = Backbone || {};
      * triangles and array of outline verts ready to be fed to the webgl
      * renderer.
      */
-    tessellate: function(points, curved, closed, reuseTriangles, reuseVertices) {
+    tessellate: function(points, closed, curved, reuseTriangles, reuseVertices) {
 
-      // Tesselate the points.
+      var shapes = flatten(decoupleShapes(points, closed));
+      var triangles = [], vertices = [], triangleAmount = 0, vertexAmount = 0;
 
-      var triangulation = new tessellation.SweepContext(points);
-      tessellation.sweep.Triangulate(triangulation);
+      _.each(shapes, function(coords, i) {
 
-      var triangleAmount = triangulation.triangles.length * 3 * 2;
+        // Tessellate the current set of points.
 
-      // Return the triangles array.
-      var triangles = (!!reuseTriangles && triangleAmount <= reuseTriangles.length) ? reuseTriangles : new Two.Array(triangleAmount);
-      _.each(triangulation.triangles, function(tri, i) {
+        var triangulation = new tessellation.SweepContext(coords);
+        tessellation.sweep.Triangulate(triangulation, true);
 
-        var points = tri.points;
-        var a = points[0];
-        var b = points[1];
-        var c = points[2];
-        var index = i * 6;
+        triangleAmount += triangulation.triangles.length * 3 * 2;
+        _.each(triangulation.triangles, function(tri, i) {
 
-        triangles[index + 0] = a.x;
-        triangles[index + 1] = a.y;
-        triangles[index + 2] = b.x;
-        triangles[index + 3] = b.y;
-        triangles[index + 4] = c.x;
-        triangles[index + 5] = c.y;
+          var points = tri.points;
+          var a = points[0];
+          var b = points[1];
+          var c = points[2];
+
+          triangles.push(a.x, a.y, b.x, b.y, c.x, c.y);
+
+        });
+
+        vertexAmount += triangulation.edges.length * 4;
+        _.each(triangulation.edges, function(edge, i) {
+          var p = edge.p, q = edge.q;
+          vertices.push(p.x, p.y, q.x, q.y);
+        });
 
       });
 
-      var vertexAmount = triangulation.edges.length * 4;
+      var triangles_32 = (!!reuseTriangles && triangleAmount <= reuseTriangles.length) ? reuseTriangles : new Two.Array(triangleAmount);
+      var vertices_32 = (!!reuseVertices && vertexAmount <= reuseVertices.length) ? reuseVertices : new Two.Array(vertexAmount);
 
-      var vertices = (!!reuseVertices && vertexAmount <= reuseVertices.length) ? reuseVertices : new Two.Array(vertexAmount);
-      _.each(triangulation.edges, function(edge, i) {
-        var p = edge.p, q = edge.q;
-        var index = i * 4;
-        vertices[index] = p.x;
-        vertices[index + 1] = p.y;
-        vertices[index + 2] = q.x;
-        vertices[index + 3] = q.y;
-      });
+      triangles_32.set(triangles);
+      vertices_32.set(vertices);
 
       return {
-        triangles: triangles,
-        vertices: vertices,
+        triangles: triangles_32,
+        vertices: vertices_32,
         triangleAmount: triangleAmount / 2,
         vertexAmount: vertexAmount / 2
       };
@@ -5304,7 +5491,7 @@ var Backbone = Backbone || {};
    * Webgl Renderer inherits from the Canvas 2d Renderer
    * with additional modifications.
    */
-  var Renderer = Two[Two.Types.webgl] = function() {
+  var Renderer = Two[Two.Types.webgl] = function(options) {
 
     this.domElement = document.createElement('canvas');
 
@@ -5315,10 +5502,13 @@ var Backbone = Backbone || {};
 
     // http://games.greggman.com/game/webgl-and-alpha/
     // http://www.khronos.org/registry/webgl/specs/latest/#5.2
-    var params = {
-      antialias: true,
-      premultipliedAlpha: false
-    };
+    var params = _.defaults(options || {}, {
+      antialias: false,
+      alpha: true,
+      premultipliedAlpha: true,
+      stencil: true,
+      preserveDrawingBuffer: false
+    });
 
     this.ctx = this.domElement.getContext('webgl', params)
       || this.domElement.getContext('experimental-webgl', params);
@@ -5343,10 +5533,13 @@ var Backbone = Backbone || {};
     this.colorLocation = this.ctx.getUniformLocation(this.program, 'color');
     this.matrixLocation = this.ctx.getUniformLocation(this.program, 'matrix');
 
+    // Copied from Three.js WebGLRenderer
+    this.ctx.disable(this.ctx.DEPTH_TEST);
+
     // Setup some initial statements of the gl context
     this.ctx.enable(this.ctx.BLEND);
-    this.ctx.disable(this.ctx.DEPTH_TEST);
-    this.ctx.blendFunc(this.ctx.ONE, this.ctx.SRC_ALPHA);
+    this.ctx.blendEquationSeparate(this.ctx.FUNC_ADD, this.ctx.FUNC_ADD);
+    this.ctx.blendFuncSeparate(this.ctx.SRC_ALPHA, this.ctx.ONE_MINUS_SRC_ALPHA, this.ctx.ONE, this.ctx.ONE_MINUS_SRC_ALPHA );
 
   };
 
@@ -5388,8 +5581,6 @@ var Backbone = Backbone || {};
 
       var gl = this.ctx,
         program = this.program;
-
-      gl.clear(gl.COLOR_BUFFER_BIT);
 
       this.stage.render(gl, this.positionLocation, this.matrixLocation, this.colorLocation);
 
@@ -5442,11 +5633,12 @@ var Backbone = Backbone || {};
     }
     if (linewidth) {
       styles.linewidth = linewidth;
+      styles._linewidth = linewidth * getScale(styles._matrix);
     }
     if (vertices) {
 
-      var vertices = webgl.toArray(vertices, curved, closed);
-      var t = webgl.tessellate(vertices, curved, closed);
+      var vertices = webgl.toArray(vertices, closed, curved);
+      var t = webgl.tessellate(vertices, closed, curved);
 
       styles.triangles = t.triangles;
       styles.vertices = t.vertices;
@@ -5462,13 +5654,17 @@ var Backbone = Backbone || {};
 
   }
 
-  function setStyles(elem, property, value) {
+  function setStyles(elem, property, value, closed, curved) {
 
     switch (property) {
 
       case 'matrix':
         property = 'matrix';
         value = value.toArray(true);
+        break;
+      case 'linewidth':
+        property = 'linewidth';
+        elem._linewidth = value * getScale(elem._matrix);
         break;
       case 'stroke':
         // interpret color
@@ -5480,12 +5676,17 @@ var Backbone = Backbone || {};
         break;
       case 'vertices':
         property = 'triangles';
-        var vertices = webgl.toArray(value, elem.curved, elem.closed);
-        var t = webgl.tessellate(vertices, elem.curved, elem.closed, elem.triangles, elem.vertices);
+        elem.closed = closed;
+        elem.curved = curved;
+
+        var vertices = webgl.toArray(value, closed, curved);
+        var t = webgl.tessellate(vertices, closed, curved, elem.triangles, elem.vertices);
+
         value = t.triangles;
         elem.vertices = t.vertices;
         elem.vertexAmount = t.vertexAmount;
         elem.triangleAmount = t.triangleAmount;
+
         break;
     }
 
@@ -5498,6 +5699,41 @@ var Backbone = Backbone || {};
     if (property === 'matrix') {
       elem.updateMatrix();
     }
+
+  }
+
+  /**
+   * Remove nested arrays and place all arrays as shallow as possible.
+   */
+  function flatten(array) {
+
+    var result = [];
+
+    _.each(array, function(v) {
+
+      if (_.isArray(v) && _.isArray(v[0])) {
+        result = result.concat(flatten(v));
+      } else {
+        result.push(v);
+      }
+
+    });
+
+    return result;
+
+  }
+
+  function getScale(matrix) {
+
+    var a = matrix[0];
+    var b = matrix[1];
+    var c = matrix[2];
+    var d = matrix[3];
+    var e = matrix[4];
+    var f = matrix[5];
+
+    var v = multiplyMatrix([a, b, c, d, e, f, 0, 0, 1], [1, 0, 1]);
+    return sqrt(v.x * v.x + v.y * v.y);
 
   }
 
@@ -5743,10 +5979,75 @@ var Backbone = Backbone || {};
       }, this);
 
       if (ids.length > 0) {
-        this.trigger(Two.Events.change, this.id, 'hierarchy', ids);
+        this.trigger(Two.Events.change, this.id, Two.Properties.hierarchy, ids);
       }
 
+      return this.center();
+
+    },
+
+    /**
+     * Anchors all children around the center of the group.
+     */
+    center: function() {
+
+      var rect = this.getBoundingClientRect();
+
+      rect.centroid = {
+        x: rect.left + rect.width / 2,
+        y: rect.top + rect.height / 2
+      };
+
+      _.each(this.children, function(child) {
+        child.translation.subSelf(rect.centroid);
+      });
+
+      this.translation.copy(rect.centroid);
+
       return this;
+
+    },
+
+    /**
+     * Remove an object from the group.
+     */
+    remove: function(o) {
+
+      var l = arguments.length,
+        objects = o,
+        children = this.children,
+        grandparent = this.parent,
+        ids = [];
+
+      if (l <= 0 && grandparent) {
+        grandparent.remove(this);
+        return this;
+      }
+
+      if (!_.isArray(o)) {
+        objects = _.toArray(arguments);
+      }
+
+      _.each(objects, function(object) {
+
+        var id = object.id, grandchildren = object.children;
+
+        if (!(id in children)) {
+          return;
+        }
+
+        delete children[id];
+        object.unbind(Two.Events.change);
+
+        ids.push(id);
+
+      });
+
+      if (ids.length > 0) {
+        this.trigger(Two.Events.change, this.id, Two.Properties.demotion, ids);
+      }
+
+      return this.center();
 
     },
 
@@ -5854,7 +6155,7 @@ var Backbone = Backbone || {};
       }
 
       this.trigger(Two.Events.change,
-        this.id, 'vertices', renderedVertices, this.closed, this.curved);
+        this.id, 'vertices', renderedVertices, closed, curved);
 
     }, this), 0);
 
@@ -5937,6 +6238,21 @@ var Backbone = Backbone || {};
       clone.scale = this.scale;
 
       return clone;
+
+    },
+
+    /**
+     * Remove self from the scene / parent.
+     */
+    remove: function() {
+
+      if (!this.parent) {
+        return this;
+      }
+
+      this.parent.remove(this);
+
+      return this;
 
     },
 

@@ -43,10 +43,33 @@
       0, 0, 1
     ],
 
+    Determinant: function(a, b, c, d, e, f, g, h, i) {
+
+      return a * e * i - a * f * h - b * d * i + b * f * g + c * d * h - c * e * g;
+
+    },
+
     /**
      * Multiply two matrix 3x3 arrays
      */
     Multiply: function(A, B) {
+
+      if (B.length <= 3) { // Multiply Vector
+
+        var x, y, z;
+        var a = B[0] || 0, b = B[1] || 0, c = B[2] || 0;
+        var e = A;
+
+        // Go down rows first
+        // a, d, g, b, e, h, c, f, i
+
+        var x = e[0] * a + e[1] * b + e[2] * c;
+        var y = e[3] * a + e[4] * b + e[5] * c;
+        var z = e[6] * a + e[7] * b + e[8] * c;
+
+        return { x: x, y: y, z: z };
+
+      }
 
       var A0 = A[0], A1 = A[1], A2 = A[2];
       var A3 = A[3], A4 = A[4], A5 = A[5];
@@ -172,6 +195,21 @@
     },
 
     /**
+     * Return the determinant of the matrix.
+     */
+    determinant: function() {
+
+      var te = this.elements;
+
+      var a = te[0], b = te[1], c = te[2],
+          d = te[3], e = te[4], f = te[5],
+          g = te[6], h = te[7], i = te[8];
+
+      return a * e * i - a * f * h - b * d * i + b * f * g + c * d * h - c * e * g;
+
+    },
+
+    /**
      * Set a scalar onto the matrix.
      */
     scale: function(sx, sy) {
@@ -273,7 +311,14 @@
      */
     clone: function() {
 
-      return new Two.Matrix(this.elements.slice(0));
+      var a = this.elements[0],
+          b = this.elements[1],
+          c = this.elements[2],
+          d = this.elements[3],
+          e = this.elements[4],
+          f = this.elements[5];
+
+      return new Two.Matrix(a, b, c, d, e, f);
 
     }
 
