@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <style>
+
+      * {
+        margin: 0;
+        padding: 0;
+      }
+
+    </style>
+  </head>
+  <body>
+    <div class="scripts">
+      <!-- Third Party -->
+      <script src="../third-party/underscore.js"></script>
+      <script src="../third-party/events.js"></script>
+      <script src="../third-party/requestAnimationFrame.js"></script>
+      <script src="../third-party/tessellation.js"></script>
+      <!-- First Party -->
+      <script src="../src/two.js"></script>
+      <script src="../src/vector.js"></script>
+      <script src="../src/matrix.js"></script>
+      <script src="../src/renderer/svg.js"></script>
+      <script src="../src/renderer/canvas.js"></script>
+      <script src="../src/renderer/webgl.js"></script>
+      <script src="../src/shape.js"></script>
+      <script src="../src/group.js"></script>
+      <script src="../src/polygon.js"></script>
+      <script src="../third-party/stats.js"></script>
+      <script>
+
+        var stats = new Stats();
+        _.extend(stats.domElement.style, {
+          position: 'absolute',
+          top: 0,
+          left: 0
+        });
+        document.body.appendChild(stats.domElement);
+
+        var two = new Two({
+          fullscreen: true,
+          type: Two.Types.webgl,
+          motionblur: true
+        }).appendTo(document.body);
+
+        var speed = 0.02;
+
+        var rect1 = two.makeRectangle(50, 50, 100, 100);
+        rect1.fill = 'sandybrown';
+        rect1.translation.set(two.width / 2, two.height / 2);
+
+        var rect2 = two.makeRectangle(50, 50, 100, 100);
+        rect2.fill = 'brown';
+        rect2.translation.set(two.width / 2, two.height / 4);
+
+        var rect3 = two.makeRectangle(50, 50, 100, 100);
+        rect3.fill = 'brown';
+        rect3.translation.set(two.width / 2, two.height / 4 * 3);
+
+        var circle = two.makeCircle(50, 50, 100);
+        circle.fill = 'skyblue';
+        circle.translation.set(two.width / 2, two.height / 2);
+
+        var poly = two.makeCurve(_.map(_.range(32), function(i) {
+          var theta = (i / 32) * Math.PI * 2;
+          var rand = Math.random();
+          var x = (50 + rand * 50) * Math.cos(theta);
+          var y = (50 + rand * 50) * Math.sin(theta);
+          return new Two.Vector(x, y);
+        }));
+        poly.fill = 'violet';
+        poly.translation.set(two.width * 0.75, two.height / 2);
+        poly.linewidth = 4;
+
+        two.bind('update', function(frames) {
+          stats.update();
+          //rect1.rotation += 1 / 50;
+          rect1.translation.set(
+              Math.cos(frames*speed)*100 + two.width / 3,
+              Math.sin(frames*speed)*100 + two.width / 3
+            );
+          circle.translation.y = Math.cos(frames/10)*200 + two.width / 3;
+          poly.rotation = frames*speed/2;
+          rect2.scale = Math.cos(frames*speed/2);
+          rect3.translation.x = Math.cos(frames*speed*4)*200 + two.width / 3;
+          }
+        );
+
+        _.defer(function() {
+          two.play();
+        });
+
+      </script>
+    </div>
+  </body>
+</html>

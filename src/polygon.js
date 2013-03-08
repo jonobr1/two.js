@@ -45,7 +45,7 @@
       }
 
       this.trigger(Two.Events.change,
-        this.id, 'vertices', renderedVertices, this.closed, this.curved);
+        this.id, 'vertices', renderedVertices, closed, curved);
 
     }, this), 0);
 
@@ -128,6 +128,21 @@
       clone.scale = this.scale;
 
       return clone;
+
+    },
+
+    /**
+     * Remove self from the scene / parent.
+     */
+    remove: function() {
+
+      if (!this.parent) {
+        return this;
+      }
+
+      this.parent.remove(this);
+
+      return this;
 
     },
 

@@ -4,7 +4,7 @@
  * agnostic enabling the same api for rendering in multiple contexts: webgl, 
  * canvas2d, and svg.
  *
- * Copyright (c) 2012 - 2013 jonobr1
+ * Copyright (c) 2012 - 2013 jonobr1 / http://jonobr1.com
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -1631,6 +1631,9 @@ var Backbone = Backbone || {};
    * The neighbor across to given point.
    */
   tessellation.Triangle.prototype.NeighborAcross = function(p) {
+    if (!p) {
+      return this.neighbors[2]; // @jonobr1 hack.
+    }
     if (p.equals(this.points[0])) {
       return this.neighbors[0];
     } else if (p.equals(this.points[1])) {
@@ -2034,6 +2037,7 @@ var Backbone = Backbone || {};
     middle.next = tail;
     middle.prev = head;
     tail.prev = middle;
+
   };
 
   tessellation.SweepContext.prototype.RemoveNode = function(node) {
@@ -2191,7 +2195,7 @@ var Backbone = Backbone || {};
         tessellation.sweep.FlipEdgeEvent(tcx, ep, eq, triangle, point);
       }
     } else {
-      alert('Invalid tessellation.sweep.EdgeEvent call!');
+      // alert('Invalid tessellation.sweep.EdgeEvent call!');
     }
   };
 
@@ -2928,7 +2932,8 @@ var Backbone = Backbone || {};
     },
 
     Properties: {
-      hierarchy: 'hierarchy'
+      hierarchy: 'hierarchy',
+      demotion: 'demotion'
     },
 
     Events: {
@@ -2964,6 +2969,114 @@ var Backbone = Backbone || {};
           angle: 0,
           epsilon: 0.01
         }
+
+      },
+
+      /**
+       * Given an array of points. Go through the points as line-segments,
+       * check for intersections, if one is found separate the points in
+       * question into separate shapes and return a new array of array of points
+       * representing the new subdivision.
+       */
+      decoupleShapes: function(points, closed, depth) {
+
+        var depth = depth || 0, l = points.length;
+
+        if (l <= 3 || depth > Two.Utils.Curve.RecursionLimit) {
+          return [points];
+        }
+
+        for (var i = 0, l = points.length; i < l; i++) {
+
+          if (!closed && i >= l - 1) {
+            continue;
+          }
+
+          var ii = mod(i + 1, l);
+          var a = points[i];
+          var b = points[ii];
+
+          for (var k = 0, j = mod(i + 1, l); k < l; k++) {
+
+            var jj = mod(j + 1, l);
+            var c = points[j];
+            var d = points[jj];
+
+            if (j == i || j == ii || jj == i || jj == ii) {
+              j = mod(j + 1, l);
+              continue;
+            }
+
+            var intersection = solveSegmentIntersection(a, b, c, d);
+
+            if (intersection) {
+
+              var s1, s2, f1 = [intersection], f2 = [intersection.clone()];
+              s1 = points.slice(0, ii).concat(f1);
+              s2 = points.slice(ii, j + 1).concat(f2);
+
+              if (jj > ii) {
+                s1 = s1.concat(points.slice(jj, l));
+              } else if (jj > 0) {
+                s2 = s2.concat(points.slice(jj, l));
+              }
+
+              return [
+                decoupleShapes(s1, closed, depth + 1),
+                decoupleShapes(s2, closed, depth + 1)
+              ];
+
+            }
+
+            j = mod(j + 1, l);
+
+          }
+
+        }
+
+        return [points];
+
+      },
+
+      /**
+       * a   d
+       *  \ /
+       *  / \
+       * c   b
+       * where a is (x1, y1), b is (x2, y2), c is (x3, y3), and d is (x4, y4)
+       * Solves for an intersection, returns null if none found, otherwise
+       * returns Two.Vector.
+       * http://www.kevlindev.com/gui/math/intersection/Intersection.js
+       */
+      solveSegmentIntersection: function(a1, a2, b1, b2) {
+
+        var result;
+
+        var ua_t = (b2.x - b1.x) * (a1.y - b1.y) - (b2.y - b1.y) * (a1.x - b1.x);
+        var ub_t = (a2.x - a1.x) * (a1.y - b1.y) - (a2.y - a1.y) * (a1.x - b1.x);
+        var u_b  = (b2.y - b1.y) * (a2.x - a1.x) - (b2.x - b1.x) * (a2.y - a1.y);
+
+        if ( u_b != 0 ) {
+            var ua = ua_t / u_b;
+            var ub = ub_t / u_b;
+
+            if ( 0 <= ua && ua <= 1 && 0 <= ub && ub <= 1 ) {
+              return new Two.Vector(
+                a1.x + ua * (a2.x - a1.x),
+                a1.y + ua * (a2.y - a1.y)
+              );
+            } else {
+              result = null;
+            }
+        } else {
+            if ( ua_t == 0 || ub_t == 0 ) {
+                result = null;//new Intersection("Coincident");
+            } else {
+                result = null;
+            }
+        }
+
+        return result;
 
       },
 
@@ -3269,6 +3382,8 @@ var Backbone = Backbone || {};
     angleBetween = Two.Utils.angleBetween,
     getControlPoints = Two.Utils.getControlPoints,
     getCurveFromPoints = Two.Utils.getCurveFromPoints,
+    solveSegmentIntersection = Two.Utils.solveSegmentIntersection,
+    decoupleShapes = Two.Utils.decoupleShapes,
     mod = Two.Utils.mod;
 
   _.extend(Two.prototype, Backbone.Events, {
@@ -3536,6 +3651,486 @@ var Backbone = Backbone || {};
 })();
 (function() {
 
+  var Vector = Two.Vector = function(x, y) {
+
+    var x = x || 0;
+    var y = y || 0;
+
+    Object.defineProperty(this, 'x', {
+      get: function() {
+        return x;
+      },
+      set: function(v) {
+        x = v;
+        this.trigger('change', 'x');
+      }
+    });
+
+    Object.defineProperty(this, 'y', {
+      get: function() {
+        return y;
+      },
+      set: function(v) {
+        y = v;
+        this.trigger('change', 'y');
+      }
+    });
+
+  };
+
+  _.extend(Vector, {
+
+  });
+
+  _.extend(Vector.prototype, Backbone.Events, {
+
+    set: function(x, y) {
+      this.x = x;
+      this.y = y;
+      return this;
+    },
+
+    copy: function(v) {
+      this.x = v.x;
+      this.y = v.y;
+      return this;
+    },
+
+    clear: function() {
+      this.x = 0;
+      this.y = 0;
+      return this;
+    },
+
+    clone: function() {
+      return new Vector(this.x, this.y);
+    },
+
+    add: function(v1, v2) {
+      this.x = v1.x + v2.x;
+      this.y = v1.y + v2.y;
+      return this;
+    },
+
+    addSelf: function(v) {
+      this.x += v.x;
+      this.y += v.y;
+      return this;
+    },
+
+    sub: function(v1, v2) {
+      this.x = v1.x - v2.x;
+      this.y = v1.y - v2.y;
+      return this;
+    },
+
+    subSelf: function(v) {
+      this.x -= v.x;
+      this.y -= v.y;
+      return this;
+    },
+
+    multiplySelf: function(v) {
+      this.x *= v.x;
+      this.y *= v.y;
+      return this;
+    },
+
+    multiplyScalar: function(s) {
+      this.x *= s;
+      this.y *= s;
+      return this;
+    },
+
+    divideScalar: function(s) {
+      if (s) {
+        this.x /= s;
+        this.y /= s;
+      } else {
+        this.set(0, 0);
+      }
+      return this;
+    },
+
+    negate: function() {
+      return this.multiplyScalar(-1);
+    },
+
+    dot: function(v) {
+      return this.x * v.x + this.y * v.y;
+    },
+
+    lengthSquared: function() {
+      return this.x * this.x + this.y * this.y;
+    },
+
+    length: function() {
+      return Math.sqrt(this.lengthSquared());
+    },
+
+    normalize: function() {
+      return this.divideScalar(this.length());
+    },
+
+    distanceTo: function(v) {
+      return Math.sqrt(this.distanceToSquared(v));
+    },
+
+    distanceToSquared: function(v) {
+      var dx = this.x - v.x, dy = this.y - v.y;
+      return dx * dx + dy * dy;
+    },
+
+    setLength: function(l) {
+      return this.normalize().multiplyScalar(l);
+    },
+
+    equals: function(v) {
+      return (this.distanceTo(v) < 0.0001 /* almost same position */);
+    },
+
+    lerp: function(v, t) {
+      var x = (v.x - this.x) * t + this.x;
+      var y = (v.y - this.y) * t + this.y;
+      return this.set(x, y);
+    },
+
+    isZero: function() {
+      return (this.length() < 0.0001 /* almost zero */ );
+    }
+
+  });
+
+})();
+(function() {
+
+  /**
+   * Constants
+   */
+  var range = _.range(6),
+    cos = Math.cos, sin = Math.sin, tan = Math.tan;
+
+  /**
+   * Two.Matrix contains an array of elements that represent
+   * the two dimensional 3 x 3 matrix as illustrated below:
+   *
+   * =====
+   * a b c
+   * d e f
+   * g h i  // this row is not really used in 2d transformations
+   * =====
+   *
+   * String order is for transform strings: a, d, b, e, c, f
+   *
+   * @class
+   */
+  var Matrix = Two.Matrix = function(a, b, c, d, e, f) {
+
+    this.elements = new Two.Array(9);
+
+    var elements = a;
+    if (!_.isArray(elements)) {
+      elements = _.toArray(arguments);
+    }
+
+    // initialize the elements with default values.
+
+    this.identity().set(elements);
+
+  };
+
+  _.extend(Matrix, {
+
+    Identity: [
+      1, 0, 0,
+      0, 1, 0,
+      0, 0, 1
+    ],
+
+    Determinant: function(a, b, c, d, e, f, g, h, i) {
+
+      return a * e * i - a * f * h - b * d * i + b * f * g + c * d * h - c * e * g;
+
+    },
+
+    /**
+     * Multiply two matrix 3x3 arrays
+     */
+    Multiply: function(A, B) {
+
+      if (B.length <= 3) { // Multiply Vector
+
+        var x, y, z;
+        var a = B[0] || 0, b = B[1] || 0, c = B[2] || 0;
+        var e = A;
+
+        // Go down rows first
+        // a, d, g, b, e, h, c, f, i
+
+        var x = e[0] * a + e[1] * b + e[2] * c;
+        var y = e[3] * a + e[4] * b + e[5] * c;
+        var z = e[6] * a + e[7] * b + e[8] * c;
+
+        return { x: x, y: y, z: z };
+
+      }
+
+      var A0 = A[0], A1 = A[1], A2 = A[2];
+      var A3 = A[3], A4 = A[4], A5 = A[5];
+      var A6 = A[6], A7 = A[7], A8 = A[8];
+
+      var B0 = B[0], B1 = B[1], B2 = B[2];
+      var B3 = B[3], B4 = B[4], B5 = B[5];
+      var B6 = B[6], B7 = B[7], B8 = B[8];
+
+      return [
+        A0 * B0 + A1 * B3 + A2 * B6,
+        A0 * B1 + A1 * B4 + A2 * B7,
+        A0 * B2 + A1 * B5 + A2 * B8,
+        A3 * B0 + A4 * B3 + A5 * B6,
+        A3 * B1 + A4 * B4 + A5 * B7,
+        A3 * B2 + A4 * B5 + A5 * B8,
+        A6 * B0 + A7 * B3 + A8 * B6,
+        A6 * B1 + A7 * B4 + A8 * B7,
+        A6 * B2 + A7 * B5 + A8 * B8
+      ];
+    }
+
+  });
+
+  _.extend(Matrix.prototype, {
+
+    /**
+     * Takes an array of elements or the arguments list itself to
+     * set and update the current matrix's elements. Only updates
+     * specified values.
+     */
+    set: function(a, b, c, d, e, f) {
+
+      var elements = a, l = arguments.length;
+      if (!_.isArray(elements)) {
+        elements = _.toArray(arguments);
+      }
+
+      _.each(elements, function(v, i) {
+        if (_.isNumber(v)) {
+          this.elements[i] = v;
+        }
+      }, this);
+
+      return this;
+
+    },
+
+    /**
+     * Turn matrix to identity, like resetting.
+     */
+    identity: function() {
+
+      this.set(Matrix.Identity);
+
+      return this;
+
+    },
+
+    /**
+     * Multiply scalar or multiply by another matrix.
+     */
+    multiply: function(a, b, c, d, e, f, g, h, i) {
+
+      var elements = arguments, l = elements.length;
+
+      // Multiply scalar
+
+      if (l <= 1) {
+
+        _.each(this.elements, function(v, i) {
+          this.elements[i] = v * a;
+        }, this);
+
+        return this;
+
+      }
+
+      if (l <= 3) { // Multiply Vector
+
+        var x, y, z;
+        var a = a || 0, b = b || 0, c = c || 0;
+        var e = this.elements;
+
+        // Go down rows first
+        // a, d, g, b, e, h, c, f, i
+
+        var x = e[0] * a + e[1] * b + e[2] * c;
+        var y = e[3] * a + e[4] * b + e[5] * c;
+        var z = e[6] * a + e[7] * b + e[8] * c;
+
+        return { x: x, y: y, z: z };
+
+      }
+
+      // Multiple matrix
+
+      var A = this.elements;
+      var B = elements;
+
+      A0 = A[0], A1 = A[1], A2 = A[2];
+      A3 = A[3], A4 = A[4], A5 = A[5];
+      A6 = A[6], A7 = A[7], A8 = A[8];
+
+      B0 = B[0], B1 = B[1], B2 = B[2];
+      B3 = B[3], B4 = B[4], B5 = B[5];
+      B6 = B[6], B7 = B[7], B8 = B[8];
+
+      this.elements[0] = A0 * B0 + A1 * B3 + A2 * B6;
+      this.elements[1] = A0 * B1 + A1 * B4 + A2 * B7;
+      this.elements[2] = A0 * B2 + A1 * B5 + A2 * B8;
+
+      this.elements[3] = A3 * B0 + A4 * B3 + A5 * B6;
+      this.elements[4] = A3 * B1 + A4 * B4 + A5 * B7;
+      this.elements[5] = A3 * B2 + A4 * B5 + A5 * B8;
+
+      this.elements[6] = A6 * B0 + A7 * B3 + A8 * B6;
+      this.elements[7] = A6 * B1 + A7 * B4 + A8 * B7;
+      this.elements[8] = A6 * B2 + A7 * B5 + A8 * B8;
+
+      return this;
+
+    },
+
+    /**
+     * Return the determinant of the matrix.
+     */
+    determinant: function() {
+
+      var te = this.elements;
+
+      var a = te[0], b = te[1], c = te[2],
+          d = te[3], e = te[4], f = te[5],
+          g = te[6], h = te[7], i = te[8];
+
+      return a * e * i - a * f * h - b * d * i + b * f * g + c * d * h - c * e * g;
+
+    },
+
+    /**
+     * Set a scalar onto the matrix.
+     */
+    scale: function(sx, sy) {
+
+      var l = arguments.length;
+      if (l <= 1) {
+        sy = sx;
+      }
+
+      return this.multiply(sx, 0, 0, 0, sy, 0, 0, 0, 1);
+
+    },
+
+    /**
+     * Rotate the matrix.
+     */
+    rotate: function(radians) {
+
+      var c = cos(radians);
+      var s = sin(radians);
+
+      return this.multiply(c, -s, 0, s, c, 0, 0, 0, 1);
+
+    },
+
+    /**
+     * Translate the matrix.
+     */
+    translate: function(x, y) {
+
+      return this.multiply(1, 0, x, 0, 1, y, 0, 0, 1);
+
+    },
+
+    /*
+     * Skew the matrix by an angle in the x axis direction.
+     */
+    skewX: function(radians) {
+
+      var a = tan(radians);
+
+      return this.multiply(1, a, 0, 0, 1, 0, 0, 0, 1);
+
+    },
+
+    /*
+     * Skew the matrix by an angle in the y axis direction.
+     */
+    skewY: function(radians) {
+
+      var a = tan(radians);
+
+      return this.multiply(1, 0, 0, a, 1, 0, 0, 0, 1);
+
+    },
+
+    /**
+     * Create a transform string to be used with rendering apis.
+     */
+    toString: function() {
+
+      return this.toArray().join(' ');
+
+    },
+
+    /**
+     * Create a transform array to be used with rendering apis.
+     */
+    toArray: function(fullMatrix) {
+
+      var elements = this.elements;
+
+      var a = parseFloat(elements[0].toFixed(3));
+      var b = parseFloat(elements[1].toFixed(3));
+      var c = parseFloat(elements[2].toFixed(3));
+      var d = parseFloat(elements[3].toFixed(3));
+      var e = parseFloat(elements[4].toFixed(3));
+      var f = parseFloat(elements[5].toFixed(3));
+
+      if (!!fullMatrix) {
+
+        var g = parseFloat(elements[6].toFixed(3));
+        var h = parseFloat(elements[7].toFixed(3));
+        var i = parseFloat(elements[8].toFixed(3));
+
+        return [
+          a, d, g, b, e, h, c, f, i
+        ];
+      }
+
+      return [
+        a, d, b, e, c, f  // Specific format see LN:19
+      ];
+
+    },
+
+    /**
+     * Clone the current matrix.
+     */
+    clone: function() {
+
+      var a = this.elements[0],
+          b = this.elements[1],
+          c = this.elements[2],
+          d = this.elements[3],
+          e = this.elements[4],
+          f = this.elements[5];
+
+      return new Two.Matrix(a, b, c, d, e, f);
+
+    }
+
+  });
+
+})();
+(function() {
+
   /**
    * Scope specific variables
    */
@@ -3799,6 +4394,11 @@ var Backbone = Backbone || {};
               elem.appendChild(elements[j]);
             });
             break;
+          case Two.Properties.demotion:
+            _.each(value, function(j) {
+              elem.removeChild(elements[j]);
+            });
+            break;
           default:
             setStyles(elem, property, value, closed, curved);
         }
@@ -3956,6 +4556,14 @@ var Backbone = Backbone || {};
 
       this.children[id] = elem;
       elem.parent = this;
+
+      return this;
+
+    },
+
+    removeChild: function(elem) {
+
+      delete this.children[elem.id];
 
       return this;
 
@@ -4259,7 +4867,7 @@ var Backbone = Backbone || {};
 
     },
 
-    update: function(id, property, value) {
+    update: function(id, property, value, closed, curved) {
 
       var proto = Object.getPrototypeOf(this);
       var constructor = proto.constructor;
@@ -4273,8 +4881,13 @@ var Backbone = Backbone || {};
             elem.appendChild(elements[j]);
           });
           break;
+        case Two.Properties.demotion:
+          _.each(value, function(j) {
+            elem.removeChild(elements[j]);
+            this.elements[j] = null;
+          }, this);
         default:
-          constructor.setStyles.call(this, elem, property, value);
+          constructor.setStyles.call(this, elem, property, value, closed, curved);
       }
 
       return this;
@@ -4361,7 +4974,7 @@ var Backbone = Backbone || {};
 
   }
 
-  function setStyles(elem, property, value) {
+  function setStyles(elem, property, value, closed, curved) {
 
     switch (property) {
 
@@ -4371,6 +4984,8 @@ var Backbone = Backbone || {};
         break;
       case 'vertices':
         property = 'commands';
+        elem.curved = curved;
+        elem.closed = closed;
         value = canvas.toArray(value, elem.curved, elem.closed);
         break;
 
@@ -4392,7 +5007,13 @@ var Backbone = Backbone || {};
   // Localize variables
   var CanvasRenderer = Two[Two.Types.canvas],
     getCurveFromPoints = Two.Utils.getCurveFromPoints,
-    mod = Two.Utils.mod;
+    mod = Two.Utils.mod,
+    multiplyMatrix = Two.Matrix.Multiply,
+    matrixDeterminant = Two.Matrix.Determinant,
+    decoupleShapes = Two.Utils.decoupleShapes,
+    subdivide = Two.Utils.subdivide,
+    abs = Math.abs,
+    sqrt = Math.sqrt;
 
   /**
    * CSS Color interpretation from
@@ -4425,8 +5046,9 @@ var Backbone = Backbone || {};
   var rgb_rgba_percentage_regex = new RegExp([
     '^rgb(a?)\\(', css_percentage, ',', css_percentage, ',', css_percentage, '(,', css_number, ')?\\)$'
   ].join(css_whitespace) );
+  var remove_comma_regex = /^,\s*/;
 
-  var hslToRgb = function(h, s, l) {
+  var hslToRgb = function(h, s, l, a) {
 
     var r, g, b;
 
@@ -4447,10 +5069,13 @@ var Backbone = Backbone || {};
       var p = 2 * l - q;
     }
 
+    var alpha = _.isUndefined(a) || _.isNull(a) ? 1.0 : a.replace(remove_comma_regex, '');
+
     return {
       r: hue2rgb(p, q, h + 1 / 3),
       g: hue2rgb(p, q, h),
-      b: hue2rgb(p, q, h - 1 / 3)
+      b: hue2rgb(p, q, h - 1 / 3),
+      a: alpha
     };
   }
 
@@ -4468,16 +5093,20 @@ var Backbone = Backbone || {};
       return match(rgb_rgba_percentage_regex, 100);
 
       function match(regex, max_value) {
+
         var colorGroups = css.match(regex);
 
         if (!colorGroups || (!!colorGroups[1] + !!colorGroups[5] === 1)) {
           return;
         }
 
+        var alpha = _.isUndefined(colorGroups[5]) ? 1.0 : colorGroups[5].replace(remove_comma_regex, '');
+
         return {
           r: Math.min(1, Math.max(0, colorGroups[2] / max_value)),
           g: Math.min(1, Math.max(0, colorGroups[3] / max_value)),
-          b: Math.min(1, Math.max(0, colorGroups[4] / max_value))
+          b: Math.min(1, Math.max(0, colorGroups[4] / max_value)),
+          a: Math.min(1, Math.max(alpha, 0))
         };
 
       }
@@ -4502,7 +5131,8 @@ var Backbone = Backbone || {};
       return {
         r: parseInt(css.slice(0, bytes), 16) / max,
         g: parseInt(css.slice(bytes * 1,bytes * 2), 16) / max,
-        b: parseInt(css.slice(bytes * 2), 16) / max
+        b: parseInt(css.slice(bytes * 2), 16) / max,
+        a: 1.0
       };
 
     },
@@ -4521,7 +5151,7 @@ var Backbone = Backbone || {};
       var s = Math.max(0, Math.min(parseInt(colorGroups[3], 10) / 100, 1));
       var l = Math.max(0, Math.min(parseInt(colorGroups[4], 10) / 100, 1));
 
-      return hslToRgb(h, s, l);
+      return hslToRgb(h, s, l, colorGroups[5]);
 
     }
 
@@ -4535,12 +5165,40 @@ var Backbone = Backbone || {};
 
   _.extend(Group.prototype, CanvasRenderer.Group.prototype, {
 
-    render: function(gl, position, matrix, color, matrices) {
+    appendChild: function() {
+
+      CanvasRenderer.Group.prototype.appendChild.apply(this, arguments);
+
+      this.updateMatrix();
+
+      return this;
+
+    },
+
+    updateMatrix: function(parentMatrix) {
+
+      var matrix = parentMatrix || this.parent && this.parent.matrix;
+
+      if (!matrix) {
+        return this;
+      }
+
+      this._matrix = multiplyMatrix(this.matrix, matrix);
+
+      _.each(this.children, function(child) {
+        child.updateMatrix(this._matrix);
+      }, this);
+
+      return this;
+
+    },
+
+    render: function(gl, position, matrix, color) {
 
       // Apply matrices here somehow...
 
       _.each(this.children, function(child) {
-        child.render(gl, position, matrix, color, matrices);
+        child.render(gl, position, matrix, color);
       });
 
     }
@@ -4555,7 +5213,24 @@ var Backbone = Backbone || {};
 
   _.extend(Element.prototype, CanvasRenderer.Element.prototype, {
 
-    render: function(gl, position, matrix, color, matrices) {
+    updateMatrix: function(parentMatrix) {
+
+      var matrix = parentMatrix || this.parent && this.parent.matrix
+
+      if (!matrix) {
+        return this;
+      }
+
+      this._matrix = multiplyMatrix(this.matrix, matrix);
+
+      // Also update linewidth
+      this._linewidth = this.linewidth * getScale(this._matrix);
+
+      return this;
+
+    },
+
+    render: function(gl, position, matrix, color) {
 
       if (!this.visible || !this.fillBuffer || !this.strokeBuffer) {
         return this;
@@ -4563,26 +5238,31 @@ var Backbone = Backbone || {};
 
       // Fill
 
-      gl.bindBuffer(gl.ARRAY_BUFFER, this.fillBuffer);
+      if (this.fill.a > 0) {
 
-      gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.fillBuffer);
 
-      gl.uniformMatrix3fv(matrix, false, this.matrix);
-      gl.uniform4f(color, this.fill.r, this.fill.g, this.fill.b, this.opacity);
-      gl.drawArrays(gl.TRIANGLES, 0, this.triangleAmount);
+        gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
+
+        gl.uniformMatrix3fv(matrix, false, this._matrix);
+        gl.uniform4f(color, this.fill.r, this.fill.g, this.fill.b, this.fill.a);// * this.opacity);
+        gl.drawArrays(gl.TRIANGLES, 0, this.triangleAmount);
+
+      }
 
       // Stroke
 
-      if (this.linewidth <= 0) {
+      if (this._linewidth <= 0 || this.stroke.a <= 0) {
         return this;
       }
 
       gl.bindBuffer(gl.ARRAY_BUFFER, this.strokeBuffer);
 
       gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
-      gl.uniformMatrix3fv(matrix, false, this.matrix);
-      gl.uniform4f(color, this.stroke.r, this.stroke.g, this.stroke.b, this.opacity);
-      gl.lineWidth(this.linewidth);
+      gl.uniformMatrix3fv(matrix, false, this._matrix);
+      gl.uniform4f(color, this.stroke.r, this.stroke.g, this.stroke.b, this.stroke.a);// * this.opacity);
+      // console.log(this._linewidth);
+      gl.lineWidth(this._linewidth);
       gl.drawArrays(gl.LINES, 0, this.vertexAmount);
 
       return this;
@@ -4637,10 +5317,10 @@ var Backbone = Backbone || {};
       }
 
       /**
-       * Default to black if can't find a color.
+       * Default to invisible black if can't find a color.
        */
       return {
-        r: 0, g: 0, b: 0 
+        r: 0, g: 0, b: 0, a: 0
       };
 
     },
@@ -4650,10 +5330,10 @@ var Backbone = Backbone || {};
      * of vertices that express the hull of a given shape accurately for the
      * webgl renderer.
      */
-    toArray: function(points, curved, closed) {
+    toArray: function(points, closed, curved) {
 
       if (!curved) {
-        return points;
+        return points.slice(0);
       }
 
       // If curved, then subdivide the path and update the points.
@@ -4667,7 +5347,7 @@ var Backbone = Backbone || {};
 
         if (closed || !closed && i < last) {
           var q = curve[(i + 1) % length];
-          var subdivision = Two.Utils.subdivide(
+          var subdivision = subdivide(
             p.x, p.y, p.v.x, p.v.y, q.u.x, q.u.y, q.x, q.y);
           divided = divided.concat(subdivision);
         }
@@ -4683,45 +5363,49 @@ var Backbone = Backbone || {};
      * triangles and array of outline verts ready to be fed to the webgl
      * renderer.
      */
-    tessellate: function(points, curved, closed, reuseTriangles, reuseVertices) {
+    tessellate: function(points, closed, curved, reuseTriangles, reuseVertices) {
 
-      // Tesselate the points.
+      var shapes = flatten(decoupleShapes(points, closed));
+      var triangles = [], vertices = [], triangleAmount = 0, vertexAmount = 0;
 
-      var triangulation = new tessellation.SweepContext(points);
-      tessellation.sweep.Triangulate(triangulation);
+      _.each(shapes, function(coords, i) {
 
-      // Return the triangles array.
-      var triangles = reuseTriangles || new Two.Array(triangulation.triangles.length * 3 * 2);
-      _.each(triangulation.triangles, function(tri, i) {
+        // Tessellate the current set of points.
 
-        var points = tri.points;
-        var a = points[0];
-        var b = points[1];
-        var c = points[2];
-        var index = i * 6;
+        var triangulation = new tessellation.SweepContext(coords);
+        tessellation.sweep.Triangulate(triangulation, true);
 
-        triangles[index + 0] = a.x;
-        triangles[index + 1] = a.y;
-        triangles[index + 2] = b.x;
-        triangles[index + 3] = b.y;
-        triangles[index + 4] = c.x;
-        triangles[index + 5] = c.y;
+        triangleAmount += triangulation.triangles.length * 3 * 2;
+        _.each(triangulation.triangles, function(tri, i) {
+
+          var points = tri.points;
+          var a = points[0];
+          var b = points[1];
+          var c = points[2];
+
+          triangles.push(a.x, a.y, b.x, b.y, c.x, c.y);
+
+        });
+
+        vertexAmount += triangulation.edges.length * 4;
+        _.each(triangulation.edges, function(edge, i) {
+          var p = edge.p, q = edge.q;
+          vertices.push(p.x, p.y, q.x, q.y);
+        });
 
       });
 
-      var vertices = reuseVertices || new Two.Array(triangulation.edges.length * 4);
-      _.each(triangulation.edges, function(edge, i) {
-        var p = edge.p, q = edge.q;
-        var index = i * 4;
-        vertices[index] = p.x;
-        vertices[index + 1] = p.y;
-        vertices[index + 2] = q.x;
-        vertices[index + 3] = q.y;
-      });
+      var triangles_32 = (!!reuseTriangles && triangleAmount <= reuseTriangles.length) ? reuseTriangles : new Two.Array(triangleAmount);
+      var vertices_32 = (!!reuseVertices && vertexAmount <= reuseVertices.length) ? reuseVertices : new Two.Array(vertexAmount);
+
+      triangles_32.set(triangles);
+      vertices_32.set(vertices);
 
       return {
-        triangles: triangles,
-        vertices: vertices
+        triangles: triangles_32,
+        vertices: vertices_32,
+        triangleAmount: triangleAmount / 2,
+        vertexAmount: vertexAmount / 2
       };
 
     },
@@ -4807,7 +5491,7 @@ var Backbone = Backbone || {};
    * Webgl Renderer inherits from the Canvas 2d Renderer
    * with additional modifications.
    */
-  var Renderer = Two[Two.Types.webgl] = function() {
+  var Renderer = Two[Two.Types.webgl] = function(options) {
 
     this.domElement = document.createElement('canvas');
 
@@ -4818,10 +5502,13 @@ var Backbone = Backbone || {};
 
     // http://games.greggman.com/game/webgl-and-alpha/
     // http://www.khronos.org/registry/webgl/specs/latest/#5.2
-    var params = {
-      antialias: true,
-      premultipliedAlpha: false
-    };
+    var params = _.defaults(options || {}, {
+      antialias: false,
+      alpha: true,
+      premultipliedAlpha: true,
+      stencil: true,
+      preserveDrawingBuffer: false
+    });
 
     this.ctx = this.domElement.getContext('webgl', params)
       || this.domElement.getContext('experimental-webgl', params);
@@ -4845,6 +5532,14 @@ var Backbone = Backbone || {};
     this.positionLocation = this.ctx.getAttribLocation(this.program, 'position');
     this.colorLocation = this.ctx.getUniformLocation(this.program, 'color');
     this.matrixLocation = this.ctx.getUniformLocation(this.program, 'matrix');
+
+    // Copied from Three.js WebGLRenderer
+    this.ctx.disable(this.ctx.DEPTH_TEST);
+
+    // Setup some initial statements of the gl context
+    this.ctx.enable(this.ctx.BLEND);
+    this.ctx.blendEquationSeparate(this.ctx.FUNC_ADD, this.ctx.FUNC_ADD);
+    this.ctx.blendFuncSeparate(this.ctx.SRC_ALPHA, this.ctx.ONE_MINUS_SRC_ALPHA, this.ctx.ONE, this.ctx.ONE_MINUS_SRC_ALPHA );
 
   };
 
@@ -4887,8 +5582,6 @@ var Backbone = Backbone || {};
       var gl = this.ctx,
         program = this.program;
 
-      gl.clear(gl.COLOR_BUFFER_BIT);
-
       this.stage.render(gl, this.positionLocation, this.matrixLocation, this.colorLocation);
 
       return this;
@@ -4918,7 +5611,7 @@ var Backbone = Backbone || {};
       styles.id = id;
     }
     if (_.isObject(matrix)) {
-      styles.matrix = matrix.toArray(true);
+      styles.matrix = styles._matrix = matrix.toArray(true);
     }
     if (stroke) {
       styles.stroke = webgl.interpret(stroke); // Interpret color
@@ -4940,16 +5633,17 @@ var Backbone = Backbone || {};
     }
     if (linewidth) {
       styles.linewidth = linewidth;
+      styles._linewidth = linewidth * getScale(styles._matrix);
     }
     if (vertices) {
 
-      var vertices = webgl.toArray(vertices, curved, closed);
-      var t = webgl.tessellate(vertices, curved, closed);
+      var vertices = webgl.toArray(vertices, closed, curved);
+      var t = webgl.tessellate(vertices, closed, curved);
 
       styles.triangles = t.triangles;
       styles.vertices = t.vertices;
-      styles.vertexAmount = styles.vertices.length / 2;
-      styles.triangleAmount = styles.triangles.length / 2;
+      styles.vertexAmount = t.vertexAmount;
+      styles.triangleAmount = t.triangleAmount;
 
     }
     styles.visible = !!visible;
@@ -4960,13 +5654,17 @@ var Backbone = Backbone || {};
 
   }
 
-  function setStyles(elem, property, value) {
+  function setStyles(elem, property, value, closed, curved) {
 
     switch (property) {
 
       case 'matrix':
         property = 'matrix';
         value = value.toArray(true);
+        break;
+      case 'linewidth':
+        property = 'linewidth';
+        elem._linewidth = value * getScale(elem._matrix);
         break;
       case 'stroke':
         // interpret color
@@ -4978,435 +5676,70 @@ var Backbone = Backbone || {};
         break;
       case 'vertices':
         property = 'triangles';
-        var vertices = webgl.toArray(value, elem.curved, elem.closed);
-        var t = webgl.tessellate(vertices, elem.curved, elem.closed, elem.triangles, elem.vertices);
+        elem.closed = closed;
+        elem.curved = curved;
+
+        var vertices = webgl.toArray(value, closed, curved);
+        var t = webgl.tessellate(vertices, closed, curved, elem.triangles, elem.vertices);
+
         value = t.triangles;
         elem.vertices = t.vertices;
-        elem.vertexAmount = elem.vertices.length / 2;
+        elem.vertexAmount = t.vertexAmount;
+        elem.triangleAmount = t.triangleAmount;
+
         break;
     }
 
     elem[property] = value;
 
+    // Try moving this to switch statement
     if (property === 'triangles') {
       webgl.updateBuffer(this.ctx, elem, this.positionLocation);
-      elem.triangleAmount = elem.triangles.length / 2;
     }
+    if (property === 'matrix') {
+      elem.updateMatrix();
+    }
+
+  }
+
+  /**
+   * Remove nested arrays and place all arrays as shallow as possible.
+   */
+  function flatten(array) {
+
+    var result = [];
+
+    _.each(array, function(v) {
+
+      if (_.isArray(v) && _.isArray(v[0])) {
+        result = result.concat(flatten(v));
+      } else {
+        result.push(v);
+      }
+
+    });
+
+    return result;
+
+  }
+
+  function getScale(matrix) {
+
+    var a = matrix[0];
+    var b = matrix[1];
+    var c = matrix[2];
+    var d = matrix[3];
+    var e = matrix[4];
+    var f = matrix[5];
+
+    var v = multiplyMatrix([a, b, c, d, e, f, 0, 0, 1], [1, 0, 1]);
+    return sqrt(v.x * v.x + v.y * v.y);
 
   }
 
   function trim(str) {
     return str.replace(/^\s+|\s+$/g, '');
   }
-
-})();
-(function() {
-
-  var Vector = Two.Vector = function(x, y) {
-
-    var x = x || 0;
-    var y = y || 0;
-
-    Object.defineProperty(this, 'x', {
-      get: function() {
-        return x;
-      },
-      set: function(v) {
-        x = v;
-        this.trigger('change', 'x');
-      }
-    });
-
-    Object.defineProperty(this, 'y', {
-      get: function() {
-        return y;
-      },
-      set: function(v) {
-        y = v;
-        this.trigger('change', 'y');
-      }
-    });
-
-  };
-
-  _.extend(Vector, {
-
-  });
-
-  _.extend(Vector.prototype, Backbone.Events, {
-
-    set: function(x, y) {
-      this.x = x;
-      this.y = y;
-      return this;
-    },
-
-    copy: function(v) {
-      this.x = v.x;
-      this.y = v.y;
-      return this;
-    },
-
-    clear: function() {
-      this.x = 0;
-      this.y = 0;
-      return this;
-    },
-
-    clone: function() {
-      return new Vector(this.x, this.y);
-    },
-
-    add: function(v1, v2) {
-      this.x = v1.x + v2.x;
-      this.y = v1.y + v2.y;
-      return this;
-    },
-
-    addSelf: function(v) {
-      this.x += v.x;
-      this.y += v.y;
-      return this;
-    },
-
-    sub: function(v1, v2) {
-      this.x = v1.x - v2.x;
-      this.y = v1.y - v2.y;
-      return this;
-    },
-
-    subSelf: function(v) {
-      this.x -= v.x;
-      this.y -= v.y;
-      return this;
-    },
-
-    multiplySelf: function(v) {
-      this.x *= v.x;
-      this.y *= v.y;
-      return this;
-    },
-
-    multiplyScalar: function(s) {
-      this.x *= s;
-      this.y *= s;
-      return this;
-    },
-
-    divideScalar: function(s) {
-      if (s) {
-        this.x /= s;
-        this.y /= s;
-      } else {
-        this.set(0, 0);
-      }
-      return this;
-    },
-
-    negate: function() {
-      return this.multiplyScalar(-1);
-    },
-
-    dot: function(v) {
-      return this.x * v.x + this.y * v.y;
-    },
-
-    lengthSquared: function() {
-      return this.x * this.x + this.y * this.y;
-    },
-
-    length: function() {
-      return Math.sqrt(this.lengthSquared());
-    },
-
-    normalize: function() {
-      return this.divideScalar(this.length());
-    },
-
-    distanceTo: function(v) {
-      return Math.sqrt(this.distanceToSquared(v));
-    },
-
-    distanceToSquared: function(v) {
-      var dx = this.x - v.x, dy = this.y - v.y;
-      return dx * dx + dy * dy;
-    },
-
-    setLength: function(l) {
-      return this.normalize().multiplyScalar(l);
-    },
-
-    equals: function(v) {
-      return (this.distanceTo(v) < 0.0001 /* almost same position */);
-    },
-
-    lerp: function(v, t) {
-      var x = (v.x - this.x) * t + this.x;
-      var y = (v.y - this.y) * t + this.y;
-      return this.set(x, y);
-    },
-
-    isZero: function() {
-      return (this.length() < 0.0001 /* almost zero */ );
-    }
-
-  });
-
-})();
-(function() {
-
-  /**
-   * Constants
-   */
-  var range = _.range(6),
-    cos = Math.cos, sin = Math.sin, tan = Math.tan;
-
-  /**
-   * Two.Matrix contains an array of elements that represent
-   * the two dimensional 3 x 3 matrix as illustrated below:
-   *
-   * =====
-   * a b c
-   * d e f
-   * g h i  // this row is not really used in 2d transformations
-   * =====
-   *
-   * String order is for transform strings: a, d, b, e, c, f
-   *
-   * @class
-   */
-  var Matrix = Two.Matrix = function(a, b, c, d, e, f) {
-
-    this.elements = new Two.Array(9);
-
-    var elements = a;
-    if (!_.isArray(elements)) {
-      elements = _.toArray(arguments);
-    }
-
-    // initialize the elements with default values.
-
-    this.identity().set(elements);
-
-  };
-
-  _.extend(Matrix, {
-
-    Identity: [
-      1, 0, 0,
-      0, 1, 0,
-      0, 0, 1
-    ]
-
-  });
-
-  _.extend(Matrix.prototype, {
-
-    /**
-     * Takes an array of elements or the arguments list itself to
-     * set and update the current matrix's elements. Only updates
-     * specified values.
-     */
-    set: function(a, b, c, d, e, f) {
-
-      var elements = a, l = arguments.length;
-      if (!_.isArray(elements)) {
-        elements = _.toArray(arguments);
-      }
-
-      _.each(elements, function(v, i) {
-        if (_.isNumber(v)) {
-          this.elements[i] = v;
-        }
-      }, this);
-
-      return this;
-
-    },
-
-    /**
-     * Turn matrix to identity, like resetting.
-     */
-    identity: function() {
-
-      this.set(Matrix.Identity);
-
-      return this;
-
-    },
-
-    /**
-     * Multiply scalar or multiply by another matrix.
-     */
-    multiply: function(a, b, c, d, e, f, g, h, i) {
-
-      var elements = arguments, l = elements.length;
-
-      // Multiply scalar
-
-      if (l <= 1) {
-
-        _.each(this.elements, function(v, i) {
-          this.elements[i] = v * a;
-        }, this);
-
-        return this;
-
-      }
-
-      if (l <= 3) { // Multiply Vector
-
-        var x, y, z;
-        var a = a || 0, b = b || 0, c = c || 0;
-        var e = this.elements;
-
-        // Go down rows first
-        // a, d, g, b, e, h, c, f, i
-
-        var x = e[0] * a + e[1] * b + e[2] * c;
-        var y = e[3] * a + e[4] * b + e[5] * c;
-        var z = e[6] * a + e[7] * b + e[8] * c;
-
-        return { x: x, y: y, z: z };
-
-      }
-
-      // Multiple matrix
-
-      var A = this.elements;
-      var B = elements;
-
-      A0 = A[0], A1 = A[1], A2 = A[2];
-      A3 = A[3], A4 = A[4], A5 = A[5];
-      A6 = A[6], A7 = A[7], A8 = A[8];
-
-      B0 = B[0], B1 = B[1], B2 = B[2];
-      B3 = B[3], B4 = B[4], B5 = B[5];
-      B6 = B[6], B7 = B[7], B8 = B[8];
-
-      this.elements[0] = A0 * B0 + A1 * B3 + A2 * B6;
-      this.elements[1] = A0 * B1 + A1 * B4 + A2 * B7;
-      this.elements[2] = A0 * B2 + A1 * B5 + A2 * B8;
-
-      this.elements[3] = A3 * B0 + A4 * B3 + A5 * B6;
-      this.elements[4] = A3 * B1 + A4 * B4 + A5 * B7;
-      this.elements[5] = A3 * B2 + A4 * B5 + A5 * B8;
-
-      this.elements[6] = A6 * B0 + A7 * B3 + A8 * B6;
-      this.elements[7] = A6 * B1 + A7 * B4 + A8 * B7;
-      this.elements[8] = A6 * B2 + A7 * B5 + A8 * B8;
-
-      return this;
-
-    },
-
-    /**
-     * Set a scalar onto the matrix.
-     */
-    scale: function(sx, sy) {
-
-      var l = arguments.length;
-      if (l <= 1) {
-        sy = sx;
-      }
-
-      return this.multiply(sx, 0, 0, 0, sy, 0, 0, 0, 1);
-
-    },
-
-    /**
-     * Rotate the matrix.
-     */
-    rotate: function(radians) {
-
-      var c = cos(radians);
-      var s = sin(radians);
-
-      return this.multiply(c, -s, 0, s, c, 0, 0, 0, 1);
-
-    },
-
-    /**
-     * Translate the matrix.
-     */
-    translate: function(x, y) {
-
-      return this.multiply(1, 0, x, 0, 1, y, 0, 0, 1);
-
-    },
-
-    /*
-     * Skew the matrix by an angle in the x axis direction.
-     */
-    skewX: function(radians) {
-
-      var a = tan(radians);
-
-      return this.multiply(1, a, 0, 0, 1, 0, 0, 0, 1);
-
-    },
-
-    /*
-     * Skew the matrix by an angle in the y axis direction.
-     */
-    skewY: function(radians) {
-
-      var a = tan(radians);
-
-      return this.multiply(1, 0, 0, a, 1, 0, 0, 0, 1);
-
-    },
-
-    /**
-     * Create a transform string to be used with rendering apis.
-     */
-    toString: function() {
-
-      return this.toArray().join(' ');
-
-    },
-
-    /**
-     * Create a transform array to be used with rendering apis.
-     */
-    toArray: function(fullMatrix) {
-
-      var elements = this.elements;
-
-      var a = parseFloat(elements[0].toFixed(3));
-      var b = parseFloat(elements[1].toFixed(3));
-      var c = parseFloat(elements[2].toFixed(3));
-      var d = parseFloat(elements[3].toFixed(3));
-      var e = parseFloat(elements[4].toFixed(3));
-      var f = parseFloat(elements[5].toFixed(3));
-
-      if (!!fullMatrix) {
-
-        var g = parseFloat(elements[6].toFixed(3));
-        var h = parseFloat(elements[7].toFixed(3));
-        var i = parseFloat(elements[8].toFixed(3));
-
-        return [
-          a, d, g, b, e, h, c, f, i
-        ];
-      }
-
-      return [
-        a, d, b, e, c, f  // Specific format see LN:19
-      ];
-
-    },
-
-    /**
-     * Clone the current matrix.
-     */
-    clone: function() {
-
-      return new Two.Matrix(this.elements.slice(0));
-
-    }
-
-  });
 
 })();
 (function() {
@@ -5646,10 +5979,75 @@ var Backbone = Backbone || {};
       }, this);
 
       if (ids.length > 0) {
-        this.trigger(Two.Events.change, this.id, 'hierarchy', ids);
+        this.trigger(Two.Events.change, this.id, Two.Properties.hierarchy, ids);
       }
 
+      return this.center();
+
+    },
+
+    /**
+     * Anchors all children around the center of the group.
+     */
+    center: function() {
+
+      var rect = this.getBoundingClientRect();
+
+      rect.centroid = {
+        x: rect.left + rect.width / 2,
+        y: rect.top + rect.height / 2
+      };
+
+      _.each(this.children, function(child) {
+        child.translation.subSelf(rect.centroid);
+      });
+
+      this.translation.copy(rect.centroid);
+
       return this;
+
+    },
+
+    /**
+     * Remove an object from the group.
+     */
+    remove: function(o) {
+
+      var l = arguments.length,
+        objects = o,
+        children = this.children,
+        grandparent = this.parent,
+        ids = [];
+
+      if (l <= 0 && grandparent) {
+        grandparent.remove(this);
+        return this;
+      }
+
+      if (!_.isArray(o)) {
+        objects = _.toArray(arguments);
+      }
+
+      _.each(objects, function(object) {
+
+        var id = object.id, grandchildren = object.children;
+
+        if (!(id in children)) {
+          return;
+        }
+
+        delete children[id];
+        object.unbind(Two.Events.change);
+
+        ids.push(id);
+
+      });
+
+      if (ids.length > 0) {
+        this.trigger(Two.Events.change, this.id, Two.Properties.demotion, ids);
+      }
+
+      return this.center();
 
     },
 
@@ -5757,7 +6155,7 @@ var Backbone = Backbone || {};
       }
 
       this.trigger(Two.Events.change,
-        this.id, 'vertices', renderedVertices, this.closed, this.curved);
+        this.id, 'vertices', renderedVertices, closed, curved);
 
     }, this), 0);
 
@@ -5840,6 +6238,21 @@ var Backbone = Backbone || {};
       clone.scale = this.scale;
 
       return clone;
+
+    },
+
+    /**
+     * Remove self from the scene / parent.
+     */
+    remove: function() {
+
+      if (!this.parent) {
+        return this;
+      }
+
+      this.parent.remove(this);
+
+      return this;
 
     },
 
