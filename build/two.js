@@ -5191,12 +5191,10 @@ var Backbone = Backbone || {};
 
     },
 
-    render: function(gl, position, matrix, color) {
-
-      // Apply matrices here somehow...
+    render: function(gl, program) {
 
       _.each(this.children, function(child) {
-        child.render(gl, position, matrix, color);
+        child.render(gl, program);
       });
 
     }
@@ -5228,7 +5226,7 @@ var Backbone = Backbone || {};
 
     },
 
-    render: function(gl, position, matrix, color) {
+    render: function(gl, program) {
 
       if (!this.visible || !this.fillBuffer || !this.strokeBuffer) {
         return this;
@@ -5236,14 +5234,14 @@ var Backbone = Backbone || {};
 
       // Fill
 
+      gl.uniformMatrix3fv(program.matrix, false, this._matrix);
+
       gl.bindBuffer(gl.ARRAY_BUFFER, this.fillBuffer);
 
       if (this.fill.a > 0 && this.triangleAmount > 0) {
 
-        gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
-
-        gl.uniformMatrix3fv(matrix, false, this._matrix);
-        gl.uniform4f(color, this.fill.r, this.fill.g, this.fill.b, this.fill.a * this.opacity);
+        gl.vertexAttribPointer(program.position, 2, gl.FLOAT, false, 0, 0);
+        gl.uniform4f(program.color, this.fill.r, this.fill.g, this.fill.b, this.fill.a * this.opacity);
         gl.drawArrays(gl.TRIANGLES, 0, this.triangleAmount);
 
       }
@@ -5256,9 +5254,8 @@ var Backbone = Backbone || {};
         return this;
       }
 
-      gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
-      gl.uniformMatrix3fv(matrix, false, this._matrix);
-      gl.uniform4f(color, this.stroke.r, this.stroke.g, this.stroke.b, this.stroke.a * this.opacity);
+      gl.vertexAttribPointer(program.position, 2, gl.FLOAT, false, 0, 0);
+      gl.uniform4f(program.color, this.stroke.r, this.stroke.g, this.stroke.b, this.stroke.a * this.opacity);
       gl.lineWidth(this._linewidth);
       gl.drawArrays(gl.LINES, 0, this.vertexAmount);
 
@@ -5524,37 +5521,38 @@ var Backbone = Backbone || {};
       preserveDrawingBuffer: false
     });
 
-    this.ctx = this.domElement.getContext('webgl', params)
+    var gl = this.ctx = this.domElement.getContext('webgl', params)
       || this.domElement.getContext('experimental-webgl', params);
 
     if (!this.ctx) {
-      throw new Two.Utils.Error('unable to create a webgl context. Try using another renderer.');
+      throw new Two.Utils.Error(
+        'unable to create a webgl context. Try using another renderer.');
     }
 
     // Compile Base Shaders to draw in pixel space.
     var vs = webgl.shaders.create(
-      this.ctx, webgl.shaders.vertex, webgl.shaders.types.vertex);
+      gl, webgl.shaders.vertex, webgl.shaders.types.vertex);
     var fs = webgl.shaders.create(
-      this.ctx, webgl.shaders.fragment, webgl.shaders.types.fragment);
+      gl, webgl.shaders.fragment, webgl.shaders.types.fragment);
 
-    this.program = webgl.program.create(this.ctx, [vs, fs]);
-    this.ctx.useProgram(this.program);
+    this.program = webgl.program.create(gl, [vs, fs]);
+    gl.useProgram(this.program);
 
     // Create and bind the drawing buffer
 
     // look up where the vertex data needs to go.
-    this.positionLocation = this.ctx.getAttribLocation(this.program, 'position');
-    this.colorLocation = this.ctx.getUniformLocation(this.program, 'color');
-    this.matrixLocation = this.ctx.getUniformLocation(this.program, 'matrix');
+    this.program.position = gl.getAttribLocation(this.program, 'position');
+    this.program.color = gl.getUniformLocation(this.program, 'color');
+    this.program.matrix = gl.getUniformLocation(this.program, 'matrix');
 
     // Copied from Three.js WebGLRenderer
-    this.ctx.disable(this.ctx.DEPTH_TEST);
+    gl.disable(gl.DEPTH_TEST);
 
     // Setup some initial statements of the gl context
-    this.ctx.enable(this.ctx.BLEND);
-    this.ctx.blendEquationSeparate(this.ctx.FUNC_ADD, this.ctx.FUNC_ADD);
-    this.ctx.blendFuncSeparate(this.ctx.SRC_ALPHA, this.ctx.ONE_MINUS_SRC_ALPHA,
-      this.ctx.ONE, this.ctx.ONE_MINUS_SRC_ALPHA );
+    gl.enable(gl.BLEND);
+    gl.blendEquationSeparate(gl.FUNC_ADD, gl.FUNC_ADD);
+    gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA,
+      gl.ONE, gl.ONE_MINUS_SRC_ALPHA );
 
   };
 
@@ -5597,7 +5595,7 @@ var Backbone = Backbone || {};
       var gl = this.ctx,
         program = this.program;
 
-      this.stage.render(gl, this.positionLocation, this.matrixLocation, this.colorLocation);
+      this.stage.render(gl, this.program);
 
       return this;
 
