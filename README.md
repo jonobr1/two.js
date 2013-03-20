@@ -4,7 +4,6 @@ two.js
 __This is considered alpha grade__. A two-dimensional drawing api meant for modern browsers. It is renderer agnostic enabling the same api to render in multiple contexts: webgl, canvas2d, and svg.
 
 ### Roadmap:
-+ Fix `webgl.getBoundingClientRect` to accommodate all curved shapes.
 + Optimize `webgl`. There are currently a lot of object replication.
 + Add svg import support.
 

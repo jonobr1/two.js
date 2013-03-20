@@ -147,7 +147,7 @@
       var left = Infinity, right = -Infinity,
         top = Infinity, bottom = -Infinity;
 
-      _.each(vertices, function(v) {
+      _.each(vertices, function(v, i) {
 
         var x = v.x, y = v.y, a, b, c, d;
 
@@ -183,11 +183,15 @@
       var height = bottom - top;
 
       var centroid = {
-        x: width / 2,
-        y: height / 2
+        x: Math.abs(left),
+        y: Math.abs(top)
       };
 
       return {
+        top: top,
+        left: left,
+        right: right,
+        bottom: bottom,
         width: width,
         height: height,
         centroid: centroid
@@ -196,15 +200,17 @@
     },
 
     getTriangles: function(rect) {
-      var w = rect.width, h = rect.height,
-        cx = rect.centroid.x, cy = rect.centroid.y;
+      var top = rect.top,
+        left = rect.left,
+        right = rect.right,
+        bottom = rect.bottom;
       return new Two.Array([
-        0 - cx, 0 - cy,
-        w - cx, 0 - cy,
-        0 - cx, h - cy,
-        0 - cx, h - cy,
-        w - cx, 0 - cy,
-        w - cx, h - cy
+        left, top,
+        right, top,
+        left, bottom,
+        left, bottom,
+        right, top,
+        right, bottom
       ]);
     },
 
@@ -232,8 +238,8 @@
       canvas.width = Math.ceil(elem.rect.width * scale);
       canvas.height = Math.ceil(elem.rect.height * scale);
 
-      // var centroid = elem.rect.centroid;
-      var cx = canvas.width / 2, cy = canvas.height / 2;
+      var centroid = elem.rect.centroid;
+      var cx = centroid.x * scale, cy = centroid.y * scale;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -329,10 +335,6 @@
     },
 
     updateTexture: function(gl, elem) {
-
-      // if (elem.scale <= 0.01) { // Lightly tested.
-      //   return;
-      // }
 
       this.updateCanvas(elem);
 
@@ -459,7 +461,6 @@
         'varying vec2 v_textureCoords;',
         '',
         'void main() {',
-        // '   gl_FragColor = vec4(v_textureCoords.xy, 0.0, 1.0);',
         '  gl_FragColor = texture2D(u_image, v_textureCoords);',
         '}'
       ].join('\n')
