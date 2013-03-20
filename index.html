@@ -8,7 +8,6 @@
       <script src="./third-party/underscore.js"></script>
       <script src="./third-party/events.js"></script>
       <script src="./third-party/requestAnimationFrame.js"></script>
-      <script src="./third-party/tessellation.js"></script>
       <script src="./src/two.js"></script>
       <script src="./src/vector.js"></script>
       <script src="./src/matrix.js"></script>
@@ -30,7 +29,8 @@
         document.body.appendChild(stats.domElement);
 
         var two = new Two({
-          fullscreen: true
+          fullscreen: true,
+          type: Two.Types.webgl
         }).appendTo(document.body);
 
         var width = 44, height = 64;

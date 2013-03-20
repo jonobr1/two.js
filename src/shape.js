@@ -13,7 +13,7 @@
         .translate(this.translation.x, this.translation.y)
         .scale(this.scale)
         .rotate(this.rotation);
-      this.trigger(Two.Events.change, this.id, 'matrix', transform);
+      this.trigger(Two.Events.change, this.id, 'matrix', transform, this.scale);
     }, this), 0);
 
     this._rotation = 'rotation';

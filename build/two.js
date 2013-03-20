@@ -3361,18 +3361,30 @@ var Backbone = Backbone || {};
 
     },
 
+    updateTexture: function(ctx) {
+
+      _.each(this.children, function(child) {
+        child.updateTexture(ctx);
+      });
+
+      return this;
+
+    },
+
     updateMatrix: function(parent) {
 
-      var matrix = parent || this.parent && this.parent.matrix;
+      var matrix = (parent && parent._matrix) || this.parent && this.parent._matrix;
+      var scale = (parent && parent._scale) || this.parent && this.parent._scale;
 
       if (!matrix) {
         return this;
       }
 
       this._matrix = multiplyMatrix(this.matrix, matrix);
+      this._scale = this.scale * scale;
 
       _.each(this.children, function(child) {
-        child.updateMatrix(this._matrix);
+        child.updateMatrix(this);
       }, this);
 
       return this;
@@ -3399,14 +3411,23 @@ var Backbone = Backbone || {};
 
     updateMatrix: function(parent) {
 
-      var matrix = parent || this.parent && this.parent.matrix;
+      var matrix = (parent && parent._matrix) || this.parent && this.parent._matrix;
+      var scale = (parent && parent._scale) || this.parent && this.parent._scale;
 
       if (!matrix) {
         return this;
       }
 
       this._matrix = multiplyMatrix(this.matrix, matrix);
+      this._scale = this.scale * scale;
 
+      return this;
+
+    },
+
+    updateTexture: function(ctx) {
+
+      webgl.updateTexture(ctx, this);
       return this;
 
     },
@@ -3527,16 +3548,15 @@ var Backbone = Backbone || {};
 
     updateCanvas: function(elem) {
 
-      var centroid = elem.rect.centroid;
-      var cx = centroid.x, cy = centroid.y;
       var commands = elem.commands;
       var canvas = this.canvas;
       var ctx = this.ctx;
 
       // Styles
 
-      var stroke = elem.stroke,
-        linewidth = elem.linewidth,
+      var scale = elem._scale,
+        stroke = elem.stroke,
+        linewidth = elem.linewidth * scale,
         fill = elem.fill,
         opacity = elem.opacity,
         cap = elem.cap,
@@ -3547,8 +3567,11 @@ var Backbone = Backbone || {};
         length = commands.length,
         last = length - 1;
 
-      canvas.width = elem.rect.width;
-      canvas.height = elem.rect.height;
+      canvas.width = Math.ceil(elem.rect.width * scale);
+      canvas.height = Math.ceil(elem.rect.height * scale);
+
+      // var centroid = elem.rect.centroid;
+      var cx = canvas.width / 2, cy = canvas.height / 2;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -3577,8 +3600,8 @@ var Backbone = Backbone || {};
       ctx.beginPath();
       _.each(commands, function(b, i) {
 
-        var x = (b.x + cx).toFixed(3),
-          y = (b.y + cy).toFixed(3);
+        var x = (b.x * scale + cx).toFixed(3),
+          y = (b.y * scale + cy).toFixed(3);
 
         if (curved) {
 
@@ -3588,11 +3611,11 @@ var Backbone = Backbone || {};
           var a = commands[prev];
           var c = commands[next];
 
-          var vx = (a.v.x + cx).toFixed(3);
-          var vy = (a.v.y + cy).toFixed(3);
+          var vx = (a.v.x * scale + cx).toFixed(3);
+          var vy = (a.v.y * scale + cy).toFixed(3);
 
-          var ux = (b.u.x + cx).toFixed(3);
-          var uy = (b.u.y + cy).toFixed(3);
+          var ux = (b.u.x * scale + cx).toFixed(3);
+          var uy = (b.u.y * scale + cy).toFixed(3);
 
           if (i <= 0) {
 
@@ -3606,14 +3629,14 @@ var Backbone = Backbone || {};
 
             if (i >= last && closed) {
 
-              vx = (b.v.x + cx).toFixed(3);
-              vy = (b.v.y + cy).toFixed(3);
+              vx = (b.v.x * scale + cx).toFixed(3);
+              vy = (b.v.y * scale + cy).toFixed(3);
 
-              ux = (c.u.x + cx).toFixed(3);
-              uy = (c.u.y + cy).toFixed(3);
+              ux = (c.u.x * scale + cx).toFixed(3);
+              uy = (c.u.y * scale + cy).toFixed(3);
 
-              x = (c.x + cx).toFixed(3);
-              y = (c.y + cy).toFixed(3);
+              x = (c.x * scale + cx).toFixed(3);
+              y = (c.y * scale + cy).toFixed(3);
 
               ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
 
@@ -3644,6 +3667,10 @@ var Backbone = Backbone || {};
     },
 
     updateTexture: function(gl, elem) {
+
+      // if (elem.scale <= 0.01) { // Lightly tested.
+      //   return;
+      // }
 
       this.updateCanvas(elem);
 
@@ -3901,6 +3928,7 @@ var Backbone = Backbone || {};
     }
     if (_.isObject(matrix)) {
       styles.matrix = styles._matrix = matrix.toArray(true);
+      styles.scale = styles._scale = 1;
     }
     if (stroke) {
       styles.stroke = stroke;
@@ -3939,15 +3967,21 @@ var Backbone = Backbone || {};
 
   function setStyles(elem, property, value, closed, curved, strokeChanged) {
 
+    var textureNeedsUpdate = false;
+
     if (/matrix/.test(property)) {
       elem[property] = value.toArray(true);
+      if (_.isNumber(closed)) {
+        textureNeedsUpdate = elem.scale !== closed;
+        elem.scale = closed;
+      }
       elem.updateMatrix();
     } else if (/(stroke|fill|opacity|cap|join|miter|linewidth)/.test(property)) {
       elem[property] = value;
       elem.rect = webgl.getBoundingClientRect(elem.commands, elem.linewidth, elem.curved);
       elem.triangles = webgl.getTriangles(elem.rect);
       webgl.updateBuffer(this.ctx, elem, this.program);
-      webgl.updateTexture(this.ctx, elem);
+      textureNeedsUpdate = true;
     } else if (property === 'vertices') {
       if (!_.isUndefined(closed)) {
         elem.closed = closed;
@@ -3964,9 +3998,13 @@ var Backbone = Backbone || {};
       elem.rect = webgl.getBoundingClientRect(elem.vertices, elem.linewidth, elem.curved);
       elem.triangles = webgl.getTriangles(elem.rect);
       webgl.updateBuffer(this.ctx, elem, this.program);
-      webgl.updateTexture(this.ctx, elem);
+      textureNeedsUpdate = true;
     } else {
       elem[property] = value;
+    }
+
+    if (textureNeedsUpdate) {
+      elem.updateTexture(this.ctx)
     }
 
   }
@@ -3987,7 +4025,7 @@ var Backbone = Backbone || {};
         .translate(this.translation.x, this.translation.y)
         .scale(this.scale)
         .rotate(this.rotation);
-      this.trigger(Two.Events.change, this.id, 'matrix', transform);
+      this.trigger(Two.Events.change, this.id, 'matrix', transform, this.scale);
     }, this), 0);
 
     this._rotation = 'rotation';
