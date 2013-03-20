@@ -1268,1558 +1268,6 @@ var Backbone = Backbone || {};
       clearTimeout(id);
     };
 }());
-/**
- * Tessellation is a revised JavaScript port of poly2tri optimized for
- * use with two.js.
- *
- * @author jonobr1 / http://jonobr1.com
- *
- * poly2tri Copyright (c) 2009-2010, poly2tri Contributors
- * http://code.google.com/p/poly2tri/
- * All rights reserved.
- *
- */
-
-(function() {
-
-  // Export closured variables.
-
-  var root = this;
-  previousTessellation = root.tessellation,
-  tessellation = root.tessellation = {
-    noConflict: function() {
-      root.tessellation = previousTessellation;
-      return this;
-    }
-  };
-
-
-  /**
-   * Utility functions for Vectors.
-   */
-
-  /**
-   * Compare two Two.Vectors component-wise.
-   * @param   a   Two.Vector object.
-   * @param   b   Two.Vector object.
-   * @return <code>-1</code> if <code>a &lt; b</code>, <code>1</code> if
-   *     <code>a &gt; b</code>, <code>0</code> otherwise.
-   */
-  tessellation.cmp = function(a, b) {
-    if (a.y == b.y) {
-      return a.x - b.x;
-    } else {
-      return a.y - b.y;
-    }
-  };
-
-  /**
-   * Test two Two.Vector objects for equality.
-   * @param   a   Two.Vector object.
-   * @param   b   Two.Vector object.
-   * @return <code>True</code> if <code>a == b</code>, <code>false</code> otherwise.
-   */
-  tessellation.equals = function(a, b) {
-    return a.x == b.x && a.y == b.y;
-  };
-
-
-  /**
-   * Edge
-   */
-  tessellation.Edge = function() {
-
-    this.p = null;
-    this.q = null;
-
-    if (arguments.length == 2) {
-      if (arguments[0].y > arguments[1].y) {
-        this.q = arguments[0];
-        this.p = arguments[1];
-      } else if (arguments[0].y == arguments[1].y) {
-        if (arguments[0].x > arguments[1].x) {
-          this.q = arguments[0];
-          this.p = arguments[1];
-        } else if (arguments[0].x == arguments[1].x) {
-          alert('Invalid tessellation.edge constructor call: repeated points!');
-        } else {
-          this.p = arguments[0];
-          this.q = arguments[1];
-        }
-      } else {
-        this.p = arguments[0];
-        this.q = arguments[1];
-      }
-    } else {
-      alert('Invalid tessellation.Edge constructor call!');
-    }
-
-    if (this.p && !_.isArray(this.p.edges)) {
-      this.p.edges = [];
-    }
-    if (this.q && !_.isArray(this.q.edges)) {
-      this.q.edges = [];
-    }
-
-    this.q.edges.push(this);
-  };
-
-  /**
-   * Triangle<br>
-   * Triangle-based data structures are known to have better performance than
-   * quad-edge structures.
-   * See: J. Shewchuk, "Triangle: Engineering a 2D Quality Mesh Generator and
-   * Delaunay Triangulator", "Triangulations in CGAL"
-   * 
-   * @param   p1  Two.Vector object.
-   * @param   p2  Two.Vector object.
-   * @param   p3  Two.Vector object.
-   */
-  tessellation.Triangle = function(p1, p2, p3) {
-    // Triangle points
-    this.points = [ null, null, null ];
-    // Neighbor list
-    this.neighbors = [ null, null, null ];
-    // Has this triangle been marked as an interior triangle?
-    this.interior = false;
-    // Flags to determine if an edge is a Constrained edge
-    this.constrained_edge = [ false, false, false ];
-    // Flags to determine if an edge is a Delauney edge
-    this.delaunay_edge = [ false, false, false ];
-
-    if (arguments.length == 3) {
-      this.points[0] = p1;
-      this.points[1] = p2;
-      this.points[2] = p3;
-    }
-  };
-
-  tessellation.Triangle.prototype.GetPoint = function(index) {
-    return this.points[index];
-  };
-
-  tessellation.Triangle.prototype.GetNeighbor = function(index) {
-    return this.neighbors[index];
-  };
-
-  /**
-   * Test if this Triangle contains the Two.Vector objects given as parameters as its
-   * vertices.
-   * @return <code>True</code> if the Two.Vector objects are of the Triangle's vertices,
-   *     <code>false</code> otherwise.
-   */
-  tessellation.Triangle.prototype.ContainsP = function() {
-    var back = true;
-    for (var aidx=0; aidx < arguments.length; ++aidx) {
-      back = back && (arguments[aidx].equals(this.points[0]) ||
-              arguments[aidx].equals(this.points[1]) ||
-              arguments[aidx].equals(this.points[2])
-      );
-    }
-    return back;
-  };
-
-  /**
-   * Test if this Triangle contains the Edge objects given as parameters as its
-   * bounding edges.
-   * @return <code>True</code> if the Edge objects are of the Triangle's bounding
-   *     edges, <code>false</code> otherwise.
-   */
-  tessellation.Triangle.prototype.ContainsE = function() {
-    var back = true;
-    for (var aidx=0; aidx < arguments.length; ++aidx) {
-      back = back && this.ContainsP(arguments[aidx].p, arguments[aidx].q);
-    }
-    return back;
-  };
-
-  tessellation.Triangle.prototype.IsInterior = function() {
-    if (arguments.length == 0) {
-      return this.interior;
-    } else {
-      this.interior = arguments[0];
-      return this.interior;
-    }
-  };
-
-  /**
-   * Update neighbor pointers.<br>
-   * This method takes either 3 parameters (<code>p1</code>, <code>p2</code> and
-   * <code>t</code>) or 1 parameter (<code>t</code>).
-   * @param   p1  Two.Vector object.
-   * @param   p2  Two.Vector object.
-   * @param   t   Triangle object.
-   */
-  tessellation.Triangle.prototype.MarkNeighbor = function() {
-    var t;
-    if (arguments.length == 3) {
-      var p1 = arguments[0];
-      var p2 = arguments[1];
-      t = arguments[2];
-
-      if ((p1.equals(this.points[2]) && p2.equals(this.points[1])) || (p1.equals(this.points[1]) && p2.equals(this.points[2]))) this.neighbors[0] = t;
-      else if ((p1.equals(this.points[0]) && p2.equals(this.points[2])) || (p1.equals(this.points[2]) && p2.equals(this.points[0]))) this.neighbors[1] = t;
-      else if ((p1.equals(this.points[0]) && p2.equals(this.points[1])) || (p1.equals(this.points[1]) && p2.equals(this.points[0]))) this.neighbors[2] = t;
-      else alert('Invalid tessellation.Triangle.MarkNeighbor call (1)!');
-    } else if (arguments.length == 1) {
-      // exhaustive search to update neighbor pointers
-      t = arguments[0];
-      if (t.ContainsP(this.points[1], this.points[2])) {
-        this.neighbors[0] = t;
-        t.MarkNeighbor(this.points[1], this.points[2], this);
-      } else if (t.ContainsP(this.points[0], this.points[2])) {
-        this.neighbors[1] = t;
-        t.MarkNeighbor(this.points[0], this.points[2], this);
-      } else if (t.ContainsP(this.points[0], this.points[1])) {
-        this.neighbors[2] = t;
-        t.MarkNeighbor(this.points[0], this.points[1], this);
-      }
-    } else {
-      alert('Invalid tessellation.Triangle.MarkNeighbor call! (2)');
-    }
-  };
-
-  tessellation.Triangle.prototype.ClearNeigbors = function() {
-    this.neighbors[0] = null;
-    this.neighbors[1] = null;
-    this.neighbors[2] = null;
-  };
-
-  tessellation.Triangle.prototype.ClearDelunayEdges = function() {
-    this.delaunay_edge[0] = false;
-    this.delaunay_edge[1] = false;
-    this.delaunay_edge[2] = false;
-  };
-
-  /**
-   * Return the Two.Vector clockwise to the given Two.Vector.
-   */
-  tessellation.Triangle.prototype.PointCW = function(p) {
-    if (p.equals(this.points[0])) {
-      return this.points[2];
-    } else if (p.equals(this.points[1])) {
-      return this.points[0];
-    } else if (p.equals(this.points[2])) {
-      return this.points[1];
-    } else {
-      return null;
-    }
-  };
-
-  /**
-   * Return the Two.Vector counter-clockwise to the given Two.Vector.
-   */
-  tessellation.Triangle.prototype.PointCCW = function(p) {
-    if (p.equals(this.points[0])) {
-      return this.points[1];
-    } else if (p.equals(this.points[1])) {
-      return this.points[2];
-    } else if (p.equals(this.points[2])) {
-      return this.points[0];
-    } else {
-      return null;
-    }
-  };
-
-  /**
-   * Return the neighbor clockwise to given Two.Vector.
-   */
-  tessellation.Triangle.prototype.NeighborCW = function(p) {
-    if (p.equals(this.points[0])) {
-      return this.neighbors[1];
-    } else if (p.equals(this.points[1])) {
-      return this.neighbors[2];
-    } else {
-      return this.neighbors[0];
-    }
-  };
-
-  /**
-   * Return the neighbor counter-clockwise to given Two.Vector.
-   */
-  tessellation.Triangle.prototype.NeighborCCW = function(p) {
-    if (p.equals(this.points[0])) {
-      return this.neighbors[2];
-    } else if (p.equals(this.points[1])) {
-      return this.neighbors[0];
-    } else {
-      return this.neighbors[1];
-    }
-  };
-
-  tessellation.Triangle.prototype.GetConstrainedEdgeCW = function(p) {
-    if (p.equals(this.points[0])) {
-      return this.constrained_edge[1];
-    } else if (p.equals(this.points[1])) {
-      return this.constrained_edge[2];
-    } else {
-      return this.constrained_edge[0];
-    }
-  };
-
-  tessellation.Triangle.prototype.GetConstrainedEdgeCCW = function(p) {
-    if (p.equals(this.points[0])) {
-      return this.constrained_edge[2];
-    } else if (p.equals(this.points[1])) {
-      return this.constrained_edge[0];
-    } else {
-      return this.constrained_edge[1];
-    }
-  };
-
-  tessellation.Triangle.prototype.SetConstrainedEdgeCW = function(p, ce) {
-    if (p.equals(this.points[0])) {
-      this.constrained_edge[1] = ce;
-    } else if (p.equals(this.points[1])) {
-      this.constrained_edge[2] = ce;
-    } else {
-      this.constrained_edge[0] = ce;
-    }
-  };
-
-  tessellation.Triangle.prototype.SetConstrainedEdgeCCW = function(p, ce) {
-    if (p.equals(this.points[0])) {
-      this.constrained_edge[2] = ce;
-    } else if (p.equals(this.points[1])) {
-      this.constrained_edge[0] = ce;
-    } else {
-      this.constrained_edge[1] = ce;
-    }
-  };
-
-  tessellation.Triangle.prototype.GetDelaunayEdgeCW = function(p) {
-    if (p.equals(this.points[0])) {
-      return this.delaunay_edge[1];
-    } else if (p.equals(this.points[1])) {
-      return this.delaunay_edge[2];
-    } else {
-      return this.delaunay_edge[0];
-    }
-  };
-
-  tessellation.Triangle.prototype.GetDelaunayEdgeCCW = function(p) {
-    if (p.equals(this.points[0])) {
-      return this.delaunay_edge[2];
-    } else if (p.equals(this.points[1])) {
-      return this.delaunay_edge[0];
-    } else {
-      return this.delaunay_edge[1];
-    }
-  };
-
-  tessellation.Triangle.prototype.SetDelaunayEdgeCW = function(p, e) {
-    if (p.equals(this.points[0])) {
-      this.delaunay_edge[1] = e;
-    } else if (p.equals(this.points[1])) {
-      this.delaunay_edge[2] = e;
-    } else {
-      this.delaunay_edge[0] = e;
-    }
-  };
-
-  tessellation.Triangle.prototype.SetDelaunayEdgeCCW = function(p, e) {
-    if (p.equals(this.points[0])) {
-      this.delaunay_edge[2] = e;
-    } else if (p.equals(this.points[1])) {
-      this.delaunay_edge[0] = e;
-    } else {
-      this.delaunay_edge[1] = e;
-    }
-  };
-
-  /**
-   * The neighbor across to given point.
-   */
-  tessellation.Triangle.prototype.NeighborAcross = function(p) {
-    if (!p) {
-      return this.neighbors[2]; // @jonobr1 hack.
-    }
-    if (p.equals(this.points[0])) {
-      return this.neighbors[0];
-    } else if (p.equals(this.points[1])) {
-      return this.neighbors[1];
-    } else {
-      return this.neighbors[2];
-    }
-  };
-
-  tessellation.Triangle.prototype.OppositePoint = function(t, p) {
-    var cw = t.PointCW(p);
-    return this.PointCW(cw);
-  };
-
-  /**
-   * Legalize triangle by rotating clockwise.<br>
-   * This method takes either 1 parameter (then the triangle is rotated around
-   * points(0)) or 2 parameters (then the triangle is rotated around the first
-   * parameter).
-   */
-  tessellation.Triangle.prototype.Legalize = function() {
-    if (arguments.length == 1) {
-      this.Legalize(this.points[0], arguments[0]);
-    } else if (arguments.length == 2) {
-      var opoint = arguments[0];
-      var npoint = arguments[1];
-
-      if (opoint.equals(this.points[0])) {
-        this.points[1] = this.points[0];
-        this.points[0] = this.points[2];
-        this.points[2] = npoint;
-      } else if (opoint.equals(this.points[1])) {
-        this.points[2] = this.points[1];
-        this.points[1] = this.points[0];
-        this.points[0] = npoint;
-      } else if (opoint.equals(this.points[2])) {
-        this.points[0] = this.points[2];
-        this.points[2] = this.points[1];
-        this.points[1] = npoint;
-      } else {
-        alert('Invalid tessellation.Triangle.Legalize call!');
-      }
-    } else {
-      alert('Invalid tessellation.Triangle.Legalize call!');
-    }
-  };
-
-  tessellation.Triangle.prototype.Index = function(p) {
-    if (p.equals(this.points[0])) return 0;
-    else if (p.equals(this.points[1])) return 1;
-    else if (p.equals(this.points[2])) return 2;
-    else return -1;
-  };
-
-  tessellation.Triangle.prototype.EdgeIndex = function(p1, p2) {
-    if (p1.equals(this.points[0])) {
-      if (p2.equals(this.points[1])) {
-        return 2;
-      } else if (p2.equals(this.points[2])) {
-        return 1;
-      }
-    } else if (p1.equals(this.points[1])) {
-      if (p2.equals(this.points[2])) {
-        return 0;
-      } else if (p2.equals(this.points[0])) {
-        return 2;
-      }
-    } else if (p1.equals(this.points[2])) {
-      if (p2.equals(this.points[0])) {
-        return 1;
-      } else if (p2.equals(this.points[1])) {
-        return 0;
-      }
-    }
-    return -1;
-  };
-
-  /**
-   * Mark an edge of this triangle as constrained.<br>
-   * This method takes either 1 parameter (an edge index or an Edge instance) or
-   * 2 parameters (two Two.Vector instances defining the edge of the triangle).
-   */
-  tessellation.Triangle.prototype.MarkConstrainedEdge = function() {
-    if (arguments.length == 1) {
-      if (typeof(arguments[0]) == 'number') {
-        this.constrained_edge[arguments[0]] = true;
-      } else {
-        this.MarkConstrainedEdge(arguments[0].p, arguments[0].q);
-      }
-    } else if (arguments.length == 2) {
-      var p = arguments[0];
-      var q = arguments[1];
-      if ((q.equals(this.points[0]) && p.equals(this.points[1])) || (q.equals(this.points[1]) && p.equals(this.points[0]))) {
-        this.constrained_edge[2] = true;
-      } else if ((q.equals(this.points[0]) && p.equals(this.points[2])) || (q.equals(this.points[2]) && p.equals(this.points[0]))) {
-        this.constrained_edge[1] = true;
-      } else if ((q.equals(this.points[1]) && p.equals(this.points[2])) || (q.equals(this.points[2]) && p.equals(this.points[1]))) {
-        this.constrained_edge[0] = true;
-      }
-    } else {
-      alert('Invalid tessellation.Triangle.MarkConstrainedEdge call!');
-    }
-  };
-
-  /**
-   * Utils
-   */
-  tessellation.PI_3div4 = 3 * Math.PI / 4;
-  tessellation.PI_2 = Math.PI / 2;
-  tessellation.EPSILON = 1e-12;
-
-  /* 
-   * Inital triangle factor, seed triangle will extend 30% of
-   * PointSet width to both left and right.
-   */
-  tessellation.kAlpha = 0.3;
-
-  tessellation.Orientation = {
-    "CW"      : 1,
-    "CCW"     : -1,
-    "COLLINEAR" : 0
-  };
-
-  /**
-   * Forumla to calculate signed area<br>
-   * Positive if CCW<br>
-   * Negative if CW<br>
-   * 0 if collinear<br>
-   * <pre>
-   * A[P1,P2,P3]  =  (x1*y2 - y1*x2) + (x2*y3 - y2*x3) + (x3*y1 - y3*x1)
-   *        =  (x1-x3)*(y2-y3) - (y1-y3)*(x2-x3)
-   * </pre>
-   */
-  tessellation.Orient2d = function(pa, pb, pc) {
-    var detleft = (pa.x - pc.x) * (pb.y - pc.y);
-    var detright = (pa.y - pc.y) * (pb.x - pc.x);
-    var val = detleft - detright;
-    if (val > -(tessellation.EPSILON) && val < (tessellation.EPSILON)) {
-      return tessellation.Orientation.COLLINEAR;
-    } else if (val > 0) {
-      return tessellation.Orientation.CCW;
-    } else {
-      return tessellation.Orientation.CW;
-    }
-  };
-
-  tessellation.InScanArea = function(pa, pb, pc, pd) {
-    var pdx = pd.x;
-    var pdy = pd.y;
-    var adx = pa.x - pdx;
-    var ady = pa.y - pdy;
-    var bdx = pb.x - pdx;
-    var bdy = pb.y - pdy;
-
-    var adxbdy = adx * bdy;
-    var bdxady = bdx * ady;
-    var oabd = adxbdy - bdxady;
-
-    if (oabd <= (tessellation.EPSILON)) {
-      return false;
-    }
-
-    var cdx = pc.x - pdx;
-    var cdy = pc.y - pdy;
-
-    var cdxady = cdx * ady;
-    var adxcdy = adx * cdy;
-    var ocad = cdxady - adxcdy;
-
-    if (ocad <= (tessellation.EPSILON)) {
-      return false;
-    }
-
-    return true;
-  };
-
-  tessellation.Node = function() {
-    this.point = null; // Point
-    this.triangle = null; // Triangle
-
-    this.next = null; // Node
-    this.prev = null; // Node
-
-    this.value = 0.0; // double
-
-    if (arguments.length == 1) {
-      this.point = arguments[0];
-      this.value = this.point.x;
-    } else if (arguments.length == 2) {
-      this.point = arguments[0];
-      this.triangle = arguments[1];
-      this.value = this.point.x;
-    } else {
-      alert('Invalid tessellation.Node constructor call!');
-    }
-  };
-
-  /**
-   * Advancing Front
-   */
-  tessellation.AdvancingFront = function(head, tail) {
-    this.head = head; // Node
-    this.tail = tail; // Node
-    this.search_node = head; // Node
-  };
-
-  tessellation.AdvancingFront.prototype.search = function() {
-    return this.search_node;
-  };
-
-  tessellation.AdvancingFront.prototype.set_search = function(node) {
-    this.search_node = node;
-  };
-
-  tessellation.AdvancingFront.prototype.FindSearchNode = function(x) {
-    return this.search_node;
-  };
-
-  tessellation.AdvancingFront.prototype.LocateNode = function(x) {
-    var node = this.search_node;
-
-    if (x < node.value) {
-      while ((node = node.prev) != null) {
-        if (x >= node.value) {
-          this.search_node = node;
-          return node;
-        }
-      }
-    } else {
-      while ((node = node.next) != null) {
-        if (x < node.value) {
-          this.search_node = node.prev;
-          return node.prev;
-        }
-      }
-    }
-    return null;
-  };
-
-  tessellation.AdvancingFront.prototype.LocatePoint = function(point) {
-    var px = point.x;
-    var node = this.FindSearchNode(px);
-    var nx = node.point.x;
-
-    if (px == nx) {
-      // We might have two nodes with same x value for a short time
-      if (node.prev && point.equals(node.prev.point)) {
-        node = node.prev;
-      } else if (node.next && point.equals(node.next.point)) {
-        node = node.next;
-      } else if (point.equals(node.point)) {
-        // do nothing
-      } else {
-        alert('Invalid tessellation.AdvancingFront.LocatePoint call!');
-        return null;
-      }
-    } else if (px < nx) {
-      while ((node = node.prev) != null) {
-        if (point.equals(node.point)) break;
-      }
-    } else {
-      while ((node = node.next) != null) {
-        if (point.equals(node.point)) break;
-      }
-    }
-
-    if (node != null) this.search_node = node;
-    return node;
-  };
-
-  /**
-   * Basin
-   */
-  tessellation.Basin = function() {
-    this.left_node = null; // Node
-    this.bottom_node = null; // Node
-    this.right_node = null; // Node
-    this.width = 0.0; // number
-    this.left_highest = false;
-  };
-
-  tessellation.Basin.prototype.Clear = function() {
-    this.left_node = null;
-    this.bottom_node = null;
-    this.right_node = null;
-    this.width = 0.0;
-    this.left_highest = false;
-  };
-
-  /**
-   * EdgeEvent
-   */
-  tessellation.EdgeEvent = function() {
-    this.constrained_edge = null; // Edge
-    this.right = false;
-  };
-
-  /**
-   * SweepContext
-   */
-  tessellation.SweepContext = function(polyline) {
-    this.triangles = [];
-    this.map = [];
-    this.points = polyline;
-    this.edges = [];
-
-    // Advancing front
-    this.front = null; // AdvancingFront
-    // head point used with advancing front
-    this.head = null; // Point
-    // tail point used with advancing front
-    this.tail = null; // Point
-
-    this.af_head = null; // Node
-    this.af_middle_ = null; // Node
-    this.af_tail = null; // Node
-
-    this.basin = new tessellation.Basin();
-    this.edge_event = new tessellation.EdgeEvent();
-
-    this.InitEdges(this.points);
-  };
-
-  tessellation.SweepContext.prototype.AddHole = function(polyline) {
-    this.InitEdges(polyline);
-    for (var i in polyline) {
-      this.points.push(polyline[i]);
-    }
-  };
-
-  tessellation.SweepContext.prototype.point_count = function() {
-    return this.points.length;
-  };
-
-  tessellation.SweepContext.prototype.GetTriangles = function() {
-    return this.triangles;
-  };
-
-  tessellation.SweepContext.prototype.GetMap = function() {
-    return this.map;
-  };
-
-  tessellation.SweepContext.prototype.InitTriangulation = function() {
-    var xmax = this.points[0].x;
-    var xmin = this.points[0].x;
-    var ymax = this.points[0].y;
-    var ymin = this.points[0].y;
-
-    // Calculate bounds
-    for (var i in this.points) {
-      var p = this.points[i];
-      if (p.x > xmax) xmax = p.x;
-      if (p.x < xmin) xmin = p.x;
-      if (p.y > ymax) ymax = p.y;
-      if (p.y < ymin) ymin = p.y;
-    }
-
-    var dx = tessellation.kAlpha * (xmax - xmin);
-    var dy = tessellation.kAlpha * (ymax - ymin);
-    this.head = new Two.Vector(xmax + dx, ymin - dy);
-    this.tail = new Two.Vector(xmin - dy, ymin - dy);
-
-    // Sort points along y-axis
-    this.points.sort(tessellation.cmp);
-  };
-
-  tessellation.SweepContext.prototype.InitEdges = function(polyline) {
-    for (var i=0; i < polyline.length; ++i) {
-      this.edges.push(new tessellation.Edge(polyline[i], polyline[(i+1) % polyline.length]));
-    }
-  };
-
-  tessellation.SweepContext.prototype.GetPoint = function(index) {
-    return this.points[index];
-  };
-
-  tessellation.SweepContext.prototype.AddToMap = function(triangle) {
-    this.map.push(triangle);
-  };
-
-  tessellation.SweepContext.prototype.LocateNode = function(point) {
-    return this.front.LocateNode(point.x);
-  };
-
-  tessellation.SweepContext.prototype.CreateAdvancingFront = function() {
-    var head;
-    var middle;
-    var tail;
-    // Initial triangle
-    var triangle = new tessellation.Triangle(this.points[0], this.tail, this.head);
-
-    this.map.push(triangle);
-
-    head = new tessellation.Node(triangle.GetPoint(1), triangle);
-    middle = new tessellation.Node(triangle.GetPoint(0), triangle);
-    tail = new tessellation.Node(triangle.GetPoint(2));
-
-    this.front = new tessellation.AdvancingFront(head, tail);
-
-    head.next = middle;
-    middle.next = tail;
-    middle.prev = head;
-    tail.prev = middle;
-
-  };
-
-  tessellation.SweepContext.prototype.RemoveNode = function(node) {
-    // do nothing
-  };
-
-  tessellation.SweepContext.prototype.MapTriangleToNodes = function(t) {
-    for (var i=0; i<3; ++i) {
-      if (t.GetNeighbor(i) == null) {
-        var n = this.front.LocatePoint(t.PointCW(t.GetPoint(i)));
-        if (n != null) {
-          n.triangle = t;
-        }
-      }
-    }
-  };
-
-  tessellation.SweepContext.prototype.RemoveFromMap = function(triangle) {
-    for (var i in this.map) {
-      if (this.map[i] == triangle) {
-        delete this.map[i];
-        break;
-      }
-    }
-  };
-
-  tessellation.SweepContext.prototype.MeshClean = function(triangle) {
-    if (triangle != null && !triangle.IsInterior()) {
-      triangle.IsInterior(true);
-      this.triangles.push(triangle);
-      for (var i=0; i<3; ++i) {
-        if (!triangle.constrained_edge[i]) {
-          this.MeshClean(triangle.GetNeighbor(i));
-        }
-      }
-    }
-  };
-
-  /**
-   * sweep
-   */
-  tessellation.sweep = {};
-
-  /**
-   * Triangulate simple polygon with holes.
-   * @param   tcx SweepContext object.
-   */
-  tessellation.sweep.Triangulate = function(tcx) {
-    tcx.InitTriangulation();
-    tcx.CreateAdvancingFront();
-    // Sweep points; build mesh
-    tessellation.sweep.SweepPoints(tcx);
-    // Clean up
-    tessellation.sweep.FinalizationPolygon(tcx);
-  };
-
-  tessellation.sweep.SweepPoints = function(tcx) {
-    for (var i=1; i < tcx.point_count(); ++i) {
-      var point = tcx.GetPoint(i);
-      var node = tessellation.sweep.PointEvent(tcx, point);
-      for (var j=0; j < point.edges.length; ++j) {
-        tessellation.sweep.EdgeEvent(tcx, point.edges[j], node);
-      }
-    }
-  };
-
-  tessellation.sweep.FinalizationPolygon = function(tcx) {
-    // Get an Internal triangle to start with
-    var t = tcx.front.head.next.triangle;
-    var p = tcx.front.head.next.point;
-    while (!t.GetConstrainedEdgeCW(p)) {
-      t = t.NeighborCCW(p);
-    }
-
-    // Collect interior triangles constrained by edges
-    tcx.MeshClean(t);
-  };
-
-  /**
-   * Find closes node to the left of the new Two.Vector and
-   * create a new triangle. If needed new holes and basins
-   * will be filled to.
-   */
-  tessellation.sweep.PointEvent = function(tcx, point) {
-    var node = tcx.LocateNode(point);
-    var new_node = tessellation.sweep.NewFrontTriangle(tcx, point, node);
-
-    // Only need to check +epsilon since Two.Vector never have smaller
-    // x value than node due to how we fetch nodes from the front
-    if (point.x <= node.point.x + (tessellation.EPSILON)) {
-      tessellation.sweep.Fill(tcx, node);
-    }
-
-    //tcx.AddNode(new_node);
-
-    tessellation.sweep.FillAdvancingFront(tcx, new_node);
-    return new_node;
-  };
-
-  tessellation.sweep.EdgeEvent = function() {
-    var tcx;
-    if (arguments.length == 3) {
-      tcx = arguments[0];
-      var edge = arguments[1];
-      var node = arguments[2];
-
-      tcx.edge_event.constrained_edge = edge;
-      tcx.edge_event.right = (edge.p.x > edge.q.x);
-
-      if (tessellation.sweep.IsEdgeSideOfTriangle(node.triangle, edge.p, edge.q)) {
-        return;
-      }
-
-      // For now we will do all needed filling
-      // TODO: integrate with flip process might give some better performance
-      //     but for now this avoid the issue with cases that needs both flips and fills
-      tessellation.sweep.FillEdgeEvent(tcx, edge, node);
-      tessellation.sweep.EdgeEvent(tcx, edge.p, edge.q, node.triangle, edge.q);
-    } else if (arguments.length == 5) {
-      tcx = arguments[0];
-      var ep = arguments[1];
-      var eq = arguments[2];
-      var triangle = arguments[3];
-      var point = arguments[4];
-
-      if (tessellation.sweep.IsEdgeSideOfTriangle(triangle, ep, eq)) {
-        return;
-      }
-
-      var p1 = triangle.PointCCW(point);
-      // @jonobr1: || statement is a hack
-      var o1 = tessellation.Orient2d(eq, p1, ep) || tessellation.Orientation.CW;
-      if (o1 == tessellation.Orientation.COLLINEAR) {
-        alert('tessellation.sweep.EdgeEvent: Collinear not supported!');
-        return;
-      }
-
-      var p2 = triangle.PointCW(point);
-      // @jonobr1: || statement is a hack
-      var o2 = tessellation.Orient2d(eq, p2, ep) || tessellation.Orientation.CW;
-      if (o2 == tessellation.Orientation.COLLINEAR) {
-        alert('tessellation.sweep.EdgeEvent: Collinear not supported!');
-        return;
-      }
-
-      if (o1 == o2) {
-        // Need to decide if we are rotating CW or CCW to get to a triangle
-        // that will cross edge
-        if (o1 == tessellation.Orientation.CW) {
-          triangle = triangle.NeighborCCW(point);
-        } else {
-          triangle = triangle.NeighborCW(point);
-        }
-        tessellation.sweep.EdgeEvent(tcx, ep, eq, triangle, point);
-      } else {
-        // This triangle crosses constraint so lets flippin start!
-        tessellation.sweep.FlipEdgeEvent(tcx, ep, eq, triangle, point);
-      }
-    } else {
-      // alert('Invalid tessellation.sweep.EdgeEvent call!');
-    }
-  };
-
-  tessellation.sweep.IsEdgeSideOfTriangle = function(triangle, ep, eq) {
-    var index = triangle.EdgeIndex(ep, eq);
-    if (index != -1) {
-      triangle.MarkConstrainedEdge(index);
-      var t = triangle.GetNeighbor(index);
-      if (t != null) {
-        t.MarkConstrainedEdge(ep, eq);
-      }
-      return true;
-    }
-    return false;
-  };
-
-  tessellation.sweep.NewFrontTriangle = function(tcx, point, node) {
-    var triangle = new tessellation.Triangle(point, node.point, node.next.point);
-
-    triangle.MarkNeighbor(node.triangle);
-    tcx.AddToMap(triangle);
-
-    var new_node = new tessellation.Node(point);
-    new_node.next = node.next;
-    new_node.prev = node;
-    node.next.prev = new_node;
-    node.next = new_node;
-
-    if (!tessellation.sweep.Legalize(tcx, triangle)) {
-      tcx.MapTriangleToNodes(triangle);
-    }
-
-    return new_node;
-  };
-
-  /**
-   * Adds a triangle to the advancing front to fill a hole.
-   * @param tcx
-   * @param node - middle node, that is the bottom of the hole
-   */
-  tessellation.sweep.Fill = function(tcx, node) {
-    var triangle = new tessellation.Triangle(node.prev.point, node.point, node.next.point);
-
-    // TODO: should copy the constrained_edge value from neighbor triangles
-    //     for now constrained_edge values are copied during the legalize
-    triangle.MarkNeighbor(node.prev.triangle);
-    triangle.MarkNeighbor(node.triangle);
-
-    tcx.AddToMap(triangle);
-
-    // Update the advancing front
-    node.prev.next = node.next;
-    node.next.prev = node.prev;
-
-
-    // If it was legalized the triangle has already been mapped
-    if (!tessellation.sweep.Legalize(tcx, triangle)) {
-      tcx.MapTriangleToNodes(triangle);
-    }
-
-    //tcx.RemoveNode(node);
-  };
-
-  /**
-   * Fills holes in the Advancing Front
-   */
-  tessellation.sweep.FillAdvancingFront = function(tcx, n) {
-    // Fill right holes
-    var node = n.next;
-    var angle;
-
-    while (node.next != null) {
-      angle = tessellation.sweep.HoleAngle(node);
-      if (angle > tessellation.PI_2 || angle < -(tessellation.PI_2)) break;
-      tessellation.sweep.Fill(tcx, node);
-      node = node.next;
-    }
-
-    // Fill left holes
-    node = n.prev;
-
-    while (node.prev != null) {
-      angle = tessellation.sweep.HoleAngle(node);
-      if (angle > tessellation.PI_2 || angle < -(tessellation.PI_2)) break;
-      tessellation.sweep.Fill(tcx, node);
-      node = node.prev;
-    }
-
-    // Fill right basins
-    if (n.next != null && n.next.next != null) {
-      angle = tessellation.sweep.BasinAngle(n);
-      if (angle < tessellation.PI_3div4) {
-        tessellation.sweep.FillBasin(tcx, n);
-      }
-    }
-  };
-
-  tessellation.sweep.BasinAngle = function(node) {
-    var ax = node.point.x - node.next.next.point.x;
-    var ay = node.point.y - node.next.next.point.y;
-    return Math.atan2(ay, ax);
-  };
-
-  /**
-   *
-   * @param node - middle node
-   * @return the angle between 3 front nodes
-   */
-  tessellation.sweep.HoleAngle = function(node) {
-  /* Complex plane
-   * ab = cosA +i*sinA
-   * ab = (ax + ay*i)(bx + by*i) = (ax*bx + ay*by) + i(ax*by-ay*bx)
-   * atan2(y,x) computes the principal value of the argument function
-   * applied to the complex number x+iy
-   * Where x = ax*bx + ay*by
-   *     y = ax*by - ay*bx
-   */
-  var ax = node.next.point.x - node.point.x;
-  var ay = node.next.point.y - node.point.y;
-  var bx = node.prev.point.x - node.point.x;
-  var by = node.prev.point.y - node.point.y;
-  return Math.atan2(ax * by - ay * bx, ax * bx + ay * by);
-  };
-
-  /**
-   * Returns true if triangle was legalized
-   */
-  tessellation.sweep.Legalize = function(tcx, t) {
-    // To legalize a triangle we start by finding if any of the three edges
-    // violate the Delaunay condition
-    for (var i=0; i < 3; ++i) {
-      if (t.delaunay_edge[i]) continue;
-
-      var ot = t.GetNeighbor(i);
-      if (ot != null) {
-        var p = t.GetPoint(i);
-        var op = ot.OppositePoint(t, p);
-        var oi = ot.Index(op);
-
-        // If this is a Constrained Edge or a Delaunay Edge(only during recursive legalization)
-        // then we should not try to legalize
-        if (ot.constrained_edge[oi] || ot.delaunay_edge[oi]) {
-          t.constrained_edge[i] = ot.constrained_edge[oi];
-          continue;
-        }
-
-        var inside = tessellation.sweep.Incircle(p, t.PointCCW(p), t.PointCW(p), op);
-        if (inside) {
-          // Lets mark this shared edge as Delaunay
-          t.delaunay_edge[i] = true;
-          ot.delaunay_edge[oi] = true;
-
-          // Lets rotate shared edge one vertex CW to legalize it
-          tessellation.sweep.RotateTrianglePair(t, p, ot, op);
-
-          // We now got one valid Delaunay Edge shared by two triangles
-          // This gives us 4 new edges to check for Delaunay
-
-          // Make sure that triangle to node mapping is done only one time for a specific triangle
-          var not_legalized = !tessellation.sweep.Legalize(tcx, t);
-          if (not_legalized) {
-            tcx.MapTriangleToNodes(t);
-          }
-
-          not_legalized = !tessellation.sweep.Legalize(tcx, ot);
-          if (not_legalized) tcx.MapTriangleToNodes(ot);
-
-          // Reset the Delaunay edges, since they only are valid Delaunay edges
-          // until we add a new triangle or Two.Vector.
-          // XXX: need to think about this. Can these edges be tried after we
-          //    return to previous recursive level?
-          t.delaunay_edge[i] = false;
-          ot.delaunay_edge[oi] = false;
-
-          // If triangle have been legalized no need to check the other edges since
-          // the recursive legalization will handles those so we can end here.
-          return true;
-        }
-      }
-    }
-    return false;
-  };
-
-  /**
-   * <b>Requirement</b>:<br>
-   * 1. a,b and c form a triangle.<br>
-   * 2. a and d is know to be on opposite side of bc<br>
-   * <pre>
-   *        a
-   *        +
-   *         / \
-   *        /   \
-   *      b/     \c
-   *      +-------+
-   *       /  d  \
-   *      /       \
-   * </pre>
-   * <b>Fact</b>: d has to be in area B to have a chance to be inside the circle formed by
-   *  a,b and c<br>
-   *  d is outside B if orient2d(a,b,d) or orient2d(c,a,d) is CW<br>
-   *  This preknowledge gives us a way to optimize the incircle test
-   * @param pa - triangle Two.Vector, opposite d
-   * @param pb - triangle Two.Vector
-   * @param pc - triangle Two.Vector
-   * @param pd - Two.Vector opposite a
-   * @return true if d is inside circle, false if on circle edge
-   */
-  tessellation.sweep.Incircle = function(pa, pb, pc, pd) {
-    var adx = pa.x - pd.x;
-    var ady = pa.y - pd.y;
-    var bdx = pb.x - pd.x;
-    var bdy = pb.y - pd.y;
-
-    var adxbdy = adx * bdy;
-    var bdxady = bdx * ady;
-    var oabd = adxbdy - bdxady;
-
-    if (oabd <= 0) return false;
-
-    var cdx = pc.x - pd.x;
-    var cdy = pc.y - pd.y;
-
-    var cdxady = cdx * ady;
-    var adxcdy = adx * cdy;
-    var ocad = cdxady - adxcdy;
-
-    if (ocad <= 0) return false;
-
-    var bdxcdy = bdx * cdy;
-    var cdxbdy = cdx * bdy;
-
-    var alift = adx * adx + ady * ady;
-    var blift = bdx * bdx + bdy * bdy;
-    var clift = cdx * cdx + cdy * cdy;
-
-    var det = alift * (bdxcdy - cdxbdy) + blift * ocad + clift * oabd;
-    return det > 0;
-  };
-
-  /**
-   * Rotates a triangle pair one vertex CW
-   *<pre>
-   *     n2          n2
-   *  P +-----+       P +-----+
-   *  | t  /|         |\  t |
-   *  | / |         | \ |
-   *  n1|  /  |n3     n1|  \  |n3
-   *  | /   |    after CW   |   \ |
-   *  |/ oT |         | oT \|
-   *  +-----+ oP        +-----+
-   *     n4          n4
-   * </pre>
-   */
-  tessellation.sweep.RotateTrianglePair = function(t, p, ot, op) {
-    var n1; var n2; var n3; var n4;
-    n1 = t.NeighborCCW(p);
-    n2 = t.NeighborCW(p);
-    n3 = ot.NeighborCCW(op);
-    n4 = ot.NeighborCW(op);
-
-    var ce1; var ce2; var ce3; var ce4;
-    ce1 = t.GetConstrainedEdgeCCW(p);
-    ce2 = t.GetConstrainedEdgeCW(p);
-    ce3 = ot.GetConstrainedEdgeCCW(op);
-    ce4 = ot.GetConstrainedEdgeCW(op);
-
-    var de1; var de2; var de3; var de4;
-    de1 = t.GetDelaunayEdgeCCW(p);
-    de2 = t.GetDelaunayEdgeCW(p);
-    de3 = ot.GetDelaunayEdgeCCW(op);
-    de4 = ot.GetDelaunayEdgeCW(op);
-
-    t.Legalize(p, op);
-    ot.Legalize(op, p);
-
-    // Remap delaunay_edge
-    ot.SetDelaunayEdgeCCW(p, de1);
-    t.SetDelaunayEdgeCW(p, de2);
-    t.SetDelaunayEdgeCCW(op, de3);
-    ot.SetDelaunayEdgeCW(op, de4);
-
-    // Remap constrained_edge
-    ot.SetConstrainedEdgeCCW(p, ce1);
-    t.SetConstrainedEdgeCW(p, ce2);
-    t.SetConstrainedEdgeCCW(op, ce3);
-    ot.SetConstrainedEdgeCW(op, ce4);
-
-    // Remap neighbors
-    // XXX: might optimize the markNeighbor by keeping track of
-    //    what side should be assigned to what neighbor after the
-    //    rotation. Now mark neighbor does lots of testing to find
-    //    the right side.
-    t.ClearNeigbors();
-    ot.ClearNeigbors();
-    if (n1) ot.MarkNeighbor(n1);
-    if (n2) t.MarkNeighbor(n2);
-    if (n3) t.MarkNeighbor(n3);
-    if (n4) ot.MarkNeighbor(n4);
-    t.MarkNeighbor(ot);
-  };
-
-  /**
-   * Fills a basin that has formed on the Advancing Front to the right
-   * of given node.<br>
-   * First we decide a left,bottom and right node that forms the
-   * boundaries of the basin. Then we do a reqursive fill.
-   *
-   * @param tcx
-   * @param node - starting node, this or next node will be left node
-   */
-  tessellation.sweep.FillBasin = function(tcx, node) {
-    if (tessellation.Orient2d(node.point, node.next.point, node.next.next.point) == tessellation.Orientation.CCW) {
-      tcx.basin.left_node = node.next.next;
-    } else {
-      tcx.basin.left_node = node.next;
-    }
-
-    // Find the bottom and right node
-    tcx.basin.bottom_node = tcx.basin.left_node;
-    while (tcx.basin.bottom_node.next != null && tcx.basin.bottom_node.point.y >= tcx.basin.bottom_node.next.point.y) {
-      tcx.basin.bottom_node = tcx.basin.bottom_node.next;
-    }
-    if (tcx.basin.bottom_node == tcx.basin.left_node) {
-      // No valid basin
-      return;
-    }
-
-    tcx.basin.right_node = tcx.basin.bottom_node;
-    while (tcx.basin.right_node.next != null && tcx.basin.right_node.point.y < tcx.basin.right_node.next.point.y) {
-      tcx.basin.right_node = tcx.basin.right_node.next;
-    }
-    if (tcx.basin.right_node == tcx.basin.bottom_node) {
-      // No valid basins
-      return;
-    }
-
-    tcx.basin.width = tcx.basin.right_node.point.x - tcx.basin.left_node.point.x;
-    tcx.basin.left_highest = tcx.basin.left_node.point.y > tcx.basin.right_node.point.y;
-
-    tessellation.sweep.FillBasinReq(tcx, tcx.basin.bottom_node);
-  };
-
-  /**
-   * Recursive algorithm to fill a Basin with triangles
-   *
-   * @param tcx
-   * @param node - bottom_node
-   */
-  tessellation.sweep.FillBasinReq = function(tcx, node) {
-    // if shallow stop filling
-    if (tessellation.sweep.IsShallow(tcx, node)) {
-      return;
-    }
-
-    tessellation.sweep.Fill(tcx, node);
-
-    var o;
-    if (node.prev == tcx.basin.left_node && node.next == tcx.basin.right_node) {
-      return;
-    } else if (node.prev == tcx.basin.left_node) {
-      o = tessellation.Orient2d(node.point, node.next.point, node.next.next.point);
-      if (o == tessellation.Orientation.CW) {
-        return;
-      }
-      node = node.next;
-    } else if (node.next == tcx.basin.right_node) {
-      o = tessellation.Orient2d(node.point, node.prev.point, node.prev.prev.point);
-      if (o == tessellation.Orientation.CCW) {
-        return;
-      }
-      node = node.prev;
-    } else {
-      // Continue with the neighbor node with lowest Y value
-      if (node.prev.point.y < node.next.point.y) {
-        node = node.prev;
-      } else {
-        node = node.next;
-      }
-    }
-
-    tessellation.sweep.FillBasinReq(tcx, node);
-  };
-
-  tessellation.sweep.IsShallow = function(tcx, node) {
-    var height;
-    if (tcx.basin.left_highest) {
-      height = tcx.basin.left_node.point.y - node.point.y;
-    } else {
-      height = tcx.basin.right_node.point.y - node.point.y;
-    }
-
-    // if shallow stop filling
-    if (tcx.basin.width > height) {
-      return true;
-    }
-    return false;
-  };
-
-  tessellation.sweep.FillEdgeEvent = function(tcx, edge, node) {
-    if (tcx.edge_event.right) {
-      tessellation.sweep.FillRightAboveEdgeEvent(tcx, edge, node);
-    } else {
-      tessellation.sweep.FillLeftAboveEdgeEvent(tcx, edge, node);
-    }
-  };
-
-  tessellation.sweep.FillRightAboveEdgeEvent = function(tcx, edge, node) {
-    while (node.next.point.x < edge.p.x) {
-      // Check if next node is below the edge
-      if (tessellation.Orient2d(edge.q, node.next.point, edge.p) == tessellation.Orientation.CCW) {
-        tessellation.sweep.FillRightBelowEdgeEvent(tcx, edge, node);
-      } else {
-        node = node.next;
-      }
-    }
-  };
-
-  tessellation.sweep.FillRightBelowEdgeEvent = function(tcx, edge, node) {
-    if (node.point.x < edge.p.x) {
-      if (tessellation.Orient2d(node.point, node.next.point, node.next.next.point) == tessellation.Orientation.CCW) {
-        // Concave
-        tessellation.sweep.FillRightConcaveEdgeEvent(tcx, edge, node);
-      } else{
-        // Convex
-        tessellation.sweep.FillRightConvexEdgeEvent(tcx, edge, node);
-        // Retry this one
-        tessellation.sweep.FillRightBelowEdgeEvent(tcx, edge, node);
-      }
-    }
-  };
-
-  tessellation.sweep.FillRightConcaveEdgeEvent = function(tcx, edge, node) {
-    tessellation.sweep.Fill(tcx, node.next);
-    if (node.next.point != edge.p) {
-      // Next above or below edge?
-      if (tessellation.Orient2d(edge.q, node.next.point, edge.p) == tessellation.Orientation.CCW) {
-        // Below
-        if (tessellation.Orient2d(node.point, node.next.point, node.next.next.point) == tessellation.Orientation.CCW) {
-          // Next is concave
-          tessellation.sweep.FillRightConcaveEdgeEvent(tcx, edge, node);
-        } else {
-        // Next is convex
-        }
-      }
-    }
-  };
-
-  tessellation.sweep.FillRightConvexEdgeEvent = function(tcx, edge, node) {
-    // Next concave or convex?
-    if (tessellation.Orient2d(node.next.point, node.next.next.point, node.next.next.next.point) == tessellation.Orientation.CCW) {
-      // Concave
-      tessellation.sweep.FillRightConcaveEdgeEvent(tcx, edge, node.next);
-    } else {
-      // Convex
-      // Next above or below edge?
-      if (tessellation.Orient2d(edge.q, node.next.next.point, edge.p) == tessellation.Orientation.CCW) {
-        // Below
-        tessellation.sweep.FillRightConvexEdgeEvent(tcx, edge, node.next);
-      } else {
-        // Above
-      }
-    }
-  };
-
-  tessellation.sweep.FillLeftAboveEdgeEvent = function(tcx, edge, node) {
-    while (node.prev.point.x > edge.p.x) {
-      // Check if next node is below the edge
-      if (tessellation.Orient2d(edge.q, node.prev.point, edge.p) == tessellation.Orientation.CW) {
-        tessellation.sweep.FillLeftBelowEdgeEvent(tcx, edge, node);
-      } else {
-        node = node.prev;
-      }
-    }
-  };
-
-  tessellation.sweep.FillLeftBelowEdgeEvent = function(tcx, edge, node) {
-    if (node.point.x > edge.p.x) {
-      if (tessellation.Orient2d(node.point, node.prev.point, node.prev.prev.point) == tessellation.Orientation.CW) {
-        // Concave
-        tessellation.sweep.FillLeftConcaveEdgeEvent(tcx, edge, node);
-      } else {
-        // Convex
-        tessellation.sweep.FillLeftConvexEdgeEvent(tcx, edge, node);
-        // Retry this one
-        tessellation.sweep.FillLeftBelowEdgeEvent(tcx, edge, node);
-      }
-    }
-  };
-
-  tessellation.sweep.FillLeftConvexEdgeEvent = function(tcx, edge, node) {
-    // Next concave or convex?
-    if (tessellation.Orient2d(node.prev.point, node.prev.prev.point, node.prev.prev.prev.point) == tessellation.Orientation.CW) {
-      // Concave
-      tessellation.sweep.FillLeftConcaveEdgeEvent(tcx, edge, node.prev);
-    } else {
-      // Convex
-      // Next above or below edge?
-      if (tessellation.Orient2d(edge.q, node.prev.prev.point, edge.p) == tessellation.Orientation.CW) {
-        // Below
-        tessellation.sweep.FillLeftConvexEdgeEvent(tcx, edge, node.prev);
-      } else {
-        // Above
-      }
-    }
-  };
-
-  tessellation.sweep.FillLeftConcaveEdgeEvent = function(tcx, edge, node) {
-    tessellation.sweep.Fill(tcx, node.prev);
-    if (node.prev.point != edge.p) {
-      // Next above or below edge?
-      if (tessellation.Orient2d(edge.q, node.prev.point, edge.p) == tessellation.Orientation.CW) {
-        // Below
-        if (tessellation.Orient2d(node.point, node.prev.point, node.prev.prev.point) == tessellation.Orientation.CW) {
-          // Next is concave
-          tessellation.sweep.FillLeftConcaveEdgeEvent(tcx, edge, node);
-        } else {
-          // Next is convex
-        }
-      }
-    }
-  };
-
-  tessellation.sweep.FlipEdgeEvent = function(tcx, ep, eq, t, p) {
-    var ot = t.NeighborAcross(p);
-    if (ot == null) {
-      // If we want to integrate the fillEdgeEvent do it here
-      // With current implementation we should never get here
-      alert('[BUG:FIXME] FLIP failed due to missing triangle!');
-      return;
-    }
-    var op = ot.OppositePoint(t, p);
-
-    if (tessellation.InScanArea(p, t.PointCCW(p), t.PointCW(p), op)) {
-      // Lets rotate shared edge one vertex CW
-      tessellation.sweep.RotateTrianglePair(t, p, ot, op);
-      tcx.MapTriangleToNodes(t);
-      tcx.MapTriangleToNodes(ot);
-
-      if (p == eq && op == ep) {
-        if (eq == tcx.edge_event.constrained_edge.q && ep == tcx.edge_event.constrained_edge.p) {
-          t.MarkConstrainedEdge(ep, eq);
-          ot.MarkConstrainedEdge(ep, eq);
-          tessellation.sweep.Legalize(tcx, t);
-          tessellation.sweep.Legalize(tcx, ot);
-        } else {
-          // XXX: I think one of the triangles should be legalized here?
-        }
-      } else {
-        var o = tessellation.Orient2d(eq, op, ep);
-        t = tessellation.sweep.NextFlipTriangle(tcx, o, t, ot, p, op);
-        tessellation.sweep.FlipEdgeEvent(tcx, ep, eq, t, p);
-      }
-    } else {
-      var newP = tessellation.sweep.NextFlipPoint(ep, eq, ot, op);
-      tessellation.sweep.FlipScanEdgeEvent(tcx, ep, eq, t, ot, newP);
-      tessellation.sweep.EdgeEvent(tcx, ep, eq, t, p);
-    }
-  };
-
-  tessellation.sweep.NextFlipTriangle = function(tcx, o, t, ot, p, op) {
-    var edge_index;
-    if (o == tessellation.Orientation.CCW) {
-      // ot is not crossing edge after flip
-      edge_index = ot.EdgeIndex(p, op);
-      ot.delaunay_edge[edge_index] = true;
-      tessellation.sweep.Legalize(tcx, ot);
-      ot.ClearDelunayEdges();
-      return t;
-    }
-
-    // t is not crossing edge after flip
-    edge_index = t.EdgeIndex(p, op);
-
-    t.delaunay_edge[edge_index] = true;
-    tessellation.sweep.Legalize(tcx, t);
-    t.ClearDelunayEdges();
-    return ot;
-  };
-
-  tessellation.sweep.NextFlipPoint = function(ep, eq, ot, op) {
-    var o2d = tessellation.Orient2d(eq, op, ep);
-    if (o2d == tessellation.Orientation.CW) {
-      // Right
-      return ot.PointCCW(op);
-    } else if (o2d == tessellation.Orientation.CCW) {
-      // Left
-      return ot.PointCW(op);
-    } else {
-      alert("[Unsupported] tessellation.sweep.NextFlipPoint: opposing point on constrained edge!");
-      return undefined;
-    }
-  };
-
-  tessellation.sweep.FlipScanEdgeEvent = function(tcx, ep, eq, flip_triangle, t, p) {
-    var ot = t.NeighborAcross(p);
-
-    if (ot == null) {
-      // If we want to integrate the fillEdgeEvent do it here
-      // With current implementation we should never get here
-      alert('[BUG:FIXME] FLIP failed due to missing triangle');
-      return;
-    }
-    var op = ot.OppositePoint(t, p);
-
-    if (tessellation.InScanArea(eq, flip_triangle.PointCCW(eq), flip_triangle.PointCW(eq), op)) {
-      // flip with new edge op.eq
-      tessellation.sweep.FlipEdgeEvent(tcx, eq, op, ot, op);
-      // TODO: Actually I just figured out that it should be possible to
-      //     improve this by getting the next ot and op before the the above
-      //     flip and continue the flipScanEdgeEvent here
-      // set new ot and op here and loop back to inScanArea test
-      // also need to set a new flip_triangle first
-      // Turns out at first glance that this is somewhat complicated
-      // so it will have to wait.
-    } else {
-      var newP = tessellation.sweep.NextFlipPoint(ep, eq, ot, op);
-      tessellation.sweep.FlipScanEdgeEvent(tcx, ep, eq, flip_triangle, ot, newP);
-    }
-  };
-
-})();
-
 (function() {
 
   var root = this;
@@ -2971,110 +1419,6 @@ var Backbone = Backbone || {};
           angle: 0,
           epsilon: 0.01
         }
-
-      },
-
-      /**
-       * Given an array of points. Go through the points as line-segments,
-       * check for intersections, if one is found separate the points in
-       * question into separate shapes and return a new array of array of points
-       * representing the new subdivision.
-       */
-      decoupleShapes: function(points, depth) {
-
-        var depth = depth || 0, l = points.length;
-
-        if (l <= 3 || depth > Two.Utils.Curve.RecursionLimit) {
-          return [points];
-        }
-
-        for (var i = 0, l = points.length; i < l; i++) {
-
-          var ii = mod(i + 1, l);
-          var a = points[i];
-          var b = points[ii];
-
-          for (var k = 0, j = mod(i + 1, l); k < l; k++) {
-
-            var jj = mod(j + 1, l);
-            var c = points[j];
-            var d = points[jj];
-
-            if (j == i || j == ii || jj == i || jj == ii) {
-              j = mod(j + 1, l);
-              continue;
-            }
-
-            var intersection = solveSegmentIntersection(a, b, c, d);
-
-            if (intersection) {
-
-              var s1, s2, f1 = [intersection], f2 = [intersection.clone()];
-              s1 = points.slice(0, ii).concat(f1);
-              s2 = points.slice(ii, j + 1).concat(f2);
-
-              if (jj > ii) {
-                s1 = s1.concat(points.slice(jj, l));
-              } else if (jj > 0) {
-                s2 = s2.concat(points.slice(jj, l));
-              }
-
-              return [
-                decoupleShapes(s1, depth + 1),
-                decoupleShapes(s2, depth + 1)
-              ];
-
-            }
-
-            j = mod(j + 1, l);
-
-          }
-
-        }
-
-        return [points];
-
-      },
-
-      /**
-       * a   d
-       *  \ /
-       *  / \
-       * c   b
-       * where a is (x1, y1), b is (x2, y2), c is (x3, y3), and d is (x4, y4)
-       * Solves for an intersection, returns null if none found, otherwise
-       * returns Two.Vector.
-       * http://www.kevlindev.com/gui/math/intersection/Intersection.js
-       */
-      solveSegmentIntersection: function(a1, a2, b1, b2) {
-
-        var result;
-
-        var ua_t = (b2.x - b1.x) * (a1.y - b1.y) - (b2.y - b1.y) * (a1.x - b1.x);
-        var ub_t = (a2.x - a1.x) * (a1.y - b1.y) - (a2.y - a1.y) * (a1.x - b1.x);
-        var u_b  = (b2.y - b1.y) * (a2.x - a1.x) - (b2.x - b1.x) * (a2.y - a1.y);
-
-        if ( u_b != 0 ) {
-            var ua = ua_t / u_b;
-            var ub = ub_t / u_b;
-
-            if ( 0 <= ua && ua <= 1 && 0 <= ub && ub <= 1 ) {
-              return new Two.Vector(
-                a1.x + ua * (a2.x - a1.x),
-                a1.y + ua * (a2.y - a1.y)
-              );
-            } else {
-              result = null;
-            }
-        } else {
-            if ( ua_t == 0 || ub_t == 0 ) {
-                result = null;//new Intersection("Coincident");
-            } else {
-                result = null;
-            }
-        }
-
-        return result;
 
       },
 
@@ -3581,17 +1925,7 @@ var Backbone = Backbone || {};
 
       var last = arguments[l - 1];
       var poly = new Two.Polygon(points, !(_.isBoolean(last) ? last : undefined));
-      var rect = poly.getBoundingClientRect();
-
-      var cx = rect.left + rect.width / 2;
-      var cy = rect.top + rect.height / 2;
-
-      _.each(poly.vertices, function(v) {
-        v.x -= cx;
-        v.y -= cy;
-      });
-
-      poly.translation.set(cx, cy);
+      poly.center();
 
       this.scene.add(poly);
 
@@ -4774,7 +3108,9 @@ var Backbone = Backbone || {};
 
     getStyles: getStyles,
 
-    setStyles: setStyles
+    setStyles: setStyles,
+
+    Utils: canvas
 
   });
 
@@ -4865,7 +3201,7 @@ var Backbone = Backbone || {};
 
     },
 
-    update: function(id, property, value, closed, curved) {
+    update: function(id, property, value, closed, curved, strokeChanged) {
 
       var proto = Object.getPrototypeOf(this);
       var constructor = proto.constructor;
@@ -4885,7 +3221,7 @@ var Backbone = Backbone || {};
             this.elements[j] = null;
           }, this);
         default:
-          constructor.setStyles.call(this, elem, property, value, closed, curved);
+          constructor.setStyles.call(this, elem, property, value, closed, curved, strokeChanged);
       }
 
       return this;
@@ -5002,158 +3338,10 @@ var Backbone = Backbone || {};
 })();
 (function() {
 
-  // Localize variables
   var CanvasRenderer = Two[Two.Types.canvas],
-    getCurveFromPoints = Two.Utils.getCurveFromPoints,
-    mod = Two.Utils.mod,
     multiplyMatrix = Two.Matrix.Multiply,
-    matrixDeterminant = Two.Matrix.Determinant,
-    decoupleShapes = Two.Utils.decoupleShapes,
-    subdivide = Two.Utils.subdivide,
-    abs = Math.abs,
-    sqrt = Math.sqrt;
-
-  /**
-   * CSS Color interpretation from
-   * https://github.com/brehaut/color-js/blob/master/color.js
-   * Copyright (c) 2008-2010, Andrew Brehaut, Tim Baumann, Matt Wilson
-   * All rights reserved.
-   */
-
-  // css_colors maps color names onto their hex values
-  // these names are defined by W3C
-  var css_colors = {aliceblue:'#F0F8FF',antiquewhite:'#FAEBD7',aqua:'#00FFFF',aquamarine:'#7FFFD4',azure:'#F0FFFF',beige:'#F5F5DC',bisque:'#FFE4C4',black:'#000000',blanchedalmond:'#FFEBCD',blue:'#0000FF',blueviolet:'#8A2BE2',brown:'#A52A2A',burlywood:'#DEB887',cadetblue:'#5F9EA0',chartreuse:'#7FFF00',chocolate:'#D2691E',coral:'#FF7F50',cornflowerblue:'#6495ED',cornsilk:'#FFF8DC',crimson:'#DC143C',cyan:'#00FFFF',darkblue:'#00008B',darkcyan:'#008B8B',darkgoldenrod:'#B8860B',darkgray:'#A9A9A9',darkgrey:'#A9A9A9',darkgreen:'#006400',darkkhaki:'#BDB76B',darkmagenta:'#8B008B',darkolivegreen:'#556B2F',darkorange:'#FF8C00',darkorchid:'#9932CC',darkred:'#8B0000',darksalmon:'#E9967A',darkseagreen:'#8FBC8F',darkslateblue:'#483D8B',darkslategray:'#2F4F4F',darkslategrey:'#2F4F4F',darkturquoise:'#00CED1',darkviolet:'#9400D3',deeppink:'#FF1493',deepskyblue:'#00BFFF',dimgray:'#696969',dimgrey:'#696969',dodgerblue:'#1E90FF',firebrick:'#B22222',floralwhite:'#FFFAF0',forestgreen:'#228B22',fuchsia:'#FF00FF',gainsboro:'#DCDCDC',ghostwhite:'#F8F8FF',gold:'#FFD700',goldenrod:'#DAA520',gray:'#808080',grey:'#808080',green:'#008000',greenyellow:'#ADFF2F',honeydew:'#F0FFF0',hotpink:'#FF69B4',indianred:'#CD5C5C',indigo:'#4B0082',ivory:'#FFFFF0',khaki:'#F0E68C',lavender:'#E6E6FA',lavenderblush:'#FFF0F5',lawngreen:'#7CFC00',lemonchiffon:'#FFFACD',lightblue:'#ADD8E6',lightcoral:'#F08080',lightcyan:'#E0FFFF',lightgoldenrodyellow:'#FAFAD2',lightgray:'#D3D3D3',lightgrey:'#D3D3D3',lightgreen:'#90EE90',lightpink:'#FFB6C1',lightsalmon:'#FFA07A',lightseagreen:'#20B2AA',lightskyblue:'#87CEFA',lightslategray:'#778899',lightslategrey:'#778899',lightsteelblue:'#B0C4DE',lightyellow:'#FFFFE0',lime:'#00FF00',limegreen:'#32CD32',linen:'#FAF0E6',magenta:'#FF00FF',maroon:'#800000',mediumaquamarine:'#66CDAA',mediumblue:'#0000CD',mediumorchid:'#BA55D3',mediumpurple:'#9370D8',mediumseagreen:'#3CB371',mediumslateblue:'#7B68EE',mediumspringgreen:'#00FA9A',mediumturquoise:'#48D1CC',mediumvioletred:'#C71585',midnightblue:'#191970',mintcream:'#F5FFFA',mistyrose:'#FFE4E1',moccasin:'#FFE4B5',navajowhite:'#FFDEAD',navy:'#000080',oldlace:'#FDF5E6',olive:'#808000',olivedrab:'#6B8E23',orange:'#FFA500',orangered:'#FF4500',orchid:'#DA70D6',palegoldenrod:'#EEE8AA',palegreen:'#98FB98',paleturquoise:'#AFEEEE',palevioletred:'#D87093',papayawhip:'#FFEFD5',peachpuff:'#FFDAB9',peru:'#CD853F',pink:'#FFC0CB',plum:'#DDA0DD',powderblue:'#B0E0E6',purple:'#800080',red:'#FF0000',rosybrown:'#BC8F8F',royalblue:'#4169E1',saddlebrown:'#8B4513',salmon:'#FA8072',sandybrown:'#F4A460',seagreen:'#2E8B57',seashell:'#FFF5EE',sienna:'#A0522D',silver:'#C0C0C0',skyblue:'#87CEEB',slateblue:'#6A5ACD',slategray:'#708090',slategrey:'#708090',snow:'#FFFAFA',springgreen:'#00FF7F',transparent:'#000',steelblue:'#4682B4',tan:'#D2B48C',teal:'#008080',thistle:'#D8BFD8',tomato:'#FF6347',turquoise:'#40E0D0',violet:'#EE82EE',wheat:'#F5DEB3',white:'#FFFFFF',whitesmoke:'#F5F5F5',yellow:'#FFFF00',yellowgreen:'#9ACD32"'};
-
-  // CSS value regexes, according to http://www.w3.org/TR/css3-values/
-  var css_integer = '(?:\\+|-)?\\d+';
-  var css_float = '(?:\\+|-)?\\d*\\.\\d+';
-  var css_number = '(?:' + css_integer + ')|(?:' + css_float + ')';
-  css_integer = '(' + css_integer + ')';
-  css_float = '(' + css_float + ')';
-  css_number = '(' + css_number + ')';
-  var css_percentage = css_number + '%';
-  var css_whitespace = '\\s*?';
-
-  // http://www.w3.org/TR/2003/CR-css3-color-20030514/
-  var hsl_hsla_regex = new RegExp([
-    '^hsl(a?)\\(', css_number, ',', css_percentage, ',', css_percentage, '(,', css_number, ')?\\)$'
-  ].join(css_whitespace) );
-  var rgb_rgba_integer_regex = new RegExp([
-    '^rgb(a?)\\(', css_integer, ',', css_integer, ',', css_integer, '(,', css_number, ')?\\)$'
-  ].join(css_whitespace) );
-  var rgb_rgba_percentage_regex = new RegExp([
-    '^rgb(a?)\\(', css_percentage, ',', css_percentage, ',', css_percentage, '(,', css_number, ')?\\)$'
-  ].join(css_whitespace) );
-  var remove_comma_regex = /^,\s*/;
-
-  var hslToRgb = function(h, s, l, a) {
-
-    var r, g, b;
-
-    if (s == 0) {
-      r = g = b = l; // achromatic
-    } else {
-
-      function hue2rgb(p, q, t){
-        if(t < 0) t += 1;
-        if(t > 1) t -= 1;
-        if(t < 1 / 6) return p + (q - p) * 6 * t;
-        if(t < 1 / 2) return q;
-        if(t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
-        return p;
-      }
-
-      var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-      var p = 2 * l - q;
-    }
-
-    var alpha = _.isUndefined(a) || _.isNull(a) ? 1.0 : a.replace(remove_comma_regex, '');
-
-    return {
-      r: hue2rgb(p, q, h + 1 / 3),
-      g: hue2rgb(p, q, h),
-      b: hue2rgb(p, q, h - 1 / 3),
-      a: alpha
-    };
-  }
-
-  var stringParsers = [
-    // CSS RGB(A) literal
-    function(css) {
-
-      css = trim(css);
-
-      var withInteger = match(rgb_rgba_integer_regex, 255);
-      if (withInteger) {
-        return withInteger;
-      }
-
-      return match(rgb_rgba_percentage_regex, 100);
-
-      function match(regex, max_value) {
-
-        var colorGroups = css.match(regex);
-
-        if (!colorGroups || (!!colorGroups[1] + !!colorGroups[5] === 1)) {
-          return;
-        }
-
-        var alpha = _.isUndefined(colorGroups[5]) ? 1.0 : colorGroups[5].replace(remove_comma_regex, '');
-
-        return {
-          r: Math.min(1, Math.max(0, colorGroups[2] / max_value)),
-          g: Math.min(1, Math.max(0, colorGroups[3] / max_value)),
-          b: Math.min(1, Math.max(0, colorGroups[4] / max_value)),
-          a: Math.min(1, Math.max(alpha, 0))
-        };
-
-      }
-
-    },
-
-    function(css) {
-
-      var lower = css.toLowerCase();
-      if (lower in css_colors) {
-        css = css_colors[lower];
-      }
-
-      if (!css.match(/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/)) {
-        return;
-      }
-
-      css = css.replace(/^#/, '');
-      var bytes = css.length / 3;
-      var max = Math.pow(16, bytes) - 1;
-
-      return {
-        r: parseInt(css.slice(0, bytes), 16) / max,
-        g: parseInt(css.slice(bytes * 1,bytes * 2), 16) / max,
-        b: parseInt(css.slice(bytes * 2), 16) / max,
-        a: 1.0
-      };
-
-    },
-
-    // css HSL(A) literal
-    function(css) {
-
-      var colorGroups = trim(css).match(hsl_hsla_regex);
-
-      // if there is an "a" after "hsl", there must be a fourth parameter and the other way round
-      if (!colorGroups || (!!colorGroups[1] + !!colorGroups[5] === 1)) {
-        return null;
-      }
-
-      var h = ((colorGroups[2] % 360 + 360) % 360) / 360;
-      var s = Math.max(0, Math.min(parseInt(colorGroups[3], 10) / 100, 1));
-      var l = Math.max(0, Math.min(parseInt(colorGroups[4], 10) / 100, 1));
-
-      return hslToRgb(h, s, l, colorGroups[5]);
-
-    }
-
-  ];
+    getCommands = Two[Two.Types.canvas].Utils.toArray,
+    mod = Two.Utils.mod;
 
   var Group = function(styles) {
 
@@ -5173,9 +3361,9 @@ var Backbone = Backbone || {};
 
     },
 
-    updateMatrix: function(parentMatrix) {
+    updateMatrix: function(parent) {
 
-      var matrix = parentMatrix || this.parent && this.parent.matrix;
+      var matrix = parent || this.parent && this.parent.matrix;
 
       if (!matrix) {
         return this;
@@ -5209,9 +3397,9 @@ var Backbone = Backbone || {};
 
   _.extend(Element.prototype, CanvasRenderer.Element.prototype, {
 
-    updateMatrix: function(parentMatrix) {
+    updateMatrix: function(parent) {
 
-      var matrix = parentMatrix || this.parent && this.parent.matrix
+      var matrix = parent || this.parent && this.parent.matrix;
 
       if (!matrix) {
         return this;
@@ -5219,45 +3407,34 @@ var Backbone = Backbone || {};
 
       this._matrix = multiplyMatrix(this.matrix, matrix);
 
-      // Also update linewidth
-      this._linewidth = this.linewidth * getScale(this._matrix);
-
       return this;
 
     },
 
     render: function(gl, program) {
 
-      if (!this.visible || !this.fillBuffer || !this.strokeBuffer) {
+      if (!this.visible || !this.opacity || !this.buffer) {
         return this;
       }
 
-      // Fill
+      // Draw Texture
+
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.textureCoordsBuffer);
+
+      gl.vertexAttribPointer(program.textureCoords, 2, gl.FLOAT, false, 0, 0);
+
+      gl.bindTexture(gl.TEXTURE_2D, this.texture);
+
+
+      // Draw Rect
 
       gl.uniformMatrix3fv(program.matrix, false, this._matrix);
 
-      gl.bindBuffer(gl.ARRAY_BUFFER, this.fillBuffer);
-
-      if (this.fill.a > 0 && this.triangleAmount > 0) {
-
-        gl.vertexAttribPointer(program.position, 2, gl.FLOAT, false, 0, 0);
-        gl.uniform4f(program.color, this.fill.r, this.fill.g, this.fill.b, this.fill.a * this.opacity);
-        gl.drawArrays(gl.TRIANGLES, 0, this.triangleAmount);
-
-      }
-
-      // Stroke
-
-      gl.bindBuffer(gl.ARRAY_BUFFER, this.strokeBuffer);
-
-      if (this._linewidth <= 0 || this.stroke.a <= 0 || this.vertexAmount < 4) {
-        return this;
-      }
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer);
 
       gl.vertexAttribPointer(program.position, 2, gl.FLOAT, false, 0, 0);
-      gl.uniform4f(program.color, this.stroke.r, this.stroke.g, this.stroke.b, this.stroke.a * this.opacity);
-      gl.lineWidth(this._linewidth);
-      gl.drawArrays(gl.LINES, 0, this.vertexAmount);
+
+      gl.drawArrays(gl.TRIANGLES, 0, 6);
 
       return this;
 
@@ -5267,157 +3444,254 @@ var Backbone = Backbone || {};
 
   var webgl = {
 
-    updateBuffer: function(gl, elem, positionLocation) {
+    canvas: document.createElement('canvas'),
 
-      // Handle Fill
+    uv: new Two.Array([
+      0, 0,
+      1, 0,
+      0, 1,
+      0, 1,
+      1, 0,
+      1, 1
+    ]),
 
-      if (_.isObject(elem.fillBuffer)) {
-        gl.deleteBuffer(elem.fillBuffer);
+    /**
+     * Returns the rect of a set of verts. Typically takes vertices that are
+     * "centered" around 0 and returns them to be anchored upper-left.
+     */
+    getBoundingClientRect: function(vertices, border, curved) {
+
+      var left = Infinity, right = -Infinity,
+        top = Infinity, bottom = -Infinity;
+
+      _.each(vertices, function(v) {
+
+        var x = v.x, y = v.y, a, b, c, d;
+
+        top = Math.min(y, top);
+        left = Math.min(x, left);
+        right = Math.max(x, right);
+        bottom = Math.max(y, bottom);
+
+        if (!!curved) {
+
+          a = v.u.x, b = v.u.y;
+          c = v.v.x, d = v.v.y;
+
+          top = Math.min(b, d, top);
+          left = Math.min(a, c, left);
+          right = Math.max(a, c, right);
+          bottom = Math.max(b, d, bottom);
+
+        }
+
+      });
+
+      // Expand borders
+
+      if (_.isNumber(border)) {
+        top -= border;
+        left -= border;
+        right += border;
+        bottom += border;
       }
 
-      elem.fillBuffer = gl.createBuffer();
+      var width = right - left;
+      var height = bottom - top;
 
-      gl.bindBuffer(gl.ARRAY_BUFFER, elem.fillBuffer);
-      gl.enableVertexAttribArray(positionLocation);
+      var centroid = {
+        x: width / 2,
+        y: height / 2
+      };
+
+      return {
+        width: width,
+        height: height,
+        centroid: centroid
+      };
+
+    },
+
+    getTriangles: function(rect) {
+      var w = rect.width, h = rect.height,
+        cx = rect.centroid.x, cy = rect.centroid.y;
+      return new Two.Array([
+        0 - cx, 0 - cy,
+        w - cx, 0 - cy,
+        0 - cx, h - cy,
+        0 - cx, h - cy,
+        w - cx, 0 - cy,
+        w - cx, h - cy
+      ]);
+    },
+
+    updateCanvas: function(elem) {
+
+      var centroid = elem.rect.centroid;
+      var cx = centroid.x, cy = centroid.y;
+      var commands = elem.commands;
+      var canvas = this.canvas;
+      var ctx = this.ctx;
+
+      // Styles
+
+      var stroke = elem.stroke,
+        linewidth = elem.linewidth,
+        fill = elem.fill,
+        opacity = elem.opacity,
+        cap = elem.cap,
+        join = elem.join,
+        miter = elem.miter,
+        curved = elem.curved,
+        closed = elem.closed,
+        length = commands.length,
+        last = length - 1;
+
+      canvas.width = elem.rect.width;
+      canvas.height = elem.rect.height;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      if (fill) {
+        ctx.fillStyle = fill;
+      }
+      if (stroke) {
+        ctx.strokeStyle = stroke;
+      }
+      if (linewidth) {
+        ctx.lineWidth = linewidth;
+      }
+      if (miter) {
+        ctx.miterLimit = miter;
+      }
+      if (join) {
+        ctx.lineJoin = join;
+      }
+      if (cap) {
+        ctx.lineCap = cap;
+      }
+      if (_.isNumber(opacity)) {
+        ctx.globalAlpha = opacity;
+      }
+
+      ctx.beginPath();
+      _.each(commands, function(b, i) {
+
+        var x = (b.x + cx).toFixed(3),
+          y = (b.y + cy).toFixed(3);
+
+        if (curved) {
+
+          var prev = closed ? mod(i - 1, length) : Math.max(i - 1, 0);
+          var next = closed ? mod(i + 1, length) : Math.min(i + 1, last);
+
+          var a = commands[prev];
+          var c = commands[next];
+
+          var vx = (a.v.x + cx).toFixed(3);
+          var vy = (a.v.y + cy).toFixed(3);
+
+          var ux = (b.u.x + cx).toFixed(3);
+          var uy = (b.u.y + cy).toFixed(3);
+
+          if (i <= 0) {
+
+            ctx.moveTo(x, y);
+
+          } else {
+
+            ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
+
+            // Add a final point and close it off
+
+            if (i >= last && closed) {
+
+              vx = (b.v.x + cx).toFixed(3);
+              vy = (b.v.y + cy).toFixed(3);
+
+              ux = (c.u.x + cx).toFixed(3);
+              uy = (c.u.y + cy).toFixed(3);
+
+              x = (c.x + cx).toFixed(3);
+              y = (c.y + cy).toFixed(3);
+
+              ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
+
+            }
+
+          }
+
+        } else {
+
+          if (i <= 0) {
+            ctx.moveTo(x, y);
+          } else {
+            ctx.lineTo(x, y);
+          }
+
+        }
+      });
+
+      // Loose ends
+
+      if (closed && !curved) {
+        ctx.closePath();
+      }
+
+      ctx.fill();
+      ctx.stroke();
+
+    },
+
+    updateTexture: function(gl, elem) {
+
+      this.updateCanvas(elem);
+
+      if (elem.texture) {
+        gl.deleteTexture(elem.texture);
+      }
+
+      gl.bindBuffer(gl.ARRAY_BUFFER, elem.textureCoordsBuffer);
+
+      elem.texture = gl.createTexture();
+      gl.bindTexture(gl.TEXTURE_2D, elem.texture);
+
+      // Set the parameters so we can render any size image.
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+      // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+
+      // Upload the image into the texture.
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.canvas);
+
+    },
+
+    updateBuffer: function(gl, elem, program) {
+
+      if (_.isObject(elem.buffer)) {
+        gl.deleteBuffer(elem.buffer);
+      }
+
+      elem.buffer = gl.createBuffer();
+
+      gl.bindBuffer(gl.ARRAY_BUFFER, elem.buffer);
+      gl.enableVertexAttribArray(program.position);
 
       gl.bufferData(gl.ARRAY_BUFFER, elem.triangles, gl.STATIC_DRAW);
 
-      // Handle Stroke
-
-      if (_.isObject(elem.strokeBuffer)) {
-        gl.deleteBuffer(elem.strokeBuffer);
+      if (_.isObject(elem.textureCoordsBuffer)) {
+        gl.deleteBuffer(elem.textureCoordsBuffer);
       }
 
-      elem.strokeBuffer = gl.createBuffer();
+      elem.textureCoordsBuffer = gl.createBuffer();
 
-      gl.bindBuffer(gl.ARRAY_BUFFER, elem.strokeBuffer);
-      gl.enableVertexAttribArray(positionLocation);
+      gl.bindBuffer(gl.ARRAY_BUFFER, elem.textureCoordsBuffer);
+      gl.enableVertexAttribArray(program.textureCoords);
 
-      gl.bufferData(gl.ARRAY_BUFFER, elem.vertices, gl.STATIC_DRAW);
-
-    },
-
-    /**
-     * Interpret a css color string and return an object of normalized
-     * r, g, b color values.
-     */
-    interpret: function(v) {
-
-      for (var i = 0, l = stringParsers.length; i < l; i++) {
-        var color = stringParsers[i](v);
-        if (color) {
-          return color;
-        }
-      }
-
-      /**
-       * Default to invisible black if can't find a color.
-       */
-      return {
-        r: 0, g: 0, b: 0, a: 0
-      };
-
-    },
-
-    /**
-     * Takes an array of vertices and converts them into a subdvided array
-     * of vertices that express the hull of a given shape accurately for the
-     * webgl renderer. It also returns the last index for properly drawing
-     * a closed or open stroke.
-     */
-    extrapolate: function(coords, closed, curved) {
-
-      var points = coords.slice(0);
-
-      if (!curved) {
-        return {
-          vertices: points,
-          last: points.length - 1
-        };
-      }
-
-      // If curved, then subdivide the path and update the points.
-
-      var curve = getCurveFromPoints(points, true);
-      var length = curve.length;
-      var last = length - 1;
-      var divided = [];
-      var finalVertex = curve.length;
-
-      _.each(curve, function(p, i) {
-        var q = curve[mod(i + 1, length)];
-        var subdivision = subdivide(
-          p.x, p.y, p.v.x, p.v.y, q.u.x, q.u.y, q.x, q.y);
-        // Calculate index of last "vertex" as well.
-        if (i >= last) {
-          finalVertex = divided.length - 2;
-        }
-        divided = divided.concat(subdivision);
-      });
-
-      return {
-        vertices: divided,
-        last: finalVertex
-      };
-
-    },
-
-    /**
-     * Takes an array of vertices and converts them into an array of
-     * triangles and array of outline verts ready to be fed to the webgl
-     * renderer.
-     */
-    tessellate: function(points, closed, curved, finalVertex, reuseTriangles, reuseVertices) {
-
-      var shapes = flatten(decoupleShapes(points));
-      var triangles = [], vertices = [], triangleAmount = 0, vertexAmount = 0;
-
-      _.each(shapes, function(coords, i) {
-
-        if (coords.length < 3) {
-          return;
-        }
-
-        // Tessellate the current set of points.
-
-        var triangulation = new tessellation.SweepContext(_.map(coords, function(c) {
-          return new Two.Vector(c.x, c.y);
-        }));
-        tessellation.sweep.Triangulate(triangulation, true);
-
-        triangleAmount += triangulation.triangles.length * 3 * 2;
-        _.each(triangulation.triangles, function(tri, i) {
-
-          var points = tri.points;
-          var a = points[0];
-          var b = points[1];
-          var c = points[2];
-
-          triangles.push(a.x, a.y, b.x, b.y, c.x, c.y);
-
-        });
-
-      });
-
-      var pointLength = points.length;
-      vertexAmount = pointLength * 4;
-      _.each(points, function(p, i) {
-        var q = points[mod(i + 1, pointLength)];
-        vertices.push(p.x, p.y, q.x, q.y);
-      });
-
-      var triangles_32 = (!!reuseTriangles && triangleAmount <= reuseTriangles.length) ? reuseTriangles : new Two.Array(triangleAmount);
-      var vertices_32 = (!!reuseVertices && vertexAmount <= reuseVertices.length) ? reuseVertices : new Two.Array(vertexAmount);
-
-      triangles_32.set(triangles);
-      vertices_32.set(vertices);
-
-      return {
-        triangles: triangles_32,
-        vertices: vertices_32,
-        triangleAmount: triangleAmount / 2,
-        vertexAmount: closed ? vertexAmount / 2 : finalVertex * 2
-      };
+      gl.bufferData(gl.ARRAY_BUFFER, this.uv, gl.STATIC_DRAW);
 
     },
 
@@ -5471,26 +3745,33 @@ var Backbone = Backbone || {};
       },
 
       vertex: [
-        'attribute vec2 position;',
-        'uniform mat3 matrix;',
-        'uniform vec2 resolution;',
+        'attribute vec2 a_position;',
+        'attribute vec2 a_textureCoords;',
+        '',
+        'uniform mat3 u_matrix;',
+        'uniform vec2 u_resolution;',
+        '',
+        'varying vec2 v_textureCoords;',
         '',
         'void main() {',
-        '   vec2 projected = (matrix * vec3(position, 1)).xy;',
-        '   vec2 normal = projected / resolution;',
+        '   vec2 projected = (u_matrix * vec3(a_position, 1)).xy;',
+        '   vec2 normal = projected / u_resolution;',
         '   vec2 clipspace = (normal * 2.0) - 1.0;',
         '',
         '   gl_Position = vec4(clipspace * vec2(1.0, -1.0), 0.0, 1.0);',
+        '   v_textureCoords = a_textureCoords;',
         '}'
       ].join('\n'),
 
       fragment: [
         'precision mediump float;',
         '',
-        'uniform vec4 color;',
+        'uniform sampler2D u_image;',
+        'varying vec2 v_textureCoords;',
         '',
         'void main() {',
-        '  gl_FragColor = color;',
+        // '   gl_FragColor = vec4(v_textureCoords.xy, 0.0, 1.0);',
+        '  gl_FragColor = texture2D(u_image, v_textureCoords);',
         '}'
       ].join('\n')
 
@@ -5498,10 +3779,8 @@ var Backbone = Backbone || {};
 
   };
 
-  /**
-   * Webgl Renderer inherits from the Canvas 2d Renderer
-   * with additional modifications.
-   */
+  webgl.ctx = webgl.canvas.getContext('2d');
+
   var Renderer = Two[Two.Types.webgl] = function(options) {
 
     this.domElement = document.createElement('canvas');
@@ -5541,9 +3820,9 @@ var Backbone = Backbone || {};
     // Create and bind the drawing buffer
 
     // look up where the vertex data needs to go.
-    this.program.position = gl.getAttribLocation(this.program, 'position');
-    this.program.color = gl.getUniformLocation(this.program, 'color');
-    this.program.matrix = gl.getUniformLocation(this.program, 'matrix');
+    this.program.position = gl.getAttribLocation(this.program, 'a_position');
+    this.program.matrix = gl.getUniformLocation(this.program, 'u_matrix');
+    this.program.textureCoords = gl.getAttribLocation(this.program, 'a_textureCoords');
 
     // Copied from Three.js WebGLRenderer
     gl.disable(gl.DEPTH_TEST);
@@ -5577,7 +3856,7 @@ var Backbone = Backbone || {};
       this.ctx.viewport(0, 0, width, height);
 
       var resolutionLocation = this.ctx.getUniformLocation(
-        this.program, 'resolution');
+        this.program, 'u_resolution');
       this.ctx.uniform2f(resolutionLocation, width, height);
 
       return this;
@@ -5592,10 +3871,7 @@ var Backbone = Backbone || {};
 
       // Draw a green rectangle
 
-      var gl = this.ctx,
-        program = this.program;
-
-      this.stage.render(gl, this.program);
+      this.stage.render(this.ctx, this.program);
 
       return this;
 
@@ -5627,10 +3903,10 @@ var Backbone = Backbone || {};
       styles.matrix = styles._matrix = matrix.toArray(true);
     }
     if (stroke) {
-      styles.stroke = webgl.interpret(stroke); // Interpret color
+      styles.stroke = stroke;
     }
     if (fill) {
-      styles.fill = webgl.interpret(fill); // Interpret color
+      styles.fill = fill;
     }
     if (_.isNumber(opacity)) {
       styles.opacity = opacity;
@@ -5646,19 +3922,12 @@ var Backbone = Backbone || {};
     }
     if (linewidth) {
       styles.linewidth = linewidth;
-      styles._linewidth = linewidth * getScale(styles._matrix);
     }
     if (vertices) {
-
-      var pointData = webgl.extrapolate(vertices, closed, curved)
-      var vertices = pointData.vertices;
-      var t = webgl.tessellate(vertices, closed, curved, pointData.last);
-
-      styles.triangles = t.triangles;
-      styles.vertices = t.vertices;
-      styles.vertexAmount = t.vertexAmount;
-      styles.triangleAmount = t.triangleAmount;
-
+      styles.vertices = getCommands(vertices, curved, closed);
+      styles.commands = styles.vertices;
+      styles.rect = webgl.getBoundingClientRect(styles.commands, styles.linewidth, styles.curved);
+      styles.triangles = webgl.getTriangles(styles.rect);
     }
     styles.visible = !!visible;
     styles.curved = !!curved;
@@ -5668,92 +3937,38 @@ var Backbone = Backbone || {};
 
   }
 
-  function setStyles(elem, property, value, closed, curved) {
+  function setStyles(elem, property, value, closed, curved, strokeChanged) {
 
-    switch (property) {
-
-      case 'matrix':
-        property = 'matrix';
-        value = value.toArray(true);
-        break;
-      case 'linewidth':
-        property = 'linewidth';
-        elem._linewidth = value * getScale(elem._matrix);
-        break;
-      case 'stroke':
-        // interpret color
-        value = webgl.interpret(value);
-        break;
-      case 'fill':
-        // interpret color
-        value = webgl.interpret(value);
-        break;
-      case 'vertices':
-        property = 'triangles';
-        elem.closed = closed;
-        elem.curved = curved;
-
-        var pointData = webgl.extrapolate(value, closed, curved);
-        var vertices = pointData.vertices;
-        var t = webgl.tessellate(vertices, closed, curved, pointData.last, elem.triangles, elem.vertices);
-
-        value = t.triangles;
-        elem.vertices = t.vertices;
-        elem.vertexAmount = t.vertexAmount;
-        elem.triangleAmount = t.triangleAmount;
-
-        break;
-    }
-
-    elem[property] = value;
-
-    // Try moving this to switch statement
-    if (property === 'triangles') {
-      webgl.updateBuffer(this.ctx, elem, this.positionLocation);
-    }
-    if (property === 'matrix') {
+    if (/matrix/.test(property)) {
+      elem[property] = value.toArray(true);
       elem.updateMatrix();
+    } else if (/(stroke|fill|opacity|cap|join|miter|linewidth)/.test(property)) {
+      elem[property] = value;
+      elem.rect = webgl.getBoundingClientRect(elem.commands, elem.linewidth, elem.curved);
+      elem.triangles = webgl.getTriangles(elem.rect);
+      webgl.updateBuffer(this.ctx, elem, this.program);
+      webgl.updateTexture(this.ctx, elem);
+    } else if (property === 'vertices') {
+      if (!_.isUndefined(closed)) {
+        elem.closed = closed;
+      }
+      if (!_.isUndefined(curved)) {
+        elem.curved = curved;
+      }
+      if (strokeChanged) {
+        elem.commands = getCommands(value, elem.curved, elem.closed);
+      } else {
+        elem.vertices = getCommands(value, elem.curved, elem.closed);
+        elem.commands = elem.vertices;
+      }
+      elem.rect = webgl.getBoundingClientRect(elem.vertices, elem.linewidth, elem.curved);
+      elem.triangles = webgl.getTriangles(elem.rect);
+      webgl.updateBuffer(this.ctx, elem, this.program);
+      webgl.updateTexture(this.ctx, elem);
+    } else {
+      elem[property] = value;
     }
 
-  }
-
-  /**
-   * Remove nested arrays and place all arrays as shallow as possible.
-   */
-  function flatten(array) {
-
-    var result = [];
-
-    _.each(array, function(v) {
-
-      if (_.isArray(v) && _.isArray(v[0])) {
-        result = result.concat(flatten(v));
-      } else {
-        result.push(v);
-      }
-
-    });
-
-    return result;
-
-  }
-
-  function getScale(matrix) {
-
-    var a = matrix[0];
-    var b = matrix[1];
-    var c = matrix[2];
-    var d = matrix[3];
-    var e = matrix[4];
-    var f = matrix[5];
-
-    var v = multiplyMatrix([a, b, c, d, e, f, 0, 0, 1], [1, 0, 1]);
-    return sqrt(v.x * v.x + v.y * v.y);
-
-  }
-
-  function trim(str) {
-    return str.replace(/^\s+|\s+$/g, '');
   }
 
 })();
@@ -5963,8 +4178,8 @@ var Backbone = Backbone || {};
 
       // A bubbled up version of 'change' event for the children.
 
-      var broadcast = _.bind(function(id, property, value, closed, curved) {
-        this.trigger(Two.Events.change, id, property, value, closed, curved);
+      var broadcast = _.bind(function(id, property, value, closed, curved, strokeChanged) {
+        this.trigger(Two.Events.change, id, property, value, closed, curved, strokeChanged);
       }, this);
 
       // Add the objects
@@ -6165,12 +4380,12 @@ var Backbone = Backbone || {};
           renderedVertices.push(new Two.Vector(v.x, v.y));
         }
 
-        strokeChanged = false;
-
       }
 
       this.trigger(Two.Events.change,
-        this.id, 'vertices', renderedVertices, closed, curved);
+        this.id, 'vertices', renderedVertices, closed, curved, strokeChanged);
+
+      strokeChanged = false;
 
     }, this), 0);
 
@@ -6253,6 +4468,25 @@ var Backbone = Backbone || {};
       clone.scale = this.scale;
 
       return clone;
+
+    },
+
+    center: function() {
+
+      var rect = this.getBoundingClientRect();
+
+      rect.centroid = {
+        x: rect.left + rect.width / 2,
+        y: rect.top + rect.height / 2
+      };
+
+      _.each(this.vertices, function(v) {
+        v.subSelf(rect.centroid);
+      });
+
+      this.translation.addSelf(rect.centroid);
+
+      return this;
 
     },
 

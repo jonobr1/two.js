@@ -7,7 +7,6 @@ var files = [
   '../third-party/underscore.js',
   '../third-party/events.js',
   '../third-party/requestAnimationFrame.js',
-  '../third-party/tessellation.js',
   '../src/two.js',
   '../src/vector.js',
   '../src/matrix.js',
