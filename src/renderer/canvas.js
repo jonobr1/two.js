@@ -255,7 +255,9 @@
 
     getStyles: getStyles,
 
-    setStyles: setStyles
+    setStyles: setStyles,
+
+    Utils: canvas
 
   });
 
@@ -346,7 +348,7 @@
 
     },
 
-    update: function(id, property, value, closed, curved) {
+    update: function(id, property, value, closed, curved, strokeChanged) {
 
       var proto = Object.getPrototypeOf(this);
       var constructor = proto.constructor;
@@ -366,7 +368,7 @@
             this.elements[j] = null;
           }, this);
         default:
-          constructor.setStyles.call(this, elem, property, value, closed, curved);
+          constructor.setStyles.call(this, elem, property, value, closed, curved, strokeChanged);
       }
 
       return this;

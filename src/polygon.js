@@ -40,12 +40,12 @@
           renderedVertices.push(new Two.Vector(v.x, v.y));
         }
 
-        strokeChanged = false;
-
       }
 
       this.trigger(Two.Events.change,
-        this.id, 'vertices', renderedVertices, closed, curved);
+        this.id, 'vertices', renderedVertices, closed, curved, strokeChanged);
+
+      strokeChanged = false;
 
     }, this), 0);
 
@@ -128,6 +128,25 @@
       clone.scale = this.scale;
 
       return clone;
+
+    },
+
+    center: function() {
+
+      var rect = this.getBoundingClientRect();
+
+      rect.centroid = {
+        x: rect.left + rect.width / 2,
+        y: rect.top + rect.height / 2
+      };
+
+      _.each(this.vertices, function(v) {
+        v.subSelf(rect.centroid);
+      });
+
+      this.translation.addSelf(rect.centroid);
+
+      return this;
 
     },
 
