@@ -296,8 +296,11 @@
           d = this.elements[3],
           e = this.elements[4],
           f = this.elements[5];
+          g = this.elements[6];
+          h = this.elements[7];
+          i = this.elements[8];
 
-      return new Two.Matrix(a, b, c, d, e, f);
+      return new Two.Matrix(a, b, c, d, e, f, g, h, i);
 
     }
 
