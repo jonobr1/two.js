@@ -43,12 +43,6 @@
       0, 0, 1
     ],
 
-    Determinant: function(a, b, c, d, e, f, g, h, i) {
-
-      return a * e * i - a * f * h - b * d * i + b * f * g + c * d * h - c * e * g;
-
-    },
-
     /**
      * Multiply two matrix 3x3 arrays
      */
@@ -191,21 +185,6 @@
       this.elements[8] = A6 * B2 + A7 * B5 + A8 * B8;
 
       return this;
-
-    },
-
-    /**
-     * Return the determinant of the matrix.
-     */
-    determinant: function() {
-
-      var te = this.elements;
-
-      var a = te[0], b = te[1], c = te[2],
-          d = te[3], e = te[4], f = te[5],
-          g = te[6], h = te[7], i = te[8];
-
-      return a * e * i - a * f * h - b * d * i + b * f * g + c * d * h - c * e * g;
 
     },
 

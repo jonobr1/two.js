@@ -4,19 +4,7 @@
   </head>
   <body>
     <div class="scripts">
-      <!-- // <script src="./build/two.js"></script> -->
-      <script src="./third-party/underscore.js"></script>
-      <script src="./third-party/events.js"></script>
-      <script src="./third-party/requestAnimationFrame.js"></script>
-      <script src="./src/two.js"></script>
-      <script src="./src/vector.js"></script>
-      <script src="./src/matrix.js"></script>
-      <script src="./src/renderer/svg.js"></script>
-      <script src="./src/renderer/canvas.js"></script>
-      <script src="./src/renderer/webgl.js"></script>
-      <script src="./src/shape.js"></script>
-      <script src="./src/group.js"></script>
-      <script src="./src/polygon.js"></script>
+      <script src="./build/two.js"></script>
       <script src="./third-party/stats.js"></script>
       <script>
 
@@ -30,7 +18,7 @@
 
         var two = new Two({
           fullscreen: true,
-          type: Two.Types.webgl
+          type: Two.Types.svg
         }).appendTo(document.body);
 
         var width = 44, height = 64;
