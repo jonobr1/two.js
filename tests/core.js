@@ -4,6 +4,8 @@
  * + Two.Matrix
  */
 
+module('Core');
+
 test('Two.Vector', 44, function() {
 
   var vector = new Two.Vector();
