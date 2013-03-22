@@ -62,7 +62,7 @@
 
     this.cap = 'round';
     this.join = 'round';
-    this.miter = 'round';
+    this.miter = 1;
 
   };
 

@@ -305,8 +305,9 @@
       styles.id = Renderer.Identifier + id;
     }
     if (translation && _.isNumber(scale) && _.isNumber(rotation)) {
-      styles.transform = 'translate(' + translation.x + ',' + translation.y
-        + ') scale(' + scale + ') rotate(' + rotation + ')'
+      // styles.transform = 'translate(' + translation.x + ',' + translation.y
+      //   + ') scale(' + scale + ') rotate(' + rotation + ')'
+      styles.transform = 'matrix(' + o._matrix.toString() + ')';
     }
     if (stroke) {
       styles.stroke = stroke;
@@ -370,8 +371,8 @@
         break;
       case 'opacity':
         svg.setAttributes(elem, {
-          'stroke-opacity': opacity,
-          'fill-opacity': opacity
+          'stroke-opacity': value,
+          'fill-opacity': value
         });
         return;
 

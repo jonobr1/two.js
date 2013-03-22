@@ -82,3 +82,48 @@ test('Two.makeCurve', 1, function() {
   equal(elem.getAttribute('d'), 'M -142.500 -25.000 C -142.500 -25.000 -144.727 25.000 -127.500 25.000 C -110.273 25.000 -129.727 -25.000 -112.500 -25.000 C -95.273 -25.000 -114.727 25.000 -97.500 25.000 C -80.273 25.000 -99.727 -25.000 -82.500 -25.000 C -65.273 -25.000 -84.727 25.000 -67.500 25.000 C -50.273 25.000 -69.727 -25.000 -52.500 -25.000 C -35.273 -25.000 -54.727 25.000 -37.500 25.000 C -20.273 25.000 -39.727 -25.000 -22.500 -25.000 C -5.273 -25.000 -24.727 25.000 -7.500 25.000 C 9.727 25.000 -9.727 -25.000 7.500 -25.000 C 24.727 -25.000 5.273 25.000 22.500 25.000 C 39.727 25.000 20.273 -25.000 37.500 -25.000 C 54.727 -25.000 35.273 25.000 52.500 25.000 C 69.727 25.000 50.273 -25.000 67.500 -25.000 C 84.727 -25.000 65.273 25.000 82.500 25.000 C 99.727 25.000 80.273 -25.000 97.500 -25.000 C 114.727 -25.000 95.273 25.000 112.500 25.000 C 129.727 25.000 110.273 -25.000 127.500 -25.000 C 144.727 -25.000 142.500 25.000 142.500 25.000', 'Two.makeCurve applies d attribute properly.');
 
 });
+
+asyncTest('Styles', 8, function() {
+
+  var shape = two.makeRectangle(two.width / 2, two.height / 2, 50, 50);
+  var elem = document.querySelector('#two-' + shape.id);
+
+  shape.rotation = Math.PI / 2;
+  shape.scale = 0.5;
+
+  shape.fill = 'lightcoral';
+  shape.stroke = '#333';
+  shape.linewidth = 10;
+  shape.opacity = 0.5;
+  shape.join = 'miter';
+  shape.cap = 'butt';
+  shape.miter = 10;
+
+  shape.closed = false;
+  shape.curved = true;
+
+  shape.visible = false;
+  shape.visible = true;
+
+  _.defer(function() {
+
+    // Update Rendering
+    two.update().render();
+
+    var matrix = elem.getAttribute('transform');
+    equal(matrix.match(/matrix\((.*)\)/)[1], shape._matrix.toString(), 'Two.Shape._matrix gets and sets proplery.');
+
+    equal(elem.getAttribute('fill'), shape.fill, 'Two.Shape.fill gets and sets properly.');
+    equal(elem.getAttribute('stroke'), shape.stroke, 'Two.Shape.stroke gets and sets properly.');
+    equal(elem.getAttribute('stroke-linejoin'), shape.join, 'Two.Shape.join gets and sets properly.');
+    equal(elem.getAttribute('stroke-linecap'), shape.cap, 'Two.Shape.cap gets and sets properly.');
+    equal(elem.getAttribute('visibility'), 'visible', 'Two.Shape.visible gets and sets properly.');
+    equal(elem.getAttribute('stroke-miterlimit'), shape.miter, 'Two.Shape.miter gets and sets properly.');
+    ok(elem.getAttribute('stroke-opacity') == shape.opacity
+      && elem.getAttribute('fill-opacity') == shape.opacity, 'Two.Shape.opacity gets and sets properly.');
+
+    start();
+
+  });
+
+});
