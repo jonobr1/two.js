@@ -3540,8 +3540,8 @@ var Backbone = Backbone || {};
         length = commands.length,
         last = length - 1;
 
-      canvas.width = Math.ceil(elem.rect.width * scale);
-      canvas.height = Math.ceil(elem.rect.height * scale);
+      canvas.width = Math.max(Math.ceil(elem.rect.width * scale), 1);
+      canvas.height = Math.max(Math.ceil(elem.rect.height * scale), 1);
 
       var centroid = elem.rect.centroid;
       var cx = centroid.x * scale, cy = centroid.y * scale;
@@ -3778,6 +3778,7 @@ var Backbone = Backbone || {};
 
   var Renderer = Two[Two.Types.webgl] = function(options) {
 
+    this.count = 0;
     this.domElement = document.createElement('canvas');
 
     this.elements = [];
@@ -4218,7 +4219,8 @@ var Backbone = Backbone || {};
         this.trigger(Two.Events.change, this.id, Two.Properties.hierarchy, ids);
       }
 
-      return this.center();
+      return this;
+      // return this.center();
 
     },
 
@@ -4283,7 +4285,8 @@ var Backbone = Backbone || {};
         this.trigger(Two.Events.change, this.id, Two.Properties.demotion, ids);
       }
 
-      return this.center();
+      return this;
+      // return this.center();
 
     },
 

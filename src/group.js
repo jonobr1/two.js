@@ -102,7 +102,8 @@
         this.trigger(Two.Events.change, this.id, Two.Properties.hierarchy, ids);
       }
 
-      return this.center();
+      return this;
+      // return this.center();
 
     },
 
@@ -167,7 +168,8 @@
         this.trigger(Two.Events.change, this.id, Two.Properties.demotion, ids);
       }
 
-      return this.center();
+      return this;
+      // return this.center();
 
     },
 
