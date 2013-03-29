@@ -7,14 +7,14 @@
 
     this._matrix = new Two.Matrix();
 
-    var updateMatrix = /*_.debounce(*/_.bind(function() {
+    var updateMatrix = _.debounce(_.bind(function() {
       var transform = this._matrix
         .identity()
         .translate(this.translation.x, this.translation.y)
         .scale(this.scale)
         .rotate(this.rotation);
       this.trigger(Two.Events.change, this.id, 'matrix', transform, this.scale);
-    }, this);//, 0);
+    }, this), 0);
 
     this._rotation = 'rotation';
 

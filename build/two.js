@@ -4003,14 +4003,14 @@ var Backbone = Backbone || {};
 
     this._matrix = new Two.Matrix();
 
-    var updateMatrix = /*_.debounce(*/_.bind(function() {
+    var updateMatrix = _.debounce(_.bind(function() {
       var transform = this._matrix
         .identity()
         .translate(this.translation.x, this.translation.y)
         .scale(this.scale)
         .rotate(this.rotation);
       this.trigger(Two.Events.change, this.id, 'matrix', transform, this.scale);
-    }, this);//, 0);
+    }, this), 0);
 
     this._rotation = 'rotation';
 
@@ -4385,7 +4385,7 @@ var Backbone = Backbone || {};
     var strokeChanged = false;
     var renderedVertices = vertices.slice(0);
 
-    var updateVertices = /**_.debounce(*/_.bind(function(property) { // Call only once a frame.
+    var updateVertices = _.debounce(_.bind(function(property) { // Call only once a frame.
 
       var l, ia, ib, last;
 
@@ -4411,7 +4411,7 @@ var Backbone = Backbone || {};
 
       strokeChanged = false;
 
-    }, this);//, 0);
+    }, this), 0);
 
     Object.defineProperty(this, 'closed', {
       get: function() {

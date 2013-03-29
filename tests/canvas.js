@@ -16,9 +16,13 @@
 
     var line = two.makeLine(0, 0, two.width, two.height);
 
-    two.render();
+    _.defer(function() {
 
-    compare.call(o, './images/canvas/line.png', two.renderer, 'Two.makeLine renders properly.');
+      two.render();
+
+      compare.call(o, './images/canvas/line.png', two.renderer, 'Two.makeLine renders properly.');
+
+    });
 
   });
 
@@ -32,9 +36,13 @@
 
     var rect = two.makeRectangle(two.width / 2, two.height / 2, 100, 100);
 
-    two.render();
+    _.defer(function() {
 
-    compare.call(o, './images/canvas/rectangle.png', two.renderer, 'Two.makeRectangle renders properly.');
+      two.render();
+
+      compare.call(o, './images/canvas/rectangle.png', two.renderer, 'Two.makeRectangle renders properly.');
+
+    });
 
   });
 
@@ -48,9 +56,13 @@
 
     var ellipse = two.makeEllipse(two.width / 2, two.height / 2, 100, 100);
 
-    two.render();
+    _.defer(function() {
 
-    compare.call(o, './images/canvas/ellipse.png', two.renderer, 'Two.makeEllipse renders properly.');
+      two.render();
+
+      compare.call(o, './images/canvas/ellipse.png', two.renderer, 'Two.makeEllipse renders properly.');
+
+    });
 
   });
 
@@ -65,9 +77,13 @@
 
     var circle = two.makeCircle(two.width / 2, two.height / 2, 50);
 
-    two.render();
+    _.defer(function() {
 
-    compare.call(o, './images/canvas/circle.png', two.renderer, 'Two.makeCircle renders properly.');
+      two.render();
+
+      compare.call(o, './images/canvas/circle.png', two.renderer, 'Two.makeCircle renders properly.');
+
+    });
 
   });
 
@@ -89,9 +105,13 @@
     });
     var poly = two.makePolygon(points, true);
 
-    two.render();
+    _.defer(function() {
 
-    compare.call(o, './images/canvas/polygon.png', two.renderer, 'Two.makePolygon renders properly.');
+      two.render();
+
+      compare.call(o, './images/canvas/polygon.png', two.renderer, 'Two.makePolygon renders properly.');
+
+    });
 
   });
 
@@ -113,9 +133,13 @@
     });
     var poly = two.makeCurve(points, true);
 
-    two.render();
+    _.defer(function() {
 
-    compare.call(o, './images/canvas/curve.png', two.renderer, 'Two.makeCurve renders properly.');
+      two.render();
+
+      compare.call(o, './images/canvas/curve.png', two.renderer, 'Two.makeCurve renders properly.');
+
+    });
 
   });
 
@@ -146,9 +170,13 @@
     shape.visible = false;
     shape.visible = true;
 
-    two.render();
+    _.defer(function() {
 
-    compare.call(o, './images/canvas/styles.png', two.renderer, 'Styles render properly.');
+      two.render();
+
+      compare.call(o, './images/canvas/styles.png', two.renderer, 'Styles render properly.');
+
+    });
 
   });
 
