@@ -178,11 +178,11 @@
 
   function addSvgToTest(o, two) {
 
-    var domElement = document.createElement('div');
+    var domElement = document.createElement('li');
     domElement.appendChild(two.renderer.domElement);
 
     _.delay(function() {
-      document.querySelector('#' + o.id + ' ol li').appendChild(domElement);
+      document.querySelector('#' + o.id + ' ol').appendChild(domElement);
     }, 100);
 
   }

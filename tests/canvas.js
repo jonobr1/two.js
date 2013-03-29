@@ -175,14 +175,14 @@
           img.src = path;
           img.title = 'Reference Image';
 
-          var domElement = document.createElement('div');
+          var domElement = document.createElement('li');
           renderer.domElement.title = 'Computed Image';
 
           domElement.appendChild(img);
           domElement.appendChild(renderer.domElement);
 
           _.delay(function() {
-            document.querySelector('#' + _this.id + ' ol li').appendChild(domElement);
+            document.querySelector('#' + _this.id + ' ol').appendChild(domElement);
           }, 100);
 
         });
