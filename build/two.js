@@ -2448,7 +2448,6 @@ var Backbone = Backbone || {};
   /**
    * Scope specific variables
    */
-  var OBJECT_COUNT = 0;
 
   // Localize variables
   var getCurveFromPoints = Two.Utils.getCurveFromPoints,
@@ -2584,9 +2583,9 @@ var Backbone = Backbone || {};
    */
   var Renderer = Two[Two.Types.svg] = function() {
 
+    this.count = 0;
     this.domElement = svg.createElement('svg');
     this.elements = [];
-    this.commands = [];
 
     this.domElement.style.visibility = 'hidden';
 
@@ -2639,7 +2638,7 @@ var Backbone = Backbone || {};
         var elem, tag, styles, isGroup = object instanceof Two.Group;
 
         if (_.isUndefined(object.id)) {
-          object.id = generateId();
+          object.id = generateId.call(this);
         }
 
         // Generate an SVG equivalent element here.
@@ -2677,9 +2676,26 @@ var Backbone = Backbone || {};
 
     },
 
-    update: function(id, property, value) {
+    update: function(id, property, value, closed, curved) {
 
-      this.commands.push(arguments);
+      var elements = this.elements;
+      var elem = elements[id];
+
+      switch (property) {
+
+        case Two.Properties.hierarchy:
+          _.each(value, function(j) {
+            elem.appendChild(elements[j]);
+          });
+          break;
+        case Two.Properties.demotion:
+          _.each(value, function(j) {
+            elem.removeChild(elements[j]);
+          });
+          break;
+        default:
+          setStyles(elem, property, value, closed, curved);
+      }
 
       return this;
 
@@ -2688,38 +2704,6 @@ var Backbone = Backbone || {};
     render: function() {
 
       this.unveil();
-
-      var elements = this.elements,
-        selector = Renderer.Identifier;
-
-      _.each(this.commands, function(command) {
-
-        var i = command[0],
-          property = command[1],
-          value = command[2],
-          closed = command[3],  // Only exists for "d/vertices" property
-          curved = command[4],
-          elem = elements[i];
-
-        switch (property) {
-
-          case Two.Properties.hierarchy:
-            _.each(value, function(j) {
-              elem.appendChild(elements[j]);
-            });
-            break;
-          case Two.Properties.demotion:
-            _.each(value, function(j) {
-              elem.removeChild(elements[j]);
-            });
-            break;
-          default:
-            setStyles(elem, property, value, closed, curved);
-        }
-
-      }, this);
-
-      this.commands.length = 0;
 
       return this;
 
@@ -2828,8 +2812,8 @@ var Backbone = Backbone || {};
   }
 
   function generateId() {
-    var count = OBJECT_COUNT;
-    OBJECT_COUNT++;
+    var count = this.count;
+    this.count++;
     return count;
   }
 
@@ -2839,7 +2823,6 @@ var Backbone = Backbone || {};
   /**
    * Constants
    */
-  var OBJECT_COUNT = 0;
 
   // Localize variables
   var getCurveFromPoints = Two.Utils.getCurveFromPoints,
@@ -3067,6 +3050,7 @@ var Backbone = Backbone || {};
 
   var Renderer = Two[Two.Types.canvas] = function() {
 
+    this.count = 0;
     this.domElement = document.createElement('canvas');
     this.ctx = this.domElement.getContext('2d');
 
@@ -3141,7 +3125,7 @@ var Backbone = Backbone || {};
           isStage = _.isNull(this.stage);
 
         if (_.isUndefined(object.id)) {
-          object.id = generateId();
+          object.id = generateId.call(this);
         }
 
         // Generate an element, a JavaScript object, that holds all the
@@ -3313,8 +3297,8 @@ var Backbone = Backbone || {};
   }
 
   function generateId() {
-    var count = OBJECT_COUNT;
-    OBJECT_COUNT++;
+    var count = this.count;
+    this.count++;
     return count;
   }
 
@@ -4003,14 +3987,14 @@ var Backbone = Backbone || {};
 
     this._matrix = new Two.Matrix();
 
-    var updateMatrix = _.debounce(_.bind(function() {
+    var updateMatrix = /*_.debounce(*/_.bind(function() {
       var transform = this._matrix
         .identity()
         .translate(this.translation.x, this.translation.y)
         .scale(this.scale)
         .rotate(this.rotation);
       this.trigger(Two.Events.change, this.id, 'matrix', transform, this.scale);
-    }, this), 0);
+    }, this);//, 0);
 
     this._rotation = 'rotation';
 
@@ -4383,7 +4367,7 @@ var Backbone = Backbone || {};
     var strokeChanged = false;
     var renderedVertices = vertices.slice(0);
 
-    var updateVertices = _.debounce(_.bind(function(property) { // Call only once a frame.
+    var updateVertices = /**_.debounce(*/_.bind(function(property) { // Call only once a frame.
 
       var l, ia, ib, last;
 
@@ -4409,7 +4393,7 @@ var Backbone = Backbone || {};
 
       strokeChanged = false;
 
-    }, this), 0);
+    }, this);//, 0);
 
     Object.defineProperty(this, 'closed', {
       get: function() {

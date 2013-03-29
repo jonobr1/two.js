@@ -3,7 +3,6 @@
   /**
    * Constants
    */
-  var OBJECT_COUNT = 0;
 
   // Localize variables
   var getCurveFromPoints = Two.Utils.getCurveFromPoints,
@@ -231,6 +230,7 @@
 
   var Renderer = Two[Two.Types.canvas] = function() {
 
+    this.count = 0;
     this.domElement = document.createElement('canvas');
     this.ctx = this.domElement.getContext('2d');
 
@@ -305,7 +305,7 @@
           isStage = _.isNull(this.stage);
 
         if (_.isUndefined(object.id)) {
-          object.id = generateId();
+          object.id = generateId.call(this);
         }
 
         // Generate an element, a JavaScript object, that holds all the
@@ -477,8 +477,8 @@
   }
 
   function generateId() {
-    var count = OBJECT_COUNT;
-    OBJECT_COUNT++;
+    var count = this.count;
+    this.count++;
     return count;
   }
 

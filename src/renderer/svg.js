@@ -3,7 +3,6 @@
   /**
    * Scope specific variables
    */
-  var OBJECT_COUNT = 0;
 
   // Localize variables
   var getCurveFromPoints = Two.Utils.getCurveFromPoints,
@@ -139,9 +138,9 @@
    */
   var Renderer = Two[Two.Types.svg] = function() {
 
+    this.count = 0;
     this.domElement = svg.createElement('svg');
     this.elements = [];
-    this.commands = [];
 
     this.domElement.style.visibility = 'hidden';
 
@@ -194,7 +193,7 @@
         var elem, tag, styles, isGroup = object instanceof Two.Group;
 
         if (_.isUndefined(object.id)) {
-          object.id = generateId();
+          object.id = generateId.call(this);
         }
 
         // Generate an SVG equivalent element here.
@@ -232,9 +231,26 @@
 
     },
 
-    update: function(id, property, value) {
+    update: function(id, property, value, closed, curved) {
 
-      this.commands.push(arguments);
+      var elements = this.elements;
+      var elem = elements[id];
+
+      switch (property) {
+
+        case Two.Properties.hierarchy:
+          _.each(value, function(j) {
+            elem.appendChild(elements[j]);
+          });
+          break;
+        case Two.Properties.demotion:
+          _.each(value, function(j) {
+            elem.removeChild(elements[j]);
+          });
+          break;
+        default:
+          setStyles(elem, property, value, closed, curved);
+      }
 
       return this;
 
@@ -243,38 +259,6 @@
     render: function() {
 
       this.unveil();
-
-      var elements = this.elements,
-        selector = Renderer.Identifier;
-
-      _.each(this.commands, function(command) {
-
-        var i = command[0],
-          property = command[1],
-          value = command[2],
-          closed = command[3],  // Only exists for "d/vertices" property
-          curved = command[4],
-          elem = elements[i];
-
-        switch (property) {
-
-          case Two.Properties.hierarchy:
-            _.each(value, function(j) {
-              elem.appendChild(elements[j]);
-            });
-            break;
-          case Two.Properties.demotion:
-            _.each(value, function(j) {
-              elem.removeChild(elements[j]);
-            });
-            break;
-          default:
-            setStyles(elem, property, value, closed, curved);
-        }
-
-      }, this);
-
-      this.commands.length = 0;
 
       return this;
 
@@ -383,8 +367,8 @@
   }
 
   function generateId() {
-    var count = OBJECT_COUNT;
-    OBJECT_COUNT++;
+    var count = this.count;
+    this.count++;
     return count;
   }
 

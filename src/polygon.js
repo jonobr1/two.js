@@ -21,7 +21,7 @@
     var strokeChanged = false;
     var renderedVertices = vertices.slice(0);
 
-    var updateVertices = _.debounce(_.bind(function(property) { // Call only once a frame.
+    var updateVertices = /**_.debounce(*/_.bind(function(property) { // Call only once a frame.
 
       var l, ia, ib, last;
 
@@ -47,7 +47,7 @@
 
       strokeChanged = false;
 
-    }, this), 0);
+    }, this);//, 0);
 
     Object.defineProperty(this, 'closed', {
       get: function() {

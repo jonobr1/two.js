@@ -1,4 +1,9 @@
 /**
+ * Modified for use with two.js comparisons.
+ * @jonobr1 / http://jonobr1.com
+ */
+
+/**
  * QUnit v1.10.0 - A JavaScript Unit Testing Framework
  *
  * http://qunitjs.com
@@ -128,12 +133,12 @@ Test.prototype = {
 		}
 
 		if ( config.notrycatch ) {
-			this.callback.call( this.testEnvironment, QUnit.assert );
+			this.callback.call( this.testEnvironment, this );
 			return;
 		}
 
 		try {
-			this.callback.call( this.testEnvironment, QUnit.assert );
+			this.callback.call( this.testEnvironment, this );
 		} catch( e ) {
 			QUnit.pushFailure( "Died on test #" + (this.assertions.length + 1) + " " + this.stack + ": " + e.message, extractStacktrace( e, 0 ) );
 			// else next test will carry the responsibility
