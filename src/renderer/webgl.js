@@ -625,6 +625,13 @@
     styles.curved = !!curved;
     styles.closed = !!closed;
 
+    // Update buffer and texture
+
+    if (o instanceof Two.Polygon) {
+      webgl.updateBuffer(this.ctx, styles, this.program);
+      Element.prototype.updateTexture.call(styles, this.ctx);
+    }
+
     return styles;
 
   }

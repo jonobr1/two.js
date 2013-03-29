@@ -1348,6 +1348,14 @@ var Backbone = Backbone || {};
         bottom: 0,
         position: 'fixed'
       });
+      _.extend(this.renderer.domElement.style, {
+        display: 'block',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        position: 'fixed'
+      })
       dom.bind(window, 'resize', fitted);
       fitted();
 
@@ -3929,6 +3937,13 @@ var Backbone = Backbone || {};
     styles.visible = !!visible;
     styles.curved = !!curved;
     styles.closed = !!closed;
+
+    // Update buffer and texture
+
+    if (o instanceof Two.Polygon) {
+      webgl.updateBuffer(this.ctx, styles, this.program);
+      Element.prototype.updateTexture.call(styles, this.ctx);
+    }
 
     return styles;
 
