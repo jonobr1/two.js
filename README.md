@@ -9,8 +9,6 @@ __This is considered alpha grade__. A two-dimensional drawing api meant for mode
 
 ### Concerns:
 + `Two.Group` unable to re-add.
-+ How does `canvas2d` perform on `ctx.fillStyle` and `ctx.setStyle` at high volumes of particles.
-+ How to do stroke properties, namely `miter`, `cap`, and `join`, in `webgl`.
 
 ### Up for discussion:
 + Add `width` and `height` properties to `Two.Polygon`.
