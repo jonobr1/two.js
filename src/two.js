@@ -160,6 +160,326 @@
 
       },
 
+      applySvgAttributes: function(node, elem) {
+
+        _.each(node.attributes, function(v, k) {
+
+          
+
+        });
+
+        return elem;
+
+      },
+
+      /**
+       * Read any number of SVG node types and create Two equivalents of them.
+       */
+      read: {
+
+        svg: function() {
+          return Two.Utils.read.g.apply(this, arguments);
+        },
+
+        g: function(node) {
+
+          var group = new Two.Group();
+
+          _.each(group.childNodes, function(n) {
+
+            var tag = n.tagName.toLowerCase();
+
+            if (!(n in Two.Utils.read)) {
+              return;
+            }
+
+            var n = Two.Utils.read[tag](n);
+
+            group.add(n);
+
+          });
+
+          return Two.Utils.applySvgAttributes(node, group);
+
+        },
+
+        polygon: function(node, open) {
+
+          var points = node.points;
+          var verts = _.map(_.range(points.numberOfItems), function(i) {
+            var p = points.getItem(i);
+            return new Two.Vector(p.x, p.y);
+          });
+
+          var poly = new Two.Polygon(verts, !open);
+
+          return Two.Utils.applySvgAttributes(node, poly);
+
+        },
+
+        polyline: function(node) {
+          return Two.Utils.read.polygon(node, true);
+        },
+
+        path: function(node) {
+
+          var data = node.getAttribute('d');
+          // Retrieve an array of all commands.
+          var paths = _.flatten(_.map(_.compact(data.split(/M/g)), function(str) {
+            var rels = _.map(_.compact(str.split(/m/g)), function(str) {
+              return 'm' + str;
+            });
+            rels[0] = 'M' + rels[0];
+            return rels;
+          }));
+
+          // Create Two.Polygons from the paths.
+          var length = paths.length;
+          var coord = new Two.Vector();
+          var control = new Two.Vector();
+          var polys = _.map(paths, function(path) {
+
+            var coords, relative = false;
+            var closed = false;
+
+            var points = _.flatten(_.map(path.match(/[a-z][^a-z]*/ig), function(command) {
+
+              var result, x, y;
+              var type = command[0];
+              var lower = type.toLowerCase();
+
+              coords = command.slice(1).trim().split(/[\s,]+|(?=[+-])/);
+              relative = type === lower;
+
+              switch(lower) {
+
+                case 'z':
+                  closed = true;
+                  break;
+
+                case 'm':
+                case 'l':
+
+                  x = parseFloat(coords[0]);
+                  y = parseFloat(coords[1]);
+
+                  result = new Two.Vector(x, y);
+
+                  if (relative) {
+                    result.addSelf(coord);
+                  }
+
+                  coord.copy(result);
+                  break;
+
+                case 'h':
+                case 'v':
+
+                  var attr = lower === 'h' ? 'x' : 'y';
+
+                  result = new Two.Vector();
+                  result[attr] = coord[0];
+
+                  if (relative) {
+                    result.addSelf(coord);
+                  }
+
+                  coord.copy(result);
+                  break;
+
+                case 's':
+                case 'c':
+
+                  var x1, y1, x2, y2, x3, y3, x4, y4;
+
+                  x1 = coord.x, y1 = coord.y;
+
+                  if (lower === 'c') {
+
+                    x2 = coords[0], y2 = coords[1];
+                    x3 = coords[2], y3 = coords[3];
+                    x4 = coords[4], y4 = coords[5];
+
+                  } else {
+
+                    // Calculate reflection control point for proper x2, y2
+                    // inclusion.
+
+                    var reflection = new Two.Vector().copy(coord)
+                      .multiplyScalar(2).subSelf(control);
+
+                    x2 = reflection.x, y2 = reflection.y;
+                    x3 = coords[0], y3 = coords[1];
+                    x4 = coords[2], y4 = coords[3];
+
+                  }
+
+                  if (relative) {
+                    x2 += x1, y2 += y1;
+                    x3 += x1, y3 += y1;
+                    x4 += x1, y4 += y1;
+                  }
+
+                  result = subdivide(x1, y1, x2, y2, x3, y3, x4, y4);
+                  coord.set(x4, y4);
+                  control.set(x3, y3);
+                  break;
+
+                case 't':
+                case 'q':
+
+                  var x1, y1, x2, y2, x3, y3, x4, y4;
+
+                  x1 = coord.x, y1 = coord.y;
+                  if (control.isZero()) {
+                    x2 = x1, y2 = y1;
+                  } else {
+                    x2 = control.x, y1 = control.y;
+                  }
+
+                  if (lower === 'q') {
+
+                    x3 = coords[0], y3 = coords[1];
+                    x4 = coords[1], y4 = coords[2];
+
+                  } else {
+
+                    var reflection = new Two.Vector().copy(coord)
+                      .multiplyScalar(2).subSelf(control);
+
+                    x3 = reflection.x, y3 = reflection.y;
+                    x4 = coords[0], y4 = coords[1];
+
+                  }
+
+                  if (relative) {
+                    x2 += x1, y2 += y1;
+                    x3 += x1, y3 += y1;
+                    x4 += x1, y4 += y1;
+                  }
+
+                  result = subdivide(x1, y1, x2, y2, x3, y3, x4, y4);
+                  coord.set(x4, y4);
+                  control.set(x3, y3);
+                  break;
+
+                case 'a':
+                  throw new Two.Utils.Error('not yet able to interpret Elliptical Arcs.');
+                  break;
+
+              }
+
+              return result;
+
+            }));
+
+            var poly = new Two.Polygon(points, closed);
+            return Two.Utils.applySvgAttributes(node, poly);
+
+          });
+
+          return polys;
+
+        },
+
+        circle: function(node) {
+
+          var x = parseFloat(node.getAttribute('cx'));
+          var y = parseFloat(node.getAttribute('cy'));
+          var r = parseFloat(node.getAttribute('r'));
+
+          var amount = Two.Resolution;
+          var points = _.map(_.range(amount), function(i) {
+            var pct = i / amount;
+            var theta = pct * TWO_PI;
+            var x = r * cos(theta);
+            var y = r * sin(theta);
+            return new Two.Vector(x, y);
+          }, this);
+
+          var circle = new Two.Polygon(points, true, true);
+          circle.translation.set(x, y);
+
+          return Two.Utils.applySvgAttributes(node, circle);
+
+        },
+
+        ellipse: function(node) {
+
+          var x = parseFloat(node.getAttribute('cx'));
+          var y = parseFloat(node.getAttribute('cy'));
+          var width = parseFloat(node.getAttribute('rx'));
+          var height = parseFloat(node.getAttribute('ry'));
+
+          var amount = Two.Resolution;
+          var points = _.map(_.range(amount), function(i) {
+            var pct = i / amount;
+            var theta = pct * TWO_PI;
+            var x = width * cos(theta);
+            var y = height * sin(theta);
+            return new Two.Vector(x, y);
+          }, this);
+
+          var ellipse = new Two.Polygon(points, true, true);
+          ellipse.translation.set(x, y);
+
+          return Two.Utils.applySvgAttributes(node, ellipse);
+
+        },
+
+        rect: function(node) {
+
+          var x = parseFloat(node.getAttribute('x'));
+          var y = parseFloat(node.getAttribute('y'));
+          var width = parseFloat(node.getAttribute('width'));
+          var height = parseFloat(node.getAttribute('height'));
+
+          var w2 = width / 2;
+          var h2 = height / 2;
+
+          var points = [
+            new Two.Vector(w2, h2),
+            new Two.Vector(-w2, h2),
+            new Two.Vector(-w2, -h2),
+            new Two.Vector(w2, -h2)
+          ];
+
+          var rect = new Two.Polygon(points, true);
+          rect.translation.set(x + w2, y + h2);
+
+          return Two.Utils.applySvgAttributes(node, rect);
+
+        },
+
+        line: function(node) {
+
+          var x1 = parseFloat(node.getAttribute('x1'));
+          var y1 = parseFloat(node.getAttribute('y1'));
+          var x2 = parseFloat(node.getAttribute('x2'));
+          var y2 = parseFloat(node.getAttribute('y2'));
+
+          var width = x2 - x1;
+          var height = y2 - y1;
+
+          var w2 = width / 2;
+          var h2 = height / 2;
+
+          var points = [
+            new Two.Vector(- w2, - h2),
+            new Two.Vector(w2, h2)
+          ];
+
+          // Center line and translate to desired position.
+
+          var line = new Two.Polygon(points).noFill();
+          line.translation.set(x1 + w2, y1 + h2);
+
+          return Two.Utils.applySvgAttributes(node, line);
+
+        }
+
+      },
+
       /**
        * Given 2 points (a, b) and corresponding control point for each
        * return an array of points that represent an Adaptive Subdivision
@@ -684,9 +1004,31 @@
 
       return group;
 
-    }
+    },
 
     // Utility Functions will go here.
+
+    /**
+     * Interpret an SVG Node and add it to this instance's scene. The
+     * distinction should be made that this doesn't `import` svg's, it solely
+     * interprets them into something compatible for Two.js — this is slightly
+     * different than a direct transcription.
+     */
+    interpret: function(svgNode) {
+
+      var tag = svgNode.tagName.toLowerCase();
+
+      if (!(tag in Two.Utils.read)) {
+        return null;
+      }
+
+      var node = Two.Utils.read[tag](svgNode);
+
+      this.add(node);
+
+      return node;
+
+    }
 
   });
 
