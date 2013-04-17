@@ -58,6 +58,7 @@
       });
 
       var group = new Group();
+      this.parent.add(group);
       group.add(children);
 
       group.translation.copy(this.translation);
