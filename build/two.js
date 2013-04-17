@@ -1434,7 +1434,49 @@ var Backbone = Backbone || {};
 
         _.each(node.attributes, function(v, k) {
 
+          var property = v.nodeName;
 
+          switch (property) {
+
+            case 'transform':
+
+              // Need to figure out how to decompose matrix into
+              // translation, rotation, scale.
+
+              // var transforms = node[k].baseVal;
+              // var matrix = new Two.Matrix();
+              // _.each(_.range(transforms.numberOfItems), function(i) {
+              //   var m = transforms.getItem(i).matrix;
+              //   matrix.multiply(m.a, m.b, m.c, m.d, m.e, m.f);
+              // });
+              // elem.setMatrix(matrix);
+              break;
+            case 'visibility':
+              elem.visible = !!v.nodeValue;
+              break;
+            case 'stroke-linecap':
+              elem.cap = v.nodeValue;
+              break;
+            case 'stroke-linejoin':
+              elem.join = v.nodeValue;
+              break;
+            case 'stroke-miterlimit':
+              elem.miter = v.nodeValue;
+              break;
+            case 'stroke-width':
+              elem.linewidth = parseFloat(v.nodeValue);
+              break;
+            case 'stroke-opacity':
+            case 'fill-opacity':
+              elem.opacity = v.nodeValue;
+              break;
+            case 'fill':
+              elem.fill = v.nodeValue;
+              break;
+            case 'stroke':
+              elem.stroke = v.nodeValue;
+              break;
+          }
 
         });
 
@@ -1455,19 +1497,22 @@ var Backbone = Backbone || {};
 
           var group = new Two.Group();
 
-          _.each(group.childNodes, function(n) {
+          this.add(group);
 
-            var tag = n.tagName.toLowerCase();
+          _.each(node.childNodes, function(n) {
 
-            if (!(n in Two.Utils.read)) {
+            if (!n.localName) {
               return;
             }
 
-            var n = Two.Utils.read[tag](n);
+            var tag = n.localName.toLowerCase();
 
-            group.add(n);
+            if ((tag in Two.Utils.read)) {
+              var n = Two.Utils.read[tag].call(this, n);
+              group.add(n);
+            }
 
-          });
+          }, this);
 
           return Two.Utils.applySvgAttributes(node, group);
 
@@ -1481,7 +1526,7 @@ var Backbone = Backbone || {};
             return new Two.Vector(p.x, p.y);
           });
 
-          var poly = new Two.Polygon(verts, !open);
+          var poly = new Two.Polygon(verts, !open).noStroke();
 
           return Two.Utils.applySvgAttributes(node, poly);
 
@@ -1496,7 +1541,10 @@ var Backbone = Backbone || {};
           var data = node.getAttribute('d');
           // Retrieve an array of all commands.
           var paths = _.flatten(_.map(_.compact(data.split(/M/g)), function(str) {
-            var rels = _.map(_.compact(str.split(/m/g)), function(str) {
+            var rels = _.map(_.compact(str.split(/m/g)), function(str, i) {
+              if (i <= 0) {
+                return str;
+              }
               return 'm' + str;
             });
             rels[0] = 'M' + rels[0];
@@ -1545,13 +1593,15 @@ var Backbone = Backbone || {};
                 case 'h':
                 case 'v':
 
-                  var attr = lower === 'h' ? 'x' : 'y';
+                  var a = lower === 'h' ? 'x' : 'y';
+                  var b = a === 'x' ? 'y' : 'x';
 
                   result = new Two.Vector();
-                  result[attr] = coord[0];
+                  result[a] = parseFloat(coords[0]);
+                  result[b] = coord[b];
 
                   if (relative) {
-                    result.addSelf(coord);
+                    result[a] += coord[a];
                   }
 
                   coord.copy(result);
@@ -1566,21 +1616,20 @@ var Backbone = Backbone || {};
 
                   if (lower === 'c') {
 
-                    x2 = coords[0], y2 = coords[1];
-                    x3 = coords[2], y3 = coords[3];
-                    x4 = coords[4], y4 = coords[5];
+                    x2 = parseFloat(coords[0]), y2 = parseFloat(coords[1]);
+                    x3 = parseFloat(coords[2]), y3 = parseFloat(coords[3]);
+                    x4 = parseFloat(coords[4]), y4 = parseFloat(coords[5]);
 
                   } else {
 
                     // Calculate reflection control point for proper x2, y2
                     // inclusion.
 
-                    var reflection = new Two.Vector().copy(coord)
-                      .multiplyScalar(2).subSelf(control);
+                    var reflection = new Two.Vector().copy(coord).subSelf(control);
 
-                    x2 = reflection.x, y2 = reflection.y;
-                    x3 = coords[0], y3 = coords[1];
-                    x4 = coords[2], y4 = coords[3];
+                    x2 = parseFloat(reflection.x), y2 = parseFloat(reflection.y);
+                    x3 = parseFloat(coords[0]), y3 = parseFloat(coords[1]);
+                    x4 = parseFloat(coords[2]), y4 = parseFloat(coords[3]);
 
                   }
 
@@ -1590,7 +1639,7 @@ var Backbone = Backbone || {};
                     x4 += x1, y4 += y1;
                   }
 
-                  result = subdivide(x1, y1, x2, y2, x3, y3, x4, y4);
+                  result = Two.Utils.subdivide(x1, y1, x2, y2, x3, y3, x4, y4);
                   coord.set(x4, y4);
                   control.set(x3, y3);
                   break;
@@ -1609,16 +1658,15 @@ var Backbone = Backbone || {};
 
                   if (lower === 'q') {
 
-                    x3 = coords[0], y3 = coords[1];
-                    x4 = coords[1], y4 = coords[2];
+                    x3 = parseFloat(coords[0]), y3 = parseFloat(coords[1]);
+                    x4 = parseFloat(coords[1]), y4 = parseFloat(coords[2]);
 
                   } else {
 
-                    var reflection = new Two.Vector().copy(coord)
-                      .multiplyScalar(2).subSelf(control);
+                    var reflection = new Two.Vector().copy(coord).subSelf(control);
 
-                    x3 = reflection.x, y3 = reflection.y;
-                    x4 = coords[0], y4 = coords[1];
+                    x3 = parseFloat(reflection.x), y3 = parseFloat(reflection.y);
+                    x4 = parseFloat(coords[0]), y4 = parseFloat(coords[1]);
 
                   }
 
@@ -1628,7 +1676,7 @@ var Backbone = Backbone || {};
                     x4 += x1, y4 += y1;
                   }
 
-                  result = subdivide(x1, y1, x2, y2, x3, y3, x4, y4);
+                  result = Two.Utils.subdivide(x1, y1, x2, y2, x3, y3, x4, y4);
                   coord.set(x4, y4);
                   control.set(x3, y3);
                   break;
@@ -1643,7 +1691,11 @@ var Backbone = Backbone || {};
 
             }));
 
-            var poly = new Two.Polygon(points, closed);
+            if (_.isUndefined(points[points.length - 1])) {
+              points.pop();
+            }
+
+            var poly = new Two.Polygon(points, closed).noStroke();
             return Two.Utils.applySvgAttributes(node, poly);
 
           });
@@ -1667,7 +1719,7 @@ var Backbone = Backbone || {};
             return new Two.Vector(x, y);
           }, this);
 
-          var circle = new Two.Polygon(points, true, true);
+          var circle = new Two.Polygon(points, true, true).noStroke();
           circle.translation.set(x, y);
 
           return Two.Utils.applySvgAttributes(node, circle);
@@ -1690,7 +1742,7 @@ var Backbone = Backbone || {};
             return new Two.Vector(x, y);
           }, this);
 
-          var ellipse = new Two.Polygon(points, true, true);
+          var ellipse = new Two.Polygon(points, true, true).noStroke();
           ellipse.translation.set(x, y);
 
           return Two.Utils.applySvgAttributes(node, ellipse);
@@ -1714,7 +1766,7 @@ var Backbone = Backbone || {};
             new Two.Vector(w2, -h2)
           ];
 
-          var rect = new Two.Polygon(points, true);
+          var rect = new Two.Polygon(points, true).noStroke();
           rect.translation.set(x + w2, y + h2);
 
           return Two.Utils.applySvgAttributes(node, rect);
@@ -2292,7 +2344,7 @@ var Backbone = Backbone || {};
         return null;
       }
 
-      var node = Two.Utils.read[tag](svgNode);
+      var node = Two.Utils.read[tag].call(this, svgNode);
 
       this.add(node);
 
