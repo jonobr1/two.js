@@ -5,7 +5,6 @@ __This is considered alpha grade__. A two-dimensional drawing api meant for mode
 
 ### Roadmap:
 + Optimize `webgl`. There are currently a lot of object replication.
-+ Add svg import support.
 
 ### Concerns:
 + `Two.Group` unable to re-add.
