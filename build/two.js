@@ -4577,14 +4577,16 @@ var Backbone = Backbone || {};
 
   _.extend(Group.prototype, Two.Shape.prototype, {
 
-    clone: function() {
+    clone: function(parent) {
+
+      var parent = parent || this.parent;
 
       var children = _.map(this.children, function(child) {
-        return child.clone();
+        return child.clone(parent);
       });
 
       var group = new Group();
-      this.parent.add(group);
+      parent.add(group);
       group.add(children);
 
       group.translation.copy(this.translation);
