@@ -4577,6 +4577,11 @@ var Backbone = Backbone || {};
 
   _.extend(Group.prototype, Two.Shape.prototype, {
 
+    /**
+     * Group has a gotcha in that it's at the moment required to be bound to
+     * an instance of two in order to add elements correctly. This needs to
+     * be rethought and fixed.
+     */
     clone: function(parent) {
 
       var parent = parent || this.parent;
