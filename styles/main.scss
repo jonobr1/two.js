@@ -37,7 +37,8 @@ body {
   // background: $grey;
   padding: 25px;
   vertical-align: top;
-  @media screen and (device-aspect-ratio: 2/3) {  // iPhone 4
+  @media screen and (device-aspect-ratio: 2/3), // iPhone < 5
+  screen and (device-aspect-ratio: 40/71) { // iPhone 5+
     font-size: $font-size * 2;
     line-height: $line-height * 2;
   }
@@ -57,7 +58,8 @@ h2 {
   all and (max-device-width: $min-device-width) {
     text-align: center;
   }
-  @media screen and (device-aspect-ratio: 2/3) {  // iPhone 4
+  @media screen and (device-aspect-ratio: 2/3),
+  screen and (device-aspect-ratio: 40/71) {
     font-size: $font-size * 4;
     line-height: $line-height * 2;
     margin-bottom: $line-height;
@@ -71,6 +73,10 @@ code {
 
 p {
   max-width: 580px;
+  @media screen and (device-aspect-ratio: 2/3),
+  screen and (device-aspect-ratio: 40/71) {
+    max-width: 100%;
+  }
 }
 
 p + p {

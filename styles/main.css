@@ -10,7 +10,7 @@ body {
   color: #555555;
   padding: 25px;
   vertical-align: top; }
-  @media screen and (device-aspect-ratio: 2 / 3) {
+  @media screen and (device-aspect-ratio: 2 / 3), screen and (device-aspect-ratio: 40 / 71) {
     body {
       font-size: 2em;
       line-height: 3em; } }
@@ -26,7 +26,7 @@ h2 {
   @media screen and (max-width: 400px), all and (max-device-width: 640px) {
     h2 {
       text-align: center; } }
-  @media screen and (device-aspect-ratio: 2 / 3) {
+  @media screen and (device-aspect-ratio: 2 / 3), screen and (device-aspect-ratio: 40 / 71) {
     h2 {
       font-size: 4em;
       line-height: 3em;
@@ -38,6 +38,9 @@ code {
 
 p {
   max-width: 580px; }
+  @media screen and (device-aspect-ratio: 2 / 3), screen and (device-aspect-ratio: 40 / 71) {
+    p {
+      max-width: 100%; } }
 
 p + p {
   margin-top: 1.5em; }
