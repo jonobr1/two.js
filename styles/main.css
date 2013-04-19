@@ -82,10 +82,11 @@ div.horizon {
     vertical-align: baseline;
     zoom: 1;
     *display: inline;
-    *vertical-align: auto; }
+    *vertical-align: auto;
+    float: left; }
     @media screen and (max-width: 400px), screen and (max-device-width: 640px) {
       #toc li {
-        float: left; } }
+        float: none; } }
     #toc li a {
       display: block;
       margin: 8px 8px 0;

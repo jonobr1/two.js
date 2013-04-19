@@ -123,9 +123,10 @@ div.horizon {
   li {
     margin-top: 0;
     @include inline-block;
+    float: left;
     @media screen and (max-width: $min-screen-width),
     screen and (max-device-width: $min-device-width) {
-      float: left;
+      float: none;
     }
     a {
       display: block;
