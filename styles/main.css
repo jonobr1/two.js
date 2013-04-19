@@ -1,0 +1,119 @@
+* {
+  margin: 0;
+  padding: 0; }
+
+body {
+  font-family: "proxima-nova", helvetica, sans-serif;
+  font-size: 1em;
+  line-height: 1.5em;
+  word-spacing: 0.1875em;
+  color: #555555;
+  padding: 25px;
+  vertical-align: top; }
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "proxima-nova", helvetica, sans-serif;
+  vertical-align: top;
+  color: #777777; }
+
+h2 {
+  font-size: 2em;
+  line-height: 1.5em;
+  margin-bottom: 0.75em; }
+  @media all and (max-width: 400px) {
+    h2 {
+      text-align: center; } }
+
+code {
+  font-family: "Ubuntu Mono", monospace;
+  color: #666666; }
+
+p {
+  max-width: 580px; }
+
+p + p {
+  margin-top: 1.5em; }
+
+a {
+  display: inline-block;
+  vertical-align: baseline;
+  zoom: 1;
+  *display: inline;
+  *vertical-align: auto; }
+  a:link {
+    color: #00bfa8;
+    text-decoration: none;
+    border-bottom: 0.125em solid #72dbcf; }
+  a:visited {
+    color: #ff8000;
+    border-bottom: 0.125em solid #ffa64c; }
+  a:hover, a:active {
+    color: #ff4040;
+    border-bottom: 0.125em solid #ff8c8c; }
+
+ul li:not(:first-child), ol li:not(:first-child) {
+  margin-top: 1.5em; }
+
+#content {
+  padding: 25px 25px 50px 25px;
+  background: white;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px; }
+
+div.center {
+  text-align: center; }
+
+div.horizon {
+  height: 0;
+  margin: 1.5em 0;
+  border-bottom: 0.125em solid #eeeeee; }
+
+#toc {
+  display: inline-block;
+  vertical-align: baseline;
+  zoom: 1;
+  *display: inline;
+  *vertical-align: auto;
+  margin-top: -8px;
+  list-style: none;
+  clear: both;
+  font-size: 1.125em; }
+  @media all and (max-width: 400px) {
+    #toc {
+      text-align: center; } }
+  #toc li {
+    margin-top: 0;
+    display: inline-block;
+    vertical-align: baseline;
+    zoom: 1;
+    *display: inline;
+    *vertical-align: auto; }
+    @media all and (min-width: 400px) {
+      #toc li {
+        float: left; } }
+    #toc li a {
+      display: block;
+      margin: 8px 8px 0;
+      border-width: 0.15625em; }
+
+#introduction {
+  height: 80px;
+  margin-bottom: 1.5em; }
+
+@media all and (max-width: 400px) {
+  p.download {
+    text-align: center; } }
+
+::selection {
+  background: #96ffc8;
+  /* Safari */ }
+
+::-moz-selection {
+  background: #96ffc8;
+  /* Firefox */ }

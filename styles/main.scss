@@ -1,0 +1,153 @@
+@import 'bourbon/bourbon';
+
+@mixin border-radius($a) {
+  @include border-top-radius($a);
+  @include border-bottom-radius($a);
+  @include border-left-radius($a);
+  @include border-right-radius($a);
+}
+
+$black: #555;
+$grey: #eee;
+$white: #fff;
+
+$red: rgb(255, 64, 64);
+$orange: rgb(255, 128, 0);
+$blue: rgb(0, 200, 255);
+$green: rgb(0, 191, 168);
+$purple: rgb(153, 102, 255);
+
+$font-size: em(16);
+$line-height: em(24);
+
+$min-screen-width: 400px;
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'proxima-nova', helvetica, sans-serif;
+  font-size: $font-size;
+  line-height: $line-height;
+  word-spacing: em(3);
+  color: $black;
+  // background: $grey;
+  padding: 25px;
+  vertical-align: top;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'proxima-nova', helvetica, sans-serif;
+  vertical-align: top;
+  color: tint($black, 20%);
+}
+
+h2 {
+  font-size: $font-size * 2;
+  line-height: $line-height;
+  margin-bottom: $line-height / 2;
+  // margin-top: -28px;
+  @media all and (max-width: $min-screen-width) {
+    text-align: center;
+  }
+}
+
+code {
+  font-family: 'Ubuntu Mono', monospace;
+  color: tint($black, 10%);
+}
+
+p {
+  max-width: 580px;
+}
+
+p + p {
+  margin-top: $line-height;
+}
+
+a {
+  @include inline-block;
+  &:link {
+    color: $green;
+    text-decoration: none;
+    border-bottom: em(2) solid tint($green, 45%);
+  }
+  &:visited {
+    color: $orange;
+    border-bottom: em(2) solid tint($orange, 30%);
+  }
+  &:hover, &:active {
+    color: $red;
+    border-bottom: em(2) solid tint($red, 40%);
+  }
+}
+
+ul, ol {
+  li {
+    &:not(:first-child) {
+      margin-top: $line-height;
+    }
+  }
+}
+
+#content {
+  // max-width: 630px;
+  padding: 25px 25px 50px 25px;
+  // margin: 0 auto;
+  background: $white;
+  @include border-radius(5px);
+}
+
+div.center {
+  text-align: center;
+}
+
+div.horizon {
+  // width: 75px;
+  height: 0;
+  margin: $line-height 0;
+  border-bottom: em(2) solid $grey;//shade($grey, 12%);
+}
+
+#toc {
+  @include inline-block;
+  margin-top: -8px;
+  list-style: none;
+  clear: both;
+  font-size: em(18);
+  @media all and (max-width: $min-screen-width) {
+    text-align: center;
+  }
+  li {
+    margin-top: 0;
+    @include inline-block;
+    @media all and (min-width: $min-screen-width) {
+      float: left;
+    }
+    a {
+      display: block;
+      margin: 8px 8px 0;
+      border-width: em(2.5);
+    }
+  }
+}
+
+#introduction {
+  height: 80px;
+  margin-bottom: $line-height;
+}
+
+p.download {
+  @media all and (max-width: $min-screen-width) {
+    text-align: center;
+  }
+}
+
+::selection {
+  background: rgb(150, 255, 200); /* Safari */
+}
+::-moz-selection {
+  background: rgb(150, 255, 200); /* Firefox */
+}
