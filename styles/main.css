@@ -1,119 +1,52 @@
-* {
-  margin: 0;
-  padding: 0; }
+/*
+Syntax error: Invalid CSS after "...n-screen-width)": expected "{", was "or (max-device-..."
+        on line 54 of ./main.scss
 
-body {
-  font-family: "proxima-nova", helvetica, sans-serif;
-  font-size: 1em;
-  line-height: 1.5em;
-  word-spacing: 0.1875em;
-  color: #555555;
-  padding: 25px;
-  vertical-align: top; }
+49:   font-size: $font-size * 2;
+50:   line-height: $line-height;
+51:   margin-bottom: $line-height / 2;
+52:   // margin-top: -28px;
+53:   @media all and (max-width: $min-screen-width)
+54:   or (max-device-width: $min-device-width) {
+55:     text-align: center;
+56:   }
+57: }
+58: 
+59: code {
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: "proxima-nova", helvetica, sans-serif;
-  vertical-align: top;
-  color: #777777; }
-
-h2 {
-  font-size: 2em;
-  line-height: 1.5em;
-  margin-bottom: 0.75em; }
-  @media all and (max-width: 400px) {
-    h2 {
-      text-align: center; } }
-
-code {
-  font-family: "Ubuntu Mono", monospace;
-  color: #666666; }
-
-p {
-  max-width: 580px; }
-
-p + p {
-  margin-top: 1.5em; }
-
-a {
-  display: inline-block;
-  vertical-align: baseline;
-  zoom: 1;
-  *display: inline;
-  *vertical-align: auto; }
-  a:link {
-    color: #00bfa8;
-    text-decoration: none;
-    border-bottom: 0.125em solid #72dbcf; }
-  a:visited {
-    color: #ff8000;
-    border-bottom: 0.125em solid #ffa64c; }
-  a:hover, a:active {
-    color: #ff4040;
-    border-bottom: 0.125em solid #ff8c8c; }
-
-ul li:not(:first-child), ol li:not(:first-child) {
-  margin-top: 1.5em; }
-
-#content {
-  padding: 25px 25px 50px 25px;
-  background: white;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
-  border-top-right-radius: 5px;
-  border-bottom-right-radius: 5px; }
-
-div.center {
-  text-align: center; }
-
-div.horizon {
-  height: 0;
-  margin: 1.5em 0;
-  border-bottom: 0.125em solid #eeeeee; }
-
-#toc {
-  display: inline-block;
-  vertical-align: baseline;
-  zoom: 1;
-  *display: inline;
-  *vertical-align: auto;
-  margin-top: -8px;
-  list-style: none;
-  clear: both;
-  font-size: 1.125em; }
-  @media all and (max-width: 400px) {
-    #toc {
-      text-align: center; } }
-  #toc li {
-    margin-top: 0;
-    display: inline-block;
-    vertical-align: baseline;
-    zoom: 1;
-    *display: inline;
-    *vertical-align: auto; }
-    @media all and (min-width: 400px) {
-      #toc li {
-        float: left; } }
-    #toc li a {
-      display: block;
-      margin: 8px 8px 0;
-      border-width: 0.15625em; }
-
-#introduction {
-  height: 80px;
-  margin-bottom: 1.5em; }
-
-@media all and (max-width: 400px) {
-  p.download {
-    text-align: center; } }
-
-::selection {
-  background: #96ffc8;
-  /* Safari */ }
-
-::-moz-selection {
-  background: #96ffc8;
-  /* Firefox */ }
+Backtrace:
+./main.scss:54
+/Users/jonobrandel/.rvm/gems/ruby-1.9.2-p290/gems/sass-3.2.5/lib/sass/scss/parser.rb:1136:in `expected'
+/Users/jonobrandel/.rvm/gems/ruby-1.9.2-p290/gems/sass-3.2.5/lib/sass/scss/parser.rb:1072:in `expected'
+/Users/jonobrandel/.rvm/gems/ruby-1.9.2-p290/gems/sass-3.2.5/lib/sass/scss/parser.rb:1067:in `tok!'
+/Users/jonobrandel/.rvm/gems/ruby-1.9.2-p290/gems/sass-3.2.5/lib/sass/scss/parser.rb:522:in `block'
+/Users/jonobrandel/.rvm/gems/ruby-1.9.2-p290/gems/sass-3.2.5/lib/sass/scss/parser.rb:337:in `media_directive'
+/Users/jonobrandel/.rvm/gems/ruby-1.9.2-p290/gems/sass-3.2.5/lib/sass/scss/parser.rb:163:in `special_directive'
+/Users/jonobrandel/.rvm/gems/ruby-1.9.2-p290/gems/sass-3.2.5/lib/sass/scss/parser.rb:135:in `directive'
+/Users/jonobrandel/.rvm/gems/ruby-1.9.2-p290/gems/sass-3.2.5/lib/sass/scss/parser.rb:542:in `block_child'
+/Users/jonobrandel/.rvm/gems/ruby-1.9.2-p290/gems/sass-3.2.5/lib/sass/scss/parser.rb:534:in `block_contents'
+/Users/jonobrandel/.rvm/gems/ruby-1.9.2-p290/gems/sass-3.2.5/lib/sass/scss/parser.rb:523:in `block'
+/Users/jonobrandel/.rvm/gems/ruby-1.9.2-p290/gems/sass-3.2.5/lib/sass/scss/parser.rb:517:in `ruleset'
+/Users/jonobrandel/.rvm/gems/ruby-1.9.2-p290/gems/sass-3.2.5/lib/sass/scss/parser.rb:541:in `block_child'
+/Users/jonobrandel/.rvm/gems/ruby-1.9.2-p290/gems/sass-3.2.5/lib/sass/scss/parser.rb:534:in `block_contents'
+/Users/jonobrandel/.rvm/gems/ruby-1.9.2-p290/gems/sass-3.2.5/lib/sass/scss/parser.rb:70:in `stylesheet'
+/Users/jonobrandel/.rvm/gems/ruby-1.9.2-p290/gems/sass-3.2.5/lib/sass/scss/parser.rb:27:in `parse'
+/Users/jonobrandel/.rvm/gems/ruby-1.9.2-p290/gems/sass-3.2.5/lib/sass/engine.rb:342:in `_to_tree'
+/Users/jonobrandel/.rvm/gems/ruby-1.9.2-p290/gems/sass-3.2.5/lib/sass/engine.rb:315:in `_render'
+/Users/jonobrandel/.rvm/gems/ruby-1.9.2-p290/gems/sass-3.2.5/lib/sass/engine.rb:262:in `render'
+/Users/jonobrandel/.rvm/gems/ruby-1.9.2-p290/gems/sass-3.2.5/lib/sass/plugin/compiler.rb:341:in `update_stylesheet'
+/Users/jonobrandel/.rvm/gems/ruby-1.9.2-p290/gems/sass-3.2.5/lib/sass/plugin/compiler.rb:203:in `block in update_stylesheets'
+/Users/jonobrandel/.rvm/gems/ruby-1.9.2-p290/gems/sass-3.2.5/lib/sass/plugin/compiler.rb:201:in `each'
+/Users/jonobrandel/.rvm/gems/ruby-1.9.2-p290/gems/sass-3.2.5/lib/sass/plugin/compiler.rb:201:in `update_stylesheets'
+/Users/jonobrandel/.rvm/gems/ruby-1.9.2-p290/gems/sass-3.2.5/lib/sass/plugin/compiler.rb:299:in `block in watch'
+/Users/jonobrandel/.rvm/gems/ruby-1.9.2-p290/gems/sass-3.2.5/vendor/listen/lib/listen/multi_listener.rb:86:in `call'
+/Users/jonobrandel/.rvm/gems/ruby-1.9.2-p290/gems/sass-3.2.5/vendor/listen/lib/listen/multi_listener.rb:86:in `on_change'
+/Users/jonobrandel/.rvm/gems/ruby-1.9.2-p290/gems/sass-3.2.5/vendor/listen/lib/listen/multi_listener.rb:95:in `block in initialize_adapter'
+/Users/jonobrandel/.rvm/gems/ruby-1.9.2-p290/gems/sass-3.2.5/vendor/listen/lib/listen/adapters/polling.rb:55:in `call'
+/Users/jonobrandel/.rvm/gems/ruby-1.9.2-p290/gems/sass-3.2.5/vendor/listen/lib/listen/adapters/polling.rb:55:in `poll'
+/Users/jonobrandel/.rvm/gems/ruby-1.9.2-p290/gems/sass-3.2.5/vendor/listen/lib/listen/adapters/polling.rb:31:in `block in start'
+*/
+body:before {
+  white-space: pre;
+  font-family: monospace;
+  content: "Syntax error: Invalid CSS after \"...n-screen-width)\": expected \"{\", was \"or (max-device-...\"\A         on line 54 of ./main.scss\A \A 49:   font-size: $font-size * 2;\A 50:   line-height: $line-height;\A 51:   margin-bottom: $line-height / 2;\A 52:   // margin-top: -28px;\A 53:   @media all and (max-width: $min-screen-width)\A 54:   or (max-device-width: $min-device-width) {\A 55:     text-align: center;\A 56:   }\A 57: }\A 58: \A 59: code {"; }

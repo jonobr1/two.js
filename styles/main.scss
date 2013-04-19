@@ -21,6 +21,7 @@ $font-size: em(16);
 $line-height: em(24);
 
 $min-screen-width: 400px;
+$min-device-width: 640px;
 
 * {
   margin: 0;
@@ -49,7 +50,8 @@ h2 {
   line-height: $line-height;
   margin-bottom: $line-height / 2;
   // margin-top: -28px;
-  @media all and (max-width: $min-screen-width) {
+  @media all and (max-width: $min-screen-width)
+  or (max-device-width: $min-device-width) {
     text-align: center;
   }
 }
