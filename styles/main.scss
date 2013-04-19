@@ -37,11 +37,6 @@ body {
   // background: $grey;
   padding: 25px;
   vertical-align: top;
-  @media screen and (device-aspect-ratio: 2/3), // iPhone < 5
-  screen and (device-aspect-ratio: 40/71) { // iPhone 5+
-    // font-size: $font-size * 2;
-    // line-height: $line-height * 2;
-  }
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -53,7 +48,6 @@ h1, h2, h3, h4, h5, h6 {
 h2 {
   font-size: $font-size * 2;
   margin-bottom: $line-height / 2;
-  // margin-top: -28px;
   @media screen and (max-width: $min-screen-width),
   all and (max-device-width: $min-device-width) {
     text-align: center;
@@ -104,7 +98,6 @@ ul, ol {
 #content {
   padding: 25px 25px 50px 25px;
   background: $white;
-  // @include border-radius(5px);
 }
 
 div.center {
