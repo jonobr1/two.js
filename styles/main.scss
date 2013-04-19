@@ -141,7 +141,8 @@ div.horizon {
 }
 
 p.download {
-  @media all and (max-width: $min-screen-width) {
+  @media all and (max-width: $min-screen-width),
+  @media all and (max-device-width: $min-device-width) {
     text-align: center;
   }
 }
