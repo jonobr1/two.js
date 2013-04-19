@@ -12,8 +12,7 @@ body {
   vertical-align: top; }
   @media screen and (device-aspect-ratio: 2 / 3), screen and (device-aspect-ratio: 40 / 71) {
     body {
-      font-size: 2em;
-      line-height: 3em; } }
+      font-size: 2em; } }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: "proxima-nova", helvetica, sans-serif;
@@ -26,11 +25,6 @@ h2 {
   @media screen and (max-width: 400px), all and (max-device-width: 640px) {
     h2 {
       text-align: center; } }
-  @media screen and (device-aspect-ratio: 2 / 3), screen and (device-aspect-ratio: 40 / 71) {
-    h2 {
-      font-size: 4em;
-      line-height: 3em;
-      margin-bottom: 1.5em; } }
 
 code {
   font-family: "Ubuntu Mono", monospace;
