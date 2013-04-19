@@ -12,8 +12,8 @@ body {
   vertical-align: top; }
   @media screen and (device-aspect-ratio: 2 / 3) {
     body {
-      font-size: 1.5em;
-      line-height: 2.25em; } }
+      font-size: 2em;
+      line-height: 3em; } }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: "proxima-nova", helvetica, sans-serif;
