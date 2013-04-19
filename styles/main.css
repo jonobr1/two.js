@@ -100,6 +100,12 @@ div.horizon {
   p.download {
     text-align: center; } }
 
+.nota-bene {
+  font-size: 75%; }
+  .nota-bene:before {
+    content: 'N.B:';
+    font-weight: 700; }
+
 ::selection {
   background: #96ffc8;
   /* Safari */ }

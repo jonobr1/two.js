@@ -148,6 +148,15 @@ p.download {
   }
 }
 
+.nota-bene {
+  &:before {
+    content: 'N.B:';
+    font-weight: 700;
+  }
+  font-size: 75%;
+  // font-style: italic;
+}
+
 ::selection {
   background: rgb(150, 255, 200); /* Safari */
 }
