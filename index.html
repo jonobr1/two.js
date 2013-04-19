@@ -4,181 +4,238 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=400">
     <title>Two.js</title>
+    <!-- @font-face -->
     <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Ubuntu+Mono:400,400italic">
-    <link rel="stylesheet" type="text/css" href="./styles/main.css">
     <script type="text/javascript" src="//use.typekit.net/edp1hux.js"></script>
     <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+    <!-- Styles -->
+    <link rel="stylesheet" type="text/css" href="./styles/main.css">
+    <link rel="favicon" type="image/gif" href="./images/favicon.gif">
+    <!-- Third Party -->
     <script src="./third-party/jquery.js"></script>
     <script src="./third-party/tween.js"></script>
     <script src="./third-party/two.js"></script>
+    <!-- Code Mirror Goodies -->
+    <script src="./third-party/codemirror.js"></script>
+    <script src="./third-party/javascript.js"></script>
   </head>
   <body>
     <div id="content">
       <div id="introduction">
         <script>
+$(function() {
 
-          $(function() {
+  var $container = $('#introduction');
 
-            var $container = $('#introduction');
+  var two = new Two({
+    width: 285,
+    height: 80,
+    type: Two.Types.svg
+  }).appendTo($container[0]);
 
-            var two = new Two({
-              width: 285,
-              height: 80,
-              type: Two.Types.svg
-            }).appendTo($container[0]);
+  var width = 44, height = 64;
+  var half_width = width / 2;
+  var quart_width = half_width / 2;
+  var half_height = height / 2;
+  var quart_height = half_height / 2;
 
-            var width = 44, height = 64;
-            var half_width = width / 2;
-            var quart_width = half_width / 2;
-            var half_height = height / 2;
-            var quart_height = half_height / 2;
+  var t = makeT(255, 64, 64);
+  t.scale = 0;
+  t.translation.x = - width * 1.33;
 
-            var t = makeT(255, 64, 64);
-            t.scale = 0;
-            t.translation.x = - width * 1.33;
+  var w = makeW(255, 128, 0);
+  w.scale = 0;
+  w.translation.x = 0;
 
-            var w = makeW(255, 128, 0);
-            w.scale = 0;
-            w.translation.x = 0;
+  var o = makeO(0, 191, 168);
+  o.scale = 0;
+  o.translation.x = width * 1.33;
 
-            var o = makeO(0, 191, 168);
-            o.scale = 0;
-            o.translation.x = width * 1.33;
+  var group = two.makeGroup(t, w, o);
+  group.translation.set(two.width / 2, two.height / 2);
+  group.scale = 3 * (285 / 486);
 
-            var group = two.makeGroup(t, w, o);
-            group.translation.set(two.width / 2, two.height / 2);
-            group.scale = 3 * (285 / 486);
+  t.scale = w.scale = o.scale = 0;
 
-            t.scale = w.scale = o.scale = 0;
+  two
+    .bind('update', function(frames) {
 
-            two
-              .bind('update', function(frames) {
+      var tScale = t.scale;
 
-                var tScale = t.scale;
+      if (tScale >= 1.0 - 0.0001) {
+        two.pause();
+        return;
+      }
 
-                if (tScale >= 1.0 - 0.0001) {
-                  two.pause();
-                  return;
-                }
+      var s = tScale + (1.0 - tScale) * 0.2;
+      t.scale = s;
+      w.scale = s;
+      o.scale = s;
 
-                var s = tScale + (1.0 - tScale) * 0.2;
-                t.scale = s;
-                w.scale = s;
-                o.scale = s;
+    });
 
-              });
+    _.defer(_.bind(two.play, two));
 
-              _.defer(_.bind(two.play, two));
+    function makeT(r, g, b) {
 
-              function makeT(r, g, b) {
+      var a = two.makeRectangle(0, 0, width, quart_width);
+      var c = two.makeRectangle(0, 0, quart_width, width);
+      var rgb = r +',' + g + ',' + b;
 
-                var a = two.makeRectangle(0, 0, width, quart_width);
-                var c = two.makeRectangle(0, 0, quart_width, width);
-                var rgb = r +',' + g + ',' + b;
+      a.fill = c.fill = 'rgba(' + rgb + ',' + 0.33 + ')';
+      a.stroke = c.stroke = 'rgb(' + rgb + ')';
+      a.linewidth = c.linewidth = 1;
 
-                a.fill = c.fill = 'rgba(' + rgb + ',' + 0.33 + ')';
-                a.stroke = c.stroke = 'rgb(' + rgb + ')';
-                a.linewidth = c.linewidth = 1;
+      return two.makeGroup(a, c);
 
-                return two.makeGroup(a, c);
+    }
 
-              }
+    function makeW(r, g, b) {
 
-              function makeW(r, g, b) {
+      var x1 = 0, y1 = height * 0.3125;
+      var x2 = half_width, y2 = - y1;
+      var x3 = - x2, y3 = y2;
 
-                var x1 = 0, y1 = height * 0.3125;
-                var x2 = half_width, y2 = - y1;
-                var x3 = - x2, y3 = y2;
+      var a = two.makePolygon(x1, y1, x2, y2, x3, y3);
+      var c = two.makePolygon(x1, y1, x2, y2, x3, y3);
 
-                var a = two.makePolygon(x1, y1, x2, y2, x3, y3);
-                var c = two.makePolygon(x1, y1, x2, y2, x3, y3);
+      a.translation.x = - width * 0.25;
+      c.translation.set(a.translation.x + half_width, a.translation.y);
 
-                a.translation.x = - width * 0.25;
-                c.translation.set(a.translation.x + half_width, a.translation.y);
+      var rgb = Math.round(r) +',' + Math.round(g) + ',' + Math.round(b);
 
-                var rgb = Math.round(r) +',' + Math.round(g) + ',' + Math.round(b);
+      a.fill = c.fill = 'rgba(' + rgb + ',' + 0.33 + ')';
+      a.stroke = c.stroke = 'rgb(' + rgb + ')';
+      a.linewidth = c.linewidth = 1;
 
-                a.fill = c.fill = 'rgba(' + rgb + ',' + 0.33 + ')';
-                a.stroke = c.stroke = 'rgb(' + rgb + ')';
-                a.linewidth = c.linewidth = 1;
+      return two.makeGroup(a, c);
 
-                return two.makeGroup(a, c);
+    }
 
-              }
+    function makeO(r, g, b) {
 
-              function makeO(r, g, b) {
+      var a = two.makeCircle(0, 0, half_width);
+      var c = two.makeCircle(0, 0, width * 0.125);
+      var rgb = Math.round(r) +',' + Math.round(g) + ',' + Math.round(b);
 
-                var a = two.makeCircle(0, 0, half_width);
-                var c = two.makeCircle(0, 0, width * 0.125);
-                var rgb = Math.round(r) +',' + Math.round(g) + ',' + Math.round(b);
+      a.fill = c.fill = 'rgba(' + rgb + ',' + 0.33 + ')';
+      a.stroke = c.stroke = 'rgb(' + rgb + ')';
+      a.linewidth = c.linewidth = 1;
 
-                a.fill = c.fill = 'rgba(' + rgb + ',' + 0.33 + ')';
-                a.stroke = c.stroke = 'rgb(' + rgb + ')';
-                a.linewidth = c.linewidth = 1;
+      return two.makeGroup(a, c);
 
-                return two.makeGroup(a, c);
+    }
 
-              }
-
-          });
-
-        </script>
+});</script>
       </div>
       <p>
-        <strong>Two.js</strong> is a two-dimensional drawing api meant for modern web browsers. It is renderer agnostic enabling the same api to draw in multiple contexts: <code>svg</code>, <code>canvas</code>, and <code>webgl</code>.
+        <strong>Two.js</strong> is a two-dimensional drawing api geared towards modern web browsers. It is renderer agnostic enabling the same api to draw in multiple contexts: <code>svg</code>, <code>canvas</code>, and <code>webgl</code>.
       </p>
       <div class="horizon"></div>
-      <!-- <div class="center"> -->
-        <ul id="toc">
-          <li><a href="#introduction">Introduction</a></li>
-          <li><a href="#download">Download</a></li>
-          <li><a href="#overview">Overview</a></li>
-          <li><a href="#basic-usage">Basic Usage</a></li>
-          <li><a href="#examples">Examples</a></li>
-          <li><a href="#documentation">Documentation</a></li>
-          <li><a href="#compatability">Compatability</a></li>
-          <li><a href="#credits">Credits</a></li>
-        </ul>
-      <!-- </div> -->
-      <div class="horizon"></div>
-      <h2 id="download">Download</h2>
+      <ul id="toc">
+        <li><a href="#introduction">Introduction</a></li>
+        <li><a href="#download">Download</a></li>
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#basic-usage">Basic Usage</a></li>
+        <li><a href="#examples">Examples</a></li>
+        <li><a href="#documentation">Documentation</a></li>
+        <li><a href="#compatability">Compatability</a></li>
+        <li><a href="#credits">Credits</a></li>
+      </ul>
+      <div id="download" class="horizon"></div>
+      <h2>Download</h2>
       <p class="download">
         <a href="https://raw.github.com/jonobr1/two.js/master/build/two.js">Development Version</a><br />
         Uncompressed with comments about <code>128kb</code>
       </p>
       <p class="download">
         <a href="https://raw.github.com/jonobr1/two.js/master/build/two.min.js">Production Version</a><br />
-        Minified using Closure Compiler about <code>50kb</code> | <code>30kb</code> gzipped.
+        Minified using Closure Compiler about <code>50kb</code>
       </p>
       <p class="download nota-bene">
-        Two.js requires <a href="http://underscorejs.org">Underscore.js</a> and <a href="http://backbonejs.org">Backbone.js</a> <a href="https://github.com/jonobr1/two.js/blob/master/third-party/events.js">Events</a>. If you&apos;re already loading these files elsewhere then you can build the project yourself and get the file size even smaller. For more information on <u>custom builds</u> check out the source on <a href="http://github.com/jonobr1/two.js">github</a>.
+        Two.js requires <a href="http://underscorejs.org">Underscore.js</a> and <a href="http://backbonejs.org">Backbone.js</a> <a href="https://github.com/jonobr1/two.js/blob/master/third-party/events.js">Events</a>. If you&apos;re already loading these files elsewhere then you can build the project yourself and get the file size even smaller. For more information on <em>custom builds</em> check out the source on <a href="http://github.com/jonobr1/two.js">github</a>.
       </p>
-      <div class="horizon"></div>
-      <h2 id="overview">Overview</h2>
+      <div id="overview" class="horizon"></div>
+      <h2>Overview</h2>
       <ul>
+        <li>
+          <h3>Focus on Vector Shapes</h3>
+          <p>
+            Two.js is deeply inspired by flat <a href="http://en.wikipedia.org/wiki/Motion_graphics">motion graphics</a>. As a result, two.js aims to make the creation and animation of flat shapes easier and more concise. At the time of this writing two.js unfortunately does <strong>not</strong> support text or images.
+          </p>
+        </li>
         <li>
           <h3>Scenegraph</h3>
           <p>
-            Two.js starts with a <a href="http://en.wikipedia.org/wiki/Scene_graph">scenegraph</a>. This means that when you draw or create an object (a <code>Two.Shape</code> or <code>Two.Group</code>), two actually stores and remembers that. After you make the object you can apply any number of operations onto it — e.g: rotation, translation, scale.
+            At it&apos;s core two.js relies on a <a href="http://en.wikipedia.org/wiki/Scene_graph">scenegraph</a>. This means that when you draw or create an object (a <code>Two.Polygon</code> or <code>Two.Group</code>), two actually stores and remembers that. After you make the object you can apply any number of operations to it — e.g: <code>rotation</code>, <code>translation</code>, <code>scale</code>, etc..
+          </p>
+        </li>
+        <li>
+          <h3>Animation Loop</h3>
+          <p>
+            Two.js has a built in animation loop. It is simple in nature and can be automated or paired with another animation library. For more information check out the <a href="#examples">examples</a>.
           </p>
         </li>
         <li>
           <h3>SVG Interpreter</h3>
           <p>
-            Two.js features a <code><a href="http://en.wikipedia.org/wiki/Scalable_Vector_Graphics">Scalable Vector Graphics</a> Interpreter</code>. This means developers and designers alike can create visuals in commercial applications like <a href="http://www.adobe.com/products/illustrator">Adobe Illustrator</a> and bring them into your two.js scene.
+            Two.js features a <code><a href="http://en.wikipedia.org/wiki/Scalable_Vector_Graphics">Scalable Vector Graphics</a> Interpreter</code>. This means developers and designers alike can create SVG elements in commercial applications like <a href="http://www.adobe.com/products/illustrator">Adobe Illustrator</a> and bring them into your two.js scene. For more information check out the <a href="#examples">examples</a>.
           </p>
         </li>
       </ul>
-      <div class="horizon"></div>
-      <h2 id="basic-usage">Basic Usage</h2>
-      <div class="horizon"></div>
-      <h2 id="examples">Examples</h2>
-      <div class="horizon"></div>
-      <h2 id="documentation">Documentation</h2>
-      <div class="horizon"></div>
-      <h2 id="compatability">Compatability</h2>
-      <div class="horizon"></div>
-      <h2 id="credits">Credits</h2>
+      <div id="basic-usage" class="horizon"></div>
+      <h2>Basic Usage</h2>
+      <div id="draw-shapes" class="basic-usage">
+        <div class="two-container"></div>
+        <h3>Drawing Your First Shapes</h3>
+        <p>
+          Before we get into all the fancy animating its good to get a feel for how to make shapes in two.js. In order to do this we need to have an instance of two. This sets up a dom element that contains either an <code>svg</code> or <code>canvas</code> element to add to the webpage. The two object has a <code>scene</code> whch holds all shapes as well as methods for creating shapes. Details for all properties and construction paramters can be found in <a href="#documentation">documentation</a>.
+        </p>
+        <br />
+        <script>// Make an instance of two and place it on the page.
+var elem = document.getElementById('draw-shapes').children[0];
+var params = { width: 285, height: 200 };
+var two = new Two(params).appendTo(elem);
+
+// two has convenience methods to create shapes.
+var circle = two.makeCircle(72, 100, 50);
+var rect = two.makeRectangle(213, 100, 100, 100);
+
+// The object returned has many stylable properties:
+circle.fill = '#FF8000';
+circle.stroke = 'orangered'; // Accepts all valid css color
+circle.linewidth = 5;
+
+rect.fill = 'rgb(0, 200, 255)';
+rect.opacity = 0.75;
+rect.noStroke();
+
+// Don't forget to tell two to render everything
+// to the screen
+two.update().render();</script>
+        <script>
+          $(function() {
+            var code = $('#draw-shapes script').html();
+            console.log(code);
+            // var code = $('#introduction script').html();
+            var mirror = CodeMirror($('#draw-shapes')[0], {
+              value: code,
+              mode: "javascript",
+              tabSize: 2,
+              lineWrapping: true,
+              lineNumbers: true
+            });
+          });
+        </script>
+      </div>
+      <div id="examples" class="horizon"></div>
+      <h2>Examples</h2>
+      <div id="documentation" class="horizon"></div>
+      <h2>Documentation</h2>
+      <div id="compatability" class="horizon"></div>
+      <h2>Compatability</h2>
+      <div id="credits" class="horizon"></div>
+      <h2>Credits</h2>
 
     </div>
   </body>

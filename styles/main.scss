@@ -1,27 +1,5 @@
 @import 'bourbon/bourbon';
-
-@mixin border-radius($a) {
-  @include border-top-radius($a);
-  @include border-bottom-radius($a);
-  @include border-left-radius($a);
-  @include border-right-radius($a);
-}
-
-$black: #555;
-$grey: #eee;
-$white: #fff;
-
-$red: rgb(255, 64, 64);
-$orange: rgb(255, 128, 0);
-$blue: rgb(0, 200, 255);
-$green: rgb(0, 191, 168);
-$purple: rgb(153, 102, 255);
-
-$font-size: em(16);
-$line-height: em(24);
-
-$min-screen-width: 400px;
-$min-device-width: 640px; // iPhone 5 portrait width
+@import 'mirror';
 
 * {
   margin: 0;
@@ -34,7 +12,9 @@ body {
   line-height: $line-height;
   word-spacing: em(3);
   color: $black;
-  // background: $grey;
+  @media screen and (max-width: $min-screen-width) {
+    background: $grey;
+  }
   padding: 25px;
   vertical-align: top;
 }
@@ -56,7 +36,7 @@ h2 {
 
 code {
   font-family: 'Ubuntu Mono', monospace;
-  color: tint($black, 10%);
+  color: $black;
 }
 
 p {
@@ -148,12 +128,26 @@ p.download {
   }
 }
 
+.basic-usage {
+  svg {
+    border: 1px solid shade($grey, 10%);
+  }
+  .two-container {
+    margin-bottom: $line-height / 2;
+  }
+}
+
+#draw-shapes > .CodeMirror {
+  height: 504px;
+}
+
 .nota-bene {
   &:before {
     content: 'N.B:';
     font-weight: 700;
   }
   font-size: 75%;
+  word-spacing: em(3 * .75);
   // font-style: italic;
 }
 

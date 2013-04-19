@@ -1,0 +1,23 @@
+@mixin border-radius($a) {
+  @include border-top-radius($a);
+  @include border-bottom-radius($a);
+  @include border-left-radius($a);
+  @include border-right-radius($a);
+}
+
+$black: #555;
+$grey: #eee;
+$white: #fff;
+
+$red: rgb(255, 64, 64);
+$orange: rgb(255, 128, 0);
+$blue: rgb(0, 200, 255);
+$green: rgb(0, 191, 168);
+$purple: rgb(153, 102, 255);
+$yellow: rgb(255, 244, 95);
+
+$font-size: em(16);
+$line-height: em(24);
+
+$min-screen-width: 400px;
+$min-device-width: 640px; // iPhone 5 portrait width
