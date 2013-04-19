@@ -10,9 +10,6 @@ body {
   color: #555555;
   padding: 25px;
   vertical-align: top; }
-  @media screen and (device-aspect-ratio: 2 / 3), screen and (device-aspect-ratio: 40 / 71) {
-    body {
-      font-size: 2em; } }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: "proxima-nova", helvetica, sans-serif;
@@ -40,14 +37,9 @@ p + p {
   margin-top: 1.5em; }
 
 a {
-  display: inline-block;
-  vertical-align: baseline;
-  zoom: 1;
-  *display: inline;
-  *vertical-align: auto; }
+  text-decoration: none; }
   a:link {
     color: #00bfa8;
-    text-decoration: none;
     border-bottom: 0.125em solid #72dbcf; }
   a:visited {
     color: #ff8000;
@@ -61,15 +53,7 @@ ul li:not(:first-child), ol li:not(:first-child) {
 
 #content {
   padding: 25px 25px 50px 25px;
-  background: white;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
-  border-top-right-radius: 5px;
-  border-bottom-right-radius: 5px; }
+  background: white; }
 
 div.center {
   text-align: center; }

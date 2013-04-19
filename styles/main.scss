@@ -39,7 +39,7 @@ body {
   vertical-align: top;
   @media screen and (device-aspect-ratio: 2/3), // iPhone < 5
   screen and (device-aspect-ratio: 40/71) { // iPhone 5+
-    font-size: $font-size * 2;
+    // font-size: $font-size * 2;
     // line-height: $line-height * 2;
   }
 }
@@ -78,10 +78,9 @@ p + p {
 }
 
 a {
-  @include inline-block;
+  text-decoration: none;
   &:link {
     color: $green;
-    text-decoration: none;
     border-bottom: em(2) solid tint($green, 45%);
   }
   &:visited {
@@ -103,11 +102,9 @@ ul, ol {
 }
 
 #content {
-  // max-width: 630px;
   padding: 25px 25px 50px 25px;
-  // margin: 0 auto;
   background: $white;
-  @include border-radius(5px);
+  // @include border-radius(5px);
 }
 
 div.center {
@@ -115,10 +112,9 @@ div.center {
 }
 
 div.horizon {
-  // width: 75px;
   height: 0;
   margin: $line-height 0;
-  border-bottom: em(2) solid $grey;//shade($grey, 12%);
+  border-bottom: em(2) solid $grey;
 }
 
 #toc {
