@@ -19,7 +19,7 @@ h1, h2, h3, h4, h5, h6 {
 h2 {
   font-size: 2em;
   margin-bottom: 0.75em; }
-  @media screen and (max-width: 400px), all and (max-device-width: 640px) {
+  @media screen and (max-width: 400px), screen and (max-device-width: 640px) {
     h2 {
       text-align: center; } }
 
@@ -73,7 +73,7 @@ div.horizon {
   list-style: none;
   clear: both;
   font-size: 1.125em; }
-  @media all and (max-width: 400px), all and (max-device-width: 640px) {
+  @media screen and (max-width: 400px), screen and (max-device-width: 640px) {
     #toc {
       text-align: center; } }
   #toc li {
@@ -83,7 +83,7 @@ div.horizon {
     zoom: 1;
     *display: inline;
     *vertical-align: auto; }
-    @media all and (min-width: 400px), all and (min-device-width: 640px) {
+    @media screen and (max-width: 400px), screen and (max-device-width: 640px) {
       #toc li {
         float: left; } }
     #toc li a {
@@ -95,7 +95,7 @@ div.horizon {
   height: 80px;
   margin-bottom: 1.5em; }
 
-@media all and (max-width: 400px), all and (max-device-width: 640px) {
+@media screen and (max-width: 400px), screen and (max-device-width: 640px) {
   p.download {
     text-align: center; } }
 

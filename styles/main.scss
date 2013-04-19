@@ -49,7 +49,7 @@ h2 {
   font-size: $font-size * 2;
   margin-bottom: $line-height / 2;
   @media screen and (max-width: $min-screen-width),
-  all and (max-device-width: $min-device-width) {
+  screen and (max-device-width: $min-device-width) {
     text-align: center;
   }
 }
@@ -116,15 +116,15 @@ div.horizon {
   list-style: none;
   clear: both;
   font-size: em(18);
-  @media all and (max-width: $min-screen-width),
-  all and(max-device-width: $min-device-width) {
+  @media screen and (max-width: $min-screen-width),
+  screen and (max-device-width: $min-device-width) {
     text-align: center;
   }
   li {
     margin-top: 0;
     @include inline-block;
-    @media all and (min-width: $min-screen-width),
-    all and (min-device-width: $min-device-width) {
+    @media screen and (max-width: $min-screen-width),
+    screen and (max-device-width: $min-device-width) {
       float: left;
     }
     a {
@@ -141,8 +141,8 @@ div.horizon {
 }
 
 p.download {
-  @media all and (max-width: $min-screen-width),
-  all and (max-device-width: $min-device-width) {
+  @media screen and (max-width: $min-screen-width),
+  screen and (max-device-width: $min-device-width) {
     text-align: center;
   }
 }
