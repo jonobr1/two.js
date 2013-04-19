@@ -105,11 +105,3 @@ div.horizon {
   .nota-bene:before {
     content: 'N.B:';
     font-weight: 700; }
-
-::selection {
-  background: #96ffc8;
-  /* Safari */ }
-
-::-moz-selection {
-  background: #96ffc8;
-  /* Firefox */ }
