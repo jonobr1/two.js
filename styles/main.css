@@ -10,6 +10,10 @@ body {
   color: #555555;
   padding: 25px;
   vertical-align: top; }
+  @media screen and (device-aspect-ratio: 2 / 3) {
+    body {
+      font-size: 1.5em;
+      line-height: 2.25em; } }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: "proxima-nova", helvetica, sans-serif;
@@ -18,11 +22,15 @@ h1, h2, h3, h4, h5, h6 {
 
 h2 {
   font-size: 2em;
-  line-height: 1.5em;
   margin-bottom: 0.75em; }
-  @media all and (max-width: 400px) {
+  @media screen and (max-width: 400px), all and (max-device-width: 640px) {
     h2 {
       text-align: center; } }
+  @media screen and (device-aspect-ratio: 2 / 3) {
+    h2 {
+      font-size: 4em;
+      line-height: 3em;
+      margin-bottom: 1.5em; } }
 
 code {
   font-family: "Ubuntu Mono", monospace;
@@ -84,7 +92,7 @@ div.horizon {
   list-style: none;
   clear: both;
   font-size: 1.125em; }
-  @media all and (max-width: 400px) {
+  @media all and (max-width: 400px), all and (max-device-width: 640px) {
     #toc {
       text-align: center; } }
   #toc li {
@@ -94,7 +102,7 @@ div.horizon {
     zoom: 1;
     *display: inline;
     *vertical-align: auto; }
-    @media all and (min-width: 400px) {
+    @media all and (min-width: 400px), all and (min-device-width: 640px) {
       #toc li {
         float: left; } }
     #toc li a {

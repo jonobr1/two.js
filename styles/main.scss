@@ -37,6 +37,10 @@ body {
   // background: $grey;
   padding: 25px;
   vertical-align: top;
+  @media screen and (device-aspect-ratio: 2/3) {  // iPhone 4
+    font-size: $font-size * 1.5;
+    line-height: $line-height * 1.5;
+  }
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -47,11 +51,16 @@ h1, h2, h3, h4, h5, h6 {
 
 h2 {
   font-size: $font-size * 2;
-  line-height: $line-height;
   margin-bottom: $line-height / 2;
   // margin-top: -28px;
-  @media all and (max-width: $min-screen-width) {
+  @media screen and (max-width: $min-screen-width),
+  all and (max-device-width: $min-device-width) {
     text-align: center;
+  }
+  @media screen and (device-aspect-ratio: 2/3) {  // iPhone 4
+    font-size: $font-size * 4;
+    line-height: $line-height * 2;
+    margin-bottom: $line-height;
   }
 }
 
@@ -118,13 +127,15 @@ div.horizon {
   list-style: none;
   clear: both;
   font-size: em(18);
-  @media all and (max-width: $min-screen-width) {
+  @media all and (max-width: $min-screen-width),
+  all and(max-device-width: $min-device-width) {
     text-align: center;
   }
   li {
     margin-top: 0;
     @include inline-block;
-    @media all and (min-width: $min-screen-width) {
+    @media all and (min-width: $min-screen-width),
+    all and (min-device-width: $min-device-width) {
       float: left;
     }
     a {
