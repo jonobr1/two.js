@@ -154,9 +154,9 @@ p.download {
   // font-style: italic;
 }
 
-// ::selection {
-//   background: rgb(150, 255, 200); /* Safari */
-// }
-// ::-moz-selection {
-//   background: rgb(150, 255, 200); /* Firefox */
-// }
+::selection {
+  background: tint($yellow, 25%); /* Safari */
+}
+::-moz-selection {
+  background: tint($yellow, 25%); /* Firefox */
+}
