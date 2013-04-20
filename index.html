@@ -215,15 +215,17 @@ rect.noStroke();
 two.update().render();</script>
         <script>
           $(function() {
-            var code = $('#draw-shapes script').html();
-            // var code = $('#introduction script').html();
-            var mirror = CodeMirror($('#draw-shapes')[0], {
-              value: code,
-              mode: "javascript",
-              tabSize: 2,
-              lineWrapping: true,
-              lineNumbers: true
-            });
+            _.delay(function() {
+              var code = $('#draw-shapes script').html();
+              // var code = $('#introduction script').html();
+              var mirror = CodeMirror($('#draw-shapes')[0], {
+                value: code,
+                mode: "javascript",
+                tabSize: 2,
+                lineWrapping: true,
+                lineNumbers: true
+              });
+            }, 100);
           });
         </script>
       </div>
