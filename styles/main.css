@@ -371,6 +371,9 @@ a {
     color: #ff4040;
     border-bottom: 0.125em solid #ff8c8c; }
 
+@media screen and (max-width: 400px) {
+  ul, ol {
+    list-style: none; } }
 ul li:not(:first-child), ol li:not(:first-child) {
   margin-top: 1.5em; }
 

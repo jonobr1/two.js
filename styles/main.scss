@@ -68,6 +68,9 @@ a {
 }
 
 ul, ol {
+  @media screen and (max-width: $min-screen-width) {
+    list-style: none;
+  }
   li {
     &:not(:first-child) {
       margin-top: $line-height;
