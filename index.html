@@ -18,6 +18,45 @@
     <!-- Code Mirror Goodies -->
     <script src="./third-party/codemirror.js"></script>
     <script src="./third-party/javascript.js"></script>
+    <script>
+
+      function addEditor(selector) {
+
+        _.delay(function() {
+
+          var parent = $(selector);
+          var code = parent.find('script').html();
+          var domElement = parent.find('svg');
+          var mirror = CodeMirror(parent[0], {
+            value: code,
+            mode: "javascript",
+            tabSize: 2,
+            lineWrapping: true,
+            lineNumbers: true
+          });
+
+          parent.find('.two-container').height(domElement.height());
+
+          var doc = mirror.getDoc();
+
+          var update = _.debounce(function() {
+            code = doc.getValue();
+            try {
+              domElement.remove();
+              eval(code); // yikes!
+              domElement = parent.find('svg');
+            } catch (e) {
+              console.log(e);
+            }
+          }, 1000);
+
+          mirror.on('change', update);
+
+        }, 100);
+
+      }
+
+    </script>
   </head>
   <body>
     <div id="content">
@@ -213,19 +252,10 @@ rect.noStroke();
 // Don't forget to tell two to render everything
 // to the screen
 two.update().render();</script>
+        <!-- Expose with CodeMirror -->
         <script>
           $(function() {
-            _.delay(function() {
-              var code = $('#draw-shapes script').html();
-              // var code = $('#introduction script').html();
-              var mirror = CodeMirror($('#draw-shapes')[0], {
-                value: code,
-                mode: "javascript",
-                tabSize: 2,
-                lineWrapping: true,
-                lineNumbers: true
-              });
-            }, 100);
+            addEditor('#draw-shapes');
           });
         </script>
       </div>
