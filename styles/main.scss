@@ -36,7 +36,7 @@ h2 {
 
 code {
   font-family: 'Ubuntu Mono', monospace;
-  color: $black;
+  // color: $black;
 }
 
 p {
@@ -140,8 +140,15 @@ p.download {
   }
 }
 
+.basic-usage + .basic-usage {
+  margin-top: $line-height;
+}
+
 #draw-shapes > .CodeMirror {
   height: 504px;
+}
+#draw-group > .CodeMirror {
+  height: 528px;
 }
 
 .nota-bene {

@@ -228,7 +228,7 @@ $(function() {
         <div class="two-container"></div>
         <h3>Drawing Your First Shapes</h3>
         <p>
-          Before we get into all the fancy animating its good to get a feel for how to make shapes in two.js. In order to do this we need to have an instance of two. This sets up a dom element that contains either an <code>svg</code> or <code>canvas</code> element to add to the webpage. The two object has a <code>scene</code> whch holds all shapes as well as methods for creating shapes. Details for all properties and construction paramters can be found in <a href="#documentation">documentation</a>.
+          Before we get into all the fancy animating its good to get a feel for how to make shapes in two.js. In order to do this we need to have an instance of two. This sets up a dom element that contains either an <code>svg</code> or <code>canvas</code> element to add to the webpage. The two object has a <code>scene</code> whch holds all shapes as well as methods for creating shapes. Details for all properties and construction parameters can be found in <a href="#documentation">documentation</a>.
         </p>
         <br />
         <script>// Make an instance of two and place it on the page.
@@ -256,6 +256,44 @@ two.update().render();</script>
         <script>
           $(function() {
             addEditor('#draw-shapes');
+          });
+        </script>
+      </div>
+      <div id="draw-group" class="basic-usage">
+        <div class="two-container"></div>
+        <h3>Shapes and Groups</h3>
+        <p>
+          Adding shapes to groups makes managing multiple shapes easier and more sane. Group&apos;s provide an easy way to move your content through <code>translation</code>, <code>rotation</code>, and <code>scale</code>. These operations emit from the coordinate space <code>(0, 0)</code>. In the example below we can see that the initial orientation of the circle and rectangle changed from the first example. These shapes are oriented around <code>(0, 0)</code>, which allows us to transform the group around the center of the shapes. In addition Group&apos;s styling operations trickle down and apply to each shape.
+        </p>
+        <p class="nota-bene">
+          All rendered objects in two.js are a child of a group. The instance has a property <a href="#documentation"><code>scene</code></a>. This property is a root-level <a href="#documentation"><code>Two.Group</code></a> and can act as a camera through the same transformations described above.
+        </p>
+        <br />
+        <script>var elem = document.getElementById('draw-group').children[0];
+var two = new Two({ width: 285, height: 200 }).appendTo(elem);
+
+var circle = two.makeCircle(-70, 0, 50);
+var rect = two.makeRectangle(70, 0, 100, 100);
+circle.fill = '#FF8000';
+circle.stroke = 'orangered';
+rect.fill = 'rgba(0, 200, 255, 0.75)';
+rect.stroke = 'blue';
+
+// Groups can take an array of shapes and/or groups.
+var group = two.makeGroup(circle, rect);
+
+// And have translation, rotation, scale like all shapes.
+group.translation.set(two.width / 2, two.height / 2);
+group.rotation = Math.PI;
+group.scale = 0.75;
+
+// You can also set all properties a shape have.
+group.linewidth = 7;
+
+two.update().render();</script>
+        <script>
+          $(function() {
+            addEditor('#draw-group');
           });
         </script>
       </div>

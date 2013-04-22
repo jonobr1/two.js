@@ -347,8 +347,7 @@ h2 {
       text-align: center; } }
 
 code {
-  font-family: "Ubuntu Mono", monospace;
-  color: #555555; }
+  font-family: "Ubuntu Mono", monospace; }
 
 p {
   max-width: 580px; }
@@ -431,8 +430,14 @@ div.horizon {
 .basic-usage .two-container {
   margin-bottom: 0.75em; }
 
+.basic-usage + .basic-usage {
+  margin-top: 1.5em; }
+
 #draw-shapes > .CodeMirror {
   height: 504px; }
+
+#draw-group > .CodeMirror {
+  height: 528px; }
 
 .nota-bene {
   font-size: 75%;
