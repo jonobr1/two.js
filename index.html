@@ -224,11 +224,18 @@ $(function() {
       </ul>
       <div id="basic-usage" class="horizon"></div>
       <h2>Basic Usage</h2>
+      <p>
+        In order to start any of these demos you&apos;ll want to <a href="#download">download</a> two.js and add it to your <code>&lt;html&gt;</code> document. Once downloaded add this tag to the <code>&lt;head&gt;</code> of your document: <code>&lt;script src=&quot;./path-to-two/two.js&quot;&gt;&lt;/script&gt;</code>. When you visit the page, you should be able to open up the <a href="https://developers.google.com/chrome-developer-tools/docs/console#opening_the_console">console</a> and type <code>Two</code>. If this returns a function then you&apos;re ready to begin!
+      </p>
+      <br />
       <div id="draw-shapes" class="basic-usage">
         <div class="two-container"></div>
         <h3>Drawing Your First Shapes</h3>
         <p>
-          Before we get into all the fancy animating its good to get a feel for how to make shapes in two.js. In order to do this we need to have an instance of two. This sets up a dom element that contains either an <code>svg</code> or <code>canvas</code> element to add to the webpage. The two object has a <code>scene</code> whch holds all shapes as well as methods for creating shapes. Details for all properties and construction parameters can be found in <a href="#documentation">documentation</a>.
+          Before we get into all the fancy animating its good to get a feel for how to make shapes in two.js. In order to do this we need to have an instance of two. This sets up a dom element that contains either an <code>svg</code> or <code>canvas</code> element to add to the webpage. The two object has a <code>scene</code> whch holds all shapes as well as methods for creating shapes.
+        </p>
+        <p class="nota-bene">
+          For a list of all properties and construction parameters check out the <a href="#documentation">documentation</a>.
         </p>
         <br />
         <script>// Make an instance of two and place it on the page.
@@ -251,7 +258,7 @@ rect.noStroke();
 
 // Don't forget to tell two to render everything
 // to the screen
-two.update().render();</script>
+two.update();</script>
         <!-- Expose with CodeMirror -->
         <script>
           $(function() {
@@ -266,7 +273,7 @@ two.update().render();</script>
           Adding shapes to groups makes managing multiple shapes easier and more sane. Group&apos;s provide an easy way to move your content through <code>translation</code>, <code>rotation</code>, and <code>scale</code>. These operations emit from the coordinate space <code>(0, 0)</code>. In the example below we can see that the initial orientation of the circle and rectangle changed from the first example. These shapes are oriented around <code>(0, 0)</code>, which allows us to transform the group around the center of the shapes. In addition Group&apos;s styling operations trickle down and apply to each shape.
         </p>
         <p class="nota-bene">
-          All rendered objects in two.js are a child of a group. The instance has a property <a href="#documentation"><code>scene</code></a>. This property is a root-level <a href="#documentation"><code>Two.Group</code></a> and can act as a camera through the same transformations described above.
+          All rendered objects in two.js are a child of a group. Every two instance has a property <a href="#documentation"><code>scene</code></a>. This property is a root-level <a href="#documentation"><code>Two.Group</code></a> and can act as a camera through the same transformations described above.
         </p>
         <br />
         <script>var elem = document.getElementById('draw-group').children[0];
@@ -277,7 +284,7 @@ var rect = two.makeRectangle(70, 0, 100, 100);
 circle.fill = '#FF8000';
 circle.stroke = 'orangered';
 rect.fill = 'rgba(0, 200, 255, 0.75)';
-rect.stroke = 'blue';
+rect.stroke = '#1C75BC';
 
 // Groups can take an array of shapes and/or groups.
 var group = two.makeGroup(circle, rect);
@@ -290,10 +297,55 @@ group.scale = 0.75;
 // You can also set all properties a shape have.
 group.linewidth = 7;
 
-two.update().render();</script>
+two.update();</script>
         <script>
           $(function() {
             addEditor('#draw-group');
+          });
+        </script>
+      </div>
+      <br />
+      <div id="draw-animation" class="basic-usage">
+        <div class="two-container"></div>
+        <h3>Adding Motion</h3>
+        <p>
+          Finally, let&apos;s add some motion to our shapes. So far the examples use <code>two.update();</code> to draw content to the screen. The instance of two.js has two particular methods for animation. The first is <code>two.play();</code> which calls <code>two.update();</code> at 60fps. This rate, however, will slowdown if there&apos;s too much content to render per frame.
+        </p>
+        <p>
+          The second method is <code>two.bind();</code> This method takes a <code>string</code> as it&apos;s first parameter indicating what event to listen to and a <code>function</code> as it&apos;s second argument delineating what to do when the event described in the first parameter happens. To sync a function with the animation loop simply invoke <code>two.bind('update', referenceToFunction);</code> as outlined below:
+        </p>
+        <p class="nota-bene">
+          For a complete list of events that can be bound to an instance of two check out the <a href="#documentation">documentation</a>.
+        </p>
+        <br />
+        <script>var elem = document.getElementById('draw-animation').children[0];
+var two = new Two({ width: 285, height: 200 }).appendTo(elem);
+
+var circle = two.makeCircle(-70, 0, 50);
+var rect = two.makeRectangle(70, 0, 100, 100);
+circle.fill = '#FF8000';
+rect.fill = 'rgba(0, 200, 255, 0.75)';
+
+var group = two.makeGroup(circle, rect);
+group.translation.set(two.width / 2, two.height / 2);
+group.scale = 0;
+group.noStroke();
+
+// Bind a function to scale and rotate the group
+// to the animation loop.
+two.bind('update', function(frameCount) {
+  // This code is called everytime two.update() is called.
+  // Effectively 60 times per second.
+  if (group.scale > 0.9999) {
+    group.scale = group.rotation = 0;
+  }
+  var t = (1 - group.scale) * 0.125;
+  group.scale += t;
+  group.rotation += t * 4 * Math.PI;
+}).play();  // Finally, start the animation loop</script>
+        <script>
+          $(function() {
+            addEditor('#draw-animation')
           });
         </script>
       </div>

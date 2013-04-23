@@ -2149,7 +2149,9 @@ var Backbone = Backbone || {};
         renderer.setSize(width, height);
       }
 
-      return this.trigger(Two.Events.update, this.frameCount);
+      this.trigger(Two.Events.update, this.frameCount);
+
+      return this.render();
 
     },
 
@@ -2333,7 +2335,7 @@ var Backbone = Backbone || {};
     /**
      * Interpret an SVG Node and add it to this instance's scene. The
      * distinction should be made that this doesn't `import` svg's, it solely
-     * interprets them into something compatible for Two.js — this is slightly
+     * interprets them into something compatible for Two.js — this is slightly
      * different than a direct transcription.
      */
     interpret: function(svgNode) {
@@ -2373,7 +2375,7 @@ var Backbone = Backbone || {};
     _.each(Two.Instances, function(t) {
 
       if (t.playing) {
-        t.update().render();
+        t.update();
       }
 
     });
