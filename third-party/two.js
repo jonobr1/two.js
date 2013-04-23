@@ -1643,7 +1643,6 @@ var Backbone = Backbone || {};
                   }
 
                   result = Two.Utils.subdivide(x1, y1, x2, y2, x3, y3, x4, y4);
-
                   coord.set(x4, y4);
                   control.set(x3, y3);
                   break;
@@ -4462,7 +4461,7 @@ var Backbone = Backbone || {};
 
     this.cap = 'round';
     this.join = 'round';
-    this.miter = 4;
+    this.miter = 1;
 
   };
 
