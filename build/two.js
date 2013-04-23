@@ -2149,7 +2149,9 @@ var Backbone = Backbone || {};
         renderer.setSize(width, height);
       }
 
-      return this.trigger(Two.Events.update, this.frameCount);
+      this.trigger(Two.Events.update, this.frameCount);
+
+      return this.render();
 
     },
 
@@ -2373,7 +2375,7 @@ var Backbone = Backbone || {};
     _.each(Two.Instances, function(t) {
 
       if (t.playing) {
-        t.update().render();
+        t.update();
       }
 
     });
