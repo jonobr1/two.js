@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Two.js: Animate In + Out</title>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" type="image/gif" href="../images/favicon.gif">
+    <script src="../third-party/jquery.js"></script>
+    <script src="../third-party/two.js"></script>
+  </head>
+  <body>
+    <div class="scripts">
+      <script>
+        $(function() {
+          var two = new Two({
+            fullscreen: true
+          }).appendTo(document.body);
+          $.get('../images/fresh.svg', function(doc) {
+            var fresh = two.interpret($(doc).find('svg')[0]);
+            fresh.center();
+            fresh.translation.set(two.width / 2, two.height / 2);
+            two.update();
+          });
+        });
+      </script>
+    </div>
+  </body>
+</html>

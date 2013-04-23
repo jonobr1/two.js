@@ -1418,7 +1418,7 @@ var Backbone = Backbone || {};
 
         CollinearityEpsilon: pow(10, -30),
 
-        RecursionLimit: 32,
+        RecursionLimit: 16,
 
         CuspLimit: 0,
 
@@ -1431,6 +1431,9 @@ var Backbone = Backbone || {};
       },
 
       applySvgAttributes: function(node, elem) {
+
+        elem.cap = 'butt';
+        elem.join = 'bevel';
 
         _.each(node.attributes, function(v, k) {
 
@@ -1640,6 +1643,7 @@ var Backbone = Backbone || {};
                   }
 
                   result = Two.Utils.subdivide(x1, y1, x2, y2, x3, y3, x4, y4);
+
                   coord.set(x4, y4);
                   control.set(x3, y3);
                   break;
@@ -1822,6 +1826,10 @@ var Backbone = Backbone || {};
           tolerance = Two.Utils.Curve.Tolerance;
 
         var level = level || 0;
+
+        if (level > limit) {
+          return [];
+        }
 
         var x12 = (x1 + x2) / 2,
             y12 = (y1 + y2) / 2,
@@ -4454,7 +4462,7 @@ var Backbone = Backbone || {};
 
     this.cap = 'round';
     this.join = 'round';
-    this.miter = 1;
+    this.miter = 4;
 
   };
 
