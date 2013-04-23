@@ -49,11 +49,10 @@
             $(window)
               .bind('mousemove', mousemove)
               .bind('touchmove', function(e) {
-                console.log(e);
-                var touch = e.changedTouches[0];
-                if (!touch) {
+                if (e.changedTouches.length < 1) {
                   return;
                 }
+                var touch = e.changedTouches[0];
                 mousemove({
                   clientX: touch.pageX,
                   clientY: touch.pageY
@@ -85,7 +84,6 @@
             function mousemove(e) {
               var rect = fresh.getBoundingClientRect();
               movingmouse = true;
-              var x = e.clientX;
               t = cmap(e.clientX, rect.left, rect.right, 0, 1);
               setEnding(fresh, t);
               stopMouse();
