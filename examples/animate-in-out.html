@@ -49,10 +49,7 @@
             $(window)
               .bind('mousemove', mousemove)
               .bind('touchmove', function(e) {
-                if (e.changedTouches.length < 1) {
-                  return;
-                }
-                var touch = e.changedTouches[0];
+                var touch = e.originalEvent.changedTouches[0];
                 mousemove({
                   clientX: touch.pageX,
                   clientY: touch.pageY
