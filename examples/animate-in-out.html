@@ -20,7 +20,8 @@
         $(function() {
 
           var two = new Two({
-            fullscreen: true
+            fullscreen: true,
+            type: Two.Types.canvas
           }).appendTo(document.body);
 
           $.get('../images/fresh.svg', function(doc) {
