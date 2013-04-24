@@ -1,0 +1,109 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Two.js: Animated Stroke</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="user-scalable=no">
+    <link rel="shortcut icon" type="image/gif" href="../images/favicon.gif">
+    <script src="../third-party/jquery.js"></script>
+    <script src="../third-party/two.js"></script>
+  </head>
+  <body>
+    <div class="scripts">
+      <script>
+
+        $(function() {
+
+          var increment = Math.PI / 256;
+
+          var two = new Two({
+            fullscreen: true,
+            type: Two.Types.canvas
+          }).appendTo(document.body);
+
+          var background = two.makeGroup();
+          var middleground = two.makeGroup();
+          var foreground = two.makeGroup();
+
+          var sun = makeSun(two);
+          sun.translation.set(two.width / 2, two.height / 2);
+
+          middleground.add(sun);
+
+          var isBackground = false;
+          var earth = two.makeCircle(two.width * 0.33, two.height * 0.66, two.height / 12);
+          earth.stroke = 'rgba(28, 117, 188, 0.66)';
+          earth.linewidth = 7;
+          earth.fill = 'rgb(0, 200, 255)';
+
+          two
+            .bind('resize', function() {
+
+              sun.translation.set(two.width / 2, two.height / 2);
+
+            })
+            .bind('update', function(frameCount) {
+
+              var osc = Math.sin(- frameCount / (Math.PI * 8));
+
+              if (osc >= 0.9 && isBackground) {
+                foreground.add(earth);
+                isBackground = false;
+              }
+              if (osc <= - 0.9 && !isBackground) {
+                background.add(earth);
+                isBackground = true;
+              }
+
+              earth.translation.set(osc * two.width / 4 + two.width / 2, - osc * two.height / 4 + two.height / 2);
+
+              sun.rotation += increment;
+
+            })
+            .play();
+
+        });
+
+        function makeSun(two) {
+
+          var color = 'rgba(255, 128, 0, 0.66)';
+          var sun = two.makeGroup();
+          var radius = two.height / 4;
+          var gutter = two.height / 20;
+
+          var core = two.makeCircle(0, 0, radius);
+          core.noStroke();
+          core.fill = color;
+
+          sun.core = core;
+
+          var coronas = [];
+          var corona_amount = 16;
+          for (var i = 0; i < corona_amount; i++) {
+            var pct = (i + 1) / corona_amount;
+            var theta = pct * Math.PI * 2;
+            var x = (radius + gutter) * Math.cos(theta);
+            var y = (radius + gutter) * Math.sin(theta);
+            var corona = makeTriangle(two, gutter);
+            corona.noStroke();
+            corona.fill = color;
+            corona.translation.set(x, y);
+            corona.rotation = Math.atan2(-y, -x) + Math.PI / 2;
+            coronas.push(corona);
+          }
+
+          sun.add(core).add(coronas);
+
+          return sun;
+
+        }
+
+        function makeTriangle(two, size) {
+          var tri = two.makePolygon(- size / 2, 0, size / 2, 0, 0, size);
+          return tri;
+        }
+
+      </script>
+    </div>
+  </body>
+</html>

@@ -20,6 +20,31 @@
     <script src="./third-party/javascript.js"></script>
     <script>
 
+      $(function() {
+
+        var totalColors = 5;
+        var chosen = [];
+        var colors = [
+          'red',
+          'orange',
+          'green',
+          'blue',
+          'purple'
+        ];
+
+        $('.examples').children().each(function(i, child) {
+          var index = Math.floor(Math.random() * colors.length);
+          var color = colors.splice(index, 1);
+          child.className = color;
+          chosen.push(color);
+          if (chosen >= totalColors) {
+            colors = chosen.slice(0);
+            chosen.length = 0;
+          }
+        });
+
+      });
+
       function addEditor(selector) {
 
         _.delay(function() {
@@ -353,9 +378,9 @@ two.bind('update', function(frameCount) {
       <h2>Examples</h2>
       <ul class="examples">
         <li>
-          <a href="./examples/animate-in-out.html">
+          <a href="./examples/animated-stroke.html">
             <img width="143" height="100" src="../images/fresh.gif" alt="">
-            <h3>Animate Strokes</h3>
+            <h3><p>Animated Strokes</p></h3>
           </a>
         </li>
       </ul>

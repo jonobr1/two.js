@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   <head>
-    <title>Two.js: Animate In + Out</title>
+    <title>Two.js: Animated Stroke</title>
     <meta charset="utf-8">
     <meta name="viewport" content="user-scalable=no">
     <link rel="shortcut icon" type="image/gif" href="../images/favicon.gif">
@@ -20,8 +20,8 @@
         $(function() {
 
           var two = new Two({
-            fullscreen: true,
-            type: Two.Types.canvas
+            fullscreen: true
+            // type: Two.Types.canvas
           }).appendTo(document.body);
 
           $.get('../images/fresh.svg', function(doc) {
@@ -59,27 +59,31 @@
                 return false;
               });
 
-            two
-              .bind('resize', function() {
+            _.defer(function() {
 
-                fresh.translation.set(two.width / 2, two.height / 2);
+              two
+                .bind('resize', function() {
 
-              })
-              .bind('update', function() {
+                  fresh.translation.set(two.width / 2, two.height / 2);
 
-                if (movingmouse) {
-                  return;
-                }
+                })
+                .bind('update', function() {
 
-                if (t < 0.9999) {
-                  t += 0.00625;
-                } else {
-                  startOver();
-                }
+                  if (movingmouse) {
+                    return;
+                  }
 
-                setEnding(fresh, t);
+                  if (t < 0.9999) {
+                    t += 0.00625;
+                  } else {
+                    startOver();
+                  }
 
-              }).play();
+                  setEnding(fresh, t);
+
+                }).play();
+
+            });
 
             function mousemove(e) {
               var rect = fresh.getBoundingClientRect();

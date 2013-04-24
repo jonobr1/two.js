@@ -439,6 +439,51 @@ div.horizon {
 #draw-group > .CodeMirror {
   height: 528px; }
 
+.examples {
+  list-style: none;
+  max-width: 580px; }
+  .examples li {
+    display: inline-block;
+    vertical-align: baseline;
+    zoom: 1;
+    *display: inline;
+    *vertical-align: auto;
+    position: relative;
+    width: 143px;
+    height: 100px;
+    overflow: hidden;
+    border: 1px solid #d6d6d6; }
+    .examples li.red h3 {
+      background: rgba(255, 64, 64, 0.8); }
+    .examples li.green h3 {
+      background: rgba(0, 191, 168, 0.8); }
+    .examples li.blue h3 {
+      background: rgba(0, 200, 255, 0.8); }
+    .examples li.orange h3 {
+      background: rgba(255, 128, 0, 0.8); }
+    .examples li.purple h3 {
+      background: rgba(153, 102, 255, 0.8); }
+    .examples li.yellow h3 {
+      background: rgba(255, 244, 95, 0.8); }
+    .examples li a {
+      display: block;
+      border-width: 0; }
+      .examples li a:hover h3, .examples li a:active h3 {
+        display: block; }
+    .examples li h3 {
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%; }
+      .examples li h3 p {
+        position: absolute;
+        top: 50%;
+        margin-top: -1.5em;
+        color: white;
+        padding: 0 8px; }
+
 .nota-bene {
   font-size: 75%;
   word-spacing: 0.14063em; }

@@ -40,7 +40,7 @@ code {
 }
 
 p {
-  max-width: 580px;
+  max-width: $max-content-width;
   @media screen and (device-aspect-ratio: 2/3),
   screen and (device-aspect-ratio: 40/71) {
     max-width: 100%;
@@ -153,19 +153,68 @@ p.download {
 
 .examples {
   list-style: none;
+  max-width: $max-content-width;
   li {
     @include inline-block;
     position: relative;
+    width: $thumbnail-width;
+    height: $thumbnail-height;
+    overflow: hidden;
+    border: 1px solid shade($grey, 10%);
+    $o: 0.8;
+    &.red {
+      h3 {
+        background: rgba($red, $o);
+      }
+    }
+    &.green {
+      h3 {
+        background: rgba($green, $o);
+      }
+    }
+    &.blue {
+      h3 {
+        background: rgba($blue, $o);
+      }
+    }
+    &.orange {
+      h3 {
+        background: rgba($orange, $o);
+      }
+    }
+    &.purple {
+      h3 {
+        background: rgba($purple, $o);
+      }
+    }
+    &.yellow {
+      h3 {
+        background: rgba($yellow, $o);
+      }
+    }
     a {
       display: block;
-      border: 0;
+      border-width: 0;
+      &:hover, &:active {
+        h3 {
+          display: block;
+        }
+      }
     }
     h3 {
+      display: none;
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
+      p {
+        position: absolute;
+        top: 50%;
+        margin-top: - $line-height;
+        color: $white;
+        padding: 0 8px;
+      }
     }
   }
 }
