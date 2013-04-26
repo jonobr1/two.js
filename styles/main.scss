@@ -12,7 +12,6 @@ body {
   line-height: $line-height;
   word-spacing: em(3);
   color: $black;
-  min-width: $min-screen-width;
   @media screen and (max-width: $min-screen-width) {
     background: $grey;
   }
