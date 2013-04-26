@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Two.js: Morph Vertices</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="user-scalable=no">
+    <link rel="shortcut icon" type="image/gif" href="../images/favicon.gif">
+    <script src="../third-party/jquery.js"></script>
+    <script src="../third-party/two.js"></script>
+    <style>
+      body {
+        background: rgb(153, 102, 255);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="scripts">
+      <script>
+
+        $(function() {
+
+          var squished = false;
+
+          var two = new Two({
+            fullscreen: true
+          }).appendTo(document.body);
+
+          Two.Resolution = 32;
+
+          var blob = two.makeCircle(two.width / 2, two.height / 2, two.height / 3);
+          blob.fill = 'white';
+          blob.noStroke();
+
+          reset();
+
+          two.bind('update', function() {
+
+            if (!squished) {
+
+              for (var i = 0; i < blob.vertices.length; i++) {
+                var v = blob.vertices[i];
+                var d = v.destination;
+
+                if (v.equals(d)) {
+                  squished = true;
+                  break;
+                }
+
+                v.x += (d.x - v.x) * 0.125;
+                v.y += (d.y - v.y) * 0.125;
+              }
+
+              return;
+            }
+
+            var outside = true;
+
+            for (var i = 0; i < blob.vertices.length; i++) {
+              var v = blob.vertices[i];
+              v.y += v.step;
+              v.step *= 1.125;
+              if (v.y < two.height) {
+                outside = false;
+              }
+            }
+
+            if (outside) {
+              reset();
+            }
+
+          }).play();
+
+          function reset() {
+
+            squished = false;
+
+            for (var i = 0; i < blob.vertices.length; i++) {
+              var v = blob.vertices[i];
+              var pct = (i + 1) / blob.vertices.length;
+              var theta = pct * Math.PI * 2;
+              var radius = Math.random() * two.height / 3 + two.height / 6;
+              var x = radius * Math.cos(theta);
+              var y = radius * Math.sin(theta);
+              v.set(two.height / 3 * Math.cos(theta), two.height / 3 * Math.sin(theta));
+              v.destination = new Two.Vector(x, y);
+              v.step = Math.sqrt(Math.random()) + 2;
+            }
+
+          }
+
+        });
+
+      </script>
+    </div>
+  </body>
+</html>

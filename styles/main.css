@@ -328,6 +328,7 @@ body {
   line-height: 1.5em;
   word-spacing: 0.1875em;
   color: #555555;
+  min-width: 400px;
   padding: 25px;
   vertical-align: top; }
   @media screen and (max-width: 400px) {
