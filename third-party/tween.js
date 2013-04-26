@@ -196,8 +196,6 @@ TWEEN.Tween = function ( object ) {
 
 	};
 
-  console.log('added get on complete');
-
 	this.update = function ( time ) {
 
 		if ( time < _startTime ) {

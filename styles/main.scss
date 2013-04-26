@@ -162,6 +162,7 @@ p.download {
     height: $thumbnail-height;
     overflow: hidden;
     border: 1px solid shade($grey, 10%);
+    margin-top: 0 !important;
     $o: 0.8;
     &.red {
       h3 {
