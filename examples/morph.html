@@ -33,42 +33,48 @@
 
           reset();
 
-          two.bind('update', function() {
+          two
+            .bind('update', function() {
 
-            if (!squished) {
+              blob.translation.set(two.width / 2, two.height / 2);
+
+            })
+            .bind('update', function() {
+
+              if (!squished) {
+
+                for (var i = 0; i < blob.vertices.length; i++) {
+                  var v = blob.vertices[i];
+                  var d = v.destination;
+
+                  if (v.equals(d)) {
+                    squished = true;
+                    break;
+                  }
+
+                  v.x += (d.x - v.x) * 0.125;
+                  v.y += (d.y - v.y) * 0.125;
+                }
+
+                return;
+              }
+
+              var outside = true;
 
               for (var i = 0; i < blob.vertices.length; i++) {
                 var v = blob.vertices[i];
-                var d = v.destination;
-
-                if (v.equals(d)) {
-                  squished = true;
-                  break;
+                v.y += v.step;
+                v.step *= 1.125;
+                if (v.y < two.height) {
+                  outside = false;
                 }
-
-                v.x += (d.x - v.x) * 0.125;
-                v.y += (d.y - v.y) * 0.125;
               }
 
-              return;
-            }
-
-            var outside = true;
-
-            for (var i = 0; i < blob.vertices.length; i++) {
-              var v = blob.vertices[i];
-              v.y += v.step;
-              v.step *= 1.125;
-              if (v.y < two.height) {
-                outside = false;
+              if (outside) {
+                reset();
               }
-            }
 
-            if (outside) {
-              reset();
-            }
-
-          }).play();
+            }).play();
 
           function reset() {
 
