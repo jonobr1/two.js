@@ -167,6 +167,7 @@ p.download {
     overflow: hidden;
     border: 1px solid shade($grey, 10%);
     margin-top: 0 !important;
+    text-align: left;
     $o: 0.8;
     &.red {
       h3 {

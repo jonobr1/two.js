@@ -457,7 +457,8 @@ div.horizon {
     height: 100px;
     overflow: hidden;
     border: 1px solid #d6d6d6;
-    margin-top: 0 !important; }
+    margin-top: 0 !important;
+    text-align: left; }
     .examples li.red h3 {
       background: rgba(255, 64, 64, 0.8); }
     .examples li.green h3 {
