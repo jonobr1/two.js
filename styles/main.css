@@ -443,6 +443,9 @@ div.horizon {
 .examples {
   list-style: none;
   max-width: 580px; }
+  @media screen and (max-width: 400px), screen and (max-device-width: 640px) {
+    .examples {
+      text-align: center; } }
   .examples li {
     display: inline-block;
     vertical-align: baseline;

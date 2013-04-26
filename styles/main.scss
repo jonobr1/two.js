@@ -155,6 +155,10 @@ p.download {
 .examples {
   list-style: none;
   max-width: $max-content-width;
+  @media screen and (max-width: $min-screen-width),
+  screen and (max-device-width: $min-device-width) {
+    text-align: center;
+  }
   li {
     @include inline-block;
     position: relative;
