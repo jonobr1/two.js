@@ -36,11 +36,6 @@
           two
             .bind('update', function() {
 
-              blob.translation.set(two.width / 2, two.height / 2);
-
-            })
-            .bind('update', function() {
-
               if (!squished) {
 
                 for (var i = 0; i < blob.vertices.length; i++) {
@@ -77,6 +72,8 @@
             }).play();
 
           function reset() {
+
+            blob.translation.set(two.width / 2, two.height / 2);
 
             squished = false;
 
