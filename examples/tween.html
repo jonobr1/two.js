@@ -65,8 +65,10 @@
 
         function makeCross(two) {
 
-          var width = two.height / 8;
-          var height = two.width / 3;
+          var longer = two.width > two.height;
+
+          var width = (longer ? two.height : two.width) / 8;
+          var height = (longer ? two.width : two.height) / 3;
 
           var a = two.makeRectangle(0, 0, width, height);
           var b = a.clone();
