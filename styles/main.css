@@ -377,6 +377,10 @@ a {
 ul li:not(:first-child), ol li:not(:first-child) {
   margin-top: 1.5em; }
 
+sup {
+  font-size: 85%;
+  line-height: 85%; }
+
 #content {
   padding: 25px 25px 50px 25px;
   background: white; }
