@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   <head>
-    <title>Two.js: Animated Stroke</title>
+    <title>Two.js: Depths</title>
     <meta charset="utf-8">
     <meta name="viewport" content="user-scalable=no">
     <link rel="shortcut icon" type="image/gif" href="../images/favicon.gif">
@@ -15,6 +15,7 @@
         $(function() {
 
           var increment = Math.PI / 256;
+          var TWO_PI = Math.PI * 2;
 
           var two = new Two({
             fullscreen: true,
@@ -36,31 +37,42 @@
           earth.linewidth = 7;
           earth.fill = 'rgb(0, 200, 255)';
 
-          two
-            .bind('resize', function() {
+          _.defer(function() {
 
-              sun.translation.set(two.width / 2, two.height / 2);
+            two
+              .bind('resize', function() {
 
-            })
-            .bind('update', function(frameCount) {
+                sun.translation.x = two.width / 2;
+                sun.translation.y = two.height / 2;
+                path.translation.copy(sun.translation);
 
-              var osc = Math.sin(- frameCount / (Math.PI * 8));
+              })
+              .bind('update', function(frameCount) {
 
-              if (osc >= 0.9 && isBackground) {
-                foreground.add(earth);
-                isBackground = false;
-              }
-              if (osc <= - 0.9 && !isBackground) {
-                background.add(earth);
-                isBackground = true;
-              }
+                var osc = Math.sin(- frameCount / (Math.PI * 8));
 
-              earth.translation.set(osc * two.width / 4 + two.width / 2, - osc * two.height / 4 + two.height / 2);
+                if (osc >= 0.9 && isBackground) {
+                  foreground.add(earth);
+                  isBackground = false;
+                }
+                if (osc <= - 0.9 && !isBackground) {
+                  background.add(earth);
+                  isBackground = true;
+                }
 
-              sun.rotation += increment;
+                earth.translation.x = osc * two.width / 4 + two.width / 2;
+                earth.translation.y = - osc * two.height / 4 + two.height / 2;
 
-            })
-            .play();
+                if (sun.rotation >= TWO_PI - 0.0625) {
+                  sun.rotation = 0;
+                }
+
+                sun.rotation += (TWO_PI - sun.rotation) * 0.0625;
+
+              })
+              .play();
+
+          });
 
         });
 
