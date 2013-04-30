@@ -868,7 +868,7 @@
 
     play: function() {
 
-      Two.Utils.setPlaying.apply(this, arguments);
+      Two.Utils.setPlaying.call(this, true);
 
       return this.trigger(Two.Events.play);
 
