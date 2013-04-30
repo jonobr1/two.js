@@ -63,7 +63,7 @@
 
           var two = new Two({
             fullscreen: true,
-            type: Two.Types.canvas
+            autostart: true
           }).appendTo(document.body);
 
           var dimensions = 140;
@@ -112,7 +112,7 @@
               index = (index + 1) % length;
             }
 
-          }).play();
+          });
 
         });
 

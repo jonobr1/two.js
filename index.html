@@ -37,7 +37,7 @@
           var color = colors.splice(index, 1);
           child.className = color;
           chosen.push(color);
-          if (chosen >= totalColors) {
+          if (chosen.length >= totalColors) {
             colors = chosen.slice(0);
             chosen.length = 0;
           }
@@ -405,6 +405,12 @@ two.bind('update', function(frameCount) {
           <a href="./examples/renderers.html" target="_blank">
             <img width="143" height="100" src="./images/renderers.gif" alt="">
             <h3><p>Rendering Types</p></h3>
+          </a>
+        </li>
+        <li>
+          <a href="./examples/svg-interpreter.html" target="_blank">
+            <img width="143" height="100" src="./images/svg-interpreter.gif" alt="">
+            <h3><p>Interpret SVG&apos;s</p></h3>
           </a>
         </li>
       </ul>
