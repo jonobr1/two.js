@@ -547,7 +547,7 @@ p.detail {
   margin-top: 0.375em;
   padding-left: 0.75em;
   margin-left: 3px;
-  border-left: 3px solid #cacaca; }
+  border-left: 3px solid #d6d6d6; }
 
 p.static, p.static + p {
   color: #8d8d8d; }

@@ -257,7 +257,7 @@ $(function() {
         <div class="two-container"></div>
         <h3>Drawing Your First Shapes</h3>
         <p>
-          Before we get into all the fancy animating its good to get a feel for how to make shapes in two.js. In order to do this we need to have an instance of two. This sets up a dom element that contains either an <code>svg</code> or <code>canvas</code> element to add to the webpage. The two object has a <code>scene</code> whch holds all shapes as well as methods for creating shapes.
+          Before we get into all the fancy animating its good to get a feel for how to make shapes in two.js. In order to do this we need to have an instance of two. This sets up a dom element that contains either an <code>svg</code> or <code>canvas</code> element to add to the webpage. The two object has a <code>scene</code> which holds all shapes as well as methods for creating shapes.
         </p>
         <p class="nota-bene">
           For a list of all properties and construction parameters check out the <a href="#documentation">documentation</a>.
@@ -472,75 +472,59 @@ two.bind('update', function(frameCount) {
           </ul>
         </li>
         <li>
-          <p class="static property array declaration">
-            <strong>Array</strong> <code>Two.Array</code>
+          <p class="property string declaration">
+            <strong>type</strong> <code>two.type</code>
           </p>
           <p class="description">
-            A JavaScript <code>Float32Array</code> with graceful fallback to JavaScript <code>Array</code>.
+            A string representing which type of renderer the instance has implored.
           </p>
         </li>
         <li>
-          <p class="static property object declaration">
-            <strong>Types</strong> <code>Two.Types</code>
+          <p class="property number declaration">
+            <strong>frameCount</strong> <code>two.frameCount</code>
           </p>
           <p class="description">
-            A list of applicable types of rendering contexts. This is used to standardize the addresses of the various renderers. The types include <code>svg</code>, <code>canvas</code>, and <code>webgl</code>. e.g: <code>Two.Types.svg</code>
+            A number representing how many frames have elapsed.
           </p>
         </li>
         <li>
-          <p class="static property object declaration">
-            <strong>Properties</strong> <code>Two.Properties</code>
+          <p class="property number declaration">
+            <strong>width</strong> <code>two.width</code>
           </p>
           <p class="description">
-            A list of renderer specific application properties.
+            The width of the instance&apos;s dom element.
           </p>
         </li>
         <li>
-          <p class="static property object declaration">
-            <strong>Events</strong> <code>Two.Events</code>
+          <p class="property number declaration">
+            <strong>height</strong> <code>two.height</code>
           </p>
           <p class="description">
-            A list of actionable events triggered by a given instance. For the most part these are internal events in order to enable two-way databinding. Exceptions include <code>update</code> event on animation loop and <code>resize</code> when the dimensions of the drawing space change. Related to <code>two.bind</code> and <code>two.trigger</code>.
+            The height of the instance&apos;s dom element.
           </p>
         </li>
         <li>
-          <p class="static property number declaration">
-            <strong>Resolution</strong> <code>Two.Resolution</code>
+          <p class="property boolean declaration">
+            <strong>playing</strong> <code>two.playing</code>
           </p>
           <p class="description">
-            A number representing how many subdivisions should be present during curve calculations.
+            A boolean representing whether or not the instance is being updated through the automatic <code>requestAnimationFrame</code>.
           </p>
         </li>
         <li>
-          <p class="static property array declaration">
-            <strong>Instances</strong> <code>Two.Instances</code>
+          <p class="property object declaration">
+            <strong>renderer</strong> <code>two.renderer</code>
           </p>
           <p class="description">
-            A running list of all instances created on the page.
+            The instantiated rendering class for the instance. For a list of possible rendering types check out <code>Two.Types</code>.
           </p>
         </li>
         <li>
-          <p class="static method function declaration">
-            <strong>noConflict</strong> <code>Two.noConflict();</code>
+          <p class="property object declaration">
+            <strong>scene</strong> <code>two.scene</code>
           </p>
           <p class="description">
-            Run two.js in <code>noConflict</code> mode, returning the <code>two</code> variable to its previous owner. Returns a reference to the <code>Two</code> class.
-          </p>
-        </li>
-        <li>
-          <p class="static method object declaration">
-            <strong>Utils</strong> <code>Two.Utils</code>
-          </p>
-          <p class="description">
-            A collection of utility functions and variables used throughout the project. This is where much of the algorithmic computation lies: <em>computing curve handles, subdividing cubic bezier curves, interpretting svg nodes</em>. Because of it&apos;s complexity it&apos;s encouraged to look at the <a href="https://github.com/jonobr1/two.js/tree/master/src" target="_blank">source code</a> for further information.
-          </p>
-        </li>
-        <li>
-          <p class="static property function declaration">
-            <strong>Error</strong> <code>Two.Error(message);</code>
-          </p>
-          <p class="description">
-            A two.js specific custom error handler. Takes a message, string, to display in the console to developers.
+            The base level <code>Two.Group</code> which houses all objects for the instance. Because it is a <code>Two.Group</code> transformations can be applied to it that will affect all objects in the instance. This is handy as a makeshift camera.
           </p>
         </li>
         <li>
@@ -639,6 +623,42 @@ two.bind('update', function(frameCount) {
         </li>
         <li>
           <p class="property function declaration">
+            <strong>makePolygon</strong> <code>two.makePolygon(x1, y1, x2, y2, xN, yN, open);</code>
+          </p>
+          <p class="description">
+            Draws a polygon to the instance&apos;s drawing space. <strong>The arguments are a little tricky</strong>. It returns a <code>Two.Polygon</code> object.
+          </p>
+          <p class="detail">
+            The method accepts any amount of paired x, y values as denoted by the series above. It then checks to see if there is a final argument, a boolean <code>open</code>, which marks whether or not the shape should be open. If <code>true</code> the polygon will have two clear endpoints, otherwise it will be closed.
+          </p>
+          <p class="detail">
+            This method also recognizes the format <code>two.makePolygon(points, open)</code> where points is an array of <code>Two.Vector</code>&apos;s and open is an optional boolean describing whether or not to expose endpoints. <em>It is imperative if you generate curves this way to make the list of points <code>Two.Vector</code>&apos;s</em>.
+          </p>
+          <p class="nota-bene">
+            The <code>Two.Polygon</code> that this method creates is the base shape for all of the make functions.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>makeGroup</strong> <code>two.makeGroup(objects);</code>
+          </p>
+          <p class="description">
+            Adds a group to the instance&apos;s drawing space. While a group does not have any visible features when rendered it allows for nested transformations on shapes. See <code>Two.Group</code> for more information. It accepts an array of objects, <code>Two.Polygon</code>s or <code>Two.Group</code>s. As well as a list of objects as the arguments, <code>two.makeGroup(o1, o2, oN)</code>. It returns a <code>Two.Group</code> object.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>interpret</strong> <code>two.interpret(svgNode);</code>
+          </p>
+          <p class="description">
+            Reads an svg node and draws the svg object by creating <code>Two.Polygon</code>s and <code>Two.Group</code>s from the reference. It then adds it to the instance&apos;s drawing space. It returns an <code>Two.Group</code> object.
+          </p>
+          <p class="nota-bene">
+            At the time of writing, <code>two.interpret</code> accepts compound paths, but often has unexpected results. Therefore it is recommended to break apart and <em>Release Compound Paths</em> as much as possible.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
             <strong>bind</strong> <code>two.bind(event, callback);</code>
           </p>
           <p class="description">
@@ -651,6 +671,81 @@ two.bind('update', function(frameCount) {
           </p>
           <p class="description">
             Remove one or many callback functions. If callback is <code>null</code> it removes all callbacks for an event. If the event name is null, all callback functions for the instance are removed. <strong>This is highly discouraged</strong>. Inherited from <a href="http://backbonejs.org/docs/backbone.html#section-13">Backbone.js</a>.
+          </p>
+        </li>
+
+        <!-- Static Properties -->
+
+        <li>
+          <p class="static property array declaration">
+            <strong>Array</strong> <code>Two.Array</code>
+          </p>
+          <p class="description">
+            A JavaScript <code>Float32Array</code> with graceful fallback to JavaScript <code>Array</code>.
+          </p>
+        </li>
+        <li>
+          <p class="static property object declaration">
+            <strong>Types</strong> <code>Two.Types</code>
+          </p>
+          <p class="description">
+            A list of applicable types of rendering contexts. This is used to standardize the addresses of the various renderers. The types include <code>svg</code>, <code>canvas</code>, and <code>webgl</code>. e.g: <code>Two.Types.svg</code>
+          </p>
+        </li>
+        <li>
+          <p class="static property object declaration">
+            <strong>Properties</strong> <code>Two.Properties</code>
+          </p>
+          <p class="description">
+            A list of renderer specific application properties.
+          </p>
+        </li>
+        <li>
+          <p class="static property object declaration">
+            <strong>Events</strong> <code>Two.Events</code>
+          </p>
+          <p class="description">
+            A list of actionable events triggered by a given instance. For the most part these are internal events in order to enable two-way databinding. Exceptions include <code>update</code> event on animation loop and <code>resize</code> when the dimensions of the drawing space change. Related to <code>two.bind</code> and <code>two.trigger</code>.
+          </p>
+        </li>
+        <li>
+          <p class="static property number declaration">
+            <strong>Resolution</strong> <code>Two.Resolution</code>
+          </p>
+          <p class="description">
+            A number representing how many subdivisions should be present during curve calculations.
+          </p>
+        </li>
+        <li>
+          <p class="static property array declaration">
+            <strong>Instances</strong> <code>Two.Instances</code>
+          </p>
+          <p class="description">
+            A running list of all instances created on the page.
+          </p>
+        </li>
+        <li>
+          <p class="static method function declaration">
+            <strong>noConflict</strong> <code>Two.noConflict();</code>
+          </p>
+          <p class="description">
+            Run two.js in <code>noConflict</code> mode, returning the <code>two</code> variable to its previous owner. Returns a reference to the <code>Two</code> class.
+          </p>
+        </li>
+        <li>
+          <p class="static method object declaration">
+            <strong>Utils</strong> <code>Two.Utils</code>
+          </p>
+          <p class="description">
+            A collection of utility functions and variables used throughout the project. This is where much of the algorithmic computation lies: <em>computing curve handles, subdividing cubic bezier curves, interpretting svg nodes</em>. Because of it&apos;s complexity it&apos;s encouraged to look at the <a href="https://github.com/jonobr1/two.js/tree/master/src" target="_blank">source code</a> for further information.
+          </p>
+        </li>
+        <li>
+          <p class="static property function declaration">
+            <strong>Error</strong> <code>Two.Error(message);</code>
+          </p>
+          <p class="description">
+            A two.js specific custom error handler. Takes a message, string, to display in the console to developers.
           </p>
         </li>
       </ul>
