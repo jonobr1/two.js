@@ -4618,6 +4618,10 @@ var Backbone = Backbone || {};
 
       var rect = this.getBoundingClientRect();
 
+      if (!rect.left || !rect.top || !rect.width || !rect.height) {
+        return this;
+      }
+
       rect.centroid = {
         x: rect.left + rect.width / 2,
         y: rect.top + rect.height / 2
@@ -4745,6 +4749,10 @@ var Backbone = Backbone || {};
       _.each(this.children, function(child) {
 
         var rect = child.getBoundingClientRect();
+
+        if (!rect.top || !rect.left || !rect.right || !rect.bottom) {
+          return;
+        }
 
         top = Math.min(rect.top, top);
         left = Math.min(rect.left, left);
