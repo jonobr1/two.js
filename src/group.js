@@ -211,6 +211,10 @@
 
         var rect = child.getBoundingClientRect();
 
+        if (!top || !left || !right || !bottom) {
+          return;
+        }
+
         top = Math.min(rect.top, top);
         left = Math.min(rect.left, left);
         right = Math.max(rect.right, right);
