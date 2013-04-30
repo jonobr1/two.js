@@ -100,8 +100,8 @@
 
             _.each(shape.children, function(child) {
               _.each(child.vertices, function(v) {
-                var x = v.ox + Math.random() * 2;
-                var y = v.oy + Math.random() * 2;
+                var x = v.ox + Math.random();
+                var y = v.oy + Math.random();
                 v.set(x, y);
               });
             });
