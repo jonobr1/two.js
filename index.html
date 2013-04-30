@@ -416,11 +416,260 @@ two.bind('update', function(frameCount) {
       </ul>
       <div id="documentation" class="horizon"></div>
       <h2>Documentation</h2>
+      <ul class="documentation">
+        <li class="title"><h3>Two</h3></li>
+        <li class="description">
+          When you import the projectTwo is a <code>window</code> level class that serves as the main interaction point for the project. It exposes a number of methods and properties. These make it possible to draw, but also afford other capabilities such as augmenting the drawing space. Unless specified methods return an instance of <code>two</code> for the purpose of chaining.
+        </li>
+        <li>
+          <p class="construction declaration">
+            <strong>construction</strong> <code>var two = new Two(params);</code>
+          </p>
+          <p class="description">
+            Create a new instance of <code>Two</code> where <code>params</code> is a JavaScript object with several optional parameters listed below:
+          </p>
+          <ul class="object">
+            <li>
+              <p class="property string">
+                <strong>type</strong> <code>params.type</code>
+              </p>
+              <p>
+                Set the type of renderer for the instance: svg, webgl, canvas, etc.. Applicable types are carried within <code>Two.Types</code>. Default type is <code>Two.Types.svg</code>.
+              </p>
+            </li>
+            <li>
+              <p class="property number">
+                <strong>width</strong> <code>params.width</code>
+              </p>
+              <p>
+                Set the width of the drawing space. Disregarded if <code>params.fullscreen</code> is set to <code>true</code>. Default width is <code>640</code> pixels.
+              </p>
+            </li>
+            <li>
+              <p class="property number">
+                <strong>height</strong> <code>params.height</code>
+              </p>
+              <p>
+                Set the height of the drawing space. Disregarded if <code>params.fullscreen</code> is set to <code>true</code>. Default height is <code>480</code> pixels.
+              </p>
+            </li>
+            <li>
+              <p class="property boolean">
+                <strong>autostart</strong> <code>params.autostart</code>
+              </p>
+              <p>
+                A boolean to automatically add the instance to draw on <code>requestAnimationFrame</code>. This is a convenient substitute so you don&apos;t have to call <code>two.play()</code>.
+              </p>
+            </li>
+            <li>
+              <p class="property boolean">
+                <strong>fullscreen</strong> <code>params.fullscreen</code>
+              </p>
+              <p>
+                A boolean to set the drawing space of the instance to be fullscreen or not. If set to <code>true</code> then <code>width</code> and <code>height</code> parameters will not be respected.
+              </p>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <p class="static property array declaration">
+            <strong>Array</strong> <code>Two.Array</code>
+          </p>
+          <p class="description">
+            A JavaScript <code>Float32Array</code> with graceful fallback to JavaScript <code>Array</code>.
+          </p>
+        </li>
+        <li>
+          <p class="static property object declaration">
+            <strong>Types</strong> <code>Two.Types</code>
+          </p>
+          <p class="description">
+            A list of applicable types of rendering contexts. This is used to standardize the addresses of the various renderers. The types include <code>svg</code>, <code>canvas</code>, and <code>webgl</code>. e.g: <code>Two.Types.svg</code>
+          </p>
+        </li>
+        <li>
+          <p class="static property object declaration">
+            <strong>Properties</strong> <code>Two.Properties</code>
+          </p>
+          <p class="description">
+            A list of renderer specific application properties.
+          </p>
+        </li>
+        <li>
+          <p class="static property object declaration">
+            <strong>Events</strong> <code>Two.Events</code>
+          </p>
+          <p class="description">
+            A list of actionable events triggered by a given instance. For the most part these are internal events in order to enable two-way databinding. Exceptions include <code>update</code> event on animation loop and <code>resize</code> when the dimensions of the drawing space change. Related to <code>two.bind</code> and <code>two.trigger</code>.
+          </p>
+        </li>
+        <li>
+          <p class="static property number declaration">
+            <strong>Resolution</strong> <code>Two.Resolution</code>
+          </p>
+          <p class="description">
+            A number representing how many subdivisions should be present during curve calculations.
+          </p>
+        </li>
+        <li>
+          <p class="static property array declaration">
+            <strong>Instances</strong> <code>Two.Instances</code>
+          </p>
+          <p class="description">
+            A running list of all instances created on the page.
+          </p>
+        </li>
+        <li>
+          <p class="static method function declaration">
+            <strong>noConflict</strong> <code>Two.noConflict();</code>
+          </p>
+          <p class="description">
+            Run two.js in <code>noConflict</code> mode, returning the <code>two</code> variable to its previous owner. Returns a reference to the <code>Two</code> class.
+          </p>
+        </li>
+        <li>
+          <p class="static method object declaration">
+            <strong>Utils</strong> <code>Two.Utils</code>
+          </p>
+          <p class="description">
+            A collection of utility functions and variables used throughout the project. This is where much of the algorithmic computation lies: <em>computing curve handles, subdividing cubic bezier curves, interpretting svg nodes</em>. Because of it&apos;s complexity it&apos;s encouraged to look at the <a href="https://github.com/jonobr1/two.js/tree/master/src" target="_blank">source code</a> for further information.
+          </p>
+        </li>
+        <li>
+          <p class="static property function declaration">
+            <strong>Error</strong> <code>Two.Error(message);</code>
+          </p>
+          <p class="description">
+            A two.js specific custom error handler. Takes a message, string, to display in the console to developers.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>appendTo</strong> <code>two.appendTo(domElement);</code>
+          </p>
+          <p class="description">
+            A convenient method to append the instance&apos;s dom element to the page. <em>It&apos;s required to add the instance&apos;s dom element to the page in order to see anything drawn.</em>
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>play</strong> <code>two.play();</code>
+          </p>
+          <p class="description">
+            This method adds the instance to the <code>requestAnimationFrame</code> loop. In affect enabling animation for this instance.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>pause</strong> <code>two.pause();</code>
+          </p>
+          <p class="description">
+            This method removes the instance from the <code>requestAnimationFrame</code> loop. In affect halting animation for this instance.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>update</strong> <code>two.update();</code>
+          </p>
+          <p class="description">
+            This method updates the dimensions of the drawing space, increments the <code>tick</code> for animation, and finally calls <code>two.render()</code>. When using the built-in <code>requestAnimationFrame</code> hook, <code>two.play()</code>, this method is invoked for you automatically.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>render</strong> <code>two.render();</code>
+          </p>
+          <p class="description">
+            This method makes the instance&apos;s renderer draw. <em>It should be unnecessary to inoke this yourself at anytime.</em>
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>add</strong> <code>two.add(objects);</code>
+          </p>
+          <p class="description">
+            Add one or many shapes / groups to the instance. Objects can be added as arguments, <code>two.add(o1, o2, oN)</code>, or as an array depicted above.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>makeLine</strong> <code>two.makeLine(x1, y1, x2, y2);</code>
+          </p>
+          <p class="description">
+            Draws a line between two coordinates to the instance&apos;s drawing space where <code>x1</code>, <code>y1</code> are the x, y values for the first coordinate and <code>x2</code>, <code>y2</code> are the x, y values for the second coordinate. It returns a <code>Two.Polygon</code> object.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>makeRectangle</strong> <code>two.makeRectangle(x, y, width, height);</code>
+          </p>
+          <p class="description">
+            Draws a rectangle to the instance&apos;s drawing space where <code>x</code>, <code>y</code> are the x, y values for the center point of the rectangle and <code>width</code>, <code>height</code> represents the width and height of the rectangle. It returns a <code>Two.Polygon</code> object.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>makeCircle</strong> <code>two.makeCircle(x, y, radius);</code>
+          </p>
+          <p class="description">
+            Draws a circle to the instance&apos;s drawing space where <code>x</code>, <code>y</code> are the x, y values for the center point of the circle and <code>radius</code> is the radius of the circle. It returns a <code>Two.Polygon</code> object.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>makeEllipse</strong> <code>two.makeEllipse(x, y, width, height);</code>
+          </p>
+          <p class="description">
+            Draws an ellipse to the instance&apos;s drawing space where <code>x</code>, <code>y</code> are the x, y values for the center point of the ellipse and <code>width</code>, <code>height</code> are the dimensions of the ellipse. It returns a <code>Two.Polygon</code> object.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>makeCurve</strong> <code>two.makeCurve(x1, y1, x2, y2, xN, yN, open);</code>
+          </p>
+          <p class="description">
+            Draws a curved polygon to the instance&apos;s drawing space. <strong>The arguments are a little tricky</strong>. It returns a <code>Two.Polygon</code> object.
+          </p>
+          <p class="detail">
+            The method accepts any amount of paired x, y values as denoted by the series above. It then checks to see if there is a final argument, a boolean <code>open</code>, which marks whether or not the shape should be open. If <code>true</code> the curve will have two clear endpoints, otherwise it will be closed.
+          </p>
+          <p class="detail">
+            This method also recognizes the format <code>two.makeCurve(points, open)</code> where points is an array of <code>Two.Vector</code>&apos;s and open is an optional boolean describing whether or not to expose endpoints. <em>It is imperative if you generate curves this way to make the list of points <code>Two.Vector</code>&apos;s</em>.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>bind</strong> <code>two.bind(event, callback);</code>
+          </p>
+          <p class="description">
+            Bind an event, string, to a callback function. Passing <code>"all"</code> will bind the callback to all events. Inherited from <a href="http://backbonejs.org/docs/backbone.html#section-13">Backbone.js</a>.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>unbind</strong> <code>two.unbind(event, callback);</code>
+          </p>
+          <p class="description">
+            Remove one or many callback functions. If callback is <code>null</code> it removes all callbacks for an event. If the event name is null, all callback functions for the instance are removed. <strong>This is highly discouraged</strong>. Inherited from <a href="http://backbonejs.org/docs/backbone.html#section-13">Backbone.js</a>.
+          </p>
+        </li>
+      </ul>
+
       <div id="compatability" class="horizon"></div>
       <h2>Compatability</h2>
       <div id="credits" class="horizon"></div>
       <h2>Credits</h2>
 
     </div>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-40550435-1', 'github.com');
+      ga('send', 'pageview');
+
+    </script>
   </body>
 </html>

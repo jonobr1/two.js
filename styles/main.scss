@@ -240,6 +240,80 @@ p.download {
   // font-style: italic;
 }
 
+ul.documentation {
+
+  list-style: none;
+  max-width: $max-content-width;
+
+  li.description {
+    margin-top: 0;
+  }
+
+  ul {
+    margin-top: $line-height;
+    list-style: none;
+    margin-left: $line-height;
+    font-size: 80%;
+    line-height: $line-height;
+    li {
+      &:not(:first-child) {
+        margin-top: $line-height * 0.75;
+      }
+      p {
+        margin-top: 0;
+      }
+    }
+  }
+
+}
+
+p.property, p.method, p.construction {
+  $border-width: 4px;
+  border-left-width: $border-width;
+  border-left-style: solid;
+  margin-left: - $border-width * 4;
+  padding-left: $border-width * 3;
+}
+
+p.construction {
+  border-left-color: $yellow;
+}
+
+p.boolean {
+  border-left-color: $blue;
+}
+
+p.number {
+  border-left-color: $red;
+}
+
+p.string {
+  border-left-color: $orange;
+}
+
+p.function {
+  border-left-color: $purple;
+}
+
+p.object, p.array {
+  border-left-color: $green;
+}
+
+p.description {
+  margin-top: $line-height / 4;
+}
+
+p.detail {
+  margin-top: $line-height / 4;
+  padding-left: $line-height / 2;
+  margin-left: 3px;
+  border-left: 3px solid shade($grey, 15%);
+}
+
+p.static, p.static + p {
+  color: tint($black, 33%);
+}
+
 ::selection {
   background: tint($yellow, 25%); /* Safari */
 }

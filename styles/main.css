@@ -500,6 +500,58 @@ div.horizon {
     content: 'N.B:';
     font-weight: 700; }
 
+ul.documentation {
+  list-style: none;
+  max-width: 580px; }
+  ul.documentation li.description {
+    margin-top: 0; }
+  ul.documentation ul {
+    margin-top: 1.5em;
+    list-style: none;
+    margin-left: 1.5em;
+    font-size: 80%;
+    line-height: 1.5em; }
+    ul.documentation ul li:not(:first-child) {
+      margin-top: 1.125em; }
+    ul.documentation ul li p {
+      margin-top: 0; }
+
+p.property, p.method, p.construction {
+  border-left-width: 4px;
+  border-left-style: solid;
+  margin-left: -16px;
+  padding-left: 12px; }
+
+p.construction {
+  border-left-color: #fff45f; }
+
+p.boolean {
+  border-left-color: #00c8ff; }
+
+p.number {
+  border-left-color: #ff4040; }
+
+p.string {
+  border-left-color: #ff8000; }
+
+p.function {
+  border-left-color: #9966ff; }
+
+p.object, p.array {
+  border-left-color: #00bfa8; }
+
+p.description {
+  margin-top: 0.375em; }
+
+p.detail {
+  margin-top: 0.375em;
+  padding-left: 0.75em;
+  margin-left: 3px;
+  border-left: 3px solid #cacaca; }
+
+p.static, p.static + p {
+  color: #8d8d8d; }
+
 ::selection {
   background: #fff687;
   /* Safari */ }
