@@ -62,7 +62,9 @@
 
     this.type = params.type;
     this.renderer = new Two[this.type](this);
-    this.playing = params.autostart;
+    _.defer(_.bind(function() {
+      this.playing = params.autostart;
+    }, this));
     this.frameCount = 0;
 
     if (params.fullscreen) {

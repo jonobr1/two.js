@@ -1332,7 +1332,9 @@ var Backbone = Backbone || {};
 
     this.type = params.type;
     this.renderer = new Two[this.type](this);
-    this.playing = params.autostart;
+    _.defer(_.bind(function() {
+      this.playing = params.autostart;
+    }, this));
     this.frameCount = 0;
 
     if (params.fullscreen) {
@@ -4746,6 +4748,10 @@ var Backbone = Backbone || {};
 
         var rect = child.getBoundingClientRect();
 
+        if (!top || !left || !right || !bottom) {
+          return;
+        }
+
         top = Math.min(rect.top, top);
         left = Math.min(rect.left, left);
         right = Math.max(rect.right, right);
@@ -4790,6 +4796,7 @@ var Backbone = Backbone || {};
   });
 
 })();
+
 (function() {
 
   /**
