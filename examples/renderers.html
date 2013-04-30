@@ -27,6 +27,16 @@
     <div class="scripts">
       <script>
 
+        // https://gist.github.com/jonobr1/4660204
+        var hasWebgl = (function() {
+          try { return !!window.WebGLRenderingContext
+            && !!(document.createElement('canvas').getContext('webgl')
+            || document.createElement('canvas').getContext('experimental-webgl'));
+          } catch(e) {
+            return false;
+          }
+        })();
+
         $(function() {
 
           var container = $('#content')[0];
@@ -40,7 +50,7 @@
           var webgl = new Two({
             width: 400,
             height: 400,
-            type: Two.Types.webgl
+            type: hasWebgl ? Two.Types.webgl : Two.Types.canvas
           }).appendTo(container);
           var canvas = new Two({
             width: 400,
