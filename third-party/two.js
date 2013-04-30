@@ -1332,9 +1332,7 @@ var Backbone = Backbone || {};
 
     this.type = params.type;
     this.renderer = new Two[this.type](this);
-    _.defer(_.bind(function() {
-      this.playing = params.autostart;
-    }, this));
+    Two.Utils.setPlaying.call(this, params.autostart);
     this.frameCount = 0;
 
     if (params.fullscreen) {
@@ -1429,6 +1427,18 @@ var Backbone = Backbone || {};
           angle: 0,
           epsilon: 0.01
         }
+
+      },
+
+      /**
+       * Properly defer play calling until after all objects
+       * have been updated with their newest styles.
+       */
+      setPlaying: function(b) {
+
+        _.defer(_.bind(function() {
+          this.playing = !!b;
+        }, this));
 
       },
 
@@ -2128,7 +2138,7 @@ var Backbone = Backbone || {};
 
     play: function() {
 
-      this.playing = true;
+      Two.Utils.setPlaying.apply(this, arguments);
 
       return this.trigger(Two.Events.play);
 
