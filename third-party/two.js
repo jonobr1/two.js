@@ -1332,7 +1332,9 @@ var Backbone = Backbone || {};
 
     this.type = params.type;
     this.renderer = new Two[this.type](this);
-    this.playing = params.autostart;
+    _.defer(_.bind(function() {
+      this.playing = params.autostart;
+    }, this));
     this.frameCount = 0;
 
     if (params.fullscreen) {
@@ -4618,10 +4620,6 @@ var Backbone = Backbone || {};
 
       var rect = this.getBoundingClientRect();
 
-      if (!rect.left || !rect.top || !rect.width || !rect.height) {
-        return this;
-      }
-
       rect.centroid = {
         x: rect.left + rect.width / 2,
         y: rect.top + rect.height / 2
@@ -4750,7 +4748,7 @@ var Backbone = Backbone || {};
 
         var rect = child.getBoundingClientRect();
 
-        if (!rect.top || !rect.left || !rect.right || !rect.bottom) {
+        if (!top || !left || !right || !bottom) {
           return;
         }
 
@@ -4798,6 +4796,7 @@ var Backbone = Backbone || {};
   });
 
 })();
+
 (function() {
 
   /**
