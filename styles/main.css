@@ -405,7 +405,8 @@ li.horizon {
   margin-top: -8px;
   list-style: none;
   clear: both;
-  font-size: 1.125em; }
+  font-size: 1.125em;
+  max-width: none; }
   @media screen and (max-width: 400px), screen and (max-device-width: 640px) {
     #toc {
       text-align: center; } }

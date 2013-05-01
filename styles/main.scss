@@ -109,6 +109,7 @@ li.horizon {
   list-style: none;
   clear: both;
   font-size: em(18);
+  max-width: none;
   @media screen and (max-width: $min-screen-width),
   screen and (max-device-width: $min-device-width) {
     text-align: center;
