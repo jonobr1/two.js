@@ -1,4 +1,4 @@
-![two.js](logo.gif)
+![two.js](http://jonobr1.github.io/two.js/images/logo.gif)
 
 A two-dimensional drawing api meant for modern browsers. It is renderer agnostic enabling the same api to render in multiple contexts: webgl, canvas2d, and svg.
 
