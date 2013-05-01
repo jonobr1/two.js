@@ -203,7 +203,7 @@ $(function() {
         <li><a href="#basic-usage">Basic Usage</a></li>
         <li><a href="#examples">Examples</a></li>
         <li><a href="#documentation">Documentation</a></li>
-        <li><a href="#compatability">Compatability</a></li>
+        <!-- <li><a href="#compatibility">Compatibility</a></li> -->
         <li><a href="#credits">Credits</a></li>
       </ul>
       <div id="download" class="horizon"></div>
@@ -295,7 +295,7 @@ two.update();</script>
         <div class="two-container"></div>
         <h3>Shapes and Groups</h3>
         <p>
-          Adding shapes to groups makes managing multiple shapes easier and more sane. Group&apos;s provide an easy way to move your content through <code>translation</code>, <code>rotation</code>, and <code>scale</code>. These operations emit from the coordinate space <code>(0, 0)</code>. In the example below we can see that the initial orientation of the circle and rectangle changed from the first example. These shapes are oriented around <code>(0, 0)</code>, which allows us to transform the group around the center of the shapes. In addition Group&apos;s styling operations trickle down and apply to each shape.
+          Adding shapes to groups makes managing multiple shapes easier and more sane. Group&apos;s provide an easy way to move your content through <code>translation</code>, <code>rotation</code>, and <code>scale</code>. These operations emit from the coordinate space <code>(0, 0)</code>. In the example below we can see that the initial orientation of the circle and rectangle changed from the first example. These shapes are oriented around <code>(0, 0)</code>, which allows us to transform the group around the centeroid of the shapes. In addition Group&apos;s styling operations trickle down and apply to each shape.
         </p>
         <p class="nota-bene">
           All rendered objects in two.js are a child of a group. Every two instance has a property <a href="#documentation"><code>scene</code></a>. This property is a root-level <a href="#documentation"><code>Two.Group</code></a> and can act as a camera through the same transformations described above.
@@ -417,9 +417,12 @@ two.bind('update', function(frameCount) {
       <div id="documentation" class="horizon"></div>
       <h2>Documentation</h2>
       <ul class="documentation">
+
+        <!-- Two Object -->
+
         <li class="title"><h3>Two</h3></li>
         <li class="description">
-          When you import the projectTwo is a <code>window</code> level class that serves as the main interaction point for the project. It exposes a number of methods and properties. These make it possible to draw, but also afford other capabilities such as augmenting the drawing space. Unless specified methods return an instance of <code>two</code> for the purpose of chaining.
+          When you import the library Two is a <code>window</code> level class that serves as the main interaction point for the project. It exposes a number of methods and properties. These make it possible to draw, but also afford other capabilities such as augmenting the drawing space. Below are the documented properties and features of the <code>Two</code> class. Unless specified methods return their instance of <code>Two</code> for the purpose of chaining.
         </li>
         <li>
           <p class="construction declaration">
@@ -748,10 +751,621 @@ two.bind('update', function(frameCount) {
             A two.js specific custom error handler. Takes a message, string, to display in the console to developers.
           </p>
         </li>
+
+        <!-- Two.Polygon -->
+
+        <li class="title"><h3>Two.Polygon</h3></li>
+        <li class="description">
+          This is the base class for creating all drawable shapes in two.js. Unless specified methods return their instance of <code>Two.Polygon</code> for the purpose of chaining.
+        </li>
+        <li>
+          <p class="construction declaration">
+            <strong>construction</strong> <code>var polygon = new Two.Polygon(vertices, closed, curved);</code>
+          </p>
+          <p>
+            A polygon takes an array of <code>vertices</code> which are made up of <code>Two.Vector</code>s. This is essential for the two-way databinding. It then takes two booleans, <code>closed</code> and <code>curved</code> which delineate whether the shape should be closed (lacking endpoints) and whether the shape should calculate curves or straight lines between the vertices.
+          </p>
+          <p class="nota-bene">
+            If you are constructing groups this way instead of <code>two.makePolygon()</code>, then don&apos;t forget to add the group to the instance&apos;s scene, <code>two.add(group)</code>.
+          </p>
+        </li>
+        <li>
+          <p class="property number declaration">
+            <strong>id</strong> <code>polygon.id</code>
+          </p>
+          <p class="description">
+            The id of the polygon. In the svg renderer this is the same number as the <code>id</code> attribute given to the corresponding node. i.e: if <code>polygon.id = 4</code> then <code>document.querySelector('two-' + group.id)</code> will return the corresponding svg node.
+          </p>
+        </li>
+        <li>
+          <p class="property string declaration">
+            <strong>stroke</strong> <code>polygon.stroke</code>
+          </p>
+          <p class="description">
+            A string representing the color for the stroke of the polygon. All valid css representations of color are accepted.
+          </p>
+        </li>
+        <li>
+          <p class="property string declaration">
+            <strong>fill</strong> <code>polygon.fill</code>
+          </p>
+          <p class="description">
+            A string representing the color for the area of the vertices. All valid css representations of color are accepted.
+          </p>
+        </li>
+        <li>
+          <p class="property number declaration">
+            <strong>linewidth</strong> <code>polygon.linewidth</code>
+          </p>
+          <p class="description">
+            A number representing the thickness the polygon&apos;s strokes. Must be a positive number.
+          </p>
+        </li>
+        <li>
+          <p class="property number declaration">
+            <strong>opacity</strong> <code>polygon.opacity</code>
+          </p>
+          <p class="description">
+            A number representing the opacity of the polygon. Use strictly for setting. Must be a number 0-1.
+          </p>
+        </li>
+        <li>
+          <p class="property string declaration">
+            <strong>cap</strong> <code>polygon.cap</code>
+          </p>
+          <p class="description">
+            A string representing the type of stroke cap to render. All applicable values can be found on the <a href="http://www.w3.org/TR/SVG/images/painting/linecap.svg" target="_blank">w3c</a> spec. Defaults to <code>"round"</code>.
+          </p>
+        </li>
+        <li>
+          <p class="property string declaration">
+            <strong>join</strong> <code>polygon.join</code>
+          </p>
+          <p class="description">
+            A string representing the type of stroke join to render. All applicable values can be found on the <a href="http://www.w3.org/TR/SVG/images/painting/linejoin.svg" target="_blank">w3c</a> spec. Defaults to <code>"round"</code>.
+          </p>
+        </li>
+        <li>
+          <p class="property number declaration">
+            <strong>miter</strong> <code>polygon.miter</code>
+          </p>
+          <p class="description">
+            A number representing the miter limit for the stroke. Defaults to 1.
+          </p>
+        </li>
+        <li>
+          <p class="property number declaration">
+            <strong>rotation</strong> <code>polygon.rotation</code>
+          </p>
+          <p class="description">
+            A number that represents the rotation of the polygon in the drawing space, in <a href="http://en.wikipedia.org/wiki/Radian" target="_blank">radians</a>.
+          </p>
+        </li>
+        <li>
+          <p class="property number declaration">
+            <strong>scale</strong> <code>polygon.scale</code>
+          </p>
+          <p class="description">
+            A number that represents the uniform scale of the polygon in the drawing space.
+          </p>
+        </li>
+        <li>
+          <p class="property object declaration">
+            <strong>translation</strong> <code>polygon.translation</code>
+          </p>
+          <p class="description">
+            A <code>Two.Vector</code> that represents x, y translation of the polygon in the drawing space.
+          </p>
+        </li>
+        <li>
+          <p class="property object declaration">
+            <strong>parent</strong> <code>polygon.parent</code>
+          </p>
+          <p class="description">
+            A reference to the <code>Two.Group</code> that contains this instance.
+          </p>
+        </li>
+        <li>
+          <p class="property array declaration">
+            <strong>vertices</strong> <code>polygon.vertices</code>
+          </p>
+          <p class="description">
+            An array of <code>Two.Vector</code>s that is two-way databound. Individual vertices may be manipulated, however <strong>it is imperative that the array itself does not get manipulated</strong>.
+          </p>
+        </li>
+        <li>
+          <p class="property boolean declaration">
+            <strong>closed</strong> <code>polygon.closed</code>
+          </p>
+          <p class="description">
+            Boolean that describes whether the polygon is closed or not.
+          </p>
+        </li>
+        <li>
+          <p class="property boolean declaration">
+            <strong>curved</strong> <code>polygon.curved</code>
+          </p>
+          <p class="description">
+            Boolean that describes whether the polygon is curved or not.
+          </p>
+        </li>
+        <li>
+          <p class="property number declaration">
+            <strong>beginning</strong> <code>polygon.beginning</code>
+          </p>
+          <p class="description">
+            A number, 0-1, that is mapped to the layout and order of vertices. It represents which of the vertices from beginning to end should start the shape. <em>Exceedingly helpful for animating strokes</em>. Defaults to 0.
+          </p>
+        </li>
+        <li>
+          <p class="property number declaration">
+            <strong>ending</strong> <code>polygon.ending</code>
+          </p>
+          <p class="description">
+            A number, 0-1, that is mapped to the layout and order of vertices. It represents which of the vertices from beginning to end should end the shape. <em>Exceedingly helpful for animating strokes</em>. Defaults to 1.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>clone</strong> <code>polygon.clone();</code>
+          </p>
+          <p class="description">
+            Returns a new instance of a <code>Two.Polygon</code> with the same settings.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>center</strong> <code>polygon.center();</code>
+          </p>
+          <p class="description">
+            Anchors all vertices around the centroid of the group.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>addTo</strong> <code>polygon.addTo(group);</code>
+          </p>
+          <p class="description">
+            Adds the instance to a <code>Two.Group</code>.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>remove</strong> <code>group.remove(objects);</code>
+          </p>
+          <p class="description">
+            If added to a <code>two.scene</code> this method removes itself from it.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>getBoundingClientRect</strong> <code>polygon.getBoundingClientRect();</code>
+          </p>
+          <p class="description">
+            Returns an object with top, left, right, bottom, width, and height parameters representing the bounding box of the polygon.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>noFill</strong> <code>polygon.noFill();</code>
+          </p>
+          <p class="description">
+            Removes the fill.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>noStroke</strong> <code>polygon.noStroke();</code>
+          </p>
+          <p class="description">
+            Removes the stroke.
+          </p>
+        </li>
+
+        <!-- Two.Group -->
+
+        <li class="title"><h3>Two.Group</h3></li>
+        <li class="description">
+          This is a container object for two.js &mdash; it can hold shapes as well as other groups. At a technical level it can be considered an empty transformation matrix. It is recommended to use <code>two.makeGroup()</code> in order to add groups to your instance of <code>two</code>, but you its not necessary. Unless specified methods return their instance of <code>Two.Group</code> for the purpose of chaining.
+        </li>
+        <li>
+          <p class="construction declaration">
+            <strong>construction</strong> <code>var group = new Two.Group();</code>
+          </p>
+          <p class="nota-bene">
+            If you are constructing groups this way instead of <code>two.makeGroup()</code>, then don&apos;t forget to add the group to the instance&apos;s scene, <code>two.add(group)</code>.
+          </p>
+        </li>
+        <li>
+          <p class="property number declaration">
+            <strong>id</strong> <code>group.id</code>
+          </p>
+          <p class="description">
+            The id of the group. In the svg renderer this is the same number as the <code>id</code> attribute given to the corresponding node. i.e: if <code>group.id = 5</code> then <code>document.querySelector('two-' + group.id)</code> will return the corresponding node.
+          </p>
+        </li>
+        <li>
+          <p class="property string declaration">
+            <strong>stroke</strong> <code>group.stroke</code>
+          </p>
+          <p class="description">
+            A string representing the color for the stroke of all child shapes. Use strictly for setting. All valid css representations of color are accepted.
+          </p>
+        </li>
+        <li>
+          <p class="property string declaration">
+            <strong>fill</strong> <code>group.fill</code>
+          </p>
+          <p class="description">
+            A string representing the color for the area of all child shapes. Use strictly for setting. All valid css representations of color are accepted.
+          </p>
+        </li>
+        <li>
+          <p class="property number declaration">
+            <strong>linewidth</strong> <code>group.linewidth</code>
+          </p>
+          <p class="description">
+            A number representing the thickness of all child shapes&apos; strokes. Use strictly for setting. Must be a positive number.
+          </p>
+        </li>
+        <li>
+          <p class="property number declaration">
+            <strong>opacity</strong> <code>group.opacity</code>
+          </p>
+          <p class="description">
+            A number representing the opacity of all child shapes. Use strictly for setting. Must be a number 0-1.
+          </p>
+        </li>
+        <li>
+          <p class="property string declaration">
+            <strong>cap</strong> <code>group.cap</code>
+          </p>
+          <p class="description">
+            A string representing the type of stroke cap to render for all child shapes. Use strictly for setting. All applicable values can be found on the <a href="http://www.w3.org/TR/SVG/images/painting/linecap.svg" target="_blank">w3c</a> spec. Defaults to <code>"round"</code>.
+          </p>
+        </li>
+        <li>
+          <p class="property string declaration">
+            <strong>join</strong> <code>group.join</code>
+          </p>
+          <p class="description">
+            A string representing the type of stroke join to render for all child shapes. Use strictly for setting. All applicable values can be found on the <a href="http://www.w3.org/TR/SVG/images/painting/linejoin.svg" target="_blank">w3c</a> spec. Defaults to <code>"round"</code>.
+          </p>
+        </li>
+        <li>
+          <p class="property number declaration">
+            <strong>miter</strong> <code>group.miter</code>
+          </p>
+          <p class="description">
+            A number representing the miter limit for the stroke of all child objects. Use strictly for setting. Defaults to 1.
+          </p>
+        </li>
+        <li>
+          <p class="property number declaration">
+            <strong>rotation</strong> <code>group.rotation</code>
+          </p>
+          <p class="description">
+            A number that represents the rotation of the group in the drawing space, in <a href="http://en.wikipedia.org/wiki/Radian" target="_blank">radians</a>.
+          </p>
+        </li>
+        <li>
+          <p class="property number declaration">
+            <strong>scale</strong> <code>group.scale</code>
+          </p>
+          <p class="description">
+            A number that represents the uniform scale of the group in the drawing space.
+          </p>
+        </li>
+        <li>
+          <p class="property object declaration">
+            <strong>translation</strong> <code>group.translation</code>
+          </p>
+          <p class="description">
+            A <code>Two.Vector</code> that represents x, y translation of the group in the drawing space.
+          </p>
+        </li>
+        <li>
+          <p class="property object declaration">
+            <strong>children</strong> <code>group.children</code>
+          </p>
+          <p class="description">
+            A map of all the children of the group.
+          </p>
+        </li>
+        <li>
+          <p class="property object declaration">
+            <strong>parent</strong> <code>group.parent</code>
+          </p>
+          <p class="description">
+            A reference to the <code>Two.Group</code> that contains this instance.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>clone</strong> <code>group.clone();</code>
+          </p>
+          <p class="description">
+            Returns a new instance of a <code>Two.Group</code> with the same settings.
+          </p>
+          <p class="nota-bene">
+            This will copy the children as well, which can be computationally expensive.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>center</strong> <code>group.center();</code>
+          </p>
+          <p class="description">
+            Anchors all children around the centroid of the group.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>addTo</strong> <code>group.addTo(group);</code>
+          </p>
+          <p class="description">
+            Adds the instance to a <code>Two.Group</code>. In many ways the inverse of <code>two.add(object)</code>.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>add</strong> <code>group.add(objects);</code>
+          </p>
+          <p class="description">
+            Add one or many shapes / groups to the instance. Objects can be added as arguments, <code>two.add(o1, o2, oN)</code>, or as an array depicted above.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>remove</strong> <code>group.remove(objects);</code>
+          </p>
+          <p class="description">
+            Remove one or many shapes / groups to the instance. Objects can be removed as arguments, <code>two.remove(o1, o2, oN)</code>, or as an array depicted above.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>getBoundingClientRect</strong> <code>group.getBoundingClientRect();</code>
+          </p>
+          <p class="description">
+            Returns an object with top, left, right, bottom, width, and height parameters representing the bounding box of the group.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>noFill</strong> <code>group.noFill();</code>
+          </p>
+          <p class="description">
+            Remove the fill from all children of the group.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>noStroke</strong> <code>group.noStroke();</code>
+          </p>
+          <p class="description">
+            Remove the stroke from all children of the group.
+          </p>
+        </li>
+        <li>
+          <p class="property static function declaration">
+            <strong>MakeGetterSetter</strong> <code>Group.MakeGetterSetter();</code>
+          </p>
+          <p class="description">
+            Convenience method to turn a property into an <a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Object/defineProperty" target="_blank">EcmaScript 5 getter / setter</a>.
+          </p>
+        </li>
+
+        <!-- Two.Vector -->
+
+        <li class="title"><h3>Two.Vector</h3></li>
+        <li class="description">
+          This is the atomic coordinate representation for two.js. A <code>Two.Vector</code> is different and specific to two.js because it&apos;s main properties, <code>x</code> and <code>y</code>, trigger events which allow the renderers to efficiently change <strong>only</strong> when they need to. Unless specified methods return their instance of <code>Two.Vector</code> for the purpose of chaining.
+        </li>
+        <li>
+          <p class="construction declaration">
+            <strong>construction</strong> <code>var vector = new Two.Vector(x, y);</code>
+          </p>
+        </li>
+        <li>
+          <p class="property number declaration">
+            <strong>x</strong> <code>vector.x</code>
+          </p>
+          <p class="description">
+            The x value of the vector.
+          </p>
+        </li>
+        <li>
+          <p class="property number declaration">
+            <strong>y</strong> <code>vector.y</code>
+          </p>
+          <p class="description">
+            The y value of the vector.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>set</strong> <code>vector.set(x, y);</code>
+          </p>
+          <p class="description">
+            Set the <code>x</code>, <code>y</code> properties of the vector to the arguments <code>x</code>, <code>y</code>.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>copy</strong> <code>vector.copy(v);</code>
+          </p>
+          <p class="description">
+            Set the <code>x</code>, <code>y</code> properties of the vector from another vector, <code>v</code>.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>clear</strong> <code>vector.clear();</code>
+          </p>
+          <p class="description">
+            Set the <code>x</code>, <code>y</code> properties of the vector to 0.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>clone</strong> <code>vector.clone();</code>
+          </p>
+          <p class="description">
+            Returns a new instance of a <code>Two.Vector</code> with the same <code>x</code>, <code>y</code> values as the instance.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>add</strong> <code>vector.add(v1, v2);</code>
+          </p>
+          <p class="description">
+            Add to vectors together. The sum of the <code>x</code>, <code>y</code> values will be set to the instance.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>addSelf</strong> <code>vector.addSelf(v);</code>
+          </p>
+          <p class="description">
+            Add the <code>x</code>, <code>y</code> values of the instance to the values of another vector. Set the sum to the instance&apos;s values.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>sub</strong> <code>vector.sub(v1, v2);</code>
+          </p>
+          <p class="description">
+            Subtract two vectors. Set the difference to the instance.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>subSelf</strong> <code>vector.subSelf(v);</code>
+          </p>
+          <p class="description">
+            Subtract a vector, <code>v</code>, from the instance.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>multiplySelf</strong> <code>vector.multiplySelf(v);</code>
+          </p>
+          <p class="description">
+            Multiply the <code>x</code>, <code>y</code> values of the instance by another vector&apos;s, <code>v</code>, <code>x</code>, <code>y</code> values.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>multiplyScalar</strong> <code>vector.multiplyScalar(value);</code>
+          </p>
+          <p class="description">
+            Multiply the <code>x</code>, <code>y</code> values of the instance by another number, <code>value</code>.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>divideScalar</strong> <code>vector.divideScalar(value);</code>
+          </p>
+          <p class="description">
+            Divide the <code>x</code>, <code>y</code> values of the instance by another number, <code>value</code>.
+          </p>
+        </li>
+
+        <li>
+          <p class="property function declaration">
+            <strong>negate</strong> <code>vector.negate();</code>
+          </p>
+          <p class="description">
+            Toggle the sign of the instance&apos;s <code>x</code>, <code>y</code> values.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>dot</strong> <code>vector.dot(v);</code>
+          </p>
+          <p class="description">
+            Return the <a href="http://en.wikipedia.org/wiki/Dot_product" target="_blank">dot product</a> of the instance and a vector, <code>v</code>.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>lengthSquared</strong> <code>vector.lengthSquared();</code>
+          </p>
+          <p class="description">
+            Return the length of the vector squared.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>length</strong> <code>vector.length();</code>
+          </p>
+          <p class="description">
+            Return the length of the vector.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>normalize</strong> <code>vector.normalize();</code>
+          </p>
+          <p class="description">
+            Reduce the length of the vector to the unit circle.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>distanceTo</strong> <code>vector.distanceTo(v);</code>
+          </p>
+          <p class="description">
+            Return the distance from the instance to another vector, <code>v</code>.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>distanceToSquared</strong> <code>vector.distanceToSquared(v);</code>
+          </p>
+          <p class="description">
+            Return the distance squared from the instance to another vector, <code>v</code>.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>setLength</strong> <code>vector.setLength(length);</code>
+          </p>
+          <p class="description">
+            Set the length of a vector to a specified distance, <code>length</code>.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>equals</strong> <code>vector.equals(v);</code>
+          </p>
+          <p class="description">
+            Return a boolean representing whether or not the vectors are within 0.0001 of each other. This fuzzy equality helps with Physics libraries.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>lerp</strong> <code>vector.lerp(v, t);</code>
+          </p>
+          <p class="description">
+            Linear interpolation of the instance&apos;s current <code>x</code>, <code>y</code> values to the destination vector, <code>v</code>, by an amount, <code>t</code>. Where t is a value 0-1.
+          </p>
+        </li>
+
+        <li>
+          <p class="property function declaration">
+            <strong>isZero</strong> <code>vector.isZero();</code>
+          </p>
+          <p class="description">
+            Returns a boolean describing the length of the vector less than 0.0001.
+          </p>
+        </li>
+
       </ul>
 
-      <div id="compatability" class="horizon"></div>
-      <h2>Compatability</h2>
+      <!-- <div id="compatibility" class="horizon"></div> -->
+      <!-- <h2>compatibility</h2> -->
       <div id="credits" class="horizon"></div>
       <h2>Credits</h2>
 
