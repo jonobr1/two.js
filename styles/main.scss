@@ -92,10 +92,15 @@ div.center {
   text-align: center;
 }
 
-div.horizon {
+.horizon {
+  list-style: none;
   height: 0;
   margin: $line-height 0;
   border-bottom: em(2) solid $grey;
+}
+
+li.horizon {
+  margin: 1.5em 0 !important;
 }
 
 #toc {
@@ -240,10 +245,12 @@ p.download {
   // font-style: italic;
 }
 
+ul {
+  max-width: $max-content-width;
+}
 ul.documentation {
 
   list-style: none;
-  max-width: $max-content-width;
 
   li.description {
     margin-top: 0;
@@ -308,6 +315,13 @@ p.detail {
   padding-left: $line-height / 2;
   margin-left: 3px;
   border-left: 3px solid shade($grey, 10%);
+}
+
+.credits {
+  margin-top: $line-height / 2;
+  li:not(:first-child) {
+    margin-top: 0;
+  }
 }
 
 p.static, p.static + p {

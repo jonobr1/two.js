@@ -387,10 +387,14 @@ sup {
 div.center {
   text-align: center; }
 
-div.horizon {
+.horizon {
+  list-style: none;
   height: 0;
   margin: 1.5em 0;
   border-bottom: 0.125em solid #eeeeee; }
+
+li.horizon {
+  margin: 1.5em 0 !important; }
 
 #toc {
   display: inline-block;
@@ -500,9 +504,11 @@ div.horizon {
     content: 'N.B:';
     font-weight: 700; }
 
-ul.documentation {
-  list-style: none;
+ul {
   max-width: 580px; }
+
+ul.documentation {
+  list-style: none; }
   ul.documentation li.description {
     margin-top: 0; }
   ul.documentation ul {
@@ -548,6 +554,11 @@ p.detail {
   padding-left: 0.75em;
   margin-left: 3px;
   border-left: 3px solid #d6d6d6; }
+
+.credits {
+  margin-top: 0.75em; }
+  .credits li:not(:first-child) {
+    margin-top: 0; }
 
 p.static, p.static + p {
   color: #8d8d8d; }
