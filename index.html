@@ -422,10 +422,18 @@ two.bind('update', function(frameCount) {
       </ul>
       <div id="documentation" class="horizon"></div>
       <h2>Documentation</h2>
+
+      <ul id="documentation-toc">
+        <li><a href="#two-class">Two</a></li>
+        <li><a href="#two-polygon">Two.Polygon</a></li>
+        <li><a href="#two-group">Two.Group</a></li>
+        <li><a href="#two-vector">Two.Vector</a></li>
+      </ul>
+
       <ul class="documentation">
 
-        <!-- Two Object -->
-
+        <!-- Two Class -->
+        <div id="two-class"></div>
         <li class="title"><h3>Two</h3></li>
         <li class="description">
           When you import the library Two is a <code>window</code> level class that serves as the main interaction point for the project. It exposes a number of methods and properties. These make it possible to draw, but also afford other capabilities such as augmenting the drawing space. Below are the documented properties and features of the <code>Two</code> class. Unless specified methods return their instance of <code>Two</code> for the purpose of chaining.
@@ -759,7 +767,7 @@ two.bind('update', function(frameCount) {
         </li>
 
         <!-- Two.Polygon -->
-
+        <div id="two-polygon"></div>
         <li class="title"><h3>Two.Polygon</h3></li>
         <li class="description">
           This is the base class for creating all drawable shapes in two.js. Unless specified methods return their instance of <code>Two.Polygon</code> for the purpose of chaining.
@@ -969,7 +977,7 @@ two.bind('update', function(frameCount) {
         </li>
 
         <!-- Two.Group -->
-
+        <div id="two-group"></div>
         <li class="title"><h3>Two.Group</h3></li>
         <li class="description">
           This is a container object for two.js &mdash; it can hold shapes as well as other groups. At a technical level it can be considered an empty transformation matrix. It is recommended to use <code>two.makeGroup()</code> in order to add groups to your instance of <code>two</code>, but you its not necessary. Unless specified methods return their instance of <code>Two.Group</code> for the purpose of chaining.
@@ -1163,7 +1171,7 @@ two.bind('update', function(frameCount) {
         </li>
 
         <!-- Two.Vector -->
-
+        <div id="two-vector"></div>
         <li class="title"><h3>Two.Vector</h3></li>
         <li class="description">
           This is the atomic coordinate representation for two.js. A <code>Two.Vector</code> is different and specific to two.js because it&apos;s main properties, <code>x</code> and <code>y</code>, trigger events which allow the renderers to efficiently change <strong>only</strong> when they need to. Unless specified methods return their instance of <code>Two.Vector</code> for the purpose of chaining.
