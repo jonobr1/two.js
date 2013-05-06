@@ -103,7 +103,7 @@ li.horizon {
   margin: 1.5em 0 !important;
 }
 
-#toc {
+#toc, #documentation-toc {
   @include inline-block;
   margin-top: -8px;
   list-style: none;
