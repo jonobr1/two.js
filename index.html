@@ -237,7 +237,7 @@ $(function() {
         <li>
           <h3>Scenegraph</h3>
           <p>
-            At it&apos;s core two.js relies on a <a href="http://en.wikipedia.org/wiki/Scene_graph">scenegraph</a>. This means that when you draw or create an object (a <code>Two.Polygon</code> or <code>Two.Group</code>), two actually stores and remembers that. After you make the object you can apply any number of operations to it — e.g: <code>rotation</code>, <code>translation</code>, <code>scale</code>, etc..
+            At its core two.js relies on a <a href="http://en.wikipedia.org/wiki/Scene_graph">scenegraph</a>. This means that when you draw or create an object (a <code>Two.Polygon</code> or <code>Two.Group</code>), two actually stores and remembers that. After you make the object you can apply any number of operations to it — e.g: <code>rotation</code>, <code>translation</code>, <code>scale</code>, etc..
           </p>
         </li>
         <li>
@@ -263,7 +263,7 @@ $(function() {
         <div class="two-container"></div>
         <h3>Drawing Your First Shapes</h3>
         <p>
-          Before we get into all the fancy animating its good to get a feel for how to make shapes in two.js. In order to do this we need to have an instance of two. This sets up a dom element that contains either an <code>svg</code> or <code>canvas</code> element to add to the webpage. The two object has a <code>scene</code> which holds all shapes as well as methods for creating shapes.
+          Before we get into all the fancy animating it&apos;s good to get a feel for how to make shapes in two.js. In order to do this we need to have an instance of two. This sets up a dom element that contains either an <code>svg</code> or <code>canvas</code> element to add to the webpage. The two object has a <code>scene</code> which holds all shapes as well as methods for creating shapes.
         </p>
         <p class="nota-bene">
           For a list of all properties and construction parameters check out the <a href="#documentation">documentation</a>.
@@ -343,7 +343,7 @@ two.update();</script>
           Finally, let&apos;s add some motion to our shapes. So far the examples use <code>two.update();</code> to draw content to the screen. The instance of two.js has two particular methods for animation. The first is <code>two.play();</code> which calls <code>two.update();</code> at 60fps. This rate, however, will slowdown if there&apos;s too much content to render per frame.
         </p>
         <p>
-          The second method is <code>two.bind();</code> This method takes a <code>string</code> as it&apos;s first parameter indicating what event to listen to and a <code>function</code> as it&apos;s second argument delineating what to do when the event described in the first parameter happens. To sync a function with the animation loop simply invoke <code>two.bind('update', referenceToFunction);</code> as outlined below:
+          The second method is <code>two.bind();</code> This method takes a <code>string</code> as its first parameter indicating what event to listen to and a <code>function</code> as its second argument delineating what to do when the event described in the first parameter happens. To sync a function with the animation loop simply invoke <code>two.bind('update', referenceToFunction);</code> as outlined below:
         </p>
         <p class="nota-bene">
           For a complete list of events that can be bound to an instance of two check out the <a href="#documentation">documentation</a>.
@@ -754,7 +754,7 @@ two.bind('update', function(frameCount) {
             <strong>Utils</strong> <code>Two.Utils</code>
           </p>
           <p class="description">
-            A collection of utility functions and variables used throughout the project. This is where much of the algorithmic computation lies: <em>computing curve handles, subdividing cubic bezier curves, interpretting svg nodes</em>. Because of it&apos;s complexity it&apos;s encouraged to look at the <a href="https://github.com/jonobr1/two.js/tree/master/src" target="_blank">source code</a> for further information.
+            A collection of utility functions and variables used throughout the project. This is where much of the algorithmic computation lies: <em>computing curve handles, subdividing cubic bezier curves, interpretting svg nodes</em>. Because of its complexity it&apos;s encouraged to look at the <a href="https://github.com/jonobr1/two.js/tree/master/src" target="_blank">source code</a> for further information.
           </p>
         </li>
         <li>
@@ -980,7 +980,7 @@ two.bind('update', function(frameCount) {
         <div id="two-group"></div>
         <li class="title"><h3>Two.Group</h3></li>
         <li class="description">
-          This is a container object for two.js &mdash; it can hold shapes as well as other groups. At a technical level it can be considered an empty transformation matrix. It is recommended to use <code>two.makeGroup()</code> in order to add groups to your instance of <code>two</code>, but you its not necessary. Unless specified methods return their instance of <code>Two.Group</code> for the purpose of chaining.
+          This is a container object for two.js &mdash; it can hold shapes as well as other groups. At a technical level it can be considered an empty transformation matrix. It is recommended to use <code>two.makeGroup()</code> in order to add groups to your instance of <code>two</code>, but it&apos;s not necessary. Unless specified methods return their instance of <code>Two.Group</code> for the purpose of chaining.
         </li>
         <li>
           <p class="construction declaration">
@@ -1174,7 +1174,7 @@ two.bind('update', function(frameCount) {
         <div id="two-vector"></div>
         <li class="title"><h3>Two.Vector</h3></li>
         <li class="description">
-          This is the atomic coordinate representation for two.js. A <code>Two.Vector</code> is different and specific to two.js because it&apos;s main properties, <code>x</code> and <code>y</code>, trigger events which allow the renderers to efficiently change <strong>only</strong> when they need to. Unless specified methods return their instance of <code>Two.Vector</code> for the purpose of chaining.
+          This is the atomic coordinate representation for two.js. A <code>Two.Vector</code> is different and specific to two.js because its main properties, <code>x</code> and <code>y</code>, trigger events which allow the renderers to efficiently change <strong>only</strong> when they need to. Unless specified methods return their instance of <code>Two.Vector</code> for the purpose of chaining.
         </li>
         <li>
           <p class="construction declaration">
@@ -1381,7 +1381,7 @@ two.bind('update', function(frameCount) {
       <br />
 
       <p>
-        These are the four main classes that a typical developer will come across with when using two.js, however the project is built with a few more classes behind the scene. If you&apos;re interested in the nitty-gritty then its recommended to check out the <a href="http://github.com/jonobr1/two.js" target="_blank">source</a>.
+        These are the four main classes that a typical developer will come across with when using two.js, however the project is built with a few more classes behind the scene. If you&apos;re interested in the nitty-gritty then it&apos;s recommended to check out the <a href="http://github.com/jonobr1/two.js" target="_blank">source</a>.
       </p>
 
       <!-- <div id="compatibility" class="horizon"></div> -->
