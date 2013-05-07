@@ -367,6 +367,7 @@
             elem.removeChild(elements[j]);
             this.elements[j] = null;
           }, this);
+          break;
         default:
           constructor.setStyles.call(this, elem, property, value, closed, curved, strokeChanged);
       }

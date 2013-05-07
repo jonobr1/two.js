@@ -2,8 +2,8 @@
 
   var Vector = Two.Vector = function(x, y) {
 
-    var x = x || 0;
-    var y = y || 0;
+    x = x || 0;
+    y = y || 0;
 
     Object.defineProperty(this, 'x', {
       get: function() {

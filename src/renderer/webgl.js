@@ -399,9 +399,8 @@
         var linked = gl.getProgramParameter(program, gl.LINK_STATUS);
         if (!linked) {
           error = gl.getProgramInfoLog(program);
-          throw new Two.Utils.Error('unable to link program: ' + error);
           gl.deleteProgram(program);
-          return null;
+          throw new Two.Utils.Error('unable to link program: ' + error);
         }
 
         return program;
@@ -421,9 +420,8 @@
         var compiled = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
         if (!compiled) {
           var error = gl.getShaderInfoLog(shader);
-          throw new Two.Utils.Error('unable to compile shader ' + shader + ': ' + error);
           gl.deleteShader(shader);
-          return null;
+          throw new Two.Utils.Error('unable to compile shader ' + shader + ': ' + error);
         }
 
         return shader;
@@ -491,8 +489,8 @@
       preserveDrawingBuffer: false
     });
 
-    var gl = this.ctx = this.domElement.getContext('webgl', params)
-      || this.domElement.getContext('experimental-webgl', params);
+    var gl = this.ctx = this.domElement.getContext('webgl', params) || 
+      this.domElement.getContext('experimental-webgl', params);
 
     if (!this.ctx) {
       throw new Two.Utils.Error(
@@ -675,7 +673,7 @@
     }
 
     if (textureNeedsUpdate) {
-      elem.updateTexture(this.ctx)
+      elem.updateTexture(this.ctx);
     }
 
   }
