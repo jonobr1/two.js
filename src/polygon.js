@@ -105,10 +105,6 @@
 
   };
 
-  _.extend(Polygon, {
-
-  });
-
   _.extend(Polygon.prototype, Two.Shape.prototype, {
 
     clone: function() {
