@@ -4524,12 +4524,12 @@ var Backbone = Backbone || {};
     },
 
     noFill: function() {
-      this.fill = 'none';
+      this.fill = 'rgba(0,0,0,0)';
       return this;
     },
 
     noStroke: function() {
-      this.stroke = 'none';
+      this.stroke = 'rgba(0,0,0,0)';
       return this;
     },
 
