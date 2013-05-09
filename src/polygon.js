@@ -14,8 +14,9 @@
 
     // Add additional logic for watching the vertices.
 
-    var closed = !!closed;
-    var curved = !!curved;
+    closed = !!closed;
+    curved = !!curved;
+    
     var beginning = 0.0;
     var ending = 1.0;
     var strokeChanged = false;
