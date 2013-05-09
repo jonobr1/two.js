@@ -3316,12 +3316,12 @@
     },
 
     noFill: function() {
-      this.fill = 'rgba(0,0,0,0)';
+      this.fill = 'transparent';
       return this;
     },
 
     noStroke: function() {
-      this.stroke = 'rgba(0,0,0,0)';
+      this.stroke = 'transparent';
       return this;
     },
 
