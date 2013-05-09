@@ -883,13 +883,15 @@
      */
     update: function() {
 
+      var animated = !!this._lastFrame;
+      var now = getNow();
+
       this.frameCount++;
-      var animated = !!this.timeDelta;
-      if (!animated) {
-        this.timeDelta = getNow();
-      } else {
-        this.timeDelta = getNow() - this.timeDelta;
+
+      if (animated) {
+        this.timeDelta = (now - this._lastFrame).toFixed(3);
       }
+      this._lastFrame = now;
 
       var width = this.width;
       var height = this.height;
@@ -900,7 +902,7 @@
         renderer.setSize(width, height);
       }
 
-      this.trigger(Two.Events.update, this.frameCount, animated ? this.timeDelta : undefined);
+      this.trigger(Two.Events.update, this.frameCount, this.timeDelta);
 
       return this.render();
 
