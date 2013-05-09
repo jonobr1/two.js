@@ -43,12 +43,12 @@ module.exports = function(grunt) {
       options: {
         separator: ';'
       },
-      nodeps : {
+      clean : {
         src: [
           "<%= meta.licenseFile %>",
           "<%= meta.srcFiles %>"
         ],
-        dest: 'build/two.nodeps.js'
+        dest: 'build/two.clean.js'
       },
       dist: {
         src: [

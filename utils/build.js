@@ -18,6 +18,19 @@ var files = [
   '../src/polygon.js'
 ];
 
+new compressor.minify({
+  type: 'no-compress',
+  fileIn: [files[0]].concat(files.slice(3)),
+  fileOut: '../build/two.clean.js',
+  callback: function(e) {
+    if (!e) {
+      console.log('clean complete');
+    } else {
+      console.log('unable to concatenate clean', e);
+    }
+  }
+});
+
 // Concatenated
 new compressor.minify({
   type: 'no-compress',

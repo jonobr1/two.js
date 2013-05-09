@@ -26,7 +26,8 @@
  *
  */
 
-;//     Underscore.js 1.3.3
+
+//     Underscore.js 1.3.3
 //     (c) 2009-2012 Jeremy Ashkenas, DocumentCloud Inc.
 //     Underscore is freely distributable under the MIT license.
 //     Portions of Underscore are inspired or borrowed from Prototype,
@@ -1084,7 +1085,8 @@
     return this._wrapped;
   };
 
-}).call(this);;var Backbone = Backbone || {};
+}).call(this);
+var Backbone = Backbone || {};
 
 (function() {
 
@@ -1240,7 +1242,8 @@
   Events.bind   = Events.on;
   Events.unbind = Events.off;
 
-})();;// http://paulirish.com/2011/requestanimationframe-for-smart-animating/
+})();
+// http://paulirish.com/2011/requestanimationframe-for-smart-animating/
 
 (function() {
   var lastTime = 0;
@@ -1264,7 +1267,8 @@
     window.cancelAnimationFrame = function(id) {
       clearTimeout(id);
     };
-}());;(function() {
+}());
+(function() {
 
   var root = this;
   var previousTwo = root.Two || {};
@@ -2395,7 +2399,8 @@
 
   })();
 
-})();;(function() {
+})();
+(function() {
 
   var Vector = Two.Vector = function(x, y) {
 
@@ -2547,7 +2552,8 @@
 
   });
 
-})();;(function() {
+})();
+(function() {
 
   /**
    * Constants
@@ -2855,7 +2861,8 @@
 
   });
 
-})();;(function() {
+})();
+(function() {
 
   /**
    * Scope specific variables
@@ -3229,7 +3236,8 @@
     return count;
   }
 
-})();;(function() {
+})();
+(function() {
 
   /**
    * Constants
@@ -3714,7 +3722,8 @@
     return count;
   }
 
-})();;(function() {
+})();
+(function() {
 
   var CanvasRenderer = Two[Two.Types.canvas],
     multiplyMatrix = Two.Matrix.Multiply,
@@ -4394,7 +4403,8 @@
 
   }
 
-})();;(function() {
+})();
+(function() {
 
   var Shape = Two.Shape = function(limited) {
 
@@ -4529,7 +4539,8 @@
 
   });
 
-})();;(function() {
+})();
+(function() {
 
   var Group = Two.Group = function(o) {
 
@@ -4790,7 +4801,8 @@
   });
 
 })();
-;(function() {
+
+(function() {
 
   /**
    * Constants
@@ -4897,10 +4909,6 @@
     updateVertices();
 
   };
-
-  _.extend(Polygon, {
-
-  });
 
   _.extend(Polygon.prototype, Two.Shape.prototype, {
 

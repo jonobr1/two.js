@@ -9,11 +9,13 @@
     "svg",
     "animation",
     "canvas2d",
-    "webgl"
+    "webgl",
+    "rendering",
+    "motiongraphics"
   ],
   "homepage": "http://jonobr1.github.io/two.js/",
   "author": {
-    "name": "Jono Brandel",
+    "name": "jonobr1",
     "url": "http://jonobr1.com/"
   },
   "repository": {

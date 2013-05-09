@@ -26,7 +26,33 @@
  *
  */
 
-;(function() {
+
+// http://paulirish.com/2011/requestanimationframe-for-smart-animating/
+
+(function() {
+  var lastTime = 0;
+  var vendors = ['ms', 'moz', 'webkit', 'o'];
+  for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+    window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+    window.cancelAnimationFrame = 
+      window[vendors[x]+'CancelAnimationFrame'] || window[vendors[x]+'CancelRequestAnimationFrame'];
+  }
+
+  if (!window.requestAnimationFrame)
+    window.requestAnimationFrame = function(callback, element) {
+      var currTime = new Date().getTime();
+      var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+      var id = window.setTimeout(function() { callback(currTime + timeToCall); }, timeToCall);
+      lastTime = currTime + timeToCall;
+      return id;
+    };
+
+  if (!window.cancelAnimationFrame)
+    window.cancelAnimationFrame = function(id) {
+      clearTimeout(id);
+    };
+}());
+(function() {
 
   var root = this;
   var previousTwo = root.Two || {};
@@ -1157,7 +1183,8 @@
 
   })();
 
-})();;(function() {
+})();
+(function() {
 
   var Vector = Two.Vector = function(x, y) {
 
@@ -1309,7 +1336,8 @@
 
   });
 
-})();;(function() {
+})();
+(function() {
 
   /**
    * Constants
@@ -1617,7 +1645,8 @@
 
   });
 
-})();;(function() {
+})();
+(function() {
 
   /**
    * Scope specific variables
@@ -1991,7 +2020,8 @@
     return count;
   }
 
-})();;(function() {
+})();
+(function() {
 
   /**
    * Constants
@@ -2476,7 +2506,8 @@
     return count;
   }
 
-})();;(function() {
+})();
+(function() {
 
   var CanvasRenderer = Two[Two.Types.canvas],
     multiplyMatrix = Two.Matrix.Multiply,
@@ -3156,7 +3187,8 @@
 
   }
 
-})();;(function() {
+})();
+(function() {
 
   var Shape = Two.Shape = function(limited) {
 
@@ -3291,7 +3323,8 @@
 
   });
 
-})();;(function() {
+})();
+(function() {
 
   var Group = Two.Group = function(o) {
 
@@ -3552,7 +3585,8 @@
   });
 
 })();
-;(function() {
+
+(function() {
 
   /**
    * Constants
@@ -3659,10 +3693,6 @@
     updateVertices();
 
   };
-
-  _.extend(Polygon, {
-
-  });
 
   _.extend(Polygon.prototype, Two.Shape.prototype, {
 
