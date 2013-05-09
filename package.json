@@ -1,6 +1,6 @@
 {
   "name": "two.js",
-  "version": "3.1.6",
+  "version": "0.2.0",
   "description": "A two-dimensional drawing api meant for modern browsers.",
   "keywords": [
     "dom",
