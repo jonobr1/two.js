@@ -58,7 +58,7 @@
      */
     clone: function(parent) {
 
-      var parent = parent || this.parent;
+      parent = parent || this.parent;
 
       var children = _.map(this.children, function(child) {
         return child.clone(parent);

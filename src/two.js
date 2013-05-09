@@ -85,7 +85,7 @@
         right: 0,
         bottom: 0,
         position: 'fixed'
-      })
+      });
       dom.bind(window, 'resize', fitted);
       fitted();
 
@@ -253,7 +253,7 @@
             var tag = n.localName.toLowerCase();
 
             if ((tag in Two.Utils.read)) {
-              var n = Two.Utils.read[tag].call(this, n);
+              n = Two.Utils.read[tag].call(this, n);
               group.add(n);
             }
 
@@ -311,8 +311,10 @@
               var type = command[0];
               var lower = type.toLowerCase();
 
-              coords = command.slice(1).trim().split(/[\s,]+|(?=[+-])/);
+              coords = command.slice(1).trim().split(/[\s,]+|(?=[+\-])/);
               relative = type === lower;
+
+              var x1, y1, x2, y2, x3, y3, x4, y4, reflection;
 
               switch(lower) {
 
@@ -355,8 +357,6 @@
                 case 's':
                 case 'c':
 
-                  var x1, y1, x2, y2, x3, y3, x4, y4;
-
                   x1 = coord.x, y1 = coord.y;
 
                   if (lower === 'c') {
@@ -370,7 +370,7 @@
                     // Calculate reflection control point for proper x2, y2
                     // inclusion.
 
-                    var reflection = new Two.Vector().copy(coord).subSelf(control);
+                    reflection = new Two.Vector().copy(coord).subSelf(control);
 
                     x2 = parseFloat(reflection.x), y2 = parseFloat(reflection.y);
                     x3 = parseFloat(coords[0]), y3 = parseFloat(coords[1]);
@@ -392,8 +392,6 @@
                 case 't':
                 case 'q':
 
-                  var x1, y1, x2, y2, x3, y3, x4, y4;
-
                   x1 = coord.x, y1 = coord.y;
                   if (control.isZero()) {
                     x2 = x1, y2 = y1;
@@ -408,7 +406,7 @@
 
                   } else {
 
-                    var reflection = new Two.Vector().copy(coord).subSelf(control);
+                    reflection = new Two.Vector().copy(coord).subSelf(control);
 
                     x3 = parseFloat(reflection.x), y3 = parseFloat(reflection.y);
                     x4 = parseFloat(coords[0]), y4 = parseFloat(coords[1]);
@@ -428,8 +426,6 @@
 
                 case 'a':
                   throw new Two.Utils.Error('not yet able to interpret Elliptical Arcs.');
-                  break;
-
               }
 
               return result;
@@ -564,9 +560,10 @@
         var epsilon = Two.Utils.Curve.CollinearityEpsilon,
           limit = Two.Utils.Curve.RecursionLimit,
           cuspLimit = Two.Utils.Curve.CuspLimit,
-          tolerance = Two.Utils.Curve.Tolerance;
+          tolerance = Two.Utils.Curve.Tolerance,
+          da1, da2;
 
-        var level = level || 0;
+        level = level || 0;
 
         if (level > limit) {
           return [];
@@ -585,16 +582,15 @@
             x1234 = (x123 + x234) / 2,
             y1234 = (y123 + y234) / 2;
 
+
+        // Try to approximate the full cubic curve by a single straight line.
+        var dx = x4 - x1;
+        var dy = y4 - y1;
+
+        var d2 = abs(((x2 - x4) * dy - (y2 - y4) * dx));
+        var d3 = abs(((x3 - x4) * dy - (y3 - y4) * dx));
+
         if (level > 0) {
-
-          // Try to approximate the full cubic curve by a single straight line.
-          var dx = x4 - x1;
-          var dy = y4 - y1;
-
-          var d2 = abs(((x2 - x4) * dy - (y2 - y4) * dx));
-          var d3 = abs(((x3 - x4) * dy - (y3 - y4) * dx));
-
-          var da1, da2;
 
           if (d2 > epsilon && d3 > epsilon) {
 

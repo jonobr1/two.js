@@ -26,8 +26,7 @@
  *
  */
 
-
-//     Underscore.js 1.3.3
+;//     Underscore.js 1.3.3
 //     (c) 2009-2012 Jeremy Ashkenas, DocumentCloud Inc.
 //     Underscore is freely distributable under the MIT license.
 //     Portions of Underscore are inspired or borrowed from Prototype,
@@ -1085,8 +1084,7 @@
     return this._wrapped;
   };
 
-}).call(this);
-var Backbone = Backbone || {};
+}).call(this);;var Backbone = Backbone || {};
 
 (function() {
 
@@ -1242,8 +1240,7 @@ var Backbone = Backbone || {};
   Events.bind   = Events.on;
   Events.unbind = Events.off;
 
-})();
-// http://paulirish.com/2011/requestanimationframe-for-smart-animating/
+})();;// http://paulirish.com/2011/requestanimationframe-for-smart-animating/
 
 (function() {
   var lastTime = 0;
@@ -1267,8 +1264,7 @@ var Backbone = Backbone || {};
     window.cancelAnimationFrame = function(id) {
       clearTimeout(id);
     };
-}());
-(function() {
+}());;(function() {
 
   var root = this;
   var previousTwo = root.Two || {};
@@ -1355,7 +1351,7 @@ var Backbone = Backbone || {};
         right: 0,
         bottom: 0,
         position: 'fixed'
-      })
+      });
       dom.bind(window, 'resize', fitted);
       fitted();
 
@@ -1523,7 +1519,7 @@ var Backbone = Backbone || {};
             var tag = n.localName.toLowerCase();
 
             if ((tag in Two.Utils.read)) {
-              var n = Two.Utils.read[tag].call(this, n);
+              n = Two.Utils.read[tag].call(this, n);
               group.add(n);
             }
 
@@ -1581,8 +1577,10 @@ var Backbone = Backbone || {};
               var type = command[0];
               var lower = type.toLowerCase();
 
-              coords = command.slice(1).trim().split(/[\s,]+|(?=[+-])/);
+              coords = command.slice(1).trim().split(/[\s,]+|(?=[+\-])/);
               relative = type === lower;
+
+              var x1, y1, x2, y2, x3, y3, x4, y4, reflection;
 
               switch(lower) {
 
@@ -1625,8 +1623,6 @@ var Backbone = Backbone || {};
                 case 's':
                 case 'c':
 
-                  var x1, y1, x2, y2, x3, y3, x4, y4;
-
                   x1 = coord.x, y1 = coord.y;
 
                   if (lower === 'c') {
@@ -1640,7 +1636,7 @@ var Backbone = Backbone || {};
                     // Calculate reflection control point for proper x2, y2
                     // inclusion.
 
-                    var reflection = new Two.Vector().copy(coord).subSelf(control);
+                    reflection = new Two.Vector().copy(coord).subSelf(control);
 
                     x2 = parseFloat(reflection.x), y2 = parseFloat(reflection.y);
                     x3 = parseFloat(coords[0]), y3 = parseFloat(coords[1]);
@@ -1662,8 +1658,6 @@ var Backbone = Backbone || {};
                 case 't':
                 case 'q':
 
-                  var x1, y1, x2, y2, x3, y3, x4, y4;
-
                   x1 = coord.x, y1 = coord.y;
                   if (control.isZero()) {
                     x2 = x1, y2 = y1;
@@ -1678,7 +1672,7 @@ var Backbone = Backbone || {};
 
                   } else {
 
-                    var reflection = new Two.Vector().copy(coord).subSelf(control);
+                    reflection = new Two.Vector().copy(coord).subSelf(control);
 
                     x3 = parseFloat(reflection.x), y3 = parseFloat(reflection.y);
                     x4 = parseFloat(coords[0]), y4 = parseFloat(coords[1]);
@@ -1698,8 +1692,6 @@ var Backbone = Backbone || {};
 
                 case 'a':
                   throw new Two.Utils.Error('not yet able to interpret Elliptical Arcs.');
-                  break;
-
               }
 
               return result;
@@ -1834,9 +1826,10 @@ var Backbone = Backbone || {};
         var epsilon = Two.Utils.Curve.CollinearityEpsilon,
           limit = Two.Utils.Curve.RecursionLimit,
           cuspLimit = Two.Utils.Curve.CuspLimit,
-          tolerance = Two.Utils.Curve.Tolerance;
+          tolerance = Two.Utils.Curve.Tolerance,
+          da1, da2;
 
-        var level = level || 0;
+        level = level || 0;
 
         if (level > limit) {
           return [];
@@ -1855,16 +1848,15 @@ var Backbone = Backbone || {};
             x1234 = (x123 + x234) / 2,
             y1234 = (y123 + y234) / 2;
 
+
+        // Try to approximate the full cubic curve by a single straight line.
+        var dx = x4 - x1;
+        var dy = y4 - y1;
+
+        var d2 = abs(((x2 - x4) * dy - (y2 - y4) * dx));
+        var d3 = abs(((x3 - x4) * dy - (y3 - y4) * dx));
+
         if (level > 0) {
-
-          // Try to approximate the full cubic curve by a single straight line.
-          var dx = x4 - x1;
-          var dy = y4 - y1;
-
-          var d2 = abs(((x2 - x4) * dy - (y2 - y4) * dx));
-          var d3 = abs(((x3 - x4) * dy - (y3 - y4) * dx));
-
-          var da1, da2;
 
           if (d2 > epsilon && d3 > epsilon) {
 
@@ -2403,13 +2395,12 @@ var Backbone = Backbone || {};
 
   })();
 
-})();
-(function() {
+})();;(function() {
 
   var Vector = Two.Vector = function(x, y) {
 
-    var x = x || 0;
-    var y = y || 0;
+    x = x || 0;
+    y = y || 0;
 
     Object.defineProperty(this, 'x', {
       get: function() {
@@ -2556,8 +2547,7 @@ var Backbone = Backbone || {};
 
   });
 
-})();
-(function() {
+})();;(function() {
 
   /**
    * Constants
@@ -2616,9 +2606,9 @@ var Backbone = Backbone || {};
         // Go down rows first
         // a, d, g, b, e, h, c, f, i
 
-        var x = e[0] * a + e[1] * b + e[2] * c;
-        var y = e[3] * a + e[4] * b + e[5] * c;
-        var z = e[6] * a + e[7] * b + e[8] * c;
+        x = e[0] * a + e[1] * b + e[2] * c;
+        y = e[3] * a + e[4] * b + e[5] * c;
+        z = e[6] * a + e[7] * b + e[8] * c;
 
         return { x: x, y: y, z: z };
 
@@ -2704,15 +2694,15 @@ var Backbone = Backbone || {};
       if (l <= 3) { // Multiply Vector
 
         var x, y, z;
-        var a = a || 0, b = b || 0, c = c || 0;
-        var e = this.elements;
+        a = a || 0, b = b || 0, c = c || 0;
+        e = this.elements;
 
         // Go down rows first
         // a, d, g, b, e, h, c, f, i
 
-        var x = e[0] * a + e[1] * b + e[2] * c;
-        var y = e[3] * a + e[4] * b + e[5] * c;
-        var z = e[6] * a + e[7] * b + e[8] * c;
+        x = e[0] * a + e[1] * b + e[2] * c;
+        y = e[3] * a + e[4] * b + e[5] * c;
+        z = e[6] * a + e[7] * b + e[8] * c;
 
         return { x: x, y: y, z: z };
 
@@ -2865,8 +2855,7 @@ var Backbone = Backbone || {};
 
   });
 
-})();
-(function() {
+})();;(function() {
 
   /**
    * Scope specific variables
@@ -2970,8 +2959,8 @@ var Backbone = Backbone || {};
         if (i <= 0) {
           command = 'M ' + x + ' ' + y;
         } else {
-          command = 'C '
-            + vx + ' ' + vy + ' ' + ux + ' ' + uy + ' ' + x + ' ' + y;
+          command = 'C ' + 
+            vx + ' ' + vy + ' ' + ux + ' ' + uy + ' ' + x + ' ' + y;
         }
 
         // Add a final point and close it off
@@ -3240,8 +3229,7 @@ var Backbone = Backbone || {};
     return count;
   }
 
-})();
-(function() {
+})();;(function() {
 
   /**
    * Constants
@@ -3610,6 +3598,7 @@ var Backbone = Backbone || {};
             elem.removeChild(elements[j]);
             this.elements[j] = null;
           }, this);
+          break;
         default:
           constructor.setStyles.call(this, elem, property, value, closed, curved, strokeChanged);
       }
@@ -3725,8 +3714,7 @@ var Backbone = Backbone || {};
     return count;
   }
 
-})();
-(function() {
+})();;(function() {
 
   var CanvasRenderer = Two[Two.Types.canvas],
     multiplyMatrix = Two.Matrix.Multiply,
@@ -4127,9 +4115,8 @@ var Backbone = Backbone || {};
         var linked = gl.getProgramParameter(program, gl.LINK_STATUS);
         if (!linked) {
           error = gl.getProgramInfoLog(program);
-          throw new Two.Utils.Error('unable to link program: ' + error);
           gl.deleteProgram(program);
-          return null;
+          throw new Two.Utils.Error('unable to link program: ' + error);
         }
 
         return program;
@@ -4149,9 +4136,8 @@ var Backbone = Backbone || {};
         var compiled = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
         if (!compiled) {
           var error = gl.getShaderInfoLog(shader);
-          throw new Two.Utils.Error('unable to compile shader ' + shader + ': ' + error);
           gl.deleteShader(shader);
-          return null;
+          throw new Two.Utils.Error('unable to compile shader ' + shader + ': ' + error);
         }
 
         return shader;
@@ -4219,8 +4205,8 @@ var Backbone = Backbone || {};
       preserveDrawingBuffer: false
     });
 
-    var gl = this.ctx = this.domElement.getContext('webgl', params)
-      || this.domElement.getContext('experimental-webgl', params);
+    var gl = this.ctx = this.domElement.getContext('webgl', params) || 
+      this.domElement.getContext('experimental-webgl', params);
 
     if (!this.ctx) {
       throw new Two.Utils.Error(
@@ -4403,13 +4389,12 @@ var Backbone = Backbone || {};
     }
 
     if (textureNeedsUpdate) {
-      elem.updateTexture(this.ctx)
+      elem.updateTexture(this.ctx);
     }
 
   }
 
-})();
-(function() {
+})();;(function() {
 
   var Shape = Two.Shape = function(limited) {
 
@@ -4544,8 +4529,7 @@ var Backbone = Backbone || {};
 
   });
 
-})();
-(function() {
+})();;(function() {
 
   var Group = Two.Group = function(o) {
 
@@ -4605,7 +4589,7 @@ var Backbone = Backbone || {};
      */
     clone: function(parent) {
 
-      var parent = parent || this.parent;
+      parent = parent || this.parent;
 
       var children = _.map(this.children, function(child) {
         return child.clone(parent);
@@ -4806,8 +4790,7 @@ var Backbone = Backbone || {};
   });
 
 })();
-
-(function() {
+;(function() {
 
   /**
    * Constants
@@ -4823,8 +4806,9 @@ var Backbone = Backbone || {};
 
     // Add additional logic for watching the vertices.
 
-    var closed = !!closed;
-    var curved = !!curved;
+    closed = !!closed;
+    curved = !!curved;
+    
     var beginning = 0.0;
     var ending = 1.0;
     var strokeChanged = false;
