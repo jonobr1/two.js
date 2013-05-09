@@ -32,22 +32,11 @@ module.exports = function(grunt) {
       scripts: {
         files: ['src/**/*.js', "tests/*.js"],
         tasks: ['jshint', 'concat']
-      },
-      thirdParty: {
-        files: ['src/third-party/*'],
-        tasks: ['copy']
       }
     },
 
     jshint: {
       all: ['Gruntfile.js', 'src/**/*.js']
-    },
-
-    uglify: {
-      release: {
-        src: ['build/two.js'],
-        dest: 'build/two.min.js'
-      }
     },
 
     concat: {
@@ -63,9 +52,9 @@ module.exports = function(grunt) {
       },
       dist: {
         src: [
-          "<%= meta.licenseFile %>",
-          "<%= meta.depFiles %>",
-          "<%= meta.srcFiles %>"
+          '<%= meta.licenseFile %>',
+          '<%= meta.depFiles %>',
+          '<%= meta.srcFiles %>'
         ],
         dest: 'build/<%= pkg.name %>'
       }
@@ -78,6 +67,27 @@ module.exports = function(grunt) {
           port: 3000
         }
       }
+    },
+
+    closureCompiler:  {
+
+      options: {
+        compilerFile: 'third-party/google_closure_compiler-r2388.jar',
+
+        // set to true if you want to check if files were modified
+        // before starting compilation (can save some time in large sourcebases)
+        checkModified: true,
+
+        // Set Closure Compiler Directives here
+        compilerOpts: {
+           language_in: 'ECMASCRIPT3'
+        }
+      },
+
+      main: {
+        src: 'build/two.js',
+        dest: 'build/two.min.js'
+      }
     }
 
   });
@@ -86,11 +96,11 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-closure-tools');
 
   // Default task
-  grunt.registerTask('default', ['jshint' , 'concat', 'uglify']);
+  grunt.registerTask('default', ['jshint' , 'concat', 'closureCompiler']);
 
 };
