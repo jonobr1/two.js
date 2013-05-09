@@ -884,6 +884,12 @@
     update: function() {
 
       this.frameCount++;
+      var animated = !!this.timeDelta;
+      if (!animated) {
+        this.timeDelta = getNow();
+      } else {
+        this.timeDelta = getNow() - this.timeDelta;
+      }
 
       var width = this.width;
       var height = this.height;
@@ -894,7 +900,7 @@
         renderer.setSize(width, height);
       }
 
-      this.trigger(Two.Events.update, this.frameCount);
+      this.trigger(Two.Events.update, this.frameCount, animated ? this.timeDelta : undefined);
 
       return this.render();
 
@@ -1111,6 +1117,11 @@
     this.renderer.setSize(width, height);
     this.trigger(Two.Events.resize, width, height);
 
+  }
+
+  function getNow() {
+    return ((window.performance && window.performance.now)
+      ? window.performance : Date).now();
   }
 
   // Request Animation Frame
