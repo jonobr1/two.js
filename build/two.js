@@ -2159,7 +2159,7 @@ var Backbone = Backbone || {};
       this.frameCount++;
 
       if (animated) {
-        this.timeDelta = (now - this._lastFrame).toFixed(3);
+        this.timeDelta = parseFloat((now - this._lastFrame).toFixed(3));
       }
       this._lastFrame = now;
 
