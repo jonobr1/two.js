@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Two.js: SVG Events</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="user-scalable=no">
+    <link rel="shortcut icon" type="image/gif" href="../images/favicon.gif">
+    <script src="../third-party/jquery.js"></script>
+    <script src="../third-party/two.js"></script>
+    <script src="../third-party/tween.js"></script>
+  </head>
+  <body>
+    <div class="scripts">
+      <script>
+
+        $(function() {
+
+          var two = new Two({
+            fullscreen: true,
+            autostart: true
+          }).appendTo(document.body);
+
+          var rect = two.makeRectangle(two.width / 2, two.height / 2, 100, 100);
+          rect.noStroke().fill = getRandomColor();
+          rect.domElement = document.querySelector('#two-' + rect.id);
+
+          $(rect.domElement)
+            .css('cursor', 'pointer')
+            .click(function(e) {
+              rect.fill = getRandomColor();
+            });
+
+          two.bind('update', function(frameCount, timeDelta) {
+            rect.rotation = frameCount / 60;
+          });
+
+          function getRandomColor() {
+            return 'rgb('
+              + Math.floor(Math.random() * 255) + ','
+              + Math.floor(Math.random() * 255) + ','
+              + Math.floor(Math.random() * 255) + ')';
+          }
+
+        });
+
+      </script>
+    </div>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-40550435-1', 'github.com');
+      ga('send', 'pageview');
+
+    </script>
+  </body>
+</html>
