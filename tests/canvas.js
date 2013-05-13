@@ -180,6 +180,43 @@
 
   });
 
+  test('DOM Event', 4,function(o){
+    var two = new Two({
+      width: 400,
+      height: 400,
+      type: Two.Types.canvas
+    });
+    var path = [
+      new Two.Vector(0,0),
+      new Two.Vector(100,25),
+      new Two.Vector(0,50),
+      new Two.Vector(50,25),
+      new Two.Vector(0,0)
+    ];
+    var fnSpy = this.spy;
+
+    var polygon  = two.makePolygon(path, true);
+
+    var makeAndTriggerSpy = function(event){
+      var spy = fnSpy();
+      polygon.on(event.type, spy);
+      fireEvent(two.renderer.domElement, event);
+      return spy;
+    };
+
+    var mousedownSpy = makeAndTriggerSpy({'type':'mousedown', 'pageX':62,'pageY':22});
+    var mouseupSpy = makeAndTriggerSpy({'type':'mouseup', 'pageX':62,'pageY':22});
+
+    var mousedownSpyFalse = makeAndTriggerSpy({'type':'mousedown', 'pageX':600,'pageY':600});
+    var mouseupSpyFalse = makeAndTriggerSpy({'type':'mouseup', 'pageX':5,'pageY':25});
+
+    ok(mousedownSpy.called);
+    ok(mouseupSpy.called);
+    ok(mousedownSpyFalse.notCalled);
+    ok(mouseupSpyFalse.notCalled);
+
+  });
+
   /**
    * Utility functions
    */
@@ -229,6 +266,21 @@
       callback(this.response);
     };
     xhr.send();
+  }
+
+  function fireEvent(element,event){
+    var evt, out;
+    if (document.createEventObject){
+      evt = document.createEventObject();
+      evt = _.extend(evt, event);
+      out = element.fireEvent('on'+event.type,evt);
+    }else{
+      evt = document.createEvent("HTMLEvents");
+      evt.initEvent(event.type, true, true );
+      evt = _.extend(evt, event);
+      out = !element.dispatchEvent(evt);
+    }
+    return out;
   }
 
 })();

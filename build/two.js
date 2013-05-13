@@ -26,8 +26,7 @@
  *
  */
 
-
-//     Underscore.js 1.3.3
+;//     Underscore.js 1.3.3
 //     (c) 2009-2012 Jeremy Ashkenas, DocumentCloud Inc.
 //     Underscore is freely distributable under the MIT license.
 //     Portions of Underscore are inspired or borrowed from Prototype,
@@ -1085,8 +1084,7 @@
     return this._wrapped;
   };
 
-}).call(this);
-var Backbone = Backbone || {};
+}).call(this);;var Backbone = Backbone || {};
 
 (function() {
 
@@ -1242,8 +1240,7 @@ var Backbone = Backbone || {};
   Events.bind   = Events.on;
   Events.unbind = Events.off;
 
-})();
-// http://paulirish.com/2011/requestanimationframe-for-smart-animating/
+})();;// http://paulirish.com/2011/requestanimationframe-for-smart-animating/
 
 (function() {
   var lastTime = 0;
@@ -1267,8 +1264,7 @@ var Backbone = Backbone || {};
     window.cancelAnimationFrame = function(id) {
       clearTimeout(id);
     };
-}());
-(function() {
+}());;(function() {
 
   var root = this;
   var previousTwo = root.Two || {};
@@ -2103,6 +2099,26 @@ var Backbone = Backbone || {};
       Error: function(message) {
         this.name = 'two.js';
         this.message = message;
+      },
+
+      mouse : {
+        eventPostion : function (event, inElement) {
+          var x;
+          var y;
+          if (event.pageX !== undefined && event.pageY !== undefined) {
+            x = event.pageX;
+            y = event.pageY;
+          }
+          else {
+            x = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+            y = event.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+          }
+          if(inElement){
+            x -= inElement.offsetLeft;
+            y -= inElement.offsetTop;
+          }
+          return new Two.Vector(x,y);
+        }
       }
 
     }
@@ -2412,8 +2428,7 @@ var Backbone = Backbone || {};
 
   })();
 
-})();
-(function() {
+})();;(function() {
 
   var Vector = Two.Vector = function(x, y) {
 
@@ -2565,8 +2580,7 @@ var Backbone = Backbone || {};
 
   });
 
-})();
-(function() {
+})();;(function() {
 
   /**
    * Constants
@@ -2874,8 +2888,7 @@ var Backbone = Backbone || {};
 
   });
 
-})();
-(function() {
+})();;(function() {
 
   /**
    * Scope specific variables
@@ -2884,6 +2897,9 @@ var Backbone = Backbone || {};
   // Localize variables
   var getCurveFromPoints = Two.Utils.getCurveFromPoints,
     mod = Two.Utils.mod;
+
+  //Dom events supported
+  var domEvents = ['click', 'mousedown', 'mouseup', 'mouseover', 'mouseout'];
 
   var svg = {
 
@@ -2932,7 +2948,7 @@ var Backbone = Backbone || {};
     /**
      * Turn a set of vertices into a string for the d property of a path
      * element. It is imperative that the string collation is as fast as
-     * possible, because this call will be happening multiple times a 
+     * possible, because this call will be happening multiple times a
      * second.
      */
     toString: function(points, closed, curved) {
@@ -2979,7 +2995,7 @@ var Backbone = Backbone || {};
         if (i <= 0) {
           command = 'M ' + x + ' ' + y;
         } else {
-          command = 'C ' + 
+          command = 'C ' +
             vx + ' ' + vy + ' ' + ux + ' ' + uy + ' ' + x + ' ' + y;
         }
 
@@ -2996,7 +3012,7 @@ var Backbone = Backbone || {};
           x = c.x.toFixed(3);
           y = c.y.toFixed(3);
 
-          command += 
+          command +=
             ' C ' + vx + ' ' + vy + ' ' + ux + ' ' + uy + ' ' + x + ' ' + y;
 
           command += ' Z';
@@ -3098,6 +3114,8 @@ var Backbone = Backbone || {};
         }
 
         elem = svg.createElement(tag, styles);
+
+        bindDomEventToObject({'events':domEvents, 'element':elem, 'object':o});
 
         domElement.appendChild(elem);
         elements.push(elem);
@@ -3249,8 +3267,17 @@ var Backbone = Backbone || {};
     return count;
   }
 
-})();
-(function() {
+  function bindDomEventToObject(opt){
+    _.each(opt.events, function(eventName){
+      opt.element.addEventListener(eventName,opt.element,false);
+    });
+
+    opt.element.handleEvent= function(evt){
+        opt.object.trigger(evt.type, evt);
+    };
+  }
+
+})();;(function() {
 
   /**
    * Constants
@@ -3488,6 +3515,9 @@ var Backbone = Backbone || {};
 
     this.elements = [];
 
+    this.objects = [];
+    bindDomEventToObject({'domElement':this.domElement,'objects':this.objects});
+
     // Everything drawn on the canvas needs to come from the stage.
     this.stage = null;
 
@@ -3495,7 +3525,7 @@ var Backbone = Backbone || {};
 
   _.extend(Renderer, {
 
-    
+
 
   });
 
@@ -3538,6 +3568,7 @@ var Backbone = Backbone || {};
         objects = o,
         elements = this.elements,
         domElement = this.domElement,
+        objCache = this.objects,
 
         // For extensibility with WebGlRenderer
 
@@ -3593,6 +3624,7 @@ var Backbone = Backbone || {};
         if (!isStage) {
           this.stage.appendChild(elem);
         }
+        objCache.push(object);
 
       }, this);
 
@@ -3735,8 +3767,25 @@ var Backbone = Backbone || {};
     return count;
   }
 
-})();
-(function() {
+  function bindDomEventToObject(opt) {
+        opt.domElement.addEventListener("mousedown", opt.domElement, false);
+        opt.domElement.addEventListener("mouseup", opt.domElement, false);
+        opt.domElement.handleEvent = function(event) {
+            var mouseCoordinate = Two.Utils.mouse.eventPostion(event, this);
+            if (event.type === "mousedown" || event.type === "mouseup") {
+                _.each(opt.objects, function(object) {
+                    if (object instanceof Two.Polygon) {
+                        if (object.isPip(mouseCoordinate)) {
+                            object.trigger(event.type, event);
+                        }
+                    }
+                });
+            }
+        };
+    }
+
+
+})();;(function() {
 
   var CanvasRenderer = Two[Two.Types.canvas],
     multiplyMatrix = Two.Matrix.Multiply,
@@ -4416,8 +4465,7 @@ var Backbone = Backbone || {};
 
   }
 
-})();
-(function() {
+})();;(function() {
 
   var Shape = Two.Shape = function(limited) {
 
@@ -4552,8 +4600,7 @@ var Backbone = Backbone || {};
 
   });
 
-})();
-(function() {
+})();;(function() {
 
   var Group = Two.Group = function(o) {
 
@@ -4814,8 +4861,7 @@ var Backbone = Backbone || {};
   });
 
 })();
-
-(function() {
+;(function() {
 
   /**
    * Constants
@@ -4833,7 +4879,7 @@ var Backbone = Backbone || {};
 
     closed = !!closed;
     curved = !!curved;
-    
+
     var beginning = 0.0;
     var ending = 1.0;
     var strokeChanged = false;
@@ -5012,6 +5058,29 @@ var Backbone = Backbone || {};
         height: ll.y - ul.y
       };
 
+    },
+    // ray-casting algorithm based on http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
+    // @src https://github.com/substack/point-in-polygon/blob/master/index.js
+    //isPointInPolygon
+    isPip : function (point) {
+
+        var x = point.x,
+          y = point.y,
+          offset = this.translation,
+          inPoint = this.vertices;
+
+        var inside = false;
+        for (var i = 0, j = inPoint.length - 1; i < inPoint.length; j = i++) {
+            var xi = inPoint[i].x+offset.x,
+              yi = inPoint[i].y+offset.y;
+            var xj = inPoint[j].x+offset.x,
+              yj = inPoint[j].y+offset.y;
+
+            var intersect = ((yi > y) != (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+            if (intersect) inside = !inside;
+        }
+
+        return inside;
     }
 
   });

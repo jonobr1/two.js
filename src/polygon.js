@@ -16,7 +16,7 @@
 
     closed = !!closed;
     curved = !!curved;
-    
+
     var beginning = 0.0;
     var ending = 1.0;
     var strokeChanged = false;
@@ -195,6 +195,29 @@
         height: ll.y - ul.y
       };
 
+    },
+    // ray-casting algorithm based on http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
+    // @src https://github.com/substack/point-in-polygon/blob/master/index.js
+    //isPointInPolygon
+    isPip : function (point) {
+
+        var x = point.x,
+          y = point.y,
+          offset = this.translation,
+          inPoint = this.vertices;
+
+        var inside = false;
+        for (var i = 0, j = inPoint.length - 1; i < inPoint.length; j = i++) {
+            var xi = inPoint[i].x+offset.x,
+              yi = inPoint[i].y+offset.y;
+            var xj = inPoint[j].x+offset.x,
+              yj = inPoint[j].y+offset.y;
+
+            var intersect = ((yi > y) != (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+            if (intersect) inside = !inside;
+        }
+
+        return inside;
     }
 
   });

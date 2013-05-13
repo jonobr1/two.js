@@ -8,6 +8,9 @@
   var getCurveFromPoints = Two.Utils.getCurveFromPoints,
     mod = Two.Utils.mod;
 
+  //Dom events supported
+  var domEvents = ['click', 'mousedown', 'mouseup', 'mouseover', 'mouseout'];
+
   var svg = {
 
     version: 1.1,
@@ -55,7 +58,7 @@
     /**
      * Turn a set of vertices into a string for the d property of a path
      * element. It is imperative that the string collation is as fast as
-     * possible, because this call will be happening multiple times a 
+     * possible, because this call will be happening multiple times a
      * second.
      */
     toString: function(points, closed, curved) {
@@ -102,7 +105,7 @@
         if (i <= 0) {
           command = 'M ' + x + ' ' + y;
         } else {
-          command = 'C ' + 
+          command = 'C ' +
             vx + ' ' + vy + ' ' + ux + ' ' + uy + ' ' + x + ' ' + y;
         }
 
@@ -119,7 +122,7 @@
           x = c.x.toFixed(3);
           y = c.y.toFixed(3);
 
-          command += 
+          command +=
             ' C ' + vx + ' ' + vy + ' ' + ux + ' ' + uy + ' ' + x + ' ' + y;
 
           command += ' Z';
@@ -221,6 +224,8 @@
         }
 
         elem = svg.createElement(tag, styles);
+
+        bindDomEventToObject({'events':domEvents, 'element':elem, 'object':o});
 
         domElement.appendChild(elem);
         elements.push(elem);
@@ -370,6 +375,16 @@
     var count = this.count;
     this.count++;
     return count;
+  }
+
+  function bindDomEventToObject(opt){
+    _.each(opt.events, function(eventName){
+      opt.element.addEventListener(eventName,opt.element,false);
+    });
+
+    opt.element.handleEvent= function(evt){
+        opt.object.trigger(evt.type, evt);
+    };
   }
 
 })();

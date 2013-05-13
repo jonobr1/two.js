@@ -26,33 +26,7 @@
  *
  */
 
-
-// http://paulirish.com/2011/requestanimationframe-for-smart-animating/
-
-(function() {
-  var lastTime = 0;
-  var vendors = ['ms', 'moz', 'webkit', 'o'];
-  for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
-    window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
-    window.cancelAnimationFrame = 
-      window[vendors[x]+'CancelAnimationFrame'] || window[vendors[x]+'CancelRequestAnimationFrame'];
-  }
-
-  if (!window.requestAnimationFrame)
-    window.requestAnimationFrame = function(callback, element) {
-      var currTime = new Date().getTime();
-      var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-      var id = window.setTimeout(function() { callback(currTime + timeToCall); }, timeToCall);
-      lastTime = currTime + timeToCall;
-      return id;
-    };
-
-  if (!window.cancelAnimationFrame)
-    window.cancelAnimationFrame = function(id) {
-      clearTimeout(id);
-    };
-}());
-(function() {
+;(function() {
 
   var root = this;
   var previousTwo = root.Two || {};
@@ -887,6 +861,26 @@
       Error: function(message) {
         this.name = 'two.js';
         this.message = message;
+      },
+
+      mouse : {
+        eventPostion : function (event, inElement) {
+          var x;
+          var y;
+          if (event.pageX !== undefined && event.pageY !== undefined) {
+            x = event.pageX;
+            y = event.pageY;
+          }
+          else {
+            x = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+            y = event.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+          }
+          if(inElement){
+            x -= inElement.offsetLeft;
+            y -= inElement.offsetTop;
+          }
+          return new Two.Vector(x,y);
+        }
       }
 
     }
@@ -1196,8 +1190,7 @@
 
   })();
 
-})();
-(function() {
+})();;(function() {
 
   var Vector = Two.Vector = function(x, y) {
 
@@ -1349,8 +1342,7 @@
 
   });
 
-})();
-(function() {
+})();;(function() {
 
   /**
    * Constants
@@ -1658,8 +1650,7 @@
 
   });
 
-})();
-(function() {
+})();;(function() {
 
   /**
    * Scope specific variables
@@ -1668,6 +1659,9 @@
   // Localize variables
   var getCurveFromPoints = Two.Utils.getCurveFromPoints,
     mod = Two.Utils.mod;
+
+  //Dom events supported
+  var domEvents = ['click', 'mousedown', 'mouseup', 'mouseover', 'mouseout'];
 
   var svg = {
 
@@ -1716,7 +1710,7 @@
     /**
      * Turn a set of vertices into a string for the d property of a path
      * element. It is imperative that the string collation is as fast as
-     * possible, because this call will be happening multiple times a 
+     * possible, because this call will be happening multiple times a
      * second.
      */
     toString: function(points, closed, curved) {
@@ -1763,7 +1757,7 @@
         if (i <= 0) {
           command = 'M ' + x + ' ' + y;
         } else {
-          command = 'C ' + 
+          command = 'C ' +
             vx + ' ' + vy + ' ' + ux + ' ' + uy + ' ' + x + ' ' + y;
         }
 
@@ -1780,7 +1774,7 @@
           x = c.x.toFixed(3);
           y = c.y.toFixed(3);
 
-          command += 
+          command +=
             ' C ' + vx + ' ' + vy + ' ' + ux + ' ' + uy + ' ' + x + ' ' + y;
 
           command += ' Z';
@@ -1882,6 +1876,8 @@
         }
 
         elem = svg.createElement(tag, styles);
+
+        bindDomEventToObject({'events':domEvents, 'element':elem, 'object':o});
 
         domElement.appendChild(elem);
         elements.push(elem);
@@ -2033,8 +2029,17 @@
     return count;
   }
 
-})();
-(function() {
+  function bindDomEventToObject(opt){
+    _.each(opt.events, function(eventName){
+      opt.element.addEventListener(eventName,opt.element,false);
+    });
+
+    opt.element.handleEvent= function(evt){
+        opt.object.trigger(evt.type, evt);
+    };
+  }
+
+})();;(function() {
 
   /**
    * Constants
@@ -2272,6 +2277,9 @@
 
     this.elements = [];
 
+    this.objects = [];
+    bindDomEventToObject({'domElement':this.domElement,'objects':this.objects});
+
     // Everything drawn on the canvas needs to come from the stage.
     this.stage = null;
 
@@ -2279,7 +2287,7 @@
 
   _.extend(Renderer, {
 
-    
+
 
   });
 
@@ -2322,6 +2330,7 @@
         objects = o,
         elements = this.elements,
         domElement = this.domElement,
+        objCache = this.objects,
 
         // For extensibility with WebGlRenderer
 
@@ -2377,6 +2386,7 @@
         if (!isStage) {
           this.stage.appendChild(elem);
         }
+        objCache.push(object);
 
       }, this);
 
@@ -2519,8 +2529,25 @@
     return count;
   }
 
-})();
-(function() {
+  function bindDomEventToObject(opt) {
+        opt.domElement.addEventListener("mousedown", opt.domElement, false);
+        opt.domElement.addEventListener("mouseup", opt.domElement, false);
+        opt.domElement.handleEvent = function(event) {
+            var mouseCoordinate = Two.Utils.mouse.eventPostion(event, this);
+            if (event.type === "mousedown" || event.type === "mouseup") {
+                _.each(opt.objects, function(object) {
+                    if (object instanceof Two.Polygon) {
+                        if (object.isPip(mouseCoordinate)) {
+                            object.trigger(event.type, event);
+                        }
+                    }
+                });
+            }
+        };
+    }
+
+
+})();;(function() {
 
   var CanvasRenderer = Two[Two.Types.canvas],
     multiplyMatrix = Two.Matrix.Multiply,
@@ -3200,8 +3227,7 @@
 
   }
 
-})();
-(function() {
+})();;(function() {
 
   var Shape = Two.Shape = function(limited) {
 
@@ -3336,8 +3362,7 @@
 
   });
 
-})();
-(function() {
+})();;(function() {
 
   var Group = Two.Group = function(o) {
 
@@ -3598,8 +3623,7 @@
   });
 
 })();
-
-(function() {
+;(function() {
 
   /**
    * Constants
@@ -3617,7 +3641,7 @@
 
     closed = !!closed;
     curved = !!curved;
-    
+
     var beginning = 0.0;
     var ending = 1.0;
     var strokeChanged = false;
@@ -3796,6 +3820,29 @@
         height: ll.y - ul.y
       };
 
+    },
+    // ray-casting algorithm based on http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
+    // @src https://github.com/substack/point-in-polygon/blob/master/index.js
+    //isPointInPolygon
+    isPip : function (point) {
+
+        var x = point.x,
+          y = point.y,
+          offset = this.translation,
+          inPoint = this.vertices;
+
+        var inside = false;
+        for (var i = 0, j = inPoint.length - 1; i < inPoint.length; j = i++) {
+            var xi = inPoint[i].x+offset.x,
+              yi = inPoint[i].y+offset.y;
+            var xj = inPoint[j].x+offset.x,
+              yj = inPoint[j].y+offset.y;
+
+            var intersect = ((yi > y) != (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+            if (intersect) inside = !inside;
+        }
+
+        return inside;
     }
 
   });

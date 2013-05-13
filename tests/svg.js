@@ -176,6 +176,37 @@
 
   });
 
+  test('DOM Event', function(o){
+    var two = new Two({
+      width: 400,
+      height: 400
+    });
+    var obj = two.makeRectangle(10, 10);
+    var elem = two.renderer.domElement.querySelector('#two-' + obj.id);
+    var fnSpy = this.spy;
+
+    var makeAndTriggerSpy = function(eventName){
+      var spy = fnSpy();
+      obj.on(eventName, spy);
+      fireEvent(elem, {'type':eventName});
+      return spy;
+    };
+    //
+    var clickSpy = makeAndTriggerSpy('click');
+    var mousedownSpy = makeAndTriggerSpy('mousedown');
+    var mouseupSpy = makeAndTriggerSpy('mouseup');
+    var mouseoverSpy = makeAndTriggerSpy('mouseover');
+    var mouseoutSpy = makeAndTriggerSpy('mouseout');
+
+    ok(clickSpy.called);
+    ok(mousedownSpy.called);
+    ok(mouseupSpy.called);
+    ok(mouseoverSpy.called);
+    ok(mouseoutSpy.called);
+
+    addSvgToTest(o, two);
+  });
+
   function addSvgToTest(o, two) {
 
     var domElement = document.createElement('li');
@@ -185,6 +216,18 @@
       document.querySelector('#' + o.id + ' ol').appendChild(domElement);
     }, 100);
 
+  }
+  function fireEvent(element,event){
+    var evt, out;
+    if (document.createEventObject){
+      evt = document.createEventObject();
+      out = element.fireEvent('on'+event.type,evt);
+    }else{
+      evt = document.createEvent("HTMLEvents");
+      evt.initEvent(event.type, true, true );
+      out = !element.dispatchEvent(evt);
+    }
+    return out;
   }
 
 })();

@@ -833,6 +833,26 @@
       Error: function(message) {
         this.name = 'two.js';
         this.message = message;
+      },
+
+      mouse : {
+        eventPostion : function (event, inElement) {
+          var x;
+          var y;
+          if (event.pageX !== undefined && event.pageY !== undefined) {
+            x = event.pageX;
+            y = event.pageY;
+          }
+          else {
+            x = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+            y = event.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+          }
+          if(inElement){
+            x -= inElement.offsetLeft;
+            y -= inElement.offsetTop;
+          }
+          return new Two.Vector(x,y);
+        }
       }
 
     }

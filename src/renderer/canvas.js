@@ -236,6 +236,9 @@
 
     this.elements = [];
 
+    this.objects = [];
+    bindDomEventToObject({'domElement':this.domElement,'objects':this.objects});
+
     // Everything drawn on the canvas needs to come from the stage.
     this.stage = null;
 
@@ -243,7 +246,7 @@
 
   _.extend(Renderer, {
 
-    
+
 
   });
 
@@ -286,6 +289,7 @@
         objects = o,
         elements = this.elements,
         domElement = this.domElement,
+        objCache = this.objects,
 
         // For extensibility with WebGlRenderer
 
@@ -341,6 +345,7 @@
         if (!isStage) {
           this.stage.appendChild(elem);
         }
+        objCache.push(object);
 
       }, this);
 
@@ -482,5 +487,23 @@
     this.count++;
     return count;
   }
+
+  function bindDomEventToObject(opt) {
+        opt.domElement.addEventListener("mousedown", opt.domElement, false);
+        opt.domElement.addEventListener("mouseup", opt.domElement, false);
+        opt.domElement.handleEvent = function(event) {
+            var mouseCoordinate = Two.Utils.mouse.eventPostion(event, this);
+            if (event.type === "mousedown" || event.type === "mouseup") {
+                _.each(opt.objects, function(object) {
+                    if (object instanceof Two.Polygon) {
+                        if (object.isPip(mouseCoordinate)) {
+                            object.trigger(event.type, event);
+                        }
+                    }
+                });
+            }
+        };
+    }
+
 
 })();
