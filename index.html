@@ -602,6 +602,22 @@ two.bind('update', function(frameCount) {
         </li>
         <li>
           <p class="property function declaration">
+            <strong>remove</strong> <code>two.remove(objects);</code>
+          </p>
+          <p class="description">
+            Remove one or many shapes / groups from the instance. Objects can be removed as arguments, <code>two.remove(o1, o2, oN)</code>, or as an array depicted above.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>clear</strong> <code>two.clear();</code>
+          </p>
+          <p class="description">
+            Removes all objects from the instance&apos;s scene. If you intend to have the browser garbage collect this, don&apos;t forget to delete the references in your application as well.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
             <strong>makeLine</strong> <code>two.makeLine(x1, y1, x2, y2);</code>
           </p>
           <p class="description">
