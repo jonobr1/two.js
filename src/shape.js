@@ -12,11 +12,12 @@
         .identity()
         .translate(this.translation.x, this.translation.y)
         .scale(this.scale)
-        .rotate(this.rotation);
+        .rotate(this.rotation)
+        .multiply.apply(this._matrix, this.matrix.elements);
       this.trigger(Two.Events.change, this.id, 'matrix', transform, this.scale);
     }, this), 0);
 
-    this._rotation = 'rotation';
+    this._rotation = 0;
 
     Object.defineProperty(this, 'rotation', {
       get: function() {
@@ -45,6 +46,11 @@
     this.scale = 1.0;
 
     this.translation.bind(Two.Events.change, updateMatrix);
+
+    // Add a public matrix for advanced transformations.
+    // Only edit this if you're a *boss*
+    this.matrix = new Two.Matrix();
+    this.matrix.bind(Two.Events.change, updateMatrix);
 
     if (!!limited) {
       return this;

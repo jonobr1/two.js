@@ -11,7 +11,7 @@
       },
       set: function(v) {
         x = v;
-        this.trigger('change', 'x');
+        this.trigger(Two.Events.change, 'x');
       }
     });
 
@@ -21,7 +21,7 @@
       },
       set: function(v) {
         y = v;
-        this.trigger('change', 'y');
+        this.trigger(Two.Events.change, 'y');
       }
     });
 

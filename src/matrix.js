@@ -88,7 +88,7 @@
 
   });
 
-  _.extend(Matrix.prototype, {
+  _.extend(Matrix.prototype, Backbone.Events, {
 
     /**
      * Takes an array of elements or the arguments list itself to
@@ -108,7 +108,7 @@
         }
       }, this);
 
-      return this;
+      return this.trigger(Two.Events.change);
 
     },
 
@@ -138,7 +138,7 @@
           this.elements[i] = v * a;
         }, this);
 
-        return this;
+        return this.trigger(Two.Events.change);
 
       }
 
@@ -184,7 +184,7 @@
       this.elements[7] = A6 * B1 + A7 * B4 + A8 * B7;
       this.elements[8] = A6 * B2 + A7 * B5 + A8 * B8;
 
-      return this;
+      return this.trigger(Two.Events.change);
 
     },
 

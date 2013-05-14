@@ -1210,7 +1210,7 @@
       },
       set: function(v) {
         x = v;
-        this.trigger('change', 'x');
+        this.trigger(Two.Events.change, 'x');
       }
     });
 
@@ -1220,7 +1220,7 @@
       },
       set: function(v) {
         y = v;
-        this.trigger('change', 'y');
+        this.trigger(Two.Events.change, 'y');
       }
     });
 
@@ -1440,7 +1440,7 @@
 
   });
 
-  _.extend(Matrix.prototype, {
+  _.extend(Matrix.prototype, Backbone.Events, {
 
     /**
      * Takes an array of elements or the arguments list itself to
@@ -1460,7 +1460,7 @@
         }
       }, this);
 
-      return this;
+      return this.trigger(Two.Events.change);
 
     },
 
@@ -1490,7 +1490,7 @@
           this.elements[i] = v * a;
         }, this);
 
-        return this;
+        return this.trigger(Two.Events.change);
 
       }
 
@@ -1536,7 +1536,7 @@
       this.elements[7] = A6 * B1 + A7 * B4 + A8 * B7;
       this.elements[8] = A6 * B2 + A7 * B5 + A8 * B8;
 
-      return this;
+      return this.trigger(Two.Events.change);
 
     },
 
@@ -3215,11 +3215,12 @@
         .identity()
         .translate(this.translation.x, this.translation.y)
         .scale(this.scale)
-        .rotate(this.rotation);
+        .rotate(this.rotation)
+        .multiply.apply(this._matrix, this.matrix.elements);
       this.trigger(Two.Events.change, this.id, 'matrix', transform, this.scale);
     }, this), 0);
 
-    this._rotation = 'rotation';
+    this._rotation = 0;
 
     Object.defineProperty(this, 'rotation', {
       get: function() {
@@ -3248,6 +3249,11 @@
     this.scale = 1.0;
 
     this.translation.bind(Two.Events.change, updateMatrix);
+
+    // Add a public matrix for advanced transformations.
+    // Only edit this if you're a *boss*
+    this.matrix = new Two.Matrix();
+    this.matrix.bind(Two.Events.change, updateMatrix);
 
     if (!!limited) {
       return this;
