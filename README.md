@@ -49,8 +49,7 @@ If you're making an application and you're only using one renderer (i.e: svg con
 Finally, build the project:
 
 ```
-cd two.js/utils
-node build
+node two.js/utils/build
 ```
 
 ## Change Log
