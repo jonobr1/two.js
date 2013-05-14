@@ -2205,6 +2205,29 @@ var Backbone = Backbone || {};
 
     },
 
+    remove: function(o) {
+
+      var objects = o;
+      if (!_.isArray(o)) {
+        objects = _.toArray(arguments);
+      }
+
+      this.scene.remove(objects);
+
+      return this;
+
+    },
+
+    clear: function() {
+
+      _.each(this.scene.children, function(child) {
+        child.remove();
+      });
+
+      return this;
+
+    },
+
     makeLine: function(x1, y1, x2, y2) {
 
       var width = x2 - x1;
