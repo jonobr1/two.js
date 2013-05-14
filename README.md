@@ -54,6 +54,13 @@ node two.js/utils/build
 
 ## Change Log
 
+Nightly
++ Added matrix property to all `Two.Shape`'s for advanced transformations
++ Remove execution path dependency on utils/build.js @masonbiler
++ Added `timeDelta` property to every `two` instance
++ Added gruntfile and package.json for more integration with `npm` @iros
++ Crossbrowser compatability with `noStroke` and `noFill` commands
+
 May 3, 2013 [v0.2.0](https://github.com/jonobr1/two.js/tree/v0.2.0)
 + First alpha release
 
