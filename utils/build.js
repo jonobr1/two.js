@@ -21,7 +21,7 @@ var files = [
 
 new compressor.minify({
   type: 'no-compress',
-  fileIn: [files[0]].concat(files.slice(3)),
+  fileIn: [files[0]].concat(files.slice(4)),
   fileOut: path.resolve(__dirname, '../build/two.clean.js'),
   callback: function(e) {
     if (!e) {
