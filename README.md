@@ -55,6 +55,7 @@ node two.js/utils/build
 ## Change Log
 
 Nightly
++ Fixed svg interpretation for `webgl` context
 + Added matrix property to all `Two.Shape`'s for advanced transformations
 + Remove execution path dependency on utils/build.js [@masonbiler](https://github.com/masonbiler)
 + Added `timeDelta` property to every `two` instance
