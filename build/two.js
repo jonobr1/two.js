@@ -1523,8 +1523,8 @@ var Backbone = Backbone || {};
             var tag = n.localName.toLowerCase();
 
             if ((tag in Two.Utils.read)) {
-              n = Two.Utils.read[tag].call(this, n);
-              group.add(n);
+              var o = Two.Utils.read[tag].call(this, n);
+              group.add(o);
             }
 
           }, this);
@@ -3921,8 +3921,8 @@ var Backbone = Backbone || {};
       var height = bottom - top;
 
       var centroid = {
-        x: Math.abs(left),
-        y: Math.abs(top)
+        x: - left,
+        y: - top
       };
 
       return {
@@ -3980,6 +3980,8 @@ var Backbone = Backbone || {};
       var cx = centroid.x * scale, cy = centroid.y * scale;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      // ctx.fillStyle = 'red';
+      // ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       if (fill) {
         ctx.fillStyle = fill;
@@ -4092,6 +4094,10 @@ var Backbone = Backbone || {};
       // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
       // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
       // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+
+      if (this.canvas.width <= 0 || this.canvas.height <= 0) {
+        return;
+      }
 
       // Upload the image into the texture.
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.canvas);
@@ -4385,7 +4391,7 @@ var Backbone = Backbone || {};
       elem.updateMatrix();
     } else if (/(stroke|fill|opacity|cap|join|miter|linewidth)/.test(property)) {
       elem[property] = value;
-      elem.rect = webgl.getBoundingClientRect(elem.commands, elem.linewidth, elem.curved);
+      elem.rect = expand(webgl.getBoundingClientRect(elem.commands, elem.linewidth, elem.curved), elem.rect);
       elem.triangles = webgl.getTriangles(elem.rect);
       webgl.updateBuffer(this.ctx, elem, this.program);
       textureNeedsUpdate = true;
@@ -4402,7 +4408,7 @@ var Backbone = Backbone || {};
         elem.vertices = getCommands(value, elem.curved, elem.closed);
         elem.commands = elem.vertices;
       }
-      elem.rect = webgl.getBoundingClientRect(elem.vertices, elem.linewidth, elem.curved);
+      elem.rect = expand(webgl.getBoundingClientRect(elem.vertices, elem.linewidth, elem.curved), elem.rect);
       elem.triangles = webgl.getTriangles(elem.rect);
       webgl.updateBuffer(this.ctx, elem, this.program);
       textureNeedsUpdate = true;
@@ -4413,6 +4419,32 @@ var Backbone = Backbone || {};
     if (textureNeedsUpdate) {
       elem.updateTexture(this.ctx);
     }
+
+  }
+
+  function expand(r1, r2) {
+
+    var top = Math.min(r1.top, r2.top),
+      left = Math.min(r1.left, r2.left),
+      right = Math.max(r1.right, r2.right),
+      bottom = Math.max(r1.bottom, r2.bottom);
+
+    var width = right - left;
+    var height = bottom - top;
+    var centroid = {
+      x: - left,
+      y: - top
+    };
+
+    return {
+      top: top,
+      left: left,
+      right: right,
+      bottom: bottom,
+      width: width,
+      height: height,
+      centroid: centroid
+    };
 
   }
 

@@ -253,8 +253,8 @@
             var tag = n.localName.toLowerCase();
 
             if ((tag in Two.Utils.read)) {
-              n = Two.Utils.read[tag].call(this, n);
-              group.add(n);
+              var o = Two.Utils.read[tag].call(this, n);
+              group.add(o);
             }
 
           }, this);
