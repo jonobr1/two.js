@@ -378,13 +378,13 @@
   }
 
   function bindDomEventToObject(opt){
-    _.each(opt.events, function(eventName){
-      opt.element.addEventListener(eventName,opt.element,false);
-    });
-
     opt.element.handleEvent= function(evt){
         opt.object.trigger(evt.type, evt);
     };
+
+    _.each(opt.events, function(eventName){
+      opt.element.addEventListener(eventName,opt.element.handleEvent,false);
+    });
   }
 
 })();

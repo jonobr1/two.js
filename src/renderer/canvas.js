@@ -489,21 +489,21 @@
   }
 
   function bindDomEventToObject(opt) {
-        opt.domElement.addEventListener("mousedown", opt.domElement, false);
-        opt.domElement.addEventListener("mouseup", opt.domElement, false);
-        opt.domElement.handleEvent = function(event) {
-            var mouseCoordinate = Two.Utils.mouse.eventPostion(event, this);
-            if (event.type === "mousedown" || event.type === "mouseup") {
-                _.each(opt.objects, function(object) {
-                    if (object instanceof Two.Polygon) {
-                        if (object.isPip(mouseCoordinate)) {
-                            object.trigger(event.type, event);
-                        }
+    opt.domElement.handleEvent = function(event) {
+        var mouseCoordinate = Two.Utils.mouse.eventPostion(event, this);
+        if (event.type === "mousedown" || event.type === "mouseup") {
+            _.each(opt.objects, function(object) {
+                if (object instanceof Two.Polygon) {
+                    if (object.isPip(mouseCoordinate)) {
+                        object.trigger(event.type, event);
                     }
-                });
-            }
-        };
-    }
+                }
+            });
+        }
+    };
+    opt.domElement.addEventListener("mousedown", opt.domElement.handleEvent, false);
+    opt.domElement.addEventListener("mouseup", opt.domElement.handleEvent, false);
+  }
 
 
 })();
