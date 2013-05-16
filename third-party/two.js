@@ -2381,7 +2381,7 @@ var Backbone = Backbone || {};
     /**
      * Interpret an SVG Node and add it to this instance's scene. The
      * distinction should be made that this doesn't `import` svg's, it solely
-     * interprets them into something compatible for Two.js — this is slightly
+     * interprets them into something compatible for Two.js — this is slightly
      * different than a direct transcription.
      */
     interpret: function(svgNode) {
@@ -4522,8 +4522,8 @@ var Backbone = Backbone || {};
         .identity()
         .translate(this.translation.x, this.translation.y)
         .scale(this.scale)
-        .rotate(this.rotation)
-        .multiply.apply(this._matrix, this.matrix.elements);
+        .rotate(this.rotation);
+        // .multiply.apply(this._matrix, this.matrix.elements);
       this.trigger(Two.Events.change, this.id, 'matrix', transform, this.scale);
     }, this), 0);
 
@@ -4559,8 +4559,8 @@ var Backbone = Backbone || {};
 
     // Add a public matrix for advanced transformations.
     // Only edit this if you're a *boss*
-    this.matrix = new Two.Matrix();
-    this.matrix.bind(Two.Events.change, updateMatrix);
+    // this.matrix = new Two.Matrix();
+    // this.matrix.bind(Two.Events.change, updateMatrix);
 
     if (!!limited) {
       return this;
