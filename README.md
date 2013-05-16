@@ -57,7 +57,8 @@ node two.js/utils/build
 Nightly
 + Added `remove` and `clear` methods to `two` instance
 + Fixed svg interpretation for `webgl` context
-+ Added matrix property to all `Two.Shape`'s for advanced transformations
++ ~~Added matrix property to all `Two.Shape`'s for advanced transformations~~
++ Added `inverse` method to `Two.Matrix`
 + Remove execution path dependency on utils/build.js [@masonbiler](https://github.com/masonbiler)
 + Added `timeDelta` property to every `two` instance
 + Added gruntfile, package.json for more integration with `npm`, and dependency free build (`build/two.clean.js`) [@iros](https://github.com/iros)
