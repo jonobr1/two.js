@@ -12,8 +12,8 @@
         .identity()
         .translate(this.translation.x, this.translation.y)
         .scale(this.scale)
-        .rotate(this.rotation)
-        .multiply.apply(this._matrix, this.matrix.elements);
+        .rotate(this.rotation);
+        // .multiply.apply(this._matrix, this.matrix.elements);
       this.trigger(Two.Events.change, this.id, 'matrix', transform, this.scale);
     }, this), 0);
 
@@ -49,8 +49,8 @@
 
     // Add a public matrix for advanced transformations.
     // Only edit this if you're a *boss*
-    this.matrix = new Two.Matrix();
-    this.matrix.bind(Two.Events.change, updateMatrix);
+    // this.matrix = new Two.Matrix();
+    // this.matrix.bind(Two.Events.change, updateMatrix);
 
     if (!!limited) {
       return this;
