@@ -17,7 +17,7 @@ var files = [
   path.resolve(__dirname, '../src/shape.js'),
   path.resolve(__dirname, '../src/group.js'),
   path.resolve(__dirname, '../src/polygon.js'),
-  path.resolve(__dirname, '../src/amd.js')
+  path.resolve(__dirname, '../src/export.js')
 ];
 
 new compressor.minify({
