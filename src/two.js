@@ -293,7 +293,7 @@
               return 'm' + str;
             });
             rels[0] = 'M' + rels[0];
-            return rels;
+            return rels.join(' ');
           }));
 
           // Create Two.Polygons from the paths.
@@ -305,16 +305,26 @@
             var coords, relative = false;
             var closed = false;
 
-            var points = _.flatten(_.map(path.match(/[a-z][^a-z]*/ig), function(command) {
+            var points = _.flatten(_.map(path.match(/[a-df-z][^a-df-z]*/ig), function(command) {
 
               var result, x, y;
               var type = command[0];
               var lower = type.toLowerCase();
 
-              coords = command.slice(1).trim().split(/[\s,]+|(?=[+\-])/);
+              coords = command.slice(1).trim();
+              coords = coords.replace(/(-?\d+(?:\.\d*)?)[eE]([+\-]?\d+)/g, function(match, n1, n2) {
+                return parseFloat(n1) * Math.pow(10, n2);
+              });
+              coords = coords.split(/[\s,]+|(?=\s?[+\-])/);
               relative = type === lower;
 
               var x1, y1, x2, y2, x3, y3, x4, y4, reflection;
+
+              var numCoordsPerCommand = { m: 2, l: 2, h: 2, v: 2, c: 6, s: 4, t: 2, q: 4, a: 7 };
+              var numCoords = numCoordsPerCommand[lower]
+              var iterations = parseInt(coords.length / numCoords, 10);
+
+              var results = _.flatten(_.map(_.range(iterations), function(i) {
 
               switch(lower) {
 
@@ -335,6 +345,7 @@
                   }
 
                   coord.copy(result);
+                  relative = true;
                   break;
 
                 case 'h':
@@ -428,8 +439,11 @@
                   throw new Two.Utils.Error('not yet able to interpret Elliptical Arcs.');
               }
 
+              coords = (coords) ? _.rest(coords, numCoords) : [];
               return result;
+              })); 
 
+              return results;
             }));
 
             if (_.isUndefined(points[points.length - 1])) {
