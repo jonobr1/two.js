@@ -253,8 +253,8 @@
             var tag = n.localName.toLowerCase();
 
             if ((tag in Two.Utils.read)) {
-              n = Two.Utils.read[tag].call(this, n);
-              group.add(n);
+              var o = Two.Utils.read[tag].call(this, n);
+              group.add(o);
             }
 
           }, this);
@@ -940,6 +940,29 @@
       }
 
       this.scene.add(objects);
+      return this;
+
+    },
+
+    remove: function(o) {
+
+      var objects = o;
+      if (!_.isArray(o)) {
+        objects = _.toArray(arguments);
+      }
+
+      this.scene.remove(objects);
+
+      return this;
+
+    },
+
+    clear: function() {
+
+      _.each(this.scene.children, function(child) {
+        child.remove();
+      });
+
       return this;
 
     },

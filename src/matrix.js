@@ -88,7 +88,7 @@
 
   });
 
-  _.extend(Matrix.prototype, {
+  _.extend(Matrix.prototype, Backbone.Events, {
 
     /**
      * Takes an array of elements or the arguments list itself to
@@ -108,7 +108,7 @@
         }
       }, this);
 
-      return this;
+      return this.trigger(Two.Events.change);
 
     },
 
@@ -138,7 +138,7 @@
           this.elements[i] = v * a;
         }, this);
 
-        return this;
+        return this.trigger(Two.Events.change);
 
       }
 
@@ -184,7 +184,43 @@
       this.elements[7] = A6 * B1 + A7 * B4 + A8 * B7;
       this.elements[8] = A6 * B2 + A7 * B5 + A8 * B8;
 
-      return this;
+      return this.trigger(Two.Events.change);
+
+    },
+
+    inverse: function(out) {
+
+      var a = this.elements;
+      var out = out || new Two.Matrix();
+
+      var a00 = a[0], a01 = a[1], a02 = a[2],
+        a10 = a[3], a11 = a[4], a12 = a[5],
+        a20 = a[6], a21 = a[7], a22 = a[8],
+
+        b01 = a22 * a11 - a12 * a21,
+        b11 = -a22 * a10 + a12 * a20,
+        b21 = a21 * a10 - a11 * a20,
+
+        // Calculate the determinant
+        det = a00 * b01 + a01 * b11 + a02 * b21;
+
+      if (!det) { 
+        return null; 
+      }
+
+      det = 1.0 / det;
+
+      out.elements[0] = b01 * det;
+      out.elements[1] = (-a22 * a01 + a02 * a21) * det;
+      out.elements[2] = (a12 * a01 - a02 * a11) * det;
+      out.elements[3] = b11 * det;
+      out.elements[4] = (a22 * a00 - a02 * a20) * det;
+      out.elements[5] = (-a12 * a00 + a02 * a10) * det;
+      out.elements[6] = b21 * det;
+      out.elements[7] = (-a21 * a00 + a01 * a20) * det;
+      out.elements[8] = (a11 * a00 - a01 * a10) * det;
+
+      return out;
 
     },
 
