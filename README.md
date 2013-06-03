@@ -55,6 +55,7 @@ node two.js/utils/build
 ## Change Log
 
 Nightly
++ Added AMD loader compatibility @thomasrudin
 + Deferred `two.update();` to account for canvas and webgl
 + Added `remove` and `clear` methods to `two` instance
 + Fixed svg interpretation for `webgl` context
