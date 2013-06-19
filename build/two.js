@@ -3564,6 +3564,7 @@ var Backbone = Backbone || {};
     this.count = 0;
     this.domElement = document.createElement('canvas');
     this.ctx = this.domElement.getContext('2d');
+    this.overdraw = false;
 
     this.elements = [];
 
@@ -3571,12 +3572,6 @@ var Backbone = Backbone || {};
     this.stage = null;
 
   };
-
-  _.extend(Renderer, {
-
-    
-
-  });
 
   _.extend(Renderer, {
 
@@ -3718,7 +3713,9 @@ var Backbone = Backbone || {};
       // var rect = this.stage.object.getBoundingClientRect();
       // this.ctx.clearRect(rect.left, rect.top, rect.width, rect.height);
 
-      this.ctx.clearRect(0, 0, this.width, this.height);
+      if (!this.overdraw) {
+        this.ctx.clearRect(0, 0, this.width, this.height);
+      }
 
       this.stage.render(this.ctx);
 

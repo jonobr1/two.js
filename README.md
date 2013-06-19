@@ -55,6 +55,7 @@ node two.js/utils/build
 ## Change Log
 
 Nightly
++ Added `overdraw` boolean to `canvas` renderer.
 + Added AMD loader compatibility [@thomasrudin](http://github.com/thomasrudin)
 + Deferred `two.update();` to account for canvas and webgl
 + Added `remove` and `clear` methods to `two` instance
