@@ -544,12 +544,16 @@
 
   _.extend(Renderer.prototype, Backbone.Events, CanvasRenderer.prototype, {
 
-    /**
-     * TODO: Support for high dpi rendering like /src/renderers/canvas.js
-     */
     setSize: function(width, height) {
 
       CanvasRenderer.prototype.setSize.apply(this, arguments);
+
+      /**
+       * TODO: Support for high dpi rendering like /src/renderers/canvas.js
+       */
+      this.ratio = 1;
+      this.domElement.width = width;
+      this.domElement.height = height;
 
       this.ctx.viewport(0, 0, width, height);
 
