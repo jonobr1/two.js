@@ -55,7 +55,7 @@ node two.js/utils/build
 ## Change Log
 
 Nightly
-+ Added High DPI support for `canvas` renderer.
++ Added automatic High DPI support for `canvas` renderer.
 + Added `overdraw` boolean to `canvas` renderer.
 + Added AMD loader compatibility [@thomasrudin](http://github.com/thomasrudin)
 + Deferred `two.update();` to account for canvas and webgl
