@@ -1734,7 +1734,7 @@
      * Create an svg namespaced element.
      */
     createElement: function(name, attrs) {
-      var tag = name.toLowerCase();
+      var tag = name;
       var elem = document.createElementNS(this.ns, tag);
       if (tag === 'svg') {
         attrs = _.defaults(attrs || {}, {
@@ -1867,7 +1867,9 @@
 
   _.extend(Renderer, {
 
-    Identifier: 'two-'
+    Identifier: 'two-',
+
+    Utils: svg
 
   });
 
@@ -2095,6 +2097,7 @@
    */
 
   // Localize variables
+  var root = this;
   var getCurveFromPoints = Two.Utils.getCurveFromPoints,
     mod = Two.Utils.mod;
 
@@ -2299,6 +2302,25 @@
   var canvas = {
 
     /**
+     * Account for high dpi rendering.
+     * http://www.html5rocks.com/en/tutorials/canvas/hidpi/
+     */
+
+    devicePixelRatio: root.devicePixelRatio || 1,
+
+    getBackingStoreRatio: function(ctx) {
+      return ctx.webkitBackingStorePixelRatio ||
+        ctx.mozBackingStorePixelRatio ||
+        ctx.msBackingStorePixelRatio ||
+        ctx.oBackingStorePixelRatio ||
+        ctx.backingStorePixelRatio || 1;
+    },
+
+    getRatio: function(ctx) {
+      return this.devicePixelRatio / this.getBackingStoreRatio(ctx);
+    },
+
+    /**
      * Turn a set of vertices into a string for drawing in a canvas.
      */
     toArray: function(points, curved, closed) {
@@ -2348,14 +2370,19 @@
 
   _.extend(Renderer.prototype, Backbone.Events, {
 
-    setSize: function(width, height) {
+    setSize: function(width, height, ratio) {
 
-      this.width = this.domElement.width = width;
-      this.height = this.domElement.height = height;
+      this.width = width;
+      this.height = height;
+
+      this.ratio = _.isUndefined(ratio) ? canvas.getRatio(this.ctx) : ratio;
+
+      this.domElement.width = width * this.ratio;
+      this.domElement.height = height * this.ratio;
 
       _.extend(this.domElement.style, {
-        width: this.width + 'px',
-        height: this.height + 'px'
+        width: width + 'px',
+        height: height + 'px'
       });
 
       return this;
@@ -2472,11 +2499,20 @@
       // var rect = this.stage.object.getBoundingClientRect();
       // this.ctx.clearRect(rect.left, rect.top, rect.width, rect.height);
 
+      if (this.ratio !== 1) {
+        this.ctx.save();
+        this.ctx.scale(this.ratio, this.ratio);
+      }
+
       if (!this.overdraw) {
         this.ctx.clearRect(0, 0, this.width, this.height);
       }
 
       this.stage.render(this.ctx);
+
+      if (this.ratio !== 1) {
+        this.ctx.restore();
+      }
 
       return this;
 
@@ -3117,6 +3153,9 @@
 
   _.extend(Renderer.prototype, Backbone.Events, CanvasRenderer.prototype, {
 
+    /**
+     * TODO: Support for high dpi rendering like /src/renderers/canvas.js
+     */
     setSize: function(width, height) {
 
       CanvasRenderer.prototype.setSize.apply(this, arguments);

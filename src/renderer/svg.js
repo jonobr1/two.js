@@ -19,7 +19,7 @@
      * Create an svg namespaced element.
      */
     createElement: function(name, attrs) {
-      var tag = name.toLowerCase();
+      var tag = name;
       var elem = document.createElementNS(this.ns, tag);
       if (tag === 'svg') {
         attrs = _.defaults(attrs || {}, {
@@ -152,7 +152,9 @@
 
   _.extend(Renderer, {
 
-    Identifier: 'two-'
+    Identifier: 'two-',
+
+    Utils: svg
 
   });
 
