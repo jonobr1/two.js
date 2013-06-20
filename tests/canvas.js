@@ -6,6 +6,9 @@
 
   module('CanvasRenderer');
 
+  var deviceRatio = Two[Two.Types.canvas].Utils.getRatio(document.createElement('canvas').getContext('2d'));
+  var suffix = '@' + deviceRatio + 'x.png';
+
   asyncTest('Two.makeLine', 1, function(o) {
 
     var two = new Two({
@@ -20,7 +23,7 @@
 
       two.render();
 
-      compare.call(o, './images/canvas/line.png', two.renderer, 'Two.makeLine renders properly.');
+      compare.call(o, './images/canvas/line' + suffix, two.renderer, 'Two.makeLine renders properly.');
 
     });
 
@@ -40,7 +43,7 @@
 
       two.render();
 
-      compare.call(o, './images/canvas/rectangle.png', two.renderer, 'Two.makeRectangle renders properly.');
+      compare.call(o, './images/canvas/rectangle' + suffix, two.renderer, 'Two.makeRectangle renders properly.');
 
     });
 
@@ -60,7 +63,7 @@
 
       two.render();
 
-      compare.call(o, './images/canvas/ellipse.png', two.renderer, 'Two.makeEllipse renders properly.');
+      compare.call(o, './images/canvas/ellipse' + suffix, two.renderer, 'Two.makeEllipse renders properly.');
 
     });
 
@@ -81,7 +84,7 @@
 
       two.render();
 
-      compare.call(o, './images/canvas/circle.png', two.renderer, 'Two.makeCircle renders properly.');
+      compare.call(o, './images/canvas/circle' + suffix, two.renderer, 'Two.makeCircle renders properly.');
 
     });
 
@@ -109,7 +112,7 @@
 
       two.render();
 
-      compare.call(o, './images/canvas/polygon.png', two.renderer, 'Two.makePolygon renders properly.');
+      compare.call(o, './images/canvas/polygon' + suffix, two.renderer, 'Two.makePolygon renders properly.');
 
     });
 
@@ -137,7 +140,7 @@
 
       two.render();
 
-      compare.call(o, './images/canvas/curve.png', two.renderer, 'Two.makeCurve renders properly.');
+      compare.call(o, './images/canvas/curve' + suffix, two.renderer, 'Two.makeCurve renders properly.');
 
     });
 
@@ -174,7 +177,7 @@
 
       two.render();
 
-      compare.call(o, './images/canvas/styles.png', two.renderer, 'Styles render properly.');
+      compare.call(o, './images/canvas/styles' + suffix, two.renderer, 'Styles render properly.');
 
     });
 
