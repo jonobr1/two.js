@@ -326,15 +326,15 @@
      */
     clone: function() {
 
-      var a = this.elements[0],
-          b = this.elements[1],
-          c = this.elements[2],
-          d = this.elements[3],
-          e = this.elements[4],
-          f = this.elements[5];
-          g = this.elements[6];
-          h = this.elements[7];
-          i = this.elements[8];
+      var a = this.elements[0];
+      var b = this.elements[1];
+      var c = this.elements[2];
+      var d = this.elements[3];
+      var e = this.elements[4];
+      var f = this.elements[5];
+      var g = this.elements[6];
+      var h = this.elements[7];
+      var i = this.elements[8];
 
       return new Two.Matrix(a, b, c, d, e, f, g, h, i);
 
