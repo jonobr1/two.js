@@ -3354,7 +3354,7 @@ var Backbone = Backbone || {};
       this[k] = v;
     }, this);
 
-    this.children = {};
+    this.children = [];
 
   };
 
@@ -3366,10 +3366,12 @@ var Backbone = Backbone || {};
       var id = elem.id;
 
       if (!_.isUndefined(parent)) {
-        delete parent.children[id];
+        parent.removeChild(elem);
+        // delete parent.children[id];
       }
 
-      this.children[id] = elem;
+      // this.children[id] = elem;
+      this.children.push(elem);
       elem.parent = this;
 
       return this;
@@ -3378,9 +3380,13 @@ var Backbone = Backbone || {};
 
     removeChild: function(elem) {
 
-      delete this.children[elem.id];
+      // delete this.children[elem.id];
+      var index = _.indexOf(this.children, elem)
+      if (index < 0) {
+        return this;
+      }
 
-      return this;
+      return this.children.splice(index, 1)[0];
 
     },
 

@@ -55,6 +55,7 @@ node two.js/utils/build
 ## Change Log
 
 Nightly
++ Fixed hierarchy ordering of `group.children` in `canvas` and `webgl` renderers
 + Fixed shallow and bidirectional `remove` method for `Two.Group` and `Two.Polygon`
 + Added `corner` method to `Two.Group` and `Two.Polygon` allowing anchoring along the upper lefthand corner of the form
 + Modified `center` method of `Two.Group` and `Two.Polygon` to not affect the `translation` property to stay inline with `corner` method and any future orientation and anchoring logic
