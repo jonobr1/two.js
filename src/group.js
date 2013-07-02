@@ -77,7 +77,25 @@
     },
 
     /**
-     * Anchors all children around the center of the group.
+     * Anchor all children to the upper left hand corner
+     * of the group.
+     */
+    corner: function() {
+
+      var rect = this.getBoundingClientRect();
+      var corner = { x: rect.left, y: rect.top };
+
+      _.each(this.children, function(child) {
+        child.translation.subSelf(corner);
+      });
+
+      return this;
+
+    },
+
+    /**
+     * Anchors all children around the center of the group,
+     * effectively placing the shape around the unit circle.
      */
     center: function() {
 
@@ -92,7 +110,7 @@
         child.translation.subSelf(rect.centroid);
       });
 
-      this.translation.copy(rect.centroid);
+      // this.translation.copy(rect.centroid);
 
       return this;
 
@@ -201,6 +219,8 @@
     /**
      * Return an object with top, left, right, bottom, width, and height
      * parameters of the group.
+     *
+     * TODO: Make a shallow and a deep request.
      */
     getBoundingClientRect: function() {
 

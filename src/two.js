@@ -1092,7 +1092,9 @@
 
       var last = arguments[l - 1];
       var poly = new Two.Polygon(points, !(_.isBoolean(last) ? last : undefined));
-      poly.center();
+      var rect = poly.getBoundingClientRect();
+      poly.center().translation
+        .set(rect.left + rect.width / 2, rect.top + rect.height / 2);
 
       this.scene.add(poly);
 

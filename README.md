@@ -55,6 +55,8 @@ node two.js/utils/build
 ## Change Log
 
 Nightly
++ Added `corner` method to `Two.Group` and `Two.Polygon` allowing anchoring along the upper lefthand corner of the form
++ Modified `center` method of `Two.Group` and `Two.Polygon` to not affect the `translation` property to stay inline with `corner` method and any future orientation and anchoring logic
 + Added automatic High DPI support for `canvas` renderer
 + Added `overdraw` boolean to `canvas` renderer
 + Added AMD loader compatibility [@thomasrudin](http://github.com/thomasrudin)

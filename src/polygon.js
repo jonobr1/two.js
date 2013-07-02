@@ -128,6 +128,27 @@
 
     },
 
+    /**
+     * Orient the vertices of the shape to the upper lefthand
+     * corner of the polygon.
+     */
+    corner: function() {
+
+      var rect = this.getBoundingClientRect();
+      var corner = { x: rect.left, y: rect.top };
+
+      _.each(this.vertices, function(v) {
+        v.subSelf(corner);
+      });
+
+      return this;
+
+    },
+
+    /**
+     * Orient the vertices of the shape to the center of the
+     * polygon.
+     */
     center: function() {
 
       var rect = this.getBoundingClientRect();
@@ -141,7 +162,7 @@
         v.subSelf(rect.centroid);
       });
 
-      this.translation.addSelf(rect.centroid);
+      // this.translation.addSelf(rect.centroid);
 
       return this;
 
@@ -162,6 +183,9 @@
 
     },
 
+    /**
+     * TODO: Make a shallow and a deep request.
+     */
     getBoundingClientRect: function() {
 
       var border = this.linewidth;

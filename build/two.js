@@ -2362,7 +2362,9 @@ var Backbone = Backbone || {};
 
       var last = arguments[l - 1];
       var poly = new Two.Polygon(points, !(_.isBoolean(last) ? last : undefined));
-      poly.center();
+      var rect = poly.getBoundingClientRect();
+      poly.center().translation
+        .set(rect.left + rect.width / 2, rect.top + rect.height / 2);
 
       this.scene.add(poly);
 
@@ -4790,7 +4792,25 @@ var Backbone = Backbone || {};
     },
 
     /**
-     * Anchors all children around the center of the group.
+     * Anchor all children to the upper left hand corner
+     * of the group.
+     */
+    corner: function() {
+
+      var rect = this.getBoundingClientRect();
+      var corner = { x: rect.left, y: rect.top };
+
+      _.each(this.children, function(child) {
+        child.translation.subSelf(corner);
+      });
+
+      return this;
+
+    },
+
+    /**
+     * Anchors all children around the center of the group,
+     * effectively placing the shape around the unit circle.
      */
     center: function() {
 
@@ -4805,7 +4825,7 @@ var Backbone = Backbone || {};
         child.translation.subSelf(rect.centroid);
       });
 
-      this.translation.copy(rect.centroid);
+      // this.translation.copy(rect.centroid);
 
       return this;
 
@@ -4914,6 +4934,8 @@ var Backbone = Backbone || {};
     /**
      * Return an object with top, left, right, bottom, width, and height
      * parameters of the group.
+     *
+     * TODO: Make a shallow and a deep request.
      */
     getBoundingClientRect: function() {
 
@@ -5103,6 +5125,27 @@ var Backbone = Backbone || {};
 
     },
 
+    /**
+     * Orient the vertices of the shape to the upper lefthand
+     * corner of the polygon.
+     */
+    corner: function() {
+
+      var rect = this.getBoundingClientRect();
+      var corner = { x: rect.left, y: rect.top };
+
+      _.each(this.vertices, function(v) {
+        v.subSelf(corner);
+      });
+
+      return this;
+
+    },
+
+    /**
+     * Orient the vertices of the shape to the center of the
+     * polygon.
+     */
     center: function() {
 
       var rect = this.getBoundingClientRect();
@@ -5116,7 +5159,7 @@ var Backbone = Backbone || {};
         v.subSelf(rect.centroid);
       });
 
-      this.translation.addSelf(rect.centroid);
+      // this.translation.addSelf(rect.centroid);
 
       return this;
 
@@ -5137,6 +5180,9 @@ var Backbone = Backbone || {};
 
     },
 
+    /**
+     * TODO: Make a shallow and a deep request.
+     */
     getBoundingClientRect: function() {
 
       var border = this.linewidth;
