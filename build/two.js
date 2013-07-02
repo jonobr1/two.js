@@ -4916,6 +4916,7 @@ var Backbone = Backbone || {};
         }
 
         delete children[id];
+        delete object.parent;
         object.unbind(Two.Events.change);
 
         ids.push(id);
