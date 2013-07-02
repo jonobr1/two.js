@@ -119,6 +119,8 @@
       canvas: 'CanvasRenderer'
     },
 
+    Version: 'v0.2.1',
+
     Properties: {
       hierarchy: 'hierarchy',
       demotion: 'demotion'
