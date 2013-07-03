@@ -1,3 +1,4 @@
 *.DS_Store
 */.sass-cache/
-*/bourbon/
+*/bourbon/node_modules
+styles/bourbon/

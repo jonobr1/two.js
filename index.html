@@ -977,10 +977,10 @@ two.bind('update', function(frameCount) {
         </li>
         <li>
           <p class="property function declaration">
-            <strong>getBoundingClientRect</strong> <code>polygon.getBoundingClientRect();</code>
+            <strong>getBoundingClientRect</strong> <code>polygon.getBoundingClientRect(shallow);</code>
           </p>
           <p class="description">
-            Returns an object with top, left, right, bottom, width, and height parameters representing the bounding box of the polygon.
+            Returns an object with top, left, right, bottom, width, and height parameters representing the bounding box of the polygon. Pass <code>true</code> if you&apos;re interested in the shallow positioning, i.e in the space directly affecting the object and not where it is nested.
           </p>
         </li>
         <li>
@@ -1163,10 +1163,10 @@ two.bind('update', function(frameCount) {
         </li>
         <li>
           <p class="property function declaration">
-            <strong>getBoundingClientRect</strong> <code>group.getBoundingClientRect();</code>
+            <strong>getBoundingClientRect</strong> <code>group.getBoundingClientRect(shallow);</code>
           </p>
           <p class="description">
-            Returns an object with top, left, right, bottom, width, and height parameters representing the bounding box of the group.
+            Returns an object with top, left, right, bottom, width, and height parameters representing the bounding box of the polygon. Pass <code>true</code> if you&apos;re interested in the shallow positioning, i.e in the space directly affecting the object and not where it is nested.
           </p>
         </li>
         <li>

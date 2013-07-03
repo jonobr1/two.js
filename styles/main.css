@@ -1,7 +1,7 @@
 /* BASICS */
 .CodeMirror {
   /* Set height, width, borders, and global font properties here */
-  font-family: "Ubuntu Mono", monospace;
+  font-family: 'Ubuntu Mono', monospace;
   height: 600px;
   max-width: 580px;
   padding-right: 8px; }
@@ -323,7 +323,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {
   padding: 0; }
 
 body {
-  font-family: "proxima-nova", helvetica, sans-serif;
+  font-family: 'proxima-nova', helvetica, sans-serif;
   font-size: 1em;
   line-height: 1.5em;
   word-spacing: 0.1875em;
@@ -335,7 +335,7 @@ body {
       background: #eeeeee; } }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: "proxima-nova", helvetica, sans-serif;
+  font-family: 'proxima-nova', helvetica, sans-serif;
   vertical-align: top;
   color: #777777; }
 
@@ -347,7 +347,7 @@ h2 {
       text-align: center; } }
 
 code {
-  font-family: "Ubuntu Mono", monospace; }
+  font-family: 'Ubuntu Mono', monospace; }
 
 p {
   max-width: 580px; }
