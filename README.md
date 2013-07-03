@@ -55,6 +55,7 @@ node two.js/utils/build
 ## Change Log
 
 Nightly
++ Properly recurse `getBoundingClientRect` for both `Two.Group` and `Two.Polygon`
 + Added `Two.Version` to clarify forthcoming builds
 + Fixed hierarchy ordering of `group.children` in `canvas` and `webgl` renderers
 + Fixed shallow and bidirectional `remove` method for `Two.Group` and `Two.Polygon`

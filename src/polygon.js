@@ -134,7 +134,7 @@
      */
     corner: function() {
 
-      var rect = this.getBoundingClientRect();
+      var rect = this.getBoundingClientRect(true);
       var corner = { x: rect.left, y: rect.top };
 
       _.each(this.vertices, function(v) {
@@ -151,7 +151,7 @@
      */
     center: function() {
 
-      var rect = this.getBoundingClientRect();
+      var rect = this.getBoundingClientRect(true);
 
       rect.centroid = {
         x: rect.left + rect.width / 2,
@@ -186,7 +186,7 @@
     /**
      * TODO: Make a shallow and a deep request.
      */
-    getBoundingClientRect: function() {
+    getBoundingClientRect: function(shallow) {
 
       var border = this.linewidth;
       var left = Infinity, right = -Infinity,
@@ -207,8 +207,10 @@
       right += border;
       bottom += border;
 
-      var ul = this._matrix.multiply(left, top, 1);
-      var ll = this._matrix.multiply(right, bottom, 1);
+      var matrix = !!shallow ? this._matrix : Two.Utils.getComputedMatrix(this);
+
+      var ul = matrix.multiply(left, top, 1);
+      var ll = matrix.multiply(right, bottom, 1);
 
       return {
         top: ul.y,

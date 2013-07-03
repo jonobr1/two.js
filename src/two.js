@@ -174,6 +174,25 @@
 
       },
 
+      /**
+       * Return the computed matrix of a nested object.
+       */
+      getComputedMatrix: function(object) {
+
+        var matrix = new Two.Matrix();
+        var parent = object;
+
+        while (parent && parent._matrix) {
+          var e = parent._matrix.elements;
+          matrix.multiply(
+            e[0], e[1], e[2], e[3], e[4], e[5], e[6], e[7], e[8], e[9]);
+          parent = parent.parent;
+        }
+
+        return matrix;
+
+      },
+
       applySvgAttributes: function(node, elem) {
 
         elem.cap = 'butt';

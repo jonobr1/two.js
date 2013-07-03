@@ -82,7 +82,7 @@
      */
     corner: function() {
 
-      var rect = this.getBoundingClientRect();
+      var rect = this.getBoundingClientRect(true);
       var corner = { x: rect.left, y: rect.top };
 
       _.each(this.children, function(child) {
@@ -99,7 +99,7 @@
      */
     center: function() {
 
-      var rect = this.getBoundingClientRect();
+      var rect = this.getBoundingClientRect(true);
 
       rect.centroid = {
         x: rect.left + rect.width / 2,
@@ -223,14 +223,14 @@
      *
      * TODO: Make a shallow and a deep request.
      */
-    getBoundingClientRect: function() {
+    getBoundingClientRect: function(shallow) {
 
       var left = Infinity, right = -Infinity,
         top = Infinity, bottom = -Infinity;
 
       _.each(this.children, function(child) {
 
-        var rect = child.getBoundingClientRect();
+        var rect = child.getBoundingClientRect(true);
 
         if (!top || !left || !right || !bottom) {
           return;
@@ -243,8 +243,10 @@
 
       }, this);
 
-      var ul = this._matrix.multiply(left, top, 1);
-      var ll = this._matrix.multiply(right, bottom, 1);
+      var matrix = !!shallow ? this._matrix : Two.Utils.getComputedMatrix(this);
+
+      var ul = matrix.multiply(left, top, 1);
+      var ll = matrix.multiply(right, bottom, 1);
 
       return {
         top: ul.y,

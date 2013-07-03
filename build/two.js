@@ -1389,6 +1389,8 @@ var Backbone = Backbone || {};
       canvas: 'CanvasRenderer'
     },
 
+    Version: 'v0.2.1',
+
     Properties: {
       hierarchy: 'hierarchy',
       demotion: 'demotion'
@@ -1439,6 +1441,25 @@ var Backbone = Backbone || {};
         _.defer(_.bind(function() {
           this.playing = !!b;
         }, this));
+
+      },
+
+      /**
+       * Return the computed matrix of a nested object.
+       */
+      getComputedMatrix: function(object) {
+
+        var matrix = new Two.Matrix();
+        var parent = object;
+
+        while (parent && parent._matrix) {
+          var e = parent._matrix.elements;
+          matrix.multiply(
+            e[0], e[1], e[2], e[3], e[4], e[5], e[6], e[7], e[8], e[9]);
+          parent = parent.parent;
+        }
+
+        return matrix;
 
       },
 
@@ -4803,7 +4824,7 @@ var Backbone = Backbone || {};
      */
     corner: function() {
 
-      var rect = this.getBoundingClientRect();
+      var rect = this.getBoundingClientRect(true);
       var corner = { x: rect.left, y: rect.top };
 
       _.each(this.children, function(child) {
@@ -4820,7 +4841,7 @@ var Backbone = Backbone || {};
      */
     center: function() {
 
-      var rect = this.getBoundingClientRect();
+      var rect = this.getBoundingClientRect(true);
 
       rect.centroid = {
         x: rect.left + rect.width / 2,
@@ -4944,14 +4965,14 @@ var Backbone = Backbone || {};
      *
      * TODO: Make a shallow and a deep request.
      */
-    getBoundingClientRect: function() {
+    getBoundingClientRect: function(shallow) {
 
       var left = Infinity, right = -Infinity,
         top = Infinity, bottom = -Infinity;
 
       _.each(this.children, function(child) {
 
-        var rect = child.getBoundingClientRect();
+        var rect = child.getBoundingClientRect(true);
 
         if (!top || !left || !right || !bottom) {
           return;
@@ -4964,8 +4985,10 @@ var Backbone = Backbone || {};
 
       }, this);
 
-      var ul = this._matrix.multiply(left, top, 1);
-      var ll = this._matrix.multiply(right, bottom, 1);
+      var matrix = !!shallow ? this._matrix : Two.Utils.getComputedMatrix(this);
+
+      var ul = matrix.multiply(left, top, 1);
+      var ll = matrix.multiply(right, bottom, 1);
 
       return {
         top: ul.y,
@@ -5138,7 +5161,7 @@ var Backbone = Backbone || {};
      */
     corner: function() {
 
-      var rect = this.getBoundingClientRect();
+      var rect = this.getBoundingClientRect(true);
       var corner = { x: rect.left, y: rect.top };
 
       _.each(this.vertices, function(v) {
@@ -5155,7 +5178,7 @@ var Backbone = Backbone || {};
      */
     center: function() {
 
-      var rect = this.getBoundingClientRect();
+      var rect = this.getBoundingClientRect(true);
 
       rect.centroid = {
         x: rect.left + rect.width / 2,
@@ -5190,7 +5213,7 @@ var Backbone = Backbone || {};
     /**
      * TODO: Make a shallow and a deep request.
      */
-    getBoundingClientRect: function() {
+    getBoundingClientRect: function(shallow) {
 
       var border = this.linewidth;
       var left = Infinity, right = -Infinity,
@@ -5211,8 +5234,10 @@ var Backbone = Backbone || {};
       right += border;
       bottom += border;
 
-      var ul = this._matrix.multiply(left, top, 1);
-      var ll = this._matrix.multiply(right, bottom, 1);
+      var matrix = !!shallow ? this._matrix : Two.Utils.getComputedMatrix(this);
+
+      var ul = matrix.multiply(left, top, 1);
+      var ll = matrix.multiply(right, bottom, 1);
 
       return {
         top: ul.y,
