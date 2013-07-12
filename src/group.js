@@ -140,7 +140,9 @@
       // Add the objects
 
       _.each(objects, function(object) {
-
+        if (!object) {
+          return;
+        }
         var id = object.id, parent = object.parent;
 
         if (_.isUndefined(id)) {
