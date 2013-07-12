@@ -316,6 +316,9 @@
         polygon: function(node, open) {
 
           var points = node.points;
+          if (!points) {
+            return;
+          }
           var verts = _.map(_.range(points.numberOfItems), function(i) {
             var p = points.getItem(i);
             return new Two.Vector(p.x, p.y);
@@ -3641,7 +3644,9 @@
       // Add the objects
 
       _.each(objects, function(object) {
-
+        if (!object) {
+          return;
+        }
         var id = object.id, parent = object.parent;
 
         if (_.isUndefined(id)) {
