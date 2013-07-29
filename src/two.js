@@ -852,6 +852,23 @@
 
       },
 
+      /**
+       * Array like collection that triggers inserted and removed events 
+       * removed : pop / shift / splice
+       * inserted : push / unshift / splice (with >2 arguments)
+       */
+
+      Collection: function() {
+        Array.call(this);
+        
+        if(arguments.length > 1) {
+          Array.prototype.push.apply(this, arguments);
+        } else if( arguments[0] && Array.isArray(arguments[0]) ) {
+          Array.prototype.push.apply(this, arguments[0]);
+        }
+
+      },
+
       // Custom Error Throwing for Two.js
 
       Error: function(message) {
@@ -859,12 +876,59 @@
         this.message = message;
       }
 
+
+
     }
 
   });
 
   Two.Utils.Error.prototype = new Error();
   Two.Utils.Error.prototype.constructor = Two.Utils.Error;
+
+  // Prototype overides for Array like collection 
+  Two.Utils.Collection.prototype = new Array();
+  Two.Utils.Collection.constructor = Two.Utils.Collection;
+
+  _.extend(Two.Utils.Collection.prototype, Backbone.Events, {
+    
+    pop: function() {
+      var popped = Array.prototype.pop.apply(this, arguments);
+      this.trigger("removed", [popped]);
+      return popped;
+    },
+
+    shift: function() {
+      var shifted = Array.prototype.shift.apply(this, arguments);
+      this.trigger("removed", [shifted]);
+      return shifted;
+    },
+
+    push: function() {
+      var pushed = Array.prototype.push.apply(this, arguments);
+      this.trigger("inserted", arguments);
+      return pushed;
+    },
+
+    unshift: function() {
+      var unshifted = Array.prototype.unshift.apply(this, arguments);
+      this.trigger("inserted", arguments);
+      return unshifted;
+    },
+
+    splice: function() {
+      var spliced = Array.prototype.splice.apply(this, arguments);
+      var inserted;
+
+      this.trigger("removed", spliced);
+
+      if(arguments.length > 2) {
+        inserted = this.slice(arguments[0], arguments.length-2);
+        this.trigger("inserted", inserted);
+      }
+      return spliced;
+    }
+
+  });
 
   // Localize utils
 
