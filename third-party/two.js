@@ -2158,7 +2158,6 @@ var Backbone = Backbone || {};
   Two.Utils.Error.prototype = new Error();
   Two.Utils.Error.prototype.constructor = Two.Utils.Error;
 
-  // Prototype overides for Array like collection 
   Two.Utils.Collection.prototype = new Array();
   Two.Utils.Collection.constructor = Two.Utils.Collection;
 
@@ -2537,7 +2536,6 @@ var Backbone = Backbone || {};
 
   })();
 
-
   //exports to multiple environments
   if (typeof define === 'function' && define.amd)
   //AMD
@@ -2545,7 +2543,6 @@ var Backbone = Backbone || {};
   else if (typeof module != "undefined" && module.exports)
   //Node
   module.exports = Two;
-
 
 })();
 
@@ -5143,6 +5140,7 @@ var Backbone = Backbone || {};
         }
 
       }
+
 
       this.trigger(Two.Events.change,
         this.id, 'vertices', renderedVertices, closed, curved, strokeChanged);
