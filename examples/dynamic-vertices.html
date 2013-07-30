@@ -49,13 +49,39 @@
               .unbind('mouseup', dragEnd);
           };
 
-          $(window).bind('mousedown', function(e) {
-            mouse.set(e.clientX, e.clientY);
-            line = null;
+          var touchDrag = function(e) {
+            var touch = e.originalEvent.changedTouches[0];
+            drag({
+              clientX: touch.pageX,
+              clientY: touch.pageY
+            });
+            return false;
+          };
+
+          var touchEnd = function() {
             $(window)
-              .bind('mousemove', drag)
-              .bind('mouseup', dragEnd);
-          });
+              .unbind('touchmove', touchDrag)
+              .unbind('touchend', touchEnd);
+            return false;
+          };
+
+          $(window)
+            .bind('mousedown', function(e) {
+              mouse.set(e.clientX, e.clientY);
+              line = null;
+              $(window)
+                .bind('mousemove', drag)
+                .bind('mouseup', dragEnd);
+            })
+            .bind('touchstart', function(e) {
+              var touch = e.originalEvent.changedTouches[0];
+              mouse.set(touch.x, touch.y);
+              line = null;
+              $(window)
+                .bind('touchmove', touchDrag)
+                .bind('touchend', touchEnd);
+              return false;
+            });
 
           two.bind('update', function(frameCount, timeDelta) {
             _.each(two.scene.children, function(child) {
