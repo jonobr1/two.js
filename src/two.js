@@ -888,7 +888,6 @@
   Two.Utils.Error.prototype = new Error();
   Two.Utils.Error.prototype.constructor = Two.Utils.Error;
 
-  // Prototype overides for Array like collection 
   Two.Utils.Collection.prototype = new Array();
   Two.Utils.Collection.constructor = Two.Utils.Collection;
 
