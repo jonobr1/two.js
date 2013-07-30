@@ -75,7 +75,7 @@
             })
             .bind('touchstart', function(e) {
               var touch = e.originalEvent.changedTouches[0];
-              mouse.set(touch.x, touch.y);
+              mouse.set(touch.pageX, touch.pageY);
               line = null;
               $(window)
                 .bind('touchmove', touchDrag)
