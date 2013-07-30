@@ -917,7 +917,6 @@
   Two.Utils.Error.prototype = new Error();
   Two.Utils.Error.prototype.constructor = Two.Utils.Error;
 
-  // Prototype overides for Array like collection 
   Two.Utils.Collection.prototype = new Array();
   Two.Utils.Collection.constructor = Two.Utils.Collection;
 
@@ -1296,15 +1295,13 @@
 
   })();
 
-
   //exports to multiple environments
   if (typeof define === 'function' && define.amd)
-	//AMD
-	define(function(){ return Two; });
+  //AMD
+  define(function(){ return Two; });
   else if (typeof module != "undefined" && module.exports)
-	//Node
-	module.exports = Two;
-
+  //Node
+  module.exports = Two;
 
 })();
 
@@ -3879,8 +3876,8 @@
     var ending = 1.0;
     var strokeChanged = false;
     var verticesChanged = false;
-    var verticesCollection = new Two.Utils.Collection();
-    var renderedVertices = vertices.slice(0);
+    var verticesCollection;
+    var renderedVertices = [];
 
     var updateVertices = _.debounce(_.bind(function(property) { // Call only once a frame.
 
@@ -3898,7 +3895,7 @@
 
         for (var i = ia; i < ib + 1; i++) {
           var v = verticesCollection[i];
-          renderedVertices.push(new Two.Vector(v.x, v.y));
+          renderedVertices.push(v);
         }
 
       }

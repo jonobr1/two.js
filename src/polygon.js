@@ -21,8 +21,8 @@
     var ending = 1.0;
     var strokeChanged = false;
     var verticesChanged = false;
-    var verticesCollection = new Two.Utils.Collection();
-    var renderedVertices = vertices.slice(0);
+    var verticesCollection;
+    var renderedVertices = [];
 
     var updateVertices = _.debounce(_.bind(function(property) { // Call only once a frame.
 
@@ -40,7 +40,7 @@
 
         for (var i = ia; i < ib + 1; i++) {
           var v = verticesCollection[i];
-          renderedVertices.push(new Two.Vector(v.x, v.y));
+          renderedVertices.push(v);
         }
 
       }
