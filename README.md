@@ -55,7 +55,7 @@ node two.js/utils/build
 ## Change Log
 
 Nightly
-+ Created `Two.Utils.Collection` an observable array class that `polygon.vertices` inherit [@fchasen](http://github.com/fchasen)
++ Created `Two.Utils.Collection` an observable array-like class that `polygon.vertices` inherit [@fchasen](http://github.com/fchasen)
 + Added `Two.Events.insert` and `Two.Events.remove` for use with `Two.Utils.Collection`
 + Properly recurses `getBoundingClientRect` for both `Two.Group` and `Two.Polygon`
 + Added `Two.Version` to clarify forthcoming builds
