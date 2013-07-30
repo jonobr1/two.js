@@ -200,3 +200,52 @@ test('Two.Matrix', 10, function() {
   deepEqual(clone.elements, matrix.elements, 'Two.Matrix.clone applies elements properly.');
 
 });
+
+module('Utils');
+
+test('Two.Utils.Collection', 12, function() {
+
+  var poly = new Two.Polygon([new Two.Vector(0, 0)]);
+  var vector = new Two.Vector(150, 150);
+  var vertices = poly.vertices;
+  var removed;
+
+  equal(vertices instanceof Two.Utils.Collection, true, 'Polyon.vertices is an instance of Two.Utils.Collection');
+
+  equal(vertices[0].equals(new Two.Vector(0, 0)), true, 'Two.Utils.Collection created with correct items');
+
+  vertices.push(vector);
+  equal(vertices.length, 2, 'Two.Utils.Collection.push added one item to the end of vertices collection');
+
+  removed = vertices.pop();
+  equal(vertices.length, 1, 'Two.Utils.Collection.pop removed one item from the end of the vertices collection');
+  equal(removed.equals(vector), true, 'Two.Utils.Collection.push removed the correct item');
+
+  // Clear removed to reuse
+  removed = null;
+
+  vertices.unshift(vector);
+  equal(vertices.length, 2, 'Two.Utils.Collection.unshift added one item to the front of the vertices collection');
+
+  removed = vertices.shift();
+  equal(vertices.length, 1, 'Two.Utils.Collection.shift removed one item from the front of the vertices collection');
+  equal(removed.equals(vector), true, 'Two.Utils.Collection.shift removed the correct item');
+
+  // Clear removed to reuse
+  removed = null;
+
+  vertices.push(
+    new Two.Vector(1, 1),
+    new Two.Vector(2, 2),
+    new Two.Vector(3, 3),
+    new Two.Vector(4, 4)
+  );
+
+  equal(vertices.length, 5, 'Two.Utils.Collection.push adds several items to the end of vertices collection');
+
+  removed = vertices.splice(2, 1, vector);
+  equal(vertices.length, 5, 'Two.Utils.Collection.slice adds and removes items from the vertices collection');
+  equal(removed[0].equals(new Two.Vector(2, 2)), true, 'Two.Utils.Collection.slice remove the correct items from the vertices collection');
+  equal(vertices[2].equals(vector), true, 'Two.Utils.Collection.slice insertes correct item to the middle of the vertices collection');
+
+});
