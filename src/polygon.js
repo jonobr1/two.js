@@ -16,7 +16,7 @@
 
     closed = !!closed;
     curved = !!curved;
-    
+
     var beginning = 0.0;
     var ending = 1.0;
     var strokeChanged = false;
@@ -51,7 +51,7 @@
 
       strokeChanged = false;
       verticesChanged = false;
-      
+
     }, this), 0);
 
     Object.defineProperty(this, 'closed', {
@@ -97,56 +97,56 @@
     });
 
     Object.defineProperty(this, 'vertices', {
+
       get: function() {
         return verticesCollection;
       },
+
       set: function(vertices) {
-        var polygon = this,
-            bindVerts = function(items) {
-          
-              _.each(items, function(v) {
 
-                v.bind(Two.Events.change, updateVertices);
+        var bindVerts = _.bind(function(items) {
 
-              }, polygon);
+          _.each(items, function(v) {
+            v.bind(Two.Events.change, updateVertices);
+          }, this);
 
-              verticesChanged = true; // Update rendered Vertices
-              updateVertices();
+          verticesChanged = true; // Update rendered Vertices
+          updateVertices();
 
-            },
-            unbindVerts = function(items) {
-          
-              _.each(items, function(v) {
+        }, this);
 
-                v.unbind(Two.Events.change, updateVertices);
+        var unbindVerts = _.bind(function(items) {
 
-              }, polygon);
+          _.each(items, function(v) {
+            v.unbind(Two.Events.change, updateVertices);
+          }, this);
 
-              verticesChanged = true; // Update rendered Vertices
-              updateVertices();
+          verticesChanged = true; // Update rendered Vertices
+          updateVertices();
 
-            };
+        }, this);
 
         // Remove previous listeners
         if(verticesCollection) {
-          verticesCollection.off();
+          verticesCollection.unbind();
         }
 
         // Create new Collection with copy of vertices
         verticesCollection = new Two.Utils.Collection(vertices.slice(0));
 
         // Listen for Collection changes and bind / unbind
-        verticesCollection.on("inserted", bindVerts);
-        verticesCollection.on("removed",  unbindVerts);
-        
-        // Bind Initial Vertices 
+        verticesCollection.bind(Two.Events.insert, bindVerts);
+        verticesCollection.bind(Two.Events.remove, unbindVerts);
+
+        // Bind Initial Vertices
         verticesChanged = true;
         bindVerts(verticesCollection);
 
       }
+
     });
 
-    this.vertices = vertices;    
+    this.vertices = vertices;
 
   };
 

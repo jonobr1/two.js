@@ -1402,7 +1402,9 @@ var Backbone = Backbone || {};
       update: 'update',
       render: 'render',
       resize: 'resize',
-      change: 'change'
+      change: 'change',
+      remove: 'remove',
+      insert: 'insert'
     },
 
     Resolution: 8,
@@ -2122,6 +2124,24 @@ var Backbone = Backbone || {};
 
       },
 
+      /**
+       * Array like collection that triggers inserted and removed events 
+       * removed : pop / shift / splice
+       * inserted : push / unshift / splice (with > 2 arguments)
+       */
+
+      Collection: function() {
+
+        Array.call(this);
+
+        if(arguments.length > 1) {
+          Array.prototype.push.apply(this, arguments);
+        } else if( arguments[0] && Array.isArray(arguments[0]) ) {
+          Array.prototype.push.apply(this, arguments[0]);
+        }
+
+      },
+
       // Custom Error Throwing for Two.js
 
       Error: function(message) {
@@ -2129,12 +2149,59 @@ var Backbone = Backbone || {};
         this.message = message;
       }
 
+
+
     }
 
   });
 
   Two.Utils.Error.prototype = new Error();
   Two.Utils.Error.prototype.constructor = Two.Utils.Error;
+
+  // Prototype overides for Array like collection 
+  Two.Utils.Collection.prototype = new Array();
+  Two.Utils.Collection.constructor = Two.Utils.Collection;
+
+  _.extend(Two.Utils.Collection.prototype, Backbone.Events, {
+
+    pop: function() {
+      var popped = Array.prototype.pop.apply(this, arguments);
+      this.trigger(Two.Events.remove, [popped]);
+      return popped;
+    },
+
+    shift: function() {
+      var shifted = Array.prototype.shift.apply(this, arguments);
+      this.trigger(Two.Events.remove, [shifted]);
+      return shifted;
+    },
+
+    push: function() {
+      var pushed = Array.prototype.push.apply(this, arguments);
+      this.trigger(Two.Events.insert, arguments);
+      return pushed;
+    },
+
+    unshift: function() {
+      var unshifted = Array.prototype.unshift.apply(this, arguments);
+      this.trigger(Two.Events.insert, arguments);
+      return unshifted;
+    },
+
+    splice: function() {
+      var spliced = Array.prototype.splice.apply(this, arguments);
+      var inserted;
+
+      this.trigger(Two.Events.remove, spliced);
+
+      if(arguments.length > 2) {
+        inserted = this.slice(arguments[0], arguments.length-2);
+        this.trigger(Two.Events.insert, inserted);
+      }
+      return spliced;
+    }
+
+  });
 
   // Localize utils
 
@@ -5048,19 +5115,21 @@ var Backbone = Backbone || {};
 
     closed = !!closed;
     curved = !!curved;
-    
+
     var beginning = 0.0;
     var ending = 1.0;
     var strokeChanged = false;
+    var verticesChanged = false;
+    var verticesCollection = new Two.Utils.Collection();
     var renderedVertices = vertices.slice(0);
 
     var updateVertices = _.debounce(_.bind(function(property) { // Call only once a frame.
 
       var l, ia, ib, last;
 
-      if (strokeChanged) {
+      if (strokeChanged || verticesChanged) {
 
-        l = this.vertices.length;
+        l = verticesCollection.length;
         last = l - 1;
 
         ia = round((beginning) * last);
@@ -5069,16 +5138,18 @@ var Backbone = Backbone || {};
         renderedVertices.length = 0;
 
         for (var i = ia; i < ib + 1; i++) {
-          var v = this.vertices[i];
+          var v = verticesCollection[i];
           renderedVertices.push(new Two.Vector(v.x, v.y));
         }
 
       }
 
+
       this.trigger(Two.Events.change,
         this.id, 'vertices', renderedVertices, closed, curved, strokeChanged);
 
       strokeChanged = false;
+      verticesChanged = false;
 
     }, this), 0);
 
@@ -5124,17 +5195,57 @@ var Backbone = Backbone || {};
       }
     });
 
-    // At the moment cannot alter the array itself, just it's points.
+    Object.defineProperty(this, 'vertices', {
 
-    this.vertices = vertices.slice(0);
+      get: function() {
+        return verticesCollection;
+      },
 
-    _.each(this.vertices, function(v) {
+      set: function(vertices) {
 
-      v.bind(Two.Events.change, updateVertices);
+        var bindVerts = _.bind(function(items) {
 
-    }, this);
+          _.each(items, function(v) {
+            v.bind(Two.Events.change, updateVertices);
+          }, this);
 
-    updateVertices();
+          verticesChanged = true; // Update rendered Vertices
+          updateVertices();
+
+        }, this);
+
+        var unbindVerts = _.bind(function(items) {
+
+          _.each(items, function(v) {
+            v.unbind(Two.Events.change, updateVertices);
+          }, this);
+
+          verticesChanged = true; // Update rendered Vertices
+          updateVertices();
+
+        }, this);
+
+        // Remove previous listeners
+        if(verticesCollection) {
+          verticesCollection.unbind();
+        }
+
+        // Create new Collection with copy of vertices
+        verticesCollection = new Two.Utils.Collection(vertices.slice(0));
+
+        // Listen for Collection changes and bind / unbind
+        verticesCollection.bind(Two.Events.insert, bindVerts);
+        verticesCollection.bind(Two.Events.remove, unbindVerts);
+
+        // Bind Initial Vertices
+        verticesChanged = true;
+        bindVerts(verticesCollection);
+
+      }
+
+    });
+
+    this.vertices = vertices;
 
   };
 
@@ -5256,5 +5367,6 @@ var Backbone = Backbone || {};
     }
 
   });
+
 
 })();

@@ -132,7 +132,9 @@
       update: 'update',
       render: 'render',
       resize: 'resize',
-      change: 'change'
+      change: 'change',
+      remove: 'remove',
+      insert: 'insert'
     },
 
     Resolution: 8,
@@ -855,12 +857,13 @@
       /**
        * Array like collection that triggers inserted and removed events 
        * removed : pop / shift / splice
-       * inserted : push / unshift / splice (with >2 arguments)
+       * inserted : push / unshift / splice (with > 2 arguments)
        */
 
       Collection: function() {
+
         Array.call(this);
-        
+
         if(arguments.length > 1) {
           Array.prototype.push.apply(this, arguments);
         } else if( arguments[0] && Array.isArray(arguments[0]) ) {
@@ -890,28 +893,28 @@
   Two.Utils.Collection.constructor = Two.Utils.Collection;
 
   _.extend(Two.Utils.Collection.prototype, Backbone.Events, {
-    
+
     pop: function() {
       var popped = Array.prototype.pop.apply(this, arguments);
-      this.trigger("removed", [popped]);
+      this.trigger(Two.Events.remove, [popped]);
       return popped;
     },
 
     shift: function() {
       var shifted = Array.prototype.shift.apply(this, arguments);
-      this.trigger("removed", [shifted]);
+      this.trigger(Two.Events.remove, [shifted]);
       return shifted;
     },
 
     push: function() {
       var pushed = Array.prototype.push.apply(this, arguments);
-      this.trigger("inserted", arguments);
+      this.trigger(Two.Events.insert, arguments);
       return pushed;
     },
 
     unshift: function() {
       var unshifted = Array.prototype.unshift.apply(this, arguments);
-      this.trigger("inserted", arguments);
+      this.trigger(Two.Events.insert, arguments);
       return unshifted;
     },
 
@@ -919,11 +922,11 @@
       var spliced = Array.prototype.splice.apply(this, arguments);
       var inserted;
 
-      this.trigger("removed", spliced);
+      this.trigger(Two.Events.remove, spliced);
 
       if(arguments.length > 2) {
         inserted = this.slice(arguments[0], arguments.length-2);
-        this.trigger("inserted", inserted);
+        this.trigger(Two.Events.insert, inserted);
       }
       return spliced;
     }
