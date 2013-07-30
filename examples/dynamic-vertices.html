@@ -3,7 +3,7 @@
   <head>
     <title>Two.js: Dynamic Vertices</title>
     <meta charset="utf-8">
-    <meta name="viewport" content="user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <link rel="shortcut icon" type="image/gif" href="../images/favicon.gif">
     <script src="../third-party/jquery.js"></script>
     <script src="../third-party/two.js"></script>
@@ -50,6 +50,7 @@
           };
 
           var touchDrag = function(e) {
+            e.preventDefault();
             var touch = e.originalEvent.changedTouches[0];
             drag({
               clientX: touch.pageX,
@@ -58,7 +59,8 @@
             return false;
           };
 
-          var touchEnd = function() {
+          var touchEnd = function(e) {
+            e.preventDefault();
             $(window)
               .unbind('touchmove', touchDrag)
               .unbind('touchend', touchEnd);
@@ -74,6 +76,7 @@
                 .bind('mouseup', dragEnd);
             })
             .bind('touchstart', function(e) {
+              e.preventDefault();
               var touch = e.originalEvent.changedTouches[0];
               mouse.set(touch.pageX, touch.pageY);
               line = null;
