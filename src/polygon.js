@@ -20,15 +20,17 @@
     var beginning = 0.0;
     var ending = 1.0;
     var strokeChanged = false;
+    var verticesChanged = false;
+    var verticesCollection = new Two.Utils.Collection();
     var renderedVertices = vertices.slice(0);
 
     var updateVertices = _.debounce(_.bind(function(property) { // Call only once a frame.
 
       var l, ia, ib, last;
 
-      if (strokeChanged) {
+      if (strokeChanged || verticesChanged) {
 
-        l = this.vertices.length;
+        l = verticesCollection.length;
         last = l - 1;
 
         ia = round((beginning) * last);
@@ -37,17 +39,19 @@
         renderedVertices.length = 0;
 
         for (var i = ia; i < ib + 1; i++) {
-          var v = this.vertices[i];
+          var v = verticesCollection[i];
           renderedVertices.push(new Two.Vector(v.x, v.y));
         }
 
       }
 
+
       this.trigger(Two.Events.change,
         this.id, 'vertices', renderedVertices, closed, curved, strokeChanged);
 
       strokeChanged = false;
-
+      verticesChanged = false;
+      
     }, this), 0);
 
     Object.defineProperty(this, 'closed', {
@@ -92,17 +96,57 @@
       }
     });
 
-    // At the moment cannot alter the array itself, just it's points.
+    Object.defineProperty(this, 'vertices', {
+      get: function() {
+        return verticesCollection;
+      },
+      set: function(vertices) {
+        var polygon = this,
+            bindVerts = function(items) {
+          
+              _.each(items, function(v) {
 
-    this.vertices = vertices.slice(0);
+                v.bind(Two.Events.change, updateVertices);
 
-    _.each(this.vertices, function(v) {
+              }, polygon);
 
-      v.bind(Two.Events.change, updateVertices);
+              verticesChanged = true; // Update rendered Vertices
+              updateVertices();
 
-    }, this);
+            },
+            unbindVerts = function(items) {
+          
+              _.each(items, function(v) {
 
-    updateVertices();
+                v.unbind(Two.Events.change, updateVertices);
+
+              }, polygon);
+
+              verticesChanged = true; // Update rendered Vertices
+              updateVertices();
+
+            };
+
+        // Remove previous listeners
+        if(verticesCollection) {
+          verticesCollection.off();
+        }
+
+        // Create new Collection with copy of vertices
+        verticesCollection = new Two.Utils.Collection(vertices.slice(0));
+
+        // Listen for Collection changes and bind / unbind
+        verticesCollection.on("inserted", bindVerts);
+        verticesCollection.on("removed",  unbindVerts);
+        
+        // Bind Initial Vertices 
+        verticesChanged = true;
+        bindVerts(verticesCollection);
+
+      }
+    });
+
+    this.vertices = vertices;    
 
   };
 
@@ -224,5 +268,6 @@
     }
 
   });
+
 
 })();
