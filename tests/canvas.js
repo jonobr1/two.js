@@ -199,7 +199,7 @@
 
           var pct = parseFloat(data.misMatchPercentage);
 
-          ok(pct <= 0, message);
+          ok(pct <= .5, message);
           start();
 
           var img = document.createElement('img');
@@ -227,9 +227,22 @@
   function getFile(path, callback) {
     var xhr = new XMLHttpRequest();
     xhr.open('GET', path, true);
-    xhr.responseType = 'blob';
+
+    if(window.URL) {
+      xhr.responseType = 'blob';
+    } else {
+      xhr.responseType = 'arraybuffer';
+    }
+
     xhr.onload = function(e) {
-      callback(this.response);
+      
+      if(window.URL) {
+        callback(this.response);
+      } else {
+        //-- Safari doesn't support responseType blob, so create a blob from arraybuffer
+        callback(new Blob([this.response], { "type" : 'image/png' }));
+      }
+            
     };
     xhr.send();
   }
