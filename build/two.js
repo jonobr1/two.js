@@ -2553,13 +2553,17 @@ var Backbone = Backbone || {};
     x = x || 0;
     y = y || 0;
 
+    this.broadcast = false;
+
     Object.defineProperty(this, 'x', {
       get: function() {
         return x;
       },
       set: function(v) {
         x = v;
-        this.trigger(Two.Events.change, 'x');
+        if (this.broadcast) {
+          this.trigger(Two.Events.change, 'x');
+        }
       }
     });
 
@@ -2569,7 +2573,9 @@ var Backbone = Backbone || {};
       },
       set: function(v) {
         y = v;
-        this.trigger(Two.Events.change, 'y');
+        if (this.broadcast) {
+          this.trigger(Two.Events.change, 'y');
+        }
       }
     });
 
@@ -2697,6 +2703,21 @@ var Backbone = Backbone || {};
     }
 
   });
+
+  /**
+   * Override Backbone bind / on in order to add properly broadcasting.
+   * This allows Two.Vector to not broadcast events unless bound to it
+   * explicity.
+   */
+
+    Two.Vector.prototype.bind = Two.Vector.prototype.on = function() {
+
+      this.broadcast = true;
+      Backbone.Events.bind.apply(this, arguments);
+
+      return this;
+
+    };
 
 })();
 (function() {
