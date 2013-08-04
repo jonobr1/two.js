@@ -193,32 +193,29 @@
 
     getFile(path, function(reference) {
 
-      renderer.domElement.toBlob(function(data) {
+      var data = renderer.domElement.toDataURL('image/png');
+      resemble(reference).compareTo(data).onComplete(function(data) {
 
-        resemble(reference).compareTo(data).onComplete(function(data) {
+        var pct = parseFloat(data.misMatchPercentage);
 
-          var pct = parseFloat(data.misMatchPercentage);
+        ok(pct <= 1, message);
+        start();
 
-          ok(pct <= .5, message);
-          start();
+        var img = document.createElement('img');
+        img.src = path;
+        img.title = 'Reference Image';
 
-          var img = document.createElement('img');
-          img.src = path;
-          img.title = 'Reference Image';
+        var domElement = document.createElement('li');
+        renderer.domElement.title = 'Computed Image';
 
-          var domElement = document.createElement('li');
-          renderer.domElement.title = 'Computed Image';
+        domElement.appendChild(img);
+        domElement.appendChild(renderer.domElement);
 
-          domElement.appendChild(img);
-          domElement.appendChild(renderer.domElement);
+        _.delay(function() {
+          document.querySelector('#' + _this.id + ' ol').appendChild(domElement);
+        }, 100);
 
-          _.delay(function() {
-            document.querySelector('#' + _this.id + ' ol').appendChild(domElement);
-          }, 100);
-
-        });
-
-      }, 'image/png');
+      });
 
     });
 
@@ -228,21 +225,21 @@
     var xhr = new XMLHttpRequest();
     xhr.open('GET', path, true);
 
-    if(window.URL) {
+    if (window.URL) {
       xhr.responseType = 'blob';
     } else {
       xhr.responseType = 'arraybuffer';
     }
 
     xhr.onload = function(e) {
-      
-      if(window.URL) {
+
+      if (window.URL) {
         callback(this.response);
       } else {
         //-- Safari doesn't support responseType blob, so create a blob from arraybuffer
         callback(new Blob([this.response], { "type" : 'image/png' }));
       }
-            
+
     };
     xhr.send();
   }
