@@ -2706,7 +2706,7 @@ var Backbone = Backbone || {};
 
     Two.Vector.prototype.bind = Two.Vector.prototype.on = function() {
 
-      if (this._bound) {
+      if (!this._bound) {
         Two.Vector.MakeGetterSetter(this, 'x', this.x);
         Two.Vector.MakeGetterSetter(this, 'y', this.y);
         this._bound = true; // Reserved for event initialization check
