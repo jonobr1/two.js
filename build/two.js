@@ -2550,38 +2550,32 @@ var Backbone = Backbone || {};
 
   var Vector = Two.Vector = function(x, y) {
 
-    x = x || 0;
-    y = y || 0;
-
-    this.broadcast = false;
-
-    Object.defineProperty(this, 'x', {
-      get: function() {
-        return x;
-      },
-      set: function(v) {
-        x = v;
-        if (this.broadcast) {
-          this.trigger(Two.Events.change, 'x');
-        }
-      }
-    });
-
-    Object.defineProperty(this, 'y', {
-      get: function() {
-        return y;
-      },
-      set: function(v) {
-        y = v;
-        if (this.broadcast) {
-          this.trigger(Two.Events.change, 'y');
-        }
-      }
-    });
+    this.x = x || 0;
+    this.y = y || 0;
 
   };
 
   _.extend(Vector, {
+
+    MakeGetterSetter: function(object, property, value) {
+
+      var secret = '_' + property;
+
+      Object.defineProperty(object, property, {
+
+        get: function() {
+          return this[secret];
+        },
+        set: function(v) {
+          this[secret] = v;
+          this.trigger(Two.Events.change, property);
+        }
+
+      });
+
+      object[secret] = value; // Initialize private attribute.
+
+    }
 
   });
 
@@ -2706,13 +2700,18 @@ var Backbone = Backbone || {};
 
   /**
    * Override Backbone bind / on in order to add properly broadcasting.
-   * This allows Two.Vector to not broadcast events unless bound to it
-   * explicity.
+   * This allows Two.Vector to not broadcast events unless event listeners
+   * are explicity bound to it.
    */
 
     Two.Vector.prototype.bind = Two.Vector.prototype.on = function() {
 
-      this.broadcast = true;
+      if (this._bound) {
+        Two.Vector.MakeGetterSetter(this, 'x', this.x);
+        Two.Vector.MakeGetterSetter(this, 'y', this.y);
+        this._bound = true; // Reserved for event initialization check
+      }
+
       Backbone.Events.bind.apply(this, arguments);
 
       return this;
