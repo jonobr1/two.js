@@ -11,24 +11,10 @@ var Backbone = Backbone || {};
   // Regular expression used to split event strings.
   var eventSplitter = /\s+/;
 
-  // Implement fancy features of the Events API such as multiple event
-  // names `"change blur"` and jQuery-style event maps `{change: action}`
-  // in terms of the existing API.
-  var eventsApi = function(obj, action, name, rest) {
-    if (!name) return true;
-    if (typeof name === 'object') {
-      for (var key in name) {
-        obj[action].apply(obj, [key, name[key]].concat(rest));
-      }
-    } else if (eventSplitter.test(name)) {
-      var names = name.split(eventSplitter);
-      for (var i = 0, l = names.length; i < l; i++) {
-        obj[action].apply(obj, [names[i]].concat(rest));
-      }
-    } else {
-      return true;
-    }
-  };
+  /**
+   * Events API deprecated because of additional calls and checks
+   * multiple times a frame tick in two.js
+   */
 
   // Optimized internal dispatch function for triggering events. Tries to
   // keep the usual cases speedy (most Backbone events have 3 arguments).
@@ -53,7 +39,7 @@ var Backbone = Backbone || {};
     // to a `callback` function. Passing `"all"` will bind the callback to
     // all events fired.
     on: function(name, callback, context) {
-      if (!(eventsApi(this, 'on', name, [callback, context]) && callback)) return this;
+      // if (!(eventsApi(this, 'on', name, [callback, context]) && callback)) return this;
       this._events || (this._events = {});
       var list = this._events[name] || (this._events[name] = []);
       list.push({callback: callback, context: context, ctx: context || this});
@@ -63,7 +49,7 @@ var Backbone = Backbone || {};
     // Bind events to only be triggered a single time. After the first time
     // the callback is invoked, it will be removed.
     once: function(name, callback, context) {
-      if (!(eventsApi(this, 'once', name, [callback, context]) && callback)) return this;
+      // if (!(eventsApi(this, 'once', name, [callback, context]) && callback)) return this;
       var self = this;
       var once = _.once(function() {
         self.off(name, once);
@@ -80,7 +66,7 @@ var Backbone = Backbone || {};
     // callbacks for all events.
     off: function(name, callback, context) {
       var list, ev, events, names, i, l, j, k;
-      if (!this._events || !eventsApi(this, 'off', name, [callback, context])) return this;
+      if (!this._events/** || !eventsApi(this, 'off', name, [callback, context])**/) return this;
       if (!name && !callback && !context) {
         this._events = {};
         return this;
@@ -114,7 +100,7 @@ var Backbone = Backbone || {};
     trigger: function(name) {
       if (!this._events) return this;
       var args = slice.call(arguments, 1);
-      if (!eventsApi(this, 'trigger', name, args)) return this;
+      // if (!eventsApi(this, 'trigger', name, args)) return this;
       var events = this._events[name];
       var allEvents = this._events.all;
       if (events) triggerEvents(this, events, args);
