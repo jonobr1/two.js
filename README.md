@@ -55,6 +55,7 @@ node two.js/utils/build
 ## Change Log
 
 Nightly
++ Added `Two.Utils.getReflection` method to properly get reflection's in svg interpretation
 + Made `Two.Vector` inherently not broadcast events and now needs to be explicity bound to in order to broadcast events, which two.js does internally for you.
 + Created `Two.Utils.Collection` an observable array-like class that `polygon.vertices` inherit [@fchasen](http://github.com/fchasen)
 + Added `Two.Events.insert` and `Two.Events.remove` for use with `Two.Utils.Collection`

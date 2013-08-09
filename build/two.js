@@ -1652,7 +1652,7 @@ var Backbone = Backbone || {};
                     // Calculate reflection control point for proper x2, y2
                     // inclusion.
 
-                    reflection = new Two.Vector().copy(coord).subSelf(control);
+                    reflection = Two.Utils.getReflection(coord, control);
 
                     x2 = parseFloat(reflection.x), y2 = parseFloat(reflection.y);
                     x3 = parseFloat(coords[0]), y3 = parseFloat(coords[1]);
@@ -2073,6 +2073,20 @@ var Backbone = Backbone || {};
         b.v = v;
 
         return b;
+
+      },
+
+      /**
+       * Get the reflection of a point "b" about point "a".
+       */
+      getReflection: function(a, b) {
+
+        var d = a.distanceTo(b);
+        var theta = angleBetween(a, b);
+        return new Two.Vector(
+          d * Math.cos(theta) + a.x,
+          d * Math.sin(theta) + a.y
+        );
 
       },
 
