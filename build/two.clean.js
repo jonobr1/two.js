@@ -425,9 +425,9 @@
                     // Calculate reflection control point for proper x2, y2
                     // inclusion.
 
-                    reflection = Two.Utils.getReflection(coord, control);
+                    reflection = Two.Utils.getReflection(coord, control, relative);
 
-                    x2 = parseFloat(reflection.x), y2 = parseFloat(reflection.y);
+                    x2 = reflection.x, y2 = reflection.y;
                     x3 = parseFloat(coords[0]), y3 = parseFloat(coords[1]);
                     x4 = parseFloat(coords[2]), y4 = parseFloat(coords[3]);
 
@@ -442,6 +442,14 @@
                   result = Two.Utils.subdivide(x1, y1, x2, y2, x3, y3, x4, y4);
                   coord.set(x4, y4);
                   control.set(x3, y3);
+
+                  var last = result[result.length - 1];
+
+                  // x4 y4 is not present in the curve, add it.
+                  if (last && !last.equals(coord)) {
+                    result.push(coord.clone());
+                  }
+
                   break;
 
                 case 't':
@@ -461,9 +469,9 @@
 
                   } else {
 
-                    reflection = new Two.Vector().copy(coord).subSelf(control);
+                    reflection = Two.Utils.getReflection(coord, control, relative);
 
-                    x3 = parseFloat(reflection.x), y3 = parseFloat(reflection.y);
+                    x3 = reflection.x, y3 = reflection.y;
                     x4 = parseFloat(coords[0]), y4 = parseFloat(coords[1]);
 
                   }
@@ -477,6 +485,14 @@
                   result = Two.Utils.subdivide(x1, y1, x2, y2, x3, y3, x4, y4);
                   coord.set(x4, y4);
                   control.set(x3, y3);
+
+                  var last = result[result.length - 1];
+
+                  // x4 y4 is not present in the curve, add it.
+                  if (!last.equals(coord)) {
+                    result.push(coord.clone());
+                  }
+
                   break;
 
                 case 'a':
@@ -852,13 +868,16 @@
       /**
        * Get the reflection of a point "b" about point "a".
        */
-      getReflection: function(a, b) {
+      getReflection: function(a, b, relative) {
 
         var d = a.distanceTo(b);
+        if (d <= 0.0001) {
+          return relative ? new Two.Vector() : a.clone();
+        }
         var theta = angleBetween(a, b);
         return new Two.Vector(
-          d * Math.cos(theta) + a.x,
-          d * Math.sin(theta) + a.y
+          d * Math.cos(theta) + (relative ? 0 : a.x),
+          d * Math.sin(theta) + (relative ? 0 : a.y)
         );
 
       },
