@@ -503,16 +503,18 @@
 
             }));
 
-            if (_.isUndefined(points[points.length - 1])) {
-              points.pop();
+            if (points.length <= 1) {
+              return;
             }
+
+            points = _.compact(points);
 
             var poly = new Two.Polygon(points, closed).noStroke();
             return Two.Utils.applySvgAttributes(node, poly);
 
           });
 
-          return polys;
+          return _.compact(polys);
 
         },
 
