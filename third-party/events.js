@@ -1,3 +1,9 @@
+/**
+ * The Events module pulled from [Backbone.js](http://backbonejs.org/)
+ * Stripped and modified to work with node.js and optimize types of calls
+ * for animation based events.
+ */
+
 var Backbone = Backbone || {};
 
 (function() {
@@ -139,5 +145,12 @@ var Backbone = Backbone || {};
   // Aliases for backwards compatibility.
   Events.bind   = Events.on;
   Events.unbind = Events.off;
+
+  if (typeof exports !== 'undefined') {
+    if (typeof module !== 'undefined' && module.exports) {
+      exports = module.exports = Events;
+    }
+    exports.Backbone = exports.Backbone || Backbone;
+  }
 
 })();
