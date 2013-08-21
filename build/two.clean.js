@@ -115,7 +115,7 @@
         bottom: 0,
         position: 'fixed'
       });
-      dom.bind(window, 'resize', fitted);
+      dom.bind(root, 'resize', fitted);
       fitted();
 
 
@@ -1308,8 +1308,8 @@
   }
 
   function getNow() {
-    return ((window.performance && window.performance.now)
-      ? window.performance : Date).now();
+    return ((root.performance && root.performance.now)
+      ? root.performance : Date).now();
   }
 
   // Request Animation Frame
