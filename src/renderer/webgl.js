@@ -273,6 +273,10 @@
 
         switch (b._command) {
 
+          case Two.Commands.close:
+            ctx.closePath();
+            break;
+
           case Two.Commands.curve:
 
             prev = closed ? mod(i - 1, length) : Math.max(i - 1, 0);

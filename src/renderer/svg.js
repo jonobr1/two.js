@@ -78,6 +78,10 @@
 
         switch (b._command) {
 
+          case Two.Commands.close:
+            command = b._command;
+            break;
+
           case Two.Commands.curve:
 
             vx = a.v.x.toFixed(3);
