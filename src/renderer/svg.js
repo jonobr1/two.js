@@ -5,8 +5,7 @@
    */
 
   // Localize variables
-  var getCurveFromPoints = Two.Utils.getCurveFromPoints,
-    mod = Two.Utils.mod;
+  var mod = Two.Utils.mod;
 
   var svg = {
 
@@ -58,71 +57,67 @@
      * possible, because this call will be happening multiple times a 
      * second.
      */
-    toString: function(points, closed, curved) {
+    toString: function(points, closed) {
 
       var l = points.length,
         last = l - 1;
 
-      if (!curved) {
-        return _.map(points, function(v, i) {
-          var command;
-          if (i <= 0) {
-            command = 'M';
-          } else {
-            command = 'L';
-          }
-          command += ' ' + v.x.toFixed(3) + ' ' + v.y.toFixed(3);
-          if (i >= last && closed) {
-            command += ' Z';
-          }
-          return command;
-        }).join(' ');
-      }
-
-      var curve = getCurveFromPoints(points, closed);
-
-      return _.map(curve, function(b, i) {
+      return _.map(points, function(b, i) {
 
         var command;
         var prev = closed ? mod(i - 1, l) : Math.max(i - 1, 0);
         var next = closed ? mod(i + 1, l) : Math.min(i + 1, last);
 
-        var a = curve[prev];
-        var c = curve[next];
+        var a = points[prev];
+        var c = points[next];
 
-        var vx = a.v.x.toFixed(3);
-        var vy = a.v.y.toFixed(3);
-
-        var ux = b.u.x.toFixed(3);
-        var uy = b.u.y.toFixed(3);
+        var vx, vy, ux, uy;
 
         var x = b.x.toFixed(3);
         var y = b.y.toFixed(3);
 
-        if (i <= 0) {
-          command = 'M ' + x + ' ' + y;
-        } else {
-          command = 'C ' + 
-            vx + ' ' + vy + ' ' + ux + ' ' + uy + ' ' + x + ' ' + y;
+        switch (b._command) {
+
+          case Two.Commands.curve:
+
+            vx = a.v.x.toFixed(3);
+            vy = a.v.y.toFixed(3);
+
+            ux = b.u.x.toFixed(3);
+            uy = b.u.y.toFixed(3);
+
+            command = b._command + ' ' +
+              vx + ' ' + vy + ' ' + ux + ' ' + uy + ' ' + x + ' ' + y;
+            break;
+
+          default:
+            command = (b._command
+              || (i === 0 ? Two.Commands.move : Two.Commands.line))
+              + ' ' + x + ' ' + y;
+
         }
 
         // Add a final point and close it off
 
         if (i >= last && closed) {
 
-          vx = b.v.x.toFixed(3);
-          vy = b.v.y.toFixed(3);
+          if (b._command === Two.Commands.curve) {
 
-          ux = c.u.x.toFixed(3);
-          uy = c.u.y.toFixed(3);
+            vx = b.v.x.toFixed(3);
+            vy = b.v.y.toFixed(3);
 
-          x = c.x.toFixed(3);
-          y = c.y.toFixed(3);
+            ux = c.u.x.toFixed(3);
+            uy = c.u.y.toFixed(3);
 
-          command += 
-            ' C ' + vx + ' ' + vy + ' ' + ux + ' ' + uy + ' ' + x + ' ' + y;
+            x = c.x.toFixed(3);
+            y = c.y.toFixed(3);
+
+            command += 
+              ' C ' + vx + ' ' + vy + ' ' + ux + ' ' + uy + ' ' + x + ' ' + y;
+          }
 
           command += ' Z';
+
         }
 
         return command;
@@ -233,7 +228,7 @@
 
     },
 
-    update: function(id, property, value, closed, curved) {
+    update: function(id, property, value, closed) {
 
       var elements = this.elements;
       var elem = elements[id];
@@ -251,7 +246,7 @@
           });
           break;
         default:
-          setStyles(elem, property, value, closed, curved);
+          setStyles(elem, property, value, closed);
       }
 
       return this;
@@ -283,7 +278,6 @@
       cap = o.cap,
       join = o.join,
       miter = o.miter,
-      curved = o.curved,
       closed = o.closed,
       vertices = o.vertices;
 
@@ -320,14 +314,14 @@
       styles['stroke-width'] = linewidth;
     }
     if (vertices) {
-      styles.d = svg.toString(vertices, closed, curved);
+      styles.d = svg.toString(vertices, closed);
     }
 
     return styles;
 
   }
 
-  function setStyles(elem, property, value, closed, curved) {
+  function setStyles(elem, property, value, closed) {
 
     switch (property) {
 
@@ -353,7 +347,7 @@
         break;
       case 'vertices':
         property = 'd';
-        value = svg.toString(value, closed, curved);
+        value = svg.toString(value, closed);
         break;
       case 'opacity':
         svg.setAttributes(elem, {

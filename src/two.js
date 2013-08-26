@@ -137,6 +137,12 @@
       insert: 'insert'
     },
 
+    Commands: {
+      move: 'M',
+      line: 'L',
+      curve: 'C'
+    },
+
     Resolution: 8,
 
     Instances: [],
@@ -294,7 +300,7 @@
           }
           var verts = _.map(_.range(points.numberOfItems), function(i) {
             var p = points.getItem(i);
-            return new Two.Vector(p.x, p.y);
+            return new Two.Point(p.x, p.y);
           });
 
           var poly = new Two.Polygon(verts, !open).noStroke();
@@ -354,7 +360,7 @@
                   x = parseFloat(coords[0]);
                   y = parseFloat(coords[1]);
 
-                  result = new Two.Vector(x, y);
+                  result = new Two.Point(x, y);
 
                   if (relative) {
                     result.addSelf(coord);
@@ -369,7 +375,7 @@
                   var a = lower === 'h' ? 'x' : 'y';
                   var b = a === 'x' ? 'y' : 'x';
 
-                  result = new Two.Vector();
+                  result = new Two.Point();
                   result[a] = parseFloat(coords[0]);
                   result[b] = coord[b];
 
@@ -410,6 +416,7 @@
                     x4 += x1, y4 += y1;
                   }
 
+                  // TODO: Turn this into a command with Two.Point
                   result = Two.Utils.subdivide(x1, y1, x2, y2, x3, y3, x4, y4);
                   coord.set(x4, y4);
                   control.set(x3, y3);
@@ -501,7 +508,7 @@
             var theta = pct * TWO_PI;
             var x = r * cos(theta);
             var y = r * sin(theta);
-            return new Two.Vector(x, y);
+            return new Two.Point(x, y);
           }, this);
 
           var circle = new Two.Polygon(points, true, true).noStroke();
@@ -524,7 +531,7 @@
             var theta = pct * TWO_PI;
             var x = width * cos(theta);
             var y = height * sin(theta);
-            return new Two.Vector(x, y);
+            return new Two.Point(x, y);
           }, this);
 
           var ellipse = new Two.Polygon(points, true, true).noStroke();
@@ -545,10 +552,10 @@
           var h2 = height / 2;
 
           var points = [
-            new Two.Vector(w2, h2),
-            new Two.Vector(-w2, h2),
-            new Two.Vector(-w2, -h2),
-            new Two.Vector(w2, -h2)
+            new Two.Point(w2, h2),
+            new Two.Point(-w2, h2),
+            new Two.Point(-w2, -h2),
+            new Two.Point(w2, -h2)
           ];
 
           var rect = new Two.Polygon(points, true).noStroke();
@@ -572,8 +579,8 @@
           var h2 = height / 2;
 
           var points = [
-            new Two.Vector(- w2, - h2),
-            new Two.Vector(w2, h2)
+            new Two.Point(- w2, - h2),
+            new Two.Point(w2, h2)
           ];
 
           // Center line and translate to desired position.
@@ -754,14 +761,11 @@
        */
       getCurveFromPoints: function(points, closed) {
 
-        var curve = [], l = points.length, last = l - 1;
+        var l = points.length, last = l - 1;
 
         for (var i = 0; i < l; i++) {
 
-          var p = points[i];
-          var point = { x: p.x, y: p.y };
-          curve.push(point);
-
+          var point = points[i];
           var prev = closed ? mod(i - 1, l) : Math.max(i - 1, 0);
           var next = closed ? mod(i + 1, l) : Math.min(i + 1, last);
 
@@ -770,19 +774,15 @@
           var c = points[next];
           getControlPoints(a, b, c);
 
-          if (!b.u.x && !b.u.y) {
-            b.u.x = b.x;
-            b.u.y = b.y;
-          }
+          b._command = i === 0 ? Two.Commands.move : Two.Commands.curve;
 
-          if (!b.v.x && !b.v.y) {
-            b.v.x = b.x;
-            b.v.y = b.y;
-          }
+          b.u.x = _.isNumber(b.u.x) ? b.u.x : b.x;
+          b.u.y = _.isNumber(b.u.y) ? b.u.y : b.y;
+
+          b.v.x = _.isNumber(b.v.x) ? b.v.x : b.x;
+          b.v.y = _.isNumber(b.v.y) ? b.v.y : b.y;
 
         }
-
-        return curve;
 
       },
 
@@ -802,11 +802,12 @@
 
         // So we know which angle corresponds to which side.
 
-        var u, v;
+        b.u = _.isObject(b.u) ? b.u : new Two.Vector(b.x, b.y);
+        b.v = _.isObject(b.v) ? b.v : new Two.Vector(b.x, b.y);
 
         if (d1 < 0.0001 || d2 < 0.0001) {
-          b.u = { x: b.x, y: b.y };
-          b.v = { x: b.x, y: b.y };
+          b.u.copy(b);
+          b.v.copy(b);
           return b;
         }
 
@@ -819,20 +820,13 @@
           mid -= HALF_PI;
         }
 
-        u = {
-          x: b.x + cos(mid) * d1,
-          y: b.y + sin(mid) * d1
-        };
+        b.u.x = b.x + cos(mid) * d1;
+        b.u.y = b.y + sin(mid) * d1;
 
         mid -= PI;
 
-        v = {
-          x: b.x + cos(mid) * d2,
-          y: b.y + sin(mid) * d2
-        };
-
-        b.u = u;
-        b.v = v;
+        b.v.x = b.x + cos(mid) * d2;
+        b.v.y = b.y + sin(mid) * d2;
 
         return b;
 
@@ -1101,8 +1095,8 @@
       var h2 = height / 2;
 
       var points = [
-        new Two.Vector(- w2, - h2),
-        new Two.Vector(w2, h2)
+        new Two.Point(- w2, - h2),
+        new Two.Point(w2, h2)
       ];
 
       // Center line and translate to desired position.
@@ -1121,10 +1115,10 @@
       var h2 = height / 2;
 
       var points = [
-        new Two.Vector(w2, h2),
-        new Two.Vector(-w2, h2),
-        new Two.Vector(-w2, -h2),
-        new Two.Vector(w2, -h2)
+        new Two.Point(w2, h2),
+        new Two.Point(-w2, h2),
+        new Two.Point(-w2, -h2),
+        new Two.Point(w2, -h2)
       ];
 
       var rect = new Two.Polygon(points, true);
@@ -1150,7 +1144,7 @@
         var theta = pct * TWO_PI;
         var x = width * cos(theta);
         var y = height * sin(theta);
-        return new Two.Vector(x, y);
+        return new Two.Point(x, y);
       }, this);
 
       var ellipse = new Two.Polygon(points, true, true);
@@ -1173,7 +1167,7 @@
             break;
           }
           var y = arguments[i + 1];
-          points.push(new Two.Vector(x, y));
+          points.push(new Two.Point(x, y));
         }
       }
 
@@ -1211,7 +1205,7 @@
             break;
           }
           var y = arguments[i + 1];
-          points.push(new Two.Vector(x, y));
+          points.push(new Two.Point(x, y));
         }
       }
 

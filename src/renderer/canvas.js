@@ -6,8 +6,7 @@
 
   // Localize variables
   var root = this;
-  var getCurveFromPoints = Two.Utils.getCurveFromPoints,
-    mod = Two.Utils.mod;
+  var mod = Two.Utils.mod;
 
   /**
    * A canvas specific representation of Two.Group
@@ -98,7 +97,6 @@
         cap = this.cap,
         join = this.join,
         miter = this.miter,
-        curved = this.curved,
         closed = this.closed,
         commands = this.commands,
         length = commands.length,
@@ -144,31 +142,25 @@
       ctx.beginPath();
       _.each(commands, function(b, i) {
 
+        var next, prev, a, c, ux, uy, vx, vy;
         var x = b.x.toFixed(3), y = b.y.toFixed(3);
 
-        if (curved) {
+        switch (b._command) {
 
-          var prev = closed ? mod(i - 1, length) : Math.max(i - 1, 0);
-          var next = closed ? mod(i + 1, length) : Math.min(i + 1, last);
+          case Two.Commands.curve:
 
-          var a = commands[prev];
-          var c = commands[next];
+            prev = closed ? mod(i - 1, length) : Math.max(i - 1, 0);
+            next = closed ? mod(i + 1, length) : Math.min(i + 1, last);
 
-          var vx = a.v.x.toFixed(3);
-          var vy = a.v.y.toFixed(3);
+            a = commands[prev], c = commands[next];
 
-          var ux = b.u.x.toFixed(3);
-          var uy = b.u.y.toFixed(3);
+            vx = a.v.x.toFixed(3);
+            vy = a.v.y.toFixed(3);
 
-          if (i <= 0) {
-
-            ctx.moveTo(x, y);
-
-          } else {
+            ux = b.u.x.toFixed(3);
+            uy = b.u.y.toFixed(3);
 
             ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
-
-            // Add a final point and close it off
 
             if (i >= last && closed) {
 
@@ -185,22 +177,23 @@
 
             }
 
-          }
+            break;
 
-        } else {
-
-          if (i <= 0) {
-            ctx.moveTo(x, y);
-          } else {
+          case Two.Commands.line:
             ctx.lineTo(x, y);
-          }
+            break;
+
+          case Two.Commands.move:
+            ctx.moveTo(x, y);
+            break;
 
         }
+
       });
 
       // Loose ends
 
-      if (closed && !curved) {
+      if (closed) {
         ctx.closePath();
       }
 
@@ -232,24 +225,6 @@
 
     getRatio: function(ctx) {
       return this.devicePixelRatio / this.getBackingStoreRatio(ctx);
-    },
-
-    /**
-     * Turn a set of vertices into a string for drawing in a canvas.
-     */
-    toArray: function(points, curved, closed) {
-
-      var l = points.length,
-        last = l - 1;
-
-      if (!curved) {
-        return _.map(points, function(v, i) {
-          return { x: v.x, y: v.y };
-        });
-      }
-
-      return getCurveFromPoints(points, closed);
-
     }
 
   };
@@ -374,7 +349,7 @@
 
     },
 
-    update: function(id, property, value, closed, curved, strokeChanged) {
+    update: function(id, property, value, closed, strokeChanged) {
 
       var proto = Object.getPrototypeOf(this);
       var constructor = proto.constructor;
@@ -395,7 +370,7 @@
           }, this);
           break;
         default:
-          constructor.setStyles.call(this, elem, property, value, closed, curved, strokeChanged);
+          constructor.setStyles.call(this, elem, property, value, closed, strokeChanged);
       }
 
       return this;
@@ -451,7 +426,6 @@
       cap = o.cap,
       join = o.join,
       miter = o.miter,
-      curved = o.curved,
       closed = o.closed,
       vertices = o.vertices;
 
@@ -483,17 +457,16 @@
       styles.linewidth = linewidth;
     }
     if (vertices) {
-      styles.commands = canvas.toArray(vertices, curved, closed);
+      styles.commands = vertices;
     }
     styles.visible = !!visible;
-    styles.curved = !!curved;
     styles.closed = !!closed;
 
     return styles;
 
   }
 
-  function setStyles(elem, property, value, closed, curved) {
+  function setStyles(elem, property, value, closed) {
 
     switch (property) {
 
@@ -503,9 +476,7 @@
         break;
       case 'vertices':
         property = 'commands';
-        elem.curved = curved;
         elem.closed = closed;
-        value = canvas.toArray(value, elem.curved, elem.closed);
         break;
 
     }

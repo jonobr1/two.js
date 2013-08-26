@@ -2,7 +2,6 @@
 
   var CanvasRenderer = Two[Two.Types.canvas],
     multiplyMatrix = Two.Matrix.Multiply,
-    getCommands = Two[Two.Types.canvas].Utils.toArray,
     mod = Two.Utils.mod;
 
   var Group = function(styles) {
@@ -142,7 +141,7 @@
      * Returns the rect of a set of verts. Typically takes vertices that are
      * "centered" around 0 and returns them to be anchored upper-left.
      */
-    getBoundingClientRect: function(vertices, border, curved) {
+    getBoundingClientRect: function(vertices, border) {
 
       var left = Infinity, right = -Infinity,
         top = Infinity, bottom = -Infinity;
@@ -156,17 +155,17 @@
         right = Math.max(x, right);
         bottom = Math.max(y, bottom);
 
-        if (!!curved) {
+        a = v.u && v.u.x, b = v.u && v.u.y;
+        c = v.v && v.v.x, d = v.v && v.v.y;
 
-          a = v.u.x, b = v.u.y;
-          c = v.v.x, d = v.v.y;
-
-          top = Math.min(b, d, top);
-          left = Math.min(a, c, left);
-          right = Math.max(a, c, right);
-          bottom = Math.max(b, d, bottom);
-
+        if (!a || !b || !c || !d) {
+          return;
         }
+
+        top = Math.min(b, d, top);
+        left = Math.min(a, c, left);
+        right = Math.max(a, c, right);
+        bottom = Math.max(b, d, bottom);
 
       });
 
@@ -230,7 +229,6 @@
         cap = elem.cap,
         join = elem.join,
         miter = elem.miter,
-        curved = elem.curved,
         closed = elem.closed,
         length = commands.length,
         last = length - 1;
@@ -270,32 +268,25 @@
       ctx.beginPath();
       _.each(commands, function(b, i) {
 
-        var x = (b.x * scale + cx).toFixed(3),
-          y = (b.y * scale + cy).toFixed(3);
+        var next, prev, a, c, ux, uy, vx, vy;
+        var x = (b.x * scale + cx).toFixed(3), y = (b.y * scale + cy).toFixed(3);
 
-        if (curved) {
+        switch (b._command) {
 
-          var prev = closed ? mod(i - 1, length) : Math.max(i - 1, 0);
-          var next = closed ? mod(i + 1, length) : Math.min(i + 1, last);
+          case Two.Commands.curve:
 
-          var a = commands[prev];
-          var c = commands[next];
+            prev = closed ? mod(i - 1, length) : Math.max(i - 1, 0);
+            next = closed ? mod(i + 1, length) : Math.min(i + 1, last);
 
-          var vx = (a.v.x * scale + cx).toFixed(3);
-          var vy = (a.v.y * scale + cy).toFixed(3);
+            a = commands[prev], c = commands[next];
 
-          var ux = (b.u.x * scale + cx).toFixed(3);
-          var uy = (b.u.y * scale + cy).toFixed(3);
+            vx = (a.v.x * scale + cx).toFixed(3);
+            vy = (a.v.y * scale + cy).toFixed(3);
 
-          if (i <= 0) {
-
-            ctx.moveTo(x, y);
-
-          } else {
+            ux = (b.u.x * scale + cx).toFixed(3);
+            uy = (b.u.y * scale + cy).toFixed(3);
 
             ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
-
-            // Add a final point and close it off
 
             if (i >= last && closed) {
 
@@ -312,22 +303,23 @@
 
             }
 
-          }
+            break;
 
-        } else {
-
-          if (i <= 0) {
-            ctx.moveTo(x, y);
-          } else {
+          case Two.Commands.line:
             ctx.lineTo(x, y);
-          }
+            break;
+
+          case Two.Commands.move:
+            ctx.moveTo(x, y);
+            break;
 
         }
+
       });
 
       // Loose ends
 
-      if (closed && !curved) {
+      if (closed) {
         ctx.closePath();
       }
 
@@ -594,7 +586,6 @@
       cap = o.cap,
       join = o.join,
       miter = o.miter,
-      curved = o.curved,
       closed = o.closed,
       vertices = o.vertices;
 
@@ -627,13 +618,12 @@
       styles.linewidth = linewidth;
     }
     if (vertices) {
-      styles.vertices = getCommands(vertices, curved, closed);
+      styles.vertices = vertices;
       styles.commands = styles.vertices;
-      styles.rect = webgl.getBoundingClientRect(styles.commands, styles.linewidth, styles.curved);
+      styles.rect = webgl.getBoundingClientRect(styles.commands, styles.linewidth);
       styles.triangles = webgl.getTriangles(styles.rect);
     }
     styles.visible = !!visible;
-    styles.curved = !!curved;
     styles.closed = !!closed;
 
     // Update buffer and texture
@@ -647,7 +637,7 @@
 
   }
 
-  function setStyles(elem, property, value, closed, curved, strokeChanged) {
+  function setStyles(elem, property, value, closed, strokeChanged) {
 
     var textureNeedsUpdate = false;
 
@@ -660,7 +650,7 @@
       elem.updateMatrix();
     } else if (/(stroke|fill|opacity|cap|join|miter|linewidth)/.test(property)) {
       elem[property] = value;
-      elem.rect = expand(webgl.getBoundingClientRect(elem.commands, elem.linewidth, elem.curved), elem.rect);
+      elem.rect = expand(webgl.getBoundingClientRect(elem.commands, elem.linewidth), elem.rect);
       elem.triangles = webgl.getTriangles(elem.rect);
       webgl.updateBuffer(this.ctx, elem, this.program);
       textureNeedsUpdate = true;
@@ -668,16 +658,13 @@
       if (!_.isUndefined(closed)) {
         elem.closed = closed;
       }
-      if (!_.isUndefined(curved)) {
-        elem.curved = curved;
-      }
       if (strokeChanged) {
-        elem.commands = getCommands(value, elem.curved, elem.closed);
+        elem.commands = value;
       } else {
-        elem.vertices = getCommands(value, elem.curved, elem.closed);
+        elem.vertices = value;
         elem.commands = elem.vertices;
       }
-      elem.rect = expand(webgl.getBoundingClientRect(elem.vertices, elem.linewidth, elem.curved), elem.rect);
+      elem.rect = expand(webgl.getBoundingClientRect(elem.vertices, elem.linewidth), elem.rect);
       elem.triangles = webgl.getTriangles(elem.rect);
       webgl.updateBuffer(this.ctx, elem, this.program);
       textureNeedsUpdate = true;

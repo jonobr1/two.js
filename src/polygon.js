@@ -6,7 +6,7 @@
 
   var min = Math.min, max = Math.max, round = Math.round;
 
-  var Polygon = Two.Polygon = function(vertices, closed, curved) {
+  var Polygon = Two.Polygon = function(vertices, closed, curved, manual) {
 
     Two.Shape.call(this);
 
@@ -14,8 +14,13 @@
 
     // Add additional logic for watching the vertices.
 
-    closed = !!closed;
-    curved = !!curved;
+    this._closed = !!closed;
+    this._curved = !!curved;
+
+    // Determines whether or not two.js should calculate curves, lines, and
+    // commands automatically for you or to let the developer manipulate them
+    // for themselves.
+    this._automatic = !manual;
 
     var beginning = 0.0;
     var ending = 1.0;
@@ -27,6 +32,10 @@
     var updateVertices = _.debounce(_.bind(function(property) { // Call only once a frame.
 
       var l, ia, ib, last;
+
+      if (this._automatic) {
+        this.plot();
+      }
 
       if (strokeChanged || verticesChanged) {
 
@@ -45,9 +54,8 @@
 
       }
 
-
       this.trigger(Two.Events.change,
-        this.id, 'vertices', renderedVertices, closed, curved, strokeChanged);
+        this.id, 'vertices', renderedVertices, this._closed, strokeChanged);
 
       strokeChanged = false;
       verticesChanged = false;
@@ -56,20 +64,30 @@
 
     Object.defineProperty(this, 'closed', {
       get: function() {
-        return closed;
+        return this._closed;
       },
       set: function(v) {
-        closed = !!v;
+        this._closed = !!v;
         updateVertices();
       }
     });
 
     Object.defineProperty(this, 'curved', {
       get: function() {
-        return curved;
+        return this._curved;
       },
       set: function(v) {
-        curved = !!v;
+        this._curved = !!v;
+        updateVertices();
+      }
+    });
+
+    Object.defineProperty(this, 'automatic', {
+      get: function() {
+        return this._automatic;
+      },
+      set: function(v) {
+        this._automatic = !!v;
         updateVertices();
       }
     });
@@ -127,7 +145,7 @@
         }, this);
 
         // Remove previous listeners
-        if(verticesCollection) {
+        if (verticesCollection) {
           verticesCollection.unbind();
         }
 
@@ -147,6 +165,7 @@
     });
 
     this.vertices = vertices;
+    this._automatic && this.plot();
 
   };
 
@@ -158,7 +177,7 @@
         return new Two.Vector(v.x, v.y);
       });
 
-      var clone = new Polygon(points, this.closed, this.curved);
+      var clone = new Polygon(points, this._closed, this._curved);
 
       _.each(Two.Shape.Properties, function(k) {
         clone[k] = this[k];
@@ -264,6 +283,31 @@
         width: ll.x - ul.x,
         height: ll.y - ul.y
       };
+
+    },
+
+    /**
+     * Based on closed / curved and sorting of vertices plot where all points
+     * should be and where the respective handles should be as well.
+     */
+    plot: function() {
+
+      if (this._curved) {
+        Two.Utils.getCurveFromPoints(this.vertices, this._closed);
+        return this;
+      }
+
+      _.each(this.vertices, function(p, i) {
+        p._command = i === 0 ? Two.Commands.move : Two.Commands.line;
+        if (p.u instanceof Two.Vector) {
+          p.u.copy(p);
+        }
+        if (p.v instanceof Two.Vector) {
+          p.v.copy(p);
+        }
+      }, this);
+
+      return this;
 
     }
 

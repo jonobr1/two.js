@@ -10,6 +10,7 @@ var files = [
   path.resolve(__dirname, '../third-party/requestAnimationFrame.js'),
   path.resolve(__dirname, '../src/two.js'),
   path.resolve(__dirname, '../src/vector.js'),
+  path.resolve(__dirname, '../src/point.js'),
   path.resolve(__dirname, '../src/matrix.js'),
   path.resolve(__dirname, '../src/renderer/svg.js'),
   path.resolve(__dirname, '../src/renderer/canvas.js'),

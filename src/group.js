@@ -133,8 +133,8 @@
 
       // A bubbled up version of 'change' event for the children.
 
-      var broadcast = _.bind(function(id, property, value, closed, curved, strokeChanged) {
-        this.trigger(Two.Events.change, id, property, value, closed, curved, strokeChanged);
+      var broadcast = _.bind(function(id, property, value, closed, strokeChanged) {
+        this.trigger(Two.Events.change, id, property, value, closed, strokeChanged);
       }, this);
 
       // Add the objects

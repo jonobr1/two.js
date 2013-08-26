@@ -166,6 +166,12 @@
       insert: 'insert'
     },
 
+    Commands: {
+      move: 'M',
+      line: 'L',
+      curve: 'C'
+    },
+
     Resolution: 8,
 
     Instances: [],
@@ -323,7 +329,7 @@
           }
           var verts = _.map(_.range(points.numberOfItems), function(i) {
             var p = points.getItem(i);
-            return new Two.Vector(p.x, p.y);
+            return new Two.Point(p.x, p.y);
           });
 
           var poly = new Two.Polygon(verts, !open).noStroke();
@@ -383,7 +389,7 @@
                   x = parseFloat(coords[0]);
                   y = parseFloat(coords[1]);
 
-                  result = new Two.Vector(x, y);
+                  result = new Two.Point(x, y);
 
                   if (relative) {
                     result.addSelf(coord);
@@ -398,7 +404,7 @@
                   var a = lower === 'h' ? 'x' : 'y';
                   var b = a === 'x' ? 'y' : 'x';
 
-                  result = new Two.Vector();
+                  result = new Two.Point();
                   result[a] = parseFloat(coords[0]);
                   result[b] = coord[b];
 
@@ -439,6 +445,7 @@
                     x4 += x1, y4 += y1;
                   }
 
+                  // TODO: Turn this into a command with Two.Point
                   result = Two.Utils.subdivide(x1, y1, x2, y2, x3, y3, x4, y4);
                   coord.set(x4, y4);
                   control.set(x3, y3);
@@ -530,7 +537,7 @@
             var theta = pct * TWO_PI;
             var x = r * cos(theta);
             var y = r * sin(theta);
-            return new Two.Vector(x, y);
+            return new Two.Point(x, y);
           }, this);
 
           var circle = new Two.Polygon(points, true, true).noStroke();
@@ -553,7 +560,7 @@
             var theta = pct * TWO_PI;
             var x = width * cos(theta);
             var y = height * sin(theta);
-            return new Two.Vector(x, y);
+            return new Two.Point(x, y);
           }, this);
 
           var ellipse = new Two.Polygon(points, true, true).noStroke();
@@ -574,10 +581,10 @@
           var h2 = height / 2;
 
           var points = [
-            new Two.Vector(w2, h2),
-            new Two.Vector(-w2, h2),
-            new Two.Vector(-w2, -h2),
-            new Two.Vector(w2, -h2)
+            new Two.Point(w2, h2),
+            new Two.Point(-w2, h2),
+            new Two.Point(-w2, -h2),
+            new Two.Point(w2, -h2)
           ];
 
           var rect = new Two.Polygon(points, true).noStroke();
@@ -601,8 +608,8 @@
           var h2 = height / 2;
 
           var points = [
-            new Two.Vector(- w2, - h2),
-            new Two.Vector(w2, h2)
+            new Two.Point(- w2, - h2),
+            new Two.Point(w2, h2)
           ];
 
           // Center line and translate to desired position.
@@ -783,14 +790,11 @@
        */
       getCurveFromPoints: function(points, closed) {
 
-        var curve = [], l = points.length, last = l - 1;
+        var l = points.length, last = l - 1;
 
         for (var i = 0; i < l; i++) {
 
-          var p = points[i];
-          var point = { x: p.x, y: p.y };
-          curve.push(point);
-
+          var point = points[i];
           var prev = closed ? mod(i - 1, l) : Math.max(i - 1, 0);
           var next = closed ? mod(i + 1, l) : Math.min(i + 1, last);
 
@@ -799,19 +803,15 @@
           var c = points[next];
           getControlPoints(a, b, c);
 
-          if (!b.u.x && !b.u.y) {
-            b.u.x = b.x;
-            b.u.y = b.y;
-          }
+          b._command = i === 0 ? Two.Commands.move : Two.Commands.curve;
 
-          if (!b.v.x && !b.v.y) {
-            b.v.x = b.x;
-            b.v.y = b.y;
-          }
+          b.u.x = _.isNumber(b.u.x) ? b.u.x : b.x;
+          b.u.y = _.isNumber(b.u.y) ? b.u.y : b.y;
+
+          b.v.x = _.isNumber(b.v.x) ? b.v.x : b.x;
+          b.v.y = _.isNumber(b.v.y) ? b.v.y : b.y;
 
         }
-
-        return curve;
 
       },
 
@@ -831,11 +831,12 @@
 
         // So we know which angle corresponds to which side.
 
-        var u, v;
+        b.u = _.isObject(b.u) ? b.u : new Two.Vector(b.x, b.y);
+        b.v = _.isObject(b.v) ? b.v : new Two.Vector(b.x, b.y);
 
         if (d1 < 0.0001 || d2 < 0.0001) {
-          b.u = { x: b.x, y: b.y };
-          b.v = { x: b.x, y: b.y };
+          b.u.copy(b);
+          b.v.copy(b);
           return b;
         }
 
@@ -848,20 +849,13 @@
           mid -= HALF_PI;
         }
 
-        u = {
-          x: b.x + cos(mid) * d1,
-          y: b.y + sin(mid) * d1
-        };
+        b.u.x = b.x + cos(mid) * d1;
+        b.u.y = b.y + sin(mid) * d1;
 
         mid -= PI;
 
-        v = {
-          x: b.x + cos(mid) * d2,
-          y: b.y + sin(mid) * d2
-        };
-
-        b.u = u;
-        b.v = v;
+        b.v.x = b.x + cos(mid) * d2;
+        b.v.y = b.y + sin(mid) * d2;
 
         return b;
 
@@ -1130,8 +1124,8 @@
       var h2 = height / 2;
 
       var points = [
-        new Two.Vector(- w2, - h2),
-        new Two.Vector(w2, h2)
+        new Two.Point(- w2, - h2),
+        new Two.Point(w2, h2)
       ];
 
       // Center line and translate to desired position.
@@ -1150,10 +1144,10 @@
       var h2 = height / 2;
 
       var points = [
-        new Two.Vector(w2, h2),
-        new Two.Vector(-w2, h2),
-        new Two.Vector(-w2, -h2),
-        new Two.Vector(w2, -h2)
+        new Two.Point(w2, h2),
+        new Two.Point(-w2, h2),
+        new Two.Point(-w2, -h2),
+        new Two.Point(w2, -h2)
       ];
 
       var rect = new Two.Polygon(points, true);
@@ -1179,7 +1173,7 @@
         var theta = pct * TWO_PI;
         var x = width * cos(theta);
         var y = height * sin(theta);
-        return new Two.Vector(x, y);
+        return new Two.Point(x, y);
       }, this);
 
       var ellipse = new Two.Polygon(points, true, true);
@@ -1202,7 +1196,7 @@
             break;
           }
           var y = arguments[i + 1];
-          points.push(new Two.Vector(x, y));
+          points.push(new Two.Point(x, y));
         }
       }
 
@@ -1240,7 +1234,7 @@
             break;
           }
           var y = arguments[i + 1];
-          points.push(new Two.Vector(x, y));
+          points.push(new Two.Point(x, y));
         }
       }
 
@@ -1635,6 +1629,41 @@
 (function() {
 
   /**
+   * An object that holds 3 `Two.Vectors`, the anchor point and its
+   * corresponding handles. 
+   */
+  var Point = Two.Point = function(x, y, ux, uy, vx, vy, command) {
+
+    Two.Vector.call(this, x, y);
+
+    Object.defineProperty(this, 'command', {
+
+      get: function() {
+        return this._command;
+      },
+
+      set: function(c) {
+        this._command = c;
+        return this.trigger(Two.Events.change);
+      }
+
+    });
+
+    this.command = Two.Commands.move;
+
+    this.u = new Two.Vector(_.isNumber(ux) ? ux : x, _.isNumber(uy) ? uy : y);
+    this.v = new Two.Vector(_.isNumber(vx) ? vx : x, _.isNumber(vy) ? vy : y);
+
+  };
+
+  _.extend(Point.prototype, Two.Vector.prototype, {
+
+  });
+
+})();
+(function() {
+
+  /**
    * Constants
    */
   var range = _.range(6),
@@ -1985,8 +2014,7 @@
    */
 
   // Localize variables
-  var getCurveFromPoints = Two.Utils.getCurveFromPoints,
-    mod = Two.Utils.mod;
+  var mod = Two.Utils.mod;
 
   var svg = {
 
@@ -2038,71 +2066,67 @@
      * possible, because this call will be happening multiple times a 
      * second.
      */
-    toString: function(points, closed, curved) {
+    toString: function(points, closed) {
 
       var l = points.length,
         last = l - 1;
 
-      if (!curved) {
-        return _.map(points, function(v, i) {
-          var command;
-          if (i <= 0) {
-            command = 'M';
-          } else {
-            command = 'L';
-          }
-          command += ' ' + v.x.toFixed(3) + ' ' + v.y.toFixed(3);
-          if (i >= last && closed) {
-            command += ' Z';
-          }
-          return command;
-        }).join(' ');
-      }
-
-      var curve = getCurveFromPoints(points, closed);
-
-      return _.map(curve, function(b, i) {
+      return _.map(points, function(b, i) {
 
         var command;
         var prev = closed ? mod(i - 1, l) : Math.max(i - 1, 0);
         var next = closed ? mod(i + 1, l) : Math.min(i + 1, last);
 
-        var a = curve[prev];
-        var c = curve[next];
+        var a = points[prev];
+        var c = points[next];
 
-        var vx = a.v.x.toFixed(3);
-        var vy = a.v.y.toFixed(3);
-
-        var ux = b.u.x.toFixed(3);
-        var uy = b.u.y.toFixed(3);
+        var vx, vy, ux, uy;
 
         var x = b.x.toFixed(3);
         var y = b.y.toFixed(3);
 
-        if (i <= 0) {
-          command = 'M ' + x + ' ' + y;
-        } else {
-          command = 'C ' + 
-            vx + ' ' + vy + ' ' + ux + ' ' + uy + ' ' + x + ' ' + y;
+        switch (b._command) {
+
+          case Two.Commands.curve:
+
+            vx = a.v.x.toFixed(3);
+            vy = a.v.y.toFixed(3);
+
+            ux = b.u.x.toFixed(3);
+            uy = b.u.y.toFixed(3);
+
+            command = b._command + ' ' +
+              vx + ' ' + vy + ' ' + ux + ' ' + uy + ' ' + x + ' ' + y;
+            break;
+
+          default:
+            command = (b._command
+              || (i === 0 ? Two.Commands.move : Two.Commands.line))
+              + ' ' + x + ' ' + y;
+
         }
 
         // Add a final point and close it off
 
         if (i >= last && closed) {
 
-          vx = b.v.x.toFixed(3);
-          vy = b.v.y.toFixed(3);
+          if (b._command === Two.Commands.curve) {
 
-          ux = c.u.x.toFixed(3);
-          uy = c.u.y.toFixed(3);
+            vx = b.v.x.toFixed(3);
+            vy = b.v.y.toFixed(3);
 
-          x = c.x.toFixed(3);
-          y = c.y.toFixed(3);
+            ux = c.u.x.toFixed(3);
+            uy = c.u.y.toFixed(3);
 
-          command += 
-            ' C ' + vx + ' ' + vy + ' ' + ux + ' ' + uy + ' ' + x + ' ' + y;
+            x = c.x.toFixed(3);
+            y = c.y.toFixed(3);
+
+            command += 
+              ' C ' + vx + ' ' + vy + ' ' + ux + ' ' + uy + ' ' + x + ' ' + y;
+          }
 
           command += ' Z';
+
         }
 
         return command;
@@ -2213,7 +2237,7 @@
 
     },
 
-    update: function(id, property, value, closed, curved) {
+    update: function(id, property, value, closed) {
 
       var elements = this.elements;
       var elem = elements[id];
@@ -2231,7 +2255,7 @@
           });
           break;
         default:
-          setStyles(elem, property, value, closed, curved);
+          setStyles(elem, property, value, closed);
       }
 
       return this;
@@ -2263,7 +2287,6 @@
       cap = o.cap,
       join = o.join,
       miter = o.miter,
-      curved = o.curved,
       closed = o.closed,
       vertices = o.vertices;
 
@@ -2300,14 +2323,14 @@
       styles['stroke-width'] = linewidth;
     }
     if (vertices) {
-      styles.d = svg.toString(vertices, closed, curved);
+      styles.d = svg.toString(vertices, closed);
     }
 
     return styles;
 
   }
 
-  function setStyles(elem, property, value, closed, curved) {
+  function setStyles(elem, property, value, closed) {
 
     switch (property) {
 
@@ -2333,7 +2356,7 @@
         break;
       case 'vertices':
         property = 'd';
-        value = svg.toString(value, closed, curved);
+        value = svg.toString(value, closed);
         break;
       case 'opacity':
         svg.setAttributes(elem, {
@@ -2363,8 +2386,7 @@
 
   // Localize variables
   var root = this;
-  var getCurveFromPoints = Two.Utils.getCurveFromPoints,
-    mod = Two.Utils.mod;
+  var mod = Two.Utils.mod;
 
   /**
    * A canvas specific representation of Two.Group
@@ -2455,7 +2477,6 @@
         cap = this.cap,
         join = this.join,
         miter = this.miter,
-        curved = this.curved,
         closed = this.closed,
         commands = this.commands,
         length = commands.length,
@@ -2501,31 +2522,25 @@
       ctx.beginPath();
       _.each(commands, function(b, i) {
 
+        var next, prev, a, c, ux, uy, vx, vy;
         var x = b.x.toFixed(3), y = b.y.toFixed(3);
 
-        if (curved) {
+        switch (b._command) {
 
-          var prev = closed ? mod(i - 1, length) : Math.max(i - 1, 0);
-          var next = closed ? mod(i + 1, length) : Math.min(i + 1, last);
+          case Two.Commands.curve:
 
-          var a = commands[prev];
-          var c = commands[next];
+            prev = closed ? mod(i - 1, length) : Math.max(i - 1, 0);
+            next = closed ? mod(i + 1, length) : Math.min(i + 1, last);
 
-          var vx = a.v.x.toFixed(3);
-          var vy = a.v.y.toFixed(3);
+            a = commands[prev], c = commands[next];
 
-          var ux = b.u.x.toFixed(3);
-          var uy = b.u.y.toFixed(3);
+            vx = a.v.x.toFixed(3);
+            vy = a.v.y.toFixed(3);
 
-          if (i <= 0) {
-
-            ctx.moveTo(x, y);
-
-          } else {
+            ux = b.u.x.toFixed(3);
+            uy = b.u.y.toFixed(3);
 
             ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
-
-            // Add a final point and close it off
 
             if (i >= last && closed) {
 
@@ -2542,22 +2557,23 @@
 
             }
 
-          }
+            break;
 
-        } else {
-
-          if (i <= 0) {
-            ctx.moveTo(x, y);
-          } else {
+          case Two.Commands.line:
             ctx.lineTo(x, y);
-          }
+            break;
+
+          case Two.Commands.move:
+            ctx.moveTo(x, y);
+            break;
 
         }
+
       });
 
       // Loose ends
 
-      if (closed && !curved) {
+      if (closed) {
         ctx.closePath();
       }
 
@@ -2589,24 +2605,6 @@
 
     getRatio: function(ctx) {
       return this.devicePixelRatio / this.getBackingStoreRatio(ctx);
-    },
-
-    /**
-     * Turn a set of vertices into a string for drawing in a canvas.
-     */
-    toArray: function(points, curved, closed) {
-
-      var l = points.length,
-        last = l - 1;
-
-      if (!curved) {
-        return _.map(points, function(v, i) {
-          return { x: v.x, y: v.y };
-        });
-      }
-
-      return getCurveFromPoints(points, closed);
-
     }
 
   };
@@ -2731,7 +2729,7 @@
 
     },
 
-    update: function(id, property, value, closed, curved, strokeChanged) {
+    update: function(id, property, value, closed, strokeChanged) {
 
       var proto = Object.getPrototypeOf(this);
       var constructor = proto.constructor;
@@ -2752,7 +2750,7 @@
           }, this);
           break;
         default:
-          constructor.setStyles.call(this, elem, property, value, closed, curved, strokeChanged);
+          constructor.setStyles.call(this, elem, property, value, closed, strokeChanged);
       }
 
       return this;
@@ -2808,7 +2806,6 @@
       cap = o.cap,
       join = o.join,
       miter = o.miter,
-      curved = o.curved,
       closed = o.closed,
       vertices = o.vertices;
 
@@ -2840,17 +2837,16 @@
       styles.linewidth = linewidth;
     }
     if (vertices) {
-      styles.commands = canvas.toArray(vertices, curved, closed);
+      styles.commands = vertices;
     }
     styles.visible = !!visible;
-    styles.curved = !!curved;
     styles.closed = !!closed;
 
     return styles;
 
   }
 
-  function setStyles(elem, property, value, closed, curved) {
+  function setStyles(elem, property, value, closed) {
 
     switch (property) {
 
@@ -2860,9 +2856,7 @@
         break;
       case 'vertices':
         property = 'commands';
-        elem.curved = curved;
         elem.closed = closed;
-        value = canvas.toArray(value, elem.curved, elem.closed);
         break;
 
     }
@@ -2882,7 +2876,6 @@
 
   var CanvasRenderer = Two[Two.Types.canvas],
     multiplyMatrix = Two.Matrix.Multiply,
-    getCommands = Two[Two.Types.canvas].Utils.toArray,
     mod = Two.Utils.mod;
 
   var Group = function(styles) {
@@ -3022,7 +3015,7 @@
      * Returns the rect of a set of verts. Typically takes vertices that are
      * "centered" around 0 and returns them to be anchored upper-left.
      */
-    getBoundingClientRect: function(vertices, border, curved) {
+    getBoundingClientRect: function(vertices, border) {
 
       var left = Infinity, right = -Infinity,
         top = Infinity, bottom = -Infinity;
@@ -3036,17 +3029,17 @@
         right = Math.max(x, right);
         bottom = Math.max(y, bottom);
 
-        if (!!curved) {
+        a = v.u && v.u.x, b = v.u && v.u.y;
+        c = v.v && v.v.x, d = v.v && v.v.y;
 
-          a = v.u.x, b = v.u.y;
-          c = v.v.x, d = v.v.y;
-
-          top = Math.min(b, d, top);
-          left = Math.min(a, c, left);
-          right = Math.max(a, c, right);
-          bottom = Math.max(b, d, bottom);
-
+        if (!a || !b || !c || !d) {
+          return;
         }
+
+        top = Math.min(b, d, top);
+        left = Math.min(a, c, left);
+        right = Math.max(a, c, right);
+        bottom = Math.max(b, d, bottom);
 
       });
 
@@ -3110,7 +3103,6 @@
         cap = elem.cap,
         join = elem.join,
         miter = elem.miter,
-        curved = elem.curved,
         closed = elem.closed,
         length = commands.length,
         last = length - 1;
@@ -3150,32 +3142,25 @@
       ctx.beginPath();
       _.each(commands, function(b, i) {
 
-        var x = (b.x * scale + cx).toFixed(3),
-          y = (b.y * scale + cy).toFixed(3);
+        var next, prev, a, c, ux, uy, vx, vy;
+        var x = (b.x * scale + cx).toFixed(3), y = (b.y * scale + cy).toFixed(3);
 
-        if (curved) {
+        switch (b._command) {
 
-          var prev = closed ? mod(i - 1, length) : Math.max(i - 1, 0);
-          var next = closed ? mod(i + 1, length) : Math.min(i + 1, last);
+          case Two.Commands.curve:
 
-          var a = commands[prev];
-          var c = commands[next];
+            prev = closed ? mod(i - 1, length) : Math.max(i - 1, 0);
+            next = closed ? mod(i + 1, length) : Math.min(i + 1, last);
 
-          var vx = (a.v.x * scale + cx).toFixed(3);
-          var vy = (a.v.y * scale + cy).toFixed(3);
+            a = commands[prev], c = commands[next];
 
-          var ux = (b.u.x * scale + cx).toFixed(3);
-          var uy = (b.u.y * scale + cy).toFixed(3);
+            vx = (a.v.x * scale + cx).toFixed(3);
+            vy = (a.v.y * scale + cy).toFixed(3);
 
-          if (i <= 0) {
-
-            ctx.moveTo(x, y);
-
-          } else {
+            ux = (b.u.x * scale + cx).toFixed(3);
+            uy = (b.u.y * scale + cy).toFixed(3);
 
             ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
-
-            // Add a final point and close it off
 
             if (i >= last && closed) {
 
@@ -3192,22 +3177,23 @@
 
             }
 
-          }
+            break;
 
-        } else {
-
-          if (i <= 0) {
-            ctx.moveTo(x, y);
-          } else {
+          case Two.Commands.line:
             ctx.lineTo(x, y);
-          }
+            break;
+
+          case Two.Commands.move:
+            ctx.moveTo(x, y);
+            break;
 
         }
+
       });
 
       // Loose ends
 
-      if (closed && !curved) {
+      if (closed) {
         ctx.closePath();
       }
 
@@ -3474,7 +3460,6 @@
       cap = o.cap,
       join = o.join,
       miter = o.miter,
-      curved = o.curved,
       closed = o.closed,
       vertices = o.vertices;
 
@@ -3507,13 +3492,12 @@
       styles.linewidth = linewidth;
     }
     if (vertices) {
-      styles.vertices = getCommands(vertices, curved, closed);
+      styles.vertices = vertices;
       styles.commands = styles.vertices;
-      styles.rect = webgl.getBoundingClientRect(styles.commands, styles.linewidth, styles.curved);
+      styles.rect = webgl.getBoundingClientRect(styles.commands, styles.linewidth);
       styles.triangles = webgl.getTriangles(styles.rect);
     }
     styles.visible = !!visible;
-    styles.curved = !!curved;
     styles.closed = !!closed;
 
     // Update buffer and texture
@@ -3527,7 +3511,7 @@
 
   }
 
-  function setStyles(elem, property, value, closed, curved, strokeChanged) {
+  function setStyles(elem, property, value, closed, strokeChanged) {
 
     var textureNeedsUpdate = false;
 
@@ -3540,7 +3524,7 @@
       elem.updateMatrix();
     } else if (/(stroke|fill|opacity|cap|join|miter|linewidth)/.test(property)) {
       elem[property] = value;
-      elem.rect = expand(webgl.getBoundingClientRect(elem.commands, elem.linewidth, elem.curved), elem.rect);
+      elem.rect = expand(webgl.getBoundingClientRect(elem.commands, elem.linewidth), elem.rect);
       elem.triangles = webgl.getTriangles(elem.rect);
       webgl.updateBuffer(this.ctx, elem, this.program);
       textureNeedsUpdate = true;
@@ -3548,16 +3532,13 @@
       if (!_.isUndefined(closed)) {
         elem.closed = closed;
       }
-      if (!_.isUndefined(curved)) {
-        elem.curved = curved;
-      }
       if (strokeChanged) {
-        elem.commands = getCommands(value, elem.curved, elem.closed);
+        elem.commands = value;
       } else {
-        elem.vertices = getCommands(value, elem.curved, elem.closed);
+        elem.vertices = value;
         elem.commands = elem.vertices;
       }
-      elem.rect = expand(webgl.getBoundingClientRect(elem.vertices, elem.linewidth, elem.curved), elem.rect);
+      elem.rect = expand(webgl.getBoundingClientRect(elem.vertices, elem.linewidth), elem.rect);
       elem.triangles = webgl.getTriangles(elem.rect);
       webgl.updateBuffer(this.ctx, elem, this.program);
       textureNeedsUpdate = true;
@@ -3875,8 +3856,8 @@
 
       // A bubbled up version of 'change' event for the children.
 
-      var broadcast = _.bind(function(id, property, value, closed, curved, strokeChanged) {
-        this.trigger(Two.Events.change, id, property, value, closed, curved, strokeChanged);
+      var broadcast = _.bind(function(id, property, value, closed, strokeChanged) {
+        this.trigger(Two.Events.change, id, property, value, closed, strokeChanged);
       }, this);
 
       // Add the objects
@@ -4035,7 +4016,7 @@
 
   var min = Math.min, max = Math.max, round = Math.round;
 
-  var Polygon = Two.Polygon = function(vertices, closed, curved) {
+  var Polygon = Two.Polygon = function(vertices, closed, curved, manual) {
 
     Two.Shape.call(this);
 
@@ -4043,8 +4024,13 @@
 
     // Add additional logic for watching the vertices.
 
-    closed = !!closed;
-    curved = !!curved;
+    this._closed = !!closed;
+    this._curved = !!curved;
+
+    // Determines whether or not two.js should calculate curves, lines, and
+    // commands automatically for you or to let the developer manipulate them
+    // for themselves.
+    this._automatic = !manual;
 
     var beginning = 0.0;
     var ending = 1.0;
@@ -4056,6 +4042,10 @@
     var updateVertices = _.debounce(_.bind(function(property) { // Call only once a frame.
 
       var l, ia, ib, last;
+
+      if (this._automatic) {
+        this.plot();
+      }
 
       if (strokeChanged || verticesChanged) {
 
@@ -4074,9 +4064,8 @@
 
       }
 
-
       this.trigger(Two.Events.change,
-        this.id, 'vertices', renderedVertices, closed, curved, strokeChanged);
+        this.id, 'vertices', renderedVertices, this._closed, strokeChanged);
 
       strokeChanged = false;
       verticesChanged = false;
@@ -4085,20 +4074,30 @@
 
     Object.defineProperty(this, 'closed', {
       get: function() {
-        return closed;
+        return this._closed;
       },
       set: function(v) {
-        closed = !!v;
+        this._closed = !!v;
         updateVertices();
       }
     });
 
     Object.defineProperty(this, 'curved', {
       get: function() {
-        return curved;
+        return this._curved;
       },
       set: function(v) {
-        curved = !!v;
+        this._curved = !!v;
+        updateVertices();
+      }
+    });
+
+    Object.defineProperty(this, 'automatic', {
+      get: function() {
+        return this._automatic;
+      },
+      set: function(v) {
+        this._automatic = !!v;
         updateVertices();
       }
     });
@@ -4156,7 +4155,7 @@
         }, this);
 
         // Remove previous listeners
-        if(verticesCollection) {
+        if (verticesCollection) {
           verticesCollection.unbind();
         }
 
@@ -4176,6 +4175,7 @@
     });
 
     this.vertices = vertices;
+    this._automatic && this.plot();
 
   };
 
@@ -4187,7 +4187,7 @@
         return new Two.Vector(v.x, v.y);
       });
 
-      var clone = new Polygon(points, this.closed, this.curved);
+      var clone = new Polygon(points, this._closed, this._curved);
 
       _.each(Two.Shape.Properties, function(k) {
         clone[k] = this[k];
@@ -4293,6 +4293,31 @@
         width: ll.x - ul.x,
         height: ll.y - ul.y
       };
+
+    },
+
+    /**
+     * Based on closed / curved and sorting of vertices plot where all points
+     * should be and where the respective handles should be as well.
+     */
+    plot: function() {
+
+      if (this._curved) {
+        Two.Utils.getCurveFromPoints(this.vertices, this._closed);
+        return this;
+      }
+
+      _.each(this.vertices, function(p, i) {
+        p._command = i === 0 ? Two.Commands.move : Two.Commands.line;
+        if (p.u instanceof Two.Vector) {
+          p.u.copy(p);
+        }
+        if (p.v instanceof Two.Vector) {
+          p.v.copy(p);
+        }
+      }, this);
+
+      return this;
 
     }
 
