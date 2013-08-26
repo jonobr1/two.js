@@ -1803,8 +1803,7 @@ var Backbone = Backbone || {};
 
           // Create Two.Polygons from the paths.
           var length = paths.length;
-          var coord = new Two.Vector();
-          var control = new Two.Vector();
+          var coord, control;
           var polys = _.map(paths, function(path) {
 
             var coords, relative = false;
@@ -1821,7 +1820,7 @@ var Backbone = Backbone || {};
 
               var x1, y1, x2, y2, x3, y3, x4, y4, reflection;
 
-              switch(lower) {
+              switch (lower) {
 
                 case 'z':
                   closed = true;
@@ -1834,12 +1833,13 @@ var Backbone = Backbone || {};
                   y = parseFloat(coords[1]);
 
                   result = new Two.Point(x, y);
+                  result._command = lower === 'm' ? Two.Commands.move : Two.Commands.line;
 
                   if (relative) {
                     result.addSelf(coord);
                   }
 
-                  coord.copy(result);
+                  coord = result;
                   break;
 
                 case 'h':
@@ -1851,12 +1851,13 @@ var Backbone = Backbone || {};
                   result = new Two.Point();
                   result[a] = parseFloat(coords[0]);
                   result[b] = coord[b];
+                  result._command = Two.Commands.line;
 
                   if (relative) {
                     result[a] += coord[a];
                   }
 
-                  coord.copy(result);
+                  coord = result;
                   break;
 
                 case 's':
@@ -1889,17 +1890,12 @@ var Backbone = Backbone || {};
                     x4 += x1, y4 += y1;
                   }
 
-                  // TODO: Turn this into a command with Two.Point
-                  result = Two.Utils.subdivide(x1, y1, x2, y2, x3, y3, x4, y4);
-                  coord.set(x4, y4);
-                  control.set(x3, y3);
+                  coord.v.set(x2, y2);
+                  result = new Two.Point(x4, y4, x3, y3);
+                  result._command = Two.Commands.curve;
 
-                  var last = result[result.length - 1];
-
-                  // x4 y4 is not present in the curve, add it.
-                  if (last && !last.equals(coord)) {
-                    result.push(coord.clone());
-                  }
+                  coord = result;
+                  control = result.u;
 
                   break;
 
@@ -1933,16 +1929,12 @@ var Backbone = Backbone || {};
                     x4 += x1, y4 += y1;
                   }
 
-                  result = Two.Utils.subdivide(x1, y1, x2, y2, x3, y3, x4, y4);
-                  coord.set(x4, y4);
-                  control.set(x3, y3);
+                  coord.v.set(x2, y2);
+                  result = new Two.Point(x4, y4, x3, y3);
+                  result._command = Two.Commands.curve;
 
-                  var last = result[result.length - 1];
-
-                  // x4 y4 is not present in the curve, add it.
-                  if (!last.equals(coord)) {
-                    result.push(coord.clone());
-                  }
+                  coord = result;
+                  control = result.u;
 
                   break;
 
@@ -1960,7 +1952,7 @@ var Backbone = Backbone || {};
 
             points = _.compact(points);
 
-            var poly = new Two.Polygon(points, closed).noStroke();
+            var poly = new Two.Polygon(points, closed, undefined, true).noStroke();
             return Two.Utils.applySvgAttributes(node, poly);
 
           });
