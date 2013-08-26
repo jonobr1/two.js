@@ -354,7 +354,7 @@
               return 'm' + str;
             });
             rels[0] = 'M' + rels[0];
-            return rels;
+            return rels.join(' ');
           }));
 
           // Create Two.Polygons from the paths.
@@ -365,140 +365,156 @@
             var coords, relative = false;
             var closed = false;
 
-            var points = _.flatten(_.map(path.match(/[a-z][^a-z]*/ig), function(command) {
+            var points = _.flatten(_.map(path.match(/[a-df-z][^a-df-z]*/ig), function(command) {
 
               var result, x, y;
               var type = command[0];
               var lower = type.toLowerCase();
 
-              coords = command.slice(1).trim().split(/[\s,]+|(?=[+\-])/);
+              coords = command.slice(1).trim();
+              coords = coords.replace(/(-?\d+(?:\.\d*)?)[eE]([+\-]?\d+)/g, function(match, n1, n2) {
+                return parseFloat(n1) * Math.pow(10, n2);
+              });
+              coords = coords.split(/[\s,]+|(?=\s?[+\-])/);
               relative = type === lower;
 
               var x1, y1, x2, y2, x3, y3, x4, y4, reflection;
 
-              switch (lower) {
+              var numCoordsPerCommand = { m: 2, l: 2, h: 2, v: 2, c: 6, s: 4, t: 2, q: 4, a: 7 };
+              var numCoords = numCoordsPerCommand[lower]
+              var iterations = parseInt(coords.length / numCoords, 10);
 
-                case 'z':
-                  closed = true;
-                  break;
+              var results = _.flatten(_.map(_.range(iterations), function(i) {
 
-                case 'm':
-                case 'l':
+                switch (lower) {
 
-                  x = parseFloat(coords[0]);
-                  y = parseFloat(coords[1]);
+                  case 'z':
+                    closed = true;
+                    break;
 
-                  result = new Two.Point(x, y);
-                  result._command = lower === 'm' ? Two.Commands.move : Two.Commands.line;
+                  case 'm':
+                  case 'l':
 
-                  if (relative) {
-                    result.addSelf(coord);
-                  }
+                    x = parseFloat(coords[0]);
+                    y = parseFloat(coords[1]);
 
-                  coord = result;
-                  break;
+                    result = new Two.Point(x, y);
+                    result._command = lower === 'm' ? Two.Commands.move : Two.Commands.line;
 
-                case 'h':
-                case 'v':
+                    if (relative) {
+                      result.addSelf(coord);
+                    }
 
-                  var a = lower === 'h' ? 'x' : 'y';
-                  var b = a === 'x' ? 'y' : 'x';
+                    coord = result;
+                    relative = true;
+                    break;
 
-                  result = new Two.Point();
-                  result[a] = parseFloat(coords[0]);
-                  result[b] = coord[b];
-                  result._command = Two.Commands.line;
+                  case 'h':
+                  case 'v':
 
-                  if (relative) {
-                    result[a] += coord[a];
-                  }
+                    var a = lower === 'h' ? 'x' : 'y';
+                    var b = a === 'x' ? 'y' : 'x';
 
-                  coord = result;
-                  break;
+                    result = new Two.Point();
+                    result[a] = parseFloat(coords[0]);
+                    result[b] = coord[b];
+                    result._command = Two.Commands.line;
 
-                case 's':
-                case 'c':
+                    if (relative) {
+                      result[a] += coord[a];
+                    }
 
-                  x1 = coord.x, y1 = coord.y;
+                    coord = result;
+                    break;
 
-                  if (lower === 'c') {
+                  case 's':
+                  case 'c':
 
-                    x2 = parseFloat(coords[0]), y2 = parseFloat(coords[1]);
-                    x3 = parseFloat(coords[2]), y3 = parseFloat(coords[3]);
-                    x4 = parseFloat(coords[4]), y4 = parseFloat(coords[5]);
+                    x1 = coord.x, y1 = coord.y;
 
-                  } else {
+                    if (lower === 'c') {
 
-                    // Calculate reflection control point for proper x2, y2
-                    // inclusion.
+                      x2 = parseFloat(coords[0]), y2 = parseFloat(coords[1]);
+                      x3 = parseFloat(coords[2]), y3 = parseFloat(coords[3]);
+                      x4 = parseFloat(coords[4]), y4 = parseFloat(coords[5]);
 
-                    reflection = Two.Utils.getReflection(coord, control, relative);
+                    } else {
 
-                    x2 = reflection.x, y2 = reflection.y;
-                    x3 = parseFloat(coords[0]), y3 = parseFloat(coords[1]);
-                    x4 = parseFloat(coords[2]), y4 = parseFloat(coords[3]);
+                      // Calculate reflection control point for proper x2, y2
+                      // inclusion.
 
-                  }
+                      reflection = Two.Utils.getReflection(coord, control, relative);
 
-                  if (relative) {
-                    x2 += x1, y2 += y1;
-                    x3 += x1, y3 += y1;
-                    x4 += x1, y4 += y1;
-                  }
+                      x2 = reflection.x, y2 = reflection.y;
+                      x3 = parseFloat(coords[0]), y3 = parseFloat(coords[1]);
+                      x4 = parseFloat(coords[2]), y4 = parseFloat(coords[3]);
 
-                  coord.v.set(x2, y2);
-                  result = new Two.Point(x4, y4, x3, y3);
-                  result._command = Two.Commands.curve;
+                    }
 
-                  coord = result;
-                  control = result.u;
+                    if (relative) {
+                      x2 += x1, y2 += y1;
+                      x3 += x1, y3 += y1;
+                      x4 += x1, y4 += y1;
+                    }
 
-                  break;
+                    coord.v.set(x2, y2);
+                    result = new Two.Point(x4, y4, x3, y3);
+                    result._command = Two.Commands.curve;
 
-                case 't':
-                case 'q':
+                    coord = result;
+                    control = result.u;
 
-                  x1 = coord.x, y1 = coord.y;
-                  if (control.isZero()) {
-                    x2 = x1, y2 = y1;
-                  } else {
-                    x2 = control.x, y1 = control.y;
-                  }
+                    break;
 
-                  if (lower === 'q') {
+                  case 't':
+                  case 'q':
 
-                    x3 = parseFloat(coords[0]), y3 = parseFloat(coords[1]);
-                    x4 = parseFloat(coords[1]), y4 = parseFloat(coords[2]);
+                    x1 = coord.x, y1 = coord.y;
+                    if (control.isZero()) {
+                      x2 = x1, y2 = y1;
+                    } else {
+                      x2 = control.x, y1 = control.y;
+                    }
 
-                  } else {
+                    if (lower === 'q') {
 
-                    reflection = Two.Utils.getReflection(coord, control, relative);
+                      x3 = parseFloat(coords[0]), y3 = parseFloat(coords[1]);
+                      x4 = parseFloat(coords[1]), y4 = parseFloat(coords[2]);
 
-                    x3 = reflection.x, y3 = reflection.y;
-                    x4 = parseFloat(coords[0]), y4 = parseFloat(coords[1]);
+                    } else {
 
-                  }
+                      reflection = Two.Utils.getReflection(coord, control, relative);
 
-                  if (relative) {
-                    x2 += x1, y2 += y1;
-                    x3 += x1, y3 += y1;
-                    x4 += x1, y4 += y1;
-                  }
+                      x3 = reflection.x, y3 = reflection.y;
+                      x4 = parseFloat(coords[0]), y4 = parseFloat(coords[1]);
 
-                  coord.v.set(x2, y2);
-                  result = new Two.Point(x4, y4, x3, y3);
-                  result._command = Two.Commands.curve;
+                    }
 
-                  coord = result;
-                  control = result.u;
+                    if (relative) {
+                      x2 += x1, y2 += y1;
+                      x3 += x1, y3 += y1;
+                      x4 += x1, y4 += y1;
+                    }
 
-                  break;
+                    coord.v.set(x2, y2);
+                    result = new Two.Point(x4, y4, x3, y3);
+                    result._command = Two.Commands.curve;
 
-                case 'a':
-                  throw new Two.Utils.Error('not yet able to interpret Elliptical Arcs.');
-              }
+                    coord = result;
+                    control = result.u;
 
-              return result;
+                    break;
+
+                  case 'a':
+                    throw new Two.Utils.Error('not yet able to interpret Elliptical Arcs.');
+                }
+
+                coords = (coords) ? _.rest(coords, numCoords) : [];
+                return result;
+
+              })); 
+
+              return results;
 
             }));
 
