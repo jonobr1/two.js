@@ -79,7 +79,7 @@
             var shape = two.interpret(el).center();
             shape.fill = 'white';
             shape.visible = false;
-            shape.noStroke();;
+            shape.noStroke();
             shape.translation.set(two.width / 2, two.height / 2);
             shapes.push(shape);
             _.each(shape.children, function(child) {
