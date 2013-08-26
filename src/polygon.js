@@ -88,6 +88,13 @@
       },
       set: function(v) {
         this._automatic = !!v;
+        var method = v ? 'unbind' : 'bind';
+        // TODO: Test
+        // Add / remove handlers to propagated handle events
+        _.each(this.vertices, function(v) {
+          v.u && v.u[method](Two.Events.change, updateVertices);
+          v.v && v.v[method](Two.Events.change, updateVertices);
+        }, this);
         updateVertices();
       }
     });
@@ -246,9 +253,6 @@
 
     },
 
-    /**
-     * TODO: Make a shallow and a deep request.
-     */
     getBoundingClientRect: function(shallow) {
 
       var border = this.linewidth;
