@@ -240,8 +240,6 @@
       var cx = centroid.x * scale, cy = centroid.y * scale;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      // ctx.fillStyle = 'red';
-      // ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       if (fill) {
         ctx.fillStyle = fill;

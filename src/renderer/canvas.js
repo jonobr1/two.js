@@ -387,12 +387,9 @@
         return this;
       }
 
-      // TODO: Test performance between these two
+      var isOne = this.ratio === 1;
 
-      // var rect = this.stage.object.getBoundingClientRect();
-      // this.ctx.clearRect(rect.left, rect.top, rect.width, rect.height);
-
-      if (this.ratio !== 1) {
+      if (isOne) {
         this.ctx.save();
         this.ctx.scale(this.ratio, this.ratio);
       }
@@ -403,7 +400,7 @@
 
       this.stage.render(this.ctx);
 
-      if (this.ratio !== 1) {
+      if (isOne) {
         this.ctx.restore();
       }
 

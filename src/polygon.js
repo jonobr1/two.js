@@ -87,6 +87,9 @@
         return this._automatic;
       },
       set: function(v) {
+        if (v === this._automatic) {
+          return;
+        }
         this._automatic = !!v;
         var method = v ? 'unbind' : 'bind';
         // TODO: Test
@@ -115,7 +118,7 @@
         return ending;
       },
       set: function(v) {
-        ending = min(max(v, 0.0), 1);
+        ending = min(max(v, 0.0), 1.0);
         strokeChanged = true;
         updateVertices();
       }
@@ -292,7 +295,7 @@
 
     /**
      * Based on closed / curved and sorting of vertices plot where all points
-     * should be and where the respective handles should be as well.
+     * should be and where the respective handles should be too.
      */
     plot: function() {
 

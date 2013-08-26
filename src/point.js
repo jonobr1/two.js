@@ -1,8 +1,8 @@
 (function() {
 
   /**
-   * An object that holds 3 `Two.Vectors`, the anchor point and its
-   * corresponding handles. 
+   * An object that holds 3 `Two.Vector`s, the anchor point and its
+   * corresponding handles: `u` and `v`. 
    */
   var Point = Two.Point = function(x, y, ux, uy, vx, vy, command) {
 
@@ -27,9 +27,5 @@
     this.v = new Two.Vector(_.isNumber(vx) ? vx : x, _.isNumber(vy) ? vy : y);
 
   };
-
-  _.extend(Point.prototype, Two.Vector.prototype, {
-
-  });
 
 })();
