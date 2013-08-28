@@ -1665,10 +1665,18 @@
 
     // TODO: Only add this to commands.curve...
     Anchor.AppendCurveProperties(this);
-    this.controls.left.x = _.isNumber(ux) ? ux : x;
-    this.controls.left.y = _.isNumber(uy) ? uy : y;
-    this.controls.right.x = _.isNumber(vx) ? vx : x;
-    this.controls.right.y = _.isNumber(vy) ? vy : y;
+    if (_.isNumber(ux)) {
+      this.controls.left.x = ux;
+    }
+    if (_.isNumber(uy)) {
+      this.controls.left.y = uy;
+    }
+    if (_.isNumber(vx)) {
+      this.controls.right.x = vx;
+    }
+    if (_.isNumber(vy)) {
+      this.controls.right.y = vy;
+    }
 
   };
 
