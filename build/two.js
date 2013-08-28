@@ -2242,6 +2242,11 @@ var Backbone = Backbone || {};
         for (var i = 0; i < l; i++) {
 
           var point = points[i];
+
+          if (!_.isObject(point.controls)) {
+            Two.Anchor.AppendCurveProperties(point);
+          }
+
           var prev = closed ? mod(i - 1, l) : Math.max(i - 1, 0);
           var next = closed ? mod(i + 1, l) : Math.min(i + 1, last);
 
@@ -2252,11 +2257,11 @@ var Backbone = Backbone || {};
 
           b._command = i === 0 ? Two.Commands.move : Two.Commands.curve;
 
-          b.u.x = _.isNumber(b.u.x) ? b.u.x : b.x;
-          b.u.y = _.isNumber(b.u.y) ? b.u.y : b.y;
+          b.controls.left.x = _.isNumber(b.controls.left.x) ? b.controls.left.x : b.x;
+          b.controls.left.y = _.isNumber(b.controls.left.y) ? b.controls.left.y : b.y;
 
-          b.v.x = _.isNumber(b.v.x) ? b.v.x : b.x;
-          b.v.y = _.isNumber(b.v.y) ? b.v.y : b.y;
+          b.controls.right.x = _.isNumber(b.controls.right.x) ? b.controls.right.x : b.x;
+          b.controls.right.y = _.isNumber(b.controls.right.y) ? b.controls.right.y : b.y;
 
         }
 
@@ -2278,12 +2283,12 @@ var Backbone = Backbone || {};
 
         // So we know which angle corresponds to which side.
 
-        b.u = _.isObject(b.u) ? b.u : new Two.Vector(b.x, b.y);
-        b.v = _.isObject(b.v) ? b.v : new Two.Vector(b.x, b.y);
+        b.u = _.isObject(b.controls.left) ? b.controls.left : new Two.Vector(b.x, b.y);
+        b.v = _.isObject(b.controls.right) ? b.controls.right : new Two.Vector(b.x, b.y);
 
         if (d1 < 0.0001 || d2 < 0.0001) {
-          b.u.copy(b);
-          b.v.copy(b);
+          b.controls.left.copy(b);
+          b.controls.right.copy(b);
           return b;
         }
 
@@ -2296,13 +2301,13 @@ var Backbone = Backbone || {};
           mid -= HALF_PI;
         }
 
-        b.u.x = b.x + cos(mid) * d1;
-        b.u.y = b.y + sin(mid) * d1;
+        b.controls.left.x = b.x + cos(mid) * d1;
+        b.controls.left.y = b.y + sin(mid) * d1;
 
         mid -= PI;
 
-        b.v.x = b.x + cos(mid) * d2;
-        b.v.y = b.y + sin(mid) * d2;
+        b.controls.right.x = b.x + cos(mid) * d2;
+        b.controls.right.y = b.y + sin(mid) * d2;
 
         return b;
 
