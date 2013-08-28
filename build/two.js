@@ -1774,7 +1774,7 @@ var Backbone = Backbone || {};
           }
           var verts = _.map(_.range(points.numberOfItems), function(i) {
             var p = points.getItem(i);
-            return new Two.Point(p.x, p.y);
+            return new Two.Anchor(p.x, p.y);
           });
 
           var poly = new Two.Polygon(verts, !open).noStroke();
@@ -1821,7 +1821,7 @@ var Backbone = Backbone || {};
                 } else {
                   x = coord.x;
                   y = coord.y;
-                  result = new Two.Point(x, y);
+                  result = new Two.Anchor(x, y);
                   result._command = Two.Commands.close;
                 }
                 break;
@@ -1832,7 +1832,7 @@ var Backbone = Backbone || {};
                 x = parseFloat(coords[0]);
                 y = parseFloat(coords[1]);
 
-                result = new Two.Point(x, y);
+                result = new Two.Anchor(x, y);
                 result._command = lower === 'm' ? Two.Commands.move : Two.Commands.line;
 
                 if (relative) {
@@ -1840,7 +1840,6 @@ var Backbone = Backbone || {};
                 }
 
                 coord = result;
-                relative = true;
                 break;
 
               case 'h':
@@ -1849,7 +1848,7 @@ var Backbone = Backbone || {};
                 var a = lower === 'h' ? 'x' : 'y';
                 var b = a === 'x' ? 'y' : 'x';
 
-                result = new Two.Point();
+                result = new Two.Anchor();
                 result[a] = parseFloat(coords[0]);
                 result[b] = coord[b];
                 result._command = Two.Commands.line;
@@ -1865,6 +1864,9 @@ var Backbone = Backbone || {};
               case 'c':
 
                 x1 = coord.x, y1 = coord.y;
+                if (!control) {
+                  control = new Two.Vector().copy(coord);
+                }
 
                 if (lower === 'c') {
 
@@ -1891,12 +1893,15 @@ var Backbone = Backbone || {};
                   x4 += x1, y4 += y1;
                 }
 
-                coord.v.set(x2, y2);
-                result = new Two.Point(x4, y4, x3, y3);
-                result._command = Two.Commands.curve;
+                if (!_.isObject(coord.controls)) {
+                  Two.Anchor.AppendCurveProperties(coord);
+                }
+
+                coord.controls.right.set(x2, y2);
+                result = new Two.Anchor(x4, y4, x3, y3, undefined, undefined, Two.Commands.curve);
 
                 coord = result;
-                control = result.u;
+                control = result.controls.left;
 
                 break;
 
@@ -1904,6 +1909,11 @@ var Backbone = Backbone || {};
               case 'q':
 
                 x1 = coord.x, y1 = coord.y;
+
+                if (!control) {
+                  control = new Two.Vector().copy(coord);
+                }
+
                 if (control.isZero()) {
                   x2 = x1, y2 = y1;
                 } else {
@@ -1930,12 +1940,15 @@ var Backbone = Backbone || {};
                   x4 += x1, y4 += y1;
                 }
 
-                coord.v.set(x2, y2);
-                result = new Two.Point(x4, y4, x3, y3);
-                result._command = Two.Commands.curve;
+                if (!_.isObject(coord.controls)) {
+                  Two.Anchor.AppendCurveProperties(coord);
+                }
+
+                coord.controls.right.set(x2, y2);
+                result = new Two.Anchor(x4, y4, x3, y3, undefined, undefined, Two.Commands.curve);
 
                 coord = result;
-                control = result.u;
+                control = result.controls.left;
 
                 break;
 
@@ -1971,7 +1984,7 @@ var Backbone = Backbone || {};
             var theta = pct * TWO_PI;
             var x = r * cos(theta);
             var y = r * sin(theta);
-            return new Two.Point(x, y);
+            return new Two.Anchor(x, y);
           }, this);
 
           var circle = new Two.Polygon(points, true, true).noStroke();
@@ -1994,7 +2007,7 @@ var Backbone = Backbone || {};
             var theta = pct * TWO_PI;
             var x = width * cos(theta);
             var y = height * sin(theta);
-            return new Two.Point(x, y);
+            return new Two.Anchor(x, y);
           }, this);
 
           var ellipse = new Two.Polygon(points, true, true).noStroke();
@@ -2015,10 +2028,10 @@ var Backbone = Backbone || {};
           var h2 = height / 2;
 
           var points = [
-            new Two.Point(w2, h2),
-            new Two.Point(-w2, h2),
-            new Two.Point(-w2, -h2),
-            new Two.Point(w2, -h2)
+            new Two.Anchor(w2, h2),
+            new Two.Anchor(-w2, h2),
+            new Two.Anchor(-w2, -h2),
+            new Two.Anchor(w2, -h2)
           ];
 
           var rect = new Two.Polygon(points, true).noStroke();
@@ -2042,8 +2055,8 @@ var Backbone = Backbone || {};
           var h2 = height / 2;
 
           var points = [
-            new Two.Point(- w2, - h2),
-            new Two.Point(w2, h2)
+            new Two.Anchor(- w2, - h2),
+            new Two.Anchor(w2, h2)
           ];
 
           // Center line and translate to desired position.
@@ -2558,8 +2571,8 @@ var Backbone = Backbone || {};
       var h2 = height / 2;
 
       var points = [
-        new Two.Point(- w2, - h2),
-        new Two.Point(w2, h2)
+        new Two.Anchor(- w2, - h2),
+        new Two.Anchor(w2, h2)
       ];
 
       // Center line and translate to desired position.
@@ -2578,10 +2591,10 @@ var Backbone = Backbone || {};
       var h2 = height / 2;
 
       var points = [
-        new Two.Point(w2, h2),
-        new Two.Point(-w2, h2),
-        new Two.Point(-w2, -h2),
-        new Two.Point(w2, -h2)
+        new Two.Anchor(w2, h2),
+        new Two.Anchor(-w2, h2),
+        new Two.Anchor(-w2, -h2),
+        new Two.Anchor(w2, -h2)
       ];
 
       var rect = new Two.Polygon(points, true);
@@ -2607,7 +2620,7 @@ var Backbone = Backbone || {};
         var theta = pct * TWO_PI;
         var x = width * cos(theta);
         var y = height * sin(theta);
-        return new Two.Point(x, y);
+        return new Two.Anchor(x, y);
       }, this);
 
       var ellipse = new Two.Polygon(points, true, true);
@@ -2630,7 +2643,7 @@ var Backbone = Backbone || {};
             break;
           }
           var y = arguments[i + 1];
-          points.push(new Two.Point(x, y));
+          points.push(new Two.Anchor(x, y));
         }
       }
 
@@ -2668,7 +2681,7 @@ var Backbone = Backbone || {};
             break;
           }
           var y = arguments[i + 1];
-          points.push(new Two.Point(x, y));
+          points.push(new Two.Anchor(x, y));
         }
       }
 
@@ -3062,13 +3075,19 @@ var Backbone = Backbone || {};
 })();
 (function() {
 
+  var commands = Two.Commands;
+
   /**
-   * An object that holds 3 `Two.Vectors`, the anchor point and its
-   * corresponding handles. 
+   * An object that holds 3 `Two.Vector`s, the anchor point and its
+   * corresponding handles: `left` and `right`.
    */
-  var Point = Two.Point = function(x, y, ux, uy, vx, vy, command) {
+  var Anchor = Two.Anchor = function(x, y, ux, uy, vx, vy, command) {
 
     Two.Vector.call(this, x, y);
+
+    this._broadcast = _.bind(function() {
+      this.trigger(Two.Events.change);
+    }, this);
 
     Object.defineProperty(this, 'command', {
 
@@ -3078,19 +3097,69 @@ var Backbone = Backbone || {};
 
       set: function(c) {
         this._command = c;
+        if (this._command === commands.curve && !_.isObject(this.controls)) {
+          Anchor.AppendCurveProperties(this);
+        }
         return this.trigger(Two.Events.change);
       }
 
     });
 
-    this.command = Two.Commands.move;
+    this._command = command || commands.move;
 
-    this.u = new Two.Vector(_.isNumber(ux) ? ux : x, _.isNumber(uy) ? uy : y);
-    this.v = new Two.Vector(_.isNumber(vx) ? vx : x, _.isNumber(vy) ? vy : y);
+    // TODO: Only add this to commands.curve...
+    Anchor.AppendCurveProperties(this);
+    this.controls.left.x = _.isNumber(ux) ? ux : x;
+    this.controls.left.y = _.isNumber(uy) ? uy : y;
+    this.controls.right.x = _.isNumber(vx) ? vx : x;
+    this.controls.right.y = _.isNumber(vy) ? vy : y;
 
   };
 
-  _.extend(Point.prototype, Two.Vector.prototype, {
+  _.extend(Anchor, {
+
+    AppendCurveProperties: function(anchor) {
+
+      var x = this._x, y = this._y;
+
+      anchor.controls = {
+        left: new Two.Vector(x, y),
+        right: new Two.Vector(x, y)
+      };
+
+    }
+
+  });
+
+  _.extend(Anchor.prototype, Two.Vector.prototype, {
+
+    listen: function() {
+
+      if (this._command !== commands.curve) {
+        return this;
+      }
+
+      if (!_.isObject(this.controls)) {
+        Anchor.AppendCurveProperties(this);
+      }
+
+      _.each(this.controls, function(v) {
+        v.bind(Two.Events.change, this._broadcast);
+      }, this);
+
+      return this;
+
+    },
+
+    ignore: function() {
+
+      _.each(this.controls, function(v) {
+        v.unbind(Two.Events.change, this._broadcast);
+      }, this);
+
+      return this;
+
+    }
 
   });
 
@@ -3527,11 +3596,11 @@ var Backbone = Backbone || {};
 
           case Two.Commands.curve:
 
-            vx = a.v.x.toFixed(3);
-            vy = a.v.y.toFixed(3);
+            vx = ((a.controls && a.controls.right) || a).x.toFixed(3);
+            vy = ((a.controls && a.controls.right) || a).y.toFixed(3);
 
-            ux = b.u.x.toFixed(3);
-            uy = b.u.y.toFixed(3);
+            ux = ((b.controls && b.controls.left) || b).x.toFixed(3);
+            uy = ((b.controls && b.controls.left) || b).y.toFixed(3);
 
             command = b._command + ' ' +
               vx + ' ' + vy + ' ' + ux + ' ' + uy + ' ' + x + ' ' + y;
@@ -3550,11 +3619,11 @@ var Backbone = Backbone || {};
 
           if (b._command === Two.Commands.curve) {
 
-            vx = b.v.x.toFixed(3);
-            vy = b.v.y.toFixed(3);
+            vx = ((b.controls && b.controls.right) || b).x.toFixed(3);
+            vy = ((b.controls && b.controls.right) || b).y.toFixed(3);
 
-            ux = c.u.x.toFixed(3);
-            uy = c.u.y.toFixed(3);
+            ux = ((c.controls && c.controls.left) || c).x.toFixed(3);
+            uy = ((c.controls && c.controls.left) || c).y.toFixed(3);
 
             x = c.x.toFixed(3);
             y = c.y.toFixed(3);
@@ -3976,21 +4045,21 @@ var Backbone = Backbone || {};
 
             a = commands[prev], c = commands[next];
 
-            vx = a.v.x.toFixed(3);
-            vy = a.v.y.toFixed(3);
+            vx = ((a.controls && a.controls.right) || a).x.toFixed(3);
+            vy = ((a.controls && a.controls.right) || a).y.toFixed(3);
 
-            ux = b.u.x.toFixed(3);
-            uy = b.u.y.toFixed(3);
+            ux = ((b.controls && b.controls.left) || b).x.toFixed(3);
+            uy = ((b.controls && b.controls.left) || b).y.toFixed(3);
 
             ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
 
             if (i >= last && closed) {
 
-              vx = b.v.x.toFixed(3);
-              vy = b.v.y.toFixed(3);
+              vx = ((b.controls && b.controls.right) || b).x.toFixed(3);
+              vy = ((b.controls && b.controls.right) || b).y.toFixed(3);
 
-              ux = c.u.x.toFixed(3);
-              uy = c.u.y.toFixed(3);
+              ux = ((c.controls && c.controls.left) || c).x.toFixed(3);
+              uy = ((c.controls && c.controls.left) || c).y.toFixed(3);
 
               x = c.x.toFixed(3);
               y = c.y.toFixed(3);
@@ -4205,12 +4274,9 @@ var Backbone = Backbone || {};
         return this;
       }
 
-      // TODO: Test performance between these two
+      var isOne = this.ratio === 1;
 
-      // var rect = this.stage.object.getBoundingClientRect();
-      // this.ctx.clearRect(rect.left, rect.top, rect.width, rect.height);
-
-      if (this.ratio !== 1) {
+      if (!isOne) {
         this.ctx.save();
         this.ctx.scale(this.ratio, this.ratio);
       }
@@ -4221,7 +4287,7 @@ var Backbone = Backbone || {};
 
       this.stage.render(this.ctx);
 
-      if (this.ratio !== 1) {
+      if (!isOne) {
         this.ctx.restore();
       }
 
@@ -4464,15 +4530,19 @@ var Backbone = Backbone || {};
 
       _.each(vertices, function(v, i) {
 
-        var x = v.x, y = v.y, a, b, c, d;
+        var x = v.x, y = v.y, a, b, c, d, controls = v.controls;
 
         top = Math.min(y, top);
         left = Math.min(x, left);
         right = Math.max(x, right);
         bottom = Math.max(y, bottom);
 
-        a = v.u && v.u.x, b = v.u && v.u.y;
-        c = v.v && v.v.x, d = v.v && v.v.y;
+        if (!v.controls) {
+          return;
+        }
+
+        a = controls.left && controls.left.x, b = controls.left && controls.left.y;
+        c = controls.right && controls.right.x, d = controls.right && controls.right.y;
 
         if (!a || !b || !c || !d) {
           return;
@@ -4556,8 +4626,6 @@ var Backbone = Backbone || {};
       var cx = centroid.x * scale, cy = centroid.y * scale;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      // ctx.fillStyle = 'red';
-      // ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       if (fill) {
         ctx.fillStyle = fill;
@@ -4600,21 +4668,21 @@ var Backbone = Backbone || {};
 
             a = commands[prev], c = commands[next];
 
-            vx = (a.v.x * scale + cx).toFixed(3);
-            vy = (a.v.y * scale + cy).toFixed(3);
+            vx = ( ((a.controls && a.controls.right) || a).x * scale + cx ).toFixed(3);
+            vy = ( ((a.controls && a.controls.right) || a).y * scale + cy ).toFixed(3);
 
-            ux = (b.u.x * scale + cx).toFixed(3);
-            uy = (b.u.y * scale + cy).toFixed(3);
+            ux = ( ((b.controls && b.controls.left) || b).x * scale + cx ).toFixed(3);
+            uy = ( ((b.controls && b.controls.left) || b).y * scale + cy ).toFixed(3);
 
             ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
 
             if (i >= last && closed) {
 
-              vx = (b.v.x * scale + cx).toFixed(3);
-              vy = (b.v.y * scale + cy).toFixed(3);
+              vx = ( ((b.controls && b.controls.right) || b).x * scale + cx ).toFixed(3);
+              vy = ( ((b.controls && b.controls.right) || b).y * scale + cy ).toFixed(3);
 
-              ux = (c.u.x * scale + cx).toFixed(3);
-              uy = (c.u.y * scale + cy).toFixed(3);
+              ux = ( ((c.controls && c.controls.left) || c).x * scale + cx ).toFixed(3);
+              uy = ( ((c.controls && c.controls.left) || c).y * scale + cy ).toFixed(3);
 
               x = (c.x * scale + cx).toFixed(3);
               y = (c.y * scale + cy).toFixed(3);
@@ -5543,13 +5611,14 @@ var Backbone = Backbone || {};
         return this._automatic;
       },
       set: function(v) {
+        if (v === this._automatic) {
+          return;
+        }
         this._automatic = !!v;
-        var method = v ? 'unbind' : 'bind';
-        // TODO: Test
+        var method = this._automatic ? 'ignore' : 'listen';
         // Add / remove handlers to propagated handle events
         _.each(this.vertices, function(v) {
-          v.u && v.u[method](Two.Events.change, updateVertices);
-          v.v && v.v[method](Two.Events.change, updateVertices);
+          v[method]();
         }, this);
         updateVertices();
       }
@@ -5571,7 +5640,7 @@ var Backbone = Backbone || {};
         return ending;
       },
       set: function(v) {
-        ending = min(max(v, 0.0), 1);
+        ending = min(max(v, 0.0), 1.0);
         strokeChanged = true;
         updateVertices();
       }
@@ -5628,7 +5697,7 @@ var Backbone = Backbone || {};
     });
 
     this.vertices = vertices;
-    this._automatic && this.plot();
+    this._automatic && this.plot(); // TODO: Is this necessary
 
   };
 
@@ -5748,7 +5817,7 @@ var Backbone = Backbone || {};
 
     /**
      * Based on closed / curved and sorting of vertices plot where all points
-     * should be and where the respective handles should be as well.
+     * should be and where the respective handles should be too.
      */
     plot: function() {
 
@@ -5759,12 +5828,6 @@ var Backbone = Backbone || {};
 
       _.each(this.vertices, function(p, i) {
         p._command = i === 0 ? Two.Commands.move : Two.Commands.line;
-        if (p.u instanceof Two.Vector) {
-          p.u.copy(p);
-        }
-        if (p.v instanceof Two.Vector) {
-          p.v.copy(p);
-        }
       }, this);
 
       return this;

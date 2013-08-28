@@ -204,6 +204,8 @@
         var img = document.createElement('img');
         img.src = path;
         img.title = 'Reference Image';
+        img.width = 400;
+        img.height = 400;
 
         var domElement = document.createElement('li');
         renderer.domElement.title = 'Computed Image';

@@ -301,7 +301,7 @@
           }
           var verts = _.map(_.range(points.numberOfItems), function(i) {
             var p = points.getItem(i);
-            return new Two.Point(p.x, p.y);
+            return new Two.Anchor(p.x, p.y);
           });
 
           var poly = new Two.Polygon(verts, !open).noStroke();
@@ -348,7 +348,7 @@
                 } else {
                   x = coord.x;
                   y = coord.y;
-                  result = new Two.Point(x, y);
+                  result = new Two.Anchor(x, y);
                   result._command = Two.Commands.close;
                 }
                 break;
@@ -359,7 +359,7 @@
                 x = parseFloat(coords[0]);
                 y = parseFloat(coords[1]);
 
-                result = new Two.Point(x, y);
+                result = new Two.Anchor(x, y);
                 result._command = lower === 'm' ? Two.Commands.move : Two.Commands.line;
 
                 if (relative) {
@@ -367,7 +367,6 @@
                 }
 
                 coord = result;
-                relative = true;
                 break;
 
               case 'h':
@@ -376,7 +375,7 @@
                 var a = lower === 'h' ? 'x' : 'y';
                 var b = a === 'x' ? 'y' : 'x';
 
-                result = new Two.Point();
+                result = new Two.Anchor();
                 result[a] = parseFloat(coords[0]);
                 result[b] = coord[b];
                 result._command = Two.Commands.line;
@@ -392,6 +391,9 @@
               case 'c':
 
                 x1 = coord.x, y1 = coord.y;
+                if (!control) {
+                  control = new Two.Vector().copy(coord);
+                }
 
                 if (lower === 'c') {
 
@@ -418,12 +420,15 @@
                   x4 += x1, y4 += y1;
                 }
 
-                coord.v.set(x2, y2);
-                result = new Two.Point(x4, y4, x3, y3);
-                result._command = Two.Commands.curve;
+                if (!_.isObject(coord.controls)) {
+                  Two.Anchor.AppendCurveProperties(coord);
+                }
+
+                coord.controls.right.set(x2, y2);
+                result = new Two.Anchor(x4, y4, x3, y3, undefined, undefined, Two.Commands.curve);
 
                 coord = result;
-                control = result.u;
+                control = result.controls.left;
 
                 break;
 
@@ -431,6 +436,11 @@
               case 'q':
 
                 x1 = coord.x, y1 = coord.y;
+
+                if (!control) {
+                  control = new Two.Vector().copy(coord);
+                }
+
                 if (control.isZero()) {
                   x2 = x1, y2 = y1;
                 } else {
@@ -457,12 +467,15 @@
                   x4 += x1, y4 += y1;
                 }
 
-                coord.v.set(x2, y2);
-                result = new Two.Point(x4, y4, x3, y3);
-                result._command = Two.Commands.curve;
+                if (!_.isObject(coord.controls)) {
+                  Two.Anchor.AppendCurveProperties(coord);
+                }
+
+                coord.controls.right.set(x2, y2);
+                result = new Two.Anchor(x4, y4, x3, y3, undefined, undefined, Two.Commands.curve);
 
                 coord = result;
-                control = result.u;
+                control = result.controls.left;
 
                 break;
 
@@ -498,7 +511,7 @@
             var theta = pct * TWO_PI;
             var x = r * cos(theta);
             var y = r * sin(theta);
-            return new Two.Point(x, y);
+            return new Two.Anchor(x, y);
           }, this);
 
           var circle = new Two.Polygon(points, true, true).noStroke();
@@ -521,7 +534,7 @@
             var theta = pct * TWO_PI;
             var x = width * cos(theta);
             var y = height * sin(theta);
-            return new Two.Point(x, y);
+            return new Two.Anchor(x, y);
           }, this);
 
           var ellipse = new Two.Polygon(points, true, true).noStroke();
@@ -542,10 +555,10 @@
           var h2 = height / 2;
 
           var points = [
-            new Two.Point(w2, h2),
-            new Two.Point(-w2, h2),
-            new Two.Point(-w2, -h2),
-            new Two.Point(w2, -h2)
+            new Two.Anchor(w2, h2),
+            new Two.Anchor(-w2, h2),
+            new Two.Anchor(-w2, -h2),
+            new Two.Anchor(w2, -h2)
           ];
 
           var rect = new Two.Polygon(points, true).noStroke();
@@ -569,8 +582,8 @@
           var h2 = height / 2;
 
           var points = [
-            new Two.Point(- w2, - h2),
-            new Two.Point(w2, h2)
+            new Two.Anchor(- w2, - h2),
+            new Two.Anchor(w2, h2)
           ];
 
           // Center line and translate to desired position.
@@ -1085,8 +1098,8 @@
       var h2 = height / 2;
 
       var points = [
-        new Two.Point(- w2, - h2),
-        new Two.Point(w2, h2)
+        new Two.Anchor(- w2, - h2),
+        new Two.Anchor(w2, h2)
       ];
 
       // Center line and translate to desired position.
@@ -1105,10 +1118,10 @@
       var h2 = height / 2;
 
       var points = [
-        new Two.Point(w2, h2),
-        new Two.Point(-w2, h2),
-        new Two.Point(-w2, -h2),
-        new Two.Point(w2, -h2)
+        new Two.Anchor(w2, h2),
+        new Two.Anchor(-w2, h2),
+        new Two.Anchor(-w2, -h2),
+        new Two.Anchor(w2, -h2)
       ];
 
       var rect = new Two.Polygon(points, true);
@@ -1134,7 +1147,7 @@
         var theta = pct * TWO_PI;
         var x = width * cos(theta);
         var y = height * sin(theta);
-        return new Two.Point(x, y);
+        return new Two.Anchor(x, y);
       }, this);
 
       var ellipse = new Two.Polygon(points, true, true);
@@ -1157,7 +1170,7 @@
             break;
           }
           var y = arguments[i + 1];
-          points.push(new Two.Point(x, y));
+          points.push(new Two.Anchor(x, y));
         }
       }
 
@@ -1195,7 +1208,7 @@
             break;
           }
           var y = arguments[i + 1];
-          points.push(new Two.Point(x, y));
+          points.push(new Two.Anchor(x, y));
         }
       }
 

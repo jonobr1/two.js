@@ -84,11 +84,11 @@
 
           case Two.Commands.curve:
 
-            vx = a.v.x.toFixed(3);
-            vy = a.v.y.toFixed(3);
+            vx = ((a.controls && a.controls.right) || a).x.toFixed(3);
+            vy = ((a.controls && a.controls.right) || a).y.toFixed(3);
 
-            ux = b.u.x.toFixed(3);
-            uy = b.u.y.toFixed(3);
+            ux = ((b.controls && b.controls.left) || b).x.toFixed(3);
+            uy = ((b.controls && b.controls.left) || b).y.toFixed(3);
 
             command = b._command + ' ' +
               vx + ' ' + vy + ' ' + ux + ' ' + uy + ' ' + x + ' ' + y;
@@ -107,11 +107,11 @@
 
           if (b._command === Two.Commands.curve) {
 
-            vx = b.v.x.toFixed(3);
-            vy = b.v.y.toFixed(3);
+            vx = ((b.controls && b.controls.right) || b).x.toFixed(3);
+            vy = ((b.controls && b.controls.right) || b).y.toFixed(3);
 
-            ux = c.u.x.toFixed(3);
-            uy = c.u.y.toFixed(3);
+            ux = ((c.controls && c.controls.left) || c).x.toFixed(3);
+            uy = ((c.controls && c.controls.left) || c).y.toFixed(3);
 
             x = c.x.toFixed(3);
             y = c.y.toFixed(3);

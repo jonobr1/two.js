@@ -91,12 +91,10 @@
           return;
         }
         this._automatic = !!v;
-        var method = v ? 'unbind' : 'bind';
-        // TODO: Test
+        var method = this._automatic ? 'ignore' : 'listen';
         // Add / remove handlers to propagated handle events
         _.each(this.vertices, function(v) {
-          v.u && v.u[method](Two.Events.change, updateVertices);
-          v.v && v.v[method](Two.Events.change, updateVertices);
+          v[method]();
         }, this);
         updateVertices();
       }
@@ -175,7 +173,7 @@
     });
 
     this.vertices = vertices;
-    this._automatic && this.plot();
+    this._automatic && this.plot(); // TODO: Is this necessary
 
   };
 
@@ -306,12 +304,6 @@
 
       _.each(this.vertices, function(p, i) {
         p._command = i === 0 ? Two.Commands.move : Two.Commands.line;
-        if (p.u instanceof Two.Vector) {
-          p.u.copy(p);
-        }
-        if (p.v instanceof Two.Vector) {
-          p.v.copy(p);
-        }
       }, this);
 
       return this;

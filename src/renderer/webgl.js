@@ -148,15 +148,19 @@
 
       _.each(vertices, function(v, i) {
 
-        var x = v.x, y = v.y, a, b, c, d;
+        var x = v.x, y = v.y, a, b, c, d, controls = v.controls;
 
         top = Math.min(y, top);
         left = Math.min(x, left);
         right = Math.max(x, right);
         bottom = Math.max(y, bottom);
 
-        a = v.u && v.u.x, b = v.u && v.u.y;
-        c = v.v && v.v.x, d = v.v && v.v.y;
+        if (!v.controls) {
+          return;
+        }
+
+        a = controls.left && controls.left.x, b = controls.left && controls.left.y;
+        c = controls.right && controls.right.x, d = controls.right && controls.right.y;
 
         if (!a || !b || !c || !d) {
           return;
@@ -282,21 +286,21 @@
 
             a = commands[prev], c = commands[next];
 
-            vx = (a.v.x * scale + cx).toFixed(3);
-            vy = (a.v.y * scale + cy).toFixed(3);
+            vx = ( ((a.controls && a.controls.right) || a).x * scale + cx ).toFixed(3);
+            vy = ( ((a.controls && a.controls.right) || a).y * scale + cy ).toFixed(3);
 
-            ux = (b.u.x * scale + cx).toFixed(3);
-            uy = (b.u.y * scale + cy).toFixed(3);
+            ux = ( ((b.controls && b.controls.left) || b).x * scale + cx ).toFixed(3);
+            uy = ( ((b.controls && b.controls.left) || b).y * scale + cy ).toFixed(3);
 
             ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
 
             if (i >= last && closed) {
 
-              vx = (b.v.x * scale + cx).toFixed(3);
-              vy = (b.v.y * scale + cy).toFixed(3);
+              vx = ( ((b.controls && b.controls.right) || b).x * scale + cx ).toFixed(3);
+              vy = ( ((b.controls && b.controls.right) || b).y * scale + cy ).toFixed(3);
 
-              ux = (c.u.x * scale + cx).toFixed(3);
-              uy = (c.u.y * scale + cy).toFixed(3);
+              ux = ( ((c.controls && c.controls.left) || c).x * scale + cx ).toFixed(3);
+              uy = ( ((c.controls && c.controls.left) || c).y * scale + cy ).toFixed(3);
 
               x = (c.x * scale + cx).toFixed(3);
               y = (c.y * scale + cy).toFixed(3);
