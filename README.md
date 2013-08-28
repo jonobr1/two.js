@@ -55,6 +55,8 @@ node two.js/utils/build
 ## Change Log
 
 Nightly
++ Updated `two.interpret(svg)` to handle compound paths
++ Added [`Two.Anchor`](http://jonobr1.github.io/two.js/#two-anchor) which represents all anchor points drawn in two.js
 + Modified source to not have any instances of `window` for node use
 + Updated to underscore.js 1.5.1
 + Added `Two.Utils.getReflection` method to properly get reflection's in svg interpretation
