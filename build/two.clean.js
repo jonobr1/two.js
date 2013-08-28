@@ -1663,7 +1663,11 @@
 
     this._command = command || commands.move;
 
-    // TODO: Only add this to commands.curve...
+    // Only curves have control ;)
+    if (this._command !== commands.curve) {
+      return this;
+    }
+
     Anchor.AppendCurveProperties(this);
     if (_.isNumber(ux)) {
       this.controls.left.x = ux;
@@ -1684,7 +1688,7 @@
 
     AppendCurveProperties: function(anchor) {
 
-      var x = this._x, y = this._y;
+      var x = anchor._x || anchor.x, y = anchor._y || anchor.y;
 
       anchor.controls = {
         left: new Two.Vector(x, y),
