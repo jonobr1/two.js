@@ -3600,7 +3600,9 @@ var Backbone = Backbone || {};
         var a = points[prev];
         var c = points[next];
 
-        var vx, vy, ux, uy;
+
+
+        var vx, vy, ux, uy, ar, bl, br, cl;
 
         var x = b.x.toFixed(3);
         var y = b.y.toFixed(3);
@@ -3613,11 +3615,14 @@ var Backbone = Backbone || {};
 
           case Two.Commands.curve:
 
-            vx = ((a.controls && a.controls.right) || a).x.toFixed(3);
-            vy = ((a.controls && a.controls.right) || a).y.toFixed(3);
+            var ar = (a.controls && a.controls.right) || a;
+            var bl = (b.controls && b.controls.left) || b;
 
-            ux = ((b.controls && b.controls.left) || b).x.toFixed(3);
-            uy = ((b.controls && b.controls.left) || b).y.toFixed(3);
+            vx = ar.x.toFixed(3);
+            vy = ar.y.toFixed(3);
+
+            ux = bl.x.toFixed(3);
+            uy = bl.y.toFixed(3);
 
             command = b._command + ' ' +
               vx + ' ' + vy + ' ' + ux + ' ' + uy + ' ' + x + ' ' + y;
@@ -3636,11 +3641,14 @@ var Backbone = Backbone || {};
 
           if (b._command === Two.Commands.curve) {
 
-            vx = ((b.controls && b.controls.right) || b).x.toFixed(3);
-            vy = ((b.controls && b.controls.right) || b).y.toFixed(3);
+            br = (b.controls && b.controls.right) || b;
+            cl = (c.controls && c.controls.left) || c;
 
-            ux = ((c.controls && c.controls.left) || c).x.toFixed(3);
-            uy = ((c.controls && c.controls.left) || c).y.toFixed(3);
+            vx = br.x.toFixed(3);
+            vy = br.y.toFixed(3);
+
+            ux = cl.x.toFixed(3);
+            uy = cl.y.toFixed(3);
 
             x = c.x.toFixed(3);
             y = c.y.toFixed(3);
@@ -4046,7 +4054,7 @@ var Backbone = Backbone || {};
       ctx.beginPath();
       _.each(commands, function(b, i) {
 
-        var next, prev, a, c, ux, uy, vx, vy;
+        var next, prev, a, c, ux, uy, vx, vy, ar, bl, br, cl;
         var x = b.x.toFixed(3), y = b.y.toFixed(3);
 
         switch (b._command) {
@@ -4061,22 +4069,27 @@ var Backbone = Backbone || {};
             next = closed ? mod(i + 1, length) : Math.min(i + 1, last);
 
             a = commands[prev], c = commands[next];
+            ar = (a.controls && a.controls.right) || a;
+            bl = (b.controls && b.controls.left) || b;
 
-            vx = ((a.controls && a.controls.right) || a).x.toFixed(3);
-            vy = ((a.controls && a.controls.right) || a).y.toFixed(3);
+            vx = ar.x.toFixed(3);
+            vy = ar.y.toFixed(3);
 
-            ux = ((b.controls && b.controls.left) || b).x.toFixed(3);
-            uy = ((b.controls && b.controls.left) || b).y.toFixed(3);
+            ux = bl.x.toFixed(3);
+            uy = bl.y.toFixed(3);
 
             ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
 
             if (i >= last && closed) {
 
-              vx = ((b.controls && b.controls.right) || b).x.toFixed(3);
-              vy = ((b.controls && b.controls.right) || b).y.toFixed(3);
+              br = (b.controls && b.controls.right) || b;
+              cl = (c.controls && c.controls.left) || c;
 
-              ux = ((c.controls && c.controls.left) || c).x.toFixed(3);
-              uy = ((c.controls && c.controls.left) || c).y.toFixed(3);
+              vx = br.x.toFixed(3);
+              vy = br.y.toFixed(3);
+
+              ux = cl.x.toFixed(3);
+              uy = cl.y.toFixed(3);
 
               x = c.x.toFixed(3);
               y = c.y.toFixed(3);
@@ -4558,8 +4571,14 @@ var Backbone = Backbone || {};
           return;
         }
 
-        a = controls.left && controls.left.x, b = controls.left && controls.left.y;
-        c = controls.right && controls.right.x, d = controls.right && controls.right.y;
+        var cl = controls.left;
+        var cr = controls.right;
+
+        if (!cl || !cr) {
+          return;
+        }
+
+        a = cl.x, b = cl.y, c = cr.x, d = cr.y;
 
         if (!a || !b || !c || !d) {
           return;
@@ -4669,7 +4688,7 @@ var Backbone = Backbone || {};
       ctx.beginPath();
       _.each(commands, function(b, i) {
 
-        var next, prev, a, c, ux, uy, vx, vy;
+        var next, prev, a, c, ux, uy, vx, vy, ar, bl, br, cl;
         var x = (b.x * scale + cx).toFixed(3), y = (b.y * scale + cy).toFixed(3);
 
         switch (b._command) {
@@ -4684,22 +4703,27 @@ var Backbone = Backbone || {};
             next = closed ? mod(i + 1, length) : Math.min(i + 1, last);
 
             a = commands[prev], c = commands[next];
+            ar = (a.controls && a.controls.right) || a;
+            bl = (b.controls && b.controls.left) || b;
 
-            vx = ( ((a.controls && a.controls.right) || a).x * scale + cx ).toFixed(3);
-            vy = ( ((a.controls && a.controls.right) || a).y * scale + cy ).toFixed(3);
+            vx = (ar.x * scale + cx).toFixed(3);
+            vy = (ar.y * scale + cy).toFixed(3);
 
-            ux = ( ((b.controls && b.controls.left) || b).x * scale + cx ).toFixed(3);
-            uy = ( ((b.controls && b.controls.left) || b).y * scale + cy ).toFixed(3);
+            ux = (bl.x * scale + cx).toFixed(3);
+            uy = (bl.y * scale + cy).toFixed(3);
 
             ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
 
             if (i >= last && closed) {
 
-              vx = ( ((b.controls && b.controls.right) || b).x * scale + cx ).toFixed(3);
-              vy = ( ((b.controls && b.controls.right) || b).y * scale + cy ).toFixed(3);
+              br = (b.controls && b.controls.right) || b;
+              cl = (c.controls && c.controls.left) || c;
 
-              ux = ( ((c.controls && c.controls.left) || c).x * scale + cx ).toFixed(3);
-              uy = ( ((c.controls && c.controls.left) || c).y * scale + cy ).toFixed(3);
+              vx = (br.x * scale + cx).toFixed(3);
+              vy = (br.y * scale + cy).toFixed(3);
+
+              ux = (cl.x * scale + cx).toFixed(3);
+              uy = (cl.y * scale + cy).toFixed(3);
 
               x = (c.x * scale + cx).toFixed(3);
               y = (c.y * scale + cy).toFixed(3);
