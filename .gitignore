@@ -1,1 +1,4 @@
 *.DS_Store
+junk/
+styles/
+node_modules/
