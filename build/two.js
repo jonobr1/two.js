@@ -4967,7 +4967,7 @@ var Backbone = Backbone || {};
 
   _.extend(Renderer.prototype, Backbone.Events, CanvasRenderer.prototype, {
 
-    setSize: function(width, height) {
+    setSize: function(width, height, ratio) {
 
       CanvasRenderer.prototype.setSize.apply(this, arguments);
 
