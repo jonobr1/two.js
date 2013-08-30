@@ -1,0 +1,181 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Two.js: Advanced Anchors</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <link rel="shortcut icon" type="image/gif" href="../images/favicon.gif">
+    <script src="../third-party/jquery.js"></script>
+    <script src="../third-party/two.js"></script>
+    <style>
+      * { margin: 0; padding: 0; }
+      .assets { display: none; }
+    </style>
+  </head>
+  <body>
+    <div class="assets">
+      <!-- letter "C" made in Adobe Illustrator CS5 -->
+      <svg version="1.1"
+         xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/"
+         x="0px" y="0px" width="202px" height="264px" viewBox="-0.469 -0.136 202 264"
+         overflow="visible" enable-background="new -0.469 -0.136 202 264" xml:space="preserve">
+      <path fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M200.5,204.792
+        c0,0-35.703,58.341-99.988,58.341C36.223,263.132,0.5,210.862,0.5,131.531C0.5,52.204,38.584,0.5,100.5,0.5
+        c61.924,0,85.354,51.704,85.354,51.704"/>
+      </svg>
+    </div>
+    <div class="scripts">
+      <script>
+
+        $(function() {
+
+          addBackdrop(25);
+
+          var $window = $(window);
+          var radius = 20, editColor = 'rgb(79, 128, 255)';
+          var two = new Two({
+              fullscreen: true,
+              autostart: true
+            }).appendTo(document.body);
+
+          var letter = two.interpret(document.querySelector('.assets svg'));
+          letter.linewidth = radius;
+          letter.cap = letter.join = 'round';
+          letter.stroke = '#333';
+
+          var resize = function() {
+            var cx = two.width / 2;
+            var cy = two.height / 2;
+            var rect = letter.getBoundingClientRect();
+            letter.translation.set(cx - rect.width / 2, cy - rect.height / 2);
+          };
+          two.bind('resize', resize);
+          resize();
+
+          _.each(letter.children, function(polygon) {
+            _.each(polygon.vertices, function(anchor) {
+
+              var p = two.makeCircle(0, 0, radius / 4);
+              var l = two.makeCircle(0, 0, radius / 4);
+              var r = two.makeCircle(0, 0, radius / 4);
+
+              p.translation.copy(anchor);
+              l.translation.copy(anchor.controls.left);
+              r.translation.copy(anchor.controls.right);
+              p.noStroke().fill = l.noStroke().fill = r.noStroke().fill = editColor;
+
+              var ll = new Two.Polygon([
+                new Two.Anchor().copy(p.translation),
+                new Two.Anchor().copy(l.translation)
+              ]);
+              var rl = new Two.Polygon([
+                new Two.Anchor().copy(p.translation),
+                new Two.Anchor().copy(r.translation)
+              ]);
+              rl.noFill().stroke = ll.noFill().stroke = editColor;
+
+              letter.add(rl, ll, p, l, r);
+
+              p.translation.bind(Two.Events.change, function() {
+                anchor.copy(this);
+                ll.vertices[0].copy(this);
+                rl.vertices[0].copy(this);
+              });
+              l.translation.bind(Two.Events.change, function() {
+                anchor.controls.left.copy(this);
+                ll.vertices[1].copy(this);
+                anchor.trigger(Two.Events.change);
+              });
+              r.translation.bind(Two.Events.change, function() {
+                anchor.controls.right.copy(this);
+                rl.vertices[1].copy(this);
+                anchor.trigger(Two.Events.change);
+              });
+
+              addInteractivity(p);
+              addInteractivity(l);
+              addInteractivity(r);
+
+            });
+
+          });
+
+          function addInteractivity(shape) {
+
+            var id = '#' + Two[Two.Types.svg].Identifier + shape.id;
+            shape.elem = two.renderer.domElement.querySelector(id);
+            var offset = shape.parent.translation;
+
+            var drag = function(e) {
+              e.preventDefault();
+              var x = e.clientX - offset.x;
+              var y = e.clientY - offset.y;
+              shape.translation.set(x, y);
+            };
+            var dragEnd = function(e) {
+              e.preventDefault();
+              $window
+                .unbind('mousemove', drag)
+                .unbind('mouseup', dragEnd);
+            };
+
+            $(shape.elem)
+              .css({
+                cursor: 'pointer'
+              })
+              .bind('mousedown', function(e) {
+                e.preventDefault();
+                $window
+                  .bind('mousemove', drag)
+                  .bind('mouseup', dragEnd);
+              });
+
+          }
+
+        });
+
+        function addBackdrop(d) {
+
+          var dimensions = d || 50;
+          var two = new Two({
+            type: Two.Types.canvas,
+            width: dimensions,
+            height: dimensions
+          });
+
+          var r = dimensions / 10;
+          var center = dimensions / 2;
+
+          var a = two.makeLine(center - r, center, center + r, center);
+          var b = two.makeLine(center, center - r, center, center + r);
+
+          a.stroke = b.stroke = '#aaa';
+          a.linewidth = b.linewidth = 0.5;
+
+          two.update();
+
+          _.defer(function() {
+
+            _.extend(document.body.style, {
+              backgroundImage: 'url(' + two.renderer.domElement.toDataURL() + ')',
+              backgroundRepeat: 'repeat'
+            });
+
+          });
+
+        }
+
+      </script>
+    </div>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-40550435-1', 'github.com');
+      ga('send', 'pageview');
+
+    </script>
+  </body>
+</html>
