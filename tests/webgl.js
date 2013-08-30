@@ -7,7 +7,7 @@
   module('WebGlRenderer');
 
   var deviceRatio = Two[Two.Types.canvas].Utils.getRatio(document.createElement('canvas').getContext('2d'));
-  var suffix = '@1x.png';
+  var suffix = '@' + deviceRatio + 'x.png';
 
   asyncTest('Two.makeLine', 1, function(o) {
 
@@ -205,6 +205,7 @@
         var img = document.createElement('img');
         img.src = path;
         img.title = 'Reference Image';
+        img.width = img.height = 400;
 
         var domElement = document.createElement('li');
         renderer.domElement.title = 'Computed Image';

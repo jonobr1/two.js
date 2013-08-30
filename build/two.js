@@ -4249,7 +4249,7 @@ var Backbone = Backbone || {};
             this.stage = elem;
             this.stage.object = object; // Reference for BoundingBox calc.
 
-            object.parent = this;
+            this.stage.parent = object.parent = this;
             object.unbind(Two.Events.change)
               .bind(Two.Events.change, _.bind(this.update, this));
 
@@ -4970,9 +4970,6 @@ var Backbone = Backbone || {};
     setSize: function(width, height, ratio) {
 
       CanvasRenderer.prototype.setSize.apply(this, arguments);
-
-      this.domElement.width = width;
-      this.domElement.height = height;
 
       width *= this.ratio;
       height *= this.ratio;

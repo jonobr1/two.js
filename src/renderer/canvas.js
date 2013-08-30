@@ -337,7 +337,7 @@
             this.stage = elem;
             this.stage.object = object; // Reference for BoundingBox calc.
 
-            object.parent = this;
+            this.stage.parent = object.parent = this;
             object.unbind(Two.Events.change)
               .bind(Two.Events.change, _.bind(this.update, this));
 

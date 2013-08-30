@@ -559,9 +559,6 @@
 
       CanvasRenderer.prototype.setSize.apply(this, arguments);
 
-      this.domElement.width = width;
-      this.domElement.height = height;
-
       width *= this.ratio;
       height *= this.ratio;
 
