@@ -4905,6 +4905,8 @@ var Backbone = Backbone || {};
 
     // Everything drawn on the canvas needs to come from the stage.
     this.stage = null;
+    this._matrix = [1, 0, 0, 0, 1, 0, 0, 0, 1];
+    this._scale = 1;
 
     // http://games.greggman.com/game/webgl-and-alpha/
     // http://www.khronos.org/registry/webgl/specs/latest/#5.2
@@ -4969,12 +4971,17 @@ var Backbone = Backbone || {};
 
       CanvasRenderer.prototype.setSize.apply(this, arguments);
 
-      /**
-       * TODO: Support for high dpi rendering like /src/renderers/canvas.js
-       */
-      this.ratio = 1;
       this.domElement.width = width;
       this.domElement.height = height;
+
+      width *= this.ratio;
+      height *= this.ratio;
+
+      // Set for this.stage parent scaling to account for HDPI
+      this._matrix[0] = this._matrix[4] = this._scale = this.ratio;
+      if (!_.isNull(this.stage)) {
+        this.stage.updateMatrix();
+      }
 
       this.ctx.viewport(0, 0, width, height);
 
@@ -4991,8 +4998,6 @@ var Backbone = Backbone || {};
       if (_.isNull(this.stage)) {
         return this;
       }
-
-      // Draw a green rectangle
 
       this.stage.render(this.ctx, this.program);
 
@@ -5023,7 +5028,7 @@ var Backbone = Backbone || {};
     }
     if (_.isObject(matrix)) {
       styles.matrix = styles._matrix = matrix.toArray(true);
-      styles.scale = styles._scale = 1;
+      styles.scale = styles._scale = 1; // Cannot be user-set on construction
     }
     if (stroke) {
       styles.stroke = stroke;
