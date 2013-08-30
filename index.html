@@ -427,6 +427,7 @@ two.bind('update', function(frameCount) {
         <li><a href="#two-class">Two</a></li>
         <li><a href="#two-polygon">Two.Polygon</a></li>
         <li><a href="#two-group">Two.Group</a></li>
+        <li><a href="#two-anchor">Two.Anchor</a></li>
         <li><a href="#two-vector">Two.Vector</a></li>
       </ul>
 
@@ -659,7 +660,7 @@ two.bind('update', function(frameCount) {
             The method accepts any amount of paired x, y values as denoted by the series above. It then checks to see if there is a final argument, a boolean <code>open</code>, which marks whether or not the shape should be open. If <code>true</code> the curve will have two clear endpoints, otherwise it will be closed.
           </p>
           <p class="detail">
-            This method also recognizes the format <code>two.makeCurve(points, open)</code> where points is an array of <code>Two.Vector</code>&apos;s and open is an optional boolean describing whether or not to expose endpoints. <em>It is imperative if you generate curves this way to make the list of points <code>Two.Vector</code>&apos;s</em>.
+            This method also recognizes the format <code>two.makeCurve(points, open)</code> where points is an array of <code>Two.Anchor</code>&apos;s and open is an optional boolean describing whether or not to expose endpoints. <em>It is imperative if you generate curves this way to make the list of points <code>Two.Anchor</code>&apos;s</em>.
           </p>
         </li>
         <li>
@@ -673,7 +674,7 @@ two.bind('update', function(frameCount) {
             The method accepts any amount of paired x, y values as denoted by the series above. It then checks to see if there is a final argument, a boolean <code>open</code>, which marks whether or not the shape should be open. If <code>true</code> the polygon will have two clear endpoints, otherwise it will be closed.
           </p>
           <p class="detail">
-            This method also recognizes the format <code>two.makePolygon(points, open)</code> where points is an array of <code>Two.Vector</code>&apos;s and open is an optional boolean describing whether or not to expose endpoints. <em>It is imperative if you generate curves this way to make the list of points <code>Two.Vector</code>&apos;s</em>.
+            This method also recognizes the format <code>two.makePolygon(points, open)</code> where points is an array of <code>Two.Anchor</code>&apos;s and open is an optional boolean describing whether or not to expose endpoints. <em>It is imperative if you generate curves this way to make the list of points <code>Two.Anchor</code>&apos;s</em>.
           </p>
           <p class="nota-bene">
             The <code>Two.Polygon</code> that this method creates is the base shape for all of the make functions.
@@ -693,9 +694,6 @@ two.bind('update', function(frameCount) {
           </p>
           <p class="description">
             Reads an svg node and draws the svg object by creating <code>Two.Polygon</code>s and <code>Two.Group</code>s from the reference. It then adds it to the instance&apos;s drawing space. It returns an <code>Two.Group</code> object.
-          </p>
-          <p class="nota-bene">
-            At the time of writing, <code>two.interpret</code> accepts compound paths, but often has unexpected results. Therefore it is recommended to break apart and <em>Release Compound Paths</em> as much as possible.
           </p>
         </li>
         <li>
@@ -727,6 +725,14 @@ two.bind('update', function(frameCount) {
         </li>
         <li>
           <p class="static property object declaration">
+            <strong>Collection</strong> <code>Two.Collection</code>
+          </p>
+          <p class="description">
+            A databound instance of an array, used for <code>vertices</code> attribute of a <code>Two.Polygon</code>.
+          </p>
+        </li>
+        <li>
+          <p class="static property object declaration">
             <strong>Types</strong> <code>Two.Types</code>
           </p>
           <p class="description">
@@ -747,6 +753,14 @@ two.bind('update', function(frameCount) {
           </p>
           <p class="description">
             A list of actionable events triggered by a given instance. For the most part these are internal events in order to enable two-way databinding. Exceptions include <code>update</code> event on animation loop and <code>resize</code> when the dimensions of the drawing space change. Related to <code>two.bind</code> and <code>two.trigger</code>.
+          </p>
+        </li>
+        <li>
+          <p class="static property object declaration">
+            <strong>Commands</strong> <code>Two.Commands</code>
+          </p>
+          <p class="description">
+            A list of commands that dictate how the various renderers draw <code>Two.Anchor</code>s.
           </p>
         </li>
         <li>
@@ -798,10 +812,10 @@ two.bind('update', function(frameCount) {
         </li>
         <li>
           <p class="construction declaration">
-            <strong>construction</strong> <code>var polygon = new Two.Polygon(vertices, closed, curved);</code>
+            <strong>construction</strong> <code>var polygon = new Two.Polygon(vertices, closed, curved, manual);</code>
           </p>
           <p>
-            A polygon takes an array of <code>vertices</code> which are made up of <code>Two.Vector</code>s. This is essential for the two-way databinding. It then takes two booleans, <code>closed</code> and <code>curved</code> which delineate whether the shape should be closed (lacking endpoints) and whether the shape should calculate curves or straight lines between the vertices.
+            A polygon takes an array of <code>vertices</code> which are made up of <code>Two.Anchor</code>s. This is essential for the two-way databinding. It then takes two booleans, <code>closed</code> and <code>curved</code> which delineate whether the shape should be closed (lacking endpoints) and whether the shape should calculate curves or straight lines between the vertices. Finally, manual is an optional argument if you&apos;d like to override the default behavior of two.js and handle anchor positions yourself. Generally speaking, this isn&apos;t something you need to deal with, although some great usecases arise from this customability, e.g: advanced curve manipulation.
           </p>
           <p class="nota-bene">
             If you are constructing groups this way instead of <code>two.makePolygon()</code>, then don&apos;t forget to add the group to the instance&apos;s scene, <code>two.add(group)</code>.
@@ -908,7 +922,7 @@ two.bind('update', function(frameCount) {
             <strong>vertices</strong> <code>polygon.vertices</code>
           </p>
           <p class="description">
-            An array of <code>Two.Vector</code>s that is two-way databound. Individual vertices may be manipulated, however <strong>it is imperative that the array itself does not get manipulated</strong>.
+            An <code>Two.Collection</code> of <code>Two.Anchor</code>s that is two-way databound. Individual vertices may be manipulated, however <strong>it is imperative that the array itself does not get manipulated</strong>.
           </p>
         </li>
         <li>
@@ -925,6 +939,14 @@ two.bind('update', function(frameCount) {
           </p>
           <p class="description">
             Boolean that describes whether the polygon is curved or not.
+          </p>
+        </li>
+        <li>
+          <p class="property boolean declaration">
+            <strong>automatic</strong> <code>polygon.automatic</code>
+          </p>
+          <p class="description">
+            Boolean that describes whether the polygon should automatically dictate how <code>Two.Anchor</code>s behave. This defaults to <code>true</code>.
           </p>
         </li>
         <li>
@@ -997,6 +1019,14 @@ two.bind('update', function(frameCount) {
           </p>
           <p class="description">
             Removes the stroke.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>plot</strong> <code>polygon.plot();</code>
+          </p>
+          <p class="description">
+            If curved goes through the vertices and calculates the curve. If not, then goes through the vertices and calculates the lines.
           </p>
         </li>
 
@@ -1191,6 +1221,98 @@ two.bind('update', function(frameCount) {
           </p>
           <p class="description">
             Convenience method to turn a property into an <a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Object/defineProperty" target="_blank">EcmaScript 5 getter / setter</a>.
+          </p>
+        </li>
+
+        <!-- Two.Anchor -->
+        <div id="two-anchor"></div>
+        <li class="title"><h3>Two.Anchor</h3></li>
+        <li class="description">
+          Taken from the <a href="http://help.adobe.com/en_US/illustrator/cs/using/WS714a382cdf7d304e7e07d0100196cbc5f-6269a.html">Adobe Illustrator nomenclature</a> a <code>Two.Anchor</code> represents an anchor point in two.js. This class delineates to the renderer what action to take when plotting points. It inherits all properties and methods from <code>Two.Vector</code>. As a result, <code>Two.Anchor</code> can be used as such. Depending on its command, anchor points may or may not have corresponding control points to describe how their bezier curves should be rendered.
+        </li>
+        <li>
+          <p class="construction declaration">
+            <strong>construction</strong> <code>var anchor = new Two.Anchor(x, y, lx, ly, rx, ry, command);</code>
+          </p>
+          <p>
+            A <code>Two.Anchor</code> can take initial positions of <code>x</code> and <code>y</code> to orient the point. <code>lx</code> and <code>ly</code> describe where the left control point will reside. Likewise <code>rx</code> and <code>ry</code> describe where the right control point will reside. Finally, the <code>command</code> describes what action the renderer will take once rendering. A more detailed description of commands can be found on the <a href="http://www.w3.org/TR/SVG/paths.html#PathData">w3c</a> and the available commands in two.js can be found under <code>Two.Commands</code>.
+          </p>
+          <p class="nota-bene">
+            <code>Two.Anchor</code> is introduced to two.js as of <a href="https://github.com/jonobr1/two.js/releases/tag/v0.3.0">v0.3.0</a>
+          </p>
+        </li>
+        <li>
+          <p class="property number declaration">
+            <strong>x</strong> <code>anchor.x</code>
+          </p>
+          <p class="description">
+            The x value of the anchor&apos;s position.
+          </p>
+        </li>
+        <li>
+          <p class="property number declaration">
+            <strong>y</strong> <code>anchor.y</code>
+          </p>
+          <p class="description">
+            The y value of the anchor&apos;s position.
+          </p>
+        </li>
+        <li>
+          <p class="property string declaration">
+            <strong>command</strong> <code>anchor.command</code>
+          </p>
+          <p class="description">
+            The command for the given anchor.
+          </p>
+        </li>
+        <li>
+          <p class="property object declaration">
+            <strong>controls</strong> <code>anchor.controls</code>
+          </p>
+          <p class="description">
+            An object that exists <em>only</em> when <code>anchor.command</code> is <code>Two.Commands.curve</code>. It holds the anchor&apos;s control point <code>Two.Vector</code>s and describes what the make up of the curve will be.
+          </p>
+          <ul class="object">
+            <li>
+              <p class="property object">
+                <strong>right</strong> <code>anchor.controls.right</code>
+              </p>
+              <p>
+                A <code>Two.Vector</code> that represents the position of the control point to the &lquot;right&rquot; of the anchor&apos;s position. To further clarify, if you were to orient the anchor so that it was normalized and facing up, this control point would be to the right of it.
+              </p>
+            </li>
+            <li>
+              <p class="property object">
+                <strong>left</strong> <code>anchor.controls.left</code>
+              </p>
+              <p>
+                A <code>Two.Vector</code> that represents the position of the control point to the &lquot;left&rquot; of the anchor&apos;s position. To further clarify, if you were to orient the anchor so that it was normalized and facing up, this control point would be to the left of it.
+              </p>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>listen</strong> <code>anchor.listen();</code>
+          </p>
+          <p class="description">
+            Convenience method to add event bubbling to an attached polygon.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>ignore</strong> <code>anchor.ignore();</code>
+          </p>
+          <p class="description">
+            Convenience method to remove event bubbling to an attached polygon.
+          </p>
+        </li>
+        <li>
+          <p class="property static function declaration">
+            <strong>AppendCurveProperties</strong> <code>Anchor.AppendCurveProperties();</code>
+          </p>
+          <p class="description">
+            Convenience method to add the <code>controls</code> object.
           </p>
         </li>
 
