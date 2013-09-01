@@ -72,10 +72,6 @@
 
     listen: function() {
 
-      if (this._command !== commands.curve) {
-        return this;
-      }
-
       if (!_.isObject(this.controls)) {
         Anchor.AppendCurveProperties(this);
       }

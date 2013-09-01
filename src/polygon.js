@@ -173,7 +173,15 @@
     });
 
     this.vertices = vertices;
-    this._automatic && this.plot(); // TODO: Is this necessary
+
+    if (this._automatic) {
+      this.plot();
+      return this;
+    }
+
+    _.each(this.vertices, function(v) {
+      _.isFunction(v.listen) && v.listen();
+    });
 
   };
 

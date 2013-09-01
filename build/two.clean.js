@@ -377,8 +377,12 @@
                 } else {
                   x = coord.x;
                   y = coord.y;
-                  result = new Two.Anchor(x, y);
-                  result._command = Two.Commands.close;
+                  result = new Two.Anchor(
+                    x, y,
+                    undefined, undefined,
+                    undefined, undefined,
+                    Two.Commands.close
+                  );
                 }
                 break;
 
@@ -388,8 +392,12 @@
                 x = parseFloat(coords[0]);
                 y = parseFloat(coords[1]);
 
-                result = new Two.Anchor(x, y);
-                result._command = lower === 'm' ? Two.Commands.move : Two.Commands.line;
+                result = new Two.Anchor(
+                  x, y,
+                  undefined, undefined,
+                  undefined, undefined,
+                  lower === 'm' ? Two.Commands.move : Two.Commands.line
+                );
 
                 if (relative) {
                   result.addSelf(coord);
@@ -404,10 +412,14 @@
                 var a = lower === 'h' ? 'x' : 'y';
                 var b = a === 'x' ? 'y' : 'x';
 
-                result = new Two.Anchor();
+                result = new Two.Anchor(
+                  undefined, undefined,
+                  undefined, undefined,
+                  undefined, undefined,
+                  Two.Commands.line
+                );
                 result[a] = parseFloat(coords[0]);
                 result[b] = coord[b];
-                result._command = Two.Commands.line;
 
                 if (relative) {
                   result[a] += coord[a];
@@ -454,7 +466,12 @@
                 }
 
                 coord.controls.right.set(x2, y2);
-                result = new Two.Anchor(x4, y4, x3, y3, undefined, undefined, Two.Commands.curve);
+                result = new Two.Anchor(
+                  x4, y4,
+                  x3, y3,
+                  undefined, undefined,
+                  Two.Commands.curve
+                );
 
                 coord = result;
                 control = result.controls.left;
@@ -501,7 +518,12 @@
                 }
 
                 coord.controls.right.set(x2, y2);
-                result = new Two.Anchor(x4, y4, x3, y3, undefined, undefined, Two.Commands.curve);
+                result = new Two.Anchor(
+                  x4, y4,
+                  x3, y3,
+                  undefined, undefined,
+                  Two.Commands.curve
+                );
 
                 coord = result;
                 control = result.controls.left;
@@ -1707,10 +1729,6 @@
   _.extend(Anchor.prototype, Two.Vector.prototype, {
 
     listen: function() {
-
-      if (this._command !== commands.curve) {
-        return this;
-      }
 
       if (!_.isObject(this.controls)) {
         Anchor.AppendCurveProperties(this);
@@ -4296,7 +4314,15 @@
     });
 
     this.vertices = vertices;
-    this._automatic && this.plot(); // TODO: Is this necessary
+
+    if (this._automatic) {
+      this.plot();
+      return this;
+    }
+
+    _.each(this.vertices, function(v) {
+      _.isFunction(v.listen) && v.listen();
+    });
 
   };
 

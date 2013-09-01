@@ -55,6 +55,7 @@ node two.js/utils/build
 ## Change Log
 
 Nightly
++ Ensure sure that `manual` properly is set on construction of `Two.Polygon` that it binds `Two.Anchor.controls` change events
 + Added automatic High DPI support for `webgl` renderer
 + Updated `two.interpret(svg)` to handle compound paths
 + Added [`Two.Anchor`](http://jonobr1.github.io/two.js/#two-anchor) which represents all anchor points drawn in two.js
