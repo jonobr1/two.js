@@ -32,7 +32,7 @@
           addBackdrop(25);
 
           var $window = $(window);
-          var radius = 20, editColor = 'rgb(79, 128, 255)';
+          var radius = 40, editColor = 'rgb(79, 128, 255)';
           var two = new Two({
               fullscreen: true,
               autostart: true
@@ -84,12 +84,10 @@
               l.translation.bind(Two.Events.change, function() {
                 anchor.controls.left.copy(this);
                 ll.vertices[1].copy(this);
-                anchor.trigger(Two.Events.change);
               });
               r.translation.bind(Two.Events.change, function() {
                 anchor.controls.right.copy(this);
                 rl.vertices[1].copy(this);
-                anchor.trigger(Two.Events.change);
               });
 
               addInteractivity(p);
@@ -182,7 +180,8 @@
 
             _.extend(document.body.style, {
               backgroundImage: 'url(' + two.renderer.domElement.toDataURL() + ')',
-              backgroundRepeat: 'repeat'
+              backgroundRepeat: 'repeat',
+              backgroundSize: dimensions + 'px ' + dimensions + 'px'
             });
 
           });
