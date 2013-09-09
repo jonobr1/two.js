@@ -262,18 +262,22 @@
 
     },
 
+    /**
+     * Return an object with top, left, right, bottom, width, and height
+     * parameters of the group.
+     */
     getBoundingClientRect: function(shallow) {
 
-      var border = this.linewidth;
+      var border = this.linewidth / 2, temp;
       var left = Infinity, right = -Infinity,
         top = Infinity, bottom = -Infinity;
 
       _.each(this.vertices, function(v) {
         var x = v.x, y = v.y;
-        top = Math.min(y, top);
-        left = Math.min(x, left);
-        right = Math.max(x, right);
-        bottom = Math.max(y, bottom);
+        top = min(y, top);
+        left = min(x, left);
+        right = max(x, right);
+        bottom = max(y, bottom);
       });
 
       // Expand borders
@@ -285,16 +289,23 @@
 
       var matrix = !!shallow ? this._matrix : Two.Utils.getComputedMatrix(this);
 
-      var ul = matrix.multiply(left, top, 1);
-      var ll = matrix.multiply(right, bottom, 1);
+      var a = matrix.multiply(left, top, 1);
+      var b = matrix.multiply(right, top, 1);
+      var c = matrix.multiply(right, bottom, 1);
+      var d = matrix.multiply(left, bottom, 1);
+
+      top = min(a.y, b.y, c.y, d.y);
+      left = min(a.x, b.x, c.x, d.x);
+      right = max(a.x, b.x, c.x, d.x);
+      bottom = max(a.y, b.y, c.y, d.y);
 
       return {
-        top: ul.y,
-        left: ul.x,
-        right: ll.x,
-        bottom: ll.y,
-        width: ll.x - ul.x,
-        height: ll.y - ul.y
+        top: top,
+        left: left,
+        right: right,
+        bottom: bottom,
+        width: right - left,
+        height: bottom - top
       };
 
     },
