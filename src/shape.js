@@ -68,7 +68,7 @@
 
     this.cap = 'round';
     this.join = 'round';
-    this.miter = 1;
+    this.miter = 4; // Default of Adobe Illustrator
 
   };
 
