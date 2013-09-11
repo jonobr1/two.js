@@ -1690,8 +1690,7 @@
 
     this._command = command || commands.move;
 
-    // Only curves have control ;)
-    if (this._command !== commands.curve) {
+    if (!command) {
       return this;
     }
 
