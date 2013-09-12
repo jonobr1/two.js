@@ -991,7 +991,7 @@ two.bind('update', function(frameCount) {
         </li>
         <li>
           <p class="property function declaration">
-            <strong>remove</strong> <code>group.remove(objects);</code>
+            <strong>remove</strong> <code>polygon.remove();</code>
           </p>
           <p class="description">
             If added to a <code>two.scene</code> this method removes itself from it.
@@ -1027,6 +1027,14 @@ two.bind('update', function(frameCount) {
           </p>
           <p class="description">
             If curved goes through the vertices and calculates the curve. If not, then goes through the vertices and calculates the lines.
+          </p>
+        </li>
+        <li>
+          <p class="property function declaration">
+            <strong>subdivide</strong> <code>polygon.subdivide();</code>
+          </p>
+          <p class="description">
+            Creates a new set of vertices that are <code>lineTo</code> anchors. For previously straight lines the anchors remain the same. For curved lines, however, <code>Two.Utils.subdivide</code> is used to generate a new set of straight lines that are perceived as a curve.
           </p>
         </li>
 
