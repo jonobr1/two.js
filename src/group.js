@@ -237,7 +237,8 @@
 
         var rect = child.getBoundingClientRect(true);
 
-        if (!top || !left || !right || !bottom) {
+        if (!_.isNumber(rect.top) || !_.isNumber(rect.left)
+          || !_.isNumber(rect.right) || !_.isNumber(rect.bottom)) {
           return;
         }
 
