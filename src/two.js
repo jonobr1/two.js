@@ -673,7 +673,7 @@
             if ((d2 + d3) * (d2 + d3) <= tolerance.distance * (dx * dx + dy * dy)) {
 
               if (tolerance.angle < tolerance.epsilon) {
-                return [new Two.Vector(x1234, y1234)];
+                return [new Two.Anchor(x1234, y1234)];
               }
 
               var a23 = atan2(y3 - y2, x3 - x2);
@@ -684,17 +684,17 @@
               if (da2 >= PI) da2 = TWO_PI - da2;
 
               if (da1 + da2 < tolerance.angle) {
-                return [new Two.Vector(x1234, y1234)];
+                return [new Two.Anchor(x1234, y1234)];
               }
 
               if (cuspLimit !== 0) {
 
                 if (da1 > cuspLimit) {
-                  return [new Two.Vector(x2, y2)];
+                  return [new Two.Anchor(x2, y2)];
                 }
 
                 if (da2 > cuspLimit) {
-                  return [new Two.Vector(x3, y3)];
+                  return [new Two.Anchor(x3, y3)];
                 }
 
               }
@@ -710,7 +710,7 @@
             if (d2 * d2 <= tolerance.distance * (dx * dx + dy * dy)) {
 
               if (tolerance.angle < tolerance.epsilon) {
-                return [new Two.Vector(x1234, y1234)];
+                return [new Two.Anchor(x1234, y1234)];
               }
 
               da1 = abs(atan2(y3 - y2, x3 - x2) - atan2(y2 - y1, x2 - x1));
@@ -718,15 +718,15 @@
 
               if (da1 < tolerance.angle) {
                 return [
-                  new Two.Vector(x2, y2),
-                  new Two.Vector(x3, y3)
+                  new Two.Anchor(x2, y2),
+                  new Two.Anchor(x3, y3)
                 ];
               }
 
               if (cuspLimit !== 0) {
 
                 if (da1 > cuspLimit) {
-                  return [new Two.Vector(x2, y2)];
+                  return [new Two.Anchor(x2, y2)];
                 }
 
               }
@@ -736,7 +736,7 @@
               if (d3 * d3 <= tolerance.distance * (dx * dx + dy * dy)) {
 
                 if (tolerance.angle < tolerance.epsilon) {
-                  return [new Two.Vector(x1234, y1234)];
+                  return [new Two.Anchor(x1234, y1234)];
                 }
 
                 da1 = abs(atan2(y4 - y3, x4 - x3) - atan2(y3 - y2, x3 - x2));
@@ -744,15 +744,15 @@
 
                 if (da1 < tolerance.angle) {
                   return [
-                    new Two.Vector(x2, y2),
-                    new Two.Vector(x3, y3)
+                    new Two.Anchor(x2, y2),
+                    new Two.Anchor(x3, y3)
                   ];
                 }
 
                 if (cuspLimit !== 0) {
 
                   if (da1 > cuspLimit) {
-                    return [new Two.Vector2(x3, y3)];
+                    return [new Two.Anchor(x3, y3)];
                   }
 
                 }
@@ -764,7 +764,7 @@
               dx = x1234 - (x1 + x4) / 2;
               dy = y1234 - (y1 + y4) / 2;
               if (dx * dx + dy * dy <= tolerance.distance) {
-                return [new Two.Vector(x1234, y1234)];
+                return [new Two.Anchor(x1234, y1234)];
               }
 
             }

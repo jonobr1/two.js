@@ -2146,7 +2146,7 @@ var Backbone = Backbone || {};
             if ((d2 + d3) * (d2 + d3) <= tolerance.distance * (dx * dx + dy * dy)) {
 
               if (tolerance.angle < tolerance.epsilon) {
-                return [new Two.Vector(x1234, y1234)];
+                return [new Two.Anchor(x1234, y1234)];
               }
 
               var a23 = atan2(y3 - y2, x3 - x2);
@@ -2157,17 +2157,17 @@ var Backbone = Backbone || {};
               if (da2 >= PI) da2 = TWO_PI - da2;
 
               if (da1 + da2 < tolerance.angle) {
-                return [new Two.Vector(x1234, y1234)];
+                return [new Two.Anchor(x1234, y1234)];
               }
 
               if (cuspLimit !== 0) {
 
                 if (da1 > cuspLimit) {
-                  return [new Two.Vector(x2, y2)];
+                  return [new Two.Anchor(x2, y2)];
                 }
 
                 if (da2 > cuspLimit) {
-                  return [new Two.Vector(x3, y3)];
+                  return [new Two.Anchor(x3, y3)];
                 }
 
               }
@@ -2183,7 +2183,7 @@ var Backbone = Backbone || {};
             if (d2 * d2 <= tolerance.distance * (dx * dx + dy * dy)) {
 
               if (tolerance.angle < tolerance.epsilon) {
-                return [new Two.Vector(x1234, y1234)];
+                return [new Two.Anchor(x1234, y1234)];
               }
 
               da1 = abs(atan2(y3 - y2, x3 - x2) - atan2(y2 - y1, x2 - x1));
@@ -2191,15 +2191,15 @@ var Backbone = Backbone || {};
 
               if (da1 < tolerance.angle) {
                 return [
-                  new Two.Vector(x2, y2),
-                  new Two.Vector(x3, y3)
+                  new Two.Anchor(x2, y2),
+                  new Two.Anchor(x3, y3)
                 ];
               }
 
               if (cuspLimit !== 0) {
 
                 if (da1 > cuspLimit) {
-                  return [new Two.Vector(x2, y2)];
+                  return [new Two.Anchor(x2, y2)];
                 }
 
               }
@@ -2209,7 +2209,7 @@ var Backbone = Backbone || {};
               if (d3 * d3 <= tolerance.distance * (dx * dx + dy * dy)) {
 
                 if (tolerance.angle < tolerance.epsilon) {
-                  return [new Two.Vector(x1234, y1234)];
+                  return [new Two.Anchor(x1234, y1234)];
                 }
 
                 da1 = abs(atan2(y4 - y3, x4 - x3) - atan2(y3 - y2, x3 - x2));
@@ -2217,15 +2217,15 @@ var Backbone = Backbone || {};
 
                 if (da1 < tolerance.angle) {
                   return [
-                    new Two.Vector(x2, y2),
-                    new Two.Vector(x3, y3)
+                    new Two.Anchor(x2, y2),
+                    new Two.Anchor(x3, y3)
                   ];
                 }
 
                 if (cuspLimit !== 0) {
 
                   if (da1 > cuspLimit) {
-                    return [new Two.Vector2(x3, y3)];
+                    return [new Two.Anchor(x3, y3)];
                   }
 
                 }
@@ -2237,7 +2237,7 @@ var Backbone = Backbone || {};
               dx = x1234 - (x1 + x4) / 2;
               dy = y1234 - (y1 + y4) / 2;
               if (dx * dx + dy * dy <= tolerance.distance) {
-                return [new Two.Vector(x1234, y1234)];
+                return [new Two.Anchor(x1234, y1234)];
               }
 
             }
@@ -3192,6 +3192,22 @@ var Backbone = Backbone || {};
       }, this);
 
       return this;
+
+    },
+
+    clone: function() {
+
+      var controls = this.controls;
+
+      return new Two.Anchor(
+        this.x,
+        this.y,
+        controls && controls.left.x,
+        controls && controls.left.y,
+        controls && controls.right.x,
+        controls && controls.right.y,
+        this.command
+      );
 
     }
 
@@ -5586,6 +5602,16 @@ var Backbone = Backbone || {};
         child.noStroke();
       });
       return this;
+    },
+
+    /**
+     * Trickle down subdivide
+     */
+    subdivide: function() {
+      _.each(this.children, function(child) {
+        child.subdivide();
+      });
+      return this;
     }
 
   });
@@ -5784,7 +5810,7 @@ var Backbone = Backbone || {};
     clone: function() {
 
       var points = _.map(this.vertices, function(v) {
-        return new Two.Vector(v.x, v.y);
+        return v.clone();
       });
 
       var clone = new Polygon(points, this._closed, this._curved);
@@ -5918,6 +5944,43 @@ var Backbone = Backbone || {};
       _.each(this.vertices, function(p, i) {
         p._command = i === 0 ? Two.Commands.move : Two.Commands.line;
       }, this);
+
+      return this;
+
+    },
+
+    subdivide: function() {
+
+      var last = this.vertices.length - 1;
+      var closed = this._closed || this.vertices[last].command === Two.Commands.close;
+      var points = [];
+      var b;
+
+      _.each(this.vertices, function(a, i) {
+
+        var x1, y1, x2, y2, x3, y3, x4, y4;
+
+        if (i <= 0 && !closed) {
+          b = a;
+          return;
+        }
+
+        x1 = b.x, y1 = b.y;
+        x2 = ((b.controls && b.controls.right) || b).x, y2 = ((b.controls && b.controls.right) || b).y;
+        x3 = ((a.controls && a.controls.left) || a).x, y3 = ((a.controls && a.controls.left) || a).y;
+        x4 = a.x, y4 = a.y;
+
+        points.push(Two.Utils.subdivide(x1, y1, x2, y2, x3, y3, x4, y4));
+
+        b = a;
+
+      }, this);
+
+      this._manual = false;
+      this._curved = false;
+
+      this.vertices = _.flatten(points);
+      this.plot();
 
       return this;
 

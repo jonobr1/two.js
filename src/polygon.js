@@ -190,7 +190,7 @@
     clone: function() {
 
       var points = _.map(this.vertices, function(v) {
-        return new Two.Vector(v.x, v.y);
+        return v.clone();
       });
 
       var clone = new Polygon(points, this._closed, this._curved);
@@ -324,6 +324,43 @@
       _.each(this.vertices, function(p, i) {
         p._command = i === 0 ? Two.Commands.move : Two.Commands.line;
       }, this);
+
+      return this;
+
+    },
+
+    subdivide: function() {
+
+      var last = this.vertices.length - 1;
+      var closed = this._closed || this.vertices[last].command === Two.Commands.close;
+      var points = [];
+      var b;
+
+      _.each(this.vertices, function(a, i) {
+
+        var x1, y1, x2, y2, x3, y3, x4, y4;
+
+        if (i <= 0 && !closed) {
+          b = a;
+          return;
+        }
+
+        x1 = b.x, y1 = b.y;
+        x2 = ((b.controls && b.controls.right) || b).x, y2 = ((b.controls && b.controls.right) || b).y;
+        x3 = ((a.controls && a.controls.left) || a).x, y3 = ((a.controls && a.controls.left) || a).y;
+        x4 = a.x, y4 = a.y;
+
+        points.push(Two.Utils.subdivide(x1, y1, x2, y2, x3, y3, x4, y4));
+
+        b = a;
+
+      }, this);
+
+      this._manual = false;
+      this._curved = false;
+
+      this.vertices = _.flatten(points);
+      this.plot();
 
       return this;
 

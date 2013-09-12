@@ -289,6 +289,16 @@
         child.noStroke();
       });
       return this;
+    },
+
+    /**
+     * Trickle down subdivide
+     */
+    subdivide: function() {
+      _.each(this.children, function(child) {
+        child.subdivide();
+      });
+      return this;
     }
 
   });

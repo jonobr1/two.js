@@ -91,6 +91,22 @@
 
       return this;
 
+    },
+
+    clone: function() {
+
+      var controls = this.controls;
+
+      return new Two.Anchor(
+        this.x,
+        this.y,
+        controls && controls.left.x,
+        controls && controls.left.y,
+        controls && controls.right.x,
+        controls && controls.right.y,
+        this.command
+      );
+
     }
 
   });
