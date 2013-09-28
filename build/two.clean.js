@@ -305,10 +305,10 @@
 
           _.each(node.childNodes, function(n) {
 
-            var tag = n.localName || n.tagName;
+            var tag = n.nodeName;
             if (!tag) return;
             
-            var tagName = tag.toLowerCase();
+            var tagName = tag.replace(/svg\:/ig, '').toLowerCase();
 
             if (tagName in Two.Utils.read) {
               var o = Two.Utils.read[tagName].call(this, n);
