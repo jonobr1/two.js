@@ -3465,7 +3465,7 @@
         'varying vec2 v_textureCoords;',
         '',
         'void main() {',
-        '   vec2 projected = (u_matrix * vec3(a_position, 1)).xy;',
+        '   vec2 projected = (u_matrix * vec3(a_position, 1.0)).xy;',
         '   vec2 normal = projected / u_resolution;',
         '   vec2 clipspace = (normal * 2.0) - 1.0;',
         '',
@@ -3510,8 +3510,11 @@
       alpha: true,
       premultipliedAlpha: true,
       stencil: true,
-      preserveDrawingBuffer: false
+      preserveDrawingBuffer: true,
+      overdraw: false
     });
+
+    this.overdraw = params.overdraw;
 
     var gl = this.ctx = this.domElement.getContext('webgl', params) || 
       this.domElement.getContext('experimental-webgl', params);
@@ -3591,7 +3594,13 @@
         return this;
       }
 
-      this.stage.render(this.ctx, this.program);
+      var gl = this.ctx;
+
+      if (!this.overdraw) {
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+      }
+
+      this.stage.render(gl, this.program);
 
       return this;
 
