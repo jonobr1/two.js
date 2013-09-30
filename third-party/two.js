@@ -1533,7 +1533,14 @@ var Backbone = Backbone || {};
       autostart: false
     });
 
-    this.type = params.type;
+    _.each(params, function(v, k) {
+      if (k === 'fullscreen' || k === 'width' || k === 'height'
+        || k === 'autostart') {
+        return;
+      }
+      this[k] = v;
+    }, this);
+
     this.renderer = new Two[this.type](this);
     Two.Utils.setPlaying.call(this, params.autostart);
     this.frameCount = 0;
@@ -1749,14 +1756,13 @@ var Backbone = Backbone || {};
 
           _.each(node.childNodes, function(n) {
 
-            if (!n.localName) {
-              return;
-            }
+            var tag = n.nodeName;
+            if (!tag) return;
+            
+            var tagName = tag.replace(/svg\:/ig, '').toLowerCase();
 
-            var tag = n.localName.toLowerCase();
-
-            if ((tag in Two.Utils.read)) {
-              var o = Two.Utils.read[tag].call(this, n);
+            if (tagName in Two.Utils.read) {
+              var o = Two.Utils.read[tagName].call(this, n);
               group.add(o);
             }
 
@@ -5550,7 +5556,8 @@ var Backbone = Backbone || {};
 
         var rect = child.getBoundingClientRect(true);
 
-        if (!top || !left || !right || !bottom) {
+        if (!_.isNumber(rect.top) || !_.isNumber(rect.left)
+          || !_.isNumber(rect.right) || !_.isNumber(rect.bottom)) {
           return;
         }
 
