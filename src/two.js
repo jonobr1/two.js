@@ -283,14 +283,13 @@
 
           _.each(node.childNodes, function(n) {
 
-            if (!n.localName) {
-              return;
-            }
+            var tag = n.nodeName;
+            if (!tag) return;
+            
+            var tagName = tag.replace(/svg\:/ig, '').toLowerCase();
 
-            var tag = n.localName.toLowerCase();
-
-            if ((tag in Two.Utils.read)) {
-              var o = Two.Utils.read[tag].call(this, n);
+            if (tagName in Two.Utils.read) {
+              var o = Two.Utils.read[tagName].call(this, n);
               group.add(o);
             }
 
