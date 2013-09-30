@@ -55,6 +55,7 @@ node two.js/utils/build
 ## Change Log
 
 Nightly
++ Added `overdraw` boolean to `webgl` renderer
 + Added support for ie9 svg interpretation [@tomconroy](https://github.com/tomconroy)
 + Added `subdivide` method for `Two.Polygon` and `Two.Group`
 + Ensure sure that `manual` properly is set on construction of `Two.Polygon` that it binds `Two.Anchor.controls` change events
