@@ -89,7 +89,14 @@
       autostart: false
     });
 
-    this.type = params.type;
+    _.each(params, function(v, k) {
+      if (k === 'fullscreen' || k === 'width' || k === 'height'
+        || k === 'autostart') {
+        return;
+      }
+      this[k] = v;
+    }, this);
+
     this.renderer = new Two[this.type](this);
     Two.Utils.setPlaying.call(this, params.autostart);
     this.frameCount = 0;
