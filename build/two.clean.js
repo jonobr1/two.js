@@ -329,14 +329,11 @@
         },
 
         polygon: function(node, open) {
+          var points = node.getAttribute('points');
 
-          var points = node.points;
-          if (!points) {
-            return;
-          }
-          var verts = _.map(_.range(points.numberOfItems), function(i) {
-            var p = points.getItem(i);
-            return new Two.Anchor(p.x, p.y);
+          var verts = [];
+          points.replace(/([\d\.?]+),([\d\.?]+)/g, function(match, p1, p2) {
+            verts.push(new Two.Anchor(parseFloat(p1), parseFloat(p2)));
           });
 
           var poly = new Two.Polygon(verts, !open).noStroke();
