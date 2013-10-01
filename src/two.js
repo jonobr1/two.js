@@ -99,7 +99,7 @@
 
     } else {
 
-      this.renderer.setSize(params.width, params.height);
+      this.renderer.setSize(params.width, params.height, this.ratio);
       this.width = params.width;
       this.height = params.height;
 
@@ -1059,7 +1059,7 @@
 
         // Update width / height for the renderer
         if (width !== renderer.width || height !== renderer.height) {
-          renderer.setSize(width, height);
+          renderer.setSize(width, height, this.ratio);
         }
 
         this.trigger(Two.Events.update, this.frameCount, this.timeDelta);
@@ -1305,7 +1305,7 @@
     var width = this.width = wr.width;
     var height = this.height = wr.height;
 
-    this.renderer.setSize(width, height);
+    this.renderer.setSize(width, height, this.ratio);
     this.trigger(Two.Events.resize, width, height);
 
   }
