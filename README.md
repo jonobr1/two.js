@@ -65,7 +65,7 @@ Nightly
 + Modified source to not have any instances of `window` for node use
 + Updated to underscore.js 1.5.1
 + Added `Two.Utils.getReflection` method to properly get reflection's in svg interpretation
-+ Made `Two.Vector` inherently not broadcast events and now needs to be explicity bound to in order to broadcast events, which two.js does internally for you.
++ Made `Two.Vector` inherently not broadcast events and now needs to be explicity bound to in order to broadcast events, which two.js does internally for you
 + Created `Two.Utils.Collection` an observable array-like class that `polygon.vertices` inherit [@fchasen](http://github.com/fchasen)
 + Added `Two.Events.insert` and `Two.Events.remove` for use with `Two.Utils.Collection`
 + Properly recurses `getBoundingClientRect` for both `Two.Group` and `Two.Polygon`
