@@ -146,6 +146,14 @@
 
     isZero: function() {
       return (this.length() < 0.0001 /* almost zero */ );
+    },
+
+    toString: function() {
+      return this.x + ',' + this.y;
+    },
+
+    toObject: function() {
+      return { x: this.x, y: this.y };
     }
 
   });
@@ -264,6 +272,14 @@
 
     isZero: function() {
       return (this.length() < 0.0001 /* almost zero */ );
+    },
+
+    toString: function() {
+      return this._x + ',' + this._y;
+    },
+
+    toObject: function() {
+      return { x: this._x, y: this._y };
     }
 
   };
