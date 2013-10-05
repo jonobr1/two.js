@@ -2508,31 +2508,31 @@ var Backbone = Backbone || {};
      */
     update: function() {
 
+      var animated = !!this._lastFrame;
+      var now = getNow();
+
+      this.frameCount++;
+
+      if (animated) {
+        this.timeDelta = parseFloat((now - this._lastFrame).toFixed(3));
+      }
+      this._lastFrame = now;
+
+      var width = this.width;
+      var height = this.height;
+      var renderer = this.renderer;
+
+      // Update width / height for the renderer
+      if (width !== renderer.width || height !== renderer.height) {
+        renderer.setSize(width, height, this.ratio);
+      }
+
+      this.trigger(Two.Events.update, this.frameCount, this.timeDelta);
+
       /**
        * Purposefully deferred to be called after all other transformations.
        */
       _.defer(_.bind(function() {
-
-        var animated = !!this._lastFrame;
-        var now = getNow();
-
-        this.frameCount++;
-
-        if (animated) {
-          this.timeDelta = parseFloat((now - this._lastFrame).toFixed(3));
-        }
-        this._lastFrame = now;
-
-        var width = this.width;
-        var height = this.height;
-        var renderer = this.renderer;
-
-        // Update width / height for the renderer
-        if (width !== renderer.width || height !== renderer.height) {
-          renderer.setSize(width, height, this.ratio);
-        }
-
-        this.trigger(Two.Events.update, this.frameCount, this.timeDelta);
 
         this.render();
 
