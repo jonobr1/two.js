@@ -1541,6 +1541,11 @@ var Backbone = Backbone || {};
       this[k] = v;
     }, this);
 
+    // Specified domElement overrides type declaration.
+    if (_.isElement(params.domElement)) {
+      this.type = Two.Types[params.domElement.tagName.toLowerCase()];
+    }
+
     this.renderer = new Two[this.type](this);
     Two.Utils.setPlaying.call(this, params.autostart);
     this.frameCount = 0;
@@ -1570,9 +1575,9 @@ var Backbone = Backbone || {};
       fitted();
 
 
-    } else {
+    } else if (!_.isElement(params.domElement)) {
 
-      this.renderer.setSize(params.width, params.height);
+      this.renderer.setSize(params.width, params.height, this.ratio);
       this.width = params.width;
       this.height = params.height;
 
@@ -1773,14 +1778,11 @@ var Backbone = Backbone || {};
         },
 
         polygon: function(node, open) {
+          var points = node.getAttribute('points');
 
-          var points = node.points;
-          if (!points) {
-            return;
-          }
-          var verts = _.map(_.range(points.numberOfItems), function(i) {
-            var p = points.getItem(i);
-            return new Two.Anchor(p.x, p.y);
+          var verts = [];
+          points.replace(/([\d\.?]+),([\d\.?]+)/g, function(match, p1, p2) {
+            verts.push(new Two.Anchor(parseFloat(p1), parseFloat(p2)));
           });
 
           var poly = new Two.Polygon(verts, !open).noStroke();
@@ -2511,31 +2513,31 @@ var Backbone = Backbone || {};
      */
     update: function() {
 
+      var animated = !!this._lastFrame;
+      var now = getNow();
+
+      this.frameCount++;
+
+      if (animated) {
+        this.timeDelta = parseFloat((now - this._lastFrame).toFixed(3));
+      }
+      this._lastFrame = now;
+
+      var width = this.width;
+      var height = this.height;
+      var renderer = this.renderer;
+
+      // Update width / height for the renderer
+      if (width !== renderer.width || height !== renderer.height) {
+        renderer.setSize(width, height, this.ratio);
+      }
+
+      this.trigger(Two.Events.update, this.frameCount, this.timeDelta);
+
       /**
        * Purposefully deferred to be called after all other transformations.
        */
       _.defer(_.bind(function() {
-
-        var animated = !!this._lastFrame;
-        var now = getNow();
-
-        this.frameCount++;
-
-        if (animated) {
-          this.timeDelta = parseFloat((now - this._lastFrame).toFixed(3));
-        }
-        this._lastFrame = now;
-
-        var width = this.width;
-        var height = this.height;
-        var renderer = this.renderer;
-
-        // Update width / height for the renderer
-        if (width !== renderer.width || height !== renderer.height) {
-          renderer.setSize(width, height);
-        }
-
-        this.trigger(Two.Events.update, this.frameCount, this.timeDelta);
 
         this.render();
 
@@ -2778,7 +2780,7 @@ var Backbone = Backbone || {};
     var width = this.width = wr.width;
     var height = this.height = wr.height;
 
-    this.renderer.setSize(width, height);
+    this.renderer.setSize(width, height, this.ratio);
     this.trigger(Two.Events.resize, width, height);
 
   }
@@ -2962,6 +2964,14 @@ var Backbone = Backbone || {};
 
     isZero: function() {
       return (this.length() < 0.0001 /* almost zero */ );
+    },
+
+    toString: function() {
+      return this.x + ',' + this.y;
+    },
+
+    toObject: function() {
+      return { x: this.x, y: this.y };
     }
 
   });
@@ -3080,6 +3090,14 @@ var Backbone = Backbone || {};
 
     isZero: function() {
       return (this.length() < 0.0001 /* almost zero */ );
+    },
+
+    toString: function() {
+      return this._x + ',' + this._y;
+    },
+
+    toObject: function() {
+      return { x: this._x, y: this._y };
     }
 
   };
@@ -3711,10 +3729,10 @@ var Backbone = Backbone || {};
   /**
    * @class
    */
-  var Renderer = Two[Two.Types.svg] = function() {
+  var Renderer = Two[Two.Types.svg] = function(params) {
 
     this.count = 0;
-    this.domElement = svg.createElement('svg');
+    this.domElement = params.domElement || svg.createElement('svg');
     this.elements = [];
 
     this.domElement.style.visibility = 'hidden';
@@ -4189,10 +4207,10 @@ var Backbone = Backbone || {};
 
   };
 
-  var Renderer = Two[Two.Types.canvas] = function() {
+  var Renderer = Two[Two.Types.canvas] = function(params) {
 
     this.count = 0;
-    this.domElement = document.createElement('canvas');
+    this.domElement = params.domElement || document.createElement('canvas');
     this.ctx = this.domElement.getContext('2d');
     this.overdraw = false;
 
@@ -4938,7 +4956,7 @@ var Backbone = Backbone || {};
   var Renderer = Two[Two.Types.webgl] = function(options) {
 
     this.count = 0;
-    this.domElement = document.createElement('canvas');
+    this.domElement = options.domElement || document.createElement('canvas');
 
     this.elements = [];
 
