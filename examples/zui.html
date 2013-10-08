@@ -5,14 +5,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="user-scalable=no">
     <link rel="shortcut icon" type="image/gif" href="../images/favicon.gif">
-    <style>
-      svg, canvas {
-        display: block;
-        margin: 50px auto;
-        cursor: -webkit-zoom-in;
-        border: 5px solid #ccc;
-      }
-    </style>
     <script src="../third-party/jquery.js"></script>
     <script src="../third-party/two.js"></script>
     <script src="../third-party/tween.js"></script>
@@ -249,7 +241,8 @@
 
           var two = new Two({
             autostart: true,
-            type: Two.Types.canvas
+            // type: Two.Types.canvas,
+            fullscreen: true
           }).appendTo(document.body);
 
           _.each(_.range(500), function(i) {

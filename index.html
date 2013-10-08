@@ -9,7 +9,7 @@
     <link rel="image_src" href="./images/logo.gif" />
     <title>Two.js</title>
     <!-- @font-face -->
-    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Ubuntu+Mono:400,400italic">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Ubuntu+Mono:400,400italic">
     <script type="text/javascript" src="//use.typekit.net/edp1hux.js"></script>
     <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
     <!-- Styles -->
@@ -37,15 +37,32 @@
           'purple'
         ];
 
-        $('.examples').children().each(function(i, child) {
-          var index = Math.floor(Math.random() * colors.length);
-          var color = colors.splice(index, 1);
-          child.className = color;
-          chosen.push(color);
-          if (chosen.length >= totalColors) {
-            colors = chosen.slice(0);
-            chosen.length = 0;
-          }
+        var $examples = $('.examples');
+
+        $.getJSON('../data/examples.json', function(resp) {
+
+          var html = resp.template;
+
+
+          $examples.html(
+            _.map(resp.items.splice(0, 6), function(data, i) {
+              data.href = '../' + data.href;
+              data.img = '../' + data.img;
+              return _.template(html, data);
+            }).join('\n')
+          );
+
+          $examples.children().each(function(i, child) {
+            var index = Math.floor(Math.random() * colors.length);
+            var color = colors.splice(index, 1);
+            child.className = color;
+            chosen.push(color);
+            if (chosen.length >= totalColors) {
+              colors = chosen.slice(0);
+              chosen.length = 0;
+            }
+          });
+
         });
 
       });
@@ -91,111 +108,7 @@
   <body>
     <div id="content">
       <div id="introduction">
-        <script>
-$(function() {
-
-  var $container = $('#introduction');
-
-  var two = new Two({
-    width: 285,
-    height: 80,
-    type: Two.Types.svg
-  }).appendTo($container[0]);
-
-  var width = 44, height = 64;
-  var half_width = width / 2;
-  var quart_width = half_width / 2;
-  var half_height = height / 2;
-  var quart_height = half_height / 2;
-
-  var t = makeT(255, 64, 64);
-  t.scale = 0;
-  t.translation.x = - width * 1.33;
-
-  var w = makeW(255, 128, 0);
-  w.scale = 0;
-  w.translation.x = 0;
-
-  var o = makeO(0, 191, 168);
-  o.scale = 0;
-  o.translation.x = width * 1.33;
-
-  var group = two.makeGroup(t, w, o);
-  group.translation.set(two.width / 2, two.height / 2);
-  group.scale = 3 * (285 / 486);
-
-  t.scale = w.scale = o.scale = 0;
-
-  two
-    .bind('update', function(frames) {
-
-      var tScale = t.scale;
-
-      if (tScale >= 1.0 - 0.0001) {
-        two.pause();
-        return;
-      }
-
-      var s = tScale + (1.0 - tScale) * 0.2;
-      t.scale = s;
-      w.scale = s;
-      o.scale = s;
-
-    });
-
-    _.defer(_.bind(two.play, two));
-
-    function makeT(r, g, b) {
-
-      var a = two.makeRectangle(0, 0, width, quart_width);
-      var c = two.makeRectangle(0, 0, quart_width, width);
-      var rgb = r +',' + g + ',' + b;
-
-      a.fill = c.fill = 'rgba(' + rgb + ',' + 0.33 + ')';
-      a.stroke = c.stroke = 'rgb(' + rgb + ')';
-      a.linewidth = c.linewidth = 1;
-
-      return two.makeGroup(a, c);
-
-    }
-
-    function makeW(r, g, b) {
-
-      var x1 = 0, y1 = height * 0.3125;
-      var x2 = half_width, y2 = - y1;
-      var x3 = - x2, y3 = y2;
-
-      var a = two.makePolygon(x1, y1, x2, y2, x3, y3);
-      var c = two.makePolygon(x1, y1, x2, y2, x3, y3);
-
-      a.translation.x = - width * 0.25;
-      c.translation.set(a.translation.x + half_width, a.translation.y);
-
-      var rgb = Math.round(r) +',' + Math.round(g) + ',' + Math.round(b);
-
-      a.fill = c.fill = 'rgba(' + rgb + ',' + 0.33 + ')';
-      a.stroke = c.stroke = 'rgb(' + rgb + ')';
-      a.linewidth = c.linewidth = 1;
-
-      return two.makeGroup(a, c);
-
-    }
-
-    function makeO(r, g, b) {
-
-      var a = two.makeCircle(0, 0, half_width);
-      var c = two.makeCircle(0, 0, width * 0.125);
-      var rgb = Math.round(r) +',' + Math.round(g) + ',' + Math.round(b);
-
-      a.fill = c.fill = 'rgba(' + rgb + ',' + 0.33 + ')';
-      a.stroke = c.stroke = 'rgb(' + rgb + ')';
-      a.linewidth = c.linewidth = 1;
-
-      return two.makeGroup(a, c);
-
-    }
-
-});</script>
+        <script src="./src/signum.js"></script>
       </div>
       <p>
         <strong>Two.js</strong> is a two-dimensional drawing api geared towards modern web browsers. It is renderer agnostic enabling the same api to draw in multiple contexts: <code>svg</code>, <code>canvas</code>, and <code>webgl</code>.
@@ -206,10 +119,9 @@ $(function() {
         <li><a href="#download">Download</a></li>
         <li><a href="#overview">Overview</a></li>
         <li><a href="#basic-usage">Basic Usage</a></li>
-        <li><a href="#examples">Examples</a></li>
+        <li><a href="/examples">Examples</a></li>
         <li><a href="#documentation">Documentation</a></li>
         <li><a href="http://github.com/jonobr1/two.js" target="_blank">Source</a></li>
-        <!-- <li><a href="#compatibility">Compatibility</a></li> -->
         <li><a href="#credits">Credits</a></li>
       </ul>
       <div id="download" class="horizon"></div>
@@ -382,44 +294,8 @@ two.bind('update', function(frameCount) {
       </div>
       <div id="examples" class="horizon"></div>
       <h2>Examples</h2>
-      <ul class="examples">
-        <li>
-          <a href="./examples/depths.html" target="_blank">
-            <img width="143" height="100" src="./images/depths.gif" alt="">
-            <h3><p>Depth via Groups</p></h3>
-          </a>
-        </li>
-        <li>
-          <a href="./examples/animate-stroke.html" target="_blank">
-            <img width="143" height="100" src="./images/fresh.gif" alt="">
-            <h3><p>Animate Strokes</p></h3>
-          </a>
-        </li>
-        <li>
-          <a href="./examples/tween.html" target="_blank">
-            <img width="143" height="100" src="./images/tween.gif" alt="">
-            <h3><p>3<sup>rd</sup> Party Animation</p></h3>
-          </a>
-        </li>
-        <li>
-          <a href="./examples/morph.html" target="_blank">
-            <img width="143" height="100" src="./images/morph.gif" alt="">
-            <h3><p>Morph Vertices</p></h3>
-          </a>
-        </li>
-        <li>
-          <a href="./examples/renderers.html" target="_blank">
-            <img width="143" height="100" src="./images/renderers.gif" alt="">
-            <h3><p>Rendering Types</p></h3>
-          </a>
-        </li>
-        <li>
-          <a href="./examples/svg-interpreter.html" target="_blank">
-            <img width="143" height="100" src="./images/svg-interpreter.gif" alt="">
-            <h3><p>Interpret SVG&apos;s</p></h3>
-          </a>
-        </li>
-      </ul>
+      <ul class="examples"></ul>
+      <p>For <strong>even more</strong> examples check out the example page <a href="/examples">here</a>.</p>
       <div id="documentation" class="horizon"></div>
       <h2>Documentation</h2>
 
