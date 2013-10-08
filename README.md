@@ -55,6 +55,7 @@ node two.js/utils/build
 ## Change Log
 
 Nightly
++ Can properly pass `domElement` on construction of new instance of two
 + Added `overdraw` boolean to `webgl` renderer [@arodic](https://github.com/arodic)
 + Added support for ie9 svg interpretation [@tomconroy](https://github.com/tomconroy)
 + Added `subdivide` method for `Two.Polygon` and `Two.Group`
