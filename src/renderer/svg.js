@@ -143,10 +143,10 @@
   /**
    * @class
    */
-  var Renderer = Two[Two.Types.svg] = function() {
+  var Renderer = Two[Two.Types.svg] = function(params) {
 
     this.count = 0;
-    this.domElement = svg.createElement('svg');
+    this.domElement = params.domElement || svg.createElement('svg');
     this.elements = [];
 
     this.domElement.style.visibility = 'hidden';

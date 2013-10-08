@@ -1541,6 +1541,11 @@ var Backbone = Backbone || {};
       this[k] = v;
     }, this);
 
+    // Specified domElement overrides type declaration.
+    if (_.isElement(params.domElement)) {
+      this.type = Two.Types[params.domElement.tagName.toLowerCase()];
+    }
+
     this.renderer = new Two[this.type](this);
     Two.Utils.setPlaying.call(this, params.autostart);
     this.frameCount = 0;
@@ -1570,7 +1575,7 @@ var Backbone = Backbone || {};
       fitted();
 
 
-    } else {
+    } else if (!_.isElement(params.domElement)) {
 
       this.renderer.setSize(params.width, params.height, this.ratio);
       this.width = params.width;
@@ -3724,10 +3729,10 @@ var Backbone = Backbone || {};
   /**
    * @class
    */
-  var Renderer = Two[Two.Types.svg] = function() {
+  var Renderer = Two[Two.Types.svg] = function(params) {
 
     this.count = 0;
-    this.domElement = svg.createElement('svg');
+    this.domElement = params.domElement || svg.createElement('svg');
     this.elements = [];
 
     this.domElement.style.visibility = 'hidden';
@@ -4202,10 +4207,10 @@ var Backbone = Backbone || {};
 
   };
 
-  var Renderer = Two[Two.Types.canvas] = function() {
+  var Renderer = Two[Two.Types.canvas] = function(params) {
 
     this.count = 0;
-    this.domElement = document.createElement('canvas');
+    this.domElement = params.domElement || document.createElement('canvas');
     this.ctx = this.domElement.getContext('2d');
     this.overdraw = false;
 
@@ -4951,7 +4956,7 @@ var Backbone = Backbone || {};
   var Renderer = Two[Two.Types.webgl] = function(options) {
 
     this.count = 0;
-    this.domElement = document.createElement('canvas');
+    this.domElement = options.domElement || document.createElement('canvas');
 
     this.elements = [];
 

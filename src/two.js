@@ -68,6 +68,11 @@
       this[k] = v;
     }, this);
 
+    // Specified domElement overrides type declaration.
+    if (_.isElement(params.domElement)) {
+      this.type = Two.Types[params.domElement.tagName.toLowerCase()];
+    }
+
     this.renderer = new Two[this.type](this);
     Two.Utils.setPlaying.call(this, params.autostart);
     this.frameCount = 0;
@@ -97,7 +102,7 @@
       fitted();
 
 
-    } else {
+    } else if (!_.isElement(params.domElement)) {
 
       this.renderer.setSize(params.width, params.height, this.ratio);
       this.width = params.width;

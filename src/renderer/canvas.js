@@ -238,10 +238,10 @@
 
   };
 
-  var Renderer = Two[Two.Types.canvas] = function() {
+  var Renderer = Two[Two.Types.canvas] = function(params) {
 
     this.count = 0;
-    this.domElement = document.createElement('canvas');
+    this.domElement = params.domElement || document.createElement('canvas');
     this.ctx = this.domElement.getContext('2d');
     this.overdraw = false;
 

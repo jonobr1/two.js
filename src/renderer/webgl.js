@@ -487,7 +487,7 @@
   var Renderer = Two[Two.Types.webgl] = function(options) {
 
     this.count = 0;
-    this.domElement = document.createElement('canvas');
+    this.domElement = options.domElement || document.createElement('canvas');
 
     this.elements = [];
 
