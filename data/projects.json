@@ -1,0 +1,20 @@
+{
+  "template": "<li><a href=\"<%= href %>\" target=\"_blank\"><img width=\"143\" height=\"100\" src=\"<%= img %>\" alt=\"\"><h3><p><%= title %></p></h3></a></li>",
+  "items": [
+    {
+      "title": "Just A Reflektor",
+      "href": "http://justareflektor.com/tech",
+      "img": "images/projects/reflektor.gif"
+    },
+    {
+      "title": "Jumping Jack Sack",
+      "href": "http://lab.ultranoir.com/jumping-jack-sack/",
+      "img": "images/projects/jumping-jack.gif"
+    },
+    {
+      "title": "Neuronal Synchrony",
+      "href": "http://works.jonobr1.com/Neuronal-Synchrony",
+      "img": "images/projects/neuronal-synchrony.gif"
+    }
+  ]
+}

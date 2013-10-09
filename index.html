@@ -38,21 +38,45 @@
         ];
 
         var $examples = $('.examples');
+        var $projects = $('.projects');
 
         $.getJSON('./data/examples.json', function(resp) {
 
           var html = resp.template;
 
-
           $examples.html(
             _.map(resp.items.splice(0, 6), function(data, i) {
-              data.href = '../' + data.href;
-              data.img = '../' + data.img;
+              data.href = './' + data.href;
+              data.img = './' + data.img;
               return _.template(html, data);
             }).join('\n')
           );
 
           $examples.children().each(function(i, child) {
+            var index = Math.floor(Math.random() * colors.length);
+            var color = colors.splice(index, 1);
+            child.className = color;
+            chosen.push(color);
+            if (chosen.length >= totalColors) {
+              colors = chosen.slice(0);
+              chosen.length = 0;
+            }
+          });
+
+        });
+
+        $.getJSON('./data/projects.json', function(resp) {
+
+          var html = resp.template;
+
+          $projects.html(
+            _.map(resp.items.splice(0, 6), function(data, i) {
+              data.img = '../' + data.img;
+              return _.template(html, data);
+            }).join('\n')
+          );
+
+          $projects.children().each(function(i, child) {
             var index = Math.floor(Math.random() * colors.length);
             var color = colors.splice(index, 1);
             child.className = color;
@@ -120,6 +144,7 @@
         <li><a href="#overview">Overview</a></li>
         <li><a href="#basic-usage">Basic Usage</a></li>
         <li><a href="./examples/">Examples</a></li>
+        <li><a href="./projects/">Projects</a></li>
         <li><a href="#documentation">Documentation</a></li>
         <li><a href="http://github.com/jonobr1/two.js" target="_blank">Source</a></li>
         <li><a href="#credits">Credits</a></li>
@@ -296,6 +321,10 @@ two.bind('update', function(frameCount) {
       <h2>Examples</h2>
       <ul class="examples"></ul>
       <p>For <strong>even more</strong> examples check out the example page <a href="./examples">here</a>.</p>
+      <div id="projects" class="horizon"></div>
+      <h2>Projects</h2>
+      <ul class="projects"></ul>
+      <p>For <strong>even more</strong> projects and information to submit your projects built with two.js check out the project page <a href="./projects">here</a>.</p>
       <div id="documentation" class="horizon"></div>
       <h2>Documentation</h2>
 

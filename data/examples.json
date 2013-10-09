@@ -4,53 +4,53 @@
     {
       "title": "Advanced Anchors",
       "href": "examples/advanced-anchors.html",
-      "img": "images/anchors.gif"
+      "img": "images/examples/anchors.gif"
     },
     {
       "title": "Dynamic Vertices",
       "href": "examples/dynamic-vertices.html",
-      "img": "images/vertices.gif"
+      "img": "images/examples/vertices.gif"
     },
     {
       "title": "Event Binding (SVG)",
       "href": "examples/svg-events.html",
-      "img": "images/svg-events.gif"
+      "img": "images/examples/svg-events.gif"
     },
     {
       "title": "Zoom UI",
       "href": "examples/zui.html",
-      "img": "images/zui.gif"
+      "img": "images/examples/zui.gif"
     },
 
     {
       "title": "Depth via Groups",
       "href": "examples/depths.html",
-      "img": "images/depths.gif"
+      "img": "images/examples/depths.gif"
     },
     {
       "title": "Animate Strokes",
       "href": "examples/animate-stroke.html",
-      "img": "images/fresh.gif"
+      "img": "images/examples/fresh.gif"
     },
     {
       "title": "3<sup>rd</sup> Party Animation",
       "href": "tween.html",
-      "img": "images/tween.gif"
+      "img": "images/examples/tween.gif"
     },
     {
       "title": "Morph Vertices",
       "href": "examples/morph.html",
-      "img": "images/morph.gif"
+      "img": "images/examples/morph.gif"
     },
     {
       "title": "Rendering Types",
       "href": "examples/renderers.html",
-      "img": "images/renderers.gif"
+      "img": "images/examples/renderers.gif"
     },
     {
       "title": "Interpret SVG&apos;s",
       "href": "examples/svg-interpreter.html",
-      "img": "images/svg-interpreter.gif"
+      "img": "images/examples/svg-interpreter.gif"
     }
   ]
 }

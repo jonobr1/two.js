@@ -162,7 +162,8 @@ p.download {
   height: 528px;
 }
 
-.examples {
+.examples,
+.projects {
   list-style: none;
   max-width: $max-content-width;
   @media screen and (max-width: $min-screen-width),

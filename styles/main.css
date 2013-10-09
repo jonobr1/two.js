@@ -1,7 +1,7 @@
 /* BASICS */
 .CodeMirror {
   /* Set height, width, borders, and global font properties here */
-  font-family: "Ubuntu Mono", monospace;
+  font-family: 'Ubuntu Mono', monospace;
   height: 600px;
   max-width: 580px;
   padding-right: 8px; }
@@ -323,7 +323,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {
   padding: 0; }
 
 body {
-  font-family: "proxima-nova", helvetica, sans-serif;
+  font-family: 'proxima-nova', helvetica, sans-serif;
   font-size: 1em;
   line-height: 1.5em;
   word-spacing: 0.1875em;
@@ -335,7 +335,7 @@ body {
       background: #eeeeee; } }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: "proxima-nova", helvetica, sans-serif;
+  font-family: 'proxima-nova', helvetica, sans-serif;
   vertical-align: top;
   color: #777777; }
 
@@ -347,7 +347,7 @@ h2 {
       text-align: center; } }
 
 code {
-  font-family: "Ubuntu Mono", monospace; }
+  font-family: 'Ubuntu Mono', monospace; }
 
 p {
   max-width: 580px; }
@@ -448,13 +448,16 @@ li.horizon {
 #draw-group > .CodeMirror {
   height: 528px; }
 
-.examples {
+.examples,
+.projects {
   list-style: none;
   max-width: 580px; }
   @media screen and (max-width: 400px), screen and (max-device-width: 640px) {
-    .examples {
+    .examples,
+    .projects {
       text-align: center; } }
-  .examples li {
+  .examples li,
+  .projects li {
     display: inline-block;
     vertical-align: baseline;
     zoom: 1;
@@ -467,31 +470,42 @@ li.horizon {
     border: 1px solid #d6d6d6;
     margin-top: 0 !important;
     text-align: left; }
-    .examples li.red h3 {
+    .examples li.red h3,
+    .projects li.red h3 {
       background: rgba(255, 64, 64, 0.8); }
-    .examples li.green h3 {
+    .examples li.green h3,
+    .projects li.green h3 {
       background: rgba(0, 191, 168, 0.8); }
-    .examples li.blue h3 {
+    .examples li.blue h3,
+    .projects li.blue h3 {
       background: rgba(0, 200, 255, 0.8); }
-    .examples li.orange h3 {
+    .examples li.orange h3,
+    .projects li.orange h3 {
       background: rgba(255, 128, 0, 0.8); }
-    .examples li.purple h3 {
+    .examples li.purple h3,
+    .projects li.purple h3 {
       background: rgba(153, 102, 255, 0.8); }
-    .examples li.yellow h3 {
+    .examples li.yellow h3,
+    .projects li.yellow h3 {
       background: rgba(255, 244, 95, 0.8); }
-    .examples li a {
+    .examples li a,
+    .projects li a {
       display: block;
       border-width: 0; }
-      .examples li a:hover h3, .examples li a:active h3 {
+      .examples li a:hover h3, .examples li a:active h3,
+      .projects li a:hover h3,
+      .projects li a:active h3 {
         display: block; }
-    .examples li h3 {
+    .examples li h3,
+    .projects li h3 {
       display: none;
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%; }
-      .examples li h3 p {
+      .examples li h3 p,
+      .projects li h3 p {
         position: absolute;
         top: 50%;
         margin-top: -1.5em;
