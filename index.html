@@ -46,8 +46,6 @@
 
           $examples.html(
             _.map(resp.items.splice(0, 6), function(data, i) {
-              data.href = '../' + data.href;
-              data.img = '../' + data.img;
               return _.template(html, data);
             }).join('\n')
           );
