@@ -71,7 +71,7 @@
 
           $projects.html(
             _.map(resp.items.splice(0, 6), function(data, i) {
-              data.img = '../' + data.img;
+              data.img = './' + data.img;
               return _.template(html, data);
             }).join('\n')
           );
