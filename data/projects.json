@@ -7,6 +7,11 @@
       "img": "images/projects/reflektor.gif"
     },
     {
+      "title": "Choc",
+      "href": "http://www.fullstack.io/choc/",
+      "img": "images/projects/choc.gif"
+    },
+    {
       "title": "Jumping Jack Sack",
       "href": "http://lab.ultranoir.com/jumping-jack-sack/",
       "img": "images/projects/jumping-jack.gif"
