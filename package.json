@@ -1,6 +1,6 @@
 {
   "name": "two.js",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A two-dimensional drawing api meant for modern browsers.",
   "keywords": [
     "dom",
@@ -21,6 +21,9 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/jonobr1/two.js"
+  },
+  "bugs": {
+    "url": "https://github.com/jonobr1/two.js/issues"
   },
   "licenses": [
     {

@@ -1,6 +1,6 @@
 /**
  * @author sole / http://soledadpenades.com
- * @author mr.doob / http://mrdoob.com
+ * @author mrdoob / http://mrdoob.com
  * @author Robert Eisele / http://www.xarg.org
  * @author Philippe / http://philippe.elsass.me
  * @author Robert Penner / http://www.robertpenner.com/easing_terms_of_use.html
@@ -8,7 +8,21 @@
  * @author lechecacharro
  * @author Josh Faul / http://jocafa.com/
  * @author egraether / http://egraether.com/
+ * @author endel / http://endel.me
+ * @author Ben Delarre / http://delarre.net
+ * @author jonobr1 / http://jonobr1.com/
  */
+
+// Date.now shim for (ahem) Internet Explo(d|r)er
+if ( Date.now === undefined ) {
+
+	Date.now = function () {
+
+		return new Date().valueOf();
+
+	};
+
+}
 
 var TWEEN = TWEEN || ( function () {
 
@@ -16,7 +30,7 @@ var TWEEN = TWEEN || ( function () {
 
 	return {
 
-		REVISION: '6',
+		REVISION: '11dev',
 
 		getAll: function () {
 
@@ -48,29 +62,33 @@ var TWEEN = TWEEN || ( function () {
 
 		},
 
-		update: function ( time ) {
+		update: function ( time, preserve ) {
 
-			var i = 0;
-			var num_tweens = _tweens.length;
-			var time = time !== undefined ? time : Date.now();
+			if ( _tweens.length === 0 ) return false;
 
-			while ( i < num_tweens ) {
+			var i = 0, numTweens = _tweens.length;
+
+			time = time !== undefined ? time : ( typeof window !== 'undefined' && window.performance !== undefined && window.performance.now !== undefined ? window.performance.now() : Date.now() );
+
+			while ( i < numTweens ) {
 
 				if ( _tweens[ i ].update( time ) ) {
 
 					i ++;
 
-				} else {
+				} else if ( !preserve ) {
 
 					_tweens.splice( i, 1 );
-					num_tweens --;
+
+					numTweens --;
 
 				}
 
 			}
 
-		}
+			return true;
 
+		}
 	};
 
 } )();
@@ -80,18 +98,37 @@ TWEEN.Tween = function ( object ) {
 	var _object = object;
 	var _valuesStart = {};
 	var _valuesEnd = {};
+	var _valuesStartRepeat = {};
 	var _duration = 1000;
+	var _repeat = 0;
+	var _yoyo = false;
+	var _reversed = false;
 	var _delayTime = 0;
 	var _startTime = null;
 	var _easingFunction = TWEEN.Easing.Linear.None;
 	var _interpolationFunction = TWEEN.Interpolation.Linear;
-	var _chainedTween = null;
+	var _chainedTweens = [];
+	var _onStartCallback = null;
+	var _onStartCallbackFired = false;
 	var _onUpdateCallback = null;
 	var _onCompleteCallback = null;
 
+	// Set all starting values present on the target object
+	for ( var field in object ) {
+
+		var value = parseFloat( object[ field ], 10 );
+		var type = toString.call( value );
+
+		// Only add properties that are numbers or arrays
+		if ( type == '[object Number]' || type == '[object Array]' ) {
+			_valuesStart[ field ] = value;
+		}
+
+	}
+
 	this.to = function ( properties, duration ) {
 
-		if ( duration !== null ) {
+		if ( duration !== undefined ) {
 
 			_duration = duration;
 
@@ -107,17 +144,12 @@ TWEEN.Tween = function ( object ) {
 
 		TWEEN.add( this );
 
-		_startTime = time !== undefined ? time : Date.now();
+		_onStartCallbackFired = false;
+
+		_startTime = time !== undefined ? time : ( typeof window !== 'undefined' && window.performance !== undefined && window.performance.now !== undefined ? window.performance.now() : Date.now() );
 		_startTime += _delayTime;
 
 		for ( var property in _valuesEnd ) {
-
-			// This prevents the engine from interpolating null values
-			if ( _object[ property ] === null ) {
-
-				continue;
-
-			}
 
 			// check if an Array was provided as property value
 			if ( _valuesEnd[ property ] instanceof Array ) {
@@ -134,6 +166,12 @@ TWEEN.Tween = function ( object ) {
 			}
 
 			_valuesStart[ property ] = _object[ property ];
+
+			if( ( _valuesStart[ property ] instanceof Array ) === false ) {
+				_valuesStart[ property ] *= 1.0; // Ensures we're using numbers, not strings
+			}
+
+			_valuesStartRepeat[ property ] = _valuesStart[ property ] || 0;
 
 		}
 
@@ -155,6 +193,21 @@ TWEEN.Tween = function ( object ) {
 
 	};
 
+	this.repeat = function ( times ) {
+
+		_repeat = times;
+		return this;
+
+	};
+
+	this.yoyo = function( yoyo ) {
+
+		_yoyo = yoyo;
+		return this;
+
+	};
+
+
 	this.easing = function ( easing ) {
 
 		_easingFunction = easing;
@@ -169,40 +222,53 @@ TWEEN.Tween = function ( object ) {
 
 	};
 
-	this.chain = function ( chainedTween ) {
+	this.chain = function () {
 
-		_chainedTween = chainedTween;
+		_chainedTweens = arguments;
 		return this;
 
 	};
 
-	this.onUpdate = function ( onUpdateCallback ) {
+	this.onStart = function ( callback ) {
 
-		_onUpdateCallback = onUpdateCallback;
+		_onStartCallback = callback;
 		return this;
 
 	};
 
-	this.onComplete = function ( onCompleteCallback ) {
+	this.onUpdate = function ( callback ) {
 
-		_onCompleteCallback = onCompleteCallback;
+		_onUpdateCallback = callback;
 		return this;
 
 	};
 
-	this.getOnComplete = function () {
+	this.onComplete = function ( callback ) {
 
-		return _onCompleteCallback;
+		_onCompleteCallback = callback;
+		return this;
 
 	};
-
-  console.log('added get on complete');
 
 	this.update = function ( time ) {
+
+		var property;
 
 		if ( time < _startTime ) {
 
 			return true;
+
+		}
+
+		if ( _onStartCallbackFired === false ) {
+
+			if ( _onStartCallback !== null ) {
+
+				_onStartCallback.call( _object );
+
+			}
+
+			_onStartCallbackFired = true;
 
 		}
 
@@ -211,9 +277,9 @@ TWEEN.Tween = function ( object ) {
 
 		var value = _easingFunction( elapsed );
 
-		for ( var property in _valuesStart ) {
+		for ( property in _valuesEnd ) {
 
-			var start = _valuesStart[ property ];
+			var start = _valuesStart[ property ] || 0;
 			var end = _valuesEnd[ property ];
 
 			if ( end instanceof Array ) {
@@ -222,7 +288,15 @@ TWEEN.Tween = function ( object ) {
 
 			} else {
 
-				_object[ property ] = start + ( end - start ) * value;
+				// Parses relative end values with start as base (e.g.: +10, -3)
+				if ( typeof(end) === "string" ) {
+					end = start + parseFloat(end, 10);
+				}
+
+				// protect against non numeric properties.
+				if ( typeof(end) === "number" ) {
+					_object[ property ] = start + ( end - start ) * value;
+				}
 
 			}
 
@@ -236,19 +310,50 @@ TWEEN.Tween = function ( object ) {
 
 		if ( elapsed == 1 ) {
 
-			if ( _onCompleteCallback !== null ) {
+			if ( _repeat > 0 ) {
 
-				_onCompleteCallback.call( _object );
+				if( isFinite( _repeat ) ) {
+					_repeat--;
+				}
+
+				// reassign starting values, restart by making startTime = now
+				for( property in _valuesStartRepeat ) {
+
+					if ( typeof( _valuesEnd[ property ] ) === "string" ) {
+						_valuesStartRepeat[ property ] = _valuesStartRepeat[ property ] + parseFloat(_valuesEnd[ property ], 10);
+					}
+
+					if ( _yoyo ) {
+						var tmp = _valuesStartRepeat[ property ];
+						_valuesStartRepeat[ property ] = _valuesEnd[ property ];
+						_valuesEnd[ property ] = tmp;
+						_reversed = !_reversed;
+					}
+					_valuesStart[ property ] = _valuesStartRepeat[ property ];
+
+				}
+
+				_startTime = time + _delayTime;
+
+				return true;
+
+			} else {
+
+				if ( _onCompleteCallback !== null ) {
+
+					_onCompleteCallback.call( _object );
+
+				}
+
+				for ( var i = 0, numChainedTweens = _chainedTweens.length; i < numChainedTweens; i ++ ) {
+
+					_chainedTweens[ i ].start( time );
+
+				}
+
+				return false;
 
 			}
-
-			if ( _chainedTween !== null ) {
-
-				_chainedTween.start();
-
-			}
-
-			return false;
 
 		}
 
@@ -257,6 +362,7 @@ TWEEN.Tween = function ( object ) {
 	};
 
 };
+
 
 TWEEN.Easing = {
 
@@ -326,7 +432,7 @@ TWEEN.Easing = {
 
 		Out: function ( k ) {
 
-			return 1 - --k * k * k * k;
+			return 1 - ( --k * k * k * k );
 
 		},
 
@@ -419,7 +525,7 @@ TWEEN.Easing = {
 
 		Out: function ( k ) {
 
-			return Math.sqrt( 1 - --k * k );
+			return Math.sqrt( 1 - ( --k * k ) );
 
 		},
 
@@ -609,7 +715,7 @@ TWEEN.Interpolation = {
 				for ( i = n; i > 1; i-- ) s *= i;
 				return a[ n ] = s;
 
-			}
+			};
 
 		} )(),
 
