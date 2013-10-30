@@ -9,15 +9,6 @@
 
     Two.Shape.call(this, true);
 
-    delete this.stroke;
-    delete this.fill;
-    delete this.linewidth;
-    delete this.opacity;
-
-    delete this.cap;
-    delete this.join;
-    delete this.miter;
-
     Group.MakeGetterSetter(this, Two.Shape.Properties);
 
     this.children = {};
@@ -63,10 +54,10 @@
      */
     clone: function(parent) {
 
-      parent = parent || this.parent;
+      var parent = parent || this.parent;
 
       var children = _.map(this.children, function(child) {
-        return child.clone(parent);
+        return child.clone();
       });
 
       var group = new Group();
@@ -136,12 +127,6 @@
         objects = _.toArray(arguments);
       }
 
-      // A bubbled up version of 'change' event for the children.
-
-      var broadcast = _.bind(function(id, property, value, closed, strokeChanged) {
-        this.trigger(Two.Events.change, id, property, value, closed, strokeChanged);
-      }, this);
-
       // Add the objects
 
       _.each(objects, function(object) {
@@ -149,11 +134,6 @@
           return;
         }
         var id = object.id, parent = object.parent;
-
-        if (_.isUndefined(id)) {
-          grandparent.add(object);
-          id = object.id;
-        }
 
         if (_.isUndefined(children[id])) {
           // Release object from previous parent.
@@ -163,19 +143,12 @@
           // Add it to this group and update parent-child relationship.
           children[id] = object;
           object.parent = this;
-          object.unbind(Two.Events.change)
-            .bind(Two.Events.change, broadcast);
           ids.push(id);
         }
 
       }, this);
 
-      if (ids.length > 0) {
-        this.trigger(Two.Events.change, this.id, Two.Properties.hierarchy, ids);
-      }
-
       return this;
-      // return this.center();
 
     },
 
@@ -209,18 +182,12 @@
 
         delete children[id];
         delete object.parent;
-        object.unbind(Two.Events.change);
 
         ids.push(id);
 
       });
 
-      if (ids.length > 0) {
-        this.trigger(Two.Events.change, this.id, Two.Properties.demotion, ids);
-      }
-
       return this;
-      // return this.center();
 
     },
 
@@ -300,7 +267,15 @@
         child.subdivide();
       });
       return this;
-    }
+    },
+
+    // update: function() {
+    //   Two.Shape.prototype.update.call(this);
+    //   _.each(this.children, function(child) {
+    //     child.update();
+    //   });
+    //   return this;
+    // }
 
   });
 

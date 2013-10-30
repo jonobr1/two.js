@@ -19,6 +19,12 @@
     pow = Math.pow;
 
   /**
+   * Globals
+   */
+
+  var count = 0;
+
+  /**
    * Cross browser dom events.
    */
   var dom = {
@@ -56,7 +62,7 @@
       fullscreen: false,
       width: 640,
       height: 480,
-      type: Two.Types.svg,
+      type: Two.Types.canvas, // TODO: Setting default to canvas for debugging
       autostart: false
     });
 
@@ -110,8 +116,7 @@
 
     }
 
-    this.scene = new Two.Group();
-    this.renderer.add(this.scene);
+    this.scene = this.renderer.scene;
 
     Two.Instances.push(this);
 
@@ -165,6 +170,12 @@
       return this;
     },
 
+    uniqueId: function() {
+      var id = count;
+      count++;
+      return id;
+    },
+
     Utils: {
 
       Curve: {
@@ -189,9 +200,11 @@
        */
       setPlaying: function(b) {
 
-        _.defer(_.bind(function() {
+        // _.defer(_.bind(function() {
           this.playing = !!b;
-        }, this));
+        // }, this));
+
+        return this;
 
       },
 
@@ -1059,16 +1072,9 @@
         renderer.setSize(width, height, this.ratio);
       }
 
+      // this.scene.update();
+
       this.trigger(Two.Events.update, this.frameCount, this.timeDelta);
-
-      /**
-       * Purposefully deferred to be called after all other transformations.
-       */
-      _.defer(_.bind(function() {
-
-        this.render();
-
-      }, this));
 
       return this;
 
@@ -1319,19 +1325,21 @@
 
   // Request Animation Frame
 
-  (function() {
+  var loop = function() {
+
+    requestAnimationFrame(loop);
 
     _.each(Two.Instances, function(t) {
 
       if (t.playing) {
-        t.update();
+        t.update().render();
       }
 
     });
 
-    requestAnimationFrame(arguments.callee);
+  };
 
-  })();
+  loop();
 
   //exports to multiple environments
   if (typeof define === 'function' && define.amd)

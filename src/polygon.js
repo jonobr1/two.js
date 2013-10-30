@@ -6,11 +6,12 @@
 
   var min = Math.min, max = Math.max, round = Math.round;
 
+  // Localized variables
+  var l, ia, ib, last, v;
+
   var Polygon = Two.Polygon = function(vertices, closed, curved, manual) {
 
     Two.Shape.call(this);
-
-    // Further getter setters for Polygon for closed and curved properties
 
     // Add additional logic for watching the vertices.
 
@@ -22,178 +23,36 @@
     // for themselves.
     this._automatic = !manual;
 
-    var beginning = 0.0;
-    var ending = 1.0;
-    var strokeChanged = false;
-    var verticesChanged = false;
-    var verticesCollection;
-    var renderedVertices = [];
+    this._beginning = 0.0;
+    this._ending = 1.0;
+    this._verticesChanged = true;
+    this._vertices = [];
 
-    var updateVertices = _.debounce(_.bind(function(property) { // Call only once a frame.
+    this.vertices = vertices.slice();
 
-      var l, ia, ib, last;
-
-      if (this._automatic) {
-        this.plot();
-      }
-
-      if (strokeChanged || verticesChanged) {
-
-        l = verticesCollection.length;
-        last = l - 1;
-
-        ia = round((beginning) * last);
-        ib = round((ending) * last);
-
-        renderedVertices.length = 0;
-
-        for (var i = ia; i < ib + 1; i++) {
-          var v = verticesCollection[i];
-          renderedVertices.push(v);
-        }
-
-      }
-
-      this.trigger(Two.Events.change,
-        this.id, 'vertices', renderedVertices, this._closed, strokeChanged);
-
-      strokeChanged = false;
-      verticesChanged = false;
-
-    }, this), 0);
-
-    Object.defineProperty(this, 'closed', {
-      get: function() {
-        return this._closed;
-      },
-      set: function(v) {
-        this._closed = !!v;
-        updateVertices();
-      }
-    });
-
-    Object.defineProperty(this, 'curved', {
-      get: function() {
-        return this._curved;
-      },
-      set: function(v) {
-        this._curved = !!v;
-        updateVertices();
-      }
-    });
-
-    Object.defineProperty(this, 'automatic', {
-      get: function() {
-        return this._automatic;
-      },
-      set: function(v) {
-        if (v === this._automatic) {
-          return;
-        }
-        this._automatic = !!v;
-        var method = this._automatic ? 'ignore' : 'listen';
-        // Add / remove handlers to propagated handle events
-        _.each(this.vertices, function(v) {
-          v[method]();
-        }, this);
-        updateVertices();
-      }
-    });
-
-    Object.defineProperty(this, 'beginning', {
-      get: function() {
-        return beginning;
-      },
-      set: function(v) {
-        beginning = min(max(v, 0.0), 1.0);
-        strokeChanged = true;
-        updateVertices();
-      }
-    });
-
-    Object.defineProperty(this, 'ending', {
-      get: function() {
-        return ending;
-      },
-      set: function(v) {
-        ending = min(max(v, 0.0), 1.0);
-        strokeChanged = true;
-        updateVertices();
-      }
-    });
-
-    Object.defineProperty(this, 'vertices', {
-
-      get: function() {
-        return verticesCollection;
-      },
-
-      set: function(vertices) {
-
-        var bindVerts = _.bind(function(items) {
-
-          _.each(items, function(v) {
-            v.bind(Two.Events.change, updateVertices);
-          }, this);
-
-          verticesChanged = true; // Update rendered Vertices
-          updateVertices();
-
-        }, this);
-
-        var unbindVerts = _.bind(function(items) {
-
-          _.each(items, function(v) {
-            v.unbind(Two.Events.change, updateVertices);
-          }, this);
-
-          verticesChanged = true; // Update rendered Vertices
-          updateVertices();
-
-        }, this);
-
-        // Remove previous listeners
-        if (verticesCollection) {
-          verticesCollection.unbind();
-        }
-
-        // Create new Collection with copy of vertices
-        verticesCollection = new Two.Utils.Collection(vertices.slice(0));
-
-        // Listen for Collection changes and bind / unbind
-        verticesCollection.bind(Two.Events.insert, bindVerts);
-        verticesCollection.bind(Two.Events.remove, unbindVerts);
-
-        // Bind Initial Vertices
-        verticesChanged = true;
-        bindVerts(verticesCollection);
-
-      }
-
-    });
-
-    this.vertices = vertices;
-
-    if (this._automatic) {
-      this.plot();
-      return this;
-    }
-
-    _.each(this.vertices, function(v) {
-      _.isFunction(v.listen) && v.listen();
-    });
+    this.plot();
 
   };
 
   _.extend(Polygon.prototype, Two.Shape.prototype, {
 
-    clone: function() {
+    _closed: true,
+    _curved: false,
+    _automatic: true,
+
+    _beginning: 0,
+    _ending: 1.0,
+    _verticesChanged: true,
+
+    clone: function(parent) {
+
+      var parent = parent || this.parent;
 
       var points = _.map(this.vertices, function(v) {
         return v.clone();
       });
 
-      var clone = new Polygon(points, this._closed, this._curved);
+      var clone = new Polygon(points, this.closed, this.curved, !this.automatic);
 
       _.each(Two.Shape.Properties, function(k) {
         clone[k] = this[k];
@@ -202,6 +61,8 @@
       clone.translation.copy(this.translation);
       clone.rotation = this.rotation;
       clone.scale = this.scale;
+
+      parent.add(clone);
 
       return clone;
 
@@ -316,8 +177,8 @@
      */
     plot: function() {
 
-      if (this._curved) {
-        Two.Utils.getCurveFromPoints(this.vertices, this._closed);
+      if (this.curved) {
+        Two.Utils.getCurveFromPoints(this.vertices, this.closed);
         return this;
       }
 
@@ -356,7 +217,7 @@
 
       }, this);
 
-      this._manual = false;
+      this._automatic = false;
       this._curved = false;
 
       this.vertices = _.flatten(points);
@@ -364,9 +225,89 @@
 
       return this;
 
+    },
+
+    update: function() {
+
+      if (this.automatic) {
+        this.plot();
+      }
+
+      if (this._verticesChanged) {
+
+        l = this.vertices.length;
+        last = l - 1;
+
+        ia = round((this._beginning) * last);
+        ib = round((this._ending) * last);
+
+        this._vertices.length = 0;
+
+        for (var i = ia; i < ib + 1; i++) {
+          v = this.vertices[i];
+          this._vertices.push(v);
+        }
+
+      }
+
+      Two.Shape.prototype.update.call(this);
+
+      this._verticesChanged = false;
+
+      return this;
+
     }
 
   });
 
+  Object.defineProperty(Polygon.prototype, 'closed', {
+    get: function() {
+      return this._closed;
+    },
+    set: function(v) {
+      this._closed = !!v;
+    }
+  });
+
+  Object.defineProperty(Polygon.prototype, 'curved', {
+    get: function() {
+      return this._curved;
+    },
+    set: function(v) {
+      this._curved = !!v;
+    }
+  });
+
+  Object.defineProperty(Polygon.prototype, 'automatic', {
+    get: function() {
+      return this._automatic;
+    },
+    set: function(v) {
+      if (v === this._automatic) {
+        return;
+      }
+      this._automatic = !!v;
+    }
+  });
+
+  Object.defineProperty(Polygon.prototype, 'beginning', {
+    get: function() {
+      return this._beginning;
+    },
+    set: function(v) {
+      this._beginning = min(max(v, 0.0), 1.0);
+      this._verticesChanged = true;
+    }
+  });
+
+  Object.defineProperty(Polygon.prototype, 'ending', {
+    get: function() {
+      return this._ending;
+    },
+    set: function(v) {
+      this._ending = min(max(v, 0.0), 1.0);
+      this._verticesChanged = true;
+    }
+  });
 
 })();
