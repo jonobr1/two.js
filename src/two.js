@@ -19,7 +19,7 @@
     pow = Math.pow;
 
   /**
-   * Globals
+   * Localized variables
    */
 
   var count = 0;
@@ -199,13 +199,8 @@
        * have been updated with their newest styles.
        */
       setPlaying: function(b) {
-
-        // _.defer(_.bind(function() {
-          this.playing = !!b;
-        // }, this));
-
+        this.playing = !!b;
         return this;
-
       },
 
       /**
@@ -1072,8 +1067,6 @@
         renderer.setSize(width, height, this.ratio);
       }
 
-      // this.scene.update();
-
       this.trigger(Two.Events.update, this.frameCount, this.timeDelta);
 
       return this;
@@ -1324,6 +1317,20 @@
   }
 
   // Request Animation Frame
+
+  // (function() {
+
+  //   requestAnimationFrame(arguments.callee);
+
+  //   _.each(Two.Instances, function(t) {
+
+  //     if (t.playing) {
+  //       t.update().render();
+  //     }
+
+  //   });
+
+  // })();
 
   var loop = function() {
 

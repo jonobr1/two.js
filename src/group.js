@@ -267,15 +267,7 @@
         child.subdivide();
       });
       return this;
-    },
-
-    // update: function() {
-    //   Two.Shape.prototype.update.call(this);
-    //   _.each(this.children, function(child) {
-    //     child.update();
-    //   });
-    //   return this;
-    // }
+    }
 
   });
 

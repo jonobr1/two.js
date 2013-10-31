@@ -4,7 +4,7 @@
    * Constants
    */
 
-  // Localize variables
+  // Localized variables
   var root = this;
   var mod = Two.Utils.mod;
   var matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter,
@@ -36,6 +36,7 @@
 
       render: function(ctx) {
 
+        // TODO: Add a check here to only invoke update if need be.
         this.update();
 
         matrix = this._matrix.elements;
@@ -60,6 +61,7 @@
 
       render: function(ctx) {
 
+        // TODO: Add a check here to only invoke update if need be.
         this.update();
 
         matrix = this._matrix.elements;

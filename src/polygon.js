@@ -13,8 +13,6 @@
 
     Two.Shape.call(this);
 
-    // Add additional logic for watching the vertices.
-
     this._closed = !!closed;
     this._curved = !!curved;
 
@@ -23,14 +21,8 @@
     // for themselves.
     this._automatic = !manual;
 
-    this._beginning = 0.0;
-    this._ending = 1.0;
-    this._verticesChanged = true;
     this._vertices = [];
-
     this.vertices = vertices.slice();
-
-    this.plot();
 
   };
 
@@ -229,7 +221,7 @@
 
     update: function() {
 
-      if (this.automatic) {
+      if (this._automatic) {
         this.plot();
       }
 
