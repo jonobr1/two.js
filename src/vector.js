@@ -1,5 +1,8 @@
 (function() {
 
+  // Localized variables
+  var parent, flag, x, y, dx, dy;
+
   var Vector = Two.Vector = function(x, y) {
 
     this.x = x || 0;
@@ -9,68 +12,74 @@
 
   _.extend(Vector.prototype, {
 
+    // Underlying Properties
+
+    _x: 0,
+    _y: 0,
+
     set: function(x, y) {
-      this.x = x;
-      this.y = y;
-      return this;
+      this._x = x;
+      this._y = y;
+      return this.trigger();
     },
 
     copy: function(v) {
-      this.x = v.x;
-      this.y = v.y;
-      return this;
+      this._x = v.x;
+      this._y = v.y;
+      return this.trigger();
     },
 
     clear: function() {
-      this.x = 0;
-      this.y = 0;
-      return this;
+      this._x = 0;
+      this._y = 0;
+      return this.trigger();
     },
 
     clone: function() {
-      return new Vector(this.x, this.y);
+      return new Vector(this._x, this._y);
     },
 
     add: function(v1, v2) {
-      this.x = v1.x + v2.x;
-      this.y = v1.y + v2.y;
-      return this;
+      this._x = v1.x + v2.x;
+      this._y = v1.y + v2.y;
+      return this.trigger();
     },
 
     addSelf: function(v) {
-      this.x += v.x;
-      this.y += v.y;
-      return this;
+      this._x += v.x;
+      this._y += v.y;
+      return this.trigger();
     },
 
     sub: function(v1, v2) {
-      this.x = v1.x - v2.x;
-      this.y = v1.y - v2.y;
-      return this;
+      this._x = v1.x - v2.x;
+      this._y = v1.y - v2.y;
+      return this.trigger();
     },
 
     subSelf: function(v) {
-      this.x -= v.x;
-      this.y -= v.y;
-      return this;
+      this._x -= v.x;
+      this._y -= v.y;
+      return this.trigger();
     },
 
     multiplySelf: function(v) {
-      this.x *= v.x;
-      this.y *= v.y;
-      return this;
+      this._x *= v.x;
+      this._y *= v.y;
+      return this.trigger();
     },
 
     multiplyScalar: function(s) {
-      this.x *= s;
-      this.y *= s;
-      return this;
+      this._x *= s;
+      this._y *= s;
+      return this.trigger();
     },
 
     divideScalar: function(s) {
       if (s) {
-        this.x /= s;
-        this.y /= s;
+        this._x /= s;
+        this._y /= s;
+        this.trigger();
       } else {
         this.set(0, 0);
       }
@@ -82,11 +91,12 @@
     },
 
     dot: function(v) {
-      return this.x * v.x + this.y * v.y;
+      return this._x * v.x + this._y * v.y;
     },
 
     lengthSquared: function() {
-      return this.x * this.x + this.y * this.y;
+      x = this._x, y = this._y;
+      return x * x + y * y;
     },
 
     length: function() {
@@ -102,7 +112,7 @@
     },
 
     distanceToSquared: function(v) {
-      var dx = this.x - v.x, dy = this.y - v.y;
+      dx = this._x - v.x, dy = this._y - v.y;
       return dx * dx + dy * dy;
     },
 
@@ -115,8 +125,8 @@
     },
 
     lerp: function(v, t) {
-      var x = (v.x - this.x) * t + this.x;
-      var y = (v.y - this.y) * t + this.y;
+      x = (v.x - this._x) * t + this._x;
+      y = (v.y - this._y) * t + this._y;
       return this.set(x, y);
     },
 
@@ -125,13 +135,60 @@
     },
 
     toString: function() {
-      return this.x + ',' + this.y;
+      return this._x + ',' + this._y;
     },
 
-    toObject: function() {
-      return { x: this.x, y: this.y };
+    toObject: function(o) {
+      if (_.isObject(o)) {
+        o.x = this._x;
+        o.y = this._y;
+        return o;
+      }
+      return { x: this._x, y: this._y };
+    },
+
+    // Two.js specifc functionality
+
+    bind: function(parent, flag) {
+
+      this._parent = parent;
+      this._flag = flag;
+
+      return this;
+
+    },
+
+    trigger: function() {
+
+      parent = this._parent, flag = this._flag;
+      if (parent && flag) {
+        parent[flag] = true;
+      }
+
+      return this;
+
     }
 
   });
+
+  Object.defineProperty(Vector.prototype, 'x', {
+    get: function() {
+      return this._x;
+    },
+    set: function(v) {
+      this._x = v;
+      this.trigger();
+    }
+  });
+
+  Object.defineProperty(Vector.prototype, 'y', {
+    get: function() {
+      return this._y;
+    },
+    set: function(v) {
+      this._y = v;
+      this.trigger();
+    }
+  })
 
 })();

@@ -7,7 +7,7 @@
   var min = Math.min, max = Math.max, round = Math.round;
 
   // Localized variables
-  var l, ia, ib, last, v;
+  var l, ia, ib, last, v, i;
 
   var Polygon = Two.Polygon = function(vertices, closed, curved, manual) {
 
@@ -21,6 +21,9 @@
     // for themselves.
     this._automatic = !manual;
 
+    this.beginning = 0;
+    this.ending = 1;
+
     this._vertices = [];
     this.vertices = vertices.slice();
 
@@ -28,13 +31,18 @@
 
   _.extend(Polygon.prototype, Two.Shape.prototype, {
 
+    // Flags
+    // http://en.wikipedia.org/wiki/Flag
+
+    _flagVertices: true,
+
+    // Underlying Properties
+
     _closed: true,
     _curved: false,
     _automatic: true,
-
     _beginning: 0,
     _ending: 1.0,
-    _verticesChanged: true,
 
     clone: function(parent) {
 
@@ -221,11 +229,11 @@
 
     update: function() {
 
-      if (this._automatic) {
-        this.plot();
-      }
+      if (this._flagVertices) {
 
-      if (this._verticesChanged) {
+        if (this._automatic) {
+          this.plot();
+        }
 
         l = this.vertices.length;
         last = l - 1;
@@ -235,7 +243,7 @@
 
         this._vertices.length = 0;
 
-        for (var i = ia; i < ib + 1; i++) {
+        for (i = ia; i < ib + 1; i++) {
           v = this.vertices[i];
           this._vertices.push(v);
         }
@@ -244,7 +252,11 @@
 
       Two.Shape.prototype.update.call(this);
 
-      this._verticesChanged = false;
+      /**
+       * Reset Flags
+       */
+
+      this._flagVertices = false;
 
       return this;
 
@@ -288,7 +300,7 @@
     },
     set: function(v) {
       this._beginning = min(max(v, 0.0), 1.0);
-      this._verticesChanged = true;
+      this._flagVertices = true;
     }
   });
 
@@ -298,7 +310,7 @@
     },
     set: function(v) {
       this._ending = min(max(v, 0.0), 1.0);
-      this._verticesChanged = true;
+      this._flagVertices = true;
     }
   });
 

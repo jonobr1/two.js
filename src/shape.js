@@ -1,5 +1,7 @@
 (function() {
 
+  var zero = new Two.Vector();
+
   var Shape = Two.Shape = function(limited) {
 
     this.id = Two.uniqueId();
@@ -10,8 +12,9 @@
     this._matrix = new Two.Matrix();
 
     this.translation = new Two.Vector();
-    this.rotation = 0.0;
-    this.scale = 1.0;
+    this.translation.bind(this, '_flagMatrix');
+    this.rotation = 0;
+    this.scale = 1;
 
     if (!!limited) {
       return this;
@@ -34,6 +37,15 @@
   };
 
   _.extend(Shape.prototype, {
+
+    // Flags
+
+    _flagMatrix: true,
+
+    // Underlying Properties
+
+    _rotation: 0,
+    _scale: 1,
 
     addTo: function(group) {
       group.add(this);
@@ -67,9 +79,7 @@
      */
     update: function() {
 
-      // TODO: Check for dirty flags.
-      // Add `this._matrix.manual = true` to override transformations.
-      if (!this._matrix.manual) {
+      if (!this._matrix.manual && this._flagMatrix) {
 
         this._matrix
           .identity()
@@ -79,10 +89,34 @@
 
       }
 
+      // Reset Flags
+
+      this._flagMatrix = false;
+
       return this;
 
     }
 
+  });
+
+  Object.defineProperty(Shape.prototype, 'rotation', {
+    get: function() {
+      return this._rotation;
+    },
+    set: function(v) {
+      this._rotation = v;
+      this._flagMatrix = true;
+    }
+  });
+
+  Object.defineProperty(Shape.prototype, 'scale', {
+    get: function() {
+      return this._scale;
+    },
+    set: function(v) {
+      this._scale = v;
+      this._flagMatrix = true;
+    }
   });
 
 })();
