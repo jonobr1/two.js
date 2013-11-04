@@ -1,6 +1,6 @@
 (function() {
 
-  var commands = Two.Commands;
+  var commands = Two.Commands, x, y, controls;
 
   /**
    * An object that holds 3 `Two.Vector`s, the anchor point and its
@@ -56,7 +56,8 @@
 
     AppendCurveProperties: function(anchor) {
 
-      var x = anchor._x || anchor.x, y = anchor._y || anchor.y;
+      x = anchor._x || anchor.x;
+      y = anchor._y || anchor.y;
 
       anchor.controls = {
         left: new Two.Vector(x, y),
@@ -95,7 +96,7 @@
 
     clone: function() {
 
-      var controls = this.controls;
+      controls = this.controls;
 
       return new Two.Anchor(
         this.x,

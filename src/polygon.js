@@ -312,9 +312,6 @@
 
       Two.Shape.prototype.update.call(this);
 
-      // TODO: Decouple from `update`
-      this.flagReset();
-
       return this;
 
     },

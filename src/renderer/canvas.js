@@ -51,7 +51,7 @@
 
         ctx.restore();
 
-        return this;
+        return this.flagReset();
 
       }
 
@@ -185,6 +185,8 @@
         ctx.stroke();
 
         ctx.restore();
+
+        return this.flagReset();
 
       }
 
