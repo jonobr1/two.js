@@ -5,6 +5,10 @@
    */
   var min = Math.min, max = Math.max;
 
+  // Localized variables
+  var secret, parent, children, group, rect, corner, l, objects, grandparent,
+    ids, id, left, right, top, bottom, matrix, a, b, c, d;
+
   var Group = Two.Group = function(o) {
 
     Two.Shape.call(this, true);
@@ -23,7 +27,7 @@
 
       _.each(properties, function(k) {
 
-        var secret = '_' + k;
+        secret = '_' + k;
 
         Object.defineProperty(group, k, {
           get: function() {
@@ -72,13 +76,13 @@
      */
     clone: function(parent) {
 
-      var parent = parent || this.parent;
+      parent = parent || this.parent;
 
-      var children = _.map(this.children, function(child) {
+      children = _.map(this.children, function(child) {
         return child.clone();
       });
 
-      var group = new Group();
+      group = new Group();
       parent.add(group);
       group.add(children);
 
@@ -96,8 +100,8 @@
      */
     corner: function() {
 
-      var rect = this.getBoundingClientRect(true);
-      var corner = { x: rect.left, y: rect.top };
+      rect = this.getBoundingClientRect(true);
+      corner = { x: rect.left, y: rect.top };
 
       _.each(this.children, function(child) {
         child.translation.subSelf(corner);
@@ -113,7 +117,7 @@
      */
     center: function() {
 
-      var rect = this.getBoundingClientRect(true);
+      rect = this.getBoundingClientRect(true);
 
       rect.centroid = {
         x: rect.left + rect.width / 2,
@@ -135,7 +139,7 @@
      */
     add: function(o) {
 
-      var l = arguments.length,
+      l = arguments.length,
         objects = o,
         children = this.children,
         grandparent = this.parent,
@@ -148,10 +152,12 @@
       // Add the objects
 
       _.each(objects, function(object) {
+
         if (!object) {
           return;
         }
-        var id = object.id, parent = object.parent;
+
+        id = object.id, parent = object.parent;
 
         if (_.isUndefined(children[id])) {
           // Release object from previous parent.
@@ -175,7 +181,7 @@
      */
     remove: function(o) {
 
-      var l = arguments.length,
+      l = arguments.length,
         objects = o,
         children = this.children,
         grandparent = this.parent,
@@ -192,7 +198,7 @@
 
       _.each(objects, function(object) {
 
-        var id = object.id, grandchildren = object.children;
+        id = object.id, grandchildren = object.children;
 
         if (!(id in children)) {
           return;
@@ -215,12 +221,12 @@
      */
     getBoundingClientRect: function(shallow) {
 
-      var left = Infinity, right = -Infinity,
-        top = Infinity, bottom = -Infinity;
+      left = Infinity, right = -Infinity;
+      top = Infinity, bottom = -Infinity;
 
       _.each(this.children, function(child) {
 
-        var rect = child.getBoundingClientRect(true);
+        rect = child.getBoundingClientRect(true);
 
         if (!_.isNumber(rect.top) || !_.isNumber(rect.left)
           || !_.isNumber(rect.right) || !_.isNumber(rect.bottom)) {
@@ -234,12 +240,12 @@
 
       }, this);
 
-      var matrix = !!shallow ? this._matrix : Two.Utils.getComputedMatrix(this);
+      matrix = !!shallow ? this._matrix : Two.Utils.getComputedMatrix(this);
 
-      var a = matrix.multiply(left, top, 1);
-      var b = matrix.multiply(right, top, 1);
-      var c = matrix.multiply(right, bottom, 1);
-      var d = matrix.multiply(left, bottom, 1);
+      a = matrix.multiply(left, top, 1);
+      b = matrix.multiply(right, top, 1);
+      c = matrix.multiply(right, bottom, 1);
+      d = matrix.multiply(left, bottom, 1);
 
       top = min(a.y, b.y, c.y, d.y);
       left = min(a.x, b.x, c.x, d.x);
