@@ -1,6 +1,7 @@
 (function() {
 
-  var zero = new Two.Vector();
+  // Localized variables
+  var zero = new Two.Vector(), clone;
 
   var Shape = Two.Shape = function(limited) {
 
@@ -12,29 +13,19 @@
     this._matrix = new Two.Matrix();
 
     this.translation = new Two.Vector();
-    this.translation.bind(this, '_flagMatrix');
+    this.translation.bind(Two.Events.change, _.bind(Shape.FlagMatrix, this));
     this.rotation = 0;
     this.scale = 1;
 
-    if (!!limited) {
-      return this;
+  };
+
+  _.extend(Shape, Backbone.Events, {
+
+    FlagMatrix: function() {
+      this._flagMatrix = true;
     }
 
-    // Style properties
-
-    // Shape.MakeGetterSetter(this, Shape.Properties);
-
-    this.fill = '#fff';
-    this.stroke = '#000';
-    this.linewidth = 1.0;
-    this.opacity = 1.0;
-    this.visible = true;
-
-    this.cap = 'round';
-    this.join = 'round';
-    this.miter = 4; // Default of Adobe Illustrator
-
-  };
+  });
 
   _.extend(Shape.prototype, {
 
@@ -63,7 +54,7 @@
     },
 
     clone: function() {
-      var clone = new Shape();
+      clone = new Shape();
       clone.translation.copy(this.translation);
       clone.rotation = this.rotation;
       clone.scale = this.scale;
@@ -89,7 +80,11 @@
 
       }
 
-      // Reset Flags
+      return this;
+
+    },
+
+    flagReset: function() {
 
       this._flagMatrix = false;
 

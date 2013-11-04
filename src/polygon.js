@@ -4,11 +4,12 @@
    * Constants
    */
 
-  var min = Math.min, max = Math.max, round = Math.round;
+  var min = Math.min, max = Math.max, round = Math.round,
+    getComputedMatrix = Two.Utils.getComputedMatrix;
 
   // Localized variables
   var l, ia, ib, last, closed, v, i, parent, points, clone, rect, corner,
-    border, left, right, top, bottom, x, y, a, b, c, d, matrix,
+    border, temp, left, right, top, bottom, x, y, a, b, c, d, matrix,
     x1, y1, x2, y2, x3, y3, x4, y4;
 
   var Polygon = Two.Polygon = function(vertices, closed, curved, manual) {
@@ -26,10 +27,47 @@
     this.beginning = 0;
     this.ending = 1;
 
+    // Style properties
+
+    this.fill = '#fff';
+    this.stroke = '#000';
+    this.linewidth = 1.0;
+    this.opacity = 1.0;
+    this.visible = true;
+
+    this.cap = 'round';
+    this.join = 'round';
+    this.miter = 4; // Default of Adobe Illustrator
+
     this._vertices = [];
     this.vertices = vertices.slice();
 
   };
+
+  _.extend(Polygon, {
+
+    Properties: [
+      'fill',
+      'stroke',
+      'linewidth',
+      'opacity',
+      'visible',
+      'cap',
+      'join',
+      'miter',  // Order matters here! See LN:388
+
+      'closed',
+      'curved',
+      'automatic',
+      'beginning',
+      'ending'
+    ],
+
+    FlagVertices: function() {
+      this._flagVertices = true;
+    }
+
+  });
 
   _.extend(Polygon.prototype, Two.Shape.prototype, {
 
@@ -38,7 +76,27 @@
 
     _flagVertices: true,
 
+    _flagFill: true,
+    _flagStroke: true,
+    _flagLinewidth: true,
+    _flagOpacity: true,
+    _flagVisible: true,
+
+    _flagCap: true,
+    _flagJoin: true,
+    _flagMiter: true,
+
     // Underlying Properties
+
+    _fill: '#fff',
+    _stroke: '#000',
+    _linewidth: 1.0,
+    _opacity: 1.0,
+    _visible: true,
+
+    _cap: 'round',
+    _join: 'round',
+    _miter: 4,
 
     _closed: true,
     _curved: false,
@@ -150,7 +208,7 @@
       right += border;
       bottom += border;
 
-      matrix = !!shallow ? this._matrix : Two.Utils.getComputedMatrix(this);
+      matrix = !!shallow ? this._matrix : getComputedMatrix(this);
 
       a = matrix.multiply(left, top, 1);
       b = matrix.multiply(right, top, 1);
@@ -250,15 +308,47 @@
           this._vertices.push(v);
         }
 
-        this._flagVertices = false;
-
       }
 
       Two.Shape.prototype.update.call(this);
 
+      // TODO: Decouple from `update`
+      this.flagReset();
+
+      return this;
+
+    },
+
+    flagReset: function() {
+
+      this._flagVertices =  this._flagFill =  this._flagStroke
+        = this._flagLinewidth = this._flagOpacity = this._flagVisible
+        = this._flagCap = this._flagJoin = this._flagMiter = false;
+
+      Two.Shape.prototype.flagReset.call(this);
+
       return this;
 
     }
+
+  });
+
+  // Only the first 8 properties are flagged like this. The subsequent
+  // properties behave differently and need to be hand written.
+  _.each(Polygon.Properties.slice(0, 8), function(property) {
+
+    var secret = '_' + property;
+    var flag = '_flag' + property.charAt(0).toUpperCase() + property.slice(1);
+
+    Object.defineProperty(Polygon.prototype, property, {
+      get: function() {
+        return this[secret];
+      },
+      set: function(v) {
+        this[secret] = v;
+        this[flag] = true;
+      }
+    });
 
   });
 

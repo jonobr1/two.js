@@ -9,8 +9,6 @@
 
     Two.Shape.call(this, true);
 
-    Group.MakeGetterSetter(this, Two.Shape.Properties);
-
     this.children = {};
 
   };
@@ -46,6 +44,26 @@
   });
 
   _.extend(Group.prototype, Two.Shape.prototype, {
+
+    /**
+     * Underlying Properties
+     */
+
+    _fill: '#fff',
+    _stroke: '#000',
+    _linewidth: 1.0,
+    _opacity: 1.0,
+    _visible: true,
+
+    _cap: 'round',
+    _join: 'round',
+    _miter: 4,
+
+    _closed: true,
+    _curved: false,
+    _automatic: true,
+    _beginning: 0,
+    _ending: 1.0,
 
     /**
      * Group has a gotcha in that it's at the moment required to be bound to
@@ -270,5 +288,7 @@
     }
 
   });
+
+  Group.MakeGetterSetter(Group.prototype, Two.Polygon.Properties);
 
 })();
