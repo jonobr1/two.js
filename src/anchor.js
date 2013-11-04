@@ -1,5 +1,6 @@
 (function() {
 
+  // Localized variables
   var commands = Two.Commands, x, y, controls;
 
   /**
