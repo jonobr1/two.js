@@ -7,7 +7,9 @@
   var min = Math.min, max = Math.max, round = Math.round;
 
   // Localized variables
-  var l, ia, ib, last, v, i;
+  var l, ia, ib, last, closed, v, i, parent, points, clone, rect, corner,
+    border, left, right, top, bottom, x, y, a, b, c, d, matrix,
+    x1, y1, x2, y2, x3, y3, x4, y4;
 
   var Polygon = Two.Polygon = function(vertices, closed, curved, manual) {
 
@@ -46,13 +48,13 @@
 
     clone: function(parent) {
 
-      var parent = parent || this.parent;
+      parent = parent || this.parent;
 
-      var points = _.map(this.vertices, function(v) {
+      points = _.map(this.vertices, function(v) {
         return v.clone();
       });
 
-      var clone = new Polygon(points, this.closed, this.curved, !this.automatic);
+      clone = new Polygon(points, this.closed, this.curved, !this.automatic);
 
       _.each(Two.Shape.Properties, function(k) {
         clone[k] = this[k];
@@ -74,8 +76,8 @@
      */
     corner: function() {
 
-      var rect = this.getBoundingClientRect(true);
-      var corner = { x: rect.left, y: rect.top };
+      rect = this.getBoundingClientRect(true);
+      corner = { x: rect.left, y: rect.top };
 
       _.each(this.vertices, function(v) {
         v.subSelf(corner);
@@ -91,7 +93,7 @@
      */
     center: function() {
 
-      var rect = this.getBoundingClientRect(true);
+      rect = this.getBoundingClientRect(true);
 
       rect.centroid = {
         x: rect.left + rect.width / 2,
@@ -129,12 +131,12 @@
      */
     getBoundingClientRect: function(shallow) {
 
-      var border = this.linewidth / 2, temp;
-      var left = Infinity, right = -Infinity,
-        top = Infinity, bottom = -Infinity;
+      border = this.linewidth / 2, temp;
+      left = Infinity, right = -Infinity;
+      top = Infinity, bottom = -Infinity;
 
       _.each(this.vertices, function(v) {
-        var x = v.x, y = v.y;
+        x = v.x, y = v.y;
         top = min(y, top);
         left = min(x, left);
         right = max(x, right);
@@ -148,12 +150,12 @@
       right += border;
       bottom += border;
 
-      var matrix = !!shallow ? this._matrix : Two.Utils.getComputedMatrix(this);
+      matrix = !!shallow ? this._matrix : Two.Utils.getComputedMatrix(this);
 
-      var a = matrix.multiply(left, top, 1);
-      var b = matrix.multiply(right, top, 1);
-      var c = matrix.multiply(right, bottom, 1);
-      var d = matrix.multiply(left, bottom, 1);
+      a = matrix.multiply(left, top, 1);
+      b = matrix.multiply(right, top, 1);
+      c = matrix.multiply(right, bottom, 1);
+      d = matrix.multiply(left, bottom, 1);
 
       top = min(a.y, b.y, c.y, d.y);
       left = min(a.x, b.x, c.x, d.x);
@@ -192,23 +194,23 @@
 
     subdivide: function() {
 
-      var last = this.vertices.length - 1;
-      var closed = this._closed || this.vertices[last].command === Two.Commands.close;
-      var points = [];
-      var b;
+      last = this.vertices.length - 1;
+      closed = this._closed || this.vertices[last].command === Two.Commands.close;
+      points = [];
 
       _.each(this.vertices, function(a, i) {
-
-        var x1, y1, x2, y2, x3, y3, x4, y4;
 
         if (i <= 0 && !closed) {
           b = a;
           return;
         }
 
+        right = b.controls && b.controls.right;
+        left = a.controls && a.controls.left;
+
         x1 = b.x, y1 = b.y;
-        x2 = ((b.controls && b.controls.right) || b).x, y2 = ((b.controls && b.controls.right) || b).y;
-        x3 = ((a.controls && a.controls.left) || a).x, y3 = ((a.controls && a.controls.left) || a).y;
+        x2 = (right || b).x, y2 = (right || b).y;
+        x3 = (left || a).x, y3 = (left || a).y;
         x4 = a.x, y4 = a.y;
 
         points.push(Two.Utils.subdivide(x1, y1, x2, y2, x3, y3, x4, y4));
@@ -248,15 +250,11 @@
           this._vertices.push(v);
         }
 
+        this._flagVertices = false;
+
       }
 
       Two.Shape.prototype.update.call(this);
-
-      /**
-       * Reset Flags
-       */
-
-      this._flagVertices = false;
 
       return this;
 
