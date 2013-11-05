@@ -409,7 +409,7 @@
     }
   });
 
-  Object.defineProperty(this, 'vertices', {
+  Object.defineProperty(Polygon.prototype, 'vertices', {
 
     get: function() {
       return this._collection;
@@ -417,7 +417,7 @@
 
     set: function(vertices) {
 
-      var updateVertices = _.bind(Polygon.FlagVertices);
+      var updateVertices = _.bind(Polygon.FlagVertices, this);
 
       var bindVerts = _.bind(function(items) {
 
@@ -425,7 +425,7 @@
           v.bind(Two.Events.change, updateVertices);
         }, this);
 
-        this._flagVertices;
+        updateVertices();
 
       }, this);
 
@@ -435,7 +435,6 @@
           v.unbind(Two.Events.change, updateVertices);
         }, this);
 
-        verticesChanged = true; // Update rendered Vertices
         updateVertices();
 
       }, this);
