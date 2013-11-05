@@ -40,7 +40,7 @@
     this.miter = 4; // Default of Adobe Illustrator
 
     this._vertices = [];
-    this.vertices = vertices.slice();
+    this.vertices = vertices;
 
   };
 
@@ -407,6 +407,57 @@
       this._ending = min(max(v, 0.0), 1.0);
       this._flagVertices = true;
     }
+  });
+
+  Object.defineProperty(this, 'vertices', {
+
+    get: function() {
+      return this._collection;
+    },
+
+    set: function(vertices) {
+
+      var updateVertices = _.bind(Polygon.FlagVertices);
+
+      var bindVerts = _.bind(function(items) {
+
+        _.each(items, function(v) {
+          v.bind(Two.Events.change, updateVertices);
+        }, this);
+
+        this._flagVertices;
+
+      }, this);
+
+      var unbindVerts = _.bind(function(items) {
+
+        _.each(items, function(v) {
+          v.unbind(Two.Events.change, updateVertices);
+        }, this);
+
+        verticesChanged = true; // Update rendered Vertices
+        updateVertices();
+
+      }, this);
+
+      // Remove previous listeners
+      if (this._collection) {
+        this._collection.unbind();
+      }
+
+      // Create new Collection with copy of vertices
+      this._collection = new Two.Utils.Collection(vertices.slice(0));
+
+      // Listen for Collection changes and bind / unbind
+      this._collection.bind(Two.Events.insert, bindVerts);
+      this._collection.bind(Two.Events.remove, unbindVerts);
+
+      // Bind Initial Vertices
+      verticesChanged = true;
+      bindVerts(this._collection);
+
+    }
+
   });
 
   Two.Shape.MakeGetterSetter(Polygon.prototype);
