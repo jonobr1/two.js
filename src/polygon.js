@@ -16,6 +16,8 @@
 
     Two.Shape.call(this);
 
+    this._renderer.type = 'polygon';
+
     this._closed = !!closed;
     this._curved = !!curved;
 

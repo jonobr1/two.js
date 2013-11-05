@@ -62,7 +62,7 @@
       fullscreen: false,
       width: 640,
       height: 480,
-      type: Two.Types.canvas, // TODO: Setting default to canvas for debugging
+      type: Two.Types.svg,
       autostart: false
     });
 
@@ -136,7 +136,9 @@
       canvas: 'CanvasRenderer'
     },
 
-    Version: 'v0.3.0',
+    Version: 'v0.4.0',
+
+    Identifier: 'two-',
 
     Properties: {
       hierarchy: 'hierarchy',

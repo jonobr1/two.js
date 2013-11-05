@@ -9,7 +9,7 @@
   // Local variables
   var a, b, c, d, e, f, g, h, i, hasOutput, out, elements, x, y, z, C, A0, A1,
     A2, A3, A4, A5,A6, A7, A8, B0, B1, B2,B3, B4, B5,B6, B7, B8, A, B, l, s, c,
-    a00, a01, a02, a10, a11, a12, a20, a21, a22, b01, b11, b21, det;
+    a00, a01, a02, a10, a11, a12, a20, a21, a22, b01, b11, b21, det, TEMP = [];
 
   /**
    * Two.Matrix contains an array of elements that represent
@@ -292,9 +292,11 @@
     /**
      * Create a transform string to be used with rendering apis.
      */
-    toString: function() {
+    toString: function(fullMatrix) {
 
-      return this.toArray().join(' ');
+      this.toArray(fullMatrix, TEMP);
+
+      return TEMP.join(' ');
 
     },
 

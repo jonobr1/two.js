@@ -13,6 +13,11 @@
 
     Two.Shape.call(this, true);
 
+    this._renderer.type = 'group';
+
+    this.additions = [];
+    this.subtractions = [];
+
     this.children = {};
 
   };
@@ -49,9 +54,13 @@
 
   _.extend(Group.prototype, Two.Shape.prototype, {
 
-    /**
-     * Underlying Properties
-     */
+    // Flags
+    // http://en.wikipedia.org/wiki/Flag
+
+    _flagAdditions: false,
+    _flagSubtractions: false,
+
+    // Underlying Properties
 
     _fill: '#fff',
     _stroke: '#000',
@@ -143,7 +152,7 @@
         objects = o,
         children = this.children,
         grandparent = this.parent,
-        ids = [];
+        ids = this.additions;
 
       if (!_.isArray(o)) {
         objects = _.toArray(arguments);
@@ -168,6 +177,7 @@
           children[id] = object;
           object.parent = this;
           ids.push(id);
+          this._flagAdditions = true;
         }
 
       }, this);
@@ -185,7 +195,7 @@
         objects = o,
         children = this.children,
         grandparent = this.parent,
-        ids = [];
+        ids = this.subtractions;
 
       if (l <= 0 && grandparent) {
         grandparent.remove(this);
@@ -208,6 +218,7 @@
         delete object.parent;
 
         ids.push(id);
+        this._flagSubtractions = true;
 
       });
 
@@ -291,6 +302,24 @@
         child.subdivide();
       });
       return this;
+    },
+
+    flagReset: function() {
+
+      if (this._flagAdditions) {
+        this.additions.length = 0;
+        this._flagAdditions = false;
+      }
+
+      if (this._flagSubtractions) {
+        this.subtractions.length = 0;
+        this._flagSubtractions = false;
+      }
+
+      Two.Shape.prototype.flagReset.call(this);
+
+      return this;
+
     }
 
   });

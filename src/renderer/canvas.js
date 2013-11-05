@@ -29,7 +29,7 @@
           matrix[0], matrix[3], matrix[1], matrix[4], matrix[2], matrix[5]);
 
         _.each(this.children, function(child) {
-          canvas.polygon.render.call(child, ctx);
+          canvas[child._renderer.type].render.call(child, ctx);
         });
 
         ctx.restore();

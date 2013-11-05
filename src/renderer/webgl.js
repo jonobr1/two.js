@@ -61,7 +61,7 @@
         }
 
         _.each(this.children, function(child) {
-          webgl.polygon.render.call(child, gl, program);
+          webgl[child._renderer.type].render.call(child, gl, program);
         });
 
         return this.flagReset();
