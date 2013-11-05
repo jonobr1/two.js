@@ -365,6 +365,7 @@
     },
     set: function(v) {
       this._closed = !!v;
+      this._flagVertices = true;
     }
   });
 
@@ -374,6 +375,7 @@
     },
     set: function(v) {
       this._curved = !!v;
+      this._flagVertices = true;
     }
   });
 
