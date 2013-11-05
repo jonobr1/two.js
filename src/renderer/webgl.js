@@ -8,7 +8,8 @@
     multiplyMatrix = Two.Matrix.Multiply,
     mod = Two.Utils.mod,
     identity = [1, 0, 0, 0, 1, 0, 0, 0, 1],
-    transformation = new Two.Array(9);
+    transformation = new Two.Array(9),
+    getRatio = Two.Utils.getRatio;
 
   // Localized variables
   var parent, flagParentMatrix, flagMatrix, flagTexture, left, right, top,
@@ -511,7 +512,6 @@
 
   var Renderer = Two[Two.Types.webgl] = function(options) {
 
-    this.count = 0;
     this.domElement = options.domElement || document.createElement('canvas');
 
     // Everything drawn on the canvas needs to come from the stage.
@@ -572,11 +572,22 @@
 
   };
 
-  _.extend(Renderer.prototype, Backbone.Events, CanvasRenderer.prototype, {
+  _.extend(Renderer.prototype, Backbone.Events, {
 
     setSize: function(width, height, ratio) {
 
-      CanvasRenderer.prototype.setSize.apply(this, arguments);
+      this.width = width;
+      this.height = height;
+
+      this.ratio = _.isUndefined(ratio) ? getRatio(this.ctx) : ratio;
+
+      this.domElement.width = width * this.ratio;
+      this.domElement.height = height * this.ratio;
+
+      _.extend(this.domElement.style, {
+        width: width + 'px',
+        height: height + 'px'
+      });
 
       width *= this.ratio;
       height *= this.ratio;

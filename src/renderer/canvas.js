@@ -4,33 +4,16 @@
    * Constants
    */
 
-  // Localized variables
   var root = this;
   var mod = Two.Utils.mod;
+  var getRatio = Two.Utils.getRatio;
+
+  // Localized variables
   var matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter,
     closed, commands, length, last;
   var next, prev, a, c, ux, uy, vx, vy, ar, bl, br, cl, x, y;
 
   var canvas = {
-
-    /**
-     * Account for high dpi rendering.
-     * http://www.html5rocks.com/en/tutorials/canvas/hidpi/
-     */
-
-    devicePixelRatio: root.devicePixelRatio || 1,
-
-    getBackingStoreRatio: function(ctx) {
-      return ctx.webkitBackingStorePixelRatio ||
-        ctx.mozBackingStorePixelRatio ||
-        ctx.msBackingStorePixelRatio ||
-        ctx.oBackingStorePixelRatio ||
-        ctx.backingStorePixelRatio || 1;
-    },
-
-    getRatio: function(ctx) {
-      return this.devicePixelRatio / this.getBackingStoreRatio(ctx);
-    },
 
     group: {
 
@@ -196,7 +179,6 @@
 
   var Renderer = Two[Two.Types.canvas] = function(params) {
 
-    this.count = 0;
     this.domElement = params.domElement || document.createElement('canvas');
     this.ctx = this.domElement.getContext('2d');
     this.overdraw = false;
@@ -220,7 +202,7 @@
       this.width = width;
       this.height = height;
 
-      this.ratio = _.isUndefined(ratio) ? canvas.getRatio(this.ctx) : ratio;
+      this.ratio = _.isUndefined(ratio) ? getRatio(this.ctx) : ratio;
 
       this.domElement.width = width * this.ratio;
       this.domElement.height = height * this.ratio;

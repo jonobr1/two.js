@@ -145,15 +145,10 @@
    */
   var Renderer = Two[Two.Types.svg] = function(params) {
 
-    this.count = 0;
     this.domElement = params.domElement || svg.createElement('svg');
-    this.elements = [];
 
-    this.domElement.style.visibility = 'hidden';
-
-    this.unveil = _.once(_.bind(function() {
-      this.domElement.style.visibility = 'visible';
-    }, this));
+    this.scene = new Two.Group();
+    this.scene.parent = this;
 
   };
 

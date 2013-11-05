@@ -195,6 +195,25 @@
       },
 
       /**
+       * Account for high dpi rendering.
+       * http://www.html5rocks.com/en/tutorials/canvas/hidpi/
+       */
+
+      devicePixelRatio: root.devicePixelRatio || 1,
+
+      getBackingStoreRatio: function(ctx) {
+        return ctx.webkitBackingStorePixelRatio ||
+          ctx.mozBackingStorePixelRatio ||
+          ctx.msBackingStorePixelRatio ||
+          ctx.oBackingStorePixelRatio ||
+          ctx.backingStorePixelRatio || 1;
+      },
+
+      getRatio: function(ctx) {
+        return Two.Utils.devicePixelRatio / getBackingStoreRatio(ctx);
+      },
+
+      /**
        * Properly defer play calling until after all objects
        * have been updated with their newest styles.
        */
@@ -1031,7 +1050,8 @@
     getCurveFromPoints = Two.Utils.getCurveFromPoints,
     solveSegmentIntersection = Two.Utils.solveSegmentIntersection,
     decoupleShapes = Two.Utils.decoupleShapes,
-    mod = Two.Utils.mod;
+    mod = Two.Utils.mod,
+    getBackingStoreRatio = Two.Utils.getBackingStoreRatio;
 
   _.extend(Two.prototype, Backbone.Events, {
 
