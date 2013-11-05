@@ -296,5 +296,6 @@
   });
 
   Group.MakeGetterSetter(Group.prototype, Two.Polygon.Properties);
+  Two.Shape.MakeGetterSetter(Group.prototype);
 
 })();

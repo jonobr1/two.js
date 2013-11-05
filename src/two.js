@@ -208,9 +208,9 @@
       /**
        * Return the computed matrix of a nested object.
        */
-      getComputedMatrix: function(object) {
+      getComputedMatrix: function(object, matrix) {
 
-        var matrix = new Two.Matrix();
+        var matrix = (matrix && matrix.identity()) || new Two.Matrix();
         var parent = object;
 
         while (parent && parent._matrix) {
@@ -221,6 +221,21 @@
         }
 
         return matrix;
+
+      },
+
+      getComputedScale: function(object) {
+
+        var scale = 1;
+        var parent = object;
+
+        while (parent && parent._scale) {
+          var s = parent._scale;
+          scale *= s;
+          parent = parent.parent;
+        }
+
+        return scale
 
       },
 

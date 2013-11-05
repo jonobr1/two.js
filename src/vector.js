@@ -292,6 +292,8 @@
   Two.Vector.prototype.bind = Two.Vector.prototype.on = function() {
 
     if (!this._bound) {
+      this._x = this.x;
+      this._y = this.y;
       Object.defineProperty(this, 'x', xgs);
       Object.defineProperty(this, 'y', ygs);
       _.extend(this, BoundProto);

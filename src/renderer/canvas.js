@@ -203,6 +203,7 @@
 
     // Everything drawn on the canvas needs to be added to the scene.
     this.scene = new Two.Group();
+    this.scene.parent = this;
 
   };
 
@@ -235,10 +236,6 @@
 
     render: function() {
 
-      if (_.isNull(this.scene)) {
-        return this;
-      }
-
       var isOne = this.ratio === 1;
 
       if (!isOne) {
@@ -250,7 +247,6 @@
         this.ctx.clearRect(0, 0, this.width, this.height);
       }
 
-      // this.scene.render(this.ctx);
       canvas.group.render.call(this.scene, this.ctx);
 
       if (!isOne) {

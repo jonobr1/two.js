@@ -399,4 +399,6 @@
     }
   });
 
+  Two.Shape.MakeGetterSetter(Polygon.prototype);
+
 })();

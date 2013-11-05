@@ -5,6 +5,9 @@
 
   var Shape = Two.Shape = function(limited) {
 
+    // Private object for renderer specific variables.
+    this._renderer = {};
+
     this.id = Two.uniqueId();
 
     // Define matrix properties which all inherited
@@ -23,6 +26,30 @@
 
     FlagMatrix: function() {
       this._flagMatrix = true;
+    },
+
+    MakeGetterSetter: function(object) {
+
+      Object.defineProperty(object, 'rotation', {
+        get: function() {
+          return this._rotation;
+        },
+        set: function(v) {
+          this._rotation = v;
+          this._flagMatrix = true;
+        }
+      });
+
+      Object.defineProperty(object, 'scale', {
+        get: function() {
+          return this._scale;
+        },
+        set: function(v) {
+          this._scale = v;
+          this._flagMatrix = true;
+        }
+      });
+
     }
 
   });
@@ -94,24 +121,6 @@
 
   });
 
-  Object.defineProperty(Shape.prototype, 'rotation', {
-    get: function() {
-      return this._rotation;
-    },
-    set: function(v) {
-      this._rotation = v;
-      this._flagMatrix = true;
-    }
-  });
-
-  Object.defineProperty(Shape.prototype, 'scale', {
-    get: function() {
-      return this._scale;
-    },
-    set: function(v) {
-      this._scale = v;
-      this._flagMatrix = true;
-    }
-  });
+  Shape.MakeGetterSetter(Shape.prototype);
 
 })();
