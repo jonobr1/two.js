@@ -47,6 +47,7 @@
         set: function(v) {
           this._scale = v;
           this._flagMatrix = true;
+          this._flagScale = true;
         }
       });
 
@@ -104,6 +105,7 @@
     flagReset: function() {
 
       this._flagMatrix = false;
+      this._flagScale = false;
 
       return this;
 
