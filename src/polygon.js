@@ -128,6 +128,16 @@
 
     },
 
+    noFill: function() {
+      this.fill = 'transparent';
+      return this;
+    },
+
+    noStroke: function() {
+      this.stroke = 'transparent';
+      return this;
+    },
+
     /**
      * Orient the vertices of the shape to the upper lefthand
      * corner of the polygon.

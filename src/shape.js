@@ -70,16 +70,6 @@
       return this;
     },
 
-    noFill: function() {
-      this.fill = 'transparent';
-      return this;
-    },
-
-    noStroke: function() {
-      this.stroke = 'transparent';
-      return this;
-    },
-
     clone: function() {
       clone = new Shape();
       clone.translation.copy(this.translation);
