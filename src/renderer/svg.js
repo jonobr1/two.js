@@ -183,10 +183,7 @@
         _.each(this.children, svg.group.renderChild, domElement);
 
         if (this._flagAdditions) {
-          _.each(this.additions, svg.group.appendChild, {
-            domElement: domElement,
-            elem: this._renderer.elem
-          });
+          _.each(this.additions, svg.group.appendChild, context);
         }
 
         if (this._flagSubtractions) {

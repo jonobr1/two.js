@@ -3837,10 +3837,7 @@ var Backbone = Backbone || {};
         _.each(this.children, svg.group.renderChild, domElement);
 
         if (this._flagAdditions) {
-          _.each(this.additions, svg.group.appendChild, {
-            domElement: domElement,
-            elem: this._renderer.elem
-          });
+          _.each(this.additions, svg.group.appendChild, context);
         }
 
         if (this._flagSubtractions) {
@@ -3983,6 +3980,10 @@ var Backbone = Backbone || {};
 
     group: {
 
+      renderChild: function(child) {
+        canvas[child._renderer.type].render.call(child, this);
+      },
+
       render: function(ctx) {
 
         // TODO: Add a check here to only invoke update if need be.
@@ -3994,9 +3995,7 @@ var Backbone = Backbone || {};
         ctx.transform(
           matrix[0], matrix[3], matrix[1], matrix[4], matrix[2], matrix[5]);
 
-        _.each(this.children, function(child) {
-          canvas[child._renderer.type].render.call(child, ctx);
-        });
+        _.each(this.children, canvas.group.renderChild, ctx);
 
         ctx.restore();
 
@@ -4249,6 +4248,10 @@ var Backbone = Backbone || {};
 
     group: {
 
+      renderChild: function(child) {
+        webgl[child._renderer.type].render.call(child, this.gl, this.program);
+      },
+
       render: function(gl, program) {
 
         this.update();
@@ -4275,8 +4278,9 @@ var Backbone = Backbone || {};
 
         }
 
-        _.each(this.children, function(child) {
-          webgl[child._renderer.type].render.call(child, gl, program);
+        _.each(this.children, webgl.group.renderChild, {
+          gl: gl,
+          program: program
         });
 
         return this.flagReset();

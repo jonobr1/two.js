@@ -17,6 +17,10 @@
 
     group: {
 
+      renderChild: function(child) {
+        canvas[child._renderer.type].render.call(child, this);
+      },
+
       render: function(ctx) {
 
         // TODO: Add a check here to only invoke update if need be.
@@ -28,9 +32,7 @@
         ctx.transform(
           matrix[0], matrix[3], matrix[1], matrix[4], matrix[2], matrix[5]);
 
-        _.each(this.children, function(child) {
-          canvas[child._renderer.type].render.call(child, ctx);
-        });
+        _.each(this.children, canvas.group.renderChild, ctx);
 
         ctx.restore();
 

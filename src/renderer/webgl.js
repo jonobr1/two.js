@@ -34,6 +34,10 @@
 
     group: {
 
+      renderChild: function(child) {
+        webgl[child._renderer.type].render.call(child, this.gl, this.program);
+      },
+
       render: function(gl, program) {
 
         this.update();
@@ -60,8 +64,9 @@
 
         }
 
-        _.each(this.children, function(child) {
-          webgl[child._renderer.type].render.call(child, gl, program);
+        _.each(this.children, webgl.group.renderChild, {
+          gl: gl,
+          program: program
         });
 
         return this.flagReset();
