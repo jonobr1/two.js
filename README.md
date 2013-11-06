@@ -55,9 +55,13 @@ node two.js/utils/build
 ## Change Log
 
 ##### Nightly
-+ Refactor of renderers and scenegraph for performance optimization
-  - Relinquishing _events_ for _flags_
++ Refactor of renderers and scenegraph for performance optimization and lower memory footprint
+  - Relinquishing internal _events_ for _flags_
   - Prototypical declaration of `Object.defineProperty`
+  - Added `update` and `flagReset` methods to `Two.Shape`, `Two.Group`, and `Two.Polygon`
+  - Decoupled `canvas` and `webgl` renderers and are now independent
+  - Added `_matrix.manual` to override the default behavior of a `Two.Polygon` transformation
+  - Localized variables per file as much as possible to reduce Garbage Collection on runtime
 
 ##### October 25, 2013 [v0.3.0](https://github.com/jonobr1/two.js/tree/v0.3.0)
 + Can properly pass `domElement` on construction of new instance of two
