@@ -1535,7 +1535,7 @@ var Backbone = Backbone || {};
       fullscreen: false,
       width: 640,
       height: 480,
-      type: Two.Types.canvas, // TODO: Setting default to canvas for debugging
+      type: Two.Types.svg,
       autostart: false
     });
 
@@ -1611,6 +1611,8 @@ var Backbone = Backbone || {};
 
     Version: 'v0.4.0',
 
+    Identifier: 'two-',
+
     Properties: {
       hierarchy: 'hierarchy',
       demotion: 'demotion'
@@ -1665,6 +1667,25 @@ var Backbone = Backbone || {};
           epsilon: 0.01
         }
 
+      },
+
+      /**
+       * Account for high dpi rendering.
+       * http://www.html5rocks.com/en/tutorials/canvas/hidpi/
+       */
+
+      devicePixelRatio: root.devicePixelRatio || 1,
+
+      getBackingStoreRatio: function(ctx) {
+        return ctx.webkitBackingStorePixelRatio ||
+          ctx.mozBackingStorePixelRatio ||
+          ctx.msBackingStorePixelRatio ||
+          ctx.oBackingStorePixelRatio ||
+          ctx.backingStorePixelRatio || 1;
+      },
+
+      getRatio: function(ctx) {
+        return Two.Utils.devicePixelRatio / getBackingStoreRatio(ctx);
       },
 
       /**
@@ -2504,7 +2525,8 @@ var Backbone = Backbone || {};
     getCurveFromPoints = Two.Utils.getCurveFromPoints,
     solveSegmentIntersection = Two.Utils.solveSegmentIntersection,
     decoupleShapes = Two.Utils.decoupleShapes,
-    mod = Two.Utils.mod;
+    mod = Two.Utils.mod,
+    getBackingStoreRatio = Two.Utils.getBackingStoreRatio;
 
   _.extend(Two.prototype, Backbone.Events, {
 
@@ -3259,7 +3281,7 @@ var Backbone = Backbone || {};
   // Local variables
   var a, b, c, d, e, f, g, h, i, hasOutput, out, elements, x, y, z, C, A0, A1,
     A2, A3, A4, A5,A6, A7, A8, B0, B1, B2,B3, B4, B5,B6, B7, B8, A, B, l, s, c,
-    a00, a01, a02, a10, a11, a12, a20, a21, a22, b01, b11, b21, det;
+    a00, a01, a02, a10, a11, a12, a20, a21, a22, b01, b11, b21, det, TEMP = [];
 
   /**
    * Two.Matrix contains an array of elements that represent
@@ -3542,9 +3564,11 @@ var Backbone = Backbone || {};
     /**
      * Create a transform string to be used with rendering apis.
      */
-    toString: function() {
+    toString: function(fullMatrix) {
 
-      return this.toArray().join(' ');
+      this.toArray(fullMatrix, TEMP);
+
+      return TEMP.join(' ');
 
     },
 
@@ -3628,12 +3652,10 @@ var Backbone = Backbone || {};
 
 (function() {
 
-  /**
-   * Scope specific variables
-   */
-
   // Localize variables
-  var mod = Two.Utils.mod;
+  var mod = Two.Utils.mod, flagMatrix, elem, l, last, tag, name, command,
+    previous, next, a, c, vx, vy, ux, uy, ar, bl, br, cl, x, y, ar, bl,
+    context = {};
 
   var svg = {
 
@@ -3646,36 +3668,40 @@ var Backbone = Backbone || {};
      * Create an svg namespaced element.
      */
     createElement: function(name, attrs) {
-      var tag = name;
-      var elem = document.createElementNS(this.ns, tag);
+      tag = name;
+      elem = document.createElementNS(this.ns, tag);
       if (tag === 'svg') {
         attrs = _.defaults(attrs || {}, {
           version: this.version
         });
       }
       if (_.isObject(attrs)) {
-        this.setAttributes(elem, attrs);
+        svg.setAttributes(elem, attrs);
       }
       return elem;
+    },
+
+    setAttribute: function(v, k) {
+      this.setAttribute(k, v);
     },
 
     /**
      * Add attributes from an svg element.
      */
     setAttributes: function(elem, attrs) {
-      _.each(attrs, function(v, k) {
-        this.setAttribute(k, v);
-      }, elem);
+      _.each(attrs, svg.setAttribute, elem);
       return this;
+    },
+
+    removeAttribute: function(v, k) {
+      this.removeAttribute(k);
     },
 
     /**
      * Remove attributes from an svg element.
      */
     removeAttributes: function(elem, attrs) {
-      _.each(attrs, function(a) {
-        this.removeAttribute(a);
-      }, elem);
+      _.each(attrs, svg.removeAttribute, elem);
       return this;
     },
 
@@ -3699,8 +3725,6 @@ var Backbone = Backbone || {};
         var a = points[prev];
         var c = points[next];
 
-
-
         var vx, vy, ux, uy, ar, bl, br, cl;
 
         var x = b.x.toFixed(3);
@@ -3709,7 +3733,7 @@ var Backbone = Backbone || {};
         switch (b._command) {
 
           case Two.Commands.close:
-            command = b._command;
+            command = Two.Commands.close;
             break;
 
           case Two.Commands.curve:
@@ -3723,13 +3747,12 @@ var Backbone = Backbone || {};
             ux = bl.x.toFixed(3);
             uy = bl.y.toFixed(3);
 
-            command = b._command + ' ' +
-              vx + ' ' + vy + ' ' + ux + ' ' + uy + ' ' + x + ' ' + y;
+            command = ((i === 0) ? Two.Commands.move : Two.Commands.curve)
+              + ' ' + vx + ' ' + vy + ' ' + ux + ' ' + uy + ' ' + x + ' ' + y;
             break;
 
           default:
-            command = (b._command
-              || (i === 0 ? Two.Commands.move : Two.Commands.line))
+            command = (i === 0 ? Two.Commands.move : b._command)
               + ' ' + x + ' ' + y;
 
         }
@@ -3764,6 +3787,126 @@ var Backbone = Backbone || {};
 
       }).join(' ');
 
+    },
+
+    group: {
+
+      appendChild: function(id) {
+        elem = this.domElement.querySelector('#' + Two.Identifier + id);
+        if (elem) {
+          this.elem.appendChild(elem);
+        }
+      },
+
+      removeChild: function(id) {
+        elem = this.domElement.querySelector('#' + Two.Identifier + id);
+        if (elem) {
+          this.elem.removeChild(elem);
+        }
+      },
+
+      renderChild: function(child) {
+        svg[child._renderer.type].render.call(child, this);
+      },
+
+      render: function(domElement) {
+
+        this.update();
+
+        if (!this._renderer.elem) {
+          this._renderer.elem = svg.createElement('g', {
+            id: Two.Identifier + this.id
+          });
+          domElement.appendChild(this._renderer.elem);
+        }
+
+        // Update styles for the <g>
+        flagMatrix = this._matrix.manual || this._flagMatrix;
+        context.domElement = domElement;
+        context.elem = this._renderer.elem;
+
+        if (flagMatrix) {
+          this._renderer.elem.setAttribute('transform', 'matrix(' + this._matrix.toString() + ')');
+        }
+
+        _.each(this.children, svg.group.renderChild, domElement);
+
+        if (this._flagAdditions) {
+          _.each(this.additions, svg.group.appendChild, context);
+        }
+
+        if (this._flagSubtractions) {
+          _.each(this.subtractions, svg.group.removeChild, context);
+        }
+
+        return this.flagReset();
+
+      }
+
+    },
+
+    polygon: {
+
+      render: function(domElement) {
+
+        this.update();
+
+        if (!this._renderer.elem) {
+          this._renderer.elem = svg.createElement('path', {
+            id: Two.Identifier + this.id
+          });
+          domElement.appendChild(this._renderer.elem);
+        }
+
+        elem = this._renderer.elem;
+        flagMatrix = this._matrix.manual || this._flagMatrix;
+
+        if (flagMatrix) {
+          elem.setAttribute('transform', 'matrix(' + this._matrix.toString() + ')');
+        }
+
+        if (this._flagVertices) {
+          vertices = svg.toString(this._vertices, this._closed);
+          elem.setAttribute('d', vertices);
+        }
+
+        if (this._flagFill) {
+          elem.setAttribute('fill', this._fill);
+        }
+
+        if (this._flagStroke) {
+          elem.setAttribute('stroke', this._stroke);
+        }
+
+        if (this._flagLinewidth) {
+          elem.setAttribute('stroke-width', this._linewidth);
+        }
+
+        if (this._flagOpacity) {
+          elem.setAttribute('stroke-opacity', this._opacity);
+          elem.setAttribute('fill-opacity', this._opacity);
+        }
+
+        if (this._flagVisible) {
+          elem.setAttribute('visible', this._visible);
+        }
+
+        if (this._flagCap) {
+          elem.setAttribute('stroke-linecap', this._cap);
+        }
+
+        if (this._flagJoin) {
+          elem.setAttribute('stroke-linejoin', this._join);
+        }
+
+        if (this._flagMiter) {
+          elem.setAttribute('stroke-miterlimit', this.miter);
+        }
+
+        return this.flagReset();
+
+      }
+
     }
 
   };
@@ -3773,21 +3916,14 @@ var Backbone = Backbone || {};
    */
   var Renderer = Two[Two.Types.svg] = function(params) {
 
-    this.count = 0;
     this.domElement = params.domElement || svg.createElement('svg');
-    this.elements = [];
 
-    this.domElement.style.visibility = 'hidden';
-
-    this.unveil = _.once(_.bind(function() {
-      this.domElement.style.visibility = 'visible';
-    }, this));
+    this.scene = new Two.Group();
+    this.scene.parent = this;
 
   };
 
   _.extend(Renderer, {
-
-    Identifier: 'two-',
 
     Utils: svg
 
@@ -3809,204 +3945,15 @@ var Backbone = Backbone || {};
 
     },
 
-    /**
-     * Add an object or objects to the renderer.
-     */
-    add: function(o) {
-
-      var l = arguments.length,
-        objects = o,
-        elements = this.elements,
-        domElement = this.domElement;
-
-      if (!_.isArray(o)) {
-        objects = _.map(arguments, function(a) {
-          return a;
-        });
-      }
-
-      _.each(objects, function(object) {
-
-        var elem, tag, styles, isGroup = object instanceof Two.Group;
-
-        if (_.isUndefined(object.id)) {
-          object.id = generateId.call(this);
-        }
-
-        // Generate an SVG equivalent element here.
-
-        if (isGroup) {
-          tag = 'g';
-          if (_.isUndefined(object.parent)) { // For the "scene".
-            object.parent = this;
-            object.unbind(Two.Events.change)
-              .bind(Two.Events.change, _.bind(this.update, this));
-          }
-          styles = getStyles(object);
-          // Remove unnecessary fluff from group
-          delete styles.stroke;
-          delete styles.fill;
-          delete styles['fill-opacity'];
-          delete styles['stroke-opacity'];
-          delete styles['stroke-linecap'];
-          delete styles['stroke-linejoin'];
-          delete styles['stroke-miterlimit'];
-          delete styles['stroke-width'];
-        } else {
-          tag = 'path';
-          styles = getStyles(object);
-        }
-
-        elem = svg.createElement(tag, styles);
-
-        domElement.appendChild(elem);
-        elements.push(elem);
-
-      }, this);
-
-      return this;
-
-    },
-
-    update: function(id, property, value, closed) {
-
-      var elements = this.elements;
-      var elem = elements[id];
-
-      switch (property) {
-
-        case Two.Properties.hierarchy:
-          _.each(value, function(j) {
-            elem.appendChild(elements[j]);
-          });
-          break;
-        case Two.Properties.demotion:
-          _.each(value, function(j) {
-            elem.removeChild(elements[j]);
-          });
-          break;
-        default:
-          setStyles(elem, property, value, closed);
-      }
-
-      return this;
-
-    },
-
     render: function() {
 
-      this.unveil();
+      svg.group.render.call(this.scene, this.domElement);
 
       return this;
 
     }
 
   });
-
-  function getStyles(o) {
-
-    var styles = {},
-      id = o.id,
-      translation = o.translation,
-      rotation = o.rotation,
-      scale = o.scale,
-      stroke = o.stroke,
-      linewidth = o.linewidth,
-      fill = o.fill,
-      opacity = o.opacity,
-      visible = o.visible,
-      cap = o.cap,
-      join = o.join,
-      miter = o.miter,
-      closed = o.closed,
-      vertices = o.vertices;
-
-    if (id) {
-      styles.id = Renderer.Identifier + id;
-    }
-    if (translation && _.isNumber(scale) && _.isNumber(rotation)) {
-      // styles.transform = 'translate(' + translation.x + ',' + translation.y
-      //   + ') scale(' + scale + ') rotate(' + rotation + ')'
-      styles.transform = 'matrix(' + o._matrix.toString() + ')';
-    }
-    if (stroke) {
-      styles.stroke = stroke;
-    }
-    if (fill) {
-      styles.fill = fill;
-    }
-    if (opacity) {
-      styles['stroke-opacity'] = styles['fill-opacity'] = opacity;
-    }
-    // if (visible) {
-    styles.visibility = visible ? 'visible' : 'hidden';
-    // }
-    if (cap) {
-      styles['stroke-linecap'] = cap;
-    }
-    if (join) {
-      styles['stroke-linejoin'] = join;
-    }
-    if (miter) {
-      styles['stroke-miterlimit'] = miter;
-    }
-    if (linewidth) {
-      styles['stroke-width'] = linewidth;
-    }
-    if (vertices) {
-      styles.d = svg.toString(vertices, closed);
-    }
-
-    return styles;
-
-  }
-
-  function setStyles(elem, property, value, closed) {
-
-    switch (property) {
-
-      case 'matrix':
-        property = 'transform';
-        value = 'matrix(' + value.toString() + ')';
-        break;
-      case 'visible':
-        property = 'visibility';
-        value = value ? 'visible' : 'hidden';
-        break;
-      case 'cap':
-        property = 'stroke-linecap';
-        break;
-      case 'join':
-        property = 'stroke-linejoin';
-        break;
-      case 'miter':
-        property = 'stroke-miterlimit';
-        break;
-      case 'linewidth':
-        property = 'stroke-width';
-        break;
-      case 'vertices':
-        property = 'd';
-        value = svg.toString(value, closed);
-        break;
-      case 'opacity':
-        svg.setAttributes(elem, {
-          'stroke-opacity': value,
-          'fill-opacity': value
-        });
-        return;
-
-    }
-
-    elem.setAttribute(property, value);
-
-  }
-
-  function generateId() {
-    var count = this.count;
-    this.count++;
-    return count;
-  }
 
 })();
 (function() {
@@ -4015,33 +3962,16 @@ var Backbone = Backbone || {};
    * Constants
    */
 
-  // Localized variables
   var root = this;
   var mod = Two.Utils.mod;
+  var getRatio = Two.Utils.getRatio;
+
+  // Localized variables
   var matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter,
     closed, commands, length, last;
   var next, prev, a, c, ux, uy, vx, vy, ar, bl, br, cl, x, y;
 
   var canvas = {
-
-    /**
-     * Account for high dpi rendering.
-     * http://www.html5rocks.com/en/tutorials/canvas/hidpi/
-     */
-
-    devicePixelRatio: root.devicePixelRatio || 1,
-
-    getBackingStoreRatio: function(ctx) {
-      return ctx.webkitBackingStorePixelRatio ||
-        ctx.mozBackingStorePixelRatio ||
-        ctx.msBackingStorePixelRatio ||
-        ctx.oBackingStorePixelRatio ||
-        ctx.backingStorePixelRatio || 1;
-    },
-
-    getRatio: function(ctx) {
-      return this.devicePixelRatio / this.getBackingStoreRatio(ctx);
-    },
 
     group: {
 
@@ -4057,7 +3987,7 @@ var Backbone = Backbone || {};
           matrix[0], matrix[3], matrix[1], matrix[4], matrix[2], matrix[5]);
 
         _.each(this.children, function(child) {
-          canvas.polygon.render.call(child, ctx);
+          canvas[child._renderer.type].render.call(child, ctx);
         });
 
         ctx.restore();
@@ -4207,7 +4137,6 @@ var Backbone = Backbone || {};
 
   var Renderer = Two[Two.Types.canvas] = function(params) {
 
-    this.count = 0;
     this.domElement = params.domElement || document.createElement('canvas');
     this.ctx = this.domElement.getContext('2d');
     this.overdraw = false;
@@ -4231,7 +4160,7 @@ var Backbone = Backbone || {};
       this.width = width;
       this.height = height;
 
-      this.ratio = _.isUndefined(ratio) ? canvas.getRatio(this.ctx) : ratio;
+      this.ratio = _.isUndefined(ratio) ? getRatio(this.ctx) : ratio;
 
       this.domElement.width = width * this.ratio;
       this.domElement.height = height * this.ratio;
@@ -4286,7 +4215,8 @@ var Backbone = Backbone || {};
     multiplyMatrix = Two.Matrix.Multiply,
     mod = Two.Utils.mod,
     identity = [1, 0, 0, 0, 1, 0, 0, 0, 1],
-    transformation = new Two.Array(9);
+    transformation = new Two.Array(9),
+    getRatio = Two.Utils.getRatio;
 
   // Localized variables
   var parent, flagParentMatrix, flagMatrix, flagTexture, left, right, top,
@@ -4338,7 +4268,7 @@ var Backbone = Backbone || {};
         }
 
         _.each(this.children, function(child) {
-          webgl.polygon.render.call(child, gl, program);
+          webgl[child._renderer.type].render.call(child, gl, program);
         });
 
         return this.flagReset();
@@ -4363,7 +4293,7 @@ var Backbone = Backbone || {};
         flagTexture = this._flagVertices || this._flagFill
           || this._flagStroke || this._flagLinewidth || this._flagOpacity
           || this._flagVisible || this._flagCap || this._flagJoin
-          || this._flagMiter;
+          || this._flagMiter || this._flagScale;
 
         this.update();
 
@@ -4789,7 +4719,6 @@ var Backbone = Backbone || {};
 
   var Renderer = Two[Two.Types.webgl] = function(options) {
 
-    this.count = 0;
     this.domElement = options.domElement || document.createElement('canvas');
 
     // Everything drawn on the canvas needs to come from the stage.
@@ -4850,11 +4779,22 @@ var Backbone = Backbone || {};
 
   };
 
-  _.extend(Renderer.prototype, Backbone.Events, CanvasRenderer.prototype, {
+  _.extend(Renderer.prototype, Backbone.Events, {
 
     setSize: function(width, height, ratio) {
 
-      CanvasRenderer.prototype.setSize.apply(this, arguments);
+      this.width = width;
+      this.height = height;
+
+      this.ratio = _.isUndefined(ratio) ? getRatio(this.ctx) : ratio;
+
+      this.domElement.width = width * this.ratio;
+      this.domElement.height = height * this.ratio;
+
+      _.extend(this.domElement.style, {
+        width: width + 'px',
+        height: height + 'px'
+      });
 
       width *= this.ratio;
       height *= this.ratio;
@@ -4943,6 +4883,7 @@ var Backbone = Backbone || {};
         set: function(v) {
           this._scale = v;
           this._flagMatrix = true;
+          this._flagScale = true;
         }
       });
 
@@ -5000,6 +4941,7 @@ var Backbone = Backbone || {};
     flagReset: function() {
 
       this._flagMatrix = false;
+      this._flagScale = false;
 
       return this;
 
@@ -5029,6 +4971,8 @@ var Backbone = Backbone || {};
 
     Two.Shape.call(this);
 
+    this._renderer.type = 'polygon';
+
     this._closed = !!closed;
     this._curved = !!curved;
 
@@ -5053,7 +4997,7 @@ var Backbone = Backbone || {};
     this.miter = 4; // Default of Adobe Illustrator
 
     this._vertices = [];
-    this.vertices = vertices.slice();
+    this.vertices = vertices;
 
   };
 
@@ -5378,6 +5322,7 @@ var Backbone = Backbone || {};
     },
     set: function(v) {
       this._closed = !!v;
+      this._flagVertices = true;
     }
   });
 
@@ -5387,6 +5332,7 @@ var Backbone = Backbone || {};
     },
     set: function(v) {
       this._curved = !!v;
+      this._flagVertices = true;
     }
   });
 
@@ -5422,6 +5368,56 @@ var Backbone = Backbone || {};
     }
   });
 
+  Object.defineProperty(Polygon.prototype, 'vertices', {
+
+    get: function() {
+      return this._collection;
+    },
+
+    set: function(vertices) {
+
+      var updateVertices = _.bind(Polygon.FlagVertices, this);
+
+      var bindVerts = _.bind(function(items) {
+
+        _.each(items, function(v) {
+          v.bind(Two.Events.change, updateVertices);
+        }, this);
+
+        updateVertices();
+
+      }, this);
+
+      var unbindVerts = _.bind(function(items) {
+
+        _.each(items, function(v) {
+          v.unbind(Two.Events.change, updateVertices);
+        }, this);
+
+        updateVertices();
+
+      }, this);
+
+      // Remove previous listeners
+      if (this._collection) {
+        this._collection.unbind();
+      }
+
+      // Create new Collection with copy of vertices
+      this._collection = new Two.Utils.Collection(vertices.slice(0));
+
+      // Listen for Collection changes and bind / unbind
+      this._collection.bind(Two.Events.insert, bindVerts);
+      this._collection.bind(Two.Events.remove, unbindVerts);
+
+      // Bind Initial Vertices
+      verticesChanged = true;
+      bindVerts(this._collection);
+
+    }
+
+  });
+
   Two.Shape.MakeGetterSetter(Polygon.prototype);
 
 })();
@@ -5440,6 +5436,11 @@ var Backbone = Backbone || {};
   var Group = Two.Group = function(o) {
 
     Two.Shape.call(this, true);
+
+    this._renderer.type = 'group';
+
+    this.additions = [];
+    this.subtractions = [];
 
     this.children = {};
 
@@ -5477,9 +5478,13 @@ var Backbone = Backbone || {};
 
   _.extend(Group.prototype, Two.Shape.prototype, {
 
-    /**
-     * Underlying Properties
-     */
+    // Flags
+    // http://en.wikipedia.org/wiki/Flag
+
+    _flagAdditions: false,
+    _flagSubtractions: false,
+
+    // Underlying Properties
 
     _fill: '#fff',
     _stroke: '#000',
@@ -5571,7 +5576,7 @@ var Backbone = Backbone || {};
         objects = o,
         children = this.children,
         grandparent = this.parent,
-        ids = [];
+        ids = this.additions;
 
       if (!_.isArray(o)) {
         objects = _.toArray(arguments);
@@ -5596,6 +5601,7 @@ var Backbone = Backbone || {};
           children[id] = object;
           object.parent = this;
           ids.push(id);
+          this._flagAdditions = true;
         }
 
       }, this);
@@ -5613,7 +5619,7 @@ var Backbone = Backbone || {};
         objects = o,
         children = this.children,
         grandparent = this.parent,
-        ids = [];
+        ids = this.subtractions;
 
       if (l <= 0 && grandparent) {
         grandparent.remove(this);
@@ -5636,6 +5642,7 @@ var Backbone = Backbone || {};
         delete object.parent;
 
         ids.push(id);
+        this._flagSubtractions = true;
 
       });
 
@@ -5719,6 +5726,24 @@ var Backbone = Backbone || {};
         child.subdivide();
       });
       return this;
+    },
+
+    flagReset: function() {
+
+      if (this._flagAdditions) {
+        this.additions.length = 0;
+        this._flagAdditions = false;
+      }
+
+      if (this._flagSubtractions) {
+        this.subtractions.length = 0;
+        this._flagSubtractions = false;
+      }
+
+      Two.Shape.prototype.flagReset.call(this);
+
+      return this;
+
     }
 
   });
