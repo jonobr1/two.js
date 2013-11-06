@@ -7,7 +7,7 @@
 
   // Localized variables
   var secret, parent, children, group, rect, corner, l, objects, grandparent,
-    ids, id, left, right, top, bottom, matrix, a, b, c, d;
+    ids, id, left, right, top, bottom, matrix, a, b, c, d, index;
 
   var Group = Two.Group = function(o) {
 
@@ -172,6 +172,10 @@
           // Release object from previous parent.
           if (parent) {
             delete parent.children[id];
+            index = _.indexOf(parent.additions, id);
+            if (index >= 0) {
+              parent.additions.splice(index, 1);
+            }
           }
           // Add it to this group and update parent-child relationship.
           children[id] = object;
@@ -209,6 +213,7 @@
       _.each(objects, function(object) {
 
         id = object.id, grandchildren = object.children;
+        parent = object.parent;
 
         if (!(id in children)) {
           return;
@@ -216,6 +221,11 @@
 
         delete children[id];
         delete object.parent;
+
+        index = _.indexOf(parent.additions, id);
+        if (index >= 0) {
+          parent.additions.splice(index, 1);
+        }
 
         ids.push(id);
         this._flagSubtractions = true;

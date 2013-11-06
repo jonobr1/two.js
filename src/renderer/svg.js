@@ -2,8 +2,7 @@
 
   // Localize variables
   var mod = Two.Utils.mod, flagMatrix, elem, l, last, tag, name, command,
-    previous, next, a, c, vx, vy, ux, uy, ar, bl, br, cl, x, y, ar, bl,
-    context = {};
+    previous, next, a, c, vx, vy, ux, uy, ar, bl, br, cl, x, y, ar, bl;
 
   var svg = {
 
@@ -170,8 +169,10 @@
 
         // Update styles for the <g>
         flagMatrix = this._matrix.manual || this._flagMatrix;
-        context.domElement = domElement;
-        context.elem = this._renderer.elem;
+        var context = {
+          domElement: domElement,
+          elem: this._renderer.elem
+        };
 
         if (flagMatrix) {
           this._renderer.elem.setAttribute('transform', 'matrix(' + this._matrix.toString() + ')');
@@ -180,7 +181,10 @@
         _.each(this.children, svg.group.renderChild, domElement);
 
         if (this._flagAdditions) {
-          _.each(this.additions, svg.group.appendChild, context);
+          _.each(this.additions, svg.group.appendChild, {
+            domElement: domElement,
+            elem: this._renderer.elem
+          });
         }
 
         if (this._flagSubtractions) {
