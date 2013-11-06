@@ -57,6 +57,7 @@ node two.js/utils/build
 ##### Nightly
 + Refactor of renderers and scenegraph for performance optimization
   - Relinquishing _events_ for _flags_
+  - Prototypical declaration of `Object.defineProperty`
 
 ##### October 25, 2013 [v0.3.0](https://github.com/jonobr1/two.js/tree/v0.3.0)
 + Can properly pass `domElement` on construction of new instance of two
