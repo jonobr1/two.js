@@ -242,7 +242,7 @@
         }
 
         if (this._flagVisible) {
-          elem.setAttribute('visible', this._visible);
+          elem.setAttribute('visibility', this._visible ? 'visible' : 'hidden');
         }
 
         if (this._flagCap) {

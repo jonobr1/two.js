@@ -1102,7 +1102,9 @@
         renderer.setSize(width, height, this.ratio);
       }
 
-      return this.trigger(Two.Events.update, this.frameCount, this.timeDelta);
+      this.trigger(Two.Events.update, this.frameCount, this.timeDelta);
+
+      return this.render();
 
     },
 
@@ -1354,7 +1356,7 @@
     _.each(Two.Instances, function(t) {
 
       if (t.playing) {
-        t.update().render();
+        t.update();
       }
 
     });
