@@ -3654,8 +3654,7 @@ var Backbone = Backbone || {};
 
   // Localize variables
   var mod = Two.Utils.mod, flagMatrix, elem, l, last, tag, name, command,
-    previous, next, a, c, vx, vy, ux, uy, ar, bl, br, cl, x, y, ar, bl,
-    context = {};
+    previous, next, a, c, vx, vy, ux, uy, ar, bl, br, cl, x, y, ar, bl;
 
   var svg = {
 
@@ -3791,6 +3790,7 @@ var Backbone = Backbone || {};
 
     group: {
 
+      // TODO: Can speed up.
       appendChild: function(id) {
         elem = this.domElement.querySelector('#' + Two.Identifier + id);
         if (elem) {
@@ -3798,6 +3798,7 @@ var Backbone = Backbone || {};
         }
       },
 
+      // TODO: Can speed up.
       removeChild: function(id) {
         elem = this.domElement.querySelector('#' + Two.Identifier + id);
         if (elem) {
@@ -3822,8 +3823,10 @@ var Backbone = Backbone || {};
 
         // Update styles for the <g>
         flagMatrix = this._matrix.manual || this._flagMatrix;
-        context.domElement = domElement;
-        context.elem = this._renderer.elem;
+        var context = {
+          domElement: domElement,
+          elem: this._renderer.elem
+        };
 
         if (flagMatrix) {
           this._renderer.elem.setAttribute('transform', 'matrix(' + this._matrix.toString() + ')');
@@ -3832,7 +3835,10 @@ var Backbone = Backbone || {};
         _.each(this.children, svg.group.renderChild, domElement);
 
         if (this._flagAdditions) {
-          _.each(this.additions, svg.group.appendChild, context);
+          _.each(this.additions, svg.group.appendChild, {
+            domElement: domElement,
+            elem: this._renderer.elem
+          });
         }
 
         if (this._flagSubtractions) {
@@ -5431,7 +5437,7 @@ var Backbone = Backbone || {};
 
   // Localized variables
   var secret, parent, children, group, rect, corner, l, objects, grandparent,
-    ids, id, left, right, top, bottom, matrix, a, b, c, d;
+    ids, id, left, right, top, bottom, matrix, a, b, c, d, index;
 
   var Group = Two.Group = function(o) {
 
@@ -5596,6 +5602,10 @@ var Backbone = Backbone || {};
           // Release object from previous parent.
           if (parent) {
             delete parent.children[id];
+            index = _.indexOf(parent.additions, id);
+            if (index >= 0) {
+              parent.additions.splice(index, 1);
+            }
           }
           // Add it to this group and update parent-child relationship.
           children[id] = object;
@@ -5633,6 +5643,7 @@ var Backbone = Backbone || {};
       _.each(objects, function(object) {
 
         id = object.id, grandchildren = object.children;
+        parent = object.parent;
 
         if (!(id in children)) {
           return;
@@ -5640,6 +5651,11 @@ var Backbone = Backbone || {};
 
         delete children[id];
         delete object.parent;
+
+        index = _.indexOf(parent.additions, id);
+        if (index >= 0) {
+          parent.additions.splice(index, 1);
+        }
 
         ids.push(id);
         this._flagSubtractions = true;
