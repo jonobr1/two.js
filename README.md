@@ -54,7 +54,7 @@ node two.js/utils/build
 
 ## Change Log
 
-Nightly
+##### October 25, 2013 [v0.3.0](https://github.com/jonobr1/two.js/tree/v0.3.0)
 + Can properly pass `domElement` on construction of new instance of two
 + Added `overdraw` boolean to `webgl` renderer [@arodic](https://github.com/arodic)
 + Added support for ie9 svg interpretation [@tomconroy](https://github.com/tomconroy)
@@ -88,8 +88,8 @@ Nightly
 + Added gruntfile, package.json for more integration with `npm`, and dependency free build (`build/two.clean.js`) [@iros](https://github.com/iros)
 + Crossbrowser compatability with `noStroke` and `noFill` commands
 
-May 3, 2013 [v0.2.0](https://github.com/jonobr1/two.js/tree/v0.2.0)
+##### May 3, 2013 [v0.2.0](https://github.com/jonobr1/two.js/tree/v0.2.0)
 + First alpha release
 
-Jan 29, 2013 [v0.1.0-alpha](https://github.com/jonobr1/two.js/tree/v0.1.0-alpha)
+##### Jan 29, 2013 [v0.1.0-alpha](https://github.com/jonobr1/two.js/tree/v0.1.0-alpha)
 + Proof of Concept built from Three.js
