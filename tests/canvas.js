@@ -6,7 +6,8 @@
 
   module('CanvasRenderer');
 
-  var deviceRatio = Two[Two.Types.canvas].Utils.getRatio(document.createElement('canvas').getContext('2d'));
+  var getRatio = Two.Utils.getRatio;
+  var deviceRatio = getRatio(document.createElement('canvas').getContext('2d'));
   var suffix = '@' + deviceRatio + 'x.png';
 
   asyncTest('Two.makeLine', 1, function(o) {
