@@ -138,6 +138,7 @@
 
     group: {
 
+      // TODO: Can speed up.
       appendChild: function(id) {
         elem = this.domElement.querySelector('#' + Two.Identifier + id);
         if (elem) {
@@ -145,6 +146,7 @@
         }
       },
 
+      // TODO: Can speed up.
       removeChild: function(id) {
         elem = this.domElement.querySelector('#' + Two.Identifier + id);
         if (elem) {
