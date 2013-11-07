@@ -5175,7 +5175,7 @@ var Backbone = Backbone || {};
       left = Infinity, right = -Infinity;
       top = Infinity, bottom = -Infinity;
 
-      _.each(this.vertices, function(v) {
+      _.each(this._vertices, function(v) {
         x = v.x, y = v.y;
         top = min(y, top);
         left = min(x, left);
