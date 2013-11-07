@@ -5168,6 +5168,9 @@ var Backbone = Backbone || {};
      */
     getBoundingClientRect: function(shallow) {
 
+      // TODO: Update this to not __always__ update. Just when it needs to.
+      this.update();
+
       border = this.linewidth / 2, temp;
       left = Infinity, right = -Infinity;
       top = Infinity, bottom = -Infinity;
@@ -5677,6 +5680,9 @@ var Backbone = Backbone || {};
      * parameters of the group.
      */
     getBoundingClientRect: function(shallow) {
+
+      // TODO: Update this to not __always__ update. Just when it needs to.
+      this.update();
 
       left = Infinity, right = -Infinity;
       top = Infinity, bottom = -Infinity;
