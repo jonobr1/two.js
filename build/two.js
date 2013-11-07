@@ -4988,11 +4988,6 @@ var Backbone = Backbone || {};
     this._closed = !!closed;
     this._curved = !!curved;
 
-    // Determines whether or not two.js should calculate curves, lines, and
-    // commands automatically for you or to let the developer manipulate them
-    // for themselves.
-    this._automatic = !manual;
-
     this.beginning = 0;
     this.ending = 1;
 
@@ -5010,6 +5005,11 @@ var Backbone = Backbone || {};
 
     this._vertices = [];
     this.vertices = vertices;
+
+    // Determines whether or not two.js should calculate curves, lines, and
+    // commands automatically for you or to let the developer manipulate them
+    // for themselves.
+    this.automatic = !manual;
 
   };
 
@@ -5360,6 +5360,10 @@ var Backbone = Backbone || {};
         return;
       }
       this._automatic = !!v;
+      method = this._automatic ? 'ignore' : 'listen';
+      _.each(this.vertices, function(v) {
+        v[method]();
+      });
     }
   });
 
