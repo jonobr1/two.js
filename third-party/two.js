@@ -2782,7 +2782,7 @@ var Backbone = Backbone || {};
     /**
      * Interpret an SVG Node and add it to this instance's scene. The
      * distinction should be made that this doesn't `import` svg's, it solely
-     * interprets them into something compatible for Two.js — this is slightly
+     * interprets them into something compatible for Two.js — this is slightly
      * different than a direct transcription.
      */
     interpret: function(svgNode) {
@@ -4988,11 +4988,6 @@ var Backbone = Backbone || {};
     this._closed = !!closed;
     this._curved = !!curved;
 
-    // Determines whether or not two.js should calculate curves, lines, and
-    // commands automatically for you or to let the developer manipulate them
-    // for themselves.
-    this._automatic = !manual;
-
     this.beginning = 0;
     this.ending = 1;
 
@@ -5010,6 +5005,11 @@ var Backbone = Backbone || {};
 
     this._vertices = [];
     this.vertices = vertices;
+
+    // Determines whether or not two.js should calculate curves, lines, and
+    // commands automatically for you or to let the developer manipulate them
+    // for themselves.
+    this.automatic = !manual;
 
   };
 
@@ -5168,11 +5168,14 @@ var Backbone = Backbone || {};
      */
     getBoundingClientRect: function(shallow) {
 
+      // TODO: Update this to not __always__ update. Just when it needs to.
+      this.update();
+
       border = this.linewidth / 2, temp;
       left = Infinity, right = -Infinity;
       top = Infinity, bottom = -Infinity;
 
-      _.each(this.vertices, function(v) {
+      _.each(this._vertices, function(v) {
         x = v.x, y = v.y;
         top = min(y, top);
         left = min(x, left);
@@ -5357,6 +5360,10 @@ var Backbone = Backbone || {};
         return;
       }
       this._automatic = !!v;
+      method = this._automatic ? 'ignore' : 'listen';
+      _.each(this.vertices, function(v) {
+        v[method]();
+      });
     }
   });
 
@@ -5677,6 +5684,9 @@ var Backbone = Backbone || {};
      * parameters of the group.
      */
     getBoundingClientRect: function(shallow) {
+
+      // TODO: Update this to not __always__ update. Just when it needs to.
+      this.update();
 
       left = Infinity, right = -Infinity;
       top = Infinity, bottom = -Infinity;

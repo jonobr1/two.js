@@ -22,9 +22,11 @@
 
           var rect = two.makeRectangle(two.width / 2, two.height / 2, 250, 250);
           rect.noStroke().fill = getRandomColor();
-          rect.domElement = document.querySelector('#two-' + rect.id);
 
-          $(rect.domElement)
+          // Update the renderer in order to generate corresponding DOM Elements.
+          two.update();
+
+          $(rect._renderer.elem)
             .css('cursor', 'pointer')
             .click(function(e) {
               rect.fill = getRandomColor();

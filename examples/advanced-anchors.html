@@ -3,7 +3,7 @@
   <head>
     <title>Two.js: Advanced Anchors</title>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
     <link rel="shortcut icon" type="image/gif" href="../images/favicon.gif">
     <script src="../third-party/jquery.js"></script>
     <script src="../third-party/two.js"></script>
@@ -90,6 +90,10 @@
                 rl.vertices[1].copy(this);
               });
 
+              // Update the renderer in order to generate the actual elements.
+              two.update();
+
+              // Add Interactivity
               addInteractivity(p);
               addInteractivity(l);
               addInteractivity(r);
@@ -100,8 +104,6 @@
 
           function addInteractivity(shape) {
 
-            var id = '#' + Two[Two.Types.svg].Identifier + shape.id;
-            shape.elem = two.renderer.domElement.querySelector(id);
             var offset = shape.parent.translation;
 
             var drag = function(e) {
@@ -134,7 +136,7 @@
               return false;
             };
 
-            $(shape.elem)
+            $(shape._renderer.elem)
               .css({
                 cursor: 'pointer'
               })
@@ -172,18 +174,14 @@
           var b = two.makeLine(center, center - r, center, center + r);
 
           a.stroke = b.stroke = '#aaa';
-          a.linewidth = b.linewidth = 0.5;
+          a.linewidth = b.linewidth = 0.25;
 
           two.update();
 
-          _.defer(function() {
-
-            _.extend(document.body.style, {
-              backgroundImage: 'url(' + two.renderer.domElement.toDataURL() + ')',
-              backgroundRepeat: 'repeat',
-              backgroundSize: dimensions + 'px ' + dimensions + 'px'
-            });
-
+          _.extend(document.body.style, {
+            backgroundImage: 'url(' + two.renderer.domElement.toDataURL() + ')',
+            backgroundRepeat: 'repeat',
+            backgroundSize: dimensions + 'px ' + dimensions + 'px'
           });
 
         }
