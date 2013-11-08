@@ -3544,11 +3544,6 @@
     this._closed = !!closed;
     this._curved = !!curved;
 
-    // Determines whether or not two.js should calculate curves, lines, and
-    // commands automatically for you or to let the developer manipulate them
-    // for themselves.
-    this._automatic = !manual;
-
     this.beginning = 0;
     this.ending = 1;
 
@@ -3566,6 +3561,11 @@
 
     this._vertices = [];
     this.vertices = vertices;
+
+    // Determines whether or not two.js should calculate curves, lines, and
+    // commands automatically for you or to let the developer manipulate them
+    // for themselves.
+    this.automatic = !manual;
 
   };
 
@@ -3996,6 +3996,7 @@
   });
 
   Polygon.MakeObservable(Polygon.prototype);
+
 
 })();
 
