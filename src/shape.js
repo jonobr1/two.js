@@ -28,7 +28,7 @@
       this._flagMatrix = true;
     },
 
-    MakeGetterSetter: function(object) {
+    MakeObservable: function(object) {
 
       Object.defineProperty(object, 'rotation', {
         get: function() {
@@ -113,6 +113,6 @@
 
   });
 
-  Shape.MakeGetterSetter(Shape.prototype);
+  Shape.MakeObservable(Shape.prototype);
 
 })();

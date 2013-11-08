@@ -24,6 +24,13 @@
 
   _.extend(Group, {
 
+    MakeObservable: function(object) {
+
+      Two.Shape.MakeObservable(object);
+      Group.MakeGetterSetter(object, Two.Polygon.Properties);
+
+    },
+
     MakeGetterSetter: function(group, properties) {
 
       if (!_.isArray(properties)) {
@@ -337,7 +344,6 @@
 
   });
 
-  Group.MakeGetterSetter(Group.prototype, Two.Polygon.Properties);
-  Two.Shape.MakeGetterSetter(Group.prototype);
+  Group.MakeObservable(Group.prototype);
 
 })();

@@ -67,6 +67,133 @@
 
     FlagVertices: function() {
       this._flagVertices = true;
+    },
+
+    MakeObservable: function(object) {
+
+      Two.Shape.MakeObservable(object);
+
+      // Only the first 8 properties are flagged like this. The subsequent
+      // properties behave differently and need to be hand written.
+      _.each(Polygon.Properties.slice(0, 8), function(property) {
+
+        var secret = '_' + property;
+        var flag = '_flag' + property.charAt(0).toUpperCase() + property.slice(1);
+
+        Object.defineProperty(object, property, {
+          get: function() {
+            return this[secret];
+          },
+          set: function(v) {
+            this[secret] = v;
+            this[flag] = true;
+          }
+        });
+
+      });
+
+      Object.defineProperty(object, 'closed', {
+        get: function() {
+          return this._closed;
+        },
+        set: function(v) {
+          this._closed = !!v;
+          this._flagVertices = true;
+        }
+      });
+
+      Object.defineProperty(object, 'curved', {
+        get: function() {
+          return this._curved;
+        },
+        set: function(v) {
+          this._curved = !!v;
+          this._flagVertices = true;
+        }
+      });
+
+      Object.defineProperty(object, 'automatic', {
+        get: function() {
+          return this._automatic;
+        },
+        set: function(v) {
+          if (v === this._automatic) {
+            return;
+          }
+          this._automatic = !!v;
+        }
+      });
+
+      Object.defineProperty(object, 'beginning', {
+        get: function() {
+          return this._beginning;
+        },
+        set: function(v) {
+          this._beginning = min(max(v, 0.0), 1.0);
+          this._flagVertices = true;
+        }
+      });
+
+      Object.defineProperty(object, 'ending', {
+        get: function() {
+          return this._ending;
+        },
+        set: function(v) {
+          this._ending = min(max(v, 0.0), 1.0);
+          this._flagVertices = true;
+        }
+      });
+
+      Object.defineProperty(object, 'vertices', {
+
+        get: function() {
+          return this._collection;
+        },
+
+        set: function(vertices) {
+
+          var updateVertices = _.bind(Polygon.FlagVertices, this);
+
+          var bindVerts = _.bind(function(items) {
+
+            _.each(items, function(v) {
+              v.bind(Two.Events.change, updateVertices);
+            }, this);
+
+            updateVertices();
+
+          }, this);
+
+          var unbindVerts = _.bind(function(items) {
+
+            _.each(items, function(v) {
+              v.unbind(Two.Events.change, updateVertices);
+            }, this);
+
+            updateVertices();
+
+          }, this);
+
+          // Remove previous listeners
+          if (this._collection) {
+            this._collection.unbind();
+          }
+
+          // Create new Collection with copy of vertices
+          this._collection = new Two.Utils.Collection(vertices.slice(0));
+
+          // Listen for Collection changes and bind / unbind
+          this._collection.bind(Two.Events.insert, bindVerts);
+          this._collection.bind(Two.Events.remove, unbindVerts);
+
+          // Bind Initial Vertices
+          verticesChanged = true;
+          bindVerts(this._collection);
+
+        }
+
+      });
+
     }
 
   });
@@ -345,127 +472,6 @@
 
   });
 
-  // Only the first 8 properties are flagged like this. The subsequent
-  // properties behave differently and need to be hand written.
-  _.each(Polygon.Properties.slice(0, 8), function(property) {
-
-    var secret = '_' + property;
-    var flag = '_flag' + property.charAt(0).toUpperCase() + property.slice(1);
-
-    Object.defineProperty(Polygon.prototype, property, {
-      get: function() {
-        return this[secret];
-      },
-      set: function(v) {
-        this[secret] = v;
-        this[flag] = true;
-      }
-    });
-
-  });
-
-  Object.defineProperty(Polygon.prototype, 'closed', {
-    get: function() {
-      return this._closed;
-    },
-    set: function(v) {
-      this._closed = !!v;
-      this._flagVertices = true;
-    }
-  });
-
-  Object.defineProperty(Polygon.prototype, 'curved', {
-    get: function() {
-      return this._curved;
-    },
-    set: function(v) {
-      this._curved = !!v;
-      this._flagVertices = true;
-    }
-  });
-
-  Object.defineProperty(Polygon.prototype, 'automatic', {
-    get: function() {
-      return this._automatic;
-    },
-    set: function(v) {
-      if (v === this._automatic) {
-        return;
-      }
-      this._automatic = !!v;
-    }
-  });
-
-  Object.defineProperty(Polygon.prototype, 'beginning', {
-    get: function() {
-      return this._beginning;
-    },
-    set: function(v) {
-      this._beginning = min(max(v, 0.0), 1.0);
-      this._flagVertices = true;
-    }
-  });
-
-  Object.defineProperty(Polygon.prototype, 'ending', {
-    get: function() {
-      return this._ending;
-    },
-    set: function(v) {
-      this._ending = min(max(v, 0.0), 1.0);
-      this._flagVertices = true;
-    }
-  });
-
-  Object.defineProperty(Polygon.prototype, 'vertices', {
-
-    get: function() {
-      return this._collection;
-    },
-
-    set: function(vertices) {
-
-      var updateVertices = _.bind(Polygon.FlagVertices, this);
-
-      var bindVerts = _.bind(function(items) {
-
-        _.each(items, function(v) {
-          v.bind(Two.Events.change, updateVertices);
-        }, this);
-
-        updateVertices();
-
-      }, this);
-
-      var unbindVerts = _.bind(function(items) {
-
-        _.each(items, function(v) {
-          v.unbind(Two.Events.change, updateVertices);
-        }, this);
-
-        updateVertices();
-
-      }, this);
-
-      // Remove previous listeners
-      if (this._collection) {
-        this._collection.unbind();
-      }
-
-      // Create new Collection with copy of vertices
-      this._collection = new Two.Utils.Collection(vertices.slice(0));
-
-      // Listen for Collection changes and bind / unbind
-      this._collection.bind(Two.Events.insert, bindVerts);
-      this._collection.bind(Two.Events.remove, unbindVerts);
-
-      // Bind Initial Vertices
-      verticesChanged = true;
-      bindVerts(this._collection);
-
-    }
-
-  });
-
-  Two.Shape.MakeGetterSetter(Polygon.prototype);
+  Polygon.MakeObservable(Polygon.prototype);
 
 })();
