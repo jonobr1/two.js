@@ -112,7 +112,7 @@
         }
       });
 
-      Object.defineProperty(object, 'automatic', {
+      Object.defineProperty(Polygon.prototype, 'automatic', {
         get: function() {
           return this._automatic;
         },
@@ -121,6 +121,10 @@
             return;
           }
           this._automatic = !!v;
+          method = this._automatic ? 'ignore' : 'listen';
+          _.each(this.vertices, function(v) {
+            v[method]();
+          });
         }
       });
 
