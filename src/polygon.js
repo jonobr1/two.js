@@ -396,9 +396,10 @@
 
     },
 
-    subdivide: function() {
+    subdivide: function(limit) {
 
       last = this.vertices.length - 1;
+      b = this.vertices[last];
       closed = this._closed || this.vertices[last].command === Two.Commands.close;
       points = [];
 
@@ -417,7 +418,7 @@
         x3 = (left || a).x, y3 = (left || a).y;
         x4 = a.x, y4 = a.y;
 
-        points.push(Two.Utils.subdivide(x1, y1, x2, y2, x3, y3, x4, y4));
+        points.push(Two.Utils.subdivide(x1, y1, x2, y2, x3, y3, x4, y4, 0, limit));
 
         b = a;
 

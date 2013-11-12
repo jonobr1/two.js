@@ -45,7 +45,9 @@
     PI = Math.PI,
     TWO_PI = PI * 2,
     HALF_PI = PI / 2,
-    pow = Math.pow;
+    pow = Math.pow,
+    min = Math.min,
+    max = Math.max;
 
   /**
    * Localized variables
@@ -713,14 +715,14 @@
        * already recursed.
        *
        */
-      subdivide: function(x1, y1, x2, y2, x3, y3, x4, y4, level) {
+      subdivide: function(x1, y1, x2, y2, x3, y3, x4, y4, level, limit) {
 
         // Constants
         var epsilon = Two.Utils.Curve.CollinearityEpsilon,
-          limit = Two.Utils.Curve.RecursionLimit,
+          limit = limit || Two.Utils.Curve.RecursionLimit,
           cuspLimit = Two.Utils.Curve.CuspLimit,
           tolerance = Two.Utils.Curve.Tolerance,
-          da1, da2;
+          da1, da2, theta, amount, last, tc, ts, dx, dy;
 
         level = level || 0;
 
@@ -728,18 +730,49 @@
           return [];
         }
 
+        // Straight line subdivision
+        if (pointOnLine(x2, y2, x1, y1, x4, y4) && pointOnLine(x3, y3, x1, y1, x4, y4)) {
+
+          dx = x4 - x1;
+          dy = y4 - y1;
+
+          theta = atan2(dy, dx);
+          amount = max(limit - level, 1);
+          last = amount - 1;
+
+          // Make it positive!
+          while (theta < 0) {
+            theta += PI;
+          }
+
+          tc = cos(theta);
+          ts = sin(theta);
+
+          return _.map(_.range(amount), function(i) {
+
+            var pct = i / last;
+            var x = dx * pct * tc + x1;
+            var y = dy * pct * ts + y1;
+
+            return new Two.Anchor(x, y);
+
+          });
+
+        }
+
+        // Curve subdivision
         var x12 = (x1 + x2) / 2,
-            y12 = (y1 + y2) / 2,
-            x23 = (x2 + x3) / 2,
-            y23 = (y2 + y3) / 2,
-            x34 = (x3 + x4) / 2,
-            y34 = (y3 + y4) / 2,
-            x123  = (x12 + x23) / 2,
-            y123  = (y12 + y23) / 2,
-            x234  = (x23 + x34) / 2,
-            y234  = (y23 + y34) / 2,
-            x1234 = (x123 + x234) / 2,
-            y1234 = (y123 + y234) / 2;
+          y12 = (y1 + y2) / 2,
+          x23 = (x2 + x3) / 2,
+          y23 = (y2 + y3) / 2,
+          x34 = (x3 + x4) / 2,
+          y34 = (y3 + y4) / 2,
+          x123 = (x12 + x23) / 2,
+          y123 = (y12 + y23) / 2,
+          x234 = (x23 + x34) / 2,
+          y234 = (y23 + y34) / 2,
+          x1234 = (x123 + x234) / 2,
+          y1234 = (y123 + y234) / 2;
 
 
         // Try to approximate the full cubic curve by a single straight line.
@@ -857,10 +890,33 @@
         }
 
         return Two.Utils.subdivide(
-          x1, y1, x12, y12, x123, y123, x1234, y1234, level + 1
+          x1, y1, x12, y12, x123, y123, x1234, y1234, level + 1, limit
         ).concat(Two.Utils.subdivide(
-          x1234, y1234, x234, y234, x34, y34, x4, y4, level + 1
+          x1234, y1234, x234, y234, x34, y34, x4, y4, level + 1, limit
         ));
+
+      },
+
+      pointOnLine: function(px, py, ax, ay, bx, by) {
+
+        var epsilon = Two.Utils.Curve.Tolerance.epsilon;
+
+        var cross = (py - ay) * (bx - ax) - (px - ax) * (by - ay);
+        if (abs(cross) > epsilon) {
+          return false;
+        }
+
+        var dot = (px - ax) * (bx - ax) + (py - ay) * (by - ay);
+        if (dot < 0) {
+          return false;
+        }
+
+        var length = (bx - ax) * (bx - ax) + (by - ay) * (by - ay);
+        if (dot > length) {
+          return false;
+        }
+
+        return true;
 
       },
 
@@ -964,8 +1020,19 @@
 
       angleBetween: function(A, B) {
 
-        var dx = A.x - B.x;
-        var dy = A.y - B.y;
+        var dx, dy;
+
+        if (arguments.length >= 4) {
+
+          dx = arguments[0] - arguments[2];
+          dy = arguments[1] - arguments[3];
+
+          return atan2(dy, dx);
+
+        }
+
+        dx = A.x - B.x;
+        dy = A.y - B.y;
 
         return atan2(dy, dx);
 
@@ -1082,7 +1149,8 @@
     solveSegmentIntersection = Two.Utils.solveSegmentIntersection,
     decoupleShapes = Two.Utils.decoupleShapes,
     mod = Two.Utils.mod,
-    getBackingStoreRatio = Two.Utils.getBackingStoreRatio;
+    getBackingStoreRatio = Two.Utils.getBackingStoreRatio,
+    pointOnLine = Two.Utils.pointOnLine;
 
   _.extend(Two.prototype, Backbone.Events, {
 
@@ -3341,6 +3409,8 @@
 
     // Setup some initial statements of the gl context
     gl.enable(gl.BLEND);
+    // https://code.google.com/p/chromium/issues/detail?id=316393
+    // gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, gl.TRUE);
     gl.blendEquationSeparate(gl.FUNC_ADD, gl.FUNC_ADD);
     gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA,
       gl.ONE, gl.ONE_MINUS_SRC_ALPHA );
@@ -3919,9 +3989,10 @@
 
     },
 
-    subdivide: function() {
+    subdivide: function(limit) {
 
       last = this.vertices.length - 1;
+      b = this.vertices[last];
       closed = this._closed || this.vertices[last].command === Two.Commands.close;
       points = [];
 
@@ -3940,7 +4011,7 @@
         x3 = (left || a).x, y3 = (left || a).y;
         x4 = a.x, y4 = a.y;
 
-        points.push(Two.Utils.subdivide(x1, y1, x2, y2, x3, y3, x4, y4));
+        points.push(Two.Utils.subdivide(x1, y1, x2, y2, x3, y3, x4, y4, 0, limit));
 
         b = a;
 
@@ -4324,8 +4395,9 @@
      * Trickle down subdivide
      */
     subdivide: function() {
+      var args = arguments;
       _.each(this.children, function(child) {
-        child.subdivide();
+        child.subdivide.apply(child, args);
       });
       return this;
     },

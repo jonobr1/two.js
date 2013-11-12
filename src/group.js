@@ -318,8 +318,9 @@
      * Trickle down subdivide
      */
     subdivide: function() {
+      var args = arguments;
       _.each(this.children, function(child) {
-        child.subdivide();
+        child.subdivide.apply(child, args);
       });
       return this;
     },
