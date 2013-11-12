@@ -403,6 +403,7 @@
       closed = this._closed || this.vertices[last].command === Two.Commands.close;
       points = [];
 
+      // TODO: Handle Two.Commands.move
       _.each(this.vertices, function(a, i) {
 
         if (i <= 0 && !closed) {
