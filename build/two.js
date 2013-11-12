@@ -1720,21 +1720,6 @@ var Backbone = Backbone || {};
 
       },
 
-      getComputedScale: function(object) {
-
-        var scale = 1;
-        var parent = object;
-
-        while (parent && parent._scale) {
-          var s = parent._scale;
-          scale *= s;
-          parent = parent.parent;
-        }
-
-        return scale
-
-      },
-
       applySvgAttributes: function(node, elem) {
 
         elem.cap = 'butt';
@@ -1748,6 +1733,7 @@ var Backbone = Backbone || {};
 
             case 'transform':
 
+              // TODO:
               // Need to figure out how to decompose matrix into
               // translation, rotation, scale.
 
@@ -2180,14 +2166,9 @@ var Backbone = Backbone || {};
           dx = x4 - x1;
           dy = y4 - y1;
 
-          theta = atan2(dy, dx);
+          theta = mod(atan2(dy, dx), PI);
           amount = max(limit - level, 1);
           last = amount - 1;
-
-          // Make it positive!
-          while (theta < 0) {
-            theta += PI;
-          }
 
           tc = cos(theta);
           ts = sin(theta);
@@ -5440,6 +5421,7 @@ var Backbone = Backbone || {};
       closed = this._closed || this.vertices[last].command === Two.Commands.close;
       points = [];
 
+      // TODO: Handle Two.Commands.move
       _.each(this.vertices, function(a, i) {
 
         if (i <= 0 && !closed) {
