@@ -247,21 +247,6 @@
 
       },
 
-      getComputedScale: function(object) {
-
-        var scale = 1;
-        var parent = object;
-
-        while (parent && parent._scale) {
-          var s = parent._scale;
-          scale *= s;
-          parent = parent.parent;
-        }
-
-        return scale
-
-      },
-
       applySvgAttributes: function(node, elem) {
 
         elem.cap = 'butt';
@@ -275,6 +260,7 @@
 
             case 'transform':
 
+              // TODO:
               // Need to figure out how to decompose matrix into
               // translation, rotation, scale.
 
