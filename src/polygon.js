@@ -403,10 +403,9 @@
       closed = this._closed || this.vertices[last].command === Two.Commands.close;
       points = [];
 
-      // TODO: Handle Two.Commands.move
       _.each(this.vertices, function(a, i) {
 
-        if (i <= 0 && !closed) {
+        if ((i <= 0 && !closed) || a.command === Two.Commands.move) {
           b = a;
           return;
         }
@@ -419,7 +418,20 @@
         x3 = (left || a).x, y3 = (left || a).y;
         x4 = a.x, y4 = a.y;
 
-        points.push(Two.Utils.subdivide(x1, y1, x2, y2, x3, y3, x4, y4, 0, limit));
+        var verts = _.flatten(Two.Utils.subdivide(x1, y1, x2, y2, x3, y3, x4, y4, 0, limit));
+        var length = verts.length;
+        var last = length - 1;
+        points = points.concat(verts);
+
+        // Assign commands to all the verts
+        _.each(verts, function(v, i) {
+          // TODO: May need to check for a.command as well... Not positive.
+          if (i <= 0 && b.command === Two.Commands.move) {
+            v.command = Two.Commands.move;
+          } else {
+            v.command = Two.Commands.line;
+          }
+        });
 
         b = a;
 
@@ -429,7 +441,6 @@
       this._curved = false;
 
       this.vertices = _.flatten(points);
-      this.plot();
 
       return this;
 

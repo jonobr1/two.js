@@ -357,6 +357,7 @@
 
           var verts = [];
           points.replace(/([\d\.?]+),([\d\.?]+)/g, function(match, p1, p2) {
+            console.log(p1, p2);
             verts.push(new Two.Anchor(parseFloat(p1), parseFloat(p2)));
           });
 
@@ -707,23 +708,14 @@
           dx = x4 - x1;
           dy = y4 - y1;
 
-          theta = atan2(dy, dx);
           amount = max(limit - level, 1);
           last = amount - 1;
-
-          // Make it positive!
-          while (theta < 0) {
-            theta += PI;
-          }
-
-          tc = cos(theta);
-          ts = sin(theta);
 
           return _.map(_.range(amount), function(i) {
 
             var pct = i / last;
-            var x = dx * pct * tc + x1;
-            var y = dy * pct * ts + y1;
+            var x = dx * pct + x1;
+            var y = dy * pct + y1;
 
             return new Two.Anchor(x, y);
 

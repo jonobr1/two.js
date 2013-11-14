@@ -386,6 +386,7 @@
 
           var verts = [];
           points.replace(/([\d\.?]+),([\d\.?]+)/g, function(match, p1, p2) {
+            console.log(p1, p2);
             verts.push(new Two.Anchor(parseFloat(p1), parseFloat(p2)));
           });
 
@@ -736,23 +737,14 @@
           dx = x4 - x1;
           dy = y4 - y1;
 
-          theta = atan2(dy, dx);
           amount = max(limit - level, 1);
           last = amount - 1;
-
-          // Make it positive!
-          while (theta < 0) {
-            theta += PI;
-          }
-
-          tc = cos(theta);
-          ts = sin(theta);
 
           return _.map(_.range(amount), function(i) {
 
             var pct = i / last;
-            var x = dx * pct * tc + x1;
-            var y = dy * pct * ts + y1;
+            var x = dx * pct + x1;
+            var y = dy * pct + y1;
 
             return new Two.Anchor(x, y);
 
@@ -3998,7 +3990,7 @@
 
       _.each(this.vertices, function(a, i) {
 
-        if (i <= 0 && !closed) {
+        if ((i <= 0 && !closed) || a.command === Two.Commands.move) {
           b = a;
           return;
         }
@@ -4011,7 +4003,20 @@
         x3 = (left || a).x, y3 = (left || a).y;
         x4 = a.x, y4 = a.y;
 
-        points.push(Two.Utils.subdivide(x1, y1, x2, y2, x3, y3, x4, y4, 0, limit));
+        var verts = _.flatten(Two.Utils.subdivide(x1, y1, x2, y2, x3, y3, x4, y4, 0, limit));
+        var length = verts.length;
+        var last = length - 1;
+        points = points.concat(verts);
+
+        // Assign commands to all the verts
+        _.each(verts, function(v, i) {
+          // TODO: May need to check for a.command as well... Not positive.
+          if (i <= 0 && b.command === Two.Commands.move) {
+            v.command = Two.Commands.move;
+          } else {
+            v.command = Two.Commands.line;
+          }
+        });
 
         b = a;
 
@@ -4021,7 +4026,6 @@
       this._curved = false;
 
       this.vertices = _.flatten(points);
-      this.plot();
 
       return this;
 
