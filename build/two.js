@@ -1816,7 +1816,6 @@ var Backbone = Backbone || {};
 
           var verts = [];
           points.replace(/([\d\.?]+),([\d\.?]+)/g, function(match, p1, p2) {
-            console.log(p1, p2);
             verts.push(new Two.Anchor(parseFloat(p1), parseFloat(p2)));
           });
 
