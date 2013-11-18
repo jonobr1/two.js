@@ -237,7 +237,7 @@
         ids.push(id);
         this._flagSubtractions = true;
 
-      });
+      }, this);
 
       return this;
 

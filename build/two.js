@@ -5292,10 +5292,14 @@ var Backbone = Backbone || {};
     corner: function() {
 
       rect = this.getBoundingClientRect(true);
-      corner = { x: rect.left, y: rect.top };
+
+      rect.centroid = {
+        x: rect.left + rect.width / 2,
+        y: rect.top + rect.height / 2
+      };
 
       _.each(this.vertices, function(v) {
-        v.subSelf(corner);
+        v.addSelf(rect.centroid);
       });
 
       return this;
@@ -5747,7 +5751,7 @@ var Backbone = Backbone || {};
         ids.push(id);
         this._flagSubtractions = true;
 
-      });
+      }, this);
 
       return this;
 
