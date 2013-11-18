@@ -5416,6 +5416,8 @@ var Backbone = Backbone || {};
 
     subdivide: function(limit) {
 
+      this.update();
+
       last = this.vertices.length - 1;
       b = this.vertices[last];
       closed = this._closed || this.vertices[last].command === Two.Commands.close;
