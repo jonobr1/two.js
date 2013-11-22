@@ -2142,7 +2142,7 @@ var Backbone = Backbone || {};
       subdivide: function(x1, y1, x2, y2, x3, y3, x4, y4, limit) {
 
         var limit = limit || Two.Utils.Curve.RecursionLimit;
-        var amount = limit;
+        var amount = limit + 1;
 
         return _.map(_.range(0, amount), function(i) {
 
@@ -5256,6 +5256,8 @@ var Backbone = Backbone || {};
       _.each(this.vertices, function(a, i) {
 
         if ((i <= 0 && !closed) || a.command === Two.Commands.move) {
+          points.push(new Two.Anchor(b.x, b.y));
+          points[points.length - 1].command = Two.Commands.line;
           b = a;
           return;
         }
@@ -5273,7 +5275,6 @@ var Backbone = Backbone || {};
 
         // Assign commands to all the verts
         _.each(verts, function(v, i) {
-          // TODO: May need to check for a.command as well... Not positive.
           if (i <= 0 && b.command === Two.Commands.move) {
             v.command = Two.Commands.move;
           } else {
@@ -5282,7 +5283,8 @@ var Backbone = Backbone || {};
         });
 
         if (i >= last) {
-          points.push(new Two.Anchor(x4, y4, undefined, undefined, undefined, undefined, closed ? Two.Commands.close : Two.Commands.line));
+          points.push(new Two.Anchor(x4, y4));
+          points[points.length - 1].command = closed ? Two.Commands.close : Two.Commands.line;
         }
 
         b = a;
