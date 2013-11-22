@@ -2136,209 +2136,30 @@ var Backbone = Backbone || {};
 
       /**
        * Given 2 points (a, b) and corresponding control point for each
-       * return an array of points that represent an Adaptive Subdivision
-       * of Bezier Curves. Founded in the online article:
-       *
-       * http://www.antigrain.com/research/adaptive_bezier/index.html
-       *
-       * Where level represents how many levels deep the function has
-       * already recursed.
-       *
+       * return an array of points that represent points plotted along
+       * the curve. Number points determined by limit.
        */
-      subdivide: function(x1, y1, x2, y2, x3, y3, x4, y4, level, limit) {
+      subdivide: function(x1, y1, x2, y2, x3, y3, x4, y4, limit) {
 
-        // Constants
-        var epsilon = Two.Utils.Curve.CollinearityEpsilon,
-          limit = limit || Two.Utils.Curve.RecursionLimit,
-          cuspLimit = Two.Utils.Curve.CuspLimit,
-          tolerance = Two.Utils.Curve.Tolerance,
-          da1, da2, theta, amount, last, tc, ts, dx, dy;
+        var limit = limit || Two.Utils.Curve.RecursionLimit;
+        var amount = limit;
 
-        level = level || 0;
+        return _.map(_.range(0, amount), function(i) {
 
-        if (level > limit) {
-          return [];
-        }
+          var t = i / amount;
+          var x = getPointOnCubicBezier(t, x1, x2, x3, x4);
+          var y = getPointOnCubicBezier(t, y1, y2, y3, y4);
 
-        // Straight line subdivision
-        if (pointOnLine(x2, y2, x1, y1, x4, y4) && pointOnLine(x3, y3, x1, y1, x4, y4)) {
+          return new Two.Anchor(x, y);
 
-          dx = x4 - x1;
-          dy = y4 - y1;
-
-          amount = max(limit - level, 1);
-          last = amount - 1;
-
-          return _.map(_.range(amount), function(i) {
-
-            var pct = i / last;
-            var x = dx * pct + x1;
-            var y = dy * pct + y1;
-
-            return new Two.Anchor(x, y);
-
-          });
-
-        }
-
-        // Curve subdivision
-        var x12 = (x1 + x2) / 2,
-          y12 = (y1 + y2) / 2,
-          x23 = (x2 + x3) / 2,
-          y23 = (y2 + y3) / 2,
-          x34 = (x3 + x4) / 2,
-          y34 = (y3 + y4) / 2,
-          x123 = (x12 + x23) / 2,
-          y123 = (y12 + y23) / 2,
-          x234 = (x23 + x34) / 2,
-          y234 = (y23 + y34) / 2,
-          x1234 = (x123 + x234) / 2,
-          y1234 = (y123 + y234) / 2;
-
-
-        // Try to approximate the full cubic curve by a single straight line.
-        var dx = x4 - x1;
-        var dy = y4 - y1;
-
-        var d2 = abs(((x2 - x4) * dy - (y2 - y4) * dx));
-        var d3 = abs(((x3 - x4) * dy - (y3 - y4) * dx));
-
-        if (level > 0) {
-
-          if (d2 > epsilon && d3 > epsilon) {
-
-            if ((d2 + d3) * (d2 + d3) <= tolerance.distance * (dx * dx + dy * dy)) {
-
-              if (tolerance.angle < tolerance.epsilon) {
-                return [new Two.Anchor(x1234, y1234)];
-              }
-
-              var a23 = atan2(y3 - y2, x3 - x2);
-              da1 = abs(a23 - atan2(y2 - y1, x2 - x1));
-              da2 = abs(atan2(y4 - y3, x4 - x3) - a23);
-
-              if (da1 >= PI) da1 = TWO_PI - da1;
-              if (da2 >= PI) da2 = TWO_PI - da2;
-
-              if (da1 + da2 < tolerance.angle) {
-                return [new Two.Anchor(x1234, y1234)];
-              }
-
-              if (cuspLimit !== 0) {
-
-                if (da1 > cuspLimit) {
-                  return [new Two.Anchor(x2, y2)];
-                }
-
-                if (da2 > cuspLimit) {
-                  return [new Two.Anchor(x3, y3)];
-                }
-
-              }
-
-            }
-
-          }
-
-        } else {
-
-          if (d2 > epsilon) {
-
-            if (d2 * d2 <= tolerance.distance * (dx * dx + dy * dy)) {
-
-              if (tolerance.angle < tolerance.epsilon) {
-                return [new Two.Anchor(x1234, y1234)];
-              }
-
-              da1 = abs(atan2(y3 - y2, x3 - x2) - atan2(y2 - y1, x2 - x1));
-              if (da1 >= PI) da1 = TWO_PI - da1;
-
-              if (da1 < tolerance.angle) {
-                return [
-                  new Two.Anchor(x2, y2),
-                  new Two.Anchor(x3, y3)
-                ];
-              }
-
-              if (cuspLimit !== 0) {
-
-                if (da1 > cuspLimit) {
-                  return [new Two.Anchor(x2, y2)];
-                }
-
-              }
-
-            } else if (d3 > epsilon) {
-
-              if (d3 * d3 <= tolerance.distance * (dx * dx + dy * dy)) {
-
-                if (tolerance.angle < tolerance.epsilon) {
-                  return [new Two.Anchor(x1234, y1234)];
-                }
-
-                da1 = abs(atan2(y4 - y3, x4 - x3) - atan2(y3 - y2, x3 - x2));
-                if (da1 >= PI) da1 = TWO_PI - da1;
-
-                if (da1 < tolerance.angle) {
-                  return [
-                    new Two.Anchor(x2, y2),
-                    new Two.Anchor(x3, y3)
-                  ];
-                }
-
-                if (cuspLimit !== 0) {
-
-                  if (da1 > cuspLimit) {
-                    return [new Two.Anchor(x3, y3)];
-                  }
-
-                }
-
-              }
-
-            } else {
-
-              dx = x1234 - (x1 + x4) / 2;
-              dy = y1234 - (y1 + y4) / 2;
-              if (dx * dx + dy * dy <= tolerance.distance) {
-                return [new Two.Anchor(x1234, y1234)];
-              }
-
-            }
-
-          }
-
-        }
-
-        return Two.Utils.subdivide(
-          x1, y1, x12, y12, x123, y123, x1234, y1234, level + 1, limit
-        ).concat(Two.Utils.subdivide(
-          x1234, y1234, x234, y234, x34, y34, x4, y4, level + 1, limit
-        ));
+        });
 
       },
 
-      pointOnLine: function(px, py, ax, ay, bx, by) {
-
-        var epsilon = Two.Utils.Curve.Tolerance.epsilon;
-
-        var cross = (py - ay) * (bx - ax) - (px - ax) * (by - ay);
-        if (abs(cross) > epsilon) {
-          return false;
-        }
-
-        var dot = (px - ax) * (bx - ax) + (py - ay) * (by - ay);
-        if (dot < 0) {
-          return false;
-        }
-
-        var length = (bx - ax) * (bx - ax) + (by - ay) * (by - ay);
-        if (dot > length) {
-          return false;
-        }
-
-        return true;
-
+      getPointOnCubicBezier: function(t, a, b, c, d) {
+        var k = 1 - t;
+        return (k * k * k * a) + (3 * k * k * t * b) + (3 * k * t * t * c)
+          + (t * t * t * d);
       },
 
       /**
@@ -2571,7 +2392,7 @@ var Backbone = Backbone || {};
     decoupleShapes = Two.Utils.decoupleShapes,
     mod = Two.Utils.mod,
     getBackingStoreRatio = Two.Utils.getBackingStoreRatio,
-    pointOnLine = Two.Utils.pointOnLine;
+    getPointOnCubicBezier = Two.Utils.getPointOnCubicBezier;
 
   _.extend(Two.prototype, Backbone.Events, {
 
@@ -3272,7 +3093,7 @@ var Backbone = Backbone || {};
 
   });
 
-  _.extend(Anchor.prototype, Two.Vector.prototype, {
+  var AnchorProto = {
 
     listen: function() {
 
@@ -3314,7 +3135,16 @@ var Backbone = Backbone || {};
 
     }
 
-  });
+  };
+
+  _.extend(Anchor.prototype, Two.Vector.prototype, AnchorProto);
+
+  // Make it possible to bind and still have the Anchor specific
+  // inheritance.
+  Two.Anchor.prototype.bind = Two.Anchor.prototype.on = function() {
+    Two.Vector.prototype.bind.apply(this, arguments);
+    _.extend(this, AnchorProto);
+  };
 
 })();
 (function() {
@@ -5438,9 +5268,7 @@ var Backbone = Backbone || {};
         x3 = (left || a).x, y3 = (left || a).y;
         x4 = a.x, y4 = a.y;
 
-        var verts = _.flatten(Two.Utils.subdivide(x1, y1, x2, y2, x3, y3, x4, y4, 0, limit));
-        var length = verts.length;
-        var last = length - 1;
+        var verts = Two.Utils.subdivide(x1, y1, x2, y2, x3, y3, x4, y4, limit);
         points = points.concat(verts);
 
         // Assign commands to all the verts
@@ -5453,14 +5281,17 @@ var Backbone = Backbone || {};
           }
         });
 
+        if (i >= last) {
+          points.push(new Two.Anchor(x4, y4, undefined, undefined, undefined, undefined, closed ? Two.Commands.close : Two.Commands.line));
+        }
+
         b = a;
 
       }, this);
 
       this._automatic = false;
       this._curved = false;
-
-      this.vertices = _.flatten(points);
+      this.vertices = points;
 
       return this;
 

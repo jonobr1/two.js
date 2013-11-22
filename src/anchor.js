@@ -69,7 +69,7 @@
 
   });
 
-  _.extend(Anchor.prototype, Two.Vector.prototype, {
+  var AnchorProto = {
 
     listen: function() {
 
@@ -111,6 +111,15 @@
 
     }
 
-  });
+  };
+
+  _.extend(Anchor.prototype, Two.Vector.prototype, AnchorProto);
+
+  // Make it possible to bind and still have the Anchor specific
+  // inheritance.
+  Two.Anchor.prototype.bind = Two.Anchor.prototype.on = function() {
+    Two.Vector.prototype.bind.apply(this, arguments);
+    _.extend(this, AnchorProto);
+  };
 
 })();

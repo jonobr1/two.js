@@ -424,9 +424,7 @@
         x3 = (left || a).x, y3 = (left || a).y;
         x4 = a.x, y4 = a.y;
 
-        var verts = _.flatten(Two.Utils.subdivide(x1, y1, x2, y2, x3, y3, x4, y4, 0, limit));
-        var length = verts.length;
-        var last = length - 1;
+        var verts = Two.Utils.subdivide(x1, y1, x2, y2, x3, y3, x4, y4, limit);
         points = points.concat(verts);
 
         // Assign commands to all the verts
@@ -439,14 +437,17 @@
           }
         });
 
+        if (i >= last) {
+          points.push(new Two.Anchor(x4, y4, undefined, undefined, undefined, undefined, closed ? Two.Commands.close : Two.Commands.line));
+        }
+
         b = a;
 
       }, this);
 
       this._automatic = false;
       this._curved = false;
-
-      this.vertices = _.flatten(points);
+      this.vertices = points;
 
       return this;
 
