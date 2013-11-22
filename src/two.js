@@ -669,7 +669,7 @@
       subdivide: function(x1, y1, x2, y2, x3, y3, x4, y4, limit) {
 
         var limit = limit || Two.Utils.Curve.RecursionLimit;
-        var amount = limit;
+        var amount = limit + 1;
 
         return _.map(_.range(0, amount), function(i) {
 
