@@ -1889,6 +1889,9 @@ var Backbone = Backbone || {};
                   result.addSelf(coord);
                 }
 
+                result.controls.left.copy(result);
+                result.controls.right.copy(result);
+
                 coord = result;
                 break;
 
@@ -1910,6 +1913,9 @@ var Backbone = Backbone || {};
                 if (relative) {
                   result[a] += coord[a];
                 }
+
+                result.controls.left.copy(result);
+                result.controls.right.copy(result);
 
                 coord = result;
                 break;

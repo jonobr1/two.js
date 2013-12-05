@@ -416,6 +416,9 @@
                   result.addSelf(coord);
                 }
 
+                result.controls.left.copy(result);
+                result.controls.right.copy(result);
+
                 coord = result;
                 break;
 
@@ -437,6 +440,9 @@
                 if (relative) {
                   result[a] += coord[a];
                 }
+
+                result.controls.left.copy(result);
+                result.controls.right.copy(result);
 
                 coord = result;
                 break;
