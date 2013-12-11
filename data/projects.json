@@ -2,6 +2,11 @@
   "template": "<li><a href=\"<%= href %>\" target=\"_blank\"><img width=\"143\" height=\"100\" src=\"<%= img %>\" alt=\"\"><h3><p><%= title %></p></h3></a></li>",
   "items": [
     {
+      "title": "Anitype",
+      "href": "http://anitype.com/",
+      "img": "images/projects/anitype.gif"
+    },
+    {
       "title": "Put Me in the YTMA&apos;s",
       "href": "http://putmeintheytmas.com/static/ytlogo.html",
       "img": "images/projects/youtube.gif"
