@@ -22,7 +22,7 @@
 
     two.update();
 
-    compare.call(o, './images/canvas/line' + suffix, two.renderer, 'Two.makeLine renders properly.');
+    QUnit.Utils.compare.call(o, './images/canvas/line' + suffix, two.renderer, 'Two.makeLine renders properly.');
 
   });
 
@@ -38,7 +38,7 @@
 
     two.update();
 
-    compare.call(o, './images/canvas/rectangle' + suffix, two.renderer, 'Two.makeRectangle renders properly.');
+    QUnit.Utils.compare.call(o, './images/canvas/rectangle' + suffix, two.renderer, 'Two.makeRectangle renders properly.');
 
   });
 
@@ -54,7 +54,7 @@
 
     two.update();
 
-    compare.call(o, './images/canvas/ellipse' + suffix, two.renderer, 'Two.makeEllipse renders properly.');
+    QUnit.Utils.compare.call(o, './images/canvas/ellipse' + suffix, two.renderer, 'Two.makeEllipse renders properly.');
 
   });
 
@@ -71,7 +71,7 @@
 
     two.update();
 
-    compare.call(o, './images/canvas/circle' + suffix, two.renderer, 'Two.makeCircle renders properly.');
+    QUnit.Utils.compare.call(o, './images/canvas/circle' + suffix, two.renderer, 'Two.makeCircle renders properly.');
 
   });
 
@@ -95,7 +95,7 @@
 
     two.update();
 
-    compare.call(o, './images/canvas/polygon' + suffix, two.renderer, 'Two.makePolygon renders properly.');
+    QUnit.Utils.compare.call(o, './images/canvas/polygon' + suffix, two.renderer, 'Two.makePolygon renders properly.');
 
   });
 
@@ -119,7 +119,7 @@
 
     two.update();
 
-    compare.call(o, './images/canvas/curve' + suffix, two.renderer, 'Two.makeCurve renders properly.');
+    QUnit.Utils.compare.call(o, './images/canvas/curve' + suffix, two.renderer, 'Two.makeCurve renders properly.');
 
   });
 
@@ -152,70 +152,8 @@
 
     two.update;
 
-    compare.call(o, './images/canvas/styles' + suffix, two.renderer, 'Styles render properly.');
+    QUnit.Utils.compare.call(o, './images/canvas/styles' + suffix, two.renderer, 'Styles render properly.');
 
   });
-
-  /**
-   * Utility functions
-   */
-
-  function compare(path, renderer, message, callback) {
-
-    var _this = this;
-
-    getFile(path, function(reference) {
-
-      var data = renderer.domElement.toDataURL('image/png');
-      resemble(reference).compareTo(data).onComplete(function(data) {
-
-        var pct = parseFloat(data.misMatchPercentage);
-
-        ok(pct <= 1, message);
-        start();
-
-        var img = document.createElement('img');
-        img.src = path;
-        img.title = 'Reference Image';
-        img.width = img.height = 400;
-
-        var domElement = document.createElement('li');
-        renderer.domElement.title = 'Computed Image';
-
-        domElement.appendChild(img);
-        domElement.appendChild(renderer.domElement);
-
-        _.delay(function() {
-          document.querySelector('#' + _this.id + ' ol').appendChild(domElement);
-        }, 100);
-
-      });
-
-    });
-
-  }
-
-  function getFile(path, callback) {
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', path, true);
-
-    if (window.URL) {
-      xhr.responseType = 'blob';
-    } else {
-      xhr.responseType = 'arraybuffer';
-    }
-
-    xhr.onload = function(e) {
-
-      if (window.URL) {
-        callback(this.response);
-      } else {
-        //-- Safari doesn't support responseType blob, so create a blob from arraybuffer
-        callback(new Blob([this.response], { "type" : 'image/png' }));
-      }
-
-    };
-    xhr.send();
-  }
 
 })();

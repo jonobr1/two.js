@@ -278,9 +278,6 @@
 
       applySvgAttributes: function(node, elem) {
 
-        elem.cap = 'butt';
-        elem.join = 'bevel';
-
         _.each(node.attributes, function(v, k) {
 
           var property = v.nodeName;
@@ -318,6 +315,7 @@
               break;
             case 'stroke-opacity':
             case 'fill-opacity':
+            case 'opacity':
               elem.opacity = v.nodeValue;
               break;
             case 'fill':
@@ -1695,6 +1693,23 @@
         this.command
       );
 
+    },
+
+    toObject: function() {
+      var o = {
+        x: this.x,
+        y: this.y
+      };
+      if (this.command) {
+        o.command = this.command;
+      }
+      if (this.controls) {
+        o.controls = {
+          left: this.controls.left.toObject(),
+          right: this.controls.right.toObject()
+        };
+      }
+      return o;
     }
 
   };
@@ -3438,9 +3453,9 @@
     this.opacity = 1.0;
     this.visible = true;
 
-    this.cap = 'round';
-    this.join = 'round';
-    this.miter = 4; // Default of Adobe Illustrator
+    this.cap = 'butt';      // Default of Adobe Illustrator
+    this.join = 'miter';    // Default of Adobe Illustrator
+    this.miter = 4;         // Default of Adobe Illustrator
 
     this._vertices = [];
     this.vertices = vertices;
@@ -3664,6 +3679,26 @@
       parent.add(clone);
 
       return clone;
+
+    },
+
+    toObject: function() {
+
+      var result = {
+        vertices: _.map(this.vertices, function(v) {
+          return v.toObject();
+        })
+      };
+
+      _.each(Two.Shape.Properties, function(k) {
+        result[k] = this[k];
+      }, this);
+
+      result.translation = this.translation.toObject;
+      result.rotation = this.rotation;
+      result.scale = this.scale;
+
+      return result;
 
     },
 
@@ -4018,6 +4053,23 @@
       group.scale = this.scale;
 
       return group;
+
+    },
+
+    toObject: function() {
+
+      var result = {
+        children: {},
+        translation: this.translation.toObject(),
+        rotation: this.rotation,
+        scale: this.scale
+      };
+
+      _.each(this.children, function(child, i) {
+        result.children[i] = child.toObject();
+      }, this);
+
+      return result;
 
     },
 

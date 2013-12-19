@@ -55,6 +55,8 @@ node two.js/utils/build
 ## Change Log
 
 ##### Nightly
++ Added `toObject` method to `Two.Group`, `Two.Polygon`, `Two.Anchor`
++ `Two.Polygon` initiailizes `polygon.cap = 'butt'` and `polygon.join = 'miter'` based on Adobe Illustrator defaults
 + `Two.Polygon.subdivide` method now works with `Two.Commands.move` for noncontiguous polygons
 + Internally update matrices on `getBoundingClientRect` in order to remove the need to defer or wait for internal variables to be up-to-date
 + Refactor of renderers and scenegraph for performance optimization and lower memory footprint

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="400px" height="400px" viewBox="-29.921 -143.307 400 400" enable-background="new -29.921 -143.307 400 400"
+	 xml:space="preserve">
+<desc>Example polygon01 - star and hexagon</desc>
+<polygon fill="#FF0000" points="99.212,21.26 107.433,45.638 132.945,45.638 112.536,60.945 119.905,85.323 99.212,70.867 
+	78.52,85.323 85.89,60.945 65.48,45.638 90.992,45.638 "/>
+<polygon fill="#00FF00" points="240.945,21.26 271.559,38.977 271.559,74.41 240.945,92.126 210.331,74.438 210.331,38.977 "/>
+</svg>

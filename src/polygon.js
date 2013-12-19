@@ -32,9 +32,9 @@
     this.opacity = 1.0;
     this.visible = true;
 
-    this.cap = 'round';
-    this.join = 'round';
-    this.miter = 4; // Default of Adobe Illustrator
+    this.cap = 'butt';      // Default of Adobe Illustrator
+    this.join = 'miter';    // Default of Adobe Illustrator
+    this.miter = 4;         // Default of Adobe Illustrator
 
     this._vertices = [];
     this.vertices = vertices;
@@ -258,6 +258,26 @@
       parent.add(clone);
 
       return clone;
+
+    },
+
+    toObject: function() {
+
+      var result = {
+        vertices: _.map(this.vertices, function(v) {
+          return v.toObject();
+        })
+      };
+
+      _.each(Two.Shape.Properties, function(k) {
+        result[k] = this[k];
+      }, this);
+
+      result.translation = this.translation.toObject;
+      result.rotation = this.rotation;
+      result.scale = this.scale;
+
+      return result;
 
     },
 

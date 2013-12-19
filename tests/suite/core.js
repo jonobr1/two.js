@@ -303,8 +303,6 @@ test('Two.Matrix', 10, function() {
 
 });
 
-module('Utils');
-
 test('Two.Utils.Collection', 12, function() {
 
   var poly = new Two.Polygon([new Two.Vector(0, 0)]);

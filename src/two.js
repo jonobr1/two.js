@@ -249,9 +249,6 @@
 
       applySvgAttributes: function(node, elem) {
 
-        elem.cap = 'butt';
-        elem.join = 'bevel';
-
         _.each(node.attributes, function(v, k) {
 
           var property = v.nodeName;
@@ -289,6 +286,7 @@
               break;
             case 'stroke-opacity':
             case 'fill-opacity':
+            case 'opacity':
               elem.opacity = v.nodeValue;
               break;
             case 'fill':

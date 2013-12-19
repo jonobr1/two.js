@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="400px" height="400px" viewBox="-29.921 -143.307 400 400" enable-background="new -29.921 -143.307 400 400"
+	 xml:space="preserve">
+<desc>Example polyline01 - increasingly larger bars</desc>
+<polyline fill="none" stroke="#0000FF" stroke-width="10" points="20.079,104.42 47.352,104.42 47.352,90.785 74.625,90.785 
+	74.625,104.42 101.897,104.42 101.897,70.33 129.17,70.33 129.17,104.42 156.442,104.42 156.442,49.875 183.715,49.875 
+	183.715,104.42 210.988,104.42 210.988,29.42 238.26,29.42 238.26,104.42 265.534,104.42 265.534,8.965 292.805,8.965 
+	292.805,104.42 320.079,104.42 "/>
+</svg>

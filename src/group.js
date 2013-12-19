@@ -110,6 +110,23 @@
 
     },
 
+    toObject: function() {
+
+      var result = {
+        children: {},
+        translation: this.translation.toObject(),
+        rotation: this.rotation,
+        scale: this.scale
+      };
+
+      _.each(this.children, function(child, i) {
+        result.children[i] = child.toObject();
+      }, this);
+
+      return result;
+
+    },
+
     /**
      * Anchor all children to the upper left hand corner
      * of the group.

@@ -109,6 +109,23 @@
         this.command
       );
 
+    },
+
+    toObject: function() {
+      var o = {
+        x: this.x,
+        y: this.y
+      };
+      if (this.command) {
+        o.command = this.command;
+      }
+      if (this.controls) {
+        o.controls = {
+          left: this.controls.left.toObject(),
+          right: this.controls.right.toObject()
+        };
+      }
+      return o;
     }
 
   };
