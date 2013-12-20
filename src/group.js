@@ -267,7 +267,7 @@
     getBoundingClientRect: function(shallow) {
 
       // TODO: Update this to not __always__ update. Just when it needs to.
-      this.update();
+      this._update();
 
       left = Infinity, right = -Infinity;
       top = Infinity, bottom = -Infinity;

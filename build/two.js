@@ -3710,7 +3710,7 @@ var Backbone = Backbone || {};
 
       render: function(domElement) {
 
-        this.update();
+        this._update();
 
         if (!this._renderer.elem) {
           this._renderer.elem = svg.createElement('g', {
@@ -3719,7 +3719,7 @@ var Backbone = Backbone || {};
           domElement.appendChild(this._renderer.elem);
         }
 
-        // Update styles for the <g>
+        // _Update styles for the <g>
         flagMatrix = this._matrix.manual || this._flagMatrix;
         var context = {
           domElement: domElement,
@@ -3750,7 +3750,7 @@ var Backbone = Backbone || {};
 
       render: function(domElement) {
 
-        this.update();
+        this._update();
 
         if (!this._renderer.elem) {
           this._renderer.elem = svg.createElement('path', {
@@ -3882,8 +3882,8 @@ var Backbone = Backbone || {};
 
       render: function(ctx) {
 
-        // TODO: Add a check here to only invoke update if need be.
-        this.update();
+        // TODO: Add a check here to only invoke _update if need be.
+        this._update();
 
         matrix = this._matrix.elements;
 
@@ -3905,8 +3905,8 @@ var Backbone = Backbone || {};
 
       render: function(ctx) {
 
-        // TODO: Add a check here to only invoke update if need be.
-        this.update();
+        // TODO: Add a check here to only invoke _update if need be.
+        this._update();
 
         matrix = this._matrix.elements;
         stroke = this.stroke;
@@ -4150,7 +4150,7 @@ var Backbone = Backbone || {};
 
       render: function(gl, program) {
 
-        this.update();
+        this._update();
 
         parent = this.parent;
         flagParentMatrix = (parent._matrix && parent._matrix.manual) || parent._flagMatrix;
@@ -4203,7 +4203,7 @@ var Backbone = Backbone || {};
           || this._flagVisible || this._flagCap || this._flagJoin
           || this._flagMiter || this._flagScale;
 
-        this.update();
+        this._update();
 
         if (flagParentMatrix || flagMatrix) {
 
@@ -4825,14 +4825,14 @@ var Backbone = Backbone || {};
       _.each(Shape.Properties, function(k) {
         clone[k] = this[k];
       }, this);
-      return clone.update();
+      return clone._update();
     },
 
     /**
      * To be called before render that calculates and collates all information
      * to be as up-to-date as possible for the render. Called once a frame.
      */
-    update: function() {
+    _update: function() {
 
       if (!this._matrix.manual && this._flagMatrix) {
 
@@ -5222,7 +5222,7 @@ var Backbone = Backbone || {};
     getBoundingClientRect: function(shallow) {
 
       // TODO: Update this to not __always__ update. Just when it needs to.
-      this.update();
+      this._update();
 
       border = this.linewidth / 2, temp;
       left = Infinity, right = -Infinity;
@@ -5287,7 +5287,7 @@ var Backbone = Backbone || {};
 
     subdivide: function(limit) {
 
-      this.update();
+      this._update();
 
       last = this.vertices.length - 1;
       b = this.vertices[last];
@@ -5340,7 +5340,7 @@ var Backbone = Backbone || {};
 
     },
 
-    update: function() {
+    _update: function() {
 
       if (this._flagVertices) {
 
@@ -5363,7 +5363,7 @@ var Backbone = Backbone || {};
 
       }
 
-      Two.Shape.prototype.update.call(this);
+      Two.Shape.prototype._update.call(this);
 
       return this;
 
@@ -5657,7 +5657,7 @@ var Backbone = Backbone || {};
     getBoundingClientRect: function(shallow) {
 
       // TODO: Update this to not __always__ update. Just when it needs to.
-      this.update();
+      this._update();
 
       left = Infinity, right = -Infinity;
       top = Infinity, bottom = -Infinity;

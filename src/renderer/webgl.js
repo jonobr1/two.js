@@ -40,7 +40,7 @@
 
       render: function(gl, program) {
 
-        this.update();
+        this._update();
 
         parent = this.parent;
         flagParentMatrix = (parent._matrix && parent._matrix.manual) || parent._flagMatrix;
@@ -93,7 +93,7 @@
           || this._flagVisible || this._flagCap || this._flagJoin
           || this._flagMiter || this._flagScale;
 
-        this.update();
+        this._update();
 
         if (flagParentMatrix || flagMatrix) {
 

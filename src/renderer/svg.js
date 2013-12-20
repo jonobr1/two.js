@@ -160,7 +160,7 @@
 
       render: function(domElement) {
 
-        this.update();
+        this._update();
 
         if (!this._renderer.elem) {
           this._renderer.elem = svg.createElement('g', {
@@ -169,7 +169,7 @@
           domElement.appendChild(this._renderer.elem);
         }
 
-        // Update styles for the <g>
+        // _Update styles for the <g>
         flagMatrix = this._matrix.manual || this._flagMatrix;
         var context = {
           domElement: domElement,
@@ -200,7 +200,7 @@
 
       render: function(domElement) {
 
-        this.update();
+        this._update();
 
         if (!this._renderer.elem) {
           this._renderer.elem = svg.createElement('path', {

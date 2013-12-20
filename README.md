@@ -62,7 +62,7 @@ node two.js/utils/build
 + Refactor of renderers and scenegraph for performance optimization and lower memory footprint
   - Relinquished internal _events_ for _flags_
   - Prototypical declaration of `Object.defineProperty`
-  - Added `update` and `flagReset` methods to `Two.Shape`, `Two.Group`, and `Two.Polygon`
+  - Added `_update` and `flagReset` methods to `Two.Shape`, `Two.Group`, and `Two.Polygon`
   - Decoupled `canvas` and `webgl` renderers and are now independent
   - Added `_matrix.manual` to override the default behavior of a `Two.Polygon` transformation
   - Localized variables per file as much as possible to reduce Garbage Collection on runtime

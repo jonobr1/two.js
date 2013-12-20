@@ -79,14 +79,14 @@
       _.each(Shape.Properties, function(k) {
         clone[k] = this[k];
       }, this);
-      return clone.update();
+      return clone._update();
     },
 
     /**
      * To be called before render that calculates and collates all information
      * to be as up-to-date as possible for the render. Called once a frame.
      */
-    update: function() {
+    _update: function() {
 
       if (!this._matrix.manual && this._flagMatrix) {
 

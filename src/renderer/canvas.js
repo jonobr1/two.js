@@ -23,8 +23,8 @@
 
       render: function(ctx) {
 
-        // TODO: Add a check here to only invoke update if need be.
-        this.update();
+        // TODO: Add a check here to only invoke _update if need be.
+        this._update();
 
         matrix = this._matrix.elements;
 
@@ -46,8 +46,8 @@
 
       render: function(ctx) {
 
-        // TODO: Add a check here to only invoke update if need be.
-        this.update();
+        // TODO: Add a check here to only invoke _update if need be.
+        this._update();
 
         matrix = this._matrix.elements;
         stroke = this.stroke;

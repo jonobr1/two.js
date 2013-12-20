@@ -357,7 +357,7 @@
     getBoundingClientRect: function(shallow) {
 
       // TODO: Update this to not __always__ update. Just when it needs to.
-      this.update();
+      this._update();
 
       border = this.linewidth / 2, temp;
       left = Infinity, right = -Infinity;
@@ -422,7 +422,7 @@
 
     subdivide: function(limit) {
 
-      this.update();
+      this._update();
 
       last = this.vertices.length - 1;
       b = this.vertices[last];
@@ -475,7 +475,7 @@
 
     },
 
-    update: function() {
+    _update: function() {
 
       if (this._flagVertices) {
 
@@ -498,7 +498,7 @@
 
       }
 
-      Two.Shape.prototype.update.call(this);
+      Two.Shape.prototype._update.call(this);
 
       return this;
 
