@@ -18,6 +18,7 @@
     "name": "jonobr1",
     "url": "http://jonobr1.com/"
   },
+  "main": "build/two.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/jonobr1/two.js"
