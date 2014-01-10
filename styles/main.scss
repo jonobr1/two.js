@@ -7,7 +7,7 @@
 }
 
 body {
-  font-family: 'proxima-nova', helvetica, sans-serif;
+  font-family: $font-stack;
   font-size: $font-size;
   line-height: $line-height;
   word-spacing: em(3);

@@ -1,0 +1,52 @@
+* {
+  margin: 0;
+  padding: 0; }
+
+body {
+  font-family: "proxima-nova", helvetica, sans-serif;
+  font-size: 1em;
+  line-height: 1.5em; }
+
+#controls {
+  position: absolute;
+  top: 0;
+  list-style: none;
+  width: 100%;
+  overflow: hidden; }
+  #controls > li {
+    width: 25%;
+    float: left;
+    background: #eeeeee;
+    margin-right: -1px;
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+    overflow-x: hidden; }
+    #controls > li:hover li, #controls > li.active li {
+      display: list-item !important; }
+    #controls > li li {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      border-left: 1px solid rgba(0, 0, 0, 0.1);
+      padding: 0.75em 0;
+      text-indent: 0.75em;
+      cursor: pointer; }
+      #controls > li li:not(.title) {
+        display: none;
+        list-style: circle inside;
+        background: rgba(255, 255, 255, 0.33); }
+        #controls > li li:not(.title).enabled {
+          list-style: disc inside; }
+        #controls > li li:not(.title):hover, #controls > li li:not(.title).enabled {
+          background: rgba(255, 255, 255, 0); }
+  #controls ul {
+    list-style: none; }
+  #controls li {
+    color: #555555; }
+    #controls li.title {
+      font-weight: bold; }
+
+#stage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #fff45f; }

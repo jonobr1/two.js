@@ -1,0 +1,170 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Two.js: Performance Benchmark</title>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" type="image/gif" href="../images/favicon.gif">
+    <link rel="stylesheet" type="text/css" href="../styles/performance.css">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Ubuntu+Mono:400,400italic">
+    <script type="text/javascript" src="//use.typekit.net/edp1hux.js"></script>
+    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+    <script src="../third-party/jquery.js"></script>
+    <script src="../third-party/two.js"></script>
+    <script src="../third-party/url.js"></script>
+  </head>
+  <body>
+    <div id="content">
+      <div id="stage"></div>
+      <ul id="controls">
+        <li class="renderers">
+          <ul class="select">
+            <li class="title"><span>Renderers</span></li>
+            <li class="item" name="svg"><span>SVG</span></li>
+            <li class="item" name="canvas"><span>Canvas</span></li>
+            <li class="item" name="webgl"><span>WebGL</span></li>
+          </ul>
+        </li>
+        <li class="shapes">
+          <ul class="checkbox">
+            <li class="title"><span>Shapes</span></li>
+            <li class="item" name="triangle"><span>Triangle</span></li>
+            <li class="item" name="circle"><span>Circle</span></li>
+            <li class="item" name="square"><span>Square</span></li>
+            <li class="item" name="pentagon"><span>Pentagon</span></li>
+            <li class="item" name="star"><span>Star</span></li>
+          </ul>
+        </li>
+        <li class="operations">
+          <ul class="checkbox">
+            <li class="title"><span>Operations</span></li>
+            <li class="item" name="translation"><span>Translation</span></li>
+            <li class="item" name="rotation"><span>Rotation</span></li>
+            <li class="item" name="scale"><span>Scale</span></li>
+            <li class="item" name="vertices"><span>Vertices</span></li>
+          </ul>
+        </li>
+        <li class="count">
+          <ul>
+            <li id="particle-count" class="title"><span>0</span></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <div class="scripts">
+      <script>
+
+        $(function() {
+
+          var two;
+          var $window = $(window);
+
+          var $stage = $('#stage').click(function() {
+            $('.active').each(function(i, el) {
+              $(el).removeClass('active');
+            });
+          });
+
+          $('.title').each(function(i, el) {
+            $(el).click(function() {
+              $(this).parent().parent().toggleClass('active');
+            });
+          });
+
+          $('.item').each(function(i, el) {
+
+            var type = $(el).click(function() {
+              switch (type) {
+                case 'select':
+                  $(this).parent().find('.enabled').each(function(i, el) {
+                    $(el).removeClass('enabled');
+                  });
+                  $(this).addClass('enabled');
+                  break;
+                case 'checkbox':
+                  $(this).toggleClass('enabled');
+                  break;
+              }
+              $window.trigger($(el).attr('name'));
+            }).parent().attr('class');
+
+          });
+
+          $window
+            .bind('resize', function() {
+
+              if (!two) {
+                return;
+              }
+
+              two.renderer.setSize($window.width(), $window.height());
+              two.width = two.renderer.width;
+              two.height = two.renderer.height;
+
+            })
+            .bind('svg canvas webgl', function(e) {
+
+              initializeStage(e.type);
+
+            });
+
+          // Setup Stage on page load
+          (function() {
+
+            var type = /(canvas|webgl)/.test(url.type) ? url.type : 'svg';
+            initializeStage(type);
+            $('[name=' + type + ']').addClass('enabled');
+
+          })();
+
+          function initializeStage(type) {
+
+            // Remove any previous instances
+            _.each(Two.Instances, function(two) {
+              // TODO: Unbind all custom events within the instance
+              $(two.renderer.domElement).remove();
+            });
+
+            Two.Instances.length = 0;
+
+            // Create a new instance
+            two = new Two({
+              type: Two.Types[type],
+              autoplay: true
+            }).appendTo($stage[0]);
+
+            // Setup the size
+            _.extend(two.renderer.domElement.style, {
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0
+            });
+
+            $window.resize();
+
+            two.bind('update', update);
+
+          }
+
+          function update() {
+
+
+
+          }
+
+        });
+
+      </script>
+    </div>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-40550435-1', 'github.com');
+      ga('send', 'pageview');
+    </script>
+  </body>
+</html>

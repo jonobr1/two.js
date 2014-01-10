@@ -1,0 +1,75 @@
+@import 'bourbon/bourbon';
+@import 'prereq';
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: $font-stack;
+  font-size: $font-size;
+  line-height: $line-height;
+}
+
+#controls {
+
+  position: absolute;
+  top: 0;
+  list-style: none;
+  width: 100%;
+  overflow: hidden;
+
+  & > li {
+    width: 25%;
+    float: left;
+    background: $grey;
+    margin-right: -1px;
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+    overflow-x: hidden;
+    &:hover, &.active {
+      li {
+        display: list-item !important;
+      }
+    }
+    li {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      border-left: 1px solid rgba(0, 0, 0, 0.1);
+      padding: $line-height / 2 0;
+      text-indent: $line-height / 2;
+      cursor: pointer;
+      &:not(.title) {
+        display: none;
+        list-style: circle inside;
+        background: rgba(255, 255, 255, 0.33);
+        &.enabled {
+          list-style: disc inside;
+        }
+        &:hover, &.enabled {
+          background: rgba(255, 255, 255, 0.0);
+        }
+      }
+    }
+  }
+
+  ul {
+    list-style: none;
+  }
+
+  li {
+    color: $black;
+    &.title {
+      font-weight: bold;
+    }
+  }
+
+}
+
+#stage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: $yellow;
+}
