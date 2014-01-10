@@ -1655,6 +1655,39 @@ var Backbone = Backbone || {};
 
     Utils: {
 
+      /**
+       * Release an arbitrary class' events from the two.js corpus and recurse
+       * through its children and or vertices.
+       */
+      release: function(obj) {
+
+        if (!_.isObject(obj)) {
+          return;
+        }
+
+        if (_.isFunction(obj.unbind)) {
+          obj.unbind();
+        }
+
+        if (obj.vertices) {
+          if (_.isFunction(obj.vertices.unbind)) {
+            obj.vertices.unbind();
+          }
+          _.each(obj.vertices, function(v) {
+            if (_.isFunction(v.unbind)) {
+              v.unbind();
+            }
+          });
+        }
+
+        if (obj.children) {
+          _.each(obj.children, function(obj) {
+            Two.Utils.release(obj);
+          });
+        }
+
+      },
+
       Curve: {
 
         CollinearityEpsilon: pow(10, -30),
