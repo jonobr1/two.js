@@ -11,6 +11,7 @@
     <script src="../third-party/jquery.js"></script>
     <script src="../third-party/two.js"></script>
     <script src="../third-party/url.js"></script>
+    <script src="../third-party/has.js"></script>
   </head>
   <body>
     <div id="content">
@@ -28,7 +29,7 @@
           <ul class="checkbox">
             <li class="title"><span>Shapes</span></li>
             <li class="item" name="triangle"><span>Triangle</span></li>
-            <li class="item enabled" name="circle"><span>Circle</span></li>
+            <li class="item" name="circle"><span>Circle</span></li>
             <li class="item" name="square"><span>Square</span></li>
             <li class="item" name="pentagon"><span>Pentagon</span></li>
             <li class="item" name="star"><span>Star</span></li>
@@ -37,7 +38,7 @@
         <li class="operations">
           <ul class="checkbox">
             <li class="title"><span>Operations</span></li>
-            <li class="item enabled" name="translation"><span>Translation</span></li>
+            <li class="item" name="translation"><span>Translation</span></li>
             <li class="item" name="rotation"><span>Rotation</span></li>
             <li class="item" name="scale"><span>Scale</span></li>
             <li class="item" name="vertices"><span>Vertices</span></li>
@@ -45,21 +46,42 @@
         </li>
         <li class="count">
           <ul>
-            <li id="particle-count" class="title"><span>0</span></li>
+            <li id="particle-count" class="title">
+              <button class="plus">+</button>
+              <span>0</span>
+              <button class="minus">-</button>
+            </li>
+            <li name="vertices"><span>0</span> Vertices</li>
           </ul>
         </li>
       </ul>
     </div>
+    <div id="tool-tip"></div>
     <div class="scripts">
       <script>
 
         $(function() {
 
-          var two, particles = [], radius = 50, shouldAdd = false;
-          var activeShapes = ['circle'];
+          var two, particles = [], radius = 50, shouldAdd = false, shouldRemove = false;
+          var activeOperations = _.compact((url.operations || 'translation').split(','));
+          var activeShapes = _.compact((url.shapes || 'circle').split(','));
           var colors = [
             'rgb(255, 64, 64)', 'rgb(255, 128, 0)', 'rgb(0, 200, 255)',
             'rgb(0, 191, 168)', 'rgb(153, 102, 255)', 'rgb(255, 244, 95)'
+          ];
+          var vertices = 0;
+          var flags = [
+            '_flagMatrix',
+            '_flagScale',
+            '_flagVertices',
+            '_flagFill',
+            '_flagStroke',
+            '_flagLinewidth',
+            '_flagOpacity',
+            '_flagVisible',
+            '_flagCap',
+            '_flagJoin',
+            '_flagMiter'
           ];
           var shapes = {
             triangle: {
@@ -71,7 +93,7 @@
               }
             },
             circle: {
-              enabled: true,
+              enabled: false,
               make: function() {
                 var points = generate(8);
                 var poly = new Two.Polygon(points, true, true);
@@ -105,6 +127,8 @@
                   var x = (i % 2 ? r : r2) * Math.cos(angle);
                   var y = (i % 2 ? r : r2) * Math.sin(angle);
                   var anchor = new Two.Anchor(x, y);
+                  anchor.origin = new Two.Vector().copy(anchor);
+                  vertices++;
                   return anchor;
                 });
                 var poly = new Two.Polygon(points, true);
@@ -114,7 +138,7 @@
           };
           var operations = {
             translation: {
-              enabled: true,
+              enabled: false,
               update: function(particle) {
 
                 var w = particle.scale * particle.rect.width / 2;
@@ -150,17 +174,16 @@
             vertices: {
               enabled: false,
               update: function(particle) {
-                // TODO
+                _.each(particle.vertices, function(anchor) {
+                  anchor.x = anchor.origin.x + Math.random() * 10 - 5;
+                  anchor.y = anchor.origin.y + Math.random() * 10 - 5;
+                });
               }
             }
           };
-          var $window = $(window);
 
-          var $stage = $('#stage').click(function() {
-            $('.active').each(function(i, el) {
-              $(el).removeClass('active');
-            });
-          });
+          var $window = $(window);
+          var $stage = $('#stage');
 
           $('.title').each(function(i, el) {
             $(el).click(function() {
@@ -187,18 +210,43 @@
 
           });
 
-          var $particleCount = $('#particle-count')
+          var removeAdding = function() {
+            $('#particle-count .plus').removeClass('enabled');
+            shouldAdd = false;
+            updateQueryArgs();
+            $window.unbind('mouseup', removeAdding);
+          };
+
+          var removeSubtracting = function() {
+            $('#particle-count .minus').removeClass('enabled');
+            shouldRemove = false;
+            updateQueryArgs();
+            $window.unbind('mouseup', removeSubtracting);
+          };
+
+          var $verticesCount = $('li.count [name=vertices] span');
+          var $particleCount = $('#particle-count .plus')
             .bind('mousedown touchstart', function() {
               shouldAdd = true;
               $(this).addClass('enabled');
+              $window.bind('mouseup', removeAdding);
             })
-            .bind('mouseup touchend', function() {
-              shouldAdd = false;
-              $(this).removeClass('enabled');
+            .siblings('.minus')
+            .bind('mousedown touchstart', function() {
+              shouldRemove = true;
+              $(this).addClass('enabled');
+              $window.bind('mouseup', removeSubtracting);
             })
-            .find('span');
+            .siblings('span');
 
           $window
+            .bind('mouseup', function() {
+
+              $('.active').each(function(i, el) {
+                $(el).removeClass('active');
+              });
+
+            })
             .bind('resize', function() {
 
               if (!two) {
@@ -213,6 +261,16 @@
             .bind('translation rotation scale vertices', function(e) {
 
               operations[e.type].enabled = !operations[e.type].enabled;
+              if (operations[e.type].enabled) {
+                activeOperations.push(e.type);
+              } else {
+                var index = _.indexOf(activeOperations, e.type);
+                if (index >= 0) {
+                  activeOperations.splice(index, 1);
+                }
+              }
+
+              updateQueryArgs();
 
             })
             .bind('triangle circle square pentagon star', function(e) {
@@ -227,23 +285,44 @@
                 }
               }
 
+              updateQueryArgs();
+
             })
             .bind('svg canvas webgl', function(e) {
 
               initializeStage(e.type);
+
+              updateQueryArgs();
 
             });
 
           // Setup Stage on page load
           (function() {
 
+            _.each(activeOperations, function(type) {
+              operations[type].enabled = true;
+              $('[name=' + type + ']').addClass('enabled');
+            });
+
+            _.each(activeShapes, function(type) {
+              shapes[type].enabled = true;
+              $('[name=' + type + ']').addClass('enabled');
+            });
+
             var type = /(canvas|webgl)/.test(url.type) ? url.type : 'svg';
             initializeStage(type);
             $('[name=' + type + ']').addClass('enabled');
 
+            _.each(_.range(url.int('count', 1)), addParticle);
+
           })();
 
           function initializeStage(type) {
+
+            if (type === 'webgl' && !has.webgl) {
+              alert('Yikes! This browser does not support WebGL.');
+              return;
+            }
 
             // Remove any previous instances
             _.each(Two.Instances, function(two) {
@@ -270,7 +349,20 @@
 
             $window.resize();
 
+            // Reset flags and private variables
             _.each(particles, function(particle) {
+
+              particle._renderer = { type: particle._renderer.type };
+
+              _.each(flags, function(flag) {
+
+                if (_.isUndefined(particle[flag])) {
+                  return;
+                }
+
+                particle[flag] = true;
+
+              });
 
             });
 
@@ -289,16 +381,40 @@
             particle.velocity.phase = 0;
             particle.velocity.frequency = Math.random() * Math.PI / 32;
             particle.rect = particle.getBoundingClientRect();
-            particle.translation.set(two.width / 2, two.height / 2);
+            if (two) {
+              particle.translation.set(two.width / 2, two.height / 2);
+            } else {
+              particle.translation.set($window.width() / 2, $window.height() / 2);
+            }
 
             particle.fill = colors[Math.floor(Math.random() * colors.length)];
             particle.linewidth = 3;
             particle.stroke = '#fff';
 
-            two.scene.add(particle);
+            if (two) {
+              two.scene.add(particle);
+            }
             particles.push(particle);
 
             $particleCount.html(particles.length);
+            $verticesCount.html(vertices);
+
+          }
+
+          function removeParticle() {
+
+            if (particles.length <= 0) {
+              return;
+            }
+
+            var particle = particles.pop();
+            particle.remove();
+            Two.Utils.release(particle);
+
+            vertices -= particle.vertices.length;
+
+            $particleCount.html(particles.length);
+            $verticesCount.html(vertices);
 
           }
 
@@ -306,6 +422,10 @@
 
             if (shouldAdd) {
               addParticle();
+            }
+
+            if (shouldRemove) {
+              removeParticle();
             }
 
             _.each(particles, function(particle) {
@@ -328,8 +448,46 @@
               var x = r * Math.cos(angle);
               var y = r * Math.sin(angle);
               var anchor = new Two.Anchor(x, y);
+              anchor.origin = new Two.Vector().copy(anchor);
+              vertices++;
               return anchor;
             });
+          }
+
+          var TTRL = {
+            SVGRenderer: 'svg',
+            CanvasRenderer: 'canvas',
+            WebGLRenderer: 'webgl'
+          };
+
+          function updateQueryArgs() {
+
+            var url = './performance-benchmark.html?type=' + TTRL[two.type];
+
+            if (activeShapes.length > 0) {
+
+              url += '&shapes=';
+              _.each(activeShapes, function(shape, i) {
+                url += (i > 0 ? ',' : '') + shape;
+              });
+
+            }
+
+            if (activeOperations.length > 0) {
+
+              url += '&operations=';
+              _.each(activeOperations, function(operation, i) {
+                url += (i > 0 ? ',' : '') + operation;
+              });
+
+            }
+
+            url += '&count=' + particles.length;
+
+            if (window.history && window.history.pushState) {
+              window.history.pushState({ path: url }, '', url);
+            }
+
           }
 
         });

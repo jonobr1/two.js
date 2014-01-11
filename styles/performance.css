@@ -30,20 +30,42 @@ body {
       cursor: pointer; }
       #controls > li li:not(.title) {
         display: none;
-        list-style: circle inside;
         background: rgba(255, 255, 255, 0.75); }
-        #controls > li li:not(.title).enabled {
-          list-style: disc inside; }
+        #controls > li li:not(.title).item {
+          list-style: circle inside; }
+          #controls > li li:not(.title).item.enabled {
+            list-style: disc inside; }
         #controls > li li:not(.title):hover, #controls > li li:not(.title).enabled {
           background: rgba(255, 255, 255, 0); }
-      #controls > li li#particle-count:hover, #controls > li li#particle-count.enabled {
-        background: #fff45f; }
+      #controls > li li#particle-count {
+        cursor: default; }
   #controls ul {
     list-style: none; }
   #controls li {
     color: #555555; }
+    #controls li li {
+      height: 1.5em;
+      overflow: hidden; }
     #controls li.title {
       font-weight: bold; }
+  #controls .minus, #controls .plus {
+    border-radius: 0.25em;
+    font-family: "proxima-nova", helvetica, sans-serif;
+    font-size: 1em;
+    line-height: 1.5em;
+    width: 3em;
+    background: rgba(0, 0, 0, 0.1);
+    border: 0;
+    cursor: pointer;
+    outline: none; }
+    #controls .minus:hover, #controls .plus:hover {
+      background: rgba(0, 0, 0, 0.2); }
+    #controls .minus.enabled, #controls .plus.enabled {
+      background: rgba(0, 0, 0, 0.3); }
+  #controls .plus {
+    margin-right: 1em; }
+  #controls .minus {
+    margin-left: 1em; }
 
 #stage {
   position: absolute;
@@ -51,3 +73,11 @@ body {
   left: 0;
   right: 0;
   bottom: 0; }
+
+@media (max-width: 600px) {
+  #controls li {
+    color: #000;
+    font-size: 0.8em;
+    line-height: 1.2em; }
+  #controls .plus, #controls .minus {
+    width: 1.2em; } }

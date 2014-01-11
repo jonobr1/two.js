@@ -40,19 +40,19 @@ body {
       cursor: pointer;
       &:not(.title) {
         display: none;
-        list-style: circle inside;
         background: rgba(255, 255, 255, 0.75);
-        &.enabled {
-          list-style: disc inside;
+        &.item {
+          list-style: circle inside;
+          &.enabled {
+            list-style: disc inside;
+          }
         }
         &:hover, &.enabled {
           background: rgba(255, 255, 255, 0.0);
         }
       }
       &#particle-count {
-        &:hover, &.enabled {
-          background: $yellow;
-        }
+        cursor: default;
       }
     }
   }
@@ -63,9 +63,38 @@ body {
 
   li {
     color: $black;
+    li {
+      height: $line-height;
+      overflow: hidden;
+    }
     &.title {
       font-weight: bold;
     }
+  }
+
+  .minus, .plus {
+    border-radius: $font-size / 4;
+    font-family: $font-stack;
+    font-size: $font-size;
+    line-height: $line-height;
+    width: $line-height * 2;
+    background: rgba(0, 0, 0, 0.1);
+    border: 0;
+    cursor: pointer;
+    outline: none;
+    &:hover {
+      background: rgba(0, 0, 0, 0.2);
+    }
+    &.enabled {
+      background: rgba(0, 0, 0, 0.3);
+    }
+  }
+
+  .plus {
+    margin-right: $font-size;
+  }
+  .minus {
+    margin-left: $font-size;
   }
 
 }
@@ -77,4 +106,19 @@ body {
   right: 0;
   bottom: 0;
   // background: $yellow;
+}
+
+// Mobile design
+@media (max-width: 600px) {
+  $scale: 0.8;
+  #controls {
+    li {
+      color: #000;
+      font-size: $font-size * $scale;
+      line-height: $line-height * $scale;
+    }
+    .plus, .minus {
+      width: $line-height * $scale;
+    }
+  }
 }
