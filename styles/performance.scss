@@ -41,12 +41,17 @@ body {
       &:not(.title) {
         display: none;
         list-style: circle inside;
-        background: rgba(255, 255, 255, 0.33);
+        background: rgba(255, 255, 255, 0.75);
         &.enabled {
           list-style: disc inside;
         }
         &:hover, &.enabled {
           background: rgba(255, 255, 255, 0.0);
+        }
+      }
+      &#particle-count {
+        &:hover, &.enabled {
+          background: $yellow;
         }
       }
     }
@@ -71,5 +76,5 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background: $yellow;
+  // background: $yellow;
 }

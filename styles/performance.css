@@ -31,11 +31,13 @@ body {
       #controls > li li:not(.title) {
         display: none;
         list-style: circle inside;
-        background: rgba(255, 255, 255, 0.33); }
+        background: rgba(255, 255, 255, 0.75); }
         #controls > li li:not(.title).enabled {
           list-style: disc inside; }
         #controls > li li:not(.title):hover, #controls > li li:not(.title).enabled {
           background: rgba(255, 255, 255, 0); }
+      #controls > li li#particle-count:hover, #controls > li li#particle-count.enabled {
+        background: #fff45f; }
   #controls ul {
     list-style: none; }
   #controls li {
@@ -48,5 +50,4 @@ body {
   top: 0;
   left: 0;
   right: 0;
-  bottom: 0;
-  background: #fff45f; }
+  bottom: 0; }

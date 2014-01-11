@@ -28,7 +28,7 @@
           <ul class="checkbox">
             <li class="title"><span>Shapes</span></li>
             <li class="item" name="triangle"><span>Triangle</span></li>
-            <li class="item" name="circle"><span>Circle</span></li>
+            <li class="item enabled" name="circle"><span>Circle</span></li>
             <li class="item" name="square"><span>Square</span></li>
             <li class="item" name="pentagon"><span>Pentagon</span></li>
             <li class="item" name="star"><span>Star</span></li>
@@ -37,7 +37,7 @@
         <li class="operations">
           <ul class="checkbox">
             <li class="title"><span>Operations</span></li>
-            <li class="item" name="translation"><span>Translation</span></li>
+            <li class="item enabled" name="translation"><span>Translation</span></li>
             <li class="item" name="rotation"><span>Rotation</span></li>
             <li class="item" name="scale"><span>Scale</span></li>
             <li class="item" name="vertices"><span>Vertices</span></li>
@@ -55,7 +55,105 @@
 
         $(function() {
 
-          var two;
+          var two, particles = [], radius = 50, shouldAdd = false;
+          var activeShapes = ['circle'];
+          var colors = [
+            'rgb(255, 64, 64)', 'rgb(255, 128, 0)', 'rgb(0, 200, 255)',
+            'rgb(0, 191, 168)', 'rgb(153, 102, 255)', 'rgb(255, 244, 95)'
+          ];
+          var shapes = {
+            triangle: {
+              enabled: false,
+              make: function() {
+                var points = generate(3);
+                var poly = new Two.Polygon(points, true);
+                return poly;
+              }
+            },
+            circle: {
+              enabled: true,
+              make: function() {
+                var points = generate(8);
+                var poly = new Two.Polygon(points, true, true);
+                return poly;
+              }
+            },
+            square: {
+              enabled: false,
+              make: function() {
+                var points = generate(4);
+                var poly = new Two.Polygon(points, true);
+                return poly;
+              }
+            },
+            pentagon: {
+              enabled: false,
+              make: function() {
+                var points = generate(5);
+                var poly = new Two.Polygon(points, true);
+                return poly;
+              }
+            },
+            star: {
+              enabled: false,
+              make: function() {
+                var r = Math.random() * radius + radius / 2;
+                var r2 = r / 2;
+                var points = _.map(_.range(10), function(i) {
+                  var pct = i / 10;
+                  var angle = pct * Math.PI * 2;
+                  var x = (i % 2 ? r : r2) * Math.cos(angle);
+                  var y = (i % 2 ? r : r2) * Math.sin(angle);
+                  var anchor = new Two.Anchor(x, y);
+                  return anchor;
+                });
+                var poly = new Two.Polygon(points, true);
+                return poly;
+              }
+            }
+          };
+          var operations = {
+            translation: {
+              enabled: true,
+              update: function(particle) {
+
+                var w = particle.scale * particle.rect.width / 2;
+                var h = particle.scale * particle.rect.height / 2;
+
+                particle.translation.addSelf(particle.velocity)
+
+                if ((particle.translation.x < w && particle.velocity.x < 0)
+                  || (particle.translation.x > two.width - w && particle.velocity.x > 0)) {
+                  particle.velocity.x *= -1;
+                }
+
+                if ((particle.translation.y < h && particle.velocity.y < 0)
+                  || (particle.translation.y > two.height - h && particle.velocity.y > 0)) {
+                  particle.velocity.y *= -1;
+                }
+
+              }
+            },
+            rotation: {
+              enabled: false,
+              update: function(particle) {
+                particle.rotation += particle.velocity.rotation;
+              }
+            },
+            scale: {
+              enabled: false,
+              update: function(particle) {
+                particle.scale = particle.velocity.scale * Math.sin(particle.velocity.phase % Math.PI) + 0.5;
+                particle.velocity.phase += particle.velocity.frequency;
+              }
+            },
+            vertices: {
+              enabled: false,
+              update: function(particle) {
+                // TODO
+              }
+            }
+          };
           var $window = $(window);
 
           var $stage = $('#stage').click(function() {
@@ -89,6 +187,17 @@
 
           });
 
+          var $particleCount = $('#particle-count')
+            .bind('mousedown touchstart', function() {
+              shouldAdd = true;
+              $(this).addClass('enabled');
+            })
+            .bind('mouseup touchend', function() {
+              shouldAdd = false;
+              $(this).removeClass('enabled');
+            })
+            .find('span');
+
           $window
             .bind('resize', function() {
 
@@ -99,6 +208,24 @@
               two.renderer.setSize($window.width(), $window.height());
               two.width = two.renderer.width;
               two.height = two.renderer.height;
+
+            })
+            .bind('translation rotation scale vertices', function(e) {
+
+              operations[e.type].enabled = !operations[e.type].enabled;
+
+            })
+            .bind('triangle circle square pentagon star', function(e) {
+
+              shapes[e.type].enabled = !shapes[e.type].enabled;
+              if (shapes[e.type].enabled) {
+                activeShapes.push(e.type);
+              } else {
+                var index = _.indexOf(activeShapes, e.type);
+                if (index >= 0) {
+                  activeShapes.splice(index, 1);
+                }
+              }
 
             })
             .bind('svg canvas webgl', function(e) {
@@ -120,7 +247,7 @@
 
             // Remove any previous instances
             _.each(Two.Instances, function(two) {
-              // TODO: Unbind all custom events within the instance
+              Two.Utils.release(two);
               $(two.renderer.domElement).remove();
             });
 
@@ -129,7 +256,7 @@
             // Create a new instance
             two = new Two({
               type: Two.Types[type],
-              autoplay: true
+              autostart: true
             }).appendTo($stage[0]);
 
             // Setup the size
@@ -143,14 +270,66 @@
 
             $window.resize();
 
-            two.bind('update', update);
+            _.each(particles, function(particle) {
+
+            });
+
+            two.bind('update', update).scene.add(particles);
+
+          }
+
+          function addParticle() {
+
+            var shape = activeShapes[Math.floor(Math.random() * activeShapes.length)];
+            var particle = shapes[shape].make();
+
+            particle.velocity = new Two.Vector(Math.random() * 10, Math.random() * 10);
+            particle.velocity.rotation = Math.random() * Math.PI  / 8;
+            particle.velocity.scale = Math.random() * 2;
+            particle.velocity.phase = 0;
+            particle.velocity.frequency = Math.random() * Math.PI / 32;
+            particle.rect = particle.getBoundingClientRect();
+            particle.translation.set(two.width / 2, two.height / 2);
+
+            particle.fill = colors[Math.floor(Math.random() * colors.length)];
+            particle.linewidth = 3;
+            particle.stroke = '#fff';
+
+            two.scene.add(particle);
+            particles.push(particle);
+
+            $particleCount.html(particles.length);
 
           }
 
           function update() {
 
+            if (shouldAdd) {
+              addParticle();
+            }
 
+            _.each(particles, function(particle) {
 
+              _.each(operations, function(operation) {
+                if (operation.enabled) {
+                  operation.update(particle);
+                }
+              });
+
+            });
+
+          }
+
+          function generate(amount) {
+            var r = Math.random() * radius + radius / 2;
+            return _.map(_.range(amount), function(i) {
+              var pct = i / amount;
+              var angle = pct * Math.PI * 2;
+              var x = r * Math.cos(angle);
+              var y = r * Math.sin(angle);
+              var anchor = new Two.Anchor(x, y);
+              return anchor;
+            });
           }
 
         });
