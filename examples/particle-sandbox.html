@@ -240,7 +240,7 @@
             .siblings('span');
 
           $window
-            .bind('mouseup', function() {
+            .bind('mouseup touchend', function() {
 
               $('.active').each(function(i, el) {
                 $(el).removeClass('active');
