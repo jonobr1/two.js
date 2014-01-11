@@ -2,6 +2,11 @@
   "template": "<li><a href=\"<%= href %>\" target=\"_blank\"><img width=\"143\" height=\"100\" src=\"<%= img %>\" alt=\"\"><h3><p><%= title %></p></h3></a></li>",
   "items": [
     {
+      "title": "Particle Sandbox",
+      "href": "examples/particle-sandbox.html",
+      "img": "images/examples/particles.gif"
+    },
+    {
       "title": "Advanced Anchors",
       "href": "examples/advanced-anchors.html",
       "img": "images/examples/anchors.gif"
