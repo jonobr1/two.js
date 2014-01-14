@@ -1573,6 +1573,8 @@ var Backbone = Backbone || {};
       });
       _.extend(this.renderer.domElement.style, {
         display: 'block',
+        width: 100 + '%',
+        height: 100 + '%',
         top: 0,
         left: 0,
         right: 0,
