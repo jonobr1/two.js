@@ -2727,21 +2727,15 @@ var Backbone = Backbone || {};
 
   (function() {
 
-    var loop = function() {
+    requestAnimationFrame(arguments.callee);
 
-      requestAnimationFrame(loop);
+    _.each(Two.Instances, function(t) {
 
-      _.each(Two.Instances, function(t) {
+      if (t.playing) {
+        t.update();
+      }
 
-        if (t.playing) {
-          t.update();
-        }
-
-      });
-
-    };
-
-    loop();
+    });
 
   })();
 
