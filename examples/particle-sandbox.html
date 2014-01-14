@@ -239,14 +239,16 @@
             })
             .siblings('span');
 
-          $window
+          $stage
             .bind('mouseup touchend', function() {
 
               $('.active').each(function(i, el) {
                 $(el).removeClass('active');
               });
 
-            })
+            });
+
+          $window
             .bind('resize', function() {
 
               if (!two) {
