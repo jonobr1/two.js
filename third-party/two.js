@@ -2708,8 +2708,10 @@ var Backbone = Backbone || {};
 
   function fitToWindow() {
 
-    var width = this.width = screen.width;
-    var height = this.height = screen.height;
+    var wr = document.body.getBoundingClientRect();
+
+    var width = this.width = wr.width;
+    var height = this.height = wr.height;
 
     this.renderer.setSize(width, height, this.ratio);
     this.trigger(Two.Events.resize, width, height);
