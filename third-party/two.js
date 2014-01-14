@@ -2708,7 +2708,7 @@ var Backbone = Backbone || {};
 
   function fitToWindow() {
 
-    var wr = document.body.getBoundingClientRect();
+    var wr = screen;
 
     var width = this.width = wr.width;
     var height = this.height = wr.height;
