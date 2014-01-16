@@ -55,6 +55,7 @@ node two.js/utils/build
 ## Change Log
 
 ##### Nightly
++ Fixed `Two.Group` `clone` method
 + Added `toObject` method to `Two.Group`, `Two.Polygon`, `Two.Anchor`
 + `Two.Polygon` initiailizes `polygon.cap = 'butt'` and `polygon.join = 'miter'` based on Adobe Illustrator defaults
 + `Two.Polygon.subdivide` method now works with `Two.Commands.move` for noncontiguous polygons
