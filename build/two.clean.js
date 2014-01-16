@@ -4073,13 +4073,12 @@
 
       parent = parent || this.parent;
 
-      children = _.map(this.children, function(child) {
-        return child.clone();
-      });
-
       group = new Group();
       parent.add(group);
-      group.add(children);
+
+      children = _.map(this.children, function(child) {
+        return child.clone(group);
+      });
 
       group.translation.copy(this.translation);
       group.rotation = this.rotation;
