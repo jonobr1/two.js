@@ -8,6 +8,7 @@
     <link rel="shortcut icon" type="image/gif" href="../images/favicon.gif">
     <script src="../third-party/jquery.js"></script>
     <script src="../third-party/two.js"></script>
+    <script src="../third-party/url.js"></script>
     <style>
       body {
         background: rgb(253, 109, 109);
@@ -20,7 +21,9 @@
 
         $(function() {
 
+          var type = /(canvas|webgl)/.test(url.type) ? url.type : 'svg';
           var two = new Two({
+            type: Two.Types[type],
             fullscreen: true
           }).appendTo(document.body);
 
