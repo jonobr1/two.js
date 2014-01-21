@@ -53,12 +53,16 @@
               shadow.offset.x = 5 * radius * (mouse.x - two.width / 2) / two.width;
               shadow.offset.y = 5 * radius * (mouse.y - two.height / 2) / two.height;
             })
+            .bind('touchstart', function() {
+              return false;
+            })
             .bind('touchmove', function(e) {
               var touch = e.originalEvent.changedTouches[0]
               mouse.x = touch.pageX;
               mouse.y = touch.pageY;
               shadow.offset.x = 5 * radius * (mouse.x - two.width / 2) / two.width;
               shadow.offset.y = 5 * radius * (mouse.y - two.height / 2) / two.height;
+              return false;
             });
 
           two.bind('update', function() {
