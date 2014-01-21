@@ -54,9 +54,11 @@
               shadow.offset.y = 5 * radius * (mouse.y - two.height / 2) / two.height;
             })
             .bind('touchstart', function() {
+              e.preventDefault();
               return false;
             })
             .bind('touchmove', function(e) {
+              e.preventDefault();
               var touch = e.originalEvent.changedTouches[0]
               mouse.x = touch.pageX;
               mouse.y = touch.pageY;
