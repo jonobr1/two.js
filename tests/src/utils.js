@@ -8,6 +8,7 @@
   var root = this;
   var QU = root.QUnit || {};
   var TEMP = document.createElement('div');
+  var Tolerance = 0.001;
 
   var Utils = root.Utils = QU.Utils = {
 
@@ -163,12 +164,14 @@
 
       for (var i in a) {
 
-        var check;
+        var check, isElse = false;
 
         if (_.isArray(a[i])) {
           check = Utils.shapeEquals(a[i], _.toArray(q[i]));
         } else if (_.isObject(a[i])) {
           check = Utils.shapeEquals(a[i], q[i]);
+        } else if (_.isNumber(a[i])) {
+          check = Math.abs(a[i] - q[i]) <= Tolerance; // Fuzzy checking
         } else {
           check = q[i] === a[i];
         }
