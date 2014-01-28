@@ -370,6 +370,7 @@
         },
 
         polygon: function(node, open) {
+
           var points = node.getAttribute('points');
 
           var verts = [];
@@ -378,6 +379,7 @@
           });
 
           var poly = new Two.Polygon(verts, !open).noStroke();
+          poly.fill = 'black';
 
           return Two.Utils.applySvgAttributes(node, poly);
 
@@ -595,6 +597,7 @@
           points = _.compact(points);
 
           var poly = new Two.Polygon(points, closed, undefined, true).noStroke();
+          poly.fill = 'black';
 
           return Two.Utils.applySvgAttributes(node, poly);
 
@@ -617,6 +620,7 @@
 
           var circle = new Two.Polygon(points, true, true).noStroke();
           circle.translation.set(x, y);
+          circle.fill = 'black';
 
           return Two.Utils.applySvgAttributes(node, circle);
 
@@ -640,6 +644,7 @@
 
           var ellipse = new Two.Polygon(points, true, true).noStroke();
           ellipse.translation.set(x, y);
+          ellipse.fill = 'black';
 
           return Two.Utils.applySvgAttributes(node, ellipse);
 
@@ -664,6 +669,7 @@
 
           var rect = new Two.Polygon(points, true).noStroke();
           rect.translation.set(x + w2, y + h2);
+          rect.fill = 'black';
 
           return Two.Utils.applySvgAttributes(node, rect);
 
