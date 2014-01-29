@@ -61,7 +61,8 @@
     toString: function(points, closed) {
 
       var l = points.length,
-        last = l - 1;
+        last = l - 1,
+        d;  // The elusive last Two.Commands.move point
 
       return _.map(points, function(b, i) {
 
@@ -98,9 +99,13 @@
               + ' ' + vx + ' ' + vy + ' ' + ux + ' ' + uy + ' ' + x + ' ' + y;
             break;
 
+          case Two.Commands.move:
+            d = b;
+            command = Two.Commands.move + ' ' + x + ' ' + y;
+            break;
+
           default:
-            command = (i === 0 ? Two.Commands.move : b._command)
-              + ' ' + x + ' ' + y;
+            command = b._command + ' ' + x + ' ' + y;
 
         }
 
@@ -109,6 +114,9 @@
         if (i >= last && closed) {
 
           if (b._command === Two.Commands.curve) {
+
+            // Make sure we close to the most previous Two.Commands.move
+            c = d;
 
             br = (b.controls && b.controls.right) || b;
             cl = (c.controls && c.controls.left) || c;

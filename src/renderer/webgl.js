@@ -335,6 +335,8 @@
 
             if (i >= last && closed) {
 
+              c = d;
+
               br = (b.controls && b.controls.right) || b;
               cl = (c.controls && c.controls.left) || c;
 
@@ -358,6 +360,7 @@
             break;
 
           case Two.Commands.move:
+            d = b;
             ctx.moveTo(x, y);
             break;
 

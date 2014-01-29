@@ -3650,7 +3650,8 @@ var Backbone = Backbone || {};
     toString: function(points, closed) {
 
       var l = points.length,
-        last = l - 1;
+        last = l - 1,
+        d;  // The elusive last Two.Commands.move point
 
       return _.map(points, function(b, i) {
 
@@ -3687,9 +3688,13 @@ var Backbone = Backbone || {};
               + ' ' + vx + ' ' + vy + ' ' + ux + ' ' + uy + ' ' + x + ' ' + y;
             break;
 
+          case Two.Commands.move:
+            d = b;
+            command = Two.Commands.move + ' ' + x + ' ' + y;
+            break;
+
           default:
-            command = (i === 0 ? Two.Commands.move : b._command)
-              + ' ' + x + ' ' + y;
+            command = b._command + ' ' + x + ' ' + y;
 
         }
 
@@ -3698,6 +3703,9 @@ var Backbone = Backbone || {};
         if (i >= last && closed) {
 
           if (b._command === Two.Commands.curve) {
+
+            // Make sure we close to the most previous Two.Commands.move
+            c = d;
 
             br = (b.controls && b.controls.right) || b;
             cl = (c.controls && c.controls.left) || c;
@@ -3909,7 +3917,7 @@ var Backbone = Backbone || {};
   // Localized variables
   var matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter,
     closed, commands, length, last;
-  var next, prev, a, c, ux, uy, vx, vy, ar, bl, br, cl, x, y;
+  var next, prev, a, c, d, ux, uy, vx, vy, ar, bl, br, cl, x, y;
 
   var canvas = {
 
@@ -4028,6 +4036,8 @@ var Backbone = Backbone || {};
 
               if (i >= last && closed) {
 
+                c = d;
+
                 br = (b.controls && b.controls.right) || b;
                 cl = (c.controls && c.controls.left) || c;
 
@@ -4051,6 +4061,7 @@ var Backbone = Backbone || {};
               break;
 
             case Two.Commands.move:
+              d = b;
               ctx.moveTo(x, y);
               break;
 
@@ -4484,6 +4495,8 @@ var Backbone = Backbone || {};
 
             if (i >= last && closed) {
 
+              c = d;
+
               br = (b.controls && b.controls.right) || b;
               cl = (c.controls && c.controls.left) || c;
 
@@ -4507,6 +4520,7 @@ var Backbone = Backbone || {};
             break;
 
           case Two.Commands.move:
+            d = b;
             ctx.moveTo(x, y);
             break;
 

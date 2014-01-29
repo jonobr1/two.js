@@ -11,7 +11,7 @@
   // Localized variables
   var matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter,
     closed, commands, length, last;
-  var next, prev, a, c, ux, uy, vx, vy, ar, bl, br, cl, x, y;
+  var next, prev, a, c, d, ux, uy, vx, vy, ar, bl, br, cl, x, y;
 
   var canvas = {
 
@@ -130,6 +130,8 @@
 
               if (i >= last && closed) {
 
+                c = d;
+
                 br = (b.controls && b.controls.right) || b;
                 cl = (c.controls && c.controls.left) || c;
 
@@ -153,6 +155,7 @@
               break;
 
             case Two.Commands.move:
+              d = b;
               ctx.moveTo(x, y);
               break;
 
