@@ -431,7 +431,12 @@
 
       _.each(this.vertices, function(a, i) {
 
-        if ((i <= 0 && !closed) || a.command === Two.Commands.move) {
+        if (i <= 0 && !closed) {
+          b = a;
+          return;
+        }
+
+        if (a.command === Two.Commands.move) {
           points.push(new Two.Anchor(b.x, b.y));
           points[points.length - 1].command = Two.Commands.line;
           b = a;
