@@ -1843,6 +1843,7 @@ var Backbone = Backbone || {};
         },
 
         polygon: function(node, open) {
+
           var points = node.getAttribute('points');
 
           var verts = [];
@@ -1851,6 +1852,7 @@ var Backbone = Backbone || {};
           });
 
           var poly = new Two.Polygon(verts, !open).noStroke();
+          poly.fill = 'black';
 
           return Two.Utils.applySvgAttributes(node, poly);
 
@@ -2068,6 +2070,7 @@ var Backbone = Backbone || {};
           points = _.compact(points);
 
           var poly = new Two.Polygon(points, closed, undefined, true).noStroke();
+          poly.fill = 'black';
 
           return Two.Utils.applySvgAttributes(node, poly);
 
@@ -2090,6 +2093,7 @@ var Backbone = Backbone || {};
 
           var circle = new Two.Polygon(points, true, true).noStroke();
           circle.translation.set(x, y);
+          circle.fill = 'black';
 
           return Two.Utils.applySvgAttributes(node, circle);
 
@@ -2113,6 +2117,7 @@ var Backbone = Backbone || {};
 
           var ellipse = new Two.Polygon(points, true, true).noStroke();
           ellipse.translation.set(x, y);
+          ellipse.fill = 'black';
 
           return Two.Utils.applySvgAttributes(node, ellipse);
 
@@ -2137,6 +2142,7 @@ var Backbone = Backbone || {};
 
           var rect = new Two.Polygon(points, true).noStroke();
           rect.translation.set(x + w2, y + h2);
+          rect.fill = 'black';
 
           return Two.Utils.applySvgAttributes(node, rect);
 
@@ -2685,7 +2691,7 @@ var Backbone = Backbone || {};
     /**
      * Interpret an SVG Node and add it to this instance's scene. The
      * distinction should be made that this doesn't `import` svg's, it solely
-     * interprets them into something compatible for Two.js — this is slightly
+     * interprets them into something compatible for Two.js — this is slightly
      * different than a direct transcription.
      */
     interpret: function(svgNode) {
@@ -3644,7 +3650,8 @@ var Backbone = Backbone || {};
     toString: function(points, closed) {
 
       var l = points.length,
-        last = l - 1;
+        last = l - 1,
+        d;  // The elusive last Two.Commands.move point
 
       return _.map(points, function(b, i) {
 
@@ -3681,9 +3688,13 @@ var Backbone = Backbone || {};
               + ' ' + vx + ' ' + vy + ' ' + ux + ' ' + uy + ' ' + x + ' ' + y;
             break;
 
+          case Two.Commands.move:
+            d = b;
+            command = Two.Commands.move + ' ' + x + ' ' + y;
+            break;
+
           default:
-            command = (i === 0 ? Two.Commands.move : b._command)
-              + ' ' + x + ' ' + y;
+            command = b._command + ' ' + x + ' ' + y;
 
         }
 
@@ -3692,6 +3703,9 @@ var Backbone = Backbone || {};
         if (i >= last && closed) {
 
           if (b._command === Two.Commands.curve) {
+
+            // Make sure we close to the most previous Two.Commands.move
+            c = d;
 
             br = (b.controls && b.controls.right) || b;
             cl = (c.controls && c.controls.left) || c;
@@ -3903,7 +3917,7 @@ var Backbone = Backbone || {};
   // Localized variables
   var matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter,
     closed, commands, length, last;
-  var next, prev, a, c, ux, uy, vx, vy, ar, bl, br, cl, x, y;
+  var next, prev, a, c, d, ux, uy, vx, vy, ar, bl, br, cl, x, y;
 
   var canvas = {
 
@@ -4022,6 +4036,8 @@ var Backbone = Backbone || {};
 
               if (i >= last && closed) {
 
+                c = d;
+
                 br = (b.controls && b.controls.right) || b;
                 cl = (c.controls && c.controls.left) || c;
 
@@ -4045,6 +4061,7 @@ var Backbone = Backbone || {};
               break;
 
             case Two.Commands.move:
+              d = b;
               ctx.moveTo(x, y);
               break;
 
@@ -4478,6 +4495,8 @@ var Backbone = Backbone || {};
 
             if (i >= last && closed) {
 
+              c = d;
+
               br = (b.controls && b.controls.right) || b;
               cl = (c.controls && c.controls.left) || c;
 
@@ -4501,6 +4520,7 @@ var Backbone = Backbone || {};
             break;
 
           case Two.Commands.move:
+            d = b;
             ctx.moveTo(x, y);
             break;
 
@@ -5329,7 +5349,12 @@ var Backbone = Backbone || {};
 
       _.each(this.vertices, function(a, i) {
 
-        if ((i <= 0 && !closed) || a.command === Two.Commands.move) {
+        if (i <= 0 && !closed) {
+          b = a;
+          return;
+        }
+
+        if (a.command === Two.Commands.move) {
           points.push(new Two.Anchor(b.x, b.y));
           points[points.length - 1].command = Two.Commands.line;
           b = a;
@@ -5517,13 +5542,12 @@ var Backbone = Backbone || {};
 
       parent = parent || this.parent;
 
-      children = _.map(this.children, function(child) {
-        return child.clone();
-      });
-
       group = new Group();
       parent.add(group);
-      group.add(children);
+
+      children = _.map(this.children, function(child) {
+        return child.clone(group);
+      });
 
       group.translation.copy(this.translation);
       group.rotation = this.rotation;
