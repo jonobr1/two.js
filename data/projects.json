@@ -2,6 +2,11 @@
   "template": "<li><a href=\"<%= href %>\" target=\"_blank\"><img width=\"143\" height=\"100\" src=\"<%= img %>\" alt=\"\"><h3><p><%= title %></p></h3></a></li>",
   "items": [
     {
+      "title": "IDEOGRAM",
+      "href": "http://lab.johnwai.co.uk/ideogram/",
+      "img": "images/projects/ideogram.gif"
+    },
+    {
       "title": "Super Flying Tokyo",
       "href": "http://www.rhizomatiks.com/event/superflyingtokyo/makingshapesmove/#/about",
       "img": "images/projects/super-flying-tokyo.gif"
