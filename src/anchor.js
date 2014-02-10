@@ -1,7 +1,7 @@
 (function() {
 
   // Localized variables
-  var commands = Two.Commands, x, y, controls;
+  var commands = Two.Commands, x, y, o, controls, clone;
 
   /**
    * An object that holds 3 `Two.Vector`s, the anchor point and its
@@ -15,29 +15,15 @@
       this.trigger(Two.Events.change);
     }, this);
 
-    Object.defineProperty(this, 'command', {
-
-      get: function() {
-        return this._command;
-      },
-
-      set: function(c) {
-        this._command = c;
-        if (this._command === commands.curve && !_.isObject(this.controls)) {
-          Anchor.AppendCurveProperties(this);
-        }
-        return this.trigger(Two.Events.change);
-      }
-
-    });
-
     this._command = command || commands.move;
+    this._relative = true;
 
     if (!command) {
       return this;
     }
 
     Anchor.AppendCurveProperties(this);
+
     if (_.isNumber(ux)) {
       this.controls.left.x = ux;
     }
@@ -61,8 +47,8 @@
       y = anchor._y || anchor.y;
 
       anchor.controls = {
-        left: new Two.Vector(x, y),
-        right: new Two.Vector(x, y)
+        left: new Two.Vector(0, 0),
+        right: new Two.Vector(0, 0)
       };
 
     }
@@ -99,7 +85,7 @@
 
       controls = this.controls;
 
-      return new Two.Anchor(
+      clone = new Two.Anchor(
         this.x,
         this.y,
         controls && controls.left.x,
@@ -108,11 +94,13 @@
         controls && controls.right.y,
         this.command
       );
+      clone.relative = this._relative;
+      return clone;
 
     },
 
     toObject: function() {
-      var o = {
+      o = {
         x: this.x,
         y: this.y
       };
@@ -130,12 +118,49 @@
 
   };
 
+  Object.defineProperty(Anchor.prototype, 'command', {
+
+    get: function() {
+      return this._command;
+    },
+
+    set: function(c) {
+      this._command = c;
+      if (this._command === commands.curve && !_.isObject(this.controls)) {
+        Anchor.AppendCurveProperties(this);
+      }
+      return this.trigger(Two.Events.change);
+    }
+
+  });
+
+  Object.defineProperty(Anchor.prototype, 'relative', {
+
+    get: function() {
+      return this._relative;
+    },
+
+    set: function(b) {
+      if (this._relative == b) {
+        return this;
+      }
+      this._relative = !!b;
+      return this.trigger(Two.Events.change);
+    }
+
+  });
+
   _.extend(Anchor.prototype, Two.Vector.prototype, AnchorProto);
 
   // Make it possible to bind and still have the Anchor specific
-  // inheritance.
+  // inheritance from Two.Vector
   Two.Anchor.prototype.bind = Two.Anchor.prototype.on = function() {
     Two.Vector.prototype.bind.apply(this, arguments);
+    _.extend(this, AnchorProto);
+  };
+
+  Two.Anchor.prototype.unbind = Two.Anchor.prototype.off = function() {
+    Two.Vector.prototype.unbind.apply(this, arguments);
     _.extend(this, AnchorProto);
   };
 

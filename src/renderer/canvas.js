@@ -120,11 +120,21 @@
               ar = (a.controls && a.controls.right) || a;
               bl = (b.controls && b.controls.left) || b;
 
-              vx = ar.x.toFixed(3);
-              vy = ar.y.toFixed(3);
+              if (a._relative) {
+                vx = (ar.x + a.x).toFixed(3);
+                vy = (ar.y + a.y).toFixed(3);
+              } else {
+                vx = ar.x.toFixed(3);
+                vy = ar.y.toFixed(3);
+              }
 
-              ux = bl.x.toFixed(3);
-              uy = bl.y.toFixed(3);
+              if (b._relative) {
+                ux = (bl.x + b.x).toFixed(3);
+                uy = (bl.y + b.y).toFixed(3);
+              } else {
+                ux = bl.x.toFixed(3);
+                uy = bl.y.toFixed(3);
+              }
 
               ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
 
@@ -135,11 +145,21 @@
                 br = (b.controls && b.controls.right) || b;
                 cl = (c.controls && c.controls.left) || c;
 
-                vx = br.x.toFixed(3);
-                vy = br.y.toFixed(3);
+                if (b._relative) {
+                  vx = (br.x + b.x).toFixed(3);
+                  vy = (br.y + b.y).toFixed(3);
+                } else {
+                  vx = br.x.toFixed(3);
+                  vy = br.y.toFixed(3);
+                }
 
-                ux = cl.x.toFixed(3);
-                uy = cl.y.toFixed(3);
+                if (c._relative) {
+                  ux = (cl.x + c.x).toFixed(3);
+                  uy = (cl.y + c.y).toFixed(3);
+                } else {
+                  ux = cl.x.toFixed(3);
+                  uy = cl.y.toFixed(3);
+                }
 
                 x = c.x.toFixed(3);
                 y = c.y.toFixed(3);

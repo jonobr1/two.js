@@ -449,8 +449,8 @@
                   result.addSelf(coord);
                 }
 
-                result.controls.left.copy(result);
-                result.controls.right.copy(result);
+                // result.controls.left.copy(result);
+                // result.controls.right.copy(result);
 
                 coord = result;
                 break;
@@ -474,8 +474,8 @@
                   result[a] += coord[a];
                 }
 
-                result.controls.left.copy(result);
-                result.controls.right.copy(result);
+                // result.controls.left.copy(result);
+                // result.controls.right.copy(result);
 
                 coord = result;
                 break;
@@ -517,10 +517,10 @@
                   Two.Anchor.AppendCurveProperties(coord);
                 }
 
-                coord.controls.right.set(x2, y2);
+                coord.controls.right.set(x2 - coord.x, y2 - coord.y);
                 result = new Two.Anchor(
                   x4, y4,
-                  x3, y3,
+                  x3 - x4, y3 - y4,
                   undefined, undefined,
                   Two.Commands.curve
                 );
@@ -569,10 +569,10 @@
                   Two.Anchor.AppendCurveProperties(coord);
                 }
 
-                coord.controls.right.set(x2, y2);
+                coord.controls.right.set(x2 - coord.x, y2 - coord.y);
                 result = new Two.Anchor(
                   x4, y4,
-                  x3, y3,
+                  x3 - x4, y3 - y4,
                   undefined, undefined,
                   Two.Commands.curve
                 );
@@ -783,12 +783,14 @@
 
         // So we know which angle corresponds to which side.
 
-        b.u = _.isObject(b.controls.left) ? b.controls.left : new Two.Vector(b.x, b.y);
-        b.v = _.isObject(b.controls.right) ? b.controls.right : new Two.Vector(b.x, b.y);
+        b.u = _.isObject(b.controls.left) ? b.controls.left : new Two.Vector(0, 0);
+        b.v = _.isObject(b.controls.right) ? b.controls.right : new Two.Vector(0, 0);
 
         if (d1 < 0.0001 || d2 < 0.0001) {
-          b.controls.left.copy(b);
-          b.controls.right.copy(b);
+          if (!b._relative) {
+            b.controls.left.copy(b);
+            b.controls.right.copy(b);
+          }
           return b;
         }
 
@@ -801,13 +803,20 @@
           mid -= HALF_PI;
         }
 
-        b.controls.left.x = b.x + cos(mid) * d1;
-        b.controls.left.y = b.y + sin(mid) * d1;
+        b.controls.left.x = cos(mid) * d1;
+        b.controls.left.y = sin(mid) * d1;
 
         mid -= PI;
 
-        b.controls.right.x = b.x + cos(mid) * d2;
-        b.controls.right.y = b.y + sin(mid) * d2;
+        b.controls.right.x = cos(mid) * d2;
+        b.controls.right.y = sin(mid) * d2;
+
+        if (!b._relative) {
+          b.controls.left.x += b.x;
+          b.controls.left.y += b.y;
+          b.controls.right.x += b.x;
+          b.controls.right.y += b.y;
+        }
 
         return b;
 

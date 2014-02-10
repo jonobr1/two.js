@@ -478,8 +478,8 @@
                   result.addSelf(coord);
                 }
 
-                result.controls.left.copy(result);
-                result.controls.right.copy(result);
+                // result.controls.left.copy(result);
+                // result.controls.right.copy(result);
 
                 coord = result;
                 break;
@@ -503,8 +503,8 @@
                   result[a] += coord[a];
                 }
 
-                result.controls.left.copy(result);
-                result.controls.right.copy(result);
+                // result.controls.left.copy(result);
+                // result.controls.right.copy(result);
 
                 coord = result;
                 break;
@@ -546,10 +546,10 @@
                   Two.Anchor.AppendCurveProperties(coord);
                 }
 
-                coord.controls.right.set(x2, y2);
+                coord.controls.right.set(x2 - coord.x, y2 - coord.y);
                 result = new Two.Anchor(
                   x4, y4,
-                  x3, y3,
+                  x3 - x4, y3 - y4,
                   undefined, undefined,
                   Two.Commands.curve
                 );
@@ -598,10 +598,10 @@
                   Two.Anchor.AppendCurveProperties(coord);
                 }
 
-                coord.controls.right.set(x2, y2);
+                coord.controls.right.set(x2 - coord.x, y2 - coord.y);
                 result = new Two.Anchor(
                   x4, y4,
-                  x3, y3,
+                  x3 - x4, y3 - y4,
                   undefined, undefined,
                   Two.Commands.curve
                 );
@@ -812,12 +812,14 @@
 
         // So we know which angle corresponds to which side.
 
-        b.u = _.isObject(b.controls.left) ? b.controls.left : new Two.Vector(b.x, b.y);
-        b.v = _.isObject(b.controls.right) ? b.controls.right : new Two.Vector(b.x, b.y);
+        b.u = _.isObject(b.controls.left) ? b.controls.left : new Two.Vector(0, 0);
+        b.v = _.isObject(b.controls.right) ? b.controls.right : new Two.Vector(0, 0);
 
         if (d1 < 0.0001 || d2 < 0.0001) {
-          b.controls.left.copy(b);
-          b.controls.right.copy(b);
+          if (!b._relative) {
+            b.controls.left.copy(b);
+            b.controls.right.copy(b);
+          }
           return b;
         }
 
@@ -830,13 +832,20 @@
           mid -= HALF_PI;
         }
 
-        b.controls.left.x = b.x + cos(mid) * d1;
-        b.controls.left.y = b.y + sin(mid) * d1;
+        b.controls.left.x = cos(mid) * d1;
+        b.controls.left.y = sin(mid) * d1;
 
         mid -= PI;
 
-        b.controls.right.x = b.x + cos(mid) * d2;
-        b.controls.right.y = b.y + sin(mid) * d2;
+        b.controls.right.x = cos(mid) * d2;
+        b.controls.right.y = sin(mid) * d2;
+
+        if (!b._relative) {
+          b.controls.left.x += b.x;
+          b.controls.left.y += b.y;
+          b.controls.right.x += b.x;
+          b.controls.right.y += b.y;
+        }
 
         return b;
 
@@ -1624,7 +1633,7 @@
 (function() {
 
   // Localized variables
-  var commands = Two.Commands, x, y, controls;
+  var commands = Two.Commands, x, y, o, controls, clone;
 
   /**
    * An object that holds 3 `Two.Vector`s, the anchor point and its
@@ -1638,29 +1647,15 @@
       this.trigger(Two.Events.change);
     }, this);
 
-    Object.defineProperty(this, 'command', {
-
-      get: function() {
-        return this._command;
-      },
-
-      set: function(c) {
-        this._command = c;
-        if (this._command === commands.curve && !_.isObject(this.controls)) {
-          Anchor.AppendCurveProperties(this);
-        }
-        return this.trigger(Two.Events.change);
-      }
-
-    });
-
     this._command = command || commands.move;
+    this._relative = true;
 
     if (!command) {
       return this;
     }
 
     Anchor.AppendCurveProperties(this);
+
     if (_.isNumber(ux)) {
       this.controls.left.x = ux;
     }
@@ -1684,8 +1679,8 @@
       y = anchor._y || anchor.y;
 
       anchor.controls = {
-        left: new Two.Vector(x, y),
-        right: new Two.Vector(x, y)
+        left: new Two.Vector(0, 0),
+        right: new Two.Vector(0, 0)
       };
 
     }
@@ -1722,7 +1717,7 @@
 
       controls = this.controls;
 
-      return new Two.Anchor(
+      clone = new Two.Anchor(
         this.x,
         this.y,
         controls && controls.left.x,
@@ -1731,11 +1726,13 @@
         controls && controls.right.y,
         this.command
       );
+      clone.relative = this._relative;
+      return clone;
 
     },
 
     toObject: function() {
-      var o = {
+      o = {
         x: this.x,
         y: this.y
       };
@@ -1753,12 +1750,49 @@
 
   };
 
+  Object.defineProperty(Anchor.prototype, 'command', {
+
+    get: function() {
+      return this._command;
+    },
+
+    set: function(c) {
+      this._command = c;
+      if (this._command === commands.curve && !_.isObject(this.controls)) {
+        Anchor.AppendCurveProperties(this);
+      }
+      return this.trigger(Two.Events.change);
+    }
+
+  });
+
+  Object.defineProperty(Anchor.prototype, 'relative', {
+
+    get: function() {
+      return this._relative;
+    },
+
+    set: function(b) {
+      if (this._relative == b) {
+        return this;
+      }
+      this._relative = !!b;
+      return this.trigger(Two.Events.change);
+    }
+
+  });
+
   _.extend(Anchor.prototype, Two.Vector.prototype, AnchorProto);
 
   // Make it possible to bind and still have the Anchor specific
-  // inheritance.
+  // inheritance from Two.Vector
   Two.Anchor.prototype.bind = Two.Anchor.prototype.on = function() {
     Two.Vector.prototype.bind.apply(this, arguments);
+    _.extend(this, AnchorProto);
+  };
+
+  Two.Anchor.prototype.unbind = Two.Anchor.prototype.off = function() {
+    Two.Vector.prototype.unbind.apply(this, arguments);
     _.extend(this, AnchorProto);
   };
 
@@ -2234,11 +2268,21 @@
             var ar = (a.controls && a.controls.right) || a;
             var bl = (b.controls && b.controls.left) || b;
 
-            vx = ar.x.toFixed(3);
-            vy = ar.y.toFixed(3);
+            if (a._relative) {
+              vx = (ar.x + a.x).toFixed(3);
+              vy = (ar.y + a.y).toFixed(3);
+            } else {
+              vx = ar.x.toFixed(3);
+              vy = ar.y.toFixed(3);
+            }
 
-            ux = bl.x.toFixed(3);
-            uy = bl.y.toFixed(3);
+            if (b._relative) {
+              ux = (bl.x + b.x).toFixed(3);
+              uy = (bl.y + b.y).toFixed(3);
+            } else {
+              ux = bl.x.toFixed(3);
+              uy = bl.y.toFixed(3);
+            }
 
             command = ((i === 0) ? Two.Commands.move : Two.Commands.curve)
               + ' ' + vx + ' ' + vy + ' ' + ux + ' ' + uy + ' ' + x + ' ' + y;
@@ -2266,11 +2310,21 @@
             br = (b.controls && b.controls.right) || b;
             cl = (c.controls && c.controls.left) || c;
 
-            vx = br.x.toFixed(3);
-            vy = br.y.toFixed(3);
+            if (b._relative) {
+              vx = (br.x + b.x).toFixed(3);
+              vy = (br.y + b.y).toFixed(3);
+            } else {
+              vx = br.x.toFixed(3);
+              vy = br.y.toFixed(3);
+            }
 
-            ux = cl.x.toFixed(3);
-            uy = cl.y.toFixed(3);
+            if (c._relative) {
+              ux = (cl.x + c.x).toFixed(3);
+              uy = (cl.y + c.y).toFixed(3);
+            } else {
+              ux = cl.x.toFixed(3);
+              uy = cl.y.toFixed(3);
+            }
 
             x = c.x.toFixed(3);
             y = c.y.toFixed(3);
@@ -2582,11 +2636,21 @@
               ar = (a.controls && a.controls.right) || a;
               bl = (b.controls && b.controls.left) || b;
 
-              vx = ar.x.toFixed(3);
-              vy = ar.y.toFixed(3);
+              if (a._relative) {
+                vx = (ar.x + a.x).toFixed(3);
+                vy = (ar.y + a.y).toFixed(3);
+              } else {
+                vx = ar.x.toFixed(3);
+                vy = ar.y.toFixed(3);
+              }
 
-              ux = bl.x.toFixed(3);
-              uy = bl.y.toFixed(3);
+              if (b._relative) {
+                ux = (bl.x + b.x).toFixed(3);
+                uy = (bl.y + b.y).toFixed(3);
+              } else {
+                ux = bl.x.toFixed(3);
+                uy = bl.y.toFixed(3);
+              }
 
               ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
 
@@ -2597,11 +2661,21 @@
                 br = (b.controls && b.controls.right) || b;
                 cl = (c.controls && c.controls.left) || c;
 
-                vx = br.x.toFixed(3);
-                vy = br.y.toFixed(3);
+                if (b._relative) {
+                  vx = (br.x + b.x).toFixed(3);
+                  vy = (br.y + b.y).toFixed(3);
+                } else {
+                  vx = br.x.toFixed(3);
+                  vy = br.y.toFixed(3);
+                }
 
-                ux = cl.x.toFixed(3);
-                uy = cl.y.toFixed(3);
+                if (c._relative) {
+                  ux = (cl.x + c.x).toFixed(3);
+                  uy = (cl.y + c.y).toFixed(3);
+                } else {
+                  ux = cl.x.toFixed(3);
+                  uy = cl.y.toFixed(3);
+                }
 
                 x = c.x.toFixed(3);
                 y = c.y.toFixed(3);
@@ -3041,11 +3115,21 @@
             ar = (a.controls && a.controls.right) || a;
             bl = (b.controls && b.controls.left) || b;
 
-            vx = (ar.x * scale + cx).toFixed(3);
-            vy = (ar.y * scale + cy).toFixed(3);
+            if (a._relative) {
+              vx = ((ar.x + a.x) * scale + cx).toFixed(3);
+              vy = ((ar.y + a.y) * scale + cy).toFixed(3);
+            } else {
+              vx = (ar.x * scale + cx).toFixed(3);
+              vy = (ar.y * scale + cy).toFixed(3);
+            }
 
-            ux = (bl.x * scale + cx).toFixed(3);
-            uy = (bl.y * scale + cy).toFixed(3);
+            if (b._relative) {
+              ux = ((bl.x + b.x) * scale + cx).toFixed(3);
+              uy = ((bl.y + b.y) * scale + cy).toFixed(3);
+            } else {
+              ux = (bl.x * scale + cx).toFixed(3);
+              uy = (bl.y * scale + cy).toFixed(3);
+            }
 
             ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
 
@@ -3056,11 +3140,21 @@
               br = (b.controls && b.controls.right) || b;
               cl = (c.controls && c.controls.left) || c;
 
-              vx = (br.x * scale + cx).toFixed(3);
-              vy = (br.y * scale + cy).toFixed(3);
+              if (b._relative) {
+                vx = ((br.x + b.x) * scale + cx).toFixed(3);
+                vy = ((br.y + b.y) * scale + cy).toFixed(3);
+              } else {
+                vx = (br.x * scale + cx).toFixed(3);
+                vy = (br.y * scale + cy).toFixed(3);
+              }
 
-              ux = (cl.x * scale + cx).toFixed(3);
-              uy = (cl.y * scale + cy).toFixed(3);
+              if (c._relative) {
+                ux = ((cl.x + c.x) * scale + cx).toFixed(3);
+                uy = ((cl.y + c.y) * scale + cx).toFixed(3);
+              } else {
+                ux = (cl.x * scale + cx).toFixed(3);
+                uy = (cl.y * scale + cy).toFixed(3);
+              }
 
               x = (c.x * scale + cx).toFixed(3);
               y = (c.y * scale + cy).toFixed(3);

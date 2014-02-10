@@ -325,11 +325,21 @@
             ar = (a.controls && a.controls.right) || a;
             bl = (b.controls && b.controls.left) || b;
 
-            vx = (ar.x * scale + cx).toFixed(3);
-            vy = (ar.y * scale + cy).toFixed(3);
+            if (a._relative) {
+              vx = ((ar.x + a.x) * scale + cx).toFixed(3);
+              vy = ((ar.y + a.y) * scale + cy).toFixed(3);
+            } else {
+              vx = (ar.x * scale + cx).toFixed(3);
+              vy = (ar.y * scale + cy).toFixed(3);
+            }
 
-            ux = (bl.x * scale + cx).toFixed(3);
-            uy = (bl.y * scale + cy).toFixed(3);
+            if (b._relative) {
+              ux = ((bl.x + b.x) * scale + cx).toFixed(3);
+              uy = ((bl.y + b.y) * scale + cy).toFixed(3);
+            } else {
+              ux = (bl.x * scale + cx).toFixed(3);
+              uy = (bl.y * scale + cy).toFixed(3);
+            }
 
             ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
 
@@ -340,11 +350,21 @@
               br = (b.controls && b.controls.right) || b;
               cl = (c.controls && c.controls.left) || c;
 
-              vx = (br.x * scale + cx).toFixed(3);
-              vy = (br.y * scale + cy).toFixed(3);
+              if (b._relative) {
+                vx = ((br.x + b.x) * scale + cx).toFixed(3);
+                vy = ((br.y + b.y) * scale + cy).toFixed(3);
+              } else {
+                vx = (br.x * scale + cx).toFixed(3);
+                vy = (br.y * scale + cy).toFixed(3);
+              }
 
-              ux = (cl.x * scale + cx).toFixed(3);
-              uy = (cl.y * scale + cy).toFixed(3);
+              if (c._relative) {
+                ux = ((cl.x + c.x) * scale + cx).toFixed(3);
+                uy = ((cl.y + c.y) * scale + cx).toFixed(3);
+              } else {
+                ux = (cl.x * scale + cx).toFixed(3);
+                uy = (cl.y * scale + cy).toFixed(3);
+              }
 
               x = (c.x * scale + cx).toFixed(3);
               y = (c.y * scale + cy).toFixed(3);
