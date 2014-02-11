@@ -2300,11 +2300,9 @@ var Backbone = Backbone || {};
        */
       getReflection: function(a, b, relative) {
 
-        var d = a.distanceTo(b);
-        if (d <= 0.0001) {
-          return relative ? new Two.Vector() : a.clone();
-        }
-        var theta = angleBetween(a, b);
+        var d = b.distanceTo(Two.Vector.zero);
+        var theta = angleBetween(Two.Vector.zero, b);
+
         return new Two.Vector(
           d * Math.cos(theta) + (relative ? 0 : a.x),
           d * Math.sin(theta) + (relative ? 0 : a.y)
@@ -2775,6 +2773,12 @@ var Backbone = Backbone || {};
     this.y = y || 0;
 
   };
+
+  _.extend(Vector, {
+
+    zero: new Two.Vector()
+
+  });
 
   _.extend(Vector.prototype, Backbone.Events, {
 
@@ -4894,7 +4898,7 @@ var Backbone = Backbone || {};
 (function() {
 
   // Localized variables
-  var zero = new Two.Vector(), clone;
+  var zero = Two.Vector.zero, clone;
 
   var Shape = Two.Shape = function(limited) {
 

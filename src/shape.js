@@ -1,7 +1,7 @@
 (function() {
 
   // Localized variables
-  var zero = new Two.Vector(), clone;
+  var zero = Two.Vector.zero, clone;
 
   var Shape = Two.Shape = function(limited) {
 

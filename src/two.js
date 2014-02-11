@@ -827,11 +827,9 @@
        */
       getReflection: function(a, b, relative) {
 
-        var d = a.distanceTo(b);
-        if (d <= 0.0001) {
-          return relative ? new Two.Vector() : a.clone();
-        }
-        var theta = angleBetween(a, b);
+        var d = b.distanceTo(Two.Vector.zero);
+        var theta = angleBetween(Two.Vector.zero, b);
+
         return new Two.Vector(
           d * Math.cos(theta) + (relative ? 0 : a.x),
           d * Math.sin(theta) + (relative ? 0 : a.y)

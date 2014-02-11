@@ -10,6 +10,12 @@
 
   };
 
+  _.extend(Vector, {
+
+    zero: new Two.Vector()
+
+  });
+
   _.extend(Vector.prototype, Backbone.Events, {
 
     set: function(x, y) {
