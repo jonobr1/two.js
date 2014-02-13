@@ -1922,8 +1922,8 @@ var Backbone = Backbone || {};
                   result.addSelf(coord);
                 }
 
-                result.controls.left.copy(result);
-                result.controls.right.copy(result);
+                // result.controls.left.copy(result);
+                // result.controls.right.copy(result);
 
                 coord = result;
                 break;
@@ -1947,8 +1947,8 @@ var Backbone = Backbone || {};
                   result[a] += coord[a];
                 }
 
-                result.controls.left.copy(result);
-                result.controls.right.copy(result);
+                // result.controls.left.copy(result);
+                // result.controls.right.copy(result);
 
                 coord = result;
                 break;
@@ -1990,10 +1990,10 @@ var Backbone = Backbone || {};
                   Two.Anchor.AppendCurveProperties(coord);
                 }
 
-                coord.controls.right.set(x2, y2);
+                coord.controls.right.set(x2 - coord.x, y2 - coord.y);
                 result = new Two.Anchor(
                   x4, y4,
-                  x3, y3,
+                  x3 - x4, y3 - y4,
                   undefined, undefined,
                   Two.Commands.curve
                 );
@@ -2042,10 +2042,10 @@ var Backbone = Backbone || {};
                   Two.Anchor.AppendCurveProperties(coord);
                 }
 
-                coord.controls.right.set(x2, y2);
+                coord.controls.right.set(x2 - coord.x, y2 - coord.y);
                 result = new Two.Anchor(
                   x4, y4,
-                  x3, y3,
+                  x3 - x4, y3 - y4,
                   undefined, undefined,
                   Two.Commands.curve
                 );
@@ -2256,12 +2256,14 @@ var Backbone = Backbone || {};
 
         // So we know which angle corresponds to which side.
 
-        b.u = _.isObject(b.controls.left) ? b.controls.left : new Two.Vector(b.x, b.y);
-        b.v = _.isObject(b.controls.right) ? b.controls.right : new Two.Vector(b.x, b.y);
+        b.u = _.isObject(b.controls.left) ? b.controls.left : new Two.Vector(0, 0);
+        b.v = _.isObject(b.controls.right) ? b.controls.right : new Two.Vector(0, 0);
 
         if (d1 < 0.0001 || d2 < 0.0001) {
-          b.controls.left.copy(b);
-          b.controls.right.copy(b);
+          if (!b._relative) {
+            b.controls.left.copy(b);
+            b.controls.right.copy(b);
+          }
           return b;
         }
 
@@ -2274,13 +2276,20 @@ var Backbone = Backbone || {};
           mid -= HALF_PI;
         }
 
-        b.controls.left.x = b.x + cos(mid) * d1;
-        b.controls.left.y = b.y + sin(mid) * d1;
+        b.controls.left.x = cos(mid) * d1;
+        b.controls.left.y = sin(mid) * d1;
 
         mid -= PI;
 
-        b.controls.right.x = b.x + cos(mid) * d2;
-        b.controls.right.y = b.y + sin(mid) * d2;
+        b.controls.right.x = cos(mid) * d2;
+        b.controls.right.y = sin(mid) * d2;
+
+        if (!b._relative) {
+          b.controls.left.x += b.x;
+          b.controls.left.y += b.y;
+          b.controls.right.x += b.x;
+          b.controls.right.y += b.y;
+        }
 
         return b;
 
@@ -2291,11 +2300,9 @@ var Backbone = Backbone || {};
        */
       getReflection: function(a, b, relative) {
 
-        var d = a.distanceTo(b);
-        if (d <= 0.0001) {
-          return relative ? new Two.Vector() : a.clone();
-        }
-        var theta = angleBetween(a, b);
+        var d = b.distanceTo(Two.Vector.zero);
+        var theta = angleBetween(Two.Vector.zero, b);
+
         return new Two.Vector(
           d * Math.cos(theta) + (relative ? 0 : a.x),
           d * Math.sin(theta) + (relative ? 0 : a.y)
@@ -2691,7 +2698,7 @@ var Backbone = Backbone || {};
     /**
      * Interpret an SVG Node and add it to this instance's scene. The
      * distinction should be made that this doesn't `import` svg's, it solely
-     * interprets them into something compatible for Two.js — this is slightly
+     * interprets them into something compatible for Two.js — this is slightly
      * different than a direct transcription.
      */
     interpret: function(svgNode) {
@@ -2766,6 +2773,12 @@ var Backbone = Backbone || {};
     this.y = y || 0;
 
   };
+
+  _.extend(Vector, {
+
+    zero: new Two.Vector()
+
+  });
 
   _.extend(Vector.prototype, Backbone.Events, {
 
@@ -3068,7 +3081,7 @@ var Backbone = Backbone || {};
 (function() {
 
   // Localized variables
-  var commands = Two.Commands, x, y, controls;
+  var commands = Two.Commands, x, y, o, controls, clone;
 
   /**
    * An object that holds 3 `Two.Vector`s, the anchor point and its
@@ -3082,29 +3095,15 @@ var Backbone = Backbone || {};
       this.trigger(Two.Events.change);
     }, this);
 
-    Object.defineProperty(this, 'command', {
-
-      get: function() {
-        return this._command;
-      },
-
-      set: function(c) {
-        this._command = c;
-        if (this._command === commands.curve && !_.isObject(this.controls)) {
-          Anchor.AppendCurveProperties(this);
-        }
-        return this.trigger(Two.Events.change);
-      }
-
-    });
-
     this._command = command || commands.move;
+    this._relative = true;
 
     if (!command) {
       return this;
     }
 
     Anchor.AppendCurveProperties(this);
+
     if (_.isNumber(ux)) {
       this.controls.left.x = ux;
     }
@@ -3128,8 +3127,8 @@ var Backbone = Backbone || {};
       y = anchor._y || anchor.y;
 
       anchor.controls = {
-        left: new Two.Vector(x, y),
-        right: new Two.Vector(x, y)
+        left: new Two.Vector(0, 0),
+        right: new Two.Vector(0, 0)
       };
 
     }
@@ -3166,7 +3165,7 @@ var Backbone = Backbone || {};
 
       controls = this.controls;
 
-      return new Two.Anchor(
+      clone = new Two.Anchor(
         this.x,
         this.y,
         controls && controls.left.x,
@@ -3175,16 +3174,21 @@ var Backbone = Backbone || {};
         controls && controls.right.y,
         this.command
       );
+      clone.relative = this._relative;
+      return clone;
 
     },
 
     toObject: function() {
-      var o = {
+      o = {
         x: this.x,
         y: this.y
       };
-      if (this.command) {
-        o.command = this.command;
+      if (this._command) {
+        o.command = this._command;
+      }
+      if (this._relative) {
+        o.relative = this._relative;
       }
       if (this.controls) {
         o.controls = {
@@ -3197,12 +3201,49 @@ var Backbone = Backbone || {};
 
   };
 
+  Object.defineProperty(Anchor.prototype, 'command', {
+
+    get: function() {
+      return this._command;
+    },
+
+    set: function(c) {
+      this._command = c;
+      if (this._command === commands.curve && !_.isObject(this.controls)) {
+        Anchor.AppendCurveProperties(this);
+      }
+      return this.trigger(Two.Events.change);
+    }
+
+  });
+
+  Object.defineProperty(Anchor.prototype, 'relative', {
+
+    get: function() {
+      return this._relative;
+    },
+
+    set: function(b) {
+      if (this._relative == b) {
+        return this;
+      }
+      this._relative = !!b;
+      return this.trigger(Two.Events.change);
+    }
+
+  });
+
   _.extend(Anchor.prototype, Two.Vector.prototype, AnchorProto);
 
   // Make it possible to bind and still have the Anchor specific
-  // inheritance.
+  // inheritance from Two.Vector
   Two.Anchor.prototype.bind = Two.Anchor.prototype.on = function() {
     Two.Vector.prototype.bind.apply(this, arguments);
+    _.extend(this, AnchorProto);
+  };
+
+  Two.Anchor.prototype.unbind = Two.Anchor.prototype.off = function() {
+    Two.Vector.prototype.unbind.apply(this, arguments);
     _.extend(this, AnchorProto);
   };
 
@@ -3678,11 +3719,21 @@ var Backbone = Backbone || {};
             var ar = (a.controls && a.controls.right) || a;
             var bl = (b.controls && b.controls.left) || b;
 
-            vx = ar.x.toFixed(3);
-            vy = ar.y.toFixed(3);
+            if (a._relative) {
+              vx = (ar.x + a.x).toFixed(3);
+              vy = (ar.y + a.y).toFixed(3);
+            } else {
+              vx = ar.x.toFixed(3);
+              vy = ar.y.toFixed(3);
+            }
 
-            ux = bl.x.toFixed(3);
-            uy = bl.y.toFixed(3);
+            if (b._relative) {
+              ux = (bl.x + b.x).toFixed(3);
+              uy = (bl.y + b.y).toFixed(3);
+            } else {
+              ux = bl.x.toFixed(3);
+              uy = bl.y.toFixed(3);
+            }
 
             command = ((i === 0) ? Two.Commands.move : Two.Commands.curve)
               + ' ' + vx + ' ' + vy + ' ' + ux + ' ' + uy + ' ' + x + ' ' + y;
@@ -3710,11 +3761,21 @@ var Backbone = Backbone || {};
             br = (b.controls && b.controls.right) || b;
             cl = (c.controls && c.controls.left) || c;
 
-            vx = br.x.toFixed(3);
-            vy = br.y.toFixed(3);
+            if (b._relative) {
+              vx = (br.x + b.x).toFixed(3);
+              vy = (br.y + b.y).toFixed(3);
+            } else {
+              vx = br.x.toFixed(3);
+              vy = br.y.toFixed(3);
+            }
 
-            ux = cl.x.toFixed(3);
-            uy = cl.y.toFixed(3);
+            if (c._relative) {
+              ux = (cl.x + c.x).toFixed(3);
+              uy = (cl.y + c.y).toFixed(3);
+            } else {
+              ux = cl.x.toFixed(3);
+              uy = cl.y.toFixed(3);
+            }
 
             x = c.x.toFixed(3);
             y = c.y.toFixed(3);
@@ -4026,11 +4087,21 @@ var Backbone = Backbone || {};
               ar = (a.controls && a.controls.right) || a;
               bl = (b.controls && b.controls.left) || b;
 
-              vx = ar.x.toFixed(3);
-              vy = ar.y.toFixed(3);
+              if (a._relative) {
+                vx = (ar.x + a.x).toFixed(3);
+                vy = (ar.y + a.y).toFixed(3);
+              } else {
+                vx = ar.x.toFixed(3);
+                vy = ar.y.toFixed(3);
+              }
 
-              ux = bl.x.toFixed(3);
-              uy = bl.y.toFixed(3);
+              if (b._relative) {
+                ux = (bl.x + b.x).toFixed(3);
+                uy = (bl.y + b.y).toFixed(3);
+              } else {
+                ux = bl.x.toFixed(3);
+                uy = bl.y.toFixed(3);
+              }
 
               ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
 
@@ -4041,11 +4112,21 @@ var Backbone = Backbone || {};
                 br = (b.controls && b.controls.right) || b;
                 cl = (c.controls && c.controls.left) || c;
 
-                vx = br.x.toFixed(3);
-                vy = br.y.toFixed(3);
+                if (b._relative) {
+                  vx = (br.x + b.x).toFixed(3);
+                  vy = (br.y + b.y).toFixed(3);
+                } else {
+                  vx = br.x.toFixed(3);
+                  vy = br.y.toFixed(3);
+                }
 
-                ux = cl.x.toFixed(3);
-                uy = cl.y.toFixed(3);
+                if (c._relative) {
+                  ux = (cl.x + c.x).toFixed(3);
+                  uy = (cl.y + c.y).toFixed(3);
+                } else {
+                  ux = cl.x.toFixed(3);
+                  uy = cl.y.toFixed(3);
+                }
 
                 x = c.x.toFixed(3);
                 y = c.y.toFixed(3);
@@ -4485,11 +4566,21 @@ var Backbone = Backbone || {};
             ar = (a.controls && a.controls.right) || a;
             bl = (b.controls && b.controls.left) || b;
 
-            vx = (ar.x * scale + cx).toFixed(3);
-            vy = (ar.y * scale + cy).toFixed(3);
+            if (a._relative) {
+              vx = ((ar.x + a.x) * scale + cx).toFixed(3);
+              vy = ((ar.y + a.y) * scale + cy).toFixed(3);
+            } else {
+              vx = (ar.x * scale + cx).toFixed(3);
+              vy = (ar.y * scale + cy).toFixed(3);
+            }
 
-            ux = (bl.x * scale + cx).toFixed(3);
-            uy = (bl.y * scale + cy).toFixed(3);
+            if (b._relative) {
+              ux = ((bl.x + b.x) * scale + cx).toFixed(3);
+              uy = ((bl.y + b.y) * scale + cy).toFixed(3);
+            } else {
+              ux = (bl.x * scale + cx).toFixed(3);
+              uy = (bl.y * scale + cy).toFixed(3);
+            }
 
             ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
 
@@ -4500,11 +4591,21 @@ var Backbone = Backbone || {};
               br = (b.controls && b.controls.right) || b;
               cl = (c.controls && c.controls.left) || c;
 
-              vx = (br.x * scale + cx).toFixed(3);
-              vy = (br.y * scale + cy).toFixed(3);
+              if (b._relative) {
+                vx = ((br.x + b.x) * scale + cx).toFixed(3);
+                vy = ((br.y + b.y) * scale + cy).toFixed(3);
+              } else {
+                vx = (br.x * scale + cx).toFixed(3);
+                vy = (br.y * scale + cy).toFixed(3);
+              }
 
-              ux = (cl.x * scale + cx).toFixed(3);
-              uy = (cl.y * scale + cy).toFixed(3);
+              if (c._relative) {
+                ux = ((cl.x + c.x) * scale + cx).toFixed(3);
+                uy = ((cl.y + c.y) * scale + cx).toFixed(3);
+              } else {
+                ux = (cl.x * scale + cx).toFixed(3);
+                uy = (cl.y * scale + cy).toFixed(3);
+              }
 
               x = (c.x * scale + cx).toFixed(3);
               y = (c.y * scale + cy).toFixed(3);
@@ -4800,7 +4901,7 @@ var Backbone = Backbone || {};
 (function() {
 
   // Localized variables
-  var zero = new Two.Vector(), clone;
+  var zero = Two.Vector.zero, clone;
 
   var Shape = Two.Shape = function(limited) {
 
@@ -5344,7 +5445,7 @@ var Backbone = Backbone || {};
 
       last = this.vertices.length - 1;
       b = this.vertices[last];
-      closed = this._closed || this.vertices[last].command === Two.Commands.close;
+      closed = this._closed || this.vertices[last]._command === Two.Commands.close;
       points = [];
 
       _.each(this.vertices, function(a, i) {
@@ -5356,7 +5457,9 @@ var Backbone = Backbone || {};
 
         if (a.command === Two.Commands.move) {
           points.push(new Two.Anchor(b.x, b.y));
-          points[points.length - 1].command = Two.Commands.line;
+          if (i > 0) {
+            points[points.length - 1].command = Two.Commands.line;
+          }
           b = a;
           return;
         }
@@ -5368,6 +5471,16 @@ var Backbone = Backbone || {};
         x2 = (right || b).x, y2 = (right || b).y;
         x3 = (left || a).x, y3 = (left || a).y;
         x4 = a.x, y4 = a.y;
+
+        if (b._relative) {
+          x2 += b.x;
+          y2 += b.y;
+        }
+
+        if (a._relative) {
+          x3 += a.x;
+          y3 += a.y;
+        }
 
         var verts = Two.Utils.subdivide(x1, y1, x2, y2, x3, y3, x4, y4, limit);
         points = points.concat(verts);

@@ -61,8 +61,8 @@
               var r = two.makeCircle(0, 0, radius / 4);
 
               p.translation.copy(anchor);
-              l.translation.copy(anchor.controls.left);
-              r.translation.copy(anchor.controls.right);
+              l.translation.copy(anchor.controls.left).addSelf(anchor);
+              r.translation.copy(anchor.controls.right).addSelf(anchor);
               p.noStroke().fill = l.noStroke().fill = r.noStroke().fill = editColor;
 
               var ll = new Two.Polygon([
@@ -79,15 +79,19 @@
 
               p.translation.bind(Two.Events.change, function() {
                 anchor.copy(this);
+                l.translation.copy(anchor.controls.left).addSelf(this);
+                r.translation.copy(anchor.controls.right).addSelf(this);
                 ll.vertices[0].copy(this);
                 rl.vertices[0].copy(this);
+                ll.vertices[1].copy(l.translation);
+                rl.vertices[1].copy(r.translation);
               });
               l.translation.bind(Two.Events.change, function() {
-                anchor.controls.left.copy(this);
+                anchor.controls.left.copy(this).subSelf(anchor);
                 ll.vertices[1].copy(this);
               });
               r.translation.bind(Two.Events.change, function() {
-                anchor.controls.right.copy(this);
+                anchor.controls.right.copy(this).subSelf(anchor);
                 rl.vertices[1].copy(this);
               });
 
