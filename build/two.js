@@ -4998,6 +4998,11 @@ var Backbone = Backbone || {};
 
       }
 
+      // Bubble up to parents mainly for `getBoundingClientRect` method.
+      if (this.parent && _.isFunction(this.parent._update)) {
+        this.parent._update();
+      }
+
       return this;
 
     },
@@ -5378,16 +5383,19 @@ var Backbone = Backbone || {};
       // TODO: Update this to not __always__ update. Just when it needs to.
       this._update();
 
+      matrix = !!shallow ? this._matrix : getComputedMatrix(this);
+
       border = this.linewidth / 2, temp;
       left = Infinity, right = -Infinity;
       top = Infinity, bottom = -Infinity;
 
       _.each(this._vertices, function(v) {
         x = v.x, y = v.y;
-        top = min(y, top);
-        left = min(x, left);
-        right = max(x, right);
-        bottom = max(y, bottom);
+        v = matrix.multiply(x, y, 1);
+        top = min(v.y, top);
+        left = min(v.x, left);
+        right = max(v.x, right);
+        bottom = max(v.y, bottom);
       });
 
       // Expand borders
@@ -5396,18 +5404,6 @@ var Backbone = Backbone || {};
       left -= border;
       right += border;
       bottom += border;
-
-      matrix = !!shallow ? this._matrix : getComputedMatrix(this);
-
-      a = matrix.multiply(left, top, 1);
-      b = matrix.multiply(right, top, 1);
-      c = matrix.multiply(right, bottom, 1);
-      d = matrix.multiply(left, bottom, 1);
-
-      top = min(a.y, b.y, c.y, d.y);
-      left = min(a.x, b.x, c.x, d.x);
-      right = max(a.x, b.x, c.x, d.x);
-      bottom = max(a.y, b.y, c.y, d.y);
 
       return {
         top: top,
