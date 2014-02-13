@@ -55,6 +55,7 @@ node two.js/utils/build
 ## Change Log
 
 ##### Nightly
++ Updated `Two.Anchor` to change `control` points relatively by default through `anchor.relative` property
 + Updated `Two.Polygon.subdivide` method to accomodate `curved = false` circumstances
 + Updated `svg`, `canvas`, and `webgl` renderers to properly reflect holes in curved `Two.Polygon`s
 + Fixed `Two.Group` `clone` method
