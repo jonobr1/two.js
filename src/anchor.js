@@ -104,8 +104,11 @@
         x: this.x,
         y: this.y
       };
-      if (this.command) {
-        o.command = this.command;
+      if (this._command) {
+        o.command = this._command;
+      }
+      if (this._relative) {
+        o.relative = this._relative;
       }
       if (this.controls) {
         o.controls = {

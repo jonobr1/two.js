@@ -426,7 +426,7 @@
 
       last = this.vertices.length - 1;
       b = this.vertices[last];
-      closed = this._closed || this.vertices[last].command === Two.Commands.close;
+      closed = this._closed || this.vertices[last]._command === Two.Commands.close;
       points = [];
 
       _.each(this.vertices, function(a, i) {
@@ -438,7 +438,9 @@
 
         if (a.command === Two.Commands.move) {
           points.push(new Two.Anchor(b.x, b.y));
-          points[points.length - 1].command = Two.Commands.line;
+          if (i > 0) {
+            points[points.length - 1].command = Two.Commands.line;
+          }
           b = a;
           return;
         }
@@ -450,6 +452,16 @@
         x2 = (right || b).x, y2 = (right || b).y;
         x3 = (left || a).x, y3 = (left || a).y;
         x4 = a.x, y4 = a.y;
+
+        if (b._relative) {
+          x2 += b.x;
+          y2 += b.y;
+        }
+
+        if (a._relative) {
+          x3 += a.x;
+          y3 += a.y;
+        }
 
         var verts = Two.Utils.subdivide(x1, y1, x2, y2, x3, y3, x4, y4, limit);
         points = points.concat(verts);
