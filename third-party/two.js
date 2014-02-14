@@ -5388,12 +5388,12 @@ var Backbone = Backbone || {};
      * Return an object with top, left, right, bottom, width, and height
      * parameters of the group.
      */
-    getBoundingClientRect: function(shallow, projection) {
+    getBoundingClientRect: function(shallow) {
 
       // TODO: Update this to not __always__ update. Just when it needs to.
       this._update();
 
-      matrix = !!shallow ? projection || this._matrix : getComputedMatrix(this);
+      matrix = !!shallow ? this._matrix : getComputedMatrix(this);
 
       border = this.linewidth / 2, temp;
       left = Infinity, right = -Infinity;
@@ -5823,13 +5823,13 @@ var Backbone = Backbone || {};
      * Return an object with top, left, right, bottom, width, and height
      * parameters of the group.
      */
-    getBoundingClientRect: function(shallow, projection) {
+    getBoundingClientRect: function(shallow) {
 
       // TODO: Update this to not __always__ update. Just when it needs to.
       this._update();
 
-      left = Infinity, right = -Infinity;
-      top = Infinity, bottom = -Infinity;
+      var left = Infinity, right = -Infinity;
+      var top = Infinity, bottom = -Infinity;
 
       _.each(this.children, function(child) {
 
