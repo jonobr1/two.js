@@ -354,12 +354,12 @@
      * Return an object with top, left, right, bottom, width, and height
      * parameters of the group.
      */
-    getBoundingClientRect: function(shallow) {
+    getBoundingClientRect: function(shallow, projection) {
 
       // TODO: Update this to not __always__ update. Just when it needs to.
       this._update();
 
-      matrix = !!shallow ? this._matrix : getComputedMatrix(this);
+      matrix = !!shallow ? projection || this._matrix : getComputedMatrix(this);
 
       border = this.linewidth / 2, temp;
       left = Infinity, right = -Infinity;
@@ -367,19 +367,12 @@
 
       _.each(this._vertices, function(v) {
         x = v.x, y = v.y;
-        v = matrix.multiply(x, y, 1);
-        top = min(v.y, top);
-        left = min(v.x, left);
-        right = max(v.x, right);
-        bottom = max(v.y, bottom);
+        v = matrix.multiply(x, y , 1);
+        top = min(v.y - border, top);
+        left = min(v.x - border, left);
+        right = max(v.x + border, right);
+        bottom = max(v.y + border, bottom);
       });
-
-      // Expand borders
-
-      top -= border;
-      left -= border;
-      right += border;
-      bottom += border;
 
       return {
         top: top,

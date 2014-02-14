@@ -133,19 +133,19 @@
       parentGroup.add(group);
       group.add(shape);
 
-      var a1 = {"top":94.01856625080109,"left":148.13816463947296,"right":436.63771426677704,"bottom":382.51811587810516,"width":288.4995496273041,"height":288.4995496273041};
+      var answer = {"top":96.34699320793152,"left":150.4665915966034,"right":434.3092873096466,"bottom":380.18968892097473,"width":283.8426957130432,"height":283.8426957130432};
+
       var bBox = group.getBoundingClientRect();
       var rect = two.makeRectangle(bBox.left + bBox.width/2, bBox.top + bBox.height/2, bBox.width, bBox.height);
       rect.noFill().stroke = 'orangered';
 
-      var a2 = {"top":96.34699320793152,"left":150.4665915966034,"right":434.3092873096466,"bottom":380.18968892097473,"width":283.8426957130432,"height":283.8426957130432};
       var bBoxClose = shape.getBoundingClientRect();
-      var rectClose = two.makeRectangle(bBoxClose.left + bBoxClose.width / 2, bBoxClose.top + bBoxClose.height / 2, bBoxClose.width, bBoxClose.height);
+      var rectClose = two.makeRectangle(0, 0, bBoxClose.width, bBoxClose.height);
       rectClose.noFill().stroke = 'green';
 
       two.update();
 
-      equal(_.isEqual(a1, bBox) && _.isEqual(a2, bBoxClose), true, 'Two.Polygon.getBoundingClientRect properly calculates nested shapes / groups.');
+      equal(_.isEqual(answer, bBox) && _.isEqual(answer, bBoxClose), true, 'Two.Polygon.getBoundingClientRect properly calculates nested shapes / groups.');
 
       QUnit.Utils.addElemToTest(o, [two.renderer.domElement]);
 

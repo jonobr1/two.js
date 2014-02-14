@@ -3944,12 +3944,12 @@
      * Return an object with top, left, right, bottom, width, and height
      * parameters of the group.
      */
-    getBoundingClientRect: function(shallow) {
+    getBoundingClientRect: function(shallow, projection) {
 
       // TODO: Update this to not __always__ update. Just when it needs to.
       this._update();
 
-      matrix = !!shallow ? this._matrix : getComputedMatrix(this);
+      matrix = !!shallow ? projection || this._matrix : getComputedMatrix(this);
 
       border = this.linewidth / 2, temp;
       left = Infinity, right = -Infinity;
@@ -3957,19 +3957,12 @@
 
       _.each(this._vertices, function(v) {
         x = v.x, y = v.y;
-        v = matrix.multiply(x, y, 1);
-        top = min(v.y, top);
-        left = min(v.x, left);
-        right = max(v.x, right);
-        bottom = max(v.y, bottom);
+        v = matrix.multiply(x, y , 1);
+        top = min(v.y - border, top);
+        left = min(v.x - border, left);
+        right = max(v.x + border, right);
+        bottom = max(v.y + border, bottom);
       });
-
-      // Expand borders
-
-      top -= border;
-      left -= border;
-      right += border;
-      bottom += border;
 
       return {
         top: top,
@@ -4386,7 +4379,7 @@
      * Return an object with top, left, right, bottom, width, and height
      * parameters of the group.
      */
-    getBoundingClientRect: function(shallow) {
+    getBoundingClientRect: function(shallow, projection) {
 
       // TODO: Update this to not __always__ update. Just when it needs to.
       this._update();
@@ -4396,7 +4389,7 @@
 
       _.each(this.children, function(child) {
 
-        rect = child.getBoundingClientRect(true);
+        rect = child.getBoundingClientRect();
 
         if (!_.isNumber(rect.top) || !_.isNumber(rect.left)
           || !_.isNumber(rect.right) || !_.isNumber(rect.bottom)) {
@@ -4409,18 +4402,6 @@
         bottom = max(rect.bottom, bottom);
 
       }, this);
-
-      matrix = !!shallow ? this._matrix : Two.Utils.getComputedMatrix(this);
-
-      a = matrix.multiply(left, top, 1);
-      b = matrix.multiply(right, top, 1);
-      c = matrix.multiply(right, bottom, 1);
-      d = matrix.multiply(left, bottom, 1);
-
-      top = min(a.y, b.y, c.y, d.y);
-      left = min(a.x, b.x, c.x, d.x);
-      right = max(a.x, b.x, c.x, d.x);
-      bottom = max(a.y, b.y, c.y, d.y);
 
       return {
         top: top,

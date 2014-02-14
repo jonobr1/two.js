@@ -263,7 +263,7 @@
      * Return an object with top, left, right, bottom, width, and height
      * parameters of the group.
      */
-    getBoundingClientRect: function(shallow) {
+    getBoundingClientRect: function(shallow, projection) {
 
       // TODO: Update this to not __always__ update. Just when it needs to.
       this._update();
@@ -273,7 +273,7 @@
 
       _.each(this.children, function(child) {
 
-        rect = child.getBoundingClientRect(true);
+        rect = child.getBoundingClientRect();
 
         if (!_.isNumber(rect.top) || !_.isNumber(rect.left)
           || !_.isNumber(rect.right) || !_.isNumber(rect.bottom)) {
@@ -286,18 +286,6 @@
         bottom = max(rect.bottom, bottom);
 
       }, this);
-
-      matrix = !!shallow ? this._matrix : Two.Utils.getComputedMatrix(this);
-
-      a = matrix.multiply(left, top, 1);
-      b = matrix.multiply(right, top, 1);
-      c = matrix.multiply(right, bottom, 1);
-      d = matrix.multiply(left, bottom, 1);
-
-      top = min(a.y, b.y, c.y, d.y);
-      left = min(a.x, b.x, c.x, d.x);
-      right = max(a.x, b.x, c.x, d.x);
-      bottom = max(a.y, b.y, c.y, d.y);
 
       return {
         top: top,
