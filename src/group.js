@@ -263,13 +263,14 @@
      * Return an object with top, left, right, bottom, width, and height
      * parameters of the group.
      */
-    getBoundingClientRect: function(shallow, projection) {
+    getBoundingClientRect: function(shallow) {
 
       // TODO: Update this to not __always__ update. Just when it needs to.
       this._update();
 
-      left = Infinity, right = -Infinity;
-      top = Infinity, bottom = -Infinity;
+      // Variables need to be defined here, because of nested nature of groups.
+      var left = Infinity, right = -Infinity;
+      var top = Infinity, bottom = -Infinity;
 
       _.each(this.children, function(child) {
 
