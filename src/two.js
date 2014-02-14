@@ -263,18 +263,28 @@
 
       /**
        * Return the computed matrix of a nested object.
+       * TODO: Optimize traversal.
        */
       getComputedMatrix: function(object, matrix) {
 
+        var matrices = [];
         var matrix = (matrix && matrix.identity()) || new Two.Matrix();
         var parent = object;
 
         while (parent && parent._matrix) {
-          var e = parent._matrix.elements;
-          matrix.multiply(
-            e[0], e[1], e[2], e[3], e[4], e[5], e[6], e[7], e[8], e[9]);
+          matrices.push(parent._matrix);
           parent = parent.parent;
         }
+
+        matrices.reverse();
+
+        _.each(matrices, function(m) {
+
+          var e = m.elements;
+          matrix.multiply(
+            e[0], e[1], e[2], e[3], e[4], e[5], e[6], e[7], e[8], e[9]);
+
+        });
 
         return matrix;
 
