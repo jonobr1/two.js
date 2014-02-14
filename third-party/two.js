@@ -5828,6 +5828,7 @@ var Backbone = Backbone || {};
       // TODO: Update this to not __always__ update. Just when it needs to.
       this._update();
 
+      // Variables need to be defined here, because of nested nature of groups.
       var left = Infinity, right = -Infinity;
       var top = Infinity, bottom = -Infinity;
 
