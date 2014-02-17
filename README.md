@@ -55,6 +55,8 @@ node two.js/utils/build
 ## Change Log
 
 ##### Nightly
++ Updated `beginning` and `ending` to clamp to each other
++ Reorganized `Two.Polygon._update` and `Two.Polygon.plot` in order to handle `beginning` and `ending` properties
 + Updated `Two.getComputedMatrix` and `Two.Polygon.getBoundingClientRect` to adhere to nested transformations
 + Updated `Two.Anchor` to change `control` points relatively by default through `anchor.relative` property
 + Updated `Two.Polygon.subdivide` method to accomodate `curved = false` circumstances
