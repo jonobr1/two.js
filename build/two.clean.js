@@ -3982,11 +3982,11 @@
     plot: function() {
 
       if (this.curved) {
-        Two.Utils.getCurveFromPoints(this.vertices, this.closed);
+        Two.Utils.getCurveFromPoints(this._vertices, this.closed);
         return this;
       }
 
-      _.each(this.vertices, function(p, i) {
+      _.each(this._vertices, function(p, i) {
         p._command = i === 0 ? Two.Commands.move : Two.Commands.line;
       }, this);
 
@@ -4070,10 +4070,6 @@
 
       if (this._flagVertices) {
 
-        if (this._automatic) {
-          this.plot();
-        }
-
         l = this.vertices.length;
         last = l - 1;
 
@@ -4085,6 +4081,10 @@
         for (i = ia; i < ib + 1; i++) {
           v = this.vertices[i];
           this._vertices.push(v);
+        }
+
+        if (this._automatic) {
+          this.plot();
         }
 
       }
