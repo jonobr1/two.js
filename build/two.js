@@ -5167,7 +5167,7 @@ var Backbone = Backbone || {};
           return this._beginning;
         },
         set: function(v) {
-          this._beginning = min(max(v, 0.0), 1.0);
+          this._beginning = min(max(v, 0.0), this._ending);
           this._flagVertices = true;
         }
       });
@@ -5177,7 +5177,7 @@ var Backbone = Backbone || {};
           return this._ending;
         },
         set: function(v) {
-          this._ending = min(max(v, 0.0), 1.0);
+          this._ending = min(max(v, this._beginning), 1.0);
           this._flagVertices = true;
         }
       });
