@@ -2739,7 +2739,7 @@
 
     this.domElement = params.domElement || document.createElement('canvas');
     this.ctx = this.domElement.getContext('2d');
-    this.overdraw = false;
+    this.overdraw = params.overdraw || false;
 
     // Everything drawn on the canvas needs to be added to the scene.
     this.scene = new Two.Group();
