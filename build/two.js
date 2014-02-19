@@ -4433,7 +4433,8 @@ var Backbone = Backbone || {};
           return;
         }
 
-        a = cl.x, b = cl.y, c = cr.x, d = cr.y;
+        a = cl._relative ? cl.x + x : cl.x, b = cl._relative ? cl.y + y : cl.y;
+        c = cr._relative ? cr.x + x : cr.x, d = cr._relative ? cr.y + y : cr.y;
 
         if (!a || !b || !c || !d) {
           return;
