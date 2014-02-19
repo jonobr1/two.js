@@ -4183,7 +4183,7 @@ var Backbone = Backbone || {};
 
     this.domElement = params.domElement || document.createElement('canvas');
     this.ctx = this.domElement.getContext('2d');
-    this.overdraw = false;
+    this.overdraw = params.overdraw || false;
 
     // Everything drawn on the canvas needs to be added to the scene.
     this.scene = new Two.Group();
@@ -4433,7 +4433,8 @@ var Backbone = Backbone || {};
           return;
         }
 
-        a = cl.x, b = cl.y, c = cr.x, d = cr.y;
+        a = cl._relative ? cl.x + x : cl.x, b = cl._relative ? cl.y + y : cl.y;
+        c = cr._relative ? cr.x + x : cr.x, d = cr._relative ? cr.y + y : cr.y;
 
         if (!a || !b || !c || !d) {
           return;
@@ -5167,7 +5168,7 @@ var Backbone = Backbone || {};
           return this._beginning;
         },
         set: function(v) {
-          this._beginning = min(max(v, 0.0), 1.0);
+          this._beginning = min(max(v, 0.0), this._ending);
           this._flagVertices = true;
         }
       });
@@ -5177,7 +5178,7 @@ var Backbone = Backbone || {};
           return this._ending;
         },
         set: function(v) {
-          this._ending = min(max(v, 0.0), 1.0);
+          this._ending = min(max(v, this._beginning), 1.0);
           this._flagVertices = true;
         }
       });
@@ -5426,11 +5427,11 @@ var Backbone = Backbone || {};
     plot: function() {
 
       if (this.curved) {
-        Two.Utils.getCurveFromPoints(this.vertices, this.closed);
+        Two.Utils.getCurveFromPoints(this._vertices, this.closed);
         return this;
       }
 
-      _.each(this.vertices, function(p, i) {
+      _.each(this._vertices, function(p, i) {
         p._command = i === 0 ? Two.Commands.move : Two.Commands.line;
       }, this);
 
@@ -5514,10 +5515,6 @@ var Backbone = Backbone || {};
 
       if (this._flagVertices) {
 
-        if (this._automatic) {
-          this.plot();
-        }
-
         l = this.vertices.length;
         last = l - 1;
 
@@ -5529,6 +5526,10 @@ var Backbone = Backbone || {};
         for (i = ia; i < ib + 1; i++) {
           v = this.vertices[i];
           this._vertices.push(v);
+        }
+
+        if (this._automatic) {
+          this.plot();
         }
 
       }
