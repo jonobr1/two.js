@@ -5472,12 +5472,12 @@ var Backbone = Backbone || {};
         x3 = (left || a).x, y3 = (left || a).y;
         x4 = a.x, y4 = a.y;
 
-        if (b._relative) {
+        if (right && b._relative) {
           x2 += b.x;
           y2 += b.y;
         }
 
-        if (a._relative) {
+        if (left && a._relative) {
           x3 += a.x;
           y3 += a.y;
         }
