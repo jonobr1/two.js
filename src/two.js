@@ -340,6 +340,7 @@
               break;
             case 'id':
               elem._svgId = v.nodeValue;
+              break;
           }
 
         });
