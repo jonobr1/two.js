@@ -38,7 +38,7 @@
 
     var elem = two.renderer.domElement.querySelector('#two-' + rect.id);
 
-    equal(elem.getAttribute('d'), 'M 50.000 50.000 L -50.000 50.000 L -50.000 -50.000 L 50.000 -50.000 Z', 'Two.makeRectangle applies d attribute properly.');
+    equal(elem.getAttribute('d'), 'M -50.000 -50.000 L 50.000 -50.000 L 50.000 50.000 L -50.000 50.000 Z', 'Two.makeRectangle applies d attribute properly.');
 
     QUnit.Utils.addInstanceToTest(o, two);
 

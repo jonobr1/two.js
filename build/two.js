@@ -2582,10 +2582,10 @@ var Backbone = Backbone || {};
       var h2 = height / 2;
 
       var points = [
-        new Two.Anchor(w2, h2),
-        new Two.Anchor(-w2, h2),
         new Two.Anchor(-w2, -h2),
-        new Two.Anchor(w2, -h2)
+        new Two.Anchor(w2, -h2),
+        new Two.Anchor(w2, h2),
+        new Two.Anchor(-w2, h2)
       ];
 
       var rect = new Two.Polygon(points, true);
