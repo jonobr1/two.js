@@ -338,6 +338,8 @@
             case 'stroke':
               elem.stroke = v.nodeValue;
               break;
+            case 'id':
+              elem._svgId = v.nodeValue;
           }
 
         });
