@@ -756,6 +756,11 @@
         var limit = limit || Two.Utils.Curve.RecursionLimit;
         var amount = limit + 1;
 
+        // Don't recurse if the end points are identical
+        if (x1 === x4 && y1 === y4) {
+          return [new Two.Anchor(x4, y4)];
+        }
+
         return _.map(_.range(0, amount), function(i) {
 
           var t = i / amount;
@@ -3603,8 +3608,14 @@
 
   // Localized variables
   var l, ia, ib, last, closed, v, i, parent, points, clone, rect, corner,
-    border, temp, left, right, top, bottom, x, y, a, b, c, d, matrix,
+    border, temp, left, right, top, bottom, x, y, a, b, c, d, m, matrix, curved,
     x1, y1, x2, y2, x3, y3, x4, y4;
+
+  var commands = {};
+
+  _.each(Two.Commands, function(v, k) {
+    commands[k] = new RegExp(v);
+  });
 
   var Polygon = Two.Polygon = function(vertices, closed, curved, manual) {
 
@@ -4005,6 +4016,7 @@
       last = this.vertices.length - 1;
       b = this.vertices[last];
       closed = this._closed || this.vertices[last]._command === Two.Commands.close;
+      curved = this._curved;
       points = [];
 
       _.each(this.vertices, function(a, i) {
@@ -4019,29 +4031,11 @@
           if (i > 0) {
             points[points.length - 1].command = Two.Commands.line;
           }
-          b = a;
+          b = m = a;
           return;
         }
 
-        right = b.controls && b.controls.right;
-        left = a.controls && a.controls.left;
-
-        x1 = b.x, y1 = b.y;
-        x2 = (right || b).x, y2 = (right || b).y;
-        x3 = (left || a).x, y3 = (left || a).y;
-        x4 = a.x, y4 = a.y;
-
-        if (right && b._relative) {
-          x2 += b.x;
-          y2 += b.y;
-        }
-
-        if (left && a._relative) {
-          x3 += a.x;
-          y3 += a.y;
-        }
-
-        var verts = Two.Utils.subdivide(x1, y1, x2, y2, x3, y3, x4, y4, limit);
+        var verts = getSubdivisions(a, b, limit);
         points = points.concat(verts);
 
         // Assign commands to all the verts
@@ -4054,8 +4048,31 @@
         });
 
         if (i >= last) {
-          points.push(new Two.Anchor(x4, y4));
+
+          // TODO: Add check if the two vectors in question are the same values.
+          if (this._closed && this._automatic) {
+
+            b = a;
+            a = m;
+
+            verts = getSubdivisions(a, b, limit);
+            points = points.concat(verts);
+
+            // Assign commands to all the verts
+            _.each(verts, function(v, i) {
+              if (i <= 0 && b.command === Two.Commands.move) {
+                v.command = Two.Commands.move;
+              } else {
+                v.command = Two.Commands.line;
+              }
+            });
+
+          } else if (closed) {
+            points.push(new Two.Anchor(a.x, a.y));
+          }
+
           points[points.length - 1].command = closed ? Two.Commands.close : Two.Commands.line;
+
         }
 
         b = a;
@@ -4115,6 +4132,29 @@
 
   Polygon.MakeObservable(Polygon.prototype);
 
+  function getSubdivisions(a, b, limit) {
+
+    right = b.controls && b.controls.right;
+    left = a.controls && a.controls.left;
+
+    x1 = b.x, y1 = b.y;
+    x2 = (right || b).x, y2 = (right || b).y;
+    x3 = (left || a).x, y3 = (left || a).y;
+    x4 = a.x, y4 = a.y;
+
+    if (right && b._relative) {
+      x2 += b.x;
+      y2 += b.y;
+    }
+
+    if (left && a._relative) {
+      x3 += a.x;
+      y3 += a.y;
+    }
+
+    return Two.Utils.subdivide(x1, y1, x2, y2, x3, y3, x4, y4, limit);
+
+  }
 
 })();
 

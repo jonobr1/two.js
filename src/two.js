@@ -727,6 +727,11 @@
         var limit = limit || Two.Utils.Curve.RecursionLimit;
         var amount = limit + 1;
 
+        // // Don't recurse if the end points are identical
+        // if (x1 === x4 && y1 === y4) {
+        //   return [new Two.Anchor(x4, y4)];
+        // }
+
         return _.map(_.range(0, amount), function(i) {
 
           var t = i / amount;
