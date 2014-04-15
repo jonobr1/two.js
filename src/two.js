@@ -338,6 +338,9 @@
             case 'stroke':
               elem.stroke = v.nodeValue;
               break;
+            case 'id':
+              elem.id = v.nodeValue;
+              break;
           }
 
         });

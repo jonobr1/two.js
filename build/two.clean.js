@@ -367,6 +367,9 @@
             case 'stroke':
               elem.stroke = v.nodeValue;
               break;
+            case 'id':
+              elem.id = v.nodeValue;
+              break;
           }
 
         });
@@ -2364,7 +2367,7 @@
 
       // TODO: Can speed up.
       appendChild: function(id) {
-        elem = this.domElement.querySelector('#' + Two.Identifier + id);
+        elem = this.domElement.querySelector('#' + id);
         if (elem) {
           this.elem.appendChild(elem);
         }
@@ -2372,7 +2375,7 @@
 
       // TODO: Can speed up.
       removeChild: function(id) {
-        elem = this.domElement.querySelector('#' + Two.Identifier + id);
+        elem = this.domElement.querySelector('#' + id);
         if (elem) {
           this.elem.removeChild(elem);
         }
@@ -2388,7 +2391,7 @@
 
         if (!this._renderer.elem) {
           this._renderer.elem = svg.createElement('g', {
-            id: Two.Identifier + this.id
+            id: this.id
           });
           domElement.appendChild(this._renderer.elem);
         }
@@ -2428,7 +2431,7 @@
 
         if (!this._renderer.elem) {
           this._renderer.elem = svg.createElement('path', {
-            id: Two.Identifier + this.id
+            id: this.id
           });
           domElement.appendChild(this._renderer.elem);
         }
@@ -3475,7 +3478,7 @@
     // Private object for renderer specific variables.
     this._renderer = {};
 
-    this.id = Two.uniqueId();
+    this.id = Two.Identifier + Two.uniqueId();
 
     // Define matrix properties which all inherited
     // objects of Shape have.

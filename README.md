@@ -55,6 +55,7 @@ node two.js/utils/build
 ## Change Log
 
 ##### Nightly
++ Enabled `id` to be properly interpretted from SVG elements [@chrisdelbuck](http://github.com/chrisdelbuck)
 + Updated `webgl` renderer `getBoundingClientRect` to accommodate `relative` anchors
 + Updated `beginning` and `ending` to clamp to each other
 + Reorganized `Two.Polygon._update` and `Two.Polygon.plot` in order to handle `beginning` and `ending` properties

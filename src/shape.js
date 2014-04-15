@@ -8,7 +8,7 @@
     // Private object for renderer specific variables.
     this._renderer = {};
 
-    this.id = Two.uniqueId();
+    this.id = Two.Identifier + Two.uniqueId();
 
     // Define matrix properties which all inherited
     // objects of Shape have.
