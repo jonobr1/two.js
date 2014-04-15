@@ -90,6 +90,11 @@ body {
     }
   }
 
+  input {
+    vertical-align: middle;
+    margin-left: $font-size / 2;
+  }
+
   .plus {
     margin-right: $font-size;
   }
@@ -108,13 +113,16 @@ body {
 }
 
 // Mobile design
-@media (max-width: 600px) {
+@media (max-width: 900px) {
   $scale: 0.8;
   #controls {
     li {
       color: #000;
       font-size: $font-size * $scale;
       line-height: $line-height * $scale;
+    }
+    input {
+      width: 40px;
     }
     .plus, .minus {
       width: $line-height * $scale;

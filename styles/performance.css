@@ -62,6 +62,9 @@ body {
       background: rgba(0, 0, 0, 0.2); }
     #controls .minus.enabled, #controls .plus.enabled {
       background: rgba(0, 0, 0, 0.3); }
+  #controls input {
+    vertical-align: middle;
+    margin-left: 0.5em; }
   #controls .plus {
     margin-right: 1em; }
   #controls .minus {
@@ -74,10 +77,12 @@ body {
   right: 0;
   bottom: 0; }
 
-@media (max-width: 600px) {
+@media (max-width: 900px) {
   #controls li {
     color: #000;
     font-size: 0.8em;
     line-height: 1.2em; }
+  #controls input {
+    width: 40px; }
   #controls .plus, #controls .minus {
     width: 1.2em; } }
