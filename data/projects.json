@@ -2,6 +2,16 @@
   "template": "<li><a href=\"<%= href %>\" target=\"_blank\"><img width=\"143\" height=\"100\" src=\"<%= img %>\" alt=\"\"><h3><p><%= title %></p></h3></a></li>",
   "items": [
     {
+      "title": "Patatap",
+      "href": "http://patatap.com",
+      "img": "images/projects/neuronal-synchrony.gif"
+    },
+    {
+      "title": "Unnumbered Sparks",
+      "href": "http://unnumberedsparks.com",
+      "img": "images/projects/unnumbered-sparks.gif"
+    },
+    {
       "title": "IDEOGRAM",
       "href": "http://lab.johnwai.co.uk/ideogram/",
       "img": "images/projects/ideogram.gif"
@@ -45,11 +55,6 @@
       "title": "Jumping Jack Sack",
       "href": "http://lab.ultranoir.com/jumping-jack-sack/",
       "img": "images/projects/jumping-jack.gif"
-    },
-    {
-      "title": "Neuronal Synchrony",
-      "href": "http://works.jonobr1.com/Neuronal-Synchrony",
-      "img": "images/projects/neuronal-synchrony.gif"
     }
   ]
 }
