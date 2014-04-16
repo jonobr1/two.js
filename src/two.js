@@ -804,14 +804,6 @@
         b.u = _.isObject(b.controls.left) ? b.controls.left : new Two.Vector(0, 0);
         b.v = _.isObject(b.controls.right) ? b.controls.right : new Two.Vector(0, 0);
 
-        if (d1 < 0.0001 || d2 < 0.0001) {
-          if (!b._relative) {
-            b.controls.left.copy(b);
-            b.controls.right.copy(b);
-          }
-          return b;
-        }
-
         d1 *= 0.33; // Why 0.33?
         d2 *= 0.33;
 
