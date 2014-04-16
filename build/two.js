@@ -2200,10 +2200,10 @@ var Backbone = Backbone || {};
         var limit = limit || Two.Utils.Curve.RecursionLimit;
         var amount = limit + 1;
 
-        // Don't recurse if the end points are identical
-        if (x1 === x4 && y1 === y4) {
-          return [new Two.Anchor(x4, y4)];
-        }
+        // // Don't recurse if the end points are identical
+        // if (x1 === x4 && y1 === y4) {
+        //   return [new Two.Anchor(x4, y4)];
+        // }
 
         return _.map(_.range(0, amount), function(i) {
 
@@ -2277,13 +2277,13 @@ var Backbone = Backbone || {};
         b.u = _.isObject(b.controls.left) ? b.controls.left : new Two.Vector(0, 0);
         b.v = _.isObject(b.controls.right) ? b.controls.right : new Two.Vector(0, 0);
 
-        if (d1 < 0.0001 || d2 < 0.0001) {
-          if (!b._relative) {
-            b.controls.left.copy(b);
-            b.controls.right.copy(b);
-          }
-          return b;
-        }
+        // if (d1 < 0.0001 || d2 < 0.0001) {
+        //   if (!b._relative) {
+        //     b.controls.left.copy(b);
+        //     b.controls.right.copy(b);
+        //   }
+        //   return b;
+        // }
 
         d1 *= 0.33; // Why 0.33?
         d2 *= 0.33;

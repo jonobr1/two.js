@@ -124,7 +124,7 @@
 
           var pct = parseFloat(data.misMatchPercentage);
 
-          ok(pct <= 1, message);
+          ok(pct <= 2, message);
           start();
 
           var img = document.createElement('img');
