@@ -2,6 +2,11 @@
   "template": "<li><a href=\"<%= href %>\" target=\"_blank\"><img width=\"143\" height=\"100\" src=\"<%= img %>\" alt=\"\"><h3><p><%= title %></p></h3></a></li>",
   "items": [
     {
+      "title": "Tether",
+      "href": "http://tether.plaid.co.uk",
+      "img": "images/projects/tether.gif"
+    },
+    {
       "title": "Patatap",
       "href": "http://patatap.com",
       "img": "images/projects/neuronal-synchrony.gif"
