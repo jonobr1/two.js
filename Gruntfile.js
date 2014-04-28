@@ -18,13 +18,14 @@ module.exports = function(grunt) {
       srcFiles : [
         'src/two.js',
         'src/vector.js',
+        'src/anchor.js',
         'src/matrix.js',
         'src/renderer/svg.js',
         'src/renderer/canvas.js',
         'src/renderer/webgl.js',
         'src/shape.js',
-        'src/group.js',
-        'src/polygon.js'
+        'src/polygon.js',
+        'src/group.js'
       ]
     },
 
