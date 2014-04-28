@@ -27,32 +27,36 @@
     MakeObservable: function(object) {
 
       Two.Shape.MakeObservable(object);
-      Group.MakeGetterSetter(object, Two.Polygon.Properties);
+      Group.MakeGetterSetters(object, Two.Polygon.Properties);
 
     },
 
-    MakeGetterSetter: function(group, properties) {
+    MakeGetterSetters: function(group, properties) {
 
       if (!_.isArray(properties)) {
         properties = [properties];
       }
 
       _.each(properties, function(k) {
+        Group.MakeGetterSetter(group, k);
+      });
 
-        secret = '_' + k;
+    },
 
-        Object.defineProperty(group, k, {
-          get: function() {
-            return this[secret];
-          },
-          set: function(v) {
-            this[secret] = v;
-            _.each(this.children, function(child) { // Trickle down styles
-              child[k] = v;
-            });
-          }
-        });
+    MakeGetterSetter: function(group, k) {
 
+      var secret = '_' + k;
+
+      Object.defineProperty(group, k, {
+        get: function() {
+          return this[secret];
+        },
+        set: function(v) {
+          this[secret] = v;
+          _.each(this.children, function(child) { // Trickle down styles
+            child[k] = v;
+          });
+        }
       });
 
     }

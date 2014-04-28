@@ -55,6 +55,7 @@ node two.js/utils/build
 ## Change Log
 
 ##### Nightly
++ Updated `Two.Group.prototype` observable properties on `Two.Polygon.Properties` to ensure each property is considered unique
 + ~~`Two.Polygon.vertices` first and last vertex create automated control points when `Two.Polygon.curved = true`~~
 + Updated `Two.Polygon.subdivide` method to accomodate `Two.makeEllipse`
 + Enabled `id` to be properly interpretted from SVG elements [@chrisdelbuck](http://github.com/chrisdelbuck)
