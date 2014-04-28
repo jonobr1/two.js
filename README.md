@@ -55,7 +55,7 @@ node two.js/utils/build
 ## Change Log
 
 ##### Nightly
-+ `Two.Polygon.vertices` first and last vertex create automated control points when `Two.Polygon.curved = true`
++ ~~`Two.Polygon.vertices` first and last vertex create automated control points when `Two.Polygon.curved = true`~~
 + Updated `Two.Polygon.subdivide` method to accomodate `Two.makeEllipse`
 + Enabled `id` to be properly interpretted from SVG elements [@chrisdelbuck](http://github.com/chrisdelbuck)
 + Updated `webgl` renderer `getBoundingClientRect` to accommodate `relative` anchors

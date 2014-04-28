@@ -150,7 +150,7 @@
     shape.visible = false;
     shape.visible = true;
 
-    two.update();
+    two.update;
 
     QUnit.Utils.compare.call(o, './images/canvas/styles' + suffix, two.renderer, 'Styles render properly.');
 
