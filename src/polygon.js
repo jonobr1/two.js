@@ -10,7 +10,7 @@
   // Localized variables
   var l, ia, ib, last, closed, v, i, parent, points, clone, rect, corner,
     border, temp, left, right, top, bottom, x, y, a, b, c, d, m, matrix, curved,
-    x1, y1, x2, y2, x3, y3, x4, y4;
+    x1, y1, x2, y2, x3, y3, x4, y4, sum, target, length, t;
 
   var commands = {};
 
@@ -73,6 +73,7 @@
 
     FlagVertices: function() {
       this._flagVertices = true;
+      this._flagLength = true;
     },
 
     MakeObservable: function(object) {
@@ -96,6 +97,18 @@
           }
         });
 
+      });
+
+      Object.defineProperty(object, 'length', {
+        get: function() {
+          if (this._flagLength) {
+            this._updateLength();
+          }
+          return this._length;
+        },
+        set: function(v) {
+
+        }
       });
 
       Object.defineProperty(object, 'closed', {
@@ -214,6 +227,7 @@
     // http://en.wikipedia.org/wiki/Flag
 
     _flagVertices: true,
+    _flagLength: true,
 
     _flagFill: true,
     _flagStroke: true,
@@ -226,6 +240,8 @@
     _flagMiter: true,
 
     // Underlying Properties
+
+    _length: 0,
 
     _fill: '#fff',
     _stroke: '#000',
@@ -392,6 +408,68 @@
     },
 
     /**
+     * Given a float `t` from 0 to 1, return a point or assign a passed `obj`'s
+     * coordinates to that percentage on this Two.Polygon's curve.
+     */
+    getPointAt: function(t, obj) {
+
+      target = this.length * Math.min(Math.max(t, 0), 1);
+      length = this.vertices.length;
+      last = length - 1;
+
+      a = null;
+      b = null;
+
+      for (i = 0, l = this._lengths.length, sum = 0; i < l; i++) {
+
+        if (sum + this._lengths[i] > target) {
+          a = this.vertices[this.closed ? Two.Utils.mod(i, length) : i];
+          b = this.vertices[Math.min(Math.max(i - 1, 0), last)];
+          target -= sum;
+          t = target / this._lengths[i];
+          break;
+        }
+
+        sum += this._lengths[i];
+
+      }
+
+      if (_.isNull(a) || _.isNull(b)) {
+        return null;
+      }
+
+      right = b.controls && b.controls.right;
+      left = a.controls && a.controls.left;
+
+      x1 = b.x, y1 = b.y;
+      x2 = (right || b).x, y2 = (right || b).y;
+      x3 = (left || a).x, y3 = (left || a).y;
+      x4 = a.x, y4 = a.y;
+
+      if (right && b._relative) {
+        x2 += b.x;
+        y2 += b.y;
+      }
+
+      if (left && a._relative) {
+        x3 += a.x;
+        y3 += a.y;
+      }
+
+      x = Two.Utils.getPointOnCubicBezier(t, x1, x2, x3, x4);
+      y = Two.Utils.getPointOnCubicBezier(t, y1, y2, y3, y4);
+
+      if (_.isObject(obj)) {
+        obj.x = x;
+        obj.y = y;
+        return obj;
+      }
+
+      return new Two.Vector(x, y);
+
+    },
+
+    /**
      * Based on closed / curved and sorting of vertices plot where all points
      * should be and where the respective handles should be too.
      */
@@ -488,6 +566,51 @@
 
     },
 
+    _updateLength: function(limit) {
+
+      this._update();
+
+      last = this.vertices.length - 1;
+      b = this.vertices[last];
+      closed = this._closed || this.vertices[last]._command === Two.Commands.close;
+      curved = this._curved;
+      sum = 0;
+
+      if (_.isUndefined(this._lengths)) {
+        this._lengths = [];
+      }
+
+      _.each(this.vertices, function(a, i) {
+
+        if ((i <= 0 && !closed) || a.command === Two.Commands.move) {
+          b = m = a;
+          this._lengths[i] = 0;
+          return;
+        }
+
+        this._lengths[i] = getCurveLength(a, b, limit);
+        sum += this._lengths[i];
+
+        if (i >= last && closed) {
+
+          b = a;
+          a = m;
+
+          this._lengths[i + 1] = getCurveLength(a, b, limit);
+          sum += this._lengths[i + 1];
+
+        }
+
+        b = a;
+
+      }, this);
+
+      this._length = sum;
+
+      return this;
+
+    },
+
     _update: function() {
 
       if (this._flagVertices) {
@@ -532,6 +655,30 @@
   });
 
   Polygon.MakeObservable(Polygon.prototype);
+
+  function getCurveLength(a, b, limit) {
+
+    right = b.controls && b.controls.right;
+    left = a.controls && a.controls.left;
+
+    x1 = b.x, y1 = b.y;
+    x2 = (right || b).x, y2 = (right || b).y;
+    x3 = (left || a).x, y3 = (left || a).y;
+    x4 = a.x, y4 = a.y;
+
+    if (right && b._relative) {
+      x2 += b.x;
+      y2 += b.y;
+    }
+
+    if (left && a._relative) {
+      x3 += a.x;
+      y3 += a.y;
+    }
+
+    return Two.Utils.getCurveLength(x1, y1, x2, y2, x3, y3, x4, y4, limit);
+
+  }
 
   function getSubdivisions(a, b, limit) {
 
