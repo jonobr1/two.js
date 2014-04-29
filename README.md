@@ -55,6 +55,8 @@ node two.js/utils/build
 ## Change Log
 
 ##### Nightly
++ Added `Two.Polygon.getPointAt` method to get coordinates on a curve/line
++ Added `Two.Polygon.length` property and `Two.Polygon._updateLength` method to calculate length of curve/line
 + Updated `Two.Group.prototype` observable properties on `Two.Polygon.Properties` to ensure each property is considered unique
 + ~~`Two.Polygon.vertices` first and last vertex create automated control points when `Two.Polygon.curved = true`~~
 + Updated `Two.Polygon.subdivide` method to accomodate `Two.makeEllipse`
