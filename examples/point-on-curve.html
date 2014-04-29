@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Two.js: Get Point On Curve</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <link rel="image_src" href="../images/logo.gif" />
+    <link rel="shortcut icon" type="image/gif" href="../images/favicon.gif">
+    <script src="../third-party/jquery.js"></script>
+    <script src="../third-party/two.js"></script>
+  </head>
+  <body style="background: #faaa53;">
+    <div class="scripts">
+      <script>
+
+        $(function() {
+
+          var two = new Two({
+            fullscreen: true,
+            autostart: true
+          }).appendTo(document.body);
+
+          var path = two.makeCurve(
+            Math.random() * two.width, Math.random() * two.height,
+            Math.random() * two.width, Math.random() * two.height,
+            Math.random() * two.width, Math.random() * two.height,
+            Math.random() * two.width, Math.random() * two.height,
+            Math.random() * two.width, Math.random() * two.height,
+            Math.random() * two.width, Math.random() * two.height,
+            true
+          );
+
+          path.noFill().linewidth = 25;
+          path.stroke = 'white';
+          path.cap = 'round';
+
+          var cursor = two.makeCircle(0, 0, 25);
+          cursor.fill = '#00adef';
+          cursor.noStroke();
+
+          var pct = 0;
+
+          // Start the cursor at the beginning of the curve
+          path.getPointAt(pct, cursor.translation);
+          cursor.translation.addSelf(path.translation);
+
+          var drag = function(e) {
+            pct = e.clientX / two.width;
+            path.getPointAt(pct, cursor.translation);
+            cursor.translation.addSelf(path.translation);
+          };
+
+          var touchDrag = function(e) {
+            e.preventDefault();
+            var touch = e.originalEvent.changedTouches[0];
+            drag({
+              clientX: touch.pageX,
+              clientY: touch.pageY
+            });
+            return false;
+          };
+
+          $(window)
+            .bind('mousemove', drag)
+            .bind('touchmove', touchDrag);
+
+        });
+
+      </script>
+    </div>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-40550435-1', 'github.com');
+      ga('send', 'pageview');
+
+    </script>
+  </body>
+</html>

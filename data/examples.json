@@ -2,6 +2,11 @@
   "template": "<li><a href=\"<%= href %>\" target=\"_blank\"><img width=\"143\" height=\"100\" src=\"<%= img %>\" alt=\"\"><h3><p><%= title %></p></h3></a></li>",
   "items": [
     {
+      "title": "Get Point on Curve",
+      "href": "examples/point-on-curve.html",
+      "img": "images/examples/point-on-curve.gif"
+    },
+    {
       "title": "Rubber Ball",
       "href": "examples/rubber-ball.html",
       "img": "images/examples/rubber-ball.gif"

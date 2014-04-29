@@ -1700,7 +1700,46 @@ var Backbone = Backbone || {};
           distance: 0.25,
           angle: 0,
           epsilon: 0.01
-        }
+        },
+
+        // Lookup tables for abscissas and weights with values for n = 2 .. 16.
+        // As values are symmetric, only store half of them and adapt algorithm
+        // to factor in symmetry.
+        abscissas: [
+          [  0.5773502691896257645091488],
+          [0,0.7745966692414833770358531],
+          [  0.3399810435848562648026658,0.8611363115940525752239465],
+          [0,0.5384693101056830910363144,0.9061798459386639927976269],
+          [  0.2386191860831969086305017,0.6612093864662645136613996,0.9324695142031520278123016],
+          [0,0.4058451513773971669066064,0.7415311855993944398638648,0.9491079123427585245261897],
+          [  0.1834346424956498049394761,0.5255324099163289858177390,0.7966664774136267395915539,0.9602898564975362316835609],
+          [0,0.3242534234038089290385380,0.6133714327005903973087020,0.8360311073266357942994298,0.9681602395076260898355762],
+          [  0.1488743389816312108848260,0.4333953941292471907992659,0.6794095682990244062343274,0.8650633666889845107320967,0.9739065285171717200779640],
+          [0,0.2695431559523449723315320,0.5190961292068118159257257,0.7301520055740493240934163,0.8870625997680952990751578,0.9782286581460569928039380],
+          [  0.1252334085114689154724414,0.3678314989981801937526915,0.5873179542866174472967024,0.7699026741943046870368938,0.9041172563704748566784659,0.9815606342467192506905491],
+          [0,0.2304583159551347940655281,0.4484927510364468528779129,0.6423493394403402206439846,0.8015780907333099127942065,0.9175983992229779652065478,0.9841830547185881494728294],
+          [  0.1080549487073436620662447,0.3191123689278897604356718,0.5152486363581540919652907,0.6872929048116854701480198,0.8272013150697649931897947,0.9284348836635735173363911,0.9862838086968123388415973],
+          [0,0.2011940939974345223006283,0.3941513470775633698972074,0.5709721726085388475372267,0.7244177313601700474161861,0.8482065834104272162006483,0.9372733924007059043077589,0.9879925180204854284895657],
+          [  0.0950125098376374401853193,0.2816035507792589132304605,0.4580167776572273863424194,0.6178762444026437484466718,0.7554044083550030338951012,0.8656312023878317438804679,0.9445750230732325760779884,0.9894009349916499325961542]
+        ],
+
+        weights: [
+          [1],
+          [0.8888888888888888888888889,0.5555555555555555555555556],
+          [0.6521451548625461426269361,0.3478548451374538573730639],
+          [0.5688888888888888888888889,0.4786286704993664680412915,0.2369268850561890875142640],
+          [0.4679139345726910473898703,0.3607615730481386075698335,0.1713244923791703450402961],
+          [0.4179591836734693877551020,0.3818300505051189449503698,0.2797053914892766679014678,0.1294849661688696932706114],
+          [0.3626837833783619829651504,0.3137066458778872873379622,0.2223810344533744705443560,0.1012285362903762591525314],
+          [0.3302393550012597631645251,0.3123470770400028400686304,0.2606106964029354623187429,0.1806481606948574040584720,0.0812743883615744119718922],
+          [0.2955242247147528701738930,0.2692667193099963550912269,0.2190863625159820439955349,0.1494513491505805931457763,0.0666713443086881375935688],
+          [0.2729250867779006307144835,0.2628045445102466621806889,0.2331937645919904799185237,0.1862902109277342514260976,0.1255803694649046246346943,0.0556685671161736664827537],
+          [0.2491470458134027850005624,0.2334925365383548087608499,0.2031674267230659217490645,0.1600783285433462263346525,0.1069393259953184309602547,0.0471753363865118271946160],
+          [0.2325515532308739101945895,0.2262831802628972384120902,0.2078160475368885023125232,0.1781459807619457382800467,0.1388735102197872384636018,0.0921214998377284479144218,0.0404840047653158795200216],
+          [0.2152638534631577901958764,0.2051984637212956039659241,0.1855383974779378137417166,0.1572031671581935345696019,0.1215185706879031846894148,0.0801580871597602098056333,0.0351194603317518630318329],
+          [0.2025782419255612728806202,0.1984314853271115764561183,0.1861610000155622110268006,0.1662692058169939335532009,0.1395706779261543144478048,0.1071592204671719350118695,0.0703660474881081247092674,0.0307532419961172683546284],
+          [0.1894506104550684962853967,0.1826034150449235888667637,0.1691565193950025381893121,0.1495959888165767320815017,0.1246289712555338720524763,0.0951585116824927848099251,0.0622535239386478928628438,0.0271524594117540948517806]
+        ]
 
       },
 
@@ -1811,6 +1850,9 @@ var Backbone = Backbone || {};
             case 'stroke':
               elem.stroke = v.nodeValue;
               break;
+            case 'id':
+              elem.id = v.nodeValue;
+              break;
           }
 
         });
@@ -1891,7 +1933,7 @@ var Backbone = Backbone || {};
 
             coords = command.slice(1).trim();
             coords = coords.replace(/(-?\d+(?:\.\d*)?)[eE]([+\-]?\d+)/g, function(match, n1, n2) {
-              return parseFloat(n1) * Math.pow(10, n2);
+              return parseFloat(n1) * pow(10, n2);
             });
             coords = coords.split(/[\s,]+|(?=\s?[+\-])/);
             relative = type === lower;
@@ -2197,6 +2239,12 @@ var Backbone = Backbone || {};
         var limit = limit || Two.Utils.Curve.RecursionLimit;
         var amount = limit + 1;
 
+        // TODO: Issue 73
+        // Don't recurse if the end points are identical
+        if (x1 === x4 && y1 === y4) {
+          return [new Two.Anchor(x4, y4)];
+        }
+
         return _.map(_.range(0, amount), function(i) {
 
           var t = i / amount;
@@ -2216,6 +2264,62 @@ var Backbone = Backbone || {};
       },
 
       /**
+       * Given 2 points (a, b) and corresponding control point for each
+       * return a float that represents the length of the curve using
+       * Gauss-Legendre algorithm. Limit iterations of calculation by `limit`.
+       */
+      getCurveLength: function(x1, y1, x2, y2, x3, y3, x4, y4, limit) {
+
+        // TODO: Better / fuzzier equality check
+        // Linear calculation
+        if (x1 === x2 && y1 === y2 && x3 === x4 && y3 === y4) {
+          var dx = x4 - x1;
+          var dy = y4 - y1;
+          return sqrt(dx * dx + dy * dy);
+        }
+
+        // Calculate the coefficients of a Bezier derivative.
+        var ax = 9 * (x2 - x3) + 3 * (x4 - x1),
+          bx = 6 * (x1 + x3) - 12 * x2,
+          cx = 3 * (x2 - x1),
+
+          ay = 9 * (y2 - y3) + 3 * (y4 - y1),
+          by = 6 * (y1 + y3) - 12 * y2,
+          cy = 3 * (y2 - y1);
+
+        var integrand = function(t) {
+          // Calculate quadratic equations of derivatives for x and y
+          var dx = (ax * t + bx) * t + cx,
+            dy = (ay * t + by) * t + cy;
+          return sqrt(dx * dx + dy * dy);
+        };
+
+        return integrate(
+          integrand, 0, 1, limit || Two.Utils.Curve.RecursionLimit
+        );
+
+      },
+
+      /**
+       * Integration for `getCurveLength` calculations. Referenced from
+       * Paper.js: https://github.com/paperjs/paper.js/blob/master/src/util/Numerical.js#L101
+       */
+      integrate: function(f, a, b, n) {
+        var x = Two.Utils.Curve.abscissas[n - 2],
+          w = Two.Utils.Curve.weights[n - 2],
+          A = 0.5 * (b - a),
+          B = A + a,
+          i = 0,
+          m = (n + 1) >> 1,
+          sum = n & 1 ? w[i++] * f(B) : 0; // Handle odd n
+        while (i < m) {
+          var Ax = A * x[i];
+          sum += w[i++] * (f(B + Ax) + f(B - Ax));
+        }
+        return A * sum;
+      },
+
+      /**
        * Creates a set of points that have u, v values for anchor positions
        */
       getCurveFromPoints: function(points, closed) {
@@ -2230,8 +2334,8 @@ var Backbone = Backbone || {};
             Two.Anchor.AppendCurveProperties(point);
           }
 
-          var prev = closed ? mod(i - 1, l) : Math.max(i - 1, 0);
-          var next = closed ? mod(i + 1, l) : Math.min(i + 1, last);
+          var prev = closed ? mod(i - 1, l) : max(i - 1, 0);
+          var next = closed ? mod(i + 1, l) : min(i + 1, last);
 
           var a = points[prev];
           var b = point;
@@ -2269,6 +2373,7 @@ var Backbone = Backbone || {};
         b.u = _.isObject(b.controls.left) ? b.controls.left : new Two.Vector(0, 0);
         b.v = _.isObject(b.controls.right) ? b.controls.right : new Two.Vector(0, 0);
 
+        // TODO: Issue 73
         if (d1 < 0.0001 || d2 < 0.0001) {
           if (!b._relative) {
             b.controls.left.copy(b);
@@ -2314,8 +2419,8 @@ var Backbone = Backbone || {};
         var theta = angleBetween(Two.Vector.zero, b);
 
         return new Two.Vector(
-          d * Math.cos(theta) + (relative ? 0 : a.x),
-          d * Math.sin(theta) + (relative ? 0 : a.y)
+          d * cos(theta) + (relative ? 0 : a.x),
+          d * sin(theta) + (relative ? 0 : a.y)
         );
 
       },
@@ -2370,7 +2475,6 @@ var Backbone = Backbone || {};
        * removed : pop / shift / splice
        * inserted : push / unshift / splice (with > 2 arguments)
        */
-
       Collection: function() {
 
         Array.call(this);
@@ -2432,7 +2536,7 @@ var Backbone = Backbone || {};
 
       this.trigger(Two.Events.remove, spliced);
 
-      if(arguments.length > 2) {
+      if (arguments.length > 2) {
         inserted = this.slice(arguments[0], arguments.length-2);
         this.trigger(Two.Events.insert, inserted);
       }
@@ -2452,7 +2556,9 @@ var Backbone = Backbone || {};
     decoupleShapes = Two.Utils.decoupleShapes,
     mod = Two.Utils.mod,
     getBackingStoreRatio = Two.Utils.getBackingStoreRatio,
-    getPointOnCubicBezier = Two.Utils.getPointOnCubicBezier;
+    getPointOnCubicBezier = Two.Utils.getPointOnCubicBezier,
+    getCurveLength = Two.Utils.getCurveLength,
+    integrate = Two.Utils.integrate;
 
   _.extend(Two.prototype, Backbone.Events, {
 
@@ -2582,10 +2688,10 @@ var Backbone = Backbone || {};
       var h2 = height / 2;
 
       var points = [
-        new Two.Anchor(w2, h2),
-        new Two.Anchor(-w2, h2),
         new Two.Anchor(-w2, -h2),
-        new Two.Anchor(w2, -h2)
+        new Two.Anchor(w2, -h2),
+        new Two.Anchor(w2, h2),
+        new Two.Anchor(-w2, h2)
       ];
 
       var rect = new Two.Polygon(points, true);
@@ -3808,7 +3914,7 @@ var Backbone = Backbone || {};
 
       // TODO: Can speed up.
       appendChild: function(id) {
-        elem = this.domElement.querySelector('#' + Two.Identifier + id);
+        elem = this.domElement.querySelector('#' + id);
         if (elem) {
           this.elem.appendChild(elem);
         }
@@ -3816,7 +3922,7 @@ var Backbone = Backbone || {};
 
       // TODO: Can speed up.
       removeChild: function(id) {
-        elem = this.domElement.querySelector('#' + Two.Identifier + id);
+        elem = this.domElement.querySelector('#' + id);
         if (elem) {
           this.elem.removeChild(elem);
         }
@@ -3832,7 +3938,7 @@ var Backbone = Backbone || {};
 
         if (!this._renderer.elem) {
           this._renderer.elem = svg.createElement('g', {
-            id: Two.Identifier + this.id
+            id: this.id
           });
           domElement.appendChild(this._renderer.elem);
         }
@@ -3872,7 +3978,7 @@ var Backbone = Backbone || {};
 
         if (!this._renderer.elem) {
           this._renderer.elem = svg.createElement('path', {
-            id: Two.Identifier + this.id
+            id: this.id
           });
           domElement.appendChild(this._renderer.elem);
         }
@@ -4433,8 +4539,8 @@ var Backbone = Backbone || {};
           return;
         }
 
-        a = cl._relative ? cl.x + x : cl.x, b = cl._relative ? cl.y + y : cl.y;
-        c = cr._relative ? cr.x + x : cr.x, d = cr._relative ? cr.y + y : cr.y;
+        a = v._relative ? cl.x + x : cl.x, b = v._relative ? cl.y + y : cl.y;
+        c = v._relative ? cr.x + x : cr.x, d = v._relative ? cr.y + y : cr.y;
 
         if (!a || !b || !c || !d) {
           return;
@@ -4919,7 +5025,7 @@ var Backbone = Backbone || {};
     // Private object for renderer specific variables.
     this._renderer = {};
 
-    this.id = Two.uniqueId();
+    this.id = Two.Identifier + Two.uniqueId();
 
     // Define matrix properties which all inherited
     // objects of Shape have.
@@ -5044,8 +5150,14 @@ var Backbone = Backbone || {};
 
   // Localized variables
   var l, ia, ib, last, closed, v, i, parent, points, clone, rect, corner,
-    border, temp, left, right, top, bottom, x, y, a, b, c, d, matrix,
-    x1, y1, x2, y2, x3, y3, x4, y4;
+    border, temp, left, right, top, bottom, x, y, a, b, c, d, m, matrix, curved,
+    x1, y1, x2, y2, x3, y3, x4, y4, sum, target, length, t;
+
+  var commands = {};
+
+  _.each(Two.Commands, function(v, k) {
+    commands[k] = new RegExp(v);
+  });
 
   var Polygon = Two.Polygon = function(vertices, closed, curved, manual) {
 
@@ -5102,6 +5214,7 @@ var Backbone = Backbone || {};
 
     FlagVertices: function() {
       this._flagVertices = true;
+      this._flagLength = true;
     },
 
     MakeObservable: function(object) {
@@ -5125,6 +5238,18 @@ var Backbone = Backbone || {};
           }
         });
 
+      });
+
+      Object.defineProperty(object, 'length', {
+        get: function() {
+          if (this._flagLength) {
+            this._updateLength();
+          }
+          return this._length;
+        },
+        set: function(v) {
+
+        }
       });
 
       Object.defineProperty(object, 'closed', {
@@ -5243,6 +5368,7 @@ var Backbone = Backbone || {};
     // http://en.wikipedia.org/wiki/Flag
 
     _flagVertices: true,
+    _flagLength: true,
 
     _flagFill: true,
     _flagStroke: true,
@@ -5255,6 +5381,8 @@ var Backbone = Backbone || {};
     _flagMiter: true,
 
     // Underlying Properties
+
+    _length: 0,
 
     _fill: '#fff',
     _stroke: '#000',
@@ -5421,6 +5549,68 @@ var Backbone = Backbone || {};
     },
 
     /**
+     * Given a float `t` from 0 to 1, return a point or assign a passed `obj`'s
+     * coordinates to that percentage on this Two.Polygon's curve.
+     */
+    getPointAt: function(t, obj) {
+
+      target = this.length * Math.min(Math.max(t, 0), 1);
+      length = this.vertices.length;
+      last = length - 1;
+
+      a = null;
+      b = null;
+
+      for (i = 0, l = this._lengths.length, sum = 0; i < l; i++) {
+
+        if (sum + this._lengths[i] > target) {
+          a = this.vertices[this.closed ? Two.Utils.mod(i, length) : i];
+          b = this.vertices[Math.min(Math.max(i - 1, 0), last)];
+          target -= sum;
+          t = target / this._lengths[i];
+          break;
+        }
+
+        sum += this._lengths[i];
+
+      }
+
+      if (_.isNull(a) || _.isNull(b)) {
+        return null;
+      }
+
+      right = b.controls && b.controls.right;
+      left = a.controls && a.controls.left;
+
+      x1 = b.x, y1 = b.y;
+      x2 = (right || b).x, y2 = (right || b).y;
+      x3 = (left || a).x, y3 = (left || a).y;
+      x4 = a.x, y4 = a.y;
+
+      if (right && b._relative) {
+        x2 += b.x;
+        y2 += b.y;
+      }
+
+      if (left && a._relative) {
+        x3 += a.x;
+        y3 += a.y;
+      }
+
+      x = Two.Utils.getPointOnCubicBezier(t, x1, x2, x3, x4);
+      y = Two.Utils.getPointOnCubicBezier(t, y1, y2, y3, y4);
+
+      if (_.isObject(obj)) {
+        obj.x = x;
+        obj.y = y;
+        return obj;
+      }
+
+      return new Two.Vector(x, y);
+
+    },
+
+    /**
      * Based on closed / curved and sorting of vertices plot where all points
      * should be and where the respective handles should be too.
      */
@@ -5446,6 +5636,7 @@ var Backbone = Backbone || {};
       last = this.vertices.length - 1;
       b = this.vertices[last];
       closed = this._closed || this.vertices[last]._command === Two.Commands.close;
+      curved = this._curved;
       points = [];
 
       _.each(this.vertices, function(a, i) {
@@ -5460,29 +5651,11 @@ var Backbone = Backbone || {};
           if (i > 0) {
             points[points.length - 1].command = Two.Commands.line;
           }
-          b = a;
+          b = m = a;
           return;
         }
 
-        right = b.controls && b.controls.right;
-        left = a.controls && a.controls.left;
-
-        x1 = b.x, y1 = b.y;
-        x2 = (right || b).x, y2 = (right || b).y;
-        x3 = (left || a).x, y3 = (left || a).y;
-        x4 = a.x, y4 = a.y;
-
-        if (right && b._relative) {
-          x2 += b.x;
-          y2 += b.y;
-        }
-
-        if (left && a._relative) {
-          x3 += a.x;
-          y3 += a.y;
-        }
-
-        var verts = Two.Utils.subdivide(x1, y1, x2, y2, x3, y3, x4, y4, limit);
+        var verts = getSubdivisions(a, b, limit);
         points = points.concat(verts);
 
         // Assign commands to all the verts
@@ -5495,8 +5668,31 @@ var Backbone = Backbone || {};
         });
 
         if (i >= last) {
-          points.push(new Two.Anchor(x4, y4));
+
+          // TODO: Add check if the two vectors in question are the same values.
+          if (this._closed && this._automatic) {
+
+            b = a;
+            a = m;
+
+            verts = getSubdivisions(a, b, limit);
+            points = points.concat(verts);
+
+            // Assign commands to all the verts
+            _.each(verts, function(v, i) {
+              if (i <= 0 && b.command === Two.Commands.move) {
+                v.command = Two.Commands.move;
+              } else {
+                v.command = Two.Commands.line;
+              }
+            });
+
+          } else if (closed) {
+            points.push(new Two.Anchor(a.x, a.y));
+          }
+
           points[points.length - 1].command = closed ? Two.Commands.close : Two.Commands.line;
+
         }
 
         b = a;
@@ -5506,6 +5702,51 @@ var Backbone = Backbone || {};
       this._automatic = false;
       this._curved = false;
       this.vertices = points;
+
+      return this;
+
+    },
+
+    _updateLength: function(limit) {
+
+      this._update();
+
+      last = this.vertices.length - 1;
+      b = this.vertices[last];
+      closed = this._closed || this.vertices[last]._command === Two.Commands.close;
+      curved = this._curved;
+      sum = 0;
+
+      if (_.isUndefined(this._lengths)) {
+        this._lengths = [];
+      }
+
+      _.each(this.vertices, function(a, i) {
+
+        if ((i <= 0 && !closed) || a.command === Two.Commands.move) {
+          b = m = a;
+          this._lengths[i] = 0;
+          return;
+        }
+
+        this._lengths[i] = getCurveLength(a, b, limit);
+        sum += this._lengths[i];
+
+        if (i >= last && closed) {
+
+          b = a;
+          a = m;
+
+          this._lengths[i + 1] = getCurveLength(a, b, limit);
+          sum += this._lengths[i + 1];
+
+        }
+
+        b = a;
+
+      }, this);
+
+      this._length = sum;
 
       return this;
 
@@ -5556,6 +5797,53 @@ var Backbone = Backbone || {};
 
   Polygon.MakeObservable(Polygon.prototype);
 
+  function getCurveLength(a, b, limit) {
+
+    right = b.controls && b.controls.right;
+    left = a.controls && a.controls.left;
+
+    x1 = b.x, y1 = b.y;
+    x2 = (right || b).x, y2 = (right || b).y;
+    x3 = (left || a).x, y3 = (left || a).y;
+    x4 = a.x, y4 = a.y;
+
+    if (right && b._relative) {
+      x2 += b.x;
+      y2 += b.y;
+    }
+
+    if (left && a._relative) {
+      x3 += a.x;
+      y3 += a.y;
+    }
+
+    return Two.Utils.getCurveLength(x1, y1, x2, y2, x3, y3, x4, y4, limit);
+
+  }
+
+  function getSubdivisions(a, b, limit) {
+
+    right = b.controls && b.controls.right;
+    left = a.controls && a.controls.left;
+
+    x1 = b.x, y1 = b.y;
+    x2 = (right || b).x, y2 = (right || b).y;
+    x3 = (left || a).x, y3 = (left || a).y;
+    x4 = a.x, y4 = a.y;
+
+    if (right && b._relative) {
+      x2 += b.x;
+      y2 += b.y;
+    }
+
+    if (left && a._relative) {
+      x3 += a.x;
+      y3 += a.y;
+    }
+
+    return Two.Utils.subdivide(x1, y1, x2, y2, x3, y3, x4, y4, limit);
+
+  }
 
 })();
 
@@ -5588,32 +5876,36 @@ var Backbone = Backbone || {};
     MakeObservable: function(object) {
 
       Two.Shape.MakeObservable(object);
-      Group.MakeGetterSetter(object, Two.Polygon.Properties);
+      Group.MakeGetterSetters(object, Two.Polygon.Properties);
 
     },
 
-    MakeGetterSetter: function(group, properties) {
+    MakeGetterSetters: function(group, properties) {
 
       if (!_.isArray(properties)) {
         properties = [properties];
       }
 
       _.each(properties, function(k) {
+        Group.MakeGetterSetter(group, k);
+      });
 
-        secret = '_' + k;
+    },
 
-        Object.defineProperty(group, k, {
-          get: function() {
-            return this[secret];
-          },
-          set: function(v) {
-            this[secret] = v;
-            _.each(this.children, function(child) { // Trickle down styles
-              child[k] = v;
-            });
-          }
-        });
+    MakeGetterSetter: function(group, k) {
 
+      var secret = '_' + k;
+
+      Object.defineProperty(group, k, {
+        get: function() {
+          return this[secret];
+        },
+        set: function(v) {
+          this[secret] = v;
+          _.each(this.children, function(child) { // Trickle down styles
+            child[k] = v;
+          });
+        }
       });
 
     }
