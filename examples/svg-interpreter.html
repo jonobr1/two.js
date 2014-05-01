@@ -6,6 +6,7 @@
     <meta name="viewport" content="user-scalable=no">
     <link rel="image_src" href="../images/logo.gif" />
     <link rel="shortcut icon" type="image/gif" href="../images/favicon.gif">
+    <script src="../third-party/url.js"></script>
     <script src="../third-party/jquery.js"></script>
     <script src="../third-party/two.js"></script>
     <style>
@@ -62,8 +63,9 @@
 
         $(function() {
 
+          var type = /(canvas|webgl)/.test(url.type) ? url.type : 'svg';
           var two = new Two({
-            // type: Two.Types.webgl,
+            type: Two.Types[type],
             fullscreen: true,
             autostart: true
           }).appendTo(document.body);

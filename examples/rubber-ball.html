@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, user-scalable=no">
     <link rel="image_src" href="../images/logo.gif" />
     <link rel="shortcut icon" type="image/gif" href="../images/favicon.gif">
+    <script src="../third-party/url.js"></script>
     <script src="../third-party/jquery.js"></script>
     <script src="../third-party/two.js"></script>
-    <script src="../third-party/url.js"></script>
     <style>
       * { margin: 0; padding: 0; cursor: none; }
       body { background: #fcb215; } 
@@ -37,7 +37,7 @@
           var shadow = two.makeCircle(two.width / 2, two.height / 2, radius);
           shadow.noStroke().fill = 'rgba(0, 0, 0, 0.2)';
           shadow.offset = new Two.Vector(- radius / 2, radius * 2);
-          shadow.scale = .85;
+          shadow.scale = 0.85;
 
           var ball = two.makeCircle(two.width / 2, two.height / 2, radius);
           ball.noStroke().fill = 'white';
@@ -59,7 +59,7 @@
             })
             .bind('touchmove', function(e) {
               e.preventDefault();
-              var touch = e.originalEvent.changedTouches[0]
+              var touch = e.originalEvent.changedTouches[0];
               mouse.x = touch.pageX;
               mouse.y = touch.pageY;
               shadow.offset.x = 5 * radius * (mouse.x - two.width / 2) / two.width;

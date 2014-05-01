@@ -6,9 +6,9 @@
     <meta name="viewport" content="user-scalable=no">
     <link rel="image_src" href="../images/logo.gif" />
     <link rel="shortcut icon" type="image/gif" href="../images/favicon.gif">
+    <script src="../third-party/url.js"></script>
     <script src="../third-party/jquery.js"></script>
     <script src="../third-party/two.js"></script>
-    <script src="../third-party/url.js"></script>
     <style>
       body {
         background: rgb(253, 109, 109);
@@ -31,6 +31,7 @@
 
             var fresh = two.interpret($(doc).find('svg')[0]);
             fresh.subdivide();
+            fresh.noFill();
             var t = 0;
             var startOver, movingmouse = false;
             var clearT = function() {

@@ -6,9 +6,9 @@
     <meta name="viewport" content="user-scalable=no">
     <link rel="image_src" href="../images/logo.gif" />
     <link rel="shortcut icon" type="image/gif" href="../images/favicon.gif">
+    <script src="../third-party/url.js"></script>
     <script src="../third-party/jquery.js"></script>
     <script src="../third-party/two.js"></script>
-    <script src="../third-party/tween.js"></script>
     <script>
 
       var Surface = function(object) {
@@ -188,7 +188,7 @@
         },
 
         translateSurface: function(x, y) {
-          ZUI.TranslateMatrix(this.surfaceMatrix, x, y)
+          ZUI.TranslateMatrix(this.surfaceMatrix, x, y);
           return this;
         },
 
@@ -240,10 +240,11 @@
 
         $(function() {
 
+          var type = /(canvas|webgl)/.test(url.type) ? url.type : 'svg';
           var two = new Two({
-            autostart: true,
-            // type: Two.Types.canvas,
-            fullscreen: true
+            type: Two.Types[type],
+            fullscreen: true,
+            autostart: true
           }).appendTo(document.body);
 
           _.each(_.range(500), function(i) {
@@ -253,7 +254,7 @@
           });
 
           var zui = new ZUI(two);
-          zui.addLimits(0.06, 8)
+          zui.addLimits(0.06, 8);
 
           var $stage = $(two.renderer.domElement);
           $stage.bind('mousewheel', function(event) {

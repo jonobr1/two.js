@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, user-scalable=no">
     <link rel="image_src" href="../images/logo.gif" />
     <link rel="shortcut icon" type="image/gif" href="../images/favicon.gif">
+    <script src="../third-party/url.js"></script>
     <script src="../third-party/jquery.js"></script>
     <script src="../third-party/two.js"></script>
     <style>
@@ -34,7 +35,9 @@
 
           var $window = $(window);
           var radius = 40, editColor = 'rgb(79, 128, 255)';
+          var type = /(canvas|webgl)/.test(url.type) ? url.type : 'svg';
           var two = new Two({
+              type: Two.Types[type],
               fullscreen: true,
               autostart: true
             }).appendTo(document.body);
@@ -42,7 +45,7 @@
           var letter = two.interpret(document.querySelector('.assets svg'));
           letter.linewidth = radius;
           letter.cap = letter.join = 'round';
-          letter.stroke = '#333';
+          letter.noFill().stroke = '#333';
 
           var resize = function() {
             var cx = two.width / 2;
