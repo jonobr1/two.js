@@ -2,7 +2,8 @@
 
   // Localize variables
   var mod = Two.Utils.mod, flagMatrix, elem, l, last, tag, name, command,
-    previous, next, a, c, vx, vy, ux, uy, ar, bl, br, cl, x, y, ar, bl;
+    previous, next, a, c, vx, vy, ux, uy, ar, bl, br, cl, x, y, ar, bl,
+    parent, clip, root;
 
   var svg = {
 
@@ -164,22 +165,68 @@
 
     },
 
+    getClip: function(shape) {
+
+      clip = shape._renderer.clip;
+
+      if (!clip) {
+
+        root = shape;
+
+        while (root.parent) {
+          root = root.parent;
+        }
+
+        clip = shape._renderer.clip = svg.createElement('clipPath');
+        root.defs.appendChild(clip);
+
+      }
+
+      return clip;
+
+    },
+
     group: {
 
       // TODO: Can speed up.
+      // TODO: How does this effect a f
       appendChild: function(id) {
+
         elem = this.domElement.querySelector('#' + id);
-        if (elem) {
-          this.elem.appendChild(elem);
+        var tag = elem.nodeName;
+
+        if (!tag || !elem) {
+          return;
         }
+        
+        var tagName = tag.replace(/svg\:/ig, '').toLowerCase();
+
+        if (/clippath/.test(tagName)) {
+          return;
+        }
+
+        this.elem.appendChild(elem);
+
       },
 
       // TODO: Can speed up.
       removeChild: function(id) {
+
         elem = this.domElement.querySelector('#' + id);
-        if (elem) {
-          this.elem.removeChild(elem);
+        var tag = elem.nodeName;
+
+        if (!tag || !elem) {
+          return;
         }
+        
+        var tagName = tag.replace(/svg\:/ig, '').toLowerCase();
+
+        if (/clippath/.test(tagName)) {
+          return;
+        }
+
+        this.elem.removeChild(elem);
+
       },
 
       renderChild: function(child) {
@@ -282,6 +329,32 @@
           elem.setAttribute('stroke-miterlimit', this.miter);
         }
 
+        // TODO: Handle matrix on clip...
+        if (this._flagClip) {
+
+          clip = svg.getClip(this);
+          elem = this._renderer.elem;
+
+          if (this._clip) {
+            elem.removeAttribute('id');
+            clip.setAttribute('id', this.id);
+            clip.appendChild(elem);
+          } else {
+            clip.removeAttribute('id');
+            elem.setAttribute('id', this.id);
+            this.parent._renderer.elem.appendChild(elem); // TODO: should be insertBefore
+          }
+
+        }
+
+        if (this._flagMask) {
+          if (this._mask) {
+            elem.setAttribute('clip-path', 'url(#' + this._mask.id + ')');
+          } else {
+            elem.removeAttribute('clip-path');
+          }
+        }
+
         return this.flagReset();
 
       }
@@ -299,6 +372,9 @@
 
     this.scene = new Two.Group();
     this.scene.parent = this;
+
+    this.defs = svg.createElement('defs');
+    this.domElement.appendChild(this.defs);
 
   };
 
