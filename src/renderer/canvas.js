@@ -47,6 +47,10 @@
 
         ctx.restore();
 
+        if (clip) {
+          ctx.clip();
+        }
+
         return this.flagReset();
 
       }
@@ -214,7 +218,7 @@
 
         ctx.restore();
 
-        if (clip) {
+        if (clip && !parentClipped) {
           ctx.clip();
         }
 
