@@ -10,7 +10,7 @@
 
   // Localized variables
   var matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter,
-    closed, commands, length, last;
+    closed, commands, length, last, args = {};
   var next, prev, a, c, d, ux, uy, vx, vy, ar, bl, br, cl, x, y;
 
   var canvas = {
@@ -18,7 +18,7 @@
     group: {
 
       renderChild: function(child) {
-        canvas[child._renderer.type].render.call(child, this);
+        canvas[child._renderer.type].render.call(child, this.ctx, this.clip);
       },
 
       render: function(ctx) {
@@ -28,11 +28,22 @@
 
         matrix = this._matrix.elements;
 
+        var mask = this._mask;
+        var clip = this._clip;
+
+        args.ctx = ctx;
+        args.clip = clip;
+
         ctx.save();
+
         ctx.transform(
           matrix[0], matrix[3], matrix[1], matrix[4], matrix[2], matrix[5]);
 
-        _.each(this.children, canvas.group.renderChild, ctx);
+        if (mask) {
+          canvas[mask._renderer.type].render.call(mask, ctx, true);
+        }
+
+        _.each(this.children, canvas.group.renderChild, args);
 
         ctx.restore();
 
@@ -44,7 +55,7 @@
 
     polygon: {
 
-      render: function(ctx) {
+      render: function(ctx, force, parentClipped) {
 
         // TODO: Add a check here to only invoke _update if need be.
         this._update();
@@ -63,7 +74,10 @@
         length = commands.length;
         last = length - 1;
 
-        if (!visible) {
+        var mask = this._mask;
+        var clip = this._clip;
+
+        if (!force && (!visible || clip)) {
           return this;
         }
 
@@ -74,6 +88,10 @@
         if (matrix) {
           ctx.transform(
             matrix[0], matrix[3], matrix[1], matrix[4], matrix[2], matrix[5]);
+        }
+
+        if (mask) {
+          canvas[mask._renderer.type].render.call(mask, ctx);
         }
 
         // Styles
@@ -189,10 +207,16 @@
           ctx.closePath();
         }
 
-        ctx.fill();
-        ctx.stroke();
+        if (!clip && !parentClipped) {
+          ctx.fill();
+          ctx.stroke();
+        }
 
         ctx.restore();
+
+        if (clip) {
+          ctx.clip();
+        }
 
         return this.flagReset();
 

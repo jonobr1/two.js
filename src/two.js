@@ -401,6 +401,7 @@
 
           var group = new Two.Group();
 
+          // TODO: This necessary?
           this.add(group);
 
           _.each(node.childNodes, function(n) {

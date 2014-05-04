@@ -201,6 +201,7 @@
         
         var tagName = tag.replace(/svg\:/ig, '').toLowerCase();
 
+        // Defer additions while clipping
         if (/clippath/.test(tagName)) {
           return;
         }
@@ -221,6 +222,7 @@
         
         var tagName = tag.replace(/svg\:/ig, '').toLowerCase();
 
+        // Defer subtractions while clipping
         if (/clippath/.test(tagName)) {
           return;
         }
@@ -263,6 +265,31 @@
 
         if (this._flagSubtractions) {
           _.each(this.subtractions, svg.group.removeChild, context);
+        }
+
+        if (this._flagClip) {
+
+          clip = svg.getClip(this);
+          elem = this._renderer.elem;
+
+          if (this._clip) {
+            elem.removeAttribute('id');
+            clip.setAttribute('id', this.id);
+            clip.appendChild(elem);
+          } else {
+            clip.removeAttribute('id');
+            elem.setAttribute('id', this.id);
+            this.parent._renderer.elem.appendChild(elem); // TODO: should be insertBefore
+          }
+
+        }
+
+        if (this._flagMask) {
+          if (this._mask) {
+            this._renderer.elem.setAttribute('clip-path', 'url(#' + this._mask.id + ')');
+          } else {
+            this._renderer.elem.removeAttribute('clip-path');
+          }
         }
 
         return this.flagReset();
@@ -329,7 +356,6 @@
           elem.setAttribute('stroke-miterlimit', this.miter);
         }
 
-        // TODO: Handle matrix on clip...
         if (this._flagClip) {
 
           clip = svg.getClip(this);

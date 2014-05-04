@@ -63,8 +63,6 @@
       'cap',
       'join',
       'miter',
-      'clip',
-      'mask',  // Order matters here! See LN:85
 
       'closed',
       'curved',
@@ -84,7 +82,7 @@
 
       // Only the first 8 properties are flagged like this. The subsequent
       // properties behave differently and need to be hand written.
-      _.each(Polygon.Properties.slice(0, 9), function(property) {
+      _.each(Polygon.Properties.slice(0, 8), function(property) {
 
         var secret = '_' + property;
         var flag = '_flag' + property.charAt(0).toUpperCase() + property.slice(1);
@@ -99,19 +97,6 @@
           }
         });
 
-      });
-
-      Object.defineProperty(object, 'mask', {
-        get: function() {
-          return this._mask;
-        },
-        set: function(v) {
-          this._mask = v;
-          this._flagMask = true;
-          if (!v.clip) {
-            v.clip = true;
-          }
-        }
       });
 
       Object.defineProperty(object, 'length', {
@@ -250,9 +235,6 @@
     _flagOpacity: true,
     _flagVisible: true,
 
-    _flagMask: false,
-    _flagClip: false,
-
     _flagCap: true,
     _flagJoin: true,
     _flagMiter: true,
@@ -270,9 +252,6 @@
     _cap: 'round',
     _join: 'round',
     _miter: 4,
-
-    _mask: null,
-    _clip: false,
 
     _closed: true,
     _curved: false,
@@ -665,8 +644,7 @@
 
       this._flagVertices =  this._flagFill =  this._flagStroke
         = this._flagLinewidth = this._flagOpacity = this._flagVisible
-        = this._flagCap = this._flagJoin = this._flagMiter
-        = this._flagClip = this._flagMask = false;
+        = this._flagCap = this._flagJoin = this._flagMiter = false;
 
       Two.Shape.prototype.flagReset.call(this);
 
