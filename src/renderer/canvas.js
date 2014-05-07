@@ -18,7 +18,7 @@
     group: {
 
       renderChild: function(child) {
-        canvas[child._renderer.type].render.call(child, this.ctx, this.clip);
+        canvas[child._renderer.type].render.call(child, this.ctx, true, this.clip);
       },
 
       render: function(ctx) {
@@ -59,7 +59,7 @@
 
     polygon: {
 
-      render: function(ctx, forced) {
+      render: function(ctx, forced, parentClipped) {
 
         // TODO: Add a check here to only invoke _update if need be.
         this._update();
@@ -211,14 +211,14 @@
           ctx.closePath();
         }
 
-        if (!clip) {
+        if (!clip && !parentClipped) {
           ctx.fill();
           ctx.stroke();
         }
 
         ctx.restore();
 
-        if (clip) {
+        if (clip && !parentClipped) {
           ctx.clip();
         }
 
