@@ -10,7 +10,7 @@
 
   // Localized variables
   var matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter,
-    closed, commands, length, last, args = {};
+    closed, commands, length, last, context = {};
   var next, prev, a, c, d, ux, uy, vx, vy, ar, bl, br, cl, x, y;
 
   var canvas = {
@@ -31,8 +31,8 @@
         var mask = this._mask;
         var clip = this._clip;
 
-        args.ctx = ctx;
-        args.clip = clip;
+        context.ctx = ctx;
+        context.clip = clip;
 
         ctx.save();
 
@@ -43,7 +43,7 @@
           canvas[mask._renderer.type].render.call(mask, ctx, true);
         }
 
-        _.each(this.children, canvas.group.renderChild, args);
+        _.each(this.children, canvas.group.renderChild, context);
 
         ctx.restore();
 
@@ -59,29 +59,29 @@
 
     polygon: {
 
-      render: function(ctx, force, parentClipped) {
+      render: function(ctx, forced) {
 
         // TODO: Add a check here to only invoke _update if need be.
         this._update();
 
-        matrix = this._matrix.elements;
-        stroke = this.stroke;
-        linewidth = this.linewidth;
-        fill = this.fill;
-        opacity = this.opacity;
-        visible = this.visible;
-        cap = this.cap;
-        join = this.join;
-        miter = this.miter;
-        closed = this.closed;
-        commands = this._vertices; // Commands
-        length = commands.length;
-        last = length - 1;
+        var matrix = this._matrix.elements;
+        var stroke = this.stroke;
+        var linewidth = this.linewidth;
+        var fill = this.fill;
+        var opacity = this.opacity;
+        var visible = this.visible;
+        var cap = this.cap;
+        var join = this.join;
+        var miter = this.miter;
+        var closed = this.closed;
+        var commands = this._vertices; // Commands
+        var length = commands.length;
+        var last = length - 1;
 
         var mask = this._mask;
         var clip = this._clip;
 
-        if (!force && (!visible || clip)) {
+        if (!forced && (!visible || clip)) {
           return this;
         }
 
@@ -95,7 +95,7 @@
         }
 
         if (mask) {
-          canvas[mask._renderer.type].render.call(mask, ctx);
+          canvas[mask._renderer.type].render.call(mask, ctx, true);
         }
 
         // Styles
@@ -211,14 +211,14 @@
           ctx.closePath();
         }
 
-        if (!clip && !parentClipped) {
+        if (!clip) {
           ctx.fill();
           ctx.stroke();
         }
 
         ctx.restore();
 
-        if (clip && !parentClipped) {
+        if (clip) {
           ctx.clip();
         }
 

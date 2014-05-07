@@ -53,7 +53,7 @@
 
       Object.defineProperty(object, 'clip', {
         get: function() {
-          this._clip;
+          return this._clip;
         },
         set: function(v) {
           this._clip = v;
