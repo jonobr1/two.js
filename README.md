@@ -35,21 +35,20 @@ Here is boilerplate html in order to draw a spinning rectangle in two.js:
 ```
 
 ## Custom Build
-Two.js uses [nodejs](http://nodejs.org/) in order to build source files. You'll first want to install that. Next you'll want to install [node-minify](https://npmjs.org/package/node-minify):
+Two.js uses [nodejs](http://nodejs.org/) in order to build source files. You'll first want to install that.
+Next you'll want to install [grunt](https://npmjs.org/package/grunt):
 
 ```
-cd two.js/utils
-npm install node-minify
+cd two.js
+npm install grunt
 ```
-
-Then open up `./utils/build.js` in the text editor of your choice. You'll see an array at the top called `files`. This is the list and order of source files that get compiled to the built source. Feel free to add, subtract, or modify based on your needs.
-
+You can edit the files that we be included in the build by modifying ./Gruntfile.js.
 If you're making an application and you're only using one renderer (i.e: svg context) then it is highly recommended to remove canvas and webgl renderers from your build in order to drastically decrease your file size.
 
 Finally, build the project:
 
 ```
-node two.js/utils/build
+grunt
 ```
 
 ## Change Log
