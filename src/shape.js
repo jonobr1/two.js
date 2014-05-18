@@ -9,6 +9,7 @@
     this._renderer = {};
 
     this.id = Two.Identifier + Two.uniqueId();
+    this.classList = [];
 
     // Define matrix properties which all inherited
     // objects of Shape have.

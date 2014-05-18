@@ -380,6 +380,12 @@
             case 'id':
               elem.id = v.nodeValue;
               break;
+            case 'class':
+              if (!elem.classList) elem.classList = [];
+              v.nodeValue.split(' ').forEach(function (cl) {
+                elem.classList.push(cl);
+              });
+              break;
           }
 
         });
