@@ -55,7 +55,7 @@
     /**
      * Turn a set of vertices into a string for the d property of a path
      * element. It is imperative that the string collation is as fast as
-     * possible, because this call will be happening multiple times a 
+     * possible, because this call will be happening multiple times a
      * second.
      */
     toString: function(points, closed) {
@@ -150,7 +150,7 @@
             x = c.x.toFixed(3);
             y = c.y.toFixed(3);
 
-            command += 
+            command +=
               ' C ' + vx + ' ' + vy + ' ' + ux + ' ' + uy + ' ' + x + ' ' + y;
           }
 
