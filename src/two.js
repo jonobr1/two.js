@@ -369,13 +369,11 @@
             case 'stroke-opacity':
             case 'fill-opacity':
             case 'opacity':
-              elem.opacity = v.nodeValue;
+              elem.opacity = parseFloat(v.nodeValue);
               break;
             case 'fill':
-              elem.fill = v.nodeValue;
-              break;
             case 'stroke':
-              elem.stroke = v.nodeValue;
+              elem[property] = (v.nodeValue == 'none') ? 'transparent' : v.nodeValue;
               break;
             case 'id':
               elem.id = v.nodeValue;
