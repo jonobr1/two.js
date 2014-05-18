@@ -208,7 +208,9 @@
           this._renderer.elem.setAttribute('transform', 'matrix(' + this._matrix.toString() + ')');
         }
 
-        _.each(this.children, svg.group.renderChild, domElement);
+        for (var id in this.children) {
+          svg.group.renderChild.call(domElement, this.children[id]);
+        }
 
         if (this._flagAdditions) {
           _.each(this.additions, svg.group.appendChild, context);
