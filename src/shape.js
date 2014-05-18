@@ -99,7 +99,7 @@
       }
 
       // Bubble up to parents mainly for `getBoundingClientRect` method.
-      if (this.parent && _.isFunction(this.parent._update)) {
+      if (this.parent && this.parent._update) {
         this.parent._update();
       }
 
