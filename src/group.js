@@ -171,6 +171,42 @@
     },
 
     /**
+     * Recursively search for id
+     */
+    selectById: function (id) {
+      var found;
+      var search = function (node, id) {
+        if (node.id == id) {
+          found = node;
+          return node;
+        }
+        for (var child in node.children) {
+          if (found) return found;
+          search(node.children[child], id);
+        }
+      };
+      return search(this, id) || null;
+    },
+
+    /**
+     * Recursively search for classes
+     */
+    selectByClass: function (cl) {
+      var found = [];
+      var search = function (node, cl) {
+        if (node.classList.indexOf(cl) != -1) {
+          found.push(node);
+        }
+        for (var child in node.children) {
+          search(node.children[child], cl);
+        }
+        return found;
+      };
+      return search(this, cl);
+    },
+
+
+    /**
      * Add an object to the group.
      */
     add: function(o) {
