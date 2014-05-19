@@ -378,6 +378,12 @@
             case 'id':
               elem.id = v.nodeValue;
               break;
+            case 'class':
+              if (!elem.classList) elem.classList = [];
+              v.nodeValue.split(' ').forEach(function (cl) {
+                elem.classList.push(cl);
+              });
+              break;
           }
 
         });
@@ -405,7 +411,7 @@
 
             var tag = n.nodeName;
             if (!tag) return;
-            
+
             var tagName = tag.replace(/svg\:/ig, '').toLowerCase();
 
             if (tagName in Two.Utils.read) {
@@ -996,7 +1002,7 @@
       },
 
       /**
-       * Array like collection that triggers inserted and removed events 
+       * Array like collection that triggers inserted and removed events
        * removed : pop / shift / splice
        * inserted : push / unshift / splice (with > 2 arguments)
        */

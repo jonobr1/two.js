@@ -171,6 +171,63 @@
     },
 
     /**
+     * Recursively search for id. Returns the first element found.
+     * Returns null if none found.
+     */
+    getById: function (id) {
+      var found;
+      var search = function (node, id) {
+        if (node.id == id) {
+          found = node;
+          return node;
+        }
+        for (var child in node.children) {
+          if (found) return found;
+          search(node.children[child], id);
+        }
+      };
+      return search(this, id) || null;
+    },
+
+    /**
+     * Recursively search for classes. Returns an array of matching elements.
+     * Empty array if none found.
+     */
+    getByClassName: function (cl) {
+      var found = [];
+      var search = function (node, cl) {
+        if (node.classList.indexOf(cl) != -1) {
+          found.push(node);
+        }
+        for (var child in node.children) {
+          search(node.children[child], cl);
+        }
+        return found;
+      };
+      return search(this, cl);
+    },
+
+    /**
+     * Recursively search for children of a specific type,
+     * e.g. Two.Polygon. Pass a reference to this type as the param.
+     * Returns an empty array if none found.
+     */
+    getByType: function(type) {
+      var found = [];
+      var search = function (node, type) {
+        for (var id in node.children) {
+          if (node.children[id] instanceof type) {
+            found.push(node.children[id]);
+          } else if (node.children[id] instanceof Two.Group) {
+            search(node.children[id], type);
+          }
+        }
+        return found;
+      };
+      return search(this, type);
+    },
+
+    /**
      * Add an object to the group.
      */
     add: function(o) {
