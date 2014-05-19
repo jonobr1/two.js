@@ -101,7 +101,7 @@
         }
 
         ctx.beginPath();
-        _.each(commands, function(b, i) {
+        commands.forEach(function(b, i) {
 
           x = b.x.toFixed(3);
           y = b.y.toFixed(3);
