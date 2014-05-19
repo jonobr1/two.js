@@ -2,7 +2,7 @@
 
   // Localize variables
   var mod = Two.Utils.mod, flagMatrix, elem, l, last, tag, name, command,
-    previous, next, a, c, vx, vy, ux, uy, ar, bl, br, cl, x, y, ar, bl;
+    previous, next, a, c, vx, vy, ux, uy, ar, bl, br, cl, x, y;
 
   var svg = {
 
@@ -55,7 +55,7 @@
     /**
      * Turn a set of vertices into a string for the d property of a path
      * element. It is imperative that the string collation is as fast as
-     * possible, because this call will be happening multiple times a 
+     * possible, because this call will be happening multiple times a
      * second.
      */
     toString: function(points, closed) {
@@ -150,7 +150,7 @@
             x = c.x.toFixed(3);
             y = c.y.toFixed(3);
 
-            command += 
+            command +=
               ' C ' + vx + ' ' + vy + ' ' + ux + ' ' + uy + ' ' + x + ' ' + y;
           }
 
@@ -208,7 +208,9 @@
           this._renderer.elem.setAttribute('transform', 'matrix(' + this._matrix.toString() + ')');
         }
 
-        _.each(this.children, svg.group.renderChild, domElement);
+        for (var id in this.children) {
+          svg.group.renderChild.call(domElement, this.children[id]);
+        }
 
         if (this._flagAdditions) {
           _.each(this.additions, svg.group.appendChild, context);

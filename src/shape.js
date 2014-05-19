@@ -89,7 +89,6 @@
     _update: function() {
 
       if (!this._matrix.manual && this._flagMatrix) {
-
         this._matrix
           .identity()
           .translate(this.translation.x, this.translation.y)
@@ -99,7 +98,7 @@
       }
 
       // Bubble up to parents mainly for `getBoundingClientRect` method.
-      if (this.parent && _.isFunction(this.parent._update)) {
+      if (this.parent && this.parent._update) {
         this.parent._update();
       }
 
