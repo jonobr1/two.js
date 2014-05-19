@@ -103,7 +103,8 @@
         ctx.beginPath();
         _.each(commands, function(b, i) {
 
-          x = b.x.toFixed(3), y = b.y.toFixed(3);
+          x = b.x.toFixed(3);
+          y = b.y.toFixed(3);
 
           switch (b._command) {
 
@@ -116,7 +117,8 @@
               prev = closed ? mod(i - 1, length) : Math.max(i - 1, 0);
               next = closed ? mod(i + 1, length) : Math.min(i + 1, last);
 
-              a = commands[prev], c = commands[next];
+              a = commands[prev];
+              c = commands[next];
               ar = (a.controls && a.controls.right) || a;
               bl = (b.controls && b.controls.left) || b;
 

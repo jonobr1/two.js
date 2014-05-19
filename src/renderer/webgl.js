@@ -159,12 +159,14 @@
      */
     getBoundingClientRect: function(vertices, border, rect) {
 
-      left = Infinity, right = -Infinity;
-      top = Infinity, bottom = -Infinity;
+      var left = Infinity, right = -Infinity,
+          top = Infinity, bottom = -Infinity,
+          width, height;
 
       vertices.forEach(function(v, i) {
 
-        x = v.x, y = v.y, a, b, c, d, controls = v.controls;
+        var x = v.x, y = v.y, controls = v.controls;
+        var a, b, c, d, cl, cr;
 
         top = Math.min(y, top);
         left = Math.min(x, left);
@@ -182,8 +184,10 @@
           return;
         }
 
-        a = v._relative ? cl.x + x : cl.x, b = v._relative ? cl.y + y : cl.y;
-        c = v._relative ? cr.x + x : cr.x, d = v._relative ? cr.y + y : cr.y;
+        a = v._relative ? cl.x + x : cl.x;
+        b = v._relative ? cl.y + y : cl.y;
+        c = v._relative ? cr.x + x : cr.x;
+        d = v._relative ? cr.y + y : cr.y;
 
         if (!a || !b || !c || !d) {
           return;
@@ -226,10 +230,10 @@
 
     getTriangles: function(rect, triangles) {
 
-      top = rect.top;
-      left = rect.left;
-      right = rect.right;
-      bottom = rect.bottom;
+      var top = rect.top,
+          left = rect.left,
+          right = rect.right,
+          bottom = rect.bottom;
 
       // First Triangle
 
@@ -262,7 +266,6 @@
       ctx = this.ctx;
 
       // Styles
-
       scale = elem._renderer.scale;
       stroke = elem._stroke;
       linewidth = elem._linewidth * scale;
@@ -279,7 +282,8 @@
       canvas.height = Math.max(Math.ceil(elem._renderer.rect.height * scale), 1);
 
       centroid = elem._renderer.rect.centroid;
-      cx = centroid.x * scale, cy = centroid.y * scale;
+      cx = centroid.x * scale;
+      cy = centroid.y * scale;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -308,8 +312,9 @@
       ctx.beginPath();
       commands.forEach(function(b, i) {
 
-        next, prev, a, c, ux, uy, vx, vy, ar, bl, br, cl;
-        x = (b.x * scale + cx).toFixed(3), y = (b.y * scale + cy).toFixed(3);
+        var next, prev, a, c, ux, uy, vx, vy, ar, bl, br, cl;
+        x = (b.x * scale + cx).toFixed(3);
+        y = (b.y * scale + cy).toFixed(3);
 
         switch (b._command) {
 
@@ -322,7 +327,8 @@
             prev = closed ? mod(i - 1, length) : Math.max(i - 1, 0);
             next = closed ? mod(i + 1, length) : Math.min(i + 1, last);
 
-            a = commands[prev], c = commands[next];
+            a = commands[prev];
+            c = commands[next];
             ar = (a.controls && a.controls.right) || a;
             bl = (b.controls && b.controls.left) || b;
 
@@ -566,7 +572,7 @@
 
     this.overdraw = params.overdraw;
 
-    gl = this.ctx = this.domElement.getContext('webgl', params) || 
+    gl = this.ctx = this.domElement.getContext('webgl', params) ||
       this.domElement.getContext('experimental-webgl', params);
 
     if (!this.ctx) {
@@ -641,7 +647,7 @@
 
     render: function() {
 
-      gl = this.ctx;
+      var gl = this.ctx;
 
       if (!this.overdraw) {
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
