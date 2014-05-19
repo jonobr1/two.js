@@ -53,9 +53,12 @@
         },
         set: function(v) {
           this[secret] = v;
-          _.each(this.children, function(child) { // Trickle down styles
-            child[k] = v;
-          });
+          // Is this really necessary?
+          // Imagine a group with opacity 0.5 and a few children.
+          // Setting the childrens opacity to 0.5 as well will changes the appearance.
+          // _.each(this.children, function(child) { // Trickle down styles
+          //   child[k] = v;
+          // });
         }
       });
 
