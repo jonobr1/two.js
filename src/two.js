@@ -369,13 +369,11 @@
             case 'stroke-opacity':
             case 'fill-opacity':
             case 'opacity':
-              elem.opacity = v.nodeValue;
+              elem.opacity = parseFloat(v.nodeValue);
               break;
             case 'fill':
-              elem.fill = v.nodeValue;
-              break;
             case 'stroke':
-              elem.stroke = v.nodeValue;
+              elem[property] = (v.nodeValue == 'none') ? 'transparent' : v.nodeValue;
               break;
             case 'id':
               elem.id = v.nodeValue;
@@ -426,7 +424,7 @@
           var points = node.getAttribute('points');
 
           var verts = [];
-          points.replace(/([\d\.?]+),([\d\.?]+)/g, function(match, p1, p2) {
+          points.replace(/(-?[\d\.?]+),(-?[\d\.?]+)/g, function(match, p1, p2) {
             verts.push(new Two.Anchor(parseFloat(p1), parseFloat(p2)));
           });
 
