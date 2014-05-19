@@ -66,7 +66,7 @@ instead to minify the build with uglify.
 + Updated `Two.Group.prototype` observable properties on `Two.Polygon.Properties` to ensure each property is considered unique
 + ~~`Two.Polygon.vertices` first and last vertex create automated control points when `Two.Polygon.curved = true`~~
 + Updated `Two.Polygon.subdivide` method to accomodate `Two.makeEllipse`
-+ Enabled `id` to be properly interpretted from SVG elements [@chrisdelbuck](http://github.com/chrisdelbuck)
++ Enabled `id` to be properly interpreted from SVG elements [@chrisdelbuck](http://github.com/chrisdelbuck)
 + Updated `webgl` renderer `getBoundingClientRect` to accommodate `relative` anchors
 + Updated `beginning` and `ending` to clamp to each other
 + Reorganized `Two.Polygon._update` and `Two.Polygon.plot` in order to handle `beginning` and `ending` properties
@@ -76,7 +76,7 @@ instead to minify the build with uglify.
 + Updated `svg`, `canvas`, and `webgl` renderers to properly reflect holes in curved `Two.Polygon`s
 + Updated `Two.Group` `clone` method
 + Added `toObject` method to `Two.Group`, `Two.Polygon`, `Two.Anchor`
-+ `Two.Polygon` initiailizes `polygon.cap = 'butt'` and `polygon.join = 'miter'` based on Adobe Illustrator defaults
++ `Two.Polygon` initializes `polygon.cap = 'butt'` and `polygon.join = 'miter'` based on Adobe Illustrator defaults
 + `Two.Polygon.subdivide` method now works with `Two.Commands.move` for noncontiguous polygons
 + Internally update matrices on `getBoundingClientRect` in order to remove the need to defer or wait for internal variables to be up-to-date
 + Refactor of renderers and scenegraph for performance optimization and lower memory footprint
@@ -119,7 +119,7 @@ instead to minify the build with uglify.
 + Remove execution path dependency on utils/build.js [@masonbiler](https://github.com/masonbiler)
 + Added `timeDelta` property to every `two` instance
 + Added gruntfile, package.json for more integration with `npm`, and dependency free build (`build/two.clean.js`) [@iros](https://github.com/iros)
-+ Crossbrowser compatability with `noStroke` and `noFill` commands
++ Crossbrowser compatibility with `noStroke` and `noFill` commands
 
 ##### May 3, 2013 [v0.2.0](https://github.com/jonobr1/two.js/tree/v0.2.0)
 + First alpha release
