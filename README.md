@@ -51,6 +51,13 @@ Finally, build the project:
 grunt
 ```
 
+If you are having problems running the closure compiler (it requires a JDK to be installed), run
+
+```
+grunt build-uglify
+```
+instead to minify the build with uglify.
+
 ## Change Log
 
 ##### Nightly
