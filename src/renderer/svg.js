@@ -2,8 +2,8 @@
 
   // Localize variables
   var mod = Two.Utils.mod, flagMatrix, elem, l, last, tag, name, command,
-    previous, next, a, c, vx, vy, ux, uy, ar, bl, br, cl, x, y, ar, bl,
-    parent, clip, root;
+    previous, next, a, c, vx, vy, ux, uy, ar, bl, br, cl, x, y, parent, clip,
+    root;
 
   var svg = {
 

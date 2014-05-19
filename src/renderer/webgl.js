@@ -64,6 +64,10 @@
 
         }
 
+        if (this._mask) {
+          webgl[this._mask._renderer.type].render.call(this._mask, gl, program, this);
+        }
+
         _.each(this.children, webgl.group.renderChild, {
           gl: gl,
           program: program
@@ -77,7 +81,7 @@
 
     polygon: {
 
-      render: function(gl, program) {
+      render: function(gl, program, forcedParent) {
 
         if (!this._visible || !this._opacity) {
           return this;
@@ -85,7 +89,7 @@
 
         // Calculate what changed
 
-        parent = this.parent;
+        parent = forcedParent || this.parent;
         flagParentMatrix = parent._matrix.manual || parent._flagMatrix;
         flagMatrix = this._matrix.manual || this._flagMatrix;
         flagTexture = this._flagVertices || this._flagFill
@@ -128,6 +132,14 @@
 
         }
 
+        // if (this._mask) {
+        //   webgl[this._mask._renderer.type].render.call(mask, gl, program, this);
+        // }
+
+        if (this._clip && !forcedParent) {
+          return;
+        }
+
         // Draw Texture
 
         gl.bindBuffer(gl.ARRAY_BUFFER, this._renderer.textureCoordsBuffer);
@@ -146,6 +158,10 @@
         gl.vertexAttribPointer(program.position, 2, gl.FLOAT, false, 0, 0);
 
         gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+        if (this._clip) {
+          gl.colorMask(true, true, true, true);
+        }
 
         return this.flagReset();
 
