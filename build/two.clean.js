@@ -398,16 +398,20 @@
             case 'stroke-opacity':
             case 'fill-opacity':
             case 'opacity':
-              elem.opacity = v.nodeValue;
+              elem.opacity = parseFloat(v.nodeValue);
               break;
             case 'fill':
-              elem.fill = v.nodeValue;
-              break;
             case 'stroke':
-              elem.stroke = v.nodeValue;
+              elem[property] = (v.nodeValue == 'none') ? 'transparent' : v.nodeValue;
               break;
             case 'id':
               elem.id = v.nodeValue;
+              break;
+            case 'class':
+              if (!elem.classList) elem.classList = [];
+              v.nodeValue.split(' ').forEach(function (cl) {
+                elem.classList.push(cl);
+              });
               break;
           }
 
@@ -436,7 +440,7 @@
 
             var tag = n.nodeName;
             if (!tag) return;
-            
+
             var tagName = tag.replace(/svg\:/ig, '').toLowerCase();
 
             if (tagName in Two.Utils.read) {
@@ -455,7 +459,7 @@
           var points = node.getAttribute('points');
 
           var verts = [];
-          points.replace(/([\d\.?]+),([\d\.?]+)/g, function(match, p1, p2) {
+          points.replace(/(-?[\d\.?]+),(-?[\d\.?]+)/g, function(match, p1, p2) {
             verts.push(new Two.Anchor(parseFloat(p1), parseFloat(p2)));
           });
 
@@ -1027,7 +1031,7 @@
       },
 
       /**
-       * Array like collection that triggers inserted and removed events 
+       * Array like collection that triggers inserted and removed events
        * removed : pop / shift / splice
        * inserted : push / unshift / splice (with > 2 arguments)
        */
@@ -1414,7 +1418,7 @@
 
     requestAnimationFrame(arguments.callee);
 
-    _.each(Two.Instances, function(t) {
+    Two.Instances.forEach(function(t) {
 
       if (t.playing) {
         t.update();
@@ -2304,7 +2308,7 @@
 
   // Localize variables
   var mod = Two.Utils.mod, flagMatrix, elem, l, last, tag, name, command,
-    previous, next, a, c, vx, vy, ux, uy, ar, bl, br, cl, x, y, ar, bl;
+    previous, next, a, c, vx, vy, ux, uy, ar, bl, br, cl, x, y;
 
   var svg = {
 
@@ -2357,7 +2361,7 @@
     /**
      * Turn a set of vertices into a string for the d property of a path
      * element. It is imperative that the string collation is as fast as
-     * possible, because this call will be happening multiple times a 
+     * possible, because this call will be happening multiple times a
      * second.
      */
     toString: function(points, closed) {
@@ -2452,7 +2456,7 @@
             x = c.x.toFixed(3);
             y = c.y.toFixed(3);
 
-            command += 
+            command +=
               ' C ' + vx + ' ' + vy + ' ' + ux + ' ' + uy + ' ' + x + ' ' + y;
           }
 
@@ -2510,7 +2514,9 @@
           this._renderer.elem.setAttribute('transform', 'matrix(' + this._matrix.toString() + ')');
         }
 
-        _.each(this.children, svg.group.renderChild, domElement);
+        for (var id in this.children) {
+          svg.group.renderChild.call(domElement, this.children[id]);
+        }
 
         if (this._flagAdditions) {
           _.each(this.additions, svg.group.appendChild, context);
@@ -2637,6 +2643,7 @@
   });
 
 })();
+
 (function() {
 
   /**
@@ -2740,9 +2747,10 @@
         }
 
         ctx.beginPath();
-        _.each(commands, function(b, i) {
+        commands.forEach(function(b, i) {
 
-          x = b.x.toFixed(3), y = b.y.toFixed(3);
+          x = b.x.toFixed(3);
+          y = b.y.toFixed(3);
 
           switch (b._command) {
 
@@ -2755,7 +2763,8 @@
               prev = closed ? mod(i - 1, length) : Math.max(i - 1, 0);
               next = closed ? mod(i + 1, length) : Math.min(i + 1, last);
 
-              a = commands[prev], c = commands[next];
+              a = commands[prev];
+              c = commands[next];
               ar = (a.controls && a.controls.right) || a;
               bl = (b.controls && b.controls.left) || b;
 
@@ -3072,12 +3081,14 @@
      */
     getBoundingClientRect: function(vertices, border, rect) {
 
-      left = Infinity, right = -Infinity;
-      top = Infinity, bottom = -Infinity;
+      var left = Infinity, right = -Infinity,
+          top = Infinity, bottom = -Infinity,
+          width, height;
 
-      _.each(vertices, function(v, i) {
+      vertices.forEach(function(v, i) {
 
-        x = v.x, y = v.y, a, b, c, d, controls = v.controls;
+        var x = v.x, y = v.y, controls = v.controls;
+        var a, b, c, d, cl, cr;
 
         top = Math.min(y, top);
         left = Math.min(x, left);
@@ -3095,8 +3106,10 @@
           return;
         }
 
-        a = v._relative ? cl.x + x : cl.x, b = v._relative ? cl.y + y : cl.y;
-        c = v._relative ? cr.x + x : cr.x, d = v._relative ? cr.y + y : cr.y;
+        a = v._relative ? cl.x + x : cl.x;
+        b = v._relative ? cl.y + y : cl.y;
+        c = v._relative ? cr.x + x : cr.x;
+        d = v._relative ? cr.y + y : cr.y;
 
         if (!a || !b || !c || !d) {
           return;
@@ -3139,10 +3152,10 @@
 
     getTriangles: function(rect, triangles) {
 
-      top = rect.top;
-      left = rect.left;
-      right = rect.right;
-      bottom = rect.bottom;
+      var top = rect.top,
+          left = rect.left,
+          right = rect.right,
+          bottom = rect.bottom;
 
       // First Triangle
 
@@ -3175,7 +3188,6 @@
       ctx = this.ctx;
 
       // Styles
-
       scale = elem._renderer.scale;
       stroke = elem._stroke;
       linewidth = elem._linewidth * scale;
@@ -3192,7 +3204,8 @@
       canvas.height = Math.max(Math.ceil(elem._renderer.rect.height * scale), 1);
 
       centroid = elem._renderer.rect.centroid;
-      cx = centroid.x * scale, cy = centroid.y * scale;
+      cx = centroid.x * scale;
+      cy = centroid.y * scale;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -3219,10 +3232,11 @@
       }
 
       ctx.beginPath();
-      _.each(commands, function(b, i) {
+      commands.forEach(function(b, i) {
 
-        next, prev, a, c, ux, uy, vx, vy, ar, bl, br, cl;
-        x = (b.x * scale + cx).toFixed(3), y = (b.y * scale + cy).toFixed(3);
+        var next, prev, a, c, ux, uy, vx, vy, ar, bl, br, cl;
+        x = (b.x * scale + cx).toFixed(3);
+        y = (b.y * scale + cy).toFixed(3);
 
         switch (b._command) {
 
@@ -3235,7 +3249,8 @@
             prev = closed ? mod(i - 1, length) : Math.max(i - 1, 0);
             next = closed ? mod(i + 1, length) : Math.min(i + 1, last);
 
-            a = commands[prev], c = commands[next];
+            a = commands[prev];
+            c = commands[next];
             ar = (a.controls && a.controls.right) || a;
             bl = (b.controls && b.controls.left) || b;
 
@@ -3479,7 +3494,7 @@
 
     this.overdraw = params.overdraw;
 
-    gl = this.ctx = this.domElement.getContext('webgl', params) || 
+    gl = this.ctx = this.domElement.getContext('webgl', params) ||
       this.domElement.getContext('experimental-webgl', params);
 
     if (!this.ctx) {
@@ -3554,7 +3569,7 @@
 
     render: function() {
 
-      gl = this.ctx;
+      var gl = this.ctx;
 
       if (!this.overdraw) {
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -3582,6 +3597,7 @@
     this._renderer = {};
 
     this.id = Two.Identifier + Two.uniqueId();
+    this.classList = [];
 
     // Define matrix properties which all inherited
     // objects of Shape have.
@@ -3662,7 +3678,6 @@
     _update: function() {
 
       if (!this._matrix.manual && this._flagMatrix) {
-
         this._matrix
           .identity()
           .translate(this.translation.x, this.translation.y)
@@ -3672,7 +3687,7 @@
       }
 
       // Bubble up to parents mainly for `getBoundingClientRect` method.
-      if (this.parent && _.isFunction(this.parent._update)) {
+      if (this.parent && this.parent._update) {
         this.parent._update();
       }
 
@@ -4573,6 +4588,63 @@
 
       return this;
 
+    },
+
+    /**
+     * Recursively search for id. Returns the first element found.
+     * Returns null if none found.
+     */
+    getById: function (id) {
+      var found;
+      var search = function (node, id) {
+        if (node.id == id) {
+          found = node;
+          return node;
+        }
+        for (var child in node.children) {
+          if (found) return found;
+          search(node.children[child], id);
+        }
+      };
+      return search(this, id) || null;
+    },
+
+    /**
+     * Recursively search for classes. Returns an array of matching elements.
+     * Empty array if none found.
+     */
+    getByClassName: function (cl) {
+      var found = [];
+      var search = function (node, cl) {
+        if (node.classList.indexOf(cl) != -1) {
+          found.push(node);
+        }
+        for (var child in node.children) {
+          search(node.children[child], cl);
+        }
+        return found;
+      };
+      return search(this, cl);
+    },
+
+    /**
+     * Recursively search for children of a specific type,
+     * e.g. Two.Polygon. Pass a reference to this type as the param.
+     * Returns an empty array if none found.
+     */
+    getByType: function(type) {
+      var found = [];
+      var search = function (node, type) {
+        for (var id in node.children) {
+          if (node.children[id] instanceof type) {
+            found.push(node.children[id]);
+          } else if (node.children[id] instanceof Two.Group) {
+            search(node.children[id], type);
+          }
+        }
+        return found;
+      };
+      return search(this, type);
     },
 
     /**
