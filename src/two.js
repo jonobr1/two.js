@@ -1385,7 +1385,7 @@
 
     requestAnimationFrame(arguments.callee);
 
-    _.each(Two.Instances, function(t) {
+    Two.Instances.forEach(function(t) {
 
       if (t.playing) {
         t.update();

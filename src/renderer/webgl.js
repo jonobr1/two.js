@@ -162,7 +162,7 @@
       left = Infinity, right = -Infinity;
       top = Infinity, bottom = -Infinity;
 
-      _.each(vertices, function(v, i) {
+      vertices.forEach(function(v, i) {
 
         x = v.x, y = v.y, a, b, c, d, controls = v.controls;
 
@@ -306,7 +306,7 @@
       }
 
       ctx.beginPath();
-      _.each(commands, function(b, i) {
+      commands.forEach(function(b, i) {
 
         next, prev, a, c, ux, uy, vx, vy, ar, bl, br, cl;
         x = (b.x * scale + cx).toFixed(3), y = (b.y * scale + cy).toFixed(3);
