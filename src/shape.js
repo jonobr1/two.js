@@ -94,6 +94,12 @@
           .translate(this.translation.x, this.translation.y)
           .scale(this.scale)
           .rotate(this.rotation);
+
+      }
+
+      // Bubble up to parents mainly for `getBoundingClientRect` method.
+      if (this.parent && this.parent._update) {
+        this.parent._update();
       }
 
       return this;
