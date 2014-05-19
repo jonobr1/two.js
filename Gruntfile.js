@@ -6,7 +6,7 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     meta: {
-      
+
       licenseFile : 'license.txt',
 
       depFiles : [
@@ -45,7 +45,7 @@ module.exports = function(grunt) {
 
     concat: {
       options: {
-        separator: ';'
+        separator: '\n'
       },
       clean : {
         src: [
@@ -71,6 +71,13 @@ module.exports = function(grunt) {
           port: 3000
         }
       }
+    },
+
+    uglify: {
+       release: {
+         src: ['build/two.js'],
+        dest: 'build/two.min.js'
+       }
     },
 
     closureCompiler:  {
@@ -107,4 +114,6 @@ module.exports = function(grunt) {
   // Default task
   grunt.registerTask('default', ['jshint' , 'concat', 'closureCompiler']);
 
+  // Uglify fallback
+  grunt.registerTask('build-uglify', ['jshint' , 'concat', 'uglify']);
 };
