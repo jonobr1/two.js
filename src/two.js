@@ -326,15 +326,46 @@
         return matrix;
 
       },
-
+      /**
+       * Walk through item properties and pick the ones of interest.
+       * Will try to resolve styles applied via CSS
+       */
       applySvgAttributes: function(node, elem) {
+        var attributes = {}, styles = {};
 
-        _.each(node.attributes, function(v) {
+        // Not available in non browser environments
+        if (getComputedStyle) {
+          // Convert CSSStyleDeclaration to a normal object
+          var computedStyles = getComputedStyle(node);
+          _.each(computedStyles, function (item) {
+            styles[item] = computedStyles[item];
+          });
+        }
 
-          var property = v.nodeName;
+        // Convert NodeMap to a normal object
+        _.each(node.attributes, function(v, k) {
+          attributes[v.nodeName] = v.nodeValue;
+        });
 
-          switch (property) {
+        // Getting the correct opacity is a bit tricky, since SVG path elements don't
+        // support opacity as an attribute, but you can apply it via CSS.
+        // So we take the opacity and set (stroke/fill)-opacity to the same value.
+        if (!_.isUndefined(styles.opacity)) {
+          styles['stroke-opacity'] = styles.opacity;
+          styles['fill-opacity'] = styles.opacity;
+        }
 
+        // Merge attributes and applied styles (attributes take precedence)
+        _.extend(styles, attributes);
+
+        // Similarly visibility is influenced by the value of both display and visibility.
+        // Calculate a unified value here
+        styles.visible = (styles.display !== 'none') && (styles.visibility === 'visible');
+
+        // Now iterate the whole thing
+        _.each(styles, function(value, key) {
+
+          switch (key) {
             case 'transform':
 
               // TODO:
@@ -349,32 +380,38 @@
               // });
               // elem.setMatrix(matrix);
               break;
-            case 'visibility':
-              elem.visible = !!v.nodeValue;
+            case 'visible':
+              elem.visible = value;
               break;
             case 'stroke-linecap':
-              elem.cap = v.nodeValue;
+              elem.cap = value;
               break;
             case 'stroke-linejoin':
-              elem.join = v.nodeValue;
+              elem.join = value;
               break;
             case 'stroke-miterlimit':
-              elem.miter = v.nodeValue;
+              elem.miter = value;
               break;
             case 'stroke-width':
-              elem.linewidth = parseFloat(v.nodeValue);
+              elem.linewidth = parseFloat(value);
               break;
             case 'stroke-opacity':
             case 'fill-opacity':
             case 'opacity':
-              elem.opacity = parseFloat(v.nodeValue);
+              elem.opacity = parseFloat(value);
               break;
             case 'fill':
             case 'stroke':
-              elem[property] = (v.nodeValue == 'none') ? 'transparent' : v.nodeValue;
+              elem[key] = (value == 'none') ? 'transparent' : value;
               break;
             case 'id':
-              elem.id = v.nodeValue;
+              elem.id = value;
+              break;
+            case 'class':
+              if (!elem.classList) elem.classList = [];
+              value.split(' ').forEach(function (cl) {
+                elem.classList.push(cl);
+              });
               break;
             case 'class':
               if (!elem.classList) elem.classList = [];
@@ -383,7 +420,6 @@
               });
               break;
           }
-
         });
 
         return elem;
