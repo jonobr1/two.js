@@ -251,6 +251,7 @@
     },
 
     updateCanvas: function(elem) {
+
       var commands = elem._vertices;
       var canvas = this.canvas;
       var ctx = this.ctx;
@@ -299,6 +300,7 @@
         ctx.globalAlpha = opacity;
       }
 
+      var d;
       ctx.beginPath();
       commands.forEach(function(b, i) {
 
@@ -377,6 +379,7 @@
             break;
 
           case Two.Commands.move:
+            d = b;
             ctx.moveTo(x, y);
             break;
 
