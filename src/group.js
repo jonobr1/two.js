@@ -230,15 +230,42 @@
      * Add objects to the group.
      */
     add: function(objects) {
+
+      var l = arguments.length,
+        children = this.children,
+        grandparent = this.parent,
+        ids = this.additions,
+        id, parent, index;
+
       if (!_.isArray(objects)) {
         objects = _.toArray(arguments);
       }
 
       // Add the objects
+
       _.each(objects, function(object) {
 
-        if (object) {
-          object.replaceParent(this);
+        if (!object) {
+          return;
+        }
+
+        id = object.id;
+        parent = object.parent;
+
+        if (_.isUndefined(children[id])) {
+          // Release object from previous parent.
+          if (parent) {
+            delete parent.children[id];
+            index = _.indexOf(parent.additions, id);
+            if (index >= 0) {
+              parent.additions.splice(index, 1);
+            }
+          }
+          // Add it to this group and update parent-child relationship.
+          children[id] = object;
+          object.parent = this;
+          ids.push(id);
+          this._flagAdditions = true;
         }
 
       }, this);
@@ -253,7 +280,10 @@
     remove: function(objects) {
 
       var l = arguments.length,
-        grandparent = this.parent;
+        children = this.children,
+        grandparent = this.parent,
+        ids = this.subtractions,
+        id, parent, index, grandchildren;
 
       if (l <= 0 && grandparent) {
         grandparent.remove(this);
@@ -266,9 +296,24 @@
 
       _.each(objects, function(object) {
 
-        if (object) {
-          object.replaceParent();
+        id = object.id;
+        grandchildren = object.children;
+        parent = object.parent;
+
+        if (!(id in children)) {
+          return;
         }
+
+        delete children[id];
+        delete object.parent;
+
+        index = _.indexOf(parent.additions, id);
+        if (index >= 0) {
+          parent.additions.splice(index, 1);
+        }
+
+        ids.push(id);
+        this._flagSubtractions = true;
 
       }, this);
 
