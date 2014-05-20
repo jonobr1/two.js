@@ -1,9 +1,6 @@
 (function() {
 
-  // Localized variables
-  var zero = Two.Vector.zero, clone;
-
-  var Shape = Two.Shape = function(limited) {
+  var Shape = Two.Shape = function() {
 
     // Private object for renderer specific variables.
     this._renderer = {};
@@ -73,7 +70,7 @@
     },
 
     clone: function() {
-      clone = new Shape();
+      var clone = new Shape();
       clone.translation.copy(this.translation);
       clone.rotation = this.rotation;
       clone.scale = this.scale;
@@ -81,6 +78,36 @@
         clone[k] = this[k];
       }, this);
       return clone._update();
+    },
+
+    /**
+     * Set the parent of this object to another object
+     * and updates parent-child relationships
+     * Calling with no arguments will simply remove the parenting
+     */
+    replaceParent: function(newParent) {
+        var id = this.id, index;
+        // Release object from previous parent.
+        if (this.parent) {
+          delete this.parent.children[id];
+          index = _.indexOf(parent.additions, id);
+          if (index >= 0) {
+            this.parent.additions.splice(index, 1);
+          }
+          this.parent.subtractions.push(id);
+          this._flagSubtractions = true;
+        }
+
+        if (newParent) {
+          // Add it to this group and update parent-child relationship.
+          newParent.children[id] = this;
+          this.parent = newParent;
+          newParent.additions.push(id);
+          newParent._flagAdditions = true;
+        } else {
+          delete this.parent;
+        }
+        return this;
     },
 
     /**

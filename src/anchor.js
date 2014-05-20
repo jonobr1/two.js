@@ -1,7 +1,7 @@
 (function() {
 
   // Localized variables
-  var commands = Two.Commands, x, y, o, controls, clone;
+  var commands = Two.Commands;
 
   /**
    * An object that holds 3 `Two.Vector`s, the anchor point and its
@@ -43,8 +43,8 @@
 
     AppendCurveProperties: function(anchor) {
 
-      x = anchor._x || anchor.x;
-      y = anchor._y || anchor.y;
+      var x = anchor._x || anchor.x;
+      var y = anchor._y || anchor.y;
 
       anchor.controls = {
         left: new Two.Vector(0, 0),
@@ -83,9 +83,9 @@
 
     clone: function() {
 
-      controls = this.controls;
+      var controls = this.controls;
 
-      clone = new Two.Anchor(
+      var clone = new Two.Anchor(
         this.x,
         this.y,
         controls && controls.left.x,
@@ -100,7 +100,7 @@
     },
 
     toObject: function() {
-      o = {
+      var o = {
         x: this.x,
         y: this.y
       };

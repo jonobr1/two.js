@@ -1,8 +1,5 @@
 (function() {
 
-  // Localized variables
-  var parent, flag, x, y, dx, dy;
-
   var Vector = Two.Vector = function(x, y) {
 
     this.x = x || 0;
@@ -111,7 +108,8 @@
     },
 
     distanceToSquared: function(v) {
-      dx = this.x - v.x, dy = this.y - v.y;
+      var dx = this.x - v.x, 
+          dy = this.y - v.y;
       return dx * dx + dy * dy;
     },
 
@@ -124,8 +122,8 @@
     },
 
     lerp: function(v, t) {
-      x = (v.x - this.x) * t + this.x;
-      y = (v.y - this.y) * t + this.y;
+      var x = (v.x - this.x) * t + this.x;
+      var y = (v.y - this.y) * t + this.y;
       return this.set(x, y);
     },
 
@@ -237,7 +235,8 @@
     },
 
     distanceToSquared: function(v) {
-      dx = this._x - v.x, dy = this._y - v.y;
+      var dx = this._x - v.x,
+          dy = this._y - v.y;
       return dx * dx + dy * dy;
     },
 
@@ -250,8 +249,8 @@
     },
 
     lerp: function(v, t) {
-      x = (v.x - this._x) * t + this._x;
-      y = (v.y - this._y) * t + this._y;
+      var x = (v.x - this._x) * t + this._x;
+      var y = (v.y - this._y) * t + this._y;
       return this.set(x, y);
     },
 

@@ -38,7 +38,10 @@ module.exports = function(grunt) {
 
     jshint: {
       options: {
-        laxbreak: true
+        laxbreak: true,
+        undef: true,
+        browser: true,
+        predef: [ "_", "Backbone", "Two", "requestAnimationFrame", "module", "define"]
       },
       all: ['Gruntfile.js', 'src/**/*.js']
     },
