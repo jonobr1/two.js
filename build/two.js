@@ -1888,7 +1888,7 @@ var Backbone = Backbone || {};
               break;
             case 'class':
               if (!elem.classList) elem.classList = [];
-              v.nodeValue.split(' ').forEach(function (cl) {
+              value.split(' ').forEach(function (cl) {
                 elem.classList.push(cl);
               });
               break;
@@ -2055,11 +2055,11 @@ var Backbone = Backbone || {};
 
                 if (lower === 'c') {
 
-                  x2 = parseFloat(coords[0]); 
+                  x2 = parseFloat(coords[0]);
                   y2 = parseFloat(coords[1]);
-                  x3 = parseFloat(coords[2]); 
+                  x3 = parseFloat(coords[2]);
                   y3 = parseFloat(coords[3]);
-                  x4 = parseFloat(coords[4]); 
+                  x4 = parseFloat(coords[4]);
                   y4 = parseFloat(coords[5]);
 
                 } else {
@@ -2071,9 +2071,9 @@ var Backbone = Backbone || {};
 
                   x2 = reflection.x;
                   y2 = reflection.y;
-                  x3 = parseFloat(coords[0]); 
+                  x3 = parseFloat(coords[0]);
                   y3 = parseFloat(coords[1]);
-                  x4 = parseFloat(coords[2]); 
+                  x4 = parseFloat(coords[2]);
                   y4 = parseFloat(coords[3]);
 
                 }
@@ -6165,15 +6165,42 @@ var Backbone = Backbone || {};
      * Add objects to the group.
      */
     add: function(objects) {
+
+      var l = arguments.length,
+        children = this.children,
+        grandparent = this.parent,
+        ids = this.additions,
+        id, parent, index;
+
       if (!_.isArray(objects)) {
         objects = _.toArray(arguments);
       }
 
       // Add the objects
+
       _.each(objects, function(object) {
 
-        if (object) {
-          object.replaceParent(this);
+        if (!object) {
+          return;
+        }
+
+        id = object.id;
+        parent = object.parent;
+
+        if (_.isUndefined(children[id])) {
+          // Release object from previous parent.
+          if (parent) {
+            delete parent.children[id];
+            index = _.indexOf(parent.additions, id);
+            if (index >= 0) {
+              parent.additions.splice(index, 1);
+            }
+          }
+          // Add it to this group and update parent-child relationship.
+          children[id] = object;
+          object.parent = this;
+          ids.push(id);
+          this._flagAdditions = true;
         }
 
       }, this);
@@ -6188,7 +6215,10 @@ var Backbone = Backbone || {};
     remove: function(objects) {
 
       var l = arguments.length,
-        grandparent = this.parent;
+        children = this.children,
+        grandparent = this.parent,
+        ids = this.subtractions,
+        id, parent, index, grandchildren;
 
       if (l <= 0 && grandparent) {
         grandparent.remove(this);
@@ -6201,9 +6231,24 @@ var Backbone = Backbone || {};
 
       _.each(objects, function(object) {
 
-        if (object) {
-          object.replaceParent();
+        id = object.id;
+        grandchildren = object.children;
+        parent = object.parent;
+
+        if (!(id in children)) {
+          return;
         }
+
+        delete children[id];
+        delete object.parent;
+
+        index = _.indexOf(parent.additions, id);
+        if (index >= 0) {
+          parent.additions.splice(index, 1);
+        }
+
+        ids.push(id);
+        this._flagSubtractions = true;
 
       }, this);
 
