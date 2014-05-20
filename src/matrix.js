@@ -3,13 +3,7 @@
   /**
    * Constants
    */
-  var range = _.range(6),
-    cos = Math.cos, sin = Math.sin, tan = Math.tan;
-
-  // Local variables
-  var a, b, c, d, e, f, g, h, i, hasOutput, out, elements, x, y, z, C, A0, A1,
-    A2, A3, A4, A5,A6, A7, A8, B0, B1, B2,B3, B4, B5,B6, B7, B8, A, B, l, s, c,
-    a00, a01, a02, a10, a11, a12, a20, a21, a22, b01, b11, b21, det, TEMP = [];
+  var cos = Math.cos, sin = Math.sin, tan = Math.tan;
 
   /**
    * Two.Matrix contains an array of elements that represent
@@ -55,9 +49,11 @@
 
       if (B.length <= 3) { // Multiply Vector
 
-        x, y, z;
-        a = B[0] || 0, b = B[1] || 0, c = B[2] || 0;
-        e = A;
+        var x, y, z, e = A;
+
+        var a = B[0] || 0,
+            b = B[1] || 0,
+            c = B[2] || 0;
 
         // Go down rows first
         // a, d, g, b, e, h, c, f, i
@@ -70,13 +66,13 @@
 
       }
 
-      A0 = A[0], A1 = A[1], A2 = A[2];
-      A3 = A[3], A4 = A[4], A5 = A[5];
-      A6 = A[6], A7 = A[7], A8 = A[8];
+      var A0 = A[0], A1 = A[1], A2 = A[2];
+      var A3 = A[3], A4 = A[4], A5 = A[5];
+      var A6 = A[6], A7 = A[7], A8 = A[8];
 
-      B0 = B[0], B1 = B[1], B2 = B[2];
-      B3 = B[3], B4 = B[4], B5 = B[5];
-      B6 = B[6], B7 = B[7], B8 = B[8];
+      var B0 = B[0], B1 = B[1], B2 = B[2];
+      var B3 = B[3], B4 = B[4], B5 = B[5];
+      var B6 = B[6], B7 = B[7], B8 = B[8];
 
       C = C || new Two.Array(9);
 
@@ -105,7 +101,7 @@
      */
     set: function(a, b, c, d, e, f) {
 
-      elements = a, l = arguments.length;
+      var elements = a;
       if (!_.isArray(elements)) {
         elements = _.toArray(arguments);
       }
@@ -136,7 +132,7 @@
      */
     multiply: function(a, b, c, d, e, f, g, h, i) {
 
-      elements = arguments, l = elements.length;
+      var elements = arguments, l = elements.length;
 
       // Multiply scalar
 
@@ -152,8 +148,10 @@
 
       if (l <= 3) { // Multiply Vector
 
-        x, y, z;
-        a = a || 0, b = b || 0, c = c || 0;
+        var x, y, z;
+        a = a || 0;
+        b = b || 0;
+        c = c || 0;
         e = this.elements;
 
         // Go down rows first
@@ -169,16 +167,16 @@
 
       // Multiple matrix
 
-      A = this.elements;
-      B = elements;
+      var A = this.elements;
+      var B = elements;
 
-      A0 = A[0], A1 = A[1], A2 = A[2];
-      A3 = A[3], A4 = A[4], A5 = A[5];
-      A6 = A[6], A7 = A[7], A8 = A[8];
+      var A0 = A[0], A1 = A[1], A2 = A[2];
+      var A3 = A[3], A4 = A[4], A5 = A[5];
+      var A6 = A[6], A7 = A[7], A8 = A[8];
 
-      B0 = B[0], B1 = B[1], B2 = B[2];
-      B3 = B[3], B4 = B[4], B5 = B[5];
-      B6 = B[6], B7 = B[7], B8 = B[8];
+      var B0 = B[0], B1 = B[1], B2 = B[2];
+      var B3 = B[3], B4 = B[4], B5 = B[5];
+      var B6 = B[6], B7 = B[7], B8 = B[8];
 
       this.elements[0] = A0 * B0 + A1 * B3 + A2 * B6;
       this.elements[1] = A0 * B1 + A1 * B4 + A2 * B7;
@@ -198,19 +196,19 @@
 
     inverse: function(out) {
 
-      a = this.elements;
+      var a = this.elements;
       out = out || new Two.Matrix();
 
-      a00 = a[0], a01 = a[1], a02 = a[2];
-      a10 = a[3], a11 = a[4], a12 = a[5];
-      a20 = a[6], a21 = a[7], a22 = a[8];
+      var a00 = a[0], a01 = a[1], a02 = a[2];
+      var a10 = a[3], a11 = a[4], a12 = a[5];
+      var a20 = a[6], a21 = a[7], a22 = a[8];
 
-      b01 = a22 * a11 - a12 * a21;
-      b11 = -a22 * a10 + a12 * a20;
-      b21 = a21 * a10 - a11 * a20;
+      var b01 = a22 * a11 - a12 * a21;
+      var b11 = -a22 * a10 + a12 * a20;
+      var b21 = a21 * a10 - a11 * a20;
 
       // Calculate the determinant
-      det = a00 * b01 + a01 * b11 + a02 * b21;
+      var det = a00 * b01 + a01 * b11 + a02 * b21;
 
       if (!det) { 
         return null; 
@@ -237,7 +235,7 @@
      */
     scale: function(sx, sy) {
 
-      l = arguments.length;
+      var l = arguments.length;
       if (l <= 1) {
         sy = sx;
       }
@@ -251,8 +249,8 @@
      */
     rotate: function(radians) {
 
-      c = cos(radians);
-      s = sin(radians);
+      var c = cos(radians);
+      var s = sin(radians);
 
       return this.multiply(c, -s, 0, s, c, 0, 0, 0, 1);
 
@@ -272,7 +270,7 @@
      */
     skewX: function(radians) {
 
-      a = tan(radians);
+      var a = tan(radians);
 
       return this.multiply(1, a, 0, 0, 1, 0, 0, 0, 1);
 
@@ -283,7 +281,7 @@
      */
     skewY: function(radians) {
 
-      a = tan(radians);
+      var a = tan(radians);
 
       return this.multiply(1, 0, 0, a, 1, 0, 0, 0, 1);
 
@@ -293,10 +291,11 @@
      * Create a transform string to be used with rendering apis.
      */
     toString: function(fullMatrix) {
+      var temp = [];
 
-      this.toArray(fullMatrix, TEMP);
+      this.toArray(fullMatrix, temp);
 
-      return TEMP.join(' ');
+      return temp.join(' ');
 
     },
 
@@ -305,21 +304,21 @@
      */
     toArray: function(fullMatrix, output) {
 
-      elements = this.elements;
-      hasOutput = !!output;
+     var elements = this.elements;
+     var hasOutput = !!output;
 
-      a = parseFloat(elements[0].toFixed(3));
-      b = parseFloat(elements[1].toFixed(3));
-      c = parseFloat(elements[2].toFixed(3));
-      d = parseFloat(elements[3].toFixed(3));
-      e = parseFloat(elements[4].toFixed(3));
-      f = parseFloat(elements[5].toFixed(3));
+     var a = parseFloat(elements[0].toFixed(3));
+     var b = parseFloat(elements[1].toFixed(3));
+     var c = parseFloat(elements[2].toFixed(3));
+     var d = parseFloat(elements[3].toFixed(3));
+     var e = parseFloat(elements[4].toFixed(3));
+     var f = parseFloat(elements[5].toFixed(3));
 
       if (!!fullMatrix) {
 
-        g = parseFloat(elements[6].toFixed(3));
-        h = parseFloat(elements[7].toFixed(3));
-        i = parseFloat(elements[8].toFixed(3));
+        var g = parseFloat(elements[6].toFixed(3));
+        var h = parseFloat(elements[7].toFixed(3));
+        var i = parseFloat(elements[8].toFixed(3));
 
         if (hasOutput) {
           output[0] = a;
@@ -359,6 +358,7 @@
      * Clone the current matrix.
      */
     clone: function() {
+      var a, b, c, d, e, f, g, h, i;
 
       a = this.elements[0];
       b = this.elements[1];

@@ -5,11 +5,7 @@
    */
   var min = Math.min, max = Math.max;
 
-  // Localized variables
-  var secret, parent, children, group, rect, corner, l, objects, grandparent,
-    ids, id, left, right, top, bottom, matrix, a, b, c, d, index;
-
-  var Group = Two.Group = function(o) {
+  var Group = Two.Group = function() {
 
     Two.Shape.call(this, true);
 
@@ -98,10 +94,10 @@
 
       parent = parent || this.parent;
 
-      group = new Group();
+      var group = new Group();
       parent.add(group);
 
-      children = _.map(this.children, function(child) {
+      var children = _.map(this.children, function(child) {
         return child.clone(group);
       });
 
@@ -136,8 +132,8 @@
      */
     corner: function() {
 
-      rect = this.getBoundingClientRect(true);
-      corner = { x: rect.left, y: rect.top };
+      var rect = this.getBoundingClientRect(true),
+       corner = { x: rect.left, y: rect.top };
 
       _.each(this.children, function(child) {
         child.translation.subSelf(corner);
@@ -153,7 +149,7 @@
      */
     center: function() {
 
-      rect = this.getBoundingClientRect(true);
+      var rect = this.getBoundingClientRect(true);
 
       rect.centroid = {
         x: rect.left + rect.width / 2,
@@ -228,44 +224,18 @@
     },
 
     /**
-     * Add an object to the group.
+     * Add objects to the group.
      */
-    add: function(o) {
-
-      l = arguments.length,
-        objects = o,
-        children = this.children,
-        grandparent = this.parent,
-        ids = this.additions;
-
-      if (!_.isArray(o)) {
+    add: function(objects) {
+      if (!_.isArray(objects)) {
         objects = _.toArray(arguments);
       }
 
       // Add the objects
-
       _.each(objects, function(object) {
 
-        if (!object) {
-          return;
-        }
-
-        id = object.id, parent = object.parent;
-
-        if (_.isUndefined(children[id])) {
-          // Release object from previous parent.
-          if (parent) {
-            delete parent.children[id];
-            index = _.indexOf(parent.additions, id);
-            if (index >= 0) {
-              parent.additions.splice(index, 1);
-            }
-          }
-          // Add it to this group and update parent-child relationship.
-          children[id] = object;
-          object.parent = this;
-          ids.push(id);
-          this._flagAdditions = true;
+        if (object) {
+          object.replaceParent(this);
         }
 
       }, this);
@@ -275,44 +245,27 @@
     },
 
     /**
-     * Remove an object from the group.
+     * Remove objects from the group.
      */
-    remove: function(o) {
+    remove: function(objects) {
 
-      l = arguments.length,
-        objects = o,
-        children = this.children,
-        grandparent = this.parent,
-        ids = this.subtractions;
+      var l = arguments.length,
+        grandparent = this.parent;
 
       if (l <= 0 && grandparent) {
         grandparent.remove(this);
         return this;
       }
 
-      if (!_.isArray(o)) {
+      if (!_.isArray(objects)) {
         objects = _.toArray(arguments);
       }
 
       _.each(objects, function(object) {
 
-        id = object.id, grandchildren = object.children;
-        parent = object.parent;
-
-        if (!(id in children)) {
-          return;
+        if (object) {
+          object.replaceParent();
         }
-
-        delete children[id];
-        delete object.parent;
-
-        index = _.indexOf(parent.additions, id);
-        if (index >= 0) {
-          parent.additions.splice(index, 1);
-        }
-
-        ids.push(id);
-        this._flagSubtractions = true;
 
       }, this);
 
@@ -324,21 +277,22 @@
      * Return an object with top, left, right, bottom, width, and height
      * parameters of the group.
      */
-    getBoundingClientRect: function(shallow) {
+    getBoundingClientRect: function() {
+      var rect;
 
       // TODO: Update this to not __always__ update. Just when it needs to.
       this._update();
 
       // Variables need to be defined here, because of nested nature of groups.
-      var left = Infinity, right = -Infinity;
-      var top = Infinity, bottom = -Infinity;
+      var left = Infinity, right = -Infinity,
+          top = Infinity, bottom = -Infinity;
 
       _.each(this.children, function(child) {
 
         rect = child.getBoundingClientRect();
 
-        if (!_.isNumber(rect.top) || !_.isNumber(rect.left)
-          || !_.isNumber(rect.right) || !_.isNumber(rect.bottom)) {
+        if (!_.isNumber(rect.top)   || !_.isNumber(rect.left)   ||
+            !_.isNumber(rect.right) || !_.isNumber(rect.bottom)) {
           return;
         }
 

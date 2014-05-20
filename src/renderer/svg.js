@@ -1,8 +1,7 @@
 (function() {
 
   // Localize variables
-  var mod = Two.Utils.mod, flagMatrix, elem, l, last, tag, name, command,
-    previous, next, a, c, vx, vy, ux, uy, ar, bl, br, cl, x, y;
+  var mod = Two.Utils.mod;
 
   var svg = {
 
@@ -15,8 +14,8 @@
      * Create an svg namespaced element.
      */
     createElement: function(name, attrs) {
-      tag = name;
-      elem = document.createElementNS(this.ns, tag);
+      var tag = name;
+      var elem = document.createElementNS(this.ns, tag);
       if (tag === 'svg') {
         attrs = _.defaults(attrs || {}, {
           version: this.version
@@ -86,8 +85,8 @@
 
           case Two.Commands.curve:
 
-            var ar = (a.controls && a.controls.right) || a;
-            var bl = (b.controls && b.controls.left) || b;
+            ar = (a.controls && a.controls.right) || a;
+            bl = (b.controls && b.controls.left) || b;
 
             if (a._relative) {
               vx = (ar.x + a.x).toFixed(3);
@@ -105,8 +104,8 @@
               uy = bl.y.toFixed(3);
             }
 
-            command = ((i === 0) ? Two.Commands.move : Two.Commands.curve)
-              + ' ' + vx + ' ' + vy + ' ' + ux + ' ' + uy + ' ' + x + ' ' + y;
+            command = ((i === 0) ? Two.Commands.move : Two.Commands.curve) +
+              ' ' + vx + ' ' + vy + ' ' + ux + ' ' + uy + ' ' + x + ' ' + y;
             break;
 
           case Two.Commands.move:
@@ -168,7 +167,7 @@
 
       // TODO: Can speed up.
       appendChild: function(id) {
-        elem = this.domElement.querySelector('#' + id);
+        var elem = this.domElement.querySelector('#' + id);
         if (elem) {
           this.elem.appendChild(elem);
         }
@@ -176,7 +175,7 @@
 
       // TODO: Can speed up.
       removeChild: function(id) {
-        elem = this.domElement.querySelector('#' + id);
+        var elem = this.domElement.querySelector('#' + id);
         if (elem) {
           this.elem.removeChild(elem);
         }
@@ -198,7 +197,7 @@
         }
 
         // _Update styles for the <g>
-        flagMatrix = this._matrix.manual || this._flagMatrix;
+        var flagMatrix = this._matrix.manual || this._flagMatrix;
         var context = {
           domElement: domElement,
           elem: this._renderer.elem
@@ -239,15 +238,15 @@
           domElement.appendChild(this._renderer.elem);
         }
 
-        elem = this._renderer.elem;
-        flagMatrix = this._matrix.manual || this._flagMatrix;
+        var elem = this._renderer.elem;
+        var flagMatrix = this._matrix.manual || this._flagMatrix;
 
         if (flagMatrix) {
           elem.setAttribute('transform', 'matrix(' + this._matrix.toString() + ')');
         }
 
         if (this._flagVertices) {
-          vertices = svg.toString(this._vertices, this._closed);
+          var vertices = svg.toString(this._vertices, this._closed);
           elem.setAttribute('d', vertices);
         }
 

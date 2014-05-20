@@ -3,15 +3,8 @@
   /**
    * Constants
    */
-
-  var root = this;
   var mod = Two.Utils.mod;
   var getRatio = Two.Utils.getRatio;
-
-  // Localized variables
-  var matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter,
-    closed, commands, length, last;
-  var next, prev, a, c, d, ux, uy, vx, vy, ar, bl, br, cl, x, y;
 
   var canvas = {
 
@@ -26,7 +19,7 @@
         // TODO: Add a check here to only invoke _update if need be.
         this._update();
 
-        matrix = this._matrix.elements;
+        var matrix = this._matrix.elements;
 
         ctx.save();
         ctx.transform(
@@ -45,7 +38,10 @@
     polygon: {
 
       render: function(ctx) {
-
+        var matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter,
+            closed, commands, length, last, next, prev, a, c, d, ux, uy, vx, vy, 
+            ar, bl, br, cl, x, y;
+            
         // TODO: Add a check here to only invoke _update if need be.
         this._update();
 

@@ -69,8 +69,7 @@
     });
 
     _.each(params, function(v, k) {
-      if (k === 'fullscreen' || k === 'width' || k === 'height'
-        || k === 'autostart') {
+      if (k === 'fullscreen' || k === 'width' || k === 'height' || k === 'autostart') {
         return;
       }
       this[k] = v;
@@ -306,9 +305,8 @@
        */
       getComputedMatrix: function(object, matrix) {
 
-        var matrices = [];
-        var matrix = (matrix && matrix.identity()) || new Two.Matrix();
-        var parent = object;
+        matrix = (matrix && matrix.identity()) || new Two.Matrix();
+        var parent = object, matrices = [];
 
         while (parent && parent._matrix) {
           matrices.push(parent._matrix);
@@ -331,7 +329,7 @@
 
       applySvgAttributes: function(node, elem) {
 
-        _.each(node.attributes, function(v, k) {
+        _.each(node.attributes, function(v) {
 
           var property = v.nodeName;
 
@@ -539,16 +537,21 @@
               case 's':
               case 'c':
 
-                x1 = coord.x, y1 = coord.y;
+                x1 = coord.x;
+                y1 = coord.y;
+
                 if (!control) {
                   control = new Two.Vector().copy(coord);
                 }
 
                 if (lower === 'c') {
 
-                  x2 = parseFloat(coords[0]), y2 = parseFloat(coords[1]);
-                  x3 = parseFloat(coords[2]), y3 = parseFloat(coords[3]);
-                  x4 = parseFloat(coords[4]), y4 = parseFloat(coords[5]);
+                  x2 = parseFloat(coords[0]); 
+                  y2 = parseFloat(coords[1]);
+                  x3 = parseFloat(coords[2]); 
+                  y3 = parseFloat(coords[3]);
+                  x4 = parseFloat(coords[4]); 
+                  y4 = parseFloat(coords[5]);
 
                 } else {
 
@@ -557,16 +560,22 @@
 
                   reflection = Two.Utils.getReflection(coord, control, relative);
 
-                  x2 = reflection.x, y2 = reflection.y;
-                  x3 = parseFloat(coords[0]), y3 = parseFloat(coords[1]);
-                  x4 = parseFloat(coords[2]), y4 = parseFloat(coords[3]);
+                  x2 = reflection.x;
+                  y2 = reflection.y;
+                  x3 = parseFloat(coords[0]); 
+                  y3 = parseFloat(coords[1]);
+                  x4 = parseFloat(coords[2]); 
+                  y4 = parseFloat(coords[3]);
 
                 }
 
                 if (relative) {
-                  x2 += x1, y2 += y1;
-                  x3 += x1, y3 += y1;
-                  x4 += x1, y4 += y1;
+                  x2 += x1;
+                  y2 += y1;
+                  x3 += x1;
+                  y3 += y1;
+                  x4 += x1;
+                  y4 += y1;
                 }
 
                 if (!_.isObject(coord.controls)) {
@@ -589,36 +598,46 @@
               case 't':
               case 'q':
 
-                x1 = coord.x, y1 = coord.y;
+                x1 = coord.x;
+                y1 = coord.y;
 
                 if (!control) {
                   control = new Two.Vector().copy(coord);
                 }
 
                 if (control.isZero()) {
-                  x2 = x1, y2 = y1;
+                  x2 = x1;
+                  y2 = y1;
                 } else {
-                  x2 = control.x, y1 = control.y;
+                  x2 = control.x;
+                  y1 = control.y;
                 }
 
                 if (lower === 'q') {
 
-                  x3 = parseFloat(coords[0]), y3 = parseFloat(coords[1]);
-                  x4 = parseFloat(coords[1]), y4 = parseFloat(coords[2]);
+                  x3 = parseFloat(coords[0]);
+                  y3 = parseFloat(coords[1]);
+                  x4 = parseFloat(coords[1]);
+                  y4 = parseFloat(coords[2]);
 
                 } else {
 
                   reflection = Two.Utils.getReflection(coord, control, relative);
 
-                  x3 = reflection.x, y3 = reflection.y;
-                  x4 = parseFloat(coords[0]), y4 = parseFloat(coords[1]);
+                  x3 = reflection.x;
+                  y3 = reflection.y;
+                  x4 = parseFloat(coords[0]);
+                  y4 = parseFloat(coords[1]);
 
                 }
 
                 if (relative) {
-                  x2 += x1, y2 += y1;
-                  x3 += x1, y3 += y1;
-                  x4 += x1, y4 += y1;
+                  x2 += x1;
+                  y2 += y1;
+                  x3 += x1;
+                  y3 += y1;
+                  x4 += x1;
+                  y4 += y1;
                 }
 
                 if (!_.isObject(coord.controls)) {
@@ -767,7 +786,7 @@
        */
       subdivide: function(x1, y1, x2, y2, x3, y3, x4, y4, limit) {
 
-        var limit = limit || Two.Utils.Curve.RecursionLimit;
+        limit = limit || Two.Utils.Curve.RecursionLimit;
         var amount = limit + 1;
 
         // TODO: Issue 73
@@ -790,8 +809,8 @@
 
       getPointOnCubicBezier: function(t, a, b, c, d) {
         var k = 1 - t;
-        return (k * k * k * a) + (3 * k * k * t * b) + (3 * k * t * t * c)
-          + (t * t * t * d);
+        return (k * k * k * a) + (3 * k * k * t * b) + (3 * k * t * t * c) +
+           (t * t * t * d);
       },
 
       /**
