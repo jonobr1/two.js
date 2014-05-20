@@ -415,7 +415,7 @@
               break;
             case 'class':
               if (!elem.classList) elem.classList = [];
-              v.nodeValue.split(' ').forEach(function (cl) {
+              value.split(' ').forEach(function (cl) {
                 elem.classList.push(cl);
               });
               break;
@@ -582,11 +582,11 @@
 
                 if (lower === 'c') {
 
-                  x2 = parseFloat(coords[0]); 
+                  x2 = parseFloat(coords[0]);
                   y2 = parseFloat(coords[1]);
-                  x3 = parseFloat(coords[2]); 
+                  x3 = parseFloat(coords[2]);
                   y3 = parseFloat(coords[3]);
-                  x4 = parseFloat(coords[4]); 
+                  x4 = parseFloat(coords[4]);
                   y4 = parseFloat(coords[5]);
 
                 } else {
@@ -598,9 +598,9 @@
 
                   x2 = reflection.x;
                   y2 = reflection.y;
-                  x3 = parseFloat(coords[0]); 
+                  x3 = parseFloat(coords[0]);
                   y3 = parseFloat(coords[1]);
-                  x4 = parseFloat(coords[2]); 
+                  x4 = parseFloat(coords[2]);
                   y4 = parseFloat(coords[3]);
 
                 }
