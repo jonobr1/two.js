@@ -65,13 +65,40 @@
         }
 
         if (this._mask) {
+
+          gl.enable(gl.STENCIL_TEST);
+          gl.stencilFunc(gl.ALWAYS, 1, 1);
+
+          gl.colorMask(false, false, false, false);
+          gl.stencilOp(gl.KEEP, gl.KEEP, gl.INCR);
+
           webgl[this._mask._renderer.type].render.call(this._mask, gl, program, this);
+
+          gl.colorMask(true, true, true, true);
+          gl.stencilFunc(gl.NOTEQUAL, 0, 1); // Third argument should be length of mask depth
+          gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
+
         }
 
         _.each(this.children, webgl.group.renderChild, {
           gl: gl,
           program: program
         });
+
+        if (this._mask) {
+
+          gl.colorMask(false, false, false, false);
+          gl.stencilOp(gl.KEEP, gl.KEEP, gl.DECR);
+
+          webgl[this._mask._renderer.type].render.call(this._mask, gl, program, this);
+
+          gl.colorMask(true, true, true, true);
+          gl.stencilFunc(gl.NOTEQUAL, 0, 1);  // Third argument should be length of mask depth
+          gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
+
+          gl.disable(gl.STENCIL_TEST);
+
+        }
 
         return this.flagReset();
 
@@ -158,10 +185,6 @@
         gl.vertexAttribPointer(program.position, 2, gl.FLOAT, false, 0, 0);
 
         gl.drawArrays(gl.TRIANGLES, 0, 6);
-
-        if (this._clip) {
-          gl.colorMask(true, true, true, true);
-        }
 
         return this.flagReset();
 
