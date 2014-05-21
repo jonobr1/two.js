@@ -61,6 +61,9 @@ instead to minify the build with uglify.
 ## Change Log
 
 ##### Nightly
++ Added `Two.Group.getById` and `Two.Group.getByClassName` methods for convenient selection [@DieBuche](https://github.com/DieBuche)
++ Added `classList` to all `Two.Shape`s [@DieBuche](https://github.com/DieBuche)
++ Enabled inference of applied styles on imported svgs [@DieBuche](https://github.com/DieBuche)
 + Added `Two.Polygon.getPointAt` method to get coordinates on a curve/line
 + Added `Two.Polygon.length` property and `Two.Polygon._updateLength` method to calculate length of curve/line
 + Updated `Two.Group.prototype` observable properties on `Two.Polygon.Properties` to ensure each property is considered unique
