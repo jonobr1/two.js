@@ -66,17 +66,23 @@
 
         if (this._mask) {
 
-          gl.enable(gl.STENCIL_TEST);
-          gl.stencilFunc(gl.ALWAYS, 1, 1);
-
-          gl.colorMask(false, false, false, false);
-          gl.stencilOp(gl.KEEP, gl.KEEP, gl.INCR);
+          // gl.enable(gl.BLEND);
+          // gl.blendFunc(gl.SRC_ALPHA, gl.ZERO);
+          // gl.blendEquation(gl.FUNC_ADD);
 
           webgl[this._mask._renderer.type].render.call(this._mask, gl, program, this);
 
-          gl.colorMask(true, true, true, true);
-          gl.stencilFunc(gl.NOTEQUAL, 0, 1); // Third argument should be length of mask depth
-          gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
+          // gl.enable(gl.STENCIL_TEST);
+          // gl.stencilFunc(gl.ALWAYS, 1, 1);
+
+          // gl.colorMask(false, false, false, false);
+          // gl.stencilOp(gl.KEEP, gl.KEEP, gl.INCR);
+
+          // webgl[this._mask._renderer.type].render.call(this._mask, gl, program, this);
+
+          // gl.colorMask(true, true, true, true);
+          // gl.stencilFunc(gl.NOTEQUAL, 0, 1); // Third argument should be length of mask depth
+          // gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
 
         }
 
@@ -87,16 +93,18 @@
 
         if (this._mask) {
 
-          gl.colorMask(false, false, false, false);
-          gl.stencilOp(gl.KEEP, gl.KEEP, gl.DECR);
+          // gl.disable(gl.BLEND);
 
-          webgl[this._mask._renderer.type].render.call(this._mask, gl, program, this);
+          // gl.colorMask(false, false, false, false);
+          // gl.stencilOp(gl.KEEP, gl.KEEP, gl.DECR);
 
-          gl.colorMask(true, true, true, true);
-          gl.stencilFunc(gl.NOTEQUAL, 0, 1);  // Third argument should be length of mask depth
-          gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
+          // webgl[this._mask._renderer.type].render.call(this._mask, gl, program, this);
 
-          gl.disable(gl.STENCIL_TEST);
+          // gl.colorMask(true, true, true, true);
+          // gl.stencilFunc(gl.NOTEQUAL, 0, 1);  // Third argument should be length of mask depth
+          // gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
+
+          // gl.disable(gl.STENCIL_TEST);
 
         }
 
