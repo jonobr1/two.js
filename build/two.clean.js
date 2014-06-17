@@ -2585,7 +2585,7 @@
 
       // TODO: Can speed up.
       removeChild: function(id) {
-        var elem = this.domElement.querySelector('#' + id);
+        var elem = this.elem.querySelector('#' + id);
         if (elem) {
           this.elem.removeChild(elem);
         }
