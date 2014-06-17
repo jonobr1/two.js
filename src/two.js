@@ -478,11 +478,67 @@
           var path = node.getAttribute('d');
 
           // Create a Two.Polygon from the paths.
+
           var coord, control;
           var coords, relative = false;
           var closed = false;
           var commands = path.match(/[a-df-z][^a-df-z]*/ig);
           var last = commands.length - 1;
+
+          // Go through commands and look for Inkscape irregularities
+
+          _.each(commands.slice(0), function(command, i) {
+
+            var type = command[0];
+            var lower = type.toLowerCase();
+            var items = command.slice(1).trim().split(/[\s,]+|(?=\s?[+\-])/);
+            var pre, post, result = [], bin;
+
+            if (i <= 0) {
+              commands = [];
+            }
+
+            switch (lower) {
+              case 'm':
+              case 'l':
+              case 'h':
+              case 'v':
+                if (items.length > 2) {
+                  bin = 2;
+                }
+                break;
+              case 'c':
+              case 's':
+              case 't':
+              case 'q':
+                if (items.length > 6) {
+                  bin = 6;
+                }
+                break;
+              case 'a':
+                // TODO: Handle Ellipses
+                break;
+            }
+
+            if (bin) {
+
+              for (var j = 0, l = items.length; j < l; j+=bin) {
+
+                result.push([type].concat(items.slice(j, j + bin)).join(' '));
+
+              }
+
+              commands = Array.prototype.concat.apply(commands, result);
+
+            } else {
+
+              commands.push(command);
+
+            }
+
+          });
+
+          // Create the vertices for our Two.Polygon
 
           var points = _.flatten(_.map(commands, function(command, i) {
 
@@ -564,8 +620,8 @@
                 coord = result;
                 break;
 
-              case 's':
               case 'c':
+              case 's':
 
                 x1 = coord.x;
                 y1 = coord.y;
