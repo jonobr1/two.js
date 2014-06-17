@@ -139,7 +139,7 @@
 
     Version: 'v0.4.0',
 
-    Identifier: 'two-',
+    Identifier: 'two_',
 
     Properties: {
       hierarchy: 'hierarchy',
