@@ -462,8 +462,6 @@
 
           var group = new Two.Group();
 
-          this.add(group);
-
           _.each(node.childNodes, function(n) {
 
             var tag = n.nodeName;
@@ -1481,8 +1479,12 @@
      * distinction should be made that this doesn't `import` svg's, it solely
      * interprets them into something compatible for Two.js — this is slightly
      * different than a direct transcription.
+     *
+     * @param {Object} svgNode - The node to be parsed
+     * @param {Boolean} noWrappingGroup - Don't create a top-most group but
+     *                                    append all contents directly
      */
-    interpret: function(svgNode) {
+    interpret: function(svgNode, noWrapInGroup) {
 
       var tag = svgNode.tagName.toLowerCase();
 
@@ -1492,7 +1494,11 @@
 
       var node = Two.Utils.read[tag].call(this, svgNode);
 
-      this.add(node);
+      if (noWrapInGroup && node instanceof Two.Group) {
+        this.add(_.values(node.children));
+      } else {
+        this.add(node);
+      }
 
       return node;
 
@@ -1653,7 +1659,7 @@
     },
 
     distanceToSquared: function(v) {
-      var dx = this.x - v.x, 
+      var dx = this.x - v.x,
           dy = this.y - v.y;
       return dx * dx + dy * dy;
     },
@@ -2028,6 +2034,7 @@
   };
 
 })();
+
 (function() {
 
   /**
@@ -2240,8 +2247,8 @@
       // Calculate the determinant
       var det = a00 * b01 + a01 * b11 + a02 * b21;
 
-      if (!det) { 
-        return null; 
+      if (!det) {
+        return null;
       }
 
       det = 1.0 / det;
@@ -2709,6 +2716,7 @@
     this.domElement = params.domElement || svg.createElement('svg');
 
     this.scene = new Two.Group();
+    this.scene._renderer.elem = this.domElement;
     this.scene.parent = this;
 
   };
@@ -2788,9 +2796,9 @@
 
       render: function(ctx) {
         var matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter,
-            closed, commands, length, last, next, prev, a, c, d, ux, uy, vx, vy, 
+            closed, commands, length, last, next, prev, a, c, d, ux, uy, vx, vy,
             ar, bl, br, cl, x, y;
-            
+
         // TODO: Add a check here to only invoke _update if need be.
         this._update();
 
@@ -4712,15 +4720,13 @@
      * Returns null if none found.
      */
     getById: function (id) {
-      var found;
       var search = function (node, id) {
-        if (node.id == id) {
-          found = node;
+        if (node.id === id) {
           return node;
         }
         for (var child in node.children) {
+          var found = search(node.children[child], id);
           if (found) return found;
-          search(node.children[child], id);
         }
       };
       return search(this, id) || null;
