@@ -39,9 +39,9 @@
 
       render: function(ctx) {
         var matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter,
-            closed, commands, length, last, next, prev, a, c, d, ux, uy, vx, vy, 
+            closed, commands, length, last, next, prev, a, c, d, ux, uy, vx, vy,
             ar, bl, br, cl, x, y;
-            
+
         // TODO: Add a check here to only invoke _update if need be.
         this._update();
 

@@ -108,7 +108,7 @@
     },
 
     distanceToSquared: function(v) {
-      var dx = this.x - v.x, 
+      var dx = this.x - v.x,
           dy = this.y - v.y;
       return dx * dx + dy * dy;
     },
