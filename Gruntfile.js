@@ -41,6 +41,7 @@ module.exports = function(grunt) {
         laxbreak: true,
         undef: true,
         browser: true,
+        '-W009': true,
         predef: [ "_", "Backbone", "Two", "requestAnimationFrame", "module", "define"]
       },
       all: ['Gruntfile.js', 'src/**/*.js']
