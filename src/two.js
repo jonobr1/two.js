@@ -139,7 +139,7 @@
 
     Version: 'v0.4.0',
 
-    Identifier: 'two-',
+    Identifier: 'two_',
 
     Properties: {
       hierarchy: 'hierarchy',
@@ -406,12 +406,6 @@
               break;
             case 'id':
               elem.id = value;
-              break;
-            case 'class':
-              if (!elem.classList) elem.classList = [];
-              value.split(' ').forEach(function (cl) {
-                elem.classList.push(cl);
-              });
               break;
             case 'class':
               if (!elem.classList) elem.classList = [];
