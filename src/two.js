@@ -433,8 +433,6 @@
 
           var group = new Two.Group();
 
-          this.add(group);
-
           _.each(node.childNodes, function(n) {
 
             var tag = n.nodeName;
