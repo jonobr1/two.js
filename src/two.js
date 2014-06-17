@@ -413,12 +413,6 @@
                 elem.classList.push(cl);
               });
               break;
-            case 'class':
-              if (!elem.classList) elem.classList = [];
-              value.split(' ').forEach(function (cl) {
-                elem.classList.push(cl);
-              });
-              break;
           }
         });
 
