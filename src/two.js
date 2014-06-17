@@ -1450,8 +1450,12 @@
      * distinction should be made that this doesn't `import` svg's, it solely
      * interprets them into something compatible for Two.js — this is slightly
      * different than a direct transcription.
+     *
+     * @param {Object} svgNode - The node to be parsed
+     * @param {Boolean} noWrappingGroup - Don't create a top-most group but
+     *                                    append all contents directly
      */
-    interpret: function(svgNode) {
+    interpret: function(svgNode, noWrapInGroup) {
 
       var tag = svgNode.tagName.toLowerCase();
 
@@ -1461,7 +1465,11 @@
 
       var node = Two.Utils.read[tag].call(this, svgNode);
 
-      this.add(node);
+      if (noWrapInGroup && node instanceof Two.Group) {
+        this.add(_.values(node.children));
+      } else {
+        this.add(node);
+      }
 
       return node;
 
