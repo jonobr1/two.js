@@ -168,7 +168,7 @@
 
     Version: 'v0.4.0',
 
-    Identifier: 'two-',
+    Identifier: 'two_',
 
     Properties: {
       hierarchy: 'hierarchy',
@@ -435,12 +435,6 @@
               break;
             case 'id':
               elem.id = value;
-              break;
-            case 'class':
-              if (!elem.classList) elem.classList = [];
-              value.split(' ').forEach(function (cl) {
-                elem.classList.push(cl);
-              });
               break;
             case 'class':
               if (!elem.classList) elem.classList = [];
@@ -4540,12 +4534,9 @@
         },
         set: function(v) {
           this[secret] = v;
-          // Is this really necessary?
-          // Imagine a group with opacity 0.5 and a few children.
-          // Setting the childrens opacity to 0.5 as well will changes the appearance.
-          // _.each(this.children, function(child) { // Trickle down styles
-          //   child[k] = v;
-          // });
+          _.each(this.children, function(child) { // Trickle down styles
+            child[k] = v;
+          });
         }
       });
 
