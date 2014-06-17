@@ -61,6 +61,7 @@ instead to minify the build with uglify.
 ## Change Log
 
 ##### Nightly
++ Changed `Two.Identifier` to use underscores instead of hyphens for dot-notation access [@DieBuche](https://github.com/DieBuche)
 + Added `Two.Group.getById` and `Two.Group.getByClassName` methods for convenient selection [@DieBuche](https://github.com/DieBuche)
 + Added `classList` to all `Two.Shape`s [@DieBuche](https://github.com/DieBuche)
 + Enabled inference of applied styles on imported svgs [@DieBuche](https://github.com/DieBuche)
