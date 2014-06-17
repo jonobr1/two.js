@@ -5,6 +5,37 @@
    */
   var min = Math.min, max = Math.max;
 
+
+  /**
+   * A children collection which is accesible both by index and by ID
+   * @constructor
+   */
+  var Children = function () {
+    Two.Utils.Collection.apply(this);
+
+    Object.defineProperty(this, '_events', {
+      value : {},
+      enumerable: false
+    });
+
+    this.id = {};
+
+    this.on(Two.Events.insert, function(args) {
+      for (var i = 0; i < args.length; i++) {
+        this.id[args[i].id] = args[i];
+      }
+    });
+    this.on(Two.Events.remove, function(args) {
+      for (var i = 0; i < args.length; i++) {
+        delete this.id[args[i].id];
+      }
+    });
+  };
+
+  Children.prototype = new Two.Utils.Collection();
+  Children.constructor = Children;
+
+
   var Group = Two.Group = function() {
 
     Two.Shape.call(this, true);
@@ -14,8 +45,7 @@
     this.additions = [];
     this.subtractions = [];
 
-    this.children = {};
-
+    this.children = new Children();
   };
 
   _.extend(Group, {
@@ -175,7 +205,7 @@
       var rect = this.getBoundingClientRect(true),
        corner = { x: rect.left, y: rect.top };
 
-      _.each(this.children, function(child) {
+      this.children.forEach(function(child) {
         child.translation.subSelf(corner);
       });
 
@@ -196,7 +226,7 @@
         y: rect.top + rect.height / 2
       };
 
-      _.each(this.children, function(child) {
+      this.children.forEach(function(child) {
         child.translation.subSelf(rect.centroid);
       });
 
@@ -214,11 +244,14 @@
       var search = function (node, id) {
         if (node.id === id) {
           return node;
+        } else if (node.children) {
+          var i = node.children.length;
+          while (i--) {
+            var found = search(node.children[i], id);
+            if (found) return found;
+          }
         }
-        for (var child in node.children) {
-          var found = search(node.children[child], id);
-          if (found) return found;
-        }
+
       };
       return search(this, id) || null;
     },
@@ -232,9 +265,10 @@
       var search = function (node, cl) {
         if (node.classList.indexOf(cl) != -1) {
           found.push(node);
-        }
-        for (var child in node.children) {
-          search(node.children[child], cl);
+        } else if (node.children) {
+          node.children.forEach(function (child) {
+            search(child, cl);
+          });
         }
         return found;
       };
@@ -266,44 +300,19 @@
      */
     add: function(objects) {
 
-      var l = arguments.length,
-        children = this.children,
-        grandparent = this.parent,
-        ids = this.additions,
-        id, parent, index;
-
-      if (!_.isArray(objects)) {
+      // Allow to pass multiple objects either as array or as multiple arguments
+      // If it's an array also create copy of it in case we're getting passed
+      // a childrens array directly.
+      if (!(objects instanceof Array)) {
         objects = _.toArray(arguments);
+      } else {
+        objects = objects.slice();
       }
 
       // Add the objects
-
-      _.each(objects, function(object) {
-
-        if (!object) {
-          return;
-        }
-
-        id = object.id;
-        parent = object.parent;
-
-        if (_.isUndefined(children[id])) {
-          // Release object from previous parent.
-          if (parent) {
-            delete parent.children[id];
-            index = _.indexOf(parent.additions, id);
-            if (index >= 0) {
-              parent.additions.splice(index, 1);
-            }
-          }
-          // Add it to this group and update parent-child relationship.
-          children[id] = object;
-          object.parent = this;
-          ids.push(id);
-          this._flagAdditions = true;
-        }
-
-      }, this);
+      for (var i = 0; i < objects.length; i++) {
+        objects[i].replaceParent(this);
+      }
 
       return this;
 
@@ -315,42 +324,30 @@
     remove: function(objects) {
 
       var l = arguments.length,
-        children = this.children,
-        grandparent = this.parent,
-        ids = this.subtractions,
-        id, parent, index, grandchildren;
+        grandparent = this.parent;
 
+      // Allow to call remove without arguments
+      // This will detach the object from the scene.
       if (l <= 0 && grandparent) {
         grandparent.remove(this);
         return this;
       }
 
-      if (!_.isArray(objects)) {
+      // Allow to pass multiple objects either as array or as multiple arguments
+      // If it's an array also create copy of it in case we're getting passed
+      // a childrens array directly.
+      if (!(objects instanceof Array)) {
         objects = _.toArray(arguments);
+      } else {
+        objects = objects.slice();
       }
 
-      _.each(objects, function(object) {
+      l = objects.length;
 
-        id = object.id;
-        grandchildren = object.children;
-        parent = object.parent;
-
-        if (!(id in children)) {
-          return;
-        }
-
-        delete children[id];
-        delete object.parent;
-
-        index = _.indexOf(parent.additions, id);
-        if (index >= 0) {
-          parent.additions.splice(index, 1);
-        }
-
-        ids.push(id);
-        this._flagSubtractions = true;
-
-      }, this);
+      // Remove the objects
+      for (var i = 0; i < objects.length; i++) {
+        objects[i].replaceParent();
+      }
 
       return this;
 
@@ -370,7 +367,7 @@
       var left = Infinity, right = -Infinity,
           top = Infinity, bottom = -Infinity;
 
-      _.each(this.children, function(child) {
+      this.children.forEach(function(child) {
 
         rect = child.getBoundingClientRect();
 
@@ -401,7 +398,7 @@
      * Trickle down of noFill
      */
     noFill: function() {
-      _.each(this.children, function(child) {
+      this.children.forEach(function(child) {
         child.noFill();
       });
       return this;
@@ -411,7 +408,7 @@
      * Trickle down of noStroke
      */
     noStroke: function() {
-      _.each(this.children, function(child) {
+      this.children.forEach(function(child) {
         child.noStroke();
       });
       return this;
@@ -422,7 +419,7 @@
      */
     subdivide: function() {
       var args = arguments;
-      _.each(this.children, function(child) {
+      this.children.forEach(function(child) {
         child.subdivide.apply(child, args);
       });
       return this;

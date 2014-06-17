@@ -92,27 +92,33 @@
      * Calling with no arguments will simply remove the parenting
      */
     replaceParent: function(newParent) {
-        var id = this.id, index;
+        var id = this.id, oldParent = this.parent, index;
+
         // Release object from previous parent.
-        if (this.parent) {
-          delete this.parent.children[id];
-          index = _.indexOf(parent.additions, id);
+        if (oldParent) {
+          index = oldParent.children.indexOf(this);
           if (index >= 0) {
-            this.parent.additions.splice(index, 1);
+            oldParent.children.splice(index, 1);
+            delete this.parent;
           }
-          this.parent.subtractions.push(id);
-          this._flagSubtractions = true;
+
+          index = oldParent.additions.indexOf(id);
+          if (index >= 0) {
+            oldParent.additions.splice(index, 1);
+          }
+
+          oldParent.subtractions.push(id);
+          oldParent._flagSubtractions = true;
         }
 
+        // If newParent is specified, add this to the group
         if (newParent) {
-          // Add it to this group and update parent-child relationship.
-          newParent.children[id] = this;
+          newParent.children.push(this);
           this.parent = newParent;
           newParent.additions.push(id);
           newParent._flagAdditions = true;
-        } else {
-          delete this.parent;
         }
+
         return this;
     },
 

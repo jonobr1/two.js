@@ -31,8 +31,9 @@
      * Add attributes from an svg element.
      */
     setAttributes: function(elem, attrs) {
-      for (var key in attrs) {
-        elem.setAttribute(key, attrs[key]);
+      var keys = Object.keys(attrs);
+      for (var i = 0; i < keys.length; i++) {
+        elem.setAttribute(keys[i], attrs[keys[i]]);
       }
       return this;
     },
@@ -273,8 +274,8 @@
           this._renderer.elem.setAttribute('transform', 'matrix(' + this._matrix.toString() + ')');
         }
 
-        for (var id in this.children) {
-          var child = this.children[id];
+        for (var i = 0; i < this.children.length; i++) {
+          var child = this.children[i];
           svg[child._renderer.type].render.call(child, domElement);
         }
 
