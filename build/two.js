@@ -1799,11 +1799,47 @@ var Backbone = Backbone || {};
         return matrix;
 
       },
+
+      deltaTransformPoint: function(matrix, x, y) {
+
+        var dx = x * matrix.a + y * matrix.c + 0;
+        var dy = x * matrix.b + y * matrix.d + 0;
+
+        return new Two.Vector(dx, dy);
+
+      },
+
+      /**
+       * https://gist.github.com/2052247
+       */
+      decomposeMatrix: function(matrix) {
+
+        // calculate delta transform point
+        var px = Two.Utils.deltaTransformPoint(matrix, 0, 1);
+        var py = Two.Utils.deltaTransformPoint(matrix, 1, 0);
+
+        // calculate skew
+        var skewX = ((180 / Math.PI) * Math.atan2(px.y, px.x) - 90);
+        var skewY = ((180 / Math.PI) * Math.atan2(py.y, py.x));
+
+        return {
+            translateX: matrix.e,
+            translateY: matrix.f,
+            scaleX: Math.sqrt(matrix.a * matrix.a + matrix.b * matrix.b),
+            scaleY: Math.sqrt(matrix.c * matrix.c + matrix.d * matrix.d),
+            skewX: skewX,
+            skewY: skewY,
+            rotation: skewX // rotation is the same as skew x
+        };
+
+      },
+
       /**
        * Walk through item properties and pick the ones of interest.
        * Will try to resolve styles applied via CSS
        */
       applySvgAttributes: function(node, elem) {
+
         var attributes = {}, styles = {};
 
         // Not available in non browser environments
@@ -1841,17 +1877,18 @@ var Backbone = Backbone || {};
           switch (key) {
             case 'transform':
 
-              // TODO:
-              // Need to figure out how to decompose matrix into
-              // translation, rotation, scale.
+              // Option 1: edit the underlying matrix and don't force an auto calc.
+              // var m = node.getCTM();
+              // elem._matrix.manual = true;
+              // elem._matrix.set(m.a, m.b, m.c, m.d, m.e, m.f);
 
-              // var transforms = node[k].baseVal;
-              // var matrix = new Two.Matrix();
-              // _.each(_.range(transforms.numberOfItems), function(i) {
-              //   var m = transforms.getItem(i).matrix;
-              //   matrix.multiply(m.a, m.b, m.c, m.d, m.e, m.f);
-              // });
-              // elem.setMatrix(matrix);
+              // Option 2: Decompose and infer Two.js related properties.
+              var transforms = Two.Utils.decomposeMatrix(node.getCTM());
+              elem.translation.set(transforms.translateX, transforms.translateY);
+              elem.rotation = transforms.rotation;
+              // Warning: Two.js elements only support uniform scalars...
+              elem.scale = transforms.scaleX;
+
               break;
             case 'visible':
               elem.visible = value;
@@ -1889,6 +1926,8 @@ var Backbone = Backbone || {};
           }
         });
 
+        console.log(elem);
+
         return elem;
 
       },
@@ -1908,6 +1947,9 @@ var Backbone = Backbone || {};
 
           this.add(group);
 
+          // Switched up order to inherit more specific styles
+          Two.Utils.applySvgAttributes(node, group);
+
           _.each(node.childNodes, function(n) {
 
             var tag = n.nodeName;
@@ -1922,7 +1964,7 @@ var Backbone = Backbone || {};
 
           }, this);
 
-          return Two.Utils.applySvgAttributes(node, group);
+          return group;
 
         },
 
