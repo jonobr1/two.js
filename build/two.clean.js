@@ -433,6 +433,9 @@
           switch (key) {
             case 'transform':
 
+              var m = node.getCTM();
+              var matrix = new Two.Matrix(m.a, m.b, m.c, m.d, m.e, m.f);
+
               // Option 1: edit the underlying matrix and don't force an auto calc.
               // var m = node.getCTM();
               // elem._matrix.manual = true;
@@ -440,10 +443,20 @@
 
               // Option 2: Decompose and infer Two.js related properties.
               var transforms = Two.Utils.decomposeMatrix(node.getCTM());
+
               elem.translation.set(transforms.translateX, transforms.translateY);
               elem.rotation = transforms.rotation;
               // Warning: Two.js elements only support uniform scalars...
               elem.scale = transforms.scaleX;
+
+              // Override based on attributes.
+              if (styles.x) {
+                elem.translation.x = styles.x;
+              }
+
+              if (styles.y) {
+                elem.translation.y = styles.y;
+              }
 
               break;
             case 'visible':
@@ -481,8 +494,6 @@
               break;
           }
         });
-
-        console.log(elem);
 
         return elem;
 
