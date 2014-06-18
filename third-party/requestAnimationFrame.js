@@ -17,9 +17,9 @@
     return;
   }
 
-  for(var x = 0; x < vendors.length && !root.requestAnimationFrame; ++x) {
+  for (var x = 0; x < vendors.length && !root.requestAnimationFrame; ++x) {
     root.requestAnimationFrame = root[vendors[x]+'RequestAnimationFrame'];
-    root.cancelAnimationFrame = 
+    root.cancelAnimationFrame =
       root[vendors[x]+'CancelAnimationFrame'] || root[vendors[x]+'CancelRequestAnimationFrame'];
   }
 

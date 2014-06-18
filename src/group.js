@@ -171,15 +171,13 @@
      * Returns null if none found.
      */
     getById: function (id) {
-      var found;
       var search = function (node, id) {
-        if (node.id == id) {
-          found = node;
+        if (node.id === id) {
           return node;
         }
         for (var child in node.children) {
+          var found = search(node.children[child], id);
           if (found) return found;
-          search(node.children[child], id);
         }
       };
       return search(this, id) || null;
