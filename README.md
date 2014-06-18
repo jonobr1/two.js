@@ -61,6 +61,7 @@ instead to minify the build with uglify.
 ## Change Log
 
 ##### Nightly
++ `Two.interpret` decomposes `transform` attribute of source tag
 + `Two.interpret` handles item irregularities from [Inkscape](http://www.inkscape.org/)
 + Changed `Two.Identifier` to use underscores instead of hyphens for dot-notation access [Leo Koppelkamm](https://github.com/DieBuche)
 + Added `Two.Group.getById` and `Two.Group.getByClassName` methods for convenient selection [Leo Koppelkamm](https://github.com/DieBuche)
