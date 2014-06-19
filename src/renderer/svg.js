@@ -211,6 +211,11 @@
           svg.group.renderChild.call(domElement, this.children[id]);
         }
 
+        // FIXME: Is this the best way to do this?
+        if (!_.isUndefined(this.opacity)) {
+          this._renderer.elem.setAttribute('opacity', this.opacity );
+        }
+
         if (this._flagAdditions) {
           _.each(this.additions, svg.group.appendChild, context);
         }
