@@ -227,56 +227,64 @@
 
         this._update();
 
-        if (!this._renderer.elem) {
-          this._renderer.elem = svg.createElement('path', {
-            id: this.id
-          });
-          domElement.appendChild(this._renderer.elem);
-        }
+        // Collect any attribute that needs to be changed here
+        var changed = {};
 
-        var elem = this._renderer.elem;
         var flagMatrix = this._matrix.manual || this._flagMatrix;
 
         if (flagMatrix) {
-          elem.setAttribute('transform', 'matrix(' + this._matrix.toString() + ')');
+          changed.transform = 'matrix(' + this._matrix.toString() + ')';
         }
 
         if (this._flagVertices) {
           var vertices = svg.toString(this._vertices, this._closed);
-          elem.setAttribute('d', vertices);
+          changed.d = vertices;
         }
 
         if (this._flagFill) {
-          elem.setAttribute('fill', this._fill);
+          changed.fill = this._fill;
         }
 
         if (this._flagStroke) {
-          elem.setAttribute('stroke', this._stroke);
+          changed.stroke = this._stroke;
         }
 
         if (this._flagLinewidth) {
-          elem.setAttribute('stroke-width', this._linewidth);
+          changed['stroke-width'] = this._linewidth;
         }
 
         if (this._flagOpacity) {
-          elem.setAttribute('stroke-opacity', this._opacity);
-          elem.setAttribute('fill-opacity', this._opacity);
+          changed['stroke-opacity'] = this._opacity;
+          changed['fill-opacity'] = this._opacity;
         }
 
         if (this._flagVisible) {
-          elem.setAttribute('visibility', this._visible ? 'visible' : 'hidden');
+          changed.visibility = this._visible ? 'visible' : 'hidden';
         }
 
         if (this._flagCap) {
-          elem.setAttribute('stroke-linecap', this._cap);
+          changed['stroke-linecap'] = this._cap;
         }
 
         if (this._flagJoin) {
-          elem.setAttribute('stroke-linejoin', this._join);
+          changed['stroke-linejoin'] = this._join;
         }
 
         if (this._flagMiter) {
-          elem.setAttribute('stroke-miterlimit', this.miter);
+          changed['stroke-miterlimit'] = this.miter;
+        }
+
+        // If there is no attached DOM element yet,
+        // create it with all necessary attributes.
+        if (!this._renderer.elem) {
+
+          changed.id = this.id;
+          this._renderer.elem = svg.createElement('path', changed);
+          domElement.appendChild(this._renderer.elem);
+
+        // Otherwise apply all pending attributes
+        } else {
+          svg.setAttributes(this._renderer.elem, changed);
         }
 
         return this.flagReset();
