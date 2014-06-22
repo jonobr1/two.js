@@ -493,8 +493,8 @@
           // Switched up order to inherit more specific styles
           Two.Utils.applySvgAttributes(node, group);
 
-          _.each(node.childNodes, function(n) {
-
+          for (var i = 0, l = node.childNodes.length; i < l; i++) {
+            var n = node.childNodes[i];
             var tag = n.nodeName;
             if (!tag) return;
 
@@ -504,8 +504,7 @@
               var o = Two.Utils.read[tagName].call(this, n);
               group.add(o);
             }
-
-          }, this);
+          }
 
           return group;
 

@@ -99,18 +99,14 @@
      * set and update the current matrix's elements. Only updates
      * specified values.
      */
-    set: function(a, b, c, d, e, f) {
+    set: function(a) {
 
       var elements = a;
       if (!_.isArray(elements)) {
         elements = _.toArray(arguments);
       }
 
-      _.each(elements, function(v, i) {
-        if (_.isNumber(v)) {
-          this.elements[i] = v;
-        }
-      }, this);
+      _.extend(this.elements, elements);
 
       return this.trigger(Two.Events.change);
 

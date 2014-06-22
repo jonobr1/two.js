@@ -31,7 +31,9 @@
      * Add attributes from an svg element.
      */
     setAttributes: function(elem, attrs) {
-      _.each(attrs, svg.setAttribute, elem);
+      for (var key in attrs) {
+        elem.setAttribute(key, attrs[key]);
+      }
       return this;
     },
 
@@ -39,7 +41,9 @@
      * Remove attributes from an svg element.
      */
     removeAttributes: function(elem, attrs) {
-      _.each(attrs, svg.removeAttribute, elem);
+      for (var key in attrs) {
+        elem.removeAttribute(key);
+      }
       return this;
     },
 
