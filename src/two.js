@@ -366,22 +366,31 @@
        * Will try to resolve styles applied via CSS
        */
       applySvgAttributes: function(node, elem) {
-
-        var attributes = {}, styles = {};
+        var attributes = {}, styles = {}, i, key, value, attr;
 
         // Not available in non browser environments
         if (getComputedStyle) {
           // Convert CSSStyleDeclaration to a normal object
           var computedStyles = getComputedStyle(node);
-          _.each(computedStyles, function (item) {
-            styles[item] = computedStyles[item];
-          });
+          i = computedStyles.length;
+
+          while(i--) {
+            key = computedStyles[i];
+            value = computedStyles[key];
+            // Gecko returns undefined for unset properties
+            // Webkit returns the default value
+            if (value !== undefined) {
+              styles[key] = value;
+            }
+          }
         }
 
         // Convert NodeMap to a normal object
-        _.each(node.attributes, function(v, k) {
-          attributes[v.nodeName] = v.nodeValue;
-        });
+        i = node.attributes.length;
+        while(i--) {
+          attr = node.attributes[i];
+          attributes[attr.nodeName] = attr.value;
+        }
 
         // Getting the correct opacity is a bit tricky, since SVG path elements don't
         // support opacity as an attribute, but you can apply it via CSS.
@@ -399,7 +408,8 @@
         styles.visible = (styles.display !== 'none') && (styles.visibility === 'visible');
 
         // Now iterate the whole thing
-        _.each(styles, function(value, key) {
+        for (key in styles) {
+          value = styles[key];
 
           switch (key) {
             case 'transform':
@@ -452,19 +462,16 @@
               break;
             case 'fill':
             case 'stroke':
-              elem[key] = (value == 'none') ? 'transparent' : value;
+              elem[key] = (value === 'none') ? 'transparent' : value;
               break;
             case 'id':
               elem.id = value;
               break;
             case 'class':
-              if (!elem.classList) elem.classList = [];
-              value.split(' ').forEach(function (cl) {
-                elem.classList.push(cl);
-              });
+              elem.classList = value.split(' ');
               break;
           }
-        });
+        }
 
         return elem;
 
