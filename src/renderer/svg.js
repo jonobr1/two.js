@@ -27,20 +27,12 @@
       return elem;
     },
 
-    setAttribute: function(v, k) {
-      this.setAttribute(k, v);
-    },
-
     /**
      * Add attributes from an svg element.
      */
     setAttributes: function(elem, attrs) {
       _.each(attrs, svg.setAttribute, elem);
       return this;
-    },
-
-    removeAttribute: function(v, k) {
-      this.removeAttribute(k);
     },
 
     /**
