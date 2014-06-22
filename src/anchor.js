@@ -42,15 +42,10 @@
   _.extend(Anchor, {
 
     AppendCurveProperties: function(anchor) {
-
-      var x = anchor._x || anchor.x;
-      var y = anchor._y || anchor.y;
-
       anchor.controls = {
         left: new Two.Vector(0, 0),
         right: new Two.Vector(0, 0)
       };
-
     }
 
   });
@@ -63,9 +58,8 @@
         Anchor.AppendCurveProperties(this);
       }
 
-      _.each(this.controls, function(v) {
-        v.bind(Two.Events.change, this._broadcast);
-      }, this);
+      this.controls.left.bind(Two.Events.change, this._broadcast);
+      this.controls.right.bind(Two.Events.change, this._broadcast);
 
       return this;
 
@@ -73,9 +67,8 @@
 
     ignore: function() {
 
-      _.each(this.controls, function(v) {
-        v.unbind(Two.Events.change, this._broadcast);
-      }, this);
+      this.controls.left.unbind(Two.Events.change, this._broadcast);
+      this.controls.right.unbind(Two.Events.change, this._broadcast);
 
       return this;
 
@@ -155,16 +148,20 @@
 
   _.extend(Anchor.prototype, Two.Vector.prototype, AnchorProto);
 
+  // _.extend doesn't copy all properties properly
+  var xgs = Object.getOwnPropertyDescriptor(Two.Vector.prototype, 'x');
+  var ygs = Object.getOwnPropertyDescriptor(Two.Vector.prototype, 'y');
+  Object.defineProperty(Anchor.prototype, 'x', xgs);
+  Object.defineProperty(Anchor.prototype, 'y', ygs);
+
   // Make it possible to bind and still have the Anchor specific
   // inheritance from Two.Vector
   Two.Anchor.prototype.bind = Two.Anchor.prototype.on = function() {
     Two.Vector.prototype.bind.apply(this, arguments);
-    _.extend(this, AnchorProto);
   };
 
   Two.Anchor.prototype.unbind = Two.Anchor.prototype.off = function() {
     Two.Vector.prototype.unbind.apply(this, arguments);
-    _.extend(this, AnchorProto);
   };
 
 })();

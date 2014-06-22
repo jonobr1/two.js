@@ -1,11 +1,29 @@
 (function() {
 
   var Vector = Two.Vector = function(x, y) {
-
-    this.x = x || 0;
-    this.y = y || 0;
-
+    this._x = x || 0;
+    this._y = y || 0;
   };
+
+  Object.defineProperty(Vector.prototype, 'x', {
+    get: function() {
+      return this._x;
+    },
+    set: function(v) {
+      this._x = v;
+      if (this._bound) this.trigger(Two.Events.change, 'x');
+    }
+  });
+
+  Object.defineProperty(Vector.prototype, 'y', {
+    get: function() {
+      return this._y;
+    },
+    set: function(v) {
+      this._y = v;
+      if (this._bound) this.trigger(Two.Events.change, 'y');
+    }
+  });
 
   _.extend(Vector, {
 
@@ -16,149 +34,24 @@
   _.extend(Vector.prototype, Backbone.Events, {
 
     set: function(x, y) {
-      this.x = x;
-      this.y = y;
-      return this;
-    },
-
-    copy: function(v) {
-      this.x = v.x;
-      this.y = v.y;
-      return this;
-    },
-
-    clear: function() {
-      this.x = 0;
-      this.y = 0;
-      return this;
-    },
-
-    clone: function() {
-      return new Vector(this.x, this.y);
-    },
-
-    add: function(v1, v2) {
-      this.x = v1.x + v2.x;
-      this.y = v1.y + v2.y;
-      return this;
-    },
-
-    addSelf: function(v) {
-      this.x += v.x;
-      this.y += v.y;
-      return this;
-    },
-
-    sub: function(v1, v2) {
-      this.x = v1.x - v2.x;
-      this.y = v1.y - v2.y;
-      return this;
-    },
-
-    subSelf: function(v) {
-      this.x -= v.x;
-      this.y -= v.y;
-      return this;
-    },
-
-    multiplySelf: function(v) {
-      this.x *= v.x;
-      this.y *= v.y;
-      return this;
-    },
-
-    multiplyScalar: function(s) {
-      this.x *= s;
-      this.y *= s;
-      return this;
-    },
-
-    divideScalar: function(s) {
-      if (s) {
-        this.x /= s;
-        this.y /= s;
-      } else {
-        this.set(0, 0);
-      }
-      return this;
-    },
-
-    negate: function() {
-      return this.multiplyScalar(-1);
-    },
-
-    dot: function(v) {
-      return this.x * v.x + this.y * v.y;
-    },
-
-    lengthSquared: function() {
-      return this.x * this.x + this.y * this.y;
-    },
-
-    length: function() {
-      return Math.sqrt(this.lengthSquared());
-    },
-
-    normalize: function() {
-      return this.divideScalar(this.length());
-    },
-
-    distanceTo: function(v) {
-      return Math.sqrt(this.distanceToSquared(v));
-    },
-
-    distanceToSquared: function(v) {
-      var dx = this.x - v.x,
-          dy = this.y - v.y;
-      return dx * dx + dy * dy;
-    },
-
-    setLength: function(l) {
-      return this.normalize().multiplyScalar(l);
-    },
-
-    equals: function(v) {
-      return (this.distanceTo(v) < 0.0001 /* almost same position */);
-    },
-
-    lerp: function(v, t) {
-      var x = (v.x - this.x) * t + this.x;
-      var y = (v.y - this.y) * t + this.y;
-      return this.set(x, y);
-    },
-
-    isZero: function() {
-      return (this.length() < 0.0001 /* almost zero */ );
-    },
-
-    toString: function() {
-      return this.x + ',' + this.y;
-    },
-
-    toObject: function() {
-      return { x: this.x, y: this.y };
-    }
-
-  });
-
-  var BoundProto = {
-
-    set: function(x, y) {
       this._x = x;
       this._y = y;
-      return this.trigger(Two.Events.change);
+      if (this._bound) this.trigger(Two.Events.change);
+      return this;
     },
 
     copy: function(v) {
       this._x = v.x;
       this._y = v.y;
-      return this.trigger(Two.Events.change);
+      if (this._bound) this.trigger(Two.Events.change);
+      return this;
     },
 
     clear: function() {
       this._x = 0;
       this._y = 0;
-      return this.trigger(Two.Events.change);
+      if (this._bound) this.trigger(Two.Events.change);
+      return this;
     },
 
     clone: function() {
@@ -168,44 +61,51 @@
     add: function(v1, v2) {
       this._x = v1.x + v2.x;
       this._y = v1.y + v2.y;
-      return this.trigger(Two.Events.change);
+      if (this._bound) this.trigger(Two.Events.change);
+      return this;
     },
 
     addSelf: function(v) {
       this._x += v.x;
       this._y += v.y;
-      return this.trigger(Two.Events.change);
+      if (this._bound) this.trigger(Two.Events.change);
+      return this;
     },
 
     sub: function(v1, v2) {
       this._x = v1.x - v2.x;
       this._y = v1.y - v2.y;
-      return this.trigger(Two.Events.change);
+      if (this._bound) this.trigger(Two.Events.change);
+      return this;
     },
 
     subSelf: function(v) {
       this._x -= v.x;
       this._y -= v.y;
-      return this.trigger(Two.Events.change);
+      if (this._bound) this.trigger(Two.Events.change);
+      return this;
     },
 
     multiplySelf: function(v) {
       this._x *= v.x;
       this._y *= v.y;
-      return this.trigger(Two.Events.change);
+      if (this._bound) this.trigger(Two.Events.change);
+      return this;
     },
 
     multiplyScalar: function(s) {
       this._x *= s;
       this._y *= s;
-      return this.trigger(Two.Events.change);
+      if (this._bound) this.trigger(Two.Events.change);
+      return this;
     },
 
     divideScalar: function(s) {
       if (s) {
         this._x /= s;
         this._y /= s;
-        return this.trigger(Two.Events.change);
+        if (this._bound) this.trigger(Two.Events.change);
+        return this;
       }
       return this.clear();
     },
@@ -265,28 +165,7 @@
     toObject: function() {
       return { x: this._x, y: this._y };
     }
-
-  };
-
-  var xgs = {
-    get: function() {
-      return this._x;
-    },
-    set: function(v) {
-      this._x = v;
-      this.trigger(Two.Events.change, 'x');
-    }
-  };
-
-  var ygs = {
-    get: function() {
-      return this._y;
-    },
-    set: function(v) {
-      this._y = v;
-      this.trigger(Two.Events.change, 'y');
-    }
-  };
+  });
 
   /**
    * Override Backbone bind / on in order to add properly broadcasting.
@@ -295,20 +174,23 @@
    */
 
   Two.Vector.prototype.bind = Two.Vector.prototype.on = function() {
+    // Enable events selectively
+    this._bound = true;
 
-    if (!this._bound) {
-      this._x = this.x;
-      this._y = this.y;
-      Object.defineProperty(this, 'x', xgs);
-      Object.defineProperty(this, 'y', ygs);
-      _.extend(this, BoundProto);
-      this._bound = true; // Reserved for event initialization check
+    return Backbone.Events.bind.apply(this, arguments);
+  };
+
+  Two.Vector.prototype.unbind = Two.Vector.prototype.on = function() {
+    // Disable events selectively
+    if (!this._events) {
+      // TODO
+      // This doesn't actually work right now
+      // it would require events to unset the _events prop
+      // when no listeners are left
+      this._bound = false;
     }
 
-    Backbone.Events.bind.apply(this, arguments);
-
-    return this;
-
+    return Backbone.Events.unbind.apply(this, arguments);
   };
 
 })();
