@@ -171,9 +171,12 @@
 
           var bindVerts = _.bind(function(items) {
 
-            _.each(items, function(v) {
-              v.bind(Two.Events.change, updateVertices);
-            }, this);
+            // This function is called a lot
+            // when importing a large SVG
+            var i = items.length;
+            while(i--) {
+              items[i].bind(Two.Events.change, updateVertices);
+            }
 
             updateVertices();
 
