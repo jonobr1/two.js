@@ -10,7 +10,7 @@ module.exports = function(grunt) {
       licenseFile : 'license.txt',
 
       depFiles : [
-        'third-party/underscore.js',
+        'node_modules/underscore/underscore.js',
         'third-party/events.js',
         'third-party/requestAnimationFrame.js'
       ],
@@ -114,6 +114,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-closure-tools');
+  grunt.loadNpmTasks('grunt-contrib-qunit');
 
   // Default task
   grunt.registerTask('default', ['jshint' , 'concat', 'closureCompiler']);
