@@ -303,7 +303,6 @@
     this.domElement = params.domElement || svg.createElement('svg');
 
     this.scene = new Two.Group();
-    this.scene._renderer.elem = this.domElement;
     this.scene.parent = this;
 
   };
