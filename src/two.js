@@ -540,9 +540,9 @@
 
           // Create a Two.Polygon from the paths.
 
-          var coord, control;
-          var coords, relative = false;
-          var closed = false;
+          var coord = new Two.Anchor();
+          var control, coords;
+          var closed = false, relative = false;
           var commands = path.match(/[a-df-z][^a-df-z]*/ig);
           var last = commands.length - 1;
 
