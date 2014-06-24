@@ -413,8 +413,12 @@
 
           switch (key) {
             case 'transform':
-
+              if (value === 'none') break;
               var m = node.getCTM();
+
+              // Might happen when transform string is empty or not valid.
+              if (m === null) break;
+
               var matrix = new Two.Matrix(m.a, m.b, m.c, m.d, m.e, m.f);
 
               // Option 1: edit the underlying matrix and don't force an auto calc.
