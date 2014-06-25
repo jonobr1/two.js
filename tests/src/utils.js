@@ -17,6 +17,9 @@
      */
     addElemToTest: function(test, elem) {
 
+      // Skip for headless
+      if (window.URL) return;
+
       var domElement = document.createElement('li');
 
       if (_.isArray(elem)) {
@@ -95,10 +98,27 @@
           callback(this.response);
 
         } else {
+          var blob;
+          var mimeString = 'image/png';
 
-          // Safari doesn't support responseType blob,
-          // so create a blob from arraybuffer
-          callback(new Blob([this.response], { "type" : 'image/png' }));
+          // Some older Webkits don't support responseType blob,
+          // So create a blob from arraybuffer
+
+
+          try {
+              blob = new Blob([this.response], {type: mimeString});
+          } catch (e) {
+              // The BlobBuilder API has been deprecated in favour of Blob, but older
+              // browsers don't know about the Blob constructor
+              // IE10 also supports BlobBuilder, but since the `Blob` constructor
+              // also works, there's no need to add `MSBlobBuilder`.
+              var BlobBuilder = window.WebKitBlobBuilder || window.MozBlobBuilder;
+              var bb = new BlobBuilder();
+              bb.append(this.response);
+              blob = bb.getBlob(mimeString);
+          }
+
+          callback(blob);
 
         }
 
