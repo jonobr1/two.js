@@ -57,10 +57,11 @@
 
       var l = points.length,
         last = l - 1,
-        d;  // The elusive last Two.Commands.move point
+        d, // The elusive last Two.Commands.move point
+        ret = '';
 
-      return _.map(points, function(b, i) {
-
+      for (var i = 0; i < l; i++) {
+        var b = points[i];
         var command;
         var prev = closed ? mod(i - 1, l) : Math.max(i - 1, 0);
         var next = closed ? mod(i + 1, l) : Math.min(i + 1, last);
@@ -70,8 +71,13 @@
 
         var vx, vy, ux, uy, ar, bl, br, cl;
 
-        var x = b.x.toFixed(3);
-        var y = b.y.toFixed(3);
+        // Access x and y directly,
+        // bypassing the getter
+        // The Math.floor statement reduces the decimal places to three
+        // It's many times faster than toFixed.
+        // See http://jsperf.com/parsefloat-tofixed-vs-math-round/18
+        var x = Math.floor(b._x * 1000) / 1000;
+        var y = Math.floor(b._y * 1000) / 1000;
 
         switch (b._command) {
 
@@ -85,19 +91,19 @@
             bl = (b.controls && b.controls.left) || b;
 
             if (a._relative) {
-              vx = (ar.x + a.x).toFixed(3);
-              vy = (ar.y + a.y).toFixed(3);
+              vx = Math.floor((ar.x + a.x) * 1000) / 1000;
+              vy = Math.floor((ar.y + a.y) * 1000) / 1000;
             } else {
-              vx = ar.x.toFixed(3);
-              vy = ar.y.toFixed(3);
+              vx = Math.floor(ar.x * 1000) / 1000;
+              vy = Math.floor(ar.y * 1000) / 1000;
             }
 
             if (b._relative) {
-              ux = (bl.x + b.x).toFixed(3);
-              uy = (bl.y + b.y).toFixed(3);
+              ux = Math.floor((bl.x + b.x) * 1000) / 1000;
+              uy = Math.floor((bl.y + b.y) * 1000) / 1000;
             } else {
-              ux = bl.x.toFixed(3);
-              uy = bl.y.toFixed(3);
+              ux = Math.floor(bl.x * 1000) / 1000;
+              uy = Math.floor(bl.y * 1000) / 1000;
             }
 
             command = ((i === 0) ? Two.Commands.move : Two.Commands.curve) +
@@ -153,9 +159,9 @@
 
         }
 
-        return command;
-
-      }).join(' ');
+        ret += command + ' ';
+      }
+      return ret;
 
     },
 
@@ -204,7 +210,8 @@
         }
 
         for (var id in this.children) {
-          svg.group.renderChild.call(domElement, this.children[id]);
+          var child = this.children[id];
+          svg[child._renderer.type].render.call(child, domElement);
         }
 
         if (this._flagAdditions) {
