@@ -33,7 +33,7 @@
 
     hasEventListeners: _.isFunction(root.addEventListener),
 
-    bind: function(elem, event, func, bool) {
+    on: function(elem, event, func, bool) {
       if (this.hasEventListeners) {
         elem.addEventListener(event, func, !!bool);
       } else {
@@ -42,7 +42,7 @@
       return this;
     },
 
-    unbind: function(elem, event, func, bool) {
+    off: function(elem, event, func, bool) {
       if (this.hasEventListeners) {
         elem.removeEventListeners(event, func, !!bool);
       } else {
@@ -86,7 +86,7 @@
 
     if (params.fullscreen) {
 
-      var fitted = _.bind(fitToWindow, this);
+      var fitted = fitToWindow.bind(this);
       _.extend(document.body.style, {
         overflow: 'hidden',
         margin: 0,
@@ -105,7 +105,7 @@
         bottom: 0,
         position: 'fixed'
       });
-      dom.bind(root, 'resize', fitted);
+      dom.on(root, 'resize', fitted);
       fitted();
 
 
@@ -191,17 +191,17 @@
           return;
         }
 
-        if (_.isFunction(obj.unbind)) {
-          obj.unbind();
+        if (_.isFunction(obj.off)) {
+          obj.off();
         }
 
         if (obj.vertices) {
-          if (_.isFunction(obj.vertices.unbind)) {
-            obj.vertices.unbind();
+          if (_.isFunction(obj.vertices.off)) {
+            obj.vertices.off();
           }
           _.each(obj.vertices, function(v) {
-            if (_.isFunction(v.unbind)) {
-              v.unbind();
+            if (_.isFunction(v.off)) {
+              v.off();
             }
           });
         }
@@ -1355,9 +1355,51 @@
         this.message = message;
       }
 
-    }
+    },
 
+    Event: {
+
+        // Bind an event to a callback function.
+        on: function(name, callback) {
+          if (!this._events) this._events = {};
+          this._events[name] = this._events[name] || [];
+          this._events[name].push(callback);
+          return this;
+        },
+
+        // Iterates through listeners of events and invokes the callbacks,
+        // passing on any optional arguments.
+        trigger: function(name) {
+          if (this._events && this._events[name]) {
+            var theseEvents = this._events[name];
+            var args = (arguments.length > 1) ? arguments[1] : [];
+
+            var i = theseEvents.length;
+            while (i--) {
+              theseEvents[i].apply(this, args);
+            }
+          }
+          return this;
+        },
+
+        // Removes the passed listener from an event
+        off: function(name, callback) {
+          if (this._events[name]) {
+            name = this._events[name];
+
+            var i = name.length;
+            while (i--) if (name[i] === callback) name.splice(i - 1, 1);
+          } else if (arguments.length === 0) {
+            this._events = {};
+          }
+          return this;
+        }
+    }
   });
+
+  // Aliases for backwards compatibility.
+  Two.Event.bind   = Two.Event.on;
+  Two.Event.unbind = Two.Event.off;
 
   Two.Utils.Error.prototype = new Error();
   Two.Utils.Error.prototype.constructor = Two.Utils.Error;
@@ -1365,7 +1407,7 @@
   Two.Utils.Collection.prototype = new Array();
   Two.Utils.Collection.constructor = Two.Utils.Collection;
 
-  _.extend(Two.Utils.Collection.prototype, Backbone.Events, {
+  _.extend(Two.Utils.Collection.prototype, Two.Event, {
 
     pop: function() {
       var popped = Array.prototype.pop.apply(this, arguments);
@@ -1399,7 +1441,7 @@
 
       if (arguments.length > 2) {
         inserted = this.slice(arguments[0], arguments.length-2);
-        this.trigger(Two.Events.insert, inserted);
+        if (inserted.length) this.trigger(Two.Events.insert, inserted);
       }
       return spliced;
     }
@@ -1424,7 +1466,7 @@
     integrate = Two.Utils.integrate,
     getReflection = Two.Utils.getReflection;
 
-  _.extend(Two.prototype, Backbone.Events, {
+  _.extend(Two.prototype, Two.Event, {
 
     appendTo: function(elem) {
 
@@ -1471,7 +1513,7 @@
         renderer.setSize(width, height, this.ratio);
       }
 
-      this.trigger(Two.Events.update, this.frameCount, this.timeDelta);
+      this.trigger(Two.Events.update, [this.frameCount, this.timeDelta]);
 
       return this.render();
 

@@ -5,10 +5,10 @@
   "-W009": true,
   "predef": [
     "_",
-    "Backbone",
     "Two",
     "requestAnimationFrame",
     "module",
-    "define"
+    "define",
+    "global"
   ]
 }
