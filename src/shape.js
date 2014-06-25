@@ -1,4 +1,4 @@
-(function() {
+(function(Two) {
 
   var Shape = Two.Shape = function() {
 
@@ -147,4 +147,4 @@
 
   Shape.MakeObservable(Shape.prototype);
 
-})();
+})(Two);

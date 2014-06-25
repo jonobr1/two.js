@@ -1,4 +1,4 @@
-(function() {
+(function(Two) {
 
   // Localized variables
   var commands = Two.Commands;
@@ -167,4 +167,4 @@
     _.extend(this, AnchorProto);
   };
 
-})();
+})(Two);

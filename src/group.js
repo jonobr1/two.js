@@ -1,4 +1,4 @@
-(function() {
+(function(Two) {
 
   /**
    * Constants
@@ -410,4 +410,4 @@
 
   Group.MakeObservable(Group.prototype);
 
-})();
+})(Two);
