@@ -11,7 +11,6 @@ module.exports = function(grunt) {
 
       depFiles : [
         'third-party/underscore.js',
-        'third-party/events.js',
         'third-party/requestAnimationFrame.js'
       ],
 

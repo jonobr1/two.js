@@ -63,14 +63,14 @@
 
     this.id = {};
 
-    this.on(Two.Events.insert, function(args) {
-      for (var i = 0; i < args.length; i++) {
-        this.id[args[i].id] = args[i];
+    this.on(Two.Events.insert, function() {
+      for (var i = 0; i < arguments.length; i++) {
+        this.id[arguments[i].id] = arguments[i];
       }
     });
     this.on(Two.Events.remove, function(args) {
-      for (var i = 0; i < args.length; i++) {
-        delete this.id[args[i].id];
+      for (var i = 0; i < arguments.length; i++) {
+        delete this.id[arguments[i].id];
       }
     });
   };

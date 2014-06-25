@@ -58,8 +58,8 @@
         Anchor.AppendCurveProperties(this);
       }
 
-      this.controls.left.bind(Two.Events.change, this._broadcast);
-      this.controls.right.bind(Two.Events.change, this._broadcast);
+      this.controls.left.on(Two.Events.change, this._broadcast);
+      this.controls.right.on(Two.Events.change, this._broadcast);
 
       return this;
 
@@ -67,8 +67,8 @@
 
     ignore: function() {
 
-      this.controls.left.unbind(Two.Events.change, this._broadcast);
-      this.controls.right.unbind(Two.Events.change, this._broadcast);
+      this.controls.left.off(Two.Events.change, this._broadcast);
+      this.controls.right.off(Two.Events.change, this._broadcast);
 
       return this;
 
