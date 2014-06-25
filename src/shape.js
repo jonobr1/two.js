@@ -114,7 +114,7 @@
      * To be called before render that calculates and collates all information
      * to be as up-to-date as possible for the render. Called once a frame.
      */
-    _update: function() {
+    _update: function(deep) {
 
       if (!this._matrix.manual && this._flagMatrix) {
         this._matrix
@@ -125,9 +125,11 @@
 
       }
 
-      // Bubble up to parents mainly for `getBoundingClientRect` method.
-      if (this.parent && this.parent._update) {
-        this.parent._update();
+      if (deep) {
+        // Bubble up to parents mainly for `getBoundingClientRect` method.
+        if (this.parent && this.parent._update) {
+          this.parent._update();
+        }
       }
 
       return this;

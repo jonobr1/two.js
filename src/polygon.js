@@ -373,7 +373,7 @@
     getBoundingClientRect: function(shallow) {
 
       // TODO: Update this to not __always__ update. Just when it needs to.
-      this._update();
+      this._update(true);
 
       var matrix = !!shallow ? this._matrix : getComputedMatrix(this);
 
