@@ -3,6 +3,12 @@
   // Localize variables
   var mod = Two.Utils.mod;
 
+  // A pretty fast toFixed(3) alternative
+  // See http://jsperf.com/parsefloat-tofixed-vs-math-round/18
+  var round = function(value) {
+    return Math.floor(value * 1000) / 1000;
+  };
+
   var svg = {
 
     version: 1.1,
@@ -73,11 +79,8 @@
 
         // Access x and y directly,
         // bypassing the getter
-        // The Math.floor statement reduces the decimal places to three
-        // It's many times faster than toFixed.
-        // See http://jsperf.com/parsefloat-tofixed-vs-math-round/18
-        var x = Math.floor(b._x * 1000) / 1000;
-        var y = Math.floor(b._y * 1000) / 1000;
+        var x = round(b._x);
+        var y = round(b._y);
 
         switch (b._command) {
 
@@ -91,19 +94,19 @@
             bl = (b.controls && b.controls.left) || b;
 
             if (a._relative) {
-              vx = Math.floor((ar.x + a.x) * 1000) / 1000;
-              vy = Math.floor((ar.y + a.y) * 1000) / 1000;
+              vx = round((ar.x + a.x));
+              vy = round((ar.y + a.y));
             } else {
-              vx = Math.floor(ar.x * 1000) / 1000;
-              vy = Math.floor(ar.y * 1000) / 1000;
+              vx = round(ar.x);
+              vy = round(ar.y);
             }
 
             if (b._relative) {
-              ux = Math.floor((bl.x + b.x) * 1000) / 1000;
-              uy = Math.floor((bl.y + b.y) * 1000) / 1000;
+              ux = round((bl.x + b.x));
+              uy = round((bl.y + b.y));
             } else {
-              ux = Math.floor(bl.x * 1000) / 1000;
-              uy = Math.floor(bl.y * 1000) / 1000;
+              ux = round(bl.x);
+              uy = round(bl.y);
             }
 
             command = ((i === 0) ? Two.Commands.move : Two.Commands.curve) +
@@ -133,23 +136,23 @@
             cl = (c.controls && c.controls.left) || c;
 
             if (b._relative) {
-              vx = (br.x + b.x).toFixed(3);
-              vy = (br.y + b.y).toFixed(3);
+              vx = round((br.x + b.x));
+              vy = round((br.y + b.y));
             } else {
-              vx = br.x.toFixed(3);
-              vy = br.y.toFixed(3);
+              vx = round(br.x);
+              vy = round(br.y);
             }
 
             if (c._relative) {
-              ux = (cl.x + c.x).toFixed(3);
-              uy = (cl.y + c.y).toFixed(3);
+              ux = round((cl.x + c.x));
+              uy = round((cl.y + c.y));
             } else {
-              ux = cl.x.toFixed(3);
-              uy = cl.y.toFixed(3);
+              ux = round(cl.x);
+              uy = round(cl.y);
             }
 
-            x = c.x.toFixed(3);
-            y = c.y.toFixed(3);
+            x = round(c.x);
+            y = round(c.y);
 
             command +=
               ' C ' + vx + ' ' + vy + ' ' + ux + ' ' + uy + ' ' + x + ' ' + y;
