@@ -58,6 +58,7 @@
     get: function(path, callback) {
 
       var xhr = new XMLHttpRequest();
+      xhr.open('GET', path, true);
 
       xhr.onreadystatechange = function(e) {
 
@@ -69,7 +70,6 @@
 
       };
 
-      xhr.open('GET', path, true);
       xhr.send();
 
     },
@@ -80,6 +80,7 @@
     getImageBlob: function(path, callback) {
 
       var xhr = new XMLHttpRequest();
+      xhr.open('GET', path, true);
 
       if (window.URL) {
         xhr.responseType = 'blob';
@@ -124,7 +125,7 @@
 
       };
 
-      xhr.open('GET', path, true);
+
       xhr.send();
 
     },
