@@ -3,6 +3,12 @@
   // Localize variables
   var mod = Two.Utils.mod;
 
+  // A pretty fast toFixed(3) alternative
+  // See http://jsperf.com/parsefloat-tofixed-vs-math-round/18
+  var round = function(value) {
+    return Math.floor(value * 1000) / 1000;
+  };
+
   var svg = {
 
     version: 1.1,
@@ -57,10 +63,11 @@
 
       var l = points.length,
         last = l - 1,
-        d;  // The elusive last Two.Commands.move point
+        d, // The elusive last Two.Commands.move point
+        ret = '';
 
-      return _.map(points, function(b, i) {
-
+      for (var i = 0; i < l; i++) {
+        var b = points[i];
         var command;
         var prev = closed ? mod(i - 1, l) : Math.max(i - 1, 0);
         var next = closed ? mod(i + 1, l) : Math.min(i + 1, last);
@@ -70,8 +77,10 @@
 
         var vx, vy, ux, uy, ar, bl, br, cl;
 
-        var x = b.x.toFixed(3);
-        var y = b.y.toFixed(3);
+        // Access x and y directly,
+        // bypassing the getter
+        var x = round(b._x);
+        var y = round(b._y);
 
         switch (b._command) {
 
@@ -85,19 +94,19 @@
             bl = (b.controls && b.controls.left) || b;
 
             if (a._relative) {
-              vx = (ar.x + a.x).toFixed(3);
-              vy = (ar.y + a.y).toFixed(3);
+              vx = round((ar.x + a.x));
+              vy = round((ar.y + a.y));
             } else {
-              vx = ar.x.toFixed(3);
-              vy = ar.y.toFixed(3);
+              vx = round(ar.x);
+              vy = round(ar.y);
             }
 
             if (b._relative) {
-              ux = (bl.x + b.x).toFixed(3);
-              uy = (bl.y + b.y).toFixed(3);
+              ux = round((bl.x + b.x));
+              uy = round((bl.y + b.y));
             } else {
-              ux = bl.x.toFixed(3);
-              uy = bl.y.toFixed(3);
+              ux = round(bl.x);
+              uy = round(bl.y);
             }
 
             command = ((i === 0) ? Two.Commands.move : Two.Commands.curve) +
@@ -127,23 +136,23 @@
             cl = (c.controls && c.controls.left) || c;
 
             if (b._relative) {
-              vx = (br.x + b.x).toFixed(3);
-              vy = (br.y + b.y).toFixed(3);
+              vx = round((br.x + b.x));
+              vy = round((br.y + b.y));
             } else {
-              vx = br.x.toFixed(3);
-              vy = br.y.toFixed(3);
+              vx = round(br.x);
+              vy = round(br.y);
             }
 
             if (c._relative) {
-              ux = (cl.x + c.x).toFixed(3);
-              uy = (cl.y + c.y).toFixed(3);
+              ux = round((cl.x + c.x));
+              uy = round((cl.y + c.y));
             } else {
-              ux = cl.x.toFixed(3);
-              uy = cl.y.toFixed(3);
+              ux = round(cl.x);
+              uy = round(cl.y);
             }
 
-            x = c.x.toFixed(3);
-            y = c.y.toFixed(3);
+            x = round(c.x);
+            y = round(c.y);
 
             command +=
               ' C ' + vx + ' ' + vy + ' ' + ux + ' ' + uy + ' ' + x + ' ' + y;
@@ -153,9 +162,9 @@
 
         }
 
-        return command;
-
-      }).join(' ');
+        ret += command + ' ';
+      }
+      return ret;
 
     },
 
@@ -204,7 +213,8 @@
         }
 
         for (var id in this.children) {
-          svg.group.renderChild.call(domElement, this.children[id]);
+          var child = this.children[id];
+          svg[child._renderer.type].render.call(child, domElement);
         }
 
         if (this._flagAdditions) {

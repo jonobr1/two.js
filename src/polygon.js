@@ -480,9 +480,9 @@
         return this;
       }
 
-      _.each(this._vertices, function(p, i) {
-        p._command = i === 0 ? Two.Commands.move : Two.Commands.line;
-      }, this);
+      for (var i = 0; i < this._vertices.length; i++) {
+        this._vertices[i]._command = i === 0 ? Two.Commands.move : Two.Commands.line;
+      }
 
       return this;
 
