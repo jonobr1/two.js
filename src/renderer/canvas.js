@@ -3,7 +3,7 @@
   /**
    * Constants
    */
-  var mod = Two.Utils.mod;
+  var mod = Two.Utils.mod, toFixed = Two.Utils.toFixed;
   var getRatio = Two.Utils.getRatio;
 
   var canvas = {
@@ -99,8 +99,8 @@
         ctx.beginPath();
         commands.forEach(function(b, i) {
 
-          x = b.x.toFixed(3);
-          y = b.y.toFixed(3);
+          x = toFixed(b.x);
+          y = toFixed(b.y);
 
           switch (b._command) {
 
@@ -119,19 +119,19 @@
               bl = (b.controls && b.controls.left) || b;
 
               if (a._relative) {
-                vx = (ar.x + a.x).toFixed(3);
-                vy = (ar.y + a.y).toFixed(3);
+                vx = (ar.x + toFixed(a.x));
+                vy = (ar.y + toFixed(a.y));
               } else {
-                vx = ar.x.toFixed(3);
-                vy = ar.y.toFixed(3);
+                vx = toFixed(ar.x);
+                vy = toFixed(ar.y);
               }
 
               if (b._relative) {
-                ux = (bl.x + b.x).toFixed(3);
-                uy = (bl.y + b.y).toFixed(3);
+                ux = (bl.x + toFixed(b.x));
+                uy = (bl.y + toFixed(b.y));
               } else {
-                ux = bl.x.toFixed(3);
-                uy = bl.y.toFixed(3);
+                ux = toFixed(bl.x);
+                uy = toFixed(bl.y);
               }
 
               ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
@@ -144,23 +144,23 @@
                 cl = (c.controls && c.controls.left) || c;
 
                 if (b._relative) {
-                  vx = (br.x + b.x).toFixed(3);
-                  vy = (br.y + b.y).toFixed(3);
+                  vx = (br.x + toFixed(b.x));
+                  vy = (br.y + toFixed(b.y));
                 } else {
-                  vx = br.x.toFixed(3);
-                  vy = br.y.toFixed(3);
+                  vx = toFixed(br.x);
+                  vy = toFixed(br.y);
                 }
 
                 if (c._relative) {
-                  ux = (cl.x + c.x).toFixed(3);
-                  uy = (cl.y + c.y).toFixed(3);
+                  ux = (cl.x + toFixed(c.x));
+                  uy = (cl.y + toFixed(c.y));
                 } else {
-                  ux = cl.x.toFixed(3);
-                  uy = cl.y.toFixed(3);
+                  ux = toFixed(cl.x);
+                  uy = toFixed(cl.y);
                 }
 
-                x = c.x.toFixed(3);
-                y = c.y.toFixed(3);
+                x = toFixed(c.x);
+                y = toFixed(c.y);
 
                 ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
 

@@ -1157,6 +1157,12 @@
 
       },
 
+      // A pretty fast toFixed(3) alternative
+      // See http://jsperf.com/parsefloat-tofixed-vs-math-round/18
+      toFixed: function(v) {
+        return Math.floor(v * 1000) / 1000;
+      },
+
       mod: function(v, l) {
 
         while (v < 0) {

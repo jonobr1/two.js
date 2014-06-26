@@ -1,13 +1,7 @@
 (function(Two) {
 
   // Localize variables
-  var mod = Two.Utils.mod;
-
-  // A pretty fast toFixed(3) alternative
-  // See http://jsperf.com/parsefloat-tofixed-vs-math-round/18
-  var round = function(value) {
-    return Math.floor(value * 1000) / 1000;
-  };
+  var mod = Two.Utils.mod, toFixed = Two.Utils.toFixed;
 
   var svg = {
 
@@ -79,8 +73,8 @@
 
         // Access x and y directly,
         // bypassing the getter
-        var x = round(b._x);
-        var y = round(b._y);
+        var x = toFixed(b._x);
+        var y = toFixed(b._y);
 
         switch (b._command) {
 
@@ -94,19 +88,19 @@
             bl = (b.controls && b.controls.left) || b;
 
             if (a._relative) {
-              vx = round((ar.x + a.x));
-              vy = round((ar.y + a.y));
+              vx = toFixed((ar.x + a.x));
+              vy = toFixed((ar.y + a.y));
             } else {
-              vx = round(ar.x);
-              vy = round(ar.y);
+              vx = toFixed(ar.x);
+              vy = toFixed(ar.y);
             }
 
             if (b._relative) {
-              ux = round((bl.x + b.x));
-              uy = round((bl.y + b.y));
+              ux = toFixed((bl.x + b.x));
+              uy = toFixed((bl.y + b.y));
             } else {
-              ux = round(bl.x);
-              uy = round(bl.y);
+              ux = toFixed(bl.x);
+              uy = toFixed(bl.y);
             }
 
             command = ((i === 0) ? Two.Commands.move : Two.Commands.curve) +
@@ -136,23 +130,23 @@
             cl = (c.controls && c.controls.left) || c;
 
             if (b._relative) {
-              vx = round((br.x + b.x));
-              vy = round((br.y + b.y));
+              vx = toFixed((br.x + b.x));
+              vy = toFixed((br.y + b.y));
             } else {
-              vx = round(br.x);
-              vy = round(br.y);
+              vx = toFixed(br.x);
+              vy = toFixed(br.y);
             }
 
             if (c._relative) {
-              ux = round((cl.x + c.x));
-              uy = round((cl.y + c.y));
+              ux = toFixed((cl.x + c.x));
+              uy = toFixed((cl.y + c.y));
             } else {
-              ux = round(cl.x);
-              uy = round(cl.y);
+              ux = toFixed(cl.x);
+              uy = toFixed(cl.y);
             }
 
-            x = round(c.x);
-            y = round(c.y);
+            x = toFixed(c.x);
+            y = toFixed(c.y);
 
             command +=
               ' C ' + vx + ' ' + vy + ' ' + ux + ' ' + uy + ' ' + x + ' ' + y;

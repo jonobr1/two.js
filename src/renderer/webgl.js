@@ -8,7 +8,8 @@
     mod = Two.Utils.mod,
     identity = [1, 0, 0, 0, 1, 0, 0, 0, 1],
     transformation = new Two.Array(9),
-    getRatio = Two.Utils.getRatio;
+    getRatio = Two.Utils.getRatio,
+    toFixed = Two.Utils.toFixed;
 
   var webgl = {
 
@@ -305,8 +306,8 @@
       commands.forEach(function(b, i) {
 
         var next, prev, a, c, ux, uy, vx, vy, ar, bl, br, cl, x, y;
-        x = (b.x * scale + cx).toFixed(3);
-        y = (b.y * scale + cy).toFixed(3);
+        x = toFixed(b.x * scale + cx);
+        y = toFixed(b.y * scale + cy);
 
         switch (b._command) {
 
@@ -325,19 +326,19 @@
             bl = (b.controls && b.controls.left) || b;
 
             if (a._relative) {
-              vx = ((ar.x + a.x) * scale + cx).toFixed(3);
-              vy = ((ar.y + a.y) * scale + cy).toFixed(3);
+              vx = toFixed((ar.x + a.x) * scale + cx);
+              vy = toFixed((ar.y + a.y) * scale + cy);
             } else {
-              vx = (ar.x * scale + cx).toFixed(3);
-              vy = (ar.y * scale + cy).toFixed(3);
+              vx = toFixed(ar.x * scale + cx);
+              vy = toFixed(ar.y * scale + cy);
             }
 
             if (b._relative) {
-              ux = ((bl.x + b.x) * scale + cx).toFixed(3);
-              uy = ((bl.y + b.y) * scale + cy).toFixed(3);
+              ux = toFixed((bl.x + b.x) * scale + cx);
+              uy = toFixed((bl.y + b.y) * scale + cy);
             } else {
-              ux = (bl.x * scale + cx).toFixed(3);
-              uy = (bl.y * scale + cy).toFixed(3);
+              ux = toFixed(bl.x * scale + cx);
+              uy = toFixed(bl.y * scale + cy);
             }
 
             ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
@@ -350,23 +351,23 @@
               cl = (c.controls && c.controls.left) || c;
 
               if (b._relative) {
-                vx = ((br.x + b.x) * scale + cx).toFixed(3);
-                vy = ((br.y + b.y) * scale + cy).toFixed(3);
+                vx = toFixed((br.x + b.x) * scale + cx);
+                vy = toFixed((br.y + b.y) * scale + cy);
               } else {
-                vx = (br.x * scale + cx).toFixed(3);
-                vy = (br.y * scale + cy).toFixed(3);
+                vx = toFixed(br.x * scale + cx);
+                vy = toFixed(br.y * scale + cy);
               }
 
               if (c._relative) {
-                ux = ((cl.x + c.x) * scale + cx).toFixed(3);
-                uy = ((cl.y + c.y) * scale + cx).toFixed(3);
+                ux = toFixed((cl.x + c.x) * scale + cx);
+                uy = toFixed((cl.y + c.y) * scale + cx);
               } else {
-                ux = (cl.x * scale + cx).toFixed(3);
-                uy = (cl.y * scale + cy).toFixed(3);
+                ux = toFixed(cl.x * scale + cx);
+                uy = toFixed(cl.y * scale + cy);
               }
 
-              x = (c.x * scale + cx).toFixed(3);
-              y = (c.y * scale + cy).toFixed(3);
+              x = toFixed(c.x * scale + cx);
+              y = toFixed(c.y * scale + cy);
 
               ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
 
