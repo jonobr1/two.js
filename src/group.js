@@ -22,8 +22,30 @@
 
     MakeObservable: function(object) {
 
+      var properties = Two.Polygon.Properties.slice(0);
+      var oi = _.indexOf(properties, 'opacity');
+
+      if (oi >= 0) {
+
+        properties.splice(oi, 1);
+
+        Object.defineProperty(object, 'opacity', {
+
+          get: function() {
+            return this._opacity;
+          },
+
+          set: function(v) {
+            this._opacity = v;
+            this._flagOpacity = true;
+          }
+
+        });
+
+      }
+
       Two.Shape.MakeObservable(object);
-      Group.MakeGetterSetters(object, Two.Polygon.Properties);
+      Group.MakeGetterSetters(object, properties);
 
     },
 
@@ -66,6 +88,7 @@
 
     _flagAdditions: false,
     _flagSubtractions: false,
+    _flagOpacity: 1.0,
 
     // Underlying Properties
 
@@ -399,6 +422,8 @@
         this.subtractions.length = 0;
         this._flagSubtractions = false;
       }
+
+      this._flagOpacity = false;
 
       Two.Shape.prototype.flagReset.call(this);
 

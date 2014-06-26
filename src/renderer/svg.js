@@ -211,9 +211,8 @@
           svg[child._renderer.type].render.call(child, domElement);
         }
 
-        // FIXME: Is this the best way to do this?
-        if (!_.isUndefined(this.opacity)) {
-          this._renderer.elem.setAttribute('opacity', this.opacity );
+        if (this._flagOpacity) {
+          this._renderer.elem.setAttribute('opacity', this._opacity);
         }
 
         if (this._flagAdditions) {

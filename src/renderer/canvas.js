@@ -20,8 +20,12 @@
         this._update();
 
         var matrix = this._matrix.elements;
+        var parent = this.parent;
+        this._renderer.opacity = this._opacity
+          * (parent && parent._renderer ? parent._renderer.opacity : 1);
 
         ctx.save();
+
         ctx.transform(
           matrix[0], matrix[3], matrix[1], matrix[4], matrix[2], matrix[5]);
 
@@ -38,6 +42,7 @@
     polygon: {
 
       render: function(ctx) {
+
         var matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter,
             closed, commands, length, last, next, prev, a, c, d, ux, uy, vx, vy,
             ar, bl, br, cl, x, y;
@@ -46,20 +51,20 @@
         this._update();
 
         matrix = this._matrix.elements;
-        stroke = this.stroke;
-        linewidth = this.linewidth;
-        fill = this.fill;
-        opacity = this.opacity;
-        visible = this.visible;
-        cap = this.cap;
-        join = this.join;
-        miter = this.miter;
-        closed = this.closed;
+        stroke = this._stroke;
+        linewidth = this._linewidth;
+        fill = this._fill;
+        opacity = this._opacity * this.parent._renderer.opacity;
+        visible = this._visible;
+        cap = this._cap;
+        join = this._join;
+        miter = this._miter;
+        closed = this._closed;
         commands = this._vertices; // Commands
         length = commands.length;
         last = length - 1;
 
-        if (!visible) {
+        if (!visible || !opacity) {
           return this;
         }
 

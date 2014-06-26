@@ -56,6 +56,11 @@
 
         }
 
+        this._flagOpacity = parent._flagOpacity || this._flagOpacity;
+
+        this._renderer.opacity = this._opacity
+          * (parent && parent._renderer ? parent._renderer.opacity : 1);
+
         _.each(this.children, webgl.group.renderChild, {
           gl: gl,
           program: program
@@ -82,8 +87,8 @@
         var flagMatrix = this._matrix.manual || this._flagMatrix;
         var flagTexture = this._flagVertices || this._flagFill
           || this._flagStroke || this._flagLinewidth || this._flagOpacity
-          || this._flagVisible || this._flagCap || this._flagJoin
-          || this._flagMiter || this._flagScale;
+          || parent._flagOpacity || this._flagVisible || this._flagCap
+          || this._flagJoin || this._flagMiter || this._flagScale;
 
         this._update();
 
@@ -111,6 +116,8 @@
           if (!this._renderer.triangles) {
             this._renderer.triangles = new Two.Array(12);
           }
+
+          this._renderer.opacity = this._opacity * parent._renderer.opacity;
 
           webgl.getBoundingClientRect(this._vertices, this._linewidth, this._renderer.rect);
           webgl.getTriangles(this._renderer.rect, this._renderer.triangles);
@@ -262,7 +269,7 @@
       var stroke = elem._stroke;
       var linewidth = elem._linewidth * scale;
       var fill = elem._fill;
-      var opacity = elem._opacity;
+      var opacity = elem._renderer.opacity || elem._opacity;
       var cap = elem._cap;
       var join = elem._join;
       var miter = elem._miter;
@@ -539,6 +546,7 @@
   webgl.ctx = webgl.canvas.getContext('2d');
 
   var Renderer = Two[Two.Types.webgl] = function(options) {
+
     var params, gl, vs, fs;
     this.domElement = options.domElement || document.createElement('canvas');
 
@@ -548,7 +556,8 @@
 
     this._renderer = {
       matrix: new Two.Array(identity),
-      scale: 1
+      scale: 1,
+      opacity: 1
     };
     this._flagMatrix = true;
 
