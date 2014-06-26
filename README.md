@@ -61,6 +61,8 @@ instead to minify the build with uglify.
 ## Change Log
 
 ##### Nightly
++ Rendering optimizations [Leo Koppelkamm](https://github.com/DieBuche)
++ `Two.noConflict` non-destructive command internally to the library
 + `Two.interpret` decomposes `transform` attribute of source tag
 + `Two.interpret` handles item irregularities from [Inkscape](http://www.inkscape.org/)
 + Changed `Two.Identifier` to use underscores instead of hyphens for dot-notation access [Leo Koppelkamm](https://github.com/DieBuche)
