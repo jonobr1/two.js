@@ -61,6 +61,7 @@ instead to minify the build with uglify.
 ## Change Log
 
 ##### Nightly
++ `Two.Group` has own `opacity` property [Leo Koppelkamm](https://github.com/DieBuche)
 + Rendering optimizations [Leo Koppelkamm](https://github.com/DieBuche)
 + `Two.noConflict` non-destructive command internally to the library
 + `Two.interpret` decomposes `transform` attribute of source tag
