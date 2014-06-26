@@ -1,4 +1,4 @@
-(function() {
+(function(Two) {
 
   /**
    * Constants
@@ -372,4 +372,4 @@
 
   });
 
-})();
+})(Two);

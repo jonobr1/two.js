@@ -1,4 +1,4 @@
-(function() {
+(function(Two) {
 
   // Localize variables
   var mod = Two.Utils.mod;
@@ -349,4 +349,4 @@
 
   });
 
-})();
+})(Two);

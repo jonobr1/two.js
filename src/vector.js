@@ -1,4 +1,4 @@
-(function() {
+(function(Two) {
 
   var Vector = Two.Vector = function(x, y) {
 
@@ -311,4 +311,4 @@
 
   };
 
-})();
+})(Two);
