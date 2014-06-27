@@ -190,9 +190,9 @@
 
       // TODO: Can speed up.
       // TODO: How does this effect a f
-      appendChild: function(id) {
+      appendChild: function(object) {
 
-        var elem = this.domElement.querySelector('#' + id);
+        var elem = object._renderer.elem;
 
         if (!elem) {
           return;
@@ -204,6 +204,7 @@
           return;
         }
 
+        // Is there a nicer way to do this?
         var tagName = tag.replace(/svg\:/ig, '').toLowerCase();
 
         // Defer additions while clipping
@@ -215,10 +216,9 @@
 
       },
 
-      // TODO: Can speed up.
-      removeChild: function(id) {
+      removeChild: function(object) {
 
-        var elem = this.domElement.querySelector('#' + id);
+        var elem = object._renderer.elem;
 
         if (!elem) {
           return;
@@ -230,6 +230,7 @@
           return;
         }
 
+        // Is there a nicer way to do this?
         var tagName = tag.replace(/svg\:/ig, '').toLowerCase();
 
         // Defer subtractions while clipping
@@ -284,11 +285,11 @@
         }
 
         if (this._flagAdditions) {
-          _.each(this.additions, svg.group.appendChild, context);
+          this.additions.forEach(svg.group.appendChild, context);
         }
 
         if (this._flagSubtractions) {
-          _.each(this.subtractions, svg.group.removeChild, context);
+          this.subtractions.forEach(svg.group.removeChild, context);
         }
 
         /**
