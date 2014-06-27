@@ -88,7 +88,7 @@
 
     _flagAdditions: false,
     _flagSubtractions: false,
-    _flagOpacity: 1.0,
+    _flagOpacity: true,
 
     // Underlying Properties
 
