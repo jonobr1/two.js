@@ -351,7 +351,7 @@ test('Two.Utils.Collection', 12, function() {
 });
 
 
-test('Children adding and removing', 18, function() {
+test('Children adding and removing', 27, function() {
 
   var group1 = new Two.Group();
   var group2 = new Two.Group();
@@ -368,48 +368,48 @@ test('Children adding and removing', 18, function() {
 
 
   poly1.addTo(group1);
-  equal(poly1, group1.children[poly1.id], 'Can add objects to group (via object)');
+  equal(poly1, group1.children[0], 'Can add objects to group (via object)');
   equal(group1, poly1.parent, 'Can add objects to group (via object)');
   ok(~poly1.parent.additions.indexOf(poly1.id), 'Can add objects to group (via object)');
-  // equal(group1.children.length, 1, 'Correct childrens length');
+  equal(group1.children.length, 1, 'Correct childrens length');
 
   group2.add(poly2);
-  equal(poly2, group2.children[poly2.id], 'Can add objects to group (via group)');
+  equal(poly2, group2.children[0], 'Can add objects to group (via group)');
   equal(group2, poly2.parent, 'Can add objects to group (via group)');
   ok(~poly2.parent.additions.indexOf(poly2.id), 'Can add objects to group (via group)');
-  // equal(group2.children.length, 1, 'Correct childrens length');
+  equal(group2.children.length, 1, 'Correct childrens length');
 
 
   group1.add(poly2);
-  equal(poly2, group1.children[poly2.id], 'Can reassign objects to group');
+  equal(poly2, group1.children[1], 'Can reassign objects to group');
   equal(group1, poly2.parent, 'Can reassign objects to group');
   ok(~poly2.parent.additions.indexOf(poly2.id), 'Can reassign objects to group');
   ok(!~group2.additions.indexOf(poly2.id), 'Can reassign objects to group');
-  // equal(group1.children.length, 2, 'Correct childrens length');
-  // equal(group2.children.length, 0, 'Correct childrens length');
+  equal(group1.children.length, 2, 'Correct childrens length');
+  equal(group2.children.length, 0, 'Correct childrens length');
 
 
   group3.add(group1);
-  equal(group1, group3.children[group1.id], 'Can add groups to group');
+  equal(group1, group3.children[0], 'Can add groups to group');
   equal(group3, group1.parent, 'Can add groups to group');
   ok(~group3.additions.indexOf(group1.id), 'Can add groups to group');
-  // equal(group3.children.length, 1, 'Correct childrens length');
+  equal(group3.children.length, 1, 'Correct childrens length');
 
 
   group1.add(poly3);
   group1.add(poly4);
   group1.add(poly5);
-  // equal(group1.children.length, 5, 'Correct childrens length');
+  equal(group1.children.length, 5, 'Correct childrens length');
 
-  group3.add(_.values(group1.children));
-  // equal(group3.children.length, 6, 'Can reassign children to another group');
-  // equal(group1.children.length, 0, 'Can reassign children to another group');
+  group3.add(group1.children);
+  equal(group3.children.length, 6, 'Can reassign children to another group');
+  equal(group1.children.length, 0, 'Can reassign children to another group');
   equal(group1.additions.length, 0, 'Can reassign children to another group');
   equal(poly5.parent, group3, 'Can reassign children to another group');
   ok(~poly5.parent.additions.indexOf(poly5.id), 'Can reassign children to another group');
 
   group3.remove(poly4);
-  // equal(group3.children.length, 5, 'Can remove objects from group');
+  equal(group3.children.length, 5, 'Can remove objects from group');
   equal(group3.additions.length, 5, 'Can remove objects from group');
   equal(poly4.parent, null, 'Can remove objects from group');
 
