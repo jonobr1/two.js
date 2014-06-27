@@ -103,12 +103,16 @@
           }
 
           index = oldParent.additions.indexOf(this);
+
+          // If it's in additions it has just been added
+          // and not processed it.
+          // If not add it to substractions.
           if (index >= 0) {
             oldParent.additions.splice(index, 1);
+          } else {
+            oldParent.subtractions.push(this);
+            oldParent._flagSubtractions = true;
           }
-
-          oldParent.subtractions.push(this);
-          oldParent._flagSubtractions = true;
         }
 
         // If newParent is specified, add this to the group

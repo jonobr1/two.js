@@ -220,7 +220,7 @@
 
         var elem = object._renderer.elem;
 
-        if (!elem) {
+        if (!elem || elem.parentElement != this.elem) {
           return;
         }
 
