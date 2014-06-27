@@ -351,7 +351,7 @@ test('Two.Utils.Collection', 12, function() {
 });
 
 
-test('Children adding and removing', 27, function() {
+test('Children adding and removing', 28, function() {
 
   var group1 = new Two.Group();
   var group2 = new Two.Group();
@@ -413,4 +413,6 @@ test('Children adding and removing', 27, function() {
   equal(group3.additions.length, 5, 'Can remove objects from group');
   equal(poly4.parent, null, 'Can remove objects from group');
 
+  group3.add(void 0);
+  ok(true, 'Can safely add undefined stuff to group');
 });
