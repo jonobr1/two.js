@@ -123,7 +123,7 @@
         }
       });
 
-      Object.defineProperty(Polygon.prototype, 'automatic', {
+      Object.defineProperty(object, 'automatic', {
         get: function() {
           return this._automatic;
         },
