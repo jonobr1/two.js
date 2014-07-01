@@ -3,7 +3,7 @@
   /**
    * Constants
    */
-  var mod = Two.Utils.mod;
+  var mod = Two.Utils.mod, toFixed = Two.Utils.toFixed;
   var getRatio = Two.Utils.getRatio;
 
   var canvas = {
@@ -20,8 +20,12 @@
         this._update();
 
         var matrix = this._matrix.elements;
+        var parent = this.parent;
+        this._renderer.opacity = this._opacity
+          * (parent && parent._renderer ? parent._renderer.opacity : 1);
 
         ctx.save();
+
         ctx.transform(
           matrix[0], matrix[3], matrix[1], matrix[4], matrix[2], matrix[5]);
 
@@ -38,6 +42,7 @@
     polygon: {
 
       render: function(ctx) {
+
         var matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter,
             closed, commands, length, last, next, prev, a, c, d, ux, uy, vx, vy,
             ar, bl, br, cl, x, y;
@@ -46,20 +51,20 @@
         this._update();
 
         matrix = this._matrix.elements;
-        stroke = this.stroke;
-        linewidth = this.linewidth;
-        fill = this.fill;
-        opacity = this.opacity;
-        visible = this.visible;
-        cap = this.cap;
-        join = this.join;
-        miter = this.miter;
-        closed = this.closed;
+        stroke = this._stroke;
+        linewidth = this._linewidth;
+        fill = this._fill;
+        opacity = this._opacity * this.parent._renderer.opacity;
+        visible = this._visible;
+        cap = this._cap;
+        join = this._join;
+        miter = this._miter;
+        closed = this._closed;
         commands = this._vertices; // Commands
         length = commands.length;
         last = length - 1;
 
-        if (!visible) {
+        if (!visible || !opacity) {
           return this;
         }
 
@@ -99,8 +104,8 @@
         ctx.beginPath();
         commands.forEach(function(b, i) {
 
-          x = b.x.toFixed(3);
-          y = b.y.toFixed(3);
+          x = toFixed(b.x);
+          y = toFixed(b.y);
 
           switch (b._command) {
 
@@ -119,19 +124,19 @@
               bl = (b.controls && b.controls.left) || b;
 
               if (a._relative) {
-                vx = (ar.x + a.x).toFixed(3);
-                vy = (ar.y + a.y).toFixed(3);
+                vx = (ar.x + toFixed(a.x));
+                vy = (ar.y + toFixed(a.y));
               } else {
-                vx = ar.x.toFixed(3);
-                vy = ar.y.toFixed(3);
+                vx = toFixed(ar.x);
+                vy = toFixed(ar.y);
               }
 
               if (b._relative) {
-                ux = (bl.x + b.x).toFixed(3);
-                uy = (bl.y + b.y).toFixed(3);
+                ux = (bl.x + toFixed(b.x));
+                uy = (bl.y + toFixed(b.y));
               } else {
-                ux = bl.x.toFixed(3);
-                uy = bl.y.toFixed(3);
+                ux = toFixed(bl.x);
+                uy = toFixed(bl.y);
               }
 
               ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
@@ -144,23 +149,23 @@
                 cl = (c.controls && c.controls.left) || c;
 
                 if (b._relative) {
-                  vx = (br.x + b.x).toFixed(3);
-                  vy = (br.y + b.y).toFixed(3);
+                  vx = (br.x + toFixed(b.x));
+                  vy = (br.y + toFixed(b.y));
                 } else {
-                  vx = br.x.toFixed(3);
-                  vy = br.y.toFixed(3);
+                  vx = toFixed(br.x);
+                  vy = toFixed(br.y);
                 }
 
                 if (c._relative) {
-                  ux = (cl.x + c.x).toFixed(3);
-                  uy = (cl.y + c.y).toFixed(3);
+                  ux = (cl.x + toFixed(c.x));
+                  uy = (cl.y + toFixed(c.y));
                 } else {
-                  ux = cl.x.toFixed(3);
-                  uy = cl.y.toFixed(3);
+                  ux = toFixed(cl.x);
+                  uy = toFixed(cl.y);
                 }
 
-                x = c.x.toFixed(3);
-                y = c.y.toFixed(3);
+                x = toFixed(c.x);
+                y = toFixed(c.y);
 
                 ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
 

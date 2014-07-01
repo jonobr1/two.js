@@ -22,8 +22,30 @@
 
     MakeObservable: function(object) {
 
+      var properties = Two.Polygon.Properties.slice(0);
+      var oi = _.indexOf(properties, 'opacity');
+
+      if (oi >= 0) {
+
+        properties.splice(oi, 1);
+
+        Object.defineProperty(object, 'opacity', {
+
+          get: function() {
+            return this._opacity;
+          },
+
+          set: function(v) {
+            this._opacity = v;
+            this._flagOpacity = true;
+          }
+
+        });
+
+      }
+
       Two.Shape.MakeObservable(object);
-      Group.MakeGetterSetters(object, Two.Polygon.Properties);
+      Group.MakeGetterSetters(object, properties);
 
     },
 
@@ -66,6 +88,7 @@
 
     _flagAdditions: false,
     _flagSubtractions: false,
+    _flagOpacity: true,
 
     // Underlying Properties
 
@@ -324,7 +347,7 @@
       var rect;
 
       // TODO: Update this to not __always__ update. Just when it needs to.
-      this._update();
+      this._update(true);
 
       // Variables need to be defined here, because of nested nature of groups.
       var left = Infinity, right = -Infinity,
@@ -399,6 +422,8 @@
         this.subtractions.length = 0;
         this._flagSubtractions = false;
       }
+
+      this._flagOpacity = false;
 
       Two.Shape.prototype.flagReset.call(this);
 

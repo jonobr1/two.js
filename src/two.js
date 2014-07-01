@@ -366,22 +366,31 @@
        * Will try to resolve styles applied via CSS
        */
       applySvgAttributes: function(node, elem) {
-
-        var attributes = {}, styles = {};
+        var attributes = {}, styles = {}, i, key, value, attr;
 
         // Not available in non browser environments
         if (getComputedStyle) {
           // Convert CSSStyleDeclaration to a normal object
           var computedStyles = getComputedStyle(node);
-          _.each(computedStyles, function (item) {
-            styles[item] = computedStyles[item];
-          });
+          i = computedStyles.length;
+
+          while(i--) {
+            key = computedStyles[i];
+            value = computedStyles[key];
+            // Gecko returns undefined for unset properties
+            // Webkit returns the default value
+            if (value !== undefined) {
+              styles[key] = value;
+            }
+          }
         }
 
         // Convert NodeMap to a normal object
-        _.each(node.attributes, function(v, k) {
-          attributes[v.nodeName] = v.nodeValue;
-        });
+        i = node.attributes.length;
+        while(i--) {
+          attr = node.attributes[i];
+          attributes[attr.nodeName] = attr.value;
+        }
 
         // Getting the correct opacity is a bit tricky, since SVG path elements don't
         // support opacity as an attribute, but you can apply it via CSS.
@@ -399,12 +408,17 @@
         styles.visible = (styles.display !== 'none') && (styles.visibility === 'visible');
 
         // Now iterate the whole thing
-        _.each(styles, function(value, key) {
+        for (key in styles) {
+          value = styles[key];
 
           switch (key) {
             case 'transform':
-
+              if (value === 'none') break;
               var m = node.getCTM();
+
+              // Might happen when transform string is empty or not valid.
+              if (m === null) break;
+
               var matrix = new Two.Matrix(m.a, m.b, m.c, m.d, m.e, m.f);
 
               // Option 1: edit the underlying matrix and don't force an auto calc.
@@ -452,19 +466,16 @@
               break;
             case 'fill':
             case 'stroke':
-              elem[key] = (value == 'none') ? 'transparent' : value;
+              elem[key] = (value === 'none') ? 'transparent' : value;
               break;
             case 'id':
               elem.id = value;
               break;
             case 'class':
-              if (!elem.classList) elem.classList = [];
-              value.split(' ').forEach(function (cl) {
-                elem.classList.push(cl);
-              });
+              elem.classList = value.split(' ');
               break;
           }
-        });
+        }
 
         return elem;
 
@@ -486,8 +497,8 @@
           // Switched up order to inherit more specific styles
           Two.Utils.applySvgAttributes(node, group);
 
-          _.each(node.childNodes, function(n) {
-
+          for (var i = 0, l = node.childNodes.length; i < l; i++) {
+            var n = node.childNodes[i];
             var tag = n.nodeName;
             if (!tag) return;
 
@@ -497,8 +508,7 @@
               var o = Two.Utils.read[tagName].call(this, n);
               group.add(o);
             }
-
-          }, this);
+          }
 
           return group;
 
@@ -530,9 +540,9 @@
 
           // Create a Two.Polygon from the paths.
 
-          var coord, control;
-          var coords, relative = false;
-          var closed = false;
+          var coord = new Two.Anchor();
+          var control, coords;
+          var closed = false, relative = false;
           var commands = path.match(/[a-df-z][^a-df-z]*/ig);
           var last = commands.length - 1;
 
@@ -1145,6 +1155,12 @@
 
         return sqrt(distanceBetweenSquared(p1, p2));
 
+      },
+
+      // A pretty fast toFixed(3) alternative
+      // See http://jsperf.com/parsefloat-tofixed-vs-math-round/18
+      toFixed: function(v) {
+        return Math.floor(v * 1000) / 1000;
       },
 
       mod: function(v, l) {

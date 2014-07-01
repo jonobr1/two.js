@@ -8,7 +8,8 @@
     mod = Two.Utils.mod,
     identity = [1, 0, 0, 0, 1, 0, 0, 0, 1],
     transformation = new Two.Array(9),
-    getRatio = Two.Utils.getRatio;
+    getRatio = Two.Utils.getRatio,
+    toFixed = Two.Utils.toFixed;
 
   var webgl = {
 
@@ -55,6 +56,11 @@
 
         }
 
+        this._flagOpacity = parent._flagOpacity || this._flagOpacity;
+
+        this._renderer.opacity = this._opacity
+          * (parent && parent._renderer ? parent._renderer.opacity : 1);
+
         _.each(this.children, webgl.group.renderChild, {
           gl: gl,
           program: program
@@ -81,8 +87,8 @@
         var flagMatrix = this._matrix.manual || this._flagMatrix;
         var flagTexture = this._flagVertices || this._flagFill
           || this._flagStroke || this._flagLinewidth || this._flagOpacity
-          || this._flagVisible || this._flagCap || this._flagJoin
-          || this._flagMiter || this._flagScale;
+          || parent._flagOpacity || this._flagVisible || this._flagCap
+          || this._flagJoin || this._flagMiter || this._flagScale;
 
         this._update();
 
@@ -110,6 +116,8 @@
           if (!this._renderer.triangles) {
             this._renderer.triangles = new Two.Array(12);
           }
+
+          this._renderer.opacity = this._opacity * parent._renderer.opacity;
 
           webgl.getBoundingClientRect(this._vertices, this._linewidth, this._renderer.rect);
           webgl.getTriangles(this._renderer.rect, this._renderer.triangles);
@@ -261,7 +269,7 @@
       var stroke = elem._stroke;
       var linewidth = elem._linewidth * scale;
       var fill = elem._fill;
-      var opacity = elem._opacity;
+      var opacity = elem._renderer.opacity || elem._opacity;
       var cap = elem._cap;
       var join = elem._join;
       var miter = elem._miter;
@@ -305,8 +313,8 @@
       commands.forEach(function(b, i) {
 
         var next, prev, a, c, ux, uy, vx, vy, ar, bl, br, cl, x, y;
-        x = (b.x * scale + cx).toFixed(3);
-        y = (b.y * scale + cy).toFixed(3);
+        x = toFixed(b.x * scale + cx);
+        y = toFixed(b.y * scale + cy);
 
         switch (b._command) {
 
@@ -325,19 +333,19 @@
             bl = (b.controls && b.controls.left) || b;
 
             if (a._relative) {
-              vx = ((ar.x + a.x) * scale + cx).toFixed(3);
-              vy = ((ar.y + a.y) * scale + cy).toFixed(3);
+              vx = toFixed((ar.x + a.x) * scale + cx);
+              vy = toFixed((ar.y + a.y) * scale + cy);
             } else {
-              vx = (ar.x * scale + cx).toFixed(3);
-              vy = (ar.y * scale + cy).toFixed(3);
+              vx = toFixed(ar.x * scale + cx);
+              vy = toFixed(ar.y * scale + cy);
             }
 
             if (b._relative) {
-              ux = ((bl.x + b.x) * scale + cx).toFixed(3);
-              uy = ((bl.y + b.y) * scale + cy).toFixed(3);
+              ux = toFixed((bl.x + b.x) * scale + cx);
+              uy = toFixed((bl.y + b.y) * scale + cy);
             } else {
-              ux = (bl.x * scale + cx).toFixed(3);
-              uy = (bl.y * scale + cy).toFixed(3);
+              ux = toFixed(bl.x * scale + cx);
+              uy = toFixed(bl.y * scale + cy);
             }
 
             ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
@@ -350,23 +358,23 @@
               cl = (c.controls && c.controls.left) || c;
 
               if (b._relative) {
-                vx = ((br.x + b.x) * scale + cx).toFixed(3);
-                vy = ((br.y + b.y) * scale + cy).toFixed(3);
+                vx = toFixed((br.x + b.x) * scale + cx);
+                vy = toFixed((br.y + b.y) * scale + cy);
               } else {
-                vx = (br.x * scale + cx).toFixed(3);
-                vy = (br.y * scale + cy).toFixed(3);
+                vx = toFixed(br.x * scale + cx);
+                vy = toFixed(br.y * scale + cy);
               }
 
               if (c._relative) {
-                ux = ((cl.x + c.x) * scale + cx).toFixed(3);
-                uy = ((cl.y + c.y) * scale + cx).toFixed(3);
+                ux = toFixed((cl.x + c.x) * scale + cx);
+                uy = toFixed((cl.y + c.y) * scale + cx);
               } else {
-                ux = (cl.x * scale + cx).toFixed(3);
-                uy = (cl.y * scale + cy).toFixed(3);
+                ux = toFixed(cl.x * scale + cx);
+                uy = toFixed(cl.y * scale + cy);
               }
 
-              x = (c.x * scale + cx).toFixed(3);
-              y = (c.y * scale + cy).toFixed(3);
+              x = toFixed(c.x * scale + cx);
+              y = toFixed(c.y * scale + cy);
 
               ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
 
@@ -538,6 +546,7 @@
   webgl.ctx = webgl.canvas.getContext('2d');
 
   var Renderer = Two[Two.Types.webgl] = function(options) {
+
     var params, gl, vs, fs;
     this.domElement = options.domElement || document.createElement('canvas');
 
@@ -547,7 +556,8 @@
 
     this._renderer = {
       matrix: new Two.Array(identity),
-      scale: 1
+      scale: 1,
+      opacity: 1
     };
     this._flagMatrix = true;
 

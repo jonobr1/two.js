@@ -171,9 +171,12 @@
 
           var bindVerts = _.bind(function(items) {
 
-            _.each(items, function(v) {
-              v.bind(Two.Events.change, updateVertices);
-            }, this);
+            // This function is called a lot
+            // when importing a large SVG
+            var i = items.length;
+            while(i--) {
+              items[i].bind(Two.Events.change, updateVertices);
+            }
 
             updateVertices();
 
@@ -370,7 +373,7 @@
     getBoundingClientRect: function(shallow) {
 
       // TODO: Update this to not __always__ update. Just when it needs to.
-      this._update();
+      this._update(true);
 
       var matrix = !!shallow ? this._matrix : getComputedMatrix(this);
 
@@ -477,9 +480,9 @@
         return this;
       }
 
-      _.each(this._vertices, function(p, i) {
-        p._command = i === 0 ? Two.Commands.move : Two.Commands.line;
-      }, this);
+      for (var i = 0; i < this._vertices.length; i++) {
+        this._vertices[i]._command = i === 0 ? Two.Commands.move : Two.Commands.line;
+      }
 
       return this;
 
