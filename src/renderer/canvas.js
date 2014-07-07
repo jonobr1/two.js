@@ -260,16 +260,26 @@
   };
 
   var Renderer = Two[Two.Types.canvas] = function(params) {
-
+    // Smoothing property. Defaults to true
+    // Set it to false when working with pixel art.
+    // false can lead to better performance, since it would use a cheaper interpolation algorithm.
+    // It might not make a big difference on GPU backed canvases.
+    var smoothing = (params.smoothing !== false);
     this.domElement = params.domElement || document.createElement('canvas');
     this.ctx = this.domElement.getContext('2d');
     this.overdraw = params.overdraw || false;
 
+    this.ctx.imageSmoothingEnabled = smoothing;
+    this.ctx.mozImageSmoothingEnabled = smoothing;
+    this.ctx.oImageSmoothingEnabled = smoothing;
+    this.ctx.webkitImageSmoothingEnabled = smoothing;
+    this.ctx.imageSmoothingEnabled = smoothing;
+
     // Everything drawn on the canvas needs to be added to the scene.
     this.scene = new Two.Group();
     this.scene.parent = this;
-
   };
+
 
   _.extend(Renderer, {
 
