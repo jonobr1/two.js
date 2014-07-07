@@ -371,26 +371,31 @@
      * parameters of the group.
      */
     getBoundingClientRect: function(shallow) {
+      var border = this.linewidth / 2,
+          l = this._vertices.length;
+
+      var left = Infinity, right = -Infinity,
+          top = Infinity, bottom = -Infinity;
+
+      var matrix, x, y, i, v;
 
       // TODO: Update this to not __always__ update. Just when it needs to.
       this._update(true);
 
-      var matrix = !!shallow ? this._matrix : getComputedMatrix(this);
+      matrix = !!shallow ? this._matrix : getComputedMatrix(this);
 
-      var border = this.linewidth / 2, x, y;
-      var left = Infinity, right = -Infinity,
-          top = Infinity, bottom = -Infinity;
+      for (i = 0; i < l; i++) {
+        v = this._vertices[i];
 
+        x = v._x;
+        y = v._y;
 
-      _.each(this._vertices, function(v) {
-        x = v.x;
-        y = v.y;
-        v = matrix.multiply(x, y , 1);
+        v = matrix.multiply(x, y, 1);
         top = min(v.y - border, top);
         left = min(v.x - border, left);
         right = max(v.x + border, right);
         bottom = max(v.y + border, bottom);
-      });
+      }
 
       return {
         top: top,
