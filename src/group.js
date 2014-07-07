@@ -109,8 +109,9 @@
           },
 
           set: function(v) {
+            // Only set flag if there is an actual difference
+            this._flagOpacity = (this._opacity != v);
             this._opacity = v;
-            this._flagOpacity = true;
           }
 
         });
