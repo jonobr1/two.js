@@ -6,6 +6,11 @@
   var mod = Two.Utils.mod, toFixed = Two.Utils.toFixed;
   var getRatio = Two.Utils.getRatio;
 
+  // Returns true if this is a non-transforming matrix
+  var isDefaultMatrix = function (m) {
+    return (m[0] == 1 && m[3] == 0 && m[1] == 0 && m[4] == 1 && m[2] == 0 && m[5] == 0);
+  };
+
   var canvas = {
 
     group: {
@@ -21,17 +26,25 @@
 
         var matrix = this._matrix.elements;
         var parent = this.parent;
-        this._renderer.opacity = this._opacity
-          * (parent && parent._renderer ? parent._renderer.opacity : 1);
 
-        ctx.save();
+        var defaultMatrix = isDefaultMatrix(matrix);
 
-        ctx.transform(
-          matrix[0], matrix[3], matrix[1], matrix[4], matrix[2], matrix[5]);
+        this._renderer.opacity = this._opacity * (parent && parent._renderer ? parent._renderer.opacity : 1);
 
-        _.each(this.children, canvas.group.renderChild, ctx);
+        if (!defaultMatrix) {
+          ctx.save();
+          ctx.transform(matrix[0], matrix[3], matrix[1], matrix[4], matrix[2], matrix[5]);
+        }
 
-        ctx.restore();
+
+        for (i = 0; i < this.children.length; i++) {
+          child = this.children[i];
+          canvas[child._renderer.type].render.call(child, ctx);
+        }
+
+        if (!defaultMatrix) {
+          ctx.restore();
+        }
 
         return this.flagReset();
 
@@ -45,7 +58,7 @@
 
         var matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter,
             closed, commands, length, last, next, prev, a, c, d, ux, uy, vx, vy,
-            ar, bl, br, cl, x, y;
+            ar, bl, br, cl, x, y, defaultMatrix;
 
         // TODO: Add a check here to only invoke _update if need be.
         this._update();
@@ -63,22 +76,20 @@
         commands = this._vertices; // Commands
         length = commands.length;
         last = length - 1;
+        defaultMatrix = isDefaultMatrix(matrix);
 
         if (!visible || !opacity) {
           return this;
         }
 
         // Transform
-
-        ctx.save();
-
-        if (matrix) {
-          ctx.transform(
-            matrix[0], matrix[3], matrix[1], matrix[4], matrix[2], matrix[5]);
+        if (!defaultMatrix) {
+          ctx.save();
+          ctx.transform(matrix[0], matrix[3], matrix[1], matrix[4], matrix[2], matrix[5]);
         }
 
-        // Styles
 
+        // Styles
         if (fill) {
           ctx.fillStyle = fill;
         }
@@ -192,10 +203,14 @@
           ctx.closePath();
         }
 
-        ctx.fill();
-        ctx.stroke();
+        if (fill != 'transparent') ctx.fill();
+        if (stroke != 'transparent') ctx.stroke();
 
-        ctx.restore();
+        if (!defaultMatrix) {
+          ctx.restore();
+        }
+
+
 
         return this.flagReset();
 
