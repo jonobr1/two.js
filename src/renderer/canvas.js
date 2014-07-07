@@ -79,7 +79,7 @@
       render: function(ctx, forced, parentClipped) {
 
         var matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter,
-            closed, commands, length, last, next, prev, a, c, d, ux, uy, vx, vy,
+            closed, commands, length, last, next, prev, a, b, c, d, ux, uy, vx, vy,
             ar, bl, br, cl, x, y, mask, clip, defaultMatrix;
 
         // TODO: Add a check here to only invoke _update if need be.
@@ -147,10 +147,12 @@
         }
 
         ctx.beginPath();
-        commands.forEach(function(b, i) {
 
-          x = toFixed(b.x);
-          y = toFixed(b.y);
+        for (var i = 0; i < commands.length; i++) {
+          b = commands[i];
+
+          x = toFixed(b._x);
+          y = toFixed(b._y);
 
           switch (b._command) {
 
@@ -169,16 +171,16 @@
               bl = (b.controls && b.controls.left) || b;
 
               if (a._relative) {
-                vx = (ar.x + toFixed(a.x));
-                vy = (ar.y + toFixed(a.y));
+                vx = (ar.x + toFixed(a._x));
+                vy = (ar.y + toFixed(a._y));
               } else {
                 vx = toFixed(ar.x);
                 vy = toFixed(ar.y);
               }
 
               if (b._relative) {
-                ux = (bl.x + toFixed(b.x));
-                uy = (bl.y + toFixed(b.y));
+                ux = (bl.x + toFixed(b._x));
+                uy = (bl.y + toFixed(b._y));
               } else {
                 ux = toFixed(bl.x);
                 uy = toFixed(bl.y);
@@ -194,23 +196,23 @@
                 cl = (c.controls && c.controls.left) || c;
 
                 if (b._relative) {
-                  vx = (br.x + toFixed(b.x));
-                  vy = (br.y + toFixed(b.y));
+                  vx = (br.x + toFixed(b._x));
+                  vy = (br.y + toFixed(b._y));
                 } else {
                   vx = toFixed(br.x);
                   vy = toFixed(br.y);
                 }
 
                 if (c._relative) {
-                  ux = (cl.x + toFixed(c.x));
-                  uy = (cl.y + toFixed(c.y));
+                  ux = (cl.x + toFixed(c._x));
+                  uy = (cl.y + toFixed(c._y));
                 } else {
                   ux = toFixed(cl.x);
                   uy = toFixed(cl.y);
                 }
 
-                x = toFixed(c.x);
-                y = toFixed(c.y);
+                x = toFixed(c._x);
+                y = toFixed(c._y);
 
                 ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
 
@@ -228,8 +230,7 @@
               break;
 
           }
-
-        });
+        }
 
         // Loose ends
 
