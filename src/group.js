@@ -343,7 +343,7 @@
      * Return an object with top, left, right, bottom, width, and height
      * parameters of the group.
      */
-    getBoundingClientRect: function() {
+    getBoundingClientRect: function(shallow) {
       var rect;
 
       // TODO: Update this to not __always__ update. Just when it needs to.
@@ -355,7 +355,7 @@
 
       _.each(this.children, function(child) {
 
-        rect = child.getBoundingClientRect();
+        rect = child.getBoundingClientRect(shallow);
 
         if (!_.isNumber(rect.top)   || !_.isNumber(rect.left)   ||
             !_.isNumber(rect.right) || !_.isNumber(rect.bottom)) {
