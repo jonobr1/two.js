@@ -2,8 +2,8 @@
   "template": "<li><a href=\"<%= href %>\" target=\"_blank\"><img width=\"143\" height=\"100\" src=\"<%= img %>\" alt=\"\"><h3><p><%= title %></p></h3></a></li>",
   "items": [
     {
-      "title": "Las cuadras de Albers",
-      "href": "http://jsfiddle.net/iaranzadi/xA8N2/embedded/result/",
+      "title": "Impossible Experiments",
+      "href": "http://impossibleexperiments.tumblr.com/",
       "img": "images/projects/imanol.gif"
     },
     {
