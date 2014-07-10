@@ -51,29 +51,6 @@
         }
       });
 
-      Object.defineProperty(object, 'clip', {
-        get: function() {
-          return this._clip;
-        },
-        set: function(v) {
-          this._clip = v;
-          this._flagClip = true;
-        }
-      });
-
-      Object.defineProperty(object, 'mask', {
-        get: function() {
-          return this._mask;
-        },
-        set: function(v) {
-          this._mask = v;
-          this._flagMask = true;
-          if (!v.clip) {
-            v.clip = true;
-          }
-        }
-      });
-
     }
 
   });
@@ -84,16 +61,16 @@
 
     _flagMatrix: true,
 
-    _flagMask: false,
-    _flagClip: false,
+    // _flagMask: false,
+    // _flagClip: false,
 
     // Underlying Properties
 
     _rotation: 0,
     _scale: 1,
 
-    _mask: null,
-    _clip: false,
+    // _mask: null,
+    // _clip: false,
 
     addTo: function(group) {
       group.add(this);
@@ -138,7 +115,7 @@
 
     flagReset: function() {
 
-      this._flagMatrix = this._flagScale = this._flagClip = this._flagMask = false;
+      this._flagMatrix = this._flagScale = false;
 
       return this;
 

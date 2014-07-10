@@ -29,6 +29,19 @@
       Two.Shape.MakeObservable(object);
       Group.MakeGetterSetters(object, Two.Polygon.Properties);
 
+      Object.defineProperty(object, 'mask', {
+        get: function() {
+          return this._mask;
+        },
+        set: function(v) {
+          this._mask = v;
+          this._flagMask = true;
+          if (!v.clip) {
+            v.clip = true;
+          }
+        }
+      });
+
     },
 
     MakeGetterSetters: function(group, properties) {
@@ -71,6 +84,8 @@
     _flagAdditions: false,
     _flagSubtractions: false,
 
+    _flagMask: false,
+
     // Underlying Properties
 
     _fill: '#fff',
@@ -89,8 +104,10 @@
     _beginning: 0,
     _ending: 1.0,
 
+    _mask: null,
+
     /**
-     * Group has a gotcha in that it's at the moment required to be bound to
+     * TODO: Group has a gotcha in that it's at the moment required to be bound to
      * an instance of two in order to add elements correctly. This needs to
      * be rethought and fixed.
      */
@@ -345,6 +362,8 @@
         this.subtractions.length = 0;
         this._flagSubtractions = false;
       }
+
+      this._flagMask = false;
 
       Two.Shape.prototype.flagReset.call(this);
 

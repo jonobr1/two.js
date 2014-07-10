@@ -267,22 +267,22 @@
           _.each(this.subtractions, svg.group.removeChild, context);
         }
 
-        if (this._flagClip) {
+        // if (this._flagClip) {
 
-          clip = svg.getClip(this);
-          elem = this._renderer.elem;
+        //   clip = svg.getClip(this);
+        //   elem = this._renderer.elem;
 
-          if (this._clip) {
-            elem.removeAttribute('id');
-            clip.setAttribute('id', this.id);
-            clip.appendChild(elem);
-          } else {
-            clip.removeAttribute('id');
-            elem.setAttribute('id', this.id);
-            this.parent._renderer.elem.appendChild(elem); // TODO: should be insertBefore
-          }
+        //   if (this._clip) {
+        //     elem.removeAttribute('id');
+        //     clip.setAttribute('id', this.id);
+        //     clip.appendChild(elem);
+        //   } else {
+        //     clip.removeAttribute('id');
+        //     elem.setAttribute('id', this.id);
+        //     this.parent._renderer.elem.appendChild(elem); // TODO: should be insertBefore
+        //   }
 
-        }
+        // }
 
         if (this._flagMask) {
           if (this._mask) {
@@ -373,13 +373,13 @@
 
         }
 
-        if (this._flagMask) {
-          if (this._mask) {
-            elem.setAttribute('clip-path', 'url(#' + this._mask.id + ')');
-          } else {
-            elem.removeAttribute('clip-path');
-          }
-        }
+        // if (this._flagMask) {
+        //   if (this._mask) {
+        //     elem.setAttribute('clip-path', 'url(#' + this._mask.id + ')');
+        //   } else {
+        //     elem.removeAttribute('clip-path');
+        //   }
+        // }
 
         return this.flagReset();
 

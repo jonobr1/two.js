@@ -217,6 +217,16 @@
 
       });
 
+      Object.defineProperty(object, 'clip', {
+        get: function() {
+          return this._clip;
+        },
+        set: function(v) {
+          this._clip = v;
+          this._flagClip = true;
+        }
+      });
+
     }
 
   });
@@ -239,6 +249,8 @@
     _flagJoin: true,
     _flagMiter: true,
 
+    _flagClip: false,
+
     // Underlying Properties
 
     _length: 0,
@@ -258,6 +270,8 @@
     _automatic: true,
     _beginning: 0,
     _ending: 1.0,
+
+    _clip: false,
 
     clone: function(parent) {
 
@@ -644,7 +658,8 @@
 
       this._flagVertices =  this._flagFill =  this._flagStroke
         = this._flagLinewidth = this._flagOpacity = this._flagVisible
-        = this._flagCap = this._flagJoin = this._flagMiter = false;
+        = this._flagCap = this._flagJoin = this._flagMiter
+        = this._flagClip = false;
 
       Two.Shape.prototype.flagReset.call(this);
 

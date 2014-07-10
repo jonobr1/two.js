@@ -10,7 +10,7 @@
 
   // Localized variables
   var matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter,
-    closed, commands, length, last, context = {};
+    closed, commands, length, last;
   var next, prev, a, c, d, ux, uy, vx, vy, ar, bl, br, cl, x, y;
 
   var canvas = {
@@ -29,10 +29,14 @@
         matrix = this._matrix.elements;
 
         var mask = this._mask;
-        var clip = this._clip;
+        // var clip = this._clip;
 
-        context.ctx = ctx;
-        context.clip = clip;
+        if (!this._renderer.context) {
+          this._renderer.context = {};
+        }
+
+        this._renderer.context.ctx = ctx;
+        // this._renderer.context.clip = clip;
 
         ctx.save();
 
@@ -43,13 +47,13 @@
           canvas[mask._renderer.type].render.call(mask, ctx, true);
         }
 
-        _.each(this.children, canvas.group.renderChild, context);
+        _.each(this.children, canvas.group.renderChild, this._renderer.context);
 
         ctx.restore();
 
-        if (clip) {
-          ctx.clip();
-        }
+        // if (clip) {
+        //   ctx.clip();
+        // }
 
         return this.flagReset();
 
@@ -78,7 +82,7 @@
         var length = commands.length;
         var last = length - 1;
 
-        var mask = this._mask;
+        // var mask = this._mask;
         var clip = this._clip;
 
         if (!forced && (!visible || clip)) {
@@ -94,9 +98,9 @@
             matrix[0], matrix[3], matrix[1], matrix[4], matrix[2], matrix[5]);
         }
 
-        if (mask) {
-          canvas[mask._renderer.type].render.call(mask, ctx, true);
-        }
+        // if (mask) {
+        //   canvas[mask._renderer.type].render.call(mask, ctx, true);
+        // }
 
         // Styles
 
