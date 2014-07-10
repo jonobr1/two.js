@@ -2,7 +2,7 @@
   "template": "<li><a href=\"<%= href %>\" target=\"_blank\"><img width=\"143\" height=\"100\" src=\"<%= img %>\" alt=\"\"><h3><p><%= title %></p></h3></a></li>",
   "items": [
     {
-      "title": "Google Cardboard Demo",
+      "title": "#Cardboard Game",
       "href": "http://vr.chromeexperiments.com/",
       "img": "images/projects/collector.gif"
     },
