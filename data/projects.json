@@ -2,6 +2,11 @@
   "template": "<li><a href=\"<%= href %>\" target=\"_blank\"><img width=\"143\" height=\"100\" src=\"<%= img %>\" alt=\"\"><h3><p><%= title %></p></h3></a></li>",
   "items": [
     {
+      "title": "Google Cardboard Demo",
+      "href": "http://vr.chromeexperiments.com/",
+      "img": "images/projects/collector.gif"
+    },
+    {
       "title": "Impossible Experiments",
       "href": "http://impossibleexperiments.tumblr.com/",
       "img": "images/projects/imanol.gif"
