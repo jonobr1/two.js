@@ -61,6 +61,7 @@ instead to minify the build with uglify.
 ## Change Log
 
 ##### Nightly
++ Added `Two.Group.mask` and `Two.Polygon.clip` in order to create clipping masks
 + `Two.Group` has own `opacity` property [Leo Koppelkamm](https://github.com/DieBuche)
 + Rendering optimizations [Leo Koppelkamm](https://github.com/DieBuche)
 + `Two.noConflict` non-destructive command internally to the library
