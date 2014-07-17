@@ -35,32 +35,47 @@ Here is boilerplate html in order to draw a spinning rectangle in two.js:
 ```
 
 ## Custom Build
-Two.js uses [nodejs](http://nodejs.org/) in order to build source files. You'll first want to install that. Next you'll want to install [node-minify](https://npmjs.org/package/node-minify):
+Two.js uses [nodejs](http://nodejs.org/) in order to build source files. You'll first want to install that.
+Next you'll want to install [grunt](https://npmjs.org/package/grunt):
 
 ```
-cd two.js/utils
-npm install node-minify
+cd two.js
+npm install grunt
 ```
-
-Then open up `./utils/build.js` in the text editor of your choice. You'll see an array at the top called `files`. This is the list and order of source files that get compiled to the built source. Feel free to add, subtract, or modify based on your needs.
-
+You can edit the files that we be included in the build by modifying ./Gruntfile.js.
 If you're making an application and you're only using one renderer (i.e: svg context) then it is highly recommended to remove canvas and webgl renderers from your build in order to drastically decrease your file size.
 
 Finally, build the project:
 
 ```
-node two.js/utils/build
+grunt
 ```
+
+If you are having problems running the closure compiler (it requires a JDK to be installed), run
+
+```
+grunt build-uglify
+```
+instead to minify the build with uglify.
 
 ## Change Log
 
 ##### Nightly
++ `Two.Group` has own `opacity` property [Leo Koppelkamm](https://github.com/DieBuche)
++ Rendering optimizations [Leo Koppelkamm](https://github.com/DieBuche)
++ `Two.noConflict` non-destructive command internally to the library
++ `Two.interpret` decomposes `transform` attribute of source tag
++ `Two.interpret` handles item irregularities from [Inkscape](http://www.inkscape.org/)
++ Changed `Two.Identifier` to use underscores instead of hyphens for dot-notation access [Leo Koppelkamm](https://github.com/DieBuche)
++ Added `Two.Group.getById` and `Two.Group.getByClassName` methods for convenient selection [Leo Koppelkamm](https://github.com/DieBuche)
++ Added `classList` to all `Two.Shape`s [Leo Koppelkamm](https://github.com/DieBuche)
++ Enabled inference of applied styles on imported svgs [Leo Koppelkamm](https://github.com/DieBuche)
 + Added `Two.Polygon.getPointAt` method to get coordinates on a curve/line
 + Added `Two.Polygon.length` property and `Two.Polygon._updateLength` method to calculate length of curve/line
 + Updated `Two.Group.prototype` observable properties on `Two.Polygon.Properties` to ensure each property is considered unique
 + ~~`Two.Polygon.vertices` first and last vertex create automated control points when `Two.Polygon.curved = true`~~
 + Updated `Two.Polygon.subdivide` method to accomodate `Two.makeEllipse`
-+ Enabled `id` to be properly interpretted from SVG elements [@chrisdelbuck](http://github.com/chrisdelbuck)
++ Enabled `id` to be properly interpreted from SVG elements [@chrisdelbuck](http://github.com/chrisdelbuck)
 + Updated `webgl` renderer `getBoundingClientRect` to accommodate `relative` anchors
 + Updated `beginning` and `ending` to clamp to each other
 + Reorganized `Two.Polygon._update` and `Two.Polygon.plot` in order to handle `beginning` and `ending` properties
@@ -70,7 +85,7 @@ node two.js/utils/build
 + Updated `svg`, `canvas`, and `webgl` renderers to properly reflect holes in curved `Two.Polygon`s
 + Updated `Two.Group` `clone` method
 + Added `toObject` method to `Two.Group`, `Two.Polygon`, `Two.Anchor`
-+ `Two.Polygon` initiailizes `polygon.cap = 'butt'` and `polygon.join = 'miter'` based on Adobe Illustrator defaults
++ `Two.Polygon` initializes `polygon.cap = 'butt'` and `polygon.join = 'miter'` based on Adobe Illustrator defaults
 + `Two.Polygon.subdivide` method now works with `Two.Commands.move` for noncontiguous polygons
 + Internally update matrices on `getBoundingClientRect` in order to remove the need to defer or wait for internal variables to be up-to-date
 + Refactor of renderers and scenegraph for performance optimization and lower memory footprint
@@ -113,7 +128,7 @@ node two.js/utils/build
 + Remove execution path dependency on utils/build.js [@masonbiler](https://github.com/masonbiler)
 + Added `timeDelta` property to every `two` instance
 + Added gruntfile, package.json for more integration with `npm`, and dependency free build (`build/two.clean.js`) [@iros](https://github.com/iros)
-+ Crossbrowser compatability with `noStroke` and `noFill` commands
++ Crossbrowser compatibility with `noStroke` and `noFill` commands
 
 ##### May 3, 2013 [v0.2.0](https://github.com/jonobr1/two.js/tree/v0.2.0)
 + First alpha release

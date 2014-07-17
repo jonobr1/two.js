@@ -1,17 +1,10 @@
-(function() {
+(function(Two) {
 
   /**
    * Constants
    */
-
-  var root = this;
-  var mod = Two.Utils.mod;
+  var mod = Two.Utils.mod, toFixed = Two.Utils.toFixed;
   var getRatio = Two.Utils.getRatio;
-
-  // Localized variables
-  var matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter,
-    closed, commands, length, last;
-  var next, prev, a, c, d, ux, uy, vx, vy, ar, bl, br, cl, x, y;
 
   var canvas = {
 
@@ -26,7 +19,10 @@
         // TODO: Add a check here to only invoke _update if need be.
         this._update();
 
-        matrix = this._matrix.elements;
+        var matrix = this._matrix.elements;
+        var parent = this.parent;
+        this._renderer.opacity = this._opacity
+          * (parent && parent._renderer ? parent._renderer.opacity : 1);
 
         var mask = this._mask;
         // var clip = this._clip;
@@ -51,6 +47,12 @@
 
         ctx.restore();
 
+       /**
+         * Commented two-way functionality of clips / masks with groups and
+         * polygons. Uncomment when this bug is fixed:
+         * https://code.google.com/p/chromium/issues/detail?id=370951
+         */
+
         // if (clip) {
         //   ctx.clip();
         // }
@@ -65,25 +67,29 @@
 
       render: function(ctx, forced, parentClipped) {
 
+        var matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter,
+            closed, commands, length, last, next, prev, a, c, d, ux, uy, vx, vy,
+            ar, bl, br, cl, x, y, mask, clip;
+
         // TODO: Add a check here to only invoke _update if need be.
         this._update();
 
-        var matrix = this._matrix.elements;
-        var stroke = this.stroke;
-        var linewidth = this.linewidth;
-        var fill = this.fill;
-        var opacity = this.opacity;
-        var visible = this.visible;
-        var cap = this.cap;
-        var join = this.join;
-        var miter = this.miter;
-        var closed = this.closed;
-        var commands = this._vertices; // Commands
-        var length = commands.length;
-        var last = length - 1;
+        matrix = this._matrix.elements;
+        stroke = this._stroke;
+        linewidth = this._linewidth;
+        fill = this._fill;
+        opacity = this._opacity * this.parent._renderer.opacity;
+        visible = this._visible;
+        cap = this._cap;
+        join = this._join;
+        miter = this._miter;
+        closed = this._closed;
+        commands = this._vertices; // Commands
+        length = commands.length;
+        last = length - 1;
 
-        // var mask = this._mask;
-        var clip = this._clip;
+        // mask = this._mask;
+        clip = this._clip;
 
         if (!forced && (!visible || clip)) {
           return this;
@@ -97,6 +103,12 @@
           ctx.transform(
             matrix[0], matrix[3], matrix[1], matrix[4], matrix[2], matrix[5]);
         }
+
+       /**
+         * Commented two-way functionality of clips / masks with groups and
+         * polygons. Uncomment when this bug is fixed:
+         * https://code.google.com/p/chromium/issues/detail?id=370951
+         */
 
         // if (mask) {
         //   canvas[mask._renderer.type].render.call(mask, ctx, true);
@@ -127,9 +139,10 @@
         }
 
         ctx.beginPath();
-        _.each(commands, function(b, i) {
+        commands.forEach(function(b, i) {
 
-          x = b.x.toFixed(3), y = b.y.toFixed(3);
+          x = toFixed(b.x);
+          y = toFixed(b.y);
 
           switch (b._command) {
 
@@ -142,24 +155,25 @@
               prev = closed ? mod(i - 1, length) : Math.max(i - 1, 0);
               next = closed ? mod(i + 1, length) : Math.min(i + 1, last);
 
-              a = commands[prev], c = commands[next];
+              a = commands[prev];
+              c = commands[next];
               ar = (a.controls && a.controls.right) || a;
               bl = (b.controls && b.controls.left) || b;
 
               if (a._relative) {
-                vx = (ar.x + a.x).toFixed(3);
-                vy = (ar.y + a.y).toFixed(3);
+                vx = (ar.x + toFixed(a.x));
+                vy = (ar.y + toFixed(a.y));
               } else {
-                vx = ar.x.toFixed(3);
-                vy = ar.y.toFixed(3);
+                vx = toFixed(ar.x);
+                vy = toFixed(ar.y);
               }
 
               if (b._relative) {
-                ux = (bl.x + b.x).toFixed(3);
-                uy = (bl.y + b.y).toFixed(3);
+                ux = (bl.x + toFixed(b.x));
+                uy = (bl.y + toFixed(b.y));
               } else {
-                ux = bl.x.toFixed(3);
-                uy = bl.y.toFixed(3);
+                ux = toFixed(bl.x);
+                uy = toFixed(bl.y);
               }
 
               ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
@@ -172,23 +186,23 @@
                 cl = (c.controls && c.controls.left) || c;
 
                 if (b._relative) {
-                  vx = (br.x + b.x).toFixed(3);
-                  vy = (br.y + b.y).toFixed(3);
+                  vx = (br.x + toFixed(b.x));
+                  vy = (br.y + toFixed(b.y));
                 } else {
-                  vx = br.x.toFixed(3);
-                  vy = br.y.toFixed(3);
+                  vx = toFixed(br.x);
+                  vy = toFixed(br.y);
                 }
 
                 if (c._relative) {
-                  ux = (cl.x + c.x).toFixed(3);
-                  uy = (cl.y + c.y).toFixed(3);
+                  ux = (cl.x + toFixed(c.x));
+                  uy = (cl.y + toFixed(c.y));
                 } else {
-                  ux = cl.x.toFixed(3);
-                  uy = cl.y.toFixed(3);
+                  ux = toFixed(cl.x);
+                  uy = toFixed(cl.y);
                 }
 
-                x = c.x.toFixed(3);
-                y = c.y.toFixed(3);
+                x = toFixed(c.x);
+                y = toFixed(c.y);
 
                 ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
 
@@ -302,4 +316,4 @@
     ctx.setTransform(1, 0, 0, 1, 0, 0);
   }
 
-})();
+})(Two);

@@ -1,4 +1,4 @@
-(function() {
+(function(Two) {
 
   /**
    * Constants
@@ -6,11 +6,6 @@
 
   var min = Math.min, max = Math.max, round = Math.round,
     getComputedMatrix = Two.Utils.getComputedMatrix;
-
-  // Localized variables
-  var l, ia, ib, last, closed, v, i, parent, points, clone, rect, corner,
-    border, temp, left, right, top, bottom, x, y, a, b, c, d, m, matrix, curved,
-    x1, y1, x2, y2, x3, y3, x4, y4, sum, target, length, t;
 
   var commands = {};
 
@@ -105,9 +100,6 @@
             this._updateLength();
           }
           return this._length;
-        },
-        set: function(v) {
-          // TODO: What should this do?
         }
       });
 
@@ -131,7 +123,7 @@
         }
       });
 
-      Object.defineProperty(Polygon.prototype, 'automatic', {
+      Object.defineProperty(object, 'automatic', {
         get: function() {
           return this._automatic;
         },
@@ -140,7 +132,7 @@
             return;
           }
           this._automatic = !!v;
-          method = this._automatic ? 'ignore' : 'listen';
+          var method = this._automatic ? 'ignore' : 'listen';
           _.each(this.vertices, function(v) {
             v[method]();
           });
@@ -179,9 +171,12 @@
 
           var bindVerts = _.bind(function(items) {
 
-            _.each(items, function(v) {
-              v.bind(Two.Events.change, updateVertices);
-            }, this);
+            // This function is called a lot
+            // when importing a large SVG
+            var i = items.length;
+            while(i--) {
+              items[i].bind(Two.Events.change, updateVertices);
+            }
 
             updateVertices();
 
@@ -210,7 +205,6 @@
           this._collection.bind(Two.Events.remove, unbindVerts);
 
           // Bind Initial Vertices
-          verticesChanged = true;
           bindVerts(this._collection);
 
         }
@@ -277,11 +271,11 @@
 
       parent = parent || this.parent;
 
-      points = _.map(this.vertices, function(v) {
+      var points = _.map(this.vertices, function(v) {
         return v.clone();
       });
 
-      clone = new Polygon(points, this.closed, this.curved, !this.automatic);
+      var clone = new Polygon(points, this.closed, this.curved, !this.automatic);
 
       _.each(Two.Shape.Properties, function(k) {
         clone[k] = this[k];
@@ -333,7 +327,7 @@
      */
     corner: function() {
 
-      rect = this.getBoundingClientRect(true);
+      var rect = this.getBoundingClientRect(true);
 
       rect.centroid = {
         x: rect.left + rect.width / 2,
@@ -354,7 +348,7 @@
      */
     center: function() {
 
-      rect = this.getBoundingClientRect(true);
+      var rect = this.getBoundingClientRect(true);
 
       rect.centroid = {
         x: rect.left + rect.width / 2,
@@ -393,16 +387,18 @@
     getBoundingClientRect: function(shallow) {
 
       // TODO: Update this to not __always__ update. Just when it needs to.
-      this._update();
+      this._update(true);
 
-      matrix = !!shallow ? this._matrix : getComputedMatrix(this);
+      var matrix = !!shallow ? this._matrix : getComputedMatrix(this);
 
-      border = this.linewidth / 2, temp;
-      left = Infinity, right = -Infinity;
-      top = Infinity, bottom = -Infinity;
+      var border = this.linewidth / 2, x, y;
+      var left = Infinity, right = -Infinity,
+          top = Infinity, bottom = -Infinity;
+
 
       _.each(this._vertices, function(v) {
-        x = v.x, y = v.y;
+        x = v.x;
+        y = v.y;
         v = matrix.multiply(x, y , 1);
         top = min(v.y - border, top);
         left = min(v.x - border, left);
@@ -426,15 +422,15 @@
      * coordinates to that percentage on this Two.Polygon's curve.
      */
     getPointAt: function(t, obj) {
+      var x, x1, x2, x3, x4, y, y1, y2, y3, y4, left, right;
+      var target = this.length * Math.min(Math.max(t, 0), 1);
+      var length = this.vertices.length;
+      var last = length - 1;
 
-      target = this.length * Math.min(Math.max(t, 0), 1);
-      length = this.vertices.length;
-      last = length - 1;
+      var a = null;
+      var b = null;
 
-      a = null;
-      b = null;
-
-      for (i = 0, l = this._lengths.length, sum = 0; i < l; i++) {
+      for (var i = 0, l = this._lengths.length, sum = 0; i < l; i++) {
 
         if (sum + this._lengths[i] > target) {
           a = this.vertices[this.closed ? Two.Utils.mod(i, length) : i];
@@ -455,10 +451,14 @@
       right = b.controls && b.controls.right;
       left = a.controls && a.controls.left;
 
-      x1 = b.x, y1 = b.y;
-      x2 = (right || b).x, y2 = (right || b).y;
-      x3 = (left || a).x, y3 = (left || a).y;
-      x4 = a.x, y4 = a.y;
+      x1 = b.x;
+      y1 = b.y;
+      x2 = (right || b).x;
+      y2 = (right || b).y;
+      x3 = (left || a).x;
+      y3 = (left || a).y;
+      x4 = a.x;
+      y4 = a.y;
 
       if (right && b._relative) {
         x2 += b.x;
@@ -494,24 +494,22 @@
         return this;
       }
 
-      _.each(this._vertices, function(p, i) {
-        p._command = i === 0 ? Two.Commands.move : Two.Commands.line;
-      }, this);
+      for (var i = 0; i < this._vertices.length; i++) {
+        this._vertices[i]._command = i === 0 ? Two.Commands.move : Two.Commands.line;
+      }
 
       return this;
 
     },
 
     subdivide: function(limit) {
-
+      //TODO: DRYness (function below)
       this._update();
 
-      last = this.vertices.length - 1;
-      b = this.vertices[last];
-      closed = this._closed || this.vertices[last]._command === Two.Commands.close;
-      curved = this._curved;
-      points = [];
-
+      var last = this.vertices.length - 1;
+      var b = this.vertices[last];
+      var closed = this._closed || this.vertices[last]._command === Two.Commands.close;
+      var points = [];
       _.each(this.vertices, function(a, i) {
 
         if (i <= 0 && !closed) {
@@ -524,7 +522,7 @@
           if (i > 0) {
             points[points.length - 1].command = Two.Commands.line;
           }
-          b = m = a;
+          b = a;
           return;
         }
 
@@ -546,7 +544,6 @@
           if (this._closed && this._automatic) {
 
             b = a;
-            a = m;
 
             verts = getSubdivisions(a, b, limit);
             points = points.concat(verts);
@@ -581,14 +578,13 @@
     },
 
     _updateLength: function(limit) {
-
+      //TODO: DRYness (function above)
       this._update();
 
-      last = this.vertices.length - 1;
-      b = this.vertices[last];
-      closed = this._closed || this.vertices[last]._command === Two.Commands.close;
-      curved = this._curved;
-      sum = 0;
+      var last = this.vertices.length - 1;
+      var b = this.vertices[last];
+      var closed = this._closed || this.vertices[last]._command === Two.Commands.close;
+      var sum = 0;
 
       if (_.isUndefined(this._lengths)) {
         this._lengths = [];
@@ -597,7 +593,7 @@
       _.each(this.vertices, function(a, i) {
 
         if ((i <= 0 && !closed) || a.command === Two.Commands.move) {
-          b = m = a;
+          b = a;
           this._lengths[i] = 0;
           return;
         }
@@ -608,7 +604,6 @@
         if (i >= last && closed) {
 
           b = a;
-          a = m;
 
           this._lengths[i + 1] = getCurveLength(a, b, limit);
           sum += this._lengths[i + 1];
@@ -629,15 +624,15 @@
 
       if (this._flagVertices) {
 
-        l = this.vertices.length;
-        last = l - 1;
+        var l = this.vertices.length;
+        var last = l - 1, v;
 
-        ia = round((this._beginning) * last);
-        ib = round((this._ending) * last);
+        var ia = round((this._beginning) * last);
+        var ib = round((this._ending) * last);
 
         this._vertices.length = 0;
 
-        for (i = ia; i < ib + 1; i++) {
+        for (var i = ia; i < ib + 1; i++) {
           v = this.vertices[i];
           this._vertices.push(v);
         }
@@ -656,10 +651,10 @@
 
     flagReset: function() {
 
-      this._flagVertices =  this._flagFill =  this._flagStroke
-        = this._flagLinewidth = this._flagOpacity = this._flagVisible
-        = this._flagCap = this._flagJoin = this._flagMiter
-        = this._flagClip = false;
+      this._flagVertices =  this._flagFill =  this._flagStroke =
+         this._flagLinewidth = this._flagOpacity = this._flagVisible =
+         this._flagCap = this._flagJoin = this._flagMiter = 
+         this._flagClip = false;
 
       Two.Shape.prototype.flagReset.call(this);
 
@@ -676,14 +671,20 @@
    */
 
   function getCurveLength(a, b, limit) {
+    // TODO: DRYness
+    var x1, x2, x3, x4, y1, y2, y3, y4;
 
-    right = b.controls && b.controls.right;
-    left = a.controls && a.controls.left;
+    var right = b.controls && b.controls.right;
+    var left = a.controls && a.controls.left;
 
-    x1 = b.x, y1 = b.y;
-    x2 = (right || b).x, y2 = (right || b).y;
-    x3 = (left || a).x, y3 = (left || a).y;
-    x4 = a.x, y4 = a.y;
+    x1 = b.x;
+    y1 = b.y;
+    x2 = (right || b).x;
+    y2 = (right || b).y;
+    x3 = (left || a).x;
+    y3 = (left || a).y;
+    x4 = a.x;
+    y4 = a.y;
 
     if (right && b._relative) {
       x2 += b.x;
@@ -700,14 +701,20 @@
   }
 
   function getSubdivisions(a, b, limit) {
+    // TODO: DRYness
+    var x1, x2, x3, x4, y1, y2, y3, y4;
 
-    right = b.controls && b.controls.right;
-    left = a.controls && a.controls.left;
+    var right = b.controls && b.controls.right;
+    var left = a.controls && a.controls.left;
 
-    x1 = b.x, y1 = b.y;
-    x2 = (right || b).x, y2 = (right || b).y;
-    x3 = (left || a).x, y3 = (left || a).y;
-    x4 = a.x, y4 = a.y;
+    x1 = b.x;
+    y1 = b.y;
+    x2 = (right || b).x;
+    y2 = (right || b).y;
+    x3 = (left || a).x;
+    y3 = (left || a).y;
+    x4 = a.x;
+    y4 = a.y;
 
     if (right && b._relative) {
       x2 += b.x;
@@ -723,4 +730,4 @@
 
   }
 
-})();
+})(Two);

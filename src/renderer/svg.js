@@ -1,9 +1,7 @@
-(function() {
+(function(Two) {
 
   // Localize variables
-  var mod = Two.Utils.mod, flagMatrix, elem, l, last, tag, name, command,
-    previous, next, a, c, vx, vy, ux, uy, ar, bl, br, cl, x, y, parent, clip,
-    root;
+  var mod = Two.Utils.mod, toFixed = Two.Utils.toFixed;
 
   var svg = {
 
@@ -16,8 +14,8 @@
      * Create an svg namespaced element.
      */
     createElement: function(name, attrs) {
-      tag = name;
-      elem = document.createElementNS(this.ns, tag);
+      var tag = name;
+      var elem = document.createElementNS(this.ns, tag);
       if (tag === 'svg') {
         attrs = _.defaults(attrs || {}, {
           version: this.version
@@ -29,44 +27,41 @@
       return elem;
     },
 
-    setAttribute: function(v, k) {
-      this.setAttribute(k, v);
-    },
-
     /**
      * Add attributes from an svg element.
      */
     setAttributes: function(elem, attrs) {
-      _.each(attrs, svg.setAttribute, elem);
+      for (var key in attrs) {
+        elem.setAttribute(key, attrs[key]);
+      }
       return this;
-    },
-
-    removeAttribute: function(v, k) {
-      this.removeAttribute(k);
     },
 
     /**
      * Remove attributes from an svg element.
      */
     removeAttributes: function(elem, attrs) {
-      _.each(attrs, svg.removeAttribute, elem);
+      for (var key in attrs) {
+        elem.removeAttribute(key);
+      }
       return this;
     },
 
     /**
      * Turn a set of vertices into a string for the d property of a path
      * element. It is imperative that the string collation is as fast as
-     * possible, because this call will be happening multiple times a 
+     * possible, because this call will be happening multiple times a
      * second.
      */
     toString: function(points, closed) {
 
       var l = points.length,
         last = l - 1,
-        d;  // The elusive last Two.Commands.move point
+        d, // The elusive last Two.Commands.move point
+        ret = '';
 
-      return _.map(points, function(b, i) {
-
+      for (var i = 0; i < l; i++) {
+        var b = points[i];
         var command;
         var prev = closed ? mod(i - 1, l) : Math.max(i - 1, 0);
         var next = closed ? mod(i + 1, l) : Math.min(i + 1, last);
@@ -76,8 +71,10 @@
 
         var vx, vy, ux, uy, ar, bl, br, cl;
 
-        var x = b.x.toFixed(3);
-        var y = b.y.toFixed(3);
+        // Access x and y directly,
+        // bypassing the getter
+        var x = toFixed(b._x);
+        var y = toFixed(b._y);
 
         switch (b._command) {
 
@@ -87,27 +84,27 @@
 
           case Two.Commands.curve:
 
-            var ar = (a.controls && a.controls.right) || a;
-            var bl = (b.controls && b.controls.left) || b;
+            ar = (a.controls && a.controls.right) || a;
+            bl = (b.controls && b.controls.left) || b;
 
             if (a._relative) {
-              vx = (ar.x + a.x).toFixed(3);
-              vy = (ar.y + a.y).toFixed(3);
+              vx = toFixed((ar.x + a.x));
+              vy = toFixed((ar.y + a.y));
             } else {
-              vx = ar.x.toFixed(3);
-              vy = ar.y.toFixed(3);
+              vx = toFixed(ar.x);
+              vy = toFixed(ar.y);
             }
 
             if (b._relative) {
-              ux = (bl.x + b.x).toFixed(3);
-              uy = (bl.y + b.y).toFixed(3);
+              ux = toFixed((bl.x + b.x));
+              uy = toFixed((bl.y + b.y));
             } else {
-              ux = bl.x.toFixed(3);
-              uy = bl.y.toFixed(3);
+              ux = toFixed(bl.x);
+              uy = toFixed(bl.y);
             }
 
-            command = ((i === 0) ? Two.Commands.move : Two.Commands.curve)
-              + ' ' + vx + ' ' + vy + ' ' + ux + ' ' + uy + ' ' + x + ' ' + y;
+            command = ((i === 0) ? Two.Commands.move : Two.Commands.curve) +
+              ' ' + vx + ' ' + vy + ' ' + ux + ' ' + uy + ' ' + x + ' ' + y;
             break;
 
           case Two.Commands.move:
@@ -133,25 +130,25 @@
             cl = (c.controls && c.controls.left) || c;
 
             if (b._relative) {
-              vx = (br.x + b.x).toFixed(3);
-              vy = (br.y + b.y).toFixed(3);
+              vx = toFixed((br.x + b.x));
+              vy = toFixed((br.y + b.y));
             } else {
-              vx = br.x.toFixed(3);
-              vy = br.y.toFixed(3);
+              vx = toFixed(br.x);
+              vy = toFixed(br.y);
             }
 
             if (c._relative) {
-              ux = (cl.x + c.x).toFixed(3);
-              uy = (cl.y + c.y).toFixed(3);
+              ux = toFixed((cl.x + c.x));
+              uy = toFixed((cl.y + c.y));
             } else {
-              ux = cl.x.toFixed(3);
-              uy = cl.y.toFixed(3);
+              ux = toFixed(cl.x);
+              uy = toFixed(cl.y);
             }
 
-            x = c.x.toFixed(3);
-            y = c.y.toFixed(3);
+            x = toFixed(c.x);
+            y = toFixed(c.y);
 
-            command += 
+            command +=
               ' C ' + vx + ' ' + vy + ' ' + ux + ' ' + uy + ' ' + x + ' ' + y;
           }
 
@@ -159,9 +156,9 @@
 
         }
 
-        return command;
-
-      }).join(' ');
+        ret += command + ' ';
+      }
+      return ret;
 
     },
 
@@ -192,7 +189,7 @@
       // TODO: How does this effect a f
       appendChild: function(id) {
 
-        elem = this.domElement.querySelector('#' + id);
+        var elem = this.domElement.querySelector('#' + id);
         var tag = elem.nodeName;
 
         if (!tag || !elem) {
@@ -213,7 +210,7 @@
       // TODO: Can speed up.
       removeChild: function(id) {
 
-        elem = this.domElement.querySelector('#' + id);
+        var elem = this.domElement.querySelector('#' + id);
         var tag = elem.nodeName;
 
         if (!tag || !elem) {
@@ -239,6 +236,13 @@
 
         this._update();
 
+        // Shortcut for hidden objects.
+        // Doesn't reset the flags, so changes are stored and
+        // applied once the object is visible again
+        if (this._opacity === 0 && !this._flagOpacity) {
+          return this;
+        }
+
         if (!this._renderer.elem) {
           this._renderer.elem = svg.createElement('g', {
             id: this.id
@@ -247,7 +251,7 @@
         }
 
         // _Update styles for the <g>
-        flagMatrix = this._matrix.manual || this._flagMatrix;
+        var flagMatrix = this._matrix.manual || this._flagMatrix;
         var context = {
           domElement: domElement,
           elem: this._renderer.elem
@@ -257,7 +261,14 @@
           this._renderer.elem.setAttribute('transform', 'matrix(' + this._matrix.toString() + ')');
         }
 
-        _.each(this.children, svg.group.renderChild, domElement);
+        for (var id in this.children) {
+          var child = this.children[id];
+          svg[child._renderer.type].render.call(child, domElement);
+        }
+
+        if (this._flagOpacity) {
+          this._renderer.elem.setAttribute('opacity', this._opacity);
+        }
 
         if (this._flagAdditions) {
           _.each(this.additions, svg.group.appendChild, context);
@@ -266,6 +277,12 @@
         if (this._flagSubtractions) {
           _.each(this.subtractions, svg.group.removeChild, context);
         }
+
+        /**
+         * Commented two-way functionality of clips / masks with groups and
+         * polygons. Uncomment when this bug is fixed:
+         * https://code.google.com/p/chromium/issues/detail?id=370951
+         */
 
         // if (this._flagClip) {
 
@@ -304,56 +321,71 @@
 
         this._update();
 
-        if (!this._renderer.elem) {
-          this._renderer.elem = svg.createElement('path', {
-            id: this.id
-          });
-          domElement.appendChild(this._renderer.elem);
+        // Shortcut for hidden objects.
+        // Doesn't reset the flags, so changes are stored and
+        // applied once the object is visible again
+        if (this._opacity === 0 && !this._flagOpacity) {
+          return this;
         }
 
-        elem = this._renderer.elem;
-        flagMatrix = this._matrix.manual || this._flagMatrix;
+        // Collect any attribute that needs to be changed here
+        var changed = {};
+
+        var flagMatrix = this._matrix.manual || this._flagMatrix;
 
         if (flagMatrix) {
-          elem.setAttribute('transform', 'matrix(' + this._matrix.toString() + ')');
+          changed.transform = 'matrix(' + this._matrix.toString() + ')';
         }
 
         if (this._flagVertices) {
-          vertices = svg.toString(this._vertices, this._closed);
-          elem.setAttribute('d', vertices);
+          var vertices = svg.toString(this._vertices, this._closed);
+          changed.d = vertices;
         }
 
         if (this._flagFill) {
-          elem.setAttribute('fill', this._fill);
+          changed.fill = this._fill;
         }
 
         if (this._flagStroke) {
-          elem.setAttribute('stroke', this._stroke);
+          changed.stroke = this._stroke;
         }
 
         if (this._flagLinewidth) {
-          elem.setAttribute('stroke-width', this._linewidth);
+          changed['stroke-width'] = this._linewidth;
         }
 
         if (this._flagOpacity) {
-          elem.setAttribute('stroke-opacity', this._opacity);
-          elem.setAttribute('fill-opacity', this._opacity);
+          changed['stroke-opacity'] = this._opacity;
+          changed['fill-opacity'] = this._opacity;
         }
 
         if (this._flagVisible) {
-          elem.setAttribute('visibility', this._visible ? 'visible' : 'hidden');
+          changed.visibility = this._visible ? 'visible' : 'hidden';
         }
 
         if (this._flagCap) {
-          elem.setAttribute('stroke-linecap', this._cap);
+          changed['stroke-linecap'] = this._cap;
         }
 
         if (this._flagJoin) {
-          elem.setAttribute('stroke-linejoin', this._join);
+          changed['stroke-linejoin'] = this._join;
         }
 
         if (this._flagMiter) {
-          elem.setAttribute('stroke-miterlimit', this.miter);
+          changed['stroke-miterlimit'] = this.miter;
+        }
+
+        // If there is no attached DOM element yet,
+        // create it with all necessary attributes.
+        if (!this._renderer.elem) {
+
+          changed.id = this.id;
+          this._renderer.elem = svg.createElement('path', changed);
+          domElement.appendChild(this._renderer.elem);
+
+        // Otherwise apply all pending attributes
+        } else {
+          svg.setAttributes(this._renderer.elem, changed);
         }
 
         if (this._flagClip) {
@@ -372,6 +404,12 @@
           }
 
         }
+
+        /**
+         * Commented two-way functionality of clips / masks with groups and
+         * polygons. Uncomment when this bug is fixed:
+         * https://code.google.com/p/chromium/issues/detail?id=370951
+         */
 
         // if (this._flagMask) {
         //   if (this._mask) {
@@ -436,4 +474,4 @@
 
   });
 
-})();
+})(Two);

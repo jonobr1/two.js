@@ -6,7 +6,7 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     meta: {
-      
+
       licenseFile : 'license.txt',
 
       depFiles : [
@@ -38,14 +38,18 @@ module.exports = function(grunt) {
 
     jshint: {
       options: {
-        laxbreak: true
+        laxbreak: true,
+        undef: true,
+        browser: true,
+        '-W009': true,
+        predef: [ "_", "Backbone", "Two", "requestAnimationFrame", "module", "define"]
       },
       all: ['Gruntfile.js', 'src/**/*.js']
     },
 
     concat: {
       options: {
-        separator: ';'
+        separator: '\n'
       },
       clean : {
         src: [
@@ -67,10 +71,16 @@ module.exports = function(grunt) {
     connect: {
       server: {
         options: {
-          keepalive: true,
           port: 3000
         }
       }
+    },
+
+    uglify: {
+       release: {
+         src: ['build/two.js'],
+        dest: 'build/two.min.js'
+       }
     },
 
     closureCompiler:  {
@@ -92,19 +102,33 @@ module.exports = function(grunt) {
         src: 'build/two.js',
         dest: 'build/two.min.js'
       }
-    }
-
+    },
+    qunit: {
+      all: {
+        options: {
+          urls: [
+            'http://localhost:3000/tests/noWebGL.html',
+          ]
+        }
+      }
+    },
   });
 
   // Load tasks
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-closure-tools');
+  grunt.loadNpmTasks('grunt-contrib-connect');
+  grunt.loadNpmTasks('grunt-contrib-qunit');
 
   // Default task
   grunt.registerTask('default', ['jshint' , 'concat', 'closureCompiler']);
 
+  // Uglify fallback
+  grunt.registerTask('build-uglify', ['jshint' , 'concat', 'uglify']);
+
+  // Headless testing
+  grunt.registerTask('test', ['connect', 'qunit']);
 };

@@ -69,8 +69,7 @@
     });
 
     _.each(params, function(v, k) {
-      if (k === 'fullscreen' || k === 'width' || k === 'height'
-        || k === 'autostart') {
+      if (k === 'fullscreen' || k === 'width' || k === 'height' || k === 'autostart') {
         return;
       }
       this[k] = v;
@@ -140,7 +139,7 @@
 
     Version: 'v0.4.0',
 
-    Identifier: 'two-',
+    Identifier: 'two_',
 
     Properties: {
       hierarchy: 'hierarchy',
@@ -306,9 +305,8 @@
        */
       getComputedMatrix: function(object, matrix) {
 
-        var matrices = [];
-        var matrix = (matrix && matrix.identity()) || new Two.Matrix();
-        var parent = object;
+        matrix = (matrix && matrix.identity()) || new Two.Matrix();
+        var parent = object, matrices = [];
 
         while (parent && parent._matrix) {
           matrices.push(parent._matrix);
@@ -329,60 +327,155 @@
 
       },
 
+      deltaTransformPoint: function(matrix, x, y) {
+
+        var dx = x * matrix.a + y * matrix.c + 0;
+        var dy = x * matrix.b + y * matrix.d + 0;
+
+        return new Two.Vector(dx, dy);
+
+      },
+
+      /**
+       * https://gist.github.com/2052247
+       */
+      decomposeMatrix: function(matrix) {
+
+        // calculate delta transform point
+        var px = Two.Utils.deltaTransformPoint(matrix, 0, 1);
+        var py = Two.Utils.deltaTransformPoint(matrix, 1, 0);
+
+        // calculate skew
+        var skewX = ((180 / Math.PI) * Math.atan2(px.y, px.x) - 90);
+        var skewY = ((180 / Math.PI) * Math.atan2(py.y, py.x));
+
+        return {
+            translateX: matrix.e,
+            translateY: matrix.f,
+            scaleX: Math.sqrt(matrix.a * matrix.a + matrix.b * matrix.b),
+            scaleY: Math.sqrt(matrix.c * matrix.c + matrix.d * matrix.d),
+            skewX: skewX,
+            skewY: skewY,
+            rotation: skewX // rotation is the same as skew x
+        };
+
+      },
+
+      /**
+       * Walk through item properties and pick the ones of interest.
+       * Will try to resolve styles applied via CSS
+       */
       applySvgAttributes: function(node, elem) {
+        var attributes = {}, styles = {}, i, key, value, attr;
 
-        _.each(node.attributes, function(v, k) {
+        // Not available in non browser environments
+        if (getComputedStyle) {
+          // Convert CSSStyleDeclaration to a normal object
+          var computedStyles = getComputedStyle(node);
+          i = computedStyles.length;
 
-          var property = v.nodeName;
+          while(i--) {
+            key = computedStyles[i];
+            value = computedStyles[key];
+            // Gecko returns undefined for unset properties
+            // Webkit returns the default value
+            if (value !== undefined) {
+              styles[key] = value;
+            }
+          }
+        }
 
-          switch (property) {
+        // Convert NodeMap to a normal object
+        i = node.attributes.length;
+        while(i--) {
+          attr = node.attributes[i];
+          attributes[attr.nodeName] = attr.value;
+        }
 
+        // Getting the correct opacity is a bit tricky, since SVG path elements don't
+        // support opacity as an attribute, but you can apply it via CSS.
+        // So we take the opacity and set (stroke/fill)-opacity to the same value.
+        if (!_.isUndefined(styles.opacity)) {
+          styles['stroke-opacity'] = styles.opacity;
+          styles['fill-opacity'] = styles.opacity;
+        }
+
+        // Merge attributes and applied styles (attributes take precedence)
+        _.extend(styles, attributes);
+
+        // Similarly visibility is influenced by the value of both display and visibility.
+        // Calculate a unified value here
+        styles.visible = (styles.display !== 'none') && (styles.visibility === 'visible');
+
+        // Now iterate the whole thing
+        for (key in styles) {
+          value = styles[key];
+
+          switch (key) {
             case 'transform':
+              if (value === 'none') break;
+              var m = node.getCTM();
 
-              // TODO:
-              // Need to figure out how to decompose matrix into
-              // translation, rotation, scale.
+              // Might happen when transform string is empty or not valid.
+              if (m === null) break;
 
-              // var transforms = node[k].baseVal;
-              // var matrix = new Two.Matrix();
-              // _.each(_.range(transforms.numberOfItems), function(i) {
-              //   var m = transforms.getItem(i).matrix;
-              //   matrix.multiply(m.a, m.b, m.c, m.d, m.e, m.f);
-              // });
-              // elem.setMatrix(matrix);
+              var matrix = new Two.Matrix(m.a, m.b, m.c, m.d, m.e, m.f);
+
+              // Option 1: edit the underlying matrix and don't force an auto calc.
+              // var m = node.getCTM();
+              // elem._matrix.manual = true;
+              // elem._matrix.set(m.a, m.b, m.c, m.d, m.e, m.f);
+
+              // Option 2: Decompose and infer Two.js related properties.
+              var transforms = Two.Utils.decomposeMatrix(node.getCTM());
+
+              elem.translation.set(transforms.translateX, transforms.translateY);
+              elem.rotation = transforms.rotation;
+              // Warning: Two.js elements only support uniform scalars...
+              elem.scale = transforms.scaleX;
+
+              // Override based on attributes.
+              if (styles.x) {
+                elem.translation.x = styles.x;
+              }
+
+              if (styles.y) {
+                elem.translation.y = styles.y;
+              }
+
               break;
-            case 'visibility':
-              elem.visible = !!v.nodeValue;
+            case 'visible':
+              elem.visible = value;
               break;
             case 'stroke-linecap':
-              elem.cap = v.nodeValue;
+              elem.cap = value;
               break;
             case 'stroke-linejoin':
-              elem.join = v.nodeValue;
+              elem.join = value;
               break;
             case 'stroke-miterlimit':
-              elem.miter = v.nodeValue;
+              elem.miter = value;
               break;
             case 'stroke-width':
-              elem.linewidth = parseFloat(v.nodeValue);
+              elem.linewidth = parseFloat(value);
               break;
             case 'stroke-opacity':
             case 'fill-opacity':
             case 'opacity':
-              elem.opacity = v.nodeValue;
+              elem.opacity = parseFloat(value);
               break;
             case 'fill':
-              elem.fill = v.nodeValue;
-              break;
             case 'stroke':
-              elem.stroke = v.nodeValue;
+              elem[key] = (value === 'none') ? 'transparent' : value;
               break;
             case 'id':
-              elem.id = v.nodeValue;
+              elem.id = value;
+              break;
+            case 'class':
+              elem.classList = value.split(' ');
               break;
           }
-
-        });
+        }
 
         return elem;
 
@@ -401,24 +494,23 @@
 
           var group = new Two.Group();
 
-          // TODO: This necessary?
-          this.add(group);
+          // Switched up order to inherit more specific styles
+          Two.Utils.applySvgAttributes(node, group);
 
-          _.each(node.childNodes, function(n) {
-
+          for (var i = 0, l = node.childNodes.length; i < l; i++) {
+            var n = node.childNodes[i];
             var tag = n.nodeName;
             if (!tag) return;
-            
+
             var tagName = tag.replace(/svg\:/ig, '').toLowerCase();
 
             if (tagName in Two.Utils.read) {
               var o = Two.Utils.read[tagName].call(this, n);
               group.add(o);
             }
+          }
 
-          }, this);
-
-          return Two.Utils.applySvgAttributes(node, group);
+          return group;
 
         },
 
@@ -427,7 +519,7 @@
           var points = node.getAttribute('points');
 
           var verts = [];
-          points.replace(/([\d\.?]+),([\d\.?]+)/g, function(match, p1, p2) {
+          points.replace(/(-?[\d\.?]+),(-?[\d\.?]+)/g, function(match, p1, p2) {
             verts.push(new Two.Anchor(parseFloat(p1), parseFloat(p2)));
           });
 
@@ -447,11 +539,67 @@
           var path = node.getAttribute('d');
 
           // Create a Two.Polygon from the paths.
-          var coord, control;
-          var coords, relative = false;
-          var closed = false;
+
+          var coord = new Two.Anchor();
+          var control, coords;
+          var closed = false, relative = false;
           var commands = path.match(/[a-df-z][^a-df-z]*/ig);
           var last = commands.length - 1;
+
+          // Go through commands and look for Inkscape irregularities
+
+          _.each(commands.slice(0), function(command, i) {
+
+            var type = command[0];
+            var lower = type.toLowerCase();
+            var items = command.slice(1).trim().split(/[\s,]+|(?=\s?[+\-])/);
+            var pre, post, result = [], bin;
+
+            if (i <= 0) {
+              commands = [];
+            }
+
+            switch (lower) {
+              case 'm':
+              case 'l':
+              case 'h':
+              case 'v':
+                if (items.length > 2) {
+                  bin = 2;
+                }
+                break;
+              case 'c':
+              case 's':
+              case 't':
+              case 'q':
+                if (items.length > 6) {
+                  bin = 6;
+                }
+                break;
+              case 'a':
+                // TODO: Handle Ellipses
+                break;
+            }
+
+            if (bin) {
+
+              for (var j = 0, l = items.length; j < l; j+=bin) {
+
+                result.push([type].concat(items.slice(j, j + bin)).join(' '));
+
+              }
+
+              commands = Array.prototype.concat.apply(commands, result);
+
+            } else {
+
+              commands.push(command);
+
+            }
+
+          });
+
+          // Create the vertices for our Two.Polygon
 
           var points = _.flatten(_.map(commands, function(command, i) {
 
@@ -533,19 +681,24 @@
                 coord = result;
                 break;
 
-              case 's':
               case 'c':
+              case 's':
 
-                x1 = coord.x, y1 = coord.y;
+                x1 = coord.x;
+                y1 = coord.y;
+
                 if (!control) {
                   control = new Two.Vector().copy(coord);
                 }
 
                 if (lower === 'c') {
 
-                  x2 = parseFloat(coords[0]), y2 = parseFloat(coords[1]);
-                  x3 = parseFloat(coords[2]), y3 = parseFloat(coords[3]);
-                  x4 = parseFloat(coords[4]), y4 = parseFloat(coords[5]);
+                  x2 = parseFloat(coords[0]);
+                  y2 = parseFloat(coords[1]);
+                  x3 = parseFloat(coords[2]);
+                  y3 = parseFloat(coords[3]);
+                  x4 = parseFloat(coords[4]);
+                  y4 = parseFloat(coords[5]);
 
                 } else {
 
@@ -554,16 +707,22 @@
 
                   reflection = Two.Utils.getReflection(coord, control, relative);
 
-                  x2 = reflection.x, y2 = reflection.y;
-                  x3 = parseFloat(coords[0]), y3 = parseFloat(coords[1]);
-                  x4 = parseFloat(coords[2]), y4 = parseFloat(coords[3]);
+                  x2 = reflection.x;
+                  y2 = reflection.y;
+                  x3 = parseFloat(coords[0]);
+                  y3 = parseFloat(coords[1]);
+                  x4 = parseFloat(coords[2]);
+                  y4 = parseFloat(coords[3]);
 
                 }
 
                 if (relative) {
-                  x2 += x1, y2 += y1;
-                  x3 += x1, y3 += y1;
-                  x4 += x1, y4 += y1;
+                  x2 += x1;
+                  y2 += y1;
+                  x3 += x1;
+                  y3 += y1;
+                  x4 += x1;
+                  y4 += y1;
                 }
 
                 if (!_.isObject(coord.controls)) {
@@ -586,36 +745,46 @@
               case 't':
               case 'q':
 
-                x1 = coord.x, y1 = coord.y;
+                x1 = coord.x;
+                y1 = coord.y;
 
                 if (!control) {
                   control = new Two.Vector().copy(coord);
                 }
 
                 if (control.isZero()) {
-                  x2 = x1, y2 = y1;
+                  x2 = x1;
+                  y2 = y1;
                 } else {
-                  x2 = control.x, y1 = control.y;
+                  x2 = control.x;
+                  y1 = control.y;
                 }
 
                 if (lower === 'q') {
 
-                  x3 = parseFloat(coords[0]), y3 = parseFloat(coords[1]);
-                  x4 = parseFloat(coords[1]), y4 = parseFloat(coords[2]);
+                  x3 = parseFloat(coords[0]);
+                  y3 = parseFloat(coords[1]);
+                  x4 = parseFloat(coords[1]);
+                  y4 = parseFloat(coords[2]);
 
                 } else {
 
                   reflection = Two.Utils.getReflection(coord, control, relative);
 
-                  x3 = reflection.x, y3 = reflection.y;
-                  x4 = parseFloat(coords[0]), y4 = parseFloat(coords[1]);
+                  x3 = reflection.x;
+                  y3 = reflection.y;
+                  x4 = parseFloat(coords[0]);
+                  y4 = parseFloat(coords[1]);
 
                 }
 
                 if (relative) {
-                  x2 += x1, y2 += y1;
-                  x3 += x1, y3 += y1;
-                  x4 += x1, y4 += y1;
+                  x2 += x1;
+                  y2 += y1;
+                  x3 += x1;
+                  y3 += y1;
+                  x4 += x1;
+                  y4 += y1;
                 }
 
                 if (!_.isObject(coord.controls)) {
@@ -764,7 +933,7 @@
        */
       subdivide: function(x1, y1, x2, y2, x3, y3, x4, y4, limit) {
 
-        var limit = limit || Two.Utils.Curve.RecursionLimit;
+        limit = limit || Two.Utils.Curve.RecursionLimit;
         var amount = limit + 1;
 
         // TODO: Issue 73
@@ -787,8 +956,8 @@
 
       getPointOnCubicBezier: function(t, a, b, c, d) {
         var k = 1 - t;
-        return (k * k * k * a) + (3 * k * k * t * b) + (3 * k * t * t * c)
-          + (t * t * t * d);
+        return (k * k * k * a) + (3 * k * k * t * b) + (3 * k * t * t * c) +
+           (t * t * t * d);
       },
 
       /**
@@ -988,6 +1157,12 @@
 
       },
 
+      // A pretty fast toFixed(3) alternative
+      // See http://jsperf.com/parsefloat-tofixed-vs-math-round/18
+      toFixed: function(v) {
+        return Math.floor(v * 1000) / 1000;
+      },
+
       mod: function(v, l) {
 
         while (v < 0) {
@@ -999,7 +1174,7 @@
       },
 
       /**
-       * Array like collection that triggers inserted and removed events 
+       * Array like collection that triggers inserted and removed events
        * removed : pop / shift / splice
        * inserted : push / unshift / splice (with > 2 arguments)
        */
@@ -1344,8 +1519,12 @@
      * distinction should be made that this doesn't `import` svg's, it solely
      * interprets them into something compatible for Two.js — this is slightly
      * different than a direct transcription.
+     *
+     * @param {Object} svgNode - The node to be parsed
+     * @param {Boolean} noWrappingGroup - Don't create a top-most group but
+     *                                    append all contents directly
      */
-    interpret: function(svgNode) {
+    interpret: function(svgNode, noWrapInGroup) {
 
       var tag = svgNode.tagName.toLowerCase();
 
@@ -1355,7 +1534,11 @@
 
       var node = Two.Utils.read[tag].call(this, svgNode);
 
-      this.add(node);
+      if (noWrapInGroup && node instanceof Two.Group) {
+        this.add(_.values(node.children));
+      } else {
+        this.add(node);
+      }
 
       return node;
 
@@ -1386,7 +1569,7 @@
 
     requestAnimationFrame(arguments.callee);
 
-    _.each(Two.Instances, function(t) {
+    Two.Instances.forEach(function(t) {
 
       if (t.playing) {
         t.update();

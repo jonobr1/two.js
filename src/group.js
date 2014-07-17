@@ -1,15 +1,11 @@
-(function() {
+(function(Two) {
 
   /**
    * Constants
    */
   var min = Math.min, max = Math.max;
 
-  // Localized variables
-  var secret, parent, children, group, rect, corner, l, objects, grandparent,
-    ids, id, left, right, top, bottom, matrix, a, b, c, d, index;
-
-  var Group = Two.Group = function(o) {
+  var Group = Two.Group = function() {
 
     Two.Shape.call(this, true);
 
@@ -26,8 +22,30 @@
 
     MakeObservable: function(object) {
 
+      var properties = Two.Polygon.Properties.slice(0);
+      var oi = _.indexOf(properties, 'opacity');
+
+      if (oi >= 0) {
+
+        properties.splice(oi, 1);
+
+        Object.defineProperty(object, 'opacity', {
+
+          get: function() {
+            return this._opacity;
+          },
+
+          set: function(v) {
+            this._opacity = v;
+            this._flagOpacity = true;
+          }
+
+        });
+
+      }
+
       Two.Shape.MakeObservable(object);
-      Group.MakeGetterSetters(object, Two.Polygon.Properties);
+      Group.MakeGetterSetters(object, properties);
 
       Object.defineProperty(object, 'mask', {
         get: function() {
@@ -83,6 +101,7 @@
 
     _flagAdditions: false,
     _flagSubtractions: false,
+    _flagOpacity: true,
 
     _flagMask: false,
 
@@ -115,10 +134,10 @@
 
       parent = parent || this.parent;
 
-      group = new Group();
+      var group = new Group();
       parent.add(group);
 
-      children = _.map(this.children, function(child) {
+      var children = _.map(this.children, function(child) {
         return child.clone(group);
       });
 
@@ -153,8 +172,8 @@
      */
     corner: function() {
 
-      rect = this.getBoundingClientRect(true);
-      corner = { x: rect.left, y: rect.top };
+      var rect = this.getBoundingClientRect(true),
+       corner = { x: rect.left, y: rect.top };
 
       _.each(this.children, function(child) {
         child.translation.subSelf(corner);
@@ -170,7 +189,7 @@
      */
     center: function() {
 
-      rect = this.getBoundingClientRect(true);
+      var rect = this.getBoundingClientRect(true);
 
       rect.centroid = {
         x: rect.left + rect.width / 2,
@@ -188,17 +207,72 @@
     },
 
     /**
-     * Add an object to the group.
+     * Recursively search for id. Returns the first element found.
+     * Returns null if none found.
      */
-    add: function(o) {
+    getById: function (id) {
+      var search = function (node, id) {
+        if (node.id === id) {
+          return node;
+        }
+        for (var child in node.children) {
+          var found = search(node.children[child], id);
+          if (found) return found;
+        }
+      };
+      return search(this, id) || null;
+    },
 
-      l = arguments.length,
-        objects = o,
+    /**
+     * Recursively search for classes. Returns an array of matching elements.
+     * Empty array if none found.
+     */
+    getByClassName: function (cl) {
+      var found = [];
+      var search = function (node, cl) {
+        if (node.classList.indexOf(cl) != -1) {
+          found.push(node);
+        }
+        for (var child in node.children) {
+          search(node.children[child], cl);
+        }
+        return found;
+      };
+      return search(this, cl);
+    },
+
+    /**
+     * Recursively search for children of a specific type,
+     * e.g. Two.Polygon. Pass a reference to this type as the param.
+     * Returns an empty array if none found.
+     */
+    getByType: function(type) {
+      var found = [];
+      var search = function (node, type) {
+        for (var id in node.children) {
+          if (node.children[id] instanceof type) {
+            found.push(node.children[id]);
+          } else if (node.children[id] instanceof Two.Group) {
+            search(node.children[id], type);
+          }
+        }
+        return found;
+      };
+      return search(this, type);
+    },
+
+    /**
+     * Add objects to the group.
+     */
+    add: function(objects) {
+
+      var l = arguments.length,
         children = this.children,
         grandparent = this.parent,
-        ids = this.additions;
+        ids = this.additions,
+        id, parent, index;
 
-      if (!_.isArray(o)) {
+      if (!_.isArray(objects)) {
         objects = _.toArray(arguments);
       }
 
@@ -210,7 +284,8 @@
           return;
         }
 
-        id = object.id, parent = object.parent;
+        id = object.id;
+        parent = object.parent;
 
         if (_.isUndefined(children[id])) {
           // Release object from previous parent.
@@ -235,28 +310,29 @@
     },
 
     /**
-     * Remove an object from the group.
+     * Remove objects from the group.
      */
-    remove: function(o) {
+    remove: function(objects) {
 
-      l = arguments.length,
-        objects = o,
+      var l = arguments.length,
         children = this.children,
         grandparent = this.parent,
-        ids = this.subtractions;
+        ids = this.subtractions,
+        id, parent, index, grandchildren;
 
       if (l <= 0 && grandparent) {
         grandparent.remove(this);
         return this;
       }
 
-      if (!_.isArray(o)) {
+      if (!_.isArray(objects)) {
         objects = _.toArray(arguments);
       }
 
       _.each(objects, function(object) {
 
-        id = object.id, grandchildren = object.children;
+        id = object.id;
+        grandchildren = object.children;
         parent = object.parent;
 
         if (!(id in children)) {
@@ -284,21 +360,22 @@
      * Return an object with top, left, right, bottom, width, and height
      * parameters of the group.
      */
-    getBoundingClientRect: function(shallow) {
+    getBoundingClientRect: function() {
+      var rect;
 
       // TODO: Update this to not __always__ update. Just when it needs to.
-      this._update();
+      this._update(true);
 
       // Variables need to be defined here, because of nested nature of groups.
-      var left = Infinity, right = -Infinity;
-      var top = Infinity, bottom = -Infinity;
+      var left = Infinity, right = -Infinity,
+          top = Infinity, bottom = -Infinity;
 
       _.each(this.children, function(child) {
 
         rect = child.getBoundingClientRect();
 
-        if (!_.isNumber(rect.top) || !_.isNumber(rect.left)
-          || !_.isNumber(rect.right) || !_.isNumber(rect.bottom)) {
+        if (!_.isNumber(rect.top)   || !_.isNumber(rect.left)   ||
+            !_.isNumber(rect.right) || !_.isNumber(rect.bottom)) {
           return;
         }
 
@@ -363,7 +440,7 @@
         this._flagSubtractions = false;
       }
 
-      this._flagMask = false;
+      this._flagMask = this._flagOpacity = false;
 
       Two.Shape.prototype.flagReset.call(this);
 
@@ -375,4 +452,4 @@
 
   Group.MakeObservable(Group.prototype);
 
-})();
+})(Two);

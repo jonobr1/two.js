@@ -1,23 +1,15 @@
-(function() {
+(function(Two) {
 
   /**
    * Constants
    */
 
-  var CanvasRenderer = Two[Two.Types.canvas],
-    multiplyMatrix = Two.Matrix.Multiply,
+  var multiplyMatrix = Two.Matrix.Multiply,
     mod = Two.Utils.mod,
     identity = [1, 0, 0, 0, 1, 0, 0, 0, 1],
     transformation = new Two.Array(9),
-    getRatio = Two.Utils.getRatio;
-
-  // Localized variables
-  var parent, flagParentMatrix, flagMatrix, flagTexture, left, right, top,
-    bottom, x, y, a, b, c, d, controls, cl, cr, width, height, commands, canvas,
-    ctx, scale, stroke, linewidth, fill, opacity, cap, join, miter, closed,
-    length, last, centroid, cx, cy, next, prev, ux, uy, vx, vy, ar, bl, br,
-    program, linked, shader, compiled, error, gl, resolutionLocation, fs, vs,
-    params;
+    getRatio = Two.Utils.getRatio,
+    toFixed = Two.Utils.toFixed;
 
   var webgl = {
 
@@ -42,9 +34,9 @@
 
         this._update();
 
-        parent = this.parent;
-        flagParentMatrix = (parent._matrix && parent._matrix.manual) || parent._flagMatrix;
-        flagMatrix = this._matrix.manual || this._flagMatrix;
+        var parent = this.parent;
+        var flagParentMatrix = (parent._matrix && parent._matrix.manual) || parent._flagMatrix;
+        var flagMatrix = this._matrix.manual || this._flagMatrix;
 
         if (flagParentMatrix || flagMatrix) {
 
@@ -79,6 +71,11 @@
           gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
 
         }
+
+        this._flagOpacity = parent._flagOpacity || this._flagOpacity;
+
+        this._renderer.opacity = this._opacity
+          * (parent && parent._renderer ? parent._renderer.opacity : 1);
 
         _.each(this.children, webgl.group.renderChild, {
           gl: gl,
@@ -116,13 +113,13 @@
 
         // Calculate what changed
 
-        parent = forcedParent || this.parent;
-        flagParentMatrix = parent._matrix.manual || parent._flagMatrix;
-        flagMatrix = this._matrix.manual || this._flagMatrix;
-        flagTexture = this._flagVertices || this._flagFill
+        var parent = this.parent;
+        var flagParentMatrix = parent._matrix.manual || parent._flagMatrix;
+        var flagMatrix = this._matrix.manual || this._flagMatrix;
+        var flagTexture = this._flagVertices || this._flagFill
           || this._flagStroke || this._flagLinewidth || this._flagOpacity
-          || this._flagVisible || this._flagCap || this._flagJoin
-          || this._flagMiter || this._flagScale;
+          || parent._flagOpacity || this._flagVisible || this._flagCap
+          || this._flagJoin || this._flagMiter || this._flagScale;
 
         this._update();
 
@@ -150,6 +147,8 @@
           if (!this._renderer.triangles) {
             this._renderer.triangles = new Two.Array(12);
           }
+
+          this._renderer.opacity = this._opacity * parent._renderer.opacity;
 
           webgl.getBoundingClientRect(this._vertices, this._linewidth, this._renderer.rect);
           webgl.getTriangles(this._renderer.rect, this._renderer.triangles);
@@ -198,12 +197,14 @@
      */
     getBoundingClientRect: function(vertices, border, rect) {
 
-      left = Infinity, right = -Infinity;
-      top = Infinity, bottom = -Infinity;
+      var left = Infinity, right = -Infinity,
+          top = Infinity, bottom = -Infinity,
+          width, height;
 
-      _.each(vertices, function(v, i) {
+      vertices.forEach(function(v) {
 
-        x = v.x, y = v.y, a, b, c, d, controls = v.controls;
+        var x = v.x, y = v.y, controls = v.controls;
+        var a, b, c, d, cl, cr;
 
         top = Math.min(y, top);
         left = Math.min(x, left);
@@ -221,8 +222,10 @@
           return;
         }
 
-        a = v._relative ? cl.x + x : cl.x, b = v._relative ? cl.y + y : cl.y;
-        c = v._relative ? cr.x + x : cr.x, d = v._relative ? cr.y + y : cr.y;
+        a = v._relative ? cl.x + x : cl.x;
+        b = v._relative ? cl.y + y : cl.y;
+        c = v._relative ? cr.x + x : cr.x;
+        d = v._relative ? cr.y + y : cr.y;
 
         if (!a || !b || !c || !d) {
           return;
@@ -265,10 +268,10 @@
 
     getTriangles: function(rect, triangles) {
 
-      top = rect.top;
-      left = rect.left;
-      right = rect.right;
-      bottom = rect.bottom;
+      var top = rect.top,
+          left = rect.left,
+          right = rect.right,
+          bottom = rect.bottom;
 
       // First Triangle
 
@@ -296,29 +299,29 @@
 
     updateCanvas: function(elem) {
 
-      commands = elem._vertices;
-      canvas = this.canvas;
-      ctx = this.ctx;
+      var commands = elem._vertices;
+      var canvas = this.canvas;
+      var ctx = this.ctx;
 
       // Styles
-
-      scale = elem._renderer.scale;
-      stroke = elem._stroke;
-      linewidth = elem._linewidth * scale;
-      fill = elem._fill;
-      opacity = elem._opacity;
-      cap = elem._cap;
-      join = elem._join;
-      miter = elem._miter;
-      closed = elem._closed;
-      length = commands.length;
-      last = length - 1;
+      var scale = elem._renderer.scale;
+      var stroke = elem._stroke;
+      var linewidth = elem._linewidth * scale;
+      var fill = elem._fill;
+      var opacity = elem._renderer.opacity || elem._opacity;
+      var cap = elem._cap;
+      var join = elem._join;
+      var miter = elem._miter;
+      var closed = elem._closed;
+      var length = commands.length;
+      var last = length - 1;
 
       canvas.width = Math.max(Math.ceil(elem._renderer.rect.width * scale), 1);
       canvas.height = Math.max(Math.ceil(elem._renderer.rect.height * scale), 1);
 
-      centroid = elem._renderer.rect.centroid;
-      cx = centroid.x * scale, cy = centroid.y * scale;
+      var centroid = elem._renderer.rect.centroid;
+      var cx = centroid.x * scale;
+      var cy = centroid.y * scale;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -344,11 +347,13 @@
         ctx.globalAlpha = opacity;
       }
 
+      var d;
       ctx.beginPath();
-      _.each(commands, function(b, i) {
+      commands.forEach(function(b, i) {
 
-        next, prev, a, c, ux, uy, vx, vy, ar, bl, br, cl;
-        x = (b.x * scale + cx).toFixed(3), y = (b.y * scale + cy).toFixed(3);
+        var next, prev, a, c, ux, uy, vx, vy, ar, bl, br, cl, x, y;
+        x = toFixed(b.x * scale + cx);
+        y = toFixed(b.y * scale + cy);
 
         switch (b._command) {
 
@@ -361,53 +366,54 @@
             prev = closed ? mod(i - 1, length) : Math.max(i - 1, 0);
             next = closed ? mod(i + 1, length) : Math.min(i + 1, last);
 
-            a = commands[prev], c = commands[next];
+            a = commands[prev];
+            c = commands[next];
             ar = (a.controls && a.controls.right) || a;
             bl = (b.controls && b.controls.left) || b;
 
             if (a._relative) {
-              vx = ((ar.x + a.x) * scale + cx).toFixed(3);
-              vy = ((ar.y + a.y) * scale + cy).toFixed(3);
+              vx = toFixed((ar.x + a.x) * scale + cx);
+              vy = toFixed((ar.y + a.y) * scale + cy);
             } else {
-              vx = (ar.x * scale + cx).toFixed(3);
-              vy = (ar.y * scale + cy).toFixed(3);
+              vx = toFixed(ar.x * scale + cx);
+              vy = toFixed(ar.y * scale + cy);
             }
 
             if (b._relative) {
-              ux = ((bl.x + b.x) * scale + cx).toFixed(3);
-              uy = ((bl.y + b.y) * scale + cy).toFixed(3);
+              ux = toFixed((bl.x + b.x) * scale + cx);
+              uy = toFixed((bl.y + b.y) * scale + cy);
             } else {
-              ux = (bl.x * scale + cx).toFixed(3);
-              uy = (bl.y * scale + cy).toFixed(3);
+              ux = toFixed(bl.x * scale + cx);
+              uy = toFixed(bl.y * scale + cy);
             }
 
             ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
 
             if (i >= last && closed) {
-
+              // FIXME: d is undefined here?
               c = d;
 
               br = (b.controls && b.controls.right) || b;
               cl = (c.controls && c.controls.left) || c;
 
               if (b._relative) {
-                vx = ((br.x + b.x) * scale + cx).toFixed(3);
-                vy = ((br.y + b.y) * scale + cy).toFixed(3);
+                vx = toFixed((br.x + b.x) * scale + cx);
+                vy = toFixed((br.y + b.y) * scale + cy);
               } else {
-                vx = (br.x * scale + cx).toFixed(3);
-                vy = (br.y * scale + cy).toFixed(3);
+                vx = toFixed(br.x * scale + cx);
+                vy = toFixed(br.y * scale + cy);
               }
 
               if (c._relative) {
-                ux = ((cl.x + c.x) * scale + cx).toFixed(3);
-                uy = ((cl.y + c.y) * scale + cx).toFixed(3);
+                ux = toFixed((cl.x + c.x) * scale + cx);
+                uy = toFixed((cl.y + c.y) * scale + cx);
               } else {
-                ux = (cl.x * scale + cx).toFixed(3);
-                uy = (cl.y * scale + cy).toFixed(3);
+                ux = toFixed(cl.x * scale + cx);
+                uy = toFixed(cl.y * scale + cy);
               }
 
-              x = (c.x * scale + cx).toFixed(3);
-              y = (c.y * scale + cy).toFixed(3);
+              x = toFixed(c.x * scale + cx);
+              y = toFixed(c.y * scale + cy);
 
               ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
 
@@ -498,7 +504,7 @@
     program: {
 
       create: function(gl, shaders) {
-
+        var program, linked, error;
         program = gl.createProgram();
         _.each(shaders, function(s) {
           gl.attachShader(program, s);
@@ -521,7 +527,7 @@
     shaders: {
 
       create: function(gl, source, type) {
-
+        var shader, compiled, error;
         shader = gl.createShader(gl[type]);
         gl.shaderSource(shader, source);
         gl.compileShader(shader);
@@ -580,6 +586,7 @@
 
   var Renderer = Two[Two.Types.webgl] = function(options) {
 
+    var params, gl, vs, fs;
     this.domElement = options.domElement || document.createElement('canvas');
 
     // Everything drawn on the canvas needs to come from the stage.
@@ -588,7 +595,8 @@
 
     this._renderer = {
       matrix: new Two.Array(identity),
-      scale: 1
+      scale: 1,
+      opacity: 1
     };
     this._flagMatrix = true;
 
@@ -605,7 +613,7 @@
 
     this.overdraw = params.overdraw;
 
-    gl = this.ctx = this.domElement.getContext('webgl', params) || 
+    gl = this.ctx = this.domElement.getContext('webgl', params) ||
       this.domElement.getContext('experimental-webgl', params);
 
     if (!this.ctx) {
@@ -665,14 +673,13 @@
       height *= this.ratio;
 
       // Set for this.stage parent scaling to account for HDPI
-      this._renderer.matrix[0] = this._renderer.matrix[4]
-        = this._renderer.scale = this.ratio;
+      this._renderer.matrix[0] = this._renderer.matrix[4] = this._renderer.scale = this.ratio;
 
       this._flagMatrix = true;
 
       this.ctx.viewport(0, 0, width, height);
 
-      resolutionLocation = this.ctx.getUniformLocation(
+      var resolutionLocation = this.ctx.getUniformLocation(
         this.program, 'u_resolution');
       this.ctx.uniform2f(resolutionLocation, width, height);
 
@@ -682,7 +689,7 @@
 
     render: function() {
 
-      gl = this.ctx;
+      var gl = this.ctx;
 
       if (!this.overdraw) {
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -697,4 +704,4 @@
 
   });
 
-})();
+})(Two);
