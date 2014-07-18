@@ -192,12 +192,17 @@
       appendChild: function(id) {
 
         var elem = this.domElement.querySelector('#' + id);
-        var tag = elem.nodeName;
 
-        if (!tag || !elem) {
+        if (!elem) {
           return;
         }
-        
+
+        var tag = elem.nodeName;
+
+        if (!tag) {
+          return;
+        }
+
         var tagName = tag.replace(/svg\:/ig, '').toLowerCase();
 
         // Defer additions while clipping
@@ -213,12 +218,17 @@
       removeChild: function(id) {
 
         var elem = this.domElement.querySelector('#' + id);
-        var tag = elem.nodeName;
 
-        if (!tag || !elem) {
+        if (!elem) {
           return;
         }
-        
+
+        var tag = elem.nodeName;
+
+        if (!tag) {
+          return;
+        }
+
         var tagName = tag.replace(/svg\:/ig, '').toLowerCase();
 
         // Defer subtractions while clipping
