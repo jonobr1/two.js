@@ -390,7 +390,7 @@
             ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
 
             if (i >= last && closed) {
-              // FIXME: d is undefined here?
+
               c = d;
 
               br = (b.controls && b.controls.right) || b;
@@ -406,7 +406,7 @@
 
               if (c._relative) {
                 ux = toFixed((cl.x + c.x) * scale + cx);
-                uy = toFixed((cl.y + c.y) * scale + cx);
+                uy = toFixed((cl.y + c.y) * scale + cy);
               } else {
                 ux = toFixed(cl.x * scale + cx);
                 uy = toFixed(cl.y * scale + cy);

@@ -419,9 +419,7 @@
               // Might happen when transform string is empty or not valid.
               if (m === null) break;
 
-              var matrix = new Two.Matrix(m.a, m.b, m.c, m.d, m.e, m.f);
-
-              // Option 1: edit the underlying matrix and don't force an auto calc.
+              // // Option 1: edit the underlying matrix and don't force an auto calc.
               // var m = node.getCTM();
               // elem._matrix.manual = true;
               // elem._matrix.set(m.a, m.b, m.c, m.d, m.e, m.f);
@@ -546,7 +544,7 @@
           var commands = path.match(/[a-df-z][^a-df-z]*/ig);
           var last = commands.length - 1;
 
-          // Go through commands and look for Inkscape irregularities
+          // Split up polybeziers
 
           _.each(commands.slice(0), function(command, i) {
 
@@ -560,18 +558,26 @@
             }
 
             switch (lower) {
-              case 'm':
-              case 'l':
               case 'h':
               case 'v':
+                if (items.length > 1) {
+                  bin = 1;
+                }
+                break;
+              case 'm':
+              case 'l':
+              case 't':
                 if (items.length > 2) {
                   bin = 2;
                 }
                 break;
-              case 'c':
               case 's':
-              case 't':
               case 'q':
+                if (items.length > 4) {
+                  bin = 4;
+                }
+                break;
+              case 'c':
                 if (items.length > 6) {
                   bin = 6;
                 }
@@ -583,9 +589,24 @@
 
             if (bin) {
 
-              for (var j = 0, l = items.length; j < l; j+=bin) {
+              for (var j = 0, l = items.length, times = 0; j < l; j+=bin) {
 
-                result.push([type].concat(items.slice(j, j + bin)).join(' '));
+                var ct = type;
+                if (times > 0) {
+
+                  switch (type) {
+                    case 'm':
+                      ct = 'l';
+                      break;
+                    case 'M':
+                      ct = 'L';
+                      break;
+                  }
+
+                }
+
+                result.push([ct].concat(items.slice(j, j + bin)).join(' '));
+                times++;
 
               }
 
@@ -688,7 +709,7 @@
                 y1 = coord.y;
 
                 if (!control) {
-                  control = new Two.Vector().copy(coord);
+                  control = new Two.Vector();//.copy(coord);
                 }
 
                 if (lower === 'c') {
@@ -705,7 +726,7 @@
                   // Calculate reflection control point for proper x2, y2
                   // inclusion.
 
-                  reflection = Two.Utils.getReflection(coord, control, relative);
+                  reflection = getReflection(coord, control, relative);
 
                   x2 = reflection.x;
                   y2 = reflection.y;
@@ -749,7 +770,7 @@
                 y1 = coord.y;
 
                 if (!control) {
-                  control = new Two.Vector().copy(coord);
+                  control = new Two.Vector();//.copy(coord);
                 }
 
                 if (control.isZero()) {
@@ -769,7 +790,7 @@
 
                 } else {
 
-                  reflection = Two.Utils.getReflection(coord, control, relative);
+                  reflection = getReflection(coord, control, relative);
 
                   x3 = reflection.x;
                   y3 = reflection.y;
@@ -1108,16 +1129,16 @@
       },
 
       /**
-       * Get the reflection of a point "b" about point "a".
+       * Get the reflection of a point "b" about point "a". Where "a" is in
+       * absolute space and "b" is relative to "a".
+       *
+       * http://www.w3.org/TR/SVG11/implnote.html#PathElementImplementationNotes
        */
       getReflection: function(a, b, relative) {
 
-        var d = b.distanceTo(Two.Vector.zero);
-        var theta = angleBetween(Two.Vector.zero, b);
-
         return new Two.Vector(
-          d * cos(theta) + (relative ? 0 : a.x),
-          d * sin(theta) + (relative ? 0 : a.y)
+          2 * a.x - (b.x + a.x) - (relative ? a.x : 0),
+          2 * a.y - (b.y + a.y) - (relative ? a.y : 0)
         );
 
       },
@@ -1182,7 +1203,7 @@
 
         Array.call(this);
 
-        if(arguments.length > 1) {
+        if (arguments.length > 1) {
           Array.prototype.push.apply(this, arguments);
         } else if( arguments[0] && Array.isArray(arguments[0]) ) {
           Array.prototype.push.apply(this, arguments[0]);
@@ -1261,7 +1282,8 @@
     getBackingStoreRatio = Two.Utils.getBackingStoreRatio,
     getPointOnCubicBezier = Two.Utils.getPointOnCubicBezier,
     getCurveLength = Two.Utils.getCurveLength,
-    integrate = Two.Utils.integrate;
+    integrate = Two.Utils.integrate,
+    getReflection = Two.Utils.getReflection;
 
   _.extend(Two.prototype, Backbone.Events, {
 

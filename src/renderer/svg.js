@@ -157,7 +157,10 @@
         }
 
         ret += command + ' ';
+
       }
+
+
       return ret;
 
     },
