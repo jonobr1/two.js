@@ -2,4 +2,3 @@ node_modules
 *.DS_Store
 styles/
 junk/
-build
