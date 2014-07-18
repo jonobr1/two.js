@@ -404,8 +404,9 @@
         _.extend(styles, attributes);
 
         // Similarly visibility is influenced by the value of both display and visibility.
-        // Calculate a unified value here
-        styles.visible = (styles.display !== 'none') && (styles.visibility === 'visible');
+        // Calculate a unified value here which defaults to `true`.
+        styles.visible = !(_.isUndefined(styles.display) && styles.display === 'none')
+          || (_.isUndefined(styles.visibility) && styles.visibility === 'hidden');
 
         // Now iterate the whole thing
         for (key in styles) {
