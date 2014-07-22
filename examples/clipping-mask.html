@@ -77,7 +77,8 @@
                 shape.fill = color;
               }
 
-              shape.step = Math.random() * Math.PI / 60;
+              shape.step = (Math.floor(Math.random() * 8) / 8) * Math.PI / 60;
+              shape.step *= Math.random() > 0.5 ? - 1 : 1;
 
               container.add(shape);
 
