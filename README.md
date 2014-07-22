@@ -59,6 +59,7 @@ grunt build-uglify
 instead to minify the build with uglify.
 
 ## Change Log
+For the latest nightly changes checkout the `dev` branch [here](../../tree/dev).
 
 ##### v0.4.0
 + Updated `Two.interpret` to handle polybezier path data
