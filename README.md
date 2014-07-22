@@ -60,7 +60,7 @@ instead to minify the build with uglify.
 
 ## Change Log
 
-##### Nightly
+##### v0.4.0
 + Updated `Two.interpret` to handle polybezier path data
 + Added `Two.Group.mask` and `Two.Polygon.clip` in order to create clipping masks
 + `Two.Group` has own `opacity` property [Leo Koppelkamm](https://github.com/DieBuche)
