@@ -10,7 +10,7 @@
     <script src="../third-party/jquery.js"></script>
     <script src="../third-party/two.js"></script>
   </head>
-  <body style="background: #faaa53;">
+  <body style="background: rgb(0, 191, 168);">
     <div class="scripts">
       <script>
 
@@ -18,39 +18,44 @@
 
           var type = /(canvas|webgl)/.test(url.type) ? url.type : 'svg';
           var two = new Two({
-            type: Two.Types[type],
+            type: Two.Typesptype,
             fullscreen: true,
             autostart: true
           }).appendTo(document.body);
 
+          var amt = 64;
+
           var path = two.makeCurve(
-            Math.random() * two.width, Math.random() * two.height,
-            Math.random() * two.width, Math.random() * two.height,
-            Math.random() * two.width, Math.random() * two.height,
-            Math.random() * two.width, Math.random() * two.height,
-            Math.random() * two.width, Math.random() * two.height,
-            Math.random() * two.width, Math.random() * two.height,
+            _.map(_.range(amt), function(i) {
+              var pct = i / (amt - 1);
+              var theta = pct * Math.PI * 8;
+              var r = pct * two.height;
+              var x = r * Math.cos(theta);
+              var y = r * Math.sin(theta);
+              return new Two.Anchor(x, y);
+            }),
             true
           );
 
           path.noFill().linewidth = 25;
+          path.cap = path.join = 'round';
           path.stroke = 'white';
-          path.cap = 'round';
 
           var cursor = two.makeCircle(0, 0, 25);
-          cursor.fill = '#00adef';
-          cursor.noStroke();
+          cursor.fill = cursor.stroke = 'rgb(255, 100, 100)';
+          cursor.linewidth = 10;
+          cursor.cap = cursor.join = 'round';
 
-          var pct = 0;
-
-          // Start the cursor at the beginning of the curve
-          path.getPointAt(pct, cursor.translation);
-          cursor.translation.addSelf(path.translation);
+          var pct = 0, projection = new Two.Vector();
 
           var drag = function(e) {
+
             pct = e.clientX / two.width;
+
             path.getPointAt(pct, cursor.translation);
+
             cursor.translation.addSelf(path.translation);
+
           };
 
           var touchDrag = function(e) {
@@ -63,9 +68,35 @@
             return false;
           };
 
+          var rotating = false;
+
           $(window)
+            .bind('click', function() {
+
+              rotating = !rotating;
+
+            })
             .bind('mousemove', drag)
             .bind('touchmove', touchDrag);
+
+          two.scene.translation.set(two.width / 2, two.height / 2);
+
+          two
+            .bind('update', function() {
+
+              if (rotating) {
+                two.scene.rotation += Math.PI / 64;
+              }
+
+            })
+            .bind('resize', function() {
+
+              two.scene.translation.set(two.width / 2, two.height / 2);
+
+            });
+
+          // Start the cursor at the beginning of the curve.
+          drag({ clientX: 0 });
 
         });
 
