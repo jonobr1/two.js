@@ -29,7 +29,7 @@
             _.map(_.range(amt), function(i) {
               var pct = i / (amt - 1);
               var theta = pct * Math.PI * 8;
-              var r = pct * two.height;
+              var r = pct * Math.min(two.height, two.width);
               var x = r * Math.cos(theta);
               var y = r * Math.sin(theta);
               return new Two.Anchor(x, y);
