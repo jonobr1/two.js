@@ -137,7 +137,7 @@
       canvas: 'CanvasRenderer'
     },
 
-    Version: 'v0.4.0',
+    Version: 'v0.5.0',
 
     Identifier: 'two_',
 
