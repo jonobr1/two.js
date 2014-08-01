@@ -827,7 +827,86 @@
                 break;
 
               case 'a':
-                throw new Two.Utils.Error('not yet able to interpret Elliptical Arcs.');
+
+                x1 = coord.x;
+                y1 = coord.y;
+
+                var rx = parseFloat(coords[0]);
+                var ry = parseFloat(coords[1]);
+                var xAxisRotation = parseFloat(coords[2]) * Math.PI / 180;
+                var largeArcFlag = parseFloat(coords[3]);
+                var sweepFlag = parseFloat(coords[4]);
+
+                x4 = coords[5];
+                y4 = coords[6];
+
+                var xcs = Math.cos(xAxisRotation);
+                var xss = Math.sin(xAxisRotation);
+
+                // Conversion from endpoint to center parameterization
+                var current = new Two.Vector(
+                  xcs * (x1 - x4) / 2.0 + xss * (y1 - y4) / 2.0,
+                  xcs * (y1 - y4) / 2.0 - xss * (x1 - x4) / 2.0
+                );
+
+                var cx2 = Math.pow(current.x, 2);
+                var cy2 = Math.pow(current.y, 2);
+                var rx2 = Math.pow(rx, 2);
+                var ry2 = Math.pow(ry, 2);
+
+                // Adjust radii
+                var amp = Math.pow(cx2, 2) / rx2 + Math.pow(cy2, 2) / ry2;
+
+                if (amp > 1) {
+                  amp = Math.sqrt(amp);
+                  rx *= amp;
+                  ry *= amp;
+                }
+
+                var s = (largeArcFlag == sweepFlag ? - 1: 1) * Math.sqrt(
+                  (rx2 * ry2 - rx2 * cy2 - ry2 * cx2) / (rx2 * cy2 + ry2 * cx2)
+                ) || 0;
+
+                var cpp = new Two.Vector(
+                  s * rx * current.y / ry,
+                  s * - ry * current.x / rx
+                );
+
+                var center = new Two.Vector(
+                  (x1 + x4) / 2 + cpp.x * xcs - cpp.y * xss,
+                  (y1 + y4) / 2 + cpp.x * xcs + cpp.y * xss
+                );
+
+                var v1 = new Two.Vector(1, 0);
+                var v2 = new Two.Vector((current.x - cpp.x) / rx, (current.y - cpp.y) / ry);
+
+                // TODO: Make sure `angleBetween` is the same function as canvg LN:1472
+                var a1 = angleBetween(v1, v2);
+
+                v1.set((current.x - cpp.x) / rx, (current.y - cpp.y) / ry);
+                v2.set((- current.x - cpp.x) / rx, (- current.y - cpp.y) / ry);
+
+                // delta of angle
+                var a2 = angleBetween(v1, v2);
+                var ratio = ratioBetween(u, v);
+
+                if (ratio <= -1) {
+                  a2 = Math.PI;
+                } else if (ratio >= 1) {
+                  a2 = 0;
+                }
+
+                var direction = 1 - sweepFlag ? 1.0 : - 1.0;
+                var ah = a1 + direction * a2 / 2.0;
+                var half = new Two.Vector(
+                  center.x + rx * Math.cos(ah),
+                  center.y + ry * Math.sin(ah)
+                );
+
+                // Make the result an array of points based on Two.Resolution
+
+                break;
+                // throw new Two.Utils.Error('not yet able to interpret Elliptical Arcs.');
             }
 
             return result;
@@ -1144,6 +1223,12 @@
 
       },
 
+      ratioBetween: function(A, B) {
+
+        return (A.x * B.x + A.y * B.y) / (A.length() * B.length());
+
+      },
+
       angleBetween: function(A, B) {
 
         var dx, dy;
@@ -1274,6 +1359,7 @@
 
   var distanceBetween = Two.Utils.distanceBetween,
     distanceBetweenSquared = Two.Utils.distanceBetweenSquared,
+    ratioBetween = Two.Utils.ratioBetween,
     angleBetween = Two.Utils.angleBetween,
     getControlPoints = Two.Utils.getControlPoints,
     getCurveFromPoints = Two.Utils.getCurveFromPoints,
