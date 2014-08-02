@@ -837,8 +837,13 @@
                 var largeArcFlag = parseFloat(coords[3]);
                 var sweepFlag = parseFloat(coords[4]);
 
-                x4 = coords[5];
-                y4 = coords[6];
+                x4 = parseFloat(coords[5]);
+                y4 = parseFloat(coords[6]);
+
+                if (relative) {
+                  x4 += x1;
+                  y4 += y1;
+                }
 
                 var xcs = Math.cos(xAxisRotation);
                 var xss = Math.sin(xAxisRotation);
@@ -849,13 +854,14 @@
                   xcs * (y1 - y4) / 2.0 - xss * (x1 - x4) / 2.0
                 );
 
-                var cx2 = Math.pow(current.x, 2);
-                var cy2 = Math.pow(current.y, 2);
-                var rx2 = Math.pow(rx, 2);
-                var ry2 = Math.pow(ry, 2);
+                var cx2 = current.x * current.x;
+                var cy2 = current.y * current.y;
+                var rx2 = rx * rx;
+                var ry2 = ry * ry;
 
                 // Adjust radii
-                var amp = Math.pow(cx2, 2) / rx2 + Math.pow(cy2, 2) / ry2;
+                // Math.pow(currp.x,2)/Math.pow(rx,2)+Math.pow(currp.y,2)/Math.pow(ry,2);
+                var amp = cx2 / rx2 + cy2 / ry2;
 
                 if (amp > 1) {
                   amp = Math.sqrt(amp);
@@ -863,8 +869,8 @@
                   ry *= amp;
                 }
 
-                var s = (largeArcFlag == sweepFlag ? - 1: 1) * Math.sqrt(
-                  (rx2 * ry2 - rx2 * cy2 - ry2 * cx2) / (rx2 * cy2 + ry2 * cx2)
+                var s = (largeArcFlag == sweepFlag ? - 1 : 1) * Math.sqrt(
+                  ((rx2 * ry2) - (rx2 * cy2) - (ry2 * cx2)) / (rx2 * cy2 + ry2 * cx2)
                 ) || 0;
 
                 var cpp = new Two.Vector(
@@ -877,6 +883,8 @@
                   (y1 + y4) / 2 + cpp.x * xcs + cpp.y * xss
                 );
 
+                console.log(current.x, current.y, cpp.x, cpp.y, center.x, center.y);
+
                 var v1 = new Two.Vector(1, 0);
                 var v2 = new Two.Vector((current.x - cpp.x) / rx, (current.y - cpp.y) / ry);
 
@@ -888,7 +896,7 @@
 
                 // delta of angle
                 var a2 = angleBetween(v1, v2);
-                var ratio = ratioBetween(u, v);
+                var ratio = ratioBetween(v1, v2);
 
                 if (ratio <= -1) {
                   a2 = Math.PI;
@@ -896,14 +904,21 @@
                   a2 = 0;
                 }
 
-                var direction = 1 - sweepFlag ? 1.0 : - 1.0;
-                var ah = a1 + direction * a2 / 2.0;
-                var half = new Two.Vector(
-                  center.x + rx * Math.cos(ah),
-                  center.y + ry * Math.sin(ah)
-                );
+                // var direction = 1 - sweepFlag ? 1.0 : - 1.0;
+                // var ah = a1 + direction * a2 / 2.0;
+                // var half = new Two.Vector(
+                //   center.x + rx * Math.cos(ah),
+                //   center.y + ry * Math.sin(ah)
+                // );
+
+                console.log(Math.floor((a1 / Math.PI) * 180), Math.floor((a2 / Math.PI) * 180));
 
                 // Make the result an array of points based on Two.Resolution
+                // center, xAxisRotation, rx, ry, ts, td, ccw
+                result = getAnchorsFromArcData(center, xAxisRotation, rx, ry, a1, a2, 1 - sweepFlag);
+
+                coord = result[result.length - 1];
+                control = coord.controls.left;
 
                 break;
                 // throw new Two.Utils.Error('not yet able to interpret Elliptical Arcs.');
@@ -1223,6 +1238,42 @@
 
       },
 
+      getAnchorsFromArcData: function(center, xAxisRotation, rx, ry, ts, td, ccw) {
+
+        var matrix = new Two.Matrix()
+          .translate(center.x, center.y)
+          .rotate(xAxisRotation);
+
+        var l = Two.Resolution;
+
+        console.log(arguments);
+
+        return _.map(_.range(l), function(i) {
+
+          var pct = (i + 1) / l;
+          if (!!ccw) {
+            pct = 1 - pct;
+          }
+
+          var theta = pct * td + ts;
+          var x = rx * Math.cos(theta);
+          var y = ry * Math.sin(theta);
+
+          // x += center.x;
+          // y += center.y;
+
+          var anchor = new Two.Anchor(x, y);
+          Two.Anchor.AppendCurveProperties(anchor);
+          anchor.command = Two.Commands.line;
+
+          // TODO: Calculate control points here...
+
+          return anchor;
+
+        });
+
+      },
+
       ratioBetween: function(A, B) {
 
         return (A.x * B.x + A.y * B.y) / (A.length() * B.length());
@@ -1358,6 +1409,7 @@
   // Localize utils
 
   var distanceBetween = Two.Utils.distanceBetween,
+    getAnchorsFromArcData = Two.Utils.getAnchorsFromArcData,
     distanceBetweenSquared = Two.Utils.distanceBetweenSquared,
     ratioBetween = Two.Utils.ratioBetween,
     angleBetween = Two.Utils.angleBetween,
