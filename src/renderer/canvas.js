@@ -43,7 +43,7 @@
           canvas[mask._renderer.type].render.call(mask, ctx, true);
         }
 
-        this.children.forEach(canvas.group.renderChild, ctx);
+        this.children.forEach(canvas.group.renderChild, this._renderer.context);
 
         ctx.restore();
 
