@@ -167,11 +167,11 @@
 
     getClip: function(shape) {
 
-      clip = shape._renderer.clip;
+      var clip = shape._renderer.clip;
 
       if (!clip) {
 
-        root = shape;
+        var root = shape;
 
         while (root.parent) {
           root = root.parent;
@@ -404,8 +404,8 @@
 
         if (this._flagClip) {
 
-          clip = svg.getClip(this);
-          elem = this._renderer.elem;
+          var clip = svg.getClip(this);
+          var elem = this._renderer.elem;
 
           if (this._clip) {
             elem.removeAttribute('id');
