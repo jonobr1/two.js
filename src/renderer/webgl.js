@@ -77,7 +77,7 @@
         this._renderer.opacity = this._opacity
           * (parent && parent._renderer ? parent._renderer.opacity : 1);
 
-        _.each(this.children, webgl.group.renderChild, {
+        this.children.forEach(webgl.group.renderChild, {
           gl: gl,
           program: program
         });
@@ -652,7 +652,7 @@
 
   };
 
-  _.extend(Renderer.prototype, Backbone.Events, {
+  _.extend(Renderer.prototype, Two.Event, {
 
     setSize: function(width, height, ratio) {
 

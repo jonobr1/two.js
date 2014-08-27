@@ -11,7 +11,6 @@ module.exports = function(grunt) {
 
       depFiles : [
         'third-party/underscore.js',
-        'third-party/events.js',
         'third-party/requestAnimationFrame.js'
       ],
 
@@ -38,11 +37,7 @@ module.exports = function(grunt) {
 
     jshint: {
       options: {
-        laxbreak: true,
-        undef: true,
-        browser: true,
-        '-W009': true,
-        predef: [ "_", "Backbone", "Two", "requestAnimationFrame", "module", "define"]
+        jshintrc: true,
       },
       all: ['Gruntfile.js', 'src/**/*.js']
     },

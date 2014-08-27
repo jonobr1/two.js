@@ -43,7 +43,7 @@
           canvas[mask._renderer.type].render.call(mask, ctx, true);
         }
 
-        _.each(this.children, canvas.group.renderChild, this._renderer.context);
+        this.children.forEach(canvas.group.renderChild, this._renderer.context);
 
         ctx.restore();
 
@@ -266,7 +266,7 @@
 
   });
 
-  _.extend(Renderer.prototype, Backbone.Events, {
+  _.extend(Renderer.prototype, Two.Event, {
 
     setSize: function(width, height, ratio) {
 
