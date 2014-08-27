@@ -1,3 +1,4 @@
+/* jslint qunit: true */
 /**
  * Tests Two.js Utilities related to getBoundingClientRect methods:
  * + polygon._matrix transformations
@@ -27,7 +28,7 @@
 
       two.update();
 
-      equal(_.isEqual(answer, shape.getBoundingClientRect()), true, 'Two.Polygon.getBoundingClientRect properly calculates rotated shapes.');
+      deepEqual(shape.getBoundingClientRect(), answer, 'Two.Polygon.getBoundingClientRect properly calculates rotated shapes.');
 
       QUnit.Utils.addElemToTest(o, [two.renderer.domElement]);
 
@@ -53,7 +54,7 @@
 
       two.update();
 
-      equal(_.isEqual(answer, shape.getBoundingClientRect()), true, 'Two.Polygon.getBoundingClientRect properly calculates scaled shapes.');
+      deepEqual(shape.getBoundingClientRect(), answer, 'polygon.getBoundingClientRect properly calculates scaled shapes.');
 
       QUnit.Utils.addElemToTest(o, [two.renderer.domElement]);
 
@@ -76,7 +77,7 @@
 
       two.update();
 
-      equal(_.isEqual(answer, shape.getBoundingClientRect()), true, 'Two.Polygon.getBoundingClientRect properly calculates circles.');
+      deepEqual(shape.getBoundingClientRect(), answer, 'Two.Polygon.getBoundingClientRect properly calculates circles.');
 
       QUnit.Utils.addElemToTest(o, [two.renderer.domElement]);
 
@@ -100,7 +101,7 @@
 
       two.update();
 
-      equal(_.isEqual(answer, shape.getBoundingClientRect()), true, 'Two.Polygon.getBoundingClientRect properly calculates rotated circles (projected).');
+      deepEqual(shape.getBoundingClientRect(), answer, 'Two.Polygon.getBoundingClientRect properly calculates rotated circles (projected).');
 
       QUnit.Utils.addElemToTest(o, [two.renderer.domElement]);
 
@@ -108,7 +109,7 @@
 
   });
 
-  test('Two.getComputedMatrix', 1, function(o) {
+  test('Two.getComputedMatrix', 2, function(o) {
 
     (function() {
 
@@ -145,7 +146,8 @@
 
       two.update();
 
-      equal(_.isEqual(answer, bBox) && _.isEqual(answer, bBoxClose), true, 'Two.Polygon.getBoundingClientRect properly calculates nested shapes / groups.');
+      deepEqual(bBox, answer, 'Two.Polygon.getBoundingClientRect properly calculates nested shapes / groups.');
+      deepEqual(bBoxClose, answer, 'Two.Polygon.getBoundingClientRect properly calculates nested shapes / groups.');
 
       QUnit.Utils.addElemToTest(o, [two.renderer.domElement]);
 
