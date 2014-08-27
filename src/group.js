@@ -7,6 +7,49 @@
 
 
   /**
+   * Helper function used in Group.add and Group.remove
+   *
+   * Set the parent of the passed object to another object
+   * and updates parent-child relationships
+   * Calling with one arguments will simply remove the parenting
+   */
+  var replaceParent = function (child, newParent) {
+      var id = child.id, oldParent = child.parent, index;
+
+      // Release object from previous parent.
+      if (oldParent) {
+        index = oldParent.children.indexOf(child);
+        if (index >= 0) {
+          oldParent.children.splice(index, 1);
+          delete child.parent;
+        }
+
+        index = oldParent.additions.indexOf(child);
+
+        // If it's in additions it has just been added
+        // and not processed it.
+        // If not add it to substractions.
+        if (index >= 0) {
+          oldParent.additions.splice(index, 1);
+        } else {
+          oldParent.subtractions.push(child);
+          oldParent._flagSubtractions = true;
+        }
+      }
+
+      // If newParent is specified, add this to the group
+      if (newParent) {
+        newParent.children.push(child);
+        child.parent = newParent;
+        newParent.additions.push(child);
+        newParent._flagAdditions = true;
+      }
+
+      return child;
+  };
+
+
+  /**
    * A children collection which is accesible both by index and by ID
    * @constructor
    */
@@ -312,7 +355,7 @@
       // Add the objects
       for (var i = 0; i < objects.length; i++) {
         if (!objects[i]) continue;
-        objects[i].replaceParent(this);
+        replaceParent(objects[i], this);
       }
 
       return this;
@@ -348,7 +391,7 @@
       // Remove the objects
       for (var i = 0; i < objects.length; i++) {
         if (!objects[i]) continue;
-        objects[i].replaceParent();
+        replaceParent(objects[i]);
       }
 
       return this;
