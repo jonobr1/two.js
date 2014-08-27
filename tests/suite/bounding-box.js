@@ -18,7 +18,15 @@
         height: 400
       });
 
-      var answer = {"top":134.17185348272324,"left":134.17185348272324,"right":265.82814651727676,"bottom":265.82814651727676,"width":131.65629303455353,"height":131.65629303455353};
+      var answer = {
+        "bottom": 265.8281482438188,
+        "height": 131.65629648763763,
+        "left": 134.17185175618118,
+        "right": 265.8281482438188,
+        "top": 134.17185175618118,
+        "width": 131.65629648763763
+      };
+
       var shape = two.makeRectangle(200, 200, 100, 100);
       shape.rotation = Math.PI / 8;
       shape.noStroke().fill = 'rgb(60, 209, 201)';
@@ -41,7 +49,15 @@
         height: 400
       });
 
-      var answer = {"top":132.17185348272324,"left":132.17185348272324,"right":267.82814651727676,"bottom":267.82814651727676,"width":135.65629303455353,"height":135.65629303455353};
+      var answer = {
+        "bottom": 267.8281482438188,
+        "height": 135.65629648763763,
+        "left": 132.17185175618118,
+        "right": 267.8281482438188,
+        "top": 132.17185175618118,
+        "width": 135.65629648763763
+      };
+
       var shape = two.makeRectangle(200, 200, 50, 50);
       shape.rotation = Math.PI / 8;
       shape.fill = 'rgb(60, 209, 201)';
@@ -90,7 +106,7 @@
         height: 400
       });
 
-      var answer = {"top":150.00000085571355,"left":150.00000085571355,"right":249.99999914428645,"bottom":249.99999914428645,"width":99.9999982885729,"height":99.9999982885729};
+      var answer = {"top":150,"left":150,"right":250,"bottom":250,"width":100,"height":100};
       var shape = two.makeCircle(200, 200, 50, 50);
       shape.fill = 'rgb(60, 209, 201)';
       shape.linewidth = 0;
@@ -134,7 +150,14 @@
       parentGroup.add(group);
       group.add(shape);
 
-      var answer = {"top":96.34699320793152,"left":150.4665915966034,"right":434.3092873096466,"bottom":380.18968892097473,"width":283.8426957130432,"height":283.8426957130432};
+      var answer = {
+        "bottom": 380.18969947381845,
+        "height": 283.842712474619,
+        "left": 150.46659701381918,
+        "right": 434.3093094884382,
+        "top": 96.34698699919946,
+        "width": 283.842712474619
+      };
 
       var bBox = group.getBoundingClientRect();
       var rect = two.makeRectangle(bBox.left + bBox.width/2, bBox.top + bBox.height/2, bBox.width, bBox.height);
