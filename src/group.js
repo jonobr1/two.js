@@ -244,6 +244,8 @@
       var search = function (node, id) {
         if (node.id === id) {
           return node;
+        } else if (node.children.ids[id]) {
+          return node.children.ids[id];
         } else if (node.children) {
           var i = node.children.length;
           while (i--) {
@@ -251,7 +253,6 @@
             if (found) return found;
           }
         }
-
       };
       return search(this, id) || null;
     },
