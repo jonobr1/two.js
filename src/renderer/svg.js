@@ -204,11 +204,8 @@
           return;
         }
 
-        // Is there a nicer way to do this?
-        var tagName = tag.replace(/svg\:/ig, '').toLowerCase();
-
-        // Defer additions while clipping
-        if (/clippath/.test(tagName)) {
+        // Defer additions while clipping.
+        if (object._clip) {
           return;
         }
 
@@ -230,11 +227,8 @@
           return;
         }
 
-        // Is there a nicer way to do this?
-        var tagName = tag.replace(/svg\:/ig, '').toLowerCase();
-
-        // Defer subtractions while clipping
-        if (/clippath/.test(tagName)) {
+        // Defer subtractions while clipping.
+        if (object._clip) {
           return;
         }
 
