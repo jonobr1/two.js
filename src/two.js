@@ -154,7 +154,8 @@
       resize: 'resize',
       change: 'change',
       remove: 'remove',
-      insert: 'insert'
+      insert: 'insert',
+      order: 'order'
     },
 
     Commands: {
@@ -1342,7 +1343,7 @@
 
         if (arguments.length > 1) {
           Array.prototype.push.apply(this, arguments);
-        } else if( arguments[0] && Array.isArray(arguments[0]) ) {
+        } else if (arguments[0] && Array.isArray(arguments[0])) {
           Array.prototype.push.apply(this, arguments[0]);
         }
 
@@ -1398,10 +1399,23 @@
       this.trigger(Two.Events.remove, spliced);
 
       if (arguments.length > 2) {
-        inserted = this.slice(arguments[0], arguments.length-2);
+        inserted = this.slice(arguments[0], arguments.length - 2);
         this.trigger(Two.Events.insert, inserted);
+        this.trigger(Two.Events.order);
       }
       return spliced;
+    },
+
+    sort: function() {
+      Array.prototype.sort.apply(this, arguments);
+      this.trigger(Two.Events.order);
+      return this;
+    },
+
+    reverse: function() {
+      Array.prototype.reverse.apply(this, arguments);
+      this.trigger(Two.Events.order);
+      return this;
     }
 
   });

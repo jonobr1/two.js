@@ -5,56 +5,13 @@
    */
   var min = Math.min, max = Math.max;
 
-
   /**
-   * Helper function used in Group.add and Group.remove
-   *
-   * Set the parent of the passed object to another object
-   * and updates parent-child relationships
-   * Calling with one arguments will simply remove the parenting
-   */
-  var replaceParent = function (child, newParent) {
-      var id = child.id, oldParent = child.parent, index;
-
-      // Release object from previous parent.
-      if (oldParent) {
-        index = oldParent.children.indexOf(child);
-        if (index >= 0) {
-          oldParent.children.splice(index, 1);
-          delete child.parent;
-        }
-
-        index = oldParent.additions.indexOf(child);
-
-        // If it's in additions it has just been added
-        // and not processed it.
-        // If not add it to substractions.
-        if (index >= 0) {
-          oldParent.additions.splice(index, 1);
-        } else {
-          oldParent.subtractions.push(child);
-          oldParent._flagSubtractions = true;
-        }
-      }
-
-      // If newParent is specified, add this to the group
-      if (newParent) {
-        newParent.children.push(child);
-        child.parent = newParent;
-        newParent.additions.push(child);
-        newParent._flagAdditions = true;
-      }
-
-      return child;
-  };
-
-
-  /**
-   * A children collection which is accesible both by index and by ID
+   * A children collection which is accesible both by index and by object id
    * @constructor
    */
   var Children = function () {
-    Two.Utils.Collection.apply(this);
+
+    Two.Utils.Collection.apply(this, arguments);
 
     Object.defineProperty(this, '_events', {
       value : {},
@@ -63,21 +20,32 @@
 
     this.ids = {};
 
-    this.on(Two.Events.insert, function() {
-      for (var i = 0; i < arguments.length; i++) {
-        this.ids[arguments[i].id] = arguments[i];
-      }
-    });
-    this.on(Two.Events.remove, function(args) {
-      for (var i = 0; i < arguments.length; i++) {
-        delete this.ids[arguments[i].id];
-      }
-    });
+    this.on(Two.Events.insert, this.attach);
+    this.on(Two.Events.remove, this.detach);
+    Children.prototype.attach.apply(this, arguments);
+
   };
 
   Children.prototype = new Two.Utils.Collection();
   Children.constructor = Children;
 
+  _.extend(Children.prototype, {
+
+    attach: function(items) {
+      for (var i = 0; i < items.length; i++) {
+        this.ids[items[i].id] = items[i];
+      }
+      return this;
+    },
+
+    detach: function(items) {
+      for (var i = 0; i < items.length; i++) {
+        delete this.ids[items[i].id];
+      }
+      return this;
+    }
+
+  });
 
   var Group = Two.Group = function() {
 
@@ -88,10 +56,28 @@
     this.additions = [];
     this.subtractions = [];
 
-    this.children = new Children();
+    this._children = [];
+    this.children = arguments;
+
   };
 
   _.extend(Group, {
+
+    InsertChildren: function(items) {
+      for (var i = 0; i < items.length; i++) {
+        replaceParent.call(this, items[i], this);
+      }
+    },
+
+    RemoveChildren: function(items) {
+      for (var i = 0; i < items.length; i++) {
+        replaceParent.call(this, items[i]);
+      }
+    },
+
+    OrderChildren: function(items) {
+      this._flagOrder = true;
+    },
 
     MakeObservable: function(object) {
 
@@ -119,6 +105,28 @@
 
       Two.Shape.MakeObservable(object);
       Group.MakeGetterSetters(object, properties);
+
+      Object.defineProperty(object, 'children', {
+        get: function() {
+          return this._collection;
+        },
+        set: function(children) {
+
+          var insertChildren = _.bind(Group.InsertChildren, this);
+          var removeChildren = _.bind(Group.RemoveChildren, this);
+          var orderChildren = _.bind(Group.OrderChildren, this);
+
+          if (this._collection) {
+            this._collection.unbind();
+          }
+
+          this._collection = new Children(children);
+          this._collection.bind(Two.Events.insert, insertChildren);
+          this._collection.bind(Two.Events.remove, removeChildren);
+          this._collection.bind(Two.Events.order, orderChildren);
+
+        }
+      });
 
       Object.defineProperty(object, 'mask', {
         get: function() {
@@ -174,6 +182,7 @@
 
     _flagAdditions: false,
     _flagSubtractions: false,
+    _flagOrder: false,
     _flagOpacity: true,
 
     _flagMask: false,
@@ -353,10 +362,7 @@
       }
 
       // Add the objects
-      for (var i = 0; i < objects.length; i++) {
-        if (!objects[i]) continue;
-        replaceParent(objects[i], this);
-      }
+      Children.prototype.push.apply(this.children, objects);
 
       return this;
 
@@ -386,12 +392,11 @@
         objects = objects.slice();
       }
 
-      l = objects.length;
-
       // Remove the objects
       for (var i = 0; i < objects.length; i++) {
-        if (!objects[i]) continue;
-        replaceParent(objects[i]);
+        console.log(this.children.ids, objects[i].id);
+        if (!objects[i] || !(this.children.ids[objects[i].id])) continue;
+        this.children.splice(_.indexOf(this.children, objects[i]), 1);
       }
 
       return this;
@@ -482,7 +487,7 @@
         this._flagSubtractions = false;
       }
 
-      this._flagMask = this._flagOpacity = false;
+      this._flagOrder = this._flagMask = this._flagOpacity = false;
 
       Two.Shape.prototype.flagReset.call(this);
 
@@ -493,5 +498,48 @@
   });
 
   Group.MakeObservable(Group.prototype);
+
+  /**
+   * Helper function used to sync parent-child relationship within the
+   * `Two.Group.children` object.
+   *
+   * Set the parent of the passed object to another object
+   * and updates parent-child relationships
+   * Calling with one arguments will simply remove the parenting
+   */
+  function replaceParent(item, newParent) {
+
+    var parent = item.parent;
+    var index;
+
+    if (parent && parent.children.ids[item.id]) {
+
+      index = _.indexOf(parent.children, item);
+      parent.children.splice(index, 1);
+
+      // If we're passing from one parent to another...
+      index = _.indexOf(parent.additions, item);
+
+      if (index >= 0) {
+        parent.additions.splice(index, 1);
+      } else {
+        parent.subtractions.push(item);
+        parent._flagSubtractions = true;
+      }
+
+    }
+
+    if (newParent) {
+      item.parent = newParent;
+      this.additions.push(item);
+      this._flagAdditions = true;
+      return;
+    }
+
+    delete item.parent;
+    this.subtractions.push(item);
+    this._flagSubtractions = true;
+
+  }
 
 })(Two);

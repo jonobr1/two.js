@@ -236,6 +236,10 @@
 
       },
 
+      orderChild: function(object) {
+        this.elem.appendChild(object._renderer.elem);
+      },
+
       renderChild: function(child) {
         svg[child._renderer.type].render.call(child, this);
       },
@@ -284,6 +288,10 @@
 
         if (this._flagSubtractions) {
           this.subtractions.forEach(svg.group.removeChild, context);
+        }
+
+        if (this._flagOrder) {
+          this.children.forEach(svg.group.orderChild, context);
         }
 
         /**
