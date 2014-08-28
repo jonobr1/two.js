@@ -31,8 +31,9 @@
      * Add attributes from an svg element.
      */
     setAttributes: function(elem, attrs) {
-      for (var key in attrs) {
-        elem.setAttribute(key, attrs[key]);
+      var keys = Object.keys(attrs);
+      for (var i = 0; i < keys.length; i++) {
+        elem.setAttribute(keys[i], attrs[keys[i]]);
       }
       return this;
     },
@@ -166,11 +167,11 @@
 
     getClip: function(shape) {
 
-      clip = shape._renderer.clip;
+      var clip = shape._renderer.clip;
 
       if (!clip) {
 
-        root = shape;
+        var root = shape;
 
         while (root.parent) {
           root = root.parent;
@@ -189,9 +190,9 @@
 
       // TODO: Can speed up.
       // TODO: How does this effect a f
-      appendChild: function(id) {
+      appendChild: function(object) {
 
-        var elem = this.domElement.querySelector('#' + id);
+        var elem = object._renderer.elem;
 
         if (!elem) {
           return;
@@ -203,6 +204,7 @@
           return;
         }
 
+        // Is there a nicer way to do this?
         var tagName = tag.replace(/svg\:/ig, '').toLowerCase();
 
         // Defer additions while clipping
@@ -214,12 +216,11 @@
 
       },
 
-      // TODO: Can speed up.
-      removeChild: function(id) {
+      removeChild: function(object) {
 
-        var elem = this.domElement.querySelector('#' + id);
+        var elem = object._renderer.elem;
 
-        if (!elem) {
+        if (!elem || elem.parentElement != this.elem) {
           return;
         }
 
@@ -229,6 +230,7 @@
           return;
         }
 
+        // Is there a nicer way to do this?
         var tagName = tag.replace(/svg\:/ig, '').toLowerCase();
 
         // Defer subtractions while clipping
@@ -273,8 +275,8 @@
           this._renderer.elem.setAttribute('transform', 'matrix(' + this._matrix.toString() + ')');
         }
 
-        for (var id in this.children) {
-          var child = this.children[id];
+        for (var i = 0; i < this.children.length; i++) {
+          var child = this.children[i];
           svg[child._renderer.type].render.call(child, domElement);
         }
 
@@ -283,11 +285,11 @@
         }
 
         if (this._flagAdditions) {
-          _.each(this.additions, svg.group.appendChild, context);
+          this.additions.forEach(svg.group.appendChild, context);
         }
 
         if (this._flagSubtractions) {
-          _.each(this.subtractions, svg.group.removeChild, context);
+          this.subtractions.forEach(svg.group.removeChild, context);
         }
 
         /**
@@ -402,8 +404,8 @@
 
         if (this._flagClip) {
 
-          clip = svg.getClip(this);
-          elem = this._renderer.elem;
+          var clip = svg.getClip(this);
+          var elem = this._renderer.elem;
 
           if (this._clip) {
             elem.removeAttribute('id');

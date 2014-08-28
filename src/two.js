@@ -1494,7 +1494,7 @@
     add: function(o) {
 
       var objects = o;
-      if (!_.isArray(o)) {
+      if (!(objects instanceof Array)) {
         objects = _.toArray(arguments);
       }
 
@@ -1506,7 +1506,7 @@
     remove: function(o) {
 
       var objects = o;
-      if (!_.isArray(o)) {
+      if (!(objects instanceof Array)) {
         objects = _.toArray(arguments);
       }
 
@@ -1661,7 +1661,7 @@
     makeGroup: function(o) {
 
       var objects = o;
-      if (!_.isArray(o)) {
+      if (!(objects instanceof Array)) {
         objects = _.toArray(arguments);
       }
 
@@ -1696,7 +1696,7 @@
       var node = Two.Utils.read[tag].call(this, svgNode);
 
       if (noWrapInGroup && node instanceof Two.Group) {
-        this.add(_.values(node.children));
+        this.add(node.children);
       } else {
         this.add(node);
       }
