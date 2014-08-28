@@ -266,7 +266,7 @@
 
   });
 
-  _.extend(Renderer.prototype, Backbone.Events, {
+  _.extend(Renderer.prototype, Two.Event, {
 
     setSize: function(width, height, ratio) {
 

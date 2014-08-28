@@ -167,15 +167,15 @@
 
         set: function(vertices) {
 
-          var updateVertices = _.bind(Polygon.FlagVertices, this);
+          var updateVertices = Polygon.FlagVertices.bind(this);
 
           var bindVerts = _.bind(function(items) {
 
-            // This function is called a lot
-            // when importing a large SVG
+            if (!items) return;
+
             var i = items.length;
             while(i--) {
-              items[i].bind(Two.Events.change, updateVertices);
+              items[i].on(Two.Events.change, updateVertices);
             }
 
             updateVertices();
@@ -184,9 +184,12 @@
 
           var unbindVerts = _.bind(function(items) {
 
-            _.each(items, function(v) {
-              v.unbind(Two.Events.change, updateVertices);
-            }, this);
+            if (!items) return;
+
+            var i = items.length;
+            while(i--) {
+              items[i].off(Two.Events.change, updateVertices);
+            }
 
             updateVertices();
 
@@ -194,15 +197,15 @@
 
           // Remove previous listeners
           if (this._collection) {
-            this._collection.unbind();
+            this._collection.off();
           }
 
           // Create new Collection with copy of vertices
           this._collection = new Two.Utils.Collection(vertices.slice(0));
 
           // Listen for Collection changes and bind / unbind
-          this._collection.bind(Two.Events.insert, bindVerts);
-          this._collection.bind(Two.Events.remove, unbindVerts);
+          this._collection.on(Two.Events.insert, bindVerts);
+          this._collection.on(Two.Events.remove, unbindVerts);
 
           // Bind Initial Vertices
           bindVerts(this._collection);
@@ -653,7 +656,7 @@
 
       this._flagVertices =  this._flagFill =  this._flagStroke =
          this._flagLinewidth = this._flagOpacity = this._flagVisible =
-         this._flagCap = this._flagJoin = this._flagMiter = 
+         this._flagCap = this._flagJoin = this._flagMiter =
          this._flagClip = false;
 
       Two.Shape.prototype.flagReset.call(this);

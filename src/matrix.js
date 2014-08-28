@@ -29,7 +29,6 @@
     }
 
     // initialize the elements with default values.
-
     this.identity().set(elements);
 
   };
@@ -92,7 +91,7 @@
 
   });
 
-  _.extend(Matrix.prototype, Backbone.Events, {
+  _.extend(Matrix.prototype, Two.Event, {
 
     /**
      * Takes an array of elements or the arguments list itself to
@@ -103,7 +102,7 @@
 
       var elements = a;
       if (!_.isArray(elements)) {
-        elements = _.toArray(arguments);
+        elements = arguments;
       }
 
       _.extend(this.elements, elements);
@@ -117,9 +116,9 @@
      */
     identity: function() {
 
-      this.set(Matrix.Identity);
+      this.elements = Matrix.Identity.slice();
 
-      return this;
+      return this.trigger(Two.Events.change);
 
     },
 
