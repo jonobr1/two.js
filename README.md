@@ -62,7 +62,7 @@ instead to minify the build with uglify.
 For the latest nightly changes checkout the `dev` branch [here](../../tree/dev).
 
 ##### Nightly
-+ Enabled ordering in `Two.Group.children`
++ Enabled render ordering in `Two.Group.children` based on previous augmentation
 + Augmented `Two.Group.children` to inherit from `Two.Collection` effectively making it an array instead of a map [Leo Koppelkamm](https://github.com/DieBuche)
   - The map can still be accessed at `Two.Group.children.ids`
 
