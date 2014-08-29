@@ -61,6 +61,11 @@ instead to minify the build with uglify.
 ## Change Log
 For the latest nightly changes checkout the `dev` branch [here](../../tree/dev).
 
+##### Nightly
++ Enabled ordering in `Two.Group.children`
++ Augmented `Two.Group.children` to inherit from `Two.Collection` effectively making it an array instead of a map [Leo Koppelkamm](https://github.com/DieBuche)
+  - The map can still be accessed at `Two.Group.children.ids`
+
 ##### July 22, 2014 [v0.4.0](https://github.com/jonobr1/two.js/releases/tag/v0.4.0)
 + Updated `Two.interpret` to handle polybezier path data
 + Added `Two.Group.mask` and `Two.Polygon.clip` in order to create clipping masks
