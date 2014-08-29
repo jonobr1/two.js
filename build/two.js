@@ -1628,7 +1628,8 @@ var Backbone = Backbone || {};
       resize: 'resize',
       change: 'change',
       remove: 'remove',
-      insert: 'insert'
+      insert: 'insert',
+      order: 'order'
     },
 
     Commands: {
@@ -2301,7 +2302,101 @@ var Backbone = Backbone || {};
                 break;
 
               case 'a':
+
                 throw new Two.Utils.Error('not yet able to interpret Elliptical Arcs.');
+                // x1 = coord.x;
+                // y1 = coord.y;
+
+                // var rx = parseFloat(coords[0]);
+                // var ry = parseFloat(coords[1]);
+                // var xAxisRotation = parseFloat(coords[2]) * Math.PI / 180;
+                // var largeArcFlag = parseFloat(coords[3]);
+                // var sweepFlag = parseFloat(coords[4]);
+
+                // x4 = parseFloat(coords[5]);
+                // y4 = parseFloat(coords[6]);
+
+                // if (relative) {
+                //   x4 += x1;
+                //   y4 += y1;
+                // }
+
+                // var xcs = Math.cos(xAxisRotation);
+                // var xss = Math.sin(xAxisRotation);
+
+                // // Conversion from endpoint to center parameterization
+                // var current = new Two.Vector(
+                //   xcs * (x1 - x4) / 2.0 + xss * (y1 - y4) / 2.0,
+                //   xcs * (y1 - y4) / 2.0 - xss * (x1 - x4) / 2.0
+                // );
+
+                // var cx2 = current.x * current.x;
+                // var cy2 = current.y * current.y;
+                // var rx2 = rx * rx;
+                // var ry2 = ry * ry;
+
+                // // Adjust radii
+                // // Math.pow(currp.x,2)/Math.pow(rx,2)+Math.pow(currp.y,2)/Math.pow(ry,2);
+                // var amp = cx2 / rx2 + cy2 / ry2;
+
+                // if (amp > 1) {
+                //   amp = Math.sqrt(amp);
+                //   rx *= amp;
+                //   ry *= amp;
+                // }
+
+                // var s = (largeArcFlag == sweepFlag ? - 1 : 1) * Math.sqrt(
+                //   ((rx2 * ry2) - (rx2 * cy2) - (ry2 * cx2)) / (rx2 * cy2 + ry2 * cx2)
+                // ) || 0;
+
+                // var cpp = new Two.Vector(
+                //   s * rx * current.y / ry,
+                //   s * - ry * current.x / rx
+                // );
+
+                // var center = new Two.Vector(
+                //   (x1 + x4) / 2 + cpp.x * xcs - cpp.y * xss,
+                //   (y1 + y4) / 2 + cpp.x * xcs + cpp.y * xss
+                // );
+
+                // console.log(current.x, current.y, cpp.x, cpp.y, center.x, center.y);
+
+                // var v1 = new Two.Vector(1, 0);
+                // var v2 = new Two.Vector((current.x - cpp.x) / rx, (current.y - cpp.y) / ry);
+
+                // // TODO: Make sure `angleBetween` is the same function as canvg LN:1472
+                // var a1 = angleBetween(v1, v2);
+
+                // v1.set((current.x - cpp.x) / rx, (current.y - cpp.y) / ry);
+                // v2.set((- current.x - cpp.x) / rx, (- current.y - cpp.y) / ry);
+
+                // // delta of angle
+                // var a2 = angleBetween(v1, v2);
+                // var ratio = ratioBetween(v1, v2);
+
+                // if (ratio <= -1) {
+                //   a2 = Math.PI;
+                // } else if (ratio >= 1) {
+                //   a2 = 0;
+                // }
+
+                // // var direction = 1 - sweepFlag ? 1.0 : - 1.0;
+                // // var ah = a1 + direction * a2 / 2.0;
+                // // var half = new Two.Vector(
+                // //   center.x + rx * Math.cos(ah),
+                // //   center.y + ry * Math.sin(ah)
+                // // );
+
+                // console.log(Math.floor((a1 / Math.PI) * 180), Math.floor((a2 / Math.PI) * 180));
+
+                // // Make the result an array of points based on Two.Resolution
+                // // center, xAxisRotation, rx, ry, ts, td, ccw
+                // result = getAnchorsFromArcData(center, xAxisRotation, rx, ry, a1, a2, 1 - sweepFlag);
+
+                // coord = result[result.length - 1];
+                // control = coord.controls.left;
+
+                // break;
             }
 
             return result;
@@ -2618,6 +2713,48 @@ var Backbone = Backbone || {};
 
       },
 
+      getAnchorsFromArcData: function(center, xAxisRotation, rx, ry, ts, td, ccw) {
+
+        var matrix = new Two.Matrix()
+          .translate(center.x, center.y)
+          .rotate(xAxisRotation);
+
+        var l = Two.Resolution;
+
+        console.log(arguments);
+
+        return _.map(_.range(l), function(i) {
+
+          var pct = (i + 1) / l;
+          if (!!ccw) {
+            pct = 1 - pct;
+          }
+
+          var theta = pct * td + ts;
+          var x = rx * Math.cos(theta);
+          var y = ry * Math.sin(theta);
+
+          // x += center.x;
+          // y += center.y;
+
+          var anchor = new Two.Anchor(x, y);
+          Two.Anchor.AppendCurveProperties(anchor);
+          anchor.command = Two.Commands.line;
+
+          // TODO: Calculate control points here...
+
+          return anchor;
+
+        });
+
+      },
+
+      ratioBetween: function(A, B) {
+
+        return (A.x * B.x + A.y * B.y) / (A.length() * B.length());
+
+      },
+
       angleBetween: function(A, B) {
 
         var dx, dy;
@@ -2680,7 +2817,7 @@ var Backbone = Backbone || {};
 
         if (arguments.length > 1) {
           Array.prototype.push.apply(this, arguments);
-        } else if( arguments[0] && Array.isArray(arguments[0]) ) {
+        } else if (arguments[0] && Array.isArray(arguments[0])) {
           Array.prototype.push.apply(this, arguments[0]);
         }
 
@@ -2736,10 +2873,23 @@ var Backbone = Backbone || {};
       this.trigger(Two.Events.remove, spliced);
 
       if (arguments.length > 2) {
-        inserted = this.slice(arguments[0], arguments.length-2);
+        inserted = this.slice(arguments[0], arguments.length - 2);
         this.trigger(Two.Events.insert, inserted);
+        this.trigger(Two.Events.order);
       }
       return spliced;
+    },
+
+    sort: function() {
+      Array.prototype.sort.apply(this, arguments);
+      this.trigger(Two.Events.order);
+      return this;
+    },
+
+    reverse: function() {
+      Array.prototype.reverse.apply(this, arguments);
+      this.trigger(Two.Events.order);
+      return this;
     }
 
   });
@@ -2747,7 +2897,9 @@ var Backbone = Backbone || {};
   // Localize utils
 
   var distanceBetween = Two.Utils.distanceBetween,
+    getAnchorsFromArcData = Two.Utils.getAnchorsFromArcData,
     distanceBetweenSquared = Two.Utils.distanceBetweenSquared,
+    ratioBetween = Two.Utils.ratioBetween,
     angleBetween = Two.Utils.angleBetween,
     getControlPoints = Two.Utils.getControlPoints,
     getCurveFromPoints = Two.Utils.getCurveFromPoints,
@@ -2830,7 +2982,7 @@ var Backbone = Backbone || {};
     add: function(o) {
 
       var objects = o;
-      if (!_.isArray(o)) {
+      if (!(objects instanceof Array)) {
         objects = _.toArray(arguments);
       }
 
@@ -2842,7 +2994,7 @@ var Backbone = Backbone || {};
     remove: function(o) {
 
       var objects = o;
-      if (!_.isArray(o)) {
+      if (!(objects instanceof Array)) {
         objects = _.toArray(arguments);
       }
 
@@ -2997,7 +3149,7 @@ var Backbone = Backbone || {};
     makeGroup: function(o) {
 
       var objects = o;
-      if (!_.isArray(o)) {
+      if (!(objects instanceof Array)) {
         objects = _.toArray(arguments);
       }
 
@@ -3032,7 +3184,7 @@ var Backbone = Backbone || {};
       var node = Two.Utils.read[tag].call(this, svgNode);
 
       if (noWrapInGroup && node instanceof Two.Group) {
-        this.add(_.values(node.children));
+        this.add(node.children);
       } else {
         this.add(node);
       }
@@ -3974,8 +4126,9 @@ var Backbone = Backbone || {};
      * Add attributes from an svg element.
      */
     setAttributes: function(elem, attrs) {
-      for (var key in attrs) {
-        elem.setAttribute(key, attrs[key]);
+      var keys = Object.keys(attrs);
+      for (var i = 0; i < keys.length; i++) {
+        elem.setAttribute(keys[i], attrs[keys[i]]);
       }
       return this;
     },
@@ -4109,11 +4262,11 @@ var Backbone = Backbone || {};
 
     getClip: function(shape) {
 
-      clip = shape._renderer.clip;
+      var clip = shape._renderer.clip;
 
       if (!clip) {
 
-        root = shape;
+        var root = shape;
 
         while (root.parent) {
           root = root.parent;
@@ -4132,9 +4285,9 @@ var Backbone = Backbone || {};
 
       // TODO: Can speed up.
       // TODO: How does this effect a f
-      appendChild: function(id) {
+      appendChild: function(object) {
 
-        var elem = this.domElement.querySelector('#' + id);
+        var elem = object._renderer.elem;
 
         if (!elem) {
           return;
@@ -4146,10 +4299,8 @@ var Backbone = Backbone || {};
           return;
         }
 
-        var tagName = tag.replace(/svg\:/ig, '').toLowerCase();
-
-        // Defer additions while clipping
-        if (/clippath/.test(tagName)) {
+        // Defer additions while clipping.
+        if (object._clip) {
           return;
         }
 
@@ -4157,12 +4308,11 @@ var Backbone = Backbone || {};
 
       },
 
-      // TODO: Can speed up.
-      removeChild: function(id) {
+      removeChild: function(object) {
 
-        var elem = this.domElement.querySelector('#' + id);
+        var elem = object._renderer.elem;
 
-        if (!elem) {
+        if (!elem || elem.parentElement != this.elem) {
           return;
         }
 
@@ -4172,15 +4322,17 @@ var Backbone = Backbone || {};
           return;
         }
 
-        var tagName = tag.replace(/svg\:/ig, '').toLowerCase();
-
-        // Defer subtractions while clipping
-        if (/clippath/.test(tagName)) {
+        // Defer subtractions while clipping.
+        if (object._clip) {
           return;
         }
 
         this.elem.removeChild(elem);
 
+      },
+
+      orderChild: function(object) {
+        this.elem.appendChild(object._renderer.elem);
       },
 
       renderChild: function(child) {
@@ -4216,8 +4368,8 @@ var Backbone = Backbone || {};
           this._renderer.elem.setAttribute('transform', 'matrix(' + this._matrix.toString() + ')');
         }
 
-        for (var id in this.children) {
-          var child = this.children[id];
+        for (var i = 0; i < this.children.length; i++) {
+          var child = this.children[i];
           svg[child._renderer.type].render.call(child, domElement);
         }
 
@@ -4226,11 +4378,15 @@ var Backbone = Backbone || {};
         }
 
         if (this._flagAdditions) {
-          _.each(this.additions, svg.group.appendChild, context);
+          this.additions.forEach(svg.group.appendChild, context);
         }
 
         if (this._flagSubtractions) {
-          _.each(this.subtractions, svg.group.removeChild, context);
+          this.subtractions.forEach(svg.group.removeChild, context);
+        }
+
+        if (this._flagOrder) {
+          this.children.forEach(svg.group.orderChild, context);
         }
 
         /**
@@ -4345,8 +4501,8 @@ var Backbone = Backbone || {};
 
         if (this._flagClip) {
 
-          clip = svg.getClip(this);
-          elem = this._renderer.elem;
+          var clip = svg.getClip(this);
+          var elem = this._renderer.elem;
 
           if (this._clip) {
             elem.removeAttribute('id');
@@ -4476,7 +4632,7 @@ var Backbone = Backbone || {};
           canvas[mask._renderer.type].render.call(mask, ctx, true);
         }
 
-        _.each(this.children, canvas.group.renderChild, this._renderer.context);
+        this.children.forEach(canvas.group.renderChild, this._renderer.context);
 
         ctx.restore();
 
@@ -4830,7 +4986,7 @@ var Backbone = Backbone || {};
         this._renderer.opacity = this._opacity
           * (parent && parent._renderer ? parent._renderer.opacity : 1);
 
-        _.each(this.children, webgl.group.renderChild, {
+        this.children.forEach(webgl.group.renderChild, {
           gl: gl,
           program: program
         });
@@ -5545,36 +5701,6 @@ var Backbone = Backbone || {};
         clone[k] = this[k];
       }, this);
       return clone._update();
-    },
-
-    /**
-     * Set the parent of this object to another object
-     * and updates parent-child relationships
-     * Calling with no arguments will simply remove the parenting
-     */
-    replaceParent: function(newParent) {
-        var id = this.id, index;
-        // Release object from previous parent.
-        if (this.parent) {
-          delete this.parent.children[id];
-          index = _.indexOf(parent.additions, id);
-          if (index >= 0) {
-            this.parent.additions.splice(index, 1);
-          }
-          this.parent.subtractions.push(id);
-          this._flagSubtractions = true;
-        }
-
-        if (newParent) {
-          // Add it to this group and update parent-child relationship.
-          newParent.children[id] = this;
-          this.parent = newParent;
-          newParent.additions.push(id);
-          newParent._flagAdditions = true;
-        } else {
-          delete this.parent;
-        }
-        return this;
     },
 
     /**
@@ -6358,6 +6484,48 @@ var Backbone = Backbone || {};
    */
   var min = Math.min, max = Math.max;
 
+  /**
+   * A children collection which is accesible both by index and by object id
+   * @constructor
+   */
+  var Children = function () {
+
+    Two.Utils.Collection.apply(this, arguments);
+
+    Object.defineProperty(this, '_events', {
+      value : {},
+      enumerable: false
+    });
+
+    this.ids = {};
+
+    this.on(Two.Events.insert, this.attach);
+    this.on(Two.Events.remove, this.detach);
+    Children.prototype.attach.apply(this, arguments);
+
+  };
+
+  Children.prototype = new Two.Utils.Collection();
+  Children.constructor = Children;
+
+  _.extend(Children.prototype, {
+
+    attach: function(items) {
+      for (var i = 0; i < items.length; i++) {
+        this.ids[items[i].id] = items[i];
+      }
+      return this;
+    },
+
+    detach: function(items) {
+      for (var i = 0; i < items.length; i++) {
+        delete this.ids[items[i].id];
+      }
+      return this;
+    }
+
+  });
+
   var Group = Two.Group = function() {
 
     Two.Shape.call(this, true);
@@ -6367,11 +6535,29 @@ var Backbone = Backbone || {};
     this.additions = [];
     this.subtractions = [];
 
-    this.children = {};
+    this._children = [];
+    this.children = arguments;
 
   };
 
   _.extend(Group, {
+
+    InsertChildren: function(items) {
+      for (var i = 0; i < items.length; i++) {
+        replaceParent.call(this, items[i], this);
+      }
+    },
+
+    RemoveChildren: function(items) {
+      for (var i = 0; i < items.length; i++) {
+        console.log('removing', items[i].id);
+        replaceParent.call(this, items[i]);
+      }
+    },
+
+    OrderChildren: function(items) {
+      this._flagOrder = true;
+    },
 
     MakeObservable: function(object) {
 
@@ -6399,6 +6585,28 @@ var Backbone = Backbone || {};
 
       Two.Shape.MakeObservable(object);
       Group.MakeGetterSetters(object, properties);
+
+      Object.defineProperty(object, 'children', {
+        get: function() {
+          return this._collection;
+        },
+        set: function(children) {
+
+          var insertChildren = _.bind(Group.InsertChildren, this);
+          var removeChildren = _.bind(Group.RemoveChildren, this);
+          var orderChildren = _.bind(Group.OrderChildren, this);
+
+          if (this._collection) {
+            this._collection.unbind();
+          }
+
+          this._collection = new Children(children);
+          this._collection.bind(Two.Events.insert, insertChildren);
+          this._collection.bind(Two.Events.remove, removeChildren);
+          this._collection.bind(Two.Events.order, orderChildren);
+
+        }
+      });
 
       Object.defineProperty(object, 'mask', {
         get: function() {
@@ -6454,6 +6662,7 @@ var Backbone = Backbone || {};
 
     _flagAdditions: false,
     _flagSubtractions: false,
+    _flagOrder: false,
     _flagOpacity: true,
 
     _flagMask: false,
@@ -6502,6 +6711,11 @@ var Backbone = Backbone || {};
 
     },
 
+    /**
+     * Export the data from the instance of Two.Group into a plain JavaScript
+     * object. This also makes all children plain JavaScript objects. Great
+     * for turning into JSON and storing in a database.
+     */
     toObject: function() {
 
       var result = {
@@ -6528,7 +6742,7 @@ var Backbone = Backbone || {};
       var rect = this.getBoundingClientRect(true),
        corner = { x: rect.left, y: rect.top };
 
-      _.each(this.children, function(child) {
+      this.children.forEach(function(child) {
         child.translation.subSelf(corner);
       });
 
@@ -6549,7 +6763,7 @@ var Backbone = Backbone || {};
         y: rect.top + rect.height / 2
       };
 
-      _.each(this.children, function(child) {
+      this.children.forEach(function(child) {
         child.translation.subSelf(rect.centroid);
       });
 
@@ -6567,11 +6781,14 @@ var Backbone = Backbone || {};
       var search = function (node, id) {
         if (node.id === id) {
           return node;
+        } else if (node.children) {
+          var i = node.children.length;
+          while (i--) {
+            var found = search(node.children[i], id);
+            if (found) return found;
+          }
         }
-        for (var child in node.children) {
-          var found = search(node.children[child], id);
-          if (found) return found;
-        }
+
       };
       return search(this, id) || null;
     },
@@ -6585,9 +6802,10 @@ var Backbone = Backbone || {};
       var search = function (node, cl) {
         if (node.classList.indexOf(cl) != -1) {
           found.push(node);
-        }
-        for (var child in node.children) {
-          search(node.children[child], cl);
+        } else if (node.children) {
+          node.children.forEach(function (child) {
+            search(child, cl);
+          });
         }
         return found;
       };
@@ -6619,44 +6837,20 @@ var Backbone = Backbone || {};
      */
     add: function(objects) {
 
-      var l = arguments.length,
-        children = this.children,
-        grandparent = this.parent,
-        ids = this.additions,
-        id, parent, index;
-
-      if (!_.isArray(objects)) {
+      // Allow to pass multiple objects either as array or as multiple arguments
+      // If it's an array also create copy of it in case we're getting passed
+      // a childrens array directly.
+      if (!(objects instanceof Array)) {
         objects = _.toArray(arguments);
+      } else {
+        objects = objects.slice();
       }
 
       // Add the objects
-
-      _.each(objects, function(object) {
-
-        if (!object) {
-          return;
-        }
-
-        id = object.id;
-        parent = object.parent;
-
-        if (_.isUndefined(children[id])) {
-          // Release object from previous parent.
-          if (parent) {
-            delete parent.children[id];
-            index = _.indexOf(parent.additions, id);
-            if (index >= 0) {
-              parent.additions.splice(index, 1);
-            }
-          }
-          // Add it to this group and update parent-child relationship.
-          children[id] = object;
-          object.parent = this;
-          ids.push(id);
-          this._flagAdditions = true;
-        }
-
-      }, this);
+      for (var i = 0; i < objects.length; i++) {
+        if (!(objects[i] && objects[i].id)) continue;
+        this.children.push(objects[i]);
+      }
 
       return this;
 
@@ -6668,42 +6862,29 @@ var Backbone = Backbone || {};
     remove: function(objects) {
 
       var l = arguments.length,
-        children = this.children,
-        grandparent = this.parent,
-        ids = this.subtractions,
-        id, parent, index, grandchildren;
+        grandparent = this.parent;
 
+      // Allow to call remove without arguments
+      // This will detach the object from the scene.
       if (l <= 0 && grandparent) {
         grandparent.remove(this);
         return this;
       }
 
-      if (!_.isArray(objects)) {
+      // Allow to pass multiple objects either as array or as multiple arguments
+      // If it's an array also create copy of it in case we're getting passed
+      // a childrens array directly.
+      if (!(objects instanceof Array)) {
         objects = _.toArray(arguments);
+      } else {
+        objects = objects.slice();
       }
 
-      _.each(objects, function(object) {
-
-        id = object.id;
-        grandchildren = object.children;
-        parent = object.parent;
-
-        if (!(id in children)) {
-          return;
-        }
-
-        delete children[id];
-        delete object.parent;
-
-        index = _.indexOf(parent.additions, id);
-        if (index >= 0) {
-          parent.additions.splice(index, 1);
-        }
-
-        ids.push(id);
-        this._flagSubtractions = true;
-
-      }, this);
+      // Remove the objects
+      for (var i = 0; i < objects.length; i++) {
+        if (!objects[i] || !(this.children.ids[objects[i].id])) continue;
+        this.children.splice(_.indexOf(this.children, objects[i]), 1);
+      }
 
       return this;
 
@@ -6723,7 +6904,7 @@ var Backbone = Backbone || {};
       var left = Infinity, right = -Infinity,
           top = Infinity, bottom = -Infinity;
 
-      _.each(this.children, function(child) {
+      this.children.forEach(function(child) {
 
         rect = child.getBoundingClientRect();
 
@@ -6754,7 +6935,7 @@ var Backbone = Backbone || {};
      * Trickle down of noFill
      */
     noFill: function() {
-      _.each(this.children, function(child) {
+      this.children.forEach(function(child) {
         child.noFill();
       });
       return this;
@@ -6764,7 +6945,7 @@ var Backbone = Backbone || {};
      * Trickle down of noStroke
      */
     noStroke: function() {
-      _.each(this.children, function(child) {
+      this.children.forEach(function(child) {
         child.noStroke();
       });
       return this;
@@ -6775,7 +6956,7 @@ var Backbone = Backbone || {};
      */
     subdivide: function() {
       var args = arguments;
-      _.each(this.children, function(child) {
+      this.children.forEach(function(child) {
         child.subdivide.apply(child, args);
       });
       return this;
@@ -6793,7 +6974,7 @@ var Backbone = Backbone || {};
         this._flagSubtractions = false;
       }
 
-      this._flagMask = this._flagOpacity = false;
+      this._flagOrder = this._flagMask = this._flagOpacity = false;
 
       Two.Shape.prototype.flagReset.call(this);
 
@@ -6804,5 +6985,56 @@ var Backbone = Backbone || {};
   });
 
   Group.MakeObservable(Group.prototype);
+
+  /**
+   * Helper function used to sync parent-child relationship within the
+   * `Two.Group.children` object.
+   *
+   * Set the parent of the passed object to another object
+   * and updates parent-child relationships
+   * Calling with one arguments will simply remove the parenting
+   */
+  function replaceParent(item, newParent) {
+
+    var parent = item.parent;
+    var index;
+
+    if (parent && parent.children.ids[item.id]) {
+
+      index = _.indexOf(parent.children, item);
+      parent.children.splice(index, 1);
+
+      // If we're passing from one parent to another...
+      index = _.indexOf(parent.additions, item);
+
+      if (index >= 0) {
+        parent.additions.splice(index, 1);
+      } else {
+        parent.subtractions.push(item);
+        parent._flagSubtractions = true;
+      }
+
+    }
+
+    if (newParent) {
+      item.parent = newParent;
+      this.additions.push(item);
+      this._flagAdditions = true;
+      return;
+    }
+
+    // If we're passing from one parent to another...
+    index = _.indexOf(this.additions, item);
+
+    if (index >= 0) {
+      this.additions.splice(index, 1);
+    } else {
+      this.subtractions.push(item);
+      this._flagSubtractions = true;
+    }
+
+    delete item.parent;
+
+  }
 
 })(Two);

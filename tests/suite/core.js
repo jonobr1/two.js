@@ -366,7 +366,6 @@ test('Children adding and removing', 28, function() {
   var poly5 = new Two.Polygon([new Two.Vector(0, 0)]);
 
 
-
   poly1.addTo(group1);
   equal(poly1, group1.children[0], 'Can add objects to group (via object)');
   equal(group1, poly1.parent, 'Can add objects to group (via object)');
@@ -407,6 +406,7 @@ test('Children adding and removing', 28, function() {
   equal(group1.additions.length, 0, 'Can reassign children to another group');
   equal(poly5.parent, group3, 'Can reassign children to another group');
   ok(~poly5.parent.additions.indexOf(poly5), 'Can reassign children to another group');
+
 
   group3.remove(poly4);
   equal(group3.children.length, 5, 'Can remove objects from group');

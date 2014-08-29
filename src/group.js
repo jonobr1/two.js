@@ -231,6 +231,11 @@
 
     },
 
+    /**
+     * Export the data from the instance of Two.Group into a plain JavaScript
+     * object. This also makes all children plain JavaScript objects. Great
+     * for turning into JSON and storing in a database.
+     */
     toObject: function() {
 
       var result = {
@@ -362,7 +367,10 @@
       }
 
       // Add the objects
-      Children.prototype.push.apply(this.children, objects);
+      for (var i = 0; i < objects.length; i++) {
+        if (!(objects[i] && objects[i].id)) continue;
+        this.children.push(objects[i]);
+      }
 
       return this;
 
@@ -394,7 +402,6 @@
 
       // Remove the objects
       for (var i = 0; i < objects.length; i++) {
-        console.log(this.children.ids, objects[i].id);
         if (!objects[i] || !(this.children.ids[objects[i].id])) continue;
         this.children.splice(_.indexOf(this.children, objects[i]), 1);
       }
@@ -536,9 +543,17 @@
       return;
     }
 
+    // If we're passing from one parent to another...
+    index = _.indexOf(this.additions, item);
+
+    if (index >= 0) {
+      this.additions.splice(index, 1);
+    } else {
+      this.subtractions.push(item);
+      this._flagSubtractions = true;
+    }
+
     delete item.parent;
-    this.subtractions.push(item);
-    this._flagSubtractions = true;
 
   }
 
