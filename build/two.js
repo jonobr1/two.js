@@ -6576,6 +6576,8 @@ var Backbone = Backbone || {};
 
   _.extend(Group, {
 
+    Children: Children,
+
     InsertChildren: function(items) {
       for (var i = 0; i < items.length; i++) {
         replaceParent.call(this, items[i], this);
