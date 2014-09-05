@@ -13,6 +13,8 @@
 
   var webgl = {
 
+    isHidden: /(none|transparent)/i,
+
     canvas: document.createElement('canvas'),
 
     uv: new Two.Array([
@@ -299,6 +301,8 @@
 
     updateCanvas: function(elem) {
 
+      var next, prev, a, c, ux, uy, vx, vy, ar, bl, br, cl, x, y;
+
       var commands = elem._vertices;
       var canvas = this.canvas;
       var ctx = this.ctx;
@@ -349,11 +353,13 @@
 
       var d;
       ctx.beginPath();
-      commands.forEach(function(b, i) {
+      // commands.forEach(function(b, i) {
+      for (var i = 0; i < commands.length; i++) {
 
-        var next, prev, a, c, ux, uy, vx, vy, ar, bl, br, cl, x, y;
-        x = toFixed(b.x * scale + cx);
-        y = toFixed(b.y * scale + cy);
+        b = commands[i];
+
+        x = toFixed(b._x * scale + cx);
+        y = toFixed(b._y * scale + cy);
 
         switch (b._command) {
 
@@ -372,16 +378,16 @@
             bl = (b.controls && b.controls.left) || b;
 
             if (a._relative) {
-              vx = toFixed((ar.x + a.x) * scale + cx);
-              vy = toFixed((ar.y + a.y) * scale + cy);
+              vx = toFixed((ar.x + a._x) * scale + cx);
+              vy = toFixed((ar.y + a._y) * scale + cy);
             } else {
               vx = toFixed(ar.x * scale + cx);
               vy = toFixed(ar.y * scale + cy);
             }
 
             if (b._relative) {
-              ux = toFixed((bl.x + b.x) * scale + cx);
-              uy = toFixed((bl.y + b.y) * scale + cy);
+              ux = toFixed((bl.x + b._x) * scale + cx);
+              uy = toFixed((bl.y + b._y) * scale + cy);
             } else {
               ux = toFixed(bl.x * scale + cx);
               uy = toFixed(bl.y * scale + cy);
@@ -397,23 +403,23 @@
               cl = (c.controls && c.controls.left) || c;
 
               if (b._relative) {
-                vx = toFixed((br.x + b.x) * scale + cx);
-                vy = toFixed((br.y + b.y) * scale + cy);
+                vx = toFixed((br.x + b._x) * scale + cx);
+                vy = toFixed((br.y + b._y) * scale + cy);
               } else {
                 vx = toFixed(br.x * scale + cx);
                 vy = toFixed(br.y * scale + cy);
               }
 
               if (c._relative) {
-                ux = toFixed((cl.x + c.x) * scale + cx);
-                uy = toFixed((cl.y + c.y) * scale + cy);
+                ux = toFixed((cl.x + c._x) * scale + cx);
+                uy = toFixed((cl.y + c._y) * scale + cy);
               } else {
                 ux = toFixed(cl.x * scale + cx);
                 uy = toFixed(cl.y * scale + cy);
               }
 
-              x = toFixed(c.x * scale + cx);
-              y = toFixed(c.y * scale + cy);
+              x = toFixed(c._x * scale + cx);
+              y = toFixed(c._y * scale + cy);
 
               ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
 
@@ -432,7 +438,7 @@
 
         }
 
-      });
+      }
 
       // Loose ends
 
@@ -440,8 +446,8 @@
         ctx.closePath();
       }
 
-      ctx.fill();
-      ctx.stroke();
+      if (!webgl.isHidden.test(fill)) ctx.fill();
+      if (!webgl.isHidden.test(stroke)) ctx.stroke();
 
     },
 

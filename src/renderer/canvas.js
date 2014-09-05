@@ -151,6 +151,7 @@
         ctx.beginPath();
 
         for (var i = 0; i < commands.length; i++) {
+
           b = commands[i];
 
           x = toFixed(b._x);
