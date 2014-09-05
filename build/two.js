@@ -1,7 +1,7 @@
 /**
  * two.js
- * a two-dimensional drawing api meant for modern browsers. It is renderer 
- * agnostic enabling the same api for rendering in multiple contexts: webgl, 
+ * a two-dimensional drawing api meant for modern browsers. It is renderer
+ * agnostic enabling the same api for rendering in multiple contexts: webgl,
  * canvas2d, and svg.
  *
  * Copyright (c) 2012 - 2013 jonobr1 / http://jonobr1.com
@@ -25,7 +25,6 @@
  * THE SOFTWARE.
  *
  */
-
 
 //     Underscore.js 1.5.1
 //     http://underscorejs.org
@@ -4595,7 +4594,14 @@ var Backbone = Backbone || {};
   var mod = Two.Utils.mod, toFixed = Two.Utils.toFixed;
   var getRatio = Two.Utils.getRatio;
 
+  // Returns true if this is a non-transforming matrix
+  var isDefaultMatrix = function (m) {
+    return (m[0] == 1 && m[3] == 0 && m[1] == 0 && m[4] == 1 && m[2] == 0 && m[5] == 0);
+  };
+
   var canvas = {
+
+    isHidden: /(none|transparent)/i,
 
     group: {
 
@@ -4610,8 +4616,9 @@ var Backbone = Backbone || {};
 
         var matrix = this._matrix.elements;
         var parent = this.parent;
-        this._renderer.opacity = this._opacity
-          * (parent && parent._renderer ? parent._renderer.opacity : 1);
+        this._renderer.opacity = this._opacity * (parent && parent._renderer ? parent._renderer.opacity : 1);
+
+        var defaultMatrix = isDefaultMatrix(matrix);
 
         var mask = this._mask;
         // var clip = this._clip;
@@ -4623,18 +4630,23 @@ var Backbone = Backbone || {};
         this._renderer.context.ctx = ctx;
         // this._renderer.context.clip = clip;
 
-        ctx.save();
-
-        ctx.transform(
-          matrix[0], matrix[3], matrix[1], matrix[4], matrix[2], matrix[5]);
+        if (!defaultMatrix) {
+          ctx.save();
+          ctx.transform(matrix[0], matrix[3], matrix[1], matrix[4], matrix[2], matrix[5]);
+        }
 
         if (mask) {
           canvas[mask._renderer.type].render.call(mask, ctx, true);
         }
 
-        this.children.forEach(canvas.group.renderChild, this._renderer.context);
+        for (var i = 0; i < this.children.length; i++) {
+          var child = this.children[i];
+          canvas[child._renderer.type].render.call(child, ctx);
+        }
 
-        ctx.restore();
+        if (!defaultMatrix) {
+          ctx.restore();
+        }
 
        /**
          * Commented two-way functionality of clips / masks with groups and
@@ -4657,8 +4669,8 @@ var Backbone = Backbone || {};
       render: function(ctx, forced, parentClipped) {
 
         var matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter,
-            closed, commands, length, last, next, prev, a, c, d, ux, uy, vx, vy,
-            ar, bl, br, cl, x, y, mask, clip;
+            closed, commands, length, last, next, prev, a, b, c, d, ux, uy, vx, vy,
+            ar, bl, br, cl, x, y, mask, clip, defaultMatrix;
 
         // TODO: Add a check here to only invoke _update if need be.
         this._update();
@@ -4676,6 +4688,7 @@ var Backbone = Backbone || {};
         commands = this._vertices; // Commands
         length = commands.length;
         last = length - 1;
+        defaultMatrix = isDefaultMatrix(matrix);
 
         // mask = this._mask;
         clip = this._clip;
@@ -4685,12 +4698,9 @@ var Backbone = Backbone || {};
         }
 
         // Transform
-
-        ctx.save();
-
-        if (matrix) {
-          ctx.transform(
-            matrix[0], matrix[3], matrix[1], matrix[4], matrix[2], matrix[5]);
+        if (!defaultMatrix) {
+          ctx.save();
+          ctx.transform(matrix[0], matrix[3], matrix[1], matrix[4], matrix[2], matrix[5]);
         }
 
        /**
@@ -4704,7 +4714,6 @@ var Backbone = Backbone || {};
         // }
 
         // Styles
-
         if (fill) {
           ctx.fillStyle = fill;
         }
@@ -4728,10 +4737,12 @@ var Backbone = Backbone || {};
         }
 
         ctx.beginPath();
-        commands.forEach(function(b, i) {
 
-          x = toFixed(b.x);
-          y = toFixed(b.y);
+        for (var i = 0; i < commands.length; i++) {
+          b = commands[i];
+
+          x = toFixed(b._x);
+          y = toFixed(b._y);
 
           switch (b._command) {
 
@@ -4750,16 +4761,16 @@ var Backbone = Backbone || {};
               bl = (b.controls && b.controls.left) || b;
 
               if (a._relative) {
-                vx = (ar.x + toFixed(a.x));
-                vy = (ar.y + toFixed(a.y));
+                vx = (ar.x + toFixed(a._x));
+                vy = (ar.y + toFixed(a._y));
               } else {
                 vx = toFixed(ar.x);
                 vy = toFixed(ar.y);
               }
 
               if (b._relative) {
-                ux = (bl.x + toFixed(b.x));
-                uy = (bl.y + toFixed(b.y));
+                ux = (bl.x + toFixed(b._x));
+                uy = (bl.y + toFixed(b._y));
               } else {
                 ux = toFixed(bl.x);
                 uy = toFixed(bl.y);
@@ -4775,23 +4786,23 @@ var Backbone = Backbone || {};
                 cl = (c.controls && c.controls.left) || c;
 
                 if (b._relative) {
-                  vx = (br.x + toFixed(b.x));
-                  vy = (br.y + toFixed(b.y));
+                  vx = (br.x + toFixed(b._x));
+                  vy = (br.y + toFixed(b._y));
                 } else {
                   vx = toFixed(br.x);
                   vy = toFixed(br.y);
                 }
 
                 if (c._relative) {
-                  ux = (cl.x + toFixed(c.x));
-                  uy = (cl.y + toFixed(c.y));
+                  ux = (cl.x + toFixed(c._x));
+                  uy = (cl.y + toFixed(c._y));
                 } else {
                   ux = toFixed(cl.x);
                   uy = toFixed(cl.y);
                 }
 
-                x = toFixed(c.x);
-                y = toFixed(c.y);
+                x = toFixed(c._x);
+                y = toFixed(c._y);
 
                 ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
 
@@ -4809,8 +4820,7 @@ var Backbone = Backbone || {};
               break;
 
           }
-
-        });
+        }
 
         // Loose ends
 
@@ -4819,11 +4829,13 @@ var Backbone = Backbone || {};
         }
 
         if (!clip && !parentClipped) {
-          ctx.fill();
-          ctx.stroke();
+          if (!canvas.isHidden.test(fill)) ctx.fill();
+          if (!canvas.isHidden.test(stroke)) ctx.stroke();
         }
 
-        ctx.restore();
+        if (!defaultMatrix) {
+          ctx.restore();
+        }
 
         if (clip && !parentClipped) {
           ctx.clip();
@@ -4838,16 +4850,26 @@ var Backbone = Backbone || {};
   };
 
   var Renderer = Two[Two.Types.canvas] = function(params) {
-
+    // Smoothing property. Defaults to true
+    // Set it to false when working with pixel art.
+    // false can lead to better performance, since it would use a cheaper interpolation algorithm.
+    // It might not make a big difference on GPU backed canvases.
+    var smoothing = (params.smoothing !== false);
     this.domElement = params.domElement || document.createElement('canvas');
     this.ctx = this.domElement.getContext('2d');
     this.overdraw = params.overdraw || false;
 
+    this.ctx.imageSmoothingEnabled = smoothing;
+    this.ctx.mozImageSmoothingEnabled = smoothing;
+    this.ctx.oImageSmoothingEnabled = smoothing;
+    this.ctx.webkitImageSmoothingEnabled = smoothing;
+    this.ctx.imageSmoothingEnabled = smoothing;
+
     // Everything drawn on the canvas needs to be added to the scene.
     this.scene = new Two.Group();
     this.scene.parent = this;
-
   };
+
 
   _.extend(Renderer, {
 
@@ -6130,26 +6152,31 @@ var Backbone = Backbone || {};
      * parameters of the group.
      */
     getBoundingClientRect: function(shallow) {
+      var matrix, border, l, x, y, i, v;
+
+      var left = Infinity, right = -Infinity,
+          top = Infinity, bottom = -Infinity;
 
       // TODO: Update this to not __always__ update. Just when it needs to.
       this._update(true);
 
-      var matrix = !!shallow ? this._matrix : getComputedMatrix(this);
+      matrix = !!shallow ? this._matrix : getComputedMatrix(this);
 
-      var border = this.linewidth / 2, x, y;
-      var left = Infinity, right = -Infinity,
-          top = Infinity, bottom = -Infinity;
+      border = this.linewidth / 2;
+      l = this._vertices.length;
 
+      for (i = 0; i < l; i++) {
+        v = this._vertices[i];
 
-      _.each(this._vertices, function(v) {
         x = v.x;
         y = v.y;
-        v = matrix.multiply(x, y , 1);
+
+        v = matrix.multiply(x, y, 1);
         top = min(v.y - border, top);
         left = min(v.x - border, left);
         right = max(v.x + border, right);
         bottom = max(v.y + border, bottom);
-      });
+      }
 
       return {
         top: top,
@@ -6574,8 +6601,9 @@ var Backbone = Backbone || {};
           },
 
           set: function(v) {
+            // Only set flag if there is an actual difference
+            this._flagOpacity = (this._opacity != v);
             this._opacity = v;
-            this._flagOpacity = true;
           }
 
         });
@@ -6893,7 +6921,7 @@ var Backbone = Backbone || {};
      * Return an object with top, left, right, bottom, width, and height
      * parameters of the group.
      */
-    getBoundingClientRect: function() {
+    getBoundingClientRect: function(shallow) {
       var rect;
 
       // TODO: Update this to not __always__ update. Just when it needs to.
@@ -6905,7 +6933,7 @@ var Backbone = Backbone || {};
 
       this.children.forEach(function(child) {
 
-        rect = child.getBoundingClientRect();
+        rect = child.getBoundingClientRect(shallow);
 
         if (!_.isNumber(rect.top)   || !_.isNumber(rect.left)   ||
             !_.isNumber(rect.right) || !_.isNumber(rect.bottom)) {

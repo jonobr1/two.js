@@ -13,6 +13,8 @@
 
   var canvas = {
 
+    isHidden: /(none|transparent)/i,
+
     group: {
 
       renderChild: function(child) {
@@ -239,8 +241,8 @@
         }
 
         if (!clip && !parentClipped) {
-          if (fill != 'transparent') ctx.fill();
-          if (stroke != 'transparent') ctx.stroke();
+          if (!canvas.isHidden.test(fill)) ctx.fill();
+          if (!canvas.isHidden.test(stroke)) ctx.stroke();
         }
 
         if (!defaultMatrix) {
