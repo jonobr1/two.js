@@ -42,7 +42,7 @@ Next you'll want to install [grunt](https://npmjs.org/package/grunt):
 cd two.js
 npm install grunt
 ```
-You can edit the files that we be included in the build by modifying ./Gruntfile.js.
+You can edit the files that we be included in the build by modifying `./Gruntfile.js`.
 If you're making an application and you're only using one renderer (i.e: svg context) then it is highly recommended to remove canvas and webgl renderers from your build in order to drastically decrease your file size.
 
 Finally, build the project:
