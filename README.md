@@ -59,9 +59,11 @@ grunt build-uglify
 instead to minify the build with uglify.
 
 ## Change Log
-For the latest nightly changes checkout the `dev` branch [here](../../tree/dev).
+<!-- For the latest nightly changes checkout the `dev` branch [here](../../tree/dev). -->
 
 ##### Nightly
++ Performance enhancements to `webgl` renderer
++ Performance enhancements to `canvas` renderer [Leo Koppelkamm](https://github.com/DieBuche)
 + Enabled render ordering in `Two.Group.children` based on previous augmentation
 + Augmented `Two.Group.children` to inherit from `Two.Collection` effectively making it an array instead of a map [Leo Koppelkamm](https://github.com/DieBuche)
   - The map can still be accessed at `Two.Group.children.ids`
