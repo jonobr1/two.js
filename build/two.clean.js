@@ -5105,7 +5105,6 @@
 
     RemoveChildren: function(items) {
       for (var i = 0; i < items.length; i++) {
-        console.log('removing', items[i].id);
         replaceParent.call(this, items[i]);
       }
     },
