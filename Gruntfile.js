@@ -25,6 +25,12 @@ module.exports = function(grunt) {
         'src/renderer/webgl.js',
         'src/shape.js',
         'src/path.js',
+        'src/shapes/line.js',
+        'src/shapes/rectangle.js',
+        'src/shapes/ellipse.js',
+        'src/shapes/polygon.js',
+        'src/shapes/star.js',
+        'src/shapes/rounded-rectangle.js',
         'src/group.js'
       ]
     },

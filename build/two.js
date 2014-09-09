@@ -3012,43 +3012,27 @@ var Backbone = Backbone || {};
 
     makeLine: function(x1, y1, x2, y2) {
 
-      var width = x2 - x1;
-      var height = y2 - y1;
-
-      var w2 = width / 2;
-      var h2 = height / 2;
-
-      var points = [
-        new Two.Anchor(- w2, - h2),
-        new Two.Anchor(w2, h2)
-      ];
-
-      // Center line and translate to desired position.
-
-      var line = new Two.Path(points).noFill();
-      line.translation.set(x1 + w2, y1 + h2);
-
+      var line = new Two.Line(x1, y1, x2, y2);
       this.scene.add(line);
+
       return line;
 
     },
 
     makeRectangle: function(x, y, width, height) {
 
-      var w2 = width / 2;
-      var h2 = height / 2;
-
-      var points = [
-        new Two.Anchor(-w2, -h2),
-        new Two.Anchor(w2, -h2),
-        new Two.Anchor(w2, h2),
-        new Two.Anchor(-w2, h2)
-      ];
-
-      var rect = new Two.Path(points, true);
-      rect.translation.set(x, y);
-
+      var rect = new Two.Rectangle(x, y, width, height);
       this.scene.add(rect);
+
+      return rect;
+
+    },
+
+    makeRoundedRectangle: function(x, y, width, height, sides) {
+
+      var rect = new Two.RoundedRectangle(x, y, width, height, sides);
+      this.scene.add(rect);
+
       return rect;
 
     },
@@ -3059,24 +3043,21 @@ var Backbone = Backbone || {};
 
     },
 
-    makeEllipse: function(ox, oy, width, height) {
+    makeEllipse: function(ox, oy, rx, ry) {
 
-      var amount = Two.Resolution;
-
-      var points = _.map(_.range(amount), function(i) {
-        var pct = i / amount;
-        var theta = pct * TWO_PI;
-        var x = width * cos(theta);
-        var y = height * sin(theta);
-        return new Two.Anchor(x, y);
-      }, this);
-
-      var ellipse = new Two.Path(points, true, true);
-      ellipse.translation.set(ox, oy);
-
+      var ellipse = new Two.Ellipse(ox, oy, rx, ry);
       this.scene.add(ellipse);
 
       return ellipse;
+
+    },
+
+    makeStar: function(ox, oy, or, ir, sides) {
+
+      var star = new Two.Star(ox, oy, or, ir, sides);
+      this.add(star);
+
+      return star;
 
     },
 
@@ -3096,18 +3077,36 @@ var Backbone = Backbone || {};
       }
 
       var last = arguments[l - 1];
-      var poly = new Two.Path(points, !(_.isBoolean(last) ? last : undefined), true);
+      var curve = new Two.Path(points, !(_.isBoolean(last) ? last : undefined), true);
+      var rect = curve.getBoundingClientRect();
+      curve.center().translation
+        .set(rect.left + rect.width / 2, rect.top + rect.height / 2);
+
+      this.scene.add(curve);
+
+      return curve;
+
+    },
+
+    makePolygon: function() {
+
+      var l = arguments.length, points = p;
+      if (!_.isArray(p)) {
+        points = [];
+        for (var i = 0; i < l; i+=2) {
+          var x = arguments[i];
+          if (!_.isNumber(x)) {
+            break;
+          }
+          var y = arguments[i + 1];
+          points.push(new Two.Anchor(x, y));
+        }
+      }
+
+      var poly = new Two.Polygon(points);
       var rect = poly.getBoundingClientRect();
-
-      var cx = rect.left + rect.width / 2;
-      var cy = rect.top + rect.height / 2;
-
-      _.each(poly.vertices, function(v) {
-        v.x -= cx;
-        v.y -= cy;
-      });
-
-      poly.translation.set(cx, cy);
+      poly.center().translation
+        .set(rect.left + rect.width / 2, rect.top + rect.height / 2);
 
       this.scene.add(poly);
 
@@ -3134,14 +3133,14 @@ var Backbone = Backbone || {};
       }
 
       var last = arguments[l - 1];
-      var poly = new Two.Path(points, !(_.isBoolean(last) ? last : undefined));
-      var rect = poly.getBoundingClientRect();
-      poly.center().translation
+      var path = new Two.Path(points, !(_.isBoolean(last) ? last : undefined));
+      var rect = path.getBoundingClientRect();
+      path.center().translation
         .set(rect.left + rect.width / 2, rect.top + rect.height / 2);
 
-      this.scene.add(poly);
+      this.scene.add(path);
 
-      return poly;
+      return path;
 
     },
 
@@ -6511,6 +6510,239 @@ var Backbone = Backbone || {};
 
 })(Two);
 
+(function() {
+
+  var Path = Two.Path;
+
+  var Line = Two.Line = function(x1, y1, x2, y2) {
+
+    var width = x2 - x1;
+    var height = y2 - y1;
+
+    var w2 = width / 2;
+    var h2 = height / 2;
+
+    Path.call(this, [
+        new Two.Anchor(- w2, - h2),
+        new Two.Anchor(w2, h2)
+    ]);
+
+    this.translation.set(x1 + w2, y1 + h2);
+
+  };
+
+  _.extend(Line.prototype, Path.prototype);
+
+  Path.MakeObservable(Line.prototype);
+
+})();
+(function() {
+
+  var Path = Two.Path;
+
+  var Rectangle = Two.Rectangle = function(x, y, width, height) {
+
+    var w2 = width / 2;
+    var h2 = height / 2;
+
+    Path.call(this, [
+      new Two.Anchor(-w2, -h2),
+      new Two.Anchor(w2, -h2),
+      new Two.Anchor(w2, h2),
+      new Two.Anchor(-w2, h2)
+    ], true);
+
+    this.translation.set(x, y);
+
+  };
+
+  _.extend(Rectangle.prototype, Path.prototype);
+
+  Path.MakeObservable(Rectangle.prototype);
+
+})();
+(function() {
+
+  var Path = Two.Path, TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin;
+
+  var Ellipse = Two.Ellipse = function(ox, oy, rx, ry) {
+
+    if (!_.isNumber(ry)) {
+      ry = rx;
+    }
+
+    var amount = Two.Resolution;
+
+    var points = _.map(_.range(amount), function(i) {
+      var pct = i / amount;
+      var theta = pct * TWO_PI;
+      var x = rx * cos(theta);
+      var y = ry * sin(theta);
+      return new Two.Anchor(x, y);
+    }, this);
+
+    Path.call(this, points, true, true);
+    this.translation.set(ox, oy);
+
+  };
+
+  _.extend(Ellipse.prototype, Path.prototype);
+
+  Path.MakeObservable(Ellipse.prototype);
+
+})();
+(function() {
+
+  var Path = Two.Path;
+
+  var Polygon = Two.Polygon = function(points) {
+
+    Path.call(this, points, true);
+
+  };
+
+  _.extend(Polygon.prototype, Path.prototype);
+
+  Path.MakeObservable(Polygon.prototype);
+
+})();
+(function() {
+
+  var Path = Two.Path, TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin;
+
+  var Star = Two.Star = function(ox, oy, or, ir, sides) {
+
+    if (!_.isNumber(ir)) {
+      ir = or / 2;
+    }
+
+    if (!_.isNumber(sides) || sides <= 0) {
+      sides = 5;
+    }
+
+    var length = sides * 2;
+
+    var points = _.map(_.range(length), function(i) {
+      var pct = (i - 0.5) / length;
+      var theta = pct * TWO_PI;
+      var r = (i % 2 ? ir : or);
+      var x = r * cos(theta);
+      var y = r * sin(theta);
+      return new Two.Anchor(x, y);
+    });
+
+    Path.call(this, points, true);
+    this.translation.set(ox, oy);
+
+  };
+
+  _.extend(Star.prototype, Path.prototype);
+
+  Path.MakeObservable(Star.prototype);
+
+})();
+(function() {
+
+  var Path = Two.Path;
+
+  var RoundedRectangle = Two.RoundedRectangle = function(ox, oy, width, height, radius) {
+
+    var w2 = width / 2;
+    var h2 = height / 2;
+    var x, y;
+
+    if (!_.isNumber(radius)) {
+      radius = Math.floor(Math.min(width, height) / 12);
+    }
+
+    var points = [
+      new Two.Anchor(- w2 + radius, - h2),
+      new Two.Anchor(w2 - radius, - h2)
+    ];
+
+    x = w2;
+    y = - h2;
+    points = roundCorner(points, x, y, radius, 1);
+
+    points.push(new Two.Anchor(w2, h2 - radius));
+
+    x = w2;
+    y = h2;
+    points = roundCorner(points, x, y, radius, 4);
+
+    points.push(new Two.Anchor(- w2 + radius, h2));
+
+    x = - w2;
+    y = h2;
+    points = roundCorner(points, x, y, radius, 3);
+
+    points.push(new Two.Anchor(- w2, - h2 + radius));
+
+    x = - w2;
+    y = - h2;
+    points = roundCorner(points, x, y, radius, 2);
+
+    points.pop();
+
+    Path.call(this, points, true);
+    this.translation.set(ox, oy);
+
+  };
+
+  _.extend(RoundedRectangle.prototype, Path.prototype);
+
+  Path.MakeObservable(RoundedRectangle.prototype);
+
+  function roundCorner(points, x, y, radius, quadrant) {
+
+    var start = 0, end = 0;
+    var length = Two.Resolution;
+
+    var a = points[points.length - 1];
+    var b = new Two.Anchor(x, y);
+
+    var xr = x < 0 ? - radius : radius;
+    var yr = y < 0 ? - radius : radius;
+
+    switch (quadrant) {
+      case 1:
+        start = - Math.PI / 2;
+        end = 0;
+        break;
+      case 2:
+        start = - Math.PI;
+        end = - Math.PI / 2;
+        break;
+      case 3:
+        start = - Math.PI * 1.5;
+        end = - Math.PI;
+        break;
+      case 4:
+        start = 0;
+        end = Math.PI / 2;
+        break;
+    }
+
+    var curve = _.map(_.range(length), function(i) {
+
+      var theta = map(length - i, 0, length, start, end);
+      var tx = radius * Math.cos(theta) + x - xr;
+      var ty = radius * Math.sin(theta) + y - yr;
+      var anchor = new Two.Anchor(tx, ty);
+
+      return anchor;
+
+    }).reverse();
+
+    return points.concat(curve);
+
+  }
+
+  function map(v, i1, i2, o1, o2) {
+    return o1 + (o2 - o1) * ((v - i1) / (i2 - i1));
+  }
+
+})();
 (function(Two) {
 
   /**
