@@ -62,6 +62,7 @@ instead to minify the build with uglify.
 <!-- For the latest nightly changes checkout the `dev` branch [here](../../tree/dev). -->
 
 ##### Nightly
++ Added `Two.Line`, `Two.Rectangle`, `Two.RoundedRectangle`, `Two.Ellipse`, `Two.Polygon`, and `Two.Star` as new shapes invoked like `Two.Path`
 + ___Breaking___: renamed `Two.Polygon` to `Two.Path`
 + Performance enhancements to `webgl` renderer
 + Performance enhancements to `canvas` renderer [Leo Koppelkamm](https://github.com/DieBuche)
