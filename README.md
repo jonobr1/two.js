@@ -62,7 +62,7 @@ instead to minify the build with uglify.
 <!-- For the latest nightly changes checkout the `dev` branch [here](../../tree/dev). -->
 
 ##### Nightly
-+ __Breaking__: renamed `Two.Polygon` to `Two.Path`
++ ___Breaking___: renamed `Two.Polygon` to `Two.Path`
 + Performance enhancements to `webgl` renderer
 + Performance enhancements to `canvas` renderer [Leo Koppelkamm](https://github.com/DieBuche)
 + Enabled render ordering in `Two.Group.children` based on previous augmentation
