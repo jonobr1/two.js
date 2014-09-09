@@ -331,7 +331,7 @@
 
     },
 
-    polygon: {
+    path: {
 
       render: function(domElement) {
 

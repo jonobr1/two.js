@@ -13,11 +13,11 @@
     commands[k] = new RegExp(v);
   });
 
-  var Polygon = Two.Polygon = function(vertices, closed, curved, manual) {
+  var Path = Two.Path = function(vertices, closed, curved, manual) {
 
     Two.Shape.call(this);
 
-    this._renderer.type = 'polygon';
+    this._renderer.type = 'path';
 
     this._closed = !!closed;
     this._curved = !!curved;
@@ -47,7 +47,7 @@
 
   };
 
-  _.extend(Polygon, {
+  _.extend(Path, {
 
     Properties: [
       'fill',
@@ -77,7 +77,7 @@
 
       // Only the first 8 properties are flagged like this. The subsequent
       // properties behave differently and need to be hand written.
-      _.each(Polygon.Properties.slice(0, 8), function(property) {
+      _.each(Path.Properties.slice(0, 8), function(property) {
 
         var secret = '_' + property;
         var flag = '_flag' + property.charAt(0).toUpperCase() + property.slice(1);
@@ -167,7 +167,7 @@
 
         set: function(vertices) {
 
-          var updateVertices = _.bind(Polygon.FlagVertices, this);
+          var updateVertices = _.bind(Path.FlagVertices, this);
 
           var bindVerts = _.bind(function(items) {
 
@@ -225,7 +225,7 @@
 
   });
 
-  _.extend(Polygon.prototype, Two.Shape.prototype, {
+  _.extend(Path.prototype, Two.Shape.prototype, {
 
     // Flags
     // http://en.wikipedia.org/wiki/Flag
@@ -275,7 +275,7 @@
         return v.clone();
       });
 
-      var clone = new Polygon(points, this.closed, this.curved, !this.automatic);
+      var clone = new Path(points, this.closed, this.curved, !this.automatic);
 
       _.each(Two.Shape.Properties, function(k) {
         clone[k] = this[k];
@@ -323,7 +323,7 @@
 
     /**
      * Orient the vertices of the shape to the upper lefthand
-     * corner of the polygon.
+     * corner of the path.
      */
     corner: function() {
 
@@ -344,7 +344,7 @@
 
     /**
      * Orient the vertices of the shape to the center of the
-     * polygon.
+     * path.
      */
     center: function() {
 
@@ -424,7 +424,7 @@
 
     /**
      * Given a float `t` from 0 to 1, return a point or assign a passed `obj`'s
-     * coordinates to that percentage on this Two.Polygon's curve.
+     * coordinates to that percentage on this Two.Path's curve.
      */
     getPointAt: function(t, obj) {
       var x, x1, x2, x3, x4, y, y1, y2, y3, y4, left, right;
@@ -669,7 +669,7 @@
 
   });
 
-  Polygon.MakeObservable(Polygon.prototype);
+  Path.MakeObservable(Path.prototype);
 
   /**
    * Utility functions

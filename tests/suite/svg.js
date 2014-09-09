@@ -82,7 +82,7 @@
 
   });
 
-  test('Two.makePolygon', 1, function(o) {
+  test('Two.makePath', 1, function(o) {
 
     var two = new Two({
       width: 400,
@@ -97,13 +97,13 @@
       var y = i % 2 ? 25 : 75;
       return new Two.Vector(x, y);
     });
-    var poly = two.makePolygon(points, true);
+    var poly = two.makePath(points, true);
 
     two.update();
 
     var elem = two.renderer.domElement.querySelector('#' + poly.id);
 
-    equal(elem.getAttribute('d'), 'M -142.5 25 L -127.5 -25 L -112.5 25 L -97.5 -25 L -82.5 25 L -67.5 -25 L -52.5 25 L -37.5 -25 L -22.5 25 L -7.5 -25 L 7.5 25 L 22.5 -25 L 37.5 25 L 52.5 -25 L 67.5 25 L 82.5 -25 L 97.5 25 L 112.5 -25 L 127.5 25 L 142.5 -25 ', 'Two.makePolygon applies d attribute properly.');
+    equal(elem.getAttribute('d'), 'M -142.5 25 L -127.5 -25 L -112.5 25 L -97.5 -25 L -82.5 25 L -67.5 -25 L -52.5 25 L -37.5 -25 L -22.5 25 L -7.5 -25 L 7.5 25 L 22.5 -25 L 37.5 25 L 52.5 -25 L 67.5 25 L 82.5 -25 L 97.5 25 L 112.5 -25 L 127.5 25 L 142.5 -25 ', 'Two.makePath applies d attribute properly.');
 
     QUnit.Utils.addInstanceToTest(o, two);
 

@@ -523,7 +523,7 @@
             verts.push(new Two.Anchor(parseFloat(p1), parseFloat(p2)));
           });
 
-          var poly = new Two.Polygon(verts, !open).noStroke();
+          var poly = new Two.Path(verts, !open).noStroke();
           poly.fill = 'black';
 
           return Two.Utils.applySvgAttributes(node, poly);
@@ -538,7 +538,7 @@
 
           var path = node.getAttribute('d');
 
-          // Create a Two.Polygon from the paths.
+          // Create a Two.Path from the paths.
 
           var coord = new Two.Anchor();
           var control, coords;
@@ -622,7 +622,7 @@
 
           });
 
-          // Create the vertices for our Two.Polygon
+          // Create the vertices for our Two.Path
 
           var points = _.flatten(_.map(commands, function(command, i) {
 
@@ -935,7 +935,7 @@
 
           points = _.compact(points);
 
-          var poly = new Two.Polygon(points, closed, undefined, true).noStroke();
+          var poly = new Two.Path(points, closed, undefined, true).noStroke();
           poly.fill = 'black';
 
           return Two.Utils.applySvgAttributes(node, poly);
@@ -957,7 +957,7 @@
             return new Two.Anchor(x, y);
           }, this);
 
-          var circle = new Two.Polygon(points, true, true).noStroke();
+          var circle = new Two.Path(points, true, true).noStroke();
           circle.translation.set(x, y);
           circle.fill = 'black';
 
@@ -981,7 +981,7 @@
             return new Two.Anchor(x, y);
           }, this);
 
-          var ellipse = new Two.Polygon(points, true, true).noStroke();
+          var ellipse = new Two.Path(points, true, true).noStroke();
           ellipse.translation.set(x, y);
           ellipse.fill = 'black';
 
@@ -1006,7 +1006,7 @@
             new Two.Anchor(w2, -h2)
           ];
 
-          var rect = new Two.Polygon(points, true).noStroke();
+          var rect = new Two.Path(points, true).noStroke();
           rect.translation.set(x + w2, y + h2);
           rect.fill = 'black';
 
@@ -1034,7 +1034,7 @@
 
           // Center line and translate to desired position.
 
-          var line = new Two.Polygon(points).noFill();
+          var line = new Two.Path(points).noFill();
           line.translation.set(x1 + w2, y1 + h2);
 
           return Two.Utils.applySvgAttributes(node, line);
@@ -1552,7 +1552,7 @@
 
       // Center line and translate to desired position.
 
-      var line = new Two.Polygon(points).noFill();
+      var line = new Two.Path(points).noFill();
       line.translation.set(x1 + w2, y1 + h2);
 
       this.scene.add(line);
@@ -1572,7 +1572,7 @@
         new Two.Anchor(-w2, h2)
       ];
 
-      var rect = new Two.Polygon(points, true);
+      var rect = new Two.Path(points, true);
       rect.translation.set(x, y);
 
       this.scene.add(rect);
@@ -1598,7 +1598,7 @@
         return new Two.Anchor(x, y);
       }, this);
 
-      var ellipse = new Two.Polygon(points, true, true);
+      var ellipse = new Two.Path(points, true, true);
       ellipse.translation.set(ox, oy);
 
       this.scene.add(ellipse);
@@ -1623,7 +1623,7 @@
       }
 
       var last = arguments[l - 1];
-      var poly = new Two.Polygon(points, !(_.isBoolean(last) ? last : undefined), true);
+      var poly = new Two.Path(points, !(_.isBoolean(last) ? last : undefined), true);
       var rect = poly.getBoundingClientRect();
 
       var cx = rect.left + rect.width / 2;
@@ -1643,9 +1643,9 @@
     },
 
     /**
-     * Convenience method to make and draw a Two.Polygon.
+     * Convenience method to make and draw a Two.Path.
      */
-    makePolygon: function(p) {
+    makePath: function(p) {
 
       var l = arguments.length, points = p;
       if (!_.isArray(p)) {
@@ -1661,7 +1661,7 @@
       }
 
       var last = arguments[l - 1];
-      var poly = new Two.Polygon(points, !(_.isBoolean(last) ? last : undefined));
+      var poly = new Two.Path(points, !(_.isBoolean(last) ? last : undefined));
       var rect = poly.getBoundingClientRect();
       poly.center().translation
         .set(rect.left + rect.width / 2, rect.top + rect.height / 2);

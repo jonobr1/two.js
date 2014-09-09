@@ -1996,7 +1996,7 @@ var Backbone = Backbone || {};
             verts.push(new Two.Anchor(parseFloat(p1), parseFloat(p2)));
           });
 
-          var poly = new Two.Polygon(verts, !open).noStroke();
+          var poly = new Two.Path(verts, !open).noStroke();
           poly.fill = 'black';
 
           return Two.Utils.applySvgAttributes(node, poly);
@@ -2011,7 +2011,7 @@ var Backbone = Backbone || {};
 
           var path = node.getAttribute('d');
 
-          // Create a Two.Polygon from the paths.
+          // Create a Two.Path from the paths.
 
           var coord = new Two.Anchor();
           var control, coords;
@@ -2095,7 +2095,7 @@ var Backbone = Backbone || {};
 
           });
 
-          // Create the vertices for our Two.Polygon
+          // Create the vertices for our Two.Path
 
           var points = _.flatten(_.map(commands, function(command, i) {
 
@@ -2408,7 +2408,7 @@ var Backbone = Backbone || {};
 
           points = _.compact(points);
 
-          var poly = new Two.Polygon(points, closed, undefined, true).noStroke();
+          var poly = new Two.Path(points, closed, undefined, true).noStroke();
           poly.fill = 'black';
 
           return Two.Utils.applySvgAttributes(node, poly);
@@ -2430,7 +2430,7 @@ var Backbone = Backbone || {};
             return new Two.Anchor(x, y);
           }, this);
 
-          var circle = new Two.Polygon(points, true, true).noStroke();
+          var circle = new Two.Path(points, true, true).noStroke();
           circle.translation.set(x, y);
           circle.fill = 'black';
 
@@ -2454,7 +2454,7 @@ var Backbone = Backbone || {};
             return new Two.Anchor(x, y);
           }, this);
 
-          var ellipse = new Two.Polygon(points, true, true).noStroke();
+          var ellipse = new Two.Path(points, true, true).noStroke();
           ellipse.translation.set(x, y);
           ellipse.fill = 'black';
 
@@ -2479,7 +2479,7 @@ var Backbone = Backbone || {};
             new Two.Anchor(w2, -h2)
           ];
 
-          var rect = new Two.Polygon(points, true).noStroke();
+          var rect = new Two.Path(points, true).noStroke();
           rect.translation.set(x + w2, y + h2);
           rect.fill = 'black';
 
@@ -2507,7 +2507,7 @@ var Backbone = Backbone || {};
 
           // Center line and translate to desired position.
 
-          var line = new Two.Polygon(points).noFill();
+          var line = new Two.Path(points).noFill();
           line.translation.set(x1 + w2, y1 + h2);
 
           return Two.Utils.applySvgAttributes(node, line);
@@ -3025,7 +3025,7 @@ var Backbone = Backbone || {};
 
       // Center line and translate to desired position.
 
-      var line = new Two.Polygon(points).noFill();
+      var line = new Two.Path(points).noFill();
       line.translation.set(x1 + w2, y1 + h2);
 
       this.scene.add(line);
@@ -3045,7 +3045,7 @@ var Backbone = Backbone || {};
         new Two.Anchor(-w2, h2)
       ];
 
-      var rect = new Two.Polygon(points, true);
+      var rect = new Two.Path(points, true);
       rect.translation.set(x, y);
 
       this.scene.add(rect);
@@ -3071,7 +3071,7 @@ var Backbone = Backbone || {};
         return new Two.Anchor(x, y);
       }, this);
 
-      var ellipse = new Two.Polygon(points, true, true);
+      var ellipse = new Two.Path(points, true, true);
       ellipse.translation.set(ox, oy);
 
       this.scene.add(ellipse);
@@ -3096,7 +3096,7 @@ var Backbone = Backbone || {};
       }
 
       var last = arguments[l - 1];
-      var poly = new Two.Polygon(points, !(_.isBoolean(last) ? last : undefined), true);
+      var poly = new Two.Path(points, !(_.isBoolean(last) ? last : undefined), true);
       var rect = poly.getBoundingClientRect();
 
       var cx = rect.left + rect.width / 2;
@@ -3116,9 +3116,9 @@ var Backbone = Backbone || {};
     },
 
     /**
-     * Convenience method to make and draw a Two.Polygon.
+     * Convenience method to make and draw a Two.Path.
      */
-    makePolygon: function(p) {
+    makePath: function(p) {
 
       var l = arguments.length, points = p;
       if (!_.isArray(p)) {
@@ -3134,7 +3134,7 @@ var Backbone = Backbone || {};
       }
 
       var last = arguments[l - 1];
-      var poly = new Two.Polygon(points, !(_.isBoolean(last) ? last : undefined));
+      var poly = new Two.Path(points, !(_.isBoolean(last) ? last : undefined));
       var rect = poly.getBoundingClientRect();
       poly.center().translation
         .set(rect.left + rect.width / 2, rect.top + rect.height / 2);
@@ -4425,7 +4425,7 @@ var Backbone = Backbone || {};
 
     },
 
-    polygon: {
+    path: {
 
       render: function(domElement) {
 
@@ -4664,7 +4664,7 @@ var Backbone = Backbone || {};
 
     },
 
-    polygon: {
+    path: {
 
       render: function(ctx, forced, parentClipped) {
 
@@ -5037,7 +5037,7 @@ var Backbone = Backbone || {};
 
     },
 
-    polygon: {
+    path: {
 
       render: function(gl, program, forcedParent) {
 
@@ -5787,11 +5787,11 @@ var Backbone = Backbone || {};
     commands[k] = new RegExp(v);
   });
 
-  var Polygon = Two.Polygon = function(vertices, closed, curved, manual) {
+  var Path = Two.Path = function(vertices, closed, curved, manual) {
 
     Two.Shape.call(this);
 
-    this._renderer.type = 'polygon';
+    this._renderer.type = 'path';
 
     this._closed = !!closed;
     this._curved = !!curved;
@@ -5821,7 +5821,7 @@ var Backbone = Backbone || {};
 
   };
 
-  _.extend(Polygon, {
+  _.extend(Path, {
 
     Properties: [
       'fill',
@@ -5851,7 +5851,7 @@ var Backbone = Backbone || {};
 
       // Only the first 8 properties are flagged like this. The subsequent
       // properties behave differently and need to be hand written.
-      _.each(Polygon.Properties.slice(0, 8), function(property) {
+      _.each(Path.Properties.slice(0, 8), function(property) {
 
         var secret = '_' + property;
         var flag = '_flag' + property.charAt(0).toUpperCase() + property.slice(1);
@@ -5941,7 +5941,7 @@ var Backbone = Backbone || {};
 
         set: function(vertices) {
 
-          var updateVertices = _.bind(Polygon.FlagVertices, this);
+          var updateVertices = _.bind(Path.FlagVertices, this);
 
           var bindVerts = _.bind(function(items) {
 
@@ -5999,7 +5999,7 @@ var Backbone = Backbone || {};
 
   });
 
-  _.extend(Polygon.prototype, Two.Shape.prototype, {
+  _.extend(Path.prototype, Two.Shape.prototype, {
 
     // Flags
     // http://en.wikipedia.org/wiki/Flag
@@ -6049,7 +6049,7 @@ var Backbone = Backbone || {};
         return v.clone();
       });
 
-      var clone = new Polygon(points, this.closed, this.curved, !this.automatic);
+      var clone = new Path(points, this.closed, this.curved, !this.automatic);
 
       _.each(Two.Shape.Properties, function(k) {
         clone[k] = this[k];
@@ -6097,7 +6097,7 @@ var Backbone = Backbone || {};
 
     /**
      * Orient the vertices of the shape to the upper lefthand
-     * corner of the polygon.
+     * corner of the path.
      */
     corner: function() {
 
@@ -6118,7 +6118,7 @@ var Backbone = Backbone || {};
 
     /**
      * Orient the vertices of the shape to the center of the
-     * polygon.
+     * path.
      */
     center: function() {
 
@@ -6198,7 +6198,7 @@ var Backbone = Backbone || {};
 
     /**
      * Given a float `t` from 0 to 1, return a point or assign a passed `obj`'s
-     * coordinates to that percentage on this Two.Polygon's curve.
+     * coordinates to that percentage on this Two.Path's curve.
      */
     getPointAt: function(t, obj) {
       var x, x1, x2, x3, x4, y, y1, y2, y3, y4, left, right;
@@ -6443,7 +6443,7 @@ var Backbone = Backbone || {};
 
   });
 
-  Polygon.MakeObservable(Polygon.prototype);
+  Path.MakeObservable(Path.prototype);
 
   /**
    * Utility functions
@@ -6596,7 +6596,7 @@ var Backbone = Backbone || {};
 
     MakeObservable: function(object) {
 
-      var properties = Two.Polygon.Properties.slice(0);
+      var properties = Two.Path.Properties.slice(0);
       var oi = _.indexOf(properties, 'opacity');
 
       if (oi >= 0) {

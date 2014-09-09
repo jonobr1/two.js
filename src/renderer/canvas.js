@@ -76,7 +76,7 @@
 
     },
 
-    polygon: {
+    path: {
 
       render: function(ctx, forced, parentClipped) {
 

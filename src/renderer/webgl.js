@@ -105,7 +105,7 @@
 
     },
 
-    polygon: {
+    path: {
 
       render: function(gl, program, forcedParent) {
 

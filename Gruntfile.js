@@ -24,7 +24,7 @@ module.exports = function(grunt) {
         'src/renderer/canvas.js',
         'src/renderer/webgl.js',
         'src/shape.js',
-        'src/polygon.js',
+        'src/path.js',
         'src/group.js'
       ]
     },

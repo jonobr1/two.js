@@ -305,7 +305,7 @@ test('Two.Matrix', 10, function() {
 
 test('Two.Utils.Collection', 12, function() {
 
-  var poly = new Two.Polygon([new Two.Vector(0, 0)]);
+  var poly = new Two.Path([new Two.Vector(0, 0)]);
   var vector = new Two.Vector(150, 150);
   var vertices = poly.vertices;
   var removed;
@@ -359,11 +359,11 @@ test('Children adding and removing', 28, function() {
   var group4 = new Two.Group();
   var group5 = new Two.Group();
 
-  var poly1 = new Two.Polygon([new Two.Vector(0, 0)]);
-  var poly2 = new Two.Polygon([new Two.Vector(0, 0)]);
-  var poly3 = new Two.Polygon([new Two.Vector(0, 0)]);
-  var poly4 = new Two.Polygon([new Two.Vector(0, 0)]);
-  var poly5 = new Two.Polygon([new Two.Vector(0, 0)]);
+  var poly1 = new Two.Path([new Two.Vector(0, 0)]);
+  var poly2 = new Two.Path([new Two.Vector(0, 0)]);
+  var poly3 = new Two.Path([new Two.Vector(0, 0)]);
+  var poly4 = new Two.Path([new Two.Vector(0, 0)]);
+  var poly5 = new Two.Path([new Two.Vector(0, 0)]);
 
 
   poly1.addTo(group1);

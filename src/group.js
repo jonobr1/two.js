@@ -83,7 +83,7 @@
 
     MakeObservable: function(object) {
 
-      var properties = Two.Polygon.Properties.slice(0);
+      var properties = Two.Path.Properties.slice(0);
       var oi = _.indexOf(properties, 'opacity');
 
       if (oi >= 0) {

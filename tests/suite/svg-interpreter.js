@@ -285,7 +285,7 @@
 
   });
 
-  // Use this function to get an answer of interpreted Two.Polygon
+  // Use this function to get an answer of interpreted Two.Path
   function retrieveObject(shape) {
     var result = shape.toObject();
     result.children = _.toArray(result.children);

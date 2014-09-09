@@ -8,7 +8,7 @@
 
   module('getBoundingClientRect');
 
-  test('Two.Polygon.getBoundingClientRect', 4, function(o) {
+  test('Two.Path.getBoundingClientRect', 4, function(o) {
 
     (function() {
 
@@ -27,7 +27,7 @@
 
       two.update();
 
-      equal(_.isEqual(answer, shape.getBoundingClientRect()), true, 'Two.Polygon.getBoundingClientRect properly calculates rotated shapes.');
+      equal(_.isEqual(answer, shape.getBoundingClientRect()), true, 'Two.Path.getBoundingClientRect properly calculates rotated shapes.');
 
       QUnit.Utils.addElemToTest(o, [two.renderer.domElement]);
 
@@ -53,7 +53,7 @@
 
       two.update();
 
-      equal(_.isEqual(answer, shape.getBoundingClientRect()), true, 'Two.Polygon.getBoundingClientRect properly calculates scaled shapes.');
+      equal(_.isEqual(answer, shape.getBoundingClientRect()), true, 'Two.Path.getBoundingClientRect properly calculates scaled shapes.');
 
       QUnit.Utils.addElemToTest(o, [two.renderer.domElement]);
 
@@ -76,7 +76,7 @@
 
       two.update();
 
-      equal(_.isEqual(answer, shape.getBoundingClientRect()), true, 'Two.Polygon.getBoundingClientRect properly calculates circles.');
+      equal(_.isEqual(answer, shape.getBoundingClientRect()), true, 'Two.Path.getBoundingClientRect properly calculates circles.');
 
       QUnit.Utils.addElemToTest(o, [two.renderer.domElement]);
 
@@ -100,7 +100,7 @@
 
       two.update();
 
-      equal(_.isEqual(answer, shape.getBoundingClientRect()), true, 'Two.Polygon.getBoundingClientRect properly calculates rotated circles (projected).');
+      equal(_.isEqual(answer, shape.getBoundingClientRect()), true, 'Two.Path.getBoundingClientRect properly calculates rotated circles (projected).');
 
       QUnit.Utils.addElemToTest(o, [two.renderer.domElement]);
 
@@ -145,7 +145,7 @@
 
       two.update();
 
-      equal(_.isEqual(answer, bBox) && _.isEqual(answer, bBoxClose), true, 'Two.Polygon.getBoundingClientRect properly calculates nested shapes / groups.');
+      equal(_.isEqual(answer, bBox) && _.isEqual(answer, bBoxClose), true, 'Two.Path.getBoundingClientRect properly calculates nested shapes / groups.');
 
       QUnit.Utils.addElemToTest(o, [two.renderer.domElement]);
 

@@ -75,7 +75,7 @@
 
   });
 
-  asyncTest('Two.makePolygon', 1, function(o) {
+  asyncTest('Two.makePath', 1, function(o) {
 
     var two = new Two({
       type: Two.Types.canvas,
@@ -91,11 +91,11 @@
       var y = i % 2 ? 25 : 75;
       return new Two.Vector(x, y);
     });
-    var poly = two.makePolygon(points, true);
+    var poly = two.makePath(points, true);
 
     two.update();
 
-    QUnit.Utils.compare.call(o, './images/canvas/polygon' + suffix, two.renderer, 'Two.makePolygon renders properly.');
+    QUnit.Utils.compare.call(o, './images/canvas/polygon' + suffix, two.renderer, 'Two.makePath renders properly.');
 
   });
 
