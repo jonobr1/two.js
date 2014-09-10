@@ -415,6 +415,7 @@
 
           switch (key) {
             case 'transform':
+              // TODO: Check this out https://github.com/paperjs/paper.js/blob/master/src/svg/SVGImport.js#L313
               if (value === 'none') break;
               var m = node.getCTM();
 
