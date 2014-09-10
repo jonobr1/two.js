@@ -857,100 +857,113 @@
 
               case 'a':
 
-                throw new Two.Utils.Error('not yet able to interpret Elliptical Arcs.');
-                // x1 = coord.x;
-                // y1 = coord.y;
+                // throw new Two.Utils.Error('not yet able to interpret Elliptical Arcs.');
+                x1 = coord.x;
+                y1 = coord.y;
 
-                // var rx = parseFloat(coords[0]);
-                // var ry = parseFloat(coords[1]);
-                // var xAxisRotation = parseFloat(coords[2]) * Math.PI / 180;
-                // var largeArcFlag = parseFloat(coords[3]);
-                // var sweepFlag = parseFloat(coords[4]);
+                var rx = parseFloat(coords[0]);
+                var ry = parseFloat(coords[1]);
+                var xAxisRotation = parseFloat(coords[2]) * Math.PI / 180;
+                var largeArcFlag = parseFloat(coords[3]);
+                var sweepFlag = parseFloat(coords[4]);
 
-                // x4 = parseFloat(coords[5]);
-                // y4 = parseFloat(coords[6]);
+                x4 = parseFloat(coords[5]);
+                y4 = parseFloat(coords[6]);
 
-                // if (relative) {
-                //   x4 += x1;
-                //   y4 += y1;
-                // }
+                if (relative) {
+                  x4 += x1;
+                  y4 += y1;
+                }
 
-                // var xcs = Math.cos(xAxisRotation);
-                // var xss = Math.sin(xAxisRotation);
+                // http://www.w3.org/TR/SVG/implnote.html#ArcConversionEndpointToCenter
 
-                // // Conversion from endpoint to center parameterization
-                // var current = new Two.Vector(
-                //   xcs * (x1 - x4) / 2.0 + xss * (y1 - y4) / 2.0,
-                //   xcs * (y1 - y4) / 2.0 - xss * (x1 - x4) / 2.0
-                // );
+                // Calculate midpoint mx my
+                var mx = (x4 - x1) / 2;
+                var my = (y4 - y1) / 2;
 
-                // var cx2 = current.x * current.x;
-                // var cy2 = current.y * current.y;
-                // var rx2 = rx * rx;
-                // var ry2 = ry * ry;
+                // Calculate x1' y1' F.6.5.1
+                var _x = mx * Math.cos(xAxisRotation) + my * Math.sin(xAxisRotation);
+                var _y = - mx * Math.sin(xAxisRotation) + my * Math.cos(xAxisRotation);
 
-                // // Adjust radii
-                // // Math.pow(currp.x,2)/Math.pow(rx,2)+Math.pow(currp.y,2)/Math.pow(ry,2);
-                // var amp = cx2 / rx2 + cy2 / ry2;
+                var rx2 = rx * rx;
+                var ry2 = ry * ry;
+                var _x2 = _x * _x;
+                var _y2 = _y * _y;
 
-                // if (amp > 1) {
-                //   amp = Math.sqrt(amp);
-                //   rx *= amp;
-                //   ry *= amp;
-                // }
+                // adjust radii
+                var l = _x2 / rx2 + _y2 / ry2;
+                if (l > 1) {
+                  rx *= Math.sqrt(l);
+                  ry *= Math.sqrt(l);
+                }
 
-                // var s = (largeArcFlag == sweepFlag ? - 1 : 1) * Math.sqrt(
-                //   ((rx2 * ry2) - (rx2 * cy2) - (ry2 * cx2)) / (rx2 * cy2 + ry2 * cx2)
-                // ) || 0;
+                var amp = Math.sqrt((rx2 * ry2 - rx2 * _y2 - ry2 * _x2) / (rx2 * _y2 + ry2 * _x2));
 
-                // var cpp = new Two.Vector(
-                //   s * rx * current.y / ry,
-                //   s * - ry * current.x / rx
-                // );
+                if (_.isNaN(amp)) {
+                  amp = 0;
+                } else if (largeArcFlag != sweepFlag && amp > 0) {
+                  amp *= -1;
+                }
 
-                // var center = new Two.Vector(
-                //   (x1 + x4) / 2 + cpp.x * xcs - cpp.y * xss,
-                //   (y1 + y4) / 2 + cpp.x * xcs + cpp.y * xss
-                // );
+                // Calculate cx' cy' F.6.5.2
+                var _cx = amp * rx * _y / ry;
+                var _cy = - amp * ry * _x / rx;
 
-                // console.log(current.x, current.y, cpp.x, cpp.y, center.x, center.y);
+                // Calculate cx cy F.6.5.3
+                var cx = _cx * Math.cos(xAxisRotation) - _cy * Math.sin(xAxisRotation) + (x1 + x4) / 2;
+                var cy = _cx * Math.sin(xAxisRotation) + _cy * Math.cos(xAxisRotation) + (y1 + y4) / 2;
 
-                // var v1 = new Two.Vector(1, 0);
-                // var v2 = new Two.Vector((current.x - cpp.x) / rx, (current.y - cpp.y) / ry);
+                // vector magnitude
+                var m = function(v) { return Math.sqrt(Math.pow(v[0], 2) + Math.pow(v[1], 2)); }
+                // ratio between two vectors
+                var r = function(u, v) { return (u[0] * v[0] + u[1] * v[1]) / (m(u) * m(v)) }
+                // angle between two vectors
+                var a = function(u, v) { return (u[0] * v[1] < u[1] * v[0] ? - 1 : 1) * Math.acos(r(u,v)); }
 
-                // // TODO: Make sure `angleBetween` is the same function as canvg LN:1472
-                // var a1 = angleBetween(v1, v2);
+                // Calculate theta1 and delta theta F.6.5.4 + F.6.5.5
+                var t1 = a([1, 0], [(_x - _cx) / rx, (_y - _cy) / ry]);
+                var u = [(_x - _cx) / rx, (_y - _cy) / ry];
+                var v = [( - _x - _cx) / rx, ( - _y - _cy) / ry];
+                var dt = a(u, v);
 
-                // v1.set((current.x - cpp.x) / rx, (current.y - cpp.y) / ry);
-                // v2.set((- current.x - cpp.x) / rx, (- current.y - cpp.y) / ry);
+                if (r(u, v) <= -1) dt = Math.PI;
+                if (r(u, v) >= 1) dt = 0;
 
-                // // delta of angle
-                // var a2 = angleBetween(v1, v2);
-                // var ratio = ratioBetween(v1, v2);
+                // F.6.5.6
+                if (largeArcFlag)  {
+                  dt = mod(dt, Math.PI * 2);
+                }
 
-                // if (ratio <= -1) {
-                //   a2 = Math.PI;
-                // } else if (ratio >= 1) {
-                //   a2 = 0;
-                // }
+                if (sweepFlag && dt > 0) {
+                  dt -= Math.PI * 2;
+                }
 
-                // // var direction = 1 - sweepFlag ? 1.0 : - 1.0;
-                // // var ah = a1 + direction * a2 / 2.0;
-                // // var half = new Two.Vector(
-                // //   center.x + rx * Math.cos(ah),
-                // //   center.y + ry * Math.sin(ah)
-                // // );
+                var length = Two.Resolution;
 
-                // console.log(Math.floor((a1 / Math.PI) * 180), Math.floor((a2 / Math.PI) * 180));
+                // Save a projection of our rotation and translation to apply
+                // to the set of points.
+                var projection = new Two.Matrix()
+                  .translate(cx, cy)
+                  .rotate(xAxisRotation);
 
-                // // Make the result an array of points based on Two.Resolution
-                // // center, xAxisRotation, rx, ry, ts, td, ccw
-                // result = getAnchorsFromArcData(center, xAxisRotation, rx, ry, a1, a2, 1 - sweepFlag);
+                // Create a resulting array of Two.Anchor's to export to the
+                // the path.
+                result = _.map(_.range(length), function(i) {
+                  var pct = 1 - (i / (length - 1));
+                  var theta = pct * dt + t1;
+                  var x = rx * Math.cos(theta);
+                  var y = ry * Math.sin(theta);
+                  var projected = projection.multiply(x, y, 1);
+                  return new Two.Anchor(projected.x, projected.y, false, false, false, false, Two.Commands.line);;
+                });
 
-                // coord = result[result.length - 1];
-                // control = coord.controls.left;
+                result.push(new Two.Anchor(x4, y4, false, false, false, false, Two.Commands.line));
 
-                // break;
+                coord = result[result.length - 1];
+                control = coord.controls.left;
+
+                break;
+
             }
 
             return result;
@@ -1275,7 +1288,7 @@
 
         var l = Two.Resolution;
 
-        console.log(arguments);
+        // console.log(arguments);
 
         return _.map(_.range(l), function(i) {
 
@@ -5148,11 +5161,22 @@
 })();
 (function() {
 
-  var Path = Two.Path;
+  var Path = Two.Path, TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin;
 
-  var Polygon = Two.Polygon = function(points) {
+  var Polygon = Two.Polygon = function(ox, oy, r, sides) {
+
+    sides = Math.max(sides || 0, 3);
+
+    var points = _.map(_.range(sides), function(i) {
+      var pct = (i + 0.5) / sides;
+      var theta = TWO_PI * pct + Math.PI / 2;
+      var x = r * cos(theta);
+      var y = r * sin(theta);
+      return new Two.Anchor(x, y);
+    });
 
     Path.call(this, points, true);
+    this.translation.set(ox, oy);
 
   };
 
