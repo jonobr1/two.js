@@ -4981,7 +4981,6 @@ var Backbone = Backbone || {};
           return;
         }
         // Deallocate texture to free up gl memory.
-        console.log('deleted', child.id, '\'s texture');
         gl.deleteTexture(child._renderer.texture);
         delete child._renderer.texture;
       },
