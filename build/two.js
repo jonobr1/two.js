@@ -1680,9 +1680,6 @@ var Backbone = Backbone || {};
           });
         }
 
-        // Flag for `webgl` renderer to delete underlying 2d texture.
-        obj._renderer.removeTexture = true;
-
         if (obj.children) {
           _.each(obj.children, function(obj) {
             Two.Utils.release(obj);
@@ -4976,6 +4973,19 @@ var Backbone = Backbone || {};
 
     group: {
 
+      removeChild: function(child, gl) {
+        if (child.children) {
+          for (var i = 0; i < child.children.length; i++) {
+            webgl.group.removeChild(child.children[i], gl);
+          }
+          return;
+        }
+        // Deallocate texture to free up gl memory.
+        console.log('deleted', child.id, '\'s texture');
+        gl.deleteTexture(child._renderer.texture);
+        delete child._renderer.texture;
+      },
+
       renderChild: function(child) {
         webgl[child._renderer.type].render.call(child, this.gl, this.program);
       },
@@ -5027,6 +5037,12 @@ var Backbone = Backbone || {};
         this._renderer.opacity = this._opacity
           * (parent && parent._renderer ? parent._renderer.opacity : 1);
 
+        if (this._flagSubtractions) {
+          for (var i = 0; i < this.subtractions.length; i++) {
+            webgl.group.removeChild(this.subtractions[i], gl);
+          }
+        }
+
         this.children.forEach(webgl.group.renderChild, {
           gl: gl,
           program: program
@@ -5071,14 +5087,6 @@ var Backbone = Backbone || {};
           || parent._flagOpacity || this._flagVisible || this._flagCap
           || this._flagJoin || this._flagMiter || this._flagScale
           || !this._renderer.texture;
-
-        if (this._renderer.removeTexture && this._renderer.texture) {
-          console.log('deleted texture');
-          gl.deleteTexture(this._renderer.texture);
-          delete this._renderer.texture;
-          delete this._renderer.removeTexture;
-          return this;
-        }
 
         this._update();
 
@@ -6791,7 +6799,7 @@ var Backbone = Backbone || {};
    * A children collection which is accesible both by index and by object id
    * @constructor
    */
-  var Children = function () {
+  var Children = function() {
 
     Two.Utils.Collection.apply(this, arguments);
 
@@ -6813,16 +6821,16 @@ var Backbone = Backbone || {};
 
   _.extend(Children.prototype, {
 
-    attach: function(items) {
-      for (var i = 0; i < items.length; i++) {
-        this.ids[items[i].id] = items[i];
+    attach: function(children) {
+      for (var i = 0; i < children.length; i++) {
+        this.ids[children[i].id] = children[i];
       }
       return this;
     },
 
-    detach: function(items) {
-      for (var i = 0; i < items.length; i++) {
-        delete this.ids[items[i].id];
+    detach: function(children) {
+      for (var i = 0; i < children.length; i++) {
+        delete this.ids[children[i].id];
       }
       return this;
     }
@@ -6847,19 +6855,19 @@ var Backbone = Backbone || {};
 
     Children: Children,
 
-    InsertChildren: function(items) {
-      for (var i = 0; i < items.length; i++) {
-        replaceParent.call(this, items[i], this);
+    InsertChildren: function(children) {
+      for (var i = 0; i < children.length; i++) {
+        replaceParent.call(this, children[i], this);
       }
     },
 
-    RemoveChildren: function(items) {
-      for (var i = 0; i < items.length; i++) {
-        replaceParent.call(this, items[i]);
+    RemoveChildren: function(children) {
+      for (var i = 0; i < children.length; i++) {
+        replaceParent.call(this, children[i]);
       }
     },
 
-    OrderChildren: function(items) {
+    OrderChildren: function(children) {
       this._flagOrder = true;
     },
 
@@ -7299,46 +7307,46 @@ var Backbone = Backbone || {};
    * and updates parent-child relationships
    * Calling with one arguments will simply remove the parenting
    */
-  function replaceParent(item, newParent) {
+  function replaceParent(child, newParent) {
 
-    var parent = item.parent;
+    var parent = child.parent;
     var index;
 
-    if (parent && parent.children.ids[item.id]) {
+    if (parent && parent.children.ids[child.id]) {
 
-      index = _.indexOf(parent.children, item);
+      index = _.indexOf(parent.children, child);
       parent.children.splice(index, 1);
 
       // If we're passing from one parent to another...
-      index = _.indexOf(parent.additions, item);
+      index = _.indexOf(parent.additions, child);
 
       if (index >= 0) {
         parent.additions.splice(index, 1);
       } else {
-        parent.subtractions.push(item);
+        parent.subtractions.push(child);
         parent._flagSubtractions = true;
       }
 
     }
 
     if (newParent) {
-      item.parent = newParent;
-      this.additions.push(item);
+      child.parent = newParent;
+      this.additions.push(child);
       this._flagAdditions = true;
       return;
     }
 
     // If we're passing from one parent to another...
-    index = _.indexOf(this.additions, item);
+    index = _.indexOf(this.additions, child);
 
     if (index >= 0) {
       this.additions.splice(index, 1);
     } else {
-      this.subtractions.push(item);
+      this.subtractions.push(child);
       this._flagSubtractions = true;
     }
 
-    delete item.parent;
+    delete child.parent;
 
   }
 

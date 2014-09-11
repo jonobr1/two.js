@@ -207,9 +207,6 @@
           });
         }
 
-        // Flag for `webgl` renderer to delete underlying 2d texture.
-        obj._renderer.removeTexture = true;
-
         if (obj.children) {
           _.each(obj.children, function(obj) {
             Two.Utils.release(obj);

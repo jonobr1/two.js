@@ -4,7 +4,7 @@
 
 (function() {
 
-  module('WebGlRenderer');
+  module('WebGLRenderer');
 
   var getRatio = Two.Utils.getRatio;
   var deviceRatio = getRatio(document.createElement('canvas').getContext('2d'));

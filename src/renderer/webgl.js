@@ -28,6 +28,19 @@
 
     group: {
 
+      removeChild: function(child, gl) {
+        if (child.children) {
+          for (var i = 0; i < child.children.length; i++) {
+            webgl.group.removeChild(child.children[i], gl);
+          }
+          return;
+        }
+        // Deallocate texture to free up gl memory.
+        console.log('deleted', child.id, '\'s texture');
+        gl.deleteTexture(child._renderer.texture);
+        delete child._renderer.texture;
+      },
+
       renderChild: function(child) {
         webgl[child._renderer.type].render.call(child, this.gl, this.program);
       },
@@ -79,6 +92,12 @@
         this._renderer.opacity = this._opacity
           * (parent && parent._renderer ? parent._renderer.opacity : 1);
 
+        if (this._flagSubtractions) {
+          for (var i = 0; i < this.subtractions.length; i++) {
+            webgl.group.removeChild(this.subtractions[i], gl);
+          }
+        }
+
         this.children.forEach(webgl.group.renderChild, {
           gl: gl,
           program: program
@@ -123,14 +142,6 @@
           || parent._flagOpacity || this._flagVisible || this._flagCap
           || this._flagJoin || this._flagMiter || this._flagScale
           || !this._renderer.texture;
-
-        if (this._renderer.removeTexture && this._renderer.texture) {
-          console.log('deleted texture');
-          gl.deleteTexture(this._renderer.texture);
-          delete this._renderer.texture;
-          delete this._renderer.removeTexture;
-          return this;
-        }
 
         this._update();
 
