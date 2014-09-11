@@ -344,7 +344,7 @@ two.bind('update', function(frameCount) {
         <li class="description">
           When you import the library Two is a <code>window</code> level class that serves as the main interaction point for the project. It exposes a number of methods and properties. These make it possible to draw, but also afford other capabilities such as augmenting the drawing space. Below are the documented properties and features of the <code>Two</code> class. Unless specified methods return their instance of <code>Two</code> for the purpose of chaining.
         </li>
-        <li>
+        <li id="two-construction">
           <p class="construction declaration">
             <strong>construction</strong> <code>var two = new Two(params);</code>
           </p>
@@ -392,9 +392,17 @@ two.bind('update', function(frameCount) {
                 A boolean to set the drawing space of the instance to be fullscreen or not. If set to <code>true</code> then <code>width</code> and <code>height</code> parameters will not be respected.
               </p>
             </li>
+            <li>
+              <p class="property number">
+                <strong>ratio</strong> <code>params.ratio</code>
+              </p>
+              <p>
+                Set the resolution ratio for <code>canvas</code> and <code>webgl</code> renderers. If left blank two.js automatically infers the ratio based on the <code>devicePixelRatio</code> api.
+              </p>
+            </li>
           </ul>
         </li>
-        <li>
+        <li id="two-type">
           <p class="property string declaration">
             <strong>type</strong> <code>two.type</code>
           </p>
@@ -402,7 +410,7 @@ two.bind('update', function(frameCount) {
             A string representing which type of renderer the instance has implored.
           </p>
         </li>
-        <li>
+        <li id="two-framecount">
           <p class="property number declaration">
             <strong>frameCount</strong> <code>two.frameCount</code>
           </p>
@@ -410,7 +418,7 @@ two.bind('update', function(frameCount) {
             A number representing how many frames have elapsed.
           </p>
         </li>
-        <li>
+        <li id="two-timedelta">
           <p class="property number declaration">
             <strong>timeDelta</strong> <code>two.timeDelta</code>
           </p>
@@ -418,7 +426,7 @@ two.bind('update', function(frameCount) {
             A number representing how much time has elapsed since the last frame in milliseconds.
           </p>
         </li>
-        <li>
+        <li id="two-width">
           <p class="property number declaration">
             <strong>width</strong> <code>two.width</code>
           </p>
@@ -426,7 +434,7 @@ two.bind('update', function(frameCount) {
             The width of the instance&apos;s dom element.
           </p>
         </li>
-        <li>
+        <li id="two-height">
           <p class="property number declaration">
             <strong>height</strong> <code>two.height</code>
           </p>
@@ -434,7 +442,7 @@ two.bind('update', function(frameCount) {
             The height of the instance&apos;s dom element.
           </p>
         </li>
-        <li>
+        <li id="two-playing">
           <p class="property boolean declaration">
             <strong>playing</strong> <code>two.playing</code>
           </p>
@@ -442,7 +450,7 @@ two.bind('update', function(frameCount) {
             A boolean representing whether or not the instance is being updated through the automatic <code>requestAnimationFrame</code>.
           </p>
         </li>
-        <li>
+        <li id="two-renderer">
           <p class="property object declaration">
             <strong>renderer</strong> <code>two.renderer</code>
           </p>
@@ -450,7 +458,7 @@ two.bind('update', function(frameCount) {
             The instantiated rendering class for the instance. For a list of possible rendering types check out <code>Two.Types</code>.
           </p>
         </li>
-        <li>
+        <li id="two-scene">
           <p class="property object declaration">
             <strong>scene</strong> <code>two.scene</code>
           </p>
@@ -458,7 +466,7 @@ two.bind('update', function(frameCount) {
             The base level <code>Two.Group</code> which houses all objects for the instance. Because it is a <code>Two.Group</code> transformations can be applied to it that will affect all objects in the instance. This is handy as a makeshift camera.
           </p>
         </li>
-        <li>
+        <li id="two-appendto">
           <p class="property function declaration">
             <strong>appendTo</strong> <code>two.appendTo(domElement);</code>
           </p>
@@ -466,7 +474,7 @@ two.bind('update', function(frameCount) {
             A convenient method to append the instance&apos;s dom element to the page. <em>It&apos;s required to add the instance&apos;s dom element to the page in order to see anything drawn.</em>
           </p>
         </li>
-        <li>
+        <li id="two-play">
           <p class="property function declaration">
             <strong>play</strong> <code>two.play();</code>
           </p>
@@ -474,7 +482,7 @@ two.bind('update', function(frameCount) {
             This method adds the instance to the <code>requestAnimationFrame</code> loop. In affect enabling animation for this instance.
           </p>
         </li>
-        <li>
+        <li id="two-pause">
           <p class="property function declaration">
             <strong>pause</strong> <code>two.pause();</code>
           </p>
@@ -482,7 +490,7 @@ two.bind('update', function(frameCount) {
             This method removes the instance from the <code>requestAnimationFrame</code> loop. In affect halting animation for this instance.
           </p>
         </li>
-        <li>
+        <li id="two-update">
           <p class="property function declaration">
             <strong>update</strong> <code>two.update();</code>
           </p>
@@ -490,7 +498,7 @@ two.bind('update', function(frameCount) {
             This method updates the dimensions of the drawing space, increments the <code>tick</code> for animation, and finally calls <code>two.render()</code>. When using the built-in <code>requestAnimationFrame</code> hook, <code>two.play()</code>, this method is invoked for you automatically.
           </p>
         </li>
-        <li>
+        <li id="two-render">
           <p class="property function declaration">
             <strong>render</strong> <code>two.render();</code>
           </p>
@@ -498,7 +506,7 @@ two.bind('update', function(frameCount) {
             This method makes the instance&apos;s renderer draw. <em>It should be unnecessary to invoke this yourself at anytime.</em>
           </p>
         </li>
-        <li>
+        <li id="two-add">
           <p class="property function declaration">
             <strong>add</strong> <code>two.add(objects);</code>
           </p>
@@ -506,7 +514,7 @@ two.bind('update', function(frameCount) {
             Add one or many shapes / groups to the instance. Objects can be added as arguments, <code>two.add(o1, o2, oN)</code>, or as an array depicted above.
           </p>
         </li>
-        <li>
+        <li id="two-remove">
           <p class="property function declaration">
             <strong>remove</strong> <code>two.remove(objects);</code>
           </p>
@@ -514,7 +522,7 @@ two.bind('update', function(frameCount) {
             Remove one or many shapes / groups from the instance. Objects can be removed as arguments, <code>two.remove(o1, o2, oN)</code>, or as an array depicted above.
           </p>
         </li>
-        <li>
+        <li id="two-clear">
           <p class="property function declaration">
             <strong>clear</strong> <code>two.clear();</code>
           </p>
@@ -522,7 +530,7 @@ two.bind('update', function(frameCount) {
             Removes all objects from the instance&apos;s scene. If you intend to have the browser garbage collect this, don&apos;t forget to delete the references in your application as well.
           </p>
         </li>
-        <li>
+        <li id="two-makeline">
           <p class="property function declaration">
             <strong>makeLine</strong> <code>two.makeLine(x1, y1, x2, y2);</code>
           </p>
@@ -530,7 +538,7 @@ two.bind('update', function(frameCount) {
             Draws a line between two coordinates to the instance&apos;s drawing space where <code>x1</code>, <code>y1</code> are the x, y values for the first coordinate and <code>x2</code>, <code>y2</code> are the x, y values for the second coordinate. It returns a <code>Two.Polygon</code> object.
           </p>
         </li>
-        <li>
+        <li id="two-makerectangle">
           <p class="property function declaration">
             <strong>makeRectangle</strong> <code>two.makeRectangle(x, y, width, height);</code>
           </p>
@@ -538,7 +546,7 @@ two.bind('update', function(frameCount) {
             Draws a rectangle to the instance&apos;s drawing space where <code>x</code>, <code>y</code> are the x, y values for the center point of the rectangle and <code>width</code>, <code>height</code> represents the width and height of the rectangle. It returns a <code>Two.Polygon</code> object.
           </p>
         </li>
-        <li>
+        <li id="two-makecircle">
           <p class="property function declaration">
             <strong>makeCircle</strong> <code>two.makeCircle(x, y, radius);</code>
           </p>
@@ -546,7 +554,7 @@ two.bind('update', function(frameCount) {
             Draws a circle to the instance&apos;s drawing space where <code>x</code>, <code>y</code> are the x, y values for the center point of the circle and <code>radius</code> is the radius of the circle. It returns a <code>Two.Polygon</code> object.
           </p>
         </li>
-        <li>
+        <li id="two-makeellipse">
           <p class="property function declaration">
             <strong>makeEllipse</strong> <code>two.makeEllipse(x, y, width, height);</code>
           </p>
@@ -554,7 +562,7 @@ two.bind('update', function(frameCount) {
             Draws an ellipse to the instance&apos;s drawing space where <code>x</code>, <code>y</code> are the x, y values for the center point of the ellipse and <code>width</code>, <code>height</code> are the dimensions of the ellipse. It returns a <code>Two.Polygon</code> object.
           </p>
         </li>
-        <li>
+        <li id="two-makecurve">
           <p class="property function declaration">
             <strong>makeCurve</strong> <code>two.makeCurve(x1, y1, x2, y2, xN, yN, open);</code>
           </p>
@@ -568,7 +576,7 @@ two.bind('update', function(frameCount) {
             This method also recognizes the format <code>two.makeCurve(points, open)</code> where points is an array of <code>Two.Anchor</code>&apos;s and open is an optional boolean describing whether or not to expose endpoints. <em>It is imperative if you generate curves this way to make the list of points <code>Two.Anchor</code>&apos;s</em>.
           </p>
         </li>
-        <li>
+        <li id="two-makepolygon">
           <p class="property function declaration">
             <strong>makePolygon</strong> <code>two.makePolygon(x1, y1, x2, y2, xN, yN, open);</code>
           </p>
@@ -585,7 +593,7 @@ two.bind('update', function(frameCount) {
             The <code>Two.Polygon</code> that this method creates is the base shape for all of the make functions.
           </p>
         </li>
-        <li>
+        <li id="two-makegroup">
           <p class="property function declaration">
             <strong>makeGroup</strong> <code>two.makeGroup(objects);</code>
           </p>
@@ -593,7 +601,7 @@ two.bind('update', function(frameCount) {
             Adds a group to the instance&apos;s drawing space. While a group does not have any visible features when rendered it allows for nested transformations on shapes. See <code>Two.Group</code> for more information. It accepts an array of objects, <code>Two.Polygon</code>s or <code>Two.Group</code>s. As well as a list of objects as the arguments, <code>two.makeGroup(o1, o2, oN)</code>. It returns a <code>Two.Group</code> object.
           </p>
         </li>
-        <li>
+        <li id="two-interpret">
           <p class="property function declaration">
             <strong>interpret</strong> <code>two.interpret(svgNode);</code>
           </p>
@@ -601,7 +609,7 @@ two.bind('update', function(frameCount) {
             Reads an svg node and draws the svg object by creating <code>Two.Polygon</code>s and <code>Two.Group</code>s from the reference. It then adds it to the instance&apos;s drawing space. It returns an <code>Two.Group</code> object.
           </p>
         </li>
-        <li>
+        <li id="two-bind">
           <p class="property function declaration">
             <strong>bind</strong> <code>two.bind(event, callback);</code>
           </p>
@@ -609,7 +617,7 @@ two.bind('update', function(frameCount) {
             Bind an event, string, to a callback function. Passing <code>"all"</code> will bind the callback to all events. Inherited from <a href="http://backbonejs.org/docs/backbone.html#section-13">Backbone.js</a>.
           </p>
         </li>
-        <li>
+        <li id="two-unbind">
           <p class="property function declaration">
             <strong>unbind</strong> <code>two.unbind(event, callback);</code>
           </p>
@@ -620,7 +628,7 @@ two.bind('update', function(frameCount) {
 
         <!-- Static Properties -->
 
-        <li>
+        <li id="two-array">
           <p class="static property array declaration">
             <strong>Array</strong> <code>Two.Array</code>
           </p>
@@ -628,7 +636,7 @@ two.bind('update', function(frameCount) {
             A JavaScript <code>Float32Array</code> with graceful fallback to JavaScript <code>Array</code>.
           </p>
         </li>
-        <li>
+        <li id="two-collection">
           <p class="static property object declaration">
             <strong>Collection</strong> <code>Two.Collection</code>
           </p>
@@ -636,7 +644,7 @@ two.bind('update', function(frameCount) {
             A databound instance of an array, used for <code>vertices</code> attribute of a <code>Two.Polygon</code>.
           </p>
         </li>
-        <li>
+        <li id="two-types">
           <p class="static property object declaration">
             <strong>Types</strong> <code>Two.Types</code>
           </p>
@@ -644,7 +652,7 @@ two.bind('update', function(frameCount) {
             A list of applicable types of rendering contexts. This is used to standardize the addresses of the various renderers. The types include <code>svg</code>, <code>canvas</code>, and <code>webgl</code>. e.g: <code>Two.Types.svg</code>
           </p>
         </li>
-        <li>
+        <li id="two-properties">
           <p class="static property object declaration">
             <strong>Properties</strong> <code>Two.Properties</code>
           </p>
@@ -652,7 +660,7 @@ two.bind('update', function(frameCount) {
             A list of renderer specific application properties.
           </p>
         </li>
-        <li>
+        <li id="two-events">
           <p class="static property object declaration">
             <strong>Events</strong> <code>Two.Events</code>
           </p>
@@ -660,7 +668,7 @@ two.bind('update', function(frameCount) {
             A list of actionable events triggered by a given instance. For the most part these are internal events in order to enable two-way databinding. Exceptions include <code>update</code> event on animation loop and <code>resize</code> when the dimensions of the drawing space change. Related to <code>two.bind</code> and <code>two.trigger</code>.
           </p>
         </li>
-        <li>
+        <li id="two-commands">
           <p class="static property object declaration">
             <strong>Commands</strong> <code>Two.Commands</code>
           </p>
@@ -668,7 +676,7 @@ two.bind('update', function(frameCount) {
             A list of commands that dictate how the various renderers draw <code>Two.Anchor</code>s.
           </p>
         </li>
-        <li>
+        <li id="two-resolution">
           <p class="static property number declaration">
             <strong>Resolution</strong> <code>Two.Resolution</code>
           </p>
@@ -676,7 +684,7 @@ two.bind('update', function(frameCount) {
             A number representing how many subdivisions should be present during curve calculations.
           </p>
         </li>
-        <li>
+        <li id="two-instances">
           <p class="static property array declaration">
             <strong>Instances</strong> <code>Two.Instances</code>
           </p>
@@ -684,7 +692,7 @@ two.bind('update', function(frameCount) {
             A running list of all instances created on the page.
           </p>
         </li>
-        <li>
+        <li id="two-noconflict">
           <p class="static method function declaration">
             <strong>noConflict</strong> <code>Two.noConflict();</code>
           </p>
@@ -692,7 +700,7 @@ two.bind('update', function(frameCount) {
             Run two.js in <code>noConflict</code> mode, returning the <code>two</code> variable to its previous owner. Returns a reference to the <code>Two</code> class.
           </p>
         </li>
-        <li>
+        <li id="two-utils">
           <p class="static method object declaration">
             <strong>Utils</strong> <code>Two.Utils</code>
           </p>
@@ -700,7 +708,7 @@ two.bind('update', function(frameCount) {
             A collection of utility functions and variables used throughout the project. This is where much of the algorithmic computation lies: <em>computing curve handles, subdividing cubic bezier curves, interpretting svg nodes</em>. Because of its complexity it&apos;s encouraged to look at the <a href="https://github.com/jonobr1/two.js/tree/master/src" target="_blank">source code</a> for further information.
           </p>
         </li>
-        <li>
+        <li id="two-error">
           <p class="static property function declaration">
             <strong>Error</strong> <code>Two.Error(message);</code>
           </p>
@@ -715,7 +723,7 @@ two.bind('update', function(frameCount) {
         <li class="description">
           This is the base class for creating all drawable shapes in two.js. Unless specified methods return their instance of <code>Two.Polygon</code> for the purpose of chaining.
         </li>
-        <li>
+        <li id="polygon-construction">
           <p class="construction declaration">
             <strong>construction</strong> <code>var polygon = new Two.Polygon(vertices, closed, curved, manual);</code>
           </p>
@@ -726,7 +734,7 @@ two.bind('update', function(frameCount) {
             If you are constructing groups this way instead of <code>two.makePolygon()</code>, then don&apos;t forget to add the group to the instance&apos;s scene, <code>two.add(group)</code>.
           </p>
         </li>
-        <li>
+        <li id="polygon-id">
           <p class="property number declaration">
             <strong>id</strong> <code>polygon.id</code>
           </p>
@@ -734,7 +742,7 @@ two.bind('update', function(frameCount) {
             The id of the polygon. In the svg renderer this is the same number as the <code>id</code> attribute given to the corresponding node. i.e: if <code>polygon.id = 4</code> then <code>document.querySelector('#two-' + group.id)</code> will return the corresponding svg node.
           </p>
         </li>
-        <li>
+        <li id="polygon-stroke">
           <p class="property string declaration">
             <strong>stroke</strong> <code>polygon.stroke</code>
           </p>
@@ -742,7 +750,7 @@ two.bind('update', function(frameCount) {
             A string representing the color for the stroke of the polygon. All valid css representations of color are accepted.
           </p>
         </li>
-        <li>
+        <li id="polygon-fill">
           <p class="property string declaration">
             <strong>fill</strong> <code>polygon.fill</code>
           </p>
@@ -750,7 +758,7 @@ two.bind('update', function(frameCount) {
             A string representing the color for the area of the vertices. All valid css representations of color are accepted.
           </p>
         </li>
-        <li>
+        <li id="polygon-linewidth">
           <p class="property number declaration">
             <strong>linewidth</strong> <code>polygon.linewidth</code>
           </p>
@@ -758,7 +766,7 @@ two.bind('update', function(frameCount) {
             A number representing the thickness the polygon&apos;s strokes. Must be a positive number.
           </p>
         </li>
-        <li>
+        <li id="polygon-opacity">
           <p class="property number declaration">
             <strong>opacity</strong> <code>polygon.opacity</code>
           </p>
@@ -766,7 +774,7 @@ two.bind('update', function(frameCount) {
             A number representing the opacity of the polygon. Use strictly for setting. Must be a number 0-1.
           </p>
         </li>
-        <li>
+        <li id="polygon-cap">
           <p class="property string declaration">
             <strong>cap</strong> <code>polygon.cap</code>
           </p>
@@ -774,7 +782,7 @@ two.bind('update', function(frameCount) {
             A string representing the type of stroke cap to render. All applicable values can be found on the <a href="http://www.w3.org/TR/SVG/images/painting/linecap.svg" target="_blank">w3c</a> spec. Defaults to <code>"round"</code>.
           </p>
         </li>
-        <li>
+        <li id="polygon-join">
           <p class="property string declaration">
             <strong>join</strong> <code>polygon.join</code>
           </p>
@@ -782,7 +790,7 @@ two.bind('update', function(frameCount) {
             A string representing the type of stroke join to render. All applicable values can be found on the <a href="http://www.w3.org/TR/SVG/images/painting/linejoin.svg" target="_blank">w3c</a> spec. Defaults to <code>"round"</code>.
           </p>
         </li>
-        <li>
+        <li id="polygon-miter">
           <p class="property number declaration">
             <strong>miter</strong> <code>polygon.miter</code>
           </p>
@@ -790,7 +798,7 @@ two.bind('update', function(frameCount) {
             A number representing the miter limit for the stroke. Defaults to 1.
           </p>
         </li>
-        <li>
+        <li id="polygon-rotation">
           <p class="property number declaration">
             <strong>rotation</strong> <code>polygon.rotation</code>
           </p>
@@ -798,7 +806,7 @@ two.bind('update', function(frameCount) {
             A number that represents the rotation of the polygon in the drawing space, in <a href="http://en.wikipedia.org/wiki/Radian" target="_blank">radians</a>.
           </p>
         </li>
-        <li>
+        <li id="polygon-scale">
           <p class="property number declaration">
             <strong>scale</strong> <code>polygon.scale</code>
           </p>
@@ -806,7 +814,7 @@ two.bind('update', function(frameCount) {
             A number that represents the uniform scale of the polygon in the drawing space.
           </p>
         </li>
-        <li>
+        <li id="polygon-translation">
           <p class="property object declaration">
             <strong>translation</strong> <code>polygon.translation</code>
           </p>
@@ -814,7 +822,7 @@ two.bind('update', function(frameCount) {
             A <code>Two.Vector</code> that represents x, y translation of the polygon in the drawing space.
           </p>
         </li>
-        <li>
+        <li id="polygon-parent">
           <p class="property object declaration">
             <strong>parent</strong> <code>polygon.parent</code>
           </p>
@@ -822,7 +830,7 @@ two.bind('update', function(frameCount) {
             A reference to the <code>Two.Group</code> that contains this instance.
           </p>
         </li>
-        <li>
+        <li id="polygon-vertices">
           <p class="property array declaration">
             <strong>vertices</strong> <code>polygon.vertices</code>
           </p>
@@ -830,7 +838,7 @@ two.bind('update', function(frameCount) {
             An <code>Two.Collection</code> of <code>Two.Anchor</code>s that is two-way databound. Individual vertices may be manipulated, however <strong>it is imperative that the array itself does not get manipulated</strong>.
           </p>
         </li>
-        <li>
+        <li id="polygon-closed">
           <p class="property boolean declaration">
             <strong>closed</strong> <code>polygon.closed</code>
           </p>
@@ -838,7 +846,7 @@ two.bind('update', function(frameCount) {
             Boolean that describes whether the polygon is closed or not.
           </p>
         </li>
-        <li>
+        <li id="polygon-curved">
           <p class="property boolean declaration">
             <strong>curved</strong> <code>polygon.curved</code>
           </p>
@@ -846,7 +854,7 @@ two.bind('update', function(frameCount) {
             Boolean that describes whether the polygon is curved or not.
           </p>
         </li>
-        <li>
+        <li id="polygon-automatic">
           <p class="property boolean declaration">
             <strong>automatic</strong> <code>polygon.automatic</code>
           </p>
@@ -854,7 +862,7 @@ two.bind('update', function(frameCount) {
             Boolean that describes whether the polygon should automatically dictate how <code>Two.Anchor</code>s behave. This defaults to <code>true</code>.
           </p>
         </li>
-        <li>
+        <li id="polygon-beginning">
           <p class="property number declaration">
             <strong>beginning</strong> <code>polygon.beginning</code>
           </p>
@@ -862,7 +870,7 @@ two.bind('update', function(frameCount) {
             A number, 0-1, that is mapped to the layout and order of vertices. It represents which of the vertices from beginning to end should start the shape. <em>Exceedingly helpful for animating strokes</em>. Defaults to 0.
           </p>
         </li>
-        <li>
+        <li id="polygon-ending">
           <p class="property number declaration">
             <strong>ending</strong> <code>polygon.ending</code>
           </p>
@@ -870,7 +878,15 @@ two.bind('update', function(frameCount) {
             A number, 0-1, that is mapped to the layout and order of vertices. It represents which of the vertices from beginning to end should end the shape. <em>Exceedingly helpful for animating strokes</em>. Defaults to 1.
           </p>
         </li>
-        <li>
+        <li id="polygon-clip">
+          <p class="property boolean declaration">
+            <strong>clip</strong> <code>polygon.clip</code>
+          </p>
+          <p class="description">
+            A boolean describing whether to render this shape as a <a href="https://www.google.com/webhp?sourceid=chrome-instant&ion=1&espv=2&ie=UTF-8#q=clipping%20mask%20definition" target="_blank">clipping mask</a>. <em>This property is set automatically in correspondence with <a href="#group-mask"><code>Two.Group.mask</code></em></a>. Defaults to <code>false</code>.
+          </p>
+        </li>
+        <li id="polygon-clone">
           <p class="property function declaration">
             <strong>clone</strong> <code>polygon.clone();</code>
           </p>
@@ -878,7 +894,7 @@ two.bind('update', function(frameCount) {
             Returns a new instance of a <code>Two.Polygon</code> with the same settings.
           </p>
         </li>
-        <li>
+        <li id="polygon-center">
           <p class="property function declaration">
             <strong>center</strong> <code>polygon.center();</code>
           </p>
@@ -886,7 +902,7 @@ two.bind('update', function(frameCount) {
             Anchors all vertices around the centroid of the group.
           </p>
         </li>
-        <li>
+        <li id="polygon-addto">
           <p class="property function declaration">
             <strong>addTo</strong> <code>polygon.addTo(group);</code>
           </p>
@@ -894,7 +910,7 @@ two.bind('update', function(frameCount) {
             Adds the instance to a <code>Two.Group</code>.
           </p>
         </li>
-        <li>
+        <li id="polygon-remove">
           <p class="property function declaration">
             <strong>remove</strong> <code>polygon.remove();</code>
           </p>
@@ -902,7 +918,7 @@ two.bind('update', function(frameCount) {
             If added to a <code>two.scene</code> this method removes itself from it.
           </p>
         </li>
-        <li>
+        <li id="polygon-getboundingclientrect">
           <p class="property function declaration">
             <strong>getBoundingClientRect</strong> <code>polygon.getBoundingClientRect(shallow);</code>
           </p>
@@ -910,7 +926,7 @@ two.bind('update', function(frameCount) {
             Returns an object with top, left, right, bottom, width, and height parameters representing the bounding box of the polygon. Pass <code>true</code> if you&apos;re interested in the shallow positioning, i.e in the space directly affecting the object and not where it is nested.
           </p>
         </li>
-        <li>
+        <li id="polygon-nofill">
           <p class="property function declaration">
             <strong>noFill</strong> <code>polygon.noFill();</code>
           </p>
@@ -918,7 +934,7 @@ two.bind('update', function(frameCount) {
             Removes the fill.
           </p>
         </li>
-        <li>
+        <li id="polygon-nostroke">
           <p class="property function declaration">
             <strong>noStroke</strong> <code>polygon.noStroke();</code>
           </p>
@@ -926,7 +942,7 @@ two.bind('update', function(frameCount) {
             Removes the stroke.
           </p>
         </li>
-        <li>
+        <li id="polygon-plot">
           <p class="property function declaration">
             <strong>plot</strong> <code>polygon.plot();</code>
           </p>
@@ -934,12 +950,20 @@ two.bind('update', function(frameCount) {
             If curved goes through the vertices and calculates the curve. If not, then goes through the vertices and calculates the lines.
           </p>
         </li>
-        <li>
+        <li id="polygon-subdivide">
           <p class="property function declaration">
             <strong>subdivide</strong> <code>polygon.subdivide();</code>
           </p>
           <p class="description">
             Creates a new set of vertices that are <code>lineTo</code> anchors. For previously straight lines the anchors remain the same. For curved lines, however, <code>Two.Utils.subdivide</code> is used to generate a new set of straight lines that are perceived as a curve.
+          </p>
+        </li>
+        <li id="polygon-makeobservable">
+          <p class="property static function declaration">
+            <strong>MakeObservable</strong> <code>Two.Polygon.MakeObservable();</code>
+          </p>
+          <p class="description">
+            Convenience method to make getter / setter properties specific to <code>Two.Polygon</code>.
           </p>
         </li>
 
@@ -949,7 +973,7 @@ two.bind('update', function(frameCount) {
         <li class="description">
           This is a container object for two.js &mdash; it can hold shapes as well as other groups. At a technical level it can be considered an empty transformation matrix. It is recommended to use <code>two.makeGroup()</code> in order to add groups to your instance of <code>two</code>, but it&apos;s not necessary. Unless specified methods return their instance of <code>Two.Group</code> for the purpose of chaining.
         </li>
-        <li>
+        <li id="group-construction">
           <p class="construction declaration">
             <strong>construction</strong> <code>var group = new Two.Group();</code>
           </p>
@@ -957,7 +981,7 @@ two.bind('update', function(frameCount) {
             If you are constructing groups this way instead of <code>two.makeGroup()</code>, then don&apos;t forget to add the group to the instance&apos;s scene, <code>two.add(group)</code>.
           </p>
         </li>
-        <li>
+        <li id="group-id">
           <p class="property number declaration">
             <strong>id</strong> <code>group.id</code>
           </p>
@@ -965,7 +989,7 @@ two.bind('update', function(frameCount) {
             The id of the group. In the svg renderer this is the same number as the <code>id</code> attribute given to the corresponding node. i.e: if <code>group.id = 5</code> then <code>document.querySelector('#two-' + group.id)</code> will return the corresponding node.
           </p>
         </li>
-        <li>
+        <li id="group-stroke">
           <p class="property string declaration">
             <strong>stroke</strong> <code>group.stroke</code>
           </p>
@@ -973,7 +997,7 @@ two.bind('update', function(frameCount) {
             A string representing the color for the stroke of all child shapes. Use strictly for setting. All valid css representations of color are accepted.
           </p>
         </li>
-        <li>
+        <li id="group-fill">
           <p class="property string declaration">
             <strong>fill</strong> <code>group.fill</code>
           </p>
@@ -981,7 +1005,7 @@ two.bind('update', function(frameCount) {
             A string representing the color for the area of all child shapes. Use strictly for setting. All valid css representations of color are accepted.
           </p>
         </li>
-        <li>
+        <li id="group-linewidth">
           <p class="property number declaration">
             <strong>linewidth</strong> <code>group.linewidth</code>
           </p>
@@ -989,7 +1013,7 @@ two.bind('update', function(frameCount) {
             A number representing the thickness of all child shapes&apos; strokes. Use strictly for setting. Must be a positive number.
           </p>
         </li>
-        <li>
+        <li id="group-opacity">
           <p class="property number declaration">
             <strong>opacity</strong> <code>group.opacity</code>
           </p>
@@ -997,7 +1021,7 @@ two.bind('update', function(frameCount) {
             A number representing the opacity of all child shapes. Use strictly for setting. Must be a number 0-1.
           </p>
         </li>
-        <li>
+        <li id="group-cap">
           <p class="property string declaration">
             <strong>cap</strong> <code>group.cap</code>
           </p>
@@ -1005,7 +1029,7 @@ two.bind('update', function(frameCount) {
             A string representing the type of stroke cap to render for all child shapes. Use strictly for setting. All applicable values can be found on the <a href="http://www.w3.org/TR/SVG/images/painting/linecap.svg" target="_blank">w3c</a> spec. Defaults to <code>"round"</code>.
           </p>
         </li>
-        <li>
+        <li id="group-join">
           <p class="property string declaration">
             <strong>join</strong> <code>group.join</code>
           </p>
@@ -1013,7 +1037,7 @@ two.bind('update', function(frameCount) {
             A string representing the type of stroke join to render for all child shapes. Use strictly for setting. All applicable values can be found on the <a href="http://www.w3.org/TR/SVG/images/painting/linejoin.svg" target="_blank">w3c</a> spec. Defaults to <code>"round"</code>.
           </p>
         </li>
-        <li>
+        <li id="group-miter">
           <p class="property number declaration">
             <strong>miter</strong> <code>group.miter</code>
           </p>
@@ -1021,7 +1045,7 @@ two.bind('update', function(frameCount) {
             A number representing the miter limit for the stroke of all child objects. Use strictly for setting. Defaults to 1.
           </p>
         </li>
-        <li>
+        <li id="group-rotation">
           <p class="property number declaration">
             <strong>rotation</strong> <code>group.rotation</code>
           </p>
@@ -1029,7 +1053,7 @@ two.bind('update', function(frameCount) {
             A number that represents the rotation of the group in the drawing space, in <a href="http://en.wikipedia.org/wiki/Radian" target="_blank">radians</a>.
           </p>
         </li>
-        <li>
+        <li id="group-scale">
           <p class="property number declaration">
             <strong>scale</strong> <code>group.scale</code>
           </p>
@@ -1037,7 +1061,7 @@ two.bind('update', function(frameCount) {
             A number that represents the uniform scale of the group in the drawing space.
           </p>
         </li>
-        <li>
+        <li id="group-translation">
           <p class="property object declaration">
             <strong>translation</strong> <code>group.translation</code>
           </p>
@@ -1045,7 +1069,7 @@ two.bind('update', function(frameCount) {
             A <code>Two.Vector</code> that represents x, y translation of the group in the drawing space.
           </p>
         </li>
-        <li>
+        <li id="group-children">
           <p class="property object declaration">
             <strong>children</strong> <code>group.children</code>
           </p>
@@ -1053,7 +1077,7 @@ two.bind('update', function(frameCount) {
             A map of all the children of the group.
           </p>
         </li>
-        <li>
+        <li id="group-parent">
           <p class="property object declaration">
             <strong>parent</strong> <code>group.parent</code>
           </p>
@@ -1061,7 +1085,15 @@ two.bind('update', function(frameCount) {
             A reference to the <code>Two.Group</code> that contains this instance.
           </p>
         </li>
-        <li>
+        <li id="group-mask">
+          <p class="property object declaration">
+            <strong>mask</strong> <code>group.mask</code>
+          </p>
+          <p class="description">
+            A reference to the <code>Two.Polygon</code> that masks the content within the group. Automatically sets the referenced <code>Two.Polygon.clip</code> to <code>true</code>.
+          </p>
+        </li>
+        <li id="group-clone">
           <p class="property function declaration">
             <strong>clone</strong> <code>group.clone();</code>
           </p>
@@ -1072,7 +1104,7 @@ two.bind('update', function(frameCount) {
             This will copy the children as well, which can be computationally expensive.
           </p>
         </li>
-        <li>
+        <li id="group-center">
           <p class="property function declaration">
             <strong>center</strong> <code>group.center();</code>
           </p>
@@ -1080,7 +1112,7 @@ two.bind('update', function(frameCount) {
             Anchors all children around the centroid of the group.
           </p>
         </li>
-        <li>
+        <li id="group-addto">
           <p class="property function declaration">
             <strong>addTo</strong> <code>group.addTo(group);</code>
           </p>
@@ -1088,7 +1120,7 @@ two.bind('update', function(frameCount) {
             Adds the instance to a <code>Two.Group</code>. In many ways the inverse of <code>two.add(object)</code>.
           </p>
         </li>
-        <li>
+        <li id="group-add">
           <p class="property function declaration">
             <strong>add</strong> <code>group.add(objects);</code>
           </p>
@@ -1096,7 +1128,7 @@ two.bind('update', function(frameCount) {
             Add one or many shapes / groups to the instance. Objects can be added as arguments, <code>two.add(o1, o2, oN)</code>, or as an array depicted above.
           </p>
         </li>
-        <li>
+        <li id="group-remove">
           <p class="property function declaration">
             <strong>remove</strong> <code>group.remove(objects);</code>
           </p>
@@ -1104,7 +1136,7 @@ two.bind('update', function(frameCount) {
             Remove one or many shapes / groups to the instance. Objects can be removed as arguments, <code>two.remove(o1, o2, oN)</code>, or as an array depicted above.
           </p>
         </li>
-        <li>
+        <li id="group-getboundingclientrect">
           <p class="property function declaration">
             <strong>getBoundingClientRect</strong> <code>group.getBoundingClientRect(shallow);</code>
           </p>
@@ -1112,7 +1144,7 @@ two.bind('update', function(frameCount) {
             Returns an object with top, left, right, bottom, width, and height parameters representing the bounding box of the polygon. Pass <code>true</code> if you&apos;re interested in the shallow positioning, i.e in the space directly affecting the object and not where it is nested.
           </p>
         </li>
-        <li>
+        <li id="group-nofill">
           <p class="property function declaration">
             <strong>noFill</strong> <code>group.noFill();</code>
           </p>
@@ -1120,7 +1152,7 @@ two.bind('update', function(frameCount) {
             Remove the fill from all children of the group.
           </p>
         </li>
-        <li>
+        <li id="group-nostroke">
           <p class="property function declaration">
             <strong>noStroke</strong> <code>group.noStroke();</code>
           </p>
@@ -1128,12 +1160,12 @@ two.bind('update', function(frameCount) {
             Remove the stroke from all children of the group.
           </p>
         </li>
-        <li>
+        <li id="group-makeobservable">
           <p class="property static function declaration">
-            <strong>MakeGetterSetter</strong> <code>Group.MakeGetterSetter();</code>
+            <strong>MakeObservable</strong> <code>Two.Group.MakeObservable();</code>
           </p>
           <p class="description">
-            Convenience method to turn a property into an <a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Object/defineProperty" target="_blank">EcmaScript 5 getter / setter</a>.
+            Convenience method to make getter / setter properties specific to <code>Two.Group</code>.
           </p>
         </li>
 
@@ -1143,7 +1175,7 @@ two.bind('update', function(frameCount) {
         <li class="description">
           Taken from the <a href="http://help.adobe.com/en_US/illustrator/cs/using/WS714a382cdf7d304e7e07d0100196cbc5f-6269a.html">Adobe Illustrator nomenclature</a> a <code>Two.Anchor</code> represents an anchor point in two.js. This class delineates to the renderer what action to take when plotting points. It inherits all properties and methods from <code>Two.Vector</code>. As a result, <code>Two.Anchor</code> can be used as such. Depending on its command, anchor points may or may not have corresponding control points to describe how their bezier curves should be rendered.
         </li>
-        <li>
+        <li id="anchor-construction">
           <p class="construction declaration">
             <strong>construction</strong> <code>var anchor = new Two.Anchor(x, y, lx, ly, rx, ry, command);</code>
           </p>
@@ -1154,7 +1186,7 @@ two.bind('update', function(frameCount) {
             <code>Two.Anchor</code> is introduced to two.js as of <a href="https://github.com/jonobr1/two.js/releases/tag/v0.3.0">v0.3.0</a>
           </p>
         </li>
-        <li>
+        <li id="anchor-x">
           <p class="property number declaration">
             <strong>x</strong> <code>anchor.x</code>
           </p>
@@ -1162,7 +1194,7 @@ two.bind('update', function(frameCount) {
             The x value of the anchor&apos;s position.
           </p>
         </li>
-        <li>
+        <li id="anchor-y">
           <p class="property number declaration">
             <strong>y</strong> <code>anchor.y</code>
           </p>
@@ -1178,7 +1210,7 @@ two.bind('update', function(frameCount) {
             The command for the given anchor.
           </p>
         </li>
-        <li>
+        <li id="anchor-controls">
           <p class="property object declaration">
             <strong>controls</strong> <code>anchor.controls</code>
           </p>
@@ -1186,7 +1218,7 @@ two.bind('update', function(frameCount) {
             An object that exists <em>only</em> when <code>anchor.command</code> is <code>Two.Commands.curve</code>. It holds the anchor&apos;s control point <code>Two.Vector</code>s and describes what the make up of the curve will be.
           </p>
           <ul class="object">
-            <li>
+            <li id="anchor-controls-right">
               <p class="property object">
                 <strong>right</strong> <code>anchor.controls.right</code>
               </p>
@@ -1194,7 +1226,7 @@ two.bind('update', function(frameCount) {
                 A <code>Two.Vector</code> that represents the position of the control point to the &ldquo;right&rdquo; of the anchor&apos;s position. To further clarify, if you were to orient the anchor so that it was normalized and facing up, this control point would be to the right of it.
               </p>
             </li>
-            <li>
+            <li id="anchor-controls-left">
               <p class="property object">
                 <strong>left</strong> <code>anchor.controls.left</code>
               </p>
@@ -1204,7 +1236,7 @@ two.bind('update', function(frameCount) {
             </li>
           </ul>
         </li>
-        <li>
+        <li id="anchor-clone">
           <p class="property function declaration">
             <strong>clone</strong> <code>anchor.clone();</code>
           </p>
@@ -1212,7 +1244,7 @@ two.bind('update', function(frameCount) {
             Returns a new instance of a <code>Two.Anchor</code> with the same <code>x</code>, <code>y</code>, <code>controls</code>, and <code>command</code> values as the instance.
           </p>
         </li>
-        <li>
+        <li id="anchor-listen">
           <p class="property function declaration">
             <strong>listen</strong> <code>anchor.listen();</code>
           </p>
@@ -1220,7 +1252,7 @@ two.bind('update', function(frameCount) {
             Convenience method to add event bubbling to an attached polygon.
           </p>
         </li>
-        <li>
+        <li id="anchor-ignore">
           <p class="property function declaration">
             <strong>ignore</strong> <code>anchor.ignore();</code>
           </p>
@@ -1228,7 +1260,7 @@ two.bind('update', function(frameCount) {
             Convenience method to remove event bubbling to an attached polygon.
           </p>
         </li>
-        <li>
+        <li id="anchor-appendcurveproperties">
           <p class="property static function declaration">
             <strong>AppendCurveProperties</strong> <code>Anchor.AppendCurveProperties();</code>
           </p>
@@ -1243,12 +1275,12 @@ two.bind('update', function(frameCount) {
         <li class="description">
           This is the atomic coordinate representation for two.js. A <code>Two.Vector</code> is different and specific to two.js because its main properties, <code>x</code> and <code>y</code>, trigger events which allow the renderers to efficiently change <strong>only</strong> when they need to. Unless specified methods return their instance of <code>Two.Vector</code> for the purpose of chaining.
         </li>
-        <li>
+        <li id="vector-construction">
           <p class="construction declaration">
             <strong>construction</strong> <code>var vector = new Two.Vector(x, y);</code>
           </p>
         </li>
-        <li>
+        <li id="vector-x">
           <p class="property number declaration">
             <strong>x</strong> <code>vector.x</code>
           </p>
@@ -1256,7 +1288,7 @@ two.bind('update', function(frameCount) {
             The x value of the vector.
           </p>
         </li>
-        <li>
+        <li id="vector-y">
           <p class="property number declaration">
             <strong>y</strong> <code>vector.y</code>
           </p>
@@ -1264,7 +1296,7 @@ two.bind('update', function(frameCount) {
             The y value of the vector.
           </p>
         </li>
-        <li>
+        <li id="vector-set">
           <p class="property function declaration">
             <strong>set</strong> <code>vector.set(x, y);</code>
           </p>
@@ -1272,7 +1304,7 @@ two.bind('update', function(frameCount) {
             Set the <code>x</code>, <code>y</code> properties of the vector to the arguments <code>x</code>, <code>y</code>.
           </p>
         </li>
-        <li>
+        <li id="vector-copy">
           <p class="property function declaration">
             <strong>copy</strong> <code>vector.copy(v);</code>
           </p>
@@ -1280,7 +1312,7 @@ two.bind('update', function(frameCount) {
             Set the <code>x</code>, <code>y</code> properties of the vector from another vector, <code>v</code>.
           </p>
         </li>
-        <li>
+        <li id="vector-clear">
           <p class="property function declaration">
             <strong>clear</strong> <code>vector.clear();</code>
           </p>
@@ -1288,7 +1320,7 @@ two.bind('update', function(frameCount) {
             Set the <code>x</code>, <code>y</code> properties of the vector to 0.
           </p>
         </li>
-        <li>
+        <li id="vector-clone">
           <p class="property function declaration">
             <strong>clone</strong> <code>vector.clone();</code>
           </p>
@@ -1296,7 +1328,7 @@ two.bind('update', function(frameCount) {
             Returns a new instance of a <code>Two.Vector</code> with the same <code>x</code>, <code>y</code> values as the instance.
           </p>
         </li>
-        <li>
+        <li id="vector-add">
           <p class="property function declaration">
             <strong>add</strong> <code>vector.add(v1, v2);</code>
           </p>
@@ -1304,7 +1336,7 @@ two.bind('update', function(frameCount) {
             Add to vectors together. The sum of the <code>x</code>, <code>y</code> values will be set to the instance.
           </p>
         </li>
-        <li>
+        <li id="vector-addself">
           <p class="property function declaration">
             <strong>addSelf</strong> <code>vector.addSelf(v);</code>
           </p>
@@ -1312,7 +1344,7 @@ two.bind('update', function(frameCount) {
             Add the <code>x</code>, <code>y</code> values of the instance to the values of another vector. Set the sum to the instance&apos;s values.
           </p>
         </li>
-        <li>
+        <li id="vector-sub">
           <p class="property function declaration">
             <strong>sub</strong> <code>vector.sub(v1, v2);</code>
           </p>
@@ -1320,7 +1352,7 @@ two.bind('update', function(frameCount) {
             Subtract two vectors. Set the difference to the instance.
           </p>
         </li>
-        <li>
+        <li id="vector-subself">
           <p class="property function declaration">
             <strong>subSelf</strong> <code>vector.subSelf(v);</code>
           </p>
@@ -1328,7 +1360,7 @@ two.bind('update', function(frameCount) {
             Subtract a vector, <code>v</code>, from the instance.
           </p>
         </li>
-        <li>
+        <li id="vector-multiplyself">
           <p class="property function declaration">
             <strong>multiplySelf</strong> <code>vector.multiplySelf(v);</code>
           </p>
@@ -1336,7 +1368,7 @@ two.bind('update', function(frameCount) {
             Multiply the <code>x</code>, <code>y</code> values of the instance by another vector&apos;s, <code>v</code>, <code>x</code>, <code>y</code> values.
           </p>
         </li>
-        <li>
+        <li id="vector-multiplyscalar">
           <p class="property function declaration">
             <strong>multiplyScalar</strong> <code>vector.multiplyScalar(value);</code>
           </p>
@@ -1344,7 +1376,7 @@ two.bind('update', function(frameCount) {
             Multiply the <code>x</code>, <code>y</code> values of the instance by another number, <code>value</code>.
           </p>
         </li>
-        <li>
+        <li id="vector-dividescalar">
           <p class="property function declaration">
             <strong>divideScalar</strong> <code>vector.divideScalar(value);</code>
           </p>
@@ -1352,8 +1384,7 @@ two.bind('update', function(frameCount) {
             Divide the <code>x</code>, <code>y</code> values of the instance by another number, <code>value</code>.
           </p>
         </li>
-
-        <li>
+        <li id="vector-negate">
           <p class="property function declaration">
             <strong>negate</strong> <code>vector.negate();</code>
           </p>
@@ -1361,7 +1392,7 @@ two.bind('update', function(frameCount) {
             Toggle the sign of the instance&apos;s <code>x</code>, <code>y</code> values.
           </p>
         </li>
-        <li>
+        <li id="vector-dot">
           <p class="property function declaration">
             <strong>dot</strong> <code>vector.dot(v);</code>
           </p>
@@ -1369,7 +1400,7 @@ two.bind('update', function(frameCount) {
             Return the <a href="http://en.wikipedia.org/wiki/Dot_product" target="_blank">dot product</a> of the instance and a vector, <code>v</code>.
           </p>
         </li>
-        <li>
+        <li id="vector-lengthsquared">
           <p class="property function declaration">
             <strong>lengthSquared</strong> <code>vector.lengthSquared();</code>
           </p>
@@ -1377,7 +1408,7 @@ two.bind('update', function(frameCount) {
             Return the length of the vector squared.
           </p>
         </li>
-        <li>
+        <li id="vector-length">
           <p class="property function declaration">
             <strong>length</strong> <code>vector.length();</code>
           </p>
@@ -1385,7 +1416,7 @@ two.bind('update', function(frameCount) {
             Return the length of the vector.
           </p>
         </li>
-        <li>
+        <li id="vector-normalize">
           <p class="property function declaration">
             <strong>normalize</strong> <code>vector.normalize();</code>
           </p>
@@ -1393,7 +1424,7 @@ two.bind('update', function(frameCount) {
             Reduce the length of the vector to the unit circle.
           </p>
         </li>
-        <li>
+        <li id="vector-distanceto">
           <p class="property function declaration">
             <strong>distanceTo</strong> <code>vector.distanceTo(v);</code>
           </p>
@@ -1401,7 +1432,7 @@ two.bind('update', function(frameCount) {
             Return the distance from the instance to another vector, <code>v</code>.
           </p>
         </li>
-        <li>
+        <li id="vector-distancetosquared">
           <p class="property function declaration">
             <strong>distanceToSquared</strong> <code>vector.distanceToSquared(v);</code>
           </p>
@@ -1409,7 +1440,7 @@ two.bind('update', function(frameCount) {
             Return the distance squared from the instance to another vector, <code>v</code>.
           </p>
         </li>
-        <li>
+        <li id="vector-setlength">
           <p class="property function declaration">
             <strong>setLength</strong> <code>vector.setLength(length);</code>
           </p>
@@ -1417,7 +1448,7 @@ two.bind('update', function(frameCount) {
             Set the length of a vector to a specified distance, <code>length</code>.
           </p>
         </li>
-        <li>
+        <li id="vector-equals">
           <p class="property function declaration">
             <strong>equals</strong> <code>vector.equals(v);</code>
           </p>
@@ -1425,7 +1456,7 @@ two.bind('update', function(frameCount) {
             Return a boolean representing whether or not the vectors are within 0.0001 of each other. This fuzzy equality helps with Physics libraries.
           </p>
         </li>
-        <li>
+        <li id="vector-lerp">
           <p class="property function declaration">
             <strong>lerp</strong> <code>vector.lerp(v, t);</code>
           </p>
@@ -1433,8 +1464,7 @@ two.bind('update', function(frameCount) {
             Linear interpolation of the instance&apos;s current <code>x</code>, <code>y</code> values to the destination vector, <code>v</code>, by an amount, <code>t</code>. Where t is a value 0-1.
           </p>
         </li>
-
-        <li>
+        <li id="vector-iszero">
           <p class="property function declaration">
             <strong>isZero</strong> <code>vector.isZero();</code>
           </p>
@@ -1448,7 +1478,7 @@ two.bind('update', function(frameCount) {
       <br />
 
       <p>
-        These are the four main classes that a typical developer will come across with when using two.js, however the project is built with a few more classes behind the scene. If you&apos;re interested in the nitty-gritty then it&apos;s recommended to check out the <a href="http://github.com/jonobr1/two.js" target="_blank">source</a>.
+        These are the five main classes that a typical developer will come across with when using two.js, however the project is built with a few more classes behind the scene. If you&apos;re interested in the nitty-gritty then it&apos;s recommended to check out the <a href="http://github.com/jonobr1/two.js" target="_blank">source</a>.
       </p>
 
       <!-- <div id="compatibility" class="horizon"></div> -->

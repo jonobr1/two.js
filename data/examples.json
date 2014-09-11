@@ -2,6 +2,11 @@
   "template": "<li><a href=\"<%= href %>\" target=\"_blank\"><img width=\"143\" height=\"100\" src=\"<%= img %>\" alt=\"\"><h3><p><%= title %></p></h3></a></li>",
   "items": [
     {
+      "title": "Clipping Mask",
+      "href": "examples/clipping-mask.html",
+      "img": "images/examples/clipping-mask.gif"
+    },
+    {
       "title": "Get Point on Curve",
       "href": "examples/point-on-curve.html",
       "img": "images/examples/point-on-curve.gif"
