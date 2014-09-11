@@ -121,7 +121,16 @@
         var flagTexture = this._flagVertices || this._flagFill
           || this._flagStroke || this._flagLinewidth || this._flagOpacity
           || parent._flagOpacity || this._flagVisible || this._flagCap
-          || this._flagJoin || this._flagMiter || this._flagScale;
+          || this._flagJoin || this._flagMiter || this._flagScale
+          || !this._renderer.texture;
+
+        if (this._renderer.removeTexture && this._renderer.texture) {
+          console.log('deleted texture');
+          gl.deleteTexture(this._renderer.texture);
+          delete this._renderer.texture;
+          delete this._renderer.removeTexture;
+          return this;
+        }
 
         this._update();
 

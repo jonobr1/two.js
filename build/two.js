@@ -1680,6 +1680,9 @@ var Backbone = Backbone || {};
           });
         }
 
+        // Flag for `webgl` renderer to delete underlying 2d texture.
+        obj._renderer.removeTexture = true;
+
         if (obj.children) {
           _.each(obj.children, function(obj) {
             Two.Utils.release(obj);
@@ -1888,6 +1891,7 @@ var Backbone = Backbone || {};
 
           switch (key) {
             case 'transform':
+              // TODO: Check this out https://github.com/paperjs/paper.js/blob/master/src/svg/SVGImport.js#L313
               if (value === 'none') break;
               var m = node.getCTM();
 
@@ -5065,7 +5069,16 @@ var Backbone = Backbone || {};
         var flagTexture = this._flagVertices || this._flagFill
           || this._flagStroke || this._flagLinewidth || this._flagOpacity
           || parent._flagOpacity || this._flagVisible || this._flagCap
-          || this._flagJoin || this._flagMiter || this._flagScale;
+          || this._flagJoin || this._flagMiter || this._flagScale
+          || !this._renderer.texture;
+
+        if (this._renderer.removeTexture && this._renderer.texture) {
+          console.log('deleted texture');
+          gl.deleteTexture(this._renderer.texture);
+          delete this._renderer.texture;
+          delete this._renderer.removeTexture;
+          return this;
+        }
 
         this._update();
 
