@@ -117,8 +117,9 @@
       return this.normalize().multiplyScalar(l);
     },
 
-    equals: function(v) {
-      return (this.distanceTo(v) < 0.0001 /* almost same position */);
+    equals: function(v, eps) {
+      eps = (typeof eps === 'undefined') ?  0.0001 : eps;
+      return (this.distanceTo(v) < eps);
     },
 
     lerp: function(v, t) {
@@ -127,8 +128,9 @@
       return this.set(x, y);
     },
 
-    isZero: function() {
-      return (this.length() < 0.0001 /* almost zero */ );
+    isZero: function(eps) {
+      eps = (typeof eps === 'undefined') ?  0.0001 : eps;
+      return (this.length() <  eps);
     },
 
     toString: function() {
@@ -244,8 +246,9 @@
       return this.normalize().multiplyScalar(l);
     },
 
-    equals: function(v) {
-      return (this.distanceTo(v) < 0.0001 /* almost same position */);
+    equals: function(v, eps) {
+      eps = (typeof eps === 'undefined') ?  0.0001 : eps;
+      return (this.distanceTo(v) < eps);
     },
 
     lerp: function(v, t) {
@@ -254,8 +257,9 @@
       return this.set(x, y);
     },
 
-    isZero: function() {
-      return (this.length() < 0.0001 /* almost zero */ );
+    isZero: function(eps) {
+      eps = (typeof eps === 'undefined') ?  0.0001 : eps;
+      return (this.length() < eps);
     },
 
     toString: function() {
