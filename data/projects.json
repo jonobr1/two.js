@@ -2,6 +2,11 @@
   "template": "<li><a href=\"<%= href %>\" target=\"_blank\"><img width=\"143\" height=\"100\" src=\"<%= img %>\" alt=\"\"><h3><p><%= title %></p></h3></a></li>",
   "items": [
     {
+      "title": "JavaScreen",
+      "href": "http://javascreen.tristanbagot.com/",
+      "img": "images/projects/javascreen.gif"
+    },
+    {
       "title": "C-01",
       "href": "http://c-01.mnmly.com/",
       "img": "images/projects/c-01.gif"
