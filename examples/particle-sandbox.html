@@ -11,6 +11,7 @@
     <script type="text/javascript" src="//use.typekit.net/edp1hux.js"></script>
     <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
     <script src="../third-party/jquery.js"></script>
+    <script src="../third-party/stats.js"></script>
     <script src="../third-party/two.js"></script>
     <script src="../third-party/url.js"></script>
     <script src="../third-party/has.js"></script>
@@ -64,6 +65,7 @@
 
         $(function() {
 
+          var stats = new Stats();
           var two, particles = [], radius = 50, shouldAdd = false, shouldRemove = false;
           var activeOperations = _.compact((url.operations || 'translation').split(','));
           var activeShapes = _.compact((url.shapes || 'circle').split(','));
@@ -323,6 +325,17 @@
 
           function initializeStage(type) {
 
+            stats.exists = url.boolean('stats');
+
+            if (stats.exists) {
+              document.body.appendChild(stats.domElement);
+              _.extend(stats.domElement.style, {
+                position: 'absolute',
+                left: 0,
+                bottom: 0
+              });
+            }
+
             if (type === 'webgl' && !has.webgl) {
               alert('Yikes! This browser does not support WebGL.');
               return;
@@ -424,6 +437,10 @@
 
           function update() {
 
+            if (stats.exists) {
+              stats.update();
+            }
+
             if (shouldAdd) {
               addParticle();
             }
@@ -467,6 +484,10 @@
           function updateQueryArgs() {
 
             var url = './particle-sandbox.html?type=' + TTRL[two.type];
+
+            if (stats.exists) {
+              url += '&stats=true';
+            }
 
             if (activeShapes.length > 0) {
 
