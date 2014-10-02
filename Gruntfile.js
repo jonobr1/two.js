@@ -30,7 +30,7 @@ module.exports = function(grunt) {
         'src/shapes/ellipse.js',
         'src/shapes/polygon.js',
         'src/shapes/curved-polygon.js',
-        'src/shapes/star-sine.js',
+        'src/shapes/sine-ring.js',
         'src/shapes/star.js',
         'src/shapes/rounded-rectangle.js',
         'src/group.js'

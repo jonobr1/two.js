@@ -2,7 +2,7 @@
 
   var Path = Two.Path, PI = Math.PI, TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin, abs = Math.abs;
 
-  var StarSine = Two.StarSine = function(ox, oy, r, periods, amplitude, mod) {
+  var SineRing = Two.SineRing = function(ox, oy, r, periods, amplitude, mod) {
 
     var size = (periods * 2) + 1;
     var angleStep = Math.PI / periods;
@@ -55,8 +55,8 @@
 
   };
 
-  _.extend(StarSine.prototype, Path.prototype);
+  _.extend(SineRing.prototype, Path.prototype);
 
-  Path.MakeObservable(StarSine.prototype);
+  Path.MakeObservable(SineRing.prototype);
 
 })();
