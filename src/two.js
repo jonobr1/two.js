@@ -1655,6 +1655,19 @@
 
     },
 
+    /*
+    * Make a Curved Polygon in scene
+    */
+
+    makeCurvedPolygon: function(ox, oy, r, sides, mod) {
+
+      var curvedPoly = new Two.CurvedPolygon(ox, oy, or, ir, sides);
+      this.add(curvedPoly);
+
+      return curvedPoly;
+
+    },
+
     /**
      * Convenience method to make and draw a Two.Path.
      */

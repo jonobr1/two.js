@@ -3128,6 +3128,19 @@ var Backbone = Backbone || {};
 
     },
 
+    /*
+    * Make a Curved Polygon in scene
+    */
+
+    makeCurvedPolygon: function(ox, oy, r, sides, mod) {
+
+      var curvedPoly = new Two.CurvedPolygon(ox, oy, or, ir, sides);
+      this.add(curvedPoly);
+
+      return curvedPoly;
+
+    },
+
     /**
      * Convenience method to make and draw a Two.Path.
      */
@@ -3369,8 +3382,9 @@ var Backbone = Backbone || {};
       return this.normalize().multiplyScalar(l);
     },
 
-    equals: function(v) {
-      return (this.distanceTo(v) < 0.0001 /* almost same position */);
+    equals: function(v, eps) {
+      eps = (typeof eps === 'undefined') ?  0.0001 : eps;
+      return (this.distanceTo(v) < eps);
     },
 
     lerp: function(v, t) {
@@ -3379,8 +3393,9 @@ var Backbone = Backbone || {};
       return this.set(x, y);
     },
 
-    isZero: function() {
-      return (this.length() < 0.0001 /* almost zero */ );
+    isZero: function(eps) {
+      eps = (typeof eps === 'undefined') ?  0.0001 : eps;
+      return (this.length() <  eps);
     },
 
     toString: function() {
@@ -3496,8 +3511,9 @@ var Backbone = Backbone || {};
       return this.normalize().multiplyScalar(l);
     },
 
-    equals: function(v) {
-      return (this.distanceTo(v) < 0.0001 /* almost same position */);
+    equals: function(v, eps) {
+      eps = (typeof eps === 'undefined') ?  0.0001 : eps;
+      return (this.distanceTo(v) < eps);
     },
 
     lerp: function(v, t) {
@@ -3506,8 +3522,9 @@ var Backbone = Backbone || {};
       return this.set(x, y);
     },
 
-    isZero: function() {
-      return (this.length() < 0.0001 /* almost zero */ );
+    isZero: function(eps) {
+      eps = (typeof eps === 'undefined') ?  0.0001 : eps;
+      return (this.length() < eps);
     },
 
     toString: function() {
@@ -6648,6 +6665,143 @@ var Backbone = Backbone || {};
   _.extend(Polygon.prototype, Path.prototype);
 
   Path.MakeObservable(Polygon.prototype);
+
+})();
+(function() {
+
+  var Path = Two.Path, PI = Math.PI, TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin, abs = Math.abs;
+
+  var CurvedPolygon = Two.CurvedPolygon = function(ox, oy, r, sides, mod) {
+
+    var points = [];
+    sides = Math.max(sides || 0, 3);
+    var sidesBump = sides+1;
+    var angleStep = TWO_PI / sides;
+    var bezierDelta =  PI * r / sides / 2 ;
+    mod = mod || 0;
+
+    var command = Two.Commands.move;
+    var theta = PI, x, y, lx, ly, rx, ry;
+
+    points.push(
+      new Two.Anchor( 
+        sin(theta) * (r),
+        cos(theta) * (r),
+        0,0,0,0,
+        command
+      )
+    );
+
+    for (var i = 0; i < sidesBump; i++) {
+
+      theta = (angleStep * i) + PI;
+      command = Two.Commands.curve;
+
+      x = Math.sin(theta) * r;
+      y = Math.cos(theta) * r;
+
+      if (mod >= 0) {
+
+        lx = (sin(theta - (Math.PI/2))) * bezierDelta * mod;
+        ly = (cos(theta - (Math.PI/2))) * bezierDelta * mod;
+        rx = (sin(theta + (Math.PI/2))) * bezierDelta * mod;
+        ry = (cos(theta + (Math.PI/2))) * bezierDelta * mod;
+
+      } else {
+
+        lx = (sin(theta - (Math.PI))) * bezierDelta * abs(mod);
+        ly = (cos(theta - (Math.PI))) * bezierDelta * abs(mod);
+        rx = (sin(theta + (Math.PI))) * bezierDelta * abs(mod);
+        ry = (cos(theta + (Math.PI))) * bezierDelta * abs(mod);
+
+      }
+
+      if (i === 0) {
+        lx = 0;
+        ly = 0;
+      }
+
+      if (i === sidesBump - 1) {
+        rx = 0;
+        ry = 0;
+      }
+
+      points.push(new Two.Anchor(x, y, lx, ly, rx, ry, command));
+
+    }
+
+    Path.call(this, points, true, false, true);
+    this.translation.set(ox, oy);
+
+  };
+
+  _.extend(CurvedPolygon.prototype, Path.prototype);
+
+  Path.MakeObservable(CurvedPolygon.prototype);
+
+})();
+(function() {
+
+  var Path = Two.Path, PI = Math.PI, TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin, abs = Math.abs;
+
+  var StarSine = Two.StarSine = function(ox, oy, r, periods, amplitude, mod) {
+
+    var size = (periods * 2) + 1;
+    var angleStep = Math.PI / periods;
+    var bezierDelta = PI * r / periods / 2;
+    mod = mod || 1;
+
+    var points = [];
+    var theta = PI, x, y, lx, ly, rx, ry;
+
+    points.push(
+      new Two.Anchor( 
+        sin(theta) * (r + (amplitude/2)),
+        cos(theta) * (r + (amplitude/2)),
+        0,0,0,0,
+        Two.Commands.move
+      )
+    );
+
+
+    for (var i = 0; i < size; i++) {
+
+      theta = (angleStep * i) + PI;
+
+      if ((i%2) === 0) {
+        x = Math.sin(theta) * (r + (amplitude/2));
+        y = Math.cos(theta) * (r + (amplitude/2));
+      } else {
+        x = Math.sin(theta) * (r - (amplitude/2));
+        y = Math.cos(theta) * (r - (amplitude/2));
+      }
+
+      lx = ((Math.sin(theta - (Math.PI/2))) * bezierDelta) * mod;
+      ly = ((Math.cos(theta - (Math.PI/2))) * bezierDelta) * mod;
+      rx = ((Math.sin(theta + (Math.PI/2))) * bezierDelta) * mod;
+      ry = ((Math.cos(theta + (Math.PI/2))) * bezierDelta) * mod;
+
+      if (i === 0) {
+        lx = ly = 0;
+      }
+
+      if (i === size - 1) {
+        rx = ry = 0;
+      }
+
+      points.push(new Two.Anchor(x, y, lx, ly, rx, ry, Two.Commands.curve));
+
+    }
+
+
+    Path.call(this, points, true, false, true);
+    this.translation.set(ox, oy);
+
+  };
+
+  _.extend(StarSine.prototype, Path.prototype);
+
+  Path.MakeObservable(StarSine.prototype);
 
 })();
 (function() {

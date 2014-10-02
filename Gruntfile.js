@@ -29,6 +29,8 @@ module.exports = function(grunt) {
         'src/shapes/rectangle.js',
         'src/shapes/ellipse.js',
         'src/shapes/polygon.js',
+        'src/shapes/curved-polygon.js',
+        'src/shapes/star-sine.js',
         'src/shapes/star.js',
         'src/shapes/rounded-rectangle.js',
         'src/group.js'
