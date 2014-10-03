@@ -13,7 +13,7 @@
 
   });
 
-  _.extend(Vector.prototype, Backbone.Events, {
+  _.extend(Vector.prototype, Two.Event, {
 
     set: function(x, y) {
       this.x = x;
@@ -278,7 +278,7 @@
     },
     set: function(v) {
       this._x = v;
-      this.trigger(Two.Events.change, 'x');
+      this.trigger(Two.Events.change, ['x']);
     }
   };
 
@@ -288,7 +288,7 @@
     },
     set: function(v) {
       this._y = v;
-      this.trigger(Two.Events.change, 'y');
+      this.trigger(Two.Events.change, ['y']);
     }
   };
 
@@ -309,7 +309,7 @@
       this._bound = true; // Reserved for event initialization check
     }
 
-    Backbone.Events.bind.apply(this, arguments);
+    Two.Event.bind.apply(this, arguments);
 
     return this;
 

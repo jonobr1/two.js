@@ -320,7 +320,7 @@
 
     updateCanvas: function(elem) {
 
-      var next, prev, a, c, ux, uy, vx, vy, ar, bl, br, cl, x, y;
+      var next, prev, a, b, c, ux, uy, vx, vy, ar, bl, br, cl, x, y;
 
       var commands = elem._vertices;
       var canvas = this.canvas;
@@ -677,7 +677,7 @@
 
   };
 
-  _.extend(Renderer.prototype, Backbone.Events, {
+  _.extend(Renderer.prototype, Two.Event, {
 
     setSize: function(width, height, ratio) {
 

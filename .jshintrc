@@ -6,10 +6,10 @@
   "-W041": false,
   "predef": [
     "_",
-    "Backbone",
     "Two",
     "requestAnimationFrame",
     "module",
-    "define"
+    "define",
+    "global"
   ]
 }
