@@ -887,11 +887,19 @@
                 var cy = _cx * Math.sin(xAxisRotation) + _cy * Math.cos(xAxisRotation) + (y1 + y4) / 2;
 
                 // vector magnitude
-                var m = function(v) { return Math.sqrt(Math.pow(v[0], 2) + Math.pow(v[1], 2)); }
+                var m = function(v) {
+                  return Math.sqrt(Math.pow(v[0], 2) + Math.pow(v[1], 2));
+                };
+
                 // ratio between two vectors
-                var r = function(u, v) { return (u[0] * v[0] + u[1] * v[1]) / (m(u) * m(v)) }
+                var r = function(u, v) {
+                  return (u[0] * v[0] + u[1] * v[1]) / (m(u) * m(v));
+                };
+
                 // angle between two vectors
-                var a = function(u, v) { return (u[0] * v[1] < u[1] * v[0] ? - 1 : 1) * Math.acos(r(u,v)); }
+                var a = function(u, v) {
+                  return (u[0] * v[1] < u[1] * v[0] ? - 1 : 1) * Math.acos(r(u,v));
+                };
 
                 // Calculate theta1 and delta theta F.6.5.4 + F.6.5.5
                 var t1 = a([1, 0], [(_x - _cx) / rx, (_y - _cy) / ry]);
@@ -927,7 +935,7 @@
                   var x = rx * Math.cos(theta);
                   var y = ry * Math.sin(theta);
                   var projected = projection.multiply(x, y, 1);
-                  return new Two.Anchor(projected.x, projected.y, false, false, false, false, Two.Commands.line);;
+                  return new Two.Anchor(projected.x, projected.y, false, false, false, false, Two.Commands.line);
                 });
 
                 result.push(new Two.Anchor(x4, y4, false, false, false, false, Two.Commands.line));
@@ -1673,6 +1681,9 @@
     },
 
     makePolygon: function() {
+      // FIXME: What is p and where does it come from.
+      // If all variables are properly scoped it should
+      // be undefined.
 
       var l = arguments.length, points = p;
       if (!_.isArray(p)) {
@@ -1703,6 +1714,9 @@
     */
 
     makeCurvedPolygon: function(ox, oy, r, sides, mod) {
+      // FIXME: What is or and ir and where do they come from.
+      // If all variables are properly scoped it should
+      // be undefined.
 
       var curvedPoly = new Two.CurvedPolygon(ox, oy, or, ir, sides);
       this.add(curvedPoly);
