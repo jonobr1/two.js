@@ -22,6 +22,7 @@ var files = [
   path.resolve(__dirname, '../src/shapes/ellipse.js'),
   path.resolve(__dirname, '../src/shapes/polygon.js'),
   path.resolve(__dirname, '../src/shapes/curved-polygon.js'),
+  path.resolve(__dirname, '../src/shapes/arc-segment.js'),
   path.resolve(__dirname, '../src/shapes/sine-ring.js'),
   path.resolve(__dirname, '../src/shapes/star.js'),
   path.resolve(__dirname, '../src/shapes/rounded-rectangle.js'),
