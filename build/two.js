@@ -3149,8 +3149,8 @@ var Backbone = Backbone || {};
       var arcSegment = new Two.ArcSegment(ox, oy, ir, or, sa, ea, res);
       this.add(arcSegment);
       return arcSegment;
-    }
-    
+    },
+
     /**
      * Convenience method to make and draw a Two.Path.
      */
