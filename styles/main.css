@@ -537,6 +537,9 @@ ul.documentation {
     ul.documentation ul li p {
       margin-top: 0; }
 
+ul.additional li {
+  margin-top: 0.375em; }
+
 p.property, p.method, p.construction {
   border-left-width: 4px;
   border-left-style: solid;
