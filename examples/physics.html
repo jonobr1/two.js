@@ -46,7 +46,7 @@
           var by = variance * ay;
 
           var origin = physics.makeParticle(mass, ax, ay)
-          var particle = physics.makeParticle(Math.random() * mass, bx, by);
+          var particle = physics.makeParticle(Math.random() * mass * 0.66 + mass * 0.33, bx, by);
           var spring = physics.makeSpring(particle, origin, strength, drag, 0);
 
           origin.makeFixed();
@@ -61,16 +61,17 @@
         }
 
         var outer = new Two.Polygon(points, true, true);
-        outer.stroke = outer.fill = getRandomColor();
+        var color = getRandomColor();
+        outer.stroke = color.toString();
+        outer.fill = color.toString(0.5);
         outer.scale = 1.75;
-        outer.opacity = 0.5;
-        outer.linewidth = 20;
+        outer.linewidth = 10;
 
         background.add(outer);
 
         var inner = new Two.Polygon(points, true, true);
         inner.noStroke();
-        inner.fill = getRandomColor();
+        inner.fill = getRandomColor().toString();
         inner.scale = 1.25;
 
         background.add(inner);
@@ -94,10 +95,25 @@
         }
 
         function getRandomColor() {
-          return 'rgb('
-            + Math.floor(Math.random() * 255) + ','
-            + Math.floor(Math.random() * 255) + ','
-            + Math.floor(Math.random() * 255) + ')';
+          var color = {
+            r: Math.floor(Math.random() * 255),
+            g: Math.floor(Math.random() * 255),
+            b: Math.floor(Math.random() * 255),
+            toString: function(a) {
+              if (a) {
+                return 'rgba('
+                  + color.r + ','
+                  + color.g + ','
+                  + color.b + ','
+                  + a + ')';
+              }
+              return 'rgb('
+                + color.r + ','
+                + color.g + ','
+                + color.b + ')';
+            }
+          };
+          return color;
         }
 
         function generateGrid() {

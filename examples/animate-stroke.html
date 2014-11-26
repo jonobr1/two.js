@@ -64,31 +64,28 @@
                 return false;
               });
 
-            _.defer(function() {
+            resize();
+            two
+              .bind('resize', resize)
+              .bind('update', function() {
 
-              two
-                .bind('resize', function() {
+                if (movingmouse) {
+                  return;
+                }
 
-                  fresh.translation.set(two.width / 2, two.height / 2);
+                if (t < 0.9999) {
+                  t += 0.00625;
+                } else {
+                  startOver();
+                }
 
-                })
-                .bind('update', function() {
+                setEnding(fresh, t);
 
-                  if (movingmouse) {
-                    return;
-                  }
+              }).play();
 
-                  if (t < 0.9999) {
-                    t += 0.00625;
-                  } else {
-                    startOver();
-                  }
-
-                  setEnding(fresh, t);
-
-                }).play();
-
-            });
+            function resize() {
+              fresh.translation.set(two.width / 2, two.height / 2);
+            }
 
             function mousemove(e) {
               var rect = fresh.getBoundingClientRect();
