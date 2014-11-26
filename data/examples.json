@@ -32,11 +32,6 @@
       "img": "images/examples/vertices.gif"
     },
     {
-      "title": "Event Binding (SVG)",
-      "href": "examples/svg-events.html",
-      "img": "images/examples/svg-events.gif"
-    },
-    {
       "title": "Zoom UI",
       "href": "examples/zui.html",
       "img": "images/examples/zui.gif"

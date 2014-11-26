@@ -275,6 +275,11 @@ ul.documentation {
   }
 
 }
+ul.additional {
+  li {
+    margin-top: $line-height / 4;
+  }
+}
 
 p.property, p.method, p.construction {
   $border-width: 4px;
