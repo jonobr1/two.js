@@ -1,0 +1,140 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Two.js: Physics Integration</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="user-scalable=no">
+    <link rel="image_src" href="../images/logo.gif" />
+    <link rel="shortcut icon" type="image/gif" href="../images/favicon.gif">
+    <script src="../third-party/url.js"></script>
+    <script src="../third-party/jquery.js"></script>
+    <script src="../third-party/two.js"></script>
+    <script src="../third-party/physics.js"></script>
+  </head>
+  <body>
+    <div class="scripts">
+      <script>
+
+        var type = /(canvas|webgl)/.test(url.type) ? url.type : 'svg';
+        var two = new Two({
+          type: Two.Types[type],
+          fullscreen: true
+        }).appendTo(document.body);
+
+        var mass = 10;
+        var radius = two.height / 5;
+        var strength = 0.0625;
+        var drag = 0.0;
+
+        var background = two.makeGroup();
+        var foreground = two.makeGroup();
+
+        var physics = new Physics();
+        var points = [];
+        var i = 0;
+
+        for (i = 0; i < Two.Resolution; i++) {
+
+          var pct = i / Two.Resolution;
+          var theta = pct * Math.PI * 2;
+
+          var ax = radius * Math.cos(theta);
+          var ay = radius * Math.sin(theta);
+
+          var variance = Math.random() * 0.5 + 0.5;
+          var bx = variance * ax;
+          var by = variance * ay;
+
+          var origin = physics.makeParticle(mass, ax, ay)
+          var particle = physics.makeParticle(Math.random() * mass, bx, by);
+          var spring = physics.makeSpring(particle, origin, strength, drag, 0);
+
+          origin.makeFixed();
+
+          particle.shape = two.makeCircle(particle.position.x, particle.position.y, 5);
+          particle.shape.noStroke().fill = '#fff';
+          particle.position = particle.shape.translation;
+
+          foreground.add(particle.shape)
+          points.push(particle.position);
+
+        }
+
+        var outer = new Two.Polygon(points, true, true);
+        outer.stroke = outer.fill = getRandomColor();
+        outer.scale = 1.75;
+        outer.opacity = 0.5;
+        outer.linewidth = 20;
+
+        background.add(outer);
+
+        var inner = new Two.Polygon(points, true, true);
+        inner.noStroke();
+        inner.fill = getRandomColor();
+        inner.scale = 1.25;
+
+        background.add(inner);
+
+        _.extend(two.renderer.domElement.style, {
+          background: 'url(' + generateGrid() + ') center center'
+        });
+
+        resize();
+
+        two
+          .bind('resize', resize)
+          .bind('update', function() {
+            physics.update();
+          })
+          .play();
+
+        function resize() {
+          background.translation.set(two.width / 2, two.height / 2);
+          foreground.translation.copy(background.translation);
+        }
+
+        function getRandomColor() {
+          return 'rgb('
+            + Math.floor(Math.random() * 255) + ','
+            + Math.floor(Math.random() * 255) + ','
+            + Math.floor(Math.random() * 255) + ')';
+        }
+
+        function generateGrid() {
+
+          var two = new Two({
+            type: Two.Types.canvas,
+            width: 16,
+            height: 16,
+            ratio: 2
+          });
+
+          var width = two.width / 2;
+          var height = two.height / 2;
+
+          var background = two.makeRectangle(two.width / 2, two.height / 2, two.width, two.height);
+          background.noStroke().fill = '#efefef';
+
+          var c = two.makeCircle(two.width / 2, two.height / 2, 0.5);
+          c.noStroke().fill = '#999';
+
+          two.update();
+
+          return two.renderer.domElement.toDataURL('image/png');
+
+        }
+
+      </script>
+    </div>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-40550435-1', 'github.com');
+      ga('send', 'pageview');
+
+    </script>
+  </body>
+</html>
