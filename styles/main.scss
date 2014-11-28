@@ -163,7 +163,8 @@ p.download {
 }
 
 .examples,
-.projects {
+.projects,
+.donations {
   list-style: none;
   max-width: $max-content-width;
   @media screen and (max-width: $min-screen-width),

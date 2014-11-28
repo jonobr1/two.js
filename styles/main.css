@@ -40,10 +40,10 @@
 
 @media screen and (min-width: 400px) {
   .CodeMirror {
-    border-right: 1px solid #eeeeee; } }
+    border-right: 1px solid #eee; } }
 @media screen and (max-width: 400px) {
   .CodeMirror {
-    border-left: 0.125em solid #eeeeee; }
+    border-left: 0.125em solid #eee; }
 
   .CodeMirror-gutters,
   .CodeMirror-linenumbers,
@@ -70,7 +70,7 @@
 
 /* DEFAULT THEME */
 .cm-s-default .cm-keyword {
-  color: #555555; }
+  color: #555; }
 
 .cm-s-default .cm-atom {
   color: #219; }
@@ -91,10 +91,10 @@
   color: #0096bf; }
 
 .cm-s-default .cm-property {
-  color: #555555; }
+  color: #555; }
 
 .cm-s-default .cm-operator {
-  color: #555555; }
+  color: #555; }
 
 .cm-s-default .cm-comment {
   color: #7f7f7f;
@@ -327,12 +327,12 @@ body {
   font-size: 1em;
   line-height: 1.5em;
   word-spacing: 0.1875em;
-  color: #555555;
+  color: #555;
   padding: 25px;
   vertical-align: top; }
   @media screen and (max-width: 400px) {
     body {
-      background: #eeeeee; } }
+      background: #eee; } }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: 'proxima-nova', helvetica, sans-serif;
@@ -382,7 +382,7 @@ sup {
 
 #content {
   padding: 25px 25px 50px 25px;
-  background: white; }
+  background: #fff; }
 
 div.center {
   text-align: center; }
@@ -391,7 +391,7 @@ div.center {
   list-style: none;
   height: 0;
   margin: 1.5em 0;
-  border-bottom: 0.125em solid #eeeeee; }
+  border-bottom: 0.125em solid #eee; }
 
 li.horizon {
   margin: 1.5em 0 !important; }
@@ -449,15 +449,18 @@ li.horizon {
   height: 528px; }
 
 .examples,
-.projects {
+.projects,
+.donations {
   list-style: none;
   max-width: 580px; }
   @media screen and (max-width: 400px), screen and (max-device-width: 640px) {
     .examples,
-    .projects {
+    .projects,
+    .donations {
       text-align: center; } }
   .examples li,
-  .projects li {
+  .projects li,
+  .donations li {
     display: inline-block;
     vertical-align: baseline;
     zoom: 1;
@@ -471,33 +474,43 @@ li.horizon {
     margin-top: 0 !important;
     text-align: left; }
     .examples li.red h3,
-    .projects li.red h3 {
+    .projects li.red h3,
+    .donations li.red h3 {
       background: rgba(255, 64, 64, 0.8); }
     .examples li.green h3,
-    .projects li.green h3 {
+    .projects li.green h3,
+    .donations li.green h3 {
       background: rgba(0, 191, 168, 0.8); }
     .examples li.blue h3,
-    .projects li.blue h3 {
+    .projects li.blue h3,
+    .donations li.blue h3 {
       background: rgba(0, 200, 255, 0.8); }
     .examples li.orange h3,
-    .projects li.orange h3 {
+    .projects li.orange h3,
+    .donations li.orange h3 {
       background: rgba(255, 128, 0, 0.8); }
     .examples li.purple h3,
-    .projects li.purple h3 {
+    .projects li.purple h3,
+    .donations li.purple h3 {
       background: rgba(153, 102, 255, 0.8); }
     .examples li.yellow h3,
-    .projects li.yellow h3 {
+    .projects li.yellow h3,
+    .donations li.yellow h3 {
       background: rgba(255, 244, 95, 0.8); }
     .examples li a,
-    .projects li a {
+    .projects li a,
+    .donations li a {
       display: block;
       border-width: 0; }
       .examples li a:hover h3, .examples li a:active h3,
       .projects li a:hover h3,
-      .projects li a:active h3 {
+      .projects li a:active h3,
+      .donations li a:hover h3,
+      .donations li a:active h3 {
         display: block; }
     .examples li h3,
-    .projects li h3 {
+    .projects li h3,
+    .donations li h3 {
       display: none;
       position: absolute;
       top: 0;
@@ -505,11 +518,12 @@ li.horizon {
       width: 100%;
       height: 100%; }
       .examples li h3 p,
-      .projects li h3 p {
+      .projects li h3 p,
+      .donations li h3 p {
         position: absolute;
         top: 50%;
         margin-top: -1.5em;
-        color: white;
+        color: #fff;
         padding: 0 8px; }
 
 .nota-bene {
@@ -588,3 +602,5 @@ p.static, p.static + p {
 ::-moz-selection {
   background: #fff687;
   /* Firefox */ }
+
+/*# sourceMappingURL=main.css.map */
