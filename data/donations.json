@@ -3,43 +3,43 @@
   "items": [
     {
       "title": "Donation • $10.00",
-      "img": "../images/donations/10.png",
+      "img": "images/donations/10.png",
       "description": "for Two.js Development",
       "amount": "1000"
     },
     {
       "title": "Donation • $25.00",
-      "img": "../images/donations/25.png",
+      "img": "images/donations/25.png",
       "description": "for Two.js Development",
       "amount": "2500"
     },
     {
       "title": "Donation • $50.00",
-      "img": "../images/donations/50.png",
+      "img": "images/donations/50.png",
       "description": "for Two.js Development",
       "amount": "5000"
     },
     {
       "title": "Donation • $100.00",
-      "img": "../images/donations/100.png",
+      "img": "images/donations/100.png",
       "description": "for Two.js Development",
       "amount": "10000"
     },
     {
       "title": "Donation • $250.00",
-      "img": "../images/donations/250.png",
+      "img": "images/donations/250.png",
       "description": "for Two.js Development",
       "amount": "25000"
     },
     {
       "title": "Donation • $500.00",
-      "img": "../images/donations/500.png",
+      "img": "images/donations/500.png",
       "description": "for Two.js Development",
       "amount": "50000"
     },
     {
       "title": "Donation • $1000.00",
-      "img": "../images/donations/1k.png",
+      "img": "images/donations/1k.png",
       "description": "for Two.js Development",
       "amount": "100000"
     }
