@@ -1,0 +1,211 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Two.js: Three.js Extrusion</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <link rel="image_src" href="../images/logo.gif" />
+    <link rel="shortcut icon" type="image/gif" href="../images/favicon.gif">
+    <script src="../third-party/url.js"></script>
+    <script src="../third-party/jquery.js"></script>
+    <script src="../third-party/two.js"></script>
+    <script src="../third-party/three.js"></script>
+  </head>
+  <body>
+    <div class="scripts">
+      <script>
+
+        var ZERO = new THREE.Vector3();
+
+        var size = 10;
+        var width, height;
+
+        var splat = generateShape();
+        var renderer = new THREE.WebGLRenderer({ antialias: true });
+        var scene = new THREE.Scene();
+        var camera = new THREE.PerspectiveCamera(45);
+        camera.position.destination = new THREE.Vector3();
+
+        renderer.domElement.style.position = 'absolute';
+        renderer.domElement.style.top = 0;
+        renderer.domElement.style.left = 0;
+
+        var shape = extractShape(splat);
+
+        var geometry = new THREE.ExtrudeGeometry(shape, {
+          amount: 10,
+          curveSegments: 64
+        });
+
+        geometry.computeBoundingSphere();
+        geometry.computeBoundingBox();
+
+        geometry.boundingBox.width = geometry.boundingBox.max.x - geometry.boundingBox.min.x;
+        geometry.boundingBox.height = geometry.boundingBox.max.y - geometry.boundingBox.min.y;
+
+        var material = new THREE.MeshNormalMaterial();
+
+        var mesh = new THREE.Mesh(geometry, material);
+        mesh.rotation.x = Math.PI;  // flip-y
+        mesh.rotation.destination = new THREE.Vector3();
+
+        var shadow = generateShadow();
+
+        setup();
+
+        function generateShape() {
+
+          var two = new Two({
+            width: 400,
+            height: 400
+          });
+
+          var points = [];
+
+          for (var i = 0; i < Two.Resolution; i++) {
+
+            var pct = i / Two.Resolution;
+            var theta = pct * Math.PI * 2;
+            var radius = Math.random() * size + size;
+
+            var x = radius * Math.cos(theta);
+            var y = radius * Math.sin(theta);
+
+            var anchor = new Two.Anchor(x, y);
+            points.push(anchor);
+
+          }
+
+          points.push(new Two.Anchor(points[0].x, points[0].y));
+
+          var splat = two.makeCurve(points);
+          splat.translation.set(two.width / 2, two.height / 2);
+          two.update();
+
+          return splat;
+
+        }
+
+        function extractShape(obj) {
+
+          var shape = new THREE.Shape();
+
+          for (var i = 0; i < obj.vertices.length; i++) {
+
+            var vert = obj.vertices[i];
+            var prev = obj.vertices[i - 1];
+
+            switch (vert._command) {
+
+              case Two.Commands.move:
+                shape.moveTo(vert.x, vert.y);
+                break;
+
+              case Two.Commands.line:
+                shape.lineTo(vert.x, vert.y);
+                break;
+
+              case Two.Commands.curve:
+                shape.bezierCurveTo(
+                  prev.controls.right.x + prev.x, prev.controls.right.y + prev.y,
+                  vert.controls.left.x + vert.x, vert.controls.left.y + vert.y,
+                  vert.x, vert.y
+                );
+                break;
+
+              case Two.Commands.close:
+                shape.closePath();
+                break;
+
+            }
+
+          }
+
+          return shape;
+
+        }
+
+        function generateShadow() {
+
+          var shadow = new THREE.Mesh(new THREE.ShapeGeometry(new THREE.Shape(_.map(_.range(32), function(i) {
+            var pct = i / 32;
+            var theta = Math.PI * 2 * pct;
+            var x = Math.cos(theta);
+            var y = Math.sin(theta);
+            return new THREE.Vector2(x, y);
+          }))), new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.1, side: THREE.DoubleSide }));
+
+          shadow.scale.set(geometry.boundingBox.width / 2, geometry.boundingBox.height / 2, size);
+          shadow.rotation.x = Math.PI / 2;
+          shadow.position.y = - 25;
+
+          return shadow;
+
+        }
+
+        function mousemove(e) {
+
+          var pct;
+
+          pct = 2 * (e.clientX / width - 0.5);
+          mesh.rotation.destination.y = Math.PI / 2 * pct;
+
+          pct = e.clientY / height;
+          camera.position.destination.y = pct * 10;
+
+        }
+
+        function resize() {
+
+          width = window.innerWidth;
+          height = window.innerHeight;
+
+          renderer.setSize(width, height);
+          camera.aspect = width / height;
+          camera.updateProjectionMatrix();
+
+        }
+
+        function setup() {
+
+          renderer.setClearColor(0xffffff);
+
+          camera.position.z = 100;
+
+          scene.add(mesh);
+          scene.add(shadow);
+
+          window.addEventListener('mousemove', mousemove, false);
+          window.addEventListener('resize', resize, false);
+          document.body.appendChild(renderer.domElement);
+
+          resize();
+          loop();
+
+        }
+
+        function loop() {
+
+          requestAnimationFrame(loop);
+          renderer.render(scene, camera);
+
+          mesh.rotation.y += (mesh.rotation.destination.y - mesh.rotation.y) * 0.125;
+          camera.position.y += (camera.position.destination.y - camera.position.y) * 0.125;
+          camera.lookAt(ZERO);
+
+        }
+
+      </script>
+    </div>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-40550435-1', 'github.com');
+      ga('send', 'pageview');
+
+    </script>
+  </body>
+</html>
