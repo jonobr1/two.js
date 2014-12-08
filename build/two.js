@@ -1471,6 +1471,15 @@ var Backbone = Backbone || {};
 
 }());
 
+/**
+ * Handle dependency chain from Node.js style ASM as well as simiple
+ * synchronous JavaScript compilation for the browser.
+ */
+
+var _ = typeof require === 'function' ? require('underscore') : _;
+var Backbone = typeof require === 'function' ? require('backbone') : Backbone;
+var requestAnimationFrame = typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame;
+
 (function() {
 
   var root = this;
