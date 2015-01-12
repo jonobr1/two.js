@@ -2,6 +2,11 @@
   "template": "<li><a href=\"<%= href %>\" target=\"_blank\"><img width=\"143\" height=\"100\" src=\"<%= img %>\" alt=\"\"><h3><p><%= title %></p></h3></a></li>",
   "items": [
     {
+      "title": "Three.js Extrusion",
+      "href": "examples/three-extrusion.html",
+      "img": "images/examples/puzzle.gif"
+    },
+    {
       "title": "Physics Integration",
       "href": "examples/physics.html",
       "img": "images/examples/physics.gif"

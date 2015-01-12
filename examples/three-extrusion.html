@@ -20,21 +20,24 @@
         var size = 10;
         var width, height;
 
-        var splat = generateShape();
+        Two.Resolution = 16;
+
+        var jigsaw = generateShape();
         var renderer = new THREE.WebGLRenderer({ antialias: true });
         var scene = new THREE.Scene();
         var camera = new THREE.PerspectiveCamera(45);
         camera.position.destination = new THREE.Vector3();
 
-        renderer.domElement.style.position = 'absolute';
+        renderer.domElement.style.position = 'fixed';
         renderer.domElement.style.top = 0;
         renderer.domElement.style.left = 0;
 
-        var shape = extractShape(splat);
+        var shape = extractShape(jigsaw);
 
         var geometry = new THREE.ExtrudeGeometry(shape, {
-          amount: 10,
-          curveSegments: 64
+          amount: 0,
+          curveSegments: 64,
+          bevelThickness: 2
         });
 
         geometry.computeBoundingSphere();
@@ -47,6 +50,7 @@
 
         var mesh = new THREE.Mesh(geometry, material);
         mesh.rotation.x = Math.PI;  // flip-y
+        mesh.rotation.z = Math.random() * Math.PI * 2;
         mesh.rotation.destination = new THREE.Vector3();
 
         var shadow = generateShadow();
@@ -60,29 +64,78 @@
             height: 400
           });
 
+          var corners = 4;
           var points = [];
+          var prev, anchor;
 
-          for (var i = 0; i < Two.Resolution; i++) {
+          for (var i = 0; i < corners; i++) {
 
-            var pct = i / Two.Resolution;
+            var pct = i / corners;
             var theta = pct * Math.PI * 2;
-            var radius = Math.random() * size + size;
+            var radius = size * 2;
 
             var x = radius * Math.cos(theta);
             var y = radius * Math.sin(theta);
 
-            var anchor = new Two.Anchor(x, y);
+            prev = anchor;
+            anchor = new Two.Anchor(x, y);
+
+            if (prev) {
+              addNub(prev, anchor, points);
+            }
+
             points.push(anchor);
+
+            if (i >= corners - 1) {
+              addNub(anchor, points[0], points);
+            }
 
           }
 
-          points.push(new Two.Anchor(points[0].x, points[0].y));
+          var jigsaw = two.makePolygon(points);
 
-          var splat = two.makeCurve(points);
-          splat.translation.set(two.width / 2, two.height / 2);
+          jigsaw.translation.set(two.width / 2, two.height / 2);
           two.update();
 
-          return splat;
+          return jigsaw;
+
+        }
+
+        function addNub(a, b, list) {
+
+          var midpoint = new Two.Vector()
+            .copy(b).subSelf(a).divideScalar(2).addSelf(a);
+
+          var angle = Two.Utils.angleBetween(a, b);
+          var perp = angle + (Math.random() > 0.5 ? Math.PI : - Math.PI) / 2;
+
+          var radius = size * 0.66;
+          var projection = Math.random() * radius;
+          var center = new Two.Vector(
+            projection * Math.cos(perp) + midpoint.x,
+            projection * Math.sin(perp) + midpoint.y
+          );
+
+          var startAngle = Two.Utils.angleBetween(a, center);
+          var endAngle = Two.Utils.angleBetween(b, center);
+
+          if (Math.random() > 0.5) {
+            startAngle = mod(startAngle, Math.PI * 2);
+            endAngle = mod(endAngle, Math.PI * 2);
+          }
+
+          for (var i = 0; i < Two.Resolution - 1; i++) {
+
+            var pct = (i + 1) / Two.Resolution;
+            var theta = pct * (endAngle - startAngle) + startAngle;
+
+            var x = radius * Math.cos(theta) + center.x;
+            var y = radius * Math.sin(theta) + center.y;
+
+            var anchor = new Two.Anchor(x, y);
+            list.push(anchor);
+
+          }
 
         }
 
@@ -133,9 +186,9 @@
             var x = Math.cos(theta);
             var y = Math.sin(theta);
             return new THREE.Vector2(x, y);
-          }))), new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.1, side: THREE.DoubleSide }));
+          }))), new THREE.MeshBasicMaterial({ color: 0xefefef, transparent: true, side: THREE.DoubleSide }));
 
-          shadow.scale.set(geometry.boundingBox.width / 2, geometry.boundingBox.height / 2, size);
+          shadow.scale.set(geometry.boundingBox.width / 2, geometry.boundingBox.height / 2, 1 / size);
           shadow.rotation.x = Math.PI / 2;
           shadow.position.y = - 25;
 
@@ -151,7 +204,7 @@
           mesh.rotation.destination.y = Math.PI / 2 * pct;
 
           pct = e.clientY / height;
-          camera.position.destination.y = pct * 10;
+          camera.position.destination.y = pct * 50 - 15;
 
         }
 
@@ -176,6 +229,15 @@
           scene.add(shadow);
 
           window.addEventListener('mousemove', mousemove, false);
+          window.addEventListener('touchmove', function(e) {
+            e.preventDefault();
+            var touch = e.touches[0];
+            mousemove({
+              clientX: touch.pageX,
+              clientY: touch.pageY
+            });
+            return false;
+          }, false);
           window.addEventListener('resize', resize, false);
           document.body.appendChild(renderer.domElement);
 
@@ -190,9 +252,18 @@
           renderer.render(scene, camera);
 
           mesh.rotation.y += (mesh.rotation.destination.y - mesh.rotation.y) * 0.125;
+          shadow.rotation.z = mesh.rotation.y;
+
           camera.position.y += (camera.position.destination.y - camera.position.y) * 0.125;
           camera.lookAt(ZERO);
 
+        }
+
+        function mod(v, l) {
+          while (v < 0) {
+            v += l;
+          }
+          return v % l;
         }
 
       </script>
