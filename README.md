@@ -64,15 +64,15 @@ For the latest nightly changes checkout the `dev` branch [here](../../tree/dev).
 ##### July 22, 2014 [v0.4.0](https://github.com/jonobr1/two.js/releases/tag/v0.4.0)
 + Updated `Two.interpret` to handle polybezier path data
 + Added `Two.Group.mask` and `Two.Polygon.clip` in order to create clipping masks
-+ `Two.Group` has own `opacity` property [Leo Koppelkamm](https://github.com/DieBuche)
-+ Rendering optimizations [Leo Koppelkamm](https://github.com/DieBuche)
++ `Two.Group` has own `opacity` property [Leo Koppelkamm](https://github.com/ponychicken)
++ Rendering optimizations [Leo Koppelkamm](https://github.com/ponychicken)
 + `Two.noConflict` non-destructive command internally to the library
 + `Two.interpret` decomposes `transform` attribute of source tag
 + `Two.interpret` handles item irregularities from [Inkscape](http://www.inkscape.org/)
-+ Changed `Two.Identifier` to use underscores instead of hyphens for dot-notation access [Leo Koppelkamm](https://github.com/DieBuche)
-+ Added `Two.Group.getById` and `Two.Group.getByClassName` methods for convenient selection [Leo Koppelkamm](https://github.com/DieBuche)
-+ Added `classList` to all `Two.Shape`s [Leo Koppelkamm](https://github.com/DieBuche)
-+ Enabled inference of applied styles on imported svgs [Leo Koppelkamm](https://github.com/DieBuche)
++ Changed `Two.Identifier` to use underscores instead of hyphens for dot-notation access [Leo Koppelkamm](https://github.com/ponychicken)
++ Added `Two.Group.getById` and `Two.Group.getByClassName` methods for convenient selection [Leo Koppelkamm](https://github.com/ponychicken)
++ Added `classList` to all `Two.Shape`s [Leo Koppelkamm](https://github.com/ponychicken)
++ Enabled inference of applied styles on imported svgs [Leo Koppelkamm](https://github.com/ponychicken)
 + Added `Two.Polygon.getPointAt` method to get coordinates on a curve/line
 + Added `Two.Polygon.length` property and `Two.Polygon._updateLength` method to calculate length of curve/line
 + Updated `Two.Group.prototype` observable properties on `Two.Polygon.Properties` to ensure each property is considered unique
@@ -128,7 +128,7 @@ For the latest nightly changes checkout the `dev` branch [here](../../tree/dev).
 + Updated svg interpretation for `webgl` context
 + ~~Added matrix property to all `Two.Shape`'s for advanced transformations~~
 + Added `inverse` method to `Two.Matrix`
-+ Remove execution path dependency on utils/build.js [@masonbiler](https://github.com/masonbiler)
++ Remove execution path dependency on utils/build.js [@masonblier](https://github.com/masonblier)
 + Added `timeDelta` property to every `two` instance
 + Added gruntfile, package.json for more integration with `npm`, and dependency free build (`build/two.clean.js`) [@iros](https://github.com/iros)
 + Crossbrowser compatibility with `noStroke` and `noFill` commands
