@@ -45,7 +45,6 @@
             // Use the token to create the charge with a server-side script.
             // You can access the token ID with `token.id`
             _.extend(token, details);
-            console.log('sending', token);
             $.ajax({
               url: 'https://api.parse.com/1/functions/donate',
               type: 'post',
