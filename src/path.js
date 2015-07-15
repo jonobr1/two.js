@@ -277,7 +277,7 @@
 
       var clone = new Path(points, this.closed, this.curved, !this.automatic);
 
-      _.each(Two.Shape.Properties, function(k) {
+      _.each(Two.Path.Properties, function(k) {
         clone[k] = this[k];
       }, this);
 
