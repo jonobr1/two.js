@@ -5,11 +5,19 @@ A two-dimensional drawing api meant for modern browsers. It is renderer agnostic
 [Home](http://jonobr1.github.com/two.js) • [Examples](http://jonobr1.github.com/two.js/#examples) • [Documentation](http://jonobr1.github.com/two.js/#documentation) • [Help](https://github.com/jonobr1/two.js/issues?labels=question)
 
 ## Usage
-Download the [minified library](https://raw.github.com/jonobr1/two.js/master/build/two.min.js) and include it in your html. Alternatively see [how to build the library yourself](https://github.com/jonobr1/two.js#custom-build).
+Download the [minified library](https://raw.github.com/jonobr1/two.js/master/build/two.min.js) and include it in your html.
 
 ```html
 <script src="js/two.min.js"></script>
 ```
+
+It can also be installed via `npm`
+
+```js
+npm install --save two.js
+```
+Alternatively see [how to build the library yourself](https://github.com/jonobr1/two.js#custom-build).
+
 
 Here is boilerplate html in order to draw a spinning rectangle in two.js:
 
