@@ -1,4 +1,4 @@
-(function(Two) {
+(function(Two, _, Backbone, requestAnimationFrame) {
 
   var LinearGradient = Two.LinearGradient = function(x1, y1, x2, y2, stops) {
 
@@ -78,4 +78,9 @@
 
   LinearGradient.MakeObservable(LinearGradient.prototype);
 
-})(Two);
+})(
+  Two,
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);

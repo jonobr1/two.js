@@ -1,4 +1,4 @@
-(function() {
+(function(Two, _, Backbone, requestAnimationFrame) {
 
   var Path = Two.Path;
 
@@ -99,4 +99,9 @@
     return o1 + (o2 - o1) * ((v - i1) / (i2 - i1));
   }
 
-})();
+})(
+  Two,
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);

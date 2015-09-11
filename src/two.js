@@ -1,16 +1,6 @@
-/**
- * Handle dependency chain from Node.js style ASM as well as simiple
- * synchronous JavaScript compilation for the browser.
- */
-
-_ = typeof require === 'function' ? require('underscore') : _;
-Backbone = typeof require === 'function' ? require('backbone') : Backbone;
-requestAnimationFrame = typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame;
-
-(function() {
+(function(previousTwo, _, Backbone, requestAnimationFrame) {
 
   var root = this;
-  var previousTwo = root.Two || {};
 
   /**
    * Constants
@@ -1735,6 +1725,34 @@ requestAnimationFrame = typeof require === 'function' ? require('requestAnimatio
 
     },
 
+    /**
+     * Convenience method to make and add a Two.LinearGradient.
+     */
+    makeLinearGradient: function(x1, y1, x2, y2 /* stops */) {
+
+      var stops = arguments.slice(3);
+      var gradient = new Two.LinearGradient(x1, y1, x2, y2, stops);
+
+      this.two.add(gradient);
+
+      return gradient;
+
+    },
+
+    /**
+     * Convenience method to make and add a Two.RadialGradient.
+     */
+    makeRadialGradient: function(x1, y1, r /* stops */) {
+
+      var stops = arguments.slice(2);
+      var gradient = new Two.RadialGradient(x1, y1, r, stops);
+
+      this.two.add(gradient);
+
+      return gradient;
+
+    },
+
     makeGroup: function(o) {
 
       var objects = o;
@@ -1825,4 +1843,9 @@ requestAnimationFrame = typeof require === 'function' ? require('requestAnimatio
   //Node
   module.exports = Two;
 
-})();
+})(
+  this.Two || {},
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);

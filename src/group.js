@@ -1,4 +1,4 @@
-(function(Two) {
+(function(Two, _, Backbone, requestAnimationFrame) {
 
   /**
    * Constants
@@ -560,4 +560,9 @@
 
   }
 
-})(Two);
+})(
+  Two,
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);

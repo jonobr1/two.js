@@ -1,4 +1,4 @@
-(function() {
+(function(Two, _, Backbone, requestAnimationFrame) {
 
   var Path = Two.Path, PI = Math.PI, TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin, abs = Math.abs;
 
@@ -70,4 +70,9 @@
 
   Path.MakeObservable(CurvedPolygon.prototype);
 
-})();
+})(
+  Two,
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);

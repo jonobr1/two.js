@@ -26,19 +26,9 @@
  *
  */
 
-/**
- * Handle dependency chain from Node.js style ASM as well as simiple
- * synchronous JavaScript compilation for the browser.
- */
-
-var _ = typeof require === 'function' ? require('underscore') : _;
-var Backbone = typeof require === 'function' ? require('backbone') : Backbone;
-var requestAnimationFrame = typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame;
-
-(function() {
+(function(previousTwo, _, Backbone, requestAnimationFrame) {
 
   var root = this;
-  var previousTwo = root.Two || {};
 
   /**
    * Constants
@@ -218,6 +208,24 @@ var requestAnimationFrame = typeof require === 'function' ? require('requestAnim
     },
 
     Utils: {
+
+      defineProperty: function(property) {
+
+        var object = this;
+        var secret = '_' + property;
+        var flag = '_flag' + property.charAt(0).toUpperCase() + property.slice(1);
+
+        Object.defineProperty(object, property, {
+          get: function() {
+            return this[secret];
+          },
+          set: function(v) {
+            this[secret] = v;
+            this[flag] = true;
+          }
+        });
+
+      },
 
       /**
        * Release an arbitrary class' events from the two.js corpus and recurse
@@ -1745,6 +1753,34 @@ var requestAnimationFrame = typeof require === 'function' ? require('requestAnim
 
     },
 
+    /**
+     * Convenience method to make and add a Two.LinearGradient.
+     */
+    makeLinearGradient: function(x1, y1, x2, y2 /* stops */) {
+
+      var stops = arguments.slice(3);
+      var gradient = new Two.LinearGradient(x1, y1, x2, y2, stops);
+
+      this.two.add(gradient);
+
+      return gradient;
+
+    },
+
+    /**
+     * Convenience method to make and add a Two.RadialGradient.
+     */
+    makeRadialGradient: function(x1, y1, r /* stops */) {
+
+      var stops = arguments.slice(2);
+      var gradient = new Two.RadialGradient(x1, y1, r, stops);
+
+      this.two.add(gradient);
+
+      return gradient;
+
+    },
+
     makeGroup: function(o) {
 
       var objects = o;
@@ -1835,9 +1871,14 @@ var requestAnimationFrame = typeof require === 'function' ? require('requestAnim
   //Node
   module.exports = Two;
 
-})();
+})(
+  this.Two || {},
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);
 
-(function(Two) {
+(function(Two, _, Backbone, requestAnimationFrame) {
 
   var Vector = Two.Vector = function(x, y) {
 
@@ -2154,9 +2195,14 @@ var requestAnimationFrame = typeof require === 'function' ? require('requestAnim
 
   };
 
-})(Two);
+})(
+  Two,
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);
 
-(function(Two) {
+(function(Two, _, Backbone, requestAnimationFrame) {
 
   // Localized variables
   var commands = Two.Commands;
@@ -2318,9 +2364,14 @@ var requestAnimationFrame = typeof require === 'function' ? require('requestAnim
     _.extend(this, AnchorProto);
   };
 
-})(Two);
+})(
+  Two,
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);
 
-(function(Two) {
+(function(Two, _, Backbone, requestAnimationFrame) {
 
   /**
    * Constants
@@ -2694,9 +2745,14 @@ var requestAnimationFrame = typeof require === 'function' ? require('requestAnim
 
   });
 
-})(Two);
+})(
+  Two,
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);
 
-(function(Two) {
+(function(Two, _, Backbone, requestAnimationFrame) {
 
   // Localize variables
   var mod = Two.Utils.mod, toFixed = Two.Utils.toFixed;
@@ -2719,7 +2775,7 @@ var requestAnimationFrame = typeof require === 'function' ? require('requestAnim
           version: this.version
         });
       }
-      if (_.isObject(attrs)) {
+      if (!_.isEmpty(attrs)) {
         svg.setAttributes(elem, attrs);
       }
       return elem;
@@ -2898,12 +2954,7 @@ var requestAnimationFrame = typeof require === 'function' ? require('requestAnim
 
         var tag = elem.nodeName;
 
-        if (!tag) {
-          return;
-        }
-
-        // Defer additions while clipping.
-        if (object._clip) {
+        if (!tag || /(radial|linear)gradient/i.test(tag) || object._clip) {
           return;
         }
 
@@ -3057,7 +3108,9 @@ var requestAnimationFrame = typeof require === 'function' ? require('requestAnim
         }
 
         if (this._flagFill) {
-          changed.fill = this._fill;
+
+          changed.fill = this._fill && this._fill.id
+            ? 'url(#' + this._fill.id + ')' : this._fill;
         }
 
         if (this._flagStroke) {
@@ -3086,7 +3139,7 @@ var requestAnimationFrame = typeof require === 'function' ? require('requestAnim
         }
 
         if (this._flagMiter) {
-          changed['stroke-miterlimit'] = this.miter;
+          changed['stroke-miterlimit'] = this._miter;
         }
 
         // If there is no attached DOM element yet,
@@ -3137,6 +3190,159 @@ var requestAnimationFrame = typeof require === 'function' ? require('requestAnim
 
       }
 
+    },
+
+    'linear-gradient': {
+
+      render: function(domElement) {
+
+        this._update();
+
+        var changed = {};
+
+        if (this._flagEndPoints) {
+          changed.x1 = this.left._x;
+          changed.y1 = this.left._y;
+          changed.x2 = this.right._x;
+          changed.y2 = this.right._y;
+        }
+
+        if (this._flagSpread) {
+          changed.spreadMethod = this._spread;
+        }
+
+        // If there is no attached DOM element yet,
+        // create it with all necessary attributes.
+        if (!this._renderer.elem) {
+
+          changed.id = this.id;
+          changed.gradientUnits = 'userSpaceOnUse';
+          this._renderer.elem = svg.createElement('linearGradient', changed);
+          domElement.defs.appendChild(this._renderer.elem);
+
+        // Otherwise apply all pending attributes
+        } else {
+
+          svg.setAttributes(this._renderer.elem, changed);
+
+        }
+
+        if (this._flagStops) {
+
+          this._renderer.elem.children.length = 0;
+
+          for (var i = 0; i < this.stops.length; i++) {
+
+            var stop = this.stops[i];
+            var attrs = {};
+
+            if (stop._flagOffset) {
+              attrs.offset = 100 * stop._offset + '%';
+            }
+            if (stop._flagColor) {
+              attrs['stop-color'] = stop._color;
+            }
+            if (stop._flagOpacity) {
+              attrs['stop-opacity'] = stop._opacity;
+            }
+
+            if (!stop._renderer.elem) {
+              stop._renderer.elem = svg.createElement('stop', attrs);
+            } else {
+              svg.setAttributes(stop._renderer.elem, attrs);
+            }
+
+            this._renderer.elem.appendChild(stop._renderer.elem);
+
+            stop.flagReset();
+
+          }
+
+        }
+
+        return this.flagReset();
+
+      }
+
+    },
+
+    'radial-gradient': {
+
+      render: function(domElement) {
+
+        this._update();
+
+        var changed = {};
+
+        if (this._flagCenter) {
+          changed.cx = this.center._x;
+          changed.cy = this.center._y;
+        }
+        if (this._flagFocal) {
+          changed.fx = this.focal._x;
+          changed.fy = this.focal._y;
+        }
+
+        if (this._flagRadius) {
+          changed.r = this._radius;
+        }
+
+        if (this._flagSpread) {
+          changed.spreadMethod = this._spread;
+        }
+
+        // If there is no attached DOM element yet,
+        // create it with all necessary attributes.
+        if (!this._renderer.elem) {
+
+          changed.id = this.id;
+          changed.gradientUnits = 'userSpaceOnUse';
+          this._renderer.elem = svg.createElement('radialGradient', changed);
+          domElement.defs.appendChild(this._renderer.elem);
+
+        // Otherwise apply all pending attributes
+        } else {
+
+          svg.setAttributes(this._renderer.elem, changed);
+
+        }
+
+        if (this._flagStops) {
+
+          this._renderer.elem.children.length = 0;
+
+          for (var i = 0; i < this.stops.length; i++) {
+
+            var stop = this.stops[i];
+            var attrs = {};
+
+            if (stop._flagOffset) {
+              attrs.offset = 100 * stop._offset + '%';
+            }
+            if (stop._flagColor) {
+              attrs['stop-color'] = stop._color;
+            }
+            if (stop._flagOpacity) {
+              attrs['stop-opacity'] = stop._opacity;
+            }
+
+            if (!stop._renderer.elem) {
+              stop._renderer.elem = svg.createElement('stop', attrs);
+            } else {
+              svg.setAttributes(stop._renderer.elem, attrs);
+            }
+
+            this._renderer.elem.appendChild(stop._renderer.elem);
+            stop.flagReset();
+
+          }
+
+        }
+
+        return this.flagReset();
+
+      }
+
     }
 
   };
@@ -3153,6 +3359,7 @@ var requestAnimationFrame = typeof require === 'function' ? require('requestAnim
 
     this.defs = svg.createElement('defs');
     this.domElement.appendChild(this.defs);
+    this.domElement.defs = this.defs;
 
   };
 
@@ -3188,9 +3395,14 @@ var requestAnimationFrame = typeof require === 'function' ? require('requestAnim
 
   });
 
-})(Two);
+})(
+  Two,
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);
 
-(function(Two) {
+(function(Two, _, Backbone, requestAnimationFrame) {
 
   /**
    * Constants
@@ -3532,9 +3744,14 @@ var requestAnimationFrame = typeof require === 'function' ? require('requestAnim
     ctx.setTransform(1, 0, 0, 1, 0, 0);
   }
 
-})(Two);
+})(
+  Two,
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);
 
-(function(Two) {
+(function(Two, _, Backbone, requestAnimationFrame) {
 
   /**
    * Constants
@@ -4265,9 +4482,14 @@ var requestAnimationFrame = typeof require === 'function' ? require('requestAnim
 
   });
 
-})(Two);
+})(
+  Two,
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);
 
-(function(Two) {
+(function(Two, _, Backbone, requestAnimationFrame) {
 
   var Shape = Two.Shape = function() {
 
@@ -4393,9 +4615,14 @@ var requestAnimationFrame = typeof require === 'function' ? require('requestAnim
 
   Shape.MakeObservable(Shape.prototype);
 
-})(Two);
+})(
+  Two,
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);
 
-(function(Two) {
+(function(Two, _, Backbone, requestAnimationFrame) {
 
   /**
    * Constants
@@ -5045,7 +5272,7 @@ var requestAnimationFrame = typeof require === 'function' ? require('requestAnim
 
       }
 
-      Two.Shape.prototype._update.call(this);
+      Two.Shape.prototype._update.apply(this, arguments);
 
       return this;
 
@@ -5132,9 +5359,14 @@ var requestAnimationFrame = typeof require === 'function' ? require('requestAnim
 
   }
 
-})(Two);
+})(
+  Two,
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);
 
-(function() {
+(function(Two, _, Backbone, requestAnimationFrame) {
 
   var Path = Two.Path;
 
@@ -5159,8 +5391,14 @@ var requestAnimationFrame = typeof require === 'function' ? require('requestAnim
 
   Path.MakeObservable(Line.prototype);
 
-})();
-(function() {
+})(
+  Two,
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);
+
+(function(Two, _, Backbone, requestAnimationFrame) {
 
   var Path = Two.Path;
 
@@ -5184,8 +5422,14 @@ var requestAnimationFrame = typeof require === 'function' ? require('requestAnim
 
   Path.MakeObservable(Rectangle.prototype);
 
-})();
-(function() {
+})(
+  Two,
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);
+
+(function(Two, _, Backbone, requestAnimationFrame) {
 
   var Path = Two.Path, TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin;
 
@@ -5214,8 +5458,14 @@ var requestAnimationFrame = typeof require === 'function' ? require('requestAnim
 
   Path.MakeObservable(Ellipse.prototype);
 
-})();
-(function() {
+})(
+  Two,
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);
+
+(function(Two, _, Backbone, requestAnimationFrame) {
 
   var Path = Two.Path, TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin;
 
@@ -5240,8 +5490,14 @@ var requestAnimationFrame = typeof require === 'function' ? require('requestAnim
 
   Path.MakeObservable(Polygon.prototype);
 
-})();
-(function() {
+})(
+  Two,
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);
+
+(function(Two, _, Backbone, requestAnimationFrame) {
 
   var Path = Two.Path, PI = Math.PI, TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin, abs = Math.abs;
 
@@ -5313,8 +5569,14 @@ var requestAnimationFrame = typeof require === 'function' ? require('requestAnim
 
   Path.MakeObservable(CurvedPolygon.prototype);
 
-})();
-(function() {
+})(
+  Two,
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);
+
+(function(Two, _, Backbone, requestAnimationFrame) {
 
   var Path = Two.Path, PI = Math.PI, TWO_PI = Math.PI * 2, HALF_PI = Math.PI/2, cos = Math.cos, sin = Math.sin, abs = Math.abs;
 
@@ -5419,8 +5681,14 @@ var requestAnimationFrame = typeof require === 'function' ? require('requestAnim
 
   Path.MakeObservable(ArcSegment.prototype);
 
-})();
-(function() {
+})(
+  Two,
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);
+
+(function(Two, _, Backbone, requestAnimationFrame) {
 
   var Path = Two.Path, PI = Math.PI, TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin, abs = Math.abs;
 
@@ -5481,8 +5749,14 @@ var requestAnimationFrame = typeof require === 'function' ? require('requestAnim
 
   Path.MakeObservable(SineRing.prototype);
 
-})();
-(function() {
+})(
+  Two,
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);
+
+(function(Two, _, Backbone, requestAnimationFrame) {
 
   var Path = Two.Path, TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin;
 
@@ -5516,8 +5790,14 @@ var requestAnimationFrame = typeof require === 'function' ? require('requestAnim
 
   Path.MakeObservable(Star.prototype);
 
-})();
-(function() {
+})(
+  Two,
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);
+
+(function(Two, _, Backbone, requestAnimationFrame) {
 
   var Path = Two.Path;
 
@@ -5618,8 +5898,412 @@ var requestAnimationFrame = typeof require === 'function' ? require('requestAnim
     return o1 + (o2 - o1) * ((v - i1) / (i2 - i1));
   }
 
-})();
-(function(Two) {
+})(
+  Two,
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);
+
+(function(Two, _, Backbone, requestAnimationFrame) {
+
+  var Stop = function(offset, color, opacity) {
+
+    this._renderer = {};
+
+    this.offset = _.isNumber(offset) ? offset
+      : Stop.Index <= 0 ? 0 : 1;
+
+    this.opacity = _.isNumber(opacity) ? opacity : 1;
+
+    this.color = _.isString(color) ? color
+      : Stop.Index <= 0 ? '#fff' : '#000';
+
+    Stop.Index = (Stop.Index + 1) % 2;
+
+  };
+
+  _.extend(Stop, {
+
+    Index: 0,
+
+    Properties: [
+      'offset',
+      'opacity',
+      'color'
+    ],
+
+    MakeObservable: function(object) {
+
+      _.each(Stop.Properties, function(property) {
+
+        var secret = '_' + property;
+        var flag = '_flag' + property.charAt(0).toUpperCase() + property.slice(1);
+
+        Object.defineProperty(object, property, {
+          get: function() {
+            return this[secret];
+          },
+          set: function(v) {
+            this[secret] = v;
+            this[flag] = true;
+            this.trigger(Two.Events.change);  // Unique to Gradient.Stop
+          }
+        });
+
+
+      });
+
+    }
+
+  });
+
+  _.extend(Stop.prototype, Backbone.Events, {
+
+    clone: function() {
+
+      var clone = new Stop();
+
+      _.each(Stop.Properties, function(property) {
+        clone[property] = this[property];
+      }, this);
+
+      return clone;
+
+    },
+
+    flagReset: function() {
+
+      this._flagOffset = this._flagColor = this._flagOpacity = false;
+
+      return this;
+
+    }
+
+  });
+
+  Stop.MakeObservable(Stop.prototype);
+
+  var Gradient = Two.Gradient = function(stops) {
+
+    Two.Shape.call(this);
+
+    this._renderer.type = 'gradient';
+
+    this.spread = 'pad';
+
+    this.stops = stops;
+
+  };
+
+  _.extend(Gradient, {
+
+    Stop: Stop,
+
+    Properties: [
+      'spread'
+    ],
+
+    MakeObservable: function(object) {
+
+      Two.Shape.MakeObservable(object);
+
+      _.each(Gradient.Properties, Two.Utils.defineProperty, object);
+
+      Object.defineProperty(object, 'stops', {
+
+        get: function() {
+          return this._stops;
+        },
+
+        set: function(stops) {
+
+          var updateStops = _.bind(Gradient.FlagStops, this);
+
+          var bindStops = _.bind(function(items) {
+
+            // This function is called a lot
+            // when importing a large SVG
+            var i = items.length;
+            while(i--) {
+              items[i].bind(Two.Events.change, updateStops);
+            }
+
+            updateStops();
+
+          }, this);
+
+          var unbindStops = _.bind(function(items) {
+
+            _.each(items, function(v) {
+              v.unbind(Two.Events.change, updateStops);
+            }, this);
+
+            updateStops();
+
+          }, this);
+
+          // Remove previous listeners
+          if (this._stops) {
+            this._stops.unbind();
+          }
+
+          // Create new Collection with copy of Stops
+          this._stops = new Two.Utils.Collection(stops.slice(0));
+
+          // Listen for Collection changes and bind / unbind
+          this._stops.bind(Two.Events.insert, bindStops);
+          this._stops.bind(Two.Events.remove, unbindStops);
+
+          // Bind Initial Stops
+          bindStops(this._stops);
+
+        }
+
+      });
+
+    },
+
+    FlagStops: function() {
+      this._flagStops = true;
+    }
+
+  });
+
+  _.extend(Gradient.prototype, Two.Shape.prototype, {
+
+    clone: function(parent) {
+
+      parent = parent || this.parent;
+
+      var stops = _.map(this.stops, function(s) {
+        return s.clone();
+      });
+
+      var clone = new Gradient(stops);
+
+      _.each(Two.Gradient.Properties, function(k) {
+        clone[k] = this[k];
+      }, this);
+
+      clone.translation.copy(this.translation);
+      clone.rotation = this.rotation;
+      clone.scale = this.scale;
+
+      parent.add(clone);
+
+      return clone;
+
+    },
+
+    flagReset: function() {
+
+      this._flagSpread = this._flagStops = false;
+
+      Two.Shape.prototype.flagReset.call(this);
+
+      return this;
+
+    }
+
+  });
+
+  Gradient.MakeObservable(Gradient.prototype);
+
+})(
+  Two,
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);
+
+(function(Two, _, Backbone, requestAnimationFrame) {
+
+  var LinearGradient = Two.LinearGradient = function(x1, y1, x2, y2, stops) {
+
+    Two.Gradient.call(this, stops);
+
+    this._renderer.type = 'linear-gradient';
+
+    var flagEndPoints = _.bind(LinearGradient.FlagEndPoints, this);
+    this.left = new Two.Vector().bind(Two.Events.change, flagEndPoints);
+    this.right = new Two.Vector().bind(Two.Events.change, flagEndPoints);
+
+    if (_.isNumber(x1)) {
+      this.left.x = x1;
+    }
+    if (_.isNumber(y1)) {
+      this.left.y = y1;
+    }
+    if (_.isNumber(x2)) {
+      this.right.x = x2;
+    }
+    if (_.isNumber(y2)) {
+      this.right.y = y2;
+    }
+
+  };
+
+  _.extend(LinearGradient, {
+
+    Stop: Two.Gradient.Stop,
+
+    MakeObservable: function(object) {
+      Two.Gradient.MakeObservable(object);
+    },
+
+    FlagEndPoints: function() {
+      this._flagEndPoints = true;
+    }
+
+  });
+
+  _.extend(LinearGradient.prototype, Two.Gradient.prototype, {
+
+    _flagEndPoints: false,
+
+    clone: function(parent) {
+
+      parent = parent || this.parent;
+
+      var stops = _.each(this.stops, function(stop) {
+        return stop.clone();
+      });
+
+      var clone = new LinearGradient(this.left._x, this.left._y,
+        this.right._x, this.right._y, stops);
+
+      _.each(Gradient.Properties, function(k) {
+        clone[k] = this[k];
+      }, this);
+
+      parent.add(clone);
+
+      return clone;
+
+    },
+
+    flagReset: function() {
+
+      this._flagEndPoints = false;
+
+      Two.Gradient.prototype.flagReset.call(this);
+
+      return this;
+
+    }
+
+  });
+
+  LinearGradient.MakeObservable(LinearGradient.prototype);
+
+})(
+  Two,
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);
+
+(function(Two, _, Backbone, requestAnimationFrame) {
+
+  var RadialGradient = Two.RadialGradient = function(cx, cy, r, stops, fx, fy) {
+
+    Two.Gradient.call(this, stops);
+
+    this._renderer.type = 'radial-gradient';
+
+    this.center = new Two.Vector()
+      .bind(Two.Events.change, _.bind(function() {
+        this._flagCenter = true;
+      }, this));
+
+    this.radius = _.isNumber(r) ? r : 20;
+
+    this.focal = new Two.Vector()
+      .bind(Two.Events.change, _.bind(function() {
+        this._flagFocal = true;
+      }, this));
+
+    if (_.isNumber(cx)) {
+      this.center.x = cx;
+    }
+    if (_.isNumber(cy)) {
+      this.center.y = cy;
+    }
+    if (_.isNumber(fx)) {
+      this.focal.x = fx;
+    }
+    if (_.isNumber(fy)) {
+      this.focal.y = fy;
+    }
+
+  };
+
+  _.extend(RadialGradient, {
+
+    Stop: Two.Gradient.Stop,
+
+    Properties: [
+      'radius'
+    ],
+
+    MakeObservable: function(object) {
+
+      Two.Gradient.MakeObservable(object);
+
+      _.each(RadialGradient.Properties, Two.Utils.defineProperty, object);
+
+    }
+
+  });
+
+  _.extend(RadialGradient.prototype, Two.Gradient.prototype, {
+
+    _flagEndPoints: false,
+
+    clone: function(parent) {
+
+      parent = parent || this.parent;
+
+      var stops = _.each(this.stops, function(stop) {
+        return stop.clone();
+      });
+
+      var clone = new RadialGradient(this.center._x, this.center._y,
+          this._radius, stops, this.focal._x, this.focal._y);
+
+      _.each(Two.Gradient.Properties.concat(RadialGradient.Properties), function(k) {
+        clone[k] = this[k];
+      }, this);
+
+      parent.add(clone);
+
+      return clone;
+
+    },
+
+    flagReset: function() {
+
+      this._flagRadius = this._flagCenter = this._flagFocal = false;
+
+      Two.Gradient.prototype.flagReset.call(this);
+
+      return this;
+
+    }
+
+  });
+
+  RadialGradient.MakeObservable(RadialGradient.prototype);
+
+})(
+  Two,
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);
+
+(function(Two, _, Backbone, requestAnimationFrame) {
 
   /**
    * Constants
@@ -6181,4 +6865,9 @@ var requestAnimationFrame = typeof require === 'function' ? require('requestAnim
 
   }
 
-})(Two);
+})(
+  Two,
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);

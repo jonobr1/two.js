@@ -26,6 +26,9 @@ var files = [
   path.resolve(__dirname, '../src/shapes/sine-ring.js'),
   path.resolve(__dirname, '../src/shapes/star.js'),
   path.resolve(__dirname, '../src/shapes/rounded-rectangle.js'),
+  path.resolve(__dirname, '../src/effects/gradient.js'),
+  path.resolve(__dirname, '../src/effects/linear-gradient.js'),
+  path.resolve(__dirname, '../src/effects/radial-gradient.js'),
   path.resolve(__dirname, '../src/group.js')
 ];
 

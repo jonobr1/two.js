@@ -1,4 +1,4 @@
-(function() {
+(function(Two, _, Backbone, requestAnimationFrame) {
 
   var Path = Two.Path;
 
@@ -23,4 +23,9 @@
 
   Path.MakeObservable(Line.prototype);
 
-})();
+})(
+  Two,
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);

@@ -1,4 +1,4 @@
-(function() {
+(function(Two, _, Backbone, requestAnimationFrame) {
 
   var Path = Two.Path, TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin;
 
@@ -32,4 +32,9 @@
 
   Path.MakeObservable(Star.prototype);
 
-})();
+})(
+  Two,
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);
