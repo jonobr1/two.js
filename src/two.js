@@ -3,9 +3,9 @@
  * synchronous JavaScript compilation for the browser.
  */
 
-var _ = typeof require === 'function' ? require('underscore') : _;
-var Backbone = typeof require === 'function' ? require('backbone') : Backbone;
-var requestAnimationFrame = typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame;
+_ = typeof require === 'function' ? require('underscore') : _;
+Backbone = typeof require === 'function' ? require('backbone') : Backbone;
+requestAnimationFrame = typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame;
 
 (function() {
 
@@ -190,6 +190,24 @@ var requestAnimationFrame = typeof require === 'function' ? require('requestAnim
     },
 
     Utils: {
+
+      defineProperty: function(property) {
+
+        var object = this;
+        var secret = '_' + property;
+        var flag = '_flag' + property.charAt(0).toUpperCase() + property.slice(1);
+
+        Object.defineProperty(object, property, {
+          get: function() {
+            return this[secret];
+          },
+          set: function(v) {
+            this[secret] = v;
+            this[flag] = true;
+          }
+        });
+
+      },
 
       /**
        * Release an arbitrary class' events from the two.js corpus and recurse

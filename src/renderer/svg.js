@@ -21,7 +21,7 @@
           version: this.version
         });
       }
-      if (_.isObject(attrs)) {
+      if (!_.isEmpty(attrs)) {
         svg.setAttributes(elem, attrs);
       }
       return elem;
@@ -200,12 +200,7 @@
 
         var tag = elem.nodeName;
 
-        if (!tag) {
-          return;
-        }
-
-        // Defer additions while clipping.
-        if (object._clip) {
+        if (!tag || /(radial|linear)gradient/i.test(tag) || object._clip) {
           return;
         }
 
@@ -359,7 +354,9 @@
         }
 
         if (this._flagFill) {
-          changed.fill = this._fill;
+
+          changed.fill = this._fill && this._fill.id
+            ? 'url(#' + this._fill.id + ')' : this._fill;
         }
 
         if (this._flagStroke) {
@@ -388,7 +385,7 @@
         }
 
         if (this._flagMiter) {
-          changed['stroke-miterlimit'] = this.miter;
+          changed['stroke-miterlimit'] = this._miter;
         }
 
         // If there is no attached DOM element yet,
@@ -439,6 +436,159 @@
 
       }
 
+    },
+
+    'linear-gradient': {
+
+      render: function(domElement) {
+
+        this._update();
+
+        var changed = {};
+
+        if (this._flagEndPoints) {
+          changed.x1 = this.left._x;
+          changed.y1 = this.left._y;
+          changed.x2 = this.right._x;
+          changed.y2 = this.right._y;
+        }
+
+        if (this._flagSpread) {
+          changed.spreadMethod = this._spread;
+        }
+
+        // If there is no attached DOM element yet,
+        // create it with all necessary attributes.
+        if (!this._renderer.elem) {
+
+          changed.id = this.id;
+          changed.gradientUnits = 'userSpaceOnUse';
+          this._renderer.elem = svg.createElement('linearGradient', changed);
+          domElement.defs.appendChild(this._renderer.elem);
+
+        // Otherwise apply all pending attributes
+        } else {
+
+          svg.setAttributes(this._renderer.elem, changed);
+
+        }
+
+        if (this._flagStops) {
+
+          this._renderer.elem.children.length = 0;
+
+          for (var i = 0; i < this.stops.length; i++) {
+
+            var stop = this.stops[i];
+            var attrs = {};
+
+            if (stop._flagOffset) {
+              attrs.offset = 100 * stop._offset + '%';
+            }
+            if (stop._flagColor) {
+              attrs['stop-color'] = stop._color;
+            }
+            if (stop._flagOpacity) {
+              attrs['stop-opacity'] = stop._opacity;
+            }
+
+            if (!stop._renderer.elem) {
+              stop._renderer.elem = svg.createElement('stop', attrs);
+            } else {
+              svg.setAttributes(stop._renderer.elem, attrs);
+            }
+
+            this._renderer.elem.appendChild(stop._renderer.elem);
+
+            stop.flagReset();
+
+          }
+
+        }
+
+        return this.flagReset();
+
+      }
+
+    },
+
+    'radial-gradient': {
+
+      render: function(domElement) {
+
+        this._update();
+
+        var changed = {};
+
+        if (this._flagCenter) {
+          changed.cx = this.center._x;
+          changed.cy = this.center._y;
+        }
+        if (this._flagFocal) {
+          changed.fx = this.focal._x;
+          changed.fy = this.focal._y;
+        }
+
+        if (this._flagRadius) {
+          changed.r = this._radius;
+        }
+
+        if (this._flagSpread) {
+          changed.spreadMethod = this._spread;
+        }
+
+        // If there is no attached DOM element yet,
+        // create it with all necessary attributes.
+        if (!this._renderer.elem) {
+
+          changed.id = this.id;
+          changed.gradientUnits = 'userSpaceOnUse';
+          this._renderer.elem = svg.createElement('radialGradient', changed);
+          domElement.defs.appendChild(this._renderer.elem);
+
+        // Otherwise apply all pending attributes
+        } else {
+
+          svg.setAttributes(this._renderer.elem, changed);
+
+        }
+
+        if (this._flagStops) {
+
+          this._renderer.elem.children.length = 0;
+
+          for (var i = 0; i < this.stops.length; i++) {
+
+            var stop = this.stops[i];
+            var attrs = {};
+
+            if (stop._flagOffset) {
+              attrs.offset = 100 * stop._offset + '%';
+            }
+            if (stop._flagColor) {
+              attrs['stop-color'] = stop._color;
+            }
+            if (stop._flagOpacity) {
+              attrs['stop-opacity'] = stop._opacity;
+            }
+
+            if (!stop._renderer.elem) {
+              stop._renderer.elem = svg.createElement('stop', attrs);
+            } else {
+              svg.setAttributes(stop._renderer.elem, attrs);
+            }
+
+            this._renderer.elem.appendChild(stop._renderer.elem);
+            stop.flagReset();
+
+          }
+
+        }
+
+        return this.flagReset();
+
+      }
+
     }
 
   };
@@ -455,6 +605,7 @@
 
     this.defs = svg.createElement('defs');
     this.domElement.appendChild(this.defs);
+    this.domElement.defs = this.defs;
 
   };
 

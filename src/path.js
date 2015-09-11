@@ -648,7 +648,7 @@
 
       }
 
-      Two.Shape.prototype._update.call(this);
+      Two.Shape.prototype._update.apply(this, arguments);
 
       return this;
 
