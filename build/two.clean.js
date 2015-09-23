@@ -1758,10 +1758,10 @@
      */
     makeLinearGradient: function(x1, y1, x2, y2 /* stops */) {
 
-      var stops = arguments.slice(3);
+      var stops = Array.prototype.slice.call(arguments, 4);
       var gradient = new Two.LinearGradient(x1, y1, x2, y2, stops);
 
-      this.two.add(gradient);
+      this.add(gradient);
 
       return gradient;
 
@@ -1772,10 +1772,10 @@
      */
     makeRadialGradient: function(x1, y1, r /* stops */) {
 
-      var stops = arguments.slice(2);
+      var stops = Array.prototype.slice.call(arguments, 3);
       var gradient = new Two.RadialGradient(x1, y1, r, stops);
 
-      this.two.add(gradient);
+      this.add(gradient);
 
       return gradient;
 
@@ -3531,10 +3531,10 @@
 
         // Styles
         if (fill) {
-          ctx.fillStyle = fill;
+          ctx.fillStyle = _.isString(fill) ? fill : fill._renderer.gradient;
         }
         if (stroke) {
-          ctx.strokeStyle = stroke;
+          ctx.strokeStyle = _.isString(stroke) ? stroke : stroke._renderer.gradient;
         }
         if (linewidth) {
           ctx.lineWidth = linewidth;
@@ -3662,6 +3662,58 @@
 
       }
 
+    },
+
+    'linear-gradient': {
+
+      render: function(ctx) {
+
+        this._update();
+
+        if (!this._renderer.gradient || this._flagEndPoints || this._flagStops) {
+
+          this._renderer.gradient = ctx.createLinearGradient(
+            this.left._x, this.left._y,
+            this.right._x, this.right._y
+          );
+
+          for (var i = 0; i < this.stops.length; i++) {
+            var stop = this.stops[i];
+            this._renderer.gradient.addColorStop(stop._offset, stop._color);
+          }
+
+        }
+
+        return this.flagReset();
+
+      }
+
+    },
+
+    'radial-gradient': {
+
+      render: function(ctx) {
+
+        this._update();
+
+        if (!this._renderer.gradient || this._flagCenter || this._flagFocal
+            || this._flagRadius || this._flagStops) {
+
+          this._renderer.gradient = ctx.createRadialGradient(
+            this.center._x, this.center._y, 0,
+            this.focal._x, this.focal._y, this._radius
+          );
+
+          for (var i = 0; i < this.stops.length; i++) {
+            var stop = this.stops[i];
+            this._renderer.gradient.addColorStop(stop._offset, stop._color);
+          }
+
+        }
+
+        return this.flagReset();
+
+      }
     }
 
   };

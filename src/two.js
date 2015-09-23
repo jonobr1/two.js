@@ -1730,10 +1730,10 @@
      */
     makeLinearGradient: function(x1, y1, x2, y2 /* stops */) {
 
-      var stops = arguments.slice(3);
+      var stops = Array.prototype.slice.call(arguments, 4);
       var gradient = new Two.LinearGradient(x1, y1, x2, y2, stops);
 
-      this.two.add(gradient);
+      this.add(gradient);
 
       return gradient;
 
@@ -1744,10 +1744,10 @@
      */
     makeRadialGradient: function(x1, y1, r /* stops */) {
 
-      var stops = arguments.slice(2);
+      var stops = Array.prototype.slice.call(arguments, 3);
       var gradient = new Two.RadialGradient(x1, y1, r, stops);
 
-      this.two.add(gradient);
+      this.add(gradient);
 
       return gradient;
 
