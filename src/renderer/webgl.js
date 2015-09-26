@@ -9,6 +9,7 @@
     identity = [1, 0, 0, 0, 1, 0, 0, 0, 1],
     transformation = new Two.Array(9),
     getRatio = Two.Utils.getRatio,
+    getComputedMatrix = Two.Utils.getComputedMatrix,
     toFixed = Two.Utils.toFixed;
 
   var webgl = {
@@ -16,6 +17,8 @@
     isHidden: /(none|transparent)/i,
 
     canvas: document.createElement('canvas'),
+
+    matrix: new Two.Matrix(),
 
     uv: new Two.Array([
       0, 0,
@@ -137,6 +140,10 @@
         var flagParentMatrix = parent._matrix.manual || parent._flagMatrix;
         var flagMatrix = this._matrix.manual || this._flagMatrix;
         var flagTexture = this._flagVertices || this._flagFill
+          || (this._fill instanceof Two.LinearGradient && (this._fill._flagSpread || this._fill._flagStops || this._fill._flagEndPoints))
+          || (this._fill instanceof Two.RadialGradient && (this._fill._flagSpread || this._fill._flagStops || this._fill._flagRadius || this._fill._flagCenter || this._fill._flagFocal))
+          || (this._stroke instanceof Two.LinearGradient && (this._stroke._flagSpread || this._stroke._flagStops || this._stroke._flagEndPoints))
+          || (this._stroke instanceof Two.RadialGradient && (this._stroke._flagSpread || this._stroke._flagStops || this._stroke._flagRadius || this._stroke._flagCenter || this._stroke._flagFocal))
           || this._flagStroke || this._flagLinewidth || this._flagOpacity
           || parent._flagOpacity || this._flagVisible || this._flagCap
           || this._flagJoin || this._flagMiter || this._flagScale
@@ -205,6 +212,78 @@
         gl.vertexAttribPointer(program.position, 2, gl.FLOAT, false, 0, 0);
 
         gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+        return this.flagReset();
+
+      }
+
+    },
+
+    'linear-gradient': {
+
+      render: function(ctx, elem) {
+
+        if (!ctx.canvas.getContext('2d')) {
+          return;
+        }
+
+        this._update();
+
+        if (!this._renderer.gradient || this._flagEndPoints || this._flagStops) {
+
+          var rect = elem.getBoundingClientRect();
+          getComputedMatrix(elem, webgl.matrix);
+
+          // 1, 0, x, 0, 1, y, 0, 0, 1
+
+          var ol = webgl.matrix.multiply(this.left._x, this.left._y, 1);
+          var or = webgl.matrix.multiply(this.right._x, this.right._y, 1);
+
+          this._renderer.gradient = ctx.createLinearGradient(
+            ol.x, ol.y, or.x, or.y);
+
+          for (var i = 0; i < this.stops.length; i++) {
+            var stop = this.stops[i];
+            this._renderer.gradient.addColorStop(stop._offset, stop._color);
+          }
+
+        }
+
+        return this.flagReset();
+
+      }
+
+    },
+
+    'radial-gradient': {
+
+      render: function(ctx, elem) {
+
+        if (!ctx.canvas.getContext('2d')) {
+          return;
+        }
+
+        this._update();
+
+        if (!this._renderer.gradient || this._flagCenter || this._flagFocal
+            || this._flagRadius || this._flagStops) {
+
+          getComputedMatrix(elem, webgl.matrix);
+
+          var oc = webgl.matrix.multiply(this.center._x, this.center._y, 1);
+          var of = webgl.matrix.multiply(this.focal._x, this.focal._y, 1);
+
+          this._renderer.gradient = ctx.createRadialGradient(
+            oc.x, oc.y, 0,
+            of.x, of.y, this._radius
+          );
+
+          for (var i = 0; i < this.stops.length; i++) {
+            var stop = this.stops[i];
+            this._renderer.gradient.addColorStop(stop._offset, stop._color);
+          }
+
+        }
 
         return this.flagReset();
 
@@ -349,10 +428,20 @@
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       if (fill) {
-        ctx.fillStyle = fill;
+        if (_.isString(fill)) {
+          ctx.fillStyle = fill;
+        } else {
+          webgl[fill._renderer.type].render.call(fill, ctx, elem);
+          ctx.fillStyle = fill._renderer.gradient;
+        }
       }
       if (stroke) {
-        ctx.strokeStyle = stroke;
+        if (_.isString(stroke)) {
+          ctx.strokeStyle = stroke;
+        } else {
+          webgl[stroke._renderer.type].render.call(stroke, ctx, elem);
+          ctx.strokeStyle = stroke._renderer.gradient;
+        }
       }
       if (linewidth) {
         ctx.lineWidth = linewidth;

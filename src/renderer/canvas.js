@@ -127,10 +127,20 @@
 
         // Styles
         if (fill) {
-          ctx.fillStyle = _.isString(fill) ? fill : fill._renderer.gradient;
+          if (_.isString(fill)) {
+            ctx.fillStyle = fill;
+          } else {
+            canvas[fill._renderer.type].render.call(fill, ctx);
+            ctx.fillStyle = fill._renderer.gradient;
+          }
         }
         if (stroke) {
-          ctx.strokeStyle = _.isString(stroke) ? stroke : stroke._renderer.gradient;
+          if (_.isString(stroke)) {
+            ctx.strokeStyle = stroke;
+          } else {
+            canvas[stroke._renderer.type].render.call(stroke, ctx);
+            ctx.strokeStyle = stroke._renderer.gradient;
+          }
         }
         if (linewidth) {
           ctx.lineWidth = linewidth;
