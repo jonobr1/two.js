@@ -58,6 +58,8 @@
    */
   var dom = {
 
+    temp: document.createElement('div'),
+
     hasEventListeners: _.isFunction(root.addEventListener),
 
     bind: function(elem, event, func, bool) {
@@ -257,6 +259,22 @@
             Two.Utils.release(obj);
           });
         }
+
+      },
+
+      xhr: function(path, callback) {
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', path);
+
+        xhr.onreadystatechange = function() {
+          if (xhr.readyState === 4 && xhr.status === 200) {
+            callback(xhr.responseText);
+          }
+        };
+
+        xhr.send();
+        return xhr;
 
       },
 
@@ -1796,8 +1814,6 @@
 
     },
 
-    // Utility Functions will go here.
-
     /**
      * Interpret an SVG Node and add it to this instance's scene. The
      * distinction should be made that this doesn't `import` svg's, it solely
@@ -1805,10 +1821,10 @@
      * different than a direct transcription.
      *
      * @param {Object} svgNode - The node to be parsed
-     * @param {Boolean} noWrappingGroup - Don't create a top-most group but
+     * @param {Boolean} shallow - Don't create a top-most group but
      *                                    append all contents directly
      */
-    interpret: function(svgNode, noWrapInGroup) {
+    interpret: function(svgNode, shallow) {
 
       var tag = svgNode.tagName.toLowerCase();
 
@@ -1818,13 +1834,50 @@
 
       var node = Two.Utils.read[tag].call(this, svgNode);
 
-      if (noWrapInGroup && node instanceof Two.Group) {
+      if (shallow && node instanceof Two.Group) {
         this.add(node.children);
       } else {
         this.add(node);
       }
 
       return node;
+
+    },
+
+    /**
+     * Load an SVG file / text and interpret.
+     */
+    load: function(text, callback) {
+
+      var nodes = [], elem, i;
+
+      if (/.*\.svg/ig.test(text)) {
+
+        Two.Utils.xhr(text, _.bind(function(data) {
+
+          dom.temp.innerHTML = data;
+          for (i = 0; i < dom.temp.children.length; i++) {
+            elem = dom.temp.children[i];
+            nodes.push(this.interpret(elem));
+          }
+
+          callback(nodes.length <= 1 ? nodes[0] : nodes);
+
+        }, this));
+
+        return this;
+
+      }
+
+      dom.temp.innerHTML = text;
+      for (i = 0; i < dom.temp.children.length; i++) {
+        elem = dom.temp.children[i];
+        nodes.push(this.interpret(elem));
+      }
+
+      callback(nodes.length <= 1 ? nodes[0] : nodes);
+
+      return this;
 
     }
 
@@ -3531,10 +3584,20 @@
 
         // Styles
         if (fill) {
-          ctx.fillStyle = _.isString(fill) ? fill : fill._renderer.gradient;
+          if (_.isString(fill)) {
+            ctx.fillStyle = fill;
+          } else {
+            canvas[fill._renderer.type].render.call(fill, ctx);
+            ctx.fillStyle = fill._renderer.gradient;
+          }
         }
         if (stroke) {
-          ctx.strokeStyle = _.isString(stroke) ? stroke : stroke._renderer.gradient;
+          if (_.isString(stroke)) {
+            ctx.strokeStyle = stroke;
+          } else {
+            canvas[stroke._renderer.type].render.call(stroke, ctx);
+            ctx.strokeStyle = stroke._renderer.gradient;
+          }
         }
         if (linewidth) {
           ctx.lineWidth = linewidth;
@@ -3814,6 +3877,7 @@
     identity = [1, 0, 0, 0, 1, 0, 0, 0, 1],
     transformation = new Two.Array(9),
     getRatio = Two.Utils.getRatio,
+    getComputedMatrix = Two.Utils.getComputedMatrix,
     toFixed = Two.Utils.toFixed;
 
   var webgl = {
@@ -3821,6 +3885,8 @@
     isHidden: /(none|transparent)/i,
 
     canvas: document.createElement('canvas'),
+
+    matrix: new Two.Matrix(),
 
     uv: new Two.Array([
       0, 0,
@@ -3942,6 +4008,10 @@
         var flagParentMatrix = parent._matrix.manual || parent._flagMatrix;
         var flagMatrix = this._matrix.manual || this._flagMatrix;
         var flagTexture = this._flagVertices || this._flagFill
+          || (this._fill instanceof Two.LinearGradient && (this._fill._flagSpread || this._fill._flagStops || this._fill._flagEndPoints))
+          || (this._fill instanceof Two.RadialGradient && (this._fill._flagSpread || this._fill._flagStops || this._fill._flagRadius || this._fill._flagCenter || this._fill._flagFocal))
+          || (this._stroke instanceof Two.LinearGradient && (this._stroke._flagSpread || this._stroke._flagStops || this._stroke._flagEndPoints))
+          || (this._stroke instanceof Two.RadialGradient && (this._stroke._flagSpread || this._stroke._flagStops || this._stroke._flagRadius || this._stroke._flagCenter || this._stroke._flagFocal))
           || this._flagStroke || this._flagLinewidth || this._flagOpacity
           || parent._flagOpacity || this._flagVisible || this._flagCap
           || this._flagJoin || this._flagMiter || this._flagScale
@@ -4010,6 +4080,74 @@
         gl.vertexAttribPointer(program.position, 2, gl.FLOAT, false, 0, 0);
 
         gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+        return this.flagReset();
+
+      }
+
+    },
+
+    'linear-gradient': {
+
+      render: function(ctx, elem) {
+
+        if (!ctx.canvas.getContext('2d')) {
+          return;
+        }
+
+        this._update();
+
+        if (!this._renderer.gradient || this._flagEndPoints || this._flagStops) {
+
+          var ox = ctx.canvas.width / 2;
+          var oy = ctx.canvas.height / 2;
+          var scale = elem._renderer.scale;
+
+          this._renderer.gradient = ctx.createLinearGradient(
+            this.left._x * scale + ox, this.left._y * scale + oy,
+            this.right._x * scale + ox, this.right._y * scale + oy
+          );
+
+          for (var i = 0; i < this.stops.length; i++) {
+            var stop = this.stops[i];
+            this._renderer.gradient.addColorStop(stop._offset, stop._color);
+          }
+
+        }
+
+        return this.flagReset();
+
+      }
+
+    },
+
+    'radial-gradient': {
+
+      render: function(ctx, elem) {
+
+        if (!ctx.canvas.getContext('2d')) {
+          return;
+        }
+
+        this._update();
+
+        if (!this._renderer.gradient || this._flagCenter || this._flagFocal
+            || this._flagRadius || this._flagStops) {
+
+          var ox = ctx.canvas.width / 2;
+          var oy = ctx.canvas.height / 2;
+
+          this._renderer.gradient = ctx.createRadialGradient(
+            this.center._x + ox, this.center._y + oy, 0,
+            this.focal._x + ox, this.focal._y + oy, this._radius * elem._renderer.scale
+          );
+
+          for (var i = 0; i < this.stops.length; i++) {
+            var stop = this.stops[i];
+            this._renderer.gradient.addColorStop(stop._offset, stop._color);
+          }
+
+        }
 
         return this.flagReset();
 
@@ -4154,10 +4292,20 @@
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       if (fill) {
-        ctx.fillStyle = fill;
+        if (_.isString(fill)) {
+          ctx.fillStyle = fill;
+        } else {
+          webgl[fill._renderer.type].render.call(fill, ctx, elem);
+          ctx.fillStyle = fill._renderer.gradient;
+        }
       }
       if (stroke) {
-        ctx.strokeStyle = stroke;
+        if (_.isString(stroke)) {
+          ctx.strokeStyle = stroke;
+        } else {
+          webgl[stroke._renderer.type].render.call(stroke, ctx, elem);
+          ctx.strokeStyle = stroke._renderer.gradient;
+        }
       }
       if (linewidth) {
         ctx.lineWidth = linewidth;
