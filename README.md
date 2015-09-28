@@ -78,9 +78,9 @@ instead to minify the build with uglify.
 + Added `Two.Line`, `Two.Rectangle`, `Two.RoundedRectangle`, `Two.Ellipse`, `Two.Polygon`, and `Two.Star` as new shapes invoked like `Two.Path`
 + ___Breaking___: renamed `Two.Polygon` to `Two.Path`
 + Performance enhancements to `webgl` renderer
-+ Performance enhancements to `canvas` renderer [Leo Koppelkamm](https://github.com/DieBuche)
++ Performance enhancements to `canvas` renderer [Leo Koppelkamm](https://github.com/ponychicken)
 + Enabled render ordering in `Two.Group.children` based on previous augmentation
-+ Augmented `Two.Group.children` to inherit from `Two.Collection` effectively making it an array instead of a map [Leo Koppelkamm](https://github.com/DieBuche)
++ Augmented `Two.Group.children` to inherit from `Two.Collection` effectively making it an array instead of a map [Leo Koppelkamm](https://github.com/ponychicken)
   - The map can still be accessed at `Two.Group.children.ids`
 
 ##### July 22, 2014 [v0.4.0](https://github.com/jonobr1/two.js/releases/tag/v0.4.0)
