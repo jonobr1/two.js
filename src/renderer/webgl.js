@@ -231,16 +231,14 @@
 
         if (!this._renderer.gradient || this._flagEndPoints || this._flagStops) {
 
-          var rect = elem.getBoundingClientRect();
-          getComputedMatrix(elem, webgl.matrix);
-
-          // 1, 0, x, 0, 1, y, 0, 0, 1
-
-          var ol = webgl.matrix.multiply(this.left._x, this.left._y, 1);
-          var or = webgl.matrix.multiply(this.right._x, this.right._y, 1);
+          var ox = ctx.canvas.width / 2;
+          var oy = ctx.canvas.height / 2;
+          var scale = elem._renderer.scale;
 
           this._renderer.gradient = ctx.createLinearGradient(
-            ol.x, ol.y, or.x, or.y);
+            this.left._x * scale + ox, this.left._y * scale + oy,
+            this.right._x * scale + ox, this.right._y * scale + oy
+          );
 
           for (var i = 0; i < this.stops.length; i++) {
             var stop = this.stops[i];
@@ -268,14 +266,12 @@
         if (!this._renderer.gradient || this._flagCenter || this._flagFocal
             || this._flagRadius || this._flagStops) {
 
-          getComputedMatrix(elem, webgl.matrix);
-
-          var oc = webgl.matrix.multiply(this.center._x, this.center._y, 1);
-          var of = webgl.matrix.multiply(this.focal._x, this.focal._y, 1);
+          var ox = ctx.canvas.width / 2;
+          var oy = ctx.canvas.height / 2;
 
           this._renderer.gradient = ctx.createRadialGradient(
-            oc.x, oc.y, 0,
-            of.x, of.y, this._radius
+            this.center._x + ox, this.center._y + oy, 0,
+            this.focal._x + ox, this.focal._y + oy, this._radius * elem._renderer.scale
           );
 
           for (var i = 0; i < this.stops.length; i++) {
