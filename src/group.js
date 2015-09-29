@@ -429,6 +429,10 @@
 
       this.children.forEach(function(child) {
 
+        if (/(linear-gradient|radial-gradient|gradient)/.test(child._renderer.type)) {
+          return;
+        }
+
         rect = child.getBoundingClientRect(shallow);
 
         if (!_.isNumber(rect.top)   || !_.isNumber(rect.left)   ||

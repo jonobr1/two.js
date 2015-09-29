@@ -24,6 +24,9 @@
     if (_.isNumber(cy)) {
       this.center.y = cy;
     }
+
+    this.focal.copy(this.center);
+
     if (_.isNumber(fx)) {
       this.focal.x = fx;
     }
