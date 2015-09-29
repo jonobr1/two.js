@@ -70,11 +70,13 @@ instead to minify the build with uglify.
 <!-- For the latest nightly changes checkout the `dev` branch [here](../../tree/dev). -->
 
 ##### Nightly
-+ Added `Two.Utils.xhr` and `two.load` to asynchronously load SVG files.
-+ Added `Two.Gradient`, `Two.LinearGradient`, and `Two.RadialGradient`.
-+ Added dependency check to ensure ASM loading in environments like NPM as well as in the browser.
++ Added support for `two.interpret` to import `svg`'s gradients
++ Added `Two.Utils.xhr` and `two.load` methods to asynchronously load SVG files
++ Added `Two.Gradient`, `Two.LinearGradient`, and `Two.RadialGradient`
++ Added dependency check to ensure ASM loading in environments like NPM as well as in the browser
 + Properly deleted `webgl` textures on removal of `Two.Path`
 + Added support for `two.interpret` to import `svg`'s [Elliptical Arcs](http://www.w3.org/TR/SVG/paths.html#PathDataEllipticalArcCommands)
++ Added `Two.ArcSegment` and `Two.SineRing` as new shapes invoked like `Two.Path` [@chrisdelbuck](http://github.com/chrisdelbuck)
 + Added `Two.Line`, `Two.Rectangle`, `Two.RoundedRectangle`, `Two.Ellipse`, `Two.Polygon`, and `Two.Star` as new shapes invoked like `Two.Path`
 + ___Breaking___: renamed `Two.Polygon` to `Two.Path`
 + Performance enhancements to `webgl` renderer
