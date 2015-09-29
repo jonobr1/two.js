@@ -428,8 +428,12 @@
       /**
        * Walk through item properties and pick the ones of interest.
        * Will try to resolve styles applied via CSS
+       *
+       * TODO: Reverse calculate `Two.Gradient`s for fill / stroke
+       * of any given path.
        */
       applySvgAttributes: function(node, elem) {
+
         var attributes = {}, styles = {}, i, key, value, attr;
 
         // Not available in non browser environments
@@ -438,7 +442,7 @@
           var computedStyles = getComputedStyle(node);
           i = computedStyles.length;
 
-          while(i--) {
+          while (i--) {
             key = computedStyles[i];
             value = computedStyles[key];
             // Gecko returns undefined for unset properties
@@ -451,7 +455,7 @@
 
         // Convert NodeMap to a normal object
         i = node.attributes.length;
-        while(i--) {
+        while (i--) {
           attr = node.attributes[i];
           attributes[attr.nodeName] = attr.value;
         }
@@ -530,7 +534,12 @@
               break;
             case 'fill':
             case 'stroke':
-              elem[key] = (value === 'none') ? 'transparent' : value;
+              if (/url\(\#.*\)/i.test(value)) {
+                elem[key] = this.getById(
+                  value.replace(/url\(\#(.*)\)/i, '$1'));
+              } else {
+                elem[key] = (value === 'none') ? 'transparent' : value;
+              }
               break;
             case 'id':
               elem.id = value;
@@ -559,7 +568,7 @@
           var group = new Two.Group();
 
           // Switched up order to inherit more specific styles
-          Two.Utils.applySvgAttributes(node, group);
+          Two.Utils.applySvgAttributes.call(this, node, group);
 
           for (var i = 0, l = node.childNodes.length; i < l; i++) {
             var n = node.childNodes[i];
@@ -569,7 +578,7 @@
             var tagName = tag.replace(/svg\:/ig, '').toLowerCase();
 
             if (tagName in Two.Utils.read) {
-              var o = Two.Utils.read[tagName].call(this, n);
+              var o = Two.Utils.read[tagName].call(group, n);
               group.add(o);
             }
           }
@@ -590,7 +599,7 @@
           var poly = new Two.Path(verts, !open).noStroke();
           poly.fill = 'black';
 
-          return Two.Utils.applySvgAttributes(node, poly);
+          return Two.Utils.applySvgAttributes.call(this, node, poly);
 
         },
 
@@ -1015,7 +1024,7 @@
           var poly = new Two.Path(points, closed, undefined, true).noStroke();
           poly.fill = 'black';
 
-          return Two.Utils.applySvgAttributes(node, poly);
+          return Two.Utils.applySvgAttributes.call(this, node, poly);
 
         },
 
@@ -1032,13 +1041,13 @@
             var x = r * cos(theta);
             var y = r * sin(theta);
             return new Two.Anchor(x, y);
-          }, this);
+          });
 
           var circle = new Two.Path(points, true, true).noStroke();
           circle.translation.set(x, y);
           circle.fill = 'black';
 
-          return Two.Utils.applySvgAttributes(node, circle);
+          return Two.Utils.applySvgAttributes.call(this, node, circle);
 
         },
 
@@ -1056,13 +1065,13 @@
             var x = width * cos(theta);
             var y = height * sin(theta);
             return new Two.Anchor(x, y);
-          }, this);
+          });
 
           var ellipse = new Two.Path(points, true, true).noStroke();
           ellipse.translation.set(x, y);
           ellipse.fill = 'black';
 
-          return Two.Utils.applySvgAttributes(node, ellipse);
+          return Two.Utils.applySvgAttributes.call(this, node, ellipse);
 
         },
 
@@ -1087,7 +1096,7 @@
           rect.translation.set(x + w2, y + h2);
           rect.fill = 'black';
 
-          return Two.Utils.applySvgAttributes(node, rect);
+          return Two.Utils.applySvgAttributes.call(this, node, rect);
 
         },
 
@@ -1114,7 +1123,7 @@
           var line = new Two.Path(points).noFill();
           line.translation.set(x1 + w2, y1 + h2);
 
-          return Two.Utils.applySvgAttributes(node, line);
+          return Two.Utils.applySvgAttributes.call(this, node, line);
 
         },
 
@@ -1154,7 +1163,7 @@
           var gradient = new Two.LinearGradient(x1 - ox, y1 - oy, x2 - ox,
             y2 - oy, stops);
 
-          return Two.Utils.applySvgAttributes(node, gradient);
+          return Two.Utils.applySvgAttributes.call(this, node, gradient);
 
         },
 
@@ -1204,7 +1213,7 @@
           var gradient = new Two.RadialGradient(cx - ox, cy - oy, r,
             stops, fx - ox, fy - oy);
 
-          return Two.Utils.applySvgAttributes(node, gradient);
+          return Two.Utils.applySvgAttributes.call(this, node, gradient);
 
         }
 
