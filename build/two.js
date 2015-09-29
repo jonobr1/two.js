@@ -2561,6 +2561,96 @@ var Backbone = Backbone || {};
 
           return Two.Utils.applySvgAttributes(node, line);
 
+        },
+
+        lineargradient: function(node) {
+
+          var x1 = parseFloat(node.getAttribute('x1'));
+          var y1 = parseFloat(node.getAttribute('y1'));
+          var x2 = parseFloat(node.getAttribute('x2'));
+          var y2 = parseFloat(node.getAttribute('y2'));
+
+          var ox = (x2 + x1) / 2;
+          var oy = (y2 + y1) / 2;
+
+          var stops = [];
+          for (var i = 0; i < node.children.length; i++) {
+
+            var child = node.children[i];
+
+            var offset = parseFloat(child.getAttribute('offset'));
+            var color = child.getAttribute('stop-color');
+            var opacity = child.getAttribute('stop-opacity');
+
+            if (_.isNull(color)) {
+              var matches = child.getAttribute('style')
+                .match(/stop\-color\:(.*)\;?/);
+              color = matches && matches.length > 1 ? matches[1] : undefined;
+            }
+
+            if (_.isNull(opacity)) {
+              opacity = 1;
+            }
+
+            stops.push(new Two.Gradient.Stop(offset, color, opacity));
+
+          }
+
+          var gradient = new Two.LinearGradient(x1 - ox, y1 - oy, x2 - ox,
+            y2 - oy, stops);
+
+          return Two.Utils.applySvgAttributes(node, gradient);
+
+        },
+
+        radialgradient: function(node) {
+
+          var cx = parseFloat(node.getAttribute('cx')) || 0;
+          var cy = parseFloat(node.getAttribute('cy')) || 0;
+          var r = parseFloat(node.getAttribute('r'));
+
+          var fx = parseFloat(node.getAttribute('fx'));
+          var fy = parseFloat(node.getAttribute('fy'));
+
+          if (_.isNaN(fx)) {
+            fx = cx;
+          }
+
+          if (_.isNaN(fy)) {
+            fy = cy;
+          }
+
+          var ox = Math.abs(cx + fx) / 2;
+          var oy = Math.abs(cy + fy) / 2;
+
+          var stops = [];
+          for (var i = 0; i < node.children.length; i++) {
+
+            var child = node.children[i];
+
+            var offset = parseFloat(child.getAttribute('offset'));
+            var color = child.getAttribute('stop-color');
+            var opacity = child.getAttribute('stop-opacity');
+
+            if (_.isNull(color)) {
+              var matches = child.getAttribute('style')
+                .match(/stop\-color\:(.*)\;?/);
+              color = matches && matches.length > 1 ? matches[1] : undefined;
+            }
+
+            if (_.isNull(opacity)) {
+              opacity = 1;
+            }
+
+            stops.push(new Two.Gradient.Stop(offset, color, opacity));
+
+          }
+
+          var gradient = new Two.RadialGradient(cx - ox, cy - oy, r,
+            stops, fx - ox, fy - oy);
+
+          return Two.Utils.applySvgAttributes(node, gradient);
+
         }
 
       },
@@ -7875,6 +7965,9 @@ var Backbone = Backbone || {};
     if (_.isNumber(cy)) {
       this.center.y = cy;
     }
+
+    this.focal.copy(this.center);
+
     if (_.isNumber(fx)) {
       this.focal.x = fx;
     }
@@ -8378,6 +8471,10 @@ var Backbone = Backbone || {};
           top = Infinity, bottom = -Infinity;
 
       this.children.forEach(function(child) {
+
+        if (/(linear-gradient|radial-gradient|gradient)/.test(child._renderer.type)) {
+          return;
+        }
 
         rect = child.getBoundingClientRect(shallow);
 
