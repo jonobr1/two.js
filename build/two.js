@@ -2049,7 +2049,7 @@ var Backbone = Backbone || {};
         },
 
         polyline: function(node) {
-          return Two.Utils.read.polygon(node, true);
+          return Two.Utils.read.polygon.call(this, node, true);
         },
 
         path: function(node) {
