@@ -400,8 +400,12 @@
       /**
        * Walk through item properties and pick the ones of interest.
        * Will try to resolve styles applied via CSS
+       *
+       * TODO: Reverse calculate `Two.Gradient`s for fill / stroke
+       * of any given path.
        */
       applySvgAttributes: function(node, elem) {
+
         var attributes = {}, styles = {}, i, key, value, attr;
 
         // Not available in non browser environments
