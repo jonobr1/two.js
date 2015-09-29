@@ -25,6 +25,7 @@ Here is boilerplate html in order to draw a spinning rectangle in two.js:
 <!doctype html>
 <html>
   <head>
+    <meta charset="utf-8">
     <script src="js/two.min.js"></script>
   </head>
   <body>
