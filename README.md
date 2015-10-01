@@ -68,9 +68,9 @@ grunt build-uglify
 instead to minify the build with uglify.
 
 ## Change Log
-<!-- For the latest nightly changes checkout the `dev` branch [here](../../tree/dev). -->
+For the latest nightly changes checkout the `dev` branch [here](../../tree/dev).
 
-##### Nightly
+##### October 1, 2015 [v0.5.0]
 + Added support for `two.interpret` to import `svg`'s gradients
 + Added `Two.Utils.xhr` and `two.load` methods to asynchronously load SVG files
 + Added `Two.Gradient`, `Two.LinearGradient`, and `Two.RadialGradient`
