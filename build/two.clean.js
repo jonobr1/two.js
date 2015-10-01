@@ -1077,8 +1077,8 @@
 
         rect: function(node) {
 
-          var x = parseFloat(node.getAttribute('x'));
-          var y = parseFloat(node.getAttribute('y'));
+          var x = parseFloat(node.getAttribute('x')) || 0;
+          var y = parseFloat(node.getAttribute('y')) || 0;
           var width = parseFloat(node.getAttribute('width'));
           var height = parseFloat(node.getAttribute('height'));
 
@@ -1145,15 +1145,16 @@
             var offset = parseFloat(child.getAttribute('offset'));
             var color = child.getAttribute('stop-color');
             var opacity = child.getAttribute('stop-opacity');
+            var style = child.getAttribute('style');
 
             if (_.isNull(color)) {
-              var matches = child.getAttribute('style')
-                .match(/stop\-color\:(.*)\;?/);
+              var matches = style.match(/stop\-color\:\s?([\#a-fA-F0-9]*)/);
               color = matches && matches.length > 1 ? matches[1] : undefined;
             }
 
             if (_.isNull(opacity)) {
-              opacity = 1;
+              var matches = style.match(/stop\-opacity\:\s?([0-1\.\-]*)/);
+              opacity = matches && matches.length > 1 ? parseFloat(matches[1]) : 1;
             }
 
             stops.push(new Two.Gradient.Stop(offset, color, opacity));
@@ -1175,6 +1176,7 @@
 
           var fx = parseFloat(node.getAttribute('fx'));
           var fy = parseFloat(node.getAttribute('fy'));
+          var style = node.getAttribute('style');
 
           if (_.isNaN(fx)) {
             fx = cx;
@@ -1197,13 +1199,13 @@
             var opacity = child.getAttribute('stop-opacity');
 
             if (_.isNull(color)) {
-              var matches = child.getAttribute('style')
-                .match(/stop\-color\:(.*)\;?/);
+              var matches = style.match(/stop\-color\:\s?([\#a-fA-F0-9]*)/);
               color = matches && matches.length > 1 ? matches[1] : undefined;
             }
 
             if (_.isNull(opacity)) {
-              opacity = 1;
+              var matches = style.match(/stop\-opacity\:\s?([0-1\.\-]*)/);
+              opacity = matches && matches.length > 1 ? parseFloat(matches[1]) : 1;
             }
 
             stops.push(new Two.Gradient.Stop(offset, color, opacity));
@@ -5121,7 +5123,7 @@
           }
 
           // Create new Collection with copy of vertices
-          this._collection = new Two.Utils.Collection(vertices.slice(0));
+          this._collection = new Two.Utils.Collection((vertices || []).slice(0));
 
           // Listen for Collection changes and bind / unbind
           this._collection.bind(Two.Events.insert, bindVerts);
@@ -6348,7 +6350,7 @@
           }
 
           // Create new Collection with copy of Stops
-          this._stops = new Two.Utils.Collection(stops.slice(0));
+          this._stops = new Two.Utils.Collection((stops || []).slice(0));
 
           // Listen for Collection changes and bind / unbind
           this._stops.bind(Two.Events.insert, bindStops);
@@ -6465,14 +6467,14 @@
 
       parent = parent || this.parent;
 
-      var stops = _.each(this.stops, function(stop) {
+      var stops = _.map(this.stops, function(stop) {
         return stop.clone();
       });
 
       var clone = new LinearGradient(this.left._x, this.left._y,
         this.right._x, this.right._y, stops);
 
-      _.each(Gradient.Properties, function(k) {
+      _.each(Two.Gradient.Properties, function(k) {
         clone[k] = this[k];
       }, this);
 
@@ -6567,7 +6569,7 @@
 
       parent = parent || this.parent;
 
-      var stops = _.each(this.stops, function(stop) {
+      var stops = _.map(this.stops, function(stop) {
         return stop.clone();
       });
 

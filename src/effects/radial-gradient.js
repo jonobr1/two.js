@@ -62,7 +62,7 @@
 
       parent = parent || this.parent;
 
-      var stops = _.each(this.stops, function(stop) {
+      var stops = _.map(this.stops, function(stop) {
         return stop.clone();
       });
 

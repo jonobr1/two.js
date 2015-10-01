@@ -142,7 +142,7 @@
           }
 
           // Create new Collection with copy of Stops
-          this._stops = new Two.Utils.Collection(stops.slice(0));
+          this._stops = new Two.Utils.Collection((stops || []).slice(0));
 
           // Listen for Collection changes and bind / unbind
           this._stops.bind(Two.Events.insert, bindStops);

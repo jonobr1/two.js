@@ -47,14 +47,14 @@
 
       parent = parent || this.parent;
 
-      var stops = _.each(this.stops, function(stop) {
+      var stops = _.map(this.stops, function(stop) {
         return stop.clone();
       });
 
       var clone = new LinearGradient(this.left._x, this.left._y,
         this.right._x, this.right._y, stops);
 
-      _.each(Gradient.Properties, function(k) {
+      _.each(Two.Gradient.Properties, function(k) {
         clone[k] = this[k];
       }, this);
 
