@@ -1,5 +1,6 @@
 /**
  * Tests Two.js Utilities related to Svg Interpretation:
+ * + two.load()
  * + two.interpret()
  * + polygon.subdivide()
  */
@@ -7,6 +8,29 @@
 (function() {
 
   module('SvgInterpreter');
+
+  asyncTest('Two.load', 1, function(o) {
+
+    var two = new Two({
+      width: 400,
+      height: 400
+    });
+
+    two.load('./images/interpretation/D.svg', function(shape, svg) {
+
+      var answer = {"children":[{"vertices":[{"x":122.049,"y":350,"command":"M","relative":true,"controls":{"left":{"x":0,"y":0},"right":{"x":0,"y":0}}},{"x":122.10700000000001,"y":50,"command":"L","relative":true,"controls":{"left":{"x":0,"y":0},"right":{"x":77.89900000000002,"y":0}}},{"x":277.952,"y":118.883,"command":"C","relative":true,"controls":{"left":{"x":0,"y":-67.354},"right":{"x":0,"y":0}}},{"x":277.952,"y":273.965,"command":"C","relative":true,"controls":{"left":{"x":0,"y":-75.976},"right":{"x":-0.0009999999999763531,"y":75.976}}},{"x":122.049,"y":350,"command":"C","relative":true,"controls":{"left":{"x":77.957,"y":0},"right":{"x":0,"y":0}}}],"rotation":0,"scale":1}],"translation":{"x":200,"y":200},"rotation":0,"scale":1};
+      shape.translation.set(two.width / 2, two.height / 2);
+      two.update();
+
+      ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.load loads SVG files properly.');
+
+      start();
+
+      QUnit.Utils.addElemToTest(o, [two.renderer.domElement, svg]);
+
+    });
+
+  });
 
   asyncTest('Two.interpret', 9, function(o) {
 

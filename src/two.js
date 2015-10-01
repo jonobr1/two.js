@@ -1934,7 +1934,8 @@
             nodes.push(this.interpret(elem));
           }
 
-          callback(nodes.length <= 1 ? nodes[0] : nodes);
+          callback(nodes.length <= 1 ? nodes[0] : nodes,
+            dom.temp.children.length <= 1 ? dom.temp.children[0] : dom.temp.children);
 
         }, this));
 
@@ -1948,7 +1949,8 @@
         nodes.push(this.interpret(elem));
       }
 
-      callback(nodes.length <= 1 ? nodes[0] : nodes);
+      callback(nodes.length <= 1 ? nodes[0] : nodes,
+        dom.temp.children.length <= 1 ? dom.temp.children[0] : dom.temp.children);
 
       return this;
 
