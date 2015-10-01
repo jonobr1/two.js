@@ -102,14 +102,14 @@ For the latest nightly changes checkout the `dev` branch [here](../../tree/dev).
 + Added `Two.Polygon.length` property and `Two.Polygon._updateLength` method to calculate length of curve/line
 + Updated `Two.Group.prototype` observable properties on `Two.Polygon.Properties` to ensure each property is considered unique
 + ~~`Two.Polygon.vertices` first and last vertex create automated control points when `Two.Polygon.curved = true`~~
-+ Updated `Two.Polygon.subdivide` method to accomodate `Two.makeEllipse`
++ Updated `Two.Polygon.subdivide` method to accommodate `Two.makeEllipse`
 + Enabled `id` to be properly interpreted from SVG elements [@chrisdelbuck](http://github.com/chrisdelbuck)
 + Updated `webgl` renderer `getBoundingClientRect` to accommodate `relative` anchors
 + Updated `beginning` and `ending` to clamp to each other
 + Reorganized `Two.Polygon._update` and `Two.Polygon.plot` in order to handle `beginning` and `ending` properties
 + Updated `Two.getComputedMatrix` and `Two.Polygon.getBoundingClientRect` to adhere to nested transformations
 + Updated `Two.Anchor` to change `control` points relatively by default through `anchor.relative` property
-+ Updated `Two.Polygon.subdivide` method to accomodate `curved = false` circumstances
++ Updated `Two.Polygon.subdivide` method to accommodate `curved = false` circumstances
 + Updated `svg`, `canvas`, and `webgl` renderers to properly reflect holes in curved `Two.Polygon`s
 + Updated `Two.Group` `clone` method
 + Added `toObject` method to `Two.Group`, `Two.Polygon`, `Two.Anchor`
