@@ -124,6 +124,46 @@
 
   });
 
+  asyncTest('Two.makeLinearGradient', 1, function(o) {
+
+    var two = new Two({
+      type: Two.Types.webgl,
+      width: 400,
+      height: 400
+    });
+
+    var gradient = two.makeLinearGradient(0, - two.height / 2, 0, two.height / 2,
+      new Two.Gradient.Stop(0, 'rgb(255, 100, 100)'), new Two.Gradient.Stop(1, 'rgb(100, 100, 255)'));
+
+    var rect = two.makeRectangle(two.width / 2, two.height / 2, two.width / 4, two.height / 4);
+    rect.fill = gradient;
+
+    two.update();
+
+    QUnit.Utils.compare.call(o, './images/canvas/linear-gradient' + suffix, two.renderer, 'Two.makeLinearGradient renders properly.');
+
+  });
+
+  asyncTest('Two.makeRadialGradient', 1, function(o) {
+
+    var two = new Two({
+      type: Two.Types.webgl,
+      width: 400,
+      height: 400
+    });
+
+    var gradient = two.makeRadialGradient(0, 0, two.height / 2,
+      new Two.Gradient.Stop(0, 'rgb(255, 100, 100)'), new Two.Gradient.Stop(1, 'rgb(100, 100, 255)'));
+
+    var rect = two.makeRectangle(two.width / 2, two.height / 2, two.width / 4, two.height / 4);
+    rect.fill = gradient;
+
+    two.update();
+
+    QUnit.Utils.compare.call(o, './images/canvas/radial-gradient' + suffix, two.renderer, 'Two.makeLinearGradient renders properly.');
+
+  });
+
   asyncTest('Styles', 1, function(o) {
 
     var two = new Two({

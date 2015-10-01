@@ -136,6 +136,67 @@
 
   });
 
+  test('Two.makeLinearGradient', 7, function(o) {
+
+    var two = new Two({
+      width: 400,
+      height: 400
+    });
+
+    var gradient = two.makeLinearGradient(0, - two.height / 2, 0, two.height / 2,
+      new Two.Gradient.Stop(0, 'rgb(255, 100, 100)'), new Two.Gradient.Stop(1, 'rgb(100, 100, 255)'));
+
+    var rect = two.makeRectangle(two.width / 2, two.height / 2, two.width / 4, two.height / 4);
+    rect.fill = gradient;
+
+    two.update();
+
+    var elem = two.renderer.domElement.querySelector('#' + gradient.id);
+
+    equal(parseFloat(elem.getAttribute('x1')), 0);
+    equal(parseFloat(elem.getAttribute('y1')), -200);
+    equal(parseFloat(elem.getAttribute('x2')), 0);
+    equal(parseFloat(elem.getAttribute('y2')), 200);
+    equal(elem.getAttribute('spreadMethod'), 'pad');
+    equal(elem.getAttribute('gradientUnits'), 'userSpaceOnUse');
+    equal(elem.innerHTML, '<stop offset="0%" stop-color="rgb(255, 100, 100)" stop-opacity="1"></stop><stop offset="100%" stop-color="rgb(100, 100, 255)" stop-opacity="1"></stop>');
+
+    QUnit.Utils.addInstanceToTest(o, two);
+
+  });
+
+
+  test('Two.makeRadialGradient', 8, function(o) {
+
+    var two = new Two({
+      width: 400,
+      height: 400
+    });
+
+    var gradient = two.makeRadialGradient(0, 0, two.width / 2,
+      new Two.Gradient.Stop(0, 'rgb(255, 100, 100)'), new Two.Gradient.Stop(1, 'rgb(100, 100, 255)'));
+
+    var rect = two.makeRectangle(two.width / 2, two.height / 2, two.width / 4, two.height / 4);
+    rect.fill = gradient;
+
+    two.update();
+
+    var elem = two.renderer.domElement.querySelector('#' + gradient.id);
+
+    equal(parseFloat(elem.getAttribute('cx')), 0);
+    equal(parseFloat(elem.getAttribute('cy')), 0);
+    equal(parseFloat(elem.getAttribute('fx')), 0);
+    equal(parseFloat(elem.getAttribute('fy')), 0);
+    equal(parseFloat(elem.getAttribute('r')), 200);
+    equal(elem.getAttribute('spreadMethod'), 'pad');
+    equal(elem.getAttribute('gradientUnits'), 'userSpaceOnUse');
+    equal(elem.innerHTML, '<stop offset="0%" stop-color="rgb(255, 100, 100)" stop-opacity="1"></stop><stop offset="100%" stop-color="rgb(100, 100, 255)" stop-opacity="1"></stop>');
+
+    QUnit.Utils.addInstanceToTest(o, two);
+
+  });
+
+
   test('Styles', 8, function(o) {
 
     var two = new Two({
