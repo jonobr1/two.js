@@ -65,6 +65,18 @@
 
     },
 
+    toObject: function() {
+
+      var result = {};
+
+      _.each(Stop.Properties, function(k) {
+        result[k] = this[k];
+      }, this);
+
+      return result;
+
+    },
+
     flagReset: function() {
 
       this._flagOffset = this._flagColor = this._flagOpacity = false;
@@ -186,6 +198,22 @@
       parent.add(clone);
 
       return clone;
+
+    },
+
+    toObject: function() {
+
+      var result = {
+        stops: _.map(this.stops, function(s) {
+          return s.toObject();
+        })
+      };
+
+      _.each(Gradient.Properties, function(k) {
+        result[k] = this[k];
+      }, this);
+
+      return result;
 
     },
 

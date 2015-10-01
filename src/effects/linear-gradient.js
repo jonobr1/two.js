@@ -64,6 +64,17 @@
 
     },
 
+    toObject: function() {
+
+      var result = Two.Gradient.prototype.toObject.call(this);
+
+      result.left = this.left.toObject();
+      result.right = this.right.toObject();
+
+      return result;
+
+    },
+
     flagReset: function() {
 
       this._flagEndPoints = false;

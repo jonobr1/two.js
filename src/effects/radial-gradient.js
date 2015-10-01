@@ -79,6 +79,21 @@
 
     },
 
+    toObject: function() {
+
+      var result = Two.Gradient.prototype.toObject.call(this);
+
+      _.each(RadialGradient.Properties, function(k) {
+        result[k] = this[k];
+      }, this);
+
+      result.center = this.center.toObject();
+      result.focal = this.focal.toObject();
+
+      return result;
+
+    },
+
     flagReset: function() {
 
       this._flagRadius = this._flagCenter = this._flagFocal = false;

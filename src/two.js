@@ -1148,7 +1148,6 @@
 
           var fx = parseFloat(node.getAttribute('fx'));
           var fy = parseFloat(node.getAttribute('fy'));
-          var style = node.getAttribute('style');
 
           if (_.isNaN(fx)) {
             fx = cx;
@@ -1169,6 +1168,7 @@
             var offset = parseFloat(child.getAttribute('offset'));
             var color = child.getAttribute('stop-color');
             var opacity = child.getAttribute('stop-opacity');
+            var style = child.getAttribute('style');
 
             if (_.isNull(color)) {
               var matches = style.match(/stop\-color\:\s?([\#a-fA-F0-9]*)/);

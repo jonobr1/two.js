@@ -1176,7 +1176,6 @@
 
           var fx = parseFloat(node.getAttribute('fx'));
           var fy = parseFloat(node.getAttribute('fy'));
-          var style = node.getAttribute('style');
 
           if (_.isNaN(fx)) {
             fx = cx;
@@ -1197,6 +1196,7 @@
             var offset = parseFloat(child.getAttribute('offset'));
             var color = child.getAttribute('stop-color');
             var opacity = child.getAttribute('stop-opacity');
+            var style = child.getAttribute('style');
 
             if (_.isNull(color)) {
               var matches = style.match(/stop\-color\:\s?([\#a-fA-F0-9]*)/);
@@ -6273,6 +6273,18 @@
 
     },
 
+    toObject: function() {
+
+      var result = {};
+
+      _.each(Stop.Properties, function(k) {
+        result[k] = this[k];
+      }, this);
+
+      return result;
+
+    },
+
     flagReset: function() {
 
       this._flagOffset = this._flagColor = this._flagOpacity = false;
@@ -6397,6 +6409,22 @@
 
     },
 
+    toObject: function() {
+
+      var result = {
+        stops: _.map(this.stops, function(s) {
+          return s.toObject();
+        })
+      };
+
+      _.each(Gradient.Properties, function(k) {
+        result[k] = this[k];
+      }, this);
+
+      return result;
+
+    },
+
     flagReset: function() {
 
       this._flagSpread = this._flagStops = false;
@@ -6481,6 +6509,17 @@
       parent.add(clone);
 
       return clone;
+
+    },
+
+    toObject: function() {
+
+      var result = Two.Gradient.prototype.toObject.call(this);
+
+      result.left = this.left.toObject();
+      result.right = this.right.toObject();
+
+      return result;
 
     },
 
@@ -6583,6 +6622,21 @@
       parent.add(clone);
 
       return clone;
+
+    },
+
+    toObject: function() {
+
+      var result = Two.Gradient.prototype.toObject.call(this);
+
+      _.each(RadialGradient.Properties, function(k) {
+        result[k] = this[k];
+      }, this);
+
+      result.center = this.center.toObject();
+      result.focal = this.focal.toObject();
+
+      return result;
 
     },
 
