@@ -1,7 +1,7 @@
 /**
  * two.js
- * a two-dimensional drawing api meant for modern browsers. It is renderer 
- * agnostic enabling the same api for rendering in multiple contexts: webgl, 
+ * a two-dimensional drawing api meant for modern browsers. It is renderer
+ * agnostic enabling the same api for rendering in multiple contexts: webgl,
  * canvas2d, and svg.
  *
  * Copyright (c) 2012 - 2013 jonobr1 / http://jonobr1.com
@@ -25,7 +25,6 @@
  * THE SOFTWARE.
  *
  */
-
 
 //     Underscore.js 1.5.1
 //     http://underscorejs.org
@@ -1470,12 +1469,11 @@ var Backbone = Backbone || {};
     return id;
   }
 
-}());
+})();
 
-(function() {
+(function(previousTwo, _, Backbone, requestAnimationFrame) {
 
   var root = this;
-  var previousTwo = root.Two || {};
 
   /**
    * Constants
@@ -1504,6 +1502,8 @@ var Backbone = Backbone || {};
    * Cross browser dom events.
    */
   var dom = {
+
+    temp: document.createElement('div'),
 
     hasEventListeners: _.isFunction(root.addEventListener),
 
@@ -1611,7 +1611,7 @@ var Backbone = Backbone || {};
       canvas: 'CanvasRenderer'
     },
 
-    Version: 'v0.4.0',
+    Version: 'v0.5.0',
 
     Identifier: 'two_',
 
@@ -1628,7 +1628,8 @@ var Backbone = Backbone || {};
       resize: 'resize',
       change: 'change',
       remove: 'remove',
-      insert: 'insert'
+      insert: 'insert',
+      order: 'order'
     },
 
     Commands: {
@@ -1654,6 +1655,24 @@ var Backbone = Backbone || {};
     },
 
     Utils: {
+
+      defineProperty: function(property) {
+
+        var object = this;
+        var secret = '_' + property;
+        var flag = '_flag' + property.charAt(0).toUpperCase() + property.slice(1);
+
+        Object.defineProperty(object, property, {
+          get: function() {
+            return this[secret];
+          },
+          set: function(v) {
+            this[secret] = v;
+            this[flag] = true;
+          }
+        });
+
+      },
 
       /**
        * Release an arbitrary class' events from the two.js corpus and recurse
@@ -1685,6 +1704,22 @@ var Backbone = Backbone || {};
             Two.Utils.release(obj);
           });
         }
+
+      },
+
+      xhr: function(path, callback) {
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', path);
+
+        xhr.onreadystatechange = function() {
+          if (xhr.readyState === 4 && xhr.status === 200) {
+            callback(xhr.responseText);
+          }
+        };
+
+        xhr.send();
+        return xhr;
 
       },
 
@@ -1838,8 +1873,12 @@ var Backbone = Backbone || {};
       /**
        * Walk through item properties and pick the ones of interest.
        * Will try to resolve styles applied via CSS
+       *
+       * TODO: Reverse calculate `Two.Gradient`s for fill / stroke
+       * of any given path.
        */
       applySvgAttributes: function(node, elem) {
+
         var attributes = {}, styles = {}, i, key, value, attr;
 
         // Not available in non browser environments
@@ -1848,7 +1887,7 @@ var Backbone = Backbone || {};
           var computedStyles = getComputedStyle(node);
           i = computedStyles.length;
 
-          while(i--) {
+          while (i--) {
             key = computedStyles[i];
             value = computedStyles[key];
             // Gecko returns undefined for unset properties
@@ -1861,7 +1900,7 @@ var Backbone = Backbone || {};
 
         // Convert NodeMap to a normal object
         i = node.attributes.length;
-        while(i--) {
+        while (i--) {
           attr = node.attributes[i];
           attributes[attr.nodeName] = attr.value;
         }
@@ -1878,7 +1917,7 @@ var Backbone = Backbone || {};
         _.extend(styles, attributes);
 
         // Similarly visibility is influenced by the value of both display and visibility.
-        // Calculate a unified value here
+        // Calculate a unified value here which defaults to `true`.
         styles.visible = !(_.isUndefined(styles.display) && styles.display === 'none')
           || (_.isUndefined(styles.visibility) && styles.visibility === 'hidden');
 
@@ -1888,6 +1927,7 @@ var Backbone = Backbone || {};
 
           switch (key) {
             case 'transform':
+              // TODO: Check this out https://github.com/paperjs/paper.js/blob/master/src/svg/SVGImport.js#L313
               if (value === 'none') break;
               var m = node.getCTM();
 
@@ -1939,7 +1979,12 @@ var Backbone = Backbone || {};
               break;
             case 'fill':
             case 'stroke':
-              elem[key] = (value === 'none') ? 'transparent' : value;
+              if (/url\(\#.*\)/i.test(value)) {
+                elem[key] = this.getById(
+                  value.replace(/url\(\#(.*)\)/i, '$1'));
+              } else {
+                elem[key] = (value === 'none') ? 'transparent' : value;
+              }
               break;
             case 'id':
               elem.id = value;
@@ -1968,7 +2013,7 @@ var Backbone = Backbone || {};
           var group = new Two.Group();
 
           // Switched up order to inherit more specific styles
-          Two.Utils.applySvgAttributes(node, group);
+          Two.Utils.applySvgAttributes.call(this, node, group);
 
           for (var i = 0, l = node.childNodes.length; i < l; i++) {
             var n = node.childNodes[i];
@@ -1978,7 +2023,7 @@ var Backbone = Backbone || {};
             var tagName = tag.replace(/svg\:/ig, '').toLowerCase();
 
             if (tagName in Two.Utils.read) {
-              var o = Two.Utils.read[tagName].call(this, n);
+              var o = Two.Utils.read[tagName].call(group, n);
               group.add(o);
             }
           }
@@ -1996,22 +2041,22 @@ var Backbone = Backbone || {};
             verts.push(new Two.Anchor(parseFloat(p1), parseFloat(p2)));
           });
 
-          var poly = new Two.Polygon(verts, !open).noStroke();
+          var poly = new Two.Path(verts, !open).noStroke();
           poly.fill = 'black';
 
-          return Two.Utils.applySvgAttributes(node, poly);
+          return Two.Utils.applySvgAttributes.call(this, node, poly);
 
         },
 
         polyline: function(node) {
-          return Two.Utils.read.polygon(node, true);
+          return Two.Utils.read.polygon.call(this, node, true);
         },
 
         path: function(node) {
 
           var path = node.getAttribute('d');
 
-          // Create a Two.Polygon from the paths.
+          // Create a Two.Path from the paths.
 
           var coord = new Two.Anchor();
           var control, coords;
@@ -2095,7 +2140,7 @@ var Backbone = Backbone || {};
 
           });
 
-          // Create the vertices for our Two.Polygon
+          // Create the vertices for our Two.Path
 
           var points = _.flatten(_.map(commands, function(command, i) {
 
@@ -2301,7 +2346,114 @@ var Backbone = Backbone || {};
                 break;
 
               case 'a':
-                throw new Two.Utils.Error('not yet able to interpret Elliptical Arcs.');
+
+                // throw new Two.Utils.Error('not yet able to interpret Elliptical Arcs.');
+                x1 = coord.x;
+                y1 = coord.y;
+
+                var rx = parseFloat(coords[0]);
+                var ry = parseFloat(coords[1]);
+                var xAxisRotation = parseFloat(coords[2]) * Math.PI / 180;
+                var largeArcFlag = parseFloat(coords[3]);
+                var sweepFlag = parseFloat(coords[4]);
+
+                x4 = parseFloat(coords[5]);
+                y4 = parseFloat(coords[6]);
+
+                if (relative) {
+                  x4 += x1;
+                  y4 += y1;
+                }
+
+                // http://www.w3.org/TR/SVG/implnote.html#ArcConversionEndpointToCenter
+
+                // Calculate midpoint mx my
+                var mx = (x4 - x1) / 2;
+                var my = (y4 - y1) / 2;
+
+                // Calculate x1' y1' F.6.5.1
+                var _x = mx * Math.cos(xAxisRotation) + my * Math.sin(xAxisRotation);
+                var _y = - mx * Math.sin(xAxisRotation) + my * Math.cos(xAxisRotation);
+
+                var rx2 = rx * rx;
+                var ry2 = ry * ry;
+                var _x2 = _x * _x;
+                var _y2 = _y * _y;
+
+                // adjust radii
+                var l = _x2 / rx2 + _y2 / ry2;
+                if (l > 1) {
+                  rx *= Math.sqrt(l);
+                  ry *= Math.sqrt(l);
+                }
+
+                var amp = Math.sqrt((rx2 * ry2 - rx2 * _y2 - ry2 * _x2) / (rx2 * _y2 + ry2 * _x2));
+
+                if (_.isNaN(amp)) {
+                  amp = 0;
+                } else if (largeArcFlag != sweepFlag && amp > 0) {
+                  amp *= -1;
+                }
+
+                // Calculate cx' cy' F.6.5.2
+                var _cx = amp * rx * _y / ry;
+                var _cy = - amp * ry * _x / rx;
+
+                // Calculate cx cy F.6.5.3
+                var cx = _cx * Math.cos(xAxisRotation) - _cy * Math.sin(xAxisRotation) + (x1 + x4) / 2;
+                var cy = _cx * Math.sin(xAxisRotation) + _cy * Math.cos(xAxisRotation) + (y1 + y4) / 2;
+
+                // vector magnitude
+                var m = function(v) { return Math.sqrt(Math.pow(v[0], 2) + Math.pow(v[1], 2)); }
+                // ratio between two vectors
+                var r = function(u, v) { return (u[0] * v[0] + u[1] * v[1]) / (m(u) * m(v)) }
+                // angle between two vectors
+                var a = function(u, v) { return (u[0] * v[1] < u[1] * v[0] ? - 1 : 1) * Math.acos(r(u,v)); }
+
+                // Calculate theta1 and delta theta F.6.5.4 + F.6.5.5
+                var t1 = a([1, 0], [(_x - _cx) / rx, (_y - _cy) / ry]);
+                var u = [(_x - _cx) / rx, (_y - _cy) / ry];
+                var v = [( - _x - _cx) / rx, ( - _y - _cy) / ry];
+                var dt = a(u, v);
+
+                if (r(u, v) <= -1) dt = Math.PI;
+                if (r(u, v) >= 1) dt = 0;
+
+                // F.6.5.6
+                if (largeArcFlag)  {
+                  dt = mod(dt, Math.PI * 2);
+                }
+
+                if (sweepFlag && dt > 0) {
+                  dt -= Math.PI * 2;
+                }
+
+                var length = Two.Resolution;
+
+                // Save a projection of our rotation and translation to apply
+                // to the set of points.
+                var projection = new Two.Matrix()
+                  .translate(cx, cy)
+                  .rotate(xAxisRotation);
+
+                // Create a resulting array of Two.Anchor's to export to the
+                // the path.
+                result = _.map(_.range(length), function(i) {
+                  var pct = 1 - (i / (length - 1));
+                  var theta = pct * dt + t1;
+                  var x = rx * Math.cos(theta);
+                  var y = ry * Math.sin(theta);
+                  var projected = projection.multiply(x, y, 1);
+                  return new Two.Anchor(projected.x, projected.y, false, false, false, false, Two.Commands.line);;
+                });
+
+                result.push(new Two.Anchor(x4, y4, false, false, false, false, Two.Commands.line));
+
+                coord = result[result.length - 1];
+                control = coord.controls.left;
+
+                break;
+
             }
 
             return result;
@@ -2314,10 +2466,10 @@ var Backbone = Backbone || {};
 
           points = _.compact(points);
 
-          var poly = new Two.Polygon(points, closed, undefined, true).noStroke();
+          var poly = new Two.Path(points, closed, undefined, true).noStroke();
           poly.fill = 'black';
 
-          return Two.Utils.applySvgAttributes(node, poly);
+          return Two.Utils.applySvgAttributes.call(this, node, poly);
 
         },
 
@@ -2334,13 +2486,13 @@ var Backbone = Backbone || {};
             var x = r * cos(theta);
             var y = r * sin(theta);
             return new Two.Anchor(x, y);
-          }, this);
+          });
 
-          var circle = new Two.Polygon(points, true, true).noStroke();
+          var circle = new Two.Path(points, true, true).noStroke();
           circle.translation.set(x, y);
           circle.fill = 'black';
 
-          return Two.Utils.applySvgAttributes(node, circle);
+          return Two.Utils.applySvgAttributes.call(this, node, circle);
 
         },
 
@@ -2358,20 +2510,20 @@ var Backbone = Backbone || {};
             var x = width * cos(theta);
             var y = height * sin(theta);
             return new Two.Anchor(x, y);
-          }, this);
+          });
 
-          var ellipse = new Two.Polygon(points, true, true).noStroke();
+          var ellipse = new Two.Path(points, true, true).noStroke();
           ellipse.translation.set(x, y);
           ellipse.fill = 'black';
 
-          return Two.Utils.applySvgAttributes(node, ellipse);
+          return Two.Utils.applySvgAttributes.call(this, node, ellipse);
 
         },
 
         rect: function(node) {
 
-          var x = parseFloat(node.getAttribute('x'));
-          var y = parseFloat(node.getAttribute('y'));
+          var x = parseFloat(node.getAttribute('x')) || 0;
+          var y = parseFloat(node.getAttribute('y')) || 0;
           var width = parseFloat(node.getAttribute('width'));
           var height = parseFloat(node.getAttribute('height'));
 
@@ -2385,11 +2537,11 @@ var Backbone = Backbone || {};
             new Two.Anchor(w2, -h2)
           ];
 
-          var rect = new Two.Polygon(points, true).noStroke();
+          var rect = new Two.Path(points, true).noStroke();
           rect.translation.set(x + w2, y + h2);
           rect.fill = 'black';
 
-          return Two.Utils.applySvgAttributes(node, rect);
+          return Two.Utils.applySvgAttributes.call(this, node, rect);
 
         },
 
@@ -2413,10 +2565,102 @@ var Backbone = Backbone || {};
 
           // Center line and translate to desired position.
 
-          var line = new Two.Polygon(points).noFill();
+          var line = new Two.Path(points).noFill();
           line.translation.set(x1 + w2, y1 + h2);
 
-          return Two.Utils.applySvgAttributes(node, line);
+          return Two.Utils.applySvgAttributes.call(this, node, line);
+
+        },
+
+        lineargradient: function(node) {
+
+          var x1 = parseFloat(node.getAttribute('x1'));
+          var y1 = parseFloat(node.getAttribute('y1'));
+          var x2 = parseFloat(node.getAttribute('x2'));
+          var y2 = parseFloat(node.getAttribute('y2'));
+
+          var ox = (x2 + x1) / 2;
+          var oy = (y2 + y1) / 2;
+
+          var stops = [];
+          for (var i = 0; i < node.children.length; i++) {
+
+            var child = node.children[i];
+
+            var offset = parseFloat(child.getAttribute('offset'));
+            var color = child.getAttribute('stop-color');
+            var opacity = child.getAttribute('stop-opacity');
+            var style = child.getAttribute('style');
+
+            if (_.isNull(color)) {
+              var matches = style.match(/stop\-color\:\s?([\#a-fA-F0-9]*)/);
+              color = matches && matches.length > 1 ? matches[1] : undefined;
+            }
+
+            if (_.isNull(opacity)) {
+              var matches = style.match(/stop\-opacity\:\s?([0-1\.\-]*)/);
+              opacity = matches && matches.length > 1 ? parseFloat(matches[1]) : 1;
+            }
+
+            stops.push(new Two.Gradient.Stop(offset, color, opacity));
+
+          }
+
+          var gradient = new Two.LinearGradient(x1 - ox, y1 - oy, x2 - ox,
+            y2 - oy, stops);
+
+          return Two.Utils.applySvgAttributes.call(this, node, gradient);
+
+        },
+
+        radialgradient: function(node) {
+
+          var cx = parseFloat(node.getAttribute('cx')) || 0;
+          var cy = parseFloat(node.getAttribute('cy')) || 0;
+          var r = parseFloat(node.getAttribute('r'));
+
+          var fx = parseFloat(node.getAttribute('fx'));
+          var fy = parseFloat(node.getAttribute('fy'));
+
+          if (_.isNaN(fx)) {
+            fx = cx;
+          }
+
+          if (_.isNaN(fy)) {
+            fy = cy;
+          }
+
+          var ox = Math.abs(cx + fx) / 2;
+          var oy = Math.abs(cy + fy) / 2;
+
+          var stops = [];
+          for (var i = 0; i < node.children.length; i++) {
+
+            var child = node.children[i];
+
+            var offset = parseFloat(child.getAttribute('offset'));
+            var color = child.getAttribute('stop-color');
+            var opacity = child.getAttribute('stop-opacity');
+            var style = child.getAttribute('style');
+
+            if (_.isNull(color)) {
+              var matches = style.match(/stop\-color\:\s?([\#a-fA-F0-9]*)/);
+              color = matches && matches.length > 1 ? matches[1] : undefined;
+            }
+
+            if (_.isNull(opacity)) {
+              var matches = style.match(/stop\-opacity\:\s?([0-1\.\-]*)/);
+              opacity = matches && matches.length > 1 ? parseFloat(matches[1]) : 1;
+            }
+
+            stops.push(new Two.Gradient.Stop(offset, color, opacity));
+
+          }
+
+          var gradient = new Two.RadialGradient(cx - ox, cy - oy, r,
+            stops, fx - ox, fy - oy);
+
+          return Two.Utils.applySvgAttributes.call(this, node, gradient);
 
         }
 
@@ -2618,6 +2862,48 @@ var Backbone = Backbone || {};
 
       },
 
+      getAnchorsFromArcData: function(center, xAxisRotation, rx, ry, ts, td, ccw) {
+
+        var matrix = new Two.Matrix()
+          .translate(center.x, center.y)
+          .rotate(xAxisRotation);
+
+        var l = Two.Resolution;
+
+        // console.log(arguments);
+
+        return _.map(_.range(l), function(i) {
+
+          var pct = (i + 1) / l;
+          if (!!ccw) {
+            pct = 1 - pct;
+          }
+
+          var theta = pct * td + ts;
+          var x = rx * Math.cos(theta);
+          var y = ry * Math.sin(theta);
+
+          // x += center.x;
+          // y += center.y;
+
+          var anchor = new Two.Anchor(x, y);
+          Two.Anchor.AppendCurveProperties(anchor);
+          anchor.command = Two.Commands.line;
+
+          // TODO: Calculate control points here...
+
+          return anchor;
+
+        });
+
+      },
+
+      ratioBetween: function(A, B) {
+
+        return (A.x * B.x + A.y * B.y) / (A.length() * B.length());
+
+      },
+
       angleBetween: function(A, B) {
 
         var dx, dy;
@@ -2680,7 +2966,7 @@ var Backbone = Backbone || {};
 
         if (arguments.length > 1) {
           Array.prototype.push.apply(this, arguments);
-        } else if( arguments[0] && Array.isArray(arguments[0]) ) {
+        } else if (arguments[0] && Array.isArray(arguments[0])) {
           Array.prototype.push.apply(this, arguments[0]);
         }
 
@@ -2736,10 +3022,23 @@ var Backbone = Backbone || {};
       this.trigger(Two.Events.remove, spliced);
 
       if (arguments.length > 2) {
-        inserted = this.slice(arguments[0], arguments.length-2);
+        inserted = this.slice(arguments[0], arguments.length - 2);
         this.trigger(Two.Events.insert, inserted);
+        this.trigger(Two.Events.order);
       }
       return spliced;
+    },
+
+    sort: function() {
+      Array.prototype.sort.apply(this, arguments);
+      this.trigger(Two.Events.order);
+      return this;
+    },
+
+    reverse: function() {
+      Array.prototype.reverse.apply(this, arguments);
+      this.trigger(Two.Events.order);
+      return this;
     }
 
   });
@@ -2747,7 +3046,9 @@ var Backbone = Backbone || {};
   // Localize utils
 
   var distanceBetween = Two.Utils.distanceBetween,
+    getAnchorsFromArcData = Two.Utils.getAnchorsFromArcData,
     distanceBetweenSquared = Two.Utils.distanceBetweenSquared,
+    ratioBetween = Two.Utils.ratioBetween,
     angleBetween = Two.Utils.angleBetween,
     getControlPoints = Two.Utils.getControlPoints,
     getCurveFromPoints = Two.Utils.getCurveFromPoints,
@@ -2830,7 +3131,7 @@ var Backbone = Backbone || {};
     add: function(o) {
 
       var objects = o;
-      if (!_.isArray(o)) {
+      if (!(objects instanceof Array)) {
         objects = _.toArray(arguments);
       }
 
@@ -2842,7 +3143,7 @@ var Backbone = Backbone || {};
     remove: function(o) {
 
       var objects = o;
-      if (!_.isArray(o)) {
+      if (!(objects instanceof Array)) {
         objects = _.toArray(arguments);
       }
 
@@ -2861,43 +3162,27 @@ var Backbone = Backbone || {};
 
     makeLine: function(x1, y1, x2, y2) {
 
-      var width = x2 - x1;
-      var height = y2 - y1;
-
-      var w2 = width / 2;
-      var h2 = height / 2;
-
-      var points = [
-        new Two.Anchor(- w2, - h2),
-        new Two.Anchor(w2, h2)
-      ];
-
-      // Center line and translate to desired position.
-
-      var line = new Two.Polygon(points).noFill();
-      line.translation.set(x1 + w2, y1 + h2);
-
+      var line = new Two.Line(x1, y1, x2, y2);
       this.scene.add(line);
+
       return line;
 
     },
 
     makeRectangle: function(x, y, width, height) {
 
-      var w2 = width / 2;
-      var h2 = height / 2;
-
-      var points = [
-        new Two.Anchor(-w2, -h2),
-        new Two.Anchor(w2, -h2),
-        new Two.Anchor(w2, h2),
-        new Two.Anchor(-w2, h2)
-      ];
-
-      var rect = new Two.Polygon(points, true);
-      rect.translation.set(x, y);
-
+      var rect = new Two.Rectangle(x, y, width, height);
       this.scene.add(rect);
+
+      return rect;
+
+    },
+
+    makeRoundedRectangle: function(x, y, width, height, sides) {
+
+      var rect = new Two.RoundedRectangle(x, y, width, height, sides);
+      this.scene.add(rect);
+
       return rect;
 
     },
@@ -2908,24 +3193,21 @@ var Backbone = Backbone || {};
 
     },
 
-    makeEllipse: function(ox, oy, width, height) {
+    makeEllipse: function(ox, oy, rx, ry) {
 
-      var amount = Two.Resolution;
-
-      var points = _.map(_.range(amount), function(i) {
-        var pct = i / amount;
-        var theta = pct * TWO_PI;
-        var x = width * cos(theta);
-        var y = height * sin(theta);
-        return new Two.Anchor(x, y);
-      }, this);
-
-      var ellipse = new Two.Polygon(points, true, true);
-      ellipse.translation.set(ox, oy);
-
+      var ellipse = new Two.Ellipse(ox, oy, rx, ry);
       this.scene.add(ellipse);
 
       return ellipse;
+
+    },
+
+    makeStar: function(ox, oy, or, ir, sides) {
+
+      var star = new Two.Star(ox, oy, or, ir, sides);
+      this.add(star);
+
+      return star;
 
     },
 
@@ -2945,28 +3227,17 @@ var Backbone = Backbone || {};
       }
 
       var last = arguments[l - 1];
-      var poly = new Two.Polygon(points, !(_.isBoolean(last) ? last : undefined), true);
-      var rect = poly.getBoundingClientRect();
+      var curve = new Two.Path(points, !(_.isBoolean(last) ? last : undefined), true);
+      var rect = curve.getBoundingClientRect();
+      curve.center().translation
+        .set(rect.left + rect.width / 2, rect.top + rect.height / 2);
 
-      var cx = rect.left + rect.width / 2;
-      var cy = rect.top + rect.height / 2;
+      this.scene.add(curve);
 
-      _.each(poly.vertices, function(v) {
-        v.x -= cx;
-        v.y -= cy;
-      });
-
-      poly.translation.set(cx, cy);
-
-      this.scene.add(poly);
-
-      return poly;
+      return curve;
 
     },
 
-    /**
-     * Convenience method to make and draw a Two.Polygon.
-     */
     makePolygon: function(p) {
 
       var l = arguments.length, points = p;
@@ -2982,8 +3253,7 @@ var Backbone = Backbone || {};
         }
       }
 
-      var last = arguments[l - 1];
-      var poly = new Two.Polygon(points, !(_.isBoolean(last) ? last : undefined));
+      var poly = new Two.Polygon(points);
       var rect = poly.getBoundingClientRect();
       poly.center().translation
         .set(rect.left + rect.width / 2, rect.top + rect.height / 2);
@@ -2994,10 +3264,91 @@ var Backbone = Backbone || {};
 
     },
 
+    /*
+    * Make a Curved Polygon in scene
+    */
+
+    makeCurvedPolygon: function(ox, oy, r, sides, mod) {
+
+      var curvedPoly = new Two.CurvedPolygon(ox, oy, or, ir, sides);
+      this.add(curvedPoly);
+
+      return curvedPoly;
+
+    },
+
+    /*
+    * Make an Arc Segment
+    */
+
+    makeArcSegment: function(ox, oy, ir, or, sa, ea, res) {
+      var arcSegment = new Two.ArcSegment(ox, oy, ir, or, sa, ea, res);
+      this.add(arcSegment);
+      return arcSegment;
+    },
+
+    /**
+     * Convenience method to make and draw a Two.Path.
+     */
+    makePath: function(p) {
+
+      var l = arguments.length, points = p;
+      if (!_.isArray(p)) {
+        points = [];
+        for (var i = 0; i < l; i+=2) {
+          var x = arguments[i];
+          if (!_.isNumber(x)) {
+            break;
+          }
+          var y = arguments[i + 1];
+          points.push(new Two.Anchor(x, y));
+        }
+      }
+
+      var last = arguments[l - 1];
+      var path = new Two.Path(points, !(_.isBoolean(last) ? last : undefined));
+      var rect = path.getBoundingClientRect();
+      path.center().translation
+        .set(rect.left + rect.width / 2, rect.top + rect.height / 2);
+
+      this.scene.add(path);
+
+      return path;
+
+    },
+
+    /**
+     * Convenience method to make and add a Two.LinearGradient.
+     */
+    makeLinearGradient: function(x1, y1, x2, y2 /* stops */) {
+
+      var stops = Array.prototype.slice.call(arguments, 4);
+      var gradient = new Two.LinearGradient(x1, y1, x2, y2, stops);
+
+      this.add(gradient);
+
+      return gradient;
+
+    },
+
+    /**
+     * Convenience method to make and add a Two.RadialGradient.
+     */
+    makeRadialGradient: function(x1, y1, r /* stops */) {
+
+      var stops = Array.prototype.slice.call(arguments, 3);
+      var gradient = new Two.RadialGradient(x1, y1, r, stops);
+
+      this.add(gradient);
+
+      return gradient;
+
+    },
+
     makeGroup: function(o) {
 
       var objects = o;
-      if (!_.isArray(o)) {
+      if (!(objects instanceof Array)) {
         objects = _.toArray(arguments);
       }
 
@@ -3009,19 +3360,17 @@ var Backbone = Backbone || {};
 
     },
 
-    // Utility Functions will go here.
-
     /**
      * Interpret an SVG Node and add it to this instance's scene. The
      * distinction should be made that this doesn't `import` svg's, it solely
-     * interprets them into something compatible for Two.js — this is slightly
+     * interprets them into something compatible for Two.js — this is slightly
      * different than a direct transcription.
      *
      * @param {Object} svgNode - The node to be parsed
-     * @param {Boolean} noWrappingGroup - Don't create a top-most group but
+     * @param {Boolean} shallow - Don't create a top-most group but
      *                                    append all contents directly
      */
-    interpret: function(svgNode, noWrapInGroup) {
+    interpret: function(svgNode, shallow) {
 
       var tag = svgNode.tagName.toLowerCase();
 
@@ -3031,13 +3380,52 @@ var Backbone = Backbone || {};
 
       var node = Two.Utils.read[tag].call(this, svgNode);
 
-      if (noWrapInGroup && node instanceof Two.Group) {
-        this.add(_.values(node.children));
+      if (shallow && node instanceof Two.Group) {
+        this.add(node.children);
       } else {
         this.add(node);
       }
 
       return node;
+
+    },
+
+    /**
+     * Load an SVG file / text and interpret.
+     */
+    load: function(text, callback) {
+
+      var nodes = [], elem, i;
+
+      if (/.*\.svg/ig.test(text)) {
+
+        Two.Utils.xhr(text, _.bind(function(data) {
+
+          dom.temp.innerHTML = data;
+          for (i = 0; i < dom.temp.children.length; i++) {
+            elem = dom.temp.children[i];
+            nodes.push(this.interpret(elem));
+          }
+
+          callback(nodes.length <= 1 ? nodes[0] : nodes,
+            dom.temp.children.length <= 1 ? dom.temp.children[0] : dom.temp.children);
+
+        }, this));
+
+        return this;
+
+      }
+
+      dom.temp.innerHTML = text;
+      for (i = 0; i < dom.temp.children.length; i++) {
+        elem = dom.temp.children[i];
+        nodes.push(this.interpret(elem));
+      }
+
+      callback(nodes.length <= 1 ? nodes[0] : nodes,
+        dom.temp.children.length <= 1 ? dom.temp.children[0] : dom.temp.children);
+
+      return this;
 
     }
 
@@ -3084,9 +3472,14 @@ var Backbone = Backbone || {};
   //Node
   module.exports = Two;
 
-})();
+})(
+  this.Two || {},
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);
 
-(function(Two) {
+(function(Two, _, Backbone, requestAnimationFrame) {
 
   var Vector = Two.Vector = function(x, y) {
 
@@ -3205,8 +3598,9 @@ var Backbone = Backbone || {};
       return this.normalize().multiplyScalar(l);
     },
 
-    equals: function(v) {
-      return (this.distanceTo(v) < 0.0001 /* almost same position */);
+    equals: function(v, eps) {
+      eps = (typeof eps === 'undefined') ?  0.0001 : eps;
+      return (this.distanceTo(v) < eps);
     },
 
     lerp: function(v, t) {
@@ -3215,8 +3609,9 @@ var Backbone = Backbone || {};
       return this.set(x, y);
     },
 
-    isZero: function() {
-      return (this.length() < 0.0001 /* almost zero */ );
+    isZero: function(eps) {
+      eps = (typeof eps === 'undefined') ?  0.0001 : eps;
+      return (this.length() <  eps);
     },
 
     toString: function() {
@@ -3332,8 +3727,9 @@ var Backbone = Backbone || {};
       return this.normalize().multiplyScalar(l);
     },
 
-    equals: function(v) {
-      return (this.distanceTo(v) < 0.0001 /* almost same position */);
+    equals: function(v, eps) {
+      eps = (typeof eps === 'undefined') ?  0.0001 : eps;
+      return (this.distanceTo(v) < eps);
     },
 
     lerp: function(v, t) {
@@ -3342,8 +3738,9 @@ var Backbone = Backbone || {};
       return this.set(x, y);
     },
 
-    isZero: function() {
-      return (this.length() < 0.0001 /* almost zero */ );
+    isZero: function(eps) {
+      eps = (typeof eps === 'undefined') ?  0.0001 : eps;
+      return (this.length() < eps);
     },
 
     toString: function() {
@@ -3399,9 +3796,14 @@ var Backbone = Backbone || {};
 
   };
 
-})(Two);
+})(
+  Two,
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);
 
-(function(Two) {
+(function(Two, _, Backbone, requestAnimationFrame) {
 
   // Localized variables
   var commands = Two.Commands;
@@ -3563,9 +3965,14 @@ var Backbone = Backbone || {};
     _.extend(this, AnchorProto);
   };
 
-})(Two);
+})(
+  Two,
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);
 
-(function(Two) {
+(function(Two, _, Backbone, requestAnimationFrame) {
 
   /**
    * Constants
@@ -3939,9 +4346,14 @@ var Backbone = Backbone || {};
 
   });
 
-})(Two);
+})(
+  Two,
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);
 
-(function(Two) {
+(function(Two, _, Backbone, requestAnimationFrame) {
 
   // Localize variables
   var mod = Two.Utils.mod, toFixed = Two.Utils.toFixed;
@@ -3964,7 +4376,7 @@ var Backbone = Backbone || {};
           version: this.version
         });
       }
-      if (_.isObject(attrs)) {
+      if (!_.isEmpty(attrs)) {
         svg.setAttributes(elem, attrs);
       }
       return elem;
@@ -3974,8 +4386,9 @@ var Backbone = Backbone || {};
      * Add attributes from an svg element.
      */
     setAttributes: function(elem, attrs) {
-      for (var key in attrs) {
-        elem.setAttribute(key, attrs[key]);
+      var keys = Object.keys(attrs);
+      for (var i = 0; i < keys.length; i++) {
+        elem.setAttribute(keys[i], attrs[keys[i]]);
       }
       return this;
     },
@@ -4109,11 +4522,11 @@ var Backbone = Backbone || {};
 
     getClip: function(shape) {
 
-      clip = shape._renderer.clip;
+      var clip = shape._renderer.clip;
 
       if (!clip) {
 
-        root = shape;
+        var root = shape;
 
         while (root.parent) {
           root = root.parent;
@@ -4132,9 +4545,9 @@ var Backbone = Backbone || {};
 
       // TODO: Can speed up.
       // TODO: How does this effect a f
-      appendChild: function(id) {
+      appendChild: function(object) {
 
-        var elem = this.domElement.querySelector('#' + id);
+        var elem = object._renderer.elem;
 
         if (!elem) {
           return;
@@ -4142,14 +4555,7 @@ var Backbone = Backbone || {};
 
         var tag = elem.nodeName;
 
-        if (!tag) {
-          return;
-        }
-        
-        var tagName = tag.replace(/svg\:/ig, '').toLowerCase();
-
-        // Defer additions while clipping
-        if (/clippath/.test(tagName)) {
+        if (!tag || /(radial|linear)gradient/i.test(tag) || object._clip) {
           return;
         }
 
@@ -4157,12 +4563,11 @@ var Backbone = Backbone || {};
 
       },
 
-      // TODO: Can speed up.
-      removeChild: function(id) {
+      removeChild: function(object) {
 
-        var elem = this.domElement.querySelector('#' + id);
+        var elem = object._renderer.elem;
 
-        if (!elem) {
+        if (!elem || elem.parentElement != this.elem) {
           return;
         }
 
@@ -4172,15 +4577,17 @@ var Backbone = Backbone || {};
           return;
         }
 
-        var tagName = tag.replace(/svg\:/ig, '').toLowerCase();
-
-        // Defer subtractions while clipping
-        if (/clippath/.test(tagName)) {
+        // Defer subtractions while clipping.
+        if (object._clip) {
           return;
         }
 
         this.elem.removeChild(elem);
 
+      },
+
+      orderChild: function(object) {
+        this.elem.appendChild(object._renderer.elem);
       },
 
       renderChild: function(child) {
@@ -4216,8 +4623,8 @@ var Backbone = Backbone || {};
           this._renderer.elem.setAttribute('transform', 'matrix(' + this._matrix.toString() + ')');
         }
 
-        for (var id in this.children) {
-          var child = this.children[id];
+        for (var i = 0; i < this.children.length; i++) {
+          var child = this.children[i];
           svg[child._renderer.type].render.call(child, domElement);
         }
 
@@ -4226,11 +4633,15 @@ var Backbone = Backbone || {};
         }
 
         if (this._flagAdditions) {
-          _.each(this.additions, svg.group.appendChild, context);
+          this.additions.forEach(svg.group.appendChild, context);
         }
 
         if (this._flagSubtractions) {
-          _.each(this.subtractions, svg.group.removeChild, context);
+          this.subtractions.forEach(svg.group.removeChild, context);
+        }
+
+        if (this._flagOrder) {
+          this.children.forEach(svg.group.orderChild, context);
         }
 
         /**
@@ -4270,7 +4681,7 @@ var Backbone = Backbone || {};
 
     },
 
-    polygon: {
+    path: {
 
       render: function(domElement) {
 
@@ -4298,7 +4709,9 @@ var Backbone = Backbone || {};
         }
 
         if (this._flagFill) {
-          changed.fill = this._fill;
+
+          changed.fill = this._fill && this._fill.id
+            ? 'url(#' + this._fill.id + ')' : this._fill;
         }
 
         if (this._flagStroke) {
@@ -4327,7 +4740,7 @@ var Backbone = Backbone || {};
         }
 
         if (this._flagMiter) {
-          changed['stroke-miterlimit'] = this.miter;
+          changed['stroke-miterlimit'] = this._miter;
         }
 
         // If there is no attached DOM element yet,
@@ -4345,8 +4758,8 @@ var Backbone = Backbone || {};
 
         if (this._flagClip) {
 
-          clip = svg.getClip(this);
-          elem = this._renderer.elem;
+          var clip = svg.getClip(this);
+          var elem = this._renderer.elem;
 
           if (this._clip) {
             elem.removeAttribute('id');
@@ -4378,6 +4791,159 @@ var Backbone = Backbone || {};
 
       }
 
+    },
+
+    'linear-gradient': {
+
+      render: function(domElement) {
+
+        this._update();
+
+        var changed = {};
+
+        if (this._flagEndPoints) {
+          changed.x1 = this.left._x;
+          changed.y1 = this.left._y;
+          changed.x2 = this.right._x;
+          changed.y2 = this.right._y;
+        }
+
+        if (this._flagSpread) {
+          changed.spreadMethod = this._spread;
+        }
+
+        // If there is no attached DOM element yet,
+        // create it with all necessary attributes.
+        if (!this._renderer.elem) {
+
+          changed.id = this.id;
+          changed.gradientUnits = 'userSpaceOnUse';
+          this._renderer.elem = svg.createElement('linearGradient', changed);
+          domElement.defs.appendChild(this._renderer.elem);
+
+        // Otherwise apply all pending attributes
+        } else {
+
+          svg.setAttributes(this._renderer.elem, changed);
+
+        }
+
+        if (this._flagStops) {
+
+          this._renderer.elem.children.length = 0;
+
+          for (var i = 0; i < this.stops.length; i++) {
+
+            var stop = this.stops[i];
+            var attrs = {};
+
+            if (stop._flagOffset) {
+              attrs.offset = 100 * stop._offset + '%';
+            }
+            if (stop._flagColor) {
+              attrs['stop-color'] = stop._color;
+            }
+            if (stop._flagOpacity) {
+              attrs['stop-opacity'] = stop._opacity;
+            }
+
+            if (!stop._renderer.elem) {
+              stop._renderer.elem = svg.createElement('stop', attrs);
+            } else {
+              svg.setAttributes(stop._renderer.elem, attrs);
+            }
+
+            this._renderer.elem.appendChild(stop._renderer.elem);
+
+            stop.flagReset();
+
+          }
+
+        }
+
+        return this.flagReset();
+
+      }
+
+    },
+
+    'radial-gradient': {
+
+      render: function(domElement) {
+
+        this._update();
+
+        var changed = {};
+
+        if (this._flagCenter) {
+          changed.cx = this.center._x;
+          changed.cy = this.center._y;
+        }
+        if (this._flagFocal) {
+          changed.fx = this.focal._x;
+          changed.fy = this.focal._y;
+        }
+
+        if (this._flagRadius) {
+          changed.r = this._radius;
+        }
+
+        if (this._flagSpread) {
+          changed.spreadMethod = this._spread;
+        }
+
+        // If there is no attached DOM element yet,
+        // create it with all necessary attributes.
+        if (!this._renderer.elem) {
+
+          changed.id = this.id;
+          changed.gradientUnits = 'userSpaceOnUse';
+          this._renderer.elem = svg.createElement('radialGradient', changed);
+          domElement.defs.appendChild(this._renderer.elem);
+
+        // Otherwise apply all pending attributes
+        } else {
+
+          svg.setAttributes(this._renderer.elem, changed);
+
+        }
+
+        if (this._flagStops) {
+
+          this._renderer.elem.children.length = 0;
+
+          for (var i = 0; i < this.stops.length; i++) {
+
+            var stop = this.stops[i];
+            var attrs = {};
+
+            if (stop._flagOffset) {
+              attrs.offset = 100 * stop._offset + '%';
+            }
+            if (stop._flagColor) {
+              attrs['stop-color'] = stop._color;
+            }
+            if (stop._flagOpacity) {
+              attrs['stop-opacity'] = stop._opacity;
+            }
+
+            if (!stop._renderer.elem) {
+              stop._renderer.elem = svg.createElement('stop', attrs);
+            } else {
+              svg.setAttributes(stop._renderer.elem, attrs);
+            }
+
+            this._renderer.elem.appendChild(stop._renderer.elem);
+            stop.flagReset();
+
+          }
+
+        }
+
+        return this.flagReset();
+
+      }
+
     }
 
   };
@@ -4394,6 +4960,7 @@ var Backbone = Backbone || {};
 
     this.defs = svg.createElement('defs');
     this.domElement.appendChild(this.defs);
+    this.domElement.defs = this.defs;
 
   };
 
@@ -4429,9 +4996,14 @@ var Backbone = Backbone || {};
 
   });
 
-})(Two);
+})(
+  Two,
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);
 
-(function(Two) {
+(function(Two, _, Backbone, requestAnimationFrame) {
 
   /**
    * Constants
@@ -4439,7 +5011,14 @@ var Backbone = Backbone || {};
   var mod = Two.Utils.mod, toFixed = Two.Utils.toFixed;
   var getRatio = Two.Utils.getRatio;
 
+  // Returns true if this is a non-transforming matrix
+  var isDefaultMatrix = function (m) {
+    return (m[0] == 1 && m[3] == 0 && m[1] == 0 && m[4] == 1 && m[2] == 0 && m[5] == 0);
+  };
+
   var canvas = {
+
+    isHidden: /(none|transparent)/i,
 
     group: {
 
@@ -4454,8 +5033,9 @@ var Backbone = Backbone || {};
 
         var matrix = this._matrix.elements;
         var parent = this.parent;
-        this._renderer.opacity = this._opacity
-          * (parent && parent._renderer ? parent._renderer.opacity : 1);
+        this._renderer.opacity = this._opacity * (parent && parent._renderer ? parent._renderer.opacity : 1);
+
+        var defaultMatrix = isDefaultMatrix(matrix);
 
         var mask = this._mask;
         // var clip = this._clip;
@@ -4467,18 +5047,23 @@ var Backbone = Backbone || {};
         this._renderer.context.ctx = ctx;
         // this._renderer.context.clip = clip;
 
-        ctx.save();
-
-        ctx.transform(
-          matrix[0], matrix[3], matrix[1], matrix[4], matrix[2], matrix[5]);
+        if (!defaultMatrix) {
+          ctx.save();
+          ctx.transform(matrix[0], matrix[3], matrix[1], matrix[4], matrix[2], matrix[5]);
+        }
 
         if (mask) {
           canvas[mask._renderer.type].render.call(mask, ctx, true);
         }
 
-        _.each(this.children, canvas.group.renderChild, this._renderer.context);
+        for (var i = 0; i < this.children.length; i++) {
+          var child = this.children[i];
+          canvas[child._renderer.type].render.call(child, ctx);
+        }
 
-        ctx.restore();
+        if (!defaultMatrix) {
+          ctx.restore();
+        }
 
        /**
          * Commented two-way functionality of clips / masks with groups and
@@ -4496,13 +5081,13 @@ var Backbone = Backbone || {};
 
     },
 
-    polygon: {
+    path: {
 
       render: function(ctx, forced, parentClipped) {
 
         var matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter,
-            closed, commands, length, last, next, prev, a, c, d, ux, uy, vx, vy,
-            ar, bl, br, cl, x, y, mask, clip;
+            closed, commands, length, last, next, prev, a, b, c, d, ux, uy, vx, vy,
+            ar, bl, br, cl, x, y, mask, clip, defaultMatrix;
 
         // TODO: Add a check here to only invoke _update if need be.
         this._update();
@@ -4520,6 +5105,7 @@ var Backbone = Backbone || {};
         commands = this._vertices; // Commands
         length = commands.length;
         last = length - 1;
+        defaultMatrix = isDefaultMatrix(matrix);
 
         // mask = this._mask;
         clip = this._clip;
@@ -4529,12 +5115,9 @@ var Backbone = Backbone || {};
         }
 
         // Transform
-
-        ctx.save();
-
-        if (matrix) {
-          ctx.transform(
-            matrix[0], matrix[3], matrix[1], matrix[4], matrix[2], matrix[5]);
+        if (!defaultMatrix) {
+          ctx.save();
+          ctx.transform(matrix[0], matrix[3], matrix[1], matrix[4], matrix[2], matrix[5]);
         }
 
        /**
@@ -4548,12 +5131,21 @@ var Backbone = Backbone || {};
         // }
 
         // Styles
-
         if (fill) {
-          ctx.fillStyle = fill;
+          if (_.isString(fill)) {
+            ctx.fillStyle = fill;
+          } else {
+            canvas[fill._renderer.type].render.call(fill, ctx);
+            ctx.fillStyle = fill._renderer.gradient;
+          }
         }
         if (stroke) {
-          ctx.strokeStyle = stroke;
+          if (_.isString(stroke)) {
+            ctx.strokeStyle = stroke;
+          } else {
+            canvas[stroke._renderer.type].render.call(stroke, ctx);
+            ctx.strokeStyle = stroke._renderer.gradient;
+          }
         }
         if (linewidth) {
           ctx.lineWidth = linewidth;
@@ -4572,10 +5164,13 @@ var Backbone = Backbone || {};
         }
 
         ctx.beginPath();
-        commands.forEach(function(b, i) {
 
-          x = toFixed(b.x);
-          y = toFixed(b.y);
+        for (var i = 0; i < commands.length; i++) {
+
+          b = commands[i];
+
+          x = toFixed(b._x);
+          y = toFixed(b._y);
 
           switch (b._command) {
 
@@ -4594,16 +5189,16 @@ var Backbone = Backbone || {};
               bl = (b.controls && b.controls.left) || b;
 
               if (a._relative) {
-                vx = (ar.x + toFixed(a.x));
-                vy = (ar.y + toFixed(a.y));
+                vx = (ar.x + toFixed(a._x));
+                vy = (ar.y + toFixed(a._y));
               } else {
                 vx = toFixed(ar.x);
                 vy = toFixed(ar.y);
               }
 
               if (b._relative) {
-                ux = (bl.x + toFixed(b.x));
-                uy = (bl.y + toFixed(b.y));
+                ux = (bl.x + toFixed(b._x));
+                uy = (bl.y + toFixed(b._y));
               } else {
                 ux = toFixed(bl.x);
                 uy = toFixed(bl.y);
@@ -4619,23 +5214,23 @@ var Backbone = Backbone || {};
                 cl = (c.controls && c.controls.left) || c;
 
                 if (b._relative) {
-                  vx = (br.x + toFixed(b.x));
-                  vy = (br.y + toFixed(b.y));
+                  vx = (br.x + toFixed(b._x));
+                  vy = (br.y + toFixed(b._y));
                 } else {
                   vx = toFixed(br.x);
                   vy = toFixed(br.y);
                 }
 
                 if (c._relative) {
-                  ux = (cl.x + toFixed(c.x));
-                  uy = (cl.y + toFixed(c.y));
+                  ux = (cl.x + toFixed(c._x));
+                  uy = (cl.y + toFixed(c._y));
                 } else {
                   ux = toFixed(cl.x);
                   uy = toFixed(cl.y);
                 }
 
-                x = toFixed(c.x);
-                y = toFixed(c.y);
+                x = toFixed(c._x);
+                y = toFixed(c._y);
 
                 ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
 
@@ -4653,8 +5248,7 @@ var Backbone = Backbone || {};
               break;
 
           }
-
-        });
+        }
 
         // Loose ends
 
@@ -4663,11 +5257,13 @@ var Backbone = Backbone || {};
         }
 
         if (!clip && !parentClipped) {
-          ctx.fill();
-          ctx.stroke();
+          if (!canvas.isHidden.test(fill)) ctx.fill();
+          if (!canvas.isHidden.test(stroke)) ctx.stroke();
         }
 
-        ctx.restore();
+        if (!defaultMatrix) {
+          ctx.restore();
+        }
 
         if (clip && !parentClipped) {
           ctx.clip();
@@ -4677,21 +5273,83 @@ var Backbone = Backbone || {};
 
       }
 
+    },
+
+    'linear-gradient': {
+
+      render: function(ctx) {
+
+        this._update();
+
+        if (!this._renderer.gradient || this._flagEndPoints || this._flagStops) {
+
+          this._renderer.gradient = ctx.createLinearGradient(
+            this.left._x, this.left._y,
+            this.right._x, this.right._y
+          );
+
+          for (var i = 0; i < this.stops.length; i++) {
+            var stop = this.stops[i];
+            this._renderer.gradient.addColorStop(stop._offset, stop._color);
+          }
+
+        }
+
+        return this.flagReset();
+
+      }
+
+    },
+
+    'radial-gradient': {
+
+      render: function(ctx) {
+
+        this._update();
+
+        if (!this._renderer.gradient || this._flagCenter || this._flagFocal
+            || this._flagRadius || this._flagStops) {
+
+          this._renderer.gradient = ctx.createRadialGradient(
+            this.center._x, this.center._y, 0,
+            this.focal._x, this.focal._y, this._radius
+          );
+
+          for (var i = 0; i < this.stops.length; i++) {
+            var stop = this.stops[i];
+            this._renderer.gradient.addColorStop(stop._offset, stop._color);
+          }
+
+        }
+
+        return this.flagReset();
+
+      }
     }
 
   };
 
   var Renderer = Two[Two.Types.canvas] = function(params) {
-
+    // Smoothing property. Defaults to true
+    // Set it to false when working with pixel art.
+    // false can lead to better performance, since it would use a cheaper interpolation algorithm.
+    // It might not make a big difference on GPU backed canvases.
+    var smoothing = (params.smoothing !== false);
     this.domElement = params.domElement || document.createElement('canvas');
     this.ctx = this.domElement.getContext('2d');
     this.overdraw = params.overdraw || false;
 
+    this.ctx.imageSmoothingEnabled = smoothing;
+    this.ctx.mozImageSmoothingEnabled = smoothing;
+    this.ctx.oImageSmoothingEnabled = smoothing;
+    this.ctx.webkitImageSmoothingEnabled = smoothing;
+    this.ctx.imageSmoothingEnabled = smoothing;
+
     // Everything drawn on the canvas needs to be added to the scene.
     this.scene = new Two.Group();
     this.scene.parent = this;
-
   };
+
 
   _.extend(Renderer, {
 
@@ -4749,9 +5407,14 @@ var Backbone = Backbone || {};
     ctx.setTransform(1, 0, 0, 1, 0, 0);
   }
 
-})(Two);
+})(
+  Two,
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);
 
-(function(Two) {
+(function(Two, _, Backbone, requestAnimationFrame) {
 
   /**
    * Constants
@@ -4762,11 +5425,16 @@ var Backbone = Backbone || {};
     identity = [1, 0, 0, 0, 1, 0, 0, 0, 1],
     transformation = new Two.Array(9),
     getRatio = Two.Utils.getRatio,
+    getComputedMatrix = Two.Utils.getComputedMatrix,
     toFixed = Two.Utils.toFixed;
 
   var webgl = {
 
+    isHidden: /(none|transparent)/i,
+
     canvas: document.createElement('canvas'),
+
+    matrix: new Two.Matrix(),
 
     uv: new Two.Array([
       0, 0,
@@ -4778,6 +5446,18 @@ var Backbone = Backbone || {};
     ]),
 
     group: {
+
+      removeChild: function(child, gl) {
+        if (child.children) {
+          for (var i = 0; i < child.children.length; i++) {
+            webgl.group.removeChild(child.children[i], gl);
+          }
+          return;
+        }
+        // Deallocate texture to free up gl memory.
+        gl.deleteTexture(child._renderer.texture);
+        delete child._renderer.texture;
+      },
 
       renderChild: function(child) {
         webgl[child._renderer.type].render.call(child, this.gl, this.program);
@@ -4830,7 +5510,13 @@ var Backbone = Backbone || {};
         this._renderer.opacity = this._opacity
           * (parent && parent._renderer ? parent._renderer.opacity : 1);
 
-        _.each(this.children, webgl.group.renderChild, {
+        if (this._flagSubtractions) {
+          for (var i = 0; i < this.subtractions.length; i++) {
+            webgl.group.removeChild(this.subtractions[i], gl);
+          }
+        }
+
+        this.children.forEach(webgl.group.renderChild, {
           gl: gl,
           program: program
         });
@@ -4856,7 +5542,7 @@ var Backbone = Backbone || {};
 
     },
 
-    polygon: {
+    path: {
 
       render: function(gl, program, forcedParent) {
 
@@ -4870,9 +5556,14 @@ var Backbone = Backbone || {};
         var flagParentMatrix = parent._matrix.manual || parent._flagMatrix;
         var flagMatrix = this._matrix.manual || this._flagMatrix;
         var flagTexture = this._flagVertices || this._flagFill
+          || (this._fill instanceof Two.LinearGradient && (this._fill._flagSpread || this._fill._flagStops || this._fill._flagEndPoints))
+          || (this._fill instanceof Two.RadialGradient && (this._fill._flagSpread || this._fill._flagStops || this._fill._flagRadius || this._fill._flagCenter || this._fill._flagFocal))
+          || (this._stroke instanceof Two.LinearGradient && (this._stroke._flagSpread || this._stroke._flagStops || this._stroke._flagEndPoints))
+          || (this._stroke instanceof Two.RadialGradient && (this._stroke._flagSpread || this._stroke._flagStops || this._stroke._flagRadius || this._stroke._flagCenter || this._stroke._flagFocal))
           || this._flagStroke || this._flagLinewidth || this._flagOpacity
           || parent._flagOpacity || this._flagVisible || this._flagCap
-          || this._flagJoin || this._flagMiter || this._flagScale;
+          || this._flagJoin || this._flagMiter || this._flagScale
+          || !this._renderer.texture;
 
         this._update();
 
@@ -4937,6 +5628,74 @@ var Backbone = Backbone || {};
         gl.vertexAttribPointer(program.position, 2, gl.FLOAT, false, 0, 0);
 
         gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+        return this.flagReset();
+
+      }
+
+    },
+
+    'linear-gradient': {
+
+      render: function(ctx, elem) {
+
+        if (!ctx.canvas.getContext('2d')) {
+          return;
+        }
+
+        this._update();
+
+        if (!this._renderer.gradient || this._flagEndPoints || this._flagStops) {
+
+          var ox = ctx.canvas.width / 2;
+          var oy = ctx.canvas.height / 2;
+          var scale = elem._renderer.scale;
+
+          this._renderer.gradient = ctx.createLinearGradient(
+            this.left._x * scale + ox, this.left._y * scale + oy,
+            this.right._x * scale + ox, this.right._y * scale + oy
+          );
+
+          for (var i = 0; i < this.stops.length; i++) {
+            var stop = this.stops[i];
+            this._renderer.gradient.addColorStop(stop._offset, stop._color);
+          }
+
+        }
+
+        return this.flagReset();
+
+      }
+
+    },
+
+    'radial-gradient': {
+
+      render: function(ctx, elem) {
+
+        if (!ctx.canvas.getContext('2d')) {
+          return;
+        }
+
+        this._update();
+
+        if (!this._renderer.gradient || this._flagCenter || this._flagFocal
+            || this._flagRadius || this._flagStops) {
+
+          var ox = ctx.canvas.width / 2;
+          var oy = ctx.canvas.height / 2;
+
+          this._renderer.gradient = ctx.createRadialGradient(
+            this.center._x + ox, this.center._y + oy, 0,
+            this.focal._x + ox, this.focal._y + oy, this._radius * elem._renderer.scale
+          );
+
+          for (var i = 0; i < this.stops.length; i++) {
+            var stop = this.stops[i];
+            this._renderer.gradient.addColorStop(stop._offset, stop._color);
+          }
+
+        }
 
         return this.flagReset();
 
@@ -5052,6 +5811,8 @@ var Backbone = Backbone || {};
 
     updateCanvas: function(elem) {
 
+      var next, prev, a, c, ux, uy, vx, vy, ar, bl, br, cl, x, y;
+
       var commands = elem._vertices;
       var canvas = this.canvas;
       var ctx = this.ctx;
@@ -5079,10 +5840,20 @@ var Backbone = Backbone || {};
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       if (fill) {
-        ctx.fillStyle = fill;
+        if (_.isString(fill)) {
+          ctx.fillStyle = fill;
+        } else {
+          webgl[fill._renderer.type].render.call(fill, ctx, elem);
+          ctx.fillStyle = fill._renderer.gradient;
+        }
       }
       if (stroke) {
-        ctx.strokeStyle = stroke;
+        if (_.isString(stroke)) {
+          ctx.strokeStyle = stroke;
+        } else {
+          webgl[stroke._renderer.type].render.call(stroke, ctx, elem);
+          ctx.strokeStyle = stroke._renderer.gradient;
+        }
       }
       if (linewidth) {
         ctx.lineWidth = linewidth;
@@ -5102,11 +5873,13 @@ var Backbone = Backbone || {};
 
       var d;
       ctx.beginPath();
-      commands.forEach(function(b, i) {
+      // commands.forEach(function(b, i) {
+      for (var i = 0; i < commands.length; i++) {
 
-        var next, prev, a, c, ux, uy, vx, vy, ar, bl, br, cl, x, y;
-        x = toFixed(b.x * scale + cx);
-        y = toFixed(b.y * scale + cy);
+        b = commands[i];
+
+        x = toFixed(b._x * scale + cx);
+        y = toFixed(b._y * scale + cy);
 
         switch (b._command) {
 
@@ -5125,16 +5898,16 @@ var Backbone = Backbone || {};
             bl = (b.controls && b.controls.left) || b;
 
             if (a._relative) {
-              vx = toFixed((ar.x + a.x) * scale + cx);
-              vy = toFixed((ar.y + a.y) * scale + cy);
+              vx = toFixed((ar.x + a._x) * scale + cx);
+              vy = toFixed((ar.y + a._y) * scale + cy);
             } else {
               vx = toFixed(ar.x * scale + cx);
               vy = toFixed(ar.y * scale + cy);
             }
 
             if (b._relative) {
-              ux = toFixed((bl.x + b.x) * scale + cx);
-              uy = toFixed((bl.y + b.y) * scale + cy);
+              ux = toFixed((bl.x + b._x) * scale + cx);
+              uy = toFixed((bl.y + b._y) * scale + cy);
             } else {
               ux = toFixed(bl.x * scale + cx);
               uy = toFixed(bl.y * scale + cy);
@@ -5150,23 +5923,23 @@ var Backbone = Backbone || {};
               cl = (c.controls && c.controls.left) || c;
 
               if (b._relative) {
-                vx = toFixed((br.x + b.x) * scale + cx);
-                vy = toFixed((br.y + b.y) * scale + cy);
+                vx = toFixed((br.x + b._x) * scale + cx);
+                vy = toFixed((br.y + b._y) * scale + cy);
               } else {
                 vx = toFixed(br.x * scale + cx);
                 vy = toFixed(br.y * scale + cy);
               }
 
               if (c._relative) {
-                ux = toFixed((cl.x + c.x) * scale + cx);
-                uy = toFixed((cl.y + c.y) * scale + cy);
+                ux = toFixed((cl.x + c._x) * scale + cx);
+                uy = toFixed((cl.y + c._y) * scale + cy);
               } else {
                 ux = toFixed(cl.x * scale + cx);
                 uy = toFixed(cl.y * scale + cy);
               }
 
-              x = toFixed(c.x * scale + cx);
-              y = toFixed(c.y * scale + cy);
+              x = toFixed(c._x * scale + cx);
+              y = toFixed(c._y * scale + cy);
 
               ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
 
@@ -5185,7 +5958,7 @@ var Backbone = Backbone || {};
 
         }
 
-      });
+      }
 
       // Loose ends
 
@@ -5193,8 +5966,8 @@ var Backbone = Backbone || {};
         ctx.closePath();
       }
 
-      ctx.fill();
-      ctx.stroke();
+      if (!webgl.isHidden.test(fill)) ctx.fill();
+      if (!webgl.isHidden.test(stroke)) ctx.stroke();
 
     },
 
@@ -5457,9 +6230,14 @@ var Backbone = Backbone || {};
 
   });
 
-})(Two);
+})(
+  Two,
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);
 
-(function(Two) {
+(function(Two, _, Backbone, requestAnimationFrame) {
 
   var Shape = Two.Shape = function() {
 
@@ -5548,36 +6326,6 @@ var Backbone = Backbone || {};
     },
 
     /**
-     * Set the parent of this object to another object
-     * and updates parent-child relationships
-     * Calling with no arguments will simply remove the parenting
-     */
-    replaceParent: function(newParent) {
-        var id = this.id, index;
-        // Release object from previous parent.
-        if (this.parent) {
-          delete this.parent.children[id];
-          index = _.indexOf(parent.additions, id);
-          if (index >= 0) {
-            this.parent.additions.splice(index, 1);
-          }
-          this.parent.subtractions.push(id);
-          this._flagSubtractions = true;
-        }
-
-        if (newParent) {
-          // Add it to this group and update parent-child relationship.
-          newParent.children[id] = this;
-          this.parent = newParent;
-          newParent.additions.push(id);
-          newParent._flagAdditions = true;
-        } else {
-          delete this.parent;
-        }
-        return this;
-    },
-
-    /**
      * To be called before render that calculates and collates all information
      * to be as up-to-date as possible for the render. Called once a frame.
      */
@@ -5615,9 +6363,14 @@ var Backbone = Backbone || {};
 
   Shape.MakeObservable(Shape.prototype);
 
-})(Two);
+})(
+  Two,
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);
 
-(function(Two) {
+(function(Two, _, Backbone, requestAnimationFrame) {
 
   /**
    * Constants
@@ -5632,11 +6385,11 @@ var Backbone = Backbone || {};
     commands[k] = new RegExp(v);
   });
 
-  var Polygon = Two.Polygon = function(vertices, closed, curved, manual) {
+  var Path = Two.Path = function(vertices, closed, curved, manual) {
 
     Two.Shape.call(this);
 
-    this._renderer.type = 'polygon';
+    this._renderer.type = 'path';
 
     this._closed = !!closed;
     this._curved = !!curved;
@@ -5666,7 +6419,7 @@ var Backbone = Backbone || {};
 
   };
 
-  _.extend(Polygon, {
+  _.extend(Path, {
 
     Properties: [
       'fill',
@@ -5696,7 +6449,7 @@ var Backbone = Backbone || {};
 
       // Only the first 8 properties are flagged like this. The subsequent
       // properties behave differently and need to be hand written.
-      _.each(Polygon.Properties.slice(0, 8), function(property) {
+      _.each(Path.Properties.slice(0, 8), function(property) {
 
         var secret = '_' + property;
         var flag = '_flag' + property.charAt(0).toUpperCase() + property.slice(1);
@@ -5786,7 +6539,7 @@ var Backbone = Backbone || {};
 
         set: function(vertices) {
 
-          var updateVertices = _.bind(Polygon.FlagVertices, this);
+          var updateVertices = _.bind(Path.FlagVertices, this);
 
           var bindVerts = _.bind(function(items) {
 
@@ -5817,7 +6570,7 @@ var Backbone = Backbone || {};
           }
 
           // Create new Collection with copy of vertices
-          this._collection = new Two.Utils.Collection(vertices.slice(0));
+          this._collection = new Two.Utils.Collection((vertices || []).slice(0));
 
           // Listen for Collection changes and bind / unbind
           this._collection.bind(Two.Events.insert, bindVerts);
@@ -5844,7 +6597,7 @@ var Backbone = Backbone || {};
 
   });
 
-  _.extend(Polygon.prototype, Two.Shape.prototype, {
+  _.extend(Path.prototype, Two.Shape.prototype, {
 
     // Flags
     // http://en.wikipedia.org/wiki/Flag
@@ -5894,9 +6647,9 @@ var Backbone = Backbone || {};
         return v.clone();
       });
 
-      var clone = new Polygon(points, this.closed, this.curved, !this.automatic);
+      var clone = new Path(points, this.closed, this.curved, !this.automatic);
 
-      _.each(Two.Shape.Properties, function(k) {
+      _.each(Two.Path.Properties, function(k) {
         clone[k] = this[k];
       }, this);
 
@@ -5942,7 +6695,7 @@ var Backbone = Backbone || {};
 
     /**
      * Orient the vertices of the shape to the upper lefthand
-     * corner of the polygon.
+     * corner of the path.
      */
     corner: function() {
 
@@ -5963,7 +6716,7 @@ var Backbone = Backbone || {};
 
     /**
      * Orient the vertices of the shape to the center of the
-     * polygon.
+     * path.
      */
     center: function() {
 
@@ -6004,26 +6757,31 @@ var Backbone = Backbone || {};
      * parameters of the group.
      */
     getBoundingClientRect: function(shallow) {
+      var matrix, border, l, x, y, i, v;
+
+      var left = Infinity, right = -Infinity,
+          top = Infinity, bottom = -Infinity;
 
       // TODO: Update this to not __always__ update. Just when it needs to.
       this._update(true);
 
-      var matrix = !!shallow ? this._matrix : getComputedMatrix(this);
+      matrix = !!shallow ? this._matrix : getComputedMatrix(this);
 
-      var border = this.linewidth / 2, x, y;
-      var left = Infinity, right = -Infinity,
-          top = Infinity, bottom = -Infinity;
+      border = this.linewidth / 2;
+      l = this._vertices.length;
 
+      for (i = 0; i < l; i++) {
+        v = this._vertices[i];
 
-      _.each(this._vertices, function(v) {
         x = v.x;
         y = v.y;
-        v = matrix.multiply(x, y , 1);
+
+        v = matrix.multiply(x, y, 1);
         top = min(v.y - border, top);
         left = min(v.x - border, left);
         right = max(v.x + border, right);
         bottom = max(v.y + border, bottom);
-      });
+      }
 
       return {
         top: top,
@@ -6038,7 +6796,7 @@ var Backbone = Backbone || {};
 
     /**
      * Given a float `t` from 0 to 1, return a point or assign a passed `obj`'s
-     * coordinates to that percentage on this Two.Polygon's curve.
+     * coordinates to that percentage on this Two.Path's curve.
      */
     getPointAt: function(t, obj) {
       var x, x1, x2, x3, x4, y, y1, y2, y3, y4, left, right;
@@ -6262,7 +7020,7 @@ var Backbone = Backbone || {};
 
       }
 
-      Two.Shape.prototype._update.call(this);
+      Two.Shape.prototype._update.apply(this, arguments);
 
       return this;
 
@@ -6272,7 +7030,7 @@ var Backbone = Backbone || {};
 
       this._flagVertices =  this._flagFill =  this._flagStroke =
          this._flagLinewidth = this._flagOpacity = this._flagVisible =
-         this._flagCap = this._flagJoin = this._flagMiter = 
+         this._flagCap = this._flagJoin = this._flagMiter =
          this._flagClip = false;
 
       Two.Shape.prototype.flagReset.call(this);
@@ -6283,7 +7041,7 @@ var Backbone = Backbone || {};
 
   });
 
-  Polygon.MakeObservable(Polygon.prototype);
+  Path.MakeObservable(Path.prototype);
 
   /**
    * Utility functions
@@ -6349,14 +7107,1055 @@ var Backbone = Backbone || {};
 
   }
 
-})(Two);
+})(
+  Two,
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);
 
-(function(Two) {
+(function(Two, _, Backbone, requestAnimationFrame) {
+
+  var Path = Two.Path;
+
+  var Line = Two.Line = function(x1, y1, x2, y2) {
+
+    var width = x2 - x1;
+    var height = y2 - y1;
+
+    var w2 = width / 2;
+    var h2 = height / 2;
+
+    Path.call(this, [
+        new Two.Anchor(- w2, - h2),
+        new Two.Anchor(w2, h2)
+    ]);
+
+    this.translation.set(x1 + w2, y1 + h2);
+
+  };
+
+  _.extend(Line.prototype, Path.prototype);
+
+  Path.MakeObservable(Line.prototype);
+
+})(
+  Two,
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);
+
+(function(Two, _, Backbone, requestAnimationFrame) {
+
+  var Path = Two.Path;
+
+  var Rectangle = Two.Rectangle = function(x, y, width, height) {
+
+    var w2 = width / 2;
+    var h2 = height / 2;
+
+    Path.call(this, [
+      new Two.Anchor(-w2, -h2),
+      new Two.Anchor(w2, -h2),
+      new Two.Anchor(w2, h2),
+      new Two.Anchor(-w2, h2)
+    ], true);
+
+    this.translation.set(x, y);
+
+  };
+
+  _.extend(Rectangle.prototype, Path.prototype);
+
+  Path.MakeObservable(Rectangle.prototype);
+
+})(
+  Two,
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);
+
+(function(Two, _, Backbone, requestAnimationFrame) {
+
+  var Path = Two.Path, TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin;
+
+  var Ellipse = Two.Ellipse = function(ox, oy, rx, ry) {
+
+    if (!_.isNumber(ry)) {
+      ry = rx;
+    }
+
+    var amount = Two.Resolution;
+
+    var points = _.map(_.range(amount), function(i) {
+      var pct = i / amount;
+      var theta = pct * TWO_PI;
+      var x = rx * cos(theta);
+      var y = ry * sin(theta);
+      return new Two.Anchor(x, y);
+    }, this);
+
+    Path.call(this, points, true, true);
+    this.translation.set(ox, oy);
+
+  };
+
+  _.extend(Ellipse.prototype, Path.prototype);
+
+  Path.MakeObservable(Ellipse.prototype);
+
+})(
+  Two,
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);
+
+(function(Two, _, Backbone, requestAnimationFrame) {
+
+  var Path = Two.Path, TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin;
+
+  var Polygon = Two.Polygon = function(ox, oy, r, sides) {
+
+    sides = Math.max(sides || 0, 3);
+
+    var points = _.map(_.range(sides), function(i) {
+      var pct = (i + 0.5) / sides;
+      var theta = TWO_PI * pct + Math.PI / 2;
+      var x = r * cos(theta);
+      var y = r * sin(theta);
+      return new Two.Anchor(x, y);
+    });
+
+    Path.call(this, points, true);
+    this.translation.set(ox, oy);
+
+  };
+
+  _.extend(Polygon.prototype, Path.prototype);
+
+  Path.MakeObservable(Polygon.prototype);
+
+})(
+  Two,
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);
+
+(function(Two, _, Backbone, requestAnimationFrame) {
+
+  var Path = Two.Path, PI = Math.PI, TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin, abs = Math.abs;
+
+  var CurvedPolygon = Two.CurvedPolygon = function(ox, oy, r, sides, mod) {
+
+    var points = [];
+    sides = Math.max(sides || 0, 3);
+    var sidesBump = sides+1;
+    var angleStep = TWO_PI / sides;
+    var bezierDelta =  PI * r / sides / 2 ;
+    mod = mod || 0;
+
+    var command = Two.Commands.move;
+    var theta = PI, x, y, lx, ly, rx, ry;
+
+    points.push(
+      new Two.Anchor(
+        sin(theta) * (r),
+        cos(theta) * (r),
+        0,0,0,0,
+        command
+      )
+    );
+
+    for (var i = 0; i < sidesBump; i++) {
+
+      theta = (angleStep * i) + PI;
+      command = Two.Commands.curve;
+
+      x = Math.sin(theta) * r;
+      y = Math.cos(theta) * r;
+
+      if (mod >= 0) {
+
+        lx = (sin(theta - (Math.PI/2))) * bezierDelta * mod;
+        ly = (cos(theta - (Math.PI/2))) * bezierDelta * mod;
+        rx = (sin(theta + (Math.PI/2))) * bezierDelta * mod;
+        ry = (cos(theta + (Math.PI/2))) * bezierDelta * mod;
+
+      } else {
+
+        lx = (sin(theta - (Math.PI))) * bezierDelta * abs(mod);
+        ly = (cos(theta - (Math.PI))) * bezierDelta * abs(mod);
+        rx = (sin(theta + (Math.PI))) * bezierDelta * abs(mod);
+        ry = (cos(theta + (Math.PI))) * bezierDelta * abs(mod);
+
+      }
+
+      if (i === 0) {
+        lx = 0;
+        ly = 0;
+      }
+
+      if (i === sidesBump - 1) {
+        rx = 0;
+        ry = 0;
+      }
+
+      points.push(new Two.Anchor(x, y, lx, ly, rx, ry, command));
+
+    }
+
+    Path.call(this, points, true, false, true);
+    this.translation.set(ox, oy);
+
+  };
+
+  _.extend(CurvedPolygon.prototype, Path.prototype);
+
+  Path.MakeObservable(CurvedPolygon.prototype);
+
+})(
+  Two,
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);
+
+(function(Two, _, Backbone, requestAnimationFrame) {
+
+  var Path = Two.Path, PI = Math.PI, TWO_PI = Math.PI * 2, HALF_PI = Math.PI/2, cos = Math.cos, sin = Math.sin, abs = Math.abs;
+
+  /*
+  @class ArcSegment
+    ox : Origin X
+    oy : Origin Y
+    ir : Inner Radius
+    or : Outer Radius
+    sa : Starting Angle
+    ea : Ending Angle
+    res : Resolution
+  */
+  var ArcSegment = Two.ArcSegment = function(ox, oy, ir, or, sa, ea, res) {
+
+    if (sa > ea) {
+      ea += Math.PI*2;
+    }
+
+    res = res || 8;
+
+    var rot = sa;
+    var ta = ea - sa;
+    var angleStep = ta / res;
+    var command = Two.Commands.move;
+    var points = [];
+
+    points.push( new Two.Anchor(
+      Math.sin(0) * or,
+      Math.cos(0) * or,
+      0,0,0,0,
+      command
+    ));
+
+
+    var theta, x, y, lx, ly, rx, ry;
+    command = Two.Commands.curve;
+
+    //Do Outer Edge
+    for (var i = 0; i < res+1; i++) {
+
+      theta = i * angleStep;
+      x = sin(theta) * or;
+      y = cos(theta) * or;
+      lx = sin(theta - HALF_PI) * (angleStep / PI) * or;
+      ly = cos(theta - HALF_PI) * (angleStep / PI) * or;
+      rx = sin(theta + HALF_PI) * (angleStep / PI) * or;
+      ry = cos(theta + HALF_PI) * (angleStep / PI) * or;
+
+      if (i===0) {
+        lx = ly = 0;
+      }
+
+      if (i===res) {
+        rx = ry = 0;
+      }
+
+      points.push( new Two.Anchor(
+        x, y, lx, ly, rx, ry, command
+      ));
+    }
+
+    //Do Inner Edge
+    for (var j = 0; j < res+1; j++) {
+
+      theta = ta - (angleStep * j);
+      x = sin(theta) * ir;
+      y = cos(theta) * ir;
+      lx = sin(theta - (PI*1.5)) * (angleStep / PI) * ir;
+      ly = cos(theta - (PI*1.5)) * (angleStep / PI) * ir;
+      rx = sin(theta + (PI*1.5)) * (angleStep / PI) * ir;
+      ry = cos(theta + (PI*1.5)) * (angleStep / PI) * ir;
+
+      if (j===0) {
+        lx = ly = 0;
+      }
+
+      if (j===res) {
+        rx = ry = 0;
+      }
+
+      points.push( new Two.Anchor(
+        x, y, lx, ly, rx, ry, command
+      ));
+    }
+
+    command = Two.Commands.close
+    points.push( new Two.Anchor(
+      Math.sin(0) * or,
+      Math.cos(0) * or,
+      0,0,0,0,
+      command
+    ));
+
+
+    Path.call(this, points, true, false, true);
+    this.rotation = sa;
+    this.translation.set(ox, oy);
+  }
+
+  _.extend(ArcSegment.prototype, Path.prototype);
+
+  Path.MakeObservable(ArcSegment.prototype);
+
+})(
+  Two,
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);
+
+(function(Two, _, Backbone, requestAnimationFrame) {
+
+  var Path = Two.Path, PI = Math.PI, TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin, abs = Math.abs;
+
+  var SineRing = Two.SineRing = function(ox, oy, r, periods, amplitude, mod) {
+
+    var size = (periods * 2) + 1;
+    var angleStep = Math.PI / periods;
+    var bezierDelta = PI * r / periods / 2;
+    mod = mod || 1;
+
+    var points = [];
+    var theta = PI, x, y, lx, ly, rx, ry;
+
+    points.push(
+      new Two.Anchor(
+        sin(theta) * (r + (amplitude/2)),
+        cos(theta) * (r + (amplitude/2)),
+        0,0,0,0,
+        Two.Commands.move
+      )
+    );
+
+    for (var i = 0; i < size; i++) {
+
+      theta = (angleStep * i) + PI;
+
+      if ((i%2) === 0) {
+        x = Math.sin(theta) * (r + (amplitude/2));
+        y = Math.cos(theta) * (r + (amplitude/2));
+      } else {
+        x = Math.sin(theta) * (r - (amplitude/2));
+        y = Math.cos(theta) * (r - (amplitude/2));
+      }
+
+      lx = ((Math.sin(theta - (Math.PI/2))) * bezierDelta) * mod;
+      ly = ((Math.cos(theta - (Math.PI/2))) * bezierDelta) * mod;
+      rx = ((Math.sin(theta + (Math.PI/2))) * bezierDelta) * mod;
+      ry = ((Math.cos(theta + (Math.PI/2))) * bezierDelta) * mod;
+
+      if (i === 0) {
+        lx = ly = 0;
+      }
+
+      if (i === size - 1) {
+        rx = ry = 0;
+      }
+
+      points.push(new Two.Anchor(x, y, lx, ly, rx, ry, Two.Commands.curve));
+
+    }
+
+    Path.call(this, points, true, false, true);
+    this.translation.set(ox, oy);
+
+  };
+
+  _.extend(SineRing.prototype, Path.prototype);
+
+  Path.MakeObservable(SineRing.prototype);
+
+})(
+  Two,
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);
+
+(function(Two, _, Backbone, requestAnimationFrame) {
+
+  var Path = Two.Path, TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin;
+
+  var Star = Two.Star = function(ox, oy, or, ir, sides) {
+
+    if (!_.isNumber(ir)) {
+      ir = or / 2;
+    }
+
+    if (!_.isNumber(sides) || sides <= 0) {
+      sides = 5;
+    }
+
+    var length = sides * 2;
+
+    var points = _.map(_.range(length), function(i) {
+      var pct = (i - 0.5) / length;
+      var theta = pct * TWO_PI;
+      var r = (i % 2 ? ir : or);
+      var x = r * cos(theta);
+      var y = r * sin(theta);
+      return new Two.Anchor(x, y);
+    });
+
+    Path.call(this, points, true);
+    this.translation.set(ox, oy);
+
+  };
+
+  _.extend(Star.prototype, Path.prototype);
+
+  Path.MakeObservable(Star.prototype);
+
+})(
+  Two,
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);
+
+(function(Two, _, Backbone, requestAnimationFrame) {
+
+  var Path = Two.Path;
+
+  var RoundedRectangle = Two.RoundedRectangle = function(ox, oy, width, height, radius) {
+
+    var w2 = width / 2;
+    var h2 = height / 2;
+    var x, y;
+
+    if (!_.isNumber(radius)) {
+      radius = Math.floor(Math.min(width, height) / 12);
+    }
+
+    var points = [
+      new Two.Anchor(- w2 + radius, - h2),
+      new Two.Anchor(w2 - radius, - h2)
+    ];
+
+    x = w2;
+    y = - h2;
+    points = roundCorner(points, x, y, radius, 1);
+
+    points.push(new Two.Anchor(w2, h2 - radius));
+
+    x = w2;
+    y = h2;
+    points = roundCorner(points, x, y, radius, 4);
+
+    points.push(new Two.Anchor(- w2 + radius, h2));
+
+    x = - w2;
+    y = h2;
+    points = roundCorner(points, x, y, radius, 3);
+
+    points.push(new Two.Anchor(- w2, - h2 + radius));
+
+    x = - w2;
+    y = - h2;
+    points = roundCorner(points, x, y, radius, 2);
+
+    points.pop();
+
+    Path.call(this, points, true);
+    this.translation.set(ox, oy);
+
+  };
+
+  _.extend(RoundedRectangle.prototype, Path.prototype);
+
+  Path.MakeObservable(RoundedRectangle.prototype);
+
+  function roundCorner(points, x, y, radius, quadrant) {
+
+    var start = 0, end = 0;
+    var length = Two.Resolution;
+
+    var a = points[points.length - 1];
+    var b = new Two.Anchor(x, y);
+
+    var xr = x < 0 ? - radius : radius;
+    var yr = y < 0 ? - radius : radius;
+
+    switch (quadrant) {
+      case 1:
+        start = - Math.PI / 2;
+        end = 0;
+        break;
+      case 2:
+        start = - Math.PI;
+        end = - Math.PI / 2;
+        break;
+      case 3:
+        start = - Math.PI * 1.5;
+        end = - Math.PI;
+        break;
+      case 4:
+        start = 0;
+        end = Math.PI / 2;
+        break;
+    }
+
+    var curve = _.map(_.range(length), function(i) {
+
+      var theta = map(length - i, 0, length, start, end);
+      var tx = radius * Math.cos(theta) + x - xr;
+      var ty = radius * Math.sin(theta) + y - yr;
+      var anchor = new Two.Anchor(tx, ty);
+
+      return anchor;
+
+    }).reverse();
+
+    return points.concat(curve);
+
+  }
+
+  function map(v, i1, i2, o1, o2) {
+    return o1 + (o2 - o1) * ((v - i1) / (i2 - i1));
+  }
+
+})(
+  Two,
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);
+
+(function(Two, _, Backbone, requestAnimationFrame) {
+
+  var Stop = function(offset, color, opacity) {
+
+    this._renderer = {};
+
+    this.offset = _.isNumber(offset) ? offset
+      : Stop.Index <= 0 ? 0 : 1;
+
+    this.opacity = _.isNumber(opacity) ? opacity : 1;
+
+    this.color = _.isString(color) ? color
+      : Stop.Index <= 0 ? '#fff' : '#000';
+
+    Stop.Index = (Stop.Index + 1) % 2;
+
+  };
+
+  _.extend(Stop, {
+
+    Index: 0,
+
+    Properties: [
+      'offset',
+      'opacity',
+      'color'
+    ],
+
+    MakeObservable: function(object) {
+
+      _.each(Stop.Properties, function(property) {
+
+        var secret = '_' + property;
+        var flag = '_flag' + property.charAt(0).toUpperCase() + property.slice(1);
+
+        Object.defineProperty(object, property, {
+          get: function() {
+            return this[secret];
+          },
+          set: function(v) {
+            this[secret] = v;
+            this[flag] = true;
+            this.trigger(Two.Events.change);  // Unique to Gradient.Stop
+          }
+        });
+
+
+      });
+
+    }
+
+  });
+
+  _.extend(Stop.prototype, Backbone.Events, {
+
+    clone: function() {
+
+      var clone = new Stop();
+
+      _.each(Stop.Properties, function(property) {
+        clone[property] = this[property];
+      }, this);
+
+      return clone;
+
+    },
+
+    toObject: function() {
+
+      var result = {};
+
+      _.each(Stop.Properties, function(k) {
+        result[k] = this[k];
+      }, this);
+
+      return result;
+
+    },
+
+    flagReset: function() {
+
+      this._flagOffset = this._flagColor = this._flagOpacity = false;
+
+      return this;
+
+    }
+
+  });
+
+  Stop.MakeObservable(Stop.prototype);
+
+  var Gradient = Two.Gradient = function(stops) {
+
+    Two.Shape.call(this);
+
+    this._renderer.type = 'gradient';
+
+    this.spread = 'pad';
+
+    this.stops = stops;
+
+  };
+
+  _.extend(Gradient, {
+
+    Stop: Stop,
+
+    Properties: [
+      'spread'
+    ],
+
+    MakeObservable: function(object) {
+
+      Two.Shape.MakeObservable(object);
+
+      _.each(Gradient.Properties, Two.Utils.defineProperty, object);
+
+      Object.defineProperty(object, 'stops', {
+
+        get: function() {
+          return this._stops;
+        },
+
+        set: function(stops) {
+
+          var updateStops = _.bind(Gradient.FlagStops, this);
+
+          var bindStops = _.bind(function(items) {
+
+            // This function is called a lot
+            // when importing a large SVG
+            var i = items.length;
+            while(i--) {
+              items[i].bind(Two.Events.change, updateStops);
+            }
+
+            updateStops();
+
+          }, this);
+
+          var unbindStops = _.bind(function(items) {
+
+            _.each(items, function(v) {
+              v.unbind(Two.Events.change, updateStops);
+            }, this);
+
+            updateStops();
+
+          }, this);
+
+          // Remove previous listeners
+          if (this._stops) {
+            this._stops.unbind();
+          }
+
+          // Create new Collection with copy of Stops
+          this._stops = new Two.Utils.Collection((stops || []).slice(0));
+
+          // Listen for Collection changes and bind / unbind
+          this._stops.bind(Two.Events.insert, bindStops);
+          this._stops.bind(Two.Events.remove, unbindStops);
+
+          // Bind Initial Stops
+          bindStops(this._stops);
+
+        }
+
+      });
+
+    },
+
+    FlagStops: function() {
+      this._flagStops = true;
+    }
+
+  });
+
+  _.extend(Gradient.prototype, Two.Shape.prototype, {
+
+    clone: function(parent) {
+
+      parent = parent || this.parent;
+
+      var stops = _.map(this.stops, function(s) {
+        return s.clone();
+      });
+
+      var clone = new Gradient(stops);
+
+      _.each(Two.Gradient.Properties, function(k) {
+        clone[k] = this[k];
+      }, this);
+
+      clone.translation.copy(this.translation);
+      clone.rotation = this.rotation;
+      clone.scale = this.scale;
+
+      parent.add(clone);
+
+      return clone;
+
+    },
+
+    toObject: function() {
+
+      var result = {
+        stops: _.map(this.stops, function(s) {
+          return s.toObject();
+        })
+      };
+
+      _.each(Gradient.Properties, function(k) {
+        result[k] = this[k];
+      }, this);
+
+      return result;
+
+    },
+
+    flagReset: function() {
+
+      this._flagSpread = this._flagStops = false;
+
+      Two.Shape.prototype.flagReset.call(this);
+
+      return this;
+
+    }
+
+  });
+
+  Gradient.MakeObservable(Gradient.prototype);
+
+})(
+  Two,
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);
+
+(function(Two, _, Backbone, requestAnimationFrame) {
+
+  var LinearGradient = Two.LinearGradient = function(x1, y1, x2, y2, stops) {
+
+    Two.Gradient.call(this, stops);
+
+    this._renderer.type = 'linear-gradient';
+
+    var flagEndPoints = _.bind(LinearGradient.FlagEndPoints, this);
+    this.left = new Two.Vector().bind(Two.Events.change, flagEndPoints);
+    this.right = new Two.Vector().bind(Two.Events.change, flagEndPoints);
+
+    if (_.isNumber(x1)) {
+      this.left.x = x1;
+    }
+    if (_.isNumber(y1)) {
+      this.left.y = y1;
+    }
+    if (_.isNumber(x2)) {
+      this.right.x = x2;
+    }
+    if (_.isNumber(y2)) {
+      this.right.y = y2;
+    }
+
+  };
+
+  _.extend(LinearGradient, {
+
+    Stop: Two.Gradient.Stop,
+
+    MakeObservable: function(object) {
+      Two.Gradient.MakeObservable(object);
+    },
+
+    FlagEndPoints: function() {
+      this._flagEndPoints = true;
+    }
+
+  });
+
+  _.extend(LinearGradient.prototype, Two.Gradient.prototype, {
+
+    _flagEndPoints: false,
+
+    clone: function(parent) {
+
+      parent = parent || this.parent;
+
+      var stops = _.map(this.stops, function(stop) {
+        return stop.clone();
+      });
+
+      var clone = new LinearGradient(this.left._x, this.left._y,
+        this.right._x, this.right._y, stops);
+
+      _.each(Two.Gradient.Properties, function(k) {
+        clone[k] = this[k];
+      }, this);
+
+      parent.add(clone);
+
+      return clone;
+
+    },
+
+    toObject: function() {
+
+      var result = Two.Gradient.prototype.toObject.call(this);
+
+      result.left = this.left.toObject();
+      result.right = this.right.toObject();
+
+      return result;
+
+    },
+
+    flagReset: function() {
+
+      this._flagEndPoints = false;
+
+      Two.Gradient.prototype.flagReset.call(this);
+
+      return this;
+
+    }
+
+  });
+
+  LinearGradient.MakeObservable(LinearGradient.prototype);
+
+})(
+  Two,
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);
+
+(function(Two, _, Backbone, requestAnimationFrame) {
+
+  var RadialGradient = Two.RadialGradient = function(cx, cy, r, stops, fx, fy) {
+
+    Two.Gradient.call(this, stops);
+
+    this._renderer.type = 'radial-gradient';
+
+    this.center = new Two.Vector()
+      .bind(Two.Events.change, _.bind(function() {
+        this._flagCenter = true;
+      }, this));
+
+    this.radius = _.isNumber(r) ? r : 20;
+
+    this.focal = new Two.Vector()
+      .bind(Two.Events.change, _.bind(function() {
+        this._flagFocal = true;
+      }, this));
+
+    if (_.isNumber(cx)) {
+      this.center.x = cx;
+    }
+    if (_.isNumber(cy)) {
+      this.center.y = cy;
+    }
+
+    this.focal.copy(this.center);
+
+    if (_.isNumber(fx)) {
+      this.focal.x = fx;
+    }
+    if (_.isNumber(fy)) {
+      this.focal.y = fy;
+    }
+
+  };
+
+  _.extend(RadialGradient, {
+
+    Stop: Two.Gradient.Stop,
+
+    Properties: [
+      'radius'
+    ],
+
+    MakeObservable: function(object) {
+
+      Two.Gradient.MakeObservable(object);
+
+      _.each(RadialGradient.Properties, Two.Utils.defineProperty, object);
+
+    }
+
+  });
+
+  _.extend(RadialGradient.prototype, Two.Gradient.prototype, {
+
+    _flagEndPoints: false,
+
+    clone: function(parent) {
+
+      parent = parent || this.parent;
+
+      var stops = _.map(this.stops, function(stop) {
+        return stop.clone();
+      });
+
+      var clone = new RadialGradient(this.center._x, this.center._y,
+          this._radius, stops, this.focal._x, this.focal._y);
+
+      _.each(Two.Gradient.Properties.concat(RadialGradient.Properties), function(k) {
+        clone[k] = this[k];
+      }, this);
+
+      parent.add(clone);
+
+      return clone;
+
+    },
+
+    toObject: function() {
+
+      var result = Two.Gradient.prototype.toObject.call(this);
+
+      _.each(RadialGradient.Properties, function(k) {
+        result[k] = this[k];
+      }, this);
+
+      result.center = this.center.toObject();
+      result.focal = this.focal.toObject();
+
+      return result;
+
+    },
+
+    flagReset: function() {
+
+      this._flagRadius = this._flagCenter = this._flagFocal = false;
+
+      Two.Gradient.prototype.flagReset.call(this);
+
+      return this;
+
+    }
+
+  });
+
+  RadialGradient.MakeObservable(RadialGradient.prototype);
+
+})(
+  Two,
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);
+
+(function(Two, _, Backbone, requestAnimationFrame) {
 
   /**
    * Constants
    */
   var min = Math.min, max = Math.max;
+
+  /**
+   * A children collection which is accesible both by index and by object id
+   * @constructor
+   */
+  var Children = function() {
+
+    Two.Utils.Collection.apply(this, arguments);
+
+    Object.defineProperty(this, '_events', {
+      value : {},
+      enumerable: false
+    });
+
+    this.ids = {};
+
+    this.on(Two.Events.insert, this.attach);
+    this.on(Two.Events.remove, this.detach);
+    Children.prototype.attach.apply(this, arguments);
+
+  };
+
+  Children.prototype = new Two.Utils.Collection();
+  Children.constructor = Children;
+
+  _.extend(Children.prototype, {
+
+    attach: function(children) {
+      for (var i = 0; i < children.length; i++) {
+        this.ids[children[i].id] = children[i];
+      }
+      return this;
+    },
+
+    detach: function(children) {
+      for (var i = 0; i < children.length; i++) {
+        delete this.ids[children[i].id];
+      }
+      return this;
+    }
+
+  });
 
   var Group = Two.Group = function() {
 
@@ -6367,15 +8166,34 @@ var Backbone = Backbone || {};
     this.additions = [];
     this.subtractions = [];
 
-    this.children = {};
+    this._children = [];
+    this.children = arguments;
 
   };
 
   _.extend(Group, {
 
+    Children: Children,
+
+    InsertChildren: function(children) {
+      for (var i = 0; i < children.length; i++) {
+        replaceParent.call(this, children[i], this);
+      }
+    },
+
+    RemoveChildren: function(children) {
+      for (var i = 0; i < children.length; i++) {
+        replaceParent.call(this, children[i]);
+      }
+    },
+
+    OrderChildren: function(children) {
+      this._flagOrder = true;
+    },
+
     MakeObservable: function(object) {
 
-      var properties = Two.Polygon.Properties.slice(0);
+      var properties = Two.Path.Properties.slice(0);
       var oi = _.indexOf(properties, 'opacity');
 
       if (oi >= 0) {
@@ -6389,8 +8207,9 @@ var Backbone = Backbone || {};
           },
 
           set: function(v) {
+            // Only set flag if there is an actual difference
+            this._flagOpacity = (this._opacity != v);
             this._opacity = v;
-            this._flagOpacity = true;
           }
 
         });
@@ -6399,6 +8218,28 @@ var Backbone = Backbone || {};
 
       Two.Shape.MakeObservable(object);
       Group.MakeGetterSetters(object, properties);
+
+      Object.defineProperty(object, 'children', {
+        get: function() {
+          return this._collection;
+        },
+        set: function(children) {
+
+          var insertChildren = _.bind(Group.InsertChildren, this);
+          var removeChildren = _.bind(Group.RemoveChildren, this);
+          var orderChildren = _.bind(Group.OrderChildren, this);
+
+          if (this._collection) {
+            this._collection.unbind();
+          }
+
+          this._collection = new Children(children);
+          this._collection.bind(Two.Events.insert, insertChildren);
+          this._collection.bind(Two.Events.remove, removeChildren);
+          this._collection.bind(Two.Events.order, orderChildren);
+
+        }
+      });
 
       Object.defineProperty(object, 'mask', {
         get: function() {
@@ -6454,6 +8295,7 @@ var Backbone = Backbone || {};
 
     _flagAdditions: false,
     _flagSubtractions: false,
+    _flagOrder: false,
     _flagOpacity: true,
 
     _flagMask: false,
@@ -6502,6 +8344,11 @@ var Backbone = Backbone || {};
 
     },
 
+    /**
+     * Export the data from the instance of Two.Group into a plain JavaScript
+     * object. This also makes all children plain JavaScript objects. Great
+     * for turning into JSON and storing in a database.
+     */
     toObject: function() {
 
       var result = {
@@ -6528,7 +8375,7 @@ var Backbone = Backbone || {};
       var rect = this.getBoundingClientRect(true),
        corner = { x: rect.left, y: rect.top };
 
-      _.each(this.children, function(child) {
+      this.children.forEach(function(child) {
         child.translation.subSelf(corner);
       });
 
@@ -6549,7 +8396,7 @@ var Backbone = Backbone || {};
         y: rect.top + rect.height / 2
       };
 
-      _.each(this.children, function(child) {
+      this.children.forEach(function(child) {
         child.translation.subSelf(rect.centroid);
       });
 
@@ -6567,11 +8414,14 @@ var Backbone = Backbone || {};
       var search = function (node, id) {
         if (node.id === id) {
           return node;
+        } else if (node.children) {
+          var i = node.children.length;
+          while (i--) {
+            var found = search(node.children[i], id);
+            if (found) return found;
+          }
         }
-        for (var child in node.children) {
-          var found = search(node.children[child], id);
-          if (found) return found;
-        }
+
       };
       return search(this, id) || null;
     },
@@ -6585,9 +8435,10 @@ var Backbone = Backbone || {};
       var search = function (node, cl) {
         if (node.classList.indexOf(cl) != -1) {
           found.push(node);
-        }
-        for (var child in node.children) {
-          search(node.children[child], cl);
+        } else if (node.children) {
+          node.children.forEach(function (child) {
+            search(child, cl);
+          });
         }
         return found;
       };
@@ -6619,44 +8470,20 @@ var Backbone = Backbone || {};
      */
     add: function(objects) {
 
-      var l = arguments.length,
-        children = this.children,
-        grandparent = this.parent,
-        ids = this.additions,
-        id, parent, index;
-
-      if (!_.isArray(objects)) {
+      // Allow to pass multiple objects either as array or as multiple arguments
+      // If it's an array also create copy of it in case we're getting passed
+      // a childrens array directly.
+      if (!(objects instanceof Array)) {
         objects = _.toArray(arguments);
+      } else {
+        objects = objects.slice();
       }
 
       // Add the objects
-
-      _.each(objects, function(object) {
-
-        if (!object) {
-          return;
-        }
-
-        id = object.id;
-        parent = object.parent;
-
-        if (_.isUndefined(children[id])) {
-          // Release object from previous parent.
-          if (parent) {
-            delete parent.children[id];
-            index = _.indexOf(parent.additions, id);
-            if (index >= 0) {
-              parent.additions.splice(index, 1);
-            }
-          }
-          // Add it to this group and update parent-child relationship.
-          children[id] = object;
-          object.parent = this;
-          ids.push(id);
-          this._flagAdditions = true;
-        }
-
-      }, this);
+      for (var i = 0; i < objects.length; i++) {
+        if (!(objects[i] && objects[i].id)) continue;
+        this.children.push(objects[i]);
+      }
 
       return this;
 
@@ -6668,42 +8495,29 @@ var Backbone = Backbone || {};
     remove: function(objects) {
 
       var l = arguments.length,
-        children = this.children,
-        grandparent = this.parent,
-        ids = this.subtractions,
-        id, parent, index, grandchildren;
+        grandparent = this.parent;
 
+      // Allow to call remove without arguments
+      // This will detach the object from the scene.
       if (l <= 0 && grandparent) {
         grandparent.remove(this);
         return this;
       }
 
-      if (!_.isArray(objects)) {
+      // Allow to pass multiple objects either as array or as multiple arguments
+      // If it's an array also create copy of it in case we're getting passed
+      // a childrens array directly.
+      if (!(objects instanceof Array)) {
         objects = _.toArray(arguments);
+      } else {
+        objects = objects.slice();
       }
 
-      _.each(objects, function(object) {
-
-        id = object.id;
-        grandchildren = object.children;
-        parent = object.parent;
-
-        if (!(id in children)) {
-          return;
-        }
-
-        delete children[id];
-        delete object.parent;
-
-        index = _.indexOf(parent.additions, id);
-        if (index >= 0) {
-          parent.additions.splice(index, 1);
-        }
-
-        ids.push(id);
-        this._flagSubtractions = true;
-
-      }, this);
+      // Remove the objects
+      for (var i = 0; i < objects.length; i++) {
+        if (!objects[i] || !(this.children.ids[objects[i].id])) continue;
+        this.children.splice(_.indexOf(this.children, objects[i]), 1);
+      }
 
       return this;
 
@@ -6713,7 +8527,7 @@ var Backbone = Backbone || {};
      * Return an object with top, left, right, bottom, width, and height
      * parameters of the group.
      */
-    getBoundingClientRect: function() {
+    getBoundingClientRect: function(shallow) {
       var rect;
 
       // TODO: Update this to not __always__ update. Just when it needs to.
@@ -6723,9 +8537,13 @@ var Backbone = Backbone || {};
       var left = Infinity, right = -Infinity,
           top = Infinity, bottom = -Infinity;
 
-      _.each(this.children, function(child) {
+      this.children.forEach(function(child) {
 
-        rect = child.getBoundingClientRect();
+        if (/(linear-gradient|radial-gradient|gradient)/.test(child._renderer.type)) {
+          return;
+        }
+
+        rect = child.getBoundingClientRect(shallow);
 
         if (!_.isNumber(rect.top)   || !_.isNumber(rect.left)   ||
             !_.isNumber(rect.right) || !_.isNumber(rect.bottom)) {
@@ -6754,7 +8572,7 @@ var Backbone = Backbone || {};
      * Trickle down of noFill
      */
     noFill: function() {
-      _.each(this.children, function(child) {
+      this.children.forEach(function(child) {
         child.noFill();
       });
       return this;
@@ -6764,7 +8582,7 @@ var Backbone = Backbone || {};
      * Trickle down of noStroke
      */
     noStroke: function() {
-      _.each(this.children, function(child) {
+      this.children.forEach(function(child) {
         child.noStroke();
       });
       return this;
@@ -6775,7 +8593,7 @@ var Backbone = Backbone || {};
      */
     subdivide: function() {
       var args = arguments;
-      _.each(this.children, function(child) {
+      this.children.forEach(function(child) {
         child.subdivide.apply(child, args);
       });
       return this;
@@ -6793,7 +8611,7 @@ var Backbone = Backbone || {};
         this._flagSubtractions = false;
       }
 
-      this._flagMask = this._flagOpacity = false;
+      this._flagOrder = this._flagMask = this._flagOpacity = false;
 
       Two.Shape.prototype.flagReset.call(this);
 
@@ -6805,4 +8623,60 @@ var Backbone = Backbone || {};
 
   Group.MakeObservable(Group.prototype);
 
-})(Two);
+  /**
+   * Helper function used to sync parent-child relationship within the
+   * `Two.Group.children` object.
+   *
+   * Set the parent of the passed object to another object
+   * and updates parent-child relationships
+   * Calling with one arguments will simply remove the parenting
+   */
+  function replaceParent(child, newParent) {
+
+    var parent = child.parent;
+    var index;
+
+    if (parent && parent.children.ids[child.id]) {
+
+      index = _.indexOf(parent.children, child);
+      parent.children.splice(index, 1);
+
+      // If we're passing from one parent to another...
+      index = _.indexOf(parent.additions, child);
+
+      if (index >= 0) {
+        parent.additions.splice(index, 1);
+      } else {
+        parent.subtractions.push(child);
+        parent._flagSubtractions = true;
+      }
+
+    }
+
+    if (newParent) {
+      child.parent = newParent;
+      this.additions.push(child);
+      this._flagAdditions = true;
+      return;
+    }
+
+    // If we're passing from one parent to another...
+    index = _.indexOf(this.additions, child);
+
+    if (index >= 0) {
+      this.additions.splice(index, 1);
+    } else {
+      this.subtractions.push(child);
+      this._flagSubtractions = true;
+    }
+
+    delete child.parent;
+
+  }
+
+})(
+  Two,
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);

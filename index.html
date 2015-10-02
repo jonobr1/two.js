@@ -175,7 +175,7 @@
         <li>
           <h3>Scenegraph</h3>
           <p>
-            At its core two.js relies on a <a href="http://en.wikipedia.org/wiki/Scene_graph">scenegraph</a>. This means that when you draw or create an object (a <code>Two.Polygon</code> or <code>Two.Group</code>), two actually stores and remembers that. After you make the object you can apply any number of operations to it — e.g: <code>rotation</code>, <code>translation</code>, <code>scale</code>, etc..
+            At its core two.js relies on a <a href="http://en.wikipedia.org/wiki/Scene_graph">scenegraph</a>. This means that when you draw or create an object (a <code>Two.Path</code> or <code>Two.Group</code>), two actually stores and remembers that. After you make the object you can apply any number of operations to it — e.g: <code>rotation</code>, <code>translation</code>, <code>scale</code>, etc..
           </p>
         </li>
         <li>
@@ -331,7 +331,7 @@ two.bind('update', function(frameCount) {
 
       <ul id="documentation-toc">
         <li><a href="#two-class">Two</a></li>
-        <li><a href="#two-polygon">Two.Polygon</a></li>
+        <li><a href="#two-path">Two.Path</a></li>
         <li><a href="#two-group">Two.Group</a></li>
         <li><a href="#two-anchor">Two.Anchor</a></li>
         <li><a href="#two-vector">Two.Vector</a></li>
@@ -536,7 +536,7 @@ two.bind('update', function(frameCount) {
             <strong>makeLine</strong> <code>two.makeLine(x1, y1, x2, y2);</code>
           </p>
           <p class="description">
-            Draws a line between two coordinates to the instance&apos;s drawing space where <code>x1</code>, <code>y1</code> are the x, y values for the first coordinate and <code>x2</code>, <code>y2</code> are the x, y values for the second coordinate. It returns a <code>Two.Polygon</code> object.
+            Draws a line between two coordinates to the instance&apos;s drawing space where <code>x1</code>, <code>y1</code> are the x, y values for the first coordinate and <code>x2</code>, <code>y2</code> are the x, y values for the second coordinate. It returns a <code>Two.Path</code> object.
           </p>
         </li>
         <li id="two-makerectangle">
@@ -544,7 +544,7 @@ two.bind('update', function(frameCount) {
             <strong>makeRectangle</strong> <code>two.makeRectangle(x, y, width, height);</code>
           </p>
           <p class="description">
-            Draws a rectangle to the instance&apos;s drawing space where <code>x</code>, <code>y</code> are the x, y values for the center point of the rectangle and <code>width</code>, <code>height</code> represents the width and height of the rectangle. It returns a <code>Two.Polygon</code> object.
+            Draws a rectangle to the instance&apos;s drawing space where <code>x</code>, <code>y</code> are the x, y values for the center point of the rectangle and <code>width</code>, <code>height</code> represents the width and height of the rectangle. It returns a <code>Two.Path</code> object.
           </p>
         </li>
         <li id="two-makecircle">
@@ -552,7 +552,7 @@ two.bind('update', function(frameCount) {
             <strong>makeCircle</strong> <code>two.makeCircle(x, y, radius);</code>
           </p>
           <p class="description">
-            Draws a circle to the instance&apos;s drawing space where <code>x</code>, <code>y</code> are the x, y values for the center point of the circle and <code>radius</code> is the radius of the circle. It returns a <code>Two.Polygon</code> object.
+            Draws a circle to the instance&apos;s drawing space where <code>x</code>, <code>y</code> are the x, y values for the center point of the circle and <code>radius</code> is the radius of the circle. It returns a <code>Two.Path</code> object.
           </p>
         </li>
         <li id="two-makeellipse">
@@ -560,7 +560,7 @@ two.bind('update', function(frameCount) {
             <strong>makeEllipse</strong> <code>two.makeEllipse(x, y, width, height);</code>
           </p>
           <p class="description">
-            Draws an ellipse to the instance&apos;s drawing space where <code>x</code>, <code>y</code> are the x, y values for the center point of the ellipse and <code>width</code>, <code>height</code> are the dimensions of the ellipse. It returns a <code>Two.Polygon</code> object.
+            Draws an ellipse to the instance&apos;s drawing space where <code>x</code>, <code>y</code> are the x, y values for the center point of the ellipse and <code>width</code>, <code>height</code> are the dimensions of the ellipse. It returns a <code>Two.Path</code> object.
           </p>
         </li>
         <li id="two-makecurve">
@@ -568,7 +568,7 @@ two.bind('update', function(frameCount) {
             <strong>makeCurve</strong> <code>two.makeCurve(x1, y1, x2, y2, xN, yN, open);</code>
           </p>
           <p class="description">
-            Draws a curved polygon to the instance&apos;s drawing space. <strong>The arguments are a little tricky</strong>. It returns a <code>Two.Polygon</code> object.
+            Draws a curved path to the instance&apos;s drawing space. <strong>The arguments are a little tricky</strong>. It returns a <code>Two.Path</code> object.
           </p>
           <p class="detail">
             The method accepts any amount of paired x, y values as denoted by the series above. It then checks to see if there is a final argument, a boolean <code>open</code>, which marks whether or not the shape should be open. If <code>true</code> the curve will have two clear endpoints, otherwise it will be closed.
@@ -577,21 +577,21 @@ two.bind('update', function(frameCount) {
             This method also recognizes the format <code>two.makeCurve(points, open)</code> where points is an array of <code>Two.Anchor</code>&apos;s and open is an optional boolean describing whether or not to expose endpoints. <em>It is imperative if you generate curves this way to make the list of points <code>Two.Anchor</code>&apos;s</em>.
           </p>
         </li>
-        <li id="two-makepolygon">
+        <li id="two-makepath">
           <p class="property function declaration">
-            <strong>makePolygon</strong> <code>two.makePolygon(x1, y1, x2, y2, xN, yN, open);</code>
+            <strong>makePath</strong> <code>two.makePath(x1, y1, x2, y2, xN, yN, open);</code>
           </p>
           <p class="description">
-            Draws a polygon to the instance&apos;s drawing space. <strong>The arguments are a little tricky</strong>. It returns a <code>Two.Polygon</code> object.
+            Draws a path to the instance&apos;s drawing space. <strong>The arguments are a little tricky</strong>. It returns a <code>Two.Path</code> object.
           </p>
           <p class="detail">
-            The method accepts any amount of paired x, y values as denoted by the series above. It then checks to see if there is a final argument, a boolean <code>open</code>, which marks whether or not the shape should be open. If <code>true</code> the polygon will have two clear endpoints, otherwise it will be closed.
+            The method accepts any amount of paired x, y values as denoted by the series above. It then checks to see if there is a final argument, a boolean <code>open</code>, which marks whether or not the shape should be open. If <code>true</code> the path will have two clear endpoints, otherwise it will be closed.
           </p>
           <p class="detail">
-            This method also recognizes the format <code>two.makePolygon(points, open)</code> where points is an array of <code>Two.Anchor</code>&apos;s and open is an optional boolean describing whether or not to expose endpoints. <em>It is imperative if you generate curves this way to make the list of points <code>Two.Anchor</code>&apos;s</em>.
+            This method also recognizes the format <code>two.makePath(points, open)</code> where points is an array of <code>Two.Anchor</code>&apos;s and open is an optional boolean describing whether or not to expose endpoints. <em>It is imperative if you generate curves this way to make the list of points <code>Two.Anchor</code>&apos;s</em>.
           </p>
           <p class="nota-bene">
-            The <code>Two.Polygon</code> that this method creates is the base shape for all of the make functions.
+            The <code>Two.Path</code> that this method creates is the base shape for all of the make functions.
           </p>
         </li>
         <li id="two-makegroup">
@@ -599,7 +599,7 @@ two.bind('update', function(frameCount) {
             <strong>makeGroup</strong> <code>two.makeGroup(objects);</code>
           </p>
           <p class="description">
-            Adds a group to the instance&apos;s drawing space. While a group does not have any visible features when rendered it allows for nested transformations on shapes. See <code>Two.Group</code> for more information. It accepts an array of objects, <code>Two.Polygon</code>s or <code>Two.Group</code>s. As well as a list of objects as the arguments, <code>two.makeGroup(o1, o2, oN)</code>. It returns a <code>Two.Group</code> object.
+            Adds a group to the instance&apos;s drawing space. While a group does not have any visible features when rendered it allows for nested transformations on shapes. See <code>Two.Group</code> for more information. It accepts an array of objects, <code>Two.Path</code>s or <code>Two.Group</code>s. As well as a list of objects as the arguments, <code>two.makeGroup(o1, o2, oN)</code>. It returns a <code>Two.Group</code> object.
           </p>
         </li>
         <li id="two-interpret">
@@ -607,7 +607,7 @@ two.bind('update', function(frameCount) {
             <strong>interpret</strong> <code>two.interpret(svgNode);</code>
           </p>
           <p class="description">
-            Reads an svg node and draws the svg object by creating <code>Two.Polygon</code>s and <code>Two.Group</code>s from the reference. It then adds it to the instance&apos;s drawing space. It returns an <code>Two.Group</code> object.
+            Reads an svg node and draws the svg object by creating <code>Two.Path</code>s and <code>Two.Group</code>s from the reference. It then adds it to the instance&apos;s drawing space. It returns an <code>Two.Group</code> object.
           </p>
         </li>
         <li id="two-bind">
@@ -642,7 +642,7 @@ two.bind('update', function(frameCount) {
             <strong>Collection</strong> <code>Two.Utils.Collection</code>
           </p>
           <p class="description">
-            A databound instance of an array, used for <code>vertices</code> attribute of a <code>Two.Polygon</code>.
+            A databound instance of an array, used for <code>vertices</code> attribute of a <code>Two.Path</code>.
           </p>
         </li>
         <li id="two-types">
@@ -718,253 +718,253 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
 
-        <!-- Two.Polygon -->
-        <div id="two-polygon"></div>
-        <li class="title"><h3>Two.Polygon</h3></li>
+        <!-- Two.Path -->
+        <div id="two-path"></div>
+        <li class="title"><h3>Two.Path</h3></li>
         <li class="description">
-          This is the base class for creating all drawable shapes in two.js. Unless specified methods return their instance of <code>Two.Polygon</code> for the purpose of chaining.
+          This is the base class for creating all drawable shapes in two.js. Unless specified methods return their instance of <code>Two.Path</code> for the purpose of chaining.
         </li>
-        <li id="polygon-construction">
+        <li id="path-construction">
           <p class="construction declaration">
-            <strong>construction</strong> <code>var polygon = new Two.Polygon(vertices, closed, curved, manual);</code>
+            <strong>construction</strong> <code>var path = new Two.Path(vertices, closed, curved, manual);</code>
           </p>
           <p>
-            A polygon takes an array of <code>vertices</code> which are made up of <code>Two.Anchor</code>s. This is essential for the two-way databinding. It then takes two booleans, <code>closed</code> and <code>curved</code> which delineate whether the shape should be closed (lacking endpoints) and whether the shape should calculate curves or straight lines between the vertices. Finally, manual is an optional argument if you&apos;d like to override the default behavior of two.js and handle anchor positions yourself. Generally speaking, this isn&apos;t something you need to deal with, although some great usecases arise from this customability, e.g: advanced curve manipulation.
+            A path takes an array of <code>vertices</code> which are made up of <code>Two.Anchor</code>s. This is essential for the two-way databinding. It then takes two booleans, <code>closed</code> and <code>curved</code> which delineate whether the shape should be closed (lacking endpoints) and whether the shape should calculate curves or straight lines between the vertices. Finally, manual is an optional argument if you&apos;d like to override the default behavior of two.js and handle anchor positions yourself. Generally speaking, this isn&apos;t something you need to deal with, although some great usecases arise from this customability, e.g: advanced curve manipulation.
           </p>
           <p class="nota-bene">
-            If you are constructing groups this way instead of <code>two.makePolygon()</code>, then don&apos;t forget to add the group to the instance&apos;s scene, <code>two.add(group)</code>.
+            If you are constructing groups this way instead of <code>two.makePath()</code>, then don&apos;t forget to add the group to the instance&apos;s scene, <code>two.add(group)</code>.
           </p>
         </li>
-        <li id="polygon-id">
+        <li id="path-id">
           <p class="property number declaration">
-            <strong>id</strong> <code>polygon.id</code>
+            <strong>id</strong> <code>path.id</code>
           </p>
           <p class="description">
-            The id of the polygon. In the svg renderer this is the same number as the <code>id</code> attribute given to the corresponding node. i.e: if <code>polygon.id = 4</code> then <code>document.querySelector('#two-' + group.id)</code> will return the corresponding svg node.
+            The id of the path. In the svg renderer this is the same number as the <code>id</code> attribute given to the corresponding node. i.e: if <code>path.id = 4</code> then <code>document.querySelector('#two-' + group.id)</code> will return the corresponding svg node.
           </p>
         </li>
-        <li id="polygon-stroke">
+        <li id="path-stroke">
           <p class="property string declaration">
-            <strong>stroke</strong> <code>polygon.stroke</code>
+            <strong>stroke</strong> <code>path.stroke</code>
           </p>
           <p class="description">
-            A string representing the color for the stroke of the polygon. All valid css representations of color are accepted.
+            A string representing the color for the stroke of the path. All valid css representations of color are accepted.
           </p>
         </li>
-        <li id="polygon-fill">
+        <li id="path-fill">
           <p class="property string declaration">
-            <strong>fill</strong> <code>polygon.fill</code>
+            <strong>fill</strong> <code>path.fill</code>
           </p>
           <p class="description">
             A string representing the color for the area of the vertices. All valid css representations of color are accepted.
           </p>
         </li>
-        <li id="polygon-linewidth">
+        <li id="path-linewidth">
           <p class="property number declaration">
-            <strong>linewidth</strong> <code>polygon.linewidth</code>
+            <strong>linewidth</strong> <code>path.linewidth</code>
           </p>
           <p class="description">
-            A number representing the thickness the polygon&apos;s strokes. Must be a positive number.
+            A number representing the thickness the path&apos;s strokes. Must be a positive number.
           </p>
         </li>
-        <li id="polygon-opacity">
+        <li id="path-opacity">
           <p class="property number declaration">
-            <strong>opacity</strong> <code>polygon.opacity</code>
+            <strong>opacity</strong> <code>path.opacity</code>
           </p>
           <p class="description">
-            A number representing the opacity of the polygon. Use strictly for setting. Must be a number 0-1.
+            A number representing the opacity of the path. Use strictly for setting. Must be a number 0-1.
           </p>
         </li>
-        <li id="polygon-cap">
+        <li id="path-cap">
           <p class="property string declaration">
-            <strong>cap</strong> <code>polygon.cap</code>
+            <strong>cap</strong> <code>path.cap</code>
           </p>
           <p class="description">
             A string representing the type of stroke cap to render. All applicable values can be found on the <a href="http://www.w3.org/TR/SVG/images/painting/linecap.svg" target="_blank">w3c</a> spec. Defaults to <code>"round"</code>.
           </p>
         </li>
-        <li id="polygon-join">
+        <li id="path-join">
           <p class="property string declaration">
-            <strong>join</strong> <code>polygon.join</code>
+            <strong>join</strong> <code>path.join</code>
           </p>
           <p class="description">
             A string representing the type of stroke join to render. All applicable values can be found on the <a href="http://www.w3.org/TR/SVG/images/painting/linejoin.svg" target="_blank">w3c</a> spec. Defaults to <code>"round"</code>.
           </p>
         </li>
-        <li id="polygon-miter">
+        <li id="path-miter">
           <p class="property number declaration">
-            <strong>miter</strong> <code>polygon.miter</code>
+            <strong>miter</strong> <code>path.miter</code>
           </p>
           <p class="description">
             A number representing the miter limit for the stroke. Defaults to 1.
           </p>
         </li>
-        <li id="polygon-rotation">
+        <li id="path-rotation">
           <p class="property number declaration">
-            <strong>rotation</strong> <code>polygon.rotation</code>
+            <strong>rotation</strong> <code>path.rotation</code>
           </p>
           <p class="description">
-            A number that represents the rotation of the polygon in the drawing space, in <a href="http://en.wikipedia.org/wiki/Radian" target="_blank">radians</a>.
+            A number that represents the rotation of the path in the drawing space, in <a href="http://en.wikipedia.org/wiki/Radian" target="_blank">radians</a>.
           </p>
         </li>
-        <li id="polygon-scale">
+        <li id="path-scale">
           <p class="property number declaration">
-            <strong>scale</strong> <code>polygon.scale</code>
+            <strong>scale</strong> <code>path.scale</code>
           </p>
           <p class="description">
-            A number that represents the uniform scale of the polygon in the drawing space.
+            A number that represents the uniform scale of the path in the drawing space.
           </p>
         </li>
-        <li id="polygon-translation">
+        <li id="path-translation">
           <p class="property object declaration">
-            <strong>translation</strong> <code>polygon.translation</code>
+            <strong>translation</strong> <code>path.translation</code>
           </p>
           <p class="description">
-            A <code>Two.Vector</code> that represents x, y translation of the polygon in the drawing space.
+            A <code>Two.Vector</code> that represents x, y translation of the path in the drawing space.
           </p>
         </li>
-        <li id="polygon-parent">
+        <li id="path-parent">
           <p class="property object declaration">
-            <strong>parent</strong> <code>polygon.parent</code>
+            <strong>parent</strong> <code>path.parent</code>
           </p>
           <p class="description">
             A reference to the <code>Two.Group</code> that contains this instance.
           </p>
         </li>
-        <li id="polygon-vertices">
+        <li id="path-vertices">
           <p class="property array declaration">
-            <strong>vertices</strong> <code>polygon.vertices</code>
+            <strong>vertices</strong> <code>path.vertices</code>
           </p>
           <p class="description">
             An <code>Two.Utils.Collection</code> of <code>Two.Anchor</code>s that is two-way databound. Individual vertices may be manipulated, however <strong>it is imperative that the array itself does not get manipulated</strong>.
           </p>
         </li>
-        <li id="polygon-closed">
+        <li id="path-closed">
           <p class="property boolean declaration">
-            <strong>closed</strong> <code>polygon.closed</code>
+            <strong>closed</strong> <code>path.closed</code>
           </p>
           <p class="description">
-            Boolean that describes whether the polygon is closed or not.
+            Boolean that describes whether the path is closed or not.
           </p>
         </li>
-        <li id="polygon-curved">
+        <li id="path-curved">
           <p class="property boolean declaration">
-            <strong>curved</strong> <code>polygon.curved</code>
+            <strong>curved</strong> <code>path.curved</code>
           </p>
           <p class="description">
-            Boolean that describes whether the polygon is curved or not.
+            Boolean that describes whether the path is curved or not.
           </p>
         </li>
-        <li id="polygon-automatic">
+        <li id="path-automatic">
           <p class="property boolean declaration">
-            <strong>automatic</strong> <code>polygon.automatic</code>
+            <strong>automatic</strong> <code>path.automatic</code>
           </p>
           <p class="description">
-            Boolean that describes whether the polygon should automatically dictate how <code>Two.Anchor</code>s behave. This defaults to <code>true</code>.
+            Boolean that describes whether the path should automatically dictate how <code>Two.Anchor</code>s behave. This defaults to <code>true</code>.
           </p>
         </li>
-        <li id="polygon-beginning">
+        <li id="path-beginning">
           <p class="property number declaration">
-            <strong>beginning</strong> <code>polygon.beginning</code>
+            <strong>beginning</strong> <code>path.beginning</code>
           </p>
           <p class="description">
             A number, 0-1, that is mapped to the layout and order of vertices. It represents which of the vertices from beginning to end should start the shape. <em>Exceedingly helpful for animating strokes</em>. Defaults to 0.
           </p>
         </li>
-        <li id="polygon-ending">
+        <li id="path-ending">
           <p class="property number declaration">
-            <strong>ending</strong> <code>polygon.ending</code>
+            <strong>ending</strong> <code>path.ending</code>
           </p>
           <p class="description">
             A number, 0-1, that is mapped to the layout and order of vertices. It represents which of the vertices from beginning to end should end the shape. <em>Exceedingly helpful for animating strokes</em>. Defaults to 1.
           </p>
         </li>
-        <li id="polygon-clip">
+        <li id="path-clip">
           <p class="property boolean declaration">
-            <strong>clip</strong> <code>polygon.clip</code>
+            <strong>clip</strong> <code>path.clip</code>
           </p>
           <p class="description">
             A boolean describing whether to render this shape as a <a href="https://www.google.com/webhp?sourceid=chrome-instant&ion=1&espv=2&ie=UTF-8#q=clipping%20mask%20definition" target="_blank">clipping mask</a>. <em>This property is set automatically in correspondence with <a href="#group-mask"><code>Two.Group.mask</code></em></a>. Defaults to <code>false</code>.
           </p>
         </li>
-        <li id="polygon-clone">
+        <li id="path-clone">
           <p class="property function declaration">
-            <strong>clone</strong> <code>polygon.clone();</code>
+            <strong>clone</strong> <code>path.clone();</code>
           </p>
           <p class="description">
-            Returns a new instance of a <code>Two.Polygon</code> with the same settings.
+            Returns a new instance of a <code>Two.Path</code> with the same settings.
           </p>
         </li>
-        <li id="polygon-center">
+        <li id="path-center">
           <p class="property function declaration">
-            <strong>center</strong> <code>polygon.center();</code>
+            <strong>center</strong> <code>path.center();</code>
           </p>
           <p class="description">
             Anchors all vertices around the centroid of the group.
           </p>
         </li>
-        <li id="polygon-addto">
+        <li id="path-addto">
           <p class="property function declaration">
-            <strong>addTo</strong> <code>polygon.addTo(group);</code>
+            <strong>addTo</strong> <code>path.addTo(group);</code>
           </p>
           <p class="description">
             Adds the instance to a <code>Two.Group</code>.
           </p>
         </li>
-        <li id="polygon-remove">
+        <li id="path-remove">
           <p class="property function declaration">
-            <strong>remove</strong> <code>polygon.remove();</code>
+            <strong>remove</strong> <code>path.remove();</code>
           </p>
           <p class="description">
             If added to a <code>two.scene</code> this method removes itself from it.
           </p>
         </li>
-        <li id="polygon-getboundingclientrect">
+        <li id="path-getboundingclientrect">
           <p class="property function declaration">
-            <strong>getBoundingClientRect</strong> <code>polygon.getBoundingClientRect(shallow);</code>
+            <strong>getBoundingClientRect</strong> <code>path.getBoundingClientRect(shallow);</code>
           </p>
           <p class="description">
-            Returns an object with top, left, right, bottom, width, and height parameters representing the bounding box of the polygon. Pass <code>true</code> if you&apos;re interested in the shallow positioning, i.e in the space directly affecting the object and not where it is nested.
+            Returns an object with top, left, right, bottom, width, and height parameters representing the bounding box of the path. Pass <code>true</code> if you&apos;re interested in the shallow positioning, i.e in the space directly affecting the object and not where it is nested.
           </p>
         </li>
-        <li id="polygon-nofill">
+        <li id="path-nofill">
           <p class="property function declaration">
-            <strong>noFill</strong> <code>polygon.noFill();</code>
+            <strong>noFill</strong> <code>path.noFill();</code>
           </p>
           <p class="description">
             Removes the fill.
           </p>
         </li>
-        <li id="polygon-nostroke">
+        <li id="path-nostroke">
           <p class="property function declaration">
-            <strong>noStroke</strong> <code>polygon.noStroke();</code>
+            <strong>noStroke</strong> <code>path.noStroke();</code>
           </p>
           <p class="description">
             Removes the stroke.
           </p>
         </li>
-        <li id="polygon-plot">
+        <li id="path-plot">
           <p class="property function declaration">
-            <strong>plot</strong> <code>polygon.plot();</code>
+            <strong>plot</strong> <code>path.plot();</code>
           </p>
           <p class="description">
             If curved goes through the vertices and calculates the curve. If not, then goes through the vertices and calculates the lines.
           </p>
         </li>
-        <li id="polygon-subdivide">
+        <li id="path-subdivide">
           <p class="property function declaration">
-            <strong>subdivide</strong> <code>polygon.subdivide();</code>
+            <strong>subdivide</strong> <code>path.subdivide();</code>
           </p>
           <p class="description">
             Creates a new set of vertices that are <code>lineTo</code> anchors. For previously straight lines the anchors remain the same. For curved lines, however, <code>Two.Utils.subdivide</code> is used to generate a new set of straight lines that are perceived as a curve.
           </p>
         </li>
-        <li id="polygon-makeobservable">
+        <li id="path-makeobservable">
           <p class="property static function declaration">
-            <strong>MakeObservable</strong> <code>Two.Polygon.MakeObservable();</code>
+            <strong>MakeObservable</strong> <code>Two.Path.MakeObservable();</code>
           </p>
           <p class="description">
-            Convenience method to make getter / setter properties specific to <code>Two.Polygon</code>.
+            Convenience method to make getter / setter properties specific to <code>Two.Path</code>.
           </p>
         </li>
 
@@ -1091,7 +1091,7 @@ two.bind('update', function(frameCount) {
             <strong>mask</strong> <code>group.mask</code>
           </p>
           <p class="description">
-            A reference to the <code>Two.Polygon</code> that masks the content within the group. Automatically sets the referenced <code>Two.Polygon.clip</code> to <code>true</code>.
+            A reference to the <code>Two.Path</code> that masks the content within the group. Automatically sets the referenced <code>Two.Path.clip</code> to <code>true</code>.
           </p>
         </li>
         <li id="group-clone">
@@ -1142,7 +1142,7 @@ two.bind('update', function(frameCount) {
             <strong>getBoundingClientRect</strong> <code>group.getBoundingClientRect(shallow);</code>
           </p>
           <p class="description">
-            Returns an object with top, left, right, bottom, width, and height parameters representing the bounding box of the polygon. Pass <code>true</code> if you&apos;re interested in the shallow positioning, i.e in the space directly affecting the object and not where it is nested.
+            Returns an object with top, left, right, bottom, width, and height parameters representing the bounding box of the path. Pass <code>true</code> if you&apos;re interested in the shallow positioning, i.e in the space directly affecting the object and not where it is nested.
           </p>
         </li>
         <li id="group-nofill">
@@ -1250,7 +1250,7 @@ two.bind('update', function(frameCount) {
             <strong>listen</strong> <code>anchor.listen();</code>
           </p>
           <p class="description">
-            Convenience method to add event bubbling to an attached polygon.
+            Convenience method to add event bubbling to an attached path.
           </p>
         </li>
         <li id="anchor-ignore">
@@ -1258,7 +1258,7 @@ two.bind('update', function(frameCount) {
             <strong>ignore</strong> <code>anchor.ignore();</code>
           </p>
           <p class="description">
-            Convenience method to remove event bubbling to an attached polygon.
+            Convenience method to remove event bubbling to an attached path.
           </p>
         </li>
         <li id="anchor-appendcurveproperties">
