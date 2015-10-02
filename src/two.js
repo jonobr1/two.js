@@ -1732,7 +1732,7 @@
     makeStar: function(ox, oy, or, ir, sides) {
 
       var star = new Two.Star(ox, oy, or, ir, sides);
-      this.add(star);
+      this.scene.add(star);
 
       return star;
 
@@ -1765,26 +1765,9 @@
 
     },
 
-    makePolygon: function() {
+    makePolygon: function(ox, oy, r, sides) {
 
-      var l = arguments.length, points = p;
-      if (!_.isArray(p)) {
-        points = [];
-        for (var i = 0; i < l; i+=2) {
-          var x = arguments[i];
-          if (!_.isNumber(x)) {
-            break;
-          }
-          var y = arguments[i + 1];
-          points.push(new Two.Anchor(x, y));
-        }
-      }
-
-      var poly = new Two.Polygon(points);
-      var rect = poly.getBoundingClientRect();
-      poly.center().translation
-        .set(rect.left + rect.width / 2, rect.top + rect.height / 2);
-
+      var poly = new Two.Polygon(ox, oy, r, sides);
       this.scene.add(poly);
 
       return poly;
@@ -1798,7 +1781,7 @@
     makeCurvedPolygon: function(ox, oy, r, sides, mod) {
 
       var curvedPoly = new Two.CurvedPolygon(ox, oy, or, ir, sides);
-      this.add(curvedPoly);
+      this.scene.add(curvedPoly);
 
       return curvedPoly;
 
@@ -1810,7 +1793,7 @@
 
     makeArcSegment: function(ox, oy, ir, or, sa, ea, res) {
       var arcSegment = new Two.ArcSegment(ox, oy, ir, or, sa, ea, res);
-      this.add(arcSegment);
+      this.scene.add(arcSegment);
       return arcSegment;
     },
 
