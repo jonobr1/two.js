@@ -40,42 +40,38 @@
           earth.linewidth = 7;
           earth.fill = 'rgb(0, 200, 255)';
 
-          _.defer(function() {
+          two
+            .bind('resize', function() {
 
-            two
-              .bind('resize', function() {
+              sun.translation.x = two.width / 2;
+              sun.translation.y = two.height / 2;
+              path.translation.copy(sun.translation);
 
-                sun.translation.x = two.width / 2;
-                sun.translation.y = two.height / 2;
-                path.translation.copy(sun.translation);
+            })
+            .bind('update', function(frameCount) {
 
-              })
-              .bind('update', function(frameCount) {
+              var osc = Math.sin(- frameCount / (Math.PI * 8));
 
-                var osc = Math.sin(- frameCount / (Math.PI * 8));
+              if (osc >= 0.9 && isBackground) {
+                foreground.add(earth);
+                isBackground = false;
+              }
+              if (osc <= - 0.9 && !isBackground) {
+                background.add(earth);
+                isBackground = true;
+              }
 
-                if (osc >= 0.9 && isBackground) {
-                  foreground.add(earth);
-                  isBackground = false;
-                }
-                if (osc <= - 0.9 && !isBackground) {
-                  background.add(earth);
-                  isBackground = true;
-                }
+              earth.translation.x = osc * two.width / 4 + two.width / 2;
+              earth.translation.y = - osc * two.height / 4 + two.height / 2;
 
-                earth.translation.x = osc * two.width / 4 + two.width / 2;
-                earth.translation.y = - osc * two.height / 4 + two.height / 2;
+              if (sun.rotation >= TWO_PI - 0.0625) {
+                sun.rotation = 0;
+              }
 
-                if (sun.rotation >= TWO_PI - 0.0625) {
-                  sun.rotation = 0;
-                }
+              sun.rotation += (TWO_PI - sun.rotation) * 0.0625;
 
-                sun.rotation += (TWO_PI - sun.rotation) * 0.0625;
-
-              })
-              .play();
-
-          });
+            })
+            .play();
 
         });
 
@@ -114,7 +110,7 @@
         }
 
         function makeTriangle(two, size) {
-          var tri = two.makePolygon(- size / 2, 0, size / 2, 0, 0, size);
+          var tri = two.makePath(- size / 2, 0, size / 2, 0, 0, size);
           return tri;
         }
 

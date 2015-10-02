@@ -68,11 +68,11 @@
               r.translation.copy(anchor.controls.right).addSelf(anchor);
               p.noStroke().fill = l.noStroke().fill = r.noStroke().fill = editColor;
 
-              var ll = new Two.Polygon([
+              var ll = new Two.Path([
                 new Two.Anchor().copy(p.translation),
                 new Two.Anchor().copy(l.translation)
               ]);
-              var rl = new Two.Polygon([
+              var rl = new Two.Path([
                 new Two.Anchor().copy(p.translation),
                 new Two.Anchor().copy(r.translation)
               ]);

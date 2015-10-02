@@ -158,7 +158,7 @@
               v.x -= two.width / 2;
               v.y -= two.height / 2;
             }
-            var topMask = two.makePolygon(points);
+            var topMask = two.makePath(points);
             topMask.fill = 'white';
             topMask.noStroke();
 
@@ -178,7 +178,7 @@
               v.x -= two.width / 2;
               v.y -= two.height / 2;
             }
-            var botMask = two.makePolygon(points);
+            var botMask = two.makePath(points);
             botMask.fill = 'white';
             botMask.noStroke();
 

@@ -60,7 +60,7 @@
 
         }
 
-        var outer = new Two.Polygon(points, true, true);
+        var outer = new Two.Path(points, true, true);
         var color = getRandomColor();
         outer.stroke = color.toString();
         outer.fill = color.toString(0.5);
@@ -69,7 +69,7 @@
 
         background.add(outer);
 
-        var inner = new Two.Polygon(points, true, true);
+        var inner = new Two.Path(points, true, true);
         inner.noStroke();
         inner.fill = getRandomColor().toString();
         inner.scale = 1.25;

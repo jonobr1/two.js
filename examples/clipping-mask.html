@@ -163,7 +163,7 @@
           width /= 2;
           height /= 2;
 
-          var shape = this.makePolygon(
+          var shape = this.makePath(
             _.map(_.range(sides), function(i) {
               var pct = i / sides;
               var theta = Math.PI * 2 * pct - Math.PI / 2;
