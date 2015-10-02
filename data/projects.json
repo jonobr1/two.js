@@ -2,6 +2,11 @@
   "template": "<li><a href=\"<%= href %>\" target=\"_blank\"><img width=\"143\" height=\"100\" src=\"<%= img %>\" alt=\"\"><h3><p><%= title %></p></h3></a></li>",
   "items": [
     {
+      "title": "Lærepenger",
+      "href": "http://event.larepenger.no/",
+      "img": "images/projects/larepenger.gif"
+    },
+    {
       "title": "JavaScreen",
       "href": "http://javascreen.tristanbagot.com/",
       "img": "images/projects/javascreen.gif"
