@@ -3178,9 +3178,9 @@ var Backbone = Backbone || {};
 
     },
 
-    makeRoundedRectangle: function(x, y, width, height, sides) {
+    makeRoundedRectangle: function(x, y, width, height, radius) {
 
-      var rect = new Two.RoundedRectangle(x, y, width, height, sides);
+      var rect = new Two.RoundedRectangle(x, y, width, height, radius);
       this.scene.add(rect);
 
       return rect;

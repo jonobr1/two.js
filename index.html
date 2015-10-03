@@ -535,7 +535,7 @@ two.bind('update', function(frameCount) {
             <strong>makeLine</strong> <code>two.makeLine(x1, y1, x2, y2);</code>
           </p>
           <p class="description">
-            Draws a line between two coordinates to the instance&apos;s drawing space where <code>x1</code>, <code>y1</code> are the x, y values for the first coordinate and <code>x2</code>, <code>y2</code> are the x, y values for the second coordinate. It returns a <code>Two.Path</code> object.
+            Draws a line between two coordinates to the instance&apos;s drawing space where <code>x1</code>, <code>y1</code> are the x, y values for the first coordinate and <code>x2</code>, <code>y2</code> are the x, y values for the second coordinate. It returns a <code>Two.Line</code> object.
           </p>
         </li>
         <li id="two-makerectangle">
@@ -543,7 +543,15 @@ two.bind('update', function(frameCount) {
             <strong>makeRectangle</strong> <code>two.makeRectangle(x, y, width, height);</code>
           </p>
           <p class="description">
-            Draws a rectangle to the instance&apos;s drawing space where <code>x</code>, <code>y</code> are the x, y values for the center point of the rectangle and <code>width</code>, <code>height</code> represents the width and height of the rectangle. It returns a <code>Two.Path</code> object.
+            Draws a rectangle to the instance&apos;s drawing space where <code>x</code>, <code>y</code> are the x, y values for the center point of the rectangle and <code>width</code>, <code>height</code> represents the width and height of the rectangle. It returns a <code>Two.Rectangle</code> object.
+          </p>
+        </li>
+        <li id="two-makeroundedrectangle">
+          <p class="property function declaration">
+            <strong>makeRoundedRectangle</strong> <code>two.makeRoundedRectangle(x, y, width, height, radius);</code>
+          </p>
+          <p class="description">
+            Draws a rounded rectangle to the instance&apos;s drawing space where <code>x</code>, <code>y</code> are the x, y values for the center point of the rectangle and <code>width</code>, <code>height</code> represents the width and height of the rectangle. Lastly, the <code>radius</code> parameter defines what the miter radius of the rounded corner is. It returns a <code>Two.RoundedRectangle</code> object.
           </p>
         </li>
         <li id="two-makecircle">
@@ -551,7 +559,7 @@ two.bind('update', function(frameCount) {
             <strong>makeCircle</strong> <code>two.makeCircle(x, y, radius);</code>
           </p>
           <p class="description">
-            Draws a circle to the instance&apos;s drawing space where <code>x</code>, <code>y</code> are the x, y values for the center point of the circle and <code>radius</code> is the radius of the circle. It returns a <code>Two.Path</code> object.
+            Draws a circle to the instance&apos;s drawing space where <code>x</code>, <code>y</code> are the x, y values for the center point of the circle and <code>radius</code> is the radius of the circle. It returns a <code>Two.Circle</code> object.
           </p>
         </li>
         <li id="two-makeellipse">
@@ -559,7 +567,39 @@ two.bind('update', function(frameCount) {
             <strong>makeEllipse</strong> <code>two.makeEllipse(x, y, width, height);</code>
           </p>
           <p class="description">
-            Draws an ellipse to the instance&apos;s drawing space where <code>x</code>, <code>y</code> are the x, y values for the center point of the ellipse and <code>width</code>, <code>height</code> are the dimensions of the ellipse. It returns a <code>Two.Path</code> object.
+            Draws an ellipse to the instance&apos;s drawing space where <code>x</code>, <code>y</code> are the x, y values for the center point of the ellipse and <code>width</code>, <code>height</code> are the dimensions of the ellipse. It returns a <code>Two.Ellipse</code> object.
+          </p>
+        </li>
+        <li id="two-makestar">
+          <p class="property function declaration">
+            <strong>makeStar</strong> <code>two.makeStar(ox, oy, or, ir, sides);</code>
+          </p>
+          <p class="description">
+            Draws a star to the instance&apos;s drawing space where <code>ox</code>, <code>oy</code> are the x, y values for the center point of the star and <code>or</code>, <code>ir</code> are the outer and inner radii for the star, and <code>sides</code> are how many points the star has. It returns a <code>Two.Star</code> object.
+          </p>
+        </li>
+        <li id="two-makepolygon">
+          <p class="property function declaration">
+            <strong>makePolygon</strong> <code>two.makePolygon(ox, oy, r, sides);</code>
+          </p>
+          <p class="description">
+            Draws a polygon to the instance&apos;s drawing space where <code>ox</code>, <code>oy</code> are the x, y values for the center of the polygon, <code>r</code> is the radius, and <code>sides</code> are how many sides the polygon has. It returns a <code>Two.Polygon</code> object.
+          </p>
+        </li>
+        <li id="two-makecurvepolygon">
+          <p class="property function declaration">
+            <strong>makeCurvedPolygon</strong> <code>two.makeCurvedPolygon(ox, oy, r, sides);</code>
+          </p>
+          <p class="description">
+            Draws a curved-polygon to the instance&apos;s drawing space where <code>ox</code>, <code>oy</code> are the x, y values for the center of the polygon, <code>r</code> is the radius, and <code>sides</code> are how many sides the polygon has. It returns a <code>Two.CurvedPolygon</code> object.
+          </p>
+        </li>
+        <li class="two-makearcsegment">
+          <p class="property function desclaration">
+            <strong>makeArcSegment</strong> <code>two.makeArcSegment(ox, oy, ir, or, sa, ea, res);</code>
+          </p>
+          <p class="description">
+            Draws an arc segment from center point <code>ox</code>, <code>oy</code> with an inner and outer radius of <code>ir</code>, <code>or</code>. Lastly, you need to supply a start and ending angle <code>sa</code>, <code>ea</code>. Optionally, pass the resolution for how many points on the arc are desired. It returns a <code>Two.ArcSegment</code> object.
           </p>
         </li>
         <li id="two-makecurve">
