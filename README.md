@@ -68,7 +68,9 @@ grunt build-uglify
 instead to minify the build with uglify.
 
 ## Change Log
-For the latest nightly changes checkout the `dev` branch [here](../../tree/dev).
+<!-- For the latest nightly changes checkout the `dev` branch [here](../../tree/dev). -->
+
+##### Nightly
 
 ##### October 1, 2015 [v0.5.0](https://github.com/jonobr1/two.js/releases/tag/v0.5.0)
 + Added support for `two.interpret` to import `svg`'s gradients
