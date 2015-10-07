@@ -1775,19 +1775,6 @@
     },
 
     /*
-    * Make a Curved Polygon in scene
-    */
-
-    makeCurvedPolygon: function(ox, oy, r, sides, mod) {
-
-      var curvedPoly = new Two.CurvedPolygon(ox, oy, or, ir, sides);
-      this.scene.add(curvedPoly);
-
-      return curvedPoly;
-
-    },
-
-    /*
     * Make an Arc Segment
     */
 
