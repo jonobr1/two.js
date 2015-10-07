@@ -130,6 +130,10 @@ li.horizon {
   }
 }
 
+#documentation-toc {
+  max-width: $max-content-width;
+}
+
 #introduction {
   height: 80px;
   margin-bottom: $line-height;

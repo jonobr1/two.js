@@ -331,9 +331,17 @@ two.bind('update', function(frameCount) {
       <ul id="documentation-toc">
         <li><a href="#two-class">Two</a></li>
         <li><a href="#two-path">Two.Path</a></li>
+        <li><a href="#two-line">Two.Line</a></li>
+        <li><a href="#two-rectangle">Two.Rectangle</a></li>
+        <li><a href="#two-roundedrectangle">Two.RoundedRectangle</a></li>
+        <li><a href="#two-circle">Two.Circle</a></li>
+        <li><a href="#two-ellipse">Two.Ellipse</a></li>
+        <li><a href="#two-star">Two.Star</a></li>
+        <li><a href="#two-polygon">Two.Polygon</a></li>
+        <li><a href="#two-curvedpolygon">Two.CurvedPolygon</a></li>
         <li><a href="#two-group">Two.Group</a></li>
-        <li><a href="#two-anchor">Two.Anchor</a></li>
         <li><a href="#two-vector">Two.Vector</a></li>
+        <li><a href="#two-anchor">Two.Anchor</a></li>
       </ul>
 
       <ul class="documentation">
@@ -1209,106 +1217,6 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
 
-        <!-- Two.Anchor -->
-        <div id="two-anchor"></div>
-        <li class="title"><h3>Two.Anchor</h3></li>
-        <li class="description">
-          Taken from the <a href="http://help.adobe.com/en_US/illustrator/cs/using/WS714a382cdf7d304e7e07d0100196cbc5f-6269a.html">Adobe Illustrator nomenclature</a> a <code>Two.Anchor</code> represents an anchor point in two.js. This class delineates to the renderer what action to take when plotting points. It inherits all properties and methods from <code>Two.Vector</code>. As a result, <code>Two.Anchor</code> can be used as such. Depending on its command, anchor points may or may not have corresponding control points to describe how their bezier curves should be rendered.
-        </li>
-        <li id="anchor-construction">
-          <p class="construction declaration">
-            <strong>construction</strong> <code>var anchor = new Two.Anchor(x, y, lx, ly, rx, ry, command);</code>
-          </p>
-          <p>
-            A <code>Two.Anchor</code> can take initial positions of <code>x</code> and <code>y</code> to orient the point. <code>lx</code> and <code>ly</code> describe where the left control point will reside. Likewise <code>rx</code> and <code>ry</code> describe where the right control point will reside. Finally, the <code>command</code> describes what action the renderer will take once rendering. A more detailed description of commands can be found on the <a href="http://www.w3.org/TR/SVG/paths.html#PathData">w3c</a> and the available commands in two.js can be found under <code>Two.Commands</code>.
-          </p>
-          <p class="nota-bene">
-            <code>Two.Anchor</code> is introduced to two.js as of <a href="https://github.com/jonobr1/two.js/releases/tag/v0.3.0">v0.3.0</a>
-          </p>
-        </li>
-        <li id="anchor-x">
-          <p class="property number declaration">
-            <strong>x</strong> <code>anchor.x</code>
-          </p>
-          <p class="description">
-            The x value of the anchor&apos;s position.
-          </p>
-        </li>
-        <li id="anchor-y">
-          <p class="property number declaration">
-            <strong>y</strong> <code>anchor.y</code>
-          </p>
-          <p class="description">
-            The y value of the anchor&apos;s position.
-          </p>
-        </li>
-        <li>
-          <p class="property string declaration">
-            <strong>command</strong> <code>anchor.command</code>
-          </p>
-          <p class="description">
-            The command for the given anchor.
-          </p>
-        </li>
-        <li id="anchor-controls">
-          <p class="property object declaration">
-            <strong>controls</strong> <code>anchor.controls</code>
-          </p>
-          <p class="description">
-            An object that exists <em>only</em> when <code>anchor.command</code> is <code>Two.Commands.curve</code>. It holds the anchor&apos;s control point <code>Two.Vector</code>s and describes what the make up of the curve will be.
-          </p>
-          <ul class="object">
-            <li id="anchor-controls-right">
-              <p class="property object">
-                <strong>right</strong> <code>anchor.controls.right</code>
-              </p>
-              <p>
-                A <code>Two.Vector</code> that represents the position of the control point to the &ldquo;right&rdquo; of the anchor&apos;s position. To further clarify, if you were to orient the anchor so that it was normalized and facing up, this control point would be to the right of it.
-              </p>
-            </li>
-            <li id="anchor-controls-left">
-              <p class="property object">
-                <strong>left</strong> <code>anchor.controls.left</code>
-              </p>
-              <p>
-                A <code>Two.Vector</code> that represents the position of the control point to the &ldquo;left&rdquo; of the anchor&apos;s position. To further clarify, if you were to orient the anchor so that it was normalized and facing up, this control point would be to the left of it.
-              </p>
-            </li>
-          </ul>
-        </li>
-        <li id="anchor-clone">
-          <p class="property function declaration">
-            <strong>clone</strong> <code>anchor.clone();</code>
-          </p>
-          <p class="description">
-            Returns a new instance of a <code>Two.Anchor</code> with the same <code>x</code>, <code>y</code>, <code>controls</code>, and <code>command</code> values as the instance.
-          </p>
-        </li>
-        <li id="anchor-listen">
-          <p class="property function declaration">
-            <strong>listen</strong> <code>anchor.listen();</code>
-          </p>
-          <p class="description">
-            Convenience method to add event bubbling to an attached path.
-          </p>
-        </li>
-        <li id="anchor-ignore">
-          <p class="property function declaration">
-            <strong>ignore</strong> <code>anchor.ignore();</code>
-          </p>
-          <p class="description">
-            Convenience method to remove event bubbling to an attached path.
-          </p>
-        </li>
-        <li id="anchor-appendcurveproperties">
-          <p class="property static function declaration">
-            <strong>AppendCurveProperties</strong> <code>Anchor.AppendCurveProperties();</code>
-          </p>
-          <p class="description">
-            Convenience method to add the <code>controls</code> object.
-          </p>
-        </li>
-
         <!-- Two.Vector -->
         <div id="two-vector"></div>
         <li class="title"><h3>Two.Vector</h3></li>
@@ -1510,6 +1418,106 @@ two.bind('update', function(frameCount) {
           </p>
           <p class="description">
             Returns a boolean describing the length of the vector less than 0.0001.
+          </p>
+        </li>
+
+        <!-- Two.Anchor -->
+        <div id="two-anchor"></div>
+        <li class="title"><h3>Two.Anchor</h3></li>
+        <li class="description">
+          Taken from the <a href="http://help.adobe.com/en_US/illustrator/cs/using/WS714a382cdf7d304e7e07d0100196cbc5f-6269a.html">Adobe Illustrator nomenclature</a> a <code>Two.Anchor</code> represents an anchor point in two.js. This class delineates to the renderer what action to take when plotting points. It inherits all properties and methods from <code>Two.Vector</code>. As a result, <code>Two.Anchor</code> can be used as such. Depending on its command, anchor points may or may not have corresponding control points to describe how their bezier curves should be rendered.
+        </li>
+        <li id="anchor-construction">
+          <p class="construction declaration">
+            <strong>construction</strong> <code>var anchor = new Two.Anchor(x, y, lx, ly, rx, ry, command);</code>
+          </p>
+          <p>
+            A <code>Two.Anchor</code> can take initial positions of <code>x</code> and <code>y</code> to orient the point. <code>lx</code> and <code>ly</code> describe where the left control point will reside. Likewise <code>rx</code> and <code>ry</code> describe where the right control point will reside. Finally, the <code>command</code> describes what action the renderer will take once rendering. A more detailed description of commands can be found on the <a href="http://www.w3.org/TR/SVG/paths.html#PathData">w3c</a> and the available commands in two.js can be found under <code>Two.Commands</code>.
+          </p>
+          <p class="nota-bene">
+            <code>Two.Anchor</code> is introduced to two.js as of <a href="https://github.com/jonobr1/two.js/releases/tag/v0.3.0">v0.3.0</a>
+          </p>
+        </li>
+        <li id="anchor-x">
+          <p class="property number declaration">
+            <strong>x</strong> <code>anchor.x</code>
+          </p>
+          <p class="description">
+            The x value of the anchor&apos;s position.
+          </p>
+        </li>
+        <li id="anchor-y">
+          <p class="property number declaration">
+            <strong>y</strong> <code>anchor.y</code>
+          </p>
+          <p class="description">
+            The y value of the anchor&apos;s position.
+          </p>
+        </li>
+        <li>
+          <p class="property string declaration">
+            <strong>command</strong> <code>anchor.command</code>
+          </p>
+          <p class="description">
+            The command for the given anchor.
+          </p>
+        </li>
+        <li id="anchor-controls">
+          <p class="property object declaration">
+            <strong>controls</strong> <code>anchor.controls</code>
+          </p>
+          <p class="description">
+            An object that exists <em>only</em> when <code>anchor.command</code> is <code>Two.Commands.curve</code>. It holds the anchor&apos;s control point <code>Two.Vector</code>s and describes what the make up of the curve will be.
+          </p>
+          <ul class="object">
+            <li id="anchor-controls-right">
+              <p class="property object">
+                <strong>right</strong> <code>anchor.controls.right</code>
+              </p>
+              <p>
+                A <code>Two.Vector</code> that represents the position of the control point to the &ldquo;right&rdquo; of the anchor&apos;s position. To further clarify, if you were to orient the anchor so that it was normalized and facing up, this control point would be to the right of it.
+              </p>
+            </li>
+            <li id="anchor-controls-left">
+              <p class="property object">
+                <strong>left</strong> <code>anchor.controls.left</code>
+              </p>
+              <p>
+                A <code>Two.Vector</code> that represents the position of the control point to the &ldquo;left&rdquo; of the anchor&apos;s position. To further clarify, if you were to orient the anchor so that it was normalized and facing up, this control point would be to the left of it.
+              </p>
+            </li>
+          </ul>
+        </li>
+        <li id="anchor-clone">
+          <p class="property function declaration">
+            <strong>clone</strong> <code>anchor.clone();</code>
+          </p>
+          <p class="description">
+            Returns a new instance of a <code>Two.Anchor</code> with the same <code>x</code>, <code>y</code>, <code>controls</code>, and <code>command</code> values as the instance.
+          </p>
+        </li>
+        <li id="anchor-listen">
+          <p class="property function declaration">
+            <strong>listen</strong> <code>anchor.listen();</code>
+          </p>
+          <p class="description">
+            Convenience method to add event bubbling to an attached path.
+          </p>
+        </li>
+        <li id="anchor-ignore">
+          <p class="property function declaration">
+            <strong>ignore</strong> <code>anchor.ignore();</code>
+          </p>
+          <p class="description">
+            Convenience method to remove event bubbling to an attached path.
+          </p>
+        </li>
+        <li id="anchor-appendcurveproperties">
+          <p class="property static function declaration">
+            <strong>AppendCurveProperties</strong> <code>Anchor.AppendCurveProperties();</code>
+          </p>
+          <p class="description">
+            Convenience method to add the <code>controls</code> object.
           </p>
         </li>
 

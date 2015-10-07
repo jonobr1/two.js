@@ -36,7 +36,7 @@
   line-height: 24px; }
 
 .CodeMirror-lines > div > div > div:nth-child(odd) .CodeMirror-linenumber {
-  background: #f6f6f6; }
+  background: #f7f7f7; }
 
 @media screen and (min-width: 400px) {
   .CodeMirror {
@@ -97,7 +97,7 @@
   color: #555; }
 
 .cm-s-default .cm-comment {
-  color: #7f7f7f;
+  color: gray;
   font-style: italic; }
 
 .cm-s-default .cm-string {
@@ -301,10 +301,10 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {
   visibility: visible; }
 
 .CodeMirror-selected {
-  background: #fff9af; }
+  background: #fffaaf; }
 
 .CodeMirror-focused .CodeMirror-selected {
-  background: #fff687; }
+  background: #fff787; }
 
 .cm-searching {
   background: #ffa;
@@ -362,10 +362,10 @@ a {
   text-decoration: none; }
   a:link {
     color: #00bfa8;
-    border-bottom: 0.125em solid #72dbcf; }
+    border-bottom: 0.125em solid #73dccf; }
   a:visited {
     color: #ff8000;
-    border-bottom: 0.125em solid #ffa64c; }
+    border-bottom: 0.125em solid #ffa64d; }
   a:hover, a:active {
     color: #ff4040;
     border-bottom: 0.125em solid #ff8c8c; }
@@ -425,6 +425,9 @@ li.horizon {
       display: block;
       margin: 8px 8px 0;
       border-width: 0.15625em; }
+
+#documentation-toc {
+  max-width: 580px; }
 
 #introduction {
   height: 80px;
@@ -596,11 +599,11 @@ p.static, p.static + p {
   color: #8d8d8d; }
 
 ::selection {
-  background: #fff687;
+  background: #fff787;
   /* Safari */ }
 
 ::-moz-selection {
-  background: #fff687;
+  background: #fff787;
   /* Firefox */ }
 
 /*# sourceMappingURL=main.css.map */

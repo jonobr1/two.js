@@ -3253,7 +3253,7 @@ var Backbone = Backbone || {};
 
     makeCurvedPolygon: function(ox, oy, r, sides, mod) {
 
-      var curvedPoly = new Two.CurvedPolygon(ox, oy, or, ir, sides);
+      var curvedPoly = new Two.CurvedPolygon(ox, oy, r, sides, mod);
       this.scene.add(curvedPoly);
 
       return curvedPoly;
