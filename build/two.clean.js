@@ -166,7 +166,7 @@
       canvas: 'CanvasRenderer'
     },
 
-    Version: 'v0.5.0',
+    Version: 'v0.6.0',
 
     Identifier: 'two_',
 
@@ -1840,6 +1840,15 @@
 
       return path;
 
+    },
+
+    /**
+     * Convenience method to make and add a Two.Text.
+     */
+    makeText: function(message, x, y, styles) {
+      var text = new Two.Text(message, x, y, styles);
+      two.add(text);
+      return text;
     },
 
     /**
