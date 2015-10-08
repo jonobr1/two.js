@@ -4335,6 +4335,11 @@ var Backbone = Backbone || {};
     ns: 'http://www.w3.org/2000/svg',
     xlink: 'http://www.w3.org/1999/xlink',
 
+    alignments: {
+      left: 'start',
+      right: 'end'
+    },
+
     /**
      * Create an svg namespaced element.
      */
@@ -4679,13 +4684,13 @@ var Backbone = Backbone || {};
         }
 
         if (this._flagFill) {
-
           changed.fill = this._fill && this._fill.id
             ? 'url(#' + this._fill.id + ')' : this._fill;
         }
 
         if (this._flagStroke) {
-          changed.stroke = this._stroke;
+          changed.stroke = this._stroke && this._stroke.id
+            ? 'url(#' + this._stroke.id + ')' : this._stroke;
         }
 
         if (this._flagLinewidth) {
@@ -4756,6 +4761,95 @@ var Backbone = Backbone || {};
         //     elem.removeAttribute('clip-path');
         //   }
         // }
+
+        return this.flagReset();
+
+      }
+
+    },
+
+    text: {
+
+      render: function(domElement) {
+
+        this._update();
+
+        var changed = {};
+
+        var flagMatrix = this._matrix.manual || this._flagMatrix;
+
+        if (flagMatrix) {
+          changed.transform = 'matrix(' + this._matrix.toString() + ')';
+        }
+
+        if (this._flagFamily) {
+          changed['font-family'] = this._family;
+        }
+        if (this._flagSize) {
+          changed['font-size'] = this._size;
+        }
+        if (this._flagLeading) {
+          changed['line-height'] = this._leading;
+        }
+        if (this._flagAlignment) {
+          changed['text-anchor'] = svg.alignments[this._alignment] || this._alignment;
+        }
+        if (this._flagStyle) {
+          changed['font-style'] = this._style;
+        }
+        if (this._flagWeight) {
+          changed['font-weight'] = this._weight;
+        }
+
+        if (this._flagFill) {
+          changed.fill = this._fill && this._fill.id
+            ? 'url(#' + this._fill.id + ')' : this._fill;
+        }
+        if (this._flagStroke) {
+          changed.stroke = this._stroke && this._stroke.id
+            ? 'url(#' + this._stroke.id + ')' : this._stroke;
+        }
+        if (this._flagOpacity) {
+          changed.opacity = this._opacity;
+        }
+        if (this._flagVisible) {
+          changed.visibility = this._visible ? 'visible' : 'hidden';
+        }
+
+        if (!this._renderer.elem) {
+
+          changed.id = this.id;
+          changed['alignment-baseline'] = 'middle';
+
+          this._renderer.elem = svg.createElement('text', changed);
+          domElement.defs.appendChild(this._renderer.elem);
+
+        } else {
+
+          svg.setAttributes(this._renderer.elem, changed);
+
+        }
+
+        if (this._flagClip) {
+
+          var clip = svg.getClip(this);
+          var elem = this._renderer.elem;
+
+          if (this._clip) {
+            elem.removeAttribute('id');
+            clip.setAttribute('id', this.id);
+            clip.appendChild(elem);
+          } else {
+            clip.removeAttribute('id');
+            elem.setAttribute('id', this.id);
+            this.parent._renderer.elem.appendChild(elem); // TODO: should be insertBefore
+          }
+
+        }
+
+        if (this._flagValue) {
+          this._renderer.elem.textContent = this._value;
+        }
 
         return this.flagReset();
 
@@ -7000,7 +7094,7 @@ var Backbone = Backbone || {};
 
       this._flagVertices =  this._flagFill =  this._flagStroke =
          this._flagLinewidth = this._flagOpacity = this._flagVisible =
-         this._flagCap = this._flagJoin = this._flagMiter = 
+         this._flagCap = this._flagJoin = this._flagMiter =
          this._flagClip = false;
 
       Two.Shape.prototype.flagReset.call(this);
@@ -7536,6 +7630,192 @@ var Backbone = Backbone || {};
   function map(v, i1, i2, o1, o2) {
     return o1 + (o2 - o1) * ((v - i1) / (i2 - i1));
   }
+
+})(
+  Two,
+  typeof require === 'function' ? require('underscore') : _,
+  typeof require === 'function' ? require('backbone') : Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+);
+
+(function(Two, _, Backbone, requestAnimationFrame) {
+
+  Two.Text = function(message, x, y, styles) {
+
+    Two.Shape.call(this);
+
+    this._renderer.type = 'text';
+
+    if (!_.isEmpty(message)) {
+      this.value = message;
+    }
+
+    if (_.isNumber(x)) {
+        this.translation.x = x;
+    }
+    if (_.isNumber(y)) {
+        this.translation.y = y;
+    }
+
+    if (!_.isObject(styles)) {
+      return this;
+    }
+
+    _.each(Two.Text.Properties, function(property) {
+
+      if (property in styles) {
+        this[property] = styles[property];
+      }
+
+    }, this);
+
+  };
+
+  _.extend(Two.Text, {
+
+    Properties: [
+      'value', 'family', 'size', 'leading', 'alignment', 'fill', 'stroke',
+      'style', 'weight', 'opacity', 'visible'],
+
+    MakeObservable: function(object) {
+
+      Two.Shape.MakeObservable(object);
+
+      _.each(Two.Text.Properties, function(property) {
+
+        var secret = '_' + property;
+        var flag = '_flag' + property.charAt(0).toUpperCase() + property.slice(1);
+
+        Object.defineProperty(object, property, {
+          get: function() {
+            return this[secret];
+          },
+          set: function(v) {
+            this[secret] = v;
+            this[flag] = true;
+          }
+        });
+
+      });
+
+      Object.defineProperty(object, 'clip', {
+        get: function() {
+          return this._clip;
+        },
+        set: function(v) {
+          this._clip = v;
+          this._flagClip = true;
+        }
+      });
+
+    }
+
+  });
+
+  _.extend(Two.Text.prototype, Two.Shape.prototype, {
+
+    // Flags
+    // http://en.wikipedia.org/wiki/Flag
+
+    _flagValue: true,
+    _flagFamily: true,
+    _flagSize: true,
+    _flagLeading: true,
+    _flagAlignment: true,
+    _flagStyle: true,
+    _flagWeight: true,
+
+    _flagFill: true,
+    _flagStroke: true,
+    _flagOpacity: true,
+    _flagVisible: true,
+
+    _flagClip: false,
+
+    // Underlying Properties
+
+    _value: '',
+    _family: 'sans-serif',
+    _size: 13,
+    _leading: 17,
+    _alignment: 'left',
+    _style: 'normal',
+    _weight: 500,
+
+    _fill: '#000',
+    _stroke: 'transparent',
+    _opacity: 1,
+    _visible: true,
+
+    _clip: false,
+
+    clone: function(parent) {
+
+      var parent = parent || this.parent;
+
+      var clone = new Two.Text(this.value);
+      clone.translation.copy(this.translation);
+      clone.rotation = this.rotation;
+      clone.scale = this.scale;
+
+      _.each(Two.Text.Properties, function(property) {
+        clone[property] = this[property];
+      }, this);
+
+      parent.add(clone);
+
+      return clone;
+
+    },
+
+    toObject: function() {
+
+      var result = {
+        translation: this.translation.toObject(),
+        rotation: this.rotation,
+        scale: this.scale
+      };
+
+      _.each(Two.Text.Properties, function(property) {
+        result[property] = this[property];
+      }, this);
+
+      return result;
+
+    },
+
+    noStroke: function() {
+      this.stroke = 'transparent';
+      return this;
+    },
+
+    noFill: function() {
+      this.fill = 'transparent';
+      return this;
+    },
+
+    getBoundingClientRect: function() {
+
+      // TODO
+
+    },
+
+    flagReset: function() {
+
+      this._flagValue = this._flagFamily = this._flagSize =
+        this._flagLeading = this._flagAlignment = this._flagFill =
+        this._flagStroke = this._flagOpaicty = this._flagVisible =
+        this._flagClip = false;
+
+      Two.Shape.prototype.flagReset.call(this);
+
+      return this;
+
+    }
+
+  });
+
+  Two.Text.MakeObservable(Two.Text.prototype);
 
 })(
   Two,
