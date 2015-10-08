@@ -3333,7 +3333,7 @@ var Backbone = Backbone || {};
     /**
      * Interpret an SVG Node and add it to this instance's scene. The
      * distinction should be made that this doesn't `import` svg's, it solely
-     * interprets them into something compatible for Two.js — this is slightly
+     * interprets them into something compatible for Two.js — this is slightly
      * different than a direct transcription.
      *
      * @param {Object} svgNode - The node to be parsed
@@ -7546,7 +7546,7 @@ var Backbone = Backbone || {};
 
 (function(Two, _, Backbone, requestAnimationFrame) {
 
-  var Stop = function(offset, color, opacity) {
+  var Stop = Two.Stop = function(offset, color, opacity) {
 
     this._renderer = {};
 
