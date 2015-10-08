@@ -340,6 +340,7 @@ two.bind('update', function(frameCount) {
         <li><a href="#two-group">Two.Group</a></li>
         <li><a href="#two-vector">Two.Vector</a></li>
         <li><a href="#two-anchor">Two.Anchor</a></li>
+        <li><a href="#two-stop">Two.Stop</a></li>
         <li><a href="#two-linear-gradient">Two.LinearGradient</a></li>
         <li><a href="#two-radial-gradient">Two.RadialGradient</a></li>
       </ul>
@@ -646,7 +647,7 @@ two.bind('update', function(frameCount) {
             <strong>interpret</strong> <code>two.interpret(svgNode);</code>
           </p>
           <p class="description">
-            Reads an svg node and draws the svg object by creating <code>Two.Path</code>s and <code>Two.Group</code>s from the reference. It then adds it to the instance&apos;s drawing space. It returns an <code>Two.Group</code> object.
+            Reads an svg node and draws the svg object by creating <code>Two.Path</code>s and <code>Two.Group</code>s from the reference. It then adds it to the instance&apos;s drawing space. It returns a <code>Two.Group</code> object.
           </p>
         </li>
         <li id="two-bind">
@@ -681,7 +682,7 @@ two.bind('update', function(frameCount) {
             <strong>Collection</strong> <code>Two.Utils.Collection</code>
           </p>
           <p class="description">
-            A databound instance of an array, used for <code>vertices</code> attribute of a <code>Two.Path</code>.
+            A databound instance of an array, e.g: used for <code>vertices</code> attribute of a <code>Two.Path</code>.
           </p>
         </li>
         <li id="two-types">
@@ -875,7 +876,7 @@ two.bind('update', function(frameCount) {
             <strong>vertices</strong> <code>path.vertices</code>
           </p>
           <p class="description">
-            An <code>Two.Utils.Collection</code> of <code>Two.Anchor</code>s that is two-way databound. Individual vertices may be manipulated, however <strong>it is imperative that the array itself does not get manipulated</strong>.
+            A <code>Two.Utils.Collection</code> of <code>Two.Anchor</code>s that is two-way databound. Individual vertices may be manipulated.
           </p>
         </li>
         <li id="path-closed">
@@ -1603,6 +1604,55 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
 
+        <div id="two-stop"></div>
+        <li class="title"><h3>Two.Stop</h3></li>
+        <li class="description">
+          This is a class for defining how gradients are colored in two.js. By itself a <code>Two.Stop</code> doesn't render anything specifically to the screen.
+        </li>
+        <li id="stop-construction">
+          <p class="construction declaration">
+            <strong>construction</strong> <code>var stop = new Two.Stop(offset, color, opacity);</code>
+          </p>
+          <p>
+            A stop takes a <code>0</code> to <code>1</code> offset value which defines where on the trajectory of the gradient the full color is rendered. It also takes a <code>color</code> which is a <code>css</code> string representing the color value and an optional <code>opacity</code> which is also a <code>0</code> to <code>1</code> value.
+          </p>
+        </li>
+        <li id="stop-offset">
+          <p class="property number">
+            <strong>offset</strong> <code>stop.offset</code>
+          </p>
+          <p>
+            A <code>0</code> to <code>1</code> offset value which defines where on the trajectory of the gradient the full color is rendered.
+          </p>
+        </li>
+        <li id="stop-color">
+          <p class="property string">
+            <strong>color</strong> <code>stop.color</code>
+          </p>
+          <p>
+            A <code>css</code> string that represents the color of the stop.
+          </p>
+        </li>
+        <li id="stop-offset">
+          <p class="property number">
+            <strong>opacity</strong> <code>stop.opacity</code>
+          </p>
+          <p>
+            A <code>0</code> to <code>1</code> value which defines the opacity of the stop.
+          </p>
+          <p class="nota-bene">
+            This only renders in the <code>Two.Types.svg</code> mode.
+          </p>
+        </li>
+        <li id="stop-clone">
+          <p class="property function">
+            <strong>clone</strong> <code>stop.clone();</code>
+          </p>
+          <p>
+            Clones a <code>stop</code>. Returns a new <code>Two.Stop</code>.
+          </p>
+        </li>
+
         <div id="two-linear-gradient"></div>
         <li class="title"><h3>Two.LinearGradient</h3></li>
         <li class="description">
@@ -1614,6 +1664,108 @@ two.bind('update', function(frameCount) {
           </p>
           <p>
             A linear gradient takes two sets of <code>x</code>, <code>y</code> coordinates to define the endpoints of the styling. These coordinates are relative to the <strong>origin</strong> of a <code>Two.Path</code>. This typically means you'll want to go from a negative quadrant to a positive quadrant in order for the gradient to render correctly. Lastly it takes an array of <code>Two.Stop</code>s which represent the color value along the gradient's trajectory.
+          </p>
+        </li>
+        <li id="linear-gradient-left">
+          <p class="property object">
+            <strong>left</strong> <code>linearGradient.left</code>
+          </p>
+          <p>
+            A <code>Two.Vector</code> that represents the position of the <code>x</code>, <code>y</code> coordinates to the &ldquo;left&rdquo; of the gradient&apos;s two end points.
+          </p>
+        </li>
+        <li id="linear-gradient-right">
+          <p class="property object">
+            <strong>right</strong> <code>linearGradient.right</code>
+          </p>
+          <p>
+            A <code>Two.Vector</code> that represents the position of the <code>x</code>, <code>y</code> coordinates to the &ldquo;right&rdquo; of the gradient&apos;s two end points.
+          </p>
+        </li>
+        <li id="linear-gradient-spread">
+          <p class="property string">
+            <strong>spread</strong> <code>linearGradient.spread</code>
+          </p>
+          <p>
+            Defines how the gradient is rendered by the renderer. For more details see the <a href="http://www.w3.org/TR/SVG/pservers.html#LinearGradientElementSpreadMethodAttribute" target="_blank">w3c <code>svg</code> spec</a>.
+          </p>
+        </li>
+        <li id="linear-gradient-stops">
+          <p class="property object">
+            <strong>stops</strong> <code>linearGradient.stops</code>
+          </p>
+          <p>
+            A <code>Two.Utils.Collection</code> of <code>Two.Stop</code>s that is two-way databound. Individual stops may be manipulated.
+          </p>
+        </li>
+        <li id="linear-gradient-clone">
+          <p class="property function">
+            <strong>clone</strong> <code>linearGradient.clone();</code>
+          </p>
+          <p>
+            A function to clone a <code>linearGradient</code>. Also, clones each <code>Two.Stop</code> in the <code>linearGradient.stops</code> array.
+          </p>
+        </li>
+
+        <div id="two-radial-gradient"></div>
+        <li class="title"><h3>Two.RadialGradient</h3></li>
+        <li class="description">
+          This is a class for creating a RadialGradient in two.js. By itself a <code>Two.RadialGradient</code> doesn't render anything specifically to the screen. However, in conjunction with a <code>Two.Path</code> you can style <code>Two.Path.fill</code> or <code>Two.Path.stroke</code> with a <code>Two.RadialGradient</code> to render a gradient for that part of the <code>Two.Path</code>. Check the <a href="/examples">examples</a> page for exact usage.
+        </li>
+        <li id="radial-gradient-construction">
+          <p class="construction declaration">
+            <strong>construction</strong> <code>var radialGradient = new Two.radialGradient(x, y, radius, stops, fx, fy);</code>
+          </p>
+          <p>
+            A radial gradient takes a set of <code>x</code>, <code>y</code> coordinates to define the center of the styling. These coordinates are relative to the <strong>origin</strong> of a <code>Two.Path</code>. This typically means you'll want to set these to <code>0</code>, <code>0</code>. Next define how large the <code>radius</code> for the radial gradient is. Lastly, pass an array of <code>Two.Stop</code>s to define the coloring of the radial gradient. Optionally, you can pass a set of <code>x</code>, <code>y</code> coordinates to define the focal position of the radial gradient's trajectory.
+          </p>
+        </li>
+        <li id="radial-gradient-center">
+          <p class="property object">
+            <strong>center</strong> <code>radialGradient.center</code>
+          </p>
+          <p>
+            A <code>Two.Vector</code> that represents the position of the <code>x</code>, <code>y</code> coordinates at the center of the gradient.
+          </p>
+        </li>
+        <li id="radial-gradient-radius">
+          <p class="property number">
+            <strong>radius</strong> <code>radialGradient.radius</code>
+          </p>
+          <p>
+            A number representing the radius of the <code>radialGradient</code>.
+          </p>
+        </li>
+        <li id="radial-gradient-focal">
+          <p class="property object">
+            <strong>focal</strong> <code>linearGradient.focal</code>
+          </p>
+          <p>
+            A <code>Two.Vector</code> that represents the position of the <code>x</code>, <code>y</code> coordinates as the focal point for the gradient's trajectory.
+          </p>
+        </li>
+        <li id="radial-gradient-spread">
+          <p class="property string">
+            <strong>spread</strong> <code>radialGradient.spread</code>
+          </p>
+          <p>
+            Defines how the gradient is rendered by the renderer. For more details see the <a href="http://www.w3.org/TR/SVG/pservers.html#LinearGradientElementSpreadMethodAttribute" target="_blank">w3c <code>svg</code> spec</a>.
+          </p>
+        </li>
+        <li id="radial-gradient-stops">
+          <p class="property object">
+            <strong>stops</strong> <code>radialGradient.stops</code>
+          </p>
+          <p>
+            A <code>Two.Utils.Collection</code> of <code>Two.Stop</code>s that is two-way databound. Individual stops may be manipulated.
+          </p>
+        </li>
+        <li id="radial-gradient-clone">
+          <p class="property function">
+            <strong>clone</strong> <code>radialGradient.clone();</code>
+          </p>
+          <p>
+            A function to clone a <code>radialGradient</code>. Also, clones each <code>Two.Stop</code> in the <code>radialGradient.stops</code> array.
           </p>
         </li>
 
