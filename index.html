@@ -333,13 +333,15 @@ two.bind('update', function(frameCount) {
         <li><a href="#two-path">Two.Path</a></li>
         <li><a href="#two-line">Two.Line</a></li>
         <li><a href="#two-rectangle">Two.Rectangle</a></li>
-        <li><a href="#two-roundedrectangle">Two.RoundedRectangle</a></li>
+        <li><a href="#two-rounded-rectangle">Two.RoundedRectangle</a></li>
         <li><a href="#two-ellipse">Two.Ellipse</a></li>
         <li><a href="#two-star">Two.Star</a></li>
         <li><a href="#two-polygon">Two.Polygon</a></li>
         <li><a href="#two-group">Two.Group</a></li>
         <li><a href="#two-vector">Two.Vector</a></li>
         <li><a href="#two-anchor">Two.Anchor</a></li>
+        <li><a href="#two-linear-gradient">Two.LinearGradient</a></li>
+        <li><a href="#two-radial-gradient">Two.RadialGradient</a></li>
       </ul>
 
       <ul class="documentation">
@@ -1064,6 +1066,37 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
 
+        <div id="two-star"></div>
+        <li class="title"><h3>Two.Star</h3></li>
+        <li class="description">
+          This is a class for creating a star in two.js. It inherits from <code>Two.Path</code>, so it has all the same properties and functions as <code>Two.Path</code>.
+        </li>
+        <li id="star-construction">
+          <p class="construction declaration">
+            <strong>construction</strong> <code>var star = new Two.Star(x, y, or, ir, sides);</code>
+          </p>
+          <p>
+            A star takes a set of <code>x</code>, <code>y</code> coordinates as its origin (the center of the star by default) and <code>or</code> parameter to define the outer radius of the star. Optionally you can define an <code>ir</code> inner radius for the star and <code>sides</code> for how many sides the star has. By default he <code>ir</code> is half the <code>or</code> and there are 5 <code>sides</code>.
+          </p>
+        </li>
+
+        <div id="two-polygon"></div>
+        <li class="title"><h3>Two.Polygon</h3></li>
+        <li class="description">
+          This is a class for creating a polygon, symmetrically multi-sided shape, in two.js. It inherits from <code>Two.Path</code>, so it has all the same properties and functions as <code>Two.Path</code>.
+        </li>
+        <li id="polygon-construction">
+          <p class="construction declaration">
+            <strong>construction</strong> <code>var polygon = new Two.Polygon(x, y, radius, sides);</code>
+          </p>
+          <p>
+            A polygon takes a set of <code>x</code>, <code>y</code> coordinates as its origin (the center of the polygon by default) and <code>radius</code>, <code>sides</code> parameters to define the radius of the polygon and how many sides the polygon has. By default there are 3 <code>sides</code>, a triangle.
+          </p>
+          <p class="nota-bene">
+            Prior to two.js <code>v0.5.0</code> <code>Two.Polygon</code> acted as the base drawing class. What <code>Two.Path</code> effectively is after <code>v0.5.0</code>.
+          </p>
+        </li>
+
         <!-- Two.Group -->
         <div id="two-group"></div>
         <li class="title"><h3>Two.Group</h3></li>
@@ -1570,12 +1603,26 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
 
+        <div id="two-linear-gradient"></div>
+        <li class="title"><h3>Two.LinearGradient</h3></li>
+        <li class="description">
+          This is a class for creating a LinearGradient in two.js. By itself a <code>Two.LinearGradient</code> doesn't render anything specifically to the screen. However, in conjunction with a <code>Two.Path</code> you can style <code>Two.Path.fill</code> or <code>Two.Path.stroke</code> with a <code>Two.LinearGradient</code> to render a gradient for that part of the <code>Two.Path</code>. Check the <a href="/examples">examples</a> page for exact usage.
+        </li>
+        <li id="linear-gradient-construction">
+          <p class="construction declaration">
+            <strong>construction</strong> <code>var linearGradient = new Two.LinearGradient(x1, y1, x2, y2, stops);</code>
+          </p>
+          <p>
+            A linear gradient takes two sets of <code>x</code>, <code>y</code> coordinates to define the endpoints of the styling. These coordinates are relative to the <strong>origin</strong> of a <code>Two.Path</code>. This typically means you'll want to go from a negative quadrant to a positive quadrant in order for the gradient to render correctly. Lastly it takes an array of <code>Two.Stop</code>s which represent the color value along the gradient's trajectory.
+          </p>
+        </li>
+
       </ul>
 
       <br />
 
       <p>
-        These are the five main classes that a typical developer will come across with when using two.js, however the project is built with a few more classes behind the scene. If you&apos;re interested in the nitty-gritty then it&apos;s recommended to check out the <a href="http://github.com/jonobr1/two.js" target="_blank">source</a>.
+        These are the main classes that a typical developer will come across with when using two.js, however the project is built with a few more classes behind the scene. If you&apos;re interested in the nitty-gritty then it&apos;s recommended to check out the <a href="http://github.com/jonobr1/two.js" target="_blank">source</a>.
       </p>
 
       <!-- <div id="compatibility" class="horizon"></div> -->
