@@ -62,16 +62,12 @@
         var destination = new Two.Vector();
 
         $(window)
-          .bind('touchstart touchend touchcancel', function(e) {
-            e.preventDefault();
-            return false;
-          })
           .bind('mousemove', function(e) {
             mouse.set(e.clientX, e.clientY);
           })
           .bind('touchmove', function(e) {
             e.preventDefault();
-            var touch = e.touches[0];
+            var touch = e.originalEvent.changedTouches[0];
             mouse.set(touch.pageX, touch.pageY);
             return false;
           });
