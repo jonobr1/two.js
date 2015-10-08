@@ -49,8 +49,8 @@
         var radialGradient = two.makeRadialGradient(
           0, 0,
           radius,
-          new Two.Stop(0, 'rgba(255, 0, 0, 1)'),
-          new Two.Stop(0.5, 'rgba(255, 0, 0, 0)')
+          new Two.Stop(0, 'rgba(255, 0, 0, 1)', 1),
+          new Two.Stop(0.5, 'rgba(255, 0, 0, 0)', 0)
         );
 
         var vignette = two.makeRectangle(two.width / 2, two.height / 2, two.width, two.height);
