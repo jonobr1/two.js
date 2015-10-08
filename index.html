@@ -334,7 +334,6 @@ two.bind('update', function(frameCount) {
         <li><a href="#two-line">Two.Line</a></li>
         <li><a href="#two-rectangle">Two.Rectangle</a></li>
         <li><a href="#two-roundedrectangle">Two.RoundedRectangle</a></li>
-        <li><a href="#two-circle">Two.Circle</a></li>
         <li><a href="#two-ellipse">Two.Ellipse</a></li>
         <li><a href="#two-star">Two.Star</a></li>
         <li><a href="#two-polygon">Two.Polygon</a></li>
@@ -1003,6 +1002,65 @@ two.bind('update', function(frameCount) {
           </p>
           <p class="description">
             Convenience method to make getter / setter properties specific to <code>Two.Path</code>.
+          </p>
+        </li>
+
+        <div id="two-line"></div>
+        <li class="title"><h3>Two.Line</h3></li>
+        <li class="description">
+          This is a class for creating a line in two.js. It inherits from <code>Two.Path</code>, so it has all the same properties and functions as <code>Two.Path</code>.
+        </li>
+        <li id="line-construction">
+          <p class="construction declaration">
+            <strong>construction</strong> <code>var line = new Two.Line(x1, y1, x2, y2);</code>
+          </p>
+          <p>
+            A line takes two sets of <code>x</code>, <code>y</code> coordinates. <code>x1</code>, <code>y1</code> to define the <em>left</em> endpoint and <code>x2</code>, <code>y2</code> to define the <em>right</em> endpoint.
+          </p>
+        </li>
+
+        <div id="two-rectangle"></div>
+        <li class="title"><h3>Two.Rectangle</h3></li>
+        <li class="description">
+          This is a class for creating a rectangle in two.js. It inherits from <code>Two.Path</code>, so it has all the same properties and functions as <code>Two.Path</code>.
+        </li>
+        <li id="rectangle-construction">
+          <p class="construction declaration">
+            <strong>construction</strong> <code>var rectangle = new Two.Rectangle(x, y, width, height);</code>
+          </p>
+          <p>
+            A rectangle takes a set of <code>x</code>, <code>y</code> coordinates as its origin (the center of the rectangle by default) and <code>width</code>, <code>height</code> parameters to define the width and height of the rectangle.
+          </p>
+        </li>
+
+        <div id="two-rounded-rectangle"></div>
+        <li class="title"><h3>Two.RoundedRectangle</h3></li>
+        <li class="description">
+          This is a class for creating a rounded rectangle in two.js. It inherits from <code>Two.Path</code>, so it has all the same properties and functions as <code>Two.Path</code>.
+        </li>
+        <li id="rounded-rectangle-construction">
+          <p class="construction declaration">
+            <strong>construction</strong> <code>var roundedRect = new Two.RoundedRectangle(x, y, width, height, radius);</code>
+          </p>
+          <p>
+            A rounded rectangle takes a set of <code>x</code>, <code>y</code> coordinates as its origin (the center of the rounded rectangle by default) and <code>width</code>, <code>height</code> parameters to define the width and height of the rectangle. Lastly, it takes an optional <code>radius</code> number representing the radius of the curve along the corner of the rectangle. <code>radius</code> defaults to <code>1/12</code><sup>th</sup> the of the smaller value between <code>width</code>, <code>height</code>.
+          </p>
+        </li>
+
+        <div id="two-ellipse"></div>
+        <li class="title"><h3>Two.Ellipse</h3></li>
+        <li class="description">
+          This is a class for creating an ellipse in two.js. It inherits from <code>Two.Path</code>, so it has all the same properties and functions as <code>Two.Path</code>.
+        </li>
+        <li id="ellipse-construction">
+          <p class="construction declaration">
+            <strong>construction</strong> <code>var ellipse = new Two.Ellipse(x, y, width, height);</code>
+          </p>
+          <p>
+            An ellipse takes a set of <code>x</code>, <code>y</code> coordinates as its origin (the center of the ellipse by default) and <code>width</code>, <code>height</code> parameters to define the width and height of the ellipse.
+          </p>
+          <p class="nota-bene">
+            To construct a circle leave <code>height</code> empty and the height will default to the width.
           </p>
         </li>
 
