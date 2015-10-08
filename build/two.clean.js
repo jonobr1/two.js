@@ -6101,7 +6101,7 @@
 
 (function(Two, _, Backbone, requestAnimationFrame) {
 
-  var Stop = function(offset, color, opacity) {
+  var Stop = Two.Stop = function(offset, color, opacity) {
 
     this._renderer = {};
 
