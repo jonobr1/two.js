@@ -35,7 +35,7 @@
 
     Properties: [
       'value', 'family', 'size', 'leading', 'alignment', 'fill', 'stroke',
-      'style', 'weight', 'opacity', 'visible'],
+      'linewidth', 'style', 'weight', 'opacity', 'visible'],
 
     MakeObservable: function(object) {
 
@@ -87,6 +87,7 @@
 
     _flagFill: true,
     _flagStroke: true,
+    _flagLinewidth: true,
     _flagOpacity: true,
     _flagVisible: true,
 
@@ -104,6 +105,7 @@
 
     _fill: '#000',
     _stroke: 'transparent',
+    _linewith: 1,
     _opacity: 1,
     _visible: true,
 
@@ -164,8 +166,8 @@
 
       this._flagValue = this._flagFamily = this._flagSize =
         this._flagLeading = this._flagAlignment = this._flagFill =
-        this._flagStroke = this._flagOpaicty = this._flagVisible =
-        this._flagClip = false;
+        this._flagStroke = this._flagLinewidth = this._flagOpaicty =
+        this._flagVisible = this._flagClip = false;
 
       Two.Shape.prototype.flagReset.call(this);
 

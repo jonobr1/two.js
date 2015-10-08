@@ -484,6 +484,9 @@
           changed.stroke = this._stroke && this._stroke.id
             ? 'url(#' + this._stroke.id + ')' : this._stroke;
         }
+        if (this._flagLinewidth) {
+          changed['stroke-width'] = this._linewidth;
+        }
         if (this._flagOpacity) {
           changed.opacity = this._opacity;
         }

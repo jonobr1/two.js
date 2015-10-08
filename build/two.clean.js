@@ -3364,6 +3364,9 @@
           changed.stroke = this._stroke && this._stroke.id
             ? 'url(#' + this._stroke.id + ')' : this._stroke;
         }
+        if (this._flagLinewidth) {
+          changed['stroke-width'] = this._linewidth;
+        }
         if (this._flagOpacity) {
           changed.opacity = this._opacity;
         }
@@ -6230,7 +6233,7 @@
 
     Properties: [
       'value', 'family', 'size', 'leading', 'alignment', 'fill', 'stroke',
-      'style', 'weight', 'opacity', 'visible'],
+      'linewidth', 'style', 'weight', 'opacity', 'visible'],
 
     MakeObservable: function(object) {
 
@@ -6282,6 +6285,7 @@
 
     _flagFill: true,
     _flagStroke: true,
+    _flagLinewidth: true,
     _flagOpacity: true,
     _flagVisible: true,
 
@@ -6293,12 +6297,13 @@
     _family: 'sans-serif',
     _size: 13,
     _leading: 17,
-    _alignment: 'left',
+    _alignment: 'middle',
     _style: 'normal',
     _weight: 500,
 
     _fill: '#000',
     _stroke: 'transparent',
+    _linewith: 1,
     _opacity: 1,
     _visible: true,
 
@@ -6359,8 +6364,8 @@
 
       this._flagValue = this._flagFamily = this._flagSize =
         this._flagLeading = this._flagAlignment = this._flagFill =
-        this._flagStroke = this._flagOpaicty = this._flagVisible =
-        this._flagClip = false;
+        this._flagStroke = this._flagLinewidth = this._flagOpaicty =
+        this._flagVisible = this._flagClip = false;
 
       Two.Shape.prototype.flagReset.call(this);
 
