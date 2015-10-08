@@ -2,6 +2,11 @@
   "template": "<li><a href=\"<%= href %>\" target=\"_blank\"><img width=\"143\" height=\"100\" src=\"<%= img %>\" alt=\"\"><h3><p><%= title %></p></h3></a></li>",
   "items": [
     {
+      "title": "typatone",
+      "href": "http://typatone.com",
+      "img": "images/projects/typatone.gif"
+    },
+    {
       "title": "Lærepenger",
       "href": "http://event.larepenger.no/",
       "img": "images/projects/larepenger.gif"
