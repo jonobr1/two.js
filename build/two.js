@@ -4346,6 +4346,7 @@ var Backbone = Backbone || {};
 
     alignments: {
       left: 'start',
+      center: 'middle',
       right: 'end'
     },
 
@@ -4808,6 +4809,9 @@ var Backbone = Backbone || {};
         }
         if (this._flagWeight) {
           changed['font-weight'] = this._weight;
+        }
+        if (this._flagDecoration) {
+          changed['text-decoration'] = this._decoration;
         }
 
         if (this._flagFill) {
@@ -7687,7 +7691,7 @@ var Backbone = Backbone || {};
 
     Properties: [
       'value', 'family', 'size', 'leading', 'alignment', 'fill', 'stroke',
-      'linewidth', 'style', 'weight', 'opacity', 'visible'],
+      'linewidth', 'style', 'weight', 'decoration', 'opacity', 'visible'],
 
     MakeObservable: function(object) {
 
@@ -7736,6 +7740,7 @@ var Backbone = Backbone || {};
     _flagAlignment: true,
     _flagStyle: true,
     _flagWeight: true,
+    _flagDecoration: true,
 
     _flagFill: true,
     _flagStroke: true,
@@ -7754,6 +7759,7 @@ var Backbone = Backbone || {};
     _alignment: 'middle',
     _style: 'normal',
     _weight: 500,
+    _decoration: 'none',
 
     _fill: '#000',
     _stroke: 'transparent',
@@ -7819,7 +7825,7 @@ var Backbone = Backbone || {};
       this._flagValue = this._flagFamily = this._flagSize =
         this._flagLeading = this._flagAlignment = this._flagFill =
         this._flagStroke = this._flagLinewidth = this._flagOpaicty =
-        this._flagVisible = this._flagClip = false;
+        this._flagVisible = this._flagClip = this._flagDecoration = false;
 
       Two.Shape.prototype.flagReset.call(this);
 

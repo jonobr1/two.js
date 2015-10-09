@@ -12,6 +12,7 @@
 
     alignments: {
       left: 'start',
+      center: 'middle',
       right: 'end'
     },
 
@@ -474,6 +475,9 @@
         }
         if (this._flagWeight) {
           changed['font-weight'] = this._weight;
+        }
+        if (this._flagDecoration) {
+          changed['text-decoration'] = this._decoration;
         }
 
         if (this._flagFill) {

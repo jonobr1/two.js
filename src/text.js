@@ -1,5 +1,10 @@
 (function(Two, _, Backbone, requestAnimationFrame) {
 
+  var getComputedMatrix = Two.Utils.getComputedMatrix;
+
+  var canvas = document.createElement('canvas');
+  var ctx = canvas.getContext('2d');
+
   Two.Text = function(message, x, y, styles) {
 
     Two.Shape.call(this);
@@ -35,7 +40,7 @@
 
     Properties: [
       'value', 'family', 'size', 'leading', 'alignment', 'fill', 'stroke',
-      'linewidth', 'style', 'weight', 'opacity', 'visible'],
+      'linewidth', 'style', 'weight', 'decoration', 'opacity', 'visible'],
 
     MakeObservable: function(object) {
 
@@ -84,6 +89,7 @@
     _flagAlignment: true,
     _flagStyle: true,
     _flagWeight: true,
+    _flagDecoration: true,
 
     _flagFill: true,
     _flagStroke: true,
@@ -102,6 +108,7 @@
     _alignment: 'middle',
     _style: 'normal',
     _weight: 500,
+    _decoration: 'none',
 
     _fill: '#000',
     _stroke: 'transparent',
@@ -156,9 +163,32 @@
       return this;
     },
 
-    getBoundingClientRect: function() {
+    /**
+     * A shim to not break `getBoundingClientRect` calls. TODO: Implement a
+     * way to calculate proper bounding boxes of `Two.Text`.
+     */
+    getBoundingClientRect: function(shallow) {
 
-      // TODO
+      var matrix, border, l, x, y, i, v;
+
+      var left = Infinity, right = -Infinity,
+          top = Infinity, bottom = -Infinity;
+
+      // TODO: Update this to not __always__ update. Just when it needs to.
+      this._update(true);
+
+      matrix = !!shallow ? this._matrix : getComputedMatrix(this);
+
+      v = matrix.multiply(0, 0, 1);
+
+      return {
+        top: v.x,
+        left: v.y,
+        right: v.x,
+        bottom: v.y,
+        width: 0,
+        height: 0
+      };
 
     },
 
@@ -167,7 +197,7 @@
       this._flagValue = this._flagFamily = this._flagSize =
         this._flagLeading = this._flagAlignment = this._flagFill =
         this._flagStroke = this._flagLinewidth = this._flagOpaicty =
-        this._flagVisible = this._flagClip = false;
+        this._flagVisible = this._flagClip = this._flagDecoration = false;
 
       Two.Shape.prototype.flagReset.call(this);
 
