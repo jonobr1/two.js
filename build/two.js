@@ -4804,6 +4804,9 @@ var Backbone = Backbone || {};
         if (this._flagAlignment) {
           changed['text-anchor'] = svg.alignments[this._alignment] || this._alignment;
         }
+        if (this._flagBaseline) {
+          changed['alignment-baseline'] = changed['dominant-baseline'] = this._baseline;
+        }
         if (this._flagStyle) {
           changed['font-style'] = this._style;
         }
@@ -4835,7 +4838,6 @@ var Backbone = Backbone || {};
         if (!this._renderer.elem) {
 
           changed.id = this.id;
-          changed['alignment-baseline'] = 'middle';
 
           this._renderer.elem = svg.createElement('text', changed);
           domElement.defs.appendChild(this._renderer.elem);
@@ -5099,6 +5101,12 @@ var Backbone = Backbone || {};
   var canvas = {
 
     isHidden: /(none|transparent)/i,
+
+    alignments: {
+      left: 'start',
+      middle: 'center',
+      right: 'end'
+    },
 
     group: {
 
@@ -5373,6 +5381,94 @@ var Backbone = Backbone || {};
             this._renderer.gradient.addColorStop(stop._offset, stop._color);
           }
 
+        }
+
+        return this.flagReset();
+
+      }
+
+    },
+
+    text: {
+
+      render: function(ctx, forced, parentClipped) {
+
+        // TODO: Add a check here to only invoke _update if need be.
+        this._update();
+
+        var matrix = this._matrix.elements;
+        var stroke = this._stroke;
+        var linewidth = this._linewidth;
+        var fill = this._fill;
+        var opacity = this._opacity * this.parent._renderer.opacity;
+        var visible = this._visible;
+        var defaultMatrix = isDefaultMatrix(matrix);
+
+        // mask = this._mask;
+        var clip = this._clip;
+
+        if (!forced && (!visible || clip)) {
+          return this;
+        }
+
+        // Transform
+        if (!defaultMatrix) {
+          ctx.save();
+          ctx.transform(matrix[0], matrix[3], matrix[1], matrix[4], matrix[2], matrix[5]);
+        }
+
+       /**
+         * Commented two-way functionality of clips / masks with groups and
+         * polygons. Uncomment when this bug is fixed:
+         * https://code.google.com/p/chromium/issues/detail?id=370951
+         */
+
+        // if (mask) {
+        //   canvas[mask._renderer.type].render.call(mask, ctx, true);
+        // }
+
+        ctx.font = [this._style, this._weight, this._size + 'px/' +
+          this._leading + 'px', this._family].join(' ');
+
+        ctx.textAlign = canvas.alignments[this._alignment] || this._alignment;
+        ctx.textBaseline = this._baseline;
+
+        // Styles
+        if (fill) {
+          if (_.isString(fill)) {
+            ctx.fillStyle = fill;
+          } else {
+            canvas[fill._renderer.type].render.call(fill, ctx);
+            ctx.fillStyle = fill._renderer.gradient;
+          }
+        }
+        if (stroke) {
+          if (_.isString(stroke)) {
+            ctx.strokeStyle = stroke;
+          } else {
+            canvas[stroke._renderer.type].render.call(stroke, ctx);
+            ctx.strokeStyle = stroke._renderer.gradient;
+          }
+        }
+        if (linewidth) {
+          ctx.lineWidth = linewidth;
+        }
+        if (_.isNumber(opacity)) {
+          ctx.globalAlpha = opacity;
+        }
+
+        if (!clip && !parentClipped) {
+          if (!canvas.isHidden.test(fill)) ctx.fillText(this.value, 0, 0);
+          if (!canvas.isHidden.test(stroke)) ctx.strokeText(this.value, 0, 0);
+        }
+
+        if (!defaultMatrix) {
+          ctx.restore();
+        }
+
+        // TODO: Test for text
+        if (clip && !parentClipped) {
+          ctx.clip();
         }
 
         return this.flagReset();
@@ -7656,6 +7752,11 @@ var Backbone = Backbone || {};
 
 (function(Two, _, Backbone, requestAnimationFrame) {
 
+  var getComputedMatrix = Two.Utils.getComputedMatrix;
+
+  var canvas = document.createElement('canvas');
+  var ctx = canvas.getContext('2d');
+
   Two.Text = function(message, x, y, styles) {
 
     Two.Shape.call(this);
@@ -7691,7 +7792,9 @@ var Backbone = Backbone || {};
 
     Properties: [
       'value', 'family', 'size', 'leading', 'alignment', 'fill', 'stroke',
-      'linewidth', 'style', 'weight', 'decoration', 'opacity', 'visible'],
+      'linewidth', 'style', 'weight', 'decoration', 'baseline', 'opacity',
+      'visible'
+    ],
 
     MakeObservable: function(object) {
 
@@ -7738,6 +7841,7 @@ var Backbone = Backbone || {};
     _flagSize: true,
     _flagLeading: true,
     _flagAlignment: true,
+    _flagBaseline: true,
     _flagStyle: true,
     _flagWeight: true,
     _flagDecoration: true,
@@ -7757,6 +7861,7 @@ var Backbone = Backbone || {};
     _size: 13,
     _leading: 17,
     _alignment: 'middle',
+    _baseline: 'middle',
     _style: 'normal',
     _weight: 500,
     _decoration: 'none',
@@ -7814,9 +7919,32 @@ var Backbone = Backbone || {};
       return this;
     },
 
-    getBoundingClientRect: function() {
+    /**
+     * A shim to not break `getBoundingClientRect` calls. TODO: Implement a
+     * way to calculate proper bounding boxes of `Two.Text`.
+     */
+    getBoundingClientRect: function(shallow) {
 
-      // TODO
+      var matrix, border, l, x, y, i, v;
+
+      var left = Infinity, right = -Infinity,
+          top = Infinity, bottom = -Infinity;
+
+      // TODO: Update this to not __always__ update. Just when it needs to.
+      this._update(true);
+
+      matrix = !!shallow ? this._matrix : getComputedMatrix(this);
+
+      v = matrix.multiply(0, 0, 1);
+
+      return {
+        top: v.x,
+        left: v.y,
+        right: v.x,
+        bottom: v.y,
+        width: 0,
+        height: 0
+      };
 
     },
 
@@ -7825,7 +7953,8 @@ var Backbone = Backbone || {};
       this._flagValue = this._flagFamily = this._flagSize =
         this._flagLeading = this._flagAlignment = this._flagFill =
         this._flagStroke = this._flagLinewidth = this._flagOpaicty =
-        this._flagVisible = this._flagClip = this._flagDecoration = false;
+        this._flagVisible = this._flagClip = this._flagDecoration =
+        this._flagBaseline = false;
 
       Two.Shape.prototype.flagReset.call(this);
 

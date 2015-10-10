@@ -470,6 +470,9 @@
         if (this._flagAlignment) {
           changed['text-anchor'] = svg.alignments[this._alignment] || this._alignment;
         }
+        if (this._flagBaseline) {
+          changed['alignment-baseline'] = changed['dominant-baseline'] = this._baseline;
+        }
         if (this._flagStyle) {
           changed['font-style'] = this._style;
         }
@@ -501,7 +504,6 @@
         if (!this._renderer.elem) {
 
           changed.id = this.id;
-          changed['alignment-baseline'] = 'middle';
 
           this._renderer.elem = svg.createElement('text', changed);
           domElement.defs.appendChild(this._renderer.elem);

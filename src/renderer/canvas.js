@@ -344,7 +344,7 @@
           this._leading + 'px', this._family].join(' ');
 
         ctx.textAlign = canvas.alignments[this._alignment] || this._alignment;
-        ctx.textBaseline = 'middle';
+        ctx.textBaseline = this._baseline;
 
         // Styles
         if (fill) {
