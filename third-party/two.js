@@ -4880,7 +4880,7 @@ var Backbone = Backbone || {};
 
         if (this._flagStops) {
 
-          this._renderer.elem.children.length = 0;
+          this._renderer.elem.childNodes.length = 0;
 
           for (var i = 0; i < this.stops.length; i++) {
 
