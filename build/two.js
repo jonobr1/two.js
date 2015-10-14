@@ -4931,6 +4931,7 @@ var Backbone = Backbone || {};
     this.defs = svg.createElement('defs');
     this.domElement.appendChild(this.defs);
     this.domElement.defs = this.defs;
+    this.domElement.style.overflow = 'hidden';
 
   };
 
