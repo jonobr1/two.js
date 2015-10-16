@@ -4276,6 +4276,168 @@
 
     path: {
 
+      updateCanvas: function(elem) {
+
+        var next, prev, a, c, ux, uy, vx, vy, ar, bl, br, cl, x, y;
+
+        var commands = elem._vertices;
+        var canvas = this.canvas;
+        var ctx = this.ctx;
+
+        // Styles
+        var scale = elem._renderer.scale;
+        var stroke = elem._stroke;
+        var linewidth = elem._linewidth * scale;
+        var fill = elem._fill;
+        var opacity = elem._renderer.opacity || elem._opacity;
+        var cap = elem._cap;
+        var join = elem._join;
+        var miter = elem._miter;
+        var closed = elem._closed;
+        var length = commands.length;
+        var last = length - 1;
+
+        canvas.width = Math.max(Math.ceil(elem._renderer.rect.width * scale), 1);
+        canvas.height = Math.max(Math.ceil(elem._renderer.rect.height * scale), 1);
+
+        var centroid = elem._renderer.rect.centroid;
+        var cx = centroid.x * scale;
+        var cy = centroid.y * scale;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        if (fill) {
+          if (_.isString(fill)) {
+            ctx.fillStyle = fill;
+          } else {
+            webgl[fill._renderer.type].render.call(fill, ctx, elem);
+            ctx.fillStyle = fill._renderer.gradient;
+          }
+        }
+        if (stroke) {
+          if (_.isString(stroke)) {
+            ctx.strokeStyle = stroke;
+          } else {
+            webgl[stroke._renderer.type].render.call(stroke, ctx, elem);
+            ctx.strokeStyle = stroke._renderer.gradient;
+          }
+        }
+        if (linewidth) {
+          ctx.lineWidth = linewidth;
+        }
+        if (miter) {
+          ctx.miterLimit = miter;
+        }
+        if (join) {
+          ctx.lineJoin = join;
+        }
+        if (cap) {
+          ctx.lineCap = cap;
+        }
+        if (_.isNumber(opacity)) {
+          ctx.globalAlpha = opacity;
+        }
+
+        var d;
+        ctx.beginPath();
+        // commands.forEach(function(b, i) {
+        for (var i = 0; i < commands.length; i++) {
+
+          b = commands[i];
+
+          x = toFixed(b._x * scale + cx);
+          y = toFixed(b._y * scale + cy);
+
+          switch (b._command) {
+
+            case Two.Commands.close:
+              ctx.closePath();
+              break;
+
+            case Two.Commands.curve:
+
+              prev = closed ? mod(i - 1, length) : Math.max(i - 1, 0);
+              next = closed ? mod(i + 1, length) : Math.min(i + 1, last);
+
+              a = commands[prev];
+              c = commands[next];
+              ar = (a.controls && a.controls.right) || a;
+              bl = (b.controls && b.controls.left) || b;
+
+              if (a._relative) {
+                vx = toFixed((ar.x + a._x) * scale + cx);
+                vy = toFixed((ar.y + a._y) * scale + cy);
+              } else {
+                vx = toFixed(ar.x * scale + cx);
+                vy = toFixed(ar.y * scale + cy);
+              }
+
+              if (b._relative) {
+                ux = toFixed((bl.x + b._x) * scale + cx);
+                uy = toFixed((bl.y + b._y) * scale + cy);
+              } else {
+                ux = toFixed(bl.x * scale + cx);
+                uy = toFixed(bl.y * scale + cy);
+              }
+
+              ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
+
+              if (i >= last && closed) {
+
+                c = d;
+
+                br = (b.controls && b.controls.right) || b;
+                cl = (c.controls && c.controls.left) || c;
+
+                if (b._relative) {
+                  vx = toFixed((br.x + b._x) * scale + cx);
+                  vy = toFixed((br.y + b._y) * scale + cy);
+                } else {
+                  vx = toFixed(br.x * scale + cx);
+                  vy = toFixed(br.y * scale + cy);
+                }
+
+                if (c._relative) {
+                  ux = toFixed((cl.x + c._x) * scale + cx);
+                  uy = toFixed((cl.y + c._y) * scale + cy);
+                } else {
+                  ux = toFixed(cl.x * scale + cx);
+                  uy = toFixed(cl.y * scale + cy);
+                }
+
+                x = toFixed(c._x * scale + cx);
+                y = toFixed(c._y * scale + cy);
+
+                ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
+
+              }
+
+              break;
+
+            case Two.Commands.line:
+              ctx.lineTo(x, y);
+              break;
+
+            case Two.Commands.move:
+              d = b;
+              ctx.moveTo(x, y);
+              break;
+
+          }
+
+        }
+
+        // Loose ends
+
+        if (closed) {
+          ctx.closePath();
+        }
+
+        if (!webgl.isHidden.test(fill)) ctx.fill();
+        if (!webgl.isHidden.test(stroke)) ctx.stroke();
+
+      },
+
       render: function(gl, program, forcedParent) {
 
         if (!this._visible || !this._opacity) {
@@ -4329,8 +4491,8 @@
           webgl.getBoundingClientRect(this._vertices, this._linewidth, this._renderer.rect);
           webgl.getTriangles(this._renderer.rect, this._renderer.triangles);
 
-          webgl.updateBuffer(gl, this, program);
-          webgl.updateTexture(gl, this);
+          webgl.updateBuffer.call(webgl, gl, this, program);
+          webgl.updateTexture.call(webgl, gl, this);
 
         }
 
@@ -4541,171 +4703,9 @@
 
     },
 
-    updateCanvas: function(elem) {
-
-      var next, prev, a, c, ux, uy, vx, vy, ar, bl, br, cl, x, y;
-
-      var commands = elem._vertices;
-      var canvas = this.canvas;
-      var ctx = this.ctx;
-
-      // Styles
-      var scale = elem._renderer.scale;
-      var stroke = elem._stroke;
-      var linewidth = elem._linewidth * scale;
-      var fill = elem._fill;
-      var opacity = elem._renderer.opacity || elem._opacity;
-      var cap = elem._cap;
-      var join = elem._join;
-      var miter = elem._miter;
-      var closed = elem._closed;
-      var length = commands.length;
-      var last = length - 1;
-
-      canvas.width = Math.max(Math.ceil(elem._renderer.rect.width * scale), 1);
-      canvas.height = Math.max(Math.ceil(elem._renderer.rect.height * scale), 1);
-
-      var centroid = elem._renderer.rect.centroid;
-      var cx = centroid.x * scale;
-      var cy = centroid.y * scale;
-
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      if (fill) {
-        if (_.isString(fill)) {
-          ctx.fillStyle = fill;
-        } else {
-          webgl[fill._renderer.type].render.call(fill, ctx, elem);
-          ctx.fillStyle = fill._renderer.gradient;
-        }
-      }
-      if (stroke) {
-        if (_.isString(stroke)) {
-          ctx.strokeStyle = stroke;
-        } else {
-          webgl[stroke._renderer.type].render.call(stroke, ctx, elem);
-          ctx.strokeStyle = stroke._renderer.gradient;
-        }
-      }
-      if (linewidth) {
-        ctx.lineWidth = linewidth;
-      }
-      if (miter) {
-        ctx.miterLimit = miter;
-      }
-      if (join) {
-        ctx.lineJoin = join;
-      }
-      if (cap) {
-        ctx.lineCap = cap;
-      }
-      if (_.isNumber(opacity)) {
-        ctx.globalAlpha = opacity;
-      }
-
-      var d;
-      ctx.beginPath();
-      // commands.forEach(function(b, i) {
-      for (var i = 0; i < commands.length; i++) {
-
-        b = commands[i];
-
-        x = toFixed(b._x * scale + cx);
-        y = toFixed(b._y * scale + cy);
-
-        switch (b._command) {
-
-          case Two.Commands.close:
-            ctx.closePath();
-            break;
-
-          case Two.Commands.curve:
-
-            prev = closed ? mod(i - 1, length) : Math.max(i - 1, 0);
-            next = closed ? mod(i + 1, length) : Math.min(i + 1, last);
-
-            a = commands[prev];
-            c = commands[next];
-            ar = (a.controls && a.controls.right) || a;
-            bl = (b.controls && b.controls.left) || b;
-
-            if (a._relative) {
-              vx = toFixed((ar.x + a._x) * scale + cx);
-              vy = toFixed((ar.y + a._y) * scale + cy);
-            } else {
-              vx = toFixed(ar.x * scale + cx);
-              vy = toFixed(ar.y * scale + cy);
-            }
-
-            if (b._relative) {
-              ux = toFixed((bl.x + b._x) * scale + cx);
-              uy = toFixed((bl.y + b._y) * scale + cy);
-            } else {
-              ux = toFixed(bl.x * scale + cx);
-              uy = toFixed(bl.y * scale + cy);
-            }
-
-            ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
-
-            if (i >= last && closed) {
-
-              c = d;
-
-              br = (b.controls && b.controls.right) || b;
-              cl = (c.controls && c.controls.left) || c;
-
-              if (b._relative) {
-                vx = toFixed((br.x + b._x) * scale + cx);
-                vy = toFixed((br.y + b._y) * scale + cy);
-              } else {
-                vx = toFixed(br.x * scale + cx);
-                vy = toFixed(br.y * scale + cy);
-              }
-
-              if (c._relative) {
-                ux = toFixed((cl.x + c._x) * scale + cx);
-                uy = toFixed((cl.y + c._y) * scale + cy);
-              } else {
-                ux = toFixed(cl.x * scale + cx);
-                uy = toFixed(cl.y * scale + cy);
-              }
-
-              x = toFixed(c._x * scale + cx);
-              y = toFixed(c._y * scale + cy);
-
-              ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
-
-            }
-
-            break;
-
-          case Two.Commands.line:
-            ctx.lineTo(x, y);
-            break;
-
-          case Two.Commands.move:
-            d = b;
-            ctx.moveTo(x, y);
-            break;
-
-        }
-
-      }
-
-      // Loose ends
-
-      if (closed) {
-        ctx.closePath();
-      }
-
-      if (!webgl.isHidden.test(fill)) ctx.fill();
-      if (!webgl.isHidden.test(stroke)) ctx.stroke();
-
-    },
-
     updateTexture: function(gl, elem) {
 
-      this.updateCanvas(elem);
+      this[elem._renderer.type].updateCanvas.call(webgl, elem);
 
       if (elem._renderer.texture) {
         gl.deleteTexture(elem._renderer.texture);
