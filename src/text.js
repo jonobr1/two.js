@@ -108,7 +108,7 @@
     _family: 'sans-serif',
     _size: 13,
     _leading: 17,
-    _alignment: 'middle',
+    _alignment: 'center',
     _baseline: 'middle',
     _style: 'normal',
     _weight: 500,
