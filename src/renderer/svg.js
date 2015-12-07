@@ -218,7 +218,7 @@
 
         var elem = object._renderer.elem;
 
-        if (!elem || elem.parentElement != this.elem) {
+        if (!elem || elem.parentNode != this.elem) {
           return;
         }
 
