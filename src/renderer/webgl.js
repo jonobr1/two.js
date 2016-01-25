@@ -18,6 +18,12 @@
 
     canvas: document.createElement('canvas'),
 
+    alignments: {
+      left: 'start',
+      middle: 'center',
+      right: 'end'
+    },
+
     matrix: new Two.Matrix(),
 
     uv: new Two.Array([
@@ -128,6 +134,248 @@
 
     path: {
 
+      updateCanvas: function(elem) {
+
+        var next, prev, a, c, ux, uy, vx, vy, ar, bl, br, cl, x, y;
+
+        var commands = elem._vertices;
+        var canvas = this.canvas;
+        var ctx = this.ctx;
+
+        // Styles
+        var scale = elem._renderer.scale;
+        var stroke = elem._stroke;
+        var linewidth = elem._linewidth;
+        var fill = elem._fill;
+        var opacity = elem._renderer.opacity || elem._opacity;
+        var cap = elem._cap;
+        var join = elem._join;
+        var miter = elem._miter;
+        var closed = elem._closed;
+        var length = commands.length;
+        var last = length - 1;
+
+        canvas.width = Math.max(Math.ceil(elem._renderer.rect.width * scale), 1);
+        canvas.height = Math.max(Math.ceil(elem._renderer.rect.height * scale), 1);
+
+        var centroid = elem._renderer.rect.centroid;
+        var cx = centroid.x;
+        var cy = centroid.y;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        if (fill) {
+          if (_.isString(fill)) {
+            ctx.fillStyle = fill;
+          } else {
+            webgl[fill._renderer.type].render.call(fill, ctx, elem);
+            ctx.fillStyle = fill._renderer.gradient;
+          }
+        }
+        if (stroke) {
+          if (_.isString(stroke)) {
+            ctx.strokeStyle = stroke;
+          } else {
+            webgl[stroke._renderer.type].render.call(stroke, ctx, elem);
+            ctx.strokeStyle = stroke._renderer.gradient;
+          }
+        }
+        if (linewidth) {
+          ctx.lineWidth = linewidth;
+        }
+        if (miter) {
+          ctx.miterLimit = miter;
+        }
+        if (join) {
+          ctx.lineJoin = join;
+        }
+        if (cap) {
+          ctx.lineCap = cap;
+        }
+        if (_.isNumber(opacity)) {
+          ctx.globalAlpha = opacity;
+        }
+
+        var d;
+        ctx.save();
+        ctx.scale(scale, scale);
+        ctx.translate(cx, cy);
+
+        ctx.beginPath();
+        for (var i = 0; i < commands.length; i++) {
+
+          b = commands[i];
+
+          x = toFixed(b._x);
+          y = toFixed(b._y);
+
+          switch (b._command) {
+
+            case Two.Commands.close:
+              ctx.closePath();
+              break;
+
+            case Two.Commands.curve:
+
+              prev = closed ? mod(i - 1, length) : Math.max(i - 1, 0);
+              next = closed ? mod(i + 1, length) : Math.min(i + 1, last);
+
+              a = commands[prev];
+              c = commands[next];
+              ar = (a.controls && a.controls.right) || a;
+              bl = (b.controls && b.controls.left) || b;
+
+              if (a._relative) {
+                vx = toFixed((ar.x + a._x));
+                vy = toFixed((ar.y + a._y));
+              } else {
+                vx = toFixed(ar.x);
+                vy = toFixed(ar.y);
+              }
+
+              if (b._relative) {
+                ux = toFixed((bl.x + b._x));
+                uy = toFixed((bl.y + b._y));
+              } else {
+                ux = toFixed(bl.x);
+                uy = toFixed(bl.y);
+              }
+
+              ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
+
+              if (i >= last && closed) {
+
+                c = d;
+
+                br = (b.controls && b.controls.right) || b;
+                cl = (c.controls && c.controls.left) || c;
+
+                if (b._relative) {
+                  vx = toFixed((br.x + b._x));
+                  vy = toFixed((br.y + b._y));
+                } else {
+                  vx = toFixed(br.x);
+                  vy = toFixed(br.y);
+                }
+
+                if (c._relative) {
+                  ux = toFixed((cl.x + c._x));
+                  uy = toFixed((cl.y + c._y));
+                } else {
+                  ux = toFixed(cl.x);
+                  uy = toFixed(cl.y);
+                }
+
+                x = toFixed(c._x);
+                y = toFixed(c._y);
+
+                ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
+
+              }
+
+              break;
+
+            case Two.Commands.line:
+              ctx.lineTo(x, y);
+              break;
+
+            case Two.Commands.move:
+              d = b;
+              ctx.moveTo(x, y);
+              break;
+
+          }
+
+        }
+
+        // Loose ends
+
+        if (closed) {
+          ctx.closePath();
+        }
+
+        if (!webgl.isHidden.test(fill)) ctx.fill();
+        if (!webgl.isHidden.test(stroke)) ctx.stroke();
+
+        ctx.restore();
+
+      },
+
+      /**
+       * Returns the rect of a set of verts. Typically takes vertices that are
+       * "centered" around 0 and returns them to be anchored upper-left.
+       */
+      getBoundingClientRect: function(vertices, border, rect) {
+
+        var left = Infinity, right = -Infinity,
+            top = Infinity, bottom = -Infinity,
+            width, height;
+
+        vertices.forEach(function(v) {
+
+          var x = v.x, y = v.y, controls = v.controls;
+          var a, b, c, d, cl, cr;
+
+          top = Math.min(y, top);
+          left = Math.min(x, left);
+          right = Math.max(x, right);
+          bottom = Math.max(y, bottom);
+
+          if (!v.controls) {
+            return;
+          }
+
+          cl = controls.left;
+          cr = controls.right;
+
+          if (!cl || !cr) {
+            return;
+          }
+
+          a = v._relative ? cl.x + x : cl.x;
+          b = v._relative ? cl.y + y : cl.y;
+          c = v._relative ? cr.x + x : cr.x;
+          d = v._relative ? cr.y + y : cr.y;
+
+          if (!a || !b || !c || !d) {
+            return;
+          }
+
+          top = Math.min(b, d, top);
+          left = Math.min(a, c, left);
+          right = Math.max(a, c, right);
+          bottom = Math.max(b, d, bottom);
+
+        });
+
+        // Expand borders
+
+        if (_.isNumber(border)) {
+          top -= border;
+          left -= border;
+          right += border;
+          bottom += border;
+        }
+
+        width = right - left;
+        height = bottom - top;
+
+        rect.top = top;
+        rect.left = left;
+        rect.right = right;
+        rect.bottom = bottom;
+        rect.width = width;
+        rect.height = height;
+
+        if (!rect.centroid) {
+          rect.centroid = {};
+        }
+
+        rect.centroid.x = - left;
+        rect.centroid.y = - top;
+
+      },
+
       render: function(gl, program, forcedParent) {
 
         if (!this._visible || !this._opacity) {
@@ -178,11 +426,233 @@
 
           this._renderer.opacity = this._opacity * parent._renderer.opacity;
 
-          webgl.getBoundingClientRect(this._vertices, this._linewidth, this._renderer.rect);
+          webgl.path.getBoundingClientRect(this._vertices, this._linewidth, this._renderer.rect);
           webgl.getTriangles(this._renderer.rect, this._renderer.triangles);
 
-          webgl.updateBuffer(gl, this, program);
-          webgl.updateTexture(gl, this);
+          webgl.updateBuffer.call(webgl, gl, this, program);
+          webgl.updateTexture.call(webgl, gl, this);
+
+        }
+
+        // if (this._mask) {
+        //   webgl[this._mask._renderer.type].render.call(mask, gl, program, this);
+        // }
+
+        if (this._clip && !forcedParent) {
+          return;
+        }
+
+        // Draw Texture
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, this._renderer.textureCoordsBuffer);
+
+        gl.vertexAttribPointer(program.textureCoords, 2, gl.FLOAT, false, 0, 0);
+
+        gl.bindTexture(gl.TEXTURE_2D, this._renderer.texture);
+
+
+        // Draw Rect
+
+        gl.uniformMatrix3fv(program.matrix, false, this._renderer.matrix);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, this._renderer.buffer);
+
+        gl.vertexAttribPointer(program.position, 2, gl.FLOAT, false, 0, 0);
+
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+        return this.flagReset();
+
+      }
+
+    },
+
+    text: {
+
+      updateCanvas: function(elem) {
+
+        var canvas = this.canvas;
+        var ctx = this.ctx;
+
+        // Styles
+        var scale = elem._renderer.scale;
+        var stroke = elem._stroke;
+        var linewidth = elem._linewidth * scale;
+        var fill = elem._fill;
+        var opacity = elem._renderer.opacity || elem._opacity;
+
+        canvas.width = Math.max(Math.ceil(elem._renderer.rect.width * scale), 1);
+        canvas.height = Math.max(Math.ceil(elem._renderer.rect.height * scale), 1);
+
+        var centroid = elem._renderer.rect.centroid;
+        var cx = centroid.x;
+        var cy = centroid.y;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        ctx.font = [elem._style, elem._weight, elem._size + 'px/' +
+          elem._leading + 'px', elem._family].join(' ');
+
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+
+        // Styles
+        if (fill) {
+          if (_.isString(fill)) {
+            ctx.fillStyle = fill;
+          } else {
+            webgl[fill._renderer.type].render.call(fill, ctx, elem);
+            ctx.fillStyle = fill._renderer.gradient;
+          }
+        }
+        if (stroke) {
+          if (_.isString(stroke)) {
+            ctx.strokeStyle = stroke;
+          } else {
+            webgl[stroke._renderer.type].render.call(stroke, ctx, elem);
+            ctx.strokeStyle = stroke._renderer.gradient;
+          }
+        }
+        if (linewidth) {
+          ctx.lineWidth = linewidth;
+        }
+        if (_.isNumber(opacity)) {
+          ctx.globalAlpha = opacity;
+        }
+
+        ctx.save();
+        ctx.scale(scale, scale);
+        ctx.translate(cx, cy);
+
+        if (!webgl.isHidden.test(fill)) ctx.fillText(elem.value, 0, 0);
+        if (!webgl.isHidden.test(stroke)) ctx.strokeText(elem.value, 0, 0);
+
+        ctx.restore();
+
+      },
+
+      getBoundingClientRect: function(elem, rect) {
+
+        var ctx = webgl.ctx;
+
+        ctx.font = [elem._style, elem._weight, elem._size + 'px/' +
+          elem._leading + 'px', elem._family].join(' ');
+
+        ctx.textAlign = 'center';
+        ctx.textBaseline = elem._baseline;
+
+        // TODO: Estimate this better
+        var width = ctx.measureText(elem._value).width;
+        var height = Math.max(elem._size || elem._leading);
+
+        if (this._linewidth && !webgl.isHidden.test(this._stroke)) {
+          // width += this._linewidth; // TODO: Not sure if the `measure` calcs this.
+          height += this._linewidth;
+        }
+
+        var w = width / 2;
+        var h = height / 2;
+
+        switch (webgl.alignments[elem._alignment] || elem._alignment) {
+
+          case webgl.alignments.left:
+            rect.left = 0;
+            rect.right = width;
+            break;
+          case webgl.alignments.right:
+            rect.left = - width;
+            rect.right = 0;
+            break;
+          default:
+            rect.left = - w;
+            rect.right = w;
+        }
+
+        // TODO: Gradients aren't inherited...
+        switch (elem._baseline) {
+          case 'bottom':
+            rect.top = - height;
+            rect.bottom = 0;
+            break;
+          case 'top':
+            rect.top = 0;
+            rect.bottom = height;
+            break;
+          default:
+            rect.top = - h;
+            rect.bottom = h;
+        }
+
+        rect.width = width;
+        rect.height = height;
+
+        if (!rect.centroid) {
+          rect.centroid = {};
+        }
+
+        // TODO:
+        rect.centroid.x = w;
+        rect.centroid.y = h;
+
+      },
+
+      render: function(gl, program, forcedParent) {
+
+        if (!this._visible || !this._opacity) {
+          return this;
+        }
+
+        // Calculate what changed
+
+        var parent = this.parent;
+        var flagParentMatrix = parent._matrix.manual || parent._flagMatrix;
+        var flagMatrix = this._matrix.manual || this._flagMatrix;
+        var flagTexture = this._flagVertices || this._flagFill
+          || (this._fill instanceof Two.LinearGradient && (this._fill._flagSpread || this._fill._flagStops || this._fill._flagEndPoints))
+          || (this._fill instanceof Two.RadialGradient && (this._fill._flagSpread || this._fill._flagStops || this._fill._flagRadius || this._fill._flagCenter || this._fill._flagFocal))
+          || (this._stroke instanceof Two.LinearGradient && (this._stroke._flagSpread || this._stroke._flagStops || this._stroke._flagEndPoints))
+          || (this._stroke instanceof Two.RadialGradient && (this._stroke._flagSpread || this._stroke._flagStops || this._stroke._flagRadius || this._stroke._flagCenter || this._stroke._flagFocal))
+          || this._flagStroke || this._flagLinewidth || this._flagOpacity
+          || parent._flagOpacity || this._flagVisible || this._flagScale
+          || this._flagValue || this._flagFamily || this._flagSize
+          || this._flagLeading || this._flagAlignment || this._flagBaseline
+          || this._flagStyle || this._flagWeight || this._flagDecoration
+          || !this._renderer.texture;
+
+        this._update();
+
+        if (flagParentMatrix || flagMatrix) {
+
+          if (!this._renderer.matrix) {
+            this._renderer.matrix = new Two.Array(9);
+          }
+
+          // Reduce amount of object / array creation / deletion
+
+          this._matrix.toArray(true, transformation);
+
+          multiplyMatrix(transformation, parent._renderer.matrix, this._renderer.matrix);
+          this._renderer.scale = this._scale * parent._renderer.scale;
+
+        }
+
+        if (flagTexture) {
+
+          if (!this._renderer.rect) {
+            this._renderer.rect = {};
+          }
+
+          if (!this._renderer.triangles) {
+            this._renderer.triangles = new Two.Array(12);
+          }
+
+          this._renderer.opacity = this._opacity * parent._renderer.opacity;
+
+          webgl.text.getBoundingClientRect(this, this._renderer.rect);
+          webgl.getTriangles(this._renderer.rect, this._renderer.triangles);
+
+          webgl.updateBuffer.call(webgl, gl, this, program);
+          webgl.updateTexture.call(webgl, gl, this);
 
         }
 
@@ -231,13 +701,9 @@
 
         if (!this._renderer.gradient || this._flagEndPoints || this._flagStops) {
 
-          var ox = ctx.canvas.width / 2;
-          var oy = ctx.canvas.height / 2;
-          var scale = elem._renderer.scale;
-
           this._renderer.gradient = ctx.createLinearGradient(
-            this.left._x * scale + ox, this.left._y * scale + oy,
-            this.right._x * scale + ox, this.right._y * scale + oy
+            this.left._x, this.left._y,
+            this.right._x, this.right._y
           );
 
           for (var i = 0; i < this.stops.length; i++) {
@@ -266,12 +732,9 @@
         if (!this._renderer.gradient || this._flagCenter || this._flagFocal
             || this._flagRadius || this._flagStops) {
 
-          var ox = ctx.canvas.width / 2;
-          var oy = ctx.canvas.height / 2;
-
           this._renderer.gradient = ctx.createRadialGradient(
-            this.center._x + ox, this.center._y + oy, 0,
-            this.focal._x + ox, this.focal._y + oy, this._radius * elem._renderer.scale
+            this.center._x, this.center._y, 0,
+            this.focal._x, this.focal._y, this._radius
           );
 
           for (var i = 0; i < this.stops.length; i++) {
@@ -284,81 +747,6 @@
         return this.flagReset();
 
       }
-
-    },
-
-    /**
-     * Returns the rect of a set of verts. Typically takes vertices that are
-     * "centered" around 0 and returns them to be anchored upper-left.
-     */
-    getBoundingClientRect: function(vertices, border, rect) {
-
-      var left = Infinity, right = -Infinity,
-          top = Infinity, bottom = -Infinity,
-          width, height;
-
-      vertices.forEach(function(v) {
-
-        var x = v.x, y = v.y, controls = v.controls;
-        var a, b, c, d, cl, cr;
-
-        top = Math.min(y, top);
-        left = Math.min(x, left);
-        right = Math.max(x, right);
-        bottom = Math.max(y, bottom);
-
-        if (!v.controls) {
-          return;
-        }
-
-        cl = controls.left;
-        cr = controls.right;
-
-        if (!cl || !cr) {
-          return;
-        }
-
-        a = v._relative ? cl.x + x : cl.x;
-        b = v._relative ? cl.y + y : cl.y;
-        c = v._relative ? cr.x + x : cr.x;
-        d = v._relative ? cr.y + y : cr.y;
-
-        if (!a || !b || !c || !d) {
-          return;
-        }
-
-        top = Math.min(b, d, top);
-        left = Math.min(a, c, left);
-        right = Math.max(a, c, right);
-        bottom = Math.max(b, d, bottom);
-
-      });
-
-      // Expand borders
-
-      if (_.isNumber(border)) {
-        top -= border;
-        left -= border;
-        right += border;
-        bottom += border;
-      }
-
-      width = right - left;
-      height = bottom - top;
-
-      rect.top = top;
-      rect.left = left;
-      rect.right = right;
-      rect.bottom = bottom;
-      rect.width = width;
-      rect.height = height;
-
-      if (!rect.centroid) {
-        rect.centroid = {};
-      }
-
-      rect.centroid.x = - left;
-      rect.centroid.y = - top;
 
     },
 
@@ -393,171 +781,9 @@
 
     },
 
-    updateCanvas: function(elem) {
-
-      var next, prev, a, c, ux, uy, vx, vy, ar, bl, br, cl, x, y;
-
-      var commands = elem._vertices;
-      var canvas = this.canvas;
-      var ctx = this.ctx;
-
-      // Styles
-      var scale = elem._renderer.scale;
-      var stroke = elem._stroke;
-      var linewidth = elem._linewidth * scale;
-      var fill = elem._fill;
-      var opacity = elem._renderer.opacity || elem._opacity;
-      var cap = elem._cap;
-      var join = elem._join;
-      var miter = elem._miter;
-      var closed = elem._closed;
-      var length = commands.length;
-      var last = length - 1;
-
-      canvas.width = Math.max(Math.ceil(elem._renderer.rect.width * scale), 1);
-      canvas.height = Math.max(Math.ceil(elem._renderer.rect.height * scale), 1);
-
-      var centroid = elem._renderer.rect.centroid;
-      var cx = centroid.x * scale;
-      var cy = centroid.y * scale;
-
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      if (fill) {
-        if (_.isString(fill)) {
-          ctx.fillStyle = fill;
-        } else {
-          webgl[fill._renderer.type].render.call(fill, ctx, elem);
-          ctx.fillStyle = fill._renderer.gradient;
-        }
-      }
-      if (stroke) {
-        if (_.isString(stroke)) {
-          ctx.strokeStyle = stroke;
-        } else {
-          webgl[stroke._renderer.type].render.call(stroke, ctx, elem);
-          ctx.strokeStyle = stroke._renderer.gradient;
-        }
-      }
-      if (linewidth) {
-        ctx.lineWidth = linewidth;
-      }
-      if (miter) {
-        ctx.miterLimit = miter;
-      }
-      if (join) {
-        ctx.lineJoin = join;
-      }
-      if (cap) {
-        ctx.lineCap = cap;
-      }
-      if (_.isNumber(opacity)) {
-        ctx.globalAlpha = opacity;
-      }
-
-      var d;
-      ctx.beginPath();
-      // commands.forEach(function(b, i) {
-      for (var i = 0; i < commands.length; i++) {
-
-        b = commands[i];
-
-        x = toFixed(b._x * scale + cx);
-        y = toFixed(b._y * scale + cy);
-
-        switch (b._command) {
-
-          case Two.Commands.close:
-            ctx.closePath();
-            break;
-
-          case Two.Commands.curve:
-
-            prev = closed ? mod(i - 1, length) : Math.max(i - 1, 0);
-            next = closed ? mod(i + 1, length) : Math.min(i + 1, last);
-
-            a = commands[prev];
-            c = commands[next];
-            ar = (a.controls && a.controls.right) || a;
-            bl = (b.controls && b.controls.left) || b;
-
-            if (a._relative) {
-              vx = toFixed((ar.x + a._x) * scale + cx);
-              vy = toFixed((ar.y + a._y) * scale + cy);
-            } else {
-              vx = toFixed(ar.x * scale + cx);
-              vy = toFixed(ar.y * scale + cy);
-            }
-
-            if (b._relative) {
-              ux = toFixed((bl.x + b._x) * scale + cx);
-              uy = toFixed((bl.y + b._y) * scale + cy);
-            } else {
-              ux = toFixed(bl.x * scale + cx);
-              uy = toFixed(bl.y * scale + cy);
-            }
-
-            ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
-
-            if (i >= last && closed) {
-
-              c = d;
-
-              br = (b.controls && b.controls.right) || b;
-              cl = (c.controls && c.controls.left) || c;
-
-              if (b._relative) {
-                vx = toFixed((br.x + b._x) * scale + cx);
-                vy = toFixed((br.y + b._y) * scale + cy);
-              } else {
-                vx = toFixed(br.x * scale + cx);
-                vy = toFixed(br.y * scale + cy);
-              }
-
-              if (c._relative) {
-                ux = toFixed((cl.x + c._x) * scale + cx);
-                uy = toFixed((cl.y + c._y) * scale + cy);
-              } else {
-                ux = toFixed(cl.x * scale + cx);
-                uy = toFixed(cl.y * scale + cy);
-              }
-
-              x = toFixed(c._x * scale + cx);
-              y = toFixed(c._y * scale + cy);
-
-              ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
-
-            }
-
-            break;
-
-          case Two.Commands.line:
-            ctx.lineTo(x, y);
-            break;
-
-          case Two.Commands.move:
-            d = b;
-            ctx.moveTo(x, y);
-            break;
-
-        }
-
-      }
-
-      // Loose ends
-
-      if (closed) {
-        ctx.closePath();
-      }
-
-      if (!webgl.isHidden.test(fill)) ctx.fill();
-      if (!webgl.isHidden.test(stroke)) ctx.stroke();
-
-    },
-
     updateTexture: function(gl, elem) {
 
-      this.updateCanvas(elem);
+      this[elem._renderer.type].updateCanvas.call(webgl, elem);
 
       if (elem._renderer.texture) {
         gl.deleteTexture(elem._renderer.texture);
@@ -816,7 +1042,7 @@
 
 })(
   Two,
-  typeof require === 'function' ? require('underscore') : _,
-  typeof require === 'function' ? require('backbone') : Backbone,
-  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : _,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : Backbone,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : requestAnimationFrame
 );

@@ -658,7 +658,7 @@
 
       this._flagVertices =  this._flagFill =  this._flagStroke =
          this._flagLinewidth = this._flagOpacity = this._flagVisible =
-         this._flagCap = this._flagJoin = this._flagMiter = 
+         this._flagCap = this._flagJoin = this._flagMiter =
          this._flagClip = false;
 
       Two.Shape.prototype.flagReset.call(this);
@@ -737,7 +737,7 @@
 
 })(
   Two,
-  typeof require === 'function' ? require('underscore') : _,
-  typeof require === 'function' ? require('backbone') : Backbone,
-  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : _,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : Backbone,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : requestAnimationFrame
 );

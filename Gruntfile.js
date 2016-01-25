@@ -32,6 +32,7 @@ module.exports = function(grunt) {
         'src/shapes/sine-ring.js',
         'src/shapes/star.js',
         'src/shapes/rounded-rectangle.js',
+        'src/text.js',
         '/src/effects/gradient.js',
         '/src/effects/linear-gradient.js',
         '/src/effects/radial-gradient.js',

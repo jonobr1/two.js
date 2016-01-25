@@ -128,7 +128,7 @@
 
 })(
   Two,
-  typeof require === 'function' ? require('underscore') : _,
-  typeof require === 'function' ? require('backbone') : Backbone,
-  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : _,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : Backbone,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : requestAnimationFrame
 );

@@ -4,9 +4,11 @@
  * for animation based events.
  */
 
-var Backbone = Backbone || {};
-
 (function() {
+
+  var root = this;
+  var Backbone = root.Backbone || {};
+  root.Backbone = Backbone;
 
   var array = [];
   var slice = array.slice;
@@ -148,9 +150,17 @@ var Backbone = Backbone || {};
 
   if (typeof exports !== 'undefined') {
     if (typeof module !== 'undefined' && module.exports) {
-      exports = module.exports = Events;
+      exports = module.exports = Backbone;
     }
-    exports.Backbone = exports.Backbone || Backbone;
+    exports.Backbone = Backbone;
+  } else {
+    root.Backbone = Backbone;
+  }
+
+  if (typeof define === 'function' && define.amd) {
+    define('backbone', [], function() {
+      return Backbone;
+    });
   }
 
 })();

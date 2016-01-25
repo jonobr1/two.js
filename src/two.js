@@ -76,9 +76,12 @@
       this[k] = v;
     }, this);
 
-    // Specified domElement overrides type declaration.
+    // Specified domElement overrides type declaration only if the element does not support declared renderer type.
     if (_.isElement(params.domElement)) {
-      this.type = Two.Types[params.domElement.tagName.toLowerCase()];
+      var tagName = params.domElement.tagName.toLowerCase();
+      if (!/^(CanvasRenderer-canvas|WebGLRenderer-canvas|SVGRenderer-svg)$/.test(this.type+'-'+tagName)) {
+        this.type = Two.Types[tagName];
+      }
     }
 
     this.renderer = new Two[this.type](this);
@@ -138,7 +141,7 @@
       canvas: 'CanvasRenderer'
     },
 
-    Version: 'v0.5.0',
+    Version: 'v0.6.0',
 
     Identifier: 'two_',
 
@@ -1815,6 +1818,15 @@
     },
 
     /**
+     * Convenience method to make and add a Two.Text.
+     */
+    makeText: function(message, x, y, styles) {
+      var text = new Two.Text(message, x, y, styles);
+      two.add(text);
+      return text;
+    },
+
+    /**
      * Convenience method to make and add a Two.LinearGradient.
      */
     makeLinearGradient: function(x1, y1, x2, y2 /* stops */) {
@@ -1970,8 +1982,8 @@
   module.exports = Two;
 
 })(
-  this.Two || {},
-  typeof require === 'function' ? require('underscore') : _,
-  typeof require === 'function' ? require('backbone') : Backbone,
-  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+  this.Two,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : _,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : Backbone,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : requestAnimationFrame
 );

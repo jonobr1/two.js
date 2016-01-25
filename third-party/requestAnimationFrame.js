@@ -9,14 +9,6 @@
   var lastTime = 0;
   var vendors = ['ms', 'moz', 'webkit', 'o'];
 
-  if (typeof exports !== 'undefined') {
-    if (typeof module !== 'undefined' && module.exports) {
-      exports = module.exports = raf;
-    }
-    exports.requestAnimationFrame = raf;
-    return;
-  }
-
   for (var x = 0; x < vendors.length && !root.requestAnimationFrame; ++x) {
     root.requestAnimationFrame = root[vendors[x]+'RequestAnimationFrame'];
     root.cancelAnimationFrame =
@@ -30,6 +22,21 @@
     root.cancelAnimationFrame = function(id) {
       clearTimeout(id);
     };
+
+  if (typeof exports !== 'undefined') {
+    if (typeof module !== 'undefined' && module.exports) {
+      exports = module.exports = root.requestAnimationFrame;
+    }
+    exports.requestAnimationFrame = root.requestAnimationFrame;
+  } else {
+    root.requestAnimationFrame = root.requestAnimationFrame;
+  }
+
+  if (typeof define === 'function' && define.amd) {
+    define('requestAnimationFrame', [], function() {
+      return root.requestAnimationFrame;
+    });
+  }
 
   function raf(callback, element) {
     var currTime = new Date().getTime();
