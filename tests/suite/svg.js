@@ -130,13 +130,13 @@
 
     var elem = two.renderer.domElement.querySelector('#' + curve.id);
 
-    equal(elem.getAttribute('d'), 'M -142.5 25 C -142.5 25 -144.727 -25 -127.5 -25 C -110.274 -25 -129.727 24.999 -112.5 25 C -95.274 25 -114.727 -25 -97.5 -25 C -80.274 -25 -99.727 24.999 -82.5 25 C -65.274 25 -84.727 -25 -67.5 -25 C -50.274 -25 -69.727 24.999 -52.5 25 C -35.274 25 -54.727 -25 -37.5 -25 C -20.274 -25 -39.727 24.999 -22.5 25 C -5.274 25 -24.727 -25 -7.5 -25 C 9.726 -25 -9.727 24.999 7.5 25 C 24.726 25 5.273 -25 22.5 -25 C 39.726 -25 20.273 24.999 37.5 25 C 54.726 25 35.273 -25 52.5 -25 C 69.726 -25 50.273 24.999 67.5 25 C 84.726 25 65.273 -25 82.5 -25 C 99.726 -25 80.273 24.999 97.5 25 C 114.726 25 95.273 -25 112.5 -25 C 129.726 -25 110.273 24.999 127.5 25 C 144.726 25 142.5 -25 142.5 -25 ');
+    equal(elem.getAttribute('d'), 'M -142.5 25 C -142.5 25 -144.727 -25 -127.5 -25 C -110.274 -25 -129.727 24.999 -112.5 25 C -95.274 25 -114.727 -25 -97.5 -25 C -80.274 -25 -99.727 24.999 -82.5 25 C -65.274 25 -84.727 -25 -67.5 -25 C -50.274 -25 -69.727 24.999 -52.5 25 C -35.274 25 -54.727 -25 -37.5 -25 C -20.274 -25 -39.727 24.999 -22.5 25 C -5.274 25 -24.727 -25 -7.5 -25 C 9.726 -25 -9.727 24.999 7.5 25 C 24.726 25 5.273 -25 22.5 -25 C 39.726 -25 20.273 24.999 37.5 25 C 54.726 25 35.273 -25 52.5 -25 C 69.726 -25 50.273 24.999 67.5 25 C 84.726 25 65.273 -25 82.5 -25 C 99.726 -25 80.273 24.999 97.5 25 C 114.726 25 95.273 -25 112.5 -25 C 129.726 -25 110.273 24.999 127.5 25 C 144.726 25 142.5 -25 142.5 -25 ', 'The d attribute set properly.');
 
     QUnit.Utils.addInstanceToTest(o, two);
 
   });
 
-  test('Two.makeLinearGradient', 7, function(o) {
+  test('Two.makeLinearGradient', 8, function(o) {
 
     var two = new Two({
       width: 400,
@@ -153,20 +153,21 @@
 
     var elem = two.renderer.domElement.querySelector('#' + gradient.id);
 
-    equal(parseFloat(elem.getAttribute('x1')), 0);
-    equal(parseFloat(elem.getAttribute('y1')), -200);
-    equal(parseFloat(elem.getAttribute('x2')), 0);
-    equal(parseFloat(elem.getAttribute('y2')), 200);
-    equal(elem.getAttribute('spreadMethod'), 'pad');
-    equal(elem.getAttribute('gradientUnits'), 'userSpaceOnUse');
-    equal(elem.innerHTML, '<stop offset="0%" stop-color="rgb(255, 100, 100)" stop-opacity="1"></stop><stop offset="100%" stop-color="rgb(100, 100, 255)" stop-opacity="1"></stop>');
+    equal(elem.tagName, 'linearGradient', 'Two.LinearGradient renders as a <linear-gradient /> tag.');
+    equal(parseFloat(elem.getAttribute('x1')), 0, 'The x1 attribute applied properly.');
+    equal(parseFloat(elem.getAttribute('y1')), -200, 'The y1 attribute applied properly.');
+    equal(parseFloat(elem.getAttribute('x2')), 0, 'The x2 attribute applied properly.');
+    equal(parseFloat(elem.getAttribute('y2')), 200, 'The y2 attribute applied properly.');
+    equal(elem.getAttribute('spreadMethod'), 'pad', 'The spreadMethod attribute applied properly.');
+    equal(elem.getAttribute('gradientUnits'), 'userSpaceOnUse', 'The gradientUnits attribute applied properly.');
+    equal(elem.innerHTML, '<stop offset="0%" stop-color="rgb(255, 100, 100)" stop-opacity="1"></stop><stop offset="100%" stop-color="rgb(100, 100, 255)" stop-opacity="1"></stop>', 'The innerHTML applied properly.');
 
     QUnit.Utils.addInstanceToTest(o, two);
 
   });
 
 
-  test('Two.makeRadialGradient', 8, function(o) {
+  test('Two.makeRadialGradient', 9, function(o) {
 
     var two = new Two({
       width: 400,
@@ -183,19 +184,55 @@
 
     var elem = two.renderer.domElement.querySelector('#' + gradient.id);
 
-    equal(parseFloat(elem.getAttribute('cx')), 0);
-    equal(parseFloat(elem.getAttribute('cy')), 0);
-    equal(parseFloat(elem.getAttribute('fx')), 0);
-    equal(parseFloat(elem.getAttribute('fy')), 0);
-    equal(parseFloat(elem.getAttribute('r')), 200);
-    equal(elem.getAttribute('spreadMethod'), 'pad');
-    equal(elem.getAttribute('gradientUnits'), 'userSpaceOnUse');
-    equal(elem.innerHTML, '<stop offset="0%" stop-color="rgb(255, 100, 100)" stop-opacity="1"></stop><stop offset="100%" stop-color="rgb(100, 100, 255)" stop-opacity="1"></stop>');
+    equal(elem.tagName, 'radialGradient', 'Two.RadialGradient renders as a <radial-gradient /> tag.');
+    equal(parseFloat(elem.getAttribute('cx')), 0, 'The cx attribute applied properly.');
+    equal(parseFloat(elem.getAttribute('cy')), 0, 'The cy attribute applied properly.');
+    equal(parseFloat(elem.getAttribute('fx')), 0, 'The fx attribute applied properly.');
+    equal(parseFloat(elem.getAttribute('fy')), 0, 'The fy attribute applied properly.');
+    equal(parseFloat(elem.getAttribute('r')), 200, 'The r attribute applied properly.');
+    equal(elem.getAttribute('spreadMethod'), 'pad', 'The spreadMethod attribute applied properly.');
+    equal(elem.getAttribute('gradientUnits'), 'userSpaceOnUse', 'The gradeintUnits attribute applied properly.');
+    equal(elem.innerHTML, '<stop offset="0%" stop-color="rgb(255, 100, 100)" stop-opacity="1"></stop><stop offset="100%" stop-color="rgb(100, 100, 255)" stop-opacity="1"></stop>', 'The innerHTML applied properly.');
 
     QUnit.Utils.addInstanceToTest(o, two);
 
   });
 
+  test('Two.makeText', 16, function(o) {
+
+    var two = new Two({
+      width: 400,
+      height: 400
+    });
+
+    var text = two.makeText('Hello World', two.width / 2, two.height / 2);
+    text.fill = '#00aeff';
+    text.noStroke();
+
+    two.update();
+
+    var elem = two.renderer.domElement.querySelector('#' + text.id);
+
+    equal(elem.tagName, 'text', 'Two.Text renders as a <text /> tag.');
+    equal(elem.getAttribute('transform'), 'matrix(1 0 0 1 200 200)', 'The transform attribute applied properly.');
+    equal(elem.getAttribute('font-family'), 'sans-serif', 'The font-family attribute applied properly.');
+    equal(elem.getAttribute('font-size'), '13', 'The font-size proeprty applied properly');
+    equal(elem.getAttribute('line-height'), '17', 'The line-height attribute applied properly');
+    equal(elem.getAttribute('text-anchor'), 'middle', 'The text-anchor attribute applied properly.');
+    equal(elem.getAttribute('dominant-baseline'), 'middle', 'The dominant-baseline attribute applied properly.');
+    equal(elem.getAttribute('alignment-baseline'), 'middle', 'The alignment-baseline attribute applied properly.');
+    equal(elem.getAttribute('font-style'), 'normal', 'The font-style attribute applied properly.');
+    equal(elem.getAttribute('font-weight'), '500', 'The font-weight attribute applied properly.');
+    equal(elem.getAttribute('text-decoration'), 'none', 'The text-decoration attribute applied properly.');
+    equal(elem.getAttribute('fill'), '#00aeff', 'The fill attribute applied properly.');
+    equal(elem.getAttribute('stroke-width'), '1', 'The stroke-width attribute applied properly.');
+    equal(elem.getAttribute('opacity'), '1', 'The opacity attribute applied properly.');
+    equal(elem.getAttribute('visibility'), 'visible', 'The visibility attribute applied properly.');
+    equal(elem.innerHTML, text.value, 'The value attribute applied properly.');
+
+    QUnit.Utils.addInstanceToTest(o, two);
+
+  });
 
   test('Styles', 8, function(o) {
 

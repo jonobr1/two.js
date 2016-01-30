@@ -1822,7 +1822,7 @@
      */
     makeText: function(message, x, y, styles) {
       var text = new Two.Text(message, x, y, styles);
-      two.add(text);
+      this.add(text);
       return text;
     },
 

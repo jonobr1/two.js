@@ -152,9 +152,11 @@
           img.src = path;
           img.title = 'Reference Image';
           img.width = img.height = 400;
+          img.style.border = '1px solid #ccc';
 
           var domElement = document.createElement('li');
           renderer.domElement.title = 'Computed Image';
+          renderer.domElement.style.border = '1px solid #ccc';
 
           domElement.appendChild(img);
           domElement.appendChild(renderer.domElement);

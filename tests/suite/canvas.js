@@ -163,6 +163,24 @@
 
   });
 
+  asyncTest('Two.makeText', 1, function(o) {
+
+    var two = new Two({
+      type: Two.Types.canvas,
+      width: 400,
+      height: 400
+    });
+
+    var text = two.makeText('Hello World', two.width / 2, two.height / 2);
+    text.fill = '#00aeff';
+    text.noStroke();
+
+    two.update();
+
+    QUnit.Utils.compare.call(o, './images/canvas/text' + suffix, two.renderer, 'Two.makeText renders properly.');
+
+  });
+
   asyncTest('Styles', 1, function(o) {
 
     var two = new Two({

@@ -1868,9 +1868,12 @@
       this[k] = v;
     }, this);
 
-    // Specified domElement overrides type declaration.
+    // Specified domElement overrides type declaration only if the element does not support declared renderer type.
     if (_.isElement(params.domElement)) {
-      this.type = Two.Types[params.domElement.tagName.toLowerCase()];
+      var tagName = params.domElement.tagName.toLowerCase();
+      if (!/^(CanvasRenderer-canvas|WebGLRenderer-canvas|SVGRenderer-svg)$/.test(this.type+'-'+tagName)) {
+        this.type = Two.Types[tagName];
+      }
     }
 
     this.renderer = new Two[this.type](this);
@@ -3611,7 +3614,7 @@
      */
     makeText: function(message, x, y, styles) {
       var text = new Two.Text(message, x, y, styles);
-      two.add(text);
+      this.add(text);
       return text;
     },
 
@@ -8414,7 +8417,7 @@
 
     _fill: '#000',
     _stroke: 'transparent',
-    _linewith: 1,
+    _linewidth: 1,
     _opacity: 1,
     _visible: true,
 

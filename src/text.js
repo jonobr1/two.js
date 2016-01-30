@@ -116,7 +116,7 @@
 
     _fill: '#000',
     _stroke: 'transparent',
-    _linewith: 1,
+    _linewidth: 1,
     _opacity: 1,
     _visible: true,
 
