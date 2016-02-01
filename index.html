@@ -105,7 +105,11 @@
             lineNumbers: true
           });
 
-          parent.find('.two-container').height(domElement.height());
+          var container = document.createElement('div');
+          container.classList.add('two-container');
+
+          domElement.appendTo(container);
+          parent.append(container);
 
           var doc = mirror.getDoc();
 
@@ -197,7 +201,6 @@
       </p>
       <br />
       <div id="draw-shapes" class="basic-usage">
-        <div class="two-container"></div>
         <h3>Drawing Your First Shapes</h3>
         <p>
           Before we get into all the fancy animating it&apos;s good to get a feel for how to make shapes in two.js. In order to do this we need to have an instance of two. This sets up a dom element that contains either an <code>svg</code> or <code>canvas</code> element to add to the webpage. The two object has a <code>scene</code> which holds all shapes as well as methods for creating shapes.
@@ -207,7 +210,7 @@
         </p>
         <br />
         <script>// Make an instance of two and place it on the page.
-var elem = document.getElementById('draw-shapes').children[0];
+var elem = document.getElementById('draw-shapes');
 var params = { width: 285, height: 200 };
 var two = new Two(params).appendTo(elem);
 
@@ -235,7 +238,6 @@ two.update();</script>
         </script>
       </div>
       <div id="draw-group" class="basic-usage">
-        <div class="two-container"></div>
         <h3>Shapes and Groups</h3>
         <p>
           Adding shapes to groups makes managing multiple shapes easier and more sane. Group&apos;s provide an easy way to move your content through <code>translation</code>, <code>rotation</code>, and <code>scale</code>. These operations emit from the coordinate space <code>(0, 0)</code>. In the example below we can see that the initial orientation of the circle and rectangle changed from the first example. These shapes are oriented around <code>(0, 0)</code>, which allows us to transform the group around the centeroid of the shapes. In addition Group&apos;s styling operations trickle down and apply to each shape.
@@ -244,7 +246,7 @@ two.update();</script>
           All rendered objects in two.js are a child of a group. Every two instance has a property <a href="#documentation"><code>scene</code></a>. This property is a root-level <a href="#documentation"><code>Two.Group</code></a> and can act as a camera through the same transformations described above.
         </p>
         <br />
-        <script>var elem = document.getElementById('draw-group').children[0];
+        <script>var elem = document.getElementById('draw-group');
 var two = new Two({ width: 285, height: 200 }).appendTo(elem);
 
 var circle = two.makeCircle(-70, 0, 50);
@@ -274,7 +276,6 @@ two.update();</script>
       </div>
       <br />
       <div id="draw-animation" class="basic-usage">
-        <div class="two-container"></div>
         <h3>Adding Motion</h3>
         <p>
           Finally, let&apos;s add some motion to our shapes. So far the examples use <code>two.update();</code> to draw content to the screen. The instance of two.js has two particular methods for animation. The first is <code>two.play();</code> which calls <code>two.update();</code> at 60fps. This rate, however, will slowdown if there&apos;s too much content to render per frame.
@@ -286,7 +287,7 @@ two.update();</script>
           For a complete list of events that can be bound to an instance of two check out the <a href="#documentation">documentation</a>.
         </p>
         <br />
-        <script>var elem = document.getElementById('draw-animation').children[0];
+        <script>var elem = document.getElementById('draw-animation');
 var two = new Two({ width: 285, height: 200 }).appendTo(elem);
 
 var circle = two.makeCircle(-70, 0, 50);

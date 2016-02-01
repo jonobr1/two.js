@@ -46,3 +46,11 @@ junk/elliptical-arc.html
 node_modules/grunt
 junk/clip-svg.html
 junk/ctm.html
+junk/curved-road.html
+junk/gh-pages-test.html
+junk/interpret-gradient.html
+junk/linear-gradient.html
+junk/load-svg.html
+junk/require.html
+junk/text.html
+junk/third-party
