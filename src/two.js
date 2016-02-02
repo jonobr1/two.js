@@ -1971,7 +1971,7 @@
 
 })(
   this.Two || {},
-  typeof require === 'function' ? require('underscore') : _,
-  typeof require === 'function' ? require('backbone') : Backbone,
-  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+  typeof require === 'function' ? require('underscore') : this._,
+  typeof require === 'function' ? require('backbone') : this.Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : this.requestAnimationFrame
 );

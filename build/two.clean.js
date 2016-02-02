@@ -1999,9 +1999,9 @@
 
 })(
   this.Two || {},
-  typeof require === 'function' ? require('underscore') : _,
-  typeof require === 'function' ? require('backbone') : Backbone,
-  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+  typeof require === 'function' ? require('underscore') : this._,
+  typeof require === 'function' ? require('backbone') : this.Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : this.requestAnimationFrame
 );
 
 (function(Two, _, Backbone, requestAnimationFrame) {
@@ -2322,10 +2322,10 @@
   };
 
 })(
-  Two,
-  typeof require === 'function' ? require('underscore') : _,
-  typeof require === 'function' ? require('backbone') : Backbone,
-  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+  this.Two || {},
+  typeof require === 'function' ? require('underscore') : this._,
+  typeof require === 'function' ? require('backbone') : this.Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : this.requestAnimationFrame
 );
 
 (function(Two, _, Backbone, requestAnimationFrame) {
@@ -2491,10 +2491,10 @@
   };
 
 })(
-  Two,
-  typeof require === 'function' ? require('underscore') : _,
-  typeof require === 'function' ? require('backbone') : Backbone,
-  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+  this.Two || {},
+  typeof require === 'function' ? require('underscore') : this._,
+  typeof require === 'function' ? require('backbone') : this.Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : this.requestAnimationFrame
 );
 
 (function(Two, _, Backbone, requestAnimationFrame) {
@@ -2872,10 +2872,10 @@
   });
 
 })(
-  Two,
-  typeof require === 'function' ? require('underscore') : _,
-  typeof require === 'function' ? require('backbone') : Backbone,
-  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+  this.Two || {},
+  typeof require === 'function' ? require('underscore') : this._,
+  typeof require === 'function' ? require('backbone') : this.Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : this.requestAnimationFrame
 );
 
 (function(Two, _, Backbone, requestAnimationFrame) {
@@ -3092,7 +3092,7 @@
 
         var elem = object._renderer.elem;
 
-        if (!elem || elem.parentElement != this.elem) {
+        if (!elem || elem.parentNode != this.elem) {
           return;
         }
 
@@ -3523,10 +3523,10 @@
   });
 
 })(
-  Two,
-  typeof require === 'function' ? require('underscore') : _,
-  typeof require === 'function' ? require('backbone') : Backbone,
-  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+  this.Two || {},
+  typeof require === 'function' ? require('underscore') : this._,
+  typeof require === 'function' ? require('backbone') : this.Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : this.requestAnimationFrame
 );
 
 (function(Two, _, Backbone, requestAnimationFrame) {
@@ -3934,10 +3934,10 @@
   }
 
 })(
-  Two,
-  typeof require === 'function' ? require('underscore') : _,
-  typeof require === 'function' ? require('backbone') : Backbone,
-  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+  this.Two || {},
+  typeof require === 'function' ? require('underscore') : this._,
+  typeof require === 'function' ? require('backbone') : this.Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : this.requestAnimationFrame
 );
 
 (function(Two, _, Backbone, requestAnimationFrame) {
@@ -4757,10 +4757,10 @@
   });
 
 })(
-  Two,
-  typeof require === 'function' ? require('underscore') : _,
-  typeof require === 'function' ? require('backbone') : Backbone,
-  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+  this.Two || {},
+  typeof require === 'function' ? require('underscore') : this._,
+  typeof require === 'function' ? require('backbone') : this.Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : this.requestAnimationFrame
 );
 
 (function(Two, _, Backbone, requestAnimationFrame) {
@@ -4890,10 +4890,10 @@
   Shape.MakeObservable(Shape.prototype);
 
 })(
-  Two,
-  typeof require === 'function' ? require('underscore') : _,
-  typeof require === 'function' ? require('backbone') : Backbone,
-  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+  this.Two || {},
+  typeof require === 'function' ? require('underscore') : this._,
+  typeof require === 'function' ? require('backbone') : this.Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : this.requestAnimationFrame
 );
 
 (function(Two, _, Backbone, requestAnimationFrame) {
@@ -5634,10 +5634,10 @@
   }
 
 })(
-  Two,
-  typeof require === 'function' ? require('underscore') : _,
-  typeof require === 'function' ? require('backbone') : Backbone,
-  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+  this.Two || {},
+  typeof require === 'function' ? require('underscore') : this._,
+  typeof require === 'function' ? require('backbone') : this.Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : this.requestAnimationFrame
 );
 
 (function(Two, _, Backbone, requestAnimationFrame) {
@@ -5666,10 +5666,10 @@
   Path.MakeObservable(Line.prototype);
 
 })(
-  Two,
-  typeof require === 'function' ? require('underscore') : _,
-  typeof require === 'function' ? require('backbone') : Backbone,
-  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+  this.Two || {},
+  typeof require === 'function' ? require('underscore') : this._,
+  typeof require === 'function' ? require('backbone') : this.Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : this.requestAnimationFrame
 );
 
 (function(Two, _, Backbone, requestAnimationFrame) {
@@ -5697,10 +5697,10 @@
   Path.MakeObservable(Rectangle.prototype);
 
 })(
-  Two,
-  typeof require === 'function' ? require('underscore') : _,
-  typeof require === 'function' ? require('backbone') : Backbone,
-  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+  this.Two || {},
+  typeof require === 'function' ? require('underscore') : this._,
+  typeof require === 'function' ? require('backbone') : this.Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : this.requestAnimationFrame
 );
 
 (function(Two, _, Backbone, requestAnimationFrame) {
@@ -5733,10 +5733,10 @@
   Path.MakeObservable(Ellipse.prototype);
 
 })(
-  Two,
-  typeof require === 'function' ? require('underscore') : _,
-  typeof require === 'function' ? require('backbone') : Backbone,
-  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+  this.Two || {},
+  typeof require === 'function' ? require('underscore') : this._,
+  typeof require === 'function' ? require('backbone') : this.Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : this.requestAnimationFrame
 );
 
 (function(Two, _, Backbone, requestAnimationFrame) {
@@ -5765,10 +5765,10 @@
   Path.MakeObservable(Polygon.prototype);
 
 })(
-  Two,
-  typeof require === 'function' ? require('underscore') : _,
-  typeof require === 'function' ? require('backbone') : Backbone,
-  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+  this.Two || {},
+  typeof require === 'function' ? require('underscore') : this._,
+  typeof require === 'function' ? require('backbone') : this.Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : this.requestAnimationFrame
 );
 
 (function(Two, _, Backbone, requestAnimationFrame) {
@@ -5877,10 +5877,10 @@
   Path.MakeObservable(ArcSegment.prototype);
 
 })(
-  Two,
-  typeof require === 'function' ? require('underscore') : _,
-  typeof require === 'function' ? require('backbone') : Backbone,
-  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+  this.Two || {},
+  typeof require === 'function' ? require('underscore') : this._,
+  typeof require === 'function' ? require('backbone') : this.Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : this.requestAnimationFrame
 );
 
 (function(Two, _, Backbone, requestAnimationFrame) {
@@ -5945,10 +5945,10 @@
   Path.MakeObservable(SineRing.prototype);
 
 })(
-  Two,
-  typeof require === 'function' ? require('underscore') : _,
-  typeof require === 'function' ? require('backbone') : Backbone,
-  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+  this.Two || {},
+  typeof require === 'function' ? require('underscore') : this._,
+  typeof require === 'function' ? require('backbone') : this.Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : this.requestAnimationFrame
 );
 
 (function(Two, _, Backbone, requestAnimationFrame) {
@@ -5986,10 +5986,10 @@
   Path.MakeObservable(Star.prototype);
 
 })(
-  Two,
-  typeof require === 'function' ? require('underscore') : _,
-  typeof require === 'function' ? require('backbone') : Backbone,
-  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+  this.Two || {},
+  typeof require === 'function' ? require('underscore') : this._,
+  typeof require === 'function' ? require('backbone') : this.Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : this.requestAnimationFrame
 );
 
 (function(Two, _, Backbone, requestAnimationFrame) {
@@ -6094,10 +6094,10 @@
   }
 
 })(
-  Two,
-  typeof require === 'function' ? require('underscore') : _,
-  typeof require === 'function' ? require('backbone') : Backbone,
-  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+  this.Two || {},
+  typeof require === 'function' ? require('underscore') : this._,
+  typeof require === 'function' ? require('backbone') : this.Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : this.requestAnimationFrame
 );
 
 (function(Two, _, Backbone, requestAnimationFrame) {
@@ -6334,10 +6334,10 @@
   Gradient.MakeObservable(Gradient.prototype);
 
 })(
-  Two,
-  typeof require === 'function' ? require('underscore') : _,
-  typeof require === 'function' ? require('backbone') : Backbone,
-  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+  this.Two || {},
+  typeof require === 'function' ? require('underscore') : this._,
+  typeof require === 'function' ? require('backbone') : this.Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : this.requestAnimationFrame
 );
 
 (function(Two, _, Backbone, requestAnimationFrame) {
@@ -6432,10 +6432,10 @@
   LinearGradient.MakeObservable(LinearGradient.prototype);
 
 })(
-  Two,
-  typeof require === 'function' ? require('underscore') : _,
-  typeof require === 'function' ? require('backbone') : Backbone,
-  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+  this.Two || {},
+  typeof require === 'function' ? require('underscore') : this._,
+  typeof require === 'function' ? require('backbone') : this.Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : this.requestAnimationFrame
 );
 
 (function(Two, _, Backbone, requestAnimationFrame) {
@@ -6549,10 +6549,10 @@
   RadialGradient.MakeObservable(RadialGradient.prototype);
 
 })(
-  Two,
-  typeof require === 'function' ? require('underscore') : _,
-  typeof require === 'function' ? require('backbone') : Backbone,
-  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+  this.Two || {},
+  typeof require === 'function' ? require('underscore') : this._,
+  typeof require === 'function' ? require('backbone') : this.Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : this.requestAnimationFrame
 );
 
 (function(Two, _, Backbone, requestAnimationFrame) {
@@ -7122,8 +7122,8 @@
   }
 
 })(
-  Two,
-  typeof require === 'function' ? require('underscore') : _,
-  typeof require === 'function' ? require('backbone') : Backbone,
-  typeof require === 'function' ? require('requestAnimationFrame') : requestAnimationFrame
+  this.Two || {},
+  typeof require === 'function' ? require('underscore') : this._,
+  typeof require === 'function' ? require('backbone') : this.Backbone,
+  typeof require === 'function' ? require('requestAnimationFrame') : this.requestAnimationFrame
 );
