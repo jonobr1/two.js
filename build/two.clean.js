@@ -2011,9 +2011,9 @@
 
 })(
   this.Two,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : _,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : Backbone,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : requestAnimationFrame
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : this._,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : this.Backbone,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : this.requestAnimationFrame
 );
 
 (function(Two, _, Backbone, requestAnimationFrame) {
@@ -2334,10 +2334,10 @@
   };
 
 })(
-  Two,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : _,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : Backbone,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : requestAnimationFrame
+  this.Two,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : this._,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : this.Backbone,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : this.requestAnimationFrame
 );
 
 (function(Two, _, Backbone, requestAnimationFrame) {
@@ -2503,10 +2503,10 @@
   };
 
 })(
-  Two,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : _,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : Backbone,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : requestAnimationFrame
+  this.Two,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : this._,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : this.Backbone,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : this.requestAnimationFrame
 );
 
 (function(Two, _, Backbone, requestAnimationFrame) {
@@ -2884,10 +2884,10 @@
   });
 
 })(
-  Two,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : _,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : Backbone,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : requestAnimationFrame
+  this.Two,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : this._,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : this.Backbone,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : this.requestAnimationFrame
 );
 
 (function(Two, _, Backbone, requestAnimationFrame) {
@@ -3638,10 +3638,10 @@
   });
 
 })(
-  Two,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : _,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : Backbone,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : requestAnimationFrame
+  this.Two,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : this._,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : this.Backbone,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : this.requestAnimationFrame
 );
 
 (function(Two, _, Backbone, requestAnimationFrame) {
@@ -4143,10 +4143,10 @@
   }
 
 })(
-  Two,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : _,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : Backbone,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : requestAnimationFrame
+  this.Two,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : this._,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : this.Backbone,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : this.requestAnimationFrame
 );
 
 (function(Two, _, Backbone, requestAnimationFrame) {
@@ -5192,10 +5192,10 @@
   });
 
 })(
-  Two,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : _,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : Backbone,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : requestAnimationFrame
+  this.Two,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : this._,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : this.Backbone,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : this.requestAnimationFrame
 );
 
 (function(Two, _, Backbone, requestAnimationFrame) {
@@ -5325,10 +5325,10 @@
   Shape.MakeObservable(Shape.prototype);
 
 })(
-  Two,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : _,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : Backbone,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : requestAnimationFrame
+  this.Two,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : this._,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : this.Backbone,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : this.requestAnimationFrame
 );
 
 (function(Two, _, Backbone, requestAnimationFrame) {
@@ -6069,10 +6069,10 @@
   }
 
 })(
-  Two,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : _,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : Backbone,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : requestAnimationFrame
+  this.Two,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : this._,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : this.Backbone,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : this.requestAnimationFrame
 );
 
 (function(Two, _, Backbone, requestAnimationFrame) {
@@ -6101,10 +6101,10 @@
   Path.MakeObservable(Line.prototype);
 
 })(
-  Two,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : _,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : Backbone,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : requestAnimationFrame
+  this.Two,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : this._,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : this.Backbone,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : this.requestAnimationFrame
 );
 
 (function(Two, _, Backbone, requestAnimationFrame) {
@@ -6132,10 +6132,10 @@
   Path.MakeObservable(Rectangle.prototype);
 
 })(
-  Two,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : _,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : Backbone,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : requestAnimationFrame
+  this.Two,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : this._,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : this.Backbone,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : this.requestAnimationFrame
 );
 
 (function(Two, _, Backbone, requestAnimationFrame) {
@@ -6168,10 +6168,10 @@
   Path.MakeObservable(Ellipse.prototype);
 
 })(
-  Two,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : _,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : Backbone,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : requestAnimationFrame
+  this.Two,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : this._,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : this.Backbone,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : this.requestAnimationFrame
 );
 
 (function(Two, _, Backbone, requestAnimationFrame) {
@@ -6200,10 +6200,10 @@
   Path.MakeObservable(Polygon.prototype);
 
 })(
-  Two,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : _,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : Backbone,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : requestAnimationFrame
+  this.Two,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : this._,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : this.Backbone,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : this.requestAnimationFrame
 );
 
 (function(Two, _, Backbone, requestAnimationFrame) {
@@ -6312,10 +6312,10 @@
   Path.MakeObservable(ArcSegment.prototype);
 
 })(
-  Two,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : _,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : Backbone,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : requestAnimationFrame
+  this.Two,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : this._,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : this.Backbone,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : this.requestAnimationFrame
 );
 
 (function(Two, _, Backbone, requestAnimationFrame) {
@@ -6380,10 +6380,10 @@
   Path.MakeObservable(SineRing.prototype);
 
 })(
-  Two,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : _,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : Backbone,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : requestAnimationFrame
+  this.Two,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : this._,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : this.Backbone,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : this.requestAnimationFrame
 );
 
 (function(Two, _, Backbone, requestAnimationFrame) {
@@ -6421,10 +6421,10 @@
   Path.MakeObservable(Star.prototype);
 
 })(
-  Two,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : _,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : Backbone,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : requestAnimationFrame
+  this.Two,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : this._,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : this.Backbone,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : this.requestAnimationFrame
 );
 
 (function(Two, _, Backbone, requestAnimationFrame) {
@@ -6529,10 +6529,10 @@
   }
 
 })(
-  Two,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : _,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : Backbone,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : requestAnimationFrame
+  this.Two,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : this._,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : this.Backbone,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : this.requestAnimationFrame
 );
 
 (function(Two, _, Backbone, requestAnimationFrame) {
@@ -6992,10 +6992,10 @@
   Gradient.MakeObservable(Gradient.prototype);
 
 })(
-  Two,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : _,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : Backbone,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : requestAnimationFrame
+  this.Two,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : this._,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : this.Backbone,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : this.requestAnimationFrame
 );
 
 (function(Two, _, Backbone, requestAnimationFrame) {
@@ -7090,10 +7090,10 @@
   LinearGradient.MakeObservable(LinearGradient.prototype);
 
 })(
-  Two,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : _,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : Backbone,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : requestAnimationFrame
+  this.Two,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : this._,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : this.Backbone,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : this.requestAnimationFrame
 );
 
 (function(Two, _, Backbone, requestAnimationFrame) {
@@ -7207,10 +7207,10 @@
   RadialGradient.MakeObservable(RadialGradient.prototype);
 
 })(
-  Two,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : _,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : Backbone,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : requestAnimationFrame
+  this.Two,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : this._,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : this.Backbone,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : this.requestAnimationFrame
 );
 
 (function(Two, _, Backbone, requestAnimationFrame) {
@@ -7780,8 +7780,8 @@
   }
 
 })(
-  Two,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : _,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : Backbone,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : requestAnimationFrame
+  this.Two,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : this._,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : this.Backbone,
+  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : this.requestAnimationFrame
 );
