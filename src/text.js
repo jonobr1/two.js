@@ -11,9 +11,7 @@
 
     this._renderer.type = 'text';
 
-    if (!_.isEmpty(message)) {
-      this.value = message;
-    }
+    this.value = message;
 
     if (_.isNumber(x)) {
         this.translation.x = x;
