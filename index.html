@@ -47,7 +47,7 @@
             _.map(resp.items.splice(0, 6), function(data, i) {
               data.href = './' + data.href;
               data.img = './' + data.img;
-              return _.template(html, data);
+              return _.template(html)(data);
             }).join('\n')
           );
 
@@ -71,7 +71,7 @@
           $projects.html(
             _.map(resp.items.splice(0, 6), function(data, i) {
               data.img = './' + data.img;
-              return _.template(html, data);
+              return _.template(html)(data);
             }).join('\n')
           );
 
@@ -172,7 +172,7 @@
         <li>
           <h3>Focus on Vector Shapes</h3>
           <p>
-            Two.js is deeply inspired by flat <a href="http://en.wikipedia.org/wiki/Motion_graphics">motion graphics</a>. As a result, two.js aims to make the creation and animation of flat shapes easier and more concise. At the time of this writing two.js unfortunately does <strong>not</strong> support text or images.
+            Two.js is deeply inspired by flat <a href="http://en.wikipedia.org/wiki/Motion_graphics">motion graphics</a>. As a result, two.js aims to make the creation and animation of flat shapes easier and more concise.
           </p>
         </li>
         <li>
@@ -344,6 +344,7 @@ two.bind('update', function(frameCount) {
         <li><a href="#two-stop">Two.Stop</a></li>
         <li><a href="#two-linear-gradient">Two.LinearGradient</a></li>
         <li><a href="#two-radial-gradient">Two.RadialGradient</a></li>
+        <li><a href="#two-text">Two.Text</a></li>
       </ul>
 
       <ul class="documentation">
@@ -413,7 +414,7 @@ two.bind('update', function(frameCount) {
           </ul>
         </li>
         <li id="two-type">
-          <p class="property string declaration">
+          <p class="property string">
             <strong>type</strong> <code>two.type</code>
           </p>
           <p class="description">
@@ -421,7 +422,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="two-framecount">
-          <p class="property number declaration">
+          <p class="property number">
             <strong>frameCount</strong> <code>two.frameCount</code>
           </p>
           <p class="description">
@@ -429,7 +430,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="two-timedelta">
-          <p class="property number declaration">
+          <p class="property number">
             <strong>timeDelta</strong> <code>two.timeDelta</code>
           </p>
           <p class="description">
@@ -437,7 +438,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="two-width">
-          <p class="property number declaration">
+          <p class="property number">
             <strong>width</strong> <code>two.width</code>
           </p>
           <p class="description">
@@ -445,7 +446,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="two-height">
-          <p class="property number declaration">
+          <p class="property number">
             <strong>height</strong> <code>two.height</code>
           </p>
           <p class="description">
@@ -453,7 +454,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="two-playing">
-          <p class="property boolean declaration">
+          <p class="property boolean">
             <strong>playing</strong> <code>two.playing</code>
           </p>
           <p class="description">
@@ -461,7 +462,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="two-renderer">
-          <p class="property object declaration">
+          <p class="property object">
             <strong>renderer</strong> <code>two.renderer</code>
           </p>
           <p class="description">
@@ -469,7 +470,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="two-scene">
-          <p class="property object declaration">
+          <p class="property object">
             <strong>scene</strong> <code>two.scene</code>
           </p>
           <p class="description">
@@ -477,7 +478,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="two-appendto">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>appendTo</strong> <code>two.appendTo(domElement);</code>
           </p>
           <p class="description">
@@ -485,7 +486,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="two-play">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>play</strong> <code>two.play();</code>
           </p>
           <p class="description">
@@ -493,7 +494,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="two-pause">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>pause</strong> <code>two.pause();</code>
           </p>
           <p class="description">
@@ -501,7 +502,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="two-update">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>update</strong> <code>two.update();</code>
           </p>
           <p class="description">
@@ -509,7 +510,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="two-render">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>render</strong> <code>two.render();</code>
           </p>
           <p class="description">
@@ -517,7 +518,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="two-add">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>add</strong> <code>two.add(objects);</code>
           </p>
           <p class="description">
@@ -525,7 +526,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="two-remove">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>remove</strong> <code>two.remove(objects);</code>
           </p>
           <p class="description">
@@ -533,7 +534,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="two-clear">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>clear</strong> <code>two.clear();</code>
           </p>
           <p class="description">
@@ -541,7 +542,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="two-makeline">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>makeLine</strong> <code>two.makeLine(x1, y1, x2, y2);</code>
           </p>
           <p class="description">
@@ -549,7 +550,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="two-makerectangle">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>makeRectangle</strong> <code>two.makeRectangle(x, y, width, height);</code>
           </p>
           <p class="description">
@@ -557,7 +558,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="two-makeroundedrectangle">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>makeRoundedRectangle</strong> <code>two.makeRoundedRectangle(x, y, width, height, radius);</code>
           </p>
           <p class="description">
@@ -565,7 +566,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="two-makecircle">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>makeCircle</strong> <code>two.makeCircle(x, y, radius);</code>
           </p>
           <p class="description">
@@ -573,7 +574,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="two-makeellipse">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>makeEllipse</strong> <code>two.makeEllipse(x, y, width, height);</code>
           </p>
           <p class="description">
@@ -581,7 +582,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="two-makestar">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>makeStar</strong> <code>two.makeStar(ox, oy, or, ir, sides);</code>
           </p>
           <p class="description">
@@ -589,7 +590,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="two-makepolygon">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>makePolygon</strong> <code>two.makePolygon(ox, oy, r, sides);</code>
           </p>
           <p class="description">
@@ -605,7 +606,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="two-makecurve">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>makeCurve</strong> <code>two.makeCurve(x1, y1, x2, y2, xN, yN, open);</code>
           </p>
           <p class="description">
@@ -619,7 +620,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="two-makepath">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>makePath</strong> <code>two.makePath(x1, y1, x2, y2, xN, yN, open);</code>
           </p>
           <p class="description">
@@ -636,7 +637,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="two-makegroup">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>makeGroup</strong> <code>two.makeGroup(objects);</code>
           </p>
           <p class="description">
@@ -644,7 +645,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="two-interpret">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>interpret</strong> <code>two.interpret(svgNode);</code>
           </p>
           <p class="description">
@@ -652,7 +653,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="two-bind">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>bind</strong> <code>two.bind(event, callback);</code>
           </p>
           <p class="description">
@@ -660,7 +661,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="two-unbind">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>unbind</strong> <code>two.unbind(event, callback);</code>
           </p>
           <p class="description">
@@ -671,7 +672,7 @@ two.bind('update', function(frameCount) {
         <!-- Static Properties -->
 
         <li id="two-array">
-          <p class="static property array declaration">
+          <p class="static property array">
             <strong>Array</strong> <code>Two.Array</code>
           </p>
           <p class="description">
@@ -687,7 +688,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="two-types">
-          <p class="static property object declaration">
+          <p class="static property object">
             <strong>Types</strong> <code>Two.Types</code>
           </p>
           <p class="description">
@@ -695,7 +696,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="two-properties">
-          <p class="static property object declaration">
+          <p class="static property object">
             <strong>Properties</strong> <code>Two.Properties</code>
           </p>
           <p class="description">
@@ -703,7 +704,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="two-events">
-          <p class="static property object declaration">
+          <p class="static property object">
             <strong>Events</strong> <code>Two.Events</code>
           </p>
           <p class="description">
@@ -711,7 +712,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="two-commands">
-          <p class="static property object declaration">
+          <p class="static property object">
             <strong>Commands</strong> <code>Two.Commands</code>
           </p>
           <p class="description">
@@ -719,7 +720,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="two-resolution">
-          <p class="static property number declaration">
+          <p class="static property number">
             <strong>Resolution</strong> <code>Two.Resolution</code>
           </p>
           <p class="description">
@@ -727,7 +728,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="two-instances">
-          <p class="static property array declaration">
+          <p class="static property array">
             <strong>Instances</strong> <code>Two.Instances</code>
           </p>
           <p class="description">
@@ -735,7 +736,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="two-noconflict">
-          <p class="static method function declaration">
+          <p class="static method function">
             <strong>noConflict</strong> <code>Two.noConflict();</code>
           </p>
           <p class="description">
@@ -743,7 +744,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="two-utils">
-          <p class="static method object declaration">
+          <p class="static method object">
             <strong>Utils</strong> <code>Two.Utils</code>
           </p>
           <p class="description">
@@ -751,7 +752,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="two-error">
-          <p class="static property function declaration">
+          <p class="static property function">
             <strong>Error</strong> <code>Two.Error(message);</code>
           </p>
           <p class="description">
@@ -777,7 +778,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="path-id">
-          <p class="property number declaration">
+          <p class="property number">
             <strong>id</strong> <code>path.id</code>
           </p>
           <p class="description">
@@ -785,7 +786,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="path-stroke">
-          <p class="property string declaration">
+          <p class="property string">
             <strong>stroke</strong> <code>path.stroke</code>
           </p>
           <p class="description">
@@ -793,7 +794,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="path-fill">
-          <p class="property string declaration">
+          <p class="property string">
             <strong>fill</strong> <code>path.fill</code>
           </p>
           <p class="description">
@@ -801,7 +802,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="path-linewidth">
-          <p class="property number declaration">
+          <p class="property number">
             <strong>linewidth</strong> <code>path.linewidth</code>
           </p>
           <p class="description">
@@ -809,7 +810,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="path-opacity">
-          <p class="property number declaration">
+          <p class="property number">
             <strong>opacity</strong> <code>path.opacity</code>
           </p>
           <p class="description">
@@ -817,7 +818,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="path-cap">
-          <p class="property string declaration">
+          <p class="property string">
             <strong>cap</strong> <code>path.cap</code>
           </p>
           <p class="description">
@@ -825,7 +826,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="path-join">
-          <p class="property string declaration">
+          <p class="property string">
             <strong>join</strong> <code>path.join</code>
           </p>
           <p class="description">
@@ -833,7 +834,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="path-miter">
-          <p class="property number declaration">
+          <p class="property number">
             <strong>miter</strong> <code>path.miter</code>
           </p>
           <p class="description">
@@ -841,7 +842,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="path-rotation">
-          <p class="property number declaration">
+          <p class="property number">
             <strong>rotation</strong> <code>path.rotation</code>
           </p>
           <p class="description">
@@ -849,7 +850,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="path-scale">
-          <p class="property number declaration">
+          <p class="property number">
             <strong>scale</strong> <code>path.scale</code>
           </p>
           <p class="description">
@@ -857,7 +858,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="path-translation">
-          <p class="property object declaration">
+          <p class="property object">
             <strong>translation</strong> <code>path.translation</code>
           </p>
           <p class="description">
@@ -865,7 +866,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="path-parent">
-          <p class="property object declaration">
+          <p class="property object">
             <strong>parent</strong> <code>path.parent</code>
           </p>
           <p class="description">
@@ -873,7 +874,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="path-vertices">
-          <p class="property array declaration">
+          <p class="property array">
             <strong>vertices</strong> <code>path.vertices</code>
           </p>
           <p class="description">
@@ -881,7 +882,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="path-closed">
-          <p class="property boolean declaration">
+          <p class="property boolean">
             <strong>closed</strong> <code>path.closed</code>
           </p>
           <p class="description">
@@ -889,7 +890,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="path-curved">
-          <p class="property boolean declaration">
+          <p class="property boolean">
             <strong>curved</strong> <code>path.curved</code>
           </p>
           <p class="description">
@@ -897,7 +898,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="path-automatic">
-          <p class="property boolean declaration">
+          <p class="property boolean">
             <strong>automatic</strong> <code>path.automatic</code>
           </p>
           <p class="description">
@@ -905,7 +906,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="path-beginning">
-          <p class="property number declaration">
+          <p class="property number">
             <strong>beginning</strong> <code>path.beginning</code>
           </p>
           <p class="description">
@@ -913,7 +914,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="path-ending">
-          <p class="property number declaration">
+          <p class="property number">
             <strong>ending</strong> <code>path.ending</code>
           </p>
           <p class="description">
@@ -921,7 +922,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="path-clip">
-          <p class="property boolean declaration">
+          <p class="property boolean">
             <strong>clip</strong> <code>path.clip</code>
           </p>
           <p class="description">
@@ -929,7 +930,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="path-clone">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>clone</strong> <code>path.clone();</code>
           </p>
           <p class="description">
@@ -937,7 +938,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="path-center">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>center</strong> <code>path.center();</code>
           </p>
           <p class="description">
@@ -945,7 +946,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="path-addto">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>addTo</strong> <code>path.addTo(group);</code>
           </p>
           <p class="description">
@@ -953,7 +954,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="path-remove">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>remove</strong> <code>path.remove();</code>
           </p>
           <p class="description">
@@ -961,7 +962,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="path-getboundingclientrect">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>getBoundingClientRect</strong> <code>path.getBoundingClientRect(shallow);</code>
           </p>
           <p class="description">
@@ -969,7 +970,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="path-nofill">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>noFill</strong> <code>path.noFill();</code>
           </p>
           <p class="description">
@@ -977,7 +978,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="path-nostroke">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>noStroke</strong> <code>path.noStroke();</code>
           </p>
           <p class="description">
@@ -985,7 +986,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="path-plot">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>plot</strong> <code>path.plot();</code>
           </p>
           <p class="description">
@@ -993,7 +994,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="path-subdivide">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>subdivide</strong> <code>path.subdivide();</code>
           </p>
           <p class="description">
@@ -1001,8 +1002,8 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="path-makeobservable">
-          <p class="property static function declaration">
-            <strong>MakeObservable</strong> <code>Two.Path.MakeObservable();</code>
+          <p class="property static function">
+            <strong>MakeObservable</strong> <code>Two.Path.MakeObservable(obj);</code>
           </p>
           <p class="description">
             Convenience method to make getter / setter properties specific to <code>Two.Path</code>.
@@ -1015,7 +1016,7 @@ two.bind('update', function(frameCount) {
           This is a class for creating a line in two.js. It inherits from <code>Two.Path</code>, so it has all the same properties and functions as <code>Two.Path</code>.
         </li>
         <li id="line-construction">
-          <p class="construction declaration">
+          <p class="construction">
             <strong>construction</strong> <code>var line = new Two.Line(x1, y1, x2, y2);</code>
           </p>
           <p>
@@ -1114,7 +1115,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="group-id">
-          <p class="property number declaration">
+          <p class="property number">
             <strong>id</strong> <code>group.id</code>
           </p>
           <p class="description">
@@ -1122,7 +1123,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="group-stroke">
-          <p class="property string declaration">
+          <p class="property string">
             <strong>stroke</strong> <code>group.stroke</code>
           </p>
           <p class="description">
@@ -1130,7 +1131,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="group-fill">
-          <p class="property string declaration">
+          <p class="property string">
             <strong>fill</strong> <code>group.fill</code>
           </p>
           <p class="description">
@@ -1138,7 +1139,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="group-linewidth">
-          <p class="property number declaration">
+          <p class="property number">
             <strong>linewidth</strong> <code>group.linewidth</code>
           </p>
           <p class="description">
@@ -1146,7 +1147,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="group-opacity">
-          <p class="property number declaration">
+          <p class="property number">
             <strong>opacity</strong> <code>group.opacity</code>
           </p>
           <p class="description">
@@ -1154,7 +1155,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="group-cap">
-          <p class="property string declaration">
+          <p class="property string">
             <strong>cap</strong> <code>group.cap</code>
           </p>
           <p class="description">
@@ -1162,7 +1163,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="group-join">
-          <p class="property string declaration">
+          <p class="property string">
             <strong>join</strong> <code>group.join</code>
           </p>
           <p class="description">
@@ -1170,7 +1171,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="group-miter">
-          <p class="property number declaration">
+          <p class="property number">
             <strong>miter</strong> <code>group.miter</code>
           </p>
           <p class="description">
@@ -1178,7 +1179,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="group-rotation">
-          <p class="property number declaration">
+          <p class="property number">
             <strong>rotation</strong> <code>group.rotation</code>
           </p>
           <p class="description">
@@ -1186,7 +1187,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="group-scale">
-          <p class="property number declaration">
+          <p class="property number">
             <strong>scale</strong> <code>group.scale</code>
           </p>
           <p class="description">
@@ -1194,7 +1195,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="group-translation">
-          <p class="property object declaration">
+          <p class="property object">
             <strong>translation</strong> <code>group.translation</code>
           </p>
           <p class="description">
@@ -1202,7 +1203,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="group-children">
-          <p class="property object declaration">
+          <p class="property object">
             <strong>children</strong> <code>group.children</code>
           </p>
           <p class="description">
@@ -1210,7 +1211,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="group-parent">
-          <p class="property object declaration">
+          <p class="property object">
             <strong>parent</strong> <code>group.parent</code>
           </p>
           <p class="description">
@@ -1218,7 +1219,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="group-mask">
-          <p class="property object declaration">
+          <p class="property object">
             <strong>mask</strong> <code>group.mask</code>
           </p>
           <p class="description">
@@ -1226,7 +1227,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="group-clone">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>clone</strong> <code>group.clone();</code>
           </p>
           <p class="description">
@@ -1237,7 +1238,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="group-center">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>center</strong> <code>group.center();</code>
           </p>
           <p class="description">
@@ -1245,7 +1246,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="group-addto">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>addTo</strong> <code>group.addTo(group);</code>
           </p>
           <p class="description">
@@ -1253,7 +1254,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="group-add">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>add</strong> <code>group.add(objects);</code>
           </p>
           <p class="description">
@@ -1261,7 +1262,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="group-remove">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>remove</strong> <code>group.remove(objects);</code>
           </p>
           <p class="description">
@@ -1269,7 +1270,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="group-getboundingclientrect">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>getBoundingClientRect</strong> <code>group.getBoundingClientRect(shallow);</code>
           </p>
           <p class="description">
@@ -1277,7 +1278,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="group-nofill">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>noFill</strong> <code>group.noFill();</code>
           </p>
           <p class="description">
@@ -1285,7 +1286,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="group-nostroke">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>noStroke</strong> <code>group.noStroke();</code>
           </p>
           <p class="description">
@@ -1293,8 +1294,8 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="group-makeobservable">
-          <p class="property static function declaration">
-            <strong>MakeObservable</strong> <code>Two.Group.MakeObservable();</code>
+          <p class="property static function">
+            <strong>MakeObservable</strong> <code>Two.Group.MakeObservable(obj);</code>
           </p>
           <p class="description">
             Convenience method to make getter / setter properties specific to <code>Two.Group</code>.
@@ -1313,7 +1314,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="vector-x">
-          <p class="property number declaration">
+          <p class="property number">
             <strong>x</strong> <code>vector.x</code>
           </p>
           <p class="description">
@@ -1321,7 +1322,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="vector-y">
-          <p class="property number declaration">
+          <p class="property number">
             <strong>y</strong> <code>vector.y</code>
           </p>
           <p class="description">
@@ -1329,7 +1330,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="vector-set">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>set</strong> <code>vector.set(x, y);</code>
           </p>
           <p class="description">
@@ -1337,7 +1338,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="vector-copy">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>copy</strong> <code>vector.copy(v);</code>
           </p>
           <p class="description">
@@ -1345,7 +1346,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="vector-clear">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>clear</strong> <code>vector.clear();</code>
           </p>
           <p class="description">
@@ -1353,7 +1354,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="vector-clone">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>clone</strong> <code>vector.clone();</code>
           </p>
           <p class="description">
@@ -1361,7 +1362,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="vector-add">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>add</strong> <code>vector.add(v1, v2);</code>
           </p>
           <p class="description">
@@ -1369,7 +1370,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="vector-addself">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>addSelf</strong> <code>vector.addSelf(v);</code>
           </p>
           <p class="description">
@@ -1377,7 +1378,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="vector-sub">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>sub</strong> <code>vector.sub(v1, v2);</code>
           </p>
           <p class="description">
@@ -1385,7 +1386,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="vector-subself">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>subSelf</strong> <code>vector.subSelf(v);</code>
           </p>
           <p class="description">
@@ -1393,7 +1394,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="vector-multiplyself">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>multiplySelf</strong> <code>vector.multiplySelf(v);</code>
           </p>
           <p class="description">
@@ -1401,7 +1402,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="vector-multiplyscalar">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>multiplyScalar</strong> <code>vector.multiplyScalar(value);</code>
           </p>
           <p class="description">
@@ -1409,7 +1410,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="vector-dividescalar">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>divideScalar</strong> <code>vector.divideScalar(value);</code>
           </p>
           <p class="description">
@@ -1417,7 +1418,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="vector-negate">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>negate</strong> <code>vector.negate();</code>
           </p>
           <p class="description">
@@ -1425,7 +1426,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="vector-dot">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>dot</strong> <code>vector.dot(v);</code>
           </p>
           <p class="description">
@@ -1433,7 +1434,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="vector-lengthsquared">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>lengthSquared</strong> <code>vector.lengthSquared();</code>
           </p>
           <p class="description">
@@ -1441,7 +1442,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="vector-length">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>length</strong> <code>vector.length();</code>
           </p>
           <p class="description">
@@ -1449,7 +1450,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="vector-normalize">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>normalize</strong> <code>vector.normalize();</code>
           </p>
           <p class="description">
@@ -1457,7 +1458,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="vector-distanceto">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>distanceTo</strong> <code>vector.distanceTo(v);</code>
           </p>
           <p class="description">
@@ -1465,7 +1466,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="vector-distancetosquared">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>distanceToSquared</strong> <code>vector.distanceToSquared(v);</code>
           </p>
           <p class="description">
@@ -1473,7 +1474,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="vector-setlength">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>setLength</strong> <code>vector.setLength(length);</code>
           </p>
           <p class="description">
@@ -1481,7 +1482,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="vector-equals">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>equals</strong> <code>vector.equals(v);</code>
           </p>
           <p class="description">
@@ -1489,7 +1490,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="vector-lerp">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>lerp</strong> <code>vector.lerp(v, t);</code>
           </p>
           <p class="description">
@@ -1497,7 +1498,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="vector-iszero">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>isZero</strong> <code>vector.isZero();</code>
           </p>
           <p class="description">
@@ -1523,7 +1524,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="anchor-x">
-          <p class="property number declaration">
+          <p class="property number">
             <strong>x</strong> <code>anchor.x</code>
           </p>
           <p class="description">
@@ -1531,7 +1532,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="anchor-y">
-          <p class="property number declaration">
+          <p class="property number">
             <strong>y</strong> <code>anchor.y</code>
           </p>
           <p class="description">
@@ -1539,7 +1540,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li>
-          <p class="property string declaration">
+          <p class="property string">
             <strong>command</strong> <code>anchor.command</code>
           </p>
           <p class="description">
@@ -1547,7 +1548,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="anchor-controls">
-          <p class="property object declaration">
+          <p class="property object">
             <strong>controls</strong> <code>anchor.controls</code>
           </p>
           <p class="description">
@@ -1573,7 +1574,7 @@ two.bind('update', function(frameCount) {
           </ul>
         </li>
         <li id="anchor-clone">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>clone</strong> <code>anchor.clone();</code>
           </p>
           <p class="description">
@@ -1581,7 +1582,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="anchor-listen">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>listen</strong> <code>anchor.listen();</code>
           </p>
           <p class="description">
@@ -1589,7 +1590,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="anchor-ignore">
-          <p class="property function declaration">
+          <p class="property function">
             <strong>ignore</strong> <code>anchor.ignore();</code>
           </p>
           <p class="description">
@@ -1597,7 +1598,7 @@ two.bind('update', function(frameCount) {
           </p>
         </li>
         <li id="anchor-appendcurveproperties">
-          <p class="property static function declaration">
+          <p class="property static function">
             <strong>AppendCurveProperties</strong> <code>Anchor.AppendCurveProperties();</code>
           </p>
           <p class="description">
@@ -1767,6 +1768,196 @@ two.bind('update', function(frameCount) {
           </p>
           <p>
             A function to clone a <code>radialGradient</code>. Also, clones each <code>Two.Stop</code> in the <code>radialGradient.stops</code> array.
+          </p>
+        </li>
+
+        <div id="two-text"></div>
+        <li class="title"><h3>Two.Text</h3></li>
+        <li class="description">
+          This is a class for creating, manipulating, and rendering text dynamically in Two.js. As such it is rather primitive. You can use custom fonts through <a href="https://www.w3.org/TR/CSS2/fonts.html" target="_blank">@Font Face</a> spec. However, you do not have control over the glyphs themselves. If you&apos;d like to mainpulate that specifically it is recommended to use SVG Interpreter. A text object extends <code>Two.Shape</code>.
+        </li>
+        <li id="text-construction">
+          <p class="construction declaration">
+            <strong>construction</strong> <code>var text = new Two.Text(message, x, y, styles);</code>
+          </p>
+          <p>
+            A text object takes in a <code>message</code>, the string representation of what will be displayed. It then takes an <code>x</code> and <code>y</code> number where the text object will be placed in the group. Finally, an optional <code>styles</code> object to apply any other additional styles. Applicable properties to affect can be found in <code>Two.Text.Properties</code>.
+          </p>
+        </li>
+        <li id="text-value">
+          <p class="property string">
+            <strong>value</strong> <code>text.value</code>
+          </p>
+          <p>
+            A string representing the text that will be rendered to the stage.
+          </p>
+        </li>
+        <li id="text-family">
+          <p class="property string">
+            <strong>family</strong> <code>text.family</code>
+          </p>
+          <p>
+            A string representing the <code>css font-family</code> to be applied to the rendered text. Default value is <code>'sans-serif'</code>.
+          </p>
+        </li>
+        <li id="text-size">
+          <p class="property number">
+            <strong>size</strong> <code>text.size</code>
+          </p>
+          <p>
+            A number representing the text&apos;s size to be applied to the rendered text. Default value is <code>13</code>.
+          </p>
+        </li>
+        <li id="text-leading">
+          <p class="property number">
+            <strong>leading</strong> <code>text.leading</code>
+          </p>
+          <p>
+            A number representing the leading, a.k.a. line-height, to be applied to the rendered text. Default value is <code>17</code>.
+          </p>
+        </li>
+        <li id="text-alignment">
+          <p class="property string">
+            <strong>alignment</strong> <code>text.alignment</code>
+          </p>
+          <p>
+            A string representing the horizontal alignment to be applied to the rendered text. e.g: <code>'left'</code>, <code>'right'</code>, or <code>'center'</code>. Default value is <code>'middle'</code>.
+          </p>
+        </li>
+        <li id="text-fill">
+          <p class="property string">
+            <strong>fill</strong> <code>text.fill</code>
+          </p>
+          <p>
+            A string representing the color for the text area to be filled. All valid css representations of color are accepted. Default value is <code>'#000'</code>.
+          </p>
+        </li>
+        <li id="text-stroke">
+          <p class="property string">
+            <strong>stroke</strong> <code>text.stroke</code>
+          </p>
+          <p>
+            A string representing the color for the text area to be stroked. All valid css representations of color are accepted. Default value is <code>'transparent'</code>.
+          </p>
+        </li>
+        <li id="text-linewidth">
+          <p class="property number">
+            <strong>linewidth</strong> <code>text.linewidth</code>
+          </p>
+          <p>
+            A number representing the linewidth to be applied to the rendered text. Default value is <code>1</code>.
+          </p>
+        </li>
+        <li id="text-style">
+          <p class="property string">
+            <strong>style</strong> <code>text.style</code>
+          </p>
+          <p>
+            A string representing the font style to be applied to the rendered text. e.g: <code>'normal'</code> or <code>'italic'</code>. Default value is <code>'normal'</code>.
+          </p>
+        </li>
+        <li id="text-weight">
+          <p class="property number string">
+            <strong>weight</strong> <code>text.weight</code>
+          </p>
+          <p>
+            A number or string representing the weight to be applied to the rendered text. e.g: <code>500</code> or <code>'normal'</code>. For more information see the <a href="https://www.w3.org/wiki/CSS/Properties/font-weight" target="_blank">Font Weight Specification</a>. Default value is <code>500</code>.
+          </p>
+        </li>
+        <li id="text-decoration">
+          <p class="property string">
+            <strong>decoration</strong> <code>text.decoration</code>
+          </p>
+          <p>
+            A string representing the text decoration to be applied to the rendered text. e.g: <code>'none'</code>, <code>'underlined'</code>, or <code>'strikethrough'</code>. Default value is <code>'none'</code>
+          </p>
+        </li>
+        <li id="text-baseline">
+          <p class="property string">
+            <strong>baseline</strong> <code>text.baseline</code>
+          </p>
+          <p>
+            A string representing the vertical aligment to be applied to the rendered text. e.g: <code>'middle'</code>, <code>'baseline'</code>, or <code>'top'</code>. Default value is <code>'middle'</code>.
+          </p>
+        </li>
+        <li id="text-opacity">
+          <p class="property number">
+            <strong>opacity</strong> <code>text.opacity</code>
+          </p>
+          <p class="description">
+            A number representing the opacity of the path. Use strictly for setting. Must be a number 0-1.
+          </p>
+        </li>
+        <li id="text-visible">
+          <p class="property boolean">
+            <strong>visible</strong> <code>text.visible</code>
+          </p>
+          <p class="description">
+            A boolean representing whether the text object is visible or not.
+          </p>
+        </li>
+        <li id="text-rotation">
+          <p class="property number">
+            <strong>rotation</strong> <code>text.rotation</code>
+          </p>
+          <p class="description">
+            A number that represents the rotation of the text in the drawing space, in <a href="http://en.wikipedia.org/wiki/Radian" target="_blank">radians</a>.
+          </p>
+        </li>
+        <li id="text-scale">
+          <p class="property number">
+            <strong>scale</strong> <code>text.scale</code>
+          </p>
+          <p class="description">
+            A number that represents the uniform scale of the text in the drawing space.
+          </p>
+        </li>
+        <li id="text-translation">
+          <p class="property object">
+            <strong>translation</strong> <code>text.translation</code>
+          </p>
+          <p class="description">
+            A <code>Two.Vector</code> that represents x, y translation of the text in the drawing space.
+          </p>
+        </li>
+        <li id="text-clone">
+          <p class="property function">
+            <strong>clone</strong> <code>text.clone();</code>
+          </p>
+          <p class="description">
+            Returns a new instance of a <code>Two.Text</code> with the same settings.
+          </p>
+        </li>
+        <li id="text-getboundingclientrect">
+          <p class="property function">
+            <strong>getBoundingClientRect</strong> <code>text.getBoundingClientRect(shallow);</code>
+          </p>
+          <p class="description">
+            Currently returns an empty object. A shim for compatibility with matrix math in the various renderers.
+          </p>
+        </li>
+        <li id="text-nofill">
+          <p class="property function">
+            <strong>noFill</strong> <code>text.noFill();</code>
+          </p>
+          <p class="description">
+            Removes the fill.
+          </p>
+        </li>
+        <li id="text-nostroke">
+          <p class="property function">
+            <strong>noStroke</strong> <code>text.noStroke();</code>
+          </p>
+          <p class="description">
+            Removes the stroke.
+          </p>
+        </li>
+        <li id="text-makeobservable">
+          <p class="property static function">
+            <strong>MakeObservable</strong> <code>Two.Text.MakeObservable(obj);</code>
+          </p>
+          <p class="description">
+            Convenience method to make getter / setter properties specific to <code>Two.Text</code>.
           </p>
         </li>
 

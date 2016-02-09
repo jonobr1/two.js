@@ -42,7 +42,7 @@
           $projects.html(
             _.map(resp.items, function(data, i) {
               data.img = '../' + data.img;
-              return _.template(html, data);
+              return _.template(html)(data);
             }).join('\n')
           );
 

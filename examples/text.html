@@ -1,0 +1,101 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Two.js: Dynamic Text</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <link rel="image_src" href="../images/logo.gif" />
+    <link rel="shortcut icon" type="image/gif" href="../images/favicon.gif">
+    <script src="../third-party/url.js"></script>
+    <script src="../third-party/jquery.js"></script>
+    <script src="../third-party/two.js"></script>
+    <script type="text/javascript" src="//use.typekit.net/edp1hux.js"></script>
+    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+  </head>
+  <body style="background: #efefef">
+    <div class="scripts">
+      <script>
+
+        $(function() {
+
+          var type = /(svg|webgl)/.test(url.type) ? url.type : 'canvas';
+          var two = new Two({
+            type: Two.Types[type],
+            fullscreen: true,
+            autostart: true
+          }).appendTo(document.body);
+
+          var characters = [];
+          var gravity = new Two.Vector(0, 0.66);
+
+          var styles = {
+            family: 'proxima-nova, sans-serif',
+            size: 50,
+            leading: 50,
+            weight: 900
+          };
+
+          var directions = two.makeText('Start Typing', two.width / 2, two.height / 2, styles);
+          directions.fill = 'white';
+
+          $(window).bind('keydown', function(e) {
+            var character = String.fromCharCode(e.which);
+            add(character);
+          });
+
+          two
+            .bind('resize', function() {
+              directions.translation.set(two.width / 2, two.height / 2);
+            })
+            .bind('update', function() {
+
+              for (var i = 0; i < characters.length; i++) {
+
+                var text = characters[i];
+                text.translation.addSelf(text.velocity);
+                text.rotation += text.velocity.r;
+
+                text.velocity.addSelf(gravity);
+                if (text.velocity.y > 0 && text.translation.y > two.height)  {
+                  two.scene.remove(text);
+                  characters.splice(i, 1);
+                }
+
+              }
+
+            });
+
+          function add(msg) {
+
+            var x = Math.random() * two.width / 2 + two.width / 4;
+            var y = two.height * 1.25;
+
+            var text = two.makeText(msg, x, y, styles);
+            text.size *= 2;
+            text.fill = '#333';
+
+            text.velocity = new Two.Vector();
+            text.velocity.x = 10 * (Math.random() - 0.5);
+            text.velocity.y = - (20 * Math.random() + 13);
+            text.velocity.r = Math.random() * Math.PI / 8;
+
+            characters.push(text);
+
+          }
+
+        });
+
+      </script>
+    </div>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-40550435-1', 'github.com');
+      ga('send', 'pageview');
+
+    </script>
+  </body>
+</html>
