@@ -71,6 +71,7 @@ instead to minify the build with uglify.
 <!-- For the latest nightly changes checkout the `dev` branch [here](../../tree/dev). -->
 
 ##### Nightly
++ Fixed `Two.Group.mask` in `SVGRenderer` to append to DOM correctly
 + Updated `require` imports to be compatible with [require.js](http://requirejs.org/)
 + Added `Two.Text` for programmatically writing text in Two.js
 
