@@ -9,6 +9,7 @@
     <script src="../third-party/url.js"></script>
     <script src="../third-party/jquery.js"></script>
     <script src="../third-party/two.js"></script>
+    <script src='../third-party/has.js'></script>
     <script type="text/javascript" src="//use.typekit.net/edp1hux.js"></script>
     <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
   </head>
@@ -35,13 +36,19 @@
             weight: 900
           };
 
-          var directions = two.makeText('Start Typing', two.width / 2, two.height / 2, styles);
+          var directions = two.makeText(has.mobile ? 'Tap Me' : 'Start Typing', two.width / 2, two.height / 2, styles);
           directions.fill = 'white';
 
-          $(window).bind('keydown', function(e) {
-            var character = String.fromCharCode(e.which);
-            add(character);
-          });
+          $(window)
+            .bind('keydown', function(e) {
+              var character = String.fromCharCode(e.which);
+              add(character);
+            })
+            .bind('touchstart', function() {
+              var r = Math.random();
+              var character = String.fromCharCode(Math.floor(r*26) + (r>0.5?97:65));
+              add(character);
+            });
 
           two
             .bind('resize', function() {
