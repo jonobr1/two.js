@@ -8427,6 +8427,18 @@
 
     _clip: false,
 
+    remove: function() {
+
+      if (!this.parent) {
+        return this;
+      }
+
+      this.parent.remove(this);
+
+      return this;
+
+    },
+
     clone: function(parent) {
 
       var parent = parent || this.parent;

@@ -68,7 +68,10 @@ grunt build-uglify
 instead to minify the build with uglify.
 
 ## Change Log
-For the latest nightly changes checkout the `dev` branch [here](../../tree/dev).
+<!-- For the latest nightly changes checkout the `dev` branch [here](../../tree/dev). -->
+
+#### Nightly
++ Added `remove` method to `Two.Text`
 
 ##### February 9, 2016 [v0.6.0](https://github.com/jonobr1/two.js/releases/tag/v0.6.0)
 + Fixed `Two.Group.mask` in `SVGRenderer` to append to DOM correctly
