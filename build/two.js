@@ -4,7 +4,7 @@
  * agnostic enabling the same api for rendering in multiple contexts: webgl,
  * canvas2d, and svg.
  *
- * Copyright (c) 2012 - 2013 jonobr1 / http://jonobr1.com
+ * Copyright (c) 2012 - 2016 jonobr1 / http://jonobr1.com
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -1933,7 +1933,7 @@
       canvas: 'CanvasRenderer'
     },
 
-    Version: 'v0.6.0',
+    Version: 'v0.7.0',
 
     Identifier: 'two_',
 
