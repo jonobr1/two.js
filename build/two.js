@@ -2920,7 +2920,7 @@
             }
 
             if (_.isNull(opacity)) {
-              var matches = style.match(/stop\-opacity\:\s?([0-1\.\-]*)/);
+              var matches = style.match(/stop\-opacity\:\s?([0-9\.\-]*)/);
               opacity = matches && matches.length > 1 ? parseFloat(matches[1]) : 1;
             }
 
@@ -2971,7 +2971,7 @@
             }
 
             if (_.isNull(opacity)) {
-              var matches = style.match(/stop\-opacity\:\s?([0-1\.\-]*)/);
+              var matches = style.match(/stop\-opacity\:\s?([0-9\.\-]*)/);
               opacity = matches && matches.length > 1 ? parseFloat(matches[1]) : 1;
             }
 
