@@ -4080,11 +4080,9 @@
     this.ctx = this.domElement.getContext('2d');
     this.overdraw = params.overdraw || false;
 
-    this.ctx.imageSmoothingEnabled = smoothing;
-    this.ctx.mozImageSmoothingEnabled = smoothing;
-    this.ctx.oImageSmoothingEnabled = smoothing;
-    this.ctx.webkitImageSmoothingEnabled = smoothing;
-    this.ctx.imageSmoothingEnabled = smoothing;
+    if (!_.isUndefined(this.ctx.imageSmoothingEnabled)) {
+      this.ctx.imageSmoothingEnabled = smoothing;
+    }
 
     // Everything drawn on the canvas needs to be added to the scene.
     this.scene = new Two.Group();
