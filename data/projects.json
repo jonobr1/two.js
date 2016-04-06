@@ -2,6 +2,16 @@
   "template": "<li><a href=\"<%= href %>\" target=\"_blank\"><img width=\"143\" height=\"100\" src=\"<%= img %>\" alt=\"\"><h3><p><%= title %></p></h3></a></li>",
   "items": [
     {
+      "title": "Epigram",
+      "href": "http://grammatik.net",
+      "img": "images/projects/epigram.gif"
+    },
+    {
+      "title": "Chris Delbuck",
+      "href": "http://chrisdelbuck.com",
+      "img": "images/projects/chris-delbuck.gif"
+    },
+    {
       "title": "typatone",
       "href": "http://typatone.com",
       "img": "images/projects/typatone.gif"
