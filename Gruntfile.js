@@ -10,7 +10,7 @@ module.exports = function(grunt) {
       licenseFile : 'license.txt',
 
       depFiles : [
-        'third-party/underscore.js',
+        'node_modules/underscore/underscore.js',
         'third-party/events.js',
         'third-party/requestAnimationFrame.js'
       ],
