@@ -139,4 +139,5 @@ module.exports = function(grunt) {
 
   // Headless testing
   grunt.registerTask('test', ['connect', 'qunit']);
+
 };
