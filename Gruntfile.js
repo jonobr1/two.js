@@ -29,13 +29,14 @@ module.exports = function(grunt) {
         'src/shapes/rectangle.js',
         'src/shapes/ellipse.js',
         'src/shapes/polygon.js',
+        'src/shapes/arc-segment.js',
         'src/shapes/sine-ring.js',
         'src/shapes/star.js',
         'src/shapes/rounded-rectangle.js',
         'src/text.js',
-        '/src/effects/gradient.js',
-        '/src/effects/linear-gradient.js',
-        '/src/effects/radial-gradient.js',
+        'src/effects/gradient.js',
+        'src/effects/linear-gradient.js',
+        'src/effects/radial-gradient.js',
         'src/group.js'
       ]
     },

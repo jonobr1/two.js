@@ -1574,6 +1574,7 @@
     });
   }
 }.call(this));
+
 /**
  * The Events module pulled from [Backbone.js](http://backbonejs.org/)
  * Stripped and modified to work with node.js and optimize types of calls
