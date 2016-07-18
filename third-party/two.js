@@ -4,7 +4,7 @@
  * agnostic enabling the same api for rendering in multiple contexts: webgl,
  * canvas2d, and svg.
  *
- * Copyright (c) 2012 - 2013 jonobr1 / http://jonobr1.com
+ * Copyright (c) 2012 - 2016 jonobr1 / http://jonobr1.com
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -6909,6 +6909,12 @@
 
   };
 
+  _.extend(Renderer, {
+
+    Utils: webgl
+
+  });
+
   _.extend(Renderer.prototype, Backbone.Events, {
 
     setSize: function(width, height, ratio) {
@@ -8103,7 +8109,7 @@
     var theta = PI, x, y, lx, ly, rx, ry;
 
     points.push(
-      new Two.Anchor( 
+      new Two.Anchor(
         sin(theta) * (r + (amplitude/2)),
         cos(theta) * (r + (amplitude/2)),
         0,0,0,0,
