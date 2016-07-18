@@ -5143,6 +5143,12 @@
 
   };
 
+  _.extend(Renderer, {
+
+    Utils: webgl
+
+  });
+
   _.extend(Renderer.prototype, Backbone.Events, {
 
     setSize: function(width, height, ratio) {

@@ -1574,7 +1574,6 @@
     });
   }
 }.call(this));
-
 /**
  * The Events module pulled from [Backbone.js](http://backbonejs.org/)
  * Stripped and modified to work with node.js and optimize types of calls
@@ -6907,6 +6906,12 @@
       gl.ONE, gl.ONE_MINUS_SRC_ALPHA );
 
   };
+
+  _.extend(Renderer, {
+
+    Utils: webgl
+
+  });
 
   _.extend(Renderer.prototype, Backbone.Events, {
 
