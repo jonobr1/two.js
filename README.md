@@ -72,6 +72,7 @@ instead to minify the build with uglify.
 
 #### Nightly
 + Added `remove` method to `Two.Text`
++ Fixed ordering on same parent additions for `Two.Group`
 
 ##### February 9, 2016 [v0.6.0](https://github.com/jonobr1/two.js/releases/tag/v0.6.0)
 + Updated `Two.CanvasRenderer.ctx.imageSmoothingEnabled` to not use deprecated invokation, [issue 178](https://github.com/jonobr1/two.js/issues/178)

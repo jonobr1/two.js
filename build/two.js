@@ -9370,8 +9370,7 @@
 
       // Add the objects
       for (var i = 0; i < objects.length; i++) {
-        // if (!(objects[i] && objects[i].id)) continue;
-        if (!objects[i]) continue;  // TODO: Test further
+        if (!(objects[i] && objects[i].id)) continue;
         this.children.push(objects[i]);
       }
 
@@ -9525,6 +9524,12 @@
 
     var parent = child.parent;
     var index;
+
+    if (parent === newParent) {
+      this.additions.push(child);
+      this._flagAdditions = true;
+      return;
+    }
 
     if (parent && parent.children.ids[child.id]) {
 
