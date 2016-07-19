@@ -371,7 +371,8 @@
 
       // Add the objects
       for (var i = 0; i < objects.length; i++) {
-        if (!(objects[i] && objects[i].id)) continue;
+        // if (!(objects[i] && objects[i].id)) continue;
+        if (!objects[i]) continue;  // TODO: Test further
         this.children.push(objects[i]);
       }
 
