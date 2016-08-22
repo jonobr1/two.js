@@ -1,6 +1,7 @@
-(function(Two, _, Backbone, requestAnimationFrame) {
+(function(Two) {
 
   var getComputedMatrix = Two.Utils.getComputedMatrix;
+  var _ = Two.Utils._;
 
   var canvas = document.createElement('canvas');
   var ctx = canvas.getContext('2d');
@@ -224,9 +225,4 @@
 
   Two.Text.MakeObservable(Two.Text.prototype);
 
-})(
-  Two,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : _,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : Backbone,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : requestAnimationFrame
-);
+})(this.Two);

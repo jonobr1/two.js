@@ -1,4 +1,6 @@
-(function(Two, _, Backbone, requestAnimationFrame) {
+(function(Two) {
+
+  var _ = Two.Utils._;
 
   var Shape = Two.Shape = function() {
 
@@ -20,7 +22,7 @@
 
   };
 
-  _.extend(Shape, Backbone.Events, {
+  _.extend(Shape, Two.Utils.Events, {
 
     FlagMatrix: function() {
       this._flagMatrix = true;
@@ -124,9 +126,4 @@
 
   Shape.MakeObservable(Shape.prototype);
 
-})(
-  this.Two,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : this._,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : this.Backbone,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : this.requestAnimationFrame
-);
+})(this.Two);

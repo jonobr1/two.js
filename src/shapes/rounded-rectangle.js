@@ -1,6 +1,7 @@
-(function(Two, _, Backbone, requestAnimationFrame) {
+(function(Two) {
 
   var Path = Two.Path;
+  var _ = Two.Utils._;
 
   var RoundedRectangle = Two.RoundedRectangle = function(ox, oy, width, height, radius) {
 
@@ -99,9 +100,4 @@
     return o1 + (o2 - o1) * ((v - i1) / (i2 - i1));
   }
 
-})(
-  this.Two,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : this._,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : this.Backbone,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : this.requestAnimationFrame
-);
+})(this.Two);

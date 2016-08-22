@@ -1,4 +1,6 @@
-(function(Two, _, Backbone, requestAnimationFrame) {
+(function(Two) {
+
+  var _ = Two.Utils._;
 
   var Stop = Two.Stop = function(offset, color, opacity) {
 
@@ -51,7 +53,7 @@
 
   });
 
-  _.extend(Stop.prototype, Backbone.Events, {
+  _.extend(Stop.prototype, Two.Utils.Events, {
 
     clone: function() {
 
@@ -231,9 +233,4 @@
 
   Gradient.MakeObservable(Gradient.prototype);
 
-})(
-  this.Two,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : this._,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : this.Backbone,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : this.requestAnimationFrame
-);
+})(this.Two);

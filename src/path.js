@@ -1,4 +1,4 @@
-(function(Two, _, Backbone, requestAnimationFrame) {
+(function(Two) {
 
   /**
    * Constants
@@ -8,6 +8,7 @@
     getComputedMatrix = Two.Utils.getComputedMatrix;
 
   var commands = {};
+  var _ = Two.Utils._;
 
   _.each(Two.Commands, function(v, k) {
     commands[k] = new RegExp(v);
@@ -735,9 +736,4 @@
 
   }
 
-})(
-  this.Two,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : this._,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : this.Backbone,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : this.requestAnimationFrame
-);
+})(this.Two);
