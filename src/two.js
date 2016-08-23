@@ -27,6 +27,7 @@
 
   var count = 0;
   var slice = Array.prototype.slice;
+  var perf = ((root.performance && root.performance.now) ? root.performance : Date);
 
   /**
    * Cross browser dom events.
@@ -1774,7 +1775,7 @@
     update: function() {
 
       var animated = !!this._lastFrame;
-      var now = getNow();
+      var now = perf.now();
 
       this.frameCount++;
 
@@ -2104,11 +2105,6 @@
     this.renderer.setSize(width, height, this.ratio);
     this.trigger(Two.Events.resize, width, height);
 
-  }
-
-  function getNow() {
-    return ((root.performance && root.performance.now)
-      ? root.performance : Date).now();
   }
 
   // Request Animation Frame
