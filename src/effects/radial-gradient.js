@@ -1,6 +1,6 @@
 (function(Two) {
 
-  var _ = Two.Utils._;
+  var _ = Two.Utils;
 
   var RadialGradient = Two.RadialGradient = function(cx, cy, r, stops, fx, fy) {
 

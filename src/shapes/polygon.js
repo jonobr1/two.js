@@ -1,7 +1,7 @@
 (function(Two) {
 
   var Path = Two.Path, TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin;
-  var _ = Two.Utils._;
+  var _ = Two.Utils;
 
   var Polygon = Two.Polygon = function(ox, oy, r, sides) {
 

@@ -4,7 +4,7 @@
    * Constants
    */
   var min = Math.min, max = Math.max;
-  var _ = Two.Utils._;
+  var _ = Two.Utils;
 
   /**
    * A children collection which is accesible both by index and by object id

@@ -4,7 +4,7 @@
    * Constants
    */
   var cos = Math.cos, sin = Math.sin, tan = Math.tan;
-  var _ = Two.Utils._;
+  var _ = Two.Utils;
 
   /**
    * Two.Matrix contains an array of elements that represent

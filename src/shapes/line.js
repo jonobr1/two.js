@@ -1,7 +1,7 @@
 (function(Two) {
 
   var Path = Two.Path;
-  var _ = Two.Utils._;
+  var _ = Two.Utils;
 
   var Line = Two.Line = function(x1, y1, x2, y2) {
 

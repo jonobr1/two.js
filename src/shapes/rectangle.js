@@ -1,7 +1,7 @@
 (function(Two) {
 
   var Path = Two.Path;
-  var _ = Two.Utils._;
+  var _ = Two.Utils;
 
   var Rectangle = Two.Rectangle = function(x, y, width, height) {
 

@@ -1,6 +1,6 @@
 (function(Two) {
 
-  var _ = Two.Utils._;
+  var _ = Two.Utils;
 
   var Stop = Two.Stop = function(offset, color, opacity) {
 

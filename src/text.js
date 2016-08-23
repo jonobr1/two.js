@@ -1,7 +1,7 @@
 (function(Two) {
 
   var getComputedMatrix = Two.Utils.getComputedMatrix;
-  var _ = Two.Utils._;
+  var _ = Two.Utils;
 
   var canvas = document.createElement('canvas');
   var ctx = canvas.getContext('2d');

@@ -74,11 +74,13 @@
         lastTime = currTime + timeToCall;
         return id;
       };
-      cancel = cancel || function(id) {
-        clearTimeout(id);
-      };
+      // cancel = cancel || function(id) {
+      //   clearTimeout(id);
+      // };
 
-      return { request: request, cancel: cancel };
+      request.init = _.once(loop);
+
+      return request;
 
     }
 
@@ -154,6 +156,7 @@
     this.scene = this.renderer.scene;
 
     Two.Instances.push(this);
+    raf.init();
 
   };
 
@@ -214,9 +217,7 @@
       return id;
     },
 
-    Utils: {
-
-      _: _,
+    Utils: _.extend(_, {
 
       defineProperty: function(property) {
 
@@ -1644,7 +1645,7 @@
         }
       }
 
-    }
+    })
 
   });
 
@@ -2116,7 +2117,7 @@
 
   function loop() {
 
-    raf.request(arguments.callee);
+    raf(loop);
 
     for (var i = 0; i < Two.Instances.length; i++) {
       var t = Two.Instances[i];

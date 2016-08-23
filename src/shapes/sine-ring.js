@@ -1,7 +1,7 @@
 (function(Two) {
 
   var Path = Two.Path, PI = Math.PI, TWO_PI = Math.PI * 2, cos = Math.cos,
-    sin = Math.sin, abs = Math.abs, _ = Two.Utils._;;
+    sin = Math.sin, abs = Math.abs, _ = Two.Utils;
 
   var SineRing = Two.SineRing = function(ox, oy, r, periods, amplitude, mod) {
 

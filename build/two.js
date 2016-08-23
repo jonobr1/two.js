@@ -102,11 +102,13 @@
         lastTime = currTime + timeToCall;
         return id;
       };
-      cancel = cancel || function(id) {
-        clearTimeout(id);
-      };
+      // cancel = cancel || function(id) {
+      //   clearTimeout(id);
+      // };
 
-      return { request: request, cancel: cancel };
+      request.init = _.once(loop);
+
+      return request;
 
     }
 
@@ -182,6 +184,7 @@
     this.scene = this.renderer.scene;
 
     Two.Instances.push(this);
+    raf.init();
 
   };
 
@@ -242,9 +245,7 @@
       return id;
     },
 
-    Utils: {
-
-      _: _,
+    Utils: _.extend(_, {
 
       defineProperty: function(property) {
 
@@ -1672,7 +1673,7 @@
         }
       }
 
-    }
+    })
 
   });
 
@@ -2144,7 +2145,7 @@
 
   function loop() {
 
-    raf.request(arguments.callee);
+    raf(loop);
 
     for (var i = 0; i < Two.Instances.length; i++) {
       var t = Two.Instances[i];
@@ -2167,7 +2168,7 @@
 
 (function(Two) {
 
-  var _ = Two.Utils._;
+  var _ = Two.Utils;
 
   var Vector = Two.Vector = function(x, y) {
 
@@ -2490,7 +2491,7 @@
 
   // Localized variables
   var commands = Two.Commands;
-  var _ = Two.Utils._;
+  var _ = Two.Utils;
 
   /**
    * An object that holds 3 `Two.Vector`s, the anchor point and its
@@ -2657,7 +2658,7 @@
    * Constants
    */
   var cos = Math.cos, sin = Math.sin, tan = Math.tan;
-  var _ = Two.Utils._;
+  var _ = Two.Utils;
 
   /**
    * Two.Matrix contains an array of elements that represent
@@ -3032,7 +3033,7 @@
 
   // Localize variables
   var mod = Two.Utils.mod, toFixed = Two.Utils.toFixed;
-  var _ = Two.Utils._;
+  var _ = Two.Utils;
 
   var svg = {
 
@@ -3791,7 +3792,7 @@
    */
   var mod = Two.Utils.mod, toFixed = Two.Utils.toFixed;
   var getRatio = Two.Utils.getRatio;
-  var _ = Two.Utils._;
+  var _ = Two.Utils;
 
   // Returns true if this is a non-transforming matrix
   var isDefaultMatrix = function (m) {
@@ -4296,7 +4297,7 @@
     getRatio = Two.Utils.getRatio,
     getComputedMatrix = Two.Utils.getComputedMatrix,
     toFixed = Two.Utils.toFixed,
-    _ = Two.Utils._;
+    _ = Two.Utils;
 
   var webgl = {
 
@@ -5336,7 +5337,7 @@
 
 (function(Two) {
 
-  var _ = Two.Utils._;
+  var _ = Two.Utils;
 
   var Shape = Two.Shape = function() {
 
@@ -5474,7 +5475,7 @@
     getComputedMatrix = Two.Utils.getComputedMatrix;
 
   var commands = {};
-  var _ = Two.Utils._;
+  var _ = Two.Utils;
 
   _.each(Two.Commands, function(v, k) {
     commands[k] = new RegExp(v);
@@ -6207,7 +6208,7 @@
 (function(Two) {
 
   var Path = Two.Path;
-  var _ = Two.Utils._;
+  var _ = Two.Utils;
 
   var Line = Two.Line = function(x1, y1, x2, y2) {
 
@@ -6235,7 +6236,7 @@
 (function(Two) {
 
   var Path = Two.Path;
-  var _ = Two.Utils._;
+  var _ = Two.Utils;
 
   var Rectangle = Two.Rectangle = function(x, y, width, height) {
 
@@ -6262,7 +6263,7 @@
 (function(Two) {
 
   var Path = Two.Path, TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin;
-  var _ = Two.Utils._;
+  var _ = Two.Utils;
 
   var Ellipse = Two.Ellipse = function(ox, oy, rx, ry) {
 
@@ -6294,7 +6295,7 @@
 (function(Two) {
 
   var Path = Two.Path, TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin;
-  var _ = Two.Utils._;
+  var _ = Two.Utils;
 
   var Polygon = Two.Polygon = function(ox, oy, r, sides) {
 
@@ -6322,7 +6323,7 @@
 (function(Two) {
 
   var Path = Two.Path, PI = Math.PI, TWO_PI = Math.PI * 2, HALF_PI = Math.PI/2,
-    cos = Math.cos, sin = Math.sin, abs = Math.abs, _ = Two.Utils._;
+    cos = Math.cos, sin = Math.sin, abs = Math.abs, _ = Two.Utils;
 
   /*
   @class ArcSegment
@@ -6430,7 +6431,7 @@
 (function(Two) {
 
   var Path = Two.Path, PI = Math.PI, TWO_PI = Math.PI * 2, cos = Math.cos,
-    sin = Math.sin, abs = Math.abs, _ = Two.Utils._;;
+    sin = Math.sin, abs = Math.abs, _ = Two.Utils;
 
   var SineRing = Two.SineRing = function(ox, oy, r, periods, amplitude, mod) {
 
@@ -6494,7 +6495,7 @@
 (function(Two) {
 
   var Path = Two.Path, TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin;
-  var _ = Two.Utils._;
+  var _ = Two.Utils;
 
   var Star = Two.Star = function(ox, oy, or, ir, sides) {
 
@@ -6531,7 +6532,7 @@
 (function(Two) {
 
   var Path = Two.Path;
-  var _ = Two.Utils._;
+  var _ = Two.Utils;
 
   var RoundedRectangle = Two.RoundedRectangle = function(ox, oy, width, height, radius) {
 
@@ -6635,7 +6636,7 @@
 (function(Two) {
 
   var getComputedMatrix = Two.Utils.getComputedMatrix;
-  var _ = Two.Utils._;
+  var _ = Two.Utils;
 
   var canvas = document.createElement('canvas');
   var ctx = canvas.getContext('2d');
@@ -6863,7 +6864,7 @@
 
 (function(Two) {
 
-  var _ = Two.Utils._;
+  var _ = Two.Utils;
 
   var Stop = Two.Stop = function(offset, color, opacity) {
 
@@ -7100,7 +7101,7 @@
 
 (function(Two) {
 
-  var _ = Two.Utils._;
+  var _ = Two.Utils;
 
   var LinearGradient = Two.LinearGradient = function(x1, y1, x2, y2, stops) {
 
@@ -7195,7 +7196,7 @@
 
 (function(Two) {
 
-  var _ = Two.Utils._;
+  var _ = Two.Utils;
 
   var RadialGradient = Two.RadialGradient = function(cx, cy, r, stops, fx, fy) {
 
@@ -7313,7 +7314,7 @@
    * Constants
    */
   var min = Math.min, max = Math.max;
-  var _ = Two.Utils._;
+  var _ = Two.Utils;
 
   /**
    * A children collection which is accesible both by index and by object id

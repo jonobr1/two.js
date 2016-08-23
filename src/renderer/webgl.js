@@ -11,7 +11,7 @@
     getRatio = Two.Utils.getRatio,
     getComputedMatrix = Two.Utils.getComputedMatrix,
     toFixed = Two.Utils.toFixed,
-    _ = Two.Utils._;
+    _ = Two.Utils;
 
   var webgl = {
 

@@ -5,7 +5,7 @@
    */
   var mod = Two.Utils.mod, toFixed = Two.Utils.toFixed;
   var getRatio = Two.Utils.getRatio;
-  var _ = Two.Utils._;
+  var _ = Two.Utils;
 
   // Returns true if this is a non-transforming matrix
   var isDefaultMatrix = function (m) {

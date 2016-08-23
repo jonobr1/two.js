@@ -2,7 +2,7 @@
 
   // Localize variables
   var mod = Two.Utils.mod, toFixed = Two.Utils.toFixed;
-  var _ = Two.Utils._;
+  var _ = Two.Utils;
 
   var svg = {
 

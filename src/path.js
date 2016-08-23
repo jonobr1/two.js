@@ -8,7 +8,7 @@
     getComputedMatrix = Two.Utils.getComputedMatrix;
 
   var commands = {};
-  var _ = Two.Utils._;
+  var _ = Two.Utils;
 
   _.each(Two.Commands, function(v, k) {
     commands[k] = new RegExp(v);

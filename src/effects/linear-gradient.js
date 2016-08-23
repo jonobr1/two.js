@@ -1,6 +1,6 @@
 (function(Two) {
 
-  var _ = Two.Utils._;
+  var _ = Two.Utils;
 
   var LinearGradient = Two.LinearGradient = function(x1, y1, x2, y2, stops) {
 

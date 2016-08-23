@@ -2,7 +2,7 @@
 
   // Localized variables
   var commands = Two.Commands;
-  var _ = Two.Utils._;
+  var _ = Two.Utils;
 
   /**
    * An object that holds 3 `Two.Vector`s, the anchor point and its
