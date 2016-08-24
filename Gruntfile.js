@@ -1,62 +1,47 @@
-/* globals module */
-
+/**
+ * Grunt task for Two.js JavaScript Library.
+ */
 module.exports = function(grunt) {
 
-  // Project configuration
   grunt.initConfig({
+
     pkg: grunt.file.readJSON('package.json'),
-    meta: {
-
-      licenseFile : 'license.txt',
-
-      srcFiles : [
-        'src/two.js',
-        'src/vector.js',
-        'src/anchor.js',
-        'src/matrix.js',
-        'src/renderer/svg.js',
-        'src/renderer/canvas.js',
-        'src/renderer/webgl.js',
-        'src/shape.js',
-        'src/path.js',
-        'src/shapes/line.js',
-        'src/shapes/rectangle.js',
-        'src/shapes/ellipse.js',
-        'src/shapes/polygon.js',
-        'src/shapes/arc-segment.js',
-        'src/shapes/sine-ring.js',
-        'src/shapes/star.js',
-        'src/shapes/rounded-rectangle.js',
-        'src/text.js',
-        'src/effects/gradient.js',
-        'src/effects/linear-gradient.js',
-        'src/effects/radial-gradient.js',
-        'src/group.js'
-      ]
-    },
 
     watch: {
-      scripts: {
-        files: ['src/**/*.js', "tests/*.js"],
-        tasks: ['jshint', 'concat']
-      }
+      files: ['<%= jshint.files %>'],
+      tasks: ['jshint', 'qunit']
     },
 
     jshint: {
+      files: ['Gruntfile.js', 'src/**'],
+      filter: 'isFile',
       options: {
-        jshintrc: true,
-      },
-      all: ['Gruntfile.js', 'src/**/*.js']
+        globals: {
+          console: true
+        }
+      }
     },
 
     concat: {
+
       options: {
         separator: '\n'
       },
+
       dist: {
         src: [
-          '<%= meta.licenseFile %>',
-          '<%= meta.srcFiles %>'
+          'license.txt',
+          'src/two.js',
+          'src/vector.js',
+          'src/anchor.js',
+          'src/matrix.js',
+          'src/renderer/*.js',
+          'src/shape.js',
+          'src/path.js',
+          'src/shapes/*.js',
+          'src/text.js',
+          'src/effects/*.js',
+          'src/group.js'
         ],
         dest: 'build/<%= pkg.name %>'
       }
@@ -96,16 +81,13 @@ module.exports = function(grunt) {
         src: 'build/two.js',
         dest: 'build/two.min.js'
       }
+
     },
+
     qunit: {
-      all: {
-        options: {
-          urls: [
-            'http://localhost:3000/tests/noWebGL.html',
-          ]
-        }
-      }
-    },
+      files: ['tests/noWebGL.html']
+    }
+
   });
 
   // Load tasks
@@ -118,10 +100,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-qunit');
 
   // Default task
-  grunt.registerTask('default', ['jshint' , 'concat', 'closureCompiler']);
+  grunt.registerTask('default', ['jshint' , 'concat', 'uglify']);
 
-  // Uglify fallback
-  grunt.registerTask('build-uglify', ['jshint' , 'concat', 'uglify']);
+  // Closure Compiler fallback
+  grunt.registerTask('build-uglify', ['jshint' , 'concat', 'closureCompiler']);
 
   // Headless testing
   grunt.registerTask('test', ['connect', 'qunit']);
