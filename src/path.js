@@ -10,7 +10,7 @@
   var commands = {};
   var _ = Two.Utils;
 
-  _.each(Two.Commands, function(v) {
+  _.each(Two.Commands, function(v, k) {
     commands[k] = new RegExp(v);
   });
 
@@ -134,7 +134,7 @@
           }
           this._automatic = !!v;
           var method = this._automatic ? 'ignore' : 'listen';
-          _.each(this.vertices, function(v, k) {
+          _.each(this.vertices, function(v) {
             v[method]();
           });
         }
