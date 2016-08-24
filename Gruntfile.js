@@ -9,12 +9,6 @@ module.exports = function(grunt) {
 
       licenseFile : 'license.txt',
 
-      depFiles : [
-        'node_modules/underscore/underscore.js',
-        'third-party/events.js',
-        'third-party/requestAnimationFrame.js'
-      ],
-
       srcFiles : [
         'src/two.js',
         'src/vector.js',
@@ -59,17 +53,9 @@ module.exports = function(grunt) {
       options: {
         separator: '\n'
       },
-      clean : {
-        src: [
-          "<%= meta.licenseFile %>",
-          "<%= meta.srcFiles %>"
-        ],
-        dest: 'build/two.clean.js'
-      },
       dist: {
         src: [
           '<%= meta.licenseFile %>',
-          '<%= meta.depFiles %>',
           '<%= meta.srcFiles %>'
         ],
         dest: 'build/<%= pkg.name %>'
