@@ -27,11 +27,7 @@
     "url": "https://github.com/jonobr1/two.js/issues"
   },
   "license": "MIT",
-  "dependencies" : {
-    "underscore": ">= 1.5.0",
-    "backbone": ">= 1.1.2",
-    "requestanimationframe": ">= 0.0.22"
-  },
+  "dependencies" : {},
   "devDependencies": {
     "grunt": "^0.4.0",
     "grunt-contrib-jshint": "^0.10.0",
