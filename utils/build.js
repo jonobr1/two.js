@@ -4,7 +4,7 @@ var path = require('path');
 var compressor = require('node-minify');
 
 var files = [
-  path.resolve(__dirname, '../license.txt'),
+  path.resolve(__dirname, '../LICENSE'),
   path.resolve(__dirname, '../third-party/underscore.js'),
   path.resolve(__dirname, '../third-party/events.js'),
   path.resolve(__dirname, '../third-party/requestAnimationFrame.js'),
