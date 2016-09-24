@@ -6,6 +6,112 @@
 
 module('Core');
 
+test('Two.Utils', 11 * 11 + 18, function() {
+
+  var types = {
+    arguments: arguments,
+    number: 1,
+    nan: NaN,
+    null: null,
+    func: Two.Utils.identity,
+    obj: {},
+    array: [],
+    elem: document.createElement('div'),
+    date: new Date(),
+    regex: new RegExp(),
+    bool: false
+  };
+  var funcs = {
+    arguments: Two.Utils.isArguments,
+    number: Two.Utils.isNumber,
+    nan: Two.Utils.isNaN,
+    null: Two.Utils.isNull,
+    'undefined': Two.Utils.isUndefined,
+    func: Two.Utils.isFunction,
+    obj: Two.Utils.isObject,
+    array: Two.Utils.isArray,
+    elem: Two.Utils.isElement,
+    date: Two.Utils.isDate,
+    regex: Two.Utils.isRegExp,
+    bool: Two.Utils.isBoolean
+  };
+  var exceptions = {
+    numbernan: true,
+    objfunc: true,
+    objarray: true,
+    objelem: true,
+    objdate: true,
+    objregex: true
+  };
+  var keys = ['number', 'nan', 'null', 'undefined', 'func', 'obj',
+    'array', 'elem', 'date', 'regex', 'bool'];
+
+  for (var i = 0; i < keys.length; i++) {
+    var a = keys[i];
+    var func = funcs[a];
+    for (var j = 0; j < keys.length; j++) {
+      var b = keys[j];
+      var type = types[b];
+      equal(func(type), exceptions[a + b] || i === j, keys[i] + ' is ' + keys[j]);
+    }
+  }
+
+  equal(Two.Utils.identity(5), 5, 'identity returns passed value.');
+  equal(Two.Utils.isArray(Two.Utils.toArray({})), true, 'turned {} to array.');
+  equal(JSON.stringify(Two.Utils.range(0, 5)), '[0,1,2,3,4]', 'created 0-5 range successfully.');
+  equal(Two.Utils.indexOf(['a', 'b', 'c'], 'b'), 1, 'indexed correctly.');
+  equal(Two.Utils.has({ hello: 'foo' }, 'hello'), true, 'Object has property.');
+  equal(Two.Utils.bind(function() {
+    return this.attr;
+  }, { attr: 'Two.js' })(), 'Two.js', 'Bound function properly.');
+  equal(JSON.stringify(Two.Utils.extend({ a: 'b' }, { a: 'a', b: 'c' })), '{"a":"a","b":"c"}', 'Object extends properties successfully.');
+  equal(JSON.stringify(Two.Utils.defaults({ a: 'b' }, { a: 'a', b: 'c' })), '{"a":"b","b":"c"}', 'Object defaults properties successfully.')
+  equal(JSON.stringify(Two.Utils.keys({ a: 0, b: 1, c: 2 })), '["a","b","c"]', 'Two.Utils.keys successfully retrieves keys.');
+  equal(JSON.stringify(Two.Utils.values({ a: 0, b: 1, c: 2 })), '[0,1,2]', 'Two.Utils.values successfully retrieves keys.');
+
+  var obj = { a: 0, b: 1, c: 2, d: 3 };
+  Two.Utils.each(obj, function(v, k) {
+    equal(v, obj[k], 'Two.Utils.each');
+  });
+  var map = Two.Utils.map(obj, function(v, k) {
+    return k;
+  });
+  equal(JSON.stringify(map), '["a","b","c","d"]', 'Two.Utils.map');
+
+  var once = Two.Utils.once(function() {
+    equal(true, true, 'This test should only run once.');
+  });
+  var after = Two.Utils.after(5, function() {
+    equal(true, true, 'This test should only run after 5 invocations.');
+  });
+
+  var i = 0;
+  while (i < 5) {
+    once();
+    after();
+    i++;
+  }
+
+  equal(Two.Utils.uniqueId('hello-'), 'hello-1', 'uniqueId is unique-ish with proper prefixing.');
+
+});
+
+test('Two.Utils.Events', 1, function() {
+
+  var Item = function() {};
+  Two.Utils.extend(Item.prototype, Two.Utils.Events);
+
+  var item = new Item();
+
+  item.bind('change', function(message) {
+    equal(message, 'hello', 'Bound Two.Utils.Events successfully.');
+  });
+  item.trigger('change', 'hello');
+  item.unbind('change');
+  item.trigger('change');
+
+});
+
 test('Two.Vector', 44, function() {
 
   var vector = new Two.Vector();

@@ -1,6 +1,7 @@
-(function(Two, _, Backbone, requestAnimationFrame) {
+(function(Two) {
 
-  var Path = Two.Path, PI = Math.PI, TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin, abs = Math.abs;
+  var Path = Two.Path, PI = Math.PI, TWO_PI = Math.PI * 2, cos = Math.cos,
+    sin = Math.sin, abs = Math.abs, _ = Two.Utils;
 
   var SineRing = Two.SineRing = function(ox, oy, r, periods, amplitude, mod) {
 
@@ -13,7 +14,7 @@
     var theta = PI, x, y, lx, ly, rx, ry;
 
     points.push(
-      new Two.Anchor( 
+      new Two.Anchor(
         sin(theta) * (r + (amplitude/2)),
         cos(theta) * (r + (amplitude/2)),
         0,0,0,0,
@@ -59,9 +60,4 @@
 
   Path.MakeObservable(SineRing.prototype);
 
-})(
-  this.Two,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : this._,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : this.Backbone,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : this.requestAnimationFrame
-);
+})(this.Two);

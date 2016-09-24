@@ -1,4 +1,6 @@
-(function(Two, _, Backbone, requestAnimationFrame) {
+(function(Two) {
+
+  var _ = Two.Utils;
 
   var RadialGradient = Two.RadialGradient = function(cx, cy, r, stops, fx, fy) {
 
@@ -108,9 +110,4 @@
 
   RadialGradient.MakeObservable(RadialGradient.prototype);
 
-})(
-  this.Two,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : this._,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : this.Backbone,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : this.requestAnimationFrame
-);
+})(this.Two);

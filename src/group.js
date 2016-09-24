@@ -1,9 +1,10 @@
-(function(Two, _, Backbone, requestAnimationFrame) {
+(function(Two) {
 
   /**
    * Constants
    */
   var min = Math.min, max = Math.max;
+  var _ = Two.Utils;
 
   /**
    * A children collection which is accesible both by index and by object id
@@ -570,9 +571,4 @@
 
   }
 
-})(
-  this.Two,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : this._,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : this.Backbone,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : this.requestAnimationFrame
-);
+})(this.Two);

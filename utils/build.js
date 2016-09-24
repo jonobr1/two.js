@@ -4,10 +4,14 @@ var path = require('path');
 var compressor = require('node-minify');
 
 var files = [
+<<<<<<< HEAD
   path.resolve(__dirname, '../LICENSE'),
   path.resolve(__dirname, '../third-party/underscore.js'),
   path.resolve(__dirname, '../third-party/events.js'),
   path.resolve(__dirname, '../third-party/requestAnimationFrame.js'),
+=======
+  path.resolve(__dirname, '../license.txt'),
+>>>>>>> no-deps
   path.resolve(__dirname, '../src/two.js'),
   path.resolve(__dirname, '../src/vector.js'),
   path.resolve(__dirname, '../src/anchor.js'),
@@ -31,19 +35,6 @@ var files = [
   path.resolve(__dirname, '../src/effects/radial-gradient.js'),
   path.resolve(__dirname, '../src/group.js')
 ];
-
-new compressor.minify({
-  type: 'no-compress',
-  fileIn: [files[0]].concat(files.slice(4)),
-  fileOut: path.resolve(__dirname, '../build/two.clean.js'),
-  callback: function(e) {
-    if (!e) {
-      console.log('clean complete');
-    } else {
-      console.log('unable to concatenate clean', e);
-    }
-  }
-});
 
 // Concatenated
 new compressor.minify({

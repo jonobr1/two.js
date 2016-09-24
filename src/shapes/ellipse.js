@@ -1,6 +1,7 @@
-(function(Two, _, Backbone, requestAnimationFrame) {
+(function(Two) {
 
   var Path = Two.Path, TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin;
+  var _ = Two.Utils;
 
   var Ellipse = Two.Ellipse = function(ox, oy, rx, ry) {
 
@@ -27,9 +28,4 @@
 
   Path.MakeObservable(Ellipse.prototype);
 
-})(
-  this.Two,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : this._,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : this.Backbone,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : this.requestAnimationFrame
-);
+})(this.Two);
