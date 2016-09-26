@@ -8,7 +8,6 @@
 
   var root = this;
   var Backbone = root.Backbone || {};
-  root.Backbone = Backbone;
 
   var array = [];
   var slice = array.slice;
