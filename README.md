@@ -169,4 +169,4 @@ For the latest nightly changes checkout the `dev` branch [here](../../tree/dev).
 ##### Jan 29, 2013 [v0.1.0-alpha](https://github.com/jonobr1/two.js/tree/v0.1.0-alpha)
 + Proof of Concept built from Three.js
 
-[![Analytics](https://ga-beacon.appspot.com/UA-40550435-1/two-js/readme)](https://github.com/igrigorik/ga-beacon)
+[![Analytics](https://ga-beacon.appspot.com/UA-40550435-1/two-js/readme?pixel)](https://github.com/igrigorik/ga-beacon)
