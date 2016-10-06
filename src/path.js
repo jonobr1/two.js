@@ -399,6 +399,18 @@
       border = this.linewidth / 2;
       l = this._vertices.length;
 
+      if (l <= 0) {
+        v = matrix.multiply(0, 0, 1);
+        return {
+          top: v.y,
+          left: v.x,
+          right: v.x,
+          bottom: v.y,
+          width: 0,
+          height: 0
+        };
+      }
+
       for (i = 0; i < l; i++) {
         v = this._vertices[i];
 

@@ -82,7 +82,7 @@
 
   });
 
-  test('Two.makePath', 1, function(o) {
+  test('Two.makePath', 2, function(o) {
 
     var two = new Two({
       width: 400,
@@ -98,12 +98,15 @@
       return new Two.Vector(x, y);
     });
     var poly = two.makePath(points, true);
+    var path = two.makePath();
 
     two.update();
 
     var elem = two.renderer.domElement.querySelector('#' + poly.id);
-
     equal(elem.getAttribute('d'), 'M -142.5 25 L -127.5 -25 L -112.5 25 L -97.5 -25 L -82.5 25 L -67.5 -25 L -52.5 25 L -37.5 -25 L -22.5 25 L -7.5 -25 L 7.5 25 L 22.5 -25 L 37.5 25 L 52.5 -25 L 67.5 25 L 82.5 -25 L 97.5 25 L 112.5 -25 L 127.5 25 L 142.5 -25 ', 'Two.makePath applies d attribute properly.');
+
+    elem = two.renderer.domElement.querySelector('#' + path.id);
+    equal(elem.getAttribute('transform'), 'matrix(1 0 0 1 0 0)', 'Two.makePath applies transform attribute properly.');
 
     QUnit.Utils.addInstanceToTest(o, two);
 
