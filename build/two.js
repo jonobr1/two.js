@@ -26,7 +26,7 @@
  *
  */
 
-(function(previousTwo) {
+this.Two = (function(previousTwo) {
 
   var root = this;
   var _ = {
@@ -273,7 +273,7 @@
    */
   var dom = {
 
-    temp: document.createElement('div'),
+    temp: (root.document ? root.document.createElement('div') : {}),
 
     hasEventListeners: _.isFunction(root.addEventListener),
 
@@ -2346,6 +2346,8 @@
   } else if (typeof module != 'undefined' && module.exports) {
     module.exports = Two;
   }
+
+  return Two;
 
 })(this.Two);
 
@@ -4473,7 +4475,8 @@
    * Constants
    */
 
-  var multiplyMatrix = Two.Matrix.Multiply,
+  var root = this,
+    multiplyMatrix = Two.Matrix.Multiply,
     mod = Two.Utils.mod,
     identity = [1, 0, 0, 0, 1, 0, 0, 0, 1],
     transformation = new Two.Array(9),
@@ -4486,7 +4489,7 @@
 
     isHidden: /(none|transparent)/i,
 
-    canvas: document.createElement('canvas'),
+    canvas: (root.document ? root.document.createElement('canvas') : { getContext: _.identity }),
 
     alignments: {
       left: 'start',
@@ -6830,10 +6833,11 @@
 
 (function(Two) {
 
+  var root = this;
   var getComputedMatrix = Two.Utils.getComputedMatrix;
   var _ = Two.Utils;
 
-  var canvas = document.createElement('canvas');
+  var canvas = (root.document ? root.document.createElement('canvas') : { getContext: _.identity });
   var ctx = canvas.getContext('2d');
 
   Two.Text = function(message, x, y, styles) {

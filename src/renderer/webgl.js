@@ -4,7 +4,8 @@
    * Constants
    */
 
-  var multiplyMatrix = Two.Matrix.Multiply,
+  var root = this,
+    multiplyMatrix = Two.Matrix.Multiply,
     mod = Two.Utils.mod,
     identity = [1, 0, 0, 0, 1, 0, 0, 0, 1],
     transformation = new Two.Array(9),
@@ -17,7 +18,7 @@
 
     isHidden: /(none|transparent)/i,
 
-    canvas: document.createElement('canvas'),
+    canvas: (root.document ? root.document.createElement('canvas') : { getContext: _.identity }),
 
     alignments: {
       left: 'start',

@@ -1,4 +1,4 @@
-(function(previousTwo) {
+this.Two = (function(previousTwo) {
 
   var root = this;
   var _ = {
@@ -245,7 +245,7 @@
    */
   var dom = {
 
-    temp: document.createElement('div'),
+    temp: (root.document ? root.document.createElement('div') : {}),
 
     hasEventListeners: _.isFunction(root.addEventListener),
 
@@ -2318,5 +2318,7 @@
   } else if (typeof module != 'undefined' && module.exports) {
     module.exports = Two;
   }
+
+  return Two;
 
 })(this.Two);

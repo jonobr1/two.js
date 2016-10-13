@@ -1,9 +1,10 @@
 (function(Two) {
 
+  var root = this;
   var getComputedMatrix = Two.Utils.getComputedMatrix;
   var _ = Two.Utils;
 
-  var canvas = document.createElement('canvas');
+  var canvas = (root.document ? root.document.createElement('canvas') : { getContext: _.identity });
   var ctx = canvas.getContext('2d');
 
   Two.Text = function(message, x, y, styles) {
