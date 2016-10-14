@@ -457,10 +457,12 @@
       this.domElement.width = width * this.ratio;
       this.domElement.height = height * this.ratio;
 
-      _.extend(this.domElement.style, {
-        width: width + 'px',
-        height: height + 'px'
-      });
+      if (this.domElement.style) {
+        _.extend(this.domElement.style, {
+          width: width + 'px',
+          height: height + 'px'
+        });
+      }
 
       return this;
 

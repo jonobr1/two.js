@@ -342,7 +342,7 @@ this.Two = (function(previousTwo) {
     });
 
     _.each(params, function(v, k) {
-      if (k === 'fullscreen' || k === 'width' || k === 'height' || k === 'autostart') {
+      if (k === 'fullscreen' || k === 'autostart') {
         return;
       }
       this[k] = v;
@@ -351,6 +351,7 @@ this.Two = (function(previousTwo) {
     // Specified domElement overrides type declaration only if the element does not support declared renderer type.
     if (_.isElement(params.domElement)) {
       var tagName = params.domElement.tagName.toLowerCase();
+      // TODO: Reconsider this if statement's logic.
       if (!/^(CanvasRenderer-canvas|WebGLRenderer-canvas|SVGRenderer-svg)$/.test(this.type+'-'+tagName)) {
         this.type = Two.Types[tagName];
       }
@@ -4429,10 +4430,12 @@ this.Two = (function(previousTwo) {
       this.domElement.width = width * this.ratio;
       this.domElement.height = height * this.ratio;
 
-      _.extend(this.domElement.style, {
-        width: width + 'px',
-        height: height + 'px'
-      });
+      if (this.domElement.style) {
+        _.extend(this.domElement.style, {
+          width: width + 'px',
+          height: height + 'px'
+        });
+      }
 
       return this;
 
