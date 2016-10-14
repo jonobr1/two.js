@@ -71,6 +71,7 @@ instead to minify the build with uglify.
 <!-- For the latest nightly changes checkout the `dev` branch [here](../../tree/dev). -->
 
 #### Nightly
++ Added compatibility with [node.js](http://nodejs.org/), [browserify](http://browserify.org), and [node-canvas](https://github.com/Automattic/node-canvas)
 + Removed third party dependencies
 + Added `remove` method to `Two.Text`
 + Fixed ordering on same parent additions for `Two.Group`
