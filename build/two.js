@@ -3995,6 +3995,12 @@ this.Two = (function(previousTwo) {
       right: 'end'
     },
 
+    shim: function(elem) {
+      elem.tagName = 'canvas';
+      elem.nodeType = 1;
+      return elem;
+    },
+
     group: {
 
       renderChild: function(child) {
