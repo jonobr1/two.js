@@ -2797,7 +2797,7 @@ this.Two = (function(previousTwo) {
 
   Object.defineProperty(Anchor.prototype, 'command', {
 
-    enumerable: true
+    enumerable: true,
 
     get: function() {
       return this._command;
