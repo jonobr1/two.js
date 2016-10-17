@@ -31,6 +31,7 @@
     MakeObservable: function(object) {
 
       Object.defineProperty(object, 'rotation', {
+        enumerable: true,
         get: function() {
           return this._rotation;
         },
@@ -41,6 +42,7 @@
       });
 
       Object.defineProperty(object, 'scale', {
+        enumerable: true,
         get: function() {
           return this._scale;
         },

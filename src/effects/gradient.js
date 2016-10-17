@@ -30,24 +30,7 @@
 
     MakeObservable: function(object) {
 
-      _.each(Stop.Properties, function(property) {
-
-        var secret = '_' + property;
-        var flag = '_flag' + property.charAt(0).toUpperCase() + property.slice(1);
-
-        Object.defineProperty(object, property, {
-          get: function() {
-            return this[secret];
-          },
-          set: function(v) {
-            this[secret] = v;
-            this[flag] = true;
-            this.trigger(Two.Events.change);  // Unique to Gradient.Stop
-          }
-        });
-
-
-      });
+      _.each(Stop.Properties, Two.Utils.defineProperty, object);
 
     }
 
@@ -118,6 +101,8 @@
       _.each(Gradient.Properties, Two.Utils.defineProperty, object);
 
       Object.defineProperty(object, 'stops', {
+
+        enumerable: true,
 
         get: function() {
           return this._stops;

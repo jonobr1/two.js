@@ -119,6 +119,8 @@
 
   Object.defineProperty(Anchor.prototype, 'command', {
 
+    enumerable: true,
+
     get: function() {
       return this._command;
     },
@@ -134,6 +136,8 @@
   });
 
   Object.defineProperty(Anchor.prototype, 'relative', {
+
+    enumerable: true,
 
     get: function() {
       return this._relative;

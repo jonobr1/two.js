@@ -6,7 +6,7 @@
 
   module('WebGLRenderer');
 
-  var getRatio = Two.Utils.getRatio;
+  var getRatio = function (v) { return Math.round(Two.Utils.getRatio(v)) };
   var deviceRatio = getRatio(document.createElement('canvas').getContext('2d'));
   var suffix = '@' + deviceRatio + 'x.png';
 

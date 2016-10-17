@@ -467,6 +467,7 @@ this.Two = (function(previousTwo) {
         var flag = '_flag' + property.charAt(0).toUpperCase() + property.slice(1);
 
         Object.defineProperty(object, property, {
+          enumerable: true,
           get: function() {
             return this[secret];
           },
@@ -2629,6 +2630,7 @@ this.Two = (function(previousTwo) {
   };
 
   var xgs = {
+    enumerable: true,
     get: function() {
       return this._x;
     },
@@ -2639,6 +2641,7 @@ this.Two = (function(previousTwo) {
   };
 
   var ygs = {
+    enumerable: true,
     get: function() {
       return this._y;
     },
@@ -2794,6 +2797,8 @@ this.Two = (function(previousTwo) {
 
   Object.defineProperty(Anchor.prototype, 'command', {
 
+    enumerable: true
+
     get: function() {
       return this._command;
     },
@@ -2809,6 +2814,8 @@ this.Two = (function(previousTwo) {
   });
 
   Object.defineProperty(Anchor.prototype, 'relative', {
+
+    enumerable: true,
 
     get: function() {
       return this._relative;
@@ -5565,6 +5572,7 @@ this.Two = (function(previousTwo) {
     MakeObservable: function(object) {
 
       Object.defineProperty(object, 'rotation', {
+        enumerable: true,
         get: function() {
           return this._rotation;
         },
@@ -5575,6 +5583,7 @@ this.Two = (function(previousTwo) {
       });
 
       Object.defineProperty(object, 'scale', {
+        enumerable: true,
         get: function() {
           return this._scale;
         },
@@ -5742,22 +5751,7 @@ this.Two = (function(previousTwo) {
 
       // Only the first 8 properties are flagged like this. The subsequent
       // properties behave differently and need to be hand written.
-      _.each(Path.Properties.slice(0, 8), function(property) {
-
-        var secret = '_' + property;
-        var flag = '_flag' + property.charAt(0).toUpperCase() + property.slice(1);
-
-        Object.defineProperty(object, property, {
-          get: function() {
-            return this[secret];
-          },
-          set: function(v) {
-            this[secret] = v;
-            this[flag] = true;
-          }
-        });
-
-      });
+      _.each(Path.Properties.slice(0, 8), Two.Utils.defineProperty, object);
 
       Object.defineProperty(object, 'length', {
         get: function() {
@@ -5769,6 +5763,7 @@ this.Two = (function(previousTwo) {
       });
 
       Object.defineProperty(object, 'closed', {
+        enumerable: true,
         get: function() {
           return this._closed;
         },
@@ -5779,6 +5774,7 @@ this.Two = (function(previousTwo) {
       });
 
       Object.defineProperty(object, 'curved', {
+        enumerable: true,
         get: function() {
           return this._curved;
         },
@@ -5789,6 +5785,7 @@ this.Two = (function(previousTwo) {
       });
 
       Object.defineProperty(object, 'automatic', {
+        enumerable: true,
         get: function() {
           return this._automatic;
         },
@@ -5805,6 +5802,7 @@ this.Two = (function(previousTwo) {
       });
 
       Object.defineProperty(object, 'beginning', {
+        enumerable: true,
         get: function() {
           return this._beginning;
         },
@@ -5815,6 +5813,7 @@ this.Two = (function(previousTwo) {
       });
 
       Object.defineProperty(object, 'ending', {
+        enumerable: true,
         get: function() {
           return this._ending;
         },
@@ -5825,6 +5824,8 @@ this.Two = (function(previousTwo) {
       });
 
       Object.defineProperty(object, 'vertices', {
+
+        enumerable: true,
 
         get: function() {
           return this._collection;
@@ -5877,6 +5878,7 @@ this.Two = (function(previousTwo) {
       });
 
       Object.defineProperty(object, 'clip', {
+        enumerable: true,
         get: function() {
           return this._clip;
         },
@@ -6892,24 +6894,10 @@ this.Two = (function(previousTwo) {
 
       Two.Shape.MakeObservable(object);
 
-      _.each(Two.Text.Properties, function(property) {
-
-        var secret = '_' + property;
-        var flag = '_flag' + property.charAt(0).toUpperCase() + property.slice(1);
-
-        Object.defineProperty(object, property, {
-          get: function() {
-            return this[secret];
-          },
-          set: function(v) {
-            this[secret] = v;
-            this[flag] = true;
-          }
-        });
-
-      });
+      _.each(Two.Text.Properties, Two.Utils.defineProperty, object);
 
       Object.defineProperty(object, 'clip', {
+        enumerable: true,
         get: function() {
           return this._clip;
         },
@@ -7104,24 +7092,7 @@ this.Two = (function(previousTwo) {
 
     MakeObservable: function(object) {
 
-      _.each(Stop.Properties, function(property) {
-
-        var secret = '_' + property;
-        var flag = '_flag' + property.charAt(0).toUpperCase() + property.slice(1);
-
-        Object.defineProperty(object, property, {
-          get: function() {
-            return this[secret];
-          },
-          set: function(v) {
-            this[secret] = v;
-            this[flag] = true;
-            this.trigger(Two.Events.change);  // Unique to Gradient.Stop
-          }
-        });
-
-
-      });
+      _.each(Stop.Properties, Two.Utils.defineProperty, object);
 
     }
 
@@ -7192,6 +7163,8 @@ this.Two = (function(previousTwo) {
       _.each(Gradient.Properties, Two.Utils.defineProperty, object);
 
       Object.defineProperty(object, 'stops', {
+
+        enumerable: true,
 
         get: function() {
           return this._stops;
@@ -7613,6 +7586,8 @@ this.Two = (function(previousTwo) {
 
         Object.defineProperty(object, 'opacity', {
 
+          enumerable: true,
+
           get: function() {
             return this._opacity;
           },
@@ -7631,9 +7606,13 @@ this.Two = (function(previousTwo) {
       Group.MakeGetterSetters(object, properties);
 
       Object.defineProperty(object, 'children', {
+
+        enumerable: true,
+
         get: function() {
           return this._collection;
         },
+
         set: function(children) {
 
           var insertChildren = _.bind(Group.InsertChildren, this);
@@ -7650,12 +7629,17 @@ this.Two = (function(previousTwo) {
           this._collection.bind(Two.Events.order, orderChildren);
 
         }
+
       });
 
       Object.defineProperty(object, 'mask', {
+
+        enumerable: true,
+
         get: function() {
           return this._mask;
         },
+
         set: function(v) {
           this._mask = v;
           this._flagMask = true;
@@ -7663,6 +7647,7 @@ this.Two = (function(previousTwo) {
             v.clip = true;
           }
         }
+
       });
 
     },
@@ -7684,15 +7669,20 @@ this.Two = (function(previousTwo) {
       var secret = '_' + k;
 
       Object.defineProperty(group, k, {
+
+        enumerable: true,
+
         get: function() {
           return this[secret];
         },
+
         set: function(v) {
           this[secret] = v;
           _.each(this.children, function(child) { // Trickle down styles
             child[k] = v;
           });
         }
+
       });
 
     }

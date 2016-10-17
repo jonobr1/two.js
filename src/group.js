@@ -93,6 +93,8 @@
 
         Object.defineProperty(object, 'opacity', {
 
+          enumerable: true,
+
           get: function() {
             return this._opacity;
           },
@@ -111,9 +113,13 @@
       Group.MakeGetterSetters(object, properties);
 
       Object.defineProperty(object, 'children', {
+
+        enumerable: true,
+
         get: function() {
           return this._collection;
         },
+
         set: function(children) {
 
           var insertChildren = _.bind(Group.InsertChildren, this);
@@ -130,12 +136,17 @@
           this._collection.bind(Two.Events.order, orderChildren);
 
         }
+
       });
 
       Object.defineProperty(object, 'mask', {
+
+        enumerable: true,
+
         get: function() {
           return this._mask;
         },
+
         set: function(v) {
           this._mask = v;
           this._flagMask = true;
@@ -143,6 +154,7 @@
             v.clip = true;
           }
         }
+
       });
 
     },
@@ -164,15 +176,20 @@
       var secret = '_' + k;
 
       Object.defineProperty(group, k, {
+
+        enumerable: true,
+
         get: function() {
           return this[secret];
         },
+
         set: function(v) {
           this[secret] = v;
           _.each(this.children, function(child) { // Trickle down styles
             child[k] = v;
           });
         }
+
       });
 
     }

@@ -275,6 +275,7 @@
   };
 
   var xgs = {
+    enumerable: true,
     get: function() {
       return this._x;
     },
@@ -285,6 +286,7 @@
   };
 
   var ygs = {
+    enumerable: true,
     get: function() {
       return this._y;
     },

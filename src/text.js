@@ -48,24 +48,10 @@
 
       Two.Shape.MakeObservable(object);
 
-      _.each(Two.Text.Properties, function(property) {
-
-        var secret = '_' + property;
-        var flag = '_flag' + property.charAt(0).toUpperCase() + property.slice(1);
-
-        Object.defineProperty(object, property, {
-          get: function() {
-            return this[secret];
-          },
-          set: function(v) {
-            this[secret] = v;
-            this[flag] = true;
-          }
-        });
-
-      });
+      _.each(Two.Text.Properties, Two.Utils.defineProperty, object);
 
       Object.defineProperty(object, 'clip', {
+        enumerable: true,
         get: function() {
           return this._clip;
         },

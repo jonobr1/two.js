@@ -439,6 +439,7 @@ this.Two = (function(previousTwo) {
         var flag = '_flag' + property.charAt(0).toUpperCase() + property.slice(1);
 
         Object.defineProperty(object, property, {
+          enumerable: true,
           get: function() {
             return this[secret];
           },

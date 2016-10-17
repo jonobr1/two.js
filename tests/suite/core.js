@@ -409,7 +409,7 @@ test('Two.Matrix', 10, function() {
 
 });
 
-test('Two.Utils.Collection', 13, function() {
+test('Two.Utils.Collection', 14, function() {
 
   var poly = new Two.Path([new Two.Vector(0, 0)]);
   var vector = new Two.Vector(150, 150);
@@ -455,7 +455,11 @@ test('Two.Utils.Collection', 13, function() {
   equal(vertices[2].equals(vector), true, 'Two.Utils.Collection.splice inserts correct item to the middle of the vertices collection');
 
   var a = new Two.Utils.Collection('a', 'b', 'c', 'd', 'e');
-  equal(a.slice(1, 2), 'b', 'Two.Utils.Collection.slice does correct beginning / end index selection.');
+  equal(a.slice(1, 2)[0], 'b', 'Two.Utils.Collection.slice does correct beginning / end index selection.');
+
+  a.splice(0, 0, 'z');
+
+  equal(a[0], 'z', 'Two.Utils.Collection.splice correctly inserts properties.');
 
 });
 
