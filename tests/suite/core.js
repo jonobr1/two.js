@@ -409,7 +409,7 @@ test('Two.Matrix', 10, function() {
 
 });
 
-test('Two.Utils.Collection', 12, function() {
+test('Two.Utils.Collection', 13, function() {
 
   var poly = new Two.Path([new Two.Vector(0, 0)]);
   var vector = new Two.Vector(150, 150);
@@ -450,9 +450,12 @@ test('Two.Utils.Collection', 12, function() {
   equal(vertices.length, 5, 'Two.Utils.Collection.push adds several items to the end of vertices collection');
 
   removed = vertices.splice(2, 1, vector);
-  equal(vertices.length, 5, 'Two.Utils.Collection.slice adds and removes items from the vertices collection');
-  equal(removed[0].equals(new Two.Vector(2, 2)), true, 'Two.Utils.Collection.slice remove the correct items from the vertices collection');
-  equal(vertices[2].equals(vector), true, 'Two.Utils.Collection.slice insertes correct item to the middle of the vertices collection');
+  equal(vertices.length, 5, 'Two.Utils.Collection.splice adds and removes items from the vertices collection');
+  equal(removed[0].equals(new Two.Vector(2, 2)), true, 'Two.Utils.Collection.splice remove the correct items from the vertices collection');
+  equal(vertices[2].equals(vector), true, 'Two.Utils.Collection.splice inserts correct item to the middle of the vertices collection');
+
+  var a = new Two.Utils.Collection('a', 'b', 'c', 'd', 'e');
+  equal(a.slice(1, 2), 'b', 'Two.Utils.Collection.slice does correct beginning / end index selection.');
 
 });
 

@@ -1895,7 +1895,7 @@ this.Two = (function(previousTwo) {
       this.trigger(Two.Events.remove, spliced);
 
       if (arguments.length > 2) {
-        inserted = this.slice(arguments[0], arguments.length - 2);
+        inserted = this.slice(arguments[0], arguments[0] + arguments.length - 2);
         this.trigger(Two.Events.insert, inserted);
         this.trigger(Two.Events.order);
       }

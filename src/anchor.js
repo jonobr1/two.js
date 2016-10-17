@@ -113,6 +113,8 @@
       return o;
     }
 
+    // TODO: Make `Two.Anchor.toString`
+
   };
 
   Object.defineProperty(Anchor.prototype, 'command', {
