@@ -71,6 +71,7 @@ instead to minify the build with uglify.
 <!-- For the latest nightly changes checkout the `dev` branch [here](../../tree/dev). -->
 
 #### Nightly
++ Fixed `Two.Anchor.relative` interpretation in `svg`, `canvas`, and `webgl` renderers
 + Made Getters / Setters enumerable for iteration compatibility
 + Fixed Two.Utils.Collection.splice method and added additional test
 + Added compatibility with [node.js](http://nodejs.org/), [browserify](http://browserify.org), and [node-canvas](https://github.com/Automattic/node-canvas)

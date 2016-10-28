@@ -224,8 +224,8 @@
 
               a = commands[prev];
               c = commands[next];
-              ar = (a.controls && a.controls.right) || a;
-              bl = (b.controls && b.controls.left) || b;
+              ar = (a.controls && a.controls.right) || Two.Vector.zero;
+              bl = (b.controls && b.controls.left) || Two.Vector.zero;
 
               if (a._relative) {
                 vx = toFixed((ar.x + a._x));
@@ -249,8 +249,8 @@
 
                 c = d;
 
-                br = (b.controls && b.controls.right) || b;
-                cl = (c.controls && c.controls.left) || c;
+                br = (b.controls && b.controls.right) || Two.Vector.zero;
+                cl = (c.controls && c.controls.left) || Two.Vector.zero;
 
                 if (b._relative) {
                   vx = toFixed((br.x + b._x));

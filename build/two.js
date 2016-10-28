@@ -3294,6 +3294,10 @@ this.Two = (function(previousTwo) {
         d, // The elusive last Two.Commands.move point
         ret = '';
 
+      console.log(Array.prototype.map.call(points, function(v) {
+        return v.command + v.toString();
+      }).join(' '));
+
       for (var i = 0; i < l; i++) {
         var b = points[i];
         var command;
@@ -3318,8 +3322,8 @@ this.Two = (function(previousTwo) {
 
           case Two.Commands.curve:
 
-            ar = (a.controls && a.controls.right) || a;
-            bl = (b.controls && b.controls.left) || b;
+            ar = (a.controls && a.controls.right) || Two.Vector.zero;
+            bl = (b.controls && b.controls.left) || Two.Vector.zero;
 
             if (a._relative) {
               vx = toFixed((ar.x + a.x));
@@ -4175,8 +4179,8 @@ this.Two = (function(previousTwo) {
 
               a = commands[prev];
               c = commands[next];
-              ar = (a.controls && a.controls.right) || a;
-              bl = (b.controls && b.controls.left) || b;
+              ar = (a.controls && a.controls.right) || Two.Vector.zero;
+              bl = (b.controls && b.controls.left) || Two.Vector.zero;
 
               if (a._relative) {
                 vx = (ar.x + toFixed(a._x));
@@ -4200,8 +4204,8 @@ this.Two = (function(previousTwo) {
 
                 c = d;
 
-                br = (b.controls && b.controls.right) || b;
-                cl = (c.controls && c.controls.left) || c;
+                br = (b.controls && b.controls.right) || Two.Vector.zero;
+                cl = (c.controls && c.controls.left) || Two.Vector.zero;
 
                 if (b._relative) {
                   vx = (br.x + toFixed(b._x));
@@ -4713,8 +4717,8 @@ this.Two = (function(previousTwo) {
 
               a = commands[prev];
               c = commands[next];
-              ar = (a.controls && a.controls.right) || a;
-              bl = (b.controls && b.controls.left) || b;
+              ar = (a.controls && a.controls.right) || Two.Vector.zero;
+              bl = (b.controls && b.controls.left) || Two.Vector.zero;
 
               if (a._relative) {
                 vx = toFixed((ar.x + a._x));
@@ -4738,8 +4742,8 @@ this.Two = (function(previousTwo) {
 
                 c = d;
 
-                br = (b.controls && b.controls.right) || b;
-                cl = (c.controls && c.controls.left) || c;
+                br = (b.controls && b.controls.right) || Two.Vector.zero;
+                cl = (c.controls && c.controls.left) || Two.Vector.zero;
 
                 if (b._relative) {
                   vx = toFixed((br.x + b._x));
