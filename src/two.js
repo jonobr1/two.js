@@ -1652,8 +1652,6 @@ this.Two = (function(previousTwo) {
 
         var l = Two.Resolution;
 
-        // console.log(arguments);
-
         return _.map(_.range(l), function(i) {
 
           var pct = (i + 1) / l;

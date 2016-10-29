@@ -68,10 +68,6 @@
         d, // The elusive last Two.Commands.move point
         ret = '';
 
-      console.log(Array.prototype.map.call(points, function(v) {
-        return v.command + v.toString();
-      }).join(' '));
-
       for (var i = 0; i < l; i++) {
         var b = points[i];
         var command;

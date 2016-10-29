@@ -1680,8 +1680,6 @@ this.Two = (function(previousTwo) {
 
         var l = Two.Resolution;
 
-        // console.log(arguments);
-
         return _.map(_.range(l), function(i) {
 
           var pct = (i + 1) / l;
@@ -3293,10 +3291,6 @@ this.Two = (function(previousTwo) {
         last = l - 1,
         d, // The elusive last Two.Commands.move point
         ret = '';
-
-      console.log(Array.prototype.map.call(points, function(v) {
-        return v.command + v.toString();
-      }).join(' '));
 
       for (var i = 0; i < l; i++) {
         var b = points[i];
