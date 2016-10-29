@@ -68,8 +68,14 @@
           var ir = this._innerRadius;
           var or = this._outerRadius;
 
+          var donut = mod(sa, Math.PI * 2) === mod(ea, Math.PI * 2);
+          var id = i;
+
           if (ir > 0) {
             pct *= 2;
+            if (donut) {
+              id = i % (vertices.length / 2); // TODO:
+            }
           }
 
           var theta = pct * (ea - sa) + sa;
@@ -83,7 +89,7 @@
           var x = radius * Math.cos(theta);
           var y = radius * Math.sin(theta);
 
-          switch (i) {
+          switch (id) {
             case 0:
               command = Two.Commands.move;
               break;
@@ -120,5 +126,12 @@
   });
 
   ArcSegment.MakeObservable(ArcSegment.prototype);
+
+  function mod(v, l) {
+    while (v < 0) {
+      v += l;
+    }
+    return v % l;
+  }
 
 })(this.Two);
