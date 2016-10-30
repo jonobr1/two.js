@@ -49,52 +49,43 @@
 
     _update: function() {
 
-      Path.prototype._update.call(this);
-
       if (this._flagStartAngle || this._flagEndAngle || this._flagInnerRadius
         || this._flagOuterRadius) {
 
-        var vertices = this.vertices;
-        var command;
+        var sa = this._startAngle;
+        var ea = this._endAngle;
 
-        for (var i = 0, last = vertices.length - 1; i < vertices.length; i++) {
+        var ir = this._innerRadius;
+        var or = this._outerRadius;
+
+        var connected = mod(sa, Math.PI * 2) === mod(ea, Math.PI * 2);
+        var punctured = ir > 0;
+
+        var vertices = this.vertices;
+        var length = (punctured ? vertices.length / 2 : vertices.length);
+        var command, id = 0;
+
+        if (connected) {
+          length--;
+        } else if (!punctured) {
+          length -= 2;
+        }
+
+        /**
+         * Outer Circle
+         */
+        for (var i = 0, last = length - 1; i < length; i++) {
 
           var pct = i / last;
-          var v = vertices[i];
-
-          var sa = this._startAngle;
-          var ea = this._endAngle;
-
-          var ir = this._innerRadius;
-          var or = this._outerRadius;
-
-          var donut = mod(sa, Math.PI * 2) === mod(ea, Math.PI * 2);
-          var id = i;
-
-          if (ir > 0) {
-            pct *= 2;
-            if (donut) {
-              id = i % (vertices.length / 2); // TODO:
-            }
-          }
-
+          var v = vertices[id];
           var theta = pct * (ea - sa) + sa;
-          var radius = or;
 
-          if (pct >= 1) {
-            theta = (2 - pct) * (ea - sa) + sa;
-            radius = ir;
-          }
+          var x = or * Math.cos(theta);
+          var y = or * Math.sin(theta);
 
-          var x = radius * Math.cos(theta);
-          var y = radius * Math.sin(theta);
-
-          switch (id) {
+          switch (i) {
             case 0:
               command = Two.Commands.move;
-              break;
-            case last:
-              command = Two.Commands.close;
               break;
             default:
               command = Two.Commands.curve;
@@ -103,10 +94,58 @@
           v.command = command;
           v.x = x;
           v.y = y;
+          id++;
 
         }
 
+        if (punctured) {
+
+          if (connected) {
+            vertices[id].command = Two.Commands.close;
+            id++;
+          } else {
+            length--;
+            last = length - 1;
+          }
+
+          /** 
+           * Inner Circle
+           */
+          for (i = 0; i < length; i++) {
+
+            pct = i / last;
+            v = vertices[id];
+            theta = (1 - pct) * (ea - sa) + sa;
+
+            x = ir * Math.cos(theta);
+            y = ir * Math.sin(theta);
+            command = i <= 0 && connected
+              ? Two.Commands.move : Two.Commands.curve;
+
+            v.command = command;
+            v.x = x;
+            v.y = y;
+            id++;
+
+          }
+
+        } else if (!connected) {
+
+          vertices[id].command = Two.Commands.curve;
+          vertices[id].x = 0;
+          vertices[id].y = 0;
+          id++;
+
+        }
+
+        /**
+         * Final Point
+         */
+        vertices[id].command = Two.Commands.close;
+
       }
+
+      Path.prototype._update.call(this);
 
       return this;
 
