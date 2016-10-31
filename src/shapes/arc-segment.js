@@ -1,11 +1,11 @@
 (function(Two) {
 
-  var Path = Two.Path, PI = Math.PI, TWO_PI = Math.PI * 2, HALF_PI = Math.PI/2,
+  var Path = Two.Path, PI = Math.PI, TWO_PI = Math.PI * 2, HALF_PI = Math.PI / 2,
     cos = Math.cos, sin = Math.sin, abs = Math.abs, _ = Two.Utils;
 
   var ArcSegment = Two.ArcSegment = function(ox, oy, ir, or, sa, ea, res) {
 
-    var points = _.map(_.range(res || (Two.Resolution * 2)), function() {
+    var points = _.map(_.range(res || (Two.Resolution * 3)), function() {
       return new Two.Anchor();
     });
 
@@ -43,7 +43,7 @@
     _flagOuterRadius: false,
 
     _startAngle: 0,
-    _endAngle: Math.PI * 2,
+    _endAngle: TWO_PI,
     _innerRadius: 0,
     _outerRadius: 0,
 
@@ -58,7 +58,7 @@
         var ir = this._innerRadius;
         var or = this._outerRadius;
 
-        var connected = mod(sa, Math.PI * 2) === mod(ea, Math.PI * 2);
+        var connected = mod(sa, TWO_PI) === mod(ea, TWO_PI);
         var punctured = ir > 0;
 
         var vertices = this.vertices;
@@ -79,6 +79,7 @@
           var pct = i / last;
           var v = vertices[id];
           var theta = pct * (ea - sa) + sa;
+          var step = (ea - sa) / length;
 
           var x = or * Math.cos(theta);
           var y = or * Math.sin(theta);
@@ -94,6 +95,17 @@
           v.command = command;
           v.x = x;
           v.y = y;
+          v.controls.left.clear();
+          v.controls.right.clear();
+
+          if (v.command === Two.Commands.curve) {
+            var amp = or * step / Math.PI;
+            v.controls.left.x = amp * Math.cos(theta - HALF_PI);
+            v.controls.left.y = amp * Math.sin(theta - HALF_PI);
+            v.controls.right.x = amp * Math.cos(theta + HALF_PI);
+            v.controls.right.y = amp * Math.sin(theta + HALF_PI);
+          }
+
           id++;
 
         }
@@ -116,22 +128,36 @@
             pct = i / last;
             v = vertices[id];
             theta = (1 - pct) * (ea - sa) + sa;
+            step = (ea - sa) / length;
 
             x = ir * Math.cos(theta);
             y = ir * Math.sin(theta);
-            command = i <= 0 && connected
-              ? Two.Commands.move : Two.Commands.curve;
+            command = Two.Commands.curve;
+            if (i <= 0) {
+              command = connected ? Two.Commands.move : Two.Commands.line;
+            }
 
             v.command = command;
             v.x = x;
             v.y = y;
+            v.controls.left.clear();
+            v.controls.right.clear();
+
+            if (v.command === Two.Commands.curve) {
+              amp = ir * step / Math.PI;
+              v.controls.left.x = amp * Math.cos(theta + HALF_PI);
+              v.controls.left.y = amp * Math.sin(theta + HALF_PI);
+              v.controls.right.x = amp * Math.cos(theta - HALF_PI);
+              v.controls.right.y = amp * Math.sin(theta - HALF_PI);
+            }
+
             id++;
 
           }
 
         } else if (!connected) {
 
-          vertices[id].command = Two.Commands.curve;
+          vertices[id].command = Two.Commands.line;
           vertices[id].x = 0;
           vertices[id].y = 0;
           id++;

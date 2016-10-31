@@ -111,9 +111,12 @@
         };
       }
       return o;
-    }
+    },
 
-    // TODO: Make `Two.Anchor.toString`
+    toString: function() {
+      return [this._x, this._y, this.controls.left.x, this.controls.left.y,
+        this.controls.right.x, this.controls.right.y].join(', ');
+    }
 
   };
 
