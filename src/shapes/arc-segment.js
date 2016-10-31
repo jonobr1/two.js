@@ -104,6 +104,12 @@
             v.controls.left.y = amp * Math.sin(theta - HALF_PI);
             v.controls.right.x = amp * Math.cos(theta + HALF_PI);
             v.controls.right.y = amp * Math.sin(theta + HALF_PI);
+            if (i === 1) {
+              v.controls.left.multiplyScalar(2);
+            }
+            if (i === last) {
+              v.controls.right.multiplyScalar(2);
+            }
           }
 
           id++;
@@ -149,6 +155,12 @@
               v.controls.left.y = amp * Math.sin(theta + HALF_PI);
               v.controls.right.x = amp * Math.cos(theta - HALF_PI);
               v.controls.right.y = amp * Math.sin(theta - HALF_PI);
+              if (i === 1) {
+                v.controls.left.multiplyScalar(2);
+              }
+              if (i === last) {
+                v.controls.right.multiplyScalar(2);
+              }
             }
 
             id++;
