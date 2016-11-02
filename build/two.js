@@ -6452,23 +6452,72 @@ this.Two = (function(previousTwo) {
 
   var Rectangle = Two.Rectangle = function(x, y, width, height) {
 
-    var w2 = width / 2;
-    var h2 = height / 2;
-
     Path.call(this, [
-      new Two.Anchor(-w2, -h2),
-      new Two.Anchor(w2, -h2),
-      new Two.Anchor(w2, h2),
-      new Two.Anchor(-w2, h2)
+      new Two.Anchor(),
+      new Two.Anchor(),
+      new Two.Anchor(),
+      new Two.Anchor()
     ], true);
+
+    this.width = width;
+    this.height = height;
+    this._update();
 
     this.translation.set(x, y);
 
   };
 
-  _.extend(Rectangle.prototype, Path.prototype);
+  _.extend(Rectangle, {
 
-  Path.MakeObservable(Rectangle.prototype);
+    Properties: ['width', 'height'],
+
+    MakeObservable: function(obj) {
+      Path.MakeObservable(obj);
+      _.each(Rectangle.Properties, Two.Utils.defineProperty, obj);
+    }
+
+  });
+
+  _.extend(Rectangle.prototype, Path.prototype, {
+
+    _width: 0,
+    _height: 0,
+
+    _flagWidth: 0,
+    _flagHeight: 0,
+
+    _update: function() {
+
+      if (this._flagWidth || this._flagHeight) {
+
+        var xr = this._width / 2;
+        var yr = this._height / 2;
+
+        this.vertices[0].set(-xr, -yr);
+        this.vertices[1].set(xr, -yr);
+        this.vertices[2].set(xr, yr);
+        this.vertices[3].set(-xr, yr);
+
+      }
+
+      Path.prototype._update.call(this);
+
+      return this;
+
+    },
+
+    flagReset: function() {
+
+      this._flagWidth = this._flagHeight = false;
+      Path.prototype.flagReset.call(this);
+
+      return this;
+
+    }
+
+  });
+
+  Rectangle.MakeObservable(Rectangle.prototype);
 
 })(this.Two);
 
@@ -6486,21 +6535,69 @@ this.Two = (function(previousTwo) {
     var amount = Two.Resolution;
 
     var points = _.map(_.range(amount), function(i) {
-      var pct = i / amount;
-      var theta = pct * TWO_PI;
-      var x = rx * cos(theta);
-      var y = ry * sin(theta);
-      return new Two.Anchor(x, y);
+      return new Two.Anchor();
     }, this);
 
     Path.call(this, points, true, true);
+
+    this.width = rx * 2;
+    this.height = ry * 2;
+
+    this._update();
     this.translation.set(ox, oy);
 
   };
 
-  _.extend(Ellipse.prototype, Path.prototype);
+  _.extend(Ellipse, {
 
-  Path.MakeObservable(Ellipse.prototype);
+    Properties: ['width', 'height'],
+
+    MakeObservable: function(obj) {
+
+      Path.MakeObservable(obj);
+      _.each(Ellipse.Properties, Two.Utils.defineProperty, obj);
+
+    }
+
+  });
+
+  _.extend(Ellipse.prototype, Path.prototype, {
+
+    _width: 0,
+    _height: 0,
+
+    _flagWidth: false,
+    _flagHeight: false,
+
+    _update: function() {
+
+      if (this._flagWidth || this._flagHeight) {
+        for (var i = 0, l = this.vertices.length; i < l; i++) {
+          var pct = i / l;
+          var theta = pct * TWO_PI;
+          var x = this._width * cos(theta) / 2;
+          var y = this._height * sin(theta) / 2;
+          this.vertices[i].set(x, y);
+        }
+      }
+
+      Path.prototype._update.call(this);
+      return this;
+
+    },
+
+    flagReset: function() {
+
+      this._flagWidth = this._flagHeight = false;
+
+      Path.prototype.flagReset.call(this);
+      return this;
+
+    }
+
+  });
+
+  Ellipse.MakeObservable(Ellipse.prototype);
 
 })(this.Two);
 
@@ -6514,21 +6611,88 @@ this.Two = (function(previousTwo) {
     sides = Math.max(sides || 0, 3);
 
     var points = _.map(_.range(sides), function(i) {
-      var pct = (i + 0.5) / sides;
-      var theta = TWO_PI * pct + Math.PI / 2;
-      var x = r * cos(theta);
-      var y = r * sin(theta);
-      return new Two.Anchor(x, y);
+      return new Two.Anchor();
     });
 
     Path.call(this, points, true);
+
+    this.width = r * 2;
+    this.height = r * 2;
+    this.sides = sides;
+
+    this._update();
     this.translation.set(ox, oy);
 
   };
 
-  _.extend(Polygon.prototype, Path.prototype);
+  _.extend(Polygon, {
 
-  Path.MakeObservable(Polygon.prototype);
+    Properties: ['width', 'height', 'sides'],
+
+    MakeObservable: function(obj) {
+
+      Path.MakeObservable(obj);
+      _.each(Polygon.Properties, Two.Utils.defineProperty, obj);
+
+    }
+
+  });
+
+  _.extend(Polygon.prototype, Path.prototype, {
+
+    _width: 0,
+    _height: 0,
+    _sides: 0,
+
+    _flagWidth: false,
+    _flagHeight: false,
+    _flagSides: false,
+
+    _update: function() {
+
+      if (this._flagWidth || this._flagHeight || this._flagSides) {
+
+        var sides = this._sides;
+        var amount = this.vertices.length;
+
+        if (amount > sides) {
+          this.vertices.splice(sides - 1, amount - sides);
+        }
+
+        for (var i = 0; i < sides; i++) {
+
+          var pct = (i + 0.5) / sides;
+          var theta = TWO_PI * pct + Math.PI / 2;
+          var x = this._width * cos(theta);
+          var y = this._height * sin(theta);
+
+          if (i >= amount) {
+            this.vertices.push(new Two.Anchor(x, y));
+          } else {
+            this.vertices[i].set(x, y);
+          }
+
+        }
+
+      }
+
+      Path.prototype._update.call(this);
+      return this;
+
+    },
+
+    flagReset: function() {
+
+      this._flagWidth = this._flagHeight = this._flagSides = false;
+      Path.prototype.flagReset.call(this);
+
+      return this;
+
+    }
+
+  });
+
+  Polygon.MakeObservable(Polygon.prototype);
 
 })(this.Two);
 
@@ -6749,70 +6913,6 @@ this.Two = (function(previousTwo) {
 
 (function(Two) {
 
-  var Path = Two.Path, PI = Math.PI, TWO_PI = Math.PI * 2, cos = Math.cos,
-    sin = Math.sin, abs = Math.abs, _ = Two.Utils;
-
-  var SineRing = Two.SineRing = function(ox, oy, r, periods, amplitude, mod) {
-
-    var size = (periods * 2) + 1;
-    var angleStep = Math.PI / periods;
-    var bezierDelta = PI * r / periods / 2;
-    mod = mod || 1;
-
-    var points = [];
-    var theta = PI, x, y, lx, ly, rx, ry;
-
-    points.push(
-      new Two.Anchor(
-        sin(theta) * (r + (amplitude/2)),
-        cos(theta) * (r + (amplitude/2)),
-        0,0,0,0,
-        Two.Commands.move
-      )
-    );
-
-    for (var i = 0; i < size; i++) {
-
-      theta = (angleStep * i) + PI;
-
-      if ((i%2) === 0) {
-        x = Math.sin(theta) * (r + (amplitude/2));
-        y = Math.cos(theta) * (r + (amplitude/2));
-      } else {
-        x = Math.sin(theta) * (r - (amplitude/2));
-        y = Math.cos(theta) * (r - (amplitude/2));
-      }
-
-      lx = ((Math.sin(theta - (Math.PI/2))) * bezierDelta) * mod;
-      ly = ((Math.cos(theta - (Math.PI/2))) * bezierDelta) * mod;
-      rx = ((Math.sin(theta + (Math.PI/2))) * bezierDelta) * mod;
-      ry = ((Math.cos(theta + (Math.PI/2))) * bezierDelta) * mod;
-
-      if (i === 0) {
-        lx = ly = 0;
-      }
-
-      if (i === size - 1) {
-        rx = ry = 0;
-      }
-
-      points.push(new Two.Anchor(x, y, lx, ly, rx, ry, Two.Commands.curve));
-
-    }
-
-    Path.call(this, points, true, false, true);
-    this.translation.set(ox, oy);
-
-  };
-
-  _.extend(SineRing.prototype, Path.prototype);
-
-  Path.MakeObservable(SineRing.prototype);
-
-})(this.Two);
-
-(function(Two) {
-
   var Path = Two.Path, TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin;
   var _ = Two.Utils;
 
@@ -6829,22 +6929,90 @@ this.Two = (function(previousTwo) {
     var length = sides * 2;
 
     var points = _.map(_.range(length), function(i) {
-      var pct = (i - 0.5) / length;
-      var theta = pct * TWO_PI;
-      var r = (i % 2 ? ir : or);
-      var x = r * cos(theta);
-      var y = r * sin(theta);
-      return new Two.Anchor(x, y);
+      return new Two.Anchor();
     });
 
     Path.call(this, points, true);
+
+    this.innerRadius = ir;
+    this.outerRadius = or;
+    this.sides = sides;
+
+    this._update();
     this.translation.set(ox, oy);
 
   };
 
-  _.extend(Star.prototype, Path.prototype);
+  _.extend(Star, {
 
-  Path.MakeObservable(Star.prototype);
+    Properties: ['innerRadius', 'outerRadius', 'sides'],
+
+    MakeObservable: function(obj) {
+
+      Path.MakeObservable(obj);
+      _.each(Star.Properties, Two.Utils.defineProperty, obj);
+
+    }
+
+  });
+
+  _.extend(Star.prototype, Path.prototype, {
+
+    _innerRadius: 0,
+    _outerRadius: 0,
+    _sides: 0,
+
+    _flagInnerRadius: false,
+    _flagOuterRadius: false,
+    _flagSides: false,
+
+    _update: function() {
+
+      if (this._flagInnerRadius || this._flagOuterRadius || this._flagSides) {
+
+        var sides = this._sides * 2;
+        var amount = this.vertices.length;
+
+        if (amount > sides) {
+          this.vertices.splice(sides - 1, amount - sides);
+        }
+
+        for (var i = 0; i < sides; i++) {
+
+          var pct = (i + 0.5) / sides;
+          var theta = TWO_PI * pct;
+          var r = (i % 2 ? this._innerRadius : this._outerRadius);
+          var x = r * cos(theta);
+          var y = r * sin(theta);
+
+          if (i >= amount) {
+            this.vertices.push(new Two.Anchor(x, y));
+          } else {
+            this.vertices[i].set(x, y);
+          }
+
+        }
+
+      }
+
+      Path.prototype._update.call(this);
+
+      return this;
+
+    },
+
+    flagReset: function() {
+
+      this._flagInnerRadius = this._flagOuterRadius = this._flagSides = false;
+      Path.prototype.flagReset.call(this);
+
+      return this;
+
+    }
+
+  });
+
+  Star.MakeObservable(Star.prototype);
 
 })(this.Two);
 
@@ -6855,100 +7023,153 @@ this.Two = (function(previousTwo) {
 
   var RoundedRectangle = Two.RoundedRectangle = function(ox, oy, width, height, radius) {
 
-    var w2 = width / 2;
-    var h2 = height / 2;
-    var x, y;
-
     if (!_.isNumber(radius)) {
       radius = Math.floor(Math.min(width, height) / 12);
     }
 
-    var points = [
-      new Two.Anchor(- w2 + radius, - h2),
-      new Two.Anchor(w2 - radius, - h2)
-    ];
+    var amount = 10;
 
-    x = w2;
-    y = - h2;
-    points = roundCorner(points, x, y, radius, 1);
+    var points = _.map(_.range(amount), function(i) {
+      return new Two.Anchor(0, 0, 0, 0, 0, 0,
+        i === 0 ? Two.Commands.move : Two.Commands.curve);
+    });
 
-    points.push(new Two.Anchor(w2, h2 - radius));
+    points[points.length - 1].command = Two.Commands.close;
 
-    x = w2;
-    y = h2;
-    points = roundCorner(points, x, y, radius, 4);
+    Path.call(this, points, false, false, true);
 
-    points.push(new Two.Anchor(- w2 + radius, h2));
+    this.width = width;
+    this.height = height;
+    this.radius = radius;
 
-    x = - w2;
-    y = h2;
-    points = roundCorner(points, x, y, radius, 3);
-
-    points.push(new Two.Anchor(- w2, - h2 + radius));
-
-    x = - w2;
-    y = - h2;
-    points = roundCorner(points, x, y, radius, 2);
-
-    points.pop();
-
-    Path.call(this, points, true);
+    this._update;
     this.translation.set(ox, oy);
 
   };
 
-  _.extend(RoundedRectangle.prototype, Path.prototype);
+  _.extend(RoundedRectangle, {
 
-  Path.MakeObservable(RoundedRectangle.prototype);
+    Properties: ['width', 'height', 'radius'],
 
-  function roundCorner(points, x, y, radius, quadrant) {
+    MakeObservable: function(obj) {
 
-    var start = 0, end = 0;
-    var length = Two.Resolution;
+      Path.MakeObservable(obj);
+      _.each(RoundedRectangle.Properties, Two.Utils.defineProperty, obj);
 
-    var a = points[points.length - 1];
-    var b = new Two.Anchor(x, y);
-
-    var xr = x < 0 ? - radius : radius;
-    var yr = y < 0 ? - radius : radius;
-
-    switch (quadrant) {
-      case 1:
-        start = - Math.PI / 2;
-        end = 0;
-        break;
-      case 2:
-        start = - Math.PI;
-        end = - Math.PI / 2;
-        break;
-      case 3:
-        start = - Math.PI * 1.5;
-        end = - Math.PI;
-        break;
-      case 4:
-        start = 0;
-        end = Math.PI / 2;
-        break;
     }
 
-    var curve = _.map(_.range(length), function(i) {
+  });
 
-      var theta = map(length - i, 0, length, start, end);
-      var tx = radius * Math.cos(theta) + x - xr;
-      var ty = radius * Math.sin(theta) + y - yr;
-      var anchor = new Two.Anchor(tx, ty);
+  _.extend(RoundedRectangle.prototype, Path.prototype, {
 
-      return anchor;
+    _width: 0,
+    _height: 0,
+    _radius: 0,
 
-    }).reverse();
+    _flagWidth: false,
+    _flagHeight: false,
+    _flagRadius: false,
 
-    return points.concat(curve);
+    _update: function() {
 
-  }
+      if (this._flagWidth || this._flagHeight || this._flagRadius) {
 
-  function map(v, i1, i2, o1, o2) {
-    return o1 + (o2 - o1) * ((v - i1) / (i2 - i1));
-  }
+        var width = this._width;
+        var height = this._height;
+        var radius = Math.min(Math.max(this._radius, 0),
+          Math.min(width, height));
+
+        var v;
+        var w = width / 2;
+        var h = height / 2;
+
+        v = this.vertices[0];
+        v.x = - (w - radius);
+        v.y = - h;
+
+        // Upper Right Corner
+
+        v = this.vertices[1];
+        v.x = (w - radius);
+        v.y = - h;
+        v.controls.left.clear();
+        v.controls.right.x = radius;
+        v.controls.right.y = 0;
+
+        v = this.vertices[2];
+        v.x = w;
+        v.y = - (h - radius);
+        v.controls.right.clear();
+        v.controls.left.clear();
+
+        // Bottom Right Corner
+
+        v = this.vertices[3];
+        v.x = w;
+        v.y = (h - radius);
+        v.controls.left.clear();
+        v.controls.right.x = 0;
+        v.controls.right.y = radius;
+
+        v = this.vertices[4];
+        v.x = (w - radius);
+        v.y = h;
+        v.controls.right.clear();
+        v.controls.left.clear();
+
+        // Bottom Left Corner
+
+        v = this.vertices[5];
+        v.x = - (w - radius);
+        v.y = h;
+        v.controls.left.clear();
+        v.controls.right.x = - radius;
+        v.controls.right.y = 0;
+
+        v = this.vertices[6];
+        v.x = - w;
+        v.y = (h - radius);
+        v.controls.left.clear();
+        v.controls.right.clear();
+
+        // Upper Left Corner
+
+        v = this.vertices[7];
+        v.x = - w;
+        v.y = - (h - radius);
+        v.controls.left.clear();
+        v.controls.right.x = 0;
+        v.controls.right.y = - radius;
+
+        v = this.vertices[8];
+        v.x = - (w - radius);
+        v.y = - h;
+        v.controls.left.clear();
+        v.controls.right.clear();
+
+        v = this.vertices[9];
+        v.copy(this.vertices[8]);
+
+      }
+
+      Path.prototype._update.call(this);
+
+      return this;
+
+    },
+
+    flagReset: function() {
+
+      this._flagWidth = this._flagHeight = this._flagRadius = false;
+      Path.prototype.flagReset.call(this);
+
+      return this;
+
+    }
+
+  });
+
+  RoundedRectangle.MakeObservable(RoundedRectangle.prototype);
 
 })(this.Two);
 
