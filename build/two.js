@@ -7850,7 +7850,7 @@ this.Two = (function(previousTwo) {
   };
 
   Children.prototype = new Two.Utils.Collection();
-  Children.constructor = Children;
+  Children.prototype.constructor = Children;
 
   _.extend(Children.prototype, {
 
