@@ -1859,7 +1859,7 @@ this.Two = (function(previousTwo) {
   Two.Utils.Error.prototype.constructor = Two.Utils.Error;
 
   Two.Utils.Collection.prototype = new Array();
-  Two.Utils.Collection.constructor = Two.Utils.Collection;
+  Two.Utils.Collection.prototype.constructor = Two.Utils.Collection;
 
   _.extend(Two.Utils.Collection.prototype, Two.Utils.Events, {
 
