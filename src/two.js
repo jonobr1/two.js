@@ -724,13 +724,16 @@ this.Two = (function(previousTwo) {
               // Warning: Two.js elements only support uniform scalars...
               elem.scale = transforms.scaleX;
 
+              var x = parseFloat((styles.x + '').replace('px'));
+              var y = parseFloat((styles.y + '').replace('px'));
+
               // Override based on attributes.
-              if (styles.x) {
-                elem.translation.x = styles.x;
+              if (x) {
+                elem.translation.x = x;
               }
 
-              if (styles.y) {
-                elem.translation.y = styles.y;
+              if (y) {
+                elem.translation.y = y;
               }
 
               break;
