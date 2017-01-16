@@ -71,6 +71,7 @@ instead to minify the build with uglify.
 <!-- For the latest nightly changes checkout the `dev` branch [here](../../tree/dev). -->
 
 #### Nightly
++ Fixed translation interpretation to strip out `'px'` strings
 + Removed `Two.SineRing` — make `Two.Star.curved = true` and it's the same effect
 + Enhanced `Two.ArcSegment`, `Two.Ellipse`, `Two.Polygon`, `Two.Rectangle`, `Two.RoundedRectangle`, `Two.Star`
 + Fixed `Two.Anchor.relative` interpretation in `svg`, `canvas`, and `webgl` renderers
