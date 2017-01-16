@@ -5551,6 +5551,7 @@ this.Two = (function(previousTwo) {
 
     // Private object for renderer specific variables.
     this._renderer = {};
+    this._renderer.flagMatrix = _.bind(Shape.FlagMatrix, this);
 
     this.id = Two.Identifier + Two.uniqueId();
     this.classList = [];
@@ -5561,7 +5562,6 @@ this.Two = (function(previousTwo) {
     this._matrix = new Two.Matrix();
 
     this.translation = new Two.Vector();
-    this.translation.bind(Two.Events.change, _.bind(Shape.FlagMatrix, this));
     this.rotation = 0;
     this.scale = 1;
 
@@ -5574,6 +5574,21 @@ this.Two = (function(previousTwo) {
     },
 
     MakeObservable: function(object) {
+
+      Object.defineProperty(object, 'translation', {
+        enumerable: true,
+        get: function() {
+          return this._translation;
+        },
+        set: function(v) {
+          if (this._translation) {
+            this._translation.unbind(Two.Events.change, this._renderer.flagMatrix);
+          }
+          this._translation = v;
+          this._translation.bind(Two.Events.change, this._renderer.flagMatrix);
+          Shape.FlagMatrix.call(this);
+        }
+      });
 
       Object.defineProperty(object, 'rotation', {
         enumerable: true,
@@ -5615,6 +5630,7 @@ this.Two = (function(previousTwo) {
 
     _rotation: 0,
     _scale: 1,
+    _translation: null,
 
     // _mask: null,
     // _clip: false,
