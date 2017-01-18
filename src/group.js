@@ -57,7 +57,6 @@
     this.additions = [];
     this.subtractions = [];
 
-    this._children = [];
     this.children = arguments;
 
   };
@@ -117,7 +116,7 @@
         enumerable: true,
 
         get: function() {
-          return this._collection;
+          return this._children;
         },
 
         set: function(children) {
@@ -126,14 +125,14 @@
           var removeChildren = _.bind(Group.RemoveChildren, this);
           var orderChildren = _.bind(Group.OrderChildren, this);
 
-          if (this._collection) {
-            this._collection.unbind();
+          if (this._children) {
+            this._children.unbind();
           }
 
-          this._collection = new Children(children);
-          this._collection.bind(Two.Events.insert, insertChildren);
-          this._collection.bind(Two.Events.remove, removeChildren);
-          this._collection.bind(Two.Events.order, orderChildren);
+          this._children = new Children(children);
+          this._children.bind(Two.Events.insert, insertChildren);
+          this._children.bind(Two.Events.remove, removeChildren);
+          this._children.bind(Two.Events.order, orderChildren);
 
         }
 
@@ -260,7 +259,7 @@
     toObject: function() {
 
       var result = {
-        children: {},
+        children: [],
         translation: this.translation.toObject(),
         rotation: this.rotation,
         scale: this.scale

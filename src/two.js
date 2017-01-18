@@ -1264,17 +1264,7 @@ this.Two = (function(previousTwo) {
           var y = parseFloat(node.getAttribute('cy'));
           var r = parseFloat(node.getAttribute('r'));
 
-          var amount = Two.Resolution;
-          var points = _.map(_.range(amount), function(i) {
-            var pct = i / amount;
-            var theta = pct * TWO_PI;
-            var x = r * cos(theta);
-            var y = r * sin(theta);
-            return new Two.Anchor(x, y);
-          });
-
-          var circle = new Two.Path(points, true, true).noStroke();
-          circle.translation.set(x, y);
+          var circle = new Two.Circle(x, y, r).noStroke();
           circle.fill = 'black';
 
           return Two.Utils.applySvgAttributes.call(this, node, circle);
@@ -1288,17 +1278,7 @@ this.Two = (function(previousTwo) {
           var width = parseFloat(node.getAttribute('rx'));
           var height = parseFloat(node.getAttribute('ry'));
 
-          var amount = Two.Resolution;
-          var points = _.map(_.range(amount), function(i) {
-            var pct = i / amount;
-            var theta = pct * TWO_PI;
-            var x = width * cos(theta);
-            var y = height * sin(theta);
-            return new Two.Anchor(x, y);
-          });
-
-          var ellipse = new Two.Path(points, true, true).noStroke();
-          ellipse.translation.set(x, y);
+          var ellipse = new Two.Ellipse(x, y, width, height).noStroke();
           ellipse.fill = 'black';
 
           return Two.Utils.applySvgAttributes.call(this, node, ellipse);
@@ -1315,15 +1295,8 @@ this.Two = (function(previousTwo) {
           var w2 = width / 2;
           var h2 = height / 2;
 
-          var points = [
-            new Two.Anchor(w2, h2),
-            new Two.Anchor(-w2, h2),
-            new Two.Anchor(-w2, -h2),
-            new Two.Anchor(w2, -h2)
-          ];
-
-          var rect = new Two.Path(points, true).noStroke();
-          rect.translation.set(x + w2, y + h2);
+          var rect = new Two.Rectangle(x + w2, y + h2, width, height)
+            .noStroke();
           rect.fill = 'black';
 
           return Two.Utils.applySvgAttributes.call(this, node, rect);
@@ -1337,21 +1310,7 @@ this.Two = (function(previousTwo) {
           var x2 = parseFloat(node.getAttribute('x2'));
           var y2 = parseFloat(node.getAttribute('y2'));
 
-          var width = x2 - x1;
-          var height = y2 - y1;
-
-          var w2 = width / 2;
-          var h2 = height / 2;
-
-          var points = [
-            new Two.Anchor(- w2, - h2),
-            new Two.Anchor(w2, h2)
-          ];
-
-          // Center line and translate to desired position.
-
-          var line = new Two.Path(points).noFill();
-          line.translation.set(x1 + w2, y1 + h2);
+          var line = new Two.Line(x1, y1, x2, y2).noFill();
 
           return Two.Utils.applySvgAttributes.call(this, node, line);
 
@@ -2064,7 +2023,10 @@ this.Two = (function(previousTwo) {
 
     makeCircle: function(ox, oy, r) {
 
-      return this.makeEllipse(ox, oy, r, r);
+      var circle = new Two.Circle(ox, oy, r);
+      this.scene.add(circle);
+
+      return circle;
 
     },
 

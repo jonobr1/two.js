@@ -1292,17 +1292,7 @@ this.Two = (function(previousTwo) {
           var y = parseFloat(node.getAttribute('cy'));
           var r = parseFloat(node.getAttribute('r'));
 
-          var amount = Two.Resolution;
-          var points = _.map(_.range(amount), function(i) {
-            var pct = i / amount;
-            var theta = pct * TWO_PI;
-            var x = r * cos(theta);
-            var y = r * sin(theta);
-            return new Two.Anchor(x, y);
-          });
-
-          var circle = new Two.Path(points, true, true).noStroke();
-          circle.translation.set(x, y);
+          var circle = new Two.Circle(x, y, r).noStroke();
           circle.fill = 'black';
 
           return Two.Utils.applySvgAttributes.call(this, node, circle);
@@ -1316,17 +1306,7 @@ this.Two = (function(previousTwo) {
           var width = parseFloat(node.getAttribute('rx'));
           var height = parseFloat(node.getAttribute('ry'));
 
-          var amount = Two.Resolution;
-          var points = _.map(_.range(amount), function(i) {
-            var pct = i / amount;
-            var theta = pct * TWO_PI;
-            var x = width * cos(theta);
-            var y = height * sin(theta);
-            return new Two.Anchor(x, y);
-          });
-
-          var ellipse = new Two.Path(points, true, true).noStroke();
-          ellipse.translation.set(x, y);
+          var ellipse = new Two.Ellipse(x, y, width, height).noStroke();
           ellipse.fill = 'black';
 
           return Two.Utils.applySvgAttributes.call(this, node, ellipse);
@@ -1343,15 +1323,8 @@ this.Two = (function(previousTwo) {
           var w2 = width / 2;
           var h2 = height / 2;
 
-          var points = [
-            new Two.Anchor(w2, h2),
-            new Two.Anchor(-w2, h2),
-            new Two.Anchor(-w2, -h2),
-            new Two.Anchor(w2, -h2)
-          ];
-
-          var rect = new Two.Path(points, true).noStroke();
-          rect.translation.set(x + w2, y + h2);
+          var rect = new Two.Rectangle(x + w2, y + h2, width, height)
+            .noStroke();
           rect.fill = 'black';
 
           return Two.Utils.applySvgAttributes.call(this, node, rect);
@@ -1365,21 +1338,7 @@ this.Two = (function(previousTwo) {
           var x2 = parseFloat(node.getAttribute('x2'));
           var y2 = parseFloat(node.getAttribute('y2'));
 
-          var width = x2 - x1;
-          var height = y2 - y1;
-
-          var w2 = width / 2;
-          var h2 = height / 2;
-
-          var points = [
-            new Two.Anchor(- w2, - h2),
-            new Two.Anchor(w2, h2)
-          ];
-
-          // Center line and translate to desired position.
-
-          var line = new Two.Path(points).noFill();
-          line.translation.set(x1 + w2, y1 + h2);
+          var line = new Two.Line(x1, y1, x2, y2).noFill();
 
           return Two.Utils.applySvgAttributes.call(this, node, line);
 
@@ -2092,7 +2051,10 @@ this.Two = (function(previousTwo) {
 
     makeCircle: function(ox, oy, r) {
 
-      return this.makeEllipse(ox, oy, r, r);
+      var circle = new Two.Circle(ox, oy, r);
+      this.scene.add(circle);
+
+      return circle;
 
     },
 
@@ -6625,6 +6587,78 @@ this.Two = (function(previousTwo) {
   var Path = Two.Path, TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin;
   var _ = Two.Utils;
 
+  var Circle = Two.Circle = function(ox, oy, r) {
+
+    var amount = Two.Resolution;
+
+    var points = _.map(_.range(amount), function(i) {
+      return new Two.Anchor();
+    }, this);
+
+    Path.call(this, points, true, true);
+
+    this.radius = r;
+
+    this._update();
+    this.translation.set(ox, oy);
+
+  };
+
+  _.extend(Circle, {
+
+    Properties: ['radius'],
+
+    MakeObservable: function(obj) {
+
+      Path.MakeObservable(obj);
+      _.each(Circle.Properties, Two.Utils.defineProperty, obj);
+
+    }
+
+  });
+
+  _.extend(Circle.prototype, Path.prototype, {
+
+    _radius: 0,
+    _flagRadius: false,
+
+    _update: function() {
+
+      if (this._flagRadius) {
+        for (var i = 0, l = this.vertices.length; i < l; i++) {
+          var pct = i / l;
+          var theta = pct * TWO_PI;
+          var x = this._radius * cos(theta);
+          var y = this._radius * sin(theta);
+          this.vertices[i].set(x, y);
+        }
+      }
+
+      Path.prototype._update.call(this);
+      return this;
+
+    },
+
+    flagReset: function() {
+
+      this._flagRadius = false;
+
+      Path.prototype.flagReset.call(this);
+      return this;
+
+    }
+
+  });
+
+  Circle.MakeObservable(Circle.prototype);
+
+})(this.Two);
+
+(function(Two) {
+
+  var Path = Two.Path, TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin;
+  var _ = Two.Utils;
+
   var Polygon = Two.Polygon = function(ox, oy, r, sides) {
 
     sides = Math.max(sides || 0, 3);
@@ -7898,7 +7932,6 @@ this.Two = (function(previousTwo) {
     this.additions = [];
     this.subtractions = [];
 
-    this._children = [];
     this.children = arguments;
 
   };
@@ -7958,7 +7991,7 @@ this.Two = (function(previousTwo) {
         enumerable: true,
 
         get: function() {
-          return this._collection;
+          return this._children;
         },
 
         set: function(children) {
@@ -7967,14 +8000,14 @@ this.Two = (function(previousTwo) {
           var removeChildren = _.bind(Group.RemoveChildren, this);
           var orderChildren = _.bind(Group.OrderChildren, this);
 
-          if (this._collection) {
-            this._collection.unbind();
+          if (this._children) {
+            this._children.unbind();
           }
 
-          this._collection = new Children(children);
-          this._collection.bind(Two.Events.insert, insertChildren);
-          this._collection.bind(Two.Events.remove, removeChildren);
-          this._collection.bind(Two.Events.order, orderChildren);
+          this._children = new Children(children);
+          this._children.bind(Two.Events.insert, insertChildren);
+          this._children.bind(Two.Events.remove, removeChildren);
+          this._children.bind(Two.Events.order, orderChildren);
 
         }
 
@@ -8101,7 +8134,7 @@ this.Two = (function(previousTwo) {
     toObject: function() {
 
       var result = {
-        children: {},
+        children: [],
         translation: this.translation.toObject(),
         rotation: this.rotation,
         scale: this.scale

@@ -121,7 +121,7 @@
 
       QUnit.Utils.get('./images/interpretation/rect.svg', function(resp) {
 
-        var answer = {"children":[{"vertices":[{"x":100,"y":100,"command":"M","relative":true},{"x":-100,"y":100,"command":"L","relative":true},{"x":-100,"y":-100,"command":"L","relative":true},{"x":100,"y":-100,"command":"L","relative":true}],"rotation":0,"scale":1}],"translation":{"x":200,"y":200},"rotation":0,"scale":1};
+        var answer = {"children":[{"vertices":[{"x":-100,"y":-100,"command":"M","relative":true},{"x":100,"y":-100,"command":"L","relative":true},{"x":100,"y":100,"command":"L","relative":true},{"x":-100,"y":100,"command":"L","relative":true}],"rotation":0,"scale":1}],"translation":{"x":200,"y":200},"rotation":0,"scale":1};
         var svg = QUnit.Utils.textToDOM(resp)[0];
         var shape = two.interpret(svg).center();
 
@@ -225,7 +225,7 @@
 
       QUnit.Utils.get('./images/interpretation/linear-gradient.svg', function(resp) {
 
-        var answer = {"children":[{"stops":[{"offset":0,"opacity":1,"color":"#000000"},{"offset":0.33,"opacity":1,"color":"#FFF200"},{"offset":0.66,"opacity":1,"color":"#EC008C"},{"offset":1,"opacity":1,"color":"#00AEEF"}],"spread":"pad","left":{"x":-100,"y":0},"right":{"x":100,"y":0}},{"vertices":[{"x":100,"y":100,"command":"M","relative":true},{"x":-100,"y":100,"command":"L","relative":true},{"x":-100,"y":-100,"command":"L","relative":true},{"x":100,"y":-100,"command":"L","relative":true}],"rotation":0,"scale":1}],"translation":{"x":200,"y":200},"rotation":0,"scale":1};
+        var answer = {"children":[{"stops":[{"offset":0,"opacity":1,"color":"#000000"},{"offset":0.33,"opacity":1,"color":"#FFF200"},{"offset":0.66,"opacity":1,"color":"#EC008C"},{"offset":1,"opacity":1,"color":"#00AEEF"}],"spread":"pad","left":{"x":-100,"y":0},"right":{"x":100,"y":0}},{"vertices":[{"x":-100,"y":-100,"command":"M","relative":true},{"x":100,"y":-100,"command":"L","relative":true},{"x":100,"y":100,"command":"L","relative":true},{"x":-100,"y":100,"command":"L","relative":true}],"rotation":0,"scale":1}],"translation":{"x":200,"y":200},"rotation":0,"scale":1};
         var svg = QUnit.Utils.textToDOM(resp)[0];
         var shape = two.interpret(svg).center();
 
@@ -251,7 +251,7 @@
 
       QUnit.Utils.get('./images/interpretation/radial-gradient.svg', function(resp) {
 
-        var answer = {"children":[{"stops":[{"offset":0,"opacity":1,"color":"#000000"},{"offset":0.33,"opacity":1,"color":"#FFF200"},{"offset":0.66,"opacity":1,"color":"#EC008C"},{"offset":1,"opacity":1,"color":"#00AEEF"}],"spread":"pad","radius":100,"center":{"x":0,"y":0},"focal":{"x":0,"y":0}},{"vertices":[{"x":100,"y":100,"command":"M","relative":true},{"x":-100,"y":100,"command":"L","relative":true},{"x":-100,"y":-100,"command":"L","relative":true},{"x":100,"y":-100,"command":"L","relative":true}],"rotation":0,"scale":1}],"translation":{"x":200,"y":200},"rotation":0,"scale":1};
+        var answer = {"children":[{"stops":[{"offset":0,"opacity":1,"color":"#000000"},{"offset":0.33,"opacity":1,"color":"#FFF200"},{"offset":0.66,"opacity":1,"color":"#EC008C"},{"offset":1,"opacity":1,"color":"#00AEEF"}],"spread":"pad","radius":100,"center":{"x":0,"y":0},"focal":{"x":0,"y":0}},{"vertices":[{"x":-100,"y":-100,"command":"M","relative":true},{"x":100,"y":-100,"command":"L","relative":true},{"x":100,"y":100,"command":"L","relative":true},{"x":-100,"y":100,"command":"L","relative":true}],"rotation":0,"scale":1}],"translation":{"x":200,"y":200},"rotation":0,"scale":1};
         var svg = QUnit.Utils.textToDOM(resp)[0];
         var shape = two.interpret(svg).center();
 
