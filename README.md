@@ -71,6 +71,8 @@ instead to minify the build with uglify.
 <!-- For the latest nightly changes checkout the `dev` branch [here](../../tree/dev). -->
 
 #### Nightly
++ Made `Two.interpret` use latest primitives
++ Added `Two.Circle` primitive
 + `Two.Shape.translation` is now a getter/setter and can be replaced
 + Fixed translation interpretation to strip out `'px'` strings
 + Removed `Two.SineRing` — make `Two.Star.curved = true` and it's the same effect
