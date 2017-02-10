@@ -71,6 +71,7 @@ instead to minify the build with uglify.
 <!-- For the latest nightly changes checkout the `dev` branch [here](../../tree/dev). -->
 
 #### Nightly
++ Enhanced `Two.Shape.scale` to allow both numbers and `Two.Vector` as property value
 + Made `Two.interpret` use latest primitives
 + Added `Two.Circle` primitive
 + `Two.Shape.translation` is now a getter/setter and can be replaced
