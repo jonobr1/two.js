@@ -463,6 +463,59 @@ test('Two.Utils.Collection', 14, function() {
 
 });
 
+test('Two.Shape', 11, function() {
+
+  var shape = new Two.Shape();
+  equal(shape.translation.toString(), '0,0', 'Two.Shape.translation constructed properly.');
+  equal(shape.scale, 1, 'Two.Shape.scale constructed properly.');
+  equal(shape.rotation, 0, 'Two.Shape.rotation constructed properly.');
+
+  shape.translation.x = 50;
+  shape.translation.y = 25;
+  shape._update();
+
+  equal(shape._matrix.toString(), '1 0 0 1 50 25', 'Two.Shape.translation binds properly.');
+
+  shape.translation = new Two.Vector(25, 50);
+  shape._update();
+
+  equal(shape._matrix.toString(), '1 0 0 1 25 50', 'Two.Shape.translation binds properly.');
+
+  shape.translation.x = 0;
+  shape.translation.y = 0;
+  shape._update();
+
+  equal(shape._matrix.toString(), '1 0 0 1 0 0', 'Two.Shape.translation binds properly.');
+
+  shape.scale = 3;
+  shape._update();
+
+  equal(shape._matrix.toString(), '3 0 0 3 0 0', 'Two.Shape.scale uniform scale works properly.');
+
+  shape.scale = new Two.Vector(1, 2);
+  shape._update();
+
+  equal(shape._matrix.toString(), '1 0 0 2 0 0', 'Two.Shape.scale 2 dimension scale works properly.');
+
+  shape.scale.x = 2;
+  shape.scale.y = 1;
+  shape._update();
+
+  equal(shape._matrix.toString(), '2 0 0 1 0 0', 'Two.Shape.scale 2 dimension scale binds properly for event listening.');
+
+  var s = shape.scale;
+  shape.scale = 10;
+  s.x = 5;
+  shape._update();
+
+  equal(shape._matrix.toString(), '10 0 0 10 0 0', 'Two.Shape.scale 2 dimension scale unbinds properly.');
+
+  shape.rotation = 3.14;
+  shape._update();
+
+  equal(shape._matrix.toString(), '-10 0.016 -0.016 -10 0 0', 'Two.Shape.rotation works properly.');
+
+});
 
 test('Children adding and removing', 28, function() {
 

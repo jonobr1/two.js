@@ -62,9 +62,20 @@
           return this._scale;
         },
         set: function(v) {
+
+          if (this._scale instanceof Two.Vector) {
+            this._scale.unbind(Two.Events.change, this._renderer.flagMatrix);
+          }
+
           this._scale = v;
+
+          if (this._scale instanceof Two.Vector) {
+            this._scale.bind(Two.Events.change, this._renderer.flagMatrix);
+          }
+
           this._flagMatrix = true;
           this._flagScale = true;
+
         }
       });
 
@@ -77,6 +88,7 @@
     // Flags
 
     _flagMatrix: true,
+    _flagScale: false,
 
     // _flagMask: false,
     // _flagClip: false,
@@ -113,11 +125,18 @@
     _update: function(deep) {
 
       if (!this._matrix.manual && this._flagMatrix) {
+
         this._matrix
           .identity()
-          .translate(this.translation.x, this.translation.y)
-          .scale(this.scale)
-          .rotate(this.rotation);
+          .translate(this.translation.x, this.translation.y);
+
+          if (this._scale instanceof Two.Vector) {
+            this._matrix.scale(this._scale.x, this._scale.y);
+          } else {
+            this._matrix.scale(this._scale);
+          }
+
+          this._matrix.rotate(this.rotation);
 
       }
 
