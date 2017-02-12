@@ -33,27 +33,33 @@
         return Texture.ImageRegistry[src];
       }
 
-      return document.createElement('img'); // TODO: What's the Node.js way?
+      var image = document.createElement('img'); // TODO: What's the Node.js way?
+      image.crossOrigin = 'anonymous';
+
+      return image;
 
     },
 
     Register: {
       canvas: function(texture, callback) {
-        // TODO: Check to see if `texture.image` already exists in registry.
-        texture.path = '#' + texture.id;
+        texture._src = '#' + texture.id;
         register(texture);
         if (_.isFunction(callback)) {
           callback();
         }
       },
       image: function(texture, callback) {
-        // TODO: Check to see if `texture.image` already exists in registry.
         var loaded = function(e) {
+          texture.image.removeEventListener('load', loaded, false);
           if (_.isFunction(callback)) {
             callback();
           }
         };
+        var error = function(e) {
+          throw new Two.Utils.Error('unable to load ' + texture.src);
+        };
         texture.image.addEventListener('load', loaded, false);
+        texture.image.addEventListener('error', error, false);
         texture.image.src = texture.src;
       }
     },
