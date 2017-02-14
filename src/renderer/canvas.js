@@ -378,27 +378,25 @@
 
         if (!clip && !parentClipped) {
           if (!canvas.isHidden.test(fill)) {
-            isOffset = fill._renderer && fill._renderer.offset;
-            if (isOffset) {
+            if (fill._renderer && fill._renderer.offset) {
               ctx.save();
               ctx.translate(
                 - fill._renderer.offset.x, - fill._renderer.offset.y);
-            }
-            ctx.fillText(this.value, 0, 0);
-            if (isOffset) {
+              ctx.fillText(this.value, fill._renderer.offset.x, fill._renderer.offset.y);
               ctx.restore();
+            } else {
+              ctx.fillText(this.value, 0, 0);
             }
           }
           if (!canvas.isHidden.test(stroke)) {
-            isOffset = stroke._renderer && stroke._renderer.offset;
-            if (isOffset) {
+            if (stroke._renderer && stroke._renderer.offset) {
               ctx.save();
               ctx.translate(
                 - stroke._renderer.offset.x, - stroke._renderer.offset.y);
-            }
-            ctx.strokeText(this.value, 0, 0);
-            if (isOffset) {
+              ctx.strokeText(this.value, stroke._renderer.offset.x, stroke._renderer.offset.y);
               ctx.restore();
+            } else {
+              ctx.strokeText(this.value, 0, 0);
             }
           }
         }

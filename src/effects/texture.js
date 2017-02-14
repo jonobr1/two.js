@@ -2,10 +2,20 @@
 
   var _ = Two.Utils;
 
-  var Texture = Two.Texture = function(src) {
+  var Texture = Two.Texture = function(src, callback) {
 
     Two.Shape.call(this);
     this._renderer.type = 'texture';
+
+    if (_.isFunction(callback)) {
+      var loaded = _.bind(function() {
+        this.unbin(Two.Events.load, loaded);
+        if (_.isFunction(callback)) {
+          callback();
+        }
+      }, this);
+      this.bind(Two.Events.load, loaded);
+    }
 
     if (_.isString(src)) {
       this.src = src;
@@ -124,7 +134,9 @@
         this.loaded = false;
         Texture.load(this, _.bind(function() {
           this.loaded = true;
-          this.trigger(Two.Events.change);
+          this
+            .trigger(Two.Events.change)
+            .trigger(Two.Events.load);
         }, this));
       }
 

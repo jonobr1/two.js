@@ -366,7 +366,7 @@
 
         if (this._flagFill) {
           if (this._fill && this._fill._renderer) {
-            svg[this._fill._renderer.type].render.call(this._fill, domElement);
+            svg[this._fill._renderer.type].render.call(this._fill, domElement, true);
           }
           changed.fill = this._fill && this._fill.id
             ? 'url(#' + this._fill.id + ')' : this._fill;
@@ -378,7 +378,7 @@
 
         if (this._flagStroke) {
           if (this._stroke && this._stroke._renderer) {
-            svg[this._stroke._renderer.type].render.call(this._stroke, domElement);
+            svg[this._stroke._renderer.type].render.call(this._stroke, domElement, true);
           }
           changed.stroke = this._stroke && this._stroke.id
             ? 'url(#' + this._stroke.id + ')' : this._stroke;
@@ -501,6 +501,9 @@
           this._fill._update();
         }
         if (this._flagFill) {
+          if (this._fill && this._fill._renderer) {
+            svg[this._fill._renderer.type].render.call(this._fill, domElement, true);
+          }
           changed.fill = this._fill && this._fill.id
             ? 'url(#' + this._fill.id + ')' : this._fill;
         }
@@ -508,6 +511,9 @@
           this._stroke._update();
         }
         if (this._flagStroke) {
+          if (this._stroke && this._stroke._renderer) {
+            svg[this._stroke._renderer.type].render.call(this._stroke, domElement, true);
+          }
           changed.stroke = this._stroke && this._stroke.id
             ? 'url(#' + this._stroke.id + ')' : this._stroke;
         }
@@ -563,7 +569,11 @@
 
     'linear-gradient': {
 
-      render: function(domElement) {
+      render: function(domElement, silent) {
+
+        if (!silent) {
+          this._update();
+        }
 
         var changed = {};
 
@@ -641,7 +651,11 @@
 
     'radial-gradient': {
 
-      render: function(domElement) {
+      render: function(domElement, silent) {
+
+        if (!silent) {
+          this._update();
+        }
 
         var changed = {};
 
@@ -725,7 +739,12 @@
 
     texture: {
 
-      render: function(domElement) {
+      render: function(domElement, silent) {
+
+        if (!silent) {
+          this._update();
+        }
+
         var changed = {};
 
         if (this._flagLoaded && this.loaded) {

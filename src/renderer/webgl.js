@@ -793,6 +793,8 @@
 
       gl.bindBuffer(gl.ARRAY_BUFFER, elem._renderer.textureCoordsBuffer);
 
+      // TODO: Is this necessary every time or can we do once?
+      // TODO: Create a registry for textures
       elem._renderer.texture = gl.createTexture();
       gl.bindTexture(gl.TEXTURE_2D, elem._renderer.texture);
 

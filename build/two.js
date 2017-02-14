@@ -433,7 +433,8 @@ this.Two = (function(previousTwo) {
       change: 'change',
       remove: 'remove',
       insert: 'insert',
-      order: 'order'
+      order: 'order',
+      load: 'load'
     },
 
     Commands: {
@@ -3598,7 +3599,7 @@ this.Two = (function(previousTwo) {
 
         if (this._flagFill) {
           if (this._fill && this._fill._renderer) {
-            svg[this._fill._renderer.type].render.call(this._fill, domElement);
+            svg[this._fill._renderer.type].render.call(this._fill, domElement, true);
           }
           changed.fill = this._fill && this._fill.id
             ? 'url(#' + this._fill.id + ')' : this._fill;
@@ -3610,7 +3611,7 @@ this.Two = (function(previousTwo) {
 
         if (this._flagStroke) {
           if (this._stroke && this._stroke._renderer) {
-            svg[this._stroke._renderer.type].render.call(this._stroke, domElement);
+            svg[this._stroke._renderer.type].render.call(this._stroke, domElement, true);
           }
           changed.stroke = this._stroke && this._stroke.id
             ? 'url(#' + this._stroke.id + ')' : this._stroke;
@@ -3733,6 +3734,9 @@ this.Two = (function(previousTwo) {
           this._fill._update();
         }
         if (this._flagFill) {
+          if (this._fill && this._fill._renderer) {
+            svg[this._fill._renderer.type].render.call(this._fill, domElement, true);
+          }
           changed.fill = this._fill && this._fill.id
             ? 'url(#' + this._fill.id + ')' : this._fill;
         }
@@ -3740,6 +3744,9 @@ this.Two = (function(previousTwo) {
           this._stroke._update();
         }
         if (this._flagStroke) {
+          if (this._stroke && this._stroke._renderer) {
+            svg[this._stroke._renderer.type].render.call(this._stroke, domElement, true);
+          }
           changed.stroke = this._stroke && this._stroke.id
             ? 'url(#' + this._stroke.id + ')' : this._stroke;
         }
@@ -3795,7 +3802,11 @@ this.Two = (function(previousTwo) {
 
     'linear-gradient': {
 
-      render: function(domElement) {
+      render: function(domElement, silent) {
+
+        if (!silent) {
+          this._update();
+        }
 
         var changed = {};
 
@@ -3873,7 +3884,11 @@ this.Two = (function(previousTwo) {
 
     'radial-gradient': {
 
-      render: function(domElement) {
+      render: function(domElement, silent) {
+
+        if (!silent) {
+          this._update();
+        }
 
         var changed = {};
 
@@ -3957,7 +3972,12 @@ this.Two = (function(previousTwo) {
 
     texture: {
 
-      render: function(domElement) {
+      render: function(domElement, silent) {
+
+        if (!silent) {
+          this._update();
+        }
+
         var changed = {};
 
         if (this._flagLoaded && this.loaded) {
@@ -4452,27 +4472,25 @@ this.Two = (function(previousTwo) {
 
         if (!clip && !parentClipped) {
           if (!canvas.isHidden.test(fill)) {
-            isOffset = fill._renderer && fill._renderer.offset;
-            if (isOffset) {
+            if (fill._renderer && fill._renderer.offset) {
               ctx.save();
               ctx.translate(
                 - fill._renderer.offset.x, - fill._renderer.offset.y);
-            }
-            ctx.fillText(this.value, 0, 0);
-            if (isOffset) {
+              ctx.fillText(this.value, fill._renderer.offset.x, fill._renderer.offset.y);
               ctx.restore();
+            } else {
+              ctx.fillText(this.value, 0, 0);
             }
           }
           if (!canvas.isHidden.test(stroke)) {
-            isOffset = stroke._renderer && stroke._renderer.offset;
-            if (isOffset) {
+            if (stroke._renderer && stroke._renderer.offset) {
               ctx.save();
               ctx.translate(
                 - stroke._renderer.offset.x, - stroke._renderer.offset.y);
-            }
-            ctx.strokeText(this.value, 0, 0);
-            if (isOffset) {
+              ctx.strokeText(this.value, stroke._renderer.offset.x, stroke._renderer.offset.y);
               ctx.restore();
+            } else {
+              ctx.strokeText(this.value, 0, 0);
             }
           }
         }
@@ -5442,6 +5460,8 @@ this.Two = (function(previousTwo) {
 
       gl.bindBuffer(gl.ARRAY_BUFFER, elem._renderer.textureCoordsBuffer);
 
+      // TODO: Is this necessary every time or can we do once?
+      // TODO: Create a registry for textures
       elem._renderer.texture = gl.createTexture();
       gl.bindTexture(gl.TEXTURE_2D, elem._renderer.texture);
 
@@ -7522,11 +7542,13 @@ this.Two = (function(previousTwo) {
   var canvas = (root.document ? root.document.createElement('canvas') : { getContext: _.identity });
   var ctx = canvas.getContext('2d');
 
-  Two.Text = function(message, x, y, styles) {
+  var Text = Two.Text = function(message, x, y, styles) {
 
     Two.Shape.call(this);
 
     this._renderer.type = 'text';
+    this._renderer.flagFill = _.bind(Text.FlagFill, this);
+    this._renderer.flagStroke = _.bind(Text.FlagStroke, this);
 
     this.value = message;
 
@@ -7554,16 +7576,77 @@ this.Two = (function(previousTwo) {
   _.extend(Two.Text, {
 
     Properties: [
-      'value', 'family', 'size', 'leading', 'alignment', 'fill', 'stroke',
-      'linewidth', 'style', 'weight', 'decoration', 'baseline', 'opacity',
-      'visible'
+      'value', 'family', 'size', 'leading', 'alignment', 'linewidth', 'style',
+      'weight', 'decoration', 'baseline', 'opacity', 'visible', 'fill', 'stroke'
     ],
+
+    FlagFill: function() {
+      this._flagFill = true;
+    },
+
+    FlagStroke: function() {
+      this._flagStroke = true;
+    },
 
     MakeObservable: function(object) {
 
       Two.Shape.MakeObservable(object);
 
-      _.each(Two.Text.Properties, Two.Utils.defineProperty, object);
+      _.each(Two.Text.Properties.slice(0, 12), Two.Utils.defineProperty, object);
+
+      Object.defineProperty(object, 'fill', {
+        enumerable: true,
+        get: function() {
+          return this._fill;
+        },
+        set: function(f) {
+
+          if (this._fill instanceof Two.Gradient
+            || this._fill instanceof Two.LinearGradient
+            || this._fill instanceof Two.RadialGradient
+            || this._fill instanceof Two.Texture) {
+            this._fill.unbind(Two.Events.change, this._renderer.flagFill);
+          }
+
+          this._fill = f;
+          this._flagFill = true;
+
+          if (this._fill instanceof Two.Gradient
+            || this._fill instanceof Two.LinearGradient
+            || this._fill instanceof Two.RadialGradient
+            || this._fill instanceof Two.Texture) {
+            this._fill.bind(Two.Events.change, this._renderer.flagFill);
+          }
+
+        }
+      });
+
+      Object.defineProperty(object, 'stroke', {
+        enumerable: true,
+        get: function() {
+          return this._stroke;
+        },
+        set: function(f) {
+
+          if (this._stroke instanceof Two.Gradient
+            || this._stroke instanceof Two.LinearGradient
+            || this._stroke instanceof Two.RadialGradient
+            || this._stroke instanceof Two.Texture) {
+            this._stroke.unbind(Two.Events.change, this._renderer.flagStroke);
+          }
+
+          this._stroke = f;
+          this._flagStroke = true;
+
+          if (this._stroke instanceof Two.Gradient
+            || this._stroke instanceof Two.LinearGradient
+            || this._stroke instanceof Two.RadialGradient
+            || this._stroke instanceof Two.Texture) {
+            this._stroke.bind(Two.Events.change, this._renderer.flagStroke);
+          }
+
+        }
+      });
 
       Object.defineProperty(object, 'clip', {
         enumerable: true,
@@ -7872,7 +7955,7 @@ this.Two = (function(previousTwo) {
           // Remove previous listeners
           if (this._stops) {
             this._stops
-              .unbind(Two.Evnets.insert, bindStops)
+              .unbind(Two.Events.insert, bindStops)
               .unbind(Two.Events.remove, unbindStops);
           }
 
@@ -8238,10 +8321,20 @@ this.Two = (function(previousTwo) {
 
   var _ = Two.Utils;
 
-  var Texture = Two.Texture = function(src) {
+  var Texture = Two.Texture = function(src, callback) {
 
     Two.Shape.call(this);
     this._renderer.type = 'texture';
+
+    if (_.isFunction(callback)) {
+      var loaded = _.bind(function() {
+        this.unbin(Two.Events.load, loaded);
+        if (_.isFunction(callback)) {
+          callback();
+        }
+      }, this);
+      this.bind(Two.Events.load, loaded);
+    }
 
     if (_.isString(src)) {
       this.src = src;
@@ -8360,7 +8453,9 @@ this.Two = (function(previousTwo) {
         this.loaded = false;
         Texture.load(this, _.bind(function() {
           this.loaded = true;
-          this.trigger(Two.Events.change);
+          this
+            .trigger(Two.Events.change)
+            .trigger(Two.Events.load);
         }, this));
       }
 
@@ -8380,6 +8475,7 @@ this.Two = (function(previousTwo) {
   Texture.MakeObservable(Texture.prototype);
 
 })(this.Two);
+
 (function(Two) {
 
   /**

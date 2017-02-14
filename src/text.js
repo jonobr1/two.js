@@ -7,11 +7,13 @@
   var canvas = (root.document ? root.document.createElement('canvas') : { getContext: _.identity });
   var ctx = canvas.getContext('2d');
 
-  Two.Text = function(message, x, y, styles) {
+  var Text = Two.Text = function(message, x, y, styles) {
 
     Two.Shape.call(this);
 
     this._renderer.type = 'text';
+    this._renderer.flagFill = _.bind(Text.FlagFill, this);
+    this._renderer.flagStroke = _.bind(Text.FlagStroke, this);
 
     this.value = message;
 
@@ -39,16 +41,77 @@
   _.extend(Two.Text, {
 
     Properties: [
-      'value', 'family', 'size', 'leading', 'alignment', 'fill', 'stroke',
-      'linewidth', 'style', 'weight', 'decoration', 'baseline', 'opacity',
-      'visible'
+      'value', 'family', 'size', 'leading', 'alignment', 'linewidth', 'style',
+      'weight', 'decoration', 'baseline', 'opacity', 'visible', 'fill', 'stroke'
     ],
+
+    FlagFill: function() {
+      this._flagFill = true;
+    },
+
+    FlagStroke: function() {
+      this._flagStroke = true;
+    },
 
     MakeObservable: function(object) {
 
       Two.Shape.MakeObservable(object);
 
-      _.each(Two.Text.Properties, Two.Utils.defineProperty, object);
+      _.each(Two.Text.Properties.slice(0, 12), Two.Utils.defineProperty, object);
+
+      Object.defineProperty(object, 'fill', {
+        enumerable: true,
+        get: function() {
+          return this._fill;
+        },
+        set: function(f) {
+
+          if (this._fill instanceof Two.Gradient
+            || this._fill instanceof Two.LinearGradient
+            || this._fill instanceof Two.RadialGradient
+            || this._fill instanceof Two.Texture) {
+            this._fill.unbind(Two.Events.change, this._renderer.flagFill);
+          }
+
+          this._fill = f;
+          this._flagFill = true;
+
+          if (this._fill instanceof Two.Gradient
+            || this._fill instanceof Two.LinearGradient
+            || this._fill instanceof Two.RadialGradient
+            || this._fill instanceof Two.Texture) {
+            this._fill.bind(Two.Events.change, this._renderer.flagFill);
+          }
+
+        }
+      });
+
+      Object.defineProperty(object, 'stroke', {
+        enumerable: true,
+        get: function() {
+          return this._stroke;
+        },
+        set: function(f) {
+
+          if (this._stroke instanceof Two.Gradient
+            || this._stroke instanceof Two.LinearGradient
+            || this._stroke instanceof Two.RadialGradient
+            || this._stroke instanceof Two.Texture) {
+            this._stroke.unbind(Two.Events.change, this._renderer.flagStroke);
+          }
+
+          this._stroke = f;
+          this._flagStroke = true;
+
+          if (this._stroke instanceof Two.Gradient
+            || this._stroke instanceof Two.LinearGradient
+            || this._stroke instanceof Two.RadialGradient
+            || this._stroke instanceof Two.Texture) {
+            this._stroke.bind(Two.Events.change, this._renderer.flagStroke);
+          }
+
+        }
+      });
 
       Object.defineProperty(object, 'clip', {
         enumerable: true,

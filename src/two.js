@@ -405,7 +405,8 @@ this.Two = (function(previousTwo) {
       change: 'change',
       remove: 'remove',
       insert: 'insert',
-      order: 'order'
+      order: 'order',
+      load: 'load'
     },
 
     Commands: {

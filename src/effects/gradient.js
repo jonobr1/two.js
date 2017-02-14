@@ -141,7 +141,7 @@
           // Remove previous listeners
           if (this._stops) {
             this._stops
-              .unbind(Two.Evnets.insert, bindStops)
+              .unbind(Two.Events.insert, bindStops)
               .unbind(Two.Events.remove, unbindStops);
           }
 
