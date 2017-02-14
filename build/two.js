@@ -2320,6 +2320,43 @@ this.Two = (function(previousTwo) {
 
   var _ = Two.Utils;
 
+  var Registry = Two.Registry = function() {
+
+    this.map = {};
+
+  };
+
+  _.extend(Registry, {
+
+  });
+
+  _.extend(Registry.prototype, {
+
+    add: function(id, obj) {
+      this.map[id] = obj;
+      return this;
+    },
+
+    remove: function(id) {
+      delete this.map[id];
+      return this;
+    },
+
+    get: function(id) {
+      return this.map[id];
+    },
+
+    contains: function(id) {
+      return id in this.map;
+    }
+
+  });
+
+})(this.Two);
+(function(Two) {
+
+  var _ = Two.Utils;
+
   var Vector = Two.Vector = function(x, y) {
 
     this.x = x || 0;
@@ -2454,7 +2491,7 @@ this.Two = (function(previousTwo) {
     },
 
     toString: function() {
-      return this.x + ',' + this.y;
+      return [this.x, this.y].join(' ');
     },
 
     toObject: function() {
@@ -2583,7 +2620,7 @@ this.Two = (function(previousTwo) {
     },
 
     toString: function() {
-      return this._x + ',' + this._y;
+      return [this._x, this._y].join(' ');
     },
 
     toObject: function() {
@@ -2755,8 +2792,11 @@ this.Two = (function(previousTwo) {
     },
 
     toString: function() {
+      if (!this.controls) {
+        return [this._x, this._y].join(' ');
+      }
       return [this._x, this._y, this.controls.left.x, this.controls.left.y,
-        this.controls.right.x, this.controls.right.y].join(', ');
+        this.controls.right.x, this.controls.right.y].join(' ');
     }
 
   };
@@ -3763,6 +3803,8 @@ this.Two = (function(previousTwo) {
         // create it with all necessary attributes.
         if (!this._renderer.elem) {
 
+          console.log('true');
+
           changed.id = this.id;
           changed.gradientUnits = 'userSpaceOnUse';
           this._renderer.elem = svg.createElement('linearGradient', changed);
@@ -3777,7 +3819,12 @@ this.Two = (function(previousTwo) {
 
         if (this._flagStops) {
 
-          this._renderer.elem.childNodes.length = 0;
+          var lengthChanged = this._renderer.elem.childNodes.length
+            !== this.stops.length;
+
+          if (lengthChanged) {
+            this._renderer.elem.childNodes.length = 0;
+          }
 
           for (var i = 0; i < this.stops.length; i++) {
 
@@ -3800,8 +3847,9 @@ this.Two = (function(previousTwo) {
               svg.setAttributes(stop._renderer.elem, attrs);
             }
 
-            this._renderer.elem.appendChild(stop._renderer.elem);
-
+            if (lengthChanged) {
+              this._renderer.elem.appendChild(stop._renderer.elem);
+            }
             stop.flagReset();
 
           }
@@ -3857,7 +3905,12 @@ this.Two = (function(previousTwo) {
 
         if (this._flagStops) {
 
-          this._renderer.elem.childNodes.length = 0;
+          var lengthChanged = this._renderer.elem.childNodes.length
+            !== this.stops.length;
+
+          if (lengthChanged) {
+            this._renderer.elem.childNodes.length = 0;
+          }
 
           for (var i = 0; i < this.stops.length; i++) {
 
@@ -3880,7 +3933,9 @@ this.Two = (function(previousTwo) {
               svg.setAttributes(stop._renderer.elem, attrs);
             }
 
-            this._renderer.elem.appendChild(stop._renderer.elem);
+            if (lengthChanged) {
+              this._renderer.elem.appendChild(stop._renderer.elem);
+            }
             stop.flagReset();
 
           }
@@ -5529,7 +5584,7 @@ this.Two = (function(previousTwo) {
 
   };
 
-  _.extend(Shape, Two.Utils.Events, {
+  _.extend(Shape, {
 
     FlagMatrix: function() {
       this._flagMatrix = true;
@@ -5693,6 +5748,12 @@ this.Two = (function(previousTwo) {
     Two.Shape.call(this);
 
     this._renderer.type = 'path';
+    this._renderer.flagVertices = _.bind(Path.FlagVertices, this);
+    this._renderer.bindVertices = _.bind(Path.BindVertices, this);
+    this._renderer.unbindVertices = _.bind(Path.UnbindVertices, this);
+
+    this._renderer.flagFill = _.bind(Path.FlagFill, this);
+    this._renderer.flagStroke = _.bind(Path.FlagStroke, this);
 
     this._closed = !!closed;
     this._curved = !!curved;
@@ -5746,13 +5807,99 @@ this.Two = (function(previousTwo) {
       this._flagLength = true;
     },
 
+    BindVertices: function(items) {
+
+      // This function is called a lot
+      // when importing a large SVG
+      var i = items.length;
+      while(i--) {
+        items[i].bind(Two.Events.change, this._renderer.flagVertices);
+      }
+
+      this._renderer.flagVertices();
+
+    },
+
+    UnbindVertices: function(items) {
+
+      var i = items.length;
+      while(i--) {
+        items[i].unbind(Two.Events.change, this._renderer.flagVertices);
+      }
+
+      this._renderer.flagVertices();
+
+    },
+
+    FlagFill: function() {
+      this._flagFill = true;
+    },
+
+    FlagStroke: function() {
+      this._flagStroke = true;
+    },
+
     MakeObservable: function(object) {
 
       Two.Shape.MakeObservable(object);
 
-      // Only the first 8 properties are flagged like this. The subsequent
+      // Only the 6 defined properties are flagged like this. The subsequent
       // properties behave differently and need to be hand written.
-      _.each(Path.Properties.slice(0, 8), Two.Utils.defineProperty, object);
+      _.each(Path.Properties.slice(2, 8), Two.Utils.defineProperty, object);
+
+      Object.defineProperty(object, 'fill', {
+        enumerable: true,
+        get: function() {
+          return this._fill;
+        },
+        set: function(f) {
+
+          if (this._fill instanceof Two.Gradient
+            || this._fill instanceof Two.LinearGradient
+            || this._fill instanceof Two.RadialGradient
+            || this._fill instanceof Two.Texture) {
+            this._fill.unbind(Two.Events.change, this._renderer.flagFill);
+          }
+
+          this._fill = f;
+          this._flagFill = true;
+
+          if (this._fill instanceof Two.Gradient
+            || this._fill instanceof Two.LinearGradient
+            || this._fill instanceof Two.RadialGradient
+            || this._fill instanceof Two.Texture) {
+            this._fill.bind(Two.Events.change, this._renderer.flagFill);
+          }
+
+        }
+      });
+
+      Object.defineProperty(object, 'stroke', {
+        enumerable: true,
+        get: function() {
+          return this._stroke;
+        },
+        set: function(f) {
+
+          if (this._stroke instanceof Two.Gradient
+            || this._stroke instanceof Two.LinearGradient
+            || this._stroke instanceof Two.RadialGradient
+            || this._stroke instanceof Two.Texture) {
+            this._stroke.unbind(Two.Events.change, this._renderer.flagStroke);
+          }
+
+          this._stroke = f;
+          this._flagStroke = true;
+
+          if (this._stroke instanceof Two.Gradient
+            || this._stroke instanceof Two.LinearGradient
+            || this._stroke instanceof Two.RadialGradient
+            || this._stroke instanceof Two.Texture) {
+            this._stroke.bind(Two.Events.change, this._renderer.flagStroke);
+          }
+
+        }
+      });
 
       Object.defineProperty(object, 'length', {
         get: function() {
@@ -5834,45 +5981,27 @@ this.Two = (function(previousTwo) {
 
         set: function(vertices) {
 
-          var updateVertices = _.bind(Path.FlagVertices, this);
-
-          var bindVerts = _.bind(function(items) {
-
-            // This function is called a lot
-            // when importing a large SVG
-            var i = items.length;
-            while(i--) {
-              items[i].bind(Two.Events.change, updateVertices);
-            }
-
-            updateVertices();
-
-          }, this);
-
-          var unbindVerts = _.bind(function(items) {
-
-            _.each(items, function(v) {
-              v.unbind(Two.Events.change, updateVertices);
-            }, this);
-
-            updateVertices();
-
-          }, this);
+          var updateVertices = this._renderer.flagVertices;
+          var bindVertices = _.bind(this._renderer.bindVertices, this);
+          var unbindVertices = _.bind(this._renderer.unbindVertices, this);
 
           // Remove previous listeners
           if (this._collection) {
-            this._collection.unbind();
+            this._collection
+              .unbind(Two.Events.insert, bindVertices)
+              .unbind(Two.Events.remove, unbindVertices);
           }
 
           // Create new Collection with copy of vertices
           this._collection = new Two.Utils.Collection((vertices || []).slice(0));
 
           // Listen for Collection changes and bind / unbind
-          this._collection.bind(Two.Events.insert, bindVerts);
-          this._collection.bind(Two.Events.remove, unbindVerts);
+          this._collection
+            .bind(Two.Events.insert, bindVertices)
+            .bind(Two.Events.remove, unbindVertices);
 
           // Bind Initial Vertices
-          bindVerts(this._collection);
+          bindVertices(this._collection);
 
         }
 
@@ -7114,7 +7243,7 @@ this.Two = (function(previousTwo) {
     this.height = height;
     this.radius = radius;
 
-    this._update;
+    this._update();
     this.translation.set(ox, oy);
 
   };
@@ -7468,6 +7597,7 @@ this.Two = (function(previousTwo) {
   var Stop = Two.Stop = function(offset, color, opacity) {
 
     this._renderer = {};
+    this._renderer.type = 'stop';
 
     this.offset = _.isNumber(offset) ? offset
       : Stop.Index <= 0 ? 0 : 1;
@@ -7493,7 +7623,27 @@ this.Two = (function(previousTwo) {
 
     MakeObservable: function(object) {
 
-      _.each(Stop.Properties, Two.Utils.defineProperty, object);
+      _.each(Stop.Properties, function(property) {
+
+        var object = this;
+        var secret = '_' + property;
+        var flag = '_flag' + property.charAt(0).toUpperCase() + property.slice(1);
+
+        Object.defineProperty(object, property, {
+          enumerable: true,
+          get: function() {
+            return this[secret];
+          },
+          set: function(v) {
+            this[secret] = v;
+            this[flag] = true;
+            if (this.parent) {
+              this.parent._flagStops = true;
+            }
+          }
+        });
+
+      }, object);
 
     }
 
@@ -7540,8 +7690,11 @@ this.Two = (function(previousTwo) {
   var Gradient = Two.Gradient = function(stops) {
 
     Two.Shape.call(this);
-
     this._renderer.type = 'gradient';
+
+    this._renderer.flagStops = _.bind(Gradient.FlagStops, this);
+    this._renderer.bindStops = _.bind(Gradient.BindStops, this);
+    this._renderer.unbindStops = _.bind(Gradient.UnbindStops, this);
 
     this.spread = 'pad';
 
@@ -7573,42 +7726,24 @@ this.Two = (function(previousTwo) {
 
         set: function(stops) {
 
-          var updateStops = _.bind(Gradient.FlagStops, this);
-
-          var bindStops = _.bind(function(items) {
-
-            // This function is called a lot
-            // when importing a large SVG
-            var i = items.length;
-            while(i--) {
-              items[i].bind(Two.Events.change, updateStops);
-            }
-
-            updateStops();
-
-          }, this);
-
-          var unbindStops = _.bind(function(items) {
-
-            _.each(items, function(v) {
-              v.unbind(Two.Events.change, updateStops);
-            }, this);
-
-            updateStops();
-
-          }, this);
+          var updateStops = this._renderer.flagStops;
+          var bindStops = this._renderer.bindStops;
+          var unbindStops = this._renderer.unbindStops;
 
           // Remove previous listeners
           if (this._stops) {
-            this._stops.unbind();
+            this._stops
+              .unbind(Two.Evnets.insert, bindStops)
+              .unbind(Two.Events.remove, unbindStops);
           }
 
           // Create new Collection with copy of Stops
           this._stops = new Two.Utils.Collection((stops || []).slice(0));
 
           // Listen for Collection changes and bind / unbind
-          this._stops.bind(Two.Events.insert, bindStops);
-          this._stops.bind(Two.Events.remove, unbindStops);
+          this._stops
+            .bind(Two.Events.insert, bindStops)
+            .bind(Two.Events.remove, unbindStops);
 
           // Bind Initial Stops
           bindStops(this._stops);
@@ -7621,11 +7756,40 @@ this.Two = (function(previousTwo) {
 
     FlagStops: function() {
       this._flagStops = true;
+    },
+
+    BindStops: function(items) {
+
+      // This function is called a lot
+      // when importing a large SVG
+      var i = items.length;
+      while(i--) {
+        items[i].bind(Two.Events.change, this._renderer.flagStops);
+        items[i].parent = this;
+      }
+
+      this._renderer.flagStops();
+
+    },
+
+    UnbindStops: function(items) {
+
+      var i = items.length;
+      while(i--) {
+        items[i].unbind(Two.Events.change, this._renderer.flagStops);
+        delete items[i].parent;
+      }
+
+      this._renderer.flagStops();
+
     }
 
   });
 
-  _.extend(Gradient.prototype, Two.Shape.prototype, {
+  _.extend(Gradient.prototype, Two.Utils.Events, Two.Shape.prototype, {
+
+    _flagStops: false,
+    _flagSpread: false,
 
     clone: function(parent) {
 
@@ -7664,6 +7828,18 @@ this.Two = (function(previousTwo) {
       }, this);
 
       return result;
+
+    },
+
+    _update: function() {
+
+      if (this._flagSpread || this._flagStops) {
+        this.trigger(Two.Events.change);
+      }
+
+      Two.Shape.prototype._update.call(this);
+
+      return this;
 
     },
 
@@ -7762,6 +7938,18 @@ this.Two = (function(previousTwo) {
 
     },
 
+    _update: function() {
+
+      if (this._flagEndPoints || this._flagSpread || this._flagStops) {
+        this.trigger(Two.Events.change);
+      }
+
+      Two.Shape.prototype._update.call(this);
+
+      return this;
+
+    },
+
     flagReset: function() {
 
       this._flagEndPoints = false;
@@ -7838,7 +8026,9 @@ this.Two = (function(previousTwo) {
 
   _.extend(RadialGradient.prototype, Two.Gradient.prototype, {
 
-    _flagEndPoints: false,
+    _flagRadius: false,
+    _flagCenter: false,
+    _flagFocal: false,
 
     clone: function(parent) {
 
@@ -7876,6 +8066,19 @@ this.Two = (function(previousTwo) {
 
     },
 
+    _update: function() {
+
+      if (this._flagRadius || this._flatCenter || this._flagFocal
+        || this._flagSpread || this._flagStops) {
+        this.trigger(Two.Events.change);
+      }
+
+      Two.Shape.prototype._update.call(this);
+
+      return this;
+
+    },
+
     flagReset: function() {
 
       this._flagRadius = this._flagCenter = this._flagFocal = false;
@@ -7892,6 +8095,153 @@ this.Two = (function(previousTwo) {
 
 })(this.Two);
 
+(function(Two) {
+
+  var _ = Two.Utils;
+
+  var Texture = Two.Texture = function(src) {
+
+    this._renderer = {};
+    this._renderer.type = 'texture';
+
+    this.id = Two.Identifier + Two.uniqueId();
+    this.classList = [];
+
+    if (_.isString(src)) {
+      this.src = src;
+    } else if (_.isElement(src)) {
+      this.image = src;
+    }
+
+  };
+
+  _.extend(Texture, {
+
+    Properties: [
+      'src',
+      'image',
+      'loaded'
+    ],
+
+    ImageRegistry: new Two.Registry(),
+
+    getImage: function(src) {
+
+      if (Texture.ImageRegistry.contains(src)) {
+        return Texture.ImageRegistry.get(src);
+      }
+
+      var image = document.createElement('img'); // TODO: What's the Node.js way?
+      image.crossOrigin = 'anonymous';
+
+      return image;
+
+    },
+
+    Register: {
+      canvas: function(texture, callback) {
+        texture._src = '#' + texture.id;
+        Texture.ImageRegistry.add(texture.path, texture.image);
+        if (_.isFunction(callback)) {
+          callback();
+        }
+      },
+      image: function(texture, callback) {
+        var loaded = function(e) {
+          Texture.ImageRegistry.add(texture.path, texture.image);
+          texture.image.removeEventListener('load', loaded, false);
+          if (_.isFunction(callback)) {
+            callback();
+          }
+        };
+        var error = function(e) {
+          throw new Two.Utils.Error('unable to load ' + texture.src);
+        };
+        texture.image.addEventListener('load', loaded, false);
+        texture.image.addEventListener('error', error, false);
+        texture.image.src = texture.src;
+      }
+    },
+
+    load: function(texture, callback) {
+
+      var src = texture.src;
+      var image = texture.image;
+
+      if (texture._flagImage) {
+        if (/canvas/i.test(image.nodeName)) {
+          Texture.Register.canvas(texture, callback)
+        } else {
+          texture._src = image.src;
+          Texture.Register.image(texture, callback);
+        }
+      }
+
+      if (texture._flagSrc) {
+        if (!image) {
+          texture.image = Texture.getImage(texture.src);
+        }
+        Texture.Register.image(texture, callback);
+      }
+
+    },
+
+    MakeObservable: function(object) {
+
+      _.each(Texture.Properties, Two.Utils.defineProperty, object);
+
+    }
+
+  });
+
+  _.extend(Texture.prototype, Two.Utils.Events, {
+
+    _flagSrc: false,
+    _flagImage: false,
+    _flagLoaded: false,
+
+    src: '',
+    image: null,
+    loaded: false,
+
+    clone: function() {
+      return new Texture(this.src);
+    },
+
+    toObject: function() {
+      return {
+        src: this.src,
+        image: this.image
+      }
+    },
+
+    _update: function() {
+
+      if (this._flagSrc || this._flagImage) {
+        this.trigger(Two.Events.change);
+        this.loaded = false;
+        Texture.load(this, _.bind(function() {
+          this.loaded = true;
+          this.trigger(Two.Events.change);
+        }, this));
+      }
+
+      return this;
+
+    },
+
+    flagReset: function() {
+
+      this._flagSrc = this._flagImage = this._flagLoaded = false;
+      return this;
+
+    }
+
+  });
+
+  Texture.MakeObservable(Texture.prototype);
+
+})(this.Two);
 (function(Two) {
 
   /**

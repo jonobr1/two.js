@@ -466,7 +466,7 @@ test('Two.Utils.Collection', 14, function() {
 test('Two.Shape', 11, function() {
 
   var shape = new Two.Shape();
-  equal(shape.translation.toString(), '0,0', 'Two.Shape.translation constructed properly.');
+  equal(shape.translation.toString(), '0 0', 'Two.Shape.translation constructed properly.');
   equal(shape.scale, 1, 'Two.Shape.scale constructed properly.');
   equal(shape.rotation, 0, 'Two.Shape.rotation constructed properly.');
 

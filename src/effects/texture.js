@@ -5,6 +5,7 @@
   var Texture = Two.Texture = function(src) {
 
     this._renderer = {};
+    this._renderer.type = 'texture';
 
     this.id = Two.Identifier + Two.uniqueId();
     this.classList = [];
@@ -25,12 +26,12 @@
       'loaded'
     ],
 
-    ImageRegistry: {},
+    ImageRegistry: new Two.Registry(),
 
     getImage: function(src) {
 
-      if (src in Texture.ImageRegistry) {
-        return Texture.ImageRegistry[src];
+      if (Texture.ImageRegistry.contains(src)) {
+        return Texture.ImageRegistry.get(src);
       }
 
       var image = document.createElement('img'); // TODO: What's the Node.js way?
@@ -43,13 +44,14 @@
     Register: {
       canvas: function(texture, callback) {
         texture._src = '#' + texture.id;
-        register(texture);
+        Texture.ImageRegistry.add(texture.path, texture.image);
         if (_.isFunction(callback)) {
           callback();
         }
       },
       image: function(texture, callback) {
         var loaded = function(e) {
+          Texture.ImageRegistry.add(texture.path, texture.image);
           texture.image.removeEventListener('load', loaded, false);
           if (_.isFunction(callback)) {
             callback();
@@ -95,7 +97,7 @@
 
   });
 
-  _.extend(Texture.prototype, {
+  _.extend(Texture.prototype, Two.Utils.Events, {
 
     _flagSrc: false,
     _flagImage: false,
@@ -119,9 +121,11 @@
     _update: function() {
 
       if (this._flagSrc || this._flagImage) {
+        this.trigger(Two.Events.change);
         this.loaded = false;
         Texture.load(this, _.bind(function() {
           this.loaded = true;
+          this.trigger(Two.Events.change);
         }, this));
       }
 
@@ -138,11 +142,6 @@
 
   });
 
-  function register(texture) {
-    Texture.ImageRegistry[texture.path] = texture.image;
-    // TODO: Also add an array version?
-  }
-
   Texture.MakeObservable(Texture.prototype);
 
-})();
+})(this.Two);

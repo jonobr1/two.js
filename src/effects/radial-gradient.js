@@ -58,7 +58,9 @@
 
   _.extend(RadialGradient.prototype, Two.Gradient.prototype, {
 
-    _flagEndPoints: false,
+    _flagRadius: false,
+    _flagCenter: false,
+    _flagFocal: false,
 
     clone: function(parent) {
 
@@ -93,6 +95,19 @@
       result.focal = this.focal.toObject();
 
       return result;
+
+    },
+
+    _update: function() {
+
+      if (this._flagRadius || this._flatCenter || this._flagFocal
+        || this._flagSpread || this._flagStops) {
+        this.trigger(Two.Events.change);
+      }
+
+      Two.Shape.prototype._update.call(this);
+
+      return this;
 
     },
 

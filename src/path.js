@@ -19,6 +19,12 @@
     Two.Shape.call(this);
 
     this._renderer.type = 'path';
+    this._renderer.flagVertices = _.bind(Path.FlagVertices, this);
+    this._renderer.bindVertices = _.bind(Path.BindVertices, this);
+    this._renderer.unbindVertices = _.bind(Path.UnbindVertices, this);
+
+    this._renderer.flagFill = _.bind(Path.FlagFill, this);
+    this._renderer.flagStroke = _.bind(Path.FlagStroke, this);
 
     this._closed = !!closed;
     this._curved = !!curved;
@@ -72,13 +78,99 @@
       this._flagLength = true;
     },
 
+    BindVertices: function(items) {
+
+      // This function is called a lot
+      // when importing a large SVG
+      var i = items.length;
+      while(i--) {
+        items[i].bind(Two.Events.change, this._renderer.flagVertices);
+      }
+
+      this._renderer.flagVertices();
+
+    },
+
+    UnbindVertices: function(items) {
+
+      var i = items.length;
+      while(i--) {
+        items[i].unbind(Two.Events.change, this._renderer.flagVertices);
+      }
+
+      this._renderer.flagVertices();
+
+    },
+
+    FlagFill: function() {
+      this._flagFill = true;
+    },
+
+    FlagStroke: function() {
+      this._flagStroke = true;
+    },
+
     MakeObservable: function(object) {
 
       Two.Shape.MakeObservable(object);
 
-      // Only the first 8 properties are flagged like this. The subsequent
+      // Only the 6 defined properties are flagged like this. The subsequent
       // properties behave differently and need to be hand written.
-      _.each(Path.Properties.slice(0, 8), Two.Utils.defineProperty, object);
+      _.each(Path.Properties.slice(2, 8), Two.Utils.defineProperty, object);
+
+      Object.defineProperty(object, 'fill', {
+        enumerable: true,
+        get: function() {
+          return this._fill;
+        },
+        set: function(f) {
+
+          if (this._fill instanceof Two.Gradient
+            || this._fill instanceof Two.LinearGradient
+            || this._fill instanceof Two.RadialGradient
+            || this._fill instanceof Two.Texture) {
+            this._fill.unbind(Two.Events.change, this._renderer.flagFill);
+          }
+
+          this._fill = f;
+          this._flagFill = true;
+
+          if (this._fill instanceof Two.Gradient
+            || this._fill instanceof Two.LinearGradient
+            || this._fill instanceof Two.RadialGradient
+            || this._fill instanceof Two.Texture) {
+            this._fill.bind(Two.Events.change, this._renderer.flagFill);
+          }
+
+        }
+      });
+
+      Object.defineProperty(object, 'stroke', {
+        enumerable: true,
+        get: function() {
+          return this._stroke;
+        },
+        set: function(f) {
+
+          if (this._stroke instanceof Two.Gradient
+            || this._stroke instanceof Two.LinearGradient
+            || this._stroke instanceof Two.RadialGradient
+            || this._stroke instanceof Two.Texture) {
+            this._stroke.unbind(Two.Events.change, this._renderer.flagStroke);
+          }
+
+          this._stroke = f;
+          this._flagStroke = true;
+
+          if (this._stroke instanceof Two.Gradient
+            || this._stroke instanceof Two.LinearGradient
+            || this._stroke instanceof Two.RadialGradient
+            || this._stroke instanceof Two.Texture) {
+            this._stroke.bind(Two.Events.change, this._renderer.flagStroke);
+          }
+
+        }
+      });
 
       Object.defineProperty(object, 'length', {
         get: function() {
@@ -160,45 +252,27 @@
 
         set: function(vertices) {
 
-          var updateVertices = _.bind(Path.FlagVertices, this);
-
-          var bindVerts = _.bind(function(items) {
-
-            // This function is called a lot
-            // when importing a large SVG
-            var i = items.length;
-            while(i--) {
-              items[i].bind(Two.Events.change, updateVertices);
-            }
-
-            updateVertices();
-
-          }, this);
-
-          var unbindVerts = _.bind(function(items) {
-
-            _.each(items, function(v) {
-              v.unbind(Two.Events.change, updateVertices);
-            }, this);
-
-            updateVertices();
-
-          }, this);
+          var updateVertices = this._renderer.flagVertices;
+          var bindVertices = _.bind(this._renderer.bindVertices, this);
+          var unbindVertices = _.bind(this._renderer.unbindVertices, this);
 
           // Remove previous listeners
           if (this._collection) {
-            this._collection.unbind();
+            this._collection
+              .unbind(Two.Events.insert, bindVertices)
+              .unbind(Two.Events.remove, unbindVertices);
           }
 
           // Create new Collection with copy of vertices
           this._collection = new Two.Utils.Collection((vertices || []).slice(0));
 
           // Listen for Collection changes and bind / unbind
-          this._collection.bind(Two.Events.insert, bindVerts);
-          this._collection.bind(Two.Events.remove, unbindVerts);
+          this._collection
+            .bind(Two.Events.insert, bindVertices)
+            .bind(Two.Events.remove, unbindVertices);
 
           // Bind Initial Vertices
-          bindVerts(this._collection);
+          bindVertices(this._collection);
 
         }
 

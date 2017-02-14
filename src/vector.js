@@ -136,7 +136,7 @@
     },
 
     toString: function() {
-      return this.x + ',' + this.y;
+      return [this.x, this.y].join(' ');
     },
 
     toObject: function() {
@@ -265,7 +265,7 @@
     },
 
     toString: function() {
-      return this._x + ',' + this._y;
+      return [this._x, this._y].join(' ');
     },
 
     toObject: function() {

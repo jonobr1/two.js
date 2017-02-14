@@ -571,6 +571,8 @@
         // create it with all necessary attributes.
         if (!this._renderer.elem) {
 
+          console.log('true');
+
           changed.id = this.id;
           changed.gradientUnits = 'userSpaceOnUse';
           this._renderer.elem = svg.createElement('linearGradient', changed);
@@ -585,7 +587,12 @@
 
         if (this._flagStops) {
 
-          this._renderer.elem.childNodes.length = 0;
+          var lengthChanged = this._renderer.elem.childNodes.length
+            !== this.stops.length;
+
+          if (lengthChanged) {
+            this._renderer.elem.childNodes.length = 0;
+          }
 
           for (var i = 0; i < this.stops.length; i++) {
 
@@ -608,8 +615,9 @@
               svg.setAttributes(stop._renderer.elem, attrs);
             }
 
-            this._renderer.elem.appendChild(stop._renderer.elem);
-
+            if (lengthChanged) {
+              this._renderer.elem.appendChild(stop._renderer.elem);
+            }
             stop.flagReset();
 
           }
@@ -665,7 +673,12 @@
 
         if (this._flagStops) {
 
-          this._renderer.elem.childNodes.length = 0;
+          var lengthChanged = this._renderer.elem.childNodes.length
+            !== this.stops.length;
+
+          if (lengthChanged) {
+            this._renderer.elem.childNodes.length = 0;
+          }
 
           for (var i = 0; i < this.stops.length; i++) {
 
@@ -688,7 +701,9 @@
               svg.setAttributes(stop._renderer.elem, attrs);
             }
 
-            this._renderer.elem.appendChild(stop._renderer.elem);
+            if (lengthChanged) {
+              this._renderer.elem.appendChild(stop._renderer.elem);
+            }
             stop.flagReset();
 
           }

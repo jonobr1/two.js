@@ -114,8 +114,11 @@
     },
 
     toString: function() {
+      if (!this.controls) {
+        return [this._x, this._y].join(' ');
+      }
       return [this._x, this._y, this.controls.left.x, this.controls.left.y,
-        this.controls.right.x, this.controls.right.y].join(', ');
+        this.controls.right.x, this.controls.right.y].join(' ');
     }
 
   };

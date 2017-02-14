@@ -6,6 +6,7 @@ var compressor = require('node-minify');
 var files = [
   path.resolve(__dirname, '../LICENSE'),
   path.resolve(__dirname, '../src/two.js'),
+  path.resolve(__dirname, '../src/registry.js'),
   path.resolve(__dirname, '../src/vector.js'),
   path.resolve(__dirname, '../src/anchor.js'),
   path.resolve(__dirname, '../src/matrix.js'),
@@ -26,6 +27,7 @@ var files = [
   path.resolve(__dirname, '../src/effects/gradient.js'),
   path.resolve(__dirname, '../src/effects/linear-gradient.js'),
   path.resolve(__dirname, '../src/effects/radial-gradient.js'),
+  path.resolve(__dirname, '../src/effects/texture.js'),
   path.resolve(__dirname, '../src/group.js')
 ];
 

@@ -77,6 +77,18 @@
 
     },
 
+    _update: function() {
+
+      if (this._flagEndPoints || this._flagSpread || this._flagStops) {
+        this.trigger(Two.Events.change);
+      }
+
+      Two.Shape.prototype._update.call(this);
+
+      return this;
+
+    },
+
     flagReset: function() {
 
       this._flagEndPoints = false;

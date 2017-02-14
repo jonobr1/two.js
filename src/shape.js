@@ -22,7 +22,7 @@
 
   };
 
-  _.extend(Shape, Two.Utils.Events, {
+  _.extend(Shape, {
 
     FlagMatrix: function() {
       this._flagMatrix = true;
