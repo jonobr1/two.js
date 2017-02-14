@@ -360,12 +360,20 @@
           changed.d = vertices;
         }
 
+        if (this._fill && this._fill._renderer) {
+          this._fill._update();
+        }
+
         if (this._flagFill) {
           if (this._fill && this._fill._renderer) {
             svg[this._fill._renderer.type].render.call(this._fill, domElement);
           }
           changed.fill = this._fill && this._fill.id
             ? 'url(#' + this._fill.id + ')' : this._fill;
+        }
+
+        if (this._stroke && this._stroke._renderer) {
+          this._stroke._update();
         }
 
         if (this._flagStroke) {
@@ -489,10 +497,15 @@
         if (this._flagDecoration) {
           changed['text-decoration'] = this._decoration;
         }
-
+        if (this._fill && this._fill._renderer) {
+          this._fill._update();
+        }
         if (this._flagFill) {
           changed.fill = this._fill && this._fill.id
             ? 'url(#' + this._fill.id + ')' : this._fill;
+        }
+        if (this._stroke && this._stroke._renderer) {
+          this._stroke._update();
         }
         if (this._flagStroke) {
           changed.stroke = this._stroke && this._stroke.id
@@ -552,8 +565,6 @@
 
       render: function(domElement) {
 
-        this._update();
-
         var changed = {};
 
         if (this._flagEndPoints) {
@@ -570,8 +581,6 @@
         // If there is no attached DOM element yet,
         // create it with all necessary attributes.
         if (!this._renderer.elem) {
-
-          console.log('true');
 
           changed.id = this.id;
           changed.gradientUnits = 'userSpaceOnUse';
@@ -633,8 +642,6 @@
     'radial-gradient': {
 
       render: function(domElement) {
-
-        this._update();
 
         var changed = {};
 
@@ -708,6 +715,70 @@
 
           }
 
+        }
+
+        return this.flagReset();
+
+      }
+
+    },
+
+    texture: {
+
+      render: function(domElement) {
+        var changed = {};
+
+        if (this._flagLoaded && this.loaded) {
+
+          var image = this.image;
+          changed.x = - image.width / 2;
+          changed.y = - image.height / 2;
+          changed.width = image.width;
+          changed.height = image.height;
+
+          var styles = {
+            x: 0,
+            y: 0,
+            width: image.width,
+            height: image.height
+          };
+
+          switch (image.nodeName.toLowerCase()) {
+
+            case 'canvas':
+              styles.href = image.toDataURL('image/png');
+              break;
+            case 'img':
+            case 'image':
+              styles.href = this.src;
+              break;
+
+          }
+
+          if (!this._renderer.image) {
+            this._renderer.image = svg.createElement('image', styles);
+          } else {
+            svg.setAttributes(this._renderer.image, styles);
+          }
+
+        }
+
+        if (!this._renderer.elem) {
+
+          changed.id = this.id;
+          changed.patternUnits = 'userSpaceOnUse';
+          this._renderer.elem = svg.createElement('pattern', changed);
+          domElement.defs.appendChild(this._renderer.elem);
+
+        } else {
+
+          svg.setAttributes(this._renderer.elem, changed);
+
+        }
+
+        if (this._renderer.elem && this._renderer.image && !this._renderer.appended) {
+          this._renderer.elem.appendChild(this._renderer.image);
+          this._renderer.appended = true;
         }
 
         return this.flagReset();

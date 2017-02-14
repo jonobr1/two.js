@@ -4,11 +4,8 @@
 
   var Texture = Two.Texture = function(src) {
 
-    this._renderer = {};
+    Two.Shape.call(this);
     this._renderer.type = 'texture';
-
-    this.id = Two.Identifier + Two.uniqueId();
-    this.classList = [];
 
     if (_.isString(src)) {
       this.src = src;
@@ -91,21 +88,23 @@
 
     MakeObservable: function(object) {
 
+      Two.Shape.MakeObservable(object);
+
       _.each(Texture.Properties, Two.Utils.defineProperty, object);
 
     }
 
   });
 
-  _.extend(Texture.prototype, Two.Utils.Events, {
+  _.extend(Texture.prototype, Two.Utils.Events, Two.Shape.prototype, {
 
     _flagSrc: false,
     _flagImage: false,
     _flagLoaded: false,
 
-    src: '',
-    image: null,
-    loaded: false,
+    _src: '',
+    _image: null,
+    _loaded: false,
 
     clone: function() {
       return new Texture(this.src);

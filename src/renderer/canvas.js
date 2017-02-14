@@ -95,7 +95,7 @@
 
         var matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter,
             closed, commands, length, last, next, prev, a, b, c, d, ux, uy, vx, vy,
-            ar, bl, br, cl, x, y, mask, clip, defaultMatrix;
+            ar, bl, br, cl, x, y, mask, clip, defaultMatrix, isOffset;
 
         // TODO: Add a check here to only invoke _update if need be.
         this._update();
@@ -144,7 +144,7 @@
             ctx.fillStyle = fill;
           } else {
             canvas[fill._renderer.type].render.call(fill, ctx);
-            ctx.fillStyle = fill._renderer.gradient;
+            ctx.fillStyle = fill._renderer.effect;
           }
         }
         if (stroke) {
@@ -152,7 +152,7 @@
             ctx.strokeStyle = stroke;
           } else {
             canvas[stroke._renderer.type].render.call(stroke, ctx);
-            ctx.strokeStyle = stroke._renderer.gradient;
+            ctx.strokeStyle = stroke._renderer.effect;
           }
         }
         if (linewidth) {
@@ -265,9 +265,33 @@
         }
 
         if (!clip && !parentClipped) {
-          if (!canvas.isHidden.test(fill)) ctx.fill();
-          if (!canvas.isHidden.test(stroke)) ctx.stroke();
+          if (!canvas.isHidden.test(fill)) {
+            isOffset = fill._renderer && fill._renderer.offset
+            if (isOffset) {
+              ctx.save();
+              ctx.translate(
+                - fill._renderer.offset.x, - fill._renderer.offset.y);
+            }
+            ctx.fill();
+            if (isOffset) {
+              ctx.restore();
+            }
+          }
+          if (!canvas.isHidden.test(stroke)) {
+            isOffset = stroke._renderer && stroke._renderer.offset;
+            if (isOffset) {
+              ctx.save();
+              ctx.translate(
+                - stroke._renderer.offset.x, - stroke._renderer.offset.y);
+            }
+            ctx.stroke();
+            if (isOffset) {
+              ctx.restore();
+            }
+          }
         }
+
+        ctx.restore();
 
         if (!defaultMatrix) {
           ctx.restore();
@@ -275,32 +299,6 @@
 
         if (clip && !parentClipped) {
           ctx.clip();
-        }
-
-        return this.flagReset();
-
-      }
-
-    },
-
-    'linear-gradient': {
-
-      render: function(ctx) {
-
-        this._update();
-
-        if (!this._renderer.gradient || this._flagEndPoints || this._flagStops) {
-
-          this._renderer.gradient = ctx.createLinearGradient(
-            this.left._x, this.left._y,
-            this.right._x, this.right._y
-          );
-
-          for (var i = 0; i < this.stops.length; i++) {
-            var stop = this.stops[i];
-            this._renderer.gradient.addColorStop(stop._offset, stop._color);
-          }
-
         }
 
         return this.flagReset();
@@ -323,6 +321,7 @@
         var opacity = this._opacity * this.parent._renderer.opacity;
         var visible = this._visible;
         var defaultMatrix = isDefaultMatrix(matrix);
+        var isOffset;
 
         // mask = this._mask;
         var clip = this._clip;
@@ -359,7 +358,7 @@
             ctx.fillStyle = fill;
           } else {
             canvas[fill._renderer.type].render.call(fill, ctx);
-            ctx.fillStyle = fill._renderer.gradient;
+            ctx.fillStyle = fill._renderer.effect;
           }
         }
         if (stroke) {
@@ -367,7 +366,7 @@
             ctx.strokeStyle = stroke;
           } else {
             canvas[stroke._renderer.type].render.call(stroke, ctx);
-            ctx.strokeStyle = stroke._renderer.gradient;
+            ctx.strokeStyle = stroke._renderer.effect;
           }
         }
         if (linewidth) {
@@ -378,8 +377,30 @@
         }
 
         if (!clip && !parentClipped) {
-          if (!canvas.isHidden.test(fill)) ctx.fillText(this.value, 0, 0);
-          if (!canvas.isHidden.test(stroke)) ctx.strokeText(this.value, 0, 0);
+          if (!canvas.isHidden.test(fill)) {
+            isOffset = fill._renderer && fill._renderer.offset;
+            if (isOffset) {
+              ctx.save();
+              ctx.translate(
+                - fill._renderer.offset.x, - fill._renderer.offset.y);
+            }
+            ctx.fillText(this.value, 0, 0);
+            if (isOffset) {
+              ctx.restore();
+            }
+          }
+          if (!canvas.isHidden.test(stroke)) {
+            isOffset = stroke._renderer && stroke._renderer.offset;
+            if (isOffset) {
+              ctx.save();
+              ctx.translate(
+                - stroke._renderer.offset.x, - stroke._renderer.offset.y);
+            }
+            ctx.strokeText(this.value, 0, 0);
+            if (isOffset) {
+              ctx.restore();
+            }
+          }
         }
 
         if (!defaultMatrix) {
@@ -397,23 +418,22 @@
 
     },
 
-    'radial-gradient': {
+    'linear-gradient': {
 
       render: function(ctx) {
 
         this._update();
 
-        if (!this._renderer.gradient || this._flagCenter || this._flagFocal
-            || this._flagRadius || this._flagStops) {
+        if (!this._renderer.effect || this._flagEndPoints || this._flagStops) {
 
-          this._renderer.gradient = ctx.createRadialGradient(
-            this.center._x, this.center._y, 0,
-            this.focal._x, this.focal._y, this._radius
+          this._renderer.effect = ctx.createLinearGradient(
+            this.left._x, this.left._y,
+            this.right._x, this.right._y
           );
 
           for (var i = 0; i < this.stops.length; i++) {
             var stop = this.stops[i];
-            this._renderer.gradient.addColorStop(stop._offset, stop._color);
+            this._renderer.effect.addColorStop(stop._offset, stop._color);
           }
 
         }
@@ -421,6 +441,54 @@
         return this.flagReset();
 
       }
+
+    },
+
+    'radial-gradient': {
+
+      render: function(ctx) {
+
+        this._update();
+
+        if (!this._renderer.effect || this._flagCenter || this._flagFocal
+            || this._flagRadius || this._flagStops) {
+
+          this._renderer.effect = ctx.createRadialGradient(
+            this.center._x, this.center._y, 0,
+            this.focal._x, this.focal._y, this._radius
+          );
+
+          for (var i = 0; i < this.stops.length; i++) {
+            var stop = this.stops[i];
+            this._renderer.effect.addColorStop(stop._offset, stop._color);
+          }
+
+        }
+
+        return this.flagReset();
+
+      }
+
+    },
+
+    texture: {
+
+      render: function(ctx) {
+
+        this._update();
+
+        if (!this._renderer.effect || (this._flagLoaded && this.loaded)) {
+          this._renderer.effect = ctx.createPattern(this.image, 'repeat');
+          this._renderer.offset = new Two.Vector(
+            this.image.width / 2,
+            this.image.height / 2
+          );
+        }
+
+        return this.flagReset();
+
+      }
+
     }
 
   };
