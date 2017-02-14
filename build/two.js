@@ -6114,7 +6114,7 @@ this.Two = (function(previousTwo) {
           return this._beginning;
         },
         set: function(v) {
-          this._beginning = min(max(v, 0.0), this._ending);
+          this._beginning = v;
           this._flagVertices = true;
         }
       });
@@ -6125,7 +6125,7 @@ this.Two = (function(previousTwo) {
           return this._ending;
         },
         set: function(v) {
-          this._ending = min(max(v, this._beginning), 1.0);
+          this._ending = v;
           this._flagVertices = true;
         }
       });
@@ -6600,6 +6600,8 @@ this.Two = (function(previousTwo) {
         var l = this.vertices.length;
         var last = l - 1, v;
 
+        // TODO: Should clamp this so that `ia` and `ib`
+        // cannot select non-verts.
         var ia = round((this._beginning) * last);
         var ib = round((this._ending) * last);
 
