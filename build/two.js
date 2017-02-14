@@ -8328,7 +8328,7 @@ this.Two = (function(previousTwo) {
 
     if (_.isFunction(callback)) {
       var loaded = _.bind(function() {
-        this.unbin(Two.Events.load, loaded);
+        this.unbind(Two.Events.load, loaded);
         if (_.isFunction(callback)) {
           callback();
         }
@@ -8379,11 +8379,14 @@ this.Two = (function(previousTwo) {
         var loaded = function(e) {
           Texture.ImageRegistry.add(texture.path, texture.image);
           texture.image.removeEventListener('load', loaded, false);
+          texture.image.removeEventListener('error', error, false);
           if (_.isFunction(callback)) {
             callback();
           }
         };
         var error = function(e) {
+          texture.image.removeEventListener('load', loaded, false);
+          texture.image.removeEventListener('error', error, false);
           throw new Two.Utils.Error('unable to load ' + texture.src);
         };
         texture.image.addEventListener('load', loaded, false);
