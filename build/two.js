@@ -6751,7 +6751,7 @@ this.Two = (function(previousTwo) {
 
     this.width = width;
     this.height = height;
-    this._update();
+    this._update().flagReset();
 
     this.translation.set(x, y);
 
@@ -6833,7 +6833,7 @@ this.Two = (function(previousTwo) {
     this.width = rx * 2;
     this.height = ry * 2;
 
-    this._update();
+    this._update().flagReset();
     this.translation.set(ox, oy);
 
   };
@@ -6908,7 +6908,7 @@ this.Two = (function(previousTwo) {
 
     this.radius = r;
 
-    this._update();
+    this._update().flagReset();
     this.translation.set(ox, oy);
 
   };
@@ -6982,7 +6982,7 @@ this.Two = (function(previousTwo) {
     this.height = r * 2;
     this.sides = sides;
 
-    this._update();
+    this._update().flagReset();
     this.translation.set(ox, oy);
 
   };
@@ -7077,7 +7077,7 @@ this.Two = (function(previousTwo) {
     this.startAngle = sa;
     this.endAngle = ea;
 
-    this._update();
+    this._update().flagReset();
     this.translation.set(ox, oy);
 
   }
@@ -7300,7 +7300,7 @@ this.Two = (function(previousTwo) {
     this.outerRadius = or;
     this.sides = sides;
 
-    this._update();
+    this._update().flagReset();
     this.translation.set(ox, oy);
 
   };
@@ -7404,7 +7404,7 @@ this.Two = (function(previousTwo) {
     this.height = height;
     this.radius = radius;
 
-    this._update();
+    this._update().flagReset();
     this.translation.set(ox, oy);
 
   };

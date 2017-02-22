@@ -15,7 +15,7 @@
 
     this.radius = r;
 
-    this._update();
+    this._update().flagReset();
     this.translation.set(ox, oy);
 
   };

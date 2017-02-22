@@ -25,7 +25,7 @@
     this.outerRadius = or;
     this.sides = sides;
 
-    this._update();
+    this._update().flagReset();
     this.translation.set(ox, oy);
 
   };

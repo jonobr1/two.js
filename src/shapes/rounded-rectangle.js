@@ -24,7 +24,7 @@
     this.height = height;
     this.radius = radius;
 
-    this._update();
+    this._update().flagReset();
     this.translation.set(ox, oy);
 
   };
