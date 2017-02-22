@@ -20,7 +20,7 @@
     this.width = rx * 2;
     this.height = ry * 2;
 
-    this._update().flagReset();
+    this._update();
     this.translation.set(ox, oy);
 
   };

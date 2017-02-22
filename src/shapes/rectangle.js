@@ -14,7 +14,7 @@
 
     this.width = width;
     this.height = height;
-    this._update().flagReset();
+    this._update();
 
     this.translation.set(x, y);
 

@@ -17,7 +17,7 @@
     this.height = r * 2;
     this.sides = sides;
 
-    this._update().flagReset();
+    this._update();
     this.translation.set(ox, oy);
 
   };

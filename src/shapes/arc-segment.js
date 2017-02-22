@@ -17,7 +17,7 @@
     this.startAngle = sa;
     this.endAngle = ea;
 
-    this._update().flagReset();
+    this._update();
     this.translation.set(ox, oy);
 
   }
