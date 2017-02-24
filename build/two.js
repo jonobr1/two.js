@@ -8131,15 +8131,23 @@ this.Two = (function(previousTwo) {
       parent = parent || this.parent;
 
       var group = new Group();
-      parent.add(group);
-
       var children = _.map(this.children, function(child) {
         return child.clone(group);
       });
 
+      group.add(children);
+
+      group.opacity = this.opacity;
+
+      if (this.mask) {
+        group.mask = this.mask;
+      }
+
       group.translation.copy(this.translation);
       group.rotation = this.rotation;
       group.scale = this.scale;
+
+      parent.add(group);
 
       return group;
 
@@ -8156,7 +8164,9 @@ this.Two = (function(previousTwo) {
         children: [],
         translation: this.translation.toObject(),
         rotation: this.rotation,
-        scale: this.scale
+        scale: this.scale,
+        opacity: this.opacity,
+        mask: (this.mask ? this.mask.toObject() : null)
       };
 
       _.each(this.children, function(child, i) {
