@@ -271,24 +271,26 @@ this.Two = (function(previousTwo) {
 
       var lastTime = 0;
       var vendors = ['ms', 'moz', 'webkit', 'o'];
-      var request, cancel;
+      var request = root.requestAnimationFrame, cancel;
 
-      for (var i = 0; i < vendors.length; i++) {
-        request = root[vendors[i] + 'RequestAnimationFrame'] || request;
-        cancel = root[vendors[i] + 'CancelAnimationFrame']
-          || root[vendors[i] + 'CancelRequestAnimationFrame'] || cancel;
+      if(!request) {
+        for (var i = 0; i < vendors.length; i++) {
+          request = root[vendors[i] + 'RequestAnimationFrame'] || request;
+          cancel = root[vendors[i] + 'CancelAnimationFrame']
+            || root[vendors[i] + 'CancelRequestAnimationFrame'] || cancel;
+        }
+
+        request = request || function(callback, element) {
+          var currTime = new Date().getTime();
+          var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+          var id = root.setTimeout(function() { callback(currTime + timeToCall); }, timeToCall);
+          lastTime = currTime + timeToCall;
+          return id;
+        };
+        // cancel = cancel || function(id) {
+        //   clearTimeout(id);
+        // };
       }
-
-      request = request || function(callback, element) {
-        var currTime = new Date().getTime();
-        var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-        var id = root.setTimeout(function() { callback(currTime + timeToCall); }, timeToCall);
-        lastTime = currTime + timeToCall;
-        return id;
-      };
-      // cancel = cancel || function(id) {
-      //   clearTimeout(id);
-      // };
 
       request.init = _.once(loop);
 
