@@ -1773,6 +1773,28 @@ this.Two = (function(previousTwo) {
           var events = this._events[name];
           if (events) trigger(this, events, args);
           return this;
+        },
+
+        listenTo: function (obj, name, callback) {
+
+          var bound = this;
+
+          if (obj) {
+            obj.on(name, function () {
+              callback.apply(bound, arguments);
+            });
+          }
+
+          return this;
+
+        },
+        
+        stopListening: function (obj, name, callback) {
+
+          obj.off(name, callback);
+
+          return this;
+
         }
 
       }

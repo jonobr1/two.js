@@ -1,31 +1,3 @@
-/**
- * two.js
- * a two-dimensional drawing api meant for modern browsers. It is renderer
- * agnostic enabling the same api for rendering in multiple contexts: webgl,
- * canvas2d, and svg.
- *
- * Copyright (c) 2012 - 2016 jonobr1 / http://jonobr1.com
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- */
-
 this.Two = (function(previousTwo) {
 
   var root = this;
@@ -1801,6 +1773,28 @@ this.Two = (function(previousTwo) {
           var events = this._events[name];
           if (events) trigger(this, events, args);
           return this;
+        },
+
+        listenTo: function (obj, name, callback) {
+
+          var bound = this;
+
+          if (obj) {
+            obj.on(name, function () {
+              callback.apply(bound, arguments);
+            });
+          }
+
+          return this;
+
+        },
+        
+        stopListening: function (obj, name, callback) {
+
+          obj.off(name, callback);
+
+          return this;
+
         }
 
       }
@@ -3192,6 +3186,513 @@ this.Two = (function(previousTwo) {
 
 (function(Two) {
 
+  /**
+   * Constants
+   */
+  var mod = Two.Utils.mod, toFixed = Two.Utils.toFixed;
+  var getRatio = Two.Utils.getRatio;
+  var _ = Two.Utils;
+
+  // Returns true if this is a non-transforming matrix
+  var isDefaultMatrix = function (m) {
+    return (m[0] == 1 && m[3] == 0 && m[1] == 0 && m[4] == 1 && m[2] == 0 && m[5] == 0);
+  };
+
+  var canvas = {
+
+    isHidden: /(none|transparent)/i,
+
+    alignments: {
+      left: 'start',
+      middle: 'center',
+      right: 'end'
+    },
+
+    shim: function(elem) {
+      elem.tagName = 'canvas';
+      elem.nodeType = 1;
+      return elem;
+    },
+
+    group: {
+
+      renderChild: function(child) {
+        canvas[child._renderer.type].render.call(child, this.ctx, true, this.clip);
+      },
+
+      render: function(ctx) {
+
+        // TODO: Add a check here to only invoke _update if need be.
+        this._update();
+
+        var matrix = this._matrix.elements;
+        var parent = this.parent;
+        this._renderer.opacity = this._opacity * (parent && parent._renderer ? parent._renderer.opacity : 1);
+
+        var defaultMatrix = isDefaultMatrix(matrix);
+
+        var mask = this._mask;
+        // var clip = this._clip;
+
+        if (!this._renderer.context) {
+          this._renderer.context = {};
+        }
+
+        this._renderer.context.ctx = ctx;
+        // this._renderer.context.clip = clip;
+
+        if (!defaultMatrix) {
+          ctx.save();
+          ctx.transform(matrix[0], matrix[3], matrix[1], matrix[4], matrix[2], matrix[5]);
+        }
+
+        if (mask) {
+          canvas[mask._renderer.type].render.call(mask, ctx, true);
+        }
+
+        for (var i = 0; i < this.children.length; i++) {
+          var child = this.children[i];
+          canvas[child._renderer.type].render.call(child, ctx);
+        }
+
+        if (!defaultMatrix) {
+          ctx.restore();
+        }
+
+       /**
+         * Commented two-way functionality of clips / masks with groups and
+         * polygons. Uncomment when this bug is fixed:
+         * https://code.google.com/p/chromium/issues/detail?id=370951
+         */
+
+        // if (clip) {
+        //   ctx.clip();
+        // }
+
+        return this.flagReset();
+
+      }
+
+    },
+
+    path: {
+
+      render: function(ctx, forced, parentClipped) {
+
+        var matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter,
+            closed, commands, length, last, next, prev, a, b, c, d, ux, uy, vx, vy,
+            ar, bl, br, cl, x, y, mask, clip, defaultMatrix;
+
+        // TODO: Add a check here to only invoke _update if need be.
+        this._update();
+
+        matrix = this._matrix.elements;
+        stroke = this._stroke;
+        linewidth = this._linewidth;
+        fill = this._fill;
+        opacity = this._opacity * this.parent._renderer.opacity;
+        visible = this._visible;
+        cap = this._cap;
+        join = this._join;
+        miter = this._miter;
+        closed = this._closed;
+        commands = this._vertices; // Commands
+        length = commands.length;
+        last = length - 1;
+        defaultMatrix = isDefaultMatrix(matrix);
+
+        // mask = this._mask;
+        clip = this._clip;
+
+        if (!forced && (!visible || clip)) {
+          return this;
+        }
+
+        // Transform
+        if (!defaultMatrix) {
+          ctx.save();
+          ctx.transform(matrix[0], matrix[3], matrix[1], matrix[4], matrix[2], matrix[5]);
+        }
+
+       /**
+         * Commented two-way functionality of clips / masks with groups and
+         * polygons. Uncomment when this bug is fixed:
+         * https://code.google.com/p/chromium/issues/detail?id=370951
+         */
+
+        // if (mask) {
+        //   canvas[mask._renderer.type].render.call(mask, ctx, true);
+        // }
+
+        // Styles
+        if (fill) {
+          if (_.isString(fill)) {
+            ctx.fillStyle = fill;
+          } else {
+            canvas[fill._renderer.type].render.call(fill, ctx);
+            ctx.fillStyle = fill._renderer.gradient;
+          }
+        }
+        if (stroke) {
+          if (_.isString(stroke)) {
+            ctx.strokeStyle = stroke;
+          } else {
+            canvas[stroke._renderer.type].render.call(stroke, ctx);
+            ctx.strokeStyle = stroke._renderer.gradient;
+          }
+        }
+        if (linewidth) {
+          ctx.lineWidth = linewidth;
+        }
+        if (miter) {
+          ctx.miterLimit = miter;
+        }
+        if (join) {
+          ctx.lineJoin = join;
+        }
+        if (cap) {
+          ctx.lineCap = cap;
+        }
+        if (_.isNumber(opacity)) {
+          ctx.globalAlpha = opacity;
+        }
+
+        ctx.beginPath();
+
+        for (var i = 0; i < commands.length; i++) {
+
+          b = commands[i];
+
+          x = toFixed(b._x);
+          y = toFixed(b._y);
+
+          switch (b._command) {
+
+            case Two.Commands.close:
+              ctx.closePath();
+              break;
+
+            case Two.Commands.curve:
+
+              prev = closed ? mod(i - 1, length) : Math.max(i - 1, 0);
+              next = closed ? mod(i + 1, length) : Math.min(i + 1, last);
+
+              a = commands[prev];
+              c = commands[next];
+              ar = (a.controls && a.controls.right) || Two.Vector.zero;
+              bl = (b.controls && b.controls.left) || Two.Vector.zero;
+
+              if (a._relative) {
+                vx = (ar.x + toFixed(a._x));
+                vy = (ar.y + toFixed(a._y));
+              } else {
+                vx = toFixed(ar.x);
+                vy = toFixed(ar.y);
+              }
+
+              if (b._relative) {
+                ux = (bl.x + toFixed(b._x));
+                uy = (bl.y + toFixed(b._y));
+              } else {
+                ux = toFixed(bl.x);
+                uy = toFixed(bl.y);
+              }
+
+              ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
+
+              if (i >= last && closed) {
+
+                c = d;
+
+                br = (b.controls && b.controls.right) || Two.Vector.zero;
+                cl = (c.controls && c.controls.left) || Two.Vector.zero;
+
+                if (b._relative) {
+                  vx = (br.x + toFixed(b._x));
+                  vy = (br.y + toFixed(b._y));
+                } else {
+                  vx = toFixed(br.x);
+                  vy = toFixed(br.y);
+                }
+
+                if (c._relative) {
+                  ux = (cl.x + toFixed(c._x));
+                  uy = (cl.y + toFixed(c._y));
+                } else {
+                  ux = toFixed(cl.x);
+                  uy = toFixed(cl.y);
+                }
+
+                x = toFixed(c._x);
+                y = toFixed(c._y);
+
+                ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
+
+              }
+
+              break;
+
+            case Two.Commands.line:
+              ctx.lineTo(x, y);
+              break;
+
+            case Two.Commands.move:
+              d = b;
+              ctx.moveTo(x, y);
+              break;
+
+          }
+        }
+
+        // Loose ends
+
+        if (closed) {
+          ctx.closePath();
+        }
+
+        if (!clip && !parentClipped) {
+          if (!canvas.isHidden.test(fill)) ctx.fill();
+          if (!canvas.isHidden.test(stroke)) ctx.stroke();
+        }
+
+        if (!defaultMatrix) {
+          ctx.restore();
+        }
+
+        if (clip && !parentClipped) {
+          ctx.clip();
+        }
+
+        return this.flagReset();
+
+      }
+
+    },
+
+    'linear-gradient': {
+
+      render: function(ctx) {
+
+        this._update();
+
+        if (!this._renderer.gradient || this._flagEndPoints || this._flagStops) {
+
+          this._renderer.gradient = ctx.createLinearGradient(
+            this.left._x, this.left._y,
+            this.right._x, this.right._y
+          );
+
+          for (var i = 0; i < this.stops.length; i++) {
+            var stop = this.stops[i];
+            this._renderer.gradient.addColorStop(stop._offset, stop._color);
+          }
+
+        }
+
+        return this.flagReset();
+
+      }
+
+    },
+
+    text: {
+
+      render: function(ctx, forced, parentClipped) {
+
+        // TODO: Add a check here to only invoke _update if need be.
+        this._update();
+
+        var matrix = this._matrix.elements;
+        var stroke = this._stroke;
+        var linewidth = this._linewidth;
+        var fill = this._fill;
+        var opacity = this._opacity * this.parent._renderer.opacity;
+        var visible = this._visible;
+        var defaultMatrix = isDefaultMatrix(matrix);
+
+        // mask = this._mask;
+        var clip = this._clip;
+
+        if (!forced && (!visible || clip)) {
+          return this;
+        }
+
+        // Transform
+        if (!defaultMatrix) {
+          ctx.save();
+          ctx.transform(matrix[0], matrix[3], matrix[1], matrix[4], matrix[2], matrix[5]);
+        }
+
+       /**
+         * Commented two-way functionality of clips / masks with groups and
+         * polygons. Uncomment when this bug is fixed:
+         * https://code.google.com/p/chromium/issues/detail?id=370951
+         */
+
+        // if (mask) {
+        //   canvas[mask._renderer.type].render.call(mask, ctx, true);
+        // }
+
+        ctx.font = [this._style, this._weight, this._size + 'px/' +
+          this._leading + 'px', this._family].join(' ');
+
+        ctx.textAlign = canvas.alignments[this._alignment] || this._alignment;
+        ctx.textBaseline = this._baseline;
+
+        // Styles
+        if (fill) {
+          if (_.isString(fill)) {
+            ctx.fillStyle = fill;
+          } else {
+            canvas[fill._renderer.type].render.call(fill, ctx);
+            ctx.fillStyle = fill._renderer.gradient;
+          }
+        }
+        if (stroke) {
+          if (_.isString(stroke)) {
+            ctx.strokeStyle = stroke;
+          } else {
+            canvas[stroke._renderer.type].render.call(stroke, ctx);
+            ctx.strokeStyle = stroke._renderer.gradient;
+          }
+        }
+        if (linewidth) {
+          ctx.lineWidth = linewidth;
+        }
+        if (_.isNumber(opacity)) {
+          ctx.globalAlpha = opacity;
+        }
+
+        if (!clip && !parentClipped) {
+          if (!canvas.isHidden.test(fill)) ctx.fillText(this.value, 0, 0);
+          if (!canvas.isHidden.test(stroke)) ctx.strokeText(this.value, 0, 0);
+        }
+
+        if (!defaultMatrix) {
+          ctx.restore();
+        }
+
+        // TODO: Test for text
+        if (clip && !parentClipped) {
+          ctx.clip();
+        }
+
+        return this.flagReset();
+
+      }
+
+    },
+
+    'radial-gradient': {
+
+      render: function(ctx) {
+
+        this._update();
+
+        if (!this._renderer.gradient || this._flagCenter || this._flagFocal
+            || this._flagRadius || this._flagStops) {
+
+          this._renderer.gradient = ctx.createRadialGradient(
+            this.center._x, this.center._y, 0,
+            this.focal._x, this.focal._y, this._radius
+          );
+
+          for (var i = 0; i < this.stops.length; i++) {
+            var stop = this.stops[i];
+            this._renderer.gradient.addColorStop(stop._offset, stop._color);
+          }
+
+        }
+
+        return this.flagReset();
+
+      }
+    }
+
+  };
+
+  var Renderer = Two[Two.Types.canvas] = function(params) {
+    // Smoothing property. Defaults to true
+    // Set it to false when working with pixel art.
+    // false can lead to better performance, since it would use a cheaper interpolation algorithm.
+    // It might not make a big difference on GPU backed canvases.
+    var smoothing = (params.smoothing !== false);
+    this.domElement = params.domElement || document.createElement('canvas');
+    this.ctx = this.domElement.getContext('2d');
+    this.overdraw = params.overdraw || false;
+
+    if (!_.isUndefined(this.ctx.imageSmoothingEnabled)) {
+      this.ctx.imageSmoothingEnabled = smoothing;
+    }
+
+    // Everything drawn on the canvas needs to be added to the scene.
+    this.scene = new Two.Group();
+    this.scene.parent = this;
+  };
+
+
+  _.extend(Renderer, {
+
+    Utils: canvas
+
+  });
+
+  _.extend(Renderer.prototype, Two.Utils.Events, {
+
+    setSize: function(width, height, ratio) {
+
+      this.width = width;
+      this.height = height;
+
+      this.ratio = _.isUndefined(ratio) ? getRatio(this.ctx) : ratio;
+
+      this.domElement.width = width * this.ratio;
+      this.domElement.height = height * this.ratio;
+
+      if (this.domElement.style) {
+        _.extend(this.domElement.style, {
+          width: width + 'px',
+          height: height + 'px'
+        });
+      }
+
+      return this;
+
+    },
+
+    render: function() {
+
+      var isOne = this.ratio === 1;
+
+      if (!isOne) {
+        this.ctx.save();
+        this.ctx.scale(this.ratio, this.ratio);
+      }
+
+      if (!this.overdraw) {
+        this.ctx.clearRect(0, 0, this.width, this.height);
+      }
+
+      canvas.group.render.call(this.scene, this.ctx);
+
+      if (!isOne) {
+        this.ctx.restore();
+      }
+
+      return this;
+
+    }
+
+  });
+
+  function resetTransform(ctx) {
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+  }
+
+})(this.Two);
+
+(function(Two) {
+
   // Localize variables
   var mod = Two.Utils.mod, toFixed = Two.Utils.toFixed;
   var _ = Two.Utils;
@@ -3943,513 +4444,6 @@ this.Two = (function(previousTwo) {
     }
 
   });
-
-})(this.Two);
-
-(function(Two) {
-
-  /**
-   * Constants
-   */
-  var mod = Two.Utils.mod, toFixed = Two.Utils.toFixed;
-  var getRatio = Two.Utils.getRatio;
-  var _ = Two.Utils;
-
-  // Returns true if this is a non-transforming matrix
-  var isDefaultMatrix = function (m) {
-    return (m[0] == 1 && m[3] == 0 && m[1] == 0 && m[4] == 1 && m[2] == 0 && m[5] == 0);
-  };
-
-  var canvas = {
-
-    isHidden: /(none|transparent)/i,
-
-    alignments: {
-      left: 'start',
-      middle: 'center',
-      right: 'end'
-    },
-
-    shim: function(elem) {
-      elem.tagName = 'canvas';
-      elem.nodeType = 1;
-      return elem;
-    },
-
-    group: {
-
-      renderChild: function(child) {
-        canvas[child._renderer.type].render.call(child, this.ctx, true, this.clip);
-      },
-
-      render: function(ctx) {
-
-        // TODO: Add a check here to only invoke _update if need be.
-        this._update();
-
-        var matrix = this._matrix.elements;
-        var parent = this.parent;
-        this._renderer.opacity = this._opacity * (parent && parent._renderer ? parent._renderer.opacity : 1);
-
-        var defaultMatrix = isDefaultMatrix(matrix);
-
-        var mask = this._mask;
-        // var clip = this._clip;
-
-        if (!this._renderer.context) {
-          this._renderer.context = {};
-        }
-
-        this._renderer.context.ctx = ctx;
-        // this._renderer.context.clip = clip;
-
-        if (!defaultMatrix) {
-          ctx.save();
-          ctx.transform(matrix[0], matrix[3], matrix[1], matrix[4], matrix[2], matrix[5]);
-        }
-
-        if (mask) {
-          canvas[mask._renderer.type].render.call(mask, ctx, true);
-        }
-
-        for (var i = 0; i < this.children.length; i++) {
-          var child = this.children[i];
-          canvas[child._renderer.type].render.call(child, ctx);
-        }
-
-        if (!defaultMatrix) {
-          ctx.restore();
-        }
-
-       /**
-         * Commented two-way functionality of clips / masks with groups and
-         * polygons. Uncomment when this bug is fixed:
-         * https://code.google.com/p/chromium/issues/detail?id=370951
-         */
-
-        // if (clip) {
-        //   ctx.clip();
-        // }
-
-        return this.flagReset();
-
-      }
-
-    },
-
-    path: {
-
-      render: function(ctx, forced, parentClipped) {
-
-        var matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter,
-            closed, commands, length, last, next, prev, a, b, c, d, ux, uy, vx, vy,
-            ar, bl, br, cl, x, y, mask, clip, defaultMatrix;
-
-        // TODO: Add a check here to only invoke _update if need be.
-        this._update();
-
-        matrix = this._matrix.elements;
-        stroke = this._stroke;
-        linewidth = this._linewidth;
-        fill = this._fill;
-        opacity = this._opacity * this.parent._renderer.opacity;
-        visible = this._visible;
-        cap = this._cap;
-        join = this._join;
-        miter = this._miter;
-        closed = this._closed;
-        commands = this._vertices; // Commands
-        length = commands.length;
-        last = length - 1;
-        defaultMatrix = isDefaultMatrix(matrix);
-
-        // mask = this._mask;
-        clip = this._clip;
-
-        if (!forced && (!visible || clip)) {
-          return this;
-        }
-
-        // Transform
-        if (!defaultMatrix) {
-          ctx.save();
-          ctx.transform(matrix[0], matrix[3], matrix[1], matrix[4], matrix[2], matrix[5]);
-        }
-
-       /**
-         * Commented two-way functionality of clips / masks with groups and
-         * polygons. Uncomment when this bug is fixed:
-         * https://code.google.com/p/chromium/issues/detail?id=370951
-         */
-
-        // if (mask) {
-        //   canvas[mask._renderer.type].render.call(mask, ctx, true);
-        // }
-
-        // Styles
-        if (fill) {
-          if (_.isString(fill)) {
-            ctx.fillStyle = fill;
-          } else {
-            canvas[fill._renderer.type].render.call(fill, ctx);
-            ctx.fillStyle = fill._renderer.gradient;
-          }
-        }
-        if (stroke) {
-          if (_.isString(stroke)) {
-            ctx.strokeStyle = stroke;
-          } else {
-            canvas[stroke._renderer.type].render.call(stroke, ctx);
-            ctx.strokeStyle = stroke._renderer.gradient;
-          }
-        }
-        if (linewidth) {
-          ctx.lineWidth = linewidth;
-        }
-        if (miter) {
-          ctx.miterLimit = miter;
-        }
-        if (join) {
-          ctx.lineJoin = join;
-        }
-        if (cap) {
-          ctx.lineCap = cap;
-        }
-        if (_.isNumber(opacity)) {
-          ctx.globalAlpha = opacity;
-        }
-
-        ctx.beginPath();
-
-        for (var i = 0; i < commands.length; i++) {
-
-          b = commands[i];
-
-          x = toFixed(b._x);
-          y = toFixed(b._y);
-
-          switch (b._command) {
-
-            case Two.Commands.close:
-              ctx.closePath();
-              break;
-
-            case Two.Commands.curve:
-
-              prev = closed ? mod(i - 1, length) : Math.max(i - 1, 0);
-              next = closed ? mod(i + 1, length) : Math.min(i + 1, last);
-
-              a = commands[prev];
-              c = commands[next];
-              ar = (a.controls && a.controls.right) || Two.Vector.zero;
-              bl = (b.controls && b.controls.left) || Two.Vector.zero;
-
-              if (a._relative) {
-                vx = (ar.x + toFixed(a._x));
-                vy = (ar.y + toFixed(a._y));
-              } else {
-                vx = toFixed(ar.x);
-                vy = toFixed(ar.y);
-              }
-
-              if (b._relative) {
-                ux = (bl.x + toFixed(b._x));
-                uy = (bl.y + toFixed(b._y));
-              } else {
-                ux = toFixed(bl.x);
-                uy = toFixed(bl.y);
-              }
-
-              ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
-
-              if (i >= last && closed) {
-
-                c = d;
-
-                br = (b.controls && b.controls.right) || Two.Vector.zero;
-                cl = (c.controls && c.controls.left) || Two.Vector.zero;
-
-                if (b._relative) {
-                  vx = (br.x + toFixed(b._x));
-                  vy = (br.y + toFixed(b._y));
-                } else {
-                  vx = toFixed(br.x);
-                  vy = toFixed(br.y);
-                }
-
-                if (c._relative) {
-                  ux = (cl.x + toFixed(c._x));
-                  uy = (cl.y + toFixed(c._y));
-                } else {
-                  ux = toFixed(cl.x);
-                  uy = toFixed(cl.y);
-                }
-
-                x = toFixed(c._x);
-                y = toFixed(c._y);
-
-                ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
-
-              }
-
-              break;
-
-            case Two.Commands.line:
-              ctx.lineTo(x, y);
-              break;
-
-            case Two.Commands.move:
-              d = b;
-              ctx.moveTo(x, y);
-              break;
-
-          }
-        }
-
-        // Loose ends
-
-        if (closed) {
-          ctx.closePath();
-        }
-
-        if (!clip && !parentClipped) {
-          if (!canvas.isHidden.test(fill)) ctx.fill();
-          if (!canvas.isHidden.test(stroke)) ctx.stroke();
-        }
-
-        if (!defaultMatrix) {
-          ctx.restore();
-        }
-
-        if (clip && !parentClipped) {
-          ctx.clip();
-        }
-
-        return this.flagReset();
-
-      }
-
-    },
-
-    'linear-gradient': {
-
-      render: function(ctx) {
-
-        this._update();
-
-        if (!this._renderer.gradient || this._flagEndPoints || this._flagStops) {
-
-          this._renderer.gradient = ctx.createLinearGradient(
-            this.left._x, this.left._y,
-            this.right._x, this.right._y
-          );
-
-          for (var i = 0; i < this.stops.length; i++) {
-            var stop = this.stops[i];
-            this._renderer.gradient.addColorStop(stop._offset, stop._color);
-          }
-
-        }
-
-        return this.flagReset();
-
-      }
-
-    },
-
-    text: {
-
-      render: function(ctx, forced, parentClipped) {
-
-        // TODO: Add a check here to only invoke _update if need be.
-        this._update();
-
-        var matrix = this._matrix.elements;
-        var stroke = this._stroke;
-        var linewidth = this._linewidth;
-        var fill = this._fill;
-        var opacity = this._opacity * this.parent._renderer.opacity;
-        var visible = this._visible;
-        var defaultMatrix = isDefaultMatrix(matrix);
-
-        // mask = this._mask;
-        var clip = this._clip;
-
-        if (!forced && (!visible || clip)) {
-          return this;
-        }
-
-        // Transform
-        if (!defaultMatrix) {
-          ctx.save();
-          ctx.transform(matrix[0], matrix[3], matrix[1], matrix[4], matrix[2], matrix[5]);
-        }
-
-       /**
-         * Commented two-way functionality of clips / masks with groups and
-         * polygons. Uncomment when this bug is fixed:
-         * https://code.google.com/p/chromium/issues/detail?id=370951
-         */
-
-        // if (mask) {
-        //   canvas[mask._renderer.type].render.call(mask, ctx, true);
-        // }
-
-        ctx.font = [this._style, this._weight, this._size + 'px/' +
-          this._leading + 'px', this._family].join(' ');
-
-        ctx.textAlign = canvas.alignments[this._alignment] || this._alignment;
-        ctx.textBaseline = this._baseline;
-
-        // Styles
-        if (fill) {
-          if (_.isString(fill)) {
-            ctx.fillStyle = fill;
-          } else {
-            canvas[fill._renderer.type].render.call(fill, ctx);
-            ctx.fillStyle = fill._renderer.gradient;
-          }
-        }
-        if (stroke) {
-          if (_.isString(stroke)) {
-            ctx.strokeStyle = stroke;
-          } else {
-            canvas[stroke._renderer.type].render.call(stroke, ctx);
-            ctx.strokeStyle = stroke._renderer.gradient;
-          }
-        }
-        if (linewidth) {
-          ctx.lineWidth = linewidth;
-        }
-        if (_.isNumber(opacity)) {
-          ctx.globalAlpha = opacity;
-        }
-
-        if (!clip && !parentClipped) {
-          if (!canvas.isHidden.test(fill)) ctx.fillText(this.value, 0, 0);
-          if (!canvas.isHidden.test(stroke)) ctx.strokeText(this.value, 0, 0);
-        }
-
-        if (!defaultMatrix) {
-          ctx.restore();
-        }
-
-        // TODO: Test for text
-        if (clip && !parentClipped) {
-          ctx.clip();
-        }
-
-        return this.flagReset();
-
-      }
-
-    },
-
-    'radial-gradient': {
-
-      render: function(ctx) {
-
-        this._update();
-
-        if (!this._renderer.gradient || this._flagCenter || this._flagFocal
-            || this._flagRadius || this._flagStops) {
-
-          this._renderer.gradient = ctx.createRadialGradient(
-            this.center._x, this.center._y, 0,
-            this.focal._x, this.focal._y, this._radius
-          );
-
-          for (var i = 0; i < this.stops.length; i++) {
-            var stop = this.stops[i];
-            this._renderer.gradient.addColorStop(stop._offset, stop._color);
-          }
-
-        }
-
-        return this.flagReset();
-
-      }
-    }
-
-  };
-
-  var Renderer = Two[Two.Types.canvas] = function(params) {
-    // Smoothing property. Defaults to true
-    // Set it to false when working with pixel art.
-    // false can lead to better performance, since it would use a cheaper interpolation algorithm.
-    // It might not make a big difference on GPU backed canvases.
-    var smoothing = (params.smoothing !== false);
-    this.domElement = params.domElement || document.createElement('canvas');
-    this.ctx = this.domElement.getContext('2d');
-    this.overdraw = params.overdraw || false;
-
-    if (!_.isUndefined(this.ctx.imageSmoothingEnabled)) {
-      this.ctx.imageSmoothingEnabled = smoothing;
-    }
-
-    // Everything drawn on the canvas needs to be added to the scene.
-    this.scene = new Two.Group();
-    this.scene.parent = this;
-  };
-
-
-  _.extend(Renderer, {
-
-    Utils: canvas
-
-  });
-
-  _.extend(Renderer.prototype, Two.Utils.Events, {
-
-    setSize: function(width, height, ratio) {
-
-      this.width = width;
-      this.height = height;
-
-      this.ratio = _.isUndefined(ratio) ? getRatio(this.ctx) : ratio;
-
-      this.domElement.width = width * this.ratio;
-      this.domElement.height = height * this.ratio;
-
-      if (this.domElement.style) {
-        _.extend(this.domElement.style, {
-          width: width + 'px',
-          height: height + 'px'
-        });
-      }
-
-      return this;
-
-    },
-
-    render: function() {
-
-      var isOne = this.ratio === 1;
-
-      if (!isOne) {
-        this.ctx.save();
-        this.ctx.scale(this.ratio, this.ratio);
-      }
-
-      if (!this.overdraw) {
-        this.ctx.clearRect(0, 0, this.width, this.height);
-      }
-
-      canvas.group.render.call(this.scene, this.ctx);
-
-      if (!isOne) {
-        this.ctx.restore();
-      }
-
-      return this;
-
-    }
-
-  });
-
-  function resetTransform(ctx) {
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-  }
 
 })(this.Two);
 
@@ -5529,7 +5523,7 @@ this.Two = (function(previousTwo) {
 
   };
 
-  _.extend(Shape, Two.Utils.Events, {
+  _.extend(Shape, {
 
     FlagMatrix: function() {
       this._flagMatrix = true;
@@ -5590,7 +5584,7 @@ this.Two = (function(previousTwo) {
 
   });
 
-  _.extend(Shape.prototype, {
+  _.extend(Shape.prototype, Two.Utils.Events, {
 
     // Flags
 
@@ -6419,357 +6413,6 @@ this.Two = (function(previousTwo) {
 
 (function(Two) {
 
-  var Path = Two.Path;
-  var _ = Two.Utils;
-
-  var Line = Two.Line = function(x1, y1, x2, y2) {
-
-    var width = x2 - x1;
-    var height = y2 - y1;
-
-    var w2 = width / 2;
-    var h2 = height / 2;
-
-    Path.call(this, [
-        new Two.Anchor(- w2, - h2),
-        new Two.Anchor(w2, h2)
-    ]);
-
-    this.translation.set(x1 + w2, y1 + h2);
-
-  };
-
-  _.extend(Line.prototype, Path.prototype);
-
-  Path.MakeObservable(Line.prototype);
-
-})(this.Two);
-
-(function(Two) {
-
-  var Path = Two.Path;
-  var _ = Two.Utils;
-
-  var Rectangle = Two.Rectangle = function(x, y, width, height) {
-
-    Path.call(this, [
-      new Two.Anchor(),
-      new Two.Anchor(),
-      new Two.Anchor(),
-      new Two.Anchor()
-    ], true);
-
-    this.width = width;
-    this.height = height;
-    this._update();
-
-    this.translation.set(x, y);
-
-  };
-
-  _.extend(Rectangle, {
-
-    Properties: ['width', 'height'],
-
-    MakeObservable: function(obj) {
-      Path.MakeObservable(obj);
-      _.each(Rectangle.Properties, Two.Utils.defineProperty, obj);
-    }
-
-  });
-
-  _.extend(Rectangle.prototype, Path.prototype, {
-
-    _width: 0,
-    _height: 0,
-
-    _flagWidth: 0,
-    _flagHeight: 0,
-
-    _update: function() {
-
-      if (this._flagWidth || this._flagHeight) {
-
-        var xr = this._width / 2;
-        var yr = this._height / 2;
-
-        this.vertices[0].set(-xr, -yr);
-        this.vertices[1].set(xr, -yr);
-        this.vertices[2].set(xr, yr);
-        this.vertices[3].set(-xr, yr);
-
-      }
-
-      Path.prototype._update.call(this);
-
-      return this;
-
-    },
-
-    flagReset: function() {
-
-      this._flagWidth = this._flagHeight = false;
-      Path.prototype.flagReset.call(this);
-
-      return this;
-
-    }
-
-  });
-
-  Rectangle.MakeObservable(Rectangle.prototype);
-
-})(this.Two);
-
-(function(Two) {
-
-  var Path = Two.Path, TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin;
-  var _ = Two.Utils;
-
-  var Ellipse = Two.Ellipse = function(ox, oy, rx, ry) {
-
-    if (!_.isNumber(ry)) {
-      ry = rx;
-    }
-
-    var amount = Two.Resolution;
-
-    var points = _.map(_.range(amount), function(i) {
-      return new Two.Anchor();
-    }, this);
-
-    Path.call(this, points, true, true);
-
-    this.width = rx * 2;
-    this.height = ry * 2;
-
-    this._update();
-    this.translation.set(ox, oy);
-
-  };
-
-  _.extend(Ellipse, {
-
-    Properties: ['width', 'height'],
-
-    MakeObservable: function(obj) {
-
-      Path.MakeObservable(obj);
-      _.each(Ellipse.Properties, Two.Utils.defineProperty, obj);
-
-    }
-
-  });
-
-  _.extend(Ellipse.prototype, Path.prototype, {
-
-    _width: 0,
-    _height: 0,
-
-    _flagWidth: false,
-    _flagHeight: false,
-
-    _update: function() {
-
-      if (this._flagWidth || this._flagHeight) {
-        for (var i = 0, l = this.vertices.length; i < l; i++) {
-          var pct = i / l;
-          var theta = pct * TWO_PI;
-          var x = this._width * cos(theta) / 2;
-          var y = this._height * sin(theta) / 2;
-          this.vertices[i].set(x, y);
-        }
-      }
-
-      Path.prototype._update.call(this);
-      return this;
-
-    },
-
-    flagReset: function() {
-
-      this._flagWidth = this._flagHeight = false;
-
-      Path.prototype.flagReset.call(this);
-      return this;
-
-    }
-
-  });
-
-  Ellipse.MakeObservable(Ellipse.prototype);
-
-})(this.Two);
-
-(function(Two) {
-
-  var Path = Two.Path, TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin;
-  var _ = Two.Utils;
-
-  var Circle = Two.Circle = function(ox, oy, r) {
-
-    var amount = Two.Resolution;
-
-    var points = _.map(_.range(amount), function(i) {
-      return new Two.Anchor();
-    }, this);
-
-    Path.call(this, points, true, true);
-
-    this.radius = r;
-
-    this._update();
-    this.translation.set(ox, oy);
-
-  };
-
-  _.extend(Circle, {
-
-    Properties: ['radius'],
-
-    MakeObservable: function(obj) {
-
-      Path.MakeObservable(obj);
-      _.each(Circle.Properties, Two.Utils.defineProperty, obj);
-
-    }
-
-  });
-
-  _.extend(Circle.prototype, Path.prototype, {
-
-    _radius: 0,
-    _flagRadius: false,
-
-    _update: function() {
-
-      if (this._flagRadius) {
-        for (var i = 0, l = this.vertices.length; i < l; i++) {
-          var pct = i / l;
-          var theta = pct * TWO_PI;
-          var x = this._radius * cos(theta);
-          var y = this._radius * sin(theta);
-          this.vertices[i].set(x, y);
-        }
-      }
-
-      Path.prototype._update.call(this);
-      return this;
-
-    },
-
-    flagReset: function() {
-
-      this._flagRadius = false;
-
-      Path.prototype.flagReset.call(this);
-      return this;
-
-    }
-
-  });
-
-  Circle.MakeObservable(Circle.prototype);
-
-})(this.Two);
-
-(function(Two) {
-
-  var Path = Two.Path, TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin;
-  var _ = Two.Utils;
-
-  var Polygon = Two.Polygon = function(ox, oy, r, sides) {
-
-    sides = Math.max(sides || 0, 3);
-
-    var points = _.map(_.range(sides), function(i) {
-      return new Two.Anchor();
-    });
-
-    Path.call(this, points, true);
-
-    this.width = r * 2;
-    this.height = r * 2;
-    this.sides = sides;
-
-    this._update();
-    this.translation.set(ox, oy);
-
-  };
-
-  _.extend(Polygon, {
-
-    Properties: ['width', 'height', 'sides'],
-
-    MakeObservable: function(obj) {
-
-      Path.MakeObservable(obj);
-      _.each(Polygon.Properties, Two.Utils.defineProperty, obj);
-
-    }
-
-  });
-
-  _.extend(Polygon.prototype, Path.prototype, {
-
-    _width: 0,
-    _height: 0,
-    _sides: 0,
-
-    _flagWidth: false,
-    _flagHeight: false,
-    _flagSides: false,
-
-    _update: function() {
-
-      if (this._flagWidth || this._flagHeight || this._flagSides) {
-
-        var sides = this._sides;
-        var amount = this.vertices.length;
-
-        if (amount > sides) {
-          this.vertices.splice(sides - 1, amount - sides);
-        }
-
-        for (var i = 0; i < sides; i++) {
-
-          var pct = (i + 0.5) / sides;
-          var theta = TWO_PI * pct + Math.PI / 2;
-          var x = this._width * cos(theta);
-          var y = this._height * sin(theta);
-
-          if (i >= amount) {
-            this.vertices.push(new Two.Anchor(x, y));
-          } else {
-            this.vertices[i].set(x, y);
-          }
-
-        }
-
-      }
-
-      Path.prototype._update.call(this);
-      return this;
-
-    },
-
-    flagReset: function() {
-
-      this._flagWidth = this._flagHeight = this._flagSides = false;
-      Path.prototype.flagReset.call(this);
-
-      return this;
-
-    }
-
-  });
-
-  Polygon.MakeObservable(Polygon.prototype);
-
-})(this.Two);
-
-(function(Two) {
-
   var Path = Two.Path, PI = Math.PI, TWO_PI = Math.PI * 2, HALF_PI = Math.PI / 2,
     cos = Math.cos, sin = Math.sin, abs = Math.abs, _ = Two.Utils;
 
@@ -6988,26 +6631,198 @@ this.Two = (function(previousTwo) {
   var Path = Two.Path, TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin;
   var _ = Two.Utils;
 
-  var Star = Two.Star = function(ox, oy, or, ir, sides) {
+  var Circle = Two.Circle = function(ox, oy, r) {
 
-    if (!_.isNumber(ir)) {
-      ir = or / 2;
+    var amount = Two.Resolution;
+
+    var points = _.map(_.range(amount), function(i) {
+      return new Two.Anchor();
+    }, this);
+
+    Path.call(this, points, true, true);
+
+    this.radius = r;
+
+    this._update();
+    this.translation.set(ox, oy);
+
+  };
+
+  _.extend(Circle, {
+
+    Properties: ['radius'],
+
+    MakeObservable: function(obj) {
+
+      Path.MakeObservable(obj);
+      _.each(Circle.Properties, Two.Utils.defineProperty, obj);
+
     }
 
-    if (!_.isNumber(sides) || sides <= 0) {
-      sides = 5;
+  });
+
+  _.extend(Circle.prototype, Path.prototype, {
+
+    _radius: 0,
+    _flagRadius: false,
+
+    _update: function() {
+
+      if (this._flagRadius) {
+        for (var i = 0, l = this.vertices.length; i < l; i++) {
+          var pct = i / l;
+          var theta = pct * TWO_PI;
+          var x = this._radius * cos(theta);
+          var y = this._radius * sin(theta);
+          this.vertices[i].set(x, y);
+        }
+      }
+
+      Path.prototype._update.call(this);
+      return this;
+
+    },
+
+    flagReset: function() {
+
+      this._flagRadius = false;
+
+      Path.prototype.flagReset.call(this);
+      return this;
+
     }
 
-    var length = sides * 2;
+  });
 
-    var points = _.map(_.range(length), function(i) {
+  Circle.MakeObservable(Circle.prototype);
+
+})(this.Two);
+
+(function(Two) {
+
+  var Path = Two.Path, TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin;
+  var _ = Two.Utils;
+
+  var Ellipse = Two.Ellipse = function(ox, oy, rx, ry) {
+
+    if (!_.isNumber(ry)) {
+      ry = rx;
+    }
+
+    var amount = Two.Resolution;
+
+    var points = _.map(_.range(amount), function(i) {
+      return new Two.Anchor();
+    }, this);
+
+    Path.call(this, points, true, true);
+
+    this.width = rx * 2;
+    this.height = ry * 2;
+
+    this._update();
+    this.translation.set(ox, oy);
+
+  };
+
+  _.extend(Ellipse, {
+
+    Properties: ['width', 'height'],
+
+    MakeObservable: function(obj) {
+
+      Path.MakeObservable(obj);
+      _.each(Ellipse.Properties, Two.Utils.defineProperty, obj);
+
+    }
+
+  });
+
+  _.extend(Ellipse.prototype, Path.prototype, {
+
+    _width: 0,
+    _height: 0,
+
+    _flagWidth: false,
+    _flagHeight: false,
+
+    _update: function() {
+
+      if (this._flagWidth || this._flagHeight) {
+        for (var i = 0, l = this.vertices.length; i < l; i++) {
+          var pct = i / l;
+          var theta = pct * TWO_PI;
+          var x = this._width * cos(theta) / 2;
+          var y = this._height * sin(theta) / 2;
+          this.vertices[i].set(x, y);
+        }
+      }
+
+      Path.prototype._update.call(this);
+      return this;
+
+    },
+
+    flagReset: function() {
+
+      this._flagWidth = this._flagHeight = false;
+
+      Path.prototype.flagReset.call(this);
+      return this;
+
+    }
+
+  });
+
+  Ellipse.MakeObservable(Ellipse.prototype);
+
+})(this.Two);
+
+(function(Two) {
+
+  var Path = Two.Path;
+  var _ = Two.Utils;
+
+  var Line = Two.Line = function(x1, y1, x2, y2) {
+
+    var width = x2 - x1;
+    var height = y2 - y1;
+
+    var w2 = width / 2;
+    var h2 = height / 2;
+
+    Path.call(this, [
+        new Two.Anchor(- w2, - h2),
+        new Two.Anchor(w2, h2)
+    ]);
+
+    this.translation.set(x1 + w2, y1 + h2);
+
+  };
+
+  _.extend(Line.prototype, Path.prototype);
+
+  Path.MakeObservable(Line.prototype);
+
+})(this.Two);
+
+(function(Two) {
+
+  var Path = Two.Path, TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin;
+  var _ = Two.Utils;
+
+  var Polygon = Two.Polygon = function(ox, oy, r, sides) {
+
+    sides = Math.max(sides || 0, 3);
+
+    var points = _.map(_.range(sides), function(i) {
       return new Two.Anchor();
     });
 
     Path.call(this, points, true);
 
-    this.innerRadius = ir;
-    this.outerRadius = or;
+    this.width = r * 2;
+    this.height = r * 2;
     this.sides = sides;
 
     this._update();
@@ -7015,34 +6830,34 @@ this.Two = (function(previousTwo) {
 
   };
 
-  _.extend(Star, {
+  _.extend(Polygon, {
 
-    Properties: ['innerRadius', 'outerRadius', 'sides'],
+    Properties: ['width', 'height', 'sides'],
 
     MakeObservable: function(obj) {
 
       Path.MakeObservable(obj);
-      _.each(Star.Properties, Two.Utils.defineProperty, obj);
+      _.each(Polygon.Properties, Two.Utils.defineProperty, obj);
 
     }
 
   });
 
-  _.extend(Star.prototype, Path.prototype, {
+  _.extend(Polygon.prototype, Path.prototype, {
 
-    _innerRadius: 0,
-    _outerRadius: 0,
+    _width: 0,
+    _height: 0,
     _sides: 0,
 
-    _flagInnerRadius: false,
-    _flagOuterRadius: false,
+    _flagWidth: false,
+    _flagHeight: false,
     _flagSides: false,
 
     _update: function() {
 
-      if (this._flagInnerRadius || this._flagOuterRadius || this._flagSides) {
+      if (this._flagWidth || this._flagHeight || this._flagSides) {
 
-        var sides = this._sides * 2;
+        var sides = this._sides;
         var amount = this.vertices.length;
 
         if (amount > sides) {
@@ -7052,10 +6867,9 @@ this.Two = (function(previousTwo) {
         for (var i = 0; i < sides; i++) {
 
           var pct = (i + 0.5) / sides;
-          var theta = TWO_PI * pct;
-          var r = (i % 2 ? this._innerRadius : this._outerRadius);
-          var x = r * cos(theta);
-          var y = r * sin(theta);
+          var theta = TWO_PI * pct + Math.PI / 2;
+          var x = this._width * cos(theta);
+          var y = this._height * sin(theta);
 
           if (i >= amount) {
             this.vertices.push(new Two.Anchor(x, y));
@@ -7068,14 +6882,13 @@ this.Two = (function(previousTwo) {
       }
 
       Path.prototype._update.call(this);
-
       return this;
 
     },
 
     flagReset: function() {
 
-      this._flagInnerRadius = this._flagOuterRadius = this._flagSides = false;
+      this._flagWidth = this._flagHeight = this._flagSides = false;
       Path.prototype.flagReset.call(this);
 
       return this;
@@ -7084,7 +6897,83 @@ this.Two = (function(previousTwo) {
 
   });
 
-  Star.MakeObservable(Star.prototype);
+  Polygon.MakeObservable(Polygon.prototype);
+
+})(this.Two);
+
+(function(Two) {
+
+  var Path = Two.Path;
+  var _ = Two.Utils;
+
+  var Rectangle = Two.Rectangle = function(x, y, width, height) {
+
+    Path.call(this, [
+      new Two.Anchor(),
+      new Two.Anchor(),
+      new Two.Anchor(),
+      new Two.Anchor()
+    ], true);
+
+    this.width = width;
+    this.height = height;
+    this._update();
+
+    this.translation.set(x, y);
+
+  };
+
+  _.extend(Rectangle, {
+
+    Properties: ['width', 'height'],
+
+    MakeObservable: function(obj) {
+      Path.MakeObservable(obj);
+      _.each(Rectangle.Properties, Two.Utils.defineProperty, obj);
+    }
+
+  });
+
+  _.extend(Rectangle.prototype, Path.prototype, {
+
+    _width: 0,
+    _height: 0,
+
+    _flagWidth: 0,
+    _flagHeight: 0,
+
+    _update: function() {
+
+      if (this._flagWidth || this._flagHeight) {
+
+        var xr = this._width / 2;
+        var yr = this._height / 2;
+
+        this.vertices[0].set(-xr, -yr);
+        this.vertices[1].set(xr, -yr);
+        this.vertices[2].set(xr, yr);
+        this.vertices[3].set(-xr, yr);
+
+      }
+
+      Path.prototype._update.call(this);
+
+      return this;
+
+    },
+
+    flagReset: function() {
+
+      this._flagWidth = this._flagHeight = false;
+      Path.prototype.flagReset.call(this);
+
+      return this;
+
+    }
+
+  });
+
+  Rectangle.MakeObservable(Rectangle.prototype);
 
 })(this.Two);
 
@@ -7242,6 +7131,111 @@ this.Two = (function(previousTwo) {
   });
 
   RoundedRectangle.MakeObservable(RoundedRectangle.prototype);
+
+})(this.Two);
+
+(function(Two) {
+
+  var Path = Two.Path, TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin;
+  var _ = Two.Utils;
+
+  var Star = Two.Star = function(ox, oy, or, ir, sides) {
+
+    if (!_.isNumber(ir)) {
+      ir = or / 2;
+    }
+
+    if (!_.isNumber(sides) || sides <= 0) {
+      sides = 5;
+    }
+
+    var length = sides * 2;
+
+    var points = _.map(_.range(length), function(i) {
+      return new Two.Anchor();
+    });
+
+    Path.call(this, points, true);
+
+    this.innerRadius = ir;
+    this.outerRadius = or;
+    this.sides = sides;
+
+    this._update();
+    this.translation.set(ox, oy);
+
+  };
+
+  _.extend(Star, {
+
+    Properties: ['innerRadius', 'outerRadius', 'sides'],
+
+    MakeObservable: function(obj) {
+
+      Path.MakeObservable(obj);
+      _.each(Star.Properties, Two.Utils.defineProperty, obj);
+
+    }
+
+  });
+
+  _.extend(Star.prototype, Path.prototype, {
+
+    _innerRadius: 0,
+    _outerRadius: 0,
+    _sides: 0,
+
+    _flagInnerRadius: false,
+    _flagOuterRadius: false,
+    _flagSides: false,
+
+    _update: function() {
+
+      if (this._flagInnerRadius || this._flagOuterRadius || this._flagSides) {
+
+        var sides = this._sides * 2;
+        var amount = this.vertices.length;
+
+        if (amount > sides) {
+          this.vertices.splice(sides - 1, amount - sides);
+        }
+
+        for (var i = 0; i < sides; i++) {
+
+          var pct = (i + 0.5) / sides;
+          var theta = TWO_PI * pct;
+          var r = (i % 2 ? this._innerRadius : this._outerRadius);
+          var x = r * cos(theta);
+          var y = r * sin(theta);
+
+          if (i >= amount) {
+            this.vertices.push(new Two.Anchor(x, y));
+          } else {
+            this.vertices[i].set(x, y);
+          }
+
+        }
+
+      }
+
+      Path.prototype._update.call(this);
+
+      return this;
+
+    },
+
+    flagReset: function() {
+
+      this._flagInnerRadius = this._flagOuterRadius = this._flagSides = false;
+      Path.prototype.flagReset.call(this);
+
+      return this;
+
+    }
+
+  });
+
+  Star.MakeObservable(Star.prototype);
 
 })(this.Two);
 
