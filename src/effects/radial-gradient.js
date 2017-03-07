@@ -75,8 +75,9 @@
         clone[k] = this[k];
       }, this);
 
-      if(parent)
+      if (parent) {
         parent.add(clone);
+      }
 
       return clone;
 

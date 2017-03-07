@@ -279,8 +279,9 @@
       clone.rotation = this.rotation;
       clone.scale = this.scale;
 
-      if(parent)
+      if (parent) {
         parent.add(clone);
+      }
 
       return clone;
 

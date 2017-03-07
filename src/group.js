@@ -253,8 +253,9 @@
       group.rotation = this.rotation;
       group.scale = this.scale;
 
-      if(parent)
+      if (parent) {
         parent.add(group);
+      }
 
       return group;
 
