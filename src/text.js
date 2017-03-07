@@ -133,7 +133,8 @@
         clone[property] = this[property];
       }, this);
 
-      parent.add(clone);
+      if(parent)
+        parent.add(clone);
 
       return clone;
 

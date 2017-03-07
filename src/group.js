@@ -253,7 +253,8 @@
       group.rotation = this.rotation;
       group.scale = this.scale;
 
-      parent.add(group);
+      if(parent)
+        parent.add(group);
 
       return group;
 
