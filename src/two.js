@@ -1757,6 +1757,7 @@ this.Two = (function(previousTwo) {
               if (callback) {
                 for (var j = 0, k = list.length; j < k; j++) {
                   var ev = list[j];
+                  ev = ev.callback ? ev.callback : ev;
                   if (callback && callback !== ev) {
                     events.push(ev);
                   }
@@ -1782,9 +1783,16 @@ this.Two = (function(previousTwo) {
           var bound = this;
 
           if (obj) {
-            obj.on(name, function () {
+            var ev = function () {
               callback.apply(bound, arguments);
-            });
+            };
+
+            // add references about the object that assigned this listener
+            ev.obj = obj;
+            ev.name = name;
+            ev.callback = callback;
+
+            obj.on(name, ev);
           }
 
           return this;
