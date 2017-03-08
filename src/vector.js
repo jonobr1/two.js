@@ -144,8 +144,10 @@
     },
 
     rotate: function (radians) {
-      var newX = this.x * Math.cos(radians) - this.y * Math.sin(radians);
-      var newY = this.x * Math.sin(radians) + this.y * Math.cos(radians);
+      var cos = Math.cos(radians),
+          sin = Math.sin(radians),
+          newX = this.x * cos - this.y * sin,
+          newY = this.x * sin + this.y * cos;
       return this.set(newX, newY);
     }
 
