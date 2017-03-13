@@ -141,6 +141,14 @@
 
     toObject: function() {
       return { x: this.x, y: this.y };
+    },
+
+    rotate: function (radians) {
+      var cos = Math.cos(radians),
+          sin = Math.sin(radians),
+          newX = this.x * cos - this.y * sin,
+          newY = this.x * sin + this.y * cos;
+      return this.set(newX, newY);
     }
 
   });
