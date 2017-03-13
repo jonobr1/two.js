@@ -144,11 +144,11 @@
     },
 
     rotate: function (radians) {
-      var cos = Math.cos(radians),
-          sin = Math.sin(radians),
-          newX = this.x * cos - this.y * sin,
-          newY = this.x * sin + this.y * cos;
-      return this.set(newX, newY);
+      var cos = Math.cos(radians);
+      var sin = Math.sin(radians);
+      this.x = this.x * cos - this.y * sin;
+      this.y = this.x * sin + this.y * cos;
+      return this;
     }
 
   });
@@ -278,6 +278,14 @@
 
     toObject: function() {
       return { x: this._x, y: this._y };
+    },
+
+    rotate: function (radians) {
+      var cos = Math.cos(radians);
+      var sin = Math.sin(radians);
+      this._x = this._x * cos - this._y * sin;
+      this._y = this._x * sin + this._y * cos;
+      return this;
     }
 
   };

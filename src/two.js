@@ -1778,7 +1778,7 @@ this.Two = (function(previousTwo) {
           return this;
         },
 
-        listenTo: function (obj, name, callback) {
+        listen: function (obj, name, callback) {
 
           var bound = this;
 
@@ -1798,8 +1798,8 @@ this.Two = (function(previousTwo) {
           return this;
 
         },
-        
-        stopListening: function (obj, name, callback) {
+
+        ignore: function (obj, name, callback) {
 
           obj.off(name, callback);
 

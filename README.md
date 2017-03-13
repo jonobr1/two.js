@@ -71,6 +71,7 @@ instead to minify the build with uglify.
 <!-- For the latest nightly changes checkout the `dev` branch [here](../../tree/dev). -->
 
 #### Nightly
++ Added `Two.Vector.rotate` method [@ferm10n](https://github.com/ferm10n)
 + Objects clone to parent only if parent exists [@ferm10n](https://github.com/ferm10n)
 + Vendor agnostic `requestAnimationFrame` [@ferm10n](https://github.com/ferm10n)
 + `Two.Utils.Events.listenTo` and `Two.Utils.Events.stopListening` [@ferm10n](https://github.com/ferm10n)
