@@ -153,4 +153,4 @@
 
   RoundedRectangle.MakeObservable(RoundedRectangle.prototype);
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);

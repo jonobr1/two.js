@@ -170,4 +170,4 @@
     _.extend(this, AnchorProto);
   };
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);
