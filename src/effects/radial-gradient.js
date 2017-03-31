@@ -112,4 +112,4 @@
 
   RadialGradient.MakeObservable(RadialGradient.prototype);
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);

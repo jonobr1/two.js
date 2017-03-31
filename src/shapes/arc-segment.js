@@ -126,7 +126,7 @@
             last = length - 1;
           }
 
-          /** 
+          /**
            * Inner Circle
            */
           for (i = 0; i < length; i++) {
@@ -211,4 +211,4 @@
     return v % l;
   }
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);

@@ -91,4 +91,4 @@
 
   Polygon.MakeObservable(Polygon.prototype);
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);

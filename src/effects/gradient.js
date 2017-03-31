@@ -218,4 +218,4 @@
 
   Gradient.MakeObservable(Gradient.prototype);
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);

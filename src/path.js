@@ -743,4 +743,4 @@
 
   }
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);

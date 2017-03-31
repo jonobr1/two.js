@@ -2346,7 +2346,7 @@ this.Two = (function(previousTwo) {
 
   return Two;
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);
 
 (function(Two) {
 
@@ -2685,7 +2685,7 @@ this.Two = (function(previousTwo) {
 
   };
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);
 
 (function(Two) {
 
@@ -2859,7 +2859,7 @@ this.Two = (function(previousTwo) {
     _.extend(this, AnchorProto);
   };
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);
 
 (function(Two) {
 
@@ -3236,7 +3236,7 @@ this.Two = (function(previousTwo) {
 
   });
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);
 
 (function(Two) {
 
@@ -3992,7 +3992,7 @@ this.Two = (function(previousTwo) {
 
   });
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);
 
 (function(Two) {
 
@@ -4499,7 +4499,7 @@ this.Two = (function(previousTwo) {
     ctx.setTransform(1, 0, 0, 1, 0, 0);
   }
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);
 
 (function(Two) {
 
@@ -5551,7 +5551,7 @@ this.Two = (function(previousTwo) {
 
   });
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);
 
 (function(Two) {
 
@@ -5718,7 +5718,7 @@ this.Two = (function(previousTwo) {
 
   Shape.MakeObservable(Shape.prototype);
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);
 
 (function(Two) {
 
@@ -6465,7 +6465,7 @@ this.Two = (function(previousTwo) {
 
   }
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);
 
 (function(Two) {
 
@@ -6493,7 +6493,7 @@ this.Two = (function(previousTwo) {
 
   Path.MakeObservable(Line.prototype);
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);
 
 (function(Two) {
 
@@ -6569,7 +6569,7 @@ this.Two = (function(previousTwo) {
 
   Rectangle.MakeObservable(Rectangle.prototype);
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);
 
 (function(Two) {
 
@@ -6649,7 +6649,7 @@ this.Two = (function(previousTwo) {
 
   Ellipse.MakeObservable(Ellipse.prototype);
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);
 
 (function(Two) {
 
@@ -6721,7 +6721,7 @@ this.Two = (function(previousTwo) {
 
   Circle.MakeObservable(Circle.prototype);
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);
 
 (function(Two) {
 
@@ -6816,7 +6816,7 @@ this.Two = (function(previousTwo) {
 
   Polygon.MakeObservable(Polygon.prototype);
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);
 
 (function(Two) {
 
@@ -6946,7 +6946,7 @@ this.Two = (function(previousTwo) {
             last = length - 1;
           }
 
-          /** 
+          /**
            * Inner Circle
            */
           for (i = 0; i < length; i++) {
@@ -7031,7 +7031,7 @@ this.Two = (function(previousTwo) {
     return v % l;
   }
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);
 
 (function(Two) {
 
@@ -7136,7 +7136,7 @@ this.Two = (function(previousTwo) {
 
   Star.MakeObservable(Star.prototype);
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);
 
 (function(Two) {
 
@@ -7293,7 +7293,7 @@ this.Two = (function(previousTwo) {
 
   RoundedRectangle.MakeObservable(RoundedRectangle.prototype);
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);
 
 (function(Two) {
 
@@ -7511,7 +7511,7 @@ this.Two = (function(previousTwo) {
 
   Two.Text.MakeObservable(Two.Text.prototype);
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);
 
 (function(Two) {
 
@@ -7733,7 +7733,7 @@ this.Two = (function(previousTwo) {
 
   Gradient.MakeObservable(Gradient.prototype);
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);
 
 (function(Two) {
 
@@ -7830,7 +7830,7 @@ this.Two = (function(previousTwo) {
 
   LinearGradient.MakeObservable(LinearGradient.prototype);
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);
 
 (function(Two) {
 
@@ -7946,7 +7946,7 @@ this.Two = (function(previousTwo) {
 
   RadialGradient.MakeObservable(RadialGradient.prototype);
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);
 
 (function(Two) {
 
@@ -8549,4 +8549,4 @@ this.Two = (function(previousTwo) {
 
   }
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);

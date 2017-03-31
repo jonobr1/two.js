@@ -2318,4 +2318,4 @@ this.Two = (function(previousTwo) {
 
   return Two;
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);
