@@ -100,10 +100,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-qunit');
 
   // Default task
-  grunt.registerTask('default', ['jshint' , 'concat', 'uglify']);
+  grunt.registerTask('default', ['jshint' , 'concat', 'closureCompiler']);
 
   // Closure Compiler fallback
-  grunt.registerTask('build-uglify', ['jshint' , 'concat', 'closureCompiler']);
+  grunt.registerTask('build-uglify', ['jshint' , 'concat', 'uglify']);
 
   // Headless testing
   grunt.registerTask('test', ['connect', 'qunit']);
