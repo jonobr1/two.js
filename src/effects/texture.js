@@ -4,8 +4,15 @@
 
   var Texture = Two.Texture = function(src, callback) {
 
-    Two.Shape.call(this);
+    this._renderer = {};
     this._renderer.type = 'texture';
+    this._renderer.flagOffset = _.bind(Texture.FlagOffset, this);
+    this._renderer.flagScale = _.bind(Texture.FlagScale, this);
+
+    this.id = Two.Identifier + Two.uniqueId();
+    this.classList = [];
+
+    this.offset = new Two.Vector();
 
     if (_.isFunction(callback)) {
       var loaded = _.bind(function() {
@@ -99,11 +106,54 @@
 
     },
 
+    FlagOffset: function() {
+      this._flagOffset = true;
+    },
+
+    FlagScale: function() {
+      this._flagScale = true;
+    },
+
     MakeObservable: function(object) {
 
-      Two.Shape.MakeObservable(object);
-
       _.each(Texture.Properties, Two.Utils.defineProperty, object);
+
+      Object.defineProperty(object, 'offset', {
+        enumerable: true,
+        get: function() {
+          return this._offset;
+        },
+        set: function(v) {
+          if (this._offset) {
+            this._offset.unbind(Two.Events.change, this._renderer.flagOffset);
+          }
+          this._offset = v;
+          this._offset.bind(Two.Events.change, this._renderer.flagOffset);
+          this._flagOffset = true;
+        }
+      });
+
+      Object.defineProperty(object, 'scale', {
+        enumerable: true,
+        get: function() {
+          return this._scale;
+        },
+        set: function(v) {
+
+          if (this._scale instanceof Two.Vector) {
+            this._scale.unbind(Two.Events.change, this._renderer.flagScale);
+          }
+
+          this._scale = v;
+
+          if (this._scale instanceof Two.Vector) {
+            this._scale.bind(Two.Events.change, this._renderer.flagScale);
+          }
+
+          this._flagScale = true;
+
+        }
+      });
 
     }
 
@@ -115,9 +165,15 @@
     _flagImage: false,
     _flagLoaded: false,
 
+    _flagOffset: false,
+    _flagScale: false,
+
     _src: '',
     _image: null,
     _loaded: false,
+
+    _scale: 1,
+    _offset: null,
 
     clone: function() {
       return new Texture(this.src);
@@ -149,7 +205,9 @@
 
     flagReset: function() {
 
-      this._flagSrc = this._flagImage = this._flagLoaded = false;
+      this._flagSrc = this._flagImage = this._flagLoaded
+        = this._flagScale = this._flagOffset = false;
+
       return this;
 
     }

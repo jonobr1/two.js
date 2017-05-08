@@ -362,24 +362,20 @@
 
         if (this._fill && this._fill._renderer) {
           this._fill._update();
+          svg[this._fill._renderer.type].render.call(this._fill, domElement, true);
         }
 
         if (this._flagFill) {
-          if (this._fill && this._fill._renderer) {
-            svg[this._fill._renderer.type].render.call(this._fill, domElement, true);
-          }
           changed.fill = this._fill && this._fill.id
             ? 'url(#' + this._fill.id + ')' : this._fill;
         }
 
         if (this._stroke && this._stroke._renderer) {
           this._stroke._update();
+          svg[this._stroke._renderer.type].render.call(this._stroke, domElement, true);
         }
 
         if (this._flagStroke) {
-          if (this._stroke && this._stroke._renderer) {
-            svg[this._stroke._renderer.type].render.call(this._stroke, domElement, true);
-          }
           changed.stroke = this._stroke && this._stroke.id
             ? 'url(#' + this._stroke.id + ')' : this._stroke;
         }
@@ -746,21 +742,15 @@
         }
 
         var changed = {};
+        var styles = {};
+        var image = this.image;
 
         if (this._flagLoaded && this.loaded) {
 
-          var image = this.image;
-          changed.x = - image.width / 2;
-          changed.y = - image.height / 2;
-          changed.width = image.width;
-          changed.height = image.height;
-
-          var styles = {
-            x: 0,
-            y: 0,
-            width: image.width,
-            height: image.height
-          };
+          styles.x = 0;
+          styles.y = 0;
+          styles.width = image.width;
+          styles.height = image.height;
 
           switch (image.nodeName.toLowerCase()) {
 
@@ -774,12 +764,51 @@
 
           }
 
-          if (!this._renderer.image) {
-            this._renderer.image = svg.createElement('image', styles);
-          } else {
-            svg.setAttributes(this._renderer.image, styles);
+        }
+
+        if (this._flagOffset || this._flagLoaded) {
+
+          changed.x = this._offset.x;
+          changed.y = this._offset.y;
+
+          if (image) {
+
+            if (this._scale instanceof Two.Vector) {
+              changed.x -= this._scale.x * image.width / 2;
+              changed.y -= this._scale.y * image.height / 2;
+            } else {
+              changed.x -= this._scale * image.width / 2;
+              changed.y -= this._scale * image.height / 2;
+            }
+          }
+        }
+
+        if (this._flagScale || this._flagLoaded) {
+
+          changed.width = 0;
+          changed.height = 0;
+
+          if (image) {
+            if (this._scale instanceof Two.Vector) {
+              changed.width = image.width * this._scale.x;
+              changed.height = image.height * this._scale.y;
+            } else {
+              changed.width = image.width * this._scale;
+              changed.height = image.height * this._scale;
+            }
           }
 
+          styles.width = changed.width;
+          styles.height = changed.height;
+
+        }
+
+        if (this._flagScale || this._flagLoaded) {
+          if (!this._renderer.image) {
+            this._renderer.image = svg.createElement('image', styles);
+          } else if (!_.isEmpty(styles)) {
+            svg.setAttributes(this._renderer.image, styles);
+          }
         }
 
         if (!this._renderer.elem) {
@@ -789,7 +818,7 @@
           this._renderer.elem = svg.createElement('pattern', changed);
           domElement.defs.appendChild(this._renderer.elem);
 
-        } else {
+        } else if (!_.isEmpty(changed)) {
 
           svg.setAttributes(this._renderer.elem, changed);
 
