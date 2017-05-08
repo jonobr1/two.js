@@ -495,21 +495,17 @@
         }
         if (this._fill && this._fill._renderer) {
           this._fill._update();
+          svg[this._fill._renderer.type].render.call(this._fill, domElement, true);
         }
         if (this._flagFill) {
-          if (this._fill && this._fill._renderer) {
-            svg[this._fill._renderer.type].render.call(this._fill, domElement, true);
-          }
           changed.fill = this._fill && this._fill.id
             ? 'url(#' + this._fill.id + ')' : this._fill;
         }
         if (this._stroke && this._stroke._renderer) {
           this._stroke._update();
+          svg[this._stroke._renderer.type].render.call(this._stroke, domElement, true);
         }
         if (this._flagStroke) {
-          if (this._stroke && this._stroke._renderer) {
-            svg[this._stroke._renderer.type].render.call(this._stroke, domElement, true);
-          }
           changed.stroke = this._stroke && this._stroke.id
             ? 'url(#' + this._stroke.id + ')' : this._stroke;
         }
