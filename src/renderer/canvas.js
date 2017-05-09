@@ -285,6 +285,7 @@
               ctx.translate(
                 - stroke._renderer.offset.x, - stroke._renderer.offset.y);
               ctx.scale(stroke._renderer.scale.x, stroke._renderer.scale.y);
+              ctx.lineWidth = linewidth / stroke._renderer.scale.x;
             }
             ctx.stroke();
             if (isOffset) {
@@ -382,8 +383,16 @@
               ctx.save();
               ctx.translate(
                 - fill._renderer.offset.x, - fill._renderer.offset.y);
-              // ctx.scale(fill._renderer.scale.x, fill._renderer.scale.y);
-              ctx.fillText(this.value, fill._renderer.offset.x, fill._renderer.offset.y);
+              ctx.scale(fill._renderer.scale.x, fill._renderer.scale.y);
+              ctx.font = [
+                this._style, this._weight,
+                this._size / fill._renderer.scale.y + 'px/',
+                this._leading / fill._renderer.scale.y + 'px',
+                this._family
+              ].join(' ');
+              ctx.fillText(this.value,
+                fill._renderer.offset.x / fill._renderer.scale.x,
+                fill._renderer.offset.y / fill._renderer.scale.y);
               ctx.restore();
             } else {
               ctx.fillText(this.value, 0, 0);
@@ -394,8 +403,17 @@
               ctx.save();
               ctx.translate(
                 - stroke._renderer.offset.x, - stroke._renderer.offset.y);
-              // ctx.scale(stroke._renderer.scale.x, stroke._renderer.scale.y);
-              ctx.strokeText(this.value, stroke._renderer.offset.x, stroke._renderer.offset.y);
+              ctx.scale(stroke._renderer.scale.x, stroke._renderer.scale.y);
+              ctx.font = [
+                this._style, this._weight,
+                this._size / stroke._renderer.scale.y + 'px/',
+                this._leading / stroke._renderer.scale.y + 'px',
+                this._family
+              ].join(' ');
+              ctx.lineWidth = linewidth / stroke._renderer.scale.x;
+              ctx.strokeText(this.value,
+                stroke._renderer.offset.x / stroke._renderer.scale.x,
+                stroke._renderer.offset.y / stroke._renderer.scale.y);
               ctx.restore();
             } else {
               ctx.strokeText(this.value, 0, 0);
