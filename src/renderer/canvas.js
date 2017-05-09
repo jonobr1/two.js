@@ -322,7 +322,10 @@
         var opacity = this._opacity * this.parent._renderer.opacity;
         var visible = this._visible;
         var defaultMatrix = isDefaultMatrix(matrix);
-        var isOffset;
+        var isOffset = fill._renderer && fill._renderer.offset
+          && stroke._renderer && stroke._renderer.offset;
+
+        var a, b, c, d, e, sx, sy;
 
         // mask = this._mask;
         var clip = this._clip;
@@ -347,8 +350,10 @@
         //   canvas[mask._renderer.type].render.call(mask, ctx, true);
         // }
 
-        ctx.font = [this._style, this._weight, this._size + 'px/' +
-          this._leading + 'px', this._family].join(' ');
+        if (!isOffset) {
+          ctx.font = [this._style, this._weight, this._size + 'px/' +
+            this._leading + 'px', this._family].join(' ');
+        }
 
         ctx.textAlign = canvas.alignments[this._alignment] || this._alignment;
         ctx.textBaseline = this._baseline;
@@ -378,43 +383,61 @@
         }
 
         if (!clip && !parentClipped) {
+
           if (!canvas.isHidden.test(fill)) {
+
             if (fill._renderer && fill._renderer.offset) {
+
+              sx = toFixed(fill._renderer.scale.x);
+              sy = toFixed(fill._renderer.scale.y);
+
               ctx.save();
-              ctx.translate(
-                - fill._renderer.offset.x, - fill._renderer.offset.y);
-              ctx.scale(fill._renderer.scale.x, fill._renderer.scale.y);
-              ctx.font = [
-                this._style, this._weight,
-                this._size / fill._renderer.scale.y + 'px/',
-                this._leading / fill._renderer.scale.y + 'px',
-                this._family
-              ].join(' ');
-              ctx.fillText(this.value,
-                fill._renderer.offset.x / fill._renderer.scale.x,
-                fill._renderer.offset.y / fill._renderer.scale.y);
+              ctx.translate( - toFixed(fill._renderer.offset.x),
+                - toFixed(fill._renderer.offset.y));
+              ctx.scale(sx, sy);
+
+              a = this._size / fill._renderer.scale.y;
+              b = this._leading / fill._renderer.scale.y;
+              ctx.font = [this._style, this._weight, toFixed(a) + 'px/',
+                toFixed(b) + 'px', this._family].join(' ');
+
+              c = fill._renderer.offset.x / fill._renderer.scale.x;
+              d = fill._renderer.offset.y / fill._renderer.scale.y;
+
+              ctx.fillText(this.value, toFixed(c), toFixed(d));
               ctx.restore();
+
             } else {
               ctx.fillText(this.value, 0, 0);
             }
+
           }
+
           if (!canvas.isHidden.test(stroke)) {
+
             if (stroke._renderer && stroke._renderer.offset) {
+
+              sx = toFixed(stroke._renderer.scale.x);
+              sy = toFixed(stroke._renderer.scale.y);
+
               ctx.save();
-              ctx.translate(
-                - stroke._renderer.offset.x, - stroke._renderer.offset.y);
-              ctx.scale(stroke._renderer.scale.x, stroke._renderer.scale.y);
-              ctx.font = [
-                this._style, this._weight,
-                this._size / stroke._renderer.scale.y + 'px/',
-                this._leading / stroke._renderer.scale.y + 'px',
-                this._family
-              ].join(' ');
-              ctx.lineWidth = linewidth / stroke._renderer.scale.x;
-              ctx.strokeText(this.value,
-                stroke._renderer.offset.x / stroke._renderer.scale.x,
-                stroke._renderer.offset.y / stroke._renderer.scale.y);
+              ctx.translate(- toFixed(stroke._renderer.offset.x),
+                - toFixed(stroke._renderer.offset.y));
+              ctx.scale(sx, sy);
+
+              a = this._size / stroke._renderer.scale.y;
+              b = this._leading / stroke._renderer.scale.y;
+              ctx.font = [this._style, this._weight, toFixed(a) + 'px/',
+                toFixed(b) + 'px', this._family].join(' ');
+
+              c = stroke._renderer.offset.x / stroke._renderer.scale.x;
+              d = stroke._renderer.offset.y / stroke._renderer.scale.y;
+              e = linewidth / stroke._renderer.scale.x;
+
+              ctx.lineWidth = toFixed(e);
+              ctx.strokeText(this.value, toFixed(c), toFixed(d));
               ctx.restore();
+
             } else {
               ctx.strokeText(this.value, 0, 0);
             }
