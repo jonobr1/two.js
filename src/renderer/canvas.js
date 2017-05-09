@@ -271,6 +271,7 @@
               ctx.save();
               ctx.translate(
                 - fill._renderer.offset.x, - fill._renderer.offset.y);
+              ctx.scale(fill._renderer.scale.x, fill._renderer.scale.y);
             }
             ctx.fill();
             if (isOffset) {
@@ -283,6 +284,7 @@
               ctx.save();
               ctx.translate(
                 - stroke._renderer.offset.x, - stroke._renderer.offset.y);
+              ctx.scale(stroke._renderer.scale.x, stroke._renderer.scale.y);
             }
             ctx.stroke();
             if (isOffset) {
@@ -290,8 +292,6 @@
             }
           }
         }
-
-        ctx.restore();
 
         if (!defaultMatrix) {
           ctx.restore();
@@ -382,6 +382,7 @@
               ctx.save();
               ctx.translate(
                 - fill._renderer.offset.x, - fill._renderer.offset.y);
+              // ctx.scale(fill._renderer.scale.x, fill._renderer.scale.y);
               ctx.fillText(this.value, fill._renderer.offset.x, fill._renderer.offset.y);
               ctx.restore();
             } else {
@@ -393,6 +394,7 @@
               ctx.save();
               ctx.translate(
                 - stroke._renderer.offset.x, - stroke._renderer.offset.y);
+              // ctx.scale(stroke._renderer.scale.x, stroke._renderer.scale.y);
               ctx.strokeText(this.value, stroke._renderer.offset.x, stroke._renderer.offset.y);
               ctx.restore();
             } else {
@@ -475,12 +477,46 @@
 
         this._update();
 
+        var image = this.image;
+
         if (!this._renderer.effect || (this._flagLoaded && this.loaded)) {
           this._renderer.effect = ctx.createPattern(this.image, 'repeat');
-          this._renderer.offset = new Two.Vector(
-            this.image.width / 2,
-            this.image.height / 2
-          );
+        }
+
+        if (this._flagOffset || this._flagLoaded) {
+
+          if (!(this._renderer.offset instanceof Two.Vector)) {
+            this._renderer.offset = new Two.Vector();
+          }
+
+          this._renderer.offset.x = this._offset.x;
+          this._renderer.offset.y = this._offset.y;
+
+          if (image) {
+
+            if (this._scale instanceof Two.Vector) {
+              this._renderer.offset.x -= this._scale.x * image.width / 2;
+              this._renderer.offset.y -= this._scale.y * image.height / 2;
+            } else {
+              this._renderer.offset.x -= this._scale * image.width / 2;
+              this._renderer.offset.y -= this._scale * image.height / 2;
+            }
+          }
+
+        }
+
+        if (this._flagScale || this._flagLoaded) {
+
+          if (!(this._renderer.scale instanceof Two.Vector)) {
+            this._renderer.scale = new Two.Vector();
+          }
+
+          if (this._scale instanceof Two.Vector) {
+            this._renderer.scale.copy(this._scale);
+          } else {
+            this._renderer.scale.set(this._scale, this._scale);
+          }
+
         }
 
         return this.flagReset();
