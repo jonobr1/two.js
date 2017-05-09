@@ -83,8 +83,6 @@
         this.trigger(Two.Events.change);
       }
 
-      Two.Shape.prototype._update.call(this);
-
       return this;
 
     },

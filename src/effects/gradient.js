@@ -97,8 +97,11 @@
 
   var Gradient = Two.Gradient = function(stops) {
 
-    Two.Shape.call(this);
+    this._renderer = {};
     this._renderer.type = 'gradient';
+
+    this.id = Two.Identifier + Two.uniqueId();
+    this.classList = [];
 
     this._renderer.flagStops = _.bind(Gradient.FlagStops, this);
     this._renderer.bindStops = _.bind(Gradient.BindStops, this);
@@ -119,8 +122,6 @@
     ],
 
     MakeObservable: function(object) {
-
-      Two.Shape.MakeObservable(object);
 
       _.each(Gradient.Properties, Two.Utils.defineProperty, object);
 
@@ -194,7 +195,7 @@
 
   });
 
-  _.extend(Gradient.prototype, Two.Utils.Events, Two.Shape.prototype, {
+  _.extend(Gradient.prototype, Two.Utils.Events, {
 
     _flagStops: false,
     _flagSpread: false,
@@ -245,8 +246,6 @@
         this.trigger(Two.Events.change);
       }
 
-      Two.Shape.prototype._update.call(this);
-
       return this;
 
     },
@@ -254,8 +253,6 @@
     flagReset: function() {
 
       this._flagSpread = this._flagStops = false;
-
-      Two.Shape.prototype.flagReset.call(this);
 
       return this;
 
