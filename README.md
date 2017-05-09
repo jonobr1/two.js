@@ -71,6 +71,8 @@ instead to minify the build with uglify.
 <!-- For the latest nightly changes checkout the `dev` branch [here](../../tree/dev). -->
 
 #### Nightly
++ Added `Two.Texture`
++ Removed `Two.Shape` inheritance for `Two.Gradient`s
 + Enhanced `Two.Shape.scale` to allow both numbers and `Two.Vector` as property value
 + Made `Two.interpret` use latest primitives
 + Added `Two.Circle` primitive
