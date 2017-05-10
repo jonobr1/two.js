@@ -132,11 +132,11 @@
 
     isZero: function(eps) {
       eps = (typeof eps === 'undefined') ?  0.0001 : eps;
-      return (this.length() <  eps);
+      return (this.length() < eps);
     },
 
     toString: function() {
-      return this.x + ' ' + this.y;
+      return this.x + ', ' + this.y;
     },
 
     toObject: function() {
@@ -273,7 +273,7 @@
     },
 
     toString: function() {
-      return this._x + ' ' + this._y;
+      return this._x + ', ' + this._y;
     },
 
     toObject: function() {

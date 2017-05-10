@@ -2521,11 +2521,11 @@ this.Two = (function(previousTwo) {
 
     isZero: function(eps) {
       eps = (typeof eps === 'undefined') ?  0.0001 : eps;
-      return (this.length() <  eps);
+      return (this.length() < eps);
     },
 
     toString: function() {
-      return this.x + ' ' + this.y;
+      return this.x + ', ' + this.y;
     },
 
     toObject: function() {
@@ -2662,7 +2662,7 @@ this.Two = (function(previousTwo) {
     },
 
     toString: function() {
-      return this._x + ' ' + this._y;
+      return this._x + ', ' + this._y;
     },
 
     toObject: function() {
@@ -2842,6 +2842,9 @@ this.Two = (function(previousTwo) {
     },
 
     toString: function() {
+      if (!this.controls) {
+        return [this._x, this._y].join(', ');
+      }
       return [this._x, this._y, this.controls.left.x, this.controls.left.y,
         this.controls.right.x, this.controls.right.y].join(', ');
     }
