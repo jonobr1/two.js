@@ -646,4 +646,4 @@
     ctx.setTransform(1, 0, 0, 1, 0, 0);
   }
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);

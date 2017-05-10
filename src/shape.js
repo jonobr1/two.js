@@ -7,6 +7,7 @@
     // Private object for renderer specific variables.
     this._renderer = {};
     this._renderer.flagMatrix = _.bind(Shape.FlagMatrix, this);
+    this.isShape = true;
 
     this.id = Two.Identifier + Two.uniqueId();
     this.classList = [];
@@ -83,7 +84,7 @@
 
   });
 
-  _.extend(Shape.prototype, {
+  _.extend(Shape.prototype, Two.Utils.Events, {
 
     // Flags
 
@@ -163,4 +164,4 @@
 
   Shape.MakeObservable(Shape.prototype);
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);

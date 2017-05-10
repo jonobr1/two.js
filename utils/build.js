@@ -32,10 +32,10 @@ var files = [
 ];
 
 // Concatenated
-new compressor.minify({
-  type: 'no-compress',
-  fileIn: files,
-  fileOut: path.resolve(__dirname, '../build/two.js'),
+compressor.minify({
+  compressor: 'no-compress',
+  input: files,
+  output: path.resolve(__dirname, '../build/two.js'),
   callback: function(e) {
     if (!e) {
       console.log('concatenation complete');
@@ -46,10 +46,10 @@ new compressor.minify({
 });
 
 // Minified
-new compressor.minify({
-  type: 'gcc',
-  fileIn: files,
-  fileOut: path.resolve(__dirname, '../build/two.min.js'),
+compressor.minify({
+  compressor: 'gcc',
+  input: files,
+  output: path.resolve(__dirname, '../build/two.min.js'),
   callback: function(e){
     if (!e) {
       console.log('minified complete');

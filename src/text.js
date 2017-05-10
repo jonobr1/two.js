@@ -196,7 +196,9 @@
         clone[property] = this[property];
       }, this);
 
-      parent.add(clone);
+      if (parent) {
+        parent.add(clone);
+      }
 
       return clone;
 
@@ -275,4 +277,4 @@
 
   Two.Text.MakeObservable(Two.Text.prototype);
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);

@@ -73,6 +73,11 @@ instead to minify the build with uglify.
 #### Nightly
 + Added `Two.Texture`
 + Removed `Two.Shape` inheritance for `Two.Gradient`s
++ Added `Two.Vector.rotate` method [@ferm10n](https://github.com/ferm10n)
++ Objects clone to parent only if parent exists [@ferm10n](https://github.com/ferm10n)
++ Vendor agnostic `requestAnimationFrame` [@ferm10n](https://github.com/ferm10n)
++ `Two.Utils.Events.listenTo` and `Two.Utils.Events.stopListening` [@ferm10n](https://github.com/ferm10n)
++ `Two.Utils.Events` added to `Two.Path.prototype` for event inheritance [@ferm10n](https://github.com/ferm10n)
 + Enhanced `Two.Shape.scale` to allow both numbers and `Two.Vector` as property value
 + Made `Two.interpret` use latest primitives
 + Added `Two.Circle` primitive

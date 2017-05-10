@@ -271,24 +271,26 @@ this.Two = (function(previousTwo) {
 
       var lastTime = 0;
       var vendors = ['ms', 'moz', 'webkit', 'o'];
-      var request, cancel;
+      var request = root.requestAnimationFrame, cancel;
 
-      for (var i = 0; i < vendors.length; i++) {
-        request = root[vendors[i] + 'RequestAnimationFrame'] || request;
-        cancel = root[vendors[i] + 'CancelAnimationFrame']
-          || root[vendors[i] + 'CancelRequestAnimationFrame'] || cancel;
+      if(!request) {
+        for (var i = 0; i < vendors.length; i++) {
+          request = root[vendors[i] + 'RequestAnimationFrame'] || request;
+          cancel = root[vendors[i] + 'CancelAnimationFrame']
+            || root[vendors[i] + 'CancelRequestAnimationFrame'] || cancel;
+        }
+
+        request = request || function(callback, element) {
+          var currTime = new Date().getTime();
+          var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+          var id = root.setTimeout(function() { callback(currTime + timeToCall); }, timeToCall);
+          lastTime = currTime + timeToCall;
+          return id;
+        };
+        // cancel = cancel || function(id) {
+        //   clearTimeout(id);
+        // };
       }
-
-      request = request || function(callback, element) {
-        var currTime = new Date().getTime();
-        var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-        var id = root.setTimeout(function() { callback(currTime + timeToCall); }, timeToCall);
-        lastTime = currTime + timeToCall;
-        return id;
-      };
-      // cancel = cancel || function(id) {
-      //   clearTimeout(id);
-      // };
 
       request.init = _.once(loop);
 
@@ -818,7 +820,7 @@ this.Two = (function(previousTwo) {
           var points = node.getAttribute('points');
 
           var verts = [];
-          points.replace(/(-?[\d\.?]+),(-?[\d\.?]+)/g, function(match, p1, p2) {
+          points.replace(/(-?[\d\.?]+)[,|\s](-?[\d\.?]+)/g, function(match, p1, p2) {
             verts.push(new Two.Anchor(parseFloat(p1), parseFloat(p2)));
           });
 
@@ -1756,6 +1758,7 @@ this.Two = (function(previousTwo) {
               if (callback) {
                 for (var j = 0, k = list.length; j < k; j++) {
                   var ev = list[j];
+                  ev = ev.callback ? ev.callback : ev;
                   if (callback && callback !== ev) {
                     events.push(ev);
                   }
@@ -1774,6 +1777,35 @@ this.Two = (function(previousTwo) {
           var events = this._events[name];
           if (events) trigger(this, events, args);
           return this;
+        },
+
+        listen: function (obj, name, callback) {
+
+          var bound = this;
+
+          if (obj) {
+            var ev = function () {
+              callback.apply(bound, arguments);
+            };
+
+            // add references about the object that assigned this listener
+            ev.obj = obj;
+            ev.name = name;
+            ev.callback = callback;
+
+            obj.on(name, ev);
+          }
+
+          return this;
+
+        },
+
+        ignore: function (obj, name, callback) {
+
+          obj.off(name, callback);
+
+          return this;
+
         }
 
       }
@@ -2287,4 +2319,4 @@ this.Two = (function(previousTwo) {
 
   return Two;
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);

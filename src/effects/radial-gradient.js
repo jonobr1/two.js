@@ -77,7 +77,9 @@
         clone[k] = this[k];
       }, this);
 
-      parent.add(clone);
+      if (parent) {
+        parent.add(clone);
+      }
 
       return clone;
 
@@ -123,4 +125,4 @@
 
   RadialGradient.MakeObservable(RadialGradient.prototype);
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);

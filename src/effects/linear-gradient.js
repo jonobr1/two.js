@@ -60,7 +60,9 @@
         clone[k] = this[k];
       }, this);
 
-      parent.add(clone);
+      if (parent) {
+        parent.add(clone);
+      }
 
       return clone;
 
@@ -101,4 +103,4 @@
 
   LinearGradient.MakeObservable(LinearGradient.prototype);
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);

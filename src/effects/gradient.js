@@ -214,11 +214,9 @@
         clone[k] = this[k];
       }, this);
 
-      clone.translation.copy(this.translation);
-      clone.rotation = this.rotation;
-      clone.scale = this.scale;
-
-      parent.add(clone);
+      if (parent) {
+        parent.add(clone);
+      }
 
       return clone;
 
@@ -262,4 +260,4 @@
 
   Gradient.MakeObservable(Gradient.prototype);
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);

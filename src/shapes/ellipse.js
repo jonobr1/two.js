@@ -76,4 +76,4 @@
 
   Ellipse.MakeObservable(Ellipse.prototype);
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);

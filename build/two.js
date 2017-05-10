@@ -299,24 +299,26 @@ this.Two = (function(previousTwo) {
 
       var lastTime = 0;
       var vendors = ['ms', 'moz', 'webkit', 'o'];
-      var request, cancel;
+      var request = root.requestAnimationFrame, cancel;
 
-      for (var i = 0; i < vendors.length; i++) {
-        request = root[vendors[i] + 'RequestAnimationFrame'] || request;
-        cancel = root[vendors[i] + 'CancelAnimationFrame']
-          || root[vendors[i] + 'CancelRequestAnimationFrame'] || cancel;
+      if(!request) {
+        for (var i = 0; i < vendors.length; i++) {
+          request = root[vendors[i] + 'RequestAnimationFrame'] || request;
+          cancel = root[vendors[i] + 'CancelAnimationFrame']
+            || root[vendors[i] + 'CancelRequestAnimationFrame'] || cancel;
+        }
+
+        request = request || function(callback, element) {
+          var currTime = new Date().getTime();
+          var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+          var id = root.setTimeout(function() { callback(currTime + timeToCall); }, timeToCall);
+          lastTime = currTime + timeToCall;
+          return id;
+        };
+        // cancel = cancel || function(id) {
+        //   clearTimeout(id);
+        // };
       }
-
-      request = request || function(callback, element) {
-        var currTime = new Date().getTime();
-        var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-        var id = root.setTimeout(function() { callback(currTime + timeToCall); }, timeToCall);
-        lastTime = currTime + timeToCall;
-        return id;
-      };
-      // cancel = cancel || function(id) {
-      //   clearTimeout(id);
-      // };
 
       request.init = _.once(loop);
 
@@ -846,7 +848,7 @@ this.Two = (function(previousTwo) {
           var points = node.getAttribute('points');
 
           var verts = [];
-          points.replace(/(-?[\d\.?]+),(-?[\d\.?]+)/g, function(match, p1, p2) {
+          points.replace(/(-?[\d\.?]+)[,|\s](-?[\d\.?]+)/g, function(match, p1, p2) {
             verts.push(new Two.Anchor(parseFloat(p1), parseFloat(p2)));
           });
 
@@ -1784,6 +1786,7 @@ this.Two = (function(previousTwo) {
               if (callback) {
                 for (var j = 0, k = list.length; j < k; j++) {
                   var ev = list[j];
+                  ev = ev.callback ? ev.callback : ev;
                   if (callback && callback !== ev) {
                     events.push(ev);
                   }
@@ -1802,6 +1805,35 @@ this.Two = (function(previousTwo) {
           var events = this._events[name];
           if (events) trigger(this, events, args);
           return this;
+        },
+
+        listen: function (obj, name, callback) {
+
+          var bound = this;
+
+          if (obj) {
+            var ev = function () {
+              callback.apply(bound, arguments);
+            };
+
+            // add references about the object that assigned this listener
+            ev.obj = obj;
+            ev.name = name;
+            ev.callback = callback;
+
+            obj.on(name, ev);
+          }
+
+          return this;
+
+        },
+
+        ignore: function (obj, name, callback) {
+
+          obj.off(name, callback);
+
+          return this;
+
         }
 
       }
@@ -2315,7 +2347,7 @@ this.Two = (function(previousTwo) {
 
   return Two;
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);
 
 (function(Two) {
 
@@ -2353,7 +2385,8 @@ this.Two = (function(previousTwo) {
 
   });
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);
+
 (function(Two) {
 
   var _ = Two.Utils;
@@ -2492,11 +2525,19 @@ this.Two = (function(previousTwo) {
     },
 
     toString: function() {
-      return [this.x, this.y].join(' ');
+      return this.x + ' ' + this.y;
     },
 
     toObject: function() {
       return { x: this.x, y: this.y };
+    },
+
+    rotate: function (radians) {
+      var cos = Math.cos(radians);
+      var sin = Math.sin(radians);
+      this.x = this.x * cos - this.y * sin;
+      this.y = this.x * sin + this.y * cos;
+      return this;
     }
 
   });
@@ -2621,11 +2662,19 @@ this.Two = (function(previousTwo) {
     },
 
     toString: function() {
-      return [this._x, this._y].join(' ');
+      return this._x + ' ' + this._y;
     },
 
     toObject: function() {
       return { x: this._x, y: this._y };
+    },
+
+    rotate: function (radians) {
+      var cos = Math.cos(radians);
+      var sin = Math.sin(radians);
+      this._x = this._x * cos - this._y * sin;
+      this._y = this._x * sin + this._y * cos;
+      return this;
     }
 
   };
@@ -2675,7 +2724,7 @@ this.Two = (function(previousTwo) {
 
   };
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);
 
 (function(Two) {
 
@@ -2793,11 +2842,8 @@ this.Two = (function(previousTwo) {
     },
 
     toString: function() {
-      if (!this.controls) {
-        return [this._x, this._y].join(' ');
-      }
       return [this._x, this._y, this.controls.left.x, this.controls.left.y,
-        this.controls.right.x, this.controls.right.y].join(' ');
+        this.controls.right.x, this.controls.right.y].join(', ');
     }
 
   };
@@ -2852,7 +2898,7 @@ this.Two = (function(previousTwo) {
     _.extend(this, AnchorProto);
   };
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);
 
 (function(Two) {
 
@@ -3229,7 +3275,7 @@ this.Two = (function(previousTwo) {
 
   });
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);
 
 (function(Two) {
 
@@ -3595,24 +3641,20 @@ this.Two = (function(previousTwo) {
 
         if (this._fill && this._fill._renderer) {
           this._fill._update();
+          svg[this._fill._renderer.type].render.call(this._fill, domElement, true);
         }
 
         if (this._flagFill) {
-          if (this._fill && this._fill._renderer) {
-            svg[this._fill._renderer.type].render.call(this._fill, domElement, true);
-          }
           changed.fill = this._fill && this._fill.id
             ? 'url(#' + this._fill.id + ')' : this._fill;
         }
 
         if (this._stroke && this._stroke._renderer) {
           this._stroke._update();
+          svg[this._stroke._renderer.type].render.call(this._stroke, domElement, true);
         }
 
         if (this._flagStroke) {
-          if (this._stroke && this._stroke._renderer) {
-            svg[this._stroke._renderer.type].render.call(this._stroke, domElement, true);
-          }
           changed.stroke = this._stroke && this._stroke.id
             ? 'url(#' + this._stroke.id + ')' : this._stroke;
         }
@@ -3732,21 +3774,17 @@ this.Two = (function(previousTwo) {
         }
         if (this._fill && this._fill._renderer) {
           this._fill._update();
+          svg[this._fill._renderer.type].render.call(this._fill, domElement, true);
         }
         if (this._flagFill) {
-          if (this._fill && this._fill._renderer) {
-            svg[this._fill._renderer.type].render.call(this._fill, domElement, true);
-          }
           changed.fill = this._fill && this._fill.id
             ? 'url(#' + this._fill.id + ')' : this._fill;
         }
         if (this._stroke && this._stroke._renderer) {
           this._stroke._update();
+          svg[this._stroke._renderer.type].render.call(this._stroke, domElement, true);
         }
         if (this._flagStroke) {
-          if (this._stroke && this._stroke._renderer) {
-            svg[this._stroke._renderer.type].render.call(this._stroke, domElement, true);
-          }
           changed.stroke = this._stroke && this._stroke.id
             ? 'url(#' + this._stroke.id + ')' : this._stroke;
         }
@@ -3979,21 +4017,15 @@ this.Two = (function(previousTwo) {
         }
 
         var changed = {};
+        var styles = {};
+        var image = this.image;
 
         if (this._flagLoaded && this.loaded) {
 
-          var image = this.image;
-          changed.x = - image.width / 2;
-          changed.y = - image.height / 2;
-          changed.width = image.width;
-          changed.height = image.height;
-
-          var styles = {
-            x: 0,
-            y: 0,
-            width: image.width,
-            height: image.height
-          };
+          styles.x = 0;
+          styles.y = 0;
+          styles.width = image.width;
+          styles.height = image.height;
 
           switch (image.nodeName.toLowerCase()) {
 
@@ -4007,12 +4039,51 @@ this.Two = (function(previousTwo) {
 
           }
 
-          if (!this._renderer.image) {
-            this._renderer.image = svg.createElement('image', styles);
-          } else {
-            svg.setAttributes(this._renderer.image, styles);
+        }
+
+        if (this._flagOffset || this._flagLoaded) {
+
+          changed.x = this._offset.x;
+          changed.y = this._offset.y;
+
+          if (image) {
+
+            if (this._scale instanceof Two.Vector) {
+              changed.x -= this._scale.x * image.width / 2;
+              changed.y -= this._scale.y * image.height / 2;
+            } else {
+              changed.x -= this._scale * image.width / 2;
+              changed.y -= this._scale * image.height / 2;
+            }
+          }
+        }
+
+        if (this._flagScale || this._flagLoaded) {
+
+          changed.width = 0;
+          changed.height = 0;
+
+          if (image) {
+            if (this._scale instanceof Two.Vector) {
+              changed.width = image.width * this._scale.x;
+              changed.height = image.height * this._scale.y;
+            } else {
+              changed.width = image.width * this._scale;
+              changed.height = image.height * this._scale;
+            }
           }
 
+          styles.width = changed.width;
+          styles.height = changed.height;
+
+        }
+
+        if (this._flagScale || this._flagLoaded) {
+          if (!this._renderer.image) {
+            this._renderer.image = svg.createElement('image', styles);
+          } else if (!_.isEmpty(styles)) {
+            svg.setAttributes(this._renderer.image, styles);
+          }
         }
 
         if (!this._renderer.elem) {
@@ -4022,7 +4093,7 @@ this.Two = (function(previousTwo) {
           this._renderer.elem = svg.createElement('pattern', changed);
           domElement.defs.appendChild(this._renderer.elem);
 
-        } else {
+        } else if (!_.isEmpty(changed)) {
 
           svg.setAttributes(this._renderer.elem, changed);
 
@@ -4090,7 +4161,7 @@ this.Two = (function(previousTwo) {
 
   });
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);
 
 (function(Two) {
 
@@ -4365,6 +4436,7 @@ this.Two = (function(previousTwo) {
               ctx.save();
               ctx.translate(
                 - fill._renderer.offset.x, - fill._renderer.offset.y);
+              ctx.scale(fill._renderer.scale.x, fill._renderer.scale.y);
             }
             ctx.fill();
             if (isOffset) {
@@ -4377,6 +4449,8 @@ this.Two = (function(previousTwo) {
               ctx.save();
               ctx.translate(
                 - stroke._renderer.offset.x, - stroke._renderer.offset.y);
+              ctx.scale(stroke._renderer.scale.x, stroke._renderer.scale.y);
+              ctx.lineWidth = linewidth / stroke._renderer.scale.x;
             }
             ctx.stroke();
             if (isOffset) {
@@ -4384,8 +4458,6 @@ this.Two = (function(previousTwo) {
             }
           }
         }
-
-        ctx.restore();
 
         if (!defaultMatrix) {
           ctx.restore();
@@ -4415,7 +4487,10 @@ this.Two = (function(previousTwo) {
         var opacity = this._opacity * this.parent._renderer.opacity;
         var visible = this._visible;
         var defaultMatrix = isDefaultMatrix(matrix);
-        var isOffset;
+        var isOffset = fill._renderer && fill._renderer.offset
+          && stroke._renderer && stroke._renderer.offset;
+
+        var a, b, c, d, e, sx, sy;
 
         // mask = this._mask;
         var clip = this._clip;
@@ -4440,8 +4515,10 @@ this.Two = (function(previousTwo) {
         //   canvas[mask._renderer.type].render.call(mask, ctx, true);
         // }
 
-        ctx.font = [this._style, this._weight, this._size + 'px/' +
-          this._leading + 'px', this._family].join(' ');
+        if (!isOffset) {
+          ctx.font = [this._style, this._weight, this._size + 'px/' +
+            this._leading + 'px', this._family].join(' ');
+        }
 
         ctx.textAlign = canvas.alignments[this._alignment] || this._alignment;
         ctx.textBaseline = this._baseline;
@@ -4471,24 +4548,61 @@ this.Two = (function(previousTwo) {
         }
 
         if (!clip && !parentClipped) {
+
           if (!canvas.isHidden.test(fill)) {
+
             if (fill._renderer && fill._renderer.offset) {
+
+              sx = toFixed(fill._renderer.scale.x);
+              sy = toFixed(fill._renderer.scale.y);
+
               ctx.save();
-              ctx.translate(
-                - fill._renderer.offset.x, - fill._renderer.offset.y);
-              ctx.fillText(this.value, fill._renderer.offset.x, fill._renderer.offset.y);
+              ctx.translate( - toFixed(fill._renderer.offset.x),
+                - toFixed(fill._renderer.offset.y));
+              ctx.scale(sx, sy);
+
+              a = this._size / fill._renderer.scale.y;
+              b = this._leading / fill._renderer.scale.y;
+              ctx.font = [this._style, this._weight, toFixed(a) + 'px/',
+                toFixed(b) + 'px', this._family].join(' ');
+
+              c = fill._renderer.offset.x / fill._renderer.scale.x;
+              d = fill._renderer.offset.y / fill._renderer.scale.y;
+
+              ctx.fillText(this.value, toFixed(c), toFixed(d));
               ctx.restore();
+
             } else {
               ctx.fillText(this.value, 0, 0);
             }
+
           }
+
           if (!canvas.isHidden.test(stroke)) {
+
             if (stroke._renderer && stroke._renderer.offset) {
+
+              sx = toFixed(stroke._renderer.scale.x);
+              sy = toFixed(stroke._renderer.scale.y);
+
               ctx.save();
-              ctx.translate(
-                - stroke._renderer.offset.x, - stroke._renderer.offset.y);
-              ctx.strokeText(this.value, stroke._renderer.offset.x, stroke._renderer.offset.y);
+              ctx.translate(- toFixed(stroke._renderer.offset.x),
+                - toFixed(stroke._renderer.offset.y));
+              ctx.scale(sx, sy);
+
+              a = this._size / stroke._renderer.scale.y;
+              b = this._leading / stroke._renderer.scale.y;
+              ctx.font = [this._style, this._weight, toFixed(a) + 'px/',
+                toFixed(b) + 'px', this._family].join(' ');
+
+              c = stroke._renderer.offset.x / stroke._renderer.scale.x;
+              d = stroke._renderer.offset.y / stroke._renderer.scale.y;
+              e = linewidth / stroke._renderer.scale.x;
+
+              ctx.lineWidth = toFixed(e);
+              ctx.strokeText(this.value, toFixed(c), toFixed(d));
               ctx.restore();
+
             } else {
               ctx.strokeText(this.value, 0, 0);
             }
@@ -4569,12 +4683,46 @@ this.Two = (function(previousTwo) {
 
         this._update();
 
+        var image = this.image;
+
         if (!this._renderer.effect || (this._flagLoaded && this.loaded)) {
           this._renderer.effect = ctx.createPattern(this.image, 'repeat');
-          this._renderer.offset = new Two.Vector(
-            this.image.width / 2,
-            this.image.height / 2
-          );
+        }
+
+        if (this._flagOffset || this._flagLoaded) {
+
+          if (!(this._renderer.offset instanceof Two.Vector)) {
+            this._renderer.offset = new Two.Vector();
+          }
+
+          this._renderer.offset.x = this._offset.x;
+          this._renderer.offset.y = this._offset.y;
+
+          if (image) {
+
+            if (this._scale instanceof Two.Vector) {
+              this._renderer.offset.x -= this._scale.x * image.width / 2;
+              this._renderer.offset.y -= this._scale.y * image.height / 2;
+            } else {
+              this._renderer.offset.x -= this._scale * image.width / 2;
+              this._renderer.offset.y -= this._scale * image.height / 2;
+            }
+          }
+
+        }
+
+        if (this._flagScale || this._flagLoaded) {
+
+          if (!(this._renderer.scale instanceof Two.Vector)) {
+            this._renderer.scale = new Two.Vector();
+          }
+
+          if (this._scale instanceof Two.Vector) {
+            this._renderer.scale.copy(this._scale);
+          } else {
+            this._renderer.scale.set(this._scale, this._scale);
+          }
+
         }
 
         return this.flagReset();
@@ -4663,7 +4811,7 @@ this.Two = (function(previousTwo) {
     ctx.setTransform(1, 0, 0, 1, 0, 0);
   }
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);
 
 (function(Two) {
 
@@ -5717,7 +5865,7 @@ this.Two = (function(previousTwo) {
 
   });
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);
 
 (function(Two) {
 
@@ -5728,6 +5876,7 @@ this.Two = (function(previousTwo) {
     // Private object for renderer specific variables.
     this._renderer = {};
     this._renderer.flagMatrix = _.bind(Shape.FlagMatrix, this);
+    this.isShape = true;
 
     this.id = Two.Identifier + Two.uniqueId();
     this.classList = [];
@@ -5804,7 +5953,7 @@ this.Two = (function(previousTwo) {
 
   });
 
-  _.extend(Shape.prototype, {
+  _.extend(Shape.prototype, Two.Utils.Events, {
 
     // Flags
 
@@ -5884,7 +6033,7 @@ this.Two = (function(previousTwo) {
 
   Shape.MakeObservable(Shape.prototype);
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);
 
 (function(Two) {
 
@@ -6241,7 +6390,9 @@ this.Two = (function(previousTwo) {
       clone.rotation = this.rotation;
       clone.scale = this.scale;
 
-      parent.add(clone);
+      if (parent) {
+        parent.add(clone);
+      }
 
       return clone;
 
@@ -6705,7 +6856,7 @@ this.Two = (function(previousTwo) {
 
   }
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);
 
 (function(Two) {
 
@@ -6733,7 +6884,7 @@ this.Two = (function(previousTwo) {
 
   Path.MakeObservable(Line.prototype);
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);
 
 (function(Two) {
 
@@ -6809,7 +6960,7 @@ this.Two = (function(previousTwo) {
 
   Rectangle.MakeObservable(Rectangle.prototype);
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);
 
 (function(Two) {
 
@@ -6889,7 +7040,7 @@ this.Two = (function(previousTwo) {
 
   Ellipse.MakeObservable(Ellipse.prototype);
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);
 
 (function(Two) {
 
@@ -6961,7 +7112,7 @@ this.Two = (function(previousTwo) {
 
   Circle.MakeObservable(Circle.prototype);
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);
 
 (function(Two) {
 
@@ -7056,7 +7207,7 @@ this.Two = (function(previousTwo) {
 
   Polygon.MakeObservable(Polygon.prototype);
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);
 
 (function(Two) {
 
@@ -7186,7 +7337,7 @@ this.Two = (function(previousTwo) {
             last = length - 1;
           }
 
-          /** 
+          /**
            * Inner Circle
            */
           for (i = 0; i < length; i++) {
@@ -7271,7 +7422,7 @@ this.Two = (function(previousTwo) {
     return v % l;
   }
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);
 
 (function(Two) {
 
@@ -7376,7 +7527,7 @@ this.Two = (function(previousTwo) {
 
   Star.MakeObservable(Star.prototype);
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);
 
 (function(Two) {
 
@@ -7533,7 +7684,7 @@ this.Two = (function(previousTwo) {
 
   RoundedRectangle.MakeObservable(RoundedRectangle.prototype);
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);
 
 (function(Two) {
 
@@ -7733,7 +7884,9 @@ this.Two = (function(previousTwo) {
         clone[property] = this[property];
       }, this);
 
-      parent.add(clone);
+      if (parent) {
+        parent.add(clone);
+      }
 
       return clone;
 
@@ -7812,7 +7965,7 @@ this.Two = (function(previousTwo) {
 
   Two.Text.MakeObservable(Two.Text.prototype);
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);
 
 (function(Two) {
 
@@ -7913,8 +8066,11 @@ this.Two = (function(previousTwo) {
 
   var Gradient = Two.Gradient = function(stops) {
 
-    Two.Shape.call(this);
+    this._renderer = {};
     this._renderer.type = 'gradient';
+
+    this.id = Two.Identifier + Two.uniqueId();
+    this.classList = [];
 
     this._renderer.flagStops = _.bind(Gradient.FlagStops, this);
     this._renderer.bindStops = _.bind(Gradient.BindStops, this);
@@ -7935,8 +8091,6 @@ this.Two = (function(previousTwo) {
     ],
 
     MakeObservable: function(object) {
-
-      Two.Shape.MakeObservable(object);
 
       _.each(Gradient.Properties, Two.Utils.defineProperty, object);
 
@@ -8010,7 +8164,7 @@ this.Two = (function(previousTwo) {
 
   });
 
-  _.extend(Gradient.prototype, Two.Utils.Events, Two.Shape.prototype, {
+  _.extend(Gradient.prototype, Two.Utils.Events, {
 
     _flagStops: false,
     _flagSpread: false,
@@ -8029,11 +8183,9 @@ this.Two = (function(previousTwo) {
         clone[k] = this[k];
       }, this);
 
-      clone.translation.copy(this.translation);
-      clone.rotation = this.rotation;
-      clone.scale = this.scale;
-
-      parent.add(clone);
+      if (parent) {
+        parent.add(clone);
+      }
 
       return clone;
 
@@ -8061,8 +8213,6 @@ this.Two = (function(previousTwo) {
         this.trigger(Two.Events.change);
       }
 
-      Two.Shape.prototype._update.call(this);
-
       return this;
 
     },
@@ -8070,8 +8220,6 @@ this.Two = (function(previousTwo) {
     flagReset: function() {
 
       this._flagSpread = this._flagStops = false;
-
-      Two.Shape.prototype.flagReset.call(this);
 
       return this;
 
@@ -8081,7 +8229,7 @@ this.Two = (function(previousTwo) {
 
   Gradient.MakeObservable(Gradient.prototype);
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);
 
 (function(Two) {
 
@@ -8145,7 +8293,9 @@ this.Two = (function(previousTwo) {
         clone[k] = this[k];
       }, this);
 
-      parent.add(clone);
+      if (parent) {
+        parent.add(clone);
+      }
 
       return clone;
 
@@ -8168,8 +8318,6 @@ this.Two = (function(previousTwo) {
         this.trigger(Two.Events.change);
       }
 
-      Two.Shape.prototype._update.call(this);
-
       return this;
 
     },
@@ -8188,7 +8336,7 @@ this.Two = (function(previousTwo) {
 
   LinearGradient.MakeObservable(LinearGradient.prototype);
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);
 
 (function(Two) {
 
@@ -8269,7 +8417,9 @@ this.Two = (function(previousTwo) {
         clone[k] = this[k];
       }, this);
 
-      parent.add(clone);
+      if (parent) {
+        parent.add(clone);
+      }
 
       return clone;
 
@@ -8297,8 +8447,6 @@ this.Two = (function(previousTwo) {
         this.trigger(Two.Events.change);
       }
 
-      Two.Shape.prototype._update.call(this);
-
       return this;
 
     },
@@ -8317,7 +8465,7 @@ this.Two = (function(previousTwo) {
 
   RadialGradient.MakeObservable(RadialGradient.prototype);
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);
 
 (function(Two) {
 
@@ -8325,8 +8473,15 @@ this.Two = (function(previousTwo) {
 
   var Texture = Two.Texture = function(src, callback) {
 
-    Two.Shape.call(this);
+    this._renderer = {};
     this._renderer.type = 'texture';
+    this._renderer.flagOffset = _.bind(Texture.FlagOffset, this);
+    this._renderer.flagScale = _.bind(Texture.FlagScale, this);
+
+    this.id = Two.Identifier + Two.uniqueId();
+    this.classList = [];
+
+    this.offset = new Two.Vector();
 
     if (_.isFunction(callback)) {
       var loaded = _.bind(function() {
@@ -8420,11 +8575,54 @@ this.Two = (function(previousTwo) {
 
     },
 
+    FlagOffset: function() {
+      this._flagOffset = true;
+    },
+
+    FlagScale: function() {
+      this._flagScale = true;
+    },
+
     MakeObservable: function(object) {
 
-      Two.Shape.MakeObservable(object);
-
       _.each(Texture.Properties, Two.Utils.defineProperty, object);
+
+      Object.defineProperty(object, 'offset', {
+        enumerable: true,
+        get: function() {
+          return this._offset;
+        },
+        set: function(v) {
+          if (this._offset) {
+            this._offset.unbind(Two.Events.change, this._renderer.flagOffset);
+          }
+          this._offset = v;
+          this._offset.bind(Two.Events.change, this._renderer.flagOffset);
+          this._flagOffset = true;
+        }
+      });
+
+      Object.defineProperty(object, 'scale', {
+        enumerable: true,
+        get: function() {
+          return this._scale;
+        },
+        set: function(v) {
+
+          if (this._scale instanceof Two.Vector) {
+            this._scale.unbind(Two.Events.change, this._renderer.flagScale);
+          }
+
+          this._scale = v;
+
+          if (this._scale instanceof Two.Vector) {
+            this._scale.bind(Two.Events.change, this._renderer.flagScale);
+          }
+
+          this._flagScale = true;
+
+        }
+      });
 
     }
 
@@ -8436,9 +8634,15 @@ this.Two = (function(previousTwo) {
     _flagImage: false,
     _flagLoaded: false,
 
+    _flagOffset: false,
+    _flagScale: false,
+
     _src: '',
     _image: null,
     _loaded: false,
+
+    _scale: 1,
+    _offset: null,
 
     clone: function() {
       return new Texture(this.src);
@@ -8470,7 +8674,9 @@ this.Two = (function(previousTwo) {
 
     flagReset: function() {
 
-      this._flagSrc = this._flagImage = this._flagLoaded = false;
+      this._flagSrc = this._flagImage = this._flagLoaded
+        = this._flagScale = this._flagOffset = false;
+
       return this;
 
     }
@@ -8720,15 +8926,25 @@ this.Two = (function(previousTwo) {
       parent = parent || this.parent;
 
       var group = new Group();
-      parent.add(group);
-
       var children = _.map(this.children, function(child) {
         return child.clone(group);
       });
 
+      group.add(children);
+
+      group.opacity = this.opacity;
+
+      if (this.mask) {
+        group.mask = this.mask;
+      }
+
       group.translation.copy(this.translation);
       group.rotation = this.rotation;
       group.scale = this.scale;
+
+      if (parent) {
+        parent.add(group);
+      }
 
       return group;
 
@@ -8745,7 +8961,9 @@ this.Two = (function(previousTwo) {
         children: [],
         translation: this.translation.toObject(),
         rotation: this.rotation,
-        scale: this.scale
+        scale: this.scale,
+        opacity: this.opacity,
+        mask: (this.mask ? this.mask.toObject() : null)
       };
 
       _.each(this.children, function(child, i) {
@@ -8787,7 +9005,9 @@ this.Two = (function(previousTwo) {
       };
 
       this.children.forEach(function(child) {
-        child.translation.subSelf(rect.centroid);
+        if (child.isShape) {
+          child.translation.subSelf(rect.centroid);
+        }
       });
 
       // this.translation.copy(rect.centroid);
@@ -9070,4 +9290,4 @@ this.Two = (function(previousTwo) {
 
   }
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);
