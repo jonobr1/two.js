@@ -524,7 +524,7 @@
           this._renderer.effect = ctx.createPattern(this.image, 'repeat');
         }
 
-        if (this._flagOffset || this._flagLoaded) {
+        if (this._flagOffset || this._flagLoaded || this._flagScale) {
 
           if (!(this._renderer.offset instanceof Two.Vector)) {
             this._renderer.offset = new Two.Vector();

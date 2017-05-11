@@ -762,7 +762,7 @@
 
         }
 
-        if (this._flagOffset || this._flagLoaded) {
+        if (this._flagOffset || this._flagLoaded || this._flagScale) {
 
           changed.x = this._offset.x;
           changed.y = this._offset.y;

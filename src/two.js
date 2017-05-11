@@ -2194,6 +2194,13 @@ this.Two = (function(previousTwo) {
 
     },
 
+    makeTexture: function(path, callback) {
+
+      var texture = new Two.Texture(path, callback);
+      return texture;
+
+    },
+
     makeGroup: function(o) {
 
       var objects = o;
