@@ -769,14 +769,18 @@
 
           if (image) {
 
+            changed.x -= image.width / 2;
+            changed.y -= image.height / 2;
+
             if (this._scale instanceof Two.Vector) {
-              changed.x -= this._scale.x * image.width / 2;
-              changed.y -= this._scale.y * image.height / 2;
+              changed.x *= this._scale.x;
+              changed.y *= this._scale.y;
             } else {
-              changed.x -= this._scale * image.width / 2;
-              changed.y -= this._scale * image.height / 2;
+              changed.x *= this._scale;
+              changed.y *= this._scale;
             }
           }
+
         }
 
         if (this._flagScale || this._flagLoaded) {

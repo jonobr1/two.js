@@ -535,12 +535,15 @@
 
           if (image) {
 
+            this._renderer.offset.x -= image.width / 2;
+            this._renderer.offset.y -= image.height / 2;
+
             if (this._scale instanceof Two.Vector) {
-              this._renderer.offset.x -= this._scale.x * image.width / 2;
-              this._renderer.offset.y -= this._scale.y * image.height / 2;
+              this._renderer.offset.x *= this._scale.x;
+              this._renderer.offset.y *= this._scale.y;
             } else {
-              this._renderer.offset.x -= this._scale * image.width / 2;
-              this._renderer.offset.y -= this._scale * image.height / 2;
+              this._renderer.offset.x *= this._scale;
+              this._renderer.offset.y *= this._scale;
             }
           }
 

@@ -30,6 +30,8 @@
       this.image = src;
     }
 
+    this._update();
+
   };
 
   _.extend(Texture, {
