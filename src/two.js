@@ -522,6 +522,8 @@
             case 'class':
               elem.classList = value.split(' ');
               break;
+            case 'id':
+              elem._svgId = v.nodeValue;
           }
         }
 
