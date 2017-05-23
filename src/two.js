@@ -435,6 +435,8 @@ this.Two = (function(previousTwo) {
 
     Utils: _.extend(_, {
 
+      performance: perf,
+
       defineProperty: function(property) {
 
         var object = this;
@@ -1684,6 +1686,10 @@ this.Two = (function(previousTwo) {
 
       },
 
+      lerp: function(a, b, t) {
+        return t * (b - a) + a;
+      },
+
       // A pretty fast toFixed(3) alternative
       // See http://jsperf.com/parsefloat-tofixed-vs-math-round/18
       toFixed: function(v) {
@@ -2191,6 +2197,18 @@ this.Two = (function(previousTwo) {
       this.add(gradient);
 
       return gradient;
+
+    },
+
+    makeSprite: function(path, x, y, cols, rows, frameRate, autostart) {
+
+      var sprite = new Two.Sprite(path, x, y, cols, rows, frameRate);
+      if (!!autostart) {
+        sprite.play();
+      }
+      two.add(sprite);
+
+      return sprite;
 
     },
 

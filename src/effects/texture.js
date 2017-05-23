@@ -60,14 +60,14 @@
     Register: {
       canvas: function(texture, callback) {
         texture._src = '#' + texture.id;
-        Texture.ImageRegistry.add(texture.path, texture.image);
+        Texture.ImageRegistry.add(texture.src, texture.image);
         if (_.isFunction(callback)) {
           callback();
         }
       },
       image: function(texture, callback) {
+
         var loaded = function(e) {
-          Texture.ImageRegistry.add(texture.path, texture.image);
           texture.image.removeEventListener('load', loaded, false);
           texture.image.removeEventListener('error', error, false);
           if (_.isFunction(callback)) {
@@ -79,9 +79,13 @@
           texture.image.removeEventListener('error', error, false);
           throw new Two.Utils.Error('unable to load ' + texture.src);
         };
+
         texture.image.addEventListener('load', loaded, false);
         texture.image.addEventListener('error', error, false);
+        texture.image.setAttribute('two-src', texture.src);
+        Texture.ImageRegistry.add(texture.src, texture.image);
         texture.image.src = texture.src;
+
       }
     },
 
@@ -94,7 +98,7 @@
         if (/canvas/i.test(image.nodeName)) {
           Texture.Register.canvas(texture, callback)
         } else {
-          texture._src = image.src;
+          texture._src = image.getAttribute('two-src') || image.src;
           Texture.Register.image(texture, callback);
         }
       }
@@ -218,4 +222,4 @@
 
   Texture.MakeObservable(Texture.prototype);
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);

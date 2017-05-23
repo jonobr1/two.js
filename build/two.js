@@ -463,6 +463,8 @@ this.Two = (function(previousTwo) {
 
     Utils: _.extend(_, {
 
+      performance: perf,
+
       defineProperty: function(property) {
 
         var object = this;
@@ -1712,6 +1714,10 @@ this.Two = (function(previousTwo) {
 
       },
 
+      lerp: function(a, b, t) {
+        return t * (b - a) + a;
+      },
+
       // A pretty fast toFixed(3) alternative
       // See http://jsperf.com/parsefloat-tofixed-vs-math-round/18
       toFixed: function(v) {
@@ -2219,6 +2225,25 @@ this.Two = (function(previousTwo) {
       this.add(gradient);
 
       return gradient;
+
+    },
+
+    makeSprite: function(path, x, y, cols, rows, frameRate, autostart) {
+
+      var sprite = new Two.Sprite(path, x, y, cols, rows, frameRate);
+      if (!!autostart) {
+        sprite.play();
+      }
+      two.add(sprite);
+
+      return sprite;
+
+    },
+
+    makeTexture: function(path, callback) {
+
+      var texture = new Two.Texture(path, callback);
+      return texture;
 
     },
 
@@ -4044,21 +4069,25 @@ this.Two = (function(previousTwo) {
 
         }
 
-        if (this._flagOffset || this._flagLoaded) {
+        if (this._flagOffset || this._flagLoaded || this._flagScale) {
 
           changed.x = this._offset.x;
           changed.y = this._offset.y;
 
           if (image) {
 
+            changed.x -= image.width / 2;
+            changed.y -= image.height / 2;
+
             if (this._scale instanceof Two.Vector) {
-              changed.x -= this._scale.x * image.width / 2;
-              changed.y -= this._scale.y * image.height / 2;
+              changed.x *= this._scale.x;
+              changed.y *= this._scale.y;
             } else {
-              changed.x -= this._scale * image.width / 2;
-              changed.y -= this._scale * image.height / 2;
+              changed.x *= this._scale;
+              changed.y *= this._scale;
             }
           }
+
         }
 
         if (this._flagScale || this._flagLoaded) {
@@ -4692,7 +4721,7 @@ this.Two = (function(previousTwo) {
           this._renderer.effect = ctx.createPattern(this.image, 'repeat');
         }
 
-        if (this._flagOffset || this._flagLoaded) {
+        if (this._flagOffset || this._flagLoaded || this._flagScale) {
 
           if (!(this._renderer.offset instanceof Two.Vector)) {
             this._renderer.offset = new Two.Vector();
@@ -4703,12 +4732,15 @@ this.Two = (function(previousTwo) {
 
           if (image) {
 
+            this._renderer.offset.x -= image.width / 2;
+            this._renderer.offset.y -= image.height / 2;
+
             if (this._scale instanceof Two.Vector) {
-              this._renderer.offset.x -= this._scale.x * image.width / 2;
-              this._renderer.offset.y -= this._scale.y * image.height / 2;
+              this._renderer.offset.x *= this._scale.x;
+              this._renderer.offset.y *= this._scale.y;
             } else {
-              this._renderer.offset.x -= this._scale * image.width / 2;
-              this._renderer.offset.y -= this._scale * image.height / 2;
+              this._renderer.offset.x *= this._scale;
+              this._renderer.offset.y *= this._scale;
             }
           }
 
@@ -8502,6 +8534,8 @@ this.Two = (function(previousTwo) {
       this.image = src;
     }
 
+    this._update();
+
   };
 
   _.extend(Texture, {
@@ -8530,14 +8564,14 @@ this.Two = (function(previousTwo) {
     Register: {
       canvas: function(texture, callback) {
         texture._src = '#' + texture.id;
-        Texture.ImageRegistry.add(texture.path, texture.image);
+        Texture.ImageRegistry.add(texture.src, texture.image);
         if (_.isFunction(callback)) {
           callback();
         }
       },
       image: function(texture, callback) {
+
         var loaded = function(e) {
-          Texture.ImageRegistry.add(texture.path, texture.image);
           texture.image.removeEventListener('load', loaded, false);
           texture.image.removeEventListener('error', error, false);
           if (_.isFunction(callback)) {
@@ -8549,9 +8583,13 @@ this.Two = (function(previousTwo) {
           texture.image.removeEventListener('error', error, false);
           throw new Two.Utils.Error('unable to load ' + texture.src);
         };
+
         texture.image.addEventListener('load', loaded, false);
         texture.image.addEventListener('error', error, false);
+        texture.image.setAttribute('two-src', texture.src);
+        Texture.ImageRegistry.add(texture.src, texture.image);
         texture.image.src = texture.src;
+
       }
     },
 
@@ -8564,7 +8602,7 @@ this.Two = (function(previousTwo) {
         if (/canvas/i.test(image.nodeName)) {
           Texture.Register.canvas(texture, callback)
         } else {
-          texture._src = image.src;
+          texture._src = image.getAttribute('two-src') || image.src;
           Texture.Register.image(texture, callback);
         }
       }
@@ -8688,7 +8726,195 @@ this.Two = (function(previousTwo) {
 
   Texture.MakeObservable(Texture.prototype);
 
-})(this.Two);
+})((typeof global !== 'undefined' ? global : this).Two);
+
+(function(Two) {
+
+  var _ = Two.Utils;
+  var Path = Two.Path;
+  var Rectangle = Two.Rectangle;
+
+  var Sprite = Two.Sprite = function(path, ox, oy, cols, rows, frameRate) {
+
+    Path.call(this, [
+      new Two.Anchor(),
+      new Two.Anchor(),
+      new Two.Anchor(),
+      new Two.Anchor()
+    ], true);
+
+    if (path instanceof Two.Texture) {
+      this.texture = path;
+    } else if (_.isString(path)) {
+      this.texture = new Two.Texture(path);
+    }
+
+    this.noStroke();
+
+    this._update();
+    this.translation.set(ox, oy);
+
+    if (_.isNumber(cols)) {
+      this.columns = cols;
+    }
+    if (_.isNumber(rows)) {
+      this.rows = rows;
+    }
+    if (_.isNumber(frameRate)) {
+      this.frameRate = frameRate;
+    }
+
+  };
+
+  _.extend(Sprite, {
+
+    Properties: [
+      'texture', 'columns', 'rows', 'frameRate'
+    ],
+
+    MakeObservable: function(obj) {
+
+      Rectangle.MakeObservable(obj);
+      _.each(Sprite.Properties, Two.Utils.defineProperty, obj);
+
+    }
+
+  })
+
+  _.extend(Sprite.prototype, Rectangle.prototype, {
+
+    _flagTexture: false,
+    _flagColumns: false,
+    _flagRows: false,
+    _flagFrameRate: false,
+
+    // Private variables
+    _amount: 1,
+    _duration: 0,
+    _index: 0,
+    _startTime: 0,
+    _playing: false,
+
+    // Exposed through getter-setter
+    _texture: null,
+    _columns: 1,
+    _rows: 1,
+    _frameRate: 0,
+
+    // TODO: Add the ability to play / loop specific ranges.
+    play: function() {
+
+      this._playing = true;
+      this._startTime = _.performance.now();
+
+      return this;
+
+    },
+
+    pause: function() {
+
+      this._playing = false;
+      return this;
+
+    },
+
+    stop: function() {
+
+      this._playing = false;
+      this._index = 0;
+
+      return this;
+
+    },
+
+    _update: function() {
+
+      var effect = this._texture;
+      var cols = this._columns;
+      var rows = this._rows;
+
+      var width, height, elapsed, amount, duration;
+      var index, iw, ih;
+
+      if (this._flagColumns || this._flagRows) {
+        this._amount = this._columns * this._rows;
+      }
+
+      if (this._flagFrameRate) {
+        this._duration = 1000 * this._amount / this._frameRate;
+      }
+
+      if (this._flagTexture) {
+        this.fill = this._texture;
+      }
+
+      if (this._texture.loaded) {
+
+        iw = effect.image.width;
+        ih = effect.image.height;
+
+        width = iw / cols;
+        height = ih / rows;
+        amount = this._amount;
+
+        if (this.width !== width) {
+          this.width = width;
+        }
+        if (this.height !== height) {
+          this.height = height;
+        }
+
+        if (this._playing && this._frameRate > 0) {
+
+          // TODO: Offload perf logic to instance of `Two`.
+          elapsed = (_.performance.now() - this._startTime) % this._duration;
+          duration = this._duration;
+
+          index = _.lerp(0, amount - 1, elapsed / duration);
+          index = Math.floor(index);
+
+          if (index !== this._index) {
+            this._index = index;
+          }
+
+        }
+
+        var ox = (iw - width) / 2 + width * ((this._index % cols) + 1);
+        var oy = height * Math.floor((this._index / amount) + 1)
+          - (ih - height) / 2;
+
+        // TODO: Improve performance
+        if (ox !== effect.offset.x) {
+          effect.offset.x = ox;
+        }
+        if (oy !== effect.offset.y) {
+          effect.offset.y = oy;
+        }
+
+      }
+
+      Rectangle.prototype._update.call(this);
+
+      return this;
+
+    },
+
+    flagReset: function() {
+
+      this._flagTexture = this._flagColumns = this._flagRows
+        = this._flagFrameRate = false;
+
+      Rectangle.prototype.flagReset.call(this);
+
+      return this;
+    }
+
+
+  });
+
+  Sprite.MakeObservable(Sprite.prototype);
+
+})((typeof global !== 'undefined' ? global : this).Two);
 
 (function(Two) {
 
