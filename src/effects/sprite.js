@@ -64,6 +64,9 @@
     _index: 0,
     _startTime: 0,
     _playing: false,
+    _firstFrame: 0,
+    _lastFrame: 0,
+    _loop: true,
 
     // Exposed through getter-setter
     _texture: null,
@@ -71,11 +74,19 @@
     _rows: 1,
     _frameRate: 0,
 
-    // TODO: Add the ability to play / loop specific ranges.
-    play: function() {
+    play: function(firstFrame, lastFrame) {
 
       this._playing = true;
+      this._firstFrame = 0;
+      this._lastFrame = 0;
       this._startTime = _.performance.now();
+
+      if (_.isNumber(firstFrame)) {
+        this._firstFrame = firstFrame;
+      }
+      if (_.isNumber(lastFrame)) {
+        this._lastFrame = lastFrame;
+      }
 
       return this;
 
@@ -104,7 +115,7 @@
       var rows = this._rows;
 
       var width, height, elapsed, amount, duration;
-      var index, iw, ih;
+      var index, iw, ih, isRange;
 
       if (this._flagColumns || this._flagRows) {
         this._amount = this._columns * this._rows;
@@ -137,10 +148,27 @@
         if (this._playing && this._frameRate > 0) {
 
           // TODO: Offload perf logic to instance of `Two`.
-          elapsed = (_.performance.now() - this._startTime) % this._duration;
+          elapsed = _.performance.now() - this._startTime;
           duration = this._duration;
+          isRange = this._firstFrame >= 0 && this._lastFrame > 0;
 
-          index = _.lerp(0, amount - 1, elapsed / duration);
+          if (isRange) {
+            duration = 1000 * (this._lastFrame - this._firstFrame)
+              / this._frameRate;
+          }
+
+          if (this._loop) {
+            elapsed = elapsed % duration;
+          } else {
+            elapsed = Math.min(elapsed, duration);
+          }
+
+          if (isRange) {
+            index = _.lerp(this._firstFrame, this._lastFrame, elapsed / duration);
+          } else {
+            index = _.lerp(0, amount - 1, elapsed / duration);
+          }
+
           index = Math.floor(index);
 
           if (index !== this._index) {
@@ -150,7 +178,7 @@
         }
 
         var ox = (iw - width) / 2 + width * ((this._index % cols) + 1);
-        var oy = height * Math.floor((this._index / amount) + 1)
+        var oy = height * Math.floor((this._index / cols))
           - (ih - height) / 2;
 
         // TODO: Improve performance
@@ -183,5 +211,17 @@
   });
 
   Sprite.MakeObservable(Sprite.prototype);
+
+  function map(v, a, b, c, d) {
+    return (d - c) * (v - a) / (b - a) + c;
+  }
+
+  function cmap(v, a, b, c, d) {
+    return Math.min(Math.max((d - c) * (v - a) / (b - a) + c, c), y2);
+  }
+
+  function clamp(v, a, b) {
+    return Math.min(Math.max(v, a), b);
+  }
 
 })((typeof global !== 'undefined' ? global : this).Two);
