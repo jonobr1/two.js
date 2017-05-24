@@ -8804,11 +8804,11 @@ this.Two = (function(previousTwo) {
     _rows: 1,
     _frameRate: 0,
 
-    play: function(firstFrame, lastFrame) {
+    play: function(firstFrame, lastFrame, onLastFrame) {
 
       this._playing = true;
       this._firstFrame = 0;
-      this._lastFrame = 0;
+      this._lastFrame = this.amount - 1;
       this._startTime = _.performance.now();
 
       if (_.isNumber(firstFrame)) {
@@ -8816,6 +8816,11 @@ this.Two = (function(previousTwo) {
       }
       if (_.isNumber(lastFrame)) {
         this._lastFrame = lastFrame;
+      }
+      if (_.isFunction(onLastFrame)) {
+        this._onLastFrame = onLastFrame;
+      } else {
+        delete this._onLastFrame;
       }
 
       return this;
@@ -8877,15 +8882,14 @@ this.Two = (function(previousTwo) {
 
         if (this._playing && this._frameRate > 0) {
 
+          if (_.isNaN(this._lastFrame)) {
+            this._lastFrame = amount - 1;
+          }
+
           // TODO: Offload perf logic to instance of `Two`.
           elapsed = _.performance.now() - this._startTime;
-          duration = this._duration;
-          isRange = this._firstFrame >= 0 && this._lastFrame > 0;
-
-          if (isRange) {
-            duration = 1000 * (this._lastFrame - this._firstFrame)
-              / this._frameRate;
-          }
+          duration = 1000 * (this._lastFrame - this._firstFrame)
+            / this._frameRate;
 
           if (this._loop) {
             elapsed = elapsed % duration;
@@ -8893,16 +8897,14 @@ this.Two = (function(previousTwo) {
             elapsed = Math.min(elapsed, duration);
           }
 
-          if (isRange) {
-            index = _.lerp(this._firstFrame, this._lastFrame, elapsed / duration);
-          } else {
-            index = _.lerp(0, amount - 1, elapsed / duration);
-          }
-
+          index = _.lerp(this._firstFrame, this._lastFrame, elapsed / duration);
           index = Math.floor(index);
 
           if (index !== this._index) {
             this._index = index;
+            if (index >= this._lastFrame - 1 && this._onLastFrame) {
+              this._onLastFrame();  // Shortcut for chainable sprite animations
+            }
           }
 
         }
