@@ -5261,6 +5261,8 @@ this.Two = (function(previousTwo) {
           return this;
         }
 
+        this._update();
+
         // Calculate what changed
 
         var parent = this.parent;
@@ -5277,8 +5279,6 @@ this.Two = (function(previousTwo) {
           || parent._flagOpacity || this._flagVisible || this._flagCap
           || this._flagJoin || this._flagMiter || this._flagScale
           || !this._renderer.texture;
-
-        this._update();
 
         if (flagParentMatrix || flagMatrix) {
 
@@ -5546,6 +5546,8 @@ this.Two = (function(previousTwo) {
           return this;
         }
 
+        this._update();
+
         // Calculate what changed
 
         var parent = this.parent;
@@ -5564,8 +5566,6 @@ this.Two = (function(previousTwo) {
           || this._flagLeading || this._flagAlignment || this._flagBaseline
           || this._flagStyle || this._flagWeight || this._flagDecoration
           || !this._renderer.texture;
-
-        this._update();
 
         if (flagParentMatrix || flagMatrix) {
 
@@ -6312,7 +6312,7 @@ this.Two = (function(previousTwo) {
       // This function is called a lot
       // when importing a large SVG
       var i = items.length;
-      while(i--) {
+      while (i--) {
         items[i].bind(Two.Events.change, this._renderer.flagVertices);
       }
 
@@ -6323,7 +6323,7 @@ this.Two = (function(previousTwo) {
     UnbindVertices: function(items) {
 
       var i = items.length;
-      while(i--) {
+      while (i--) {
         items[i].unbind(Two.Events.change, this._renderer.flagVertices);
       }
 
@@ -6482,8 +6482,8 @@ this.Two = (function(previousTwo) {
         set: function(vertices) {
 
           var updateVertices = this._renderer.flagVertices;
-          var bindVertices = _.bind(this._renderer.bindVertices, this);
-          var unbindVertices = _.bind(this._renderer.unbindVertices, this);
+          var bindVertices = this._renderer.bindVertices;
+          var unbindVertices = this._renderer.unbindVertices;
 
           // Remove previous listeners
           if (this._collection) {

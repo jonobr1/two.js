@@ -83,7 +83,7 @@
       // This function is called a lot
       // when importing a large SVG
       var i = items.length;
-      while(i--) {
+      while (i--) {
         items[i].bind(Two.Events.change, this._renderer.flagVertices);
       }
 
@@ -94,7 +94,7 @@
     UnbindVertices: function(items) {
 
       var i = items.length;
-      while(i--) {
+      while (i--) {
         items[i].unbind(Two.Events.change, this._renderer.flagVertices);
       }
 
@@ -253,8 +253,8 @@
         set: function(vertices) {
 
           var updateVertices = this._renderer.flagVertices;
-          var bindVertices = _.bind(this._renderer.bindVertices, this);
-          var unbindVertices = _.bind(this._renderer.unbindVertices, this);
+          var bindVertices = this._renderer.bindVertices;
+          var unbindVertices = this._renderer.unbindVertices;
 
           // Remove previous listeners
           if (this._collection) {

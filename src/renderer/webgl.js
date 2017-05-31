@@ -411,6 +411,8 @@
           return this;
         }
 
+        this._update();
+
         // Calculate what changed
 
         var parent = this.parent;
@@ -427,8 +429,6 @@
           || parent._flagOpacity || this._flagVisible || this._flagCap
           || this._flagJoin || this._flagMiter || this._flagScale
           || !this._renderer.texture;
-
-        this._update();
 
         if (flagParentMatrix || flagMatrix) {
 
@@ -696,6 +696,8 @@
           return this;
         }
 
+        this._update();
+
         // Calculate what changed
 
         var parent = this.parent;
@@ -714,8 +716,6 @@
           || this._flagLeading || this._flagAlignment || this._flagBaseline
           || this._flagStyle || this._flagWeight || this._flagDecoration
           || !this._renderer.texture;
-
-        this._update();
 
         if (flagParentMatrix || flagMatrix) {
 
