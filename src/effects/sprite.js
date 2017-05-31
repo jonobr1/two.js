@@ -13,13 +13,14 @@
       new Two.Anchor()
     ], true);
 
+    this.noStroke();
+    this.noFill();
+
     if (path instanceof Two.Texture) {
       this.texture = path;
     } else if (_.isString(path)) {
       this.texture = new Two.Texture(path);
     }
-
-    this.noStroke();
 
     this._update();
     this.translation.set(ox, oy);
@@ -110,6 +111,28 @@
       this._index = 0;
 
       return this;
+
+    },
+
+    clone: function(parent) {
+
+      parent = parent || this.parent;
+
+      var clone = new Sprite(
+        this.texture, this.translation.x, this.translation.y,
+        this.columns, this.rows, this.frameRate
+      );
+
+      if (this.playing) {
+        clone.play(this._firstFrame, this._lastFrame);
+        clone._loop = this._loop;
+      }
+
+      if (parent) {
+        parent.add(clone);
+      }
+
+      return clone;
 
     },
 
