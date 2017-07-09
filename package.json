@@ -28,7 +28,6 @@
   },
   "license": "MIT",
   "dependencies": {
-    "canvas": "^1.5.0",
     "node-minify": "^2.0.3"
   },
   "devDependencies": {
