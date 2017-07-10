@@ -29,6 +29,7 @@ var files = [
   path.resolve(__dirname, '../src/effects/radial-gradient.js'),
   path.resolve(__dirname, '../src/effects/texture.js'),
   path.resolve(__dirname, '../src/effects/sprite.js'),
+  path.resolve(__dirname, '../src/effects/image-sequence.js'),
   path.resolve(__dirname, '../src/group.js')
 ];
 

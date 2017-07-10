@@ -2212,6 +2212,18 @@ this.Two = (function(previousTwo) {
 
     },
 
+    makeImageSequence: function(paths, x, y, frameRate, autostart) {
+
+      var imageSequence = new Two.ImageSequence(paths, x, y, frameRate);
+      if (!!autostart) {
+        imageSequence.play();
+      }
+      two.add(imageSequence);
+
+      return imageSequence;
+
+    },
+
     makeTexture: function(path, callback) {
 
       var texture = new Two.Texture(path, callback);

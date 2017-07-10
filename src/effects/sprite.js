@@ -23,7 +23,7 @@
     }
 
     this._update();
-    this.translation.set(ox, oy);
+    this.translation.set(ox || 0, oy || 0);
 
     if (_.isNumber(cols)) {
       this.columns = cols;
