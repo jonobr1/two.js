@@ -2234,7 +2234,7 @@ this.Two = (function(previousTwo) {
       if (!!autostart) {
         sprite.play();
       }
-      two.add(sprite);
+      this.add(sprite);
 
       return sprite;
 
@@ -2246,7 +2246,7 @@ this.Two = (function(previousTwo) {
       if (!!autostart) {
         imageSequence.play();
       }
-      two.add(imageSequence);
+      this.add(imageSequence);
 
       return imageSequence;
 
