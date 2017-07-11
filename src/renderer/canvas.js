@@ -520,7 +520,7 @@
 
         var image = this.image;
 
-        if (!this._renderer.effect || (this._flagLoaded && this.loaded)) {
+        if (!this._renderer.effect || ((this._flagLoaded || this._flagImage) && this.loaded)) {
           this._renderer.effect = ctx.createPattern(this.image, 'repeat');
         }
 

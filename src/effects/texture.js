@@ -1,6 +1,10 @@
 (function(Two) {
 
   var _ = Two.Utils;
+  var regex = {
+    video: /\.(mp4|webm)$/i,
+    image: /\.(jpe?g|png|gif|tiff)$/i
+  };
 
   var Texture = Two.Texture = function(src, callback) {
 
@@ -50,7 +54,14 @@
         return Texture.ImageRegistry.get(src);
       }
 
-      var image = document.createElement('img'); // TODO: What's the Node.js way?
+      var image;
+
+      if (regex.video.test(src)) {
+        image = document.createElement('video');
+      } else {
+        image = document.createElement('img');
+      }
+
       image.crossOrigin = 'anonymous';
 
       return image;
@@ -65,7 +76,7 @@
           callback();
         }
       },
-      image: function(texture, callback) {
+      img: function(texture, callback) {
 
         var loaded = function(e) {
           texture.image.removeEventListener('load', loaded, false);
@@ -86,6 +97,33 @@
         Texture.ImageRegistry.add(texture.src, texture.image);
         texture.image.src = texture.src;
 
+      },
+      video: function(texture, callback) {
+
+        var loaded = function(e) {
+          texture.image.removeEventListener('load', loaded, false);
+          texture.image.removeEventListener('error', error, false);
+          texture.image.width = texture.image.videoWidth;
+          texture.image.height = texture.image.videoHeight;
+          texture.image.play();
+          if (_.isFunction(callback)) {
+            callback();
+          }
+        };
+        var error = function(e) {
+          texture.image.removeEventListener('load', loaded, false);
+          texture.image.removeEventListener('error', error, false);
+          throw new Two.Utils.Error('unable to load ' + texture.src);
+        };
+
+        texture.image.addEventListener('canplaythrough', loaded, false);
+        texture.image.addEventListener('error', error, false);
+        texture.image.setAttribute('two-src', texture.src);
+        Texture.ImageRegistry.add(texture.src, texture.image);
+        texture.image.src = texture.src;
+        texture.image.loop = true;
+        texture.image.load();
+
       }
     },
 
@@ -93,13 +131,14 @@
 
       var src = texture.src;
       var image = texture.image;
+      var tag = image && image.nodeName.toLowerCase();
 
       if (texture._flagImage) {
-        if (/canvas/i.test(image.nodeName)) {
-          Texture.Register.canvas(texture, callback)
+        if (/canvas/i.test(tag)) {
+          Texture.Register.canvas(texture, callback);
         } else {
           texture._src = image.getAttribute('two-src') || image.src;
-          Texture.Register.image(texture, callback);
+          Texture.Register[tag](texture, callback);
         }
       }
 
@@ -107,7 +146,8 @@
         if (!image) {
           texture.image = Texture.getImage(texture.src);
         }
-        Texture.Register.image(texture, callback);
+        tag = texture.image.nodeName.toLowerCase();
+        Texture.Register[tag](texture, callback);
       }
 
     },
@@ -203,6 +243,10 @@
             .trigger(Two.Events.change)
             .trigger(Two.Events.load);
         }, this));
+      }
+
+      if (this.image.readyState >= 4) {
+        this._flagImage = true;
       }
 
       return this;
