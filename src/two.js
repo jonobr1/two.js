@@ -711,7 +711,7 @@ this.Two = (function(previousTwo) {
             case 'transform':
               // TODO: Check this out https://github.com/paperjs/paper.js/blob/master/src/svg/SVGImport.js#L313
               if (value === 'none') break;
-              var m = node.getCTM();
+              var m = node.getCTM ? node.getCTM() : null;
 
               // Might happen when transform string is empty or not valid.
               if (m === null) break;
