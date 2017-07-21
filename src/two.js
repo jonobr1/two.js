@@ -1342,12 +1342,12 @@ this.Two = (function(previousTwo) {
             var style = child.getAttribute('style');
 
             if (_.isNull(color)) {
-              var matches = style.match(/stop\-color\:\s?([\#a-fA-F0-9]*)/);
+              var matches = style ? style.match(/stop\-color\:\s?([\#a-fA-F0-9]*)/) : false;
               color = matches && matches.length > 1 ? matches[1] : undefined;
             }
 
             if (_.isNull(opacity)) {
-              var matches = style.match(/stop\-opacity\:\s?([0-9\.\-]*)/);
+              var matches = style ? style.match(/stop\-opacity\:\s?([0-9\.\-]*)/) : false;
               opacity = matches && matches.length > 1 ? parseFloat(matches[1]) : 1;
             }
 
@@ -1393,12 +1393,12 @@ this.Two = (function(previousTwo) {
             var style = child.getAttribute('style');
 
             if (_.isNull(color)) {
-              var matches = style.match(/stop\-color\:\s?([\#a-fA-F0-9]*)/);
+              var matches = style ? style.match(/stop\-color\:\s?([\#a-fA-F0-9]*)/) : false;
               color = matches && matches.length > 1 ? matches[1] : undefined;
             }
 
             if (_.isNull(opacity)) {
-              var matches = style.match(/stop\-opacity\:\s?([0-9\.\-]*)/);
+              var matches = style ? style.match(/stop\-opacity\:\s?([0-9\.\-]*)/) : false;
               opacity = matches && matches.length > 1 ? parseFloat(matches[1]) : 1;
             }
 
