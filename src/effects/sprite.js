@@ -237,16 +237,4 @@
 
   Sprite.MakeObservable(Sprite.prototype);
 
-  function map(v, a, b, c, d) {
-    return (d - c) * (v - a) / (b - a) + c;
-  }
-
-  function cmap(v, a, b, c, d) {
-    return Math.min(Math.max((d - c) * (v - a) / (b - a) + c, c), y2);
-  }
-
-  function clamp(v, a, b) {
-    return Math.min(Math.max(v, a), b);
-  }
-
 })((typeof global !== 'undefined' ? global : this).Two);

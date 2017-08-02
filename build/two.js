@@ -4347,12 +4347,16 @@ this.Two = (function(previousTwo) {
         //   canvas[mask._renderer.type].render.call(mask, ctx, true);
         // }
 
+        var columns = this._columns;
+        var rows = this._rows;
+        var isSolo = (columns && rows) && (columns <= 1 && rows <= 1);
+
         // Styles
         if (fill) {
           if (_.isString(fill)) {
             ctx.fillStyle = fill;
           } else {
-            canvas[fill._renderer.type].render.call(fill, ctx);
+            canvas[fill._renderer.type].render.call(fill, ctx, isSolo);
             ctx.fillStyle = fill._renderer.effect;
           }
         }
@@ -4360,7 +4364,7 @@ this.Two = (function(previousTwo) {
           if (_.isString(stroke)) {
             ctx.strokeStyle = stroke;
           } else {
-            canvas[stroke._renderer.type].render.call(stroke, ctx);
+            canvas[stroke._renderer.type].render.call(stroke, ctx, isSolo);
             ctx.strokeStyle = stroke._renderer.effect;
           }
         }
@@ -4567,12 +4571,16 @@ this.Two = (function(previousTwo) {
         ctx.textAlign = canvas.alignments[this._alignment] || this._alignment;
         ctx.textBaseline = this._baseline;
 
+        var columns = this._columns;
+        var rows = this._rows;
+        var isSolo = (columns && rows) && (columns <= 1 && rows <= 1);
+
         // Styles
         if (fill) {
           if (_.isString(fill)) {
             ctx.fillStyle = fill;
           } else {
-            canvas[fill._renderer.type].render.call(fill, ctx);
+            canvas[fill._renderer.type].render.call(fill, ctx, isSolo);
             ctx.fillStyle = fill._renderer.effect;
           }
         }
@@ -4580,7 +4588,7 @@ this.Two = (function(previousTwo) {
           if (_.isString(stroke)) {
             ctx.strokeStyle = stroke;
           } else {
-            canvas[stroke._renderer.type].render.call(stroke, ctx);
+            canvas[stroke._renderer.type].render.call(stroke, ctx, isSolo);
             ctx.strokeStyle = stroke._renderer.effect;
           }
         }
@@ -4723,14 +4731,16 @@ this.Two = (function(previousTwo) {
 
     texture: {
 
-      render: function(ctx) {
+      render: function(ctx, isSolo) {
 
         this._update();
 
         var image = this.image;
+        var repitition;
 
         if (!this._renderer.effect || ((this._flagLoaded || this._flagImage) && this.loaded)) {
-          this._renderer.effect = ctx.createPattern(this.image, 'repeat');
+          repitition = !!isSolo ? 'no-repeat' : 'repeat';
+          this._renderer.effect = ctx.createPattern(this.image, repitition);
         }
 
         if (this._flagOffset || this._flagLoaded || this._flagScale) {
@@ -4745,7 +4755,7 @@ this.Two = (function(previousTwo) {
           if (image) {
 
             this._renderer.offset.x -= image.width / 2;
-            this._renderer.offset.y -= image.height / 2;
+            this._renderer.offset.y += image.height / 2;
 
             if (this._scale instanceof Two.Vector) {
               this._renderer.offset.x *= this._scale.x;
@@ -5029,11 +5039,15 @@ this.Two = (function(previousTwo) {
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+        var columns = elem._columns;
+        var rows = elem._rows;
+        var isSolo = (columns && rows) && (columns <= 1 && rows <= 1);
+
         if (fill) {
           if (_.isString(fill)) {
             ctx.fillStyle = fill;
           } else {
-            webgl[fill._renderer.type].render.call(fill, ctx, elem);
+            webgl[fill._renderer.type].render.call(fill, ctx, elem, isSolo);
             ctx.fillStyle = fill._renderer.effect;
           }
         }
@@ -5041,7 +5055,7 @@ this.Two = (function(previousTwo) {
           if (_.isString(stroke)) {
             ctx.strokeStyle = stroke;
           } else {
-            webgl[stroke._renderer.type].render.call(stroke, ctx, elem);
+            webgl[stroke._renderer.type].render.call(stroke, ctx, elem, isSolo);
             ctx.strokeStyle = stroke._renderer.effect;
           }
         }
@@ -5395,12 +5409,16 @@ this.Two = (function(previousTwo) {
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
 
+        var columns = elem._columns;
+        var rows = elem._rows;
+        var isSolo = (columns && rows) && (columns <= 1 && rows <= 1);
+
         // Styles
         if (fill) {
           if (_.isString(fill)) {
             ctx.fillStyle = fill;
           } else {
-            webgl[fill._renderer.type].render.call(fill, ctx, elem);
+            webgl[fill._renderer.type].render.call(fill, ctx, elem, isSolo);
             ctx.fillStyle = fill._renderer.effect;
           }
         }
@@ -5408,7 +5426,7 @@ this.Two = (function(previousTwo) {
           if (_.isString(stroke)) {
             ctx.strokeStyle = stroke;
           } else {
-            webgl[stroke._renderer.type].render.call(stroke, ctx, elem);
+            webgl[stroke._renderer.type].render.call(stroke, ctx, elem, isSolo);
             ctx.strokeStyle = stroke._renderer.effect;
           }
         }
@@ -5710,7 +5728,7 @@ this.Two = (function(previousTwo) {
 
     texture: {
 
-      render: function(ctx, elem) {
+      render: function(ctx, elem, isSolo) {
 
         if (!ctx.canvas.getContext('2d')) {
           return;
@@ -5719,9 +5737,11 @@ this.Two = (function(previousTwo) {
         this._update();
 
         var image = this.image;
+        var repitition;
 
         if (!this._renderer.effect || (this._flagLoaded && this.loaded)) {
-          this._renderer.effect = ctx.createPattern(this.image, 'repeat');
+          repitition = !!isSolo ? 'no-repeat' : 'repeat'
+          this._renderer.effect = ctx.createPattern(this.image, repitition);
         }
 
         if (this._flagOffset || this._flagLoaded || this._flagScale) {
@@ -5736,7 +5756,7 @@ this.Two = (function(previousTwo) {
           if (image) {
 
             this._renderer.offset.x -= image.width / 2;
-            this._renderer.offset.y -= image.height / 2;
+            this._renderer.offset.y += image.height / 2;
 
             if (this._scale instanceof Two.Vector) {
               this._renderer.offset.x *= this._scale.x;
@@ -9179,18 +9199,6 @@ this.Two = (function(previousTwo) {
   });
 
   Sprite.MakeObservable(Sprite.prototype);
-
-  function map(v, a, b, c, d) {
-    return (d - c) * (v - a) / (b - a) + c;
-  }
-
-  function cmap(v, a, b, c, d) {
-    return Math.min(Math.max((d - c) * (v - a) / (b - a) + c, c), y2);
-  }
-
-  function clamp(v, a, b) {
-    return Math.min(Math.max(v, a), b);
-  }
 
 })((typeof global !== 'undefined' ? global : this).Two);
 
