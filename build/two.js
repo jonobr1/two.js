@@ -4062,11 +4062,6 @@ this.Two = (function(previousTwo) {
 
         if (this._flagLoaded && this.loaded) {
 
-          styles.x = 0;
-          styles.y = 0;
-          styles.width = image.width;
-          styles.height = image.height;
-
           switch (image.nodeName.toLowerCase()) {
 
             case 'canvas':
@@ -4108,17 +4103,26 @@ this.Two = (function(previousTwo) {
           changed.height = 0;
 
           if (image) {
+
+            changed.width = image.width;
+            changed.height = image.height;
+
+            // TODO: Hack / Bandaid
+            switch (this._repeat) {
+              case 'no-repeat':
+                changed.width += 1;
+                changed.height += 1;
+                break;
+            }
+
             if (this._scale instanceof Two.Vector) {
-              changed.width = image.width * this._scale.x;
-              changed.height = image.height * this._scale.y;
+              changed.width *= this._scale.x;
+              changed.height *= this._scale.y;
             } else {
-              changed.width = image.width * this._scale;
-              changed.height = image.height * this._scale;
+              changed.width *= this._scale;
+              changed.height *= this._scale;
             }
           }
-
-          styles.width = changed.width;
-          styles.height = changed.height;
 
         }
 
@@ -4347,16 +4351,12 @@ this.Two = (function(previousTwo) {
         //   canvas[mask._renderer.type].render.call(mask, ctx, true);
         // }
 
-        var columns = this._columns;
-        var rows = this._rows;
-        var isSolo = (columns && rows) && (columns <= 1 && rows <= 1);
-
         // Styles
         if (fill) {
           if (_.isString(fill)) {
             ctx.fillStyle = fill;
           } else {
-            canvas[fill._renderer.type].render.call(fill, ctx, isSolo);
+            canvas[fill._renderer.type].render.call(fill, ctx);
             ctx.fillStyle = fill._renderer.effect;
           }
         }
@@ -4364,7 +4364,7 @@ this.Two = (function(previousTwo) {
           if (_.isString(stroke)) {
             ctx.strokeStyle = stroke;
           } else {
-            canvas[stroke._renderer.type].render.call(stroke, ctx, isSolo);
+            canvas[stroke._renderer.type].render.call(stroke, ctx);
             ctx.strokeStyle = stroke._renderer.effect;
           }
         }
@@ -4571,16 +4571,12 @@ this.Two = (function(previousTwo) {
         ctx.textAlign = canvas.alignments[this._alignment] || this._alignment;
         ctx.textBaseline = this._baseline;
 
-        var columns = this._columns;
-        var rows = this._rows;
-        var isSolo = (columns && rows) && (columns <= 1 && rows <= 1);
-
         // Styles
         if (fill) {
           if (_.isString(fill)) {
             ctx.fillStyle = fill;
           } else {
-            canvas[fill._renderer.type].render.call(fill, ctx, isSolo);
+            canvas[fill._renderer.type].render.call(fill, ctx);
             ctx.fillStyle = fill._renderer.effect;
           }
         }
@@ -4588,7 +4584,7 @@ this.Two = (function(previousTwo) {
           if (_.isString(stroke)) {
             ctx.strokeStyle = stroke;
           } else {
-            canvas[stroke._renderer.type].render.call(stroke, ctx, isSolo);
+            canvas[stroke._renderer.type].render.call(stroke, ctx);
             ctx.strokeStyle = stroke._renderer.effect;
           }
         }
@@ -4731,16 +4727,15 @@ this.Two = (function(previousTwo) {
 
     texture: {
 
-      render: function(ctx, isSolo) {
+      render: function(ctx) {
 
         this._update();
 
         var image = this.image;
-        var repitition;
+        var repeat;
 
         if (!this._renderer.effect || ((this._flagLoaded || this._flagImage) && this.loaded)) {
-          repitition = !!isSolo ? 'no-repeat' : 'repeat';
-          this._renderer.effect = ctx.createPattern(this.image, repitition);
+          this._renderer.effect = ctx.createPattern(this.image, this._repeat);
         }
 
         if (this._flagOffset || this._flagLoaded || this._flagScale) {
@@ -5039,15 +5034,11 @@ this.Two = (function(previousTwo) {
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        var columns = elem._columns;
-        var rows = elem._rows;
-        var isSolo = (columns && rows) && (columns <= 1 && rows <= 1);
-
         if (fill) {
           if (_.isString(fill)) {
             ctx.fillStyle = fill;
           } else {
-            webgl[fill._renderer.type].render.call(fill, ctx, elem, isSolo);
+            webgl[fill._renderer.type].render.call(fill, ctx, elem);
             ctx.fillStyle = fill._renderer.effect;
           }
         }
@@ -5055,7 +5046,7 @@ this.Two = (function(previousTwo) {
           if (_.isString(stroke)) {
             ctx.strokeStyle = stroke;
           } else {
-            webgl[stroke._renderer.type].render.call(stroke, ctx, elem, isSolo);
+            webgl[stroke._renderer.type].render.call(stroke, ctx, elem);
             ctx.strokeStyle = stroke._renderer.effect;
           }
         }
@@ -5409,16 +5400,12 @@ this.Two = (function(previousTwo) {
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
 
-        var columns = elem._columns;
-        var rows = elem._rows;
-        var isSolo = (columns && rows) && (columns <= 1 && rows <= 1);
-
         // Styles
         if (fill) {
           if (_.isString(fill)) {
             ctx.fillStyle = fill;
           } else {
-            webgl[fill._renderer.type].render.call(fill, ctx, elem, isSolo);
+            webgl[fill._renderer.type].render.call(fill, ctx, elem);
             ctx.fillStyle = fill._renderer.effect;
           }
         }
@@ -5426,7 +5413,7 @@ this.Two = (function(previousTwo) {
           if (_.isString(stroke)) {
             ctx.strokeStyle = stroke;
           } else {
-            webgl[stroke._renderer.type].render.call(stroke, ctx, elem, isSolo);
+            webgl[stroke._renderer.type].render.call(stroke, ctx, elem);
             ctx.strokeStyle = stroke._renderer.effect;
           }
         }
@@ -5728,7 +5715,7 @@ this.Two = (function(previousTwo) {
 
     texture: {
 
-      render: function(ctx, elem, isSolo) {
+      render: function(ctx, elem) {
 
         if (!ctx.canvas.getContext('2d')) {
           return;
@@ -5737,11 +5724,10 @@ this.Two = (function(previousTwo) {
         this._update();
 
         var image = this.image;
-        var repitition;
+        var repeat;
 
         if (!this._renderer.effect || (this._flagLoaded && this.loaded)) {
-          repitition = !!isSolo ? 'no-repeat' : 'repeat'
-          this._renderer.effect = ctx.createPattern(this.image, repitition);
+          this._renderer.effect = ctx.createPattern(this.image, this._repeat);
         }
 
         if (this._flagOffset || this._flagLoaded || this._flagScale) {
@@ -8736,7 +8722,8 @@ this.Two = (function(previousTwo) {
     Properties: [
       'src',
       'image',
-      'loaded'
+      'loaded',
+      'repeat'
     ],
 
     ImageRegistry: new Two.Registry(),
@@ -8903,6 +8890,7 @@ this.Two = (function(previousTwo) {
     _flagSrc: false,
     _flagImage: false,
     _flagLoaded: false,
+    _flagRepeat: false,
 
     _flagOffset: false,
     _flagScale: false,
@@ -8910,6 +8898,7 @@ this.Two = (function(previousTwo) {
     _src: '',
     _image: null,
     _loaded: false,
+    _repeat: 'no-repeat',
 
     _scale: 1,
     _offset: null,

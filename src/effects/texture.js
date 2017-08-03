@@ -43,7 +43,8 @@
     Properties: [
       'src',
       'image',
-      'loaded'
+      'loaded',
+      'repeat'
     ],
 
     ImageRegistry: new Two.Registry(),
@@ -210,6 +211,7 @@
     _flagSrc: false,
     _flagImage: false,
     _flagLoaded: false,
+    _flagRepeat: false,
 
     _flagOffset: false,
     _flagScale: false,
@@ -217,6 +219,7 @@
     _src: '',
     _image: null,
     _loaded: false,
+    _repeat: 'no-repeat',
 
     _scale: 1,
     _offset: null,

@@ -138,16 +138,12 @@
         //   canvas[mask._renderer.type].render.call(mask, ctx, true);
         // }
 
-        var columns = this._columns;
-        var rows = this._rows;
-        var isSolo = (columns && rows) && (columns <= 1 && rows <= 1);
-
         // Styles
         if (fill) {
           if (_.isString(fill)) {
             ctx.fillStyle = fill;
           } else {
-            canvas[fill._renderer.type].render.call(fill, ctx, isSolo);
+            canvas[fill._renderer.type].render.call(fill, ctx);
             ctx.fillStyle = fill._renderer.effect;
           }
         }
@@ -155,7 +151,7 @@
           if (_.isString(stroke)) {
             ctx.strokeStyle = stroke;
           } else {
-            canvas[stroke._renderer.type].render.call(stroke, ctx, isSolo);
+            canvas[stroke._renderer.type].render.call(stroke, ctx);
             ctx.strokeStyle = stroke._renderer.effect;
           }
         }
@@ -362,16 +358,12 @@
         ctx.textAlign = canvas.alignments[this._alignment] || this._alignment;
         ctx.textBaseline = this._baseline;
 
-        var columns = this._columns;
-        var rows = this._rows;
-        var isSolo = (columns && rows) && (columns <= 1 && rows <= 1);
-
         // Styles
         if (fill) {
           if (_.isString(fill)) {
             ctx.fillStyle = fill;
           } else {
-            canvas[fill._renderer.type].render.call(fill, ctx, isSolo);
+            canvas[fill._renderer.type].render.call(fill, ctx);
             ctx.fillStyle = fill._renderer.effect;
           }
         }
@@ -379,7 +371,7 @@
           if (_.isString(stroke)) {
             ctx.strokeStyle = stroke;
           } else {
-            canvas[stroke._renderer.type].render.call(stroke, ctx, isSolo);
+            canvas[stroke._renderer.type].render.call(stroke, ctx);
             ctx.strokeStyle = stroke._renderer.effect;
           }
         }
@@ -522,16 +514,15 @@
 
     texture: {
 
-      render: function(ctx, isSolo) {
+      render: function(ctx) {
 
         this._update();
 
         var image = this.image;
-        var repitition;
+        var repeat;
 
         if (!this._renderer.effect || ((this._flagLoaded || this._flagImage) && this.loaded)) {
-          repitition = !!isSolo ? 'no-repeat' : 'repeat';
-          this._renderer.effect = ctx.createPattern(this.image, repitition);
+          this._renderer.effect = ctx.createPattern(this.image, this._repeat);
         }
 
         if (this._flagOffset || this._flagLoaded || this._flagScale) {

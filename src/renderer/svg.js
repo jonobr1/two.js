@@ -743,11 +743,6 @@
 
         if (this._flagLoaded && this.loaded) {
 
-          styles.x = 0;
-          styles.y = 0;
-          styles.width = image.width;
-          styles.height = image.height;
-
           switch (image.nodeName.toLowerCase()) {
 
             case 'canvas':
@@ -789,17 +784,26 @@
           changed.height = 0;
 
           if (image) {
+
+            changed.width = image.width;
+            changed.height = image.height;
+
+            // TODO: Hack / Bandaid
+            switch (this._repeat) {
+              case 'no-repeat':
+                changed.width += 1;
+                changed.height += 1;
+                break;
+            }
+
             if (this._scale instanceof Two.Vector) {
-              changed.width = image.width * this._scale.x;
-              changed.height = image.height * this._scale.y;
+              changed.width *= this._scale.x;
+              changed.height *= this._scale.y;
             } else {
-              changed.width = image.width * this._scale;
-              changed.height = image.height * this._scale;
+              changed.width *= this._scale;
+              changed.height *= this._scale;
             }
           }
-
-          styles.width = changed.width;
-          styles.height = changed.height;
 
         }
 
