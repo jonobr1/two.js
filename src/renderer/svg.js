@@ -778,7 +778,7 @@
 
         }
 
-        if (this._flagScale || this._flagLoaded) {
+        if (this._flagScale || this._flagLoaded || this._flagRepeat) {
 
           changed.width = 0;
           changed.height = 0;

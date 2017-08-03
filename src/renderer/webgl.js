@@ -859,8 +859,8 @@
         var image = this.image;
         var repeat;
 
-        if (!this._renderer.effect || (this._flagLoaded && this.loaded)) {
-          this._renderer.effect = ctx.createPattern(this.image, this._repeat);
+        if (!this._renderer.effect || ((this._flagLoaded || this._flagRepeat) && this.loaded)) {
+          this._renderer.effect = ctx.createPattern(image, this._repeat);
         }
 
         if (this._flagOffset || this._flagLoaded || this._flagScale) {
