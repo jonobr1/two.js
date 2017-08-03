@@ -71,6 +71,7 @@ instead to minify the build with uglify.
 <!-- For the latest nightly changes checkout the `dev` branch [here](../../tree/dev). -->
 
 #### Nightly
++ Added `Two.Texture.repeat` for describing pattern invocations
 + Added `Two.Texture`, `Two.Sprite`, and `Two.ImageSequence`
 + Removed `Two.Shape` inheritance for `Two.Gradient`s
 + Added `Two.Vector.rotate` method [@ferm10n](https://github.com/ferm10n)
