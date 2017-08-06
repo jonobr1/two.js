@@ -1,6 +1,6 @@
 (function(Two) {
 
-  var root = this;
+  var root = typeof window != 'undefined' ? window : typeof global != 'undefined' ? global : null;
   var getComputedMatrix = Two.Utils.getComputedMatrix;
   var _ = Two.Utils;
 
