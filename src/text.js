@@ -1,6 +1,6 @@
 (function(Two) {
 
-  var root = this;
+  var root = Two.root;
   var getComputedMatrix = Two.Utils.getComputedMatrix;
   var _ = Two.Utils;
 

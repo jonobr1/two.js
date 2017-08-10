@@ -4,7 +4,7 @@
    * Constants
    */
 
-  var root = this,
+  var root = Two.root,
     multiplyMatrix = Two.Matrix.Multiply,
     mod = Two.Utils.mod,
     identity = [1, 0, 0, 0, 1, 0, 0, 0, 1],

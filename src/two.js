@@ -1,6 +1,6 @@
 this.Two = (function(previousTwo) {
 
-  var root = this;
+  var root = typeof window != 'undefined' ? window : typeof global != 'undefined' ? global : null;
   var _ = {
     // http://underscorejs.org/ • 1.8.3
     _indexAmount: 0,
@@ -376,6 +376,12 @@ this.Two = (function(previousTwo) {
   };
 
   _.extend(Two, {
+
+    /**
+     * Access to root in other files.
+     */
+
+    root: root,
 
     /**
      * Primitive
