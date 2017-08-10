@@ -28,7 +28,7 @@
 
 this.Two = (function(previousTwo) {
 
-  var root = this;
+  var root = typeof window != 'undefined' ? window : typeof global != 'undefined' ? global : null;
   var _ = {
     // http://underscorejs.org/ • 1.8.3
     _indexAmount: 0,
@@ -404,6 +404,12 @@ this.Two = (function(previousTwo) {
   };
 
   _.extend(Two, {
+
+    /**
+     * Access to root in other files.
+     */
+
+    root: root,
 
     /**
      * Primitive
@@ -4097,7 +4103,7 @@ this.Two = (function(previousTwo) {
 
         }
 
-        if (this._flagScale || this._flagLoaded) {
+        if (this._flagScale || this._flagLoaded || this._flagRepeat) {
 
           changed.width = 0;
           changed.height = 0;
@@ -4734,7 +4740,7 @@ this.Two = (function(previousTwo) {
         var image = this.image;
         var repeat;
 
-        if (!this._renderer.effect || ((this._flagLoaded || this._flagImage) && this.loaded)) {
+        if (!this._renderer.effect || ((this._flagLoaded || this._flagImage || this._flagRepeat) && this.loaded)) {
           this._renderer.effect = ctx.createPattern(this.image, this._repeat);
         }
 
@@ -4871,7 +4877,7 @@ this.Two = (function(previousTwo) {
    * Constants
    */
 
-  var root = this,
+  var root = Two.root,
     multiplyMatrix = Two.Matrix.Multiply,
     mod = Two.Utils.mod,
     identity = [1, 0, 0, 0, 1, 0, 0, 0, 1],
@@ -5726,8 +5732,8 @@ this.Two = (function(previousTwo) {
         var image = this.image;
         var repeat;
 
-        if (!this._renderer.effect || (this._flagLoaded && this.loaded)) {
-          this._renderer.effect = ctx.createPattern(this.image, this._repeat);
+        if (!this._renderer.effect || ((this._flagLoaded || this._flagRepeat) && this.loaded)) {
+          this._renderer.effect = ctx.createPattern(image, this._repeat);
         }
 
         if (this._flagOffset || this._flagLoaded || this._flagScale) {
@@ -7898,7 +7904,7 @@ this.Two = (function(previousTwo) {
 
 (function(Two) {
 
-  var root = this;
+  var root = Two.root;
   var getComputedMatrix = Two.Utils.getComputedMatrix;
   var _ = Two.Utils;
 

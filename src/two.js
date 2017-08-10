@@ -378,6 +378,12 @@ this.Two = (function(previousTwo) {
   _.extend(Two, {
 
     /**
+     * Access to root in other files.
+     */
+
+    root: root,
+
+    /**
      * Primitive
      */
 
