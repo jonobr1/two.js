@@ -785,8 +785,8 @@
 
           if (image) {
 
-            changed.width = image.width;
-            changed.height = image.height;
+            styles.width = changed.width = image.width;
+            styles.height = changed.height = image.height;
 
             // TODO: Hack / Bandaid
             switch (this._repeat) {

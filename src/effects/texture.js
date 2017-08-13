@@ -79,6 +79,10 @@
       },
       img: function(texture, callback) {
 
+        if (texture.image && texture.image.getAttribute('two-src')) {
+          return;
+        }
+
         var loaded = function(e) {
           texture.image.removeEventListener('load', loaded, false);
           texture.image.removeEventListener('error', error, false);
@@ -100,6 +104,10 @@
 
       },
       video: function(texture, callback) {
+
+        if (texture.image && texture.image.getAttribute('two-src')) {
+          return;
+        }
 
         var loaded = function(e) {
           texture.image.removeEventListener('load', loaded, false);
