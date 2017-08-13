@@ -4110,8 +4110,8 @@ this.Two = (function(previousTwo) {
 
           if (image) {
 
-            changed.width = image.width;
-            changed.height = image.height;
+            styles.width = changed.width = image.width;
+            styles.height = changed.height = image.height;
 
             // TODO: Hack / Bandaid
             switch (this._repeat) {
@@ -8764,6 +8764,10 @@ this.Two = (function(previousTwo) {
       },
       img: function(texture, callback) {
 
+        if (texture.image && texture.image.getAttribute('two-src')) {
+          return;
+        }
+
         var loaded = function(e) {
           texture.image.removeEventListener('load', loaded, false);
           texture.image.removeEventListener('error', error, false);
@@ -8785,6 +8789,10 @@ this.Two = (function(previousTwo) {
 
       },
       video: function(texture, callback) {
+
+        if (texture.image && texture.image.getAttribute('two-src')) {
+          return;
+        }
 
         var loaded = function(e) {
           texture.image.removeEventListener('load', loaded, false);
