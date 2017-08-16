@@ -1262,10 +1262,25 @@ this.Two = (function(previousTwo) {
             return;
           }
 
-          var poly = new Two.Path(points, closed, undefined, true).noStroke();
-          poly.fill = 'black';
+          var path = new Two.Path(points, closed, undefined, true).noStroke();
+          path.fill = 'black';
 
-          return Two.Utils.applySvgAttributes.call(this, node, poly);
+          var rect = path.getBoundingClientRect(true);
+
+          // Center objects to stay consistent
+          // with the rest of the Two.js API.
+          rect.centroid = {
+            x: rect.left + rect.width / 2,
+            y: rect.top + rect.height / 2
+          };
+
+          _.each(path.vertices, function(v) {
+            v.subSelf(rect.centroid);
+          });
+
+          path.translation.addSelf(rect.centroid);
+
+          return Two.Utils.applySvgAttributes.call(this, node, path);
 
         },
 
