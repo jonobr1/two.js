@@ -64,9 +64,11 @@
           canvas[mask._renderer.type].render.call(mask, ctx, true);
         }
 
-        for (var i = 0; i < this.children.length; i++) {
-          var child = this.children[i];
-          canvas[child._renderer.type].render.call(child, ctx);
+        if (this.opacity > 0 && this.scale !== 0) {
+          for (var i = 0; i < this.children.length; i++) {
+            var child = this.children[i];
+            canvas[child._renderer.type].render.call(child, ctx);
+          }
         }
 
         if (!defaultMatrix) {
