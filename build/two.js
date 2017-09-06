@@ -3362,10 +3362,10 @@ this.Two = (function(previousTwo) {
      */
     createElement: function(name, attrs) {
       var tag = name;
-      var elem = document.createElementNS(this.ns, tag);
+      var elem = document.createElementNS(svg.ns, tag);
       if (tag === 'svg') {
         attrs = _.defaults(attrs || {}, {
-          version: this.version
+          version: svg.version
         });
       }
       if (!_.isEmpty(attrs)) {
@@ -3380,7 +3380,11 @@ this.Two = (function(previousTwo) {
     setAttributes: function(elem, attrs) {
       var keys = Object.keys(attrs);
       for (var i = 0; i < keys.length; i++) {
-        elem.setAttribute(keys[i], attrs[keys[i]]);
+        if (/href/.test(keys[i])) {
+          elem.setAttributeNS(svg.xlink, keys[i], attrs[keys[i]]);
+        } else {
+          elem.setAttribute(keys[i], attrs[keys[i]]);
+        }
       }
       return this;
     },
@@ -4078,7 +4082,7 @@ this.Two = (function(previousTwo) {
         }
 
         var changed = {};
-        var styles = {};
+        var styles = { x: 0, y: 0 };
         var image = this.image;
 
         if (this._flagLoaded && this.loaded) {
@@ -4086,11 +4090,11 @@ this.Two = (function(previousTwo) {
           switch (image.nodeName.toLowerCase()) {
 
             case 'canvas':
-              styles.href = image.toDataURL('image/png');
+              styles.href = styles['xlink:href'] = image.toDataURL('image/png');
               break;
             case 'img':
             case 'image':
-              styles.href = this.src;
+              styles.href = styles['xlink:href'] = this.src;
               break;
 
           }
@@ -4114,6 +4118,13 @@ this.Two = (function(previousTwo) {
               changed.x *= this._scale;
               changed.y *= this._scale;
             }
+          }
+
+          if (changed.x > 0) {
+            changed.x *= - 1;
+          }
+          if (changed.y > 0) {
+            changed.y *= - 1;
           }
 
         }
@@ -4298,9 +4309,11 @@ this.Two = (function(previousTwo) {
           canvas[mask._renderer.type].render.call(mask, ctx, true);
         }
 
-        for (var i = 0; i < this.children.length; i++) {
-          var child = this.children[i];
-          canvas[child._renderer.type].render.call(child, ctx);
+        if (this.opacity > 0 && this.scale !== 0) {
+          for (var i = 0; i < this.children.length; i++) {
+            var child = this.children[i];
+            canvas[child._renderer.type].render.call(child, ctx);
+          }
         }
 
         if (!defaultMatrix) {
@@ -8780,6 +8793,9 @@ this.Two = (function(previousTwo) {
       img: function(texture, callback) {
 
         if (texture.image && texture.image.getAttribute('two-src')) {
+          if (_.isFunction(callback)) {
+            callback();
+          }
           return;
         }
 

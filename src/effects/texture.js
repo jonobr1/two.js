@@ -80,6 +80,9 @@
       img: function(texture, callback) {
 
         if (texture.image && texture.image.getAttribute('two-src')) {
+          if (_.isFunction(callback)) {
+            callback();
+          }
           return;
         }
 
