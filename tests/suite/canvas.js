@@ -15,7 +15,8 @@
     var two = new Two({
       type: Two.Types.canvas,
       width: 400,
-      height: 400
+      height: 400,
+      ratio: deviceRatio
     });
 
     var line = two.makeLine(0, 0, two.width, two.height);
@@ -31,7 +32,8 @@
     var two = new Two({
       type: Two.Types.canvas,
       width: 400,
-      height: 400
+      height: 400,
+      ratio: deviceRatio
     });
 
     var rect = two.makeRectangle(two.width / 2, two.height / 2, 100, 100);
@@ -47,7 +49,8 @@
     var two = new Two({
       type: Two.Types.canvas,
       width: 400,
-      height: 400
+      height: 400,
+      ratio: deviceRatio
     });
 
     var ellipse = two.makeEllipse(two.width / 2, two.height / 2, 100, 100);
@@ -64,7 +67,8 @@
     var two = new Two({
       type: Two.Types.canvas,
       width: 400,
-      height: 400
+      height: 400,
+      ratio: deviceRatio
     });
 
     var circle = two.makeCircle(two.width / 2, two.height / 2, 50);
@@ -80,7 +84,8 @@
     var two = new Two({
       type: Two.Types.canvas,
       width: 400,
-      height: 400
+      height: 400,
+      ratio: deviceRatio
     });
 
     var amount = 20;
@@ -104,7 +109,8 @@
     var two = new Two({
       type: Two.Types.canvas,
       width: 400,
-      height: 400
+      height: 400,
+      ratio: deviceRatio
     });
 
     var amount = 20;
@@ -128,7 +134,8 @@
     var two = new Two({
       type: Two.Types.canvas,
       width: 400,
-      height: 400
+      height: 400,
+      ratio: deviceRatio
     });
 
     var gradient = two.makeLinearGradient(0, - two.height / 2, 0, two.height / 2,
@@ -148,7 +155,8 @@
     var two = new Two({
       type: Two.Types.canvas,
       width: 400,
-      height: 400
+      height: 400,
+      ratio: deviceRatio
     });
 
     var gradient = two.makeRadialGradient(0, 0, two.height / 2,
@@ -168,7 +176,8 @@
     var two = new Two({
       type: Two.Types.canvas,
       width: 400,
-      height: 400
+      height: 400,
+      ratio: deviceRatio
     });
 
     var text = two.makeText('Hello World', two.width / 2, two.height / 2);
@@ -186,7 +195,8 @@
     var two = new Two({
       type: Two.Types.canvas,
       width: 400,
-      height: 400
+      height: 400,
+      ratio: deviceRatio
     });
 
     var shape = two.makeRectangle(two.width / 2, two.height / 2, 50, 50);
