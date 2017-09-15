@@ -112,7 +112,7 @@ test('Two.Utils.Events', 1, function() {
 
 });
 
-test('Two.Vector', 44, function() {
+test('Two.Vector', 45, function() {
 
   var vector = new Two.Vector();
 
@@ -209,6 +209,10 @@ test('Two.Vector', 44, function() {
 
   vector.clear();
   equal(vector.isZero(), true, 'Two.Vector.isZero returns correct result.');
+
+  vector.set(9, 3);
+  vector.rotate(Math.PI / 2);
+  equal(vector.equals({ x: - 2.9999999999999996, y: - 2.9999999999999996}), true, 'Two.Vector.rotate applies x, y properly.')
 
 });
 
