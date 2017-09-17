@@ -585,4 +585,27 @@ test('Children adding and removing', 28, function() {
 
   group3.add(void 0);
   ok(true, 'Can safely add undefined stuff to group');
+
 });
+
+test('Two.Registry', 4, function() {
+
+  var registry = new Two.Registry();
+  var id = 'foo';
+  var val = 'bar';
+
+  registry.add(id, val);
+  equal(registry.get(id), val, 'Two.Registry registers key values properly.');
+  equal(registry.contains(id), true, 'Two.Registry.contains found registered value properly.');
+
+  registry.remove(id);
+  equal(registry.map[id], undefined, 'Two.Registry removes key values properly.');
+  equal(registry.contains(id), false, 'Two.Registry.contains did not find removed id.');
+
+});
+
+// test('Two.Texture', 1, function() {
+//
+//
+//
+// });
