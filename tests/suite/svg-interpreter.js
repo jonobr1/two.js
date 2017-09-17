@@ -7,9 +7,12 @@
 
 (function() {
 
-  module('SvgInterpreter');
+  QUnit.module('SvgInterpreter');
 
-  asyncTest('Two.load', 1, function(o) {
+  QUnit.test('Two.load', function(assert) {
+
+    assert.expect(1);
+    assert.done = assert.async(1);
 
     var two = new Two({
       width: 400,
@@ -22,17 +25,20 @@
       shape.translation.set(two.width / 2, two.height / 2);
       two.update();
 
-      ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.load loads SVG files properly.');
+      assert.ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.load loads SVG files properly.');
 
-      start();
+      assert.done();
 
-      QUnit.Utils.addElemToTest(o, [two.renderer.domElement, svg]);
+      QUnit.Utils.addElemToTest(assert.test, [two.renderer.domElement, svg]);
 
     });
 
   });
 
-  asyncTest('Two.interpret', 9, function(o) {
+  QUnit.test('Two.interpret', function(assert) {
+
+    assert.expect(9);
+    assert.done = assert.async(9);
 
     (function() {
 
@@ -51,10 +57,10 @@
 
         two.update();
 
-        ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.interpret imports <path> properly.');
-        start();
+        assert.ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.interpret imports <path> properly.');
+        assert.done();
 
-        QUnit.Utils.addElemToTest(o, [two.renderer.domElement, svg]);
+        QUnit.Utils.addElemToTest(assert.test, [two.renderer.domElement, svg]);
 
       });
 
@@ -77,10 +83,10 @@
 
         two.update();
 
-        ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.interpret imports <line> properly.');
-        start();
+        assert.ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.interpret imports <line> properly.');
+        assert.done();
 
-        QUnit.Utils.addElemToTest(o, [two.renderer.domElement, svg]);
+        QUnit.Utils.addElemToTest(assert.test, [two.renderer.domElement, svg]);
 
       });
 
@@ -103,10 +109,10 @@
 
         two.update();
 
-        ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.interpret imports <circle> properly.');
-        start();
+        assert.ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.interpret imports <circle> properly.');
+        assert.done();
 
-        QUnit.Utils.addElemToTest(o, [two.renderer.domElement, svg]);
+        QUnit.Utils.addElemToTest(assert.test, [two.renderer.domElement, svg]);
 
       });
 
@@ -129,10 +135,10 @@
 
         two.update();
 
-        ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.interpret imports <rect> properly.');
-        start();
+        assert.ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.interpret imports <rect> properly.');
+        assert.done();
 
-        QUnit.Utils.addElemToTest(o, [two.renderer.domElement, svg]);
+        QUnit.Utils.addElemToTest(assert.test, [two.renderer.domElement, svg]);
 
       });
 
@@ -155,10 +161,10 @@
 
         two.update();
 
-        ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.interpret imports <ellipse> properly.');
-        start();
+        assert.ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.interpret imports <ellipse> properly.');
+        assert.done();
 
-        QUnit.Utils.addElemToTest(o, [two.renderer.domElement, svg]);
+        QUnit.Utils.addElemToTest(assert.test, [two.renderer.domElement, svg]);
 
       });
 
@@ -181,10 +187,10 @@
 
         two.update();
 
-        ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.interpret imports <polyline> properly.');
-        start();
+        assert.ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.interpret imports <polyline> properly.');
+        assert.done();
 
-        QUnit.Utils.addElemToTest(o, [two.renderer.domElement, svg]);
+        QUnit.Utils.addElemToTest(assert.test, [two.renderer.domElement, svg]);
 
       });
 
@@ -207,10 +213,10 @@
 
         two.update();
 
-        ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.interpret imports <polygon> properly.');
-        start();
+        assert.ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.interpret imports <polygon> properly.');
+        assert.done();
 
-        QUnit.Utils.addElemToTest(o, [two.renderer.domElement, svg]);
+        QUnit.Utils.addElemToTest(assert.test, [two.renderer.domElement, svg]);
 
       });
 
@@ -233,10 +239,10 @@
 
         two.update();
 
-        ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.interpret imports <linear-gradient> properly.');
-        start();
+        assert.ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.interpret imports <linear-gradient> properly.');
+        assert.done();
 
-        QUnit.Utils.addElemToTest(o, [two.renderer.domElement, svg]);
+        QUnit.Utils.addElemToTest(assert.test, [two.renderer.domElement, svg]);
 
       });
 
@@ -259,10 +265,10 @@
 
         two.update();
 
-        ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.interpret imports <radial-gradient> properly.');
-        start();
+        assert.ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.interpret imports <radial-gradient> properly.');
+        assert.done();
 
-        QUnit.Utils.addElemToTest(o, [two.renderer.domElement, svg]);
+        QUnit.Utils.addElemToTest(assert.test, [two.renderer.domElement, svg]);
 
       });
 
@@ -270,7 +276,10 @@
 
   });
 
-  asyncTest('Two.subdivide', 3, function(o) {
+  QUnit.test('Two.subdivide', function(assert) {
+
+    assert.expect(3);
+    assert.done = assert.async(3);
 
     (function() {
 
@@ -292,10 +301,10 @@
 
         two.update();
 
-        ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.subdivide subdivides curveTo and lineTo properly.');
-        start();
+        assert.ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.subdivide subdivides curveTo and lineTo properly.');
+        assert.done();
 
-        QUnit.Utils.addElemToTest(o, [two.renderer.domElement, svg]);
+        QUnit.Utils.addElemToTest(assert.test, [two.renderer.domElement, svg]);
 
       });
 
@@ -321,10 +330,10 @@
 
         two.update();
 
-        ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.subdivide subdivides moveTo properly.');
-        start();
+        assert.ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.subdivide subdivides moveTo properly.');
+        assert.done();
 
-        QUnit.Utils.addElemToTest(o, [two.renderer.domElement, svg]);
+        QUnit.Utils.addElemToTest(assert.test, [two.renderer.domElement, svg]);
 
       });
 
@@ -350,10 +359,10 @@
 
         two.update();
 
-        ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.subdivide subdivides holes properly.');
-        start();
+        assert.ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.subdivide subdivides holes properly.');
+        assert.done();
 
-        QUnit.Utils.addElemToTest(o, [two.renderer.domElement, svg]);
+        QUnit.Utils.addElemToTest(assert.test, [two.renderer.domElement, svg]);
 
       });
 

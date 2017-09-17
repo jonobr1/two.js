@@ -5,6 +5,7 @@
     video: /\.(mp4|webm)$/i,
     image: /\.(jpe?g|png|gif|tiff)$/i
   };
+  var anchor = document.createElement('a');
 
   var Texture = Two.Texture = function(src, callback) {
 
@@ -42,22 +43,28 @@
 
     Properties: [
       'src',
-      'image',
       'loaded',
       'repeat'
     ],
 
     ImageRegistry: new Two.Registry(),
 
+    getAbsoluteURL: function(path) {
+      anchor.href = path;
+      return anchor.href;
+    },
+
     getImage: function(src) {
 
-      if (Texture.ImageRegistry.contains(src)) {
-        return Texture.ImageRegistry.get(src);
+      var absoluteSrc = Texture.getAbsoluteURL(src);
+
+      if (Texture.ImageRegistry.contains(absoluteSrc)) {
+        return Texture.ImageRegistry.get(absoluteSrc);
       }
 
       var image;
 
-      if (regex.video.test(src)) {
+      if (regex.video.test(absoluteSrc)) {
         image = document.createElement('video');
       } else {
         image = document.createElement('img');
@@ -99,8 +106,15 @@
           throw new Two.Utils.Error('unable to load ' + texture.src);
         };
 
-        texture.image.addEventListener('load', loaded, false);
-        texture.image.addEventListener('error', error, false);
+        if (_.isNumber(texture.image.width) && texture.image.width > 0
+          && _.isNumber(texture.image.height) && texture.image.height > 0) {
+            loaded();
+        } else {
+          texture.image.addEventListener('load', loaded, false);
+          texture.image.addEventListener('error', error, false);
+        }
+
+        texture._src = Texture.getAbsoluteURL(texture._src);
         texture.image.setAttribute('two-src', texture.src);
         Texture.ImageRegistry.add(texture.src, texture.image);
         texture.image.src = texture.src;
@@ -128,6 +142,7 @@
           throw new Two.Utils.Error('unable to load ' + texture.src);
         };
 
+        texture._src = Texture.getAbsoluteURL(texture._src);
         texture.image.addEventListener('canplaythrough', loaded, false);
         texture.image.addEventListener('error', error, false);
         texture.image.setAttribute('two-src', texture.src);
@@ -176,6 +191,36 @@
 
       _.each(Texture.Properties, Two.Utils.defineProperty, object);
 
+      Object.defineProperty(object, 'image', {
+        enumerable: true,
+        get: function() {
+          return this._image;
+        },
+        set: function(image) {
+
+          var tag = image && image.nodeName.toLowerCase();
+          var index;
+
+          switch (tag) {
+            case 'canvas':
+              index = '#' + image.id;
+              break;
+            default:
+              index = image.src;
+          }
+
+          if (Texture.ImageRegistry.contains(index)) {
+            this._image = Texture.ImageRegistry.get(image.src);
+          } else {
+            this._image = image;
+          }
+
+          this._flagImage = true;
+
+        }
+
+      });
+
       Object.defineProperty(object, 'offset', {
         enumerable: true,
         get: function() {
@@ -221,6 +266,7 @@
 
     _flagSrc: false,
     _flagImage: false,
+    _flagVideo: false,
     _flagLoaded: false,
     _flagRepeat: false,
 
@@ -248,19 +294,24 @@
 
     _update: function() {
 
-      if (this._flagSrc || this._flagImage) {
+      if (this._flagSrc || this._flagImage || this._flagVideo) {
+
         this.trigger(Two.Events.change);
-        this.loaded = false;
-        Texture.load(this, _.bind(function() {
-          this.loaded = true;
-          this
-            .trigger(Two.Events.change)
-            .trigger(Two.Events.load);
-        }, this));
+
+        if (this._flagSrc || this._flagImage) {
+          this.loaded = false;
+          Texture.load(this, _.bind(function() {
+            this.loaded = true;
+            this
+              .trigger(Two.Events.change)
+              .trigger(Two.Events.load);
+          }, this));
+        }
+
       }
 
-      if (this.image.readyState >= 4) {
-        this._flagImage = true;
+      if (this._image && this._image.readyState >= 4) {
+        this._flagVideo = true;
       }
 
       return this;
@@ -270,7 +321,7 @@
     flagReset: function() {
 
       this._flagSrc = this._flagImage = this._flagLoaded
-        = this._flagScale = this._flagOffset = false;
+        = this._flagVideo = this._flagScale = this._flagOffset = false;
 
       return this;
 

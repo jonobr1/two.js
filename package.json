@@ -31,17 +31,10 @@
     "node-minify": "^2.0.3"
   },
   "devDependencies": {
-    "grunt": "^0.4.0",
-    "grunt-contrib-jshint": "^0.10.0",
-    "grunt-contrib-watch": "^0.6.0",
-    "grunt-contrib-connect": "^0.8.0",
-    "grunt-contrib-concat": "^0.4.0",
-    "grunt-closure-tools": "^0.9.0",
-    "grunt-contrib-qunit": "^0.5.1",
-    "grunt-contrib-uglify": "^0.4.0",
-    "blueimp-canvas-to-blob": "^2.1.0",
-    "resemblejs": "^1.1.1",
     "animation-frame": "^0.1.7",
+    "blueimp-canvas-to-blob": "^2.1.0",
+    "qunitjs": "^2.4.0",
+    "resemblejs": "^1.1.1",
     "underscore": "^1.6.0"
   }
 }

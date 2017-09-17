@@ -12,13 +12,17 @@
 
   var Utils = root.Utils = QU.Utils = {
 
+    getSelector: function(test) {
+      return '#qunit-test-output-' + test.testId + ' ol';
+    },
+
     /**
      * Add a DOM Element to your current unit test.
      */
     addElemToTest: function(test, elem) {
 
-      // Skip for headless
-      if (window.URL) return;
+      // // Skip for headless
+      // if (window.URL) return;
 
       var domElement = document.createElement('li');
 
@@ -31,7 +35,8 @@
       }
 
       _.delay(function() {
-        document.querySelector('#' + test.id + ' ol').appendChild(domElement);
+        var selector = Utils.getSelector(test);
+        document.querySelector(selector).appendChild(domElement);
       }, 100);
 
     },
@@ -45,10 +50,16 @@
 
       if (_.isArray(two)) {
         elem = _.map(two, function(t) {
-          return t.renderer.domElement;
+          var el = t.renderer.domElement;
+          el.style.width = el.style.height = 200 + 'px';
+          el.style.border = '1px solid #ccc';
+          return el;
         });
       } else {
         elem = two.renderer.domElement;
+        elem.style.width
+          = elem.style.height = 200 + 'px';
+        elem.style.border = '1px solid #ccc';
       }
 
       Utils.addElemToTest(test, elem);
@@ -136,7 +147,7 @@
      */
     compare: function(path, renderer, message, callback) {
 
-      var _this = this;
+      var assert = this;
 
       QUnit.Utils.getImageBlob(path, function(reference) {
 
@@ -146,24 +157,27 @@
           var pct = parseFloat(data.misMatchPercentage);
 
           // Can differ a bit due to antialiasing etc.
-          ok(pct <= 2, message);
-          start();
+          assert.ok(pct <= 2, message);
+          assert.done();
 
           var img = document.createElement('img');
           img.src = path;
           img.title = 'Reference Image';
-          img.width = img.height = 400;
+          img.width = img.height = 200;
           img.style.border = '1px solid #ccc';
 
           var domElement = document.createElement('li');
           renderer.domElement.title = 'Computed Image';
           renderer.domElement.style.border = '1px solid #ccc';
+          renderer.domElement.style.width = renderer.domElement.style.height = 200 + 'px';
+          renderer.domElement.style.marginLeft = 10 + 'px';
 
           domElement.appendChild(img);
           domElement.appendChild(renderer.domElement);
 
           _.delay(function() {
-            document.querySelector('#' + _this.id + ' ol').appendChild(domElement);
+            var selector = Utils.getSelector(assert.test);
+            document.querySelector(selector).appendChild(domElement);
           }, 100);
 
         });

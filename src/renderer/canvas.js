@@ -523,7 +523,7 @@
         var image = this.image;
         var repeat;
 
-        if (!this._renderer.effect || ((this._flagLoaded || this._flagImage || this._flagRepeat) && this.loaded)) {
+        if (!this._renderer.effect || ((this._flagLoaded || this._flagImage || this._flagVideo || this._flagRepeat) && this.loaded)) {
           this._renderer.effect = ctx.createPattern(this.image, this._repeat);
         }
 
