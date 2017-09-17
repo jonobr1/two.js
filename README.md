@@ -5,7 +5,7 @@ A two-dimensional drawing api meant for modern browsers. It is renderer agnostic
 [Home](http://jonobr1.github.io/two.js) • [Examples](http://jonobr1.github.io/two.js/#examples) • [Documentation](http://jonobr1.github.io/two.js/#documentation) • [Help](https://github.com/jonobr1/two.js/issues?labels=question)
 
 ## Usage
-Download the [minified library](https://raw.github.com/jonobr1/two.js/master/build/two.min.js) and include it in your html.
+Download the latest [minified library](https://raw.github.com/jonobr1/two.js/dev/build/two.min.js) and include it in your html.
 
 ```html
 <script src="js/two.min.js"></script>
@@ -44,28 +44,20 @@ Here is boilerplate html in order to draw a spinning rectangle in two.js:
 ```
 
 ## Custom Build
-Two.js uses [nodejs](http://nodejs.org/) in order to build source files. You'll first want to install that.
-Next you'll want to install [grunt](https://npmjs.org/package/grunt):
+Two.js uses [nodejs](http://nodejs.org/) in order to build source files. You'll first want to install that. Once installed open up a terminal and head to the repository folder:
 
 ```
-cd two.js
-npm install grunt
-```
-You can edit the files that we be included in the build by modifying `./Gruntfile.js`.
-If you're making an application and you're only using one renderer (i.e: svg context) then it is highly recommended to remove canvas and webgl renderers from your build in order to drastically decrease your file size.
-
-Finally, build the project:
-
-```
-grunt
+cd ~/path-to-repo/two.js
+npm install
 ```
 
-If you are having problems running the closure compiler (it requires a JDK to be installed), run
+This will give you a number of libraries that the development of Two.js relies on. If for instance you only use the `SvgRenderer` then you can really cut down on the file size by excluding the other renderers. To do this, modify `/utils/build.js` to only add the files you'd like. Then run:
 
 ```
-grunt build-uglify
+node ./utils/build
 ```
-instead to minify the build with uglify.
+
+And the resulting `/build/two.js` and `/build/two.min.js` will be updated to your specification.
 
 ## Change Log
 <!-- For the latest nightly changes checkout the `dev` branch [here](../../tree/dev). -->

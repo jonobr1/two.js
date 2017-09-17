@@ -27,12 +27,11 @@
     "url": "https://github.com/jonobr1/two.js/issues"
   },
   "license": "MIT",
-  "dependencies": {
-    "node-minify": "^2.0.3"
-  },
+  "dependencies": {},
   "devDependencies": {
     "animation-frame": "^0.1.7",
     "blueimp-canvas-to-blob": "^2.1.0",
+    "node-minify": "^2.0.3",
     "qunitjs": "^2.4.0",
     "resemblejs": "^1.1.1",
     "underscore": "^1.6.0"
