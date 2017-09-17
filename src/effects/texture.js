@@ -86,13 +86,6 @@
       },
       img: function(texture, callback) {
 
-        if (texture.image && texture.image.getAttribute('two-src')) {
-          if (_.isFunction(callback)) {
-            callback();
-          }
-          return;
-        }
-
         var loaded = function(e) {
           texture.image.removeEventListener('load', loaded, false);
           texture.image.removeEventListener('error', error, false);
@@ -115,16 +108,17 @@
         }
 
         texture._src = Texture.getAbsoluteURL(texture._src);
+
+        if (texture.image && texture.image.getAttribute('two-src')) {
+          return;
+        }
+
         texture.image.setAttribute('two-src', texture.src);
         Texture.ImageRegistry.add(texture.src, texture.image);
         texture.image.src = texture.src;
 
       },
       video: function(texture, callback) {
-
-        if (texture.image && texture.image.getAttribute('two-src')) {
-          return;
-        }
 
         var loaded = function(e) {
           texture.image.removeEventListener('load', loaded, false);
@@ -145,6 +139,11 @@
         texture._src = Texture.getAbsoluteURL(texture._src);
         texture.image.addEventListener('canplaythrough', loaded, false);
         texture.image.addEventListener('error', error, false);
+
+        if (texture.image && texture.image.getAttribute('two-src')) {
+          return;
+        }
+
         texture.image.setAttribute('two-src', texture.src);
         Texture.ImageRegistry.add(texture.src, texture.image);
         texture.image.src = texture.src;

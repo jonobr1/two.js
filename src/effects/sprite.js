@@ -202,7 +202,7 @@
 
         }
 
-        var ox = (iw - width) / 2 + width * ((this._index % cols) + 1);
+        var ox = width * (this._index % cols) - (iw - width) / 2;
         var oy = height * Math.floor((this._index / cols))
           - (ih - height) / 2;
 

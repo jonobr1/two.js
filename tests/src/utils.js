@@ -12,6 +12,22 @@
 
   var Utils = root.Utils = QU.Utils = {
 
+    digits: function(v, d) {
+
+      var r = '';
+      var s = v + '';
+      var diff = Math.max(d - s.length, 0);
+      var i = 0;
+
+      while (i < diff) {
+        r += '0';
+        i++;
+      }
+
+      return r + v;
+
+    },
+
     getSelector: function(test) {
       return '#qunit-test-output-' + test.testId + ' ol';
     },

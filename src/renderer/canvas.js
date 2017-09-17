@@ -538,7 +538,7 @@
 
           if (image) {
 
-            this._renderer.offset.x -= image.width / 2;
+            this._renderer.offset.x += image.width / 2;
             this._renderer.offset.y += image.height / 2;
 
             if (this._scale instanceof Two.Vector) {

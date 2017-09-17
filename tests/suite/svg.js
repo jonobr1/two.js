@@ -217,6 +217,43 @@
 
   });
 
+  QUnit.test('two.makeImageSequence', function(assert) {
+
+    assert.expect(1);
+    assert.done = assert.async(1);
+
+    var two = new Two({
+      width: 400,
+      height: 400
+    });
+
+    var paths = _.map(_.range(0, 29), function(i) {
+      return '/tests/images/sequence/' + QUnit.Utils.digits(i, 5) + '.png';
+    });
+    var sequence = two.makeImageSequence(paths, two.width / 2, two.height / 2);
+    sequence.index = 3;
+    var texture = sequence.textures[sequence.index];
+
+    var loaded = function() {
+
+      texture.unbind(Two.Events.load, loaded);
+
+      two.update();
+
+      var elem = two.renderer.domElement.querySelector('#' + sequence.id);
+      var id = sequence.textures[sequence.index].id;
+
+      assert.equal('url(#' + id + ')', elem.getAttribute('fill'), 'Two.ImageSequence applied the correct texture properly.');
+      assert.done();
+
+    };
+
+    texture.bind(Two.Events.load, loaded);
+
+    QUnit.Utils.addInstanceToTest(assert.test, two);
+
+  });
+
   QUnit.test('Two.makeText', function(assert) {
 
     assert.expect(16);

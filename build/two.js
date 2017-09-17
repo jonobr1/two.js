@@ -4783,7 +4783,7 @@ this.Two = (function(previousTwo) {
 
           if (image) {
 
-            this._renderer.offset.x -= image.width / 2;
+            this._renderer.offset.x += image.width / 2;
             this._renderer.offset.y += image.height / 2;
 
             if (this._scale instanceof Two.Vector) {
@@ -8799,13 +8799,6 @@ this.Two = (function(previousTwo) {
       },
       img: function(texture, callback) {
 
-        if (texture.image && texture.image.getAttribute('two-src')) {
-          if (_.isFunction(callback)) {
-            callback();
-          }
-          return;
-        }
-
         var loaded = function(e) {
           texture.image.removeEventListener('load', loaded, false);
           texture.image.removeEventListener('error', error, false);
@@ -8828,16 +8821,17 @@ this.Two = (function(previousTwo) {
         }
 
         texture._src = Texture.getAbsoluteURL(texture._src);
+
+        if (texture.image && texture.image.getAttribute('two-src')) {
+          return;
+        }
+
         texture.image.setAttribute('two-src', texture.src);
         Texture.ImageRegistry.add(texture.src, texture.image);
         texture.image.src = texture.src;
 
       },
       video: function(texture, callback) {
-
-        if (texture.image && texture.image.getAttribute('two-src')) {
-          return;
-        }
 
         var loaded = function(e) {
           texture.image.removeEventListener('load', loaded, false);
@@ -8858,6 +8852,11 @@ this.Two = (function(previousTwo) {
         texture._src = Texture.getAbsoluteURL(texture._src);
         texture.image.addEventListener('canplaythrough', loaded, false);
         texture.image.addEventListener('error', error, false);
+
+        if (texture.image && texture.image.getAttribute('two-src')) {
+          return;
+        }
+
         texture.image.setAttribute('two-src', texture.src);
         Texture.ImageRegistry.add(texture.src, texture.image);
         texture.image.src = texture.src;
@@ -9250,7 +9249,7 @@ this.Two = (function(previousTwo) {
 
         }
 
-        var ox = (iw - width) / 2 + width * ((this._index % cols) + 1);
+        var ox = width * (this._index % cols) - (iw - width) / 2;
         var oy = height * Math.floor((this._index / cols))
           - (ih - height) / 2;
 
@@ -9325,7 +9324,8 @@ this.Two = (function(previousTwo) {
   _.extend(ImageSequence, {
 
     Properties: [
-      'frameRate'
+      'frameRate',
+      'index'
     ],
 
     DefaultFrameRate: 30,
@@ -9413,6 +9413,7 @@ this.Two = (function(previousTwo) {
 
     _flagTextures: false,
     _flagFrameRate: false,
+    _flagIndex: false,
 
     // Private variables
     _amount: 1,
@@ -9551,7 +9552,7 @@ this.Two = (function(previousTwo) {
 
         }
 
-      } else if (!(this.fill instanceof Two.Texture)) {
+      } else if (this._flagIndex || !(this.fill instanceof Two.Texture)) {
 
         texture = effects[this._index];
 
@@ -9567,9 +9568,9 @@ this.Two = (function(previousTwo) {
             this.height = height;
           }
 
-          this.fill = texture;
-
         }
+
+        this.fill = texture;
 
       }
 

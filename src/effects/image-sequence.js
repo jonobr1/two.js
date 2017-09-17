@@ -36,7 +36,8 @@
   _.extend(ImageSequence, {
 
     Properties: [
-      'frameRate'
+      'frameRate',
+      'index'
     ],
 
     DefaultFrameRate: 30,
@@ -124,6 +125,7 @@
 
     _flagTextures: false,
     _flagFrameRate: false,
+    _flagIndex: false,
 
     // Private variables
     _amount: 1,
@@ -262,7 +264,7 @@
 
         }
 
-      } else if (!(this.fill instanceof Two.Texture)) {
+      } else if (this._flagIndex || !(this.fill instanceof Two.Texture)) {
 
         texture = effects[this._index];
 
@@ -278,9 +280,9 @@
             this.height = height;
           }
 
-          this.fill = texture;
-
         }
+
+        this.fill = texture;
 
       }
 
