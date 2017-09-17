@@ -667,21 +667,3 @@ QUnit.test('Two.Texture', function(assert) {
   tc.src = path;
 
 });
-
-/*
-QUnit.test('Two.Sprite', function(assert) {
-
-  assert.expect(1);
-
-  // Test Sprite Loading and playing here
-
-});
-*/
-
-// QUnit.test('Two.ImageSequence', 1, function(assert) {
-//
-//    assert.expect(1);
-//
-//   // Test Image Sequence Loading and playing here
-//
-// });
