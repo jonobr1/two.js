@@ -21,6 +21,8 @@
 
     two.load('./images/interpretation/D.svg', function(shape, svg) {
 
+      shape.center();
+
       var answer = {"children":[{"vertices":[{"x":-77.95149999999998,"y":150,"command":"M","relative":true,"controls":{"left":{"x":0,"y":0},"right":{"x":0,"y":0}}},{"x":-77.89349999999997,"y":-150,"command":"L","relative":true,"controls":{"left":{"x":0,"y":0},"right":{"x":77.89900000000002,"y":0}}},{"x":77.95150000000001,"y":-81.117,"command":"C","relative":true,"controls":{"left":{"x":0,"y":-67.354},"right":{"x":0,"y":0}}},{"x":77.95150000000001,"y":73.96499999999997,"command":"C","relative":true,"controls":{"left":{"x":0,"y":-75.976},"right":{"x":-0.0009999999999763531,"y":75.976}}},{"x":-77.95149999999998,"y":150,"command":"C","relative":true,"controls":{"left":{"x":77.957,"y":0},"right":{"x":0,"y":0}}}],"rotation":0,"scale":1}],"translation":{"x":200,"y":200},"rotation":0,"scale":1,"opacity":1,"mask":null};
       shape.translation.set(two.width / 2, two.height / 2);
       two.update();
