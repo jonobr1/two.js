@@ -69,7 +69,7 @@ npm install canvas
 
 Now in a JavaScript file setup your Two.js scenegraph and save out frames whenever you need to:
 
-```
+```javascript
 var Two = require('../build/two.js'); // Or from npm, `require('two.js');`
 var Canvas = require('canvas');
 var Image = Canvas.Image;
