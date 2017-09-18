@@ -259,10 +259,11 @@
       height: 400
     });
 
-    var paths = _.map(_.range(0, 29), function(i) {
+    var paths = _.map(_.range(0, 30), function(i) {
       return '/tests/images/sequence/' + QUnit.Utils.digits(i, 5) + '.png';
     });
-    var sequence = two.makeImageSequence(paths, two.width / 2, two.height / 2);
+    var sequence = two.makeImageSequence(paths, two.width / 2, two.height / 2, 2);
+    console.log(paths);
     sequence.index = 3;
     var texture = sequence.textures[sequence.index];
 

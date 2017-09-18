@@ -160,6 +160,11 @@
         delete this._onLastFrame;
       }
 
+      if (this._index !== this._firstFrame) {
+        this._startTime -= 1000 * Math.abs(this._index - this._firstFrame)
+          / this._frameRate;
+      }
+
       return this;
 
     },
@@ -205,7 +210,7 @@
 
       var effects = this._textures;
       var width, height, elapsed, amount, duration, texture;
-      var index;
+      var index, frames;
 
       if (this._flagTextures) {
         this._amount = effects.length;
@@ -225,8 +230,8 @@
 
         // TODO: Offload perf logic to instance of `Two`.
         elapsed = _.performance.now() - this._startTime;
-        duration = 1000 * (this._lastFrame - this._firstFrame)
-          / this._frameRate;
+        frames = this._lastFrame + 1;
+        duration = 1000 * (frames - this._firstFrame) / this._frameRate;
 
         if (this._loop) {
           elapsed = elapsed % duration;
@@ -234,7 +239,7 @@
           elapsed = Math.min(elapsed, duration);
         }
 
-        index = _.lerp(this._firstFrame, this._lastFrame, elapsed / duration);
+        index = _.lerp(this._firstFrame, frames, elapsed / duration);
         index = Math.floor(index);
 
         if (index !== this._index) {

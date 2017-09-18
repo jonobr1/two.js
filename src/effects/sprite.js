@@ -185,12 +185,10 @@
             this._lastFrame = amount - 1;
           }
 
-          frames = this._lastFrame + 1;
-
           // TODO: Offload perf logic to instance of `Two`.
           elapsed = _.performance.now() - this._startTime;
-          duration = 1000 * (frames - this._firstFrame)
-            / this._frameRate;
+          frames = this._lastFrame + 1;
+          duration = 1000 * (frames - this._firstFrame) / this._frameRate;
 
           if (this._loop) {
             elapsed = elapsed % duration;
