@@ -67,14 +67,24 @@
       if (_.isArray(two)) {
         elem = _.map(two, function(t) {
           var el = t.renderer.domElement;
-          el.style.width = el.style.height = 200 + 'px';
+          switch (el.tagName.toLowerCase()) {
+            case 'svg':
+              break;
+            default:
+              el.style.width = el.style.height = 200 + 'px';
+          }
           el.style.border = '1px solid #ccc';
           return el;
         });
       } else {
         elem = two.renderer.domElement;
-        elem.style.width
-          = elem.style.height = 200 + 'px';
+        switch (elem.tagName.toLowerCase()) {
+          case 'svg':
+            break;
+          default:
+            elem.style.width
+              = elem.style.height = 200 + 'px';
+        }
         elem.style.border = '1px solid #ccc';
       }
 

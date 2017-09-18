@@ -9087,7 +9087,7 @@ this.Two = (function(previousTwo) {
   _.extend(Sprite, {
 
     Properties: [
-      'texture', 'columns', 'rows', 'frameRate'
+      'texture', 'columns', 'rows', 'frameRate', 'index'
     ],
 
     MakeObservable: function(obj) {
@@ -9105,11 +9105,11 @@ this.Two = (function(previousTwo) {
     _flagColumns: false,
     _flagRows: false,
     _flagFrameRate: false,
+    flagIndex: false,
 
     // Private variables
     _amount: 1,
     _duration: 0,
-    _index: 0,
     _startTime: 0,
     _playing: false,
     _firstFrame: 0,
@@ -9121,6 +9121,7 @@ this.Two = (function(previousTwo) {
     _columns: 1,
     _rows: 1,
     _frameRate: 0,
+    _index: 0,
 
     play: function(firstFrame, lastFrame, onLastFrame) {
 
@@ -9139,6 +9140,11 @@ this.Two = (function(previousTwo) {
         this._onLastFrame = onLastFrame;
       } else {
         delete this._onLastFrame;
+      }
+
+      if (this._index !== this._firstFrame) {
+        this._startTime -= 1000 * Math.abs(this._index - this._firstFrame)
+          / this._frameRate;
       }
 
       return this;
@@ -9190,7 +9196,7 @@ this.Two = (function(previousTwo) {
       var rows = this._rows;
 
       var width, height, elapsed, amount, duration;
-      var index, iw, ih, isRange;
+      var index, iw, ih, isRange, frames;
 
       if (this._flagColumns || this._flagRows) {
         this._amount = this._columns * this._rows;
@@ -9226,9 +9232,11 @@ this.Two = (function(previousTwo) {
             this._lastFrame = amount - 1;
           }
 
+          frames = this._lastFrame + 1;
+
           // TODO: Offload perf logic to instance of `Two`.
           elapsed = _.performance.now() - this._startTime;
-          duration = 1000 * (this._lastFrame - this._firstFrame)
+          duration = 1000 * (frames - this._firstFrame)
             / this._frameRate;
 
           if (this._loop) {
@@ -9237,7 +9245,7 @@ this.Two = (function(previousTwo) {
             elapsed = Math.min(elapsed, duration);
           }
 
-          index = _.lerp(this._firstFrame, this._lastFrame, elapsed / duration);
+          index = _.lerp(this._firstFrame, frames, elapsed / duration);
           index = Math.floor(index);
 
           if (index !== this._index) {
@@ -9249,9 +9257,11 @@ this.Two = (function(previousTwo) {
 
         }
 
-        var ox = width * (this._index % cols) - (iw - width) / 2;
-        var oy = height * Math.floor((this._index / cols))
-          - (ih - height) / 2;
+        var col = this._index % cols;
+        var row = Math.floor(this._index / cols);
+
+        var ox = - width * col + (iw - width) / 2;
+        var oy = - height * row + (ih - height) / 2;
 
         // TODO: Improve performance
         if (ox !== effect.offset.x) {

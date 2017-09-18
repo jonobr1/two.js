@@ -217,9 +217,41 @@
 
   });
 
-  QUnit.test('two.makeImageSequence', function(assert) {
+  QUnit.test('two.makeSprite (Simple)', function(assert) {
 
     assert.expect(1);
+    assert.done = assert.async(1);
+
+    var two = new Two({
+      width: 400,
+      height: 400
+    });
+
+    var path = '/tests/images/canvas/radial-gradient@2x.png';
+    var sprite = two.makeSprite(path, two.width / 2, two.height / 2);
+    var texture = sprite.texture;
+
+    var loaded = function() {
+
+      texture.unbind(Two.Events.load, loaded);
+      two.update();
+
+      var elem = two.renderer.domElement.querySelector('#' + sprite.id);
+      var id = texture.id;
+
+      assert.equal('url(#' + id + ')', elem.getAttribute('fill'), 'Two.Sprite applied the correct texture properly.');
+      assert.done();
+
+    };
+
+    texture.bind(Two.Events.load, loaded);
+    QUnit.Utils.addInstanceToTest(assert.test, two);
+
+  });
+
+  QUnit.test('two.makeImageSequence', function(assert) {
+
+    assert.expect(2);
     assert.done = assert.async(1);
 
     var two = new Two({
@@ -244,11 +276,84 @@
       var id = sequence.textures[sequence.index].id;
 
       assert.equal('url(#' + id + ')', elem.getAttribute('fill'), 'Two.ImageSequence applied the correct texture properly.');
+
+      sequence.index = 7;
+      id = sequence.textures[sequence.index].id;
+
+      two.update();
+
+      assert.equal('url(#' + id + ')', elem.getAttribute('fill'), 'Two.ImageSequence can change index properly.');
+
       assert.done();
 
     };
 
     texture.bind(Two.Events.load, loaded);
+
+    two.renderer.domElement.style.cursor = 'pointer';
+    two.renderer.domElement.addEventListener('click', function() {
+      if (two.playing) {
+        two.pause();
+      } else {
+        sequence.loop = true;
+        sequence.play();
+        two.play();
+      }
+    }, false);
+
+    QUnit.Utils.addInstanceToTest(assert.test, two);
+
+  });
+
+  QUnit.test('two.makeSprite', function(assert) {
+
+    assert.expect(2);
+    assert.done = assert.async(1);
+
+    var two = new Two({
+      width: 400,
+      height: 400
+    });
+
+    var path = '/tests/images/spritesheet.jpg';
+    var sprite = two.makeSprite(path, two.width / 2, two.height / 2, 4, 4, 2, false);
+    var texture = sprite.texture;
+
+    var loaded = function() {
+
+      texture.unbind(Two.Events.load, loaded);
+      two.update();
+
+      assert.ok(true, 'Two.Sprite created properly.');
+
+      sprite.index = 10;
+      two.update();
+
+      var elem = texture._renderer.elem;
+      var statement = [
+        elem.getAttribute('x'),
+        elem.getAttribute('y'),
+        elem.getAttribute('width'),
+        elem.getAttribute('height')
+      ].join(',');
+
+      assert.equal(statement, '-640,-640,1025,1025');
+      assert.done();
+
+    };
+
+    texture.bind(Two.Events.load, loaded);
+
+    two.renderer.domElement.style.cursor = 'pointer';
+    two.renderer.domElement.addEventListener('click', function() {
+      if (two.playing) {
+        two.pause();
+      } else {
+        sprite.loop = true;
+        sprite.play();
+        two.play();
+      }
+    }, false);
 
     QUnit.Utils.addInstanceToTest(assert.test, two);
 
