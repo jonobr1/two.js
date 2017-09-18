@@ -263,7 +263,6 @@
       return '/tests/images/sequence/' + QUnit.Utils.digits(i, 5) + '.png';
     });
     var sequence = two.makeImageSequence(paths, two.width / 2, two.height / 2, 2);
-    console.log(paths);
     sequence.index = 3;
     var texture = sequence.textures[sequence.index];
 
@@ -338,7 +337,7 @@
         elem.getAttribute('height')
       ].join(',');
 
-      assert.equal(statement, '-640,-640,1025,1025');
+      assert.equal(statement, '-640,-640,1025,1025', 'Two.Sprite changed index properly.');
       assert.done();
 
     };
