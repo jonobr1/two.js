@@ -59,6 +59,8 @@ node ./utils/build
 
 And the resulting `/build/two.js` and `/build/two.min.js` will be updated to your specification.
 
+### Running in Headless Environment
+
 ## Change Log
 <!-- For the latest nightly changes checkout the `dev` branch [here](../../tree/dev). -->
 
