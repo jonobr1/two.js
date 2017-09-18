@@ -4778,8 +4778,8 @@ this.Two = (function(previousTwo) {
             this._renderer.offset = new Two.Vector();
           }
 
-          this._renderer.offset.x = this._offset.x;
-          this._renderer.offset.y = this._offset.y;
+          this._renderer.offset.x = - this._offset.x;
+          this._renderer.offset.y = - this._offset.y;
 
           if (image) {
 

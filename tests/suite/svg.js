@@ -227,7 +227,7 @@
       height: 400
     });
 
-    var path = '/tests/images/canvas/radial-gradient@2x.png';
+    var path = '/tests/images/sequence/00000.png';
     var sprite = two.makeSprite(path, two.width / 2, two.height / 2);
     var texture = sprite.texture;
 
@@ -245,6 +245,7 @@
     };
 
     texture.bind(Two.Events.load, loaded);
+    texture._update();
     QUnit.Utils.addInstanceToTest(assert.test, two);
 
   });
@@ -289,6 +290,7 @@
     };
 
     texture.bind(Two.Events.load, loaded);
+    texture._update();
 
     two.renderer.domElement.style.cursor = 'pointer';
     two.renderer.domElement.addEventListener('click', function() {
@@ -343,6 +345,7 @@
     };
 
     texture.bind(Two.Events.load, loaded);
+    texture._update();
 
     two.renderer.domElement.style.cursor = 'pointer';
     two.renderer.domElement.addEventListener('click', function() {

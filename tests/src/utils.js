@@ -184,7 +184,9 @@
 
           // Can differ a bit due to antialiasing etc.
           assert.ok(pct <= 2, message);
-          assert.done();
+          if (assert.done) {
+            assert.done();
+          }
 
           var img = document.createElement('img');
           img.src = path;
@@ -205,6 +207,10 @@
             var selector = Utils.getSelector(assert.test);
             document.querySelector(selector).appendChild(domElement);
           }, 100);
+
+          if (_.isFunction(callback)) {
+            callback();
+          }
 
         });
 
