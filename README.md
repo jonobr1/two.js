@@ -59,6 +59,8 @@ node ./utils/build
 
 And the resulting `/build/two.js` and `/build/two.min.js` will be updated to your specification.
 
+---
+
 ### Running in Headless Environments
 
 As of version `v0.7.0` Two.js can also run in a headless environment, namely running on the server with the help of a library called [Node Canvas](https://github.com/Automattic/node-canvas). We don't add Node Canvas to dependencies of Two.js because it's _not necessary_ to run it in the browser. However, it has all the hooks setup to run in a cloud environment. To get started follow the installation instructions on Automattic's readme. After you've done that run:
