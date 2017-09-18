@@ -1,11 +1,15 @@
 (function(Two) {
 
   var _ = Two.Utils;
+  var anchor;
   var regex = {
     video: /\.(mp4|webm)$/i,
     image: /\.(jpe?g|png|gif|tiff)$/i
   };
-  var anchor = document.createElement('a');
+
+  if (this.document) {
+    anchor = document.createElement('a');
+  }
 
   var Texture = Two.Texture = function(src, callback) {
 
@@ -50,6 +54,10 @@
     ImageRegistry: new Two.Registry(),
 
     getAbsoluteURL: function(path) {
+      if (!anchor) {
+        // TODO: Fix for headless environment
+        return path;
+      }
       anchor.href = path;
       return anchor.href;
     },

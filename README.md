@@ -61,6 +61,48 @@ And the resulting `/build/two.js` and `/build/two.min.js` will be updated to you
 
 ### Running in Headless Environment
 
+As of version `v0.7.0` Two.js can also run in a headless environment, namely running on the server with the help of a library called [Node Canvas](https://github.com/Automattic/node-canvas). We don't add Node Canvas to dependencies of Two.js because it's _not necessary_ to run it in the browser. However, it has all the hooks setup to run in a cloud environment. To get started follow the installation instructions on Automattic's readme. After you've done that run:
+
+```
+npm install canvas
+```
+
+Now in a JavaScript file setup your Two.js scenegraph and save out frames whenever you need to:
+
+```
+var Two = require('../build/two.js'); // Or from npm, `require('two.js');`
+var Canvas = require('canvas');
+var Image = Canvas.Image;
+var fs = require('fs');
+var path = require('path');
+
+var width = 800;
+var height = 600;
+
+var canvas = new Canvas();
+Two[Two.Types.canvas].Utils.shim(canvas);
+
+var time = Date.now();
+
+var two = new Two({
+  type: Two.Types.canvas,
+  width: 800,
+  height: 600,
+  domElement: canvas
+});
+
+var rect = two.makeRectangle(width / 2, height / 2, 50, 50);
+rect.fill = 'rgb(255, 100, 100)';
+rect.noStroke();
+
+two.update();
+
+fs.writeFileSync(path.resolve(__dirname, './images/rectangle.png'), canvas.toBuffer());
+console.log('Finished rendering. Time took: ', Date.now() - time);
+
+process.exit();
+```
+
 ## Change Log
 <!-- For the latest nightly changes checkout the `dev` branch [here](../../tree/dev). -->
 
