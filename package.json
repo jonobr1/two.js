@@ -27,9 +27,6 @@
     "url": "https://github.com/jonobr1/two.js/issues"
   },
   "license": "MIT",
-  "dependencies": {
-    "canvas": "^1.6.7"
-  },
   "devDependencies": {
     "animation-frame": "^0.1.7",
     "blueimp-canvas-to-blob": "^2.1.0",
