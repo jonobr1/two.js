@@ -46,13 +46,9 @@
             // You can access the token ID with `token.id`
             _.extend(token, details);
             $.ajax({
-              url: 'https://api.parse.com/1/functions/donate',
+              url: 'https://us-central1-jono-fyi.cloudfunctions.net/charge/',
               type: 'post',
               data: JSON.stringify(token),
-              headers: {
-                'X-Parse-Application-Id': '4XZHGvVV5CExCu8c1FGYVke9hGfagJLX9TUr2eiN',
-                'X-Parse-REST-API-Key': 'YmVLRX3nTfxmFdOHayZCPxjQlKYlWFIGd4g7RoAl'
-              },
               contentType: 'application/json',
               dataType: 'json',
               success: function(resp) {
