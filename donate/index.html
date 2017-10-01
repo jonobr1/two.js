@@ -47,7 +47,7 @@
             _.extend(token, details);
             $.ajax({
               url: 'https://us-central1-jono-fyi.cloudfunctions.net/charge/',
-              type: 'post',
+              type: 'POST',
               data: JSON.stringify(token),
               contentType: 'application/json',
               dataType: 'json',
