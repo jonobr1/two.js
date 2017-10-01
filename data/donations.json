@@ -2,6 +2,18 @@
   "template": "<li><a href=\"#\" target=\"_blank\"><img width=\"143\" height=\"100\" src=\"<%= img %>\" alt=\"\"><h3><p></p></h3></a></li>",
   "items": [
     {
+      "title": "Donation • $1.00",
+      "img": "images/donations/1.png",
+      "description": "for Two.js Development",
+      "amount": "100"
+    },
+    {
+      "title": "Donation • $5.00",
+      "img": "images/donations/5.png",
+      "description": "for Two.js Development",
+      "amount": "500"
+    },
+    {
       "title": "Donation • $10.00",
       "img": "images/donations/10.png",
       "description": "for Two.js Development",
