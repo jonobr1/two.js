@@ -45,6 +45,10 @@
             // Use the token to create the charge with a server-side script.
             // You can access the token ID with `token.id`
             _.extend(token, details);
+            $.post('https://us-central1-jono-fyi.cloudfunctions.net/charge/',
+              token, function(resp) {
+                console.log(resp);
+              });
             $.ajax({
               url: 'https://us-central1-jono-fyi.cloudfunctions.net/charge/',
               type: 'POST',
