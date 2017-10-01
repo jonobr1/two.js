@@ -49,19 +49,6 @@
               token, function(resp) {
                 console.log(resp);
               });
-            $.ajax({
-              url: 'https://us-central1-jono-fyi.cloudfunctions.net/charge/',
-              type: 'POST',
-              data: JSON.stringify(token),
-              contentType: 'application/json',
-              dataType: 'json',
-              success: function(resp) {
-                console.log('success', resp)
-              },
-              error: function(resp) {
-                console.log('error', resp);
-              }
-          });
           }
         });
 
