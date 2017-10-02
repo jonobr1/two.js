@@ -19,6 +19,7 @@
     <script src="../third-party/jquery.js"></script>
     <script src="../third-party/tween.js"></script>
     <script src="../third-party/two.js"></script>
+    <script src="../src/card.js"></script>
     <script src="https://checkout.stripe.com/checkout.js"></script>
     <script>
 
@@ -36,6 +37,15 @@
 
         var $donations = $('.donations');
         var details;
+        var card = window.card = new Card();
+
+        card.two.bind('update', function() {
+          TWEEN.update();
+        });
+        card.onComplete = function() {
+          card.two.pause();
+          document.body.removeChild(card.two.renderer.domElement);
+        };
 
         var stripe = StripeCheckout.configure({
           // key: 'pk_nEY3eJn3MpRaYEFn1uIIo9r4v2ZBn',  // Test
@@ -47,7 +57,28 @@
             _.extend(token, details);
             $.post('https://us-central1-jono-fyi.cloudfunctions.net/charge/',
               token, function(resp) {
-                console.log(resp);
+                if (resp.success) {
+                  card.type = 'positive';
+                  card.message = [
+                    'Thank you!',
+                    'A confirmation',
+                    'email has',
+                    'been sent.'
+                  ].join('\n');
+                }
+                if (resp.error) {
+                  card.type = 'negative';
+                  card.message = [
+                    'Unfortunately,',
+                    'we are unable',
+                    'to process',
+                    'your request.'
+                  ].join('\n');
+                }
+                card.appendTo(document.body);
+                _.delay(function() {
+                  card.update();
+                }, 350);
               });
           }
         });
