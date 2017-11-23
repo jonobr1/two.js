@@ -1,6 +1,7 @@
 this.Two = (function(previousTwo) {
 
   var root = typeof window != 'undefined' ? window : typeof global != 'undefined' ? global : null;
+  var toString = Object.prototype.toString;
   var _ = {
     // http://underscorejs.org/ • 1.8.3
     _indexAmount: 0,
