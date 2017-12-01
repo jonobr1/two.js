@@ -424,7 +424,7 @@ this.Two = (function(previousTwo) {
       canvas: 'CanvasRenderer'
     },
 
-    Version: 'v0.7.0-alpha.1',
+    Version: 'v0.7.0',
 
     Identifier: 'two_',
 
