@@ -1,9 +1,10 @@
-(function(Two, _, Backbone, requestAnimationFrame) {
+(function(Two) {
 
   /**
    * Constants
    */
   var cos = Math.cos, sin = Math.sin, tan = Math.tan;
+  var _ = Two.Utils;
 
   /**
    * Two.Matrix contains an array of elements that represent
@@ -92,7 +93,7 @@
 
   });
 
-  _.extend(Matrix.prototype, Backbone.Events, {
+  _.extend(Matrix.prototype, Two.Utils.Events, {
 
     /**
      * Takes an array of elements or the arguments list itself to
@@ -372,9 +373,4 @@
 
   });
 
-})(
-  this.Two,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : this._,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : this.Backbone,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : this.requestAnimationFrame
-);
+})((typeof global !== 'undefined' ? global : this).Two);

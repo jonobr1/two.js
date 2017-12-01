@@ -1,111 +1,214 @@
-(function(Two, _, Backbone, requestAnimationFrame) {
+(function(Two) {
 
-  var Path = Two.Path, PI = Math.PI, TWO_PI = Math.PI * 2, HALF_PI = Math.PI/2, cos = Math.cos, sin = Math.sin, abs = Math.abs;
+  var Path = Two.Path, PI = Math.PI, TWO_PI = Math.PI * 2, HALF_PI = Math.PI / 2,
+    cos = Math.cos, sin = Math.sin, abs = Math.abs, _ = Two.Utils;
 
-  /*
-  @class ArcSegment
-    ox : Origin X
-    oy : Origin Y
-    ir : Inner Radius
-    or : Outer Radius
-    sa : Starting Angle
-    ea : Ending Angle
-    res : Resolution
-  */
   var ArcSegment = Two.ArcSegment = function(ox, oy, ir, or, sa, ea, res) {
 
-    if (sa > ea) {
-      ea += Math.PI*2;
-    }
+    var points = _.map(_.range(res || (Two.Resolution * 3)), function() {
+      return new Two.Anchor();
+    });
 
-    res = res || 8;
+    Path.call(this, points, false, false, true);
 
-    var rot = sa;
-    var ta = ea - sa;
-    var angleStep = ta / res;
-    var command = Two.Commands.move;
-    var points = [];
+    this.innerRadius = ir;
+    this.outerRadius = or;
 
-    points.push( new Two.Anchor(
-      Math.sin(0) * or,
-      Math.cos(0) * or,
-      0,0,0,0,
-      command
-    ));
+    this.startAngle = sa;
+    this.endAngle = ea;
 
-
-    var theta, x, y, lx, ly, rx, ry;
-    command = Two.Commands.curve;
-
-    //Do Outer Edge
-    for (var i = 0; i < res+1; i++) {
-
-      theta = i * angleStep;
-      x = sin(theta) * or;
-      y = cos(theta) * or;
-      lx = sin(theta - HALF_PI) * (angleStep / PI) * or;
-      ly = cos(theta - HALF_PI) * (angleStep / PI) * or;
-      rx = sin(theta + HALF_PI) * (angleStep / PI) * or;
-      ry = cos(theta + HALF_PI) * (angleStep / PI) * or;
-
-      if (i===0) {
-        lx = ly = 0;
-      }
-
-      if (i===res) {
-        rx = ry = 0;
-      }
-
-      points.push( new Two.Anchor(
-        x, y, lx, ly, rx, ry, command
-      ));
-    }
-
-    //Do Inner Edge
-    for (var j = 0; j < res+1; j++) {
-
-      theta = ta - (angleStep * j);
-      x = sin(theta) * ir;
-      y = cos(theta) * ir;
-      lx = sin(theta - (PI*1.5)) * (angleStep / PI) * ir;
-      ly = cos(theta - (PI*1.5)) * (angleStep / PI) * ir;
-      rx = sin(theta + (PI*1.5)) * (angleStep / PI) * ir;
-      ry = cos(theta + (PI*1.5)) * (angleStep / PI) * ir;
-
-      if (j===0) {
-        lx = ly = 0;
-      }
-
-      if (j===res) {
-        rx = ry = 0;
-      }
-
-      points.push( new Two.Anchor(
-        x, y, lx, ly, rx, ry, command
-      ));
-    }
-
-    command = Two.Commands.close
-    points.push( new Two.Anchor(
-      Math.sin(0) * or,
-      Math.cos(0) * or,
-      0,0,0,0,
-      command
-    ));
-
-
-    Path.call(this, points, true, false, true);
-    this.rotation = sa;
+    this._update();
     this.translation.set(ox, oy);
+
   }
 
-  _.extend(ArcSegment.prototype, Path.prototype);
+  _.extend(ArcSegment, {
 
-  Path.MakeObservable(ArcSegment.prototype);
+    Properties: ['startAngle', 'endAngle', 'innerRadius', 'outerRadius'],
 
-})(
-  this.Two,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : this._,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : this.Backbone,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : this.requestAnimationFrame
-);
+    MakeObservable: function(obj) {
+
+      Path.MakeObservable(obj);
+      _.each(ArcSegment.Properties, Two.Utils.defineProperty, obj);
+
+    }
+
+  });
+
+  _.extend(ArcSegment.prototype, Path.prototype, {
+
+    _flagStartAngle: false,
+    _flagEndAngle: false,
+    _flagInnerRadius: false,
+    _flagOuterRadius: false,
+
+    _startAngle: 0,
+    _endAngle: TWO_PI,
+    _innerRadius: 0,
+    _outerRadius: 0,
+
+    _update: function() {
+
+      if (this._flagStartAngle || this._flagEndAngle || this._flagInnerRadius
+        || this._flagOuterRadius) {
+
+        var sa = this._startAngle;
+        var ea = this._endAngle;
+
+        var ir = this._innerRadius;
+        var or = this._outerRadius;
+
+        var connected = mod(sa, TWO_PI) === mod(ea, TWO_PI);
+        var punctured = ir > 0;
+
+        var vertices = this.vertices;
+        var length = (punctured ? vertices.length / 2 : vertices.length);
+        var command, id = 0;
+
+        if (connected) {
+          length--;
+        } else if (!punctured) {
+          length -= 2;
+        }
+
+        /**
+         * Outer Circle
+         */
+        for (var i = 0, last = length - 1; i < length; i++) {
+
+          var pct = i / last;
+          var v = vertices[id];
+          var theta = pct * (ea - sa) + sa;
+          var step = (ea - sa) / length;
+
+          var x = or * Math.cos(theta);
+          var y = or * Math.sin(theta);
+
+          switch (i) {
+            case 0:
+              command = Two.Commands.move;
+              break;
+            default:
+              command = Two.Commands.curve;
+          }
+
+          v.command = command;
+          v.x = x;
+          v.y = y;
+          v.controls.left.clear();
+          v.controls.right.clear();
+
+          if (v.command === Two.Commands.curve) {
+            var amp = or * step / Math.PI;
+            v.controls.left.x = amp * Math.cos(theta - HALF_PI);
+            v.controls.left.y = amp * Math.sin(theta - HALF_PI);
+            v.controls.right.x = amp * Math.cos(theta + HALF_PI);
+            v.controls.right.y = amp * Math.sin(theta + HALF_PI);
+            if (i === 1) {
+              v.controls.left.multiplyScalar(2);
+            }
+            if (i === last) {
+              v.controls.right.multiplyScalar(2);
+            }
+          }
+
+          id++;
+
+        }
+
+        if (punctured) {
+
+          if (connected) {
+            vertices[id].command = Two.Commands.close;
+            id++;
+          } else {
+            length--;
+            last = length - 1;
+          }
+
+          /**
+           * Inner Circle
+           */
+          for (i = 0; i < length; i++) {
+
+            pct = i / last;
+            v = vertices[id];
+            theta = (1 - pct) * (ea - sa) + sa;
+            step = (ea - sa) / length;
+
+            x = ir * Math.cos(theta);
+            y = ir * Math.sin(theta);
+            command = Two.Commands.curve;
+            if (i <= 0) {
+              command = connected ? Two.Commands.move : Two.Commands.line;
+            }
+
+            v.command = command;
+            v.x = x;
+            v.y = y;
+            v.controls.left.clear();
+            v.controls.right.clear();
+
+            if (v.command === Two.Commands.curve) {
+              amp = ir * step / Math.PI;
+              v.controls.left.x = amp * Math.cos(theta + HALF_PI);
+              v.controls.left.y = amp * Math.sin(theta + HALF_PI);
+              v.controls.right.x = amp * Math.cos(theta - HALF_PI);
+              v.controls.right.y = amp * Math.sin(theta - HALF_PI);
+              if (i === 1) {
+                v.controls.left.multiplyScalar(2);
+              }
+              if (i === last) {
+                v.controls.right.multiplyScalar(2);
+              }
+            }
+
+            id++;
+
+          }
+
+        } else if (!connected) {
+
+          vertices[id].command = Two.Commands.line;
+          vertices[id].x = 0;
+          vertices[id].y = 0;
+          id++;
+
+        }
+
+        /**
+         * Final Point
+         */
+        vertices[id].command = Two.Commands.close;
+
+      }
+
+      Path.prototype._update.call(this);
+
+      return this;
+
+    },
+
+    flagReset: function() {
+
+      Path.prototype.flagReset.call(this);
+
+      this._flagStartAngle = this._flagEndAngle
+        = this._flagInnerRadius = this._flagOuterRadius = false;
+
+      return this;
+
+    }
+
+  });
+
+  ArcSegment.MakeObservable(ArcSegment.prototype);
+
+  function mod(v, l) {
+    while (v < 0) {
+      v += l;
+    }
+    return v % l;
+  }
+
+})((typeof global !== 'undefined' ? global : this).Two);

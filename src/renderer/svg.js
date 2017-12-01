@@ -1,7 +1,8 @@
-(function(Two, _, Backbone, requestAnimationFrame) {
+(function(Two) {
 
   // Localize variables
   var mod = Two.Utils.mod, toFixed = Two.Utils.toFixed;
+  var _ = Two.Utils;
 
   var svg = {
 
@@ -21,10 +22,10 @@
      */
     createElement: function(name, attrs) {
       var tag = name;
-      var elem = document.createElementNS(this.ns, tag);
+      var elem = document.createElementNS(svg.ns, tag);
       if (tag === 'svg') {
         attrs = _.defaults(attrs || {}, {
-          version: this.version
+          version: svg.version
         });
       }
       if (!_.isEmpty(attrs)) {
@@ -39,7 +40,11 @@
     setAttributes: function(elem, attrs) {
       var keys = Object.keys(attrs);
       for (var i = 0; i < keys.length; i++) {
-        elem.setAttribute(keys[i], attrs[keys[i]]);
+        if (/href/.test(keys[i])) {
+          elem.setAttributeNS(svg.xlink, keys[i], attrs[keys[i]]);
+        } else {
+          elem.setAttribute(keys[i], attrs[keys[i]]);
+        }
       }
       return this;
     },
@@ -91,8 +96,8 @@
 
           case Two.Commands.curve:
 
-            ar = (a.controls && a.controls.right) || a;
-            bl = (b.controls && b.controls.left) || b;
+            ar = (a.controls && a.controls.right) || Two.Vector.zero;
+            bl = (b.controls && b.controls.left) || Two.Vector.zero;
 
             if (a._relative) {
               vx = toFixed((ar.x + a.x));
@@ -359,18 +364,22 @@
           changed.d = vertices;
         }
 
+        if (this._fill && this._fill._renderer) {
+          this._fill._update();
+          svg[this._fill._renderer.type].render.call(this._fill, domElement, true);
+        }
+
         if (this._flagFill) {
-          if (this._fill && this._fill._renderer) {
-            svg[this._fill._renderer.type].render.call(this._fill, domElement);
-          }
           changed.fill = this._fill && this._fill.id
             ? 'url(#' + this._fill.id + ')' : this._fill;
         }
 
+        if (this._stroke && this._stroke._renderer) {
+          this._stroke._update();
+          svg[this._stroke._renderer.type].render.call(this._stroke, domElement, true);
+        }
+
         if (this._flagStroke) {
-          if (this._stroke && this._stroke._renderer) {
-            svg[this._stroke._renderer.type].render.call(this._stroke, domElement);
-          }
           changed.stroke = this._stroke && this._stroke.id
             ? 'url(#' + this._stroke.id + ')' : this._stroke;
         }
@@ -488,10 +497,17 @@
         if (this._flagDecoration) {
           changed['text-decoration'] = this._decoration;
         }
-
+        if (this._fill && this._fill._renderer) {
+          this._fill._update();
+          svg[this._fill._renderer.type].render.call(this._fill, domElement, true);
+        }
         if (this._flagFill) {
           changed.fill = this._fill && this._fill.id
             ? 'url(#' + this._fill.id + ')' : this._fill;
+        }
+        if (this._stroke && this._stroke._renderer) {
+          this._stroke._update();
+          svg[this._stroke._renderer.type].render.call(this._stroke, domElement, true);
         }
         if (this._flagStroke) {
           changed.stroke = this._stroke && this._stroke.id
@@ -549,9 +565,11 @@
 
     'linear-gradient': {
 
-      render: function(domElement) {
+      render: function(domElement, silent) {
 
-        this._update();
+        if (!silent) {
+          this._update();
+        }
 
         var changed = {};
 
@@ -584,7 +602,12 @@
 
         if (this._flagStops) {
 
-          this._renderer.elem.childNodes.length = 0;
+          var lengthChanged = this._renderer.elem.childNodes.length
+            !== this.stops.length;
+
+          if (lengthChanged) {
+            this._renderer.elem.childNodes.length = 0;
+          }
 
           for (var i = 0; i < this.stops.length; i++) {
 
@@ -607,8 +630,9 @@
               svg.setAttributes(stop._renderer.elem, attrs);
             }
 
-            this._renderer.elem.appendChild(stop._renderer.elem);
-
+            if (lengthChanged) {
+              this._renderer.elem.appendChild(stop._renderer.elem);
+            }
             stop.flagReset();
 
           }
@@ -623,9 +647,11 @@
 
     'radial-gradient': {
 
-      render: function(domElement) {
+      render: function(domElement, silent) {
 
-        this._update();
+        if (!silent) {
+          this._update();
+        }
 
         var changed = {};
 
@@ -664,7 +690,12 @@
 
         if (this._flagStops) {
 
-          this._renderer.elem.childNodes.length = 0;
+          var lengthChanged = this._renderer.elem.childNodes.length
+            !== this.stops.length;
+
+          if (lengthChanged) {
+            this._renderer.elem.childNodes.length = 0;
+          }
 
           for (var i = 0; i < this.stops.length; i++) {
 
@@ -687,11 +718,130 @@
               svg.setAttributes(stop._renderer.elem, attrs);
             }
 
-            this._renderer.elem.appendChild(stop._renderer.elem);
+            if (lengthChanged) {
+              this._renderer.elem.appendChild(stop._renderer.elem);
+            }
             stop.flagReset();
 
           }
 
+        }
+
+        return this.flagReset();
+
+      }
+
+    },
+
+    texture: {
+
+      render: function(domElement, silent) {
+
+        if (!silent) {
+          this._update();
+        }
+
+        var changed = {};
+        var styles = { x: 0, y: 0 };
+        var image = this.image;
+
+        if (this._flagLoaded && this.loaded) {
+
+          switch (image.nodeName.toLowerCase()) {
+
+            case 'canvas':
+              styles.href = styles['xlink:href'] = image.toDataURL('image/png');
+              break;
+            case 'img':
+            case 'image':
+              styles.href = styles['xlink:href'] = this.src;
+              break;
+
+          }
+
+        }
+
+        if (this._flagOffset || this._flagLoaded || this._flagScale) {
+
+          changed.x = this._offset.x;
+          changed.y = this._offset.y;
+
+          if (image) {
+
+            changed.x -= image.width / 2;
+            changed.y -= image.height / 2;
+
+            if (this._scale instanceof Two.Vector) {
+              changed.x *= this._scale.x;
+              changed.y *= this._scale.y;
+            } else {
+              changed.x *= this._scale;
+              changed.y *= this._scale;
+            }
+          }
+
+          if (changed.x > 0) {
+            changed.x *= - 1;
+          }
+          if (changed.y > 0) {
+            changed.y *= - 1;
+          }
+
+        }
+
+        if (this._flagScale || this._flagLoaded || this._flagRepeat) {
+
+          changed.width = 0;
+          changed.height = 0;
+
+          if (image) {
+
+            styles.width = changed.width = image.width;
+            styles.height = changed.height = image.height;
+
+            // TODO: Hack / Bandaid
+            switch (this._repeat) {
+              case 'no-repeat':
+                changed.width += 1;
+                changed.height += 1;
+                break;
+            }
+
+            if (this._scale instanceof Two.Vector) {
+              changed.width *= this._scale.x;
+              changed.height *= this._scale.y;
+            } else {
+              changed.width *= this._scale;
+              changed.height *= this._scale;
+            }
+          }
+
+        }
+
+        if (this._flagScale || this._flagLoaded) {
+          if (!this._renderer.image) {
+            this._renderer.image = svg.createElement('image', styles);
+          } else if (!_.isEmpty(styles)) {
+            svg.setAttributes(this._renderer.image, styles);
+          }
+        }
+
+        if (!this._renderer.elem) {
+
+          changed.id = this.id;
+          changed.patternUnits = 'userSpaceOnUse';
+          this._renderer.elem = svg.createElement('pattern', changed);
+          domElement.defs.appendChild(this._renderer.elem);
+
+        } else if (!_.isEmpty(changed)) {
+
+          svg.setAttributes(this._renderer.elem, changed);
+
+        }
+
+        if (this._renderer.elem && this._renderer.image && !this._renderer.appended) {
+          this._renderer.elem.appendChild(this._renderer.image);
+          this._renderer.appended = true;
         }
 
         return this.flagReset();
@@ -725,7 +875,7 @@
 
   });
 
-  _.extend(Renderer.prototype, Backbone.Events, {
+  _.extend(Renderer.prototype, Two.Utils.Events, {
 
     setSize: function(width, height) {
 
@@ -751,9 +901,4 @@
 
   });
 
-})(
-  this.Two,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : this._,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : this.Backbone,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : this.requestAnimationFrame
-);
+})((typeof global !== 'undefined' ? global : this).Two);

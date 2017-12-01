@@ -1,4 +1,6 @@
-(function(Two, _, Backbone, requestAnimationFrame) {
+(function(Two) {
+
+  var _ = Two.Utils;
 
   var LinearGradient = Two.LinearGradient = function(x1, y1, x2, y2, stops) {
 
@@ -58,7 +60,9 @@
         clone[k] = this[k];
       }, this);
 
-      parent.add(clone);
+      if (parent) {
+        parent.add(clone);
+      }
 
       return clone;
 
@@ -72,6 +76,16 @@
       result.right = this.right.toObject();
 
       return result;
+
+    },
+
+    _update: function() {
+
+      if (this._flagEndPoints || this._flagSpread || this._flagStops) {
+        this.trigger(Two.Events.change);
+      }
+
+      return this;
 
     },
 
@@ -89,9 +103,4 @@
 
   LinearGradient.MakeObservable(LinearGradient.prototype);
 
-})(
-  this.Two,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : this._,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : this.Backbone,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : this.requestAnimationFrame
-);
+})((typeof global !== 'undefined' ? global : this).Two);

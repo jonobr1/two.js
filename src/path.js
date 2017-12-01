@@ -1,4 +1,4 @@
-(function(Two, _, Backbone, requestAnimationFrame) {
+(function(Two) {
 
   /**
    * Constants
@@ -8,6 +8,7 @@
     getComputedMatrix = Two.Utils.getComputedMatrix;
 
   var commands = {};
+  var _ = Two.Utils;
 
   _.each(Two.Commands, function(v, k) {
     commands[k] = new RegExp(v);
@@ -18,6 +19,12 @@
     Two.Shape.call(this);
 
     this._renderer.type = 'path';
+    this._renderer.flagVertices = _.bind(Path.FlagVertices, this);
+    this._renderer.bindVertices = _.bind(Path.BindVertices, this);
+    this._renderer.unbindVertices = _.bind(Path.UnbindVertices, this);
+
+    this._renderer.flagFill = _.bind(Path.FlagFill, this);
+    this._renderer.flagStroke = _.bind(Path.FlagStroke, this);
 
     this._closed = !!closed;
     this._curved = !!curved;
@@ -71,27 +78,98 @@
       this._flagLength = true;
     },
 
+    BindVertices: function(items) {
+
+      // This function is called a lot
+      // when importing a large SVG
+      var i = items.length;
+      while (i--) {
+        items[i].bind(Two.Events.change, this._renderer.flagVertices);
+      }
+
+      this._renderer.flagVertices();
+
+    },
+
+    UnbindVertices: function(items) {
+
+      var i = items.length;
+      while (i--) {
+        items[i].unbind(Two.Events.change, this._renderer.flagVertices);
+      }
+
+      this._renderer.flagVertices();
+
+    },
+
+    FlagFill: function() {
+      this._flagFill = true;
+    },
+
+    FlagStroke: function() {
+      this._flagStroke = true;
+    },
+
     MakeObservable: function(object) {
 
       Two.Shape.MakeObservable(object);
 
-      // Only the first 8 properties are flagged like this. The subsequent
+      // Only the 6 defined properties are flagged like this. The subsequent
       // properties behave differently and need to be hand written.
-      _.each(Path.Properties.slice(0, 8), function(property) {
+      _.each(Path.Properties.slice(2, 8), Two.Utils.defineProperty, object);
 
-        var secret = '_' + property;
-        var flag = '_flag' + property.charAt(0).toUpperCase() + property.slice(1);
+      Object.defineProperty(object, 'fill', {
+        enumerable: true,
+        get: function() {
+          return this._fill;
+        },
+        set: function(f) {
 
-        Object.defineProperty(object, property, {
-          get: function() {
-            return this[secret];
-          },
-          set: function(v) {
-            this[secret] = v;
-            this[flag] = true;
+          if (this._fill instanceof Two.Gradient
+            || this._fill instanceof Two.LinearGradient
+            || this._fill instanceof Two.RadialGradient
+            || this._fill instanceof Two.Texture) {
+            this._fill.unbind(Two.Events.change, this._renderer.flagFill);
           }
-        });
 
+          this._fill = f;
+          this._flagFill = true;
+
+          if (this._fill instanceof Two.Gradient
+            || this._fill instanceof Two.LinearGradient
+            || this._fill instanceof Two.RadialGradient
+            || this._fill instanceof Two.Texture) {
+            this._fill.bind(Two.Events.change, this._renderer.flagFill);
+          }
+
+        }
+      });
+
+      Object.defineProperty(object, 'stroke', {
+        enumerable: true,
+        get: function() {
+          return this._stroke;
+        },
+        set: function(f) {
+
+          if (this._stroke instanceof Two.Gradient
+            || this._stroke instanceof Two.LinearGradient
+            || this._stroke instanceof Two.RadialGradient
+            || this._stroke instanceof Two.Texture) {
+            this._stroke.unbind(Two.Events.change, this._renderer.flagStroke);
+          }
+
+          this._stroke = f;
+          this._flagStroke = true;
+
+          if (this._stroke instanceof Two.Gradient
+            || this._stroke instanceof Two.LinearGradient
+            || this._stroke instanceof Two.RadialGradient
+            || this._stroke instanceof Two.Texture) {
+            this._stroke.bind(Two.Events.change, this._renderer.flagStroke);
+          }
+
+        }
       });
 
       Object.defineProperty(object, 'length', {
@@ -104,6 +182,7 @@
       });
 
       Object.defineProperty(object, 'closed', {
+        enumerable: true,
         get: function() {
           return this._closed;
         },
@@ -114,6 +193,7 @@
       });
 
       Object.defineProperty(object, 'curved', {
+        enumerable: true,
         get: function() {
           return this._curved;
         },
@@ -124,6 +204,7 @@
       });
 
       Object.defineProperty(object, 'automatic', {
+        enumerable: true,
         get: function() {
           return this._automatic;
         },
@@ -140,26 +221,30 @@
       });
 
       Object.defineProperty(object, 'beginning', {
+        enumerable: true,
         get: function() {
           return this._beginning;
         },
         set: function(v) {
-          this._beginning = min(max(v, 0.0), this._ending);
+          this._beginning = v;
           this._flagVertices = true;
         }
       });
 
       Object.defineProperty(object, 'ending', {
+        enumerable: true,
         get: function() {
           return this._ending;
         },
         set: function(v) {
-          this._ending = min(max(v, this._beginning), 1.0);
+          this._ending = v;
           this._flagVertices = true;
         }
       });
 
       Object.defineProperty(object, 'vertices', {
+
+        enumerable: true,
 
         get: function() {
           return this._collection;
@@ -167,51 +252,34 @@
 
         set: function(vertices) {
 
-          var updateVertices = _.bind(Path.FlagVertices, this);
-
-          var bindVerts = _.bind(function(items) {
-
-            // This function is called a lot
-            // when importing a large SVG
-            var i = items.length;
-            while(i--) {
-              items[i].bind(Two.Events.change, updateVertices);
-            }
-
-            updateVertices();
-
-          }, this);
-
-          var unbindVerts = _.bind(function(items) {
-
-            _.each(items, function(v) {
-              v.unbind(Two.Events.change, updateVertices);
-            }, this);
-
-            updateVertices();
-
-          }, this);
+          var updateVertices = this._renderer.flagVertices;
+          var bindVertices = this._renderer.bindVertices;
+          var unbindVertices = this._renderer.unbindVertices;
 
           // Remove previous listeners
           if (this._collection) {
-            this._collection.unbind();
+            this._collection
+              .unbind(Two.Events.insert, bindVertices)
+              .unbind(Two.Events.remove, unbindVertices);
           }
 
           // Create new Collection with copy of vertices
           this._collection = new Two.Utils.Collection((vertices || []).slice(0));
 
           // Listen for Collection changes and bind / unbind
-          this._collection.bind(Two.Events.insert, bindVerts);
-          this._collection.bind(Two.Events.remove, unbindVerts);
+          this._collection
+            .bind(Two.Events.insert, bindVertices)
+            .bind(Two.Events.remove, unbindVertices);
 
           // Bind Initial Vertices
-          bindVerts(this._collection);
+          bindVertices(this._collection);
 
         }
 
       });
 
       Object.defineProperty(object, 'clip', {
+        enumerable: true,
         get: function() {
           return this._clip;
         },
@@ -285,7 +353,9 @@
       clone.rotation = this.rotation;
       clone.scale = this.scale;
 
-      parent.add(clone);
+      if (parent) {
+        parent.add(clone);
+      }
 
       return clone;
 
@@ -398,6 +468,18 @@
       border = this.linewidth / 2;
       l = this._vertices.length;
 
+      if (l <= 0) {
+        v = matrix.multiply(0, 0, 1);
+        return {
+          top: v.y,
+          left: v.x,
+          right: v.x,
+          bottom: v.y,
+          width: 0,
+          height: 0
+        };
+      }
+
       for (i = 0; i < l; i++) {
         v = this._vertices[i];
 
@@ -427,6 +509,7 @@
      * coordinates to that percentage on this Two.Path's curve.
      */
     getPointAt: function(t, obj) {
+      var ia, ib;
       var x, x1, x2, x3, x4, y, y1, y2, y3, y4, left, right;
       var target = this.length * Math.min(Math.max(t, 0), 1);
       var length = this.vertices.length;
@@ -437,17 +520,36 @@
 
       for (var i = 0, l = this._lengths.length, sum = 0; i < l; i++) {
 
-        if (sum + this._lengths[i] > target) {
-          a = this.vertices[this.closed ? Two.Utils.mod(i, length) : i];
-          b = this.vertices[Math.min(Math.max(i - 1, 0), last)];
+        if (sum + this._lengths[i] >= target) {
+
+          if (this._closed) {
+            ia = Two.Utils.mod(i, length);
+            ib = Two.Utils.mod(i - 1, length);
+            if (i === 0) {
+              ia = ib;
+              ib = i;
+            }
+          } else {
+            ia = i;
+            ib = Math.min(Math.max(i - 1, 0), last);
+          }
+
+          a = this.vertices[ia];
+          b = this.vertices[ib];
           target -= sum;
-          t = target / this._lengths[i];
+          if (this._lengths[i] !== 0) {
+            t = target / this._lengths[i];
+          }
+
           break;
+
         }
 
         sum += this._lengths[i];
 
       }
+
+      // console.log(sum, a.command, b.command);
 
       if (_.isNull(a) || _.isNull(b)) {
         return null;
@@ -586,7 +688,8 @@
       //TODO: DRYness (function above)
       this._update();
 
-      var last = this.vertices.length - 1;
+      var length = this.vertices.length;
+      var last = length - 1;
       var b = this.vertices[last];
       var closed = this._closed || this.vertices[last]._command === Two.Commands.close;
       var sum = 0;
@@ -608,7 +711,7 @@
 
         if (i >= last && closed) {
 
-          b = a;
+          b = this.vertices[(i + 1) % length];
 
           this._lengths[i + 1] = getCurveLength(a, b, limit);
           sum += this._lengths[i + 1];
@@ -632,6 +735,8 @@
         var l = this.vertices.length;
         var last = l - 1, v;
 
+        // TODO: Should clamp this so that `ia` and `ib`
+        // cannot select non-verts.
         var ia = round((this._beginning) * last);
         var ib = round((this._ending) * last);
 
@@ -735,9 +840,4 @@
 
   }
 
-})(
-  this.Two,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : this._,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : this.Backbone,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : this.requestAnimationFrame
-);
+})((typeof global !== 'undefined' ? global : this).Two);

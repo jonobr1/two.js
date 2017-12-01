@@ -1,9 +1,10 @@
-(function(Two, _, Backbone, requestAnimationFrame) {
+(function(Two) {
 
   /**
    * Constants
    */
   var min = Math.min, max = Math.max;
+  var _ = Two.Utils;
 
   /**
    * A children collection which is accesible both by index and by object id
@@ -27,7 +28,7 @@
   };
 
   Children.prototype = new Two.Utils.Collection();
-  Children.constructor = Children;
+  Children.prototype.constructor = Children;
 
   _.extend(Children.prototype, {
 
@@ -56,7 +57,6 @@
     this.additions = [];
     this.subtractions = [];
 
-    this._children = [];
     this.children = arguments;
 
   };
@@ -92,6 +92,8 @@
 
         Object.defineProperty(object, 'opacity', {
 
+          enumerable: true,
+
           get: function() {
             return this._opacity;
           },
@@ -110,31 +112,40 @@
       Group.MakeGetterSetters(object, properties);
 
       Object.defineProperty(object, 'children', {
+
+        enumerable: true,
+
         get: function() {
-          return this._collection;
+          return this._children;
         },
+
         set: function(children) {
 
           var insertChildren = _.bind(Group.InsertChildren, this);
           var removeChildren = _.bind(Group.RemoveChildren, this);
           var orderChildren = _.bind(Group.OrderChildren, this);
 
-          if (this._collection) {
-            this._collection.unbind();
+          if (this._children) {
+            this._children.unbind();
           }
 
-          this._collection = new Children(children);
-          this._collection.bind(Two.Events.insert, insertChildren);
-          this._collection.bind(Two.Events.remove, removeChildren);
-          this._collection.bind(Two.Events.order, orderChildren);
+          this._children = new Children(children);
+          this._children.bind(Two.Events.insert, insertChildren);
+          this._children.bind(Two.Events.remove, removeChildren);
+          this._children.bind(Two.Events.order, orderChildren);
 
         }
+
       });
 
       Object.defineProperty(object, 'mask', {
+
+        enumerable: true,
+
         get: function() {
           return this._mask;
         },
+
         set: function(v) {
           this._mask = v;
           this._flagMask = true;
@@ -142,6 +153,7 @@
             v.clip = true;
           }
         }
+
       });
 
     },
@@ -163,15 +175,20 @@
       var secret = '_' + k;
 
       Object.defineProperty(group, k, {
+
+        enumerable: true,
+
         get: function() {
           return this[secret];
         },
+
         set: function(v) {
           this[secret] = v;
           _.each(this.children, function(child) { // Trickle down styles
             child[k] = v;
           });
         }
+
       });
 
     }
@@ -220,15 +237,25 @@
       parent = parent || this.parent;
 
       var group = new Group();
-      parent.add(group);
-
       var children = _.map(this.children, function(child) {
         return child.clone(group);
       });
 
+      group.add(children);
+
+      group.opacity = this.opacity;
+
+      if (this.mask) {
+        group.mask = this.mask;
+      }
+
       group.translation.copy(this.translation);
       group.rotation = this.rotation;
       group.scale = this.scale;
+
+      if (parent) {
+        parent.add(group);
+      }
 
       return group;
 
@@ -242,10 +269,12 @@
     toObject: function() {
 
       var result = {
-        children: {},
+        children: [],
         translation: this.translation.toObject(),
         rotation: this.rotation,
-        scale: this.scale
+        scale: this.scale,
+        opacity: this.opacity,
+        mask: (this.mask ? this.mask.toObject() : null)
       };
 
       _.each(this.children, function(child, i) {
@@ -287,7 +316,9 @@
       };
 
       this.children.forEach(function(child) {
-        child.translation.subSelf(rect.centroid);
+        if (child.isShape) {
+          child.translation.subSelf(rect.centroid);
+        }
       });
 
       // this.translation.copy(rect.centroid);
@@ -570,9 +601,4 @@
 
   }
 
-})(
-  this.Two,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : this._,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : this.Backbone,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : this.requestAnimationFrame
-);
+})((typeof global !== 'undefined' ? global : this).Two);

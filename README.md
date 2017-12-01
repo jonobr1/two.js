@@ -5,7 +5,7 @@ A two-dimensional drawing api meant for modern browsers. It is renderer agnostic
 [Home](http://jonobr1.github.io/two.js) • [Examples](http://jonobr1.github.io/two.js/#examples) • [Documentation](http://jonobr1.github.io/two.js/#documentation) • [Help](https://github.com/jonobr1/two.js/issues?labels=question)
 
 ## Usage
-Download the [minified library](https://raw.github.com/jonobr1/two.js/master/build/two.min.js) and include it in your html.
+Download the latest [minified library](https://raw.github.com/jonobr1/two.js/dev/build/two.min.js) and include it in your html.
 
 ```html
 <script src="js/two.min.js"></script>
@@ -44,33 +44,97 @@ Here is boilerplate html in order to draw a spinning rectangle in two.js:
 ```
 
 ## Custom Build
-Two.js uses [nodejs](http://nodejs.org/) in order to build source files. You'll first want to install that.
-Next you'll want to install [grunt](https://npmjs.org/package/grunt):
+Two.js uses [nodejs](http://nodejs.org/) in order to build source files. You'll first want to install that. Once installed open up a terminal and head to the repository folder:
 
 ```
-cd two.js
-npm install grunt
-```
-You can edit the files that we be included in the build by modifying `./Gruntfile.js`.
-If you're making an application and you're only using one renderer (i.e: svg context) then it is highly recommended to remove canvas and webgl renderers from your build in order to drastically decrease your file size.
-
-Finally, build the project:
-
-```
-grunt
+cd ~/path-to-repo/two.js
+npm install
 ```
 
-If you are having problems running the closure compiler (it requires a JDK to be installed), run
+This will give you a number of libraries that the development of Two.js relies on. If for instance you only use the `SvgRenderer` then you can really cut down on the file size by excluding the other renderers. To do this, modify `/utils/build.js` to only add the files you'd like. Then run:
 
 ```
-grunt build-uglify
+node ./utils/build
 ```
-instead to minify the build with uglify.
+
+And the resulting `/build/two.js` and `/build/two.min.js` will be updated to your specification.
+
+---
+
+### Running in Headless Environments
+
+As of version `v0.7.0` Two.js can also run in a headless environment, namely running on the server with the help of a library called [Node Canvas](https://github.com/Automattic/node-canvas). We don't add Node Canvas to dependencies of Two.js because it's _not necessary_ to run it in the browser. However, it has all the hooks setup to run in a cloud environment. To get started follow the installation instructions on Automattic's readme. After you've done that run:
+
+```
+npm install canvas
+```
+
+Now in a JavaScript file setup your Two.js scenegraph and save out frames whenever you need to:
+
+```javascript
+var Two = require('../build/two.js'); // Or from npm, `require('two.js');`
+var Canvas = require('canvas');
+var Image = Canvas.Image;
+var fs = require('fs');
+var path = require('path');
+
+var width = 800;
+var height = 600;
+
+var canvas = new Canvas();
+Two[Two.Types.canvas].Utils.shim(canvas);
+
+var time = Date.now();
+
+var two = new Two({
+  type: Two.Types.canvas,
+  width: 800,
+  height: 600,
+  domElement: canvas
+});
+
+var rect = two.makeRectangle(width / 2, height / 2, 50, 50);
+rect.fill = 'rgb(255, 100, 100)';
+rect.noStroke();
+
+two.update();
+
+fs.writeFileSync(path.resolve(__dirname, './images/rectangle.png'), canvas.toBuffer());
+console.log('Finished rendering. Time took: ', Date.now() - time);
+
+process.exit();
+```
 
 ## Change Log
-For the latest nightly changes checkout the `dev` branch [here](../../tree/dev).
+<!-- For the latest nightly changes checkout the `dev` branch [here](../../tree/dev). -->
+
+#### Nightly
++ Fixed closed `Two.Path.getPointAt` method to clamp properly
++ Added `Two.Texture.repeat` for describing pattern invocations
++ Added `Two.Texture`, `Two.Sprite`, and `Two.ImageSequence`
++ Removed `Two.Shape` inheritance for `Two.Gradient`s
++ Added `Two.Vector.rotate` method [@ferm10n](https://github.com/ferm10n)
++ Objects clone to parent only if parent exists [@ferm10n](https://github.com/ferm10n)
++ Vendor agnostic `requestAnimationFrame` [@ferm10n](https://github.com/ferm10n)
++ `Two.Utils.Events.listenTo` and `Two.Utils.Events.stopListening` [@ferm10n](https://github.com/ferm10n)
++ `Two.Utils.Events` added to `Two.Path.prototype` for event inheritance [@ferm10n](https://github.com/ferm10n)
++ Enhanced `Two.Shape.scale` to allow both numbers and `Two.Vector` as property value
++ Made `Two.interpret` use latest primitives
++ Added `Two.Circle` primitive
++ `Two.Shape.translation` is now a getter/setter and can be replaced
++ Fixed translation interpretation to strip out `'px'` strings
++ Removed `Two.SineRing` — make `Two.Star.curved = true` and it's the same effect
++ Enhanced `Two.ArcSegment`, `Two.Ellipse`, `Two.Polygon`, `Two.Rectangle`, `Two.RoundedRectangle`, `Two.Star`
++ Fixed `Two.Anchor.relative` interpretation in `svg`, `canvas`, and `webgl` renderers
++ Made Getters / Setters enumerable for iteration compatibility
++ Fixed Two.Utils.Collection.splice method and added additional test
++ Added compatibility with [node.js](http://nodejs.org/), [browserify](http://browserify.org), and [node-canvas](https://github.com/Automattic/node-canvas)
++ Removed third party dependencies
++ Added `remove` method to `Two.Text`
++ Fixed ordering on same parent additions for `Two.Group`
 
 ##### February 9, 2016 [v0.6.0](https://github.com/jonobr1/two.js/releases/tag/v0.6.0)
++ Updated `Two.CanvasRenderer.ctx.imageSmoothingEnabled` to not use deprecated invokation, [issue 178](https://github.com/jonobr1/two.js/issues/178)
 + Fixed `Two.Group.mask` in `SVGRenderer` to append to DOM correctly
 + Updated `require` imports to be compatible with [require.js](http://requirejs.org/)
 + Added `Two.Text` for programmatically writing text in Two.js

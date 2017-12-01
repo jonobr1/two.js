@@ -1,6 +1,212 @@
-(function(previousTwo, _, Backbone, requestAnimationFrame) {
+this.Two = (function(previousTwo) {
 
-  var root = this;
+  var root = typeof window != 'undefined' ? window : typeof global != 'undefined' ? global : null;
+  var toString = Object.prototype.toString;
+  var _ = {
+    // http://underscorejs.org/ • 1.8.3
+    _indexAmount: 0,
+    natural: {
+      slice: Array.prototype.slice,
+      indexOf: Array.prototype.indexOf,
+      keys: Object.keys,
+      bind: Function.prototype.bind,
+      create: Object.create
+    },
+    identity: function(value) {
+      return value;
+    },
+    isArguments: function(obj) {
+      return toString.call(obj) === '[object Arguments]';
+    },
+    isFunction: function(obj) {
+      return toString.call(obj) === '[object Function]';
+    },
+    isString: function(obj) {
+      return toString.call(obj) === '[object String]';
+    },
+    isNumber: function(obj) {
+      return toString.call(obj) === '[object Number]';
+    },
+    isDate: function(obj) {
+      return toString.call(obj) === '[object Date]';
+    },
+    isRegExp: function(obj) {
+      return toString.call(obj) === '[object RegExp]';
+    },
+    isError: function(obj) {
+      return toString.call(obj) === '[object Error]';
+    },
+    isFinite: function(obj) {
+      return isFinite(obj) && !isNaN(parseFloat(obj));
+    },
+    isNaN: function(obj) {
+      return _.isNumber(obj) && obj !== +obj;
+    },
+    isBoolean: function(obj) {
+      return obj === true || obj === false || toString.call(obj) === '[object Boolean]';
+    },
+    isNull: function(obj) {
+      return obj === null;
+    },
+    isUndefined: function(obj) {
+      return obj === void 0;
+    },
+    isEmpty: function(obj) {
+      if (obj == null) return true;
+      if (isArrayLike && (_.isArray(obj) || _.isString(obj) || _.isArguments(obj))) return obj.length === 0;
+      return _.keys(obj).length === 0;
+    },
+    isElement: function(obj) {
+      return !!(obj && obj.nodeType === 1);
+    },
+    isArray: Array.isArray || function(obj) {
+      return toString.call(obj) === '[object Array]';
+    },
+    isObject: function(obj) {
+      var type = typeof obj;
+      return type === 'function' || type === 'object' && !!obj;
+    },
+    toArray: function(obj) {
+      if (!obj) {
+        return [];
+      }
+      if (_.isArray(obj)) {
+        return slice.call(obj);
+      }
+      if (isArrayLike(obj)) {
+        return _.map(obj, _.identity);
+      }
+      return _.values(obj);
+    },
+    range: function(start, stop, step) {
+      if (stop == null) {
+        stop = start || 0;
+        start = 0;
+      }
+      step = step || 1;
+
+      var length = Math.max(Math.ceil((stop - start) / step), 0);
+      var range = Array(length);
+
+      for (var idx = 0; idx < length; idx++, start += step) {
+        range[idx] = start;
+      }
+
+      return range;
+    },
+    indexOf: function(list, item) {
+      if (!!_.natural.indexOf) {
+        return _.natural.indexOf.call(list, item);
+      }
+      for (var i = 0; i < list.length; i++) {
+        if (list[i] === item) {
+          return i;
+        }
+      }
+      return -1;
+    },
+    has: function(obj, key) {
+      return obj != null && hasOwnProperty.call(obj, key);
+    },
+    bind: function(func, ctx) {
+      var natural = _.natural.bind;
+      if (natural && func.bind === natural) {
+        return natural.apply(func, slice.call(arguments, 1));
+      }
+      var args = slice.call(arguments, 2);
+      return function() {
+        func.apply(ctx, args);
+      };
+    },
+    extend: function(base) {
+      var sources = slice.call(arguments, 1);
+      for (var i = 0; i < sources.length; i++) {
+        var obj = sources[i];
+        for (var k in obj) {
+          base[k] = obj[k];
+        }
+      }
+      return base;
+    },
+    defaults: function(base) {
+      var sources = slice.call(arguments, 1);
+      for (var i = 0; i < sources.length; i++) {
+        var obj = sources[i];
+        for (var k in obj) {
+          if (base[k] === void 0) {
+            base[k] = obj[k];
+          }
+        }
+      }
+      return base;
+    },
+    keys: function(obj) {
+      if (!_.isObject(obj)) {
+        return [];
+      }
+      if (_.natural.keys) {
+        return _.natural.keys(obj);
+      }
+      var keys = [];
+      for (var k in obj) {
+        if (_.has(obj, k)) {
+          keys.push(k);
+        }
+      }
+      return keys;
+    },
+    values: function(obj) {
+      var keys = _.keys(obj);
+      var values = [];
+      for (var i = 0; i < keys.length; i++) {
+        var k = keys[i];
+        values.push(obj[k]);
+      }
+      return values;
+    },
+    each: function(obj, iteratee, context) {
+      var ctx = context || this;
+      var keys = !isArrayLike(obj) && _.keys(obj);
+      var length = (keys || obj).length;
+      for (var i = 0; i < length; i++) {
+        var k = keys ? keys[i] : i;
+        iteratee.call(ctx, obj[k], k, obj);
+      }
+      return obj;
+    },
+    map: function(obj, iteratee, context) {
+      var ctx = context || this;
+      var keys = !isArrayLike(obj) && _.keys(obj);
+      var length = (keys || obj).length;
+      var result = [];
+      for (var i = 0; i < length; i++) {
+        var k = keys ? keys[i] : i;
+        result[i] = iteratee.call(ctx, obj[k], k, obj);
+      }
+      return result;
+    },
+    once: function(func) {
+      var init = false;
+      return function() {
+        if (!!init) {
+          return func;
+        }
+        init = true;
+        return func.apply(this, arguments);
+      }
+    },
+    after: function(times, func) {
+      return function() {
+        while (--times < 1) {
+          return func.apply(this, arguments);
+        }
+      }
+    },
+    uniqueId: function(prefix) {
+      var id = ++_._indexAmount + '';
+      return prefix ? prefix + id : id;
+    }
+  };
 
   /**
    * Constants
@@ -24,13 +230,23 @@
    */
 
   var count = 0;
+  var slice = _.natural.slice;
+  var perf = ((root.performance && root.performance.now) ? root.performance : Date);
+  var MAX_ARRAY_INDEX = Math.pow(2, 53) - 1;
+  var getLength = function(obj) {
+    return obj == null ? void 0 : obj['length'];
+  };
+  var isArrayLike = function(collection) {
+    var length = getLength(collection);
+    return typeof length == 'number' && length >= 0 && length <= MAX_ARRAY_INDEX;
+  };
 
   /**
    * Cross browser dom events.
    */
   var dom = {
 
-    temp: document.createElement('div'),
+    temp: (root.document ? root.document.createElement('div') : {}),
 
     hasEventListeners: _.isFunction(root.addEventListener),
 
@@ -40,16 +256,47 @@
       } else {
         elem.attachEvent('on' + event, func);
       }
-      return this;
+      return dom;
     },
 
     unbind: function(elem, event, func, bool) {
-      if (this.hasEventListeners) {
+      if (dom.hasEventListeners) {
         elem.removeEventListeners(event, func, !!bool);
       } else {
         elem.detachEvent('on' + event, func);
       }
-      return this;
+      return dom;
+    },
+
+    getRequestAnimationFrame: function() {
+
+      var lastTime = 0;
+      var vendors = ['ms', 'moz', 'webkit', 'o'];
+      var request = root.requestAnimationFrame, cancel;
+
+      if(!request) {
+        for (var i = 0; i < vendors.length; i++) {
+          request = root[vendors[i] + 'RequestAnimationFrame'] || request;
+          cancel = root[vendors[i] + 'CancelAnimationFrame']
+            || root[vendors[i] + 'CancelRequestAnimationFrame'] || cancel;
+        }
+
+        request = request || function(callback, element) {
+          var currTime = new Date().getTime();
+          var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+          var id = root.setTimeout(function() { callback(currTime + timeToCall); }, timeToCall);
+          lastTime = currTime + timeToCall;
+          return id;
+        };
+        // cancel = cancel || function(id) {
+        //   clearTimeout(id);
+        // };
+      }
+
+      request.init = _.once(loop);
+
+      return request;
+
     }
 
   };
@@ -70,7 +317,7 @@
     });
 
     _.each(params, function(v, k) {
-      if (k === 'fullscreen' || k === 'width' || k === 'height' || k === 'autostart') {
+      if (k === 'fullscreen' || k === 'autostart') {
         return;
       }
       this[k] = v;
@@ -79,6 +326,7 @@
     // Specified domElement overrides type declaration only if the element does not support declared renderer type.
     if (_.isElement(params.domElement)) {
       var tagName = params.domElement.tagName.toLowerCase();
+      // TODO: Reconsider this if statement's logic.
       if (!/^(CanvasRenderer-canvas|WebGLRenderer-canvas|SVGRenderer-svg)$/.test(this.type+'-'+tagName)) {
         this.type = Two.Types[tagName];
       }
@@ -124,10 +372,17 @@
     this.scene = this.renderer.scene;
 
     Two.Instances.push(this);
+    raf.init();
 
   };
 
   _.extend(Two, {
+
+    /**
+     * Access to root in other files.
+     */
+
+    root: root,
 
     /**
      * Primitive
@@ -141,7 +396,7 @@
       canvas: 'CanvasRenderer'
     },
 
-    Version: 'v0.6.0',
+    Version: 'v0.7.0-alpha.1',
 
     Identifier: 'two_',
 
@@ -159,7 +414,8 @@
       change: 'change',
       remove: 'remove',
       insert: 'insert',
-      order: 'order'
+      order: 'order',
+      load: 'load'
     },
 
     Commands: {
@@ -184,7 +440,9 @@
       return id;
     },
 
-    Utils: {
+    Utils: _.extend(_, {
+
+      performance: perf,
 
       defineProperty: function(property) {
 
@@ -193,6 +451,7 @@
         var flag = '_flag' + property.charAt(0).toUpperCase() + property.slice(1);
 
         Object.defineProperty(object, property, {
+          enumerable: true,
           get: function() {
             return this[secret];
           },
@@ -459,7 +718,7 @@
             case 'transform':
               // TODO: Check this out https://github.com/paperjs/paper.js/blob/master/src/svg/SVGImport.js#L313
               if (value === 'none') break;
-              var m = node.getCTM();
+              var m = node.getCTM ? node.getCTM() : null;
 
               // Might happen when transform string is empty or not valid.
               if (m === null) break;
@@ -477,13 +736,16 @@
               // Warning: Two.js elements only support uniform scalars...
               elem.scale = transforms.scaleX;
 
+              var x = parseFloat((styles.x + '').replace('px'));
+              var y = parseFloat((styles.y + '').replace('px'));
+
               // Override based on attributes.
-              if (styles.x) {
-                elem.translation.x = styles.x;
+              if (x) {
+                elem.translation.x = x;
               }
 
-              if (styles.y) {
-                elem.translation.y = styles.y;
+              if (y) {
+                elem.translation.y = y;
               }
 
               break;
@@ -567,7 +829,7 @@
           var points = node.getAttribute('points');
 
           var verts = [];
-          points.replace(/(-?[\d\.?]+),(-?[\d\.?]+)/g, function(match, p1, p2) {
+          points.replace(/(-?[\d\.?]+)[,|\s](-?[\d\.?]+)/g, function(match, p1, p2) {
             verts.push(new Two.Anchor(parseFloat(p1), parseFloat(p2)));
           });
 
@@ -672,7 +934,8 @@
 
           // Create the vertices for our Two.Path
 
-          var points = _.flatten(_.map(commands, function(command, i) {
+          var points = [];
+          _.each(commands, function(command, i) {
 
             var result, x, y;
             var type = command[0];
@@ -986,20 +1249,39 @@
 
             }
 
-            return result;
+            if (result) {
+              if (_.isArray(result)) {
+                points = points.concat(result);
+              } else {
+                points.push(result);
+              }
+            }
 
-          }));
+          });
 
           if (points.length <= 1) {
             return;
           }
 
-          points = _.compact(points);
+          var path = new Two.Path(points, closed, undefined, true).noStroke();
+          path.fill = 'black';
 
-          var poly = new Two.Path(points, closed, undefined, true).noStroke();
-          poly.fill = 'black';
+          var rect = path.getBoundingClientRect(true);
 
-          return Two.Utils.applySvgAttributes.call(this, node, poly);
+          // Center objects to stay consistent
+          // with the rest of the Two.js API.
+          rect.centroid = {
+            x: rect.left + rect.width / 2,
+            y: rect.top + rect.height / 2
+          };
+
+          _.each(path.vertices, function(v) {
+            v.subSelf(rect.centroid);
+          });
+
+          path.translation.addSelf(rect.centroid);
+
+          return Two.Utils.applySvgAttributes.call(this, node, path);
 
         },
 
@@ -1009,17 +1291,7 @@
           var y = parseFloat(node.getAttribute('cy'));
           var r = parseFloat(node.getAttribute('r'));
 
-          var amount = Two.Resolution;
-          var points = _.map(_.range(amount), function(i) {
-            var pct = i / amount;
-            var theta = pct * TWO_PI;
-            var x = r * cos(theta);
-            var y = r * sin(theta);
-            return new Two.Anchor(x, y);
-          });
-
-          var circle = new Two.Path(points, true, true).noStroke();
-          circle.translation.set(x, y);
+          var circle = new Two.Circle(x, y, r).noStroke();
           circle.fill = 'black';
 
           return Two.Utils.applySvgAttributes.call(this, node, circle);
@@ -1033,17 +1305,7 @@
           var width = parseFloat(node.getAttribute('rx'));
           var height = parseFloat(node.getAttribute('ry'));
 
-          var amount = Two.Resolution;
-          var points = _.map(_.range(amount), function(i) {
-            var pct = i / amount;
-            var theta = pct * TWO_PI;
-            var x = width * cos(theta);
-            var y = height * sin(theta);
-            return new Two.Anchor(x, y);
-          });
-
-          var ellipse = new Two.Path(points, true, true).noStroke();
-          ellipse.translation.set(x, y);
+          var ellipse = new Two.Ellipse(x, y, width, height).noStroke();
           ellipse.fill = 'black';
 
           return Two.Utils.applySvgAttributes.call(this, node, ellipse);
@@ -1060,15 +1322,8 @@
           var w2 = width / 2;
           var h2 = height / 2;
 
-          var points = [
-            new Two.Anchor(w2, h2),
-            new Two.Anchor(-w2, h2),
-            new Two.Anchor(-w2, -h2),
-            new Two.Anchor(w2, -h2)
-          ];
-
-          var rect = new Two.Path(points, true).noStroke();
-          rect.translation.set(x + w2, y + h2);
+          var rect = new Two.Rectangle(x + w2, y + h2, width, height)
+            .noStroke();
           rect.fill = 'black';
 
           return Two.Utils.applySvgAttributes.call(this, node, rect);
@@ -1082,21 +1337,7 @@
           var x2 = parseFloat(node.getAttribute('x2'));
           var y2 = parseFloat(node.getAttribute('y2'));
 
-          var width = x2 - x1;
-          var height = y2 - y1;
-
-          var w2 = width / 2;
-          var h2 = height / 2;
-
-          var points = [
-            new Two.Anchor(- w2, - h2),
-            new Two.Anchor(w2, h2)
-          ];
-
-          // Center line and translate to desired position.
-
-          var line = new Two.Path(points).noFill();
-          line.translation.set(x1 + w2, y1 + h2);
+          var line = new Two.Line(x1, y1, x2, y2).noFill();
 
           return Two.Utils.applySvgAttributes.call(this, node, line);
 
@@ -1123,12 +1364,12 @@
             var style = child.getAttribute('style');
 
             if (_.isNull(color)) {
-              var matches = style.match(/stop\-color\:\s?([\#a-fA-F0-9]*)/);
+              var matches = style ? style.match(/stop\-color\:\s?([\#a-fA-F0-9]*)/) : false;
               color = matches && matches.length > 1 ? matches[1] : undefined;
             }
 
             if (_.isNull(opacity)) {
-              var matches = style.match(/stop\-opacity\:\s?([0-1\.\-]*)/);
+              var matches = style ? style.match(/stop\-opacity\:\s?([0-9\.\-]*)/) : false;
               opacity = matches && matches.length > 1 ? parseFloat(matches[1]) : 1;
             }
 
@@ -1174,12 +1415,12 @@
             var style = child.getAttribute('style');
 
             if (_.isNull(color)) {
-              var matches = style.match(/stop\-color\:\s?([\#a-fA-F0-9]*)/);
+              var matches = style ? style.match(/stop\-color\:\s?([\#a-fA-F0-9]*)/) : false;
               color = matches && matches.length > 1 ? matches[1] : undefined;
             }
 
             if (_.isNull(opacity)) {
-              var matches = style.match(/stop\-opacity\:\s?([0-1\.\-]*)/);
+              var matches = style ? style.match(/stop\-opacity\:\s?([0-9\.\-]*)/) : false;
               opacity = matches && matches.length > 1 ? parseFloat(matches[1]) : 1;
             }
 
@@ -1400,8 +1641,6 @@
 
         var l = Two.Resolution;
 
-        // console.log(arguments);
-
         return _.map(_.range(l), function(i) {
 
           var pct = (i + 1) / l;
@@ -1469,6 +1708,10 @@
 
       },
 
+      lerp: function(a, b, t) {
+        return t * (b - a) + a;
+      },
+
       // A pretty fast toFixed(3) alternative
       // See http://jsperf.com/parsefloat-tofixed-vs-math-round/18
       toFixed: function(v) {
@@ -1507,19 +1750,141 @@
       Error: function(message) {
         this.name = 'two.js';
         this.message = message;
+      },
+
+      Events: {
+
+        on: function(name, callback) {
+
+          this._events || (this._events = {});
+          var list = this._events[name] || (this._events[name] = []);
+
+          list.push(callback);
+
+          return this;
+
+        },
+
+        off: function(name, callback) {
+
+          if (!this._events) {
+            return this;
+          }
+          if (!name && !callback) {
+            this._events = {};
+            return this;
+          }
+
+          var names = name ? [name] : _.keys(this._events);
+          for (var i = 0, l = names.length; i < l; i++) {
+
+            var name = names[i];
+            var list = this._events[name];
+
+            if (!!list) {
+              var events = [];
+              if (callback) {
+                for (var j = 0, k = list.length; j < k; j++) {
+                  var ev = list[j];
+                  ev = ev.callback ? ev.callback : ev;
+                  if (callback && callback !== ev) {
+                    events.push(ev);
+                  }
+                }
+              }
+              this._events[name] = events;
+            }
+          }
+
+          return this;
+        },
+
+        trigger: function(name) {
+          if (!this._events) return this;
+          var args = slice.call(arguments, 1);
+          var events = this._events[name];
+          if (events) trigger(this, events, args);
+          return this;
+        },
+
+        listen: function (obj, name, callback) {
+
+          var bound = this;
+
+          if (obj) {
+            var ev = function () {
+              callback.apply(bound, arguments);
+            };
+
+            // add references about the object that assigned this listener
+            ev.obj = obj;
+            ev.name = name;
+            ev.callback = callback;
+
+            obj.on(name, ev);
+          }
+
+          return this;
+
+        },
+
+        ignore: function (obj, name, callback) {
+
+          obj.off(name, callback);
+
+          return this;
+
+        }
+
       }
 
-    }
+    })
 
   });
+
+  Two.Utils.Events.bind = Two.Utils.Events.on;
+  Two.Utils.Events.unbind = Two.Utils.Events.off;
+
+  var trigger = function(obj, events, args) {
+    var method;
+    switch (args.length) {
+    case 0:
+      method = function(i) {
+        events[i].call(obj, args[0]);
+      };
+      break;
+    case 1:
+      method = function(i) {
+        events[i].call(obj, args[0], args[1]);
+      };
+      break;
+    case 2:
+      method = function(i) {
+        events[i].call(obj, args[0], args[1], args[2]);
+      };
+      break;
+    case 3:
+      method = function(i) {
+        events[i].call(obj, args[0], args[1], args[2], args[3]);
+      };
+      break;
+    default:
+      method = function(i) {
+        events[i].apply(obj, args);
+      };
+    }
+    for (var i = 0; i < events.length; i++) {
+      method(i);
+    }
+  };
 
   Two.Utils.Error.prototype = new Error();
   Two.Utils.Error.prototype.constructor = Two.Utils.Error;
 
   Two.Utils.Collection.prototype = new Array();
-  Two.Utils.Collection.constructor = Two.Utils.Collection;
+  Two.Utils.Collection.prototype.constructor = Two.Utils.Collection;
 
-  _.extend(Two.Utils.Collection.prototype, Backbone.Events, {
+  _.extend(Two.Utils.Collection.prototype, Two.Utils.Events, {
 
     pop: function() {
       var popped = Array.prototype.pop.apply(this, arguments);
@@ -1552,7 +1917,7 @@
       this.trigger(Two.Events.remove, spliced);
 
       if (arguments.length > 2) {
-        inserted = this.slice(arguments[0], arguments.length - 2);
+        inserted = this.slice(arguments[0], arguments[0] + arguments.length - 2);
         this.trigger(Two.Events.insert, inserted);
         this.trigger(Two.Events.order);
       }
@@ -1591,7 +1956,7 @@
     integrate = Two.Utils.integrate,
     getReflection = Two.Utils.getReflection;
 
-  _.extend(Two.prototype, Backbone.Events, {
+  _.extend(Two.prototype, Two.Utils.Events, {
 
     appendTo: function(elem) {
 
@@ -1620,7 +1985,7 @@
     update: function() {
 
       var animated = !!this._lastFrame;
-      var now = getNow();
+      var now = perf.now();
 
       this.frameCount++;
 
@@ -1719,7 +2084,10 @@
 
     makeCircle: function(ox, oy, r) {
 
-      return this.makeEllipse(ox, oy, r, r);
+      var circle = new Two.Circle(ox, oy, r);
+      this.scene.add(circle);
+
+      return circle;
 
     },
 
@@ -1831,7 +2199,7 @@
      */
     makeLinearGradient: function(x1, y1, x2, y2 /* stops */) {
 
-      var stops = Array.prototype.slice.call(arguments, 4);
+      var stops = slice.call(arguments, 4);
       var gradient = new Two.LinearGradient(x1, y1, x2, y2, stops);
 
       this.add(gradient);
@@ -1845,12 +2213,43 @@
      */
     makeRadialGradient: function(x1, y1, r /* stops */) {
 
-      var stops = Array.prototype.slice.call(arguments, 3);
+      var stops = slice.call(arguments, 3);
       var gradient = new Two.RadialGradient(x1, y1, r, stops);
 
       this.add(gradient);
 
       return gradient;
+
+    },
+
+    makeSprite: function(path, x, y, cols, rows, frameRate, autostart) {
+
+      var sprite = new Two.Sprite(path, x, y, cols, rows, frameRate);
+      if (!!autostart) {
+        sprite.play();
+      }
+      this.add(sprite);
+
+      return sprite;
+
+    },
+
+    makeImageSequence: function(paths, x, y, frameRate, autostart) {
+
+      var imageSequence = new Two.ImageSequence(paths, x, y, frameRate);
+      if (!!autostart) {
+        imageSequence.play();
+      }
+      this.add(imageSequence);
+
+      return imageSequence;
+
+    },
+
+    makeTexture: function(path, callback) {
+
+      var texture = new Two.Texture(path, callback);
+      return texture;
 
     },
 
@@ -1952,38 +2351,31 @@
 
   }
 
-  function getNow() {
-    return ((root.performance && root.performance.now)
-      ? root.performance : Date).now();
-  }
-
   // Request Animation Frame
 
-  (function() {
+  var raf = dom.getRequestAnimationFrame();
 
-    requestAnimationFrame(arguments.callee);
+  function loop() {
 
-    Two.Instances.forEach(function(t) {
+    raf(loop);
 
+    for (var i = 0; i < Two.Instances.length; i++) {
+      var t = Two.Instances[i];
       if (t.playing) {
         t.update();
       }
+    }
 
+  }
+
+  if (typeof define === 'function' && define.amd) {
+    define('two', [], function() {
+      return Two;
     });
+  } else if (typeof module != 'undefined' && module.exports) {
+    module.exports = Two;
+  }
 
-  })();
+  return Two;
 
-  //exports to multiple environments
-  if (typeof define === 'function' && define.amd)
-  //AMD
-  define(function(){ return Two; });
-  else if (typeof module != "undefined" && module.exports)
-  //Node
-  module.exports = Two;
-
-})(
-  this.Two,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : this._,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : this.Backbone,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : this.requestAnimationFrame
-);
+})((typeof global !== 'undefined' ? global : this).Two);

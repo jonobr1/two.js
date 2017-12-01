@@ -1,22 +1,24 @@
-(function(Two, _, Backbone, requestAnimationFrame) {
+(function(Two) {
 
   /**
    * Constants
    */
 
-  var multiplyMatrix = Two.Matrix.Multiply,
+  var root = Two.root,
+    multiplyMatrix = Two.Matrix.Multiply,
     mod = Two.Utils.mod,
     identity = [1, 0, 0, 0, 1, 0, 0, 0, 1],
     transformation = new Two.Array(9),
     getRatio = Two.Utils.getRatio,
     getComputedMatrix = Two.Utils.getComputedMatrix,
-    toFixed = Two.Utils.toFixed;
+    toFixed = Two.Utils.toFixed,
+    _ = Two.Utils;
 
   var webgl = {
 
     isHidden: /(none|transparent)/i,
 
-    canvas: document.createElement('canvas'),
+    canvas: (root.document ? root.document.createElement('canvas') : { getContext: _.identity }),
 
     alignments: {
       left: 'start',
@@ -137,6 +139,7 @@
       updateCanvas: function(elem) {
 
         var next, prev, a, c, ux, uy, vx, vy, ar, bl, br, cl, x, y;
+        var isOffset;
 
         var commands = elem._vertices;
         var canvas = this.canvas;
@@ -169,7 +172,7 @@
             ctx.fillStyle = fill;
           } else {
             webgl[fill._renderer.type].render.call(fill, ctx, elem);
-            ctx.fillStyle = fill._renderer.gradient;
+            ctx.fillStyle = fill._renderer.effect;
           }
         }
         if (stroke) {
@@ -177,7 +180,7 @@
             ctx.strokeStyle = stroke;
           } else {
             webgl[stroke._renderer.type].render.call(stroke, ctx, elem);
-            ctx.strokeStyle = stroke._renderer.gradient;
+            ctx.strokeStyle = stroke._renderer.effect;
           }
         }
         if (linewidth) {
@@ -222,8 +225,8 @@
 
               a = commands[prev];
               c = commands[next];
-              ar = (a.controls && a.controls.right) || a;
-              bl = (b.controls && b.controls.left) || b;
+              ar = (a.controls && a.controls.right) || Two.Vector.zero;
+              bl = (b.controls && b.controls.left) || Two.Vector.zero;
 
               if (a._relative) {
                 vx = toFixed((ar.x + a._x));
@@ -247,8 +250,8 @@
 
                 c = d;
 
-                br = (b.controls && b.controls.right) || b;
-                cl = (c.controls && c.controls.left) || c;
+                br = (b.controls && b.controls.right) || Two.Vector.zero;
+                cl = (c.controls && c.controls.left) || Two.Vector.zero;
 
                 if (b._relative) {
                   vx = toFixed((br.x + b._x));
@@ -294,8 +297,34 @@
           ctx.closePath();
         }
 
-        if (!webgl.isHidden.test(fill)) ctx.fill();
-        if (!webgl.isHidden.test(stroke)) ctx.stroke();
+        if (!webgl.isHidden.test(fill)) {
+          isOffset = fill._renderer && fill._renderer.offset
+          if (isOffset) {
+            ctx.save();
+            ctx.translate(
+              - fill._renderer.offset.x, - fill._renderer.offset.y);
+            ctx.scale(fill._renderer.scale.x, fill._renderer.scale.y);
+          }
+          ctx.fill();
+          if (isOffset) {
+            ctx.restore();
+          }
+        }
+
+        if (!webgl.isHidden.test(stroke)) {
+          isOffset = stroke._renderer && stroke._renderer.offset;
+          if (isOffset) {
+            ctx.save();
+            ctx.translate(
+              - stroke._renderer.offset.x, - stroke._renderer.offset.y);
+            ctx.scale(stroke._renderer.scale.x, stroke._renderer.scale.y);
+            ctx.lineWidth = linewidth / stroke._renderer.scale.x;
+          }
+          ctx.stroke();
+          if (isOffset) {
+            ctx.restore();
+          }
+        }
 
         ctx.restore();
 
@@ -382,6 +411,8 @@
           return this;
         }
 
+        this._update();
+
         // Calculate what changed
 
         var parent = this.parent;
@@ -390,14 +421,14 @@
         var flagTexture = this._flagVertices || this._flagFill
           || (this._fill instanceof Two.LinearGradient && (this._fill._flagSpread || this._fill._flagStops || this._fill._flagEndPoints))
           || (this._fill instanceof Two.RadialGradient && (this._fill._flagSpread || this._fill._flagStops || this._fill._flagRadius || this._fill._flagCenter || this._fill._flagFocal))
+          || (this._fill instanceof Two.Texture && (this._fill._flagLoaded && this._fill.loaded || this._fill._flagOffset || this._fill._flagScale))
           || (this._stroke instanceof Two.LinearGradient && (this._stroke._flagSpread || this._stroke._flagStops || this._stroke._flagEndPoints))
           || (this._stroke instanceof Two.RadialGradient && (this._stroke._flagSpread || this._stroke._flagStops || this._stroke._flagRadius || this._stroke._flagCenter || this._stroke._flagFocal))
+          || (this._stroke instanceof Two.Texture && (this._stroke._flagLoaded && this._stroke.loaded || this._stroke._flagOffset || this._fill._flagScale))
           || this._flagStroke || this._flagLinewidth || this._flagOpacity
           || parent._flagOpacity || this._flagVisible || this._flagCap
           || this._flagJoin || this._flagMiter || this._flagScale
           || !this._renderer.texture;
-
-        this._update();
 
         if (flagParentMatrix || flagMatrix) {
 
@@ -488,10 +519,16 @@
         var cx = centroid.x;
         var cy = centroid.y;
 
+        var a, b, c, d, e, sx, sy;
+        var isOffset = fill._renderer && fill._renderer.offset
+          && stroke._renderer && stroke._renderer.offset;
+
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        ctx.font = [elem._style, elem._weight, elem._size + 'px/' +
-          elem._leading + 'px', elem._family].join(' ');
+        if (!isOffset) {
+          ctx.font = [elem._style, elem._weight, elem._size + 'px/' +
+            elem._leading + 'px', elem._family].join(' ');
+        }
 
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
@@ -502,7 +539,7 @@
             ctx.fillStyle = fill;
           } else {
             webgl[fill._renderer.type].render.call(fill, ctx, elem);
-            ctx.fillStyle = fill._renderer.gradient;
+            ctx.fillStyle = fill._renderer.effect;
           }
         }
         if (stroke) {
@@ -510,7 +547,7 @@
             ctx.strokeStyle = stroke;
           } else {
             webgl[stroke._renderer.type].render.call(stroke, ctx, elem);
-            ctx.strokeStyle = stroke._renderer.gradient;
+            ctx.strokeStyle = stroke._renderer.effect;
           }
         }
         if (linewidth) {
@@ -524,8 +561,65 @@
         ctx.scale(scale, scale);
         ctx.translate(cx, cy);
 
-        if (!webgl.isHidden.test(fill)) ctx.fillText(elem.value, 0, 0);
-        if (!webgl.isHidden.test(stroke)) ctx.strokeText(elem.value, 0, 0);
+        if (!webgl.isHidden.test(fill)) {
+
+          if (fill._renderer && fill._renderer.offset) {
+
+            sx = toFixed(fill._renderer.scale.x);
+            sy = toFixed(fill._renderer.scale.y);
+
+            ctx.save();
+            ctx.translate( - toFixed(fill._renderer.offset.x),
+              - toFixed(fill._renderer.offset.y));
+            ctx.scale(sx, sy);
+
+            a = elem._size / fill._renderer.scale.y;
+            b = elem._leading / fill._renderer.scale.y;
+            ctx.font = [elem._style, elem._weight, toFixed(a) + 'px/',
+              toFixed(b) + 'px', elem._family].join(' ');
+
+            c = fill._renderer.offset.x / fill._renderer.scale.x;
+            d = fill._renderer.offset.y / fill._renderer.scale.y;
+
+            ctx.fillText(elem.value, toFixed(c), toFixed(d));
+            ctx.restore();
+
+          } else {
+            ctx.fillText(elem.value, 0, 0);
+          }
+
+        }
+
+        if (!webgl.isHidden.test(stroke)) {
+
+          if (stroke._renderer && stroke._renderer.offset) {
+
+            sx = toFixed(stroke._renderer.scale.x);
+            sy = toFixed(stroke._renderer.scale.y);
+
+            ctx.save();
+            ctx.translate(- toFixed(stroke._renderer.offset.x),
+              - toFixed(stroke._renderer.offset.y));
+            ctx.scale(sx, sy);
+
+            a = elem._size / stroke._renderer.scale.y;
+            b = elem._leading / stroke._renderer.scale.y;
+            ctx.font = [elem._style, elem._weight, toFixed(a) + 'px/',
+              toFixed(b) + 'px', elem._family].join(' ');
+
+            c = stroke._renderer.offset.x / stroke._renderer.scale.x;
+            d = stroke._renderer.offset.y / stroke._renderer.scale.y;
+            e = linewidth / stroke._renderer.scale.x;
+
+            ctx.lineWidth = toFixed(e);
+            ctx.strokeText(elem.value, toFixed(c), toFixed(d));
+            ctx.restore();
+
+          } else {
+            ctx.strokeText(elem.value, 0, 0);
+          }
+
+        }
 
         ctx.restore();
 
@@ -602,6 +696,8 @@
           return this;
         }
 
+        this._update();
+
         // Calculate what changed
 
         var parent = this.parent;
@@ -610,16 +706,16 @@
         var flagTexture = this._flagVertices || this._flagFill
           || (this._fill instanceof Two.LinearGradient && (this._fill._flagSpread || this._fill._flagStops || this._fill._flagEndPoints))
           || (this._fill instanceof Two.RadialGradient && (this._fill._flagSpread || this._fill._flagStops || this._fill._flagRadius || this._fill._flagCenter || this._fill._flagFocal))
+          || (this._fill instanceof Two.Texture && (this._fill._flagLoaded && this._fill.loaded))
           || (this._stroke instanceof Two.LinearGradient && (this._stroke._flagSpread || this._stroke._flagStops || this._stroke._flagEndPoints))
           || (this._stroke instanceof Two.RadialGradient && (this._stroke._flagSpread || this._stroke._flagStops || this._stroke._flagRadius || this._stroke._flagCenter || this._stroke._flagFocal))
+          || (this._texture instanceof Two.Texture && (this._texture._flagLoaded && this._texture.loaded))
           || this._flagStroke || this._flagLinewidth || this._flagOpacity
           || parent._flagOpacity || this._flagVisible || this._flagScale
           || this._flagValue || this._flagFamily || this._flagSize
           || this._flagLeading || this._flagAlignment || this._flagBaseline
           || this._flagStyle || this._flagWeight || this._flagDecoration
           || !this._renderer.texture;
-
-        this._update();
 
         if (flagParentMatrix || flagMatrix) {
 
@@ -699,16 +795,16 @@
 
         this._update();
 
-        if (!this._renderer.gradient || this._flagEndPoints || this._flagStops) {
+        if (!this._renderer.effect || this._flagEndPoints || this._flagStops) {
 
-          this._renderer.gradient = ctx.createLinearGradient(
+          this._renderer.effect = ctx.createLinearGradient(
             this.left._x, this.left._y,
             this.right._x, this.right._y
           );
 
           for (var i = 0; i < this.stops.length; i++) {
             var stop = this.stops[i];
-            this._renderer.gradient.addColorStop(stop._offset, stop._color);
+            this._renderer.effect.addColorStop(stop._offset, stop._color);
           }
 
         }
@@ -729,17 +825,79 @@
 
         this._update();
 
-        if (!this._renderer.gradient || this._flagCenter || this._flagFocal
+        if (!this._renderer.effect || this._flagCenter || this._flagFocal
             || this._flagRadius || this._flagStops) {
 
-          this._renderer.gradient = ctx.createRadialGradient(
+          this._renderer.effect = ctx.createRadialGradient(
             this.center._x, this.center._y, 0,
             this.focal._x, this.focal._y, this._radius
           );
 
           for (var i = 0; i < this.stops.length; i++) {
             var stop = this.stops[i];
-            this._renderer.gradient.addColorStop(stop._offset, stop._color);
+            this._renderer.effect.addColorStop(stop._offset, stop._color);
+          }
+
+        }
+
+        return this.flagReset();
+
+      }
+
+    },
+
+    texture: {
+
+      render: function(ctx, elem) {
+
+        if (!ctx.canvas.getContext('2d')) {
+          return;
+        }
+
+        this._update();
+
+        var image = this.image;
+        var repeat;
+
+        if (!this._renderer.effect || ((this._flagLoaded || this._flagRepeat) && this.loaded)) {
+          this._renderer.effect = ctx.createPattern(image, this._repeat);
+        }
+
+        if (this._flagOffset || this._flagLoaded || this._flagScale) {
+
+          if (!(this._renderer.offset instanceof Two.Vector)) {
+            this._renderer.offset = new Two.Vector();
+          }
+
+          this._renderer.offset.x = this._offset.x;
+          this._renderer.offset.y = this._offset.y;
+
+          if (image) {
+
+            this._renderer.offset.x -= image.width / 2;
+            this._renderer.offset.y += image.height / 2;
+
+            if (this._scale instanceof Two.Vector) {
+              this._renderer.offset.x *= this._scale.x;
+              this._renderer.offset.y *= this._scale.y;
+            } else {
+              this._renderer.offset.x *= this._scale;
+              this._renderer.offset.y *= this._scale;
+            }
+          }
+
+        }
+
+        if (this._flagScale || this._flagLoaded) {
+
+          if (!(this._renderer.scale instanceof Two.Vector)) {
+            this._renderer.scale = new Two.Vector();
+          }
+
+          if (this._scale instanceof Two.Vector) {
+            this._renderer.scale.copy(this._scale);
+          } else {
+            this._renderer.scale.set(this._scale, this._scale);
           }
 
         }
@@ -791,6 +949,8 @@
 
       gl.bindBuffer(gl.ARRAY_BUFFER, elem._renderer.textureCoordsBuffer);
 
+      // TODO: Is this necessary every time or can we do once?
+      // TODO: Create a registry for textures
       elem._renderer.texture = gl.createTexture();
       gl.bindTexture(gl.TEXTURE_2D, elem._renderer.texture);
 
@@ -914,7 +1074,9 @@
         '}'
       ].join('\n')
 
-    }
+    },
+
+    TextureRegistry: new Two.Registry()
 
   };
 
@@ -994,7 +1156,7 @@
 
   });
 
-  _.extend(Renderer.prototype, Backbone.Events, {
+  _.extend(Renderer.prototype, Two.Utils.Events, {
 
     setSize: function(width, height, ratio) {
 
@@ -1046,9 +1208,4 @@
 
   });
 
-})(
-  this.Two,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : this._,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : this.Backbone,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : this.requestAnimationFrame
-);
+})((typeof global !== 'undefined' ? global : this).Two);

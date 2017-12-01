@@ -7,9 +7,12 @@
 
 (function() {
 
-  module('SvgInterpreter');
+  QUnit.module('SvgInterpreter');
 
-  asyncTest('Two.load', 1, function(o) {
+  QUnit.test('Two.load', function(assert) {
+
+    assert.expect(1);
+    assert.done = assert.async(1);
 
     var two = new Two({
       width: 400,
@@ -18,21 +21,26 @@
 
     two.load('./images/interpretation/D.svg', function(shape, svg) {
 
-      var answer = {"children":[{"vertices":[{"x":122.049,"y":350,"command":"M","relative":true,"controls":{"left":{"x":0,"y":0},"right":{"x":0,"y":0}}},{"x":122.10700000000001,"y":50,"command":"L","relative":true,"controls":{"left":{"x":0,"y":0},"right":{"x":77.89900000000002,"y":0}}},{"x":277.952,"y":118.883,"command":"C","relative":true,"controls":{"left":{"x":0,"y":-67.354},"right":{"x":0,"y":0}}},{"x":277.952,"y":273.965,"command":"C","relative":true,"controls":{"left":{"x":0,"y":-75.976},"right":{"x":-0.0009999999999763531,"y":75.976}}},{"x":122.049,"y":350,"command":"C","relative":true,"controls":{"left":{"x":77.957,"y":0},"right":{"x":0,"y":0}}}],"rotation":0,"scale":1}],"translation":{"x":200,"y":200},"rotation":0,"scale":1};
+      shape.center();
+
+      var answer = {"children":[{"vertices":[{"x":-77.95149999999998,"y":150,"command":"M","relative":true,"controls":{"left":{"x":0,"y":0},"right":{"x":0,"y":0}}},{"x":-77.89349999999997,"y":-150,"command":"L","relative":true,"controls":{"left":{"x":0,"y":0},"right":{"x":77.89900000000002,"y":0}}},{"x":77.95150000000001,"y":-81.117,"command":"C","relative":true,"controls":{"left":{"x":0,"y":-67.354},"right":{"x":0,"y":0}}},{"x":77.95150000000001,"y":73.96499999999997,"command":"C","relative":true,"controls":{"left":{"x":0,"y":-75.976},"right":{"x":-0.0009999999999763531,"y":75.976}}},{"x":-77.95149999999998,"y":150,"command":"C","relative":true,"controls":{"left":{"x":77.957,"y":0},"right":{"x":0,"y":0}}}],"rotation":0,"scale":1}],"translation":{"x":200,"y":200},"rotation":0,"scale":1,"opacity":1,"mask":null};
       shape.translation.set(two.width / 2, two.height / 2);
       two.update();
 
-      ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.load loads SVG files properly.');
+      assert.ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.load loads SVG files properly.');
 
-      start();
+      assert.done();
 
-      QUnit.Utils.addElemToTest(o, [two.renderer.domElement, svg]);
+      QUnit.Utils.addElemToTest(assert.test, [two.renderer.domElement, svg]);
 
     });
 
   });
 
-  asyncTest('Two.interpret', 9, function(o) {
+  QUnit.test('Two.interpret', function(assert) {
+
+    assert.expect(9);
+    assert.done = assert.async(9);
 
     (function() {
 
@@ -43,7 +51,7 @@
 
       QUnit.Utils.get('./images/interpretation/D.svg', function(resp) {
 
-        var answer = {"children":[{"vertices":[{"x":122.049,"y":350,"command":"M","relative":true,"controls":{"left":{"x":0,"y":0},"right":{"x":0,"y":0}}},{"x":122.10700000000001,"y":50,"command":"L","relative":true,"controls":{"left":{"x":0,"y":0},"right":{"x":77.89900000000002,"y":0}}},{"x":277.952,"y":118.883,"command":"C","relative":true,"controls":{"left":{"x":0,"y":-67.354},"right":{"x":0,"y":0}}},{"x":277.952,"y":273.965,"command":"C","relative":true,"controls":{"left":{"x":0,"y":-75.976},"right":{"x":-0.0009999999999763531,"y":75.976}}},{"x":122.049,"y":350,"command":"C","relative":true,"controls":{"left":{"x":77.957,"y":0},"right":{"x":0,"y":0}}}],"rotation":0,"scale":1}],"translation":{"x":200,"y":200},"rotation":0,"scale":1};
+        var answer = {"children":[{"vertices":[{"x":-77.95149999999998,"y":150,"command":"M","relative":true,"controls":{"left":{"x":0,"y":0},"right":{"x":0,"y":0}}},{"x":-77.89349999999997,"y":-150,"command":"L","relative":true,"controls":{"left":{"x":0,"y":0},"right":{"x":77.89900000000002,"y":0}}},{"x":77.95150000000001,"y":-81.117,"command":"C","relative":true,"controls":{"left":{"x":0,"y":-67.354},"right":{"x":0,"y":0}}},{"x":77.95150000000001,"y":73.96499999999997,"command":"C","relative":true,"controls":{"left":{"x":0,"y":-75.976},"right":{"x":-0.0009999999999763531,"y":75.976}}},{"x":-77.95149999999998,"y":150,"command":"C","relative":true,"controls":{"left":{"x":77.957,"y":0},"right":{"x":0,"y":0}}}],"rotation":0,"scale":1}],"translation":{"x":200,"y":200},"rotation":0,"scale":1,"opacity":1,"mask":null};
         var svg = QUnit.Utils.textToDOM(resp)[0];
         var shape = two.interpret(svg).center();
 
@@ -51,10 +59,10 @@
 
         two.update();
 
-        ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.interpret imports <path> properly.');
-        start();
+        assert.ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.interpret imports <path> properly.');
+        assert.done();
 
-        QUnit.Utils.addElemToTest(o, [two.renderer.domElement, svg]);
+        QUnit.Utils.addElemToTest(assert.test, [two.renderer.domElement, svg]);
 
       });
 
@@ -77,10 +85,10 @@
 
         two.update();
 
-        ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.interpret imports <line> properly.');
-        start();
+        assert.ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.interpret imports <line> properly.');
+        assert.done();
 
-        QUnit.Utils.addElemToTest(o, [two.renderer.domElement, svg]);
+        QUnit.Utils.addElemToTest(assert.test, [two.renderer.domElement, svg]);
 
       });
 
@@ -103,10 +111,10 @@
 
         two.update();
 
-        ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.interpret imports <circle> properly.');
-        start();
+        assert.ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.interpret imports <circle> properly.');
+        assert.done();
 
-        QUnit.Utils.addElemToTest(o, [two.renderer.domElement, svg]);
+        QUnit.Utils.addElemToTest(assert.test, [two.renderer.domElement, svg]);
 
       });
 
@@ -121,7 +129,7 @@
 
       QUnit.Utils.get('./images/interpretation/rect.svg', function(resp) {
 
-        var answer = {"children":[{"vertices":[{"x":100,"y":100,"command":"M","relative":true},{"x":-100,"y":100,"command":"L","relative":true},{"x":-100,"y":-100,"command":"L","relative":true},{"x":100,"y":-100,"command":"L","relative":true}],"rotation":0,"scale":1}],"translation":{"x":200,"y":200},"rotation":0,"scale":1};
+        var answer = {"children":[{"vertices":[{"x":-100,"y":-100,"command":"M","relative":true},{"x":100,"y":-100,"command":"L","relative":true},{"x":100,"y":100,"command":"L","relative":true},{"x":-100,"y":100,"command":"L","relative":true}],"rotation":0,"scale":1}],"translation":{"x":200,"y":200},"rotation":0,"scale":1};
         var svg = QUnit.Utils.textToDOM(resp)[0];
         var shape = two.interpret(svg).center();
 
@@ -129,10 +137,10 @@
 
         two.update();
 
-        ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.interpret imports <rect> properly.');
-        start();
+        assert.ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.interpret imports <rect> properly.');
+        assert.done();
 
-        QUnit.Utils.addElemToTest(o, [two.renderer.domElement, svg]);
+        QUnit.Utils.addElemToTest(assert.test, [two.renderer.domElement, svg]);
 
       });
 
@@ -155,10 +163,10 @@
 
         two.update();
 
-        ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.interpret imports <ellipse> properly.');
-        start();
+        assert.ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.interpret imports <ellipse> properly.');
+        assert.done();
 
-        QUnit.Utils.addElemToTest(o, [two.renderer.domElement, svg]);
+        QUnit.Utils.addElemToTest(assert.test, [two.renderer.domElement, svg]);
 
       });
 
@@ -181,10 +189,10 @@
 
         two.update();
 
-        ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.interpret imports <polyline> properly.');
-        start();
+        assert.ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.interpret imports <polyline> properly.');
+        assert.done();
 
-        QUnit.Utils.addElemToTest(o, [two.renderer.domElement, svg]);
+        QUnit.Utils.addElemToTest(assert.test, [two.renderer.domElement, svg]);
 
       });
 
@@ -207,10 +215,10 @@
 
         two.update();
 
-        ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.interpret imports <polygon> properly.');
-        start();
+        assert.ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.interpret imports <polygon> properly.');
+        assert.done();
 
-        QUnit.Utils.addElemToTest(o, [two.renderer.domElement, svg]);
+        QUnit.Utils.addElemToTest(assert.test, [two.renderer.domElement, svg]);
 
       });
 
@@ -225,7 +233,7 @@
 
       QUnit.Utils.get('./images/interpretation/linear-gradient.svg', function(resp) {
 
-        var answer = {"children":[{"stops":[{"offset":0,"opacity":1,"color":"#000000"},{"offset":0.33,"opacity":1,"color":"#FFF200"},{"offset":0.66,"opacity":1,"color":"#EC008C"},{"offset":1,"opacity":1,"color":"#00AEEF"}],"spread":"pad","left":{"x":-100,"y":0},"right":{"x":100,"y":0}},{"vertices":[{"x":100,"y":100,"command":"M","relative":true},{"x":-100,"y":100,"command":"L","relative":true},{"x":-100,"y":-100,"command":"L","relative":true},{"x":100,"y":-100,"command":"L","relative":true}],"rotation":0,"scale":1}],"translation":{"x":200,"y":200},"rotation":0,"scale":1};
+        var answer = {"children":[{"stops":[{"offset":0,"opacity":1,"color":"#000000"},{"offset":0.33,"opacity":1,"color":"#FFF200"},{"offset":0.66,"opacity":1,"color":"#EC008C"},{"offset":1,"opacity":1,"color":"#00AEEF"}],"spread":"pad","left":{"x":-100,"y":0},"right":{"x":100,"y":0}},{"vertices":[{"x":-100,"y":-100,"command":"M","relative":true},{"x":100,"y":-100,"command":"L","relative":true},{"x":100,"y":100,"command":"L","relative":true},{"x":-100,"y":100,"command":"L","relative":true}],"rotation":0,"scale":1}],"translation":{"x":200,"y":200},"rotation":0,"scale":1};
         var svg = QUnit.Utils.textToDOM(resp)[0];
         var shape = two.interpret(svg).center();
 
@@ -233,10 +241,10 @@
 
         two.update();
 
-        ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.interpret imports <linear-gradient> properly.');
-        start();
+        assert.ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.interpret imports <linear-gradient> properly.');
+        assert.done();
 
-        QUnit.Utils.addElemToTest(o, [two.renderer.domElement, svg]);
+        QUnit.Utils.addElemToTest(assert.test, [two.renderer.domElement, svg]);
 
       });
 
@@ -251,7 +259,7 @@
 
       QUnit.Utils.get('./images/interpretation/radial-gradient.svg', function(resp) {
 
-        var answer = {"children":[{"stops":[{"offset":0,"opacity":1,"color":"#000000"},{"offset":0.33,"opacity":1,"color":"#FFF200"},{"offset":0.66,"opacity":1,"color":"#EC008C"},{"offset":1,"opacity":1,"color":"#00AEEF"}],"spread":"pad","radius":100,"center":{"x":0,"y":0},"focal":{"x":0,"y":0}},{"vertices":[{"x":100,"y":100,"command":"M","relative":true},{"x":-100,"y":100,"command":"L","relative":true},{"x":-100,"y":-100,"command":"L","relative":true},{"x":100,"y":-100,"command":"L","relative":true}],"rotation":0,"scale":1}],"translation":{"x":200,"y":200},"rotation":0,"scale":1};
+        var answer = {"children":[{"stops":[{"offset":0,"opacity":1,"color":"#000000"},{"offset":0.33,"opacity":1,"color":"#FFF200"},{"offset":0.66,"opacity":1,"color":"#EC008C"},{"offset":1,"opacity":1,"color":"#00AEEF"}],"spread":"pad","radius":100,"center":{"x":0,"y":0},"focal":{"x":0,"y":0}},{"vertices":[{"x":-100,"y":-100,"command":"M","relative":true},{"x":100,"y":-100,"command":"L","relative":true},{"x":100,"y":100,"command":"L","relative":true},{"x":-100,"y":100,"command":"L","relative":true}],"rotation":0,"scale":1}],"translation":{"x":200,"y":200},"rotation":0,"scale":1};
         var svg = QUnit.Utils.textToDOM(resp)[0];
         var shape = two.interpret(svg).center();
 
@@ -259,10 +267,10 @@
 
         two.update();
 
-        ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.interpret imports <radial-gradient> properly.');
-        start();
+        assert.ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.interpret imports <radial-gradient> properly.');
+        assert.done();
 
-        QUnit.Utils.addElemToTest(o, [two.renderer.domElement, svg]);
+        QUnit.Utils.addElemToTest(assert.test, [two.renderer.domElement, svg]);
 
       });
 
@@ -270,7 +278,10 @@
 
   });
 
-  asyncTest('Two.subdivide', 3, function(o) {
+  QUnit.test('Two.subdivide', function(assert) {
+
+    assert.expect(3);
+    assert.done = assert.async(3);
 
     (function() {
 
@@ -281,7 +292,7 @@
 
       QUnit.Utils.get('./images/interpretation/D.svg', function(resp) {
 
-        var answer = {"children":[{"vertices":[{"x":122.049,"y":350,"command":"M","relative":true},{"x":122.049,"y":350,"command":"M","relative":true},{"x":122.04957846529616,"y":347.0079381233462,"command":"L","relative":true},{"x":122.05121941787094,"y":338.52025239161406,"command":"L","relative":true},{"x":122.05378119275392,"y":325.2696926521473,"command":"L","relative":true},{"x":122.05712212497455,"y":307.9890087522898,"command":"L","relative":true},{"x":122.06110054956238,"y":287.4109505393852,"command":"L","relative":true},{"x":122.0655748015469,"y":264.2682678607775,"command":"L","relative":true},{"x":122.07040321595767,"y":239.29371056381027,"command":"L","relative":true},{"x":122.07544412782416,"y":213.22002849582742,"command":"L","relative":true},{"x":122.08055587217586,"y":186.7799715041726,"command":"L","relative":true},{"x":122.08559678404237,"y":160.7062894361897,"command":"L","relative":true},{"x":122.09042519845309,"y":135.73173213922243,"command":"L","relative":true},{"x":122.09489945043764,"y":112.58904946061469,"command":"L","relative":true},{"x":122.09887787502545,"y":92.01099124771018,"command":"L","relative":true},{"x":122.1022188072461,"y":74.73030734785264,"command":"L","relative":true},{"x":122.10478058212905,"y":61.47974760838592,"command":"L","relative":true},{"x":122.10642153470387,"y":52.99206187665378,"command":"L","relative":true},{"x":122.10700000000001,"y":50,"command":"L","relative":true},{"x":135.83849542031348,"y":50.0289588845919,"command":"L","relative":true},{"x":149.47571768776714,"y":50.168183187461835,"command":"L","relative":true},{"x":162.9234178709546,"y":50.49619438225117,"command":"L","relative":true},{"x":176.08634703846934,"y":51.09151394260126,"command":"L","relative":true},{"x":188.86925625890493,"y":52.032663342153455,"command":"L","relative":true},{"x":201.17689660085486,"y":53.398164054549156,"command":"L","relative":true},{"x":212.9140191329127,"y":55.26653755342967,"command":"L","relative":true},{"x":223.9853749236719,"y":57.716305312436404,"command":"L","relative":true},{"x":234.295715041726,"y":60.82598880521066,"command":"L","relative":true},{"x":243.74979055566868,"y":64.67410950539386,"command":"L","relative":true},{"x":252.25235253409323,"y":69.33918888662731,"command":"L","relative":true},{"x":259.70815204559335,"y":74.89974842255242,"command":"L","relative":true},{"x":266.0219401587625,"y":81.4343095868105,"command":"L","relative":true},{"x":271.0984679421942,"y":89.02139385304294,"command":"L","relative":true},{"x":274.84248646448196,"y":97.7395226948911,"command":"L","relative":true},{"x":277.15874679421944,"y":107.66721758599634,"command":"L","relative":true},{"x":277.952,"y":118.883,"command":"L","relative":true},{"x":277.952,"y":119.68743110116019,"command":"L","relative":true},{"x":277.952,"y":122.03377060858944,"command":"L","relative":true},{"x":277.952,"y":125.82158782821085,"command":"L","relative":true},{"x":277.95199999999994,"y":130.95045206594747,"command":"L","relative":true},{"x":277.95199999999994,"y":137.31993262772232,"command":"L","relative":true},{"x":277.952,"y":144.82959881945854,"command":"L","relative":true},{"x":277.952,"y":153.37901994707917,"command":"L","relative":true},{"x":277.952,"y":162.86776531650722,"command":"L","relative":true},{"x":277.952,"y":173.19540423366573,"command":"L","relative":true},{"x":277.952,"y":184.26150600447792,"command":"L","relative":true},{"x":277.952,"y":195.96563993486666,"command":"L","relative":true},{"x":277.952,"y":208.20737533075516,"command":"L","relative":true},{"x":277.952,"y":220.88628149806632,"command":"L","relative":true},{"x":277.952,"y":233.90192774272333,"command":"L","relative":true},{"x":277.952,"y":247.15388337064925,"command":"L","relative":true},{"x":277.952,"y":260.5417176877671,"command":"L","relative":true},{"x":277.952,"y":273.965,"command":"L","relative":true},{"x":277.15857866883783,"y":286.59990392835334,"command":"L","relative":true},{"x":274.84211723997555,"y":297.75131793201706,"command":"L","relative":true},{"x":271.09779014858543,"y":307.51188357419085,"command":"L","relative":true},{"x":266.02077182983913,"y":315.9742424180744,"command":"L","relative":true},{"x":259.70623671890894,"y":323.2310360268674,"command":"L","relative":true},{"x":252.2493592509668,"y":329.3749059637695,"command":"L","relative":true},{"x":243.74531386118457,"y":334.4984937919804,"command":"L","relative":true},{"x":234.2892749847344,"y":338.6944410746998,"command":"L","relative":true},{"x":223.9764170567881,"y":342.0553893751271,"command":"L","relative":true},{"x":212.90191451251786,"y":344.67398025646247,"command":"L","relative":true},{"x":201.16094178709545,"y":346.6428552819051,"command":"L","relative":true},{"x":188.84867331569308,"y":348.05465601465505,"command":"L","relative":true},{"x":176.06028353348262,"y":349.00202401791165,"command":"L","relative":true},{"x":162.89094687563608,"y":349.57760085487485,"command":"L","relative":true},{"x":149.43583777732547,"y":349.8740280887441,"command":"L","relative":true},{"x":135.79013067372279,"y":349.9839472827193,"command":"L","relative":true},{"x":122.049,"y":350,"command":"Z","relative":true}],"rotation":0,"scale":1}],"translation":{"x":0,"y":0},"rotation":0,"scale":1};
+        var answer = {"children":[{"vertices":[{"x":-77.95149999999998,"y":150,"command":"M","relative":true},{"x":-77.95149999999998,"y":150,"command":"M","relative":true},{"x":-77.95092153470384,"y":147.0079381233462,"command":"L","relative":true},{"x":-77.94928058212902,"y":138.52025239161406,"command":"L","relative":true},{"x":-77.94671880724607,"y":125.26969265214734,"command":"L","relative":true},{"x":-77.94337787502542,"y":107.98900875228983,"command":"L","relative":true},{"x":-77.93939945043758,"y":87.41095053938528,"command":"L","relative":true},{"x":-77.93492519845306,"y":64.26826786077751,"command":"L","relative":true},{"x":-77.9300967840423,"y":39.29371056381031,"command":"L","relative":true},{"x":-77.92505587217585,"y":13.220028495827409,"command":"L","relative":true},{"x":-77.91994412782411,"y":-13.2200284958274,"command":"L","relative":true},{"x":-77.91490321595765,"y":-39.29371056381031,"command":"L","relative":true},{"x":-77.9100748015469,"y":-64.26826786077754,"command":"L","relative":true},{"x":-77.90560054956237,"y":-87.41095053938533,"command":"L","relative":true},{"x":-77.90162212497455,"y":-107.98900875228983,"command":"L","relative":true},{"x":-77.8982811927539,"y":-125.26969265214736,"command":"L","relative":true},{"x":-77.89571941787094,"y":-138.52025239161406,"command":"L","relative":true},{"x":-77.89407846529613,"y":-147.00793812334624,"command":"L","relative":true},{"x":-77.89349999999997,"y":-150,"command":"L","relative":true},{"x":-64.16200457968652,"y":-149.9710411154081,"command":"L","relative":true},{"x":-50.52478231223282,"y":-149.83181681253814,"command":"L","relative":true},{"x":-37.07708212904535,"y":-149.5038056177488,"command":"L","relative":true},{"x":-23.9141529615306,"y":-148.9084860573987,"command":"L","relative":true},{"x":-11.13124374109502,"y":-147.96733665784652,"command":"L","relative":true},{"x":1.1763966008549112,"y":-146.60183594545083,"command":"L","relative":true},{"x":12.913519132912704,"y":-144.73346244657031,"command":"L","relative":true},{"x":23.984874923671917,"y":-142.2836946875636,"command":"L","relative":true},{"x":34.29521504172605,"y":-139.17401119478933,"command":"L","relative":true},{"x":43.749290555668665,"y":-135.32589049460614,"command":"L","relative":true},{"x":52.251852534093246,"y":-130.6608111133727,"command":"L","relative":true},{"x":59.70765204559335,"y":-125.1002515774476,"command":"L","relative":true},{"x":66.02144015876247,"y":-118.56569041318951,"command":"L","relative":true},{"x":71.09796794219419,"y":-110.97860614695708,"command":"L","relative":true},{"x":74.84198646448199,"y":-102.2604773051089,"command":"L","relative":true},{"x":77.15824679421942,"y":-92.33278241400367,"command":"L","relative":true},{"x":77.95150000000001,"y":-81.117,"command":"L","relative":true},{"x":77.95150000000001,"y":-80.31256889883981,"command":"L","relative":true},{"x":77.95150000000001,"y":-77.96622939141054,"command":"L","relative":true},{"x":77.95150000000001,"y":-74.17841217178913,"command":"L","relative":true},{"x":77.9515,"y":-69.04954793405251,"command":"L","relative":true},{"x":77.95149999999998,"y":-62.68006737227763,"command":"L","relative":true},{"x":77.95149999999998,"y":-55.17040118054142,"command":"L","relative":true},{"x":77.95150000000001,"y":-46.620980052920835,"command":"L","relative":true},{"x":77.95150000000001,"y":-37.13223468349279,"command":"L","relative":true},{"x":77.95150000000001,"y":-26.80459576633422,"command":"L","relative":true},{"x":77.95150000000002,"y":-15.738493995522099,"command":"L","relative":true},{"x":77.95150000000001,"y":-4.034360065133331,"command":"L","relative":true},{"x":77.95150000000001,"y":8.207375330755127,"command":"L","relative":true},{"x":77.95150000000001,"y":20.886281498066325,"command":"L","relative":true},{"x":77.95150000000001,"y":33.90192774272336,"command":"L","relative":true},{"x":77.95150000000001,"y":47.15388337064927,"command":"L","relative":true},{"x":77.95150000000001,"y":60.541717687767125,"command":"L","relative":true},{"x":77.95150000000001,"y":73.96499999999997,"command":"L","relative":true},{"x":77.15807866883779,"y":86.59990392835334,"command":"L","relative":true},{"x":74.84161723997559,"y":97.75131793201707,"command":"L","relative":true},{"x":71.0972901485854,"y":107.5118835741909,"command":"L","relative":true},{"x":66.02027182983922,"y":115.97424241807445,"command":"L","relative":true},{"x":59.70573671890902,"y":123.23103602686743,"command":"L","relative":true},{"x":52.24885925096683,"y":129.37490596376955,"command":"L","relative":true},{"x":43.74481386118463,"y":134.49849379198045,"command":"L","relative":true},{"x":34.288774984734395,"y":138.69444107469977,"command":"L","relative":true},{"x":23.975917056788127,"y":142.0553893751272,"command":"L","relative":true},{"x":12.901414512517832,"y":144.67398025646247,"command":"L","relative":true},{"x":1.160441787095472,"y":146.64285528190513,"command":"L","relative":true},{"x":-11.15182668430693,"y":148.054656014655,"command":"L","relative":true},{"x":-23.940216466517377,"y":149.00202401791165,"command":"L","relative":true},{"x":-37.109553124363906,"y":149.57760085487485,"command":"L","relative":true},{"x":-50.564662222674514,"y":149.87402808874415,"command":"L","relative":true},{"x":-64.2103693262772,"y":149.98394728271933,"command":"L","relative":true},{"x":-77.95149999999998,"y":150,"command":"Z","relative":true}],"rotation":0,"scale":1}],"translation":{"x":0,"y":0},"rotation":0,"scale":1,"opacity":1,"mask":null};
         var svg = QUnit.Utils.textToDOM(resp)[0];
         var shape = two.interpret(svg).subdivide();
 
@@ -292,10 +303,10 @@
 
         two.update();
 
-        ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.subdivide subdivides curveTo and lineTo properly.');
-        start();
+        assert.ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.subdivide subdivides curveTo and lineTo properly.');
+        assert.done();
 
-        QUnit.Utils.addElemToTest(o, [two.renderer.domElement, svg]);
+        QUnit.Utils.addElemToTest(assert.test, [two.renderer.domElement, svg]);
 
       });
 
@@ -310,7 +321,7 @@
 
       QUnit.Utils.get('./images/interpretation/compound-path.svg', function(resp) {
 
-        var answer = {"children":[{"vertices":[{"x":220,"y":100,"command":"M","relative":true},{"x":80,"y":200,"command":"M","relative":true},{"x":80.4577667412986,"y":209.63074944026056,"command":"L","relative":true},{"x":81.80313047018115,"y":219.00247303073476,"command":"L","relative":true},{"x":83.99418644412783,"y":228.07326602890294,"command":"L","relative":true},{"x":86.98902992061875,"y":236.801223692245,"command":"L","relative":true},{"x":90.74575615713411,"y":245.14444127824135,"command":"L","relative":true},{"x":95.22246041115407,"y":253.06101404437203,"command":"L","relative":true},{"x":100.37723794015875,"y":260.50903724811724,"command":"L","relative":true},{"x":106.16818400162833,"y":267.44660614695704,"command":"L","relative":true},{"x":112.55339385304293,"y":273.8318159983716,"command":"L","relative":true},{"x":119.49096275188278,"y":279.6227620598413,"command":"L","relative":true},{"x":126.93898595562791,"y":284.7775395888459,"command":"L","relative":true},{"x":134.85555872175863,"y":289.2542438428659,"command":"L","relative":true},{"x":143.19877630775494,"y":293.01097007938125,"command":"L","relative":true},{"x":151.9267339710971,"y":296.0058135558722,"command":"L","relative":true},{"x":160.9975269692652,"y":298.19686952981885,"command":"L","relative":true},{"x":170.3692505597395,"y":299.5422332587014,"command":"L","relative":true},{"x":180,"y":300,"command":"L","relative":true},{"x":180,"y":298.00529208223077,"command":"L","relative":true},{"x":179.99999999999997,"y":292.3468349277427,"command":"L","relative":true},{"x":180,"y":283.5131284347649,"command":"L","relative":true},{"x":179.99999999999997,"y":271.9926725015265,"command":"L","relative":true},{"x":179.99999999999994,"y":258.2739670262568,"command":"L","relative":true},{"x":180,"y":242.84551190718497,"command":"L","relative":true},{"x":180,"y":226.1958070425402,"command":"L","relative":true},{"x":180.00000000000003,"y":208.81335233055162,"command":"L","relative":true},{"x":179.99999999999997,"y":191.18664766944838,"command":"L","relative":true},{"x":180,"y":173.8041929574598,"command":"L","relative":true},{"x":179.99999999999997,"y":157.15448809281497,"command":"L","relative":true},{"x":180,"y":141.72603297374314,"command":"L","relative":true},{"x":180,"y":128.00732749847344,"command":"L","relative":true},{"x":180,"y":116.4868715652351,"command":"L","relative":true},{"x":180,"y":107.65316507225728,"command":"L","relative":true},{"x":180.00000000000003,"y":101.99470791776919,"command":"L","relative":true},{"x":180,"y":100,"command":"L","relative":true},{"x":170.36925055973947,"y":100.4577667412986,"command":"L","relative":true},{"x":160.99752696926518,"y":101.80313047018115,"command":"L","relative":true},{"x":151.92673397109706,"y":103.9941864441278,"command":"L","relative":true},{"x":143.1987763077549,"y":106.98902992061876,"command":"L","relative":true},{"x":134.85555872175857,"y":110.74575615713411,"command":"L","relative":true},{"x":126.9389859556279,"y":115.22246041115407,"command":"L","relative":true},{"x":119.49096275188275,"y":120.37723794015875,"command":"L","relative":true},{"x":112.55339385304295,"y":126.16818400162833,"command":"L","relative":true},{"x":106.16818400162832,"y":132.55339385304293,"command":"L","relative":true},{"x":100.37723794015878,"y":139.49096275188276,"command":"L","relative":true},{"x":95.22246041115406,"y":146.9389859556279,"command":"L","relative":true},{"x":90.74575615713414,"y":154.8555587217586,"command":"L","relative":true},{"x":86.98902992061878,"y":163.19877630775494,"command":"L","relative":true},{"x":83.99418644412782,"y":171.92673397109706,"command":"L","relative":true},{"x":81.80313047018115,"y":180.9975269692652,"command":"L","relative":true},{"x":80.45776674129861,"y":190.36925055973947,"command":"L","relative":true},{"x":80,"y":200,"command":"L","relative":true},{"x":80,"y":200,"command":"L","relative":true},{"x":220,"y":100,"command":"M","relative":true},{"x":220,"y":101.99470791776919,"command":"L","relative":true},{"x":219.99999999999997,"y":107.65316507225728,"command":"L","relative":true},{"x":220,"y":116.48687156523509,"command":"L","relative":true},{"x":219.99999999999994,"y":128.00732749847342,"command":"L","relative":true},{"x":219.99999999999994,"y":141.7260329737431,"command":"L","relative":true},{"x":219.99999999999994,"y":157.15448809281497,"command":"L","relative":true},{"x":219.99999999999997,"y":173.8041929574598,"command":"L","relative":true},{"x":220.00000000000003,"y":191.1866476694484,"command":"L","relative":true},{"x":219.99999999999997,"y":208.8133523305516,"command":"L","relative":true},{"x":220,"y":226.19580704254022,"command":"L","relative":true},{"x":220,"y":242.84551190718503,"command":"L","relative":true},{"x":220,"y":258.2739670262569,"command":"L","relative":true},{"x":220,"y":271.99267250152656,"command":"L","relative":true},{"x":220,"y":283.5131284347649,"command":"L","relative":true},{"x":220,"y":292.34683492774275,"command":"L","relative":true},{"x":220,"y":298.0052920822308,"command":"L","relative":true},{"x":220,"y":300,"command":"L","relative":true},{"x":229.63074944026053,"y":299.5422332587014,"command":"L","relative":true},{"x":239.00247303073476,"y":298.1968695298188,"command":"L","relative":true},{"x":248.07326602890288,"y":296.0058135558722,"command":"L","relative":true},{"x":256.801223692245,"y":293.0109700793812,"command":"L","relative":true},{"x":265.14444127824135,"y":289.2542438428658,"command":"L","relative":true},{"x":273.06101404437203,"y":284.77753958884585,"command":"L","relative":true},{"x":280.5090372481172,"y":279.6227620598412,"command":"L","relative":true},{"x":287.44660614695704,"y":273.8318159983717,"command":"L","relative":true},{"x":293.8318159983716,"y":267.446606146957,"command":"L","relative":true},{"x":299.6227620598413,"y":260.50903724811724,"command":"L","relative":true},{"x":304.7775395888459,"y":253.0610140443721,"command":"L","relative":true},{"x":309.2542438428659,"y":245.1444412782414,"command":"L","relative":true},{"x":313.0109700793812,"y":236.80122369224506,"command":"L","relative":true},{"x":316.0058135558722,"y":228.07326602890294,"command":"L","relative":true},{"x":318.19686952981885,"y":219.0024730307348,"command":"L","relative":true},{"x":319.54223325870146,"y":209.63074944026056,"command":"L","relative":true},{"x":320,"y":200,"command":"L","relative":true},{"x":319.54223325870146,"y":190.3692505597395,"command":"L","relative":true},{"x":318.19686952981885,"y":180.9975269692652,"command":"L","relative":true},{"x":316.0058135558722,"y":171.9267339710971,"command":"L","relative":true},{"x":313.01097007938114,"y":163.1987763077549,"command":"L","relative":true},{"x":309.25424384286583,"y":154.8555587217586,"command":"L","relative":true},{"x":304.7775395888459,"y":146.93898595562789,"command":"L","relative":true},{"x":299.6227620598412,"y":139.49096275188276,"command":"L","relative":true},{"x":293.8318159983717,"y":132.55339385304296,"command":"L","relative":true},{"x":287.446606146957,"y":126.16818400162833,"command":"L","relative":true},{"x":280.50903724811724,"y":120.37723794015878,"command":"L","relative":true},{"x":273.06101404437203,"y":115.22246041115409,"command":"L","relative":true},{"x":265.1444412782414,"y":110.74575615713414,"command":"L","relative":true},{"x":256.80122369224506,"y":106.98902992061878,"command":"L","relative":true},{"x":248.0732660289029,"y":103.99418644412783,"command":"L","relative":true},{"x":239.0024730307348,"y":101.80313047018116,"command":"L","relative":true},{"x":229.63074944026056,"y":100.4577667412986,"command":"L","relative":true},{"x":220,"y":100,"command":"Z","relative":true}],"rotation":0,"scale":1}],"translation":{"x":0,"y":0},"rotation":0,"scale":1};
+        var answer = {"children":[{"vertices":[{"x":20,"y":-100,"command":"M","relative":true},{"x":-120,"y":0,"command":"M","relative":true},{"x":-119.5422332587014,"y":9.63074944026053,"command":"L","relative":true},{"x":-118.19686952981884,"y":19.00247303073478,"command":"L","relative":true},{"x":-116.00581355587218,"y":28.07326602890291,"command":"L","relative":true},{"x":-113.01097007938121,"y":36.80122369224505,"command":"L","relative":true},{"x":-109.25424384286585,"y":45.14444127824139,"command":"L","relative":true},{"x":-104.77753958884588,"y":53.061014044372065,"command":"L","relative":true},{"x":-99.62276205984122,"y":60.509037248117224,"command":"L","relative":true},{"x":-93.83181599837168,"y":67.44660614695705,"command":"L","relative":true},{"x":-87.44660614695705,"y":73.83181599837165,"command":"L","relative":true},{"x":-80.50903724811725,"y":79.62276205984124,"command":"L","relative":true},{"x":-73.06101404437207,"y":84.77753958884591,"command":"L","relative":true},{"x":-65.1444412782414,"y":89.25424384286586,"command":"L","relative":true},{"x":-56.80122369224507,"y":93.01097007938122,"command":"L","relative":true},{"x":-48.073266028902914,"y":96.00581355587218,"command":"L","relative":true},{"x":-39.00247303073479,"y":98.19686952981885,"command":"L","relative":true},{"x":-29.63074944026054,"y":99.54223325870142,"command":"L","relative":true},{"x":-20,"y":100,"command":"L","relative":true},{"x":-20,"y":98.00529208223082,"command":"L","relative":true},{"x":-20,"y":92.34683492774272,"command":"L","relative":true},{"x":-20,"y":83.5131284347649,"command":"L","relative":true},{"x":-19.999999999999996,"y":71.99267250152656,"command":"L","relative":true},{"x":-19.999999999999996,"y":58.273967026256855,"command":"L","relative":true},{"x":-19.999999999999996,"y":42.845511907185006,"command":"L","relative":true},{"x":-19.999999999999996,"y":26.1958070425402,"command":"L","relative":true},{"x":-20,"y":8.813352330551599,"command":"L","relative":true},{"x":-19.999999999999996,"y":-8.813352330551593,"command":"L","relative":true},{"x":-20.000000000000004,"y":-26.195807042540203,"command":"L","relative":true},{"x":-20,"y":-42.84551190718503,"command":"L","relative":true},{"x":-20,"y":-58.273967026256884,"command":"L","relative":true},{"x":-20,"y":-71.99267250152656,"command":"L","relative":true},{"x":-20,"y":-83.51312843476491,"command":"L","relative":true},{"x":-20,"y":-92.34683492774272,"command":"L","relative":true},{"x":-20.000000000000004,"y":-98.00529208223082,"command":"L","relative":true},{"x":-20,"y":-100,"command":"L","relative":true},{"x":-29.630749440260534,"y":-99.54223325870142,"command":"L","relative":true},{"x":-39.002473030734784,"y":-98.19686952981884,"command":"L","relative":true},{"x":-48.07326602890291,"y":-96.00581355587217,"command":"L","relative":true},{"x":-56.80122369224506,"y":-93.01097007938124,"command":"L","relative":true},{"x":-65.14444127824139,"y":-89.25424384286585,"command":"L","relative":true},{"x":-73.06101404437206,"y":-84.77753958884591,"command":"L","relative":true},{"x":-80.50903724811724,"y":-79.62276205984124,"command":"L","relative":true},{"x":-87.44660614695707,"y":-73.83181599837168,"command":"L","relative":true},{"x":-93.83181599837167,"y":-67.44660614695705,"command":"L","relative":true},{"x":-99.62276205984124,"y":-60.50903724811725,"command":"L","relative":true},{"x":-104.77753958884591,"y":-53.06101404437207,"command":"L","relative":true},{"x":-109.25424384286588,"y":-45.1444412782414,"command":"L","relative":true},{"x":-113.01097007938124,"y":-36.801223692245074,"command":"L","relative":true},{"x":-116.00581355587218,"y":-28.07326602890292,"command":"L","relative":true},{"x":-118.19686952981884,"y":-19.00247303073479,"command":"L","relative":true},{"x":-119.5422332587014,"y":-9.630749440260539,"command":"L","relative":true},{"x":-120,"y":0,"command":"L","relative":true},{"x":-120,"y":0,"command":"L","relative":true},{"x":20,"y":-100,"command":"M","relative":true},{"x":20,"y":-98.00529208223082,"command":"L","relative":true},{"x":20,"y":-92.34683492774272,"command":"L","relative":true},{"x":20,"y":-83.5131284347649,"command":"L","relative":true},{"x":19.999999999999996,"y":-71.99267250152656,"command":"L","relative":true},{"x":19.999999999999996,"y":-58.273967026256855,"command":"L","relative":true},{"x":19.999999999999996,"y":-42.845511907185006,"command":"L","relative":true},{"x":19.999999999999996,"y":-26.1958070425402,"command":"L","relative":true},{"x":20,"y":-8.813352330551599,"command":"L","relative":true},{"x":19.999999999999996,"y":8.813352330551593,"command":"L","relative":true},{"x":20.000000000000004,"y":26.195807042540203,"command":"L","relative":true},{"x":20,"y":42.84551190718503,"command":"L","relative":true},{"x":20,"y":58.273967026256884,"command":"L","relative":true},{"x":20,"y":71.99267250152656,"command":"L","relative":true},{"x":20,"y":83.51312843476491,"command":"L","relative":true},{"x":20,"y":92.34683492774272,"command":"L","relative":true},{"x":20.000000000000004,"y":98.00529208223082,"command":"L","relative":true},{"x":20,"y":100,"command":"L","relative":true},{"x":29.630749440260534,"y":99.5422332587014,"command":"L","relative":true},{"x":39.00247303073478,"y":98.19686952981884,"command":"L","relative":true},{"x":48.07326602890291,"y":96.00581355587217,"command":"L","relative":true},{"x":56.80122369224505,"y":93.01097007938122,"command":"L","relative":true},{"x":65.14444127824139,"y":89.25424384286583,"command":"L","relative":true},{"x":73.06101404437206,"y":84.77753958884591,"command":"L","relative":true},{"x":80.50903724811722,"y":79.62276205984122,"command":"L","relative":true},{"x":87.44660614695705,"y":73.83181599837167,"command":"L","relative":true},{"x":93.83181599837167,"y":67.44660614695704,"command":"L","relative":true},{"x":99.62276205984124,"y":60.50903724811724,"command":"L","relative":true},{"x":104.77753958884591,"y":53.06101404437206,"command":"L","relative":true},{"x":109.25424384286588,"y":45.14444127824139,"command":"L","relative":true},{"x":113.01097007938124,"y":36.80122369224507,"command":"L","relative":true},{"x":116.00581355587218,"y":28.07326602890291,"command":"L","relative":true},{"x":118.19686952981884,"y":19.002473030734784,"command":"L","relative":true},{"x":119.5422332587014,"y":9.630749440260534,"command":"L","relative":true},{"x":120,"y":0,"command":"L","relative":true},{"x":119.5422332587014,"y":-9.63074944026053,"command":"L","relative":true},{"x":118.19686952981884,"y":-19.00247303073478,"command":"L","relative":true},{"x":116.00581355587218,"y":-28.07326602890291,"command":"L","relative":true},{"x":113.01097007938121,"y":-36.80122369224505,"command":"L","relative":true},{"x":109.25424384286585,"y":-45.14444127824139,"command":"L","relative":true},{"x":104.77753958884588,"y":-53.061014044372065,"command":"L","relative":true},{"x":99.62276205984122,"y":-60.509037248117224,"command":"L","relative":true},{"x":93.83181599837167,"y":-67.44660614695705,"command":"L","relative":true},{"x":87.44660614695704,"y":-73.83181599837165,"command":"L","relative":true},{"x":80.50903724811724,"y":-79.62276205984124,"command":"L","relative":true},{"x":73.06101404437206,"y":-84.77753958884591,"command":"L","relative":true},{"x":65.14444127824139,"y":-89.25424384286586,"command":"L","relative":true},{"x":56.80122369224507,"y":-93.01097007938122,"command":"L","relative":true},{"x":48.073266028902914,"y":-96.00581355587218,"command":"L","relative":true},{"x":39.00247303073479,"y":-98.19686952981885,"command":"L","relative":true},{"x":29.630749440260537,"y":-99.54223325870142,"command":"L","relative":true},{"x":20,"y":-100,"command":"Z","relative":true}],"rotation":0,"scale":1}],"translation":{"x":0,"y":0},"rotation":0,"scale":1,"opacity":1,"mask":null};
         var svg = QUnit.Utils.textToDOM(resp)[0];
         var shape = two.interpret(svg).subdivide();
 
@@ -321,10 +332,10 @@
 
         two.update();
 
-        ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.subdivide subdivides moveTo properly.');
-        start();
+        assert.ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.subdivide subdivides moveTo properly.');
+        assert.done();
 
-        QUnit.Utils.addElemToTest(o, [two.renderer.domElement, svg]);
+        QUnit.Utils.addElemToTest(assert.test, [two.renderer.domElement, svg]);
 
       });
 
@@ -339,7 +350,7 @@
 
       QUnit.Utils.get('./images/interpretation/donut.svg', function(resp) {
 
-        var answer = {"children":[{"vertices":[{"x":200,"y":262.315,"command":"M","relative":true},{"x":200,"y":78.822,"command":"M","relative":true},{"x":152.769828125,"y":88.35735937499999,"command":"L","relative":true},{"x":114.201125,"y":114.361125,"command":"L","relative":true},{"x":88.19735937500002,"y":152.92982812499997,"command":"L","relative":true},{"x":78.662,"y":200.16,"command":"L","relative":true},{"x":88.197359375,"y":247.390171875,"command":"L","relative":true},{"x":114.201125,"y":285.958875,"command":"L","relative":true},{"x":152.769828125,"y":311.962640625,"command":"L","relative":true},{"x":200,"y":321.498,"command":"L","relative":true},{"x":247.230171875,"y":311.962640625,"command":"L","relative":true},{"x":285.79887499999995,"y":285.958875,"command":"L","relative":true},{"x":311.802640625,"y":247.390171875,"command":"L","relative":true},{"x":321.33799999999997,"y":200.16,"command":"L","relative":true},{"x":311.8026406249999,"y":152.92982812499997,"command":"L","relative":true},{"x":285.79887499999995,"y":114.361125,"command":"L","relative":true},{"x":247.230171875,"y":88.35735937499999,"command":"L","relative":true},{"x":200,"y":78.822,"command":"L","relative":true},{"x":200,"y":78.822,"command":"L","relative":true},{"x":200,"y":262.315,"command":"M","relative":true},{"x":175.806578125,"y":257.430515625,"command":"L","relative":true},{"x":156.04987500000001,"y":244.110125,"command":"L","relative":true},{"x":142.729484375,"y":224.35342187499998,"command":"L","relative":true},{"x":137.845,"y":200.16,"command":"L","relative":true},{"x":142.729484375,"y":175.96657812499998,"command":"L","relative":true},{"x":156.049875,"y":156.209875,"command":"L","relative":true},{"x":175.806578125,"y":142.889484375,"command":"L","relative":true},{"x":200,"y":138.005,"command":"L","relative":true},{"x":224.19342187499998,"y":142.889484375,"command":"L","relative":true},{"x":243.95012499999999,"y":156.209875,"command":"L","relative":true},{"x":257.27051562500003,"y":175.966578125,"command":"L","relative":true},{"x":262.155,"y":200.16,"command":"L","relative":true},{"x":257.270515625,"y":224.353421875,"command":"L","relative":true},{"x":243.95012499999999,"y":244.11012499999998,"command":"L","relative":true},{"x":224.19342187499998,"y":257.430515625,"command":"L","relative":true},{"x":200,"y":262.315,"command":"Z","relative":true}],"rotation":0,"scale":1}],"translation":{"x":0,"y":0},"rotation":0,"scale":1};
+        var answer = {"children":[{"vertices":[{"x":0,"y":62.155,"command":"M","relative":true},{"x":0,"y":-121.338,"command":"M","relative":true},{"x":-47.230171875,"y":-111.802640625,"command":"L","relative":true},{"x":-85.798875,"y":-85.798875,"command":"L","relative":true},{"x":-111.802640625,"y":-47.230171874999996,"command":"L","relative":true},{"x":-121.338,"y":0,"command":"L","relative":true},{"x":-111.802640625,"y":47.230171875,"command":"L","relative":true},{"x":-85.798875,"y":85.798875,"command":"L","relative":true},{"x":-47.230171874999996,"y":111.802640625,"command":"L","relative":true},{"x":0,"y":121.338,"command":"L","relative":true},{"x":47.23017187500001,"y":111.802640625,"command":"L","relative":true},{"x":85.798875,"y":85.798875,"command":"L","relative":true},{"x":111.80264062499998,"y":47.230171874999996,"command":"L","relative":true},{"x":121.33799999999997,"y":0,"command":"L","relative":true},{"x":111.80264062499998,"y":-47.230171875,"command":"L","relative":true},{"x":85.79887499999998,"y":-85.798875,"command":"L","relative":true},{"x":47.23017187499998,"y":-111.802640625,"command":"L","relative":true},{"x":0,"y":-121.338,"command":"L","relative":true},{"x":0,"y":-121.338,"command":"L","relative":true},{"x":0,"y":62.155,"command":"M","relative":true},{"x":-24.193421875,"y":57.270515625,"command":"L","relative":true},{"x":-43.950125,"y":43.950125,"command":"L","relative":true},{"x":-57.270515625,"y":24.193421875,"command":"L","relative":true},{"x":-62.155,"y":0,"command":"L","relative":true},{"x":-57.270515625,"y":-24.193421875,"command":"L","relative":true},{"x":-43.950125,"y":-43.950125,"command":"L","relative":true},{"x":-24.193421875,"y":-57.270515625,"command":"L","relative":true},{"x":0,"y":-62.155,"command":"L","relative":true},{"x":24.193421874999995,"y":-57.270515625,"command":"L","relative":true},{"x":43.950124999999986,"y":-43.950125,"command":"L","relative":true},{"x":57.27051562499997,"y":-24.193421875,"command":"L","relative":true},{"x":62.15499999999997,"y":0,"command":"L","relative":true},{"x":57.27051562499997,"y":24.193421875,"command":"L","relative":true},{"x":43.950124999999986,"y":43.950125,"command":"L","relative":true},{"x":24.193421874999995,"y":57.270515625,"command":"L","relative":true},{"x":0,"y":62.155,"command":"Z","relative":true}],"rotation":0,"scale":1}],"translation":{"x":0,"y":0},"rotation":0,"scale":1,"opacity":1,"mask":null};
         var svg = QUnit.Utils.textToDOM(resp)[0];
         var shape = two.interpret(svg).subdivide(3);
 
@@ -350,10 +361,10 @@
 
         two.update();
 
-        ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.subdivide subdivides holes properly.');
-        start();
+        assert.ok(QUnit.Utils.shapeEquals(answer, shape), 'Two.subdivide subdivides holes properly.');
+        assert.done();
 
-        QUnit.Utils.addElemToTest(o, [two.renderer.domElement, svg]);
+        QUnit.Utils.addElemToTest(assert.test, [two.renderer.domElement, svg]);
 
       });
 

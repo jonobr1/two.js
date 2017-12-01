@@ -1,4 +1,6 @@
-(function(Two, _, Backbone, requestAnimationFrame) {
+(function(Two) {
+
+  var _ = Two.Utils;
 
   var RadialGradient = Two.RadialGradient = function(cx, cy, r, stops, fx, fy) {
 
@@ -56,7 +58,9 @@
 
   _.extend(RadialGradient.prototype, Two.Gradient.prototype, {
 
-    _flagEndPoints: false,
+    _flagRadius: false,
+    _flagCenter: false,
+    _flagFocal: false,
 
     clone: function(parent) {
 
@@ -73,7 +77,9 @@
         clone[k] = this[k];
       }, this);
 
-      parent.add(clone);
+      if (parent) {
+        parent.add(clone);
+      }
 
       return clone;
 
@@ -94,6 +100,17 @@
 
     },
 
+    _update: function() {
+
+      if (this._flagRadius || this._flatCenter || this._flagFocal
+        || this._flagSpread || this._flagStops) {
+        this.trigger(Two.Events.change);
+      }
+
+      return this;
+
+    },
+
     flagReset: function() {
 
       this._flagRadius = this._flagCenter = this._flagFocal = false;
@@ -108,9 +125,4 @@
 
   RadialGradient.MakeObservable(RadialGradient.prototype);
 
-})(
-  this.Two,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : this._,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : this.Backbone,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : this.requestAnimationFrame
-);
+})((typeof global !== 'undefined' ? global : this).Two);

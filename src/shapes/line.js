@@ -1,6 +1,7 @@
-(function(Two, _, Backbone, requestAnimationFrame) {
+(function(Two) {
 
   var Path = Two.Path;
+  var _ = Two.Utils;
 
   var Line = Two.Line = function(x1, y1, x2, y2) {
 
@@ -23,9 +24,4 @@
 
   Path.MakeObservable(Line.prototype);
 
-})(
-  this.Two,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : this._,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : this.Backbone,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : this.requestAnimationFrame
-);
+})((typeof global !== 'undefined' ? global : this).Two);

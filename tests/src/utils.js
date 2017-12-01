@@ -12,13 +12,33 @@
 
   var Utils = root.Utils = QU.Utils = {
 
+    digits: function(v, d) {
+
+      var r = '';
+      var s = v + '';
+      var diff = Math.max(d - s.length, 0);
+      var i = 0;
+
+      while (i < diff) {
+        r += '0';
+        i++;
+      }
+
+      return r + v;
+
+    },
+
+    getSelector: function(test) {
+      return '#qunit-test-output-' + test.testId + ' ol';
+    },
+
     /**
      * Add a DOM Element to your current unit test.
      */
     addElemToTest: function(test, elem) {
 
-      // Skip for headless
-      if (window.URL) return;
+      // // Skip for headless
+      // if (window.URL) return;
 
       var domElement = document.createElement('li');
 
@@ -31,7 +51,8 @@
       }
 
       _.delay(function() {
-        document.querySelector('#' + test.id + ' ol').appendChild(domElement);
+        var selector = Utils.getSelector(test);
+        document.querySelector(selector).appendChild(domElement);
       }, 100);
 
     },
@@ -45,10 +66,26 @@
 
       if (_.isArray(two)) {
         elem = _.map(two, function(t) {
-          return t.renderer.domElement;
+          var el = t.renderer.domElement;
+          switch (el.tagName.toLowerCase()) {
+            case 'svg':
+              break;
+            default:
+              el.style.width = el.style.height = 200 + 'px';
+          }
+          el.style.border = '1px solid #ccc';
+          return el;
         });
       } else {
         elem = two.renderer.domElement;
+        switch (elem.tagName.toLowerCase()) {
+          case 'svg':
+            break;
+          default:
+            elem.style.width
+              = elem.style.height = 200 + 'px';
+        }
+        elem.style.border = '1px solid #ccc';
       }
 
       Utils.addElemToTest(test, elem);
@@ -136,7 +173,7 @@
      */
     compare: function(path, renderer, message, callback) {
 
-      var _this = this;
+      var assert = this;
 
       QUnit.Utils.getImageBlob(path, function(reference) {
 
@@ -145,25 +182,35 @@
 
           var pct = parseFloat(data.misMatchPercentage);
 
-          ok(pct <= 1, message);
-          start();
+          // Can differ a bit due to antialiasing etc.
+          assert.ok(pct <= 2, message);
+          if (assert.done) {
+            assert.done();
+          }
 
           var img = document.createElement('img');
           img.src = path;
           img.title = 'Reference Image';
-          img.width = img.height = 400;
+          img.width = img.height = 200;
           img.style.border = '1px solid #ccc';
 
           var domElement = document.createElement('li');
           renderer.domElement.title = 'Computed Image';
           renderer.domElement.style.border = '1px solid #ccc';
+          renderer.domElement.style.width = renderer.domElement.style.height = 200 + 'px';
+          renderer.domElement.style.marginLeft = 10 + 'px';
 
           domElement.appendChild(img);
           domElement.appendChild(renderer.domElement);
 
           _.delay(function() {
-            document.querySelector('#' + _this.id + ' ol').appendChild(domElement);
+            var selector = Utils.getSelector(assert.test);
+            document.querySelector(selector).appendChild(domElement);
           }, 100);
+
+          if (_.isFunction(callback)) {
+            callback();
+          }
 
         });
 

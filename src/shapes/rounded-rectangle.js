@@ -1,107 +1,156 @@
-(function(Two, _, Backbone, requestAnimationFrame) {
+(function(Two) {
 
   var Path = Two.Path;
+  var _ = Two.Utils;
 
   var RoundedRectangle = Two.RoundedRectangle = function(ox, oy, width, height, radius) {
-
-    var w2 = width / 2;
-    var h2 = height / 2;
-    var x, y;
 
     if (!_.isNumber(radius)) {
       radius = Math.floor(Math.min(width, height) / 12);
     }
 
-    var points = [
-      new Two.Anchor(- w2 + radius, - h2),
-      new Two.Anchor(w2 - radius, - h2)
-    ];
+    var amount = 10;
 
-    x = w2;
-    y = - h2;
-    points = roundCorner(points, x, y, radius, 1);
+    var points = _.map(_.range(amount), function(i) {
+      return new Two.Anchor(0, 0, 0, 0, 0, 0,
+        i === 0 ? Two.Commands.move : Two.Commands.curve);
+    });
 
-    points.push(new Two.Anchor(w2, h2 - radius));
+    points[points.length - 1].command = Two.Commands.close;
 
-    x = w2;
-    y = h2;
-    points = roundCorner(points, x, y, radius, 4);
+    Path.call(this, points, false, false, true);
 
-    points.push(new Two.Anchor(- w2 + radius, h2));
+    this.width = width;
+    this.height = height;
+    this.radius = radius;
 
-    x = - w2;
-    y = h2;
-    points = roundCorner(points, x, y, radius, 3);
-
-    points.push(new Two.Anchor(- w2, - h2 + radius));
-
-    x = - w2;
-    y = - h2;
-    points = roundCorner(points, x, y, radius, 2);
-
-    points.pop();
-
-    Path.call(this, points, true);
+    this._update();
     this.translation.set(ox, oy);
 
   };
 
-  _.extend(RoundedRectangle.prototype, Path.prototype);
+  _.extend(RoundedRectangle, {
 
-  Path.MakeObservable(RoundedRectangle.prototype);
+    Properties: ['width', 'height', 'radius'],
 
-  function roundCorner(points, x, y, radius, quadrant) {
+    MakeObservable: function(obj) {
 
-    var start = 0, end = 0;
-    var length = Two.Resolution;
+      Path.MakeObservable(obj);
+      _.each(RoundedRectangle.Properties, Two.Utils.defineProperty, obj);
 
-    var a = points[points.length - 1];
-    var b = new Two.Anchor(x, y);
-
-    var xr = x < 0 ? - radius : radius;
-    var yr = y < 0 ? - radius : radius;
-
-    switch (quadrant) {
-      case 1:
-        start = - Math.PI / 2;
-        end = 0;
-        break;
-      case 2:
-        start = - Math.PI;
-        end = - Math.PI / 2;
-        break;
-      case 3:
-        start = - Math.PI * 1.5;
-        end = - Math.PI;
-        break;
-      case 4:
-        start = 0;
-        end = Math.PI / 2;
-        break;
     }
 
-    var curve = _.map(_.range(length), function(i) {
+  });
 
-      var theta = map(length - i, 0, length, start, end);
-      var tx = radius * Math.cos(theta) + x - xr;
-      var ty = radius * Math.sin(theta) + y - yr;
-      var anchor = new Two.Anchor(tx, ty);
+  _.extend(RoundedRectangle.prototype, Path.prototype, {
 
-      return anchor;
+    _width: 0,
+    _height: 0,
+    _radius: 0,
 
-    }).reverse();
+    _flagWidth: false,
+    _flagHeight: false,
+    _flagRadius: false,
 
-    return points.concat(curve);
+    _update: function() {
 
-  }
+      if (this._flagWidth || this._flagHeight || this._flagRadius) {
 
-  function map(v, i1, i2, o1, o2) {
-    return o1 + (o2 - o1) * ((v - i1) / (i2 - i1));
-  }
+        var width = this._width;
+        var height = this._height;
+        var radius = Math.min(Math.max(this._radius, 0),
+          Math.min(width, height));
 
-})(
-  this.Two,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : this._,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : this.Backbone,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : this.requestAnimationFrame
-);
+        var v;
+        var w = width / 2;
+        var h = height / 2;
+
+        v = this.vertices[0];
+        v.x = - (w - radius);
+        v.y = - h;
+
+        // Upper Right Corner
+
+        v = this.vertices[1];
+        v.x = (w - radius);
+        v.y = - h;
+        v.controls.left.clear();
+        v.controls.right.x = radius;
+        v.controls.right.y = 0;
+
+        v = this.vertices[2];
+        v.x = w;
+        v.y = - (h - radius);
+        v.controls.right.clear();
+        v.controls.left.clear();
+
+        // Bottom Right Corner
+
+        v = this.vertices[3];
+        v.x = w;
+        v.y = (h - radius);
+        v.controls.left.clear();
+        v.controls.right.x = 0;
+        v.controls.right.y = radius;
+
+        v = this.vertices[4];
+        v.x = (w - radius);
+        v.y = h;
+        v.controls.right.clear();
+        v.controls.left.clear();
+
+        // Bottom Left Corner
+
+        v = this.vertices[5];
+        v.x = - (w - radius);
+        v.y = h;
+        v.controls.left.clear();
+        v.controls.right.x = - radius;
+        v.controls.right.y = 0;
+
+        v = this.vertices[6];
+        v.x = - w;
+        v.y = (h - radius);
+        v.controls.left.clear();
+        v.controls.right.clear();
+
+        // Upper Left Corner
+
+        v = this.vertices[7];
+        v.x = - w;
+        v.y = - (h - radius);
+        v.controls.left.clear();
+        v.controls.right.x = 0;
+        v.controls.right.y = - radius;
+
+        v = this.vertices[8];
+        v.x = - (w - radius);
+        v.y = - h;
+        v.controls.left.clear();
+        v.controls.right.clear();
+
+        v = this.vertices[9];
+        v.copy(this.vertices[8]);
+
+      }
+
+      Path.prototype._update.call(this);
+
+      return this;
+
+    },
+
+    flagReset: function() {
+
+      this._flagWidth = this._flagHeight = this._flagRadius = false;
+      Path.prototype.flagReset.call(this);
+
+      return this;
+
+    }
+
+  });
+
+  RoundedRectangle.MakeObservable(RoundedRectangle.prototype);
+
+})((typeof global !== 'undefined' ? global : this).Two);

@@ -1,30 +1,75 @@
-(function(Two, _, Backbone, requestAnimationFrame) {
+(function(Two) {
 
   var Path = Two.Path;
+  var _ = Two.Utils;
 
   var Rectangle = Two.Rectangle = function(x, y, width, height) {
 
-    var w2 = width / 2;
-    var h2 = height / 2;
-
     Path.call(this, [
-      new Two.Anchor(-w2, -h2),
-      new Two.Anchor(w2, -h2),
-      new Two.Anchor(w2, h2),
-      new Two.Anchor(-w2, h2)
+      new Two.Anchor(),
+      new Two.Anchor(),
+      new Two.Anchor(),
+      new Two.Anchor()
     ], true);
+
+    this.width = width;
+    this.height = height;
+    this._update();
 
     this.translation.set(x, y);
 
   };
 
-  _.extend(Rectangle.prototype, Path.prototype);
+  _.extend(Rectangle, {
 
-  Path.MakeObservable(Rectangle.prototype);
+    Properties: ['width', 'height'],
 
-})(
-  this.Two,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : this._,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : this.Backbone,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : this.requestAnimationFrame
-);
+    MakeObservable: function(obj) {
+      Path.MakeObservable(obj);
+      _.each(Rectangle.Properties, Two.Utils.defineProperty, obj);
+    }
+
+  });
+
+  _.extend(Rectangle.prototype, Path.prototype, {
+
+    _width: 0,
+    _height: 0,
+
+    _flagWidth: 0,
+    _flagHeight: 0,
+
+    _update: function() {
+
+      if (this._flagWidth || this._flagHeight) {
+
+        var xr = this._width / 2;
+        var yr = this._height / 2;
+
+        this.vertices[0].set(-xr, -yr);
+        this.vertices[1].set(xr, -yr);
+        this.vertices[2].set(xr, yr);
+        this.vertices[3].set(-xr, yr);
+
+      }
+
+      Path.prototype._update.call(this);
+
+      return this;
+
+    },
+
+    flagReset: function() {
+
+      this._flagWidth = this._flagHeight = false;
+      Path.prototype.flagReset.call(this);
+
+      return this;
+
+    }
+
+  });
+
+  Rectangle.MakeObservable(Rectangle.prototype);
+
+})((typeof global !== 'undefined' ? global : this).Two);

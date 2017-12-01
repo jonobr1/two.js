@@ -6,9 +6,12 @@
 
 (function() {
 
-  module('getBoundingClientRect');
+  QUnit.module('getBoundingClientRect');
 
-  test('Two.Path.getBoundingClientRect', 4, function(o) {
+  QUnit.test('Two.Path.getBoundingClientRect', function(assert) {
+
+    assert.expect(4);
+    // assert.done = assert.async(4);
 
     (function() {
 
@@ -27,9 +30,9 @@
 
       two.update();
 
-      equal(_.isEqual(answer, shape.getBoundingClientRect()), true, 'Two.Path.getBoundingClientRect properly calculates rotated shapes.');
+      assert.equal(_.isEqual(answer, shape.getBoundingClientRect()), true, 'Two.Path.getBoundingClientRect properly calculates rotated shapes.');
 
-      QUnit.Utils.addElemToTest(o, [two.renderer.domElement]);
+      QUnit.Utils.addElemToTest(assert.test, [two.renderer.domElement]);
 
     })();
 
@@ -53,9 +56,9 @@
 
       two.update();
 
-      equal(_.isEqual(answer, shape.getBoundingClientRect()), true, 'Two.Path.getBoundingClientRect properly calculates scaled shapes.');
+      assert.equal(_.isEqual(answer, shape.getBoundingClientRect()), true, 'Two.Path.getBoundingClientRect properly calculates scaled shapes.');
 
-      QUnit.Utils.addElemToTest(o, [two.renderer.domElement]);
+      QUnit.Utils.addElemToTest(assert.test, [two.renderer.domElement]);
 
     })();
 
@@ -76,9 +79,9 @@
 
       two.update();
 
-      equal(_.isEqual(answer, shape.getBoundingClientRect()), true, 'Two.Path.getBoundingClientRect properly calculates circles.');
+      assert.equal(_.isEqual(answer, shape.getBoundingClientRect()), true, 'Two.Path.getBoundingClientRect properly calculates circles.');
 
-      QUnit.Utils.addElemToTest(o, [two.renderer.domElement]);
+      QUnit.Utils.addElemToTest(assert.test, [two.renderer.domElement]);
 
     })();
 
@@ -100,15 +103,18 @@
 
       two.update();
 
-      equal(_.isEqual(answer, shape.getBoundingClientRect()), true, 'Two.Path.getBoundingClientRect properly calculates rotated circles (projected).');
+      assert.equal(_.isEqual(answer, shape.getBoundingClientRect()), true, 'Two.Path.getBoundingClientRect properly calculates rotated circles (projected).');
 
-      QUnit.Utils.addElemToTest(o, [two.renderer.domElement]);
+      QUnit.Utils.addElemToTest(assert.test, [two.renderer.domElement]);
 
     })();
 
   });
 
-  test('Two.getComputedMatrix', 1, function(o) {
+  QUnit.test('Two.getComputedMatrix', function(assert) {
+
+    assert.expect(1);
+    // assert.done = assert.async(1);
 
     (function() {
 
@@ -145,9 +151,9 @@
 
       two.update();
 
-      equal(_.isEqual(answer, bBox) && _.isEqual(answer, bBoxClose), true, 'Two.Path.getBoundingClientRect properly calculates nested shapes / groups.');
+      assert.equal(_.isEqual(answer, bBox) && _.isEqual(answer, bBoxClose), true, 'Two.Path.getBoundingClientRect properly calculates nested shapes / groups.');
 
-      QUnit.Utils.addElemToTest(o, [two.renderer.domElement]);
+      QUnit.Utils.addElemToTest(assert.test, [two.renderer.domElement]);
 
     })();
 

@@ -1,4 +1,6 @@
-(function(Two, _, Backbone, requestAnimationFrame) {
+(function(Two) {
+
+  var _ = Two.Utils;
 
   var Vector = Two.Vector = function(x, y) {
 
@@ -13,7 +15,7 @@
 
   });
 
-  _.extend(Vector.prototype, Backbone.Events, {
+  _.extend(Vector.prototype, Two.Utils.Events, {
 
     set: function(x, y) {
       this.x = x;
@@ -130,15 +132,23 @@
 
     isZero: function(eps) {
       eps = (typeof eps === 'undefined') ?  0.0001 : eps;
-      return (this.length() <  eps);
+      return (this.length() < eps);
     },
 
     toString: function() {
-      return this.x + ',' + this.y;
+      return this.x + ', ' + this.y;
     },
 
     toObject: function() {
       return { x: this.x, y: this.y };
+    },
+
+    rotate: function (radians) {
+      var cos = Math.cos(radians);
+      var sin = Math.sin(radians);
+      this.x = this.x * cos - this.y * sin;
+      this.y = this.x * sin + this.y * cos;
+      return this;
     }
 
   });
@@ -263,16 +273,25 @@
     },
 
     toString: function() {
-      return this._x + ',' + this._y;
+      return this._x + ', ' + this._y;
     },
 
     toObject: function() {
       return { x: this._x, y: this._y };
+    },
+
+    rotate: function (radians) {
+      var cos = Math.cos(radians);
+      var sin = Math.sin(radians);
+      this._x = this._x * cos - this._y * sin;
+      this._y = this._x * sin + this._y * cos;
+      return this;
     }
 
   };
 
   var xgs = {
+    enumerable: true,
     get: function() {
       return this._x;
     },
@@ -283,6 +302,7 @@
   };
 
   var ygs = {
+    enumerable: true,
     get: function() {
       return this._y;
     },
@@ -309,15 +329,10 @@
       this._bound = true; // Reserved for event initialization check
     }
 
-    Backbone.Events.bind.apply(this, arguments);
+    Two.Utils.Events.bind.apply(this, arguments);
 
     return this;
 
   };
 
-})(
-  this.Two,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : this._,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : this.Backbone,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : this.requestAnimationFrame
-);
+})((typeof global !== 'undefined' ? global : this).Two);

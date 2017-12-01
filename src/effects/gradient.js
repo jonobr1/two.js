@@ -1,8 +1,11 @@
-(function(Two, _, Backbone, requestAnimationFrame) {
+(function(Two) {
+
+  var _ = Two.Utils;
 
   var Stop = Two.Stop = function(offset, color, opacity) {
 
     this._renderer = {};
+    this._renderer.type = 'stop';
 
     this.offset = _.isNumber(offset) ? offset
       : Stop.Index <= 0 ? 0 : 1;
@@ -30,28 +33,31 @@
 
       _.each(Stop.Properties, function(property) {
 
+        var object = this;
         var secret = '_' + property;
         var flag = '_flag' + property.charAt(0).toUpperCase() + property.slice(1);
 
         Object.defineProperty(object, property, {
+          enumerable: true,
           get: function() {
             return this[secret];
           },
           set: function(v) {
             this[secret] = v;
             this[flag] = true;
-            this.trigger(Two.Events.change);  // Unique to Gradient.Stop
+            if (this.parent) {
+              this.parent._flagStops = true;
+            }
           }
         });
 
-
-      });
+      }, object);
 
     }
 
   });
 
-  _.extend(Stop.prototype, Backbone.Events, {
+  _.extend(Stop.prototype, Two.Utils.Events, {
 
     clone: function() {
 
@@ -91,9 +97,15 @@
 
   var Gradient = Two.Gradient = function(stops) {
 
-    Two.Shape.call(this);
-
+    this._renderer = {};
     this._renderer.type = 'gradient';
+
+    this.id = Two.Identifier + Two.uniqueId();
+    this.classList = [];
+
+    this._renderer.flagStops = _.bind(Gradient.FlagStops, this);
+    this._renderer.bindStops = _.bind(Gradient.BindStops, this);
+    this._renderer.unbindStops = _.bind(Gradient.UnbindStops, this);
 
     this.spread = 'pad';
 
@@ -111,11 +123,11 @@
 
     MakeObservable: function(object) {
 
-      Two.Shape.MakeObservable(object);
-
       _.each(Gradient.Properties, Two.Utils.defineProperty, object);
 
       Object.defineProperty(object, 'stops', {
+
+        enumerable: true,
 
         get: function() {
           return this._stops;
@@ -123,42 +135,24 @@
 
         set: function(stops) {
 
-          var updateStops = _.bind(Gradient.FlagStops, this);
-
-          var bindStops = _.bind(function(items) {
-
-            // This function is called a lot
-            // when importing a large SVG
-            var i = items.length;
-            while(i--) {
-              items[i].bind(Two.Events.change, updateStops);
-            }
-
-            updateStops();
-
-          }, this);
-
-          var unbindStops = _.bind(function(items) {
-
-            _.each(items, function(v) {
-              v.unbind(Two.Events.change, updateStops);
-            }, this);
-
-            updateStops();
-
-          }, this);
+          var updateStops = this._renderer.flagStops;
+          var bindStops = this._renderer.bindStops;
+          var unbindStops = this._renderer.unbindStops;
 
           // Remove previous listeners
           if (this._stops) {
-            this._stops.unbind();
+            this._stops
+              .unbind(Two.Events.insert, bindStops)
+              .unbind(Two.Events.remove, unbindStops);
           }
 
           // Create new Collection with copy of Stops
           this._stops = new Two.Utils.Collection((stops || []).slice(0));
 
           // Listen for Collection changes and bind / unbind
-          this._stops.bind(Two.Events.insert, bindStops);
-          this._stops.bind(Two.Events.remove, unbindStops);
+          this._stops
+            .bind(Two.Events.insert, bindStops)
+            .bind(Two.Events.remove, unbindStops);
 
           // Bind Initial Stops
           bindStops(this._stops);
@@ -171,11 +165,40 @@
 
     FlagStops: function() {
       this._flagStops = true;
+    },
+
+    BindStops: function(items) {
+
+      // This function is called a lot
+      // when importing a large SVG
+      var i = items.length;
+      while(i--) {
+        items[i].bind(Two.Events.change, this._renderer.flagStops);
+        items[i].parent = this;
+      }
+
+      this._renderer.flagStops();
+
+    },
+
+    UnbindStops: function(items) {
+
+      var i = items.length;
+      while(i--) {
+        items[i].unbind(Two.Events.change, this._renderer.flagStops);
+        delete items[i].parent;
+      }
+
+      this._renderer.flagStops();
+
     }
 
   });
 
-  _.extend(Gradient.prototype, Two.Shape.prototype, {
+  _.extend(Gradient.prototype, Two.Utils.Events, {
+
+    _flagStops: false,
+    _flagSpread: false,
 
     clone: function(parent) {
 
@@ -191,11 +214,9 @@
         clone[k] = this[k];
       }, this);
 
-      clone.translation.copy(this.translation);
-      clone.rotation = this.rotation;
-      clone.scale = this.scale;
-
-      parent.add(clone);
+      if (parent) {
+        parent.add(clone);
+      }
 
       return clone;
 
@@ -217,11 +238,19 @@
 
     },
 
+    _update: function() {
+
+      if (this._flagSpread || this._flagStops) {
+        this.trigger(Two.Events.change);
+      }
+
+      return this;
+
+    },
+
     flagReset: function() {
 
       this._flagSpread = this._flagStops = false;
-
-      Two.Shape.prototype.flagReset.call(this);
 
       return this;
 
@@ -231,9 +260,4 @@
 
   Gradient.MakeObservable(Gradient.prototype);
 
-})(
-  this.Two,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('underscore') : this._,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('backbone') : this.Backbone,
-  typeof require === 'function' && !(typeof define === 'function' && define.amd) ? require('requestAnimationFrame') : this.requestAnimationFrame
-);
+})((typeof global !== 'undefined' ? global : this).Two);
