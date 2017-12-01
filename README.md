@@ -109,6 +109,7 @@ process.exit();
 <!-- For the latest nightly changes checkout the `dev` branch [here](../../tree/dev). -->
 
 #### Nightly
++ Fixed closed `Two.Path.getPointAt` method to clamp properly
 + Added `Two.Texture.repeat` for describing pattern invocations
 + Added `Two.Texture`, `Two.Sprite`, and `Two.ImageSequence`
 + Removed `Two.Shape` inheritance for `Two.Gradient`s
