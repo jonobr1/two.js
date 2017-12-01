@@ -6791,6 +6791,7 @@ this.Two = (function(previousTwo) {
      * coordinates to that percentage on this Two.Path's curve.
      */
     getPointAt: function(t, obj) {
+      var ia, ib;
       var x, x1, x2, x3, x4, y, y1, y2, y3, y4, left, right;
       var target = this.length * Math.min(Math.max(t, 0), 1);
       var length = this.vertices.length;
@@ -6801,17 +6802,36 @@ this.Two = (function(previousTwo) {
 
       for (var i = 0, l = this._lengths.length, sum = 0; i < l; i++) {
 
-        if (sum + this._lengths[i] > target) {
-          a = this.vertices[this.closed ? Two.Utils.mod(i, length) : i];
-          b = this.vertices[Math.min(Math.max(i - 1, 0), last)];
+        if (sum + this._lengths[i] >= target) {
+
+          if (this._closed) {
+            ia = Two.Utils.mod(i, length);
+            ib = Two.Utils.mod(i - 1, length);
+            if (i === 0) {
+              ia = ib;
+              ib = i;
+            }
+          } else {
+            ia = i;
+            ib = Math.min(Math.max(i - 1, 0), last);
+          }
+
+          a = this.vertices[ia];
+          b = this.vertices[ib];
           target -= sum;
-          t = target / this._lengths[i];
+          if (this._lengths[i] !== 0) {
+            t = target / this._lengths[i];
+          }
+
           break;
+
         }
 
         sum += this._lengths[i];
 
       }
+
+      // console.log(sum, a.command, b.command);
 
       if (_.isNull(a) || _.isNull(b)) {
         return null;
@@ -6950,7 +6970,8 @@ this.Two = (function(previousTwo) {
       //TODO: DRYness (function above)
       this._update();
 
-      var last = this.vertices.length - 1;
+      var length = this.vertices.length;
+      var last = length - 1;
       var b = this.vertices[last];
       var closed = this._closed || this.vertices[last]._command === Two.Commands.close;
       var sum = 0;
@@ -6972,7 +6993,7 @@ this.Two = (function(previousTwo) {
 
         if (i >= last && closed) {
 
-          b = a;
+          b = this.vertices[(i + 1) % length];
 
           this._lengths[i + 1] = getCurveLength(a, b, limit);
           sum += this._lengths[i + 1];
