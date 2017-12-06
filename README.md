@@ -108,7 +108,9 @@ process.exit();
 ## Change Log
 <!-- For the latest nightly changes checkout the `dev` branch [here](../../tree/dev). -->
 
-#### Nightly
+<!-- #### Nightly -->
+
+#### December 1, 2017 [v0.7.0-alpha.1](https://github.com/jonobr1/two.js/releases/tag/v0.7.0-alpha.1)
 + Fixed closed `Two.Path.getPointAt` method to clamp properly
 + Added `Two.Texture.repeat` for describing pattern invocations
 + Added `Two.Texture`, `Two.Sprite`, and `Two.ImageSequence`
