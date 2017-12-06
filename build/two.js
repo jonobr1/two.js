@@ -810,6 +810,7 @@ this.Two = (function(previousTwo) {
               elem.id = value;
               break;
             case 'class':
+            case 'className':
               elem.classList = value.split(' ');
               break;
           }
@@ -3629,6 +3630,10 @@ this.Two = (function(previousTwo) {
           this._renderer.elem.setAttribute('opacity', this._opacity);
         }
 
+        if (this._flagClassName) {
+          this._renderer.elem.setAttribute('class', this._className);
+        }
+
         if (this._flagAdditions) {
           this.additions.forEach(svg.group.appendChild, context);
         }
@@ -3732,6 +3737,10 @@ this.Two = (function(previousTwo) {
         if (this._flagOpacity) {
           changed['stroke-opacity'] = this._opacity;
           changed['fill-opacity'] = this._opacity;
+        }
+
+        if (this._flagClassName) {
+          changed['class'] = this._className;
         }
 
         if (this._flagVisible) {
@@ -3859,6 +3868,9 @@ this.Two = (function(previousTwo) {
         }
         if (this._flagOpacity) {
           changed.opacity = this._opacity;
+        }
+        if (this._flagClassName) {
+          changed['class'] = this._className;
         }
         if (this._flagVisible) {
           changed.visibility = this._visible ? 'visible' : 'hidden';
@@ -6320,6 +6332,7 @@ this.Two = (function(previousTwo) {
     this.stroke = '#000';
     this.linewidth = 1.0;
     this.opacity = 1.0;
+    this.className = '';
     this.visible = true;
 
     this.cap = 'butt';      // Default of Adobe Illustrator
@@ -6343,6 +6356,7 @@ this.Two = (function(previousTwo) {
       'stroke',
       'linewidth',
       'opacity',
+      'className',
       'visible',
       'cap',
       'join',
@@ -6396,9 +6410,9 @@ this.Two = (function(previousTwo) {
 
       Two.Shape.MakeObservable(object);
 
-      // Only the 6 defined properties are flagged like this. The subsequent
+      // Only the 7 defined properties are flagged like this. The subsequent
       // properties behave differently and need to be hand written.
-      _.each(Path.Properties.slice(2, 8), Two.Utils.defineProperty, object);
+      _.each(Path.Properties.slice(2, 9), Two.Utils.defineProperty, object);
 
       Object.defineProperty(object, 'fill', {
         enumerable: true,
@@ -6588,6 +6602,7 @@ this.Two = (function(previousTwo) {
     _flagLinewidth: true,
     _flagOpacity: true,
     _flagVisible: true,
+    _flagClassName: true,
 
     _flagCap: true,
     _flagJoin: true,
@@ -6603,6 +6618,7 @@ this.Two = (function(previousTwo) {
     _stroke: '#000',
     _linewidth: 1.0,
     _opacity: 1.0,
+    _className: '',
     _visible: true,
 
     _cap: 'round',
@@ -7046,7 +7062,7 @@ this.Two = (function(previousTwo) {
       this._flagVertices =  this._flagFill =  this._flagStroke =
          this._flagLinewidth = this._flagOpacity = this._flagVisible =
          this._flagCap = this._flagJoin = this._flagMiter =
-         this._flagClip = false;
+         this._flagClassName = this._flagClip = false;
 
       Two.Shape.prototype.flagReset.call(this);
 
@@ -7995,7 +8011,7 @@ this.Two = (function(previousTwo) {
   _.extend(Two.Text, {
 
     Properties: [
-      'value', 'family', 'size', 'leading', 'alignment', 'linewidth', 'style',
+      'value', 'family', 'size', 'leading', 'alignment', 'linewidth', 'style', 'className',
       'weight', 'decoration', 'baseline', 'opacity', 'visible', 'fill', 'stroke'
     ],
 
@@ -8101,6 +8117,7 @@ this.Two = (function(previousTwo) {
     _flagStroke: true,
     _flagLinewidth: true,
     _flagOpacity: true,
+    _flagClassName: true,
     _flagVisible: true,
 
     _flagClip: false,
@@ -8121,6 +8138,7 @@ this.Two = (function(previousTwo) {
     _stroke: 'transparent',
     _linewidth: 1,
     _opacity: 1,
+    _className: '',
     _visible: true,
 
     _clip: false,
@@ -8217,9 +8235,9 @@ this.Two = (function(previousTwo) {
 
       this._flagValue = this._flagFamily = this._flagSize =
         this._flagLeading = this._flagAlignment = this._flagFill =
-        this._flagStroke = this._flagLinewidth = this._flagOpaicty =
+        this._flagStroke = this._flagLinewidth = this._flagOpacity =
         this._flagVisible = this._flagClip = this._flagDecoration =
-        this._flagBaseline = false;
+        this._flagClassName = this._flagBaseline = false;
 
       Two.Shape.prototype.flagReset.call(this);
 
@@ -9748,6 +9766,28 @@ this.Two = (function(previousTwo) {
 
       }
 
+      var ci = _.indexOf(properties, 'className');
+      if (ci >= 0) {
+
+        properties.splice(ci, 1);
+
+        Object.defineProperty(object, 'className', {
+
+          enumerable: true,
+
+          get: function() {
+            return this._className;
+          },
+
+          set: function(v) {
+            // Only set flag if there is an actual difference
+            this._flagClassName  = (this._className != v);
+            this._className = v;
+          }
+
+        });
+      }
+
       Two.Shape.MakeObservable(object);
       Group.MakeGetterSetters(object, properties);
 
@@ -9844,6 +9884,7 @@ this.Two = (function(previousTwo) {
     _flagSubtractions: false,
     _flagOrder: false,
     _flagOpacity: true,
+    _flagClassName: false,
 
     _flagMask: false,
 
@@ -9853,6 +9894,7 @@ this.Two = (function(previousTwo) {
     _stroke: '#000',
     _linewidth: 1.0,
     _opacity: 1.0,
+    _className: '',
     _visible: true,
 
     _cap: 'round',
@@ -9892,6 +9934,7 @@ this.Two = (function(previousTwo) {
       group.translation.copy(this.translation);
       group.rotation = this.rotation;
       group.scale = this.scale;
+      group.className = this.className;
 
       if (parent) {
         parent.add(group);
@@ -9914,6 +9957,7 @@ this.Two = (function(previousTwo) {
         rotation: this.rotation,
         scale: this.scale,
         opacity: this.opacity,
+        className: this.className,
         mask: (this.mask ? this.mask.toObject() : null)
       };
 
@@ -10172,7 +10216,7 @@ this.Two = (function(previousTwo) {
         this._flagSubtractions = false;
       }
 
-      this._flagOrder = this._flagMask = this._flagOpacity = false;
+      this._flagOrder = this._flagMask = this._flagOpacity = this._flagClassName = false;
 
       Two.Shape.prototype.flagReset.call(this);
 

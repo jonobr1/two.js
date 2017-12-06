@@ -41,7 +41,7 @@
   _.extend(Two.Text, {
 
     Properties: [
-      'value', 'family', 'size', 'leading', 'alignment', 'linewidth', 'style',
+      'value', 'family', 'size', 'leading', 'alignment', 'linewidth', 'style', 'className',
       'weight', 'decoration', 'baseline', 'opacity', 'visible', 'fill', 'stroke'
     ],
 
@@ -147,6 +147,7 @@
     _flagStroke: true,
     _flagLinewidth: true,
     _flagOpacity: true,
+    _flagClassName: true,
     _flagVisible: true,
 
     _flagClip: false,
@@ -167,6 +168,7 @@
     _stroke: 'transparent',
     _linewidth: 1,
     _opacity: 1,
+    _className: '',
     _visible: true,
 
     _clip: false,
@@ -263,9 +265,9 @@
 
       this._flagValue = this._flagFamily = this._flagSize =
         this._flagLeading = this._flagAlignment = this._flagFill =
-        this._flagStroke = this._flagLinewidth = this._flagOpaicty =
+        this._flagStroke = this._flagLinewidth = this._flagOpacity =
         this._flagVisible = this._flagClip = this._flagDecoration =
-        this._flagBaseline = false;
+        this._flagClassName = this._flagBaseline = false;
 
       Two.Shape.prototype.flagReset.call(this);
 
