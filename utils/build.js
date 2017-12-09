@@ -4,7 +4,9 @@ var path = require('path');
 var compressor = require('node-minify');
 
 var files = [
+  path.resolve(__dirname, './start-comment.js'),
   path.resolve(__dirname, '../LICENSE'),
+  path.resolve(__dirname, './end-comment.js'),
   path.resolve(__dirname, '../src/two.js'),
   path.resolve(__dirname, '../src/registry.js'),
   path.resolve(__dirname, '../src/vector.js'),
