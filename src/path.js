@@ -38,6 +38,7 @@
     this.stroke = '#000';
     this.linewidth = 1.0;
     this.opacity = 1.0;
+    this.className = '';
     this.visible = true;
 
     this.cap = 'butt';      // Default of Adobe Illustrator
@@ -61,6 +62,7 @@
       'stroke',
       'linewidth',
       'opacity',
+      'className',
       'visible',
       'cap',
       'join',
@@ -114,9 +116,9 @@
 
       Two.Shape.MakeObservable(object);
 
-      // Only the 6 defined properties are flagged like this. The subsequent
+      // Only the 7 defined properties are flagged like this. The subsequent
       // properties behave differently and need to be hand written.
-      _.each(Path.Properties.slice(2, 8), Two.Utils.defineProperty, object);
+      _.each(Path.Properties.slice(2, 9), Two.Utils.defineProperty, object);
 
       Object.defineProperty(object, 'fill', {
         enumerable: true,
@@ -306,6 +308,7 @@
     _flagLinewidth: true,
     _flagOpacity: true,
     _flagVisible: true,
+    _flagClassName: true,
 
     _flagCap: true,
     _flagJoin: true,
@@ -321,6 +324,7 @@
     _stroke: '#000',
     _linewidth: 1.0,
     _opacity: 1.0,
+    _className: '',
     _visible: true,
 
     _cap: 'round',
@@ -764,7 +768,7 @@
       this._flagVertices =  this._flagFill =  this._flagStroke =
          this._flagLinewidth = this._flagOpacity = this._flagVisible =
          this._flagCap = this._flagJoin = this._flagMiter =
-         this._flagClip = false;
+         this._flagClassName = this._flagClip = false;
 
       Two.Shape.prototype.flagReset.call(this);
 

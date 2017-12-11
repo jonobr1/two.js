@@ -108,6 +108,28 @@
 
       }
 
+      var ci = _.indexOf(properties, 'className');
+      if (ci >= 0) {
+
+        properties.splice(ci, 1);
+
+        Object.defineProperty(object, 'className', {
+
+          enumerable: true,
+
+          get: function() {
+            return this._className;
+          },
+
+          set: function(v) {
+            // Only set flag if there is an actual difference
+            this._flagClassName  = (this._className != v);
+            this._className = v;
+          }
+
+        });
+      }
+
       Two.Shape.MakeObservable(object);
       Group.MakeGetterSetters(object, properties);
 
@@ -204,6 +226,7 @@
     _flagSubtractions: false,
     _flagOrder: false,
     _flagOpacity: true,
+    _flagClassName: false,
 
     _flagMask: false,
 
@@ -213,6 +236,7 @@
     _stroke: '#000',
     _linewidth: 1.0,
     _opacity: 1.0,
+    _className: '',
     _visible: true,
 
     _cap: 'round',
@@ -252,6 +276,7 @@
       group.translation.copy(this.translation);
       group.rotation = this.rotation;
       group.scale = this.scale;
+      group.className = this.className;
 
       if (parent) {
         parent.add(group);
@@ -274,6 +299,7 @@
         rotation: this.rotation,
         scale: this.scale,
         opacity: this.opacity,
+        className: this.className,
         mask: (this.mask ? this.mask.toObject() : null)
       };
 
@@ -532,7 +558,7 @@
         this._flagSubtractions = false;
       }
 
-      this._flagOrder = this._flagMask = this._flagOpacity = false;
+      this._flagOrder = this._flagMask = this._flagOpacity = this._flagClassName = false;
 
       Two.Shape.prototype.flagReset.call(this);
 

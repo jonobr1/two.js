@@ -288,6 +288,10 @@
           this._renderer.elem.setAttribute('opacity', this._opacity);
         }
 
+        if (this._flagClassName) {
+          this._renderer.elem.setAttribute('class', this._className);
+        }
+
         if (this._flagAdditions) {
           this.additions.forEach(svg.group.appendChild, context);
         }
@@ -391,6 +395,10 @@
         if (this._flagOpacity) {
           changed['stroke-opacity'] = this._opacity;
           changed['fill-opacity'] = this._opacity;
+        }
+
+        if (this._flagClassName) {
+          changed['class'] = this._className;
         }
 
         if (this._flagVisible) {
@@ -518,6 +526,9 @@
         }
         if (this._flagOpacity) {
           changed.opacity = this._opacity;
+        }
+        if (this._flagClassName) {
+          changed['class'] = this._className;
         }
         if (this._flagVisible) {
           changed.visibility = this._visible ? 'visible' : 'hidden';

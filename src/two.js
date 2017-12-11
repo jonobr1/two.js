@@ -783,6 +783,7 @@ this.Two = (function(previousTwo) {
               elem.id = value;
               break;
             case 'class':
+            case 'className':
               elem.classList = value.split(' ');
               break;
           }
