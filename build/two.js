@@ -395,6 +395,7 @@ this.Two = (function(previousTwo) {
 
     }
 
+    this.renderer.bind(Two.Events.resize, _.bind(updateDimensions, this));
     this.scene = this.renderer.scene;
 
     Two.Instances.push(this);
@@ -2373,8 +2374,12 @@ this.Two = (function(previousTwo) {
     var height = this.height = wr.height;
 
     this.renderer.setSize(width, height, this.ratio);
-    this.trigger(Two.Events.resize, width, height);
 
+  }
+
+  function updateDimensions() {
+    this.width = width;
+    this.height = height;
   }
 
   // Request Animation Frame
@@ -4226,7 +4231,7 @@ this.Two = (function(previousTwo) {
         height: height
       });
 
-      return this;
+      return this.trigger(Two.Events.resize, width, height);
 
     },
 
@@ -4863,7 +4868,7 @@ this.Two = (function(previousTwo) {
         });
       }
 
-      return this;
+      return this.trigger(Two.Events.resize, width, height, ratio);
 
     },
 
@@ -6087,7 +6092,7 @@ this.Two = (function(previousTwo) {
         this.program, 'u_resolution');
       this.ctx.uniform2f(resolutionLocation, width, height);
 
-      return this;
+      return this.trigger(Two.Events.resize, width, height, ratio);
 
     },
 
