@@ -106,7 +106,7 @@ process.exit();
 ```
 
 ## Change Log
-<!-- For the latest nightly changes checkout the `dev` branch [here](../../tree/dev). -->
+For the latest nightly changes checkout the `dev` branch [here](../../tree/dev).
 
 <!-- #### Nightly -->
 
