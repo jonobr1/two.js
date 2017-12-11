@@ -108,7 +108,8 @@ process.exit();
 ## Change Log
 <!-- For the latest nightly changes checkout the `dev` branch [here](../../tree/dev). -->
 
-<!-- #### Nightly -->
+#### Nightly
++ `Two.Events.resize` is now bound to a renderer's `setSize` function giving a more generic solution to change scenegraph items based on dimensions changing.
 
 #### December 1, 2017 [v0.7.0-alpha.1](https://github.com/jonobr1/two.js/releases/tag/v0.7.0-alpha.1)
 + Fixed closed `Two.Path.getPointAt` method to clamp properly
