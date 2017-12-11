@@ -369,6 +369,7 @@ this.Two = (function(previousTwo) {
 
     }
 
+    this.renderer.bind(Two.Events.resize, _.bind(updateDimensions, this));
     this.scene = this.renderer.scene;
 
     Two.Instances.push(this);
@@ -2347,8 +2348,12 @@ this.Two = (function(previousTwo) {
     var height = this.height = wr.height;
 
     this.renderer.setSize(width, height, this.ratio);
-    this.trigger(Two.Events.resize, width, height);
 
+  }
+
+  function updateDimensions() {
+    this.width = width;
+    this.height = height;
   }
 
   // Request Animation Frame

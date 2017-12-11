@@ -1187,7 +1187,7 @@
         this.program, 'u_resolution');
       this.ctx.uniform2f(resolutionLocation, width, height);
 
-      return this;
+      return this.trigger(Two.Events.resize, width, height, ratio);
 
     },
 

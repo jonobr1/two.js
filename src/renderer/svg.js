@@ -887,7 +887,7 @@
         height: height
       });
 
-      return this;
+      return this.trigger(Two.Events.resize, width, height);
 
     },
 
