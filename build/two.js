@@ -2380,6 +2380,7 @@ this.Two = (function(previousTwo) {
   function updateDimensions() {
     this.width = width;
     this.height = height;
+    this.trigger(Two.Events.resize, width, height);
   }
 
   // Request Animation Frame
