@@ -27,11 +27,6 @@
       "img": "images/projects/collisions.gif"
     },
     {
-      "title": "Epigram",
-      "href": "http://gramatik.net",
-      "img": "images/projects/epigram.gif"
-    },
-    {
       "title": "Chris Delbuck",
       "href": "http://chrisdelbuck.com",
       "img": "images/projects/chris-delbuck.gif"
@@ -73,7 +68,7 @@
     },
     {
       "title": "Gray Area Theater",
-      "href": "http://grayarea.org/theater",
+      "href": "https://grayarea.org/theater/overview/",
       "img": "images/projects/grayarea.gif"
     },
     {
@@ -113,7 +108,7 @@
     },
     {
       "title": "Decibel Festival",
-      "href": "http://stimulant.io/portfolio-item/decibel-festival-digital-schedule/",
+      "href": "https://vimeo.com/77623506",
       "img": "images/projects/decibel.gif"
     },
     {
@@ -130,11 +125,6 @@
       "title": "Choc",
       "href": "http://www.fullstack.io/choc/",
       "img": "images/projects/choc.gif"
-    },
-    {
-      "title": "Jumping Jack Sack",
-      "href": "http://lab.ultranoir.com/jumping-jack-sack/",
-      "img": "images/projects/jumping-jack.gif"
     }
   ]
 }
