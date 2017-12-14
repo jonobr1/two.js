@@ -2,6 +2,11 @@
   "template": "<li><a href=\"<%= href %>\" target=\"_blank\"><img width=\"143\" height=\"100\" src=\"<%= img %>\" alt=\"\"><h3><p><%= title %></p></h3></a></li>",
   "items": [
     {
+      "title": "Wonderland",
+      "href": "http://2017.wonderlandindustry.com/",
+      "img": "images/projects/wonderland.gif"
+    },
+    {
       "title": "Still: Miranda Joan",
       "href": "https://www.mirandajoan.com/",
       "img": "images/projects/still-miranda-joan.gif"
