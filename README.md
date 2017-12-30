@@ -109,6 +109,7 @@ process.exit();
 <!-- For the latest nightly changes checkout the `dev` branch [here](../../tree/dev). -->
 
 #### Nightly
++ `Two.Texture`, `Two.Sprite`, and `Two.ImageSequence` implemented in WebGLRenderer.
 + Added `className` property to `Two.Shape`s for easier CSS styling in SVG Renderers. [@fr0](https://github.com/fr0)
 + `Two.Events.resize` is now bound to a renderer's `setSize` function giving a more generic solution to change scenegraph items based on dimensions changing.
 
