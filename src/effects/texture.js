@@ -3,7 +3,7 @@
   var _ = Two.Utils;
   var anchor;
   var regex = {
-    video: /\.(mp4|webm)$/i,
+    video: /\.(mp4|webm|ogg)$/i,
     image: /\.(jpe?g|png|gif|tiff)$/i
   };
 
@@ -129,7 +129,7 @@
       video: function(texture, callback) {
 
         var loaded = function(e) {
-          texture.image.removeEventListener('load', loaded, false);
+          texture.image.removeEventListener('canplaythrough', loaded, false);
           texture.image.removeEventListener('error', error, false);
           texture.image.width = texture.image.videoWidth;
           texture.image.height = texture.image.videoHeight;
@@ -139,7 +139,7 @@
           }
         };
         var error = function(e) {
-          texture.image.removeEventListener('load', loaded, false);
+          texture.image.removeEventListener('canplaythrough', loaded, false);
           texture.image.removeEventListener('error', error, false);
           throw new Two.Utils.Error('unable to load ' + texture.src);
         };
@@ -301,7 +301,7 @@
 
     _update: function() {
 
-      if (this._flagSrc || this._flagImage || this._flagVideo) {
+      if (this._flagSrc || this._flagImage) {
 
         this.trigger(Two.Events.change);
 

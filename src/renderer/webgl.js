@@ -421,10 +421,10 @@
         var flagTexture = this._flagVertices || this._flagFill
           || (this._fill instanceof Two.LinearGradient && (this._fill._flagSpread || this._fill._flagStops || this._fill._flagEndPoints))
           || (this._fill instanceof Two.RadialGradient && (this._fill._flagSpread || this._fill._flagStops || this._fill._flagRadius || this._fill._flagCenter || this._fill._flagFocal))
-          || (this._fill instanceof Two.Texture && (this._fill._flagLoaded && this._fill.loaded || this._fill._flagOffset || this._fill._flagScale))
+          || (this._fill instanceof Two.Texture && (this._fill._flagLoaded && this._fill.loaded || this._fill._flagImage || this._fill._flagVideo || this._fill._flagRepeat || this._fill._flagOffset || this._fill._flagScale))
           || (this._stroke instanceof Two.LinearGradient && (this._stroke._flagSpread || this._stroke._flagStops || this._stroke._flagEndPoints))
           || (this._stroke instanceof Two.RadialGradient && (this._stroke._flagSpread || this._stroke._flagStops || this._stroke._flagRadius || this._stroke._flagCenter || this._stroke._flagFocal))
-          || (this._stroke instanceof Two.Texture && (this._stroke._flagLoaded && this._stroke.loaded || this._stroke._flagOffset || this._fill._flagScale))
+          || (this._stroke instanceof Two.Texture && (this._stroke._flagLoaded && this._stroke.loaded || this._stroke._flagImage || this._stroke._flagVideo || this._stroke._flagRepeat || this._stroke._flagOffset || this._fill._flagScale))
           || this._flagStroke || this._flagLinewidth || this._flagOpacity
           || parent._flagOpacity || this._flagVisible || this._flagCap
           || this._flagJoin || this._flagMiter || this._flagScale
@@ -462,6 +462,17 @@
 
           webgl.updateBuffer.call(webgl, gl, this, program);
           webgl.updateTexture.call(webgl, gl, this);
+
+        } else {
+
+          // We still need to update child Two elements on the fill and
+          // stroke properties.
+          if (!_.isString(this._fill)) {
+            this._fill._update();
+          }
+          if (!_.isString(this._stroke)) {
+            this._stroke._update();
+          }
 
         }
 
@@ -706,10 +717,10 @@
         var flagTexture = this._flagVertices || this._flagFill
           || (this._fill instanceof Two.LinearGradient && (this._fill._flagSpread || this._fill._flagStops || this._fill._flagEndPoints))
           || (this._fill instanceof Two.RadialGradient && (this._fill._flagSpread || this._fill._flagStops || this._fill._flagRadius || this._fill._flagCenter || this._fill._flagFocal))
-          || (this._fill instanceof Two.Texture && (this._fill._flagLoaded && this._fill.loaded))
+          || (this._fill instanceof Two.Texture && (this._fill._flagLoaded && this._fill.loaded || this._fill._flagImage || this._fill._flagVideo || this._fill._flagRepeat || this._fill._flagOffset || this._fill._flagScale))
           || (this._stroke instanceof Two.LinearGradient && (this._stroke._flagSpread || this._stroke._flagStops || this._stroke._flagEndPoints))
           || (this._stroke instanceof Two.RadialGradient && (this._stroke._flagSpread || this._stroke._flagStops || this._stroke._flagRadius || this._stroke._flagCenter || this._stroke._flagFocal))
-          || (this._texture instanceof Two.Texture && (this._texture._flagLoaded && this._texture.loaded))
+          || (this._stroke instanceof Two.Texture && (this._stroke._flagLoaded && this._stroke.loaded || this._stroke._flagImage || this._stroke._flagVideo || this._stroke._flagRepeat || this._stroke._flagOffset || this._fill._flagScale))
           || this._flagStroke || this._flagLinewidth || this._flagOpacity
           || parent._flagOpacity || this._flagVisible || this._flagScale
           || this._flagValue || this._flagFamily || this._flagSize
@@ -749,6 +760,17 @@
 
           webgl.updateBuffer.call(webgl, gl, this, program);
           webgl.updateTexture.call(webgl, gl, this);
+
+        } else {
+
+          // We still need to update child Two elements on the fill and
+          // stroke properties.
+          if (!_.isString(this._fill)) {
+            this._fill._update();
+          }
+          if (!_.isString(this._stroke)) {
+            this._stroke._update();
+          }
 
         }
 
@@ -859,8 +881,10 @@
         var image = this.image;
         var repeat;
 
-        if (!this._renderer.effect || ((this._flagLoaded || this._flagRepeat) && this.loaded)) {
+        if (((this._flagLoaded || this._flagImage || this._flagVideo || this._flagRepeat) && this.loaded)) {
           this._renderer.effect = ctx.createPattern(image, this._repeat);
+        } else if (!this._renderer.effect) {
+          return this.flagReset();
         }
 
         if (this._flagOffset || this._flagLoaded || this._flagScale) {
@@ -869,12 +893,12 @@
             this._renderer.offset = new Two.Vector();
           }
 
-          this._renderer.offset.x = this._offset.x;
-          this._renderer.offset.y = this._offset.y;
+          this._renderer.offset.x = - this._offset.x;
+          this._renderer.offset.y = - this._offset.y;
 
           if (image) {
 
-            this._renderer.offset.x -= image.width / 2;
+            this._renderer.offset.x += image.width / 2;
             this._renderer.offset.y += image.height / 2;
 
             if (this._scale instanceof Two.Vector) {
