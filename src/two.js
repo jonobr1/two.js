@@ -1104,7 +1104,6 @@ this.Two = (function(previousTwo) {
                   y3 = parseFloat(coords[1]);
                   x4 = parseFloat(coords[2]);
                   y4 = parseFloat(coords[3]);
-                  console.log(coords);
 
                 } else {
 
