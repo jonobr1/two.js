@@ -972,6 +972,8 @@ this.Two = (function(previousTwo) {
               case 'm':
               case 'l':
 
+                control = undefined;
+
                 x = parseFloat(coords[0]);
                 y = parseFloat(coords[1]);
 
@@ -1093,15 +1095,16 @@ this.Two = (function(previousTwo) {
                   y2 = y1;
                 } else {
                   x2 = control.x;
-                  y1 = control.y;
+                  y2 = control.y;
                 }
 
                 if (lower === 'q') {
 
                   x3 = parseFloat(coords[0]);
                   y3 = parseFloat(coords[1]);
-                  x4 = parseFloat(coords[1]);
-                  y4 = parseFloat(coords[2]);
+                  x4 = parseFloat(coords[2]);
+                  y4 = parseFloat(coords[3]);
+                  console.log(coords);
 
                 } else {
 
