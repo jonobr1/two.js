@@ -54,11 +54,24 @@ compressor.minify({
   compressor: 'gcc',
   input: files,
   output: path.resolve(__dirname, '../build/two.min.js'),
-  callback: function(e){
+  callback: function(e) {
     if (!e) {
       console.log('minified complete');
     } else {
       console.log('unable to minify', e);
+    }
+  }
+});
+
+compressor.minify({
+  compressor: 'no-compress',
+  input: files.concat(path.resolve(__dirname, './exports.js')),
+  output: path.resolve(__dirname, '../build/two.module.js'),
+  callback: function(e) {
+    if (!e) {
+      console.log('module complete');
+    } else {
+      console.log('unable to create module', e);
     }
   }
 });

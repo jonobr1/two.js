@@ -627,4 +627,4 @@
 
   }
 
-})((typeof global !== 'undefined' ? global : this).Two);
+})((typeof global !== 'undefined' ? global : (this || window)).Two);

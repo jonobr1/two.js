@@ -7,7 +7,7 @@
     image: /\.(jpe?g|png|gif|tiff)$/i
   };
 
-  if (this.document) {
+  if ((this || window).document) {
     anchor = document.createElement('a');
   }
 
@@ -338,4 +338,4 @@
 
   Texture.MakeObservable(Texture.prototype);
 
-})((typeof global !== 'undefined' ? global : this).Two);
+})((typeof global !== 'undefined' ? global : (this || window)).Two);

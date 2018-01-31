@@ -1,4 +1,4 @@
-this.Two = (function(previousTwo) {
+(this || window).Two = (function(previousTwo) {
 
   var root = typeof window != 'undefined' ? window : typeof global != 'undefined' ? global : null;
   var toString = Object.prototype.toString;
@@ -2387,4 +2387,4 @@ this.Two = (function(previousTwo) {
 
   return Two;
 
-})((typeof global !== 'undefined' ? global : this).Two);
+})((typeof global !== 'undefined' ? global : (this || window)).Two);

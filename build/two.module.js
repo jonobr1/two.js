@@ -10316,3 +10316,6 @@ SOFTWARE.
   }
 
 })((typeof global !== 'undefined' ? global : (this || window)).Two);
+
+
+export default (this || window).Two;
