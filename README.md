@@ -109,6 +109,9 @@ process.exit();
 <!-- For the latest nightly changes checkout the `dev` branch [here](../../tree/dev). -->
 
 #### Nightly
++ Added `rx` and `ry` property reading on `Two.Utils.read.rect`
++ Added `Two.Utils.read['rounded-rect']` to interpret Rounded Rectangles
++ Added ability for `Two.RoundedRectangle.radius` to be a `Two.Vector` for x, y component styling
 + Added ES6 compatible `./build/two.module.js` for importing library
 + Improved `Q` SVG interpretation
 + `Two.Texture`, `Two.Sprite`, and `Two.ImageSequence` implemented in `WebGLRenderer`
