@@ -5,7 +5,7 @@
 
   var RoundedRectangle = Two.RoundedRectangle = function(ox, oy, width, height, radius) {
 
-    if (!_.isNumber(radius)) {
+    if (_.isUndefined(radius)) {
       radius = Math.floor(Math.min(width, height) / 12);
     }
 
@@ -20,6 +20,8 @@
 
     Path.call(this, points, false, false, true);
 
+    this._renderer.flagRadius = _.bind(RoundedRectangle.FlagRadius, this);
+
     this.width = width;
     this.height = height;
     this.radius = radius;
@@ -31,12 +33,38 @@
 
   _.extend(RoundedRectangle, {
 
-    Properties: ['width', 'height', 'radius'],
+    Properties: ['width', 'height'],
 
-    MakeObservable: function(obj) {
+    FlagRadius: function() {
+      this._flagRadius = true;
+    },
 
-      Path.MakeObservable(obj);
-      _.each(RoundedRectangle.Properties, Two.Utils.defineProperty, obj);
+    MakeObservable: function(object) {
+
+      Path.MakeObservable(object);
+      _.each(RoundedRectangle.Properties, Two.Utils.defineProperty, object);
+
+      Object.defineProperty(object, 'radius', {
+        enumerable: true,
+        get: function() {
+          return this._radius;
+        },
+        set: function(v) {
+
+          if (this._radius instanceof Two.Vector) {
+            this._radius.unbind(Two.Events.change, this._renderer.flagRadius);
+          }
+
+          this._radius = v;
+
+          if (this._radius instanceof Two.Vector) {
+            this._radius.bind(Two.Events.change, this._renderer.flagRadius);
+          }
+
+          this._flagRadius = true;
+
+        }
+      });
 
     }
 
@@ -58,29 +86,37 @@
 
         var width = this._width;
         var height = this._height;
-        var radius = Math.min(Math.max(this._radius, 0),
-          Math.min(width, height));
+
+        var rx, ry;
+
+        if (this._radius instanceof Two.Vector) {
+          rx = this._radius.x;
+          ry = this._radius.y;
+        } else {
+          rx = this._radius;
+          ry = this._radius;
+        }
 
         var v;
         var w = width / 2;
         var h = height / 2;
 
         v = this.vertices[0];
-        v.x = - (w - radius);
+        v.x = - (w - rx);
         v.y = - h;
 
         // Upper Right Corner
 
         v = this.vertices[1];
-        v.x = (w - radius);
+        v.x = (w - rx);
         v.y = - h;
         v.controls.left.clear();
-        v.controls.right.x = radius;
+        v.controls.right.x = rx;
         v.controls.right.y = 0;
 
         v = this.vertices[2];
         v.x = w;
-        v.y = - (h - radius);
+        v.y = - (h - ry);
         v.controls.right.clear();
         v.controls.left.clear();
 
@@ -88,13 +124,13 @@
 
         v = this.vertices[3];
         v.x = w;
-        v.y = (h - radius);
+        v.y = (h - ry);
         v.controls.left.clear();
         v.controls.right.x = 0;
-        v.controls.right.y = radius;
+        v.controls.right.y = ry;
 
         v = this.vertices[4];
-        v.x = (w - radius);
+        v.x = (w - rx);
         v.y = h;
         v.controls.right.clear();
         v.controls.left.clear();
@@ -102,15 +138,15 @@
         // Bottom Left Corner
 
         v = this.vertices[5];
-        v.x = - (w - radius);
+        v.x = - (w - rx);
         v.y = h;
         v.controls.left.clear();
-        v.controls.right.x = - radius;
+        v.controls.right.x = - rx;
         v.controls.right.y = 0;
 
         v = this.vertices[6];
         v.x = - w;
-        v.y = (h - radius);
+        v.y = (h - ry);
         v.controls.left.clear();
         v.controls.right.clear();
 
@@ -118,13 +154,13 @@
 
         v = this.vertices[7];
         v.x = - w;
-        v.y = - (h - radius);
+        v.y = - (h - ry);
         v.controls.left.clear();
         v.controls.right.x = 0;
-        v.controls.right.y = - radius;
+        v.controls.right.y = - ry;
 
         v = this.vertices[8];
-        v.x = - (w - radius);
+        v.x = - (w - rx);
         v.y = - h;
         v.controls.left.clear();
         v.controls.right.clear();

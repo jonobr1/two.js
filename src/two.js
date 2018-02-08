@@ -1318,6 +1318,13 @@
 
         rect: function(node) {
 
+          var rx = parseFloat(node.getAttribute('rx'));
+          var ry = parseFloat(node.getAttribute('ry'));
+
+          if (!_.isNaN(rx) || !_.isNaN(ry)) {
+            return Two.Utils.read['rounded-rect'](node);
+          }
+
           var x = parseFloat(node.getAttribute('x')) || 0;
           var y = parseFloat(node.getAttribute('y')) || 0;
           var width = parseFloat(node.getAttribute('width'));
@@ -1327,6 +1334,28 @@
           var h2 = height / 2;
 
           var rect = new Two.Rectangle(x + w2, y + h2, width, height)
+            .noStroke();
+          rect.fill = 'black';
+
+          return Two.Utils.applySvgAttributes.call(this, node, rect);
+
+        },
+
+        'rounded-rect': function(node) {
+
+          var x = parseFloat(node.getAttribute('x')) || 0;
+          var y = parseFloat(node.getAttribute('y')) || 0;
+          var rx = parseFloat(node.getAttribute('rx')) || 0;
+          var ry = parseFloat(node.getAttribute('ry')) || 0;
+
+          var width = parseFloat(node.getAttribute('width'));
+          var height = parseFloat(node.getAttribute('height'));
+
+          var w2 = width / 2;
+          var h2 = height / 2;
+          var radius = new Two.Vector(rx, ry);
+
+          var rect = new Two.RoundedRectangle(x + w2, y + h2, width, height, radius)
             .noStroke();
           rect.fill = 'black';
 
