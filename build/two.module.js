@@ -962,8 +962,6 @@ SOFTWARE.
 
           });
 
-          console.log(commands);
-
           // Create the vertices for our Two.Path
 
           var points = [];
@@ -3111,7 +3109,15 @@ SOFTWARE.
         elements = _.toArray(arguments);
       }
 
-      _.extend(this.elements, elements);
+      this.elements[0] = elements[0];
+      this.elements[1] = elements[1];
+      this.elements[2] = elements[2];
+      this.elements[3] = elements[3];
+      this.elements[4] = elements[4];
+      this.elements[5] = elements[5];
+      this.elements[6] = elements[6];
+      this.elements[7] = elements[7];
+      this.elements[8] = elements[8];
 
       return this.trigger(Two.Events.change);
 
@@ -3122,9 +3128,17 @@ SOFTWARE.
      */
     identity: function() {
 
-      this.set(Matrix.Identity);
+      this.elements[0] = Matrix.Identity[0];
+      this.elements[1] = Matrix.Identity[1];
+      this.elements[2] = Matrix.Identity[2];
+      this.elements[3] = Matrix.Identity[3];
+      this.elements[4] = Matrix.Identity[4];
+      this.elements[5] = Matrix.Identity[5];
+      this.elements[6] = Matrix.Identity[6];
+      this.elements[7] = Matrix.Identity[7];
+      this.elements[8] = Matrix.Identity[8];
 
-      return this;
+      return this.trigger(Two.Events.change);
 
     },
 
@@ -3307,19 +3321,20 @@ SOFTWARE.
 
      var elements = this.elements;
      var hasOutput = !!output;
+     var fix = _.toFixed;
 
-     var a = parseFloat(elements[0].toFixed(3));
-     var b = parseFloat(elements[1].toFixed(3));
-     var c = parseFloat(elements[2].toFixed(3));
-     var d = parseFloat(elements[3].toFixed(3));
-     var e = parseFloat(elements[4].toFixed(3));
-     var f = parseFloat(elements[5].toFixed(3));
+     var a = fix(elements[0]);
+     var b = fix(elements[1]);
+     var c = fix(elements[2]);
+     var d = fix(elements[3]);
+     var e = fix(elements[4]);
+     var f = fix(elements[5]);
 
       if (!!fullMatrix) {
 
-        var g = parseFloat(elements[6].toFixed(3));
-        var h = parseFloat(elements[7].toFixed(3));
-        var i = parseFloat(elements[8].toFixed(3));
+        var g = fix(elements[6]);
+        var h = fix(elements[7]);
+        var i = fix(elements[8]);
 
         if (hasOutput) {
           output[0] = a;
