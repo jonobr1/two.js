@@ -936,8 +936,6 @@
 
           });
 
-          console.log(commands);
-
           // Create the vertices for our Two.Path
 
           var points = [];
