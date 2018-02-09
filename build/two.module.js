@@ -399,7 +399,9 @@ SOFTWARE.
     this.scene = this.renderer.scene;
 
     Two.Instances.push(this);
-    raf.init();
+    if (params.autostart) {
+      raf.init();
+    }
 
   };
 
@@ -2029,6 +2031,7 @@ SOFTWARE.
     play: function() {
 
       Two.Utils.setPlaying.call(this, true);
+      raf.init();
       return this.trigger(Two.Events.play);
 
     },
@@ -2423,14 +2426,14 @@ SOFTWARE.
 
   function loop() {
 
-    raf(loop);
-
     for (var i = 0; i < Two.Instances.length; i++) {
       var t = Two.Instances[i];
       if (t.playing) {
         t.update();
       }
     }
+
+    raf(loop);
 
   }
 
@@ -3006,7 +3009,7 @@ SOFTWARE.
    * Constants
    */
   var cos = Math.cos, sin = Math.sin, tan = Math.tan;
-  var _ = Two.Utils;
+  var _ = Two.Utils, fix = _.toFixed;
 
   /**
    * Two.Matrix contains an array of elements that represent
@@ -3032,8 +3035,11 @@ SOFTWARE.
     }
 
     // initialize the elements with default values.
+    this.identity();
 
-    this.identity().set(elements);
+    if (elements.length > 0) {
+      this.set(elements);
+    }
 
   };
 
@@ -3153,9 +3159,15 @@ SOFTWARE.
 
       if (l <= 1) {
 
-        _.each(this.elements, function(v, i) {
-          this.elements[i] = v * a;
-        }, this);
+        this.elements[0] *= a;
+        this.elements[1] *= a;
+        this.elements[2] *= a;
+        this.elements[3] *= a;
+        this.elements[4] *= a;
+        this.elements[5] *= a;
+        this.elements[6] *= a;
+        this.elements[7] *= a;
+        this.elements[8] *= a;
 
         return this.trigger(Two.Events.change);
 
@@ -3321,7 +3333,6 @@ SOFTWARE.
 
      var elements = this.elements;
      var hasOutput = !!output;
-     var fix = _.toFixed;
 
      var a = fix(elements[0]);
      var b = fix(elements[1]);
