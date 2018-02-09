@@ -373,7 +373,9 @@
     this.scene = this.renderer.scene;
 
     Two.Instances.push(this);
-    raf.init();
+    if (params.autostart) {
+      raf.init();
+    }
 
   };
 
@@ -2003,6 +2005,7 @@
     play: function() {
 
       Two.Utils.setPlaying.call(this, true);
+      raf.init();
       return this.trigger(Two.Events.play);
 
     },
@@ -2397,14 +2400,14 @@
 
   function loop() {
 
-    raf(loop);
-
     for (var i = 0; i < Two.Instances.length; i++) {
       var t = Two.Instances[i];
       if (t.playing) {
         t.update();
       }
     }
+
+    raf(loop);
 
   }
 
