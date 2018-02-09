@@ -897,7 +897,9 @@
                 }
                 break;
               case 'a':
-                // TODO: Handle Ellipses
+                if (items.length > 7) {
+                  bin = 7;
+                }
                 break;
             }
 
@@ -933,6 +935,8 @@
             }
 
           });
+
+          console.log(commands);
 
           // Create the vertices for our Two.Path
 

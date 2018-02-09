@@ -923,7 +923,9 @@ SOFTWARE.
                 }
                 break;
               case 'a':
-                // TODO: Handle Ellipses
+                if (items.length > 7) {
+                  bin = 7;
+                }
                 break;
             }
 
@@ -959,6 +961,8 @@ SOFTWARE.
             }
 
           });
+
+          console.log(commands);
 
           // Create the vertices for our Two.Path
 
