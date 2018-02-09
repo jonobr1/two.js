@@ -4,7 +4,7 @@
    * Constants
    */
   var cos = Math.cos, sin = Math.sin, tan = Math.tan;
-  var _ = Two.Utils;
+  var _ = Two.Utils, fix = _.toFixed;
 
   /**
    * Two.Matrix contains an array of elements that represent
@@ -30,8 +30,11 @@
     }
 
     // initialize the elements with default values.
+    this.identity();
 
-    this.identity().set(elements);
+    if (elements.length > 0) {
+      this.set(elements);
+    }
 
   };
 
@@ -151,9 +154,15 @@
 
       if (l <= 1) {
 
-        _.each(this.elements, function(v, i) {
-          this.elements[i] = v * a;
-        }, this);
+        this.elements[0] *= a;
+        this.elements[1] *= a;
+        this.elements[2] *= a;
+        this.elements[3] *= a;
+        this.elements[4] *= a;
+        this.elements[5] *= a;
+        this.elements[6] *= a;
+        this.elements[7] *= a;
+        this.elements[8] *= a;
 
         return this.trigger(Two.Events.change);
 
@@ -319,7 +328,6 @@
 
      var elements = this.elements;
      var hasOutput = !!output;
-     var fix = _.toFixed;
 
      var a = fix(elements[0]);
      var b = fix(elements[1]);
