@@ -2315,10 +2315,12 @@
      * @param {Object} svgNode - The node to be parsed
      * @param {Boolean} shallow - Don't create a top-most group but
      *                                    append all contents directly
+     * @param {Boolean} add – Return SVG node without adding it to scene
      */
-    interpret: function(svgNode, shallow) {
+    interpret: function(svgNode, shallow, add) {
 
-      var tag = svgNode.tagName.toLowerCase();
+      var tag = svgNode.tagName.toLowerCase(),
+          add = (typeof add !== 'undefined') ? add : true;
 
       if (!(tag in Two.Utils.read)) {
         return null;
@@ -2326,11 +2328,7 @@
 
       var node = Two.Utils.read[tag].call(this, svgNode);
 
-      if (shallow && node instanceof Two.Group) {
-        this.add(node.children);
-      } else {
-        this.add(node);
-      }
+      add !== false && this.add(shallow && node instanceof Two.Group ? node.children : node);
 
       return node;
 
