@@ -2386,7 +2386,7 @@
 
   }
 
-  function updateDimensions() {
+  function updateDimensions(width, height) {
     this.width = width;
     this.height = height;
     this.trigger(Two.Events.resize, width, height);
