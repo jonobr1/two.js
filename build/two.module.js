@@ -5184,7 +5184,7 @@ SOFTWARE.
         ctx.beginPath();
         for (var i = 0; i < commands.length; i++) {
 
-          b = commands[i];
+          var b = commands[i];
 
           x = toFixed(b._x);
           y = toFixed(b._y);
