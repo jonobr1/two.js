@@ -146,7 +146,7 @@ process.exit();
 + Fixed ordering on same parent additions for `Two.Group`
 
 ##### February 9, 2016 [v0.6.0](https://github.com/jonobr1/two.js/releases/tag/v0.6.0)
-+ Updated `Two.CanvasRenderer.ctx.imageSmoothingEnabled` to not use deprecated invokation, [issue 178](https://github.com/jonobr1/two.js/issues/178)
++ Updated `Two.CanvasRenderer.ctx.imageSmoothingEnabled` to not use deprecated invocation, [issue 178](https://github.com/jonobr1/two.js/issues/178)
 + Fixed `Two.Group.mask` in `SVGRenderer` to append to DOM correctly
 + Updated `require` imports to be compatible with [require.js](http://requirejs.org/)
 + Added `Two.Text` for programmatically writing text in Two.js
