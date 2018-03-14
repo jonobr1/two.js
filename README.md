@@ -109,6 +109,8 @@ process.exit();
 <!-- For the latest nightly changes checkout the `dev` branch [here](../../tree/dev). -->
 
 #### Nightly
++ Added ability to read `viewBox` property from root SVG node in `Two.interpret`
++ Added more reliable transform getter in `Two.interpret`
 + Added `rx` and `ry` property reading on `Two.Utils.read.rect`
 + Added `Two.Utils.read['rounded-rect']` to interpret Rounded Rectangles
 + Added ability for `Two.RoundedRectangle.radius` to be a `Two.Vector` for x, y component styling
