@@ -729,6 +729,7 @@ SOFTWARE.
         if (!_.isUndefined(styles.opacity)) {
           styles['stroke-opacity'] = styles.opacity;
           styles['fill-opacity'] = styles.opacity;
+          delete styles.opacity;
         }
 
         // Merge attributes and applied styles (attributes take precedence)
@@ -745,9 +746,11 @@ SOFTWARE.
 
           switch (key) {
             case 'transform':
-              // TODO: Check this out https://github.com/paperjs/paper.js/blob/master/src/svg/SVGImport.js#L313
+              // TODO: Check this out https://github.com/paperjs/paper.js/blob/develop/src/svg/SvgImport.js#L315
               if (value === 'none') break;
-              var m = node.getCTM ? node.getCTM() : null;
+              var m = (node.transform && node.transform.baseVal && node.transform.baseVal.length > 0)
+                ? node.transform.baseVal[0].matrix
+                : (node.getCTM ? node.getCTM() : null);
 
               // Might happen when transform string is empty or not valid.
               if (m === null) break;
@@ -758,12 +761,11 @@ SOFTWARE.
               // elem._matrix.set(m.a, m.b, m.c, m.d, m.e, m.f);
 
               // Option 2: Decompose and infer Two.js related properties.
-              var transforms = Two.Utils.decomposeMatrix(node.getCTM());
+              var transforms = Two.Utils.decomposeMatrix(m);
 
               elem.translation.set(transforms.translateX, transforms.translateY);
               elem.rotation = transforms.rotation;
-              // Warning: Two.js elements only support uniform scalars...
-              elem.scale = transforms.scaleX;
+              elem.scale = new Two.Vector(transforms.scaleX, transforms.scaleY);
 
               var x = parseFloat((styles.x + '').replace('px'));
               var y = parseFloat((styles.y + '').replace('px'));
@@ -776,6 +778,18 @@ SOFTWARE.
               if (y) {
                 elem.translation.y = y;
               }
+
+              break;
+            case 'viewBox':
+
+              // Reverse calculate viewbox from an SVG element
+              // into the Two.js scene.
+              var elements = value.split(/\s/);
+              var s = Math.max(this.width / elements[2], this.height / elements[3]);
+
+              elem.translation.x -= elements[0] * s;
+              elem.translation.y -= elements[1] * s;
+              elem.scale = s;
 
               break;
             case 'visible':
@@ -795,8 +809,11 @@ SOFTWARE.
               break;
             case 'stroke-opacity':
             case 'fill-opacity':
-            case 'opacity':
-              elem.opacity = parseFloat(value);
+              // Only apply styles to rendered shapes
+              // in the scene.
+              if (!(elem instanceof Two.Group)) {
+                elem.opacity = parseFloat(value);
+              }
               break;
             case 'fill':
             case 'stroke':
