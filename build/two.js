@@ -8151,8 +8151,9 @@ SOFTWARE.
   _.extend(Two.Text, {
 
     Properties: [
-      'value', 'family', 'size', 'leading', 'alignment', 'linewidth', 'style', 'className',
-      'weight', 'decoration', 'baseline', 'opacity', 'visible', 'fill', 'stroke'
+      'value', 'family', 'size', 'leading', 'alignment', 'linewidth', 'style',
+      'className', 'weight', 'decoration', 'baseline', 'opacity', 'visible',
+      'fill', 'stroke'
     ],
 
     FlagFill: function() {
@@ -8167,7 +8168,7 @@ SOFTWARE.
 
       Two.Shape.MakeObservable(object);
 
-      _.each(Two.Text.Properties.slice(0, 12), Two.Utils.defineProperty, object);
+      _.each(Two.Text.Properties.slice(0, 13), Two.Utils.defineProperty, object);
 
       Object.defineProperty(object, 'fill', {
         enumerable: true,
