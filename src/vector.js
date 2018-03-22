@@ -11,7 +11,34 @@
 
   _.extend(Vector, {
 
-    zero: new Two.Vector()
+    zero: new Two.Vector(),
+
+    MakeObservable: function(object) {
+
+      /**
+       * Override Backbone bind / on in order to add properly broadcasting.
+       * This allows Two.Vector to not broadcast events unless event listeners
+       * are explicity bound to it.
+       */
+
+      object.bind = object.on = function() {
+
+        if (!this._bound) {
+          this._x = this.x;
+          this._y = this.y;
+          Object.defineProperty(this, 'x', xgs);
+          Object.defineProperty(this, 'y', ygs);
+          _.extend(this, BoundProto);
+          this._bound = true; // Reserved for event initialization check
+        }
+
+        Two.Utils.Events.bind.apply(this, arguments);
+
+        return this;
+
+      };
+
+    }
 
   });
 
@@ -312,27 +339,6 @@
     }
   };
 
-  /**
-   * Override Backbone bind / on in order to add properly broadcasting.
-   * This allows Two.Vector to not broadcast events unless event listeners
-   * are explicity bound to it.
-   */
-
-  Two.Vector.prototype.bind = Two.Vector.prototype.on = function() {
-
-    if (!this._bound) {
-      this._x = this.x;
-      this._y = this.y;
-      Object.defineProperty(this, 'x', xgs);
-      Object.defineProperty(this, 'y', ygs);
-      _.extend(this, BoundProto);
-      this._bound = true; // Reserved for event initialization check
-    }
-
-    Two.Utils.Events.bind.apply(this, arguments);
-
-    return this;
-
-  };
+  Vector.MakeObservable(Vector.prototype);
 
 })((typeof global !== 'undefined' ? global : (this || window)).Two);

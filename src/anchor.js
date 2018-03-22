@@ -47,6 +47,61 @@
         left: new Two.Vector(0, 0),
         right: new Two.Vector(0, 0)
       };
+    },
+
+    MakeObservable: function(object) {
+
+      Object.defineProperty(object, 'command', {
+
+        enumerable: true,
+
+        get: function() {
+          return this._command;
+        },
+
+        set: function(c) {
+          this._command = c;
+          if (this._command === commands.curve && !_.isObject(this.controls)) {
+            Anchor.AppendCurveProperties(this);
+          }
+          return this.trigger(Two.Events.change);
+        }
+
+      });
+
+      Object.defineProperty(object, 'relative', {
+
+        enumerable: true,
+
+        get: function() {
+          return this._relative;
+        },
+
+        set: function(b) {
+          if (this._relative == b) {
+            return this;
+          }
+          this._relative = !!b;
+          return this.trigger(Two.Events.change);
+        }
+
+      });
+
+      _.extend(object, Two.Vector.prototype, AnchorProto);
+
+      // Make it possible to bind and still have the Anchor specific
+      // inheritance from Two.Vector
+      object.bind = object.on = function() {
+        Two.Vector.prototype.bind.apply(this, arguments);
+        if (!this._bound) {
+          _.extend(this, AnchorProto);
+        }
+      };
+
+      object.unbind = object.off = function() {
+        Two.Vector.prototype.unbind.apply(this, arguments);
+      };
+
     }
 
   });
@@ -123,54 +178,6 @@
 
   };
 
-  Object.defineProperty(Anchor.prototype, 'command', {
-
-    enumerable: true,
-
-    get: function() {
-      return this._command;
-    },
-
-    set: function(c) {
-      this._command = c;
-      if (this._command === commands.curve && !_.isObject(this.controls)) {
-        Anchor.AppendCurveProperties(this);
-      }
-      return this.trigger(Two.Events.change);
-    }
-
-  });
-
-  Object.defineProperty(Anchor.prototype, 'relative', {
-
-    enumerable: true,
-
-    get: function() {
-      return this._relative;
-    },
-
-    set: function(b) {
-      if (this._relative == b) {
-        return this;
-      }
-      this._relative = !!b;
-      return this.trigger(Two.Events.change);
-    }
-
-  });
-
-  _.extend(Anchor.prototype, Two.Vector.prototype, AnchorProto);
-
-  // Make it possible to bind and still have the Anchor specific
-  // inheritance from Two.Vector
-  Two.Anchor.prototype.bind = Two.Anchor.prototype.on = function() {
-    Two.Vector.prototype.bind.apply(this, arguments);
-    _.extend(this, AnchorProto);
-  };
-
-  Two.Anchor.prototype.unbind = Two.Anchor.prototype.off = function() {
-    Two.Vector.prototype.unbind.apply(this, arguments);
-    _.extend(this, AnchorProto);
-  };
+  Anchor.MakeObservable(Two.Anchor.prototype);
 
 })((typeof global !== 'undefined' ? global : (this || window)).Two);
