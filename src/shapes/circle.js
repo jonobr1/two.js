@@ -3,9 +3,9 @@
   var Path = Two.Path, TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin;
   var _ = Two.Utils;
 
-  var Circle = Two.Circle = function(ox, oy, r) {
+  var Circle = Two.Circle = function(ox, oy, r, res) {
 
-    var amount = Two.Resolution;
+    var amount = res || Two.Resolution;
 
     var points = _.map(_.range(amount), function(i) {
       return new Two.Anchor();
@@ -60,6 +60,23 @@
       this._flagRadius = false;
 
       Path.prototype.flagReset.call(this);
+      return this;
+
+    },
+
+    clone: function(parent) {
+
+      var parent = parent || this.parent;
+
+      var clone = new Circle(0, 0, this.radius, this.vertices.length);
+      clone.translation.copy(this.translation);
+      clone.rotation = this.rotation;
+      clone.scale = this.scale;
+
+      if (parent) {
+        parent.add(clone);
+      }
+
       return this;
 
     }

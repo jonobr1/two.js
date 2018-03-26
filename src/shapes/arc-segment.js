@@ -202,6 +202,8 @@
 
     clone: function(parent) {
 
+      var parent = parent || this.parent;
+
       var ir = this.innerRadius;
       var or = this.outerradius;
       var sa = this.startAngle;
@@ -212,6 +214,10 @@
       clone.translation.copy(this.translation);
       clone.rotation = this.rotation;
       clone.scale = this.scale;
+
+      if (parent) {
+        parent.add(clone);
+      }
 
       return clone;
 
