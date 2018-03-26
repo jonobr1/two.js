@@ -89,7 +89,7 @@
 
     clone: function(parent) {
 
-      var parent = parent || this.parent;
+      parent = parent || this.parent;
 
       var clone = new Polygon(0, 0, this.radius, this.sides);
       clone.translation.copy(this.translation);

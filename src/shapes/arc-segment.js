@@ -202,7 +202,7 @@
 
     clone: function(parent) {
 
-      var parent = parent || this.parent;
+      parent = parent || this.parent;
 
       var ir = this.innerRadius;
       var or = this.outerradius;
