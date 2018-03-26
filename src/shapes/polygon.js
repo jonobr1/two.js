@@ -85,6 +85,23 @@
 
       return this;
 
+    },
+
+    clone: function(parent) {
+
+      var parent = parent || this.parent;
+
+      var clone = new Polygon(0, 0, this.radius, this.sides);
+      clone.translation.copy(this.translation);
+      clone.rotation = this.rotation;
+      clone.scale = this.scale;
+
+      if (parent) {
+        parent.add(clone);
+      }
+
+      return clone;
+
     }
 
   });

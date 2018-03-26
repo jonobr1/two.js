@@ -84,7 +84,7 @@
       clone.scale = this.scale;
 
       if (parent) {
-        parent.add( clone );
+        parent.add(clone);
       }
 
       return clone;
