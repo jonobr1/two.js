@@ -1,7 +1,13 @@
 /**
  * Tests Two.js Core Classes Functionality:
+ * + Two.Utils ( Underscore Methods )
+ * + Two.Utils.Events
  * + Two.Vector
  * + Two.Matrix
+ * + Two.Utils.Collection
+ * + Two.Shape
+ * + Two.Registry
+ * + Two.Texture
  */
 
 QUnit.module('Core');

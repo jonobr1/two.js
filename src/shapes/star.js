@@ -3,9 +3,10 @@
   var Path = Two.Path, TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin;
   var _ = Two.Utils;
 
-  var Star = Two.Star = function(ox, oy, or, ir, sides) {
+  var Star = Two.Star = function(ox, oy, ir, or, sides) {
 
-    if (!_.isNumber(ir)) {
+    if (arguments.length <= 3) {
+      or = ir;
       ir = or / 2;
     }
 
