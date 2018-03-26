@@ -183,6 +183,27 @@
 
       return this;
 
+    },
+
+    clone: function(parent) {
+
+      parent = parent || this.parent;
+
+      var width = this.width;
+      var height = this.height;
+      var radius = this.radius;
+
+      var clone = new RoundedRectangle(0, 0, width, height, radius);
+      clone.translation.copy(this.translation);
+      clone.rotation = this.rotation;
+      clone.scale = this.scale;
+
+      if (parent) {
+        parent.add(clone);
+      }
+
+      return clone;
+
     }
 
   });
