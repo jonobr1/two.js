@@ -95,6 +95,27 @@
 
       return this;
 
+    },
+
+    clone: function(parent) {
+
+      parent = parent || this.parent;
+
+      var ir = this.innerRadius;
+      var or = this.outerRadius;
+      var sides = this.sides;
+
+      var clone = new Star(0, 0, ir, or, sides);
+      clone.translation.copy(this.translation);
+      clone.rotation = this.rotation;
+      clone.scale = this.scale;
+
+      if (parent) {
+        parent.add(clone);
+      }
+
+      return clone;
+
     }
 
   });
