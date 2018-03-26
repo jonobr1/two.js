@@ -3,13 +3,13 @@
   var Path = Two.Path, TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin;
   var _ = Two.Utils;
 
-  var Ellipse = Two.Ellipse = function(ox, oy, rx, ry) {
+  var Ellipse = Two.Ellipse = function(ox, oy, rx, ry, resolution) {
 
     if (!_.isNumber(ry)) {
       ry = rx;
     }
 
-    var amount = Two.Resolution;
+    var amount = resolution || Two.Resolution;
 
     var points = _.map(_.range(amount), function(i) {
       return new Two.Anchor();
@@ -69,6 +69,25 @@
 
       Path.prototype.flagReset.call(this);
       return this;
+
+    },
+
+    clone: function(parent) {
+
+      var parent = parent || this.parent;
+
+      var resolution = this.vertices.length;
+      var clone = new Ellipse(0, 0, this.width, this.height, resolution);
+
+      clone.translation.copy(this.translation);
+      clone.rotation = this.rotation;
+      clone.scale = this.scale;
+
+      if (parent) {
+        parent.add( clone );
+      }
+
+      return clone;
 
     }
 

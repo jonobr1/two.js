@@ -77,7 +77,7 @@
         parent.add(clone);
       }
 
-      return this;
+      return clone;
 
     }
 
