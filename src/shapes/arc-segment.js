@@ -198,6 +198,23 @@
 
       return this;
 
+    },
+
+    clone: function(parent) {
+
+      var ir = this.innerRadius;
+      var or = this.outerradius;
+      var sa = this.startAngle;
+      var ea = this.endAngle;
+      var resolution = this.vertices.length;
+
+      var clone = new ArcSegment(0, 0, ir, or, sa, ea, resolution);
+      clone.translation.copy(this.translation);
+      clone.rotation = this.rotation;
+      clone.scale = this.scale;
+
+      return clone;
+
     }
 
   });
