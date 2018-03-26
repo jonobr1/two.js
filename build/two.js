@@ -7353,6 +7353,23 @@ SOFTWARE.
 
       return this;
 
+    },
+
+    clone: function(parent) {
+
+      parent = parent || this.parent;
+
+      var clone = new Rectangle(0, 0, this.width, this.height);
+      clone.translation.copy(this.translation);
+      clone.rotation = this.rotation;
+      clone.scale = this.scale;
+
+      if (parent) {
+        parent.add(clone);
+      }
+
+      return clone;
+
     }
 
   });
@@ -7366,13 +7383,13 @@ SOFTWARE.
   var Path = Two.Path, TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin;
   var _ = Two.Utils;
 
-  var Ellipse = Two.Ellipse = function(ox, oy, rx, ry) {
+  var Ellipse = Two.Ellipse = function(ox, oy, rx, ry, resolution) {
 
     if (!_.isNumber(ry)) {
       ry = rx;
     }
 
-    var amount = Two.Resolution;
+    var amount = resolution || Two.Resolution;
 
     var points = _.map(_.range(amount), function(i) {
       return new Two.Anchor();
@@ -7433,6 +7450,25 @@ SOFTWARE.
       Path.prototype.flagReset.call(this);
       return this;
 
+    },
+
+    clone: function(parent) {
+
+      parent = parent || this.parent;
+
+      var resolution = this.vertices.length;
+      var clone = new Ellipse(0, 0, this.width, this.height, resolution);
+
+      clone.translation.copy(this.translation);
+      clone.rotation = this.rotation;
+      clone.scale = this.scale;
+
+      if (parent) {
+        parent.add(clone);
+      }
+
+      return clone;
+
     }
 
   });
@@ -7446,9 +7482,9 @@ SOFTWARE.
   var Path = Two.Path, TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin;
   var _ = Two.Utils;
 
-  var Circle = Two.Circle = function(ox, oy, r) {
+  var Circle = Two.Circle = function(ox, oy, r, res) {
 
-    var amount = Two.Resolution;
+    var amount = res || Two.Resolution;
 
     var points = _.map(_.range(amount), function(i) {
       return new Two.Anchor();
@@ -7504,6 +7540,23 @@ SOFTWARE.
 
       Path.prototype.flagReset.call(this);
       return this;
+
+    },
+
+    clone: function(parent) {
+
+      parent = parent || this.parent;
+
+      var clone = new Circle(0, 0, this.radius, this.vertices.length);
+      clone.translation.copy(this.translation);
+      clone.rotation = this.rotation;
+      clone.scale = this.scale;
+
+      if (parent) {
+        parent.add(clone);
+      }
+
+      return clone;
 
     }
 
@@ -7599,6 +7652,23 @@ SOFTWARE.
       Path.prototype.flagReset.call(this);
 
       return this;
+
+    },
+
+    clone: function(parent) {
+
+      parent = parent || this.parent;
+
+      var clone = new Polygon(0, 0, this.radius, this.sides);
+      clone.translation.copy(this.translation);
+      clone.rotation = this.rotation;
+      clone.scale = this.scale;
+
+      if (parent) {
+        parent.add(clone);
+      }
+
+      return clone;
 
     }
 
@@ -7808,6 +7878,29 @@ SOFTWARE.
 
       return this;
 
+    },
+
+    clone: function(parent) {
+
+      parent = parent || this.parent;
+
+      var ir = this.innerRadius;
+      var or = this.outerradius;
+      var sa = this.startAngle;
+      var ea = this.endAngle;
+      var resolution = this.vertices.length;
+
+      var clone = new ArcSegment(0, 0, ir, or, sa, ea, resolution);
+      clone.translation.copy(this.translation);
+      clone.rotation = this.rotation;
+      clone.scale = this.scale;
+
+      if (parent) {
+        parent.add(clone);
+      }
+
+      return clone;
+
     }
 
   });
@@ -7828,9 +7921,10 @@ SOFTWARE.
   var Path = Two.Path, TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin;
   var _ = Two.Utils;
 
-  var Star = Two.Star = function(ox, oy, or, ir, sides) {
+  var Star = Two.Star = function(ox, oy, ir, or, sides) {
 
-    if (!_.isNumber(ir)) {
+    if (arguments.length <= 3) {
+      or = ir;
       ir = or / 2;
     }
 
@@ -7919,6 +8013,27 @@ SOFTWARE.
       Path.prototype.flagReset.call(this);
 
       return this;
+
+    },
+
+    clone: function(parent) {
+
+      parent = parent || this.parent;
+
+      var ir = this.innerRadius;
+      var or = this.outerRadius;
+      var sides = this.sides;
+
+      var clone = new Star(0, 0, ir, or, sides);
+      clone.translation.copy(this.translation);
+      clone.rotation = this.rotation;
+      clone.scale = this.scale;
+
+      if (parent) {
+        parent.add(clone);
+      }
+
+      return clone;
 
     }
 
@@ -8112,6 +8227,27 @@ SOFTWARE.
       Path.prototype.flagReset.call(this);
 
       return this;
+
+    },
+
+    clone: function(parent) {
+
+      parent = parent || this.parent;
+
+      var width = this.width;
+      var height = this.height;
+      var radius = this.radius;
+
+      var clone = new RoundedRectangle(0, 0, width, height, radius);
+      clone.translation.copy(this.translation);
+      clone.rotation = this.rotation;
+      clone.scale = this.scale;
+
+      if (parent) {
+        parent.add(clone);
+      }
+
+      return clone;
 
     }
 

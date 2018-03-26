@@ -109,6 +109,7 @@ process.exit();
 <!-- For the latest nightly changes checkout the `dev` branch [here](../../tree/dev). -->
 
 #### Nightly
++ Added specific `clone` method to `Two.ArcSegment`, `Two.Circle`, `Two.Ellipse`, `Two.Polygon`, `Two.Rectangle`, `Two.RoundedRectangle`, and `Two.Star` primitives
 + Added ability to read `viewBox` property from root SVG node in `Two.interpret`
 + Added more reliable transform getter in `Two.interpret`
 + Added `rx` and `ry` property reading on `Two.Utils.read.rect`
