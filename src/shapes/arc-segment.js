@@ -215,6 +215,10 @@
       clone.rotation = this.rotation;
       clone.scale = this.scale;
 
+      _.each(Two.Path.Properties, function(k) {
+        clone[k] = this[k];
+      }, this);
+
       if (parent) {
         parent.add(clone);
       }
