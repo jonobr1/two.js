@@ -2,6 +2,11 @@
   "template": "<li><a href=\"<%= href %>\" target=\"_blank\"><img width=\"143\" height=\"100\" src=\"<%= img %>\" alt=\"\"><h3><p><%= title %></p></h3></a></li>",
   "items": [
     {
+      "title": "Apple Heart Study",
+      "href": "https://www.apple.com/watch/apple-heart-study/",
+      "img": "images/projects/apple-heart-study.gif"
+    },
+    {
       "title": "Wonderland",
       "href": "http://2017.wonderlandindustry.com/",
       "img": "images/projects/wonderland.gif"
