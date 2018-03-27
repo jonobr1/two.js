@@ -514,6 +514,7 @@
      * coordinates to that percentage on this Two.Path's curve.
      */
     getPointAt: function(t, obj) {
+
       var ia, ib;
       var x, x1, x2, x3, x4, y, y1, y2, y3, y4, left, right;
       var target = this.length * Math.min(Math.max(t, 0), 1);
@@ -522,6 +523,88 @@
 
       var a = null;
       var b = null;
+
+      if (t >= 1) {
+
+        var v = this.vertices[last];
+
+        if (_.isObject(obj)) {
+
+          obj.x = v.x;
+          obj.y = v.y;
+
+          if (_.isObject(v.controls)) {
+
+            if (!_.isObject(obj.controls)) {
+              Two.Anchor.AppendCurveProperties(obj);
+            }
+
+            obj.controls.left.x = v.controls.left.x;
+            obj.controls.left.y = v.controls.left.y;
+            obj.controls.right.x = v.controls.right.x;
+            obj.controls.right.y = v.controls.right.y;
+
+            if (v.relative && _.isBoolean(obj.relative) && !obj.relative) {
+              obj.controls.left.x += v.x;
+              obj.controls.left.y += v.y;
+              obj.controls.right.x += v.x;
+              obj.controls.right.y += v.y;
+            } else if (!v.relative && (!_.isBoolean(obj.relative) || obj.relative)) {
+              obj.controls.left.x -= v.x;
+              obj.controls.left.y -= v.y;
+              obj.controls.right.x -= v.x;
+              obj.controls.right.y -= v.y;
+            }
+
+          }
+
+          return obj;
+
+        }
+
+        return v.clone();
+
+      } else if (t <= 0) {
+
+        var v = this.vertices[0];
+
+        if (_.isObject(obj)) {
+
+          obj.x = v.x;
+          obj.y = v.y;
+
+          if (_.isObject(v.controls)) {
+
+            if (!_.isObject(obj.controls)) {
+              Two.Anchor.AppendCurveProperties(obj);
+            }
+
+            obj.controls.left.x = v.controls.left.x;
+            obj.controls.left.y = v.controls.left.y;
+            obj.controls.right.x = v.controls.right.x;
+            obj.controls.right.y = v.controls.right.y;
+
+            if (v.relative && _.isBoolean(obj.relative) && !obj.relative) {
+              obj.controls.left.x += v.x;
+              obj.controls.left.y += v.y;
+              obj.controls.right.x += v.x;
+              obj.controls.right.y += v.y;
+            } else if (!v.relative && (!_.isBoolean(obj.relative) || obj.relative)) {
+              obj.controls.left.x -= v.x;
+              obj.controls.left.y -= v.y;
+              obj.controls.right.x -= v.x;
+              obj.controls.right.y -= v.y;
+            }
+
+          }
+
+          return obj;
+
+        }
+
+        return v.clone();
+
+      }
 
       for (var i = 0, l = this._lengths.length, sum = 0; i < l; i++) {
 
@@ -554,7 +637,7 @@
 
       }
 
-      // console.log(sum, a.command, b.command);
+      // console.log(sum, a, b);
 
       if (_.isNull(a) || _.isNull(b)) {
         return null;
@@ -585,15 +668,49 @@
       x = Two.Utils.getPointOnCubicBezier(t, x1, x2, x3, x4);
       y = Two.Utils.getPointOnCubicBezier(t, y1, y2, y3, y4);
 
-      // TODO: Get the control points to stay consistent on the curve.
+      // Higher order points for control calculation.
+      var t1x = Two.Utils.lerp(x1, x2, t);
+      var t1y = Two.Utils.lerp(y1, y2, t);
+      var t2x = Two.Utils.lerp(x2, x3, t);
+      var t2y = Two.Utils.lerp(y2, y3, t);
+      var t3x = Two.Utils.lerp(x3, x4, t);
+      var t3y = Two.Utils.lerp(y3, y4, t);
+
+      // Calculate the returned points control points.
+      var brx = Two.Utils.lerp(t1x, t2x, t);
+      var bry = Two.Utils.lerp(t1y, t2y, t);
+      var alx = Two.Utils.lerp(t2x, t3x, t);
+      var aly = Two.Utils.lerp(t2y, t3y, t);
 
       if (_.isObject(obj)) {
+
         obj.x = x;
         obj.y = y;
+
+        if (!_.isObject(obj.controls)) {
+          Two.Anchor.AppendCurveProperties(obj);
+        }
+
+        obj.controls.left.x = brx;
+        obj.controls.left.y = bry;
+        obj.controls.right.x = alx;
+        obj.controls.right.y = aly;
+
+        if (!_.isBoolean(obj.relative) || obj.relative) {
+          obj.controls.left.x -= x;
+          obj.controls.left.y -= y;
+          obj.controls.right.x -= x;
+          obj.controls.right.y -= y;
+        }
+
         return obj;
+
       }
 
-      return new Two.Vector(x, y);
+      return new Two.Anchor(
+        x, y, brx - x, bry - y, alx - x, aly - y,
+        this._curved ? Two.Commands.curve : Two.Commands.line
+      );
 
     },
 
@@ -753,34 +870,50 @@
         var l = this._collection.length;
         var last = l - 1;
 
-        var low = ceil(this._beginning * l);
-        var high = floor(this._ending * l);
+        var beginning = this._beginning;
+        var ending = this._ending;
 
-        var a = min(low, high);
-        var b = max(low, high);
+        var bid, eid;
+
+        if (this._closed) {
+          bid = beginning * l;
+          eid = ending * l;
+        } else {
+          bid = beginning * last;
+          eid = ending * last;
+        }
+
+        var low = ceil(min(bid, eid));
+        var high = floor(max(bid, eid));
+
+        var left, right;
+
+        this._vertices.length = 0;
 
         for (var i = 0; i < l; i++) {
 
-          if (this._vertices.length <= i) {
-            this._vertices.push(new Two.Anchor());
-          }
-
           var v = this._vertices[i];
 
-          if (i < a) {
-            this.getPointAt(this._beginning, v);
-            if (v.controls) {
-              v.controls.left.clear();
-              v.controls.right.clear();
+          if (i < low) {
+            if (!left) {
+              left = this.getPointAt(beginning);
+              left.command = Two.Commands.move;
+              this._vertices.push(left);
+              // if (this._vertices[i - 1] && this._vertices[i - 1].controls) {
+              //   this._vertices[i - 1].controls.right.clear();
+              // }
             }
-          } else if (i > b) {
-            this.getPointAt(this._ending, v);
-            if (v.controls) {
-              v.controls.left.clear();
-              v.controls.right.clear();
+          } else if (i > high) {
+            if (!right) {
+              right = this.getPointAt(ending);
+              this._vertices.push(right);
+              // right.controls.left.clear();
+              // if (this._vertices[i - 1] && this._vertices[i - 1].controls) {
+              //   this._vertices[i - 1].controls.right.clear();
+              // }
             }
           } else {
-            v.copy(this._collection[i]);
+            this._vertices.push(this._collection[i]);
           }
 
         }

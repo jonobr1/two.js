@@ -92,14 +92,11 @@
       // Make it possible to bind and still have the Anchor specific
       // inheritance from Two.Vector
       object.bind = object.on = function() {
+        var bound = this._bound;
         Two.Vector.prototype.bind.apply(this, arguments);
-        if (!this._bound) {
+        if (!bound) {
           _.extend(this, AnchorProto);
         }
-      };
-
-      object.unbind = object.off = function() {
-        Two.Vector.prototype.unbind.apply(this, arguments);
       };
 
     }
