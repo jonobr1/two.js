@@ -5,6 +5,7 @@
    */
 
   var min = Math.min, max = Math.max, round = Math.round,
+    ceil = Math.ceil, floor = Math.floor,
     getComputedMatrix = Two.Utils.getComputedMatrix;
 
   var commands = {};
@@ -601,12 +602,12 @@
     plot: function() {
 
       if (this.curved) {
-        Two.Utils.getCurveFromPoints(this._vertices, this.closed);
+        Two.Utils.getCurveFromPoints(this._collection, this.closed);
         return this;
       }
 
-      for (var i = 0; i < this._vertices.length; i++) {
-        this._vertices[i]._command = i === 0 ? Two.Commands.move : Two.Commands.line;
+      for (var i = 0; i < this._collection.length; i++) {
+        this._collection[i].command = i === 0 ? Two.Commands.move : Two.Commands.line;
       }
 
       return this;
@@ -688,9 +689,11 @@
 
     },
 
-    _updateLength: function(limit) {
+    _updateLength: function(limit, silent) {
       //TODO: DRYness (function above)
-      this._update();
+      if (!silent) {
+        this._update();
+      }
 
       var length = this.vertices.length;
       var last = length - 1;
@@ -727,6 +730,7 @@
       }, this);
 
       this._length = sum;
+      this._flagLength = false;
 
       return this;
 
@@ -736,23 +740,47 @@
 
       if (this._flagVertices) {
 
-        var l = this.vertices.length;
-        var last = l - 1, v;
-
-        // TODO: Should clamp this so that `ia` and `ib`
-        // cannot select non-verts.
-        var ia = round((this._beginning) * last);
-        var ib = round((this._ending) * last);
-
-        this._vertices.length = 0;
-
-        for (var i = ia; i < ib + 1; i++) {
-          v = this.vertices[i];
-          this._vertices.push(v);
-        }
-
         if (this._automatic) {
           this.plot();
+        }
+
+        if (this._flagLength) {
+          this._updateLength(undefined, true);
+        }
+
+        var l = this._collection.length;
+        var last = l - 1;
+
+        var low = ceil(this._beginning * l);
+        var high = floor(this._ending * l);
+
+        var a = min(low, high);
+        var b = max(low, high);
+
+        for (var i = 0; i < l; i++) {
+
+          if (this._vertices.length <= i) {
+            this._vertices.push(new Two.Anchor());
+          }
+
+          var v = this._vertices[i];
+
+          if (i < a) {
+            this.getPointAt(this._beginning, v);
+            if (v.controls) {
+              v.controls.left.clear();
+              v.controls.right.clear();
+            }
+          } else if (i > b) {
+            this.getPointAt(this._ending, v);
+            if (v.controls) {
+              v.controls.left.clear();
+              v.controls.right.clear();
+            }
+          } else {
+            v.copy(this._collection[i]);
+          }
+
         }
 
       }

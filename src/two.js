@@ -1604,13 +1604,7 @@
           var c = points[next];
           getControlPoints(a, b, c);
 
-          b._command = i === 0 ? Two.Commands.move : Two.Commands.curve;
-
-          b.controls.left.x = _.isNumber(b.controls.left.x) ? b.controls.left.x : b.x;
-          b.controls.left.y = _.isNumber(b.controls.left.y) ? b.controls.left.y : b.y;
-
-          b.controls.right.x = _.isNumber(b.controls.right.x) ? b.controls.right.x : b.x;
-          b.controls.right.y = _.isNumber(b.controls.right.y) ? b.controls.right.y : b.y;
+          b.command = i === 0 ? Two.Commands.move : Two.Commands.curve;
 
         }
 
@@ -1630,14 +1624,9 @@
 
         var mid = (a1 + a2) / 2;
 
-        // So we know which angle corresponds to which side.
-
-        b.u = _.isObject(b.controls.left) ? b.controls.left : new Two.Vector(0, 0);
-        b.v = _.isObject(b.controls.right) ? b.controls.right : new Two.Vector(0, 0);
-
         // TODO: Issue 73
         if (d1 < 0.0001 || d2 < 0.0001) {
-          if (!b._relative) {
+          if (_.isBoolean(b.relative) && !b.relative) {
             b.controls.left.copy(b);
             b.controls.right.copy(b);
           }
@@ -1661,7 +1650,7 @@
         b.controls.right.x = cos(mid) * d2;
         b.controls.right.y = sin(mid) * d2;
 
-        if (!b._relative) {
+        if (_.isBoolean(b.relative) && !b.relative) {
           b.controls.left.x += b.x;
           b.controls.left.y += b.y;
           b.controls.right.x += b.x;

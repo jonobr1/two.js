@@ -85,10 +85,10 @@
 
         // Access x and y directly,
         // bypassing the getter
-        var x = toFixed(b._x);
-        var y = toFixed(b._y);
+        var x = toFixed(b.x);
+        var y = toFixed(b.y);
 
-        switch (b._command) {
+        switch (b.command) {
 
           case Two.Commands.close:
             command = Two.Commands.close;
@@ -99,7 +99,7 @@
             ar = (a.controls && a.controls.right) || Two.Vector.zero;
             bl = (b.controls && b.controls.left) || Two.Vector.zero;
 
-            if (a._relative) {
+            if (a.relative) {
               vx = toFixed((ar.x + a.x));
               vy = toFixed((ar.y + a.y));
             } else {
@@ -107,7 +107,7 @@
               vy = toFixed(ar.y);
             }
 
-            if (b._relative) {
+            if (b.relative) {
               ux = toFixed((bl.x + b.x));
               uy = toFixed((bl.y + b.y));
             } else {
@@ -125,7 +125,7 @@
             break;
 
           default:
-            command = b._command + ' ' + x + ' ' + y;
+            command = b.command + ' ' + x + ' ' + y;
 
         }
 
@@ -133,7 +133,7 @@
 
         if (i >= last && closed) {
 
-          if (b._command === Two.Commands.curve) {
+          if (b.command === Two.Commands.curve) {
 
             // Make sure we close to the most previous Two.Commands.move
             c = d;
@@ -141,7 +141,7 @@
             br = (b.controls && b.controls.right) || b;
             cl = (c.controls && c.controls.left) || c;
 
-            if (b._relative) {
+            if (b.relative) {
               vx = toFixed((br.x + b.x));
               vy = toFixed((br.y + b.y));
             } else {
@@ -149,7 +149,7 @@
               vy = toFixed(br.y);
             }
 
-            if (c._relative) {
+            if (c.relative) {
               ux = toFixed((cl.x + c.x));
               uy = toFixed((cl.y + c.y));
             } else {

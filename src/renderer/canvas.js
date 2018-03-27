@@ -179,10 +179,10 @@
 
           b = commands[i];
 
-          x = toFixed(b._x);
-          y = toFixed(b._y);
+          x = toFixed(b.x);
+          y = toFixed(b.y);
 
-          switch (b._command) {
+          switch (b.command) {
 
             case Two.Commands.close:
               ctx.closePath();
@@ -199,16 +199,16 @@
               bl = (b.controls && b.controls.left) || Two.Vector.zero;
 
               if (a._relative) {
-                vx = (ar.x + toFixed(a._x));
-                vy = (ar.y + toFixed(a._y));
+                vx = (ar.x + toFixed(a.x));
+                vy = (ar.y + toFixed(a.y));
               } else {
                 vx = toFixed(ar.x);
                 vy = toFixed(ar.y);
               }
 
               if (b._relative) {
-                ux = (bl.x + toFixed(b._x));
-                uy = (bl.y + toFixed(b._y));
+                ux = (bl.x + toFixed(b.x));
+                uy = (bl.y + toFixed(b.y));
               } else {
                 ux = toFixed(bl.x);
                 uy = toFixed(bl.y);
@@ -224,23 +224,23 @@
                 cl = (c.controls && c.controls.left) || Two.Vector.zero;
 
                 if (b._relative) {
-                  vx = (br.x + toFixed(b._x));
-                  vy = (br.y + toFixed(b._y));
+                  vx = (br.x + toFixed(b.x));
+                  vy = (br.y + toFixed(b.y));
                 } else {
                   vx = toFixed(br.x);
                   vy = toFixed(br.y);
                 }
 
                 if (c._relative) {
-                  ux = (cl.x + toFixed(c._x));
-                  uy = (cl.y + toFixed(c._y));
+                  ux = (cl.x + toFixed(c.x));
+                  uy = (cl.y + toFixed(c.y));
                 } else {
                   ux = toFixed(cl.x);
                   uy = toFixed(cl.y);
                 }
 
-                x = toFixed(c._x);
-                y = toFixed(c._y);
+                x = toFixed(c.x);
+                y = toFixed(c.y);
 
                 ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
 

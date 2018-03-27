@@ -130,6 +130,30 @@
 
     },
 
+    copy: function(v) {
+
+      this.x = v.x;
+      this.y = v.y;
+
+      if (_.isString(v.command)) {
+        this.command = v.command;
+      }
+      if (_.isObject(v.controls)) {
+        if (!_.isObject(this.controls)) {
+          Anchor.AppendCurveProperties(this);
+        }
+        // TODO: Do we need to listen here?
+        this.controls.left.copy(v.controls.left);
+        this.controls.right.copy(v.controls.right);
+      }
+      if (_.isBoolean(v.relative)) {
+        this.relative = v.relative;
+      }
+
+      return this;
+
+    },
+
     clone: function() {
 
       var controls = this.controls;
