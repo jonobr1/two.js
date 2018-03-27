@@ -109,6 +109,8 @@ process.exit();
 <!-- For the latest nightly changes checkout the `dev` branch [here](../../tree/dev). -->
 
 #### Nightly
++ Moved `Two.Path._vertices` underlying to list of rendered points to `Two.Path._renderer.vertices`
++ Improved accuracy of `Two.Path.ending` and `Two.Path.beginning` on open paths
 + Added specific `clone` method to `Two.ArcSegment`, `Two.Circle`, `Two.Ellipse`, `Two.Polygon`, `Two.Rectangle`, `Two.RoundedRectangle`, and `Two.Star` primitives
 + Added ability to read `viewBox` property from root SVG node in `Two.interpret`
 + Added more reliable transform getter in `Two.interpret`

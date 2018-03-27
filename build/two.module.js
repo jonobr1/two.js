@@ -1630,13 +1630,7 @@ SOFTWARE.
           var c = points[next];
           getControlPoints(a, b, c);
 
-          b._command = i === 0 ? Two.Commands.move : Two.Commands.curve;
-
-          b.controls.left.x = _.isNumber(b.controls.left.x) ? b.controls.left.x : b.x;
-          b.controls.left.y = _.isNumber(b.controls.left.y) ? b.controls.left.y : b.y;
-
-          b.controls.right.x = _.isNumber(b.controls.right.x) ? b.controls.right.x : b.x;
-          b.controls.right.y = _.isNumber(b.controls.right.y) ? b.controls.right.y : b.y;
+          b.command = i === 0 ? Two.Commands.move : Two.Commands.curve;
 
         }
 
@@ -1656,14 +1650,9 @@ SOFTWARE.
 
         var mid = (a1 + a2) / 2;
 
-        // So we know which angle corresponds to which side.
-
-        b.u = _.isObject(b.controls.left) ? b.controls.left : new Two.Vector(0, 0);
-        b.v = _.isObject(b.controls.right) ? b.controls.right : new Two.Vector(0, 0);
-
         // TODO: Issue 73
         if (d1 < 0.0001 || d2 < 0.0001) {
-          if (!b._relative) {
+          if (_.isBoolean(b.relative) && !b.relative) {
             b.controls.left.copy(b);
             b.controls.right.copy(b);
           }
@@ -1687,7 +1676,7 @@ SOFTWARE.
         b.controls.right.x = cos(mid) * d2;
         b.controls.right.y = sin(mid) * d2;
 
-        if (!b._relative) {
+        if (_.isBoolean(b.relative) && !b.relative) {
           b.controls.left.x += b.x;
           b.controls.left.y += b.y;
           b.controls.right.x += b.x;
@@ -2941,14 +2930,11 @@ SOFTWARE.
       // Make it possible to bind and still have the Anchor specific
       // inheritance from Two.Vector
       object.bind = object.on = function() {
+        var bound = this._bound;
         Two.Vector.prototype.bind.apply(this, arguments);
-        if (!this._bound) {
+        if (!bound) {
           _.extend(this, AnchorProto);
         }
-      };
-
-      object.unbind = object.off = function() {
-        Two.Vector.prototype.unbind.apply(this, arguments);
       };
 
     }
@@ -2974,6 +2960,30 @@ SOFTWARE.
 
       this.controls.left.unbind(Two.Events.change, this._broadcast);
       this.controls.right.unbind(Two.Events.change, this._broadcast);
+
+      return this;
+
+    },
+
+    copy: function(v) {
+
+      this.x = v.x;
+      this.y = v.y;
+
+      if (_.isString(v.command)) {
+        this.command = v.command;
+      }
+      if (_.isObject(v.controls)) {
+        if (!_.isObject(this.controls)) {
+          Anchor.AppendCurveProperties(this);
+        }
+        // TODO: Do we need to listen here?
+        this.controls.left.copy(v.controls.left);
+        this.controls.right.copy(v.controls.right);
+      }
+      if (_.isBoolean(v.relative)) {
+        this.relative = v.relative;
+      }
 
       return this;
 
@@ -3520,10 +3530,10 @@ SOFTWARE.
 
         // Access x and y directly,
         // bypassing the getter
-        var x = toFixed(b._x);
-        var y = toFixed(b._y);
+        var x = toFixed(b.x);
+        var y = toFixed(b.y);
 
-        switch (b._command) {
+        switch (b.command) {
 
           case Two.Commands.close:
             command = Two.Commands.close;
@@ -3534,7 +3544,7 @@ SOFTWARE.
             ar = (a.controls && a.controls.right) || Two.Vector.zero;
             bl = (b.controls && b.controls.left) || Two.Vector.zero;
 
-            if (a._relative) {
+            if (a.relative) {
               vx = toFixed((ar.x + a.x));
               vy = toFixed((ar.y + a.y));
             } else {
@@ -3542,7 +3552,7 @@ SOFTWARE.
               vy = toFixed(ar.y);
             }
 
-            if (b._relative) {
+            if (b.relative) {
               ux = toFixed((bl.x + b.x));
               uy = toFixed((bl.y + b.y));
             } else {
@@ -3560,7 +3570,7 @@ SOFTWARE.
             break;
 
           default:
-            command = b._command + ' ' + x + ' ' + y;
+            command = b.command + ' ' + x + ' ' + y;
 
         }
 
@@ -3568,7 +3578,7 @@ SOFTWARE.
 
         if (i >= last && closed) {
 
-          if (b._command === Two.Commands.curve) {
+          if (b.command === Two.Commands.curve) {
 
             // Make sure we close to the most previous Two.Commands.move
             c = d;
@@ -3576,7 +3586,7 @@ SOFTWARE.
             br = (b.controls && b.controls.right) || b;
             cl = (c.controls && c.controls.left) || c;
 
-            if (b._relative) {
+            if (b.relative) {
               vx = toFixed((br.x + b.x));
               vy = toFixed((br.y + b.y));
             } else {
@@ -3584,7 +3594,7 @@ SOFTWARE.
               vy = toFixed(br.y);
             }
 
-            if (c._relative) {
+            if (c.relative) {
               ux = toFixed((cl.x + c.x));
               uy = toFixed((cl.y + c.y));
             } else {
@@ -3799,7 +3809,7 @@ SOFTWARE.
         }
 
         if (this._flagVertices) {
-          var vertices = svg.toString(this._vertices, this._closed);
+          var vertices = svg.toString(this._renderer.vertices, this._closed);
           changed.d = vertices;
         }
 
@@ -4463,7 +4473,7 @@ SOFTWARE.
         join = this._join;
         miter = this._miter;
         closed = this._closed;
-        commands = this._vertices; // Commands
+        commands = this._renderer.vertices; // Commands
         length = commands.length;
         last = length - 1;
         defaultMatrix = isDefaultMatrix(matrix);
@@ -4530,10 +4540,10 @@ SOFTWARE.
 
           b = commands[i];
 
-          x = toFixed(b._x);
-          y = toFixed(b._y);
+          x = toFixed(b.x);
+          y = toFixed(b.y);
 
-          switch (b._command) {
+          switch (b.command) {
 
             case Two.Commands.close:
               ctx.closePath();
@@ -4550,16 +4560,16 @@ SOFTWARE.
               bl = (b.controls && b.controls.left) || Two.Vector.zero;
 
               if (a._relative) {
-                vx = (ar.x + toFixed(a._x));
-                vy = (ar.y + toFixed(a._y));
+                vx = (ar.x + toFixed(a.x));
+                vy = (ar.y + toFixed(a.y));
               } else {
                 vx = toFixed(ar.x);
                 vy = toFixed(ar.y);
               }
 
               if (b._relative) {
-                ux = (bl.x + toFixed(b._x));
-                uy = (bl.y + toFixed(b._y));
+                ux = (bl.x + toFixed(b.x));
+                uy = (bl.y + toFixed(b.y));
               } else {
                 ux = toFixed(bl.x);
                 uy = toFixed(bl.y);
@@ -4575,23 +4585,23 @@ SOFTWARE.
                 cl = (c.controls && c.controls.left) || Two.Vector.zero;
 
                 if (b._relative) {
-                  vx = (br.x + toFixed(b._x));
-                  vy = (br.y + toFixed(b._y));
+                  vx = (br.x + toFixed(b.x));
+                  vy = (br.y + toFixed(b.y));
                 } else {
                   vx = toFixed(br.x);
                   vy = toFixed(br.y);
                 }
 
                 if (c._relative) {
-                  ux = (cl.x + toFixed(c._x));
-                  uy = (cl.y + toFixed(c._y));
+                  ux = (cl.x + toFixed(c.x));
+                  uy = (cl.y + toFixed(c.y));
                 } else {
                   ux = toFixed(cl.x);
                   uy = toFixed(cl.y);
                 }
 
-                x = toFixed(c._x);
-                y = toFixed(c._y);
+                x = toFixed(c.x);
+                y = toFixed(c.y);
 
                 ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
 
@@ -5148,7 +5158,7 @@ SOFTWARE.
         var next, prev, a, c, ux, uy, vx, vy, ar, bl, br, cl, x, y;
         var isOffset;
 
-        var commands = elem._vertices;
+        var commands = elem._renderer.vertices;
         var canvas = this.canvas;
         var ctx = this.ctx;
 
@@ -5216,10 +5226,10 @@ SOFTWARE.
 
           var b = commands[i];
 
-          x = toFixed(b._x);
-          y = toFixed(b._y);
+          x = toFixed(b.x);
+          y = toFixed(b.y);
 
-          switch (b._command) {
+          switch (b.command) {
 
             case Two.Commands.close:
               ctx.closePath();
@@ -5236,16 +5246,16 @@ SOFTWARE.
               bl = (b.controls && b.controls.left) || Two.Vector.zero;
 
               if (a._relative) {
-                vx = toFixed((ar.x + a._x));
-                vy = toFixed((ar.y + a._y));
+                vx = toFixed((ar.x + a.x));
+                vy = toFixed((ar.y + a.y));
               } else {
                 vx = toFixed(ar.x);
                 vy = toFixed(ar.y);
               }
 
               if (b._relative) {
-                ux = toFixed((bl.x + b._x));
-                uy = toFixed((bl.y + b._y));
+                ux = toFixed((bl.x + b.x));
+                uy = toFixed((bl.y + b.y));
               } else {
                 ux = toFixed(bl.x);
                 uy = toFixed(bl.y);
@@ -5261,23 +5271,23 @@ SOFTWARE.
                 cl = (c.controls && c.controls.left) || Two.Vector.zero;
 
                 if (b._relative) {
-                  vx = toFixed((br.x + b._x));
-                  vy = toFixed((br.y + b._y));
+                  vx = toFixed((br.x + b.x));
+                  vy = toFixed((br.y + b.y));
                 } else {
                   vx = toFixed(br.x);
                   vy = toFixed(br.y);
                 }
 
                 if (c._relative) {
-                  ux = toFixed((cl.x + c._x));
-                  uy = toFixed((cl.y + c._y));
+                  ux = toFixed((cl.x + c.x));
+                  uy = toFixed((cl.y + c.y));
                 } else {
                   ux = toFixed(cl.x);
                   uy = toFixed(cl.y);
                 }
 
-                x = toFixed(c._x);
-                y = toFixed(c._y);
+                x = toFixed(c.x);
+                y = toFixed(c.y);
 
                 ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
 
@@ -5464,7 +5474,7 @@ SOFTWARE.
 
           this._renderer.opacity = this._opacity * parent._renderer.opacity;
 
-          webgl.path.getBoundingClientRect(this._vertices, this._linewidth, this._renderer.rect);
+          webgl.path.getBoundingClientRect(this._renderer.vertices, this._linewidth, this._renderer.rect);
           webgl.getTriangles(this._renderer.rect, this._renderer.triangles);
 
           webgl.updateBuffer.call(webgl, gl, this, program);
@@ -6416,6 +6426,7 @@ SOFTWARE.
    */
 
   var min = Math.min, max = Math.max, round = Math.round,
+    ceil = Math.ceil, floor = Math.floor,
     getComputedMatrix = Two.Utils.getComputedMatrix;
 
   var commands = {};
@@ -6436,6 +6447,8 @@ SOFTWARE.
 
     this._renderer.flagFill = _.bind(Path.FlagFill, this);
     this._renderer.flagStroke = _.bind(Path.FlagStroke, this);
+    this._renderer.vertices = [];
+    this._renderer.collection = [];
 
     this._closed = !!closed;
     this._curved = !!curved;
@@ -6456,7 +6469,6 @@ SOFTWARE.
     this.join = 'miter';    // Default of Adobe Illustrator
     this.miter = 4;         // Default of Adobe Illustrator
 
-    this._vertices = [];
     this.vertices = vertices;
 
     // Determines whether or not two.js should calculate curves, lines, and
@@ -6760,7 +6772,7 @@ SOFTWARE.
 
       var clone = new Path(points, this.closed, this.curved, !this.automatic);
 
-      _.each(Two.Path.Properties, function(k) {
+      _.each(Path.Properties, function(k) {
         clone[k] = this[k];
       }, this);
 
@@ -6881,7 +6893,7 @@ SOFTWARE.
       matrix = !!shallow ? this._matrix : getComputedMatrix(this);
 
       border = this.linewidth / 2;
-      l = this._vertices.length;
+      l = this._renderer.vertices.length;
 
       if (l <= 0) {
         v = matrix.multiply(0, 0, 1);
@@ -6896,7 +6908,7 @@ SOFTWARE.
       }
 
       for (i = 0; i < l; i++) {
-        v = this._vertices[i];
+        v = this._renderer.vertices[i];
 
         x = v.x;
         y = v.y;
@@ -6924,7 +6936,8 @@ SOFTWARE.
      * coordinates to that percentage on this Two.Path's curve.
      */
     getPointAt: function(t, obj) {
-      var ia, ib;
+
+      var ia, ib, result;
       var x, x1, x2, x3, x4, y, y1, y2, y3, y4, left, right;
       var target = this.length * Math.min(Math.max(t, 0), 1);
       var length = this.vertices.length;
@@ -6932,6 +6945,98 @@ SOFTWARE.
 
       var a = null;
       var b = null;
+
+      if (t >= 1) {
+
+        var v = this.vertices[last];
+
+        if (_.isObject(obj)) {
+
+          obj.x = v.x;
+          obj.y = v.y;
+
+          if (_.isObject(v.controls)) {
+
+            if (!_.isObject(obj.controls)) {
+              Two.Anchor.AppendCurveProperties(obj);
+            }
+
+            obj.controls.left.x = v.controls.left.x;
+            obj.controls.left.y = v.controls.left.y;
+            obj.controls.right.x = v.controls.right.x;
+            obj.controls.right.y = v.controls.right.y;
+
+            if (v.relative && _.isBoolean(obj.relative) && !obj.relative) {
+              obj.controls.left.x += v.x;
+              obj.controls.left.y += v.y;
+              obj.controls.right.x += v.x;
+              obj.controls.right.y += v.y;
+            } else if (!v.relative && (!_.isBoolean(obj.relative) || obj.relative)) {
+              obj.controls.left.x -= v.x;
+              obj.controls.left.y -= v.y;
+              obj.controls.right.x -= v.x;
+              obj.controls.right.y -= v.y;
+            }
+
+          }
+
+          obj.t = 1;
+
+          return obj;
+
+        }
+
+        result = v.clone();
+        result.t = 1;
+
+        return v;
+
+      } else if (t <= 0) {
+
+        var v = this.vertices[0];
+
+        if (_.isObject(obj)) {
+
+          obj.x = v.x;
+          obj.y = v.y;
+
+          if (_.isObject(v.controls)) {
+
+            if (!_.isObject(obj.controls)) {
+              Two.Anchor.AppendCurveProperties(obj);
+            }
+
+            obj.controls.left.x = v.controls.left.x;
+            obj.controls.left.y = v.controls.left.y;
+            obj.controls.right.x = v.controls.right.x;
+            obj.controls.right.y = v.controls.right.y;
+
+            if (v.relative && _.isBoolean(obj.relative) && !obj.relative) {
+              obj.controls.left.x += v.x;
+              obj.controls.left.y += v.y;
+              obj.controls.right.x += v.x;
+              obj.controls.right.y += v.y;
+            } else if (!v.relative && (!_.isBoolean(obj.relative) || obj.relative)) {
+              obj.controls.left.x -= v.x;
+              obj.controls.left.y -= v.y;
+              obj.controls.right.x -= v.x;
+              obj.controls.right.y -= v.y;
+            }
+
+          }
+
+          obj.t = 0;
+
+          return obj;
+
+        }
+
+        result = v.clone();
+        result.t = 0;
+
+        return result;
+
+      }
 
       for (var i = 0, l = this._lengths.length, sum = 0; i < l; i++) {
 
@@ -6954,6 +7059,8 @@ SOFTWARE.
           target -= sum;
           if (this._lengths[i] !== 0) {
             t = target / this._lengths[i];
+          } else {
+            t = 0;
           }
 
           break;
@@ -6964,7 +7071,7 @@ SOFTWARE.
 
       }
 
-      // console.log(sum, a.command, b.command);
+      // console.log(sum, a, b);
 
       if (_.isNull(a) || _.isNull(b)) {
         return null;
@@ -6995,13 +7102,55 @@ SOFTWARE.
       x = Two.Utils.getPointOnCubicBezier(t, x1, x2, x3, x4);
       y = Two.Utils.getPointOnCubicBezier(t, y1, y2, y3, y4);
 
+      // Higher order points for control calculation.
+      var t1x = Two.Utils.lerp(x1, x2, t);
+      var t1y = Two.Utils.lerp(y1, y2, t);
+      var t2x = Two.Utils.lerp(x2, x3, t);
+      var t2y = Two.Utils.lerp(y2, y3, t);
+      var t3x = Two.Utils.lerp(x3, x4, t);
+      var t3y = Two.Utils.lerp(y3, y4, t);
+
+      // Calculate the returned points control points.
+      var brx = Two.Utils.lerp(t1x, t2x, t);
+      var bry = Two.Utils.lerp(t1y, t2y, t);
+      var alx = Two.Utils.lerp(t2x, t3x, t);
+      var aly = Two.Utils.lerp(t2y, t3y, t);
+
       if (_.isObject(obj)) {
+
         obj.x = x;
         obj.y = y;
+
+        if (!_.isObject(obj.controls)) {
+          Two.Anchor.AppendCurveProperties(obj);
+        }
+
+        obj.controls.left.x = brx;
+        obj.controls.left.y = bry;
+        obj.controls.right.x = alx;
+        obj.controls.right.y = aly;
+
+        if (!_.isBoolean(obj.relative) || obj.relative) {
+          obj.controls.left.x -= x;
+          obj.controls.left.y -= y;
+          obj.controls.right.x -= x;
+          obj.controls.right.y -= y;
+        }
+
+        obj.t = t;
+
         return obj;
+
       }
 
-      return new Two.Vector(x, y);
+      result = new Two.Anchor(
+        x, y, brx - x, bry - y, alx - x, aly - y,
+        this._curved ? Two.Commands.curve : Two.Commands.line
+      );
+
+      result.t = t;
+
+      return result;
 
     },
 
@@ -7012,12 +7161,12 @@ SOFTWARE.
     plot: function() {
 
       if (this.curved) {
-        Two.Utils.getCurveFromPoints(this._vertices, this.closed);
+        Two.Utils.getCurveFromPoints(this._collection, this.closed);
         return this;
       }
 
-      for (var i = 0; i < this._vertices.length; i++) {
-        this._vertices[i]._command = i === 0 ? Two.Commands.move : Two.Commands.line;
+      for (var i = 0; i < this._collection.length; i++) {
+        this._collection[i].command = i === 0 ? Two.Commands.move : Two.Commands.line;
       }
 
       return this;
@@ -7099,9 +7248,11 @@ SOFTWARE.
 
     },
 
-    _updateLength: function(limit) {
+    _updateLength: function(limit, silent) {
       //TODO: DRYness (function above)
-      this._update();
+      if (!silent) {
+        this._update();
+      }
 
       var length = this.vertices.length;
       var last = length - 1;
@@ -7138,6 +7289,7 @@ SOFTWARE.
       }, this);
 
       this._length = sum;
+      this._flagLength = false;
 
       return this;
 
@@ -7147,23 +7299,94 @@ SOFTWARE.
 
       if (this._flagVertices) {
 
-        var l = this.vertices.length;
-        var last = l - 1, v;
-
-        // TODO: Should clamp this so that `ia` and `ib`
-        // cannot select non-verts.
-        var ia = round((this._beginning) * last);
-        var ib = round((this._ending) * last);
-
-        this._vertices.length = 0;
-
-        for (var i = ia; i < ib + 1; i++) {
-          v = this.vertices[i];
-          this._vertices.push(v);
-        }
-
         if (this._automatic) {
           this.plot();
+        }
+
+        if (this._flagLength) {
+          this._updateLength(undefined, true);
+        }
+
+        var l = this._collection.length;
+        var last = l - 1;
+
+        var beginning = this._beginning;
+        var ending = this._ending;
+
+        var bid, eid;
+
+        if (this._closed) {
+          bid = beginning * l;
+          eid = ending * l;
+        } else {
+          bid = beginning * last;
+          eid = ending * last;
+        }
+
+        var low = ceil(min(bid, eid));
+        var high = floor(max(bid, eid));
+
+        var left, right, prev, next, v;
+
+        this._renderer.vertices.length = 0;
+
+        for (var i = 0; i < l; i++) {
+
+          if (this._renderer.collection.length <= i) {
+            // Expected to be `relative` anchor points.
+            this._renderer.collection.push(new Two.Anchor());
+          }
+
+          if (i > high && !right) {
+
+            v = this._renderer.collection[i]
+              .copy(this._collection[i]);
+            this.getPointAt(ending, v);
+            this._renderer.vertices.push(v);
+
+            right = v;
+            prev = this._collection[i - 1];
+
+            // Project control over the percentage `t`
+            // of the in-between point
+            if (prev && prev.controls) {
+              this._renderer.collection[i - 1].controls.right
+                .clear()
+                .lerp(prev.controls.right, v.t);
+            }
+
+          } else if (i >= low && i <= high) {
+
+            v = this._renderer.collection[i]
+              .copy(this._collection[i]);
+            this._renderer.vertices.push(v);
+
+          }
+
+        }
+
+        // Prepend the trimmed point if necessary.
+        if (low - 1 >= 0) {
+
+          i = low - 1;
+
+          v = this._renderer.collection[i]
+            .copy(this._collection[i]);
+          this.getPointAt(beginning, v);
+          v.command = Two.Commands.move;
+          this._renderer.vertices.unshift(v);
+
+          left = v;
+          next = this._collection[i + 1];
+
+          // Project control over the percentage `t`
+          // of the in-between point
+          if (!this._closed && next && next.controls) {
+            this._renderer.collection[i + 1].controls.left
+              .copy(next.controls.left)
+              .lerp(Two.Vector.zero, v.t);
+          }
+
         }
 
       }
@@ -7364,6 +7587,10 @@ SOFTWARE.
       clone.rotation = this.rotation;
       clone.scale = this.scale;
 
+      _.each(Two.Path.Properties, function(k) {
+        clone[k] = this[k];
+      }, this);
+
       if (parent) {
         parent.add(clone);
       }
@@ -7463,6 +7690,10 @@ SOFTWARE.
       clone.rotation = this.rotation;
       clone.scale = this.scale;
 
+      _.each(Two.Path.Properties, function(k) {
+        clone[k] = this[k];
+      }, this);
+
       if (parent) {
         parent.add(clone);
       }
@@ -7551,6 +7782,10 @@ SOFTWARE.
       clone.translation.copy(this.translation);
       clone.rotation = this.rotation;
       clone.scale = this.scale;
+
+      _.each(Two.Path.Properties, function(k) {
+        clone[k] = this[k];
+      }, this);
 
       if (parent) {
         parent.add(clone);
@@ -7663,6 +7898,10 @@ SOFTWARE.
       clone.translation.copy(this.translation);
       clone.rotation = this.rotation;
       clone.scale = this.scale;
+
+      _.each(Two.Path.Properties, function(k) {
+        clone[k] = this[k];
+      }, this);
 
       if (parent) {
         parent.add(clone);
@@ -7895,6 +8134,10 @@ SOFTWARE.
       clone.rotation = this.rotation;
       clone.scale = this.scale;
 
+      _.each(Two.Path.Properties, function(k) {
+        clone[k] = this[k];
+      }, this);
+
       if (parent) {
         parent.add(clone);
       }
@@ -8028,6 +8271,10 @@ SOFTWARE.
       clone.translation.copy(this.translation);
       clone.rotation = this.rotation;
       clone.scale = this.scale;
+
+      _.each(Two.Path.Properties, function(k) {
+        clone[k] = this[k];
+      }, this);
 
       if (parent) {
         parent.add(clone);
@@ -8242,6 +8489,10 @@ SOFTWARE.
       clone.translation.copy(this.translation);
       clone.rotation = this.rotation;
       clone.scale = this.scale;
+
+      _.each(Two.Path.Properties, function(k) {
+        clone[k] = this[k];
+      }, this);
 
       if (parent) {
         parent.add(clone);
