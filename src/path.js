@@ -585,6 +585,8 @@
       x = Two.Utils.getPointOnCubicBezier(t, x1, x2, x3, x4);
       y = Two.Utils.getPointOnCubicBezier(t, y1, y2, y3, y4);
 
+      // TODO: Get the control points to stay consistent on the curve.
+
       if (_.isObject(obj)) {
         obj.x = x;
         obj.y = y;
