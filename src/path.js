@@ -26,6 +26,8 @@
 
     this._renderer.flagFill = _.bind(Path.FlagFill, this);
     this._renderer.flagStroke = _.bind(Path.FlagStroke, this);
+    this._renderer.vertices = [];
+    this._renderer.collection = [];
 
     this._closed = !!closed;
     this._curved = !!curved;
@@ -46,7 +48,6 @@
     this.join = 'miter';    // Default of Adobe Illustrator
     this.miter = 4;         // Default of Adobe Illustrator
 
-    this._vertices = [];
     this.vertices = vertices;
 
     // Determines whether or not two.js should calculate curves, lines, and
@@ -350,7 +351,7 @@
 
       var clone = new Path(points, this.closed, this.curved, !this.automatic);
 
-      _.each(Two.Path.Properties, function(k) {
+      _.each(Path.Properties, function(k) {
         clone[k] = this[k];
       }, this);
 
@@ -471,7 +472,7 @@
       matrix = !!shallow ? this._matrix : getComputedMatrix(this);
 
       border = this.linewidth / 2;
-      l = this._vertices.length;
+      l = this._renderer.vertices.length;
 
       if (l <= 0) {
         v = matrix.multiply(0, 0, 1);
@@ -486,7 +487,7 @@
       }
 
       for (i = 0; i < l; i++) {
-        v = this._vertices[i];
+        v = this._renderer.vertices[i];
 
         x = v.x;
         y = v.y;
@@ -515,7 +516,7 @@
      */
     getPointAt: function(t, obj) {
 
-      var ia, ib;
+      var ia, ib, result;
       var x, x1, x2, x3, x4, y, y1, y2, y3, y4, left, right;
       var target = this.length * Math.min(Math.max(t, 0), 1);
       var length = this.vertices.length;
@@ -558,11 +559,16 @@
 
           }
 
+          obj.t = 1;
+
           return obj;
 
         }
 
-        return v.clone();
+        result = v.clone();
+        result.t = 1;
+
+        return v;
 
       } else if (t <= 0) {
 
@@ -598,11 +604,16 @@
 
           }
 
+          obj.t = 0;
+
           return obj;
 
         }
 
-        return v.clone();
+        result = v.clone();
+        result.t = 0;
+
+        return result;
 
       }
 
@@ -627,6 +638,8 @@
           target -= sum;
           if (this._lengths[i] !== 0) {
             t = target / this._lengths[i];
+          } else {
+            t = 0;
           }
 
           break;
@@ -703,14 +716,20 @@
           obj.controls.right.y -= y;
         }
 
+        obj.t = t;
+
         return obj;
 
       }
 
-      return new Two.Anchor(
+      result = new Two.Anchor(
         x, y, brx - x, bry - y, alx - x, aly - y,
         this._curved ? Two.Commands.curve : Two.Commands.line
       );
+
+      result.t = t;
+
+      return result;
 
     },
 
@@ -886,34 +905,65 @@
         var low = ceil(min(bid, eid));
         var high = floor(max(bid, eid));
 
-        var left, right;
+        var left, right, prev, next, v;
 
-        this._vertices.length = 0;
+        this._renderer.vertices.length = 0;
 
         for (var i = 0; i < l; i++) {
 
-          var v = this._vertices[i];
+          if (this._renderer.collection.length <= i) {
+            // Expected to be `relative` anchor points.
+            this._renderer.collection.push(new Two.Anchor());
+          }
 
-          if (i < low) {
-            if (!left) {
-              left = this.getPointAt(beginning);
-              left.command = Two.Commands.move;
-              this._vertices.push(left);
-              // if (this._vertices[i - 1] && this._vertices[i - 1].controls) {
-              //   this._vertices[i - 1].controls.right.clear();
-              // }
+          if (i > high && !right) {
+
+            v = this._renderer.collection[i]
+              .copy(this._collection[i]);
+            this.getPointAt(ending, v);
+            this._renderer.vertices.push(v);
+
+            right = v;
+            prev = this._collection[i - 1];
+
+            // Project control over the percentage `t`
+            // of the in-between point
+            if (prev && prev.controls) {
+              this._renderer.collection[i - 1].controls.right
+                .clear()
+                .lerp(prev.controls.right, v.t);
             }
-          } else if (i > high) {
-            if (!right) {
-              right = this.getPointAt(ending);
-              this._vertices.push(right);
-              // right.controls.left.clear();
-              // if (this._vertices[i - 1] && this._vertices[i - 1].controls) {
-              //   this._vertices[i - 1].controls.right.clear();
-              // }
-            }
-          } else {
-            this._vertices.push(this._collection[i]);
+
+          } else if (i >= low && i <= high) {
+
+            v = this._renderer.collection[i]
+              .copy(this._collection[i]);
+            this._renderer.vertices.push(v);
+
+          }
+
+        }
+
+        // Prepend the trimmed point if necessary.
+        if (low - 1 >= 0) {
+
+          i = low - 1;
+
+          v = this._renderer.collection[i]
+            .copy(this._collection[i]);
+          this.getPointAt(beginning, v);
+          v.command = Two.Commands.move;
+          this._renderer.vertices.unshift(v);
+
+          left = v;
+          next = this._collection[i + 1];
+
+          // Project control over the percentage `t`
+          // of the in-between point
+          if (!this._closed && next && next.controls) {
+            this._renderer.collection[i + 1].controls.left
+              .copy(next.controls.left)
+              .lerp(Two.Vector.zero, v.t);
           }
 
         }

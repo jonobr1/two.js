@@ -141,7 +141,7 @@
         var next, prev, a, c, ux, uy, vx, vy, ar, bl, br, cl, x, y;
         var isOffset;
 
-        var commands = elem._vertices;
+        var commands = elem._renderer.vertices;
         var canvas = this.canvas;
         var ctx = this.ctx;
 
@@ -457,7 +457,7 @@
 
           this._renderer.opacity = this._opacity * parent._renderer.opacity;
 
-          webgl.path.getBoundingClientRect(this._vertices, this._linewidth, this._renderer.rect);
+          webgl.path.getBoundingClientRect(this._renderer.vertices, this._linewidth, this._renderer.rect);
           webgl.getTriangles(this._renderer.rect, this._renderer.triangles);
 
           webgl.updateBuffer.call(webgl, gl, this, program);

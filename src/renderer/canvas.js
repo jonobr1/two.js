@@ -112,7 +112,7 @@
         join = this._join;
         miter = this._miter;
         closed = this._closed;
-        commands = this._vertices; // Commands
+        commands = this._renderer.vertices; // Commands
         length = commands.length;
         last = length - 1;
         defaultMatrix = isDefaultMatrix(matrix);

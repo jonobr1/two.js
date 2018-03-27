@@ -364,7 +364,7 @@
         }
 
         if (this._flagVertices) {
-          var vertices = svg.toString(this._vertices, this._closed);
+          var vertices = svg.toString(this._renderer.vertices, this._closed);
           changed.d = vertices;
         }
 

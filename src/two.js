@@ -1626,7 +1626,7 @@
 
         // TODO: Issue 73
         if (d1 < 0.0001 || d2 < 0.0001) {
-          if (!b.relative) {
+          if (_.isBoolean(b.relative) && !b.relative) {
             b.controls.left.copy(b);
             b.controls.right.copy(b);
           }
@@ -1650,7 +1650,7 @@
         b.controls.right.x = cos(mid) * d2;
         b.controls.right.y = sin(mid) * d2;
 
-        if (!b.relative) {
+        if (_.isBoolean(b.relative) && !b.relative) {
           b.controls.left.x += b.x;
           b.controls.left.y += b.y;
           b.controls.right.x += b.x;
