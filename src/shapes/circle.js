@@ -1,17 +1,21 @@
 (function(Two) {
 
-  var Path = Two.Path, TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin;
+  var Path = Two.Path, TWO_PI = Math.PI * 2, HALF_PI = Math.PI / 2;
+  var cos = Math.cos, sin = Math.sin;
   var _ = Two.Utils;
+
+  // Circular coefficient
+  var c = (4 / 3) * Math.tan(Math.PI / 8);
 
   var Circle = Two.Circle = function(ox, oy, r, res) {
 
-    var amount = res || Two.Resolution;
+    var amount = res || 5;
 
     var points = _.map(_.range(amount), function(i) {
       return new Two.Anchor();
     }, this);
 
-    Path.call(this, points, true, true);
+    Path.call(this, points, true, true, true);
 
     this.radius = r;
 
@@ -41,12 +45,32 @@
     _update: function() {
 
       if (this._flagRadius) {
-        for (var i = 0, l = this.vertices.length; i < l; i++) {
-          var pct = i / l;
+        for (var i = 0, l = this.vertices.length, last = l - 1; i < l; i++) {
+
+          var pct = i / last;
           var theta = pct * TWO_PI;
-          var x = this._radius * cos(theta);
-          var y = this._radius * sin(theta);
-          this.vertices[i].set(x, y);
+
+          var radius = this._radius;
+          var ct = cos(theta);
+          var st = sin(theta);
+          var rc = radius * c;
+
+          var x = radius * cos(theta);
+          var y = radius * sin(theta);
+
+          var lx = i === 0 ? 0 : rc * cos(theta - HALF_PI);
+          var ly = i === 0 ? 0 : rc * sin(theta - HALF_PI);
+
+          var rx = i === last ? 0 : rc * cos(theta + HALF_PI);
+          var ry = i === last ? 0 : rc * sin(theta + HALF_PI);
+
+          var v = this.vertices[i];
+
+          v.command = i === 0 ? Two.Commands.move : Two.Commands.curve;
+          v.set(x, y);
+          v.controls.left.set(lx, ly);
+          v.controls.right.set(rx, ry);
+
         }
       }
 

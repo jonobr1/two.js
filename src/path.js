@@ -461,7 +461,7 @@
      * parameters of the group.
      */
     getBoundingClientRect: function(shallow) {
-      var matrix, border, l, x, y, i, v;
+      var matrix, border, l, x, y, i, v0, c0, c1, v1;
 
       var left = Infinity, right = -Infinity,
           top = Infinity, bottom = -Infinity;
@@ -486,17 +486,61 @@
         };
       }
 
-      for (i = 0; i < l; i++) {
-        v = this._renderer.vertices[i];
+      for (i = 1; i < l; i++) {
 
-        x = v.x;
-        y = v.y;
+        v1 = this._renderer.vertices[i];
+        v0 = this._renderer.vertices[i - 1];
 
-        v = matrix.multiply(x, y, 1);
-        top = min(v.y - border, top);
-        left = min(v.x - border, left);
-        right = max(v.x + border, right);
-        bottom = max(v.y + border, bottom);
+        if (v0.controls && v1.controls) {
+
+          if (v0.relative) {
+            c0 = matrix.multiply(
+              v0.controls.right.x + v0.x, v0.controls.right.y + v0.y, 1);
+          } else {
+            c0 = matrix.multiply(
+              v0.controls.right.x, v0.controls.right.y, 1);
+          }
+          v0 = matrix.multiply(v0.x, v0.y, 1);
+
+          if (v1.relative) {
+            c1 = matrix.multiply(
+              v1.controls.left.x + v1.x, v1.controls.left.y + v1.y, 1);
+          } else {
+            c1 = matrix.multiply(
+              v1.controls.left.x, v1.controls.left.y, 1);
+          }
+          v1 = matrix.multiply(v1.x, v1.y, 1);
+
+          var bb = Two.Utils.getCurveBoundingBox(
+            v0.x, v0.y, c0.x, c0.y, c1.x, c1.y, v1.x, v1.y);
+
+          top = min(bb.min.y - border, top);
+          left = min(bb.min.x - border, left);
+          right = max(bb.max.x + border, right);
+          bottom = max(bb.max.y + border, bottom);
+
+        } else {
+
+          if (i <= 1) {
+
+            v0 = matrix.multiply(v0.x, v0.y, 1);
+
+            top = min(v0.y - border, top);
+            left = min(v0.x - border, left);
+            right = max(v0.x + border, right);
+            bottom = max(v0.y + border, bottom);
+
+          }
+
+          v1 = matrix.multiply(v1.x, v1.y, 1);
+
+          top = min(v1.y - border, top);
+          left = min(v1.x - border, left);
+          right = max(v1.x + border, right);
+          bottom = max(v1.y + border, bottom);
+
+        }
+
       }
 
       return {
@@ -524,98 +568,6 @@
 
       var a = null;
       var b = null;
-
-      if (t >= 1) {
-
-        var v = this.vertices[last];
-
-        if (_.isObject(obj)) {
-
-          obj.x = v.x;
-          obj.y = v.y;
-
-          if (_.isObject(v.controls)) {
-
-            if (!_.isObject(obj.controls)) {
-              Two.Anchor.AppendCurveProperties(obj);
-            }
-
-            obj.controls.left.x = v.controls.left.x;
-            obj.controls.left.y = v.controls.left.y;
-            obj.controls.right.x = v.controls.right.x;
-            obj.controls.right.y = v.controls.right.y;
-
-            if (v.relative && _.isBoolean(obj.relative) && !obj.relative) {
-              obj.controls.left.x += v.x;
-              obj.controls.left.y += v.y;
-              obj.controls.right.x += v.x;
-              obj.controls.right.y += v.y;
-            } else if (!v.relative && (!_.isBoolean(obj.relative) || obj.relative)) {
-              obj.controls.left.x -= v.x;
-              obj.controls.left.y -= v.y;
-              obj.controls.right.x -= v.x;
-              obj.controls.right.y -= v.y;
-            }
-
-          }
-
-          obj.t = 1;
-
-          return obj;
-
-        }
-
-        result = v.clone();
-        result.t = 1;
-
-        return v;
-
-      } else if (t <= 0) {
-
-        var v = this.vertices[0];
-
-        if (_.isObject(obj)) {
-
-          obj.x = v.x;
-          obj.y = v.y;
-
-          if (_.isObject(v.controls)) {
-
-            if (!_.isObject(obj.controls)) {
-              Two.Anchor.AppendCurveProperties(obj);
-            }
-
-            obj.controls.left.x = v.controls.left.x;
-            obj.controls.left.y = v.controls.left.y;
-            obj.controls.right.x = v.controls.right.x;
-            obj.controls.right.y = v.controls.right.y;
-
-            if (v.relative && _.isBoolean(obj.relative) && !obj.relative) {
-              obj.controls.left.x += v.x;
-              obj.controls.left.y += v.y;
-              obj.controls.right.x += v.x;
-              obj.controls.right.y += v.y;
-            } else if (!v.relative && (!_.isBoolean(obj.relative) || obj.relative)) {
-              obj.controls.left.x -= v.x;
-              obj.controls.left.y -= v.y;
-              obj.controls.right.x -= v.x;
-              obj.controls.right.y -= v.y;
-            }
-
-          }
-
-          obj.t = 0;
-
-          return obj;
-
-        }
-
-        result = v.clone();
-        result.t = 0;
-
-        return result;
-
-      }
 
       for (var i = 0, l = this._lengths.length, sum = 0; i < l; i++) {
 
@@ -650,10 +602,14 @@
 
       }
 
-      // console.log(sum, a, b);
-
       if (_.isNull(a) || _.isNull(b)) {
         return null;
+      }
+
+      if (!a) {
+        return b;
+      } else if (!b) {
+        return a;
       }
 
       right = b.controls && b.controls.right;
@@ -811,7 +767,8 @@
             points.push(new Two.Anchor(a.x, a.y));
           }
 
-          points[points.length - 1].command = closed ? Two.Commands.close : Two.Commands.line;
+          points[points.length - 1].command = closed
+            ? Two.Commands.close : Two.Commands.line;
 
         }
 
@@ -836,7 +793,7 @@
       var length = this.vertices.length;
       var last = length - 1;
       var b = this.vertices[last];
-      var closed = this._closed || this.vertices[last]._command === Two.Commands.close;
+      var closed = false;//this._closed || this.vertices[last]._command === Two.Commands.close;
       var sum = 0;
 
       if (_.isUndefined(this._lengths)) {
@@ -852,6 +809,7 @@
         }
 
         this._lengths[i] = getCurveLength(a, b, limit);
+        this._lengths[i] = Two.Utils.toFixed(this._lengths[i]);
         sum += this._lengths[i];
 
         if (i >= last && closed) {
@@ -859,6 +817,7 @@
           b = this.vertices[(i + 1) % length];
 
           this._lengths[i + 1] = getCurveLength(a, b, limit);
+          this._lengths[i + 1] = Two.Utils.toFixed(this._lengths[i + 1]);
           sum += this._lengths[i + 1];
 
         }
@@ -889,21 +848,14 @@
         var l = this._collection.length;
         var last = l - 1;
 
-        var beginning = this._beginning;
-        var ending = this._ending;
+        var beginning = Math.min(this._beginning, this._ending);
+        var ending = Math.max(this._beginning, this._ending);
 
-        var bid, eid;
+        var bid = getIdByLength(this, beginning * this._length);
+        var eid = getIdByLength(this, ending * this._length);
 
-        if (this._closed) {
-          bid = beginning * l;
-          eid = ending * l;
-        } else {
-          bid = beginning * last;
-          eid = ending * last;
-        }
-
-        var low = ceil(min(bid, eid));
-        var high = floor(max(bid, eid));
+        var low = ceil(bid);
+        var high = floor(eid);
 
         var left, right, prev, next, v;
 
@@ -918,9 +870,9 @@
 
           if (i > high && !right) {
 
-            v = this._renderer.collection[i]
-              .copy(this._collection[i]);
+            v = this._renderer.collection[i];
             this.getPointAt(ending, v);
+            v.command = this._renderer.collection[i].command;
             this._renderer.vertices.push(v);
 
             right = v;
@@ -929,9 +881,13 @@
             // Project control over the percentage `t`
             // of the in-between point
             if (prev && prev.controls) {
+
+              v.controls.right.clear();
+
               this._renderer.collection[i - 1].controls.right
                 .clear()
                 .lerp(prev.controls.right, v.t);
+
             }
 
           } else if (i >= low && i <= high) {
@@ -940,17 +896,29 @@
               .copy(this._collection[i]);
             this._renderer.vertices.push(v);
 
+            if (i === high && contains(this, ending)) {
+              right = v;
+              if (right.controls) {
+                right.controls.right.clear();
+              }
+            } else if (i === low && contains(this, beginning)) {
+              left = v;
+              left.command = Two.Commands.move;
+              if (left.controls) {
+                left.controls.left.clear();
+              }
+            }
+
           }
 
         }
 
         // Prepend the trimmed point if necessary.
-        if (low - 1 >= 0) {
+        if (low > 0 && !left) {
 
           i = low - 1;
 
-          v = this._renderer.collection[i]
-            .copy(this._collection[i]);
+          v = this._renderer.collection[i];
           this.getPointAt(beginning, v);
           v.command = Two.Commands.move;
           this._renderer.vertices.unshift(v);
@@ -960,10 +928,14 @@
 
           // Project control over the percentage `t`
           // of the in-between point
-          if (!this._closed && next && next.controls) {
+          if (next && next.controls) {
+
+            v.controls.left.clear();
+
             this._renderer.collection[i + 1].controls.left
               .copy(next.controls.left)
               .lerp(Two.Vector.zero, v.t);
+
           }
 
         }
@@ -996,6 +968,62 @@
   /**
    * Utility functions
    */
+
+  function contains(path, t) {
+
+    if (t === 0 || t === 1) {
+      return true;
+    }
+
+    var length = path._length;
+    var target = length * t;
+    var elapsed = 0;
+
+    for (var i = 0; i < path._lengths.length; i++) {
+      var dist = path._lengths[i];
+      if (elapsed >= target) {
+        return target - elapsed >= 0;
+      }
+      elapsed += dist;
+    }
+
+    return false;
+
+  }
+
+  function getIdByLength(path, dist) {
+
+    var total = path._length;
+
+    if (dist <= 0) {
+      return 0;
+    } else if (dist >= total) {
+      return path._lengths.length - 1;
+    }
+
+    for (var i = 0; i < path._lengths.length; i++) {
+
+      var segment = path._lengths[i];
+      if (dist === segment) {
+        return i;
+      } else if (segment > dist) {
+        var index = i - 1;
+        var offset = dist / segment;
+        if (offset >= 0.99) { // TODO: Create parameterized limits here
+          offset = 1;
+        } else if (offset <= 0.01) {
+          offset = 0;
+        }
+        return index + offset;
+      }
+
+      dist -= segment;
+
+    }
+
+    return - 1;
+
+  }
 
   function getCurveLength(a, b, limit) {
     // TODO: DRYness

@@ -9,8 +9,9 @@
       new Two.Anchor(),
       new Two.Anchor(),
       new Two.Anchor(),
+      new Two.Anchor(),
       new Two.Anchor()
-    ], true);
+    ], true, false, true);
 
     this.width = width;
     this.height = height;
@@ -46,10 +47,14 @@
         var xr = this._width / 2;
         var yr = this._height / 2;
 
-        this.vertices[0].set(-xr, -yr);
-        this.vertices[1].set(xr, -yr);
-        this.vertices[2].set(xr, yr);
-        this.vertices[3].set(-xr, yr);
+        this.vertices[0].set(-xr, -yr).command = Two.Commands.move;
+        this.vertices[1].set(xr, -yr).command = Two.Commands.line;
+        this.vertices[2].set(xr, yr).command = Two.Commands.line;
+        this.vertices[3].set(-xr, yr).command = Two.Commands.line;
+        // FYI: Two.Sprite and Two.ImageSequence have 4 verts
+        if (this.vertices[4]) {
+          this.vertices[4].set(-xr, -yr).command = Two.Commands.line;
+        }
 
       }
 

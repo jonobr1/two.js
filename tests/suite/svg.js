@@ -21,7 +21,7 @@
 
     var elem = two.renderer.domElement.querySelector('#' + line.id);
 
-    assert.equal(elem.getAttribute('d'), 'M -200 -200 L 200 200 ', 'Two.makeLine applies d attribute properly.');
+    assert.equal(elem.getAttribute('d'), 'M 0 0 L 400 400 ', 'Two.makeLine applies d attribute properly.');
 
     QUnit.Utils.addInstanceToTest(assert.test, two);
 
@@ -42,7 +42,7 @@
 
     var elem = two.renderer.domElement.querySelector('#' + rect.id);
 
-    assert.equal(elem.getAttribute('d'), 'M -50 -50 L 50 -50 L 50 50 L -50 50 Z ', 'Two.makeRectangle applies d attribute properly.');
+    assert.equal(elem.getAttribute('d'), 'M -50 -50 L 50 -50 L 50 50 L -50 50 L -50 -50 Z ', 'Two.makeRectangle applies d attribute properly.');
 
     QUnit.Utils.addInstanceToTest(assert.test, two);
 
@@ -63,7 +63,7 @@
 
     var elem = two.renderer.domElement.querySelector('#' + ellipse.id);
 
-    assert.equal(elem.getAttribute('d'), 'M 100 0 C 100 25.257 88.57 52.851 70.71 70.71 C 52.851 88.57 25.257 100 0 100 C -25.258 100 -52.852 88.57 -70.711 70.71 C -88.571 52.851 -100 25.257 -100 0 C -100 -25.258 -88.571 -52.852 -70.711 -70.711 C -52.852 -88.571 -25.258 -100 -0.001 -100 C 25.257 -100 52.851 -88.571 70.71 -70.711 C 88.57 -52.852 100 -25.258 100 0 Z ', 'Two.makeEllipse applies d attribute properly.');
+    assert.equal(elem.getAttribute('d'), 'M 100 0 C 100 55.228 55.228 100 0 100 C -55.229 100 -100 55.228 -100 0 C -100.001 -55.229 -55.229 -100 -0.001 -100 C 55.228 -100.001 99.999 -55.229 100 -0.001 C 100 -0.001 100 0 100 0 Z ', 'Two.makeEllipse applies d attribute properly.');
 
     QUnit.Utils.addInstanceToTest(assert.test, two);
 
@@ -84,7 +84,7 @@
 
     var elem = two.renderer.domElement.querySelector('#' + circle.id);
 
-    assert.equal(elem.getAttribute('d'), 'M 50 0 C 50 12.628 44.285 26.425 35.355 35.355 C 26.425 44.285 12.628 50 0 50 C -12.629 50 -26.426 44.285 -35.356 35.355 C -44.286 26.425 -50 12.628 -50 0 C -50 -12.629 -44.286 -26.426 -35.356 -35.356 C -26.426 -44.286 -12.629 -50 -0.001 -50 C 12.628 -50 26.425 -44.286 35.355 -35.356 C 44.285 -26.426 50 -12.629 50 0 Z ', 'Two.makeCircle applies d attribute properly.');
+    assert.equal(elem.getAttribute('d'), 'M 50 0 C 50 27.614 27.614 50 0 50 C -27.615 50 -50 27.614 -50 0 C -50.001 -27.615 -27.615 -50 -0.001 -50 C 27.614 -50.001 49.999 -27.615 50 -0.001 C 50 -0.001 50 0 50 0 Z ', 'Two.makeCircle applies d attribute properly.');
 
     QUnit.Utils.addInstanceToTest(assert.test, two);
 

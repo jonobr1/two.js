@@ -5,11 +5,12 @@
 
   var ArcSegment = Two.ArcSegment = function(ox, oy, ir, or, sa, ea, res) {
 
-    var points = _.map(_.range(res || (Two.Resolution * 3)), function() {
+    var amount = res || (Two.Resolution * 3);
+    var points = _.map(_.range(amount), function() {
       return new Two.Anchor();
     });
 
-    Path.call(this, points, false, false, true);
+    Path.call(this, points, true, false, true);
 
     this.innerRadius = ir;
     this.outerRadius = or;
@@ -167,6 +168,10 @@
 
           }
 
+          // Final Point
+          vertices[id].copy(vertices[0]);
+          vertices[id].command = Two.Commands.line;
+
         } else if (!connected) {
 
           vertices[id].command = Two.Commands.line;
@@ -174,12 +179,11 @@
           vertices[id].y = 0;
           id++;
 
-        }
+          // Final Point
+          vertices[id].copy(vertices[0]);
+          vertices[id].command = Two.Commands.line;
 
-        /**
-         * Final Point
-         */
-        vertices[id].command = Two.Commands.close;
+        }
 
       }
 

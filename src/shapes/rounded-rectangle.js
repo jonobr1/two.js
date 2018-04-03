@@ -16,9 +16,12 @@
         i === 0 ? Two.Commands.move : Two.Commands.curve);
     });
 
-    points[points.length - 1].command = Two.Commands.close;
+    // points[points.length - 1].command = Two.Commands.close;
 
-    Path.call(this, points, false, false, true);
+    Path.call(this, points);
+
+    this.closed = true;
+    this.automatic = false;
 
     this._renderer.flagRadius = _.bind(RoundedRectangle.FlagRadius, this);
 

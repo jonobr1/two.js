@@ -12,11 +12,14 @@
     var h2 = height / 2;
 
     Path.call(this, [
-        new Two.Anchor(- w2, - h2),
-        new Two.Anchor(w2, h2)
+        new Two.Anchor(x1, y1),
+        new Two.Anchor(x2, y2)
     ]);
 
-    this.translation.set(x1 + w2, y1 + h2);
+    this.vertices[0].command = Two.Commands.move;
+    this.vertices[1].command = Two.Commands.line;
+
+    this.automatic = false;
 
   };
 
