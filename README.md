@@ -109,6 +109,9 @@ process.exit();
 <!-- For the latest nightly changes checkout the `dev` branch [here](../../tree/dev). -->
 
 #### Nightly
++ Improved conformance between primitive shapes
++ `Two.Path.getBoundingClientRect` considers control points from bezier curves
++ `Two.Path.beginning` and `Two.Path.ending` calculates based on distance increasing accuracy for animation, but also performance load
 + Moved `Two.Path._vertices` underlying to list of rendered points to `Two.Path._renderer.vertices`
 + Improved accuracy of `Two.Path.ending` and `Two.Path.beginning` on open paths
 + Added specific `clone` method to `Two.ArcSegment`, `Two.Circle`, `Two.Ellipse`, `Two.Polygon`, `Two.Rectangle`, `Two.RoundedRectangle`, and `Two.Star` primitives
