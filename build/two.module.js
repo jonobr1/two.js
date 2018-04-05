@@ -492,6 +492,22 @@ SOFTWARE.
 
       },
 
+      Image: null,
+
+      isHeadless: false,
+
+      /**
+       * Convenience method for defining all the dependencies from
+       * `node-canvas`
+       */
+      shim: function(CanvasModule) {
+        var canvas = new CanvasModule();
+        Two.CanvasRenderer.Utils.shim(canvas);
+        Two.Utils.Image = CanvasModule.Image;
+        Two.Utils.isHeadless = true;
+        return canvas;
+      },
+
       /**
        * Release an arbitrary class' events from the two.js corpus and recurse
        * through its children and or vertices.
@@ -4447,9 +4463,16 @@ SOFTWARE.
       right: 'end'
     },
 
-    shim: function(elem) {
-      elem.tagName = 'canvas';
+    shim: function(elem, name) {
+      elem.tagName = elem.nodeName = name || 'canvas';
       elem.nodeType = 1;
+      elem.getAttribute = function(prop) {
+        return this[prop];
+      };
+      elem.setAttribute = function(prop, val) {
+        this[prop] = val;
+        return this;
+      };
       return elem;
     },
 
@@ -9456,6 +9479,7 @@ SOFTWARE.
 
 (function(Two) {
 
+  var root = Two.root;
   var _ = Two.Utils;
   var anchor;
   var regex = {
@@ -9463,7 +9487,7 @@ SOFTWARE.
     image: /\.(jpe?g|png|gif|tiff)$/i
   };
 
-  if ((this || window).document) {
+  if (root.document) {
     anchor = document.createElement('a');
   }
 
@@ -9511,7 +9535,7 @@ SOFTWARE.
 
     getAbsoluteURL: function(path) {
       if (!anchor) {
-        // TODO: Fix for headless environment
+        // TODO: Fix for headless environments
         return path;
       }
       anchor.href = path;
@@ -9528,10 +9552,24 @@ SOFTWARE.
 
       var image;
 
-      if (regex.video.test(absoluteSrc)) {
-        image = document.createElement('video');
+      if (Two.Utils.Image) {
+
+        // TODO: Fix for headless environments
+        image = new Two.Utils.Image();
+        Two.CanvasRenderer.Utils.shim(image, 'img');
+
+      } else if (root.document) {
+
+        if (regex.video.test(absoluteSrc)) {
+          image = document.createElement('video');
+        } else {
+          image = document.createElement('img');
+        }
+
       } else {
-        image = document.createElement('img');
+
+        console.warn('Two.js: no prototypical image defined for Two.Texture');
+
       }
 
       image.crossOrigin = 'anonymous';
@@ -9551,22 +9589,26 @@ SOFTWARE.
       img: function(texture, callback) {
 
         var loaded = function(e) {
-          texture.image.removeEventListener('load', loaded, false);
-          texture.image.removeEventListener('error', error, false);
+          if (_.isFunction(texture.image.removeEventListener)) {
+            texture.image.removeEventListener('load', loaded, false);
+            texture.image.removeEventListener('error', error, false);
+          }
           if (_.isFunction(callback)) {
             callback();
           }
         };
         var error = function(e) {
-          texture.image.removeEventListener('load', loaded, false);
-          texture.image.removeEventListener('error', error, false);
+          if (_.isFunction(texture.image.removeEventListener)) {
+            texture.image.removeEventListener('load', loaded, false);
+            texture.image.removeEventListener('error', error, false);
+          }
           throw new Two.Utils.Error('unable to load ' + texture.src);
         };
 
         if (_.isNumber(texture.image.width) && texture.image.width > 0
           && _.isNumber(texture.image.height) && texture.image.height > 0) {
             loaded();
-        } else {
+        } else if (_.isFunction(texture.image.addEventListener)) {
           texture.image.addEventListener('load', loaded, false);
           texture.image.addEventListener('error', error, false);
         }
@@ -9579,7 +9621,20 @@ SOFTWARE.
 
         texture.image.setAttribute('two-src', texture.src);
         Texture.ImageRegistry.add(texture.src, texture.image);
-        texture.image.src = texture.src;
+
+        if (Two.Utils.isHeadless) {
+
+          var fs = require('fs');
+          var buffer = fs.readFileSync(texture.src);
+
+          texture.image.src = buffer;
+          loaded();
+
+        } else {
+
+          texture.image.src = texture.src;
+
+        }
 
       },
       video: function(texture, callback) {
@@ -9605,6 +9660,11 @@ SOFTWARE.
         texture.image.addEventListener('error', error, false);
 
         if (texture.image && texture.image.getAttribute('two-src')) {
+          return;
+        }
+
+        if (Two.Utils.isHeadless) {
+          throw new Two.Utils.Error('video textures are not implemented in headless environments.');
           return;
         }
 
