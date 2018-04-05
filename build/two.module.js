@@ -7379,6 +7379,7 @@ SOFTWARE.
           if (i > high && !right) {
 
             v = this._renderer.collection[i];
+            v.copy(this._collection[i]);
             this.getPointAt(ending, v);
             v.command = this._renderer.collection[i].command;
             this._renderer.vertices.push(v);
@@ -7427,6 +7428,7 @@ SOFTWARE.
           i = low - 1;
 
           v = this._renderer.collection[i];
+          v.copy(this._collection[i]);
           this.getPointAt(beginning, v);
           v.command = Two.Commands.move;
           this._renderer.vertices.unshift(v);
