@@ -466,6 +466,22 @@
 
       },
 
+      Image: null,
+
+      isHeadless: false,
+
+      /**
+       * Convenience method for defining all the dependencies from
+       * `node-canvas`
+       */
+      shim: function(CanvasModule) {
+        var canvas = new CanvasModule();
+        Two.CanvasRenderer.Utils.shim(canvas);
+        Two.Utils.Image = CanvasModule.Image;
+        Two.Utils.isHeadless = true;
+        return canvas;
+      },
+
       /**
        * Release an arbitrary class' events from the two.js corpus and recurse
        * through its children and or vertices.
