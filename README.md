@@ -81,8 +81,7 @@ var path = require('path');
 var width = 800;
 var height = 600;
 
-var canvas = new Canvas();
-Two[Two.Types.canvas].Utils.shim(canvas);
+var canvas = Two.Utils.shim(Canvas);
 
 var time = Date.now();
 
@@ -109,6 +108,7 @@ process.exit();
 <!-- For the latest nightly changes checkout the `dev` branch [here](../../tree/dev). -->
 
 #### Nightly
++ Added `Two.Utils.shim` to properly handle `canvas` and `image` element spoofing in headless environments
 + Improved conformance between primitive shapes
 + `Two.Path.getBoundingClientRect` considers control points from bezier curves
 + `Two.Path.beginning` and `Two.Path.ending` calculates based on distance increasing accuracy for animation, but also performance load
