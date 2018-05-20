@@ -80,6 +80,9 @@
     FlagVertices: function() {
       this._flagVertices = true;
       this._flagLength = true;
+      if (this.parent) {
+        this.parent._flagLength = true;
+      }
     },
 
     BindVertices: function(items) {

@@ -2414,48 +2414,57 @@
 
       var node = Two.Utils.read[tag].call(this, svgNode);
 
-      add !== false && this.add(shallow && node instanceof Two.Group ? node.children : node);
+      if (!!add) {
+        this.add(shallow && node instanceof Two.Group ? node.children : node);
+      }
 
       return node;
 
     },
 
     /**
-     * Load an SVG file / text and interpret.
+     * Load an SVG file / text and interpret it into Two.js legible
+     * objects.
      */
     load: function(text, callback) {
 
-      var nodes = [], elem, i;
+      var group = new Two.Group();
+      var elem, i, j;
 
-      if (/.*\.svg/ig.test(text)) {
+      var attach = _.bind(function(data) {
 
-        Two.Utils.xhr(text, _.bind(function(data) {
+        dom.temp.innerHTML = data;
 
-          dom.temp.innerHTML = data;
-          for (i = 0; i < dom.temp.children.length; i++) {
-            elem = dom.temp.children[i];
-            nodes.push(this.interpret(elem));
+        for (i = 0; i < dom.temp.children.length; i++) {
+          elem = dom.temp.children[i];
+          if (/svg/i.test(elem.nodeName)) {
+            for (j = 0; j < elem.children.length; j++) {
+              group.add(this.interpret(elem.children[j]));
+            }
+          } else {
+            group.add(this.interpret(elem));
           }
+        }
 
-          callback(nodes.length <= 1 ? nodes[0] : nodes,
-            dom.temp.children.length <= 1 ? dom.temp.children[0] : dom.temp.children);
+        if (_.isFunction(callback)) {
+          var svg = dom.temp.children.length <= 1
+            ? dom.temp.children[0] : dom.temp.children;
+          callback(group, svg);
+        }
 
-        }, this));
+      }, this);
 
-        return this;
+      if (/.*\.svg$/ig.test(text)) {
+
+        Two.Utils.xhr(text, attach);
+
+        return group;
 
       }
 
-      dom.temp.innerHTML = text;
-      for (i = 0; i < dom.temp.children.length; i++) {
-        elem = dom.temp.children[i];
-        nodes.push(this.interpret(elem));
-      }
+      attach(text);
 
-      callback(nodes.length <= 1 ? nodes[0] : nodes,
-        dom.temp.children.length <= 1 ? dom.temp.children[0] : dom.temp.children);
-
-      return this;
+      return group;
 
     }
 

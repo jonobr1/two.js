@@ -81,54 +81,96 @@
       this._flagOrder = true;
     },
 
+    Properties: [
+      'fill',
+      'stroke',
+      'linewidth',
+      'visible',
+      'cap',
+      'join',
+      'miter',
+    ],
+
     MakeObservable: function(object) {
 
-      var properties = Two.Path.Properties.slice(0);
-      var oi = _.indexOf(properties, 'opacity');
+      var properties = Two.Group.Properties;
 
-      if (oi >= 0) {
+      Object.defineProperty(object, 'opacity', {
 
-        properties.splice(oi, 1);
+        enumerable: true,
 
-        Object.defineProperty(object, 'opacity', {
+        get: function() {
+          return this._opacity;
+        },
 
-          enumerable: true,
+        set: function(v) {
+          this._flagOpacity = this._opacity !== v;
+          this._opacity = v;
+        }
 
-          get: function() {
-            return this._opacity;
-          },
+      });
 
-          set: function(v) {
-            // Only set flag if there is an actual difference
-            this._flagOpacity = (this._opacity != v);
-            this._opacity = v;
+      Object.defineProperty(object, 'className', {
+
+        enumerable: true,
+
+        get: function() {
+          return this._className;
+        },
+
+        set: function(v) {
+          this._flagClassName  = this._className !== v;
+          this._className = v;
+        }
+
+      });
+
+      Object.defineProperty(object, 'beginning', {
+
+        enumerable: true,
+
+        get: function() {
+          return this._beginning;
+        },
+
+        set: function(v) {
+          this._flagBeginning = this._beginning !== v;
+          this._beginning = v;
+        }
+
+      });
+
+      Object.defineProperty(object, 'ending', {
+
+        enumerable: true,
+
+        get: function() {
+          return this._ending;
+        },
+
+        set: function(v) {
+          this._flagEnding = this._ending !== v;
+          this._ending = v;
+        }
+
+      });
+
+      Object.defineProperty(object, 'length', {
+
+        enumerable: true,
+
+        get: function() {
+          if (this._flagLength || this._length <= 0) {
+            this._length = 0;
+            for (var i = 0; i < this.children.length; i++) {
+              var child = this.children[i];
+              this._length += child.length;
+            }
           }
+          return this._length;
+        }
 
-        });
-
-      }
-
-      var ci = _.indexOf(properties, 'className');
-      if (ci >= 0) {
-
-        properties.splice(ci, 1);
-
-        Object.defineProperty(object, 'className', {
-
-          enumerable: true,
-
-          get: function() {
-            return this._className;
-          },
-
-          set: function(v) {
-            // Only set flag if there is an actual difference
-            this._flagClassName  = (this._className != v);
-            this._className = v;
-          }
-
-        });
-      }
+      });
 
       Two.Shape.MakeObservable(object);
       Group.MakeGetterSetters(object, properties);
@@ -227,7 +269,10 @@
     _flagOrder: false,
     _flagOpacity: true,
     _flagClassName: false,
+    _flagBeginning: false,
+    _flagEnding: false,
 
+    _flagLength: false,
     _flagMask: false,
 
     // Underlying Properties
@@ -249,6 +294,7 @@
     _beginning: 0,
     _ending: 1.0,
 
+    _length: 0,
     _mask: null,
 
     /**
@@ -546,6 +592,51 @@
       return this;
     },
 
+    _update: function() {
+
+      if (this._flagBeginning || this._flagEnding) {
+
+        var beginning = this._beginning;
+        var ending = this._ending;
+        var length = this.length;
+        var sum = 0;
+
+        var bd = beginning * length;
+        var ed = ending * length;
+        var distance = (ed - bd);
+
+        for (var i = 0; i < this.children.length; i++) {
+
+          var child = this.children[i];
+          var l = child.length;
+
+          if (bd > sum + l) {
+            child.beginning = 1;
+            child.ending = 1;
+          } else if (ed < sum) {
+            child.beginning = 0;
+            child.ending = 0;
+          } else if (bd > sum && bd < sum + l) {
+            child.beginning = (bd - sum) / l;
+            child.ending = 1;
+          } else if (ed > sum && ed < sum + l) {
+            child.beginning = 0;
+            child.ending = (ed - sum) / l;
+          } else {
+            child.beginning = 0;
+            child.ending = 1;
+          }
+
+          sum += l;
+
+        }
+
+      }
+
+      return Two.Shape.prototype._update.apply(this, arguments);
+
+    },
+
     flagReset: function() {
 
       if (this._flagAdditions) {
@@ -558,7 +649,8 @@
         this._flagSubtractions = false;
       }
 
-      this._flagOrder = this._flagMask = this._flagOpacity = this._flagClassName = false;
+      this._flagOrder = this._flagMask = this._flagOpacity = this._flagClassName
+        this._flagBeginning = this._flagEnding = false;
 
       Two.Shape.prototype.flagReset.call(this);
 
