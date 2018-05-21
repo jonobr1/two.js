@@ -108,10 +108,13 @@ process.exit();
 <!-- For the latest nightly changes checkout the `dev` branch [here](../../tree/dev). -->
 
 #### Nightly
++ `Two.load` now immediately returns a `Two.Group` for use without callbacks if desired
++ Added `Two.Group.length` to return the calculated length of all child paths
++ `Two.Group.beginning` and `Two.Group.ending` calculate based on child `Two.Path`s for intuitive grouped animating
 + Added `Two.Utils.shim` to properly handle `canvas` and `image` element spoofing in headless environments
 + Improved conformance between primitive shapes
 + `Two.Path.getBoundingClientRect` considers control points from bezier curves
-+ `Two.Path.beginning` and `Two.Path.ending` calculates based on distance increasing accuracy for animation, but also performance load
++ `Two.Path.beginning` and `Two.Path.ending` calculate based on distance increasing accuracy for animation, but also performance load
 + Moved `Two.Path._vertices` underlying to list of rendered points to `Two.Path._renderer.vertices`
 + Improved accuracy of `Two.Path.ending` and `Two.Path.beginning` on open paths
 + Added specific `clone` method to `Two.ArcSegment`, `Two.Circle`, `Two.Ellipse`, `Two.Polygon`, `Two.Rectangle`, `Two.RoundedRectangle`, and `Two.Star` primitives
