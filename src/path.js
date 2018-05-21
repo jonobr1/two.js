@@ -627,12 +627,12 @@
       x4 = a.x;
       y4 = a.y;
 
-      if (right && b._relative) {
+      if (right && b.relative) {
         x2 += b.x;
         y2 += b.y;
       }
 
-      if (left && a._relative) {
+      if (left && a.relative) {
         x3 += a.x;
         y3 += a.y;
       }
@@ -996,33 +996,24 @@
 
   }
 
-  function getIdByLength(path, dist) {
+  function getIdByLength(path, target) {
 
     var total = path._length;
 
-    if (dist <= 0) {
+    if (target <= 0) {
       return 0;
-    } else if (dist >= total) {
+    } else if (target >= total) {
       return path._lengths.length - 1;
     }
 
-    for (var i = 0; i < path._lengths.length; i++) {
+    for (var i = 0, sum = 0; i < path._lengths.length; i++) {
 
-      var segment = path._lengths[i];
-      if (dist === segment) {
-        return i;
-      } else if (segment > dist) {
-        var index = i - 1;
-        var offset = dist / segment;
-        if (offset >= 0.99) { // TODO: Create parameterized limits here
-          offset = 1;
-        } else if (offset <= 0.01) {
-          offset = 0;
-        }
-        return index + offset;
+      if (sum + path._lengths[i] >= target) {
+        target -= sum;
+        return Math.max(i - 1, 0) + target / path._lengths[i];
       }
 
-      dist -= segment;
+      sum += path._lengths[i];
 
     }
 

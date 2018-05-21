@@ -596,8 +596,8 @@
 
       if (this._flagBeginning || this._flagEnding) {
 
-        var beginning = this._beginning;
-        var ending = this._ending;
+        var beginning = Math.min(this._beginning, this._ending);
+        var ending = Math.max(this._beginning, this._ending);
         var length = this.length;
         var sum = 0;
 

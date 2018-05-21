@@ -43,6 +43,7 @@
   _.extend(Anchor, {
 
     AppendCurveProperties: function(anchor) {
+      anchor.relative = true;
       anchor.controls = {
         left: new Two.Vector(0, 0),
         right: new Two.Vector(0, 0)
