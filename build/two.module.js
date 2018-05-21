@@ -2440,48 +2440,57 @@ SOFTWARE.
 
       var node = Two.Utils.read[tag].call(this, svgNode);
 
-      add !== false && this.add(shallow && node instanceof Two.Group ? node.children : node);
+      if (!!add) {
+        this.add(shallow && node instanceof Two.Group ? node.children : node);
+      }
 
       return node;
 
     },
 
     /**
-     * Load an SVG file / text and interpret.
+     * Load an SVG file / text and interpret it into Two.js legible
+     * objects.
      */
     load: function(text, callback) {
 
-      var nodes = [], elem, i;
+      var group = new Two.Group();
+      var elem, i, j;
 
-      if (/.*\.svg/ig.test(text)) {
+      var attach = _.bind(function(data) {
 
-        Two.Utils.xhr(text, _.bind(function(data) {
+        dom.temp.innerHTML = data;
 
-          dom.temp.innerHTML = data;
-          for (i = 0; i < dom.temp.children.length; i++) {
-            elem = dom.temp.children[i];
-            nodes.push(this.interpret(elem));
+        for (i = 0; i < dom.temp.children.length; i++) {
+          elem = dom.temp.children[i];
+          if (/svg/i.test(elem.nodeName)) {
+            for (j = 0; j < elem.children.length; j++) {
+              group.add(this.interpret(elem.children[j]));
+            }
+          } else {
+            group.add(this.interpret(elem));
           }
+        }
 
-          callback(nodes.length <= 1 ? nodes[0] : nodes,
-            dom.temp.children.length <= 1 ? dom.temp.children[0] : dom.temp.children);
+        if (_.isFunction(callback)) {
+          var svg = dom.temp.children.length <= 1
+            ? dom.temp.children[0] : dom.temp.children;
+          callback(group, svg);
+        }
 
-        }, this));
+      }, this);
 
-        return this;
+      if (/.*\.svg$/ig.test(text)) {
+
+        Two.Utils.xhr(text, attach);
+
+        return group;
 
       }
 
-      dom.temp.innerHTML = text;
-      for (i = 0; i < dom.temp.children.length; i++) {
-        elem = dom.temp.children[i];
-        nodes.push(this.interpret(elem));
-      }
+      attach(text);
 
-      callback(nodes.length <= 1 ? nodes[0] : nodes,
-        dom.temp.children.length <= 1 ? dom.temp.children[0] : dom.temp.children);
-
-      return this;
+      return group;
 
     }
 
@@ -2961,6 +2970,7 @@ SOFTWARE.
   _.extend(Anchor, {
 
     AppendCurveProperties: function(anchor) {
+      anchor.relative = true;
       anchor.controls = {
         left: new Two.Vector(0, 0),
         right: new Two.Vector(0, 0)
@@ -6588,6 +6598,9 @@ SOFTWARE.
     FlagVertices: function() {
       this._flagVertices = true;
       this._flagLength = true;
+      if (this.parent) {
+        this.parent._flagLength = true;
+      }
     },
 
     BindVertices: function(items) {
@@ -7132,12 +7145,12 @@ SOFTWARE.
       x4 = a.x;
       y4 = a.y;
 
-      if (right && b._relative) {
+      if (right && b.relative) {
         x2 += b.x;
         y2 += b.y;
       }
 
-      if (left && a._relative) {
+      if (left && a.relative) {
         x3 += a.x;
         y3 += a.y;
       }
@@ -7501,33 +7514,24 @@ SOFTWARE.
 
   }
 
-  function getIdByLength(path, dist) {
+  function getIdByLength(path, target) {
 
     var total = path._length;
 
-    if (dist <= 0) {
+    if (target <= 0) {
       return 0;
-    } else if (dist >= total) {
+    } else if (target >= total) {
       return path._lengths.length - 1;
     }
 
-    for (var i = 0; i < path._lengths.length; i++) {
+    for (var i = 0, sum = 0; i < path._lengths.length; i++) {
 
-      var segment = path._lengths[i];
-      if (dist === segment) {
-        return i;
-      } else if (segment > dist) {
-        var index = i - 1;
-        var offset = dist / segment;
-        if (offset >= 0.99) { // TODO: Create parameterized limits here
-          offset = 1;
-        } else if (offset <= 0.01) {
-          offset = 0;
-        }
-        return index + offset;
+      if (sum + path._lengths[i] >= target) {
+        target -= sum;
+        return Math.max(i - 1, 0) + target / path._lengths[i];
       }
 
-      dist -= segment;
+      sum += path._lengths[i];
 
     }
 
@@ -10504,54 +10508,96 @@ SOFTWARE.
       this._flagOrder = true;
     },
 
+    Properties: [
+      'fill',
+      'stroke',
+      'linewidth',
+      'visible',
+      'cap',
+      'join',
+      'miter',
+    ],
+
     MakeObservable: function(object) {
 
-      var properties = Two.Path.Properties.slice(0);
-      var oi = _.indexOf(properties, 'opacity');
+      var properties = Two.Group.Properties;
 
-      if (oi >= 0) {
+      Object.defineProperty(object, 'opacity', {
 
-        properties.splice(oi, 1);
+        enumerable: true,
 
-        Object.defineProperty(object, 'opacity', {
+        get: function() {
+          return this._opacity;
+        },
 
-          enumerable: true,
+        set: function(v) {
+          this._flagOpacity = this._opacity !== v;
+          this._opacity = v;
+        }
 
-          get: function() {
-            return this._opacity;
-          },
+      });
 
-          set: function(v) {
-            // Only set flag if there is an actual difference
-            this._flagOpacity = (this._opacity != v);
-            this._opacity = v;
+      Object.defineProperty(object, 'className', {
+
+        enumerable: true,
+
+        get: function() {
+          return this._className;
+        },
+
+        set: function(v) {
+          this._flagClassName  = this._className !== v;
+          this._className = v;
+        }
+
+      });
+
+      Object.defineProperty(object, 'beginning', {
+
+        enumerable: true,
+
+        get: function() {
+          return this._beginning;
+        },
+
+        set: function(v) {
+          this._flagBeginning = this._beginning !== v;
+          this._beginning = v;
+        }
+
+      });
+
+      Object.defineProperty(object, 'ending', {
+
+        enumerable: true,
+
+        get: function() {
+          return this._ending;
+        },
+
+        set: function(v) {
+          this._flagEnding = this._ending !== v;
+          this._ending = v;
+        }
+
+      });
+
+      Object.defineProperty(object, 'length', {
+
+        enumerable: true,
+
+        get: function() {
+          if (this._flagLength || this._length <= 0) {
+            this._length = 0;
+            for (var i = 0; i < this.children.length; i++) {
+              var child = this.children[i];
+              this._length += child.length;
+            }
           }
+          return this._length;
+        }
 
-        });
-
-      }
-
-      var ci = _.indexOf(properties, 'className');
-      if (ci >= 0) {
-
-        properties.splice(ci, 1);
-
-        Object.defineProperty(object, 'className', {
-
-          enumerable: true,
-
-          get: function() {
-            return this._className;
-          },
-
-          set: function(v) {
-            // Only set flag if there is an actual difference
-            this._flagClassName  = (this._className != v);
-            this._className = v;
-          }
-
-        });
-      }
+      });
 
       Two.Shape.MakeObservable(object);
       Group.MakeGetterSetters(object, properties);
@@ -10650,7 +10696,10 @@ SOFTWARE.
     _flagOrder: false,
     _flagOpacity: true,
     _flagClassName: false,
+    _flagBeginning: false,
+    _flagEnding: false,
 
+    _flagLength: false,
     _flagMask: false,
 
     // Underlying Properties
@@ -10672,6 +10721,7 @@ SOFTWARE.
     _beginning: 0,
     _ending: 1.0,
 
+    _length: 0,
     _mask: null,
 
     /**
@@ -10969,6 +11019,51 @@ SOFTWARE.
       return this;
     },
 
+    _update: function() {
+
+      if (this._flagBeginning || this._flagEnding) {
+
+        var beginning = Math.min(this._beginning, this._ending);
+        var ending = Math.max(this._beginning, this._ending);
+        var length = this.length;
+        var sum = 0;
+
+        var bd = beginning * length;
+        var ed = ending * length;
+        var distance = (ed - bd);
+
+        for (var i = 0; i < this.children.length; i++) {
+
+          var child = this.children[i];
+          var l = child.length;
+
+          if (bd > sum + l) {
+            child.beginning = 1;
+            child.ending = 1;
+          } else if (ed < sum) {
+            child.beginning = 0;
+            child.ending = 0;
+          } else if (bd > sum && bd < sum + l) {
+            child.beginning = (bd - sum) / l;
+            child.ending = 1;
+          } else if (ed > sum && ed < sum + l) {
+            child.beginning = 0;
+            child.ending = (ed - sum) / l;
+          } else {
+            child.beginning = 0;
+            child.ending = 1;
+          }
+
+          sum += l;
+
+        }
+
+      }
+
+      return Two.Shape.prototype._update.apply(this, arguments);
+
+    },
+
     flagReset: function() {
 
       if (this._flagAdditions) {
@@ -10981,7 +11076,8 @@ SOFTWARE.
         this._flagSubtractions = false;
       }
 
-      this._flagOrder = this._flagMask = this._flagOpacity = this._flagClassName = false;
+      this._flagOrder = this._flagMask = this._flagOpacity = this._flagClassName
+        this._flagBeginning = this._flagEnding = false;
 
       Two.Shape.prototype.flagReset.call(this);
 
