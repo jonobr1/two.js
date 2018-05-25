@@ -23,7 +23,7 @@
       return this;
     }
 
-    Anchor.AppendCurveProperties(this);
+    Two.Anchor.AppendCurveProperties(this);
 
     if (_.isNumber(ux)) {
       this.controls.left.x = ux;
@@ -40,7 +40,7 @@
 
   };
 
-  _.extend(Anchor, {
+  _.extend(Two.Anchor, {
 
     AppendCurveProperties: function(anchor) {
       anchor.relative = true;
@@ -106,10 +106,12 @@
 
   var AnchorProto = {
 
+    constructor: Two.Anchor,
+
     listen: function() {
 
       if (!_.isObject(this.controls)) {
-        Anchor.AppendCurveProperties(this);
+        Two.Anchor.AppendCurveProperties(this);
       }
 
       this.controls.left.bind(Two.Events.change, this._broadcast);
@@ -138,7 +140,7 @@
       }
       if (_.isObject(v.controls)) {
         if (!_.isObject(this.controls)) {
-          Anchor.AppendCurveProperties(this);
+          Two.Anchor.AppendCurveProperties(this);
         }
         // TODO: Do we need to listen here?
         this.controls.left.copy(v.controls.left);
@@ -200,6 +202,6 @@
 
   };
 
-  Anchor.MakeObservable(Two.Anchor.prototype);
+  Two.Anchor.MakeObservable(Two.Anchor.prototype);
 
 })((typeof global !== 'undefined' ? global : (this || window)).Two);

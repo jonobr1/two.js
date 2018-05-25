@@ -927,6 +927,29 @@ SOFTWARE.
             var lower = type.toLowerCase();
             var items = command.slice(1).trim().split(/[\s,]+|(?=\s?[+\-])/);
             var pre, post, result = [], bin;
+            var hasDoubleDecimals = false;
+
+            // Handle double decimal values e.g: 48.6037.71
+            for (var j = 0; j < items.length; j++) {
+
+              var number = items[j];
+
+              if (number.indexOf( '.' ) !== number.lastIndexOf( '.' )) {
+
+                var numbers = number.split('.');
+                var first = numbers[0] + '.' + numbers[1];
+                var second = '0.' + numbers[ 2 ];
+
+                items.splice(i, 1, first, second);
+                hasDoubleDecimals = true;
+
+              }
+
+            }
+
+            if (hasDoubleDecimals) {
+              command = type + items.join(',');
+            }
 
             if (i <= 0) {
               commands = [];
@@ -2043,6 +2066,8 @@ SOFTWARE.
 
   _.extend(Two.Utils.Collection.prototype, Two.Utils.Events, {
 
+    constructor: Two.Utils.Collection,
+
     pop: function() {
       var popped = Array.prototype.pop.apply(this, arguments);
       this.trigger(Two.Events.remove, [popped]);
@@ -2114,6 +2139,8 @@ SOFTWARE.
     getReflection = Two.Utils.getReflection;
 
   _.extend(Two.prototype, Two.Utils.Events, {
+
+    constructor: Two,
 
     appendTo: function(elem) {
 
@@ -2566,6 +2593,8 @@ SOFTWARE.
 
   _.extend(Registry.prototype, {
 
+    constructor: Registry,
+
     add: function(id, obj) {
       this.map[id] = obj;
       return this;
@@ -2633,6 +2662,8 @@ SOFTWARE.
   });
 
   _.extend(Vector.prototype, Two.Utils.Events, {
+
+    constructor: Vector,
 
     set: function(x, y) {
       this.x = x;
@@ -2771,6 +2802,8 @@ SOFTWARE.
   });
 
   var BoundProto = {
+
+    constructor: Vector,
 
     set: function(x, y) {
       this._x = x;
@@ -2958,7 +2991,7 @@ SOFTWARE.
       return this;
     }
 
-    Anchor.AppendCurveProperties(this);
+    Two.Anchor.AppendCurveProperties(this);
 
     if (_.isNumber(ux)) {
       this.controls.left.x = ux;
@@ -2975,7 +3008,7 @@ SOFTWARE.
 
   };
 
-  _.extend(Anchor, {
+  _.extend(Two.Anchor, {
 
     AppendCurveProperties: function(anchor) {
       anchor.relative = true;
@@ -3041,10 +3074,12 @@ SOFTWARE.
 
   var AnchorProto = {
 
+    constructor: Two.Anchor,
+
     listen: function() {
 
       if (!_.isObject(this.controls)) {
-        Anchor.AppendCurveProperties(this);
+        Two.Anchor.AppendCurveProperties(this);
       }
 
       this.controls.left.bind(Two.Events.change, this._broadcast);
@@ -3073,7 +3108,7 @@ SOFTWARE.
       }
       if (_.isObject(v.controls)) {
         if (!_.isObject(this.controls)) {
-          Anchor.AppendCurveProperties(this);
+          Two.Anchor.AppendCurveProperties(this);
         }
         // TODO: Do we need to listen here?
         this.controls.left.copy(v.controls.left);
@@ -3135,7 +3170,7 @@ SOFTWARE.
 
   };
 
-  Anchor.MakeObservable(Two.Anchor.prototype);
+  Two.Anchor.MakeObservable(Two.Anchor.prototype);
 
 })((typeof global !== 'undefined' ? global : (this || window)).Two);
 
@@ -3238,6 +3273,8 @@ SOFTWARE.
   });
 
   _.extend(Matrix.prototype, Two.Utils.Events, {
+
+    constructor: Matrix,
 
     /**
      * Takes an array of elements or the arguments list itself to
@@ -4431,6 +4468,8 @@ SOFTWARE.
 
   _.extend(Renderer.prototype, Two.Utils.Events, {
 
+    constructor: Renderer,
+
     setSize: function(width, height) {
 
       this.width = width;
@@ -5067,6 +5106,8 @@ SOFTWARE.
   });
 
   _.extend(Renderer.prototype, Two.Utils.Events, {
+
+    constructor: Renderer,
 
     setSize: function(width, height, ratio) {
 
@@ -6304,6 +6345,8 @@ SOFTWARE.
 
   _.extend(Renderer.prototype, Two.Utils.Events, {
 
+    constructor: Renderer,
+
     setSize: function(width, height, ratio) {
 
       this.width = width;
@@ -6460,6 +6503,8 @@ SOFTWARE.
 
     // _mask: null,
     // _clip: false,
+
+    constructor: Shape,
 
     addTo: function(group) {
       group.add(this);
@@ -6869,6 +6914,8 @@ SOFTWARE.
     _ending: 1.0,
 
     _clip: false,
+
+    constructor: Path,
 
     clone: function(parent) {
 
@@ -7635,6 +7682,7 @@ SOFTWARE.
   };
 
   _.extend(Line.prototype, Path.prototype);
+  Line.prototype.constructor = Line;
 
   Path.MakeObservable(Line.prototype);
 
@@ -7681,6 +7729,8 @@ SOFTWARE.
 
     _flagWidth: 0,
     _flagHeight: 0,
+
+    constructor: Rectangle,
 
     _update: function() {
 
@@ -7793,6 +7843,8 @@ SOFTWARE.
 
     _flagWidth: false,
     _flagHeight: false,
+
+    constructor: Ellipse,
 
     _update: function() {
 
@@ -7913,6 +7965,8 @@ SOFTWARE.
     _radius: 0,
     _flagRadius: false,
 
+    constructor: Circle,
+
     _update: function() {
 
       if (this._flagRadius) {
@@ -8031,6 +8085,8 @@ SOFTWARE.
     _flagWidth: false,
     _flagHeight: false,
     _flagSides: false,
+
+    constructor: Polygon,
 
     _update: function() {
 
@@ -8155,6 +8211,8 @@ SOFTWARE.
     _endAngle: TWO_PI,
     _innerRadius: 0,
     _outerRadius: 0,
+
+    constructor: ArcSegment,
 
     _update: function() {
 
@@ -8406,6 +8464,8 @@ SOFTWARE.
     _flagOuterRadius: false,
     _flagSides: false,
 
+    constructor: Star,
+
     _update: function() {
 
       if (this._flagInnerRadius || this._flagOuterRadius || this._flagSides) {
@@ -8571,6 +8631,8 @@ SOFTWARE.
     _flagHeight: false,
     _flagRadius: false,
 
+    constructor: RoundedRectangle,
+
     _update: function() {
 
       if (this._flagWidth || this._flagHeight || this._flagRadius) {
@@ -8721,8 +8783,8 @@ SOFTWARE.
     Two.Shape.call(this);
 
     this._renderer.type = 'text';
-    this._renderer.flagFill = _.bind(Text.FlagFill, this);
-    this._renderer.flagStroke = _.bind(Text.FlagStroke, this);
+    this._renderer.flagFill = _.bind(Two.Text.FlagFill, this);
+    this._renderer.flagStroke = _.bind(Two.Text.FlagStroke, this);
 
     this.value = message;
 
@@ -8882,6 +8944,8 @@ SOFTWARE.
     _visible: true,
 
     _clip: false,
+
+    constructor: Two.Text,
 
     remove: function() {
 
@@ -9052,6 +9116,8 @@ SOFTWARE.
 
   _.extend(Stop.prototype, Two.Utils.Events, {
 
+    constructor: Stop,
+
     clone: function() {
 
       var clone = new Stop();
@@ -9087,6 +9153,7 @@ SOFTWARE.
   });
 
   Stop.MakeObservable(Stop.prototype);
+  Stop.prototype.constructor = Stop;
 
   var Gradient = Two.Gradient = function(stops) {
 
@@ -9302,6 +9369,8 @@ SOFTWARE.
 
     _flagEndPoints: false,
 
+    constructor: LinearGradient,
+
     clone: function(parent) {
 
       parent = parent || this.parent;
@@ -9425,6 +9494,8 @@ SOFTWARE.
     _flagRadius: false,
     _flagCenter: false,
     _flagFocal: false,
+
+    constructor: RadialGradient,
 
     clone: function(parent) {
 
@@ -9818,6 +9889,8 @@ SOFTWARE.
     _scale: 1,
     _offset: null,
 
+    constructor: Texture,
+
     clone: function() {
       return new Texture(this.src);
     },
@@ -9947,6 +10020,8 @@ SOFTWARE.
     _rows: 1,
     _frameRate: 0,
     _index: 0,
+
+    constructor: Sprite,
 
     play: function(firstFrame, lastFrame, onLastFrame) {
 
@@ -10262,6 +10337,8 @@ SOFTWARE.
     _textures: null,
     _frameRate: 0,
 
+    constructor: ImageSequence,
+
     play: function(firstFrame, lastFrame, onLastFrame) {
 
       this._playing = true;
@@ -10463,9 +10540,10 @@ SOFTWARE.
   };
 
   Children.prototype = new Two.Utils.Collection();
-  Children.prototype.constructor = Children;
 
   _.extend(Children.prototype, {
+
+    constructor: Children,
 
     attach: function(children) {
       for (var i = 0; i < children.length; i++) {
@@ -10731,6 +10809,8 @@ SOFTWARE.
 
     _length: 0,
     _mask: null,
+
+    constructor: Group,
 
     /**
      * TODO: Group has a gotcha in that it's at the moment required to be bound to

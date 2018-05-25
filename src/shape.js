@@ -103,6 +103,8 @@
     // _mask: null,
     // _clip: false,
 
+    constructor: Shape,
+
     addTo: function(group) {
       group.add(this);
       return this;

@@ -62,6 +62,8 @@
     _flagCenter: false,
     _flagFocal: false,
 
+    constructor: RadialGradient,
+
     clone: function(parent) {
 
       parent = parent || this.parent;

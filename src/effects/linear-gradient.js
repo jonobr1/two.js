@@ -45,6 +45,8 @@
 
     _flagEndPoints: false,
 
+    constructor: LinearGradient,
+
     clone: function(parent) {
 
       parent = parent || this.parent;

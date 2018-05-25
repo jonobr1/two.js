@@ -141,6 +141,8 @@
     _textures: null,
     _frameRate: 0,
 
+    constructor: ImageSequence,
+
     play: function(firstFrame, lastFrame, onLastFrame) {
 
       this._playing = true;

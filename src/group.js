@@ -28,9 +28,10 @@
   };
 
   Children.prototype = new Two.Utils.Collection();
-  Children.prototype.constructor = Children;
 
   _.extend(Children.prototype, {
+
+    constructor: Children,
 
     attach: function(children) {
       for (var i = 0; i < children.length; i++) {
@@ -296,6 +297,8 @@
 
     _length: 0,
     _mask: null,
+
+    constructor: Group,
 
     /**
      * TODO: Group has a gotcha in that it's at the moment required to be bound to

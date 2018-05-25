@@ -98,6 +98,8 @@
 
   _.extend(Matrix.prototype, Two.Utils.Events, {
 
+    constructor: Matrix,
+
     /**
      * Takes an array of elements or the arguments list itself to
      * set and update the current matrix's elements. Only updates

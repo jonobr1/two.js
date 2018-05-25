@@ -14,6 +14,8 @@
 
   _.extend(Registry.prototype, {
 
+    constructor: Registry,
+
     add: function(id, obj) {
       this.map[id] = obj;
       return this;

@@ -76,6 +76,8 @@
     _frameRate: 0,
     _index: 0,
 
+    constructor: Sprite,
+
     play: function(firstFrame, lastFrame, onLastFrame) {
 
       this._playing = true;

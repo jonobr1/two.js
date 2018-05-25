@@ -83,6 +83,8 @@
     _flagHeight: false,
     _flagRadius: false,
 
+    constructor: RoundedRectangle,
+
     _update: function() {
 
       if (this._flagWidth || this._flagHeight || this._flagRadius) {

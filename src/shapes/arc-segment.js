@@ -48,6 +48,8 @@
     _innerRadius: 0,
     _outerRadius: 0,
 
+    constructor: ArcSegment,
+
     _update: function() {
 
       if (this._flagStartAngle || this._flagEndAngle || this._flagInnerRadius

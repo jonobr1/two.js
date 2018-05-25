@@ -12,8 +12,8 @@
     Two.Shape.call(this);
 
     this._renderer.type = 'text';
-    this._renderer.flagFill = _.bind(Text.FlagFill, this);
-    this._renderer.flagStroke = _.bind(Text.FlagStroke, this);
+    this._renderer.flagFill = _.bind(Two.Text.FlagFill, this);
+    this._renderer.flagStroke = _.bind(Two.Text.FlagStroke, this);
 
     this.value = message;
 
@@ -173,6 +173,8 @@
     _visible: true,
 
     _clip: false,
+
+    constructor: Two.Text,
 
     remove: function() {
 

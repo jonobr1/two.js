@@ -2040,6 +2040,8 @@
 
   _.extend(Two.Utils.Collection.prototype, Two.Utils.Events, {
 
+    constructor: Two.Utils.Collection,
+
     pop: function() {
       var popped = Array.prototype.pop.apply(this, arguments);
       this.trigger(Two.Events.remove, [popped]);
@@ -2111,6 +2113,8 @@
     getReflection = Two.Utils.getReflection;
 
   _.extend(Two.prototype, Two.Utils.Events, {
+
+    constructor: Two,
 
     appendTo: function(elem) {
 

@@ -344,6 +344,8 @@
 
     _clip: false,
 
+    constructor: Path,
+
     clone: function(parent) {
 
       parent = parent || this.parent;

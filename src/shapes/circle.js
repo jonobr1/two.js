@@ -42,6 +42,8 @@
     _radius: 0,
     _flagRadius: false,
 
+    constructor: Circle,
+
     _update: function() {
 
       if (this._flagRadius) {

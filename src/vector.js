@@ -44,6 +44,8 @@
 
   _.extend(Vector.prototype, Two.Utils.Events, {
 
+    constructor: Vector,
+
     set: function(x, y) {
       this.x = x;
       this.y = y;
@@ -181,6 +183,8 @@
   });
 
   var BoundProto = {
+
+    constructor: Vector,
 
     set: function(x, y) {
       this._x = x;

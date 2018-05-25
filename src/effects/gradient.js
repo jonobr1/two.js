@@ -59,6 +59,8 @@
 
   _.extend(Stop.prototype, Two.Utils.Events, {
 
+    constructor: Stop,
+
     clone: function() {
 
       var clone = new Stop();
@@ -94,6 +96,7 @@
   });
 
   Stop.MakeObservable(Stop.prototype);
+  Stop.prototype.constructor = Stop;
 
   var Gradient = Two.Gradient = function(stops) {
 

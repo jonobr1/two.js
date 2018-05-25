@@ -50,6 +50,8 @@
     _flagWidth: false,
     _flagHeight: false,
 
+    constructor: Ellipse,
+
     _update: function() {
 
       if (this._flagWidth || this._flagHeight) {

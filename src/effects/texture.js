@@ -325,6 +325,8 @@
     _scale: 1,
     _offset: null,
 
+    constructor: Texture,
+
     clone: function() {
       return new Texture(this.src);
     },

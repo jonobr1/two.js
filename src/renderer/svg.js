@@ -888,6 +888,8 @@
 
   _.extend(Renderer.prototype, Two.Utils.Events, {
 
+    constructor: Renderer,
+
     setSize: function(width, height) {
 
       this.width = width;

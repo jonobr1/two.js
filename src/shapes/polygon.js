@@ -44,6 +44,8 @@
     _flagHeight: false,
     _flagSides: false,
 
+    constructor: Polygon,
+
     _update: function() {
 
       if (this._flagWidth || this._flagHeight || this._flagSides) {

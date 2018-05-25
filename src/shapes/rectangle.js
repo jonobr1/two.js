@@ -40,6 +40,8 @@
     _flagWidth: 0,
     _flagHeight: 0,
 
+    constructor: Rectangle,
+
     _update: function() {
 
       if (this._flagWidth || this._flagHeight) {

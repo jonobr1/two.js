@@ -24,6 +24,7 @@
   };
 
   _.extend(Line.prototype, Path.prototype);
+  Line.prototype.constructor = Line;
 
   Path.MakeObservable(Line.prototype);
 

@@ -52,6 +52,8 @@
     _flagOuterRadius: false,
     _flagSides: false,
 
+    constructor: Star,
+
     _update: function() {
 
       if (this._flagInnerRadius || this._flagOuterRadius || this._flagSides) {
