@@ -901,6 +901,29 @@
             var lower = type.toLowerCase();
             var items = command.slice(1).trim().split(/[\s,]+|(?=\s?[+\-])/);
             var pre, post, result = [], bin;
+            var hasDoubleDecimals = false;
+
+            // Handle double decimal values e.g: 48.6037.71
+            for (var j = 0; j < items.length; j++) {
+
+              var number = items[j];
+
+              if (number.indexOf( '.' ) !== number.lastIndexOf( '.' )) {
+
+                var numbers = number.split('.');
+                var first = numbers[0] + '.' + numbers[1];
+                var second = '0.' + numbers[ 2 ];
+
+                items.splice(i, 1, first, second);
+                hasDoubleDecimals = true;
+
+              }
+
+            }
+
+            if (hasDoubleDecimals) {
+              command = type + items.join(',');
+            }
 
             if (i <= 0) {
               commands = [];
