@@ -317,7 +317,7 @@
     });
 
     _.each(params, function(v, k) {
-      if (k === 'fullscreen' || k === 'autostart') {
+      if (/fullscreen/i.test(k) || /autostart/i.test(k)) {
         return;
       }
       this[k] = v;
@@ -727,8 +727,8 @@
 
         // Similarly visibility is influenced by the value of both display and visibility.
         // Calculate a unified value here which defaults to `true`.
-        styles.visible = !(_.isUndefined(styles.display) && styles.display === 'none')
-          || (_.isUndefined(styles.visibility) && styles.visibility === 'hidden');
+        styles.visible = !(_.isUndefined(styles.display) && /none/i.test(styles.display))
+          || (_.isUndefined(styles.visibility) && /hidden/i.test(styles.visibility));
 
         // Now iterate the whole thing
         for (key in styles) {
@@ -737,13 +737,13 @@
           switch (key) {
             case 'transform':
               // TODO: Check this out https://github.com/paperjs/paper.js/blob/develop/src/svg/SvgImport.js#L315
-              if (value === 'none') break;
+              if (/none/i.test(value)) break;
               var m = (node.transform && node.transform.baseVal && node.transform.baseVal.length > 0)
                 ? node.transform.baseVal[0].matrix
                 : (node.getCTM ? node.getCTM() : null);
 
               // Might happen when transform string is empty or not valid.
-              if (m === null) break;
+              if (_.isNull(m)) break;
 
               // // Option 1: edit the underlying matrix and don't force an auto calc.
               // var m = node.getCTM();
@@ -811,7 +811,7 @@
                 elem[key] = this.getById(
                   value.replace(/url\(\#(.*)\)/i, '$1'));
               } else {
-                elem[key] = (value === 'none') ? 'transparent' : value;
+                elem[key] = (/none/i.test(value)) ? 'transparent' : value;
               }
               break;
             case 'id':
@@ -1003,6 +1003,14 @@
                     undefined, undefined,
                     Two.Commands.close
                   );
+                  // Make coord be the last `m` command
+                  for (var i = points.length - 1; i >= 0; i--) {
+                    var point = points[i];
+                    if (/m/i.test(point.command)) {
+                      coord = point;
+                      break;
+                    }
+                  }
                 }
                 break;
 
@@ -1018,7 +1026,7 @@
                   x, y,
                   undefined, undefined,
                   undefined, undefined,
-                  lower === 'm' ? Two.Commands.move : Two.Commands.line
+                  /m/i.test(lower) ? Two.Commands.move : Two.Commands.line
                 );
 
                 if (relative) {
@@ -1034,8 +1042,8 @@
               case 'h':
               case 'v':
 
-                var a = lower === 'h' ? 'x' : 'y';
-                var b = a === 'x' ? 'y' : 'x';
+                var a = /h/i.test(lower) ? 'x' : 'y';
+                var b = /x/i.test(a) ? 'y' : 'x';
 
                 result = new Two.Anchor(
                   undefined, undefined,
@@ -1066,7 +1074,7 @@
                   control = new Two.Vector();//.copy(coord);
                 }
 
-                if (lower === 'c') {
+                if (/c/i.test(lower)) {
 
                   x2 = parseFloat(coords[0]);
                   y2 = parseFloat(coords[1]);
@@ -1135,7 +1143,7 @@
                   y2 = control.y;
                 }
 
-                if (lower === 'q') {
+                if (/q/i.test(lower)) {
 
                   x3 = parseFloat(coords[0]);
                   y3 = parseFloat(coords[1]);
