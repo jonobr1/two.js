@@ -30,7 +30,8 @@ compiler.renderSync({
     // path.resolve(__dirname, '../src/effects/image-sequence.js'),
     path.resolve(__dirname, '../src/group.js')
   ],
-  destination: path.resolve(__dirname, '../documentation')
+  destination: path.resolve(__dirname, '../documentation'),
+  cache: false
 });
 
 console.log('Two.js Documentation rendered');
