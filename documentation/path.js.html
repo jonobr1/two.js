@@ -1,4 +1,32 @@
-(function(Two) {
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: path.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: path.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>(function(Two) {
 
   // Constants
 
@@ -490,7 +518,7 @@
       border = this.linewidth / 2;
       l = this._renderer.vertices.length;
 
-      if (l <= 0) {
+      if (l &lt;= 0) {
         v = matrix.multiply(0, 0, 1);
         return {
           top: v.y,
@@ -502,12 +530,12 @@
         };
       }
 
-      for (i = 1; i < l; i++) {
+      for (i = 1; i &lt; l; i++) {
 
         v1 = this._renderer.vertices[i];
         v0 = this._renderer.vertices[i - 1];
 
-        if (v0.controls && v1.controls) {
+        if (v0.controls &amp;&amp; v1.controls) {
 
           if (v0.relative) {
             c0 = matrix.multiply(
@@ -537,7 +565,7 @@
 
         } else {
 
-          if (i <= 1) {
+          if (i &lt;= 1) {
 
             v0 = matrix.multiply(v0.x, v0.y, 1);
 
@@ -588,7 +616,7 @@
       var a = null;
       var b = null;
 
-      for (var i = 0, l = this._lengths.length, sum = 0; i < l; i++) {
+      for (var i = 0, l = this._lengths.length, sum = 0; i &lt; l; i++) {
 
         if (sum + this._lengths[i] >= target) {
 
@@ -631,8 +659,8 @@
         return a;
       }
 
-      right = b.controls && b.controls.right;
-      left = a.controls && a.controls.left;
+      right = b.controls &amp;&amp; b.controls.right;
+      left = a.controls &amp;&amp; a.controls.left;
 
       x1 = b.x;
       y1 = b.y;
@@ -643,12 +671,12 @@
       x4 = a.x;
       y4 = a.y;
 
-      if (right && b.relative) {
+      if (right &amp;&amp; b.relative) {
         x2 += b.x;
         y2 += b.y;
       }
 
-      if (left && a.relative) {
+      if (left &amp;&amp; a.relative) {
         x3 += a.x;
         y3 += a.y;
       }
@@ -719,7 +747,7 @@
         return this;
       }
 
-      for (var i = 0; i < this._collection.length; i++) {
+      for (var i = 0; i &lt; this._collection.length; i++) {
         this._collection[i].command = i === 0 ? Two.Commands.move : Two.Commands.line;
       }
 
@@ -737,7 +765,7 @@
       var points = [];
       _.each(this.vertices, function(a, i) {
 
-        if (i <= 0 && !closed) {
+        if (i &lt;= 0 &amp;&amp; !closed) {
           b = a;
           return;
         }
@@ -756,7 +784,7 @@
 
         // Assign commands to all the verts
         _.each(verts, function(v, i) {
-          if (i <= 0 && b.command === Two.Commands.move) {
+          if (i &lt;= 0 &amp;&amp; b.command === Two.Commands.move) {
             v.command = Two.Commands.move;
           } else {
             v.command = Two.Commands.line;
@@ -766,7 +794,7 @@
         if (i >= last) {
 
           // TODO: Add check if the two vectors in question are the same values.
-          if (this._closed && this._automatic) {
+          if (this._closed &amp;&amp; this._automatic) {
 
             b = a;
 
@@ -775,7 +803,7 @@
 
             // Assign commands to all the verts
             _.each(verts, function(v, i) {
-              if (i <= 0 && b.command === Two.Commands.move) {
+              if (i &lt;= 0 &amp;&amp; b.command === Two.Commands.move) {
                 v.command = Two.Commands.move;
               } else {
                 v.command = Two.Commands.line;
@@ -821,7 +849,7 @@
 
       _.each(this.vertices, function(a, i) {
 
-        if ((i <= 0 && !closed) || a.command === Two.Commands.move) {
+        if ((i &lt;= 0 &amp;&amp; !closed) || a.command === Two.Commands.move) {
           b = a;
           this._lengths[i] = 0;
           return;
@@ -831,7 +859,7 @@
         this._lengths[i] = Two.Utils.toFixed(this._lengths[i]);
         sum += this._lengths[i];
 
-        if (i >= last && closed) {
+        if (i >= last &amp;&amp; closed) {
 
           b = this.vertices[(i + 1) % length];
 
@@ -880,14 +908,14 @@
 
         this._renderer.vertices.length = 0;
 
-        for (var i = 0; i < l; i++) {
+        for (var i = 0; i &lt; l; i++) {
 
-          if (this._renderer.collection.length <= i) {
+          if (this._renderer.collection.length &lt;= i) {
             // Expected to be `relative` anchor points.
             this._renderer.collection.push(new Two.Anchor());
           }
 
-          if (i > high && !right) {
+          if (i > high &amp;&amp; !right) {
 
             v = this._renderer.collection[i];
             v.copy(this._collection[i]);
@@ -900,7 +928,7 @@
 
             // Project control over the percentage `t`
             // of the in-between point
-            if (prev && prev.controls) {
+            if (prev &amp;&amp; prev.controls) {
 
               v.controls.right.clear();
 
@@ -910,18 +938,18 @@
 
             }
 
-          } else if (i >= low && i <= high) {
+          } else if (i >= low &amp;&amp; i &lt;= high) {
 
             v = this._renderer.collection[i]
               .copy(this._collection[i]);
             this._renderer.vertices.push(v);
 
-            if (i === high && contains(this, ending)) {
+            if (i === high &amp;&amp; contains(this, ending)) {
               right = v;
               if (right.controls) {
                 right.controls.right.clear();
               }
-            } else if (i === low && contains(this, beginning)) {
+            } else if (i === low &amp;&amp; contains(this, beginning)) {
               left = v;
               left.command = Two.Commands.move;
               if (left.controls) {
@@ -934,7 +962,7 @@
         }
 
         // Prepend the trimmed point if necessary.
-        if (low > 0 && !left) {
+        if (low > 0 &amp;&amp; !left) {
 
           i = low - 1;
 
@@ -949,7 +977,7 @@
 
           // Project control over the percentage `t`
           // of the in-between point
-          if (next && next.controls) {
+          if (next &amp;&amp; next.controls) {
 
             v.controls.left.clear();
 
@@ -998,7 +1026,7 @@
     var target = length * t;
     var elapsed = 0;
 
-    for (var i = 0; i < path._lengths.length; i++) {
+    for (var i = 0; i &lt; path._lengths.length; i++) {
       var dist = path._lengths[i];
       if (elapsed >= target) {
         return target - elapsed >= 0;
@@ -1014,13 +1042,13 @@
 
     var total = path._length;
 
-    if (target <= 0) {
+    if (target &lt;= 0) {
       return 0;
     } else if (target >= total) {
       return path._lengths.length - 1;
     }
 
-    for (var i = 0, sum = 0; i < path._lengths.length; i++) {
+    for (var i = 0, sum = 0; i &lt; path._lengths.length; i++) {
 
       if (sum + path._lengths[i] >= target) {
         target -= sum;
@@ -1039,8 +1067,8 @@
     // TODO: DRYness
     var x1, x2, x3, x4, y1, y2, y3, y4;
 
-    var right = b.controls && b.controls.right;
-    var left = a.controls && a.controls.left;
+    var right = b.controls &amp;&amp; b.controls.right;
+    var left = a.controls &amp;&amp; a.controls.left;
 
     x1 = b.x;
     y1 = b.y;
@@ -1051,12 +1079,12 @@
     x4 = a.x;
     y4 = a.y;
 
-    if (right && b._relative) {
+    if (right &amp;&amp; b._relative) {
       x2 += b.x;
       y2 += b.y;
     }
 
-    if (left && a._relative) {
+    if (left &amp;&amp; a._relative) {
       x3 += a.x;
       y3 += a.y;
     }
@@ -1069,8 +1097,8 @@
     // TODO: DRYness
     var x1, x2, x3, x4, y1, y2, y3, y4;
 
-    var right = b.controls && b.controls.right;
-    var left = a.controls && a.controls.left;
+    var right = b.controls &amp;&amp; b.controls.right;
+    var left = a.controls &amp;&amp; a.controls.left;
 
     x1 = b.x;
     y1 = b.y;
@@ -1081,12 +1109,12 @@
     x4 = a.x;
     y4 = a.y;
 
-    if (right && b._relative) {
+    if (right &amp;&amp; b._relative) {
       x2 += b.x;
       y2 += b.y;
     }
 
-    if (left && a._relative) {
+    if (left &amp;&amp; a._relative) {
       x3 += a.x;
       y3 += a.y;
     }
@@ -1096,3 +1124,26 @@
   }
 
 })((typeof global !== 'undefined' ? global : (this || window)).Two);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Two.html">Two</a></li><li><a href="Two.Anchor.html">Anchor</a></li><li><a href="Two.Group.html">Group</a></li><li><a href="Two.Group.Children.html">Children</a></li><li><a href="Two.Matrix.html">Matrix</a></li><li><a href="Two.Path.html">Path</a></li><li><a href="Two.Registry.html">Registry</a></li><li><a href="Two.Shape.html">Shape</a></li><li><a href="Two.Text.html">Text</a></li><li><a href="Two.Utils.Collection.html">Collection</a></li><li><a href="Two.Utils.Error.html">Error</a></li><li><a href="Two.Vector.html">Vector</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed May 30 2018 13:01:10 GMT-0700 (PDT)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

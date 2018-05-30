@@ -30,6 +30,8 @@
   "devDependencies": {
     "animation-frame": "^0.1.7",
     "blueimp-canvas-to-blob": "^2.1.0",
+    "jsdoc": "~3.5.5",
+    "jsdoc-to-markdown": "^4.0.1",
     "node-minify": "^2.0.3",
     "qunitjs": "^2.4.0",
     "resemblejs": "^1.1.1",

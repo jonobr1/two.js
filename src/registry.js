@@ -2,6 +2,10 @@
 
   var _ = Two.Utils;
 
+  /**
+   * @class
+   * @name Two.Registry
+   */
   var Registry = Two.Registry = function() {
 
     this.map = {};

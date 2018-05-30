@@ -1,4 +1,32 @@
-(this || window).Two = (function(previousTwo) {
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: two.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: two.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>(this || window).Two = (function(previousTwo) {
 
   var root = typeof window != 'undefined' ? window : typeof global != 'undefined' ? global : null;
   var toString = Object.prototype.toString;
@@ -37,10 +65,10 @@
       return toString.call(obj) === '[object Error]';
     },
     isFinite: function(obj) {
-      return isFinite(obj) && !isNaN(parseFloat(obj));
+      return isFinite(obj) &amp;&amp; !isNaN(parseFloat(obj));
     },
     isNaN: function(obj) {
-      return _.isNumber(obj) && obj !== +obj;
+      return _.isNumber(obj) &amp;&amp; obj !== +obj;
     },
     isBoolean: function(obj) {
       return obj === true || obj === false || toString.call(obj) === '[object Boolean]';
@@ -53,18 +81,18 @@
     },
     isEmpty: function(obj) {
       if (obj == null) return true;
-      if (isArrayLike && (_.isArray(obj) || _.isString(obj) || _.isArguments(obj))) return obj.length === 0;
+      if (isArrayLike &amp;&amp; (_.isArray(obj) || _.isString(obj) || _.isArguments(obj))) return obj.length === 0;
       return _.keys(obj).length === 0;
     },
     isElement: function(obj) {
-      return !!(obj && obj.nodeType === 1);
+      return !!(obj &amp;&amp; obj.nodeType === 1);
     },
     isArray: Array.isArray || function(obj) {
       return toString.call(obj) === '[object Array]';
     },
     isObject: function(obj) {
       var type = typeof obj;
-      return type === 'function' || type === 'object' && !!obj;
+      return type === 'function' || type === 'object' &amp;&amp; !!obj;
     },
     toArray: function(obj) {
       if (!obj) {
@@ -88,7 +116,7 @@
       var length = Math.max(Math.ceil((stop - start) / step), 0);
       var range = Array(length);
 
-      for (var idx = 0; idx < length; idx++, start += step) {
+      for (var idx = 0; idx &lt; length; idx++, start += step) {
         range[idx] = start;
       }
 
@@ -98,7 +126,7 @@
       if (!!_.natural.indexOf) {
         return _.natural.indexOf.call(list, item);
       }
-      for (var i = 0; i < list.length; i++) {
+      for (var i = 0; i &lt; list.length; i++) {
         if (list[i] === item) {
           return i;
         }
@@ -106,11 +134,11 @@
       return -1;
     },
     has: function(obj, key) {
-      return obj != null && hasOwnProperty.call(obj, key);
+      return obj != null &amp;&amp; hasOwnProperty.call(obj, key);
     },
     bind: function(func, ctx) {
       var natural = _.natural.bind;
-      if (natural && func.bind === natural) {
+      if (natural &amp;&amp; func.bind === natural) {
         return natural.apply(func, slice.call(arguments, 1));
       }
       var args = slice.call(arguments, 2);
@@ -120,7 +148,7 @@
     },
     extend: function(base) {
       var sources = slice.call(arguments, 1);
-      for (var i = 0; i < sources.length; i++) {
+      for (var i = 0; i &lt; sources.length; i++) {
         var obj = sources[i];
         for (var k in obj) {
           base[k] = obj[k];
@@ -130,7 +158,7 @@
     },
     defaults: function(base) {
       var sources = slice.call(arguments, 1);
-      for (var i = 0; i < sources.length; i++) {
+      for (var i = 0; i &lt; sources.length; i++) {
         var obj = sources[i];
         for (var k in obj) {
           if (base[k] === void 0) {
@@ -158,7 +186,7 @@
     values: function(obj) {
       var keys = _.keys(obj);
       var values = [];
-      for (var i = 0; i < keys.length; i++) {
+      for (var i = 0; i &lt; keys.length; i++) {
         var k = keys[i];
         values.push(obj[k]);
       }
@@ -166,9 +194,9 @@
     },
     each: function(obj, iteratee, context) {
       var ctx = context || this;
-      var keys = !isArrayLike(obj) && _.keys(obj);
+      var keys = !isArrayLike(obj) &amp;&amp; _.keys(obj);
       var length = (keys || obj).length;
-      for (var i = 0; i < length; i++) {
+      for (var i = 0; i &lt; length; i++) {
         var k = keys ? keys[i] : i;
         iteratee.call(ctx, obj[k], k, obj);
       }
@@ -176,10 +204,10 @@
     },
     map: function(obj, iteratee, context) {
       var ctx = context || this;
-      var keys = !isArrayLike(obj) && _.keys(obj);
+      var keys = !isArrayLike(obj) &amp;&amp; _.keys(obj);
       var length = (keys || obj).length;
       var result = [];
-      for (var i = 0; i < length; i++) {
+      for (var i = 0; i &lt; length; i++) {
         var k = keys ? keys[i] : i;
         result[i] = iteratee.call(ctx, obj[k], k, obj);
       }
@@ -197,7 +225,7 @@
     },
     after: function(times, func) {
       return function() {
-        while (--times < 1) {
+        while (--times &lt; 1) {
           return func.apply(this, arguments);
         }
       }
@@ -228,14 +256,14 @@
 
   var count = 0;
   var slice = _.natural.slice;
-  var perf = ((root.performance && root.performance.now) ? root.performance : Date);
+  var perf = ((root.performance &amp;&amp; root.performance.now) ? root.performance : Date);
   var MAX_ARRAY_INDEX = Math.pow(2, 53) - 1;
   var getLength = function(obj) {
     return obj == null ? void 0 : obj['length'];
   };
   var isArrayLike = function(collection) {
     var length = getLength(collection);
-    return typeof length == 'number' && length >= 0 && length <= MAX_ARRAY_INDEX;
+    return typeof length == 'number' &amp;&amp; length >= 0 &amp;&amp; length &lt;= MAX_ARRAY_INDEX;
   };
 
   // Cross browser dom events.
@@ -271,7 +299,7 @@
       var request = root.requestAnimationFrame, cancel;
 
       if(!request) {
-        for (var i = 0; i < vendors.length; i++) {
+        for (var i = 0; i &lt; vendors.length; i++) {
           request = root[vendors[i] + 'RequestAnimationFrame'] || request;
           cancel = root[vendors[i] + 'CancelAnimationFrame']
             || root[vendors[i] + 'CancelRequestAnimationFrame'] || cancel;
@@ -524,7 +552,7 @@
         xhr.open('GET', path);
 
         xhr.onreadystatechange = function() {
-          if (xhr.readyState === 4 && xhr.status === 200) {
+          if (xhr.readyState === 4 &amp;&amp; xhr.status === 200) {
             callback(xhr.responseText);
           }
         };
@@ -623,10 +651,10 @@
       //  */
       getComputedMatrix: function(object, matrix) {
 
-        matrix = (matrix && matrix.identity()) || new Two.Matrix();
+        matrix = (matrix &amp;&amp; matrix.identity()) || new Two.Matrix();
         var parent = object, matrices = [];
 
-        while (parent && parent._matrix) {
+        while (parent &amp;&amp; parent._matrix) {
           matrices.push(parent._matrix);
           parent = parent.parent;
         }
@@ -728,8 +756,8 @@
 
         // Similarly visibility is influenced by the value of both display and visibility.
         // Calculate a unified value here which defaults to `true`.
-        styles.visible = !(_.isUndefined(styles.display) && /none/i.test(styles.display))
-          || (_.isUndefined(styles.visibility) && /hidden/i.test(styles.visibility));
+        styles.visible = !(_.isUndefined(styles.display) &amp;&amp; /none/i.test(styles.display))
+          || (_.isUndefined(styles.visibility) &amp;&amp; /hidden/i.test(styles.visibility));
 
         // Now iterate the whole thing
         for (key in styles) {
@@ -739,7 +767,7 @@
             case 'transform':
               // TODO: Check this out https://github.com/paperjs/paper.js/blob/develop/src/svg/SvgImport.js#L315
               if (/none/i.test(value)) break;
-              var m = (node.transform && node.transform.baseVal && node.transform.baseVal.length > 0)
+              var m = (node.transform &amp;&amp; node.transform.baseVal &amp;&amp; node.transform.baseVal.length > 0)
                 ? node.transform.baseVal[0].matrix
                 : (node.getCTM ? node.getCTM() : null);
 
@@ -845,7 +873,7 @@
           // Switched up order to inherit more specific styles
           Two.Utils.applySvgAttributes.call(this, node, group);
 
-          for (var i = 0, l = node.childNodes.length; i < l; i++) {
+          for (var i = 0, l = node.childNodes.length; i &lt; l; i++) {
             var n = node.childNodes[i];
             var tag = n.nodeName;
             if (!tag) return;
@@ -905,7 +933,7 @@
             var hasDoubleDecimals = false;
 
             // Handle double decimal values e.g: 48.6037.71
-            for (var j = 0; j < items.length; j++) {
+            for (var j = 0; j &lt; items.length; j++) {
 
               var number = items[j];
 
@@ -926,7 +954,7 @@
               command = type + items.join(',');
             }
 
-            if (i <= 0) {
+            if (i &lt;= 0) {
               commands = [];
             }
 
@@ -964,7 +992,7 @@
 
             if (bin) {
 
-              for (var j = 0, l = items.length, times = 0; j < l; j+=bin) {
+              for (var j = 0, l = items.length, times = 0; j &lt; l; j+=bin) {
 
                 var ct = type;
                 if (times > 0) {
@@ -1257,7 +1285,7 @@
 
                 if (_.isNaN(amp)) {
                   amp = 0;
-                } else if (largeArcFlag != sweepFlag && amp > 0) {
+                } else if (largeArcFlag != sweepFlag &amp;&amp; amp > 0) {
                   amp *= -1;
                 }
 
@@ -1274,7 +1302,7 @@
                 // ratio between two vectors
                 var r = function(u, v) { return (u[0] * v[0] + u[1] * v[1]) / (m(u) * m(v)) }
                 // angle between two vectors
-                var a = function(u, v) { return (u[0] * v[1] < u[1] * v[0] ? - 1 : 1) * Math.acos(r(u,v)); }
+                var a = function(u, v) { return (u[0] * v[1] &lt; u[1] * v[0] ? - 1 : 1) * Math.acos(r(u,v)); }
 
                 // Calculate theta1 and delta theta F.6.5.4 + F.6.5.5
                 var t1 = a([1, 0], [(_x - _cx) / rx, (_y - _cy) / ry]);
@@ -1282,7 +1310,7 @@
                 var v = [( - _x - _cx) / rx, ( - _y - _cy) / ry];
                 var dt = a(u, v);
 
-                if (r(u, v) <= -1) dt = Math.PI;
+                if (r(u, v) &lt;= -1) dt = Math.PI;
                 if (r(u, v) >= 1) dt = 0;
 
                 // F.6.5.6
@@ -1290,7 +1318,7 @@
                   dt = mod(dt, Math.PI * 2);
                 }
 
-                if (sweepFlag && dt > 0) {
+                if (sweepFlag &amp;&amp; dt > 0) {
                   dt -= Math.PI * 2;
                 }
 
@@ -1332,7 +1360,7 @@
 
           });
 
-          if (points.length <= 1) {
+          if (points.length &lt;= 1) {
             return;
           }
 
@@ -1456,7 +1484,7 @@
           var oy = (y2 + y1) / 2;
 
           var stops = [];
-          for (var i = 0; i < node.children.length; i++) {
+          for (var i = 0; i &lt; node.children.length; i++) {
 
             var child = node.children[i];
 
@@ -1467,12 +1495,12 @@
 
             if (_.isNull(color)) {
               var matches = style ? style.match(/stop\-color\:\s?([\#a-fA-F0-9]*)/) : false;
-              color = matches && matches.length > 1 ? matches[1] : undefined;
+              color = matches &amp;&amp; matches.length > 1 ? matches[1] : undefined;
             }
 
             if (_.isNull(opacity)) {
               var matches = style ? style.match(/stop\-opacity\:\s?([0-9\.\-]*)/) : false;
-              opacity = matches && matches.length > 1 ? parseFloat(matches[1]) : 1;
+              opacity = matches &amp;&amp; matches.length > 1 ? parseFloat(matches[1]) : 1;
             }
 
             stops.push(new Two.Gradient.Stop(offset, color, opacity));
@@ -1507,7 +1535,7 @@
           var oy = Math.abs(cy + fy) / 2;
 
           var stops = [];
-          for (var i = 0; i < node.children.length; i++) {
+          for (var i = 0; i &lt; node.children.length; i++) {
 
             var child = node.children[i];
 
@@ -1518,12 +1546,12 @@
 
             if (_.isNull(color)) {
               var matches = style ? style.match(/stop\-color\:\s?([\#a-fA-F0-9]*)/) : false;
-              color = matches && matches.length > 1 ? matches[1] : undefined;
+              color = matches &amp;&amp; matches.length > 1 ? matches[1] : undefined;
             }
 
             if (_.isNull(opacity)) {
               var matches = style ? style.match(/stop\-opacity\:\s?([0-9\.\-]*)/) : false;
-              opacity = matches && matches.length > 1 ? parseFloat(matches[1]) : 1;
+              opacity = matches &amp;&amp; matches.length > 1 ? parseFloat(matches[1]) : 1;
             }
 
             stops.push(new Two.Gradient.Stop(offset, color, opacity));
@@ -1551,7 +1579,7 @@
 
         // TODO: Issue 73
         // Don't recurse if the end points are identical
-        if (x1 === x4 && y1 === y4) {
+        if (x1 === x4 &amp;&amp; y1 === y4) {
           return [new Two.Anchor(x4, y4)];
         }
 
@@ -1582,7 +1610,7 @@
 
         // TODO: Better / fuzzier equality check
         // Linear calculation
-        if (x1 === x2 && y1 === y2 && x3 === x4 && y3 === y4) {
+        if (x1 === x2 &amp;&amp; y1 === y2 &amp;&amp; x3 === x4 &amp;&amp; y3 === y4) {
           var dx = x4 - x1;
           var dy = y4 - y1;
           return sqrt(dx * dx + dy * dy);
@@ -1615,7 +1643,7 @@
         var tvalues = [],
             bounds = [[], []],
             a, b, c, t, t1, t2, b2ac, sqrtb2ac;
-        for (var i = 0; i < 2; ++i) {
+        for (var i = 0; i &lt; 2; ++i) {
             if (i == 0) {
                 b = 6 * x0 - 12 * x1 + 6 * x2;
                 a = -3 * x0 + 9 * x1 - 9 * x2 + 3 * x3;
@@ -1625,27 +1653,27 @@
                 a = -3 * y0 + 9 * y1 - 9 * y2 + 3 * y3;
                 c = 3 * y1 - 3 * y0;
             }
-            if (abs(a) < 1e-12) {
-                if (abs(b) < 1e-12) {
+            if (abs(a) &lt; 1e-12) {
+                if (abs(b) &lt; 1e-12) {
                     continue;
                 }
                 t = -c / b;
-                if (0 < t && t < 1) {
+                if (0 &lt; t &amp;&amp; t &lt; 1) {
                     tvalues.push(t);
                 }
                 continue;
             }
             b2ac = b * b - 4 * c * a;
             sqrtb2ac = Math.sqrt(b2ac);
-            if (b2ac < 0) {
+            if (b2ac &lt; 0) {
                 continue;
             }
             t1 = (-b + sqrtb2ac) / (2 * a);
-            if (0 < t1 && t1 < 1) {
+            if (0 &lt; t1 &amp;&amp; t1 &lt; 1) {
                 tvalues.push(t1);
             }
             t2 = (-b - sqrtb2ac) / (2 * a);
-            if (0 < t2 && t2 < 1) {
+            if (0 &lt; t2 &amp;&amp; t2 &lt; 1) {
                 tvalues.push(t2);
             }
         }
@@ -1685,8 +1713,8 @@
           B = A + a,
           i = 0,
           m = (n + 1) >> 1,
-          sum = n & 1 ? w[i++] * f(B) : 0; // Handle odd n
-        while (i < m) {
+          sum = n &amp; 1 ? w[i++] * f(B) : 0; // Handle odd n
+        while (i &lt; m) {
           var Ax = A * x[i];
           sum += w[i++] * (f(B + Ax) + f(B - Ax));
         }
@@ -1700,7 +1728,7 @@
 
         var l = points.length, last = l - 1;
 
-        for (var i = 0; i < l; i++) {
+        for (var i = 0; i &lt; l; i++) {
 
           var point = points[i];
 
@@ -1737,8 +1765,8 @@
         var mid = (a1 + a2) / 2;
 
         // TODO: Issue 73
-        if (d1 < 0.0001 || d2 < 0.0001) {
-          if (_.isBoolean(b.relative) && !b.relative) {
+        if (d1 &lt; 0.0001 || d2 &lt; 0.0001) {
+          if (_.isBoolean(b.relative) &amp;&amp; !b.relative) {
             b.controls.left.copy(b);
             b.controls.right.copy(b);
           }
@@ -1748,7 +1776,7 @@
         d1 *= 0.33; // Why 0.33?
         d2 *= 0.33;
 
-        if (a2 < a1) {
+        if (a2 &lt; a1) {
           mid += HALF_PI;
         } else {
           mid -= HALF_PI;
@@ -1762,7 +1790,7 @@
         b.controls.right.x = cos(mid) * d2;
         b.controls.right.y = sin(mid) * d2;
 
-        if (_.isBoolean(b.relative) && !b.relative) {
+        if (_.isBoolean(b.relative) &amp;&amp; !b.relative) {
           b.controls.left.x += b.x;
           b.controls.left.y += b.y;
           b.controls.right.x += b.x;
@@ -1875,7 +1903,7 @@
 
       mod: function(v, l) {
 
-        while (v < 0) {
+        while (v &lt; 0) {
           v += l;
         }
 
@@ -1897,7 +1925,7 @@
 
         if (arguments.length > 1) {
           Array.prototype.push.apply(this, arguments);
-        } else if (arguments[0] && Array.isArray(arguments[0])) {
+        } else if (arguments[0] &amp;&amp; Array.isArray(arguments[0])) {
           Array.prototype.push.apply(this, arguments[0]);
         }
 
@@ -1938,13 +1966,13 @@
           if (!this._events) {
             return this;
           }
-          if (!name && !callback) {
+          if (!name &amp;&amp; !callback) {
             this._events = {};
             return this;
           }
 
           var names = name ? [name] : _.keys(this._events);
-          for (var i = 0, l = names.length; i < l; i++) {
+          for (var i = 0, l = names.length; i &lt; l; i++) {
 
             var name = names[i];
             var list = this._events[name];
@@ -1952,10 +1980,10 @@
             if (!!list) {
               var events = [];
               if (callback) {
-                for (var j = 0, k = list.length; j < k; j++) {
+                for (var j = 0, k = list.length; j &lt; k; j++) {
                   var ev = list[j];
                   ev = ev.callback ? ev.callback : ev;
-                  if (callback && callback !== ev) {
+                  if (callback &amp;&amp; callback !== ev) {
                     events.push(ev);
                   }
                 }
@@ -2041,7 +2069,7 @@
         events[i].apply(obj, args);
       };
     }
-    for (var i = 0; i < events.length; i++) {
+    for (var i = 0; i &lt; events.length; i++) {
       method(i);
     }
   };
@@ -2285,7 +2313,7 @@
       var l = arguments.length, points = p;
       if (!_.isArray(p)) {
         points = [];
-        for (var i = 0; i < l; i+=2) {
+        for (var i = 0; i &lt; l; i+=2) {
           var x = arguments[i];
           if (!_.isNumber(x)) {
             break;
@@ -2334,7 +2362,7 @@
       var l = arguments.length, points = p;
       if (!_.isArray(p)) {
         points = [];
-        for (var i = 0; i < l; i+=2) {
+        for (var i = 0; i &lt; l; i+=2) {
           var x = arguments[i];
           if (!_.isNumber(x)) {
             break;
@@ -2462,7 +2490,7 @@
       var node = Two.Utils.read[tag].call(this, svgNode);
 
       if (!!add) {
-        this.add(shallow && node instanceof Two.Group ? node.children : node);
+        this.add(shallow &amp;&amp; node instanceof Two.Group ? node.children : node);
       }
 
       return node;
@@ -2482,10 +2510,10 @@
 
         dom.temp.innerHTML = data;
 
-        for (i = 0; i < dom.temp.children.length; i++) {
+        for (i = 0; i &lt; dom.temp.children.length; i++) {
           elem = dom.temp.children[i];
           if (/svg/i.test(elem.nodeName)) {
-            for (j = 0; j < elem.children.length; j++) {
+            for (j = 0; j &lt; elem.children.length; j++) {
               group.add(this.interpret(elem.children[j]));
             }
           } else {
@@ -2494,7 +2522,7 @@
         }
 
         if (_.isFunction(callback)) {
-          var svg = dom.temp.children.length <= 1
+          var svg = dom.temp.children.length &lt;= 1
             ? dom.temp.children[0] : dom.temp.children;
           callback(group, svg);
         }
@@ -2540,7 +2568,7 @@
 
   function loop() {
 
-    for (var i = 0; i < Two.Instances.length; i++) {
+    for (var i = 0; i &lt; Two.Instances.length; i++) {
       var t = Two.Instances[i];
       if (t.playing) {
         t.update();
@@ -2551,14 +2579,37 @@
 
   }
 
-  if (typeof define === 'function' && define.amd) {
+  if (typeof define === 'function' &amp;&amp; define.amd) {
     define('two', [], function() {
       return Two;
     });
-  } else if (typeof module != 'undefined' && module.exports) {
+  } else if (typeof module != 'undefined' &amp;&amp; module.exports) {
     module.exports = Two;
   }
 
   return Two;
 
 })((typeof global !== 'undefined' ? global : (this || window)).Two);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Two.html">Two</a></li><li><a href="Two.Anchor.html">Anchor</a></li><li><a href="Two.Group.html">Group</a></li><li><a href="Two.Group.Children.html">Children</a></li><li><a href="Two.Matrix.html">Matrix</a></li><li><a href="Two.Path.html">Path</a></li><li><a href="Two.Registry.html">Registry</a></li><li><a href="Two.Shape.html">Shape</a></li><li><a href="Two.Text.html">Text</a></li><li><a href="Two.Utils.Collection.html">Collection</a></li><li><a href="Two.Utils.Error.html">Error</a></li><li><a href="Two.Vector.html">Vector</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed May 30 2018 13:01:10 GMT-0700 (PDT)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
