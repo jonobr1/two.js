@@ -391,23 +391,38 @@
 
     // Primitive
 
+    /**
+     * @name Two.Array
+     * @description A simple polyfill for Float32Array.
+     */
     Array: root.Float32Array || Array,
 
+    /**
+     * @name Two.Types
+     * @property {Object} - The different rendering types availabe in the library.
+     */
     Types: {
       webgl: 'WebGLRenderer',
       svg: 'SVGRenderer',
       canvas: 'CanvasRenderer'
     },
 
+    /**
+     * @name Two.Version
+     * @property {String} - The current working version of the library.
+     */
     Version: 'v0.7.0',
 
+    /**
+     * @name Two.Identifier
+     * @property {String} - String prefix for all Two.js object's ids. This trickles down to SVG ids.
+     */
     Identifier: 'two_',
 
-    Properties: {
-      hierarchy: 'hierarchy',
-      demotion: 'demotion'
-    },
-
+    /**
+     * @name Two.Events
+     * @property {Object} - Map of possible events in Two.js.
+     */
     Events: {
       play: 'play',
       pause: 'pause',
@@ -421,6 +436,10 @@
       load: 'load'
     },
 
+    /**
+     * @name Two.Commands
+     * @property {Object} - Map of possible path commands. Taken from the SVG specification.
+     */
     Commands: {
       move: 'M',
       line: 'L',
@@ -428,15 +447,33 @@
       close: 'Z'
     },
 
+    /**
+     * @name Two.Resolution
+     * @property {Number} - Default amount of vertices to be used for interpreting Arcs and ArcSegments.
+     */
     Resolution: 8,
 
+    /**
+     * @name Two.Instances
+     * @property {Array} - Registered list of all Two.js instances in the current session.
+     */
     Instances: [],
 
+    /**
+     * @function Two.noConflict
+     * @description A function to revert the global namespaced `Two` variable to its previous incarnation.
+     * @returns {Two} Two - Returns access to the Two.js library for local use.
+     */
     noConflict: function() {
       root.Two = previousTwo;
-      return this;
+      return Two;
     },
 
+    /**
+     * @function Two.uniqueId
+     * @description Simple method to access an incrementing value. Used for `id` allocation on all Two.js objects.
+     * @returns {Number} id - Ever incrementing integer.
+     */
     uniqueId: function() {
       var id = count;
       count++;
@@ -445,9 +482,15 @@
 
     /**
      * @name Two.Utils
+     * @property {Object}
+     * @description A hodgepodge of handy functions, math, and properties are stored here.
      */
     Utils: _.extend(_, {
 
+      // /**
+      //  * @name Two.Utils.performance
+      //  * @property {Date} - A special date like object to get the current millis of the session. Used internally to calculate time between frames.
+      //  */
       performance: perf,
 
       defineProperty: function(property) {

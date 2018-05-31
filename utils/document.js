@@ -1,37 +1,60 @@
 var path = require('path');
 var compiler = require('jsdoc-api');
 
-compiler.renderSync({
-  files: [
-    path.resolve(__dirname, '../src/two.js'),
-    path.resolve(__dirname, '../src/registry.js'),
-    path.resolve(__dirname, '../src/vector.js'),
-    path.resolve(__dirname, '../src/anchor.js'),
-    path.resolve(__dirname, '../src/matrix.js'),
-    // path.resolve(__dirname, '../src/renderer/svg.js'),
-    // path.resolve(__dirname, '../src/renderer/canvas.js'),
-    // path.resolve(__dirname, '../src/renderer/webgl.js'),
-    path.resolve(__dirname, '../src/shape.js'),
-    path.resolve(__dirname, '../src/path.js'),
-    // path.resolve(__dirname, '../src/shapes/line.js'),
-    // path.resolve(__dirname, '../src/shapes/rectangle.js'),
-    // path.resolve(__dirname, '../src/shapes/ellipse.js'),
-    // path.resolve(__dirname, '../src/shapes/circle.js'),
-    // path.resolve(__dirname, '../src/shapes/polygon.js'),
-    // path.resolve(__dirname, '../src/shapes/arc-segment.js'),
-    // path.resolve(__dirname, '../src/shapes/star.js'),
-    // path.resolve(__dirname, '../src/shapes/rounded-rectangle.js'),
-    path.resolve(__dirname, '../src/text.js'),
-    // path.resolve(__dirname, '../src/effects/gradient.js'),
-    // path.resolve(__dirname, '../src/effects/linear-gradient.js'),
-    // path.resolve(__dirname, '../src/effects/radial-gradient.js'),
-    // path.resolve(__dirname, '../src/effects/texture.js'),
-    // path.resolve(__dirname, '../src/effects/sprite.js'),
-    // path.resolve(__dirname, '../src/effects/image-sequence.js'),
-    path.resolve(__dirname, '../src/group.js')
-  ],
-  destination: path.resolve(__dirname, '../documentation'),
-  cache: false
+var explanation = compiler.explainSync({
+    files: [
+      path.resolve(__dirname, '../src/two.js'),
+      // path.resolve(__dirname, '../src/registry.js'),
+      // path.resolve(__dirname, '../src/vector.js'),
+      // path.resolve(__dirname, '../src/anchor.js'),
+      // path.resolve(__dirname, '../src/matrix.js'),
+      // path.resolve(__dirname, '../src/renderer/svg.js'),
+      // path.resolve(__dirname, '../src/renderer/canvas.js'),
+      // path.resolve(__dirname, '../src/renderer/webgl.js'),
+      // path.resolve(__dirname, '../src/shape.js'),
+      // path.resolve(__dirname, '../src/path.js'),
+      // path.resolve(__dirname, '../src/shapes/line.js'),
+      // path.resolve(__dirname, '../src/shapes/rectangle.js'),
+      // path.resolve(__dirname, '../src/shapes/ellipse.js'),
+      // path.resolve(__dirname, '../src/shapes/circle.js'),
+      // path.resolve(__dirname, '../src/shapes/polygon.js'),
+      // path.resolve(__dirname, '../src/shapes/arc-segment.js'),
+      // path.resolve(__dirname, '../src/shapes/star.js'),
+      // path.resolve(__dirname, '../src/shapes/rounded-rectangle.js'),
+      // path.resolve(__dirname, '../src/text.js'),
+      // path.resolve(__dirname, '../src/effects/gradient.js'),
+      // path.resolve(__dirname, '../src/effects/linear-gradient.js'),
+      // path.resolve(__dirname, '../src/effects/radial-gradient.js'),
+      // path.resolve(__dirname, '../src/effects/texture.js'),
+      // path.resolve(__dirname, '../src/effects/sprite.js'),
+      // path.resolve(__dirname, '../src/effects/image-sequence.js'),
+      // path.resolve(__dirname, '../src/group.js')
+    ],
+    cache: false,
+    configure: path.resolve(__dirname, '../jsdoc-conf.json')
 });
 
-console.log('Two.js Documentation rendered');
+explanation.slice(0).forEach(function(object) {
+  var a = object.undocumented;
+  var b = /package\:undefined/i.test(object.longname);
+  if (a || b) {
+    explanation.splice(explanation.indexOf(object), 1);
+  }
+});
+
+// var example = explanation[0];
+// ID = example.longname
+// example.description
+// example.augments
+// example.params
+
+// use the meta information in conjunction with the folder structure to
+// create the right navigation environment.
+
+// example.meta.path // Replace with github URL based on tagged version
+// example.meta.filename
+// example.meta.lineno
+// example.meta.columnno
+// example.memberof
+
+console.log(explanation);

@@ -17,7 +17,7 @@
    * @class
    * @name Two.Path
    * @extends Two.Shape
-   * @description This is the base class for creating all drawable shapes in two.js. Unless specified methods return their instance of Two.Path for the purpose of chaining.
+   * @description This is the base class for creating all drawable shapes in two.js. Unless specified methods return their instance of `Two.Path` for the purpose of chaining.
    * @param {Two#Anchor[]} [vertices] - A list of Two.Anchors that represent the order and coordinates to construct the rendered shape.
    * @param {Boolean} [closed=false] - Describes whether the shape is closed or open.
    * @param {Boolean} [curved=false] - Describes whether the shape automatically calculates bezier handles for each vertex.
