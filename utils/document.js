@@ -42,7 +42,7 @@ explanation.slice(0).forEach(function(object) {
   }
 });
 
-// var example = explanation[0];
+// For all @kinds
 // ID = example.longname
 // example.description
 // example.augments
@@ -55,6 +55,6 @@ explanation.slice(0).forEach(function(object) {
 // example.meta.filename
 // example.meta.lineno
 // example.meta.columnno
-// example.memberof
+// example.memberof // Use to map and identify what goes to what
 
 console.log(explanation);
