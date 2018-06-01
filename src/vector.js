@@ -19,6 +19,10 @@
 
     zero: new Two.Vector(),
 
+    set: function(v1, v2) {
+
+    },
+
     add: function(v1, v2) {
       return new Vector(v1.x + v2.x, v1.y + v2.y);
     },
@@ -30,6 +34,62 @@
     subtract: function(v1, v2) {
       return Vector.sub(v1, v2);
     },
+
+    /**
+     * @name Two.Utils.ratioBetween
+     * @function
+     * @param {Two.Vector} A
+     * @param {Two.Vector} B
+     * @returns {Number} The ratio betwen two points `A` and `B`.
+     */
+    ratioBetween: function(A, B) {
+
+      return (A.x * B.x + A.y * B.y) / (A.length() * B.length());
+
+    },
+
+    /**
+     * @name Two.Utils.angleBetween
+     * @function
+     * @param {Two.Vector} A
+     * @param {Two.Vector} B
+     * @returns {Radians} The angle between points `A` and `B`.
+     */
+    angleBetween: function(A, B) {
+
+      var dx, dy;
+
+      if (arguments.length >= 4) {
+
+        dx = arguments[0] - arguments[2];
+        dy = arguments[1] - arguments[3];
+
+        return atan2(dy, dx);
+
+      }
+
+      dx = A.x - B.x;
+      dy = A.y - B.y;
+
+      return atan2(dy, dx);
+
+    },
+
+    distanceBetween: function(p1, p2) {
+
+      return Math.sqrt(Vector.distanceBetweenSquared(p1, p2));
+
+    },
+
+    distanceBetweenSquared: function(p1, p2) {
+
+      var dx = p1.x - p2.x;
+      var dy = p1.y - p2.y;
+
+      return dx * dx + dy * dy;
+
+    },
+
 
     MakeObservable: function(object) {
 
