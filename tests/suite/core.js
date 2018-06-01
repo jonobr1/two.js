@@ -155,7 +155,7 @@ QUnit.test('Two.Vector', function(assert) {
   assert.equal(clone.x, vector.x, 'Two.Vector.clone applies x value properly.');
   assert.equal(clone.y, vector.y, 'Two.Vector.clone applies y value properly.');
 
-  vector.add({ x: 5, y: 5 }, { x: 10, y: 10 });
+  vector.add({ x: 5, y: 5 });
   assert.equal(vector.x, 15, 'Two.Vector.add applies x value properly.');
   assert.equal(vector.y, 15, 'Two.Vector.add applies y value properly.');
 
@@ -163,7 +163,7 @@ QUnit.test('Two.Vector', function(assert) {
   assert.equal(vector.x, 20, 'Two.Vector.addSelf applies x value properly.');
   assert.equal(vector.y, 20, 'Two.Vector.addSelf applies y value properly.');
 
-  vector.sub({ x: 10, y: 10 }, { x: 5, y: 5 });
+  vector.sub({ x: 15, y: 15 });
   assert.equal(vector.x, 5, 'Two.Vector.sub applies x value properly.');
   assert.equal(vector.y, 5, 'Two.Vector.sub applies y value properly.');
 
@@ -185,8 +185,8 @@ QUnit.test('Two.Vector', function(assert) {
   assert.equal(vector.y, 5, 'Two.Vector.divideScalar applies y value properly.');
 
   vector.divideScalar();
-  assert.equal(vector.x, 0, 'Two.Vector.divideScalar applies x value properly.');
-  assert.equal(vector.y, 0, 'Two.Vector.divideScalar applies y value properly.');
+  assert.equal(vector.x, 5, 'Two.Vector.divideScalar applies x value properly.');
+  assert.equal(vector.y, 5, 'Two.Vector.divideScalar applies y value properly.');
 
   vector.set(1, -1);
   vector.negate();
@@ -263,7 +263,7 @@ QUnit.test('Bound Two.Vector', function(assert) {
   assert.equal(clone.x, vector.x, 'Two.Vector.clone applies x value properly.');
   assert.equal(clone.y, vector.y, 'Two.Vector.clone applies y value properly.');
 
-  vector.add({ x: 5, y: 5 }, { x: 10, y: 10 });
+  vector.add({ x: 5, y: 5 });
   assert.equal(vector.x, 15, 'Two.Vector.add applies x value properly.');
   assert.equal(vector.y, 15, 'Two.Vector.add applies y value properly.');
 
@@ -271,7 +271,7 @@ QUnit.test('Bound Two.Vector', function(assert) {
   assert.equal(vector.x, 20, 'Two.Vector.addSelf applies x value properly.');
   assert.equal(vector.y, 20, 'Two.Vector.addSelf applies y value properly.');
 
-  vector.sub({ x: 10, y: 10 }, { x: 5, y: 5 });
+  vector.sub({ x: 15, y: 15 });
   assert.equal(vector.x, 5, 'Two.Vector.sub applies x value properly.');
   assert.equal(vector.y, 5, 'Two.Vector.sub applies y value properly.');
 
@@ -293,8 +293,8 @@ QUnit.test('Bound Two.Vector', function(assert) {
   assert.equal(vector.y, 5, 'Two.Vector.divideScalar applies y value properly.');
 
   vector.divideScalar();
-  assert.equal(vector.x, 0, 'Two.Vector.divideScalar applies x value properly.');
-  assert.equal(vector.y, 0, 'Two.Vector.divideScalar applies y value properly.');
+  assert.equal(vector.x, 5, 'Two.Vector.divideScalar applies x value properly.');
+  assert.equal(vector.y, 5, 'Two.Vector.divideScalar applies y value properly.');
 
   vector.set(1, -1);
   vector.negate();

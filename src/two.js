@@ -297,8 +297,8 @@
   };
 
   /**
-   * @class
    * @name Two
+   * @class
    * @global
    * @param {Object} [options]
    * @param {Boolean} [options.fullscreen=false] - Set to `true` to automatically make the stage adapt to the width and height of the parent document. This parameter overrides `width` and `height` parameters if set to `true`.
@@ -2002,16 +2002,38 @@
 
       },
 
+      /**
+       * @name Two.Utils.lerp
+       * @function
+       * @param {Number} a - Start value.
+       * @param {Number} b - End value.
+       * @param {Number} t - Zero-to-one value describing percentage between a and b.
+       * @returns {Number}
+       * @description Linear interpolation between two values `a` and `b` by an amount `t`.
+       */
       lerp: function(a, b, t) {
         return t * (b - a) + a;
       },
 
-      // A pretty fast toFixed(3) alternative
-      // See http://jsperf.com/parsefloat-tofixed-vs-math-round/18
+      /**
+       * @name Two.Utils.toFixed
+       * @function
+       * @param {Number} v - Any float
+       * @returns {Number} That float trimmed to the third decimal place.
+       * @description A pretty fast toFixed(3) alternative.
+       * @see {@link http://jsperf.com/parsefloat-tofixed-vs-math-round/18}
+       */
       toFixed: function(v) {
         return Math.floor(v * 1000) / 1000;
       },
 
+      /**
+       * @name Two.Utils.mod
+       * @param {Number} v - The value to modulo
+       * @param {Number} l - The value to modulo by
+       * @returns {Number}
+       * @description Modulo with added functionality to handle negative values in a positive manner.
+       */
       mod: function(v, l) {
 
         while (v < 0) {
@@ -2023,13 +2045,11 @@
       },
 
       /**
-       * @class
        * @name Two.Utils.Collection
-       * @memberof Two.Utils
-       * @description Array like collection that triggers 'inserted' and 'removed' events
+       * @class
+       * @extends Two.Utils.Events
+       * @description An `Array` like object with additional event propagation on actions. `pop`, `shift`, and `splice` trigger `removed` events. `push`, `unshift`, and `splice` with more than 2 arguments trigger 'inserted'. Finally, `sort` and `reverse` trigger `order` events.
        */
-      // * removed : pop / shift / splice
-      // * inserted : push / unshift / splice (with > 2 arguments)
       Collection: function() {
 
         Array.call(this);
@@ -2042,12 +2062,10 @@
 
       },
 
-      // Custom Error Throwing for Two.js
-
       /**
-       * @class
-       * @memberof Two.Utils
        * @name Two.Utils.Error
+       * @class
+       * @description Custom error throwing for Two.js specific identification.
        */
       Error: function(message) {
         this.name = 'two.js';
@@ -2055,29 +2073,43 @@
       },
 
       /**
-       * @property {Object} Two.Utils.Events
        * @name Two.Utils.Events
-       * @memberof Two.Utils
+       * @property {Object} Two.Utils.Events
+       * @description Object inherited by many Two.js objects in order to facilitate custom events.
        */
       Events: {
 
-        on: function(name, callback) {
+        /**
+         * @name Two.Utils.Events.on
+         * @function
+         * @param {String} name - The name of the event to bind a function to.
+         * @param {Function} handler - The function to be invoked when the event is dispatched.
+         * @description Call to add a listener to a specific event name.
+         */
+        on: function(name, handler) {
 
           this._events || (this._events = {});
           var list = this._events[name] || (this._events[name] = []);
 
-          list.push(callback);
+          list.push(handler);
 
           return this;
 
         },
 
-        off: function(name, callback) {
+        /**
+         * @name Two.Utils.Events.off
+         * @function
+         * @param {String} [name] - The name of the event intended to be removed.
+         * @param {Function} [handler] - The handler intended to be reomved.
+         * @description Call to remove listeners from a specific event. If only `name` is passed then all the handlers attached to that `name` will be removed. If no arguments are passed then all handlers for every event on the obejct are removed.
+         */
+        off: function(name, handler) {
 
           if (!this._events) {
             return this;
           }
-          if (!name && !callback) {
+          if (!name && !handler) {
             this._events = {};
             return this;
           }
@@ -2090,11 +2122,11 @@
 
             if (!!list) {
               var events = [];
-              if (callback) {
+              if (handler) {
                 for (var j = 0, k = list.length; j < k; j++) {
                   var ev = list[j];
-                  ev = ev.callback ? ev.callback : ev;
-                  if (callback && callback !== ev) {
+                  ev = ev.handler ? ev.handler : ev;
+                  if (handler && handler !== ev) {
                     events.push(ev);
                   }
                 }
@@ -2106,6 +2138,13 @@
           return this;
         },
 
+        /**
+         * @name Two.Utils.Events.trigger
+         * @function
+         * @param {String} name - The name of the event to dispatch.
+         * @param arguments - Anything can be passed after the name and those will be passed on to handlers attached to the event in the order they are passed.
+         * @description Call to trigger a custom event. Any additional arguments passed after the name will be passed along to the attached handlers.
+         */
         trigger: function(name) {
           if (!this._events) return this;
           var args = slice.call(arguments, 1);
@@ -2114,31 +2153,32 @@
           return this;
         },
 
-        listen: function (obj, name, callback) {
+        listen: function(obj, name, handler) {
 
           var bound = this;
 
           if (obj) {
-            var ev = function () {
-              callback.apply(bound, arguments);
+
+            var event = function () {
+              handler.apply(bound, arguments);
             };
 
-            // add references about the object that assigned this listener
-            ev.obj = obj;
-            ev.name = name;
-            ev.callback = callback;
+            // Add references about the object that assigned this listener
+            event.obj = obj;
+            event.name = name;
+            event.handler = handler;
 
             obj.on(name, ev);
+
           }
 
           return this;
 
         },
 
-        ignore: function (obj, name, callback) {
+        ignore: function(obj, name, handler) {
 
-          obj.off(name, callback);
-
+          obj.off(name, handler);
           return this;
 
         }
@@ -2149,7 +2189,16 @@
 
   });
 
+  /**
+   * @name Two.Utils.Events.bind
+   * @borrows Two.Utils.Events.on
+   */
   Two.Utils.Events.bind = Two.Utils.Events.on;
+
+  /**
+   * @name Two.Utils.Events.unbind
+   * @borrows Two.Utils.Events.off
+   */
   Two.Utils.Events.unbind = Two.Utils.Events.off;
 
   var trigger = function(obj, events, args) {
@@ -2192,8 +2241,6 @@
   Two.Utils.Collection.prototype.constructor = Two.Utils.Collection;
 
   _.extend(Two.Utils.Collection.prototype, Two.Utils.Events, {
-
-    constructor: Two.Utils.Collection,
 
     pop: function() {
       var popped = Array.prototype.pop.apply(this, arguments);
@@ -2249,7 +2296,7 @@
 
   // Localize utils
 
-  var getAnchorsFromArcData = Two.Utils.getAnchorsFromArcData,3
+  var getAnchorsFromArcData = Two.Utils.getAnchorsFromArcData,
     getControlPoints = Two.Utils.getControlPoints,
     getCurveFromPoints = Two.Utils.getCurveFromPoints,
     solveSegmentIntersection = Two.Utils.solveSegmentIntersection,
@@ -2265,6 +2312,12 @@
 
     constructor: Two,
 
+    /**
+     * @name Two#appendTo
+     * @function
+     * @param {Element} elem - The DOM element to append the Two.js stage to.
+     * @description Shorthand method to append your instance of Two.js to the `document`.
+     */
     appendTo: function(elem) {
 
       elem.appendChild(this.renderer.domElement);
@@ -2272,6 +2325,12 @@
 
     },
 
+    /**
+     * @name Two#play
+     * @function
+     * @description Call to start an internal animation loop. Dispatches a `play` event.
+     * @nota-bene This function initiates a `requestAnimationFrame` loop.
+     */
     play: function() {
 
       Two.Utils.setPlaying.call(this, true);
@@ -2280,6 +2339,11 @@
 
     },
 
+    /**
+     * @name Two#pause
+     * @function
+     * @description Call to stop the internal animation loop for a specific instance of Two.js. Dispatches a `pause` event.
+     */
     pause: function() {
 
       this.playing = false;

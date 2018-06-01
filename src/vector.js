@@ -19,10 +19,6 @@
 
     zero: new Two.Vector(),
 
-    set: function(v1, v2) {
-
-    },
-
     add: function(v1, v2) {
       return new Vector(v1.x + v2.x, v1.y + v2.y);
     },
@@ -64,14 +60,14 @@
         dx = arguments[0] - arguments[2];
         dy = arguments[1] - arguments[3];
 
-        return atan2(dy, dx);
+        return Math.atan2(dy, dx);
 
       }
 
       dx = A.x - B.x;
       dy = A.y - B.y;
 
-      return atan2(dy, dx);
+      return Math.atan2(dy, dx);
 
     },
 
@@ -147,7 +143,9 @@
     },
 
     add: function(x, y) {
-      if (arguments.length <= 1) {
+      if (arguments.length <= 0) {
+        return this;
+      } else if (arguments.length <= 1) {
         if (_.isNumber(x.x) && _.isNumber(x.y)) {
           this.x += x.x;
           this.y += x.y;
@@ -167,7 +165,9 @@
     },
 
     sub: function(x, y) {
-      if (arguments.length <= 1) {
+      if (arguments.length <= 0) {
+        return this;
+      } else if (arguments.length <= 1) {
         if (_.isNumber(x.x) && _.isNumber(x.y)) {
           this.x -= x.x;
           this.y -= x.y;
@@ -195,7 +195,9 @@
     },
 
     multiply: function(x, y) {
-      if (arguments.length <= 1) {
+      if (arguments.length <= 0) {
+        return this;
+      } else if (arguments.length <= 1) {
         if (_.isNumber(x.x) && _.isNumber(x.y)) {
           this.x *= x.x;
           this.y *= x.y;
@@ -211,15 +213,17 @@
     },
 
     multiplySelf: function(v) {
-      return this.multiply(v);
+      return this.multiply.apply(this, arguments);
     },
 
     multiplyScalar: function(s) {
-      return this.multiply(s);
+      return this.multiply.apply(this, arguments);
     },
 
     divide: function(x, y) {
-      if (arguments.length <= 1) {
+      if (arguments.length <= 0) {
+        return this;
+      } else if (arguments.length <= 1) {
         if (_.isNumber(x.x) && _.isNumber(x.y)) {
           this.x /= x.x;
           this.y /= x.y;
@@ -241,7 +245,7 @@
     },
 
     divideScalar: function(s) {
-      return this.divide(s);
+      return this.divide.apply(this, arguments);
     },
 
     negate: function() {
@@ -339,7 +343,9 @@
     },
 
     add: function(x, y) {
-      if (arguments.length <= 1) {
+      if (arguments.length <= 0) {
+        return this;
+      } else if (arguments.length <= 1) {
         if (_.isNumber(x.x) && _.isNumber(x.y)) {
           this._x += x.x;
           this._y += x.y;
@@ -354,8 +360,10 @@
       return this.trigger(Two.Events.change);
     },
 
-    sub: function(v1, v2) {
-      if (arguments.length <= 1) {
+    sub: function(x, y) {
+      if (arguments.length <= 0) {
+        return this;
+      } else if (arguments.length <= 1) {
         if (_.isNumber(x.x) && _.isNumber(x.y)) {
           this._x -= x.x;
           this._y -= x.y;
@@ -371,7 +379,9 @@
     },
 
     multiply: function(x, y) {
-      if (arguments.length <= 1) {
+      if (arguments.length <= 0) {
+        return this;
+      } else if (arguments.length <= 1) {
         if (_.isNumber(x.x) && _.isNumber(x.y)) {
           this._x *= x.x;
           this._y *= x.y;
@@ -386,8 +396,10 @@
       return this.trigger(Two.Events.change);
     },
 
-    divide: function() {
-      if (arguments.length <= 1) {
+    divide: function(x, y) {
+      if (arguments.length <= 0) {
+        return this;
+      } else if (arguments.length <= 1) {
         if (_.isNumber(x.x) && _.isNumber(x.y)) {
           this._x /= x.x;
           this._y /= x.y;
