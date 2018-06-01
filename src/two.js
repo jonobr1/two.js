@@ -2371,8 +2371,6 @@
       var animated = !!this._lastFrame;
       var now = perf.now();
 
-      this.frameCount++;
-
       if (animated) {
         this.timeDelta = parseFloat((now - this._lastFrame).toFixed(3));
       }
@@ -2401,7 +2399,7 @@
     render: function() {
 
       this.renderer.render();
-      return this.trigger(Two.Events.render, this.frameCount);
+      return this.trigger(Two.Events.render, this.frameCount++);
 
     },
 
