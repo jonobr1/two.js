@@ -57,4 +57,6 @@ explanation.slice(0).forEach(function(object) {
 // example.meta.columnno
 // example.memberof // Use to map and identify what goes to what
 
-console.log(explanation);
+explanation.forEach(function(item) {
+  console.log(item.longname);
+});
