@@ -19,6 +19,18 @@
 
     zero: new Two.Vector(),
 
+    add: function(v1, v2) {
+      return new Vector(v1.x + v2.x, v1.y + v2.y);
+    },
+
+    sub: function(v1, v2) {
+      return new Vector(v1.x - v2.x, v1.y - v2.y);
+    },
+
+    subtract: function(v1, v2) {
+      return Vector.sub(v1, v2);
+    },
+
     MakeObservable: function(object) {
 
       // /**
@@ -74,54 +86,106 @@
       return new Vector(this.x, this.y);
     },
 
-    add: function(v1, v2) {
-      this.x = v1.x + v2.x;
-      this.y = v1.y + v2.y;
-      return this;
-    },
-
-    addSelf: function(v) {
-      this.x += v.x;
-      this.y += v.y;
-      return this;
-    },
-
-    sub: function(v1, v2) {
-      this.x = v1.x - v2.x;
-      this.y = v1.y - v2.y;
-      return this;
-    },
-
-    subSelf: function(v) {
-      this.x -= v.x;
-      this.y -= v.y;
-      return this;
-    },
-
-    multiplySelf: function(v) {
-      this.x *= v.x;
-      this.y *= v.y;
-      return this;
-    },
-
-    multiplyScalar: function(s) {
-      this.x *= s;
-      this.y *= s;
-      return this;
-    },
-
-    divideScalar: function(s) {
-      if (s) {
-        this.x /= s;
-        this.y /= s;
+    add: function(x, y) {
+      if (arguments.length <= 1) {
+        if (_.isNumber(x.x) && _.isNumber(x.y)) {
+          this.x += x.x;
+          this.y += x.y;
+        } else {
+          this.x += x;
+          this.y += x;
+        }
       } else {
-        this.set(0, 0);
+        this.x += x;
+        this.y += y;
       }
       return this;
     },
 
+    addSelf: function(v) {
+      return this.add(v);
+    },
+
+    sub: function(x, y) {
+      if (arguments.length <= 1) {
+        if (_.isNumber(x.x) && _.isNumber(x.y)) {
+          this.x -= x.x;
+          this.y -= x.y;
+        } else {
+          this.x -= x;
+          this.y -= x;
+        }
+      } else {
+        this.x -= x;
+        this.y -= y;
+      }
+      return this;
+    },
+
+    subtract: function() {
+      return Vector.prototype.sub.apply(this, arguments);
+    },
+
+    subSelf: function(v) {
+      return this.sub(v);
+    },
+
+    subtractSelf: function(v) {
+      return this.sub(v);
+    },
+
+    multiply: function(x, y) {
+      if (arguments.length <= 1) {
+        if (_.isNumber(x.x) && _.isNumber(x.y)) {
+          this.x *= x.x;
+          this.y *= x.y;
+        } else {
+          this.x *= x;
+          this.y *= x;
+        }
+      } else {
+        this.x *= x;
+        this.y *= y;
+      }
+      return this;
+    },
+
+    multiplySelf: function(v) {
+      return this.multiply(v);
+    },
+
+    multiplyScalar: function(s) {
+      return this.multiply(s);
+    },
+
+    divide: function(x, y) {
+      if (arguments.length <= 1) {
+        if (_.isNumber(x.x) && _.isNumber(x.y)) {
+          this.x /= x.x;
+          this.y /= x.y;
+        } else {
+          this.x /= x;
+          this.y /= x;
+        }
+      } else {
+        this.x /= x;
+        this.y /= y;
+      }
+      if (_.isNaN(this.x)) {
+        this.x = 0;
+      }
+      if (_.isNaN(this.y)) {
+        this.y = 0;
+      }
+      return this;
+    },
+
+    divideScalar: function(s) {
+      return this.divide(s);
+    },
+
     negate: function() {
-      return this.multiplyScalar(-1);
+      return this.multiply(-1);
     },
 
     dot: function(v) {
@@ -214,53 +278,74 @@
       return new Vector(this._x, this._y);
     },
 
-    add: function(v1, v2) {
-      this._x = v1.x + v2.x;
-      this._y = v1.y + v2.y;
-      return this.trigger(Two.Events.change);
-    },
-
-    addSelf: function(v) {
-      this._x += v.x;
-      this._y += v.y;
+    add: function(x, y) {
+      if (arguments.length <= 1) {
+        if (_.isNumber(x.x) && _.isNumber(x.y)) {
+          this._x += x.x;
+          this._y += x.y;
+        } else {
+          this._x += x;
+          this._y += x;
+        }
+      } else {
+        this._x += x;
+        this._y += y;
+      }
       return this.trigger(Two.Events.change);
     },
 
     sub: function(v1, v2) {
-      this._x = v1.x - v2.x;
-      this._y = v1.y - v2.y;
-      return this.trigger(Two.Events.change);
-    },
-
-    subSelf: function(v) {
-      this._x -= v.x;
-      this._y -= v.y;
-      return this.trigger(Two.Events.change);
-    },
-
-    multiplySelf: function(v) {
-      this._x *= v.x;
-      this._y *= v.y;
-      return this.trigger(Two.Events.change);
-    },
-
-    multiplyScalar: function(s) {
-      this._x *= s;
-      this._y *= s;
-      return this.trigger(Two.Events.change);
-    },
-
-    divideScalar: function(s) {
-      if (s) {
-        this._x /= s;
-        this._y /= s;
-        return this.trigger(Two.Events.change);
+      if (arguments.length <= 1) {
+        if (_.isNumber(x.x) && _.isNumber(x.y)) {
+          this._x -= x.x;
+          this._y -= x.y;
+        } else {
+          this._x -= x;
+          this._y -= x;
+        }
+      } else {
+        this._x -= x;
+        this._y -= y;
       }
-      return this.clear();
+      return this.trigger(Two.Events.change);
     },
 
-    negate: function() {
-      return this.multiplyScalar(-1);
+    multiply: function(x, y) {
+      if (arguments.length <= 1) {
+        if (_.isNumber(x.x) && _.isNumber(x.y)) {
+          this._x *= x.x;
+          this._y *= x.y;
+        } else {
+          this._x *= x;
+          this._y *= x;
+        }
+      } else {
+        this._x *= x;
+        this._y *= y;
+      }
+      return this.trigger(Two.Events.change);
+    },
+
+    divide: function() {
+      if (arguments.length <= 1) {
+        if (_.isNumber(x.x) && _.isNumber(x.y)) {
+          this._x /= x.x;
+          this._y /= x.y;
+        } else {
+          this._x /= x;
+          this._y /= x;
+        }
+      } else {
+        this._x /= x;
+        this._y /= y;
+      }
+      if (_.isNaN(this._x)) {
+        this._x = 0;
+      }
+      if (_.isNaN(this._y)) {
+        this._y = 0;
+      }
+      return this.trigger(Two.Events.change);
     },
 
     dot: function(v) {
@@ -271,42 +356,16 @@
       return this._x * this._x + this._y * this._y;
     },
 
-    length: function() {
-      return Math.sqrt(this.lengthSquared());
-    },
-
-    normalize: function() {
-      return this.divideScalar(this.length());
-    },
-
-    distanceTo: function(v) {
-      return Math.sqrt(this.distanceToSquared(v));
-    },
-
     distanceToSquared: function(v) {
       var dx = this._x - v.x,
           dy = this._y - v.y;
       return dx * dx + dy * dy;
     },
 
-    setLength: function(l) {
-      return this.normalize().multiplyScalar(l);
-    },
-
-    equals: function(v, eps) {
-      eps = (typeof eps === 'undefined') ?  0.0001 : eps;
-      return (this.distanceTo(v) < eps);
-    },
-
     lerp: function(v, t) {
       var x = (v.x - this._x) * t + this._x;
       var y = (v.y - this._y) * t + this._y;
       return this.set(x, y);
-    },
-
-    isZero: function(eps) {
-      eps = (typeof eps === 'undefined') ?  0.0001 : eps;
-      return (this.length() < eps);
     },
 
     toString: function() {
