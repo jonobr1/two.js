@@ -2074,7 +2074,7 @@
 
       /**
        * @name Two.Utils.Events
-       * @property {Object} Two.Utils.Events
+       * @interface
        * @description Object inherited by many Two.js objects in order to facilitate custom events.
        */
       Events: {
@@ -2191,13 +2191,13 @@
 
   /**
    * @name Two.Utils.Events.bind
-   * @borrows Two.Utils.Events.on
+   * @borrows Two.Utils.Events.on as Two.Utils.Events.bind
    */
   Two.Utils.Events.bind = Two.Utils.Events.on;
 
   /**
    * @name Two.Utils.Events.unbind
-   * @borrows Two.Utils.Events.off
+   * @borrows Two.Utils.Events.off as Two.Utils.Events.unbind
    */
   Two.Utils.Events.unbind = Two.Utils.Events.off;
 
@@ -2328,7 +2328,8 @@
     /**
      * @name Two#play
      * @function
-     * @description Call to start an internal animation loop. Dispatches a `play` event.
+     * @fires `Two.Events.play` event
+     * @description Call to start an internal animation loop.
      * @nota-bene This function initiates a `requestAnimationFrame` loop.
      */
     play: function() {
@@ -2342,7 +2343,8 @@
     /**
      * @name Two#pause
      * @function
-     * @description Call to stop the internal animation loop for a specific instance of Two.js. Dispatches a `pause` event.
+     * @fires `Two.Events.pause` event
+     * @description Call to stop the internal animation loop for a specific instance of Two.js.
      */
     pause: function() {
 
@@ -2351,9 +2353,12 @@
 
     },
 
-    // /**
-    //  * Update positions and calculations in one pass before rendering.
-    //  */
+    /**
+     * @name Two#update
+     * @fires `Two.Events.update` event
+     * @description Update positions and calculations in one pass before rendering. Then render to the canvas.
+     * @nota-bene This function is called automatically if using {@link Two#play} or the `autostart` parameter in construction.
+     */
     update: function() {
 
       var animated = !!this._lastFrame;
@@ -2381,9 +2386,11 @@
 
     },
 
-    // /**
-    //  * Render all drawable - visible objects of the scene.
-    //  */
+    /**
+     * @name Two#render
+     * @fires `Two.Events.render` event
+     * @description Render all drawable and visible objects of the scene.
+     */
     render: function() {
 
       this.renderer.render();
