@@ -223,7 +223,6 @@
     min = Math.min,
     max = Math.max;
 
-
   // Localized variables
 
   var count = 0;
@@ -302,11 +301,12 @@
    * @name Two
    * @global
    * @param {Object} [options]
-   * @param {Boolean} [options.fullscreen=false]
-   * @param {Number} [options.width=640]
-   * @param {Number} [options.height=480]
-   * @param {String} [options.type=Two.Types.svg]
+   * @param {Boolean} [options.fullscreen=false] - Set to `true` to automatically make the stage adapt to the width and height of the parent document. This parameter overrides `width` and `height` parameters if set to `true`.
+   * @param {Number} [options.width=640] - The width of the stage on construction. This can be set at a later time.
+   * @param {Number} [options.height=480] - The height of the stage on construction. This can be set at a later time.
+   * @param {String} [options.type=Two.Types.svg] - The type of renderer to setup drawing with. See [`Two.Types`]{@link  Two.Types} for available options.
    * @param {Boolean} [options.autostart=false]
+   * @description The entrypoint for Two.js. Instantiate a `new Two` in order to setup a scene to render to. `Two` is also the publicly accessible namespace that all other sub-classes, functions, and utilities attach to.
    */
   var Two = root.Two = function(options) {
 
@@ -387,6 +387,10 @@
 
     // Access to root in other files.
 
+    /**
+     * @name Two.root
+     * @description The root of the session context. In the browser this is the `window` variable. This varies in headless environments.
+     */
     root: root,
 
     // Primitive
@@ -462,7 +466,7 @@
     /**
      * @function Two.noConflict
      * @description A function to revert the global namespaced `Two` variable to its previous incarnation.
-     * @returns {Two} Two - Returns access to the Two.js library for local use.
+     * @returns {Two} Returns access to the top-level Two.js library for local use.
      */
     noConflict: function() {
       root.Two = previousTwo;
@@ -472,7 +476,7 @@
     /**
      * @function Two.uniqueId
      * @description Simple method to access an incrementing value. Used for `id` allocation on all Two.js objects.
-     * @returns {Number} id - Ever incrementing integer.
+     * @returns {Number} Ever increasing integer.
      */
     uniqueId: function() {
       var id = count;
@@ -487,12 +491,20 @@
      */
     Utils: _.extend(_, {
 
-      // /**
-      //  * @name Two.Utils.performance
-      //  * @property {Date} - A special date like object to get the current millis of the session. Used internally to calculate time between frames.
-      //  */
+      /**
+       * @name Two.Utils.performance
+       * @property {Date} - A special `Date` like object to get the current millis of the session. Used internally to calculate time between frames.
+       * e.g: `Two.Utils.performance.now() // milliseconds since epoch`
+       */
       performance: perf,
 
+      /**
+       * @name Two.Utils.defineProperty
+       * @function
+       * @this Two#
+       * @param {String} property - The property to add an enumerable getter / setter to.
+       * @description Convenience function to setup the flag based getter / setter that most properties are defined as in Two.js.
+       */
       defineProperty: function(property) {
 
         var object = this;
@@ -516,10 +528,13 @@
 
       isHeadless: false,
 
-      // /**
-      //  * Convenience method for defining all the dependencies from
-      //  * `node-canvas`
-      //  */
+      /**
+       * @name Two.Utils.shim
+       * @function
+       * @param {Canvas} CanvasModule - The `Canvas` object provided by `node-canvas`.
+       * @returns {Canvas} Returns an instanced canvas object from the provided `node-canvas` `Canvas` object.
+       * @description Convenience method for defining all the dependencies from the npm package `node-canvas`. See [node-canvas]{@link https://github.com/Automattic/node-canvas} for additional information on setting up HTML5 `<canvas />` drawing in a node.js environment.
+       */
       shim: function(CanvasModule) {
         var canvas = new CanvasModule();
         Two.CanvasRenderer.Utils.shim(canvas);
@@ -528,10 +543,13 @@
         return canvas;
       },
 
-      // /**
-      //  * Release an arbitrary class' events from the two.js corpus and recurse
-      //  * through its children and or vertices.
-      //  */
+      /**
+       * @name Two.Utils.release
+       * @function
+       * @param {Object} obj
+       * @returns {Object} The object passed for event deallocation.
+       * @description Release an arbitrary class' events from the Two.js corpus and recurse through its children and or vertices.
+       */
       release: function(obj) {
 
         if (!_.isObject(obj)) {
@@ -559,8 +577,18 @@
           });
         }
 
+        return obj;
+
       },
 
+      /**
+       * @name Two.Utils.xhr
+       * @function
+       * @param {String} path
+       * @param {Function} callback
+       * @returns {XMLHttpRequest} The constructed and called XHR request.
+       * @description Canonical method to initiate `GET` requests in the browser. Mainly used by {@link Two#load} method.
+       */
       xhr: function(path, callback) {
 
         var xhr = new XMLHttpRequest();
@@ -577,6 +605,10 @@
 
       },
 
+      /**
+       * @name Two.Utils.Curve
+       * @property {Object} - Additional utility constant variables related to curve math and calculations.
+       */
       Curve: {
 
         CollinearityEpsilon: pow(10, -30),
@@ -632,9 +664,6 @@
 
       },
 
-      // Account for high dpi rendering.
-      // http://www.html5rocks.com/en/tutorials/canvas/hidpi/
-
       devicePixelRatio: root.devicePixelRatio || 1,
 
       getBackingStoreRatio: function(ctx) {
@@ -645,14 +674,24 @@
           ctx.backingStorePixelRatio || 1;
       },
 
+      /**
+       * @name Two.Utils.getRatio
+       * @function
+       * @param {Canvas.context2D} ctx
+       * @returns {Number} The ratio of a unit in Two.js to the pixel density of a session's screen.
+       * @see [High DPI Rendering]{@link http://www.html5rocks.com/en/tutorials/canvas/hidpi/}
+       */
       getRatio: function(ctx) {
         return Two.Utils.devicePixelRatio / getBackingStoreRatio(ctx);
       },
 
-      // /**
-      //  * Properly defer play calling until after all objects
-      //  * have been updated with their newest styles.
-      //  */
+      /**
+       * @name Two.Utils.setPlaying
+       * @function
+       * @this Two#
+       * @returns {Two} The instance called with for potential chaining.
+       * @description Internal convenience method to properly defer play calling until after all objects have been updated with their newest styles.
+       */
       setPlaying: function(b) {
 
         this.playing = !!b;
@@ -660,10 +699,14 @@
 
       },
 
-      // /**
-      //  * Return the computed matrix of a nested object.
-      //  * TODO: Optimize traversal.
-      //  */
+      /**
+       * @name Two.Utils.getComputedMatrix
+       * @function
+       * @param {Two.Shape} object - The Two.js object that has a matrix property to calculate from.
+       * @param {Two.Matrix} [matrix] - The matrix to apply calculated transformations to if available.
+       * @returns {Two.Matrix} The computed matrix of a nested object. If no `matrix` was passed in arguments then a `new Two.Matrix` is returned.
+       * @description Method to get the world space transformation of a given object in a Two.js scene.
+       */
       getComputedMatrix: function(object, matrix) {
 
         matrix = (matrix && matrix.identity()) || new Two.Matrix();
@@ -676,18 +719,28 @@
 
         matrices.reverse();
 
-        _.each(matrices, function(m) {
+        for (var i = 0; i < matrices.length; i++) {
 
+          var m = matrices[i];
           var e = m.elements;
           matrix.multiply(
             e[0], e[1], e[2], e[3], e[4], e[5], e[6], e[7], e[8], e[9]);
 
-        });
+        }
 
         return matrix;
 
       },
 
+      /**
+       * @name Two.Utils.deltaTransformPoint
+       * @function
+       * @param {Two.Matrix} matrix
+       * @param {Number} x
+       * @param {Number} y
+       * @returns {Two.Vector}
+       * @description Used by {@link Two.Utils.decomposeMatrix}
+       */
       deltaTransformPoint: function(matrix, x, y) {
 
         var dx = x * matrix.a + y * matrix.c + 0;
@@ -697,9 +750,14 @@
 
       },
 
-      // /**
-      //  * https://gist.github.com/2052247
-      //  */
+      /**
+       * @name Two.Utils.decomposeMatrix
+       * @function
+       * @param {Two.Matrix} matrix - The matrix to decompose.
+       * @returns {Object} An object containing relevant skew values.
+       * @description Decompose a 2D 3x3 Matrix to find the skew.
+       * @see {@link https://gist.github.com/2052247}
+       */
       decomposeMatrix: function(matrix) {
 
         // calculate delta transform point
@@ -722,13 +780,15 @@
 
       },
 
-      // /**
-      //  * Walk through item properties and pick the ones of interest.
-      //  * Will try to resolve styles applied via CSS
-      //  *
-      //  * TODO: Reverse calculate `Two.Gradient`s for fill / stroke
-      //  * of any given path.
-      //  */
+      /**
+       * @name Two.Utils.applySvgAttributes
+       * @function
+       * @param {SvgNode} node - An SVG Node to extrapolate attributes from.
+       * @param {Two.Shape} elem - The Two.js object to apply extrapolated attributes to.
+       * @returns {Two.Shape} The Two.js object passed now with applied attributes.
+       * @description This function iterates through an SVG Node's properties and stores ones of interest. It tries to resolve styles applied via CSS as well.
+       * @TODO Reverse calculate `Two.Gradient`s for fill / stroke of any given path.
+       */
       applySvgAttributes: function(node, elem) {
 
         var attributes = {}, styles = {}, i, key, value, attr;
@@ -872,9 +932,10 @@
 
       },
 
-      // /**
-      //  * Read any number of SVG node types and create Two equivalents of them.
-      //  */
+      /**
+       * @name Two.Utils.read
+       * @property {Object} read - A map of functions to read any number of SVG node types and create Two.js equivalents of them. Primarily used by the {@link Two#interpret} method.
+       */
       read: {
 
         svg: function() {
@@ -1546,8 +1607,8 @@
             fy = cy;
           }
 
-          var ox = Math.abs(cx + fx) / 2;
-          var oy = Math.abs(cy + fy) / 2;
+          var ox = abs(cx + fx) / 2;
+          var oy = abs(cy + fy) / 2;
 
           var stops = [];
           for (var i = 0; i < node.children.length; i++) {
@@ -1582,45 +1643,76 @@
 
       },
 
-      // /**
-      //  * Given 2 points (a, b) and corresponding control point for each
-      //  * return an array of points that represent points plotted along
-      //  * the curve. Number points determined by limit.
-      //  */
+      /**
+       * @name Two.Utils.subdivide
+       * @function
+       * @param {Number} x1 - x position of first anchor point.
+       * @param {Number} y1 - y position of first anchor point.
+       * @param {Number} x2 - x position of first anchor point's "right" bezier handle.
+       * @param {Number} y2 - y position of first anchor point's "right" bezier handle.
+       * @param {Number} x3 - x position of second anchor point's "left" bezier handle.
+       * @param {Number} y3 - y position of second anchor point's "left" bezier handle.
+       * @param {Number} x4 - x position of second anchor point.
+       * @param {Number} y4 - y position of second anchor point.
+       * @param {Number} [limit=Two.Utils.Curve.RecursionLimit] - The amount of vertices to create by subdividing.
+       * @returns {Two.Anchor[]} A list of anchor points ordered in between `x1`, `y1` and `x4`, `y4`
+       * @description Given 2 points (a, b) and corresponding control point for each return an array of points that represent points plotted along the curve. The number of returned points is determined by `limit`.
+       */
       subdivide: function(x1, y1, x2, y2, x3, y3, x4, y4, limit) {
 
         limit = limit || Two.Utils.Curve.RecursionLimit;
         var amount = limit + 1;
 
-        // TODO: Issue 73
+        // TODO: Abstract 0.001 to a limiting variable
         // Don't recurse if the end points are identical
-        if (x1 === x4 && y1 === y4) {
+        if (abs(x1 - x4) < 0.001 && abs(y1 - y4) < 0.001) {
           return [new Two.Anchor(x4, y4)];
         }
 
-        return _.map(_.range(0, amount), function(i) {
+        var result = [];
 
+        for (var i = 0; i < amount; i++) {
           var t = i / amount;
-          var x = getPointOnCubicBezier(t, x1, x2, x3, x4);
-          var y = getPointOnCubicBezier(t, y1, y2, y3, y4);
+          var x = getComponentOnCubicBezier(t, x1, x2, x3, x4);
+          var y = getComponentOnCubicBezier(t, y1, y2, y3, y4);
+          result.push(new Two.Anchor(x, y));
+        }
 
-          return new Two.Anchor(x, y);
-
-        });
+        return result;
 
       },
 
-      getPointOnCubicBezier: function(t, a, b, c, d) {
+      /**
+       * @name Two.Utils.getComponentOnCubicBezier
+       * @function
+       * @param {Number} t - Zero-to-one value describing what percentage to calculate.
+       * @param {Number} a - The firt point's component value.
+       * @param {Number} b - The first point's bezier component value.
+       * @param {Number} c - The second point's bezier component value.
+       * @param {Number} d - The second point's component value.
+       * @returns {Number} The coordinate value for a specific component along a cubic bezier curve by `t`.
+       */
+      getComponentOnCubicBezier: function(t, a, b, c, d) {
         var k = 1 - t;
         return (k * k * k * a) + (3 * k * k * t * b) + (3 * k * t * t * c) +
            (t * t * t * d);
       },
 
-      // /**
-      //  * Given 2 points (a, b) and corresponding control point for each
-      //  * return a float that represents the length of the curve using
-      //  * Gauss-Legendre algorithm. Limit iterations of calculation by `limit`.
-      //  */
+      /**
+       * @name Two.Utils.getCurveLength
+       * @function
+       * @param {Number} x1 - x position of first anchor point.
+       * @param {Number} y1 - y position of first anchor point.
+       * @param {Number} x2 - x position of first anchor point's "right" bezier handle.
+       * @param {Number} y2 - y position of first anchor point's "right" bezier handle.
+       * @param {Number} x3 - x position of second anchor point's "left" bezier handle.
+       * @param {Number} y3 - y position of second anchor point's "left" bezier handle.
+       * @param {Number} x4 - x position of second anchor point.
+       * @param {Number} y4 - y position of second anchor point.
+       * @param {Number} [limit=Two.Utils.Curve.RecursionLimit] - The amount of vertices to create by subdividing.
+       * @returns {Number} The length of a curve.
+       * @description Given 2 points (a, b) and corresponding control point for each, return a float that represents the length of the curve using Gauss-Legendre algorithm. Limit iterations of calculation by `limit`.
+       */
       getCurveLength: function(x1, y1, x2, y2, x3, y3, x4, y4, limit) {
 
         // TODO: Better / fuzzier equality check
@@ -1653,62 +1745,77 @@
 
       },
 
-      // https://github.com/adobe-webplatform/Snap.svg/blob/master/src/path.js#L856
-      getCurveBoundingBox: function(x0, y0, x1, y1, x2, y2, x3, y3) {
-        var tvalues = [],
-            bounds = [[], []],
-            a, b, c, t, t1, t2, b2ac, sqrtb2ac;
+      /**
+       * @name Two.Utils.getCurveBoundingBox
+       * @function
+       * @param {Number} x1 - x position of first anchor point.
+       * @param {Number} y1 - y position of first anchor point.
+       * @param {Number} x2 - x position of first anchor point's "right" bezier handle.
+       * @param {Number} y2 - y position of first anchor point's "right" bezier handle.
+       * @param {Number} x3 - x position of second anchor point's "left" bezier handle.
+       * @param {Number} y3 - y position of second anchor point's "left" bezier handle.
+       * @param {Number} x4 - x position of second anchor point.
+       * @param {Number} y4 - y position of second anchor point.
+       * @returns {Object} Object contains min and max `x` / `y` bounds.
+       * @see {@link https://github.com/adobe-webplatform/Snap.svg/blob/master/src/path.js#L856}
+       */
+      getCurveBoundingBox: function(x1, y1, x2, y2, x3, y3, x4, y4) {
+
+        var tvalues = [];
+        var bounds = [[], []];
+        var a, b, c, t, t1, t2, b2ac, sqrtb2ac;
+
         for (var i = 0; i < 2; ++i) {
             if (i == 0) {
-                b = 6 * x0 - 12 * x1 + 6 * x2;
-                a = -3 * x0 + 9 * x1 - 9 * x2 + 3 * x3;
-                c = 3 * x1 - 3 * x0;
+              b = 6 * x1 - 12 * x2 + 6 * x3;
+              a = -3 * x1 + 9 * x2 - 9 * x3 + 3 * x4;
+              c = 3 * x2 - 3 * x1;
             } else {
-                b = 6 * y0 - 12 * y1 + 6 * y2;
-                a = -3 * y0 + 9 * y1 - 9 * y2 + 3 * y3;
-                c = 3 * y1 - 3 * y0;
+              b = 6 * y1 - 12 * y2 + 6 * y3;
+              a = -3 * y1 + 9 * y2 - 9 * y3 + 3 * y4;
+              c = 3 * y2 - 3 * y1;
             }
             if (abs(a) < 1e-12) {
-                if (abs(b) < 1e-12) {
-                    continue;
-                }
-                t = -c / b;
-                if (0 < t && t < 1) {
-                    tvalues.push(t);
-                }
+              if (abs(b) < 1e-12) {
                 continue;
+              }
+              t = -c / b;
+              if (0 < t && t < 1) {
+                tvalues.push(t);
+              }
+              continue;
             }
             b2ac = b * b - 4 * c * a;
             sqrtb2ac = Math.sqrt(b2ac);
             if (b2ac < 0) {
-                continue;
+              continue;
             }
             t1 = (-b + sqrtb2ac) / (2 * a);
             if (0 < t1 && t1 < 1) {
-                tvalues.push(t1);
+              tvalues.push(t1);
             }
             t2 = (-b - sqrtb2ac) / (2 * a);
             if (0 < t2 && t2 < 1) {
-                tvalues.push(t2);
+              tvalues.push(t2);
             }
         }
 
-        var x, y, j = tvalues.length,
-            jlen = j,
-            mt;
+        var x, y, j = tvalues.length;
+        var jlen = j;
+        var mt;
+
         while (j--) {
-            t = tvalues[j];
-            mt = 1 - t;
-            bounds[0][j] = mt * mt * mt * x0 + 3 * mt * mt * t * x1 + 3 * mt * t * t * x2 + t * t * t * x3;
-            bounds[1][j] = mt * mt * mt * y0 + 3 * mt * mt * t * y1 + 3 * mt * t * t * y2 + t * t * t * y3;
+          t = tvalues[j];
+          mt = 1 - t;
+          bounds[0][j] = mt * mt * mt * x1 + 3 * mt * mt * t * x2 + 3 * mt * t * t * x3 + t * t * t * x4;
+          bounds[1][j] = mt * mt * mt * y1 + 3 * mt * mt * t * y2 + 3 * mt * t * t * y3 + t * t * t * y4;
         }
 
-        bounds[0][jlen] = x0;
-        bounds[1][jlen] = y0;
-        bounds[0][jlen + 1] = x3;
-        bounds[1][jlen + 1] = y3;
+        bounds[0][jlen] = x1;
+        bounds[1][jlen] = y1;
+        bounds[0][jlen + 1] = x4;
+        bounds[1][jlen + 1] = y4;
         bounds[0].length = bounds[1].length = jlen + 2;
-
 
         return {
           min: { x: Math.min.apply(0, bounds[0]), y: Math.min.apply(0, bounds[1]) },
@@ -1717,10 +1824,16 @@
 
       },
 
-      // /**
-      //  * Integration for `getCurveLength` calculations. Referenced from
-      //  * Paper.js: https://github.com/paperjs/paper.js/blob/master/src/util/Numerical.js#L101
-      //  */
+      /**
+       * @name Two.Utils.integrate
+       * @function
+       * @param {Function} f
+       * @param {Number} a
+       * @param {Number} b
+       * @param {Integer} n
+       * @description Integration for `getCurveLength` calculations.
+       * @see [Paper.js]{@link https://github.com/paperjs/paper.js/blob/master/src/util/Numerical.js#L101}
+       */
       integrate: function(f, a, b, n) {
         var x = Two.Utils.Curve.abscissas[n - 2],
           w = Two.Utils.Curve.weights[n - 2],
@@ -1736,9 +1849,13 @@
         return A * sum;
       },
 
-      // /**
-      //  * Creates a set of points that have u, v values for anchor positions
-      //  */
+      /**
+       * @name Two.Utils.getCurveFromPoints
+       * @function
+       * @param {Two.Anchor[]} points
+       * @param {Boolean} closed
+       * @description Sets the bezier handles on `Two.Anchor`s in the `points` list with estimated values to create a catmull-rom like curve. Used by {@link Two.Path#plot}.
+       */
       getCurveFromPoints: function(points, closed) {
 
         var l = points.length, last = l - 1;
@@ -1765,17 +1882,22 @@
 
       },
 
-      // /**
-      //  * Given three coordinates return the control points for the middle, b,
-      //  * vertex.
-      //  */
+      /**
+       * @name Two.Utils.getControlPoints
+       * @function
+       * @param {Two.Anchor} a
+       * @param {Two.Anchor} b
+       * @param {Two.Anchor} c
+       * @returns {Two.Anchor} Returns the passed middle point `b`.
+       * @description Given three coordinates set the control points for the middle, b, vertex based on its position with the adjacent points.
+       */
       getControlPoints: function(a, b, c) {
 
-        var a1 = angleBetween(a, b);
-        var a2 = angleBetween(c, b);
+        var a1 = Two.Vector.angleBetween(a, b);
+        var a2 = Two.Vector.angleBetween(c, b);
 
-        var d1 = distanceBetween(a, b);
-        var d2 = distanceBetween(c, b);
+        var d1 = Two.Vector.distanceBetween(a, b);
+        var d2 = Two.Vector.distanceBetween(c, b);
 
         var mid = (a1 + a2) / 2;
 
@@ -1816,12 +1938,16 @@
 
       },
 
-      // /**
-      //  * Get the reflection of a point "b" about point "a". Where "a" is in
-      //  * absolute space and "b" is relative to "a".
-      //  *
-      //  * http://www.w3.org/TR/SVG11/implnote.html#PathElementImplementationNotes
-      //  */
+      /**
+       * @name Two.Utils.getReflection
+       * @function
+       * @param {Two.Vector} a
+       * @param {Two.Vector} b
+       * @param {Boolean} [relative=false]
+       * @returns {Two.Vector} New `Two.Vector` that represents the reflection point.
+       * @description Get the reflection of a point `b` about point `a`. Where `a` is in absolute space and `b` is relative to `a`.
+       * @see {@link http://www.w3.org/TR/SVG11/implnote.html#PathElementImplementationNotes}
+       */
       getReflection: function(a, b, relative) {
 
         return new Two.Vector(
@@ -1831,6 +1957,17 @@
 
       },
 
+      /**
+       * @name Two.Utils.getAnchorsFromArcData
+       * @function
+       * @param {Two.Vector} center
+       * @param {Radians} xAxisRotation
+       * @param {Number} rx - x radius
+       * @param {Number} ry - y radius
+       * @param {Radians} ts
+       * @param {Radians} td
+       * @param {Boolean} [ccw=false] - Set path traversal to counter-clockwise
+       */
       getAnchorsFromArcData: function(center, xAxisRotation, rx, ry, ts, td, ccw) {
 
         var matrix = new Two.Matrix()
@@ -1862,47 +1999,6 @@
           return anchor;
 
         });
-
-      },
-
-      ratioBetween: function(A, B) {
-
-        return (A.x * B.x + A.y * B.y) / (A.length() * B.length());
-
-      },
-
-      angleBetween: function(A, B) {
-
-        var dx, dy;
-
-        if (arguments.length >= 4) {
-
-          dx = arguments[0] - arguments[2];
-          dy = arguments[1] - arguments[3];
-
-          return atan2(dy, dx);
-
-        }
-
-        dx = A.x - B.x;
-        dy = A.y - B.y;
-
-        return atan2(dy, dx);
-
-      },
-
-      distanceBetweenSquared: function(p1, p2) {
-
-        var dx = p1.x - p2.x;
-        var dy = p1.y - p2.y;
-
-        return dx * dx + dy * dy;
-
-      },
-
-      distanceBetween: function(p1, p2) {
-
-        return sqrt(distanceBetweenSquared(p1, p2));
 
       },
 
@@ -2153,18 +2249,14 @@
 
   // Localize utils
 
-  var distanceBetween = Two.Utils.distanceBetween,
-    getAnchorsFromArcData = Two.Utils.getAnchorsFromArcData,
-    distanceBetweenSquared = Two.Utils.distanceBetweenSquared,
-    ratioBetween = Two.Utils.ratioBetween,
-    angleBetween = Two.Utils.angleBetween,
+  var getAnchorsFromArcData = Two.Utils.getAnchorsFromArcData,3
     getControlPoints = Two.Utils.getControlPoints,
     getCurveFromPoints = Two.Utils.getCurveFromPoints,
     solveSegmentIntersection = Two.Utils.solveSegmentIntersection,
     decoupleShapes = Two.Utils.decoupleShapes,
     mod = Two.Utils.mod,
     getBackingStoreRatio = Two.Utils.getBackingStoreRatio,
-    getPointOnCubicBezier = Two.Utils.getPointOnCubicBezier,
+    getComponentOnCubicBezier = Two.Utils.getComponentOnCubicBezier,
     getCurveLength = Two.Utils.getCurveLength,
     integrate = Two.Utils.integrate,
     getReflection = Two.Utils.getReflection;
