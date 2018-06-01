@@ -2,6 +2,12 @@
 
   var root = typeof window != 'undefined' ? window : typeof global != 'undefined' ? global : null;
   var toString = Object.prototype.toString;
+  /**
+   * @name _
+   * @interface
+   * @description A collection of useful functions borrowed and repurposed from Underscore.js.
+   * @see {@link http://underscorejs.org/}
+   */
   var _ = {
     // http://underscorejs.org/ • 1.8.3
     _indexAmount: 0,
@@ -486,7 +492,8 @@
 
     /**
      * @name Two.Utils
-     * @property {Object}
+     * @interface
+     * @implements {_}
      * @description A hodgepodge of handy functions, math, and properties are stored here.
      */
     Utils: _.extend(_, {
