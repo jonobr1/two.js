@@ -8,6 +8,7 @@
  * + Two.Shape
  * + Two.Registry
  * + Two.Texture
+ * + Two
  */
 
 QUnit.module('Core');
@@ -671,5 +672,39 @@ QUnit.test('Two.Texture', function(assert) {
   assert.ok(true, 'Two.Texture able to be constructed without any parameters properly.');
 
   tc.src = path;
+
+});
+
+QUnit.test('Two', function(assert) {
+
+  assert.expect(8);
+
+  var selector = QUnit.Utils.getSelector(assert.test);
+  var elem = document.querySelector(selector);
+  elem.id = assert.test.id + '-container';
+
+  var two = new Two().appendTo(elem);
+  assert.equal(two.renderer.domElement.parentElement.id, elem.id, 'Two appends to the correct element when `appendTo` invoked.');
+
+  two.update();
+  assert.equal(two.frameCount, 1, 'Two increments frameCount correctly.');
+
+  two.play();
+  assert.ok(two.playing, 'Two.Utils.setPlaying applied correctly.');
+  assert.ok(_.isNumber(Two.nextFrameID), 'requestAnimationFrame runs correctly.');
+
+  two.pause();
+  assert.ok(!two.playing, 'Two.pause correctly stops updating.');
+
+  var rectangle = two.makeRectangle(two.width / 2, two.height / 2, 10, 10);
+
+  assert.equal(two.scene.children.length, 1, 'Adds children correctly.');
+
+  two.remove(rectangle);
+  assert.equal(two.scene.children.length, 0, 'Removes children correctly');
+
+  two.add(rectangle);
+  two.clear();
+  assert.equal(two.scene.children.length, 0, 'Clears children correctly');
 
 });

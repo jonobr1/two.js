@@ -399,6 +399,13 @@
      */
     root: root,
 
+    /**
+     * @name Two.nextFrameID
+     * @property {Integer}
+     * @description The id of the next requestAnimationFrame function.
+     */
+    nextFrameID: null,
+
     // Primitive
 
     /**
@@ -2931,7 +2938,7 @@
       }
     }
 
-    raf(loop);
+    Two.nextFrameID = raf(loop);
 
   }
 
