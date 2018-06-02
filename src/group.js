@@ -499,7 +499,7 @@
         grandparent = this.parent;
 
       // Allow to call remove without arguments
-      // This will detach the object from the scene.
+      // This will detach the object from its own parent.
       if (l <= 0 && grandparent) {
         grandparent.remove(this);
         return this;

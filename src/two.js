@@ -2405,6 +2405,12 @@
 
     // Convenience Methods
 
+    /**
+     * @name Two#add
+     * @function
+     * @param {(Two.Shape[]|...Two.Shape)}} [objects] - An array of Two.js objects. Alternatively can add objects as individual arguments.
+     * @description A shorthand method to add specific Two.js objects to the scene.
+     */
     add: function(o) {
 
       var objects = o;
@@ -2417,6 +2423,12 @@
 
     },
 
+    /**
+     * @name Two#remove
+     * @function
+     * @param {(Two.Shape[]|...Two.Shape)} [objects] - An array of Two.js objects.
+     * @description A shorthand method to remove specific Two.js objects from the scene.
+     */
     remove: function(o) {
 
       var objects = o;
@@ -2430,13 +2442,28 @@
 
     },
 
+    /**
+     * @name Two#clear
+     * @function
+     * @description Remove all all Two.js objects from the scene.
+     */
     clear: function() {
 
-      this.scene.remove(_.toArray(this.scene.children));
+      this.scene.remove(this.scene.children);
       return this;
 
     },
 
+    /**
+     * @name Two#makeLine
+     * @function
+     * @param {Number} x1
+     * @param {Number} y1
+     * @param {Number} x2
+     * @param {Number} y2
+     * @returns {Two.Line}
+     * @description Creates a Two.js line and adds it to the scene.
+     */
     makeLine: function(x1, y1, x2, y2) {
 
       var line = new Two.Line(x1, y1, x2, y2);
@@ -2446,6 +2473,16 @@
 
     },
 
+    /**
+     * @name Two#makeRectangle
+     * @function
+     * @param {Number} x
+     * @param {Number} y
+     * @param {Number} width
+     * @param {Number} height
+     * @returns {Two.Rectangle}
+     * @description Creates a Two.js rectangle and adds it to the scene.
+     */
     makeRectangle: function(x, y, width, height) {
 
       var rect = new Two.Rectangle(x, y, width, height);
@@ -2455,6 +2492,17 @@
 
     },
 
+    /**
+     * @name Two#makeRoundedRectangle
+     * @function
+     * @param {Number} x
+     * @param {Number} y
+     * @param {Number} width
+     * @param {Number} height
+     * @param {Number} sides
+     * @returns {Two.Rectangle}
+     * @description Creates a Two.js rounded rectangle and adds it to the scene.
+     */
     makeRoundedRectangle: function(x, y, width, height, sides) {
 
       var rect = new Two.RoundedRectangle(x, y, width, height, sides);
@@ -2464,33 +2512,72 @@
 
     },
 
-    makeCircle: function(ox, oy, r) {
+    /**
+     * @name Two#makeCircle
+     * @function
+     * @param {Number} x
+     * @param {Number} y
+     * @param {Number} radius
+     * @returns {Two.Circle}
+     * @description Creates a Two.js circle and adds it to the scene.
+     */
+    makeCircle: function(x, y, radius) {
 
-      var circle = new Two.Circle(ox, oy, r);
+      var circle = new Two.Circle(x, y, radius);
       this.scene.add(circle);
 
       return circle;
 
     },
 
-    makeEllipse: function(ox, oy, rx, ry) {
+    /**
+     * @name Two#makeEllipse
+     * @function
+     * @param {Number} x
+     * @param {Number} y
+     * @param {Number} rx
+     * @param {Number} ry
+     * @returns {Two.Ellipse}
+     * @description Creates a Two.js ellipse and adds it to the scene.
+     */
+    makeEllipse: function(x, y, rx, ry) {
 
-      var ellipse = new Two.Ellipse(ox, oy, rx, ry);
+      var ellipse = new Two.Ellipse(x, y, rx, ry);
       this.scene.add(ellipse);
 
       return ellipse;
 
     },
 
-    makeStar: function(ox, oy, or, ir, sides) {
+    /**
+     * @name Two#makeStar
+     * @function
+     * @param {Number} x
+     * @param {Number} y
+     * @param {Number} outerRadius
+     * @param {Number} innerRadius
+     * @param {Number} sides
+     * @returns {Two.Star}
+     * @description Creates a Two.js star and adds it to the scene.
+     */
+    makeStar: function(ox, oy, outerRadius, innerRadius, sides) {
 
-      var star = new Two.Star(ox, oy, or, ir, sides);
+      var star = new Two.Star(ox, oy, outerRadius, innerRadius, sides);
       this.scene.add(star);
 
       return star;
 
     },
 
+    /**
+     * @name Two#makeCurve
+     * @function
+     * @param {Two.Anchor[]} [points] - An array of `Two.Anchor` points.
+     * @param {...Number} - Alternatively you can pass alternating `x` / `y` coordinate values as individual arguments. These will be combined into `Two.Anchor`s for use in the path.
+     * @returns {Two.Path} - Where `path.curved` is set to `true`.
+     * @description Creates a Two.js path that is curved and adds it to the scene.
+     * @nota-bene In either case of passing an array or passing numbered arguments the last argument is an optional `Boolean` that defines whether the path should be open or closed.
+     */
     makeCurve: function(p) {
 
       var l = arguments.length, points = p;
@@ -2518,28 +2605,51 @@
 
     },
 
-    makePolygon: function(ox, oy, r, sides) {
+    /**
+     * @name Two#makePolygon
+     * @function
+     * @param {Number} x
+     * @param {Number} y
+     * @param {Number} radius
+     * @param {Number} sides
+     * @returns {Two.Polygon}
+     * @description Creates a Two.js polygon and adds it to the scene.
+     */
+    makePolygon: function(x, y, radius, sides) {
 
-      var poly = new Two.Polygon(ox, oy, r, sides);
+      var poly = new Two.Polygon(x, y, radius, sides);
       this.scene.add(poly);
 
       return poly;
 
     },
 
-    /*
-    * Make an Arc Segment
-    */
-
+    /**
+     * @name Two#makeArcSegment
+     * @function
+     * @param {Number} x
+     * @param {Number} y
+     * @param {Number} innerRadius
+     * @param {Number} outerRadius
+     * @param {Number} startAngle
+     * @param {Number} endAngle
+     * @param {Number} [resolution=Two.Resolution] - The number of vertices that should comprise the arc segment.
+     */
     makeArcSegment: function(ox, oy, ir, or, sa, ea, res) {
       var arcSegment = new Two.ArcSegment(ox, oy, ir, or, sa, ea, res);
       this.scene.add(arcSegment);
       return arcSegment;
     },
 
-    // /**
-    //  * Convenience method to make and draw a Two.Path.
-    //  */
+    /**
+     * @name Two#makePath
+     * @function
+     * @param {Two.Anchor[]} [points] - An array of `Two.Anchor` points.
+     * @param {...Number} - Alternatively you can pass alternating `x` / `y` coordinate values as individual arguments. These will be combined into `Two.Anchor`s for use in the path.
+     * @returns {Two.Path}
+     * @description Creates a Two.js path and adds it to the scene.
+     * @nota-bene In either case of passing an array or passing numbered arguments the last argument is an optional `Boolean` that defines whether the path should be open or closed.
+     */
     makePath: function(p) {
 
       var l = arguments.length, points = p;
@@ -2567,18 +2677,33 @@
 
     },
 
-    // /**
-    //  * Convenience method to make and add a Two.Text.
-    //  */
+    /**
+     * @name Two#makeText
+     * @function
+     * @param {String} message
+     * @param {Number} x
+     * @param {Number} y
+     * @param {Object} [styles] - An object to describe any of the {@link Two.Text.Properties} including `fill`, `stroke`, `linewidth`, `family`, `alignment`, `leading`, `opacity`, etc..
+     * @returns {Two.Text}
+     * @description Creates a Two.js text object and adds it to the scene.
+     */
     makeText: function(message, x, y, styles) {
       var text = new Two.Text(message, x, y, styles);
       this.add(text);
       return text;
     },
 
-    // /**
-    //  * Convenience method to make and add a Two.LinearGradient.
-    //  */
+    /**
+     * @name Two#makeLinearGradient
+     * @function
+     * @param {Number} x1
+     * @param {Number} y1
+     * @param {Number} x2
+     * @param {Number} y2
+     * @param {...Two.Stop} [stops] - Any number of color stops sometimes reffered to as ramp stops. If none are supplied then the default black-to-white two stop gradient is applied.
+     * @returns {Two.LinearGradient}
+     * @description Creates a Two.js linear gradient and ads it to the scene. In the case of an effect it's added to an invisible "definitions" group.
+     */
     makeLinearGradient: function(x1, y1, x2, y2 /* stops */) {
 
       var stops = slice.call(arguments, 4);
@@ -2590,9 +2715,16 @@
 
     },
 
-    // /**
-    //  * Convenience method to make and add a Two.RadialGradient.
-    //  */
+    /**
+     * @name Two#makeRadialGradient
+     * @function
+     * @param {Number} x1
+     * @param {Number} y1
+     * @param {Number} radius
+     * @param {...Two.Stop} [stops] - Any number of color stops sometimes reffered to as ramp stops. If none are supplied then the default black-to-white two stop gradient is applied.
+     * @returns {Two.RadialGradient}
+     * @description Creates a Two.js linear-gradient object and ads it to the scene. In the case of an effect it's added to an invisible "definitions" group.
+     */
     makeRadialGradient: function(x1, y1, r /* stops */) {
 
       var stops = slice.call(arguments, 3);
@@ -2604,6 +2736,19 @@
 
     },
 
+    /**
+     * @name Two#makeSprite
+     * @function
+     * @param {(String|Two.Texture)} pathOrTexture - The URL path to an image or an already created `Two.Texture`.
+     * @param {Number} x
+     * @param {Number} y
+     * @param {Number} [columns=1]
+     * @param {Number} [rows=1]
+     * @param {Integer} [frameRate=0]
+     * @param {Boolean} [autostart=false]
+     * @returns {Two.Sprite}
+     * @description Creates a Two.js sprite object and adds it to the scene. Sprites can be used for still images as well as animations.
+     */
     makeSprite: function(path, x, y, cols, rows, frameRate, autostart) {
 
       var sprite = new Two.Sprite(path, x, y, cols, rows, frameRate);
@@ -2616,6 +2761,17 @@
 
     },
 
+    /**
+     * @name Two#makeImageSequence
+     * @function
+     * @param {(String[]|Two.Texture[])} pathsOrTextures - An array of paths or of `Two.Textures`.
+     * @param {Number} x
+     * @param {Number} y
+     * @param {Number} [frameRate=0]
+     * @param {Boolean} [autostart=false]
+     * @returns {Two.ImageSequence}
+     * @description Creates a Two.js image sequence object and adds it to the scene.
+     */
     makeImageSequence: function(paths, x, y, frameRate, autostart) {
 
       var imageSequence = new Two.ImageSequence(paths, x, y, frameRate);
@@ -2628,6 +2784,14 @@
 
     },
 
+    /**
+     * @name Two#makeTexture
+     * @function
+     * @param {(String|Image|Canvas|Video)} [pathOrSource] - The URL path to an image or a DOM image-like element.
+     * @param {Function} [callback] - Function to be invoked when the image is loaded.
+     * @returns {Two.Texture}
+     * @description Creates a Two.js texture object.
+     */
     makeTexture: function(path, callback) {
 
       var texture = new Two.Texture(path, callback);
@@ -2635,6 +2799,13 @@
 
     },
 
+    /**
+     * @name Two#makeGroup
+     * @function
+     * @param {(Two.Shape[]|...Two.Shape)} [objects] - Two.js objects to be added to the group in the form of an array or as individual arguments.
+     * @returns {Two.Group}
+     * @description Creates a Two.js group object and adds it to the scene.
+     */
     makeGroup: function(o) {
 
       var objects = o;
@@ -2650,17 +2821,15 @@
 
     },
 
-    // /**
-    //  * Interpret an SVG Node and add it to this instance's scene. The
-    //  * distinction should be made that this doesn't `import` svg's, it solely
-    //  * interprets them into something compatible for Two.js — this is slightly
-    //  * different than a direct transcription.
-    //  *
-    //  * @param {Object} svgNode - The node to be parsed
-    //  * @param {Boolean} shallow - Don't create a top-most group but
-    //  *                                    append all contents directly
-    //  * @param {Boolean} add – Return SVG node without adding it to scene
-    //  */
+    /**
+     * @name Two#interpret
+     * @function
+     * @param {Object} svgNode - The SVG node to be parsed.
+     * @param {Boolean} shallow - Don't create a top-most group but append all content directly.
+     * @param {Boolean} add – Automatically add the reconstructed SVG node to scene.
+     * @returns {Two.Group}
+     * @description Interpret an SVG Node and add it to this instance's scene. The distinction should be made that this doesn't `import` svg's, it solely interprets them into something compatible for Two.js — this is slightly different than a direct transcription.
+     */
     interpret: function(svgNode, shallow, add) {
 
       var tag = svgNode.tagName.toLowerCase(),
@@ -2680,10 +2849,14 @@
 
     },
 
-    // /**
-    //  * Load an SVG file / text and interpret it into Two.js legible
-    //  * objects.
-    //  */
+    /**
+     * @name Two#load
+     * @function
+     * @param {String} pathOrSVGContent - The URL path of an SVG file or an SVG document as text.
+     * @param {Function} callback - Function to call once loading has completed.
+     * @returns {Two.Group}
+     * @description Load an SVG file or SVG text and interpret it into Two.js legible objects.
+     */
     load: function(text, callback) {
 
       var group = new Two.Group();
