@@ -59,5 +59,7 @@ explanation.slice(0).forEach(function(object) {
 // example.memberof // Use to map and identify what goes to what
 
 explanation.forEach(function(item) {
-  console.log(item.longname);
+  console.log(item.longname, item.memberof);
 });
+
+console.log(explanation[0]);

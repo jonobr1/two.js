@@ -5,6 +5,7 @@
   /**
    * @name _
    * @interface
+   * @private
    * @description A collection of useful functions borrowed and repurposed from Underscore.js.
    * @see {@link http://underscorejs.org/}
    */
@@ -311,7 +312,7 @@
    * @param {Number} [options.width=640] - The width of the stage on construction. This can be set at a later time.
    * @param {Number} [options.height=480] - The height of the stage on construction. This can be set at a later time.
    * @param {String} [options.type=Two.Types.svg] - The type of renderer to setup drawing with. See [`Two.Types`]{@link  Two.Types} for available options.
-   * @param {Boolean} [options.autostart=false]
+   * @param {Boolean} [options.autostart=false] - Set to `true` to add the instance to draw on `requestAnimationFrame`. This is a convenient substitute for {@link Two#play}.
    * @description The entrypoint for Two.js. Instantiate a `new Two` in order to setup a scene to render to. `Two` is also the publicly accessible namespace that all other sub-classes, functions, and utilities attach to.
    */
   var Two = root.Two = function(options) {
