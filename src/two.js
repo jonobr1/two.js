@@ -1023,7 +1023,7 @@
             var pre, post, result = [], bin;
             var hasDoubleDecimals = false;
 
-            // Handle double decimal values e.g: 48.6037.71
+            // Handle double decimal values e.g: 48.6037.71.8
             for (var j = 0; j < items.length; j++) {
 
               var number = items[j];
@@ -1032,9 +1032,13 @@
 
                 var numbers = number.split('.');
                 var first = numbers[0] + '.' + numbers[1];
-                var second = '0.' + numbers[ 2 ];
 
-                items.splice(i, 1, first, second);
+                items.splice(i, 1, first);
+
+                for (var s = 2; s < numbers.length; s++) {
+                  items.splice(i + s - 1, 0, '0.' + numbers[s]);
+                }
+
                 hasDoubleDecimals = true;
 
               }
