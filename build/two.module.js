@@ -821,6 +821,45 @@ SOFTWARE.
 
       },
 
+      extractCSSText: function(text, styles) {
+
+        var commands, command, name, value;
+
+        if (!styles) {
+          styles = {};
+        }
+
+        commands = text.split(';');
+
+        for (var i = 0; i < commands.length; i++) {
+          command = commands[i].split(':');
+          name = command[0];
+          value = command[1];
+          if (_.isUndefined(name) || _.isUndefined(value)) {
+            continue;
+          }
+          styles[name] = value.replace(/\s/, '');
+        }
+
+        return styles;
+
+      },
+
+      getSvgStyles: function(node) {
+
+        var styles = {};
+
+        for (i = 0; i < node.attributes.length; i++) {
+          attr = node.attributes[i];
+          if (/style/i.test(attr.nodeName)) {
+            Two.Utils.extractCSSText(attr.value, styles);
+          }
+        }
+
+        return styles;
+
+      },
+
       /**
        * @name Two.Utils.applySvgAttributes
        * @function
@@ -830,14 +869,14 @@ SOFTWARE.
        * @description This function iterates through an SVG Node's properties and stores ones of interest. It tries to resolve styles applied via CSS as well.
        * @TODO Reverse calculate `Two.Gradient`s for fill / stroke of any given path.
        */
-      applySvgAttributes: function(node, elem) {
+      applySvgAttributes: function(node, elem, parentStyles) {
 
-        var attributes = {}, styles = {}, i, key, value, attr;
+        var  styles = {}, attributes = {}, extracted = {}, i, key, value, attr;
 
         // Not available in non browser environments
-        if (getComputedStyle) {
+        if (root.getComputedStyle) {
           // Convert CSSStyleDeclaration to a normal object
-          var computedStyles = getComputedStyle(node);
+          var computedStyles = root.getComputedStyle(node);
           i = computedStyles.length;
 
           while (i--) {
@@ -845,17 +884,20 @@ SOFTWARE.
             value = computedStyles[key];
             // Gecko returns undefined for unset properties
             // Webkit returns the default value
-            if (value !== undefined) {
+            if (!_.isUndefined(value)) {
               styles[key] = value;
             }
           }
         }
 
         // Convert NodeMap to a normal object
-        i = node.attributes.length;
-        while (i--) {
+        for (i = 0; i < node.attributes.length; i++) {
           attr = node.attributes[i];
-          attributes[attr.nodeName] = attr.value;
+          if (/style/i.test(attr.nodeName)) {
+            Two.Utils.extractCSSText(attr.value, extracted);
+          } else {
+            attributes[attr.nodeName] = attr.value;
+          }
         }
 
         // Getting the correct opacity is a bit tricky, since SVG path elements don't
@@ -868,7 +910,10 @@ SOFTWARE.
         }
 
         // Merge attributes and applied styles (attributes take precedence)
-        _.extend(styles, attributes);
+        if (parentStyles) {
+          _.defaults(styles, parentStyles);
+        }
+        _.extend(styles, attributes, extracted);
 
         // Similarly visibility is influenced by the value of both display and visibility.
         // Calculate a unified value here which defaults to `true`.
@@ -969,7 +1014,7 @@ SOFTWARE.
           }
         }
 
-        return elem;
+        return styles;
 
       },
 
@@ -979,16 +1024,17 @@ SOFTWARE.
        */
       read: {
 
-        svg: function() {
-          return Two.Utils.read.g.apply(this, arguments);
+        svg: function(node) {
+          return Two.Utils.read.g.call(this, node);
         },
 
         g: function(node) {
 
+          var styles;
           var group = new Two.Group();
 
           // Switched up order to inherit more specific styles
-          Two.Utils.applySvgAttributes.call(this, node, group);
+          styles = Two.Utils.getSvgStyles.call(this, node);
 
           for (var i = 0, l = node.childNodes.length; i < l; i++) {
             var n = node.childNodes[i];
@@ -998,7 +1044,7 @@ SOFTWARE.
             var tagName = tag.replace(/svg\:/ig, '').toLowerCase();
 
             if (tagName in Two.Utils.read) {
-              var o = Two.Utils.read[tagName].call(group, n);
+              var o = Two.Utils.read[tagName].call(group, n, styles);
               group.add(o);
             }
           }
@@ -1007,7 +1053,7 @@ SOFTWARE.
 
         },
 
-        polygon: function(node, open) {
+        polygon: function(node, parentStyles) {
 
           var points = node.getAttribute('points');
 
@@ -1016,18 +1062,20 @@ SOFTWARE.
             verts.push(new Two.Anchor(parseFloat(p1), parseFloat(p2)));
           });
 
-          var poly = new Two.Path(verts, !open).noStroke();
+          var poly = new Two.Path(verts, true).noStroke();
           poly.fill = 'black';
 
-          return Two.Utils.applySvgAttributes.call(this, node, poly);
+          Two.Utils.applySvgAttributes.call(this, node, poly, parentStyles);
+
+          return poly;
 
         },
 
-        polyline: function(node) {
+        polyline: function(node, parentStyles) {
           return Two.Utils.read.polygon.call(this, node, true);
         },
 
-        path: function(node) {
+        path: function(node, parentStyles) {
 
           var path = node.getAttribute('d');
 
@@ -1050,6 +1098,7 @@ SOFTWARE.
             var hasDoubleDecimals = false;
 
             // Handle double decimal values e.g: 48.6037.71.8
+            // Like: https://m.abcsofchinese.com/images/svg/亼ji2.svg
             for (var j = 0; j < items.length; j++) {
 
               var number = items[j];
@@ -1503,11 +1552,13 @@ SOFTWARE.
 
           path.translation.addSelf(rect.centroid);
 
-          return Two.Utils.applySvgAttributes.call(this, node, path);
+          Two.Utils.applySvgAttributes.call(this, node, path, parentStyles);
+
+          return path;
 
         },
 
-        circle: function(node) {
+        circle: function(node, parentStyles) {
 
           var x = parseFloat(node.getAttribute('cx'));
           var y = parseFloat(node.getAttribute('cy'));
@@ -1516,11 +1567,13 @@ SOFTWARE.
           var circle = new Two.Circle(x, y, r).noStroke();
           circle.fill = 'black';
 
-          return Two.Utils.applySvgAttributes.call(this, node, circle);
+          Two.Utils.applySvgAttributes.call(this, node, circle, parentStyles);
+
+          return circle;
 
         },
 
-        ellipse: function(node) {
+        ellipse: function(node, parentStyles) {
 
           var x = parseFloat(node.getAttribute('cx'));
           var y = parseFloat(node.getAttribute('cy'));
@@ -1530,11 +1583,13 @@ SOFTWARE.
           var ellipse = new Two.Ellipse(x, y, width, height).noStroke();
           ellipse.fill = 'black';
 
-          return Two.Utils.applySvgAttributes.call(this, node, ellipse);
+          Two.Utils.applySvgAttributes.call(this, node, ellipse, parentStyles);
+
+          return ellipse;
 
         },
 
-        rect: function(node) {
+        rect: function(node, parentStyles) {
 
           var rx = parseFloat(node.getAttribute('rx'));
           var ry = parseFloat(node.getAttribute('ry'));
@@ -1555,11 +1610,13 @@ SOFTWARE.
             .noStroke();
           rect.fill = 'black';
 
-          return Two.Utils.applySvgAttributes.call(this, node, rect);
+          Two.Utils.applySvgAttributes.call(this, node, rect, parentStyles);
+
+          return rect;
 
         },
 
-        'rounded-rect': function(node) {
+        'rounded-rect': function(node, parentStyles) {
 
           var x = parseFloat(node.getAttribute('x')) || 0;
           var y = parseFloat(node.getAttribute('y')) || 0;
@@ -1577,11 +1634,13 @@ SOFTWARE.
             .noStroke();
           rect.fill = 'black';
 
-          return Two.Utils.applySvgAttributes.call(this, node, rect);
+          Two.Utils.applySvgAttributes.call(this, node, rect, parentStyles);
+
+          return rect;
 
         },
 
-        line: function(node) {
+        line: function(node, parentStyles) {
 
           var x1 = parseFloat(node.getAttribute('x1'));
           var y1 = parseFloat(node.getAttribute('y1'));
@@ -1590,11 +1649,13 @@ SOFTWARE.
 
           var line = new Two.Line(x1, y1, x2, y2).noFill();
 
-          return Two.Utils.applySvgAttributes.call(this, node, line);
+          Two.Utils.applySvgAttributes.call(this, node, line, parentStyles);
+
+          return line;
 
         },
 
-        lineargradient: function(node) {
+        lineargradient: function(node, parentStyles) {
 
           var x1 = parseFloat(node.getAttribute('x1'));
           var y1 = parseFloat(node.getAttribute('y1'));
@@ -1631,11 +1692,13 @@ SOFTWARE.
           var gradient = new Two.LinearGradient(x1 - ox, y1 - oy, x2 - ox,
             y2 - oy, stops);
 
-          return Two.Utils.applySvgAttributes.call(this, node, gradient);
+          Two.Utils.applySvgAttributes.call(this, node, gradient, parentStyles);
+
+          return gradient;
 
         },
 
-        radialgradient: function(node) {
+        radialgradient: function(node, parentStyles) {
 
           var cx = parseFloat(node.getAttribute('cx')) || 0;
           var cy = parseFloat(node.getAttribute('cy')) || 0;
@@ -1682,7 +1745,9 @@ SOFTWARE.
           var gradient = new Two.RadialGradient(cx - ox, cy - oy, r,
             stops, fx - ox, fy - oy);
 
-          return Two.Utils.applySvgAttributes.call(this, node, gradient);
+          Two.Utils.applySvgAttributes.call(this, node, gradient, parentStyles);
+
+          return gradient;
 
         }
 
