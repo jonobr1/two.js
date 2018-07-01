@@ -795,6 +795,14 @@
 
       },
 
+      /**
+       * @name Two.Utils.extractCSSText
+       * @function
+       * @param {String} text - The CSS text body to be parsed and extracted.
+       * @param {Object} [styles] - The styles object to apply CSS key values to.
+       * @returns {Object} styles
+       * @description Parse CSS text body and apply them as key value pairs to a JavaScript object.
+       */
       extractCSSText: function(text, styles) {
 
         var commands, command, name, value;
@@ -819,15 +827,20 @@
 
       },
 
+      /**
+       * @name Two.Utils.getSvgStyles
+       * @function
+       * @param {SVG Node} node - The SVG node to parse.
+       * @returns {Object} styles
+       * @description Get the CSS comands from the `style` attribute of an SVG node and apply them as key value pairs to a JavaScript object.
+       */
       getSvgStyles: function(node) {
 
         var styles = {};
 
-        for (i = 0; i < node.attributes.length; i++) {
-          attr = node.attributes[i];
-          if (/style/i.test(attr.nodeName)) {
-            Two.Utils.extractCSSText(attr.value, styles);
-          }
+        for (var i = 0; i < node.style.length; i++) {
+          var command = node.style[i];
+          styles[command] = node.style[command];
         }
 
         return styles;
