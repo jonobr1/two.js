@@ -108,6 +108,7 @@ process.exit();
 <!-- For the latest nightly changes checkout the `dev` branch [here](../../tree/dev). -->
 
 #### Nightly
++ `Two.interpret` apply SVG node `style` attributes to paths. Inherits from groups
 + `Two.interpret` improves multi-decimal formatted `d` attributes
 + `Two.interpret` properly assigns back calculated `Z` coordinates
 + `Two.load` now immediately returns a `Two.Group` for use without callbacks if desired
