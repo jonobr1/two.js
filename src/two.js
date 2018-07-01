@@ -830,7 +830,7 @@
       /**
        * @name Two.Utils.getSvgStyles
        * @function
-       * @param {SVG Node} node - The SVG node to parse.
+       * @param {SvgNode} node - The SVG node to parse.
        * @returns {Object} styles
        * @description Get the CSS comands from the `style` attribute of an SVG node and apply them as key value pairs to a JavaScript object.
        */
@@ -2914,7 +2914,7 @@
     /**
      * @name Two#interpret
      * @function
-     * @param {Object} svgNode - The SVG node to be parsed.
+     * @param {SvgNode} svgNode - The SVG node to be parsed.
      * @param {Boolean} shallow - Don't create a top-most group but append all content directly.
      * @param {Boolean} add – Automatically add the reconstructed SVG node to scene.
      * @returns {Two.Group}
