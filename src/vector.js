@@ -3,55 +3,90 @@
   var _ = Two.Utils;
 
   /**
-   * @class
    * @name Two.Vector
-   * @param {Number} [x=0]
-   * @param {Number} [y=0]
+   * @class
+   * @param {Number} [x=0] - Any number to represent the horizontal x-component of the vector.
+   * @param {Number} [y=0] - Any number to represent the vertical y-component of the vector.
+   * @description A class to store x / y component vector data. In addition to storing data `Two.Vector` has suped up methods for commonplace mathematical operations.
    */
   var Vector = Two.Vector = function(x, y) {
 
+    /**
+     * @name Two.Vector#x
+     * @property {Number} x - The horizontal x-component of the vector.
+     */
     this.x = x || 0;
+
+    /**
+     * @name Two.Vector#y
+     * @property {Number} y - The vertical y-component of the vector.
+     */
     this.y = y || 0;
 
   };
 
   _.extend(Vector, {
 
+    /**
+     * @name Two.Vector.zero
+     * @readonly
+     * @property {Two.Vector} - Handy reference to a vector with component values 0, 0 at all times.
+     */
     zero: new Two.Vector(),
 
+    /**
+     * @name Two.Vector.add
+     * @function
+     * @param {Two.Vector} v1
+     * @param {Two.Vector} v2
+     * @returns {Two.Vector}
+     * @description Add two vectors together.
+     */
     add: function(v1, v2) {
       return new Vector(v1.x + v2.x, v1.y + v2.y);
     },
 
+    /**
+     * @name Two.Vector.sub
+     * @function
+     * @param {Two.Vector} v1
+     * @param {Two.Vector} v2
+     * @returns {Two.Vector}
+     * @description Subtract two vectors: `v2` from `v1`.
+     */
     sub: function(v1, v2) {
       return new Vector(v1.x - v2.x, v1.y - v2.y);
     },
 
+    /**
+     * @name Two.Vector.subtract
+     * @borrows Two.Vector.sub as Two.Vector.subtract
+     */
     subtract: function(v1, v2) {
       return Vector.sub(v1, v2);
     },
 
     /**
-     * @name Two.Utils.ratioBetween
+     * @name Two.Vector.ratioBetween
      * @function
      * @param {Two.Vector} A
      * @param {Two.Vector} B
-     * @returns {Number} The ratio betwen two points `A` and `B`.
+     * @returns {Number} The ratio betwen two points `v1` and `v2`.
      */
-    ratioBetween: function(A, B) {
+    ratioBetween: function(v1, v2) {
 
-      return (A.x * B.x + A.y * B.y) / (A.length() * B.length());
+      return (v1.x * v2.x + v1.y * v2.y) / (v1.length() * v2.length());
 
     },
 
     /**
-     * @name Two.Utils.angleBetween
+     * @name Two.Vector.angleBetween
      * @function
-     * @param {Two.Vector} A
-     * @param {Two.Vector} B
-     * @returns {Radians} The angle between points `A` and `B`.
+     * @param {Two.Vector} v1
+     * @param {Two.Vector} v2
+     * @returns {Radians} The angle between points `v1` and `v2`.
      */
-    angleBetween: function(A, B) {
+    angleBetween: function(v1, v2) {
 
       var dx, dy;
 
@@ -64,29 +99,48 @@
 
       }
 
-      dx = A.x - B.x;
-      dy = A.y - B.y;
+      dx = v1.x - v2.x;
+      dy = v1.y - v2.y;
 
       return Math.atan2(dy, dx);
 
     },
 
-    distanceBetween: function(p1, p2) {
+    /**
+     * @name Two.Vector.distanceBetween
+     * @function
+     * @param {Two.Vector} v1
+     * @param {Two.Vector} v2
+     * @returns {Number} The distance between points `v1` and `v2`. Distance is always positive.
+     */
+    distanceBetween: function(v1, v2) {
 
-      return Math.sqrt(Vector.distanceBetweenSquared(p1, p2));
+      return Math.sqrt(Vector.distanceBetweenSquared(v1, v2));
 
     },
 
-    distanceBetweenSquared: function(p1, p2) {
+    /**
+     * @name Two.Vector.distanceBetweenSquared
+     * @function
+     * @param {Two.Vector} v1
+     * @param {Two.Vector} v2
+     * @returns {Number} The squared distance between points `v1` and `v2`.
+     */
+    distanceBetweenSquared: function(v1, v2) {
 
-      var dx = p1.x - p2.x;
-      var dy = p1.y - p2.y;
+      var dx = v1.x - v2.x;
+      var dy = v1.y - v2.y;
 
       return dx * dx + dy * dy;
 
     },
 
-
+    /**
+     * @name Two.Vector.MakeObservable
+     * @function
+     * @param {Object} object - The object to make observable.
+     * @description Convenience function to apply observable qualities of a `Two.Vector` to any object. Handy if you'd like to extend the `Two.Vector` class on a custom class.
+     */
     MakeObservable: function(object) {
 
       // /**
