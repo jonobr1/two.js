@@ -174,28 +174,82 @@
 
     constructor: Vector,
 
+    /**
+     * @name Two.Vector#set
+     * @function
+     * @param {Number} x
+     * @param {Number} y
+     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
+     * @description Set the x / y components of a vector to specific number values.
+     */
     set: function(x, y) {
       this.x = x;
       this.y = y;
       return this;
     },
 
+    /**
+     * @name Two.Vector#copy
+     * @function
+     * @param {Two.Vector} v
+     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
+     * @description Copy the x / y components of another object `v`.
+     */
     copy: function(v) {
       this.x = v.x;
       this.y = v.y;
       return this;
     },
 
+    /**
+     * @name Two.Vector#clear
+     * @function
+     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
+     * @description Set the x / y component values of the vector to zero.
+     */
     clear: function() {
       this.x = 0;
       this.y = 0;
       return this;
     },
 
+    /**
+     * @name Two.Vector#clone
+     * @function
+     * @returns {Two.Vector} - A new instance of `Two.Vector`.
+     * @description Create a new vector and copy the existing values onto the newly created instance.
+     */
     clone: function() {
       return new Vector(this.x, this.y);
     },
 
+    /**
+     * @name Two.Vector#add
+     * @function
+     * @param {Two.Vector} v
+     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
+     * @description Add an object with x / y component values to the instance.
+     * @overloaded
+     */
+
+    /**
+     * @name Two.Vector#add
+     * @function
+     * @param {Number} v
+     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
+     * @description Add the **same** number to both x / y component values of the instance.
+     * @overloaded
+     */
+
+    /**
+     * @name Two.Vector#add
+     * @function
+     * @param {Number} x
+     * @param {Number} y
+     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
+     * @description Add `x` / `y` values to their respective component value on the instance.
+     * @overloaded
+     */
     add: function(x, y) {
       if (arguments.length <= 0) {
         return this;
@@ -214,8 +268,12 @@
       return this;
     },
 
+    /**
+     * @name Two.Vector#addSelf
+     * @borrows Two.Vector#add as Two.Vector#addSelf
+     */
     addSelf: function(v) {
-      return this.add(v);
+      return this.add.apply(this, arguments);
     },
 
     sub: function(x, y) {
@@ -236,16 +294,28 @@
       return this;
     },
 
+    /**
+     * @name Two.Vector#subtract
+     * @borrows Two.Vector#sub as Two.Vector#subtract
+     */
     subtract: function() {
-      return Vector.prototype.sub.apply(this, arguments);
+      return this.sub.apply(this, arguments);
     },
 
+    /**
+     * @name Two.Vector#subSelf
+     * @borrows Two.Vector#sub as Two.Vector#subSelf
+     */
     subSelf: function(v) {
-      return this.sub(v);
+      return this.sub.apply(this, arguments);
     },
 
+    /**
+     * @name Two.Vector#subtractSelf
+     * @borrows Two.Vector#sub as Two.Vector#subtractSelf
+     */
     subtractSelf: function(v) {
-      return this.sub(v);
+      return this.sub.apply(this, arguments);
     },
 
     multiply: function(x, y) {

@@ -5,7 +5,7 @@ var explanation = compiler.explainSync({
     files: [
       path.resolve(__dirname, '../src/two.js'),
       path.resolve(__dirname, '../src/registry.js'),
-      // path.resolve(__dirname, '../src/vector.js'),
+      path.resolve(__dirname, '../src/vector.js'),
       // path.resolve(__dirname, '../src/anchor.js'),
       // path.resolve(__dirname, '../src/matrix.js'),
       // path.resolve(__dirname, '../src/renderer/svg.js'),
@@ -59,7 +59,16 @@ explanation.slice(0).forEach(function(object) {
 // example.meta.columnno
 // example.memberof // Use to map and identify what goes to what
 
+// Overload Methods
+// ----------------
+// Check tags for special "overloaded" tag. If it exists then make the value
+// of the ID's longname an array instead of just the object. If the array
+// already exists then continue to append onto the array.
+
 explanation.forEach(function(item) {
+  // if (/^Two\.Vector\#add$/i.test(item.longname)) {
+  //   console.log(item);
+  // }
   console.log(item.longname, item.memberof);
 });
 
