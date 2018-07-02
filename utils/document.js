@@ -4,7 +4,7 @@ var compiler = require('jsdoc-api');
 var explanation = compiler.explainSync({
     files: [
       path.resolve(__dirname, '../src/two.js'),
-      // path.resolve(__dirname, '../src/registry.js'),
+      path.resolve(__dirname, '../src/registry.js'),
       // path.resolve(__dirname, '../src/vector.js'),
       // path.resolve(__dirname, '../src/anchor.js'),
       // path.resolve(__dirname, '../src/matrix.js'),
@@ -48,6 +48,7 @@ explanation.slice(0).forEach(function(object) {
 // example.description
 // example.augments
 // example.params
+// example.access ( don't show 'private' access documentation objects )
 
 // use the meta information in conjunction with the folder structure to
 // create the right navigation environment.
@@ -62,4 +63,4 @@ explanation.forEach(function(item) {
   console.log(item.longname, item.memberof);
 });
 
-console.log(explanation[0]);
+// console.log(explanation[0]);
