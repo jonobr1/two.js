@@ -262,8 +262,8 @@
       v = matrix.multiply(0, 0, 1);
 
       return {
-        top: v.x,
-        left: v.y,
+        top: v.y,
+        left: v.x,
         right: v.x,
         bottom: v.y,
         width: 0,
