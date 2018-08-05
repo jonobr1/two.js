@@ -3,15 +3,16 @@
   "version": "0.7.0",
   "description": "A two-dimensional drawing api meant for modern browsers.",
   "keywords": [
-    "dom",
-    "w3c",
-    "visualization",
     "svg",
-    "animation",
     "canvas2d",
     "webgl",
+    "animation",
     "rendering",
-    "motiongraphics"
+    "scenegraph",
+    "motiongraphics",
+    "visualization",
+    "dom",
+    "w3c"
   ],
   "homepage": "http://jonobr1.github.io/two.js/",
   "author": {
