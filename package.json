@@ -1,7 +1,7 @@
 {
   "name": "two.js",
   "version": "0.7.0",
-  "description": "A two-dimensional drawing api meant for modern browsers.",
+  "description": "A renderer agnostic two-dimensional drawing api for the web.",
   "keywords": [
     "svg",
     "canvas2d",
