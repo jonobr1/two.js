@@ -276,6 +276,33 @@
       return this.add.apply(this, arguments);
     },
 
+    /**
+     * @name Two.Vector#sub
+     * @function
+     * @param {Two.Vector} v
+     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
+     * @description Subtract an object with x / y component values to the instance.
+     * @overloaded
+     */
+
+    /**
+     * @name Two.Vector#sub
+     * @function
+     * @param {Number} v
+     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
+     * @description Subtract the **same** number to both x / y component values of the instance.
+     * @overloaded
+     */
+
+    /**
+     * @name Two.Vector#sub
+     * @function
+     * @param {Number} x
+     * @param {Number} y
+     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
+     * @description Subtract `x` / `y` values to their respective component value on the instance.
+     * @overloaded
+     */
     sub: function(x, y) {
       if (arguments.length <= 0) {
         return this;
@@ -318,6 +345,33 @@
       return this.sub.apply(this, arguments);
     },
 
+    /**
+     * @name Two.Vector#multiply
+     * @function
+     * @param {Two.Vector} v
+     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
+     * @description Multiply an object with x / y component values to the instance.
+     * @overloaded
+     */
+
+    /**
+     * @name Two.Vector#multiply
+     * @function
+     * @param {Number} v
+     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
+     * @description Multiply the **same** number to both x / y component values of the instance.
+     * @overloaded
+     */
+
+    /**
+     * @name Two.Vector#multiply
+     * @function
+     * @param {Number} x
+     * @param {Number} y
+     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
+     * @description Multiply `x` / `y` values to their respective component value on the instance.
+     * @overloaded
+     */
     multiply: function(x, y) {
       if (arguments.length <= 0) {
         return this;
@@ -336,14 +390,49 @@
       return this;
     },
 
+    /**
+     * @name Two.Vector#multiplySelf
+     * @borrows Two.Vector#multiply as Two.Vector#multiplySelf
+     */
     multiplySelf: function(v) {
       return this.multiply.apply(this, arguments);
     },
 
+    /**
+     * @name Two.Vector#multiplyScalar
+     * @borrows Two.Vector#multiply as Two.Vector#multiplyScalar
+     */
     multiplyScalar: function(s) {
       return this.multiply.apply(this, arguments);
     },
 
+    /**
+     * @name Two.Vector#divide
+     * @function
+     * @param {Two.Vector} v
+     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
+     * @description Divide an object with x / y component values to the instance.
+     * @overloaded
+     */
+
+    /**
+     * @name Two.Vector#divide
+     * @function
+     * @param {Number} v
+     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
+     * @description Divide the **same** number to both x / y component values of the instance.
+     * @overloaded
+     */
+
+    /**
+     * @name Two.Vector#divide
+     * @function
+     * @param {Number} x
+     * @param {Number} y
+     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
+     * @description Divide `x` / `y` values to their respective component value on the instance.
+     * @overloaded
+     */
     divide: function(x, y) {
       if (arguments.length <= 0) {
         return this;
@@ -368,6 +457,18 @@
       return this;
     },
 
+    /**
+     * @name Two.Vector#divideSelf
+     * @borrows Two.Vector#divide as Two.Vector#divideSelf
+     */
+    divideSelf: function(v) {
+      return this.divide.apply(this, arguments);
+    },
+
+    /**
+     * @name Two.Vector#divideScalar
+     * @borrows Two.Vector#divide as Two.Vector#divideScalar
+     */
     divideScalar: function(s) {
       return this.divide.apply(this, arguments);
     },
@@ -430,7 +531,7 @@
       return { x: this.x, y: this.y };
     },
 
-    rotate: function (radians) {
+    rotate: function(radians) {
       var cos = Math.cos(radians);
       var sin = Math.sin(radians);
       this.x = this.x * cos - this.y * sin;
