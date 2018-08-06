@@ -8775,7 +8775,7 @@ SOFTWARE.
   var getComputedMatrix = Two.Utils.getComputedMatrix;
   var _ = Two.Utils;
 
-  var canvas = (root.document ? root.document.createElement('canvas') : { getContext: _.identity });
+  var canvas = getCanvas();
   var ctx = canvas.getContext('2d');
 
   var Text = Two.Text = function(message, x, y, styles) {
@@ -8810,6 +8810,8 @@ SOFTWARE.
   };
 
   _.extend(Two.Text, {
+
+    Ratio: 0.6,
 
     Properties: [
       'value', 'family', 'size', 'leading', 'alignment', 'linewidth', 'style',
@@ -9006,31 +9008,64 @@ SOFTWARE.
       return this;
     },
 
-    /**
-     * A shim to not break `getBoundingClientRect` calls. TODO: Implement a
-     * way to calculate proper bounding boxes of `Two.Text`.
-     */
     getBoundingClientRect: function(shallow) {
 
       var matrix, border, l, x, y, i, v;
-
-      var left = Infinity, right = -Infinity,
-          top = Infinity, bottom = -Infinity;
+      var left, right, top, bottom;
 
       // TODO: Update this to not __always__ update. Just when it needs to.
       this._update(true);
 
       matrix = !!shallow ? this._matrix : getComputedMatrix(this);
 
-      v = matrix.multiply(0, 0, 1);
+      var height = this.leading;
+      var width = this.value.length * this.size * Text.Ratio;
+
+      switch (this.alignment) {
+        case 'left':
+          left = 0;
+          right = width;
+          break;
+        case 'right':
+          left = - width;
+          right = 0;
+          break;
+        default:
+          left = - width / 2;
+          right = width / 2;
+      }
+
+      switch (this.baseline) {
+        case 'top':
+          top = 0;
+          bottom = height;
+          break;
+        case 'bottom':
+          top = - height;
+          bottom = 0;
+          break;
+        default:
+          top = - height / 2;
+          bottom = height / 2;
+      }
+
+      v = matrix.multiply(left, top, 1);
+
+      top = v.y;
+      left = v.x;
+
+      v = matrix.multiply(right, bottom, 1);
+
+      right = v.x;
+      bottom = v.y;
 
       return {
-        top: v.x,
-        left: v.y,
-        right: v.x,
-        bottom: v.y,
-        width: 0,
-        height: 0
+        top: top,
+        left: left,
+        right: right,
+        bottom: bottom,
+        width: right - left,
+        height: bottom - top
       };
 
     },
@@ -9052,6 +9087,17 @@ SOFTWARE.
   });
 
   Two.Text.MakeObservable(Two.Text.prototype);
+
+  function getCanvas() {
+    if (root.document) {
+      return root.document.createElement('canvas');
+    } else {
+      console.warn('Unable to create canvas for Two.Text measurements.');
+      return {
+        getContext: _.identity
+      }
+    }
+  }
 
 })((typeof global !== 'undefined' ? global : (this || window)).Two);
 
@@ -9569,7 +9615,8 @@ SOFTWARE.
   var anchor;
   var regex = {
     video: /\.(mp4|webm|ogg)$/i,
-    image: /\.(jpe?g|png|gif|tiff)$/i
+    image: /\.(jpe?g|png|gif|tiff)$/i,
+    effect: /texture|gradient/i
   };
 
   if (root.document) {
@@ -9615,6 +9662,8 @@ SOFTWARE.
       'loaded',
       'repeat'
     ],
+
+    RegularExpressions: regex,
 
     ImageRegistry: new Two.Registry(),
 
@@ -11045,17 +11094,21 @@ SOFTWARE.
       var left = Infinity, right = -Infinity,
           top = Infinity, bottom = -Infinity;
 
-      this.children.forEach(function(child) {
+      var regex = Two.Texture.RegularExpressions.effect;
 
-        if (/(linear-gradient|radial-gradient|gradient)/.test(child._renderer.type)) {
-          return;
+      for (var i = 0; i < this.children.length; i++) {
+
+        var child = this.children[i];
+
+        if (!child.visible || regex.test(child._renderer.type)) {
+          break;
         }
 
         rect = child.getBoundingClientRect(shallow);
 
         if (!_.isNumber(rect.top)   || !_.isNumber(rect.left)   ||
             !_.isNumber(rect.right) || !_.isNumber(rect.bottom)) {
-          return;
+          break;
         }
 
         top = min(rect.top, top);
@@ -11063,7 +11116,7 @@ SOFTWARE.
         right = max(rect.right, right);
         bottom = max(rect.bottom, bottom);
 
-      }, this);
+      }
 
       return {
         top: top,
