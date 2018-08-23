@@ -2,6 +2,11 @@
   "template": "<li><a href=\"<%= href %>\" target=\"_blank\"><img width=\"143\" height=\"100\" src=\"<%= img %>\" alt=\"\"><h3><p><%= title %></p></h3></a></li>",
   "items": [
     {
+      "title": "Generative Designs",
+      "href": "https://generative-design.surge.sh/",
+      "img": "images/projects/generative-designs.gif"
+    },
+    {
       "title": "Land on the Moon",
       "href": "https://luniland.halabe.com/",
       "img": "images/projects/land-on-the-moon.gif"
