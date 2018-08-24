@@ -108,6 +108,8 @@ process.exit();
 <!-- For the latest nightly changes checkout the `dev` branch [here](../../tree/dev). -->
 
 #### Nightly
++ `Two.ZUI` added through the new `/extras` folder
++ `Two.Text.getBoundingClientRect` now returns an estimated bounding box object
 + `Two.interpret` properly assigns back calculated `Z` coordinates
 + `Two.load` now immediately returns a `Two.Group` for use without callbacks if desired
 + Added `Two.Group.length` to return the calculated length of all child paths
