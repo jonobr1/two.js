@@ -5,7 +5,8 @@
   var anchor;
   var regex = {
     video: /\.(mp4|webm|ogg)$/i,
-    image: /\.(jpe?g|png|gif|tiff)$/i
+    image: /\.(jpe?g|png|gif|tiff)$/i,
+    effect: /texture|gradient/i
   };
 
   if (root.document) {
@@ -51,6 +52,8 @@
       'loaded',
       'repeat'
     ],
+
+    RegularExpressions: regex,
 
     ImageRegistry: new Two.Registry(),
 

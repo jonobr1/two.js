@@ -110,6 +110,8 @@ process.exit();
 #### Nightly
 + `Two.interpret` apply SVG node `style` attributes to paths. Inherits from groups
 + `Two.interpret` improves multi-decimal formatted `d` attributes
++ `Two.ZUI` added through the new `/extras` folder
++ `Two.Text.getBoundingClientRect` now returns an estimated bounding box object
 + `Two.interpret` properly assigns back calculated `Z` coordinates
 + `Two.load` now immediately returns a `Two.Group` for use without callbacks if desired
 + Added `Two.Group.length` to return the calculated length of all child paths

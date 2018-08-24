@@ -538,17 +538,21 @@
       var left = Infinity, right = -Infinity,
           top = Infinity, bottom = -Infinity;
 
-      this.children.forEach(function(child) {
+      var regex = Two.Texture.RegularExpressions.effect;
 
-        if (/(linear-gradient|radial-gradient|gradient)/.test(child._renderer.type)) {
-          return;
+      for (var i = 0; i < this.children.length; i++) {
+
+        var child = this.children[i];
+
+        if (!child.visible || regex.test(child._renderer.type)) {
+          break;
         }
 
         rect = child.getBoundingClientRect(shallow);
 
         if (!_.isNumber(rect.top)   || !_.isNumber(rect.left)   ||
             !_.isNumber(rect.right) || !_.isNumber(rect.bottom)) {
-          return;
+          break;
         }
 
         top = min(rect.top, top);
@@ -556,7 +560,7 @@
         right = max(rect.right, right);
         bottom = max(rect.bottom, bottom);
 
-      }, this);
+      }
 
       return {
         top: top,

@@ -856,7 +856,7 @@ SOFTWARE.
       /**
        * @name Two.Utils.getSvgStyles
        * @function
-       * @param {SVG Node} node - The SVG node to parse.
+       * @param {SvgNode} node - The SVG node to parse.
        * @returns {Object} styles
        * @description Get the CSS comands from the `style` attribute of an SVG node and apply them as key value pairs to a JavaScript object.
        */
@@ -2940,7 +2940,7 @@ SOFTWARE.
     /**
      * @name Two#interpret
      * @function
-     * @param {Object} svgNode - The SVG node to be parsed.
+     * @param {SvgNode} svgNode - The SVG node to be parsed.
      * @param {Boolean} shallow - Don't create a top-most group but append all content directly.
      * @param {Boolean} add – Automatically add the reconstructed SVG node to scene.
      * @returns {Two.Group}
@@ -3068,8 +3068,9 @@ SOFTWARE.
   var _ = Two.Utils;
 
   /**
-   * @class
    * @name Two.Registry
+   * @class
+   * @description An arbitrary class to manage a directory of things. Mainly used for keeping tabs of textures in Two.js.
    */
   var Registry = Two.Registry = function() {
 
@@ -3077,28 +3078,51 @@ SOFTWARE.
 
   };
 
-  _.extend(Registry, {
-
-  });
-
   _.extend(Registry.prototype, {
 
     constructor: Registry,
 
+    /**
+     * @name Two.Registry#add
+     * @function
+     * @param {String} id - A unique identifier.
+     * @param value - Any type of variable to be registered to the directory.
+     * @description Adds any value to the directory. Assigned by the `id`.
+     */
     add: function(id, obj) {
       this.map[id] = obj;
       return this;
     },
 
+    /**
+     * @name Two.Registry#remove
+     * @function
+     * @param {String} id - A unique identifier.
+     * @description Remove any value from the directory by its `id`.
+     */
     remove: function(id) {
       delete this.map[id];
       return this;
     },
 
+    /**
+     * @name Two.Registry#get
+     * @function
+     * @param {String} id - A unique identifier.
+     * @returns value - The associated value. If unavailable then `undefined` is returned.
+     * @description Get a registered value by its `id`.
+     */
     get: function(id) {
       return this.map[id];
     },
 
+    /**
+     * @name Two.Registry#contains
+     * @function
+     * @param {String} id - A unique identifier.
+     * @returns {Boolean}
+     * @description Convenience method to see if a value is registered to an `id` already.
+     */
     contains: function(id) {
       return id in this.map;
     }
@@ -3112,55 +3136,90 @@ SOFTWARE.
   var _ = Two.Utils;
 
   /**
-   * @class
    * @name Two.Vector
-   * @param {Number} [x=0]
-   * @param {Number} [y=0]
+   * @class
+   * @param {Number} [x=0] - Any number to represent the horizontal x-component of the vector.
+   * @param {Number} [y=0] - Any number to represent the vertical y-component of the vector.
+   * @description A class to store x / y component vector data. In addition to storing data `Two.Vector` has suped up methods for commonplace mathematical operations.
    */
   var Vector = Two.Vector = function(x, y) {
 
+    /**
+     * @name Two.Vector#x
+     * @property {Number} x - The horizontal x-component of the vector.
+     */
     this.x = x || 0;
+
+    /**
+     * @name Two.Vector#y
+     * @property {Number} y - The vertical y-component of the vector.
+     */
     this.y = y || 0;
 
   };
 
   _.extend(Vector, {
 
+    /**
+     * @name Two.Vector.zero
+     * @readonly
+     * @property {Two.Vector} - Handy reference to a vector with component values 0, 0 at all times.
+     */
     zero: new Two.Vector(),
 
+    /**
+     * @name Two.Vector.add
+     * @function
+     * @param {Two.Vector} v1
+     * @param {Two.Vector} v2
+     * @returns {Two.Vector}
+     * @description Add two vectors together.
+     */
     add: function(v1, v2) {
       return new Vector(v1.x + v2.x, v1.y + v2.y);
     },
 
+    /**
+     * @name Two.Vector.sub
+     * @function
+     * @param {Two.Vector} v1
+     * @param {Two.Vector} v2
+     * @returns {Two.Vector}
+     * @description Subtract two vectors: `v2` from `v1`.
+     */
     sub: function(v1, v2) {
       return new Vector(v1.x - v2.x, v1.y - v2.y);
     },
 
+    /**
+     * @name Two.Vector.subtract
+     * @borrows Two.Vector.sub as Two.Vector.subtract
+     */
     subtract: function(v1, v2) {
       return Vector.sub(v1, v2);
     },
 
     /**
-     * @name Two.Utils.ratioBetween
+     * @name Two.Vector.ratioBetween
      * @function
      * @param {Two.Vector} A
      * @param {Two.Vector} B
-     * @returns {Number} The ratio betwen two points `A` and `B`.
+     * @returns {Number} The ratio betwen two points `v1` and `v2`.
      */
-    ratioBetween: function(A, B) {
+    ratioBetween: function(v1, v2) {
 
-      return (A.x * B.x + A.y * B.y) / (A.length() * B.length());
+      return (v1.x * v2.x + v1.y * v2.y) / (v1.length() * v2.length());
 
     },
 
     /**
-     * @name Two.Utils.angleBetween
+     * @name Two.Vector.angleBetween
      * @function
-     * @param {Two.Vector} A
-     * @param {Two.Vector} B
-     * @returns {Radians} The angle between points `A` and `B`.
+     * @param {Two.Vector} v1
+     * @param {Two.Vector} v2
+     * @returns {Radians} The angle between points `v1` and `v2`.
      */
-    angleBetween: function(A, B) {
+    angleBetween: function(v1, v2) {
 
       var dx, dy;
 
@@ -3173,29 +3232,48 @@ SOFTWARE.
 
       }
 
-      dx = A.x - B.x;
-      dy = A.y - B.y;
+      dx = v1.x - v2.x;
+      dy = v1.y - v2.y;
 
       return Math.atan2(dy, dx);
 
     },
 
-    distanceBetween: function(p1, p2) {
+    /**
+     * @name Two.Vector.distanceBetween
+     * @function
+     * @param {Two.Vector} v1
+     * @param {Two.Vector} v2
+     * @returns {Number} The distance between points `v1` and `v2`. Distance is always positive.
+     */
+    distanceBetween: function(v1, v2) {
 
-      return Math.sqrt(Vector.distanceBetweenSquared(p1, p2));
+      return Math.sqrt(Vector.distanceBetweenSquared(v1, v2));
 
     },
 
-    distanceBetweenSquared: function(p1, p2) {
+    /**
+     * @name Two.Vector.distanceBetweenSquared
+     * @function
+     * @param {Two.Vector} v1
+     * @param {Two.Vector} v2
+     * @returns {Number} The squared distance between points `v1` and `v2`.
+     */
+    distanceBetweenSquared: function(v1, v2) {
 
-      var dx = p1.x - p2.x;
-      var dy = p1.y - p2.y;
+      var dx = v1.x - v2.x;
+      var dy = v1.y - v2.y;
 
       return dx * dx + dy * dy;
 
     },
 
-
+    /**
+     * @name Two.Vector.MakeObservable
+     * @function
+     * @param {Object} object - The object to make observable.
+     * @description Convenience function to apply observable qualities of a `Two.Vector` to any object. Handy if you'd like to extend the `Two.Vector` class on a custom class.
+     */
     MakeObservable: function(object) {
 
       // /**
@@ -3229,28 +3307,82 @@ SOFTWARE.
 
     constructor: Vector,
 
+    /**
+     * @name Two.Vector#set
+     * @function
+     * @param {Number} x
+     * @param {Number} y
+     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
+     * @description Set the x / y components of a vector to specific number values.
+     */
     set: function(x, y) {
       this.x = x;
       this.y = y;
       return this;
     },
 
+    /**
+     * @name Two.Vector#copy
+     * @function
+     * @param {Two.Vector} v
+     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
+     * @description Copy the x / y components of another object `v`.
+     */
     copy: function(v) {
       this.x = v.x;
       this.y = v.y;
       return this;
     },
 
+    /**
+     * @name Two.Vector#clear
+     * @function
+     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
+     * @description Set the x / y component values of the vector to zero.
+     */
     clear: function() {
       this.x = 0;
       this.y = 0;
       return this;
     },
 
+    /**
+     * @name Two.Vector#clone
+     * @function
+     * @returns {Two.Vector} - A new instance of `Two.Vector`.
+     * @description Create a new vector and copy the existing values onto the newly created instance.
+     */
     clone: function() {
       return new Vector(this.x, this.y);
     },
 
+    /**
+     * @name Two.Vector#add
+     * @function
+     * @param {Two.Vector} v
+     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
+     * @description Add an object with x / y component values to the instance.
+     * @overloaded
+     */
+
+    /**
+     * @name Two.Vector#add
+     * @function
+     * @param {Number} v
+     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
+     * @description Add the **same** number to both x / y component values of the instance.
+     * @overloaded
+     */
+
+    /**
+     * @name Two.Vector#add
+     * @function
+     * @param {Number} x
+     * @param {Number} y
+     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
+     * @description Add `x` / `y` values to their respective component value on the instance.
+     * @overloaded
+     */
     add: function(x, y) {
       if (arguments.length <= 0) {
         return this;
@@ -3269,10 +3401,41 @@ SOFTWARE.
       return this;
     },
 
+    /**
+     * @name Two.Vector#addSelf
+     * @borrows Two.Vector#add as Two.Vector#addSelf
+     */
     addSelf: function(v) {
-      return this.add(v);
+      return this.add.apply(this, arguments);
     },
 
+    /**
+     * @name Two.Vector#sub
+     * @function
+     * @param {Two.Vector} v
+     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
+     * @description Subtract an object with x / y component values to the instance.
+     * @overloaded
+     */
+
+    /**
+     * @name Two.Vector#sub
+     * @function
+     * @param {Number} v
+     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
+     * @description Subtract the **same** number to both x / y component values of the instance.
+     * @overloaded
+     */
+
+    /**
+     * @name Two.Vector#sub
+     * @function
+     * @param {Number} x
+     * @param {Number} y
+     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
+     * @description Subtract `x` / `y` values to their respective component value on the instance.
+     * @overloaded
+     */
     sub: function(x, y) {
       if (arguments.length <= 0) {
         return this;
@@ -3291,18 +3454,57 @@ SOFTWARE.
       return this;
     },
 
+    /**
+     * @name Two.Vector#subtract
+     * @borrows Two.Vector#sub as Two.Vector#subtract
+     */
     subtract: function() {
-      return Vector.prototype.sub.apply(this, arguments);
+      return this.sub.apply(this, arguments);
     },
 
+    /**
+     * @name Two.Vector#subSelf
+     * @borrows Two.Vector#sub as Two.Vector#subSelf
+     */
     subSelf: function(v) {
-      return this.sub(v);
+      return this.sub.apply(this, arguments);
     },
 
+    /**
+     * @name Two.Vector#subtractSelf
+     * @borrows Two.Vector#sub as Two.Vector#subtractSelf
+     */
     subtractSelf: function(v) {
-      return this.sub(v);
+      return this.sub.apply(this, arguments);
     },
 
+    /**
+     * @name Two.Vector#multiply
+     * @function
+     * @param {Two.Vector} v
+     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
+     * @description Multiply an object with x / y component values to the instance.
+     * @overloaded
+     */
+
+    /**
+     * @name Two.Vector#multiply
+     * @function
+     * @param {Number} v
+     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
+     * @description Multiply the **same** number to both x / y component values of the instance.
+     * @overloaded
+     */
+
+    /**
+     * @name Two.Vector#multiply
+     * @function
+     * @param {Number} x
+     * @param {Number} y
+     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
+     * @description Multiply `x` / `y` values to their respective component value on the instance.
+     * @overloaded
+     */
     multiply: function(x, y) {
       if (arguments.length <= 0) {
         return this;
@@ -3321,14 +3523,49 @@ SOFTWARE.
       return this;
     },
 
+    /**
+     * @name Two.Vector#multiplySelf
+     * @borrows Two.Vector#multiply as Two.Vector#multiplySelf
+     */
     multiplySelf: function(v) {
       return this.multiply.apply(this, arguments);
     },
 
+    /**
+     * @name Two.Vector#multiplyScalar
+     * @borrows Two.Vector#multiply as Two.Vector#multiplyScalar
+     */
     multiplyScalar: function(s) {
       return this.multiply.apply(this, arguments);
     },
 
+    /**
+     * @name Two.Vector#divide
+     * @function
+     * @param {Two.Vector} v
+     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
+     * @description Divide an object with x / y component values to the instance.
+     * @overloaded
+     */
+
+    /**
+     * @name Two.Vector#divide
+     * @function
+     * @param {Number} v
+     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
+     * @description Divide the **same** number to both x / y component values of the instance.
+     * @overloaded
+     */
+
+    /**
+     * @name Two.Vector#divide
+     * @function
+     * @param {Number} x
+     * @param {Number} y
+     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
+     * @description Divide `x` / `y` values to their respective component value on the instance.
+     * @overloaded
+     */
     divide: function(x, y) {
       if (arguments.length <= 0) {
         return this;
@@ -3353,6 +3590,18 @@ SOFTWARE.
       return this;
     },
 
+    /**
+     * @name Two.Vector#divideSelf
+     * @borrows Two.Vector#divide as Two.Vector#divideSelf
+     */
+    divideSelf: function(v) {
+      return this.divide.apply(this, arguments);
+    },
+
+    /**
+     * @name Two.Vector#divideScalar
+     * @borrows Two.Vector#divide as Two.Vector#divideScalar
+     */
     divideScalar: function(s) {
       return this.divide.apply(this, arguments);
     },
@@ -3415,7 +3664,7 @@ SOFTWARE.
       return { x: this.x, y: this.y };
     },
 
-    rotate: function (radians) {
+    rotate: function(radians) {
       var cos = Math.cos(radians);
       var sin = Math.sin(radians);
       this.x = this.x * cos - this.y * sin;
@@ -9430,7 +9679,7 @@ SOFTWARE.
   var getComputedMatrix = Two.Utils.getComputedMatrix;
   var _ = Two.Utils;
 
-  var canvas = (root.document ? root.document.createElement('canvas') : { getContext: _.identity });
+  var canvas = getCanvas();
   var ctx = canvas.getContext('2d');
 
   /**
@@ -9473,6 +9722,8 @@ SOFTWARE.
   };
 
   _.extend(Two.Text, {
+
+    Ratio: 0.6,
 
     Properties: [
       'value', 'family', 'size', 'leading', 'alignment', 'linewidth', 'style',
@@ -9676,24 +9927,61 @@ SOFTWARE.
     getBoundingClientRect: function(shallow) {
 
       var matrix, border, l, x, y, i, v;
-
-      var left = Infinity, right = -Infinity,
-          top = Infinity, bottom = -Infinity;
+      var left, right, top, bottom;
 
       // TODO: Update this to not __always__ update. Just when it needs to.
       this._update(true);
 
       matrix = !!shallow ? this._matrix : getComputedMatrix(this);
 
-      v = matrix.multiply(0, 0, 1);
+      var height = this.leading;
+      var width = this.value.length * this.size * Text.Ratio;
+
+      switch (this.alignment) {
+        case 'left':
+          left = 0;
+          right = width;
+          break;
+        case 'right':
+          left = - width;
+          right = 0;
+          break;
+        default:
+          left = - width / 2;
+          right = width / 2;
+      }
+
+      switch (this.baseline) {
+        case 'top':
+          top = 0;
+          bottom = height;
+          break;
+        case 'bottom':
+          top = - height;
+          bottom = 0;
+          break;
+        default:
+          top = - height / 2;
+          bottom = height / 2;
+      }
+
+      v = matrix.multiply(left, top, 1);
+
+      top = v.y;
+      left = v.x;
+
+      v = matrix.multiply(right, bottom, 1);
+
+      right = v.x;
+      bottom = v.y;
 
       return {
-        top: v.x,
-        left: v.y,
-        right: v.x,
-        bottom: v.y,
-        width: 0,
-        height: 0
+        top: top,
+        left: left,
+        right: right,
+        bottom: bottom,
+        width: right - left,
+        height: bottom - top
       };
 
     },
@@ -9715,6 +10003,17 @@ SOFTWARE.
   });
 
   Two.Text.MakeObservable(Two.Text.prototype);
+
+  function getCanvas() {
+    if (root.document) {
+      return root.document.createElement('canvas');
+    } else {
+      console.warn('Two.js: Unable to create canvas for Two.Text measurements.');
+      return {
+        getContext: _.identity
+      }
+    }
+  }
 
 })((typeof global !== 'undefined' ? global : (this || window)).Two);
 
@@ -10232,7 +10531,8 @@ SOFTWARE.
   var anchor;
   var regex = {
     video: /\.(mp4|webm|ogg)$/i,
-    image: /\.(jpe?g|png|gif|tiff)$/i
+    image: /\.(jpe?g|png|gif|tiff)$/i,
+    effect: /texture|gradient/i
   };
 
   if (root.document) {
@@ -10278,6 +10578,8 @@ SOFTWARE.
       'loaded',
       'repeat'
     ],
+
+    RegularExpressions: regex,
 
     ImageRegistry: new Two.Registry(),
 
@@ -11713,17 +12015,21 @@ SOFTWARE.
       var left = Infinity, right = -Infinity,
           top = Infinity, bottom = -Infinity;
 
-      this.children.forEach(function(child) {
+      var regex = Two.Texture.RegularExpressions.effect;
 
-        if (/(linear-gradient|radial-gradient|gradient)/.test(child._renderer.type)) {
-          return;
+      for (var i = 0; i < this.children.length; i++) {
+
+        var child = this.children[i];
+
+        if (!child.visible || regex.test(child._renderer.type)) {
+          break;
         }
 
         rect = child.getBoundingClientRect(shallow);
 
         if (!_.isNumber(rect.top)   || !_.isNumber(rect.left)   ||
             !_.isNumber(rect.right) || !_.isNumber(rect.bottom)) {
-          return;
+          break;
         }
 
         top = min(rect.top, top);
@@ -11731,7 +12037,7 @@ SOFTWARE.
         right = max(rect.right, right);
         bottom = max(rect.bottom, bottom);
 
-      }, this);
+      }
 
       return {
         top: top,
