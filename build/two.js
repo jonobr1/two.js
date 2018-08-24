@@ -9008,6 +9008,9 @@ SOFTWARE.
       return this;
     },
 
+    /**
+     * TODO: Currently an estimation. Make this better.
+     */
     getBoundingClientRect: function(shallow) {
 
       var matrix, border, l, x, y, i, v;
