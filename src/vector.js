@@ -400,10 +400,12 @@
 
     /**
      * @name Two.Vector#multiplyScalar
-     * @borrows Two.Vector#multiply as Two.Vector#multiplyScalar
+     * @function
+     * @param {Number} s - The scalar to multiply by.
+     * @description Mulitiply the vector by a single number. Shorthand to call {@link Two.Vector#multiply} directly.
      */
     multiplyScalar: function(s) {
-      return this.multiply.apply(this, arguments);
+      return this.multiply(s);
     },
 
     /**
@@ -467,70 +469,159 @@
 
     /**
      * @name Two.Vector#divideScalar
-     * @borrows Two.Vector#divide as Two.Vector#divideScalar
+     * @function
+     * @param {Number} s - The scalar to divide by.
+     * @description Divide the vector by a single number. Shorthand to call {@link Two.Vector#divide} directly.
      */
     divideScalar: function(s) {
-      return this.divide.apply(this, arguments);
+      return this.divide(s);
     },
 
+    /**
+     * @name Two.Vector#negate
+     * @function
+     * @description Invert each component's sign value.
+     */
     negate: function() {
       return this.multiply(-1);
     },
 
+    /**
+     * @name Two.Vector#negate
+     * @function
+     * @return {Number}
+     * @description Get the [dot product]{@link https://en.wikipedia.org/wiki/Dot_product} of the vector.
+     */
     dot: function(v) {
       return this.x * v.x + this.y * v.y;
     },
 
-    lengthSquared: function() {
-      return this.x * this.x + this.y * this.y;
-    },
-
+    /**
+     * @name Two.Vector#length
+     * @function
+     * @return {Number}
+     * @description Get the length of a vector.
+     */
     length: function() {
       return Math.sqrt(this.lengthSquared());
     },
 
+    /**
+     * @name Two.Vector#lengthSquared
+     * @function
+     * @return {Number}
+     * @description Get the length of the vector to the power of two. Widely used as less expensive than {@link Two.Vector#length}, because it isn't square-rooting any numbers.
+     */
+    lengthSquared: function() {
+      return this.x * this.x + this.y * this.y;
+    },
+
+    /**
+     * @name Two.Vector#normalize
+     * @function
+     * @description Normalize the vector from negative one to one.
+     */
     normalize: function() {
       return this.divideScalar(this.length());
     },
 
+    /**
+     * @name Two.Vector#distanceTo
+     * @function
+     * @return {Number}
+     * @description Get the distance between two vectors.
+     */
     distanceTo: function(v) {
       return Math.sqrt(this.distanceToSquared(v));
     },
 
+    /**
+     * @name Two.Vector#distanceToSquared
+     * @function
+     * @return {Number}
+     * @description Get the distance between two vectors to the power of two. Widely used as less expensive than {@link Two.Vector#distanceTo}, because it isn't square-rooting any numbers.
+     */
     distanceToSquared: function(v) {
       var dx = this.x - v.x,
           dy = this.y - v.y;
       return dx * dx + dy * dy;
     },
 
+    /**
+     * @name Two.Vector#setLength
+     * @function
+     * @param {Number} l - length to set vector to.
+     * @description Set the length of a vector.
+     */
     setLength: function(l) {
       return this.normalize().multiplyScalar(l);
     },
 
+    /**
+     * @name Two.Vector#equals
+     * @function
+     * @param {Two.Vector} v - The vector to compare against.
+     * @param {Number} [eps=0.0001] - An options epsilon for precision.
+     * @return {Boolean}
+     * @description Qualify if one vector roughly equal another. With a margin of error defined by epsilon.
+     */
     equals: function(v, eps) {
       eps = (typeof eps === 'undefined') ?  0.0001 : eps;
       return (this.distanceTo(v) < eps);
     },
 
+    /**
+     * @name Two.Vector#lerp
+     * @function
+     * @param {Two.Vector} v - The destination vector to step towards.
+     * @param {Number} t - The zero to one value of how close the current vector gets to the destination vector.
+     * @description Linear interpolate one vector to another by an amount `t` defined as a zero to one number.
+     * @see [Matt DesLauriers]{@link https://twitter.com/mattdesl/status/1031305279227478016} has a good thread about this.
+     */
     lerp: function(v, t) {
       var x = (v.x - this.x) * t + this.x;
       var y = (v.y - this.y) * t + this.y;
       return this.set(x, y);
     },
 
+    /**
+     * @name Two.Vector#isZero
+     * @function
+     * @param {Number} [eps=0.0001] - Optional precision amount to check against.
+     * @return {Boolean}
+     * @description Check to see if vector is roughly zero, based on the `epsilon` precision value.
+     */
     isZero: function(eps) {
       eps = (typeof eps === 'undefined') ?  0.0001 : eps;
       return (this.length() < eps);
     },
 
+    /**
+     * @name Two.Vector#toString
+     * @function
+     * @return {String}
+     * @description Return a comma-separated string of x, y value. Great for storing in a database.
+     */
     toString: function() {
       return this.x + ', ' + this.y;
     },
 
+    /**
+     * @name Two.Vector#toObject
+     * @function
+     * @return {Object}
+     * @description Return a JSON compatible plain object that represents the vector.
+     */
     toObject: function() {
       return { x: this.x, y: this.y };
     },
 
+    /**
+     * @name Two.Vector#rotate
+     * @function
+     * @param {Radians} radians - The amoun to rotate the vector by.
+     * @description Rotate a vector.
+     */
     rotate: function(radians) {
       var cos = Math.cos(radians);
       var sin = Math.sin(radians);
@@ -541,6 +632,11 @@
 
   });
 
+  // The same set of prototypical functions, but using the underlying
+  // getter or setter for `x` and `y` values. This set of functions
+  // is used instead of the previously documented ones above when
+  // Two.Vector#bind is invoked and there is event dispatching processed
+  // on x / y property changes.
   var BoundProto = {
 
     constructor: Vector,
