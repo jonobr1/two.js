@@ -974,6 +974,7 @@
             case 'stroke-width':
               elem.linewidth = parseFloat(value);
               break;
+            case 'opacity':
             case 'stroke-opacity':
             case 'fill-opacity':
               // Only apply styles to rendered shapes
@@ -1059,7 +1060,9 @@
         },
 
         polyline: function(node, parentStyles) {
-          return Two.Utils.read.polygon.call(this, node, true);
+          var poly = Two.Utils.read.polygon.call(this, node, parentStyles);
+          poly.closed = false;
+          return poly;
         },
 
         path: function(node, parentStyles) {
