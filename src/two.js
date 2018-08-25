@@ -848,6 +848,33 @@
       },
 
       /**
+       * @name Two.Utils.applySvgViewBox
+       * @function
+       * @param {Two.Shape} node - The Two.js object to apply viewbox matrix to
+       * @param {String} value - The viewBox value from the SVG attribute
+       * @returns {Two.Shape} node
+       @ @description
+       */
+      applySvgViewBox: function(node, value) {
+
+        var elements = value.split(/\s/);
+
+        var x = parseFloat(elements[0]);
+        var y = parseFloat(elements[1]);
+        var width = parseFloat(elements[2]);
+        var height = parseFloat(elements[3]);
+
+        var s = Math.min(this.width / width, this.height / height);
+
+        node.translation.x -= x * s;
+        node.translation.y -= y * s;
+        node.scale = s;
+
+        return node;
+
+      },
+
+      /**
        * @name Two.Utils.applySvgAttributes
        * @function
        * @param {SvgNode} node - An SVG Node to extrapolate attributes from.
@@ -907,6 +934,8 @@
         styles.visible = !(_.isUndefined(styles.display) && /none/i.test(styles.display))
           || (_.isUndefined(styles.visibility) && /hidden/i.test(styles.visibility));
 
+        console.log(styles, parentStyles);
+
         // Now iterate the whole thing
         for (key in styles) {
           value = styles[key];
@@ -948,16 +977,7 @@
 
               break;
             case 'viewBox':
-
-              // Reverse calculate viewbox from an SVG element
-              // into the Two.js scene.
-              var elements = value.split(/\s/);
-              var s = Math.max(this.width / elements[2], this.height / elements[3]);
-
-              elem.translation.x -= elements[0] * s;
-              elem.translation.y -= elements[1] * s;
-              elem.scale = s;
-
+              Two.Utils.applySvgViewBox.call(this, elem, value);
               break;
             case 'visible':
               elem.visible = value;
@@ -1018,11 +1038,14 @@
 
         g: function(node) {
 
-          var styles;
+          var styles, attrs;
           var group = new Two.Group();
 
           // Switched up order to inherit more specific styles
           styles = Two.Utils.getSvgStyles.call(this, node);
+          attrs = Two.Utils.getSvgAttributes.call(this, node);
+
+          console.log("g");
 
           for (var i = 0, l = node.childNodes.length; i < l; i++) {
             var n = node.childNodes[i];
@@ -2962,6 +2985,7 @@
         for (i = 0; i < dom.temp.children.length; i++) {
           elem = dom.temp.children[i];
           if (/svg/i.test(elem.nodeName)) {
+            Two.Utils.applySvgViewBox.call(this, group, elem.getAttribute('viewBox'));
             for (j = 0; j < elem.children.length; j++) {
               group.add(this.interpret(elem.children[j]));
             }

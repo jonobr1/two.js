@@ -108,7 +108,7 @@ process.exit();
 <!-- For the latest nightly changes checkout the `dev` branch [here](../../tree/dev). -->
 
 #### Nightly
-+ `Two.interpret` apply SVG node `style` attributes to paths. Inherits from groups
++ `Two.interpret` apply SVG node `style` attributes to paths. Inherits from groups and infers SVG `viewBox` attribute against Two.js instance
 + `Two.interpret` improves multi-decimal formatted `d` attributes
 + `Two.ZUI` added through the new `/extras` folder
 + `Two.Text.getBoundingClientRect` now returns an estimated bounding box object
