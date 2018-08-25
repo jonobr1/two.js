@@ -11,7 +11,7 @@ Download the latest [minified library](https://raw.github.com/jonobr1/two.js/dev
 <script src="js/two.min.js"></script>
 ```
 
-It can also be installed via `npm`
+It can also be installed via [npm](https://www.npmjs.com/package/two.js), Node Package Manager:
 
 ```js
 npm install --save two.js
