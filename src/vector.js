@@ -254,12 +254,12 @@
       if (arguments.length <= 0) {
         return this;
       } else if (arguments.length <= 1) {
-        if (_.isNumber(x.x) && _.isNumber(x.y)) {
-          this.x += x.x;
-          this.y += x.y;
-        } else {
+        if (_.isNumber(x)) {
           this.x += x;
           this.y += x;
+        } else if (x && _.isNumber(x.x) && _.isNumber(x.y)) {
+          this.x += x.x;
+          this.y += x.y;
         }
       } else {
         this.x += x;
@@ -307,12 +307,12 @@
       if (arguments.length <= 0) {
         return this;
       } else if (arguments.length <= 1) {
-        if (_.isNumber(x.x) && _.isNumber(x.y)) {
-          this.x -= x.x;
-          this.y -= x.y;
-        } else {
+        if (_.isNumber(x)) {
           this.x -= x;
           this.y -= x;
+        } else if (x && _.isNumber(x.x) && _.isNumber(x.y)) {
+          this.x -= x.x;
+          this.y -= x.y;
         }
       } else {
         this.x -= x;
