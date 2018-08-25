@@ -392,9 +392,9 @@
         result[k] = this[k];
       }, this);
 
-      result.translation = this.translation.toObject;
+      result.translation = this.translation.toObject();
       result.rotation = this.rotation;
-      result.scale = this.scale;
+      result.scale = this.scale instanceof Two.Vector ? this.scale.toObject() : this.scale;
 
       return result;
 

@@ -351,7 +351,7 @@
         children: [],
         translation: this.translation.toObject(),
         rotation: this.rotation,
-        scale: this.scale,
+        scale: this.scale instanceof Two.Vector ? this.scale.toObject() : this.scale,
         opacity: this.opacity,
         className: this.className,
         mask: (this.mask ? this.mask.toObject() : null)
