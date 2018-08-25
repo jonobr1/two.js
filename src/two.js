@@ -1033,7 +1033,13 @@
       read: {
 
         svg: function(node) {
-          return Two.Utils.read.g.call(this, node);
+
+          var svg = Two.Utils.read.g.call(this, node);
+          var viewBox = node.getAttribute('viewBox');
+          Two.Utils.applySvgViewBox(svg, viewBox);
+
+          return svg;
+
         },
 
         g: function(node) {
@@ -1043,9 +1049,6 @@
 
           // Switched up order to inherit more specific styles
           styles = Two.Utils.getSvgStyles.call(this, node);
-          attrs = Two.Utils.getSvgAttributes.call(this, node);
-
-          console.log("g");
 
           for (var i = 0, l = node.childNodes.length; i < l; i++) {
             var n = node.childNodes[i];
