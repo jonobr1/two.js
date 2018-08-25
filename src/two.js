@@ -934,8 +934,6 @@
         styles.visible = !(_.isUndefined(styles.display) && /none/i.test(styles.display))
           || (_.isUndefined(styles.visibility) && /hidden/i.test(styles.visibility));
 
-        console.log(styles, parentStyles);
-
         // Now iterate the whole thing
         for (key in styles) {
           value = styles[key];
