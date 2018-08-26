@@ -11,7 +11,7 @@ var explanation = compiler.explainSync({
       // path.resolve(__dirname, '../src/renderer/svg.js'),
       // path.resolve(__dirname, '../src/renderer/canvas.js'),
       // path.resolve(__dirname, '../src/renderer/webgl.js'),
-      // path.resolve(__dirname, '../src/shape.js'),
+      path.resolve(__dirname, '../src/shape.js'),
       // path.resolve(__dirname, '../src/path.js'),
       // path.resolve(__dirname, '../src/shapes/line.js'),
       // path.resolve(__dirname, '../src/shapes/rectangle.js'),
