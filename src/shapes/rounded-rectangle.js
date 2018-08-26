@@ -192,8 +192,6 @@
 
     clone: function(parent) {
 
-      parent = parent || this.parent;
-
       var width = this.width;
       var height = this.height;
       var radius = this.radius;

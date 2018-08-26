@@ -200,8 +200,6 @@
 
     clone: function(parent) {
 
-      var parent = parent || this.parent;
-
       var clone = new Two.Text(this.value);
       clone.translation.copy(this.translation);
       clone.rotation = this.rotation;

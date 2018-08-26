@@ -1034,7 +1034,7 @@
 
           var svg = Two.Utils.read.g.call(this, node);
           var viewBox = node.getAttribute('viewBox');
-          Two.Utils.applySvgViewBox(svg, viewBox);
+          // Two.Utils.applySvgViewBox(svg, viewBox);
 
           return svg;
 

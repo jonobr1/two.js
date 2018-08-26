@@ -100,8 +100,6 @@
 
     clone: function(parent) {
 
-      parent = parent || this.parent;
-
       var resolution = this.vertices.length;
       var clone = new Ellipse(0, 0, this.width, this.height, resolution);
 

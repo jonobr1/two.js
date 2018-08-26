@@ -108,7 +108,12 @@ process.exit();
 <!-- For the latest nightly changes checkout the `dev` branch [here](../../tree/dev). -->
 
 #### Nightly
-+ `Two.interpret` apply SVG node `style` attributes to paths. Inherits from groups and infers SVG `viewBox` attribute against Two.js instance
++ `Two.Vector` arithmetic methods made more consistent — still need to improve performance
++ `Two.Path.vertices` will not clone vectors, improving developer clarity
++ Two.js clone methods do not force adding to a parent
++ `Two.ImageSequence`, `Two.Sprite`, and `Two.Rectangle` have `origin` properties for offset rendering
++ `Two.Group.getBoundingClientRect` will pass-through on effects instead of break
++ `Two.interpret` apply SVG node `style` attributes to paths. Inherits from groups ~~and infers SVG `viewBox` attribute against Two.js instance~~
 + `Two.interpret` improves multi-decimal formatted `d` attributes
 + `Two.ZUI` added through the new `/extras` folder
 + `Two.Text.getBoundingClientRect` now returns an estimated bounding box object

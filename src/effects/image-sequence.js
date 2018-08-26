@@ -21,6 +21,7 @@
     this.noFill();
 
     this.textures = _.map(paths, ImageSequence.GenerateTexture, this);
+    this.origin = new Two.Vector();
 
     this._update();
     this.translation.set(ox || 0, oy || 0);
@@ -140,6 +141,7 @@
     // Exposed through getter-setter
     _textures: null,
     _frameRate: 0,
+    _origin: null,
 
     constructor: ImageSequence,
 
@@ -189,22 +191,20 @@
 
     clone: function(parent) {
 
-      parent = parent || this.parent;
-
       var clone = new ImageSequence(this.textures, this.translation.x,
         this.translation.y, this.frameRate)
 
-        clone._loop = this._loop;
+      clone._loop = this._loop;
 
-        if (this._playing) {
-          clone.play();
-        }
+      if (this._playing) {
+        clone.play();
+      }
 
-        if (parent) {
-          parent.add(clone);
-        }
+      if (parent) {
+        parent.add(clone);
+      }
 
-        return clone;
+      return clone;
 
     },
 

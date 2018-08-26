@@ -312,8 +312,6 @@
     //  */
     clone: function(parent) {
 
-      parent = parent || this.parent;
-
       var group = new Group();
       var children = _.map(this.children, function(child) {
         return child.clone(group);
@@ -375,7 +373,7 @@
        corner = { x: rect.left, y: rect.top };
 
       this.children.forEach(function(child) {
-        child.translation.subSelf(corner);
+        child.translation.sub(corner);
       });
 
       return this;
@@ -397,7 +395,7 @@
 
       this.children.forEach(function(child) {
         if (child.isShape) {
-          child.translation.subSelf(rect.centroid);
+          child.translation.sub(rect.centroid);
         }
       });
 
@@ -545,14 +543,14 @@
         var child = this.children[i];
 
         if (!child.visible || regex.test(child._renderer.type)) {
-          break;
+          continue;
         }
 
         rect = child.getBoundingClientRect(shallow);
 
         if (!_.isNumber(rect.top)   || !_.isNumber(rect.left)   ||
             !_.isNumber(rect.right) || !_.isNumber(rect.bottom)) {
-          break;
+          continue;
         }
 
         top = min(rect.top, top);

@@ -279,7 +279,7 @@
           }
 
           // Create new Collection with copy of vertices
-          this._collection = new Two.Utils.Collection((vertices || []).slice(0));
+          this._collection = new Two.Utils.Collection(vertices || []);//.slice(0));
 
           // Listen for Collection changes and bind / unbind
           this._collection
@@ -356,8 +356,6 @@
 
     clone: function(parent) {
 
-      parent = parent || this.parent;
-
       var points = _.map(this.vertices, function(v) {
         return v.clone();
       });
@@ -376,7 +374,7 @@
         parent.add(clone);
       }
 
-      return clone;
+      return clone._update();
 
     },
 

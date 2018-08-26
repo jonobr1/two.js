@@ -76,7 +76,7 @@
         this.vertices[3].set(-xr, yr).add(this._origin).command = Two.Commands.line;
         // FYI: Two.Sprite and Two.ImageSequence have 4 verts
         if (this.vertices[4]) {
-          this.vertices[4].set(-xr, -yr).add(this.origin).command = Two.Commands.line;
+          this.vertices[4].set(-xr, -yr).add(this._origin).command = Two.Commands.line;
         }
 
       }
@@ -97,8 +97,6 @@
     },
 
     clone: function(parent) {
-
-      parent = parent || this.parent;
 
       var clone = new Rectangle(0, 0, this.width, this.height);
       clone.translation.copy(this.translation);

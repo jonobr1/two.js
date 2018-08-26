@@ -205,8 +205,6 @@
 
     clone: function(parent) {
 
-      parent = parent || this.parent;
-
       var stops = _.map(this.stops, function(s) {
         return s.clone();
       });

@@ -22,6 +22,8 @@
       this.texture = new Two.Texture(path);
     }
 
+    this.origin = new Two.Vector();
+
     this._update();
     this.translation.set(ox || 0, oy || 0);
 
@@ -75,6 +77,7 @@
     _rows: 1,
     _frameRate: 0,
     _index: 0,
+    _origin: null,
 
     constructor: Sprite,
 
@@ -123,8 +126,6 @@
     },
 
     clone: function(parent) {
-
-      parent = parent || this.parent;
 
       var clone = new Sprite(
         this.texture, this.translation.x, this.translation.y,

@@ -105,8 +105,6 @@
 
     clone: function(parent) {
 
-      parent = parent || this.parent;
-
       var ir = this.innerRadius;
       var or = this.outerRadius;
       var sides = this.sides;

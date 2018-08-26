@@ -208,8 +208,6 @@
 
     clone: function(parent) {
 
-      parent = parent || this.parent;
-
       var ir = this.innerRadius;
       var or = this.outerradius;
       var sa = this.startAngle;
