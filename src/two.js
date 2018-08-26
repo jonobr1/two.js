@@ -2986,7 +2986,7 @@
         for (i = 0; i < dom.temp.children.length; i++) {
           elem = dom.temp.children[i];
           if (/svg/i.test(elem.nodeName)) {
-            Two.Utils.applySvgViewBox.call(this, group, elem.getAttribute('viewBox'));
+            // Two.Utils.applySvgViewBox.call(this, group, elem.getAttribute('viewBox'));
             for (j = 0; j < elem.children.length; j++) {
               group.add(this.interpret(elem.children[j]));
             }
