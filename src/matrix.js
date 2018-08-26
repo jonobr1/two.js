@@ -140,7 +140,7 @@
      /**
       * @name Two.Matrix#set
       * @function
-      * @param {Array} a - The array of elements to apply.
+      * @param {Number[]} a - The array of elements to apply.
       * @description Set an array of values onto the matrix. Order described in {@link Two.Matrix}.
       */
     set: function(a) {
@@ -428,7 +428,7 @@
      * @name Two.Matrix#toArray
      * @function
      * @param {Boolean} [fullMatrix=false] - Return the full 9 elements of the matrix or just 6 for 2D transformations.
-     * @param {Array} [output] - An array to apply the values to.
+     * @param {Number[]} [output] - An array empty or otherwise to apply the values to.
      * @description Create a transform array. Used for the Two.js rendering APIs.
      */
     toArray: function(fullMatrix, output) {

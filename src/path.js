@@ -14,14 +14,14 @@
   });
 
   /**
-   * @class
    * @name Two.Path
+   * @class
    * @extends Two.Shape
-   * @description This is the base class for creating all drawable shapes in two.js. Unless specified methods return their instance of `Two.Path` for the purpose of chaining.
    * @param {Two#Anchor[]} [vertices] - A list of Two.Anchors that represent the order and coordinates to construct the rendered shape.
    * @param {Boolean} [closed=false] - Describes whether the shape is closed or open.
    * @param {Boolean} [curved=false] - Describes whether the shape automatically calculates bezier handles for each vertex.
    * @param {Boolean} [manual=false] - Describes whether the developer controls how vertices are plotted or if Two.js automatically plots coordinates based on closed and curved booleans.
+   * @description This is the primary primitive class for creating all drawable shapes in Two.js. Unless specified methods return their instance of `Two.Path` for the purpose of chaining.
    */
   var Path = Two.Path = function(vertices, closed, curved, manual) {
 
@@ -40,27 +40,97 @@
     this._closed = !!closed;
     this._curved = !!curved;
 
+    /**
+     * @name Two.Path#beginning
+     * @property {Number} - Number between zero and one to state the beginning of where the path is rendered.
+     * @description `Two.Path.beginning` is a percentage value that represents at what percentage into the path should the renderer start drawing.
+     * @nota-bene This is great for animating in and out stroked paths in conjunction with {@link Two.Path#ending}.
+     */
     this.beginning = 0;
+
+    /**
+     * @name Two.Path#ending
+     * @property {Number} - Number between zero and one to state the ending of where the path is rendered.
+     * @description `Two.Path.ending` is a percentage value that represents at what percentage into the path should the renderer start drawing.
+     * @nota-bene This is great for animating in and out stroked paths in conjunction with {@link Two.Path#beginning}.
+     */
     this.ending = 1;
 
     // Style properties
 
+    /**
+     * @name Two.Path#fill
+     * @property {(CssColor|Two.Gradient|Two.Texture)} - The value of what the path should be filled in with.
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS Colors.
+     */
     this.fill = '#fff';
+
+    /**
+     * @name Two.Path#stroke
+     * @property {(CssColor|Two.Gradient|Two.Texture)} - The value of what the path should be outlined in with.
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS Colors.
+     */
     this.stroke = '#000';
+
+    /**
+     * @name Two.Path#linewidth
+     * @property {Number} - The thickness in pixels of the stroke.
+     */
     this.linewidth = 1.0;
+
+    /**
+     * @name Two.Path#opacity
+     * @property {Number} - The opaqueness of the path.
+     * @nota-bene Can be used in conjunction with CSS Colors that have an alpha value.
+     */
     this.opacity = 1.0;
+
+    /**
+     * @name Two.Path#className
+     * @property {String} - A class name to be searched by in {@link Two.Group}s.
+     */
     this.className = '';
+
+    /**
+     * @name Two.Path#visible
+     * @property {Boolean} - Display the path or not.
+     * @nota-bene For {@link Two.CanvasRenderer} and {@link Two.WebGLRenderer} when set to false all updating is disabled improving performance dramatically with many objects in the scene.
+     */
     this.visible = true;
 
+    /**
+     * @name Two.Path#cap
+     * @property {String}
+     * @see {@link https://www.w3.org/TR/SVG11/painting.html#StrokeLinecapProperty}
+     */
     this.cap = 'butt';      // Default of Adobe Illustrator
+
+    /**
+     * @name Two.Path#join
+     * @property {String}
+     * @see {@link https://www.w3.org/TR/SVG11/painting.html#StrokeLinejoinProperty}
+     */
     this.join = 'miter';    // Default of Adobe Illustrator
+
+    /**
+     * @name Two.Path#miter
+     * @property {String}
+     * @see {@link https://www.w3.org/TR/SVG11/painting.html#StrokeMiterlimitProperty}
+     */
     this.miter = 4;         // Default of Adobe Illustrator
 
+    /**
+     * @name Two.Path#vertices
+     * @property {Two.Anchor[]} - An ordered list of anchor points for rendering the path.
+     * @description An of `Two.Anchor` objects that consist of what form the path takes.
+     * @nota-bene The array when manipulating is actually a {@link Two.Utils.Collection}.
+     */
     this.vertices = vertices;
 
-    // Determines whether or not two.js should calculate curves, lines, and
-    // commands automatically for you or to let the developer manipulate them
-    // for themselves.
+    /**
+     * @name Two.Path#automatic
+     * @property {Boolean} - Determines whether or not Two.js should calculate curves, lines, and commands automatically for you or to let the developer manipulate them for themselves.
+     */
     this.automatic = !manual;
 
   };
