@@ -7,7 +7,7 @@ var explanation = compiler.explainSync({
       path.resolve(__dirname, '../src/registry.js'),
       path.resolve(__dirname, '../src/vector.js'),
       path.resolve(__dirname, '../src/anchor.js'),
-      // path.resolve(__dirname, '../src/matrix.js'),
+      path.resolve(__dirname, '../src/matrix.js'),
       // path.resolve(__dirname, '../src/renderer/svg.js'),
       // path.resolve(__dirname, '../src/renderer/canvas.js'),
       // path.resolve(__dirname, '../src/renderer/webgl.js'),
