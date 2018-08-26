@@ -1,7 +1,23 @@
 {
   "name": "two.js",
   "version": "0.7.0",
-  "description": "A two-dimensional drawing api meant for modern browsers.",
+  "description": "A renderer agnostic two-dimensional drawing api for the web.",
+  "module": "build/two.module.js",
+  "files": [
+    "package.json",
+    "LICENSE",
+    "README.md",
+    "build/two.js",
+    "build/two.min.js",
+    "build/two.module.js"
+    "extras",
+    "src"
+  ],
+  "directories": {
+    "doc": "documentation",
+    "test": "tests",
+    "example": "utils"
+  },
   "keywords": [
     "dom",
     "w3c",
@@ -13,7 +29,7 @@
     "rendering",
     "motiongraphics"
   ],
-  "homepage": "http://jonobr1.github.io/two.js/",
+  "homepage": "https://two.js.org/",
   "author": {
     "name": "jonobr1",
     "url": "http://jonobr1.com/"
