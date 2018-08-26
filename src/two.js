@@ -435,7 +435,7 @@
      * @name Two.Identifier
      * @property {String} - String prefix for all Two.js object's ids. This trickles down to SVG ids.
      */
-    Identifier: 'two_',
+    Identifier: 'two-',
 
     /**
      * @name Two.Events
