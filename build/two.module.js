@@ -874,6 +874,33 @@ SOFTWARE.
       },
 
       /**
+       * @name Two.Utils.applySvgViewBox
+       * @function
+       * @param {Two.Shape} node - The Two.js object to apply viewbox matrix to
+       * @param {String} value - The viewBox value from the SVG attribute
+       * @returns {Two.Shape} node
+       @ @description
+       */
+      applySvgViewBox: function(node, value) {
+
+        var elements = value.split(/\s/);
+
+        var x = parseFloat(elements[0]);
+        var y = parseFloat(elements[1]);
+        var width = parseFloat(elements[2]);
+        var height = parseFloat(elements[3]);
+
+        var s = Math.min(this.width / width, this.height / height);
+
+        node.translation.x -= x * s;
+        node.translation.y -= y * s;
+        node.scale = s;
+
+        return node;
+
+      },
+
+      /**
        * @name Two.Utils.applySvgAttributes
        * @function
        * @param {SvgNode} node - An SVG Node to extrapolate attributes from.
@@ -974,16 +1001,7 @@ SOFTWARE.
 
               break;
             case 'viewBox':
-
-              // Reverse calculate viewbox from an SVG element
-              // into the Two.js scene.
-              var elements = value.split(/\s/);
-              var s = Math.max(this.width / elements[2], this.height / elements[3]);
-
-              elem.translation.x -= elements[0] * s;
-              elem.translation.y -= elements[1] * s;
-              elem.scale = s;
-
+              Two.Utils.applySvgViewBox.call(this, elem, value);
               break;
             case 'visible':
               elem.visible = value;
@@ -1000,6 +1018,7 @@ SOFTWARE.
             case 'stroke-width':
               elem.linewidth = parseFloat(value);
               break;
+            case 'opacity':
             case 'stroke-opacity':
             case 'fill-opacity':
               // Only apply styles to rendered shapes
@@ -1038,12 +1057,18 @@ SOFTWARE.
       read: {
 
         svg: function(node) {
-          return Two.Utils.read.g.call(this, node);
+
+          var svg = Two.Utils.read.g.call(this, node);
+          var viewBox = node.getAttribute('viewBox');
+          // Two.Utils.applySvgViewBox(svg, viewBox);
+
+          return svg;
+
         },
 
         g: function(node) {
 
-          var styles;
+          var styles, attrs;
           var group = new Two.Group();
 
           // Switched up order to inherit more specific styles
@@ -1085,7 +1110,9 @@ SOFTWARE.
         },
 
         polyline: function(node, parentStyles) {
-          return Two.Utils.read.polygon.call(this, node, true);
+          var poly = Two.Utils.read.polygon.call(this, node, parentStyles);
+          poly.closed = false;
+          return poly;
         },
 
         path: function(node, parentStyles) {
@@ -2985,6 +3012,7 @@ SOFTWARE.
         for (i = 0; i < dom.temp.children.length; i++) {
           elem = dom.temp.children[i];
           if (/svg/i.test(elem.nodeName)) {
+            // Two.Utils.applySvgViewBox.call(this, group, elem.getAttribute('viewBox'));
             for (j = 0; j < elem.children.length; j++) {
               group.add(this.interpret(elem.children[j]));
             }
@@ -3387,12 +3415,12 @@ SOFTWARE.
       if (arguments.length <= 0) {
         return this;
       } else if (arguments.length <= 1) {
-        if (_.isNumber(x.x) && _.isNumber(x.y)) {
-          this.x += x.x;
-          this.y += x.y;
-        } else {
+        if (_.isNumber(x)) {
           this.x += x;
           this.y += x;
+        } else if (x && _.isNumber(x.x) && _.isNumber(x.y)) {
+          this.x += x.x;
+          this.y += x.y;
         }
       } else {
         this.x += x;
@@ -3440,12 +3468,12 @@ SOFTWARE.
       if (arguments.length <= 0) {
         return this;
       } else if (arguments.length <= 1) {
-        if (_.isNumber(x.x) && _.isNumber(x.y)) {
-          this.x -= x.x;
-          this.y -= x.y;
-        } else {
+        if (_.isNumber(x)) {
           this.x -= x;
           this.y -= x;
+        } else if (x && _.isNumber(x.x) && _.isNumber(x.y)) {
+          this.x -= x.x;
+          this.y -= x.y;
         }
       } else {
         this.x -= x;
@@ -3509,12 +3537,12 @@ SOFTWARE.
       if (arguments.length <= 0) {
         return this;
       } else if (arguments.length <= 1) {
-        if (_.isNumber(x.x) && _.isNumber(x.y)) {
-          this.x *= x.x;
-          this.y *= x.y;
-        } else {
+        if (_.isNumber(x)) {
           this.x *= x;
           this.y *= x;
+        } else if (x && _.isNumber(x.x) && _.isNumber(x.y)) {
+          this.x *= x.x;
+          this.y *= x.y;
         }
       } else {
         this.x *= x;
@@ -3533,10 +3561,12 @@ SOFTWARE.
 
     /**
      * @name Two.Vector#multiplyScalar
-     * @borrows Two.Vector#multiply as Two.Vector#multiplyScalar
+     * @function
+     * @param {Number} s - The scalar to multiply by.
+     * @description Mulitiply the vector by a single number. Shorthand to call {@link Two.Vector#multiply} directly.
      */
     multiplyScalar: function(s) {
-      return this.multiply.apply(this, arguments);
+      return this.multiply(s);
     },
 
     /**
@@ -3570,12 +3600,12 @@ SOFTWARE.
       if (arguments.length <= 0) {
         return this;
       } else if (arguments.length <= 1) {
-        if (_.isNumber(x.x) && _.isNumber(x.y)) {
-          this.x /= x.x;
-          this.y /= x.y;
-        } else {
+        if (_.isNumber(x)) {
           this.x /= x;
           this.y /= x;
+        } else if (x && _.isNumber(x.x) && _.isNumber(x.y)) {
+          this.x /= x.x;
+          this.y /= x.y;
         }
       } else {
         this.x /= x;
@@ -3600,70 +3630,159 @@ SOFTWARE.
 
     /**
      * @name Two.Vector#divideScalar
-     * @borrows Two.Vector#divide as Two.Vector#divideScalar
+     * @function
+     * @param {Number} s - The scalar to divide by.
+     * @description Divide the vector by a single number. Shorthand to call {@link Two.Vector#divide} directly.
      */
     divideScalar: function(s) {
-      return this.divide.apply(this, arguments);
+      return this.divide(s);
     },
 
+    /**
+     * @name Two.Vector#negate
+     * @function
+     * @description Invert each component's sign value.
+     */
     negate: function() {
       return this.multiply(-1);
     },
 
+    /**
+     * @name Two.Vector#negate
+     * @function
+     * @return {Number}
+     * @description Get the [dot product]{@link https://en.wikipedia.org/wiki/Dot_product} of the vector.
+     */
     dot: function(v) {
       return this.x * v.x + this.y * v.y;
     },
 
-    lengthSquared: function() {
-      return this.x * this.x + this.y * this.y;
-    },
-
+    /**
+     * @name Two.Vector#length
+     * @function
+     * @return {Number}
+     * @description Get the length of a vector.
+     */
     length: function() {
       return Math.sqrt(this.lengthSquared());
     },
 
+    /**
+     * @name Two.Vector#lengthSquared
+     * @function
+     * @return {Number}
+     * @description Get the length of the vector to the power of two. Widely used as less expensive than {@link Two.Vector#length}, because it isn't square-rooting any numbers.
+     */
+    lengthSquared: function() {
+      return this.x * this.x + this.y * this.y;
+    },
+
+    /**
+     * @name Two.Vector#normalize
+     * @function
+     * @description Normalize the vector from negative one to one.
+     */
     normalize: function() {
       return this.divideScalar(this.length());
     },
 
+    /**
+     * @name Two.Vector#distanceTo
+     * @function
+     * @return {Number}
+     * @description Get the distance between two vectors.
+     */
     distanceTo: function(v) {
       return Math.sqrt(this.distanceToSquared(v));
     },
 
+    /**
+     * @name Two.Vector#distanceToSquared
+     * @function
+     * @return {Number}
+     * @description Get the distance between two vectors to the power of two. Widely used as less expensive than {@link Two.Vector#distanceTo}, because it isn't square-rooting any numbers.
+     */
     distanceToSquared: function(v) {
       var dx = this.x - v.x,
           dy = this.y - v.y;
       return dx * dx + dy * dy;
     },
 
+    /**
+     * @name Two.Vector#setLength
+     * @function
+     * @param {Number} l - length to set vector to.
+     * @description Set the length of a vector.
+     */
     setLength: function(l) {
       return this.normalize().multiplyScalar(l);
     },
 
+    /**
+     * @name Two.Vector#equals
+     * @function
+     * @param {Two.Vector} v - The vector to compare against.
+     * @param {Number} [eps=0.0001] - An options epsilon for precision.
+     * @return {Boolean}
+     * @description Qualify if one vector roughly equal another. With a margin of error defined by epsilon.
+     */
     equals: function(v, eps) {
       eps = (typeof eps === 'undefined') ?  0.0001 : eps;
       return (this.distanceTo(v) < eps);
     },
 
+    /**
+     * @name Two.Vector#lerp
+     * @function
+     * @param {Two.Vector} v - The destination vector to step towards.
+     * @param {Number} t - The zero to one value of how close the current vector gets to the destination vector.
+     * @description Linear interpolate one vector to another by an amount `t` defined as a zero to one number.
+     * @see [Matt DesLauriers]{@link https://twitter.com/mattdesl/status/1031305279227478016} has a good thread about this.
+     */
     lerp: function(v, t) {
       var x = (v.x - this.x) * t + this.x;
       var y = (v.y - this.y) * t + this.y;
       return this.set(x, y);
     },
 
+    /**
+     * @name Two.Vector#isZero
+     * @function
+     * @param {Number} [eps=0.0001] - Optional precision amount to check against.
+     * @return {Boolean}
+     * @description Check to see if vector is roughly zero, based on the `epsilon` precision value.
+     */
     isZero: function(eps) {
       eps = (typeof eps === 'undefined') ?  0.0001 : eps;
       return (this.length() < eps);
     },
 
+    /**
+     * @name Two.Vector#toString
+     * @function
+     * @return {String}
+     * @description Return a comma-separated string of x, y value. Great for storing in a database.
+     */
     toString: function() {
       return this.x + ', ' + this.y;
     },
 
+    /**
+     * @name Two.Vector#toObject
+     * @function
+     * @return {Object}
+     * @description Return a JSON compatible plain object that represents the vector.
+     */
     toObject: function() {
       return { x: this.x, y: this.y };
     },
 
+    /**
+     * @name Two.Vector#rotate
+     * @function
+     * @param {Radians} radians - The amoun to rotate the vector by.
+     * @description Rotate a vector.
+     */
     rotate: function(radians) {
       var cos = Math.cos(radians);
       var sin = Math.sin(radians);
@@ -3674,6 +3793,11 @@ SOFTWARE.
 
   });
 
+  // The same set of prototypical functions, but using the underlying
+  // getter or setter for `x` and `y` values. This set of functions
+  // is used instead of the previously documented ones above when
+  // Two.Vector#bind is invoked and there is event dispatching processed
+  // on x / y property changes.
   var BoundProto = {
 
     constructor: Vector,
@@ -3704,12 +3828,12 @@ SOFTWARE.
       if (arguments.length <= 0) {
         return this;
       } else if (arguments.length <= 1) {
-        if (_.isNumber(x.x) && _.isNumber(x.y)) {
-          this._x += x.x;
-          this._y += x.y;
-        } else {
+        if (_.isNumber(x)) {
           this._x += x;
           this._y += x;
+        }  else if (x && _.isNumber(x.x) && _.isNumber(x.y)) {
+          this._x += x.x;
+          this._y += x.y;
         }
       } else {
         this._x += x;
@@ -3722,12 +3846,12 @@ SOFTWARE.
       if (arguments.length <= 0) {
         return this;
       } else if (arguments.length <= 1) {
-        if (_.isNumber(x.x) && _.isNumber(x.y)) {
-          this._x -= x.x;
-          this._y -= x.y;
-        } else {
+        if (_.isNumber(x)) {
           this._x -= x;
           this._y -= x;
+        } else if (x && _.isNumber(x.x) && _.isNumber(x.y)) {
+          this._x -= x.x;
+          this._y -= x.y;
         }
       } else {
         this._x -= x;
@@ -3740,12 +3864,12 @@ SOFTWARE.
       if (arguments.length <= 0) {
         return this;
       } else if (arguments.length <= 1) {
-        if (_.isNumber(x.x) && _.isNumber(x.y)) {
-          this._x *= x.x;
-          this._y *= x.y;
-        } else {
+        if (_.isNumber(x)) {
           this._x *= x;
           this._y *= x;
+        } else if (x && _.isNumber(x.x) && _.isNumber(x.y)) {
+          this._x *= x.x;
+          this._y *= x.y;
         }
       } else {
         this._x *= x;
@@ -3758,12 +3882,12 @@ SOFTWARE.
       if (arguments.length <= 0) {
         return this;
       } else if (arguments.length <= 1) {
-        if (_.isNumber(x.x) && _.isNumber(x.y)) {
-          this._x /= x.x;
-          this._y /= x.y;
-        } else {
+        if (_.isNumber(x)) {
           this._x /= x;
           this._y /= x;
+        } else if (x && _.isNumber(x.x) && _.isNumber(x.y)) {
+          this._x /= x.x;
+          this._y /= x.y;
         }
       } else {
         this._x /= x;
@@ -3851,16 +3975,17 @@ SOFTWARE.
   /**
    * @class
    * @name Two.Anchor
-   * @param {Number} [x=0]
-   * @param {Number} [y=0]
-   * @param {Number} [ux=0]
-   * @param {Number} [uy=0]
-   * @param {Number} [vx=0]
-   * @param {Number} [vy=0]
-   * @param {String} [command=Two.Commands.move]
-   * @description An object that holds 3 `Two.Vector`s, the anchor point and its corresponding handles: `left` and `right`.
+   * @param {Number} [x=0] - The x position of the root anchor point.
+   * @param {Number} [y=0] - The y position of the root anchor point.
+   * @param {Number} [lx=0] - The x position of the left handle point.
+   * @param {Number} [ly=0] - The y position of the left handle point.
+   * @param {Number} [rx=0] - The x position of the right handle point.
+   * @param {Number} [ry=0] - The y position of the right handle point.
+   * @param {String} [command=Two.Commands.move] - The command to describe how to render. Applicable commands are {@link Two.Commands}
+   * @extends Two.Vector
+   * @description An object that holds 3 `Two.Vector`s, the anchor point and its corresponding handles: `left` and `right`. In order to properly describe the bezier curve about the point there is also a command property to describe what type of drawing should occur when Two.js renders the anchors.
    */
-  var Anchor = Two.Anchor = function(x, y, ux, uy, vx, vy, command) {
+  var Anchor = Two.Anchor = function(x, y, lx, ly, rx, ry, command) {
 
     Two.Vector.call(this, x, y);
 
@@ -3871,39 +3996,81 @@ SOFTWARE.
     this._command = command || commands.move;
     this._relative = true;
 
-    if (!command) {
-      return this;
+    var ilx = _.isNumber(lx);
+    var ily = _.isNumber(ly);
+    var irx = _.isNumber(rx);
+    var iry = _.isNumber(ry);
+
+    // Append the `controls` object only if control points are specified,
+    // keeping the Two.Anchor inline with a Two.Vector until it needs to
+    // evolve beyond those functions — e.g: a simple 2 component vector.
+    if (ilx || ily || irx || iry) {
+      Two.Anchor.AppendCurveProperties(this);
     }
 
-    Two.Anchor.AppendCurveProperties(this);
-
-    if (_.isNumber(ux)) {
-      this.controls.left.x = ux;
+    if (ilx) {
+      this.controls.left.x = lx;
     }
-    if (_.isNumber(uy)) {
-      this.controls.left.y = uy;
+    if (ily) {
+      this.controls.left.y = ly;
     }
-    if (_.isNumber(vx)) {
-      this.controls.right.x = vx;
+    if (irx) {
+      this.controls.right.x = rx;
     }
-    if (_.isNumber(vy)) {
-      this.controls.right.y = vy;
+    if (iry) {
+      this.controls.right.y = ry;
     }
 
   };
 
   _.extend(Two.Anchor, {
 
+    /**
+     * @name Two.Anchor.AppendCurveProperties
+     * @function
+     * @param {Two.Anchor} anchor - The instance to append the `control`object to.
+     * @description Adds the `controls` property as an object with `left` and `right` properties to access the bezier control handles that define how the curve is drawn. It also sets the `relative` property to `true` making vectors in the `controls` object relative to their corresponding root anchor point.
+     */
     AppendCurveProperties: function(anchor) {
+
       anchor.relative = true;
-      anchor.controls = {
-        left: new Two.Vector(0, 0),
-        right: new Two.Vector(0, 0)
-      };
+
+      /**
+       * @name Two.Anchor#controls
+       * @property {Object} controls
+       * @description An plain object that holds the controls handles for a {@link Two.Anchor}.
+       */
+      anchor.controls = {};
+
+      /**
+       * @name Two.Anchor#controls#left
+       * @property {Two.Vector} left
+       * @description The "left" control point to define handles on a bezier curve.
+       */
+      anchor.controls.left = new Two.Vector(0, 0);
+
+      /**
+       * @name Two.Anchor#controls#right
+       * @property {Two.Vector} right
+       * @description The "left" control point to define handles on a bezier curve.
+       */
+      anchor.controls.right = new Two.Vector(0, 0);
+
     },
 
+    /**
+     * @name Two.Anchor.MakeObservable
+     * @function
+     * @param {Object} object - The object to make observable.
+     * @description Convenience function to apply observable qualities of a `Two.Anchor` to any object. Handy if you'd like to extend the `Two.Anchor` class on a custom class.
+     */
     MakeObservable: function(object) {
 
+      /**
+       * @name Two.Anchor#command
+       * @property {Two.Commands} command
+       * @description A draw command associated with the anchor point.
+       */
       Object.defineProperty(object, 'command', {
 
         enumerable: true,
@@ -3922,6 +4089,11 @@ SOFTWARE.
 
       });
 
+      /**
+       * @name Two.Anchor#command
+       * @property {Boolean} relative
+       * @description A boolean to render control points relative to the root anchor point or in global coordinate-space to the rest of the scene.
+       */
       Object.defineProperty(object, 'relative', {
 
         enumerable: true,
@@ -3943,7 +4115,8 @@ SOFTWARE.
       _.extend(object, Two.Vector.prototype, AnchorProto);
 
       // Make it possible to bind and still have the Anchor specific
-      // inheritance from Two.Vector
+      // inheritance from Two.Vector. In this case relying on `Two.Vector`
+      // to do much of the heavy event-listener binding / unbinding.
       object.bind = object.on = function() {
         var bound = this._bound;
         Two.Vector.prototype.bind.apply(this, arguments);
@@ -3960,6 +4133,11 @@ SOFTWARE.
 
     constructor: Two.Anchor,
 
+    /**
+     * @name Two.Anchor#listen
+     * @function
+     * @description Convenience method used mainly by {@link Two.Path#vertices} to listen and propagate changes from control points up to their respective anchors and further if necessary.
+     */
     listen: function() {
 
       if (!_.isObject(this.controls)) {
@@ -3973,6 +4151,11 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.Anchor#ignore
+     * @function
+     * @description Convenience method used mainly by {@link Two.Path#vertices} to ignore changes from a specific anchor's control points.
+     */
     ignore: function() {
 
       this.controls.left.unbind(Two.Events.change, this._broadcast);
@@ -3982,6 +4165,12 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.Anchor#copy
+     * @function
+     * @param {Two.Anchor} v - The anchor to apply values to.
+     * @description Copy the properties of one {@link Two.Anchor} onto another.
+     */
     copy: function(v) {
 
       this.x = v.x;
@@ -4006,6 +4195,12 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.Anchor#clone
+     * @function
+     * @returns {Two.Anchor}
+     * @description Create a new {@link Two.Anchor}, set all its values to the current instance and return it for use.
+     */
     clone: function() {
 
       var controls = this.controls;
@@ -4024,6 +4219,12 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.Anchor#toObject
+     * @function
+     * @returns {Object} - An object with properties filled out to mirror {@link Two.Anchor}.
+     * @description Create a JSON compatible plain object of the current instance. Intended for use with storing values in a database.
+     */
     toObject: function() {
       var o = {
         x: this.x,
@@ -4044,12 +4245,19 @@ SOFTWARE.
       return o;
     },
 
+    /**
+     * @name Two.Anchor#toString
+     * @function
+     * @returns {String} - A String with comma-separated values reflecting the various values on the current instance.
+     * @description Create a string form of the current instance. Intended for use with storing values in a database. This is lighter to store than the JSON compatible {@link Two.Anchor#toObject}.
+     */
     toString: function() {
       if (!this.controls) {
         return [this._x, this._y].join(', ');
       }
       return [this._x, this._y, this.controls.left.x, this.controls.left.y,
-        this.controls.right.x, this.controls.right.y].join(', ');
+        this.controls.right.x, this.controls.right.y, this._command,
+        this._relative ? 1 : 0].join(', ');
     }
 
   };
@@ -7742,7 +7950,7 @@ SOFTWARE.
           }
 
           // Create new Collection with copy of vertices
-          this._collection = new Two.Utils.Collection((vertices || []).slice(0));
+          this._collection = new Two.Utils.Collection(vertices || []);//.slice(0));
 
           // Listen for Collection changes and bind / unbind
           this._collection
@@ -7819,8 +8027,6 @@ SOFTWARE.
 
     clone: function(parent) {
 
-      parent = parent || this.parent;
-
       var points = _.map(this.vertices, function(v) {
         return v.clone();
       });
@@ -7839,7 +8045,7 @@ SOFTWARE.
         parent.add(clone);
       }
 
-      return clone;
+      return clone._update();
 
     },
 
@@ -7855,9 +8061,9 @@ SOFTWARE.
         result[k] = this[k];
       }, this);
 
-      result.translation = this.translation.toObject;
+      result.translation = this.translation.toObject();
       result.rotation = this.rotation;
-      result.scale = this.scale;
+      result.scale = this.scale instanceof Two.Vector ? this.scale.toObject() : this.scale;
 
       return result;
 
@@ -8609,9 +8815,11 @@ SOFTWARE.
 
     this.width = width;
     this.height = height;
-    this._update();
 
+    this.origin = new Two.Vector();
     this.translation.set(x, y);
+
+    this._update();
 
   };
 
@@ -8619,9 +8827,26 @@ SOFTWARE.
 
     Properties: ['width', 'height'],
 
-    MakeObservable: function(obj) {
-      Path.MakeObservable(obj);
-      _.each(Rectangle.Properties, Two.Utils.defineProperty, obj);
+    MakeObservable: function(object) {
+
+      Path.MakeObservable(object);
+      _.each(Rectangle.Properties, Two.Utils.defineProperty, object);
+
+      Object.defineProperty(object, 'origin', {
+        enumerable: true,
+        get: function() {
+          return this._origin;
+        },
+        set: function(v) {
+          if (this._origin) {
+            this._origin.unbind(Two.Events.change, this._renderer.flagVertices);
+          }
+          this._origin = v;
+          this._origin.bind(Two.Events.change, this._renderer.flagVertices);
+          this._renderer.flagVertices();
+        }
+      });
+
     }
 
   });
@@ -8634,6 +8859,8 @@ SOFTWARE.
     _flagWidth: 0,
     _flagHeight: 0,
 
+    _origin: null,
+
     constructor: Rectangle,
 
     _update: function() {
@@ -8643,13 +8870,13 @@ SOFTWARE.
         var xr = this._width / 2;
         var yr = this._height / 2;
 
-        this.vertices[0].set(-xr, -yr).command = Two.Commands.move;
-        this.vertices[1].set(xr, -yr).command = Two.Commands.line;
-        this.vertices[2].set(xr, yr).command = Two.Commands.line;
-        this.vertices[3].set(-xr, yr).command = Two.Commands.line;
+        this.vertices[0].set(-xr, -yr).add(this._origin).command = Two.Commands.move;
+        this.vertices[1].set(xr, -yr).add(this._origin).command = Two.Commands.line;
+        this.vertices[2].set(xr, yr).add(this._origin).command = Two.Commands.line;
+        this.vertices[3].set(-xr, yr).add(this._origin).command = Two.Commands.line;
         // FYI: Two.Sprite and Two.ImageSequence have 4 verts
         if (this.vertices[4]) {
-          this.vertices[4].set(-xr, -yr).command = Two.Commands.line;
+          this.vertices[4].set(-xr, -yr).add(this._origin).command = Two.Commands.line;
         }
 
       }
@@ -8670,8 +8897,6 @@ SOFTWARE.
     },
 
     clone: function(parent) {
-
-      parent = parent || this.parent;
 
       var clone = new Rectangle(0, 0, this.width, this.height);
       clone.translation.copy(this.translation);
@@ -8798,8 +9023,6 @@ SOFTWARE.
 
     clone: function(parent) {
 
-      parent = parent || this.parent;
-
       var resolution = this.vertices.length;
       var clone = new Ellipse(0, 0, this.width, this.height, resolution);
 
@@ -8918,8 +9141,6 @@ SOFTWARE.
     },
 
     clone: function(parent) {
-
-      parent = parent || this.parent;
 
       var clone = new Circle(0, 0, this.radius, this.vertices.length);
       clone.translation.copy(this.translation);
@@ -9040,8 +9261,6 @@ SOFTWARE.
     },
 
     clone: function(parent) {
-
-      parent = parent || this.parent;
 
       var clone = new Polygon(0, 0, this.radius, this.sides);
       clone.translation.copy(this.translation);
@@ -9276,8 +9495,6 @@ SOFTWARE.
 
     clone: function(parent) {
 
-      parent = parent || this.parent;
-
       var ir = this.innerRadius;
       var or = this.outerradius;
       var sa = this.startAngle;
@@ -9420,8 +9637,6 @@ SOFTWARE.
     },
 
     clone: function(parent) {
-
-      parent = parent || this.parent;
 
       var ir = this.innerRadius;
       var or = this.outerRadius;
@@ -9643,8 +9858,6 @@ SOFTWARE.
     },
 
     clone: function(parent) {
-
-      parent = parent || this.parent;
 
       var width = this.width;
       var height = this.height;
@@ -9874,8 +10087,6 @@ SOFTWARE.
     },
 
     clone: function(parent) {
-
-      var parent = parent || this.parent;
 
       var clone = new Two.Text(this.value);
       clone.translation.copy(this.translation);
@@ -10224,8 +10435,6 @@ SOFTWARE.
 
     clone: function(parent) {
 
-      parent = parent || this.parent;
-
       var stops = _.map(this.stops, function(s) {
         return s.clone();
       });
@@ -10334,8 +10543,6 @@ SOFTWARE.
     constructor: LinearGradient,
 
     clone: function(parent) {
-
-      parent = parent || this.parent;
 
       var stops = _.map(this.stops, function(stop) {
         return stop.clone();
@@ -10460,8 +10667,6 @@ SOFTWARE.
     constructor: RadialGradient,
 
     clone: function(parent) {
-
-      parent = parent || this.parent;
 
       var stops = _.map(this.stops, function(stop) {
         return stop.clone();
@@ -10932,6 +11137,8 @@ SOFTWARE.
       this.texture = new Two.Texture(path);
     }
 
+    this.origin = new Two.Vector();
+
     this._update();
     this.translation.set(ox || 0, oy || 0);
 
@@ -10985,6 +11192,7 @@ SOFTWARE.
     _rows: 1,
     _frameRate: 0,
     _index: 0,
+    _origin: null,
 
     constructor: Sprite,
 
@@ -11033,8 +11241,6 @@ SOFTWARE.
     },
 
     clone: function(parent) {
-
-      parent = parent || this.parent;
 
       var clone = new Sprite(
         this.texture, this.translation.x, this.translation.y,
@@ -11182,6 +11388,7 @@ SOFTWARE.
     this.noFill();
 
     this.textures = _.map(paths, ImageSequence.GenerateTexture, this);
+    this.origin = new Two.Vector();
 
     this._update();
     this.translation.set(ox || 0, oy || 0);
@@ -11301,6 +11508,7 @@ SOFTWARE.
     // Exposed through getter-setter
     _textures: null,
     _frameRate: 0,
+    _origin: null,
 
     constructor: ImageSequence,
 
@@ -11350,22 +11558,20 @@ SOFTWARE.
 
     clone: function(parent) {
 
-      parent = parent || this.parent;
-
       var clone = new ImageSequence(this.textures, this.translation.x,
         this.translation.y, this.frameRate)
 
-        clone._loop = this._loop;
+      clone._loop = this._loop;
 
-        if (this._playing) {
-          clone.play();
-        }
+      if (this._playing) {
+        clone.play();
+      }
 
-        if (parent) {
-          parent.add(clone);
-        }
+      if (parent) {
+        parent.add(clone);
+      }
 
-        return clone;
+      return clone;
 
     },
 
@@ -11789,8 +11995,6 @@ SOFTWARE.
     //  */
     clone: function(parent) {
 
-      parent = parent || this.parent;
-
       var group = new Group();
       var children = _.map(this.children, function(child) {
         return child.clone(group);
@@ -11828,7 +12032,7 @@ SOFTWARE.
         children: [],
         translation: this.translation.toObject(),
         rotation: this.rotation,
-        scale: this.scale,
+        scale: this.scale instanceof Two.Vector ? this.scale.toObject() : this.scale,
         opacity: this.opacity,
         className: this.className,
         mask: (this.mask ? this.mask.toObject() : null)
@@ -11852,7 +12056,7 @@ SOFTWARE.
        corner = { x: rect.left, y: rect.top };
 
       this.children.forEach(function(child) {
-        child.translation.subSelf(corner);
+        child.translation.sub(corner);
       });
 
       return this;
@@ -11874,7 +12078,7 @@ SOFTWARE.
 
       this.children.forEach(function(child) {
         if (child.isShape) {
-          child.translation.subSelf(rect.centroid);
+          child.translation.sub(rect.centroid);
         }
       });
 
@@ -12022,14 +12226,14 @@ SOFTWARE.
         var child = this.children[i];
 
         if (!child.visible || regex.test(child._renderer.type)) {
-          break;
+          continue;
         }
 
         rect = child.getBoundingClientRect(shallow);
 
         if (!_.isNumber(rect.top)   || !_.isNumber(rect.left)   ||
             !_.isNumber(rect.right) || !_.isNumber(rect.bottom)) {
-          break;
+          continue;
         }
 
         top = min(rect.top, top);
