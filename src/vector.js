@@ -489,7 +489,7 @@
     /**
      * @name Two.Vector#negate
      * @function
-     * @return {Number}
+     * @returns {Number}
      * @description Get the [dot product]{@link https://en.wikipedia.org/wiki/Dot_product} of the vector.
      */
     dot: function(v) {
@@ -499,7 +499,7 @@
     /**
      * @name Two.Vector#length
      * @function
-     * @return {Number}
+     * @returns {Number}
      * @description Get the length of a vector.
      */
     length: function() {
@@ -509,7 +509,7 @@
     /**
      * @name Two.Vector#lengthSquared
      * @function
-     * @return {Number}
+     * @returns {Number}
      * @description Get the length of the vector to the power of two. Widely used as less expensive than {@link Two.Vector#length}, because it isn't square-rooting any numbers.
      */
     lengthSquared: function() {
@@ -528,7 +528,7 @@
     /**
      * @name Two.Vector#distanceTo
      * @function
-     * @return {Number}
+     * @returns {Number}
      * @description Get the distance between two vectors.
      */
     distanceTo: function(v) {
@@ -538,7 +538,7 @@
     /**
      * @name Two.Vector#distanceToSquared
      * @function
-     * @return {Number}
+     * @returns {Number}
      * @description Get the distance between two vectors to the power of two. Widely used as less expensive than {@link Two.Vector#distanceTo}, because it isn't square-rooting any numbers.
      */
     distanceToSquared: function(v) {
@@ -562,7 +562,7 @@
      * @function
      * @param {Two.Vector} v - The vector to compare against.
      * @param {Number} [eps=0.0001] - An options epsilon for precision.
-     * @return {Boolean}
+     * @returns {Boolean}
      * @description Qualify if one vector roughly equal another. With a margin of error defined by epsilon.
      */
     equals: function(v, eps) {
@@ -588,7 +588,7 @@
      * @name Two.Vector#isZero
      * @function
      * @param {Number} [eps=0.0001] - Optional precision amount to check against.
-     * @return {Boolean}
+     * @returns {Boolean}
      * @description Check to see if vector is roughly zero, based on the `epsilon` precision value.
      */
     isZero: function(eps) {
@@ -599,7 +599,7 @@
     /**
      * @name Two.Vector#toString
      * @function
-     * @return {String}
+     * @returns {String}
      * @description Return a comma-separated string of x, y value. Great for storing in a database.
      */
     toString: function() {
@@ -609,7 +609,7 @@
     /**
      * @name Two.Vector#toObject
      * @function
-     * @return {Object}
+     * @returns {Object}
      * @description Return a JSON compatible plain object that represents the vector.
      */
     toObject: function() {

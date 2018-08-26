@@ -471,7 +471,7 @@
     /**
      * @function Two.Path#getBoundingClientRect
      * @param {Boolean} [shallow=false] - Describes whether to calculate off local matrix or world matrix.
-     * @return {Object} - Returns object with top, left, right, bottom, width, height attributes.
+     * @returns {Object} - Returns object with top, left, right, bottom, width, height attributes.
      * @description Return an object with top, left, right, bottom, width, and height parameters of the group.
      */
     getBoundingClientRect: function(shallow) {

@@ -4,27 +4,29 @@
 
   var cos = Math.cos, sin = Math.sin, tan = Math.tan;
   var _ = Two.Utils, fix = _.toFixed;
+  var array = [];
 
   /**
-   * @class
    * @name Two.Matrix
+   * @class
+   * @param {Number} [a=1] - The value for element at the first column and first row.
+   * @param {Number} [b=0] - The value for element at the second column and first row.
+   * @param {Number} [c=0] - The value for element at the third column and first row.
+   * @param {Number} [d=0] - The value for element at the first column and second row.
+   * @param {Number} [e=1] - The value for element at the second column and second row.
+   * @param {Number} [f=0] - The value for element at the third column and second row.
+   * @param {Number} [g=0] - The value for element at the first column and third row.
+   * @param {Number} [h=0] - The value for element at the second column and third row.
+   * @param {Number} [i=1] - The value for element at the third column and third row.
+   * @description A class to store 3 x 3 transformation matrix information. In addition to storing data `Two.Matrix` has suped up methods for commonplace mathematical operations.
+   * @nota-bene Order is based on how to construct transformation strings for the browser.
    */
-
-  // /**
-  //  * Two.Matrix contains an array of elements that represent
-  //  * the two dimensional 3 x 3 matrix as illustrated below:
-  //  *
-  //  * =====
-  //  * a b c
-  //  * d e f
-  //  * g h i  // this row is not really used in 2d transformations
-  //  * =====
-  //  *
-  //  * String order is for transform strings: a, d, b, e, c, f
-  //  */
-
   var Matrix = Two.Matrix = function(a, b, c, d, e, f) {
 
+    /**
+     * @name Two.Matrix#elements
+     * @property {Array} - The underlying data stored as an array.
+     */
     this.elements = new Two.Array(9);
 
     var elements = a;
@@ -43,15 +45,25 @@
 
   _.extend(Matrix, {
 
+    /**
+     * @name Two.Matrix.Identity
+     * @property {Array} - A stored reference to the default value of a 3 x 3 matrix.
+     */
     Identity: [
       1, 0, 0,
       0, 1, 0,
       0, 0, 1
     ],
 
-    // /**
-    //  * Multiply two matrix 3x3 arrays
-    //  */
+    /**
+     * @name Two.Matrix.Multiply
+     * @function
+     * @param {Two.Matrix} A
+     * @param {Two.Matrix} B
+     * @param {Two.Matrix} [C] - An optional matrix to apply the multiplication to.
+     * @returns {Two.Matrix} - If an optional `C` matrix isn't passed then a new one is created and returned.
+     * @description Multiply two matrices together and return the result.
+     */
     Multiply: function(A, B, C) {
 
       if (B.length <= 3) { // Multiply Vector
@@ -103,11 +115,34 @@
 
     constructor: Matrix,
 
-    // /**
-    //  * Takes an array of elements or the arguments list itself to
-    //  * set and update the current matrix's elements. Only updates
-    //  * specified values.
-    //  */
+    /**
+     * @name Two.Matrix#manual
+     * @property {Boolean} - Determines whether Two.js automatically calculates the values for the matrix or if the developer intends to manage the matrix.
+     * @nota-bene - Setting to `true` nullifies {@link Two.Shape#translation}, {@link Two.Shape#rotation}, and {@link Two.Shape#scale}.
+     */
+    manual: false,
+
+    /**
+     * @name Two.Matrix#set
+     * @function
+     * @param {Number} a - The value for element at the first column and first row.
+     * @param {Number} b - The value for element at the second column and first row.
+     * @param {Number} c - The value for element at the third column and first row.
+     * @param {Number} d - The value for element at the first column and second row.
+     * @param {Number} e - The value for element at the second column and second row.
+     * @param {Number} f - The value for element at the third column and second row.
+     * @param {Number} g - The value for element at the first column and third row.
+     * @param {Number} h - The value for element at the second column and third row.
+     * @param {Number} i - The value for element at the third column and third row.
+     * @description Set an array of values onto the matrix. Order described in {@link Two.Matrix}.
+     */
+
+     /**
+      * @name Two.Matrix#set
+      * @function
+      * @param {Array} a - The array of elements to apply.
+      * @description Set an array of values onto the matrix. Order described in {@link Two.Matrix}.
+      */
     set: function(a) {
 
       var elements = a;
@@ -129,9 +164,11 @@
 
     },
 
-    // /**
-    //  * Turn matrix to identity, like resetting.
-    //  */
+    /**
+     * @name Two.Matrix#identity
+     * @function
+     * @description Turn matrix to the identity, like resetting.
+     */
     identity: function() {
 
       this.elements[0] = Matrix.Identity[0];
@@ -148,9 +185,36 @@
 
     },
 
-    // /**
-    //  * Multiply scalar or multiply by another matrix.
-    //  */
+    /**
+     * @name Two.Matrix.multiply
+     * @function
+     * @param {Number} a - The scalar to be multiplied.
+     * @description Multiply all components of the matrix against a single scalar value.
+     */
+
+    /**
+     * @name Two.Matrix.multiply
+     * @function
+     * @param {Number} a - The x component to be multiplied.
+     * @param {Number} b - The y component to be multiplied.
+     * @param {Number} c - The z component to be multiplied.
+     * @description Multiply all components of a matrix against a 3 component vector.
+     */
+
+    /**
+     * @name Two.Matrix.multiply
+     * @function
+     * @param {Number} a - The value at the first column and first row of the matrix to be multiplied.
+     * @param {Number} b - The value at the second column and first row of the matrix to be multiplied.
+     * @param {Number} c - The value at the third column and first row of the matrix to be multiplied.
+     * @param {Number} d - The value at the first column and second row of the matrix to be multiplied.
+     * @param {Number} e - The value at the second column and second row of the matrix to be multiplied.
+     * @param {Number} f - The value at the third column and second row of the matrix to be multiplied.
+     * @param {Number} g - The value at the first column and third row of the matrix to be multiplied.
+     * @param {Number} h - The value at the second column and third row of the matrix to be multiplied.
+     * @param {Number} i - The value at the third column and third row of the matrix to be multiplied.
+     * @description Multiply all components of a matrix against another matrix.
+     */
     multiply: function(a, b, c, d, e, f, g, h, i) {
 
       var elements = arguments, l = elements.length;
@@ -221,6 +285,12 @@
 
     },
 
+    /**
+     * @name Two.Matrix#inverse
+     * @function
+     * @param {Two.Matrix} [out] - The optional matrix to apply the inversion to.
+     * @description Return an inverted version of the matrix. If no optional one is passed a new matrix is created and returned.
+     */
     inverse: function(out) {
 
       var a = this.elements;
@@ -257,9 +327,20 @@
 
     },
 
-    // /**
-    //  * Set a scalar onto the matrix.
-    //  */
+    /**
+     * @name Two.Matrix#scale
+     * @function
+     * @param {Number} scale - The one dimensional scale to apply to the matrix.
+     * @description Uniformly scale the transformation matrix.
+     */
+
+    /**
+     * @name Two.Matrix#scale
+     * @function
+     * @param {Number} sx - The horizontal scale factor.
+     * @param {Number} sy - The vertical scale factor
+     * @description Scale the transformation matrix in two dimensions.
+     */
     scale: function(sx, sy) {
 
       var l = arguments.length;
@@ -271,9 +352,12 @@
 
     },
 
-    // /**
-    //  * Rotate the matrix.
-    //  */
+    /**
+     * @name Two.Matrix#rotate
+     * @function
+     * @param {Radians} radians - The amount to rotate in radians.
+     * @description Rotate the matrix.
+     */
     rotate: function(radians) {
 
       var c = cos(radians);
@@ -283,17 +367,24 @@
 
     },
 
-    // /**
-    //  * Translate the matrix.
-    //  */
+    /**
+     * @name Two.Matrix#translate
+     * @function
+     * @param {Number} x - The horizontal translation value to apply.
+     * @param {Number} y - The vertical translation value to apply.
+     * @description Translate the matrix.
+     */
     translate: function(x, y) {
 
       return this.multiply(1, 0, x, 0, 1, y, 0, 0, 1);
 
     },
 
-    /*
-     * Skew the matrix by an angle in the x axis direction.
+    /**
+     * @name Two.Matrix#skewX
+     * @function
+     * @param {Radians} radians - The amount to skew in radians.
+     * @description Skew the matrix by an angle in the x axis direction.
      */
     skewX: function(radians) {
 
@@ -303,8 +394,11 @@
 
     },
 
-    /*
-     * Skew the matrix by an angle in the y axis direction.
+    /**
+     * @name Two.Matrix#skewY
+     * @function
+     * @param {Radians} radians - The amount to skew in radians.
+     * @description Skew the matrix by an angle in the y axis direction.
      */
     skewY: function(radians) {
 
@@ -314,21 +408,29 @@
 
     },
 
-    // /**
-    //  * Create a transform string to be used with rendering apis.
-    //  */
+    /**
+     * @name Two.Matrix#toString
+     * @function
+     * @param {Boolean} [fullMatrix=false] - Return the full 9 elements of the matrix or just 6 for 2D transformations.
+     * @returns {String} - The transformation matrix as a 6 component string separated by spaces.
+     * @description Create a transform string. Used for the Two.js rendering APIs.
+     */
     toString: function(fullMatrix) {
-      var temp = [];
 
-      this.toArray(fullMatrix, temp);
+      array.length = 0;
+      this.toArray(fullMatrix, array);
 
-      return temp.join(' ');
+      return array.join(' ');
 
     },
 
-    // /**
-    //  * Create a transform array to be used with rendering apis.
-    //  */
+    /**
+     * @name Two.Matrix#toArray
+     * @function
+     * @param {Boolean} [fullMatrix=false] - Return the full 9 elements of the matrix or just 6 for 2D transformations.
+     * @param {Array} [output] - An array to apply the values to.
+     * @description Create a transform array. Used for the Two.js rendering APIs.
+     */
     toArray: function(fullMatrix, output) {
 
      var elements = this.elements;
@@ -381,9 +483,11 @@
 
     },
 
-    // /**
-    //  * Clone the current matrix.
-    //  */
+    /**
+     * @name Two.Matrix#clone
+     * @function
+     * @description Clone the current matrix.
+     */
     clone: function() {
       var a, b, c, d, e, f, g, h, i;
 
@@ -397,7 +501,10 @@
       h = this.elements[7];
       i = this.elements[8];
 
-      return new Two.Matrix(a, b, c, d, e, f, g, h, i);
+      var matrix = new Two.Matrix(a, b, c, d, e, f, g, h, i);
+      matrix.manual = this.manual;
+
+      return matrix;
 
     }
 
