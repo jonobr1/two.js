@@ -469,7 +469,7 @@
      * @name Two.Resolution
      * @property {Number} - Default amount of vertices to be used for interpreting Arcs and ArcSegments.
      */
-    Resolution: 8,
+    Resolution: 12,
 
     /**
      * @name Two.Instances
@@ -1425,13 +1425,12 @@
 
               case 'a':
 
-                // throw new Two.Utils.Error('not yet able to interpret Elliptical Arcs.');
                 x1 = coord.x;
                 y1 = coord.y;
 
                 var rx = parseFloat(coords[0]);
                 var ry = parseFloat(coords[1]);
-                var xAxisRotation = parseFloat(coords[2]) * Math.PI / 180;
+                var xAxisRotation = parseFloat(coords[2]) * PI / 180;
                 var largeArcFlag = parseFloat(coords[3]);
                 var sweepFlag = parseFloat(coords[4]);
 
@@ -1450,8 +1449,8 @@
                 var my = (y4 - y1) / 2;
 
                 // Calculate x1' y1' F.6.5.1
-                var _x = mx * Math.cos(xAxisRotation) + my * Math.sin(xAxisRotation);
-                var _y = - mx * Math.sin(xAxisRotation) + my * Math.cos(xAxisRotation);
+                var _x = mx * cos(xAxisRotation) + my * sin(xAxisRotation);
+                var _y = - mx * sin(xAxisRotation) + my * cos(xAxisRotation);
 
                 var rx2 = rx * rx;
                 var ry2 = ry * ry;
@@ -1461,11 +1460,12 @@
                 // adjust radii
                 var l = _x2 / rx2 + _y2 / ry2;
                 if (l > 1) {
-                  rx *= Math.sqrt(l);
-                  ry *= Math.sqrt(l);
+                  rx *= sqrt(l);
+                  ry *= sqrt(l);
                 }
 
-                var amp = Math.sqrt((rx2 * ry2 - rx2 * _y2 - ry2 * _x2) / (rx2 * _y2 + ry2 * _x2));
+                var amp = sqrt(
+                  (rx2 * ry2 - rx2 * _y2 - ry2 * _x2) / (rx2 * _y2 + ry2 * _x2));
 
                 if (_.isNaN(amp)) {
                   amp = 0;
@@ -1478,15 +1478,23 @@
                 var _cy = - amp * ry * _x / rx;
 
                 // Calculate cx cy F.6.5.3
-                var cx = _cx * Math.cos(xAxisRotation) - _cy * Math.sin(xAxisRotation) + (x1 + x4) / 2;
-                var cy = _cx * Math.sin(xAxisRotation) + _cy * Math.cos(xAxisRotation) + (y1 + y4) / 2;
+                var cx = _cx * cos(xAxisRotation) - _cy * sin(xAxisRotation)
+                  + (x1 + x4) / 2;
+                var cy = _cx * sin(xAxisRotation) + _cy * cos(xAxisRotation)
+                  + (y1 + y4) / 2;
 
                 // vector magnitude
-                var m = function(v) { return Math.sqrt(Math.pow(v[0], 2) + Math.pow(v[1], 2)); }
+                var m = function(v) {
+                  return sqrt(pow(v[0], 2) + pow(v[1], 2));
+                };
                 // ratio between two vectors
-                var r = function(u, v) { return (u[0] * v[0] + u[1] * v[1]) / (m(u) * m(v)) }
+                var r = function(u, v) {
+                  return (u[0] * v[0] + u[1] * v[1]) / (m(u) * m(v));
+                };
                 // angle between two vectors
-                var a = function(u, v) { return (u[0] * v[1] < u[1] * v[0] ? - 1 : 1) * Math.acos(r(u,v)); }
+                var a = function(u, v) {
+                  return (u[0] * v[1] < u[1] * v[0] ? - 1 : 1) * acos(r(u,v));
+                };
 
                 // Calculate theta1 and delta theta F.6.5.4 + F.6.5.5
                 var t1 = a([1, 0], [(_x - _cx) / rx, (_y - _cy) / ry]);
@@ -1494,19 +1502,20 @@
                 var v = [( - _x - _cx) / rx, ( - _y - _cy) / ry];
                 var dt = a(u, v);
 
-                if (r(u, v) <= -1) dt = Math.PI;
+                if (r(u, v) <= -1) dt = PI;
                 if (r(u, v) >= 1) dt = 0;
 
                 // F.6.5.6
                 if (largeArcFlag)  {
-                  dt = mod(dt, Math.PI * 2);
+                  dt = mod(dt, PI * 2);
                 }
 
                 if (sweepFlag && dt > 0) {
-                  dt -= Math.PI * 2;
+                  dt -= PI * 2;
                 }
 
                 var length = Two.Resolution;
+                var pa, pb, pc;
 
                 // Save a projection of our rotation and translation to apply
                 // to the set of points.
@@ -1517,15 +1526,30 @@
                 // Create a resulting array of Two.Anchor's to export to the
                 // the path.
                 result = _.map(_.range(length), function(i) {
+
                   var pct = 1 - (i / (length - 1));
                   var theta = pct * dt + t1;
-                  var x = rx * Math.cos(theta);
-                  var y = ry * Math.sin(theta);
+
+                  var x = rx * cos(theta);
+                  var y = ry * sin(theta);
+
                   var projected = projection.multiply(x, y, 1);
-                  return new Two.Anchor(projected.x, projected.y, false, false, false, false, Two.Commands.line);;
+
+                  pa = pb;
+                  pb = pc;
+                  pc = new Two.Anchor(
+                    projected.x, projected.y, 0, 0, 0, 0, Two.Commands.curve);
+
+                  if (pa && pb && pc) {
+                    getControlPoints(pa, pb, pc);
+                  }
+
+                  return pc;
+
                 });
 
-                result.push(new Two.Anchor(x4, y4, false, false, false, false, Two.Commands.line));
+                result.push(
+                  new Two.Anchor(x4, y4, 0, 0, 0, 0, Two.Commands.curve));
 
                 coord = result[result.length - 1];
                 control = coord.controls.left;

@@ -461,7 +461,7 @@ SOFTWARE.
      * @name Two.Identifier
      * @property {String} - String prefix for all Two.js object's ids. This trickles down to SVG ids.
      */
-    Identifier: 'two_',
+    Identifier: 'two-',
 
     /**
      * @name Two.Events
@@ -495,7 +495,7 @@ SOFTWARE.
      * @name Two.Resolution
      * @property {Number} - Default amount of vertices to be used for interpreting Arcs and ArcSegments.
      */
-    Resolution: 8,
+    Resolution: 12,
 
     /**
      * @name Two.Instances
@@ -1451,13 +1451,12 @@ SOFTWARE.
 
               case 'a':
 
-                // throw new Two.Utils.Error('not yet able to interpret Elliptical Arcs.');
                 x1 = coord.x;
                 y1 = coord.y;
 
                 var rx = parseFloat(coords[0]);
                 var ry = parseFloat(coords[1]);
-                var xAxisRotation = parseFloat(coords[2]) * Math.PI / 180;
+                var xAxisRotation = parseFloat(coords[2]) * PI / 180;
                 var largeArcFlag = parseFloat(coords[3]);
                 var sweepFlag = parseFloat(coords[4]);
 
@@ -1476,8 +1475,8 @@ SOFTWARE.
                 var my = (y4 - y1) / 2;
 
                 // Calculate x1' y1' F.6.5.1
-                var _x = mx * Math.cos(xAxisRotation) + my * Math.sin(xAxisRotation);
-                var _y = - mx * Math.sin(xAxisRotation) + my * Math.cos(xAxisRotation);
+                var _x = mx * cos(xAxisRotation) + my * sin(xAxisRotation);
+                var _y = - mx * sin(xAxisRotation) + my * cos(xAxisRotation);
 
                 var rx2 = rx * rx;
                 var ry2 = ry * ry;
@@ -1487,11 +1486,12 @@ SOFTWARE.
                 // adjust radii
                 var l = _x2 / rx2 + _y2 / ry2;
                 if (l > 1) {
-                  rx *= Math.sqrt(l);
-                  ry *= Math.sqrt(l);
+                  rx *= sqrt(l);
+                  ry *= sqrt(l);
                 }
 
-                var amp = Math.sqrt((rx2 * ry2 - rx2 * _y2 - ry2 * _x2) / (rx2 * _y2 + ry2 * _x2));
+                var amp = sqrt(
+                  (rx2 * ry2 - rx2 * _y2 - ry2 * _x2) / (rx2 * _y2 + ry2 * _x2));
 
                 if (_.isNaN(amp)) {
                   amp = 0;
@@ -1504,15 +1504,23 @@ SOFTWARE.
                 var _cy = - amp * ry * _x / rx;
 
                 // Calculate cx cy F.6.5.3
-                var cx = _cx * Math.cos(xAxisRotation) - _cy * Math.sin(xAxisRotation) + (x1 + x4) / 2;
-                var cy = _cx * Math.sin(xAxisRotation) + _cy * Math.cos(xAxisRotation) + (y1 + y4) / 2;
+                var cx = _cx * cos(xAxisRotation) - _cy * sin(xAxisRotation)
+                  + (x1 + x4) / 2;
+                var cy = _cx * sin(xAxisRotation) + _cy * cos(xAxisRotation)
+                  + (y1 + y4) / 2;
 
                 // vector magnitude
-                var m = function(v) { return Math.sqrt(Math.pow(v[0], 2) + Math.pow(v[1], 2)); }
+                var m = function(v) {
+                  return sqrt(pow(v[0], 2) + pow(v[1], 2));
+                };
                 // ratio between two vectors
-                var r = function(u, v) { return (u[0] * v[0] + u[1] * v[1]) / (m(u) * m(v)) }
+                var r = function(u, v) {
+                  return (u[0] * v[0] + u[1] * v[1]) / (m(u) * m(v));
+                };
                 // angle between two vectors
-                var a = function(u, v) { return (u[0] * v[1] < u[1] * v[0] ? - 1 : 1) * Math.acos(r(u,v)); }
+                var a = function(u, v) {
+                  return (u[0] * v[1] < u[1] * v[0] ? - 1 : 1) * acos(r(u,v));
+                };
 
                 // Calculate theta1 and delta theta F.6.5.4 + F.6.5.5
                 var t1 = a([1, 0], [(_x - _cx) / rx, (_y - _cy) / ry]);
@@ -1520,19 +1528,20 @@ SOFTWARE.
                 var v = [( - _x - _cx) / rx, ( - _y - _cy) / ry];
                 var dt = a(u, v);
 
-                if (r(u, v) <= -1) dt = Math.PI;
+                if (r(u, v) <= -1) dt = PI;
                 if (r(u, v) >= 1) dt = 0;
 
                 // F.6.5.6
                 if (largeArcFlag)  {
-                  dt = mod(dt, Math.PI * 2);
+                  dt = mod(dt, PI * 2);
                 }
 
                 if (sweepFlag && dt > 0) {
-                  dt -= Math.PI * 2;
+                  dt -= PI * 2;
                 }
 
                 var length = Two.Resolution;
+                var pa, pb, pc;
 
                 // Save a projection of our rotation and translation to apply
                 // to the set of points.
@@ -1543,15 +1552,30 @@ SOFTWARE.
                 // Create a resulting array of Two.Anchor's to export to the
                 // the path.
                 result = _.map(_.range(length), function(i) {
+
                   var pct = 1 - (i / (length - 1));
                   var theta = pct * dt + t1;
-                  var x = rx * Math.cos(theta);
-                  var y = ry * Math.sin(theta);
+
+                  var x = rx * cos(theta);
+                  var y = ry * sin(theta);
+
                   var projected = projection.multiply(x, y, 1);
-                  return new Two.Anchor(projected.x, projected.y, false, false, false, false, Two.Commands.line);;
+
+                  pa = pb;
+                  pb = pc;
+                  pc = new Two.Anchor(
+                    projected.x, projected.y, 0, 0, 0, 0, Two.Commands.curve);
+
+                  if (pa && pb && pc) {
+                    getControlPoints(pa, pb, pc);
+                  }
+
+                  return pc;
+
                 });
 
-                result.push(new Two.Anchor(x4, y4, false, false, false, false, Two.Commands.line));
+                result.push(
+                  new Two.Anchor(x4, y4, 0, 0, 0, 0, Two.Commands.curve));
 
                 coord = result[result.length - 1];
                 control = coord.controls.left;
@@ -3650,7 +3674,7 @@ SOFTWARE.
     /**
      * @name Two.Vector#negate
      * @function
-     * @return {Number}
+     * @returns {Number}
      * @description Get the [dot product]{@link https://en.wikipedia.org/wiki/Dot_product} of the vector.
      */
     dot: function(v) {
@@ -3660,7 +3684,7 @@ SOFTWARE.
     /**
      * @name Two.Vector#length
      * @function
-     * @return {Number}
+     * @returns {Number}
      * @description Get the length of a vector.
      */
     length: function() {
@@ -3670,7 +3694,7 @@ SOFTWARE.
     /**
      * @name Two.Vector#lengthSquared
      * @function
-     * @return {Number}
+     * @returns {Number}
      * @description Get the length of the vector to the power of two. Widely used as less expensive than {@link Two.Vector#length}, because it isn't square-rooting any numbers.
      */
     lengthSquared: function() {
@@ -3689,7 +3713,7 @@ SOFTWARE.
     /**
      * @name Two.Vector#distanceTo
      * @function
-     * @return {Number}
+     * @returns {Number}
      * @description Get the distance between two vectors.
      */
     distanceTo: function(v) {
@@ -3699,7 +3723,7 @@ SOFTWARE.
     /**
      * @name Two.Vector#distanceToSquared
      * @function
-     * @return {Number}
+     * @returns {Number}
      * @description Get the distance between two vectors to the power of two. Widely used as less expensive than {@link Two.Vector#distanceTo}, because it isn't square-rooting any numbers.
      */
     distanceToSquared: function(v) {
@@ -3723,7 +3747,7 @@ SOFTWARE.
      * @function
      * @param {Two.Vector} v - The vector to compare against.
      * @param {Number} [eps=0.0001] - An options epsilon for precision.
-     * @return {Boolean}
+     * @returns {Boolean}
      * @description Qualify if one vector roughly equal another. With a margin of error defined by epsilon.
      */
     equals: function(v, eps) {
@@ -3749,7 +3773,7 @@ SOFTWARE.
      * @name Two.Vector#isZero
      * @function
      * @param {Number} [eps=0.0001] - Optional precision amount to check against.
-     * @return {Boolean}
+     * @returns {Boolean}
      * @description Check to see if vector is roughly zero, based on the `epsilon` precision value.
      */
     isZero: function(eps) {
@@ -3760,7 +3784,7 @@ SOFTWARE.
     /**
      * @name Two.Vector#toString
      * @function
-     * @return {String}
+     * @returns {String}
      * @description Return a comma-separated string of x, y value. Great for storing in a database.
      */
     toString: function() {
@@ -3770,7 +3794,7 @@ SOFTWARE.
     /**
      * @name Two.Vector#toObject
      * @function
-     * @return {Object}
+     * @returns {Object}
      * @description Return a JSON compatible plain object that represents the vector.
      */
     toObject: function() {
@@ -4272,27 +4296,29 @@ SOFTWARE.
 
   var cos = Math.cos, sin = Math.sin, tan = Math.tan;
   var _ = Two.Utils, fix = _.toFixed;
+  var array = [];
 
   /**
-   * @class
    * @name Two.Matrix
+   * @class
+   * @param {Number} [a=1] - The value for element at the first column and first row.
+   * @param {Number} [b=0] - The value for element at the second column and first row.
+   * @param {Number} [c=0] - The value for element at the third column and first row.
+   * @param {Number} [d=0] - The value for element at the first column and second row.
+   * @param {Number} [e=1] - The value for element at the second column and second row.
+   * @param {Number} [f=0] - The value for element at the third column and second row.
+   * @param {Number} [g=0] - The value for element at the first column and third row.
+   * @param {Number} [h=0] - The value for element at the second column and third row.
+   * @param {Number} [i=1] - The value for element at the third column and third row.
+   * @description A class to store 3 x 3 transformation matrix information. In addition to storing data `Two.Matrix` has suped up methods for commonplace mathematical operations.
+   * @nota-bene Order is based on how to construct transformation strings for the browser.
    */
-
-  // /**
-  //  * Two.Matrix contains an array of elements that represent
-  //  * the two dimensional 3 x 3 matrix as illustrated below:
-  //  *
-  //  * =====
-  //  * a b c
-  //  * d e f
-  //  * g h i  // this row is not really used in 2d transformations
-  //  * =====
-  //  *
-  //  * String order is for transform strings: a, d, b, e, c, f
-  //  */
-
   var Matrix = Two.Matrix = function(a, b, c, d, e, f) {
 
+    /**
+     * @name Two.Matrix#elements
+     * @property {Array} - The underlying data stored as an array.
+     */
     this.elements = new Two.Array(9);
 
     var elements = a;
@@ -4311,15 +4337,25 @@ SOFTWARE.
 
   _.extend(Matrix, {
 
+    /**
+     * @name Two.Matrix.Identity
+     * @property {Array} - A stored reference to the default value of a 3 x 3 matrix.
+     */
     Identity: [
       1, 0, 0,
       0, 1, 0,
       0, 0, 1
     ],
 
-    // /**
-    //  * Multiply two matrix 3x3 arrays
-    //  */
+    /**
+     * @name Two.Matrix.Multiply
+     * @function
+     * @param {Two.Matrix} A
+     * @param {Two.Matrix} B
+     * @param {Two.Matrix} [C] - An optional matrix to apply the multiplication to.
+     * @returns {Two.Matrix} - If an optional `C` matrix isn't passed then a new one is created and returned.
+     * @description Multiply two matrices together and return the result.
+     */
     Multiply: function(A, B, C) {
 
       if (B.length <= 3) { // Multiply Vector
@@ -4371,11 +4407,34 @@ SOFTWARE.
 
     constructor: Matrix,
 
-    // /**
-    //  * Takes an array of elements or the arguments list itself to
-    //  * set and update the current matrix's elements. Only updates
-    //  * specified values.
-    //  */
+    /**
+     * @name Two.Matrix#manual
+     * @property {Boolean} - Determines whether Two.js automatically calculates the values for the matrix or if the developer intends to manage the matrix.
+     * @nota-bene - Setting to `true` nullifies {@link Two.Shape#translation}, {@link Two.Shape#rotation}, and {@link Two.Shape#scale}.
+     */
+    manual: false,
+
+    /**
+     * @name Two.Matrix#set
+     * @function
+     * @param {Number} a - The value for element at the first column and first row.
+     * @param {Number} b - The value for element at the second column and first row.
+     * @param {Number} c - The value for element at the third column and first row.
+     * @param {Number} d - The value for element at the first column and second row.
+     * @param {Number} e - The value for element at the second column and second row.
+     * @param {Number} f - The value for element at the third column and second row.
+     * @param {Number} g - The value for element at the first column and third row.
+     * @param {Number} h - The value for element at the second column and third row.
+     * @param {Number} i - The value for element at the third column and third row.
+     * @description Set an array of values onto the matrix. Order described in {@link Two.Matrix}.
+     */
+
+     /**
+      * @name Two.Matrix#set
+      * @function
+      * @param {Number[]} a - The array of elements to apply.
+      * @description Set an array of values onto the matrix. Order described in {@link Two.Matrix}.
+      */
     set: function(a) {
 
       var elements = a;
@@ -4397,9 +4456,11 @@ SOFTWARE.
 
     },
 
-    // /**
-    //  * Turn matrix to identity, like resetting.
-    //  */
+    /**
+     * @name Two.Matrix#identity
+     * @function
+     * @description Turn matrix to the identity, like resetting.
+     */
     identity: function() {
 
       this.elements[0] = Matrix.Identity[0];
@@ -4416,9 +4477,36 @@ SOFTWARE.
 
     },
 
-    // /**
-    //  * Multiply scalar or multiply by another matrix.
-    //  */
+    /**
+     * @name Two.Matrix.multiply
+     * @function
+     * @param {Number} a - The scalar to be multiplied.
+     * @description Multiply all components of the matrix against a single scalar value.
+     */
+
+    /**
+     * @name Two.Matrix.multiply
+     * @function
+     * @param {Number} a - The x component to be multiplied.
+     * @param {Number} b - The y component to be multiplied.
+     * @param {Number} c - The z component to be multiplied.
+     * @description Multiply all components of a matrix against a 3 component vector.
+     */
+
+    /**
+     * @name Two.Matrix.multiply
+     * @function
+     * @param {Number} a - The value at the first column and first row of the matrix to be multiplied.
+     * @param {Number} b - The value at the second column and first row of the matrix to be multiplied.
+     * @param {Number} c - The value at the third column and first row of the matrix to be multiplied.
+     * @param {Number} d - The value at the first column and second row of the matrix to be multiplied.
+     * @param {Number} e - The value at the second column and second row of the matrix to be multiplied.
+     * @param {Number} f - The value at the third column and second row of the matrix to be multiplied.
+     * @param {Number} g - The value at the first column and third row of the matrix to be multiplied.
+     * @param {Number} h - The value at the second column and third row of the matrix to be multiplied.
+     * @param {Number} i - The value at the third column and third row of the matrix to be multiplied.
+     * @description Multiply all components of a matrix against another matrix.
+     */
     multiply: function(a, b, c, d, e, f, g, h, i) {
 
       var elements = arguments, l = elements.length;
@@ -4489,6 +4577,12 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.Matrix#inverse
+     * @function
+     * @param {Two.Matrix} [out] - The optional matrix to apply the inversion to.
+     * @description Return an inverted version of the matrix. If no optional one is passed a new matrix is created and returned.
+     */
     inverse: function(out) {
 
       var a = this.elements;
@@ -4525,9 +4619,20 @@ SOFTWARE.
 
     },
 
-    // /**
-    //  * Set a scalar onto the matrix.
-    //  */
+    /**
+     * @name Two.Matrix#scale
+     * @function
+     * @param {Number} scale - The one dimensional scale to apply to the matrix.
+     * @description Uniformly scale the transformation matrix.
+     */
+
+    /**
+     * @name Two.Matrix#scale
+     * @function
+     * @param {Number} sx - The horizontal scale factor.
+     * @param {Number} sy - The vertical scale factor
+     * @description Scale the transformation matrix in two dimensions.
+     */
     scale: function(sx, sy) {
 
       var l = arguments.length;
@@ -4539,9 +4644,12 @@ SOFTWARE.
 
     },
 
-    // /**
-    //  * Rotate the matrix.
-    //  */
+    /**
+     * @name Two.Matrix#rotate
+     * @function
+     * @param {Radians} radians - The amount to rotate in radians.
+     * @description Rotate the matrix.
+     */
     rotate: function(radians) {
 
       var c = cos(radians);
@@ -4551,17 +4659,24 @@ SOFTWARE.
 
     },
 
-    // /**
-    //  * Translate the matrix.
-    //  */
+    /**
+     * @name Two.Matrix#translate
+     * @function
+     * @param {Number} x - The horizontal translation value to apply.
+     * @param {Number} y - The vertical translation value to apply.
+     * @description Translate the matrix.
+     */
     translate: function(x, y) {
 
       return this.multiply(1, 0, x, 0, 1, y, 0, 0, 1);
 
     },
 
-    /*
-     * Skew the matrix by an angle in the x axis direction.
+    /**
+     * @name Two.Matrix#skewX
+     * @function
+     * @param {Radians} radians - The amount to skew in radians.
+     * @description Skew the matrix by an angle in the x axis direction.
      */
     skewX: function(radians) {
 
@@ -4571,8 +4686,11 @@ SOFTWARE.
 
     },
 
-    /*
-     * Skew the matrix by an angle in the y axis direction.
+    /**
+     * @name Two.Matrix#skewY
+     * @function
+     * @param {Radians} radians - The amount to skew in radians.
+     * @description Skew the matrix by an angle in the y axis direction.
      */
     skewY: function(radians) {
 
@@ -4582,21 +4700,29 @@ SOFTWARE.
 
     },
 
-    // /**
-    //  * Create a transform string to be used with rendering apis.
-    //  */
+    /**
+     * @name Two.Matrix#toString
+     * @function
+     * @param {Boolean} [fullMatrix=false] - Return the full 9 elements of the matrix or just 6 for 2D transformations.
+     * @returns {String} - The transformation matrix as a 6 component string separated by spaces.
+     * @description Create a transform string. Used for the Two.js rendering APIs.
+     */
     toString: function(fullMatrix) {
-      var temp = [];
 
-      this.toArray(fullMatrix, temp);
+      array.length = 0;
+      this.toArray(fullMatrix, array);
 
-      return temp.join(' ');
+      return array.join(' ');
 
     },
 
-    // /**
-    //  * Create a transform array to be used with rendering apis.
-    //  */
+    /**
+     * @name Two.Matrix#toArray
+     * @function
+     * @param {Boolean} [fullMatrix=false] - Return the full 9 elements of the matrix or just 6 for 2D transformations.
+     * @param {Number[]} [output] - An array empty or otherwise to apply the values to.
+     * @description Create a transform array. Used for the Two.js rendering APIs.
+     */
     toArray: function(fullMatrix, output) {
 
      var elements = this.elements;
@@ -4649,9 +4775,11 @@ SOFTWARE.
 
     },
 
-    // /**
-    //  * Clone the current matrix.
-    //  */
+    /**
+     * @name Two.Matrix#clone
+     * @function
+     * @description Clone the current matrix.
+     */
     clone: function() {
       var a, b, c, d, e, f, g, h, i;
 
@@ -4665,7 +4793,10 @@ SOFTWARE.
       h = this.elements[7];
       i = this.elements[8];
 
-      return new Two.Matrix(a, b, c, d, e, f, g, h, i);
+      var matrix = new Two.Matrix(a, b, c, d, e, f, g, h, i);
+      matrix.manual = this.manual;
+
+      return matrix;
 
     }
 
@@ -7499,37 +7630,84 @@ SOFTWARE.
   var _ = Two.Utils;
 
   /**
-   * @class
    * @name Two.Shape
+   * @class
    * @extends Two.Utils.Events
+   * @description The foundational transformation object for the Two.js scenegraph.
    */
   var Shape = Two.Shape = function() {
 
-    // Private object for renderer specific variables.
+    /**
+     * @name Two.Shape#_renderer
+     * @property {Object}
+     * @private
+     * @description A private object to store relevant renderer specific variables.
+     * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `shape._renderer.elem`.
+     */
     this._renderer = {};
     this._renderer.flagMatrix = _.bind(Shape.FlagMatrix, this);
     this.isShape = true;
 
+    /**
+     * @name Two.Shape#id
+     * @property {String} - Session specific unique identifier.
+     * @nota-bene In the {@link Two.SvgRenderer} change this to change the underlying SVG element's id too.
+     */
     this.id = Two.Identifier + Two.uniqueId();
+
+    /**
+     * @name Two.Shape#classList
+     * @property {Array}
+     * @description A list of class strings stored if imported / interpreted  from an SVG element.
+     */
     this.classList = [];
 
-    // Define matrix properties which all inherited
-    // objects of Shape have.
-
+    /**
+     * @name Two.Shape#_matrix
+     * @property
+     * @description The transformation matrix of the shape.
+     * @nota-bene {@link Two.Shape#translation}, {@link Two.Shape#rotation}, and {@link Two.Shape#scale} apply their values to the matrix when changed. The matrix is what is sent to the renderer to be drawn.
+     */
     this._matrix = new Two.Matrix();
 
+    /**
+     * @name Two.Shape#translation
+     * @property {Two.Vector} - The x and y value for where the shape is placed relative to its parent.
+     */
     this.translation = new Two.Vector();
+
+    /**
+     * @name Two.Shape#rotation
+     * @property {Radians} - The value in radians for how much the shape is rotated relative to its parent.
+     */
     this.rotation = 0;
+
+    /**
+     * @name Two.Shape#scale
+     * @property {Number} - The value for how much the shape is scaled relative to its parent.
+     * @nota-bene This value can be replaced with a {@link Two.Vector} to do non-uniform scaling. e.g: `shape.scale = new Two.Vector(2, 1);`
+     */
     this.scale = 1;
 
   };
 
   _.extend(Shape, {
 
+    /**
+     * @name Two.Shape.FlagMatrix
+     * @function
+     * @description Utility function used in conjunction with event handlers to update the flagMatrix of a shape.
+     */
     FlagMatrix: function() {
       this._flagMatrix = true;
     },
 
+    /**
+     * @name Two.Shape.MakeObservable
+     * @function
+     * @param {Object} object - The object to make observable.
+     * @description Convenience function to apply observable qualities of a `Two.Shape` to any object. Handy if you'd like to extend the `Two.Shape` class on a custom class.
+     */
     MakeObservable: function(object) {
 
       Object.defineProperty(object, 'translation', {
@@ -7589,7 +7767,18 @@ SOFTWARE.
 
     // Flags
 
+    /**
+     * @name Two.Shape#_flagMatrix
+     * @private
+     * @property {Boolean} - Determines whether the matrix needs updating.
+     */
     _flagMatrix: true,
+
+    /**
+     * @name Two.Shape#_flagScale
+     * @private
+     * @property {Boolean} - Determines whether the scale needs updating.
+     */
     _flagScale: false,
 
     // _flagMask: false,
@@ -7597,36 +7786,75 @@ SOFTWARE.
 
     // Underlying Properties
 
-    _rotation: 0,
-    _scale: 1,
+    /**
+     * @name Two.Shape#_translation
+     * @private
+     * @property {Two.Vector} - The translation values as a {@link Two.Vector}.
+     */
     _translation: null,
+
+    /**
+     * @name Two.Shape#_rotation
+     * @private
+     * @property {Radians} - The rotation value in radians.
+     */
+    _rotation: 0,
+
+    /**
+     * @name Two.Shape#_translation
+     * @private
+     * @property {Two.Vector} - The translation values as a {@link Two.Vector}.
+     */
+    _scale: 1,
 
     // _mask: null,
     // _clip: false,
 
     constructor: Shape,
 
+    /**
+     * @name Two.Shape#addTo
+     * @function
+     * @param {Two.Group} group - The parent the shape adds itself to.
+     * @description Convenience method to add itself to the scenegraph.
+     */
     addTo: function(group) {
       group.add(this);
       return this;
     },
 
-    clone: function() {
+    /**
+     * @name Two.Shape#clone
+     * @function
+     * @param {Two.Group} [parent] - Optional argument to automatically add the shape to a scenegraph.
+     * @returns {Two.Shape}
+     * @description Create a new `Two.Shape` with the same values as the current shape.
+     */
+    clone: function(parent) {
+
       var clone = new Shape();
+
       clone.translation.copy(this.translation);
       clone.rotation = this.rotation;
       clone.scale = this.scale;
-      _.each(Shape.Properties, function(k) {
-        clone[k] = this[k];
-      }, this);
+
+      if (parent) {
+        parent.add(clone);
+      }
+
       return clone._update();
+
     },
 
-    // /**
-    //  * To be called before render that calculates and collates all information
-    //  * to be as up-to-date as possible for the render. Called once a frame.
-    //  */
-    _update: function(deep) {
+    /**
+     * @name Two.Shape#_update
+     * @function
+     * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+     * @private
+     * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
+     * @nota-bene Try not to call this method more than once a frame.
+     */
+    _update: function(bubbles) {
 
       if (!this._matrix.manual && this._flagMatrix) {
 
@@ -7644,8 +7872,7 @@ SOFTWARE.
 
       }
 
-      if (deep) {
-        // Bubble up to parents mainly for `getBoundingClientRect` method.
+      if (bubbles) {
         if (this.parent && this.parent._update) {
           this.parent._update();
         }
@@ -7655,6 +7882,12 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.Shape#flagReset
+     * @function
+     * @private
+     * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+     */
     flagReset: function() {
 
       this._flagMatrix = this._flagScale = false;
@@ -7685,14 +7918,14 @@ SOFTWARE.
   });
 
   /**
-   * @class
    * @name Two.Path
+   * @class
    * @extends Two.Shape
-   * @description This is the base class for creating all drawable shapes in two.js. Unless specified methods return their instance of `Two.Path` for the purpose of chaining.
    * @param {Two#Anchor[]} [vertices] - A list of Two.Anchors that represent the order and coordinates to construct the rendered shape.
    * @param {Boolean} [closed=false] - Describes whether the shape is closed or open.
    * @param {Boolean} [curved=false] - Describes whether the shape automatically calculates bezier handles for each vertex.
    * @param {Boolean} [manual=false] - Describes whether the developer controls how vertices are plotted or if Two.js automatically plots coordinates based on closed and curved booleans.
+   * @description This is the primary primitive class for creating all drawable shapes in Two.js. Unless specified methods return their instance of `Two.Path` for the purpose of chaining.
    */
   var Path = Two.Path = function(vertices, closed, curved, manual) {
 
@@ -7711,27 +7944,97 @@ SOFTWARE.
     this._closed = !!closed;
     this._curved = !!curved;
 
+    /**
+     * @name Two.Path#beginning
+     * @property {Number} - Number between zero and one to state the beginning of where the path is rendered.
+     * @description `Two.Path.beginning` is a percentage value that represents at what percentage into the path should the renderer start drawing.
+     * @nota-bene This is great for animating in and out stroked paths in conjunction with {@link Two.Path#ending}.
+     */
     this.beginning = 0;
+
+    /**
+     * @name Two.Path#ending
+     * @property {Number} - Number between zero and one to state the ending of where the path is rendered.
+     * @description `Two.Path.ending` is a percentage value that represents at what percentage into the path should the renderer start drawing.
+     * @nota-bene This is great for animating in and out stroked paths in conjunction with {@link Two.Path#beginning}.
+     */
     this.ending = 1;
 
     // Style properties
 
+    /**
+     * @name Two.Path#fill
+     * @property {(CssColor|Two.Gradient|Two.Texture)} - The value of what the path should be filled in with.
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS Colors.
+     */
     this.fill = '#fff';
+
+    /**
+     * @name Two.Path#stroke
+     * @property {(CssColor|Two.Gradient|Two.Texture)} - The value of what the path should be outlined in with.
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS Colors.
+     */
     this.stroke = '#000';
+
+    /**
+     * @name Two.Path#linewidth
+     * @property {Number} - The thickness in pixels of the stroke.
+     */
     this.linewidth = 1.0;
+
+    /**
+     * @name Two.Path#opacity
+     * @property {Number} - The opaqueness of the path.
+     * @nota-bene Can be used in conjunction with CSS Colors that have an alpha value.
+     */
     this.opacity = 1.0;
+
+    /**
+     * @name Two.Path#className
+     * @property {String} - A class name to be searched by in {@link Two.Group}s.
+     */
     this.className = '';
+
+    /**
+     * @name Two.Path#visible
+     * @property {Boolean} - Display the path or not.
+     * @nota-bene For {@link Two.CanvasRenderer} and {@link Two.WebGLRenderer} when set to false all updating is disabled improving performance dramatically with many objects in the scene.
+     */
     this.visible = true;
 
+    /**
+     * @name Two.Path#cap
+     * @property {String}
+     * @see {@link https://www.w3.org/TR/SVG11/painting.html#StrokeLinecapProperty}
+     */
     this.cap = 'butt';      // Default of Adobe Illustrator
+
+    /**
+     * @name Two.Path#join
+     * @property {String}
+     * @see {@link https://www.w3.org/TR/SVG11/painting.html#StrokeLinejoinProperty}
+     */
     this.join = 'miter';    // Default of Adobe Illustrator
+
+    /**
+     * @name Two.Path#miter
+     * @property {String}
+     * @see {@link https://www.w3.org/TR/SVG11/painting.html#StrokeMiterlimitProperty}
+     */
     this.miter = 4;         // Default of Adobe Illustrator
 
+    /**
+     * @name Two.Path#vertices
+     * @property {Two.Anchor[]} - An ordered list of anchor points for rendering the path.
+     * @description An of `Two.Anchor` objects that consist of what form the path takes.
+     * @nota-bene The array when manipulating is actually a {@link Two.Utils.Collection}.
+     */
     this.vertices = vertices;
 
-    // Determines whether or not two.js should calculate curves, lines, and
-    // commands automatically for you or to let the developer manipulate them
-    // for themselves.
+    /**
+     * @name Two.Path#automatic
+     * @property {Boolean} - Determines whether or not Two.js should calculate curves, lines, and commands automatically for you or to let the developer manipulate them for themselves.
+     */
     this.automatic = !manual;
 
   };
@@ -8142,7 +8445,7 @@ SOFTWARE.
     /**
      * @function Two.Path#getBoundingClientRect
      * @param {Boolean} [shallow=false] - Describes whether to calculate off local matrix or world matrix.
-     * @return {Object} - Returns object with top, left, right, bottom, width, height attributes.
+     * @returns {Object} - Returns object with top, left, right, bottom, width, height attributes.
      * @description Return an object with top, left, right, bottom, width, and height parameters of the group.
      */
     getBoundingClientRect: function(shallow) {
