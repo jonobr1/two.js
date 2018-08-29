@@ -37,7 +37,16 @@
     this._renderer.vertices = [];
     this._renderer.collection = [];
 
+    /**
+     * @name Two.Path#closed
+     * @property {Boolean} - Determines whether a final line is drawn between the final point in the `vertices` array and the first point.
+     */
     this._closed = !!closed;
+
+    /**
+     * @name Two.Path#curved
+     * @property {Boolean} - When the path is `automatic = true` this boolean determines whether the lines between the points are curved or not.
+     */
     this._curved = !!curved;
 
     /**
@@ -137,6 +146,10 @@
 
   _.extend(Path, {
 
+    /**
+     * @name Two.Path.Properties
+     * @property {String[]} - A list of properties that are on every {@link Two.Path}.
+     */
     Properties: [
       'fill',
       'stroke',
@@ -155,6 +168,11 @@
       'ending'
     ],
 
+    /**
+     * @name Two.Path.FlagVertices
+     * @function
+     * @description Cached method to let renderers know vertices have been updated on a {@link Two.Path}.
+     */
     FlagVertices: function() {
       this._flagVertices = true;
       this._flagLength = true;
@@ -163,6 +181,11 @@
       }
     },
 
+    /**
+     * @name Two.Path.BindVertices
+     * @function
+     * @description Cached method to let {@link Two.Path} know vertices have been added to the instance.
+     */
     BindVertices: function(items) {
 
       // This function is called a lot
@@ -176,6 +199,11 @@
 
     },
 
+    /**
+     * @name Two.Path.BindVertices
+     * @function
+     * @description Cached method to let {@link Two.Path} know vertices have been removed from the instance.
+     */
     UnbindVertices: function(items) {
 
       var i = items.length;
@@ -187,14 +215,30 @@
 
     },
 
+    /**
+     * @name Two.Path.FlagFill
+     * @function
+     * @description Cached method to let {@link Two.Path} know the fill has changed.
+     */
     FlagFill: function() {
       this._flagFill = true;
     },
 
+    /**
+     * @name Two.Path.FlagFill
+     * @function
+     * @description Cached method to let {@link Two.Path} know the stroke has changed.
+     */
     FlagStroke: function() {
       this._flagStroke = true;
     },
 
+    /**
+     * @name Two.Path.MakeObservable
+     * @function
+     * @param {Object} object - The object to make observable.
+     * @description Convenience function to apply observable qualities of a `Two.Path` to any object. Handy if you'd like to extend the `Two.Path` class on a custom class.
+     */
     MakeObservable: function(object) {
 
       Two.Shape.MakeObservable(object);
