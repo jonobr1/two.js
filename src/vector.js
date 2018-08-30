@@ -13,13 +13,13 @@
 
     /**
      * @name Two.Vector#x
-     * @property {Number} x - The horizontal x-component of the vector.
+     * @property {Number} - The horizontal x-component of the vector.
      */
     this.x = x || 0;
 
     /**
      * @name Two.Vector#y
-     * @property {Number} y - The vertical y-component of the vector.
+     * @property {Number} - The vertical y-component of the vector.
      */
     this.y = y || 0;
 

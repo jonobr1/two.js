@@ -407,6 +407,11 @@
 
       });
 
+      /**
+       * @name Two.Path#clip
+       * @property {Two.Shape} - Object to define clipping area.
+       * @nota-bene This property is currently not working becuase of SVG spec issues found here {@link https://code.google.com/p/chromium/issues/detail?id=370951}.
+       */
       Object.defineProperty(object, 'clip', {
         enumerable: true,
         get: function() {
@@ -427,20 +432,88 @@
     // Flags
     // http://en.wikipedia.org/wiki/Flag
 
+    /**
+     * @name Two.Shape#_flagVertices
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Path#vertices} need updating.
+     */
     _flagVertices: true,
+
+    /**
+     * @name Two.Shape#_flagLength
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Path#length} needs updating.
+     */
     _flagLength: true,
 
+    /**
+     * @name Two.Shape#_flagFill
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Path#fill} needs updating.
+     */
     _flagFill: true,
+
+    /**
+     * @name Two.Shape#_flagStroke
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Path#stroke} needs updating.
+     */
     _flagStroke: true,
+
+    /**
+     * @name Two.Shape#_flagLinewidth
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Path#linewidth} needs updating.
+     */
     _flagLinewidth: true,
+
+    /**
+     * @name Two.Shape#_flagOpacity
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Path#opacity} needs updating.
+     */
     _flagOpacity: true,
+
+    /**
+     * @name Two.Shape#_flagVisible
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Path#visible} needs updating.
+     */
     _flagVisible: true,
+
+    /**
+     * @name Two.Shape#_flagClassName
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Path#className} needs updating.
+     */
     _flagClassName: true,
 
+    /**
+     * @name Two.Shape#_flagCap
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Path#cap} needs updating.
+     */
     _flagCap: true,
+
+    /**
+     * @name Two.Shape#_flagJoin
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Path#join} needs updating.
+     */
     _flagJoin: true,
+
+    /**
+     * @name Two.Shape#_flagMiter
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Path#miter} needs updating.
+     */
     _flagMiter: true,
 
+    /**
+     * @name Two.Shape#_flagClip
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Path#clip} needs updating.
+     */
     _flagClip: false,
 
     // Underlying Properties

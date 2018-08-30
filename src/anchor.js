@@ -100,7 +100,7 @@
 
       /**
        * @name Two.Anchor#command
-       * @property {Two.Commands} command
+       * @property {Two.Commands}
        * @description A draw command associated with the anchor point.
        */
       Object.defineProperty(object, 'command', {
@@ -122,8 +122,8 @@
       });
 
       /**
-       * @name Two.Anchor#command
-       * @property {Boolean} relative
+       * @name Two.Anchor#relative
+       * @property {Boolean}
        * @description A boolean to render control points relative to the root anchor point or in global coordinate-space to the rest of the scene.
        */
       Object.defineProperty(object, 'relative', {
