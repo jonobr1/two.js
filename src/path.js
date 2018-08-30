@@ -433,84 +433,84 @@
     // http://en.wikipedia.org/wiki/Flag
 
     /**
-     * @name Two.Shape#_flagVertices
+     * @name Two.Path#_flagVertices
      * @private
      * @property {Boolean} - Determines whether the {@link Two.Path#vertices} need updating.
      */
     _flagVertices: true,
 
     /**
-     * @name Two.Shape#_flagLength
+     * @name Two.Path#_flagLength
      * @private
      * @property {Boolean} - Determines whether the {@link Two.Path#length} needs updating.
      */
     _flagLength: true,
 
     /**
-     * @name Two.Shape#_flagFill
+     * @name Two.Path#_flagFill
      * @private
      * @property {Boolean} - Determines whether the {@link Two.Path#fill} needs updating.
      */
     _flagFill: true,
 
     /**
-     * @name Two.Shape#_flagStroke
+     * @name Two.Path#_flagStroke
      * @private
      * @property {Boolean} - Determines whether the {@link Two.Path#stroke} needs updating.
      */
     _flagStroke: true,
 
     /**
-     * @name Two.Shape#_flagLinewidth
+     * @name Two.Path#_flagLinewidth
      * @private
      * @property {Boolean} - Determines whether the {@link Two.Path#linewidth} needs updating.
      */
     _flagLinewidth: true,
 
     /**
-     * @name Two.Shape#_flagOpacity
+     * @name Two.Path#_flagOpacity
      * @private
      * @property {Boolean} - Determines whether the {@link Two.Path#opacity} needs updating.
      */
     _flagOpacity: true,
 
     /**
-     * @name Two.Shape#_flagVisible
+     * @name Two.Path#_flagVisible
      * @private
      * @property {Boolean} - Determines whether the {@link Two.Path#visible} needs updating.
      */
     _flagVisible: true,
 
     /**
-     * @name Two.Shape#_flagClassName
+     * @name Two.Path#_flagClassName
      * @private
      * @property {Boolean} - Determines whether the {@link Two.Path#className} needs updating.
      */
     _flagClassName: true,
 
     /**
-     * @name Two.Shape#_flagCap
+     * @name Two.Path#_flagCap
      * @private
      * @property {Boolean} - Determines whether the {@link Two.Path#cap} needs updating.
      */
     _flagCap: true,
 
     /**
-     * @name Two.Shape#_flagJoin
+     * @name Two.Path#_flagJoin
      * @private
      * @property {Boolean} - Determines whether the {@link Two.Path#join} needs updating.
      */
     _flagJoin: true,
 
     /**
-     * @name Two.Shape#_flagMiter
+     * @name Two.Path#_flagMiter
      * @private
      * @property {Boolean} - Determines whether the {@link Two.Path#miter} needs updating.
      */
     _flagMiter: true,
 
     /**
-     * @name Two.Shape#_flagClip
+     * @name Two.Path#_flagClip
      * @private
      * @property {Boolean} - Determines whether the {@link Two.Path#clip} needs updating.
      */
@@ -518,9 +518,25 @@
 
     // Underlying Properties
 
+    /**
+     * @name Two.Path#_length
+     * @private
+     * @property {Number} - The sum of distances between all {@link Two.Path#vertices}.
+     */
     _length: 0,
 
+    /**
+     * @name Two.Path#_fill
+     * @private
+     * @property {(CssColor|Two.Gradient|Two.Texture)} - The value of what the path should be filled in with.
+     */
     _fill: '#fff',
+
+    /**
+     * @name Two.Path#_stroke
+     * @private
+     * @property {(CssColor|Two.Gradient|Two.Texture)} - The value of what the path should be outlined in with.
+     */
     _stroke: '#000',
     _linewidth: 1.0,
     _opacity: 1.0,
