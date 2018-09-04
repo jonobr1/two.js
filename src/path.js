@@ -1122,6 +1122,7 @@
     /**
      * @name Two.Path#_updateLength
      * @function
+     * @private
      * @param {Integer} [limit=] -
      * @param {Boolean} [silent=false] - If set to `true` then the path isn't updated before calculation. Useful for internal use.
      * @description Recalculate the {@link Two.Path#length} value.
@@ -1175,6 +1176,14 @@
 
     },
 
+    /**
+     * @name Two.Path#_update
+     * @function
+     * @private
+     * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+     * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
+     * @nota-bene Try not to call this method more than once a frame.
+     */
     _update: function() {
 
       if (this._flagVertices) {
@@ -1292,6 +1301,12 @@
 
     },
 
+    /**
+     * @name Two.Path#flagReset
+     * @function
+     * @private
+     * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+     */
     flagReset: function() {
 
       this._flagVertices =  this._flagFill =  this._flagStroke =
@@ -1333,6 +1348,13 @@
 
   }
 
+  /**
+   * @protected
+   * @param {Two.Path} path - The path to analyze against.
+   * @param {Number} target - The target length at which to find an anchor.
+   * @returns {Integer}
+   * @description Return the id of an anchor based on a target length.
+   */
   function getIdByLength(path, target) {
 
     var total = path._length;

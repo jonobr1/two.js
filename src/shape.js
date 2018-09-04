@@ -222,8 +222,8 @@
     /**
      * @name Two.Shape#_update
      * @function
-     * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
      * @private
+     * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
      * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
      * @nota-bene Try not to call this method more than once a frame.
      */
