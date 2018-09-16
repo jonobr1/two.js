@@ -3198,13 +3198,13 @@ SOFTWARE.
 
     /**
      * @name Two.Vector#x
-     * @property {Number} x - The horizontal x-component of the vector.
+     * @property {Number} - The horizontal x-component of the vector.
      */
     this.x = x || 0;
 
     /**
      * @name Two.Vector#y
-     * @property {Number} y - The vertical y-component of the vector.
+     * @property {Number} - The vertical y-component of the vector.
      */
     this.y = y || 0;
 
@@ -4092,7 +4092,7 @@ SOFTWARE.
 
       /**
        * @name Two.Anchor#command
-       * @property {Two.Commands} command
+       * @property {Two.Commands}
        * @description A draw command associated with the anchor point.
        */
       Object.defineProperty(object, 'command', {
@@ -4114,8 +4114,8 @@ SOFTWARE.
       });
 
       /**
-       * @name Two.Anchor#command
-       * @property {Boolean} relative
+       * @name Two.Anchor#relative
+       * @property {Boolean}
        * @description A boolean to render control points relative to the root anchor point or in global coordinate-space to the rest of the scene.
        */
       Object.defineProperty(object, 'relative', {
@@ -4438,7 +4438,7 @@ SOFTWARE.
     set: function(a) {
 
       var elements = a;
-      if (!_.isArray(elements)) {
+      if (arguments.length > 1) {
         elements = _.toArray(arguments);
       }
 
@@ -7941,7 +7941,16 @@ SOFTWARE.
     this._renderer.vertices = [];
     this._renderer.collection = [];
 
+    /**
+     * @name Two.Path#closed
+     * @property {Boolean} - Determines whether a final line is drawn between the final point in the `vertices` array and the first point.
+     */
     this._closed = !!closed;
+
+    /**
+     * @name Two.Path#curved
+     * @property {Boolean} - When the path is `automatic = true` this boolean determines whether the lines between the points are curved or not.
+     */
     this._curved = !!curved;
 
     /**
@@ -8041,6 +8050,10 @@ SOFTWARE.
 
   _.extend(Path, {
 
+    /**
+     * @name Two.Path.Properties
+     * @property {String[]} - A list of properties that are on every {@link Two.Path}.
+     */
     Properties: [
       'fill',
       'stroke',
@@ -8059,6 +8072,11 @@ SOFTWARE.
       'ending'
     ],
 
+    /**
+     * @name Two.Path.FlagVertices
+     * @function
+     * @description Cached method to let renderers know vertices have been updated on a {@link Two.Path}.
+     */
     FlagVertices: function() {
       this._flagVertices = true;
       this._flagLength = true;
@@ -8067,6 +8085,11 @@ SOFTWARE.
       }
     },
 
+    /**
+     * @name Two.Path.BindVertices
+     * @function
+     * @description Cached method to let {@link Two.Path} know vertices have been added to the instance.
+     */
     BindVertices: function(items) {
 
       // This function is called a lot
@@ -8080,6 +8103,11 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.Path.BindVertices
+     * @function
+     * @description Cached method to let {@link Two.Path} know vertices have been removed from the instance.
+     */
     UnbindVertices: function(items) {
 
       var i = items.length;
@@ -8091,14 +8119,30 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.Path.FlagFill
+     * @function
+     * @description Cached method to let {@link Two.Path} know the fill has changed.
+     */
     FlagFill: function() {
       this._flagFill = true;
     },
 
+    /**
+     * @name Two.Path.FlagFill
+     * @function
+     * @description Cached method to let {@link Two.Path} know the stroke has changed.
+     */
     FlagStroke: function() {
       this._flagStroke = true;
     },
 
+    /**
+     * @name Two.Path.MakeObservable
+     * @function
+     * @param {Object} object - The object to make observable.
+     * @description Convenience function to apply observable qualities of a `Two.Path` to any object. Handy if you'd like to extend the `Two.Path` class on a custom class.
+     */
     MakeObservable: function(object) {
 
       Two.Shape.MakeObservable(object);
@@ -8267,6 +8311,11 @@ SOFTWARE.
 
       });
 
+      /**
+       * @name Two.Path#clip
+       * @property {Two.Shape} - Object to define clipping area.
+       * @nota-bene This property is currently not working becuase of SVG spec issues found here {@link https://code.google.com/p/chromium/issues/detail?id=370951}.
+       */
       Object.defineProperty(object, 'clip', {
         enumerable: true,
         get: function() {
@@ -8287,27 +8336,111 @@ SOFTWARE.
     // Flags
     // http://en.wikipedia.org/wiki/Flag
 
+    /**
+     * @name Two.Path#_flagVertices
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Path#vertices} need updating.
+     */
     _flagVertices: true,
+
+    /**
+     * @name Two.Path#_flagLength
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Path#length} needs updating.
+     */
     _flagLength: true,
 
+    /**
+     * @name Two.Path#_flagFill
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Path#fill} needs updating.
+     */
     _flagFill: true,
+
+    /**
+     * @name Two.Path#_flagStroke
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Path#stroke} needs updating.
+     */
     _flagStroke: true,
+
+    /**
+     * @name Two.Path#_flagLinewidth
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Path#linewidth} needs updating.
+     */
     _flagLinewidth: true,
+
+    /**
+     * @name Two.Path#_flagOpacity
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Path#opacity} needs updating.
+     */
     _flagOpacity: true,
+
+    /**
+     * @name Two.Path#_flagVisible
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Path#visible} needs updating.
+     */
     _flagVisible: true,
+
+    /**
+     * @name Two.Path#_flagClassName
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Path#className} needs updating.
+     */
     _flagClassName: true,
 
+    /**
+     * @name Two.Path#_flagCap
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Path#cap} needs updating.
+     */
     _flagCap: true,
+
+    /**
+     * @name Two.Path#_flagJoin
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Path#join} needs updating.
+     */
     _flagJoin: true,
+
+    /**
+     * @name Two.Path#_flagMiter
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Path#miter} needs updating.
+     */
     _flagMiter: true,
 
+    /**
+     * @name Two.Path#_flagClip
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Path#clip} needs updating.
+     */
     _flagClip: false,
 
     // Underlying Properties
 
+    /**
+     * @name Two.Path#_length
+     * @private
+     * @property {Number} - The sum of distances between all {@link Two.Path#vertices}.
+     */
     _length: 0,
 
+    /**
+     * @name Two.Path#_fill
+     * @private
+     * @property {(CssColor|Two.Gradient|Two.Texture)} - The value of what the path should be filled in with.
+     */
     _fill: '#fff',
+
+    /**
+     * @name Two.Path#_stroke
+     * @private
+     * @property {(CssColor|Two.Gradient|Two.Texture)} - The value of what the path should be outlined in with.
+     */
     _stroke: '#000',
     _linewidth: 1.0,
     _opacity: 1.0,
