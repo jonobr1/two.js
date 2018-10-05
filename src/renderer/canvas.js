@@ -104,7 +104,7 @@
 
         var matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter,
             closed, commands, length, last, next, prev, a, b, c, d, ux, uy, vx, vy,
-            ar, bl, br, cl, x, y, mask, clip, defaultMatrix, isOffset, dasharray;
+            ar, bl, br, cl, x, y, mask, clip, defaultMatrix, isOffset, dashes;
 
         // TODO: Add a check here to only invoke _update if need be.
         this._update();
@@ -123,7 +123,7 @@
         length = commands.length;
         last = length - 1;
         defaultMatrix = isDefaultMatrix(matrix);
-        dasharray = this._dasharray;
+        dashes = this.dashes;
 
         // mask = this._mask;
         clip = this._clip;
@@ -181,8 +181,8 @@
           ctx.globalAlpha = opacity;
         }
 
-        if (dasharray) {
-          ctx.setLineDash(dasharray.split(' '));
+        if (dashes && dashes.length > 0) {
+          ctx.setLineDash(dashes);
         }
 
         ctx.beginPath();
@@ -338,6 +338,7 @@
         var defaultMatrix = isDefaultMatrix(matrix);
         var isOffset = fill._renderer && fill._renderer.offset
           && stroke._renderer && stroke._renderer.offset;
+        var dashes = this.dashes;
 
         var a, b, c, d, e, sx, sy;
 
@@ -394,6 +395,9 @@
         }
         if (_.isNumber(opacity)) {
           ctx.globalAlpha = opacity;
+        }
+        if (dashes && dashes.length > 0) {
+          ctx.setLineDash(dashes);
         }
 
         if (!clip && !parentClipped) {

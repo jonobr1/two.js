@@ -108,6 +108,11 @@
           }
         }
 
+        for (var i = 0; i < this.children.length; i++) {
+          var child = this.children[i];
+          webgl[child._renderer.type].render.call(child, gl, program);
+        }
+
         this.children.forEach(webgl.group.renderChild, {
           gl: gl,
           program: program
@@ -155,6 +160,7 @@
         var join = elem._join;
         var miter = elem._miter;
         var closed = elem._closed;
+        var dashes = elem.dashes;
         var length = commands.length;
         var last = length - 1;
 
@@ -197,6 +203,10 @@
         }
         if (_.isNumber(opacity)) {
           ctx.globalAlpha = opacity;
+        }
+
+        if (dashes && dashes.length > 0) {
+          ctx.setLineDash(dashes);
         }
 
         var d;
@@ -428,6 +438,7 @@
           || this._flagStroke || this._flagLinewidth || this._flagOpacity
           || parent._flagOpacity || this._flagVisible || this._flagCap
           || this._flagJoin || this._flagMiter || this._flagScale
+          || (this.dashes && this.dashes.length > 0)
           || !this._renderer.texture;
 
         if (flagParentMatrix || flagMatrix) {
@@ -522,6 +533,7 @@
         var linewidth = elem._linewidth * scale;
         var fill = elem._fill;
         var opacity = elem._renderer.opacity || elem._opacity;
+        var dashes = elem.dashes;
 
         canvas.width = Math.max(Math.ceil(elem._renderer.rect.width * scale), 1);
         canvas.height = Math.max(Math.ceil(elem._renderer.rect.height * scale), 1);
@@ -566,6 +578,9 @@
         }
         if (_.isNumber(opacity)) {
           ctx.globalAlpha = opacity;
+        }
+        if (dashes && dashes.length > 0) {
+          ctx.setLineDash(dashes);
         }
 
         ctx.save();
@@ -726,6 +741,7 @@
           || this._flagValue || this._flagFamily || this._flagSize
           || this._flagLeading || this._flagAlignment || this._flagBaseline
           || this._flagStyle || this._flagWeight || this._flagDecoration
+          || (this.dashes && this.dashes.length > 0)
           || !this._renderer.texture;
 
         if (flagParentMatrix || flagMatrix) {
