@@ -108,6 +108,7 @@ process.exit();
 <!-- For the latest nightly changes checkout the `dev` branch [here](../../tree/dev). -->
 
 #### Nightly
++ `Two.Path` and `Two.Text` now have `dashes` property to define stroke dashing behavior [@danvanorden](https://github.com/danvanorden)
 + `Two.Vector` arithmetic methods made more consistent — still need to improve performance
 + `Two.Path.vertices` will not clone vectors, improving developer clarity
 + Two.js clone methods do not force adding to a parent
