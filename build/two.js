@@ -5223,6 +5223,10 @@ SOFTWARE.
           changed['stroke-miterlimit'] = this._miter;
         }
 
+        if (this._flagDasharray) {
+          changed['stroke-dasharray'] = this._dasharray;
+        }
+
         // If there is no attached DOM element yet,
         // create it with all necessary attributes.
         if (!this._renderer.elem) {
@@ -5828,7 +5832,7 @@ SOFTWARE.
 
         var matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter,
             closed, commands, length, last, next, prev, a, b, c, d, ux, uy, vx, vy,
-            ar, bl, br, cl, x, y, mask, clip, defaultMatrix, isOffset;
+            ar, bl, br, cl, x, y, mask, clip, defaultMatrix, isOffset, dasharray;
 
         // TODO: Add a check here to only invoke _update if need be.
         this._update();
@@ -5847,6 +5851,7 @@ SOFTWARE.
         length = commands.length;
         last = length - 1;
         defaultMatrix = isDefaultMatrix(matrix);
+        dasharray = this._dasharray;
 
         // mask = this._mask;
         clip = this._clip;
@@ -5902,6 +5907,10 @@ SOFTWARE.
         }
         if (_.isNumber(opacity)) {
           ctx.globalAlpha = opacity;
+        }
+
+        if (dasharray) {
+          ctx.setLineDash(dasharray.split(' '));
         }
 
         ctx.beginPath();
@@ -8046,6 +8055,13 @@ SOFTWARE.
      */
     this.automatic = !manual;
 
+    /**
+     * @name Two.Path#dasharray
+     * @property {String} - List of space-separated dash and gap values.
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray} for more information on the SVG stroke-dasharray attribute.
+     */
+    this.dasharray = '';
+
   };
 
   _.extend(Path, {
@@ -8064,6 +8080,7 @@ SOFTWARE.
       'cap',
       'join',
       'miter',
+      'dasharray',
 
       'closed',
       'curved',
@@ -8149,7 +8166,7 @@ SOFTWARE.
 
       // Only the 7 defined properties are flagged like this. The subsequent
       // properties behave differently and need to be hand written.
-      _.each(Path.Properties.slice(2, 9), Two.Utils.defineProperty, object);
+      _.each(Path.Properties.slice(2, 10), Two.Utils.defineProperty, object);
 
       Object.defineProperty(object, 'fill', {
         enumerable: true,
@@ -8420,6 +8437,13 @@ SOFTWARE.
      */
     _flagClip: false,
 
+    /**
+     * @name Two.Path#_flagDashArray
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Path#clip} needs updating.
+     */
+    _flagDasharray: false,
+
     // Underlying Properties
 
     /**
@@ -8458,6 +8482,7 @@ SOFTWARE.
     _ending: 1.0,
 
     _clip: false,
+    _dasharray: '',
 
     constructor: Path,
 
@@ -9079,7 +9104,7 @@ SOFTWARE.
       this._flagVertices =  this._flagFill =  this._flagStroke =
          this._flagLinewidth = this._flagOpacity = this._flagVisible =
          this._flagCap = this._flagJoin = this._flagMiter =
-         this._flagClassName = this._flagClip = false;
+         this._flagClassName = this._flagClip = this._flagDasharray = false;
 
       Two.Shape.prototype.flagReset.call(this);
 

@@ -142,6 +142,13 @@
      */
     this.automatic = !manual;
 
+    /**
+     * @name Two.Path#dashes
+     * @property {String} - List of dash and gap values.
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray} for more information on the SVG stroke-dasharray attribute.
+     */
+    this.dashes = [];
+
   };
 
   _.extend(Path, {
@@ -393,7 +400,7 @@
           }
 
           // Create new Collection with copy of vertices
-          this._collection = new Two.Utils.Collection(vertices || []);//.slice(0));
+          this._collection = new Two.Utils.Collection(vertices || []);
 
           // Listen for Collection changes and bind / unbind
           this._collection
