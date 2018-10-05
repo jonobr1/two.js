@@ -5223,8 +5223,8 @@ SOFTWARE.
           changed['stroke-miterlimit'] = this._miter;
         }
 
-        if (this._flagDasharray) {
-          changed['stroke-dasharray'] = this._dasharray;
+        if (this.dashes && this.dashes.length > 0) {
+          changed['stroke-dasharray'] = this.dashes.join(' ');
         }
 
         // If there is no attached DOM element yet,
@@ -5342,6 +5342,9 @@ SOFTWARE.
         }
         if (this._flagVisible) {
           changed.visibility = this._visible ? 'visible' : 'hidden';
+        }
+        if (this.dashes && this.dashes.length > 0) {
+          changed['stroke-dasharray'] = this.dashes.join(' ');
         }
 
         if (!this._renderer.elem) {
@@ -5832,7 +5835,7 @@ SOFTWARE.
 
         var matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter,
             closed, commands, length, last, next, prev, a, b, c, d, ux, uy, vx, vy,
-            ar, bl, br, cl, x, y, mask, clip, defaultMatrix, isOffset, dasharray;
+            ar, bl, br, cl, x, y, mask, clip, defaultMatrix, isOffset, dashes;
 
         // TODO: Add a check here to only invoke _update if need be.
         this._update();
@@ -5851,7 +5854,7 @@ SOFTWARE.
         length = commands.length;
         last = length - 1;
         defaultMatrix = isDefaultMatrix(matrix);
-        dasharray = this._dasharray;
+        dashes = this.dashes;
 
         // mask = this._mask;
         clip = this._clip;
@@ -5909,8 +5912,8 @@ SOFTWARE.
           ctx.globalAlpha = opacity;
         }
 
-        if (dasharray) {
-          ctx.setLineDash(dasharray.split(' '));
+        if (dashes && dashes.length > 0) {
+          ctx.setLineDash(dashes);
         }
 
         ctx.beginPath();
@@ -6066,6 +6069,7 @@ SOFTWARE.
         var defaultMatrix = isDefaultMatrix(matrix);
         var isOffset = fill._renderer && fill._renderer.offset
           && stroke._renderer && stroke._renderer.offset;
+        var dashes = this.dashes;
 
         var a, b, c, d, e, sx, sy;
 
@@ -6122,6 +6126,9 @@ SOFTWARE.
         }
         if (_.isNumber(opacity)) {
           ctx.globalAlpha = opacity;
+        }
+        if (dashes && dashes.length > 0) {
+          ctx.setLineDash(dashes);
         }
 
         if (!clip && !parentClipped) {
@@ -6506,6 +6513,11 @@ SOFTWARE.
           }
         }
 
+        for (var i = 0; i < this.children.length; i++) {
+          var child = this.children[i];
+          webgl[child._renderer.type].render.call(child, gl, program);
+        }
+
         this.children.forEach(webgl.group.renderChild, {
           gl: gl,
           program: program
@@ -6553,6 +6565,7 @@ SOFTWARE.
         var join = elem._join;
         var miter = elem._miter;
         var closed = elem._closed;
+        var dashes = elem.dashes;
         var length = commands.length;
         var last = length - 1;
 
@@ -6595,6 +6608,10 @@ SOFTWARE.
         }
         if (_.isNumber(opacity)) {
           ctx.globalAlpha = opacity;
+        }
+
+        if (dashes && dashes.length > 0) {
+          ctx.setLineDash(dashes);
         }
 
         var d;
@@ -6826,6 +6843,7 @@ SOFTWARE.
           || this._flagStroke || this._flagLinewidth || this._flagOpacity
           || parent._flagOpacity || this._flagVisible || this._flagCap
           || this._flagJoin || this._flagMiter || this._flagScale
+          || (this.dashes && this.dashes.length > 0)
           || !this._renderer.texture;
 
         if (flagParentMatrix || flagMatrix) {
@@ -6920,6 +6938,7 @@ SOFTWARE.
         var linewidth = elem._linewidth * scale;
         var fill = elem._fill;
         var opacity = elem._renderer.opacity || elem._opacity;
+        var dashes = elem.dashes;
 
         canvas.width = Math.max(Math.ceil(elem._renderer.rect.width * scale), 1);
         canvas.height = Math.max(Math.ceil(elem._renderer.rect.height * scale), 1);
@@ -6964,6 +6983,9 @@ SOFTWARE.
         }
         if (_.isNumber(opacity)) {
           ctx.globalAlpha = opacity;
+        }
+        if (dashes && dashes.length > 0) {
+          ctx.setLineDash(dashes);
         }
 
         ctx.save();
@@ -7124,6 +7146,7 @@ SOFTWARE.
           || this._flagValue || this._flagFamily || this._flagSize
           || this._flagLeading || this._flagAlignment || this._flagBaseline
           || this._flagStyle || this._flagWeight || this._flagDecoration
+          || (this.dashes && this.dashes.length > 0)
           || !this._renderer.texture;
 
         if (flagParentMatrix || flagMatrix) {
@@ -8056,11 +8079,11 @@ SOFTWARE.
     this.automatic = !manual;
 
     /**
-     * @name Two.Path#dasharray
-     * @property {String} - List of space-separated dash and gap values.
+     * @name Two.Path#dashes
+     * @property {String} - List of dash and gap values.
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray} for more information on the SVG stroke-dasharray attribute.
      */
-    this.dasharray = '';
+    this.dashes = [];
 
   };
 
@@ -8080,7 +8103,6 @@ SOFTWARE.
       'cap',
       'join',
       'miter',
-      'dasharray',
 
       'closed',
       'curved',
@@ -8166,7 +8188,7 @@ SOFTWARE.
 
       // Only the 7 defined properties are flagged like this. The subsequent
       // properties behave differently and need to be hand written.
-      _.each(Path.Properties.slice(2, 10), Two.Utils.defineProperty, object);
+      _.each(Path.Properties.slice(2, 9), Two.Utils.defineProperty, object);
 
       Object.defineProperty(object, 'fill', {
         enumerable: true,
@@ -8314,7 +8336,7 @@ SOFTWARE.
           }
 
           // Create new Collection with copy of vertices
-          this._collection = new Two.Utils.Collection(vertices || []);//.slice(0));
+          this._collection = new Two.Utils.Collection(vertices || []);
 
           // Listen for Collection changes and bind / unbind
           this._collection
@@ -8437,13 +8459,6 @@ SOFTWARE.
      */
     _flagClip: false,
 
-    /**
-     * @name Two.Path#_flagDashArray
-     * @private
-     * @property {Boolean} - Determines whether the {@link Two.Path#clip} needs updating.
-     */
-    _flagDasharray: false,
-
     // Underlying Properties
 
     /**
@@ -8482,7 +8497,6 @@ SOFTWARE.
     _ending: 1.0,
 
     _clip: false,
-    _dasharray: '',
 
     constructor: Path,
 
@@ -9104,7 +9118,7 @@ SOFTWARE.
       this._flagVertices =  this._flagFill =  this._flagStroke =
          this._flagLinewidth = this._flagOpacity = this._flagVisible =
          this._flagCap = this._flagJoin = this._flagMiter =
-         this._flagClassName = this._flagClip = this._flagDasharray = false;
+         this._flagClassName = this._flagClip = false;
 
       Two.Shape.prototype.flagReset.call(this);
 
@@ -10381,6 +10395,8 @@ SOFTWARE.
         this.translation.y = y;
     }
 
+    this.dashes = [];
+
     if (!_.isObject(styles)) {
       return this;
     }
@@ -10402,7 +10418,7 @@ SOFTWARE.
     Properties: [
       'value', 'family', 'size', 'leading', 'alignment', 'linewidth', 'style',
       'className', 'weight', 'decoration', 'baseline', 'opacity', 'visible',
-      'fill', 'stroke'
+      'fill', 'stroke',
     ],
 
     FlagFill: function() {
