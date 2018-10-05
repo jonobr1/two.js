@@ -146,7 +146,7 @@
     set: function(a) {
 
       var elements = a;
-      if (!_.isArray(elements)) {
+      if (arguments.length > 1) {
         elements = _.toArray(arguments);
       }
 

@@ -417,6 +417,10 @@
           changed['stroke-miterlimit'] = this._miter;
         }
 
+        if (this.dashes && this.dashes.length > 0) {
+          changed['stroke-dasharray'] = this.dashes.join(' ');
+        }
+
         // If there is no attached DOM element yet,
         // create it with all necessary attributes.
         if (!this._renderer.elem) {
@@ -532,6 +536,9 @@
         }
         if (this._flagVisible) {
           changed.visibility = this._visible ? 'visible' : 'hidden';
+        }
+        if (this.dashes && this.dashes.length > 0) {
+          changed['stroke-dasharray'] = this.dashes.join(' ');
         }
 
         if (!this._renderer.elem) {

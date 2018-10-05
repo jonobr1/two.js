@@ -32,6 +32,8 @@
         this.translation.y = y;
     }
 
+    this.dashes = [];
+
     if (!_.isObject(styles)) {
       return this;
     }
@@ -53,7 +55,7 @@
     Properties: [
       'value', 'family', 'size', 'leading', 'alignment', 'linewidth', 'style',
       'className', 'weight', 'decoration', 'baseline', 'opacity', 'visible',
-      'fill', 'stroke'
+      'fill', 'stroke',
     ],
 
     FlagFill: function() {
