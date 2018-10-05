@@ -104,7 +104,7 @@
 
         var matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter,
             closed, commands, length, last, next, prev, a, b, c, d, ux, uy, vx, vy,
-            ar, bl, br, cl, x, y, mask, clip, defaultMatrix, isOffset;
+            ar, bl, br, cl, x, y, mask, clip, defaultMatrix, isOffset, dasharray;
 
         // TODO: Add a check here to only invoke _update if need be.
         this._update();
@@ -123,6 +123,7 @@
         length = commands.length;
         last = length - 1;
         defaultMatrix = isDefaultMatrix(matrix);
+        dasharray = this._dasharray;
 
         // mask = this._mask;
         clip = this._clip;
@@ -178,6 +179,10 @@
         }
         if (_.isNumber(opacity)) {
           ctx.globalAlpha = opacity;
+        }
+
+        if (dasharray) {
+          ctx.setLineDash(dasharray.split(' '));
         }
 
         ctx.beginPath();

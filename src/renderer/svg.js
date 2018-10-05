@@ -417,6 +417,10 @@
           changed['stroke-miterlimit'] = this._miter;
         }
 
+        if (this._flagDasharray) {
+          changed['stroke-dasharray'] = this._dasharray;
+        }
+
         // If there is no attached DOM element yet,
         // create it with all necessary attributes.
         if (!this._renderer.elem) {

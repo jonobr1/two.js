@@ -142,6 +142,13 @@
      */
     this.automatic = !manual;
 
+    /**
+     * @name Two.Path#dasharray
+     * @property {String} - List of space-separated dash and gap values.
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray} for more information on the SVG stroke-dasharray attribute.
+     */
+    this.dasharray = '';
+
   };
 
   _.extend(Path, {
@@ -160,6 +167,7 @@
       'cap',
       'join',
       'miter',
+      'dasharray',
 
       'closed',
       'curved',
@@ -245,7 +253,7 @@
 
       // Only the 7 defined properties are flagged like this. The subsequent
       // properties behave differently and need to be hand written.
-      _.each(Path.Properties.slice(2, 9), Two.Utils.defineProperty, object);
+      _.each(Path.Properties.slice(2, 10), Two.Utils.defineProperty, object);
 
       Object.defineProperty(object, 'fill', {
         enumerable: true,
@@ -516,6 +524,13 @@
      */
     _flagClip: false,
 
+    /**
+     * @name Two.Path#_flagDashArray
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Path#clip} needs updating.
+     */
+    _flagDasharray: false,
+
     // Underlying Properties
 
     /**
@@ -554,6 +569,7 @@
     _ending: 1.0,
 
     _clip: false,
+    _dasharray: '',
 
     constructor: Path,
 
@@ -1175,7 +1191,7 @@
       this._flagVertices =  this._flagFill =  this._flagStroke =
          this._flagLinewidth = this._flagOpacity = this._flagVisible =
          this._flagCap = this._flagJoin = this._flagMiter =
-         this._flagClassName = this._flagClip = false;
+         this._flagClassName = this._flagClip = this._flagDasharray = false;
 
       Two.Shape.prototype.flagReset.call(this);
 
