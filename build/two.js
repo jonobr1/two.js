@@ -7881,8 +7881,8 @@ SOFTWARE.
     /**
      * @name Two.Shape#_update
      * @function
-     * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
      * @private
+     * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
      * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
      * @nota-bene Try not to call this method more than once a frame.
      */
@@ -8244,6 +8244,10 @@ SOFTWARE.
         }
       });
 
+      /**
+       * @name Two.Path#length
+       * @property {Number} - The sum of distances between all {@link Two.Path#vertices}.
+       */
       Object.defineProperty(object, 'length', {
         get: function() {
           if (this._flagLength) {
@@ -8464,42 +8468,124 @@ SOFTWARE.
     /**
      * @name Two.Path#_length
      * @private
-     * @property {Number} - The sum of distances between all {@link Two.Path#vertices}.
+     * @see {@link Two.Path#length}
      */
     _length: 0,
 
     /**
      * @name Two.Path#_fill
      * @private
-     * @property {(CssColor|Two.Gradient|Two.Texture)} - The value of what the path should be filled in with.
+     * @see {@link Two.Path#fill}
      */
     _fill: '#fff',
 
     /**
      * @name Two.Path#_stroke
      * @private
-     * @property {(CssColor|Two.Gradient|Two.Texture)} - The value of what the path should be outlined in with.
+     * @see {@link Two.Path#stroke}
      */
     _stroke: '#000',
+
+    /**
+     * @name Two.Path#_linewidth
+     * @private
+     * @see {@link Two.Path#linewidth}
+     */
     _linewidth: 1.0,
+
+    /**
+     * @name Two.Path#_opacity
+     * @private
+     * @see {@link Two.Path#opacity}
+     */
     _opacity: 1.0,
+
+    /**
+     * @name Two.Path#_className
+     * @private
+     * @see {@link Two.Path#className}
+     */
     _className: '',
+
+    /**
+     * @name Two.Path#_visible
+     * @private
+     * @see {@link Two.Path#visible}
+     */
     _visible: true,
 
+    /**
+     * @name Two.Path#_cap
+     * @private
+     * @see {@link Two.Path#cap}
+     */
     _cap: 'round',
+
+    /**
+     * @name Two.Path#_join
+     * @private
+     * @see {@link Two.Path#join}
+     */
     _join: 'round',
+
+    /**
+     * @name Two.Path#_miter
+     * @private
+     * @see {@link Two.Path#miter}
+     */
     _miter: 4,
 
+    /**
+     * @name Two.Path#_closed
+     * @private
+     * @see {@link Two.Path#closed}
+     */
     _closed: true,
+
+    /**
+     * @name Two.Path#_curved
+     * @private
+     * @see {@link Two.Path#curved}
+     */
     _curved: false,
+
+    /**
+     * @name Two.Path#_automatic
+     * @private
+     * @see {@link Two.Path#automatic}
+     */
     _automatic: true,
+
+    /**
+     * @name Two.Path#_beginning
+     * @private
+     * @see {@link Two.Path#beginning}
+     */
     _beginning: 0,
+
+    /**
+     * @name Two.Path#_ending
+     * @private
+     * @see {@link Two.Path#ending}
+     */
     _ending: 1.0,
 
+    /**
+     * @name Two.Path#_clip
+     * @private
+     * @see {@link Two.Path#clip}
+     */
     _clip: false,
 
     constructor: Path,
 
+    /**
+     * @name Two.Path#clone
+     * @function
+     * @param {Two.Group} parent - The parent group or scene to add the clone to.
+     * @returns {Two.Path}
+     * @description Create a new instance of {@link Two.Path} with the same properties of the current path.
+     */
     clone: function(parent) {
 
       var points = _.map(this.vertices, function(v) {
@@ -8524,6 +8610,12 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.Path#toObject
+     * @function
+     * @returns {Object}
+     * @description Return a JSON compatible plain object that represents the path.
+     */
     toObject: function() {
 
       var result = {
@@ -8544,19 +8636,30 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.Path#noFill
+     * @function
+     * @description Short hand method to set fill to `transparent`.
+     */
     noFill: function() {
       this.fill = 'transparent';
       return this;
     },
 
+    /**
+     * @name Two.Path#noStroke
+     * @function
+     * @description Short hand method to set stroke to `transparent`.
+     */
     noStroke: function() {
       this.stroke = 'transparent';
       return this;
     },
 
     /**
-     * @function Two.Path#corner
-     * @description Orient the vertices of the shape to the upper lefthand corner of the path.
+     * @name Two.Path#corner
+     * @function
+     * @description Orient the vertices of the shape to the upper left-hand corner of the path.
      */
     corner: function() {
 
@@ -8576,7 +8679,8 @@ SOFTWARE.
     },
 
     /**
-     * @function Two.Path#center
+     * @name Two.Path#center
+     * @function
      * @description Orient the vertices of the shape to the center of the path.
      */
     center: function() {
@@ -8599,7 +8703,8 @@ SOFTWARE.
     },
 
     /**
-     * @function Two.Path#remove
+     * @name Two.Path#remove
+     * @function
      * @description Remove self from the scene / parent.
      */
     remove: function() {
@@ -8615,10 +8720,11 @@ SOFTWARE.
     },
 
     /**
-     * @function Two.Path#getBoundingClientRect
+     * @name Two.Path#getBoundingClientRect
+     * @function
      * @param {Boolean} [shallow=false] - Describes whether to calculate off local matrix or world matrix.
      * @returns {Object} - Returns object with top, left, right, bottom, width, height attributes.
-     * @description Return an object with top, left, right, bottom, width, and height parameters of the group.
+     * @description Return an object with top, left, right, bottom, width, and height parameters of the path.
      */
     getBoundingClientRect: function(shallow) {
       var matrix, border, l, x, y, i, v0, c0, c1, v1;
@@ -8715,7 +8821,8 @@ SOFTWARE.
     },
 
     /**
-     * @function Two.Path#getPointAt
+     * @name Two.Path#getPointAt
+     * @function
      * @param {Boolean} t - Percentage value describing where on the Two.Path to estimate and assign coordinate values.
      * @param {Two.Vector} [obj=undefined] - Object to apply calculated x, y to. If none available returns new Object.
      * @returns {Object}
@@ -8853,8 +8960,10 @@ SOFTWARE.
     },
 
     /**
-     * @function Two.Path#plot
+     * @name Two.Path#plot
+     * @function
      * @description Based on closed / curved and sorting of vertices plot where all points should be and where the respective handles should be too.
+     * @nota-bene While this method is public it is internally called by {@link Two.Path#_update} when `automatic = true`.
      */
     plot: function() {
 
@@ -8871,6 +8980,12 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.Path#subdivide
+     * @function
+     * @param {Integer} limit - How many times to recurse subdivisions.
+     * @description Insert a {@link Two.Anchor} at the midpoint between every item in {@link Two.Path#vertices}.
+     */
     subdivide: function(limit) {
       //TODO: DRYness (function below)
       this._update();
@@ -8947,6 +9062,14 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.Path#_updateLength
+     * @function
+     * @private
+     * @param {Integer} [limit=] -
+     * @param {Boolean} [silent=false] - If set to `true` then the path isn't updated before calculation. Useful for internal use.
+     * @description Recalculate the {@link Two.Path#length} value.
+     */
     _updateLength: function(limit, silent) {
       //TODO: DRYness (function above)
       if (!silent) {
@@ -8996,6 +9119,14 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.Path#_update
+     * @function
+     * @private
+     * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+     * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
+     * @nota-bene Try not to call this method more than once a frame.
+     */
     _update: function() {
 
       if (this._flagVertices) {
@@ -9113,6 +9244,12 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.Path#flagReset
+     * @function
+     * @private
+     * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+     */
     flagReset: function() {
 
       this._flagVertices =  this._flagFill =  this._flagStroke =
@@ -9154,6 +9291,13 @@ SOFTWARE.
 
   }
 
+  /**
+   * @protected
+   * @param {Two.Path} path - The path to analyze against.
+   * @param {Number} target - The target length at which to find an anchor.
+   * @returns {Integer}
+   * @description Return the id of an anchor based on a target length.
+   */
   function getIdByLength(path, target) {
 
     var total = path._length;
