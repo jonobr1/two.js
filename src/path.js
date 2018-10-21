@@ -175,6 +175,10 @@
       'ending'
     ],
 
+    Utils: {
+      getCurveLength: getCurveLength
+    },
+
     /**
      * @name Two.Path.FlagVertices
      * @function
