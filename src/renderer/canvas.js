@@ -6,6 +6,14 @@
   var mod = Two.Utils.mod, toFixed = Two.Utils.toFixed;
   var getRatio = Two.Utils.getRatio;
   var _ = Two.Utils;
+  var TWO_PI = Math.PI * 2,
+    max = Math.max,
+    min = Math.min,
+    abs = Math.abs,
+    sin = Math.sin,
+    cos = Math.cos,
+    acos = Math.acos,
+    sqrt = Math.sqrt;
 
   // Returns true if this is a non-transforming matrix
   var isDefaultMatrix = function (m) {
@@ -198,6 +206,23 @@
 
             case Two.Commands.close:
               ctx.closePath();
+              break;
+
+            case Two.Commands.arc:
+
+              var rx = b.rx;
+              var ry = b.ry;
+              var xAxisRotation = b.xAxisRotation;
+              var largeArcFlag = b.largeArcFlag;
+              var sweepFlag = b.sweepFlag;
+
+              prev = closed ? mod(i - 1, length) : max(i - 1, 0);
+              a = commands[prev];
+
+              var ax = toFixed(a.x);
+              var ay = toFixed(a.y);
+
+              canvas.renderSvgArcCommand(ctx, ax, ay, rx, ry, largeArcFlag, sweepFlag, xAxisRotation, x, y);
               break;
 
             case Two.Commands.curve:
@@ -586,6 +611,67 @@
 
       }
 
+    },
+
+    renderSvgArcCommand: function(ctx, ax, ay, rx, ry, largeArcFlag, sweepFlag, xAxisRotation, x, y) {
+
+      xAxisRotation = xAxisRotation * Math.PI / 180;
+
+      // Ensure radii are positive
+      rx = abs(rx);
+      ry = abs(ry);
+
+      // Compute (x1′, y1′)
+      var dx2 = (ax - x) / 2.0;
+      var dy2 = (ay - y) / 2.0;
+      var x1p = cos(xAxisRotation) * dx2 + sin(xAxisRotation) * dy2;
+      var y1p = - sin(xAxisRotation) * dx2 + cos(xAxisRotation) * dy2;
+
+      // Compute (cx′, cy′)
+      var rxs = rx * rx;
+      var rys = ry * ry;
+      var x1ps = x1p * x1p;
+      var y1ps = y1p * y1p;
+
+      // Ensure radii are large enough
+      var cr = x1ps / rxs + y1ps / rys;
+
+      if (cr > 1) {
+
+        // scale up rx,ry equally so cr == 1
+        var s = sqrt(cr);
+        rx = s * rx;
+        ry = s * ry;
+        rxs = rx * rx;
+        rys = ry * ry;
+
+      }
+
+      var dq = (rxs * y1ps + rys * x1ps);
+      var pq = (rxs * rys - dq) / dq;
+      var q = sqrt(max(0, pq));
+      if (largeArcFlag === sweepFlag) q = - q;
+      var cxp = q * rx * y1p / ry;
+      var cyp = - q * ry * x1p / rx;
+
+      // Step 3: Compute (cx, cy) from (cx′, cy′)
+      var cx = cos(xAxisRotation) * cxp
+        - sin(xAxisRotation) * cyp + (ax + x) / 2;
+      var cy = sin(xAxisRotation) * cxp
+        + cos(xAxisRotation) * cyp + (ay + y) / 2;
+
+      // Step 4: Compute θ1 and Δθ
+      var startAngle = svgAngle(1, 0, (x1p - cxp) / rx, (y1p - cyp) / ry);
+      var delta = svgAngle((x1p - cxp) / rx, (y1p - cyp) / ry,
+        (- x1p - cxp) / rx, (- y1p - cyp) / ry) % TWO_PI;
+
+      var endAngle = startAngle + delta;
+
+      var clockwise = sweepFlag === 0;
+
+      renderArcEstimate(ctx, cx, cy, rx, ry, startAngle, endAngle,
+        clockwise, xAxisRotation);
+
     }
 
   };
@@ -665,6 +751,85 @@
     }
 
   });
+
+  function renderArcEstimate(ctx, ox, oy, rx, ry, startAngle, endAngle, clockwise, xAxisRotation) {
+
+    var epsilon = Two.Utils.Curve.Tolerance.epsilon;
+    var deltaAngle = endAngle - startAngle;
+    var samePoints = Math.abs(deltaAngle) < epsilon;
+
+    // ensures that deltaAngle is 0 .. 2 PI
+    deltaAngle = mod(deltaAngle, TWO_PI);
+
+    if (deltaAngle < epsilon) {
+
+      if (samePoints) {
+
+        deltaAngle = 0;
+
+      } else {
+
+        deltaAngle = TWO_PI;
+
+      }
+
+    }
+
+    if (clockwise === true && ! samePoints) {
+
+      if (deltaAngle === TWO_PI) {
+
+        deltaAngle = - TWO_PI;
+
+      } else {
+
+        deltaAngle = deltaAngle - TWO_PI;
+
+      }
+
+    }
+
+    for (var i = 0; i < Two.Resolution; i++) {
+
+      var t = i / (Two.Resolution - 1);
+
+      var angle = startAngle + t * deltaAngle;
+      var x = ox + rx * Math.cos(angle);
+      var y = oy + ry * Math.sin(angle);
+
+      if (xAxisRotation !== 0) {
+
+        var cos = Math.cos(xAxisRotation);
+        var sin = Math.sin(xAxisRotation);
+
+        var tx = x - ox;
+        var ty = y - oy;
+
+        // Rotate the point about the center of the ellipse.
+        x = tx * cos - ty * sin + ox;
+        y = tx * sin + ty * cos + oy;
+
+      }
+
+      ctx.lineTo(x, y);
+
+    }
+
+  }
+
+  function svgAngle(ux, uy, vx, vy) {
+
+    var dot = ux * vx + uy * vy;
+    var len = sqrt(ux * ux + uy * uy) *  sqrt(vx * vx + vy * vy);
+    // floating point precision, slightly over values appear
+    var ang = acos(max(-1, min(1, dot / len)));
+    if ((ux * vy - uy * vx) < 0) {
+      ang = - ang;
+    }
+
+    return ang;
+
+  }
 
   function resetTransform(ctx) {
     ctx.setTransform(1, 0, 0, 1, 0, 0);

@@ -223,6 +223,15 @@
         this.relative = v.relative;
       }
 
+      // TODO: Hack for `Two.Commands.arc`
+      if (this.command === Two.Commands.arc) {
+        this.rx = v.rx;
+        this.ry = v.ry;
+        this.xAxisRotation = v.xAxisRotation;
+        this.largeArcFlag = v.largeArcFlag;
+        this.sweepFlag = v.sweepFlag;
+      }
+
       return this;
 
     },

@@ -12,6 +12,7 @@
     getRatio = Two.Utils.getRatio,
     getComputedMatrix = Two.Utils.getComputedMatrix,
     toFixed = Two.Utils.toFixed,
+    CanvasUtils = Two[Two.Types.canvas].Utils,
     _ = Two.Utils;
 
   var webgl = {
@@ -226,6 +227,23 @@
 
             case Two.Commands.close:
               ctx.closePath();
+              break;
+
+            case Two.Commands.arc:
+
+              var rx = b.rx;
+              var ry = b.ry;
+              var xAxisRotation = b.xAxisRotation;
+              var largeArcFlag = b.largeArcFlag;
+              var sweepFlag = b.sweepFlag;
+
+              prev = closed ? mod(i - 1, length) : max(i - 1, 0);
+              a = commands[prev];
+
+              var ax = toFixed(a.x);
+              var ay = toFixed(a.y);
+
+              CanvasUtils.renderSvgArcCommand(ctx, ax, ay, rx, ry, largeArcFlag, sweepFlag, xAxisRotation, x, y);
               break;
 
             case Two.Commands.curve:
