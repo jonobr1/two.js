@@ -314,7 +314,7 @@
 
       var group = new Group();
       var children = _.map(this.children, function(child) {
-        return child.clone(group);
+        return child.clone();
       });
 
       group.add(children);
@@ -334,7 +334,7 @@
         parent.add(group);
       }
 
-      return group;
+      return group._update();
 
     },
 

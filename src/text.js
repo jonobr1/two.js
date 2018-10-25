@@ -215,7 +215,7 @@
         parent.add(clone);
       }
 
-      return clone;
+      return clone._update();
 
     },
 

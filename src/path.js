@@ -408,7 +408,12 @@
           }
 
           // Create new Collection with copy of vertices
-          this._collection = new Two.Utils.Collection(vertices || []);
+          if (vertices instanceof Two.Utils.Collection) {
+            this._collection = vertices;
+          } else {
+            this._collection = new Two.Utils.Collection(vertices || []);
+          }
+
 
           // Listen for Collection changes and bind / unbind
           this._collection
@@ -656,15 +661,14 @@
      */
     clone: function(parent) {
 
-      var points = _.map(this.vertices, function(v) {
-        return v.clone();
-      });
+      var clone = new Path();
 
-      var clone = new Path(points, this.closed, this.curved, !this.automatic);
+      clone.vertices = this.vertices;
 
-      _.each(Path.Properties, function(k) {
+      for (var i = 0; i < Path.Properties.length; i++) {
+        var k = Path.Properties[i];
         clone[k] = this[k];
-      }, this);
+      }
 
       clone.translation.copy(this.translation);
       clone.rotation = this.rotation;
