@@ -108,6 +108,7 @@ process.exit();
 <!-- For the latest nightly changes checkout the `dev` branch [here](../../tree/dev). -->
 
 #### Nightly
++ Altered `Two.Path.clone` and `Two.Text.clone` to use references where possible and to `_update()` on return
 + Improved multi-decimal and arc SVG interpretation
 + Added `Two.Commands.arc` for better arc rendering across all renderers
 + `Two.Path` and `Two.Text` now have `dashes` property to define stroke dashing behavior [@danvanorden](https://github.com/danvanorden)
