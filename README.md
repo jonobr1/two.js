@@ -63,7 +63,7 @@ And the resulting `/build/two.js` and `/build/two.min.js` will be updated to you
 
 ### Running in Headless Environments
 
-As of version `v0.7.0` Two.js can also run in a headless environment, namely running on the server with the help of a library called [Node Canvas](https://github.com/Automattic/node-canvas). We don't add Node Canvas to dependencies of Two.js because it's _not necessary_ to run it in the browser. However, it has all the hooks setup to run in a cloud environment. To get started follow the installation instructions on Automattic's readme. After you've done that run:
+As of version `v0.7.x` Two.js can also run in a headless environment, namely running on the server with the help of a library called [Node Canvas](https://github.com/Automattic/node-canvas). We don't add Node Canvas to dependencies of Two.js because it's _not necessary_ to run it in the browser. However, it has all the hooks setup to run in a cloud environment. To get started follow the installation instructions on Automattic's readme. After you've done that run:
 
 ```
 npm install canvas
@@ -107,7 +107,7 @@ process.exit();
 ## Change Log
 <!-- For the latest nightly changes checkout the `dev` branch [here](../../tree/dev). -->
 
-#### Nightly
+#### November 3, 2018 [v0.7.0-beta.1](https://github.com/jonobr1/two.js/releases/tag/v0.7.0-beta.1)
 + Altered `Two.Path.clone` and `Two.Text.clone` to use references where possible and to `_update()` on return
 + Improved multi-decimal and arc SVG interpretation
 + Added `Two.Commands.arc` for better arc rendering across all renderers
