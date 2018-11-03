@@ -456,7 +456,13 @@ SOFTWARE.
      * @name Two.Version
      * @property {String} - The current working version of the library.
      */
-    Version: 'v0.7.0',
+    Version: 'v0.7.0-beta.1',
+
+    /**
+     * @name Two.PublishDate
+     * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
+     */
+    PublishDate: '2018-11-03T10:28:50+01:00',
 
     /**
      * @name Two.Identifier
