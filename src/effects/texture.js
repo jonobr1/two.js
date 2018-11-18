@@ -66,6 +66,14 @@
       return anchor.href;
     },
 
+    loadHeadlessBuffer: new Function('texture', 'loaded', [
+      'var fs = require("fs");',
+      'var buffer = fs.readFileSync(texture.src);',
+
+      'texture.image.src = buffer;',
+      'loaded();'
+    ].join('\n')),
+
     getImage: function(src) {
 
       var absoluteSrc = Texture.getAbsoluteURL(src);
@@ -148,11 +156,7 @@
 
         if (Two.Utils.isHeadless) {
 
-          var fs = require('fs');
-          var buffer = fs.readFileSync(texture.src);
-
-          texture.image.src = buffer;
-          loaded();
+          Texture.loadHeadlessBuffer(texture, loaded);
 
         } else {
 

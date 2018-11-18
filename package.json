@@ -1,6 +1,6 @@
 {
   "name": "two.js",
-  "version": "0.7.0-beta.1",
+  "version": "0.7.0-beta.2",
   "description": "A renderer agnostic two-dimensional drawing api for the web.",
   "module": "build/two.module.js",
   "files": [
@@ -54,5 +54,20 @@
     "qunitjs": "^2.4.0",
     "resemblejs": "^1.1.1",
     "underscore": "^1.9.1"
+  },
+  "autoupdate": {
+    "source": "git",
+    "target": "git://github.com/jonobr1/two.js.git",
+    "fileMap": [
+      {
+        "basePath": "build",
+        "files": [
+          "two*.js"
+        ]
+      }
+    ]
+  },
+  "dependencies": {
+    "canvas": "^2.1.0"
   }
 }

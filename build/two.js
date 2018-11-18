@@ -456,13 +456,13 @@ SOFTWARE.
      * @name Two.Version
      * @property {String} - The current working version of the library.
      */
-    Version: 'v0.7.0-beta.1',
+    Version: 'v0.7.0-beta.2',
 
     /**
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2018-11-03T10:28:50+01:00',
+    PublishDate: '2018-11-18T10:50:17+01:00',
 
     /**
      * @name Two.Identifier
@@ -580,14 +580,16 @@ SOFTWARE.
       /**
        * @name Two.Utils.shim
        * @function
-       * @param {Canvas} CanvasModule - The `Canvas` object provided by `node-canvas`.
-       * @returns {Canvas} Returns an instanced canvas object from the provided `node-canvas` `Canvas` object.
+       * @param {canvas} canvas - The instanced `Canvas` object provided by `node-canvas`.
+       * @param {Image} [Image] - The prototypical `Image` object provided by `node-canvas`. This is only necessary to pass if you're going to load bitmap imagery.
+       * @returns {canvas} Returns the instanced canvas object you passed from with additional attributes needed for Two.js.
        * @description Convenience method for defining all the dependencies from the npm package `node-canvas`. See [node-canvas]{@link https://github.com/Automattic/node-canvas} for additional information on setting up HTML5 `<canvas />` drawing in a node.js environment.
        */
-      shim: function(CanvasModule) {
-        var canvas = new CanvasModule();
+      shim: function(canvas, Image) {
         Two.CanvasRenderer.Utils.shim(canvas);
-        Two.Utils.Image = CanvasModule.Image;
+        if (!_.isUndefined(Image)) {
+          Two.Utils.Image = Image;
+        }
         Two.Utils.isHeadless = true;
         return canvas;
       },
@@ -11552,6 +11554,14 @@ SOFTWARE.
       return anchor.href;
     },
 
+    loadHeadlessBuffer: new Function('texture', 'loaded', [
+      'var fs = require("fs");',
+      'var buffer = fs.readFileSync(texture.src);',
+
+      'texture.image.src = buffer;',
+      'loaded();'
+    ].join('\n')),
+
     getImage: function(src) {
 
       var absoluteSrc = Texture.getAbsoluteURL(src);
@@ -11634,11 +11644,7 @@ SOFTWARE.
 
         if (Two.Utils.isHeadless) {
 
-          var fs = require('fs');
-          var buffer = fs.readFileSync(texture.src);
-
-          texture.image.src = buffer;
-          loaded();
+          Texture.loadHeadlessBuffer(texture, loaded);
 
         } else {
 

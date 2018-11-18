@@ -63,32 +63,33 @@ And the resulting `/build/two.js` and `/build/two.min.js` will be updated to you
 
 ### Running in Headless Environments
 
-As of version `v0.7.x` Two.js can also run in a headless environment, namely running on the server with the help of a library called [Node Canvas](https://github.com/Automattic/node-canvas). We don't add Node Canvas to dependencies of Two.js because it's _not necessary_ to run it in the browser. However, it has all the hooks setup to run in a cloud environment. To get started follow the installation instructions on Automattic's readme. After you've done that run:
+As of version `v0.7.x` Two.js can also run in a headless environment, namely running on the server with the help of a library called [Node Canvas](https://github.com/Automattic/node-canvas). We don't add Node Canvas to dependencies of Two.js because it's _not necessary_ to run it in the browser. However, it has all the hooks setup to run in a cloud environment. To get started follow the installation instructions on Automattic's [readme](https://github.com/Automattic/node-canvas#installation). After you've done that run:
 
 ```
 npm install canvas
+npm intsall two.js
 ```
 
 Now in a JavaScript file setup your Two.js scenegraph and save out frames whenever you need to:
 
 ```javascript
-var Two = require('../build/two.js'); // Or from npm, `require('two.js');`
-var Canvas = require('canvas');
-var Image = Canvas.Image;
+var { createCanvas, Image } = require('canvas');
+var Two = require('two.js')
+
 var fs = require('fs');
 var path = require('path');
 
 var width = 800;
 var height = 600;
 
-var canvas = Two.Utils.shim(Canvas);
+var canvas = createCanvas(width, height);
+Two.Utils.shim(canvas, Image);
 
 var time = Date.now();
 
 var two = new Two({
-  type: Two.Types.canvas,
-  width: 800,
-  height: 600,
+  width: width,
+  height: height,
   domElement: canvas
 });
 
@@ -96,16 +97,20 @@ var rect = two.makeRectangle(width / 2, height / 2, 50, 50);
 rect.fill = 'rgb(255, 100, 100)';
 rect.noStroke();
 
-two.update();
+two.render();
 
-fs.writeFileSync(path.resolve(__dirname, './images/rectangle.png'), canvas.toBuffer());
+var settings = { compressionLevel: 3, filters: canvas.PNG_FILTER_NONE };
+fs.writeFileSync(path.resolve(__dirname, './images/rectangle.png'), canvas.toBuffer('image/png', settings));
 console.log('Finished rendering. Time took: ', Date.now() - time);
 
 process.exit();
+
 ```
 
 ## Change Log
 <!-- For the latest nightly changes checkout the `dev` branch [here](../../tree/dev). -->
+### November 18, 2018 [v0.7.0-beta.2](https://github.com/jonobr1/two.js/releases/tag/v0.7.0-beta.2)
++ Updated Two.js compatibility with webpack and node-canvas 2.0.0+
 
 #### November 3, 2018 [v0.7.0-beta.1](https://github.com/jonobr1/two.js/releases/tag/v0.7.0-beta.1)
 + Altered `Two.Path.clone` and `Two.Text.clone` to use references where possible and to `_update()` on return

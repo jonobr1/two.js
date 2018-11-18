@@ -95,6 +95,8 @@
 
   _.extend(ZUI.prototype, {
 
+    constructor: ZUI,
+
     add: function(surface) {
       this.surfaces.push(surface);
       var limits = surface.limits();
