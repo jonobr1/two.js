@@ -462,7 +462,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2018-11-18T10:50:17+01:00',
+    PublishDate: '2018-12-08T17:24:17+01:00',
 
     /**
      * @name Two.Identifier
@@ -9275,6 +9275,7 @@ SOFTWARE.
 
         var l = this._collection.length;
         var last = l - 1;
+        var closed = this._closed;
 
         var beginning = Math.min(this._beginning, this._ending);
         var ending = Math.max(this._beginning, this._ending);
@@ -9327,13 +9328,13 @@ SOFTWARE.
 
             if (i === high && contains(this, ending)) {
               right = v;
-              if (right.controls) {
+              if (!closed && right.controls) {
                 right.controls.right.clear();
               }
             } else if (i === low && contains(this, beginning)) {
               left = v;
               left.command = Two.Commands.move;
-              if (left.controls) {
+              if (!closed && left.controls) {
                 left.controls.left.clear();
               }
             }

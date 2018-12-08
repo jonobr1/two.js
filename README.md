@@ -108,7 +108,10 @@ process.exit();
 ```
 
 ## Change Log
-<!-- For the latest nightly changes checkout the `dev` branch [here](../../tree/dev). -->
+
+#### Nightly
++ Fixed `Two.Path.closed` on latest `ending` calculations
+
 #### November 18, 2018 [v0.7.0-beta.2](https://github.com/jonobr1/two.js/releases/tag/v0.7.0-beta.2)
 + Updated Two.js compatibility with webpack and node-canvas 2.0.0+
 

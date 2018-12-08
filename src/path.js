@@ -1213,6 +1213,7 @@
 
         var l = this._collection.length;
         var last = l - 1;
+        var closed = this._closed;
 
         var beginning = Math.min(this._beginning, this._ending);
         var ending = Math.max(this._beginning, this._ending);
@@ -1265,13 +1266,13 @@
 
             if (i === high && contains(this, ending)) {
               right = v;
-              if (right.controls) {
+              if (!closed && right.controls) {
                 right.controls.right.clear();
               }
             } else if (i === low && contains(this, beginning)) {
               left = v;
               left.command = Two.Commands.move;
-              if (left.controls) {
+              if (!closed && left.controls) {
                 left.controls.left.clear();
               }
             }
