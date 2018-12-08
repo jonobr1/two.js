@@ -66,8 +66,5 @@
         ]
       }
     ]
-  },
-  "dependencies": {
-    "canvas": "^2.1.0"
   }
 }

@@ -6,6 +6,7 @@
   var mod = Two.Utils.mod, toFixed = Two.Utils.toFixed;
   var getRatio = Two.Utils.getRatio;
   var _ = Two.Utils;
+  var emptyArray = [];
   var TWO_PI = Math.PI * 2,
     max = Math.max,
     min = Math.min,
@@ -301,6 +302,10 @@
 
         if (closed) {
           ctx.closePath();
+        }
+
+        if (dashes && dashes.length > 0) {
+          ctx.setLineDash(emptyArray);
         }
 
         if (!clip && !parentClipped) {

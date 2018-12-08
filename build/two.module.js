@@ -462,7 +462,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2018-12-08T17:42:55+01:00',
+    PublishDate: '2018-12-08T19:10:42+01:00',
 
     /**
      * @name Two.Identifier
@@ -5680,6 +5680,7 @@ SOFTWARE.
   var mod = Two.Utils.mod, toFixed = Two.Utils.toFixed;
   var getRatio = Two.Utils.getRatio;
   var _ = Two.Utils;
+  var emptyArray = [];
   var TWO_PI = Math.PI * 2,
     max = Math.max,
     min = Math.min,
@@ -5975,6 +5976,10 @@ SOFTWARE.
 
         if (closed) {
           ctx.closePath();
+        }
+
+        if (dashes && dashes.length > 0) {
+          ctx.setLineDash(emptyArray);
         }
 
         if (!clip && !parentClipped) {

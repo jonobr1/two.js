@@ -110,6 +110,7 @@ process.exit();
 ## Change Log
 
 #### Nightly
++ Canvas Renderer supports dashed and non dashed paths
 + Enforce `Two.Rectangle` has four `vertices`
 + Fixed `Two.Path.closed` on latest `ending` calculations
 
