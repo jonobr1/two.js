@@ -42,7 +42,7 @@
 
     var elem = two.renderer.domElement.querySelector('#' + rect.id);
 
-    assert.equal(elem.getAttribute('d'), 'M -50 -50 L 50 -50 L 50 50 L -50 50 L -50 -50 Z ', 'Two.makeRectangle applies d attribute properly.');
+    assert.equal(elem.getAttribute('d'), 'M -50 -50 L 50 -50 L 50 50 L -50 50 Z ', 'Two.makeRectangle applies d attribute properly.');
 
     QUnit.Utils.addInstanceToTest(assert.test, two);
 

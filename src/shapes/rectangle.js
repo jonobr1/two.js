@@ -9,8 +9,8 @@
       new Two.Anchor(),
       new Two.Anchor(),
       new Two.Anchor(),
-      new Two.Anchor(),
       new Two.Anchor()
+      // new Two.Anchor() // TODO: Figure out how to handle this for `beginning` / `ending` animations
     ], true, false, true);
 
     this.width = width;

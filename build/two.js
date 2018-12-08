@@ -462,7 +462,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2018-12-08T17:24:17+01:00',
+    PublishDate: '2018-12-08T17:42:55+01:00',
 
     /**
      * @name Two.Identifier
@@ -9563,8 +9563,8 @@ SOFTWARE.
       new Two.Anchor(),
       new Two.Anchor(),
       new Two.Anchor(),
-      new Two.Anchor(),
       new Two.Anchor()
+      // new Two.Anchor() // TODO: Figure out how to handle this for `beginning` / `ending` animations
     ], true, false, true);
 
     this.width = width;

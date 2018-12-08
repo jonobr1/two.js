@@ -110,6 +110,7 @@ process.exit();
 ## Change Log
 
 #### Nightly
++ Enforce `Two.Rectangle` has four `vertices`
 + Fixed `Two.Path.closed` on latest `ending` calculations
 
 #### November 18, 2018 [v0.7.0-beta.2](https://github.com/jonobr1/two.js/releases/tag/v0.7.0-beta.2)
