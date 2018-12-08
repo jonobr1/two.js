@@ -430,7 +430,7 @@
      * @name Two.Version
      * @property {String} - The current working version of the library.
      */
-    Version: 'v0.7.0-beta.2',
+    Version: 'v0.7.0-beta.3',
 
     /**
      * @name Two.PublishDate
