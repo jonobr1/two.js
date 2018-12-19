@@ -883,7 +883,68 @@
 
       }
 
+    },
+	
+	image: {
+
+      render: function(domElement) {
+
+        this._update();
+
+        var changed = {};
+
+        var flagMatrix = this._matrix.manual || this._flagMatrix;
+
+        if (flagMatrix) {
+          changed.transform = 'matrix(' + this._matrix.toString() + ')';
+        }
+
+        if (this._flagWidth) {
+          changed['width'] = this._width;
+        }
+
+          if (this._flagHeight) {
+              changed['height'] = this._height;
+          }
+
+          if (this._flagHref) {
+              changed['href'] = this._href;
+          }
+
+          if (this._flagPreserveAspectRatio) {
+              changed['preserveAspectRatio'] = this._preserveAspectRatio ? 'none' : 'meet';
+          }
+
+        if (this._flagOpacity) {
+          changed.opacity = this._opacity;
+        }
+
+        if (this._flagClassName) {
+          changed['class'] = this._className;
+        }
+
+        if (this._flagVisible) {
+          changed.visibility = this._visible ? 'visible' : 'hidden';
+        }
+
+        if (!this._renderer.elem) {
+
+          changed.id = this.id;
+
+          this._renderer.elem = svg.createElement('image', changed);
+          domElement.defs.appendChild(this._renderer.elem);
+
+        } else {
+
+          svg.setAttributes(this._renderer.elem, changed);
+
+        }
+        return this.flagReset();
+
+      }
+
     }
+
 
   };
 
