@@ -614,6 +614,40 @@
 
         return this.flagReset();
 
+      },
+
+      image: function(ctx, forced) {
+
+        var matrix = this._matrix.elements;
+        var width = this._width;
+        var height = this._height;
+        var href = this._href;
+        var preserveAspectRatio = this._preserveAspectRatio;
+        var opacity = this._opacity;
+        var visible = this._visible;
+        var defaultMatrix = isDefaultMatrix(matrix);
+
+        if (!forced && (!visible)) {
+          return this;
+        }
+
+        if (!defaultMatrix) {
+          ctx.save();
+          ctx.transform(matrix[0], matrix[3], matrix[1], matrix[4], matrix[2], matrix[5]);
+        }
+
+        // TODO: Handle `preserveAspectRatio` intelligently...
+        var image = Two.Texture.getImage(href);
+
+        if (image) {
+          ctx.save();
+          ctx.translate(x, y);
+          ctx.drawImage(image, - width / 2, - height / 2, width, height);
+          ctx.restore();
+        }
+
+        return this.flagReset();
+
       }
 
     },

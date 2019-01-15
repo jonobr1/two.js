@@ -13,7 +13,7 @@
     anchor = document.createElement('a');
   }
 
-  var Texture = Two.Texture = function(src, callback) {
+  var Texture = Two.Texture = function(source, callback) {
 
     this._renderer = {};
     this._renderer.type = 'texture';
@@ -35,10 +35,10 @@
       this.bind(Two.Events.load, loaded);
     }
 
-    if (_.isString(src)) {
-      this.src = src;
-    } else if (_.isElement(src)) {
-      this.image = src;
+    if (_.isString(source)) {
+      this.src = source;
+    } else if (_.isElement(source)) {
+      this.image = source;
     }
 
     this._update();
