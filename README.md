@@ -109,6 +109,9 @@ process.exit();
 
 ## Change Log
 
+#### Nightly
++ Added `Two.Path.dashes` and `Two.Text.dashes` support to WebGL and Canvas Renderers
+
 #### December 8, 2018 [v0.7.0-beta.3](https://github.com/jonobr1/two.js/releases/tag/v0.7.0-beta.3)
 + Canvas Renderer supports dashed and non dashed paths
 + Enforce `Two.Rectangle` has four `vertices`
