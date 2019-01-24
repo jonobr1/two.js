@@ -304,10 +304,6 @@
           ctx.closePath();
         }
 
-        if (dashes && dashes.length > 0) {
-          ctx.setLineDash(emptyArray);
-        }
-
         if (!clip && !parentClipped) {
           if (!canvas.isHidden.test(fill)) {
             isOffset = fill._renderer && fill._renderer.offset
@@ -344,6 +340,10 @@
 
         if (clip && !parentClipped) {
           ctx.clip();
+        }
+
+        if (dashes && dashes.length > 0) {
+          ctx.setLineDash(emptyArray);
         }
 
         return this.flagReset();
@@ -499,6 +499,10 @@
         // TODO: Test for text
         if (clip && !parentClipped) {
           ctx.clip();
+        }
+
+        if (dashes && dashes.length > 0) {
+          ctx.setLineDash(emptyArray);
         }
 
         return this.flagReset();

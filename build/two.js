@@ -456,13 +456,13 @@ SOFTWARE.
      * @name Two.Version
      * @property {String} - The current working version of the library.
      */
-    Version: 'v0.7.0-beta.3',
+    Version: 'v0.7.0-beta.4',
 
     /**
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2018-12-08T22:41:43+01:00',
+    PublishDate: '2019-01-24T20:29:30+01:00',
 
     /**
      * @name Two.Identifier
@@ -5978,10 +5978,6 @@ SOFTWARE.
           ctx.closePath();
         }
 
-        if (dashes && dashes.length > 0) {
-          ctx.setLineDash(emptyArray);
-        }
-
         if (!clip && !parentClipped) {
           if (!canvas.isHidden.test(fill)) {
             isOffset = fill._renderer && fill._renderer.offset
@@ -6018,6 +6014,10 @@ SOFTWARE.
 
         if (clip && !parentClipped) {
           ctx.clip();
+        }
+
+        if (dashes && dashes.length > 0) {
+          ctx.setLineDash(emptyArray);
         }
 
         return this.flagReset();
@@ -6173,6 +6173,10 @@ SOFTWARE.
         // TODO: Test for text
         if (clip && !parentClipped) {
           ctx.clip();
+        }
+
+        if (dashes && dashes.length > 0) {
+          ctx.setLineDash(emptyArray);
         }
 
         return this.flagReset();
@@ -7198,12 +7202,12 @@ SOFTWARE.
         ctx.textBaseline = elem._baseline;
 
         // TODO: Estimate this better
-        var width = ctx.measureText(elem._value).width;
-        var height = Math.max(elem._size || elem._leading);
+        var width = ctx.measureText(elem._value).width * 1.25;
+        var height = Math.max(elem._size, elem._leading) * 1.25;
 
         if (this._linewidth && !webgl.isHidden.test(this._stroke)) {
-          // width += this._linewidth; // TODO: Not sure if the `measure` calcs this.
-          height += this._linewidth;
+          width += this._linewidth * 2;
+          height += this._linewidth * 2;
         }
 
         var w = width / 2;

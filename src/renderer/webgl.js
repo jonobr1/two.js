@@ -680,12 +680,12 @@
         ctx.textBaseline = elem._baseline;
 
         // TODO: Estimate this better
-        var width = ctx.measureText(elem._value).width;
-        var height = Math.max(elem._size || elem._leading);
+        var width = ctx.measureText(elem._value).width * 1.25;
+        var height = Math.max(elem._size, elem._leading) * 1.25;
 
         if (this._linewidth && !webgl.isHidden.test(this._stroke)) {
-          // width += this._linewidth; // TODO: Not sure if the `measure` calcs this.
-          height += this._linewidth;
+          width += this._linewidth * 2;
+          height += this._linewidth * 2;
         }
 
         var w = width / 2;
