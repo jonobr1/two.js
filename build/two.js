@@ -462,7 +462,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2019-01-24T20:29:30+01:00',
+    PublishDate: '2019-01-25T16:24:46+01:00',
 
     /**
      * @name Two.Identifier
@@ -7877,8 +7877,8 @@ SOFTWARE.
      */
     MakeObservable: function(object) {
 
-      Object.defineProperty(object, 'translation', {
-        enumerable: true,
+      var translation = {
+        enumerable: false,
         get: function() {
           return this._translation;
         },
@@ -7890,7 +7890,10 @@ SOFTWARE.
           this._translation.bind(Two.Events.change, this._renderer.flagMatrix);
           Shape.FlagMatrix.call(this);
         }
-      });
+      };
+
+      Object.defineProperty(object, 'translation', translation);
+      Object.defineProperty(object, 'position', translation);
 
       Object.defineProperty(object, 'rotation', {
         enumerable: true,

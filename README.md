@@ -110,6 +110,7 @@ process.exit();
 ## Change Log
 
 #### Nightly
++ Added `Two.Shape.position` accessor to `Two.Shape.translation` for ease of use with [matter.js](http://brm.io/matter-js/)
 + Added `Two.Path.dashes` and `Two.Text.dashes` support to WebGL and Canvas Renderers
 
 #### December 8, 2018 [v0.7.0-beta.3](https://github.com/jonobr1/two.js/releases/tag/v0.7.0-beta.3)

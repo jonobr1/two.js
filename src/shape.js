@@ -83,8 +83,8 @@
      */
     MakeObservable: function(object) {
 
-      Object.defineProperty(object, 'translation', {
-        enumerable: true,
+      var translation = {
+        enumerable: false,
         get: function() {
           return this._translation;
         },
@@ -96,7 +96,10 @@
           this._translation.bind(Two.Events.change, this._renderer.flagMatrix);
           Shape.FlagMatrix.call(this);
         }
-      });
+      };
+
+      Object.defineProperty(object, 'translation', translation);
+      Object.defineProperty(object, 'position', translation);
 
       Object.defineProperty(object, 'rotation', {
         enumerable: true,
