@@ -2,7 +2,7 @@
 
 MIT License
 
-Copyright (c) 2012 - 2017 jonobr1 / http://jonobr1.com
+Copyright (c) 2012 - 2019 jonobr1 / http://jonobr1.com
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,9 +24,19 @@ SOFTWARE.
 
 */
 
-(this || window).Two = (function(previousTwo) {
+(this || self || window).Two = (function(previousTwo) {
 
-  var root = typeof window != 'undefined' ? window : typeof global != 'undefined' ? global : null;
+  var root;
+  if (typeof window !== 'undefined') {
+    root = window;
+  } else if (typeof global !== 'undefined') {
+    root = global;
+  } else if (typeof self !== 'undefined') {
+    root = self
+  } else {
+    root = this;
+  }
+
   var toString = Object.prototype.toString;
   /**
    * @name _
@@ -462,7 +472,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2019-01-25T16:24:46+01:00',
+    PublishDate: '2019-01-25T21:54:30+01:00',
 
     /**
      * @name Two.Identifier
@@ -3020,17 +3030,17 @@ SOFTWARE.
 
   }
 
-  if (typeof define === 'function' && define.amd) {
+  if (typeof module != 'undefined' && module.exports) {
+    module.exports = Two;
+  } else if (typeof define === 'function' && define.amd) {
     define('two', [], function() {
       return Two;
     });
-  } else if (typeof module != 'undefined' && module.exports) {
-    module.exports = Two;
   }
 
   return Two;
 
-})((typeof global !== 'undefined' ? global : (this || window)).Two);
+})((typeof global !== 'undefined' ? global : (this || self || window)).Two);
 
 (function(Two) {
 
@@ -3098,7 +3108,7 @@ SOFTWARE.
 
   });
 
-})((typeof global !== 'undefined' ? global : (this || window)).Two);
+})((typeof global !== 'undefined' ? global : (this || self || window)).Two);
 
 (function(Two) {
 
@@ -3905,7 +3915,7 @@ SOFTWARE.
 
   Vector.MakeObservable(Vector.prototype);
 
-})((typeof global !== 'undefined' ? global : (this || window)).Two);
+})((typeof global !== 'undefined' ? global : (this || self || window)).Two);
 
 (function(Two) {
 
@@ -4214,7 +4224,7 @@ SOFTWARE.
 
   Two.Anchor.MakeObservable(Two.Anchor.prototype);
 
-})((typeof global !== 'undefined' ? global : (this || window)).Two);
+})((typeof global !== 'undefined' ? global : (this || self || window)).Two);
 
 (function(Two) {
 
@@ -4728,7 +4738,7 @@ SOFTWARE.
 
   });
 
-})((typeof global !== 'undefined' ? global : (this || window)).Two);
+})((typeof global !== 'undefined' ? global : (this || self || window)).Two);
 
 (function(Two) {
 
@@ -5670,7 +5680,7 @@ SOFTWARE.
 
   });
 
-})((typeof global !== 'undefined' ? global : (this || window)).Two);
+})((typeof global !== 'undefined' ? global : (this || self || window)).Two);
 
 (function(Two) {
 
@@ -6518,7 +6528,7 @@ SOFTWARE.
     ctx.setTransform(1, 0, 0, 1, 0, 0);
   }
 
-})((typeof global !== 'undefined' ? global : (this || window)).Two);
+})((typeof global !== 'undefined' ? global : (this || self || window)).Two);
 
 (function(Two) {
 
@@ -7790,7 +7800,7 @@ SOFTWARE.
 
   });
 
-})((typeof global !== 'undefined' ? global : (this || window)).Two);
+})((typeof global !== 'undefined' ? global : (this || self || window)).Two);
 
 (function(Two) {
 
@@ -8070,7 +8080,7 @@ SOFTWARE.
 
   Shape.MakeObservable(Shape.prototype);
 
-})((typeof global !== 'undefined' ? global : (this || window)).Two);
+})((typeof global !== 'undefined' ? global : (this || self || window)).Two);
 
 (function(Two) {
 
@@ -9530,7 +9540,7 @@ SOFTWARE.
 
   }
 
-})((typeof global !== 'undefined' ? global : (this || window)).Two);
+})((typeof global !== 'undefined' ? global : (this || self || window)).Two);
 
 (function(Two) {
 
@@ -9562,7 +9572,7 @@ SOFTWARE.
 
   Path.MakeObservable(Line.prototype);
 
-})((typeof global !== 'undefined' ? global : (this || window)).Two);
+})((typeof global !== 'undefined' ? global : (this || self || window)).Two);
 
 (function(Two) {
 
@@ -9685,7 +9695,7 @@ SOFTWARE.
 
   Rectangle.MakeObservable(Rectangle.prototype);
 
-})((typeof global !== 'undefined' ? global : (this || window)).Two);
+})((typeof global !== 'undefined' ? global : (this || self || window)).Two);
 
 (function(Two) {
 
@@ -9814,7 +9824,7 @@ SOFTWARE.
 
   Ellipse.MakeObservable(Ellipse.prototype);
 
-})((typeof global !== 'undefined' ? global : (this || window)).Two);
+})((typeof global !== 'undefined' ? global : (this || self || window)).Two);
 
 (function(Two) {
 
@@ -9931,7 +9941,7 @@ SOFTWARE.
 
   Circle.MakeObservable(Circle.prototype);
 
-})((typeof global !== 'undefined' ? global : (this || window)).Two);
+})((typeof global !== 'undefined' ? global : (this || self || window)).Two);
 
 (function(Two) {
 
@@ -10051,7 +10061,7 @@ SOFTWARE.
 
   Polygon.MakeObservable(Polygon.prototype);
 
-})((typeof global !== 'undefined' ? global : (this || window)).Two);
+})((typeof global !== 'undefined' ? global : (this || self || window)).Two);
 
 (function(Two) {
 
@@ -10297,7 +10307,7 @@ SOFTWARE.
     return v % l;
   }
 
-})((typeof global !== 'undefined' ? global : (this || window)).Two);
+})((typeof global !== 'undefined' ? global : (this || self || window)).Two);
 
 (function(Two) {
 
@@ -10431,7 +10441,7 @@ SOFTWARE.
 
   Star.MakeObservable(Star.prototype);
 
-})((typeof global !== 'undefined' ? global : (this || window)).Two);
+})((typeof global !== 'undefined' ? global : (this || self || window)).Two);
 
 (function(Two) {
 
@@ -10652,7 +10662,7 @@ SOFTWARE.
 
   RoundedRectangle.MakeObservable(RoundedRectangle.prototype);
 
-})((typeof global !== 'undefined' ? global : (this || window)).Two);
+})((typeof global !== 'undefined' ? global : (this || self || window)).Two);
 
 (function(Two) {
 
@@ -10996,7 +11006,7 @@ SOFTWARE.
     }
   }
 
-})((typeof global !== 'undefined' ? global : (this || window)).Two);
+})((typeof global !== 'undefined' ? global : (this || self || window)).Two);
 
 (function(Two) {
 
@@ -11261,7 +11271,7 @@ SOFTWARE.
 
   Gradient.MakeObservable(Gradient.prototype);
 
-})((typeof global !== 'undefined' ? global : (this || window)).Two);
+})((typeof global !== 'undefined' ? global : (this || self || window)).Two);
 
 (function(Two) {
 
@@ -11368,7 +11378,7 @@ SOFTWARE.
 
   LinearGradient.MakeObservable(LinearGradient.prototype);
 
-})((typeof global !== 'undefined' ? global : (this || window)).Two);
+})((typeof global !== 'undefined' ? global : (this || self || window)).Two);
 
 (function(Two) {
 
@@ -11497,7 +11507,7 @@ SOFTWARE.
 
   RadialGradient.MakeObservable(RadialGradient.prototype);
 
-})((typeof global !== 'undefined' ? global : (this || window)).Two);
+})((typeof global !== 'undefined' ? global : (this || self || window)).Two);
 
 (function(Two) {
 
@@ -11885,7 +11895,7 @@ SOFTWARE.
 
   Texture.MakeObservable(Texture.prototype);
 
-})((typeof global !== 'undefined' ? global : (this || window)).Two);
+})((typeof global !== 'undefined' ? global : (this || self || window)).Two);
 
 (function(Two) {
 
@@ -12137,7 +12147,7 @@ SOFTWARE.
 
   Sprite.MakeObservable(Sprite.prototype);
 
-})((typeof global !== 'undefined' ? global : (this || window)).Two);
+})((typeof global !== 'undefined' ? global : (this || self || window)).Two);
 
 (function(Two) {
 
@@ -12453,7 +12463,7 @@ SOFTWARE.
 
   ImageSequence.MakeObservable(ImageSequence.prototype);
 
-})((typeof global !== 'undefined' ? global : (this || window)).Two);
+})((typeof global !== 'undefined' ? global : (this || self || window)).Two);
 
 (function(Two) {
 
@@ -13186,7 +13196,7 @@ SOFTWARE.
 
   }
 
-})((typeof global !== 'undefined' ? global : (this || window)).Two);
+})((typeof global !== 'undefined' ? global : (this || self || window)).Two);
 
 
 export default (this || window).Two;

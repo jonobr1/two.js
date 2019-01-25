@@ -340,4 +340,4 @@
     }
   }
 
-})((typeof global !== 'undefined' ? global : (this || window)).Two);
+})((typeof global !== 'undefined' ? global : (this || self || window)).Two);

@@ -1,6 +1,16 @@
-(this || window).Two = (function(previousTwo) {
+(this || self || window).Two = (function(previousTwo) {
 
-  var root = typeof window != 'undefined' ? window : typeof global != 'undefined' ? global : null;
+  var root;
+  if (typeof window !== 'undefined') {
+    root = window;
+  } else if (typeof global !== 'undefined') {
+    root = global;
+  } else if (typeof self !== 'undefined') {
+    root = self
+  } else {
+    root = this;
+  }
+
   var toString = Object.prototype.toString;
   /**
    * @name _
@@ -2994,14 +3004,14 @@
 
   }
 
-  if (typeof define === 'function' && define.amd) {
+  if (typeof module != 'undefined' && module.exports) {
+    module.exports = Two;
+  } else if (typeof define === 'function' && define.amd) {
     define('two', [], function() {
       return Two;
     });
-  } else if (typeof module != 'undefined' && module.exports) {
-    module.exports = Two;
   }
 
   return Two;
 
-})((typeof global !== 'undefined' ? global : (this || window)).Two);
+})((typeof global !== 'undefined' ? global : (this || self || window)).Two);
