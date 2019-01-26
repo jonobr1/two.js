@@ -1145,6 +1145,10 @@
     var params, gl, vs, fs;
     this.domElement = options.domElement || document.createElement('canvas');
 
+    if (!_.isUndefined(options.offscreenElement)) {
+      webgl.canvas = options.offscreenElement;
+    }
+
     // Everything drawn on the canvas needs to come from the stage.
     this.scene = new Two.Group();
     this.scene.parent = this;

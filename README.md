@@ -110,6 +110,7 @@ process.exit();
 ## Change Log
 
 #### Nightly
++ Added `offscreenElement` as an option when constructing WebGL Renderers for WebWorker compatibility
 + Added `Two.Shape.position` accessor to `Two.Shape.translation` for ease of use with [matter.js](http://brm.io/matter-js/)
 + Added `Two.Path.dashes` and `Two.Text.dashes` support to WebGL and Canvas Renderers
 
