@@ -1147,6 +1147,7 @@
 
     if (!_.isUndefined(options.offscreenElement)) {
       webgl.canvas = options.offscreenElement;
+      webgl.ctx = webgl.canvas.getContext('2d');
     }
 
     // Everything drawn on the canvas needs to come from the stage.
@@ -1232,10 +1233,12 @@
       this.domElement.width = width * this.ratio;
       this.domElement.height = height * this.ratio;
 
-      _.extend(this.domElement.style, {
-        width: width + 'px',
-        height: height + 'px'
-      });
+      if (_.isObject(this.domElement.style)) {
+        _.extend(this.domElement.style, {
+          width: width + 'px',
+          height: height + 'px'
+        });
+      }
 
       width *= this.ratio;
       height *= this.ratio;

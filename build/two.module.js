@@ -472,7 +472,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2019-01-26T01:28:17+01:00',
+    PublishDate: '2019-01-29T09:17:29+01:00',
 
     /**
      * @name Two.Identifier
@@ -7679,6 +7679,7 @@ SOFTWARE.
 
     if (!_.isUndefined(options.offscreenElement)) {
       webgl.canvas = options.offscreenElement;
+      webgl.ctx = webgl.canvas.getContext('2d');
     }
 
     // Everything drawn on the canvas needs to come from the stage.
@@ -7764,10 +7765,12 @@ SOFTWARE.
       this.domElement.width = width * this.ratio;
       this.domElement.height = height * this.ratio;
 
-      _.extend(this.domElement.style, {
-        width: width + 'px',
-        height: height + 'px'
-      });
+      if (_.isObject(this.domElement.style)) {
+        _.extend(this.domElement.style, {
+          width: width + 'px',
+          height: height + 'px'
+        });
+      }
 
       width *= this.ratio;
       height *= this.ratio;
