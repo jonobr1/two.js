@@ -640,10 +640,6 @@
           var lengthChanged = this._renderer.elem.childNodes.length
             !== this.stops.length;
 
-          if (lengthChanged) {
-            this._renderer.elem.childNodes.length = 0;
-          }
-
           for (var i = 0; i < this.stops.length; i++) {
 
             var stop = this.stops[i];
@@ -727,10 +723,6 @@
 
           var lengthChanged = this._renderer.elem.childNodes.length
             !== this.stops.length;
-
-          if (lengthChanged) {
-            this._renderer.elem.childNodes.length = 0;
-          }
 
           for (var i = 0; i < this.stops.length; i++) {
 
