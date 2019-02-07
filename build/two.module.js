@@ -472,7 +472,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2019-01-29T09:17:29+01:00',
+    PublishDate: '2019-02-07T16:51:55+01:00',
 
     /**
      * @name Two.Identifier
@@ -5383,7 +5383,9 @@ SOFTWARE.
             !== this.stops.length;
 
           if (lengthChanged) {
-            this._renderer.elem.childNodes.length = 0;
+            while (this._renderer.elem.lastChild) {
+              this._renderer.elem.removeChild(this._renderer.elem.lastChild);
+            }
           }
 
           for (var i = 0; i < this.stops.length; i++) {
@@ -5471,7 +5473,9 @@ SOFTWARE.
             !== this.stops.length;
 
           if (lengthChanged) {
-            this._renderer.elem.childNodes.length = 0;
+            while (this._renderer.elem.lastChild) {
+              this._renderer.elem.removeChild(this._renderer.elem.lastChild);
+            }
           }
 
           for (var i = 0; i < this.stops.length; i++) {
