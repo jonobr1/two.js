@@ -640,6 +640,12 @@
           var lengthChanged = this._renderer.elem.childNodes.length
             !== this.stops.length;
 
+          if (lengthChanged) {
+            while (this._renderer.elem.lastChild) {
+              this._renderer.elem.removeChild(this._renderer.elem.lastChild);
+            }
+          }
+
           for (var i = 0; i < this.stops.length; i++) {
 
             var stop = this.stops[i];
@@ -723,6 +729,12 @@
 
           var lengthChanged = this._renderer.elem.childNodes.length
             !== this.stops.length;
+
+          if (lengthChanged) {
+            while (this._renderer.elem.lastChild) {
+              this._renderer.elem.removeChild(this._renderer.elem.lastChild);
+            }
+          }
 
           for (var i = 0; i < this.stops.length; i++) {
 
