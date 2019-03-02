@@ -96,7 +96,7 @@
 
     /**
      * @name Two.Path#className
-     * @property {String} - A class name to be searched by in {@link Two.Group}s.
+     * @property {String} - A class to be applied to the element to be compatible with CSS styling. Only available for the SVG renderer.
      */
     this.className = '';
 
@@ -144,7 +144,8 @@
 
     /**
      * @name Two.Path#dashes
-     * @property {String} - List of dash and gap values.
+     * @property {Number[]} - Array of numbers. Odd indices represent dash length. Even indices represent dash space.
+     * @description A list of numbers that represent the repeated dash length and dash space applied to the stroke of the text.
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray} for more information on the SVG stroke-dasharray attribute.
      */
     this.dashes = [];
@@ -655,7 +656,7 @@
     /**
      * @name Two.Path#clone
      * @function
-     * @param {Two.Group} parent - The parent group or scene to add the clone to.
+     * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
      * @returns {Two.Path}
      * @description Create a new instance of {@link Two.Path} with the same properties of the current path.
      */
