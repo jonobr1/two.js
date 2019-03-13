@@ -641,7 +641,9 @@
             !== this.stops.length;
 
           if (lengthChanged) {
-            this._renderer.elem.childNodes.length = 0;
+            while (this._renderer.elem.lastChild) {
+              this._renderer.elem.removeChild(this._renderer.elem.lastChild);
+            }
           }
 
           for (var i = 0; i < this.stops.length; i++) {
@@ -729,7 +731,9 @@
             !== this.stops.length;
 
           if (lengthChanged) {
-            this._renderer.elem.childNodes.length = 0;
+            while (this._renderer.elem.lastChild) {
+              this._renderer.elem.removeChild(this._renderer.elem.lastChild);
+            }
           }
 
           for (var i = 0; i < this.stops.length; i++) {
