@@ -472,7 +472,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2019-03-02T18:38:00+01:00',
+    PublishDate: '2019-03-13T10:58:02+01:00',
 
     /**
      * @name Two.Identifier
@@ -883,13 +883,43 @@ SOFTWARE.
       getSvgStyles: function(node) {
 
         var styles = {};
+        var attributes = Two.Utils.getSvgAttributes(node);
+        var length = Math.max(attributes.length, node.style.length);
 
-        for (var i = 0; i < node.style.length; i++) {
+        for (var i = 0; i < length; i++) {
+
           var command = node.style[i];
-          styles[command] = node.style[command];
+          var attribute = attributes[i];
+
+          if (command) {
+            styles[command] = node.style[command];
+          }
+          if (attribute) {
+            styles[attribute] = node.getAttribute(attribute);
+          }
+
         }
 
         return styles;
+
+      },
+
+      getSvgAttributes: function(node) {
+
+        var attributes = node.getAttributeNames();
+
+        // Reserved attributes to remove
+        var keywords = ['id', 'class', 'transform', 'xmlns', 'viewBox'];
+
+        for (var i = 0; i < keywords.length; i++) {
+          var keyword = keywords[i];
+          var index = _.indexOf(attributes, keyword);
+          if (index >= 0) {
+            attributes.splice(index, 1);
+          }
+        }
+
+        return attributes;
 
       },
 
