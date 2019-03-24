@@ -9,7 +9,7 @@
    * @class
    * @name Two.Group.Children
    * @extends Two.Utils.Collection
-   * @description A children collection which is accesible both by index and by object id
+   * @description A children collection which is accesible both by index and by object `id`.
    */
   var Children = function() {
 
@@ -20,6 +20,11 @@
       enumerable: false
     });
 
+    /**
+     * @property
+     * @name Two.Group.Children#ids
+     * @property {Object} - Map of all elements in the list keyed by `id`s.
+     */
     this.ids = {};
 
     this.on(Two.Events.insert, this.attach);
@@ -34,6 +39,12 @@
 
     constructor: Children,
 
+    /**
+     * @function
+     * @name Two.Group.Children#attach
+     * @param {Two.Shape[]}
+     * @description Adds elements to the `ids` map.
+     */
     attach: function(children) {
       for (var i = 0; i < children.length; i++) {
         this.ids[children[i].id] = children[i];
@@ -41,6 +52,12 @@
       return this;
     },
 
+    /**
+     * @function
+     * @name Two.Group.Children#detach
+     * @param {Two.Shape[]}
+     * @description Removes elements to the `ids` map.
+     */
     detach: function(children) {
       for (var i = 0; i < children.length; i++) {
         delete this.ids[children[i].id];

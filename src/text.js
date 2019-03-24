@@ -455,13 +455,23 @@
 
     },
 
-    noStroke: function() {
-      this.stroke = 'transparent';
+    /**
+     * @name Two.Text#noFill
+     * @function
+     * @description Short hand method to set fill to `transparent`.
+     */
+    noFill: function() {
+      this.fill = 'transparent';
       return this;
     },
 
-    noFill: function() {
-      this.fill = 'transparent';
+    /**
+     * @name Two.Text#noStroke
+     * @function
+     * @description Short hand method to set stroke to `transparent`.
+     */
+    noStroke: function() {
+      this.stroke = 'transparent';
       return this;
     },
 
