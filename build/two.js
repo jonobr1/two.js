@@ -472,7 +472,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2019-03-13T11:01:43+01:00',
+    PublishDate: '2019-03-24T19:55:21+01:00',
 
     /**
      * @name Two.Identifier
@@ -7882,7 +7882,7 @@ SOFTWARE.
 
     /**
      * @name Two.Shape#_matrix
-     * @property
+     * @property {Two.Matrix}
      * @description The transformation matrix of the shape.
      * @nota-bene {@link Two.Shape#translation}, {@link Two.Shape#rotation}, and {@link Two.Shape#scale} apply their values to the matrix when changed. The matrix is what is sent to the renderer to be drawn.
      */
@@ -8142,7 +8142,7 @@ SOFTWARE.
    * @name Two.Path
    * @class
    * @extends Two.Shape
-   * @param {Two#Anchor[]} [vertices] - A list of Two.Anchors that represent the order and coordinates to construct the rendered shape.
+   * @param {Two.Anchor[]} [vertices] - A list of Two.Anchors that represent the order and coordinates to construct the rendered shape.
    * @param {Boolean} [closed=false] - Describes whether the shape is closed or open.
    * @param {Boolean} [curved=false] - Describes whether the shape automatically calculates bezier handles for each vertex.
    * @param {Boolean} [manual=false] - Describes whether the developer controls how vertices are plotted or if Two.js automatically plots coordinates based on closed and curved booleans.
@@ -8221,7 +8221,8 @@ SOFTWARE.
 
     /**
      * @name Two.Path#className
-     * @property {String} - A class to be applied to the element to be compatible with CSS styling. Only available for the SVG renderer.
+     * @property {String} - A class to be applied to the element to be compatible with CSS styling.
+     * @nota-bene Only available for the SVG renderer.
      */
     this.className = '';
 
@@ -11163,13 +11164,23 @@ SOFTWARE.
 
     },
 
-    noStroke: function() {
-      this.stroke = 'transparent';
+    /**
+     * @name Two.Text#noFill
+     * @function
+     * @description Short hand method to set fill to `transparent`.
+     */
+    noFill: function() {
+      this.fill = 'transparent';
       return this;
     },
 
-    noFill: function() {
-      this.fill = 'transparent';
+    /**
+     * @name Two.Text#noStroke
+     * @function
+     * @description Short hand method to set stroke to `transparent`.
+     */
+    noStroke: function() {
+      this.stroke = 'transparent';
       return this;
     },
 
@@ -12751,7 +12762,7 @@ SOFTWARE.
    * @class
    * @name Two.Group.Children
    * @extends Two.Utils.Collection
-   * @description A children collection which is accesible both by index and by object id
+   * @description A children collection which is accesible both by index and by object `id`.
    */
   var Children = function() {
 
@@ -12762,6 +12773,11 @@ SOFTWARE.
       enumerable: false
     });
 
+    /**
+     * @property
+     * @name Two.Group.Children#ids
+     * @property {Object} - Map of all elements in the list keyed by `id`s.
+     */
     this.ids = {};
 
     this.on(Two.Events.insert, this.attach);
@@ -12776,6 +12792,12 @@ SOFTWARE.
 
     constructor: Children,
 
+    /**
+     * @function
+     * @name Two.Group.Children#attach
+     * @param {Two.Shape[]}
+     * @description Adds elements to the `ids` map.
+     */
     attach: function(children) {
       for (var i = 0; i < children.length; i++) {
         this.ids[children[i].id] = children[i];
@@ -12783,6 +12805,12 @@ SOFTWARE.
       return this;
     },
 
+    /**
+     * @function
+     * @name Two.Group.Children#detach
+     * @param {Two.Shape[]}
+     * @description Removes elements to the `ids` map.
+     */
     detach: function(children) {
       for (var i = 0; i < children.length; i++) {
         delete this.ids[children[i].id];
@@ -12802,9 +12830,26 @@ SOFTWARE.
 
     this._renderer.type = 'group';
 
+    /**
+     * @name Two.Group#additions
+     * @property {Array}
+     * @description An automatically updated list of children that need to be appended to the renderer's scenegraph.
+     */
     this.additions = [];
+
+    /**
+     * @name Two.Group#subtractions
+     * @property {Array}
+     * @description An automatically updated list of children that need to be removed from the renderer's scenegraph.
+     */
     this.subtractions = [];
 
+    /**
+     * @name Two.Group#additions
+     * @property {Two.Group.Children[]}
+     * @description A list of all the children in the scenegraph.
+     * @nota-bene Ther order of this list indicates the order each element is rendered to the screen.
+     */
     this.children = _.isArray(children) ? children : arguments;
 
   };
@@ -12813,22 +12858,41 @@ SOFTWARE.
 
     Children: Children,
 
+    /**
+     * @name Two.Group.InsertChildren
+     * @function
+     * @description Cached method to let renderers know children have been added to a {@link Two.Group}.
+     */
     InsertChildren: function(children) {
       for (var i = 0; i < children.length; i++) {
         replaceParent.call(this, children[i], this);
       }
     },
 
+    /**
+     * @name Two.Group.RemoveChildren
+     * @function
+     * @description Cached method to let renderers know children have been removed from a {@link Two.Group}.
+     */
     RemoveChildren: function(children) {
       for (var i = 0; i < children.length; i++) {
         replaceParent.call(this, children[i]);
       }
     },
 
+    /**
+     * @name Two.Group.OrderChildren
+     * @function
+     * @description Cached method to let renderers know order has been updated on a {@link Two.Group}.
+     */
     OrderChildren: function(children) {
       this._flagOrder = true;
     },
 
+    /**
+     * @name Two.Group.Properties
+     * @property {String[]} - A list of properties that are on every {@link Two.Group}.
+     */
     Properties: [
       'fill',
       'stroke',
@@ -12839,6 +12903,12 @@ SOFTWARE.
       'miter',
     ],
 
+    /**
+     * @name Two.Group.MakeObservable
+     * @function
+     * @param {Object} object - The object to make observable.
+     * @description Convenience function to apply observable qualities of a `Two.Group` to any object. Handy if you'd like to extend the `Two.Group` class on a custom class.
+     */
     MakeObservable: function(object) {
 
       var properties = Two.Group.Properties;
@@ -12970,6 +13040,12 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.Group.MakeGetterSetters
+     * @function
+     * @param {Two.Group} group - The group to apply getters and setters.
+     * @param {Object} properties - A key / value object containing properties to inherit.
+     */
     MakeGetterSetters: function(group, properties) {
 
       if (!_.isArray(properties)) {
@@ -12982,11 +13058,17 @@ SOFTWARE.
 
     },
 
-    MakeGetterSetter: function(group, k) {
+    /**
+     * @name Two.Group.MakeGetterSetter
+     * @function
+     * @param {Two.Group} group - The group to apply getters and setters.
+     * @param {String} key - The key which will become a property on the group.
+     */
+    MakeGetterSetter: function(group, key) {
 
-      var secret = '_' + k;
+      var secret = '_' + key;
 
-      Object.defineProperty(group, k, {
+      Object.defineProperty(group, key, {
 
         enumerable: true,
 
@@ -12997,7 +13079,7 @@ SOFTWARE.
         set: function(v) {
           this[secret] = v;
           _.each(this.children, function(child) { // Trickle down styles
-            child[k] = v;
+            child[key] = v;
           });
         }
 
@@ -13012,47 +13094,195 @@ SOFTWARE.
     // Flags
     // http://en.wikipedia.org/wiki/Flag
 
+    /**
+     * @name Two.Group#_flagAdditions
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Group#additions} need updating.
+     */
     _flagAdditions: false,
+
+    /**
+     * @name Two.Group#_flagSubtractions
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Group#subtractions} need updating.
+     */
     _flagSubtractions: false,
+
+    /**
+     * @name Two.Group#_flagOrder
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Group#order} need updating.
+     */
     _flagOrder: false,
+
+    /**
+     * @name Two.Group#_flagOpacity
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Group#opacity} need updating.
+     */
     _flagOpacity: true,
+
+    /**
+     * @name Two.Group#_flagClassName
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Group#className} need updating.
+     */
     _flagClassName: false,
+
+    /**
+     * @name Two.Group#_flagBeginning
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Group#beginning} need updating.
+     */
     _flagBeginning: false,
+
+    /**
+     * @name Two.Group#_flagEnding
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Group#ending} need updating.
+     */
     _flagEnding: false,
 
+    /**
+     * @name Two.Group#_flagLength
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Group#length} need updating.
+     */
     _flagLength: false,
+
+    /**
+     * @name Two.Group#_flagMask
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Group#mask} need updating.
+     */
     _flagMask: false,
 
     // Underlying Properties
 
+    /**
+     * @name Two.Group#fill
+     * @property {(CssColor|Two.Gradient|Two.Texture)} - The value of what all child shapes should be filled in with.
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS Colors.
+     */
     _fill: '#fff',
+
+    /**
+     * @name Two.Group#stroke
+     * @property {(CssColor|Two.Gradient|Two.Texture)} - The value of what all child shapes should be outlined in with.
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS Colors.
+     */
     _stroke: '#000',
+
+    /**
+     * @name Two.Group#linewidth
+     * @property {Number} - The thickness in pixels of the stroke for all child shapes.
+     */
     _linewidth: 1.0,
+
+    /**
+     * @name Two.Group#opacity
+     * @property {Number} - The opaqueness of all child shapes.
+     * @nota-bene Becomes multiplied by the individual child's opacity property.
+     */
     _opacity: 1.0,
+
+    /**
+     * @name Two.Group#className
+     * @property {String} - A class to be applied to the element to be compatible with CSS styling.
+     * @nota-bene Only available for the SVG renderer.
+     */
     _className: '',
+
+    /**
+     * @name Two.Group#visible
+     * @property {Boolean} - Display the path or not.
+     * @nota-bene For {@link Two.CanvasRenderer} and {@link Two.WebGLRenderer} when set to false all updating is disabled improving performance dramatically with many objects in the scene.
+     */
     _visible: true,
 
+    /**
+     * @name Two.Group#cap
+     * @property {String}
+     * @see {@link https://www.w3.org/TR/SVG11/painting.html#StrokeLinecapProperty}
+     */
     _cap: 'round',
+
+    /**
+     * @name Two.Group#join
+     * @property {String}
+     * @see {@link https://www.w3.org/TR/SVG11/painting.html#StrokeLinejoinProperty}
+     */
     _join: 'round',
+
+    /**
+     * @name Two.Group#miter
+     * @property {String}
+     * @see {@link https://www.w3.org/TR/SVG11/painting.html#StrokeMiterlimitProperty}
+     */
     _miter: 4,
 
+    /**
+     * @name Two.Group#closed
+     * @property {Boolean} - Determines whether a final line is drawn between the final point in the `vertices` array and the first point of all child shapes.
+     */
     _closed: true,
+
+    /**
+     * @name Two.Group#curved
+     * @property {Boolean} - When the child's path is `automatic = true` this boolean determines whether the lines between the points are curved or not.
+     */
     _curved: false,
+
+    /**
+     * @name Two.Group#automatic
+     * @property {Boolean} - Determines whether or not Two.js should calculate curves, lines, and commands automatically for you or to let the developer manipulate them for themselves.
+     */
     _automatic: true,
+
+    /**
+     * @name Two.Group#beginning
+     * @property {Number} - Number between zero and one to state the beginning of where the path is rendered.
+     * @description `Two.Group.beginning` is a percentage value that represents at what percentage into all child shapes should the renderer start drawing.
+     * @nota-bene This is great for animating in and out stroked paths in conjunction with {@link Two.Group#ending}.
+     */
     _beginning: 0,
+
+    /**
+     * @name Two.Group#ending
+     * @property {Number} - Number between zero and one to state the ending of where the path is rendered.
+     * @description `Two.Group.ending` is a percentage value that represents at what percentage into all child shapes should the renderer start drawing.
+     * @nota-bene This is great for animating in and out stroked paths in conjunction with {@link Two.Group#beginning}.
+     */
     _ending: 1.0,
 
+    /**
+     * @name Two.Group#length
+     * @property {Number} - The sum of distances between all child lengths.
+     */
     _length: 0,
+
+    /**
+     * @name Two.Group#mask
+     * @property {Two.Shape} - The Two.js object to clip from a group's rendering.
+     */
     _mask: null,
 
     constructor: Group,
 
-    // /**
-    //  * TODO: Group has a gotcha in that it's at the moment required to be bound to
-    //  * an instance of two in order to add elements correctly. This needs to
-    //  * be rethought and fixed.
-    //  */
+    /**
+     * @name Two.Group#clone
+     * @function
+     * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+     * @returns {Two.Group}
+     * @description Create a new instance of {@link Two.Group} with the same properties of the current group.
+     */
     clone: function(parent) {
+
+      // /**
+      //  * TODO: Group has a gotcha in that it's at the moment required to be bound to
+      //  * an instance of two in order to add elements correctly. This needs to
+      //  * be rethought and fixed.
+      //  */
 
       var group = new Group();
       var children = _.map(this.children, function(child) {
@@ -13080,11 +13310,12 @@ SOFTWARE.
 
     },
 
-    // /**
-    //  * Export the data from the instance of Two.Group into a plain JavaScript
-    //  * object. This also makes all children plain JavaScript objects. Great
-    //  * for turning into JSON and storing in a database.
-    //  */
+    /**
+     * @name Two.Group#toObject
+     * @function
+     * @returns {Object}
+     * @description Return a JSON compatible plain object that represents the group.
+     */
     toObject: function() {
 
       var result = {
@@ -13105,10 +13336,11 @@ SOFTWARE.
 
     },
 
-    // /**
-    //  * Anchor all children to the upper left hand corner
-    //  * of the group.
-    //  */
+    /**
+     * @name Two.Group#corner
+     * @function
+     * @description Orient the children of the group to the upper left-hand corner of that group.
+     */
     corner: function() {
 
       var rect = this.getBoundingClientRect(true),
@@ -13122,10 +13354,11 @@ SOFTWARE.
 
     },
 
-    // /**
-    //  * Anchors all children around the center of the group,
-    //  * effectively placing the shape around the unit circle.
-    //  */
+    /**
+     * @name Two.Group#center
+     * @function
+     * @description Orient the children of the group to the center of that group.
+     */
     center: function() {
 
       var rect = this.getBoundingClientRect(true);
@@ -13147,10 +13380,12 @@ SOFTWARE.
 
     },
 
-    // /**
-    //  * Recursively search for id. Returns the first element found.
-    //  * Returns null if none found.
-    //  */
+    /**
+     * @name Two.Group#getById
+     * @function
+     * @description Recursively search for id. Returns the first element found.
+     * @returns {Two.Shape} - Or `null` if nothing is found.
+     */
     getById: function (id) {
       var search = function (node, id) {
         if (node.id === id) {
@@ -13167,10 +13402,12 @@ SOFTWARE.
       return search(this, id) || null;
     },
 
-    // /**
-    //  * Recursively search for classes. Returns an array of matching elements.
-    //  * Empty array if none found.
-    //  */
+    /**
+     * @name Two.Group#getByClassName
+     * @function
+     * @description Recursively search for classes. Returns an array of matching elements.
+     * @returns {Two.Shape[]} - Or empty array if nothing is found.
+     */
     getByClassName: function (cl) {
       var found = [];
       var search = function (node, cl) {
@@ -13186,11 +13423,12 @@ SOFTWARE.
       return search(this, cl);
     },
 
-    // /**
-    //  * Recursively search for children of a specific type,
-    //  * e.g. Two.Polygon. Pass a reference to this type as the param.
-    //  * Returns an empty array if none found.
-    //  */
+    /**
+     * @name Two.Group#getByType
+     * @function
+     * @description Recursively search for children of a specific type, e.g. `Two.Path`. Pass a reference to this type as the param. Returns an array of matching elements.
+     * @returns {Array} - Empty array if nothing is found.
+     */
     getByType: function(type) {
       var found = [];
       var search = function (node, type) {
@@ -13206,9 +13444,12 @@ SOFTWARE.
       return search(this, type);
     },
 
-    // /**
-    //  * Add objects to the group.
-    //  */
+    /**
+     * @name Two.Group#add
+     * @function
+     * @param {Two.Shape[]} objects - An array of objects to be added. Can be also added as individual arguments.
+     * @description Add objects to the group.
+     */
     add: function(objects) {
 
       // Allow to pass multiple objects either as array or as multiple arguments
@@ -13230,9 +13471,12 @@ SOFTWARE.
 
     },
 
-    // /**
-    //  * Remove objects from the group.
-    //  */
+    /**
+     * @name Two.Group#add
+     * @function
+     * @param {Two.Shape[]} objects - An array of objects to be removed. Can be also removed as individual arguments.
+     * @description Remove objects from the group.
+     */
     remove: function(objects) {
 
       var l = arguments.length,
@@ -13264,10 +13508,13 @@ SOFTWARE.
 
     },
 
-    // /**
-    //  * Return an object with top, left, right, bottom, width, and height
-    //  * parameters of the group.
-    //  */
+    /**
+     * @name Two.Group#getBoundingClientRect
+     * @function
+     * @param {Boolean} [shallow=false] - Describes whether to calculate off local matrix or world matrix.
+     * @returns {Object} - Returns object with top, left, right, bottom, width, height attributes.
+     * @description Return an object with top, left, right, bottom, width, and height parameters of the group.
+     */
     getBoundingClientRect: function(shallow) {
       var rect;
 
@@ -13313,9 +13560,11 @@ SOFTWARE.
 
     },
 
-    // /**
-    //  * Trickle down of noFill
-    //  */
+    /**
+     * @name Two.Group#noFill
+     * @function
+     * @description Apply `noFill` method to all child shapes.
+     */
     noFill: function() {
       this.children.forEach(function(child) {
         child.noFill();
@@ -13323,9 +13572,11 @@ SOFTWARE.
       return this;
     },
 
-    // /**
-    //  * Trickle down of noStroke
-    //  */
+    /**
+     * @name Two.Group#noStroke
+     * @function
+     * @description Apply `noStroke` method to all child shapes.
+     */
     noStroke: function() {
       this.children.forEach(function(child) {
         child.noStroke();
@@ -13333,9 +13584,11 @@ SOFTWARE.
       return this;
     },
 
-    // /**
-    //  * Trickle down subdivide
-    //  */
+    /**
+     * @name Two.Group#subdivide
+     * @function
+     * @description Apply `subdivide` method to all child shapes.
+     */
     subdivide: function() {
       var args = arguments;
       this.children.forEach(function(child) {
@@ -13344,6 +13597,14 @@ SOFTWARE.
       return this;
     },
 
+    /**
+     * @name Two.Group#_update
+     * @function
+     * @private
+     * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+     * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
+     * @nota-bene Try not to call this method more than once a frame.
+     */
     _update: function() {
 
       if (this._flagBeginning || this._flagEnding) {
@@ -13389,6 +13650,12 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.Group#flagReset
+     * @function
+     * @private
+     * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+     */
     flagReset: function() {
 
       if (this._flagAdditions) {

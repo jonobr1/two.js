@@ -37,7 +37,7 @@
 
     /**
      * @name Two.Shape#_matrix
-     * @property
+     * @property {Two.Matrix}
      * @description The transformation matrix of the shape.
      * @nota-bene {@link Two.Shape#translation}, {@link Two.Shape#rotation}, and {@link Two.Shape#scale} apply their values to the matrix when changed. The matrix is what is sent to the renderer to be drawn.
      */

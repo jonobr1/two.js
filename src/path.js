@@ -96,7 +96,8 @@
 
     /**
      * @name Two.Path#className
-     * @property {String} - A class to be applied to the element to be compatible with CSS styling. Only available for the SVG renderer.
+     * @property {String} - A class to be applied to the element to be compatible with CSS styling.
+     * @nota-bene Only available for the SVG renderer.
      */
     this.className = '';
 
