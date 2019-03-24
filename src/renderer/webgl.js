@@ -74,7 +74,28 @@
           this._matrix.toArray(true, transformation);
 
           multiplyMatrix(transformation, parent._renderer.matrix, this._renderer.matrix);
-          this._renderer.scale = this._scale * parent._renderer.scale;
+
+          if (!(this._renderer.scale instanceof Two.Vector)) {
+            this._renderer.scale = new Two.Vector();
+          }
+
+          if (this._scale instanceof Two.Vector) {
+            this._renderer.scale.x = this._scale.x;
+            this._renderer.scale.y = this._scale.y;
+          } else {
+            this._renderer.scale.x = this._scale;
+            this._renderer.scale.y = this._scale;
+          }
+
+          if (!(/renderer/i.test(parent._renderer.type))) {
+            if (parent._renderer.scale instanceof Two.Vector) {
+              this._renderer.scale.x *= parent._renderer.scale.x;
+              this._renderer.scale.y *= parent._renderer.scale.y;
+            } else {
+              this._renderer.scale.x *= parent._renderer.scale;
+              this._renderer.scale.y *= parent._renderer.scale;
+            }
+          }
 
           if (flagParentMatrix) {
             this._flagMatrix = true;
@@ -165,8 +186,13 @@
         var length = commands.length;
         var last = length - 1;
 
-        canvas.width = Math.max(Math.ceil(elem._renderer.rect.width * scale), 1);
-        canvas.height = Math.max(Math.ceil(elem._renderer.rect.height * scale), 1);
+        if (scale instanceof Two.Vector) {
+          canvas.width = Math.max(Math.ceil(elem._renderer.rect.width * scale.x), 1);
+          canvas.height = Math.max(Math.ceil(elem._renderer.rect.height * scale.y), 1);
+        } else {
+          canvas.width = Math.max(Math.ceil(elem._renderer.rect.width * scale), 1);
+          canvas.height = Math.max(Math.ceil(elem._renderer.rect.height * scale), 1);
+        }
 
         var centroid = elem._renderer.rect.centroid;
         var cx = centroid.x;
@@ -470,7 +496,17 @@
           this._matrix.toArray(true, transformation);
 
           multiplyMatrix(transformation, parent._renderer.matrix, this._renderer.matrix);
-          this._renderer.scale = this._scale * parent._renderer.scale;
+
+          if (!(this._renderer.scale instanceof Two.Vector)) {
+            this._renderer.scale = new Two.Vector();
+          }
+          if (this._scale instanceof Two.Vector) {
+            this._renderer.scale.x = this._scale.x * parent._renderer.scale.x;
+            this._renderer.scale.y = this._scale.y * parent._renderer.scale.y;
+          } else {
+            this._renderer.scale.x = this._scale * parent._renderer.scale.x;
+            this._renderer.scale.y = this._scale * parent._renderer.scale.y;
+          }
 
         }
 
@@ -553,8 +589,13 @@
         var opacity = elem._renderer.opacity || elem._opacity;
         var dashes = elem.dashes;
 
-        canvas.width = Math.max(Math.ceil(elem._renderer.rect.width * scale), 1);
-        canvas.height = Math.max(Math.ceil(elem._renderer.rect.height * scale), 1);
+        if (scale instanceof Two.Vector) {
+          canvas.width = Math.max(Math.ceil(elem._renderer.rect.width * scale.x), 1);
+          canvas.height = Math.max(Math.ceil(elem._renderer.rect.height * scale.y), 1);
+        } else {
+          canvas.width = Math.max(Math.ceil(elem._renderer.rect.width * scale), 1);
+          canvas.height = Math.max(Math.ceil(elem._renderer.rect.height * scale), 1);
+        }
 
         var centroid = elem._renderer.rect.centroid;
         var cx = centroid.x;
@@ -773,7 +814,17 @@
           this._matrix.toArray(true, transformation);
 
           multiplyMatrix(transformation, parent._renderer.matrix, this._renderer.matrix);
-          this._renderer.scale = this._scale * parent._renderer.scale;
+
+          if (!(this._renderer.scale instanceof Two.Vector)) {
+            this._renderer.scale = new Two.Vector();
+          }
+          if (this._scale instanceof Two.Vector) {
+            this._renderer.scale.x = this._scale.x * parent._renderer.scale.x;
+            this._renderer.scale.y = this._scale.y * parent._renderer.scale.y;
+          } else {
+            this._renderer.scale.x = this._scale * parent._renderer.scale.x;
+            this._renderer.scale.y = this._scale * parent._renderer.scale.y;
+          }
 
         }
 
@@ -1155,6 +1206,7 @@
     this.scene.parent = this;
 
     this._renderer = {
+      type: 'renderer',
       matrix: new Two.Array(identity),
       scale: 1,
       opacity: 1
