@@ -335,7 +335,7 @@ QUnit.test('Bound Two.Vector', function(assert) {
 
 QUnit.test('Two.Matrix', function(assert) {
 
-  assert.expect(10);
+  assert.expect(12);
 
   var matrix = new Two.Matrix();
   var check = true;
@@ -420,8 +420,10 @@ QUnit.test('Two.Matrix', function(assert) {
 
   matrix.set(1, 2, 3, 4, 5, 6, 7, 8, 9);
 
-  assert.deepEqual(matrix.toArray(), [1, 4, 2, 5, 3, 6], 'Two.Matrix.toArray returns correct result for 6 digit transformation.');
-  assert.deepEqual(matrix.toArray(true), [1, 4, 7, 2, 5, 8, 3, 6, 9], 'Two.Matrix.toArray returns correct result for 9 digit transformation.');
+  assert.deepEqual(matrix.toTransformArray(), [1, 4, 2, 5, 3, 6], 'Two.Matrix.toTransformArray returns correct result for 6 digit transformation.');
+  assert.deepEqual(matrix.toTransformArray(true), [1, 4, 7, 2, 5, 8, 3, 6, 9], 'Two.Matrix.toTransformArray returns correct result for 9 digit transformation.');
+  assert.deepEqual(matrix.toArray(), [1, 2, 3, 4, 5, 6], 'Two.Matrix.toArray returns correct result for 6 digit transformation.');
+  assert.deepEqual(matrix.toArray(true), [1, 2, 3, 4, 5, 6, 7, 8, 9], 'Two.Matrix.toArray returns correct result for 9 digit transformation.');
   assert.equal(matrix.toString(), '1 4 2 5 3 6', 'Two.Matrix.toString returns correct result for 6 digit transformation.');
 
   var clone = matrix.clone();

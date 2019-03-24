@@ -472,7 +472,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2019-03-24T22:17:29+01:00',
+    PublishDate: '2019-03-24T22:35:02+01:00',
 
     /**
      * @name Two.Identifier
@@ -4676,20 +4676,20 @@ SOFTWARE.
     toString: function(fullMatrix) {
 
       array.length = 0;
-      this.toArray(fullMatrix, array);
+      this.toTransformArray(fullMatrix, array);
 
       return array.join(' ');
 
     },
 
     /**
-     * @name Two.Matrix#toArray
+     * @name Two.Matrix#toTransformArray
      * @function
-     * @param {Boolean} [fullMatrix=false] - Return the full 9 elements of the matrix or just 6 for 2D transformations.
+     * @param {Boolean} [fullMatrix=false] - Return the full 9 elements of the matrix or just 6 in the format for 2D transformations.
      * @param {Number[]} [output] - An array empty or otherwise to apply the values to.
      * @description Create a transform array. Used for the Two.js rendering APIs.
      */
-    toArray: function(fullMatrix, output) {
+    toTransformArray: function(fullMatrix, output) {
 
      var elements = this.elements;
      var hasOutput = !!output;
@@ -4737,6 +4737,65 @@ SOFTWARE.
 
       return [
         a, d, b, e, c, f  // Specific format see LN:19
+      ];
+
+    },
+
+    /**
+     * @name Two.Matrix#toArray
+     * @function
+     * @param {Boolean} [fullMatrix=false] - Return the full 9 elements of the matrix or just 6 for 2D transformations.
+     * @param {Number[]} [output] - An array empty or otherwise to apply the values to.
+     * @description Create a transform array. Used for the Two.js rendering APIs.
+     */
+    toArray: function(fullMatrix, output) {
+
+     var elements = this.elements;
+     var hasOutput = !!output;
+
+     var a = fix(elements[0]);
+     var b = fix(elements[1]);
+     var c = fix(elements[2]);
+     var d = fix(elements[3]);
+     var e = fix(elements[4]);
+     var f = fix(elements[5]);
+
+      if (!!fullMatrix) {
+
+        var g = fix(elements[6]);
+        var h = fix(elements[7]);
+        var i = fix(elements[8]);
+
+        if (hasOutput) {
+          output[0] = a;
+          output[1] = b;
+          output[2] = c;
+          output[3] = d;
+          output[4] = e;
+          output[5] = f;
+          output[6] = g;
+          output[7] = h;
+          output[8] = i;
+          return;
+        }
+
+        return [
+          a, b, c, d, e, f, g, h, i
+        ];
+      }
+
+      if (hasOutput) {
+        output[0] = a;
+        output[1] = b;
+        output[2] = c;
+        output[3] = d;
+        output[4] = e;
+        output[5] = f;
+        return;
+      }
+
+      return [
+        a, b, c, d, e, f
       ];
 
     },
@@ -6637,7 +6696,7 @@ SOFTWARE.
           }
 
           // Reduce amount of object / array creation / deletion
-          this._matrix.toArray(true, transformation);
+          this._matrix.toTransformArray(true, transformation);
 
           multiplyMatrix(transformation, parent._renderer.matrix, this._renderer.matrix);
 
@@ -7059,7 +7118,7 @@ SOFTWARE.
 
           // Reduce amount of object / array creation / deletion
 
-          this._matrix.toArray(true, transformation);
+          this._matrix.toTransformArray(true, transformation);
 
           multiplyMatrix(transformation, parent._renderer.matrix, this._renderer.matrix);
 
@@ -7377,7 +7436,7 @@ SOFTWARE.
 
           // Reduce amount of object / array creation / deletion
 
-          this._matrix.toArray(true, transformation);
+          this._matrix.toTransformArray(true, transformation);
 
           multiplyMatrix(transformation, parent._renderer.matrix, this._renderer.matrix);
 

@@ -71,7 +71,7 @@
           }
 
           // Reduce amount of object / array creation / deletion
-          this._matrix.toArray(true, transformation);
+          this._matrix.toTransformArray(true, transformation);
 
           multiplyMatrix(transformation, parent._renderer.matrix, this._renderer.matrix);
 
@@ -493,7 +493,7 @@
 
           // Reduce amount of object / array creation / deletion
 
-          this._matrix.toArray(true, transformation);
+          this._matrix.toTransformArray(true, transformation);
 
           multiplyMatrix(transformation, parent._renderer.matrix, this._renderer.matrix);
 
@@ -811,7 +811,7 @@
 
           // Reduce amount of object / array creation / deletion
 
-          this._matrix.toArray(true, transformation);
+          this._matrix.toTransformArray(true, transformation);
 
           multiplyMatrix(transformation, parent._renderer.matrix, this._renderer.matrix);
 
