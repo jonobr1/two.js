@@ -590,8 +590,8 @@
      */
     corner: function() {
 
-      var rect = this.getBoundingClientRect(true),
-       corner = { x: rect.left, y: rect.top };
+      var rect = this.getBoundingClientRect(true);
+      var corner = { x: rect.left, y: rect.top };
 
       this.children.forEach(function(child) {
         child.translation.sub(corner);

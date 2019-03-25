@@ -472,7 +472,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2019-03-24T22:35:02+01:00',
+    PublishDate: '2019-03-25T15:06:28+01:00',
 
     /**
      * @name Two.Identifier
@@ -8981,7 +8981,9 @@ SOFTWARE.
       };
 
       _.each(this.vertices, function(v) {
-        v.addSelf(rect.centroid);
+        v.subSelf(rect.centroid);
+        v.x += rect.width / 2;
+        v.y += rect.height / 2;
       });
 
       return this;
@@ -13454,8 +13456,8 @@ SOFTWARE.
      */
     corner: function() {
 
-      var rect = this.getBoundingClientRect(true),
-       corner = { x: rect.left, y: rect.top };
+      var rect = this.getBoundingClientRect(true);
+      var corner = { x: rect.left, y: rect.top };
 
       this.children.forEach(function(child) {
         child.translation.sub(corner);

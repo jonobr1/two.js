@@ -745,7 +745,9 @@
       };
 
       _.each(this.vertices, function(v) {
-        v.addSelf(rect.centroid);
+        v.subSelf(rect.centroid);
+        v.x += rect.width / 2;
+        v.y += rect.height / 2;
       });
 
       return this;
