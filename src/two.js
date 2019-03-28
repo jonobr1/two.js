@@ -322,7 +322,7 @@
    * @param {Boolean} [options.fullscreen=false] - Set to `true` to automatically make the stage adapt to the width and height of the parent document. This parameter overrides `width` and `height` parameters if set to `true`.
    * @param {Number} [options.width=640] - The width of the stage on construction. This can be set at a later time.
    * @param {Number} [options.height=480] - The height of the stage on construction. This can be set at a later time.
-   * @param {String} [options.type=Two.Types.svg] - The type of renderer to setup drawing with. See [`Two.Types`]{@link  Two.Types} for available options.
+   * @param {String} [options.type=Two.Types.svg] - The type of renderer to setup drawing with. See {@link  Two.Types} for available options.
    * @param {Boolean} [options.autostart=false] - Set to `true` to add the instance to draw on `requestAnimationFrame`. This is a convenient substitute for {@link Two#play}.
    * @description The entrypoint for Two.js. Instantiate a `new Two` in order to setup a scene to render to. `Two` is also the publicly accessible namespace that all other sub-classes, functions, and utilities attach to.
    */
@@ -931,7 +931,7 @@
        * @param {Two.Shape} elem - The Two.js object to apply extrapolated attributes to.
        * @returns {Two.Shape} The Two.js object passed now with applied attributes.
        * @description This function iterates through an SVG Node's properties and stores ones of interest. It tries to resolve styles applied via CSS as well.
-       * @TODO Reverse calculate `Two.Gradient`s for fill / stroke of any given path.
+       * @TODO Reverse calculate {@link Two.Gradient}s for fill / stroke of any given path.
        */
       applySvgAttributes: function(node, elem, parentStyles) {
 
@@ -1959,7 +1959,7 @@
        * @function
        * @param {Two.Anchor[]} points
        * @param {Boolean} closed
-       * @description Sets the bezier handles on `Two.Anchor`s in the `points` list with estimated values to create a catmull-rom like curve. Used by {@link Two.Path#plot}.
+       * @description Sets the bezier handles on {@link Two.Anchor}s in the `points` list with estimated values to create a catmull-rom like curve. Used by {@link Two.Path#plot}.
        */
       getCurveFromPoints: function(points, closed) {
 
@@ -2049,7 +2049,7 @@
        * @param {Two.Vector} a
        * @param {Two.Vector} b
        * @param {Boolean} [relative=false]
-       * @returns {Two.Vector} New `Two.Vector` that represents the reflection point.
+       * @returns {Two.Vector} New {@link Two.Vector} that represents the reflection point.
        * @description Get the reflection of a point `b` about point `a`. Where `a` is in absolute space and `b` is relative to `a`.
        * @see {@link http://www.w3.org/TR/SVG11/implnote.html#PathElementImplementationNotes}
        */
@@ -2433,7 +2433,7 @@
     /**
      * @name Two#play
      * @function
-     * @fires `Two.Events.play` event
+     * @fires Two.Events.play event
      * @description Call to start an internal animation loop.
      * @nota-bene This function initiates a `requestAnimationFrame` loop.
      */
@@ -2448,7 +2448,7 @@
     /**
      * @name Two#pause
      * @function
-     * @fires `Two.Events.pause` event
+     * @fires Two.Events.pause event
      * @description Call to stop the internal animation loop for a specific instance of Two.js.
      */
     pause: function() {
@@ -2460,7 +2460,7 @@
 
     /**
      * @name Two#update
-     * @fires `Two.Events.update` event
+     * @fires Two.Events.update event
      * @description Update positions and calculations in one pass before rendering. Then render to the canvas.
      * @nota-bene This function is called automatically if using {@link Two#play} or the `autostart` parameter in construction.
      */
@@ -2491,7 +2491,7 @@
 
     /**
      * @name Two#render
-     * @fires `Two.Events.render` event
+     * @fires Two.Events.render event
      * @description Render all drawable and visible objects of the scene.
      */
     render: function() {
@@ -2670,8 +2670,8 @@
     /**
      * @name Two#makeCurve
      * @function
-     * @param {Two.Anchor[]} [points] - An array of `Two.Anchor` points.
-     * @param {...Number} - Alternatively you can pass alternating `x` / `y` coordinate values as individual arguments. These will be combined into `Two.Anchor`s for use in the path.
+     * @param {Two.Anchor[]} [points] - An array of {@link Two.Anchor} points.
+     * @param {...Number} - Alternatively you can pass alternating `x` / `y` coordinate values as individual arguments. These will be combined into {@link Two.Anchor}s for use in the path.
      * @returns {Two.Path} - Where `path.curved` is set to `true`.
      * @description Creates a Two.js path that is curved and adds it to the scene.
      * @nota-bene In either case of passing an array or passing numbered arguments the last argument is an optional `Boolean` that defines whether the path should be open or closed.
@@ -2742,8 +2742,8 @@
     /**
      * @name Two#makePath
      * @function
-     * @param {Two.Anchor[]} [points] - An array of `Two.Anchor` points.
-     * @param {...Number} - Alternatively you can pass alternating `x` / `y` coordinate values as individual arguments. These will be combined into `Two.Anchor`s for use in the path.
+     * @param {Two.Anchor[]} [points] - An array of {@link Two.Anchor} points.
+     * @param {...Number} - Alternatively you can pass alternating `x` / `y` coordinate values as individual arguments. These will be combined into {@link Two.Anchor}s for use in the path.
      * @returns {Two.Path}
      * @description Creates a Two.js path and adds it to the scene.
      * @nota-bene In either case of passing an array or passing numbered arguments the last argument is an optional `Boolean` that defines whether the path should be open or closed.
@@ -2837,7 +2837,7 @@
     /**
      * @name Two#makeSprite
      * @function
-     * @param {(String|Two.Texture)} pathOrTexture - The URL path to an image or an already created `Two.Texture`.
+     * @param {(String|Two.Texture)} pathOrTexture - The URL path to an image or an already created {@link Two.Texture}.
      * @param {Number} x
      * @param {Number} y
      * @param {Number} [columns=1]
@@ -2862,7 +2862,7 @@
     /**
      * @name Two#makeImageSequence
      * @function
-     * @param {(String[]|Two.Texture[])} pathsOrTextures - An array of paths or of `Two.Textures`.
+     * @param {(String[]|Two.Texture[])} pathsOrTextures - An array of paths or of {@link Two.Textures}.
      * @param {Number} x
      * @param {Number} y
      * @param {Number} [frameRate=0]

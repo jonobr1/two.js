@@ -79,7 +79,7 @@
      * @name Two.Shape.MakeObservable
      * @function
      * @param {Object} object - The object to make observable.
-     * @description Convenience function to apply observable qualities of a `Two.Shape` to any object. Handy if you'd like to extend the `Two.Shape` class on a custom class.
+     * @description Convenience function to apply observable qualities of a {@link Two.Shape} to any object. Handy if you'd like to extend the {@link Two.Shape} class on a custom class.
      */
     MakeObservable: function(object) {
 
@@ -204,7 +204,7 @@
      * @function
      * @param {Two.Group} [parent] - Optional argument to automatically add the shape to a scenegraph.
      * @returns {Two.Shape}
-     * @description Create a new `Two.Shape` with the same values as the current shape.
+     * @description Create a new {@link Two.Shape} with the same values as the current shape.
      */
     clone: function(parent) {
 

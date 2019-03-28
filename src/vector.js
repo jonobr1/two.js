@@ -139,7 +139,7 @@
      * @name Two.Vector.MakeObservable
      * @function
      * @param {Object} object - The object to make observable.
-     * @description Convenience function to apply observable qualities of a `Two.Vector` to any object. Handy if you'd like to extend the `Two.Vector` class on a custom class.
+     * @description Convenience function to apply observable qualities of a {@link Two.Vector} to any object. Handy if you'd like to extend the {@link Two.Vector} class on a custom class.
      */
     MakeObservable: function(object) {
 
@@ -216,7 +216,7 @@
     /**
      * @name Two.Vector#clone
      * @function
-     * @returns {Two.Vector} - A new instance of `Two.Vector`.
+     * @returns {Two.Vector} - A new instance of {@link Two.Vector}.
      * @description Create a new vector and copy the existing values onto the newly created instance.
      */
     clone: function() {

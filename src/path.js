@@ -52,7 +52,7 @@
     /**
      * @name Two.Path#beginning
      * @property {Number} - Number between zero and one to state the beginning of where the path is rendered.
-     * @description `Two.Path.beginning` is a percentage value that represents at what percentage into the path should the renderer start drawing.
+     * @description {@link Two.Path#beginning} is a percentage value that represents at what percentage into the path should the renderer start drawing.
      * @nota-bene This is great for animating in and out stroked paths in conjunction with {@link Two.Path#ending}.
      */
     this.beginning = 0;
@@ -60,7 +60,7 @@
     /**
      * @name Two.Path#ending
      * @property {Number} - Number between zero and one to state the ending of where the path is rendered.
-     * @description `Two.Path.ending` is a percentage value that represents at what percentage into the path should the renderer start drawing.
+     * @description {@link Two.Path#ending} is a percentage value that represents at what percentage into the path should the renderer start drawing.
      * @nota-bene This is great for animating in and out stroked paths in conjunction with {@link Two.Path#beginning}.
      */
     this.ending = 1;
@@ -132,7 +132,7 @@
     /**
      * @name Two.Path#vertices
      * @property {Two.Anchor[]} - An ordered list of anchor points for rendering the path.
-     * @description An of `Two.Anchor` objects that consist of what form the path takes.
+     * @description An of{@link Two.Anchor} objects that consist of what form the path takes.
      * @nota-bene The array when manipulating is actually a {@link Two.Utils.Collection}.
      */
     this.vertices = vertices;
@@ -256,7 +256,7 @@
      * @name Two.Path.MakeObservable
      * @function
      * @param {Object} object - The object to make observable.
-     * @description Convenience function to apply observable qualities of a `Two.Path` to any object. Handy if you'd like to extend the `Two.Path` class on a custom class.
+     * @description Convenience function to apply observable qualities of a {@link link Two.Path} to any object. Handy if you'd like to extend the {@link Two.Path} class on a custom class.
      */
     MakeObservable: function(object) {
 

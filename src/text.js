@@ -332,13 +332,13 @@
 
     /**
      * @name Two.Text#alignment
-     * @property {String} - Alignment of text in relation to `Two.Text.translation`'s coordinates. Possible values include `'left'`, `'center'`, `'right'`. Defaults to `'center'`.
+     * @property {String} - Alignment of text in relation to {@link Two.Text#translation}'s coordinates. Possible values include `'left'`, `'center'`, `'right'`. Defaults to `'center'`.
      */
     _alignment: 'center',
 
     /**
      * @name Two.Text#baseline
-     * @property {String} - The vertical aligment of the text in relation to `Two.Text.translation`'s coordinates. Possible values include `'top'`, `'middle'`, `'bottom'`, and `'baseline'`. Defaults to `'baseline'`.
+     * @property {String} - The vertical aligment of the text in relation to {@link Two.Text#translation}'s coordinates. Possible values include `'top'`, `'middle'`, `'bottom'`, and `'baseline'`. Defaults to `'baseline'`.
      */
     _baseline: 'middle',
 
@@ -389,7 +389,7 @@
 
     /**
      * @name Two.Text#className
-     * @property {String} - A class to be applied to the element to be compatible with CSS styling. Only available for the `Two.SvgRenderer`.
+     * @property {String} - A class to be applied to the element to be compatible with CSS styling. Only available for the {@link Two.SvgRenderer}.
      */
     _className: '',
 

@@ -154,7 +154,7 @@
      * @name Two.Group.MakeObservable
      * @function
      * @param {Object} object - The object to make observable.
-     * @description Convenience function to apply observable qualities of a `Two.Group` to any object. Handy if you'd like to extend the `Two.Group` class on a custom class.
+     * @description Convenience function to apply observable qualities of a {@link Two.Group} to any object. Handy if you'd like to extend the {@link Two.Group} class on a custom class.
      */
     MakeObservable: function(object) {
 
@@ -489,7 +489,7 @@
     /**
      * @name Two.Group#beginning
      * @property {Number} - Number between zero and one to state the beginning of where the path is rendered.
-     * @description `Two.Group.beginning` is a percentage value that represents at what percentage into all child shapes should the renderer start drawing.
+     * @description {@link Two.Group#beginning} is a percentage value that represents at what percentage into all child shapes should the renderer start drawing.
      * @nota-bene This is great for animating in and out stroked paths in conjunction with {@link Two.Group#ending}.
      */
     _beginning: 0,
@@ -497,7 +497,7 @@
     /**
      * @name Two.Group#ending
      * @property {Number} - Number between zero and one to state the ending of where the path is rendered.
-     * @description `Two.Group.ending` is a percentage value that represents at what percentage into all child shapes should the renderer start drawing.
+     * @description {@link Two.Group#ending} is a percentage value that represents at what percentage into all child shapes should the renderer start drawing.
      * @nota-bene This is great for animating in and out stroked paths in conjunction with {@link Two.Group#beginning}.
      */
     _ending: 1.0,
@@ -673,7 +673,7 @@
     /**
      * @name Two.Group#getByType
      * @function
-     * @description Recursively search for children of a specific type, e.g. `Two.Path`. Pass a reference to this type as the param. Returns an array of matching elements.
+     * @description Recursively search for children of a specific type, e.g. {@link Two.Path}. Pass a reference to this type as the param. Returns an array of matching elements.
      * @returns {Array} - Empty array if nothing is found.
      */
     getByType: function(type) {

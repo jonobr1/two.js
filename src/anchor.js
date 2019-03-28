@@ -15,7 +15,7 @@
    * @param {Number} [ry=0] - The y position of the right handle point.
    * @param {String} [command=Two.Commands.move] - The command to describe how to render. Applicable commands are {@link Two.Commands}
    * @extends Two.Vector
-   * @description An object that holds 3 `Two.Vector`s, the anchor point and its corresponding handles: `left` and `right`. In order to properly describe the bezier curve about the point there is also a command property to describe what type of drawing should occur when Two.js renders the anchors.
+   * @description An object that holds 3 {@link Two.Vector}s, the anchor point and its corresponding handles: `left` and `right`. In order to properly describe the bezier curve about the point there is also a command property to describe what type of drawing should occur when Two.js renders the anchors.
    */
   var Anchor = Two.Anchor = function(x, y, lx, ly, rx, ry, command) {
 
@@ -94,7 +94,7 @@
      * @name Two.Anchor.MakeObservable
      * @function
      * @param {Object} object - The object to make observable.
-     * @description Convenience function to apply observable qualities of a `Two.Anchor` to any object. Handy if you'd like to extend the `Two.Anchor` class on a custom class.
+     * @description Convenience function to apply observable qualities of a {@link Two.Anchor} to any object. Handy if you'd like to extend the {@link Two.Anchor} class on a custom class.
      */
     MakeObservable: function(object) {
 
