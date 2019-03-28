@@ -43,6 +43,12 @@
      */
     this.dashes = [];
 
+    /**
+     * @name Two.Text#dashes#offset
+     * @property {Number} - A number in pixels to offset {@link Two.Text#dashes} display.
+     */
+    this.dashes.offset = 0;
+
     if (!_.isObject(styles)) {
       return this;
     }
@@ -161,6 +167,19 @@
         set: function(v) {
           this._clip = v;
           this._flagClip = true;
+        }
+      });
+
+      Object.defineProperty(object, 'dashes', {
+        enumerable: true,
+        get: function() {
+          return this._dashes;
+        },
+        set: function(v) {
+          if (!_.isNumber(v.offset)) {
+            v.offset = this._dashes.offset || 0;
+          }
+          this._dashes = v;
         }
       });
 
@@ -387,6 +406,13 @@
      * @nota-bene This property is currently not working becuase of SVG spec issues found here {@link https://code.google.com/p/chromium/issues/detail?id=370951}.
      */
     _clip: false,
+
+    /**
+     * @name Two.Text#_dashes
+     * @private
+     * @see {@link Two.Text#dashes}
+     */
+    _dashes: [],
 
     constructor: Two.Text,
 

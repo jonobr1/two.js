@@ -436,6 +436,7 @@
 
         if (this.dashes && this.dashes.length > 0) {
           changed['stroke-dasharray'] = this.dashes.join(' ');
+          changed['stroke-dashoffset'] = this.dashes.offset || 0;
         }
 
         // If there is no attached DOM element yet,
@@ -556,6 +557,7 @@
         }
         if (this.dashes && this.dashes.length > 0) {
           changed['stroke-dasharray'] = this.dashes.join(' ');
+          changed['stroke-dashoffset'] = this.dashes.offset || 0;
         }
 
         if (!this._renderer.elem) {

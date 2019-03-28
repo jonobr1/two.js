@@ -151,6 +151,12 @@
      */
     this.dashes = [];
 
+    /**
+     * @name Two.Path#dashes#offset
+     * @property {Number} - A number in pixels to offset {@link Two.Path#dashes} display.
+     */
+    this.dashes.offset = 0;
+
   };
 
   _.extend(Path, {
@@ -445,6 +451,19 @@
         }
       });
 
+      Object.defineProperty(object, 'dashes', {
+        enumerable: true,
+        get: function() {
+          return this._dashes;
+        },
+        set: function(v) {
+          if (!_.isNumber(v.offset)) {
+            v.offset = this._dashes.offset || 0;
+          }
+          this._dashes = v;
+        }
+      });
+
     }
 
   });
@@ -651,6 +670,13 @@
      * @see {@link Two.Path#clip}
      */
     _clip: false,
+
+    /**
+     * @name Two.Path#_dashes
+     * @private
+     * @see {@link Two.Path#dashes}
+     */
+    _dashes: [],
 
     constructor: Path,
 

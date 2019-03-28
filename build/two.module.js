@@ -472,7 +472,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2019-03-25T15:06:28+01:00',
+    PublishDate: '2019-03-28T08:17:09+01:00',
 
     /**
      * @name Two.Identifier
@@ -5267,6 +5267,7 @@ SOFTWARE.
 
         if (this.dashes && this.dashes.length > 0) {
           changed['stroke-dasharray'] = this.dashes.join(' ');
+          changed['stroke-dashoffset'] = this.dashes.offset || 0;
         }
 
         // If there is no attached DOM element yet,
@@ -5387,6 +5388,7 @@ SOFTWARE.
         }
         if (this.dashes && this.dashes.length > 0) {
           changed['stroke-dasharray'] = this.dashes.join(' ');
+          changed['stroke-dashoffset'] = this.dashes.offset || 0;
         }
 
         if (!this._renderer.elem) {
@@ -5968,6 +5970,7 @@ SOFTWARE.
         }
 
         if (dashes && dashes.length > 0) {
+          ctx.lineDashOffset = dashes.offset || 0;
           ctx.setLineDash(dashes);
         }
 
@@ -6204,6 +6207,7 @@ SOFTWARE.
           ctx.globalAlpha = opacity;
         }
         if (dashes && dashes.length > 0) {
+          ctx.lineDashOffset = dashes.offset || 0;
           ctx.setLineDash(dashes);
         }
 
@@ -6858,6 +6862,7 @@ SOFTWARE.
         }
 
         if (dashes && dashes.length > 0) {
+          ctx.lineDashOffset = dashes.offset || 0;
           ctx.setLineDash(dashes);
         }
 
@@ -7264,6 +7269,7 @@ SOFTWARE.
           ctx.globalAlpha = opacity;
         }
         if (dashes && dashes.length > 0) {
+          ctx.lineDashOffset = dashes.offset || 0;
           ctx.setLineDash(dashes);
         }
 
@@ -8387,6 +8393,12 @@ SOFTWARE.
      */
     this.dashes = [];
 
+    /**
+     * @name Two.Path#dashes#offset
+     * @property {Number} - A number in pixels to offset {@link Two.Path#dashes} display.
+     */
+    this.dashes.offset = 0;
+
   };
 
   _.extend(Path, {
@@ -8681,6 +8693,19 @@ SOFTWARE.
         }
       });
 
+      Object.defineProperty(object, 'dashes', {
+        enumerable: true,
+        get: function() {
+          return this._dashes;
+        },
+        set: function(v) {
+          if (!_.isNumber(v.offset)) {
+            v.offset = this._dashes.offset || 0;
+          }
+          this._dashes = v;
+        }
+      });
+
     }
 
   });
@@ -8887,6 +8912,13 @@ SOFTWARE.
      * @see {@link Two.Path#clip}
      */
     _clip: false,
+
+    /**
+     * @name Two.Path#_dashes
+     * @private
+     * @see {@link Two.Path#dashes}
+     */
+    _dashes: [],
 
     constructor: Path,
 
@@ -10865,6 +10897,12 @@ SOFTWARE.
      */
     this.dashes = [];
 
+    /**
+     * @name Two.Text#dashes#offset
+     * @property {Number} - A number in pixels to offset {@link Two.Text#dashes} display.
+     */
+    this.dashes.offset = 0;
+
     if (!_.isObject(styles)) {
       return this;
     }
@@ -10983,6 +11021,19 @@ SOFTWARE.
         set: function(v) {
           this._clip = v;
           this._flagClip = true;
+        }
+      });
+
+      Object.defineProperty(object, 'dashes', {
+        enumerable: true,
+        get: function() {
+          return this._dashes;
+        },
+        set: function(v) {
+          if (!_.isNumber(v.offset)) {
+            v.offset = this._dashes.offset || 0;
+          }
+          this._dashes = v;
         }
       });
 
@@ -11209,6 +11260,13 @@ SOFTWARE.
      * @nota-bene This property is currently not working becuase of SVG spec issues found here {@link https://code.google.com/p/chromium/issues/detail?id=370951}.
      */
     _clip: false,
+
+    /**
+     * @name Two.Text#_dashes
+     * @private
+     * @see {@link Two.Text#dashes}
+     */
+    _dashes: [],
 
     constructor: Two.Text,
 

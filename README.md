@@ -110,6 +110,7 @@ process.exit();
 ## Change Log
 
 #### Nightly
++ Added `Two.Path.dashes.offset` and `Two.Text.dashes.offset` properties for animating dashed strokes in all renderers
 + Fixed `Two.Path.corner` method to not be additive on successive invocations
 + Split `Two.Matrix.toArray` into two different functions. One for 2D transforms and one for a plain object (JSON) representation
 + Added `Two.Matrix.toTransformArray` intended for 2D transformation use internally

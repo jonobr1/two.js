@@ -191,6 +191,7 @@
         }
 
         if (dashes && dashes.length > 0) {
+          ctx.lineDashOffset = dashes.offset || 0;
           ctx.setLineDash(dashes);
         }
 
@@ -427,6 +428,7 @@
           ctx.globalAlpha = opacity;
         }
         if (dashes && dashes.length > 0) {
+          ctx.lineDashOffset = dashes.offset || 0;
           ctx.setLineDash(dashes);
         }
 
