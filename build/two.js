@@ -348,7 +348,7 @@ SOFTWARE.
    * @param {Boolean} [options.fullscreen=false] - Set to `true` to automatically make the stage adapt to the width and height of the parent document. This parameter overrides `width` and `height` parameters if set to `true`.
    * @param {Number} [options.width=640] - The width of the stage on construction. This can be set at a later time.
    * @param {Number} [options.height=480] - The height of the stage on construction. This can be set at a later time.
-   * @param {String} [options.type=Two.Types.svg] - The type of renderer to setup drawing with. See [`Two.Types`]{@link  Two.Types} for available options.
+   * @param {String} [options.type=Two.Types.svg] - The type of renderer to setup drawing with. See {@link  Two.Types} for available options.
    * @param {Boolean} [options.autostart=false] - Set to `true` to add the instance to draw on `requestAnimationFrame`. This is a convenient substitute for {@link Two#play}.
    * @description The entrypoint for Two.js. Instantiate a `new Two` in order to setup a scene to render to. `Two` is also the publicly accessible namespace that all other sub-classes, functions, and utilities attach to.
    */
@@ -472,7 +472,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2019-03-28T08:17:09+01:00',
+    PublishDate: '2019-03-28T08:32:09+01:00',
 
     /**
      * @name Two.Identifier
@@ -957,7 +957,7 @@ SOFTWARE.
        * @param {Two.Shape} elem - The Two.js object to apply extrapolated attributes to.
        * @returns {Two.Shape} The Two.js object passed now with applied attributes.
        * @description This function iterates through an SVG Node's properties and stores ones of interest. It tries to resolve styles applied via CSS as well.
-       * @TODO Reverse calculate `Two.Gradient`s for fill / stroke of any given path.
+       * @TODO Reverse calculate {@link Two.Gradient}s for fill / stroke of any given path.
        */
       applySvgAttributes: function(node, elem, parentStyles) {
 
@@ -1985,7 +1985,7 @@ SOFTWARE.
        * @function
        * @param {Two.Anchor[]} points
        * @param {Boolean} closed
-       * @description Sets the bezier handles on `Two.Anchor`s in the `points` list with estimated values to create a catmull-rom like curve. Used by {@link Two.Path#plot}.
+       * @description Sets the bezier handles on {@link Two.Anchor}s in the `points` list with estimated values to create a catmull-rom like curve. Used by {@link Two.Path#plot}.
        */
       getCurveFromPoints: function(points, closed) {
 
@@ -2075,7 +2075,7 @@ SOFTWARE.
        * @param {Two.Vector} a
        * @param {Two.Vector} b
        * @param {Boolean} [relative=false]
-       * @returns {Two.Vector} New `Two.Vector` that represents the reflection point.
+       * @returns {Two.Vector} New {@link Two.Vector} that represents the reflection point.
        * @description Get the reflection of a point `b` about point `a`. Where `a` is in absolute space and `b` is relative to `a`.
        * @see {@link http://www.w3.org/TR/SVG11/implnote.html#PathElementImplementationNotes}
        */
@@ -2459,7 +2459,7 @@ SOFTWARE.
     /**
      * @name Two#play
      * @function
-     * @fires `Two.Events.play` event
+     * @fires Two.Events.play event
      * @description Call to start an internal animation loop.
      * @nota-bene This function initiates a `requestAnimationFrame` loop.
      */
@@ -2474,7 +2474,7 @@ SOFTWARE.
     /**
      * @name Two#pause
      * @function
-     * @fires `Two.Events.pause` event
+     * @fires Two.Events.pause event
      * @description Call to stop the internal animation loop for a specific instance of Two.js.
      */
     pause: function() {
@@ -2486,7 +2486,7 @@ SOFTWARE.
 
     /**
      * @name Two#update
-     * @fires `Two.Events.update` event
+     * @fires Two.Events.update event
      * @description Update positions and calculations in one pass before rendering. Then render to the canvas.
      * @nota-bene This function is called automatically if using {@link Two#play} or the `autostart` parameter in construction.
      */
@@ -2517,7 +2517,7 @@ SOFTWARE.
 
     /**
      * @name Two#render
-     * @fires `Two.Events.render` event
+     * @fires Two.Events.render event
      * @description Render all drawable and visible objects of the scene.
      */
     render: function() {
@@ -2696,8 +2696,8 @@ SOFTWARE.
     /**
      * @name Two#makeCurve
      * @function
-     * @param {Two.Anchor[]} [points] - An array of `Two.Anchor` points.
-     * @param {...Number} - Alternatively you can pass alternating `x` / `y` coordinate values as individual arguments. These will be combined into `Two.Anchor`s for use in the path.
+     * @param {Two.Anchor[]} [points] - An array of {@link Two.Anchor} points.
+     * @param {...Number} - Alternatively you can pass alternating `x` / `y` coordinate values as individual arguments. These will be combined into {@link Two.Anchor}s for use in the path.
      * @returns {Two.Path} - Where `path.curved` is set to `true`.
      * @description Creates a Two.js path that is curved and adds it to the scene.
      * @nota-bene In either case of passing an array or passing numbered arguments the last argument is an optional `Boolean` that defines whether the path should be open or closed.
@@ -2768,8 +2768,8 @@ SOFTWARE.
     /**
      * @name Two#makePath
      * @function
-     * @param {Two.Anchor[]} [points] - An array of `Two.Anchor` points.
-     * @param {...Number} - Alternatively you can pass alternating `x` / `y` coordinate values as individual arguments. These will be combined into `Two.Anchor`s for use in the path.
+     * @param {Two.Anchor[]} [points] - An array of {@link Two.Anchor} points.
+     * @param {...Number} - Alternatively you can pass alternating `x` / `y` coordinate values as individual arguments. These will be combined into {@link Two.Anchor}s for use in the path.
      * @returns {Two.Path}
      * @description Creates a Two.js path and adds it to the scene.
      * @nota-bene In either case of passing an array or passing numbered arguments the last argument is an optional `Boolean` that defines whether the path should be open or closed.
@@ -2863,7 +2863,7 @@ SOFTWARE.
     /**
      * @name Two#makeSprite
      * @function
-     * @param {(String|Two.Texture)} pathOrTexture - The URL path to an image or an already created `Two.Texture`.
+     * @param {(String|Two.Texture)} pathOrTexture - The URL path to an image or an already created {@link Two.Texture}.
      * @param {Number} x
      * @param {Number} y
      * @param {Number} [columns=1]
@@ -2888,7 +2888,7 @@ SOFTWARE.
     /**
      * @name Two#makeImageSequence
      * @function
-     * @param {(String[]|Two.Texture[])} pathsOrTextures - An array of paths or of `Two.Textures`.
+     * @param {(String[]|Two.Texture[])} pathsOrTextures - An array of paths or of {@link Two.Textures}.
      * @param {Number} x
      * @param {Number} y
      * @param {Number} [frameRate=0]
@@ -3281,7 +3281,7 @@ SOFTWARE.
      * @name Two.Vector.MakeObservable
      * @function
      * @param {Object} object - The object to make observable.
-     * @description Convenience function to apply observable qualities of a `Two.Vector` to any object. Handy if you'd like to extend the `Two.Vector` class on a custom class.
+     * @description Convenience function to apply observable qualities of a {@link Two.Vector} to any object. Handy if you'd like to extend the {@link Two.Vector} class on a custom class.
      */
     MakeObservable: function(object) {
 
@@ -3358,7 +3358,7 @@ SOFTWARE.
     /**
      * @name Two.Vector#clone
      * @function
-     * @returns {Two.Vector} - A new instance of `Two.Vector`.
+     * @returns {Two.Vector} - A new instance of {@link Two.Vector}.
      * @description Create a new vector and copy the existing values onto the newly created instance.
      */
     clone: function() {
@@ -3964,7 +3964,7 @@ SOFTWARE.
    * @param {Number} [ry=0] - The y position of the right handle point.
    * @param {String} [command=Two.Commands.move] - The command to describe how to render. Applicable commands are {@link Two.Commands}
    * @extends Two.Vector
-   * @description An object that holds 3 `Two.Vector`s, the anchor point and its corresponding handles: `left` and `right`. In order to properly describe the bezier curve about the point there is also a command property to describe what type of drawing should occur when Two.js renders the anchors.
+   * @description An object that holds 3 {@link Two.Vector}s, the anchor point and its corresponding handles: `left` and `right`. In order to properly describe the bezier curve about the point there is also a command property to describe what type of drawing should occur when Two.js renders the anchors.
    */
   var Anchor = Two.Anchor = function(x, y, lx, ly, rx, ry, command) {
 
@@ -4043,7 +4043,7 @@ SOFTWARE.
      * @name Two.Anchor.MakeObservable
      * @function
      * @param {Object} object - The object to make observable.
-     * @description Convenience function to apply observable qualities of a `Two.Anchor` to any object. Handy if you'd like to extend the `Two.Anchor` class on a custom class.
+     * @description Convenience function to apply observable qualities of a {@link Two.Anchor} to any object. Handy if you'd like to extend the {@link Two.Anchor} class on a custom class.
      */
     MakeObservable: function(object) {
 
@@ -8041,7 +8041,7 @@ SOFTWARE.
      * @name Two.Shape.MakeObservable
      * @function
      * @param {Object} object - The object to make observable.
-     * @description Convenience function to apply observable qualities of a `Two.Shape` to any object. Handy if you'd like to extend the `Two.Shape` class on a custom class.
+     * @description Convenience function to apply observable qualities of a {@link Two.Shape} to any object. Handy if you'd like to extend the {@link Two.Shape} class on a custom class.
      */
     MakeObservable: function(object) {
 
@@ -8166,7 +8166,7 @@ SOFTWARE.
      * @function
      * @param {Two.Group} [parent] - Optional argument to automatically add the shape to a scenegraph.
      * @returns {Two.Shape}
-     * @description Create a new `Two.Shape` with the same values as the current shape.
+     * @description Create a new {@link Two.Shape} with the same values as the current shape.
      */
     clone: function(parent) {
 
@@ -8294,7 +8294,7 @@ SOFTWARE.
     /**
      * @name Two.Path#beginning
      * @property {Number} - Number between zero and one to state the beginning of where the path is rendered.
-     * @description `Two.Path.beginning` is a percentage value that represents at what percentage into the path should the renderer start drawing.
+     * @description {@link Two.Path#beginning} is a percentage value that represents at what percentage into the path should the renderer start drawing.
      * @nota-bene This is great for animating in and out stroked paths in conjunction with {@link Two.Path#ending}.
      */
     this.beginning = 0;
@@ -8302,7 +8302,7 @@ SOFTWARE.
     /**
      * @name Two.Path#ending
      * @property {Number} - Number between zero and one to state the ending of where the path is rendered.
-     * @description `Two.Path.ending` is a percentage value that represents at what percentage into the path should the renderer start drawing.
+     * @description {@link Two.Path#ending} is a percentage value that represents at what percentage into the path should the renderer start drawing.
      * @nota-bene This is great for animating in and out stroked paths in conjunction with {@link Two.Path#beginning}.
      */
     this.ending = 1;
@@ -8374,7 +8374,7 @@ SOFTWARE.
     /**
      * @name Two.Path#vertices
      * @property {Two.Anchor[]} - An ordered list of anchor points for rendering the path.
-     * @description An of `Two.Anchor` objects that consist of what form the path takes.
+     * @description An of{@link Two.Anchor} objects that consist of what form the path takes.
      * @nota-bene The array when manipulating is actually a {@link Two.Utils.Collection}.
      */
     this.vertices = vertices;
@@ -8498,7 +8498,7 @@ SOFTWARE.
      * @name Two.Path.MakeObservable
      * @function
      * @param {Object} object - The object to make observable.
-     * @description Convenience function to apply observable qualities of a `Two.Path` to any object. Handy if you'd like to extend the `Two.Path` class on a custom class.
+     * @description Convenience function to apply observable qualities of a {@link link Two.Path} to any object. Handy if you'd like to extend the {@link Two.Path} class on a custom class.
      */
     MakeObservable: function(object) {
 
@@ -11186,13 +11186,13 @@ SOFTWARE.
 
     /**
      * @name Two.Text#alignment
-     * @property {String} - Alignment of text in relation to `Two.Text.translation`'s coordinates. Possible values include `'left'`, `'center'`, `'right'`. Defaults to `'center'`.
+     * @property {String} - Alignment of text in relation to {@link Two.Text#translation}'s coordinates. Possible values include `'left'`, `'center'`, `'right'`. Defaults to `'center'`.
      */
     _alignment: 'center',
 
     /**
      * @name Two.Text#baseline
-     * @property {String} - The vertical aligment of the text in relation to `Two.Text.translation`'s coordinates. Possible values include `'top'`, `'middle'`, `'bottom'`, and `'baseline'`. Defaults to `'baseline'`.
+     * @property {String} - The vertical aligment of the text in relation to {@link Two.Text#translation}'s coordinates. Possible values include `'top'`, `'middle'`, `'bottom'`, and `'baseline'`. Defaults to `'baseline'`.
      */
     _baseline: 'middle',
 
@@ -11243,7 +11243,7 @@ SOFTWARE.
 
     /**
      * @name Two.Text#className
-     * @property {String} - A class to be applied to the element to be compatible with CSS styling. Only available for the `Two.SvgRenderer`.
+     * @property {String} - A class to be applied to the element to be compatible with CSS styling. Only available for the {@link Two.SvgRenderer}.
      */
     _className: '',
 
@@ -13078,7 +13078,7 @@ SOFTWARE.
      * @name Two.Group.MakeObservable
      * @function
      * @param {Object} object - The object to make observable.
-     * @description Convenience function to apply observable qualities of a `Two.Group` to any object. Handy if you'd like to extend the `Two.Group` class on a custom class.
+     * @description Convenience function to apply observable qualities of a {@link Two.Group} to any object. Handy if you'd like to extend the {@link Two.Group} class on a custom class.
      */
     MakeObservable: function(object) {
 
@@ -13413,7 +13413,7 @@ SOFTWARE.
     /**
      * @name Two.Group#beginning
      * @property {Number} - Number between zero and one to state the beginning of where the path is rendered.
-     * @description `Two.Group.beginning` is a percentage value that represents at what percentage into all child shapes should the renderer start drawing.
+     * @description {@link Two.Group#beginning} is a percentage value that represents at what percentage into all child shapes should the renderer start drawing.
      * @nota-bene This is great for animating in and out stroked paths in conjunction with {@link Two.Group#ending}.
      */
     _beginning: 0,
@@ -13421,7 +13421,7 @@ SOFTWARE.
     /**
      * @name Two.Group#ending
      * @property {Number} - Number between zero and one to state the ending of where the path is rendered.
-     * @description `Two.Group.ending` is a percentage value that represents at what percentage into all child shapes should the renderer start drawing.
+     * @description {@link Two.Group#ending} is a percentage value that represents at what percentage into all child shapes should the renderer start drawing.
      * @nota-bene This is great for animating in and out stroked paths in conjunction with {@link Two.Group#beginning}.
      */
     _ending: 1.0,
@@ -13597,7 +13597,7 @@ SOFTWARE.
     /**
      * @name Two.Group#getByType
      * @function
-     * @description Recursively search for children of a specific type, e.g. `Two.Path`. Pass a reference to this type as the param. Returns an array of matching elements.
+     * @description Recursively search for children of a specific type, e.g. {@link Two.Path}. Pass a reference to this type as the param. Returns an array of matching elements.
      * @returns {Array} - Empty array if nothing is found.
      */
     getByType: function(type) {
