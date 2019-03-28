@@ -143,22 +143,32 @@
       * @param {Number[]} a - The array of elements to apply.
       * @description Set an array of values onto the matrix. Order described in {@link Two.Matrix}.
       */
-    set: function(a) {
+    set: function(a, b, c, d, e, f, g, h, i) {
 
-      var elements = a;
-      if (arguments.length > 1) {
-        elements = _.toArray(arguments);
+      var elements;
+
+      if (_.isUndefined(b)) {
+        elements = a;
+        a = elements[0];
+        b = elements[1];
+        c = elements[2];
+        d = elements[3];
+        e = elements[4];
+        f = elements[5];
+        g = elements[6];
+        h = elements[7];
+        i = elements[8];
       }
 
-      this.elements[0] = elements[0];
-      this.elements[1] = elements[1];
-      this.elements[2] = elements[2];
-      this.elements[3] = elements[3];
-      this.elements[4] = elements[4];
-      this.elements[5] = elements[5];
-      this.elements[6] = elements[6];
-      this.elements[7] = elements[7];
-      this.elements[8] = elements[8];
+      this.elements[0] = a;
+      this.elements[1] = b;
+      this.elements[2] = c;
+      this.elements[3] = d;
+      this.elements[4] = e;
+      this.elements[5] = f;
+      this.elements[6] = g;
+      this.elements[7] = h;
+      this.elements[8] = i;
 
       return this.trigger(Two.Events.change);
 
@@ -217,11 +227,9 @@
      */
     multiply: function(a, b, c, d, e, f, g, h, i) {
 
-      var elements = arguments, l = elements.length;
-
       // Multiply scalar
 
-      if (l <= 1) {
+      if (_.isUndefined(b)) {
 
         this.elements[0] *= a;
         this.elements[1] *= a;
@@ -237,7 +245,7 @@
 
       }
 
-      if (l <= 3) { // Multiply Vector
+      if (_.isUndefined(d)) { // Multiply Vector
 
         var x, y, z;
         a = a || 0;
@@ -259,7 +267,7 @@
       // Multiple matrix
 
       var A = this.elements;
-      var B = elements;
+      var B = [a, b, c, d, e, f, g, h, i];
 
       var A0 = A[0], A1 = A[1], A2 = A[2];
       var A3 = A[3], A4 = A[4], A5 = A[5];
@@ -495,18 +503,18 @@
      var elements = this.elements;
      var hasOutput = !!output;
 
-     var a = fix(elements[0]);
-     var b = fix(elements[1]);
-     var c = fix(elements[2]);
-     var d = fix(elements[3]);
-     var e = fix(elements[4]);
-     var f = fix(elements[5]);
+     var a = elements[0];
+     var b = elements[1];
+     var c = elements[2];
+     var d = elements[3];
+     var e = elements[4];
+     var f = elements[5];
 
       if (!!fullMatrix) {
 
-        var g = fix(elements[6]);
-        var h = fix(elements[7]);
-        var i = fix(elements[8]);
+        var g = elements[6];
+        var h = elements[7];
+        var i = elements[8];
 
         if (hasOutput) {
           output[0] = a;
