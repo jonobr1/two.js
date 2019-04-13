@@ -472,7 +472,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2019-03-28T08:54:45+01:00',
+    PublishDate: '2019-04-13T18:25:19+02:00',
 
     /**
      * @name Two.Identifier
@@ -13159,6 +13159,9 @@ SOFTWARE.
         get: function() {
           if (this._flagLength || this._length <= 0) {
             this._length = 0;
+            if (!this.children) {
+              return this._length;
+            }
             for (var i = 0; i < this.children.length; i++) {
               var child = this.children[i];
               this._length += child.length;

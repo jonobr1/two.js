@@ -227,6 +227,9 @@
         get: function() {
           if (this._flagLength || this._length <= 0) {
             this._length = 0;
+            if (!this.children) {
+              return this._length;
+            }
             for (var i = 0; i < this.children.length; i++) {
               var child = this.children[i];
               this._length += child.length;
