@@ -110,6 +110,7 @@ process.exit();
 ## Change Log
 
 #### Nightly
++ Added `Two.makeArrow` for Simple Triangular Tipped Arrows [@mike168m](https://github.com/mike168m)
 + Improved `Two.Matrix` efficiency of calculations
 + Added `Two.Path.dashes.offset` and `Two.Text.dashes.offset` properties for animating dashed strokes in all renderers
 + Fixed `Two.Path.corner` method to not be additive on successive invocations
