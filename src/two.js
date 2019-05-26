@@ -2587,7 +2587,7 @@
 
       var angle = Math.atan2(y2 - y1,x2 - x1);
 
-      let vertices = [
+      var vertices = [
         x1, y1, 
         x2, y2,
         x2 - headlen * Math.cos(angle - Math.PI/6), y2 - headlen * Math.sin(angle - Math.PI/6),
@@ -2595,7 +2595,7 @@
         x2 - headlen * Math.cos(angle + Math.PI/6), y2 - headlen * Math.sin(angle + Math.PI/6)
       ]
 
-      let path = Two.Path(vertices, false, false);
+      var path = Two.Path(vertices, false, false);
       path.fill = 'transparent';
       path.stroke = color;
       path.linewidth = width;
