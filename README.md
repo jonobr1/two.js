@@ -67,7 +67,7 @@ As of version `v0.7.x` Two.js can also run in a headless environment, namely run
 
 ```
 npm install canvas
-npm intsall two.js
+npm install two.js
 ```
 
 Now in a JavaScript file setup your Two.js scenegraph and save out frames whenever you need to:
