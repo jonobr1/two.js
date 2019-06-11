@@ -2581,24 +2581,35 @@
      * @returns {Two.Path}
      * @description Creates a Two.js arrow and adds it to the scene.
      */
-    makeArrow: function(x1, y1, x2, y2, color, width) {
+    makeArrow: function(x1, y1, x2, y2, size) {
 
-      var headlen = 10;   // length of head in pixels
+      var headlen = _.isNumber(size ) ? size : 10;
 
-      var angle = Math.atan2(y2 - y1,x2 - x1);
+      var angle = Math.atan2(y2 - y1, x2 - x1);
 
       var vertices = [
-        x1, y1, 
-        x2, y2,
-        x2 - headlen * Math.cos(angle - Math.PI/6), y2 - headlen * Math.sin(angle - Math.PI/6),
-        x2, y2,
-        x2 - headlen * Math.cos(angle + Math.PI/6), y2 - headlen * Math.sin(angle + Math.PI/6)
-      ]
 
-      var path = Two.Path(vertices, false, false);
-      path.fill = 'transparent';
-      path.stroke = color;
-      path.linewidth = width;
+        new Two.Anchor(x1, y1, undefined, undefined, undefined, undefined, Two.Commands.move),
+        new Two.Anchor(x2, y2, undefined, undefined, undefined, undefined, Two.Commands.line),
+        new Two.Anchor(
+          x2 - headlen * Math.cos(angle - Math.PI / 4),
+          y2 - headlen * Math.sin(angle - Math.PI / 4),
+          undefined, undefined, undefined, undefined, Two.Commands.line
+        ),
+
+        new Two.Anchor(x2, y2, undefined, undefined, undefined, undefined, Two.Commands.move),
+        new Two.Anchor(
+          x2 - headlen * Math.cos(angle + Math.PI / 4),
+          y2 - headlen * Math.sin(angle + Math.PI / 4),
+          undefined, undefined, undefined, undefined, Two.Commands.line
+        )
+
+      ];
+
+      var path = new Two.Path(vertices, false, false, true);
+      path.noFill();
+      path.cap = 'round';
+      path.join = 'round';
 
       this.scene.add(path);
 
