@@ -472,7 +472,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2019-06-11T11:17:41-07:00',
+    PublishDate: '2019-07-30T17:33:26+02:00',
 
     /**
      * @name Two.Identifier
@@ -829,6 +829,9 @@ SOFTWARE.
         var skewX = ((180 / Math.PI) * Math.atan2(px.y, px.x) - 90);
         var skewY = ((180 / Math.PI) * Math.atan2(py.y, py.x));
 
+        skewX = Two.Utils.toFixed(skewX);
+        skewY = Two.Utils.toFixed(skewY);
+
         return {
             translateX: matrix.e,
             translateY: matrix.f,
@@ -1034,7 +1037,7 @@ SOFTWARE.
               var transforms = Two.Utils.decomposeMatrix(m);
 
               elem.translation.set(transforms.translateX, transforms.translateY);
-              elem.rotation = transforms.rotation;
+              elem.rotation = Math.PI * (transforms.rotation / 180);
               elem.scale = new Two.Vector(transforms.scaleX, transforms.scaleY);
 
               var x = parseFloat((styles.x + '').replace('px'));

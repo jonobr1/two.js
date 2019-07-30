@@ -803,6 +803,9 @@
         var skewX = ((180 / Math.PI) * Math.atan2(px.y, px.x) - 90);
         var skewY = ((180 / Math.PI) * Math.atan2(py.y, py.x));
 
+        skewX = Two.Utils.toFixed(skewX);
+        skewY = Two.Utils.toFixed(skewY);
+
         return {
             translateX: matrix.e,
             translateY: matrix.f,
@@ -1008,7 +1011,7 @@
               var transforms = Two.Utils.decomposeMatrix(m);
 
               elem.translation.set(transforms.translateX, transforms.translateY);
-              elem.rotation = transforms.rotation;
+              elem.rotation = Math.PI * (transforms.rotation / 180);
               elem.scale = new Two.Vector(transforms.scaleX, transforms.scaleY);
 
               var x = parseFloat((styles.x + '').replace('px'));
