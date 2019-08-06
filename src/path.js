@@ -256,7 +256,7 @@
      * @name Two.Path.MakeObservable
      * @function
      * @param {Object} object - The object to make observable.
-     * @description Convenience function to apply observable qualities of a {@link link Two.Path} to any object. Handy if you'd like to extend the {@link Two.Path} class on a custom class.
+     * @description Convenience function to apply observable qualities of a {@link Two.Path} to any object. Handy if you'd like to extend the {@link Two.Path} class on a custom class.
      */
     MakeObservable: function(object) {
 
