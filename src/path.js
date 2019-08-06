@@ -17,7 +17,7 @@
    * @name Two.Path
    * @class
    * @extends Two.Shape
-   * @param {Two.Anchor[]} [vertices] - A list of Two.Anchors that represent the order and coordinates to construct the rendered shape.
+   * @param {Two.Anchor[]} [vertices] - A list of {@link Two.Anchor}s that represent the order and coordinates to construct the rendered shape.
    * @param {Boolean} [closed=false] - Describes whether the shape is closed or open.
    * @param {Boolean} [curved=false] - Describes whether the shape automatically calculates bezier handles for each vertex.
    * @param {Boolean} [manual=false] - Describes whether the developer controls how vertices are plotted or if Two.js automatically plots coordinates based on closed and curved booleans.
@@ -132,7 +132,7 @@
     /**
      * @name Two.Path#vertices
      * @property {Two.Anchor[]} - An ordered list of anchor points for rendering the path.
-     * @description An of{@link Two.Anchor} objects that consist of what form the path takes.
+     * @description A list of {@link Two.Anchor} objects that consist of what form the path takes.
      * @nota-bene The array when manipulating is actually a {@link Two.Utils.Collection}.
      */
     this.vertices = vertices;
@@ -219,7 +219,7 @@
     },
 
     /**
-     * @name Two.Path.BindVertices
+     * @name Two.Path.UnbindVertices
      * @function
      * @description Cached method to let {@link Two.Path} know vertices have been removed from the instance.
      */
