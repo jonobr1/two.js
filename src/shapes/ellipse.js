@@ -86,13 +86,13 @@
     _flagHeight: false,
 
     /**
-     * @name Two.Circle#_width
+     * @name Two.Polygon#_width
      * @private
      * @see {@link Two.Ellipse#width}
      */
     _width: 0,
     /**
-     * @name Two.Circle#_height
+     * @name Two.Polygon#_height
      * @private
      * @see {@link Two.Ellipse#height}
      */
@@ -164,8 +164,8 @@
      * @name Two.Ellipse#clone
      * @function
      * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
-     * @returns {Two.Circle}
-     * @description Create a new instance of {@link Two.Circle} with the same properties of the current path.
+     * @returns {Two.Polygon}
+     * @description Create a new instance of {@link Two.Polygon} with the same properties of the current path.
      */
     clone: function(parent) {
 
