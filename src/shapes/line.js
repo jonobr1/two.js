@@ -3,6 +3,15 @@
   var Path = Two.Path;
   var _ = Two.Utils;
 
+  /**
+   * @name Two.Line
+   * @class
+   * @extends Two.Path
+   * @param {Number} [x1=0] - The x position of the first vertex on the line.
+   * @param {Number} [y1=0] - The y position of the first vertex on the line.
+   * @param {Number} [x2=0] - The x position of the second vertex on the line.
+   * @param {Number} [y2=0] - The y position of the second vertex on the line.
+   */
   var Line = Two.Line = function(x1, y1, x2, y2) {
 
     var width = x2 - x1;
