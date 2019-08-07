@@ -2,12 +2,28 @@
 
   var _ = Two.Utils;
 
+  /**
+   * @name Two.RadialGradient
+   * @class
+   * @extends Two.Gradient
+   * @param {Number} [x=0] - The x position of the origin of the radial gradient.
+   * @param {Number} [y=0] - The y position of the origin of the radial gradient.
+   * @param {Number} [radius=0] - The radius of the radial gradient.
+   * @param {Two.Stop[]} [stops] - A list of {@link Two.Stop}s that contain the gradient fill pattern for the gradient.
+   * @param {Number} [focalX=0] - The x position of the focal point on the radial gradient.
+   * @param {Number} [focalY=0] - The y position of the focal point on the radial gradient.
+   * @nota-bene The radial gradient lives within the space of the parent object's matrix space.
+   */
   var RadialGradient = Two.RadialGradient = function(cx, cy, r, stops, fx, fy) {
 
     Two.Gradient.call(this, stops);
 
     this._renderer.type = 'radial-gradient';
 
+    /**
+     * @name Two.RadialGradient#center
+     * @property {Two.Vector} - The x and y value for where the origin of the radial gradient is.
+     */
     this.center = new Two.Vector()
       .bind(Two.Events.change, _.bind(function() {
         this._flagCenter = true;
@@ -15,6 +31,11 @@
 
     this.radius = _.isNumber(r) ? r : 20;
 
+    /**
+     * @name Two.RadialGradient#focal
+     * @property {Two.Vector} - The x and y value for where the focal point of the radial gradient is.
+     * @nota-bene This effects the spray or spread of the radial gradient.
+     */
     this.focal = new Two.Vector()
       .bind(Two.Events.change, _.bind(function() {
         this._flagFocal = true;
@@ -40,12 +61,26 @@
 
   _.extend(RadialGradient, {
 
+    /**
+     * @name Two.RadialGradient#Stop
+     * @see {@link Two.Stop}
+     */
     Stop: Two.Gradient.Stop,
 
+    /**
+     * @name Two.RadialGradient.Properties
+     * @property {String[]} - A list of properties that are on every {@link Two.RadialGradient}.
+     */
     Properties: [
       'radius'
     ],
 
+    /**
+     * @name Two.RadialGradient.MakeObservable
+     * @function
+     * @param {Object} object - The object to make observable.
+     * @description Convenience function to apply observable qualities of a {@link Two.RadialGradient} to any object. Handy if you'd like to extend the {@link Two.RadialGradient} class on a custom class.
+     */
     MakeObservable: function(object) {
 
       Two.Gradient.MakeObservable(object);
@@ -58,12 +93,34 @@
 
   _.extend(RadialGradient.prototype, Two.Gradient.prototype, {
 
+    /**
+     * @name Two.RadialGradient#_flagRadius
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.RadialGradient#radius} changed and needs to update.
+     */
     _flagRadius: false,
+    /**
+     * @name Two.RadialGradient#_flagCenter
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.RadialGradient#center} changed and needs to update.
+     */
     _flagCenter: false,
+    /**
+     * @name Two.RadialGradient#_flagFocal
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.RadialGradient#focal} changed and needs to update.
+     */
     _flagFocal: false,
 
     constructor: RadialGradient,
 
+    /**
+     * @name Two.RadialGradient#clone
+     * @function
+     * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+     * @returns {Two.Gradient}
+     * @description Create a new instance of {@link Two.RadialGradient} with the same properties of the current path.
+     */
     clone: function(parent) {
 
       var stops = _.map(this.stops, function(stop) {
@@ -85,6 +142,12 @@
 
     },
 
+    /**
+     * @name Two.RadialGradient#toObject
+     * @function
+     * @returns {Object}
+     * @description Return a JSON compatible plain object that represents the path.
+     */
     toObject: function() {
 
       var result = Two.Gradient.prototype.toObject.call(this);
@@ -100,6 +163,14 @@
 
     },
 
+    /**
+     * @name Two.RadialGradient#_update
+     * @function
+     * @private
+     * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+     * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
+     * @nota-bene Try not to call this method more than once a frame.
+     */
     _update: function() {
 
       if (this._flagRadius || this._flatCenter || this._flagFocal
@@ -111,6 +182,12 @@
 
     },
 
+    /**
+     * @name Two.RadialGradient#flagReset
+     * @function
+     * @private
+     * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+     */
     flagReset: function() {
 
       this._flagRadius = this._flagCenter = this._flagFocal = false;

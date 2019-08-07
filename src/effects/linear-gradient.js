@@ -50,7 +50,7 @@
   _.extend(LinearGradient, {
 
     /**
-     * @name Two.Gradient#Stop
+     * @name Two.LinearGradient#Stop
      * @see {@link Two.Stop}
      */
     Stop: Two.Gradient.Stop,
