@@ -472,7 +472,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2019-08-10T15:25:24+02:00',
+    PublishDate: '2019-08-10T21:55:24+02:00',
 
     /**
      * @name Two.Identifier
@@ -1145,7 +1145,7 @@ SOFTWARE.
           return null;
         },
 
-        g: function(node) {
+        g: function(node, parentStyles) {
 
           var styles, attrs;
           var group = new Two.Group();
@@ -1164,11 +1164,13 @@ SOFTWARE.
 
             if (tagName in Two.Utils.read) {
               var o = Two.Utils.read[tagName].call(group, n, styles);
-              if (!_.isNull(o) && !o.parent) {
+              if (!!o && !o.parent) {
                 group.add(o);
               }
             }
           }
+
+          Two.Utils.applySvgAttributes.call(this, node, group, parentStyles);
 
           return group;
 
@@ -1483,19 +1485,13 @@ SOFTWARE.
                 y1 = coord.y;
 
                 if (!control) {
-                  control = new Two.Vector();//.copy(coord);
-                }
-
-                if (control.isZero()) {
-                  x2 = x1;
-                  y2 = y1;
-                } else {
-                  x2 = control.x;
-                  y2 = control.y;
+                  control = new Two.Vector();
                 }
 
                 if (/q/i.test(lower)) {
 
+                  x2 = parseFloat(coords[0]);
+                  y2 = parseFloat(coords[1]);
                   x3 = parseFloat(coords[0]);
                   y3 = parseFloat(coords[1]);
                   x4 = parseFloat(coords[2]);
@@ -1505,6 +1501,8 @@ SOFTWARE.
 
                   reflection = getReflection(coord, control, relative);
 
+                  x2 = reflection.x;
+                  y2 = reflection.y;
                   x3 = reflection.x;
                   y3 = reflection.y;
                   x4 = parseFloat(coords[0]);
@@ -1525,7 +1523,8 @@ SOFTWARE.
                   Two.Anchor.AppendCurveProperties(coord);
                 }
 
-                coord.controls.right.set(x2 - coord.x, y2 - coord.y);
+                coord.controls.right.set(
+                  (x2 - coord.x) * 0.33, (y2 - coord.y) * 0.33);
                 result = new Two.Anchor(
                   x4, y4,
                   x3 - x4, y3 - y4,
@@ -1604,9 +1603,9 @@ SOFTWARE.
             v.subSelf(rect.centroid);
           });
 
-          path.translation.addSelf(rect.centroid);
-
           Two.Utils.applySvgAttributes.call(this, node, path, parentStyles);
+
+          path.translation.addSelf(rect.centroid);
 
           return path;
 
@@ -2246,7 +2245,7 @@ SOFTWARE.
        * @description Custom error throwing for Two.js specific identification.
        */
       Error: function(message) {
-        this.name = 'two.js';
+        this.name = 'Two.js';
         this.message = message;
       },
 
