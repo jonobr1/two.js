@@ -110,6 +110,7 @@ process.exit();
 ## Change Log
 
 #### Nightly
++ Added support for various position inclusion of gradients and other effects in `Two.interpret`
 + Improved `Two.Utils.applySvgAttributes` rotation from SVG interpretation
 + Added `Two.makeArrow` for Simple Triangular Tipped Arrows [@mike168m](https://github.com/mike168m)
 + Improved `Two.Matrix` efficiency of calculations
