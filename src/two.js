@@ -1057,7 +1057,8 @@
             case 'fill':
             case 'stroke':
               if (/url\(\#.*\)/i.test(value)) {
-                elem[key] = this.getById(
+                var scene = Two.Utils.getScene(this);
+                elem[key] = scene.getById(
                   value.replace(/url\(\#(.*)\)/i, '$1'));
               } else {
                 elem[key] = (/none/i.test(value)) ? 'transparent' : value;
@@ -1065,6 +1066,9 @@
               break;
             case 'id':
               elem.id = value;
+              // Overwritten id for non-conflicts on same page SVG documents
+              // TODO: Make this non-descructive
+              node.id = value + '-' + Two.Identifier + 'applied';
               break;
             case 'class':
             case 'className':
@@ -1074,6 +1078,16 @@
         }
 
         return styles;
+
+      },
+
+      getScene: function(node) {
+
+        while (node.parent) {
+          node = node.parent;
+        }
+
+        return node;
 
       },
 
@@ -1091,6 +1105,16 @@
 
           return svg;
 
+        },
+
+        defs: function(node) {
+          var error = new Two.Utils.Error('interpret <defs /> not supported.');
+          console.warn(error.name, error.message);
+        },
+
+        use: function(node) {
+          var error = new Two.Utils.Error('interpret <use /> not supported.');
+          console.warn(error.name, error.message);
         },
 
         g: function(node) {
@@ -1668,7 +1692,12 @@
 
             var child = node.children[i];
 
-            var offset = parseFloat(child.getAttribute('offset'));
+            var offset = child.getAttribute('offset');
+            if (/\%/ig.test(offset)) {
+              offset = parseFloat(offset.replace(/\%/ig, '')) / 100;
+            }
+            offset = parseFloat(offset);
+
             var color = child.getAttribute('stop-color');
             var opacity = child.getAttribute('stop-opacity');
             var style = child.getAttribute('style');
@@ -1681,6 +1710,8 @@
             if (_.isNull(opacity)) {
               var matches = style ? style.match(/stop\-opacity\:\s?([0-9\.\-]*)/) : false;
               opacity = matches && matches.length > 1 ? parseFloat(matches[1]) : 1;
+            } else {
+              opacity = parseFloat(opacity);
             }
 
             stops.push(new Two.Gradient.Stop(offset, color, opacity));
@@ -1721,7 +1752,12 @@
 
             var child = node.children[i];
 
-            var offset = parseFloat(child.getAttribute('offset'));
+            var offset = child.getAttribute('offset');
+            if (/\%/ig.test(offset)) {
+              offset = parseFloat(offset.replace(/\%/ig, '')) / 100;
+            }
+            offset = parseFloat(offset);
+
             var color = child.getAttribute('stop-color');
             var opacity = child.getAttribute('stop-opacity');
             var style = child.getAttribute('style');
@@ -1734,6 +1770,8 @@
             if (_.isNull(opacity)) {
               var matches = style ? style.match(/stop\-opacity\:\s?([0-9\.\-]*)/) : false;
               opacity = matches && matches.length > 1 ? parseFloat(matches[1]) : 1;
+            } else {
+              opacity = parseFloat(opacity);
             }
 
             stops.push(new Two.Gradient.Stop(offset, color, opacity));
