@@ -472,7 +472,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2019-07-30T17:33:26+02:00',
+    PublishDate: '2019-08-10T15:25:24+02:00',
 
     /**
      * @name Two.Identifier
@@ -1083,7 +1083,8 @@ SOFTWARE.
             case 'fill':
             case 'stroke':
               if (/url\(\#.*\)/i.test(value)) {
-                elem[key] = this.getById(
+                var scene = Two.Utils.getScene(this);
+                elem[key] = scene.getById(
                   value.replace(/url\(\#(.*)\)/i, '$1'));
               } else {
                 elem[key] = (/none/i.test(value)) ? 'transparent' : value;
@@ -1091,6 +1092,9 @@ SOFTWARE.
               break;
             case 'id':
               elem.id = value;
+              // Overwritten id for non-conflicts on same page SVG documents
+              // TODO: Make this non-descructive
+              node.id = value + '-' + Two.Identifier + 'applied';
               break;
             case 'class':
             case 'className':
@@ -1100,6 +1104,16 @@ SOFTWARE.
         }
 
         return styles;
+
+      },
+
+      getScene: function(node) {
+
+        while (node.parent) {
+          node = node.parent;
+        }
+
+        return node.scene;
 
       },
 
@@ -1119,10 +1133,24 @@ SOFTWARE.
 
         },
 
+        defs: function(node) {
+          var error = new Two.Utils.Error('interpret <defs /> not supported.');
+          console.warn(error.name, error.message);
+          return null;
+        },
+
+        use: function(node) {
+          var error = new Two.Utils.Error('interpret <use /> not supported.');
+          console.warn(error.name, error.message);
+          return null;
+        },
+
         g: function(node) {
 
           var styles, attrs;
           var group = new Two.Group();
+
+          this.add(group);
 
           // Switched up order to inherit more specific styles
           styles = Two.Utils.getSvgStyles.call(this, node);
@@ -1136,7 +1164,9 @@ SOFTWARE.
 
             if (tagName in Two.Utils.read) {
               var o = Two.Utils.read[tagName].call(group, n, styles);
-              group.add(o);
+              if (!_.isNull(o) && !o.parent) {
+                group.add(o);
+              }
             }
           }
 
@@ -1694,7 +1724,12 @@ SOFTWARE.
 
             var child = node.children[i];
 
-            var offset = parseFloat(child.getAttribute('offset'));
+            var offset = child.getAttribute('offset');
+            if (/\%/ig.test(offset)) {
+              offset = parseFloat(offset.replace(/\%/ig, '')) / 100;
+            }
+            offset = parseFloat(offset);
+
             var color = child.getAttribute('stop-color');
             var opacity = child.getAttribute('stop-opacity');
             var style = child.getAttribute('style');
@@ -1707,6 +1742,8 @@ SOFTWARE.
             if (_.isNull(opacity)) {
               var matches = style ? style.match(/stop\-opacity\:\s?([0-9\.\-]*)/) : false;
               opacity = matches && matches.length > 1 ? parseFloat(matches[1]) : 1;
+            } else {
+              opacity = parseFloat(opacity);
             }
 
             stops.push(new Two.Gradient.Stop(offset, color, opacity));
@@ -1747,7 +1784,12 @@ SOFTWARE.
 
             var child = node.children[i];
 
-            var offset = parseFloat(child.getAttribute('offset'));
+            var offset = child.getAttribute('offset');
+            if (/\%/ig.test(offset)) {
+              offset = parseFloat(offset.replace(/\%/ig, '')) / 100;
+            }
+            offset = parseFloat(offset);
+
             var color = child.getAttribute('stop-color');
             var opacity = child.getAttribute('stop-opacity');
             var style = child.getAttribute('style');
@@ -1760,6 +1802,8 @@ SOFTWARE.
             if (_.isNull(opacity)) {
               var matches = style ? style.match(/stop\-opacity\:\s?([0-9\.\-]*)/) : false;
               opacity = matches && matches.length > 1 ? parseFloat(matches[1]) : 1;
+            } else {
+              opacity = parseFloat(opacity);
             }
 
             stops.push(new Two.Gradient.Stop(offset, color, opacity));
@@ -8315,7 +8359,7 @@ SOFTWARE.
    * @name Two.Path
    * @class
    * @extends Two.Shape
-   * @param {Two.Anchor[]} [vertices] - A list of Two.Anchors that represent the order and coordinates to construct the rendered shape.
+   * @param {Two.Anchor[]} [vertices] - A list of {@link Two.Anchor}s that represent the order and coordinates to construct the rendered shape.
    * @param {Boolean} [closed=false] - Describes whether the shape is closed or open.
    * @param {Boolean} [curved=false] - Describes whether the shape automatically calculates bezier handles for each vertex.
    * @param {Boolean} [manual=false] - Describes whether the developer controls how vertices are plotted or if Two.js automatically plots coordinates based on closed and curved booleans.
@@ -8430,7 +8474,7 @@ SOFTWARE.
     /**
      * @name Two.Path#vertices
      * @property {Two.Anchor[]} - An ordered list of anchor points for rendering the path.
-     * @description An of{@link Two.Anchor} objects that consist of what form the path takes.
+     * @description A list of {@link Two.Anchor} objects that consist of what form the path takes.
      * @nota-bene The array when manipulating is actually a {@link Two.Utils.Collection}.
      */
     this.vertices = vertices;
@@ -8517,7 +8561,7 @@ SOFTWARE.
     },
 
     /**
-     * @name Two.Path.BindVertices
+     * @name Two.Path.UnbindVertices
      * @function
      * @description Cached method to let {@link Two.Path} know vertices have been removed from the instance.
      */
@@ -8554,7 +8598,7 @@ SOFTWARE.
      * @name Two.Path.MakeObservable
      * @function
      * @param {Object} object - The object to make observable.
-     * @description Convenience function to apply observable qualities of a {@link link Two.Path} to any object. Handy if you'd like to extend the {@link Two.Path} class on a custom class.
+     * @description Convenience function to apply observable qualities of a {@link Two.Path} to any object. Handy if you'd like to extend the {@link Two.Path} class on a custom class.
      */
     MakeObservable: function(object) {
 
@@ -9791,6 +9835,15 @@ SOFTWARE.
   var Path = Two.Path;
   var _ = Two.Utils;
 
+  /**
+   * @name Two.Line
+   * @class
+   * @extends Two.Path
+   * @param {Number} [x1=0] - The x position of the first vertex on the line.
+   * @param {Number} [y1=0] - The y position of the first vertex on the line.
+   * @param {Number} [x2=0] - The x position of the second vertex on the line.
+   * @param {Number} [y2=0] - The y position of the second vertex on the line.
+   */
   var Line = Two.Line = function(x1, y1, x2, y2) {
 
     var width = x2 - x1;
@@ -9823,6 +9876,15 @@ SOFTWARE.
   var Path = Two.Path;
   var _ = Two.Utils;
 
+  /**
+   * @name Two.Rectangle
+   * @class
+   * @extends Two.Path
+   * @param {Number} [x=0] - The x position of the rectangle.
+   * @param {Number} [y=0] - The y position of the rectangle.
+   * @param {Number} width - The width value of the rectangle.
+   * @param {Number} height - The width value of the rectangle.
+   */
   var Rectangle = Two.Rectangle = function(x, y, width, height) {
 
     Path.call(this, [
@@ -9833,9 +9895,21 @@ SOFTWARE.
       // new Two.Anchor() // TODO: Figure out how to handle this for `beginning` / `ending` animations
     ], true, false, true);
 
+    /**
+     * @name Two.Rectangle#width
+     * @property {Number} - The size of the width of the rectangle.
+     */
     this.width = width;
+    /**
+     * @name Two.Rectangle#height
+     * @property {Number} - The size of the height of the rectangle.
+     */
     this.height = height;
 
+    /**
+     * @name Two.Rectangle#origin
+     * @property {Number} - A two-component vector describing the origin offset to draw the rectangle. Default is `0, 0`.
+     */
     this.origin = new Two.Vector();
     this.translation.set(x, y);
 
@@ -9845,8 +9919,18 @@ SOFTWARE.
 
   _.extend(Rectangle, {
 
+    /**
+     * @name Two.Rectangle.Properties
+     * @property {String[]} - A list of properties that are on every {@link Two.Rectangle}.
+     */
     Properties: ['width', 'height'],
 
+    /**
+     * @name Two.Rectangle.MakeObservable
+     * @function
+     * @param {Object} object - The object to make observable.
+     * @description Convenience function to apply observable qualities of a {@link Two.Rectangle} to any object. Handy if you'd like to extend the {@link Two.Rectangle} class on a custom class.
+     */
     MakeObservable: function(object) {
 
       Path.MakeObservable(object);
@@ -9873,16 +9957,44 @@ SOFTWARE.
 
   _.extend(Rectangle.prototype, Path.prototype, {
 
-    _width: 0,
-    _height: 0,
-
+    /**
+     * @name Two.Rectangle#_flagWidth
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Rectangle#width} needs updating.
+     */
     _flagWidth: 0,
+    /**
+     * @name Two.Rectangle#_flagHeight
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Rectangle#height} needs updating.
+     */
     _flagHeight: 0,
+
+    /**
+     * @name Two.Rectangle#_width
+     * @private
+     * @see {@link Two.Rectangle#width}
+     */
+    _width: 0,
+    /**
+     * @name Two.Rectangle#_height
+     * @private
+     * @see {@link Two.Rectangle#height}
+     */
+    _height: 0,
 
     _origin: null,
 
     constructor: Rectangle,
 
+    /**
+     * @name Two.Rectangle#_update
+     * @function
+     * @private
+     * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+     * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
+     * @nota-bene Try not to call this method more than once a frame.
+     */
     _update: function() {
 
       if (this._flagWidth || this._flagHeight) {
@@ -9907,6 +10019,12 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.Rectangle#flagReset
+     * @function
+     * @private
+     * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+     */
     flagReset: function() {
 
       this._flagWidth = this._flagHeight = false;
@@ -9916,6 +10034,13 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.Rectangle#clone
+     * @function
+     * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+     * @returns {Two.Rectangle}
+     * @description Create a new instance of {@link Two.Rectangle} with the same properties of the current path.
+     */
     clone: function(parent) {
 
       var clone = new Rectangle(0, 0, this.width, this.height);
@@ -9950,6 +10075,16 @@ SOFTWARE.
   // Circular coefficient
   var c = (4 / 3) * Math.tan(Math.PI / 8);
 
+  /**
+   * @name Two.Ellipse
+   * @class
+   * @extends Two.Path
+   * @param {Number} [x=0] - The x position of the ellipse.
+   * @param {Number} [y=0] - The y position of the ellipse.
+   * @param {Number} rx - The radius value of the ellipse in the x direction.
+   * @param {Number} ry - The radius value of the ellipse in the y direction.
+   * @param {Number} [resolution=12] - The number of vertices used to construct the ellipse.
+   */
   var Ellipse = Two.Ellipse = function(ox, oy, rx, ry, resolution) {
 
     if (!_.isNumber(ry)) {
@@ -9964,7 +10099,15 @@ SOFTWARE.
 
     Path.call(this, points, true, true, true);
 
+    /**
+     * @name Two.Ellipse#width
+     * @property {Number} - The width of the ellipse.
+     */
     this.width = rx * 2;
+    /**
+     * @name Two.Ellipse#height
+     * @property {Number} - The height of the ellipse.
+     */
     this.height = ry * 2;
 
     this._update();
@@ -9974,8 +10117,18 @@ SOFTWARE.
 
   _.extend(Ellipse, {
 
+    /**
+     * @name Two.Ellipse.Properties
+     * @property {String[]} - A list of properties that are on every {@link Two.Ellipse}.
+     */
     Properties: ['width', 'height'],
 
+    /**
+     * @name Two.Ellipse.MakeObservable
+     * @function
+     * @param {Object} object - The object to make observable.
+     * @description Convenience function to apply observable qualities of a {@link Two.Ellipse} to any object. Handy if you'd like to extend the {@link Two.Ellipse} class on a custom class.
+     */
     MakeObservable: function(obj) {
 
       Path.MakeObservable(obj);
@@ -9987,14 +10140,42 @@ SOFTWARE.
 
   _.extend(Ellipse.prototype, Path.prototype, {
 
-    _width: 0,
-    _height: 0,
-
+    /**
+     * @name Two.Ellipse#_flagWidth
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Ellipse#width} needs updating.
+     */
     _flagWidth: false,
+    /**
+     * @name Two.Ellipse#_flagHeight
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Ellipse#height} needs updating.
+     */
     _flagHeight: false,
+
+    /**
+     * @name Two.Polygon#_width
+     * @private
+     * @see {@link Two.Ellipse#width}
+     */
+    _width: 0,
+    /**
+     * @name Two.Polygon#_height
+     * @private
+     * @see {@link Two.Ellipse#height}
+     */
+    _height: 0,
 
     constructor: Ellipse,
 
+    /**
+     * @name Two.Ellipse#_update
+     * @function
+     * @private
+     * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+     * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
+     * @nota-bene Try not to call this method more than once a frame.
+     */
     _update: function() {
 
       if (this._flagWidth || this._flagHeight) {
@@ -10032,6 +10213,12 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.Ellipse#flagReset
+     * @function
+     * @private
+     * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+     */
     flagReset: function() {
 
       this._flagWidth = this._flagHeight = false;
@@ -10041,6 +10228,13 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.Ellipse#clone
+     * @function
+     * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+     * @returns {Two.Polygon}
+     * @description Create a new instance of {@link Two.Polygon} with the same properties of the current path.
+     */
     clone: function(parent) {
 
       var rx = this.width / 2;
@@ -10079,6 +10273,15 @@ SOFTWARE.
   // Circular coefficient
   var c = (4 / 3) * Math.tan(Math.PI / 8);
 
+  /**
+   * @name Two.Circle
+   * @class
+   * @extends Two.Path
+   * @param {Number} [x=0] - The x position of the circle.
+   * @param {Number} [y=0] - The y position of the circle.
+   * @param {Number} radius - The radius value of the circle.
+   * @param {Number} [resolution=12] - The number of vertices used to construct the circle.
+   */
   var Circle = Two.Circle = function(ox, oy, r, res) {
 
     var amount = res || 5;
@@ -10089,17 +10292,37 @@ SOFTWARE.
 
     Path.call(this, points, true, true, true);
 
+    /**
+     * @name Two.Circle#radius
+     * @property {Number} - The size of the radius of the circle.
+     */
     this.radius = r;
 
     this._update();
-    this.translation.set(ox, oy);
+
+    if (_.isNumber(ox)) {
+      this.translation.x = ox;
+    }
+    if (_.isNumber(oy)) {
+      this.translation.y = oy;
+    }
 
   };
 
   _.extend(Circle, {
 
+    /**
+     * @name Two.Circle.Properties
+     * @property {String[]} - A list of properties that are on every {@link Two.Circle}.
+     */
     Properties: ['radius'],
 
+    /**
+     * @name Two.Circle.MakeObservable
+     * @function
+     * @param {Object} object - The object to make observable.
+     * @description Convenience function to apply observable qualities of a {@link Two.Circle} to any object. Handy if you'd like to extend the {@link Two.Circle} class on a custom class.
+     */
     MakeObservable: function(obj) {
 
       Path.MakeObservable(obj);
@@ -10111,11 +10334,30 @@ SOFTWARE.
 
   _.extend(Circle.prototype, Path.prototype, {
 
-    _radius: 0,
+    /**
+     * @name Two.Circle#_flagRadius
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Circle#radius} needs updating.
+     */
     _flagRadius: false,
+
+    /**
+     * @name Two.Circle#_radius
+     * @private
+     * @see {@link Two.Circle#radius}
+     */
+    _radius: 0,
 
     constructor: Circle,
 
+    /**
+     * @name Two.Circle#_update
+     * @function
+     * @private
+     * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+     * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
+     * @nota-bene Try not to call this method more than once a frame.
+     */
     _update: function() {
 
       if (this._flagRadius) {
@@ -10153,6 +10395,12 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.Circle#flagReset
+     * @function
+     * @private
+     * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+     */
     flagReset: function() {
 
       this._flagRadius = false;
@@ -10162,6 +10410,13 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.Circle#clone
+     * @function
+     * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+     * @returns {Two.Circle}
+     * @description Create a new instance of {@link Two.Circle} with the same properties of the current path.
+     */
     clone: function(parent) {
 
       var clone = new Circle(0, 0, this.radius, this.vertices.length);
@@ -10192,6 +10447,15 @@ SOFTWARE.
   var Path = Two.Path, TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin;
   var _ = Two.Utils;
 
+  /**
+   * @name Two.Polygon
+   * @class
+   * @extends Two.Path
+   * @param {Number} [x=0] - The x position of the polygon.
+   * @param {Number} [y=0] - The y position of the polygon.
+   * @param {Number} radius - The radius value of the polygon.
+   * @param {Number} [sides=12] - The number of vertices used to construct the polygon.
+   */
   var Polygon = Two.Polygon = function(ox, oy, r, sides) {
 
     sides = Math.max(sides || 0, 3);
@@ -10201,8 +10465,20 @@ SOFTWARE.
     this.closed = true;
     this.automatic = false;
 
+    /**
+     * @name Two.Polygon#width
+     * @property {Number} - The size of the width of the polygon.
+     */
     this.width = r * 2;
+    /**
+     * @name Two.Polygon#height
+     * @property {Number} - The size of the height of the polygon.
+     */
     this.height = r * 2;
+    /**
+     * @name Two.Polygon#sides
+     * @property {Number} - The amount of sides the polyogn has.
+     */
     this.sides = sides;
 
     this._update();
@@ -10212,8 +10488,18 @@ SOFTWARE.
 
   _.extend(Polygon, {
 
+    /**
+     * @name Two.Polygon.Properties
+     * @property {String[]} - A list of properties that are on every {@link Two.Polygon}.
+     */
     Properties: ['width', 'height', 'sides'],
 
+    /**
+     * @name Two.Polygon.MakeObservable
+     * @function
+     * @param {Object} object - The object to make observable.
+     * @description Convenience function to apply observable qualities of a {@link Two.Polygon} to any object. Handy if you'd like to extend the {@link Two.Polygon} class on a custom class.
+     */
     MakeObservable: function(obj) {
 
       Path.MakeObservable(obj);
@@ -10225,16 +10511,54 @@ SOFTWARE.
 
   _.extend(Polygon.prototype, Path.prototype, {
 
-    _width: 0,
-    _height: 0,
-    _sides: 0,
-
+    /**
+     * @name Two.Polygon#_flagWidth
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Polygon#width} needs updating.
+     */
     _flagWidth: false,
+    /**
+     * @name Two.Polygon#_flagHeight
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Polygon#height} needs updating.
+     */
     _flagHeight: false,
+    /**
+     * @name Two.Polygon#_flagSides
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Polygon#sides} needs updating.
+     */
     _flagSides: false,
+
+    /**
+     * @name Two.Polygon#_width
+     * @private
+     * @see {@link Two.Polygon#width}
+     */
+    _width: 0,
+    /**
+     * @name Two.Polygon#_height
+     * @private
+     * @see {@link Two.Polygon#height}
+     */
+    _height: 0,
+    /**
+     * @name Two.Polygon#_sides
+     * @private
+     * @see {@link Two.Polygon#sides}
+     */
+    _sides: 0,
 
     constructor: Polygon,
 
+    /**
+     * @name Two.Polygon#_update
+     * @function
+     * @private
+     * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+     * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
+     * @nota-bene Try not to call this method more than once a frame.
+     */
     _update: function() {
 
       if (this._flagWidth || this._flagHeight || this._flagSides) {
@@ -10273,6 +10597,12 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.Polygon#flagReset
+     * @function
+     * @private
+     * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+     */
     flagReset: function() {
 
       this._flagWidth = this._flagHeight = this._flagSides = false;
@@ -10282,6 +10612,13 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.Polygon#clone
+     * @function
+     * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+     * @returns {Two.Polygon}
+     * @description Create a new instance of {@link Two.Polygon} with the same properties of the current path.
+     */
     clone: function(parent) {
 
       var clone = new Polygon(0, 0, this.radius, this.sides);
@@ -10310,8 +10647,21 @@ SOFTWARE.
 (function(Two) {
 
   var Path = Two.Path, PI = Math.PI, TWO_PI = Math.PI * 2, HALF_PI = Math.PI / 2,
-    cos = Math.cos, sin = Math.sin, abs = Math.abs, _ = Two.Utils;
+    cos = Math.cos, sin = Math.sin, abs = Math.abs, _ = Two.Utils,
+    mod = Two.Utils.mod;
 
+  /**
+   * @name Two.ArcSegment
+   * @class
+   * @extends Two.Path
+   * @param {Number} [x=0] - The x position of the arc segment.
+   * @param {Number} [y=0] - The y position of the arc segment.
+   * @param {Number} innerRadius - The inner radius value of the arc segment.
+   * @param {Number} outerRadius - The outer radius value of the arc segment.
+   * @param {Radians} startAngle - The start angle of the arc segment in radians.
+   * @param {Radians} endAngle - The end angle of the arc segment in radians.
+   * @param {Number} [resolution=24] - The number of vertices used to construct the arc segment.
+   */
   var ArcSegment = Two.ArcSegment = function(ox, oy, ir, or, sa, ea, res) {
 
     var amount = res || (Two.Resolution * 3);
@@ -10321,21 +10671,53 @@ SOFTWARE.
 
     Path.call(this, points, true, false, true);
 
+    /**
+     * @name Two.ArcSegment#innerRadius
+     * @property {Number} - The size of the inner radius of the arc segment.
+     */
     this.innerRadius = ir;
+    /**
+     * @name Two.ArcSegment#outerRadius
+     * @property {Number} - The size of the outer radius of the arc segment.
+     */
     this.outerRadius = or;
 
+    /**
+     * @name Two.ArcSegment#startRadius
+     * @property {Radians} - The angle of one side for the arc segment.
+     */
     this.startAngle = sa;
+    /**
+     * @name Two.ArcSegment#endAngle
+     * @property {Radians} - The angle of the other side for the arc segment.
+     */
     this.endAngle = ea;
 
     this._update();
-    this.translation.set(ox, oy);
+
+    if (_.isNumber(ox)) {
+      this.translation.x = ox;
+    }
+    if (_.isNumber(oy)) {
+      this.translation.y = oy;
+    }
 
   }
 
   _.extend(ArcSegment, {
 
+    /**
+     * @name Two.ArcSegment.Properties
+     * @property {String[]} - A list of properties that are on every {@link Two.ArcSegment}.
+     */
     Properties: ['startAngle', 'endAngle', 'innerRadius', 'outerRadius'],
 
+    /**
+     * @name Two.ArcSegment.MakeObservable
+     * @function
+     * @param {Object} object - The object to make observable.
+     * @description Convenience function to apply observable qualities of a {@link Two.ArcSegment} to any object. Handy if you'd like to extend the {@link Two.ArcSegment} class on a custom class.
+     */
     MakeObservable: function(obj) {
 
       Path.MakeObservable(obj);
@@ -10347,18 +10729,66 @@ SOFTWARE.
 
   _.extend(ArcSegment.prototype, Path.prototype, {
 
+    /**
+     * @name Two.ArcSegment#_flagStartAngle
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.ArcSegment#startAngle} needs updating.
+     */
     _flagStartAngle: false,
+    /**
+     * @name Two.ArcSegment#_flagEndAngle
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.ArcSegment#endAngle} needs updating.
+     */
     _flagEndAngle: false,
+    /**
+     * @name Two.ArcSegment#_flagInnerRadius
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.ArcSegment#innerRadius} needs updating.
+     */
     _flagInnerRadius: false,
+    /**
+     * @name Two.ArcSegment#_flagOuterRadius
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.ArcSegment#outerRadius} needs updating.
+     */
     _flagOuterRadius: false,
 
+    /**
+     * @name Two.ArcSegment#_startAngle
+     * @private
+     * @see {@link Two.ArcSegment#startAngle}
+     */
     _startAngle: 0,
+    /**
+     * @name Two.ArcSegment#_endAngle
+     * @private
+     * @see {@link Two.ArcSegment#endAngle}
+     */
     _endAngle: TWO_PI,
+    /**
+     * @name Two.ArcSegment#_innerRadius
+     * @private
+     * @see {@link Two.ArcSegment#innerRadius}
+     */
     _innerRadius: 0,
+    /**
+     * @name Two.ArcSegment#_outerRadius
+     * @private
+     * @see {@link Two.ArcSegment#outerRadius}
+     */
     _outerRadius: 0,
 
     constructor: ArcSegment,
 
+    /**
+     * @name Two.ArcSegment#_update
+     * @function
+     * @private
+     * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+     * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
+     * @nota-bene Try not to call this method more than once a frame.
+     */
     _update: function() {
 
       if (this._flagStartAngle || this._flagEndAngle || this._flagInnerRadius
@@ -10504,6 +10934,12 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.ArcSegment#flagReset
+     * @function
+     * @private
+     * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+     */
     flagReset: function() {
 
       Path.prototype.flagReset.call(this);
@@ -10515,6 +10951,13 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.ArcSegment#clone
+     * @function
+     * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+     * @returns {Two.ArcSegment}
+     * @description Create a new instance of {@link Two.ArcSegment} with the same properties of the current path.
+     */
     clone: function(parent) {
 
       var ir = this.innerRadius;
@@ -10544,13 +10987,6 @@ SOFTWARE.
 
   ArcSegment.MakeObservable(ArcSegment.prototype);
 
-  function mod(v, l) {
-    while (v < 0) {
-      v += l;
-    }
-    return v % l;
-  }
-
 })((typeof global !== 'undefined' ? global : (this || self || window)).Two);
 
 (function(Two) {
@@ -10558,6 +10994,16 @@ SOFTWARE.
   var Path = Two.Path, TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin;
   var _ = Two.Utils;
 
+  /**
+   * @name Two.Star
+   * @class
+   * @extends Two.Path
+   * @param {Number} [x=0] - The x position of the star.
+   * @param {Number} [y=0] - The y position of the star.
+   * @param {Number} innerRadius - The inner radius value of the star.
+   * @param {Number} outerRadius - The outer radius value of the star.
+   * @param {Number} [sides=5] - The number of sides used to construct the star.
+   */
   var Star = Two.Star = function(ox, oy, ir, or, sides) {
 
     if (arguments.length <= 3) {
@@ -10575,8 +11021,20 @@ SOFTWARE.
     this.closed = true;
     this.automatic = false;
 
+    /**
+     * @name Two.Star#innerRadius
+     * @property {Number} - The size of the inner radius of the star.
+     */
     this.innerRadius = ir;
+    /**
+     * @name Two.Star#outerRadius
+     * @property {Number} - The size of the outer radius of the star.
+     */
     this.outerRadius = or;
+    /**
+     * @name Two.Star#sides
+     * @property {Number} - The amount of sides the star has.
+     */
     this.sides = sides;
 
     this._update();
@@ -10586,8 +11044,18 @@ SOFTWARE.
 
   _.extend(Star, {
 
+    /**
+     * @name Two.Star.Properties
+     * @property {String[]} - A list of properties that are on every {@link Two.Star}.
+     */
     Properties: ['innerRadius', 'outerRadius', 'sides'],
 
+    /**
+     * @name Two.Star.MakeObservable
+     * @function
+     * @param {Object} object - The object to make observable.
+     * @description Convenience function to apply observable qualities of a {@link Two.Star} to any object. Handy if you'd like to extend the {@link Two.Star} class on a custom class.
+     */
     MakeObservable: function(obj) {
 
       Path.MakeObservable(obj);
@@ -10599,16 +11067,54 @@ SOFTWARE.
 
   _.extend(Star.prototype, Path.prototype, {
 
-    _innerRadius: 0,
-    _outerRadius: 0,
-    _sides: 0,
-
+    /**
+     * @name Two.Star#_flagInnerRadius
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Star#innerRadius} needs updating.
+     */
     _flagInnerRadius: false,
+    /**
+     * @name Two.Star#_flagOuterRadius
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Star#outerRadius} needs updating.
+     */
     _flagOuterRadius: false,
+    /**
+     * @name Two.Star#_flagSides
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Star#sides} needs updating.
+     */
     _flagSides: false,
+
+    /**
+     * @name Two.Star#_innerRadius
+     * @private
+     * @see {@link Two.Star#innerRadius}
+     */
+    _innerRadius: 0,
+    /**
+     * @name Two.Star#_outerRadius
+     * @private
+     * @see {@link Two.Star#outerRadius}
+     */
+    _outerRadius: 0,
+    /**
+     * @name Two.Star#_sides
+     * @private
+     * @see {@link Two.Star#sides}
+     */
+    _sides: 0,
 
     constructor: Star,
 
+    /**
+     * @name Two.Star#_update
+     * @function
+     * @private
+     * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+     * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
+     * @nota-bene Try not to call this method more than once a frame.
+     */
     _update: function() {
 
       if (this._flagInnerRadius || this._flagOuterRadius || this._flagSides) {
@@ -10649,6 +11155,12 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.Star#flagReset
+     * @function
+     * @private
+     * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+     */
     flagReset: function() {
 
       this._flagInnerRadius = this._flagOuterRadius = this._flagSides = false;
@@ -10658,6 +11170,13 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.Star#clone
+     * @function
+     * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+     * @returns {Two.Star}
+     * @description Create a new instance of {@link Two.Star} with the same properties of the current path.
+     */
     clone: function(parent) {
 
       var ir = this.innerRadius;
@@ -10692,6 +11211,17 @@ SOFTWARE.
   var Path = Two.Path;
   var _ = Two.Utils;
 
+  /**
+   * @name Two.RoundedRectangle
+   * @class
+   * @extends Two.Path
+   * @param {Number} [x=0] - The x position of the rounded rectangle.
+   * @param {Number} [y=0] - The y position of the rounded rectangle.
+   * @param {Number} width - The width value of the rounded rectangle.
+   * @param {Number} height - The width value of the rounded rectangle.
+   * @param {Number} radius - The radius value of the rounded rectangle.
+   * @param {Number} [resolution=12] - The number of vertices used to construct the rounded rectangle.
+   */
   var RoundedRectangle = Two.RoundedRectangle = function(ox, oy, width, height, radius) {
 
     if (_.isUndefined(radius)) {
@@ -10714,8 +11244,20 @@ SOFTWARE.
 
     this._renderer.flagRadius = _.bind(RoundedRectangle.FlagRadius, this);
 
+    /**
+     * @name Two.RoundedRectangle#width
+     * @property {Number} - The width of the rounded rectangle.
+     */
     this.width = width;
+    /**
+     * @name Two.RoundedRectangle#height
+     * @property {Number} - The height of the rounded rectangle.
+     */
     this.height = height;
+    /**
+     * @name Two.RoundedRectangle#radius
+     * @property {Number} - The size of the radius of the rounded rectangle.
+     */
     this.radius = radius;
 
     this._update();
@@ -10725,12 +11267,26 @@ SOFTWARE.
 
   _.extend(RoundedRectangle, {
 
+    /**
+     * @name Two.RoundedRectangle.Properties
+     * @property {String[]} - A list of properties that are on every {@link Two.RoundedRectangle}.
+     */
     Properties: ['width', 'height'],
 
+    /**
+     * @name Two.RoundedRectangle.FlagRadius
+     * @property {Function} - A convenience function to trigger the flag for radius changing.
+     */
     FlagRadius: function() {
       this._flagRadius = true;
     },
 
+    /**
+     * @name Two.RoundedRectangle.MakeObservable
+     * @function
+     * @param {Object} object - The object to make observable.
+     * @description Convenience function to apply observable qualities of a {@link Two.RoundedRectangle} to any object. Handy if you'd like to extend the {@link Two.RoundedRectangle} class on a custom class.
+     */
     MakeObservable: function(object) {
 
       Path.MakeObservable(object);
@@ -10764,16 +11320,54 @@ SOFTWARE.
 
   _.extend(RoundedRectangle.prototype, Path.prototype, {
 
-    _width: 0,
-    _height: 0,
-    _radius: 0,
-
+    /**
+     * @name Two.RoundedRectangle#_flagWidth
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.RoundedRectangle#width} needs updating.
+     */
     _flagWidth: false,
+    /**
+     * @name Two.RoundedRectangle#_flagHeight
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.RoundedRectangle#height} needs updating.
+     */
     _flagHeight: false,
+    /**
+     * @name Two.RoundedRectangle#_flagRadius
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.RoundedRectangle#radius} needs updating.
+     */
     _flagRadius: false,
+
+    /**
+     * @name Two.RoundedRectangle#_width
+     * @private
+     * @see {@link Two.RoundedRectangle#width}
+     */
+    _width: 0,
+    /**
+     * @name Two.RoundedRectangle#_height
+     * @private
+     * @see {@link Two.RoundedRectangle#height}
+     */
+    _height: 0,
+    /**
+     * @name Two.RoundedRectangle#_radius
+     * @private
+     * @see {@link Two.RoundedRectangle#radius}
+     */
+    _radius: 0,
 
     constructor: RoundedRectangle,
 
+    /**
+     * @name Two.RoundedRectangle#_update
+     * @function
+     * @private
+     * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+     * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
+     * @nota-bene Try not to call this method more than once a frame.
+     */
     _update: function() {
 
       if (this._flagWidth || this._flagHeight || this._flagRadius) {
@@ -10870,6 +11464,12 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.RoundedRectangle#flagReset
+     * @function
+     * @private
+     * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+     */
     flagReset: function() {
 
       this._flagWidth = this._flagHeight = this._flagRadius = false;
@@ -10879,6 +11479,13 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.RoundedRectangle#clone
+     * @function
+     * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+     * @returns {Two.RoundedRectangle}
+     * @description Create a new instance of {@link Two.RoundedRectangle} with the same properties of the current path.
+     */
     clone: function(parent) {
 
       var width = this.width;
@@ -11525,16 +12132,43 @@ SOFTWARE.
 
   var _ = Two.Utils;
 
+  /**
+   * @name Two.Stop
+   * @class
+   * @param {Number} [offset] - The offset percentage of the stop represented as a zero-to-one value. Default value flip flops from zero-to-one as new stops are created.
+   * @param {CssColor} [color] - The color of the stop. Default value flip flops from white to black as new stops are created.
+   * @param {Number} [opacity] - The opacity value. Default value is 1, cannot be lower than 0.
+   * @nota-bene Used specifically in conjunction with {@link Two.Gradient}s to control color graduation.
+   */
   var Stop = Two.Stop = function(offset, color, opacity) {
 
+    /**
+     * @name Two.Stop#_renderer
+     * @property {Object}
+     * @private
+     * @description A private object to store relevant renderer specific variables.
+     * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `stop._renderer.elem`.
+     */
     this._renderer = {};
     this._renderer.type = 'stop';
 
+    /**
+     * @name Two.Stop#offset
+     * @property {Number} - The offset percentage of the stop represented as a zero-to-one value.
+     */
     this.offset = _.isNumber(offset) ? offset
       : Stop.Index <= 0 ? 0 : 1;
 
+    /**
+     * @name Two.Stop#opacity
+     * @property {Number} - The alpha percentage of the stop represented as a zero-to-one value.
+     */
     this.opacity = _.isNumber(opacity) ? opacity : 1;
 
+    /**
+     * @name Two.Stop#color
+     * @property {CssColor} - The color of the stop.
+     */
     this.color = _.isString(color) ? color
       : Stop.Index <= 0 ? '#fff' : '#000';
 
@@ -11544,14 +12178,28 @@ SOFTWARE.
 
   _.extend(Stop, {
 
+    /**
+     * @name Two.Stop.Index
+     * @property {Number} - The current index being referenced for calculating a stop's default offset value.
+     */
     Index: 0,
 
+    /**
+     * @name Two.Stop.Properties
+     * @property {String[]} - A list of properties that are on every {@link Two.Stop}.
+     */
     Properties: [
       'offset',
       'opacity',
       'color'
     ],
 
+    /**
+     * @name Two.Stop.MakeObservable
+     * @function
+     * @param {Object} object - The object to make observable.
+     * @description Convenience function to apply observable qualities of a {@link Two.Stop} to any object. Handy if you'd like to extend the {@link Two.Stop} class on a custom class.
+     */
     MakeObservable: function(object) {
 
       _.each(Stop.Properties, function(property) {
@@ -11584,6 +12232,13 @@ SOFTWARE.
 
     constructor: Stop,
 
+    /**
+     * @name Two.Stop#clone
+     * @function
+     * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+     * @returns {Two.Stop}
+     * @description Create a new instance of {@link Two.Stop} with the same properties of the current path.
+     */
     clone: function() {
 
       var clone = new Stop();
@@ -11596,6 +12251,12 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.Stop#toObject
+     * @function
+     * @returns {Object}
+     * @description Return a JSON compatible plain object that represents the path.
+     */
     toObject: function() {
 
       var result = {};
@@ -11608,6 +12269,12 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.Stop#flagReset
+     * @function
+     * @private
+     * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+     */
     flagReset: function() {
 
       this._flagOffset = this._flagColor = this._flagOpacity = false;
@@ -11621,11 +12288,29 @@ SOFTWARE.
   Stop.MakeObservable(Stop.prototype);
   Stop.prototype.constructor = Stop;
 
+  /**
+   * @name Two.Gradient
+   * @class
+   * @param {Two.Stop[]} [stops] - A list of {@link Two.Stop}s that contain the gradient fill pattern for the gradient.
+   * @description This is the base class for constructing different types of gradients with Two.js. The two common gradients are {@link Two.LinearGradient} and {@link Two.RadialGradient}.
+   */
   var Gradient = Two.Gradient = function(stops) {
 
+    /**
+     * @name Two.Gradient#_renderer
+     * @property {Object}
+     * @private
+     * @description A private object to store relevant renderer specific variables.
+     * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `gradient._renderer.elem`.
+     */
     this._renderer = {};
     this._renderer.type = 'gradient';
 
+    /**
+     * @name Two.Gradient#id
+     * @property {String} - Session specific unique identifier.
+     * @nota-bene In the {@link Two.SvgRenderer} change this to change the underlying SVG element's id too.
+     */
     this.id = Two.Identifier + Two.uniqueId();
     this.classList = [];
 
@@ -11633,20 +12318,43 @@ SOFTWARE.
     this._renderer.bindStops = _.bind(Gradient.BindStops, this);
     this._renderer.unbindStops = _.bind(Gradient.UnbindStops, this);
 
+    /**
+     * @name Two.Gradient#spread
+     * @property {String} - Indicates what happens if the gradient starts or ends inside the bounds of the target rectangle. Possible values are `'pad'`, `'reflect'`, and `'repeat'`.
+     * @see {@link https://www.w3.org/TR/SVG11/pservers.html#LinearGradientElementSpreadMethodAttribute} for more information
+     */
     this.spread = 'pad';
 
+    /**
+     * @name Two.Gradient#stops
+     * @property {Two.Stop[]} - An ordered list of {@link Two.Stop}s for rendering the gradient.
+     */
     this.stops = stops;
 
   };
 
   _.extend(Gradient, {
 
+    /**
+     * @name Two.Gradient#Stop
+     * @see {@link Two.Stop}
+     */
     Stop: Stop,
 
+    /**
+     * @name Two.Gradient.Properties
+     * @property {String[]} - A list of properties that are on every {@link Two.Gradient}.
+     */
     Properties: [
       'spread'
     ],
 
+    /**
+     * @name Two.Gradient.MakeObservable
+     * @function
+     * @param {Object} object - The object to make observable.
+     * @description Convenience function to apply observable qualities of a {@link Two.Gradient} to any object. Handy if you'd like to extend the {@link Two.Gradient} class on a custom class.
+     */
     MakeObservable: function(object) {
 
       _.each(Gradient.Properties, Two.Utils.defineProperty, object);
@@ -11689,10 +12397,20 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.Gradient.FlagStops
+     * @function
+     * @description Cached method to let renderers know stops have been updated on a {@link Two.Gradient}.
+     */
     FlagStops: function() {
       this._flagStops = true;
     },
 
+    /**
+     * @name Two.Gradient.BindVertices
+     * @function
+     * @description Cached method to let {@link Two.Gradient} know vertices have been added to the instance.
+     */
     BindStops: function(items) {
 
       // This function is called a lot
@@ -11707,6 +12425,11 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.Gradient.UnbindStops
+     * @function
+     * @description Cached method to let {@link Two.Gradient} know vertices have been removed from the instance.
+     */
     UnbindStops: function(items) {
 
       var i = items.length;
@@ -11723,9 +12446,26 @@ SOFTWARE.
 
   _.extend(Gradient.prototype, Two.Utils.Events, {
 
+    /**
+     * @name Two.Gradient#_flagStops
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Gradient#stops} need updating.
+     */
     _flagStops: false,
+    /**
+     * @name Two.Gradient#_flagSpread
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Gradient#spread} need updating.
+     */
     _flagSpread: false,
 
+    /**
+     * @name Two.Gradient#clone
+     * @function
+     * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+     * @returns {Two.Gradient}
+     * @description Create a new instance of {@link Two.Gradient} with the same properties of the current path.
+     */
     clone: function(parent) {
 
       var stops = _.map(this.stops, function(s) {
@@ -11746,6 +12486,12 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.Gradient#toObject
+     * @function
+     * @returns {Object}
+     * @description Return a JSON compatible plain object that represents the path.
+     */
     toObject: function() {
 
       var result = {
@@ -11762,6 +12508,14 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.Gradient#_update
+     * @function
+     * @private
+     * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+     * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
+     * @nota-bene Try not to call this method more than once a frame.
+     */
     _update: function() {
 
       if (this._flagSpread || this._flagStops) {
@@ -11772,6 +12526,12 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.Gradient#flagReset
+     * @function
+     * @private
+     * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+     */
     flagReset: function() {
 
       this._flagSpread = this._flagStops = false;
@@ -11790,6 +12550,17 @@ SOFTWARE.
 
   var _ = Two.Utils;
 
+  /**
+   * @name Two.LinearGradient
+   * @class
+   * @extends Two.Gradient
+   * @param {Number} [x1=0] - The x position of the first end point of the linear gradient.
+   * @param {Number} [y1=0] - The y position of the first end point of the linear gradient.
+   * @param {Number} [x2=0] - The x position of the second end point of the linear gradient.
+   * @param {Number} [y2=0] - The y position of the second end point of the linear gradient.
+   * @param {Two.Stop[]} [stops] - A list of {@link Two.Stop}s that contain the gradient fill pattern for the gradient.
+   * @nota-bene The linear gradient lives within the space of the parent object's matrix space.
+   */
   var LinearGradient = Two.LinearGradient = function(x1, y1, x2, y2, stops) {
 
     Two.Gradient.call(this, stops);
@@ -11797,7 +12568,16 @@ SOFTWARE.
     this._renderer.type = 'linear-gradient';
 
     var flagEndPoints = _.bind(LinearGradient.FlagEndPoints, this);
+
+    /**
+     * @name Two.LinearGradient#left
+     * @property {Two.Vector} - The x and y value for where the first end point is placed on the canvas.
+     */
     this.left = new Two.Vector().bind(Two.Events.change, flagEndPoints);
+    /**
+     * @name Two.LinearGradient#right
+     * @property {Two.Vector} - The x and y value for where the second end point is placed on the canvas.
+     */
     this.right = new Two.Vector().bind(Two.Events.change, flagEndPoints);
 
     if (_.isNumber(x1)) {
@@ -11817,12 +12597,27 @@ SOFTWARE.
 
   _.extend(LinearGradient, {
 
+    /**
+     * @name Two.LinearGradient#Stop
+     * @see {@link Two.Stop}
+     */
     Stop: Two.Gradient.Stop,
 
+    /**
+     * @name Two.LinearGradient.MakeObservable
+     * @function
+     * @param {Object} object - The object to make observable.
+     * @description Convenience function to apply observable qualities of a {@link Two.LinearGradient} to any object. Handy if you'd like to extend the {@link Two.LinearGradient} class on a custom class.
+     */
     MakeObservable: function(object) {
       Two.Gradient.MakeObservable(object);
     },
 
+    /**
+     * @name Two.LinearGradient.FlagEndPoints
+     * @function
+     * @description Cached method to let renderers know end points have been updated on a {@link Two.LinearGradient}.
+     */
     FlagEndPoints: function() {
       this._flagEndPoints = true;
     }
@@ -11831,10 +12626,22 @@ SOFTWARE.
 
   _.extend(LinearGradient.prototype, Two.Gradient.prototype, {
 
+    /**
+     * @name Two.LinearGradient#_flagEndPoints
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.LinearGradient#left} or {@link Two.LinearGradient#right} changed and needs to update.
+     */
     _flagEndPoints: false,
 
     constructor: LinearGradient,
 
+    /**
+     * @name Two.LinearGradient#clone
+     * @function
+     * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+     * @returns {Two.Gradient}
+     * @description Create a new instance of {@link Two.LinearGradient} with the same properties of the current path.
+     */
     clone: function(parent) {
 
       var stops = _.map(this.stops, function(stop) {
@@ -11856,6 +12663,12 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.LinearGradient#toObject
+     * @function
+     * @returns {Object}
+     * @description Return a JSON compatible plain object that represents the path.
+     */
     toObject: function() {
 
       var result = Two.Gradient.prototype.toObject.call(this);
@@ -11867,6 +12680,14 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.LinearGradient#_update
+     * @function
+     * @private
+     * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+     * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
+     * @nota-bene Try not to call this method more than once a frame.
+     */
     _update: function() {
 
       if (this._flagEndPoints || this._flagSpread || this._flagStops) {
@@ -11877,6 +12698,12 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.LinearGradient#flagReset
+     * @function
+     * @private
+     * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+     */
     flagReset: function() {
 
       this._flagEndPoints = false;
@@ -11897,12 +12724,28 @@ SOFTWARE.
 
   var _ = Two.Utils;
 
+  /**
+   * @name Two.RadialGradient
+   * @class
+   * @extends Two.Gradient
+   * @param {Number} [x=0] - The x position of the origin of the radial gradient.
+   * @param {Number} [y=0] - The y position of the origin of the radial gradient.
+   * @param {Number} [radius=0] - The radius of the radial gradient.
+   * @param {Two.Stop[]} [stops] - A list of {@link Two.Stop}s that contain the gradient fill pattern for the gradient.
+   * @param {Number} [focalX=0] - The x position of the focal point on the radial gradient.
+   * @param {Number} [focalY=0] - The y position of the focal point on the radial gradient.
+   * @nota-bene The radial gradient lives within the space of the parent object's matrix space.
+   */
   var RadialGradient = Two.RadialGradient = function(cx, cy, r, stops, fx, fy) {
 
     Two.Gradient.call(this, stops);
 
     this._renderer.type = 'radial-gradient';
 
+    /**
+     * @name Two.RadialGradient#center
+     * @property {Two.Vector} - The x and y value for where the origin of the radial gradient is.
+     */
     this.center = new Two.Vector()
       .bind(Two.Events.change, _.bind(function() {
         this._flagCenter = true;
@@ -11910,6 +12753,11 @@ SOFTWARE.
 
     this.radius = _.isNumber(r) ? r : 20;
 
+    /**
+     * @name Two.RadialGradient#focal
+     * @property {Two.Vector} - The x and y value for where the focal point of the radial gradient is.
+     * @nota-bene This effects the spray or spread of the radial gradient.
+     */
     this.focal = new Two.Vector()
       .bind(Two.Events.change, _.bind(function() {
         this._flagFocal = true;
@@ -11935,12 +12783,26 @@ SOFTWARE.
 
   _.extend(RadialGradient, {
 
+    /**
+     * @name Two.RadialGradient#Stop
+     * @see {@link Two.Stop}
+     */
     Stop: Two.Gradient.Stop,
 
+    /**
+     * @name Two.RadialGradient.Properties
+     * @property {String[]} - A list of properties that are on every {@link Two.RadialGradient}.
+     */
     Properties: [
       'radius'
     ],
 
+    /**
+     * @name Two.RadialGradient.MakeObservable
+     * @function
+     * @param {Object} object - The object to make observable.
+     * @description Convenience function to apply observable qualities of a {@link Two.RadialGradient} to any object. Handy if you'd like to extend the {@link Two.RadialGradient} class on a custom class.
+     */
     MakeObservable: function(object) {
 
       Two.Gradient.MakeObservable(object);
@@ -11953,12 +12815,34 @@ SOFTWARE.
 
   _.extend(RadialGradient.prototype, Two.Gradient.prototype, {
 
+    /**
+     * @name Two.RadialGradient#_flagRadius
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.RadialGradient#radius} changed and needs to update.
+     */
     _flagRadius: false,
+    /**
+     * @name Two.RadialGradient#_flagCenter
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.RadialGradient#center} changed and needs to update.
+     */
     _flagCenter: false,
+    /**
+     * @name Two.RadialGradient#_flagFocal
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.RadialGradient#focal} changed and needs to update.
+     */
     _flagFocal: false,
 
     constructor: RadialGradient,
 
+    /**
+     * @name Two.RadialGradient#clone
+     * @function
+     * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+     * @returns {Two.Gradient}
+     * @description Create a new instance of {@link Two.RadialGradient} with the same properties of the current path.
+     */
     clone: function(parent) {
 
       var stops = _.map(this.stops, function(stop) {
@@ -11980,6 +12864,12 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.RadialGradient#toObject
+     * @function
+     * @returns {Object}
+     * @description Return a JSON compatible plain object that represents the path.
+     */
     toObject: function() {
 
       var result = Two.Gradient.prototype.toObject.call(this);
@@ -11995,6 +12885,14 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.RadialGradient#_update
+     * @function
+     * @private
+     * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+     * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
+     * @nota-bene Try not to call this method more than once a frame.
+     */
     _update: function() {
 
       if (this._flagRadius || this._flatCenter || this._flagFocal
@@ -12006,6 +12904,12 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.RadialGradient#flagReset
+     * @function
+     * @private
+     * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+     */
     flagReset: function() {
 
       this._flagRadius = this._flagCenter = this._flagFocal = false;
@@ -12037,6 +12941,13 @@ SOFTWARE.
     anchor = document.createElement('a');
   }
 
+  /**
+   * @name Two.Texture
+   * @class
+   * @extends Two.Shape
+   * @param {(String|Element)} [src] - The path to the image or an image element to use for the texture.
+   * @param {Function} [callback] - A callback function once the image is loaded and applied.
+   */
   var Texture = Two.Texture = function(src, callback) {
 
     this._renderer = {};
@@ -12047,6 +12958,10 @@ SOFTWARE.
     this.id = Two.Identifier + Two.uniqueId();
     this.classList = [];
 
+    /**
+     * @name Two.Texture#offset
+     * @property {Two.Vector} - The pixel offset for the texture within the bounds of the parent object.
+     */
     this.offset = new Two.Vector();
 
     if (_.isFunction(callback)) {
@@ -12060,10 +12975,28 @@ SOFTWARE.
     }
 
     if (_.isString(src)) {
+      /**
+       * @name Two.Texture#src
+       * @property {String} - The file path of the image data. Can be a URL or binary image data.
+       */
       this.src = src;
     } else if (_.isElement(src)) {
+      /**
+       * @name Two.Texture#image
+       * @property {Element} - The DOM Element that holds the image data. Typically this is an `<img />`.
+       */
       this.image = src;
     }
+
+    /**
+     * @name Two.Texture#repeat
+     * @property {String} - Valid strings are `'repeat'`, `'repeat-x'`, `'repeat-y'`, and '`no-repeat'`. Default is `'no-repeat'`.
+     */
+
+     /**
+      * @name Two.Texture#scale
+      * @property {Two.Vector} - The scale factor as a two-component vector of the texture.
+      */
 
     this._update();
 
@@ -12071,16 +13004,34 @@ SOFTWARE.
 
   _.extend(Texture, {
 
+    /**
+     * @name Two.Texture.Properties
+     * @property {String[]} - A list of properties that are on every {@link Two.Texture}.
+     */
     Properties: [
       'src',
       'loaded',
       'repeat'
     ],
 
+    /**
+     * @name Two.Texture.RegularExpressions
+     * @property {Object} - A map of regular expressions that represent the valid element and image types.
+     */
     RegularExpressions: regex,
 
+    /**
+     * @name Two.Texture.ImageRegistry
+     * @property {Two.ImageRegistry} - A canonincal registry of all images used in a session.
+     */
     ImageRegistry: new Two.Registry(),
 
+    /**
+     * @name Two.Texture.getAbsoluteURL
+     * @function
+     * @param {String} path - A URL, relative or absolute.
+     * @description Convert a path into an absolute URL. This is used to uniquely identify assets against the Two.ImageRegistry.
+     */
     getAbsoluteURL: function(path) {
       if (!anchor) {
         // TODO: Fix for headless environments
@@ -12090,6 +13041,12 @@ SOFTWARE.
       return anchor.href;
     },
 
+    /**
+     * @name Two.Texture.loadHeadlessBuffer
+     * @function
+     * @private
+     * @description A node based snippet of code to load files with the Node.js File System module.
+     */
     loadHeadlessBuffer: new Function('texture', 'loaded', [
       'var fs = require("fs");',
       'var buffer = fs.readFileSync(texture.src);',
@@ -12098,6 +13055,13 @@ SOFTWARE.
       'loaded();'
     ].join('\n')),
 
+    /**
+     * @name Two.Texture.getImage
+     * @function
+     * @param {String} - A URL path, relative or absolute.
+     * @return {Element}
+     * @description Function to get a cached image. If none exists, create a corresponding image element.
+     */
     getImage: function(src) {
 
       var absoluteSrc = Texture.getAbsoluteURL(src);
@@ -12134,6 +13098,11 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.Texture.Register
+     * @property {Object} - A class-wide object to handle different types of functions to register image elements.
+     * @private
+     */
     Register: {
       canvas: function(texture, callback) {
         texture._src = '#' + texture.id;
@@ -12229,6 +13198,13 @@ SOFTWARE.
       }
     },
 
+    /**
+     * @name Two.Texture.load
+     * @function
+     * @param {(String|Element)} [src] - The path to the image or an image element to use for the texture.
+     * @param {Function} [callback] - A callback function once the image is loaded and applied.
+     * @description - A class-wide object to handle different types of functions to register image elements.
+     */
     load: function(texture, callback) {
 
       var src = texture.src;
@@ -12254,14 +13230,30 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.Texture.FlagOffset
+     * @function
+     * @description Cached method to let renderers know stops have been updated on a {@link Two.Texture}.
+     */
     FlagOffset: function() {
       this._flagOffset = true;
     },
 
+    /**
+     * @name Two.Texture.FlagScale
+     * @function
+     * @description Cached method to let renderers know stops have been updated on a {@link Two.Texture}.
+     */
     FlagScale: function() {
       this._flagScale = true;
     },
 
+    /**
+     * @name Two.Texture.MakeObservable
+     * @function
+     * @param {Object} object - The object to make observable.
+     * @description Convenience function to apply observable qualities of a {@link Two.Texture} to any object. Handy if you'd like to extend the {@link Two.Texture} class on a custom class.
+     */
     MakeObservable: function(object) {
 
       _.each(Texture.Properties, Two.Utils.defineProperty, object);
@@ -12337,7 +13329,7 @@ SOFTWARE.
 
   });
 
-  _.extend(Texture.prototype, Two.Utils.Events, Two.Shape.prototype, {
+  _.extend(Texture.prototype, Two.Shape.prototype, {
 
     _flagSrc: false,
     _flagImage: false,

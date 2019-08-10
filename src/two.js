@@ -1087,7 +1087,7 @@
           node = node.parent;
         }
 
-        return node;
+        return node.scene;
 
       },
 
@@ -1110,17 +1110,21 @@
         defs: function(node) {
           var error = new Two.Utils.Error('interpret <defs /> not supported.');
           console.warn(error.name, error.message);
+          return null;
         },
 
         use: function(node) {
           var error = new Two.Utils.Error('interpret <use /> not supported.');
           console.warn(error.name, error.message);
+          return null;
         },
 
         g: function(node) {
 
           var styles, attrs;
           var group = new Two.Group();
+
+          this.add(group);
 
           // Switched up order to inherit more specific styles
           styles = Two.Utils.getSvgStyles.call(this, node);
@@ -1134,7 +1138,9 @@
 
             if (tagName in Two.Utils.read) {
               var o = Two.Utils.read[tagName].call(group, n, styles);
-              group.add(o);
+              if (!_.isNull(o) && !o.parent) {
+                group.add(o);
+              }
             }
           }
 
