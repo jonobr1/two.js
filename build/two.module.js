@@ -472,7 +472,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2019-08-11T11:36:04+02:00',
+    PublishDate: '2019-08-11T12:06:01+02:00',
 
     /**
      * @name Two.Identifier
@@ -794,52 +794,22 @@ SOFTWARE.
       },
 
       /**
-       * @name Two.Utils.deltaTransformPoint
-       * @function
-       * @param {Two.Matrix} matrix
-       * @param {Number} x
-       * @param {Number} y
-       * @returns {Two.Vector}
-       * @description Used by {@link Two.Utils.decomposeMatrix}
-       */
-      deltaTransformPoint: function(matrix, x, y) {
-
-        var dx = x * matrix.a + y * matrix.c + 0;
-        var dy = x * matrix.b + y * matrix.d + 0;
-
-        return new Two.Vector(dx, dy);
-
-      },
-
-      /**
        * @name Two.Utils.decomposeMatrix
        * @function
        * @param {Two.Matrix} matrix - The matrix to decompose.
        * @returns {Object} An object containing relevant skew values.
        * @description Decompose a 2D 3x3 Matrix to find the skew.
-       * @see {@link https://gist.github.com/2052247}
        */
       decomposeMatrix: function(matrix) {
 
-        // calculate delta transform point
-        var px = Two.Utils.deltaTransformPoint(matrix, 0, 1);
-        var py = Two.Utils.deltaTransformPoint(matrix, 1, 0);
-
-        // calculate skew
-        var skewX = ((180 / Math.PI) * Math.atan2(px.y, px.x) - 90);
-        var skewY = ((180 / Math.PI) * Math.atan2(py.y, py.x));
-
-        skewX = Two.Utils.toFixed(skewX);
-        skewY = Two.Utils.toFixed(skewY);
+        // TODO: Include skewX, skewY
 
         return {
             translateX: matrix.e,
             translateY: matrix.f,
-            scaleX: Math.sqrt(matrix.a * matrix.a + matrix.b * matrix.b),
-            scaleY: Math.sqrt(matrix.c * matrix.c + matrix.d * matrix.d),
-            skewX: skewX,
-            skewY: skewY,
-            rotation: skewX // rotation is the same as skew x
+            scaleX: matrix.a,
+            scaleY: matrix.d,
+            rotation: Math.asin(- matrix.b)
         };
 
       },

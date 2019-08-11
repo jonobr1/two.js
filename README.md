@@ -110,6 +110,7 @@ process.exit();
 ## Change Log
 
 #### Nightly
++ Removed `Two.Utils.deltaTransformPoint` and patched `Two.Utils.decomposeMatrix` to more accurately parse matrices
 + Added support for various position inclusion of gradients and other effects in `Two.interpret`
 + Improved `Two.Utils.applySvgAttributes` rotation from SVG interpretation
 + Added `Two.makeArrow` for Simple Triangular Tipped Arrows [@mike168m](https://github.com/mike168m)
