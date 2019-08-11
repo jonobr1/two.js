@@ -36,12 +36,12 @@
     this.classList = [];
 
     /**
-     * @name Two.Shape#_matrix
+     * @name Two.Shape#matrix
      * @property {Two.Matrix}
      * @description The transformation matrix of the shape.
      * @nota-bene {@link Two.Shape#translation}, {@link Two.Shape#rotation}, and {@link Two.Shape#scale} apply their values to the matrix when changed. The matrix is what is sent to the renderer to be drawn.
      */
-    this._matrix = new Two.Matrix();
+    this.matrix = new Two.Matrix();
 
     /**
      * @name Two.Shape#translation
@@ -132,6 +132,17 @@
           this._flagMatrix = true;
           this._flagScale = true;
 
+        }
+      });
+
+      Object.defineProperty(object, 'matrix', {
+        enumerable: true,
+        get: function() {
+          return this._matrix;
+        },
+        set: function(v) {
+          this._matrix = v;
+          this._flagMatrix = true;
         }
       });
 

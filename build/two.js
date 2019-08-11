@@ -472,7 +472,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2019-08-11T12:06:01+02:00',
+    PublishDate: '2019-08-11T12:10:05+02:00',
 
     /**
      * @name Two.Identifier
@@ -8098,12 +8098,12 @@ SOFTWARE.
     this.classList = [];
 
     /**
-     * @name Two.Shape#_matrix
+     * @name Two.Shape#matrix
      * @property {Two.Matrix}
      * @description The transformation matrix of the shape.
      * @nota-bene {@link Two.Shape#translation}, {@link Two.Shape#rotation}, and {@link Two.Shape#scale} apply their values to the matrix when changed. The matrix is what is sent to the renderer to be drawn.
      */
-    this._matrix = new Two.Matrix();
+    this.matrix = new Two.Matrix();
 
     /**
      * @name Two.Shape#translation
@@ -8194,6 +8194,17 @@ SOFTWARE.
           this._flagMatrix = true;
           this._flagScale = true;
 
+        }
+      });
+
+      Object.defineProperty(object, 'matrix', {
+        enumerable: true,
+        get: function() {
+          return this._matrix;
+        },
+        set: function(v) {
+          this._matrix = v;
+          this._flagMatrix = true;
         }
       });
 
