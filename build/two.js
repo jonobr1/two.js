@@ -472,7 +472,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2019-08-11T12:10:05+02:00',
+    PublishDate: '2019-08-11T12:45:26+02:00',
 
     /**
      * @name Two.Identifier
@@ -9143,15 +9143,13 @@ SOFTWARE.
       var rect = this.getBoundingClientRect(true);
 
       rect.centroid = {
-        x: rect.left + rect.width / 2,
-        y: rect.top + rect.height / 2
+        x: rect.left + rect.width / 2 - this.translation.x,
+        y: rect.top + rect.height / 2 - this.translation.y
       };
 
       _.each(this.vertices, function(v) {
         v.subSelf(rect.centroid);
       });
-
-      // this.translation.addSelf(rect.centroid);
 
       return this;
 
@@ -14597,8 +14595,8 @@ SOFTWARE.
       var rect = this.getBoundingClientRect(true);
 
       rect.centroid = {
-        x: rect.left + rect.width / 2,
-        y: rect.top + rect.height / 2
+        x: rect.left + rect.width / 2 - this.translation.x,
+        y: rect.top + rect.height / 2 - this.translation.y
       };
 
       this.children.forEach(function(child) {
@@ -14606,8 +14604,6 @@ SOFTWARE.
           child.translation.sub(rect.centroid);
         }
       });
-
-      // this.translation.copy(rect.centroid);
 
       return this;
 

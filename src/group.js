@@ -614,8 +614,8 @@
       var rect = this.getBoundingClientRect(true);
 
       rect.centroid = {
-        x: rect.left + rect.width / 2,
-        y: rect.top + rect.height / 2
+        x: rect.left + rect.width / 2 - this.translation.x,
+        y: rect.top + rect.height / 2 - this.translation.y
       };
 
       this.children.forEach(function(child) {
@@ -623,8 +623,6 @@
           child.translation.sub(rect.centroid);
         }
       });
-
-      // this.translation.copy(rect.centroid);
 
       return this;
 

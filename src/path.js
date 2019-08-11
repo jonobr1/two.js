@@ -790,15 +790,13 @@
       var rect = this.getBoundingClientRect(true);
 
       rect.centroid = {
-        x: rect.left + rect.width / 2,
-        y: rect.top + rect.height / 2
+        x: rect.left + rect.width / 2 - this.translation.x,
+        y: rect.top + rect.height / 2 - this.translation.y
       };
 
       _.each(this.vertices, function(v) {
         v.subSelf(rect.centroid);
       });
-
-      // this.translation.addSelf(rect.centroid);
 
       return this;
 
