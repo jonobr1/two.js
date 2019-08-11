@@ -1031,18 +1031,38 @@
               Two.Utils.applySvgViewBox.call(this, elem, value);
               break;
             case 'visible':
+              if (elem instanceof Two.Group) {
+                elem._visible = value;
+                break;
+              }
               elem.visible = value;
               break;
             case 'stroke-linecap':
+              if (elem instanceof Two.Group) {
+                elem._cap = value;
+                break;
+              }
               elem.cap = value;
               break;
             case 'stroke-linejoin':
+              if (elem instanceof Two.Group) {
+                elem._join = value;
+                break;
+              }
               elem.join = value;
               break;
             case 'stroke-miterlimit':
+              if (elem instanceof Two.Group) {
+                elem._miter = value;
+                break;
+              }
               elem.miter = value;
               break;
             case 'stroke-width':
+              if (elem instanceof Two.Group) {
+                elem._linewidth = parseFloat(value);
+                break;
+              }
               elem.linewidth = parseFloat(value);
               break;
             case 'opacity':
@@ -1050,12 +1070,17 @@
             case 'fill-opacity':
               // Only apply styles to rendered shapes
               // in the scene.
-              if (!(elem instanceof Two.Group)) {
-                elem.opacity = parseFloat(value);
+              if (elem instanceof Two.Group) {
+                elem._opacity = parseFloat(value);
+                break;
               }
+              elem.opacity = parseFloat(value);
               break;
             case 'fill':
             case 'stroke':
+              if (elem instanceof Two.Group) {
+                key = '_' + key;
+              }
               if (/url\(\#.*\)/i.test(value)) {
                 var scene = Two.Utils.getScene(this);
                 elem[key] = scene.getById(
@@ -1081,6 +1106,12 @@
 
       },
 
+      /**
+       * @name two.Utils.getScene
+       * @param {Two.Shape} node - The currently available object in the scenegraph.
+       * @returns {Two.Group} - The highest order {@link Two.Group} in the scenegraph.
+       * @property {Function}
+       */
       getScene: function(node) {
 
         while (node.parent) {
