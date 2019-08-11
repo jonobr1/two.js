@@ -472,7 +472,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2019-08-10T21:55:24+02:00',
+    PublishDate: '2019-08-11T11:36:04+02:00',
 
     /**
      * @name Two.Identifier
@@ -1057,18 +1057,38 @@ SOFTWARE.
               Two.Utils.applySvgViewBox.call(this, elem, value);
               break;
             case 'visible':
+              if (elem instanceof Two.Group) {
+                elem._visible = value;
+                break;
+              }
               elem.visible = value;
               break;
             case 'stroke-linecap':
+              if (elem instanceof Two.Group) {
+                elem._cap = value;
+                break;
+              }
               elem.cap = value;
               break;
             case 'stroke-linejoin':
+              if (elem instanceof Two.Group) {
+                elem._join = value;
+                break;
+              }
               elem.join = value;
               break;
             case 'stroke-miterlimit':
+              if (elem instanceof Two.Group) {
+                elem._miter = value;
+                break;
+              }
               elem.miter = value;
               break;
             case 'stroke-width':
+              if (elem instanceof Two.Group) {
+                elem._linewidth = parseFloat(value);
+                break;
+              }
               elem.linewidth = parseFloat(value);
               break;
             case 'opacity':
@@ -1076,12 +1096,17 @@ SOFTWARE.
             case 'fill-opacity':
               // Only apply styles to rendered shapes
               // in the scene.
-              if (!(elem instanceof Two.Group)) {
-                elem.opacity = parseFloat(value);
+              if (elem instanceof Two.Group) {
+                elem._opacity = parseFloat(value);
+                break;
               }
+              elem.opacity = parseFloat(value);
               break;
             case 'fill':
             case 'stroke':
+              if (elem instanceof Two.Group) {
+                key = '_' + key;
+              }
               if (/url\(\#.*\)/i.test(value)) {
                 var scene = Two.Utils.getScene(this);
                 elem[key] = scene.getById(
@@ -1107,6 +1132,12 @@ SOFTWARE.
 
       },
 
+      /**
+       * @name two.Utils.getScene
+       * @param {Two.Shape} node - The currently available object in the scenegraph.
+       * @returns {Two.Group} - The highest order {@link Two.Group} in the scenegraph.
+       * @property {Function}
+       */
       getScene: function(node) {
 
         while (node.parent) {
