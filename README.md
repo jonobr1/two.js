@@ -110,6 +110,7 @@ process.exit();
 ## Change Log
 
 #### Nightly
++ Added trickle down styling to `Two.Group.closed`, `Two.Group.curved`, and `Two.Group.automatic`
 + Check for Duplicity on `Two.Group.add`
 + Accounted for offset positions in `Two.Path.center` and `Two.Group.center` methods
 + Exposed `Two.Shape.matrix` as a publicly accessible property

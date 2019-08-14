@@ -472,7 +472,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2019-08-14T08:45:08+02:00',
+    PublishDate: '2019-08-14T08:59:06+02:00',
 
     /**
      * @name Two.Identifier
@@ -14129,6 +14129,10 @@ SOFTWARE.
       'cap',
       'join',
       'miter',
+
+      'closed',
+      'curved',
+      'automatic'
     ],
 
     /**
@@ -14309,9 +14313,11 @@ SOFTWARE.
 
         set: function(v) {
           this[secret] = v;
-          _.each(this.children, function(child) { // Trickle down styles
+          // Trickle down styles
+          for (var i = 0; i < this.children.length; i++) {
+            var child = this.children[i];
             child[key] = v;
-          });
+          }
         }
 
       });
