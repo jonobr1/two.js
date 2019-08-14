@@ -472,7 +472,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2019-08-11T12:45:26+02:00',
+    PublishDate: '2019-08-14T08:45:08+02:00',
 
     /**
      * @name Two.Identifier
@@ -1151,6 +1151,8 @@ SOFTWARE.
           var styles, attrs;
           var group = new Two.Group();
 
+          Two.Utils.applySvgAttributes.call(this, node, group, parentStyles);
+
           this.add(group);
 
           // Switched up order to inherit more specific styles
@@ -1170,8 +1172,6 @@ SOFTWARE.
               }
             }
           }
-
-          Two.Utils.applySvgAttributes.call(this, node, group, parentStyles);
 
           return group;
 
@@ -14692,8 +14692,15 @@ SOFTWARE.
 
       // Add the objects
       for (var i = 0; i < objects.length; i++) {
-        if (!(objects[i] && objects[i].id)) continue;
-        this.children.push(objects[i]);
+        var child = objects[i];
+        if (!(child && child.id)) {
+          continue
+        }
+        var index = this.children.ids[child.id];
+        if (index) {
+          this.children.splice(child.id, 1);
+        }
+        this.children.push(child);
       }
 
       return this;
@@ -14924,9 +14931,18 @@ SOFTWARE.
     var index;
 
     if (parent === newParent) {
-      this.additions.push(child);
-      this._flagAdditions = true;
+
+      index = _.indexOf(newParent.additions, child);
+
+      if (index >= 0) {
+        newParent.additions.splice(index, 1);
+      }
+
+      newParent.additions.push(child);
+      newParent._flagAdditions = true;
+
       return;
+
     }
 
     if (parent && parent.children.ids[child.id]) {
@@ -14948,19 +14964,26 @@ SOFTWARE.
 
     if (newParent) {
       child.parent = newParent;
-      this.additions.push(child);
-      this._flagAdditions = true;
+      newParent.additions.push(child);
+      newParent._flagAdditions = true;
       return;
     }
 
     // If we're passing from one parent to another...
-    index = _.indexOf(this.additions, child);
+    index = _.indexOf(parent.additions, child);
 
     if (index >= 0) {
-      this.additions.splice(index, 1);
+      parent.additions.splice(index, 1);
     } else {
-      this.subtractions.push(child);
-      this._flagSubtractions = true;
+      parent.subtractions.push(child);
+      parent._flagSubtractions = true;
+    }
+
+    if (parent._flagAdditions && parent.additions.length === 0) {
+      parent._flagAdditions = false;
+    }
+    if (parent._flagSubtractions && parent.subtractions.length === 0) {
+      parent._flagSubtractions = false;
     }
 
     delete child.parent;

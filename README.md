@@ -110,6 +110,7 @@ process.exit();
 ## Change Log
 
 #### Nightly
++ Check for Duplicity on `Two.Group.add`
 + Accounted for offset positions in `Two.Path.center` and `Two.Group.center` methods
 + Exposed `Two.Shape.matrix` as a publicly accessible property
 + Removed `Two.Utils.deltaTransformPoint` and patched `Two.Utils.decomposeMatrix` to more accurately parse matrices

@@ -1125,6 +1125,8 @@
           var styles, attrs;
           var group = new Two.Group();
 
+          Two.Utils.applySvgAttributes.call(this, node, group, parentStyles);
+
           this.add(group);
 
           // Switched up order to inherit more specific styles
@@ -1144,8 +1146,6 @@
               }
             }
           }
-
-          Two.Utils.applySvgAttributes.call(this, node, group, parentStyles);
 
           return group;
 

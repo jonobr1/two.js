@@ -711,8 +711,15 @@
 
       // Add the objects
       for (var i = 0; i < objects.length; i++) {
-        if (!(objects[i] && objects[i].id)) continue;
-        this.children.push(objects[i]);
+        var child = objects[i];
+        if (!(child && child.id)) {
+          continue
+        }
+        var index = this.children.ids[child.id];
+        if (index) {
+          this.children.splice(child.id, 1);
+        }
+        this.children.push(child);
       }
 
       return this;
@@ -943,9 +950,18 @@
     var index;
 
     if (parent === newParent) {
+
+      index = _.indexOf(newParent.additions, child);
+
+      if (index >= 0) {
+        newParent.additions.splice(index, 1);
+      }
+
       newParent.additions.push(child);
       newParent._flagAdditions = true;
+
       return;
+
     }
 
     if (parent && parent.children.ids[child.id]) {
@@ -980,6 +996,13 @@
     } else {
       parent.subtractions.push(child);
       parent._flagSubtractions = true;
+    }
+
+    if (parent._flagAdditions && parent.additions.length === 0) {
+      parent._flagAdditions = false;
+    }
+    if (parent._flagSubtractions && parent.subtractions.length === 0) {
+      parent._flagSubtractions = false;
     }
 
     delete child.parent;
