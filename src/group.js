@@ -943,8 +943,8 @@
     var index;
 
     if (parent === newParent) {
-      this.additions.push(child);
-      this._flagAdditions = true;
+      newParent.additions.push(child);
+      newParent._flagAdditions = true;
       return;
     }
 
@@ -967,19 +967,19 @@
 
     if (newParent) {
       child.parent = newParent;
-      this.additions.push(child);
-      this._flagAdditions = true;
+      newParent.additions.push(child);
+      newParent._flagAdditions = true;
       return;
     }
 
     // If we're passing from one parent to another...
-    index = _.indexOf(this.additions, child);
+    index = _.indexOf(parent.additions, child);
 
     if (index >= 0) {
-      this.additions.splice(index, 1);
+      parent.additions.splice(index, 1);
     } else {
-      this.subtractions.push(child);
-      this._flagSubtractions = true;
+      parent.subtractions.push(child);
+      parent._flagSubtractions = true;
     }
 
     delete child.parent;
