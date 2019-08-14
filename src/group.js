@@ -148,6 +148,10 @@
       'cap',
       'join',
       'miter',
+
+      'closed',
+      'curved',
+      'automatic'
     ],
 
     /**
@@ -328,9 +332,11 @@
 
         set: function(v) {
           this[secret] = v;
-          _.each(this.children, function(child) { // Trickle down styles
+          // Trickle down styles
+          for (var i = 0; i < this.children.length; i++) {
+            var child = this.children[i];
             child[key] = v;
-          });
+          }
         }
 
       });
