@@ -472,7 +472,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2019-08-14T08:59:06+02:00',
+    PublishDate: '2019-08-15T10:07:26+02:00',
 
     /**
      * @name Two.Identifier
@@ -14702,9 +14702,9 @@ SOFTWARE.
         if (!(child && child.id)) {
           continue
         }
-        var index = this.children.ids[child.id];
-        if (index) {
-          this.children.splice(child.id, 1);
+        var index = _.indexOf(this.children, child);
+        if (index >= 0) {
+          this.children.splice(index, 1);
         }
         this.children.push(child);
       }
