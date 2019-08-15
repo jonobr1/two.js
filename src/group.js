@@ -721,9 +721,9 @@
         if (!(child && child.id)) {
           continue
         }
-        var index = this.children.ids[child.id];
-        if (index) {
-          this.children.splice(child.id, 1);
+        var index = _.indexOf(this.children, child);
+        if (index >= 0) {
+          this.children.splice(index, 1);
         }
         this.children.push(child);
       }
