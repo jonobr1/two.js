@@ -956,18 +956,8 @@
     var index;
 
     if (parent === newParent) {
-
-      index = _.indexOf(newParent.additions, child);
-
-      if (index >= 0) {
-        newParent.additions.splice(index, 1);
-      }
-
-      newParent.additions.push(child);
-      newParent._flagAdditions = true;
-
+      add();
       return;
-
     }
 
     if (parent && parent.children.ids[child.id]) {
@@ -975,34 +965,16 @@
       index = _.indexOf(parent.children, child);
       parent.children.splice(index, 1);
 
-      // If we're passing from one parent to another...
-      index = _.indexOf(parent.additions, child);
-
-      if (index >= 0) {
-        parent.additions.splice(index, 1);
-      } else {
-        parent.subtractions.push(child);
-        parent._flagSubtractions = true;
-      }
+      splice();
 
     }
 
     if (newParent) {
-      child.parent = newParent;
-      newParent.additions.push(child);
-      newParent._flagAdditions = true;
+      add();
       return;
     }
 
-    // If we're passing from one parent to another...
-    index = _.indexOf(parent.additions, child);
-
-    if (index >= 0) {
-      parent.additions.splice(index, 1);
-    } else {
-      parent.subtractions.push(child);
-      parent._flagSubtractions = true;
-    }
+    splice();
 
     if (parent._flagAdditions && parent.additions.length === 0) {
       parent._flagAdditions = false;
@@ -1012,6 +984,47 @@
     }
 
     delete child.parent;
+
+    function add() {
+
+      if (newParent.subtractions.length > 0) {
+        index = _.indexOf(newParent.subtractions, child);
+
+        if (index >= 0) {
+          newParent.subtractions.splice(index, 1);
+        }
+      }
+
+      if (newParent.additions.length > 0) {
+        index = _.indexOf(newParent.additions, child);
+
+        if (index >= 0) {
+          newParent.additions.splice(index, 1);
+        }
+      }
+
+      child.parent = newParent;
+      newParent.additions.push(child);
+      newParent._flagAdditions = true;
+
+    }
+
+    function splice() {
+
+      index = _.indexOf(parent.additions, child);
+
+      if (index >= 0) {
+        parent.additions.splice(index, 1);
+      }
+
+      index = _.indexOf(parent.subtractions, child);
+
+      if (index < 0) {
+        parent.subtractions.push(child);
+        parent._flagSubtractions = true;
+      }
+
+    }
 
   }
 
