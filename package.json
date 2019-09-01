@@ -1,5 +1,5 @@
 {
-  "name": "two.js",
+  "name": "@jonobr1/two.js",
   "version": "0.7.0-beta.4",
   "description": "A renderer agnostic two-dimensional drawing api for the web.",
   "module": "build/two.module.js",
