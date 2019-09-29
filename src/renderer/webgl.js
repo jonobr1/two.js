@@ -225,7 +225,7 @@
         if (join) {
           ctx.lineJoin = join;
         }
-        if (cap) {
+        if (!closed && cap) {
           ctx.lineCap = cap;
         }
         if (_.isNumber(opacity)) {
