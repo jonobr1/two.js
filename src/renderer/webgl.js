@@ -17,7 +17,7 @@
 
   var webgl = {
 
-    isHidden: /(none|transparent)/i,
+    isHidden: /(undefined|none|transparent)/i,
 
     canvas: (root.document ? root.document.createElement('canvas') : { getContext: _.identity }),
 

@@ -23,7 +23,7 @@
 
   var canvas = {
 
-    isHidden: /(none|transparent)/i,
+    isHidden: /(undefined|none|transparent)/i,
 
     alignments: {
       left: 'start',
@@ -183,7 +183,7 @@
         if (join) {
           ctx.lineJoin = join;
         }
-        if (cap) {
+        if (!closed && cap) {
           ctx.lineCap = cap;
         }
         if (_.isNumber(opacity)) {
