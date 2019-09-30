@@ -753,7 +753,6 @@
      */
     noStroke: function() {
       this.stroke = undefined;
-      this.linewidth = undefined;
       return this;
     },
 
