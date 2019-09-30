@@ -497,7 +497,8 @@
      * @description Short hand method to set stroke to `transparent`.
      */
     noStroke: function() {
-      this.stroke = 'transparent';
+      this.stroke = undefined;
+      this.linewidth = undefined;
       return this;
     },
 

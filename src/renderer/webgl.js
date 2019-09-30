@@ -17,7 +17,7 @@
 
   var webgl = {
 
-    isHidden: /(none|transparent)/i,
+    isHidden: /(undefined|none|transparent)/i,
 
     canvas: (root.document ? root.document.createElement('canvas') : { getContext: _.identity }),
 
@@ -215,18 +215,18 @@
             webgl[stroke._renderer.type].render.call(stroke, ctx, elem);
             ctx.strokeStyle = stroke._renderer.effect;
           }
-        }
-        if (linewidth) {
-          ctx.lineWidth = linewidth;
-        }
-        if (miter) {
-          ctx.miterLimit = miter;
-        }
-        if (join) {
-          ctx.lineJoin = join;
-        }
-        if (cap) {
-          ctx.lineCap = cap;
+          if (linewidth) {
+            ctx.lineWidth = linewidth;
+          }
+          if (miter) {
+            ctx.miterLimit = miter;
+          }
+          if (join) {
+            ctx.lineJoin = join;
+          }
+          if (!closed && cap) {
+            ctx.lineCap = cap;
+          }
         }
         if (_.isNumber(opacity)) {
           ctx.globalAlpha = opacity;
@@ -533,10 +533,10 @@
 
           // We still need to update child Two elements on the fill and
           // stroke properties.
-          if (!_.isString(this._fill)) {
+          if (this._fill && this._fill._update) {
             this._fill._update();
           }
-          if (!_.isString(this._stroke)) {
+          if (this._stroke && this._stroke._update) {
             this._stroke._update();
           }
 
@@ -632,9 +632,9 @@
             webgl[stroke._renderer.type].render.call(stroke, ctx, elem);
             ctx.strokeStyle = stroke._renderer.effect;
           }
-        }
-        if (linewidth) {
-          ctx.lineWidth = linewidth;
+          if (linewidth) {
+            ctx.lineWidth = linewidth;
+          }
         }
         if (_.isNumber(opacity)) {
           ctx.globalAlpha = opacity;
@@ -852,10 +852,10 @@
 
           // We still need to update child Two elements on the fill and
           // stroke properties.
-          if (!_.isString(this._fill)) {
+          if (this._fill && this._fill._update) {
             this._fill._update();
           }
-          if (!_.isString(this._stroke)) {
+          if (this._stroke && this._stroke._update) {
             this._stroke._update();
           }
 

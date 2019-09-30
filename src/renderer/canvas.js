@@ -23,7 +23,7 @@
 
   var canvas = {
 
-    isHidden: /(none|transparent)/i,
+    isHidden: /(undefined|none|transparent)/i,
 
     alignments: {
       left: 'start',
@@ -173,18 +173,18 @@
             canvas[stroke._renderer.type].render.call(stroke, ctx);
             ctx.strokeStyle = stroke._renderer.effect;
           }
-        }
-        if (linewidth) {
-          ctx.lineWidth = linewidth;
-        }
-        if (miter) {
-          ctx.miterLimit = miter;
-        }
-        if (join) {
-          ctx.lineJoin = join;
-        }
-        if (cap) {
-          ctx.lineCap = cap;
+          if (linewidth) {
+            ctx.lineWidth = linewidth;
+          }
+          if (miter) {
+            ctx.miterLimit = miter;
+          }
+          if (join) {
+            ctx.lineJoin = join;
+          }
+          if (!closed && cap) {
+            ctx.lineCap = cap;
+          }
         }
         if (_.isNumber(opacity)) {
           ctx.globalAlpha = opacity;
@@ -420,9 +420,9 @@
             canvas[stroke._renderer.type].render.call(stroke, ctx);
             ctx.strokeStyle = stroke._renderer.effect;
           }
-        }
-        if (linewidth) {
-          ctx.lineWidth = linewidth;
+          if (linewidth) {
+            ctx.lineWidth = linewidth;
+          }
         }
         if (_.isNumber(opacity)) {
           ctx.globalAlpha = opacity;

@@ -472,7 +472,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2019-08-27T17:59:35+02:00',
+    PublishDate: '2019-09-30T08:49:56+02:00',
 
     /**
      * @name Two.Identifier
@@ -5902,7 +5902,7 @@ SOFTWARE.
 
   var canvas = {
 
-    isHidden: /(none|transparent)/i,
+    isHidden: /(undefined|none|transparent)/i,
 
     alignments: {
       left: 'start',
@@ -6052,18 +6052,18 @@ SOFTWARE.
             canvas[stroke._renderer.type].render.call(stroke, ctx);
             ctx.strokeStyle = stroke._renderer.effect;
           }
-        }
-        if (linewidth) {
-          ctx.lineWidth = linewidth;
-        }
-        if (miter) {
-          ctx.miterLimit = miter;
-        }
-        if (join) {
-          ctx.lineJoin = join;
-        }
-        if (cap) {
-          ctx.lineCap = cap;
+          if (linewidth) {
+            ctx.lineWidth = linewidth;
+          }
+          if (miter) {
+            ctx.miterLimit = miter;
+          }
+          if (join) {
+            ctx.lineJoin = join;
+          }
+          if (!closed && cap) {
+            ctx.lineCap = cap;
+          }
         }
         if (_.isNumber(opacity)) {
           ctx.globalAlpha = opacity;
@@ -6299,9 +6299,9 @@ SOFTWARE.
             canvas[stroke._renderer.type].render.call(stroke, ctx);
             ctx.strokeStyle = stroke._renderer.effect;
           }
-        }
-        if (linewidth) {
-          ctx.lineWidth = linewidth;
+          if (linewidth) {
+            ctx.lineWidth = linewidth;
+          }
         }
         if (_.isNumber(opacity)) {
           ctx.globalAlpha = opacity;
@@ -6746,7 +6746,7 @@ SOFTWARE.
 
   var webgl = {
 
-    isHidden: /(none|transparent)/i,
+    isHidden: /(undefined|none|transparent)/i,
 
     canvas: (root.document ? root.document.createElement('canvas') : { getContext: _.identity }),
 
@@ -6944,18 +6944,18 @@ SOFTWARE.
             webgl[stroke._renderer.type].render.call(stroke, ctx, elem);
             ctx.strokeStyle = stroke._renderer.effect;
           }
-        }
-        if (linewidth) {
-          ctx.lineWidth = linewidth;
-        }
-        if (miter) {
-          ctx.miterLimit = miter;
-        }
-        if (join) {
-          ctx.lineJoin = join;
-        }
-        if (cap) {
-          ctx.lineCap = cap;
+          if (linewidth) {
+            ctx.lineWidth = linewidth;
+          }
+          if (miter) {
+            ctx.miterLimit = miter;
+          }
+          if (join) {
+            ctx.lineJoin = join;
+          }
+          if (!closed && cap) {
+            ctx.lineCap = cap;
+          }
         }
         if (_.isNumber(opacity)) {
           ctx.globalAlpha = opacity;
@@ -7262,10 +7262,10 @@ SOFTWARE.
 
           // We still need to update child Two elements on the fill and
           // stroke properties.
-          if (!_.isString(this._fill)) {
+          if (this._fill && this._fill._update) {
             this._fill._update();
           }
-          if (!_.isString(this._stroke)) {
+          if (this._stroke && this._stroke._update) {
             this._stroke._update();
           }
 
@@ -7361,9 +7361,9 @@ SOFTWARE.
             webgl[stroke._renderer.type].render.call(stroke, ctx, elem);
             ctx.strokeStyle = stroke._renderer.effect;
           }
-        }
-        if (linewidth) {
-          ctx.lineWidth = linewidth;
+          if (linewidth) {
+            ctx.lineWidth = linewidth;
+          }
         }
         if (_.isNumber(opacity)) {
           ctx.globalAlpha = opacity;
@@ -7581,10 +7581,10 @@ SOFTWARE.
 
           // We still need to update child Two elements on the fill and
           // stroke properties.
-          if (!_.isString(this._fill)) {
+          if (this._fill && this._fill._update) {
             this._fill._update();
           }
-          if (!_.isString(this._stroke)) {
+          if (this._stroke && this._stroke._update) {
             this._stroke._update();
           }
 
@@ -9105,7 +9105,7 @@ SOFTWARE.
      * @description Short hand method to set stroke to `transparent`.
      */
     noStroke: function() {
-      this.stroke = 'transparent';
+      this.stroke = undefined;
       return this;
     },
 
@@ -12023,7 +12023,8 @@ SOFTWARE.
      * @description Short hand method to set stroke to `transparent`.
      */
     noStroke: function() {
-      this.stroke = 'transparent';
+      this.stroke = undefined;
+      this.linewidth = undefined;
       return this;
     },
 
@@ -12950,13 +12951,6 @@ SOFTWARE.
     anchor = document.createElement('a');
   }
 
-  /**
-   * @name Two.Texture
-   * @class
-   * @extends Two.Shape
-   * @param {(String|Element)} [src] - The path to the image or an image element to use for the texture.
-   * @param {Function} [callback] - A callback function once the image is loaded and applied.
-   */
   var Texture = Two.Texture = function(src, callback) {
 
     this._renderer = {};
@@ -12967,10 +12961,6 @@ SOFTWARE.
     this.id = Two.Identifier + Two.uniqueId();
     this.classList = [];
 
-    /**
-     * @name Two.Texture#offset
-     * @property {Two.Vector} - The pixel offset for the texture within the bounds of the parent object.
-     */
     this.offset = new Two.Vector();
 
     if (_.isFunction(callback)) {
@@ -12984,28 +12974,10 @@ SOFTWARE.
     }
 
     if (_.isString(src)) {
-      /**
-       * @name Two.Texture#src
-       * @property {String} - The file path of the image data. Can be a URL or binary image data.
-       */
       this.src = src;
     } else if (_.isElement(src)) {
-      /**
-       * @name Two.Texture#image
-       * @property {Element} - The DOM Element that holds the image data. Typically this is an `<img />`.
-       */
       this.image = src;
     }
-
-    /**
-     * @name Two.Texture#repeat
-     * @property {String} - Valid strings are `'repeat'`, `'repeat-x'`, `'repeat-y'`, and '`no-repeat'`. Default is `'no-repeat'`.
-     */
-
-     /**
-      * @name Two.Texture#scale
-      * @property {Two.Vector} - The scale factor as a two-component vector of the texture.
-      */
 
     this._update();
 
@@ -13013,34 +12985,16 @@ SOFTWARE.
 
   _.extend(Texture, {
 
-    /**
-     * @name Two.Texture.Properties
-     * @property {String[]} - A list of properties that are on every {@link Two.Texture}.
-     */
     Properties: [
       'src',
       'loaded',
       'repeat'
     ],
 
-    /**
-     * @name Two.Texture.RegularExpressions
-     * @property {Object} - A map of regular expressions that represent the valid element and image types.
-     */
     RegularExpressions: regex,
 
-    /**
-     * @name Two.Texture.ImageRegistry
-     * @property {Two.ImageRegistry} - A canonincal registry of all images used in a session.
-     */
     ImageRegistry: new Two.Registry(),
 
-    /**
-     * @name Two.Texture.getAbsoluteURL
-     * @function
-     * @param {String} path - A URL, relative or absolute.
-     * @description Convert a path into an absolute URL. This is used to uniquely identify assets against the Two.ImageRegistry.
-     */
     getAbsoluteURL: function(path) {
       if (!anchor) {
         // TODO: Fix for headless environments
@@ -13050,12 +13004,6 @@ SOFTWARE.
       return anchor.href;
     },
 
-    /**
-     * @name Two.Texture.loadHeadlessBuffer
-     * @function
-     * @private
-     * @description A node based snippet of code to load files with the Node.js File System module.
-     */
     loadHeadlessBuffer: new Function('texture', 'loaded', [
       'var fs = require("fs");',
       'var buffer = fs.readFileSync(texture.src);',
@@ -13064,13 +13012,6 @@ SOFTWARE.
       'loaded();'
     ].join('\n')),
 
-    /**
-     * @name Two.Texture.getImage
-     * @function
-     * @param {String} - A URL path, relative or absolute.
-     * @return {Element}
-     * @description Function to get a cached image. If none exists, create a corresponding image element.
-     */
     getImage: function(src) {
 
       var absoluteSrc = Texture.getAbsoluteURL(src);
@@ -13107,11 +13048,6 @@ SOFTWARE.
 
     },
 
-    /**
-     * @name Two.Texture.Register
-     * @property {Object} - A class-wide object to handle different types of functions to register image elements.
-     * @private
-     */
     Register: {
       canvas: function(texture, callback) {
         texture._src = '#' + texture.id;
@@ -13207,13 +13143,6 @@ SOFTWARE.
       }
     },
 
-    /**
-     * @name Two.Texture.load
-     * @function
-     * @param {(String|Element)} [src] - The path to the image or an image element to use for the texture.
-     * @param {Function} [callback] - A callback function once the image is loaded and applied.
-     * @description - A class-wide object to handle different types of functions to register image elements.
-     */
     load: function(texture, callback) {
 
       var src = texture.src;
@@ -13239,30 +13168,14 @@ SOFTWARE.
 
     },
 
-    /**
-     * @name Two.Texture.FlagOffset
-     * @function
-     * @description Cached method to let renderers know stops have been updated on a {@link Two.Texture}.
-     */
     FlagOffset: function() {
       this._flagOffset = true;
     },
 
-    /**
-     * @name Two.Texture.FlagScale
-     * @function
-     * @description Cached method to let renderers know stops have been updated on a {@link Two.Texture}.
-     */
     FlagScale: function() {
       this._flagScale = true;
     },
 
-    /**
-     * @name Two.Texture.MakeObservable
-     * @function
-     * @param {Object} object - The object to make observable.
-     * @description Convenience function to apply observable qualities of a {@link Two.Texture} to any object. Handy if you'd like to extend the {@link Two.Texture} class on a custom class.
-     */
     MakeObservable: function(object) {
 
       _.each(Texture.Properties, Two.Utils.defineProperty, object);
@@ -13338,7 +13251,7 @@ SOFTWARE.
 
   });
 
-  _.extend(Texture.prototype, Two.Shape.prototype, {
+  _.extend(Texture.prototype, Two.Utils.Events, Two.Shape.prototype, {
 
     _flagSrc: false,
     _flagImage: false,

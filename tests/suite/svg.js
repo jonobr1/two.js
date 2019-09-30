@@ -412,7 +412,7 @@
     assert.equal(elem.getAttribute('font-weight'), '500', 'The font-weight attribute applied properly.');
     assert.equal(elem.getAttribute('text-decoration'), 'none', 'The text-decoration attribute applied properly.');
     assert.equal(elem.getAttribute('fill'), '#00aeff', 'The fill attribute applied properly.');
-    assert.equal(elem.getAttribute('stroke-width'), '1', 'The stroke-width attribute applied properly.');
+    assert.equal(elem.getAttribute('stroke-width'), 'undefined', 'The stroke-width attribute applied properly.');
     assert.equal(elem.getAttribute('opacity'), '1', 'The opacity attribute applied properly.');
     assert.equal(elem.getAttribute('visibility'), 'visible', 'The visibility attribute applied properly.');
     assert.equal(elem.getAttribute('class'), '', 'The class attribute applied properly.');
