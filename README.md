@@ -110,6 +110,8 @@ process.exit();
 ## Change Log
 
 #### Nightly
++ Connected `Two.Shape.className` to `Two.Shape.classList` for searching and class assignment in SVG elements
++ Performance improvements on canvas HTML5 styles [@brandonheyer](https://github.com/brandonheyer)
 + Added trickle down styling to `Two.Group.closed`, `Two.Group.curved`, and `Two.Group.automatic`
 + Check for Duplicity on `Two.Group.add`
 + Accounted for offset positions in `Two.Path.center` and `Two.Group.center` methods

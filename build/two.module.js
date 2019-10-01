@@ -472,7 +472,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2019-09-30T08:49:56+02:00',
+    PublishDate: '2019-10-01T13:37:15+02:00',
 
     /**
      * @name Two.Identifier
@@ -8208,6 +8208,41 @@ SOFTWARE.
         }
       });
 
+      Object.defineProperty(object, 'className', {
+
+        enumerable: true,
+
+        get: function() {
+          return this._className;
+        },
+
+        set: function(v) {
+
+          this._flagClassName  = this._className !== v;
+
+          if (this._flagClassName) {
+
+            var prev = this._className.split(/\s+?/);
+            var dest = v.split(/\s+?/);
+
+            for (var i = 0; i < prev.length; i++) {
+              var className = prev[i];
+              var index = _.indexOf(this.classList, className);
+              if (index >= 0) {
+                this.classList.splice(index, 1);
+              }
+            }
+
+            this.classList = this.classList.concat(dest);
+
+          }
+
+          this._className = v;
+
+        }
+
+      });
+
     }
 
   });
@@ -8232,6 +8267,13 @@ SOFTWARE.
 
     // _flagMask: false,
     // _flagClip: false,
+
+    /**
+     * @name Two.Shape#_flagClassName
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Group#className} need updating.
+     */
+    _flagClassName: false,
 
     // Underlying Properties
 
@@ -8258,6 +8300,13 @@ SOFTWARE.
 
     // _mask: null,
     // _clip: false,
+
+    /**
+     * @name Two.Group#className
+     * @property {String} - A class to be applied to the element to be compatible with CSS styling.
+     * @nota-bene Only available for the SVG renderer.
+     */
+    _className: '',
 
     constructor: Shape,
 
@@ -8339,7 +8388,7 @@ SOFTWARE.
      */
     flagReset: function() {
 
-      this._flagMatrix = this._flagScale = false;
+      this._flagMatrix = this._flagScale = this._flagClassName = false;
 
       return this;
 
@@ -8523,7 +8572,6 @@ SOFTWARE.
       'stroke',
       'linewidth',
       'opacity',
-      'className',
       'visible',
       'cap',
       'join',
@@ -8617,7 +8665,7 @@ SOFTWARE.
 
       // Only the 7 defined properties are flagged like this. The subsequent
       // properties behave differently and need to be hand written.
-      _.each(Path.Properties.slice(2, 9), Two.Utils.defineProperty, object);
+      _.each(Path.Properties.slice(2, 8), Two.Utils.defineProperty, object);
 
       Object.defineProperty(object, 'fill', {
         enumerable: true,
@@ -8876,13 +8924,6 @@ SOFTWARE.
     _flagVisible: true,
 
     /**
-     * @name Two.Path#_flagClassName
-     * @private
-     * @property {Boolean} - Determines whether the {@link Two.Path#className} needs updating.
-     */
-    _flagClassName: true,
-
-    /**
      * @name Two.Path#_flagCap
      * @private
      * @property {Boolean} - Determines whether the {@link Two.Path#cap} needs updating.
@@ -8946,13 +8987,6 @@ SOFTWARE.
      * @see {@link Two.Path#opacity}
      */
     _opacity: 1.0,
-
-    /**
-     * @name Two.Path#_className
-     * @private
-     * @see {@link Two.Path#className}
-     */
-    _className: '',
 
     /**
      * @name Two.Path#_visible
@@ -9051,6 +9085,8 @@ SOFTWARE.
         clone[k] = this[k];
       }
 
+      clone.className = this.className;
+
       clone.translation.copy(this.translation);
       clone.rotation = this.rotation;
       clone.scale = this.scale;
@@ -9080,6 +9116,8 @@ SOFTWARE.
       _.each(Two.Shape.Properties, function(k) {
         result[k] = this[k];
       }, this);
+
+      result.className = this.className;
 
       result.translation = this.translation.toObject();
       result.rotation = this.rotation;
@@ -9709,7 +9747,7 @@ SOFTWARE.
       this._flagVertices =  this._flagFill =  this._flagStroke =
          this._flagLinewidth = this._flagOpacity = this._flagVisible =
          this._flagCap = this._flagJoin = this._flagMiter =
-         this._flagClassName = this._flagClip = false;
+         this._flagClip = false;
 
       Two.Shape.prototype.flagReset.call(this);
 
@@ -14073,21 +14111,6 @@ SOFTWARE.
 
       });
 
-      Object.defineProperty(object, 'className', {
-
-        enumerable: true,
-
-        get: function() {
-          return this._className;
-        },
-
-        set: function(v) {
-          this._flagClassName  = this._className !== v;
-          this._className = v;
-        }
-
-      });
-
       Object.defineProperty(object, 'beginning', {
 
         enumerable: true,
@@ -14273,13 +14296,6 @@ SOFTWARE.
     _flagOpacity: true,
 
     /**
-     * @name Two.Group#_flagClassName
-     * @private
-     * @property {Boolean} - Determines whether the {@link Two.Group#className} need updating.
-     */
-    _flagClassName: false,
-
-    /**
      * @name Two.Group#_flagBeginning
      * @private
      * @property {Boolean} - Determines whether the {@link Two.Group#beginning} need updating.
@@ -14335,13 +14351,6 @@ SOFTWARE.
      * @nota-bene Becomes multiplied by the individual child's opacity property.
      */
     _opacity: 1.0,
-
-    /**
-     * @name Two.Group#className
-     * @property {String} - A class to be applied to the element to be compatible with CSS styling.
-     * @nota-bene Only available for the SVG renderer.
-     */
-    _className: '',
 
     /**
      * @name Two.Group#visible
@@ -14535,19 +14544,21 @@ SOFTWARE.
      * @returns {Two.Shape} - Or `null` if nothing is found.
      */
     getById: function (id) {
-      var search = function (node, id) {
+      var found = null;
+      function search(node) {
         if (node.id === id) {
           return node;
         } else if (node.children) {
-          var i = node.children.length;
-          while (i--) {
-            var found = search(node.children[i], id);
-            if (found) return found;
+          for (var i = 0; i < node.children.length; i++) {
+            found = search(node.children[i], id);
+            if (found) {
+              return found;
+            }
           }
         }
-
-      };
-      return search(this, id) || null;
+        return null;
+      }
+      return search(this);
     },
 
     /**
@@ -14556,19 +14567,21 @@ SOFTWARE.
      * @description Recursively search for classes. Returns an array of matching elements.
      * @returns {Two.Shape[]} - Or empty array if nothing is found.
      */
-    getByClassName: function (cl) {
+    getByClassName: function(className) {
       var found = [];
-      var search = function (node, cl) {
-        if (node.classList.indexOf(cl) != -1) {
+      function search(node) {
+        if (_.indexOf(node.classList, className) >= 0) {
           found.push(node);
-        } else if (node.children) {
-          node.children.forEach(function (child) {
-            search(child, cl);
-          });
+        }
+        if (node.children) {
+          for (var i = 0; i < node.children.length; i++) {
+            var child = node.children[i];
+            search(child, className);
+          }
         }
         return found;
-      };
-      return search(this, cl);
+      }
+      return search(this);
     },
 
     /**
@@ -14579,16 +14592,18 @@ SOFTWARE.
      */
     getByType: function(type) {
       var found = [];
-      var search = function (node, type) {
-        for (var id in node.children) {
-          if (node.children[id] instanceof type) {
-            found.push(node.children[id]);
-          } else if (node.children[id] instanceof Two.Group) {
-            search(node.children[id], type);
+      function search(node) {
+        if (node instanceof type) {
+          found.push(node);
+        }
+        if (node.children) {
+          for (var i = 0; i < node.children.length; i++) {
+            var child = node.children[i];
+            search(child);
           }
         }
         return found;
-      };
+      }
       return search(this, type);
     },
 
@@ -14823,7 +14838,7 @@ SOFTWARE.
         this._flagSubtractions = false;
       }
 
-      this._flagOrder = this._flagMask = this._flagOpacity = this._flagClassName
+      this._flagOrder = this._flagMask = this._flagOpacity =
         this._flagBeginning = this._flagEnding = false;
 
       Two.Shape.prototype.flagReset.call(this);
