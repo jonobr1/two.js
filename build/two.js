@@ -472,7 +472,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2019-10-01T13:37:15+02:00',
+    PublishDate: '2019-10-01T13:43:33+02:00',
 
     /**
      * @name Two.Identifier
@@ -5237,7 +5237,7 @@ SOFTWARE.
         }
 
         if (this._flagClassName) {
-          this._renderer.elem.setAttribute('class', this._className);
+          this._renderer.elem.setAttribute('class', this.classList.join(' '));
         }
 
         if (this._flagAdditions) {
@@ -5346,7 +5346,7 @@ SOFTWARE.
         }
 
         if (this._flagClassName) {
-          changed['class'] = this._className;
+          changed['class'] = this.classList.join(' ');
         }
 
         if (this._flagVisible) {
@@ -5481,7 +5481,7 @@ SOFTWARE.
           changed.opacity = this._opacity;
         }
         if (this._flagClassName) {
-          changed['class'] = this._className;
+          changed['class'] = this.classList.join(' ');
         }
         if (this._flagVisible) {
           changed.visibility = this._visible ? 'visible' : 'hidden';
