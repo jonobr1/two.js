@@ -306,7 +306,7 @@
         }
 
         if (this._flagClassName) {
-          this._renderer.elem.setAttribute('class', this._className);
+          this._renderer.elem.setAttribute('class', this.classList.join(' '));
         }
 
         if (this._flagAdditions) {
@@ -415,7 +415,7 @@
         }
 
         if (this._flagClassName) {
-          changed['class'] = this._className;
+          changed['class'] = this.classList.join(' ');
         }
 
         if (this._flagVisible) {
@@ -550,7 +550,7 @@
           changed.opacity = this._opacity;
         }
         if (this._flagClassName) {
-          changed['class'] = this._className;
+          changed['class'] = this.classList.join(' ');
         }
         if (this._flagVisible) {
           changed.visibility = this._visible ? 'visible' : 'hidden';
