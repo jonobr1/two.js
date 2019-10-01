@@ -146,6 +146,41 @@
         }
       });
 
+      Object.defineProperty(object, 'className', {
+
+        enumerable: true,
+
+        get: function() {
+          return this._className;
+        },
+
+        set: function(v) {
+
+          this._flagClassName  = this._className !== v;
+
+          if (this._flagClassName) {
+
+            var prev = this._className.split(/\s+?/);
+            var dest = v.split(/\s+?/);
+
+            for (var i = 0; i < prev.length; i++) {
+              var className = prev[i];
+              var index = _.indexOf(this.classList, className);
+              if (index >= 0) {
+                this.classList.splice(index, 1);
+              }
+            }
+
+            this.classList = this.classList.concat(dest);
+
+          }
+
+          this._className = v;
+
+        }
+
+      });
+
     }
 
   });
@@ -170,6 +205,13 @@
 
     // _flagMask: false,
     // _flagClip: false,
+
+    /**
+     * @name Two.Shape#_flagClassName
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Group#className} need updating.
+     */
+    _flagClassName: false,
 
     // Underlying Properties
 
@@ -196,6 +238,13 @@
 
     // _mask: null,
     // _clip: false,
+
+    /**
+     * @name Two.Group#className
+     * @property {String} - A class to be applied to the element to be compatible with CSS styling.
+     * @nota-bene Only available for the SVG renderer.
+     */
+    _className: '',
 
     constructor: Shape,
 
@@ -277,7 +326,7 @@
      */
     flagReset: function() {
 
-      this._flagMatrix = this._flagScale = false;
+      this._flagMatrix = this._flagScale = this._flagClassName = false;
 
       return this;
 

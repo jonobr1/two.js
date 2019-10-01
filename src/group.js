@@ -179,21 +179,6 @@
 
       });
 
-      Object.defineProperty(object, 'className', {
-
-        enumerable: true,
-
-        get: function() {
-          return this._className;
-        },
-
-        set: function(v) {
-          this._flagClassName  = this._className !== v;
-          this._className = v;
-        }
-
-      });
-
       Object.defineProperty(object, 'beginning', {
 
         enumerable: true,
@@ -379,13 +364,6 @@
     _flagOpacity: true,
 
     /**
-     * @name Two.Group#_flagClassName
-     * @private
-     * @property {Boolean} - Determines whether the {@link Two.Group#className} need updating.
-     */
-    _flagClassName: false,
-
-    /**
      * @name Two.Group#_flagBeginning
      * @private
      * @property {Boolean} - Determines whether the {@link Two.Group#beginning} need updating.
@@ -441,13 +419,6 @@
      * @nota-bene Becomes multiplied by the individual child's opacity property.
      */
     _opacity: 1.0,
-
-    /**
-     * @name Two.Group#className
-     * @property {String} - A class to be applied to the element to be compatible with CSS styling.
-     * @nota-bene Only available for the SVG renderer.
-     */
-    _className: '',
 
     /**
      * @name Two.Group#visible
@@ -641,19 +612,21 @@
      * @returns {Two.Shape} - Or `null` if nothing is found.
      */
     getById: function (id) {
-      var search = function (node, id) {
+      var found = null;
+      function search(node) {
         if (node.id === id) {
           return node;
         } else if (node.children) {
-          var i = node.children.length;
-          while (i--) {
-            var found = search(node.children[i], id);
-            if (found) return found;
+          for (var i = 0; i < node.children.length; i++) {
+            found = search(node.children[i], id);
+            if (found) {
+              return found;
+            }
           }
         }
-
-      };
-      return search(this, id) || null;
+        return null;
+      }
+      return search(this);
     },
 
     /**
@@ -662,19 +635,21 @@
      * @description Recursively search for classes. Returns an array of matching elements.
      * @returns {Two.Shape[]} - Or empty array if nothing is found.
      */
-    getByClassName: function (cl) {
+    getByClassName: function(className) {
       var found = [];
-      var search = function (node, cl) {
-        if (node.classList.indexOf(cl) != -1) {
+      function search(node) {
+        if (_.indexOf(node.classList, className) >= 0) {
           found.push(node);
-        } else if (node.children) {
-          node.children.forEach(function (child) {
-            search(child, cl);
-          });
+        }
+        if (node.children) {
+          for (var i = 0; i < node.children.length; i++) {
+            var child = node.children[i];
+            search(child, className);
+          }
         }
         return found;
-      };
-      return search(this, cl);
+      }
+      return search(this);
     },
 
     /**
@@ -685,16 +660,18 @@
      */
     getByType: function(type) {
       var found = [];
-      var search = function (node, type) {
-        for (var id in node.children) {
-          if (node.children[id] instanceof type) {
-            found.push(node.children[id]);
-          } else if (node.children[id] instanceof Two.Group) {
-            search(node.children[id], type);
+      function search(node) {
+        if (node instanceof type) {
+          found.push(node);
+        }
+        if (node.children) {
+          for (var i = 0; i < node.children.length; i++) {
+            var child = node.children[i];
+            search(child);
           }
         }
         return found;
-      };
+      }
       return search(this, type);
     },
 
@@ -929,7 +906,7 @@
         this._flagSubtractions = false;
       }
 
-      this._flagOrder = this._flagMask = this._flagOpacity = this._flagClassName
+      this._flagOrder = this._flagMask = this._flagOpacity =
         this._flagBeginning = this._flagEnding = false;
 
       Two.Shape.prototype.flagReset.call(this);
