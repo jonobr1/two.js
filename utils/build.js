@@ -20,6 +20,7 @@ var files = [
   path.resolve(__dirname, '../src/renderer/webgl.js'),
   path.resolve(__dirname, '../src/shape.js'),
   path.resolve(__dirname, '../src/path.js'),
+  path.resolve(__dirname, '../src/image.js'),
   path.resolve(__dirname, '../src/shapes/line.js'),
   path.resolve(__dirname, '../src/shapes/rectangle.js'),
   path.resolve(__dirname, '../src/shapes/ellipse.js'),
