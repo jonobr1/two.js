@@ -491,7 +491,7 @@
 
     /**
      * @name Two.Instances
-     * @property {Array} - Registered list of all Two.js instances in the current session.
+     * @property {Two[]} - Registered list of all Two.js instances in the current session.
      */
     Instances: [],
 
@@ -3042,7 +3042,7 @@
     /**
      * @name Two#load
      * @function
-     * @param {String} pathOrSVGContent - The URL path of an SVG file or an SVG document as text.
+     * @param {String|SvgNode} pathOrSVGContent - The URL path of an SVG file or an SVG document as text.
      * @param {Function} callback - Function to call once loading has completed.
      * @returns {Two.Group}
      * @description Load an SVG file or SVG text and interpret it into Two.js legible objects.

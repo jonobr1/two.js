@@ -30,7 +30,7 @@
 
     /**
      * @name Two.Shape#classList
-     * @property {Array}
+     * @property {String[]}
      * @description A list of class strings stored if imported / interpreted  from an SVG element.
      */
     this.classList = [];

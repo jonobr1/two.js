@@ -25,7 +25,7 @@
 
     /**
      * @name Two.Matrix#elements
-     * @property {Array} - The underlying data stored as an array.
+     * @property {Number[]} - The underlying data stored as an array.
      */
     this.elements = new Two.Array(9);
 
@@ -47,7 +47,7 @@
 
     /**
      * @name Two.Matrix.Identity
-     * @property {Array} - A stored reference to the default value of a 3 x 3 matrix.
+     * @property {Number[]} - A stored reference to the default value of a 3 x 3 matrix.
      */
     Identity: [
       1, 0, 0,

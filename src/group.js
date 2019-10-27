@@ -79,14 +79,14 @@
 
     /**
      * @name Two.Group#additions
-     * @property {Array}
+     * @property {Two.Shape[]}
      * @description An automatically updated list of children that need to be appended to the renderer's scenegraph.
      */
     this.additions = [];
 
     /**
      * @name Two.Group#subtractions
-     * @property {Array}
+     * @property {Two.Shape[]}
      * @description An automatically updated list of children that need to be removed from the renderer's scenegraph.
      */
     this.subtractions = [];
@@ -656,7 +656,7 @@
      * @name Two.Group#getByType
      * @function
      * @description Recursively search for children of a specific type, e.g. {@link Two.Path}. Pass a reference to this type as the param. Returns an array of matching elements.
-     * @returns {Array} - Empty array if nothing is found.
+     * @returns {Two.Shape[]} - Empty array if nothing is found.
      */
     getByType: function(type) {
       var found = [];
