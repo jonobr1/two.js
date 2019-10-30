@@ -1312,19 +1312,16 @@
         });
       }
 
-      width *= this.ratio;
-      height *= this.ratio;
-
       // Set for this.stage parent scaling to account for HDPI
       this._renderer.matrix[0] = this._renderer.matrix[4] = this._renderer.scale = this.ratio;
 
       this._flagMatrix = true;
 
-      this.ctx.viewport(0, 0, width, height);
+      this.ctx.viewport(0, 0, width * this.ratio, height * this.ratio);
 
       var resolutionLocation = this.ctx.getUniformLocation(
         this.program, 'u_resolution');
-      this.ctx.uniform2f(resolutionLocation, width, height);
+      this.ctx.uniform2f(resolutionLocation, width * this.ratio, height * this.ratio);
 
       return this.trigger(Two.Events.resize, width, height, ratio);
 
