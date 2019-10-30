@@ -160,6 +160,7 @@
           gl.disable(gl.STENCIL_TEST);
 
           // Clip Contents to visible fragment
+          // TODO: Back buffer still isn't propagated to the blend operation :(
 
           gl.blendEquationSeparate(gl.FUNC_ADD, gl.FUNC_ADD);
           gl.blendFuncSeparate(gl.ZERO, gl.ONE, gl.ZERO, gl.SRC_ALPHA);
