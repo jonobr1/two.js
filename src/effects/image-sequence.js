@@ -4,8 +4,18 @@
   var Path = Two.Path;
   var Rectangle = Two.Rectangle;
 
+  /**
+   * @name Two.ImageSequence
+   * @class
+   * @extends Two.Rectangle
+   * @param {String|String[]|Two.Texture|Two.Texture[]} paths - A list of URLs or {@link Two.Texture}s.
+   * @param {Number} [ox=0] - The initial `x` position of the Two.ImageSequence.
+   * @param {Number} [oy=0] - The initial `y` position of the Two.ImageSequence.
+   * @param {Integer} [frameRate=30] - The frame rate at which the images should playback at.
+   */
   var ImageSequence = Two.ImageSequence = function(paths, ox, oy, frameRate) {
 
+    // Not using default constructor of Rectangle due to odd `beginning` / `ending` behavior.
     Path.call(this, [
       new Two.Anchor(),
       new Two.Anchor(),
@@ -20,12 +30,26 @@
     this.noStroke();
     this.noFill();
 
-    this.textures = _.map(paths, ImageSequence.GenerateTexture, this);
+    /**
+     * @name Two.ImageSequence#textures
+     * @property {Two.Texture[]} - A list of textures to be used as frames for animating the {@link Two.ImageSequence}.
+     */
+    if (_.isObject(paths)) {
+      this.textures = _.map(paths, ImageSequence.GenerateTexture, this);
+    } else {
+      // If just a single path convert into a single Two.Texture
+      this.textures = [ImageSequence.GenerateTexture(paths)];
+    }
+
     this.origin = new Two.Vector();
 
     this._update();
     this.translation.set(ox || 0, oy || 0);
 
+    /**
+     * @name Two.ImageSequence#frameRate
+     * @property {Integer} - The number of frames to animate against per second.
+     */
     if (_.isNumber(frameRate)) {
       this.frameRate = frameRate;
     } else {
@@ -36,17 +60,35 @@
 
   _.extend(ImageSequence, {
 
+    /**
+     * @name Two.ImageSequence.Properties
+     * @property {String[]} - A list of properties that are on every {@link Two.ImageSequence}.
+     */
     Properties: [
       'frameRate',
       'index'
     ],
 
+    /**
+     * @name Two.ImageSequence.DefaultFrameRate
+     * @property The default frame rate that {@link Two.ImageSequence#frameRate} is set to when instantiated.
+     */
     DefaultFrameRate: 30,
 
+    /**
+     * @name Two.ImageSequence.FlagTextures
+     * @function
+     * @description Cached method to let renderers know textures have been updated on a {@link Two.ImageSequence}.
+     */
     FlagTextures: function() {
       this._flagTextures = true;
     },
 
+    /**
+     * @name Two.ImageSequence.BindTextures
+     * @function
+     * @description Cached method to let {@link Two.ImageSequence} know textures have been added to the instance.
+     */
     BindTextures: function(items) {
 
       var i = items.length;
@@ -58,6 +100,11 @@
 
     },
 
+    /**
+     * @name Two.ImageSequence.UnbindVertices
+     * @function
+     * @description Cached method to let {@link Two.ImageSequence} know textures have been removed from the instance.
+     */
     UnbindTextures: function(items) {
 
       var i = items.length;
@@ -69,6 +116,12 @@
 
     },
 
+    /**
+     * @name Two.ImageSequence.MakeObservable
+     * @function
+     * @param {Object} object - The object to make observable.
+     * @description Convenience function to apply observable qualities of a {@link Two.ImageSequence} to any object. Handy if you'd like to extend the {@link Two.ImageSequence} class on a custom class.
+     */
     MakeObservable: function(obj) {
 
       Rectangle.MakeObservable(obj);
@@ -112,6 +165,11 @@
 
     },
 
+    /**
+     * @name Two.ImageSequence.GenerateTexture
+     * @property {Function} - Shorthand function to prepare source image material into readable format by {@link Two.ImageSequence}.
+     * @param {String|Two.Texture} textureOrString - The texture or string to create a {@link Two.Texture} from.
+     */
     GenerateTexture: function(obj) {
       if (obj instanceof Two.Texture) {
         return obj;
