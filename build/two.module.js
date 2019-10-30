@@ -472,7 +472,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2019-10-01T13:43:33+02:00',
+    PublishDate: '2019-10-30T12:14:29+01:00',
 
     /**
      * @name Two.Identifier
@@ -517,7 +517,7 @@ SOFTWARE.
 
     /**
      * @name Two.Instances
-     * @property {Array} - Registered list of all Two.js instances in the current session.
+     * @property {Two[]} - Registered list of all Two.js instances in the current session.
      */
     Instances: [],
 
@@ -3068,7 +3068,7 @@ SOFTWARE.
     /**
      * @name Two#load
      * @function
-     * @param {String} pathOrSVGContent - The URL path of an SVG file or an SVG document as text.
+     * @param {String|SvgNode} pathOrSVGContent - The URL path of an SVG file or an SVG document as text.
      * @param {Function} callback - Function to call once loading has completed.
      * @returns {Two.Group}
      * @description Load an SVG file or SVG text and interpret it into Two.js legible objects.
@@ -4375,7 +4375,7 @@ SOFTWARE.
 
     /**
      * @name Two.Matrix#elements
-     * @property {Array} - The underlying data stored as an array.
+     * @property {Number[]} - The underlying data stored as an array.
      */
     this.elements = new Two.Array(9);
 
@@ -4397,7 +4397,7 @@ SOFTWARE.
 
     /**
      * @name Two.Matrix.Identity
-     * @property {Array} - A stored reference to the default value of a 3 x 3 matrix.
+     * @property {Number[]} - A stored reference to the default value of a 3 x 3 matrix.
      */
     Identity: [
       1, 0, 0,
@@ -6834,6 +6834,8 @@ SOFTWARE.
 
         if (this._mask) {
 
+          // Stencil away everything that isn't rendered by the mask
+
           gl.enable(gl.STENCIL_TEST);
           gl.stencilFunc(gl.ALWAYS, 1, 1);
 
@@ -6871,6 +6873,8 @@ SOFTWARE.
 
         if (this._mask) {
 
+          // Clean up Stencil
+
           gl.colorMask(false, false, false, false);
           gl.stencilOp(gl.KEEP, gl.KEEP, gl.DECR);
 
@@ -6880,7 +6884,22 @@ SOFTWARE.
           gl.stencilFunc(gl.NOTEQUAL, 0, 1);
           gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
 
+          // Reset Stencil Mode
+
           gl.disable(gl.STENCIL_TEST);
+
+          // Clip Contents to visible fragment
+
+          gl.blendEquationSeparate(gl.FUNC_ADD, gl.FUNC_ADD);
+          gl.blendFuncSeparate(gl.ZERO, gl.ONE, gl.ZERO, gl.SRC_ALPHA);
+
+          webgl[this._mask._renderer.type].render.call(this._mask, gl, program, this);
+
+          // Reset Blend Functions
+
+          gl.blendEquationSeparate(gl.FUNC_ADD, gl.FUNC_ADD);
+          gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA,
+            gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
 
         }
 
@@ -7286,7 +7305,6 @@ SOFTWARE.
         gl.vertexAttribPointer(program.textureCoords, 2, gl.FLOAT, false, 0, 0);
 
         gl.bindTexture(gl.TEXTURE_2D, this._renderer.texture);
-
 
         // Draw Rect
 
@@ -7992,7 +8010,7 @@ SOFTWARE.
 
     gl.blendEquationSeparate(gl.FUNC_ADD, gl.FUNC_ADD);
     gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA,
-      gl.ONE, gl.ONE_MINUS_SRC_ALPHA );
+      gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
 
   };
 
@@ -8092,7 +8110,7 @@ SOFTWARE.
 
     /**
      * @name Two.Shape#classList
-     * @property {Array}
+     * @property {String[]}
      * @description A list of class strings stored if imported / interpreted  from an SVG element.
      */
     this.classList = [];
@@ -14011,14 +14029,14 @@ SOFTWARE.
 
     /**
      * @name Two.Group#additions
-     * @property {Array}
+     * @property {Two.Shape[]}
      * @description An automatically updated list of children that need to be appended to the renderer's scenegraph.
      */
     this.additions = [];
 
     /**
      * @name Two.Group#subtractions
-     * @property {Array}
+     * @property {Two.Shape[]}
      * @description An automatically updated list of children that need to be removed from the renderer's scenegraph.
      */
     this.subtractions = [];
@@ -14588,7 +14606,7 @@ SOFTWARE.
      * @name Two.Group#getByType
      * @function
      * @description Recursively search for children of a specific type, e.g. {@link Two.Path}. Pass a reference to this type as the param. Returns an array of matching elements.
-     * @returns {Array} - Empty array if nothing is found.
+     * @returns {Two.Shape[]} - Empty array if nothing is found.
      */
     getByType: function(type) {
       var found = [];
