@@ -12,6 +12,7 @@
    * @param {Number} [ox=0] - The initial `x` position of the Two.ImageSequence.
    * @param {Number} [oy=0] - The initial `y` position of the Two.ImageSequence.
    * @param {Integer} [frameRate=30] - The frame rate at which the images should playback at.
+   * @description A convenient package to display still or animated images organized as a series of still images.
    */
   var ImageSequence = Two.ImageSequence = function(paths, ox, oy, frameRate) {
 
