@@ -169,6 +169,8 @@
      * @name Two.ImageSequence.GenerateTexture
      * @property {Function} - Shorthand function to prepare source image material into readable format by {@link Two.ImageSequence}.
      * @param {String|Two.Texture} textureOrString - The texture or string to create a {@link Two.Texture} from.
+     * @description Function used internally by {@link Two.ImageSequence} to parse arguments and return {@link Two.Texture}s.
+     * @returns {Two.Texture}
      */
     GenerateTexture: function(obj) {
       if (obj instanceof Two.Texture) {
@@ -182,27 +184,118 @@
 
   _.extend(ImageSequence.prototype, Rectangle.prototype, {
 
+    /**
+     * @name Two.ImageSequence#_flagTextures
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.ImageSequence#textures} need updating.
+     */
     _flagTextures: false,
+
+    /**
+     * @name Two.ImageSequence#_flagFrameRate
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.ImageSequence#frameRate} needs updating.
+     */
     _flagFrameRate: false,
+
+    /**
+     * @name Two.ImageSequence#_flagIndex
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.ImageSequence#index} needs updating.
+     */
     _flagIndex: false,
 
     // Private variables
+
+    /**
+     * @name Two.ImageSequence#_amount
+     * @private
+     * @property {Integer} - Number of frames for a given {@link Two.ImageSequence}.
+     */
     _amount: 1,
+
+    /**
+     * @name Two.ImageSequence#_duration
+     * @private
+     * @property {Number} - Number of milliseconds a {@link Two.ImageSequence}.
+     */
     _duration: 0,
+
+    /**
+     * @name Two.ImageSequence#_index
+     * @private
+     * @property {Integer} - The current frame the {@link Two.ImageSequence} is currently displaying.
+     */
     _index: 0,
+
+    /**
+     * @name Two.ImageSequence#_startTime
+     * @private
+     * @property {Milliseconds} - Epoch time in milliseconds of when the {@link Two.ImageSequence} started.
+     */
     _startTime: 0,
+
+    /**
+     * @name Two.ImageSequence#_playing
+     * @private
+     * @property {Boolean} - Dictates whether the {@link Two.ImageSequence} is animating or not.
+     */
     _playing: false,
+
+    /**
+     * @name Two.ImageSequence#_firstFrame
+     * @private
+     * @property {Integer} - The frame the {@link Two.ImageSequence} should start with.
+     */
     _firstFrame: 0,
+
+    /**
+     * @name Two.ImageSequence#_lastFrame
+     * @private
+     * @property {Integer} - The frame the {@link Two.ImageSequence} should end with.
+     */
     _lastFrame: 0,
+
+    /**
+     * @name Two.ImageSequence#_playing
+     * @private
+     * @property {Boolean} - Dictates whether the {@link Two.ImageSequence} should loop or not.
+     */
     _loop: true,
 
     // Exposed through getter-setter
+
+    /**
+     * @name Two.ImageSequence#_textures
+     * @private
+     * @see {@link Two.ImageSequence#textures}
+     */
     _textures: null,
+
+    /**
+     * @name Two.ImageSequence#_frameRate
+     * @private
+     * @see {@link Two.ImageSequence#frameRate}
+     */
     _frameRate: 0,
+
+    /**
+     * @name Two.ImageSequence#_origin
+     * @private
+     * @see {@link Two.ImageSequence#origin}
+     */
     _origin: null,
 
     constructor: ImageSequence,
 
+    /**
+     * @name Two.ImageSequence#play
+     * @function
+     * @param {Integer} [firstFrame=0] - The index of the frame to start the animation with.
+     * @param {Integer} [lastFrame] - The index of the frame to end the animation with. Defaults to the last item in the {@link Two.ImageSequence#textures}.
+     * @param {Function} [onLastFrame] - Optional callback function to be triggered after playing the last frame. This fires multiple times when the image sequence is looped.
+     * @description Initiate animation playback of a {@link Two.ImageSequence}.
+     */
     play: function(firstFrame, lastFrame, onLastFrame) {
 
       this._playing = true;
@@ -231,6 +324,11 @@
 
     },
 
+    /**
+     * @name Two.ImageSequence#pause
+     * @function
+     * @description Halt animation playback of a {@link Two.ImageSequence}.
+     */
     pause: function() {
 
       this._playing = false;
@@ -238,15 +336,27 @@
 
     },
 
+    /**
+     * @name Two.ImageSequence#stop
+     * @function
+     * @description Halt animation playback of a {@link Two.ImageSequence} and set the current frame back to the first frame.
+     */
     stop: function() {
 
       this._playing = false;
-      this._index = 0;
+      this._index = this._firstFrame;
 
       return this;
 
     },
 
+    /**
+     * @name Two.ImageSequence#clone
+     * @function
+     * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+     * @returns {Two.ImageSequence}
+     * @description Create a new instance of {@link Two.ImageSequence} with the same properties of the current image sequence.
+     */
     clone: function(parent) {
 
       var clone = new ImageSequence(this.textures, this.translation.x,
@@ -266,6 +376,14 @@
 
     },
 
+    /**
+     * @name Two.ImageSequence#_update
+     * @function
+     * @private
+     * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+     * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
+     * @nota-bene Try not to call this method more than once a frame.
+     */
     _update: function() {
 
       var effects = this._textures;
@@ -357,6 +475,12 @@
 
     },
 
+    /**
+     * @name Two.ImageSequence#flagReset
+     * @function
+     * @private
+     * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+     */
     flagReset: function() {
 
       this._flagTextures = this._flagFrameRate = false;
