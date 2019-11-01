@@ -1212,17 +1212,36 @@
 
   webgl.ctx = webgl.canvas.getContext('2d');
 
-  var Renderer = Two[Two.Types.webgl] = function(options) {
+  /**
+   * @name Two.WebGLRenderer
+   * @class
+   * @extends Two.Utils.Events
+   * @param {Object} [parameters] - This object is inherited when constructing a new instance of {@link Two}.
+   * @param {Element} [parameters.domElement] - The `<canvas />` to draw to. If none given a new one will be constructed.
+   * @param {CanvasElement} [parameters.offscreenElement] - The offscreen two dimensional `<canvas />` to render each element on WebGL texture updates.
+   * @param {Boolean} [parameters.antialias] - Determines whether the canvas should clear render with antialias on.
+   * @description This class is used by {@link Two} when constructing with `type` of `Two.Types.webgl`. It takes Two.js' scenegraph and renders it to a `<canvas />` through the WebGL api.
+   * @see {@link https://www.khronos.org/registry/webgl/specs/latest/1.0/}
+   */
+  var Renderer = Two[Two.Types.webgl] = function(params) {
 
     var params, gl, vs, fs;
-    this.domElement = options.domElement || document.createElement('canvas');
 
-    if (!_.isUndefined(options.offscreenElement)) {
-      webgl.canvas = options.offscreenElement;
+    /**
+     * @name Two.WebGLRenderer#domElement
+     * @property {Element} - The `<canvas />` associated with the Two.js scene.
+     */
+    this.domElement = params.domElement || document.createElement('canvas');
+
+    if (!_.isUndefined(params.offscreenElement)) {
+      webgl.canvas = params.offscreenElement;
       webgl.ctx = webgl.canvas.getContext('2d');
     }
 
-    // Everything drawn on the canvas needs to come from the stage.
+    /**
+     * @name Two.WebGLRenderer#scene
+     * @property {Two.Group} - The root group of the scenegraph.
+     */
     this.scene = new Two.Group();
     this.scene.parent = this;
 
@@ -1236,7 +1255,7 @@
 
     // http://games.greggman.com/game/webgl-and-alpha/
     // http://www.khronos.org/registry/webgl/specs/latest/#5.2
-    params = _.defaults(options || {}, {
+    params = _.defaults(params || {}, {
       antialias: false,
       alpha: true,
       premultipliedAlpha: true,
@@ -1245,8 +1264,17 @@
       overdraw: false
     });
 
+    /**
+     * @name Two.WebGLRenderer#overdraw
+     * @property {Boolean} - Determines whether the canvas clears the background each draw call.
+     * @default true
+     */
     this.overdraw = params.overdraw;
 
+    /**
+     * @name Two.WebGLRenderer#ctx
+     * @property {WebGLContext} - Associated two dimensional context to render on the `<canvas />`.
+     */
     gl = this.ctx = this.domElement.getContext('webgl', params) ||
       this.domElement.getContext('experimental-webgl', params);
 
@@ -1261,6 +1289,10 @@
     fs = webgl.shaders.create(
       gl, webgl.shaders.fragment, webgl.shaders.types.fragment);
 
+    /**
+     * @name Two.WebGLRenderer#program
+     * @property {WebGLProgram} - Associated WebGL program to render all elements from the scenegraph.
+     */
     this.program = webgl.program.create(gl, [vs, fs]);
     gl.useProgram(this.program);
 
@@ -1288,6 +1320,10 @@
 
   _.extend(Renderer, {
 
+    /**
+     * @name Two.WebGLRenderer.Utils
+     * @property {Object} - A massive object filled with utility functions and properties to render Two.js objects to a `<canvas />` through the WebGL API.
+     */
     Utils: webgl
 
   });
@@ -1296,6 +1332,15 @@
 
     constructor: Renderer,
 
+    /**
+     * @name Two.WebGLRenderer#setSize
+     * @function
+     * @param {Number} width - The new width of the renderer.
+     * @param {Number} height - The new height of the renderer.
+     * @param {Number} [ratio] - The new pixel ratio (pixel density) of the renderer. Defaults to calculate the pixel density of the user's screen.
+     * @description Change the size of the renderer.
+     * @nota-bene Triggers a `Two.Events.resize`.
+     */
     setSize: function(width, height, ratio) {
 
       this.width = width;
@@ -1328,6 +1373,11 @@
 
     },
 
+    /**
+     * @name Two.WebGLRenderer#render
+     * @function
+     * @description Render the current scene to the `<canvas />`.
+     */
     render: function() {
 
       var gl = this.ctx;
