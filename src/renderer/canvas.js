@@ -687,14 +687,38 @@
 
   };
 
+  /**
+   * @name Two.CanvasRenderer
+   * @class
+   * @extends Two.Utils.Events
+   * @param {Object} [parameters] - This object is inherited when constructing a new instance of {@link Two}.
+   * @param {Element} [parameters.domElement] - The `<canvas />` to draw to. If none given a new one will be constructed.
+   * @param {Boolean} [parameters.overdraw] - Determines whether the canvas should clear the background or not. Defaults to `true`.
+   * @param {Boolean} [parameters.smoothing=true] - Determines whether the canvas should antialias drawing. Set it to `false` when working with pixel art. `false` can lead to better performance, since it would use a cheaper interpolation algorithm.
+   * @description This class is used by {@link Two} when constructing with `type` of `Two.Types.canvas`. It takes Two.js' scenegraph and renders it to a `<canvas />`.
+   */
   var Renderer = Two[Two.Types.canvas] = function(params) {
-    // Smoothing property. Defaults to true
-    // Set it to false when working with pixel art.
-    // false can lead to better performance, since it would use a cheaper interpolation algorithm.
+
     // It might not make a big difference on GPU backed canvases.
     var smoothing = (params.smoothing !== false);
+
+    /**
+     * @name Two.CanvasRenderer#domElement
+     * @property {Element} - The `<canvas />` associated with the Two.js scene.
+     */
     this.domElement = params.domElement || document.createElement('canvas');
+
+    /**
+     * @name Two.CanvasRenderer#ctx
+     * @property {Canvas2DContext} - Associated two dimensional context to render on the `<canvas />`.
+     */
     this.ctx = this.domElement.getContext('2d');
+
+    /**
+     * @name Two.CanvasRenderer#overdraw
+     * @property {Boolean} - Determines whether the canvas clears the background each draw call.
+     * @default true
+     */
     this.overdraw = params.overdraw || false;
 
     if (!_.isUndefined(this.ctx.imageSmoothingEnabled)) {
@@ -702,6 +726,10 @@
     }
 
     // Everything drawn on the canvas needs to be added to the scene.
+    /**
+     * @name Two.CanvasRenderer#scene
+     * @property {Two.Group} - The root group of the scenegraph.
+     */
     this.scene = new Two.Group();
     this.scene.parent = this;
   };
@@ -709,6 +737,10 @@
 
   _.extend(Renderer, {
 
+    /**
+     * @name Two.CanvasRenderer.Utils
+     * @property {Object} - A massive object filled with utility functions and properties to render Two.js objects to a `<canvas />`.
+     */
     Utils: canvas
 
   });
@@ -717,6 +749,15 @@
 
     constructor: Renderer,
 
+    /**
+     * @name Two.CanvasRenderer#setSize
+     * @function
+     * @param {Number} width - The new width of the renderer.
+     * @param {Number} height - The new height of the renderer.
+     * @param {Number} [ratio] - The new pixel ratio (pixel density) of the renderer. Defaults to calculate the pixel density of the user's screen.
+     * @description Change the size of the renderer.
+     * @nota-bene Triggers a `Two.Events.resize`.
+     */
     setSize: function(width, height, ratio) {
 
       this.width = width;
@@ -738,6 +779,11 @@
 
     },
 
+    /**
+     * @name Two.CanvasRenderer#render
+     * @function
+     * @description Render the current scene to the `<canvas />`.
+     */
     render: function() {
 
       var isOne = this.ratio === 1;
