@@ -894,15 +894,32 @@
   };
 
   /**
+   * @name Two.SVGRenderer
    * @class
+   * @extends Two.Utils.Events
+   * @param {Object} [parameters] - This object is inherited when constructing a new instance of {@link Two}.
+   * @param {Element} [parameters.domElement] - The `<svg />` to draw to. If none given a new one will be constructed.
+   * @description This class is used by {@link Two} when constructing with `type` of `Two.Types.svg` (the default type). It takes Two.js' scenegraph and renders it to a `<svg />`.
    */
   var Renderer = Two[Two.Types.svg] = function(params) {
 
+    /**
+     * @name Two.SVGRenderer#domElement
+     * @property {Element} - The `<svg />` associated with the Two.js scene.
+     */
     this.domElement = params.domElement || svg.createElement('svg');
 
+    /**
+     * @name Two.SVGRenderer#scene
+     * @property {Two.Group} - The root group of the scenegraph.
+     */
     this.scene = new Two.Group();
     this.scene.parent = this;
 
+    /**
+     * @name Two.SVGRenderer#defs
+     * @property {SvgDefintionsElement} - The `<defs />` to apply gradients, patterns, and bitmap imagery.
+     */
     this.defs = svg.createElement('defs');
     this.domElement.appendChild(this.defs);
     this.domElement.defs = this.defs;
@@ -912,6 +929,10 @@
 
   _.extend(Renderer, {
 
+    /**
+     * @name Two.SVGRenderer.Utils
+     * @property {Object} - A massive object filled with utility functions and properties to render Two.js objects to a `<svg />`.
+     */
     Utils: svg
 
   });
@@ -920,6 +941,14 @@
 
     constructor: Renderer,
 
+    /**
+     * @name Two.SVGRenderer#setSize
+     * @function
+     * @param {Number} width - The new width of the renderer.
+     * @param {Number} height - The new height of the renderer.
+     * @description Change the size of the renderer.
+     * @nota-bene Triggers a `Two.Events.resize`.
+     */
     setSize: function(width, height) {
 
       this.width = width;
@@ -934,6 +963,11 @@
 
     },
 
+    /**
+     * @name Two.SVGRenderer#render
+     * @function
+     * @description Render the current scene to the `<svg />`.
+     */
     render: function() {
 
       svg.group.render.call(this.scene, this.domElement);
