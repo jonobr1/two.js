@@ -840,7 +840,7 @@
             styles.width = changed.width = image.width;
             styles.height = changed.height = image.height;
 
-            // TODO: Hack / Bandaid
+            // TODO: Hack / Band-aid
             switch (this._repeat) {
               case 'no-repeat':
                 changed.width += 1;
