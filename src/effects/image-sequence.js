@@ -385,6 +385,25 @@
     },
 
     /**
+     * @name Two.ImageSequence#toObject
+     * @function
+     * @returns {Object}
+     * @description Return a JSON compatible plain object that represents the path.
+     */
+    toObject: function() {
+      var object = Rectangle.prototype.toObject.call(this);
+      object.textures = _.map(this.textures, function(texture) {
+        return texture.toObject();
+      });
+      object.frameRate = this.frameRate;
+      object.index = this.index;
+      object._firstFrame = this._firstFrame;
+      object._lastFrame = this._lastFrame;
+      object._loop = this._loop;
+      return object;
+    },
+
+    /**
      * @name Two.ImageSequence#_update
      * @function
      * @private
