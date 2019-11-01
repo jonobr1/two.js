@@ -168,6 +168,24 @@
 
       return clone;
 
+    },
+
+    /**
+     * @name Two.Circle#toObject
+     * @function
+     * @returns {Object}
+     * @description Return a JSON compatible plain object that represents the path.
+     */
+    toObject: function() {
+
+      var object = Path.prototype.toObject.call(this);
+
+      _.each(Circle.Properties, function(property) {
+        object[property] = this[property]
+      }, this);
+
+      return object;
+
     }
 
   });
