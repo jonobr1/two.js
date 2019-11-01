@@ -725,7 +725,6 @@
       this.ctx.imageSmoothingEnabled = smoothing;
     }
 
-    // Everything drawn on the canvas needs to be added to the scene.
     /**
      * @name Two.CanvasRenderer#scene
      * @property {Two.Group} - The root group of the scenegraph.
