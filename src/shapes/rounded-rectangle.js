@@ -299,6 +299,27 @@
 
       return clone;
 
+    },
+
+    /**
+     * @name Two.RoundedRectangle#toObject
+     * @function
+     * @returns {Object}
+     * @description Return a JSON compatible plain object that represents the path.
+     */
+    toObject: function() {
+
+      var object = Path.prototype.toObject.call(this);
+
+      _.each(RoundedRectangle.Properties, function(property) {
+        object[property] = this[property]
+      }, this);
+
+      object.radius = _.isNumber(this.radius)
+        ? this.radius : this.radius.toObject();
+
+      return object;
+
     }
 
   });
