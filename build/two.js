@@ -472,7 +472,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2019-10-30T14:33:02+01:00',
+    PublishDate: '2019-11-01T17:02:19+01:00',
 
     /**
      * @name Two.Identifier
@@ -5771,7 +5771,7 @@ SOFTWARE.
             styles.width = changed.width = image.width;
             styles.height = changed.height = image.height;
 
-            // TODO: Hack / Bandaid
+            // TODO: Hack / Band-aid
             switch (this._repeat) {
               case 'no-repeat':
                 changed.width += 1;
@@ -6889,6 +6889,7 @@ SOFTWARE.
           gl.disable(gl.STENCIL_TEST);
 
           // Clip Contents to visible fragment
+          // TODO: Back buffer still isn't propagated to the blend operation :(
 
           gl.blendEquationSeparate(gl.FUNC_ADD, gl.FUNC_ADD);
           gl.blendFuncSeparate(gl.ZERO, gl.ONE, gl.ZERO, gl.SRC_ALPHA);
@@ -10120,6 +10121,22 @@ SOFTWARE.
 
       return clone;
 
+    },
+
+    /**
+     * @name Two.Rectangle#toObject
+     * @function
+     * @returns {Object}
+     * @description Return a JSON compatible plain object that represents the path.
+     */
+    toObject: function() {
+
+      var object = Path.prototype.toObject.call(this);
+      object.width = this.width;
+      object.height = this.height;
+      object.origin = this.origin.toObject();
+      return object;
+
     }
 
   });
@@ -10318,6 +10335,24 @@ SOFTWARE.
 
       return clone;
 
+    },
+
+    /**
+     * @name Two.Ellipse#toObject
+     * @function
+     * @returns {Object}
+     * @description Return a JSON compatible plain object that represents the path.
+     */
+    toObject: function() {
+
+      var object = Path.prototype.toObject.call(this);
+
+      _.each(Ellipse.Properties, function(property) {
+        object[property] = this[property]
+      }, this);
+
+      return object;
+
     }
 
   });
@@ -10495,6 +10530,24 @@ SOFTWARE.
       }
 
       return clone;
+
+    },
+
+    /**
+     * @name Two.Circle#toObject
+     * @function
+     * @returns {Object}
+     * @description Return a JSON compatible plain object that represents the path.
+     */
+    toObject: function() {
+
+      var object = Path.prototype.toObject.call(this);
+
+      _.each(Circle.Properties, function(property) {
+        object[property] = this[property]
+      }, this);
+
+      return object;
 
     }
 
@@ -10697,6 +10750,24 @@ SOFTWARE.
       }
 
       return clone;
+
+    },
+
+    /**
+     * @name Two.Polygon#toObject
+     * @function
+     * @returns {Object}
+     * @description Return a JSON compatible plain object that represents the path.
+     */
+    toObject: function() {
+
+      var object = Path.prototype.toObject.call(this);
+
+      _.each(Polygon.Properties, function(property) {
+        object[property] = this[property]
+      }, this);
+
+      return object;
 
     }
 
@@ -11043,6 +11114,24 @@ SOFTWARE.
 
       return clone;
 
+    },
+
+    /**
+     * @name Two.ArcSegment#toObject
+     * @function
+     * @returns {Object}
+     * @description Return a JSON compatible plain object that represents the path.
+     */
+    toObject: function() {
+
+      var object = Path.prototype.toObject.call(this);
+
+      _.each(ArcSegment.Properties, function(property) {
+        object[property] = this[property]
+      }, this);
+
+      return object;
+
     }
 
   });
@@ -11259,6 +11348,24 @@ SOFTWARE.
       }
 
       return clone;
+
+    },
+
+    /**
+     * @name Two.Star#toObject
+     * @function
+     * @returns {Object}
+     * @description Return a JSON compatible plain object that represents the path.
+     */
+    toObject: function() {
+
+      var object = Path.prototype.toObject.call(this);
+
+      _.each(Star.Properties, function(property) {
+        object[property] = this[property]
+      }, this);
+
+      return object;
 
     }
 
@@ -11568,6 +11675,27 @@ SOFTWARE.
       }
 
       return clone;
+
+    },
+
+    /**
+     * @name Two.RoundedRectangle#toObject
+     * @function
+     * @returns {Object}
+     * @description Return a JSON compatible plain object that represents the path.
+     */
+    toObject: function() {
+
+      var object = Path.prototype.toObject.call(this);
+
+      _.each(RoundedRectangle.Properties, function(property) {
+        object[property] = this[property]
+      }, this);
+
+      object.radius = _.isNumber(this.radius)
+        ? this.radius : this.radius.toObject();
+
+      return object;
 
     }
 
@@ -12996,7 +13124,7 @@ SOFTWARE.
   var anchor;
   var regex = {
     video: /\.(mp4|webm|ogg)$/i,
-    image: /\.(jpe?g|png|gif|tiff)$/i,
+    image: /\.(jpe?g|png|gif|tiff|webp)$/i,
     effect: /texture|gradient/i
   };
 
@@ -13004,6 +13132,14 @@ SOFTWARE.
     anchor = document.createElement('a');
   }
 
+  /**
+   * @name Two.Texture
+   * @class
+   * @extends Two.Shape
+   * @param {String|ImageElement} [src] - The URL path to an image file or an `<img />` element.
+   * @param {Function} [callback] - An optional callback function once the image has been loaded.
+   * @description Fundamental to work with bitmap data, a.k.a. pregenerated imagery, in Two.js. Supported formats include jpg, png, gif, and tiff. See {@link Two.Texture.RegularExpressions} for a full list of supported formats.
+   */
   var Texture = Two.Texture = function(src, callback) {
 
     this._renderer = {};
@@ -13014,6 +13150,23 @@ SOFTWARE.
     this.id = Two.Identifier + Two.uniqueId();
     this.classList = [];
 
+    /**
+     * @name Two.Texture#loaded
+     * @property {Boolean} - Shorthand value to determine if image has been loaded into the texture.
+     */
+    this.loaded = false;
+
+    /**
+     * @name Two.Texture#repeat
+     * @property {String} - CSS style declaration to tile {@link Two.Path}. Valid values include: `'no-repeat'`, `'repeat'`, `'repeat-x'`, `'repeat-y'`.
+     * @see {@link https://www.w3.org/TR/2dcontext/#dom-context-2d-createpattern}
+     */
+    this.repeat = 'no-repeat';
+
+    /**
+     * @name Two.Texture#offset
+     * @property {Two.Vector} - A two-component vector describing any pixel offset of the texture when applied to a {@link Two.Path}.
+     */
     this.offset = new Two.Vector();
 
     if (_.isFunction(callback)) {
@@ -13026,9 +13179,19 @@ SOFTWARE.
       this.bind(Two.Events.load, loaded);
     }
 
+    /**
+     * @name Two.Texture#src
+     * @property {String} - The URL path to the image data.
+     * @nota-bene This property is ultimately serialized in a {@link Two.Registry} to cache retrieval.
+     */
     if (_.isString(src)) {
       this.src = src;
     } else if (_.isElement(src)) {
+      /**
+       * @name Two.Texture#image
+       * @property {Element} - The corresponding DOM Element of the texture. Can be a `<img />`, `<canvas />`, or `<video />` element. See {@link Two.Texture.RegularExpressions} for a full list of supported elements.
+       * @nota-bene In headless environments this is a `Canvas.Image` object. See {@link https://github.com/Automattic/node-canvas} for more information on headless image objects.
+       */
       this.image = src;
     }
 
@@ -13038,16 +13201,35 @@ SOFTWARE.
 
   _.extend(Texture, {
 
+    /**
+     * @name Two.Texture.Properties
+     * @property {String[]} - A list of properties that are on every {@link Two.Texture}.
+     */
     Properties: [
       'src',
       'loaded',
       'repeat'
     ],
 
+    /**
+     * @name Two.Texture.RegularExpressions
+     * @property {Object} - A map of compatible DOM Elements categorized by media format.
+     */
     RegularExpressions: regex,
 
+    /**
+     * @name Two.Texture.ImageRegistry
+     * @property {Two.Registry} - A canonical listing of image data used in a single session of Two.js.
+     * @nota-bene This object is used to cache image data between different textures.
+     */
     ImageRegistry: new Two.Registry(),
 
+    /**
+     * @name Two.Texture.getAbsoluteURL
+     * @property {Function} - Serializes a URL as an absolute path for canonical attribution in {@link Two.ImageRegistry}.
+     * @param {String} path
+     * @returns {String} - The serialized absolute path.
+     */
     getAbsoluteURL: function(path) {
       if (!anchor) {
         // TODO: Fix for headless environments
@@ -13057,6 +13239,13 @@ SOFTWARE.
       return anchor.href;
     },
 
+    /**
+     * @name Two.Texture.loadHeadlessBuffer
+     * @property {Function} - Loads an image as a buffer in headless environments.
+     * @param {Two.Texture} texture - The {@link Two.Texture} to be loaded.
+     * @param {Function} loaded - The callback function to be triggered once the image is loaded.
+     * @nota-bene - This function uses node's `fs.readFileSync` to spoof the `<img />` loading process in the browser.
+     */
     loadHeadlessBuffer: new Function('texture', 'loaded', [
       'var fs = require("fs");',
       'var buffer = fs.readFileSync(texture.src);',
@@ -13065,6 +13254,12 @@ SOFTWARE.
       'loaded();'
     ].join('\n')),
 
+    /**
+     * @name Two.Texture.getImage
+     * @property {Function} - Convenience function to set {@link Two.Texture#image} properties with canonincal versions set in {@link Two.Texture.ImageRegistry}.
+     * @param {String} src - The URL path of the image.
+     * @returns {ImageElement} - Returns either a cached version of the image or a new one that is registered in {@link Two.Texture.ImageRegistry}.
+     */
     getImage: function(src) {
 
       var absoluteSrc = Texture.getAbsoluteURL(src);
@@ -13101,6 +13296,11 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.Register
+     * @interface
+     * @description A collection of functions to register different types of textures. Used internally by a {@link Two.Texture}.
+     */
     Register: {
       canvas: function(texture, callback) {
         texture._src = '#' + texture.id;
@@ -13196,6 +13396,12 @@ SOFTWARE.
       }
     },
 
+    /**
+     * @name Two.Texture.load
+     * @function
+     * @param {Two.Texture} texture - The texture to load.
+     * @param {Function} callback - The function to be called once the texture is loaded.
+     */
     load: function(texture, callback) {
 
       var src = texture.src;
@@ -13221,14 +13427,30 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.Texture.FlagOffset
+     * @function
+     * @description Cached method to let renderers know `offset` has been updated on a {@link Two.Texture}.
+     */
     FlagOffset: function() {
       this._flagOffset = true;
     },
 
+    /**
+     * @name Two.Texture.FlagScale
+     * @function
+     * @description Cached method to let renderers know `scale` has been updated on a {@link Two.Texture}.
+     */
     FlagScale: function() {
       this._flagScale = true;
     },
 
+    /**
+     * @name Two.Texture.MakeObservable
+     * @function
+     * @param {Object} object - The object to make observable.
+     * @description Convenience function to apply observable qualities of a {@link Two.Texture} to any object. Handy if you'd like to extend or inherit the {@link Two.Texture} class on a custom class.
+     */
     MakeObservable: function(object) {
 
       _.each(Texture.Properties, Two.Utils.defineProperty, object);
@@ -13306,36 +13528,137 @@ SOFTWARE.
 
   _.extend(Texture.prototype, Two.Utils.Events, Two.Shape.prototype, {
 
+    /**
+     * @name Two.Texture#_flagSrc
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Texture#src} needs updating.
+     */
     _flagSrc: false,
+
+    /**
+     * @name Two.Texture#_flagImage
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Texture#image} needs updating.
+     */
     _flagImage: false,
+
+    /**
+     * @name Two.Texture#_flagVideo
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Texture#video} needs updating.
+     */
     _flagVideo: false,
+
+    /**
+     * @name Two.Texture#_flagLoaded
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Texture#loaded} needs updating.
+     */
     _flagLoaded: false,
+
+    /**
+     * @name Two.Texture#_flagRepeat
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Texture#repeat} needs updating.
+     */
     _flagRepeat: false,
 
+    /**
+     * @name Two.Texture#_flagOffset
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Texture#offset} needs updating.
+     */
     _flagOffset: false,
+
+    /**
+     * @name Two.Texture#_flagScale
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Texture#scale} needs updating.
+     */
     _flagScale: false,
 
+    /**
+     * @name Two.Texture#_src
+     * @private
+     * @see {@link Two.Texture#src}
+     */
     _src: '',
+
+    /**
+     * @name Two.Texture#_image
+     * @private
+     * @see {@link Two.Texture#image}
+     */
     _image: null,
+
+    /**
+     * @name Two.Texture#_loaded
+     * @private
+     * @see {@link Two.Texture#loaded}
+     */
     _loaded: false,
+
+    /**
+     * @name Two.Texture#_repeat
+     * @private
+     * @see {@link Two.Texture#repeat}
+     */
     _repeat: 'no-repeat',
 
+    /**
+     * @name Two.Texture#_scale
+     * @private
+     * @see {@link Two.Texture#scale}
+     */
     _scale: 1,
+
+    /**
+     * @name Two.Texture#_offset
+     * @private
+     * @see {@link Two.Texture#offset}
+     */
     _offset: null,
 
     constructor: Texture,
 
+    /**
+     * @name Two.Texture#clone
+     * @function
+     * @returns {Two.Texture}
+     * @description Create a new instance of {@link Two.Texture} with the same properties of the current texture.
+     */
     clone: function() {
-      return new Texture(this.src);
+      var clone = new Texture(this.src);
+      clone.repeat = this.repeat;
+      clone.offset.copy(this.origin);
+      clone.scale = this.scale;
+      return clone;
     },
 
+    /**
+     * @name Two.Texture#toObject
+     * @function
+     * @returns {Object}
+     * @description Return a JSON compatible plain object that represents the texture.
+     */
     toObject: function() {
       return {
         src: this.src,
-        image: this.image
+        // image: this.image,
+        repeat: this.repeat,
+        origin: this.origin.toObject(),
+        scale: _.isNumber(this.scale) ? this.scale : this.scale.toObject()
       }
     },
 
+    /**
+     * @name Two.Texture#_update
+     * @function
+     * @private
+     * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+     * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
+     * @nota-bene Try not to call this method more than once a frame.
+     */
     _update: function() {
 
       if (this._flagSrc || this._flagImage) {
@@ -13362,6 +13685,12 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.Texture#flagReset
+     * @function
+     * @private
+     * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+     */
     flagReset: function() {
 
       this._flagSrc = this._flagImage = this._flagLoaded
@@ -13383,8 +13712,22 @@ SOFTWARE.
   var Path = Two.Path;
   var Rectangle = Two.Rectangle;
 
+  /**
+   * @name Two.Sprite
+   * @class
+   * @extends Two.Rectangle
+   * @param {String|Two.Texture} [path] - The URL path or {@link Two.Texture} to be used as the bitmap data displayed on the sprite.
+   * @param {Number} [ox=0] - The initial `x` position of the Two.Sprite.
+   * @param {Number} [oy=0] - The initial `y` position of the Two.Sprite.
+   * @param {Integer} [cols=1] - The number of columns the sprite contains.
+   * @param {Integer} [rows=1] - The number of rows the sprite contains.
+   * @param {Integer} [frameRate=0] - The frame rate at which the partitions of the image should playback at.
+   * @description A convenient package to display still or animated images through a tiled image source. For more information on the principals of animated imagery through tiling see [Texture Atlas]{@link https://en.wikipedia.org/wiki/Texture_atlas} on Wikipedia..
+   */
   var Sprite = Two.Sprite = function(path, ox, oy, cols, rows, frameRate) {
 
+    // Not using default constructor of Rectangle due to odd `beginning` / `ending` behavior.
+    // See: https://github.com/jonobr1/two.js/issues/383
     Path.call(this, [
       new Two.Anchor(),
       new Two.Anchor(),
@@ -13395,6 +13738,10 @@ SOFTWARE.
     this.noStroke();
     this.noFill();
 
+    /**
+     * @name Two.Sprite#texture
+     * @property {Two.Texture} - The texture to be used as bitmap data to display image in the scene.
+     */
     if (path instanceof Two.Texture) {
       this.texture = path;
     } else if (_.isString(path)) {
@@ -13406,24 +13753,54 @@ SOFTWARE.
     this._update();
     this.translation.set(ox || 0, oy || 0);
 
+    /**
+     * @name Two.Sprite#columns
+     * @property {Integer} - The number of columns to split the texture into. Defaults to `1`.
+     */
     if (_.isNumber(cols)) {
       this.columns = cols;
     }
+
+    /**
+     * @name Two.Sprite#rows
+     * @property {Integer} - The number of rows to split the texture into. Defaults to `1`.
+     */
     if (_.isNumber(rows)) {
       this.rows = rows;
     }
+
+    /**
+     * @name Two.Sprite#frameRate
+     * @property {Integer} - The number of frames to animate against per second. Defaults to `0` for non-animated sprites.
+     */
     if (_.isNumber(frameRate)) {
       this.frameRate = frameRate;
     }
+
+    /**
+     * @name Two.Sprite#index
+     * @property {Integer} - The index of the current tile of the sprite to display. Defaults to `0`.
+     */
+    this.index = 0;
 
   };
 
   _.extend(Sprite, {
 
+    /**
+     * @name Two.Sprite.Properties
+     * @property {String[]} - A list of properties that are on every {@link Two.Sprite}.
+     */
     Properties: [
       'texture', 'columns', 'rows', 'frameRate', 'index'
     ],
 
+    /**
+     * @name Two.Sprite.MakeObservable
+     * @function
+     * @param {Object} object - The object to make observable.
+     * @description Convenience function to apply observable qualities of a {@link Two.Sprite} to any object. Handy if you'd like to extend or inherit the {@link Two.Sprite} class on a custom class.
+     */
     MakeObservable: function(obj) {
 
       Rectangle.MakeObservable(obj);
@@ -13435,31 +13812,146 @@ SOFTWARE.
 
   _.extend(Sprite.prototype, Rectangle.prototype, {
 
+    /**
+     * @name Two.Sprite#_flagTexture
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Sprite#texture} needs updating.
+     */
     _flagTexture: false,
+
+    /**
+     * @name Two.Sprite#_flagColumns
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Sprite#columns} need updating.
+     */
     _flagColumns: false,
+
+    /**
+     * @name Two.Sprite#_flagRows
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Sprite#rows} need updating.
+     */
     _flagRows: false,
+
+    /**
+     * @name Two.Sprite#_flagFrameRate
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Sprite#flagFrameRate} needs updating.
+     */
     _flagFrameRate: false,
+
+    /**
+     * @name Two.Sprite#_flagIndex
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Sprite#index} needs updating.
+     */
     flagIndex: false,
 
     // Private variables
+
+    /**
+     * @name Two.Sprite#_amount
+     * @private
+     * @property {Integer} - Number of frames for a given {@link Two.Sprite}.
+     */
     _amount: 1,
+
+    /**
+     * @name Two.Sprite#_duration
+     * @private
+     * @property {Number} - Number of milliseconds a {@link Two.Sprite}.
+     */
     _duration: 0,
+
+    /**
+     * @name Two.Sprite#_startTime
+     * @private
+     * @property {Milliseconds} - Epoch time in milliseconds of when the {@link Two.Sprite} started.
+     */
     _startTime: 0,
+
+    /**
+     * @name Two.Sprite#_playing
+     * @private
+     * @property {Boolean} - Dictates whether the {@link Two.Sprite} is animating or not.
+     */
     _playing: false,
+
+    /**
+     * @name Two.Sprite#_firstFrame
+     * @private
+     * @property {Integer} - The frame the {@link Two.Sprite} should start with.
+     */
     _firstFrame: 0,
+
+    /**
+     * @name Two.Sprite#_lastFrame
+     * @private
+     * @property {Integer} - The frame the {@link Two.Sprite} should end with.
+     */
     _lastFrame: 0,
+
+    /**
+     * @name Two.Sprite#_playing
+     * @private
+     * @property {Boolean} - Dictates whether the {@link Two.Sprite} should loop or not.
+     */
     _loop: true,
 
     // Exposed through getter-setter
+
+    /**
+     * @name Two.Sprite#_texture
+     * @private
+     * @see {@link Two.Sprite#texture}
+     */
     _texture: null,
+
+    /**
+     * @name Two.Sprite#_columns
+     * @private
+     * @see {@link Two.Sprite#columns}
+     */
     _columns: 1,
+
+    /**
+     * @name Two.Sprite#_rows
+     * @private
+     * @see {@link Two.Sprite#rows}
+     */
     _rows: 1,
+
+    /**
+     * @name Two.Sprite#_frameRate
+     * @private
+     * @see {@link Two.Sprite#frameRate}
+     */
     _frameRate: 0,
+
+    /**
+     * @name Two.Sprite#_index
+     * @private
+     * @property {Integer} - The current frame the {@link Two.Sprite} is currently displaying.
+     */
     _index: 0,
+
+    /**
+     * @name Two.Sprite#_origin
+     * @private
+     * @see {@link Two.Sprite#origin}
+     */
     _origin: null,
 
     constructor: Sprite,
 
+    /**
+     * @name Two.Sprite#play
+     * @function
+     * @param {Integer} [firstFrame=0] - The index of the frame to start the animation with.
+     * @param {Integer} [lastFrame] - The index of the frame to end the animation with. Defaults to the last item in the {@link Two.Sprite#textures}.
+     * @param {Function} [onLastFrame] - Optional callback function to be triggered after playing the last frame. This fires multiple times when the sprite is looped.
+     * @description Initiate animation playback of a {@link Two.Sprite}.
+     */
     play: function(firstFrame, lastFrame, onLastFrame) {
 
       this._playing = true;
@@ -13488,6 +13980,11 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.Sprite#pause
+     * @function
+     * @description Halt animation playback of a {@link Two.Sprite}.
+     */
     pause: function() {
 
       this._playing = false;
@@ -13495,6 +13992,11 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.Sprite#stop
+     * @function
+     * @description Halt animation playback of a {@link Two.Sprite} and set the current frame back to the first frame.
+     */
     stop: function() {
 
       this._playing = false;
@@ -13504,6 +14006,13 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.Sprite#clone
+     * @function
+     * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+     * @returns {Two.Sprite}
+     * @description Create a new instance of {@link Two.Sprite} with the same properties of the current sprite.
+     */
     clone: function(parent) {
 
       var clone = new Sprite(
@@ -13524,6 +14033,33 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.Sprite#toObject
+     * @function
+     * @returns {Object}
+     * @description Return a JSON compatible plain object that represents the path.
+     */
+    toObject: function() {
+      var object = Rectangle.prototype.toObject.call(this);
+      object.texture = this.texture.toObject();
+      object.columns = this.columns;
+      object.rows = this.rows;
+      object.frameRate = this.frameRate;
+      object.index = this.index;
+      object._firstFrame = this._firstFrame;
+      object._lastFrame = this._lastFrame;
+      object._loop = this._loop;
+      return object;
+    },
+
+    /**
+     * @name Two.Sprite#_update
+     * @function
+     * @private
+     * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+     * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
+     * @nota-bene Try not to call this method more than once a frame.
+     */
     _update: function() {
 
       var effect = this._texture;
@@ -13612,6 +14148,12 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.Sprite#flagReset
+     * @function
+     * @private
+     * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+     */
     flagReset: function() {
 
       this._flagTexture = this._flagColumns = this._flagRows
@@ -13635,8 +14177,20 @@ SOFTWARE.
   var Path = Two.Path;
   var Rectangle = Two.Rectangle;
 
+  /**
+   * @name Two.ImageSequence
+   * @class
+   * @extends Two.Rectangle
+   * @param {String|String[]|Two.Texture|Two.Texture[]} paths - A list of URLs or {@link Two.Texture}s.
+   * @param {Number} [ox=0] - The initial `x` position of the Two.ImageSequence.
+   * @param {Number} [oy=0] - The initial `y` position of the Two.ImageSequence.
+   * @param {Integer} [frameRate=30] - The frame rate at which the images should playback at.
+   * @description A convenient package to display still or animated images organized as a series of still images.
+   */
   var ImageSequence = Two.ImageSequence = function(paths, ox, oy, frameRate) {
 
+    // Not using default constructor of Rectangle due to odd `beginning` / `ending` behavior.
+    // See: https://github.com/jonobr1/two.js/issues/383
     Path.call(this, [
       new Two.Anchor(),
       new Two.Anchor(),
@@ -13651,33 +14205,71 @@ SOFTWARE.
     this.noStroke();
     this.noFill();
 
-    this.textures = _.map(paths, ImageSequence.GenerateTexture, this);
+    /**
+     * @name Two.ImageSequence#textures
+     * @property {Two.Texture[]} - A list of textures to be used as frames for animating the {@link Two.ImageSequence}.
+     */
+    if (_.isObject(paths)) {
+      this.textures = _.map(paths, ImageSequence.GenerateTexture, this);
+    } else {
+      // If just a single path convert into a single Two.Texture
+      this.textures = [ImageSequence.GenerateTexture(paths)];
+    }
+
     this.origin = new Two.Vector();
 
     this._update();
     this.translation.set(ox || 0, oy || 0);
 
+    /**
+     * @name Two.ImageSequence#frameRate
+     * @property {Integer} - The number of frames to animate against per second.
+     */
     if (_.isNumber(frameRate)) {
       this.frameRate = frameRate;
     } else {
       this.frameRate = ImageSequence.DefaultFrameRate;
     }
 
+    /**
+     * @name Two.ImageSequence#index
+     * @property {Integer} - The index of the current tile of the sprite to display. Defaults to `0`.
+     */
+    this.index = 0;
+
   };
 
   _.extend(ImageSequence, {
 
+    /**
+     * @name Two.ImageSequence.Properties
+     * @property {String[]} - A list of properties that are on every {@link Two.ImageSequence}.
+     */
     Properties: [
       'frameRate',
       'index'
     ],
 
+    /**
+     * @name Two.ImageSequence.DefaultFrameRate
+     * @property The default frame rate that {@link Two.ImageSequence#frameRate} is set to when instantiated.
+     */
     DefaultFrameRate: 30,
 
+    /**
+     * @name Two.ImageSequence.FlagTextures
+     * @function
+     * @description Cached method to let renderers know textures have been updated on a {@link Two.ImageSequence}.
+     */
     FlagTextures: function() {
       this._flagTextures = true;
     },
 
+    /**
+     * @name Two.ImageSequence.BindTextures
+     * @function
+     * @description Cached method to let {@link Two.ImageSequence} know textures have been added to the instance.
+     */
     BindTextures: function(items) {
 
       var i = items.length;
@@ -13689,6 +14281,11 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.ImageSequence.UnbindVertices
+     * @function
+     * @description Cached method to let {@link Two.ImageSequence} know textures have been removed from the instance.
+     */
     UnbindTextures: function(items) {
 
       var i = items.length;
@@ -13700,6 +14297,12 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.ImageSequence.MakeObservable
+     * @function
+     * @param {Object} object - The object to make observable.
+     * @description Convenience function to apply observable qualities of a {@link Two.ImageSequence} to any object. Handy if you'd like to extend or inherit the {@link Two.ImageSequence} class on a custom class.
+     */
     MakeObservable: function(obj) {
 
       Rectangle.MakeObservable(obj);
@@ -13743,6 +14346,13 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.ImageSequence.GenerateTexture
+     * @property {Function} - Shorthand function to prepare source image material into readable format by {@link Two.ImageSequence}.
+     * @param {String|Two.Texture} textureOrString - The texture or string to create a {@link Two.Texture} from.
+     * @description Function used internally by {@link Two.ImageSequence} to parse arguments and return {@link Two.Texture}s.
+     * @returns {Two.Texture}
+     */
     GenerateTexture: function(obj) {
       if (obj instanceof Two.Texture) {
         return obj;
@@ -13755,27 +14365,118 @@ SOFTWARE.
 
   _.extend(ImageSequence.prototype, Rectangle.prototype, {
 
+    /**
+     * @name Two.ImageSequence#_flagTextures
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.ImageSequence#textures} need updating.
+     */
     _flagTextures: false,
+
+    /**
+     * @name Two.ImageSequence#_flagFrameRate
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.ImageSequence#frameRate} needs updating.
+     */
     _flagFrameRate: false,
+
+    /**
+     * @name Two.ImageSequence#_flagIndex
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.ImageSequence#index} needs updating.
+     */
     _flagIndex: false,
 
     // Private variables
+
+    /**
+     * @name Two.ImageSequence#_amount
+     * @private
+     * @property {Integer} - Number of frames for a given {@link Two.ImageSequence}.
+     */
     _amount: 1,
+
+    /**
+     * @name Two.ImageSequence#_duration
+     * @private
+     * @property {Number} - Number of milliseconds a {@link Two.ImageSequence}.
+     */
     _duration: 0,
+
+    /**
+     * @name Two.ImageSequence#_index
+     * @private
+     * @property {Integer} - The current frame the {@link Two.ImageSequence} is currently displaying.
+     */
     _index: 0,
+
+    /**
+     * @name Two.ImageSequence#_startTime
+     * @private
+     * @property {Milliseconds} - Epoch time in milliseconds of when the {@link Two.ImageSequence} started.
+     */
     _startTime: 0,
+
+    /**
+     * @name Two.ImageSequence#_playing
+     * @private
+     * @property {Boolean} - Dictates whether the {@link Two.ImageSequence} is animating or not.
+     */
     _playing: false,
+
+    /**
+     * @name Two.ImageSequence#_firstFrame
+     * @private
+     * @property {Integer} - The frame the {@link Two.ImageSequence} should start with.
+     */
     _firstFrame: 0,
+
+    /**
+     * @name Two.ImageSequence#_lastFrame
+     * @private
+     * @property {Integer} - The frame the {@link Two.ImageSequence} should end with.
+     */
     _lastFrame: 0,
+
+    /**
+     * @name Two.ImageSequence#_playing
+     * @private
+     * @property {Boolean} - Dictates whether the {@link Two.ImageSequence} should loop or not.
+     */
     _loop: true,
 
     // Exposed through getter-setter
+
+    /**
+     * @name Two.ImageSequence#_textures
+     * @private
+     * @see {@link Two.ImageSequence#textures}
+     */
     _textures: null,
+
+    /**
+     * @name Two.ImageSequence#_frameRate
+     * @private
+     * @see {@link Two.ImageSequence#frameRate}
+     */
     _frameRate: 0,
+
+    /**
+     * @name Two.ImageSequence#_origin
+     * @private
+     * @see {@link Two.ImageSequence#origin}
+     */
     _origin: null,
 
     constructor: ImageSequence,
 
+    /**
+     * @name Two.ImageSequence#play
+     * @function
+     * @param {Integer} [firstFrame=0] - The index of the frame to start the animation with.
+     * @param {Integer} [lastFrame] - The index of the frame to end the animation with. Defaults to the last item in the {@link Two.ImageSequence#textures}.
+     * @param {Function} [onLastFrame] - Optional callback function to be triggered after playing the last frame. This fires multiple times when the image sequence is looped.
+     * @description Initiate animation playback of a {@link Two.ImageSequence}.
+     */
     play: function(firstFrame, lastFrame, onLastFrame) {
 
       this._playing = true;
@@ -13804,6 +14505,11 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.ImageSequence#pause
+     * @function
+     * @description Halt animation playback of a {@link Two.ImageSequence}.
+     */
     pause: function() {
 
       this._playing = false;
@@ -13811,15 +14517,27 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.ImageSequence#stop
+     * @function
+     * @description Halt animation playback of a {@link Two.ImageSequence} and set the current frame back to the first frame.
+     */
     stop: function() {
 
       this._playing = false;
-      this._index = 0;
+      this._index = this._firstFrame;
 
       return this;
 
     },
 
+    /**
+     * @name Two.ImageSequence#clone
+     * @function
+     * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+     * @returns {Two.ImageSequence}
+     * @description Create a new instance of {@link Two.ImageSequence} with the same properties of the current image sequence.
+     */
     clone: function(parent) {
 
       var clone = new ImageSequence(this.textures, this.translation.x,
@@ -13839,6 +14557,33 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.ImageSequence#toObject
+     * @function
+     * @returns {Object}
+     * @description Return a JSON compatible plain object that represents the path.
+     */
+    toObject: function() {
+      var object = Rectangle.prototype.toObject.call(this);
+      object.textures = _.map(this.textures, function(texture) {
+        return texture.toObject();
+      });
+      object.frameRate = this.frameRate;
+      object.index = this.index;
+      object._firstFrame = this._firstFrame;
+      object._lastFrame = this._lastFrame;
+      object._loop = this._loop;
+      return object;
+    },
+
+    /**
+     * @name Two.ImageSequence#_update
+     * @function
+     * @private
+     * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+     * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
+     * @nota-bene Try not to call this method more than once a frame.
+     */
     _update: function() {
 
       var effects = this._textures;
@@ -13930,6 +14675,12 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.ImageSequence#flagReset
+     * @function
+     * @private
+     * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+     */
     flagReset: function() {
 
       this._flagTextures = this._flagFrameRate = false;
@@ -13968,7 +14719,6 @@ SOFTWARE.
     });
 
     /**
-     * @property
      * @name Two.Group.Children#ids
      * @property {Object} - Map of all elements in the list keyed by `id`s.
      */
