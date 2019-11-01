@@ -17,6 +17,7 @@
   var ImageSequence = Two.ImageSequence = function(paths, ox, oy, frameRate) {
 
     // Not using default constructor of Rectangle due to odd `beginning` / `ending` behavior.
+    // See: https://github.com/jonobr1/two.js/issues/383
     Path.call(this, [
       new Two.Anchor(),
       new Two.Anchor(),
@@ -56,6 +57,12 @@
     } else {
       this.frameRate = ImageSequence.DefaultFrameRate;
     }
+
+    /**
+     * @name Two.ImageSequence#index
+     * @property {Integer} - The index of the current tile of the sprite to display. Defaults to `0`.
+     */
+    this.index = 0;
 
   };
 
@@ -121,7 +128,7 @@
      * @name Two.ImageSequence.MakeObservable
      * @function
      * @param {Object} object - The object to make observable.
-     * @description Convenience function to apply observable qualities of a {@link Two.ImageSequence} to any object. Handy if you'd like to extend the {@link Two.ImageSequence} class on a custom class.
+     * @description Convenience function to apply observable qualities of a {@link Two.ImageSequence} to any object. Handy if you'd like to extend or inherit the {@link Two.ImageSequence} class on a custom class.
      */
     MakeObservable: function(obj) {
 

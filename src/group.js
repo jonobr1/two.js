@@ -21,7 +21,6 @@
     });
 
     /**
-     * @property
      * @name Two.Group.Children#ids
      * @property {Object} - Map of all elements in the list keyed by `id`s.
      */
