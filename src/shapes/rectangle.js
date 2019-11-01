@@ -185,6 +185,22 @@
 
       return clone;
 
+    },
+
+    /**
+     * @name Two.Rectangle#toObject
+     * @function
+     * @returns {Object}
+     * @description Return a JSON compatible plain object that represents the path.
+     */
+    toObject: function() {
+
+      var object = Path.prototype.toObject.call(this);
+      object.width = this.width;
+      object.height = this.height;
+      object.origin = this.origin.toObject();
+      return object;
+
     }
 
   });
