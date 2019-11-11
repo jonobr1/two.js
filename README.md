@@ -110,6 +110,7 @@ process.exit();
 ## Change Log
 
 #### Nightly
++ `Two.Shape.clone` clones `Two.Shape.matrix` when `Two.Shape.matrix.manual` is set to `true`
 + Improved `Two.Group.mask` rendering in `Two.WebGLREnderer`
 + Fixed `Two.WebGLRenderer.setSize` recursive loop error
 + Connected `Two.Shape.className` to `Two.Shape.classList` for searching and class assignment in SVG elements
