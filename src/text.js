@@ -451,6 +451,10 @@
         clone[property] = this[property];
       }, this);
 
+      if (this.matrix.manual) {
+        clone.matrix.copy(this.matrix);
+      }
+
       if (parent) {
         parent.add(clone);
       }

@@ -689,6 +689,10 @@
       clone.rotation = this.rotation;
       clone.scale = this.scale;
 
+      if (this.matrix.manual) {
+        clone.matrix.copy(this.matrix);
+      }
+
       if (parent) {
         parent.add(clone);
       }
