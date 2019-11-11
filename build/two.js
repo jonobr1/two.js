@@ -472,7 +472,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2019-11-01T17:02:19+01:00',
+    PublishDate: '2019-11-11T07:39:43-08:00',
 
     /**
      * @name Two.Identifier
@@ -5825,15 +5825,32 @@ SOFTWARE.
   };
 
   /**
+   * @name Two.SVGRenderer
    * @class
+   * @extends Two.Utils.Events
+   * @param {Object} [parameters] - This object is inherited when constructing a new instance of {@link Two}.
+   * @param {Element} [parameters.domElement] - The `<svg />` to draw to. If none given a new one will be constructed.
+   * @description This class is used by {@link Two} when constructing with `type` of `Two.Types.svg` (the default type). It takes Two.js' scenegraph and renders it to a `<svg />`.
    */
   var Renderer = Two[Two.Types.svg] = function(params) {
 
+    /**
+     * @name Two.SVGRenderer#domElement
+     * @property {Element} - The `<svg />` associated with the Two.js scene.
+     */
     this.domElement = params.domElement || svg.createElement('svg');
 
+    /**
+     * @name Two.SVGRenderer#scene
+     * @property {Two.Group} - The root group of the scenegraph.
+     */
     this.scene = new Two.Group();
     this.scene.parent = this;
 
+    /**
+     * @name Two.SVGRenderer#defs
+     * @property {SvgDefintionsElement} - The `<defs />` to apply gradients, patterns, and bitmap imagery.
+     */
     this.defs = svg.createElement('defs');
     this.domElement.appendChild(this.defs);
     this.domElement.defs = this.defs;
@@ -5843,6 +5860,10 @@ SOFTWARE.
 
   _.extend(Renderer, {
 
+    /**
+     * @name Two.SVGRenderer.Utils
+     * @property {Object} - A massive object filled with utility functions and properties to render Two.js objects to a `<svg />`.
+     */
     Utils: svg
 
   });
@@ -5851,6 +5872,14 @@ SOFTWARE.
 
     constructor: Renderer,
 
+    /**
+     * @name Two.SVGRenderer#setSize
+     * @function
+     * @param {Number} width - The new width of the renderer.
+     * @param {Number} height - The new height of the renderer.
+     * @description Change the size of the renderer.
+     * @nota-bene Triggers a `Two.Events.resize`.
+     */
     setSize: function(width, height) {
 
       this.width = width;
@@ -5865,6 +5894,11 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.SVGRenderer#render
+     * @function
+     * @description Render the current scene to the `<svg />`.
+     */
     render: function() {
 
       svg.group.render.call(this.scene, this.domElement);
@@ -6566,21 +6600,48 @@ SOFTWARE.
 
   };
 
+  /**
+   * @name Two.CanvasRenderer
+   * @class
+   * @extends Two.Utils.Events
+   * @param {Object} [parameters] - This object is inherited when constructing a new instance of {@link Two}.
+   * @param {Element} [parameters.domElement] - The `<canvas />` to draw to. If none given a new one will be constructed.
+   * @param {Boolean} [parameters.overdraw] - Determines whether the canvas should clear the background or not. Defaults to `true`.
+   * @param {Boolean} [parameters.smoothing=true] - Determines whether the canvas should antialias drawing. Set it to `false` when working with pixel art. `false` can lead to better performance, since it would use a cheaper interpolation algorithm.
+   * @description This class is used by {@link Two} when constructing with `type` of `Two.Types.canvas`. It takes Two.js' scenegraph and renders it to a `<canvas />`.
+   */
   var Renderer = Two[Two.Types.canvas] = function(params) {
-    // Smoothing property. Defaults to true
-    // Set it to false when working with pixel art.
-    // false can lead to better performance, since it would use a cheaper interpolation algorithm.
+
     // It might not make a big difference on GPU backed canvases.
     var smoothing = (params.smoothing !== false);
+
+    /**
+     * @name Two.CanvasRenderer#domElement
+     * @property {Element} - The `<canvas />` associated with the Two.js scene.
+     */
     this.domElement = params.domElement || document.createElement('canvas');
+
+    /**
+     * @name Two.CanvasRenderer#ctx
+     * @property {Canvas2DContext} - Associated two dimensional context to render on the `<canvas />`.
+     */
     this.ctx = this.domElement.getContext('2d');
+
+    /**
+     * @name Two.CanvasRenderer#overdraw
+     * @property {Boolean} - Determines whether the canvas clears the background each draw call.
+     * @default true
+     */
     this.overdraw = params.overdraw || false;
 
     if (!_.isUndefined(this.ctx.imageSmoothingEnabled)) {
       this.ctx.imageSmoothingEnabled = smoothing;
     }
 
-    // Everything drawn on the canvas needs to be added to the scene.
+    /**
+     * @name Two.CanvasRenderer#scene
+     * @property {Two.Group} - The root group of the scenegraph.
+     */
     this.scene = new Two.Group();
     this.scene.parent = this;
   };
@@ -6588,6 +6649,10 @@ SOFTWARE.
 
   _.extend(Renderer, {
 
+    /**
+     * @name Two.CanvasRenderer.Utils
+     * @property {Object} - A massive object filled with utility functions and properties to render Two.js objects to a `<canvas />`.
+     */
     Utils: canvas
 
   });
@@ -6596,6 +6661,15 @@ SOFTWARE.
 
     constructor: Renderer,
 
+    /**
+     * @name Two.CanvasRenderer#setSize
+     * @function
+     * @param {Number} width - The new width of the renderer.
+     * @param {Number} height - The new height of the renderer.
+     * @param {Number} [ratio] - The new pixel ratio (pixel density) of the renderer. Defaults to calculate the pixel density of the user's screen.
+     * @description Change the size of the renderer.
+     * @nota-bene Triggers a `Two.Events.resize`.
+     */
     setSize: function(width, height, ratio) {
 
       this.width = width;
@@ -6617,6 +6691,11 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.CanvasRenderer#render
+     * @function
+     * @description Render the current scene to the `<canvas />`.
+     */
     render: function() {
 
       var isOne = this.ratio === 1;
@@ -7941,17 +8020,36 @@ SOFTWARE.
 
   webgl.ctx = webgl.canvas.getContext('2d');
 
-  var Renderer = Two[Two.Types.webgl] = function(options) {
+  /**
+   * @name Two.WebGLRenderer
+   * @class
+   * @extends Two.Utils.Events
+   * @param {Object} [parameters] - This object is inherited when constructing a new instance of {@link Two}.
+   * @param {Element} [parameters.domElement] - The `<canvas />` to draw to. If none given a new one will be constructed.
+   * @param {CanvasElement} [parameters.offscreenElement] - The offscreen two dimensional `<canvas />` to render each element on WebGL texture updates.
+   * @param {Boolean} [parameters.antialias] - Determines whether the canvas should clear render with antialias on.
+   * @description This class is used by {@link Two} when constructing with `type` of `Two.Types.webgl`. It takes Two.js' scenegraph and renders it to a `<canvas />` through the WebGL api.
+   * @see {@link https://www.khronos.org/registry/webgl/specs/latest/1.0/}
+   */
+  var Renderer = Two[Two.Types.webgl] = function(params) {
 
     var params, gl, vs, fs;
-    this.domElement = options.domElement || document.createElement('canvas');
 
-    if (!_.isUndefined(options.offscreenElement)) {
-      webgl.canvas = options.offscreenElement;
+    /**
+     * @name Two.WebGLRenderer#domElement
+     * @property {Element} - The `<canvas />` associated with the Two.js scene.
+     */
+    this.domElement = params.domElement || document.createElement('canvas');
+
+    if (!_.isUndefined(params.offscreenElement)) {
+      webgl.canvas = params.offscreenElement;
       webgl.ctx = webgl.canvas.getContext('2d');
     }
 
-    // Everything drawn on the canvas needs to come from the stage.
+    /**
+     * @name Two.WebGLRenderer#scene
+     * @property {Two.Group} - The root group of the scenegraph.
+     */
     this.scene = new Two.Group();
     this.scene.parent = this;
 
@@ -7965,7 +8063,7 @@ SOFTWARE.
 
     // http://games.greggman.com/game/webgl-and-alpha/
     // http://www.khronos.org/registry/webgl/specs/latest/#5.2
-    params = _.defaults(options || {}, {
+    params = _.defaults(params || {}, {
       antialias: false,
       alpha: true,
       premultipliedAlpha: true,
@@ -7974,8 +8072,17 @@ SOFTWARE.
       overdraw: false
     });
 
+    /**
+     * @name Two.WebGLRenderer#overdraw
+     * @property {Boolean} - Determines whether the canvas clears the background each draw call.
+     * @default true
+     */
     this.overdraw = params.overdraw;
 
+    /**
+     * @name Two.WebGLRenderer#ctx
+     * @property {WebGLContext} - Associated two dimensional context to render on the `<canvas />`.
+     */
     gl = this.ctx = this.domElement.getContext('webgl', params) ||
       this.domElement.getContext('experimental-webgl', params);
 
@@ -7990,6 +8097,10 @@ SOFTWARE.
     fs = webgl.shaders.create(
       gl, webgl.shaders.fragment, webgl.shaders.types.fragment);
 
+    /**
+     * @name Two.WebGLRenderer#program
+     * @property {WebGLProgram} - Associated WebGL program to render all elements from the scenegraph.
+     */
     this.program = webgl.program.create(gl, [vs, fs]);
     gl.useProgram(this.program);
 
@@ -8017,6 +8128,10 @@ SOFTWARE.
 
   _.extend(Renderer, {
 
+    /**
+     * @name Two.WebGLRenderer.Utils
+     * @property {Object} - A massive object filled with utility functions and properties to render Two.js objects to a `<canvas />` through the WebGL API.
+     */
     Utils: webgl
 
   });
@@ -8025,6 +8140,15 @@ SOFTWARE.
 
     constructor: Renderer,
 
+    /**
+     * @name Two.WebGLRenderer#setSize
+     * @function
+     * @param {Number} width - The new width of the renderer.
+     * @param {Number} height - The new height of the renderer.
+     * @param {Number} [ratio] - The new pixel ratio (pixel density) of the renderer. Defaults to calculate the pixel density of the user's screen.
+     * @description Change the size of the renderer.
+     * @nota-bene Triggers a `Two.Events.resize`.
+     */
     setSize: function(width, height, ratio) {
 
       this.width = width;
@@ -8057,6 +8181,11 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.WebGLRenderer#render
+     * @function
+     * @description Render the current scene to the `<canvas />`.
+     */
     render: function() {
 
       var gl = this.ctx;
@@ -8351,6 +8480,10 @@ SOFTWARE.
       clone.translation.copy(this.translation);
       clone.rotation = this.rotation;
       clone.scale = this.scale;
+
+      if (this.matrix.manual) {
+        clone.matrix.copy(this.matrix);
+      }
 
       if (parent) {
         parent.add(clone);
@@ -9106,6 +9239,10 @@ SOFTWARE.
       clone.translation.copy(this.translation);
       clone.rotation = this.rotation;
       clone.scale = this.scale;
+
+      if (this.matrix.manual) {
+        clone.matrix.copy(this.matrix);
+      }
 
       if (parent) {
         parent.add(clone);
@@ -12157,6 +12294,10 @@ SOFTWARE.
       _.each(Two.Text.Properties, function(property) {
         clone[property] = this[property];
       }, this);
+
+      if (this.matrix.manual) {
+        clone.matrix.copy(this.matrix);
+      }
 
       if (parent) {
         parent.add(clone);
