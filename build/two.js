@@ -472,7 +472,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2019-11-11T07:39:43-08:00',
+    PublishDate: '2019-11-12T06:59:14-08:00',
 
     /**
      * @name Two.Identifier
@@ -4519,6 +4519,27 @@ SOFTWARE.
       this.elements[6] = g;
       this.elements[7] = h;
       this.elements[8] = i;
+
+      return this.trigger(Two.Events.change);
+
+    },
+
+    /**
+     * @name Two.Matrix#copy
+     * @function
+     * @description Copy the matrix of one to the current instance.
+     */
+    copy: function(m) {
+
+      this.elements[0] = m.elements[0];
+      this.elements[1] = m.elements[1];
+      this.elements[2] = m.elements[2];
+      this.elements[3] = m.elements[3];
+      this.elements[4] = m.elements[4];
+      this.elements[5] = m.elements[5];
+      this.elements[6] = m.elements[6];
+      this.elements[7] = m.elements[7];
+      this.elements[8] = m.elements[8];
 
       return this.trigger(Two.Events.change);
 
