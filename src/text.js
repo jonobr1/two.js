@@ -477,6 +477,10 @@
         scale: this.scale
       };
 
+      if (this.matrix.manual) {
+        result.matrix = this.matrix.toObject();
+      }
+
       _.each(Two.Text.Properties, function(property) {
         result[property] = this[property];
       }, this);

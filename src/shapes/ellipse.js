@@ -178,6 +178,10 @@
       clone.rotation = this.rotation;
       clone.scale = this.scale;
 
+      if (this.matrix.manual) {
+        clone.matrix.copy(this.matrix);
+      }
+
       _.each(Two.Path.Properties, function(k) {
         clone[k] = this[k];
       }, this);

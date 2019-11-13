@@ -191,6 +191,8 @@
       this.elements[7] = m.elements[7];
       this.elements[8] = m.elements[8];
 
+      this.manual = m.manual;
+
       return this.trigger(Two.Events.change);
 
     },
@@ -572,27 +574,25 @@
     },
 
     /**
+     * @name Two.Matrix#toObject
+     * @function
+     * @description Create a JSON compatible object that represents information of the matrix.
+     */
+    toObject: function() {
+      return {
+        elements: this.toArray(true),
+        manual: !!this.manual
+      };
+    },
+
+    /**
      * @name Two.Matrix#clone
      * @function
      * @description Clone the current matrix.
      */
     clone: function() {
-      var a, b, c, d, e, f, g, h, i;
 
-      a = this.elements[0];
-      b = this.elements[1];
-      c = this.elements[2];
-      d = this.elements[3];
-      e = this.elements[4];
-      f = this.elements[5];
-      g = this.elements[6];
-      h = this.elements[7];
-      i = this.elements[8];
-
-      var matrix = new Two.Matrix(a, b, c, d, e, f, g, h, i);
-      matrix.manual = this.manual;
-
-      return matrix;
+      return new Two.Matrix().copy(this);
 
     }
 

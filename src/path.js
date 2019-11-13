@@ -725,6 +725,10 @@
       result.rotation = this.rotation;
       result.scale = this.scale instanceof Two.Vector ? this.scale.toObject() : this.scale;
 
+      if (this.matrix.manual) {
+        result.matrix = this.matrix.toObject();
+      }
+
       return result;
 
     },

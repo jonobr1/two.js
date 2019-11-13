@@ -321,9 +321,14 @@
       var resolution = this.vertices.length;
 
       var clone = new ArcSegment(0, 0, ir, or, sa, ea, resolution);
+
       clone.translation.copy(this.translation);
       clone.rotation = this.rotation;
       clone.scale = this.scale;
+
+      if (this.matrix.manual) {
+        clone.matrix.copy(this.matrix);
+      }
 
       _.each(Two.Path.Properties, function(k) {
         clone[k] = this[k];

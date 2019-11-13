@@ -285,9 +285,14 @@
       var radius = this.radius;
 
       var clone = new RoundedRectangle(0, 0, width, height, radius);
+
       clone.translation.copy(this.translation);
       clone.rotation = this.rotation;
       clone.scale = this.scale;
+
+      if (this.matrix.manual) {
+        clone.matrix.copy(this.matrix);
+      }
 
       _.each(Two.Path.Properties, function(k) {
         clone[k] = this[k];

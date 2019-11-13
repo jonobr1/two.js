@@ -154,9 +154,14 @@
     clone: function(parent) {
 
       var clone = new Circle(0, 0, this.radius, this.vertices.length);
+
       clone.translation.copy(this.translation);
       clone.rotation = this.rotation;
       clone.scale = this.scale;
+
+      if (this.matrix.manual) {
+        clone.matrix.copy(this.matrix);
+      }
 
       _.each(Two.Path.Properties, function(k) {
         clone[k] = this[k];

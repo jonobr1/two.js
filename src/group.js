@@ -510,29 +510,33 @@
       //  * be rethought and fixed.
       //  */
 
-      var group = new Group();
+      var clone = new Group();
       var children = _.map(this.children, function(child) {
         return child.clone();
       });
 
-      group.add(children);
+      clone.add(children);
 
-      group.opacity = this.opacity;
+      clone.opacity = this.opacity;
 
       if (this.mask) {
-        group.mask = this.mask;
+        clone.mask = this.mask;
       }
 
-      group.translation.copy(this.translation);
-      group.rotation = this.rotation;
-      group.scale = this.scale;
-      group.className = this.className;
+      clone.translation.copy(this.translation);
+      clone.rotation = this.rotation;
+      clone.scale = this.scale;
+      clone.className = this.className;
+
+      if (this.matrix.manual) {
+        clone.matrix.copy(this.matrix);
+      }
 
       if (parent) {
-        parent.add(group);
+        parent.add(clone);
       }
 
-      return group._update();
+      return clone._update();
 
     },
 
@@ -553,6 +557,10 @@
         className: this.className,
         mask: (this.mask ? this.mask.toObject() : null)
       };
+
+      if (this.matrix.manual) {
+        result.matrix = this.matrix.toObject();
+      }
 
       _.each(this.children, function(child, i) {
         result.children[i] = child.toObject();
