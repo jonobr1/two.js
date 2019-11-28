@@ -302,3 +302,33 @@ process.exit();
 
 ##### Jan 29, 2013 [v0.1.0-alpha](https://github.com/jonobr1/two.js/tree/v0.1.0-alpha)
 + Proof of Concept built from Three.js
+
+## Contributors
+
+### Code Contributors
+
+This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
+<a href="https://github.com/jonobr1/two.js/graphs/contributors"><img src="https://opencollective.com/twojs/contributors.svg?width=890&button=false" /></a>
+
+### Financial Contributors
+
+Become a financial contributor and help us sustain our community. [[Contribute](https://opencollective.com/twojs/contribute)]
+
+#### Individuals
+
+<a href="https://opencollective.com/twojs"><img src="https://opencollective.com/twojs/individuals.svg?width=890"></a>
+
+#### Organizations
+
+Support this project with your organization. Your logo will show up here with a link to your website. [[Contribute](https://opencollective.com/twojs/contribute)]
+
+<a href="https://opencollective.com/twojs/organization/0/website"><img src="https://opencollective.com/twojs/organization/0/avatar.svg"></a>
+<a href="https://opencollective.com/twojs/organization/1/website"><img src="https://opencollective.com/twojs/organization/1/avatar.svg"></a>
+<a href="https://opencollective.com/twojs/organization/2/website"><img src="https://opencollective.com/twojs/organization/2/avatar.svg"></a>
+<a href="https://opencollective.com/twojs/organization/3/website"><img src="https://opencollective.com/twojs/organization/3/avatar.svg"></a>
+<a href="https://opencollective.com/twojs/organization/4/website"><img src="https://opencollective.com/twojs/organization/4/avatar.svg"></a>
+<a href="https://opencollective.com/twojs/organization/5/website"><img src="https://opencollective.com/twojs/organization/5/avatar.svg"></a>
+<a href="https://opencollective.com/twojs/organization/6/website"><img src="https://opencollective.com/twojs/organization/6/avatar.svg"></a>
+<a href="https://opencollective.com/twojs/organization/7/website"><img src="https://opencollective.com/twojs/organization/7/avatar.svg"></a>
+<a href="https://opencollective.com/twojs/organization/8/website"><img src="https://opencollective.com/twojs/organization/8/avatar.svg"></a>
+<a href="https://opencollective.com/twojs/organization/9/website"><img src="https://opencollective.com/twojs/organization/9/avatar.svg"></a>
