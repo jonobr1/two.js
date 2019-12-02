@@ -472,7 +472,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2019-11-13T07:50:01-08:00',
+    PublishDate: '2019-12-02T18:36:52-05:00',
 
     /**
      * @name Two.Identifier
@@ -6991,16 +6991,13 @@ SOFTWARE.
           // Clip Contents to visible fragment
           // TODO: Back buffer still isn't propagated to the blend operation :(
 
-          gl.blendEquationSeparate(gl.FUNC_ADD, gl.FUNC_ADD);
-          gl.blendFuncSeparate(gl.ZERO, gl.ONE, gl.ZERO, gl.SRC_ALPHA);
+          gl.blendFunc(gl.ZERO, gl.SRC_ALPHA);
 
           webgl[this._mask._renderer.type].render.call(this._mask, gl, program, this);
 
           // Reset Blend Functions
 
-          gl.blendEquationSeparate(gl.FUNC_ADD, gl.FUNC_ADD);
-          gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA,
-            gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+          gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
 
         }
 
@@ -8138,12 +8135,10 @@ SOFTWARE.
     // Setup some initial statements of the gl context
     gl.enable(gl.BLEND);
 
-    // https://code.google.com/p/chromium/issues/detail?id=316393
-    // gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, gl.TRUE);
+    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
 
-    gl.blendEquationSeparate(gl.FUNC_ADD, gl.FUNC_ADD);
-    gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA,
-      gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+    gl.blendEquation(gl.FUNC_ADD);
+    gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
 
   };
 
