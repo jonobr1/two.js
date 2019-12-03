@@ -128,13 +128,14 @@
         this._renderer.opacity = this._opacity
           * (parent && parent._renderer ? parent._renderer.opacity : 1);
 
+        var i;
         if (this._flagSubtractions) {
-          for (var i = 0; i < this.subtractions.length; i++) {
+          for (i = 0; i < this.subtractions.length; i++) {
             webgl.group.removeChild(this.subtractions[i], gl);
           }
         }
 
-        for (var i = 0; i < this.children.length; i++) {
+        for (i = 0; i < this.children.length; i++) {
           var child = this.children[i];
           webgl[child._renderer.type].render.call(child, gl, program);
         }
@@ -257,7 +258,7 @@
               var largeArcFlag = b.largeArcFlag;
               var sweepFlag = b.sweepFlag;
 
-              prev = closed ? mod(i - 1, length) : max(i - 1, 0);
+              prev = closed ? mod(i - 1, length) : Math.max(i - 1, 0);
               a = commands[prev];
 
               var ax = toFixed(a.x);
@@ -346,7 +347,7 @@
         }
 
         if (!webgl.isHidden.test(fill)) {
-          isOffset = fill._renderer && fill._renderer.offset
+          isOffset = fill._renderer && fill._renderer.offset;
           if (isOffset) {
             ctx.save();
             ctx.translate(
@@ -1202,7 +1203,7 @@
    */
   var Renderer = Two[Two.Types.webgl] = function(params) {
 
-    var params, gl, vs, fs;
+    var gl, vs, fs;
 
     /**
      * @name Two.WebGLRenderer#domElement

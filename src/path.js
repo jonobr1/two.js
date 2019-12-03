@@ -832,13 +832,13 @@
       // TODO: Update this to not __always__ update. Just when it needs to.
       this._update(true);
 
-      matrix = !!shallow ? this._matrix : getComputedMatrix(this);
+      matrix = shallow ? this._matrix : getComputedMatrix(this);
 
       border = this.linewidth / 2;
       l = this._renderer.vertices.length;
 
       if (l <= 0) {
-        v = matrix.multiply(0, 0, 1);
+        var v = matrix.multiply(0, 0, 1);
         return {
           top: v.y,
           left: v.x,

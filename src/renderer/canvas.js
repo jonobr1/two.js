@@ -312,7 +312,7 @@
 
         if (!clip && !parentClipped) {
           if (!canvas.isHidden.test(fill)) {
-            isOffset = fill._renderer && fill._renderer.offset
+            isOffset = fill._renderer && fill._renderer.offset;
             if (isOffset) {
               ctx.save();
               ctx.translate(
