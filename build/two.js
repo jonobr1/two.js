@@ -472,7 +472,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2019-11-13T07:50:01-08:00',
+    PublishDate: '2019-12-04T10:00:14+01:00',
 
     /**
      * @name Two.Identifier
@@ -6936,16 +6936,18 @@ SOFTWARE.
 
           // Stencil away everything that isn't rendered by the mask
 
+          gl.clear(gl.STENCIL_BUFFER_BIT);
           gl.enable(gl.STENCIL_TEST);
-          gl.stencilFunc(gl.ALWAYS, 1, 1);
 
           gl.colorMask(false, false, false, true);
-          gl.stencilOp(gl.KEEP, gl.KEEP, gl.INCR);
+          gl.stencilOp(gl.KEEP, gl.KEEP, gl.REPLACE);
+
+          gl.stencilFunc(gl.ALWAYS, 1, 0);
 
           webgl[this._mask._renderer.type].render.call(this._mask, gl, program, this);
 
           gl.colorMask(true, true, true, true);
-          gl.stencilFunc(gl.NOTEQUAL, 0, 1);
+          gl.stencilFunc(gl.EQUAL, 1, 0xff);
           gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
 
         }
@@ -6973,34 +6975,7 @@ SOFTWARE.
 
         if (this._mask) {
 
-          // Clean up Stencil
-
-          gl.colorMask(false, false, false, false);
-          gl.stencilOp(gl.KEEP, gl.KEEP, gl.DECR);
-
-          webgl[this._mask._renderer.type].render.call(this._mask, gl, program, this);
-
-          gl.colorMask(true, true, true, true);
-          gl.stencilFunc(gl.NOTEQUAL, 0, 1);
-          gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
-
-          // Reset Stencil Mode
-
           gl.disable(gl.STENCIL_TEST);
-
-          // Clip Contents to visible fragment
-          // TODO: Back buffer still isn't propagated to the blend operation :(
-
-          gl.blendEquationSeparate(gl.FUNC_ADD, gl.FUNC_ADD);
-          gl.blendFuncSeparate(gl.ZERO, gl.ONE, gl.ZERO, gl.SRC_ALPHA);
-
-          webgl[this._mask._renderer.type].render.call(this._mask, gl, program, this);
-
-          // Reset Blend Functions
-
-          gl.blendEquationSeparate(gl.FUNC_ADD, gl.FUNC_ADD);
-          gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA,
-            gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
 
         }
 
@@ -8029,7 +8004,11 @@ SOFTWARE.
         'varying vec2 v_textureCoords;',
         '',
         'void main() {',
-        '  gl_FragColor = texture2D(u_image, v_textureCoords);',
+        '  vec4 texel = texture2D(u_image, v_textureCoords);',
+        '  if (texel.a == 0.0) {',
+        '    discard;',
+        '  }',
+        '  gl_FragColor = texel;',
         '}'
       ].join('\n')
 
@@ -8139,11 +8118,16 @@ SOFTWARE.
     gl.enable(gl.BLEND);
 
     // https://code.google.com/p/chromium/issues/detail?id=316393
-    // gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, gl.TRUE);
+    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, gl.TRUE);
 
     gl.blendEquationSeparate(gl.FUNC_ADD, gl.FUNC_ADD);
     gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA,
       gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+
+    // TODO: Fiddling with blend functions still required.
+    // gl.blendEquation(gl.FUNC_ADD);
+    // gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
 
   };
 
