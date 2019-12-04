@@ -57,12 +57,14 @@
 
         var matrix = this._matrix.elements;
         var parent = this.parent;
-        this._renderer.opacity = this._opacity * (parent && parent._renderer ? parent._renderer.opacity : 1);
-
-        var defaultMatrix = isDefaultMatrix(matrix);
+        this._renderer.opacity = this._opacity
+          * (parent && parent._renderer ? parent._renderer.opacity : 1);
 
         var mask = this._mask;
         // var clip = this._clip;
+
+        var defaultMatrix = isDefaultMatrix(matrix);
+        var shouldIsolate = !defaultMatrix || !!mask;
 
         if (!this._renderer.context) {
           this._renderer.context = {};
@@ -71,9 +73,12 @@
         this._renderer.context.ctx = ctx;
         // this._renderer.context.clip = clip;
 
-        if (!defaultMatrix) {
+        if (shouldIsolate) {
           ctx.save();
-          ctx.transform(matrix[0], matrix[3], matrix[1], matrix[4], matrix[2], matrix[5]);
+          if (!defaultMatrix) {
+            ctx.transform(  matrix[0], matrix[3], matrix[1],
+              matrix[4], matrix[2], matrix[5]);
+          }
         }
 
         if (mask) {
@@ -87,7 +92,7 @@
           }
         }
 
-        if (!defaultMatrix) {
+        if (shouldIsolate) {
           ctx.restore();
         }
 
