@@ -145,9 +145,7 @@
         });
 
         if (this._mask) {
-
           gl.disable(gl.STENCIL_TEST);
-
         }
 
         return this.flagReset();
@@ -1288,18 +1286,10 @@
     // Setup some initial statements of the gl context
     gl.enable(gl.BLEND);
 
-    // https://code.google.com/p/chromium/issues/detail?id=316393
-    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, gl.TRUE);
+    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
 
-    gl.blendEquationSeparate(gl.FUNC_ADD, gl.FUNC_ADD);
-    gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA,
-      gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-
-    // TODO: Fiddling with blend functions still required.
-    // gl.blendEquation(gl.FUNC_ADD);
-    // gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-
-
+    gl.blendEquation(gl.FUNC_ADD);
+    gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
   };
 
   _.extend(Renderer, {
