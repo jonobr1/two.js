@@ -67,13 +67,20 @@
      */
     if (typeof src === 'string') {
       this.src = src;
-    } else if (_.isElement(src)) {
-      /**
-       * @name Two.Texture#image
-       * @property {Element} - The corresponding DOM Element of the texture. Can be a `<img />`, `<canvas />`, or `<video />` element. See {@link Two.Texture.RegularExpressions} for a full list of supported elements.
-       * @nota-bene In headless environments this is a `Canvas.Image` object. See {@link https://github.com/Automattic/node-canvas} for more information on headless image objects.
-       */
-      this.image = src;
+    } else if (typeof src === 'object') {
+      var elemString = Object.prototype.toString.call(src);
+      if (
+        elemString === '[object HTMLImageElement]' ||
+        elemString === '[object HTMLCanvasElement]' ||
+        elemString === '[object HTMLVideoElement]'
+      ) {
+        /**
+         * @name Two.Texture#image
+         * @property {Element} - The corresponding DOM Element of the texture. Can be a `<img />`, `<canvas />`, or `<video />` element. See {@link Two.Texture.RegularExpressions} for a full list of supported elements.
+         * @nota-bene In headless environments this is a `Canvas.Image` object. See {@link https://github.com/Automattic/node-canvas} for more information on headless image objects.
+         */
+        this.image = src;
+      }
     }
 
     this._update();

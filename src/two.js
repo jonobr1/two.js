@@ -11,7 +11,6 @@
     root = this;
   }
 
-  var toString = Object.prototype.toString;
   /**
    * @name _
    * @interface
