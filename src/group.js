@@ -694,7 +694,7 @@
       // If it's an array also create copy of it in case we're getting passed
       // a childrens array directly.
       if (!(objects instanceof Array)) {
-        objects = _.toArray(arguments);
+        objects = Array.prototype.slice.call(arguments);
       } else {
         objects = objects.slice();
       }
@@ -738,7 +738,7 @@
       // If it's an array also create copy of it in case we're getting passed
       // a childrens array directly.
       if (!(objects instanceof Array)) {
-        objects = _.toArray(arguments);
+        objects = Array.prototype.slice.call(arguments);
       } else {
         objects = objects.slice();
       }

@@ -31,7 +31,7 @@
 
     var elements = a;
     if (!Array.isArray(elements)) {
-      elements = _.toArray(arguments);
+      elements = Array.prototype.slice.call(arguments);
     }
 
     // initialize the elements with default values.

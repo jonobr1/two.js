@@ -296,7 +296,7 @@
         var svg = QUnit.Utils.textToDOM(resp)[0];
         var shape = two.interpret(svg).subdivide();
 
-        _.each(_.toArray(shape.children)[0].vertices, function(v) {
+        _.each(shape.children[0].vertices, function(v) {
           var circle = two.makeCircle(v.x, v.y, 3);
           circle.noStroke().fill = 'red';
         });
@@ -325,7 +325,7 @@
         var svg = QUnit.Utils.textToDOM(resp)[0];
         var shape = two.interpret(svg).subdivide();
 
-        _.each(_.toArray(shape.children)[0].vertices, function(v) {
+        _.each(shape.children[0].vertices, function(v) {
           var circle = two.makeCircle(v.x, v.y, 3);
           circle.noStroke().fill = 'red';
         });
@@ -354,7 +354,7 @@
         var svg = QUnit.Utils.textToDOM(resp)[0];
         var shape = two.interpret(svg).subdivide(3);
 
-        _.each(_.toArray(shape.children)[0].vertices, function(v) {
+        _.each(shape.children[0].vertices, function(v) {
           var circle = two.makeCircle(v.x, v.y, 3);
           circle.noStroke().fill = 'red';
         });
@@ -371,13 +371,5 @@
     })();
 
   });
-
-  // Use this function to get an answer of interpreted Two.Path
-  function retrieveObject(shape) {
-    var result = shape.toObject();
-    result.children = _.toArray(result.children);
-    console.log(JSON.stringify(result));
-    return result;
-  }
 
 })();

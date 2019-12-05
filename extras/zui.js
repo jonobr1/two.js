@@ -138,14 +138,14 @@
       this.updateOffset();
       var m = this.surfaceMatrix.inverse();
       var n = this.viewportOffset.matrix.inverse().multiply(x, y, 1);
-      return m.multiply.apply(m, _.toArray(n));
+      return m.multiply.apply(m, [n.x, n.y, n.z]);
     },
 
     surfaceToClient: function(v) {
       this.updateOffset();
       var vo = this.viewportOffset.matrix.clone();
-      var sm = this.surfaceMatrix.multiply.apply(this.surfaceMatrix, _.toArray(v));
-      return vo.multiply.apply(vo, _.toArray(sm));
+      var sm = this.surfaceMatrix.multiply.apply(this.surfaceMatrix, [v.x, v.y, v.z]);
+      return vo.multiply.apply(vo, [sm.x, sm.y, sm.z]);
     },
 
     /**

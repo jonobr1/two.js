@@ -237,7 +237,7 @@
         var check, isElse = false;
 
         if (Array.isArray(a[i])) {
-          check = Utils.shapeEquals(a[i], _.toArray(q[i]));
+          check = Utils.shapeEquals(a[i], Array.prototype.slice.call(q[i]));
         } else if (_.isObject(a[i])) {
           check = Utils.shapeEquals(a[i], q[i]);
         } else if (typeof a[i] === 'number') {
