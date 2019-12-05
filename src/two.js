@@ -35,18 +35,6 @@
     isNumber: function(obj) {
       return toString.call(obj) === '[object Number]';
     },
-    isDate: function(obj) {
-      return toString.call(obj) === '[object Date]';
-    },
-    isRegExp: function(obj) {
-      return toString.call(obj) === '[object RegExp]';
-    },
-    isError: function(obj) {
-      return toString.call(obj) === '[object Error]';
-    },
-    isFinite: function(obj) {
-      return isFinite(obj) && !isNaN(parseFloat(obj));
-    },
     isNaN: function(obj) {
       return _.isNumber(obj) && obj !== +obj;
     },
