@@ -23,9 +23,10 @@
     // At least 2 vertices are required for proper circlage
     var amount = resolution ? Math.max(resolution, 2) : 4;
 
-    var points = _.map(_.range(amount), function(i) {
-      return new Two.Anchor();
-    }, this);
+    var points = [];
+    for (var i = 0; i < amount; i++) {
+      points.push(new Two.Anchor());
+    }
 
     Path.call(this, points, true, true, true);
 

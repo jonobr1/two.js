@@ -22,10 +22,13 @@
 
     var amount = 10;
 
-    var points = _.map(_.range(amount), function(i) {
-      return new Two.Anchor(0, 0, 0, 0, 0, 0,
-        i === 0 ? Two.Commands.move : Two.Commands.curve);
-    });
+    var points = [];
+    for (var i = 0; i < amount; i++) {
+      points.push(
+        new Two.Anchor(0, 0, 0, 0, 0, 0,
+          i === 0 ? Two.Commands.move : Two.Commands.curve)
+      );
+    }
 
     // points[points.length - 1].command = Two.Commands.close;
 

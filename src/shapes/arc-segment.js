@@ -19,9 +19,10 @@
   var ArcSegment = Two.ArcSegment = function(ox, oy, ir, or, sa, ea, res) {
 
     var amount = res || (Two.Resolution * 3);
-    var points = _.map(_.range(amount), function() {
-      return new Two.Anchor();
-    });
+    var points = [];
+    for (var i = 0; i < amount; i++) {
+      points.push(new Two.Anchor());
+    }
 
     Path.call(this, points, true, false, true);
 

@@ -63,22 +63,6 @@
       }
       return _.values(obj);
     },
-    range: function(start, stop, step) {
-      if (stop == null) {
-        stop = start || 0;
-        start = 0;
-      }
-      step = step || 1;
-
-      var length = Math.max(Math.ceil((stop - start) / step), 0);
-      var range = Array(length);
-
-      for (var idx = 0; idx < length; idx++, start += step) {
-        range[idx] = start;
-      }
-
-      return range;
-    },
     indexOf: function(list, item) {
       if (_.natural.indexOf) {
         return _.natural.indexOf.call(list, item);
@@ -2092,11 +2076,12 @@
        */
       getAnchorsFromArcData: function(center, xAxisRotation, rx, ry, ts, td, ccw) {
 
-        var l = Two.Resolution;
+        var resolution = Two.Resolution;
 
-        return _.map(_.range(l), function(i) {
+        var anchors = [];
 
-          var pct = (i + 1) / l;
+        for (var i = 0; i < resolution; i++) {
+          var pct = (i + 1) / resolution;
           if (ccw) {
             pct = 1 - pct;
           }
@@ -2114,9 +2099,8 @@
 
           // TODO: Calculate control points here...
 
-          return anchor;
-
-        });
+          anchors.push(anchor);
+        }
 
       },
 
