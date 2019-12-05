@@ -20,7 +20,6 @@
     <script type="text/javascript" src="//use.typekit.net/edp1hux.js"></script>
     <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
     <script src="../third-party/jquery.js"></script>
-    <script src="../third-party/underscore.js"></script>
     <script src="../third-party/stats.js"></script>
     <script src="../third-party/two.js"></script>
     <script src="../third-party/url.js"></script>
@@ -77,8 +76,8 @@
 
           var stats = new Stats();
           var two, particles = [], radius = 50, shouldAdd = false, shouldRemove = false;
-          var activeOperations = _.compact((url.operations || 'translation').split(','));
-          var activeShapes = _.compact((url.shapes || 'circle').split(','));
+          var activeOperations = (url.operations || 'translation').split(',');
+          var activeShapes = (url.shapes || 'circle').split(',');
           var colors = [
             'rgb(255, 64, 64)', 'rgb(255, 128, 0)', 'rgb(0, 200, 255)',
             'rgb(0, 191, 168)', 'rgb(153, 102, 255)', 'rgb(255, 244, 95)'
@@ -135,7 +134,8 @@
               make: function() {
                 var r = Math.random() * radius + radius / 2;
                 var r2 = r / 2;
-                var points = _.map(_.range(10), function(i) {
+                var points = [];
+                for (var i = 0; i < 10; i++) {
                   var pct = i / 10;
                   var angle = pct * Math.PI * 2;
                   var x = (i % 2 ? r : r2) * Math.cos(angle);
@@ -143,8 +143,8 @@
                   var anchor = new Two.Anchor(x, y);
                   anchor.origin = new Two.Vector().copy(anchor);
                   vertices++;
-                  return anchor;
-                });
+                  points.push(anchor);
+                }
                 var poly = new Two.Path(points, true);
                 return poly;
               }
@@ -188,7 +188,7 @@
             vertices: {
               enabled: false,
               update: function(particle) {
-                _.each(particle.vertices, function(anchor) {
+                particle.vertices.forEach(function(anchor) {
                   anchor.x = anchor.origin.x + Math.random() * 10 - 5;
                   anchor.y = anchor.origin.y + Math.random() * 10 - 5;
                 });
@@ -280,7 +280,7 @@
               if (operations[e.type].enabled) {
                 activeOperations.push(e.type);
               } else {
-                var index = _.indexOf(activeOperations, e.type);
+                var index = activeOperations.indexOf(e.type);
                 if (index >= 0) {
                   activeOperations.splice(index, 1);
                 }
@@ -295,7 +295,7 @@
               if (shapes[e.type].enabled) {
                 activeShapes.push(e.type);
               } else {
-                var index = _.indexOf(activeShapes, e.type);
+                var index = activeShapes.indexOf(e.type);
                 if (index >= 0) {
                   activeShapes.splice(index, 1);
                 }
@@ -315,12 +315,12 @@
           // Setup Stage on page load
           (function() {
 
-            _.each(activeOperations, function(type) {
+            activeOperations.forEach(function(type) {
               operations[type].enabled = true;
               $('[name=' + type + ']').addClass('enabled');
             });
 
-            _.each(activeShapes, function(type) {
+            activeShapes.forEach(function(type) {
               shapes[type].enabled = true;
               $('[name=' + type + ']').addClass('enabled');
             });
@@ -329,7 +329,10 @@
             initializeStage(type);
             $('[name=' + type + ']').addClass('enabled');
 
-            _.each(_.range(url.int('count', 1)), addParticle);
+            var particleCount = url.int('count', 1);
+            for (var i = 0; i < particleCount; i++) {
+              addParticle();
+            }
 
           })();
 
@@ -339,11 +342,10 @@
 
             if (stats.exists) {
               document.body.appendChild(stats.domElement);
-              _.extend(stats.domElement.style, {
-                position: 'absolute',
-                left: 0,
-                bottom: 0
-              });
+              var statsStyle = stats.domElement.style;
+              statsStyle.position = 'absolute';
+              statsStyle.left = 0;
+              statsStyle.bottom = 0;
             }
 
             if (type === 'webgl' && !has.webgl) {
@@ -352,7 +354,7 @@
             }
 
             // Remove any previous instances
-            _.each(Two.Instances, function(two) {
+            Two.Instances.forEach(function(two) {
               Two.Utils.release(two);
               $(two.renderer.domElement).remove();
             });
@@ -366,25 +368,24 @@
             }).appendTo($stage[0]);
 
             // Setup the size
-            _.extend(two.renderer.domElement.style, {
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0
-            });
+            var style = two.renderer.domElement.style;
+            style.position = 'absolute';
+            style.top = 0;
+            style.left = 0;
+            style.right = 0;
+            style.bottom = 0;
 
             $window.resize();
 
             // Reset flags and private variables
-            _.each(particles, function(particle) {
+            particles.forEach(function(particle) {
 
               // TODO: figure out what this code did in earlier versions of Two.js. Right now it's broken.
               // particle._renderer = { type: particle._renderer.type };
 
-              _.each(flags, function(flag) {
+              flags.forEach(function(flag) {
 
-                if (_.isUndefined(particle[flag])) {
+                if (typeof particle[flag] === 'undefined') {
                   return;
                 }
 
@@ -460,13 +461,15 @@
               removeParticle();
             }
 
-            _.each(particles, function(particle) {
+            particles.forEach(function(particle) {
 
-              _.each(operations, function(operation) {
-                if (operation.enabled) {
-                  operation.update(particle);
+              for (var i in operations) {
+                if (Object.prototype.hasOwnProperty.call(operations, i)) {
+                  if (operations[i].enabled) {
+                    operations[i].update(particle);
+                  }
                 }
-              });
+              }
 
             });
 
@@ -474,7 +477,8 @@
 
           function generate(amount) {
             var r = Math.random() * radius + radius / 2;
-            return _.map(_.range(amount), function(i) {
+            var points = [];
+            for (var i = 0; i < amount; i++) {
               var pct = i / amount;
               var angle = pct * Math.PI * 2;
               var x = r * Math.cos(angle);
@@ -482,8 +486,9 @@
               var anchor = new Two.Anchor(x, y);
               anchor.origin = new Two.Vector().copy(anchor);
               vertices++;
-              return anchor;
-            });
+              points.push(anchor);
+            }
+            return points;
           }
 
           var TTRL = {
@@ -502,19 +507,13 @@
 
             if (activeShapes.length > 0) {
 
-              url += '&shapes=';
-              _.each(activeShapes, function(shape, i) {
-                url += (i > 0 ? ',' : '') + shape;
-              });
+              url += '&shapes=' + activeShapes.join(',');
 
             }
 
             if (activeOperations.length > 0) {
 
-              url += '&operations=';
-              _.each(activeOperations, function(operation, i) {
-                url += (i > 0 ? ',' : '') + operation;
-              });
+              url += '&operations=' + activeOperations.join(',');
 
             }
 

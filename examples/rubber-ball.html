@@ -8,7 +8,6 @@
     <link rel="shortcut icon" type="image/gif" href="../images/favicon.gif">
     <script src="../third-party/url.js"></script>
     <script src="../third-party/jquery.js"></script>
-    <script src="../third-party/underscore.js"></script>
     <script src="../third-party/two.js"></script>
     <style>
       * { margin: 0; padding: 0; cursor: none; }
@@ -43,7 +42,7 @@
           var ball = two.makeCircle(two.width / 2, two.height / 2, radius);
           ball.noStroke().fill = 'white';
 
-          _.each(ball.vertices, function(v) {
+          ball.vertices.forEach(function(v) {
             v.origin = new Two.Vector().copy(v);
           });
 
@@ -72,7 +71,7 @@
 
             delta.copy(mouse).subSelf(ball.translation);
 
-            _.each(ball.vertices, function(v, i) {
+            ball.vertices.forEach(function(v, i) {
 
               var dist = v.origin.distanceTo(delta);
               var pct = dist / radius;

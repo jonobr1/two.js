@@ -8,7 +8,6 @@
     <link rel="shortcut icon" type="image/gif" href="../images/favicon.gif">
     <script src="../third-party/url.js"></script>
     <script src="../third-party/jquery.js"></script>
-    <script src="../third-party/underscore.js"></script>
     <script src="../third-party/two.js"></script>
     <style>
       * { margin: 0; padding: 0; }
@@ -20,7 +19,7 @@
       <!-- letter "C" made in Adobe Illustrator CS5 -->
       <svg version="1.1"
          xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/"
-         x="0px" y="0px" width="202px" height="264px" viewBox="-0.469 -0.136 202 264"
+         x="0px" y="0px" width="202px" height="264px"
          overflow="visible" enable-background="new -0.469 -0.136 202 264" xml:space="preserve">
       <path fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M200.5,204.792
         c0,0-35.703,58.341-99.988,58.341C36.223,263.132,0.5,210.862,0.5,131.531C0.5,52.204,38.584,0.5,100.5,0.5
@@ -57,8 +56,8 @@
           two.bind('resize', resize);
           resize();
 
-          _.each(letter.children, function(polygon) {
-            _.each(polygon.vertices, function(anchor) {
+          letter.children.forEach(function(polygon) {
+            polygon.vertices.forEach(function(anchor) {
 
               var p = two.makeCircle(0, 0, radius / 4);
               var l = two.makeCircle(0, 0, radius / 4);
@@ -79,7 +78,9 @@
               ]);
               rl.noFill().stroke = ll.noFill().stroke = editColor;
 
-              letter.add(rl, ll, p, l, r);
+              var g = two.makeGroup(rl, ll, p, l, r);
+              g.translation.addSelf(polygon.translation);
+              letter.add(g);
 
               p.translation.bind(Two.Events.change, function() {
                 anchor.copy(this);
@@ -113,7 +114,7 @@
 
           function addInteractivity(shape) {
 
-            var offset = shape.parent.translation;
+            var offset = Two.Vector.add(shape.parent.parent.translation, shape.parent.translation);
 
             var drag = function(e) {
               e.preventDefault();
@@ -125,7 +126,7 @@
               e.preventDefault();
               var touch = e.originalEvent.changedTouches[0];
               drag({
-                preventDefault: _.identity,
+                preventDefault: function() {},
                 clientX: touch.pageX,
                 clientY: touch.pageY
               });
@@ -187,11 +188,10 @@
 
           two.update();
 
-          _.extend(document.body.style, {
-            backgroundImage: 'url(' + two.renderer.domElement.toDataURL() + ')',
-            backgroundRepeat: 'repeat',
-            backgroundSize: dimensions + 'px ' + dimensions + 'px'
-          });
+          var style = document.body.style;
+          style.backgroundImage = 'url(' + two.renderer.domElement.toDataURL() + ')';
+          style.backgroundRepeat = 'repeat';
+          style.backgroundSize = dimensions + 'px ' + dimensions + 'px';
 
         }
 

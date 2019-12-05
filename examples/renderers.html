@@ -71,7 +71,7 @@
           eyes[2].domElement = canvas.renderer.domElement;
 
           var releaseEyes = _.debounce(function() {
-            _.each(eyes, function(eye) {
+            eyes.forEach(function(eye) {
               eye.ball.destination.clear();
             });
           }, 1000);
@@ -106,7 +106,7 @@
           function mousemove(e) {
 
             var mouse = new Two.Vector(e.clientX, e.clientY);
-            _.each(eyes, function(eye) {
+            eyes.forEach(function(eye) {
               var rect = eye.domElement.getBoundingClientRect();
               var center = {
                 x: rect.left + rect.width / 2,

@@ -8,7 +8,6 @@
     <link rel="shortcut icon" type="image/gif" href="../images/favicon.gif">
     <script src="../third-party/url.js"></script>
     <script src="../third-party/jquery.js"></script>
-    <script src="../third-party/underscore.js"></script>
     <script src="../third-party/two.js"></script>
     <script src="../third-party/physics.js"></script>
   </head>
@@ -77,9 +76,7 @@
 
         background.add(inner);
 
-        _.extend(two.renderer.domElement.style, {
-          background: 'url(' + generateGrid() + ') center center'
-        });
+        two.renderer.domElement.style.background = 'url(' + generateGrid() + ') center center';
 
         resize();
 

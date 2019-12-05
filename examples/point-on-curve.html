@@ -8,7 +8,6 @@
     <link rel="shortcut icon" type="image/gif" href="../images/favicon.gif">
     <script src="../third-party/url.js"></script>
     <script src="../third-party/jquery.js"></script>
-    <script src="../third-party/underscore.js"></script>
     <script src="../third-party/two.js"></script>
   </head>
   <body style="background: rgb(0, 191, 168);">
@@ -26,17 +25,16 @@
 
           var amt = 64;
 
-          var path = two.makeCurve(
-            _.map(_.range(amt), function(i) {
-              var pct = i / (amt - 1);
+          var points = [];
+          for (var i = 0; i < amt; i++) {
+            var pct = i / (amt - 1);
               var theta = pct * Math.PI * 8;
               var r = pct * Math.min(two.height, two.width);
               var x = r * Math.cos(theta);
               var y = r * Math.sin(theta);
-              return new Two.Anchor(x, y);
-            }),
-            true
-          );
+              points.push(new Two.Anchor(x, y));
+          }
+          var path = two.makeCurve(points, true);
 
           path.noFill().linewidth = 25;
           path.cap = path.join = 'round';

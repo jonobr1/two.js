@@ -8,7 +8,6 @@
     <link rel="shortcut icon" type="image/gif" href="../images/favicon.gif">
     <script src="../third-party/url.js"></script>
     <script src="../third-party/jquery.js"></script>
-    <script src="../third-party/underscore.js"></script>
     <script src="../third-party/two.js"></script>
     <script src="../third-party/three.js"></script>
   </head>
@@ -181,13 +180,19 @@
 
         function generateShadow() {
 
-          var shadow = new THREE.Mesh(new THREE.ShapeGeometry(new THREE.Shape(_.map(_.range(32), function(i) {
+          var vertices = [];
+          for (var i = 0; i < 32; i++) {
             var pct = i / 32;
             var theta = Math.PI * 2 * pct;
             var x = Math.cos(theta);
             var y = Math.sin(theta);
-            return new THREE.Vector2(x, y);
-          }))), new THREE.MeshBasicMaterial({ color: 0xefefef, transparent: true, side: THREE.DoubleSide }));
+            vertices.push(new THREE.Vector2(x, y));
+          }
+
+          var shadow = new THREE.Mesh(
+            new THREE.ShapeGeometry(new THREE.Shape(vertices)),
+            new THREE.MeshBasicMaterial({ color: 0xefefef, transparent: true, side: THREE.DoubleSide })
+          );
 
           shadow.scale.set(geometry.boundingBox.width / 2, geometry.boundingBox.height / 2, 1 / size);
           shadow.rotation.x = Math.PI / 2;
