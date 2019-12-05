@@ -22,13 +22,6 @@
   var _ = {
     // http://underscorejs.org/ • 1.8.3
     _indexAmount: 0,
-    natural: {
-      slice: Array.prototype.slice,
-      indexOf: Array.prototype.indexOf,
-      keys: Object.keys,
-      bind: Function.prototype.bind,
-      create: Object.create
-    },
     isNaN: function(obj) {
       return typeof obj === 'number' && obj !== +obj;
     },
@@ -52,7 +45,7 @@
       return Object.keys(obj).map(function(key) {return obj[key];});
     },
     bind: function(func, ctx) {
-      var natural = _.natural.bind;
+      var natural = Function.prototype.bind;
       if (natural && func.bind === natural) {
         return natural.apply(func, slice.call(arguments, 1));
       }
@@ -128,7 +121,7 @@
   // Localized variables
 
   var count = 0;
-  var slice = _.natural.slice;
+  var slice = Array.prototype.slice;
   var perf = ((root.performance && root.performance.now) ? root.performance : Date);
   var MAX_ARRAY_INDEX = Math.pow(2, 53) - 1;
   var getLength = function(obj) {
