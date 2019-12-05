@@ -165,7 +165,7 @@
 
             for (var i = 0; i < prev.length; i++) {
               var className = prev[i];
-              var index = _.indexOf(this.classList, className);
+              var index = Array.prototype.indexOf.call(this.classList, className);
               if (index >= 0) {
                 this.classList.splice(index, 1);
               }

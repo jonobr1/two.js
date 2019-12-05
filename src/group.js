@@ -645,7 +645,7 @@
     getByClassName: function(className) {
       var found = [];
       function search(node) {
-        if (_.indexOf(node.classList, className) >= 0) {
+        if (Array.prototype.indexOf.call(node.classList, className) >= 0) {
           found.push(node);
         }
         if (node.children) {
@@ -705,7 +705,7 @@
         if (!(child && child.id)) {
           continue;
         }
-        var index = _.indexOf(this.children, child);
+        var index = Array.prototype.indexOf.call(this.children, child);
         if (index >= 0) {
           this.children.splice(index, 1);
         }
@@ -746,7 +746,7 @@
       // Remove the objects
       for (var i = 0; i < objects.length; i++) {
         if (!objects[i] || !(this.children.ids[objects[i].id])) continue;
-        this.children.splice(_.indexOf(this.children, objects[i]), 1);
+        this.children.splice(Array.prototype.indexOf.call(this.children, objects[i]), 1);
       }
 
       return this;
@@ -946,7 +946,7 @@
 
     if (parent && parent.children.ids[child.id]) {
 
-      index = _.indexOf(parent.children, child);
+      index = Array.prototype.indexOf.call(parent.children, child);
       parent.children.splice(index, 1);
 
       splice();
@@ -972,7 +972,7 @@
     function add() {
 
       if (newParent.subtractions.length > 0) {
-        index = _.indexOf(newParent.subtractions, child);
+        index = Array.prototype.indexOf.call(newParent.subtractions, child);
 
         if (index >= 0) {
           newParent.subtractions.splice(index, 1);
@@ -980,7 +980,7 @@
       }
 
       if (newParent.additions.length > 0) {
-        index = _.indexOf(newParent.additions, child);
+        index = Array.prototype.indexOf.call(newParent.additions, child);
 
         if (index >= 0) {
           newParent.additions.splice(index, 1);
@@ -995,13 +995,13 @@
 
     function splice() {
 
-      index = _.indexOf(parent.additions, child);
+      index = Array.prototype.indexOf.call(parent.additions, child);
 
       if (index >= 0) {
         parent.additions.splice(index, 1);
       }
 
-      index = _.indexOf(parent.subtractions, child);
+      index = Array.prototype.indexOf.call(parent.subtractions, child);
 
       if (index < 0) {
         parent.subtractions.push(child);

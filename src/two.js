@@ -63,17 +63,6 @@
       }
       return _.values(obj);
     },
-    indexOf: function(list, item) {
-      if (_.natural.indexOf) {
-        return _.natural.indexOf.call(list, item);
-      }
-      for (var i = 0; i < list.length; i++) {
-        if (list[i] === item) {
-          return i;
-        }
-      }
-      return -1;
-    },
     has: function(obj, key) {
       return obj != null && hasOwnProperty.call(obj, key);
     },
@@ -812,7 +801,7 @@
 
         for (var i = 0; i < keywords.length; i++) {
           var keyword = keywords[i];
-          var index = _.indexOf(attributes, keyword);
+          var index = Array.prototype.indexOf.call(attributes, keyword);
           if (index >= 0) {
             attributes.splice(index, 1);
           }
