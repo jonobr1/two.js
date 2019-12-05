@@ -49,7 +49,7 @@
       if (isArrayLike(obj)) {
         return Array.prototype.map.call(obj, function(item) {return item;});
       }
-      return _.values(obj);
+      return Object.keys(obj).map(function(key) {return obj[key];});
     },
     bind: function(func, ctx) {
       var natural = _.natural.bind;
@@ -83,33 +83,9 @@
       }
       return base;
     },
-    keys: function(obj) {
-      if (!_.isObject(obj)) {
-        return [];
-      }
-      if (_.natural.keys) {
-        return _.natural.keys(obj);
-      }
-      var keys = [];
-      for (var k in obj) {
-        if (Object.prototype.hasOwnProperty.call(obj, k)) {
-          keys.push(k);
-        }
-      }
-      return keys;
-    },
-    values: function(obj) {
-      var keys = _.keys(obj);
-      var values = [];
-      for (var i = 0; i < keys.length; i++) {
-        var k = keys[i];
-        values.push(obj[k]);
-      }
-      return values;
-    },
     each: function(obj, iteratee, context) {
       var ctx = context || this;
-      var keys = !isArrayLike(obj) && _.keys(obj);
+      var keys = !isArrayLike(obj) && Object.keys(obj);
       var length = (keys || obj).length;
       for (var i = 0; i < length; i++) {
         var k = keys ? keys[i] : i;
@@ -2179,7 +2155,7 @@
             return this;
           }
 
-          var names = name ? [name] : _.keys(this._events);
+          var names = name ? [name] : Object.keys(this._events);
           for (var i = 0, l = names.length; i < l; i++) {
 
             name = names[i];
