@@ -35,9 +35,6 @@
     isNaN: function(obj) {
       return _.isNumber(obj) && obj !== +obj;
     },
-    isBoolean: function(obj) {
-      return obj === true || obj === false || toString.call(obj) === '[object Boolean]';
-    },
     isUndefined: function(obj) {
       return obj === void 0;
     },
@@ -1984,7 +1981,7 @@
 
         // TODO: Issue 73
         if (d1 < 0.0001 || d2 < 0.0001) {
-          if (_.isBoolean(b.relative) && !b.relative) {
+          if (typeof b.relative === 'boolean' && !b.relative) {
             b.controls.left.copy(b);
             b.controls.right.copy(b);
           }
@@ -2008,7 +2005,7 @@
         b.controls.right.x = cos(mid) * d2;
         b.controls.right.y = sin(mid) * d2;
 
-        if (_.isBoolean(b.relative) && !b.relative) {
+        if (typeof b.relative === 'boolean' && !b.relative) {
           b.controls.left.x += b.x;
           b.controls.left.y += b.y;
           b.controls.right.x += b.x;
@@ -2711,7 +2708,7 @@
       }
 
       var last = arguments[l - 1];
-      var curve = new Two.Path(points, !(_.isBoolean(last) ? last : undefined), true);
+      var curve = new Two.Path(points, !(typeof last === 'boolean' ? last : undefined), true);
       var rect = curve.getBoundingClientRect();
       curve.center().translation
         .set(rect.left + rect.width / 2, rect.top + rect.height / 2);
@@ -2783,7 +2780,7 @@
       }
 
       var last = arguments[l - 1];
-      var path = new Two.Path(points, !(_.isBoolean(last) ? last : undefined));
+      var path = new Two.Path(points, !(typeof last === 'boolean' ? last : undefined));
       var rect = path.getBoundingClientRect();
 
       if (_.isNumber(rect.top)   && _.isNumber(rect.left)   &&

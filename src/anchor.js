@@ -219,7 +219,7 @@
         this.controls.left.copy(v.controls.left);
         this.controls.right.copy(v.controls.right);
       }
-      if (_.isBoolean(v.relative)) {
+      if (typeof v.relative === 'boolean') {
         this.relative = v.relative;
       }
 

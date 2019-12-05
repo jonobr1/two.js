@@ -1031,7 +1031,7 @@
         obj.controls.right.x = alx;
         obj.controls.right.y = aly;
 
-        if (!_.isBoolean(obj.relative) || obj.relative) {
+        if (!typeof obj.relative === 'boolean' || obj.relative) {
           obj.controls.left.x -= x;
           obj.controls.left.y -= y;
           obj.controls.right.x -= x;
