@@ -29,12 +29,6 @@
       bind: Function.prototype.bind,
       create: Object.create
     },
-    identity: function(value) {
-      return value;
-    },
-    isArguments: function(obj) {
-      return toString.call(obj) === '[object Arguments]';
-    },
     isFunction: function(obj) {
       return toString.call(obj) === '[object Function]';
     },

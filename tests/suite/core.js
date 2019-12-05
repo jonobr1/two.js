@@ -18,7 +18,6 @@ QUnit.test('Two.Utils', function(assert) {
   assert.expect(10 * 10 + 16);
 
   var types = {
-    arguments: arguments,
     number: 1,
     nan: NaN,
     null: null,
@@ -30,7 +29,6 @@ QUnit.test('Two.Utils', function(assert) {
     bool: false
   };
   var funcs = {
-    arguments: Two.Utils.isArguments,
     number: Two.Utils.isNumber,
     nan: Two.Utils.isNaN,
     null: Two.Utils.isNull,
