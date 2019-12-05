@@ -29,9 +29,6 @@
       bind: Function.prototype.bind,
       create: Object.create
     },
-    isFunction: function(obj) {
-      return toString.call(obj) === '[object Function]';
-    },
     isNumber: function(obj) {
       return toString.call(obj) === '[object Number]';
     },
@@ -191,7 +188,7 @@
 
     temp: (root.document ? root.document.createElement('div') : {}),
 
-    hasEventListeners: _.isFunction(root.addEventListener),
+    hasEventListeners: typeof root.addEventListener === 'function',
 
     bind: function(elem, event, func, bool) {
       if (this.hasEventListeners) {
@@ -521,16 +518,16 @@
           return;
         }
 
-        if (_.isFunction(obj.unbind)) {
+        if (typeof obj.unbind === 'function') {
           obj.unbind();
         }
 
         if (obj.vertices) {
-          if (_.isFunction(obj.vertices.unbind)) {
+          if (typeof obj.vertices.unbind === 'function') {
             obj.vertices.unbind();
           }
           _.each(obj.vertices, function(v) {
-            if (_.isFunction(v.unbind)) {
+            if (typeof v.unbind === 'function') {
               v.unbind();
             }
           });
@@ -3003,7 +3000,7 @@
           }
         }
 
-        if (_.isFunction(callback)) {
+        if (typeof callback === 'function') {
           var svg = dom.temp.children.length <= 1
             ? dom.temp.children[0] : dom.temp.children;
           callback(group, svg);

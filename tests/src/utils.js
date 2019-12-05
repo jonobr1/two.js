@@ -208,7 +208,7 @@
             document.querySelector(selector).appendChild(domElement);
           }, 100);
 
-          if (_.isFunction(callback)) {
+          if (typeof callback === 'function') {
             callback();
           }
 

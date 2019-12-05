@@ -50,10 +50,10 @@
      */
     this.offset = new Two.Vector();
 
-    if (_.isFunction(callback)) {
+    if (typeof callback === 'function') {
       var loaded = _.bind(function() {
         this.unbind(Two.Events.load, loaded);
-        if (_.isFunction(callback)) {
+        if (typeof callback === 'function') {
           callback();
         }
       }, this);
@@ -186,23 +186,23 @@
       canvas: function(texture, callback) {
         texture._src = '#' + texture.id;
         Texture.ImageRegistry.add(texture.src, texture.image);
-        if (_.isFunction(callback)) {
+        if (typeof callback === 'function') {
           callback();
         }
       },
       img: function(texture, callback) {
 
         var loaded = function(e) {
-          if (_.isFunction(texture.image.removeEventListener)) {
+          if (typeof texture.image.removeEventListener === 'function') {
             texture.image.removeEventListener('load', loaded, false);
             texture.image.removeEventListener('error', error, false);
           }
-          if (_.isFunction(callback)) {
+          if (typeof callback === 'function') {
             callback();
           }
         };
         var error = function(e) {
-          if (_.isFunction(texture.image.removeEventListener)) {
+          if (typeof texture.image.removeEventListener === 'function') {
             texture.image.removeEventListener('load', loaded, false);
             texture.image.removeEventListener('error', error, false);
           }
@@ -212,7 +212,7 @@
         if (_.isNumber(texture.image.width) && texture.image.width > 0
           && _.isNumber(texture.image.height) && texture.image.height > 0) {
             loaded();
-        } else if (_.isFunction(texture.image.addEventListener)) {
+        } else if (typeof texture.image.addEventListener === 'function') {
           texture.image.addEventListener('load', loaded, false);
           texture.image.addEventListener('error', error, false);
         }
@@ -245,7 +245,7 @@
           texture.image.width = texture.image.videoWidth;
           texture.image.height = texture.image.videoHeight;
           texture.image.play();
-          if (_.isFunction(callback)) {
+          if (typeof callback === 'function') {
             callback();
           }
         };

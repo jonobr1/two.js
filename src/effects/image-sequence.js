@@ -317,7 +317,7 @@
       if (_.isNumber(lastFrame)) {
         this._lastFrame = lastFrame;
       }
-      if (_.isFunction(onLastFrame)) {
+      if (typeof onLastFrame === 'function') {
         this._onLastFrame = onLastFrame;
       } else {
         delete this._onLastFrame;
