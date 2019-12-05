@@ -232,7 +232,12 @@
 
         var d;
         ctx.save();
-        ctx.scale(scale, scale);
+        if (scale instanceof Two.Vector) {
+          ctx.scale(scale.x, scale.y);
+        } else {
+          ctx.scale(scale, scale);
+        }
+
         ctx.translate(cx, cy);
 
         ctx.beginPath();
@@ -637,7 +642,11 @@
         }
 
         ctx.save();
-        ctx.scale(scale, scale);
+        if (scale instanceof Two.Vector) {
+          ctx.scale(scale.x, scale.y);
+        } else {
+          ctx.scale(scale, scale);
+        }
         ctx.translate(cx, cy);
 
         if (!webgl.isHidden.test(fill)) {
