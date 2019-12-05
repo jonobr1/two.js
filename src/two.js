@@ -68,11 +68,6 @@
     isUndefined: function(obj) {
       return obj === void 0;
     },
-    isEmpty: function(obj) {
-      if (obj == null) return true;
-      if (isArrayLike && (_.isArray(obj) || _.isString(obj) || _.isArguments(obj))) return obj.length === 0;
-      return _.keys(obj).length === 0;
-    },
     isElement: function(obj) {
       return !!(obj && obj.nodeType === 1);
     },
