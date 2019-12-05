@@ -91,7 +91,7 @@
         return slice.call(obj);
       }
       if (isArrayLike(obj)) {
-        return _.map(obj, _.identity);
+        return _.map(obj, function(item) {return item;});
       }
       return _.values(obj);
     },

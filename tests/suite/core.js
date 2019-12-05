@@ -15,14 +15,14 @@ QUnit.module('Core');
 
 QUnit.test('Two.Utils', function(assert) {
 
-  assert.expect(11 * 11 + 18);
+  assert.expect(11 * 11 + 17);
 
   var types = {
     arguments: arguments,
     number: 1,
     nan: NaN,
     null: null,
-    func: Two.Utils.identity,
+    func: function() {},
     obj: {},
     array: [],
     elem: document.createElement('div'),
@@ -65,7 +65,6 @@ QUnit.test('Two.Utils', function(assert) {
     }
   }
 
-  assert.equal(Two.Utils.identity(5), 5, 'identity returns passed value.');
   assert.equal(Two.Utils.isArray(Two.Utils.toArray({})), true, 'turned {} to array.');
   assert.equal(JSON.stringify(Two.Utils.range(0, 5)), '[0,1,2,3,4]', 'created 0-5 range successfully.');
   assert.equal(Two.Utils.indexOf(['a', 'b', 'c'], 'b'), 1, 'indexed correctly.');
@@ -234,7 +233,7 @@ QUnit.test('Bound Two.Vector', function(assert) {
   assert.expect(45);
 
   var vector = new Two.Vector();
-  vector.bind(Two.Events.change, _.identity);
+  vector.bind(Two.Events.change, function() {});
 
   assert.equal(vector._bound, true, 'Vector is bound.');
   assert.equal(vector.x, 0, 'x property defaults to 0.');

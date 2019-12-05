@@ -613,7 +613,7 @@
     } else {
       console.warn('Two.js: Unable to create canvas for Two.Text measurements.');
       return {
-        getContext: _.identity
+        getContext: function() {}
       };
     }
   }
