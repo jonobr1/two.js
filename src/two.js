@@ -74,16 +74,6 @@
       }
       return obj;
     },
-    once: function(func) {
-      var init = false;
-      return function() {
-        if (init) {
-          return func;
-        }
-        init = true;
-        return func.apply(this, arguments);
-      };
-    },
     uniqueId: function(prefix) {
       var id = ++_._indexAmount + '';
       return prefix ? prefix + id : id;
@@ -166,12 +156,12 @@
           lastTime = currTime + timeToCall;
           return id;
         };
-        // cancel = cancel || function(id) {
-        //   clearTimeout(id);
-        // };
       }
 
-      request.init = _.once(loop);
+      request.init = function() {
+        loop();
+        request.init = function() {};
+      };
 
       return request;
 
