@@ -1192,7 +1192,6 @@
         }
 
         this._lengths[i] = getCurveLength(a, b, limit);
-        this._lengths[i] = Two.Utils.toFixed(this._lengths[i]);
         sum += this._lengths[i];
 
         if (i >= last && closed) {
@@ -1200,7 +1199,6 @@
           b = this.vertices[(i + 1) % length];
 
           this._lengths[i + 1] = getCurveLength(a, b, limit);
-          this._lengths[i + 1] = Two.Utils.toFixed(this._lengths[i + 1]);
           sum += this._lengths[i + 1];
 
         }
