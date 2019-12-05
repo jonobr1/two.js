@@ -8,7 +8,6 @@
     <link rel="shortcut icon" type="image/gif" href="../images/favicon.gif">
     <script src="../third-party/url.js"></script>
     <script src="../third-party/jquery.js"></script>
-    <script src="../third-party/underscore.js"></script>
     <script src="../third-party/two.js"></script>
   </head>
   <body>
@@ -37,7 +36,7 @@
               line = two.makeCurve([v1, v2], true);
               line.noFill().stroke = '#333';
               line.linewidth = 10;
-              _.each(line.vertices, function(v) {
+              line.vertices.forEach(function(v) {
                 v.addSelf(line.translation);
               });
               line.translation.clear();
@@ -92,8 +91,8 @@
             });
 
           two.bind('update', function(frameCount, timeDelta) {
-            _.each(two.scene.children, function(child) {
-              _.each(child.vertices, function(v) {
+            two.scene.children.forEach(function(child) {
+              child.vertices.forEach(function(v) {
                 if (!v.position) {
                   return;
                 }
@@ -132,11 +131,9 @@
 
             two.update();
 
-            _.defer(function() {
-              $(document.body).css({
-                background: 'url(' + two.renderer.domElement.toDataURL('image/png') + ') 0 0 repeat',
-                backgroundSize: size + 'px ' + size + 'px'
-              });
+            $(document.body).css({
+              background: 'url(' + two.renderer.domElement.toDataURL('image/png') + ') 0 0 repeat',
+              backgroundSize: size + 'px ' + size + 'px'
             });
 
           }
