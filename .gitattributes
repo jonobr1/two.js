@@ -1,0 +1,2 @@
+# Don't attempt to diff extremely large chunks of third-party JS
+third-party/**.js -diff

@@ -85,12 +85,13 @@
             shape.noStroke();
             shape.translation.set(two.width / 2, two.height / 2);
             shapes.push(shape);
-            _.each(shape.children, function(child) {
-              _.each(child.vertices, function(v) {
+            for (var i = 0; i < shape.children.length; i++) {
+              for (var j = 0; j < shape.children[i].vertices.length; j++) {
+                var v = shape.children[i].vertices[j];
                 v.ox = v.x;
                 v.oy = v.y;
-              });
-            });
+              }
+            }
 
           });
 
@@ -102,13 +103,14 @@
             shape.visible = true;
             shape.scale += (scale - shape.scale) * easing;
 
-            _.each(shape.children, function(child) {
-              _.each(child.vertices, function(v) {
+            for (var i = 0; i < shape.children.length; i++) {
+              for (var j = 0; j < shape.children[i].vertices.length; j++) {
+                var v = shape.children[i].vertices[j];
                 var x = v.ox + Math.random();
                 var y = v.oy + Math.random();
                 v.set(x, y);
-              });
-            });
+              }
+            }
 
             if (shape.scale >= (scale - 0.001)) {
               shape.visible = false;

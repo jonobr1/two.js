@@ -8,6 +8,7 @@
     <link rel="shortcut icon" type="image/gif" href="../images/favicon.gif">
     <script src="../third-party/url.js"></script>
     <script src="../third-party/jquery.js"></script>
+    <script src="../third-party/underscore.js"></script>
     <script src="../third-party/two.js"></script>
     <script src="../third-party/three.js"></script>
   </head>
@@ -106,7 +107,7 @@
           var midpoint = new Two.Vector()
             .copy(b).subSelf(a).divideScalar(2).addSelf(a);
 
-          var angle = Two.Utils.angleBetween(a, b);
+          var angle = Two.Vector.angleBetween(a, b);
           var perp = angle + (Math.random() > 0.5 ? Math.PI : - Math.PI) / 2;
 
           var radius = size * 0.66;
@@ -116,8 +117,8 @@
             projection * Math.sin(perp) + midpoint.y
           );
 
-          var startAngle = Two.Utils.angleBetween(a, center);
-          var endAngle = Two.Utils.angleBetween(b, center);
+          var startAngle = Two.Vector.angleBetween(a, center);
+          var endAngle = Two.Vector.angleBetween(b, center);
 
           if (Math.random() > 0.5) {
             startAngle = mod(startAngle, Math.PI * 2);

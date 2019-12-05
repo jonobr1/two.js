@@ -8,6 +8,7 @@
     <link rel="shortcut icon" type="image/gif" href="../images/favicon.gif">
     <script src="../third-party/url.js"></script>
     <script src="../third-party/jquery.js"></script>
+    <script src="../third-party/underscore.js"></script>
     <script src="../third-party/two.js"></script>
   </head>
   <body>
@@ -59,23 +60,23 @@
 
               var hi = k / (cols - 1);
 
-              var type = !!(j % 2) ? 'Squiggle' : 'Nonagon';
-              var height = !!(j % 2) ? width / 3 : width;
-              var shape = two['make' + type](width, height, Math.floor(Math.random() * 3) + 3);
               var color = colors[Math.floor(Math.random() * colors.length)];
 
-              shape.rotation = Math.floor(Math.random() * 4) * Math.PI / 2 + Math.PI / 4;
-              shape.translation.set(hi * two.width, vi * two.height);
-
-              if (j % 2) {
+              var shape;
+              if (j % 2 === 1) {
+                shape = makeSquiggle(width, width / 3, Math.floor(Math.random() * 3) + 3, two);
                 shape.noFill();
                 shape.stroke = color;
                 shape.linewidth = 4;
                 shape.cap = 'round';
               } else {
+                shape = new Two.Polygon(0, 0, width / 2, Math.floor(Math.random() * 3) + 3);
                 shape.noStroke();
                 shape.fill = color;
               }
+
+              shape.rotation = Math.floor(Math.random() * 4) * Math.PI / 2 + Math.PI / 4;
+              shape.translation.set(hi * two.width, vi * two.height);
 
               shape.step = (Math.floor(Math.random() * 8) / 8) * Math.PI / 60;
               shape.step *= Math.random() > 0.5 ? - 1 : 1;
@@ -139,41 +140,19 @@
 
         });
 
-        Two.prototype.makeSquiggle = function(width, height, phi) {
+        var makeSquiggle = function(width, height, phi, two) {
 
           var amt = 64;
-
-          var squiggle = this.makeCurve(
-            _.map(_.range(amt), function(i) {
-              var pct = i / (amt - 1);
+          var anchors = [];
+          for (var i = 0; i < amt; i++) {
+            var pct = i / (amt - 1);
               var theta = pct * Math.PI * 2 * phi + Math.PI / 2;
               var x = width * pct - width / 2;
               var y = height / 2 * Math.sin(theta);
-              return new Two.Anchor(x, y);
-            }),
-            true
-          );
+              anchors.push(new Two.Anchor(x, y));
+          }
 
-          return squiggle;
-
-        };
-
-        Two.prototype.makeNonagon = function(width, height, sides) {
-
-          width /= 2;
-          height /= 2;
-
-          var shape = this.makePath(
-            _.map(_.range(sides), function(i) {
-              var pct = i / sides;
-              var theta = Math.PI * 2 * pct - Math.PI / 2;
-              var x = width * Math.cos(theta);
-              var y = height * Math.sin(theta);
-              return new Two.Anchor(x, y);
-            })
-          );
-
-          return shape;
+          return two.makeCurve(anchors, true);
 
         };
 

@@ -7,6 +7,7 @@
     <link rel="image_src" href="../images/logo.gif" />
     <link rel="shortcut icon" type="image/gif" href="../images/favicon.gif">
     <script src="../third-party/jquery.js"></script>
+    <script src="../third-party/underscore.js"></script>
     <script src="../third-party/two.js"></script>
     <style>
       #content {
@@ -140,61 +141,29 @@
             reflection.noStroke();
 
             var lid = two.makeEllipse(0, 0, two.height / 3, two.height / 4);
-
-            var points = [
-              new Two.Vector(0, two.height / 2),
-              new Two.Vector(0, 0),
-              new Two.Vector(two.width, 0),
-              new Two.Vector(two.width, two.height / 2)
-            ];
-            var midpoint = Math.round(lid.vertices.length / 2) - 1;
-            var topbrow = lid.vertices.slice(midpoint).reverse();
-            for (var i = 0; i < topbrow.length; i++) {
-              var v = topbrow[i];
-              points.push(new Two.Vector(v.x + two.width / 2, v.y + two.height / 2));
-            }
-            for (var i = 0; i < points.length; i++) {
-              var v = points[i];
-              v.x -= two.width / 2;
-              v.y -= two.height / 2;
-            }
-            var topMask = two.makePath(points);
-            topMask.fill = 'white';
-            topMask.noStroke();
-
-            points = [
-              new Two.Vector(0, two.height / 2),
-              new Two.Vector(0, two.height),
-              new Two.Vector(two.width, two.height),
-              new Two.Vector(two.width, two.height / 2)
-            ];
-            var botbrow = [lid.vertices[lid.vertices.length - 1]].concat(lid.vertices.slice(0, midpoint + 1));
-            for (var i = 0; i < botbrow.length; i++) {
-              var v = botbrow[i];
-              points.push(new Two.Vector(v.x + two.width / 2, v.y + two.height / 2));
-            }
-            for (var i = 0; i < points.length; i++) {
-              var v = points[i];
-              v.x -= two.width / 2;
-              v.y -= two.height / 2;
-            }
-            var botMask = two.makePath(points);
-            botMask.fill = 'white';
-            botMask.noStroke();
-
-            lid.remove();
-            lid = two.makeEllipse(0, 0, two.height / 3, two.height / 4);
             lid.stroke = '#333';
             lid.linewidth = 15;
             lid.noFill();
 
+            var eyeMask = two.makeEllipse(0, 0, two.height / 3, two.height / 4);
+            eyeMask.noStroke();
+
+            // TODO: this is only necessary because masking in the WebGL renderer
+            // makes the sclera black if there's not a background here
+            var eyeBackground = two.makeRectangle(0, 0, two.width, two.height);
+            eyeBackground.fill = 'white';
+            eyeBackground.noStroke();
+
+            var container = two.makeGroup(eyeBackground, ball);
+
             ball.add(retina, pupil, reflection);
             ball.destination = new Two.Vector();
 
-            eye.add(ball, topMask, botMask, lid);
-            eye.translation.set(two.width / 2, two.height / 2)
+            eye.add(container, eyeMask, lid);
+            eye.translation.set(two.width / 2, two.height / 2);
 
-            eye.masks = [topbrow, botbrow];
+            container.mask = eyeMask;
+
             eye.ball = ball;
 
             return eye;

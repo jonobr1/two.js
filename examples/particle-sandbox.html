@@ -12,12 +12,15 @@
       #stats {
         -webkit-transform: scale(2);
         -webkit-transform-origin: bottom left;
+        transform: scale(2);
+        transform-origin: bottom left;
       }
     </style>
     <meta name="viewport" content="width=device-width,height=device-height">
     <script type="text/javascript" src="//use.typekit.net/edp1hux.js"></script>
     <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
     <script src="../third-party/jquery.js"></script>
+    <script src="../third-party/underscore.js"></script>
     <script src="../third-party/stats.js"></script>
     <script src="../third-party/two.js"></script>
     <script src="../third-party/url.js"></script>
@@ -376,7 +379,8 @@
             // Reset flags and private variables
             _.each(particles, function(particle) {
 
-              particle._renderer = { type: particle._renderer.type };
+              // TODO: figure out what this code did in earlier versions of Two.js. Right now it's broken.
+              // particle._renderer = { type: particle._renderer.type };
 
               _.each(flags, function(flag) {
 
