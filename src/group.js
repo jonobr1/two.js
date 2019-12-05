@@ -96,7 +96,7 @@
      * @description A list of all the children in the scenegraph.
      * @nota-bene Ther order of this list indicates the order each element is rendered to the screen.
      */
-    this.children = Array.isArray(children) ? children : arguments;
+    this.children = Array.isArray(children) ? children : Array.prototype.slice.call(arguments);
 
   };
 
@@ -511,7 +511,7 @@
       //  */
 
       var clone = new Group();
-      var children = _.map(this.children, function(child) {
+      var children = this.children.map(function(child) {
         return child.clone();
       });
 

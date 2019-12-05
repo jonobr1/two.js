@@ -59,7 +59,7 @@
         return slice.call(obj);
       }
       if (isArrayLike(obj)) {
-        return _.map(obj, function(item) {return item;});
+        return Array.prototype.map.call(obj, function(item) {return item;});
       }
       return _.values(obj);
     },
@@ -131,17 +131,6 @@
         iteratee.call(ctx, obj[k], k, obj);
       }
       return obj;
-    },
-    map: function(obj, iteratee, context) {
-      var ctx = context || this;
-      var keys = !isArrayLike(obj) && _.keys(obj);
-      var length = (keys || obj).length;
-      var result = [];
-      for (var i = 0; i < length; i++) {
-        var k = keys ? keys[i] : i;
-        result[i] = iteratee.call(ctx, obj[k], k, obj);
-      }
-      return result;
     },
     once: function(func) {
       var init = false;

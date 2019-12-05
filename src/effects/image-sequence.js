@@ -36,8 +36,8 @@
      * @name Two.ImageSequence#textures
      * @property {Two.Texture[]} - A list of textures to be used as frames for animating the {@link Two.ImageSequence}.
      */
-    if (_.isObject(paths)) {
-      this.textures = _.map(paths, ImageSequence.GenerateTexture, this);
+    if (Array.isArray(paths)) {
+      this.textures = paths.map(ImageSequence.GenerateTexture.bind(this));
     } else {
       // If just a single path convert into a single Two.Texture
       this.textures = [ImageSequence.GenerateTexture(paths)];
@@ -392,7 +392,7 @@
      */
     toObject: function() {
       var object = Rectangle.prototype.toObject.call(this);
-      object.textures = _.map(this.textures, function(texture) {
+      object.textures = this.textures.map(function(texture) {
         return texture.toObject();
       });
       object.frameRate = this.frameRate;

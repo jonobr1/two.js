@@ -338,7 +338,7 @@
      */
     clone: function(parent) {
 
-      var stops = _.map(this.stops, function(s) {
+      var stops = this.stops.map(function(s) {
         return s.clone();
       });
 
@@ -365,7 +365,7 @@
     toObject: function() {
 
       var result = {
-        stops: _.map(this.stops, function(s) {
+        stops: this.stops.map(function(s) {
           return s.toObject();
         })
       };

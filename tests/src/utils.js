@@ -65,7 +65,7 @@
       var elem;
 
       if (Array.isArray(two)) {
-        elem = _.map(two, function(t) {
+        elem = two.map(function(t) {
           var el = t.renderer.domElement;
           switch (el.tagName.toLowerCase()) {
             case 'svg':
@@ -221,7 +221,7 @@
     textToDOM: function(str) {
 
       TEMP.innerHTML = str;
-      return _.map(TEMP.children, function(child) {
+      return Array.prototype.map.call(TEMP.children, function(child) {
         return child;
       });
 

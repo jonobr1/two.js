@@ -123,7 +123,7 @@
      */
     clone: function(parent) {
 
-      var stops = _.map(this.stops, function(stop) {
+      var stops = this.stops.map(function(stop) {
         return stop.clone();
       });
 
