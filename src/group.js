@@ -241,9 +241,9 @@
 
         set: function(children) {
 
-          var insertChildren = _.bind(Group.InsertChildren, this);
-          var removeChildren = _.bind(Group.RemoveChildren, this);
-          var orderChildren = _.bind(Group.OrderChildren, this);
+          var insertChildren = Group.InsertChildren.bind(this);
+          var removeChildren = Group.RemoveChildren.bind(this);
+          var orderChildren = Group.OrderChildren.bind(this);
 
           if (this._children) {
             this._children.unbind();

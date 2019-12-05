@@ -32,16 +32,6 @@
       var type = typeof obj;
       return type === 'function' || type === 'object' && !!obj;
     },
-    bind: function(func, ctx) {
-      var natural = Function.prototype.bind;
-      if (natural && func.bind === natural) {
-        return natural.apply(func, slice.call(arguments, 1));
-      }
-      var args = slice.call(arguments, 2);
-      return function() {
-        func.apply(ctx, args);
-      };
-    },
     extend: function(base) {
       var sources = slice.call(arguments, 1);
       for (var i = 0; i < sources.length; i++) {
@@ -215,7 +205,7 @@
 
     if (params.fullscreen) {
 
-      var fitted = _.bind(fitToWindow, this);
+      var fitted = fitToWindow.bind(this);
       _.extend(document.body.style, {
         overflow: 'hidden',
         margin: 0,
@@ -246,7 +236,7 @@
 
     }
 
-    this.renderer.bind(Two.Events.resize, _.bind(updateDimensions, this));
+    this.renderer.bind(Two.Events.resize, updateDimensions.bind(this));
     this.scene = this.renderer.scene;
 
     Two.Instances.push(this);
@@ -2912,7 +2902,7 @@
       var group = new Two.Group();
       var elem, i, j;
 
-      var attach = _.bind(function(data) {
+      var attach = (function(data) {
 
         dom.temp.innerHTML = data;
 
@@ -2934,7 +2924,7 @@
           callback(group, svg);
         }
 
-      }, this);
+      }).bind(this);
 
       if (/.*\.svg$/ig.test(text)) {
 

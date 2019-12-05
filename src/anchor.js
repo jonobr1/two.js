@@ -21,9 +21,9 @@
 
     Two.Vector.call(this, x, y);
 
-    this._broadcast = _.bind(function() {
+    this._broadcast = (function() {
       this.trigger(Two.Events.change);
-    }, this);
+    }).bind(this);
 
     this._command = command || commands.move;
     this._relative = true;

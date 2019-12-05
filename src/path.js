@@ -28,12 +28,12 @@
     Two.Shape.call(this);
 
     this._renderer.type = 'path';
-    this._renderer.flagVertices = _.bind(Path.FlagVertices, this);
-    this._renderer.bindVertices = _.bind(Path.BindVertices, this);
-    this._renderer.unbindVertices = _.bind(Path.UnbindVertices, this);
+    this._renderer.flagVertices = Path.FlagVertices.bind(this);
+    this._renderer.bindVertices = Path.BindVertices.bind(this);
+    this._renderer.unbindVertices = Path.UnbindVertices.bind(this);
 
-    this._renderer.flagFill = _.bind(Path.FlagFill, this);
-    this._renderer.flagStroke = _.bind(Path.FlagStroke, this);
+    this._renderer.flagFill = Path.FlagFill.bind(this);
+    this._renderer.flagStroke = Path.FlagStroke.bind(this);
     this._renderer.vertices = [];
     this._renderer.collection = [];
 

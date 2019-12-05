@@ -25,8 +25,8 @@
 
     this._renderer = {};
     this._renderer.type = 'texture';
-    this._renderer.flagOffset = _.bind(Texture.FlagOffset, this);
-    this._renderer.flagScale = _.bind(Texture.FlagScale, this);
+    this._renderer.flagOffset = Texture.FlagOffset.bind(this);
+    this._renderer.flagScale = Texture.FlagScale.bind(this);
 
     this.id = Two.Identifier + Two.uniqueId();
     this.classList = [];
@@ -51,12 +51,12 @@
     this.offset = new Two.Vector();
 
     if (typeof callback === 'function') {
-      var loaded = _.bind(function() {
+      var loaded = (function() {
         this.unbind(Two.Events.load, loaded);
         if (typeof callback === 'function') {
           callback();
         }
-      }, this);
+      }).bind(this);
       this.bind(Two.Events.load, loaded);
     }
 
@@ -547,12 +547,12 @@
 
         if (this._flagSrc || this._flagImage) {
           this.loaded = false;
-          Texture.load(this, _.bind(function() {
+          Texture.load(this,(function() {
             this.loaded = true;
             this
               .trigger(Two.Events.change)
               .trigger(Two.Events.load);
-          }, this));
+          }).bind(this));
         }
 
       }

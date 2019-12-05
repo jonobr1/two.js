@@ -25,9 +25,9 @@
       new Two.Anchor()
     ], true);
 
-    this._renderer.flagTextures = _.bind(ImageSequence.FlagTextures, this);
-    this._renderer.bindTextures = _.bind(ImageSequence.BindTextures, this);
-    this._renderer.unbindTextures = _.bind(ImageSequence.UnbindTextures, this);
+    this._renderer.flagTextures = ImageSequence.FlagTextures.bind(this);
+    this._renderer.bindTextures = ImageSequence.BindTextures.bind(this);
+    this._renderer.unbindTextures = ImageSequence.UnbindTextures.bind(this);
 
     this.noStroke();
     this.noFill();

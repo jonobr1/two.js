@@ -25,9 +25,9 @@
      * @property {Two.Vector} - The x and y value for where the origin of the radial gradient is.
      */
     this.center = new Two.Vector()
-      .bind(Two.Events.change, _.bind(function() {
+      .bind(Two.Events.change, (function() {
         this._flagCenter = true;
-      }, this));
+      }).bind(this));
 
     this.radius = typeof r === 'number' ? r : 20;
 
@@ -37,9 +37,9 @@
      * @nota-bene This effects the spray or spread of the radial gradient.
      */
     this.focal = new Two.Vector()
-      .bind(Two.Events.change, _.bind(function() {
+      .bind(Two.Events.change, (function() {
         this._flagFocal = true;
-      }, this));
+      }).bind(this));
 
     if (typeof cx === 'number') {
       this.center.x = cx;

@@ -19,7 +19,7 @@
 
     this._renderer.type = 'linear-gradient';
 
-    var flagEndPoints = _.bind(LinearGradient.FlagEndPoints, this);
+    var flagEndPoints = LinearGradient.FlagEndPoints.bind(this);
 
     /**
      * @name Two.LinearGradient#left

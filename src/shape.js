@@ -18,7 +18,7 @@
      * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `shape._renderer.elem`.
      */
     this._renderer = {};
-    this._renderer.flagMatrix = _.bind(Shape.FlagMatrix, this);
+    this._renderer.flagMatrix = Shape.FlagMatrix.bind(this);
     this.isShape = true;
 
     /**

@@ -184,9 +184,9 @@
     this.id = Two.Identifier + Two.uniqueId();
     this.classList = [];
 
-    this._renderer.flagStops = _.bind(Gradient.FlagStops, this);
-    this._renderer.bindStops = _.bind(Gradient.BindStops, this);
-    this._renderer.unbindStops = _.bind(Gradient.UnbindStops, this);
+    this._renderer.flagStops = Gradient.FlagStops.bind(this);
+    this._renderer.bindStops = Gradient.BindStops.bind(this);
+    this._renderer.unbindStops = Gradient.UnbindStops.bind(this);
 
     /**
      * @name Two.Gradient#spread

@@ -37,7 +37,7 @@
     this.closed = true;
     this.automatic = false;
 
-    this._renderer.flagRadius = _.bind(RoundedRectangle.FlagRadius, this);
+    this._renderer.flagRadius = RoundedRectangle.FlagRadius.bind(this);
 
     /**
      * @name Two.RoundedRectangle#width

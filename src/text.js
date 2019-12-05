@@ -23,8 +23,8 @@
     Two.Shape.call(this);
 
     this._renderer.type = 'text';
-    this._renderer.flagFill = _.bind(Two.Text.FlagFill, this);
-    this._renderer.flagStroke = _.bind(Two.Text.FlagStroke, this);
+    this._renderer.flagFill = Two.Text.FlagFill.bind(this);
+    this._renderer.flagStroke = Two.Text.FlagStroke.bind(this);
 
     this.value = message;
 
