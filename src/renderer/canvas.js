@@ -726,7 +726,7 @@
      */
     this.overdraw = params.overdraw || false;
 
-    if (!_.isUndefined(this.ctx.imageSmoothingEnabled)) {
+    if (typeof this.ctx.imageSmoothingEnabled !== 'undefined') {
       this.ctx.imageSmoothingEnabled = smoothing;
     }
 
@@ -767,7 +767,7 @@
       this.width = width;
       this.height = height;
 
-      this.ratio = _.isUndefined(ratio) ? getRatio(this.ctx) : ratio;
+      this.ratio = typeof ratio === 'undefined' ? getRatio(this.ctx) : ratio;
 
       this.domElement.width = width * this.ratio;
       this.domElement.height = height * this.ratio;

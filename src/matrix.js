@@ -147,7 +147,7 @@
 
       var elements;
 
-      if (_.isUndefined(b)) {
+      if (typeof b === 'undefined') {
         elements = a;
         a = elements[0];
         b = elements[1];
@@ -252,7 +252,7 @@
 
       // Multiply scalar
 
-      if (_.isUndefined(b)) {
+      if (typeof b === 'undefined') {
 
         this.elements[0] *= a;
         this.elements[1] *= a;
@@ -268,7 +268,7 @@
 
       }
 
-      if (_.isUndefined(d)) { // Multiply Vector
+      if (typeof d === 'undefined') { // Multiply Vector
 
         var x, y, z;
         a = a || 0;

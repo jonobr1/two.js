@@ -12,8 +12,8 @@
 
     limits: function(min, max) {
 
-      var min_exists = !_.isUndefined(min);
-      var max_exists = !_.isUndefined(max);
+      var min_exists = typeof min !== 'undefined';
+      var max_exists = typeof max !== 'undefined';
 
       if (!max_exists && !min_exists) {
         return { min: this.min, max: this.max };
@@ -108,7 +108,7 @@
 
       type = type || 'scale';
 
-      if (!_.isUndefined(min)) {
+      if (typeof min !== 'undefined') {
         if (this.limits[type].min) {
           this.limits[type].min = Math.max(min, this.limits[type].min);
         } else {
@@ -116,7 +116,7 @@
         }
       }
 
-      if (_.isUndefined(max)) {
+      if (typeof max === 'undefined') {
         return this;
       }
 

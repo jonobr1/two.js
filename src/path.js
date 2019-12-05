@@ -1178,7 +1178,7 @@
       var closed = false;//this._closed || this.vertices[last]._command === Two.Commands.close;
       var sum = 0;
 
-      if (_.isUndefined(this._lengths)) {
+      if (typeof this._lengths === 'undefined') {
         this._lengths = [];
       }
 

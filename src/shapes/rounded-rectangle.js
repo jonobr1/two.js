@@ -16,7 +16,7 @@
    */
   var RoundedRectangle = Two.RoundedRectangle = function(ox, oy, width, height, radius) {
 
-    if (_.isUndefined(radius)) {
+    if (typeof radius === 'undefined') {
       radius = Math.floor(Math.min(width, height) / 12);
     }
 

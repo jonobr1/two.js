@@ -32,9 +32,6 @@
     isNaN: function(obj) {
       return typeof obj === 'number' && obj !== +obj;
     },
-    isUndefined: function(obj) {
-      return obj === void 0;
-    },
     isElement: function(obj) {
       return !!(obj && obj.nodeType === 1);
     },
@@ -53,9 +50,6 @@
         return Array.prototype.map.call(obj, function(item) {return item;});
       }
       return _.values(obj);
-    },
-    has: function(obj, key) {
-      return obj != null && hasOwnProperty.call(obj, key);
     },
     bind: function(func, ctx) {
       var natural = _.natural.bind;
@@ -98,7 +92,7 @@
       }
       var keys = [];
       for (var k in obj) {
-        if (_.has(obj, k)) {
+        if (Object.prototype.hasOwnProperty.call(obj, k)) {
           keys.push(k);
         }
       }
@@ -492,7 +486,7 @@
        */
       shim: function(canvas, Image) {
         Two.CanvasRenderer.Utils.shim(canvas);
-        if (!_.isUndefined(Image)) {
+        if (typeof Image !== 'undefined') {
           Two.Utils.Image = Image;
         }
         Two.Utils.isHeadless = true;
@@ -731,7 +725,7 @@
           command = commands[i].split(':');
           name = command[0];
           value = command[1];
-          if (_.isUndefined(name) || _.isUndefined(value)) {
+          if (typeof name === 'undefined' || typeof value === 'undefined') {
             continue;
           }
           styles[name] = value.replace(/\s/, '');
@@ -842,7 +836,7 @@
             value = computedStyles[key];
             // Gecko returns undefined for unset properties
             // Webkit returns the default value
-            if (!_.isUndefined(value)) {
+            if (typeof value !== 'undefined') {
               styles[key] = value;
             }
           }
@@ -861,7 +855,7 @@
         // Getting the correct opacity is a bit tricky, since SVG path elements don't
         // support opacity as an attribute, but you can apply it via CSS.
         // So we take the opacity and set (stroke/fill)-opacity to the same value.
-        if (!_.isUndefined(styles.opacity)) {
+        if (typeof styles.opacity !== 'undefined') {
           styles['stroke-opacity'] = styles.opacity;
           styles['fill-opacity'] = styles.opacity;
           delete styles.opacity;
@@ -875,8 +869,8 @@
 
         // Similarly visibility is influenced by the value of both display and visibility.
         // Calculate a unified value here which defaults to `true`.
-        styles.visible = !(_.isUndefined(styles.display) && /none/i.test(styles.display))
-          || (_.isUndefined(styles.visibility) && /hidden/i.test(styles.visibility));
+        styles.visible = !(typeof styles.display === 'undefined' && /none/i.test(styles.display))
+          || (typeof styles.visibility === 'undefined' && /hidden/i.test(styles.visibility));
 
         // Now iterate the whole thing
         for (key in styles) {

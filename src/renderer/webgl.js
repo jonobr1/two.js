@@ -1084,7 +1084,7 @@
      */
     this.domElement = params.domElement || document.createElement('canvas');
 
-    if (!_.isUndefined(params.offscreenElement)) {
+    if (typeof params.offscreenElement !== 'undefined') {
       webgl.canvas = params.offscreenElement;
       webgl.ctx = webgl.canvas.getContext('2d');
     }
@@ -1208,7 +1208,7 @@
       this.width = width;
       this.height = height;
 
-      this.ratio = _.isUndefined(ratio) ? getRatio(this.ctx) : ratio;
+      this.ratio = typeof ratio === 'undefined' ? getRatio(this.ctx) : ratio;
 
       this.domElement.width = width * this.ratio;
       this.domElement.height = height * this.ratio;
