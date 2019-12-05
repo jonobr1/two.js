@@ -28,10 +28,10 @@
     this._command = command || commands.move;
     this._relative = true;
 
-    var ilx = _.isNumber(lx);
-    var ily = _.isNumber(ly);
-    var irx = _.isNumber(rx);
-    var iry = _.isNumber(ry);
+    var ilx = typeof lx === 'number';
+    var ily = typeof ly === 'number';
+    var irx = typeof rx === 'number';
+    var iry = typeof ry === 'number';
 
     // Append the `controls` object only if control points are specified,
     // keeping the Two.Anchor inline with a Two.Vector until it needs to

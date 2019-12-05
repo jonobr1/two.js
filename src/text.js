@@ -28,10 +28,10 @@
 
     this.value = message;
 
-    if (_.isNumber(x)) {
+    if (typeof x === 'number') {
         this.translation.x = x;
     }
-    if (_.isNumber(y)) {
+    if (typeof y === 'number') {
         this.translation.y = y;
     }
 
@@ -176,7 +176,7 @@
           return this._dashes;
         },
         set: function(v) {
-          if (!_.isNumber(v.offset)) {
+          if (typeof v.offset !== 'number') {
             v.offset = this._dashes.offset || 0;
           }
           this._dashes = v;

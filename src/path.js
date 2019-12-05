@@ -456,7 +456,7 @@
           return this._dashes;
         },
         set: function(v) {
-          if (!_.isNumber(v.offset)) {
+          if (typeof v.offset !== 'number') {
             v.offset = this._dashes.offset || 0;
           }
           this._dashes = v;

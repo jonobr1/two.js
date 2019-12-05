@@ -26,14 +26,14 @@
      * @name Two.Stop#offset
      * @property {Number} - The offset percentage of the stop represented as a zero-to-one value.
      */
-    this.offset = _.isNumber(offset) ? offset
+    this.offset = typeof offset === 'number' ? offset
       : Stop.Index <= 0 ? 0 : 1;
 
     /**
      * @name Two.Stop#opacity
      * @property {Number} - The alpha percentage of the stop represented as a zero-to-one value.
      */
-    this.opacity = _.isNumber(opacity) ? opacity : 1;
+    this.opacity = typeof opacity === 'number' ? opacity : 1;
 
     /**
      * @name Two.Stop#color

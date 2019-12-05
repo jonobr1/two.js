@@ -323,7 +323,7 @@
         object[property] = this[property];
       }, this);
 
-      object.radius = _.isNumber(this.radius)
+      object.radius = typeof this.radius === 'number'
         ? this.radius : this.radius.toObject();
 
       return object;

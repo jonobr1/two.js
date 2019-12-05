@@ -52,7 +52,7 @@
      * @name Two.ImageSequence#frameRate
      * @property {Integer} - The number of frames to animate against per second.
      */
-    if (_.isNumber(frameRate)) {
+    if (typeof frameRate === 'number') {
       this.frameRate = frameRate;
     } else {
       this.frameRate = ImageSequence.DefaultFrameRate;
@@ -311,10 +311,10 @@
       this._lastFrame = this.amount - 1;
       this._startTime = _.performance.now();
 
-      if (_.isNumber(firstFrame)) {
+      if (typeof firstFrame === 'number') {
         this._firstFrame = firstFrame;
       }
-      if (_.isNumber(lastFrame)) {
+      if (typeof lastFrame === 'number') {
         this._lastFrame = lastFrame;
       }
       if (typeof onLastFrame === 'function') {

@@ -601,7 +601,7 @@ QUnit.test('Two', function(assert) {
 
   two.play();
   assert.ok(two.playing, 'Two.Utils.setPlaying applied correctly.');
-  assert.ok(_.isNumber(Two.nextFrameID), 'requestAnimationFrame runs correctly.');
+  assert.ok(typeof Two.nextFrameID === 'number', 'requestAnimationFrame runs correctly.');
 
   two.pause();
   assert.ok(!two.playing, 'Two.pause correctly stops updating.');

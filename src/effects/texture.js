@@ -209,8 +209,8 @@
           throw new Two.Utils.Error('unable to load ' + texture.src);
         };
 
-        if (_.isNumber(texture.image.width) && texture.image.width > 0
-          && _.isNumber(texture.image.height) && texture.image.height > 0) {
+        if (typeof texture.image.width === 'number' && texture.image.width > 0
+          && typeof texture.image.height === 'number' && texture.image.height > 0) {
             loaded();
         } else if (typeof texture.image.addEventListener === 'function') {
           texture.image.addEventListener('load', loaded, false);
@@ -527,7 +527,7 @@
         // image: this.image,
         repeat: this.repeat,
         origin: this.origin.toObject(),
-        scale: _.isNumber(this.scale) ? this.scale : this.scale.toObject()
+        scale: typeof this.scale === 'number' ? this.scale : this.scale.toObject()
       };
     },
 

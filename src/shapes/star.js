@@ -20,7 +20,7 @@
       ir = or / 2;
     }
 
-    if (!_.isNumber(sides) || sides <= 0) {
+    if (typeof sides !== 'number' || sides <= 0) {
       sides = 5;
     }
 

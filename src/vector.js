@@ -254,10 +254,10 @@
       if (arguments.length <= 0) {
         return this;
       } else if (arguments.length <= 1) {
-        if (_.isNumber(x)) {
+        if (typeof x === 'number') {
           this.x += x;
           this.y += x;
-        } else if (x && _.isNumber(x.x) && _.isNumber(x.y)) {
+        } else if (x && typeof x.x === 'number' && typeof x.y === 'number') {
           this.x += x.x;
           this.y += x.y;
         }
@@ -307,10 +307,10 @@
       if (arguments.length <= 0) {
         return this;
       } else if (arguments.length <= 1) {
-        if (_.isNumber(x)) {
+        if (typeof x === 'number') {
           this.x -= x;
           this.y -= x;
-        } else if (x && _.isNumber(x.x) && _.isNumber(x.y)) {
+        } else if (x && typeof x.x === 'number' && typeof x.y === 'number') {
           this.x -= x.x;
           this.y -= x.y;
         }
@@ -376,10 +376,10 @@
       if (arguments.length <= 0) {
         return this;
       } else if (arguments.length <= 1) {
-        if (_.isNumber(x)) {
+        if (typeof x === 'number') {
           this.x *= x;
           this.y *= x;
-        } else if (x && _.isNumber(x.x) && _.isNumber(x.y)) {
+        } else if (x && typeof x.x === 'number' && typeof x.y === 'number') {
           this.x *= x.x;
           this.y *= x.y;
         }
@@ -439,10 +439,10 @@
       if (arguments.length <= 0) {
         return this;
       } else if (arguments.length <= 1) {
-        if (_.isNumber(x)) {
+        if (typeof x === 'number') {
           this.x /= x;
           this.y /= x;
-        } else if (x && _.isNumber(x.x) && _.isNumber(x.y)) {
+        } else if (x && typeof x.x === 'number' && typeof x.y === 'number') {
           this.x /= x.x;
           this.y /= x.y;
         }
@@ -667,10 +667,10 @@
       if (arguments.length <= 0) {
         return this;
       } else if (arguments.length <= 1) {
-        if (_.isNumber(x)) {
+        if (typeof x === 'number') {
           this._x += x;
           this._y += x;
-        }  else if (x && _.isNumber(x.x) && _.isNumber(x.y)) {
+        }  else if (x && typeof x.x === 'number' && typeof x.y === 'number') {
           this._x += x.x;
           this._y += x.y;
         }
@@ -685,10 +685,10 @@
       if (arguments.length <= 0) {
         return this;
       } else if (arguments.length <= 1) {
-        if (_.isNumber(x)) {
+        if (typeof x === 'number') {
           this._x -= x;
           this._y -= x;
-        } else if (x && _.isNumber(x.x) && _.isNumber(x.y)) {
+        } else if (x && typeof x.x === 'number' && typeof x.y === 'number') {
           this._x -= x.x;
           this._y -= x.y;
         }
@@ -703,10 +703,10 @@
       if (arguments.length <= 0) {
         return this;
       } else if (arguments.length <= 1) {
-        if (_.isNumber(x)) {
+        if (typeof x === 'number') {
           this._x *= x;
           this._y *= x;
-        } else if (x && _.isNumber(x.x) && _.isNumber(x.y)) {
+        } else if (x && typeof x.x === 'number' && typeof x.y === 'number') {
           this._x *= x.x;
           this._y *= x.y;
         }
@@ -721,10 +721,10 @@
       if (arguments.length <= 0) {
         return this;
       } else if (arguments.length <= 1) {
-        if (_.isNumber(x)) {
+        if (typeof x === 'number') {
           this._x /= x;
           this._y /= x;
-        } else if (x && _.isNumber(x.x) && _.isNumber(x.y)) {
+        } else if (x && typeof x.x === 'number' && typeof x.y === 'number') {
           this._x /= x.x;
           this._y /= x.y;
         }

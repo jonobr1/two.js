@@ -49,7 +49,7 @@
      * @name Two.Sprite#columns
      * @property {Integer} - The number of columns to split the texture into. Defaults to `1`.
      */
-    if (_.isNumber(cols)) {
+    if (typeof cols === 'number') {
       this.columns = cols;
     }
 
@@ -57,7 +57,7 @@
      * @name Two.Sprite#rows
      * @property {Integer} - The number of rows to split the texture into. Defaults to `1`.
      */
-    if (_.isNumber(rows)) {
+    if (typeof rows === 'number') {
       this.rows = rows;
     }
 
@@ -65,7 +65,7 @@
      * @name Two.Sprite#frameRate
      * @property {Integer} - The number of frames to animate against per second. Defaults to `0` for non-animated sprites.
      */
-    if (_.isNumber(frameRate)) {
+    if (typeof frameRate === 'number') {
       this.frameRate = frameRate;
     }
 
@@ -251,10 +251,10 @@
       this._lastFrame = this.amount - 1;
       this._startTime = _.performance.now();
 
-      if (_.isNumber(firstFrame)) {
+      if (typeof firstFrame === 'number') {
         this._firstFrame = firstFrame;
       }
-      if (_.isNumber(lastFrame)) {
+      if (typeof lastFrame === 'number') {
         this._lastFrame = lastFrame;
       }
       if (typeof onLastFrame === 'function') {

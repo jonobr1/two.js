@@ -29,7 +29,7 @@
         this._flagCenter = true;
       }, this));
 
-    this.radius = _.isNumber(r) ? r : 20;
+    this.radius = typeof r === 'number' ? r : 20;
 
     /**
      * @name Two.RadialGradient#focal
@@ -41,19 +41,19 @@
         this._flagFocal = true;
       }, this));
 
-    if (_.isNumber(cx)) {
+    if (typeof cx === 'number') {
       this.center.x = cx;
     }
-    if (_.isNumber(cy)) {
+    if (typeof cy === 'number') {
       this.center.y = cy;
     }
 
     this.focal.copy(this.center);
 
-    if (_.isNumber(fx)) {
+    if (typeof fx === 'number') {
       this.focal.x = fx;
     }
-    if (_.isNumber(fy)) {
+    if (typeof fy === 'number') {
       this.focal.y = fy;
     }
 

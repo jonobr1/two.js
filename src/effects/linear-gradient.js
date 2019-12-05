@@ -32,16 +32,16 @@
      */
     this.right = new Two.Vector().bind(Two.Events.change, flagEndPoints);
 
-    if (_.isNumber(x1)) {
+    if (typeof x1 === 'number') {
       this.left.x = x1;
     }
-    if (_.isNumber(y1)) {
+    if (typeof y1 === 'number') {
       this.left.y = y1;
     }
-    if (_.isNumber(x2)) {
+    if (typeof x2 === 'number') {
       this.right.x = x2;
     }
-    if (_.isNumber(y2)) {
+    if (typeof y2 === 'number') {
       this.right.y = y2;
     }
 

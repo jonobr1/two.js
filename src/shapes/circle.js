@@ -33,10 +33,10 @@
 
     this._update();
 
-    if (_.isNumber(ox)) {
+    if (typeof ox === 'number') {
       this.translation.x = ox;
     }
-    if (_.isNumber(oy)) {
+    if (typeof oy === 'number') {
       this.translation.y = oy;
     }
 

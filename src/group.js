@@ -782,8 +782,8 @@
 
         rect = child.getBoundingClientRect(shallow);
 
-        if (!_.isNumber(rect.top)   || !_.isNumber(rect.left)   ||
-            !_.isNumber(rect.right) || !_.isNumber(rect.bottom)) {
+        if (typeof rect.top !== 'number'   || typeof rect.left !== 'number' ||
+            typeof rect.right !== 'number' || typeof rect.bottom !== 'number') {
           continue;
         }
 

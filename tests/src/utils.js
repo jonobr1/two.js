@@ -240,7 +240,7 @@
           check = Utils.shapeEquals(a[i], _.toArray(q[i]));
         } else if (_.isObject(a[i])) {
           check = Utils.shapeEquals(a[i], q[i]);
-        } else if (_.isNumber(a[i])) {
+        } else if (typeof a[i] === 'number') {
           check = Math.abs(a[i] - q[i]) <= Tolerance; // Fuzzy checking
         } else {
           check = q[i] === a[i];
