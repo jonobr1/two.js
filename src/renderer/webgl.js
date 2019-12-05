@@ -110,14 +110,11 @@
           gl.clear(gl.STENCIL_BUFFER_BIT);
           gl.enable(gl.STENCIL_TEST);
 
-          gl.colorMask(false, false, false, true);
-          gl.stencilOp(gl.KEEP, gl.KEEP, gl.REPLACE);
-
           gl.stencilFunc(gl.ALWAYS, 1, 0);
+          gl.stencilOp(gl.KEEP, gl.KEEP, gl.REPLACE);
 
           webgl[this._mask._renderer.type].render.call(this._mask, gl, program, this);
 
-          gl.colorMask(true, true, true, true);
           gl.stencilFunc(gl.EQUAL, 1, 0xff);
           gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
 
