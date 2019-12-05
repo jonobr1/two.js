@@ -103,13 +103,6 @@
         return func.apply(this, arguments);
       };
     },
-    after: function(times, func) {
-      return function() {
-        while (--times < 1) {
-          return func.apply(this, arguments);
-        }
-      };
-    },
     uniqueId: function(prefix) {
       var id = ++_._indexAmount + '';
       return prefix ? prefix + id : id;
