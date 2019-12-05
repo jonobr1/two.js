@@ -30,7 +30,7 @@
     this.elements = new Two.Array(9);
 
     var elements = a;
-    if (!_.isArray(elements)) {
+    if (!Array.isArray(elements)) {
       elements = _.toArray(arguments);
     }
 

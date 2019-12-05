@@ -15,7 +15,7 @@ QUnit.module('Core');
 
 QUnit.test('Two.Utils', function(assert) {
 
-  assert.expect(11 * 11 + 17);
+  assert.expect(10 * 10 + 16);
 
   var types = {
     arguments: arguments,
@@ -24,7 +24,6 @@ QUnit.test('Two.Utils', function(assert) {
     null: null,
     func: function() {},
     obj: {},
-    array: [],
     elem: document.createElement('div'),
     date: new Date(),
     regex: new RegExp(),
@@ -38,7 +37,6 @@ QUnit.test('Two.Utils', function(assert) {
     'undefined': Two.Utils.isUndefined,
     func: Two.Utils.isFunction,
     obj: Two.Utils.isObject,
-    array: Two.Utils.isArray,
     elem: Two.Utils.isElement,
     date: Two.Utils.isDate,
     regex: Two.Utils.isRegExp,
@@ -53,7 +51,7 @@ QUnit.test('Two.Utils', function(assert) {
     objregex: true
   };
   var keys = ['number', 'nan', 'null', 'undefined', 'func', 'obj',
-    'array', 'elem', 'date', 'regex', 'bool'];
+    'elem', 'date', 'regex', 'bool'];
 
   for (var i = 0; i < keys.length; i++) {
     var a = keys[i];
@@ -65,7 +63,6 @@ QUnit.test('Two.Utils', function(assert) {
     }
   }
 
-  assert.equal(Two.Utils.isArray(Two.Utils.toArray({})), true, 'turned {} to array.');
   assert.equal(JSON.stringify(Two.Utils.range(0, 5)), '[0,1,2,3,4]', 'created 0-5 range successfully.');
   assert.equal(Two.Utils.indexOf(['a', 'b', 'c'], 'b'), 1, 'indexed correctly.');
   assert.equal(Two.Utils.has({ hello: 'foo' }, 'hello'), true, 'Object has property.');

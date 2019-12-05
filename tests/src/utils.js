@@ -42,7 +42,7 @@
 
       var domElement = document.createElement('li');
 
-      if (_.isArray(elem)) {
+      if (Array.isArray(elem)) {
         _.each(elem, function(el) {
           domElement.appendChild(el);
         });
@@ -64,7 +64,7 @@
 
       var elem;
 
-      if (_.isArray(two)) {
+      if (Array.isArray(two)) {
         elem = _.map(two, function(t) {
           var el = t.renderer.domElement;
           switch (el.tagName.toLowerCase()) {
@@ -236,7 +236,7 @@
 
         var check, isElse = false;
 
-        if (_.isArray(a[i])) {
+        if (Array.isArray(a[i])) {
           check = Utils.shapeEquals(a[i], _.toArray(q[i]));
         } else if (_.isObject(a[i])) {
           check = Utils.shapeEquals(a[i], q[i]);

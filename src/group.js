@@ -96,7 +96,7 @@
      * @description A list of all the children in the scenegraph.
      * @nota-bene Ther order of this list indicates the order each element is rendered to the screen.
      */
-    this.children = _.isArray(children) ? children : arguments;
+    this.children = Array.isArray(children) ? children : arguments;
 
   };
 
@@ -286,7 +286,7 @@
      */
     MakeGetterSetters: function(group, properties) {
 
-      if (!_.isArray(properties)) {
+      if (!Array.isArray(properties)) {
         properties = [properties];
       }
 
