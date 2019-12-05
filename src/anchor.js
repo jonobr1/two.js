@@ -208,7 +208,7 @@
       this.x = v.x;
       this.y = v.y;
 
-      if (_.isString(v.command)) {
+      if (typeof v.command === 'string') {
         this.command = v.command;
       }
       if (_.isObject(v.controls)) {

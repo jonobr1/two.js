@@ -183,7 +183,7 @@
     GenerateTexture: function(obj) {
       if (obj instanceof Two.Texture) {
         return obj;
-      } else if (_.isString(obj)) {
+      } else if (typeof obj === 'string') {
         return new Two.Texture(obj);
       }
     }

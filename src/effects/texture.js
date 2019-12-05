@@ -65,7 +65,7 @@
      * @property {String} - The URL path to the image data.
      * @nota-bene This property is ultimately serialized in a {@link Two.Registry} to cache retrieval.
      */
-    if (_.isString(src)) {
+    if (typeof src === 'string') {
       this.src = src;
     } else if (_.isElement(src)) {
       /**

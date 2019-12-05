@@ -163,7 +163,7 @@
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         if (fill) {
-          if (_.isString(fill)) {
+          if (typeof fill === 'string') {
             ctx.fillStyle = fill;
           } else {
             webgl[fill._renderer.type].render.call(fill, ctx, elem);
@@ -171,7 +171,7 @@
           }
         }
         if (stroke) {
-          if (_.isString(stroke)) {
+          if (typeof stroke === 'string') {
             ctx.strokeStyle = stroke;
           } else {
             webgl[stroke._renderer.type].render.call(stroke, ctx, elem);
@@ -560,7 +560,7 @@
 
         // Styles
         if (fill) {
-          if (_.isString(fill)) {
+          if (typeof fill === 'string') {
             ctx.fillStyle = fill;
           } else {
             webgl[fill._renderer.type].render.call(fill, ctx, elem);
@@ -568,7 +568,7 @@
           }
         }
         if (stroke) {
-          if (_.isString(stroke)) {
+          if (typeof stroke === 'string') {
             ctx.strokeStyle = stroke;
           } else {
             webgl[stroke._renderer.type].render.call(stroke, ctx, elem);

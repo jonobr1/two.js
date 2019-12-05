@@ -164,7 +164,7 @@
 
         // Styles
         if (fill) {
-          if (_.isString(fill)) {
+          if (typeof fill === 'string') {
             ctx.fillStyle = fill;
           } else {
             canvas[fill._renderer.type].render.call(fill, ctx);
@@ -172,7 +172,7 @@
           }
         }
         if (stroke) {
-          if (_.isString(stroke)) {
+          if (typeof stroke === 'string') {
             ctx.strokeStyle = stroke;
           } else {
             canvas[stroke._renderer.type].render.call(stroke, ctx);
@@ -411,7 +411,7 @@
 
         // Styles
         if (fill) {
-          if (_.isString(fill)) {
+          if (typeof fill === 'string') {
             ctx.fillStyle = fill;
           } else {
             canvas[fill._renderer.type].render.call(fill, ctx);
@@ -419,7 +419,7 @@
           }
         }
         if (stroke) {
-          if (_.isString(stroke)) {
+          if (typeof stroke === 'string') {
             ctx.strokeStyle = stroke;
           } else {
             canvas[stroke._renderer.type].render.call(stroke, ctx);

@@ -38,9 +38,6 @@
     isFunction: function(obj) {
       return toString.call(obj) === '[object Function]';
     },
-    isString: function(obj) {
-      return toString.call(obj) === '[object String]';
-    },
     isNumber: function(obj) {
       return toString.call(obj) === '[object Number]';
     },

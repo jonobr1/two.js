@@ -36,7 +36,7 @@
      */
     if (path instanceof Two.Texture) {
       this.texture = path;
-    } else if (_.isString(path)) {
+    } else if (typeof path === 'string') {
       this.texture = new Two.Texture(path);
     }
 

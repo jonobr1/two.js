@@ -39,7 +39,7 @@
      * @name Two.Stop#color
      * @property {CssColor} - The color of the stop.
      */
-    this.color = _.isString(color) ? color
+    this.color = (typeof color === 'string') ? color
       : Stop.Index <= 0 ? '#fff' : '#000';
 
     Stop.Index = (Stop.Index + 1) % 2;
