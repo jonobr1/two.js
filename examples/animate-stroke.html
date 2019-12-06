@@ -52,6 +52,7 @@
               fresh.total += d;
             });
 
+            var rect = fresh.getBoundingClientRect();
             clearT();
 
             $(window)
@@ -89,7 +90,6 @@
             }
 
             function mousemove(e) {
-              var rect = fresh.getBoundingClientRect();
               movingmouse = true;
               t = cmap(e.clientX, rect.left, rect.right, 0, 1);
               setEnding(fresh, t);
