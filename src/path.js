@@ -849,10 +849,12 @@
         };
       }
 
-      for (i = 1; i < l; i++) {
+      for (i = 0; i < l; i++) {
 
         v1 = this._renderer.vertices[i];
-        v0 = this._renderer.vertices[i - 1];
+        // If i = 0, then this "wraps around" to the last vertex. Otherwise, it's the previous vertex.
+        // This is important for handling cyclic paths.
+        v0 = this._renderer.vertices[(i + l - 1) % l];
 
         if (v0.controls && v1.controls) {
 

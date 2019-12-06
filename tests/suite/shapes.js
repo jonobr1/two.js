@@ -43,7 +43,7 @@ QUnit.test('Two.Circle', function(assert) {
   var properties = [radius];
 
   var path = new Two.Circle(0, 0, radius);
-  assert.equal(path.vertices.length, 5, 'amount of vertices set correctly.');
+  assert.equal(path.vertices.length, 4, 'amount of vertices set correctly.');
 
   for (var i = 0; i < Two.Circle.Properties.length; i++) {
     var prop = Two.Circle.Properties[i];
@@ -72,7 +72,7 @@ QUnit.test('Two.Ellipse', function(assert) {
   var properties = [rx * 2, ry * 2];
 
   var path = new Two.Ellipse(0, 0, rx, ry);
-  assert.equal(path.vertices.length, 5, 'amount of vertices set correctly.');
+  assert.equal(path.vertices.length, 4, 'amount of vertices set correctly.');
 
   for (var i = 0; i < Two.Ellipse.Properties.length; i++) {
     var prop = Two.Ellipse.Properties[i];
