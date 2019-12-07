@@ -2706,12 +2706,13 @@
      * @param {Number} x
      * @param {Number} y
      * @param {Number} radius
+     * @param {Number} [resolution=4]
      * @returns {Two.Circle}
      * @description Creates a Two.js circle and adds it to the scene.
      */
-    makeCircle: function(x, y, radius) {
+    makeCircle: function(x, y, radius, resolution) {
 
-      var circle = new Two.Circle(x, y, radius);
+      var circle = new Two.Circle(x, y, radius, resolution);
       this.scene.add(circle);
 
       return circle;
@@ -2725,12 +2726,13 @@
      * @param {Number} y
      * @param {Number} rx
      * @param {Number} ry
+     * @param {Number} [resolution=4]
      * @returns {Two.Ellipse}
      * @description Creates a Two.js ellipse and adds it to the scene.
      */
-    makeEllipse: function(x, y, rx, ry) {
+    makeEllipse: function(x, y, rx, ry, resolution) {
 
-      var ellipse = new Two.Ellipse(x, y, rx, ry);
+      var ellipse = new Two.Ellipse(x, y, rx, ry, resolution);
       this.scene.add(ellipse);
 
       return ellipse;
