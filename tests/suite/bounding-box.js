@@ -70,7 +70,7 @@
       });
 
       var answer = {"top":150,"left":150,"right":250,"bottom":250,"width":100,"height":100};
-      var shape = two.makeCircle(200, 200, 50, 50);
+      var shape = two.makeCircle(200, 200, 50);
       shape.fill = 'rgb(60, 209, 201)';
       shape.linewidth = 0;
 
@@ -93,7 +93,7 @@
       });
 
       var answer = {"top":150.00000085571355,"left":150.00000085571355,"right":249.99999914428645,"bottom":249.99999914428645,"width":99.9999982885729,"height":99.9999982885729};
-      var shape = two.makeCircle(200, 200, 50, 50);
+      var shape = two.makeCircle(200, 200, 50);
       shape.fill = 'rgb(60, 209, 201)';
       shape.linewidth = 0;
       shape.rotation = Math.PI / 4;
