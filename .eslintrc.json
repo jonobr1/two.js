@@ -32,5 +32,5 @@
 			}
 		}
 	],
-	"ignorePatterns": ["build/", "utils/start-comment.js", "utils/end-comment.js", "utils/exports.js"]
+	"ignorePatterns": ["build/", "utils/start-comment.js", "utils/end-comment.js", "utils/exports.js", "junk/"]
 }
