@@ -703,7 +703,7 @@
       for (var i = 0; i < objects.length; i++) {
         var child = objects[i];
         if (!(child && child.id)) {
-          continue
+          continue;
         }
         var index = _.indexOf(this.children, child);
         if (index >= 0) {

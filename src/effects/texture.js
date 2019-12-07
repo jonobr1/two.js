@@ -265,7 +265,6 @@
 
         if (Two.Utils.isHeadless) {
           throw new Two.Utils.Error('video textures are not implemented in headless environments.');
-          return;
         }
 
         texture.image.setAttribute('two-src', texture.src);
@@ -529,7 +528,7 @@
         repeat: this.repeat,
         origin: this.origin.toObject(),
         scale: _.isNumber(this.scale) ? this.scale : this.scale.toObject()
-      }
+      };
     },
 
     /**

@@ -127,8 +127,8 @@
           var lx = i === 0 ? 0 : rx * c * cos(theta - HALF_PI);
           var ly = i === 0 ? 0 : ry * c * sin(theta - HALF_PI);
 
-          var rx = i === last ? 0 : rx * c * cos(theta + HALF_PI);
-          var ry = i === last ? 0 : ry * c * sin(theta + HALF_PI);
+          rx = i === last ? 0 : rx * c * cos(theta + HALF_PI);
+          ry = i === last ? 0 : ry * c * sin(theta + HALF_PI);
 
           var v = this.vertices[i];
 
@@ -205,7 +205,7 @@
       var object = Path.prototype.toObject.call(this);
 
       _.each(Ellipse.Properties, function(property) {
-        object[property] = this[property]
+        object[property] = this[property];
       }, this);
 
       return object;

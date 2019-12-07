@@ -36,8 +36,8 @@ var explanation = compiler.explainSync({
 
 explanation.slice(0).forEach(function(object) {
   var a = object.undocumented;
-  var b = /package\:undefined/i.test(object.longname);
-  var c = /Two\.Utils\.Events\.(bind|unbind)/i.test(object.memberof)
+  var b = /package:undefined/i.test(object.longname);
+  var c = /Two\.Utils\.Events\.(bind|unbind)/i.test(object.memberof);
   if (a || b || c) {
     explanation.splice(explanation.indexOf(object), 1);
   }

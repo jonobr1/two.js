@@ -474,7 +474,7 @@
      var e = elements[4];
      var f = elements[5];
 
-      if (!!fullMatrix) {
+      if (fullMatrix) {
 
         var g = elements[6];
         var h = elements[7];
@@ -533,7 +533,7 @@
      var e = elements[4];
      var f = elements[5];
 
-      if (!!fullMatrix) {
+      if (fullMatrix) {
 
         var g = elements[6];
         var h = elements[7];
