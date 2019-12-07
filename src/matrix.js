@@ -3,7 +3,7 @@
   // Constants
 
   var cos = Math.cos, sin = Math.sin, tan = Math.tan;
-  var _ = Two.Utils, fix = _.toFixed;
+  var _ = Two.Utils;
   var array = [];
 
   /**
@@ -451,7 +451,7 @@
       array.length = 0;
       this.toTransformArray(fullMatrix, array);
 
-      return array.join(' ');
+      return array.map(Two.Utils.toFixed).join(' ');
 
     },
 
@@ -467,18 +467,18 @@
      var elements = this.elements;
      var hasOutput = !!output;
 
-     var a = fix(elements[0]);
-     var b = fix(elements[1]);
-     var c = fix(elements[2]);
-     var d = fix(elements[3]);
-     var e = fix(elements[4]);
-     var f = fix(elements[5]);
+     var a = elements[0];
+     var b = elements[1];
+     var c = elements[2];
+     var d = elements[3];
+     var e = elements[4];
+     var f = elements[5];
 
       if (!!fullMatrix) {
 
-        var g = fix(elements[6]);
-        var h = fix(elements[7]);
-        var i = fix(elements[8]);
+        var g = elements[6];
+        var h = elements[7];
+        var i = elements[8];
 
         if (hasOutput) {
           output[0] = a;

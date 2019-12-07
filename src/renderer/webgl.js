@@ -11,7 +11,6 @@
     transformation = new Two.Array(9),
     getRatio = Two.Utils.getRatio,
     getComputedMatrix = Two.Utils.getComputedMatrix,
-    toFixed = Two.Utils.toFixed,
     CanvasUtils = Two[Two.Types.canvas].Utils,
     _ = Two.Utils;
 
@@ -240,8 +239,8 @@
 
           var b = commands[i];
 
-          x = toFixed(b.x);
-          y = toFixed(b.y);
+          x = b.x;
+          y = b.y;
 
           switch (b.command) {
 
@@ -260,8 +259,8 @@
               prev = closed ? mod(i - 1, length) : max(i - 1, 0);
               a = commands[prev];
 
-              var ax = toFixed(a.x);
-              var ay = toFixed(a.y);
+              var ax = a.x;
+              var ay = a.y;
 
               CanvasUtils.renderSvgArcCommand(ctx, ax, ay, rx, ry, largeArcFlag, sweepFlag, xAxisRotation, x, y);
               break;
@@ -277,19 +276,19 @@
               bl = (b.controls && b.controls.left) || Two.Vector.zero;
 
               if (a._relative) {
-                vx = toFixed((ar.x + a.x));
-                vy = toFixed((ar.y + a.y));
+                vx = ar.x + a.x;
+                vy = ar.y + a.y;
               } else {
-                vx = toFixed(ar.x);
-                vy = toFixed(ar.y);
+                vx = ar.x;
+                vy = ar.y;
               }
 
               if (b._relative) {
-                ux = toFixed((bl.x + b.x));
-                uy = toFixed((bl.y + b.y));
+                ux = bl.x + b.x;
+                uy = bl.y + b.y;
               } else {
-                ux = toFixed(bl.x);
-                uy = toFixed(bl.y);
+                ux = bl.x;
+                uy = bl.y;
               }
 
               ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
@@ -302,23 +301,23 @@
                 cl = (c.controls && c.controls.left) || Two.Vector.zero;
 
                 if (b._relative) {
-                  vx = toFixed((br.x + b.x));
-                  vy = toFixed((br.y + b.y));
+                  vx = br.x + b.x;
+                  vy = br.y + b.y;
                 } else {
-                  vx = toFixed(br.x);
-                  vy = toFixed(br.y);
+                  vx = br.x;
+                  vy = br.y;
                 }
 
                 if (c._relative) {
-                  ux = toFixed((cl.x + c.x));
-                  uy = toFixed((cl.y + c.y));
+                  ux = cl.x + c.x;
+                  uy = cl.y + c.y;
                 } else {
-                  ux = toFixed(cl.x);
-                  uy = toFixed(cl.y);
+                  ux = cl.x;
+                  uy = cl.y;
                 }
 
-                x = toFixed(c.x);
-                y = toFixed(c.y);
+                x = c.x;
+                y = c.y;
 
                 ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
 
@@ -644,23 +643,23 @@
 
           if (fill._renderer && fill._renderer.offset) {
 
-            sx = toFixed(fill._renderer.scale.x);
-            sy = toFixed(fill._renderer.scale.y);
+            sx = fill._renderer.scale.x;
+            sy = fill._renderer.scale.y;
 
             ctx.save();
-            ctx.translate( - toFixed(fill._renderer.offset.x),
-              - toFixed(fill._renderer.offset.y));
+            ctx.translate( - fill._renderer.offset.x,
+              - fill._renderer.offset.y);
             ctx.scale(sx, sy);
 
             a = elem._size / fill._renderer.scale.y;
             b = elem._leading / fill._renderer.scale.y;
-            ctx.font = [elem._style, elem._weight, toFixed(a) + 'px/',
-              toFixed(b) + 'px', elem._family].join(' ');
+            ctx.font = [elem._style, elem._weight, a + 'px/',
+              b + 'px', elem._family].join(' ');
 
             c = fill._renderer.offset.x / fill._renderer.scale.x;
             d = fill._renderer.offset.y / fill._renderer.scale.y;
 
-            ctx.fillText(elem.value, toFixed(c), toFixed(d));
+            ctx.fillText(elem.value, c, d);
             ctx.restore();
 
           } else {
@@ -673,25 +672,25 @@
 
           if (stroke._renderer && stroke._renderer.offset) {
 
-            sx = toFixed(stroke._renderer.scale.x);
-            sy = toFixed(stroke._renderer.scale.y);
+            sx = stroke._renderer.scale.x;
+            sy = stroke._renderer.scale.y;
 
             ctx.save();
-            ctx.translate(- toFixed(stroke._renderer.offset.x),
-              - toFixed(stroke._renderer.offset.y));
+            ctx.translate(- stroke._renderer.offset.x,
+              - stroke._renderer.offset.y);
             ctx.scale(sx, sy);
 
             a = elem._size / stroke._renderer.scale.y;
             b = elem._leading / stroke._renderer.scale.y;
-            ctx.font = [elem._style, elem._weight, toFixed(a) + 'px/',
-              toFixed(b) + 'px', elem._family].join(' ');
+            ctx.font = [elem._style, elem._weight, a + 'px/',
+              b + 'px', elem._family].join(' ');
 
             c = stroke._renderer.offset.x / stroke._renderer.scale.x;
             d = stroke._renderer.offset.y / stroke._renderer.scale.y;
             e = linewidth / stroke._renderer.scale.x;
 
-            ctx.lineWidth = toFixed(e);
-            ctx.strokeText(elem.value, toFixed(c), toFixed(d));
+            ctx.lineWidth = e;
+            ctx.strokeText(elem.value, c, d);
             ctx.restore();
 
           } else {
