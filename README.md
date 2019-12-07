@@ -110,6 +110,7 @@ process.exit();
 ## Change Log
 
 #### Nightly
++ Removed unnecessary `gl.colorMask` calls [@adroitwhiz](https://github.com/adroitwhiz)
 + Removed `Two.Utils.toFixed` calls on Canvas and WebGLRenderers [@adroitwhiz](https://github.com/adroitwhiz)
 + `Two.Shape.clone` clones `Two.Shape.matrix` when `Two.Shape.matrix.manual` is set to `true`
 + Improved `Two.Group.mask` rendering in `Two.WebGLREnderer`
