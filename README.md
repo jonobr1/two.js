@@ -110,6 +110,7 @@ process.exit();
 ## Change Log
 
 #### Nightly
++ Exposed `resolution` parameter in `Two.makeCircle` and `Two.makeEllipse` as the final parameter
 + Made `Two.Circle` and `Two.Ellipse` recalculate controls points on `_update` and made vertex amounts cyclical [@adroitwhiz](https://github.com/adroitwhiz)
 + Added [ESLint](https://eslint.org/) scripts to development environment [@adroitwhiz](https://github.com/adroitwhiz)
 + Improve performance of WebGLRenderer by leveraging uniform to construct plane and removing duplicate render calls [@adroitwhiz](https://github.com/adroitwhiz)
