@@ -451,11 +451,7 @@
       array.length = 0;
       this.toTransformArray(fullMatrix, array);
 
-      return array.map(
-        function(item) {
-          return Two.Utils.toFixed(item);
-        }
-      ).join(' ');
+      return array.map(Two.Utils.toFixed).join(' ');
 
     },
 
