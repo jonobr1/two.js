@@ -832,13 +832,13 @@
       // TODO: Update this to not __always__ update. Just when it needs to.
       this._update(true);
 
-      matrix = !!shallow ? this._matrix : getComputedMatrix(this);
+      matrix = shallow ? this._matrix : getComputedMatrix(this);
 
       border = this.linewidth / 2;
       l = this._renderer.vertices.length;
 
       if (l <= 0) {
-        v = matrix.multiply(0, 0, 1);
+        var v = matrix.multiply(0, 0, 1);
         return {
           top: v.y,
           left: v.x,
@@ -1194,7 +1194,6 @@
         }
 
         this._lengths[i] = getCurveLength(a, b, limit);
-        this._lengths[i] = Two.Utils.toFixed(this._lengths[i]);
         sum += this._lengths[i];
 
         if (i >= last && closed) {
@@ -1202,7 +1201,6 @@
           b = this.vertices[(i + 1) % length];
 
           this._lengths[i + 1] = getCurveLength(a, b, limit);
-          this._lengths[i + 1] = Two.Utils.toFixed(this._lengths[i + 1]);
           sum += this._lengths[i + 1];
 
         }

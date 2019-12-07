@@ -6,7 +6,7 @@
   } else if (typeof global !== 'undefined') {
     root = global;
   } else if (typeof self !== 'undefined') {
-    root = self
+    root = self;
   } else {
     root = this;
   }
@@ -112,7 +112,7 @@
       return range;
     },
     indexOf: function(list, item) {
-      if (!!_.natural.indexOf) {
+      if (_.natural.indexOf) {
         return _.natural.indexOf.call(list, item);
       }
       for (var i = 0; i < list.length; i++) {
@@ -205,19 +205,19 @@
     once: function(func) {
       var init = false;
       return function() {
-        if (!!init) {
+        if (init) {
           return func;
         }
         init = true;
         return func.apply(this, arguments);
-      }
+      };
     },
     after: function(times, func) {
       return function() {
         while (--times < 1) {
           return func.apply(this, arguments);
         }
-      }
+      };
     },
     uniqueId: function(prefix) {
       var id = ++_._indexAmount + '';
@@ -1051,10 +1051,10 @@
               if (elem instanceof Two.Group) {
                 key = '_' + key;
               }
-              if (/url\(\#.*\)/i.test(value)) {
+              if (/url\(#.*\)/i.test(value)) {
                 var scene = Two.Utils.getScene(this);
                 elem[key] = scene.getById(
-                  value.replace(/url\(\#(.*)\)/i, '$1'));
+                  value.replace(/url\(#(.*)\)/i, '$1'));
               } else {
                 elem[key] = (/none/i.test(value)) ? 'transparent' : value;
               }
@@ -1137,7 +1137,7 @@
             var tag = n.nodeName;
             if (!tag) return;
 
-            var tagName = tag.replace(/svg\:/ig, '').toLowerCase();
+            var tagName = tag.replace(/svg:/ig, '').toLowerCase();
 
             if (tagName in Two.Utils.read) {
               var o = Two.Utils.read[tagName].call(group, n, styles);
@@ -1156,7 +1156,7 @@
           var points = node.getAttribute('points');
 
           var verts = [];
-          points.replace(/(-?[\d\.?]+)[,|\s](-?[\d\.?]+)/g, function(match, p1, p2) {
+          points.replace(/(-?[\d.?]+)[,|\s](-?[\d.?]+)/g, function(match, p1, p2) {
             verts.push(new Two.Anchor(parseFloat(p1), parseFloat(p2)));
           });
 
@@ -1196,7 +1196,7 @@
 
             var type = command[0];
             var lower = type.toLowerCase();
-            var items = command.slice(1).trim().split(/[\s,]+|(?=\s?[+\-])/);
+            var items = command.slice(1).trim().split(/[\s,]+|(?=\s?[+-])/);
             var pre, post, result = [], bin;
             var hasDoubleDecimals = false;
 
@@ -1309,10 +1309,10 @@
             var lower = type.toLowerCase();
 
             coords = command.slice(1).trim();
-            coords = coords.replace(/(-?\d+(?:\.\d*)?)[eE]([+\-]?\d+)/g, function(match, n1, n2) {
+            coords = coords.replace(/(-?\d+(?:\.\d*)?)[eE]([+-]?\d+)/g, function(match, n1, n2) {
               return parseFloat(n1) * pow(10, n2);
             });
-            coords = coords.split(/[\s,]+|(?=\s?[+\-])/);
+            coords = coords.split(/[\s,]+|(?=\s?[+-])/);
             relative = type === lower;
 
             var x1, y1, x2, y2, x3, y3, x4, y4, reflection;
@@ -1332,8 +1332,8 @@
                     Two.Commands.close
                   );
                   // Make coord be the last `m` command
-                  for (var i = points.length - 1; i >= 0; i--) {
-                    var point = points[i];
+                  for (var j = points.length - 1; j >= 0; j--) {
+                    var point = points[j];
                     if (/m/i.test(point.command)) {
                       coord = point;
                       break;
@@ -1562,7 +1562,7 @@
             return;
           }
 
-          var path = new Two.Path(points, closed, undefined, true).noStroke();
+          path = new Two.Path(points, closed, undefined, true).noStroke();
           path.fill = 'black';
 
           var rect = path.getBoundingClientRect(true);
@@ -1699,8 +1699,8 @@
             var child = node.children[i];
 
             var offset = child.getAttribute('offset');
-            if (/\%/ig.test(offset)) {
-              offset = parseFloat(offset.replace(/\%/ig, '')) / 100;
+            if (/%/ig.test(offset)) {
+              offset = parseFloat(offset.replace(/%/ig, '')) / 100;
             }
             offset = parseFloat(offset);
 
@@ -1708,13 +1708,14 @@
             var opacity = child.getAttribute('stop-opacity');
             var style = child.getAttribute('style');
 
+            var matches;
             if (_.isNull(color)) {
-              var matches = style ? style.match(/stop\-color\:\s?([\#a-fA-F0-9]*)/) : false;
+              matches = style ? style.match(/stop-color:\s?([#a-fA-F0-9]*)/) : false;
               color = matches && matches.length > 1 ? matches[1] : undefined;
             }
 
             if (_.isNull(opacity)) {
-              var matches = style ? style.match(/stop\-opacity\:\s?([0-9\.\-]*)/) : false;
+              matches = style ? style.match(/stop-opacity:\s?([0-9.-]*)/) : false;
               opacity = matches && matches.length > 1 ? parseFloat(matches[1]) : 1;
             } else {
               opacity = parseFloat(opacity);
@@ -1759,8 +1760,8 @@
             var child = node.children[i];
 
             var offset = child.getAttribute('offset');
-            if (/\%/ig.test(offset)) {
-              offset = parseFloat(offset.replace(/\%/ig, '')) / 100;
+            if (/%/ig.test(offset)) {
+              offset = parseFloat(offset.replace(/%/ig, '')) / 100;
             }
             offset = parseFloat(offset);
 
@@ -1768,13 +1769,14 @@
             var opacity = child.getAttribute('stop-opacity');
             var style = child.getAttribute('style');
 
+            var matches;
             if (_.isNull(color)) {
-              var matches = style ? style.match(/stop\-color\:\s?([\#a-fA-F0-9]*)/) : false;
+              matches = style ? style.match(/stop-color:\s?([#a-fA-F0-9]*)/) : false;
               color = matches && matches.length > 1 ? matches[1] : undefined;
             }
 
             if (_.isNull(opacity)) {
-              var matches = style ? style.match(/stop\-opacity\:\s?([0-9\.\-]*)/) : false;
+              matches = style ? style.match(/stop-opacity:\s?([0-9.-]*)/) : false;
               opacity = matches && matches.length > 1 ? parseFloat(matches[1]) : 1;
             } else {
               opacity = parseFloat(opacity);
@@ -2122,16 +2124,12 @@
        */
       getAnchorsFromArcData: function(center, xAxisRotation, rx, ry, ts, td, ccw) {
 
-        var matrix = new Two.Matrix()
-          .translate(center.x, center.y)
-          .rotate(xAxisRotation);
-
         var l = Two.Resolution;
 
         return _.map(_.range(l), function(i) {
 
           var pct = (i + 1) / l;
-          if (!!ccw) {
+          if (ccw) {
             pct = 1 - pct;
           }
 
@@ -2269,10 +2267,10 @@
           var names = name ? [name] : _.keys(this._events);
           for (var i = 0, l = names.length; i < l; i++) {
 
-            var name = names[i];
+            name = names[i];
             var list = this._events[name];
 
-            if (!!list) {
+            if (list) {
               var events = [];
               if (handler) {
                 for (var j = 0, k = list.length; j < k; j++) {
@@ -2320,7 +2318,7 @@
             event.name = name;
             event.handler = handler;
 
-            obj.on(name, ev);
+            obj.on(name, event);
 
           }
 
@@ -2708,12 +2706,13 @@
      * @param {Number} x
      * @param {Number} y
      * @param {Number} radius
+     * @param {Number} [resolution=4]
      * @returns {Two.Circle}
      * @description Creates a Two.js circle and adds it to the scene.
      */
-    makeCircle: function(x, y, radius) {
+    makeCircle: function(x, y, radius, resolution) {
 
-      var circle = new Two.Circle(x, y, radius);
+      var circle = new Two.Circle(x, y, radius, resolution);
       this.scene.add(circle);
 
       return circle;
@@ -2727,12 +2726,13 @@
      * @param {Number} y
      * @param {Number} rx
      * @param {Number} ry
+     * @param {Number} [resolution=4]
      * @returns {Two.Ellipse}
      * @description Creates a Two.js ellipse and adds it to the scene.
      */
-    makeEllipse: function(x, y, rx, ry) {
+    makeEllipse: function(x, y, rx, ry, resolution) {
 
-      var ellipse = new Two.Ellipse(x, y, rx, ry);
+      var ellipse = new Two.Ellipse(x, y, rx, ry, resolution);
       this.scene.add(ellipse);
 
       return ellipse;
@@ -2942,7 +2942,7 @@
     makeSprite: function(path, x, y, cols, rows, frameRate, autostart) {
 
       var sprite = new Two.Sprite(path, x, y, cols, rows, frameRate);
-      if (!!autostart) {
+      if (autostart) {
         sprite.play();
       }
       this.add(sprite);
@@ -2965,7 +2965,7 @@
     makeImageSequence: function(paths, x, y, frameRate, autostart) {
 
       var imageSequence = new Two.ImageSequence(paths, x, y, frameRate);
-      if (!!autostart) {
+      if (autostart) {
         imageSequence.play();
       }
       this.add(imageSequence);
@@ -3018,12 +3018,13 @@
      * @param {Boolean} shallow - Don't create a top-most group but append all content directly.
      * @param {Boolean} add – Automatically add the reconstructed SVG node to scene.
      * @returns {Two.Group}
-     * @description Interpret an SVG Node and add it to this instance's scene. The distinction should be made that this doesn't `import` svg's, it solely interprets them into something compatible for Two.js — this is slightly different than a direct transcription.
+     * @description Interpret an SVG Node and add it to this instance's scene. The distinction should be made that this doesn't `import` svg's, it solely interprets them into something compatible for Two.js - this is slightly different than a direct transcription.
      */
     interpret: function(svgNode, shallow, add) {
 
-      var tag = svgNode.tagName.toLowerCase(),
-          add = (typeof add !== 'undefined') ? add : true;
+      var tag = svgNode.tagName.toLowerCase();
+
+      add = (typeof add !== 'undefined') ? add : true;
 
       if (!(tag in Two.Utils.read)) {
         return null;
@@ -3031,7 +3032,7 @@
 
       var node = Two.Utils.read[tag].call(this, svgNode);
 
-      if (!!add) {
+      if (add) {
         this.add(shallow && node instanceof Two.Group ? node.children : node);
       }
 

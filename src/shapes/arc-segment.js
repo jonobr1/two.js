@@ -56,7 +56,7 @@
       this.translation.y = oy;
     }
 
-  }
+  };
 
   _.extend(ArcSegment, {
 
@@ -353,7 +353,7 @@
       var object = Path.prototype.toObject.call(this);
 
       _.each(ArcSegment.Properties, function(property) {
-        object[property] = this[property]
+        object[property] = this[property];
       }, this);
 
       return object;

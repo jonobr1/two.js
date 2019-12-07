@@ -6,7 +6,7 @@
 
   QUnit.module('WebGLRenderer');
 
-  var getRatio = function (v) { return Math.round(Two.Utils.getRatio(v)) };
+  var getRatio = function (v) { return Math.round(Two.Utils.getRatio(v));};
   var deviceRatio = getRatio(document.createElement('canvas').getContext('2d'));
   var suffix = '@' + deviceRatio + 'x.png';
 
@@ -257,7 +257,7 @@
 
         sequence.index = 7;
         texture = sequence.textures[sequence.index];
-        id = texture.id
+        id = texture.id;
         texture._flagImage = true;
 
         texture.bind(Two.Events.load, function() {

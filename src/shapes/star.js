@@ -225,7 +225,7 @@
       var object = Path.prototype.toObject.call(this);
 
       _.each(Star.Properties, function(property) {
-        object[property] = this[property]
+        object[property] = this[property];
       }, this);
 
       return object;

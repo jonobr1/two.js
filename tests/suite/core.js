@@ -74,7 +74,7 @@ QUnit.test('Two.Utils', function(assert) {
     return this.attr;
   }, { attr: 'Two.js' })(), 'Two.js', 'Bound function properly.');
   assert.equal(JSON.stringify(Two.Utils.extend({ a: 'b' }, { a: 'a', b: 'c' })), '{"a":"a","b":"c"}', 'Object extends properties successfully.');
-  assert.equal(JSON.stringify(Two.Utils.defaults({ a: 'b' }, { a: 'a', b: 'c' })), '{"a":"b","b":"c"}', 'Object defaults properties successfully.')
+  assert.equal(JSON.stringify(Two.Utils.defaults({ a: 'b' }, { a: 'a', b: 'c' })), '{"a":"b","b":"c"}', 'Object defaults properties successfully.');
   assert.equal(JSON.stringify(Two.Utils.keys({ a: 0, b: 1, c: 2 })), '["a","b","c"]', 'Two.Utils.keys successfully retrieves keys.');
   assert.equal(JSON.stringify(Two.Utils.values({ a: 0, b: 1, c: 2 })), '[0,1,2]', 'Two.Utils.values successfully retrieves keys.');
 
@@ -225,7 +225,7 @@ QUnit.test('Two.Vector', function(assert) {
 
   vector.set(9, 3);
   vector.rotate(Math.PI / 2);
-  assert.equal(vector.equals({ x: - 2.9999999999999996, y: - 2.9999999999999996}), true, 'Two.Vector.rotate applies x, y properly.')
+  assert.equal(vector.equals({ x: - 2.9999999999999996, y: - 2.9999999999999996}), true, 'Two.Vector.rotate applies x, y properly.');
 
 });
 

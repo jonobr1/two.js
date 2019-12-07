@@ -529,7 +529,7 @@
       // TODO: Update this to not __always__ update. Just when it needs to.
       this._update(true);
 
-      matrix = !!shallow ? this._matrix : getComputedMatrix(this);
+      matrix = shallow ? this._matrix : getComputedMatrix(this);
 
       var height = this.leading;
       var width = this.value.length * this.size * Text.Ratio;
@@ -614,7 +614,7 @@
       console.warn('Two.js: Unable to create canvas for Two.Text measurements.');
       return {
         getContext: _.identity
-      }
+      };
     }
   }
 

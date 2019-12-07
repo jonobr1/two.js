@@ -201,7 +201,7 @@
       var object = Path.prototype.toObject.call(this);
 
       _.each(Ellipse.Properties, function(property) {
-        object[property] = this[property]
+        object[property] = this[property];
       }, this);
 
       return object;

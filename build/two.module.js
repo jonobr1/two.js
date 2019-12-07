@@ -32,7 +32,7 @@ SOFTWARE.
   } else if (typeof global !== 'undefined') {
     root = global;
   } else if (typeof self !== 'undefined') {
-    root = self
+    root = self;
   } else {
     root = this;
   }
@@ -138,7 +138,7 @@ SOFTWARE.
       return range;
     },
     indexOf: function(list, item) {
-      if (!!_.natural.indexOf) {
+      if (_.natural.indexOf) {
         return _.natural.indexOf.call(list, item);
       }
       for (var i = 0; i < list.length; i++) {
@@ -231,19 +231,19 @@ SOFTWARE.
     once: function(func) {
       var init = false;
       return function() {
-        if (!!init) {
+        if (init) {
           return func;
         }
         init = true;
         return func.apply(this, arguments);
-      }
+      };
     },
     after: function(times, func) {
       return function() {
         while (--times < 1) {
           return func.apply(this, arguments);
         }
-      }
+      };
     },
     uniqueId: function(prefix) {
       var id = ++_._indexAmount + '';
@@ -472,7 +472,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2019-12-04T13:35:47+01:00',
+    PublishDate: '2019-12-07T16:06:40+01:00',
 
     /**
      * @name Two.Identifier
@@ -1077,10 +1077,10 @@ SOFTWARE.
               if (elem instanceof Two.Group) {
                 key = '_' + key;
               }
-              if (/url\(\#.*\)/i.test(value)) {
+              if (/url\(#.*\)/i.test(value)) {
                 var scene = Two.Utils.getScene(this);
                 elem[key] = scene.getById(
-                  value.replace(/url\(\#(.*)\)/i, '$1'));
+                  value.replace(/url\(#(.*)\)/i, '$1'));
               } else {
                 elem[key] = (/none/i.test(value)) ? 'transparent' : value;
               }
@@ -1163,7 +1163,7 @@ SOFTWARE.
             var tag = n.nodeName;
             if (!tag) return;
 
-            var tagName = tag.replace(/svg\:/ig, '').toLowerCase();
+            var tagName = tag.replace(/svg:/ig, '').toLowerCase();
 
             if (tagName in Two.Utils.read) {
               var o = Two.Utils.read[tagName].call(group, n, styles);
@@ -1182,7 +1182,7 @@ SOFTWARE.
           var points = node.getAttribute('points');
 
           var verts = [];
-          points.replace(/(-?[\d\.?]+)[,|\s](-?[\d\.?]+)/g, function(match, p1, p2) {
+          points.replace(/(-?[\d.?]+)[,|\s](-?[\d.?]+)/g, function(match, p1, p2) {
             verts.push(new Two.Anchor(parseFloat(p1), parseFloat(p2)));
           });
 
@@ -1222,7 +1222,7 @@ SOFTWARE.
 
             var type = command[0];
             var lower = type.toLowerCase();
-            var items = command.slice(1).trim().split(/[\s,]+|(?=\s?[+\-])/);
+            var items = command.slice(1).trim().split(/[\s,]+|(?=\s?[+-])/);
             var pre, post, result = [], bin;
             var hasDoubleDecimals = false;
 
@@ -1335,10 +1335,10 @@ SOFTWARE.
             var lower = type.toLowerCase();
 
             coords = command.slice(1).trim();
-            coords = coords.replace(/(-?\d+(?:\.\d*)?)[eE]([+\-]?\d+)/g, function(match, n1, n2) {
+            coords = coords.replace(/(-?\d+(?:\.\d*)?)[eE]([+-]?\d+)/g, function(match, n1, n2) {
               return parseFloat(n1) * pow(10, n2);
             });
-            coords = coords.split(/[\s,]+|(?=\s?[+\-])/);
+            coords = coords.split(/[\s,]+|(?=\s?[+-])/);
             relative = type === lower;
 
             var x1, y1, x2, y2, x3, y3, x4, y4, reflection;
@@ -1358,8 +1358,8 @@ SOFTWARE.
                     Two.Commands.close
                   );
                   // Make coord be the last `m` command
-                  for (var i = points.length - 1; i >= 0; i--) {
-                    var point = points[i];
+                  for (var j = points.length - 1; j >= 0; j--) {
+                    var point = points[j];
                     if (/m/i.test(point.command)) {
                       coord = point;
                       break;
@@ -1588,7 +1588,7 @@ SOFTWARE.
             return;
           }
 
-          var path = new Two.Path(points, closed, undefined, true).noStroke();
+          path = new Two.Path(points, closed, undefined, true).noStroke();
           path.fill = 'black';
 
           var rect = path.getBoundingClientRect(true);
@@ -1725,8 +1725,8 @@ SOFTWARE.
             var child = node.children[i];
 
             var offset = child.getAttribute('offset');
-            if (/\%/ig.test(offset)) {
-              offset = parseFloat(offset.replace(/\%/ig, '')) / 100;
+            if (/%/ig.test(offset)) {
+              offset = parseFloat(offset.replace(/%/ig, '')) / 100;
             }
             offset = parseFloat(offset);
 
@@ -1734,13 +1734,14 @@ SOFTWARE.
             var opacity = child.getAttribute('stop-opacity');
             var style = child.getAttribute('style');
 
+            var matches;
             if (_.isNull(color)) {
-              var matches = style ? style.match(/stop\-color\:\s?([\#a-fA-F0-9]*)/) : false;
+              matches = style ? style.match(/stop-color:\s?([#a-fA-F0-9]*)/) : false;
               color = matches && matches.length > 1 ? matches[1] : undefined;
             }
 
             if (_.isNull(opacity)) {
-              var matches = style ? style.match(/stop\-opacity\:\s?([0-9\.\-]*)/) : false;
+              matches = style ? style.match(/stop-opacity:\s?([0-9.-]*)/) : false;
               opacity = matches && matches.length > 1 ? parseFloat(matches[1]) : 1;
             } else {
               opacity = parseFloat(opacity);
@@ -1785,8 +1786,8 @@ SOFTWARE.
             var child = node.children[i];
 
             var offset = child.getAttribute('offset');
-            if (/\%/ig.test(offset)) {
-              offset = parseFloat(offset.replace(/\%/ig, '')) / 100;
+            if (/%/ig.test(offset)) {
+              offset = parseFloat(offset.replace(/%/ig, '')) / 100;
             }
             offset = parseFloat(offset);
 
@@ -1794,13 +1795,14 @@ SOFTWARE.
             var opacity = child.getAttribute('stop-opacity');
             var style = child.getAttribute('style');
 
+            var matches;
             if (_.isNull(color)) {
-              var matches = style ? style.match(/stop\-color\:\s?([\#a-fA-F0-9]*)/) : false;
+              matches = style ? style.match(/stop-color:\s?([#a-fA-F0-9]*)/) : false;
               color = matches && matches.length > 1 ? matches[1] : undefined;
             }
 
             if (_.isNull(opacity)) {
-              var matches = style ? style.match(/stop\-opacity\:\s?([0-9\.\-]*)/) : false;
+              matches = style ? style.match(/stop-opacity:\s?([0-9.-]*)/) : false;
               opacity = matches && matches.length > 1 ? parseFloat(matches[1]) : 1;
             } else {
               opacity = parseFloat(opacity);
@@ -2148,16 +2150,12 @@ SOFTWARE.
        */
       getAnchorsFromArcData: function(center, xAxisRotation, rx, ry, ts, td, ccw) {
 
-        var matrix = new Two.Matrix()
-          .translate(center.x, center.y)
-          .rotate(xAxisRotation);
-
         var l = Two.Resolution;
 
         return _.map(_.range(l), function(i) {
 
           var pct = (i + 1) / l;
-          if (!!ccw) {
+          if (ccw) {
             pct = 1 - pct;
           }
 
@@ -2295,10 +2293,10 @@ SOFTWARE.
           var names = name ? [name] : _.keys(this._events);
           for (var i = 0, l = names.length; i < l; i++) {
 
-            var name = names[i];
+            name = names[i];
             var list = this._events[name];
 
-            if (!!list) {
+            if (list) {
               var events = [];
               if (handler) {
                 for (var j = 0, k = list.length; j < k; j++) {
@@ -2346,7 +2344,7 @@ SOFTWARE.
             event.name = name;
             event.handler = handler;
 
-            obj.on(name, ev);
+            obj.on(name, event);
 
           }
 
@@ -2734,12 +2732,13 @@ SOFTWARE.
      * @param {Number} x
      * @param {Number} y
      * @param {Number} radius
+     * @param {Number} [resolution=4]
      * @returns {Two.Circle}
      * @description Creates a Two.js circle and adds it to the scene.
      */
-    makeCircle: function(x, y, radius) {
+    makeCircle: function(x, y, radius, resolution) {
 
-      var circle = new Two.Circle(x, y, radius);
+      var circle = new Two.Circle(x, y, radius, resolution);
       this.scene.add(circle);
 
       return circle;
@@ -2753,12 +2752,13 @@ SOFTWARE.
      * @param {Number} y
      * @param {Number} rx
      * @param {Number} ry
+     * @param {Number} [resolution=4]
      * @returns {Two.Ellipse}
      * @description Creates a Two.js ellipse and adds it to the scene.
      */
-    makeEllipse: function(x, y, rx, ry) {
+    makeEllipse: function(x, y, rx, ry, resolution) {
 
-      var ellipse = new Two.Ellipse(x, y, rx, ry);
+      var ellipse = new Two.Ellipse(x, y, rx, ry, resolution);
       this.scene.add(ellipse);
 
       return ellipse;
@@ -2968,7 +2968,7 @@ SOFTWARE.
     makeSprite: function(path, x, y, cols, rows, frameRate, autostart) {
 
       var sprite = new Two.Sprite(path, x, y, cols, rows, frameRate);
-      if (!!autostart) {
+      if (autostart) {
         sprite.play();
       }
       this.add(sprite);
@@ -2991,7 +2991,7 @@ SOFTWARE.
     makeImageSequence: function(paths, x, y, frameRate, autostart) {
 
       var imageSequence = new Two.ImageSequence(paths, x, y, frameRate);
-      if (!!autostart) {
+      if (autostart) {
         imageSequence.play();
       }
       this.add(imageSequence);
@@ -3044,12 +3044,13 @@ SOFTWARE.
      * @param {Boolean} shallow - Don't create a top-most group but append all content directly.
      * @param {Boolean} add – Automatically add the reconstructed SVG node to scene.
      * @returns {Two.Group}
-     * @description Interpret an SVG Node and add it to this instance's scene. The distinction should be made that this doesn't `import` svg's, it solely interprets them into something compatible for Two.js — this is slightly different than a direct transcription.
+     * @description Interpret an SVG Node and add it to this instance's scene. The distinction should be made that this doesn't `import` svg's, it solely interprets them into something compatible for Two.js - this is slightly different than a direct transcription.
      */
     interpret: function(svgNode, shallow, add) {
 
-      var tag = svgNode.tagName.toLowerCase(),
-          add = (typeof add !== 'undefined') ? add : true;
+      var tag = svgNode.tagName.toLowerCase();
+
+      add = (typeof add !== 'undefined') ? add : true;
 
       if (!(tag in Two.Utils.read)) {
         return null;
@@ -3057,7 +3058,7 @@ SOFTWARE.
 
       var node = Two.Utils.read[tag].call(this, svgNode);
 
-      if (!!add) {
+      if (add) {
         this.add(shallow && node instanceof Two.Group ? node.children : node);
       }
 
@@ -4076,7 +4077,7 @@ SOFTWARE.
 
     // Append the `controls` object only if control points are specified,
     // keeping the Two.Anchor inline with a Two.Vector until it needs to
-    // evolve beyond those functions — e.g: a simple 2 component vector.
+    // evolve beyond those functions - e.g: a simple 2 component vector.
     if (ilx || ily || irx || iry) {
       Two.Anchor.AppendCurveProperties(this);
     }
@@ -4353,7 +4354,7 @@ SOFTWARE.
   // Constants
 
   var cos = Math.cos, sin = Math.sin, tan = Math.tan;
-  var _ = Two.Utils, fix = _.toFixed;
+  var _ = Two.Utils;
   var array = [];
 
   /**
@@ -4801,7 +4802,7 @@ SOFTWARE.
       array.length = 0;
       this.toTransformArray(fullMatrix, array);
 
-      return array.join(' ');
+      return array.map(Two.Utils.toFixed).join(' ');
 
     },
 
@@ -4817,18 +4818,18 @@ SOFTWARE.
      var elements = this.elements;
      var hasOutput = !!output;
 
-     var a = fix(elements[0]);
-     var b = fix(elements[1]);
-     var c = fix(elements[2]);
-     var d = fix(elements[3]);
-     var e = fix(elements[4]);
-     var f = fix(elements[5]);
+     var a = elements[0];
+     var b = elements[1];
+     var c = elements[2];
+     var d = elements[3];
+     var e = elements[4];
+     var f = elements[5];
 
-      if (!!fullMatrix) {
+      if (fullMatrix) {
 
-        var g = fix(elements[6]);
-        var h = fix(elements[7]);
-        var i = fix(elements[8]);
+        var g = elements[6];
+        var h = elements[7];
+        var i = elements[8];
 
         if (hasOutput) {
           output[0] = a;
@@ -4883,7 +4884,7 @@ SOFTWARE.
      var e = elements[4];
      var f = elements[5];
 
-      if (!!fullMatrix) {
+      if (fullMatrix) {
 
         var g = elements[6];
         var h = elements[7];
@@ -5937,7 +5938,7 @@ SOFTWARE.
   /**
    * Constants
    */
-  var mod = Two.Utils.mod, toFixed = Two.Utils.toFixed;
+  var mod = Two.Utils.mod;
   var getRatio = Two.Utils.getRatio;
   var _ = Two.Utils;
   var emptyArray = [];
@@ -6140,8 +6141,8 @@ SOFTWARE.
 
           b = commands[i];
 
-          x = toFixed(b.x);
-          y = toFixed(b.y);
+          x = b.x;
+          y = b.y;
 
           switch (b.command) {
 
@@ -6160,8 +6161,8 @@ SOFTWARE.
               prev = closed ? mod(i - 1, length) : max(i - 1, 0);
               a = commands[prev];
 
-              var ax = toFixed(a.x);
-              var ay = toFixed(a.y);
+              var ax = a.x;
+              var ay = a.y;
 
               canvas.renderSvgArcCommand(ctx, ax, ay, rx, ry, largeArcFlag, sweepFlag, xAxisRotation, x, y);
               break;
@@ -6177,19 +6178,19 @@ SOFTWARE.
               bl = (b.controls && b.controls.left) || Two.Vector.zero;
 
               if (a._relative) {
-                vx = (ar.x + toFixed(a.x));
-                vy = (ar.y + toFixed(a.y));
+                vx = (ar.x + a.x);
+                vy = (ar.y + a.y);
               } else {
-                vx = toFixed(ar.x);
-                vy = toFixed(ar.y);
+                vx = ar.x;
+                vy = ar.y;
               }
 
               if (b._relative) {
-                ux = (bl.x + toFixed(b.x));
-                uy = (bl.y + toFixed(b.y));
+                ux = (bl.x + b.x);
+                uy = (bl.y + b.y);
               } else {
-                ux = toFixed(bl.x);
-                uy = toFixed(bl.y);
+                ux = bl.x;
+                uy = bl.y;
               }
 
               ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
@@ -6202,23 +6203,23 @@ SOFTWARE.
                 cl = (c.controls && c.controls.left) || Two.Vector.zero;
 
                 if (b._relative) {
-                  vx = (br.x + toFixed(b.x));
-                  vy = (br.y + toFixed(b.y));
+                  vx = (br.x + b.x);
+                  vy = (br.y + b.y);
                 } else {
-                  vx = toFixed(br.x);
-                  vy = toFixed(br.y);
+                  vx = br.x;
+                  vy = br.y;
                 }
 
                 if (c._relative) {
-                  ux = (cl.x + toFixed(c.x));
-                  uy = (cl.y + toFixed(c.y));
+                  ux = (cl.x + c.x);
+                  uy = (cl.y + c.y);
                 } else {
-                  ux = toFixed(cl.x);
-                  uy = toFixed(cl.y);
+                  ux = cl.x;
+                  uy = cl.y;
                 }
 
-                x = toFixed(c.x);
-                y = toFixed(c.y);
+                x = c.x;
+                y = c.y;
 
                 ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
 
@@ -6246,7 +6247,7 @@ SOFTWARE.
 
         if (!clip && !parentClipped) {
           if (!canvas.isHidden.test(fill)) {
-            isOffset = fill._renderer && fill._renderer.offset
+            isOffset = fill._renderer && fill._renderer.offset;
             if (isOffset) {
               ctx.save();
               ctx.translate(
@@ -6377,23 +6378,23 @@ SOFTWARE.
 
             if (fill._renderer && fill._renderer.offset) {
 
-              sx = toFixed(fill._renderer.scale.x);
-              sy = toFixed(fill._renderer.scale.y);
+              sx = fill._renderer.scale.x;
+              sy = fill._renderer.scale.y;
 
               ctx.save();
-              ctx.translate( - toFixed(fill._renderer.offset.x),
-                - toFixed(fill._renderer.offset.y));
+              ctx.translate( - fill._renderer.offset.x,
+                - fill._renderer.offset.y);
               ctx.scale(sx, sy);
 
               a = this._size / fill._renderer.scale.y;
               b = this._leading / fill._renderer.scale.y;
-              ctx.font = [this._style, this._weight, toFixed(a) + 'px/',
-                toFixed(b) + 'px', this._family].join(' ');
+              ctx.font = [this._style, this._weight, a + 'px/',
+                b + 'px', this._family].join(' ');
 
               c = fill._renderer.offset.x / fill._renderer.scale.x;
               d = fill._renderer.offset.y / fill._renderer.scale.y;
 
-              ctx.fillText(this.value, toFixed(c), toFixed(d));
+              ctx.fillText(this.value, c, d);
               ctx.restore();
 
             } else {
@@ -6406,25 +6407,25 @@ SOFTWARE.
 
             if (stroke._renderer && stroke._renderer.offset) {
 
-              sx = toFixed(stroke._renderer.scale.x);
-              sy = toFixed(stroke._renderer.scale.y);
+              sx = stroke._renderer.scale.x;
+              sy = stroke._renderer.scale.y;
 
               ctx.save();
-              ctx.translate(- toFixed(stroke._renderer.offset.x),
-                - toFixed(stroke._renderer.offset.y));
+              ctx.translate(- stroke._renderer.offset.x,
+                - stroke._renderer.offset.y);
               ctx.scale(sx, sy);
 
               a = this._size / stroke._renderer.scale.y;
               b = this._leading / stroke._renderer.scale.y;
-              ctx.font = [this._style, this._weight, toFixed(a) + 'px/',
-                toFixed(b) + 'px', this._family].join(' ');
+              ctx.font = [this._style, this._weight, a + 'px/',
+                b + 'px', this._family].join(' ');
 
               c = stroke._renderer.offset.x / stroke._renderer.scale.x;
               d = stroke._renderer.offset.y / stroke._renderer.scale.y;
               e = linewidth / stroke._renderer.scale.x;
 
-              ctx.lineWidth = toFixed(e);
-              ctx.strokeText(this.value, toFixed(c), toFixed(d));
+              ctx.lineWidth = e;
+              ctx.strokeText(this.value, c, d);
               ctx.restore();
 
             } else {
@@ -6845,7 +6846,6 @@ SOFTWARE.
     transformation = new Two.Array(9),
     getRatio = Two.Utils.getRatio,
     getComputedMatrix = Two.Utils.getComputedMatrix,
-    toFixed = Two.Utils.toFixed,
     CanvasUtils = Two[Two.Types.canvas].Utils,
     _ = Two.Utils;
 
@@ -6863,15 +6863,6 @@ SOFTWARE.
 
     matrix: new Two.Matrix(),
 
-    uv: new Two.Array([
-      0, 0,
-      1, 0,
-      0, 1,
-      0, 1,
-      1, 0,
-      1, 1
-    ]),
-
     group: {
 
       removeChild: function(child, gl) {
@@ -6884,10 +6875,6 @@ SOFTWARE.
         // Deallocate texture to free up gl memory.
         gl.deleteTexture(child._renderer.texture);
         delete child._renderer.texture;
-      },
-
-      renderChild: function(child) {
-        webgl[child._renderer.type].render.call(child, this.gl, this.program);
       },
 
       render: function(gl, program) {
@@ -6922,13 +6909,8 @@ SOFTWARE.
           }
 
           if (!(/renderer/i.test(parent._renderer.type))) {
-            if (parent._renderer.scale instanceof Two.Vector) {
-              this._renderer.scale.x *= parent._renderer.scale.x;
-              this._renderer.scale.y *= parent._renderer.scale.y;
-            } else {
-              this._renderer.scale.x *= parent._renderer.scale;
-              this._renderer.scale.y *= parent._renderer.scale;
-            }
+            this._renderer.scale.x *= parent._renderer.scale.x;
+            this._renderer.scale.y *= parent._renderer.scale.y;
           }
 
           if (flagParentMatrix) {
@@ -6944,14 +6926,11 @@ SOFTWARE.
           gl.clear(gl.STENCIL_BUFFER_BIT);
           gl.enable(gl.STENCIL_TEST);
 
-          gl.colorMask(false, false, false, true);
-          gl.stencilOp(gl.KEEP, gl.KEEP, gl.REPLACE);
-
           gl.stencilFunc(gl.ALWAYS, 1, 0);
+          gl.stencilOp(gl.KEEP, gl.KEEP, gl.REPLACE);
 
           webgl[this._mask._renderer.type].render.call(this._mask, gl, program, this);
 
-          gl.colorMask(true, true, true, true);
           gl.stencilFunc(gl.EQUAL, 1, 0xff);
           gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
 
@@ -6962,21 +6941,17 @@ SOFTWARE.
         this._renderer.opacity = this._opacity
           * (parent && parent._renderer ? parent._renderer.opacity : 1);
 
+        var i;
         if (this._flagSubtractions) {
-          for (var i = 0; i < this.subtractions.length; i++) {
+          for (i = 0; i < this.subtractions.length; i++) {
             webgl.group.removeChild(this.subtractions[i], gl);
           }
         }
 
-        for (var i = 0; i < this.children.length; i++) {
+        for (i = 0; i < this.children.length; i++) {
           var child = this.children[i];
           webgl[child._renderer.type].render.call(child, gl, program);
         }
-
-        this.children.forEach(webgl.group.renderChild, {
-          gl: gl,
-          program: program
-        });
 
         if (this._mask) {
           gl.disable(gl.STENCIL_TEST);
@@ -7013,13 +6988,8 @@ SOFTWARE.
         var length = commands.length;
         var last = length - 1;
 
-        if (scale instanceof Two.Vector) {
-          canvas.width = Math.max(Math.ceil(elem._renderer.rect.width * scale.x), 1);
-          canvas.height = Math.max(Math.ceil(elem._renderer.rect.height * scale.y), 1);
-        } else {
-          canvas.width = Math.max(Math.ceil(elem._renderer.rect.width * scale), 1);
-          canvas.height = Math.max(Math.ceil(elem._renderer.rect.height * scale), 1);
-        }
+        canvas.width = Math.max(Math.ceil(elem._renderer.rect.width * scale.x), 1);
+        canvas.height = Math.max(Math.ceil(elem._renderer.rect.height * scale.y), 1);
 
         var centroid = elem._renderer.rect.centroid;
         var cx = centroid.x;
@@ -7066,7 +7036,8 @@ SOFTWARE.
 
         var d;
         ctx.save();
-        ctx.scale(scale, scale);
+        ctx.scale(scale.x, scale.y);
+
         ctx.translate(cx, cy);
 
         ctx.beginPath();
@@ -7074,8 +7045,8 @@ SOFTWARE.
 
           var b = commands[i];
 
-          x = toFixed(b.x);
-          y = toFixed(b.y);
+          x = b.x;
+          y = b.y;
 
           switch (b.command) {
 
@@ -7091,11 +7062,11 @@ SOFTWARE.
               var largeArcFlag = b.largeArcFlag;
               var sweepFlag = b.sweepFlag;
 
-              prev = closed ? mod(i - 1, length) : max(i - 1, 0);
+              prev = closed ? mod(i - 1, length) : Math.max(i - 1, 0);
               a = commands[prev];
 
-              var ax = toFixed(a.x);
-              var ay = toFixed(a.y);
+              var ax = a.x;
+              var ay = a.y;
 
               CanvasUtils.renderSvgArcCommand(ctx, ax, ay, rx, ry, largeArcFlag, sweepFlag, xAxisRotation, x, y);
               break;
@@ -7111,19 +7082,19 @@ SOFTWARE.
               bl = (b.controls && b.controls.left) || Two.Vector.zero;
 
               if (a._relative) {
-                vx = toFixed((ar.x + a.x));
-                vy = toFixed((ar.y + a.y));
+                vx = ar.x + a.x;
+                vy = ar.y + a.y;
               } else {
-                vx = toFixed(ar.x);
-                vy = toFixed(ar.y);
+                vx = ar.x;
+                vy = ar.y;
               }
 
               if (b._relative) {
-                ux = toFixed((bl.x + b.x));
-                uy = toFixed((bl.y + b.y));
+                ux = bl.x + b.x;
+                uy = bl.y + b.y;
               } else {
-                ux = toFixed(bl.x);
-                uy = toFixed(bl.y);
+                ux = bl.x;
+                uy = bl.y;
               }
 
               ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
@@ -7136,23 +7107,23 @@ SOFTWARE.
                 cl = (c.controls && c.controls.left) || Two.Vector.zero;
 
                 if (b._relative) {
-                  vx = toFixed((br.x + b.x));
-                  vy = toFixed((br.y + b.y));
+                  vx = br.x + b.x;
+                  vy = br.y + b.y;
                 } else {
-                  vx = toFixed(br.x);
-                  vy = toFixed(br.y);
+                  vx = br.x;
+                  vy = br.y;
                 }
 
                 if (c._relative) {
-                  ux = toFixed((cl.x + c.x));
-                  uy = toFixed((cl.y + c.y));
+                  ux = cl.x + c.x;
+                  uy = cl.y + c.y;
                 } else {
-                  ux = toFixed(cl.x);
-                  uy = toFixed(cl.y);
+                  ux = cl.x;
+                  uy = cl.y;
                 }
 
-                x = toFixed(c.x);
-                y = toFixed(c.y);
+                x = c.x;
+                y = c.y;
 
                 ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
 
@@ -7180,7 +7151,7 @@ SOFTWARE.
         }
 
         if (!webgl.isHidden.test(fill)) {
-          isOffset = fill._renderer && fill._renderer.offset
+          isOffset = fill._renderer && fill._renderer.offset;
           if (isOffset) {
             ctx.save();
             ctx.translate(
@@ -7344,16 +7315,10 @@ SOFTWARE.
             this._renderer.rect = {};
           }
 
-          if (!this._renderer.triangles) {
-            this._renderer.triangles = new Two.Array(12);
-          }
-
           this._renderer.opacity = this._opacity * parent._renderer.opacity;
 
           webgl.path.getBoundingClientRect(this._renderer.vertices, this._linewidth, this._renderer.rect);
-          webgl.getTriangles(this._renderer.rect, this._renderer.triangles);
 
-          webgl.updateBuffer.call(webgl, gl, this, program);
           webgl.updateTexture.call(webgl, gl, this);
 
         } else {
@@ -7378,21 +7343,12 @@ SOFTWARE.
         }
 
         // Draw Texture
-
-        gl.bindBuffer(gl.ARRAY_BUFFER, this._renderer.textureCoordsBuffer);
-
-        gl.vertexAttribPointer(program.textureCoords, 2, gl.FLOAT, false, 0, 0);
-
         gl.bindTexture(gl.TEXTURE_2D, this._renderer.texture);
 
         // Draw Rect
-
+        var rect = this._renderer.rect;
         gl.uniformMatrix3fv(program.matrix, false, this._renderer.matrix);
-
-        gl.bindBuffer(gl.ARRAY_BUFFER, this._renderer.buffer);
-
-        gl.vertexAttribPointer(program.position, 2, gl.FLOAT, false, 0, 0);
-
+        gl.uniform4f(program.rect, rect.left, rect.top, rect.right, rect.bottom);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
 
         return this.flagReset();
@@ -7416,13 +7372,8 @@ SOFTWARE.
         var opacity = elem._renderer.opacity || elem._opacity;
         var dashes = elem.dashes;
 
-        if (scale instanceof Two.Vector) {
-          canvas.width = Math.max(Math.ceil(elem._renderer.rect.width * scale.x), 1);
-          canvas.height = Math.max(Math.ceil(elem._renderer.rect.height * scale.y), 1);
-        } else {
-          canvas.width = Math.max(Math.ceil(elem._renderer.rect.width * scale), 1);
-          canvas.height = Math.max(Math.ceil(elem._renderer.rect.height * scale), 1);
-        }
+        canvas.width = Math.max(Math.ceil(elem._renderer.rect.width * scale.x), 1);
+        canvas.height = Math.max(Math.ceil(elem._renderer.rect.height * scale.y), 1);
 
         var centroid = elem._renderer.rect.centroid;
         var cx = centroid.x;
@@ -7471,30 +7422,30 @@ SOFTWARE.
         }
 
         ctx.save();
-        ctx.scale(scale, scale);
+        ctx.scale(scale.x, scale.y);
         ctx.translate(cx, cy);
 
         if (!webgl.isHidden.test(fill)) {
 
           if (fill._renderer && fill._renderer.offset) {
 
-            sx = toFixed(fill._renderer.scale.x);
-            sy = toFixed(fill._renderer.scale.y);
+            sx = fill._renderer.scale.x;
+            sy = fill._renderer.scale.y;
 
             ctx.save();
-            ctx.translate( - toFixed(fill._renderer.offset.x),
-              - toFixed(fill._renderer.offset.y));
+            ctx.translate( - fill._renderer.offset.x,
+              - fill._renderer.offset.y);
             ctx.scale(sx, sy);
 
             a = elem._size / fill._renderer.scale.y;
             b = elem._leading / fill._renderer.scale.y;
-            ctx.font = [elem._style, elem._weight, toFixed(a) + 'px/',
-              toFixed(b) + 'px', elem._family].join(' ');
+            ctx.font = [elem._style, elem._weight, a + 'px/',
+              b + 'px', elem._family].join(' ');
 
             c = fill._renderer.offset.x / fill._renderer.scale.x;
             d = fill._renderer.offset.y / fill._renderer.scale.y;
 
-            ctx.fillText(elem.value, toFixed(c), toFixed(d));
+            ctx.fillText(elem.value, c, d);
             ctx.restore();
 
           } else {
@@ -7507,25 +7458,25 @@ SOFTWARE.
 
           if (stroke._renderer && stroke._renderer.offset) {
 
-            sx = toFixed(stroke._renderer.scale.x);
-            sy = toFixed(stroke._renderer.scale.y);
+            sx = stroke._renderer.scale.x;
+            sy = stroke._renderer.scale.y;
 
             ctx.save();
-            ctx.translate(- toFixed(stroke._renderer.offset.x),
-              - toFixed(stroke._renderer.offset.y));
+            ctx.translate(- stroke._renderer.offset.x,
+              - stroke._renderer.offset.y);
             ctx.scale(sx, sy);
 
             a = elem._size / stroke._renderer.scale.y;
             b = elem._leading / stroke._renderer.scale.y;
-            ctx.font = [elem._style, elem._weight, toFixed(a) + 'px/',
-              toFixed(b) + 'px', elem._family].join(' ');
+            ctx.font = [elem._style, elem._weight, a + 'px/',
+              b + 'px', elem._family].join(' ');
 
             c = stroke._renderer.offset.x / stroke._renderer.scale.x;
             d = stroke._renderer.offset.y / stroke._renderer.scale.y;
             e = linewidth / stroke._renderer.scale.x;
 
-            ctx.lineWidth = toFixed(e);
-            ctx.strokeText(elem.value, toFixed(c), toFixed(d));
+            ctx.lineWidth = e;
+            ctx.strokeText(elem.value, c, d);
             ctx.restore();
 
           } else {
@@ -7662,16 +7613,10 @@ SOFTWARE.
             this._renderer.rect = {};
           }
 
-          if (!this._renderer.triangles) {
-            this._renderer.triangles = new Two.Array(12);
-          }
-
           this._renderer.opacity = this._opacity * parent._renderer.opacity;
 
           webgl.text.getBoundingClientRect(this, this._renderer.rect);
-          webgl.getTriangles(this._renderer.rect, this._renderer.triangles);
 
-          webgl.updateBuffer.call(webgl, gl, this, program);
           webgl.updateTexture.call(webgl, gl, this);
 
         } else {
@@ -7696,22 +7641,12 @@ SOFTWARE.
         }
 
         // Draw Texture
-
-        gl.bindBuffer(gl.ARRAY_BUFFER, this._renderer.textureCoordsBuffer);
-
-        gl.vertexAttribPointer(program.textureCoords, 2, gl.FLOAT, false, 0, 0);
-
         gl.bindTexture(gl.TEXTURE_2D, this._renderer.texture);
 
-
         // Draw Rect
-
+        var rect = this._renderer.rect;
         gl.uniformMatrix3fv(program.matrix, false, this._renderer.matrix);
-
-        gl.bindBuffer(gl.ARRAY_BUFFER, this._renderer.buffer);
-
-        gl.vertexAttribPointer(program.position, 2, gl.FLOAT, false, 0, 0);
-
+        gl.uniform4f(program.rect, rect.left, rect.top, rect.right, rect.bottom);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
 
         return this.flagReset();
@@ -7845,50 +7780,14 @@ SOFTWARE.
 
     },
 
-    getTriangles: function(rect, triangles) {
-
-      var top = rect.top,
-          left = rect.left,
-          right = rect.right,
-          bottom = rect.bottom;
-
-      // First Triangle
-
-      triangles[0] = left;
-      triangles[1] = top;
-
-      triangles[2] = right;
-      triangles[3] = top;
-
-      triangles[4] = left;
-      triangles[5] = bottom;
-
-      // Second Triangle
-
-      triangles[6] = left;
-      triangles[7] = bottom;
-
-      triangles[8] = right;
-      triangles[9] = top;
-
-      triangles[10] = right;
-      triangles[11] = bottom;
-
-    },
-
     updateTexture: function(gl, elem) {
 
       this[elem._renderer.type].updateCanvas.call(webgl, elem);
 
-      if (elem._renderer.texture) {
-        gl.deleteTexture(elem._renderer.texture);
+      if (!elem._renderer.texture) {
+        elem._renderer.texture = gl.createTexture();
       }
 
-      gl.bindBuffer(gl.ARRAY_BUFFER, elem._renderer.textureCoordsBuffer);
-
-      // TODO: Is this necessary every time or can we do once?
-      // TODO: Create a registry for textures
-      elem._renderer.texture = gl.createTexture();
       gl.bindTexture(gl.TEXTURE_2D, elem._renderer.texture);
 
       // Set the parameters so we can render any size image.
@@ -7905,32 +7804,6 @@ SOFTWARE.
 
       // Upload the image into the texture.
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.canvas);
-
-    },
-
-    updateBuffer: function(gl, elem, program) {
-
-      if (_.isObject(elem._renderer.buffer)) {
-        gl.deleteBuffer(elem._renderer.buffer);
-      }
-
-      elem._renderer.buffer = gl.createBuffer();
-
-      gl.bindBuffer(gl.ARRAY_BUFFER, elem._renderer.buffer);
-      gl.enableVertexAttribArray(program.position);
-
-      gl.bufferData(gl.ARRAY_BUFFER, elem._renderer.triangles, gl.STATIC_DRAW);
-
-      if (_.isObject(elem._renderer.textureCoordsBuffer)) {
-        gl.deleteBuffer(elem._renderer.textureCoordsBuffer);
-      }
-
-      elem._renderer.textureCoordsBuffer = gl.createBuffer();
-
-      gl.bindBuffer(gl.ARRAY_BUFFER, elem._renderer.textureCoordsBuffer);
-      gl.enableVertexAttribArray(program.textureCoords);
-
-      gl.bufferData(gl.ARRAY_BUFFER, this.uv, gl.STATIC_DRAW);
 
     },
 
@@ -7982,21 +7855,23 @@ SOFTWARE.
       },
 
       vertex: [
+        'precision mediump float;',
         'attribute vec2 a_position;',
-        'attribute vec2 a_textureCoords;',
         '',
         'uniform mat3 u_matrix;',
         'uniform vec2 u_resolution;',
+        'uniform vec4 u_rect;',
         '',
         'varying vec2 v_textureCoords;',
         '',
         'void main() {',
-        '   vec2 projected = (u_matrix * vec3(a_position, 1.0)).xy;',
+        '   vec2 rectCoords = (a_position * (u_rect.zw - u_rect.xy)) + u_rect.xy;',
+        '   vec2 projected = (u_matrix * vec3(rectCoords, 1.0)).xy;',
         '   vec2 normal = projected / u_resolution;',
         '   vec2 clipspace = (normal * 2.0) - 1.0;',
         '',
         '   gl_Position = vec4(clipspace * vec2(1.0, -1.0), 0.0, 1.0);',
-        '   v_textureCoords = a_textureCoords;',
+        '   v_textureCoords = a_position;',
         '}'
       ].join('\n'),
 
@@ -8036,7 +7911,7 @@ SOFTWARE.
    */
   var Renderer = Two[Two.Types.webgl] = function(params) {
 
-    var params, gl, vs, fs;
+    var gl, vs, fs;
 
     /**
      * @name Two.WebGLRenderer#domElement
@@ -8112,10 +7987,24 @@ SOFTWARE.
     // look up where the vertex data needs to go.
     this.program.position = gl.getAttribLocation(this.program, 'a_position');
     this.program.matrix = gl.getUniformLocation(this.program, 'u_matrix');
-    this.program.textureCoords = gl.getAttribLocation(this.program, 'a_textureCoords');
+    this.program.rect = gl.getUniformLocation(this.program, 'u_rect');
 
-    // Copied from Three.js WebGLRenderer
-    gl.disable(gl.DEPTH_TEST);
+    // Bind the vertex buffer
+    var positionBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+    gl.vertexAttribPointer(this.program.position, 2, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(this.program.position);
+    gl.bufferData(
+      gl.ARRAY_BUFFER,
+      new Float32Array([
+        0, 0,
+        1, 0,
+        0, 1,
+        0, 1,
+        1, 0,
+        1, 1
+      ]),
+      gl.STATIC_DRAW);
 
     // Setup some initial statements of the gl context
     gl.enable(gl.BLEND);
@@ -8191,7 +8080,7 @@ SOFTWARE.
       var gl = this.ctx;
 
       if (!this.overdraw) {
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        gl.clear(gl.COLOR_BUFFER_BIT);
       }
 
       webgl.group.render.call(this.scene, gl, this.program);
@@ -9383,13 +9272,13 @@ SOFTWARE.
       // TODO: Update this to not __always__ update. Just when it needs to.
       this._update(true);
 
-      matrix = !!shallow ? this._matrix : getComputedMatrix(this);
+      matrix = shallow ? this._matrix : getComputedMatrix(this);
 
       border = this.linewidth / 2;
       l = this._renderer.vertices.length;
 
       if (l <= 0) {
-        v = matrix.multiply(0, 0, 1);
+        var v = matrix.multiply(0, 0, 1);
         return {
           top: v.y,
           left: v.x,
@@ -9743,7 +9632,6 @@ SOFTWARE.
         }
 
         this._lengths[i] = getCurveLength(a, b, limit);
-        this._lengths[i] = Two.Utils.toFixed(this._lengths[i]);
         sum += this._lengths[i];
 
         if (i >= last && closed) {
@@ -9751,7 +9639,6 @@ SOFTWARE.
           b = this.vertices[(i + 1) % length];
 
           this._lengths[i + 1] = getCurveLength(a, b, limit);
-          this._lengths[i + 1] = Two.Utils.toFixed(this._lengths[i + 1]);
           sum += this._lengths[i + 1];
 
         }
@@ -10420,8 +10307,8 @@ SOFTWARE.
           var lx = i === 0 ? 0 : rx * c * cos(theta - HALF_PI);
           var ly = i === 0 ? 0 : ry * c * sin(theta - HALF_PI);
 
-          var rx = i === last ? 0 : rx * c * cos(theta + HALF_PI);
-          var ry = i === last ? 0 : ry * c * sin(theta + HALF_PI);
+          rx = i === last ? 0 : rx * c * cos(theta + HALF_PI);
+          ry = i === last ? 0 : ry * c * sin(theta + HALF_PI);
 
           var v = this.vertices[i];
 
@@ -10498,7 +10385,7 @@ SOFTWARE.
       var object = Path.prototype.toObject.call(this);
 
       _.each(Ellipse.Properties, function(property) {
-        object[property] = this[property]
+        object[property] = this[property];
       }, this);
 
       return object;
@@ -10699,7 +10586,7 @@ SOFTWARE.
       var object = Path.prototype.toObject.call(this);
 
       _.each(Circle.Properties, function(property) {
-        object[property] = this[property]
+        object[property] = this[property];
       }, this);
 
       return object;
@@ -10924,7 +10811,7 @@ SOFTWARE.
       var object = Path.prototype.toObject.call(this);
 
       _.each(Polygon.Properties, function(property) {
-        object[property] = this[property]
+        object[property] = this[property];
       }, this);
 
       return object;
@@ -10995,7 +10882,7 @@ SOFTWARE.
       this.translation.y = oy;
     }
 
-  }
+  };
 
   _.extend(ArcSegment, {
 
@@ -11292,7 +11179,7 @@ SOFTWARE.
       var object = Path.prototype.toObject.call(this);
 
       _.each(ArcSegment.Properties, function(property) {
-        object[property] = this[property]
+        object[property] = this[property];
       }, this);
 
       return object;
@@ -11532,7 +11419,7 @@ SOFTWARE.
       var object = Path.prototype.toObject.call(this);
 
       _.each(Star.Properties, function(property) {
-        object[property] = this[property]
+        object[property] = this[property];
       }, this);
 
       return object;
@@ -11864,7 +11751,7 @@ SOFTWARE.
       var object = Path.prototype.toObject.call(this);
 
       _.each(RoundedRectangle.Properties, function(property) {
-        object[property] = this[property]
+        object[property] = this[property];
       }, this);
 
       object.radius = _.isNumber(this.radius)
@@ -12411,7 +12298,7 @@ SOFTWARE.
       // TODO: Update this to not __always__ update. Just when it needs to.
       this._update(true);
 
-      matrix = !!shallow ? this._matrix : getComputedMatrix(this);
+      matrix = shallow ? this._matrix : getComputedMatrix(this);
 
       var height = this.leading;
       var width = this.value.length * this.size * Text.Ratio;
@@ -12496,7 +12383,7 @@ SOFTWARE.
       console.warn('Two.js: Unable to create canvas for Two.Text measurements.');
       return {
         getContext: _.identity
-      }
+      };
     }
   }
 
@@ -13567,7 +13454,6 @@ SOFTWARE.
 
         if (Two.Utils.isHeadless) {
           throw new Two.Utils.Error('video textures are not implemented in headless environments.');
-          return;
         }
 
         texture.image.setAttribute('two-src', texture.src);
@@ -13831,7 +13717,7 @@ SOFTWARE.
         repeat: this.repeat,
         origin: this.origin.toObject(),
         scale: _.isNumber(this.scale) ? this.scale : this.scale.toObject()
-      }
+      };
     },
 
     /**
@@ -13991,7 +13877,7 @@ SOFTWARE.
 
     }
 
-  })
+  });
 
   _.extend(Sprite.prototype, Rectangle.prototype, {
 
@@ -14724,7 +14610,7 @@ SOFTWARE.
     clone: function(parent) {
 
       var clone = new ImageSequence(this.textures, this.translation.x,
-        this.translation.y, this.frameRate)
+        this.translation.y, this.frameRate);
 
       clone._loop = this._loop;
 
@@ -15584,7 +15470,7 @@ SOFTWARE.
       for (var i = 0; i < objects.length; i++) {
         var child = objects[i];
         if (!(child && child.id)) {
-          continue
+          continue;
         }
         var index = _.indexOf(this.children, child);
         if (index >= 0) {

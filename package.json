@@ -16,6 +16,9 @@
     "extras",
     "src"
   ],
+  "scripts": {
+    "lint": "eslint ."
+  },
   "directories": {
     "doc": "documentation",
     "test": "tests",
@@ -50,6 +53,7 @@
   "devDependencies": {
     "animation-frame": "^0.1.7",
     "blueimp-canvas-to-blob": "^2.1.0",
+    "eslint": "^6.7.2",
     "jsdoc": "~3.5.5",
     "jsdoc-to-markdown": "^4.0.1",
     "moment": "^2.22.2",
