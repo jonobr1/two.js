@@ -110,7 +110,8 @@ process.exit();
 ## Change Log
 
 #### Nightly
-+ Added ESLint scripts to development environment [@adroitwhiz](https://github.com/adroitwhiz)
++ Made `Two.Circle` and `Two.Ellipse` recalculate controls points on `_update` and made vertex amounts cyclical [@adroitwhiz](https://github.com/adroitwhiz)
++ Added [ESLint](https://eslint.org/) scripts to development environment [@adroitwhiz](https://github.com/adroitwhiz)
 + Improve performance of WebGLRenderer by leveraging uniform to construct plane and removing duplicate render calls [@adroitwhiz](https://github.com/adroitwhiz)
 + Unpacked `scale` objects in WebGLRenderer [@adroitwhiz](https://github.com/adroitwhiz)
 + Removed unnecessary `gl.colorMask` calls [@adroitwhiz](https://github.com/adroitwhiz)
