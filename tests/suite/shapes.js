@@ -68,7 +68,7 @@ QUnit.test('Two.Ellipse', function(assert) {
   assert.expect(Two.Ellipse.Properties.length * 4 + 1);
 
   var rx = 50;
-  var ry = 75
+  var ry = 75;
   var properties = [rx * 2, ry * 2];
 
   var path = new Two.Ellipse(0, 0, rx, ry);

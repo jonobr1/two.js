@@ -100,7 +100,7 @@
 
     }
 
-  })
+  });
 
   _.extend(Sprite.prototype, Rectangle.prototype, {
 

@@ -368,7 +368,7 @@
     clone: function(parent) {
 
       var clone = new ImageSequence(this.textures, this.translation.x,
-        this.translation.y, this.frameRate)
+        this.translation.y, this.frameRate);
 
       clone._loop = this._loop;
 

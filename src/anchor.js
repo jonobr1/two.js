@@ -35,7 +35,7 @@
 
     // Append the `controls` object only if control points are specified,
     // keeping the Two.Anchor inline with a Two.Vector until it needs to
-    // evolve beyond those functions — e.g: a simple 2 component vector.
+    // evolve beyond those functions - e.g: a simple 2 component vector.
     if (ilx || ily || irx || iry) {
       Two.Anchor.AppendCurveProperties(this);
     }

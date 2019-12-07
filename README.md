@@ -110,6 +110,10 @@ process.exit();
 ## Change Log
 
 #### Nightly
++ Improve performance of WebGLRenderer by leveraging uniform to construct plane and removing duplicate render calls [@adroitwhiz](https://github.com/adroitwhiz)
++ Unpacked `scale` objects in WebGLRenderer [@adroitwhiz](https://github.com/adroitwhiz)
++ Removed unnecessary `gl.colorMask` calls [@adroitwhiz](https://github.com/adroitwhiz)
++ Removed `Two.Utils.toFixed` calls on Canvas and WebGLRenderers [@adroitwhiz](https://github.com/adroitwhiz)
 + `Two.Shape.clone` clones `Two.Shape.matrix` when `Two.Shape.matrix.manual` is set to `true`
 + Improved `Two.Group.mask` rendering in `Two.WebGLREnderer`
 + Fixed `Two.WebGLRenderer.setSize` recursive loop error

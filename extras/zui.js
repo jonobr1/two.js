@@ -106,7 +106,7 @@
 
     addLimits: function(min, max, type) {
 
-      var type = type || 'scale';
+      type = type || 'scale';
 
       if (!_.isUndefined(min)) {
         if (this.limits[type].min) {
