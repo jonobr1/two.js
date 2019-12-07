@@ -63,7 +63,7 @@
 
     var elem = two.renderer.domElement.querySelector('#' + ellipse.id);
 
-    assert.equal(elem.getAttribute('d'), 'M 100 0 C 100 55.228 55.228 100 0 100 C -55.229 100 -100 55.228 -100 0 C -100.001 -55.229 -55.229 -100 -0.001 -100 C 55.228 -100.001 99.999 -55.229 100 -0.001 C 100 -0.001 100 0 100 0 Z ', 'Two.makeEllipse applies d attribute properly.');
+    assert.equal(elem.getAttribute('d'), 'M 100 0 C 100 55.228 55.228 100 0 100 C -55.229 100 -100 55.228 -100 0 C -100.001 -55.229 -55.229 -100 -0.001 -100 C 55.228 -100.001 100 -55.229 100 0 Z ', 'Two.makeEllipse applies d attribute properly.');
 
     QUnit.Utils.addInstanceToTest(assert.test, two);
 
@@ -84,7 +84,7 @@
 
     var elem = two.renderer.domElement.querySelector('#' + circle.id);
 
-    assert.equal(elem.getAttribute('d'), 'M 50 0 C 50 27.614 27.614 50 0 50 C -27.615 50 -50 27.614 -50 0 C -50.001 -27.615 -27.615 -50 -0.001 -50 C 27.614 -50.001 49.999 -27.615 50 -0.001 C 50 -0.001 50 0 50 0 Z ', 'Two.makeCircle applies d attribute properly.');
+    assert.equal(elem.getAttribute('d'), 'M 50 0 C 50 27.614 27.614 50 0 50 C -27.615 50 -50 27.614 -50 0 C -50.001 -27.615 -27.615 -50 -0.001 -50 C 27.614 -50.001 50 -27.615 50 0 Z ', 'Two.makeCircle applies d attribute properly.');
 
     QUnit.Utils.addInstanceToTest(assert.test, two);
 

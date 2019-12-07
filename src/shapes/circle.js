@@ -4,9 +4,6 @@
   var cos = Math.cos, sin = Math.sin;
   var _ = Two.Utils;
 
-  // Circular coefficient
-  var c = (4 / 3) * Math.tan(Math.PI / 8);
-
   /**
    * @name Two.Circle
    * @class
@@ -14,11 +11,12 @@
    * @param {Number} [x=0] - The x position of the circle.
    * @param {Number} [y=0] - The y position of the circle.
    * @param {Number} radius - The radius value of the circle.
-   * @param {Number} [resolution=12] - The number of vertices used to construct the circle.
+   * @param {Number} [resolution=4] - The number of vertices used to construct the circle.
    */
-  var Circle = Two.Circle = function(ox, oy, r, res) {
+  var Circle = Two.Circle = function(ox, oy, r, resolution) {
 
-    var amount = res || 5;
+    // At least 2 vertices are required for proper circlage
+    var amount = resolution ? Math.max(resolution, 2) : 4;
 
     var points = _.map(_.range(amount), function(i) {
       return new Two.Anchor();
@@ -95,32 +93,31 @@
     _update: function() {
 
       if (this._flagRadius) {
-        for (var i = 0, l = this.vertices.length, last = l - 1; i < l; i++) {
+        // Coefficient for approximating circular arcs with Bezier curves
+        var c = (4 / 3) * Math.tan(Math.PI / (this.vertices.length * 2));
 
-          var pct = i / last;
+        var radius = this._radius;
+        var rc = radius * c;
+
+        for (var i = 0, numVertices = this.vertices.length; i < numVertices; i++) {
+          var pct = i / numVertices;
           var theta = pct * TWO_PI;
-
-          var radius = this._radius;
-          var ct = cos(theta);
-          var st = sin(theta);
-          var rc = radius * c;
 
           var x = radius * cos(theta);
           var y = radius * sin(theta);
 
-          var lx = i === 0 ? 0 : rc * cos(theta - HALF_PI);
-          var ly = i === 0 ? 0 : rc * sin(theta - HALF_PI);
+          var lx = rc * cos(theta - HALF_PI);
+          var ly = rc * sin(theta - HALF_PI);
 
-          var rx = i === last ? 0 : rc * cos(theta + HALF_PI);
-          var ry = i === last ? 0 : rc * sin(theta + HALF_PI);
+          var rx = rc * cos(theta + HALF_PI);
+          var ry = rc * sin(theta + HALF_PI);
 
           var v = this.vertices[i];
 
-          v.command = i === 0 ? Two.Commands.move : Two.Commands.curve;
+          v.command = Two.Commands.curve;
           v.set(x, y);
           v.controls.left.set(lx, ly);
           v.controls.right.set(rx, ry);
-
         }
       }
 
