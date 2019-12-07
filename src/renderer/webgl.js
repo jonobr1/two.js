@@ -43,10 +43,6 @@
         delete child._renderer.texture;
       },
 
-      renderChild: function(child) {
-        webgl[child._renderer.type].render.call(child, this.gl, this.program);
-      },
-
       render: function(gl, program) {
 
         this._update();
@@ -120,10 +116,10 @@
           }
         }
 
-        this.children.forEach(webgl.group.renderChild, {
-          gl: gl,
-          program: program
-        });
+        for (var i = 0; i < this.children.length; i++) {
+          var child = this.children[i];
+          webgl[child._renderer.type].render.call(child, gl, program);
+        }
 
         if (this._mask) {
           gl.disable(gl.STENCIL_TEST);
