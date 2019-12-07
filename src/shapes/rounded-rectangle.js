@@ -317,7 +317,7 @@
       var object = Path.prototype.toObject.call(this);
 
       _.each(RoundedRectangle.Properties, function(property) {
-        object[property] = this[property]
+        object[property] = this[property];
       }, this);
 
       object.radius = _.isNumber(this.radius)
