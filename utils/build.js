@@ -1,9 +1,12 @@
 // https://npmjs.org/package/node-minify
 
 var path = require('path');
-var compressor = require('node-minify');
 var _ = require('underscore');
 var fs = require('fs');
+
+var minify = require('@node-minify/core');
+var noCompress = require('@node-minify/no-compress');
+var gcc = require('@node-minify/google-closure-compiler');
 
 var files = [
   path.resolve(__dirname, './start-comment.js'),
@@ -38,8 +41,8 @@ var files = [
 ];
 
 // Concatenated
-compressor.minify({
-  compressor: 'no-compress',
+minify({
+  compressor: noCompress,
   input: files,
   output: path.resolve(__dirname, '../build/two.js'),
   callback: function(e) {
@@ -59,8 +62,8 @@ compressor.minify({
       });
 
       // Minified
-      compressor.minify({
-        compressor: 'gcc',
+      minify({
+        compressor: gcc,
         input: path.resolve(__dirname, '../build/two.js'),
         output: path.resolve(__dirname, '../build/two.min.js'),
         callback: function(e) {
@@ -72,8 +75,8 @@ compressor.minify({
         }
       });
 
-      compressor.minify({
-        compressor: 'no-compress',
+      minify({
+        compressor: noCompress,
         input: [
           path.resolve(__dirname, '../build/two.js'),
           path.resolve(__dirname, './exports.js')

@@ -51,9 +51,11 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "@node-minify/core": "^5.2.1",
+    "@node-minify/google-closure-compiler": "^5.2.1",
+    "@node-minify/no-compress": "^5.2.0",
     "eslint": "^6.7.2",
     "jsdoc": "~3.5.5",
-    "node-minify": "^2.0.3",
     "qunit": "^2.9.3",
     "resemblejs": "^3.2.3",
     "underscore": "^1.9.1"
