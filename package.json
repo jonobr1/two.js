@@ -59,7 +59,7 @@
     "moment": "^2.22.2",
     "node-minify": "^2.0.3",
     "qunit": "^2.9.3",
-    "resemblejs": "^1.1.1",
+    "resemblejs": "^3.2.3",
     "underscore": "^1.9.1"
   },
   "autoupdate": {
