@@ -58,7 +58,7 @@
     "jsdoc-to-markdown": "^4.0.1",
     "moment": "^2.22.2",
     "node-minify": "^2.0.3",
-    "qunitjs": "^2.4.0",
+    "qunit": "^2.9.3",
     "resemblejs": "^1.1.1",
     "underscore": "^1.9.1"
   },
