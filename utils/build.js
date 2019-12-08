@@ -4,7 +4,6 @@ var path = require('path');
 var compressor = require('node-minify');
 var _ = require('underscore');
 var fs = require('fs');
-var moment = require('moment');
 
 var files = [
   path.resolve(__dirname, './start-comment.js'),
@@ -53,7 +52,7 @@ compressor.minify({
       });
       var template = _.template(source);
       source = template({
-        publishDate: moment().format()
+        publishDate: (new Date()).toISOString()
       });
       fs.writeFileSync(path.resolve(__dirname, '../build/two.js'), source, {
         encoding: 'utf-8'

@@ -56,7 +56,6 @@
     "eslint": "^6.7.2",
     "jsdoc": "~3.5.5",
     "jsdoc-to-markdown": "^4.0.1",
-    "moment": "^2.22.2",
     "node-minify": "^2.0.3",
     "qunit": "^2.9.3",
     "resemblejs": "^3.2.3",
