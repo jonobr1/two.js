@@ -51,15 +51,13 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "animation-frame": "^0.1.7",
-    "blueimp-canvas-to-blob": "^2.1.0",
+    "@node-minify/core": "^5.2.1",
+    "@node-minify/google-closure-compiler": "^5.2.1",
+    "@node-minify/no-compress": "^5.2.0",
     "eslint": "^6.7.2",
     "jsdoc": "~3.5.5",
-    "jsdoc-to-markdown": "^4.0.1",
-    "moment": "^2.22.2",
-    "node-minify": "^2.0.3",
-    "qunitjs": "^2.4.0",
-    "resemblejs": "^1.1.1",
+    "qunit": "^2.9.3",
+    "resemblejs": "^3.2.3",
     "underscore": "^1.9.1"
   },
   "autoupdate": {
