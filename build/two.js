@@ -472,7 +472,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2019-12-07T16:06:40+01:00',
+    PublishDate: '2019-12-09T12:59:56.068Z',
 
     /**
      * @name Two.Identifier
@@ -7996,7 +7996,7 @@ SOFTWARE.
     gl.enableVertexAttribArray(this.program.position);
     gl.bufferData(
       gl.ARRAY_BUFFER,
-      new Float32Array([
+      new Two.Array([
         0, 0,
         1, 0,
         0, 1,
@@ -9289,10 +9289,12 @@ SOFTWARE.
         };
       }
 
-      for (i = 1; i < l; i++) {
+      for (i = 0; i < l; i++) {
 
         v1 = this._renderer.vertices[i];
-        v0 = this._renderer.vertices[i - 1];
+        // If i = 0, then this "wraps around" to the last vertex. Otherwise, it's the previous vertex.
+        // This is important for handling cyclic paths.
+        v0 = this._renderer.vertices[(i + l - 1) % l];
 
         if (v0.controls && v1.controls) {
 
@@ -10184,9 +10186,6 @@ SOFTWARE.
   var cos = Math.cos, sin = Math.sin;
   var _ = Two.Utils;
 
-  // Circular coefficient
-  var c = (4 / 3) * Math.tan(Math.PI / 8);
-
   /**
    * @name Two.Ellipse
    * @class
@@ -10195,7 +10194,7 @@ SOFTWARE.
    * @param {Number} [y=0] - The y position of the ellipse.
    * @param {Number} rx - The radius value of the ellipse in the x direction.
    * @param {Number} ry - The radius value of the ellipse in the y direction.
-   * @param {Number} [resolution=12] - The number of vertices used to construct the ellipse.
+   * @param {Number} [resolution=4] - The number of vertices used to construct the ellipse.
    */
   var Ellipse = Two.Ellipse = function(ox, oy, rx, ry, resolution) {
 
@@ -10203,7 +10202,8 @@ SOFTWARE.
       ry = rx;
     }
 
-    var amount = resolution || 5;
+    // At least 2 vertices are required for proper circlage
+    var amount = resolution ? Math.max(resolution, 2) : 4;
 
     var points = _.map(_.range(amount), function(i) {
       return new Two.Anchor();
@@ -10291,32 +10291,30 @@ SOFTWARE.
     _update: function() {
 
       if (this._flagWidth || this._flagHeight) {
-        for (var i = 0, l = this.vertices.length, last = l - 1; i < l; i++) {
+        // Coefficient for approximating circular arcs with Bezier curves
+        var c = (4 / 3) * Math.tan(Math.PI / (this.vertices.length * 2));
+        var radiusX = this._width / 2;
+        var radiusY = this._height / 2;
 
-          var pct = i / last;
+        for (var i = 0, numVertices = this.vertices.length; i < numVertices; i++) {
+          var pct = i / numVertices;
           var theta = pct * TWO_PI;
 
-          var rx = this._width / 2;
-          var ry = this._height / 2;
-          var ct = cos(theta);
-          var st = sin(theta);
+          var x = radiusX * cos(theta);
+          var y = radiusY * sin(theta);
 
-          var x = rx * cos(theta);
-          var y = ry * sin(theta);
+          var lx = radiusX * c * cos(theta - HALF_PI);
+          var ly = radiusY * c * sin(theta - HALF_PI);
 
-          var lx = i === 0 ? 0 : rx * c * cos(theta - HALF_PI);
-          var ly = i === 0 ? 0 : ry * c * sin(theta - HALF_PI);
-
-          rx = i === last ? 0 : rx * c * cos(theta + HALF_PI);
-          ry = i === last ? 0 : ry * c * sin(theta + HALF_PI);
+          var rx = radiusX * c * cos(theta + HALF_PI);
+          var ry = radiusY * c * sin(theta + HALF_PI);
 
           var v = this.vertices[i];
 
-          v.command = i === 0 ? Two.Commands.move : Two.Commands.curve;
+          v.command = Two.Commands.curve;
           v.set(x, y);
           v.controls.left.set(lx, ly);
           v.controls.right.set(rx, ry);
-
         }
       }
 
@@ -10404,9 +10402,6 @@ SOFTWARE.
   var cos = Math.cos, sin = Math.sin;
   var _ = Two.Utils;
 
-  // Circular coefficient
-  var c = (4 / 3) * Math.tan(Math.PI / 8);
-
   /**
    * @name Two.Circle
    * @class
@@ -10414,11 +10409,12 @@ SOFTWARE.
    * @param {Number} [x=0] - The x position of the circle.
    * @param {Number} [y=0] - The y position of the circle.
    * @param {Number} radius - The radius value of the circle.
-   * @param {Number} [resolution=12] - The number of vertices used to construct the circle.
+   * @param {Number} [resolution=4] - The number of vertices used to construct the circle.
    */
-  var Circle = Two.Circle = function(ox, oy, r, res) {
+  var Circle = Two.Circle = function(ox, oy, r, resolution) {
 
-    var amount = res || 5;
+    // At least 2 vertices are required for proper circlage
+    var amount = resolution ? Math.max(resolution, 2) : 4;
 
     var points = _.map(_.range(amount), function(i) {
       return new Two.Anchor();
@@ -10495,32 +10491,31 @@ SOFTWARE.
     _update: function() {
 
       if (this._flagRadius) {
-        for (var i = 0, l = this.vertices.length, last = l - 1; i < l; i++) {
+        // Coefficient for approximating circular arcs with Bezier curves
+        var c = (4 / 3) * Math.tan(Math.PI / (this.vertices.length * 2));
 
-          var pct = i / last;
+        var radius = this._radius;
+        var rc = radius * c;
+
+        for (var i = 0, numVertices = this.vertices.length; i < numVertices; i++) {
+          var pct = i / numVertices;
           var theta = pct * TWO_PI;
-
-          var radius = this._radius;
-          var ct = cos(theta);
-          var st = sin(theta);
-          var rc = radius * c;
 
           var x = radius * cos(theta);
           var y = radius * sin(theta);
 
-          var lx = i === 0 ? 0 : rc * cos(theta - HALF_PI);
-          var ly = i === 0 ? 0 : rc * sin(theta - HALF_PI);
+          var lx = rc * cos(theta - HALF_PI);
+          var ly = rc * sin(theta - HALF_PI);
 
-          var rx = i === last ? 0 : rc * cos(theta + HALF_PI);
-          var ry = i === last ? 0 : rc * sin(theta + HALF_PI);
+          var rx = rc * cos(theta + HALF_PI);
+          var ry = rc * sin(theta + HALF_PI);
 
           var v = this.vertices[i];
 
-          v.command = i === 0 ? Two.Commands.move : Two.Commands.curve;
+          v.command = Two.Commands.curve;
           v.set(x, y);
           v.controls.left.set(lx, ly);
           v.controls.right.set(rx, ry);
-
         }
       }
 
