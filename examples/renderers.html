@@ -148,13 +148,7 @@
             var eyeMask = two.makeEllipse(0, 0, two.height / 3, two.height / 4);
             eyeMask.noStroke();
 
-            // TODO: this is only necessary because masking in the WebGL renderer
-            // makes the sclera black if there's not a background here
-            var eyeBackground = two.makeRectangle(0, 0, two.width, two.height);
-            eyeBackground.fill = 'white';
-            eyeBackground.noStroke();
-
-            var container = two.makeGroup(eyeBackground, ball);
+            var container = two.makeGroup(ball);
 
             ball.add(retina, pupil, reflection);
             ball.destination = new Two.Vector();
