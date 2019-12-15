@@ -472,7 +472,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2019-12-09T12:59:56.068Z',
+    PublishDate: '2019-12-15T22:56:58.719Z',
 
     /**
      * @name Two.Identifier
@@ -1211,6 +1211,9 @@ SOFTWARE.
           var control, coords;
           var closed = false, relative = false;
           var commands = path.match(/[a-df-z][^a-df-z]*/ig);
+          if (commands === null) {
+            return new Two.Path();
+          }
           var last = commands.length - 1;
 
           // Split up polybeziers
