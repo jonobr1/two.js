@@ -1185,6 +1185,9 @@
           var control, coords;
           var closed = false, relative = false;
           var commands = path.match(/[a-df-z][^a-df-z]*/ig);
+          if (commands === null) {
+            return new Two.Path();
+          }
           var last = commands.length - 1;
 
           // Split up polybeziers
