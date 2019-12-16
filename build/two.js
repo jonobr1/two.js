@@ -472,7 +472,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2019-12-09T12:59:56.068Z',
+    PublishDate: '2019-12-16T01:47:38.467Z',
 
     /**
      * @name Two.Identifier
@@ -1204,388 +1204,388 @@ SOFTWARE.
         path: function(node, parentStyles) {
 
           var path = node.getAttribute('d');
-
-          // Create a Two.Path from the paths.
-
-          var coord = new Two.Anchor();
-          var control, coords;
+          var points = [];
           var closed = false, relative = false;
-          var commands = path.match(/[a-df-z][^a-df-z]*/ig);
-          var last = commands.length - 1;
 
-          // Split up polybeziers
+          if (path) {
 
-          _.each(commands.slice(0), function(command, i) {
+            // Create a Two.Path from the paths.
 
-            var number, fid, lid, numbers, first, s;
-            var j, k, ct, l, times;
+            var coord = new Two.Anchor();
+            var control, coords;
+            var commands = path.match(/[a-df-z][^a-df-z]*/ig);
+            var last = commands.length - 1;
 
-            var type = command[0];
-            var lower = type.toLowerCase();
-            var items = command.slice(1).trim().split(/[\s,]+|(?=\s?[+-])/);
-            var pre, post, result = [], bin;
-            var hasDoubleDecimals = false;
+            // Split up polybeziers
 
-            // Handle double decimal values e.g: 48.6037.71.8
-            // Like: https://m.abcsofchinese.com/images/svg/亼ji2.svg
-            for (j = 0; j < items.length; j++) {
+            _.each(commands.slice(0), function(command, i) {
 
-              number = items[j];
-              fid = number.indexOf('.');
-              lid = number.lastIndexOf('.');
+              var number, fid, lid, numbers, first, s;
+              var j, k, ct, l, times;
 
-              if (fid !== lid) {
+              var type = command[0];
+              var lower = type.toLowerCase();
+              var items = command.slice(1).trim().split(/[\s,]+|(?=\s?[+-])/);
+              var pre, post, result = [], bin;
+              var hasDoubleDecimals = false;
 
-                numbers = number.split('.');
-                first = numbers[0] + '.' + numbers[1];
+              // Handle double decimal values e.g: 48.6037.71.8
+              // Like: https://m.abcsofchinese.com/images/svg/亼ji2.svg
+              for (j = 0; j < items.length; j++) {
 
-                items.splice(j, 1, first);
+                number = items[j];
+                fid = number.indexOf('.');
+                lid = number.lastIndexOf('.');
 
-                for (s = 2; s < numbers.length; s++) {
-                  items.splice(j + s - 1, 0, '0.' + numbers[s]);
-                }
+                if (fid !== lid) {
 
-                hasDoubleDecimals = true;
+                  numbers = number.split('.');
+                  first = numbers[0] + '.' + numbers[1];
 
-              }
+                  items.splice(j, 1, first);
 
-            }
-
-            if (hasDoubleDecimals) {
-              command = type + items.join(',');
-            }
-
-            if (i <= 0) {
-              commands = [];
-            }
-
-            switch (lower) {
-              case 'h':
-              case 'v':
-                if (items.length > 1) {
-                  bin = 1;
-                }
-                break;
-              case 'm':
-              case 'l':
-              case 't':
-                if (items.length > 2) {
-                  bin = 2;
-                }
-                break;
-              case 's':
-              case 'q':
-                if (items.length > 4) {
-                  bin = 4;
-                }
-                break;
-              case 'c':
-                if (items.length > 6) {
-                  bin = 6;
-                }
-                break;
-              case 'a':
-                if (items.length > 7) {
-                  bin = 7;
-                }
-                break;
-            }
-
-            // This means we have a polybezier.
-            if (bin) {
-
-              for (j = 0, l = items.length, times = 0; j < l; j+=bin) {
-
-                ct = type;
-                if (times > 0) {
-
-                  switch (type) {
-                    case 'm':
-                      ct = 'l';
-                      break;
-                    case 'M':
-                      ct = 'L';
-                      break;
+                  for (s = 2; s < numbers.length; s++) {
+                    items.splice(j + s - 1, 0, '0.' + numbers[s]);
                   }
 
-                }
+                  hasDoubleDecimals = true;
 
-                result.push(ct + items.slice(j, j + bin).join(' '));
-                times++;
+                }
 
               }
 
-              commands = Array.prototype.concat.apply(commands, result);
+              if (hasDoubleDecimals) {
+                command = type + items.join(',');
+              }
 
-            } else {
+              if (i <= 0) {
+                commands = [];
+              }
 
-              commands.push(command);
+              switch (lower) {
+                case 'h':
+                case 'v':
+                  if (items.length > 1) {
+                    bin = 1;
+                  }
+                  break;
+                case 'm':
+                case 'l':
+                case 't':
+                  if (items.length > 2) {
+                    bin = 2;
+                  }
+                  break;
+                case 's':
+                case 'q':
+                  if (items.length > 4) {
+                    bin = 4;
+                  }
+                  break;
+                case 'c':
+                  if (items.length > 6) {
+                    bin = 6;
+                  }
+                  break;
+                case 'a':
+                  if (items.length > 7) {
+                    bin = 7;
+                  }
+                  break;
+              }
 
-            }
+              // This means we have a polybezier.
+              if (bin) {
 
-          });
+                for (j = 0, l = items.length, times = 0; j < l; j+=bin) {
 
-          // Create the vertices for our Two.Path
+                  ct = type;
+                  if (times > 0) {
 
-          var points = [];
-          _.each(commands, function(command, i) {
+                    switch (type) {
+                      case 'm':
+                        ct = 'l';
+                        break;
+                      case 'M':
+                        ct = 'L';
+                        break;
+                    }
 
-            var result, x, y;
-            var type = command[0];
-            var lower = type.toLowerCase();
+                  }
 
-            coords = command.slice(1).trim();
-            coords = coords.replace(/(-?\d+(?:\.\d*)?)[eE]([+-]?\d+)/g, function(match, n1, n2) {
-              return parseFloat(n1) * pow(10, n2);
+                  result.push(ct + items.slice(j, j + bin).join(' '));
+                  times++;
+
+                }
+
+                commands = Array.prototype.concat.apply(commands, result);
+
+              } else {
+
+                commands.push(command);
+
+              }
+
             });
-            coords = coords.split(/[\s,]+|(?=\s?[+-])/);
-            relative = type === lower;
 
-            var x1, y1, x2, y2, x3, y3, x4, y4, reflection;
+            // Create the vertices for our Two.Path
 
-            switch (lower) {
+            _.each(commands, function(command, i) {
 
-              case 'z':
-                if (i >= last) {
-                  closed = true;
-                } else {
-                  x = coord.x;
-                  y = coord.y;
+              var result, x, y;
+              var type = command[0];
+              var lower = type.toLowerCase();
+
+              coords = command.slice(1).trim();
+              coords = coords.replace(/(-?\d+(?:\.\d*)?)[eE]([+-]?\d+)/g, function(match, n1, n2) {
+                return parseFloat(n1) * pow(10, n2);
+              });
+              coords = coords.split(/[\s,]+|(?=\s?[+-])/);
+              relative = type === lower;
+
+              var x1, y1, x2, y2, x3, y3, x4, y4, reflection;
+
+              switch (lower) {
+
+                case 'z':
+                  if (i >= last) {
+                    closed = true;
+                  } else {
+                    x = coord.x;
+                    y = coord.y;
+                    result = new Two.Anchor(
+                      x, y,
+                      undefined, undefined,
+                      undefined, undefined,
+                      Two.Commands.close
+                    );
+                    // Make coord be the last `m` command
+                    for (var j = points.length - 1; j >= 0; j--) {
+                      var point = points[j];
+                      if (/m/i.test(point.command)) {
+                        coord = point;
+                        break;
+                      }
+                    }
+                  }
+                  break;
+
+                case 'm':
+                case 'l':
+
+                  control = undefined;
+
+                  x = parseFloat(coords[0]);
+                  y = parseFloat(coords[1]);
+
                   result = new Two.Anchor(
                     x, y,
                     undefined, undefined,
                     undefined, undefined,
-                    Two.Commands.close
+                    /m/i.test(lower) ? Two.Commands.move : Two.Commands.line
                   );
-                  // Make coord be the last `m` command
-                  for (var j = points.length - 1; j >= 0; j--) {
-                    var point = points[j];
-                    if (/m/i.test(point.command)) {
-                      coord = point;
-                      break;
-                    }
+
+                  if (relative) {
+                    result.addSelf(coord);
                   }
-                }
-                break;
 
-              case 'm':
-              case 'l':
+                  // result.controls.left.copy(result);
+                  // result.controls.right.copy(result);
 
-                control = undefined;
+                  coord = result;
+                  break;
 
-                x = parseFloat(coords[0]);
-                y = parseFloat(coords[1]);
+                case 'h':
+                case 'v':
 
-                result = new Two.Anchor(
-                  x, y,
-                  undefined, undefined,
-                  undefined, undefined,
-                  /m/i.test(lower) ? Two.Commands.move : Two.Commands.line
-                );
+                  var a = /h/i.test(lower) ? 'x' : 'y';
+                  var b = /x/i.test(a) ? 'y' : 'x';
 
-                if (relative) {
-                  result.addSelf(coord);
-                }
+                  result = new Two.Anchor(
+                    undefined, undefined,
+                    undefined, undefined,
+                    undefined, undefined,
+                    Two.Commands.line
+                  );
+                  result[a] = parseFloat(coords[0]);
+                  result[b] = coord[b];
 
-                // result.controls.left.copy(result);
-                // result.controls.right.copy(result);
+                  if (relative) {
+                    result[a] += coord[a];
+                  }
 
-                coord = result;
-                break;
+                  // result.controls.left.copy(result);
+                  // result.controls.right.copy(result);
 
-              case 'h':
-              case 'v':
+                  coord = result;
+                  break;
 
-                var a = /h/i.test(lower) ? 'x' : 'y';
-                var b = /x/i.test(a) ? 'y' : 'x';
+                case 'c':
+                case 's':
 
-                result = new Two.Anchor(
-                  undefined, undefined,
-                  undefined, undefined,
-                  undefined, undefined,
-                  Two.Commands.line
-                );
-                result[a] = parseFloat(coords[0]);
-                result[b] = coord[b];
+                  x1 = coord.x;
+                  y1 = coord.y;
 
-                if (relative) {
-                  result[a] += coord[a];
-                }
+                  if (!control) {
+                    control = new Two.Vector();//.copy(coord);
+                  }
 
-                // result.controls.left.copy(result);
-                // result.controls.right.copy(result);
+                  if (/c/i.test(lower)) {
 
-                coord = result;
-                break;
+                    x2 = parseFloat(coords[0]);
+                    y2 = parseFloat(coords[1]);
+                    x3 = parseFloat(coords[2]);
+                    y3 = parseFloat(coords[3]);
+                    x4 = parseFloat(coords[4]);
+                    y4 = parseFloat(coords[5]);
 
-              case 'c':
-              case 's':
+                  } else {
 
-                x1 = coord.x;
-                y1 = coord.y;
+                    // Calculate reflection control point for proper x2, y2
+                    // inclusion.
 
-                if (!control) {
-                  control = new Two.Vector();//.copy(coord);
-                }
+                    reflection = getReflection(coord, control, relative);
 
-                if (/c/i.test(lower)) {
+                    x2 = reflection.x;
+                    y2 = reflection.y;
+                    x3 = parseFloat(coords[0]);
+                    y3 = parseFloat(coords[1]);
+                    x4 = parseFloat(coords[2]);
+                    y4 = parseFloat(coords[3]);
 
-                  x2 = parseFloat(coords[0]);
-                  y2 = parseFloat(coords[1]);
-                  x3 = parseFloat(coords[2]);
-                  y3 = parseFloat(coords[3]);
-                  x4 = parseFloat(coords[4]);
-                  y4 = parseFloat(coords[5]);
+                  }
 
-                } else {
+                  if (relative) {
+                    x2 += x1;
+                    y2 += y1;
+                    x3 += x1;
+                    y3 += y1;
+                    x4 += x1;
+                    y4 += y1;
+                  }
 
-                  // Calculate reflection control point for proper x2, y2
-                  // inclusion.
+                  if (!_.isObject(coord.controls)) {
+                    Two.Anchor.AppendCurveProperties(coord);
+                  }
 
-                  reflection = getReflection(coord, control, relative);
+                  coord.controls.right.set(x2 - coord.x, y2 - coord.y);
+                  result = new Two.Anchor(
+                    x4, y4,
+                    x3 - x4, y3 - y4,
+                    undefined, undefined,
+                    Two.Commands.curve
+                  );
 
-                  x2 = reflection.x;
-                  y2 = reflection.y;
-                  x3 = parseFloat(coords[0]);
-                  y3 = parseFloat(coords[1]);
-                  x4 = parseFloat(coords[2]);
-                  y4 = parseFloat(coords[3]);
+                  coord = result;
+                  control = result.controls.left;
 
-                }
+                  break;
 
-                if (relative) {
-                  x2 += x1;
-                  y2 += y1;
-                  x3 += x1;
-                  y3 += y1;
-                  x4 += x1;
-                  y4 += y1;
-                }
+                case 't':
+                case 'q':
 
-                if (!_.isObject(coord.controls)) {
-                  Two.Anchor.AppendCurveProperties(coord);
-                }
+                  x1 = coord.x;
+                  y1 = coord.y;
 
-                coord.controls.right.set(x2 - coord.x, y2 - coord.y);
-                result = new Two.Anchor(
-                  x4, y4,
-                  x3 - x4, y3 - y4,
-                  undefined, undefined,
-                  Two.Commands.curve
-                );
+                  if (!control) {
+                    control = new Two.Vector();
+                  }
 
-                coord = result;
-                control = result.controls.left;
+                  if (/q/i.test(lower)) {
 
-                break;
+                    x2 = parseFloat(coords[0]);
+                    y2 = parseFloat(coords[1]);
+                    x3 = parseFloat(coords[0]);
+                    y3 = parseFloat(coords[1]);
+                    x4 = parseFloat(coords[2]);
+                    y4 = parseFloat(coords[3]);
 
-              case 't':
-              case 'q':
+                  } else {
 
-                x1 = coord.x;
-                y1 = coord.y;
+                    reflection = getReflection(coord, control, relative);
 
-                if (!control) {
-                  control = new Two.Vector();
-                }
+                    x2 = reflection.x;
+                    y2 = reflection.y;
+                    x3 = reflection.x;
+                    y3 = reflection.y;
+                    x4 = parseFloat(coords[0]);
+                    y4 = parseFloat(coords[1]);
 
-                if (/q/i.test(lower)) {
+                  }
 
-                  x2 = parseFloat(coords[0]);
-                  y2 = parseFloat(coords[1]);
-                  x3 = parseFloat(coords[0]);
-                  y3 = parseFloat(coords[1]);
-                  x4 = parseFloat(coords[2]);
-                  y4 = parseFloat(coords[3]);
+                  if (relative) {
+                    x2 += x1;
+                    y2 += y1;
+                    x3 += x1;
+                    y3 += y1;
+                    x4 += x1;
+                    y4 += y1;
+                  }
 
-                } else {
+                  if (!_.isObject(coord.controls)) {
+                    Two.Anchor.AppendCurveProperties(coord);
+                  }
 
-                  reflection = getReflection(coord, control, relative);
+                  coord.controls.right.set(
+                    (x2 - coord.x) * 0.33, (y2 - coord.y) * 0.33);
+                  result = new Two.Anchor(
+                    x4, y4,
+                    x3 - x4, y3 - y4,
+                    undefined, undefined,
+                    Two.Commands.curve
+                  );
 
-                  x2 = reflection.x;
-                  y2 = reflection.y;
-                  x3 = reflection.x;
-                  y3 = reflection.y;
-                  x4 = parseFloat(coords[0]);
-                  y4 = parseFloat(coords[1]);
+                  coord = result;
+                  control = result.controls.left;
 
-                }
+                  break;
 
-                if (relative) {
-                  x2 += x1;
-                  y2 += y1;
-                  x3 += x1;
-                  y3 += y1;
-                  x4 += x1;
-                  y4 += y1;
-                }
+                case 'a':
 
-                if (!_.isObject(coord.controls)) {
-                  Two.Anchor.AppendCurveProperties(coord);
-                }
+                  x1 = coord.x;
+                  y1 = coord.y;
 
-                coord.controls.right.set(
-                  (x2 - coord.x) * 0.33, (y2 - coord.y) * 0.33);
-                result = new Two.Anchor(
-                  x4, y4,
-                  x3 - x4, y3 - y4,
-                  undefined, undefined,
-                  Two.Commands.curve
-                );
+                  var rx = parseFloat(coords[0]);
+                  var ry = parseFloat(coords[1]);
+                  var xAxisRotation = parseFloat(coords[2]);// * PI / 180;
+                  var largeArcFlag = parseFloat(coords[3]);
+                  var sweepFlag = parseFloat(coords[4]);
 
-                coord = result;
-                control = result.controls.left;
+                  x4 = parseFloat(coords[5]);
+                  y4 = parseFloat(coords[6]);
 
-                break;
+                  if (relative) {
+                    x4 += x1;
+                    y4 += y1;
+                  }
 
-              case 'a':
+                  var anchor = new Two.Anchor(x4, y4);
+                  anchor.command = Two.Commands.arc;
+                  anchor.rx = rx;
+                  anchor.ry = ry;
+                  anchor.xAxisRotation = xAxisRotation;
+                  anchor.largeArcFlag = largeArcFlag;
+                  anchor.sweepFlag = sweepFlag;
 
-                x1 = coord.x;
-                y1 = coord.y;
+                  result = anchor;
 
-                var rx = parseFloat(coords[0]);
-                var ry = parseFloat(coords[1]);
-                var xAxisRotation = parseFloat(coords[2]);// * PI / 180;
-                var largeArcFlag = parseFloat(coords[3]);
-                var sweepFlag = parseFloat(coords[4]);
+                  coord = anchor;
+                  control = undefined;
 
-                x4 = parseFloat(coords[5]);
-                y4 = parseFloat(coords[6]);
+                  break;
 
-                if (relative) {
-                  x4 += x1;
-                  y4 += y1;
-                }
-
-                var anchor = new Two.Anchor(x4, y4);
-                anchor.command = Two.Commands.arc;
-                anchor.rx = rx;
-                anchor.ry = ry;
-                anchor.xAxisRotation = xAxisRotation;
-                anchor.largeArcFlag = largeArcFlag;
-                anchor.sweepFlag = sweepFlag;
-
-                result = anchor;
-
-                coord = anchor;
-                control = undefined;
-
-                break;
-
-            }
-
-            if (result) {
-              if (_.isArray(result)) {
-                points = points.concat(result);
-              } else {
-                points.push(result);
               }
-            }
 
-          });
+              if (result) {
+                if (_.isArray(result)) {
+                  points = points.concat(result);
+                } else {
+                  points.push(result);
+                }
+              }
 
-          if (points.length <= 1) {
-            return;
+            });
+
           }
 
           path = new Two.Path(points, closed, undefined, true).noStroke();
