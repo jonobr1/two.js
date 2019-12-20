@@ -838,12 +838,7 @@
       l = this._renderer.vertices.length;
 
       if (l <= 0) {
-        var v = matrix.multiply(0, 0, 1);
         return {
-          top: v.y,
-          left: v.x,
-          right: v.x,
-          bottom: v.y,
           width: 0,
           height: 0
         };
