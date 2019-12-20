@@ -472,7 +472,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2019-12-16T01:47:38.467Z',
+    PublishDate: '2019-12-20T11:30:29.234Z',
 
     /**
      * @name Two.Identifier
@@ -2884,8 +2884,12 @@ SOFTWARE.
       var last = arguments[l - 1];
       var path = new Two.Path(points, !(_.isBoolean(last) ? last : undefined));
       var rect = path.getBoundingClientRect();
-      path.center().translation
-        .set(rect.left + rect.width / 2, rect.top + rect.height / 2);
+
+      if (_.isNumber(rect.top)   && _.isNumber(rect.left)   &&
+          _.isNumber(rect.right) && _.isNumber(rect.bottom)) {
+        path.center().translation
+          .set(rect.left + rect.width / 2, rect.top + rect.height / 2);
+      }
 
       this.scene.add(path);
 
@@ -9278,12 +9282,7 @@ SOFTWARE.
       l = this._renderer.vertices.length;
 
       if (l <= 0) {
-        var v = matrix.multiply(0, 0, 1);
         return {
-          top: v.y,
-          left: v.x,
-          right: v.x,
-          bottom: v.y,
           width: 0,
           height: 0
         };
