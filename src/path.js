@@ -676,7 +676,10 @@
 
       var clone = new Path();
 
-      clone.vertices = this.vertices;
+      for (var j = 0; j < this.vertices.length; j++) {
+        var vertex = this.vertices[j];
+        clone.vertices.push(new Two.Anchor().clone(vertex));
+      }
 
       for (var i = 0; i < Path.Properties.length; i++) {
         var k = Path.Properties[i];
