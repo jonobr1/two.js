@@ -472,7 +472,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2019-12-25T10:03:32.521Z',
+    PublishDate: '2019-12-25T23:17:57.437Z',
 
     /**
      * @name Two.Identifier
@@ -9121,8 +9121,7 @@ SOFTWARE.
       var clone = new Path();
 
       for (var j = 0; j < this.vertices.length; j++) {
-        var vertex = this.vertices[j];
-        clone.vertices.push(new Two.Anchor().clone(vertex));
+        clone.vertices.push(this.vertices[j].clone());
       }
 
       for (var i = 0; i < Path.Properties.length; i++) {
