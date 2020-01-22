@@ -109,7 +109,7 @@ process.exit();
 
 ## Change Log
 
-#### Nightly
+#### January, 2020 [v0.7.0](https://github.com/jonobr1/two.js/releases/tag/v0.7.0)
 + Exposed `resolution` parameter in `Two.makeCircle` and `Two.makeEllipse` as the final parameter
 + Made `Two.Circle` and `Two.Ellipse` recalculate controls points on `_update` and made vertex amounts cyclical [@adroitwhiz](https://github.com/adroitwhiz)
 + Added [ESLint](https://eslint.org/) scripts to development environment [@adroitwhiz](https://github.com/adroitwhiz)

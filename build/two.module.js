@@ -2,7 +2,7 @@
 
 MIT License
 
-Copyright (c) 2012 - 2019 jonobr1 / http://jonobr1.com
+Copyright (c) 2012 - 2020 jonobr1 / http://jonobr1.com
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -466,13 +466,13 @@ SOFTWARE.
      * @name Two.Version
      * @property {String} - The current working version of the library.
      */
-    Version: 'v0.7.0-beta.4',
+    Version: 'v0.7.0',
 
     /**
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2019-12-25T23:17:57.437Z',
+    PublishDate: '2020-01-22T21:17:28.421Z',
 
     /**
      * @name Two.Identifier
