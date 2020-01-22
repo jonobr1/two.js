@@ -29,11 +29,11 @@
             fullscreen: true
           }).appendTo(document.body);
 
-          Two.Resolution = 32;
-
-          var blob = two.makeCircle(two.width / 2, two.height / 2, two.height / 3);
+          var blob = two.makeCircle(two.width / 2, two.height / 2, two.height / 3, 32);
           blob.fill = 'white';
           blob.noStroke();
+          // Automatically smoothe vertices to get that smooth "blobby" effect
+          blob.automatic = true;
 
           reset();
 
