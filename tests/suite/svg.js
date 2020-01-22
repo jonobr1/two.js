@@ -21,7 +21,7 @@
 
     var elem = two.renderer.domElement.querySelector('#' + line.id);
 
-    assert.equal(elem.getAttribute('d'), 'M -200 -200 L 200 200 ', 'Two.makeLine applies d attribute properly.');
+    assert.equal(elem.getAttribute('d'), 'M 0 0 L 400 400 ', 'Two.makeLine applies d attribute properly.');
 
     QUnit.Utils.addInstanceToTest(assert.test, two);
 
@@ -63,7 +63,7 @@
 
     var elem = two.renderer.domElement.querySelector('#' + ellipse.id);
 
-    assert.equal(elem.getAttribute('d'), 'M 100 0 C 100 25.257 88.57 52.851 70.71 70.71 C 52.851 88.57 25.257 100 0 100 C -25.258 100 -52.852 88.57 -70.711 70.71 C -88.571 52.851 -100 25.257 -100 0 C -100 -25.258 -88.571 -52.852 -70.711 -70.711 C -52.852 -88.571 -25.258 -100 -0.001 -100 C 25.257 -100 52.851 -88.571 70.71 -70.711 C 88.57 -52.852 100 -25.258 100 0 Z ', 'Two.makeEllipse applies d attribute properly.');
+    assert.equal(elem.getAttribute('d'), 'M 100 0 C 100 55.228 55.228 100 0 100 C -55.229 100 -100 55.228 -100 0 C -100.001 -55.229 -55.229 -100 -0.001 -100 C 55.228 -100.001 100 -55.229 100 0 Z ', 'Two.makeEllipse applies d attribute properly.');
 
     QUnit.Utils.addInstanceToTest(assert.test, two);
 
@@ -84,7 +84,7 @@
 
     var elem = two.renderer.domElement.querySelector('#' + circle.id);
 
-    assert.equal(elem.getAttribute('d'), 'M 50 0 C 50 12.628 44.285 26.425 35.355 35.355 C 26.425 44.285 12.628 50 0 50 C -12.629 50 -26.426 44.285 -35.356 35.355 C -44.286 26.425 -50 12.628 -50 0 C -50 -12.629 -44.286 -26.426 -35.356 -35.356 C -26.426 -44.286 -12.629 -50 -0.001 -50 C 12.628 -50 26.425 -44.286 35.355 -35.356 C 44.285 -26.426 50 -12.629 50 0 Z ', 'Two.makeCircle applies d attribute properly.');
+    assert.equal(elem.getAttribute('d'), 'M 50 0 C 50 27.614 27.614 50 0 50 C -27.615 50 -50 27.614 -50 0 C -50.001 -27.615 -27.615 -50 -0.001 -50 C 27.614 -50.001 50 -27.615 50 0 Z ', 'Two.makeCircle applies d attribute properly.');
 
     QUnit.Utils.addInstanceToTest(assert.test, two);
 
@@ -362,9 +362,30 @@
 
   });
 
+  QUnit.test('Two.makeGroup', function(assert) {
+
+    assert.expect(2);
+
+    var two = new Two({
+      width: 400,
+      height: 400
+    });
+
+    var group = two.makeGroup();
+    group.className = 'hello world';
+    two.update();
+
+    var elem = two.renderer.domElement.querySelector('#' + group.id);
+
+    assert.equal(elem.tagName, 'g', 'Two.Group renders as a <g/> tag.');
+    assert.equal(elem.getAttribute('class'), 'hello world', 'The class attribute applied properly.');
+
+    QUnit.Utils.addInstanceToTest(assert.test, two);
+  });
+
   QUnit.test('Two.makeText', function(assert) {
 
-    assert.expect(16);
+    assert.expect(17);
 
     var two = new Two({
       width: 400,
@@ -391,9 +412,10 @@
     assert.equal(elem.getAttribute('font-weight'), '500', 'The font-weight attribute applied properly.');
     assert.equal(elem.getAttribute('text-decoration'), 'none', 'The text-decoration attribute applied properly.');
     assert.equal(elem.getAttribute('fill'), '#00aeff', 'The fill attribute applied properly.');
-    assert.equal(elem.getAttribute('stroke-width'), '1', 'The stroke-width attribute applied properly.');
+    assert.equal(elem.getAttribute('stroke-width'), 'undefined', 'The stroke-width attribute applied properly.');
     assert.equal(elem.getAttribute('opacity'), '1', 'The opacity attribute applied properly.');
     assert.equal(elem.getAttribute('visibility'), 'visible', 'The visibility attribute applied properly.');
+    assert.equal(elem.getAttribute('class'), '', 'The class attribute applied properly.');
     assert.equal(elem.innerHTML, text.value, 'The value attribute applied properly.');
 
     QUnit.Utils.addInstanceToTest(assert.test, two);
@@ -402,7 +424,7 @@
 
   QUnit.test('Styles', function(assert) {
 
-    assert.expect(8);
+    assert.expect(9);
 
     var two = new Two({
       width: 400,
@@ -421,6 +443,7 @@
     shape.join = 'miter';
     shape.cap = 'butt';
     shape.miter = 10;
+    shape.className = 'pretty';
 
     shape.closed = false;
     shape.curved = true;
@@ -441,6 +464,7 @@
     assert.equal(elem.getAttribute('stroke-linecap'), shape.cap, 'Two.Shape.cap gets and sets properly.');
     assert.equal(elem.getAttribute('visibility'), 'visible', 'Two.Shape.visible gets and sets properly.');
     assert.equal(elem.getAttribute('stroke-miterlimit'), shape.miter, 'Two.Shape.miter gets and sets properly.');
+    assert.equal(elem.getAttribute('class'), shape.className, 'Two.Shape.className gets and sets properly.');
     assert.ok(elem.getAttribute('stroke-opacity') == shape.opacity
       && elem.getAttribute('fill-opacity') == shape.opacity, 'Two.Shape.opacity gets and sets properly.');
 

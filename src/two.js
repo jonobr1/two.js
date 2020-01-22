@@ -1,7 +1,24 @@
-this.Two = (function(previousTwo) {
+(this || self || window).Two = (function(previousTwo) {
 
-  var root = typeof window != 'undefined' ? window : typeof global != 'undefined' ? global : null;
+  var root;
+  if (typeof window !== 'undefined') {
+    root = window;
+  } else if (typeof global !== 'undefined') {
+    root = global;
+  } else if (typeof self !== 'undefined') {
+    root = self;
+  } else {
+    root = this;
+  }
+
   var toString = Object.prototype.toString;
+  /**
+   * @name _
+   * @interface
+   * @private
+   * @description A collection of useful functions borrowed and repurposed from Underscore.js.
+   * @see {@link http://underscorejs.org/}
+   */
   var _ = {
     // http://underscorejs.org/ • 1.8.3
     _indexAmount: 0,
@@ -95,7 +112,7 @@ this.Two = (function(previousTwo) {
       return range;
     },
     indexOf: function(list, item) {
-      if (!!_.natural.indexOf) {
+      if (_.natural.indexOf) {
         return _.natural.indexOf.call(list, item);
       }
       for (var i = 0; i < list.length; i++) {
@@ -188,19 +205,19 @@ this.Two = (function(previousTwo) {
     once: function(func) {
       var init = false;
       return function() {
-        if (!!init) {
+        if (init) {
           return func;
         }
         init = true;
         return func.apply(this, arguments);
-      }
+      };
     },
     after: function(times, func) {
       return function() {
         while (--times < 1) {
           return func.apply(this, arguments);
         }
-      }
+      };
     },
     uniqueId: function(prefix) {
       var id = ++_._indexAmount + '';
@@ -208,12 +225,11 @@ this.Two = (function(previousTwo) {
     }
   };
 
-  /**
-   * Constants
-   */
+  // Constants
 
   var sin = Math.sin,
     cos = Math.cos,
+    acos = Math.acos,
     atan2 = Math.atan2,
     sqrt = Math.sqrt,
     round = Math.round,
@@ -225,9 +241,7 @@ this.Two = (function(previousTwo) {
     min = Math.min,
     max = Math.max;
 
-  /**
-   * Localized variables
-   */
+  // Localized variables
 
   var count = 0;
   var slice = _.natural.slice;
@@ -241,9 +255,8 @@ this.Two = (function(previousTwo) {
     return typeof length == 'number' && length >= 0 && length <= MAX_ARRAY_INDEX;
   };
 
-  /**
-   * Cross browser dom events.
-   */
+  // Cross browser dom events.
+
   var dom = {
 
     temp: (root.document ? root.document.createElement('div') : {}),
@@ -302,7 +315,16 @@ this.Two = (function(previousTwo) {
   };
 
   /**
+   * @name Two
    * @class
+   * @global
+   * @param {Object} [options]
+   * @param {Boolean} [options.fullscreen=false] - Set to `true` to automatically make the stage adapt to the width and height of the parent document. This parameter overrides `width` and `height` parameters if set to `true`.
+   * @param {Number} [options.width=640] - The width of the stage on construction. This can be set at a later time.
+   * @param {Number} [options.height=480] - The height of the stage on construction. This can be set at a later time.
+   * @param {String} [options.type=Two.Types.svg] - The type of renderer to setup drawing with. See {@link  Two.Types} for available options.
+   * @param {Boolean} [options.autostart=false] - Set to `true` to add the instance to draw on `requestAnimationFrame`. This is a convenient substitute for {@link Two#play}.
+   * @description The entrypoint for Two.js. Instantiate a `new Two` in order to setup a scene to render to. `Two` is also the publicly accessible namespace that all other sub-classes, functions, and utilities attach to.
    */
   var Two = root.Two = function(options) {
 
@@ -317,7 +339,7 @@ this.Two = (function(previousTwo) {
     });
 
     _.each(params, function(v, k) {
-      if (k === 'fullscreen' || k === 'autostart') {
+      if (/fullscreen/i.test(k) || /autostart/i.test(k)) {
         return;
       }
       this[k] = v;
@@ -369,42 +391,73 @@ this.Two = (function(previousTwo) {
 
     }
 
+    this.renderer.bind(Two.Events.resize, _.bind(updateDimensions, this));
     this.scene = this.renderer.scene;
 
     Two.Instances.push(this);
-    raf.init();
+    if (params.autostart) {
+      raf.init();
+    }
 
   };
 
   _.extend(Two, {
 
-    /**
-     * Access to root in other files.
-     */
+    // Access to root in other files.
 
+    /**
+     * @name Two.root
+     * @description The root of the session context. In the browser this is the `window` variable. This varies in headless environments.
+     */
     root: root,
 
     /**
-     * Primitive
+     * @name Two.nextFrameID
+     * @property {Integer}
+     * @description The id of the next requestAnimationFrame function.
      */
+    nextFrameID: null,
 
+    // Primitive
+
+    /**
+     * @name Two.Array
+     * @description A simple polyfill for Float32Array.
+     */
     Array: root.Float32Array || Array,
 
+    /**
+     * @name Two.Types
+     * @property {Object} - The different rendering types availabe in the library.
+     */
     Types: {
       webgl: 'WebGLRenderer',
       svg: 'SVGRenderer',
       canvas: 'CanvasRenderer'
     },
 
+    /**
+     * @name Two.Version
+     * @property {String} - The current working version of the library.
+     */
     Version: 'v0.7.0',
 
-    Identifier: 'two_',
+    /**
+     * @name Two.PublishDate
+     * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
+     */
+    PublishDate: '<%= publishDate %>',
 
-    Properties: {
-      hierarchy: 'hierarchy',
-      demotion: 'demotion'
-    },
+    /**
+     * @name Two.Identifier
+     * @property {String} - String prefix for all Two.js object's ids. This trickles down to SVG ids.
+     */
+    Identifier: 'two-',
 
+    /**
+     * @name Two.Events
+     * @property {Object} - Map of possible events in Two.js.
+     */
     Events: {
       play: 'play',
       pause: 'pause',
@@ -418,32 +471,73 @@ this.Two = (function(previousTwo) {
       load: 'load'
     },
 
+    /**
+     * @name Two.Commands
+     * @property {Object} - Map of possible path commands. Taken from the SVG specification.
+     */
     Commands: {
       move: 'M',
       line: 'L',
       curve: 'C',
+      arc: 'A',
       close: 'Z'
     },
 
-    Resolution: 8,
+    /**
+     * @name Two.Resolution
+     * @property {Number} - Default amount of vertices to be used for interpreting Arcs and ArcSegments.
+     */
+    Resolution: 12,
 
+    /**
+     * @name Two.Instances
+     * @property {Two[]} - Registered list of all Two.js instances in the current session.
+     */
     Instances: [],
 
+    /**
+     * @function Two.noConflict
+     * @description A function to revert the global namespaced `Two` variable to its previous incarnation.
+     * @returns {Two} Returns access to the top-level Two.js library for local use.
+     */
     noConflict: function() {
       root.Two = previousTwo;
-      return this;
+      return Two;
     },
 
+    /**
+     * @function Two.uniqueId
+     * @description Simple method to access an incrementing value. Used for `id` allocation on all Two.js objects.
+     * @returns {Number} Ever increasing integer.
+     */
     uniqueId: function() {
       var id = count;
       count++;
       return id;
     },
 
+    /**
+     * @name Two.Utils
+     * @interface
+     * @implements {_}
+     * @description A hodgepodge of handy functions, math, and properties are stored here.
+     */
     Utils: _.extend(_, {
 
+      /**
+       * @name Two.Utils.performance
+       * @property {Date} - A special `Date` like object to get the current millis of the session. Used internally to calculate time between frames.
+       * e.g: `Two.Utils.performance.now() // milliseconds since epoch`
+       */
       performance: perf,
 
+      /**
+       * @name Two.Utils.defineProperty
+       * @function
+       * @this Two#
+       * @param {String} property - The property to add an enumerable getter / setter to.
+       * @description Convenience function to setup the flag based getter / setter that most properties are defined as in Two.js.
+       */
       defineProperty: function(property) {
 
         var object = this;
@@ -463,9 +557,33 @@ this.Two = (function(previousTwo) {
 
       },
 
+      Image: null,
+
+      isHeadless: false,
+
       /**
-       * Release an arbitrary class' events from the two.js corpus and recurse
-       * through its children and or vertices.
+       * @name Two.Utils.shim
+       * @function
+       * @param {canvas} canvas - The instanced `Canvas` object provided by `node-canvas`.
+       * @param {Image} [Image] - The prototypical `Image` object provided by `node-canvas`. This is only necessary to pass if you're going to load bitmap imagery.
+       * @returns {canvas} Returns the instanced canvas object you passed from with additional attributes needed for Two.js.
+       * @description Convenience method for defining all the dependencies from the npm package `node-canvas`. See [node-canvas]{@link https://github.com/Automattic/node-canvas} for additional information on setting up HTML5 `<canvas />` drawing in a node.js environment.
+       */
+      shim: function(canvas, Image) {
+        Two.CanvasRenderer.Utils.shim(canvas);
+        if (!_.isUndefined(Image)) {
+          Two.Utils.Image = Image;
+        }
+        Two.Utils.isHeadless = true;
+        return canvas;
+      },
+
+      /**
+       * @name Two.Utils.release
+       * @function
+       * @param {Object} obj
+       * @returns {Object} The object passed for event deallocation.
+       * @description Release an arbitrary class' events from the Two.js corpus and recurse through its children and or vertices.
        */
       release: function(obj) {
 
@@ -494,8 +612,18 @@ this.Two = (function(previousTwo) {
           });
         }
 
+        return obj;
+
       },
 
+      /**
+       * @name Two.Utils.xhr
+       * @function
+       * @param {String} path
+       * @param {Function} callback
+       * @returns {XMLHttpRequest} The constructed and called XHR request.
+       * @description Canonical method to initiate `GET` requests in the browser. Mainly used by {@link Two#load} method.
+       */
       xhr: function(path, callback) {
 
         var xhr = new XMLHttpRequest();
@@ -512,6 +640,10 @@ this.Two = (function(previousTwo) {
 
       },
 
+      /**
+       * @name Two.Utils.Curve
+       * @property {Object} - Additional utility constant variables related to curve math and calculations.
+       */
       Curve: {
 
         CollinearityEpsilon: pow(10, -30),
@@ -523,7 +655,7 @@ this.Two = (function(previousTwo) {
         Tolerance: {
           distance: 0.25,
           angle: 0,
-          epsilon: 0.01
+          epsilon: Number.EPSILON
         },
 
         // Lookup tables for abscissas and weights with values for n = 2 .. 16.
@@ -567,11 +699,6 @@ this.Two = (function(previousTwo) {
 
       },
 
-      /**
-       * Account for high dpi rendering.
-       * http://www.html5rocks.com/en/tutorials/canvas/hidpi/
-       */
-
       devicePixelRatio: root.devicePixelRatio || 1,
 
       getBackingStoreRatio: function(ctx) {
@@ -582,13 +709,23 @@ this.Two = (function(previousTwo) {
           ctx.backingStorePixelRatio || 1;
       },
 
+      /**
+       * @name Two.Utils.getRatio
+       * @function
+       * @param {Canvas.context2D} ctx
+       * @returns {Number} The ratio of a unit in Two.js to the pixel density of a session's screen.
+       * @see [High DPI Rendering]{@link http://www.html5rocks.com/en/tutorials/canvas/hidpi/}
+       */
       getRatio: function(ctx) {
         return Two.Utils.devicePixelRatio / getBackingStoreRatio(ctx);
       },
 
       /**
-       * Properly defer play calling until after all objects
-       * have been updated with their newest styles.
+       * @name Two.Utils.setPlaying
+       * @function
+       * @this Two#
+       * @returns {Two} The instance called with for potential chaining.
+       * @description Internal convenience method to properly defer play calling until after all objects have been updated with their newest styles.
        */
       setPlaying: function(b) {
 
@@ -598,8 +735,12 @@ this.Two = (function(previousTwo) {
       },
 
       /**
-       * Return the computed matrix of a nested object.
-       * TODO: Optimize traversal.
+       * @name Two.Utils.getComputedMatrix
+       * @function
+       * @param {Two.Shape} object - The Two.js object that has a matrix property to calculate from.
+       * @param {Two.Matrix} [matrix] - The matrix to apply calculated transformations to if available.
+       * @returns {Two.Matrix} The computed matrix of a nested object. If no `matrix` was passed in arguments then a `new Two.Matrix` is returned.
+       * @description Method to get the world space transformation of a given object in a Two.js scene.
        */
       getComputedMatrix: function(object, matrix) {
 
@@ -613,67 +754,166 @@ this.Two = (function(previousTwo) {
 
         matrices.reverse();
 
-        _.each(matrices, function(m) {
+        for (var i = 0; i < matrices.length; i++) {
 
+          var m = matrices[i];
           var e = m.elements;
           matrix.multiply(
             e[0], e[1], e[2], e[3], e[4], e[5], e[6], e[7], e[8], e[9]);
 
-        });
+        }
 
         return matrix;
 
       },
 
-      deltaTransformPoint: function(matrix, x, y) {
-
-        var dx = x * matrix.a + y * matrix.c + 0;
-        var dy = x * matrix.b + y * matrix.d + 0;
-
-        return new Two.Vector(dx, dy);
-
-      },
-
       /**
-       * https://gist.github.com/2052247
+       * @name Two.Utils.decomposeMatrix
+       * @function
+       * @param {Two.Matrix} matrix - The matrix to decompose.
+       * @returns {Object} An object containing relevant skew values.
+       * @description Decompose a 2D 3x3 Matrix to find the skew.
        */
       decomposeMatrix: function(matrix) {
 
-        // calculate delta transform point
-        var px = Two.Utils.deltaTransformPoint(matrix, 0, 1);
-        var py = Two.Utils.deltaTransformPoint(matrix, 1, 0);
-
-        // calculate skew
-        var skewX = ((180 / Math.PI) * Math.atan2(px.y, px.x) - 90);
-        var skewY = ((180 / Math.PI) * Math.atan2(py.y, py.x));
+        // TODO: Include skewX, skewY
 
         return {
             translateX: matrix.e,
             translateY: matrix.f,
-            scaleX: Math.sqrt(matrix.a * matrix.a + matrix.b * matrix.b),
-            scaleY: Math.sqrt(matrix.c * matrix.c + matrix.d * matrix.d),
-            skewX: skewX,
-            skewY: skewY,
-            rotation: skewX // rotation is the same as skew x
+            scaleX: matrix.a,
+            scaleY: matrix.d,
+            rotation: Math.asin(- matrix.b)
         };
 
       },
 
       /**
-       * Walk through item properties and pick the ones of interest.
-       * Will try to resolve styles applied via CSS
-       *
-       * TODO: Reverse calculate `Two.Gradient`s for fill / stroke
-       * of any given path.
+       * @name Two.Utils.extractCSSText
+       * @function
+       * @param {String} text - The CSS text body to be parsed and extracted.
+       * @param {Object} [styles] - The styles object to apply CSS key values to.
+       * @returns {Object} styles
+       * @description Parse CSS text body and apply them as key value pairs to a JavaScript object.
        */
-      applySvgAttributes: function(node, elem) {
+      extractCSSText: function(text, styles) {
 
-        var attributes = {}, styles = {}, i, key, value, attr;
+        var commands, command, name, value;
+
+        if (!styles) {
+          styles = {};
+        }
+
+        commands = text.split(';');
+
+        for (var i = 0; i < commands.length; i++) {
+          command = commands[i].split(':');
+          name = command[0];
+          value = command[1];
+          if (_.isUndefined(name) || _.isUndefined(value)) {
+            continue;
+          }
+          styles[name] = value.replace(/\s/, '');
+        }
+
+        return styles;
+
+      },
+
+      /**
+       * @name Two.Utils.getSvgStyles
+       * @function
+       * @param {SvgNode} node - The SVG node to parse.
+       * @returns {Object} styles
+       * @description Get the CSS comands from the `style` attribute of an SVG node and apply them as key value pairs to a JavaScript object.
+       */
+      getSvgStyles: function(node) {
+
+        var styles = {};
+        var attributes = Two.Utils.getSvgAttributes(node);
+        var length = Math.max(attributes.length, node.style.length);
+
+        for (var i = 0; i < length; i++) {
+
+          var command = node.style[i];
+          var attribute = attributes[i];
+
+          if (command) {
+            styles[command] = node.style[command];
+          }
+          if (attribute) {
+            styles[attribute] = node.getAttribute(attribute);
+          }
+
+        }
+
+        return styles;
+
+      },
+
+      getSvgAttributes: function(node) {
+
+        var attributes = node.getAttributeNames();
+
+        // Reserved attributes to remove
+        var keywords = ['id', 'class', 'transform', 'xmlns', 'viewBox'];
+
+        for (var i = 0; i < keywords.length; i++) {
+          var keyword = keywords[i];
+          var index = _.indexOf(attributes, keyword);
+          if (index >= 0) {
+            attributes.splice(index, 1);
+          }
+        }
+
+        return attributes;
+
+      },
+
+      /**
+       * @name Two.Utils.applySvgViewBox
+       * @function
+       * @param {Two.Shape} node - The Two.js object to apply viewbox matrix to
+       * @param {String} value - The viewBox value from the SVG attribute
+       * @returns {Two.Shape} node
+       @ @description
+       */
+      applySvgViewBox: function(node, value) {
+
+        var elements = value.split(/\s/);
+
+        var x = parseFloat(elements[0]);
+        var y = parseFloat(elements[1]);
+        var width = parseFloat(elements[2]);
+        var height = parseFloat(elements[3]);
+
+        var s = Math.min(this.width / width, this.height / height);
+
+        node.translation.x -= x * s;
+        node.translation.y -= y * s;
+        node.scale = s;
+
+        return node;
+
+      },
+
+      /**
+       * @name Two.Utils.applySvgAttributes
+       * @function
+       * @param {SvgNode} node - An SVG Node to extrapolate attributes from.
+       * @param {Two.Shape} elem - The Two.js object to apply extrapolated attributes to.
+       * @returns {Two.Shape} The Two.js object passed now with applied attributes.
+       * @description This function iterates through an SVG Node's properties and stores ones of interest. It tries to resolve styles applied via CSS as well.
+       * @TODO Reverse calculate {@link Two.Gradient}s for fill / stroke of any given path.
+       */
+      applySvgAttributes: function(node, elem, parentStyles) {
+
+        var  styles = {}, attributes = {}, extracted = {}, i, key, value, attr;
 
         // Not available in non browser environments
-        if (getComputedStyle) {
+        if (root.getComputedStyle) {
           // Convert CSSStyleDeclaration to a normal object
-          var computedStyles = getComputedStyle(node);
+          var computedStyles = root.getComputedStyle(node);
           i = computedStyles.length;
 
           while (i--) {
@@ -681,17 +921,20 @@ this.Two = (function(previousTwo) {
             value = computedStyles[key];
             // Gecko returns undefined for unset properties
             // Webkit returns the default value
-            if (value !== undefined) {
+            if (!_.isUndefined(value)) {
               styles[key] = value;
             }
           }
         }
 
         // Convert NodeMap to a normal object
-        i = node.attributes.length;
-        while (i--) {
+        for (i = 0; i < node.attributes.length; i++) {
           attr = node.attributes[i];
-          attributes[attr.nodeName] = attr.value;
+          if (/style/i.test(attr.nodeName)) {
+            Two.Utils.extractCSSText(attr.value, extracted);
+          } else {
+            attributes[attr.nodeName] = attr.value;
+          }
         }
 
         // Getting the correct opacity is a bit tricky, since SVG path elements don't
@@ -700,15 +943,19 @@ this.Two = (function(previousTwo) {
         if (!_.isUndefined(styles.opacity)) {
           styles['stroke-opacity'] = styles.opacity;
           styles['fill-opacity'] = styles.opacity;
+          delete styles.opacity;
         }
 
         // Merge attributes and applied styles (attributes take precedence)
-        _.extend(styles, attributes);
+        if (parentStyles) {
+          _.defaults(styles, parentStyles);
+        }
+        _.extend(styles, attributes, extracted);
 
         // Similarly visibility is influenced by the value of both display and visibility.
         // Calculate a unified value here which defaults to `true`.
-        styles.visible = !(_.isUndefined(styles.display) && styles.display === 'none')
-          || (_.isUndefined(styles.visibility) && styles.visibility === 'hidden');
+        styles.visible = !(_.isUndefined(styles.display) && /none/i.test(styles.display))
+          || (_.isUndefined(styles.visibility) && /hidden/i.test(styles.visibility));
 
         // Now iterate the whole thing
         for (key in styles) {
@@ -716,12 +963,14 @@ this.Two = (function(previousTwo) {
 
           switch (key) {
             case 'transform':
-              // TODO: Check this out https://github.com/paperjs/paper.js/blob/master/src/svg/SVGImport.js#L313
-              if (value === 'none') break;
-              var m = node.getCTM ? node.getCTM() : null;
+              // TODO: Check this out https://github.com/paperjs/paper.js/blob/develop/src/svg/SvgImport.js#L315
+              if (/none/i.test(value)) break;
+              var m = (node.transform && node.transform.baseVal && node.transform.baseVal.length > 0)
+                ? node.transform.baseVal[0].matrix
+                : (node.getCTM ? node.getCTM() : null);
 
               // Might happen when transform string is empty or not valid.
-              if (m === null) break;
+              if (_.isNull(m)) break;
 
               // // Option 1: edit the underlying matrix and don't force an auto calc.
               // var m = node.getCTM();
@@ -729,12 +978,11 @@ this.Two = (function(previousTwo) {
               // elem._matrix.set(m.a, m.b, m.c, m.d, m.e, m.f);
 
               // Option 2: Decompose and infer Two.js related properties.
-              var transforms = Two.Utils.decomposeMatrix(node.getCTM());
+              var transforms = Two.Utils.decomposeMatrix(m);
 
               elem.translation.set(transforms.translateX, transforms.translateY);
-              elem.rotation = transforms.rotation;
-              // Warning: Two.js elements only support uniform scalars...
-              elem.scale = transforms.scaleX;
+              elem.rotation = Math.PI * (transforms.rotation / 180);
+              elem.scale = new Two.Vector(transforms.scaleX, transforms.scaleY);
 
               var x = parseFloat((styles.x + '').replace('px'));
               var y = parseFloat((styles.y + '').replace('px'));
@@ -749,74 +997,153 @@ this.Two = (function(previousTwo) {
               }
 
               break;
+            case 'viewBox':
+              Two.Utils.applySvgViewBox.call(this, elem, value);
+              break;
             case 'visible':
+              if (elem instanceof Two.Group) {
+                elem._visible = value;
+                break;
+              }
               elem.visible = value;
               break;
             case 'stroke-linecap':
+              if (elem instanceof Two.Group) {
+                elem._cap = value;
+                break;
+              }
               elem.cap = value;
               break;
             case 'stroke-linejoin':
+              if (elem instanceof Two.Group) {
+                elem._join = value;
+                break;
+              }
               elem.join = value;
               break;
             case 'stroke-miterlimit':
+              if (elem instanceof Two.Group) {
+                elem._miter = value;
+                break;
+              }
               elem.miter = value;
               break;
             case 'stroke-width':
+              if (elem instanceof Two.Group) {
+                elem._linewidth = parseFloat(value);
+                break;
+              }
               elem.linewidth = parseFloat(value);
               break;
+            case 'opacity':
             case 'stroke-opacity':
             case 'fill-opacity':
-            case 'opacity':
+              // Only apply styles to rendered shapes
+              // in the scene.
+              if (elem instanceof Two.Group) {
+                elem._opacity = parseFloat(value);
+                break;
+              }
               elem.opacity = parseFloat(value);
               break;
             case 'fill':
             case 'stroke':
-              if (/url\(\#.*\)/i.test(value)) {
-                elem[key] = this.getById(
-                  value.replace(/url\(\#(.*)\)/i, '$1'));
+              if (elem instanceof Two.Group) {
+                key = '_' + key;
+              }
+              if (/url\(#.*\)/i.test(value)) {
+                var scene = Two.Utils.getScene(this);
+                elem[key] = scene.getById(
+                  value.replace(/url\(#(.*)\)/i, '$1'));
               } else {
-                elem[key] = (value === 'none') ? 'transparent' : value;
+                elem[key] = (/none/i.test(value)) ? 'transparent' : value;
               }
               break;
             case 'id':
               elem.id = value;
+              // Overwritten id for non-conflicts on same page SVG documents
+              // TODO: Make this non-descructive
+              node.id = value + '-' + Two.Identifier + 'applied';
               break;
             case 'class':
+            case 'className':
               elem.classList = value.split(' ');
               break;
           }
         }
 
-        return elem;
+        return styles;
 
       },
 
       /**
-       * Read any number of SVG node types and create Two equivalents of them.
+       * @name two.Utils.getScene
+       * @param {Two.Shape} node - The currently available object in the scenegraph.
+       * @returns {Two.Group} - The highest order {@link Two.Group} in the scenegraph.
+       * @property {Function}
+       */
+      getScene: function(node) {
+
+        while (node.parent) {
+          node = node.parent;
+        }
+
+        return node.scene;
+
+      },
+
+      /**
+       * @name Two.Utils.read
+       * @property {Object} read - A map of functions to read any number of SVG node types and create Two.js equivalents of them. Primarily used by the {@link Two#interpret} method.
        */
       read: {
 
-        svg: function() {
-          return Two.Utils.read.g.apply(this, arguments);
+        svg: function(node) {
+
+          var svg = Two.Utils.read.g.call(this, node);
+          var viewBox = node.getAttribute('viewBox');
+          // Two.Utils.applySvgViewBox(svg, viewBox);
+
+          return svg;
+
         },
 
-        g: function(node) {
+        defs: function(node) {
+          var error = new Two.Utils.Error('interpret <defs /> not supported.');
+          console.warn(error.name, error.message);
+          return null;
+        },
 
+        use: function(node) {
+          var error = new Two.Utils.Error('interpret <use /> not supported.');
+          console.warn(error.name, error.message);
+          return null;
+        },
+
+        g: function(node, parentStyles) {
+
+          var styles, attrs;
           var group = new Two.Group();
 
+          Two.Utils.applySvgAttributes.call(this, node, group, parentStyles);
+
+          this.add(group);
+
           // Switched up order to inherit more specific styles
-          Two.Utils.applySvgAttributes.call(this, node, group);
+          styles = Two.Utils.getSvgStyles.call(this, node);
 
           for (var i = 0, l = node.childNodes.length; i < l; i++) {
             var n = node.childNodes[i];
             var tag = n.nodeName;
             if (!tag) return;
 
-            var tagName = tag.replace(/svg\:/ig, '').toLowerCase();
+            var tagName = tag.replace(/svg:/ig, '').toLowerCase();
 
             if (tagName in Two.Utils.read) {
-              var o = Two.Utils.read[tagName].call(group, n);
-              group.add(o);
+              var o = Two.Utils.read[tagName].call(group, n, styles);
+              if (!!o && !o.parent) {
+                group.add(o);
+              }
             }
           }
 
@@ -824,446 +1151,418 @@ this.Two = (function(previousTwo) {
 
         },
 
-        polygon: function(node, open) {
+        polygon: function(node, parentStyles) {
 
           var points = node.getAttribute('points');
 
           var verts = [];
-          points.replace(/(-?[\d\.?]+)[,|\s](-?[\d\.?]+)/g, function(match, p1, p2) {
+          points.replace(/(-?[\d.?]+)[,|\s](-?[\d.?]+)/g, function(match, p1, p2) {
             verts.push(new Two.Anchor(parseFloat(p1), parseFloat(p2)));
           });
 
-          var poly = new Two.Path(verts, !open).noStroke();
+          var poly = new Two.Path(verts, true).noStroke();
           poly.fill = 'black';
 
-          return Two.Utils.applySvgAttributes.call(this, node, poly);
+          Two.Utils.applySvgAttributes.call(this, node, poly, parentStyles);
+
+          return poly;
 
         },
 
-        polyline: function(node) {
-          return Two.Utils.read.polygon.call(this, node, true);
+        polyline: function(node, parentStyles) {
+          var poly = Two.Utils.read.polygon.call(this, node, parentStyles);
+          poly.closed = false;
+          return poly;
         },
 
-        path: function(node) {
+        path: function(node, parentStyles) {
 
           var path = node.getAttribute('d');
-
-          // Create a Two.Path from the paths.
-
-          var coord = new Two.Anchor();
-          var control, coords;
+          var points = [];
           var closed = false, relative = false;
-          var commands = path.match(/[a-df-z][^a-df-z]*/ig);
-          var last = commands.length - 1;
 
-          // Split up polybeziers
+          if (path) {
 
-          _.each(commands.slice(0), function(command, i) {
+            // Create a Two.Path from the paths.
 
-            var type = command[0];
-            var lower = type.toLowerCase();
-            var items = command.slice(1).trim().split(/[\s,]+|(?=\s?[+\-])/);
-            var pre, post, result = [], bin;
+            var coord = new Two.Anchor();
+            var control, coords;
+            var commands = path.match(/[a-df-z][^a-df-z]*/ig);
+            var last = commands.length - 1;
 
-            if (i <= 0) {
-              commands = [];
-            }
+            // Split up polybeziers
 
-            switch (lower) {
-              case 'h':
-              case 'v':
-                if (items.length > 1) {
-                  bin = 1;
-                }
-                break;
-              case 'm':
-              case 'l':
-              case 't':
-                if (items.length > 2) {
-                  bin = 2;
-                }
-                break;
-              case 's':
-              case 'q':
-                if (items.length > 4) {
-                  bin = 4;
-                }
-                break;
-              case 'c':
-                if (items.length > 6) {
-                  bin = 6;
-                }
-                break;
-              case 'a':
-                // TODO: Handle Ellipses
-                break;
-            }
+            _.each(commands.slice(0), function(command, i) {
 
-            if (bin) {
+              var number, fid, lid, numbers, first, s;
+              var j, k, ct, l, times;
 
-              for (var j = 0, l = items.length, times = 0; j < l; j+=bin) {
+              var type = command[0];
+              var lower = type.toLowerCase();
+              var items = command.slice(1).trim().split(/[\s,]+|(?=\s?[+-])/);
+              var pre, post, result = [], bin;
+              var hasDoubleDecimals = false;
 
-                var ct = type;
-                if (times > 0) {
+              // Handle double decimal values e.g: 48.6037.71.8
+              // Like: https://m.abcsofchinese.com/images/svg/亼ji2.svg
+              for (j = 0; j < items.length; j++) {
 
-                  switch (type) {
-                    case 'm':
-                      ct = 'l';
-                      break;
-                    case 'M':
-                      ct = 'L';
-                      break;
+                number = items[j];
+                fid = number.indexOf('.');
+                lid = number.lastIndexOf('.');
+
+                if (fid !== lid) {
+
+                  numbers = number.split('.');
+                  first = numbers[0] + '.' + numbers[1];
+
+                  items.splice(j, 1, first);
+
+                  for (s = 2; s < numbers.length; s++) {
+                    items.splice(j + s - 1, 0, '0.' + numbers[s]);
                   }
 
-                }
+                  hasDoubleDecimals = true;
 
-                result.push([ct].concat(items.slice(j, j + bin)).join(' '));
-                times++;
+                }
 
               }
 
-              commands = Array.prototype.concat.apply(commands, result);
+              if (hasDoubleDecimals) {
+                command = type + items.join(',');
+              }
 
-            } else {
+              if (i <= 0) {
+                commands = [];
+              }
 
-              commands.push(command);
+              switch (lower) {
+                case 'h':
+                case 'v':
+                  if (items.length > 1) {
+                    bin = 1;
+                  }
+                  break;
+                case 'm':
+                case 'l':
+                case 't':
+                  if (items.length > 2) {
+                    bin = 2;
+                  }
+                  break;
+                case 's':
+                case 'q':
+                  if (items.length > 4) {
+                    bin = 4;
+                  }
+                  break;
+                case 'c':
+                  if (items.length > 6) {
+                    bin = 6;
+                  }
+                  break;
+                case 'a':
+                  if (items.length > 7) {
+                    bin = 7;
+                  }
+                  break;
+              }
 
-            }
+              // This means we have a polybezier.
+              if (bin) {
 
-          });
+                for (j = 0, l = items.length, times = 0; j < l; j+=bin) {
 
-          // Create the vertices for our Two.Path
+                  ct = type;
+                  if (times > 0) {
 
-          var points = [];
-          _.each(commands, function(command, i) {
+                    switch (type) {
+                      case 'm':
+                        ct = 'l';
+                        break;
+                      case 'M':
+                        ct = 'L';
+                        break;
+                    }
 
-            var result, x, y;
-            var type = command[0];
-            var lower = type.toLowerCase();
+                  }
 
-            coords = command.slice(1).trim();
-            coords = coords.replace(/(-?\d+(?:\.\d*)?)[eE]([+\-]?\d+)/g, function(match, n1, n2) {
-              return parseFloat(n1) * pow(10, n2);
+                  result.push(ct + items.slice(j, j + bin).join(' '));
+                  times++;
+
+                }
+
+                commands = Array.prototype.concat.apply(commands, result);
+
+              } else {
+
+                commands.push(command);
+
+              }
+
             });
-            coords = coords.split(/[\s,]+|(?=\s?[+\-])/);
-            relative = type === lower;
 
-            var x1, y1, x2, y2, x3, y3, x4, y4, reflection;
+            // Create the vertices for our Two.Path
 
-            switch (lower) {
+            _.each(commands, function(command, i) {
 
-              case 'z':
-                if (i >= last) {
-                  closed = true;
-                } else {
-                  x = coord.x;
-                  y = coord.y;
+              var result, x, y;
+              var type = command[0];
+              var lower = type.toLowerCase();
+
+              coords = command.slice(1).trim();
+              coords = coords.replace(/(-?\d+(?:\.\d*)?)[eE]([+-]?\d+)/g, function(match, n1, n2) {
+                return parseFloat(n1) * pow(10, n2);
+              });
+              coords = coords.split(/[\s,]+|(?=\s?[+-])/);
+              relative = type === lower;
+
+              var x1, y1, x2, y2, x3, y3, x4, y4, reflection;
+
+              switch (lower) {
+
+                case 'z':
+                  if (i >= last) {
+                    closed = true;
+                  } else {
+                    x = coord.x;
+                    y = coord.y;
+                    result = new Two.Anchor(
+                      x, y,
+                      undefined, undefined,
+                      undefined, undefined,
+                      Two.Commands.close
+                    );
+                    // Make coord be the last `m` command
+                    for (var j = points.length - 1; j >= 0; j--) {
+                      var point = points[j];
+                      if (/m/i.test(point.command)) {
+                        coord = point;
+                        break;
+                      }
+                    }
+                  }
+                  break;
+
+                case 'm':
+                case 'l':
+
+                  control = undefined;
+
+                  x = parseFloat(coords[0]);
+                  y = parseFloat(coords[1]);
+
                   result = new Two.Anchor(
                     x, y,
                     undefined, undefined,
                     undefined, undefined,
-                    Two.Commands.close
+                    /m/i.test(lower) ? Two.Commands.move : Two.Commands.line
                   );
-                }
-                break;
-
-              case 'm':
-              case 'l':
-
-                x = parseFloat(coords[0]);
-                y = parseFloat(coords[1]);
-
-                result = new Two.Anchor(
-                  x, y,
-                  undefined, undefined,
-                  undefined, undefined,
-                  lower === 'm' ? Two.Commands.move : Two.Commands.line
-                );
 
-                if (relative) {
-                  result.addSelf(coord);
-                }
+                  if (relative) {
+                    result.addSelf(coord);
+                  }
 
-                // result.controls.left.copy(result);
-                // result.controls.right.copy(result);
+                  // result.controls.left.copy(result);
+                  // result.controls.right.copy(result);
 
-                coord = result;
-                break;
-
-              case 'h':
-              case 'v':
-
-                var a = lower === 'h' ? 'x' : 'y';
-                var b = a === 'x' ? 'y' : 'x';
-
-                result = new Two.Anchor(
-                  undefined, undefined,
-                  undefined, undefined,
-                  undefined, undefined,
-                  Two.Commands.line
-                );
-                result[a] = parseFloat(coords[0]);
-                result[b] = coord[b];
+                  coord = result;
+                  break;
 
-                if (relative) {
-                  result[a] += coord[a];
-                }
+                case 'h':
+                case 'v':
 
-                // result.controls.left.copy(result);
-                // result.controls.right.copy(result);
+                  var a = /h/i.test(lower) ? 'x' : 'y';
+                  var b = /x/i.test(a) ? 'y' : 'x';
 
-                coord = result;
-                break;
+                  result = new Two.Anchor(
+                    undefined, undefined,
+                    undefined, undefined,
+                    undefined, undefined,
+                    Two.Commands.line
+                  );
+                  result[a] = parseFloat(coords[0]);
+                  result[b] = coord[b];
 
-              case 'c':
-              case 's':
-
-                x1 = coord.x;
-                y1 = coord.y;
-
-                if (!control) {
-                  control = new Two.Vector();//.copy(coord);
-                }
-
-                if (lower === 'c') {
-
-                  x2 = parseFloat(coords[0]);
-                  y2 = parseFloat(coords[1]);
-                  x3 = parseFloat(coords[2]);
-                  y3 = parseFloat(coords[3]);
-                  x4 = parseFloat(coords[4]);
-                  y4 = parseFloat(coords[5]);
-
-                } else {
-
-                  // Calculate reflection control point for proper x2, y2
-                  // inclusion.
-
-                  reflection = getReflection(coord, control, relative);
+                  if (relative) {
+                    result[a] += coord[a];
+                  }
 
-                  x2 = reflection.x;
-                  y2 = reflection.y;
-                  x3 = parseFloat(coords[0]);
-                  y3 = parseFloat(coords[1]);
-                  x4 = parseFloat(coords[2]);
-                  y4 = parseFloat(coords[3]);
-
-                }
-
-                if (relative) {
-                  x2 += x1;
-                  y2 += y1;
-                  x3 += x1;
-                  y3 += y1;
-                  x4 += x1;
-                  y4 += y1;
-                }
-
-                if (!_.isObject(coord.controls)) {
-                  Two.Anchor.AppendCurveProperties(coord);
-                }
-
-                coord.controls.right.set(x2 - coord.x, y2 - coord.y);
-                result = new Two.Anchor(
-                  x4, y4,
-                  x3 - x4, y3 - y4,
-                  undefined, undefined,
-                  Two.Commands.curve
-                );
-
-                coord = result;
-                control = result.controls.left;
-
-                break;
-
-              case 't':
-              case 'q':
-
-                x1 = coord.x;
-                y1 = coord.y;
-
-                if (!control) {
-                  control = new Two.Vector();//.copy(coord);
-                }
-
-                if (control.isZero()) {
-                  x2 = x1;
-                  y2 = y1;
-                } else {
-                  x2 = control.x;
-                  y1 = control.y;
-                }
-
-                if (lower === 'q') {
-
-                  x3 = parseFloat(coords[0]);
-                  y3 = parseFloat(coords[1]);
-                  x4 = parseFloat(coords[1]);
-                  y4 = parseFloat(coords[2]);
-
-                } else {
-
-                  reflection = getReflection(coord, control, relative);
-
-                  x3 = reflection.x;
-                  y3 = reflection.y;
-                  x4 = parseFloat(coords[0]);
-                  y4 = parseFloat(coords[1]);
-
-                }
-
-                if (relative) {
-                  x2 += x1;
-                  y2 += y1;
-                  x3 += x1;
-                  y3 += y1;
-                  x4 += x1;
-                  y4 += y1;
-                }
-
-                if (!_.isObject(coord.controls)) {
-                  Two.Anchor.AppendCurveProperties(coord);
-                }
-
-                coord.controls.right.set(x2 - coord.x, y2 - coord.y);
-                result = new Two.Anchor(
-                  x4, y4,
-                  x3 - x4, y3 - y4,
-                  undefined, undefined,
-                  Two.Commands.curve
-                );
-
-                coord = result;
-                control = result.controls.left;
-
-                break;
-
-              case 'a':
-
-                // throw new Two.Utils.Error('not yet able to interpret Elliptical Arcs.');
-                x1 = coord.x;
-                y1 = coord.y;
-
-                var rx = parseFloat(coords[0]);
-                var ry = parseFloat(coords[1]);
-                var xAxisRotation = parseFloat(coords[2]) * Math.PI / 180;
-                var largeArcFlag = parseFloat(coords[3]);
-                var sweepFlag = parseFloat(coords[4]);
-
-                x4 = parseFloat(coords[5]);
-                y4 = parseFloat(coords[6]);
-
-                if (relative) {
-                  x4 += x1;
-                  y4 += y1;
-                }
-
-                // http://www.w3.org/TR/SVG/implnote.html#ArcConversionEndpointToCenter
-
-                // Calculate midpoint mx my
-                var mx = (x4 - x1) / 2;
-                var my = (y4 - y1) / 2;
-
-                // Calculate x1' y1' F.6.5.1
-                var _x = mx * Math.cos(xAxisRotation) + my * Math.sin(xAxisRotation);
-                var _y = - mx * Math.sin(xAxisRotation) + my * Math.cos(xAxisRotation);
-
-                var rx2 = rx * rx;
-                var ry2 = ry * ry;
-                var _x2 = _x * _x;
-                var _y2 = _y * _y;
-
-                // adjust radii
-                var l = _x2 / rx2 + _y2 / ry2;
-                if (l > 1) {
-                  rx *= Math.sqrt(l);
-                  ry *= Math.sqrt(l);
-                }
-
-                var amp = Math.sqrt((rx2 * ry2 - rx2 * _y2 - ry2 * _x2) / (rx2 * _y2 + ry2 * _x2));
-
-                if (_.isNaN(amp)) {
-                  amp = 0;
-                } else if (largeArcFlag != sweepFlag && amp > 0) {
-                  amp *= -1;
-                }
-
-                // Calculate cx' cy' F.6.5.2
-                var _cx = amp * rx * _y / ry;
-                var _cy = - amp * ry * _x / rx;
-
-                // Calculate cx cy F.6.5.3
-                var cx = _cx * Math.cos(xAxisRotation) - _cy * Math.sin(xAxisRotation) + (x1 + x4) / 2;
-                var cy = _cx * Math.sin(xAxisRotation) + _cy * Math.cos(xAxisRotation) + (y1 + y4) / 2;
-
-                // vector magnitude
-                var m = function(v) { return Math.sqrt(Math.pow(v[0], 2) + Math.pow(v[1], 2)); }
-                // ratio between two vectors
-                var r = function(u, v) { return (u[0] * v[0] + u[1] * v[1]) / (m(u) * m(v)) }
-                // angle between two vectors
-                var a = function(u, v) { return (u[0] * v[1] < u[1] * v[0] ? - 1 : 1) * Math.acos(r(u,v)); }
-
-                // Calculate theta1 and delta theta F.6.5.4 + F.6.5.5
-                var t1 = a([1, 0], [(_x - _cx) / rx, (_y - _cy) / ry]);
-                var u = [(_x - _cx) / rx, (_y - _cy) / ry];
-                var v = [( - _x - _cx) / rx, ( - _y - _cy) / ry];
-                var dt = a(u, v);
-
-                if (r(u, v) <= -1) dt = Math.PI;
-                if (r(u, v) >= 1) dt = 0;
-
-                // F.6.5.6
-                if (largeArcFlag)  {
-                  dt = mod(dt, Math.PI * 2);
-                }
-
-                if (sweepFlag && dt > 0) {
-                  dt -= Math.PI * 2;
-                }
-
-                var length = Two.Resolution;
-
-                // Save a projection of our rotation and translation to apply
-                // to the set of points.
-                var projection = new Two.Matrix()
-                  .translate(cx, cy)
-                  .rotate(xAxisRotation);
-
-                // Create a resulting array of Two.Anchor's to export to the
-                // the path.
-                result = _.map(_.range(length), function(i) {
-                  var pct = 1 - (i / (length - 1));
-                  var theta = pct * dt + t1;
-                  var x = rx * Math.cos(theta);
-                  var y = ry * Math.sin(theta);
-                  var projected = projection.multiply(x, y, 1);
-                  return new Two.Anchor(projected.x, projected.y, false, false, false, false, Two.Commands.line);;
-                });
-
-                result.push(new Two.Anchor(x4, y4, false, false, false, false, Two.Commands.line));
-
-                coord = result[result.length - 1];
-                control = coord.controls.left;
-
-                break;
-
-            }
-
-            if (result) {
-              if (_.isArray(result)) {
-                points = points.concat(result);
-              } else {
-                points.push(result);
+                  // result.controls.left.copy(result);
+                  // result.controls.right.copy(result);
+
+                  coord = result;
+                  break;
+
+                case 'c':
+                case 's':
+
+                  x1 = coord.x;
+                  y1 = coord.y;
+
+                  if (!control) {
+                    control = new Two.Vector();//.copy(coord);
+                  }
+
+                  if (/c/i.test(lower)) {
+
+                    x2 = parseFloat(coords[0]);
+                    y2 = parseFloat(coords[1]);
+                    x3 = parseFloat(coords[2]);
+                    y3 = parseFloat(coords[3]);
+                    x4 = parseFloat(coords[4]);
+                    y4 = parseFloat(coords[5]);
+
+                  } else {
+
+                    // Calculate reflection control point for proper x2, y2
+                    // inclusion.
+
+                    reflection = getReflection(coord, control, relative);
+
+                    x2 = reflection.x;
+                    y2 = reflection.y;
+                    x3 = parseFloat(coords[0]);
+                    y3 = parseFloat(coords[1]);
+                    x4 = parseFloat(coords[2]);
+                    y4 = parseFloat(coords[3]);
+
+                  }
+
+                  if (relative) {
+                    x2 += x1;
+                    y2 += y1;
+                    x3 += x1;
+                    y3 += y1;
+                    x4 += x1;
+                    y4 += y1;
+                  }
+
+                  if (!_.isObject(coord.controls)) {
+                    Two.Anchor.AppendCurveProperties(coord);
+                  }
+
+                  coord.controls.right.set(x2 - coord.x, y2 - coord.y);
+                  result = new Two.Anchor(
+                    x4, y4,
+                    x3 - x4, y3 - y4,
+                    undefined, undefined,
+                    Two.Commands.curve
+                  );
+
+                  coord = result;
+                  control = result.controls.left;
+
+                  break;
+
+                case 't':
+                case 'q':
+
+                  x1 = coord.x;
+                  y1 = coord.y;
+
+                  if (!control) {
+                    control = new Two.Vector();
+                  }
+
+                  if (/q/i.test(lower)) {
+
+                    x2 = parseFloat(coords[0]);
+                    y2 = parseFloat(coords[1]);
+                    x3 = parseFloat(coords[0]);
+                    y3 = parseFloat(coords[1]);
+                    x4 = parseFloat(coords[2]);
+                    y4 = parseFloat(coords[3]);
+
+                  } else {
+
+                    reflection = getReflection(coord, control, relative);
+
+                    x2 = reflection.x;
+                    y2 = reflection.y;
+                    x3 = reflection.x;
+                    y3 = reflection.y;
+                    x4 = parseFloat(coords[0]);
+                    y4 = parseFloat(coords[1]);
+
+                  }
+
+                  if (relative) {
+                    x2 += x1;
+                    y2 += y1;
+                    x3 += x1;
+                    y3 += y1;
+                    x4 += x1;
+                    y4 += y1;
+                  }
+
+                  if (!_.isObject(coord.controls)) {
+                    Two.Anchor.AppendCurveProperties(coord);
+                  }
+
+                  coord.controls.right.set(
+                    (x2 - coord.x) * 0.33, (y2 - coord.y) * 0.33);
+                  result = new Two.Anchor(
+                    x4, y4,
+                    x3 - x4, y3 - y4,
+                    undefined, undefined,
+                    Two.Commands.curve
+                  );
+
+                  coord = result;
+                  control = result.controls.left;
+
+                  break;
+
+                case 'a':
+
+                  x1 = coord.x;
+                  y1 = coord.y;
+
+                  var rx = parseFloat(coords[0]);
+                  var ry = parseFloat(coords[1]);
+                  var xAxisRotation = parseFloat(coords[2]);// * PI / 180;
+                  var largeArcFlag = parseFloat(coords[3]);
+                  var sweepFlag = parseFloat(coords[4]);
+
+                  x4 = parseFloat(coords[5]);
+                  y4 = parseFloat(coords[6]);
+
+                  if (relative) {
+                    x4 += x1;
+                    y4 += y1;
+                  }
+
+                  var anchor = new Two.Anchor(x4, y4);
+                  anchor.command = Two.Commands.arc;
+                  anchor.rx = rx;
+                  anchor.ry = ry;
+                  anchor.xAxisRotation = xAxisRotation;
+                  anchor.largeArcFlag = largeArcFlag;
+                  anchor.sweepFlag = sweepFlag;
+
+                  result = anchor;
+
+                  coord = anchor;
+                  control = undefined;
+
+                  break;
+
               }
-            }
 
-          });
+              if (result) {
+                if (_.isArray(result)) {
+                  points = points.concat(result);
+                } else {
+                  points.push(result);
+                }
+              }
 
-          if (points.length <= 1) {
-            return;
+            });
+
           }
 
-          var path = new Two.Path(points, closed, undefined, true).noStroke();
+          path = new Two.Path(points, closed, undefined, true).noStroke();
           path.fill = 'black';
 
           var rect = path.getBoundingClientRect(true);
@@ -1279,13 +1578,15 @@ this.Two = (function(previousTwo) {
             v.subSelf(rect.centroid);
           });
 
+          Two.Utils.applySvgAttributes.call(this, node, path, parentStyles);
+
           path.translation.addSelf(rect.centroid);
 
-          return Two.Utils.applySvgAttributes.call(this, node, path);
+          return path;
 
         },
 
-        circle: function(node) {
+        circle: function(node, parentStyles) {
 
           var x = parseFloat(node.getAttribute('cx'));
           var y = parseFloat(node.getAttribute('cy'));
@@ -1294,11 +1595,13 @@ this.Two = (function(previousTwo) {
           var circle = new Two.Circle(x, y, r).noStroke();
           circle.fill = 'black';
 
-          return Two.Utils.applySvgAttributes.call(this, node, circle);
+          Two.Utils.applySvgAttributes.call(this, node, circle, parentStyles);
+
+          return circle;
 
         },
 
-        ellipse: function(node) {
+        ellipse: function(node, parentStyles) {
 
           var x = parseFloat(node.getAttribute('cx'));
           var y = parseFloat(node.getAttribute('cy'));
@@ -1308,11 +1611,20 @@ this.Two = (function(previousTwo) {
           var ellipse = new Two.Ellipse(x, y, width, height).noStroke();
           ellipse.fill = 'black';
 
-          return Two.Utils.applySvgAttributes.call(this, node, ellipse);
+          Two.Utils.applySvgAttributes.call(this, node, ellipse, parentStyles);
+
+          return ellipse;
 
         },
 
-        rect: function(node) {
+        rect: function(node, parentStyles) {
+
+          var rx = parseFloat(node.getAttribute('rx'));
+          var ry = parseFloat(node.getAttribute('ry'));
+
+          if (!_.isNaN(rx) || !_.isNaN(ry)) {
+            return Two.Utils.read['rounded-rect'](node);
+          }
 
           var x = parseFloat(node.getAttribute('x')) || 0;
           var y = parseFloat(node.getAttribute('y')) || 0;
@@ -1326,11 +1638,37 @@ this.Two = (function(previousTwo) {
             .noStroke();
           rect.fill = 'black';
 
-          return Two.Utils.applySvgAttributes.call(this, node, rect);
+          Two.Utils.applySvgAttributes.call(this, node, rect, parentStyles);
+
+          return rect;
 
         },
 
-        line: function(node) {
+        'rounded-rect': function(node, parentStyles) {
+
+          var x = parseFloat(node.getAttribute('x')) || 0;
+          var y = parseFloat(node.getAttribute('y')) || 0;
+          var rx = parseFloat(node.getAttribute('rx')) || 0;
+          var ry = parseFloat(node.getAttribute('ry')) || 0;
+
+          var width = parseFloat(node.getAttribute('width'));
+          var height = parseFloat(node.getAttribute('height'));
+
+          var w2 = width / 2;
+          var h2 = height / 2;
+          var radius = new Two.Vector(rx, ry);
+
+          var rect = new Two.RoundedRectangle(x + w2, y + h2, width, height, radius)
+            .noStroke();
+          rect.fill = 'black';
+
+          Two.Utils.applySvgAttributes.call(this, node, rect, parentStyles);
+
+          return rect;
+
+        },
+
+        line: function(node, parentStyles) {
 
           var x1 = parseFloat(node.getAttribute('x1'));
           var y1 = parseFloat(node.getAttribute('y1'));
@@ -1339,11 +1677,13 @@ this.Two = (function(previousTwo) {
 
           var line = new Two.Line(x1, y1, x2, y2).noFill();
 
-          return Two.Utils.applySvgAttributes.call(this, node, line);
+          Two.Utils.applySvgAttributes.call(this, node, line, parentStyles);
+
+          return line;
 
         },
 
-        lineargradient: function(node) {
+        lineargradient: function(node, parentStyles) {
 
           var x1 = parseFloat(node.getAttribute('x1'));
           var y1 = parseFloat(node.getAttribute('y1'));
@@ -1358,19 +1698,27 @@ this.Two = (function(previousTwo) {
 
             var child = node.children[i];
 
-            var offset = parseFloat(child.getAttribute('offset'));
+            var offset = child.getAttribute('offset');
+            if (/%/ig.test(offset)) {
+              offset = parseFloat(offset.replace(/%/ig, '')) / 100;
+            }
+            offset = parseFloat(offset);
+
             var color = child.getAttribute('stop-color');
             var opacity = child.getAttribute('stop-opacity');
             var style = child.getAttribute('style');
 
+            var matches;
             if (_.isNull(color)) {
-              var matches = style ? style.match(/stop\-color\:\s?([\#a-fA-F0-9]*)/) : false;
+              matches = style ? style.match(/stop-color:\s?([#a-fA-F0-9]*)/) : false;
               color = matches && matches.length > 1 ? matches[1] : undefined;
             }
 
             if (_.isNull(opacity)) {
-              var matches = style ? style.match(/stop\-opacity\:\s?([0-9\.\-]*)/) : false;
+              matches = style ? style.match(/stop-opacity:\s?([0-9.-]*)/) : false;
               opacity = matches && matches.length > 1 ? parseFloat(matches[1]) : 1;
+            } else {
+              opacity = parseFloat(opacity);
             }
 
             stops.push(new Two.Gradient.Stop(offset, color, opacity));
@@ -1380,11 +1728,13 @@ this.Two = (function(previousTwo) {
           var gradient = new Two.LinearGradient(x1 - ox, y1 - oy, x2 - ox,
             y2 - oy, stops);
 
-          return Two.Utils.applySvgAttributes.call(this, node, gradient);
+          Two.Utils.applySvgAttributes.call(this, node, gradient, parentStyles);
+
+          return gradient;
 
         },
 
-        radialgradient: function(node) {
+        radialgradient: function(node, parentStyles) {
 
           var cx = parseFloat(node.getAttribute('cx')) || 0;
           var cy = parseFloat(node.getAttribute('cy')) || 0;
@@ -1401,27 +1751,35 @@ this.Two = (function(previousTwo) {
             fy = cy;
           }
 
-          var ox = Math.abs(cx + fx) / 2;
-          var oy = Math.abs(cy + fy) / 2;
+          var ox = abs(cx + fx) / 2;
+          var oy = abs(cy + fy) / 2;
 
           var stops = [];
           for (var i = 0; i < node.children.length; i++) {
 
             var child = node.children[i];
 
-            var offset = parseFloat(child.getAttribute('offset'));
+            var offset = child.getAttribute('offset');
+            if (/%/ig.test(offset)) {
+              offset = parseFloat(offset.replace(/%/ig, '')) / 100;
+            }
+            offset = parseFloat(offset);
+
             var color = child.getAttribute('stop-color');
             var opacity = child.getAttribute('stop-opacity');
             var style = child.getAttribute('style');
 
+            var matches;
             if (_.isNull(color)) {
-              var matches = style ? style.match(/stop\-color\:\s?([\#a-fA-F0-9]*)/) : false;
+              matches = style ? style.match(/stop-color:\s?([#a-fA-F0-9]*)/) : false;
               color = matches && matches.length > 1 ? matches[1] : undefined;
             }
 
             if (_.isNull(opacity)) {
-              var matches = style ? style.match(/stop\-opacity\:\s?([0-9\.\-]*)/) : false;
+              matches = style ? style.match(/stop-opacity:\s?([0-9.-]*)/) : false;
               opacity = matches && matches.length > 1 ? parseFloat(matches[1]) : 1;
+            } else {
+              opacity = parseFloat(opacity);
             }
 
             stops.push(new Two.Gradient.Stop(offset, color, opacity));
@@ -1431,50 +1789,83 @@ this.Two = (function(previousTwo) {
           var gradient = new Two.RadialGradient(cx - ox, cy - oy, r,
             stops, fx - ox, fy - oy);
 
-          return Two.Utils.applySvgAttributes.call(this, node, gradient);
+          Two.Utils.applySvgAttributes.call(this, node, gradient, parentStyles);
+
+          return gradient;
 
         }
 
       },
 
       /**
-       * Given 2 points (a, b) and corresponding control point for each
-       * return an array of points that represent points plotted along
-       * the curve. Number points determined by limit.
+       * @name Two.Utils.subdivide
+       * @function
+       * @param {Number} x1 - x position of first anchor point.
+       * @param {Number} y1 - y position of first anchor point.
+       * @param {Number} x2 - x position of first anchor point's "right" bezier handle.
+       * @param {Number} y2 - y position of first anchor point's "right" bezier handle.
+       * @param {Number} x3 - x position of second anchor point's "left" bezier handle.
+       * @param {Number} y3 - y position of second anchor point's "left" bezier handle.
+       * @param {Number} x4 - x position of second anchor point.
+       * @param {Number} y4 - y position of second anchor point.
+       * @param {Number} [limit=Two.Utils.Curve.RecursionLimit] - The amount of vertices to create by subdividing.
+       * @returns {Two.Anchor[]} A list of anchor points ordered in between `x1`, `y1` and `x4`, `y4`
+       * @description Given 2 points (a, b) and corresponding control point for each return an array of points that represent points plotted along the curve. The number of returned points is determined by `limit`.
        */
       subdivide: function(x1, y1, x2, y2, x3, y3, x4, y4, limit) {
 
         limit = limit || Two.Utils.Curve.RecursionLimit;
         var amount = limit + 1;
 
-        // TODO: Issue 73
+        // TODO: Abstract 0.001 to a limiting variable
         // Don't recurse if the end points are identical
-        if (x1 === x4 && y1 === y4) {
+        if (abs(x1 - x4) < 0.001 && abs(y1 - y4) < 0.001) {
           return [new Two.Anchor(x4, y4)];
         }
 
-        return _.map(_.range(0, amount), function(i) {
+        var result = [];
 
+        for (var i = 0; i < amount; i++) {
           var t = i / amount;
-          var x = getPointOnCubicBezier(t, x1, x2, x3, x4);
-          var y = getPointOnCubicBezier(t, y1, y2, y3, y4);
+          var x = getComponentOnCubicBezier(t, x1, x2, x3, x4);
+          var y = getComponentOnCubicBezier(t, y1, y2, y3, y4);
+          result.push(new Two.Anchor(x, y));
+        }
 
-          return new Two.Anchor(x, y);
-
-        });
+        return result;
 
       },
 
-      getPointOnCubicBezier: function(t, a, b, c, d) {
+      /**
+       * @name Two.Utils.getComponentOnCubicBezier
+       * @function
+       * @param {Number} t - Zero-to-one value describing what percentage to calculate.
+       * @param {Number} a - The firt point's component value.
+       * @param {Number} b - The first point's bezier component value.
+       * @param {Number} c - The second point's bezier component value.
+       * @param {Number} d - The second point's component value.
+       * @returns {Number} The coordinate value for a specific component along a cubic bezier curve by `t`.
+       */
+      getComponentOnCubicBezier: function(t, a, b, c, d) {
         var k = 1 - t;
         return (k * k * k * a) + (3 * k * k * t * b) + (3 * k * t * t * c) +
            (t * t * t * d);
       },
 
       /**
-       * Given 2 points (a, b) and corresponding control point for each
-       * return a float that represents the length of the curve using
-       * Gauss-Legendre algorithm. Limit iterations of calculation by `limit`.
+       * @name Two.Utils.getCurveLength
+       * @function
+       * @param {Number} x1 - x position of first anchor point.
+       * @param {Number} y1 - y position of first anchor point.
+       * @param {Number} x2 - x position of first anchor point's "right" bezier handle.
+       * @param {Number} y2 - y position of first anchor point's "right" bezier handle.
+       * @param {Number} x3 - x position of second anchor point's "left" bezier handle.
+       * @param {Number} y3 - y position of second anchor point's "left" bezier handle.
+       * @param {Number} x4 - x position of second anchor point.
+       * @param {Number} y4 - y position of second anchor point.
+       * @param {Number} [limit=Two.Utils.Curve.RecursionLimit] - The amount of vertices to create by subdividing.
+       * @returns {Number} The length of a curve.
+       * @description Given 2 points (a, b) and corresponding control point for each, return a float that represents the length of the curve using Gauss-Legendre algorithm. Limit iterations of calculation by `limit`.
        */
       getCurveLength: function(x1, y1, x2, y2, x3, y3, x4, y4, limit) {
 
@@ -1509,8 +1900,93 @@ this.Two = (function(previousTwo) {
       },
 
       /**
-       * Integration for `getCurveLength` calculations. Referenced from
-       * Paper.js: https://github.com/paperjs/paper.js/blob/master/src/util/Numerical.js#L101
+       * @name Two.Utils.getCurveBoundingBox
+       * @function
+       * @param {Number} x1 - x position of first anchor point.
+       * @param {Number} y1 - y position of first anchor point.
+       * @param {Number} x2 - x position of first anchor point's "right" bezier handle.
+       * @param {Number} y2 - y position of first anchor point's "right" bezier handle.
+       * @param {Number} x3 - x position of second anchor point's "left" bezier handle.
+       * @param {Number} y3 - y position of second anchor point's "left" bezier handle.
+       * @param {Number} x4 - x position of second anchor point.
+       * @param {Number} y4 - y position of second anchor point.
+       * @returns {Object} Object contains min and max `x` / `y` bounds.
+       * @see {@link https://github.com/adobe-webplatform/Snap.svg/blob/master/src/path.js#L856}
+       */
+      getCurveBoundingBox: function(x1, y1, x2, y2, x3, y3, x4, y4) {
+
+        var tvalues = [];
+        var bounds = [[], []];
+        var a, b, c, t, t1, t2, b2ac, sqrtb2ac;
+
+        for (var i = 0; i < 2; ++i) {
+            if (i == 0) {
+              b = 6 * x1 - 12 * x2 + 6 * x3;
+              a = -3 * x1 + 9 * x2 - 9 * x3 + 3 * x4;
+              c = 3 * x2 - 3 * x1;
+            } else {
+              b = 6 * y1 - 12 * y2 + 6 * y3;
+              a = -3 * y1 + 9 * y2 - 9 * y3 + 3 * y4;
+              c = 3 * y2 - 3 * y1;
+            }
+            if (abs(a) < 1e-12) {
+              if (abs(b) < 1e-12) {
+                continue;
+              }
+              t = -c / b;
+              if (0 < t && t < 1) {
+                tvalues.push(t);
+              }
+              continue;
+            }
+            b2ac = b * b - 4 * c * a;
+            sqrtb2ac = Math.sqrt(b2ac);
+            if (b2ac < 0) {
+              continue;
+            }
+            t1 = (-b + sqrtb2ac) / (2 * a);
+            if (0 < t1 && t1 < 1) {
+              tvalues.push(t1);
+            }
+            t2 = (-b - sqrtb2ac) / (2 * a);
+            if (0 < t2 && t2 < 1) {
+              tvalues.push(t2);
+            }
+        }
+
+        var x, y, j = tvalues.length;
+        var jlen = j;
+        var mt;
+
+        while (j--) {
+          t = tvalues[j];
+          mt = 1 - t;
+          bounds[0][j] = mt * mt * mt * x1 + 3 * mt * mt * t * x2 + 3 * mt * t * t * x3 + t * t * t * x4;
+          bounds[1][j] = mt * mt * mt * y1 + 3 * mt * mt * t * y2 + 3 * mt * t * t * y3 + t * t * t * y4;
+        }
+
+        bounds[0][jlen] = x1;
+        bounds[1][jlen] = y1;
+        bounds[0][jlen + 1] = x4;
+        bounds[1][jlen + 1] = y4;
+        bounds[0].length = bounds[1].length = jlen + 2;
+
+        return {
+          min: { x: Math.min.apply(0, bounds[0]), y: Math.min.apply(0, bounds[1]) },
+          max: { x: Math.max.apply(0, bounds[0]), y: Math.max.apply(0, bounds[1]) }
+        };
+
+      },
+
+      /**
+       * @name Two.Utils.integrate
+       * @function
+       * @param {Function} f
+       * @param {Number} a
+       * @param {Number} b
+       * @param {Integer} n
+       * @description Integration for `getCurveLength` calculations.
+       * @see [Paper.js]{@link https://github.com/paperjs/paper.js/blob/master/src/util/Numerical.js#L101}
        */
       integrate: function(f, a, b, n) {
         var x = Two.Utils.Curve.abscissas[n - 2],
@@ -1528,7 +2004,11 @@ this.Two = (function(previousTwo) {
       },
 
       /**
-       * Creates a set of points that have u, v values for anchor positions
+       * @name Two.Utils.getCurveFromPoints
+       * @function
+       * @param {Two.Anchor[]} points
+       * @param {Boolean} closed
+       * @description Sets the bezier handles on {@link Two.Anchor}s in the `points` list with estimated values to create a catmull-rom like curve. Used by {@link Two.Path#plot}.
        */
       getCurveFromPoints: function(points, closed) {
 
@@ -1550,40 +2030,34 @@ this.Two = (function(previousTwo) {
           var c = points[next];
           getControlPoints(a, b, c);
 
-          b._command = i === 0 ? Two.Commands.move : Two.Commands.curve;
-
-          b.controls.left.x = _.isNumber(b.controls.left.x) ? b.controls.left.x : b.x;
-          b.controls.left.y = _.isNumber(b.controls.left.y) ? b.controls.left.y : b.y;
-
-          b.controls.right.x = _.isNumber(b.controls.right.x) ? b.controls.right.x : b.x;
-          b.controls.right.y = _.isNumber(b.controls.right.y) ? b.controls.right.y : b.y;
+          b.command = i === 0 ? Two.Commands.move : Two.Commands.curve;
 
         }
 
       },
 
       /**
-       * Given three coordinates return the control points for the middle, b,
-       * vertex.
+       * @name Two.Utils.getControlPoints
+       * @function
+       * @param {Two.Anchor} a
+       * @param {Two.Anchor} b
+       * @param {Two.Anchor} c
+       * @returns {Two.Anchor} Returns the passed middle point `b`.
+       * @description Given three coordinates set the control points for the middle, b, vertex based on its position with the adjacent points.
        */
       getControlPoints: function(a, b, c) {
 
-        var a1 = angleBetween(a, b);
-        var a2 = angleBetween(c, b);
+        var a1 = Two.Vector.angleBetween(a, b);
+        var a2 = Two.Vector.angleBetween(c, b);
 
-        var d1 = distanceBetween(a, b);
-        var d2 = distanceBetween(c, b);
+        var d1 = Two.Vector.distanceBetween(a, b);
+        var d2 = Two.Vector.distanceBetween(c, b);
 
         var mid = (a1 + a2) / 2;
 
-        // So we know which angle corresponds to which side.
-
-        b.u = _.isObject(b.controls.left) ? b.controls.left : new Two.Vector(0, 0);
-        b.v = _.isObject(b.controls.right) ? b.controls.right : new Two.Vector(0, 0);
-
         // TODO: Issue 73
         if (d1 < 0.0001 || d2 < 0.0001) {
-          if (!b._relative) {
+          if (_.isBoolean(b.relative) && !b.relative) {
             b.controls.left.copy(b);
             b.controls.right.copy(b);
           }
@@ -1607,7 +2081,7 @@ this.Two = (function(previousTwo) {
         b.controls.right.x = cos(mid) * d2;
         b.controls.right.y = sin(mid) * d2;
 
-        if (!b._relative) {
+        if (_.isBoolean(b.relative) && !b.relative) {
           b.controls.left.x += b.x;
           b.controls.left.y += b.y;
           b.controls.right.x += b.x;
@@ -1619,10 +2093,14 @@ this.Two = (function(previousTwo) {
       },
 
       /**
-       * Get the reflection of a point "b" about point "a". Where "a" is in
-       * absolute space and "b" is relative to "a".
-       *
-       * http://www.w3.org/TR/SVG11/implnote.html#PathElementImplementationNotes
+       * @name Two.Utils.getReflection
+       * @function
+       * @param {Two.Vector} a
+       * @param {Two.Vector} b
+       * @param {Boolean} [relative=false]
+       * @returns {Two.Vector} New {@link Two.Vector} that represents the reflection point.
+       * @description Get the reflection of a point `b` about point `a`. Where `a` is in absolute space and `b` is relative to `a`.
+       * @see {@link http://www.w3.org/TR/SVG11/implnote.html#PathElementImplementationNotes}
        */
       getReflection: function(a, b, relative) {
 
@@ -1633,18 +2111,25 @@ this.Two = (function(previousTwo) {
 
       },
 
+      /**
+       * @name Two.Utils.getAnchorsFromArcData
+       * @function
+       * @param {Two.Vector} center
+       * @param {Radians} xAxisRotation
+       * @param {Number} rx - x radius
+       * @param {Number} ry - y radius
+       * @param {Radians} ts
+       * @param {Radians} td
+       * @param {Boolean} [ccw=false] - Set path traversal to counter-clockwise
+       */
       getAnchorsFromArcData: function(center, xAxisRotation, rx, ry, ts, td, ccw) {
-
-        var matrix = new Two.Matrix()
-          .translate(center.x, center.y)
-          .rotate(xAxisRotation);
 
         var l = Two.Resolution;
 
         return _.map(_.range(l), function(i) {
 
           var pct = (i + 1) / l;
-          if (!!ccw) {
+          if (ccw) {
             pct = 1 - pct;
           }
 
@@ -1667,57 +2152,38 @@ this.Two = (function(previousTwo) {
 
       },
 
-      ratioBetween: function(A, B) {
-
-        return (A.x * B.x + A.y * B.y) / (A.length() * B.length());
-
-      },
-
-      angleBetween: function(A, B) {
-
-        var dx, dy;
-
-        if (arguments.length >= 4) {
-
-          dx = arguments[0] - arguments[2];
-          dy = arguments[1] - arguments[3];
-
-          return atan2(dy, dx);
-
-        }
-
-        dx = A.x - B.x;
-        dy = A.y - B.y;
-
-        return atan2(dy, dx);
-
-      },
-
-      distanceBetweenSquared: function(p1, p2) {
-
-        var dx = p1.x - p2.x;
-        var dy = p1.y - p2.y;
-
-        return dx * dx + dy * dy;
-
-      },
-
-      distanceBetween: function(p1, p2) {
-
-        return sqrt(distanceBetweenSquared(p1, p2));
-
-      },
-
+      /**
+       * @name Two.Utils.lerp
+       * @function
+       * @param {Number} a - Start value.
+       * @param {Number} b - End value.
+       * @param {Number} t - Zero-to-one value describing percentage between a and b.
+       * @returns {Number}
+       * @description Linear interpolation between two values `a` and `b` by an amount `t`.
+       */
       lerp: function(a, b, t) {
         return t * (b - a) + a;
       },
 
-      // A pretty fast toFixed(3) alternative
-      // See http://jsperf.com/parsefloat-tofixed-vs-math-round/18
+      /**
+       * @name Two.Utils.toFixed
+       * @function
+       * @param {Number} v - Any float
+       * @returns {Number} That float trimmed to the third decimal place.
+       * @description A pretty fast toFixed(3) alternative.
+       * @see {@link http://jsperf.com/parsefloat-tofixed-vs-math-round/18}
+       */
       toFixed: function(v) {
         return Math.floor(v * 1000) / 1000;
       },
 
+      /**
+       * @name Two.Utils.mod
+       * @param {Number} v - The value to modulo
+       * @param {Number} l - The value to modulo by
+       * @returns {Number}
+       * @description Modulo with added functionality to handle negative values in a positive manner.
+       */
       mod: function(v, l) {
 
         while (v < 0) {
@@ -1729,9 +2195,10 @@ this.Two = (function(previousTwo) {
       },
 
       /**
-       * Array like collection that triggers inserted and removed events
-       * removed : pop / shift / splice
-       * inserted : push / unshift / splice (with > 2 arguments)
+       * @name Two.Utils.Collection
+       * @class
+       * @extends Two.Utils.Events
+       * @description An `Array` like object with additional event propagation on actions. `pop`, `shift`, and `splice` trigger `removed` events. `push`, `unshift`, and `splice` with more than 2 arguments trigger 'inserted'. Finally, `sort` and `reverse` trigger `order` events.
        */
       Collection: function() {
 
@@ -1745,32 +2212,54 @@ this.Two = (function(previousTwo) {
 
       },
 
-      // Custom Error Throwing for Two.js
-
+      /**
+       * @name Two.Utils.Error
+       * @class
+       * @description Custom error throwing for Two.js specific identification.
+       */
       Error: function(message) {
-        this.name = 'two.js';
+        this.name = 'Two.js';
         this.message = message;
       },
 
+      /**
+       * @name Two.Utils.Events
+       * @interface
+       * @description Object inherited by many Two.js objects in order to facilitate custom events.
+       */
       Events: {
 
-        on: function(name, callback) {
+        /**
+         * @name Two.Utils.Events.on
+         * @function
+         * @param {String} name - The name of the event to bind a function to.
+         * @param {Function} handler - The function to be invoked when the event is dispatched.
+         * @description Call to add a listener to a specific event name.
+         */
+        on: function(name, handler) {
 
           this._events || (this._events = {});
           var list = this._events[name] || (this._events[name] = []);
 
-          list.push(callback);
+          list.push(handler);
 
           return this;
 
         },
 
-        off: function(name, callback) {
+        /**
+         * @name Two.Utils.Events.off
+         * @function
+         * @param {String} [name] - The name of the event intended to be removed.
+         * @param {Function} [handler] - The handler intended to be reomved.
+         * @description Call to remove listeners from a specific event. If only `name` is passed then all the handlers attached to that `name` will be removed. If no arguments are passed then all handlers for every event on the obejct are removed.
+         */
+        off: function(name, handler) {
 
           if (!this._events) {
             return this;
           }
-          if (!name && !callback) {
+          if (!name && !handler) {
             this._events = {};
             return this;
           }
@@ -1778,16 +2267,16 @@ this.Two = (function(previousTwo) {
           var names = name ? [name] : _.keys(this._events);
           for (var i = 0, l = names.length; i < l; i++) {
 
-            var name = names[i];
+            name = names[i];
             var list = this._events[name];
 
-            if (!!list) {
+            if (list) {
               var events = [];
-              if (callback) {
+              if (handler) {
                 for (var j = 0, k = list.length; j < k; j++) {
                   var ev = list[j];
-                  ev = ev.callback ? ev.callback : ev;
-                  if (callback && callback !== ev) {
+                  ev = ev.handler ? ev.handler : ev;
+                  if (handler && handler !== ev) {
                     events.push(ev);
                   }
                 }
@@ -1799,6 +2288,13 @@ this.Two = (function(previousTwo) {
           return this;
         },
 
+        /**
+         * @name Two.Utils.Events.trigger
+         * @function
+         * @param {String} name - The name of the event to dispatch.
+         * @param arguments - Anything can be passed after the name and those will be passed on to handlers attached to the event in the order they are passed.
+         * @description Call to trigger a custom event. Any additional arguments passed after the name will be passed along to the attached handlers.
+         */
         trigger: function(name) {
           if (!this._events) return this;
           var args = slice.call(arguments, 1);
@@ -1807,31 +2303,32 @@ this.Two = (function(previousTwo) {
           return this;
         },
 
-        listen: function (obj, name, callback) {
+        listen: function(obj, name, handler) {
 
           var bound = this;
 
           if (obj) {
-            var ev = function () {
-              callback.apply(bound, arguments);
+
+            var event = function () {
+              handler.apply(bound, arguments);
             };
 
-            // add references about the object that assigned this listener
-            ev.obj = obj;
-            ev.name = name;
-            ev.callback = callback;
+            // Add references about the object that assigned this listener
+            event.obj = obj;
+            event.name = name;
+            event.handler = handler;
 
-            obj.on(name, ev);
+            obj.on(name, event);
+
           }
 
           return this;
 
         },
 
-        ignore: function (obj, name, callback) {
+        ignore: function(obj, name, handler) {
 
-          obj.off(name, callback);
-
+          obj.off(name, handler);
           return this;
 
         }
@@ -1842,7 +2339,16 @@ this.Two = (function(previousTwo) {
 
   });
 
+  /**
+   * @name Two.Utils.Events.bind
+   * @borrows Two.Utils.Events.on as Two.Utils.Events.bind
+   */
   Two.Utils.Events.bind = Two.Utils.Events.on;
+
+  /**
+   * @name Two.Utils.Events.unbind
+   * @borrows Two.Utils.Events.off as Two.Utils.Events.unbind
+   */
   Two.Utils.Events.unbind = Two.Utils.Events.off;
 
   var trigger = function(obj, events, args) {
@@ -1940,24 +2446,28 @@ this.Two = (function(previousTwo) {
 
   // Localize utils
 
-  var distanceBetween = Two.Utils.distanceBetween,
-    getAnchorsFromArcData = Two.Utils.getAnchorsFromArcData,
-    distanceBetweenSquared = Two.Utils.distanceBetweenSquared,
-    ratioBetween = Two.Utils.ratioBetween,
-    angleBetween = Two.Utils.angleBetween,
+  var getAnchorsFromArcData = Two.Utils.getAnchorsFromArcData,
     getControlPoints = Two.Utils.getControlPoints,
     getCurveFromPoints = Two.Utils.getCurveFromPoints,
     solveSegmentIntersection = Two.Utils.solveSegmentIntersection,
     decoupleShapes = Two.Utils.decoupleShapes,
     mod = Two.Utils.mod,
     getBackingStoreRatio = Two.Utils.getBackingStoreRatio,
-    getPointOnCubicBezier = Two.Utils.getPointOnCubicBezier,
+    getComponentOnCubicBezier = Two.Utils.getComponentOnCubicBezier,
     getCurveLength = Two.Utils.getCurveLength,
     integrate = Two.Utils.integrate,
     getReflection = Two.Utils.getReflection;
 
   _.extend(Two.prototype, Two.Utils.Events, {
 
+    constructor: Two,
+
+    /**
+     * @name Two#appendTo
+     * @function
+     * @param {Element} elem - The DOM element to append the Two.js stage to.
+     * @description Shorthand method to append your instance of Two.js to the `document`.
+     */
     appendTo: function(elem) {
 
       elem.appendChild(this.renderer.domElement);
@@ -1965,13 +2475,27 @@ this.Two = (function(previousTwo) {
 
     },
 
+    /**
+     * @name Two#play
+     * @function
+     * @fires Two.Events.play event
+     * @description Call to start an internal animation loop.
+     * @nota-bene This function initiates a `requestAnimationFrame` loop.
+     */
     play: function() {
 
       Two.Utils.setPlaying.call(this, true);
+      raf.init();
       return this.trigger(Two.Events.play);
 
     },
 
+    /**
+     * @name Two#pause
+     * @function
+     * @fires Two.Events.pause event
+     * @description Call to stop the internal animation loop for a specific instance of Two.js.
+     */
     pause: function() {
 
       this.playing = false;
@@ -1980,14 +2504,15 @@ this.Two = (function(previousTwo) {
     },
 
     /**
-     * Update positions and calculations in one pass before rendering.
+     * @name Two#update
+     * @fires Two.Events.update event
+     * @description Update positions and calculations in one pass before rendering. Then render to the canvas.
+     * @nota-bene This function is called automatically if using {@link Two#play} or the `autostart` parameter in construction.
      */
     update: function() {
 
       var animated = !!this._lastFrame;
       var now = perf.now();
-
-      this.frameCount++;
 
       if (animated) {
         this.timeDelta = parseFloat((now - this._lastFrame).toFixed(3));
@@ -2010,19 +2535,25 @@ this.Two = (function(previousTwo) {
     },
 
     /**
-     * Render all drawable - visible objects of the scene.
+     * @name Two#render
+     * @fires Two.Events.render event
+     * @description Render all drawable and visible objects of the scene.
      */
     render: function() {
 
       this.renderer.render();
-      return this.trigger(Two.Events.render, this.frameCount);
+      return this.trigger(Two.Events.render, this.frameCount++);
 
     },
 
-    /**
-     * Convenience Methods
-     */
+    // Convenience Methods
 
+    /**
+     * @name Two#add
+     * @function
+     * @param {(Two.Shape[]|...Two.Shape)}} [objects] - An array of Two.js objects. Alternatively can add objects as individual arguments.
+     * @description A shorthand method to add specific Two.js objects to the scene.
+     */
     add: function(o) {
 
       var objects = o;
@@ -2035,6 +2566,12 @@ this.Two = (function(previousTwo) {
 
     },
 
+    /**
+     * @name Two#remove
+     * @function
+     * @param {(Two.Shape[]|...Two.Shape)} [objects] - An array of Two.js objects.
+     * @description A shorthand method to remove specific Two.js objects from the scene.
+     */
     remove: function(o) {
 
       var objects = o;
@@ -2048,13 +2585,28 @@ this.Two = (function(previousTwo) {
 
     },
 
+    /**
+     * @name Two#clear
+     * @function
+     * @description Remove all all Two.js objects from the scene.
+     */
     clear: function() {
 
-      this.scene.remove(_.toArray(this.scene.children));
+      this.scene.remove(this.scene.children);
       return this;
 
     },
 
+    /**
+     * @name Two#makeLine
+     * @function
+     * @param {Number} x1
+     * @param {Number} y1
+     * @param {Number} x2
+     * @param {Number} y2
+     * @returns {Two.Line}
+     * @description Creates a Two.js line and adds it to the scene.
+     */
     makeLine: function(x1, y1, x2, y2) {
 
       var line = new Two.Line(x1, y1, x2, y2);
@@ -2064,6 +2616,61 @@ this.Two = (function(previousTwo) {
 
     },
 
+    /**
+     * @name Two#makeArrow
+     * @function
+     * @param {Number} x1
+     * @param {Number} y1
+     * @param {Number} x2
+     * @param {Number} y2
+     * @returns {Two.Path}
+     * @description Creates a Two.js arrow and adds it to the scene.
+     */
+    makeArrow: function(x1, y1, x2, y2, size) {
+
+      var headlen = _.isNumber(size ) ? size : 10;
+
+      var angle = Math.atan2(y2 - y1, x2 - x1);
+
+      var vertices = [
+
+        new Two.Anchor(x1, y1, undefined, undefined, undefined, undefined, Two.Commands.move),
+        new Two.Anchor(x2, y2, undefined, undefined, undefined, undefined, Two.Commands.line),
+        new Two.Anchor(
+          x2 - headlen * Math.cos(angle - Math.PI / 4),
+          y2 - headlen * Math.sin(angle - Math.PI / 4),
+          undefined, undefined, undefined, undefined, Two.Commands.line
+        ),
+
+        new Two.Anchor(x2, y2, undefined, undefined, undefined, undefined, Two.Commands.move),
+        new Two.Anchor(
+          x2 - headlen * Math.cos(angle + Math.PI / 4),
+          y2 - headlen * Math.sin(angle + Math.PI / 4),
+          undefined, undefined, undefined, undefined, Two.Commands.line
+        )
+
+      ];
+
+      var path = new Two.Path(vertices, false, false, true);
+      path.noFill();
+      path.cap = 'round';
+      path.join = 'round';
+
+      this.scene.add(path);
+
+      return path;
+    },
+
+    /**
+     * @name Two#makeRectangle
+     * @function
+     * @param {Number} x
+     * @param {Number} y
+     * @param {Number} width
+     * @param {Number} height
+     * @returns {Two.Rectangle}
+     * @description Creates a Two.js rectangle and adds it to the scene.
+     */
     makeRectangle: function(x, y, width, height) {
 
       var rect = new Two.Rectangle(x, y, width, height);
@@ -2073,6 +2680,17 @@ this.Two = (function(previousTwo) {
 
     },
 
+    /**
+     * @name Two#makeRoundedRectangle
+     * @function
+     * @param {Number} x
+     * @param {Number} y
+     * @param {Number} width
+     * @param {Number} height
+     * @param {Number} sides
+     * @returns {Two.Rectangle}
+     * @description Creates a Two.js rounded rectangle and adds it to the scene.
+     */
     makeRoundedRectangle: function(x, y, width, height, sides) {
 
       var rect = new Two.RoundedRectangle(x, y, width, height, sides);
@@ -2082,33 +2700,74 @@ this.Two = (function(previousTwo) {
 
     },
 
-    makeCircle: function(ox, oy, r) {
+    /**
+     * @name Two#makeCircle
+     * @function
+     * @param {Number} x
+     * @param {Number} y
+     * @param {Number} radius
+     * @param {Number} [resolution=4]
+     * @returns {Two.Circle}
+     * @description Creates a Two.js circle and adds it to the scene.
+     */
+    makeCircle: function(x, y, radius, resolution) {
 
-      var circle = new Two.Circle(ox, oy, r);
+      var circle = new Two.Circle(x, y, radius, resolution);
       this.scene.add(circle);
 
       return circle;
 
     },
 
-    makeEllipse: function(ox, oy, rx, ry) {
+    /**
+     * @name Two#makeEllipse
+     * @function
+     * @param {Number} x
+     * @param {Number} y
+     * @param {Number} rx
+     * @param {Number} ry
+     * @param {Number} [resolution=4]
+     * @returns {Two.Ellipse}
+     * @description Creates a Two.js ellipse and adds it to the scene.
+     */
+    makeEllipse: function(x, y, rx, ry, resolution) {
 
-      var ellipse = new Two.Ellipse(ox, oy, rx, ry);
+      var ellipse = new Two.Ellipse(x, y, rx, ry, resolution);
       this.scene.add(ellipse);
 
       return ellipse;
 
     },
 
-    makeStar: function(ox, oy, or, ir, sides) {
+    /**
+     * @name Two#makeStar
+     * @function
+     * @param {Number} x
+     * @param {Number} y
+     * @param {Number} outerRadius
+     * @param {Number} innerRadius
+     * @param {Number} sides
+     * @returns {Two.Star}
+     * @description Creates a Two.js star and adds it to the scene.
+     */
+    makeStar: function(ox, oy, outerRadius, innerRadius, sides) {
 
-      var star = new Two.Star(ox, oy, or, ir, sides);
+      var star = new Two.Star(ox, oy, outerRadius, innerRadius, sides);
       this.scene.add(star);
 
       return star;
 
     },
 
+    /**
+     * @name Two#makeCurve
+     * @function
+     * @param {Two.Anchor[]} [points] - An array of {@link Two.Anchor} points.
+     * @param {...Number} - Alternatively you can pass alternating `x` / `y` coordinate values as individual arguments. These will be combined into {@link Two.Anchor}s for use in the path.
+     * @returns {Two.Path} - Where `path.curved` is set to `true`.
+     * @description Creates a Two.js path that is curved and adds it to the scene.
+     * @nota-bene In either case of passing an array or passing numbered arguments the last argument is an optional `Boolean` that defines whether the path should be open or closed.
+     */
     makeCurve: function(p) {
 
       var l = arguments.length, points = p;
@@ -2136,19 +2795,36 @@ this.Two = (function(previousTwo) {
 
     },
 
-    makePolygon: function(ox, oy, r, sides) {
+    /**
+     * @name Two#makePolygon
+     * @function
+     * @param {Number} x
+     * @param {Number} y
+     * @param {Number} radius
+     * @param {Number} sides
+     * @returns {Two.Polygon}
+     * @description Creates a Two.js polygon and adds it to the scene.
+     */
+    makePolygon: function(x, y, radius, sides) {
 
-      var poly = new Two.Polygon(ox, oy, r, sides);
+      var poly = new Two.Polygon(x, y, radius, sides);
       this.scene.add(poly);
 
       return poly;
 
     },
 
-    /*
-    * Make an Arc Segment
-    */
-
+    /**
+     * @name Two#makeArcSegment
+     * @function
+     * @param {Number} x
+     * @param {Number} y
+     * @param {Number} innerRadius
+     * @param {Number} outerRadius
+     * @param {Number} startAngle
+     * @param {Number} endAngle
+     * @param {Number} [resolution=Two.Resolution] - The number of vertices that should comprise the arc segment.
+     */
     makeArcSegment: function(ox, oy, ir, or, sa, ea, res) {
       var arcSegment = new Two.ArcSegment(ox, oy, ir, or, sa, ea, res);
       this.scene.add(arcSegment);
@@ -2156,7 +2832,13 @@ this.Two = (function(previousTwo) {
     },
 
     /**
-     * Convenience method to make and draw a Two.Path.
+     * @name Two#makePath
+     * @function
+     * @param {Two.Anchor[]} [points] - An array of {@link Two.Anchor} points.
+     * @param {...Number} - Alternatively you can pass alternating `x` / `y` coordinate values as individual arguments. These will be combined into {@link Two.Anchor}s for use in the path.
+     * @returns {Two.Path}
+     * @description Creates a Two.js path and adds it to the scene.
+     * @nota-bene In either case of passing an array or passing numbered arguments the last argument is an optional `Boolean` that defines whether the path should be open or closed.
      */
     makePath: function(p) {
 
@@ -2176,8 +2858,12 @@ this.Two = (function(previousTwo) {
       var last = arguments[l - 1];
       var path = new Two.Path(points, !(_.isBoolean(last) ? last : undefined));
       var rect = path.getBoundingClientRect();
-      path.center().translation
-        .set(rect.left + rect.width / 2, rect.top + rect.height / 2);
+
+      if (_.isNumber(rect.top)   && _.isNumber(rect.left)   &&
+          _.isNumber(rect.right) && _.isNumber(rect.bottom)) {
+        path.center().translation
+          .set(rect.left + rect.width / 2, rect.top + rect.height / 2);
+      }
 
       this.scene.add(path);
 
@@ -2186,7 +2872,14 @@ this.Two = (function(previousTwo) {
     },
 
     /**
-     * Convenience method to make and add a Two.Text.
+     * @name Two#makeText
+     * @function
+     * @param {String} message
+     * @param {Number} x
+     * @param {Number} y
+     * @param {Object} [styles] - An object to describe any of the {@link Two.Text.Properties} including `fill`, `stroke`, `linewidth`, `family`, `alignment`, `leading`, `opacity`, etc..
+     * @returns {Two.Text}
+     * @description Creates a Two.js text object and adds it to the scene.
      */
     makeText: function(message, x, y, styles) {
       var text = new Two.Text(message, x, y, styles);
@@ -2195,7 +2888,15 @@ this.Two = (function(previousTwo) {
     },
 
     /**
-     * Convenience method to make and add a Two.LinearGradient.
+     * @name Two#makeLinearGradient
+     * @function
+     * @param {Number} x1
+     * @param {Number} y1
+     * @param {Number} x2
+     * @param {Number} y2
+     * @param {...Two.Stop} [stops] - Any number of color stops sometimes reffered to as ramp stops. If none are supplied then the default black-to-white two stop gradient is applied.
+     * @returns {Two.LinearGradient}
+     * @description Creates a Two.js linear gradient and ads it to the scene. In the case of an effect it's added to an invisible "definitions" group.
      */
     makeLinearGradient: function(x1, y1, x2, y2 /* stops */) {
 
@@ -2209,7 +2910,14 @@ this.Two = (function(previousTwo) {
     },
 
     /**
-     * Convenience method to make and add a Two.RadialGradient.
+     * @name Two#makeRadialGradient
+     * @function
+     * @param {Number} x1
+     * @param {Number} y1
+     * @param {Number} radius
+     * @param {...Two.Stop} [stops] - Any number of color stops sometimes reffered to as ramp stops. If none are supplied then the default black-to-white two stop gradient is applied.
+     * @returns {Two.RadialGradient}
+     * @description Creates a Two.js linear-gradient object and ads it to the scene. In the case of an effect it's added to an invisible "definitions" group.
      */
     makeRadialGradient: function(x1, y1, r /* stops */) {
 
@@ -2222,10 +2930,23 @@ this.Two = (function(previousTwo) {
 
     },
 
+    /**
+     * @name Two#makeSprite
+     * @function
+     * @param {(String|Two.Texture)} pathOrTexture - The URL path to an image or an already created {@link Two.Texture}.
+     * @param {Number} x
+     * @param {Number} y
+     * @param {Number} [columns=1]
+     * @param {Number} [rows=1]
+     * @param {Integer} [frameRate=0]
+     * @param {Boolean} [autostart=false]
+     * @returns {Two.Sprite}
+     * @description Creates a Two.js sprite object and adds it to the scene. Sprites can be used for still images as well as animations.
+     */
     makeSprite: function(path, x, y, cols, rows, frameRate, autostart) {
 
       var sprite = new Two.Sprite(path, x, y, cols, rows, frameRate);
-      if (!!autostart) {
+      if (autostart) {
         sprite.play();
       }
       this.add(sprite);
@@ -2234,10 +2955,21 @@ this.Two = (function(previousTwo) {
 
     },
 
+    /**
+     * @name Two#makeImageSequence
+     * @function
+     * @param {(String[]|Two.Texture[])} pathsOrTextures - An array of paths or of {@link Two.Textures}.
+     * @param {Number} x
+     * @param {Number} y
+     * @param {Number} [frameRate=0]
+     * @param {Boolean} [autostart=false]
+     * @returns {Two.ImageSequence}
+     * @description Creates a Two.js image sequence object and adds it to the scene.
+     */
     makeImageSequence: function(paths, x, y, frameRate, autostart) {
 
       var imageSequence = new Two.ImageSequence(paths, x, y, frameRate);
-      if (!!autostart) {
+      if (autostart) {
         imageSequence.play();
       }
       this.add(imageSequence);
@@ -2246,6 +2978,14 @@ this.Two = (function(previousTwo) {
 
     },
 
+    /**
+     * @name Two#makeTexture
+     * @function
+     * @param {(String|Image|Canvas|Video)} [pathOrSource] - The URL path to an image or a DOM image-like element.
+     * @param {Function} [callback] - Function to be invoked when the image is loaded.
+     * @returns {Two.Texture}
+     * @description Creates a Two.js texture object.
+     */
     makeTexture: function(path, callback) {
 
       var texture = new Two.Texture(path, callback);
@@ -2253,6 +2993,13 @@ this.Two = (function(previousTwo) {
 
     },
 
+    /**
+     * @name Two#makeGroup
+     * @function
+     * @param {(Two.Shape[]|...Two.Shape)} [objects] - Two.js objects to be added to the group in the form of an array or as individual arguments.
+     * @returns {Two.Group}
+     * @description Creates a Two.js group object and adds it to the scene.
+     */
     makeGroup: function(o) {
 
       var objects = o;
@@ -2269,18 +3016,19 @@ this.Two = (function(previousTwo) {
     },
 
     /**
-     * Interpret an SVG Node and add it to this instance's scene. The
-     * distinction should be made that this doesn't `import` svg's, it solely
-     * interprets them into something compatible for Two.js — this is slightly
-     * different than a direct transcription.
-     *
-     * @param {Object} svgNode - The node to be parsed
-     * @param {Boolean} shallow - Don't create a top-most group but
-     *                                    append all contents directly
+     * @name Two#interpret
+     * @function
+     * @param {SvgNode} svgNode - The SVG node to be parsed.
+     * @param {Boolean} shallow - Don't create a top-most group but append all content directly.
+     * @param {Boolean} add – Automatically add the reconstructed SVG node to scene.
+     * @returns {Two.Group}
+     * @description Interpret an SVG Node and add it to this instance's scene. The distinction should be made that this doesn't `import` svg's, it solely interprets them into something compatible for Two.js - this is slightly different than a direct transcription.
      */
-    interpret: function(svgNode, shallow) {
+    interpret: function(svgNode, shallow, add) {
 
       var tag = svgNode.tagName.toLowerCase();
+
+      add = (typeof add !== 'undefined') ? add : true;
 
       if (!(tag in Two.Utils.read)) {
         return null;
@@ -2288,10 +3036,8 @@ this.Two = (function(previousTwo) {
 
       var node = Two.Utils.read[tag].call(this, svgNode);
 
-      if (shallow && node instanceof Two.Group) {
-        this.add(node.children);
-      } else {
-        this.add(node);
+      if (add) {
+        this.add(shallow && node instanceof Two.Group ? node.children : node);
       }
 
       return node;
@@ -2299,41 +3045,53 @@ this.Two = (function(previousTwo) {
     },
 
     /**
-     * Load an SVG file / text and interpret.
+     * @name Two#load
+     * @function
+     * @param {String|SvgNode} pathOrSVGContent - The URL path of an SVG file or an SVG document as text.
+     * @param {Function} callback - Function to call once loading has completed.
+     * @returns {Two.Group}
+     * @description Load an SVG file or SVG text and interpret it into Two.js legible objects.
      */
     load: function(text, callback) {
 
-      var nodes = [], elem, i;
+      var group = new Two.Group();
+      var elem, i, j;
 
-      if (/.*\.svg/ig.test(text)) {
+      var attach = _.bind(function(data) {
 
-        Two.Utils.xhr(text, _.bind(function(data) {
+        dom.temp.innerHTML = data;
 
-          dom.temp.innerHTML = data;
-          for (i = 0; i < dom.temp.children.length; i++) {
-            elem = dom.temp.children[i];
-            nodes.push(this.interpret(elem));
+        for (i = 0; i < dom.temp.children.length; i++) {
+          elem = dom.temp.children[i];
+          if (/svg/i.test(elem.nodeName)) {
+            // Two.Utils.applySvgViewBox.call(this, group, elem.getAttribute('viewBox'));
+            for (j = 0; j < elem.children.length; j++) {
+              group.add(this.interpret(elem.children[j]));
+            }
+          } else {
+            group.add(this.interpret(elem));
           }
+        }
 
-          callback(nodes.length <= 1 ? nodes[0] : nodes,
-            dom.temp.children.length <= 1 ? dom.temp.children[0] : dom.temp.children);
+        if (_.isFunction(callback)) {
+          var svg = dom.temp.children.length <= 1
+            ? dom.temp.children[0] : dom.temp.children;
+          callback(group, svg);
+        }
 
-        }, this));
+      }, this);
 
-        return this;
+      if (/.*\.svg$/ig.test(text)) {
+
+        Two.Utils.xhr(text, attach);
+
+        return group;
 
       }
 
-      dom.temp.innerHTML = text;
-      for (i = 0; i < dom.temp.children.length; i++) {
-        elem = dom.temp.children[i];
-        nodes.push(this.interpret(elem));
-      }
+      attach(text);
 
-      callback(nodes.length <= 1 ? nodes[0] : nodes,
-        dom.temp.children.length <= 1 ? dom.temp.children[0] : dom.temp.children);
-
-      return this;
+      return group;
 
     }
 
@@ -2347,8 +3105,13 @@ this.Two = (function(previousTwo) {
     var height = this.height = wr.height;
 
     this.renderer.setSize(width, height, this.ratio);
-    this.trigger(Two.Events.resize, width, height);
 
+  }
+
+  function updateDimensions(width, height) {
+    this.width = width;
+    this.height = height;
+    this.trigger(Two.Events.resize, width, height);
   }
 
   // Request Animation Frame
@@ -2357,8 +3120,6 @@ this.Two = (function(previousTwo) {
 
   function loop() {
 
-    raf(loop);
-
     for (var i = 0; i < Two.Instances.length; i++) {
       var t = Two.Instances[i];
       if (t.playing) {
@@ -2366,16 +3127,18 @@ this.Two = (function(previousTwo) {
       }
     }
 
+    Two.nextFrameID = raf(loop);
+
   }
 
-  if (typeof define === 'function' && define.amd) {
+  if (typeof module != 'undefined' && module.exports) {
+    module.exports = Two;
+  } else if (typeof define === 'function' && define.amd) {
     define('two', [], function() {
       return Two;
     });
-  } else if (typeof module != 'undefined' && module.exports) {
-    module.exports = Two;
   }
 
   return Two;
 
-})((typeof global !== 'undefined' ? global : this).Two);
+})((typeof global !== 'undefined' ? global : (this || self || window)).Two);

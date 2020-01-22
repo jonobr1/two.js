@@ -6,7 +6,7 @@
 
   QUnit.module('WebGLRenderer');
 
-  var getRatio = function (v) { return Math.round(Two.Utils.getRatio(v)) };
+  var getRatio = function (v) { return Math.round(Two.Utils.getRatio(v));};
   var deviceRatio = getRatio(document.createElement('canvas').getContext('2d'));
   var suffix = '@' + deviceRatio + 'x.png';
 
@@ -192,6 +192,152 @@
     two.update();
 
     QUnit.Utils.compare.call(assert, './images/canvas/radial-gradient' + suffix, two.renderer, 'Two.makeLinearGradient renders properly.');
+
+  });
+
+  QUnit.test('two.makeSprite (Simple)', function(assert) {
+
+    assert.expect(1);
+    assert.done = assert.async(1);
+
+    var two = new Two({
+      type: Two.Types.webgl,
+      width: 400,
+      height: 400,
+      ratio: deviceRatio
+    });
+
+    var path = '/tests/images/sequence/00000.png';
+    var sprite = two.makeSprite(path, two.width / 2, two.height / 2);
+    var texture = sprite.texture;
+
+    var loaded = function() {
+
+      texture.unbind(Two.Events.load, loaded);
+      two.update();
+
+      QUnit.Utils.compare.call(assert, './images/canvas/sprite-simple' + suffix, two.renderer, 'Two.makeSprite renders properly.');
+
+    };
+
+    texture.bind(Two.Events.load, loaded);
+    texture._update();
+
+  });
+
+  QUnit.test('two.makeImageSequence', function(assert) {
+
+    assert.expect(2);
+    assert.done = assert.async(2);
+
+    var two = new Two({
+      type: Two.Types.webgl,
+      width: 400,
+      height: 400,
+      ratio: deviceRatio
+    });
+
+    var paths = _.map(_.range(0, 30), function(i) {
+      return '/tests/images/sequence/' + QUnit.Utils.digits(i, 5) + '.png';
+    });
+    var sequence = two.makeImageSequence(paths, two.width / 2, two.height / 2, 2);
+    sequence.index = 3;
+    var texture = sequence.textures[sequence.index];
+
+    var loaded = function() {
+
+      texture.unbind(Two.Events.load, loaded);
+
+      two.update();
+
+      var elem = two.renderer.domElement.querySelector('#' + sequence.id);
+      var id = sequence.textures[sequence.index].id;
+
+      QUnit.Utils.compare.call(assert, './images/canvas/image-sequence-1' + suffix, two.renderer, 'Two.ImageSequence applied the correct texture properly.', function() {
+
+        sequence.index = 7;
+        texture = sequence.textures[sequence.index];
+        id = texture.id;
+        texture._flagImage = true;
+
+        texture.bind(Two.Events.load, function() {
+
+          texture.unbind(Two.Events.load);
+
+          two.update();
+
+          QUnit.Utils.compare.call(assert, './images/canvas/image-sequence-2' + suffix, two.renderer, 'Two.ImageSequence can change index properly.');
+
+        });
+
+        texture._update();
+
+      });
+
+    };
+
+    texture.bind(Two.Events.load, loaded);
+    texture._update();
+
+    two.renderer.domElement.style.cursor = 'pointer';
+    two.renderer.domElement.addEventListener('click', function() {
+      if (two.playing) {
+        two.pause();
+      } else {
+        sequence.loop = true;
+        sequence.play();
+        two.play();
+      }
+    }, false);
+
+  });
+
+  QUnit.test('two.makeSprite', function(assert) {
+
+    assert.expect(2);
+    assert.done = assert.async(2);
+
+    var two = new Two({
+      type: Two.Types.webgl,
+      width: 400,
+      height: 400,
+      ratio: deviceRatio
+    });
+
+    var path = '/tests/images/spritesheet.jpg';
+    var sprite = two.makeSprite(path, two.width / 2, two.height / 2, 4, 4, 2, false);
+    var texture = sprite.texture;
+    sprite.index = 3;
+
+    var loaded = function() {
+
+      texture.unbind(Two.Events.load, loaded);
+      two.update();
+
+      QUnit.Utils.compare.call(assert, './images/canvas/image-sequence-1' + suffix, two.renderer, 'Two.makeSprite renders properly.', function() {
+
+        sprite.index = 7;
+        two.update();
+
+        QUnit.Utils.compare.call(assert, './images/canvas/image-sequence-2' + suffix, two.renderer, 'Two.Sprite changed index properly.');
+
+      });
+
+    };
+
+    texture.bind(Two.Events.load, loaded);
+    texture._update();
+
+    two.renderer.domElement.style.cursor = 'pointer';
+    two.renderer.domElement.addEventListener('click', function() {
+      if (two.playing) {
+        two.pause();
+      } else {
+        sprite.loop = true;
+        sprite.play();
+        two.play();
+      }
+    }, false);
 
   });
 

@@ -70,7 +70,7 @@
       var l = points.length,
         last = l - 1,
         d, // The elusive last Two.Commands.move point
-        ret = '';
+        string = '';
 
       for (var i = 0; i < l; i++) {
         var b = points[i];
@@ -82,16 +82,30 @@
         var c = points[next];
 
         var vx, vy, ux, uy, ar, bl, br, cl;
+        var rx, ry, xAxisRotation, largeArcFlag, sweepFlag;
 
         // Access x and y directly,
         // bypassing the getter
-        var x = toFixed(b._x);
-        var y = toFixed(b._y);
+        var x = toFixed(b.x);
+        var y = toFixed(b.y);
 
-        switch (b._command) {
+        switch (b.command) {
 
           case Two.Commands.close:
             command = Two.Commands.close;
+            break;
+
+          case Two.Commands.arc:
+
+            rx = b.rx;
+            ry = b.ry;
+            xAxisRotation = b.xAxisRotation;
+            largeArcFlag = b.largeArcFlag;
+            sweepFlag = b.sweepFlag;
+
+            command = Two.Commands.arc + ' ' + rx + ' ' + ry + ' '
+              + xAxisRotation + ' ' + largeArcFlag + ' ' + sweepFlag + ' '
+              + x + ' ' + y;
             break;
 
           case Two.Commands.curve:
@@ -99,7 +113,7 @@
             ar = (a.controls && a.controls.right) || Two.Vector.zero;
             bl = (b.controls && b.controls.left) || Two.Vector.zero;
 
-            if (a._relative) {
+            if (a.relative) {
               vx = toFixed((ar.x + a.x));
               vy = toFixed((ar.y + a.y));
             } else {
@@ -107,7 +121,7 @@
               vy = toFixed(ar.y);
             }
 
-            if (b._relative) {
+            if (b.relative) {
               ux = toFixed((bl.x + b.x));
               uy = toFixed((bl.y + b.y));
             } else {
@@ -125,7 +139,7 @@
             break;
 
           default:
-            command = b._command + ' ' + x + ' ' + y;
+            command = b.command + ' ' + x + ' ' + y;
 
         }
 
@@ -133,7 +147,7 @@
 
         if (i >= last && closed) {
 
-          if (b._command === Two.Commands.curve) {
+          if (b.command === Two.Commands.curve) {
 
             // Make sure we close to the most previous Two.Commands.move
             c = d;
@@ -141,7 +155,7 @@
             br = (b.controls && b.controls.right) || b;
             cl = (c.controls && c.controls.left) || c;
 
-            if (b._relative) {
+            if (b.relative) {
               vx = toFixed((br.x + b.x));
               vy = toFixed((br.y + b.y));
             } else {
@@ -149,7 +163,7 @@
               vy = toFixed(br.y);
             }
 
-            if (c._relative) {
+            if (c.relative) {
               ux = toFixed((cl.x + c.x));
               uy = toFixed((cl.y + c.y));
             } else {
@@ -162,17 +176,20 @@
 
             command +=
               ' C ' + vx + ' ' + vy + ' ' + ux + ' ' + uy + ' ' + x + ' ' + y;
+
           }
 
-          command += ' Z';
+          if (b.command !== Two.Commands.close) {
+            command += ' Z';
+          }
 
         }
 
-        ret += command + ' ';
+        string += command + ' ';
 
       }
 
-      return ret;
+      return string;
 
     },
 
@@ -288,6 +305,10 @@
           this._renderer.elem.setAttribute('opacity', this._opacity);
         }
 
+        if (this._flagClassName) {
+          this._renderer.elem.setAttribute('class', this.classList.join(' '));
+        }
+
         if (this._flagAdditions) {
           this.additions.forEach(svg.group.appendChild, context);
         }
@@ -360,7 +381,7 @@
         }
 
         if (this._flagVertices) {
-          var vertices = svg.toString(this._vertices, this._closed);
+          var vertices = svg.toString(this._renderer.vertices, this._closed);
           changed.d = vertices;
         }
 
@@ -393,6 +414,10 @@
           changed['fill-opacity'] = this._opacity;
         }
 
+        if (this._flagClassName) {
+          changed['class'] = this.classList.join(' ');
+        }
+
         if (this._flagVisible) {
           changed.visibility = this._visible ? 'visible' : 'hidden';
         }
@@ -407,6 +432,11 @@
 
         if (this._flagMiter) {
           changed['stroke-miterlimit'] = this._miter;
+        }
+
+        if (this.dashes && this.dashes.length > 0) {
+          changed['stroke-dasharray'] = this.dashes.join(' ');
+          changed['stroke-dashoffset'] = this.dashes.offset || 0;
         }
 
         // If there is no attached DOM element yet,
@@ -519,8 +549,15 @@
         if (this._flagOpacity) {
           changed.opacity = this._opacity;
         }
+        if (this._flagClassName) {
+          changed['class'] = this.classList.join(' ');
+        }
         if (this._flagVisible) {
           changed.visibility = this._visible ? 'visible' : 'hidden';
+        }
+        if (this.dashes && this.dashes.length > 0) {
+          changed['stroke-dasharray'] = this.dashes.join(' ');
+          changed['stroke-dashoffset'] = this.dashes.offset || 0;
         }
 
         if (!this._renderer.elem) {
@@ -606,7 +643,9 @@
             !== this.stops.length;
 
           if (lengthChanged) {
-            this._renderer.elem.childNodes.length = 0;
+            while (this._renderer.elem.lastChild) {
+              this._renderer.elem.removeChild(this._renderer.elem.lastChild);
+            }
           }
 
           for (var i = 0; i < this.stops.length; i++) {
@@ -694,7 +733,9 @@
             !== this.stops.length;
 
           if (lengthChanged) {
-            this._renderer.elem.childNodes.length = 0;
+            while (this._renderer.elem.lastChild) {
+              this._renderer.elem.removeChild(this._renderer.elem.lastChild);
+            }
           }
 
           for (var i = 0; i < this.stops.length; i++) {
@@ -799,7 +840,7 @@
             styles.width = changed.width = image.width;
             styles.height = changed.height = image.height;
 
-            // TODO: Hack / Bandaid
+            // TODO: Hack / Band-aid
             switch (this._repeat) {
               case 'no-repeat':
                 changed.width += 1;
@@ -853,15 +894,32 @@
   };
 
   /**
+   * @name Two.SVGRenderer
    * @class
+   * @extends Two.Utils.Events
+   * @param {Object} [parameters] - This object is inherited when constructing a new instance of {@link Two}.
+   * @param {Element} [parameters.domElement] - The `<svg />` to draw to. If none given a new one will be constructed.
+   * @description This class is used by {@link Two} when constructing with `type` of `Two.Types.svg` (the default type). It takes Two.js' scenegraph and renders it to a `<svg />`.
    */
   var Renderer = Two[Two.Types.svg] = function(params) {
 
+    /**
+     * @name Two.SVGRenderer#domElement
+     * @property {Element} - The `<svg />` associated with the Two.js scene.
+     */
     this.domElement = params.domElement || svg.createElement('svg');
 
+    /**
+     * @name Two.SVGRenderer#scene
+     * @property {Two.Group} - The root group of the scenegraph.
+     */
     this.scene = new Two.Group();
     this.scene.parent = this;
 
+    /**
+     * @name Two.SVGRenderer#defs
+     * @property {SvgDefintionsElement} - The `<defs />` to apply gradients, patterns, and bitmap imagery.
+     */
     this.defs = svg.createElement('defs');
     this.domElement.appendChild(this.defs);
     this.domElement.defs = this.defs;
@@ -871,12 +929,26 @@
 
   _.extend(Renderer, {
 
+    /**
+     * @name Two.SVGRenderer.Utils
+     * @property {Object} - A massive object filled with utility functions and properties to render Two.js objects to a `<svg />`.
+     */
     Utils: svg
 
   });
 
   _.extend(Renderer.prototype, Two.Utils.Events, {
 
+    constructor: Renderer,
+
+    /**
+     * @name Two.SVGRenderer#setSize
+     * @function
+     * @param {Number} width - The new width of the renderer.
+     * @param {Number} height - The new height of the renderer.
+     * @description Change the size of the renderer.
+     * @nota-bene Triggers a `Two.Events.resize`.
+     */
     setSize: function(width, height) {
 
       this.width = width;
@@ -887,10 +959,15 @@
         height: height
       });
 
-      return this;
+      return this.trigger(Two.Events.resize, width, height);
 
     },
 
+    /**
+     * @name Two.SVGRenderer#render
+     * @function
+     * @description Render the current scene to the `<svg />`.
+     */
     render: function() {
 
       svg.group.render.call(this.scene, this.domElement);
@@ -901,4 +978,4 @@
 
   });
 
-})((typeof global !== 'undefined' ? global : this).Two);
+})((typeof global !== 'undefined' ? global : (this || self || window)).Two);

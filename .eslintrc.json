@@ -1,0 +1,36 @@
+{
+	"extends": "eslint:recommended",
+	"env": {
+		"browser": true,
+		"commonjs": true,
+		"amd": true
+	},
+	"globals": {
+		"global": "writable"
+	},
+	"rules": {
+		"semi": ["error", "always"],
+		"no-unused-vars": "off"
+	},
+	"overrides": [
+		{
+			"files": ["utils/**"],
+			"env": {
+				"node": true
+			}
+		},
+		{
+			"files": ["tests/**"],
+			"globals": {
+				"QUnit": "writable",
+				"resemble": "writable",
+				"Two": "writable",
+				"_": "writable"
+			},
+			"rules": {
+				"no-redeclare": "off"
+			}
+		}
+	],
+	"ignorePatterns": ["build/", "utils/start-comment.js", "utils/end-comment.js", "utils/exports.js", "junk/"]
+}

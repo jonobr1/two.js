@@ -1,7 +1,14 @@
 /**
  * Tests Two.js Core Classes Functionality:
+ * + Two.Utils ( Underscore Methods )
+ * + Two.Utils.Events
  * + Two.Vector
  * + Two.Matrix
+ * + Two.Utils.Collection
+ * + Two.Shape
+ * + Two.Registry
+ * + Two.Texture
+ * + Two
  */
 
 QUnit.module('Core');
@@ -67,7 +74,7 @@ QUnit.test('Two.Utils', function(assert) {
     return this.attr;
   }, { attr: 'Two.js' })(), 'Two.js', 'Bound function properly.');
   assert.equal(JSON.stringify(Two.Utils.extend({ a: 'b' }, { a: 'a', b: 'c' })), '{"a":"a","b":"c"}', 'Object extends properties successfully.');
-  assert.equal(JSON.stringify(Two.Utils.defaults({ a: 'b' }, { a: 'a', b: 'c' })), '{"a":"b","b":"c"}', 'Object defaults properties successfully.')
+  assert.equal(JSON.stringify(Two.Utils.defaults({ a: 'b' }, { a: 'a', b: 'c' })), '{"a":"b","b":"c"}', 'Object defaults properties successfully.');
   assert.equal(JSON.stringify(Two.Utils.keys({ a: 0, b: 1, c: 2 })), '["a","b","c"]', 'Two.Utils.keys successfully retrieves keys.');
   assert.equal(JSON.stringify(Two.Utils.values({ a: 0, b: 1, c: 2 })), '[0,1,2]', 'Two.Utils.values successfully retrieves keys.');
 
@@ -149,7 +156,7 @@ QUnit.test('Two.Vector', function(assert) {
   assert.equal(clone.x, vector.x, 'Two.Vector.clone applies x value properly.');
   assert.equal(clone.y, vector.y, 'Two.Vector.clone applies y value properly.');
 
-  vector.add({ x: 5, y: 5 }, { x: 10, y: 10 });
+  vector.add({ x: 5, y: 5 });
   assert.equal(vector.x, 15, 'Two.Vector.add applies x value properly.');
   assert.equal(vector.y, 15, 'Two.Vector.add applies y value properly.');
 
@@ -157,7 +164,7 @@ QUnit.test('Two.Vector', function(assert) {
   assert.equal(vector.x, 20, 'Two.Vector.addSelf applies x value properly.');
   assert.equal(vector.y, 20, 'Two.Vector.addSelf applies y value properly.');
 
-  vector.sub({ x: 10, y: 10 }, { x: 5, y: 5 });
+  vector.sub({ x: 15, y: 15 });
   assert.equal(vector.x, 5, 'Two.Vector.sub applies x value properly.');
   assert.equal(vector.y, 5, 'Two.Vector.sub applies y value properly.');
 
@@ -179,8 +186,8 @@ QUnit.test('Two.Vector', function(assert) {
   assert.equal(vector.y, 5, 'Two.Vector.divideScalar applies y value properly.');
 
   vector.divideScalar();
-  assert.equal(vector.x, 0, 'Two.Vector.divideScalar applies x value properly.');
-  assert.equal(vector.y, 0, 'Two.Vector.divideScalar applies y value properly.');
+  assert.equal(vector.x, 5, 'Two.Vector.divideScalar applies x value properly.');
+  assert.equal(vector.y, 5, 'Two.Vector.divideScalar applies y value properly.');
 
   vector.set(1, -1);
   vector.negate();
@@ -218,7 +225,7 @@ QUnit.test('Two.Vector', function(assert) {
 
   vector.set(9, 3);
   vector.rotate(Math.PI / 2);
-  assert.equal(vector.equals({ x: - 2.9999999999999996, y: - 2.9999999999999996}), true, 'Two.Vector.rotate applies x, y properly.')
+  assert.equal(vector.equals({ x: - 2.9999999999999996, y: - 2.9999999999999996}), true, 'Two.Vector.rotate applies x, y properly.');
 
 });
 
@@ -257,7 +264,7 @@ QUnit.test('Bound Two.Vector', function(assert) {
   assert.equal(clone.x, vector.x, 'Two.Vector.clone applies x value properly.');
   assert.equal(clone.y, vector.y, 'Two.Vector.clone applies y value properly.');
 
-  vector.add({ x: 5, y: 5 }, { x: 10, y: 10 });
+  vector.add({ x: 5, y: 5 });
   assert.equal(vector.x, 15, 'Two.Vector.add applies x value properly.');
   assert.equal(vector.y, 15, 'Two.Vector.add applies y value properly.');
 
@@ -265,7 +272,7 @@ QUnit.test('Bound Two.Vector', function(assert) {
   assert.equal(vector.x, 20, 'Two.Vector.addSelf applies x value properly.');
   assert.equal(vector.y, 20, 'Two.Vector.addSelf applies y value properly.');
 
-  vector.sub({ x: 10, y: 10 }, { x: 5, y: 5 });
+  vector.sub({ x: 15, y: 15 });
   assert.equal(vector.x, 5, 'Two.Vector.sub applies x value properly.');
   assert.equal(vector.y, 5, 'Two.Vector.sub applies y value properly.');
 
@@ -287,8 +294,8 @@ QUnit.test('Bound Two.Vector', function(assert) {
   assert.equal(vector.y, 5, 'Two.Vector.divideScalar applies y value properly.');
 
   vector.divideScalar();
-  assert.equal(vector.x, 0, 'Two.Vector.divideScalar applies x value properly.');
-  assert.equal(vector.y, 0, 'Two.Vector.divideScalar applies y value properly.');
+  assert.equal(vector.x, 5, 'Two.Vector.divideScalar applies x value properly.');
+  assert.equal(vector.y, 5, 'Two.Vector.divideScalar applies y value properly.');
 
   vector.set(1, -1);
   vector.negate();
@@ -328,7 +335,7 @@ QUnit.test('Bound Two.Vector', function(assert) {
 
 QUnit.test('Two.Matrix', function(assert) {
 
-  assert.expect(10);
+  assert.expect(12);
 
   var matrix = new Two.Matrix();
   var check = true;
@@ -413,8 +420,10 @@ QUnit.test('Two.Matrix', function(assert) {
 
   matrix.set(1, 2, 3, 4, 5, 6, 7, 8, 9);
 
-  assert.deepEqual(matrix.toArray(), [1, 4, 2, 5, 3, 6], 'Two.Matrix.toArray returns correct result for 6 digit transformation.');
-  assert.deepEqual(matrix.toArray(true), [1, 4, 7, 2, 5, 8, 3, 6, 9], 'Two.Matrix.toArray returns correct result for 9 digit transformation.');
+  assert.deepEqual(matrix.toTransformArray(), [1, 4, 2, 5, 3, 6], 'Two.Matrix.toTransformArray returns correct result for 6 digit transformation.');
+  assert.deepEqual(matrix.toTransformArray(true), [1, 4, 7, 2, 5, 8, 3, 6, 9], 'Two.Matrix.toTransformArray returns correct result for 9 digit transformation.');
+  assert.deepEqual(matrix.toArray(), [1, 2, 3, 4, 5, 6], 'Two.Matrix.toArray returns correct result for 6 digit transformation.');
+  assert.deepEqual(matrix.toArray(true), [1, 2, 3, 4, 5, 6, 7, 8, 9], 'Two.Matrix.toArray returns correct result for 9 digit transformation.');
   assert.equal(matrix.toString(), '1 4 2 5 3 6', 'Two.Matrix.toString returns correct result for 6 digit transformation.');
 
   var clone = matrix.clone();
@@ -531,7 +540,7 @@ QUnit.test('Two.Shape', function(assert) {
   shape.rotation = 3.14;
   shape._update();
 
-  assert.equal(shape._matrix.toString(), '-10 0.016 -0.016 -10 0 0', 'Two.Shape.rotation works properly.');
+  assert.equal(shape._matrix.toString(), '-10 0.015 -0.016 -10 0 0', 'Two.Shape.rotation works properly.');
 
 });
 
@@ -665,5 +674,39 @@ QUnit.test('Two.Texture', function(assert) {
   assert.ok(true, 'Two.Texture able to be constructed without any parameters properly.');
 
   tc.src = path;
+
+});
+
+QUnit.test('Two', function(assert) {
+
+  assert.expect(8);
+
+  var selector = QUnit.Utils.getSelector(assert.test);
+  var elem = document.querySelector(selector);
+  elem.id = assert.test.id + '-container';
+
+  var two = new Two().appendTo(elem);
+  assert.equal(two.renderer.domElement.parentElement.id, elem.id, 'Two appends to the correct element when `appendTo` invoked.');
+
+  two.update();
+  assert.equal(two.frameCount, 1, 'Two increments frameCount correctly.');
+
+  two.play();
+  assert.ok(two.playing, 'Two.Utils.setPlaying applied correctly.');
+  assert.ok(_.isNumber(Two.nextFrameID), 'requestAnimationFrame runs correctly.');
+
+  two.pause();
+  assert.ok(!two.playing, 'Two.pause correctly stops updating.');
+
+  var rectangle = two.makeRectangle(two.width / 2, two.height / 2, 10, 10);
+
+  assert.equal(two.scene.children.length, 1, 'Adds children correctly.');
+
+  two.remove(rectangle);
+  assert.equal(two.scene.children.length, 0, 'Removes children correctly');
+
+  two.add(rectangle);
+  two.clear();
+  assert.equal(two.scene.children.length, 0, 'Clears children correctly');
 
 });

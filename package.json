@@ -1,19 +1,42 @@
 {
-  "name": "two.js",
+  "name": "@jonobr1/two.js",
   "version": "0.7.0",
-  "description": "A two-dimensional drawing api meant for modern browsers.",
+  "description": "A renderer agnostic two-dimensional drawing api for the web.",
+  "module": "build/two.module.js",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
+  "files": [
+    "package.json",
+    "LICENSE",
+    "README.md",
+    "build/two.js",
+    "build/two.min.js",
+    "build/two.module.js",
+    "extras",
+    "src"
+  ],
+  "scripts": {
+    "lint": "eslint ."
+  },
+  "directories": {
+    "doc": "documentation",
+    "test": "tests",
+    "example": "utils"
+  },
   "keywords": [
-    "dom",
-    "w3c",
-    "visualization",
     "svg",
-    "animation",
     "canvas2d",
     "webgl",
+    "animation",
     "rendering",
-    "motiongraphics"
+    "scenegraph",
+    "motiongraphics",
+    "visualization",
+    "dom",
+    "w3c"
   ],
-  "homepage": "http://jonobr1.github.io/two.js/",
+  "homepage": "https://two.js.org/",
   "author": {
     "name": "jonobr1",
     "url": "http://jonobr1.com/"
@@ -28,11 +51,25 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "animation-frame": "^0.1.7",
-    "blueimp-canvas-to-blob": "^2.1.0",
-    "node-minify": "^2.0.3",
-    "qunitjs": "^2.4.0",
-    "resemblejs": "^1.1.1",
-    "underscore": "^1.6.0"
+    "@node-minify/core": "^5.2.1",
+    "@node-minify/no-compress": "^5.2.0",
+    "@node-minify/terser": "^5.2.1",
+    "eslint": "^6.7.2",
+    "jsdoc": "~3.5.5",
+    "qunit": "^2.9.3",
+    "resemblejs": "^3.2.3",
+    "underscore": "^1.9.1"
+  },
+  "autoupdate": {
+    "source": "git",
+    "target": "git://github.com/jonobr1/two.js.git",
+    "fileMap": [
+      {
+        "basePath": "build",
+        "files": [
+          "two*.js"
+        ]
+      }
+    ]
   }
 }

@@ -3,9 +3,18 @@
   /**
    * Constants
    */
-  var mod = Two.Utils.mod, toFixed = Two.Utils.toFixed;
+  var mod = Two.Utils.mod;
   var getRatio = Two.Utils.getRatio;
   var _ = Two.Utils;
+  var emptyArray = [];
+  var TWO_PI = Math.PI * 2,
+    max = Math.max,
+    min = Math.min,
+    abs = Math.abs,
+    sin = Math.sin,
+    cos = Math.cos,
+    acos = Math.acos,
+    sqrt = Math.sqrt;
 
   // Returns true if this is a non-transforming matrix
   var isDefaultMatrix = function (m) {
@@ -14,7 +23,7 @@
 
   var canvas = {
 
-    isHidden: /(none|transparent)/i,
+    isHidden: /(undefined|none|transparent)/i,
 
     alignments: {
       left: 'start',
@@ -22,9 +31,16 @@
       right: 'end'
     },
 
-    shim: function(elem) {
-      elem.tagName = 'canvas';
+    shim: function(elem, name) {
+      elem.tagName = elem.nodeName = name || 'canvas';
       elem.nodeType = 1;
+      elem.getAttribute = function(prop) {
+        return this[prop];
+      };
+      elem.setAttribute = function(prop, val) {
+        this[prop] = val;
+        return this;
+      };
       return elem;
     },
 
@@ -41,12 +57,14 @@
 
         var matrix = this._matrix.elements;
         var parent = this.parent;
-        this._renderer.opacity = this._opacity * (parent && parent._renderer ? parent._renderer.opacity : 1);
-
-        var defaultMatrix = isDefaultMatrix(matrix);
+        this._renderer.opacity = this._opacity
+          * (parent && parent._renderer ? parent._renderer.opacity : 1);
 
         var mask = this._mask;
         // var clip = this._clip;
+
+        var defaultMatrix = isDefaultMatrix(matrix);
+        var shouldIsolate = !defaultMatrix || !!mask;
 
         if (!this._renderer.context) {
           this._renderer.context = {};
@@ -55,9 +73,12 @@
         this._renderer.context.ctx = ctx;
         // this._renderer.context.clip = clip;
 
-        if (!defaultMatrix) {
+        if (shouldIsolate) {
           ctx.save();
-          ctx.transform(matrix[0], matrix[3], matrix[1], matrix[4], matrix[2], matrix[5]);
+          if (!defaultMatrix) {
+            ctx.transform(  matrix[0], matrix[3], matrix[1],
+              matrix[4], matrix[2], matrix[5]);
+          }
         }
 
         if (mask) {
@@ -71,7 +92,7 @@
           }
         }
 
-        if (!defaultMatrix) {
+        if (shouldIsolate) {
           ctx.restore();
         }
 
@@ -97,7 +118,7 @@
 
         var matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter,
             closed, commands, length, last, next, prev, a, b, c, d, ux, uy, vx, vy,
-            ar, bl, br, cl, x, y, mask, clip, defaultMatrix, isOffset;
+            ar, bl, br, cl, x, y, mask, clip, defaultMatrix, isOffset, dashes;
 
         // TODO: Add a check here to only invoke _update if need be.
         this._update();
@@ -112,10 +133,11 @@
         join = this._join;
         miter = this._miter;
         closed = this._closed;
-        commands = this._vertices; // Commands
+        commands = this._renderer.vertices; // Commands
         length = commands.length;
         last = length - 1;
         defaultMatrix = isDefaultMatrix(matrix);
+        dashes = this.dashes;
 
         // mask = this._mask;
         clip = this._clip;
@@ -156,21 +178,26 @@
             canvas[stroke._renderer.type].render.call(stroke, ctx);
             ctx.strokeStyle = stroke._renderer.effect;
           }
-        }
-        if (linewidth) {
-          ctx.lineWidth = linewidth;
-        }
-        if (miter) {
-          ctx.miterLimit = miter;
-        }
-        if (join) {
-          ctx.lineJoin = join;
-        }
-        if (cap) {
-          ctx.lineCap = cap;
+          if (linewidth) {
+            ctx.lineWidth = linewidth;
+          }
+          if (miter) {
+            ctx.miterLimit = miter;
+          }
+          if (join) {
+            ctx.lineJoin = join;
+          }
+          if (!closed && cap) {
+            ctx.lineCap = cap;
+          }
         }
         if (_.isNumber(opacity)) {
           ctx.globalAlpha = opacity;
+        }
+
+        if (dashes && dashes.length > 0) {
+          ctx.lineDashOffset = dashes.offset || 0;
+          ctx.setLineDash(dashes);
         }
 
         ctx.beginPath();
@@ -179,13 +206,30 @@
 
           b = commands[i];
 
-          x = toFixed(b._x);
-          y = toFixed(b._y);
+          x = b.x;
+          y = b.y;
 
-          switch (b._command) {
+          switch (b.command) {
 
             case Two.Commands.close:
               ctx.closePath();
+              break;
+
+            case Two.Commands.arc:
+
+              var rx = b.rx;
+              var ry = b.ry;
+              var xAxisRotation = b.xAxisRotation;
+              var largeArcFlag = b.largeArcFlag;
+              var sweepFlag = b.sweepFlag;
+
+              prev = closed ? mod(i - 1, length) : max(i - 1, 0);
+              a = commands[prev];
+
+              var ax = a.x;
+              var ay = a.y;
+
+              canvas.renderSvgArcCommand(ctx, ax, ay, rx, ry, largeArcFlag, sweepFlag, xAxisRotation, x, y);
               break;
 
             case Two.Commands.curve:
@@ -199,19 +243,19 @@
               bl = (b.controls && b.controls.left) || Two.Vector.zero;
 
               if (a._relative) {
-                vx = (ar.x + toFixed(a._x));
-                vy = (ar.y + toFixed(a._y));
+                vx = (ar.x + a.x);
+                vy = (ar.y + a.y);
               } else {
-                vx = toFixed(ar.x);
-                vy = toFixed(ar.y);
+                vx = ar.x;
+                vy = ar.y;
               }
 
               if (b._relative) {
-                ux = (bl.x + toFixed(b._x));
-                uy = (bl.y + toFixed(b._y));
+                ux = (bl.x + b.x);
+                uy = (bl.y + b.y);
               } else {
-                ux = toFixed(bl.x);
-                uy = toFixed(bl.y);
+                ux = bl.x;
+                uy = bl.y;
               }
 
               ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
@@ -224,23 +268,23 @@
                 cl = (c.controls && c.controls.left) || Two.Vector.zero;
 
                 if (b._relative) {
-                  vx = (br.x + toFixed(b._x));
-                  vy = (br.y + toFixed(b._y));
+                  vx = (br.x + b.x);
+                  vy = (br.y + b.y);
                 } else {
-                  vx = toFixed(br.x);
-                  vy = toFixed(br.y);
+                  vx = br.x;
+                  vy = br.y;
                 }
 
                 if (c._relative) {
-                  ux = (cl.x + toFixed(c._x));
-                  uy = (cl.y + toFixed(c._y));
+                  ux = (cl.x + c.x);
+                  uy = (cl.y + c.y);
                 } else {
-                  ux = toFixed(cl.x);
-                  uy = toFixed(cl.y);
+                  ux = cl.x;
+                  uy = cl.y;
                 }
 
-                x = toFixed(c._x);
-                y = toFixed(c._y);
+                x = c.x;
+                y = c.y;
 
                 ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
 
@@ -268,7 +312,7 @@
 
         if (!clip && !parentClipped) {
           if (!canvas.isHidden.test(fill)) {
-            isOffset = fill._renderer && fill._renderer.offset
+            isOffset = fill._renderer && fill._renderer.offset;
             if (isOffset) {
               ctx.save();
               ctx.translate(
@@ -304,6 +348,10 @@
           ctx.clip();
         }
 
+        if (dashes && dashes.length > 0) {
+          ctx.setLineDash(emptyArray);
+        }
+
         return this.flagReset();
 
       }
@@ -326,6 +374,7 @@
         var defaultMatrix = isDefaultMatrix(matrix);
         var isOffset = fill._renderer && fill._renderer.offset
           && stroke._renderer && stroke._renderer.offset;
+        var dashes = this.dashes;
 
         var a, b, c, d, e, sx, sy;
 
@@ -376,12 +425,16 @@
             canvas[stroke._renderer.type].render.call(stroke, ctx);
             ctx.strokeStyle = stroke._renderer.effect;
           }
-        }
-        if (linewidth) {
-          ctx.lineWidth = linewidth;
+          if (linewidth) {
+            ctx.lineWidth = linewidth;
+          }
         }
         if (_.isNumber(opacity)) {
           ctx.globalAlpha = opacity;
+        }
+        if (dashes && dashes.length > 0) {
+          ctx.lineDashOffset = dashes.offset || 0;
+          ctx.setLineDash(dashes);
         }
 
         if (!clip && !parentClipped) {
@@ -390,23 +443,23 @@
 
             if (fill._renderer && fill._renderer.offset) {
 
-              sx = toFixed(fill._renderer.scale.x);
-              sy = toFixed(fill._renderer.scale.y);
+              sx = fill._renderer.scale.x;
+              sy = fill._renderer.scale.y;
 
               ctx.save();
-              ctx.translate( - toFixed(fill._renderer.offset.x),
-                - toFixed(fill._renderer.offset.y));
+              ctx.translate( - fill._renderer.offset.x,
+                - fill._renderer.offset.y);
               ctx.scale(sx, sy);
 
               a = this._size / fill._renderer.scale.y;
               b = this._leading / fill._renderer.scale.y;
-              ctx.font = [this._style, this._weight, toFixed(a) + 'px/',
-                toFixed(b) + 'px', this._family].join(' ');
+              ctx.font = [this._style, this._weight, a + 'px/',
+                b + 'px', this._family].join(' ');
 
               c = fill._renderer.offset.x / fill._renderer.scale.x;
               d = fill._renderer.offset.y / fill._renderer.scale.y;
 
-              ctx.fillText(this.value, toFixed(c), toFixed(d));
+              ctx.fillText(this.value, c, d);
               ctx.restore();
 
             } else {
@@ -419,25 +472,25 @@
 
             if (stroke._renderer && stroke._renderer.offset) {
 
-              sx = toFixed(stroke._renderer.scale.x);
-              sy = toFixed(stroke._renderer.scale.y);
+              sx = stroke._renderer.scale.x;
+              sy = stroke._renderer.scale.y;
 
               ctx.save();
-              ctx.translate(- toFixed(stroke._renderer.offset.x),
-                - toFixed(stroke._renderer.offset.y));
+              ctx.translate(- stroke._renderer.offset.x,
+                - stroke._renderer.offset.y);
               ctx.scale(sx, sy);
 
               a = this._size / stroke._renderer.scale.y;
               b = this._leading / stroke._renderer.scale.y;
-              ctx.font = [this._style, this._weight, toFixed(a) + 'px/',
-                toFixed(b) + 'px', this._family].join(' ');
+              ctx.font = [this._style, this._weight, a + 'px/',
+                b + 'px', this._family].join(' ');
 
               c = stroke._renderer.offset.x / stroke._renderer.scale.x;
               d = stroke._renderer.offset.y / stroke._renderer.scale.y;
               e = linewidth / stroke._renderer.scale.x;
 
-              ctx.lineWidth = toFixed(e);
-              ctx.strokeText(this.value, toFixed(c), toFixed(d));
+              ctx.lineWidth = e;
+              ctx.strokeText(this.value, c, d);
               ctx.restore();
 
             } else {
@@ -453,6 +506,10 @@
         // TODO: Test for text
         if (clip && !parentClipped) {
           ctx.clip();
+        }
+
+        if (dashes && dashes.length > 0) {
+          ctx.setLineDash(emptyArray);
         }
 
         return this.flagReset();
@@ -570,25 +627,113 @@
 
       }
 
+    },
+
+    renderSvgArcCommand: function(ctx, ax, ay, rx, ry, largeArcFlag, sweepFlag, xAxisRotation, x, y) {
+
+      xAxisRotation = xAxisRotation * Math.PI / 180;
+
+      // Ensure radii are positive
+      rx = abs(rx);
+      ry = abs(ry);
+
+      // Compute (x1′, y1′)
+      var dx2 = (ax - x) / 2.0;
+      var dy2 = (ay - y) / 2.0;
+      var x1p = cos(xAxisRotation) * dx2 + sin(xAxisRotation) * dy2;
+      var y1p = - sin(xAxisRotation) * dx2 + cos(xAxisRotation) * dy2;
+
+      // Compute (cx′, cy′)
+      var rxs = rx * rx;
+      var rys = ry * ry;
+      var x1ps = x1p * x1p;
+      var y1ps = y1p * y1p;
+
+      // Ensure radii are large enough
+      var cr = x1ps / rxs + y1ps / rys;
+
+      if (cr > 1) {
+
+        // scale up rx,ry equally so cr == 1
+        var s = sqrt(cr);
+        rx = s * rx;
+        ry = s * ry;
+        rxs = rx * rx;
+        rys = ry * ry;
+
+      }
+
+      var dq = (rxs * y1ps + rys * x1ps);
+      var pq = (rxs * rys - dq) / dq;
+      var q = sqrt(max(0, pq));
+      if (largeArcFlag === sweepFlag) q = - q;
+      var cxp = q * rx * y1p / ry;
+      var cyp = - q * ry * x1p / rx;
+
+      // Step 3: Compute (cx, cy) from (cx′, cy′)
+      var cx = cos(xAxisRotation) * cxp
+        - sin(xAxisRotation) * cyp + (ax + x) / 2;
+      var cy = sin(xAxisRotation) * cxp
+        + cos(xAxisRotation) * cyp + (ay + y) / 2;
+
+      // Step 4: Compute θ1 and Δθ
+      var startAngle = svgAngle(1, 0, (x1p - cxp) / rx, (y1p - cyp) / ry);
+      var delta = svgAngle((x1p - cxp) / rx, (y1p - cyp) / ry,
+        (- x1p - cxp) / rx, (- y1p - cyp) / ry) % TWO_PI;
+
+      var endAngle = startAngle + delta;
+
+      var clockwise = sweepFlag === 0;
+
+      renderArcEstimate(ctx, cx, cy, rx, ry, startAngle, endAngle,
+        clockwise, xAxisRotation);
+
     }
 
   };
 
+  /**
+   * @name Two.CanvasRenderer
+   * @class
+   * @extends Two.Utils.Events
+   * @param {Object} [parameters] - This object is inherited when constructing a new instance of {@link Two}.
+   * @param {Element} [parameters.domElement] - The `<canvas />` to draw to. If none given a new one will be constructed.
+   * @param {Boolean} [parameters.overdraw] - Determines whether the canvas should clear the background or not. Defaults to `true`.
+   * @param {Boolean} [parameters.smoothing=true] - Determines whether the canvas should antialias drawing. Set it to `false` when working with pixel art. `false` can lead to better performance, since it would use a cheaper interpolation algorithm.
+   * @description This class is used by {@link Two} when constructing with `type` of `Two.Types.canvas`. It takes Two.js' scenegraph and renders it to a `<canvas />`.
+   */
   var Renderer = Two[Two.Types.canvas] = function(params) {
-    // Smoothing property. Defaults to true
-    // Set it to false when working with pixel art.
-    // false can lead to better performance, since it would use a cheaper interpolation algorithm.
+
     // It might not make a big difference on GPU backed canvases.
     var smoothing = (params.smoothing !== false);
+
+    /**
+     * @name Two.CanvasRenderer#domElement
+     * @property {Element} - The `<canvas />` associated with the Two.js scene.
+     */
     this.domElement = params.domElement || document.createElement('canvas');
+
+    /**
+     * @name Two.CanvasRenderer#ctx
+     * @property {Canvas2DContext} - Associated two dimensional context to render on the `<canvas />`.
+     */
     this.ctx = this.domElement.getContext('2d');
+
+    /**
+     * @name Two.CanvasRenderer#overdraw
+     * @property {Boolean} - Determines whether the canvas clears the background each draw call.
+     * @default true
+     */
     this.overdraw = params.overdraw || false;
 
     if (!_.isUndefined(this.ctx.imageSmoothingEnabled)) {
       this.ctx.imageSmoothingEnabled = smoothing;
     }
 
-    // Everything drawn on the canvas needs to be added to the scene.
+    /**
+     * @name Two.CanvasRenderer#scene
+     * @property {Two.Group} - The root group of the scenegraph.
+     */
     this.scene = new Two.Group();
     this.scene.parent = this;
   };
@@ -596,12 +741,27 @@
 
   _.extend(Renderer, {
 
+    /**
+     * @name Two.CanvasRenderer.Utils
+     * @property {Object} - A massive object filled with utility functions and properties to render Two.js objects to a `<canvas />`.
+     */
     Utils: canvas
 
   });
 
   _.extend(Renderer.prototype, Two.Utils.Events, {
 
+    constructor: Renderer,
+
+    /**
+     * @name Two.CanvasRenderer#setSize
+     * @function
+     * @param {Number} width - The new width of the renderer.
+     * @param {Number} height - The new height of the renderer.
+     * @param {Number} [ratio] - The new pixel ratio (pixel density) of the renderer. Defaults to calculate the pixel density of the user's screen.
+     * @description Change the size of the renderer.
+     * @nota-bene Triggers a `Two.Events.resize`.
+     */
     setSize: function(width, height, ratio) {
 
       this.width = width;
@@ -619,10 +779,15 @@
         });
       }
 
-      return this;
+      return this.trigger(Two.Events.resize, width, height, ratio);
 
     },
 
+    /**
+     * @name Two.CanvasRenderer#render
+     * @function
+     * @description Render the current scene to the `<canvas />`.
+     */
     render: function() {
 
       var isOne = this.ratio === 1;
@@ -648,8 +813,87 @@
 
   });
 
+  function renderArcEstimate(ctx, ox, oy, rx, ry, startAngle, endAngle, clockwise, xAxisRotation) {
+
+    var epsilon = Two.Utils.Curve.Tolerance.epsilon;
+    var deltaAngle = endAngle - startAngle;
+    var samePoints = Math.abs(deltaAngle) < epsilon;
+
+    // ensures that deltaAngle is 0 .. 2 PI
+    deltaAngle = mod(deltaAngle, TWO_PI);
+
+    if (deltaAngle < epsilon) {
+
+      if (samePoints) {
+
+        deltaAngle = 0;
+
+      } else {
+
+        deltaAngle = TWO_PI;
+
+      }
+
+    }
+
+    if (clockwise === true && ! samePoints) {
+
+      if (deltaAngle === TWO_PI) {
+
+        deltaAngle = - TWO_PI;
+
+      } else {
+
+        deltaAngle = deltaAngle - TWO_PI;
+
+      }
+
+    }
+
+    for (var i = 0; i < Two.Resolution; i++) {
+
+      var t = i / (Two.Resolution - 1);
+
+      var angle = startAngle + t * deltaAngle;
+      var x = ox + rx * Math.cos(angle);
+      var y = oy + ry * Math.sin(angle);
+
+      if (xAxisRotation !== 0) {
+
+        var cos = Math.cos(xAxisRotation);
+        var sin = Math.sin(xAxisRotation);
+
+        var tx = x - ox;
+        var ty = y - oy;
+
+        // Rotate the point about the center of the ellipse.
+        x = tx * cos - ty * sin + ox;
+        y = tx * sin + ty * cos + oy;
+
+      }
+
+      ctx.lineTo(x, y);
+
+    }
+
+  }
+
+  function svgAngle(ux, uy, vx, vy) {
+
+    var dot = ux * vx + uy * vy;
+    var len = sqrt(ux * ux + uy * uy) *  sqrt(vx * vx + vy * vy);
+    // floating point precision, slightly over values appear
+    var ang = acos(max(-1, min(1, dot / len)));
+    if ((ux * vy - uy * vx) < 0) {
+      ang = - ang;
+    }
+
+    return ang;
+
+  }
+
   function resetTransform(ctx) {
     ctx.setTransform(1, 0, 0, 1, 0, 0);
   }
 
-})((typeof global !== 'undefined' ? global : this).Two);
+})((typeof global !== 'undefined' ? global : (this || self || window)).Two);
