@@ -17,13 +17,16 @@
     "src"
   ],
   "scripts": {
-    "lint": "eslint .",
-    "build": "node ./utils/build.js"
+    "build": "node ./utils/build",
+    "docs:generate": "node ./utils/document",
+    "docs:dev": "vuepress dev wiki",
+    "docs:build": "vuepress build wiki",
+    "lint": "eslint ."
   },
   "directories": {
-    "doc": "documentation",
+    "doc": "wiki/documentation",
     "test": "tests",
-    "example": "utils"
+    "example": "wiki/examples"
   },
   "keywords": [
     "svg",
@@ -52,8 +55,15 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "@vuepress/plugin-active-header-links": "^1.2.0",
+    "@vuepress/plugin-medium-zoom": "^1.2.0",
+    "@vuepress/plugin-nprogress": "^1.2.0",
+    "jsdoc-api": "^5.0.4",
+    "vuepress": "^1.2.0",
+    "@node-minify/core": "^5.2.1",
+    "@node-minify/no-compress": "^5.2.0",
+    "@node-minify/terser": "^5.2.1",
     "eslint": "^6.7.2",
-    "jsdoc": "~3.5.5",
     "qunit": "^2.9.3",
     "resemblejs": "^3.2.3",
     "rollup": "^1.27.9",

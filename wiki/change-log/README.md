@@ -1,118 +1,6 @@
-# Two.js
+# Change Log
 
-A two-dimensional drawing api meant for modern browsers. It is renderer agnostic enabling the same api to render in multiple contexts: webgl, canvas2d, and svg.
-
-[Home](http://two.js.org) • [Releases](https://github.com/jonobr1/two.js/releases) • [Examples](http://two.js.org/#examples) • [Documentation](http://two.js.org/#documentation) • [Change Log](http://two.js.org/change-log/) • [Help](https://github.com/jonobr1/two.js/issues?labels=question)
-
-## Usage
-Download the latest [minified library](https://raw.github.com/jonobr1/two.js/dev/build/two.min.js) and include it in your html.
-
-```html
-<script src="js/two.min.js"></script>
-```
-
-It can also be installed via [npm](https://www.npmjs.com/package/two.js), Node Package Manager:
-
-```js
-npm install --save two.js
-```
-Alternatively see [how to build the library yourself](https://github.com/jonobr1/two.js#custom-build).
-
-
-Here is boilerplate html in order to draw a spinning rectangle in two.js:
-
-```html
-<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <script src="js/two.min.js"></script>
-  </head>
-  <body>
-    <script>
-      var two = new Two({
-        fullscreen: true,
-        autostart: true
-      }).appendTo(document.body);
-      var rect = two.makeRectangle(two.width / 2, two.height / 2, 50 ,50);
-      two.bind('update', function() {
-        rect.rotation += 0.001;
-      });
-    </script>
-  </body>
-</html>
-```
-
-## Custom Build
-Two.js uses [nodejs](http://nodejs.org/) in order to build source files. You'll first want to install that. Once installed open up a terminal and head to the repository folder:
-
-```
-cd ~/path-to-repo/two.js
-npm install
-```
-
-This will give you a number of libraries that the development of Two.js relies on. If for instance you only use the `SvgRenderer` then you can really cut down on the file size by excluding the other renderers. To do this, modify `/utils/build.js` to only add the files you'd like. Then run:
-
-```
-node ./utils/build
-```
-
-And the resulting `/build/two.js` and `/build/two.min.js` will be updated to your specification.
-
----
-
-### Running in Headless Environments
-
-As of version `v0.7.x` Two.js can also run in a headless environment, namely running on the server with the help of a library called [Node Canvas](https://github.com/Automattic/node-canvas). We don't add Node Canvas to dependencies of Two.js because it's _not necessary_ to run it in the browser. However, it has all the hooks setup to run in a cloud environment. To get started follow the installation instructions on Automattic's [readme](https://github.com/Automattic/node-canvas#installation). After you've done that run:
-
-```
-npm install canvas
-npm install two.js
-```
-
-Now in a JavaScript file setup your Two.js scenegraph and save out frames whenever you need to:
-
-```javascript
-var { createCanvas, Image } = require('canvas');
-var Two = require('two.js')
-
-var fs = require('fs');
-var path = require('path');
-
-var width = 800;
-var height = 600;
-
-var canvas = createCanvas(width, height);
-Two.Utils.shim(canvas, Image);
-
-var time = Date.now();
-
-var two = new Two({
-  width: width,
-  height: height,
-  domElement: canvas
-});
-
-var rect = two.makeRectangle(width / 2, height / 2, 50, 50);
-rect.fill = 'rgb(255, 100, 100)';
-rect.noStroke();
-
-two.render();
-
-var settings = { compressionLevel: 3, filters: canvas.PNG_FILTER_NONE };
-fs.writeFileSync(path.resolve(__dirname, './images/rectangle.png'), canvas.toBuffer('image/png', settings));
-console.log('Finished rendering. Time took: ', Date.now() - time);
-
-process.exit();
-
-```
-
-## Change Log
-
-#### Nightly
-+ Removed extraneous underscore calls from `Two.Utils` [@adroitwhiz](https://github.com/adroitwhiz)
-
-#### January, 2020 [v0.7.0](https://github.com/jonobr1/two.js/releases/tag/v0.7.0)
+## Nightly • [Devolpment Branch](https://github.com/jonobr1/two.js/trees/dev/)
 + Exposed `resolution` parameter in `Two.makeCircle` and `Two.makeEllipse` as the final parameter
 + Made `Two.Circle` and `Two.Ellipse` recalculate controls points on `_update` and made vertex amounts cyclical [@adroitwhiz](https://github.com/adroitwhiz)
 + Added [ESLint](https://eslint.org/) scripts to development environment [@adroitwhiz](https://github.com/adroitwhiz)
@@ -144,15 +32,15 @@ process.exit();
 + Added `Two.Shape.position` accessor to `Two.Shape.translation` for ease of use with [matter.js](http://brm.io/matter-js/)
 + Added `Two.Path.dashes` and `Two.Text.dashes` support to WebGL and Canvas Renderers
 
-#### December 8, 2018 [v0.7.0-beta.3](https://github.com/jonobr1/two.js/releases/tag/v0.7.0-beta.3)
+## December 8, 2018 • [v0.7.0-beta.3](https://github.com/jonobr1/two.js/releases/tag/v0.7.0-beta.3)
 + Canvas Renderer supports dashed and non dashed paths
 + Enforce `Two.Rectangle` has four `vertices`
 + Fixed `Two.Path.closed` on latest `ending` calculations
 
-#### November 18, 2018 [v0.7.0-beta.2](https://github.com/jonobr1/two.js/releases/tag/v0.7.0-beta.2)
+## November 18, 2018 • [v0.7.0-beta.2](https://github.com/jonobr1/two.js/releases/tag/v0.7.0-beta.2)
 + Updated Two.js compatibility with webpack and node-canvas 2.0.0+
 
-#### November 3, 2018 [v0.7.0-beta.1](https://github.com/jonobr1/two.js/releases/tag/v0.7.0-beta.1)
+## November 3, 2018 • [v0.7.0-beta.1](https://github.com/jonobr1/two.js/releases/tag/v0.7.0-beta.1)
 + Altered `Two.Path.clone` and `Two.Text.clone` to use references where possible and to `_update()` on return
 + Improved multi-decimal and arc SVG interpretation
 + Added `Two.Commands.arc` for better arc rendering across all renderers
@@ -188,7 +76,7 @@ process.exit();
 + Added `className` property to `Two.Shape`s for easier CSS styling in `SVGRenderer` [@fr0](https://github.com/fr0)
 + `Two.Events.resize` is now bound to a renderer's `setSize` function giving a more generic solution to change scenegraph items based on dimensions changing
 
-#### December 1, 2017 [v0.7.0-alpha.1](https://github.com/jonobr1/two.js/releases/tag/v0.7.0-alpha.1)
+## December 1, 2017 • [v0.7.0-alpha.1](https://github.com/jonobr1/two.js/releases/tag/v0.7.0-alpha.1)
 + Fixed closed `Two.Path.getPointAt` method to clamp properly
 + Added `Two.Texture.repeat` for describing pattern invocations
 + Added `Two.Texture`, `Two.Sprite`, and `Two.ImageSequence`
@@ -213,13 +101,13 @@ process.exit();
 + Added `remove` method to `Two.Text`
 + Fixed ordering on same parent additions for `Two.Group`
 
-##### February 9, 2016 [v0.6.0](https://github.com/jonobr1/two.js/releases/tag/v0.6.0)
+## February 9, 2016 • [v0.6.0](https://github.com/jonobr1/two.js/releases/tag/v0.6.0)
 + Updated `Two.CanvasRenderer.ctx.imageSmoothingEnabled` to not use deprecated invocation, [issue 178](https://github.com/jonobr1/two.js/issues/178)
 + Fixed `Two.Group.mask` in `SVGRenderer` to append to DOM correctly
 + Updated `require` imports to be compatible with [require.js](http://requirejs.org/)
 + Added `Two.Text` for programmatically writing text in Two.js
 
-##### October 1, 2015 [v0.5.0](https://github.com/jonobr1/two.js/releases/tag/v0.5.0)
+## October 1, 2015 • [v0.5.0](https://github.com/jonobr1/two.js/releases/tag/v0.5.0)
 + Added support for `two.interpret` to import `svg`'s gradients
 + Added `Two.Utils.xhr` and `two.load` methods to asynchronously load SVG files
 + Added `Two.Gradient`, `Two.LinearGradient`, and `Two.RadialGradient`
@@ -235,7 +123,7 @@ process.exit();
 + Augmented `Two.Group.children` to inherit from `Two.Collection` effectively making it an array instead of a map [Leo Koppelkamm](https://github.com/ponychicken)
   - The map can still be accessed at `Two.Group.children.ids`
 
-##### July 22, 2014 [v0.4.0](https://github.com/jonobr1/two.js/releases/tag/v0.4.0)
+## July 22, 2014 • [v0.4.0](https://github.com/jonobr1/two.js/releases/tag/v0.4.0)
 + Updated `Two.interpret` to handle polybezier path data
 + Added `Two.Group.mask` and `Two.Polygon.clip` in order to create clipping masks
 + `Two.Group` has own `opacity` property [Leo Koppelkamm](https://github.com/ponychicken)
@@ -273,7 +161,7 @@ process.exit();
   - Added `_matrix.manual` to override the default behavior of a `Two.Polygon` transformation
   - Localized variables per file as much as possible to reduce Garbage Collection on runtime
 
-##### October 25, 2013 [v0.3.0](https://github.com/jonobr1/two.js/tree/v0.3.0)
+## October 25, 2013 • [v0.3.0](https://github.com/jonobr1/two.js/tree/v0.3.0)
 + Can properly pass `domElement` on construction of new instance of two
 + Added `overdraw` boolean to `webgl` renderer [@arodic](https://github.com/arodic)
 + Added support for ie9 svg interpretation [@tomconroy](https://github.com/tomconroy)
@@ -307,8 +195,8 @@ process.exit();
 + Added gruntfile, package.json for more integration with `npm`, and dependency free build (`build/two.clean.js`) [@iros](https://github.com/iros)
 + Crossbrowser compatibility with `noStroke` and `noFill` commands
 
-##### May 3, 2013 [v0.2.0](https://github.com/jonobr1/two.js/tree/v0.2.0)
+## May 3, 2013 • [v0.2.0](https://github.com/jonobr1/two.js/tree/v0.2.0)
 + First alpha release
 
-##### Jan 29, 2013 [v0.1.0-alpha](https://github.com/jonobr1/two.js/tree/v0.1.0-alpha)
+## Jan 29, 2013 • [v0.1.0-alpha](https://github.com/jonobr1/two.js/tree/v0.1.0-alpha)
 + Proof of Concept built from Three.js

@@ -31,9 +31,9 @@ import Rectangle from './shapes/rectangle';
 import RoundedRectangle from './shapes/rounded-rectangle';
 import Star from './shapes/star';
 
-import CanvasRenderer from './renderer/canvas';
-import SVGRenderer from './renderer/svg';
-import WebGLRenderer from './renderer/webgl';
+import CanvasRenderer from './renderers/canvas';
+import SVGRenderer from './renderers/svg';
+import WebGLRenderer from './renderers/webgl';
 
 import TwoGlobals from './two-globals';
 
@@ -51,7 +51,7 @@ import dom from './utils/dom';
  * @param {Boolean} [options.fullscreen=false] - Set to `true` to automatically make the stage adapt to the width and height of the parent document. This parameter overrides `width` and `height` parameters if set to `true`.
  * @param {Number} [options.width=640] - The width of the stage on construction. This can be set at a later time.
  * @param {Number} [options.height=480] - The height of the stage on construction. This can be set at a later time.
- * @param {String} [options.type=Two.Types.svg] - The type of renderer to setup drawing with. See {@link  Two.Types} for available options.
+ * @param {String} [options.type=Two.Types.svg] - The type of renderer to setup drawing with. See {@link Two.Types} for available options.
  * @param {Boolean} [options.autostart=false] - Set to `true` to add the instance to draw on `requestAnimationFrame`. This is a convenient substitute for {@link Two#play}.
  * @description The entrypoint for Two.js. Instantiate a `new Two` in order to setup a scene to render to. `Two` is also the publicly accessible namespace that all other sub-classes, functions, and utilities attach to.
  */
@@ -252,7 +252,7 @@ _.extend(Two.prototype, Events, {
 
   /**
    * @name Two#render
-   * @fires Two.Events.Types.render event
+   * @fires render
    * @description Render all drawable and visible objects of the scene.
    */
   render: function() {

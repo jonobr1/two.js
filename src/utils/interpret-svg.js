@@ -313,7 +313,7 @@ var applySvgAttributes = function(node, elem, parentStyles) {
 /**
  * @name Utils.getScene
  * @param {Two.Shape} node - The currently available object in the scenegraph.
- * @returns {Group} - The highest order {@link Group} in the scenegraph.
+ * @returns {Group} - The highest order {@link Two.Group} in the scenegraph.
  * @property {Function}
  */
 var getScene = function(node) {

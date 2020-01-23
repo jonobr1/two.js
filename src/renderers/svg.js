@@ -19,9 +19,7 @@ var svg = {
     right: 'end'
   },
 
-  /**
-   * Create an svg namespaced element.
-   */
+  // Create an svg namespaced element.
   createElement: function(name, attrs) {
     var tag = name;
     var elem = document.createElementNS(svg.ns, tag);
@@ -36,9 +34,7 @@ var svg = {
     return elem;
   },
 
-  /**
-   * Add attributes from an svg element.
-   */
+  // Add attributes from an svg element.
   setAttributes: function(elem, attrs) {
     var keys = Object.keys(attrs);
     for (var i = 0; i < keys.length; i++) {
@@ -51,9 +47,7 @@ var svg = {
     return this;
   },
 
-  /**
-   * Remove attributes from an svg element.
-   */
+  // Remove attributes from an svg element.
   removeAttributes: function(elem, attrs) {
     for (var key in attrs) {
       elem.removeAttribute(key);
@@ -61,12 +55,10 @@ var svg = {
     return this;
   },
 
-  /**
-   * Turn a set of vertices into a string for the d property of a path
-   * element. It is imperative that the string collation is as fast as
-   * possible, because this call will be happening multiple times a
-   * second.
-   */
+  // Turn a set of vertices into a string for the d property of a path
+  // element. It is imperative that the string collation is as fast as
+  // possible, because this call will be happening multiple times a
+  // second.
   toString: function(points, closed) {
 
     var l = points.length,
@@ -323,11 +315,9 @@ var svg = {
         this.children.forEach(svg.group.orderChild, context);
       }
 
-      /**
-       * Commented two-way functionality of clips / masks with groups and
-       * polygons. Uncomment when this bug is fixed:
-       * https://code.google.com/p/chromium/issues/detail?id=370951
-       */
+      // Commented two-way functionality of clips / masks with groups and
+      // polygons. Uncomment when this bug is fixed:
+      // https://code.google.com/p/chromium/issues/detail?id=370951
 
       // if (this._flagClip) {
 
@@ -471,11 +461,9 @@ var svg = {
 
       }
 
-      /**
-       * Commented two-way functionality of clips / masks with groups and
-       * polygons. Uncomment when this bug is fixed:
-       * https://code.google.com/p/chromium/issues/detail?id=370951
-       */
+      // Commented two-way functionality of clips / masks with groups and
+      // polygons. Uncomment when this bug is fixed:
+      // https://code.google.com/p/chromium/issues/detail?id=370951
 
       // if (this._flagMask) {
       //   if (this._mask) {

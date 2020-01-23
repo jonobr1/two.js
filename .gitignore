@@ -3,3 +3,4 @@ node_modules
 styles/
 junk/
 *.log
+docs.json

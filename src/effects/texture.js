@@ -9,7 +9,7 @@ import Vector from '../vector';
 import Shape from '../shape';
 import Registry from '../registry';
 
-import CanvasRenderer from '../renderer/canvas';
+import CanvasRenderer from '../renderers/canvas';
 
 import TwoGlobals from '../two-globals';
 

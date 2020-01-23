@@ -1,0 +1,64 @@
+# <%= root.longname %>
+
+<% if (root.augments) { %>
+__Extends__: `<%= root.augments %>`
+<% } %>
+
+<%= root.description %>
+
+<% if (root.params && root.params.length > 0) { %>
+### Constructor
+<% } %>
+<% _.each(root.params, function(param, i) { %><% if (i <= 0) { %>
+| Argument | Description |
+| ---- | ----------- |
+| `<%= param.name %>` | <%= param.description %> |<% } else { %>
+| `<%= param.name %>` | <%= param.description %> |<% } %><% }); %>
+
+<% _.each(citations, function(item) { %>
+
+---
+
+## <%= item.longname %>
+
+<% if (item.returns && item.returns.length > 0) { %>
+__Returns__:
+<% _.each(item.returns, function(result) { %>
+<% if (result.type) { %>
+<% _.each(result.type.names, function(name) { %>
++ `<%= name %>`
+<% }); %>
+<% } %>
+<% if (result.description) { %>
+<%= result.description %>
+<% } %>
+<% }); %>
+<% } %>
+
+<% if (item.fires && item.fires.length > 0) { %>
+__Triggers__:
+<% _.each(item.fires, function(name) { %>
++ `<%= name %>`
+<% }); %>
+<% } %>
+
+<% _.each(item.properties, function(property) { %>
+<%= property.description %>
+<% }); %>
+
+<% _.each(item.params, function(param, i) { %><% if (i <= 0) { %>
+| Argument | Description |
+| ---- | ----------- |
+| `<%= param.name %>` | <%= param.description %> |<% } else { %>
+| `<%= param.name %>` | <%= param.description %> |<% } %><% }); %>
+
+
+<%= item.description %>
+
+<% _.each(item.tags, function(tag) { %>
+::: tip <%= tag.title %>
+<%= tag.text %>
+:::
+<% }); %>
+
+<% }); %>

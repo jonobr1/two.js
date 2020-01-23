@@ -2114,7 +2114,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2020-01-25T19:54:00.069Z',
+    PublishDate: '2020-01-25T19:54:19.826Z',
 
     /**
      * @name Two.Identifier
@@ -4877,11 +4877,9 @@ SOFTWARE.
           ctx.restore();
         }
 
-        /**
-         * Commented two-way functionality of clips / masks with groups and
-         * polygons. Uncomment when this bug is fixed:
-         * https://code.google.com/p/chromium/issues/detail?id=370951
-         */
+        // Commented two-way functionality of clips / masks with groups and
+        // polygons. Uncomment when this bug is fixed:
+        // https://code.google.com/p/chromium/issues/detail?id=370951
 
         // if (clip) {
         //   ctx.clip();
@@ -4933,11 +4931,9 @@ SOFTWARE.
           ctx.transform(matrix[0], matrix[3], matrix[1], matrix[4], matrix[2], matrix[5]);
         }
 
-        /**
-         * Commented two-way functionality of clips / masks with groups and
-         * polygons. Uncomment when this bug is fixed:
-         * https://code.google.com/p/chromium/issues/detail?id=370951
-         */
+        // Commented two-way functionality of clips / masks with groups and
+        // polygons. Uncomment when this bug is fixed:
+        // https://code.google.com/p/chromium/issues/detail?id=370951
 
         // if (mask) {
         //   canvas[mask._renderer.type].render.call(mask, ctx, true);
@@ -5172,11 +5168,9 @@ SOFTWARE.
           ctx.transform(matrix[0], matrix[3], matrix[1], matrix[4], matrix[2], matrix[5]);
         }
 
-        /**
-         * Commented two-way functionality of clips / masks with groups and
-         * polygons. Uncomment when this bug is fixed:
-         * https://code.google.com/p/chromium/issues/detail?id=370951
-         */
+        // Commented two-way functionality of clips / masks with groups and
+        // polygons. Uncomment when this bug is fixed:
+        // https://code.google.com/p/chromium/issues/detail?id=370951
 
         // if (mask) {
         //   canvas[mask._renderer.type].render.call(mask, ctx, true);
@@ -5536,11 +5530,11 @@ SOFTWARE.
     /**
      * @name Two.CanvasRenderer#setSize
      * @function
+     * @fires resize
      * @param {Number} width - The new width of the renderer.
      * @param {Number} height - The new height of the renderer.
      * @param {Number} [ratio] - The new pixel ratio (pixel density) of the renderer. Defaults to calculate the pixel density of the user's screen.
      * @description Change the size of the renderer.
-     * @nota-bene Triggers a `Two.Events.resize`.
      */
     setSize: function(width, height, ratio) {
 
@@ -5739,7 +5733,7 @@ SOFTWARE.
      * @name Two.Registry#get
      * @function
      * @param {String} id - A unique identifier.
-     * @returns value - The associated value. If unavailable then `undefined` is returned.
+     * @returns The associated value. If unavailable then `undefined` is returned.
      * @description Get a registered value by its `id`.
      */
     get: function(id) {
@@ -9081,7 +9075,7 @@ SOFTWARE.
   /**
    * @name Utils.getScene
    * @param {Two.Shape} node - The currently available object in the scenegraph.
-   * @returns {Group} - The highest order {@link Group} in the scenegraph.
+   * @returns {Group} - The highest order {@link Two.Group} in the scenegraph.
    * @property {Function}
    */
   var getScene = function(node) {
@@ -12225,9 +12219,7 @@ SOFTWARE.
       right: 'end'
     },
 
-    /**
-     * Create an svg namespaced element.
-     */
+    // Create an svg namespaced element.
     createElement: function(name, attrs) {
       var tag = name;
       var elem = document.createElementNS(svg.ns, tag);
@@ -12242,9 +12234,7 @@ SOFTWARE.
       return elem;
     },
 
-    /**
-     * Add attributes from an svg element.
-     */
+    // Add attributes from an svg element.
     setAttributes: function(elem, attrs) {
       var keys = Object.keys(attrs);
       for (var i = 0; i < keys.length; i++) {
@@ -12257,9 +12247,7 @@ SOFTWARE.
       return this;
     },
 
-    /**
-     * Remove attributes from an svg element.
-     */
+    // Remove attributes from an svg element.
     removeAttributes: function(elem, attrs) {
       for (var key in attrs) {
         elem.removeAttribute(key);
@@ -12267,12 +12255,10 @@ SOFTWARE.
       return this;
     },
 
-    /**
-     * Turn a set of vertices into a string for the d property of a path
-     * element. It is imperative that the string collation is as fast as
-     * possible, because this call will be happening multiple times a
-     * second.
-     */
+    // Turn a set of vertices into a string for the d property of a path
+    // element. It is imperative that the string collation is as fast as
+    // possible, because this call will be happening multiple times a
+    // second.
     toString: function(points, closed) {
 
       var l = points.length,
@@ -12529,11 +12515,9 @@ SOFTWARE.
           this.children.forEach(svg.group.orderChild, context);
         }
 
-        /**
-         * Commented two-way functionality of clips / masks with groups and
-         * polygons. Uncomment when this bug is fixed:
-         * https://code.google.com/p/chromium/issues/detail?id=370951
-         */
+        // Commented two-way functionality of clips / masks with groups and
+        // polygons. Uncomment when this bug is fixed:
+        // https://code.google.com/p/chromium/issues/detail?id=370951
 
         // if (this._flagClip) {
 
@@ -12677,11 +12661,9 @@ SOFTWARE.
 
         }
 
-        /**
-         * Commented two-way functionality of clips / masks with groups and
-         * polygons. Uncomment when this bug is fixed:
-         * https://code.google.com/p/chromium/issues/detail?id=370951
-         */
+        // Commented two-way functionality of clips / masks with groups and
+        // polygons. Uncomment when this bug is fixed:
+        // https://code.google.com/p/chromium/issues/detail?id=370951
 
         // if (this._flagMask) {
         //   if (this._mask) {
@@ -13186,9 +13168,7 @@ SOFTWARE.
 
   });
 
-  /**
-   * Constants
-   */
+  // Constants
 
   var multiplyMatrix = Matrix.Multiply,
     identity = [1, 0, 0, 0, 1, 0, 0, 0, 1],
@@ -13529,10 +13509,8 @@ SOFTWARE.
 
       },
 
-      /**
-       * Returns the rect of a set of verts. Typically takes vertices that are
-       * "centered" around 0 and returns them to be anchored upper-left.
-       */
+      // Returns the rect of a set of verts. Typically takes vertices that are
+      // "centered" around 0 and returns them to be anchored upper-left.
       getBoundingClientRect: function(vertices, border, rect) {
 
         var left = Infinity, right = -Infinity,
@@ -14377,11 +14355,11 @@ SOFTWARE.
     /**
      * @name Two.WebGLRenderer#setSize
      * @function
+     * @fires resize
      * @param {Number} width - The new width of the renderer.
      * @param {Number} height - The new height of the renderer.
      * @param {Number} [ratio] - The new pixel ratio (pixel density) of the renderer. Defaults to calculate the pixel density of the user's screen.
      * @description Change the size of the renderer.
-     * @nota-bene Triggers a `Two.Events.resize`.
      */
     setSize: function(width, height, ratio) {
 
@@ -14723,7 +14701,7 @@ SOFTWARE.
    * @param {Boolean} [options.fullscreen=false] - Set to `true` to automatically make the stage adapt to the width and height of the parent document. This parameter overrides `width` and `height` parameters if set to `true`.
    * @param {Number} [options.width=640] - The width of the stage on construction. This can be set at a later time.
    * @param {Number} [options.height=480] - The height of the stage on construction. This can be set at a later time.
-   * @param {String} [options.type=Two.Types.svg] - The type of renderer to setup drawing with. See {@link  Two.Types} for available options.
+   * @param {String} [options.type=Two.Types.svg] - The type of renderer to setup drawing with. See {@link Two.Types} for available options.
    * @param {Boolean} [options.autostart=false] - Set to `true` to add the instance to draw on `requestAnimationFrame`. This is a convenient substitute for {@link Two#play}.
    * @description The entrypoint for Two.js. Instantiate a `new Two` in order to setup a scene to render to. `Two` is also the publicly accessible namespace that all other sub-classes, functions, and utilities attach to.
    */
@@ -14924,7 +14902,7 @@ SOFTWARE.
 
     /**
      * @name Two#render
-     * @fires Two.Events.Types.render event
+     * @fires render
      * @description Render all drawable and visible objects of the scene.
      */
     render: function() {

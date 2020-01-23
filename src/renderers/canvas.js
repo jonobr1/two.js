@@ -102,11 +102,9 @@ var canvas = {
         ctx.restore();
       }
 
-      /**
-       * Commented two-way functionality of clips / masks with groups and
-       * polygons. Uncomment when this bug is fixed:
-       * https://code.google.com/p/chromium/issues/detail?id=370951
-       */
+      // Commented two-way functionality of clips / masks with groups and
+      // polygons. Uncomment when this bug is fixed:
+      // https://code.google.com/p/chromium/issues/detail?id=370951
 
       // if (clip) {
       //   ctx.clip();
@@ -158,11 +156,9 @@ var canvas = {
         ctx.transform(matrix[0], matrix[3], matrix[1], matrix[4], matrix[2], matrix[5]);
       }
 
-      /**
-       * Commented two-way functionality of clips / masks with groups and
-       * polygons. Uncomment when this bug is fixed:
-       * https://code.google.com/p/chromium/issues/detail?id=370951
-       */
+      // Commented two-way functionality of clips / masks with groups and
+      // polygons. Uncomment when this bug is fixed:
+      // https://code.google.com/p/chromium/issues/detail?id=370951
 
       // if (mask) {
       //   canvas[mask._renderer.type].render.call(mask, ctx, true);
@@ -397,11 +393,9 @@ var canvas = {
         ctx.transform(matrix[0], matrix[3], matrix[1], matrix[4], matrix[2], matrix[5]);
       }
 
-      /**
-       * Commented two-way functionality of clips / masks with groups and
-       * polygons. Uncomment when this bug is fixed:
-       * https://code.google.com/p/chromium/issues/detail?id=370951
-       */
+      // Commented two-way functionality of clips / masks with groups and
+      // polygons. Uncomment when this bug is fixed:
+      // https://code.google.com/p/chromium/issues/detail?id=370951
 
       // if (mask) {
       //   canvas[mask._renderer.type].render.call(mask, ctx, true);
@@ -762,11 +756,11 @@ _.extend(Renderer.prototype, Events, {
   /**
    * @name Two.CanvasRenderer#setSize
    * @function
+   * @fires resize
    * @param {Number} width - The new width of the renderer.
    * @param {Number} height - The new height of the renderer.
    * @param {Number} [ratio] - The new pixel ratio (pixel density) of the renderer. Defaults to calculate the pixel density of the user's screen.
    * @description Change the size of the renderer.
-   * @nota-bene Triggers a `Two.Events.resize`.
    */
   setSize: function(width, height, ratio) {
 
