@@ -106,7 +106,7 @@
       var x = pct * 300 + 50;
       var y = i % 2 ? 25 : 75;
       points.push(new Two.Vector(x, y));
-    };
+    }
     var poly = two.makePath(points, true);
     var path = two.makePath();
 
@@ -138,7 +138,7 @@
       var x = pct * 300 + 50;
       var y = i % 2 ? 25 : 75;
       points.push(new Two.Vector(x, y));
-    };
+    }
     var curve = two.makeCurve(points, true);
 
     two.update();
@@ -233,7 +233,7 @@
 
     var loaded = function() {
 
-      texture.unbind(Two.Events.load, loaded);
+      texture.unbind(Two.Events.Types.load, loaded);
       two.update();
 
       var elem = two.renderer.domElement.querySelector('#' + sprite.id);
@@ -244,7 +244,7 @@
 
     };
 
-    texture.bind(Two.Events.load, loaded);
+    texture.bind(Two.Events.Types.load, loaded);
     texture._update();
     QUnit.Utils.addInstanceToTest(assert.test, two);
 
@@ -270,7 +270,7 @@
 
     var loaded = function() {
 
-      texture.unbind(Two.Events.load, loaded);
+      texture.unbind(Two.Events.Types.load, loaded);
 
       two.update();
 
@@ -290,7 +290,7 @@
 
     };
 
-    texture.bind(Two.Events.load, loaded);
+    texture.bind(Two.Events.Types.load, loaded);
     texture._update();
 
     two.renderer.domElement.style.cursor = 'pointer';
@@ -324,7 +324,7 @@
 
     var loaded = function() {
 
-      texture.unbind(Two.Events.load, loaded);
+      texture.unbind(Two.Events.Types.load, loaded);
       two.update();
 
       assert.ok(true, 'Two.Sprite created properly.');
@@ -345,7 +345,7 @@
 
     };
 
-    texture.bind(Two.Events.load, loaded);
+    texture.bind(Two.Events.Types.load, loaded);
     texture._update();
 
     two.renderer.domElement.style.cursor = 'pointer';

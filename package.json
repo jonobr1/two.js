@@ -17,7 +17,8 @@
     "src"
   ],
   "scripts": {
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "build": "node ./utils/build.js"
   },
   "directories": {
     "doc": "documentation",
@@ -51,13 +52,12 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@node-minify/core": "^5.2.1",
-    "@node-minify/no-compress": "^5.2.0",
-    "@node-minify/terser": "^5.2.1",
     "eslint": "^6.7.2",
     "jsdoc": "~3.5.5",
     "qunit": "^2.9.3",
     "resemblejs": "^3.2.3",
+    "rollup": "^1.27.9",
+    "rollup-plugin-terser": "^5.1.2",
     "underscore": "^1.9.1"
   },
   "autoupdate": {

@@ -1,101 +1,37 @@
-// https://npmjs.org/package/node-minify
+const rollup = require('rollup');
+const fs = require('fs');
+const path = require('path');
+const _ = require('underscore');
+const terser = require('rollup-plugin-terser').terser;
 
-var path = require('path');
-var _ = require('underscore');
-var fs = require('fs');
+const publishDateString = (new Date()).toISOString();
 
-var minify = require('@node-minify/core');
-var noCompress = require('@node-minify/no-compress');
-var terser = require('@node-minify/terser');
+const inputOptions = {input: 'src/two.js'};
+const outputOptions = {name: 'Two'};
 
-var files = [
-  path.resolve(__dirname, './start-comment.js'),
-  path.resolve(__dirname, '../LICENSE'),
-  path.resolve(__dirname, './end-comment.js'),
-  path.resolve(__dirname, '../src/two.js'),
-  path.resolve(__dirname, '../src/registry.js'),
-  path.resolve(__dirname, '../src/vector.js'),
-  path.resolve(__dirname, '../src/anchor.js'),
-  path.resolve(__dirname, '../src/matrix.js'),
-  path.resolve(__dirname, '../src/renderer/svg.js'),
-  path.resolve(__dirname, '../src/renderer/canvas.js'),
-  path.resolve(__dirname, '../src/renderer/webgl.js'),
-  path.resolve(__dirname, '../src/shape.js'),
-  path.resolve(__dirname, '../src/path.js'),
-  path.resolve(__dirname, '../src/shapes/line.js'),
-  path.resolve(__dirname, '../src/shapes/rectangle.js'),
-  path.resolve(__dirname, '../src/shapes/ellipse.js'),
-  path.resolve(__dirname, '../src/shapes/circle.js'),
-  path.resolve(__dirname, '../src/shapes/polygon.js'),
-  path.resolve(__dirname, '../src/shapes/arc-segment.js'),
-  path.resolve(__dirname, '../src/shapes/star.js'),
-  path.resolve(__dirname, '../src/shapes/rounded-rectangle.js'),
-  path.resolve(__dirname, '../src/text.js'),
-  path.resolve(__dirname, '../src/effects/gradient.js'),
-  path.resolve(__dirname, '../src/effects/linear-gradient.js'),
-  path.resolve(__dirname, '../src/effects/radial-gradient.js'),
-  path.resolve(__dirname, '../src/effects/texture.js'),
-  path.resolve(__dirname, '../src/effects/sprite.js'),
-  path.resolve(__dirname, '../src/effects/image-sequence.js'),
-  path.resolve(__dirname, '../src/group.js')
-];
+async function generateOutput(bundle, additionalOptions) {
+  const output = (await bundle.generate(Object.assign({}, outputOptions, additionalOptions))).output;
+  let code = output[0].code;
 
-// Concatenated
-minify({
-  compressor: noCompress,
-  input: files,
-  output: path.resolve(__dirname, '../build/two.js'),
-  callback: function(e) {
+  const template = _.template(code);
+  return template({
+    publishDate: publishDateString
+  });
+}
 
-    if (!e) {
+async function build() {
+  const bundle = await(rollup.rollup(inputOptions));
 
-      console.log('concatenation complete');
-      var source = fs.readFileSync(path.resolve(__dirname, '../build/two.js'), {
-        encoding: 'utf-8'
-      });
-      var template = _.template(source);
-      source = template({
-        publishDate: (new Date()).toISOString()
-      });
-      fs.writeFileSync(path.resolve(__dirname, '../build/two.js'), source, {
-        encoding: 'utf-8'
-      });
+  const license = fs.readFileSync(path.resolve(__dirname, '../LICENSE'), {encoding: 'utf-8'});
+  const licenseComment = '/*\n' + license.trim() + '\n*/\n';
 
-      // Minified
-      minify({
-        compressor: terser,
-        input: path.resolve(__dirname, '../build/two.js'),
-        output: path.resolve(__dirname, '../build/two.min.js'),
-        callback: function(e) {
-          if (!e) {
-            console.log('minified complete');
-          } else {
-            console.log('unable to minify', e);
-          }
-        }
-      });
+  const umdOutput = await generateOutput(bundle, {format: 'umd'});
+  const esmOutput = await generateOutput(bundle, {format: 'esm'});
+  const minifiedOutput = await generateOutput(bundle, {format: 'umd', plugins: [terser()]});
 
-      minify({
-        compressor: noCompress,
-        input: [
-          path.resolve(__dirname, '../build/two.js'),
-          path.resolve(__dirname, './exports.js')
-        ],
-        output: path.resolve(__dirname, '../build/two.module.js'),
-        callback: function(e) {
-          if (!e) {
-            console.log('module complete');
-          } else {
-            console.log('unable to create module', e);
-          }
-        }
-      });
+  fs.writeFileSync('build/two.js', licenseComment + umdOutput);
+  fs.writeFileSync('build/two.module.js', licenseComment + esmOutput);
+  fs.writeFileSync('build/two.min.js', licenseComment + minifiedOutput);
+}
 
-    } else {
-
-      console.log('unable to concatenate', e);
-    }
-
-  }
-
-});
+build();
