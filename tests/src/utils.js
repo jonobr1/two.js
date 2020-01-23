@@ -10,7 +10,7 @@
   var TEMP = document.createElement('div');
   var Tolerance = 0.001;
 
-  var Utils = root.Utils = QU.Utils = {
+  var Utils = QU.Utils = {
 
     digits: function(v, d) {
 

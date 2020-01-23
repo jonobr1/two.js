@@ -6,7 +6,7 @@
 
   QUnit.module('CanvasRenderer');
 
-  var getRatio = function(v) { return Math.round(Two.Utils.getRatio(v));};
+  var getRatio = function(v) { return window.devicePixelRatio;};
   var deviceRatio = getRatio(document.createElement('canvas').getContext('2d'));
   var suffix = '@' + deviceRatio + 'x.png';
 
@@ -138,7 +138,7 @@
       var x = pct * 300 + 50;
       var y = i % 2 ? 25 : 75;
       points.push(new Two.Vector(x, y));
-    };
+    }
     var poly = two.makeCurve(points, true);
 
     two.update();
@@ -213,14 +213,14 @@
 
     var loaded = function() {
 
-      texture.unbind(Two.Events.load, loaded);
+      texture.unbind(Two.Events.Types.load, loaded);
       two.update();
 
       QUnit.Utils.compare.call(assert, './images/canvas/sprite-simple' + suffix, two.renderer, 'Two.makeSprite renders properly.');
 
     };
 
-    texture.bind(Two.Events.load, loaded);
+    texture.bind(Two.Events.Types.load, loaded);
     texture._update();
 
   });
@@ -247,7 +247,7 @@
 
     var loaded = function() {
 
-      texture.unbind(Two.Events.load, loaded);
+      texture.unbind(Two.Events.Types.load, loaded);
 
       two.update();
 
@@ -261,9 +261,9 @@
         id = texture.id;
         texture._flagImage = true;
 
-        texture.bind(Two.Events.load, function() {
+        texture.bind(Two.Events.Types.load, function() {
 
-          texture.unbind(Two.Events.load);
+          texture.unbind(Two.Events.Types.load);
 
           two.update();
 
@@ -277,7 +277,7 @@
 
     };
 
-    texture.bind(Two.Events.load, loaded);
+    texture.bind(Two.Events.Types.load, loaded);
     texture._update();
 
     two.renderer.domElement.style.cursor = 'pointer';
@@ -312,7 +312,7 @@
 
     var loaded = function() {
 
-      texture.unbind(Two.Events.load, loaded);
+      texture.unbind(Two.Events.Types.load, loaded);
       two.update();
 
       QUnit.Utils.compare.call(assert, './images/canvas/image-sequence-1' + suffix, two.renderer, 'Two.makeSprite renders properly.', function() {
@@ -326,7 +326,7 @@
 
     };
 
-    texture.bind(Two.Events.load, loaded);
+    texture.bind(Two.Events.Types.load, loaded);
     texture._update();
 
     two.renderer.domElement.style.cursor = 'pointer';

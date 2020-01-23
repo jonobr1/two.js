@@ -1,10 +1,10 @@
 /**
  * Tests Two.js Core Classes Functionality:
  * + Two.Utils ( Underscore Methods )
- * + Two.Utils.Events
+ * + Two.Events
  * + Two.Vector
  * + Two.Matrix
- * + Two.Utils.Collection
+ * + Two.Collection
  * + Two.Shape
  * + Two.Registry
  * + Two.Texture
@@ -13,17 +13,17 @@
 
 QUnit.module('Core');
 
-QUnit.test('Two.Utils.Events', function(assert) {
+QUnit.test('Two.Events', function(assert) {
 
   assert.expect(1);
 
   var Item = function() {};
-  Two.Utils.extend(Item.prototype, Two.Utils.Events);
+  _.extend(Item.prototype, Two.Events);
 
   var item = new Item();
 
   item.bind('change', function(message) {
-    assert.equal(message, 'hello', 'Bound Two.Utils.Events successfully.');
+    assert.equal(message, 'hello', 'Bound Two.Events successfully.');
   });
   item.trigger('change', 'hello');
   item.unbind('change');
@@ -142,7 +142,7 @@ QUnit.test('Bound Two.Vector', function(assert) {
   assert.expect(45);
 
   var vector = new Two.Vector();
-  vector.bind(Two.Events.change, function() {});
+  vector.bind(Two.Events.Types.change, function() {});
 
   assert.equal(vector._bound, true, 'Vector is bound.');
   assert.equal(vector.x, 0, 'x property defaults to 0.');
@@ -340,7 +340,7 @@ QUnit.test('Two.Matrix', function(assert) {
 
 });
 
-QUnit.test('Two.Utils.Collection', function(assert) {
+QUnit.test('Two.Collection', function(assert) {
 
   assert.expect(14);
 
@@ -349,26 +349,26 @@ QUnit.test('Two.Utils.Collection', function(assert) {
   var vertices = poly.vertices;
   var removed;
 
-  assert.equal(vertices instanceof Two.Utils.Collection, true, 'Polyon.vertices is an instance of Two.Utils.Collection');
+  assert.equal(vertices instanceof Two.Collection, true, 'Polyon.vertices is an instance of Two.Collection');
 
-  assert.equal(vertices[0].equals(new Two.Vector(0, 0)), true, 'Two.Utils.Collection created with correct items');
+  assert.equal(vertices[0].equals(new Two.Vector(0, 0)), true, 'Two.Collection created with correct items');
 
   vertices.push(vector);
-  assert.equal(vertices.length, 2, 'Two.Utils.Collection.push added one item to the end of vertices collection');
+  assert.equal(vertices.length, 2, 'Two.Collection.push added one item to the end of vertices collection');
 
   removed = vertices.pop();
-  assert.equal(vertices.length, 1, 'Two.Utils.Collection.pop removed one item from the end of the vertices collection');
-  assert.equal(removed.equals(vector), true, 'Two.Utils.Collection.push removed the correct item');
+  assert.equal(vertices.length, 1, 'Two.Collection.pop removed one item from the end of the vertices collection');
+  assert.equal(removed.equals(vector), true, 'Two.Collection.push removed the correct item');
 
   // Clear removed to reuse
   removed = null;
 
   vertices.unshift(vector);
-  assert.equal(vertices.length, 2, 'Two.Utils.Collection.unshift added one item to the front of the vertices collection');
+  assert.equal(vertices.length, 2, 'Two.Collection.unshift added one item to the front of the vertices collection');
 
   removed = vertices.shift();
-  assert.equal(vertices.length, 1, 'Two.Utils.Collection.shift removed one item from the front of the vertices collection');
-  assert.equal(removed.equals(vector), true, 'Two.Utils.Collection.shift removed the correct item');
+  assert.equal(vertices.length, 1, 'Two.Collection.shift removed one item from the front of the vertices collection');
+  assert.equal(removed.equals(vector), true, 'Two.Collection.shift removed the correct item');
 
   // Clear removed to reuse
   removed = null;
@@ -380,19 +380,19 @@ QUnit.test('Two.Utils.Collection', function(assert) {
     new Two.Vector(4, 4)
   );
 
-  assert.equal(vertices.length, 5, 'Two.Utils.Collection.push adds several items to the end of vertices collection');
+  assert.equal(vertices.length, 5, 'Two.Collection.push adds several items to the end of vertices collection');
 
   removed = vertices.splice(2, 1, vector);
-  assert.equal(vertices.length, 5, 'Two.Utils.Collection.splice adds and removes items from the vertices collection');
-  assert.equal(removed[0].equals(new Two.Vector(2, 2)), true, 'Two.Utils.Collection.splice remove the correct items from the vertices collection');
-  assert.equal(vertices[2].equals(vector), true, 'Two.Utils.Collection.splice inserts correct item to the middle of the vertices collection');
+  assert.equal(vertices.length, 5, 'Two.Collection.splice adds and removes items from the vertices collection');
+  assert.equal(removed[0].equals(new Two.Vector(2, 2)), true, 'Two.Collection.splice remove the correct items from the vertices collection');
+  assert.equal(vertices[2].equals(vector), true, 'Two.Collection.splice inserts correct item to the middle of the vertices collection');
 
-  var a = new Two.Utils.Collection('a', 'b', 'c', 'd', 'e');
-  assert.equal(a.slice(1, 2)[0], 'b', 'Two.Utils.Collection.slice does correct beginning / end index selection.');
+  var a = new Two.Collection('a', 'b', 'c', 'd', 'e');
+  assert.equal(a.slice(1, 2)[0], 'b', 'Two.Collection.slice does correct beginning / end index selection.');
 
   a.splice(0, 0, 'z');
 
-  assert.equal(a[0], 'z', 'Two.Utils.Collection.splice correctly inserts properties.');
+  assert.equal(a[0], 'z', 'Two.Collection.splice correctly inserts properties.');
 
 });
 
