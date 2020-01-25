@@ -37,7 +37,6 @@ SOFTWARE.
     root = this;
   }
 
-  var toString = Object.prototype.toString;
   /**
    * @name _
    * @interface
@@ -48,118 +47,15 @@ SOFTWARE.
   var _ = {
     // http://underscorejs.org/ • 1.8.3
     _indexAmount: 0,
-    natural: {
-      slice: Array.prototype.slice,
-      indexOf: Array.prototype.indexOf,
-      keys: Object.keys,
-      bind: Function.prototype.bind,
-      create: Object.create
-    },
-    identity: function(value) {
-      return value;
-    },
-    isArguments: function(obj) {
-      return toString.call(obj) === '[object Arguments]';
-    },
-    isFunction: function(obj) {
-      return toString.call(obj) === '[object Function]';
-    },
-    isString: function(obj) {
-      return toString.call(obj) === '[object String]';
-    },
-    isNumber: function(obj) {
-      return toString.call(obj) === '[object Number]';
-    },
-    isDate: function(obj) {
-      return toString.call(obj) === '[object Date]';
-    },
-    isRegExp: function(obj) {
-      return toString.call(obj) === '[object RegExp]';
-    },
-    isError: function(obj) {
-      return toString.call(obj) === '[object Error]';
-    },
-    isFinite: function(obj) {
-      return isFinite(obj) && !isNaN(parseFloat(obj));
-    },
     isNaN: function(obj) {
-      return _.isNumber(obj) && obj !== +obj;
-    },
-    isBoolean: function(obj) {
-      return obj === true || obj === false || toString.call(obj) === '[object Boolean]';
-    },
-    isNull: function(obj) {
-      return obj === null;
-    },
-    isUndefined: function(obj) {
-      return obj === void 0;
-    },
-    isEmpty: function(obj) {
-      if (obj == null) return true;
-      if (isArrayLike && (_.isArray(obj) || _.isString(obj) || _.isArguments(obj))) return obj.length === 0;
-      return _.keys(obj).length === 0;
+      return typeof obj === 'number' && obj !== +obj;
     },
     isElement: function(obj) {
       return !!(obj && obj.nodeType === 1);
     },
-    isArray: Array.isArray || function(obj) {
-      return toString.call(obj) === '[object Array]';
-    },
     isObject: function(obj) {
       var type = typeof obj;
       return type === 'function' || type === 'object' && !!obj;
-    },
-    toArray: function(obj) {
-      if (!obj) {
-        return [];
-      }
-      if (_.isArray(obj)) {
-        return slice.call(obj);
-      }
-      if (isArrayLike(obj)) {
-        return _.map(obj, _.identity);
-      }
-      return _.values(obj);
-    },
-    range: function(start, stop, step) {
-      if (stop == null) {
-        stop = start || 0;
-        start = 0;
-      }
-      step = step || 1;
-
-      var length = Math.max(Math.ceil((stop - start) / step), 0);
-      var range = Array(length);
-
-      for (var idx = 0; idx < length; idx++, start += step) {
-        range[idx] = start;
-      }
-
-      return range;
-    },
-    indexOf: function(list, item) {
-      if (_.natural.indexOf) {
-        return _.natural.indexOf.call(list, item);
-      }
-      for (var i = 0; i < list.length; i++) {
-        if (list[i] === item) {
-          return i;
-        }
-      }
-      return -1;
-    },
-    has: function(obj, key) {
-      return obj != null && hasOwnProperty.call(obj, key);
-    },
-    bind: function(func, ctx) {
-      var natural = _.natural.bind;
-      if (natural && func.bind === natural) {
-        return natural.apply(func, slice.call(arguments, 1));
-      }
-      var args = slice.call(arguments, 2);
-      return function() {
-        func.apply(ctx, args);
-      };
     },
     extend: function(base) {
       var sources = slice.call(arguments, 1);
@@ -183,67 +79,15 @@ SOFTWARE.
       }
       return base;
     },
-    keys: function(obj) {
-      if (!_.isObject(obj)) {
-        return [];
-      }
-      if (_.natural.keys) {
-        return _.natural.keys(obj);
-      }
-      var keys = [];
-      for (var k in obj) {
-        if (_.has(obj, k)) {
-          keys.push(k);
-        }
-      }
-      return keys;
-    },
-    values: function(obj) {
-      var keys = _.keys(obj);
-      var values = [];
-      for (var i = 0; i < keys.length; i++) {
-        var k = keys[i];
-        values.push(obj[k]);
-      }
-      return values;
-    },
     each: function(obj, iteratee, context) {
       var ctx = context || this;
-      var keys = !isArrayLike(obj) && _.keys(obj);
+      var keys = !isArrayLike(obj) && Object.keys(obj);
       var length = (keys || obj).length;
       for (var i = 0; i < length; i++) {
         var k = keys ? keys[i] : i;
         iteratee.call(ctx, obj[k], k, obj);
       }
       return obj;
-    },
-    map: function(obj, iteratee, context) {
-      var ctx = context || this;
-      var keys = !isArrayLike(obj) && _.keys(obj);
-      var length = (keys || obj).length;
-      var result = [];
-      for (var i = 0; i < length; i++) {
-        var k = keys ? keys[i] : i;
-        result[i] = iteratee.call(ctx, obj[k], k, obj);
-      }
-      return result;
-    },
-    once: function(func) {
-      var init = false;
-      return function() {
-        if (init) {
-          return func;
-        }
-        init = true;
-        return func.apply(this, arguments);
-      };
-    },
-    after: function(times, func) {
-      return function() {
-        while (--times < 1) {
-          return func.apply(this, arguments);
-        }
-      };
     },
     uniqueId: function(prefix) {
       var id = ++_._indexAmount + '';
@@ -270,7 +114,7 @@ SOFTWARE.
   // Localized variables
 
   var count = 0;
-  var slice = _.natural.slice;
+  var slice = Array.prototype.slice;
   var perf = ((root.performance && root.performance.now) ? root.performance : Date);
   var MAX_ARRAY_INDEX = Math.pow(2, 53) - 1;
   var getLength = function(obj) {
@@ -287,7 +131,7 @@ SOFTWARE.
 
     temp: (root.document ? root.document.createElement('div') : {}),
 
-    hasEventListeners: _.isFunction(root.addEventListener),
+    hasEventListeners: typeof root.addEventListener === 'function',
 
     bind: function(elem, event, func, bool) {
       if (this.hasEventListeners) {
@@ -327,12 +171,12 @@ SOFTWARE.
           lastTime = currTime + timeToCall;
           return id;
         };
-        // cancel = cancel || function(id) {
-        //   clearTimeout(id);
-        // };
       }
 
-      request.init = _.once(loop);
+      request.init = function() {
+        loop();
+        request.init = function() {};
+      };
 
       return request;
 
@@ -386,7 +230,7 @@ SOFTWARE.
 
     if (params.fullscreen) {
 
-      var fitted = _.bind(fitToWindow, this);
+      var fitted = fitToWindow.bind(this);
       _.extend(document.body.style, {
         overflow: 'hidden',
         margin: 0,
@@ -417,7 +261,7 @@ SOFTWARE.
 
     }
 
-    this.renderer.bind(Two.Events.resize, _.bind(updateDimensions, this));
+    this.renderer.bind(Two.Events.resize, updateDimensions.bind(this));
     this.scene = this.renderer.scene;
 
     Two.Instances.push(this);
@@ -466,13 +310,13 @@ SOFTWARE.
      * @name Two.Version
      * @property {String} - The current working version of the library.
      */
-    Version: 'v0.7.0',
+    Version: 'v0.8.0-dev',
 
     /**
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2020-01-22T21:17:28.421Z',
+    PublishDate: '2020-01-25T14:11:29.478Z',
 
     /**
      * @name Two.Identifier
@@ -597,7 +441,7 @@ SOFTWARE.
        */
       shim: function(canvas, Image) {
         Two.CanvasRenderer.Utils.shim(canvas);
-        if (!_.isUndefined(Image)) {
+        if (typeof Image !== 'undefined') {
           Two.Utils.Image = Image;
         }
         Two.Utils.isHeadless = true;
@@ -617,16 +461,16 @@ SOFTWARE.
           return;
         }
 
-        if (_.isFunction(obj.unbind)) {
+        if (typeof obj.unbind === 'function') {
           obj.unbind();
         }
 
         if (obj.vertices) {
-          if (_.isFunction(obj.vertices.unbind)) {
+          if (typeof obj.vertices.unbind === 'function') {
             obj.vertices.unbind();
           }
           _.each(obj.vertices, function(v) {
-            if (_.isFunction(v.unbind)) {
+            if (typeof v.unbind === 'function') {
               v.unbind();
             }
           });
@@ -836,7 +680,7 @@ SOFTWARE.
           command = commands[i].split(':');
           name = command[0];
           value = command[1];
-          if (_.isUndefined(name) || _.isUndefined(value)) {
+          if (typeof name === 'undefined' || typeof value === 'undefined') {
             continue;
           }
           styles[name] = value.replace(/\s/, '');
@@ -886,7 +730,7 @@ SOFTWARE.
 
         for (var i = 0; i < keywords.length; i++) {
           var keyword = keywords[i];
-          var index = _.indexOf(attributes, keyword);
+          var index = Array.prototype.indexOf.call(attributes, keyword);
           if (index >= 0) {
             attributes.splice(index, 1);
           }
@@ -947,7 +791,7 @@ SOFTWARE.
             value = computedStyles[key];
             // Gecko returns undefined for unset properties
             // Webkit returns the default value
-            if (!_.isUndefined(value)) {
+            if (typeof value !== 'undefined') {
               styles[key] = value;
             }
           }
@@ -966,7 +810,7 @@ SOFTWARE.
         // Getting the correct opacity is a bit tricky, since SVG path elements don't
         // support opacity as an attribute, but you can apply it via CSS.
         // So we take the opacity and set (stroke/fill)-opacity to the same value.
-        if (!_.isUndefined(styles.opacity)) {
+        if (typeof styles.opacity !== 'undefined') {
           styles['stroke-opacity'] = styles.opacity;
           styles['fill-opacity'] = styles.opacity;
           delete styles.opacity;
@@ -980,8 +824,8 @@ SOFTWARE.
 
         // Similarly visibility is influenced by the value of both display and visibility.
         // Calculate a unified value here which defaults to `true`.
-        styles.visible = !(_.isUndefined(styles.display) && /none/i.test(styles.display))
-          || (_.isUndefined(styles.visibility) && /hidden/i.test(styles.visibility));
+        styles.visible = !(typeof styles.display === 'undefined' && /none/i.test(styles.display))
+          || (typeof styles.visibility === 'undefined' && /hidden/i.test(styles.visibility));
 
         // Now iterate the whole thing
         for (key in styles) {
@@ -996,7 +840,7 @@ SOFTWARE.
                 : (node.getCTM ? node.getCTM() : null);
 
               // Might happen when transform string is empty or not valid.
-              if (_.isNull(m)) break;
+              if (m === null) break;
 
               // // Option 1: edit the underlying matrix and don't force an auto calc.
               // var m = node.getCTM();
@@ -1577,7 +1421,7 @@ SOFTWARE.
               }
 
               if (result) {
-                if (_.isArray(result)) {
+                if (Array.isArray(result)) {
                   points = points.concat(result);
                 } else {
                   points.push(result);
@@ -1735,12 +1579,12 @@ SOFTWARE.
             var style = child.getAttribute('style');
 
             var matches;
-            if (_.isNull(color)) {
+            if (color === null) {
               matches = style ? style.match(/stop-color:\s?([#a-fA-F0-9]*)/) : false;
               color = matches && matches.length > 1 ? matches[1] : undefined;
             }
 
-            if (_.isNull(opacity)) {
+            if (opacity === null) {
               matches = style ? style.match(/stop-opacity:\s?([0-9.-]*)/) : false;
               opacity = matches && matches.length > 1 ? parseFloat(matches[1]) : 1;
             } else {
@@ -1796,12 +1640,12 @@ SOFTWARE.
             var style = child.getAttribute('style');
 
             var matches;
-            if (_.isNull(color)) {
+            if (color === null) {
               matches = style ? style.match(/stop-color:\s?([#a-fA-F0-9]*)/) : false;
               color = matches && matches.length > 1 ? matches[1] : undefined;
             }
 
-            if (_.isNull(opacity)) {
+            if (opacity === null) {
               matches = style ? style.match(/stop-opacity:\s?([0-9.-]*)/) : false;
               opacity = matches && matches.length > 1 ? parseFloat(matches[1]) : 1;
             } else {
@@ -2083,7 +1927,7 @@ SOFTWARE.
 
         // TODO: Issue 73
         if (d1 < 0.0001 || d2 < 0.0001) {
-          if (_.isBoolean(b.relative) && !b.relative) {
+          if (typeof b.relative === 'boolean' && !b.relative) {
             b.controls.left.copy(b);
             b.controls.right.copy(b);
           }
@@ -2107,7 +1951,7 @@ SOFTWARE.
         b.controls.right.x = cos(mid) * d2;
         b.controls.right.y = sin(mid) * d2;
 
-        if (_.isBoolean(b.relative) && !b.relative) {
+        if (typeof b.relative === 'boolean' && !b.relative) {
           b.controls.left.x += b.x;
           b.controls.left.y += b.y;
           b.controls.right.x += b.x;
@@ -2150,11 +1994,12 @@ SOFTWARE.
        */
       getAnchorsFromArcData: function(center, xAxisRotation, rx, ry, ts, td, ccw) {
 
-        var l = Two.Resolution;
+        var resolution = Two.Resolution;
 
-        return _.map(_.range(l), function(i) {
+        var anchors = [];
 
-          var pct = (i + 1) / l;
+        for (var i = 0; i < resolution; i++) {
+          var pct = (i + 1) / resolution;
           if (ccw) {
             pct = 1 - pct;
           }
@@ -2172,9 +2017,8 @@ SOFTWARE.
 
           // TODO: Calculate control points here...
 
-          return anchor;
-
-        });
+          anchors.push(anchor);
+        }
 
       },
 
@@ -2290,7 +2134,7 @@ SOFTWARE.
             return this;
           }
 
-          var names = name ? [name] : _.keys(this._events);
+          var names = name ? [name] : Object.keys(this._events);
           for (var i = 0, l = names.length; i < l; i++) {
 
             name = names[i];
@@ -2584,7 +2428,7 @@ SOFTWARE.
 
       var objects = o;
       if (!(objects instanceof Array)) {
-        objects = _.toArray(arguments);
+        objects = Array.prototype.slice.call(arguments);
       }
 
       this.scene.add(objects);
@@ -2602,7 +2446,7 @@ SOFTWARE.
 
       var objects = o;
       if (!(objects instanceof Array)) {
-        objects = _.toArray(arguments);
+        objects = Array.prototype.slice.call(arguments);
       }
 
       this.scene.remove(objects);
@@ -2654,7 +2498,7 @@ SOFTWARE.
      */
     makeArrow: function(x1, y1, x2, y2, size) {
 
-      var headlen = _.isNumber(size ) ? size : 10;
+      var headlen = typeof size  === 'number' ? size : 10;
 
       var angle = Math.atan2(y2 - y1, x2 - x1);
 
@@ -2797,11 +2641,11 @@ SOFTWARE.
     makeCurve: function(p) {
 
       var l = arguments.length, points = p;
-      if (!_.isArray(p)) {
+      if (!Array.isArray(p)) {
         points = [];
         for (var i = 0; i < l; i+=2) {
           var x = arguments[i];
-          if (!_.isNumber(x)) {
+          if (typeof x !== 'number') {
             break;
           }
           var y = arguments[i + 1];
@@ -2810,7 +2654,7 @@ SOFTWARE.
       }
 
       var last = arguments[l - 1];
-      var curve = new Two.Path(points, !(_.isBoolean(last) ? last : undefined), true);
+      var curve = new Two.Path(points, !(typeof last === 'boolean' ? last : undefined), true);
       var rect = curve.getBoundingClientRect();
       curve.center().translation
         .set(rect.left + rect.width / 2, rect.top + rect.height / 2);
@@ -2869,11 +2713,11 @@ SOFTWARE.
     makePath: function(p) {
 
       var l = arguments.length, points = p;
-      if (!_.isArray(p)) {
+      if (!Array.isArray(p)) {
         points = [];
         for (var i = 0; i < l; i+=2) {
           var x = arguments[i];
-          if (!_.isNumber(x)) {
+          if (typeof x !== 'number') {
             break;
           }
           var y = arguments[i + 1];
@@ -2882,11 +2726,11 @@ SOFTWARE.
       }
 
       var last = arguments[l - 1];
-      var path = new Two.Path(points, !(_.isBoolean(last) ? last : undefined));
+      var path = new Two.Path(points, !(typeof last === 'boolean' ? last : undefined));
       var rect = path.getBoundingClientRect();
 
-      if (_.isNumber(rect.top)   && _.isNumber(rect.left)   &&
-          _.isNumber(rect.right) && _.isNumber(rect.bottom)) {
+      if (typeof rect.top === 'number'   && typeof rect.left === 'number' &&
+          typeof rect.right === 'number' && typeof rect.bottom === 'number') {
         path.center().translation
           .set(rect.left + rect.width / 2, rect.top + rect.height / 2);
       }
@@ -3030,7 +2874,7 @@ SOFTWARE.
 
       var objects = o;
       if (!(objects instanceof Array)) {
-        objects = _.toArray(arguments);
+        objects = Array.prototype.slice.call(arguments);
       }
 
       var group = new Two.Group();
@@ -3083,7 +2927,7 @@ SOFTWARE.
       var group = new Two.Group();
       var elem, i, j;
 
-      var attach = _.bind(function(data) {
+      var attach = (function(data) {
 
         dom.temp.innerHTML = data;
 
@@ -3099,13 +2943,13 @@ SOFTWARE.
           }
         }
 
-        if (_.isFunction(callback)) {
+        if (typeof callback === 'function') {
           var svg = dom.temp.children.length <= 1
             ? dom.temp.children[0] : dom.temp.children;
           callback(group, svg);
         }
 
-      }, this);
+      }).bind(this);
 
       if (/.*\.svg$/ig.test(text)) {
 
@@ -3493,10 +3337,10 @@ SOFTWARE.
       if (arguments.length <= 0) {
         return this;
       } else if (arguments.length <= 1) {
-        if (_.isNumber(x)) {
+        if (typeof x === 'number') {
           this.x += x;
           this.y += x;
-        } else if (x && _.isNumber(x.x) && _.isNumber(x.y)) {
+        } else if (x && typeof x.x === 'number' && typeof x.y === 'number') {
           this.x += x.x;
           this.y += x.y;
         }
@@ -3546,10 +3390,10 @@ SOFTWARE.
       if (arguments.length <= 0) {
         return this;
       } else if (arguments.length <= 1) {
-        if (_.isNumber(x)) {
+        if (typeof x === 'number') {
           this.x -= x;
           this.y -= x;
-        } else if (x && _.isNumber(x.x) && _.isNumber(x.y)) {
+        } else if (x && typeof x.x === 'number' && typeof x.y === 'number') {
           this.x -= x.x;
           this.y -= x.y;
         }
@@ -3615,10 +3459,10 @@ SOFTWARE.
       if (arguments.length <= 0) {
         return this;
       } else if (arguments.length <= 1) {
-        if (_.isNumber(x)) {
+        if (typeof x === 'number') {
           this.x *= x;
           this.y *= x;
-        } else if (x && _.isNumber(x.x) && _.isNumber(x.y)) {
+        } else if (x && typeof x.x === 'number' && typeof x.y === 'number') {
           this.x *= x.x;
           this.y *= x.y;
         }
@@ -3678,10 +3522,10 @@ SOFTWARE.
       if (arguments.length <= 0) {
         return this;
       } else if (arguments.length <= 1) {
-        if (_.isNumber(x)) {
+        if (typeof x === 'number') {
           this.x /= x;
           this.y /= x;
-        } else if (x && _.isNumber(x.x) && _.isNumber(x.y)) {
+        } else if (x && typeof x.x === 'number' && typeof x.y === 'number') {
           this.x /= x.x;
           this.y /= x.y;
         }
@@ -3906,10 +3750,10 @@ SOFTWARE.
       if (arguments.length <= 0) {
         return this;
       } else if (arguments.length <= 1) {
-        if (_.isNumber(x)) {
+        if (typeof x === 'number') {
           this._x += x;
           this._y += x;
-        }  else if (x && _.isNumber(x.x) && _.isNumber(x.y)) {
+        }  else if (x && typeof x.x === 'number' && typeof x.y === 'number') {
           this._x += x.x;
           this._y += x.y;
         }
@@ -3924,10 +3768,10 @@ SOFTWARE.
       if (arguments.length <= 0) {
         return this;
       } else if (arguments.length <= 1) {
-        if (_.isNumber(x)) {
+        if (typeof x === 'number') {
           this._x -= x;
           this._y -= x;
-        } else if (x && _.isNumber(x.x) && _.isNumber(x.y)) {
+        } else if (x && typeof x.x === 'number' && typeof x.y === 'number') {
           this._x -= x.x;
           this._y -= x.y;
         }
@@ -3942,10 +3786,10 @@ SOFTWARE.
       if (arguments.length <= 0) {
         return this;
       } else if (arguments.length <= 1) {
-        if (_.isNumber(x)) {
+        if (typeof x === 'number') {
           this._x *= x;
           this._y *= x;
-        } else if (x && _.isNumber(x.x) && _.isNumber(x.y)) {
+        } else if (x && typeof x.x === 'number' && typeof x.y === 'number') {
           this._x *= x.x;
           this._y *= x.y;
         }
@@ -3960,10 +3804,10 @@ SOFTWARE.
       if (arguments.length <= 0) {
         return this;
       } else if (arguments.length <= 1) {
-        if (_.isNumber(x)) {
+        if (typeof x === 'number') {
           this._x /= x;
           this._y /= x;
-        } else if (x && _.isNumber(x.x) && _.isNumber(x.y)) {
+        } else if (x && typeof x.x === 'number' && typeof x.y === 'number') {
           this._x /= x.x;
           this._y /= x.y;
         }
@@ -4067,17 +3911,17 @@ SOFTWARE.
 
     Two.Vector.call(this, x, y);
 
-    this._broadcast = _.bind(function() {
+    this._broadcast = (function() {
       this.trigger(Two.Events.change);
-    }, this);
+    }).bind(this);
 
     this._command = command || commands.move;
     this._relative = true;
 
-    var ilx = _.isNumber(lx);
-    var ily = _.isNumber(ly);
-    var irx = _.isNumber(rx);
-    var iry = _.isNumber(ry);
+    var ilx = typeof lx === 'number';
+    var ily = typeof ly === 'number';
+    var irx = typeof rx === 'number';
+    var iry = typeof ry === 'number';
 
     // Append the `controls` object only if control points are specified,
     // keeping the Two.Anchor inline with a Two.Vector until it needs to
@@ -4254,7 +4098,7 @@ SOFTWARE.
       this.x = v.x;
       this.y = v.y;
 
-      if (_.isString(v.command)) {
+      if (typeof v.command === 'string') {
         this.command = v.command;
       }
       if (_.isObject(v.controls)) {
@@ -4265,7 +4109,7 @@ SOFTWARE.
         this.controls.left.copy(v.controls.left);
         this.controls.right.copy(v.controls.right);
       }
-      if (_.isBoolean(v.relative)) {
+      if (typeof v.relative === 'boolean') {
         this.relative = v.relative;
       }
 
@@ -4385,8 +4229,8 @@ SOFTWARE.
     this.elements = new Two.Array(9);
 
     var elements = a;
-    if (!_.isArray(elements)) {
-      elements = _.toArray(arguments);
+    if (!Array.isArray(elements)) {
+      elements = Array.prototype.slice.call(arguments);
     }
 
     // initialize the elements with default values.
@@ -4502,7 +4346,7 @@ SOFTWARE.
 
       var elements;
 
-      if (_.isUndefined(b)) {
+      if (typeof b === 'undefined') {
         elements = a;
         a = elements[0];
         b = elements[1];
@@ -4607,7 +4451,7 @@ SOFTWARE.
 
       // Multiply scalar
 
-      if (_.isUndefined(b)) {
+      if (typeof b === 'undefined') {
 
         this.elements[0] *= a;
         this.elements[1] *= a;
@@ -4623,7 +4467,7 @@ SOFTWARE.
 
       }
 
-      if (_.isUndefined(d)) { // Multiply Vector
+      if (typeof d === 'undefined') { // Multiply Vector
 
         var x, y, z;
         a = a || 0;
@@ -4985,7 +4829,7 @@ SOFTWARE.
           version: svg.version
         });
       }
-      if (!_.isEmpty(attrs)) {
+      if (attrs && Object.keys(attrs).length > 0) {
         svg.setAttributes(elem, attrs);
       }
       return elem;
@@ -5819,7 +5663,7 @@ SOFTWARE.
         if (this._flagScale || this._flagLoaded) {
           if (!this._renderer.image) {
             this._renderer.image = svg.createElement('image', styles);
-          } else if (!_.isEmpty(styles)) {
+          } else {
             svg.setAttributes(this._renderer.image, styles);
           }
         }
@@ -5831,7 +5675,7 @@ SOFTWARE.
           this._renderer.elem = svg.createElement('pattern', changed);
           domElement.defs.appendChild(this._renderer.elem);
 
-        } else if (!_.isEmpty(changed)) {
+        } else if (Object.keys(changed).length !== 0) {
 
           svg.setAttributes(this._renderer.elem, changed);
 
@@ -6103,7 +5947,7 @@ SOFTWARE.
 
         // Styles
         if (fill) {
-          if (_.isString(fill)) {
+          if (typeof fill === 'string') {
             ctx.fillStyle = fill;
           } else {
             canvas[fill._renderer.type].render.call(fill, ctx);
@@ -6111,7 +5955,7 @@ SOFTWARE.
           }
         }
         if (stroke) {
-          if (_.isString(stroke)) {
+          if (typeof stroke === 'string') {
             ctx.strokeStyle = stroke;
           } else {
             canvas[stroke._renderer.type].render.call(stroke, ctx);
@@ -6130,7 +5974,7 @@ SOFTWARE.
             ctx.lineCap = cap;
           }
         }
-        if (_.isNumber(opacity)) {
+        if (typeof opacity === 'number') {
           ctx.globalAlpha = opacity;
         }
 
@@ -6350,7 +6194,7 @@ SOFTWARE.
 
         // Styles
         if (fill) {
-          if (_.isString(fill)) {
+          if (typeof fill === 'string') {
             ctx.fillStyle = fill;
           } else {
             canvas[fill._renderer.type].render.call(fill, ctx);
@@ -6358,7 +6202,7 @@ SOFTWARE.
           }
         }
         if (stroke) {
-          if (_.isString(stroke)) {
+          if (typeof stroke === 'string') {
             ctx.strokeStyle = stroke;
           } else {
             canvas[stroke._renderer.type].render.call(stroke, ctx);
@@ -6368,7 +6212,7 @@ SOFTWARE.
             ctx.lineWidth = linewidth;
           }
         }
-        if (_.isNumber(opacity)) {
+        if (typeof opacity === 'number') {
           ctx.globalAlpha = opacity;
         }
         if (dashes && dashes.length > 0) {
@@ -6665,7 +6509,7 @@ SOFTWARE.
      */
     this.overdraw = params.overdraw || false;
 
-    if (!_.isUndefined(this.ctx.imageSmoothingEnabled)) {
+    if (typeof this.ctx.imageSmoothingEnabled !== 'undefined') {
       this.ctx.imageSmoothingEnabled = smoothing;
     }
 
@@ -6706,7 +6550,7 @@ SOFTWARE.
       this.width = width;
       this.height = height;
 
-      this.ratio = _.isUndefined(ratio) ? getRatio(this.ctx) : ratio;
+      this.ratio = typeof ratio === 'undefined' ? getRatio(this.ctx) : ratio;
 
       this.domElement.width = width * this.ratio;
       this.domElement.height = height * this.ratio;
@@ -6857,7 +6701,7 @@ SOFTWARE.
 
     isHidden: /(undefined|none|transparent)/i,
 
-    canvas: (root.document ? root.document.createElement('canvas') : { getContext: _.identity }),
+    canvas: (root.document ? root.document.createElement('canvas') : { getContext: function() {} }),
 
     alignments: {
       left: 'start',
@@ -7002,7 +6846,7 @@ SOFTWARE.
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         if (fill) {
-          if (_.isString(fill)) {
+          if (typeof fill === 'string') {
             ctx.fillStyle = fill;
           } else {
             webgl[fill._renderer.type].render.call(fill, ctx, elem);
@@ -7010,7 +6854,7 @@ SOFTWARE.
           }
         }
         if (stroke) {
-          if (_.isString(stroke)) {
+          if (typeof stroke === 'string') {
             ctx.strokeStyle = stroke;
           } else {
             webgl[stroke._renderer.type].render.call(stroke, ctx, elem);
@@ -7029,7 +6873,7 @@ SOFTWARE.
             ctx.lineCap = cap;
           }
         }
-        if (_.isNumber(opacity)) {
+        if (typeof opacity === 'number') {
           ctx.globalAlpha = opacity;
         }
 
@@ -7236,7 +7080,7 @@ SOFTWARE.
 
         // Expand borders
 
-        if (_.isNumber(border)) {
+        if (typeof border === 'number') {
           top -= border;
           left -= border;
           right += border;
@@ -7399,7 +7243,7 @@ SOFTWARE.
 
         // Styles
         if (fill) {
-          if (_.isString(fill)) {
+          if (typeof fill === 'string') {
             ctx.fillStyle = fill;
           } else {
             webgl[fill._renderer.type].render.call(fill, ctx, elem);
@@ -7407,7 +7251,7 @@ SOFTWARE.
           }
         }
         if (stroke) {
-          if (_.isString(stroke)) {
+          if (typeof stroke === 'string') {
             ctx.strokeStyle = stroke;
           } else {
             webgl[stroke._renderer.type].render.call(stroke, ctx, elem);
@@ -7417,7 +7261,7 @@ SOFTWARE.
             ctx.lineWidth = linewidth;
           }
         }
-        if (_.isNumber(opacity)) {
+        if (typeof opacity === 'number') {
           ctx.globalAlpha = opacity;
         }
         if (dashes && dashes.length > 0) {
@@ -7923,7 +7767,7 @@ SOFTWARE.
      */
     this.domElement = params.domElement || document.createElement('canvas');
 
-    if (!_.isUndefined(params.offscreenElement)) {
+    if (typeof params.offscreenElement !== 'undefined') {
       webgl.canvas = params.offscreenElement;
       webgl.ctx = webgl.canvas.getContext('2d');
     }
@@ -8047,7 +7891,7 @@ SOFTWARE.
       this.width = width;
       this.height = height;
 
-      this.ratio = _.isUndefined(ratio) ? getRatio(this.ctx) : ratio;
+      this.ratio = typeof ratio === 'undefined' ? getRatio(this.ctx) : ratio;
 
       this.domElement.width = width * this.ratio;
       this.domElement.height = height * this.ratio;
@@ -8118,7 +7962,7 @@ SOFTWARE.
      * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `shape._renderer.elem`.
      */
     this._renderer = {};
-    this._renderer.flagMatrix = _.bind(Shape.FlagMatrix, this);
+    this._renderer.flagMatrix = Shape.FlagMatrix.bind(this);
     this.isShape = true;
 
     /**
@@ -8265,7 +8109,7 @@ SOFTWARE.
 
             for (var i = 0; i < prev.length; i++) {
               var className = prev[i];
-              var index = _.indexOf(this.classList, className);
+              var index = Array.prototype.indexOf.call(this.classList, className);
               if (index >= 0) {
                 this.classList.splice(index, 1);
               }
@@ -8472,12 +8316,12 @@ SOFTWARE.
     Two.Shape.call(this);
 
     this._renderer.type = 'path';
-    this._renderer.flagVertices = _.bind(Path.FlagVertices, this);
-    this._renderer.bindVertices = _.bind(Path.BindVertices, this);
-    this._renderer.unbindVertices = _.bind(Path.UnbindVertices, this);
+    this._renderer.flagVertices = Path.FlagVertices.bind(this);
+    this._renderer.bindVertices = Path.BindVertices.bind(this);
+    this._renderer.unbindVertices = Path.UnbindVertices.bind(this);
 
-    this._renderer.flagFill = _.bind(Path.FlagFill, this);
-    this._renderer.flagStroke = _.bind(Path.FlagStroke, this);
+    this._renderer.flagFill = Path.FlagFill.bind(this);
+    this._renderer.flagStroke = Path.FlagStroke.bind(this);
     this._renderer.vertices = [];
     this._renderer.collection = [];
 
@@ -8900,7 +8744,7 @@ SOFTWARE.
           return this._dashes;
         },
         set: function(v) {
-          if (!_.isNumber(v.offset)) {
+          if (typeof v.offset !== 'number') {
             v.offset = this._dashes.offset || 0;
           }
           this._dashes = v;
@@ -9156,7 +9000,7 @@ SOFTWARE.
     toObject: function() {
 
       var result = {
-        vertices: _.map(this.vertices, function(v) {
+        vertices: this.vertices.map(function(v) {
           return v.toObject();
         })
       };
@@ -9412,7 +9256,7 @@ SOFTWARE.
 
       }
 
-      if (_.isNull(a) || _.isNull(b)) {
+      if (a === null || b === null) {
         return null;
       }
 
@@ -9475,7 +9319,7 @@ SOFTWARE.
         obj.controls.right.x = alx;
         obj.controls.right.y = aly;
 
-        if (!_.isBoolean(obj.relative) || obj.relative) {
+        if (!typeof obj.relative === 'boolean' || obj.relative) {
           obj.controls.left.x -= x;
           obj.controls.left.y -= y;
           obj.controls.right.x -= x;
@@ -9622,7 +9466,7 @@ SOFTWARE.
       var closed = false;//this._closed || this.vertices[last]._command === Two.Commands.close;
       var sum = 0;
 
-      if (_.isUndefined(this._lengths)) {
+      if (typeof this._lengths === 'undefined') {
         this._lengths = [];
       }
 
@@ -10199,16 +10043,17 @@ SOFTWARE.
    */
   var Ellipse = Two.Ellipse = function(ox, oy, rx, ry, resolution) {
 
-    if (!_.isNumber(ry)) {
+    if (typeof ry !== 'number') {
       ry = rx;
     }
 
     // At least 2 vertices are required for proper circlage
     var amount = resolution ? Math.max(resolution, 2) : 4;
 
-    var points = _.map(_.range(amount), function(i) {
-      return new Two.Anchor();
-    }, this);
+    var points = [];
+    for (var i = 0; i < amount; i++) {
+      points.push(new Two.Anchor());
+    }
 
     Path.call(this, points, true, true, true);
 
@@ -10417,9 +10262,10 @@ SOFTWARE.
     // At least 2 vertices are required for proper circlage
     var amount = resolution ? Math.max(resolution, 2) : 4;
 
-    var points = _.map(_.range(amount), function(i) {
-      return new Two.Anchor();
-    }, this);
+    var points = [];
+    for (var i = 0; i < amount; i++) {
+      points.push(new Two.Anchor());
+    }
 
     Path.call(this, points, true, true, true);
 
@@ -10431,10 +10277,10 @@ SOFTWARE.
 
     this._update();
 
-    if (_.isNumber(ox)) {
+    if (typeof ox === 'number') {
       this.translation.x = ox;
     }
-    if (_.isNumber(oy)) {
+    if (typeof oy === 'number') {
       this.translation.y = oy;
     }
 
@@ -10841,9 +10687,10 @@ SOFTWARE.
   var ArcSegment = Two.ArcSegment = function(ox, oy, ir, or, sa, ea, res) {
 
     var amount = res || (Two.Resolution * 3);
-    var points = _.map(_.range(amount), function() {
-      return new Two.Anchor();
-    });
+    var points = [];
+    for (var i = 0; i < amount; i++) {
+      points.push(new Two.Anchor());
+    }
 
     Path.call(this, points, true, false, true);
 
@@ -10871,10 +10718,10 @@ SOFTWARE.
 
     this._update();
 
-    if (_.isNumber(ox)) {
+    if (typeof ox === 'number') {
       this.translation.x = ox;
     }
-    if (_.isNumber(oy)) {
+    if (typeof oy === 'number') {
       this.translation.y = oy;
     }
 
@@ -11210,7 +11057,7 @@ SOFTWARE.
       ir = or / 2;
     }
 
-    if (!_.isNumber(sides) || sides <= 0) {
+    if (typeof sides !== 'number' || sides <= 0) {
       sides = 5;
     }
 
@@ -11446,16 +11293,19 @@ SOFTWARE.
    */
   var RoundedRectangle = Two.RoundedRectangle = function(ox, oy, width, height, radius) {
 
-    if (_.isUndefined(radius)) {
+    if (typeof radius === 'undefined') {
       radius = Math.floor(Math.min(width, height) / 12);
     }
 
     var amount = 10;
 
-    var points = _.map(_.range(amount), function(i) {
-      return new Two.Anchor(0, 0, 0, 0, 0, 0,
-        i === 0 ? Two.Commands.move : Two.Commands.curve);
-    });
+    var points = [];
+    for (var i = 0; i < amount; i++) {
+      points.push(
+        new Two.Anchor(0, 0, 0, 0, 0, 0,
+          i === 0 ? Two.Commands.move : Two.Commands.curve)
+      );
+    }
 
     // points[points.length - 1].command = Two.Commands.close;
 
@@ -11464,7 +11314,7 @@ SOFTWARE.
     this.closed = true;
     this.automatic = false;
 
-    this._renderer.flagRadius = _.bind(RoundedRectangle.FlagRadius, this);
+    this._renderer.flagRadius = RoundedRectangle.FlagRadius.bind(this);
 
     /**
      * @name Two.RoundedRectangle#width
@@ -11750,7 +11600,7 @@ SOFTWARE.
         object[property] = this[property];
       }, this);
 
-      object.radius = _.isNumber(this.radius)
+      object.radius = typeof this.radius === 'number'
         ? this.radius : this.radius.toObject();
 
       return object;
@@ -11788,15 +11638,15 @@ SOFTWARE.
     Two.Shape.call(this);
 
     this._renderer.type = 'text';
-    this._renderer.flagFill = _.bind(Two.Text.FlagFill, this);
-    this._renderer.flagStroke = _.bind(Two.Text.FlagStroke, this);
+    this._renderer.flagFill = Two.Text.FlagFill.bind(this);
+    this._renderer.flagStroke = Two.Text.FlagStroke.bind(this);
 
     this.value = message;
 
-    if (_.isNumber(x)) {
+    if (typeof x === 'number') {
         this.translation.x = x;
     }
-    if (_.isNumber(y)) {
+    if (typeof y === 'number') {
         this.translation.y = y;
     }
 
@@ -11941,7 +11791,7 @@ SOFTWARE.
           return this._dashes;
         },
         set: function(v) {
-          if (!_.isNumber(v.offset)) {
+          if (typeof v.offset !== 'number') {
             v.offset = this._dashes.offset || 0;
           }
           this._dashes = v;
@@ -12378,7 +12228,7 @@ SOFTWARE.
     } else {
       console.warn('Two.js: Unable to create canvas for Two.Text measurements.');
       return {
-        getContext: _.identity
+        getContext: function() {}
       };
     }
   }
@@ -12413,20 +12263,20 @@ SOFTWARE.
      * @name Two.Stop#offset
      * @property {Number} - The offset percentage of the stop represented as a zero-to-one value.
      */
-    this.offset = _.isNumber(offset) ? offset
+    this.offset = typeof offset === 'number' ? offset
       : Stop.Index <= 0 ? 0 : 1;
 
     /**
      * @name Two.Stop#opacity
      * @property {Number} - The alpha percentage of the stop represented as a zero-to-one value.
      */
-    this.opacity = _.isNumber(opacity) ? opacity : 1;
+    this.opacity = typeof opacity === 'number' ? opacity : 1;
 
     /**
      * @name Two.Stop#color
      * @property {CssColor} - The color of the stop.
      */
-    this.color = _.isString(color) ? color
+    this.color = (typeof color === 'string') ? color
       : Stop.Index <= 0 ? '#fff' : '#000';
 
     Stop.Index = (Stop.Index + 1) % 2;
@@ -12571,9 +12421,9 @@ SOFTWARE.
     this.id = Two.Identifier + Two.uniqueId();
     this.classList = [];
 
-    this._renderer.flagStops = _.bind(Gradient.FlagStops, this);
-    this._renderer.bindStops = _.bind(Gradient.BindStops, this);
-    this._renderer.unbindStops = _.bind(Gradient.UnbindStops, this);
+    this._renderer.flagStops = Gradient.FlagStops.bind(this);
+    this._renderer.bindStops = Gradient.BindStops.bind(this);
+    this._renderer.unbindStops = Gradient.UnbindStops.bind(this);
 
     /**
      * @name Two.Gradient#spread
@@ -12725,7 +12575,7 @@ SOFTWARE.
      */
     clone: function(parent) {
 
-      var stops = _.map(this.stops, function(s) {
+      var stops = this.stops.map(function(s) {
         return s.clone();
       });
 
@@ -12752,7 +12602,7 @@ SOFTWARE.
     toObject: function() {
 
       var result = {
-        stops: _.map(this.stops, function(s) {
+        stops: this.stops.map(function(s) {
           return s.toObject();
         })
       };
@@ -12824,7 +12674,7 @@ SOFTWARE.
 
     this._renderer.type = 'linear-gradient';
 
-    var flagEndPoints = _.bind(LinearGradient.FlagEndPoints, this);
+    var flagEndPoints = LinearGradient.FlagEndPoints.bind(this);
 
     /**
      * @name Two.LinearGradient#left
@@ -12837,16 +12687,16 @@ SOFTWARE.
      */
     this.right = new Two.Vector().bind(Two.Events.change, flagEndPoints);
 
-    if (_.isNumber(x1)) {
+    if (typeof x1 === 'number') {
       this.left.x = x1;
     }
-    if (_.isNumber(y1)) {
+    if (typeof y1 === 'number') {
       this.left.y = y1;
     }
-    if (_.isNumber(x2)) {
+    if (typeof x2 === 'number') {
       this.right.x = x2;
     }
-    if (_.isNumber(y2)) {
+    if (typeof y2 === 'number') {
       this.right.y = y2;
     }
 
@@ -12901,7 +12751,7 @@ SOFTWARE.
      */
     clone: function(parent) {
 
-      var stops = _.map(this.stops, function(stop) {
+      var stops = this.stops.map(function(stop) {
         return stop.clone();
       });
 
@@ -13004,11 +12854,11 @@ SOFTWARE.
      * @property {Two.Vector} - The x and y value for where the origin of the radial gradient is.
      */
     this.center = new Two.Vector()
-      .bind(Two.Events.change, _.bind(function() {
+      .bind(Two.Events.change, (function() {
         this._flagCenter = true;
-      }, this));
+      }).bind(this));
 
-    this.radius = _.isNumber(r) ? r : 20;
+    this.radius = typeof r === 'number' ? r : 20;
 
     /**
      * @name Two.RadialGradient#focal
@@ -13016,23 +12866,23 @@ SOFTWARE.
      * @nota-bene This effects the spray or spread of the radial gradient.
      */
     this.focal = new Two.Vector()
-      .bind(Two.Events.change, _.bind(function() {
+      .bind(Two.Events.change, (function() {
         this._flagFocal = true;
-      }, this));
+      }).bind(this));
 
-    if (_.isNumber(cx)) {
+    if (typeof cx === 'number') {
       this.center.x = cx;
     }
-    if (_.isNumber(cy)) {
+    if (typeof cy === 'number') {
       this.center.y = cy;
     }
 
     this.focal.copy(this.center);
 
-    if (_.isNumber(fx)) {
+    if (typeof fx === 'number') {
       this.focal.x = fx;
     }
-    if (_.isNumber(fy)) {
+    if (typeof fy === 'number') {
       this.focal.y = fy;
     }
 
@@ -13102,7 +12952,7 @@ SOFTWARE.
      */
     clone: function(parent) {
 
-      var stops = _.map(this.stops, function(stop) {
+      var stops = this.stops.map(function(stop) {
         return stop.clone();
       });
 
@@ -13210,8 +13060,8 @@ SOFTWARE.
 
     this._renderer = {};
     this._renderer.type = 'texture';
-    this._renderer.flagOffset = _.bind(Texture.FlagOffset, this);
-    this._renderer.flagScale = _.bind(Texture.FlagScale, this);
+    this._renderer.flagOffset = Texture.FlagOffset.bind(this);
+    this._renderer.flagScale = Texture.FlagScale.bind(this);
 
     this.id = Two.Identifier + Two.uniqueId();
     this.classList = [];
@@ -13235,13 +13085,13 @@ SOFTWARE.
      */
     this.offset = new Two.Vector();
 
-    if (_.isFunction(callback)) {
-      var loaded = _.bind(function() {
+    if (typeof callback === 'function') {
+      var loaded = (function() {
         this.unbind(Two.Events.load, loaded);
-        if (_.isFunction(callback)) {
+        if (typeof callback === 'function') {
           callback();
         }
-      }, this);
+      }).bind(this);
       this.bind(Two.Events.load, loaded);
     }
 
@@ -13250,15 +13100,22 @@ SOFTWARE.
      * @property {String} - The URL path to the image data.
      * @nota-bene This property is ultimately serialized in a {@link Two.Registry} to cache retrieval.
      */
-    if (_.isString(src)) {
+    if (typeof src === 'string') {
       this.src = src;
-    } else if (_.isElement(src)) {
-      /**
-       * @name Two.Texture#image
-       * @property {Element} - The corresponding DOM Element of the texture. Can be a `<img />`, `<canvas />`, or `<video />` element. See {@link Two.Texture.RegularExpressions} for a full list of supported elements.
-       * @nota-bene In headless environments this is a `Canvas.Image` object. See {@link https://github.com/Automattic/node-canvas} for more information on headless image objects.
-       */
-      this.image = src;
+    } else if (typeof src === 'object') {
+      var elemString = Object.prototype.toString.call(src);
+      if (
+        elemString === '[object HTMLImageElement]' ||
+        elemString === '[object HTMLCanvasElement]' ||
+        elemString === '[object HTMLVideoElement]'
+      ) {
+        /**
+         * @name Two.Texture#image
+         * @property {Element} - The corresponding DOM Element of the texture. Can be a `<img />`, `<canvas />`, or `<video />` element. See {@link Two.Texture.RegularExpressions} for a full list of supported elements.
+         * @nota-bene In headless environments this is a `Canvas.Image` object. See {@link https://github.com/Automattic/node-canvas} for more information on headless image objects.
+         */
+        this.image = src;
+      }
     }
 
     this._update();
@@ -13371,33 +13228,33 @@ SOFTWARE.
       canvas: function(texture, callback) {
         texture._src = '#' + texture.id;
         Texture.ImageRegistry.add(texture.src, texture.image);
-        if (_.isFunction(callback)) {
+        if (typeof callback === 'function') {
           callback();
         }
       },
       img: function(texture, callback) {
 
         var loaded = function(e) {
-          if (_.isFunction(texture.image.removeEventListener)) {
+          if (typeof texture.image.removeEventListener === 'function') {
             texture.image.removeEventListener('load', loaded, false);
             texture.image.removeEventListener('error', error, false);
           }
-          if (_.isFunction(callback)) {
+          if (typeof callback === 'function') {
             callback();
           }
         };
         var error = function(e) {
-          if (_.isFunction(texture.image.removeEventListener)) {
+          if (typeof texture.image.removeEventListener === 'function') {
             texture.image.removeEventListener('load', loaded, false);
             texture.image.removeEventListener('error', error, false);
           }
           throw new Two.Utils.Error('unable to load ' + texture.src);
         };
 
-        if (_.isNumber(texture.image.width) && texture.image.width > 0
-          && _.isNumber(texture.image.height) && texture.image.height > 0) {
+        if (typeof texture.image.width === 'number' && texture.image.width > 0
+          && typeof texture.image.height === 'number' && texture.image.height > 0) {
             loaded();
-        } else if (_.isFunction(texture.image.addEventListener)) {
+        } else if (typeof texture.image.addEventListener === 'function') {
           texture.image.addEventListener('load', loaded, false);
           texture.image.addEventListener('error', error, false);
         }
@@ -13430,7 +13287,7 @@ SOFTWARE.
           texture.image.width = texture.image.videoWidth;
           texture.image.height = texture.image.videoHeight;
           texture.image.play();
-          if (_.isFunction(callback)) {
+          if (typeof callback === 'function') {
             callback();
           }
         };
@@ -13712,7 +13569,7 @@ SOFTWARE.
         // image: this.image,
         repeat: this.repeat,
         origin: this.origin.toObject(),
-        scale: _.isNumber(this.scale) ? this.scale : this.scale.toObject()
+        scale: typeof this.scale === 'number' ? this.scale : this.scale.toObject()
       };
     },
 
@@ -13732,12 +13589,12 @@ SOFTWARE.
 
         if (this._flagSrc || this._flagImage) {
           this.loaded = false;
-          Texture.load(this, _.bind(function() {
+          Texture.load(this,(function() {
             this.loaded = true;
             this
               .trigger(Two.Events.change)
               .trigger(Two.Events.load);
-          }, this));
+          }).bind(this));
         }
 
       }
@@ -13809,7 +13666,7 @@ SOFTWARE.
      */
     if (path instanceof Two.Texture) {
       this.texture = path;
-    } else if (_.isString(path)) {
+    } else if (typeof path === 'string') {
       this.texture = new Two.Texture(path);
     }
 
@@ -13822,7 +13679,7 @@ SOFTWARE.
      * @name Two.Sprite#columns
      * @property {Integer} - The number of columns to split the texture into. Defaults to `1`.
      */
-    if (_.isNumber(cols)) {
+    if (typeof cols === 'number') {
       this.columns = cols;
     }
 
@@ -13830,7 +13687,7 @@ SOFTWARE.
      * @name Two.Sprite#rows
      * @property {Integer} - The number of rows to split the texture into. Defaults to `1`.
      */
-    if (_.isNumber(rows)) {
+    if (typeof rows === 'number') {
       this.rows = rows;
     }
 
@@ -13838,7 +13695,7 @@ SOFTWARE.
      * @name Two.Sprite#frameRate
      * @property {Integer} - The number of frames to animate against per second. Defaults to `0` for non-animated sprites.
      */
-    if (_.isNumber(frameRate)) {
+    if (typeof frameRate === 'number') {
       this.frameRate = frameRate;
     }
 
@@ -14024,13 +13881,13 @@ SOFTWARE.
       this._lastFrame = this.amount - 1;
       this._startTime = _.performance.now();
 
-      if (_.isNumber(firstFrame)) {
+      if (typeof firstFrame === 'number') {
         this._firstFrame = firstFrame;
       }
-      if (_.isNumber(lastFrame)) {
+      if (typeof lastFrame === 'number') {
         this._lastFrame = lastFrame;
       }
-      if (_.isFunction(onLastFrame)) {
+      if (typeof onLastFrame === 'function') {
         this._onLastFrame = onLastFrame;
       } else {
         delete this._onLastFrame;
@@ -14263,9 +14120,9 @@ SOFTWARE.
       new Two.Anchor()
     ], true);
 
-    this._renderer.flagTextures = _.bind(ImageSequence.FlagTextures, this);
-    this._renderer.bindTextures = _.bind(ImageSequence.BindTextures, this);
-    this._renderer.unbindTextures = _.bind(ImageSequence.UnbindTextures, this);
+    this._renderer.flagTextures = ImageSequence.FlagTextures.bind(this);
+    this._renderer.bindTextures = ImageSequence.BindTextures.bind(this);
+    this._renderer.unbindTextures = ImageSequence.UnbindTextures.bind(this);
 
     this.noStroke();
     this.noFill();
@@ -14274,8 +14131,8 @@ SOFTWARE.
      * @name Two.ImageSequence#textures
      * @property {Two.Texture[]} - A list of textures to be used as frames for animating the {@link Two.ImageSequence}.
      */
-    if (_.isObject(paths)) {
-      this.textures = _.map(paths, ImageSequence.GenerateTexture, this);
+    if (Array.isArray(paths)) {
+      this.textures = paths.map(ImageSequence.GenerateTexture.bind(this));
     } else {
       // If just a single path convert into a single Two.Texture
       this.textures = [ImageSequence.GenerateTexture(paths)];
@@ -14290,7 +14147,7 @@ SOFTWARE.
      * @name Two.ImageSequence#frameRate
      * @property {Integer} - The number of frames to animate against per second.
      */
-    if (_.isNumber(frameRate)) {
+    if (typeof frameRate === 'number') {
       this.frameRate = frameRate;
     } else {
       this.frameRate = ImageSequence.DefaultFrameRate;
@@ -14421,7 +14278,7 @@ SOFTWARE.
     GenerateTexture: function(obj) {
       if (obj instanceof Two.Texture) {
         return obj;
-      } else if (_.isString(obj)) {
+      } else if (typeof obj === 'string') {
         return new Two.Texture(obj);
       }
     }
@@ -14549,13 +14406,13 @@ SOFTWARE.
       this._lastFrame = this.amount - 1;
       this._startTime = _.performance.now();
 
-      if (_.isNumber(firstFrame)) {
+      if (typeof firstFrame === 'number') {
         this._firstFrame = firstFrame;
       }
-      if (_.isNumber(lastFrame)) {
+      if (typeof lastFrame === 'number') {
         this._lastFrame = lastFrame;
       }
-      if (_.isFunction(onLastFrame)) {
+      if (typeof onLastFrame === 'function') {
         this._onLastFrame = onLastFrame;
       } else {
         delete this._onLastFrame;
@@ -14630,7 +14487,7 @@ SOFTWARE.
      */
     toObject: function() {
       var object = Rectangle.prototype.toObject.call(this);
-      object.textures = _.map(this.textures, function(texture) {
+      object.textures = this.textures.map(function(texture) {
         return texture.toObject();
       });
       object.frameRate = this.frameRate;
@@ -14859,7 +14716,7 @@ SOFTWARE.
      * @description A list of all the children in the scenegraph.
      * @nota-bene Ther order of this list indicates the order each element is rendered to the screen.
      */
-    this.children = _.isArray(children) ? children : arguments;
+    this.children = Array.isArray(children) ? children : Array.prototype.slice.call(arguments);
 
   };
 
@@ -15004,9 +14861,9 @@ SOFTWARE.
 
         set: function(children) {
 
-          var insertChildren = _.bind(Group.InsertChildren, this);
-          var removeChildren = _.bind(Group.RemoveChildren, this);
-          var orderChildren = _.bind(Group.OrderChildren, this);
+          var insertChildren = Group.InsertChildren.bind(this);
+          var removeChildren = Group.RemoveChildren.bind(this);
+          var orderChildren = Group.OrderChildren.bind(this);
 
           if (this._children) {
             this._children.unbind();
@@ -15049,7 +14906,7 @@ SOFTWARE.
      */
     MakeGetterSetters: function(group, properties) {
 
-      if (!_.isArray(properties)) {
+      if (!Array.isArray(properties)) {
         properties = [properties];
       }
 
@@ -15274,7 +15131,7 @@ SOFTWARE.
       //  */
 
       var clone = new Group();
-      var children = _.map(this.children, function(child) {
+      var children = this.children.map(function(child) {
         return child.clone();
       });
 
@@ -15408,7 +15265,7 @@ SOFTWARE.
     getByClassName: function(className) {
       var found = [];
       function search(node) {
-        if (_.indexOf(node.classList, className) >= 0) {
+        if (Array.prototype.indexOf.call(node.classList, className) >= 0) {
           found.push(node);
         }
         if (node.children) {
@@ -15457,7 +15314,7 @@ SOFTWARE.
       // If it's an array also create copy of it in case we're getting passed
       // a childrens array directly.
       if (!(objects instanceof Array)) {
-        objects = _.toArray(arguments);
+        objects = Array.prototype.slice.call(arguments);
       } else {
         objects = objects.slice();
       }
@@ -15468,7 +15325,7 @@ SOFTWARE.
         if (!(child && child.id)) {
           continue;
         }
-        var index = _.indexOf(this.children, child);
+        var index = Array.prototype.indexOf.call(this.children, child);
         if (index >= 0) {
           this.children.splice(index, 1);
         }
@@ -15501,7 +15358,7 @@ SOFTWARE.
       // If it's an array also create copy of it in case we're getting passed
       // a childrens array directly.
       if (!(objects instanceof Array)) {
-        objects = _.toArray(arguments);
+        objects = Array.prototype.slice.call(arguments);
       } else {
         objects = objects.slice();
       }
@@ -15509,7 +15366,7 @@ SOFTWARE.
       // Remove the objects
       for (var i = 0; i < objects.length; i++) {
         if (!objects[i] || !(this.children.ids[objects[i].id])) continue;
-        this.children.splice(_.indexOf(this.children, objects[i]), 1);
+        this.children.splice(Array.prototype.indexOf.call(this.children, objects[i]), 1);
       }
 
       return this;
@@ -15545,8 +15402,8 @@ SOFTWARE.
 
         rect = child.getBoundingClientRect(shallow);
 
-        if (!_.isNumber(rect.top)   || !_.isNumber(rect.left)   ||
-            !_.isNumber(rect.right) || !_.isNumber(rect.bottom)) {
+        if (typeof rect.top !== 'number'   || typeof rect.left !== 'number' ||
+            typeof rect.right !== 'number' || typeof rect.bottom !== 'number') {
           continue;
         }
 
@@ -15709,7 +15566,7 @@ SOFTWARE.
 
     if (parent && parent.children.ids[child.id]) {
 
-      index = _.indexOf(parent.children, child);
+      index = Array.prototype.indexOf.call(parent.children, child);
       parent.children.splice(index, 1);
 
       splice();
@@ -15735,7 +15592,7 @@ SOFTWARE.
     function add() {
 
       if (newParent.subtractions.length > 0) {
-        index = _.indexOf(newParent.subtractions, child);
+        index = Array.prototype.indexOf.call(newParent.subtractions, child);
 
         if (index >= 0) {
           newParent.subtractions.splice(index, 1);
@@ -15743,7 +15600,7 @@ SOFTWARE.
       }
 
       if (newParent.additions.length > 0) {
-        index = _.indexOf(newParent.additions, child);
+        index = Array.prototype.indexOf.call(newParent.additions, child);
 
         if (index >= 0) {
           newParent.additions.splice(index, 1);
@@ -15758,13 +15615,13 @@ SOFTWARE.
 
     function splice() {
 
-      index = _.indexOf(parent.additions, child);
+      index = Array.prototype.indexOf.call(parent.additions, child);
 
       if (index >= 0) {
         parent.additions.splice(index, 1);
       }
 
-      index = _.indexOf(parent.subtractions, child);
+      index = Array.prototype.indexOf.call(parent.subtractions, child);
 
       if (index < 0) {
         parent.subtractions.push(child);
