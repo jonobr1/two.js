@@ -164,7 +164,7 @@
 
         // Styles
         if (fill) {
-          if (_.isString(fill)) {
+          if (typeof fill === 'string') {
             ctx.fillStyle = fill;
           } else {
             canvas[fill._renderer.type].render.call(fill, ctx);
@@ -172,7 +172,7 @@
           }
         }
         if (stroke) {
-          if (_.isString(stroke)) {
+          if (typeof stroke === 'string') {
             ctx.strokeStyle = stroke;
           } else {
             canvas[stroke._renderer.type].render.call(stroke, ctx);
@@ -191,7 +191,7 @@
             ctx.lineCap = cap;
           }
         }
-        if (_.isNumber(opacity)) {
+        if (typeof opacity === 'number') {
           ctx.globalAlpha = opacity;
         }
 
@@ -411,7 +411,7 @@
 
         // Styles
         if (fill) {
-          if (_.isString(fill)) {
+          if (typeof fill === 'string') {
             ctx.fillStyle = fill;
           } else {
             canvas[fill._renderer.type].render.call(fill, ctx);
@@ -419,7 +419,7 @@
           }
         }
         if (stroke) {
-          if (_.isString(stroke)) {
+          if (typeof stroke === 'string') {
             ctx.strokeStyle = stroke;
           } else {
             canvas[stroke._renderer.type].render.call(stroke, ctx);
@@ -429,7 +429,7 @@
             ctx.lineWidth = linewidth;
           }
         }
-        if (_.isNumber(opacity)) {
+        if (typeof opacity === 'number') {
           ctx.globalAlpha = opacity;
         }
         if (dashes && dashes.length > 0) {
@@ -726,7 +726,7 @@
      */
     this.overdraw = params.overdraw || false;
 
-    if (!_.isUndefined(this.ctx.imageSmoothingEnabled)) {
+    if (typeof this.ctx.imageSmoothingEnabled !== 'undefined') {
       this.ctx.imageSmoothingEnabled = smoothing;
     }
 
@@ -767,7 +767,7 @@
       this.width = width;
       this.height = height;
 
-      this.ratio = _.isUndefined(ratio) ? getRatio(this.ctx) : ratio;
+      this.ratio = typeof ratio === 'undefined' ? getRatio(this.ctx) : ratio;
 
       this.domElement.width = width * this.ratio;
       this.domElement.height = height * this.ratio;

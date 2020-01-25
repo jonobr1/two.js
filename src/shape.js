@@ -18,7 +18,7 @@
      * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `shape._renderer.elem`.
      */
     this._renderer = {};
-    this._renderer.flagMatrix = _.bind(Shape.FlagMatrix, this);
+    this._renderer.flagMatrix = Shape.FlagMatrix.bind(this);
     this.isShape = true;
 
     /**
@@ -165,7 +165,7 @@
 
             for (var i = 0; i < prev.length; i++) {
               var className = prev[i];
-              var index = _.indexOf(this.classList, className);
+              var index = Array.prototype.indexOf.call(this.classList, className);
               if (index >= 0) {
                 this.classList.splice(index, 1);
               }

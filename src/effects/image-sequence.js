@@ -25,9 +25,9 @@
       new Two.Anchor()
     ], true);
 
-    this._renderer.flagTextures = _.bind(ImageSequence.FlagTextures, this);
-    this._renderer.bindTextures = _.bind(ImageSequence.BindTextures, this);
-    this._renderer.unbindTextures = _.bind(ImageSequence.UnbindTextures, this);
+    this._renderer.flagTextures = ImageSequence.FlagTextures.bind(this);
+    this._renderer.bindTextures = ImageSequence.BindTextures.bind(this);
+    this._renderer.unbindTextures = ImageSequence.UnbindTextures.bind(this);
 
     this.noStroke();
     this.noFill();
@@ -36,8 +36,8 @@
      * @name Two.ImageSequence#textures
      * @property {Two.Texture[]} - A list of textures to be used as frames for animating the {@link Two.ImageSequence}.
      */
-    if (_.isObject(paths)) {
-      this.textures = _.map(paths, ImageSequence.GenerateTexture, this);
+    if (Array.isArray(paths)) {
+      this.textures = paths.map(ImageSequence.GenerateTexture.bind(this));
     } else {
       // If just a single path convert into a single Two.Texture
       this.textures = [ImageSequence.GenerateTexture(paths)];
@@ -52,7 +52,7 @@
      * @name Two.ImageSequence#frameRate
      * @property {Integer} - The number of frames to animate against per second.
      */
-    if (_.isNumber(frameRate)) {
+    if (typeof frameRate === 'number') {
       this.frameRate = frameRate;
     } else {
       this.frameRate = ImageSequence.DefaultFrameRate;
@@ -183,7 +183,7 @@
     GenerateTexture: function(obj) {
       if (obj instanceof Two.Texture) {
         return obj;
-      } else if (_.isString(obj)) {
+      } else if (typeof obj === 'string') {
         return new Two.Texture(obj);
       }
     }
@@ -311,13 +311,13 @@
       this._lastFrame = this.amount - 1;
       this._startTime = _.performance.now();
 
-      if (_.isNumber(firstFrame)) {
+      if (typeof firstFrame === 'number') {
         this._firstFrame = firstFrame;
       }
-      if (_.isNumber(lastFrame)) {
+      if (typeof lastFrame === 'number') {
         this._lastFrame = lastFrame;
       }
-      if (_.isFunction(onLastFrame)) {
+      if (typeof onLastFrame === 'function') {
         this._onLastFrame = onLastFrame;
       } else {
         delete this._onLastFrame;
@@ -392,7 +392,7 @@
      */
     toObject: function() {
       var object = Rectangle.prototype.toObject.call(this);
-      object.textures = _.map(this.textures, function(texture) {
+      object.textures = this.textures.map(function(texture) {
         return texture.toObject();
       });
       object.frameRate = this.frameRate;

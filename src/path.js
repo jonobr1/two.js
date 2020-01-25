@@ -28,12 +28,12 @@
     Two.Shape.call(this);
 
     this._renderer.type = 'path';
-    this._renderer.flagVertices = _.bind(Path.FlagVertices, this);
-    this._renderer.bindVertices = _.bind(Path.BindVertices, this);
-    this._renderer.unbindVertices = _.bind(Path.UnbindVertices, this);
+    this._renderer.flagVertices = Path.FlagVertices.bind(this);
+    this._renderer.bindVertices = Path.BindVertices.bind(this);
+    this._renderer.unbindVertices = Path.UnbindVertices.bind(this);
 
-    this._renderer.flagFill = _.bind(Path.FlagFill, this);
-    this._renderer.flagStroke = _.bind(Path.FlagStroke, this);
+    this._renderer.flagFill = Path.FlagFill.bind(this);
+    this._renderer.flagStroke = Path.FlagStroke.bind(this);
     this._renderer.vertices = [];
     this._renderer.collection = [];
 
@@ -456,7 +456,7 @@
           return this._dashes;
         },
         set: function(v) {
-          if (!_.isNumber(v.offset)) {
+          if (typeof v.offset !== 'number') {
             v.offset = this._dashes.offset || 0;
           }
           this._dashes = v;
@@ -712,7 +712,7 @@
     toObject: function() {
 
       var result = {
-        vertices: _.map(this.vertices, function(v) {
+        vertices: this.vertices.map(function(v) {
           return v.toObject();
         })
       };
@@ -968,7 +968,7 @@
 
       }
 
-      if (_.isNull(a) || _.isNull(b)) {
+      if (a === null || b === null) {
         return null;
       }
 
@@ -1031,7 +1031,7 @@
         obj.controls.right.x = alx;
         obj.controls.right.y = aly;
 
-        if (!_.isBoolean(obj.relative) || obj.relative) {
+        if (!typeof obj.relative === 'boolean' || obj.relative) {
           obj.controls.left.x -= x;
           obj.controls.left.y -= y;
           obj.controls.right.x -= x;
@@ -1178,7 +1178,7 @@
       var closed = false;//this._closed || this.vertices[last]._command === Two.Commands.close;
       var sum = 0;
 
-      if (_.isUndefined(this._lengths)) {
+      if (typeof this._lengths === 'undefined') {
         this._lengths = [];
       }
 

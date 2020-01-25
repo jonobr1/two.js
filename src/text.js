@@ -23,15 +23,15 @@
     Two.Shape.call(this);
 
     this._renderer.type = 'text';
-    this._renderer.flagFill = _.bind(Two.Text.FlagFill, this);
-    this._renderer.flagStroke = _.bind(Two.Text.FlagStroke, this);
+    this._renderer.flagFill = Two.Text.FlagFill.bind(this);
+    this._renderer.flagStroke = Two.Text.FlagStroke.bind(this);
 
     this.value = message;
 
-    if (_.isNumber(x)) {
+    if (typeof x === 'number') {
         this.translation.x = x;
     }
-    if (_.isNumber(y)) {
+    if (typeof y === 'number') {
         this.translation.y = y;
     }
 
@@ -176,7 +176,7 @@
           return this._dashes;
         },
         set: function(v) {
-          if (!_.isNumber(v.offset)) {
+          if (typeof v.offset !== 'number') {
             v.offset = this._dashes.offset || 0;
           }
           this._dashes = v;
@@ -613,7 +613,7 @@
     } else {
       console.warn('Two.js: Unable to create canvas for Two.Text measurements.');
       return {
-        getContext: _.identity
+        getContext: function() {}
       };
     }
   }

@@ -28,7 +28,7 @@
           version: svg.version
         });
       }
-      if (!_.isEmpty(attrs)) {
+      if (attrs && Object.keys(attrs).length > 0) {
         svg.setAttributes(elem, attrs);
       }
       return elem;
@@ -862,7 +862,7 @@
         if (this._flagScale || this._flagLoaded) {
           if (!this._renderer.image) {
             this._renderer.image = svg.createElement('image', styles);
-          } else if (!_.isEmpty(styles)) {
+          } else {
             svg.setAttributes(this._renderer.image, styles);
           }
         }
@@ -874,7 +874,7 @@
           this._renderer.elem = svg.createElement('pattern', changed);
           domElement.defs.appendChild(this._renderer.elem);
 
-        } else if (!_.isEmpty(changed)) {
+        } else if (Object.keys(changed).length !== 0) {
 
           svg.setAttributes(this._renderer.elem, changed);
 

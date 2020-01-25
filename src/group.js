@@ -96,7 +96,7 @@
      * @description A list of all the children in the scenegraph.
      * @nota-bene Ther order of this list indicates the order each element is rendered to the screen.
      */
-    this.children = _.isArray(children) ? children : arguments;
+    this.children = Array.isArray(children) ? children : Array.prototype.slice.call(arguments);
 
   };
 
@@ -241,9 +241,9 @@
 
         set: function(children) {
 
-          var insertChildren = _.bind(Group.InsertChildren, this);
-          var removeChildren = _.bind(Group.RemoveChildren, this);
-          var orderChildren = _.bind(Group.OrderChildren, this);
+          var insertChildren = Group.InsertChildren.bind(this);
+          var removeChildren = Group.RemoveChildren.bind(this);
+          var orderChildren = Group.OrderChildren.bind(this);
 
           if (this._children) {
             this._children.unbind();
@@ -286,7 +286,7 @@
      */
     MakeGetterSetters: function(group, properties) {
 
-      if (!_.isArray(properties)) {
+      if (!Array.isArray(properties)) {
         properties = [properties];
       }
 
@@ -511,7 +511,7 @@
       //  */
 
       var clone = new Group();
-      var children = _.map(this.children, function(child) {
+      var children = this.children.map(function(child) {
         return child.clone();
       });
 
@@ -645,7 +645,7 @@
     getByClassName: function(className) {
       var found = [];
       function search(node) {
-        if (_.indexOf(node.classList, className) >= 0) {
+        if (Array.prototype.indexOf.call(node.classList, className) >= 0) {
           found.push(node);
         }
         if (node.children) {
@@ -694,7 +694,7 @@
       // If it's an array also create copy of it in case we're getting passed
       // a childrens array directly.
       if (!(objects instanceof Array)) {
-        objects = _.toArray(arguments);
+        objects = Array.prototype.slice.call(arguments);
       } else {
         objects = objects.slice();
       }
@@ -705,7 +705,7 @@
         if (!(child && child.id)) {
           continue;
         }
-        var index = _.indexOf(this.children, child);
+        var index = Array.prototype.indexOf.call(this.children, child);
         if (index >= 0) {
           this.children.splice(index, 1);
         }
@@ -738,7 +738,7 @@
       // If it's an array also create copy of it in case we're getting passed
       // a childrens array directly.
       if (!(objects instanceof Array)) {
-        objects = _.toArray(arguments);
+        objects = Array.prototype.slice.call(arguments);
       } else {
         objects = objects.slice();
       }
@@ -746,7 +746,7 @@
       // Remove the objects
       for (var i = 0; i < objects.length; i++) {
         if (!objects[i] || !(this.children.ids[objects[i].id])) continue;
-        this.children.splice(_.indexOf(this.children, objects[i]), 1);
+        this.children.splice(Array.prototype.indexOf.call(this.children, objects[i]), 1);
       }
 
       return this;
@@ -782,8 +782,8 @@
 
         rect = child.getBoundingClientRect(shallow);
 
-        if (!_.isNumber(rect.top)   || !_.isNumber(rect.left)   ||
-            !_.isNumber(rect.right) || !_.isNumber(rect.bottom)) {
+        if (typeof rect.top !== 'number'   || typeof rect.left !== 'number' ||
+            typeof rect.right !== 'number' || typeof rect.bottom !== 'number') {
           continue;
         }
 
@@ -946,7 +946,7 @@
 
     if (parent && parent.children.ids[child.id]) {
 
-      index = _.indexOf(parent.children, child);
+      index = Array.prototype.indexOf.call(parent.children, child);
       parent.children.splice(index, 1);
 
       splice();
@@ -972,7 +972,7 @@
     function add() {
 
       if (newParent.subtractions.length > 0) {
-        index = _.indexOf(newParent.subtractions, child);
+        index = Array.prototype.indexOf.call(newParent.subtractions, child);
 
         if (index >= 0) {
           newParent.subtractions.splice(index, 1);
@@ -980,7 +980,7 @@
       }
 
       if (newParent.additions.length > 0) {
-        index = _.indexOf(newParent.additions, child);
+        index = Array.prototype.indexOf.call(newParent.additions, child);
 
         if (index >= 0) {
           newParent.additions.splice(index, 1);
@@ -995,13 +995,13 @@
 
     function splice() {
 
-      index = _.indexOf(parent.additions, child);
+      index = Array.prototype.indexOf.call(parent.additions, child);
 
       if (index >= 0) {
         parent.additions.splice(index, 1);
       }
 
-      index = _.indexOf(parent.subtractions, child);
+      index = Array.prototype.indexOf.call(parent.subtractions, child);
 
       if (index < 0) {
         parent.subtractions.push(child);

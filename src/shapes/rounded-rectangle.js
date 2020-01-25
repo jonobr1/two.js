@@ -16,16 +16,19 @@
    */
   var RoundedRectangle = Two.RoundedRectangle = function(ox, oy, width, height, radius) {
 
-    if (_.isUndefined(radius)) {
+    if (typeof radius === 'undefined') {
       radius = Math.floor(Math.min(width, height) / 12);
     }
 
     var amount = 10;
 
-    var points = _.map(_.range(amount), function(i) {
-      return new Two.Anchor(0, 0, 0, 0, 0, 0,
-        i === 0 ? Two.Commands.move : Two.Commands.curve);
-    });
+    var points = [];
+    for (var i = 0; i < amount; i++) {
+      points.push(
+        new Two.Anchor(0, 0, 0, 0, 0, 0,
+          i === 0 ? Two.Commands.move : Two.Commands.curve)
+      );
+    }
 
     // points[points.length - 1].command = Two.Commands.close;
 
@@ -34,7 +37,7 @@
     this.closed = true;
     this.automatic = false;
 
-    this._renderer.flagRadius = _.bind(RoundedRectangle.FlagRadius, this);
+    this._renderer.flagRadius = RoundedRectangle.FlagRadius.bind(this);
 
     /**
      * @name Two.RoundedRectangle#width
@@ -320,7 +323,7 @@
         object[property] = this[property];
       }, this);
 
-      object.radius = _.isNumber(this.radius)
+      object.radius = typeof this.radius === 'number'
         ? this.radius : this.radius.toObject();
 
       return object;

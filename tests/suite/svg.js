@@ -100,13 +100,13 @@
     });
 
     var amount = 20;
-    var phi = 6;
-    var points = _.map(_.range(amount), function(i) {
+    var points = [];
+    for (var i = 0; i < amount; i++) {
       var pct = i / amount;
       var x = pct * 300 + 50;
       var y = i % 2 ? 25 : 75;
-      return new Two.Vector(x, y);
-    });
+      points.push(new Two.Vector(x, y));
+    };
     var poly = two.makePath(points, true);
     var path = two.makePath();
 
@@ -132,13 +132,13 @@
     });
 
     var amount = 20;
-    var phi = 6;
-    var points = _.map(_.range(amount), function(i) {
+    var points = [];
+    for (var i = 0; i < amount; i++) {
       var pct = i / amount;
       var x = pct * 300 + 50;
       var y = i % 2 ? 25 : 75;
-      return new Two.Vector(x, y);
-    });
+      points.push(new Two.Vector(x, y));
+    };
     var curve = two.makeCurve(points, true);
 
     two.update();
@@ -260,9 +260,10 @@
       height: 400
     });
 
-    var paths = _.map(_.range(0, 30), function(i) {
-      return '/tests/images/sequence/' + QUnit.Utils.digits(i, 5) + '.png';
-    });
+    var paths = [];
+    for (var i = 0; i < 30; i++) {
+      paths.push('/tests/images/sequence/' + QUnit.Utils.digits(i, 5) + '.png');
+    }
     var sequence = two.makeImageSequence(paths, two.width / 2, two.height / 2, 2);
     sequence.index = 3;
     var texture = sequence.textures[sequence.index];

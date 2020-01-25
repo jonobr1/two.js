@@ -11,7 +11,6 @@
     root = this;
   }
 
-  var toString = Object.prototype.toString;
   /**
    * @name _
    * @interface
@@ -22,118 +21,15 @@
   var _ = {
     // http://underscorejs.org/ • 1.8.3
     _indexAmount: 0,
-    natural: {
-      slice: Array.prototype.slice,
-      indexOf: Array.prototype.indexOf,
-      keys: Object.keys,
-      bind: Function.prototype.bind,
-      create: Object.create
-    },
-    identity: function(value) {
-      return value;
-    },
-    isArguments: function(obj) {
-      return toString.call(obj) === '[object Arguments]';
-    },
-    isFunction: function(obj) {
-      return toString.call(obj) === '[object Function]';
-    },
-    isString: function(obj) {
-      return toString.call(obj) === '[object String]';
-    },
-    isNumber: function(obj) {
-      return toString.call(obj) === '[object Number]';
-    },
-    isDate: function(obj) {
-      return toString.call(obj) === '[object Date]';
-    },
-    isRegExp: function(obj) {
-      return toString.call(obj) === '[object RegExp]';
-    },
-    isError: function(obj) {
-      return toString.call(obj) === '[object Error]';
-    },
-    isFinite: function(obj) {
-      return isFinite(obj) && !isNaN(parseFloat(obj));
-    },
     isNaN: function(obj) {
-      return _.isNumber(obj) && obj !== +obj;
-    },
-    isBoolean: function(obj) {
-      return obj === true || obj === false || toString.call(obj) === '[object Boolean]';
-    },
-    isNull: function(obj) {
-      return obj === null;
-    },
-    isUndefined: function(obj) {
-      return obj === void 0;
-    },
-    isEmpty: function(obj) {
-      if (obj == null) return true;
-      if (isArrayLike && (_.isArray(obj) || _.isString(obj) || _.isArguments(obj))) return obj.length === 0;
-      return _.keys(obj).length === 0;
+      return typeof obj === 'number' && obj !== +obj;
     },
     isElement: function(obj) {
       return !!(obj && obj.nodeType === 1);
     },
-    isArray: Array.isArray || function(obj) {
-      return toString.call(obj) === '[object Array]';
-    },
     isObject: function(obj) {
       var type = typeof obj;
       return type === 'function' || type === 'object' && !!obj;
-    },
-    toArray: function(obj) {
-      if (!obj) {
-        return [];
-      }
-      if (_.isArray(obj)) {
-        return slice.call(obj);
-      }
-      if (isArrayLike(obj)) {
-        return _.map(obj, _.identity);
-      }
-      return _.values(obj);
-    },
-    range: function(start, stop, step) {
-      if (stop == null) {
-        stop = start || 0;
-        start = 0;
-      }
-      step = step || 1;
-
-      var length = Math.max(Math.ceil((stop - start) / step), 0);
-      var range = Array(length);
-
-      for (var idx = 0; idx < length; idx++, start += step) {
-        range[idx] = start;
-      }
-
-      return range;
-    },
-    indexOf: function(list, item) {
-      if (_.natural.indexOf) {
-        return _.natural.indexOf.call(list, item);
-      }
-      for (var i = 0; i < list.length; i++) {
-        if (list[i] === item) {
-          return i;
-        }
-      }
-      return -1;
-    },
-    has: function(obj, key) {
-      return obj != null && hasOwnProperty.call(obj, key);
-    },
-    bind: function(func, ctx) {
-      var natural = _.natural.bind;
-      if (natural && func.bind === natural) {
-        return natural.apply(func, slice.call(arguments, 1));
-      }
-      var args = slice.call(arguments, 2);
-      return function() {
-        func.apply(ctx, args);
-      };
     },
     extend: function(base) {
       var sources = slice.call(arguments, 1);
@@ -157,67 +53,15 @@
       }
       return base;
     },
-    keys: function(obj) {
-      if (!_.isObject(obj)) {
-        return [];
-      }
-      if (_.natural.keys) {
-        return _.natural.keys(obj);
-      }
-      var keys = [];
-      for (var k in obj) {
-        if (_.has(obj, k)) {
-          keys.push(k);
-        }
-      }
-      return keys;
-    },
-    values: function(obj) {
-      var keys = _.keys(obj);
-      var values = [];
-      for (var i = 0; i < keys.length; i++) {
-        var k = keys[i];
-        values.push(obj[k]);
-      }
-      return values;
-    },
     each: function(obj, iteratee, context) {
       var ctx = context || this;
-      var keys = !isArrayLike(obj) && _.keys(obj);
+      var keys = !isArrayLike(obj) && Object.keys(obj);
       var length = (keys || obj).length;
       for (var i = 0; i < length; i++) {
         var k = keys ? keys[i] : i;
         iteratee.call(ctx, obj[k], k, obj);
       }
       return obj;
-    },
-    map: function(obj, iteratee, context) {
-      var ctx = context || this;
-      var keys = !isArrayLike(obj) && _.keys(obj);
-      var length = (keys || obj).length;
-      var result = [];
-      for (var i = 0; i < length; i++) {
-        var k = keys ? keys[i] : i;
-        result[i] = iteratee.call(ctx, obj[k], k, obj);
-      }
-      return result;
-    },
-    once: function(func) {
-      var init = false;
-      return function() {
-        if (init) {
-          return func;
-        }
-        init = true;
-        return func.apply(this, arguments);
-      };
-    },
-    after: function(times, func) {
-      return function() {
-        while (--times < 1) {
-          return func.apply(this, arguments);
-        }
-      };
     },
     uniqueId: function(prefix) {
       var id = ++_._indexAmount + '';
@@ -244,7 +88,7 @@
   // Localized variables
 
   var count = 0;
-  var slice = _.natural.slice;
+  var slice = Array.prototype.slice;
   var perf = ((root.performance && root.performance.now) ? root.performance : Date);
   var MAX_ARRAY_INDEX = Math.pow(2, 53) - 1;
   var getLength = function(obj) {
@@ -261,7 +105,7 @@
 
     temp: (root.document ? root.document.createElement('div') : {}),
 
-    hasEventListeners: _.isFunction(root.addEventListener),
+    hasEventListeners: typeof root.addEventListener === 'function',
 
     bind: function(elem, event, func, bool) {
       if (this.hasEventListeners) {
@@ -301,12 +145,12 @@
           lastTime = currTime + timeToCall;
           return id;
         };
-        // cancel = cancel || function(id) {
-        //   clearTimeout(id);
-        // };
       }
 
-      request.init = _.once(loop);
+      request.init = function() {
+        loop();
+        request.init = function() {};
+      };
 
       return request;
 
@@ -360,7 +204,7 @@
 
     if (params.fullscreen) {
 
-      var fitted = _.bind(fitToWindow, this);
+      var fitted = fitToWindow.bind(this);
       _.extend(document.body.style, {
         overflow: 'hidden',
         margin: 0,
@@ -391,7 +235,7 @@
 
     }
 
-    this.renderer.bind(Two.Events.resize, _.bind(updateDimensions, this));
+    this.renderer.bind(Two.Events.resize, updateDimensions.bind(this));
     this.scene = this.renderer.scene;
 
     Two.Instances.push(this);
@@ -571,7 +415,7 @@
        */
       shim: function(canvas, Image) {
         Two.CanvasRenderer.Utils.shim(canvas);
-        if (!_.isUndefined(Image)) {
+        if (typeof Image !== 'undefined') {
           Two.Utils.Image = Image;
         }
         Two.Utils.isHeadless = true;
@@ -591,16 +435,16 @@
           return;
         }
 
-        if (_.isFunction(obj.unbind)) {
+        if (typeof obj.unbind === 'function') {
           obj.unbind();
         }
 
         if (obj.vertices) {
-          if (_.isFunction(obj.vertices.unbind)) {
+          if (typeof obj.vertices.unbind === 'function') {
             obj.vertices.unbind();
           }
           _.each(obj.vertices, function(v) {
-            if (_.isFunction(v.unbind)) {
+            if (typeof v.unbind === 'function') {
               v.unbind();
             }
           });
@@ -810,7 +654,7 @@
           command = commands[i].split(':');
           name = command[0];
           value = command[1];
-          if (_.isUndefined(name) || _.isUndefined(value)) {
+          if (typeof name === 'undefined' || typeof value === 'undefined') {
             continue;
           }
           styles[name] = value.replace(/\s/, '');
@@ -860,7 +704,7 @@
 
         for (var i = 0; i < keywords.length; i++) {
           var keyword = keywords[i];
-          var index = _.indexOf(attributes, keyword);
+          var index = Array.prototype.indexOf.call(attributes, keyword);
           if (index >= 0) {
             attributes.splice(index, 1);
           }
@@ -921,7 +765,7 @@
             value = computedStyles[key];
             // Gecko returns undefined for unset properties
             // Webkit returns the default value
-            if (!_.isUndefined(value)) {
+            if (typeof value !== 'undefined') {
               styles[key] = value;
             }
           }
@@ -940,7 +784,7 @@
         // Getting the correct opacity is a bit tricky, since SVG path elements don't
         // support opacity as an attribute, but you can apply it via CSS.
         // So we take the opacity and set (stroke/fill)-opacity to the same value.
-        if (!_.isUndefined(styles.opacity)) {
+        if (typeof styles.opacity !== 'undefined') {
           styles['stroke-opacity'] = styles.opacity;
           styles['fill-opacity'] = styles.opacity;
           delete styles.opacity;
@@ -954,8 +798,8 @@
 
         // Similarly visibility is influenced by the value of both display and visibility.
         // Calculate a unified value here which defaults to `true`.
-        styles.visible = !(_.isUndefined(styles.display) && /none/i.test(styles.display))
-          || (_.isUndefined(styles.visibility) && /hidden/i.test(styles.visibility));
+        styles.visible = !(typeof styles.display === 'undefined' && /none/i.test(styles.display))
+          || (typeof styles.visibility === 'undefined' && /hidden/i.test(styles.visibility));
 
         // Now iterate the whole thing
         for (key in styles) {
@@ -970,7 +814,7 @@
                 : (node.getCTM ? node.getCTM() : null);
 
               // Might happen when transform string is empty or not valid.
-              if (_.isNull(m)) break;
+              if (m === null) break;
 
               // // Option 1: edit the underlying matrix and don't force an auto calc.
               // var m = node.getCTM();
@@ -1551,7 +1395,7 @@
               }
 
               if (result) {
-                if (_.isArray(result)) {
+                if (Array.isArray(result)) {
                   points = points.concat(result);
                 } else {
                   points.push(result);
@@ -1709,12 +1553,12 @@
             var style = child.getAttribute('style');
 
             var matches;
-            if (_.isNull(color)) {
+            if (color === null) {
               matches = style ? style.match(/stop-color:\s?([#a-fA-F0-9]*)/) : false;
               color = matches && matches.length > 1 ? matches[1] : undefined;
             }
 
-            if (_.isNull(opacity)) {
+            if (opacity === null) {
               matches = style ? style.match(/stop-opacity:\s?([0-9.-]*)/) : false;
               opacity = matches && matches.length > 1 ? parseFloat(matches[1]) : 1;
             } else {
@@ -1770,12 +1614,12 @@
             var style = child.getAttribute('style');
 
             var matches;
-            if (_.isNull(color)) {
+            if (color === null) {
               matches = style ? style.match(/stop-color:\s?([#a-fA-F0-9]*)/) : false;
               color = matches && matches.length > 1 ? matches[1] : undefined;
             }
 
-            if (_.isNull(opacity)) {
+            if (opacity === null) {
               matches = style ? style.match(/stop-opacity:\s?([0-9.-]*)/) : false;
               opacity = matches && matches.length > 1 ? parseFloat(matches[1]) : 1;
             } else {
@@ -2057,7 +1901,7 @@
 
         // TODO: Issue 73
         if (d1 < 0.0001 || d2 < 0.0001) {
-          if (_.isBoolean(b.relative) && !b.relative) {
+          if (typeof b.relative === 'boolean' && !b.relative) {
             b.controls.left.copy(b);
             b.controls.right.copy(b);
           }
@@ -2081,7 +1925,7 @@
         b.controls.right.x = cos(mid) * d2;
         b.controls.right.y = sin(mid) * d2;
 
-        if (_.isBoolean(b.relative) && !b.relative) {
+        if (typeof b.relative === 'boolean' && !b.relative) {
           b.controls.left.x += b.x;
           b.controls.left.y += b.y;
           b.controls.right.x += b.x;
@@ -2124,11 +1968,12 @@
        */
       getAnchorsFromArcData: function(center, xAxisRotation, rx, ry, ts, td, ccw) {
 
-        var l = Two.Resolution;
+        var resolution = Two.Resolution;
 
-        return _.map(_.range(l), function(i) {
+        var anchors = [];
 
-          var pct = (i + 1) / l;
+        for (var i = 0; i < resolution; i++) {
+          var pct = (i + 1) / resolution;
           if (ccw) {
             pct = 1 - pct;
           }
@@ -2146,9 +1991,8 @@
 
           // TODO: Calculate control points here...
 
-          return anchor;
-
-        });
+          anchors.push(anchor);
+        }
 
       },
 
@@ -2264,7 +2108,7 @@
             return this;
           }
 
-          var names = name ? [name] : _.keys(this._events);
+          var names = name ? [name] : Object.keys(this._events);
           for (var i = 0, l = names.length; i < l; i++) {
 
             name = names[i];
@@ -2558,7 +2402,7 @@
 
       var objects = o;
       if (!(objects instanceof Array)) {
-        objects = _.toArray(arguments);
+        objects = Array.prototype.slice.call(arguments);
       }
 
       this.scene.add(objects);
@@ -2576,7 +2420,7 @@
 
       var objects = o;
       if (!(objects instanceof Array)) {
-        objects = _.toArray(arguments);
+        objects = Array.prototype.slice.call(arguments);
       }
 
       this.scene.remove(objects);
@@ -2628,7 +2472,7 @@
      */
     makeArrow: function(x1, y1, x2, y2, size) {
 
-      var headlen = _.isNumber(size ) ? size : 10;
+      var headlen = typeof size  === 'number' ? size : 10;
 
       var angle = Math.atan2(y2 - y1, x2 - x1);
 
@@ -2771,11 +2615,11 @@
     makeCurve: function(p) {
 
       var l = arguments.length, points = p;
-      if (!_.isArray(p)) {
+      if (!Array.isArray(p)) {
         points = [];
         for (var i = 0; i < l; i+=2) {
           var x = arguments[i];
-          if (!_.isNumber(x)) {
+          if (typeof x !== 'number') {
             break;
           }
           var y = arguments[i + 1];
@@ -2784,7 +2628,7 @@
       }
 
       var last = arguments[l - 1];
-      var curve = new Two.Path(points, !(_.isBoolean(last) ? last : undefined), true);
+      var curve = new Two.Path(points, !(typeof last === 'boolean' ? last : undefined), true);
       var rect = curve.getBoundingClientRect();
       curve.center().translation
         .set(rect.left + rect.width / 2, rect.top + rect.height / 2);
@@ -2843,11 +2687,11 @@
     makePath: function(p) {
 
       var l = arguments.length, points = p;
-      if (!_.isArray(p)) {
+      if (!Array.isArray(p)) {
         points = [];
         for (var i = 0; i < l; i+=2) {
           var x = arguments[i];
-          if (!_.isNumber(x)) {
+          if (typeof x !== 'number') {
             break;
           }
           var y = arguments[i + 1];
@@ -2856,11 +2700,11 @@
       }
 
       var last = arguments[l - 1];
-      var path = new Two.Path(points, !(_.isBoolean(last) ? last : undefined));
+      var path = new Two.Path(points, !(typeof last === 'boolean' ? last : undefined));
       var rect = path.getBoundingClientRect();
 
-      if (_.isNumber(rect.top)   && _.isNumber(rect.left)   &&
-          _.isNumber(rect.right) && _.isNumber(rect.bottom)) {
+      if (typeof rect.top === 'number'   && typeof rect.left === 'number' &&
+          typeof rect.right === 'number' && typeof rect.bottom === 'number') {
         path.center().translation
           .set(rect.left + rect.width / 2, rect.top + rect.height / 2);
       }
@@ -3004,7 +2848,7 @@
 
       var objects = o;
       if (!(objects instanceof Array)) {
-        objects = _.toArray(arguments);
+        objects = Array.prototype.slice.call(arguments);
       }
 
       var group = new Two.Group();
@@ -3057,7 +2901,7 @@
       var group = new Two.Group();
       var elem, i, j;
 
-      var attach = _.bind(function(data) {
+      var attach = (function(data) {
 
         dom.temp.innerHTML = data;
 
@@ -3073,13 +2917,13 @@
           }
         }
 
-        if (_.isFunction(callback)) {
+        if (typeof callback === 'function') {
           var svg = dom.temp.children.length <= 1
             ? dom.temp.children[0] : dom.temp.children;
           callback(group, svg);
         }
 
-      }, this);
+      }).bind(this);
 
       if (/.*\.svg$/ig.test(text)) {
 

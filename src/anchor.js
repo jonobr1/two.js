@@ -21,17 +21,17 @@
 
     Two.Vector.call(this, x, y);
 
-    this._broadcast = _.bind(function() {
+    this._broadcast = (function() {
       this.trigger(Two.Events.change);
-    }, this);
+    }).bind(this);
 
     this._command = command || commands.move;
     this._relative = true;
 
-    var ilx = _.isNumber(lx);
-    var ily = _.isNumber(ly);
-    var irx = _.isNumber(rx);
-    var iry = _.isNumber(ry);
+    var ilx = typeof lx === 'number';
+    var ily = typeof ly === 'number';
+    var irx = typeof rx === 'number';
+    var iry = typeof ry === 'number';
 
     // Append the `controls` object only if control points are specified,
     // keeping the Two.Anchor inline with a Two.Vector until it needs to
@@ -208,7 +208,7 @@
       this.x = v.x;
       this.y = v.y;
 
-      if (_.isString(v.command)) {
+      if (typeof v.command === 'string') {
         this.command = v.command;
       }
       if (_.isObject(v.controls)) {
@@ -219,7 +219,7 @@
         this.controls.left.copy(v.controls.left);
         this.controls.right.copy(v.controls.right);
       }
-      if (_.isBoolean(v.relative)) {
+      if (typeof v.relative === 'boolean') {
         this.relative = v.relative;
       }
 

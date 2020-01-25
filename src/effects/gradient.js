@@ -26,20 +26,20 @@
      * @name Two.Stop#offset
      * @property {Number} - The offset percentage of the stop represented as a zero-to-one value.
      */
-    this.offset = _.isNumber(offset) ? offset
+    this.offset = typeof offset === 'number' ? offset
       : Stop.Index <= 0 ? 0 : 1;
 
     /**
      * @name Two.Stop#opacity
      * @property {Number} - The alpha percentage of the stop represented as a zero-to-one value.
      */
-    this.opacity = _.isNumber(opacity) ? opacity : 1;
+    this.opacity = typeof opacity === 'number' ? opacity : 1;
 
     /**
      * @name Two.Stop#color
      * @property {CssColor} - The color of the stop.
      */
-    this.color = _.isString(color) ? color
+    this.color = (typeof color === 'string') ? color
       : Stop.Index <= 0 ? '#fff' : '#000';
 
     Stop.Index = (Stop.Index + 1) % 2;
@@ -184,9 +184,9 @@
     this.id = Two.Identifier + Two.uniqueId();
     this.classList = [];
 
-    this._renderer.flagStops = _.bind(Gradient.FlagStops, this);
-    this._renderer.bindStops = _.bind(Gradient.BindStops, this);
-    this._renderer.unbindStops = _.bind(Gradient.UnbindStops, this);
+    this._renderer.flagStops = Gradient.FlagStops.bind(this);
+    this._renderer.bindStops = Gradient.BindStops.bind(this);
+    this._renderer.unbindStops = Gradient.UnbindStops.bind(this);
 
     /**
      * @name Two.Gradient#spread
@@ -338,7 +338,7 @@
      */
     clone: function(parent) {
 
-      var stops = _.map(this.stops, function(s) {
+      var stops = this.stops.map(function(s) {
         return s.clone();
       });
 
@@ -365,7 +365,7 @@
     toObject: function() {
 
       var result = {
-        stops: _.map(this.stops, function(s) {
+        stops: this.stops.map(function(s) {
           return s.toObject();
         })
       };

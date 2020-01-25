@@ -25,8 +25,8 @@
 
     this._renderer = {};
     this._renderer.type = 'texture';
-    this._renderer.flagOffset = _.bind(Texture.FlagOffset, this);
-    this._renderer.flagScale = _.bind(Texture.FlagScale, this);
+    this._renderer.flagOffset = Texture.FlagOffset.bind(this);
+    this._renderer.flagScale = Texture.FlagScale.bind(this);
 
     this.id = Two.Identifier + Two.uniqueId();
     this.classList = [];
@@ -50,13 +50,13 @@
      */
     this.offset = new Two.Vector();
 
-    if (_.isFunction(callback)) {
-      var loaded = _.bind(function() {
+    if (typeof callback === 'function') {
+      var loaded = (function() {
         this.unbind(Two.Events.load, loaded);
-        if (_.isFunction(callback)) {
+        if (typeof callback === 'function') {
           callback();
         }
-      }, this);
+      }).bind(this);
       this.bind(Two.Events.load, loaded);
     }
 
@@ -65,15 +65,22 @@
      * @property {String} - The URL path to the image data.
      * @nota-bene This property is ultimately serialized in a {@link Two.Registry} to cache retrieval.
      */
-    if (_.isString(src)) {
+    if (typeof src === 'string') {
       this.src = src;
-    } else if (_.isElement(src)) {
-      /**
-       * @name Two.Texture#image
-       * @property {Element} - The corresponding DOM Element of the texture. Can be a `<img />`, `<canvas />`, or `<video />` element. See {@link Two.Texture.RegularExpressions} for a full list of supported elements.
-       * @nota-bene In headless environments this is a `Canvas.Image` object. See {@link https://github.com/Automattic/node-canvas} for more information on headless image objects.
-       */
-      this.image = src;
+    } else if (typeof src === 'object') {
+      var elemString = Object.prototype.toString.call(src);
+      if (
+        elemString === '[object HTMLImageElement]' ||
+        elemString === '[object HTMLCanvasElement]' ||
+        elemString === '[object HTMLVideoElement]'
+      ) {
+        /**
+         * @name Two.Texture#image
+         * @property {Element} - The corresponding DOM Element of the texture. Can be a `<img />`, `<canvas />`, or `<video />` element. See {@link Two.Texture.RegularExpressions} for a full list of supported elements.
+         * @nota-bene In headless environments this is a `Canvas.Image` object. See {@link https://github.com/Automattic/node-canvas} for more information on headless image objects.
+         */
+        this.image = src;
+      }
     }
 
     this._update();
@@ -186,33 +193,33 @@
       canvas: function(texture, callback) {
         texture._src = '#' + texture.id;
         Texture.ImageRegistry.add(texture.src, texture.image);
-        if (_.isFunction(callback)) {
+        if (typeof callback === 'function') {
           callback();
         }
       },
       img: function(texture, callback) {
 
         var loaded = function(e) {
-          if (_.isFunction(texture.image.removeEventListener)) {
+          if (typeof texture.image.removeEventListener === 'function') {
             texture.image.removeEventListener('load', loaded, false);
             texture.image.removeEventListener('error', error, false);
           }
-          if (_.isFunction(callback)) {
+          if (typeof callback === 'function') {
             callback();
           }
         };
         var error = function(e) {
-          if (_.isFunction(texture.image.removeEventListener)) {
+          if (typeof texture.image.removeEventListener === 'function') {
             texture.image.removeEventListener('load', loaded, false);
             texture.image.removeEventListener('error', error, false);
           }
           throw new Two.Utils.Error('unable to load ' + texture.src);
         };
 
-        if (_.isNumber(texture.image.width) && texture.image.width > 0
-          && _.isNumber(texture.image.height) && texture.image.height > 0) {
+        if (typeof texture.image.width === 'number' && texture.image.width > 0
+          && typeof texture.image.height === 'number' && texture.image.height > 0) {
             loaded();
-        } else if (_.isFunction(texture.image.addEventListener)) {
+        } else if (typeof texture.image.addEventListener === 'function') {
           texture.image.addEventListener('load', loaded, false);
           texture.image.addEventListener('error', error, false);
         }
@@ -245,7 +252,7 @@
           texture.image.width = texture.image.videoWidth;
           texture.image.height = texture.image.videoHeight;
           texture.image.play();
-          if (_.isFunction(callback)) {
+          if (typeof callback === 'function') {
             callback();
           }
         };
@@ -527,7 +534,7 @@
         // image: this.image,
         repeat: this.repeat,
         origin: this.origin.toObject(),
-        scale: _.isNumber(this.scale) ? this.scale : this.scale.toObject()
+        scale: typeof this.scale === 'number' ? this.scale : this.scale.toObject()
       };
     },
 
@@ -547,12 +554,12 @@
 
         if (this._flagSrc || this._flagImage) {
           this.loaded = false;
-          Texture.load(this, _.bind(function() {
+          Texture.load(this,(function() {
             this.loaded = true;
             this
               .trigger(Two.Events.change)
               .trigger(Two.Events.load);
-          }, this));
+          }).bind(this));
         }
 
       }

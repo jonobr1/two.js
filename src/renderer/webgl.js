@@ -18,7 +18,7 @@
 
     isHidden: /(undefined|none|transparent)/i,
 
-    canvas: (root.document ? root.document.createElement('canvas') : { getContext: _.identity }),
+    canvas: (root.document ? root.document.createElement('canvas') : { getContext: function() {} }),
 
     alignments: {
       left: 'start',
@@ -163,7 +163,7 @@
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         if (fill) {
-          if (_.isString(fill)) {
+          if (typeof fill === 'string') {
             ctx.fillStyle = fill;
           } else {
             webgl[fill._renderer.type].render.call(fill, ctx, elem);
@@ -171,7 +171,7 @@
           }
         }
         if (stroke) {
-          if (_.isString(stroke)) {
+          if (typeof stroke === 'string') {
             ctx.strokeStyle = stroke;
           } else {
             webgl[stroke._renderer.type].render.call(stroke, ctx, elem);
@@ -190,7 +190,7 @@
             ctx.lineCap = cap;
           }
         }
-        if (_.isNumber(opacity)) {
+        if (typeof opacity === 'number') {
           ctx.globalAlpha = opacity;
         }
 
@@ -397,7 +397,7 @@
 
         // Expand borders
 
-        if (_.isNumber(border)) {
+        if (typeof border === 'number') {
           top -= border;
           left -= border;
           right += border;
@@ -560,7 +560,7 @@
 
         // Styles
         if (fill) {
-          if (_.isString(fill)) {
+          if (typeof fill === 'string') {
             ctx.fillStyle = fill;
           } else {
             webgl[fill._renderer.type].render.call(fill, ctx, elem);
@@ -568,7 +568,7 @@
           }
         }
         if (stroke) {
-          if (_.isString(stroke)) {
+          if (typeof stroke === 'string') {
             ctx.strokeStyle = stroke;
           } else {
             webgl[stroke._renderer.type].render.call(stroke, ctx, elem);
@@ -578,7 +578,7 @@
             ctx.lineWidth = linewidth;
           }
         }
-        if (_.isNumber(opacity)) {
+        if (typeof opacity === 'number') {
           ctx.globalAlpha = opacity;
         }
         if (dashes && dashes.length > 0) {
@@ -1084,7 +1084,7 @@
      */
     this.domElement = params.domElement || document.createElement('canvas');
 
-    if (!_.isUndefined(params.offscreenElement)) {
+    if (typeof params.offscreenElement !== 'undefined') {
       webgl.canvas = params.offscreenElement;
       webgl.ctx = webgl.canvas.getContext('2d');
     }
@@ -1208,7 +1208,7 @@
       this.width = width;
       this.height = height;
 
-      this.ratio = _.isUndefined(ratio) ? getRatio(this.ctx) : ratio;
+      this.ratio = typeof ratio === 'undefined' ? getRatio(this.ctx) : ratio;
 
       this.domElement.width = width * this.ratio;
       this.domElement.height = height * this.ratio;
