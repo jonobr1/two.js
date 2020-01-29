@@ -1,14 +1,14 @@
-import {getComputedMatrix} from './utils/math';
-import Events from './events';
-import defineGetterSetter from './utils/get-set';
-import _ from './utils/dash';
+import {getComputedMatrix} from './utils/math.js';
+import Events from './events.js';
+import defineGetterSetter from './utils/get-set.js';
+import _ from './utils/dash.js';
 
-import Shape from './shape';
+import Shape from './shape.js';
 
-import {Gradient} from './effects/gradient';
-import LinearGradient from './effects/linear-gradient';
-import RadialGradient from './effects/radial-gradient';
-import Texture from './effects/texture';
+import {Gradient} from './effects/gradient.js';
+import LinearGradient from './effects/linear-gradient.js';
+import RadialGradient from './effects/radial-gradient.js';
+import Texture from './effects/texture.js';
 
 /**
  * @name Two.Text

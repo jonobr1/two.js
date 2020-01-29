@@ -1,5 +1,5 @@
-import _ from './utils/dash';
-import Events from './events';
+import _ from './utils/dash.js';
+import Events from './events.js';
 
 /**
  * @name Two.Vector

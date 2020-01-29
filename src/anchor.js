@@ -1,8 +1,8 @@
-import Commands from './utils/path-commands';
-import _ from './utils/dash';
+import Commands from './utils/path-commands.js';
+import _ from './utils/dash.js';
 
-import Events from './events';
-import Vector from './vector';
+import Events from './events.js';
+import Vector from './vector.js';
 
 /**
  * @class

@@ -1,9 +1,9 @@
-import Collection from '../collection';
-import Events from '../events';
-import defineGetterSetter from '../utils/get-set';
-import _ from '../utils/dash';
+import Collection from '../collection.js';
+import Events from '../events.js';
+import defineGetterSetter from '../utils/get-set.js';
+import _ from '../utils/dash.js';
 
-import TwoGlobals from '../two-globals';
+import TwoGlobals from '../two-globals.js';
 
 /**
  * @name Two.Stop

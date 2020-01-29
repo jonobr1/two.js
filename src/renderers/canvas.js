@@ -1,13 +1,13 @@
-import Commands from '../utils/path-commands';
-import {mod} from '../utils/math';
-import {Curve} from '../utils/curves';
-import Events from '../events';
-import getRatio from '../utils/get-ratio';
-import _ from '../utils/dash';
+import Commands from '../utils/path-commands.js';
+import {mod} from '../utils/math.js';
+import {Curve} from '../utils/curves.js';
+import Events from '../events.js';
+import getRatio from '../utils/get-ratio.js';
+import _ from '../utils/dash.js';
 
-import Group from '../group';
-import Vector from '../vector';
-import TwoGlobals from '../two-globals';
+import Group from '../group.js';
+import Vector from '../vector.js';
+import TwoGlobals from '../two-globals.js';
 
 /**
  * Constants

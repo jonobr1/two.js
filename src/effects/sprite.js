@@ -1,12 +1,12 @@
-import defineGetterSetter from '../utils/get-set';
-import {lerp} from '../utils/math';
-import _ from '../utils/dash';
+import defineGetterSetter from '../utils/get-set.js';
+import {lerp} from '../utils/math.js';
+import _ from '../utils/dash.js';
 
-import Path from '../path';
-import Anchor from '../anchor';
-import Vector from '../vector';
-import Rectangle from '../shapes/rectangle';
-import Texture from './texture';
+import Path from '../path.js';
+import Anchor from '../anchor.js';
+import Vector from '../vector.js';
+import Rectangle from '../shapes/rectangle.js';
+import Texture from './texture.js';
 
 /**
  * @name Two.Sprite

@@ -1,9 +1,9 @@
-import Events from '../events';
-import defineGetterSetter from '../utils/get-set';
-import _ from '../utils/dash';
+import Events from '../events.js';
+import defineGetterSetter from '../utils/get-set.js';
+import _ from '../utils/dash.js';
 
-import {Gradient, Stop} from './gradient';
-import Vector from '../vector';
+import {Gradient, Stop} from './gradient.js';
+import Vector from '../vector.js';
 
 /**
  * @name Two.RadialGradient

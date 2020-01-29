@@ -1,11 +1,11 @@
-import Commands from '../utils/path-commands';
-import Events from '../events';
-import defineGetterSetter from '../utils/get-set';
-import _ from '../utils/dash';
+import Commands from '../utils/path-commands.js';
+import Events from '../events.js';
+import defineGetterSetter from '../utils/get-set.js';
+import _ from '../utils/dash.js';
 
-import Path from '../path';
-import Anchor from '../anchor';
-import Vector from '../vector';
+import Path from '../path.js';
+import Anchor from '../anchor.js';
+import Vector from '../vector.js';
 
 /**
  * @name Two.RoundedRectangle

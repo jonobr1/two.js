@@ -1,11 +1,11 @@
-import {mod} from './math';
-import Commands from './path-commands';
-import _ from './dash';
+import {mod} from './math.js';
+import Commands from './path-commands.js';
+import _ from './dash.js';
 
-import Anchor from '../anchor';
-import Vector from '../vector';
-import Matrix from '../matrix';
-import TwoGlobals from '../two-globals';
+import Anchor from '../anchor.js';
+import Vector from '../vector.js';
+import Matrix from '../matrix.js';
+import TwoGlobals from '../two-globals.js';
 
 var HALF_PI = Math.PI / 2;
 

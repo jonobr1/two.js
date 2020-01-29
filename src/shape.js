@@ -1,10 +1,10 @@
-import Events from './events';
-import _ from './utils/dash';
+import Events from './events.js';
+import _ from './utils/dash.js';
 
-import Matrix from './matrix';
-import Vector from './vector';
+import Matrix from './matrix.js';
+import Vector from './vector.js';
 
-import TwoGlobals from './two-globals';
+import TwoGlobals from './two-globals.js';
 
 /**
  * @name Two.Shape

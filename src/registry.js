@@ -1,4 +1,4 @@
-import _ from './utils/dash';
+import _ from './utils/dash.js';
 
 /**
  * @name Two.Registry

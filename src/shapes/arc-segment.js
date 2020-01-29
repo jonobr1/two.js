@@ -1,11 +1,11 @@
-import Commands from '../utils/path-commands';
-import {mod} from '../utils/math';
-import defineGetterSetter from '../utils/get-set';
-import _ from '../utils/dash';
+import Commands from '../utils/path-commands.js';
+import {mod} from '../utils/math.js';
+import defineGetterSetter from '../utils/get-set.js';
+import _ from '../utils/dash.js';
 
-import Path from '../path';
-import Anchor from '../anchor';
-import TwoGlobals from '../two-globals';
+import Path from '../path.js';
+import Anchor from '../anchor.js';
+import TwoGlobals from '../two-globals.js';
 
 var TWO_PI = Math.PI * 2, HALF_PI = Math.PI / 2;
 

@@ -1,9 +1,9 @@
-import Commands from '../utils/path-commands';
-import defineGetterSetter from '../utils/get-set';
-import _ from '../utils/dash';
+import Commands from '../utils/path-commands.js';
+import defineGetterSetter from '../utils/get-set.js';
+import _ from '../utils/dash.js';
 
-import Path from '../path';
-import Anchor from '../anchor';
+import Path from '../path.js';
+import Anchor from '../anchor.js';
 
 var TWO_PI = Math.PI * 2, HALF_PI = Math.PI / 2;
 var cos = Math.cos, sin = Math.sin;

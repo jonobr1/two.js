@@ -1,6 +1,6 @@
-import root from './root';
+import root from './root.js';
 
-import Matrix from '../matrix';
+import Matrix from '../matrix.js';
 
 /**
  * @name Utils.getComputedMatrix

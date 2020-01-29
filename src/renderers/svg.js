@@ -1,10 +1,10 @@
-import Commands from '../utils/path-commands';
-import {mod, toFixed} from '../utils/math';
-import Events from '../events';
-import _ from '../utils/dash';
+import Commands from '../utils/path-commands.js';
+import {mod, toFixed} from '../utils/math.js';
+import Events from '../events.js';
+import _ from '../utils/dash.js';
 
-import Group from '../group';
-import Vector from '../vector';
+import Group from '../group.js';
+import Vector from '../vector.js';
 
 var svg = {
 

@@ -1,6 +1,6 @@
-import Commands from './utils/path-commands';
-import Collection from './collection';
-import {getComputedMatrix, lerp, mod} from './utils/math';
+import Commands from './utils/path-commands.js';
+import Collection from './collection.js';
+import {getComputedMatrix, lerp, mod} from './utils/math.js';
 import {
   getComponentOnCubicBezier,
   getCurveBoundingBox,
@@ -8,19 +8,19 @@ import {
   subdivide,
   getCurveLength as utilGetCurveLength
 } from './utils/curves';
-import defineGetterSetter from './utils/get-set';
-import _ from './utils/dash';
+import defineGetterSetter from './utils/get-set.js';
+import _ from './utils/dash.js';
 
 
-import Shape from './shape';
-import Events from './events';
-import Vector from './vector';
-import Anchor from './anchor';
+import Shape from './shape.js';
+import Events from './events.js';
+import Vector from './vector.js';
+import Anchor from './anchor.js';
 
-import {Gradient} from './effects/gradient';
-import LinearGradient from './effects/linear-gradient';
-import RadialGradient from './effects/radial-gradient';
-import Texture from './effects/texture';
+import {Gradient} from './effects/gradient.js';
+import LinearGradient from './effects/linear-gradient.js';
+import RadialGradient from './effects/radial-gradient.js';
+import Texture from './effects/texture.js';
 
 // Constants
 

@@ -1,8 +1,8 @@
-import Commands from '../utils/path-commands';
-import _ from '../utils/dash';
+import Commands from '../utils/path-commands.js';
+import _ from '../utils/dash.js';
 
-import Path from '../path';
-import Anchor from '../anchor';
+import Path from '../path.js';
+import Anchor from '../anchor.js';
 
 /**
  * @name Two.Line

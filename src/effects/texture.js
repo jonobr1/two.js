@@ -1,17 +1,17 @@
-import root from '../utils/root';
-import Events from '../events';
-import TwoError from '../utils/error';
-import defineGetterSetter from '../utils/get-set';
-import CanvasShim from '../utils/canvas-shim';
-import _ from '../utils/dash';
+import root from '../utils/root.js';
+import Events from '../events.js';
+import TwoError from '../utils/error.js';
+import defineGetterSetter from '../utils/get-set.js';
+import CanvasShim from '../utils/canvas-shim.js';
+import _ from '../utils/dash.js';
 
-import Vector from '../vector';
-import Shape from '../shape';
-import Registry from '../registry';
+import Vector from '../vector.js';
+import Shape from '../shape.js';
+import Registry from '../registry.js';
 
-import CanvasRenderer from '../renderers/canvas';
+import CanvasRenderer from '../renderers/canvas.js';
 
-import TwoGlobals from '../two-globals';
+import TwoGlobals from '../two-globals.js';
 
 var anchor;
 var regex = {

@@ -1,8 +1,8 @@
-import Events from '../events';
-import _ from '../utils/dash';
+import Events from '../events.js';
+import _ from '../utils/dash.js';
 
-import {Gradient, Stop} from './gradient';
-import Vector from '../vector';
+import {Gradient, Stop} from './gradient.js';
+import Vector from '../vector.js';
 
 /**
  * @name Two.LinearGradient

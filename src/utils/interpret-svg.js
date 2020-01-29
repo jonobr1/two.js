@@ -1,26 +1,26 @@
-import root from './root';
-import Commands from './path-commands';
-import {decomposeMatrix} from './math';
-import {getReflection} from './curves';
-import _ from './dash';
-import TwoError from './error';
+import root from './root.js';
+import Commands from './path-commands.js';
+import {decomposeMatrix} from './math.js';
+import {getReflection} from './curves.js';
+import _ from './dash.js';
+import TwoError from './error.js';
 
-import Anchor from '../anchor';
-import Vector from '../vector';
-import Path from '../path';
-import Group from '../group';
+import Anchor from '../anchor.js';
+import Vector from '../vector.js';
+import Path from '../path.js';
+import Group from '../group.js';
 
-import Circle from '../shapes/circle';
-import Ellipse from '../shapes/ellipse';
-import Line from '../shapes/line';
-import Rectangle from '../shapes/rectangle';
-import RoundedRectangle from '../shapes/rounded-rectangle';
+import Circle from '../shapes/circle.js';
+import Ellipse from '../shapes/ellipse.js';
+import Line from '../shapes/line.js';
+import Rectangle from '../shapes/rectangle.js';
+import RoundedRectangle from '../shapes/rounded-rectangle.js';
 
-import {Gradient, Stop} from '../effects/gradient';
-import LinearGradient from '../effects/linear-gradient';
-import RadialGradient from '../effects/radial-gradient';
+import {Gradient, Stop} from '../effects/gradient.js';
+import LinearGradient from '../effects/linear-gradient.js';
+import RadialGradient from '../effects/radial-gradient.js';
 
-import TwoGlobals from '../two-globals';
+import TwoGlobals from '../two-globals.js';
 
 /**
  * @name Utils.extractCSSText

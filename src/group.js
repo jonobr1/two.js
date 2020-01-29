@@ -1,10 +1,10 @@
-import Collection from './collection';
-import Events from './events';
-import _ from './utils/dash';
+import Collection from './collection.js';
+import Events from './events.js';
+import _ from './utils/dash.js';
 
-import Vector from './vector';
-import Shape from './shape';
-import Texture from './effects/texture';
+import Vector from './vector.js';
+import Shape from './shape.js';
+import Texture from './effects/texture.js';
 
 // Constants
 

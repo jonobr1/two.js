@@ -1,4 +1,4 @@
-import root from './root';
+import root from './root.js';
 
 var devicePixelRatio = root.devicePixelRatio || 1;
 

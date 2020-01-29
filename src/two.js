@@ -1,45 +1,45 @@
-import Commands from './utils/path-commands';
-import root from './utils/root';
-import interpretSVG from './utils/interpret-svg';
-import xhr from './utils/xhr';
-import _ from './utils/dash';
+import Commands from './utils/path-commands.js';
+import root from './utils/root.js';
+import interpretSVG from './utils/interpret-svg.js';
+import xhr from './utils/xhr.js';
+import _ from './utils/dash.js';
 
-import Anchor from './anchor';
-import Collection from './collection';
-import Events from './events';
-import Group from './group';
-import Matrix from './matrix';
-import Path from './path';
-import Registry from './registry';
-import Shape from './shape';
-import Text from './text';
-import Vector from './vector';
+import Anchor from './anchor.js';
+import Collection from './collection.js';
+import Events from './events.js';
+import Group from './group.js';
+import Matrix from './matrix.js';
+import Path from './path.js';
+import Registry from './registry.js';
+import Shape from './shape.js';
+import Text from './text.js';
+import Vector from './vector.js';
 
-import {Gradient, Stop} from './effects/gradient';
-import ImageSequence from './effects/image-sequence';
-import LinearGradient from './effects/linear-gradient';
-import RadialGradient from './effects/radial-gradient';
-import Sprite from './effects/sprite';
-import Texture from './effects/texture';
+import {Gradient, Stop} from './effects/gradient.js';
+import ImageSequence from './effects/image-sequence.js';
+import LinearGradient from './effects/linear-gradient.js';
+import RadialGradient from './effects/radial-gradient.js';
+import Sprite from './effects/sprite.js';
+import Texture from './effects/texture.js';
 
-import ArcSegment from './shapes/arc-segment';
-import Circle from './shapes/circle';
-import Ellipse from './shapes/ellipse';
-import Line from './shapes/line';
-import Polygon from './shapes/polygon';
-import Rectangle from './shapes/rectangle';
-import RoundedRectangle from './shapes/rounded-rectangle';
-import Star from './shapes/star';
+import ArcSegment from './shapes/arc-segment.js';
+import Circle from './shapes/circle.js';
+import Ellipse from './shapes/ellipse.js';
+import Line from './shapes/line.js';
+import Polygon from './shapes/polygon.js';
+import Rectangle from './shapes/rectangle.js';
+import RoundedRectangle from './shapes/rounded-rectangle.js';
+import Star from './shapes/star.js';
 
-import CanvasRenderer from './renderers/canvas';
-import SVGRenderer from './renderers/svg';
-import WebGLRenderer from './renderers/webgl';
+import CanvasRenderer from './renderers/canvas.js';
+import SVGRenderer from './renderers/svg.js';
+import WebGLRenderer from './renderers/webgl.js';
 
-import TwoGlobals from './two-globals';
+import TwoGlobals from './two-globals.js';
 
 // Cross browser dom events.
 
-import dom from './utils/dom';
+import dom from './utils/dom.js';
 
 /**
  * @name Two

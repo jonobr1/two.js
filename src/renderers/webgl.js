@@ -1,22 +1,22 @@
-import Commands from '../utils/path-commands';
+import Commands from '../utils/path-commands.js';
 
-import root from '../utils/root';
-import {mod, NumArray} from '../utils/math';
-import Events from '../events';
-import TwoError from '../utils/error';
-import getRatio from '../utils/get-ratio';
-import _ from '../utils/dash';
+import root from '../utils/root.js';
+import {mod, NumArray} from '../utils/math.js';
+import Events from '../events.js';
+import TwoError from '../utils/error.js';
+import getRatio from '../utils/get-ratio.js';
+import _ from '../utils/dash.js';
 
-import Group from '../group';
-import Vector from '../vector';
-import Matrix from '../matrix';
-import Registry from '../registry';
+import Group from '../group.js';
+import Vector from '../vector.js';
+import Matrix from '../matrix.js';
+import Registry from '../registry.js';
 
-import LinearGradient from '../effects/linear-gradient';
-import RadialGradient from '../effects/radial-gradient';
-import Texture from '../effects/texture';
+import LinearGradient from '../effects/linear-gradient.js';
+import RadialGradient from '../effects/radial-gradient.js';
+import Texture from '../effects/texture.js';
 
-import CanvasRenderer from './canvas';
+import CanvasRenderer from './canvas.js';
 
 // Constants
 
