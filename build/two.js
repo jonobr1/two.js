@@ -2114,7 +2114,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2020-01-25T19:54:19.826Z',
+    PublishDate: '2020-01-29T23:39:42.510Z',
 
     /**
      * @name Two.Identifier
@@ -5666,31 +5666,6 @@ SOFTWARE.
 
   }
 
-  var CanvasShim = {
-
-    Image: null,
-
-    isHeadless: false,
-
-    /**
-     * @name Utils.shim
-     * @function
-     * @param {canvas} canvas - The instanced `Canvas` object provided by `node-canvas`.
-     * @param {Image} [Image] - The prototypical `Image` object provided by `node-canvas`. This is only necessary to pass if you're going to load bitmap imagery.
-     * @returns {canvas} Returns the instanced canvas object you passed from with additional attributes needed for Two.js.
-     * @description Convenience method for defining all the dependencies from the npm package `node-canvas`. See [node-canvas]{@link https://github.com/Automattic/node-canvas} for additional information on setting up HTML5 `<canvas />` drawing in a node.js environment.
-     */
-    shim: function(canvas, Image) {
-      Renderer.Utils.shim(canvas);
-      if (typeof Image !== 'undefined') {
-        CanvasShim.Image = Image;
-      }
-      CanvasShim.isHeadless = true;
-      return canvas;
-    }
-
-  };
-
   /**
    * @name Two.Registry
    * @class
@@ -5909,13 +5884,7 @@ SOFTWARE.
 
       var image;
 
-      if (CanvasShim.Image) {
-
-        // TODO: Fix for headless environments
-        image = new CanvasShim.Image();
-        Renderer.Utils.shim(image, 'img');
-
-      } else if (root$1.document) {
+      if (root$1.document) {
 
         if (regex.video.test(absoluteSrc)) {
           image = document.createElement('video');
@@ -5984,11 +5953,7 @@ SOFTWARE.
         texture.image.setAttribute('two-src', texture.src);
         Texture.ImageRegistry.add(texture.src, texture.image);
 
-        if (CanvasShim.isHeadless) {
-
-          Texture.loadHeadlessBuffer(texture, loaded);
-
-        } else {
+        {
 
           texture.image.src = texture.src;
 
@@ -6019,10 +5984,6 @@ SOFTWARE.
 
         if (texture.image && texture.image.getAttribute('two-src')) {
           return;
-        }
-
-        if (CanvasShim.isHeadless) {
-          throw new TwoError('video textures are not implemented in headless environments.');
         }
 
         texture.image.setAttribute('two-src', texture.src);
@@ -14415,232 +14376,6 @@ SOFTWARE.
 
   });
 
-  var Surface = function(object) {
-
-    this.object = object;
-
-  };
-
-  _.extend(Surface.prototype, {
-
-    limits: function(min, max) {
-
-      var min_exists = typeof min !== 'undefined';
-      var max_exists = typeof max !== 'undefined';
-
-      if (!max_exists && !min_exists) {
-        return { min: this.min, max: this.max };
-      }
-
-      this.min = min_exists ? min : this.min;
-      this.max = max_exists ? max : this.max;
-
-      return this;
-
-    },
-
-    apply: function(px, py, s) {
-      this.object.translation.set(px, py);
-      this.object.scale = s;
-      return this;
-    }
-
-  });
-
-  var ZUI = function(group, domElement) {
-
-    this.limits = {
-      scale: ZUI.Limit.clone(),
-      x: ZUI.Limit.clone(),
-      y: ZUI.Limit.clone()
-    };
-
-    this.viewport = domElement || document.body;
-    this.viewportOffset = {
-      matrix: new Matrix()
-    };
-
-    this.surfaceMatrix = new Matrix();
-
-    this.surfaces = [];
-    this.reset();
-    this.updateSurface();
-
-    this.add(new Surface(group));
-
-  };
-
-  _.extend(ZUI, {
-
-    Surface: Surface,
-
-    Clamp: function(v, min, max) {
-      return Math.min(Math.max(v, min), max);
-    },
-
-    Limit: {
-      min: -Infinity,
-      max: Infinity,
-      clone: function() {
-        var result = {};
-        for (var k in this) {
-          result[k] = this[k];
-        }
-        return result;
-      }
-    },
-
-    TranslateMatrix: function(m, x, y) {
-      m.elements[2] += x;
-      m.elements[5] += y;
-      return m;
-    },
-
-    PositionToScale: function(pos) {
-      return Math.exp(pos);
-    },
-
-    ScaleToPosition: function(scale) {
-      return Math.log(scale);
-    }
-
-  });
-
-  _.extend(ZUI.prototype, {
-
-    constructor: ZUI,
-
-    add: function(surface) {
-      this.surfaces.push(surface);
-      var limits = surface.limits();
-      this.addLimits(limits.min, limits.max);
-      return this;
-    },
-
-    addLimits: function(min, max, type) {
-
-      type = type || 'scale';
-
-      if (typeof min !== 'undefined') {
-        if (this.limits[type].min) {
-          this.limits[type].min = Math.max(min, this.limits[type].min);
-        } else {
-          this.limits[type].min = min;
-        }
-      }
-
-      if (typeof max === 'undefined') {
-        return this;
-      }
-
-      if (this.limits[type].max) {
-        this.limits[type].max = Math.min(max, this.limits[type].max);
-      } else {
-        this.limits[type].max = max;
-      }
-
-      return this;
-
-    },
-
-    /**
-     * Conversion Functions
-     */
-
-    clientToSurface: function(x, y) {
-      this.updateOffset();
-      var m = this.surfaceMatrix.inverse();
-      var n = this.viewportOffset.matrix.inverse().multiply(x, y, 1);
-      return m.multiply.apply(m, [n.x, n.y, n.z]);
-    },
-
-    surfaceToClient: function(v) {
-      this.updateOffset();
-      var vo = this.viewportOffset.matrix.clone();
-      var sm = this.surfaceMatrix.multiply.apply(this.surfaceMatrix, [v.x, v.y, v.z]);
-      return vo.multiply.apply(vo, [sm.x, sm.y, sm.z]);
-    },
-
-    /**
-     *
-     */
-
-    zoomBy: function(byF, clientX, clientY) {
-      var s = ZUI.PositionToScale(this.zoom + byF);
-      this.zoomSet(s, clientX, clientY);
-      return this;
-    },
-
-    zoomSet: function(zoom, clientX, clientY) {
-
-      var newScale = this.fitToLimits(zoom);
-      this.zoom = ZUI.ScaleToPosition(newScale);
-
-      if (newScale === this.scale) {
-        return this;
-      }
-
-      var sf = this.clientToSurface(clientX, clientY);
-      var scaleBy = newScale / this.scale;
-
-      this.surfaceMatrix.scale(scaleBy);
-      this.scale = newScale;
-
-      var c = this.surfaceToClient(sf);
-      var dx = clientX - c.x;
-      var dy = clientY - c.y;
-      this.translateSurface(dx, dy);
-
-      return this;
-
-    },
-
-    translateSurface: function(x, y) {
-      ZUI.TranslateMatrix(this.surfaceMatrix, x, y);
-      this.updateSurface();
-      return this;
-    },
-
-    updateOffset: function() {
-
-      var rect = this.viewport.getBoundingClientRect();
-      _.extend(this.viewportOffset, rect);
-
-      this.viewportOffset.left -= document.body.scrollLeft;
-      this.viewportOffset.top -= document.body.scrollTop;
-
-      this.viewportOffset.matrix
-        .identity()
-        .translate(this.viewportOffset.left, this.viewportOffset.top);
-
-      return this;
-
-    },
-
-    updateSurface: function() {
-
-      var e = this.surfaceMatrix.elements;
-      for (var i = 0; i < this.surfaces.length; i++) {
-        this.surfaces[i].apply(e[2], e[5], e[0]);
-      }
-
-      return this;
-
-    },
-
-    reset: function() {
-      this.zoom = 0;
-      this.scale = 1.0;
-      this.surfaceMatrix.identity();
-      return this;
-    },
-
-    fitToLimits: function(s) {
-      return ZUI.Clamp(s, this.limits.scale.min, this.limits.scale.max);
-    }
-
-  });
-
   var dom = {
 
     temp: (root$1.document ? root$1.document.createElement('div') : {}),
@@ -15530,8 +15265,6 @@ SOFTWARE.
     CanvasRenderer: Renderer,
     SVGRenderer: Renderer$1,
     WebGLRenderer: Renderer$2,
-
-    ZUI: ZUI,
 
     /**
      * @name Two.Commands

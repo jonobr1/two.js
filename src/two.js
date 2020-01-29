@@ -37,8 +37,6 @@ import WebGLRenderer from './renderers/webgl';
 
 import TwoGlobals from './two-globals';
 
-import ZUI from '../extras/zui';
-
 // Cross browser dom events.
 
 import dom from './utils/dom';
@@ -880,8 +878,6 @@ _.extend(Two, {
   CanvasRenderer: CanvasRenderer,
   SVGRenderer: SVGRenderer,
   WebGLRenderer: WebGLRenderer,
-
-  ZUI: ZUI,
 
   /**
    * @name Two.Commands
