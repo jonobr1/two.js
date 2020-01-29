@@ -1,16 +1,3 @@
-var EventTypes = {
-  play: 'play',
-  pause: 'pause',
-  update: 'update',
-  render: 'render',
-  resize: 'resize',
-  change: 'change',
-  remove: 'remove',
-  insert: 'insert',
-  order: 'order',
-  load: 'load'
-};
-
 var trigger = function(obj, events, args) {
   var method;
   switch (args.length) {
@@ -155,7 +142,18 @@ var Events = {
 
   },
 
-  Types: EventTypes
+  Types: {
+    play: 'play',
+    pause: 'pause',
+    update: 'update',
+    render: 'render',
+    resize: 'resize',
+    change: 'change',
+    remove: 'remove',
+    insert: 'insert',
+    order: 'order',
+    load: 'load'
+  }
 
 };
 
