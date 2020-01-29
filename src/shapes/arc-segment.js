@@ -5,7 +5,7 @@ import _ from '../utils/dash.js';
 
 import Path from '../path.js';
 import Anchor from '../anchor.js';
-import TwoGlobals from '../two-globals.js';
+import Globals from '../globals.js';
 
 var TWO_PI = Math.PI * 2, HALF_PI = Math.PI / 2;
 
@@ -23,7 +23,7 @@ var TWO_PI = Math.PI * 2, HALF_PI = Math.PI / 2;
  */
 var ArcSegment = function(ox, oy, ir, or, sa, ea, res) {
 
-  var amount = res || (TwoGlobals.Resolution * 3);
+  var amount = res || (Globals.Resolution * 3);
   var points = [];
   for (var i = 0; i < amount; i++) {
     points.push(new Anchor());

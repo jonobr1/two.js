@@ -5,7 +5,7 @@ import _ from './dash.js';
 import Anchor from '../anchor.js';
 import Vector from '../vector.js';
 import Matrix from '../matrix.js';
-import TwoGlobals from '../two-globals.js';
+import Globals from '../globals.js';
 
 var HALF_PI = Math.PI / 2;
 
@@ -399,7 +399,7 @@ var getAnchorsFromArcData = function(center, xAxisRotation, rx, ry, ts, td, ccw)
     .translate(center.x, center.y)
     .rotate(xAxisRotation);
 
-  var resolution = TwoGlobals.Resolution;
+  var resolution = Globals.Resolution;
 
   var anchors = [];
 

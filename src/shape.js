@@ -4,7 +4,7 @@ import _ from './utils/dash.js';
 import Matrix from './matrix.js';
 import Vector from './vector.js';
 
-import TwoGlobals from './two-globals.js';
+import Globals from './globals.js';
 
 /**
  * @name Two.Shape
@@ -30,7 +30,7 @@ var Shape = function() {
    * @property {String} - Session specific unique identifier.
    * @nota-bene In the {@link Two.SvgRenderer} change this to change the underlying SVG element's id too.
    */
-  this.id = TwoGlobals.Identifier + TwoGlobals.uniqueId();
+  this.id = Globals.Identifier + Globals.uniqueId();
 
   /**
    * @name Two.Shape#classList

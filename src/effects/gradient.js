@@ -3,7 +3,7 @@ import Events from '../events.js';
 import defineGetterSetter from '../utils/get-set.js';
 import _ from '../utils/dash.js';
 
-import TwoGlobals from '../two-globals.js';
+import Globals from '../globals.js';
 
 /**
  * @name Two.Stop
@@ -184,7 +184,7 @@ var Gradient = function(stops) {
    * @property {String} - Session specific unique identifier.
    * @nota-bene In the {@link Two.SvgRenderer} change this to change the underlying SVG element's id too.
    */
-  this.id = TwoGlobals.Identifier + TwoGlobals.uniqueId();
+  this.id = Globals.Identifier + Globals.uniqueId();
   this.classList = [];
 
   this._renderer.flagStops = Gradient.FlagStops.bind(this);

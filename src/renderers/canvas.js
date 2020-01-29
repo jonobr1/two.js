@@ -7,7 +7,7 @@ import _ from '../utils/dash.js';
 
 import Group from '../group.js';
 import Vector from '../vector.js';
-import TwoGlobals from '../two-globals.js';
+import Globals from '../globals.js';
 
 /**
  * Constants
@@ -850,9 +850,9 @@ function renderArcEstimate(ctx, ox, oy, rx, ry, startAngle, endAngle, clockwise,
 
   }
 
-  for (var i = 0; i < TwoGlobals.Resolution; i++) {
+  for (var i = 0; i < Globals.Resolution; i++) {
 
-    var t = i / (TwoGlobals.Resolution - 1);
+    var t = i / (Globals.Resolution - 1);
 
     var angle = startAngle + t * deltaAngle;
     var x = ox + rx * Math.cos(angle);

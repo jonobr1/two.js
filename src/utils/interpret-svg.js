@@ -20,7 +20,7 @@ import {Gradient, Stop} from '../effects/gradient.js';
 import LinearGradient from '../effects/linear-gradient.js';
 import RadialGradient from '../effects/radial-gradient.js';
 
-import TwoGlobals from '../two-globals.js';
+import Globals from '../globals.js';
 
 /**
  * @name Utils.extractCSSText
@@ -297,7 +297,7 @@ var applySvgAttributes = function(node, elem, parentStyles) {
         elem.id = value;
         // Overwritten id for non-conflicts on same page SVG documents
         // TODO: Make this non-descructive
-        node.id = value + '-' + TwoGlobals.Identifier + 'applied';
+        node.id = value + '-' + Globals.Identifier + 'applied';
         break;
       case 'class':
       case 'className':

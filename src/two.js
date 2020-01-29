@@ -35,7 +35,7 @@ import CanvasRenderer from './renderers/canvas.js';
 import SVGRenderer from './renderers/svg.js';
 import WebGLRenderer from './renderers/webgl.js';
 
-import TwoGlobals from './two-globals.js';
+import Globals from './globals.js';
 
 // Cross browser dom events.
 
@@ -128,7 +128,7 @@ var Two = function(options) {
 
 };
 
-_.extend(Two, TwoGlobals);
+_.extend(Two, Globals);
 
 _.extend(Two.prototype, Events, {
 

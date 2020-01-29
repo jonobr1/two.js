@@ -44,19 +44,6 @@ if (typeof window !== 'undefined') {
 
 var root$1 = root;
 
-var EventTypes = {
-  play: 'play',
-  pause: 'pause',
-  update: 'update',
-  render: 'render',
-  resize: 'resize',
-  change: 'change',
-  remove: 'remove',
-  insert: 'insert',
-  order: 'order',
-  load: 'load'
-};
-
 var trigger = function(obj, events, args) {
   var method;
   switch (args.length) {
@@ -201,7 +188,18 @@ var Events = {
 
   },
 
-  Types: EventTypes
+  Types: {
+    play: 'play',
+    pause: 'pause',
+    update: 'update',
+    render: 'render',
+    resize: 'resize',
+    change: 'change',
+    remove: 'remove',
+    insert: 'insert',
+    order: 'order',
+    load: 'load'
+  }
 
 };
 
@@ -2077,7 +2075,7 @@ Anchor.MakeObservable(Anchor.prototype);
 
 var count = 0;
 
-var TwoGlobals = {
+var Globals = {
 
   /**
    * @name Two.nextFrameID
@@ -2108,7 +2106,7 @@ var TwoGlobals = {
    * @name Two.PublishDate
    * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
    */
-  PublishDate: '2020-01-29T23:41:10.459Z',
+  PublishDate: '2020-01-29T23:41:34.959Z',
 
   /**
    * @name Two.Identifier
@@ -2653,7 +2651,7 @@ var Shape = function() {
    * @property {String} - Session specific unique identifier.
    * @nota-bene In the {@link Two.SvgRenderer} change this to change the underlying SVG element's id too.
    */
-  this.id = TwoGlobals.Identifier + TwoGlobals.uniqueId();
+  this.id = Globals.Identifier + Globals.uniqueId();
 
   /**
    * @name Two.Shape#classList
@@ -3146,7 +3144,7 @@ var Gradient = function(stops) {
    * @property {String} - Session specific unique identifier.
    * @nota-bene In the {@link Two.SvgRenderer} change this to change the underlying SVG element's id too.
    */
-  this.id = TwoGlobals.Identifier + TwoGlobals.uniqueId();
+  this.id = Globals.Identifier + Globals.uniqueId();
   this.classList = [];
 
   this._renderer.flagStops = Gradient.FlagStops.bind(this);
@@ -5618,9 +5616,9 @@ function renderArcEstimate(ctx, ox, oy, rx, ry, startAngle, endAngle, clockwise,
 
   }
 
-  for (var i = 0; i < TwoGlobals.Resolution; i++) {
+  for (var i = 0; i < Globals.Resolution; i++) {
 
-    var t = i / (TwoGlobals.Resolution - 1);
+    var t = i / (Globals.Resolution - 1);
 
     var angle = startAngle + t * deltaAngle;
     var x = ox + rx * Math.cos(angle);
@@ -5748,7 +5746,7 @@ var Texture = function(src, callback) {
   this._renderer.flagOffset = Texture.FlagOffset.bind(this);
   this._renderer.flagScale = Texture.FlagScale.bind(this);
 
-  this.id = TwoGlobals.Identifier + TwoGlobals.uniqueId();
+  this.id = Globals.Identifier + Globals.uniqueId();
   this.classList = [];
 
   /**
@@ -9014,7 +9012,7 @@ var applySvgAttributes = function(node, elem, parentStyles) {
         elem.id = value;
         // Overwritten id for non-conflicts on same page SVG documents
         // TODO: Make this non-descructive
-        node.id = value + '-' + TwoGlobals.Identifier + 'applied';
+        node.id = value + '-' + Globals.Identifier + 'applied';
         break;
       case 'class':
       case 'className':
@@ -11361,7 +11359,7 @@ var TWO_PI$3 = Math.PI * 2, HALF_PI$3 = Math.PI / 2;
  */
 var ArcSegment = function(ox, oy, ir, or, sa, ea, res) {
 
-  var amount = res || (TwoGlobals.Resolution * 3);
+  var amount = res || (Globals.Resolution * 3);
   var points = [];
   for (var i = 0; i < amount; i++) {
     points.push(new Anchor());
@@ -14509,7 +14507,7 @@ var Two = function(options) {
 
 };
 
-_.extend(Two, TwoGlobals);
+_.extend(Two, Globals);
 
 _.extend(Two.prototype, Events, {
 
