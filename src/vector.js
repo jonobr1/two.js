@@ -1,4 +1,4 @@
-import _ from './utils/dash.js';
+import _ from './utils/underdash.js';
 import Events from './events.js';
 
 /**

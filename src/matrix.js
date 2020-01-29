@@ -1,6 +1,6 @@
 import {NumArray, toFixed} from './utils/math.js';
 import Events from './events.js';
-import _ from './utils/dash.js';
+import _ from './utils/underdash.js';
 
 // Constants
 

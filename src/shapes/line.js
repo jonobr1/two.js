@@ -1,5 +1,5 @@
 import Commands from '../utils/path-commands.js';
-import _ from '../utils/dash.js';
+import _ from '../utils/underdash.js';
 
 import Path from '../path.js';
 import Anchor from '../anchor.js';

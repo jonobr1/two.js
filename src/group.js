@@ -1,6 +1,6 @@
 import Collection from './collection.js';
 import Events from './events.js';
-import _ from './utils/dash.js';
+import _ from './utils/underdash.js';
 
 import Vector from './vector.js';
 import Shape from './shape.js';

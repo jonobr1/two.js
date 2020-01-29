@@ -1,6 +1,6 @@
 import Events from '../events.js';
 import defineGetterSetter from '../utils/get-set.js';
-import _ from '../utils/dash.js';
+import _ from '../utils/underdash.js';
 
 import {Gradient, Stop} from './gradient.js';
 import Vector from '../vector.js';

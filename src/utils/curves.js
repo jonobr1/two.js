@@ -1,6 +1,6 @@
 import {mod} from './math.js';
 import Commands from './path-commands.js';
-import _ from './dash.js';
+import _ from './underdash.js';
 
 import Anchor from '../anchor.js';
 import Vector from '../vector.js';

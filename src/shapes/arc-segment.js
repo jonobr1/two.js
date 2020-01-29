@@ -1,7 +1,7 @@
 import Commands from '../utils/path-commands.js';
 import {mod} from '../utils/math.js';
 import defineGetterSetter from '../utils/get-set.js';
-import _ from '../utils/dash.js';
+import _ from '../utils/underdash.js';
 
 import Path from '../path.js';
 import Anchor from '../anchor.js';

@@ -2,7 +2,7 @@ import Commands from './utils/path-commands.js';
 import root from './utils/root.js';
 import interpretSVG from './utils/interpret-svg.js';
 import xhr from './utils/xhr.js';
-import _ from './utils/dash.js';
+import _ from './utils/underdash.js';
 
 import Anchor from './anchor.js';
 import Collection from './collection.js';
