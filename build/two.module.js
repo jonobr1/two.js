@@ -2106,7 +2106,7 @@ var Globals = {
    * @name Two.PublishDate
    * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
    */
-  PublishDate: '2020-01-29T23:41:49.639Z',
+  PublishDate: '2020-01-30T18:35:15.017Z',
 
   /**
    * @name Two.Identifier
@@ -14951,8 +14951,11 @@ _.extend(Two.prototype, Events, {
     var last = arguments[l - 1];
     var path = new Path(points, !(typeof last === 'boolean' ? last : undefined));
     var rect = path.getBoundingClientRect();
-    path.center().translation
-      .set(rect.left + rect.width / 2, rect.top + rect.height / 2);
+    if (typeof rect.top === 'number'   && typeof rect.left === 'number' &&
+        typeof rect.right === 'number' && typeof rect.bottom === 'number') {
+      path.center().translation
+        .set(rect.left + rect.width / 2, rect.top + rect.height / 2);
+    }
 
     this.scene.add(path);
 
