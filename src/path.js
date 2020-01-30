@@ -7,7 +7,7 @@ import {
   getCurveFromPoints,
   subdivide,
   getCurveLength as utilGetCurveLength
-} from './utils/curves';
+} from './utils/curves.js';
 import defineGetterSetter from './utils/get-set.js';
 import _ from './utils/underdash.js';
 
