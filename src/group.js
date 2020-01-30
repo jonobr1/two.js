@@ -4,7 +4,6 @@ import _ from './utils/underdash.js';
 
 import Vector from './vector.js';
 import Shape from './shape.js';
-import Texture from './effects/texture.js';
 
 // Constants
 
@@ -775,7 +774,7 @@ _.extend(Group.prototype, Shape.prototype, {
     var left = Infinity, right = -Infinity,
         top = Infinity, bottom = -Infinity;
 
-    var regex = Texture.RegularExpressions.effect;
+    var regex = /texture|gradient/i;
 
     for (var i = 0; i < this.children.length; i++) {
 

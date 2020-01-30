@@ -2112,7 +2112,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2020-01-30T18:35:15.017Z',
+    PublishDate: '2020-01-30T18:39:20.383Z',
 
     /**
      * @name Two.Identifier
@@ -4541,7 +4541,7 @@ SOFTWARE.
       var left = Infinity, right = -Infinity,
           top = Infinity, bottom = -Infinity;
 
-      var regex = Texture.RegularExpressions.effect;
+      var regex = /texture|gradient/i;
 
       for (var i = 0; i < this.children.length; i++) {
 
