@@ -1,6 +1,7 @@
 import Commands from './utils/path-commands.js';
 import Collection from './collection.js';
-import {getComputedMatrix, lerp, mod} from './utils/math.js';
+import {lerp, mod} from './utils/math.js';
+import {getComputedMatrix} from './matrix.js';
 import {
   getComponentOnCubicBezier,
   getCurveBoundingBox,

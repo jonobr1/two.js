@@ -44,6 +44,39 @@ var Matrix = function(a, b, c, d, e, f) {
 
 };
 
+/**
+ * @name Utils.getComputedMatrix
+ * @function
+ * @param {Two.Shape} object - The Two.js object that has a matrix property to calculate from.
+ * @param {Two.Matrix} [matrix] - The matrix to apply calculated transformations to if available.
+ * @returns {Two.Matrix} The computed matrix of a nested object. If no `matrix` was passed in arguments then a `new Two.Matrix` is returned.
+ * @description Method to get the world space transformation of a given object in a Two.js scene.
+ */
+var getComputedMatrix = function(object, matrix) {
+
+  matrix = (matrix && matrix.identity()) || new Matrix();
+  var parent = object, matrices = [];
+
+  while (parent && parent._matrix) {
+    matrices.push(parent._matrix);
+    parent = parent.parent;
+  }
+
+  matrices.reverse();
+
+  for (var i = 0; i < matrices.length; i++) {
+
+    var m = matrices[i];
+    var e = m.elements;
+    matrix.multiply(
+      e[0], e[1], e[2], e[3], e[4], e[5], e[6], e[7], e[8], e[9]);
+
+  }
+
+  return matrix;
+
+};
+
 _.extend(Matrix, {
 
   /**
@@ -600,3 +633,4 @@ _.extend(Matrix.prototype, Events, {
 });
 
 export default Matrix;
+export {getComputedMatrix};
