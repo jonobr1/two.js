@@ -4,7 +4,7 @@ import _ from './utils/underscore.js';
 import Matrix from './matrix.js';
 import Vector from './vector.js';
 
-import Globals from './globals.js';
+import Constants from './constants.js';
 
 /**
  * @name Two.Shape
@@ -30,7 +30,7 @@ var Shape = function() {
    * @property {String} - Session specific unique identifier.
    * @nota-bene In the {@link Two.SvgRenderer} change this to change the underlying SVG element's id too.
    */
-  this.id = Globals.Identifier + Globals.uniqueId();
+  this.id = Constants.Identifier + Constants.uniqueId();
 
   /**
    * @name Two.Shape#classList

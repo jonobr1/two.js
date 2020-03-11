@@ -1,6 +1,6 @@
 var count = 0;
 
-var Globals = {
+var Constants = {
 
   /**
    * @name Two.nextFrameID
@@ -62,4 +62,4 @@ var Globals = {
 
 };
 
-export default Globals;
+export default Constants;

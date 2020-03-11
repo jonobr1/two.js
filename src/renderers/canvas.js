@@ -7,7 +7,7 @@ import _ from '../utils/underscore.js';
 
 import Group from '../group.js';
 import Vector from '../vector.js';
-import Globals from '../globals.js';
+import Constants from '../constants.js';
 
 /**
  * Constants
@@ -850,9 +850,9 @@ function renderArcEstimate(ctx, ox, oy, rx, ry, startAngle, endAngle, clockwise,
 
   }
 
-  for (var i = 0; i < Globals.Resolution; i++) {
+  for (var i = 0; i < Constants.Resolution; i++) {
 
-    var t = i / (Globals.Resolution - 1);
+    var t = i / (Constants.Resolution - 1);
 
     var angle = startAngle + t * deltaAngle;
     var x = ox + rx * Math.cos(angle);

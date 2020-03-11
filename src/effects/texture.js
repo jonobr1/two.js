@@ -11,7 +11,7 @@ import Registry from '../registry.js';
 
 import CanvasRenderer from '../renderers/canvas.js';
 
-import Globals from '../globals.js';
+import Constants from '../constants.js';
 
 var anchor;
 var regex = {
@@ -39,7 +39,7 @@ var Texture = function(src, callback) {
   this._renderer.flagOffset = Texture.FlagOffset.bind(this);
   this._renderer.flagScale = Texture.FlagScale.bind(this);
 
-  this.id = Globals.Identifier + Globals.uniqueId();
+  this.id = Constants.Identifier + Constants.uniqueId();
   this.classList = [];
 
   /**

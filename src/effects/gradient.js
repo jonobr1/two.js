@@ -3,7 +3,7 @@ import Events from '../events.js';
 import defineGetterSetter from '../utils/get-set.js';
 import _ from '../utils/underscore.js';
 
-import Globals from '../globals.js';
+import Constants from '../constants.js';
 
 /**
  * @name Two.Stop
@@ -184,7 +184,7 @@ var Gradient = function(stops) {
    * @property {String} - Session specific unique identifier.
    * @nota-bene In the {@link Two.SvgRenderer} change this to change the underlying SVG element's id too.
    */
-  this.id = Globals.Identifier + Globals.uniqueId();
+  this.id = Constants.Identifier + Constants.uniqueId();
   this.classList = [];
 
   this._renderer.flagStops = Gradient.FlagStops.bind(this);
