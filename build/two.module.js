@@ -2106,7 +2106,7 @@ var Globals = {
    * @name Two.PublishDate
    * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
    */
-  PublishDate: '2020-03-11T21:21:28.859Z',
+  PublishDate: '2020-03-11T21:25:30.340Z',
 
   /**
    * @name Two.Identifier

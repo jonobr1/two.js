@@ -2,7 +2,7 @@ import root from './root.js';
 import Commands from './path-commands.js';
 import {decomposeMatrix} from './math.js';
 import {getReflection} from './curves.js';
-import _ from './underdash.js';
+import _ from './underscore.js';
 import TwoError from './error.js';
 
 import Anchor from '../anchor.js';

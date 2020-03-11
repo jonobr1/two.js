@@ -5,7 +5,7 @@ import {mod, NumArray} from '../utils/math.js';
 import Events from '../events.js';
 import TwoError from '../utils/error.js';
 import getRatio from '../utils/get-ratio.js';
-import _ from '../utils/underdash.js';
+import _ from '../utils/underscore.js';
 
 import Group from '../group.js';
 import Vector from '../vector.js';

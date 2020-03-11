@@ -3,7 +3,7 @@ import {mod} from '../utils/math.js';
 import {Curve} from '../utils/curves.js';
 import Events from '../events.js';
 import getRatio from '../utils/get-ratio.js';
-import _ from '../utils/underdash.js';
+import _ from '../utils/underscore.js';
 
 import Group from '../group.js';
 import Vector from '../vector.js';

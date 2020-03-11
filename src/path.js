@@ -10,7 +10,7 @@ import {
   getCurveLength as utilGetCurveLength
 } from './utils/curves.js';
 import defineGetterSetter from './utils/get-set.js';
-import _ from './utils/underdash.js';
+import _ from './utils/underscore.js';
 
 
 import Shape from './shape.js';

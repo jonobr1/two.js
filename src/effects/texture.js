@@ -3,7 +3,7 @@ import Events from '../events.js';
 import TwoError from '../utils/error.js';
 import defineGetterSetter from '../utils/get-set.js';
 import CanvasShim from '../utils/canvas-shim.js';
-import _ from '../utils/underdash.js';
+import _ from '../utils/underscore.js';
 
 import Vector from '../vector.js';
 import Shape from '../shape.js';

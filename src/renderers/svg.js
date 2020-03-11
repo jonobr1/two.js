@@ -1,7 +1,7 @@
 import Commands from '../utils/path-commands.js';
 import {mod, toFixed} from '../utils/math.js';
 import Events from '../events.js';
-import _ from '../utils/underdash.js';
+import _ from '../utils/underscore.js';
 
 import Group from '../group.js';
 import Vector from '../vector.js';

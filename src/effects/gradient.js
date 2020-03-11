@@ -1,7 +1,7 @@
 import Collection from '../collection.js';
 import Events from '../events.js';
 import defineGetterSetter from '../utils/get-set.js';
-import _ from '../utils/underdash.js';
+import _ from '../utils/underscore.js';
 
 import Globals from '../globals.js';
 

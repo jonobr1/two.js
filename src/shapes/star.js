@@ -1,6 +1,6 @@
 import Commands from '../utils/path-commands.js';
 import defineGetterSetter from '../utils/get-set.js';
-import _ from '../utils/underdash.js';
+import _ from '../utils/underscore.js';
 
 import Path from '../path.js';
 import Anchor from '../anchor.js';

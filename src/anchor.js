@@ -1,5 +1,5 @@
 import Commands from './utils/path-commands.js';
-import _ from './utils/underdash.js';
+import _ from './utils/underscore.js';
 
 import Events from './events.js';
 import Vector from './vector.js';
