@@ -1,6 +1,6 @@
 {
   "name": "@jonobr1/two.js",
-  "version": "0.7.0",
+  "version": "v0.8.0-dev",
   "description": "A renderer agnostic two-dimensional drawing api for the web.",
   "module": "build/two.module.js",
   "publishConfig": {
