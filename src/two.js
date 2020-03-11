@@ -751,6 +751,10 @@ _.extend(Two.prototype, Events, {
 
     if (add) {
       this.add(shallow && node instanceof Group ? node.children : node);
+    } else if (node.parent) {
+      // Remove `g` tags that have been added to scenegraph / DOM
+      // in order to be compatible with `getById` methods.
+      node.remove();
     }
 
     return node;

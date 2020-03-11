@@ -2106,7 +2106,7 @@ var Globals = {
    * @name Two.PublishDate
    * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
    */
-  PublishDate: '2020-03-04T20:01:07.410Z',
+  PublishDate: '2020-03-11T21:21:28.859Z',
 
   /**
    * @name Two.Identifier
@@ -15130,6 +15130,10 @@ _.extend(Two.prototype, Events, {
 
     if (add) {
       this.add(shallow && node instanceof Group ? node.children : node);
+    } else if (node.parent) {
+      // Remove `g` tags that have been added to scenegraph / DOM
+      // in order to be compatible with `getById` methods.
+      node.remove();
     }
 
     return node;

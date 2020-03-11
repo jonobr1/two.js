@@ -111,6 +111,7 @@ process.exit();
 
 #### Nightly
 + Removed extraneous underscore calls from `Two.Utils` [@adroitwhiz](https://github.com/adroitwhiz)
++ Ensure `Two.interpret` respects the `add` parameter to be added (or not) to the current instance 
 
 #### January, 2020 [v0.7.0](https://github.com/jonobr1/two.js/releases/tag/v0.7.0)
 + Exposed `resolution` parameter in `Two.makeCircle` and `Two.makeEllipse` as the final parameter
