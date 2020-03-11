@@ -316,7 +316,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2020-01-25T14:11:29.478Z',
+    PublishDate: '2020-03-11T21:16:24.326Z',
 
     /**
      * @name Two.Identifier
@@ -2908,6 +2908,10 @@ SOFTWARE.
 
       if (add) {
         this.add(shallow && node instanceof Two.Group ? node.children : node);
+      } else if (node.parent) {
+        // Remove `g` tags that have been added to scenegraph / DOM
+        // in order to be compatible with `getById` methods.
+        node.remove();
       }
 
       return node;
