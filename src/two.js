@@ -1,8 +1,19 @@
+// Utils
+
+import CanvasShim from './utils/canvas-shim.js';
+import * as Curves from './utils/curves.js';
+import dom from './utils/dom.js';
+import TwoError from './utils/error.js';
+import getRatio from './utils/get-ratio.js';
+import defineGetterSetter from './utils/get-set.js';
+import interpretSVG from './utils/interpret-svg.js';
+import * as math from './utils/math.js';
 import Commands from './utils/path-commands.js';
 import root from './utils/root.js';
-import interpretSVG from './utils/interpret-svg.js';
-import xhr from './utils/xhr.js';
 import _ from './utils/underscore.js';
+import xhr from './utils/xhr.js';
+
+// Core Classes
 
 import Anchor from './anchor.js';
 import Collection from './collection.js';
@@ -15,12 +26,16 @@ import Shape from './shape.js';
 import Text from './text.js';
 import Vector from './vector.js';
 
+// Effects
+
 import {Gradient, Stop} from './effects/gradient.js';
 import ImageSequence from './effects/image-sequence.js';
 import LinearGradient from './effects/linear-gradient.js';
 import RadialGradient from './effects/radial-gradient.js';
 import Sprite from './effects/sprite.js';
 import Texture from './effects/texture.js';
+
+// Secondary Classes
 
 import ArcSegment from './shapes/arc-segment.js';
 import Circle from './shapes/circle.js';
@@ -31,15 +46,13 @@ import Rectangle from './shapes/rectangle.js';
 import RoundedRectangle from './shapes/rounded-rectangle.js';
 import Star from './shapes/star.js';
 
+// Renderers
+
 import CanvasRenderer from './renderers/canvas.js';
 import SVGRenderer from './renderers/svg.js';
 import WebGLRenderer from './renderers/webgl.js';
 
 import Constants from './constants.js';
-
-// Cross browser dom events.
-
-import dom from './utils/dom.js';
 
 /**
  * @name Two
@@ -890,7 +903,18 @@ _.extend(Two, {
    * @name Two.Commands
    * @property {Object} - Map of possible path commands. Taken from the SVG specification.
    */
-  Commands: Commands
+  Commands: Commands,
+
+  Utils: _.extend({
+
+    Error: TwoError,
+    getRatio: getRatio,
+    defineGetterSetter: defineGetterSetter,
+    read: interpretSVG,
+    xhr: xhr
+
+  }, _, CanvasShim, Curves, math)
+
 });
 
 export default Two;
