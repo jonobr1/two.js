@@ -626,7 +626,7 @@
         if (!this._renderer.elem) {
 
           changed.id = this.id;
-          changed.gradientUnits = 'userSpaceOnUse';
+          changed.gradientUnits = 'objectBoundingBox';
           this._renderer.elem = svg.createElement('linearGradient', changed);
           domElement.defs.appendChild(this._renderer.elem);
 
@@ -716,7 +716,7 @@
         if (!this._renderer.elem) {
 
           changed.id = this.id;
-          changed.gradientUnits = 'userSpaceOnUse';
+          changed.gradientUnits = 'objectBoundingBox';
           this._renderer.elem = svg.createElement('radialGradient', changed);
           domElement.defs.appendChild(this._renderer.elem);
 
