@@ -2,7 +2,7 @@
 
 A two-dimensional drawing api meant for modern browsers. It is renderer agnostic enabling the same api to render in multiple contexts: webgl, canvas2d, and svg.
 
-[Home](http://jonobr1.github.io/two.js) • [Examples](http://jonobr1.github.io/two.js/#examples) • [Documentation](http://jonobr1.github.io/two.js/#documentation) • [Help](https://github.com/jonobr1/two.js/issues?labels=question)
+[Home](http://two.js.org) • [Releases](https://github.com/jonobr1/two.js/releases) • [Examples](http://two.js.org/#examples) • [Documentation](http://two.js.org/#documentation) • [Change Log](http://two.js.org/change-log/) • [Help](https://github.com/jonobr1/two.js/issues?labels=question)
 
 ## Usage
 Download the latest [minified library](https://raw.github.com/jonobr1/two.js/dev/build/two.min.js) and include it in your html.
@@ -111,7 +111,10 @@ process.exit();
 
 #### Nightly
 + Removed extraneous underscore calls from `Two.Utils` [@adroitwhiz](https://github.com/adroitwhiz)
-+ Ensure `Two.interpret` respects the `add` parameter to be added (or not) to the current instance 
++ Ensured `Two.interpret` respects the `add` parameter to be added (or not) to the current instance
++ Modularized Two.js classes / files [@adroitwhiz](https://github.com/adroitwhiz)
++ Made Two.js compatible with `import` modules [@adroitwhiz](https://github.com/adroitwhiz)
++ Added wiki as [VuePress](https://vuepress.vuejs.org/) project
 
 #### January, 2020 [v0.7.0](https://github.com/jonobr1/two.js/releases/tag/v0.7.0)
 + Exposed `resolution` parameter in `Two.makeCircle` and `Two.makeEllipse` as the final parameter

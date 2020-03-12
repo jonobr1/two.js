@@ -1,231 +1,234 @@
-(function(Two) {
+import Two from 'two.js';
 
-  var _ = Two.Utils;
+var extend = function(base, obj) {
+  for (var k in obj) {
+    base[k] = obj[k];
+  }
+  return base;
+};
 
-  var Surface = function(object) {
+var Surface = function(object) {
+  this.object = object;
+};
 
-    this.object = object;
+extend(Surface.prototype, {
 
-  };
+  limits: function(min, max) {
 
-  _.extend(Surface.prototype, {
+    var min_exists = typeof min !== 'undefined';
+    var max_exists = typeof max !== 'undefined';
 
-    limits: function(min, max) {
-
-      var min_exists = typeof min !== 'undefined';
-      var max_exists = typeof max !== 'undefined';
-
-      if (!max_exists && !min_exists) {
-        return { min: this.min, max: this.max };
-      }
-
-      this.min = min_exists ? min : this.min;
-      this.max = max_exists ? max : this.max;
-
-      return this;
-
-    },
-
-    apply: function(px, py, s) {
-      this.object.translation.set(px, py);
-      this.object.scale = s;
-      return this;
+    if (!max_exists && !min_exists) {
+      return { min: this.min, max: this.max };
     }
 
-  });
+    this.min = min_exists ? min : this.min;
+    this.max = max_exists ? max : this.max;
 
-  var ZUI = Two.ZUI = function(group, domElement) {
+    return this;
 
-    this.limits = {
-      scale: ZUI.Limit.clone(),
-      x: ZUI.Limit.clone(),
-      y: ZUI.Limit.clone()
-    };
+  },
 
-    this.viewport = domElement || document.body;
-    this.viewportOffset = {
-      matrix: new Two.Matrix()
-    };
+  apply: function(px, py, s) {
+    this.object.translation.set(px, py);
+    this.object.scale = s;
+    return this;
+  }
 
-    this.surfaceMatrix = new Two.Matrix();
+});
 
-    this.surfaces = [];
-    this.reset();
-    this.updateSurface();
+var ZUI = function(group, domElement) {
 
-    this.add(new Surface(group));
-
+  this.limits = {
+    scale: ZUI.Limit.clone(),
+    x: ZUI.Limit.clone(),
+    y: ZUI.Limit.clone()
   };
 
-  _.extend(ZUI, {
+  this.viewport = domElement || document.body;
+  this.viewportOffset = {
+    matrix: new Two.Matrix()
+  };
 
-    Surface: Surface,
+  this.surfaceMatrix = new Two.Matrix();
 
-    Clamp: function(v, min, max) {
-      return Math.min(Math.max(v, min), max);
-    },
+  this.surfaces = [];
+  this.reset();
+  this.updateSurface();
 
-    Limit: {
-      min: -Infinity,
-      max: Infinity,
-      clone: function() {
-        var result = {};
-        for (var k in this) {
-          result[k] = this[k];
-        }
-        return result;
+  this.add(new Surface(group));
+
+};
+
+extend(ZUI, {
+
+  Surface: Surface,
+
+  Clamp: function(v, min, max) {
+    return Math.min(Math.max(v, min), max);
+  },
+
+  Limit: {
+    min: -Infinity,
+    max: Infinity,
+    clone: function() {
+      var result = {};
+      for (var k in this) {
+        result[k] = this[k];
       }
-    },
-
-    TranslateMatrix: function(m, x, y) {
-      m.elements[2] += x;
-      m.elements[5] += y;
-      return m;
-    },
-
-    PositionToScale: function(pos) {
-      return Math.exp(pos);
-    },
-
-    ScaleToPosition: function(scale) {
-      return Math.log(scale);
+      return result;
     }
+  },
 
-  });
+  TranslateMatrix: function(m, x, y) {
+    m.elements[2] += x;
+    m.elements[5] += y;
+    return m;
+  },
 
-  _.extend(ZUI.prototype, {
+  PositionToScale: function(pos) {
+    return Math.exp(pos);
+  },
 
-    constructor: ZUI,
+  ScaleToPosition: function(scale) {
+    return Math.log(scale);
+  }
 
-    add: function(surface) {
-      this.surfaces.push(surface);
-      var limits = surface.limits();
-      this.addLimits(limits.min, limits.max);
-      return this;
-    },
+});
 
-    addLimits: function(min, max, type) {
+extend(ZUI.prototype, {
 
-      type = type || 'scale';
+  constructor: ZUI,
 
-      if (typeof min !== 'undefined') {
-        if (this.limits[type].min) {
-          this.limits[type].min = Math.max(min, this.limits[type].min);
-        } else {
-          this.limits[type].min = min;
-        }
-      }
+  add: function(surface) {
+    this.surfaces.push(surface);
+    var limits = surface.limits();
+    this.addLimits(limits.min, limits.max);
+    return this;
+  },
 
-      if (typeof max === 'undefined') {
-        return this;
-      }
+  addLimits: function(min, max, type) {
 
-      if (this.limits[type].max) {
-        this.limits[type].max = Math.min(max, this.limits[type].max);
+    type = type || 'scale';
+
+    if (typeof min !== 'undefined') {
+      if (this.limits[type].min) {
+        this.limits[type].min = Math.max(min, this.limits[type].min);
       } else {
-        this.limits[type].max = max;
+        this.limits[type].min = min;
       }
-
-      return this;
-
-    },
-
-    /**
-     * Conversion Functions
-     */
-
-    clientToSurface: function(x, y) {
-      this.updateOffset();
-      var m = this.surfaceMatrix.inverse();
-      var n = this.viewportOffset.matrix.inverse().multiply(x, y, 1);
-      return m.multiply.apply(m, [n.x, n.y, n.z]);
-    },
-
-    surfaceToClient: function(v) {
-      this.updateOffset();
-      var vo = this.viewportOffset.matrix.clone();
-      var sm = this.surfaceMatrix.multiply.apply(this.surfaceMatrix, [v.x, v.y, v.z]);
-      return vo.multiply.apply(vo, [sm.x, sm.y, sm.z]);
-    },
-
-    /**
-     *
-     */
-
-    zoomBy: function(byF, clientX, clientY) {
-      var s = ZUI.PositionToScale(this.zoom + byF);
-      this.zoomSet(s, clientX, clientY);
-      return this;
-    },
-
-    zoomSet: function(zoom, clientX, clientY) {
-
-      var newScale = this.fitToLimits(zoom);
-      this.zoom = ZUI.ScaleToPosition(newScale);
-
-      if (newScale === this.scale) {
-        return this;
-      }
-
-      var sf = this.clientToSurface(clientX, clientY);
-      var scaleBy = newScale / this.scale;
-
-      this.surfaceMatrix.scale(scaleBy);
-      this.scale = newScale;
-
-      var c = this.surfaceToClient(sf);
-      var dx = clientX - c.x;
-      var dy = clientY - c.y;
-      this.translateSurface(dx, dy);
-
-      return this;
-
-    },
-
-    translateSurface: function(x, y) {
-      ZUI.TranslateMatrix(this.surfaceMatrix, x, y);
-      this.updateSurface();
-      return this;
-    },
-
-    updateOffset: function() {
-
-      var rect = this.viewport.getBoundingClientRect();
-      _.extend(this.viewportOffset, rect);
-
-      this.viewportOffset.left -= document.body.scrollLeft;
-      this.viewportOffset.top -= document.body.scrollTop;
-
-      this.viewportOffset.matrix
-        .identity()
-        .translate(this.viewportOffset.left, this.viewportOffset.top);
-
-      return this;
-
-    },
-
-    updateSurface: function() {
-
-      var e = this.surfaceMatrix.elements;
-      for (var i = 0; i < this.surfaces.length; i++) {
-        this.surfaces[i].apply(e[2], e[5], e[0]);
-      }
-
-      return this;
-
-    },
-
-    reset: function() {
-      this.zoom = 0;
-      this.scale = 1.0;
-      this.surfaceMatrix.identity();
-      return this;
-    },
-
-    fitToLimits: function(s) {
-      return ZUI.Clamp(s, this.limits.scale.min, this.limits.scale.max);
     }
 
-  });
+    if (typeof max === 'undefined') {
+      return this;
+    }
 
-})((typeof global !== 'undefined' ? global : (this || window)).Two);
+    if (this.limits[type].max) {
+      this.limits[type].max = Math.min(max, this.limits[type].max);
+    } else {
+      this.limits[type].max = max;
+    }
+
+    return this;
+
+  },
+
+  /**
+   * Conversion Functions
+   */
+
+  clientToSurface: function(x, y) {
+    this.updateOffset();
+    var m = this.surfaceMatrix.inverse();
+    var n = this.viewportOffset.matrix.inverse().multiply(x, y, 1);
+    return m.multiply.apply(m, [n.x, n.y, n.z]);
+  },
+
+  surfaceToClient: function(v) {
+    this.updateOffset();
+    var vo = this.viewportOffset.matrix.clone();
+    var sm = this.surfaceMatrix.multiply.apply(this.surfaceMatrix, [v.x, v.y, v.z]);
+    return vo.multiply.apply(vo, [sm.x, sm.y, sm.z]);
+  },
+
+  /**
+   *
+   */
+
+  zoomBy: function(byF, clientX, clientY) {
+    var s = ZUI.PositionToScale(this.zoom + byF);
+    this.zoomSet(s, clientX, clientY);
+    return this;
+  },
+
+  zoomSet: function(zoom, clientX, clientY) {
+
+    var newScale = this.fitToLimits(zoom);
+    this.zoom = ZUI.ScaleToPosition(newScale);
+
+    if (newScale === this.scale) {
+      return this;
+    }
+
+    var sf = this.clientToSurface(clientX, clientY);
+    var scaleBy = newScale / this.scale;
+
+    this.surfaceMatrix.scale(scaleBy);
+    this.scale = newScale;
+
+    var c = this.surfaceToClient(sf);
+    var dx = clientX - c.x;
+    var dy = clientY - c.y;
+    this.translateSurface(dx, dy);
+
+    return this;
+
+  },
+
+  translateSurface: function(x, y) {
+    ZUI.TranslateMatrix(this.surfaceMatrix, x, y);
+    this.updateSurface();
+    return this;
+  },
+
+  updateOffset: function() {
+
+    var rect = this.viewport.getBoundingClientRect();
+    extend(this.viewportOffset, rect);
+
+    this.viewportOffset.left -= document.body.scrollLeft;
+    this.viewportOffset.top -= document.body.scrollTop;
+
+    this.viewportOffset.matrix
+      .identity()
+      .translate(this.viewportOffset.left, this.viewportOffset.top);
+
+    return this;
+
+  },
+
+  updateSurface: function() {
+
+    var e = this.surfaceMatrix.elements;
+    for (var i = 0; i < this.surfaces.length; i++) {
+      this.surfaces[i].apply(e[2], e[5], e[0]);
+    }
+
+    return this;
+
+  },
+
+  reset: function() {
+    this.zoom = 0;
+    this.scale = 1.0;
+    this.surfaceMatrix.identity();
+    return this;
+  },
+
+  fitToLimits: function(s) {
+    return ZUI.Clamp(s, this.limits.scale.min, this.limits.scale.max);
+  }
+
+});
+
+export default ZUI;

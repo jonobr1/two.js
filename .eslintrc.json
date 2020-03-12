@@ -5,8 +5,9 @@
 		"commonjs": true,
 		"amd": true
 	},
-	"globals": {
-		"global": "writable"
+	"parserOptions": {
+		"sourceType": "module",
+		"ecmaVersion": 2015
 	},
 	"rules": {
 		"semi": ["error", "always"],
@@ -16,7 +17,11 @@
 		{
 			"files": ["utils/**"],
 			"env": {
-				"node": true
+				"node": true,
+				"es6": true
+			},
+			"parserOptions": {
+				"ecmaVersion": 8
 			}
 		},
 		{

@@ -1,47 +1,64 @@
+var _ = require('underscore');
+var fs = require('fs');
 var path = require('path');
 var compiler = require('jsdoc-api');
+var sourceFiles = require('./source-files');
 
-var explanation = compiler.explainSync({
-    files: [
-      path.resolve(__dirname, '../src/two.js'),
-      path.resolve(__dirname, '../src/registry.js'),
-      path.resolve(__dirname, '../src/vector.js'),
-      path.resolve(__dirname, '../src/anchor.js'),
-      path.resolve(__dirname, '../src/matrix.js'),
-      // path.resolve(__dirname, '../src/renderer/svg.js'),
-      // path.resolve(__dirname, '../src/renderer/canvas.js'),
-      // path.resolve(__dirname, '../src/renderer/webgl.js'),
-      path.resolve(__dirname, '../src/shape.js'),
-      path.resolve(__dirname, '../src/path.js'),
-      path.resolve(__dirname, '../src/shapes/line.js'),
-      path.resolve(__dirname, '../src/shapes/rectangle.js'),
-      path.resolve(__dirname, '../src/shapes/ellipse.js'),
-      path.resolve(__dirname, '../src/shapes/circle.js'),
-      path.resolve(__dirname, '../src/shapes/polygon.js'),
-      path.resolve(__dirname, '../src/shapes/arc-segment.js'),
-      path.resolve(__dirname, '../src/shapes/star.js'),
-      path.resolve(__dirname, '../src/shapes/rounded-rectangle.js'),
-      path.resolve(__dirname, '../src/text.js'),
-      path.resolve(__dirname, '../src/effects/gradient.js'),
-      path.resolve(__dirname, '../src/effects/linear-gradient.js'),
-      path.resolve(__dirname, '../src/effects/radial-gradient.js'),
-      path.resolve(__dirname, '../src/effects/texture.js'),
-      path.resolve(__dirname, '../src/effects/sprite.js'),
-      path.resolve(__dirname, '../src/effects/image-sequence.js'),
-      path.resolve(__dirname, '../src/group.js')
-    ],
-    cache: false,
-    configure: path.resolve(__dirname, '../jsdoc-conf.json')
+var template = _.template(
+  fs.readFileSync(
+    path.resolve(__dirname, './documentation.template'),
+    { encoding: 'utf8' }
+  )
+);
+
+_.each(sourceFiles, function(file) {
+
+  var sourceFile = path.resolve(__dirname, '../' + file);
+  var outputDir = path.resolve(__dirname,
+    '../' + file.replace('src/', 'wiki/documentation/').replace('.js', '/')
+  );
+  var outputFile = path.join(outputDir, '/README.md');
+
+  var citations = compiler.explainSync({
+      files: sourceFile,
+      cache: false,
+      configure: path.resolve(__dirname, '../jsdoc-conf.json')
+  });
+
+  citations.slice(0).forEach(function(object) {
+    var a = object.undocumented;
+    var b = /package:undefined/i.test(object.longname);
+    var c = /Two\.Utils\.Events\.(bind|unbind)/i.test(object.memberof);
+    var d = /(private|protected)/i.test(object.access);
+    if (a || b || c || d) {
+      citations.splice(citations.indexOf(object), 1);
+    }
+  });
+
+
+  // fs.mkdirSync(outputDir, { recursive: true });
+  fs.writeFileSync(outputFile.replace('README.md', 'docs.json'), JSON.stringify(citations));
+  fs.writeFileSync(outputFile, template({
+    root: getRoot(citations),
+    citations: citations
+  }));
+  console.log('Generated', outputFile);
+
 });
 
-explanation.slice(0).forEach(function(object) {
-  var a = object.undocumented;
-  var b = /package:undefined/i.test(object.longname);
-  var c = /Two\.Utils\.Events\.(bind|unbind)/i.test(object.memberof);
-  if (a || b || c) {
-    explanation.splice(explanation.indexOf(object), 1);
+function getRoot(citations) {
+  var result = null;
+  var list = citations.slice(0);
+  for (var i = 0; i < list.length; i++) {
+    var citation = list[i];
+    if (/class/i.test(citation.kind)) {
+      var index = _.indexOf(citations, citation);
+      citations.splice(index, 1);
+      return citation;
+    }
   }
-});
+  return null;
+}
 
 // For all @kinds
 // ID = example.longname
@@ -65,11 +82,11 @@ explanation.slice(0).forEach(function(object) {
 // of the ID's longname an array instead of just the object. If the array
 // already exists then continue to append onto the array.
 
-explanation.forEach(function(item) {
-  // if (/^Two\.Vector\#add$/i.test(item.longname)) {
-  //   console.log(item);
-  // }
-  console.log(item.longname, item.memberof);
-});
+// citations.forEach(function(item) {
+//   // if (/^Two\.Vector\#add$/i.test(item.longname)) {
+//   //   console.log(item);
+//   // }
+//   console.log(item.longname, item.memberof);
+// });
 
-// console.log(explanation[0]);
+// console.log(citations[0]);
