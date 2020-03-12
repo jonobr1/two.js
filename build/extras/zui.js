@@ -27,7 +27,7 @@ SOFTWARE.
   (global = global || self, global.ZUI = factory(global.Two));
 }(this, (function (Two) { 'use strict';
 
-  Two = Two && Two.hasOwnProperty('default') ? Two['default'] : Two;
+  Two = Two && Object.prototype.hasOwnProperty.call(Two, 'default') ? Two['default'] : Two;
 
   var extend = function(base, obj) {
     for (var k in obj) {

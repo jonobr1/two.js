@@ -109,6 +109,15 @@ var toFixed = function(v) {
   return Math.floor(v * 1000) / 1000;
 };
 
+var math = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  decomposeMatrix: decomposeMatrix,
+  lerp: lerp,
+  mod: mod,
+  NumArray: NumArray,
+  toFixed: toFixed
+});
+
 var slice = Array.prototype.slice;
 
 var isArrayLike = function(collection) {
@@ -2075,7 +2084,7 @@ _.extend(Matrix.prototype, Events, {
 
 var count = 0;
 
-var Globals = {
+var Constants = {
 
   /**
    * @name Two.nextFrameID
@@ -2106,7 +2115,7 @@ var Globals = {
    * @name Two.PublishDate
    * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
    */
-  PublishDate: '2020-03-11T21:25:30.340Z',
+  PublishDate: '2020-03-12T13:48:32.538Z',
 
   /**
    * @name Two.Identifier
@@ -2513,18 +2522,78 @@ var getReflection = function(a, b, relative) {
 };
 
 /**
- * @name Utils.Error
- * @class
- * @description Custom error throwing for Two.js specific identification.
+ * @name Utils.getAnchorsFromArcData
+ * @function
+ * @param {Vector} center
+ * @param {Radians} xAxisRotation
+ * @param {Number} rx - x radius
+ * @param {Number} ry - y radius
+ * @param {Radians} ts
+ * @param {Radians} td
+ * @param {Boolean} [ccw=false] - Set path traversal to counter-clockwise
  */
-var TwoError = function(message) {
-  this.name = 'Two.js';
-  this.message = message;
+var getAnchorsFromArcData = function(center, xAxisRotation, rx, ry, ts, td, ccw) {
+
+  var matrix = new Matrix()
+    .translate(center.x, center.y)
+    .rotate(xAxisRotation);
+
+  var resolution = Constants.Resolution;
+
+  for (var i = 0; i < resolution; i++) {
+    var pct = (i + 1) / resolution;
+    if (ccw) {
+      pct = 1 - pct;
+    }
+
+    var theta = pct * td + ts;
+    var x = rx * Math.cos(theta);
+    var y = ry * Math.sin(theta);
+
+    // x += center.x;
+    // y += center.y;
+
+    var anchor = new Anchor(x, y);
+    Anchor.AppendCurveProperties(anchor);
+    anchor.command = Commands.line;
+  }
+
 };
 
+var Curves = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  Curve: Curve,
+  getComponentOnCubicBezier: getComponentOnCubicBezier,
+  subdivide: subdivide,
+  getCurveLength: getCurveLength,
+  getCurveBoundingBox: getCurveBoundingBox,
+  integrate: integrate,
+  getCurveFromPoints: getCurveFromPoints,
+  getControlPoints: getControlPoints,
+  getReflection: getReflection,
+  getAnchorsFromArcData: getAnchorsFromArcData
+});
 
-TwoError.prototype = new Error();
-TwoError.prototype.constructor = TwoError;
+var devicePixelRatio = root$1.devicePixelRatio || 1;
+
+var getBackingStoreRatio = function(ctx) {
+  return ctx.webkitBackingStorePixelRatio ||
+  ctx.mozBackingStorePixelRatio ||
+  ctx.msBackingStorePixelRatio ||
+  ctx.oBackingStorePixelRatio ||
+  ctx.backingStorePixelRatio || 1;
+};
+
+/**
+ * @name Utils.getRatio
+ * @function
+ * @param {CanvasRenderingContext2D} ctx
+ * @returns {Number} The ratio of a unit in Two.js to the pixel density of a session's screen.
+ * @see [High DPI Rendering]{@link http://www.html5rocks.com/en/tutorials/canvas/hidpi/}
+ */
+var getRatio = function(ctx) {
+  return devicePixelRatio / getBackingStoreRatio(ctx);
+};
 
 /**
  * @name Utils.Collection
@@ -2602,32 +2671,6 @@ _.extend(Collection.prototype, Events, {
 });
 
 /**
- * @name Utils.defineGetterSetter
- * @function
- * @this Two#
- * @param {String} property - The property to add an enumerable getter / setter to.
- * @description Convenience function to setup the flag based getter / setter that most properties are defined as in Two.js.
- */
-var defineGetterSetter = function(property) {
-
-  var object = this;
-  var secret = '_' + property;
-  var flag = '_flag' + property.charAt(0).toUpperCase() + property.slice(1);
-
-  Object.defineProperty(object, property, {
-    enumerable: true,
-    get: function() {
-      return this[secret];
-    },
-    set: function(v) {
-      this[secret] = v;
-      this[flag] = true;
-    }
-  });
-
-};
-
-/**
  * @name Two.Shape
  * @class
  * @extends Events
@@ -2651,7 +2694,7 @@ var Shape = function() {
    * @property {String} - Session specific unique identifier.
    * @nota-bene In the {@link Two.SvgRenderer} change this to change the underlying SVG element's id too.
    */
-  this.id = Globals.Identifier + Globals.uniqueId();
+  this.id = Constants.Identifier + Constants.uniqueId();
 
   /**
    * @name Two.Shape#classList
@@ -2964,807 +3007,6 @@ _.extend(Shape.prototype, Events, {
 });
 
 Shape.MakeObservable(Shape.prototype);
-
-/**
- * @name Two.Stop
- * @class
- * @param {Number} [offset] - The offset percentage of the stop represented as a zero-to-one value. Default value flip flops from zero-to-one as new stops are created.
- * @param {CssColor} [color] - The color of the stop. Default value flip flops from white to black as new stops are created.
- * @param {Number} [opacity] - The opacity value. Default value is 1, cannot be lower than 0.
- * @nota-bene Used specifically in conjunction with {@link Two.Gradient}s to control color graduation.
- */
-var Stop = function(offset, color, opacity) {
-
-  /**
-   * @name Two.Stop#_renderer
-   * @property {Object}
-   * @private
-   * @description A private object to store relevant renderer specific variables.
-   * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `stop._renderer.elem`.
-   */
-  this._renderer = {};
-  this._renderer.type = 'stop';
-
-  /**
-   * @name Two.Stop#offset
-   * @property {Number} - The offset percentage of the stop represented as a zero-to-one value.
-   */
-  this.offset = typeof offset === 'number' ? offset
-    : Stop.Index <= 0 ? 0 : 1;
-
-  /**
-   * @name Two.Stop#opacity
-   * @property {Number} - The alpha percentage of the stop represented as a zero-to-one value.
-   */
-  this.opacity = typeof opacity === 'number' ? opacity : 1;
-
-  /**
-   * @name Two.Stop#color
-   * @property {CssColor} - The color of the stop.
-   */
-  this.color = (typeof color === 'string') ? color
-    : Stop.Index <= 0 ? '#fff' : '#000';
-
-  Stop.Index = (Stop.Index + 1) % 2;
-
-};
-
-_.extend(Stop, {
-
-  /**
-   * @name Two.Stop.Index
-   * @property {Number} - The current index being referenced for calculating a stop's default offset value.
-   */
-  Index: 0,
-
-  /**
-   * @name Two.Stop.Properties
-   * @property {String[]} - A list of properties that are on every {@link Two.Stop}.
-   */
-  Properties: [
-    'offset',
-    'opacity',
-    'color'
-  ],
-
-  /**
-   * @name Two.Stop.MakeObservable
-   * @function
-   * @param {Object} object - The object to make observable.
-   * @description Convenience function to apply observable qualities of a {@link Two.Stop} to any object. Handy if you'd like to extend the {@link Two.Stop} class on a custom class.
-   */
-  MakeObservable: function(object) {
-
-    _.each(Stop.Properties, function(property) {
-
-      var object = this;
-      var secret = '_' + property;
-      var flag = '_flag' + property.charAt(0).toUpperCase() + property.slice(1);
-
-      Object.defineProperty(object, property, {
-        enumerable: true,
-        get: function() {
-          return this[secret];
-        },
-        set: function(v) {
-          this[secret] = v;
-          this[flag] = true;
-          if (this.parent) {
-            this.parent._flagStops = true;
-          }
-        }
-      });
-
-    }, object);
-
-  }
-
-});
-
-_.extend(Stop.prototype, Events, {
-
-  constructor: Stop,
-
-  /**
-   * @name Two.Stop#clone
-   * @function
-   * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
-   * @returns {Two.Stop}
-   * @description Create a new instance of {@link Two.Stop} with the same properties of the current path.
-   */
-  clone: function() {
-
-    var clone = new Stop();
-
-    _.each(Stop.Properties, function(property) {
-      clone[property] = this[property];
-    }, this);
-
-    return clone;
-
-  },
-
-  /**
-   * @name Two.Stop#toObject
-   * @function
-   * @returns {Object}
-   * @description Return a JSON compatible plain object that represents the path.
-   */
-  toObject: function() {
-
-    var result = {};
-
-    _.each(Stop.Properties, function(k) {
-      result[k] = this[k];
-    }, this);
-
-    return result;
-
-  },
-
-  /**
-   * @name Two.Stop#flagReset
-   * @function
-   * @private
-   * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
-   */
-  flagReset: function() {
-
-    this._flagOffset = this._flagColor = this._flagOpacity = false;
-
-    return this;
-
-  }
-
-});
-
-Stop.MakeObservable(Stop.prototype);
-Stop.prototype.constructor = Stop;
-
-/**
- * @name Two.Gradient
- * @class
- * @param {Two.Stop[]} [stops] - A list of {@link Two.Stop}s that contain the gradient fill pattern for the gradient.
- * @description This is the base class for constructing different types of gradients with Two.js. The two common gradients are {@link Two.LinearGradient} and {@link Two.RadialGradient}.
- */
-var Gradient = function(stops) {
-
-  /**
-   * @name Two.Gradient#_renderer
-   * @property {Object}
-   * @private
-   * @description A private object to store relevant renderer specific variables.
-   * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `gradient._renderer.elem`.
-   */
-  this._renderer = {};
-  this._renderer.type = 'gradient';
-
-  /**
-   * @name Two.Gradient#id
-   * @property {String} - Session specific unique identifier.
-   * @nota-bene In the {@link Two.SvgRenderer} change this to change the underlying SVG element's id too.
-   */
-  this.id = Globals.Identifier + Globals.uniqueId();
-  this.classList = [];
-
-  this._renderer.flagStops = Gradient.FlagStops.bind(this);
-  this._renderer.bindStops = Gradient.BindStops.bind(this);
-  this._renderer.unbindStops = Gradient.UnbindStops.bind(this);
-
-  /**
-   * @name Two.Gradient#spread
-   * @property {String} - Indicates what happens if the gradient starts or ends inside the bounds of the target rectangle. Possible values are `'pad'`, `'reflect'`, and `'repeat'`.
-   * @see {@link https://www.w3.org/TR/SVG11/pservers.html#LinearGradientElementSpreadMethodAttribute} for more information
-   */
-  this.spread = 'pad';
-
-  /**
-   * @name Two.Gradient#stops
-   * @property {Two.Stop[]} - An ordered list of {@link Two.Stop}s for rendering the gradient.
-   */
-  this.stops = stops;
-
-};
-
-_.extend(Gradient, {
-
-  /**
-   * @name Two.Gradient#Stop
-   * @see {@link Two.Stop}
-   */
-  Stop: Stop,
-
-  /**
-   * @name Two.Gradient.Properties
-   * @property {String[]} - A list of properties that are on every {@link Two.Gradient}.
-   */
-  Properties: [
-    'spread'
-  ],
-
-  /**
-   * @name Two.Gradient.MakeObservable
-   * @function
-   * @param {Object} object - The object to make observable.
-   * @description Convenience function to apply observable qualities of a {@link Two.Gradient} to any object. Handy if you'd like to extend the {@link Two.Gradient} class on a custom class.
-   */
-  MakeObservable: function(object) {
-
-    _.each(Gradient.Properties, defineGetterSetter, object);
-
-    Object.defineProperty(object, 'stops', {
-
-      enumerable: true,
-
-      get: function() {
-        return this._stops;
-      },
-
-      set: function(stops) {
-
-        var updateStops = this._renderer.flagStops;
-        var bindStops = this._renderer.bindStops;
-        var unbindStops = this._renderer.unbindStops;
-
-        // Remove previous listeners
-        if (this._stops) {
-          this._stops
-            .unbind(Events.Types.insert, bindStops)
-            .unbind(Events.Types.remove, unbindStops);
-        }
-
-        // Create new Collection with copy of Stops
-        this._stops = new Collection((stops || []).slice(0));
-
-        // Listen for Collection changes and bind / unbind
-        this._stops
-          .bind(Events.Types.insert, bindStops)
-          .bind(Events.Types.remove, unbindStops);
-
-        // Bind Initial Stops
-        bindStops(this._stops);
-
-      }
-
-    });
-
-  },
-
-  /**
-   * @name Two.Gradient.FlagStops
-   * @function
-   * @description Cached method to let renderers know stops have been updated on a {@link Two.Gradient}.
-   */
-  FlagStops: function() {
-    this._flagStops = true;
-  },
-
-  /**
-   * @name Two.Gradient.BindVertices
-   * @function
-   * @description Cached method to let {@link Two.Gradient} know vertices have been added to the instance.
-   */
-  BindStops: function(items) {
-
-    // This function is called a lot
-    // when importing a large SVG
-    var i = items.length;
-    while(i--) {
-      items[i].bind(Events.Types.change, this._renderer.flagStops);
-      items[i].parent = this;
-    }
-
-    this._renderer.flagStops();
-
-  },
-
-  /**
-   * @name Two.Gradient.UnbindStops
-   * @function
-   * @description Cached method to let {@link Two.Gradient} know vertices have been removed from the instance.
-   */
-  UnbindStops: function(items) {
-
-    var i = items.length;
-    while(i--) {
-      items[i].unbind(Events.Types.change, this._renderer.flagStops);
-      delete items[i].parent;
-    }
-
-    this._renderer.flagStops();
-
-  }
-
-});
-
-_.extend(Gradient.prototype, Events, {
-
-  /**
-   * @name Two.Gradient#_flagStops
-   * @private
-   * @property {Boolean} - Determines whether the {@link Two.Gradient#stops} need updating.
-   */
-  _flagStops: false,
-  /**
-   * @name Two.Gradient#_flagSpread
-   * @private
-   * @property {Boolean} - Determines whether the {@link Two.Gradient#spread} need updating.
-   */
-  _flagSpread: false,
-
-  /**
-   * @name Two.Gradient#clone
-   * @function
-   * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
-   * @returns {Two.Gradient}
-   * @description Create a new instance of {@link Two.Gradient} with the same properties of the current path.
-   */
-  clone: function(parent) {
-
-    var stops = this.stops.map(function(s) {
-      return s.clone();
-    });
-
-    var clone = new Gradient(stops);
-
-    _.each(Gradient.Properties, function(k) {
-      clone[k] = this[k];
-    }, this);
-
-    if (parent) {
-      parent.add(clone);
-    }
-
-    return clone;
-
-  },
-
-  /**
-   * @name Two.Gradient#toObject
-   * @function
-   * @returns {Object}
-   * @description Return a JSON compatible plain object that represents the path.
-   */
-  toObject: function() {
-
-    var result = {
-      stops: this.stops.map(function(s) {
-        return s.toObject();
-      })
-    };
-
-    _.each(Gradient.Properties, function(k) {
-      result[k] = this[k];
-    }, this);
-
-    return result;
-
-  },
-
-  /**
-   * @name Two.Gradient#_update
-   * @function
-   * @private
-   * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
-   * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
-   * @nota-bene Try not to call this method more than once a frame.
-   */
-  _update: function() {
-
-    if (this._flagSpread || this._flagStops) {
-      this.trigger(Events.Types.change);
-    }
-
-    return this;
-
-  },
-
-  /**
-   * @name Two.Gradient#flagReset
-   * @function
-   * @private
-   * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
-   */
-  flagReset: function() {
-
-    this._flagSpread = this._flagStops = false;
-
-    return this;
-
-  }
-
-});
-
-Gradient.MakeObservable(Gradient.prototype);
-
-/**
- * @name Two.LinearGradient
- * @class
- * @extends Two.Gradient
- * @param {Number} [x1=0] - The x position of the first end point of the linear gradient.
- * @param {Number} [y1=0] - The y position of the first end point of the linear gradient.
- * @param {Number} [x2=0] - The x position of the second end point of the linear gradient.
- * @param {Number} [y2=0] - The y position of the second end point of the linear gradient.
- * @param {Two.Stop[]} [stops] - A list of {@link Two.Stop}s that contain the gradient fill pattern for the gradient.
- * @nota-bene The linear gradient lives within the space of the parent object's matrix space.
- */
-var LinearGradient = function(x1, y1, x2, y2, stops) {
-
-  Gradient.call(this, stops);
-
-  this._renderer.type = 'linear-gradient';
-
-  var flagEndPoints = LinearGradient.FlagEndPoints.bind(this);
-
-  /**
-   * @name Two.LinearGradient#left
-   * @property {Two.Vector} - The x and y value for where the first end point is placed on the canvas.
-   */
-  this.left = new Vector().bind(Events.Types.change, flagEndPoints);
-  /**
-   * @name Two.LinearGradient#right
-   * @property {Two.Vector} - The x and y value for where the second end point is placed on the canvas.
-   */
-  this.right = new Vector().bind(Events.Types.change, flagEndPoints);
-
-  if (typeof x1 === 'number') {
-    this.left.x = x1;
-  }
-  if (typeof y1 === 'number') {
-    this.left.y = y1;
-  }
-  if (typeof x2 === 'number') {
-    this.right.x = x2;
-  }
-  if (typeof y2 === 'number') {
-    this.right.y = y2;
-  }
-
-};
-
-_.extend(LinearGradient, {
-
-  /**
-   * @name Two.LinearGradient#Stop
-   * @see {@link Two.Stop}
-   */
-  Stop: Stop,
-
-  /**
-   * @name Two.LinearGradient.MakeObservable
-   * @function
-   * @param {Object} object - The object to make observable.
-   * @description Convenience function to apply observable qualities of a {@link Two.LinearGradient} to any object. Handy if you'd like to extend the {@link Two.LinearGradient} class on a custom class.
-   */
-  MakeObservable: function(object) {
-    Gradient.MakeObservable(object);
-  },
-
-  /**
-   * @name Two.LinearGradient.FlagEndPoints
-   * @function
-   * @description Cached method to let renderers know end points have been updated on a {@link Two.LinearGradient}.
-   */
-  FlagEndPoints: function() {
-    this._flagEndPoints = true;
-  }
-
-});
-
-_.extend(LinearGradient.prototype, Gradient.prototype, {
-
-  /**
-   * @name Two.LinearGradient#_flagEndPoints
-   * @private
-   * @property {Boolean} - Determines whether the {@link Two.LinearGradient#left} or {@link Two.LinearGradient#right} changed and needs to update.
-   */
-  _flagEndPoints: false,
-
-  constructor: LinearGradient,
-
-  /**
-   * @name Two.LinearGradient#clone
-   * @function
-   * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
-   * @returns {Two.Gradient}
-   * @description Create a new instance of {@link Two.LinearGradient} with the same properties of the current path.
-   */
-  clone: function(parent) {
-
-    var stops = this.stops.map(function(stop) {
-      return stop.clone();
-    });
-
-    var clone = new LinearGradient(this.left._x, this.left._y,
-      this.right._x, this.right._y, stops);
-
-    _.each(Gradient.Properties, function(k) {
-      clone[k] = this[k];
-    }, this);
-
-    if (parent) {
-      parent.add(clone);
-    }
-
-    return clone;
-
-  },
-
-  /**
-   * @name Two.LinearGradient#toObject
-   * @function
-   * @returns {Object}
-   * @description Return a JSON compatible plain object that represents the path.
-   */
-  toObject: function() {
-
-    var result = Gradient.prototype.toObject.call(this);
-
-    result.left = this.left.toObject();
-    result.right = this.right.toObject();
-
-    return result;
-
-  },
-
-  /**
-   * @name Two.LinearGradient#_update
-   * @function
-   * @private
-   * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
-   * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
-   * @nota-bene Try not to call this method more than once a frame.
-   */
-  _update: function() {
-
-    if (this._flagEndPoints || this._flagSpread || this._flagStops) {
-      this.trigger(Events.Types.change);
-    }
-
-    return this;
-
-  },
-
-  /**
-   * @name Two.LinearGradient#flagReset
-   * @function
-   * @private
-   * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
-   */
-  flagReset: function() {
-
-    this._flagEndPoints = false;
-
-    Gradient.prototype.flagReset.call(this);
-
-    return this;
-
-  }
-
-});
-
-LinearGradient.MakeObservable(LinearGradient.prototype);
-
-/**
- * @name Two.RadialGradient
- * @class
- * @extends Two.Gradient
- * @param {Number} [x=0] - The x position of the origin of the radial gradient.
- * @param {Number} [y=0] - The y position of the origin of the radial gradient.
- * @param {Number} [radius=0] - The radius of the radial gradient.
- * @param {Two.Stop[]} [stops] - A list of {@link Two.Stop}s that contain the gradient fill pattern for the gradient.
- * @param {Number} [focalX=0] - The x position of the focal point on the radial gradient.
- * @param {Number} [focalY=0] - The y position of the focal point on the radial gradient.
- * @nota-bene The radial gradient lives within the space of the parent object's matrix space.
- */
-var RadialGradient = function(cx, cy, r, stops, fx, fy) {
-
-  Gradient.call(this, stops);
-
-  this._renderer.type = 'radial-gradient';
-
-  /**
-   * @name Two.RadialGradient#center
-   * @property {Two.Vector} - The x and y value for where the origin of the radial gradient is.
-   */
-  this.center = new Vector()
-    .bind(Events.Types.change, (function() {
-      this._flagCenter = true;
-    }).bind(this));
-
-  this.radius = typeof r === 'number' ? r : 20;
-
-  /**
-   * @name Two.RadialGradient#focal
-   * @property {Two.Vector} - The x and y value for where the focal point of the radial gradient is.
-   * @nota-bene This effects the spray or spread of the radial gradient.
-   */
-  this.focal = new Vector()
-    .bind(Events.Types.change, (function() {
-      this._flagFocal = true;
-    }).bind(this));
-
-  if (typeof cx === 'number') {
-    this.center.x = cx;
-  }
-  if (typeof cy === 'number') {
-    this.center.y = cy;
-  }
-
-  this.focal.copy(this.center);
-
-  if (typeof fx === 'number') {
-    this.focal.x = fx;
-  }
-  if (typeof fy === 'number') {
-    this.focal.y = fy;
-  }
-
-};
-
-_.extend(RadialGradient, {
-
-  /**
-   * @name Two.RadialGradient#Stop
-   * @see {@link Two.Stop}
-   */
-  Stop: Stop,
-
-  /**
-   * @name Two.RadialGradient.Properties
-   * @property {String[]} - A list of properties that are on every {@link Two.RadialGradient}.
-   */
-  Properties: [
-    'radius'
-  ],
-
-  /**
-   * @name Two.RadialGradient.MakeObservable
-   * @function
-   * @param {Object} object - The object to make observable.
-   * @description Convenience function to apply observable qualities of a {@link Two.RadialGradient} to any object. Handy if you'd like to extend the {@link Two.RadialGradient} class on a custom class.
-   */
-  MakeObservable: function(object) {
-
-    Gradient.MakeObservable(object);
-
-    _.each(RadialGradient.Properties, defineGetterSetter, object);
-
-  }
-
-});
-
-_.extend(RadialGradient.prototype, Gradient.prototype, {
-
-  /**
-   * @name Two.RadialGradient#_flagRadius
-   * @private
-   * @property {Boolean} - Determines whether the {@link Two.RadialGradient#radius} changed and needs to update.
-   */
-  _flagRadius: false,
-  /**
-   * @name Two.RadialGradient#_flagCenter
-   * @private
-   * @property {Boolean} - Determines whether the {@link Two.RadialGradient#center} changed and needs to update.
-   */
-  _flagCenter: false,
-  /**
-   * @name Two.RadialGradient#_flagFocal
-   * @private
-   * @property {Boolean} - Determines whether the {@link Two.RadialGradient#focal} changed and needs to update.
-   */
-  _flagFocal: false,
-
-  constructor: RadialGradient,
-
-  /**
-   * @name Two.RadialGradient#clone
-   * @function
-   * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
-   * @returns {Two.Gradient}
-   * @description Create a new instance of {@link Two.RadialGradient} with the same properties of the current path.
-   */
-  clone: function(parent) {
-
-    var stops = this.stops.map(function(stop) {
-      return stop.clone();
-    });
-
-    var clone = new RadialGradient(this.center._x, this.center._y,
-        this._radius, stops, this.focal._x, this.focal._y);
-
-    _.each(Gradient.Properties.concat(RadialGradient.Properties), function(k) {
-      clone[k] = this[k];
-    }, this);
-
-    if (parent) {
-      parent.add(clone);
-    }
-
-    return clone;
-
-  },
-
-  /**
-   * @name Two.RadialGradient#toObject
-   * @function
-   * @returns {Object}
-   * @description Return a JSON compatible plain object that represents the path.
-   */
-  toObject: function() {
-
-    var result = Gradient.prototype.toObject.call(this);
-
-    _.each(RadialGradient.Properties, function(k) {
-      result[k] = this[k];
-    }, this);
-
-    result.center = this.center.toObject();
-    result.focal = this.focal.toObject();
-
-    return result;
-
-  },
-
-  /**
-   * @name Two.RadialGradient#_update
-   * @function
-   * @private
-   * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
-   * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
-   * @nota-bene Try not to call this method more than once a frame.
-   */
-  _update: function() {
-
-    if (this._flagRadius || this._flatCenter || this._flagFocal
-      || this._flagSpread || this._flagStops) {
-      this.trigger(Events.Types.change);
-    }
-
-    return this;
-
-  },
-
-  /**
-   * @name Two.RadialGradient#flagReset
-   * @function
-   * @private
-   * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
-   */
-  flagReset: function() {
-
-    this._flagRadius = this._flagCenter = this._flagFocal = false;
-
-    Gradient.prototype.flagReset.call(this);
-
-    return this;
-
-  }
-
-});
-
-RadialGradient.MakeObservable(RadialGradient.prototype);
-
-var devicePixelRatio = root$1.devicePixelRatio || 1;
-
-var getBackingStoreRatio = function(ctx) {
-  return ctx.webkitBackingStorePixelRatio ||
-  ctx.mozBackingStorePixelRatio ||
-  ctx.msBackingStorePixelRatio ||
-  ctx.oBackingStorePixelRatio ||
-  ctx.backingStorePixelRatio || 1;
-};
-
-/**
- * @name Utils.getRatio
- * @function
- * @param {CanvasRenderingContext2D} ctx
- * @returns {Number} The ratio of a unit in Two.js to the pixel density of a session's screen.
- * @see [High DPI Rendering]{@link http://www.html5rocks.com/en/tutorials/canvas/hidpi/}
- */
-var getRatio = function(ctx) {
-  return devicePixelRatio / getBackingStoreRatio(ctx);
-};
 
 // Constants
 
@@ -5616,9 +4858,9 @@ function renderArcEstimate(ctx, ox, oy, rx, ry, startAngle, endAngle, clockwise,
 
   }
 
-  for (var i = 0; i < Globals.Resolution; i++) {
+  for (var i = 0; i < Constants.Resolution; i++) {
 
-    var t = i / (Globals.Resolution - 1);
+    var t = i / (Constants.Resolution - 1);
 
     var angle = startAngle + t * deltaAngle;
     var x = ox + rx * Math.cos(angle);
@@ -5657,6 +4899,903 @@ function svgAngle(ux, uy, vx, vy) {
   return ang;
 
 }
+
+var CanvasShim = {
+
+  Image: null,
+
+  isHeadless: false,
+
+  /**
+   * @name Utils.shim
+   * @function
+   * @param {canvas} canvas - The instanced `Canvas` object provided by `node-canvas`.
+   * @param {Image} [Image] - The prototypical `Image` object provided by `node-canvas`. This is only necessary to pass if you're going to load bitmap imagery.
+   * @returns {canvas} Returns the instanced canvas object you passed from with additional attributes needed for Two.js.
+   * @description Convenience method for defining all the dependencies from the npm package `node-canvas`. See [node-canvas]{@link https://github.com/Automattic/node-canvas} for additional information on setting up HTML5 `<canvas />` drawing in a node.js environment.
+   */
+  shim: function(canvas, Image) {
+    Renderer.Utils.shim(canvas);
+    if (typeof Image !== 'undefined') {
+      CanvasShim.Image = Image;
+    }
+    CanvasShim.isHeadless = true;
+    return canvas;
+  }
+
+};
+
+var dom = {
+
+  temp: (root$1.document ? root$1.document.createElement('div') : {}),
+
+  hasEventListeners: typeof root$1.addEventListener === 'function',
+
+  bind: function(elem, event, func, bool) {
+    if (this.hasEventListeners) {
+      elem.addEventListener(event, func, !!bool);
+    } else {
+      elem.attachEvent('on' + event, func);
+    }
+    return dom;
+  },
+
+  unbind: function(elem, event, func, bool) {
+    if (dom.hasEventListeners) {
+      elem.removeEventListeners(event, func, !!bool);
+    } else {
+      elem.detachEvent('on' + event, func);
+    }
+    return dom;
+  },
+
+  getRequestAnimationFrame: function() {
+
+    var lastTime = 0;
+    var vendors = ['ms', 'moz', 'webkit', 'o'];
+    var request = root$1.requestAnimationFrame, cancel;
+
+    if(!request) {
+      for (var i = 0; i < vendors.length; i++) {
+        request = root$1[vendors[i] + 'RequestAnimationFrame'] || request;
+        cancel = root$1[vendors[i] + 'CancelAnimationFrame']
+          || root$1[vendors[i] + 'CancelRequestAnimationFrame'] || cancel;
+      }
+
+      request = request || function(callback, element) {
+        var currTime = new Date().getTime();
+        var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+        var id = root$1.setTimeout(function() { callback(currTime + timeToCall); }, timeToCall);
+        lastTime = currTime + timeToCall;
+        return id;
+      };
+    }
+
+    return request;
+
+  }
+
+};
+
+/**
+ * @name Utils.Error
+ * @class
+ * @description Custom error throwing for Two.js specific identification.
+ */
+var TwoError = function(message) {
+  this.name = 'Two.js';
+  this.message = message;
+};
+
+
+TwoError.prototype = new Error();
+TwoError.prototype.constructor = TwoError;
+
+/**
+ * @name Utils.defineGetterSetter
+ * @function
+ * @this Two#
+ * @param {String} property - The property to add an enumerable getter / setter to.
+ * @description Convenience function to setup the flag based getter / setter that most properties are defined as in Two.js.
+ */
+var defineGetterSetter = function(property) {
+
+  var object = this;
+  var secret = '_' + property;
+  var flag = '_flag' + property.charAt(0).toUpperCase() + property.slice(1);
+
+  Object.defineProperty(object, property, {
+    enumerable: true,
+    get: function() {
+      return this[secret];
+    },
+    set: function(v) {
+      this[secret] = v;
+      this[flag] = true;
+    }
+  });
+
+};
+
+/**
+ * @name Two.Stop
+ * @class
+ * @param {Number} [offset] - The offset percentage of the stop represented as a zero-to-one value. Default value flip flops from zero-to-one as new stops are created.
+ * @param {CssColor} [color] - The color of the stop. Default value flip flops from white to black as new stops are created.
+ * @param {Number} [opacity] - The opacity value. Default value is 1, cannot be lower than 0.
+ * @nota-bene Used specifically in conjunction with {@link Two.Gradient}s to control color graduation.
+ */
+var Stop = function(offset, color, opacity) {
+
+  /**
+   * @name Two.Stop#_renderer
+   * @property {Object}
+   * @private
+   * @description A private object to store relevant renderer specific variables.
+   * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `stop._renderer.elem`.
+   */
+  this._renderer = {};
+  this._renderer.type = 'stop';
+
+  /**
+   * @name Two.Stop#offset
+   * @property {Number} - The offset percentage of the stop represented as a zero-to-one value.
+   */
+  this.offset = typeof offset === 'number' ? offset
+    : Stop.Index <= 0 ? 0 : 1;
+
+  /**
+   * @name Two.Stop#opacity
+   * @property {Number} - The alpha percentage of the stop represented as a zero-to-one value.
+   */
+  this.opacity = typeof opacity === 'number' ? opacity : 1;
+
+  /**
+   * @name Two.Stop#color
+   * @property {CssColor} - The color of the stop.
+   */
+  this.color = (typeof color === 'string') ? color
+    : Stop.Index <= 0 ? '#fff' : '#000';
+
+  Stop.Index = (Stop.Index + 1) % 2;
+
+};
+
+_.extend(Stop, {
+
+  /**
+   * @name Two.Stop.Index
+   * @property {Number} - The current index being referenced for calculating a stop's default offset value.
+   */
+  Index: 0,
+
+  /**
+   * @name Two.Stop.Properties
+   * @property {String[]} - A list of properties that are on every {@link Two.Stop}.
+   */
+  Properties: [
+    'offset',
+    'opacity',
+    'color'
+  ],
+
+  /**
+   * @name Two.Stop.MakeObservable
+   * @function
+   * @param {Object} object - The object to make observable.
+   * @description Convenience function to apply observable qualities of a {@link Two.Stop} to any object. Handy if you'd like to extend the {@link Two.Stop} class on a custom class.
+   */
+  MakeObservable: function(object) {
+
+    _.each(Stop.Properties, function(property) {
+
+      var object = this;
+      var secret = '_' + property;
+      var flag = '_flag' + property.charAt(0).toUpperCase() + property.slice(1);
+
+      Object.defineProperty(object, property, {
+        enumerable: true,
+        get: function() {
+          return this[secret];
+        },
+        set: function(v) {
+          this[secret] = v;
+          this[flag] = true;
+          if (this.parent) {
+            this.parent._flagStops = true;
+          }
+        }
+      });
+
+    }, object);
+
+  }
+
+});
+
+_.extend(Stop.prototype, Events, {
+
+  constructor: Stop,
+
+  /**
+   * @name Two.Stop#clone
+   * @function
+   * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+   * @returns {Two.Stop}
+   * @description Create a new instance of {@link Two.Stop} with the same properties of the current path.
+   */
+  clone: function() {
+
+    var clone = new Stop();
+
+    _.each(Stop.Properties, function(property) {
+      clone[property] = this[property];
+    }, this);
+
+    return clone;
+
+  },
+
+  /**
+   * @name Two.Stop#toObject
+   * @function
+   * @returns {Object}
+   * @description Return a JSON compatible plain object that represents the path.
+   */
+  toObject: function() {
+
+    var result = {};
+
+    _.each(Stop.Properties, function(k) {
+      result[k] = this[k];
+    }, this);
+
+    return result;
+
+  },
+
+  /**
+   * @name Two.Stop#flagReset
+   * @function
+   * @private
+   * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+   */
+  flagReset: function() {
+
+    this._flagOffset = this._flagColor = this._flagOpacity = false;
+
+    return this;
+
+  }
+
+});
+
+Stop.MakeObservable(Stop.prototype);
+Stop.prototype.constructor = Stop;
+
+/**
+ * @name Two.Gradient
+ * @class
+ * @param {Two.Stop[]} [stops] - A list of {@link Two.Stop}s that contain the gradient fill pattern for the gradient.
+ * @description This is the base class for constructing different types of gradients with Two.js. The two common gradients are {@link Two.LinearGradient} and {@link Two.RadialGradient}.
+ */
+var Gradient = function(stops) {
+
+  /**
+   * @name Two.Gradient#_renderer
+   * @property {Object}
+   * @private
+   * @description A private object to store relevant renderer specific variables.
+   * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `gradient._renderer.elem`.
+   */
+  this._renderer = {};
+  this._renderer.type = 'gradient';
+
+  /**
+   * @name Two.Gradient#id
+   * @property {String} - Session specific unique identifier.
+   * @nota-bene In the {@link Two.SvgRenderer} change this to change the underlying SVG element's id too.
+   */
+  this.id = Constants.Identifier + Constants.uniqueId();
+  this.classList = [];
+
+  this._renderer.flagStops = Gradient.FlagStops.bind(this);
+  this._renderer.bindStops = Gradient.BindStops.bind(this);
+  this._renderer.unbindStops = Gradient.UnbindStops.bind(this);
+
+  /**
+   * @name Two.Gradient#spread
+   * @property {String} - Indicates what happens if the gradient starts or ends inside the bounds of the target rectangle. Possible values are `'pad'`, `'reflect'`, and `'repeat'`.
+   * @see {@link https://www.w3.org/TR/SVG11/pservers.html#LinearGradientElementSpreadMethodAttribute} for more information
+   */
+  this.spread = 'pad';
+
+  /**
+   * @name Two.Gradient#stops
+   * @property {Two.Stop[]} - An ordered list of {@link Two.Stop}s for rendering the gradient.
+   */
+  this.stops = stops;
+
+};
+
+_.extend(Gradient, {
+
+  /**
+   * @name Two.Gradient#Stop
+   * @see {@link Two.Stop}
+   */
+  Stop: Stop,
+
+  /**
+   * @name Two.Gradient.Properties
+   * @property {String[]} - A list of properties that are on every {@link Two.Gradient}.
+   */
+  Properties: [
+    'spread'
+  ],
+
+  /**
+   * @name Two.Gradient.MakeObservable
+   * @function
+   * @param {Object} object - The object to make observable.
+   * @description Convenience function to apply observable qualities of a {@link Two.Gradient} to any object. Handy if you'd like to extend the {@link Two.Gradient} class on a custom class.
+   */
+  MakeObservable: function(object) {
+
+    _.each(Gradient.Properties, defineGetterSetter, object);
+
+    Object.defineProperty(object, 'stops', {
+
+      enumerable: true,
+
+      get: function() {
+        return this._stops;
+      },
+
+      set: function(stops) {
+
+        var updateStops = this._renderer.flagStops;
+        var bindStops = this._renderer.bindStops;
+        var unbindStops = this._renderer.unbindStops;
+
+        // Remove previous listeners
+        if (this._stops) {
+          this._stops
+            .unbind(Events.Types.insert, bindStops)
+            .unbind(Events.Types.remove, unbindStops);
+        }
+
+        // Create new Collection with copy of Stops
+        this._stops = new Collection((stops || []).slice(0));
+
+        // Listen for Collection changes and bind / unbind
+        this._stops
+          .bind(Events.Types.insert, bindStops)
+          .bind(Events.Types.remove, unbindStops);
+
+        // Bind Initial Stops
+        bindStops(this._stops);
+
+      }
+
+    });
+
+  },
+
+  /**
+   * @name Two.Gradient.FlagStops
+   * @function
+   * @description Cached method to let renderers know stops have been updated on a {@link Two.Gradient}.
+   */
+  FlagStops: function() {
+    this._flagStops = true;
+  },
+
+  /**
+   * @name Two.Gradient.BindVertices
+   * @function
+   * @description Cached method to let {@link Two.Gradient} know vertices have been added to the instance.
+   */
+  BindStops: function(items) {
+
+    // This function is called a lot
+    // when importing a large SVG
+    var i = items.length;
+    while(i--) {
+      items[i].bind(Events.Types.change, this._renderer.flagStops);
+      items[i].parent = this;
+    }
+
+    this._renderer.flagStops();
+
+  },
+
+  /**
+   * @name Two.Gradient.UnbindStops
+   * @function
+   * @description Cached method to let {@link Two.Gradient} know vertices have been removed from the instance.
+   */
+  UnbindStops: function(items) {
+
+    var i = items.length;
+    while(i--) {
+      items[i].unbind(Events.Types.change, this._renderer.flagStops);
+      delete items[i].parent;
+    }
+
+    this._renderer.flagStops();
+
+  }
+
+});
+
+_.extend(Gradient.prototype, Events, {
+
+  /**
+   * @name Two.Gradient#_flagStops
+   * @private
+   * @property {Boolean} - Determines whether the {@link Two.Gradient#stops} need updating.
+   */
+  _flagStops: false,
+  /**
+   * @name Two.Gradient#_flagSpread
+   * @private
+   * @property {Boolean} - Determines whether the {@link Two.Gradient#spread} need updating.
+   */
+  _flagSpread: false,
+
+  /**
+   * @name Two.Gradient#clone
+   * @function
+   * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+   * @returns {Two.Gradient}
+   * @description Create a new instance of {@link Two.Gradient} with the same properties of the current path.
+   */
+  clone: function(parent) {
+
+    var stops = this.stops.map(function(s) {
+      return s.clone();
+    });
+
+    var clone = new Gradient(stops);
+
+    _.each(Gradient.Properties, function(k) {
+      clone[k] = this[k];
+    }, this);
+
+    if (parent) {
+      parent.add(clone);
+    }
+
+    return clone;
+
+  },
+
+  /**
+   * @name Two.Gradient#toObject
+   * @function
+   * @returns {Object}
+   * @description Return a JSON compatible plain object that represents the path.
+   */
+  toObject: function() {
+
+    var result = {
+      stops: this.stops.map(function(s) {
+        return s.toObject();
+      })
+    };
+
+    _.each(Gradient.Properties, function(k) {
+      result[k] = this[k];
+    }, this);
+
+    return result;
+
+  },
+
+  /**
+   * @name Two.Gradient#_update
+   * @function
+   * @private
+   * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+   * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
+   * @nota-bene Try not to call this method more than once a frame.
+   */
+  _update: function() {
+
+    if (this._flagSpread || this._flagStops) {
+      this.trigger(Events.Types.change);
+    }
+
+    return this;
+
+  },
+
+  /**
+   * @name Two.Gradient#flagReset
+   * @function
+   * @private
+   * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+   */
+  flagReset: function() {
+
+    this._flagSpread = this._flagStops = false;
+
+    return this;
+
+  }
+
+});
+
+Gradient.MakeObservable(Gradient.prototype);
+
+/**
+ * @name Two.LinearGradient
+ * @class
+ * @extends Two.Gradient
+ * @param {Number} [x1=0] - The x position of the first end point of the linear gradient.
+ * @param {Number} [y1=0] - The y position of the first end point of the linear gradient.
+ * @param {Number} [x2=0] - The x position of the second end point of the linear gradient.
+ * @param {Number} [y2=0] - The y position of the second end point of the linear gradient.
+ * @param {Two.Stop[]} [stops] - A list of {@link Two.Stop}s that contain the gradient fill pattern for the gradient.
+ * @nota-bene The linear gradient lives within the space of the parent object's matrix space.
+ */
+var LinearGradient = function(x1, y1, x2, y2, stops) {
+
+  Gradient.call(this, stops);
+
+  this._renderer.type = 'linear-gradient';
+
+  var flagEndPoints = LinearGradient.FlagEndPoints.bind(this);
+
+  /**
+   * @name Two.LinearGradient#left
+   * @property {Two.Vector} - The x and y value for where the first end point is placed on the canvas.
+   */
+  this.left = new Vector().bind(Events.Types.change, flagEndPoints);
+  /**
+   * @name Two.LinearGradient#right
+   * @property {Two.Vector} - The x and y value for where the second end point is placed on the canvas.
+   */
+  this.right = new Vector().bind(Events.Types.change, flagEndPoints);
+
+  if (typeof x1 === 'number') {
+    this.left.x = x1;
+  }
+  if (typeof y1 === 'number') {
+    this.left.y = y1;
+  }
+  if (typeof x2 === 'number') {
+    this.right.x = x2;
+  }
+  if (typeof y2 === 'number') {
+    this.right.y = y2;
+  }
+
+};
+
+_.extend(LinearGradient, {
+
+  /**
+   * @name Two.LinearGradient#Stop
+   * @see {@link Two.Stop}
+   */
+  Stop: Stop,
+
+  /**
+   * @name Two.LinearGradient.MakeObservable
+   * @function
+   * @param {Object} object - The object to make observable.
+   * @description Convenience function to apply observable qualities of a {@link Two.LinearGradient} to any object. Handy if you'd like to extend the {@link Two.LinearGradient} class on a custom class.
+   */
+  MakeObservable: function(object) {
+    Gradient.MakeObservable(object);
+  },
+
+  /**
+   * @name Two.LinearGradient.FlagEndPoints
+   * @function
+   * @description Cached method to let renderers know end points have been updated on a {@link Two.LinearGradient}.
+   */
+  FlagEndPoints: function() {
+    this._flagEndPoints = true;
+  }
+
+});
+
+_.extend(LinearGradient.prototype, Gradient.prototype, {
+
+  /**
+   * @name Two.LinearGradient#_flagEndPoints
+   * @private
+   * @property {Boolean} - Determines whether the {@link Two.LinearGradient#left} or {@link Two.LinearGradient#right} changed and needs to update.
+   */
+  _flagEndPoints: false,
+
+  constructor: LinearGradient,
+
+  /**
+   * @name Two.LinearGradient#clone
+   * @function
+   * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+   * @returns {Two.Gradient}
+   * @description Create a new instance of {@link Two.LinearGradient} with the same properties of the current path.
+   */
+  clone: function(parent) {
+
+    var stops = this.stops.map(function(stop) {
+      return stop.clone();
+    });
+
+    var clone = new LinearGradient(this.left._x, this.left._y,
+      this.right._x, this.right._y, stops);
+
+    _.each(Gradient.Properties, function(k) {
+      clone[k] = this[k];
+    }, this);
+
+    if (parent) {
+      parent.add(clone);
+    }
+
+    return clone;
+
+  },
+
+  /**
+   * @name Two.LinearGradient#toObject
+   * @function
+   * @returns {Object}
+   * @description Return a JSON compatible plain object that represents the path.
+   */
+  toObject: function() {
+
+    var result = Gradient.prototype.toObject.call(this);
+
+    result.left = this.left.toObject();
+    result.right = this.right.toObject();
+
+    return result;
+
+  },
+
+  /**
+   * @name Two.LinearGradient#_update
+   * @function
+   * @private
+   * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+   * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
+   * @nota-bene Try not to call this method more than once a frame.
+   */
+  _update: function() {
+
+    if (this._flagEndPoints || this._flagSpread || this._flagStops) {
+      this.trigger(Events.Types.change);
+    }
+
+    return this;
+
+  },
+
+  /**
+   * @name Two.LinearGradient#flagReset
+   * @function
+   * @private
+   * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+   */
+  flagReset: function() {
+
+    this._flagEndPoints = false;
+
+    Gradient.prototype.flagReset.call(this);
+
+    return this;
+
+  }
+
+});
+
+LinearGradient.MakeObservable(LinearGradient.prototype);
+
+/**
+ * @name Two.RadialGradient
+ * @class
+ * @extends Two.Gradient
+ * @param {Number} [x=0] - The x position of the origin of the radial gradient.
+ * @param {Number} [y=0] - The y position of the origin of the radial gradient.
+ * @param {Number} [radius=0] - The radius of the radial gradient.
+ * @param {Two.Stop[]} [stops] - A list of {@link Two.Stop}s that contain the gradient fill pattern for the gradient.
+ * @param {Number} [focalX=0] - The x position of the focal point on the radial gradient.
+ * @param {Number} [focalY=0] - The y position of the focal point on the radial gradient.
+ * @nota-bene The radial gradient lives within the space of the parent object's matrix space.
+ */
+var RadialGradient = function(cx, cy, r, stops, fx, fy) {
+
+  Gradient.call(this, stops);
+
+  this._renderer.type = 'radial-gradient';
+
+  /**
+   * @name Two.RadialGradient#center
+   * @property {Two.Vector} - The x and y value for where the origin of the radial gradient is.
+   */
+  this.center = new Vector()
+    .bind(Events.Types.change, (function() {
+      this._flagCenter = true;
+    }).bind(this));
+
+  this.radius = typeof r === 'number' ? r : 20;
+
+  /**
+   * @name Two.RadialGradient#focal
+   * @property {Two.Vector} - The x and y value for where the focal point of the radial gradient is.
+   * @nota-bene This effects the spray or spread of the radial gradient.
+   */
+  this.focal = new Vector()
+    .bind(Events.Types.change, (function() {
+      this._flagFocal = true;
+    }).bind(this));
+
+  if (typeof cx === 'number') {
+    this.center.x = cx;
+  }
+  if (typeof cy === 'number') {
+    this.center.y = cy;
+  }
+
+  this.focal.copy(this.center);
+
+  if (typeof fx === 'number') {
+    this.focal.x = fx;
+  }
+  if (typeof fy === 'number') {
+    this.focal.y = fy;
+  }
+
+};
+
+_.extend(RadialGradient, {
+
+  /**
+   * @name Two.RadialGradient#Stop
+   * @see {@link Two.Stop}
+   */
+  Stop: Stop,
+
+  /**
+   * @name Two.RadialGradient.Properties
+   * @property {String[]} - A list of properties that are on every {@link Two.RadialGradient}.
+   */
+  Properties: [
+    'radius'
+  ],
+
+  /**
+   * @name Two.RadialGradient.MakeObservable
+   * @function
+   * @param {Object} object - The object to make observable.
+   * @description Convenience function to apply observable qualities of a {@link Two.RadialGradient} to any object. Handy if you'd like to extend the {@link Two.RadialGradient} class on a custom class.
+   */
+  MakeObservable: function(object) {
+
+    Gradient.MakeObservable(object);
+
+    _.each(RadialGradient.Properties, defineGetterSetter, object);
+
+  }
+
+});
+
+_.extend(RadialGradient.prototype, Gradient.prototype, {
+
+  /**
+   * @name Two.RadialGradient#_flagRadius
+   * @private
+   * @property {Boolean} - Determines whether the {@link Two.RadialGradient#radius} changed and needs to update.
+   */
+  _flagRadius: false,
+  /**
+   * @name Two.RadialGradient#_flagCenter
+   * @private
+   * @property {Boolean} - Determines whether the {@link Two.RadialGradient#center} changed and needs to update.
+   */
+  _flagCenter: false,
+  /**
+   * @name Two.RadialGradient#_flagFocal
+   * @private
+   * @property {Boolean} - Determines whether the {@link Two.RadialGradient#focal} changed and needs to update.
+   */
+  _flagFocal: false,
+
+  constructor: RadialGradient,
+
+  /**
+   * @name Two.RadialGradient#clone
+   * @function
+   * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+   * @returns {Two.Gradient}
+   * @description Create a new instance of {@link Two.RadialGradient} with the same properties of the current path.
+   */
+  clone: function(parent) {
+
+    var stops = this.stops.map(function(stop) {
+      return stop.clone();
+    });
+
+    var clone = new RadialGradient(this.center._x, this.center._y,
+        this._radius, stops, this.focal._x, this.focal._y);
+
+    _.each(Gradient.Properties.concat(RadialGradient.Properties), function(k) {
+      clone[k] = this[k];
+    }, this);
+
+    if (parent) {
+      parent.add(clone);
+    }
+
+    return clone;
+
+  },
+
+  /**
+   * @name Two.RadialGradient#toObject
+   * @function
+   * @returns {Object}
+   * @description Return a JSON compatible plain object that represents the path.
+   */
+  toObject: function() {
+
+    var result = Gradient.prototype.toObject.call(this);
+
+    _.each(RadialGradient.Properties, function(k) {
+      result[k] = this[k];
+    }, this);
+
+    result.center = this.center.toObject();
+    result.focal = this.focal.toObject();
+
+    return result;
+
+  },
+
+  /**
+   * @name Two.RadialGradient#_update
+   * @function
+   * @private
+   * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+   * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
+   * @nota-bene Try not to call this method more than once a frame.
+   */
+  _update: function() {
+
+    if (this._flagRadius || this._flatCenter || this._flagFocal
+      || this._flagSpread || this._flagStops) {
+      this.trigger(Events.Types.change);
+    }
+
+    return this;
+
+  },
+
+  /**
+   * @name Two.RadialGradient#flagReset
+   * @function
+   * @private
+   * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+   */
+  flagReset: function() {
+
+    this._flagRadius = this._flagCenter = this._flagFocal = false;
+
+    Gradient.prototype.flagReset.call(this);
+
+    return this;
+
+  }
+
+});
+
+RadialGradient.MakeObservable(RadialGradient.prototype);
 
 /**
  * @name Two.Registry
@@ -5746,7 +5885,7 @@ var Texture = function(src, callback) {
   this._renderer.flagOffset = Texture.FlagOffset.bind(this);
   this._renderer.flagScale = Texture.FlagScale.bind(this);
 
-  this.id = Globals.Identifier + Globals.uniqueId();
+  this.id = Constants.Identifier + Constants.uniqueId();
   this.classList = [];
 
   /**
@@ -5876,7 +6015,13 @@ _.extend(Texture, {
 
     var image;
 
-    if (root$1.document) {
+    if (CanvasShim.Image) {
+
+      // TODO: Fix for headless environments
+      image = new CanvasShim.Image();
+      Renderer.Utils.shim(image, 'img');
+
+    } else if (root$1.document) {
 
       if (regex.video.test(absoluteSrc)) {
         image = document.createElement('video');
@@ -5945,7 +6090,11 @@ _.extend(Texture, {
       texture.image.setAttribute('two-src', texture.src);
       Texture.ImageRegistry.add(texture.src, texture.image);
 
-      {
+      if (CanvasShim.isHeadless) {
+
+        Texture.loadHeadlessBuffer(texture, loaded);
+
+      } else {
 
         texture.image.src = texture.src;
 
@@ -5976,6 +6125,10 @@ _.extend(Texture, {
 
       if (texture.image && texture.image.getAttribute('two-src')) {
         return;
+      }
+
+      if (CanvasShim.isHeadless) {
+        throw new TwoError('video textures are not implemented in headless environments.');
       }
 
       texture.image.setAttribute('two-src', texture.src);
@@ -9012,7 +9165,7 @@ var applySvgAttributes = function(node, elem, parentStyles) {
         elem.id = value;
         // Overwritten id for non-conflicts on same page SVG documents
         // TODO: Make this non-descructive
-        node.id = value + '-' + Globals.Identifier + 'applied';
+        node.id = value + '-' + Constants.Identifier + 'applied';
         break;
       case 'class':
       case 'className':
@@ -11359,7 +11512,7 @@ var TWO_PI$3 = Math.PI * 2, HALF_PI$3 = Math.PI / 2;
  */
 var ArcSegment = function(ox, oy, ir, or, sa, ea, res) {
 
-  var amount = res || (Globals.Resolution * 3);
+  var amount = res || (Constants.Resolution * 3);
   var points = [];
   for (var i = 0; i < amount; i++) {
     points.push(new Anchor());
@@ -14368,57 +14521,7 @@ _.extend(Renderer$2.prototype, Events, {
 
 });
 
-var dom = {
-
-  temp: (root$1.document ? root$1.document.createElement('div') : {}),
-
-  hasEventListeners: typeof root$1.addEventListener === 'function',
-
-  bind: function(elem, event, func, bool) {
-    if (this.hasEventListeners) {
-      elem.addEventListener(event, func, !!bool);
-    } else {
-      elem.attachEvent('on' + event, func);
-    }
-    return dom;
-  },
-
-  unbind: function(elem, event, func, bool) {
-    if (dom.hasEventListeners) {
-      elem.removeEventListeners(event, func, !!bool);
-    } else {
-      elem.detachEvent('on' + event, func);
-    }
-    return dom;
-  },
-
-  getRequestAnimationFrame: function() {
-
-    var lastTime = 0;
-    var vendors = ['ms', 'moz', 'webkit', 'o'];
-    var request = root$1.requestAnimationFrame, cancel;
-
-    if(!request) {
-      for (var i = 0; i < vendors.length; i++) {
-        request = root$1[vendors[i] + 'RequestAnimationFrame'] || request;
-        cancel = root$1[vendors[i] + 'CancelAnimationFrame']
-          || root$1[vendors[i] + 'CancelRequestAnimationFrame'] || cancel;
-      }
-
-      request = request || function(callback, element) {
-        var currTime = new Date().getTime();
-        var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-        var id = root$1.setTimeout(function() { callback(currTime + timeToCall); }, timeToCall);
-        lastTime = currTime + timeToCall;
-        return id;
-      };
-    }
-
-    return request;
-
-  }
-
-};
+// Utils
 
 /**
  * @name Two
@@ -14507,7 +14610,7 @@ var Two = function(options) {
 
 };
 
-_.extend(Two, Globals);
+_.extend(Two, Constants);
 
 _.extend(Two.prototype, Events, {
 
@@ -15269,7 +15372,18 @@ _.extend(Two, {
    * @name Two.Commands
    * @property {Object} - Map of possible path commands. Taken from the SVG specification.
    */
-  Commands: Commands
+  Commands: Commands,
+
+  Utils: _.extend({
+
+    Error: TwoError,
+    getRatio: getRatio,
+    defineGetterSetter: defineGetterSetter,
+    read: read,
+    xhr: xhr
+
+  }, _, CanvasShim, Curves, math)
+
 });
 
 export default Two;
