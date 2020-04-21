@@ -55,9 +55,6 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@node-minify/core": "^5.2.1",
-    "@node-minify/no-compress": "^5.2.0",
-    "@node-minify/terser": "^5.2.1",
     "@vuepress/plugin-active-header-links": "^1.2.0",
     "@vuepress/plugin-medium-zoom": "^1.2.0",
     "@vuepress/plugin-nprogress": "^1.2.0",
