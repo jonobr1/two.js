@@ -4,6 +4,7 @@ import {decomposeMatrix} from './math.js';
 import {getReflection} from './curves.js';
 import _ from './underscore.js';
 import TwoError from './error.js';
+import Registry from '../registry.js';
 
 import Anchor from '../anchor.js';
 import Vector from '../vector.js';
@@ -184,7 +185,7 @@ var applySvgAttributes = function(node, elem, parentStyles) {
   if (parentStyles) {
     _.defaults(styles, parentStyles);
   }
-  _.extend(styles, attributes, extracted);
+  _.extend(styles, extracted, attributes);
 
   // Similarly visibility is influenced by the value of both display and visibility.
   // Calculate a unified value here which defaults to `true`.
@@ -303,11 +304,39 @@ var applySvgAttributes = function(node, elem, parentStyles) {
       case 'className':
         elem.classList = value.split(' ');
         break;
+      case 'x':
+      case 'y':
+        if (value.match('[a-z%]$') && !value.endsWith('px')) {
+          var error = new TwoError(
+            'only pixel values are supported with the ' + key + ' attribute.');
+          console.warn(error.name, error.message);
+        }
+        elem.translation[key] = parseFloat(value);
+        break;
     }
   }
 
   return styles;
 
+};
+
+/**
+ * @name Utils.updateDefsCache
+ * @function
+ * @param {SvgNode} node - The SVG Node with which to update the defs cache.
+ * @param {Object} Object - The defs cache to be updated.
+ * @description Update the cache of children of <defs /> tags.
+ */
+var updateDefsCache = function(node, defsCache) {
+  for (var i = 0, l = node.childNodes.length; i < l; i++) {
+    var n = node.childNodes[i];
+    if (!n.id) continue;
+
+    var tagName = n.localName;
+    if (tagName === '#text') continue;
+
+    defsCache.add(n.id, n);
+  }
 };
 
 /**
@@ -334,24 +363,62 @@ var read = {
 
   svg: function(node) {
 
+    var defs = read.defs.current = new Registry();
+    var elements = node.getElementsByTagName('defs');
+
+    for (var i = 0; i < elements.length; i++) {
+      updateDefsCache(elements[i], defs);
+    }
+
     var svg = read.g.call(this, node);
     var viewBox = node.getAttribute('viewBox');
+
+    svg.defs = defs;  // Export out the <defs /> for later use
     // Utils.applySvgViewBox(svg, viewBox);
+
+    delete read.defs.current;
 
     return svg;
 
   },
 
   defs: function(node) {
-    var error = new TwoError('interpret <defs /> not supported.');
-    console.warn(error.name, error.message);
     return null;
   },
 
-  use: function(node) {
-    var error = new TwoError('interpret <use /> not supported.');
-    console.warn(error.name, error.message);
-    return null;
+  use: function(node, styles) {
+
+    var href = node.getAttribute('href') || node.getAttribute('xlink:href');
+    if (!href) {
+      var error = new TwoError('encountered <use /> with no href.');
+      console.warn(error.name, error.message);
+      return null;
+    }
+
+    var id = href.slice(1);
+    if (!read.defs.current.contains(id)) {
+      var error = new TwoError(
+        'unable to find element for reference ' + href + '.');
+      console.warn(error.name, error.message);
+      return null;
+    }
+
+    var template = read.defs.current.get(id);
+    var fullNode = template.cloneNode(true);
+    var overwriteAttrs = ['x', 'y', 'width', 'height', 'href', 'xlink:href'];
+
+    for (var i = 0; i < node.attributes.length; i++) {
+      var attr = node.attributes[i];
+      var ca = overwriteAttrs.includes(attr.nodeName);
+      var cb = !fullNode.hasAttribute(attr.nodeName);
+      if (ca || cb) {
+        fullNode.setAttribute(attr.nodeName, attr.value);
+      }
+    }
+
+    var tagName = fullNode.localName;
+    return read[tagName].call(this, fullNode, styles);
+
   },
 
   g: function(node, parentStyles) {
@@ -874,6 +941,11 @@ var read = {
 
     applySvgAttributes.call(this, node, rect, parentStyles);
 
+    // For rectangles, (x, y) is the center of the shape rather than the top
+    // left corner.
+    rect.translation.x += w2;
+    rect.translation.y += h2;
+
     return rect;
 
   },
@@ -897,6 +969,11 @@ var read = {
     rect.fill = 'black';
 
     applySvgAttributes.call(this, node, rect, parentStyles);
+
+    // For rectangles, (x, y) is the center of the shape rather than the top
+    // left corner.
+    rect.translation.x += w2;
+    rect.translation.y += h2;
 
     return rect;
 
