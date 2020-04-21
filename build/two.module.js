@@ -2115,7 +2115,7 @@ var Constants = {
    * @name Two.PublishDate
    * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
    */
-  PublishDate: '2020-03-12T13:48:32.538Z',
+  PublishDate: '2020-04-21T04:02:36.670Z',
 
   /**
    * @name Two.Identifier
@@ -9171,11 +9171,40 @@ var applySvgAttributes = function(node, elem, parentStyles) {
       case 'className':
         elem.classList = value.split(' ');
         break;
+      case 'x':
+      case 'y':
+        if (value.match('[a-z%]$') && !value.endsWith('px')) {
+          var error = new TwoError(
+            'only pixel values are supported with the ' + key + ' attribute.'
+          );
+          console.warn(error.name, error.message);
+        }
+        elem.translation[key] = parseFloat(value);
+        break;
     }
   }
 
   return styles;
 
+};
+
+/**
+ * @name Utils.updateDefsCache
+ * @function
+ * @param {SvgNode} node - The SVG Node with which to update the defs cache.
+ * @param {Object} Object - The defs cache to be updated.
+ * @description Update the cache of children of <defs /> tags.
+ */
+var updateDefsCache = function(node, defsCache) {
+  for (var i = 0, l = node.childNodes.length; i < l; i++) {
+    var n = node.childNodes[i];
+    if (!n.id) continue;
+
+    var tagName = n.localName;
+    if (tagName === '#text') continue;
+
+    defsCache[n.id] = n;
+  }
 };
 
 /**
@@ -9200,7 +9229,18 @@ var getScene = function(node) {
  */
 var read = {
 
+  defsCache: {},
+
   svg: function(node) {
+
+    for (var i = 0, l = node.childNodes.length; i < l; i++) {
+      var n = node.childNodes[i];
+      var tagName = n.localName;
+
+      if (tagName === 'defs') {
+        updateDefsCache(n, read.defsCache);
+      }
+    }
 
     var svg = read.g.call(this, node);
     var viewBox = node.getAttribute('viewBox');
@@ -9211,15 +9251,40 @@ var read = {
   },
 
   defs: function(node) {
-    var error = new TwoError('interpret <defs /> not supported.');
-    console.warn(error.name, error.message);
     return null;
   },
 
-  use: function(node) {
-    var error = new TwoError('interpret <use /> not supported.');
-    console.warn(error.name, error.message);
-    return null;
+  use: function(node, styles) {
+    var href = node.getAttribute('href') || node.getAttribute('xlink:href');
+    if (!href) {
+      var error = new TwoError('encountered <use /> with no href.');
+      console.warn(error.name, error.message);
+      return null;
+    }
+
+    var template = read.defsCache[href.slice(1)];
+    if (!template) {
+      var error = new TwoError(
+        'unable to find element for reference ' + href + '.'
+      );
+      console.warn(error.name, error.message);
+      return null;
+    }
+    var fullNode = template.cloneNode(true);
+
+    var overwriteAttrs = ['x', 'y', 'width', 'height', 'href', 'xlink:href'];
+    for (var i = 0; i < node.attributes.length; i++) {
+      var attr = node.attributes[i];
+      if (
+        overwriteAttrs.includes(attr.nodeName) ||
+        !fullNode.hasAttribute(attr.nodeName)
+      ) {
+        fullNode.setAttribute(attr.nodeName, attr.value);
+      }
+    }
+
+    var tagName = fullNode.localName;
+    return read[tagName].call(this, fullNode, styles);
   },
 
   g: function(node, parentStyles) {
@@ -9742,6 +9807,11 @@ var read = {
 
     applySvgAttributes.call(this, node, rect, parentStyles);
 
+    // For rectangles, (x, y) is the center of the shape rather than the top
+    // left corner.
+    rect.translation.x += w2;
+    rect.translation.y += h2;
+
     return rect;
 
   },
@@ -9765,6 +9835,11 @@ var read = {
     rect.fill = 'black';
 
     applySvgAttributes.call(this, node, rect, parentStyles);
+
+    // For rectangles, (x, y) is the center of the shape rather than the top
+    // left corner.
+    rect.translation.x += w2;
+    rect.translation.y += h2;
 
     return rect;
 
