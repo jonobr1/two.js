@@ -16,7 +16,7 @@ var decomposeMatrix = function(matrix) {
       translateY: matrix.f,
       scaleX: matrix.a,
       scaleY: matrix.d,
-      rotation: Math.asin(- matrix.b)
+      rotation: 180 * Math.asin(matrix.b) / Math.PI
   };
 
 };
