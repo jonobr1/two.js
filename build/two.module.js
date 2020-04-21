@@ -60,7 +60,7 @@ var decomposeMatrix = function(matrix) {
       translateY: matrix.f,
       scaleX: matrix.a,
       scaleY: matrix.d,
-      rotation: Math.asin(- matrix.b)
+      rotation: 180 * Math.asin(matrix.b) / Math.PI
   };
 
 };
@@ -2115,7 +2115,7 @@ var Constants = {
    * @name Two.PublishDate
    * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
    */
-  PublishDate: '2020-04-21T04:02:36.670Z',
+  PublishDate: '2020-04-21T19:53:41.670Z',
 
   /**
    * @name Two.Identifier
@@ -5018,6 +5018,68 @@ var defineGetterSetter = function(property) {
 };
 
 /**
+ * @name Two.Registry
+ * @class
+ * @description An arbitrary class to manage a directory of things. Mainly used for keeping tabs of textures in Two.js.
+ */
+var Registry = function() {
+
+  this.map = {};
+
+};
+
+_.extend(Registry.prototype, {
+
+  constructor: Registry,
+
+  /**
+   * @name Two.Registry#add
+   * @function
+   * @param {String} id - A unique identifier.
+   * @param value - Any type of variable to be registered to the directory.
+   * @description Adds any value to the directory. Assigned by the `id`.
+   */
+  add: function(id, obj) {
+    this.map[id] = obj;
+    return this;
+  },
+
+  /**
+   * @name Two.Registry#remove
+   * @function
+   * @param {String} id - A unique identifier.
+   * @description Remove any value from the directory by its `id`.
+   */
+  remove: function(id) {
+    delete this.map[id];
+    return this;
+  },
+
+  /**
+   * @name Two.Registry#get
+   * @function
+   * @param {String} id - A unique identifier.
+   * @returns The associated value. If unavailable then `undefined` is returned.
+   * @description Get a registered value by its `id`.
+   */
+  get: function(id) {
+    return this.map[id];
+  },
+
+  /**
+   * @name Two.Registry#contains
+   * @function
+   * @param {String} id - A unique identifier.
+   * @returns {Boolean}
+   * @description Convenience method to see if a value is registered to an `id` already.
+   */
+  contains: function(id) {
+    return id in this.map;
+  }
+
+});
+
+/**
  * @name Two.Stop
  * @class
  * @param {Number} [offset] - The offset percentage of the stop represented as a zero-to-one value. Default value flip flops from zero-to-one as new stops are created.
@@ -5796,68 +5858,6 @@ _.extend(RadialGradient.prototype, Gradient.prototype, {
 });
 
 RadialGradient.MakeObservable(RadialGradient.prototype);
-
-/**
- * @name Two.Registry
- * @class
- * @description An arbitrary class to manage a directory of things. Mainly used for keeping tabs of textures in Two.js.
- */
-var Registry = function() {
-
-  this.map = {};
-
-};
-
-_.extend(Registry.prototype, {
-
-  constructor: Registry,
-
-  /**
-   * @name Two.Registry#add
-   * @function
-   * @param {String} id - A unique identifier.
-   * @param value - Any type of variable to be registered to the directory.
-   * @description Adds any value to the directory. Assigned by the `id`.
-   */
-  add: function(id, obj) {
-    this.map[id] = obj;
-    return this;
-  },
-
-  /**
-   * @name Two.Registry#remove
-   * @function
-   * @param {String} id - A unique identifier.
-   * @description Remove any value from the directory by its `id`.
-   */
-  remove: function(id) {
-    delete this.map[id];
-    return this;
-  },
-
-  /**
-   * @name Two.Registry#get
-   * @function
-   * @param {String} id - A unique identifier.
-   * @returns The associated value. If unavailable then `undefined` is returned.
-   * @description Get a registered value by its `id`.
-   */
-  get: function(id) {
-    return this.map[id];
-  },
-
-  /**
-   * @name Two.Registry#contains
-   * @function
-   * @param {String} id - A unique identifier.
-   * @returns {Boolean}
-   * @description Convenience method to see if a value is registered to an `id` already.
-   */
-  contains: function(id) {
-    return id in this.map;
-  }
-
-});
 
 var anchor;
 var regex = {
@@ -9052,7 +9052,7 @@ var applySvgAttributes = function(node, elem, parentStyles) {
   if (parentStyles) {
     _.defaults(styles, parentStyles);
   }
-  _.extend(styles, attributes, extracted);
+  _.extend(styles, extracted, attributes);
 
   // Similarly visibility is influenced by the value of both display and visibility.
   // Calculate a unified value here which defaults to `true`.
@@ -9173,10 +9173,16 @@ var applySvgAttributes = function(node, elem, parentStyles) {
         break;
       case 'x':
       case 'y':
+        var ca = elem instanceof Gradient;
+        var cb = elem instanceof LinearGradient;
+        var cc = elem instanceof RadialGradient;
+        if (ca || cb || cc) {
+          break;
+        }
+        console.log(elem);
         if (value.match('[a-z%]$') && !value.endsWith('px')) {
           var error = new TwoError(
-            'only pixel values are supported with the ' + key + ' attribute.'
-          );
+            'only pixel values are supported with the ' + key + ' attribute.');
           console.warn(error.name, error.message);
         }
         elem.translation[key] = parseFloat(value);
@@ -9203,7 +9209,7 @@ var updateDefsCache = function(node, defsCache) {
     var tagName = n.localName;
     if (tagName === '#text') continue;
 
-    defsCache[n.id] = n;
+    defsCache.add(n.id, n);
   }
 };
 
@@ -9229,22 +9235,22 @@ var getScene = function(node) {
  */
 var read = {
 
-  defsCache: {},
-
   svg: function(node) {
 
-    for (var i = 0, l = node.childNodes.length; i < l; i++) {
-      var n = node.childNodes[i];
-      var tagName = n.localName;
+    var defs = read.defs.current = new Registry();
+    var elements = node.getElementsByTagName('defs');
 
-      if (tagName === 'defs') {
-        updateDefsCache(n, read.defsCache);
-      }
+    for (var i = 0; i < elements.length; i++) {
+      updateDefsCache(elements[i], defs);
     }
 
     var svg = read.g.call(this, node);
     var viewBox = node.getAttribute('viewBox');
+
+    svg.defs = defs;  // Export out the <defs /> for later use
     // Utils.applySvgViewBox(svg, viewBox);
+
+    delete read.defs.current;
 
     return svg;
 
@@ -9255,6 +9261,7 @@ var read = {
   },
 
   use: function(node, styles) {
+
     var href = node.getAttribute('href') || node.getAttribute('xlink:href');
     if (!href) {
       var error = new TwoError('encountered <use /> with no href.');
@@ -9262,29 +9269,30 @@ var read = {
       return null;
     }
 
-    var template = read.defsCache[href.slice(1)];
-    if (!template) {
+    var id = href.slice(1);
+    if (!read.defs.current.contains(id)) {
       var error = new TwoError(
-        'unable to find element for reference ' + href + '.'
-      );
+        'unable to find element for reference ' + href + '.');
       console.warn(error.name, error.message);
       return null;
     }
-    var fullNode = template.cloneNode(true);
 
+    var template = read.defs.current.get(id);
+    var fullNode = template.cloneNode(true);
     var overwriteAttrs = ['x', 'y', 'width', 'height', 'href', 'xlink:href'];
+
     for (var i = 0; i < node.attributes.length; i++) {
       var attr = node.attributes[i];
-      if (
-        overwriteAttrs.includes(attr.nodeName) ||
-        !fullNode.hasAttribute(attr.nodeName)
-      ) {
+      var ca = overwriteAttrs.includes(attr.nodeName);
+      var cb = !fullNode.hasAttribute(attr.nodeName);
+      if (ca || cb) {
         fullNode.setAttribute(attr.nodeName, attr.value);
       }
     }
 
     var tagName = fullNode.localName;
     return read[tagName].call(this, fullNode, styles);
+
   },
 
   g: function(node, parentStyles) {

@@ -306,6 +306,12 @@ var applySvgAttributes = function(node, elem, parentStyles) {
         break;
       case 'x':
       case 'y':
+        var ca = elem instanceof Gradient;
+        var cb = elem instanceof LinearGradient;
+        var cc = elem instanceof RadialGradient;
+        if (ca || cb || cc) {
+          break;
+        }
         if (value.match('[a-z%]$') && !value.endsWith('px')) {
           var error = new TwoError(
             'only pixel values are supported with the ' + key + ' attribute.');
