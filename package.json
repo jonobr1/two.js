@@ -55,20 +55,17 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@node-minify/core": "^5.2.1",
-    "@node-minify/no-compress": "^5.2.0",
-    "@node-minify/terser": "^5.2.1",
-    "@vuepress/plugin-active-header-links": "^1.2.0",
-    "@vuepress/plugin-medium-zoom": "^1.2.0",
-    "@vuepress/plugin-nprogress": "^1.2.0",
+    "@vuepress/plugin-active-header-links": "^1.4.1",
+    "@vuepress/plugin-medium-zoom": "^1.4.1",
+    "@vuepress/plugin-nprogress": "^1.4.1",
     "eslint": "^6.8.0",
     "jsdoc-api": "^5.0.4",
     "qunit": "^2.9.3",
-    "resemblejs": "^3.2.3",
+    "resemblejs": "^3.2.4",
     "rollup": "^1.27.9",
-    "rollup-plugin-terser": "^5.1.2",
-    "underscore": "^1.9.1",
-    "vuepress": "^1.2.0"
+    "rollup-plugin-terser": "^5.3.0",
+    "underscore": "^1.10.2",
+    "vuepress": "^1.4.1"
   },
   "autoupdate": {
     "source": "git",
