@@ -62,7 +62,7 @@ var NumArray = root.Float32Array || Array;
 * @see {@link http://jsperf.com/parsefloat-tofixed-vs-math-round/18}
 */
 var toFixed = function(v) {
-  return Math.floor(v * 1000) / 1000;
+  return Math.floor(v * 1000000) / 1000000;
 };
 
 
