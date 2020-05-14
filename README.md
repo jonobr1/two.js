@@ -110,6 +110,7 @@ process.exit();
 ## Change Log
 
 #### Nightly
++ Added `Two.Text.decoration` styling to `Two.CanvasRenderer` and `Two.WebGLRenderer`
 + Increased precision on `Two.Utils.toFixed` for Firefox transformation engine performance increase
 + Added support to import `<use />` tags from SVG interpretation [@eulertour](https://github.com/eulertour)
 + Removed extraneous underscore calls from `Two.Utils` [@adroitwhiz](https://github.com/adroitwhiz)
