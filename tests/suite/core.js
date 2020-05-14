@@ -448,7 +448,7 @@ QUnit.test('Two.Shape', function(assert) {
   shape.rotation = 3.14;
   shape._update();
 
-  assert.equal(shape._matrix.toString(), '-10 0.015 -0.016 -10 0 0', 'Two.Shape.rotation works properly.');
+  assert.equal(shape._matrix.toString(), '-9.999988 0.015926 -0.015927 -9.999988 0 0', 'Two.Shape.rotation works properly.');
 
 });
 
