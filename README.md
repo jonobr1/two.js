@@ -110,6 +110,7 @@ process.exit();
 ## Change Log
 
 #### Nightly
++ Increased precision on `Two.Utils.toFixed` for Firefox transformation engine performance increase
 + Added support to import `<use />` tags from SVG interpretation [@eulertour](https://github.com/eulertour)
 + Removed extraneous underscore calls from `Two.Utils` [@adroitwhiz](https://github.com/adroitwhiz)
 + Ensured `Two.interpret` respects the `add` parameter to be added (or not) to the current instance
