@@ -2115,7 +2115,7 @@ var Constants = {
    * @name Two.PublishDate
    * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
    */
-  PublishDate: '2020-05-14T10:36:45.984Z',
+  PublishDate: '2020-05-14T13:48:57.821Z',
 
   /**
    * @name Two.Identifier
@@ -4380,14 +4380,17 @@ var canvas = {
       var stroke = this._stroke;
       var linewidth = this._linewidth;
       var fill = this._fill;
+      var decoration = this._decoration;
       var opacity = this._opacity * this.parent._renderer.opacity;
       var visible = this._visible;
       var defaultMatrix = isDefaultMatrix(matrix);
       var isOffset = fill._renderer && fill._renderer.offset
         && stroke._renderer && stroke._renderer.offset;
       var dashes = this.dashes;
+      var alignment = canvas.alignments[this._alignment] || this._alignment;
+      var baseline = this._baseline;
 
-      var a, b, c, d, e, sx, sy;
+      var a, b, c, d, e, sx, sy, x1, y1, x2, y2;
 
       // mask = this._mask;
       var clip = this._clip;
@@ -4415,8 +4418,8 @@ var canvas = {
           this._leading + 'px', this._family].join(' ');
       }
 
-      ctx.textAlign = canvas.alignments[this._alignment] || this._alignment;
-      ctx.textBaseline = this._baseline;
+      ctx.textAlign = alignment;
+      ctx.textBaseline = baseline;
 
       // Styles
       if (fill) {
@@ -4506,6 +4509,62 @@ var canvas = {
             ctx.strokeText(this.value, 0, 0);
           }
         }
+      }
+
+      // Handle text-decoration
+      if (/(underline|strikethrough)/i.test(decoration)) {
+
+        var metrics = ctx.measureText(this.value);
+        var scalar = 1;
+
+        switch (decoration) {
+          case 'underline':
+            y1 = metrics.actualBoundingBoxAscent;
+            y2 = metrics.actualBoundingBoxAscent;
+            break;
+          case 'strikethrough':
+            y1 = 0;
+            y2 = 0;
+            scalar = 0.5;
+            break;
+        }
+
+        switch (baseline) {
+          case 'top':
+            y1 += this._size * scalar;
+            y2 += this._size * scalar;
+            break;
+          case 'baseline':
+          case 'bottom':
+            y1 -= this._size * scalar;
+            y2 -= this._size * scalar;
+            break;
+        }
+
+        switch (alignment) {
+          case 'left':
+          case 'start':
+            x1 = 0;
+            x2 = metrics.width;
+            break;
+          case 'right':
+          case 'end':
+            x1 = - metrics.width;
+            x2 = 0;
+            break;
+          default:
+            x1 = - metrics.width / 2;
+            x2 = metrics.width / 2;
+        }
+
+        ctx.lineWidth = Math.max(Math.floor(this._size / 15), 1);
+        ctx.strokeStyle = ctx.fillStyle;
+
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+
       }
 
       if (!defaultMatrix) {
@@ -13883,6 +13942,9 @@ var webgl = {
       var fill = elem._fill;
       var opacity = elem._renderer.opacity || elem._opacity;
       var dashes = elem.dashes;
+      var decoration = elem._decoration;
+      var alignment = CanvasUtils.alignments[elem._alignment] || elem._alignment;
+      var baseline = elem._baseline;
 
       canvas.width = Math.max(Math.ceil(elem._renderer.rect.width * scale.x), 1);
       canvas.height = Math.max(Math.ceil(elem._renderer.rect.height * scale.y), 1);
@@ -13891,7 +13953,7 @@ var webgl = {
       var cx = centroid.x;
       var cy = centroid.y;
 
-      var a, b, c, d, e, sx, sy;
+      var a, b, c, d, e, sx, sy, x1, y1, x2, y2;
       var isOffset = fill._renderer && fill._renderer.offset
         && stroke._renderer && stroke._renderer.offset;
 
@@ -13994,6 +14056,35 @@ var webgl = {
         } else {
           ctx.strokeText(elem.value, 0, 0);
         }
+
+      }
+
+      // Handle text-decoration
+      if (/(underline|strikethrough)/i.test(decoration)) {
+
+        var metrics = ctx.measureText(elem.value);
+
+        switch (decoration) {
+          case 'underline':
+            y1 = metrics.actualBoundingBoxAscent;
+            y2 = metrics.actualBoundingBoxAscent;
+            break;
+          case 'strikethrough':
+            y1 = 0;
+            y2 = 0;
+            break;
+        }
+
+        x1 = - metrics.width / 2;
+        x2 = metrics.width / 2;
+
+        ctx.lineWidth = Math.max(Math.floor(elem._size / 15), 1);
+        ctx.strokeStyle = ctx.fillStyle;
+
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
 
       }
 
