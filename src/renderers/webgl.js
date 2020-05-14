@@ -545,6 +545,9 @@ var webgl = {
       var fill = elem._fill;
       var opacity = elem._renderer.opacity || elem._opacity;
       var dashes = elem.dashes;
+      var decoration = elem._decoration;
+      var alignment = CanvasUtils.alignments[elem._alignment] || elem._alignment;
+      var baseline = elem._baseline;
 
       canvas.width = Math.max(Math.ceil(elem._renderer.rect.width * scale.x), 1);
       canvas.height = Math.max(Math.ceil(elem._renderer.rect.height * scale.y), 1);
@@ -553,7 +556,7 @@ var webgl = {
       var cx = centroid.x;
       var cy = centroid.y;
 
-      var a, b, c, d, e, sx, sy;
+      var a, b, c, d, e, sx, sy, x1, y1, x2, y2;
       var isOffset = fill._renderer && fill._renderer.offset
         && stroke._renderer && stroke._renderer.offset;
 
@@ -656,6 +659,37 @@ var webgl = {
         } else {
           ctx.strokeText(elem.value, 0, 0);
         }
+
+      }
+
+      // Handle text-decoration
+      if (/(underline|strikethrough)/i.test(decoration)) {
+
+        var metrics = ctx.measureText(elem.value);
+        var scalar = 1;
+
+        switch (decoration) {
+          case 'underline':
+            y1 = metrics.actualBoundingBoxAscent;
+            y2 = metrics.actualBoundingBoxAscent;
+            break;
+          case 'strikethrough':
+            y1 = 0;
+            y2 = 0;
+            scalar = 0.5;
+            break;
+        }
+
+        x1 = - metrics.width / 2;
+        x2 = metrics.width / 2;
+
+        ctx.lineWidth = Math.max(Math.floor(elem._size / 15), 1);
+        ctx.strokeStyle = ctx.fillStyle;
+
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
 
       }
 
