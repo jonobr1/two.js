@@ -112,7 +112,7 @@ SOFTWARE.
   * @see {@link http://jsperf.com/parsefloat-tofixed-vs-math-round/18}
   */
   var toFixed = function(v) {
-    return Math.floor(v * 1000) / 1000;
+    return Math.floor(v * 1000000) / 1000000;
   };
 
   var math = /*#__PURE__*/Object.freeze({
@@ -2121,7 +2121,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2020-04-21T19:53:41.670Z',
+    PublishDate: '2020-05-14T10:36:45.984Z',
 
     /**
      * @name Two.Identifier
@@ -9185,7 +9185,6 @@ SOFTWARE.
           if (ca || cb || cc) {
             break;
           }
-          console.log(elem);
           if (value.match('[a-z%]$') && !value.endsWith('px')) {
             var error = new TwoError(
               'only pixel values are supported with the ' + key + ' attribute.');
