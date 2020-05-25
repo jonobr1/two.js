@@ -2121,7 +2121,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2020-05-14T13:48:57.821Z',
+    PublishDate: '2020-05-25T14:44:28.944Z',
 
     /**
      * @name Two.Identifier
@@ -6056,13 +6056,15 @@ SOFTWARE.
      * @param {Function} loaded - The callback function to be triggered once the image is loaded.
      * @nota-bene - This function uses node's `fs.readFileSync` to spoof the `<img />` loading process in the browser.
      */
-    loadHeadlessBuffer: new Function('texture', 'loaded', [
-      'var fs = require("fs");',
-      'var buffer = fs.readFileSync(texture.src);',
+    loadHeadlessBuffer: function(texture, loaded) {
 
-      'texture.image.src = buffer;',
-      'loaded();'
-    ].join('\n')),
+      var fs = require("fs");
+      var buffer = fs.readFileSync(texture.src);
+
+      texture.image.src = buffer;
+      loaded();
+
+    },
 
     /**
      * @name Two.Texture.getImage
