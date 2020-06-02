@@ -83,7 +83,8 @@ var Texture = function(src, callback) {
     if (
       elemString === '[object HTMLImageElement]' ||
       elemString === '[object HTMLCanvasElement]' ||
-      elemString === '[object HTMLVideoElement]'
+      elemString === '[object HTMLVideoElement]' ||
+      elemString === '[object Image]'
     ) {
       /**
        * @name Two.Texture#image
@@ -147,12 +148,21 @@ _.extend(Texture, {
    */
   loadHeadlessBuffer: function(texture, loaded) {
 
-    var fs = require("fs");
-    var buffer = fs.readFileSync(texture.src);
+    texture.image.onload = loaded;
+    texture.image.src = texture.src;
 
-    texture.image.src = buffer;
-    loaded();
+  },
 
+  /**
+   * @name Two.Texture.getTag
+   * @property {Function} - Retrieves the tag name of an image, video, or canvas node.
+   * @param {ImageElement} - The image to infer the tag name from.
+   * @returns {String} - Returns the tag name of an image, video, or canvas node.
+   */
+  getTag: function(image) {
+    return (image && image.nodeName && image.nodeName.toLowerCase())
+      // Headless environments
+      || 'img';
   },
 
   /**
@@ -212,39 +222,44 @@ _.extend(Texture, {
     },
     img: function(texture, callback) {
 
+      var image = texture.image;
+
       var loaded = function(e) {
-        if (typeof texture.image.removeEventListener === 'function') {
-          texture.image.removeEventListener('load', loaded, false);
-          texture.image.removeEventListener('error', error, false);
+        if (!CanvasShim.isHeadless && image.removeEventListener && typeof image.removeEventListener === 'function') {
+          image.removeEventListener('load', loaded, false);
+          image.removeEventListener('error', error, false);
         }
         if (typeof callback === 'function') {
           callback();
         }
       };
       var error = function(e) {
-        if (typeof texture.image.removeEventListener === 'function') {
-          texture.image.removeEventListener('load', loaded, false);
-          texture.image.removeEventListener('error', error, false);
+        if (!CanvasShim.isHeadless && typeof image.removeEventListener === 'function') {
+          image.removeEventListener('load', loaded, false);
+          image.removeEventListener('error', error, false);
         }
         throw new TwoError('unable to load ' + texture.src);
       };
 
-      if (typeof texture.image.width === 'number' && texture.image.width > 0
-        && typeof texture.image.height === 'number' && texture.image.height > 0) {
+      if (typeof image.width === 'number' && image.width > 0
+        && typeof image.height === 'number' && image.height > 0) {
           loaded();
-      } else if (typeof texture.image.addEventListener === 'function') {
-        texture.image.addEventListener('load', loaded, false);
-        texture.image.addEventListener('error', error, false);
+      } else if (!CanvasShim.isHeadless && typeof image.addEventListener === 'function') {
+        image.addEventListener('load', loaded, false);
+        image.addEventListener('error', error, false);
       }
 
       texture._src = Texture.getAbsoluteURL(texture._src);
 
-      if (texture.image && texture.image.getAttribute('two-src')) {
+      if (!CanvasShim.isHeadless && image && image.getAttribute('two-src')) {
         return;
       }
 
-      texture.image.setAttribute('two-src', texture.src);
-      Texture.ImageRegistry.add(texture.src, texture.image);
+      if (!CanvasShim.isHeadless) {
+        image.setAttribute('two-src', texture.src);
+      }
+
+      Texture.ImageRegistry.add(texture.src, image);
 
       if (CanvasShim.isHeadless) {
 
@@ -258,6 +273,10 @@ _.extend(Texture, {
 
     },
     video: function(texture, callback) {
+
+      if (CanvasShim.isHeadless) {
+        throw new TwoError('video textures are not implemented in headless environments.');
+      }
 
       var loaded = function(e) {
         texture.image.removeEventListener('canplaythrough', loaded, false);
@@ -283,10 +302,6 @@ _.extend(Texture, {
         return;
       }
 
-      if (CanvasShim.isHeadless) {
-        throw new TwoError('video textures are not implemented in headless environments.');
-      }
-
       texture.image.setAttribute('two-src', texture.src);
       Texture.ImageRegistry.add(texture.src, texture.image);
       texture.image.src = texture.src;
@@ -306,22 +321,23 @@ _.extend(Texture, {
 
     var src = texture.src;
     var image = texture.image;
-    var tag = image && image.nodeName.toLowerCase();
+    var tag = Texture.getTag(image);
 
     if (texture._flagImage) {
       if (/canvas/i.test(tag)) {
         Texture.Register.canvas(texture, callback);
       } else {
-        texture._src = image.getAttribute('two-src') || image.src;
+        texture._src = (!CanvasShim.isHeadless && image.getAttribute('two-src')) || image.src;
         Texture.Register[tag](texture, callback);
       }
     }
 
     if (texture._flagSrc) {
       if (!image) {
-        texture.image = Texture.getImage(texture.src);
+        image = Texture.getImage(texture.src);
+        texture.image = image;
       }
-      tag = texture.image.nodeName.toLowerCase();
+      tag = Texture.getTag(image);
       Texture.Register[tag](texture, callback);
     }
 
@@ -362,7 +378,7 @@ _.extend(Texture, {
       },
       set: function(image) {
 
-        var tag = image && image.nodeName.toLowerCase();
+        var tag = Texture.getTag(image);
         var index;
 
         switch (tag) {
@@ -567,7 +583,7 @@ _.extend(Texture.prototype, Events, Shape.prototype, {
 
       if (this._flagSrc || this._flagImage) {
         this.loaded = false;
-        Texture.load(this,(function() {
+        Texture.load(this, (function() {
           this.loaded = true;
           this
             .trigger(Events.Types.change)
