@@ -2121,7 +2121,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2020-06-02T16:26:54.975Z',
+    PublishDate: '2020-07-14T00:43:34.448Z',
 
     /**
      * @name Two.Identifier

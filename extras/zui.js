@@ -1,4 +1,4 @@
-import Two from 'two.js';
+import Two from '../build/two.module.js';
 
 var extend = function(base, obj) {
   for (var k in obj) {
