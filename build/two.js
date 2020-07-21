@@ -2121,7 +2121,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2020-07-14T00:43:34.448Z',
+    PublishDate: '2020-07-21T02:55:47.045Z',
 
     /**
      * @name Two.Identifier
@@ -9082,6 +9082,26 @@ SOFTWARE.
 
   };
 
+  var extrapolateScientificNotation = function(command) {
+    var regex = /[\+\-]?[\d\.]*e[\-\+]?\d*/ig;
+    var matches = command.match(regex);
+    if (matches && matches.length > 0) {
+      for (var i = 0; i < matches.length; i++) {
+        var match = matches[i];
+        var items = match.split(/e/i);
+        var value = parseFloat(items[0]);
+        var coefficient = Math.pow(10, parseFloat(items[1]));
+        if (coefficient < 0) {
+          value /= coefficient;
+        } else {
+          value *= coefficient;
+        }
+        command = command.replace(match, value);
+      }
+    }
+    return command;
+  };
+
   /**
    * @name Utils.applySvgAttributes
    * @function
@@ -9453,6 +9473,8 @@ SOFTWARE.
 
           var number, fid, lid, numbers, first, s;
           var j, ct, l, times;
+
+          command = extrapolateScientificNotation(command);
 
           var type = command[0];
           var lower = type.toLowerCase();

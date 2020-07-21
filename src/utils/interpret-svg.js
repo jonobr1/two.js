@@ -132,6 +132,26 @@ var applySvgViewBox = function(node, value) {
 
 };
 
+var extrapolateScientificNotation = function(command) {
+  var regex = /[\+\-]?[\d\.]*e[\-\+]?\d*/ig;
+  var matches = command.match(regex);
+  if (matches && matches.length > 0) {
+    for (var i = 0; i < matches.length; i++) {
+      var match = matches[i];
+      var items = match.split(/e/i);
+      var value = parseFloat(items[0]);
+      var coefficient = Math.pow(10, parseFloat(items[1]));
+      if (coefficient < 0) {
+        value /= coefficient;
+      } else {
+        value *= coefficient;
+      }
+      command = command.replace(match, value);
+    }
+  }
+  return command;
+};
+
 /**
  * @name Utils.applySvgAttributes
  * @function
@@ -503,6 +523,8 @@ var read = {
 
         var number, fid, lid, numbers, first, s;
         var j, k, ct, l, times;
+
+        command = extrapolateScientificNotation(command);
 
         var type = command[0];
         var lower = type.toLowerCase();
