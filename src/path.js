@@ -732,7 +732,7 @@ _.extend(Path.prototype, Shape.prototype, {
       })
     };
 
-    _.each(Shape.Properties, function(k) {
+    _.each(Path.Properties, function(k) {
       result[k] = this[k];
     }, this);
 
