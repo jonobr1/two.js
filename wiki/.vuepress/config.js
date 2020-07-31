@@ -1,8 +1,17 @@
+var fs = require('fs');
+var path = require('path');
 var sourceFiles = require('../../utils/source-files');
+
+var fileSizes = getJSON('../../utils/file-sizes.json');
 
 for (var i = 0; i < sourceFiles.length; i++) {
   var name = sourceFiles[i];
   sourceFiles[i] = name.replace('src/', '').replace('.js', '/');
+}
+
+function getJSON(filepath) {
+  var file = fs.readFileSync(path.resolve(__dirname, filepath));
+  return JSON.parse(file);
 }
 
 module.exports = {
@@ -13,7 +22,7 @@ module.exports = {
     repo: 'jonobr1/two.js',
     repoLabel: 'Github',
     docsDir: 'wiki',
-    docsBranch: 'jsdocs',
+    docsBranch: 'dev',
     editLinks: true,
     editLinkText: 'See a typo? Help us improve it.',
     smoothScroll: true,
@@ -21,25 +30,27 @@ module.exports = {
     lastUpdated: 'Last Updated',
     activeHeaderLinks: false,
     searchPlaceholder: 'Search...',
+    developmentSize: fileSizes.development,
+    productionSize: fileSizes.production,
     nav: [
       {
         text: 'Overview', link: '/'
       },
-      // {
-      //   text: 'Examples', link: '/examples/'
-      // },
+      {
+        text: 'Examples', link: '/examples/'
+      },
       // {
       //   text: 'Projects', link: '/projects/'
       // },
       {
+        text: 'Documentation', link: '/documentation/two/'
+      },
+      {
         text: 'Change Log', link: '/change-log/'
       },
       {
-        text: 'Documentation', link: '/documentation/two/'
-      },
-      // {
-      //   text: 'Sponsors', link: '/sponsor'
-      // }
+        text: 'Sponsors', link: '/sponsor'
+      }
     ],
     sidebar: {
       '/change-log/': ['/change-log/'],
