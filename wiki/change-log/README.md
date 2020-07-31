@@ -1,6 +1,17 @@
 # Change Log
 
-## Nightly • [Devolpment Branch](https://github.com/jonobr1/two.js/trees/dev/)
+#### Nightly
++ Added support for scientific notation in `Two.interpret`
++ Added `Two.Text.decoration` styling to `Two.CanvasRenderer` and `Two.WebGLRenderer`
++ Increased precision on `Two.Utils.toFixed` for Firefox transformation engine performance increase
++ Added support to import `<use />` tags from SVG interpretation [@eulertour](https://github.com/eulertour)
++ Removed extraneous underscore calls from `Two.Utils` [@adroitwhiz](https://github.com/adroitwhiz)
++ Ensured `Two.interpret` respects the `add` parameter to be added (or not) to the current instance
++ Modularized Two.js classes / files [@adroitwhiz](https://github.com/adroitwhiz)
++ Made Two.js compatible with `import` modules [@adroitwhiz](https://github.com/adroitwhiz)
++ Added wiki as [VuePress](https://vuepress.vuejs.org/) project
+
+#### January, 2020 [v0.7.0](https://github.com/jonobr1/two.js/releases/tag/v0.7.0)
 + Exposed `resolution` parameter in `Two.makeCircle` and `Two.makeEllipse` as the final parameter
 + Made `Two.Circle` and `Two.Ellipse` recalculate controls points on `_update` and made vertex amounts cyclical [@adroitwhiz](https://github.com/adroitwhiz)
 + Added [ESLint](https://eslint.org/) scripts to development environment [@adroitwhiz](https://github.com/adroitwhiz)
