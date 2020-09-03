@@ -2121,7 +2121,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2020-07-21T02:55:47.045Z',
+    PublishDate: '2020-09-03T15:23:41.796Z',
 
     /**
      * @name Two.Identifier
@@ -7239,7 +7239,7 @@ SOFTWARE.
         })
       };
 
-      _.each(Shape.Properties, function(k) {
+      _.each(Path.Properties, function(k) {
         result[k] = this[k];
       }, this);
 
