@@ -18,7 +18,7 @@ import Events from './events.js';
 import Vector from './vector.js';
 import Anchor from './anchor.js';
 
-import {Gradient} from './effects/gradient.js';
+import Gradient from './effects/gradient.js';
 import LinearGradient from './effects/linear-gradient.js';
 import RadialGradient from './effects/radial-gradient.js';
 import Texture from './effects/texture.js';

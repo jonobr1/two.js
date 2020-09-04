@@ -18,6 +18,7 @@ var sourceFiles = [
   'src/shapes/star.js',
   'src/shapes/rounded-rectangle.js',
   'src/text.js',
+  'src/effects/stop.js',
   'src/effects/gradient.js',
   'src/effects/linear-gradient.js',
   'src/effects/radial-gradient.js',

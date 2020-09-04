@@ -1,113 +1,11 @@
-# Two.Group.Children
+# Two.Group
 
 
-__Extends__: `Two.Utils.Collection`
 
 
-A children collection which is accesible both by index and by object `id`.
 
 
 
-
-
-
----
-
-<div class="instance">
-
-## Two.Group.Children.ids
-
-
-
-
-
-
-Map of all elements in the list keyed by `id`s.
-
-
-
-
-
-
-
-
-
-</div>
-
-
-
----
-
-<div class="instance">
-
-## Two.Group.Children.attach
-
-
-
-
-
-
-
-
-| Argument | Description |
-| ---- | ----------- |
-| `` |  |
-
-
-Adds elements to the `ids` map.
-
-
-
-</div>
-
-
-
----
-
-<div class="instance">
-
-## Two.Group.Children.detach
-
-
-
-
-
-
-
-
-| Argument | Description |
-| ---- | ----------- |
-| `` |  |
-
-
-Removes elements to the `ids` map.
-
-
-
-</div>
-
-
-
----
-
-<div class="static">
-
-## Two.Group
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</div>
 
 
 
@@ -184,6 +82,106 @@ A list of all the children in the scenegraph.
 ::: tip nota-bene
 Ther order of this list indicates the order each element is rendered to the screen.
 :::
+
+
+</div>
+
+
+
+---
+
+<div class="static">
+
+## Two.Group.Children
+
+
+
+
+
+
+
+
+
+
+A children collection which is accesible both by index and by object `id`.
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.Group.Children.ids
+
+
+
+
+
+
+Map of all elements in the list keyed by `id`s.
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.Group.Children.attach
+
+
+
+
+
+
+
+
+| Argument | Description |
+| ---- | ----------- |
+| `` |  |
+
+
+Adds elements to the `ids` map.
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.Group.Children.detach
+
+
+
+
+
+
+
+
+| Argument | Description |
+| ---- | ----------- |
+| `` |  |
+
+
+Removes elements to the `ids` map.
+
 
 
 </div>

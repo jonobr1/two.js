@@ -23,22 +23,22 @@ var _ = {
   extend: function(base) {
     var sources = slice.call(arguments, 1);
     for (var i = 0; i < sources.length; i++) {
-    var obj = sources[i];
-    for (var k in obj) {
-      base[k] = obj[k];
-    }
+      var obj = sources[i];
+      for (var k in obj) {
+        base[k] = obj[k];
+      }
     }
     return base;
   },
   defaults: function(base) {
     var sources = slice.call(arguments, 1);
     for (var i = 0; i < sources.length; i++) {
-    var obj = sources[i];
-    for (var k in obj) {
-      if (base[k] === void 0) {
-      base[k] = obj[k];
+      var obj = sources[i];
+      for (var k in obj) {
+        if (base[k] === void 0) {
+        base[k] = obj[k];
+        }
       }
-    }
     }
     return base;
   },
@@ -47,8 +47,8 @@ var _ = {
     var keys = !isArrayLike(obj) && Object.keys(obj);
     var length = (keys || obj).length;
     for (var i = 0; i < length; i++) {
-    var k = keys ? keys[i] : i;
-    iteratee.call(ctx, obj[k], k, obj);
+      var k = keys ? keys[i] : i;
+      iteratee.call(ctx, obj[k], k, obj);
     }
     return obj;
   },

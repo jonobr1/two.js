@@ -17,7 +17,8 @@ import Line from '../shapes/line.js';
 import Rectangle from '../shapes/rectangle.js';
 import RoundedRectangle from '../shapes/rounded-rectangle.js';
 
-import {Gradient, Stop} from '../effects/gradient.js';
+import Stop from '../effects/stop.js';
+import Gradient from '../effects/gradient.js';
 import LinearGradient from '../effects/linear-gradient.js';
 import RadialGradient from '../effects/radial-gradient.js';
 

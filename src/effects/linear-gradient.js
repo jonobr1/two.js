@@ -1,7 +1,8 @@
 import Events from '../events.js';
 import _ from '../utils/underscore.js';
 
-import {Gradient, Stop} from './gradient.js';
+import Stop from './stop.js';
+import Gradient from './gradient.js';
 import Vector from '../vector.js';
 
 /**

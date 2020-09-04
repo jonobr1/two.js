@@ -28,7 +28,8 @@ import Vector from './vector.js';
 
 // Effects
 
-import {Gradient, Stop} from './effects/gradient.js';
+import Stop from './effects/stop.js';
+import Gradient from './effects/gradient.js';
 import ImageSequence from './effects/image-sequence.js';
 import LinearGradient from './effects/linear-gradient.js';
 import RadialGradient from './effects/radial-gradient.js';

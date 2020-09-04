@@ -11,6 +11,40 @@ var min = Math.min, max = Math.max;
 
 /**
  * @class
+ * @name Two.Group
+ */
+var Group = function(children) {
+
+  Shape.call(this, true);
+
+  this._renderer.type = 'group';
+
+  /**
+   * @name Two.Group#additions
+   * @property {Two.Shape[]}
+   * @description An automatically updated list of children that need to be appended to the renderer's scenegraph.
+   */
+  this.additions = [];
+
+  /**
+   * @name Two.Group#subtractions
+   * @property {Two.Shape[]}
+   * @description An automatically updated list of children that need to be removed from the renderer's scenegraph.
+   */
+  this.subtractions = [];
+
+  /**
+   * @name Two.Group#additions
+   * @property {Two.Group.Children[]}
+   * @description A list of all the children in the scenegraph.
+   * @nota-bene Ther order of this list indicates the order each element is rendered to the screen.
+   */
+  this.children = Array.isArray(children) ? children : Array.prototype.slice.call(arguments);
+
+};
+
+/**
+ * @class
  * @name Two.Group.Children
  * @extends Two.Utils.Collection
  * @description A children collection which is accesible both by index and by object `id`.
@@ -69,40 +103,6 @@ _.extend(Children.prototype, {
   }
 
 });
-
-/**
- * @class
- * @name Two.Group
- */
-var Group = function(children) {
-
-  Shape.call(this, true);
-
-  this._renderer.type = 'group';
-
-  /**
-   * @name Two.Group#additions
-   * @property {Two.Shape[]}
-   * @description An automatically updated list of children that need to be appended to the renderer's scenegraph.
-   */
-  this.additions = [];
-
-  /**
-   * @name Two.Group#subtractions
-   * @property {Two.Shape[]}
-   * @description An automatically updated list of children that need to be removed from the renderer's scenegraph.
-   */
-  this.subtractions = [];
-
-  /**
-   * @name Two.Group#additions
-   * @property {Two.Group.Children[]}
-   * @description A list of all the children in the scenegraph.
-   * @nota-bene Ther order of this list indicates the order each element is rendered to the screen.
-   */
-  this.children = Array.isArray(children) ? children : Array.prototype.slice.call(arguments);
-
-};
 
 _.extend(Group, {
 
