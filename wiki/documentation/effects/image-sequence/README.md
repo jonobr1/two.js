@@ -12,7 +12,7 @@ A convenient package to display still or animated images organized as a series o
 
 | Argument | Description |
 | ---- | ----------- |
-| `paths` | A list of URLs or {@link Two.Texture}s. |
+| `paths` | A list of URLs or [Two.Texture](/documentation/texture)s. |
 | `ox` | The initial `x` position of the Two.ImageSequence. |
 | `oy` | The initial `y` position of the Two.ImageSequence. |
 | `frameRate` | The frame rate at which the images should playback at. |
@@ -21,14 +21,16 @@ A convenient package to display still or animated images organized as a series o
 
 ---
 
-## Two.ImageSequence#textures
+<div class="instance">
+
+## Two.ImageSequence.textures
 
 
 
 
 
 
-A list of textures to be used as frames for animating the {@link Two.ImageSequence}.
+A list of textures to be used as frames for animating the [Two.ImageSequence](/documentation/imagesequence).
 
 
 
@@ -37,12 +39,16 @@ A list of textures to be used as frames for animating the {@link Two.ImageSequen
 
 
 
+
+</div>
 
 
 
 ---
 
-## Two.ImageSequence#frameRate
+<div class="instance">
+
+## Two.ImageSequence.frameRate
 
 
 
@@ -59,11 +65,15 @@ The number of frames to animate against per second.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.ImageSequence#index
+<div class="instance">
+
+## Two.ImageSequence.index
 
 
 
@@ -80,9 +90,13 @@ The index of the current tile of the sprite to display. Defaults to `0`.
 
 
 
+</div>
+
 
 
 ---
+
+<div class="static">
 
 ## Two.ImageSequence.Properties
 
@@ -91,7 +105,7 @@ The index of the current tile of the sprite to display. Defaults to `0`.
 
 
 
-A list of properties that are on every {@link Two.ImageSequence}.
+A list of properties that are on every [Two.ImageSequence](/documentation/imagesequence).
 
 
 
@@ -100,10 +114,14 @@ A list of properties that are on every {@link Two.ImageSequence}.
 
 
 
+
+</div>
 
 
 
 ---
+
+<div class="static">
 
 ## Two.ImageSequence.DefaultFrameRate
 
@@ -112,7 +130,7 @@ A list of properties that are on every {@link Two.ImageSequence}.
 
 
 
-default frame rate that {@link Two.ImageSequence#frameRate} is set to when instantiated.
+default frame rate that [Two.ImageSequence.frameRate](/documentation/imagesequence#two-imagesequence-framerate) is set to when instantiated.
 
 
 
@@ -121,10 +139,14 @@ default frame rate that {@link Two.ImageSequence#frameRate} is set to when insta
 
 
 
+
+</div>
 
 
 
 ---
+
+<div class="static">
 
 ## Two.ImageSequence.FlagTextures
 
@@ -137,13 +159,17 @@ default frame rate that {@link Two.ImageSequence#frameRate} is set to when insta
 
 
 
-Cached method to let renderers know textures have been updated on a {@link Two.ImageSequence}.
+Cached method to let renderers know textures have been updated on a [Two.ImageSequence](/documentation/imagesequence).
 
 
+
+</div>
 
 
 
 ---
+
+<div class="static">
 
 ## Two.ImageSequence.BindTextures
 
@@ -156,13 +182,17 @@ Cached method to let renderers know textures have been updated on a {@link Two.I
 
 
 
-Cached method to let {@link Two.ImageSequence} know textures have been added to the instance.
+Cached method to let [Two.ImageSequence](/documentation/imagesequence) know textures have been added to the instance.
 
 
+
+</div>
 
 
 
 ---
+
+<div class="static">
 
 ## Two.ImageSequence.UnbindVertices
 
@@ -175,13 +205,17 @@ Cached method to let {@link Two.ImageSequence} know textures have been added to 
 
 
 
-Cached method to let {@link Two.ImageSequence} know textures have been removed from the instance.
+Cached method to let [Two.ImageSequence](/documentation/imagesequence) know textures have been removed from the instance.
 
 
+
+</div>
 
 
 
 ---
+
+<div class="static">
 
 ## Two.ImageSequence.MakeObservable
 
@@ -197,13 +231,17 @@ Cached method to let {@link Two.ImageSequence} know textures have been removed f
 | `object` | The object to make observable. |
 
 
-Convenience function to apply observable qualities of a {@link Two.ImageSequence} to any object. Handy if you'd like to extend or inherit the {@link Two.ImageSequence} class on a custom class.
+Convenience function to apply observable qualities of a [Two.ImageSequence](/documentation/imagesequence) to any object. Handy if you'd like to extend or inherit the {@link Two.ImageSequence} class on a custom class.
 
 
+
+</div>
 
 
 
 ---
+
+<div class="static">
 
 ## Two.ImageSequence.GenerateTexture
 
@@ -222,24 +260,28 @@ __Returns__:
 
 
 
-Shorthand function to prepare source image material into readable format by {@link Two.ImageSequence}.
+Shorthand function to prepare source image material into readable format by [Two.ImageSequence](/documentation/imagesequence).
 
 
 
 | Argument | Description |
 | ---- | ----------- |
-| `textureOrString` | The texture or string to create a {@link Two.Texture} from. |
+| `textureOrString` | The texture or string to create a [Two.Texture](/documentation/texture) from. |
 
 
-Function used internally by {@link Two.ImageSequence} to parse arguments and return {@link Two.Texture}s.
+Function used internally by [Two.ImageSequence](/documentation/imagesequence) to parse arguments and return {@link Two.Texture}s.
 
 
+
+</div>
 
 
 
 ---
 
-## Two.ImageSequence#play
+<div class="instance">
+
+## Two.ImageSequence.play
 
 
 
@@ -251,38 +293,23 @@ Function used internally by {@link Two.ImageSequence} to parse arguments and ret
 | Argument | Description |
 | ---- | ----------- |
 | `firstFrame` | The index of the frame to start the animation with. |
-| `lastFrame` | The index of the frame to end the animation with. Defaults to the last item in the {@link Two.ImageSequence#textures}. |
+| `lastFrame` | The index of the frame to end the animation with. Defaults to the last item in the [Two.ImageSequence.textures](/documentation/imagesequence#two-imagesequence-textures). |
 | `onLastFrame` | Optional callback function to be triggered after playing the last frame. This fires multiple times when the image sequence is looped. |
 
 
-Initiate animation playback of a {@link Two.ImageSequence}.
+Initiate animation playback of a [Two.ImageSequence](/documentation/imagesequence).
 
 
 
-
-
----
-
-## Two.ImageSequence#pause
-
-
-
-
-
-
-
-
-
-
-Halt animation playback of a {@link Two.ImageSequence}.
-
-
+</div>
 
 
 
 ---
 
-## Two.ImageSequence#stop
+<div class="instance">
+
+## Two.ImageSequence.pause
 
 
 
@@ -293,15 +320,42 @@ Halt animation playback of a {@link Two.ImageSequence}.
 
 
 
-Halt animation playback of a {@link Two.ImageSequence} and set the current frame back to the first frame.
+Halt animation playback of a [Two.ImageSequence](/documentation/imagesequence).
 
 
+
+</div>
 
 
 
 ---
 
-## Two.ImageSequence#clone
+<div class="instance">
+
+## Two.ImageSequence.stop
+
+
+
+
+
+
+
+
+
+
+Halt animation playback of a [Two.ImageSequence](/documentation/imagesequence) and set the current frame back to the first frame.
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.ImageSequence.clone
 
 
 __Returns__:
@@ -325,15 +379,19 @@ __Returns__:
 | `parent` | The parent group or scene to add the clone to. |
 
 
-Create a new instance of {@link Two.ImageSequence} with the same properties of the current image sequence.
+Create a new instance of [Two.ImageSequence](/documentation/imagesequence) with the same properties of the current image sequence.
 
 
+
+</div>
 
 
 
 ---
 
-## Two.ImageSequence#toObject
+<div class="instance">
+
+## Two.ImageSequence.toObject
 
 
 __Returns__:
@@ -357,5 +415,7 @@ __Returns__:
 Return a JSON compatible plain object that represents the path.
 
 
+
+</div>
 
 

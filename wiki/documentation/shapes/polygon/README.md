@@ -21,7 +21,9 @@ __Extends__: `Two.Path`
 
 ---
 
-## Two.Polygon#width
+<div class="instance">
+
+## Two.Polygon.width
 
 
 
@@ -38,11 +40,15 @@ The size of the width of the polygon.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Polygon#height
+<div class="instance">
+
+## Two.Polygon.height
 
 
 
@@ -59,11 +65,15 @@ The size of the height of the polygon.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Polygon#sides
+<div class="instance">
+
+## Two.Polygon.sides
 
 
 
@@ -80,9 +90,13 @@ The amount of sides the polyogn has.
 
 
 
+</div>
+
 
 
 ---
+
+<div class="static">
 
 ## Two.Polygon.Properties
 
@@ -91,7 +105,7 @@ The amount of sides the polyogn has.
 
 
 
-A list of properties that are on every {@link Two.Polygon}.
+A list of properties that are on every [Two.Polygon](/documentation/polygon).
 
 
 
@@ -100,10 +114,14 @@ A list of properties that are on every {@link Two.Polygon}.
 
 
 
+
+</div>
 
 
 
 ---
+
+<div class="static">
 
 ## Two.Polygon.MakeObservable
 
@@ -119,15 +137,19 @@ A list of properties that are on every {@link Two.Polygon}.
 | `object` | The object to make observable. |
 
 
-Convenience function to apply observable qualities of a {@link Two.Polygon} to any object. Handy if you'd like to extend the {@link Two.Polygon} class on a custom class.
+Convenience function to apply observable qualities of a [Two.Polygon](/documentation/polygon) to any object. Handy if you'd like to extend the {@link Two.Polygon} class on a custom class.
 
 
+
+</div>
 
 
 
 ---
 
-## Two.Polygon#clone
+<div class="instance">
+
+## Two.Polygon.clone
 
 
 __Returns__:
@@ -151,15 +173,19 @@ __Returns__:
 | `parent` | The parent group or scene to add the clone to. |
 
 
-Create a new instance of {@link Two.Polygon} with the same properties of the current path.
+Create a new instance of [Two.Polygon](/documentation/polygon) with the same properties of the current path.
 
 
+
+</div>
 
 
 
 ---
 
-## Two.Polygon#toObject
+<div class="instance">
+
+## Two.Polygon.toObject
 
 
 __Returns__:
@@ -183,5 +209,7 @@ __Returns__:
 Return a JSON compatible plain object that represents the path.
 
 
+
+</div>
 
 

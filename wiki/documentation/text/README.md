@@ -21,7 +21,9 @@ This is a primitive class for creating drawable text that can be added to the sc
 
 ---
 
-## Two.Text#dashes
+<div class="instance">
+
+## Two.Text.dashes
 
 
 
@@ -38,30 +40,38 @@ A list of numbers that represent the repeated dash length and dash space applied
 
 
 
-
-
----
-
-## Two.Text#dashes#offset
-
-
-
-
-
-
-A number in pixels to offset {@link Two.Text#dashes} display.
-
-
-
-
-
-
-
-
+</div>
 
 
 
 ---
+
+<div class="instance">
+
+## Two.Text.dashes.offset
+
+
+
+
+
+
+A number in pixels to offset [Two.Text.dashes](/documentation/text#two-text-dashes) display.
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="static">
 
 ## Two.Text.Ratio
 
@@ -80,9 +90,13 @@ Approximate aspect ratio of a typeface's character width to height.
 
 
 
+</div>
+
 
 
 ---
+
+<div class="static">
 
 ## Two.Text.Properties
 
@@ -91,7 +105,7 @@ Approximate aspect ratio of a typeface's character width to height.
 
 
 
-A list of properties that are on every {@link Two.Text}.
+A list of properties that are on every [Two.Text](/documentation/text).
 
 
 
@@ -100,10 +114,14 @@ A list of properties that are on every {@link Two.Text}.
 
 
 
+
+</div>
 
 
 
 ---
+
+<div class="static">
 
 ## Two.Text.FlagFill
 
@@ -116,13 +134,17 @@ A list of properties that are on every {@link Two.Text}.
 
 
 
-Cached method to let renderers know the fill property have been updated on a {@link Two.Text}.
+Cached method to let renderers know the fill property have been updated on a [Two.Text](/documentation/text).
 
 
+
+</div>
 
 
 
 ---
+
+<div class="static">
 
 ## Two.Text.FlagStroke
 
@@ -135,15 +157,19 @@ Cached method to let renderers know the fill property have been updated on a {@l
 
 
 
-Cached method to let renderers know the stroke property have been updated on a {@link Two.Text}.
+Cached method to let renderers know the stroke property have been updated on a [Two.Text](/documentation/text).
 
 
+
+</div>
 
 
 
 ---
 
-## Two.Text#value
+<div class="instance">
+
+## Two.Text.value
 
 
 
@@ -160,11 +186,15 @@ The characters to be rendered to the the screen. Referred to in the documentatio
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Text#family
+<div class="instance">
+
+## Two.Text.family
 
 
 
@@ -181,11 +211,15 @@ The font family Two.js should attempt to regsiter for rendering. The default val
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Text#size
+<div class="instance">
+
+## Two.Text.size
 
 
 
@@ -202,11 +236,15 @@ The font size in Two.js point space. Defaults to `13`.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Text#leading
+<div class="instance">
+
+## Two.Text.leading
 
 
 
@@ -223,39 +261,22 @@ The height between lines measured from base to base in Two.js point space. Defau
 
 
 
-
-
----
-
-## Two.Text#alignment
-
-
-
-
-
-
-Alignment of text in relation to {@link Two.Text#translation}'s coordinates. Possible values include `'left'`, `'center'`, `'right'`. Defaults to `'center'`.
-
-
-
-
-
-
-
-
+</div>
 
 
 
 ---
 
-## Two.Text#baseline
+<div class="instance">
+
+## Two.Text.alignment
 
 
 
 
 
 
-The vertical aligment of the text in relation to {@link Two.Text#translation}'s coordinates. Possible values include `'top'`, `'middle'`, `'bottom'`, and `'baseline'`. Defaults to `'baseline'`.
+Alignment of text in relation to [Two.Text.translation](/documentation/text#two-text-translation)'s coordinates. Possible values include `'left'`, `'center'`, `'right'`. Defaults to `'center'`.
 
 
 
@@ -264,12 +285,41 @@ The vertical aligment of the text in relation to {@link Two.Text#translation}'s 
 
 
 
+
+</div>
 
 
 
 ---
 
-## Two.Text#style
+<div class="instance">
+
+## Two.Text.baseline
+
+
+
+
+
+
+The vertical aligment of the text in relation to [Two.Text.translation](/documentation/text#two-text-translation)'s coordinates. Possible values include `'top'`, `'middle'`, `'bottom'`, and `'baseline'`. Defaults to `'baseline'`.
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.Text.style
 
 
 
@@ -286,11 +336,15 @@ The font's style. Possible values include '`normal`', `'italic'`. Defaults to `'
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Text#weight
+<div class="instance">
+
+## Two.Text.weight
 
 
 
@@ -307,11 +361,15 @@ A number at intervals of 100 to describe the font's weight. This compatibility v
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Text#decoration
+<div class="instance">
+
+## Two.Text.decoration
 
 
 
@@ -328,11 +386,15 @@ String to delineate whether text should be decorated with for instance an `'unde
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Text#fill
+<div class="instance">
+
+## Two.Text.fill
 
 
 
@@ -349,11 +411,15 @@ The value of what the text object should be filled in with.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Text#stroke
+<div class="instance">
+
+## Two.Text.stroke
 
 
 
@@ -370,11 +436,15 @@ The value of what the text object should be filled in with.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Text#linewidth
+<div class="instance">
+
+## Two.Text.linewidth
 
 
 
@@ -391,11 +461,15 @@ The thickness in pixels of the stroke.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Text#opacity
+<div class="instance">
+
+## Two.Text.opacity
 
 
 
@@ -416,32 +490,40 @@ Can be used in conjunction with CSS Colors that have an alpha value.
 :::
 
 
-
-
----
-
-## Two.Text#className
-
-
-
-
-
-
-A class to be applied to the element to be compatible with CSS styling. Only available for the {@link Two.SvgRenderer}.
-
-
-
-
-
-
-
-
+</div>
 
 
 
 ---
 
-## Two.Text#visible
+<div class="instance">
+
+## Two.Text.className
+
+
+
+
+
+
+A class to be applied to the element to be compatible with CSS styling. Only available for the [Two.SvgRenderer](/documentation/svgrenderer).
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.Text.visible
 
 
 
@@ -458,15 +540,19 @@ Display the text object or not.
 
 
 ::: tip nota-bene
-For {@link Two.CanvasRenderer} and {@link Two.WebGLRenderer} when set to false all updating is disabled improving performance dramatically with many objects in the scene.
+For [Two.CanvasRenderer](/documentation/canvasrenderer) and {@link Two.WebGLRenderer} when set to false all updating is disabled improving performance dramatically with many objects in the scene.
 :::
 
+
+</div>
 
 
 
 ---
 
-## Two.Text#clip
+<div class="instance">
+
+## Two.Text.clip
 
 
 
@@ -487,11 +573,15 @@ This property is currently not working becuase of SVG spec issues found here {@l
 :::
 
 
+</div>
+
 
 
 ---
 
-## Two.Text#remove
+<div class="instance">
+
+## Two.Text.remove
 
 
 
@@ -506,11 +596,15 @@ Remove self from the scene / parent.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Text#clone
+<div class="instance">
+
+## Two.Text.clone
 
 
 __Returns__:
@@ -534,15 +628,19 @@ __Returns__:
 | `parent` | The parent group or scene to add the clone to. |
 
 
-Create a new instance of {@link Two.Text} with the same properties of the current text object.
+Create a new instance of [Two.Text](/documentation/text) with the same properties of the current text object.
 
 
+
+</div>
 
 
 
 ---
 
-## Two.Text#toObject
+<div class="instance">
+
+## Two.Text.toObject
 
 
 __Returns__:
@@ -567,11 +665,15 @@ Return a JSON compatible plain object that represents the text object.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Text#noFill
+<div class="instance">
+
+## Two.Text.noFill
 
 
 
@@ -586,11 +688,15 @@ Short hand method to set fill to `transparent`.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Text#noStroke
+<div class="instance">
+
+## Two.Text.noStroke
 
 
 
@@ -605,11 +711,15 @@ Short hand method to set stroke to `transparent`.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Text#getBoundingClientRect
+<div class="instance">
+
+## Two.Text.getBoundingClientRect
 
 
 __Returns__:
@@ -638,5 +748,7 @@ __Returns__:
 Return an object with top, left, right, bottom, width, and height parameters of the text object.
 
 
+
+</div>
 
 

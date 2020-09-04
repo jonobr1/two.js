@@ -22,7 +22,9 @@ __Extends__: `Two.Path`
 
 ---
 
-## Two.Star#innerRadius
+<div class="instance">
+
+## Two.Star.innerRadius
 
 
 
@@ -39,11 +41,15 @@ The size of the inner radius of the star.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Star#outerRadius
+<div class="instance">
+
+## Two.Star.outerRadius
 
 
 
@@ -60,11 +66,15 @@ The size of the outer radius of the star.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Star#sides
+<div class="instance">
+
+## Two.Star.sides
 
 
 
@@ -81,9 +91,13 @@ The amount of sides the star has.
 
 
 
+</div>
+
 
 
 ---
+
+<div class="static">
 
 ## Two.Star.Properties
 
@@ -92,7 +106,7 @@ The amount of sides the star has.
 
 
 
-A list of properties that are on every {@link Two.Star}.
+A list of properties that are on every [Two.Star](/documentation/star).
 
 
 
@@ -101,10 +115,14 @@ A list of properties that are on every {@link Two.Star}.
 
 
 
+
+</div>
 
 
 
 ---
+
+<div class="static">
 
 ## Two.Star.MakeObservable
 
@@ -120,15 +138,19 @@ A list of properties that are on every {@link Two.Star}.
 | `object` | The object to make observable. |
 
 
-Convenience function to apply observable qualities of a {@link Two.Star} to any object. Handy if you'd like to extend the {@link Two.Star} class on a custom class.
+Convenience function to apply observable qualities of a [Two.Star](/documentation/star) to any object. Handy if you'd like to extend the {@link Two.Star} class on a custom class.
 
 
+
+</div>
 
 
 
 ---
 
-## Two.Star#clone
+<div class="instance">
+
+## Two.Star.clone
 
 
 __Returns__:
@@ -152,15 +174,19 @@ __Returns__:
 | `parent` | The parent group or scene to add the clone to. |
 
 
-Create a new instance of {@link Two.Star} with the same properties of the current path.
+Create a new instance of [Two.Star](/documentation/star) with the same properties of the current path.
 
 
+
+</div>
 
 
 
 ---
 
-## Two.Star#toObject
+<div class="instance">
+
+## Two.Star.toObject
 
 
 __Returns__:
@@ -184,5 +210,7 @@ __Returns__:
 Return a JSON compatible plain object that represents the path.
 
 
+
+</div>
 
 

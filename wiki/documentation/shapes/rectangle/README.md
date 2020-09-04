@@ -21,7 +21,9 @@ __Extends__: `Two.Path`
 
 ---
 
-## Two.Rectangle#width
+<div class="instance">
+
+## Two.Rectangle.width
 
 
 
@@ -38,11 +40,15 @@ The size of the width of the rectangle.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Rectangle#height
+<div class="instance">
+
+## Two.Rectangle.height
 
 
 
@@ -59,11 +65,15 @@ The size of the height of the rectangle.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Rectangle#origin
+<div class="instance">
+
+## Two.Rectangle.origin
 
 
 
@@ -80,9 +90,13 @@ A two-component vector describing the origin offset to draw the rectangle. Defau
 
 
 
+</div>
+
 
 
 ---
+
+<div class="static">
 
 ## Two.Rectangle.Properties
 
@@ -91,7 +105,7 @@ A two-component vector describing the origin offset to draw the rectangle. Defau
 
 
 
-A list of properties that are on every {@link Two.Rectangle}.
+A list of properties that are on every [Two.Rectangle](/documentation/rectangle).
 
 
 
@@ -100,10 +114,14 @@ A list of properties that are on every {@link Two.Rectangle}.
 
 
 
+
+</div>
 
 
 
 ---
+
+<div class="static">
 
 ## Two.Rectangle.MakeObservable
 
@@ -119,15 +137,19 @@ A list of properties that are on every {@link Two.Rectangle}.
 | `object` | The object to make observable. |
 
 
-Convenience function to apply observable qualities of a {@link Two.Rectangle} to any object. Handy if you'd like to extend the {@link Two.Rectangle} class on a custom class.
+Convenience function to apply observable qualities of a [Two.Rectangle](/documentation/rectangle) to any object. Handy if you'd like to extend the {@link Two.Rectangle} class on a custom class.
 
 
+
+</div>
 
 
 
 ---
 
-## Two.Rectangle#clone
+<div class="instance">
+
+## Two.Rectangle.clone
 
 
 __Returns__:
@@ -151,15 +173,19 @@ __Returns__:
 | `parent` | The parent group or scene to add the clone to. |
 
 
-Create a new instance of {@link Two.Rectangle} with the same properties of the current path.
+Create a new instance of [Two.Rectangle](/documentation/rectangle) with the same properties of the current path.
 
 
+
+</div>
 
 
 
 ---
 
-## Two.Rectangle#toObject
+<div class="instance">
+
+## Two.Rectangle.toObject
 
 
 __Returns__:
@@ -183,5 +209,7 @@ __Returns__:
 Return a JSON compatible plain object that represents the path.
 
 
+
+</div>
 
 

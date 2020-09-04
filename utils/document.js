@@ -25,16 +25,30 @@ _.each(sourceFiles, function(file) {
       configure: path.resolve(__dirname, '../jsdoc-conf.json')
   });
 
+  // TODO: Sort citations by citation.scope (static first, then instance)
   citations.slice(0).forEach(function(object) {
+
     var a = object.undocumented;
     var b = /package:undefined/i.test(object.longname);
     var c = /Two\.Utils\.Events\.(bind|unbind)/i.test(object.memberof);
     var d = /(private|protected)/i.test(object.access);
-    if (a || b || c || d) {
-      citations.splice(citations.indexOf(object), 1);
-    }
-  });
 
+    if (a || b || c || d) {
+
+      // Remove private / hidden / incomplete documented citations
+      citations.splice(citations.indexOf(object), 1);
+
+    } else {
+
+      expandLink(object, 'description');
+      _.each(object.params, expandParam);
+      _.each(object.returns, expandParam);
+      _.each(object.properties, expandParam);
+      _.each(object.tags, expandTag);
+
+    }
+
+  });
 
   // fs.mkdirSync(outputDir, { recursive: true });
   fs.writeFileSync(outputFile.replace('README.md', 'docs.json'), JSON.stringify(citations));
@@ -58,6 +72,53 @@ function getRoot(citations) {
     }
   }
   return null;
+}
+
+function expandTag(tag) {
+  expandLink(tag, 'text');
+}
+
+function expandParam(param) {
+  expandLink(param, 'description');
+}
+
+function expandLink(object, property) {
+
+  var value = object[property];
+
+  if (value) {
+
+    // TODO: Need to handle multiple instances of {@link }s
+    var regex = /\{\@link ([\w\d\:\/\?\-\.\#]*)\}/i;
+    var link = value.match(regex);
+
+    if (/http/i.test(value)) {
+
+      // TODO: Not working
+      object[property] = value.replace(regex, '[$1]($1)')
+
+    } else if (link && link.length > 1) {
+
+      var name = link[1];
+      var fragments = name.split(/[\.\#]/i);
+
+      var directory = fragments[1] || '';
+      var hash = fragments.length > 2 ? fragments.join('-') : '';
+
+      object[property] = value.replace(regex, [
+        '[',
+        fragments.join('.'),
+        ']',
+        '(/documentation/',
+        directory.toLowerCase(),
+        hash ? '#' + hash.toLowerCase() : '',
+        ')'
+      ].join(''));
+
+    }
+
+  }
+
 }
 
 // For all @kinds

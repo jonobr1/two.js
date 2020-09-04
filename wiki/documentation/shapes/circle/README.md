@@ -21,7 +21,9 @@ __Extends__: `Two.Path`
 
 ---
 
-## Two.Circle#radius
+<div class="instance">
+
+## Two.Circle.radius
 
 
 
@@ -38,9 +40,13 @@ The size of the radius of the circle.
 
 
 
+</div>
+
 
 
 ---
+
+<div class="static">
 
 ## Two.Circle.Properties
 
@@ -49,7 +55,7 @@ The size of the radius of the circle.
 
 
 
-A list of properties that are on every {@link Two.Circle}.
+A list of properties that are on every [Two.Circle](/documentation/circle).
 
 
 
@@ -58,10 +64,14 @@ A list of properties that are on every {@link Two.Circle}.
 
 
 
+
+</div>
 
 
 
 ---
+
+<div class="static">
 
 ## Two.Circle.MakeObservable
 
@@ -77,15 +87,19 @@ A list of properties that are on every {@link Two.Circle}.
 | `object` | The object to make observable. |
 
 
-Convenience function to apply observable qualities of a {@link Two.Circle} to any object. Handy if you'd like to extend the {@link Two.Circle} class on a custom class.
+Convenience function to apply observable qualities of a [Two.Circle](/documentation/circle) to any object. Handy if you'd like to extend the {@link Two.Circle} class on a custom class.
 
 
+
+</div>
 
 
 
 ---
 
-## Two.Circle#clone
+<div class="instance">
+
+## Two.Circle.clone
 
 
 __Returns__:
@@ -109,15 +123,19 @@ __Returns__:
 | `parent` | The parent group or scene to add the clone to. |
 
 
-Create a new instance of {@link Two.Circle} with the same properties of the current path.
+Create a new instance of [Two.Circle](/documentation/circle) with the same properties of the current path.
 
 
+
+</div>
 
 
 
 ---
 
-## Two.Circle#toObject
+<div class="instance">
+
+## Two.Circle.toObject
 
 
 __Returns__:
@@ -141,5 +159,7 @@ __Returns__:
 Return a JSON compatible plain object that represents the path.
 
 
+
+</div>
 
 

@@ -24,7 +24,9 @@ __Extends__: `Two.Path`
 
 ---
 
-## Two.ArcSegment#innerRadius
+<div class="instance">
+
+## Two.ArcSegment.innerRadius
 
 
 
@@ -41,11 +43,15 @@ The size of the inner radius of the arc segment.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.ArcSegment#outerRadius
+<div class="instance">
+
+## Two.ArcSegment.outerRadius
 
 
 
@@ -62,11 +68,15 @@ The size of the outer radius of the arc segment.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.ArcSegment#startRadius
+<div class="instance">
+
+## Two.ArcSegment.startRadius
 
 
 
@@ -83,11 +93,15 @@ The angle of one side for the arc segment.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.ArcSegment#endAngle
+<div class="instance">
+
+## Two.ArcSegment.endAngle
 
 
 
@@ -104,9 +118,13 @@ The angle of the other side for the arc segment.
 
 
 
+</div>
+
 
 
 ---
+
+<div class="static">
 
 ## Two.ArcSegment.Properties
 
@@ -115,7 +133,7 @@ The angle of the other side for the arc segment.
 
 
 
-A list of properties that are on every {@link Two.ArcSegment}.
+A list of properties that are on every [Two.ArcSegment](/documentation/arcsegment).
 
 
 
@@ -124,10 +142,14 @@ A list of properties that are on every {@link Two.ArcSegment}.
 
 
 
+
+</div>
 
 
 
 ---
+
+<div class="static">
 
 ## Two.ArcSegment.MakeObservable
 
@@ -143,15 +165,19 @@ A list of properties that are on every {@link Two.ArcSegment}.
 | `object` | The object to make observable. |
 
 
-Convenience function to apply observable qualities of a {@link Two.ArcSegment} to any object. Handy if you'd like to extend the {@link Two.ArcSegment} class on a custom class.
+Convenience function to apply observable qualities of a [Two.ArcSegment](/documentation/arcsegment) to any object. Handy if you'd like to extend the {@link Two.ArcSegment} class on a custom class.
 
 
+
+</div>
 
 
 
 ---
 
-## Two.ArcSegment#clone
+<div class="instance">
+
+## Two.ArcSegment.clone
 
 
 __Returns__:
@@ -175,15 +201,19 @@ __Returns__:
 | `parent` | The parent group or scene to add the clone to. |
 
 
-Create a new instance of {@link Two.ArcSegment} with the same properties of the current path.
+Create a new instance of [Two.ArcSegment](/documentation/arcsegment) with the same properties of the current path.
 
 
+
+</div>
 
 
 
 ---
 
-## Two.ArcSegment#toObject
+<div class="instance">
+
+## Two.ArcSegment.toObject
 
 
 __Returns__:
@@ -207,5 +237,7 @@ __Returns__:
 Return a JSON compatible plain object that represents the path.
 
 
+
+</div>
 
 

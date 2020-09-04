@@ -17,7 +17,9 @@ A class to store x / y component vector data. In addition to storing data `Two.V
 
 ---
 
-## Two.Vector#x
+<div class="instance">
+
+## Two.Vector.x
 
 
 
@@ -34,11 +36,15 @@ The horizontal x-component of the vector.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Vector#y
+<div class="instance">
+
+## Two.Vector.y
 
 
 
@@ -55,9 +61,13 @@ The vertical y-component of the vector.
 
 
 
+</div>
+
 
 
 ---
+
+<div class="static">
 
 ## Two.Vector.zero
 
@@ -76,9 +86,13 @@ Handy reference to a vector with component values 0, 0 at all times.
 
 
 
+</div>
+
 
 
 ---
+
+<div class="static">
 
 ## Two.Vector.add
 
@@ -109,9 +123,13 @@ Add two vectors together.
 
 
 
+</div>
+
 
 
 ---
+
+<div class="static">
 
 ## Two.Vector.sub
 
@@ -142,9 +160,13 @@ Subtract two vectors: `v2` from `v1`.
 
 
 
+</div>
+
 
 
 ---
+
+<div class="static">
 
 ## Two.Vector.subtract
 
@@ -161,9 +183,13 @@ Subtract two vectors: `v2` from `v1`.
 
 
 
+</div>
+
 
 
 ---
+
+<div class="static">
 
 ## Two.Vector.ratioBetween
 
@@ -196,9 +222,13 @@ The ratio betwen two points `v1` and `v2`.
 
 
 
+</div>
+
 
 
 ---
+
+<div class="static">
 
 ## Two.Vector.angleBetween
 
@@ -231,9 +261,13 @@ The angle between points `v1` and `v2`.
 
 
 
+</div>
+
 
 
 ---
+
+<div class="static">
 
 ## Two.Vector.distanceBetween
 
@@ -266,9 +300,13 @@ The distance between points `v1` and `v2`. Distance is always positive.
 
 
 
+</div>
+
 
 
 ---
+
+<div class="static">
 
 ## Two.Vector.distanceBetweenSquared
 
@@ -301,9 +339,13 @@ The squared distance between points `v1` and `v2`.
 
 
 
+</div>
+
 
 
 ---
+
+<div class="static">
 
 ## Two.Vector.MakeObservable
 
@@ -319,15 +361,19 @@ The squared distance between points `v1` and `v2`.
 | `object` | The object to make observable. |
 
 
-Convenience function to apply observable qualities of a {@link Two.Vector} to any object. Handy if you'd like to extend the {@link Two.Vector} class on a custom class.
+Convenience function to apply observable qualities of a [Two.Vector](/documentation/vector) to any object. Handy if you'd like to extend the {@link Two.Vector} class on a custom class.
 
 
+
+</div>
 
 
 
 ---
 
-## Two.Vector#set
+<div class="instance">
+
+## Two.Vector.set
 
 
 __Returns__:
@@ -358,11 +404,15 @@ Set the x / y components of a vector to specific number values.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Vector#copy
+<div class="instance">
+
+## Two.Vector.copy
 
 
 __Returns__:
@@ -392,11 +442,15 @@ Copy the x / y components of another object `v`.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Vector#clear
+<div class="instance">
+
+## Two.Vector.clear
 
 
 __Returns__:
@@ -423,11 +477,15 @@ Set the x / y component values of the vector to zero.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Vector#clone
+<div class="instance">
+
+## Two.Vector.clone
 
 
 __Returns__:
@@ -438,7 +496,7 @@ __Returns__:
 
 
 
-- A new instance of {@link Two.Vector}.
+- A new instance of [Two.Vector](/documentation/vector).
 
 
 
@@ -454,11 +512,15 @@ Create a new vector and copy the existing values onto the newly created instance
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Vector#add
+<div class="instance">
+
+## Two.Vector.add
 
 
 __Returns__:
@@ -492,11 +554,15 @@ Add an object with x / y component values to the instance.
 :::
 
 
+</div>
+
 
 
 ---
 
-## Two.Vector#add
+<div class="instance">
+
+## Two.Vector.add
 
 
 __Returns__:
@@ -530,11 +596,15 @@ Add the **same** number to both x / y component values of the instance.
 :::
 
 
+</div>
+
 
 
 ---
 
-## Two.Vector#add
+<div class="instance">
+
+## Two.Vector.add
 
 
 __Returns__:
@@ -569,30 +639,38 @@ Add `x` / `y` values to their respective component value on the instance.
 :::
 
 
-
-
----
-
-## Two.Vector#addSelf
-
-
-
-
-
-
-
-
-
-
-
-
-
+</div>
 
 
 
 ---
 
-## Two.Vector#sub
+<div class="instance">
+
+## Two.Vector.addSelf
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.Vector.sub
 
 
 __Returns__:
@@ -626,11 +704,15 @@ Subtract an object with x / y component values to the instance.
 :::
 
 
+</div>
+
 
 
 ---
 
-## Two.Vector#sub
+<div class="instance">
+
+## Two.Vector.sub
 
 
 __Returns__:
@@ -664,11 +746,15 @@ Subtract the **same** number to both x / y component values of the instance.
 :::
 
 
+</div>
+
 
 
 ---
 
-## Two.Vector#sub
+<div class="instance">
+
+## Two.Vector.sub
 
 
 __Returns__:
@@ -703,30 +789,15 @@ Subtract `x` / `y` values to their respective component value on the instance.
 :::
 
 
-
-
----
-
-## Two.Vector#subtract
-
-
-
-
-
-
-
-
-
-
-
-
-
+</div>
 
 
 
 ---
 
-## Two.Vector#subSelf
+<div class="instance">
+
+## Two.Vector.subtract
 
 
 
@@ -741,30 +812,61 @@ Subtract `x` / `y` values to their respective component value on the instance.
 
 
 
-
-
----
-
-## Two.Vector#subtractSelf
-
-
-
-
-
-
-
-
-
-
-
-
-
+</div>
 
 
 
 ---
 
-## Two.Vector#multiply
+<div class="instance">
+
+## Two.Vector.subSelf
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.Vector.subtractSelf
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.Vector.multiply
 
 
 __Returns__:
@@ -798,11 +900,15 @@ Multiply an object with x / y component values to the instance.
 :::
 
 
+</div>
+
 
 
 ---
 
-## Two.Vector#multiply
+<div class="instance">
+
+## Two.Vector.multiply
 
 
 __Returns__:
@@ -836,11 +942,15 @@ Multiply the **same** number to both x / y component values of the instance.
 :::
 
 
+</div>
+
 
 
 ---
 
-## Two.Vector#multiply
+<div class="instance">
+
+## Two.Vector.multiply
 
 
 __Returns__:
@@ -875,30 +985,38 @@ Multiply `x` / `y` values to their respective component value on the instance.
 :::
 
 
-
-
----
-
-## Two.Vector#multiplySelf
-
-
-
-
-
-
-
-
-
-
-
-
-
+</div>
 
 
 
 ---
 
-## Two.Vector#multiplyScalar
+<div class="instance">
+
+## Two.Vector.multiplySelf
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.Vector.multiplyScalar
 
 
 
@@ -912,15 +1030,19 @@ Multiply `x` / `y` values to their respective component value on the instance.
 | `s` | The scalar to multiply by. |
 
 
-Mulitiply the vector by a single number. Shorthand to call {@link Two.Vector#multiply} directly.
+Mulitiply the vector by a single number. Shorthand to call [Two.Vector.multiply](/documentation/vector#two-vector-multiply) directly.
 
 
+
+</div>
 
 
 
 ---
 
-## Two.Vector#divide
+<div class="instance">
+
+## Two.Vector.divide
 
 
 __Returns__:
@@ -954,11 +1076,15 @@ Divide an object with x / y component values to the instance.
 :::
 
 
+</div>
+
 
 
 ---
 
-## Two.Vector#divide
+<div class="instance">
+
+## Two.Vector.divide
 
 
 __Returns__:
@@ -992,11 +1118,15 @@ Divide the **same** number to both x / y component values of the instance.
 :::
 
 
+</div>
+
 
 
 ---
 
-## Two.Vector#divide
+<div class="instance">
+
+## Two.Vector.divide
 
 
 __Returns__:
@@ -1031,30 +1161,38 @@ Divide `x` / `y` values to their respective component value on the instance.
 :::
 
 
-
-
----
-
-## Two.Vector#divideSelf
-
-
-
-
-
-
-
-
-
-
-
-
-
+</div>
 
 
 
 ---
 
-## Two.Vector#divideScalar
+<div class="instance">
+
+## Two.Vector.divideSelf
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.Vector.divideScalar
 
 
 
@@ -1068,15 +1206,19 @@ Divide `x` / `y` values to their respective component value on the instance.
 | `s` | The scalar to divide by. |
 
 
-Divide the vector by a single number. Shorthand to call {@link Two.Vector#divide} directly.
+Divide the vector by a single number. Shorthand to call [Two.Vector.divide](/documentation/vector#two-vector-divide) directly.
 
 
+
+</div>
 
 
 
 ---
 
-## Two.Vector#negate
+<div class="instance">
+
+## Two.Vector.negate
 
 
 
@@ -1091,11 +1233,15 @@ Invert each component's sign value.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Vector#negate
+<div class="instance">
+
+## Two.Vector.negate
 
 
 __Returns__:
@@ -1116,15 +1262,19 @@ __Returns__:
 
 
 
-Get the [dot product]{@link https://en.wikipedia.org/wiki/Dot_product} of the vector.
+Get the [dot product][https://en.wikipedia.org/wiki/Dot_product](https://en.wikipedia.org/wiki/Dot_product) of the vector.
 
 
+
+</div>
 
 
 
 ---
 
-## Two.Vector#length
+<div class="instance">
+
+## Two.Vector.length
 
 
 __Returns__:
@@ -1149,11 +1299,15 @@ Get the length of a vector.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Vector#lengthSquared
+<div class="instance">
+
+## Two.Vector.lengthSquared
 
 
 __Returns__:
@@ -1174,15 +1328,19 @@ __Returns__:
 
 
 
-Get the length of the vector to the power of two. Widely used as less expensive than {@link Two.Vector#length}, because it isn't square-rooting any numbers.
+Get the length of the vector to the power of two. Widely used as less expensive than [Two.Vector.length](/documentation/vector#two-vector-length), because it isn't square-rooting any numbers.
 
 
+
+</div>
 
 
 
 ---
 
-## Two.Vector#normalize
+<div class="instance">
+
+## Two.Vector.normalize
 
 
 
@@ -1197,11 +1355,15 @@ Normalize the vector from negative one to one.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Vector#distanceTo
+<div class="instance">
+
+## Two.Vector.distanceTo
 
 
 __Returns__:
@@ -1226,11 +1388,15 @@ Get the distance between two vectors.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Vector#distanceToSquared
+<div class="instance">
+
+## Two.Vector.distanceToSquared
 
 
 __Returns__:
@@ -1251,15 +1417,19 @@ __Returns__:
 
 
 
-Get the distance between two vectors to the power of two. Widely used as less expensive than {@link Two.Vector#distanceTo}, because it isn't square-rooting any numbers.
+Get the distance between two vectors to the power of two. Widely used as less expensive than [Two.Vector.distanceTo](/documentation/vector#two-vector-distanceto), because it isn't square-rooting any numbers.
 
 
+
+</div>
 
 
 
 ---
 
-## Two.Vector#setLength
+<div class="instance">
+
+## Two.Vector.setLength
 
 
 
@@ -1277,11 +1447,15 @@ Set the length of a vector.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Vector#equals
+<div class="instance">
+
+## Two.Vector.equals
 
 
 __Returns__:
@@ -1310,11 +1484,15 @@ Qualify if one vector roughly equal another. With a margin of error defined by e
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Vector#lerp
+<div class="instance">
+
+## Two.Vector.lerp
 
 
 
@@ -1333,11 +1511,15 @@ Linear interpolate one vector to another by an amount `t` defined as a zero to o
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Vector#isZero
+<div class="instance">
+
+## Two.Vector.isZero
 
 
 __Returns__:
@@ -1365,11 +1547,15 @@ Check to see if vector is roughly zero, based on the `epsilon` precision value.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Vector#toString
+<div class="instance">
+
+## Two.Vector.toString
 
 
 __Returns__:
@@ -1394,11 +1580,15 @@ Return a comma-separated string of x, y value. Great for storing in a database.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Vector#toObject
+<div class="instance">
+
+## Two.Vector.toObject
 
 
 __Returns__:
@@ -1423,11 +1613,15 @@ Return a JSON compatible plain object that represents the vector.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Vector#rotate
+<div class="instance">
+
+## Two.Vector.rotate
 
 
 
@@ -1445,9 +1639,13 @@ Rotate a vector.
 
 
 
+</div>
+
 
 
 ---
+
+<div class="static">
 
 ## Two.Vector.subtract.Two.Vector.subtract
 
@@ -1478,11 +1676,15 @@ Subtract two vectors: `v2` from `v1`.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Vector#addSelf#addSelf
+<div class="instance">
+
+## Two.Vector.addSelf.addSelf
 
 
 __Returns__:
@@ -1516,11 +1718,15 @@ Add an object with x / y component values to the instance.
 :::
 
 
+</div>
+
 
 
 ---
 
-## Two.Vector#addSelf#addSelf
+<div class="instance">
+
+## Two.Vector.addSelf.addSelf
 
 
 __Returns__:
@@ -1554,11 +1760,15 @@ Add the **same** number to both x / y component values of the instance.
 :::
 
 
+</div>
+
 
 
 ---
 
-## Two.Vector#addSelf#addSelf
+<div class="instance">
+
+## Two.Vector.addSelf.addSelf
 
 
 __Returns__:
@@ -1593,11 +1803,15 @@ Add `x` / `y` values to their respective component value on the instance.
 :::
 
 
+</div>
+
 
 
 ---
 
-## Two.Vector#subtract#subtract
+<div class="instance">
+
+## Two.Vector.subtract.subtract
 
 
 __Returns__:
@@ -1631,11 +1845,15 @@ Subtract an object with x / y component values to the instance.
 :::
 
 
+</div>
+
 
 
 ---
 
-## Two.Vector#subtract#subtract
+<div class="instance">
+
+## Two.Vector.subtract.subtract
 
 
 __Returns__:
@@ -1669,11 +1887,15 @@ Subtract the **same** number to both x / y component values of the instance.
 :::
 
 
+</div>
+
 
 
 ---
 
-## Two.Vector#subtract#subtract
+<div class="instance">
+
+## Two.Vector.subtract.subtract
 
 
 __Returns__:
@@ -1708,11 +1930,15 @@ Subtract `x` / `y` values to their respective component value on the instance.
 :::
 
 
+</div>
+
 
 
 ---
 
-## Two.Vector#subSelf#subSelf
+<div class="instance">
+
+## Two.Vector.subSelf.subSelf
 
 
 __Returns__:
@@ -1746,11 +1972,15 @@ Subtract an object with x / y component values to the instance.
 :::
 
 
+</div>
+
 
 
 ---
 
-## Two.Vector#subSelf#subSelf
+<div class="instance">
+
+## Two.Vector.subSelf.subSelf
 
 
 __Returns__:
@@ -1784,11 +2014,15 @@ Subtract the **same** number to both x / y component values of the instance.
 :::
 
 
+</div>
+
 
 
 ---
 
-## Two.Vector#subSelf#subSelf
+<div class="instance">
+
+## Two.Vector.subSelf.subSelf
 
 
 __Returns__:
@@ -1823,11 +2057,15 @@ Subtract `x` / `y` values to their respective component value on the instance.
 :::
 
 
+</div>
+
 
 
 ---
 
-## Two.Vector#subtractSelf#subtractSelf
+<div class="instance">
+
+## Two.Vector.subtractSelf.subtractSelf
 
 
 __Returns__:
@@ -1861,11 +2099,15 @@ Subtract an object with x / y component values to the instance.
 :::
 
 
+</div>
+
 
 
 ---
 
-## Two.Vector#subtractSelf#subtractSelf
+<div class="instance">
+
+## Two.Vector.subtractSelf.subtractSelf
 
 
 __Returns__:
@@ -1899,11 +2141,15 @@ Subtract the **same** number to both x / y component values of the instance.
 :::
 
 
+</div>
+
 
 
 ---
 
-## Two.Vector#subtractSelf#subtractSelf
+<div class="instance">
+
+## Two.Vector.subtractSelf.subtractSelf
 
 
 __Returns__:
@@ -1938,11 +2184,15 @@ Subtract `x` / `y` values to their respective component value on the instance.
 :::
 
 
+</div>
+
 
 
 ---
 
-## Two.Vector#multiplySelf#multiplySelf
+<div class="instance">
+
+## Two.Vector.multiplySelf.multiplySelf
 
 
 __Returns__:
@@ -1976,11 +2226,15 @@ Multiply an object with x / y component values to the instance.
 :::
 
 
+</div>
+
 
 
 ---
 
-## Two.Vector#multiplySelf#multiplySelf
+<div class="instance">
+
+## Two.Vector.multiplySelf.multiplySelf
 
 
 __Returns__:
@@ -2014,11 +2268,15 @@ Multiply the **same** number to both x / y component values of the instance.
 :::
 
 
+</div>
+
 
 
 ---
 
-## Two.Vector#multiplySelf#multiplySelf
+<div class="instance">
+
+## Two.Vector.multiplySelf.multiplySelf
 
 
 __Returns__:
@@ -2053,11 +2311,15 @@ Multiply `x` / `y` values to their respective component value on the instance.
 :::
 
 
+</div>
+
 
 
 ---
 
-## Two.Vector#divideSelf#divideSelf
+<div class="instance">
+
+## Two.Vector.divideSelf.divideSelf
 
 
 __Returns__:
@@ -2091,11 +2353,15 @@ Divide an object with x / y component values to the instance.
 :::
 
 
+</div>
+
 
 
 ---
 
-## Two.Vector#divideSelf#divideSelf
+<div class="instance">
+
+## Two.Vector.divideSelf.divideSelf
 
 
 __Returns__:
@@ -2129,11 +2395,15 @@ Divide the **same** number to both x / y component values of the instance.
 :::
 
 
+</div>
+
 
 
 ---
 
-## Two.Vector#divideSelf#divideSelf
+<div class="instance">
+
+## Two.Vector.divideSelf.divideSelf
 
 
 __Returns__:
@@ -2167,5 +2437,7 @@ Divide `x` / `y` values to their respective component value on the instance.
 
 :::
 
+
+</div>
 
 

@@ -111,8 +111,8 @@ var getSvgAttributes = function(node) {
  * @param {Two.Shape} node - The Two.js object to apply viewbox matrix to
  * @param {String} value - The viewBox value from the SVG attribute
  * @returns {Two.Shape} node
- @ @description
-  */
+ * @description Applies the transform of the SVG Viewbox on a given node.
+ */
 var applySvgViewBox = function(node, value) {
 
   var elements = value.split(/\s/);

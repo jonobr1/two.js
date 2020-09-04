@@ -22,7 +22,9 @@ __Extends__: `Two.Path`
 
 ---
 
-## Two.Ellipse#width
+<div class="instance">
+
+## Two.Ellipse.width
 
 
 
@@ -39,11 +41,15 @@ The width of the ellipse.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Ellipse#height
+<div class="instance">
+
+## Two.Ellipse.height
 
 
 
@@ -60,9 +66,13 @@ The height of the ellipse.
 
 
 
+</div>
+
 
 
 ---
+
+<div class="static">
 
 ## Two.Ellipse.Properties
 
@@ -71,7 +81,7 @@ The height of the ellipse.
 
 
 
-A list of properties that are on every {@link Two.Ellipse}.
+A list of properties that are on every [Two.Ellipse](/documentation/ellipse).
 
 
 
@@ -80,10 +90,14 @@ A list of properties that are on every {@link Two.Ellipse}.
 
 
 
+
+</div>
 
 
 
 ---
+
+<div class="static">
 
 ## Two.Ellipse.MakeObservable
 
@@ -99,15 +113,19 @@ A list of properties that are on every {@link Two.Ellipse}.
 | `object` | The object to make observable. |
 
 
-Convenience function to apply observable qualities of a {@link Two.Ellipse} to any object. Handy if you'd like to extend the {@link Two.Ellipse} class on a custom class.
+Convenience function to apply observable qualities of a [Two.Ellipse](/documentation/ellipse) to any object. Handy if you'd like to extend the {@link Two.Ellipse} class on a custom class.
 
 
+
+</div>
 
 
 
 ---
 
-## Two.Ellipse#clone
+<div class="instance">
+
+## Two.Ellipse.clone
 
 
 __Returns__:
@@ -131,15 +149,19 @@ __Returns__:
 | `parent` | The parent group or scene to add the clone to. |
 
 
-Create a new instance of {@link Two.Polygon} with the same properties of the current path.
+Create a new instance of [Two.Polygon](/documentation/polygon) with the same properties of the current path.
 
 
+
+</div>
 
 
 
 ---
 
-## Two.Ellipse#toObject
+<div class="instance">
+
+## Two.Ellipse.toObject
 
 
 __Returns__:
@@ -163,5 +185,7 @@ __Returns__:
 Return a JSON compatible plain object that represents the path.
 
 
+
+</div>
 
 

@@ -23,7 +23,9 @@ __Extends__: `Two.Path`
 
 ---
 
-## Two.RoundedRectangle#width
+<div class="instance">
+
+## Two.RoundedRectangle.width
 
 
 
@@ -40,11 +42,15 @@ The width of the rounded rectangle.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.RoundedRectangle#height
+<div class="instance">
+
+## Two.RoundedRectangle.height
 
 
 
@@ -61,11 +67,15 @@ The height of the rounded rectangle.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.RoundedRectangle#radius
+<div class="instance">
+
+## Two.RoundedRectangle.radius
 
 
 
@@ -82,9 +92,13 @@ The size of the radius of the rounded rectangle.
 
 
 
+</div>
+
 
 
 ---
+
+<div class="static">
 
 ## Two.RoundedRectangle.Properties
 
@@ -93,7 +107,7 @@ The size of the radius of the rounded rectangle.
 
 
 
-A list of properties that are on every {@link Two.RoundedRectangle}.
+A list of properties that are on every [Two.RoundedRectangle](/documentation/roundedrectangle).
 
 
 
@@ -102,10 +116,14 @@ A list of properties that are on every {@link Two.RoundedRectangle}.
 
 
 
+
+</div>
 
 
 
 ---
+
+<div class="static">
 
 ## Two.RoundedRectangle.FlagRadius
 
@@ -124,9 +142,13 @@ A convenience function to trigger the flag for radius changing.
 
 
 
+</div>
+
 
 
 ---
+
+<div class="static">
 
 ## Two.RoundedRectangle.MakeObservable
 
@@ -142,15 +164,19 @@ A convenience function to trigger the flag for radius changing.
 | `object` | The object to make observable. |
 
 
-Convenience function to apply observable qualities of a {@link Two.RoundedRectangle} to any object. Handy if you'd like to extend the {@link Two.RoundedRectangle} class on a custom class.
+Convenience function to apply observable qualities of a [Two.RoundedRectangle](/documentation/roundedrectangle) to any object. Handy if you'd like to extend the {@link Two.RoundedRectangle} class on a custom class.
 
 
+
+</div>
 
 
 
 ---
 
-## Two.RoundedRectangle#clone
+<div class="instance">
+
+## Two.RoundedRectangle.clone
 
 
 __Returns__:
@@ -174,15 +200,19 @@ __Returns__:
 | `parent` | The parent group or scene to add the clone to. |
 
 
-Create a new instance of {@link Two.RoundedRectangle} with the same properties of the current path.
+Create a new instance of [Two.RoundedRectangle](/documentation/roundedrectangle) with the same properties of the current path.
 
 
+
+</div>
 
 
 
 ---
 
-## Two.RoundedRectangle#toObject
+<div class="instance">
+
+## Two.RoundedRectangle.toObject
 
 
 __Returns__:
@@ -206,5 +236,7 @@ __Returns__:
 Return a JSON compatible plain object that represents the path.
 
 
+
+</div>
 
 

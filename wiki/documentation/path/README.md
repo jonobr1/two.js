@@ -12,7 +12,7 @@ This is the primary primitive class for creating all drawable shapes in Two.js. 
 
 | Argument | Description |
 | ---- | ----------- |
-| `vertices` | A list of {@link Two.Anchor}s that represent the order and coordinates to construct the rendered shape. |
+| `vertices` | A list of [Two.Anchor](/documentation/anchor)s that represent the order and coordinates to construct the rendered shape. |
 | `closed` | Describes whether the shape is closed or open. |
 | `curved` | Describes whether the shape automatically calculates bezier handles for each vertex. |
 | `manual` | Describes whether the developer controls how vertices are plotted or if Two.js automatically plots coordinates based on closed and curved booleans. |
@@ -21,7 +21,9 @@ This is the primary primitive class for creating all drawable shapes in Two.js. 
 
 ---
 
-## Two.Path#closed
+<div class="instance">
+
+## Two.Path.closed
 
 
 
@@ -38,11 +40,15 @@ Determines whether a final line is drawn between the final point in the `vertice
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Path#curved
+<div class="instance">
+
+## Two.Path.curved
 
 
 
@@ -59,11 +65,15 @@ When the path is `automatic = true` this boolean determines whether the lines be
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Path#beginning
+<div class="instance">
+
+## Two.Path.beginning
 
 
 
@@ -76,19 +86,23 @@ Number between zero and one to state the beginning of where the path is rendered
 
 
 
-{@link Two.Path#beginning} is a percentage value that represents at what percentage into the path should the renderer start drawing.
+[Two.Path.beginning](/documentation/path#two-path-beginning) is a percentage value that represents at what percentage into the path should the renderer start drawing.
 
 
 ::: tip nota-bene
-This is great for animating in and out stroked paths in conjunction with {@link Two.Path#ending}.
+This is great for animating in and out stroked paths in conjunction with [Two.Path.ending](/documentation/path#two-path-ending).
 :::
 
+
+</div>
 
 
 
 ---
 
-## Two.Path#ending
+<div class="instance">
+
+## Two.Path.ending
 
 
 
@@ -101,19 +115,23 @@ Number between zero and one to state the ending of where the path is rendered.
 
 
 
-{@link Two.Path#ending} is a percentage value that represents at what percentage into the path should the renderer start drawing.
+[Two.Path.ending](/documentation/path#two-path-ending) is a percentage value that represents at what percentage into the path should the renderer start drawing.
 
 
 ::: tip nota-bene
-This is great for animating in and out stroked paths in conjunction with {@link Two.Path#beginning}.
+This is great for animating in and out stroked paths in conjunction with [Two.Path.beginning](/documentation/path#two-path-beginning).
 :::
 
+
+</div>
 
 
 
 ---
 
-## Two.Path#fill
+<div class="instance">
+
+## Two.Path.fill
 
 
 
@@ -130,11 +148,15 @@ The value of what the path should be filled in with.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Path#stroke
+<div class="instance">
+
+## Two.Path.stroke
 
 
 
@@ -151,11 +173,15 @@ The value of what the path should be outlined in with.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Path#linewidth
+<div class="instance">
+
+## Two.Path.linewidth
 
 
 
@@ -172,11 +198,15 @@ The thickness in pixels of the stroke.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Path#opacity
+<div class="instance">
+
+## Two.Path.opacity
 
 
 
@@ -197,11 +227,15 @@ Can be used in conjunction with CSS Colors that have an alpha value.
 :::
 
 
+</div>
+
 
 
 ---
 
-## Two.Path#className
+<div class="instance">
+
+## Two.Path.className
 
 
 
@@ -222,11 +256,15 @@ Only available for the SVG renderer.
 :::
 
 
+</div>
+
 
 
 ---
 
-## Two.Path#visible
+<div class="instance">
+
+## Two.Path.visible
 
 
 
@@ -243,36 +281,19 @@ Display the path or not.
 
 
 ::: tip nota-bene
-For {@link Two.CanvasRenderer} and {@link Two.WebGLRenderer} when set to false all updating is disabled improving performance dramatically with many objects in the scene.
+For [Two.CanvasRenderer](/documentation/canvasrenderer) and {@link Two.WebGLRenderer} when set to false all updating is disabled improving performance dramatically with many objects in the scene.
 :::
 
 
-
-
----
-
-## Two.Path#cap
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+</div>
 
 
 
 ---
 
-## Two.Path#join
+<div class="instance">
+
+## Two.Path.cap
 
 
 
@@ -289,32 +310,65 @@ For {@link Two.CanvasRenderer} and {@link Two.WebGLRenderer} when set to false a
 
 
 
-
-
----
-
-## Two.Path#miter
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+</div>
 
 
 
 ---
 
-## Two.Path#vertices
+<div class="instance">
+
+## Two.Path.join
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.Path.miter
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.Path.vertices
 
 
 
@@ -327,19 +381,23 @@ An ordered list of anchor points for rendering the path.
 
 
 
-A list of {@link Two.Anchor} objects that consist of what form the path takes.
+A list of [Two.Anchor](/documentation/anchor) objects that consist of what form the path takes.
 
 
 ::: tip nota-bene
-The array when manipulating is actually a {@link Two.Utils.Collection}.
+The array when manipulating is actually a [Two.Utils.Collection](/documentation/utils#two-utils-collection).
 :::
 
+
+</div>
 
 
 
 ---
 
-## Two.Path#automatic
+<div class="instance">
+
+## Two.Path.automatic
 
 
 
@@ -356,11 +414,15 @@ Determines whether or not Two.js should calculate curves, lines, and commands au
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Path#dashes
+<div class="instance">
+
+## Two.Path.dashes
 
 
 
@@ -377,30 +439,38 @@ A list of numbers that represent the repeated dash length and dash space applied
 
 
 
-
-
----
-
-## Two.Path#dashes#offset
-
-
-
-
-
-
-A number in pixels to offset {@link Two.Path#dashes} display.
-
-
-
-
-
-
-
-
+</div>
 
 
 
 ---
+
+<div class="instance">
+
+## Two.Path.dashes.offset
+
+
+
+
+
+
+A number in pixels to offset [Two.Path.dashes](/documentation/path#two-path-dashes) display.
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="static">
 
 ## Two.Path.Properties
 
@@ -409,7 +479,7 @@ A number in pixels to offset {@link Two.Path#dashes} display.
 
 
 
-A list of properties that are on every {@link Two.Path}.
+A list of properties that are on every [Two.Path](/documentation/path).
 
 
 
@@ -418,10 +488,14 @@ A list of properties that are on every {@link Two.Path}.
 
 
 
+
+</div>
 
 
 
 ---
+
+<div class="static">
 
 ## Two.Path.FlagVertices
 
@@ -434,13 +508,17 @@ A list of properties that are on every {@link Two.Path}.
 
 
 
-Cached method to let renderers know vertices have been updated on a {@link Two.Path}.
+Cached method to let renderers know vertices have been updated on a [Two.Path](/documentation/path).
 
 
+
+</div>
 
 
 
 ---
+
+<div class="static">
 
 ## Two.Path.BindVertices
 
@@ -453,13 +531,17 @@ Cached method to let renderers know vertices have been updated on a {@link Two.P
 
 
 
-Cached method to let {@link Two.Path} know vertices have been added to the instance.
+Cached method to let [Two.Path](/documentation/path) know vertices have been added to the instance.
 
 
+
+</div>
 
 
 
 ---
+
+<div class="static">
 
 ## Two.Path.UnbindVertices
 
@@ -472,13 +554,17 @@ Cached method to let {@link Two.Path} know vertices have been added to the insta
 
 
 
-Cached method to let {@link Two.Path} know vertices have been removed from the instance.
+Cached method to let [Two.Path](/documentation/path) know vertices have been removed from the instance.
 
 
+
+</div>
 
 
 
 ---
+
+<div class="static">
 
 ## Two.Path.FlagFill
 
@@ -491,13 +577,17 @@ Cached method to let {@link Two.Path} know vertices have been removed from the i
 
 
 
-Cached method to let {@link Two.Path} know the fill has changed.
+Cached method to let [Two.Path](/documentation/path) know the fill has changed.
 
 
+
+</div>
 
 
 
 ---
+
+<div class="static">
 
 ## Two.Path.FlagFill
 
@@ -510,13 +600,17 @@ Cached method to let {@link Two.Path} know the fill has changed.
 
 
 
-Cached method to let {@link Two.Path} know the stroke has changed.
+Cached method to let [Two.Path](/documentation/path) know the stroke has changed.
 
 
+
+</div>
 
 
 
 ---
+
+<div class="static">
 
 ## Two.Path.MakeObservable
 
@@ -532,36 +626,44 @@ Cached method to let {@link Two.Path} know the stroke has changed.
 | `object` | The object to make observable. |
 
 
-Convenience function to apply observable qualities of a {@link Two.Path} to any object. Handy if you'd like to extend the {@link Two.Path} class on a custom class.
+Convenience function to apply observable qualities of a [Two.Path](/documentation/path) to any object. Handy if you'd like to extend the {@link Two.Path} class on a custom class.
 
 
 
-
-
----
-
-## Two.Path#length
-
-
-
-
-
-
-The sum of distances between all {@link Two.Path#vertices}.
-
-
-
-
-
-
-
-
+</div>
 
 
 
 ---
 
-## Two.Path#clip
+<div class="instance">
+
+## Two.Path.length
+
+
+
+
+
+
+The sum of distances between all [Two.Path.vertices](/documentation/path#two-path-vertices).
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.Path.clip
 
 
 
@@ -582,11 +684,15 @@ This property is currently not working becuase of SVG spec issues found here {@l
 :::
 
 
+</div>
+
 
 
 ---
 
-## Two.Path#clone
+<div class="instance">
+
+## Two.Path.clone
 
 
 __Returns__:
@@ -610,15 +716,19 @@ __Returns__:
 | `parent` | The parent group or scene to add the clone to. |
 
 
-Create a new instance of {@link Two.Path} with the same properties of the current path.
+Create a new instance of [Two.Path](/documentation/path) with the same properties of the current path.
 
 
+
+</div>
 
 
 
 ---
 
-## Two.Path#toObject
+<div class="instance">
+
+## Two.Path.toObject
 
 
 __Returns__:
@@ -643,11 +753,15 @@ Return a JSON compatible plain object that represents the path.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Path#noFill
+<div class="instance">
+
+## Two.Path.noFill
 
 
 
@@ -662,11 +776,15 @@ Short hand method to set fill to `transparent`.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Path#noStroke
+<div class="instance">
+
+## Two.Path.noStroke
 
 
 
@@ -681,11 +799,15 @@ Short hand method to set stroke to `transparent`.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Path#corner
+<div class="instance">
+
+## Two.Path.corner
 
 
 
@@ -700,11 +822,15 @@ Orient the vertices of the shape to the upper left-hand corner of the path.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Path#center
+<div class="instance">
+
+## Two.Path.center
 
 
 
@@ -719,11 +845,15 @@ Orient the vertices of the shape to the center of the path.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Path#remove
+<div class="instance">
+
+## Two.Path.remove
 
 
 
@@ -738,11 +868,15 @@ Remove self from the scene / parent.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Path#getBoundingClientRect
+<div class="instance">
+
+## Two.Path.getBoundingClientRect
 
 
 __Returns__:
@@ -772,11 +906,15 @@ Return an object with top, left, right, bottom, width, and height parameters of 
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Path#getPointAt
+<div class="instance">
+
+## Two.Path.getPointAt
 
 
 __Returns__:
@@ -805,11 +943,15 @@ Given a float `t` from 0 to 1, return a point or assign a passed `obj`'s coordin
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Path#plot
+<div class="instance">
+
+## Two.Path.plot
 
 
 
@@ -824,15 +966,19 @@ Based on closed / curved and sorting of vertices plot where all points should be
 
 
 ::: tip nota-bene
-While this method is public it is internally called by {@link Two.Path#_update} when `automatic = true`.
+While this method is public it is internally called by [Two.Path._update](/documentation/path#two-path-_update) when `automatic = true`.
 :::
 
+
+</div>
 
 
 
 ---
 
-## Two.Path#subdivide
+<div class="instance">
+
+## Two.Path.subdivide
 
 
 
@@ -846,8 +992,10 @@ While this method is public it is internally called by {@link Two.Path#_update} 
 | `limit` | How many times to recurse subdivisions. |
 
 
-Insert a {@link Two.Anchor} at the midpoint between every item in {@link Two.Path#vertices}.
+Insert a [Two.Anchor](/documentation/anchor) at the midpoint between every item in {@link Two.Path#vertices}.
 
 
+
+</div>
 
 

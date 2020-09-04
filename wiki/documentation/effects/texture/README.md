@@ -4,7 +4,7 @@
 __Extends__: `Two.Shape`
 
 
-Fundamental to work with bitmap data, a.k.a. pregenerated imagery, in Two.js. Supported formats include jpg, png, gif, and tiff. See {@link Two.Texture.RegularExpressions} for a full list of supported formats.
+Fundamental to work with bitmap data, a.k.a. pregenerated imagery, in Two.js. Supported formats include jpg, png, gif, and tiff. See [Two.Texture.RegularExpressions](/documentation/texture#two-texture-regularexpressions) for a full list of supported formats.
 
 
 ### Constructor
@@ -19,7 +19,9 @@ Fundamental to work with bitmap data, a.k.a. pregenerated imagery, in Two.js. Su
 
 ---
 
-## Two.Texture#loaded
+<div class="instance">
+
+## Two.Texture.loaded
 
 
 
@@ -36,39 +38,22 @@ Shorthand value to determine if image has been loaded into the texture.
 
 
 
-
-
----
-
-## Two.Texture#repeat
-
-
-
-
-
-
-CSS style declaration to tile {@link Two.Path}. Valid values include: `'no-repeat'`, `'repeat'`, `'repeat-x'`, `'repeat-y'`.
-
-
-
-
-
-
-
-
+</div>
 
 
 
 ---
 
-## Two.Texture#offset
+<div class="instance">
+
+## Two.Texture.repeat
 
 
 
 
 
 
-A two-component vector describing any pixel offset of the texture when applied to a {@link Two.Path}.
+CSS style declaration to tile [Two.Path](/documentation/path). Valid values include: `'no-repeat'`, `'repeat'`, `'repeat-x'`, `'repeat-y'`.
 
 
 
@@ -77,12 +62,41 @@ A two-component vector describing any pixel offset of the texture when applied t
 
 
 
+
+</div>
 
 
 
 ---
 
-## Two.Texture#src
+<div class="instance">
+
+## Two.Texture.offset
+
+
+
+
+
+
+A two-component vector describing any pixel offset of the texture when applied to a [Two.Path](/documentation/path).
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.Texture.src
 
 
 
@@ -99,22 +113,26 @@ The URL path to the image data.
 
 
 ::: tip nota-bene
-This property is ultimately serialized in a {@link Two.Registry} to cache retrieval.
+This property is ultimately serialized in a [Two.Registry](/documentation/registry) to cache retrieval.
 :::
 
+
+</div>
 
 
 
 ---
 
-## Two.Texture#image
+<div class="instance">
+
+## Two.Texture.image
 
 
 
 
 
 
-The corresponding DOM Element of the texture. Can be a `<img />`, `<canvas />`, or `<video />` element. See {@link Two.Texture.RegularExpressions} for a full list of supported elements.
+The corresponding DOM Element of the texture. Can be a `<img />`, `<canvas />`, or `<video />` element. See [Two.Texture.RegularExpressions](/documentation/texture#two-texture-regularexpressions) for a full list of supported elements.
 
 
 
@@ -124,13 +142,17 @@ The corresponding DOM Element of the texture. Can be a `<img />`, `<canvas />`, 
 
 
 ::: tip nota-bene
-In headless environments this is a `Canvas.Image` object. See {@link https://github.com/Automattic/node-canvas} for more information on headless image objects.
+In headless environments this is a `Canvas.Image` object. See [https://github.com/Automattic/node-canvas](https://github.com/Automattic/node-canvas) for more information on headless image objects.
 :::
 
+
+</div>
 
 
 
 ---
+
+<div class="static">
 
 ## Two.Texture.Properties
 
@@ -139,7 +161,7 @@ In headless environments this is a `Canvas.Image` object. See {@link https://git
 
 
 
-A list of properties that are on every {@link Two.Texture}.
+A list of properties that are on every [Two.Texture](/documentation/texture).
 
 
 
@@ -148,10 +170,14 @@ A list of properties that are on every {@link Two.Texture}.
 
 
 
+
+</div>
 
 
 
 ---
+
+<div class="static">
 
 ## Two.Texture.RegularExpressions
 
@@ -170,9 +196,13 @@ A map of compatible DOM Elements categorized by media format.
 
 
 
+</div>
+
 
 
 ---
+
+<div class="static">
 
 ## Two.Texture.ImageRegistry
 
@@ -195,9 +225,13 @@ This object is used to cache image data between different textures.
 :::
 
 
+</div>
+
 
 
 ---
+
+<div class="static">
 
 ## Two.Texture.getAbsoluteURL
 
@@ -218,7 +252,7 @@ __Returns__:
 
 
 
-Serializes a URL as an absolute path for canonical attribution in {@link Two.ImageRegistry}.
+Serializes a URL as an absolute path for canonical attribution in [Two.ImageRegistry](/documentation/imageregistry).
 
 
 
@@ -231,9 +265,13 @@ Serializes a URL as an absolute path for canonical attribution in {@link Two.Ima
 
 
 
+</div>
+
 
 
 ---
+
+<div class="static">
 
 ## Two.Texture.loadHeadlessBuffer
 
@@ -248,7 +286,7 @@ Loads an image as a buffer in headless environments.
 
 | Argument | Description |
 | ---- | ----------- |
-| `texture` | The {@link Two.Texture} to be loaded. |
+| `texture` | The [Two.Texture](/documentation/texture) to be loaded. |
 | `loaded` | The callback function to be triggered once the image is loaded. |
 
 
@@ -260,9 +298,53 @@ Loads an image as a buffer in headless environments.
 :::
 
 
+</div>
+
 
 
 ---
+
+<div class="static">
+
+## Two.Texture.getTag
+
+
+__Returns__:
+
+
+
++ `String`
+
+
+
+- Returns the tag name of an image, video, or canvas node.
+
+
+
+
+
+
+
+Retrieves the tag name of an image, video, or canvas node.
+
+
+
+| Argument | Description |
+| ---- | ----------- |
+| `` | The image to infer the tag name from. |
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="static">
 
 ## Two.Texture.getImage
 
@@ -275,7 +357,7 @@ __Returns__:
 
 
 
-- Returns either a cached version of the image or a new one that is registered in {@link Two.Texture.ImageRegistry}.
+- Returns either a cached version of the image or a new one that is registered in [Two.Texture.ImageRegistry](/documentation/texture#two-texture-imageregistry).
 
 
 
@@ -283,7 +365,7 @@ __Returns__:
 
 
 
-Convenience function to set {@link Two.Texture#image} properties with canonincal versions set in {@link Two.Texture.ImageRegistry}.
+Convenience function to set [Two.Texture.image](/documentation/texture#two-texture-image) properties with canonincal versions set in {@link Two.Texture.ImageRegistry}.
 
 
 
@@ -296,9 +378,13 @@ Convenience function to set {@link Two.Texture#image} properties with canonincal
 
 
 
+</div>
+
 
 
 ---
+
+<div class="static">
 
 ## Two.Register
 
@@ -311,13 +397,17 @@ Convenience function to set {@link Two.Texture#image} properties with canonincal
 
 
 
-A collection of functions to register different types of textures. Used internally by a {@link Two.Texture}.
+A collection of functions to register different types of textures. Used internally by a [Two.Texture](/documentation/texture).
 
 
+
+</div>
 
 
 
 ---
+
+<div class="static">
 
 ## Two.Texture.load
 
@@ -338,9 +428,13 @@ A collection of functions to register different types of textures. Used internal
 
 
 
+</div>
+
 
 
 ---
+
+<div class="static">
 
 ## Two.Texture.FlagOffset
 
@@ -353,13 +447,17 @@ A collection of functions to register different types of textures. Used internal
 
 
 
-Cached method to let renderers know `offset` has been updated on a {@link Two.Texture}.
+Cached method to let renderers know `offset` has been updated on a [Two.Texture](/documentation/texture).
 
 
+
+</div>
 
 
 
 ---
+
+<div class="static">
 
 ## Two.Texture.FlagScale
 
@@ -372,13 +470,17 @@ Cached method to let renderers know `offset` has been updated on a {@link Two.Te
 
 
 
-Cached method to let renderers know `scale` has been updated on a {@link Two.Texture}.
+Cached method to let renderers know `scale` has been updated on a [Two.Texture](/documentation/texture).
 
 
+
+</div>
 
 
 
 ---
+
+<div class="static">
 
 ## Two.Texture.MakeObservable
 
@@ -394,15 +496,19 @@ Cached method to let renderers know `scale` has been updated on a {@link Two.Tex
 | `object` | The object to make observable. |
 
 
-Convenience function to apply observable qualities of a {@link Two.Texture} to any object. Handy if you'd like to extend or inherit the {@link Two.Texture} class on a custom class.
+Convenience function to apply observable qualities of a [Two.Texture](/documentation/texture) to any object. Handy if you'd like to extend or inherit the {@link Two.Texture} class on a custom class.
 
 
+
+</div>
 
 
 
 ---
 
-## Two.Texture#clone
+<div class="instance">
+
+## Two.Texture.clone
 
 
 __Returns__:
@@ -423,15 +529,19 @@ __Returns__:
 
 
 
-Create a new instance of {@link Two.Texture} with the same properties of the current texture.
+Create a new instance of [Two.Texture](/documentation/texture) with the same properties of the current texture.
 
 
+
+</div>
 
 
 
 ---
 
-## Two.Texture#toObject
+<div class="instance">
+
+## Two.Texture.toObject
 
 
 __Returns__:
@@ -455,5 +565,7 @@ __Returns__:
 Return a JSON compatible plain object that represents the texture.
 
 
+
+</div>
 
 

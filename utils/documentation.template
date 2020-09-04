@@ -19,7 +19,9 @@ __Extends__: `<%= root.augments %>`
 
 ---
 
-## <%= item.longname %>
+<div class="<%= item.scope %>">
+
+## <%= item.longname.replace(/\#/ig, '.') %>
 
 <% if (item.returns && item.returns.length > 0) { %>
 __Returns__:
@@ -60,5 +62,7 @@ __Triggers__:
 <%= tag.text %>
 :::
 <% }); %>
+
+</div>
 
 <% }); %>

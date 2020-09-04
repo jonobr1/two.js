@@ -1,10 +1,10 @@
 # Two.SVGRenderer
 
 
-__Extends__: `Two.Utils.Events`
+__Extends__: `Two.Events`
 
 
-This class is used by {@link Two} when constructing with `type` of `Two.Types.svg` (the default type). It takes Two.js' scenegraph and renders it to a `<svg />`.
+This class is used by [Two](/documentation/) when constructing with `type` of `Two.Types.svg` (the default type). It takes Two.js' scenegraph and renders it to a `<svg />`.
 
 
 ### Constructor
@@ -12,14 +12,16 @@ This class is used by {@link Two} when constructing with `type` of `Two.Types.sv
 
 | Argument | Description |
 | ---- | ----------- |
-| `parameters` | This object is inherited when constructing a new instance of {@link Two}. |
+| `parameters` | This object is inherited when constructing a new instance of [Two](/documentation/). |
 | `parameters.domElement` | The `<svg />` to draw to. If none given a new one will be constructed. |
 
 
 
 ---
 
-## Two.SVGRenderer#domElement
+<div class="instance">
+
+## Two.SVGRenderer.domElement
 
 
 
@@ -36,11 +38,15 @@ The `<svg />` associated with the Two.js scene.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.SVGRenderer#scene
+<div class="instance">
+
+## Two.SVGRenderer.scene
 
 
 
@@ -57,11 +63,15 @@ The root group of the scenegraph.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.SVGRenderer#defs
+<div class="instance">
+
+## Two.SVGRenderer.defs
 
 
 
@@ -78,9 +88,13 @@ The `<defs />` to apply gradients, patterns, and bitmap imagery.
 
 
 
+</div>
+
 
 
 ---
+
+<div class="static">
 
 ## Two.SVGRenderer.Utils
 
@@ -99,18 +113,17 @@ A massive object filled with utility functions and properties to render Two.js o
 
 
 
+</div>
+
 
 
 ---
 
-## Two.SVGRenderer#setSize
+<div class="instance">
+
+## Two.SVGRenderer.setSize
 
 
-
-
-__Triggers__:
-
-+ `event:resize`
 
 
 
@@ -126,12 +139,20 @@ __Triggers__:
 Change the size of the renderer.
 
 
+::: tip nota-bene
+Triggers a `Two.Events.resize`.
+:::
+
+
+</div>
 
 
 
 ---
 
-## Two.SVGRenderer#render
+<div class="instance">
+
+## Two.SVGRenderer.render
 
 
 
@@ -145,5 +166,7 @@ Change the size of the renderer.
 Render the current scene to the `<svg />`.
 
 
+
+</div>
 
 

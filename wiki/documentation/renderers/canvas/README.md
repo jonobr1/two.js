@@ -1,10 +1,10 @@
 # Two.CanvasRenderer
 
 
-__Extends__: `Two.Utils.Events`
+__Extends__: `Two.Events`
 
 
-This class is used by {@link Two} when constructing with `type` of `Two.Types.canvas`. It takes Two.js' scenegraph and renders it to a `<canvas />`.
+This class is used by [Two](/documentation/) when constructing with `type` of `Two.Types.canvas`. It takes Two.js' scenegraph and renders it to a `<canvas />`.
 
 
 ### Constructor
@@ -12,7 +12,7 @@ This class is used by {@link Two} when constructing with `type` of `Two.Types.ca
 
 | Argument | Description |
 | ---- | ----------- |
-| `parameters` | This object is inherited when constructing a new instance of {@link Two}. |
+| `parameters` | This object is inherited when constructing a new instance of [Two](/documentation/). |
 | `parameters.domElement` | The `<canvas />` to draw to. If none given a new one will be constructed. |
 | `parameters.overdraw` | Determines whether the canvas should clear the background or not. Defaults to `true`. |
 | `parameters.smoothing` | Determines whether the canvas should antialias drawing. Set it to `false` when working with pixel art. `false` can lead to better performance, since it would use a cheaper interpolation algorithm. |
@@ -21,7 +21,32 @@ This class is used by {@link Two} when constructing with `type` of `Two.Types.ca
 
 ---
 
-## Two.CanvasRenderer#domElement
+<div class="global">
+
+## emptyArray
+
+
+
+
+
+
+
+
+
+
+Constants
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.CanvasRenderer.domElement
 
 
 
@@ -38,11 +63,15 @@ The `<canvas />` associated with the Two.js scene.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.CanvasRenderer#ctx
+<div class="instance">
+
+## Two.CanvasRenderer.ctx
 
 
 
@@ -59,11 +88,15 @@ Associated two dimensional context to render on the `<canvas />`.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.CanvasRenderer#overdraw
+<div class="instance">
+
+## Two.CanvasRenderer.overdraw
 
 
 
@@ -80,11 +113,15 @@ Determines whether the canvas clears the background each draw call.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.CanvasRenderer#scene
+<div class="instance">
+
+## Two.CanvasRenderer.scene
 
 
 
@@ -101,9 +138,13 @@ The root group of the scenegraph.
 
 
 
+</div>
+
 
 
 ---
+
+<div class="static">
 
 ## Two.CanvasRenderer.Utils
 
@@ -122,11 +163,15 @@ A massive object filled with utility functions and properties to render Two.js o
 
 
 
+</div>
+
 
 
 ---
 
-## Two.CanvasRenderer#setSize
+<div class="instance">
+
+## Two.CanvasRenderer.setSize
 
 
 
@@ -151,11 +196,15 @@ Change the size of the renderer.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.CanvasRenderer#render
+<div class="instance">
+
+## Two.CanvasRenderer.render
 
 
 
@@ -169,5 +218,7 @@ Change the size of the renderer.
 Render the current scene to the `<canvas />`.
 
 
+
+</div>
 
 

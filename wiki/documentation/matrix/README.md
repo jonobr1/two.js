@@ -24,7 +24,9 @@ A class to store 3 x 3 transformation matrix information. In addition to storing
 
 ---
 
-## Two.Matrix#elements
+<div class="instance">
+
+## Two.Matrix.elements
 
 
 
@@ -41,9 +43,52 @@ The underlying data stored as an array.
 
 
 
+</div>
+
 
 
 ---
+
+<div class="static">
+
+## Utils.getComputedMatrix
+
+
+__Returns__:
+
+
+
++ `Two.Matrix`
+
+
+
+The computed matrix of a nested object. If no `matrix` was passed in arguments then a `new Two.Matrix` is returned.
+
+
+
+
+
+
+
+
+
+| Argument | Description |
+| ---- | ----------- |
+| `object` | The Two.js object that has a matrix property to calculate from. |
+| `matrix` | The matrix to apply calculated transformations to if available. |
+
+
+Method to get the world space transformation of a given object in a Two.js scene.
+
+
+
+</div>
+
+
+
+---
+
+<div class="static">
 
 ## Two.Matrix.Identity
 
@@ -62,9 +107,13 @@ A stored reference to the default value of a 3 x 3 matrix.
 
 
 
+</div>
+
 
 
 ---
+
+<div class="static">
 
 ## Two.Matrix.Multiply
 
@@ -98,11 +147,15 @@ Multiply two matrices together and return the result.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Matrix#manual
+<div class="instance">
+
+## Two.Matrix.manual
 
 
 
@@ -119,15 +172,19 @@ Determines whether Two.js automatically calculates the values for the matrix or 
 
 
 ::: tip nota-bene
-- Setting to `true` nullifies {@link Two.Shape#translation}, {@link Two.Shape#rotation}, and {@link Two.Shape#scale}.
+- Setting to `true` nullifies [Two.Shape.translation](/documentation/shape#two-shape-translation), {@link Two.Shape#rotation}, and {@link Two.Shape#scale}.
 :::
 
+
+</div>
 
 
 
 ---
 
-## Two.Matrix#set
+<div class="instance">
+
+## Two.Matrix.set
 
 
 
@@ -149,15 +206,19 @@ Determines whether Two.js automatically calculates the values for the matrix or 
 | `i` | The value for element at the third column and third row. |
 
 
-Set an array of values onto the matrix. Order described in {@link Two.Matrix}.
+Set an array of values onto the matrix. Order described in [Two.Matrix](/documentation/matrix).
 
 
+
+</div>
 
 
 
 ---
 
-## Two.Matrix#set
+<div class="instance">
+
+## Two.Matrix.set
 
 
 
@@ -171,15 +232,42 @@ Set an array of values onto the matrix. Order described in {@link Two.Matrix}.
 | `a` | The array of elements to apply. |
 
 
-Set an array of values onto the matrix. Order described in {@link Two.Matrix}.
+Set an array of values onto the matrix. Order described in [Two.Matrix](/documentation/matrix).
 
 
+
+</div>
 
 
 
 ---
 
-## Two.Matrix#identity
+<div class="instance">
+
+## Two.Matrix.copy
+
+
+
+
+
+
+
+
+
+
+Copy the matrix of one to the current instance.
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.Matrix.identity
 
 
 
@@ -194,9 +282,13 @@ Turn matrix to the identity, like resetting.
 
 
 
+</div>
+
 
 
 ---
+
+<div class="static">
 
 ## Two.Matrix.multiply
 
@@ -216,9 +308,13 @@ Multiply all components of the matrix against a single scalar value.
 
 
 
+</div>
+
 
 
 ---
+
+<div class="static">
 
 ## Two.Matrix.multiply
 
@@ -240,9 +336,13 @@ Multiply all components of a matrix against a 3 component vector.
 
 
 
+</div>
+
 
 
 ---
+
+<div class="static">
 
 ## Two.Matrix.multiply
 
@@ -270,11 +370,15 @@ Multiply all components of a matrix against another matrix.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Matrix#inverse
+<div class="instance">
+
+## Two.Matrix.inverse
 
 
 
@@ -292,11 +396,15 @@ Return an inverted version of the matrix. If no optional one is passed a new mat
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Matrix#scale
+<div class="instance">
+
+## Two.Matrix.scale
 
 
 
@@ -314,11 +422,15 @@ Uniformly scale the transformation matrix.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Matrix#scale
+<div class="instance">
+
+## Two.Matrix.scale
 
 
 
@@ -337,11 +449,15 @@ Scale the transformation matrix in two dimensions.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Matrix#rotate
+<div class="instance">
+
+## Two.Matrix.rotate
 
 
 
@@ -359,11 +475,15 @@ Rotate the matrix.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Matrix#translate
+<div class="instance">
+
+## Two.Matrix.translate
 
 
 
@@ -382,11 +502,15 @@ Translate the matrix.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Matrix#skewX
+<div class="instance">
+
+## Two.Matrix.skewX
 
 
 
@@ -404,11 +528,15 @@ Skew the matrix by an angle in the x axis direction.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Matrix#skewY
+<div class="instance">
+
+## Two.Matrix.skewY
 
 
 
@@ -426,11 +554,15 @@ Skew the matrix by an angle in the y axis direction.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Matrix#toString
+<div class="instance">
+
+## Two.Matrix.toString
 
 
 __Returns__:
@@ -460,11 +592,15 @@ Create a transform string. Used for the Two.js rendering APIs.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Matrix#toTransformArray
+<div class="instance">
+
+## Two.Matrix.toTransformArray
 
 
 
@@ -483,11 +619,15 @@ Create a transform array. Used for the Two.js rendering APIs.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Matrix#toArray
+<div class="instance">
+
+## Two.Matrix.toArray
 
 
 
@@ -506,11 +646,38 @@ Create a transform array. Used for the Two.js rendering APIs.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Matrix#clone
+<div class="instance">
+
+## Two.Matrix.toObject
+
+
+
+
+
+
+
+
+
+
+Create a JSON compatible object that represents information of the matrix.
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.Matrix.clone
 
 
 
@@ -524,5 +691,7 @@ Create a transform array. Used for the Two.js rendering APIs.
 Clone the current matrix.
 
 
+
+</div>
 
 

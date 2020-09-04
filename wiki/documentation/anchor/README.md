@@ -4,7 +4,7 @@
 __Extends__: `Two.Vector`
 
 
-An object that holds 3 {@link Two.Vector}s, the anchor point and its corresponding handles: `left` and `right`. In order to properly describe the bezier curve about the point there is also a command property to describe what type of drawing should occur when Two.js renders the anchors.
+An object that holds 3 [Two.Vector](/documentation/vector)s, the anchor point and its corresponding handles: `left` and `right`. In order to properly describe the bezier curve about the point there is also a command property to describe what type of drawing should occur when Two.js renders the anchors.
 
 
 ### Constructor
@@ -18,11 +18,13 @@ An object that holds 3 {@link Two.Vector}s, the anchor point and its correspondi
 | `ly` | The y position of the left handle point. |
 | `rx` | The x position of the right handle point. |
 | `ry` | The y position of the right handle point. |
-| `command` | The command to describe how to render. Applicable commands are {@link Two.Commands} |
+| `command` | The command to describe how to render. Applicable commands are [Two.Commands](/documentation/commands) |
 
 
 
 ---
+
+<div class="static">
 
 ## Two.Anchor.AppendCurveProperties
 
@@ -42,32 +44,40 @@ Adds the `controls` property as an object with `left` and `right` properties to 
 
 
 
-
-
----
-
-## Two.Anchor#controls
-
-
-
-
-
-
-
-
-
-
-
-
-An plain object that holds the controls handles for a {@link Two.Anchor}.
-
-
+</div>
 
 
 
 ---
 
-## Two.Anchor#controls#left
+<div class="instance">
+
+## Two.Anchor.controls
+
+
+
+
+
+
+
+
+
+
+
+
+An plain object that holds the controls handles for a [Two.Anchor](/documentation/anchor).
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.Anchor.controls.left
 
 
 
@@ -84,11 +94,15 @@ The "left" control point to define handles on a bezier curve.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Anchor#controls#right
+<div class="instance">
+
+## Two.Anchor.controls.right
 
 
 
@@ -105,9 +119,13 @@ The "left" control point to define handles on a bezier curve.
 
 
 
+</div>
+
 
 
 ---
+
+<div class="static">
 
 ## Two.Anchor.MakeObservable
 
@@ -123,15 +141,19 @@ The "left" control point to define handles on a bezier curve.
 | `object` | The object to make observable. |
 
 
-Convenience function to apply observable qualities of a {@link Two.Anchor} to any object. Handy if you'd like to extend the {@link Two.Anchor} class on a custom class.
+Convenience function to apply observable qualities of a [Two.Anchor](/documentation/anchor) to any object. Handy if you'd like to extend the {@link Two.Anchor} class on a custom class.
 
 
+
+</div>
 
 
 
 ---
 
-## Two.Anchor#command
+<div class="instance">
+
+## Two.Anchor.command
 
 
 
@@ -148,11 +170,15 @@ A draw command associated with the anchor point.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Anchor#relative
+<div class="instance">
+
+## Two.Anchor.relative
 
 
 
@@ -169,30 +195,15 @@ A boolean to render control points relative to the root anchor point or in globa
 
 
 
-
-
----
-
-## Two.Anchor#listen
-
-
-
-
-
-
-
-
-
-
-Convenience method used mainly by {@link Two.Path#vertices} to listen and propagate changes from control points up to their respective anchors and further if necessary.
-
-
+</div>
 
 
 
 ---
 
-## Two.Anchor#ignore
+<div class="instance">
+
+## Two.Anchor.listen
 
 
 
@@ -203,15 +214,42 @@ Convenience method used mainly by {@link Two.Path#vertices} to listen and propag
 
 
 
-Convenience method used mainly by {@link Two.Path#vertices} to ignore changes from a specific anchor's control points.
+Convenience method used mainly by [Two.Path.vertices](/documentation/path#two-path-vertices) to listen and propagate changes from control points up to their respective anchors and further if necessary.
 
 
+
+</div>
 
 
 
 ---
 
-## Two.Anchor#copy
+<div class="instance">
+
+## Two.Anchor.ignore
+
+
+
+
+
+
+
+
+
+
+Convenience method used mainly by [Two.Path.vertices](/documentation/path#two-path-vertices) to ignore changes from a specific anchor's control points.
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.Anchor.copy
 
 
 
@@ -225,15 +263,19 @@ Convenience method used mainly by {@link Two.Path#vertices} to ignore changes fr
 | `v` | The anchor to apply values to. |
 
 
-Copy the properties of one {@link Two.Anchor} onto another.
+Copy the properties of one [Two.Anchor](/documentation/anchor) onto another.
 
 
+
+</div>
 
 
 
 ---
 
-## Two.Anchor#clone
+<div class="instance">
+
+## Two.Anchor.clone
 
 
 __Returns__:
@@ -254,15 +296,19 @@ __Returns__:
 
 
 
-Create a new {@link Two.Anchor}, set all its values to the current instance and return it for use.
+Create a new [Two.Anchor](/documentation/anchor), set all its values to the current instance and return it for use.
 
 
+
+</div>
 
 
 
 ---
 
-## Two.Anchor#toObject
+<div class="instance">
+
+## Two.Anchor.toObject
 
 
 __Returns__:
@@ -273,7 +319,7 @@ __Returns__:
 
 
 
-- An object with properties filled out to mirror {@link Two.Anchor}.
+- An object with properties filled out to mirror [Two.Anchor](/documentation/anchor).
 
 
 
@@ -289,11 +335,15 @@ Create a JSON compatible plain object of the current instance. Intended for use 
 
 
 
+</div>
+
 
 
 ---
 
-## Two.Anchor#toString
+<div class="instance">
+
+## Two.Anchor.toString
 
 
 __Returns__:
@@ -316,8 +366,10 @@ __Returns__:
 
 
 
-Create a string form of the current instance. Intended for use with storing values in a database. This is lighter to store than the JSON compatible {@link Two.Anchor#toObject}.
+Create a string form of the current instance. Intended for use with storing values in a database. This is lighter to store than the JSON compatible [Two.Anchor.toObject](/documentation/anchor#two-anchor-toobject).
 
 
+
+</div>
 
 

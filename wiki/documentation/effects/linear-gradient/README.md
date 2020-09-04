@@ -16,13 +16,15 @@ __Extends__: `Two.Gradient`
 | `y1` | The y position of the first end point of the linear gradient. |
 | `x2` | The x position of the second end point of the linear gradient. |
 | `y2` | The y position of the second end point of the linear gradient. |
-| `stops` | A list of {@link Two.Stop}s that contain the gradient fill pattern for the gradient. |
+| `stops` | A list of [Two.Stop](/documentation/stop)s that contain the gradient fill pattern for the gradient. |
 
 
 
 ---
 
-## Two.LinearGradient#left
+<div class="instance">
+
+## Two.LinearGradient.left
 
 
 
@@ -39,11 +41,15 @@ The x and y value for where the first end point is placed on the canvas.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.LinearGradient#right
+<div class="instance">
+
+## Two.LinearGradient.right
 
 
 
@@ -60,28 +66,36 @@ The x and y value for where the second end point is placed on the canvas.
 
 
 
-
-
----
-
-## Two.LinearGradient#Stop
-
-
-
-
-
-
-
-
-
-
-
-
-
+</div>
 
 
 
 ---
+
+<div class="instance">
+
+## Two.LinearGradient.Stop
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="static">
 
 ## Two.LinearGradient.MakeObservable
 
@@ -97,13 +111,17 @@ The x and y value for where the second end point is placed on the canvas.
 | `object` | The object to make observable. |
 
 
-Convenience function to apply observable qualities of a {@link Two.LinearGradient} to any object. Handy if you'd like to extend the {@link Two.LinearGradient} class on a custom class.
+Convenience function to apply observable qualities of a [Two.LinearGradient](/documentation/lineargradient) to any object. Handy if you'd like to extend the {@link Two.LinearGradient} class on a custom class.
 
 
+
+</div>
 
 
 
 ---
+
+<div class="static">
 
 ## Two.LinearGradient.FlagEndPoints
 
@@ -116,15 +134,19 @@ Convenience function to apply observable qualities of a {@link Two.LinearGradien
 
 
 
-Cached method to let renderers know end points have been updated on a {@link Two.LinearGradient}.
+Cached method to let renderers know end points have been updated on a [Two.LinearGradient](/documentation/lineargradient).
 
 
+
+</div>
 
 
 
 ---
 
-## Two.LinearGradient#clone
+<div class="instance">
+
+## Two.LinearGradient.clone
 
 
 __Returns__:
@@ -148,15 +170,19 @@ __Returns__:
 | `parent` | The parent group or scene to add the clone to. |
 
 
-Create a new instance of {@link Two.LinearGradient} with the same properties of the current path.
+Create a new instance of [Two.LinearGradient](/documentation/lineargradient) with the same properties of the current path.
 
 
+
+</div>
 
 
 
 ---
 
-## Two.LinearGradient#toObject
+<div class="instance">
+
+## Two.LinearGradient.toObject
 
 
 __Returns__:
@@ -180,5 +206,7 @@ __Returns__:
 Return a JSON compatible plain object that represents the path.
 
 
+
+</div>
 
 

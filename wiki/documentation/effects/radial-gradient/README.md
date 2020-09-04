@@ -15,7 +15,7 @@ __Extends__: `Two.Gradient`
 | `x` | The x position of the origin of the radial gradient. |
 | `y` | The y position of the origin of the radial gradient. |
 | `radius` | The radius of the radial gradient. |
-| `stops` | A list of {@link Two.Stop}s that contain the gradient fill pattern for the gradient. |
+| `stops` | A list of [Two.Stop](/documentation/stop)s that contain the gradient fill pattern for the gradient. |
 | `focalX` | The x position of the focal point on the radial gradient. |
 | `focalY` | The y position of the focal point on the radial gradient. |
 
@@ -23,7 +23,9 @@ __Extends__: `Two.Gradient`
 
 ---
 
-## Two.RadialGradient#center
+<div class="instance">
+
+## Two.RadialGradient.center
 
 
 
@@ -40,11 +42,15 @@ The x and y value for where the origin of the radial gradient is.
 
 
 
+</div>
+
 
 
 ---
 
-## Two.RadialGradient#focal
+<div class="instance">
+
+## Two.RadialGradient.focal
 
 
 
@@ -65,28 +71,36 @@ This effects the spray or spread of the radial gradient.
 :::
 
 
-
-
----
-
-## Two.RadialGradient#Stop
-
-
-
-
-
-
-
-
-
-
-
-
-
+</div>
 
 
 
 ---
+
+<div class="instance">
+
+## Two.RadialGradient.Stop
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="static">
 
 ## Two.RadialGradient.Properties
 
@@ -95,7 +109,7 @@ This effects the spray or spread of the radial gradient.
 
 
 
-A list of properties that are on every {@link Two.RadialGradient}.
+A list of properties that are on every [Two.RadialGradient](/documentation/radialgradient).
 
 
 
@@ -104,10 +118,14 @@ A list of properties that are on every {@link Two.RadialGradient}.
 
 
 
+
+</div>
 
 
 
 ---
+
+<div class="static">
 
 ## Two.RadialGradient.MakeObservable
 
@@ -123,15 +141,19 @@ A list of properties that are on every {@link Two.RadialGradient}.
 | `object` | The object to make observable. |
 
 
-Convenience function to apply observable qualities of a {@link Two.RadialGradient} to any object. Handy if you'd like to extend the {@link Two.RadialGradient} class on a custom class.
+Convenience function to apply observable qualities of a [Two.RadialGradient](/documentation/radialgradient) to any object. Handy if you'd like to extend the {@link Two.RadialGradient} class on a custom class.
 
 
+
+</div>
 
 
 
 ---
 
-## Two.RadialGradient#clone
+<div class="instance">
+
+## Two.RadialGradient.clone
 
 
 __Returns__:
@@ -155,15 +177,19 @@ __Returns__:
 | `parent` | The parent group or scene to add the clone to. |
 
 
-Create a new instance of {@link Two.RadialGradient} with the same properties of the current path.
+Create a new instance of [Two.RadialGradient](/documentation/radialgradient) with the same properties of the current path.
 
 
+
+</div>
 
 
 
 ---
 
-## Two.RadialGradient#toObject
+<div class="instance">
+
+## Two.RadialGradient.toObject
 
 
 __Returns__:
@@ -187,5 +213,7 @@ __Returns__:
 Return a JSON compatible plain object that represents the path.
 
 
+
+</div>
 
 
