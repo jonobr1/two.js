@@ -141,7 +141,7 @@ A list of properties that are on every [Two.RadialGradient](/documentation/radia
 | `object` | The object to make observable. |
 
 
-Convenience function to apply observable qualities of a [Two.RadialGradient](/documentation/radialgradient) to any object. Handy if you'd like to extend the {@link Two.RadialGradient} class on a custom class.
+Convenience function to apply observable qualities of a [Two.RadialGradient](/documentation/radialgradient) to any object. Handy if you'd like to extend the [Two.RadialGradient](/documentation/radialgradient) class on a custom class.
 
 
 

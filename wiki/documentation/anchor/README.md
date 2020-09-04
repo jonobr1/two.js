@@ -141,7 +141,7 @@ The "left" control point to define handles on a bezier curve.
 | `object` | The object to make observable. |
 
 
-Convenience function to apply observable qualities of a [Two.Anchor](/documentation/anchor) to any object. Handy if you'd like to extend the {@link Two.Anchor} class on a custom class.
+Convenience function to apply observable qualities of a [Two.Anchor](/documentation/anchor) to any object. Handy if you'd like to extend the [Two.Anchor](/documentation/anchor) class on a custom class.
 
 
 

@@ -365,7 +365,7 @@ __Returns__:
 
 
 
-Convenience function to set [Two.Texture.image](/documentation/texture#two-texture-image) properties with canonincal versions set in {@link Two.Texture.ImageRegistry}.
+Convenience function to set [Two.Texture.image](/documentation/texture#two-texture-image) properties with canonincal versions set in [Two.Texture.ImageRegistry](/documentation/texture#two-texture-imageregistry).
 
 
 
@@ -496,7 +496,7 @@ Cached method to let renderers know `scale` has been updated on a [Two.Texture](
 | `object` | The object to make observable. |
 
 
-Convenience function to apply observable qualities of a [Two.Texture](/documentation/texture) to any object. Handy if you'd like to extend or inherit the {@link Two.Texture} class on a custom class.
+Convenience function to apply observable qualities of a [Two.Texture](/documentation/texture) to any object. Handy if you'd like to extend or inherit the [Two.Texture](/documentation/texture) class on a custom class.
 
 
 

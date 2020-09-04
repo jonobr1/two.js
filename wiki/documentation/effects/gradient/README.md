@@ -159,7 +159,7 @@ A list of properties that are on every [Two.Stop](/documentation/stop).
 | `object` | The object to make observable. |
 
 
-Convenience function to apply observable qualities of a [Two.Stop](/documentation/stop) to any object. Handy if you'd like to extend the {@link Two.Stop} class on a custom class.
+Convenience function to apply observable qualities of a [Two.Stop](/documentation/stop) to any object. Handy if you'd like to extend the [Two.Stop](/documentation/stop) class on a custom class.
 
 
 
@@ -254,7 +254,7 @@ Return a JSON compatible plain object that represents the path.
 | `stops` | A list of [Two.Stop](/documentation/stop)s that contain the gradient fill pattern for the gradient. |
 
 
-This is the base class for constructing different types of gradients with Two.js. The two common gradients are [Two.LinearGradient](/documentation/lineargradient) and {@link Two.RadialGradient}.
+This is the base class for constructing different types of gradients with Two.js. The two common gradients are [Two.LinearGradient](/documentation/lineargradient) and [Two.RadialGradient](/documentation/radialgradient).
 
 
 
@@ -407,7 +407,7 @@ A list of properties that are on every [Two.Gradient](/documentation/gradient).
 | `object` | The object to make observable. |
 
 
-Convenience function to apply observable qualities of a [Two.Gradient](/documentation/gradient) to any object. Handy if you'd like to extend the {@link Two.Gradient} class on a custom class.
+Convenience function to apply observable qualities of a [Two.Gradient](/documentation/gradient) to any object. Handy if you'd like to extend the [Two.Gradient](/documentation/gradient) class on a custom class.
 
 
 

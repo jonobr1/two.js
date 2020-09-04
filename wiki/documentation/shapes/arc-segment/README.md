@@ -165,7 +165,7 @@ A list of properties that are on every [Two.ArcSegment](/documentation/arcsegmen
 | `object` | The object to make observable. |
 
 
-Convenience function to apply observable qualities of a [Two.ArcSegment](/documentation/arcsegment) to any object. Handy if you'd like to extend the {@link Two.ArcSegment} class on a custom class.
+Convenience function to apply observable qualities of a [Two.ArcSegment](/documentation/arcsegment) to any object. Handy if you'd like to extend the [Two.ArcSegment](/documentation/arcsegment) class on a custom class.
 
 
 

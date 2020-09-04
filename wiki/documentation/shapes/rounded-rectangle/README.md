@@ -164,7 +164,7 @@ A convenience function to trigger the flag for radius changing.
 | `object` | The object to make observable. |
 
 
-Convenience function to apply observable qualities of a [Two.RoundedRectangle](/documentation/roundedrectangle) to any object. Handy if you'd like to extend the {@link Two.RoundedRectangle} class on a custom class.
+Convenience function to apply observable qualities of a [Two.RoundedRectangle](/documentation/roundedrectangle) to any object. Handy if you'd like to extend the [Two.RoundedRectangle](/documentation/roundedrectangle) class on a custom class.
 
 
 

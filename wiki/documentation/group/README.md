@@ -302,7 +302,7 @@ A list of properties that are on every [Two.Group](/documentation/group).
 | `object` | The object to make observable. |
 
 
-Convenience function to apply observable qualities of a [Two.Group](/documentation/group) to any object. Handy if you'd like to extend the {@link Two.Group} class on a custom class.
+Convenience function to apply observable qualities of a [Two.Group](/documentation/group) to any object. Handy if you'd like to extend the [Two.Group](/documentation/group) class on a custom class.
 
 
 
@@ -489,7 +489,7 @@ Display the path or not.
 
 
 ::: tip nota-bene
-For [Two.CanvasRenderer](/documentation/canvasrenderer) and {@link Two.WebGLRenderer} when set to false all updating is disabled improving performance dramatically with many objects in the scene.
+For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](/documentation/webglrenderer) when set to false all updating is disabled improving performance dramatically with many objects in the scene.
 :::
 
 

@@ -231,7 +231,7 @@ Cached method to let [Two.ImageSequence](/documentation/imagesequence) know text
 | `object` | The object to make observable. |
 
 
-Convenience function to apply observable qualities of a [Two.ImageSequence](/documentation/imagesequence) to any object. Handy if you'd like to extend or inherit the {@link Two.ImageSequence} class on a custom class.
+Convenience function to apply observable qualities of a [Two.ImageSequence](/documentation/imagesequence) to any object. Handy if you'd like to extend or inherit the [Two.ImageSequence](/documentation/imagesequence) class on a custom class.
 
 
 
@@ -269,7 +269,7 @@ Shorthand function to prepare source image material into readable format by [Two
 | `textureOrString` | The texture or string to create a [Two.Texture](/documentation/texture) from. |
 
 
-Function used internally by [Two.ImageSequence](/documentation/imagesequence) to parse arguments and return {@link Two.Texture}s.
+Function used internally by [Two.ImageSequence](/documentation/imagesequence) to parse arguments and return [Two.Texture](/documentation/texture)s.
 
 
 

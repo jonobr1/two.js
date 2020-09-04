@@ -172,7 +172,7 @@ Determines whether Two.js automatically calculates the values for the matrix or 
 
 
 ::: tip nota-bene
-- Setting to `true` nullifies [Two.Shape.translation](/documentation/shape#two-shape-translation), {@link Two.Shape#rotation}, and {@link Two.Shape#scale}.
+- Setting to `true` nullifies [Two.Shape.translation](/documentation/shape#two-shape-translation), [Two.Shape.rotation](/documentation/shape#two-shape-rotation), and [Two.Shape.scale](/documentation/shape#two-shape-scale).
 :::
 
 

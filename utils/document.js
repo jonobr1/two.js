@@ -85,38 +85,49 @@ function expandParam(param) {
 function expandLink(object, property) {
 
   var value = object[property];
+  var shouldRecurse = false;
 
   if (value) {
 
-    // TODO: Need to handle multiple instances of {@link }s
     var regex = /\{\@link ([\w\d\:\/\?\-\.\#]*)\}/i;
     var link = value.match(regex);
 
-    if (/http/i.test(value)) {
-
-      // TODO: Not working
-      object[property] = value.replace(regex, '[$1]($1)')
-
-    } else if (link && link.length > 1) {
+    if (link && link.length > 1) {
 
       var name = link[1];
-      var fragments = name.split(/[\.\#]/i);
 
-      var directory = fragments[1] || '';
-      var hash = fragments.length > 2 ? fragments.join('-') : '';
+      if (/http/i.test(name)) {
 
-      object[property] = value.replace(regex, [
-        '[',
-        fragments.join('.'),
-        ']',
-        '(/documentation/',
-        directory.toLowerCase(),
-        hash ? '#' + hash.toLowerCase() : '',
-        ')'
-      ].join(''));
+        // TODO: Not working
+        object[property] = value.replace(regex, '[$1]($1)')
+        shouldRecurse = true;
+
+      } else {
+
+        var fragments = name.split(/[\.\#]/i);
+
+        var directory = fragments[1] || '';
+        var hash = fragments.length > 2 ? fragments.join('-') : '';
+
+        object[property] = value.replace(regex, [
+          '[',
+          fragments.join('.'),
+          ']',
+          '(/documentation/',
+          directory.toLowerCase(),
+          hash ? '#' + hash.toLowerCase() : '',
+          ')'
+        ].join(''));
+        shouldRecurse = true;
+
+      }
 
     }
 
+  }
+
+  if (shouldRecurse) {
+    expandLink(object, property);
   }
 
 }

@@ -111,7 +111,7 @@ The x and y value for where the second end point is placed on the canvas.
 | `object` | The object to make observable. |
 
 
-Convenience function to apply observable qualities of a [Two.LinearGradient](/documentation/lineargradient) to any object. Handy if you'd like to extend the {@link Two.LinearGradient} class on a custom class.
+Convenience function to apply observable qualities of a [Two.LinearGradient](/documentation/lineargradient) to any object. Handy if you'd like to extend the [Two.LinearGradient](/documentation/lineargradient) class on a custom class.
 
 
 

@@ -361,7 +361,7 @@ The squared distance between points `v1` and `v2`.
 | `object` | The object to make observable. |
 
 
-Convenience function to apply observable qualities of a [Two.Vector](/documentation/vector) to any object. Handy if you'd like to extend the {@link Two.Vector} class on a custom class.
+Convenience function to apply observable qualities of a [Two.Vector](/documentation/vector) to any object. Handy if you'd like to extend the [Two.Vector](/documentation/vector) class on a custom class.
 
 
 

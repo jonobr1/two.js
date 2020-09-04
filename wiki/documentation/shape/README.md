@@ -86,7 +86,7 @@ The transformation matrix of the shape.
 
 
 ::: tip nota-bene
-[Two.Shape.translation](/documentation/shape#two-shape-translation), {@link Two.Shape#rotation}, and {@link Two.Shape#scale} apply their values to the matrix when changed. The matrix is what is sent to the renderer to be drawn.
+[Two.Shape.translation](/documentation/shape#two-shape-translation), [Two.Shape.rotation](/documentation/shape#two-shape-rotation), and [Two.Shape.scale](/documentation/shape#two-shape-scale) apply their values to the matrix when changed. The matrix is what is sent to the renderer to be drawn.
 :::
 
 
@@ -214,7 +214,7 @@ Utility function used in conjunction with event handlers to update the flagMatri
 | `object` | The object to make observable. |
 
 
-Convenience function to apply observable qualities of a [Two.Shape](/documentation/shape) to any object. Handy if you'd like to extend the {@link Two.Shape} class on a custom class.
+Convenience function to apply observable qualities of a [Two.Shape](/documentation/shape) to any object. Handy if you'd like to extend the [Two.Shape](/documentation/shape) class on a custom class.
 
 
 

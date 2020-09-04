@@ -113,7 +113,7 @@ A list of properties that are on every [Two.Ellipse](/documentation/ellipse).
 | `object` | The object to make observable. |
 
 
-Convenience function to apply observable qualities of a [Two.Ellipse](/documentation/ellipse) to any object. Handy if you'd like to extend the {@link Two.Ellipse} class on a custom class.
+Convenience function to apply observable qualities of a [Two.Ellipse](/documentation/ellipse) to any object. Handy if you'd like to extend the [Two.Ellipse](/documentation/ellipse) class on a custom class.
 
 
 

@@ -281,7 +281,7 @@ Display the path or not.
 
 
 ::: tip nota-bene
-For [Two.CanvasRenderer](/documentation/canvasrenderer) and {@link Two.WebGLRenderer} when set to false all updating is disabled improving performance dramatically with many objects in the scene.
+For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](/documentation/webglrenderer) when set to false all updating is disabled improving performance dramatically with many objects in the scene.
 :::
 
 
@@ -626,7 +626,7 @@ Cached method to let [Two.Path](/documentation/path) know the stroke has changed
 | `object` | The object to make observable. |
 
 
-Convenience function to apply observable qualities of a [Two.Path](/documentation/path) to any object. Handy if you'd like to extend the {@link Two.Path} class on a custom class.
+Convenience function to apply observable qualities of a [Two.Path](/documentation/path) to any object. Handy if you'd like to extend the [Two.Path](/documentation/path) class on a custom class.
 
 
 
@@ -992,7 +992,7 @@ While this method is public it is internally called by [Two.Path._update](/docum
 | `limit` | How many times to recurse subdivisions. |
 
 
-Insert a [Two.Anchor](/documentation/anchor) at the midpoint between every item in {@link Two.Path#vertices}.
+Insert a [Two.Anchor](/documentation/anchor) at the midpoint between every item in [Two.Path.vertices](/documentation/path#two-path-vertices).
 
 
 

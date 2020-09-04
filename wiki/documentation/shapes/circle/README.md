@@ -87,7 +87,7 @@ A list of properties that are on every [Two.Circle](/documentation/circle).
 | `object` | The object to make observable. |
 
 
-Convenience function to apply observable qualities of a [Two.Circle](/documentation/circle) to any object. Handy if you'd like to extend the {@link Two.Circle} class on a custom class.
+Convenience function to apply observable qualities of a [Two.Circle](/documentation/circle) to any object. Handy if you'd like to extend the [Two.Circle](/documentation/circle) class on a custom class.
 
 
 

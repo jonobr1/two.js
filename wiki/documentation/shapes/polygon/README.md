@@ -137,7 +137,7 @@ A list of properties that are on every [Two.Polygon](/documentation/polygon).
 | `object` | The object to make observable. |
 
 
-Convenience function to apply observable qualities of a [Two.Polygon](/documentation/polygon) to any object. Handy if you'd like to extend the {@link Two.Polygon} class on a custom class.
+Convenience function to apply observable qualities of a [Two.Polygon](/documentation/polygon) to any object. Handy if you'd like to extend the [Two.Polygon](/documentation/polygon) class on a custom class.
 
 
 
