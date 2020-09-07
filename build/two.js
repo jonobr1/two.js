@@ -50,6 +50,8 @@ SOFTWARE.
 
   var root$1 = root;
 
+  var Matrix;
+
   /**
    * @name Utils.decomposeMatrix
    * @function
@@ -68,6 +70,43 @@ SOFTWARE.
         scaleY: matrix.d,
         rotation: 180 * Math.asin(matrix.b) / Math.PI
     };
+
+  };
+
+  var setMatrix = function(M) {
+    Matrix = M;
+  };
+
+  /**
+   * @name Utils.getComputedMatrix
+   * @function
+   * @param {Two.Shape} object - The Two.js object that has a matrix property to calculate from.
+   * @param {Two.Matrix} [matrix] - The matrix to apply calculated transformations to if available.
+   * @returns {Two.Matrix} The computed matrix of a nested object. If no `matrix` was passed in arguments then a `new Two.Matrix` is returned.
+   * @description Method to get the world space transformation of a given object in a Two.js scene.
+   */
+  var getComputedMatrix = function(object, matrix) {
+
+    matrix = (matrix && matrix.identity()) || new Matrix();
+    var parent = object, matrices = [];
+
+    while (parent && parent._matrix) {
+      matrices.push(parent._matrix);
+      parent = parent.parent;
+    }
+
+    matrices.reverse();
+
+    for (var i = 0; i < matrices.length; i++) {
+
+      var m = matrices[i];
+      var e = m.elements;
+      matrix.multiply(
+        e[0], e[1], e[2], e[3], e[4], e[5], e[6], e[7], e[8], e[9]);
+
+    }
+
+    return matrix;
 
   };
 
@@ -118,6 +157,8 @@ SOFTWARE.
   var math = /*#__PURE__*/Object.freeze({
     __proto__: null,
     decomposeMatrix: decomposeMatrix,
+    getComputedMatrix: getComputedMatrix,
+    setMatrix: setMatrix,
     lerp: lerp,
     mod: mod,
     NumArray: NumArray,
@@ -147,22 +188,22 @@ SOFTWARE.
     extend: function(base) {
       var sources = slice.call(arguments, 1);
       for (var i = 0; i < sources.length; i++) {
-      var obj = sources[i];
-      for (var k in obj) {
-        base[k] = obj[k];
-      }
+        var obj = sources[i];
+        for (var k in obj) {
+          base[k] = obj[k];
+        }
       }
       return base;
     },
     defaults: function(base) {
       var sources = slice.call(arguments, 1);
       for (var i = 0; i < sources.length; i++) {
-      var obj = sources[i];
-      for (var k in obj) {
-        if (base[k] === void 0) {
-        base[k] = obj[k];
+        var obj = sources[i];
+        for (var k in obj) {
+          if (base[k] === void 0) {
+          base[k] = obj[k];
+          }
         }
-      }
       }
       return base;
     },
@@ -171,8 +212,8 @@ SOFTWARE.
       var keys = !isArrayLike(obj) && Object.keys(obj);
       var length = (keys || obj).length;
       for (var i = 0; i < length; i++) {
-      var k = keys ? keys[i] : i;
-      iteratee.call(ctx, obj[k], k, obj);
+        var k = keys ? keys[i] : i;
+        iteratee.call(ctx, obj[k], k, obj);
       }
       return obj;
     },
@@ -1478,7 +1519,7 @@ SOFTWARE.
    * @description A class to store 3 x 3 transformation matrix information. In addition to storing data `Two.Matrix` has suped up methods for commonplace mathematical operations.
    * @nota-bene Order is based on how to construct transformation strings for the browser.
    */
-  var Matrix = function(a, b, c, d, e, f) {
+  var Matrix$1 = function(a, b, c, d, e, f) {
 
     /**
      * @name Two.Matrix#elements
@@ -1500,40 +1541,9 @@ SOFTWARE.
 
   };
 
-  /**
-   * @name Utils.getComputedMatrix
-   * @function
-   * @param {Two.Shape} object - The Two.js object that has a matrix property to calculate from.
-   * @param {Two.Matrix} [matrix] - The matrix to apply calculated transformations to if available.
-   * @returns {Two.Matrix} The computed matrix of a nested object. If no `matrix` was passed in arguments then a `new Two.Matrix` is returned.
-   * @description Method to get the world space transformation of a given object in a Two.js scene.
-   */
-  var getComputedMatrix = function(object, matrix) {
+  setMatrix(Matrix$1);
 
-    matrix = (matrix && matrix.identity()) || new Matrix();
-    var parent = object, matrices = [];
-
-    while (parent && parent._matrix) {
-      matrices.push(parent._matrix);
-      parent = parent.parent;
-    }
-
-    matrices.reverse();
-
-    for (var i = 0; i < matrices.length; i++) {
-
-      var m = matrices[i];
-      var e = m.elements;
-      matrix.multiply(
-        e[0], e[1], e[2], e[3], e[4], e[5], e[6], e[7], e[8], e[9]);
-
-    }
-
-    return matrix;
-
-  };
-
-  _.extend(Matrix, {
+  _.extend(Matrix$1, {
 
     /**
      * @name Two.Matrix.Identity
@@ -1601,9 +1611,9 @@ SOFTWARE.
 
   });
 
-  _.extend(Matrix.prototype, Events, {
+  _.extend(Matrix$1.prototype, Events, {
 
-    constructor: Matrix,
+    constructor: Matrix$1,
 
     /**
      * @name Two.Matrix#manual
@@ -1694,15 +1704,15 @@ SOFTWARE.
      */
     identity: function() {
 
-      this.elements[0] = Matrix.Identity[0];
-      this.elements[1] = Matrix.Identity[1];
-      this.elements[2] = Matrix.Identity[2];
-      this.elements[3] = Matrix.Identity[3];
-      this.elements[4] = Matrix.Identity[4];
-      this.elements[5] = Matrix.Identity[5];
-      this.elements[6] = Matrix.Identity[6];
-      this.elements[7] = Matrix.Identity[7];
-      this.elements[8] = Matrix.Identity[8];
+      this.elements[0] = Matrix$1.Identity[0];
+      this.elements[1] = Matrix$1.Identity[1];
+      this.elements[2] = Matrix$1.Identity[2];
+      this.elements[3] = Matrix$1.Identity[3];
+      this.elements[4] = Matrix$1.Identity[4];
+      this.elements[5] = Matrix$1.Identity[5];
+      this.elements[6] = Matrix$1.Identity[6];
+      this.elements[7] = Matrix$1.Identity[7];
+      this.elements[8] = Matrix$1.Identity[8];
 
       return this.trigger(Events.Types.change);
 
@@ -1815,7 +1825,7 @@ SOFTWARE.
     inverse: function(out) {
 
       var a = this.elements;
-      out = out || new Matrix();
+      out = out || new Matrix$1();
 
       var a00 = a[0], a01 = a[1], a02 = a[2];
       var a10 = a[3], a11 = a[4], a12 = a[5];
@@ -2082,7 +2092,7 @@ SOFTWARE.
      */
     clone: function() {
 
-      return new Matrix().copy(this);
+      return new Matrix$1().copy(this);
 
     }
 
@@ -2121,7 +2131,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2020-09-03T15:23:41.796Z',
+    PublishDate: '2020-09-07T20:16:37.646Z',
 
     /**
      * @name Two.Identifier
@@ -2540,7 +2550,7 @@ SOFTWARE.
    */
   var getAnchorsFromArcData = function(center, xAxisRotation, rx, ry, ts, td, ccw) {
 
-    var matrix = new Matrix()
+    var matrix = new Matrix$1()
       .translate(center.x, center.y)
       .rotate(xAxisRotation);
 
@@ -2715,7 +2725,7 @@ SOFTWARE.
      * @description The transformation matrix of the shape.
      * @nota-bene {@link Two.Shape#translation}, {@link Two.Shape#rotation}, and {@link Two.Shape#scale} apply their values to the matrix when changed. The matrix is what is sent to the renderer to be drawn.
      */
-    this.matrix = new Matrix();
+    this.matrix = new Matrix$1();
 
     /**
      * @name Two.Shape#translation
@@ -3020,6 +3030,40 @@ SOFTWARE.
 
   /**
    * @class
+   * @name Two.Group
+   */
+  var Group = function(children) {
+
+    Shape.call(this, true);
+
+    this._renderer.type = 'group';
+
+    /**
+     * @name Two.Group#additions
+     * @property {Two.Shape[]}
+     * @description An automatically updated list of children that need to be appended to the renderer's scenegraph.
+     */
+    this.additions = [];
+
+    /**
+     * @name Two.Group#subtractions
+     * @property {Two.Shape[]}
+     * @description An automatically updated list of children that need to be removed from the renderer's scenegraph.
+     */
+    this.subtractions = [];
+
+    /**
+     * @name Two.Group#additions
+     * @property {Two.Group.Children[]}
+     * @description A list of all the children in the scenegraph.
+     * @nota-bene Ther order of this list indicates the order each element is rendered to the screen.
+     */
+    this.children = Array.isArray(children) ? children : Array.prototype.slice.call(arguments);
+
+  };
+
+  /**
+   * @class
    * @name Two.Group.Children
    * @extends Two.Utils.Collection
    * @description A children collection which is accesible both by index and by object `id`.
@@ -3078,40 +3122,6 @@ SOFTWARE.
     }
 
   });
-
-  /**
-   * @class
-   * @name Two.Group
-   */
-  var Group = function(children) {
-
-    Shape.call(this, true);
-
-    this._renderer.type = 'group';
-
-    /**
-     * @name Two.Group#additions
-     * @property {Two.Shape[]}
-     * @description An automatically updated list of children that need to be appended to the renderer's scenegraph.
-     */
-    this.additions = [];
-
-    /**
-     * @name Two.Group#subtractions
-     * @property {Two.Shape[]}
-     * @description An automatically updated list of children that need to be removed from the renderer's scenegraph.
-     */
-    this.subtractions = [];
-
-    /**
-     * @name Two.Group#additions
-     * @property {Two.Group.Children[]}
-     * @description A list of all the children in the scenegraph.
-     * @nota-bene Ther order of this list indicates the order each element is rendered to the screen.
-     */
-    this.children = Array.isArray(children) ? children : Array.prototype.slice.call(arguments);
-
-  };
 
   _.extend(Group, {
 
@@ -9061,8 +9071,8 @@ SOFTWARE.
    * @param {Two.Shape} node - The Two.js object to apply viewbox matrix to
    * @param {String} value - The viewBox value from the SVG attribute
    * @returns {Two.Shape} node
-   @ @description
-    */
+   * @description Applies the transform of the SVG Viewbox on a given node.
+   */
   var applySvgViewBox = function(node, value) {
 
     var elements = value.split(/\s/);
@@ -13463,7 +13473,7 @@ SOFTWARE.
 
   // Constants
 
-  var multiplyMatrix = Matrix.Multiply,
+  var multiplyMatrix = Matrix$1.Multiply,
     identity = [1, 0, 0, 0, 1, 0, 0, 0, 1],
     transformation = new NumArray(9),
     CanvasUtils = Renderer.Utils;
@@ -13480,7 +13490,7 @@ SOFTWARE.
       right: 'end'
     },
 
-    matrix: new Matrix(),
+    matrix: new Matrix$1(),
 
     group: {
 
@@ -15559,7 +15569,7 @@ SOFTWARE.
     Collection: Collection,
     Events: Events,
     Group: Group,
-    Matrix: Matrix,
+    Matrix: Matrix$1,
     Path: Path,
     Registry: Registry,
     Shape: Shape,
