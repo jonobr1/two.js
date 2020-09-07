@@ -21,20 +21,22 @@ This class is used by [Two](/documentation/) when constructing with `type` of `T
 
 ---
 
-<div class="global">
+<div class="static">
 
-## emptyArray
-
-
+## Two.CanvasRenderer.Utils
 
 
 
 
 
 
+A massive object filled with utility functions and properties to render Two.js objects to a `<canvas />`.
 
 
-Constants
+
+
+
+
 
 
 
@@ -129,31 +131,6 @@ Determines whether the canvas clears the background each draw call.
 
 
 The root group of the scenegraph.
-
-
-
-
-
-
-
-
-
-</div>
-
-
-
----
-
-<div class="static">
-
-## Two.CanvasRenderer.Utils
-
-
-
-
-
-
-A massive object filled with utility functions and properties to render Two.js objects to a `<canvas />`.
 
 
 

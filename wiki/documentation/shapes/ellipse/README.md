@@ -22,56 +22,6 @@ __Extends__: `Two.Path`
 
 ---
 
-<div class="instance">
-
-## Two.Ellipse.width
-
-
-
-
-
-
-The width of the ellipse.
-
-
-
-
-
-
-
-
-
-</div>
-
-
-
----
-
-<div class="instance">
-
-## Two.Ellipse.height
-
-
-
-
-
-
-The height of the ellipse.
-
-
-
-
-
-
-
-
-
-</div>
-
-
-
----
-
 <div class="static">
 
 ## Two.Ellipse.Properties
@@ -114,6 +64,56 @@ A list of properties that are on every [Two.Ellipse](/documentation/ellipse).
 
 
 Convenience function to apply observable qualities of a [Two.Ellipse](/documentation/ellipse) to any object. Handy if you'd like to extend the [Two.Ellipse](/documentation/ellipse) class on a custom class.
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.Ellipse.width
+
+
+
+
+
+
+The width of the ellipse.
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.Ellipse.height
+
+
+
+
+
+
+The height of the ellipse.
+
+
+
+
+
+
 
 
 

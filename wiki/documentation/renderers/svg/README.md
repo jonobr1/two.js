@@ -19,6 +19,31 @@ This class is used by [Two](/documentation/) when constructing with `type` of `T
 
 ---
 
+<div class="static">
+
+## Two.SVGRenderer.Utils
+
+
+
+
+
+
+A massive object filled with utility functions and properties to render Two.js objects to a `<svg />`.
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
 <div class="instance">
 
 ## Two.SVGRenderer.domElement
@@ -79,31 +104,6 @@ The root group of the scenegraph.
 
 
 The `<defs />` to apply gradients, patterns, and bitmap imagery.
-
-
-
-
-
-
-
-
-
-</div>
-
-
-
----
-
-<div class="static">
-
-## Two.SVGRenderer.Utils
-
-
-
-
-
-
-A massive object filled with utility functions and properties to render Two.js objects to a `<svg />`.
 
 
 

@@ -23,6 +23,57 @@ __Extends__: `Two.Gradient`
 
 ---
 
+<div class="static">
+
+## Two.RadialGradient.Properties
+
+
+
+
+
+
+A list of properties that are on every [Two.RadialGradient](/documentation/radialgradient).
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="static">
+
+## Two.RadialGradient.MakeObservable
+
+
+
+
+
+
+
+
+| Argument | Description |
+| ---- | ----------- |
+| `object` | The object to make observable. |
+
+
+Convenience function to apply observable qualities of a [Two.RadialGradient](/documentation/radialgradient) to any object. Handy if you'd like to extend the [Two.RadialGradient](/documentation/radialgradient) class on a custom class.
+
+
+
+</div>
+
+
+
+---
+
 <div class="instance">
 
 ## Two.RadialGradient.center
@@ -91,57 +142,6 @@ This effects the spray or spread of the radial gradient.
 
 
 
-
-
-
-</div>
-
-
-
----
-
-<div class="static">
-
-## Two.RadialGradient.Properties
-
-
-
-
-
-
-A list of properties that are on every [Two.RadialGradient](/documentation/radialgradient).
-
-
-
-
-
-
-
-
-
-</div>
-
-
-
----
-
-<div class="static">
-
-## Two.RadialGradient.MakeObservable
-
-
-
-
-
-
-
-
-| Argument | Description |
-| ---- | ----------- |
-| `object` | The object to make observable. |
-
-
-Convenience function to apply observable qualities of a [Two.RadialGradient](/documentation/radialgradient) to any object. Handy if you'd like to extend the [Two.RadialGradient](/documentation/radialgradient) class on a custom class.
 
 
 

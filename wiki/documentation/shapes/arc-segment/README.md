@@ -24,6 +24,57 @@ __Extends__: `Two.Path`
 
 ---
 
+<div class="static">
+
+## Two.ArcSegment.Properties
+
+
+
+
+
+
+A list of properties that are on every [Two.ArcSegment](/documentation/arcsegment).
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="static">
+
+## Two.ArcSegment.MakeObservable
+
+
+
+
+
+
+
+
+| Argument | Description |
+| ---- | ----------- |
+| `object` | The object to make observable. |
+
+
+Convenience function to apply observable qualities of a [Two.ArcSegment](/documentation/arcsegment) to any object. Handy if you'd like to extend the [Two.ArcSegment](/documentation/arcsegment) class on a custom class.
+
+
+
+</div>
+
+
+
+---
+
 <div class="instance">
 
 ## Two.ArcSegment.innerRadius
@@ -115,57 +166,6 @@ The angle of the other side for the arc segment.
 
 
 
-
-
-
-</div>
-
-
-
----
-
-<div class="static">
-
-## Two.ArcSegment.Properties
-
-
-
-
-
-
-A list of properties that are on every [Two.ArcSegment](/documentation/arcsegment).
-
-
-
-
-
-
-
-
-
-</div>
-
-
-
----
-
-<div class="static">
-
-## Two.ArcSegment.MakeObservable
-
-
-
-
-
-
-
-
-| Argument | Description |
-| ---- | ----------- |
-| `object` | The object to make observable. |
-
-
-Convenience function to apply observable qualities of a [Two.ArcSegment](/documentation/arcsegment) to any object. Handy if you'd like to extend the [Two.ArcSegment](/documentation/arcsegment) class on a custom class.
 
 
 

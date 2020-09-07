@@ -11,6 +11,11 @@ var template = _.template(
   )
 );
 
+var alphabet = [
+  'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
+  'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
+];
+
 _.each(sourceFiles, function(file) {
 
   var sourceFile = path.resolve(__dirname, '../' + file);
@@ -25,7 +30,6 @@ _.each(sourceFiles, function(file) {
       configure: path.resolve(__dirname, '../jsdoc-conf.json')
   });
 
-  // TODO: Sort citations by citation.scope (static first, then instance)
   citations.slice(0).forEach(function(object) {
 
     var a = object.undocumented;
@@ -50,15 +54,52 @@ _.each(sourceFiles, function(file) {
 
   });
 
+  var citationsByScope = {
+    instance: [],
+    static: []
+  };
+
+  _.each(citations, function(citation) {
+    if (/\#/i.test(citation.longname)) {
+      citationsByScope.instance.push(citation);
+    } else {
+      citationsByScope.static.push(citation);
+    }
+  });
+
+  citationsByScope.instance.sort(sortByFunctionThenAlphabetical);
+  // citationsByScope.static.sort(sortByFunctionThenAlphabetical);
+
+  citations = citationsByScope.static.concat(citationsByScope.instance)
+
   // fs.mkdirSync(outputDir, { recursive: true });
-  fs.writeFileSync(outputFile.replace('README.md', 'docs.json'), JSON.stringify(citations));
+  fs.writeFileSync(outputFile.replace('README.md', 'docs.json'),
+    JSON.stringify(citations));
+
   fs.writeFileSync(outputFile, template({
     root: getRoot(citations),
     citations: citations
   }));
+
   console.log('Generated', outputFile);
 
 });
+
+function sortByFunctionThenAlphabetical(a, b) {
+
+  var isFunctionA = /function/i.test(a.kind);
+  var isFunctionB = /function/i.test(b.kind);
+
+  if (!isFunctionA && isFunctionB) return - 1;
+  if (isFunctionA === isFunctionB) return 0;
+  // if (isFunctionA === isFunctionB) {
+  //   var ida = alphabet.indexOf(a.name[0]);
+  //   var idb = alphabet.indexOf(b.name[0]);
+  //   return ida - idb;
+  // }
+  if (isFunctionA && !isFunctionB) return 1;
+
+}
 
 function getRoot(citations) {
   var result = null;
@@ -98,7 +139,6 @@ function expandLink(object, property) {
 
       if (/http/i.test(name)) {
 
-        // TODO: Not working
         object[property] = value.replace(regex, '[$1]($1)')
         shouldRecurse = true;
 

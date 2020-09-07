@@ -23,81 +23,6 @@ __Extends__: `Two.Path`
 
 ---
 
-<div class="instance">
-
-## Two.RoundedRectangle.width
-
-
-
-
-
-
-The width of the rounded rectangle.
-
-
-
-
-
-
-
-
-
-</div>
-
-
-
----
-
-<div class="instance">
-
-## Two.RoundedRectangle.height
-
-
-
-
-
-
-The height of the rounded rectangle.
-
-
-
-
-
-
-
-
-
-</div>
-
-
-
----
-
-<div class="instance">
-
-## Two.RoundedRectangle.radius
-
-
-
-
-
-
-The size of the radius of the rounded rectangle.
-
-
-
-
-
-
-
-
-
-</div>
-
-
-
----
-
 <div class="static">
 
 ## Two.RoundedRectangle.Properties
@@ -165,6 +90,81 @@ A convenience function to trigger the flag for radius changing.
 
 
 Convenience function to apply observable qualities of a [Two.RoundedRectangle](/documentation/roundedrectangle) to any object. Handy if you'd like to extend the [Two.RoundedRectangle](/documentation/roundedrectangle) class on a custom class.
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.RoundedRectangle.width
+
+
+
+
+
+
+The width of the rounded rectangle.
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.RoundedRectangle.height
+
+
+
+
+
+
+The height of the rounded rectangle.
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.RoundedRectangle.radius
+
+
+
+
+
+
+The size of the radius of the rounded rectangle.
+
+
+
+
+
+
 
 
 

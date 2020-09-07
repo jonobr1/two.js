@@ -21,6 +21,57 @@ __Extends__: `Two.Path`
 
 ---
 
+<div class="static">
+
+## Two.Polygon.Properties
+
+
+
+
+
+
+A list of properties that are on every [Two.Polygon](/documentation/polygon).
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="static">
+
+## Two.Polygon.MakeObservable
+
+
+
+
+
+
+
+
+| Argument | Description |
+| ---- | ----------- |
+| `object` | The object to make observable. |
+
+
+Convenience function to apply observable qualities of a [Two.Polygon](/documentation/polygon) to any object. Handy if you'd like to extend the [Two.Polygon](/documentation/polygon) class on a custom class.
+
+
+
+</div>
+
+
+
+---
+
 <div class="instance">
 
 ## Two.Polygon.width
@@ -87,57 +138,6 @@ The amount of sides the polyogn has.
 
 
 
-
-
-
-</div>
-
-
-
----
-
-<div class="static">
-
-## Two.Polygon.Properties
-
-
-
-
-
-
-A list of properties that are on every [Two.Polygon](/documentation/polygon).
-
-
-
-
-
-
-
-
-
-</div>
-
-
-
----
-
-<div class="static">
-
-## Two.Polygon.MakeObservable
-
-
-
-
-
-
-
-
-| Argument | Description |
-| ---- | ----------- |
-| `object` | The object to make observable. |
-
-
-Convenience function to apply observable qualities of a [Two.Polygon](/documentation/polygon) to any object. Handy if you'd like to extend the [Two.Polygon](/documentation/polygon) class on a custom class.
 
 
 

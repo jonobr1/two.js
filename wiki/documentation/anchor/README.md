@@ -50,6 +50,32 @@ Adds the `controls` property as an object with `left` and `right` properties to 
 
 ---
 
+<div class="static">
+
+## Two.Anchor.MakeObservable
+
+
+
+
+
+
+
+
+| Argument | Description |
+| ---- | ----------- |
+| `object` | The object to make observable. |
+
+
+Convenience function to apply observable qualities of a [Two.Anchor](/documentation/anchor) to any object. Handy if you'd like to extend the [Two.Anchor](/documentation/anchor) class on a custom class.
+
+
+
+</div>
+
+
+
+---
+
 <div class="instance">
 
 ## Two.Anchor.controls
@@ -77,31 +103,6 @@ An plain object that holds the controls handles for a [Two.Anchor](/documentatio
 
 <div class="instance">
 
-## Two.Anchor.controls.left
-
-
-
-
-
-
-
-
-
-
-
-
-The "left" control point to define handles on a bezier curve.
-
-
-
-</div>
-
-
-
----
-
-<div class="instance">
-
 ## Two.Anchor.controls.right
 
 
@@ -116,32 +117,6 @@ The "left" control point to define handles on a bezier curve.
 
 
 The "left" control point to define handles on a bezier curve.
-
-
-
-</div>
-
-
-
----
-
-<div class="static">
-
-## Two.Anchor.MakeObservable
-
-
-
-
-
-
-
-
-| Argument | Description |
-| ---- | ----------- |
-| `object` | The object to make observable. |
-
-
-Convenience function to apply observable qualities of a [Two.Anchor](/documentation/anchor) to any object. Handy if you'd like to extend the [Two.Anchor](/documentation/anchor) class on a custom class.
 
 
 
@@ -203,7 +178,7 @@ A boolean to render control points relative to the root anchor point or in globa
 
 <div class="instance">
 
-## Two.Anchor.listen
+## Two.Anchor.controls.left
 
 
 
@@ -214,7 +189,44 @@ A boolean to render control points relative to the root anchor point or in globa
 
 
 
-Convenience method used mainly by [Two.Path.vertices](/documentation/path#two-path-vertices) to listen and propagate changes from control points up to their respective anchors and further if necessary.
+
+
+The "left" control point to define handles on a bezier curve.
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.Anchor.toString
+
+
+__Returns__:
+
+
+
++ `String`
+
+
+
+- A String with comma-separated values reflecting the various values on the current instance.
+
+
+
+
+
+
+
+
+
+
+
+Create a string form of the current instance. Intended for use with storing values in a database. This is lighter to store than the JSON compatible [Two.Anchor.toObject](/documentation/anchor#two-anchor-toobject).
 
 
 
@@ -343,18 +355,7 @@ Create a JSON compatible plain object of the current instance. Intended for use 
 
 <div class="instance">
 
-## Two.Anchor.toString
-
-
-__Returns__:
-
-
-
-+ `String`
-
-
-
-- A String with comma-separated values reflecting the various values on the current instance.
+## Two.Anchor.listen
 
 
 
@@ -365,8 +366,7 @@ __Returns__:
 
 
 
-
-Create a string form of the current instance. Intended for use with storing values in a database. This is lighter to store than the JSON compatible [Two.Anchor.toObject](/documentation/anchor#two-anchor-toobject).
+Convenience method used mainly by [Two.Path.vertices](/documentation/path#two-path-vertices) to listen and propagate changes from control points up to their respective anchors and further if necessary.
 
 
 

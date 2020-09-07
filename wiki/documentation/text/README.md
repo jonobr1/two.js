@@ -21,56 +21,6 @@ This is a primitive class for creating drawable text that can be added to the sc
 
 ---
 
-<div class="instance">
-
-## Two.Text.dashes
-
-
-
-
-
-
-Array of numbers. Odd indices represent dash length. Even indices represent dash space.
-
-
-
-
-
-A list of numbers that represent the repeated dash length and dash space applied to the stroke of the text.
-
-
-
-</div>
-
-
-
----
-
-<div class="instance">
-
-## Two.Text.dashes.offset
-
-
-
-
-
-
-A number in pixels to offset [Two.Text.dashes](/documentation/text#two-text-dashes) display.
-
-
-
-
-
-
-
-
-
-</div>
-
-
-
----
-
 <div class="static">
 
 ## Two.Text.Ratio
@@ -158,6 +108,56 @@ Cached method to let renderers know the fill property have been updated on a [Tw
 
 
 Cached method to let renderers know the stroke property have been updated on a [Two.Text](/documentation/text).
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.Text.stroke
+
+
+
+
+
+
+The value of what the text object should be filled in with.
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.Text.dashes
+
+
+
+
+
+
+Array of numbers. Odd indices represent dash length. Even indices represent dash space.
+
+
+
+
+
+A list of numbers that represent the repeated dash length and dash space applied to the stroke of the text.
 
 
 
@@ -419,14 +419,14 @@ The value of what the text object should be filled in with.
 
 <div class="instance">
 
-## Two.Text.stroke
+## Two.Text.dashes.offset
 
 
 
 
 
 
-The value of what the text object should be filled in with.
+A number in pixels to offset [Two.Text.dashes](/documentation/text#two-text-dashes) display.
 
 
 

@@ -17,56 +17,6 @@ A class to store x / y component vector data. In addition to storing data `Two.V
 
 ---
 
-<div class="instance">
-
-## Two.Vector.x
-
-
-
-
-
-
-The horizontal x-component of the vector.
-
-
-
-
-
-
-
-
-
-</div>
-
-
-
----
-
-<div class="instance">
-
-## Two.Vector.y
-
-
-
-
-
-
-The vertical y-component of the vector.
-
-
-
-
-
-
-
-
-
-</div>
-
-
-
----
-
 <div class="static">
 
 ## Two.Vector.zero
@@ -371,9 +321,9 @@ Convenience function to apply observable qualities of a [Two.Vector](/documentat
 
 ---
 
-<div class="instance">
+<div class="static">
 
-## Two.Vector.set
+## Two.Vector.subtract.Two.Vector.subtract
 
 
 __Returns__:
@@ -383,8 +333,6 @@ __Returns__:
 + `Two.Vector`
 
 
-
-- An instance of itself for the purpose of chaining.
 
 
 
@@ -396,49 +344,11 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `x` |  |
-| `y` |  |
+| `v1` |  |
+| `v2` |  |
 
 
-Set the x / y components of a vector to specific number values.
-
-
-
-</div>
-
-
-
----
-
-<div class="instance">
-
-## Two.Vector.copy
-
-
-__Returns__:
-
-
-
-+ `Two.Vector`
-
-
-
-- An instance of itself for the purpose of chaining.
-
-
-
-
-
-
-
-
-
-| Argument | Description |
-| ---- | ----------- |
-| `v` |  |
-
-
-Copy the x / y components of another object `v`.
+Subtract two vectors: `v2` from `v1`.
 
 
 
@@ -450,30 +360,20 @@ Copy the x / y components of another object `v`.
 
 <div class="instance">
 
-## Two.Vector.clear
-
-
-__Returns__:
-
-
-
-+ `Two.Vector`
-
-
-
-- An instance of itself for the purpose of chaining.
+## Two.Vector.x
 
 
 
 
 
 
+The horizontal x-component of the vector.
 
 
 
 
 
-Set the x / y component values of the vector to zero.
+
 
 
 
@@ -485,18 +385,7 @@ Set the x / y component values of the vector to zero.
 
 <div class="instance">
 
-## Two.Vector.clone
-
-
-__Returns__:
-
-
-
-+ `Two.Vector`
-
-
-
-- A new instance of [Two.Vector](/documentation/vector).
+## Two.Vector.addSelf
 
 
 
@@ -508,7 +397,6 @@ __Returns__:
 
 
 
-Create a new vector and copy the existing values onto the newly created instance.
 
 
 
@@ -520,18 +408,7 @@ Create a new vector and copy the existing values onto the newly created instance
 
 <div class="instance">
 
-## Two.Vector.add
-
-
-__Returns__:
-
-
-
-+ `Two.Vector`
-
-
-
-- An instance of itself for the purpose of chaining.
+## Two.Vector.subtract
 
 
 
@@ -541,17 +418,9 @@ __Returns__:
 
 
 
-| Argument | Description |
-| ---- | ----------- |
-| `v` |  |
 
 
-Add an object with x / y component values to the instance.
 
-
-::: tip overloaded
-
-:::
 
 
 </div>
@@ -562,18 +431,7 @@ Add an object with x / y component values to the instance.
 
 <div class="instance">
 
-## Two.Vector.add
-
-
-__Returns__:
-
-
-
-+ `Two.Vector`
-
-
-
-- An instance of itself for the purpose of chaining.
+## Two.Vector.subSelf
 
 
 
@@ -583,17 +441,103 @@ __Returns__:
 
 
 
-| Argument | Description |
-| ---- | ----------- |
-| `v` |  |
 
 
-Add the **same** number to both x / y component values of the instance.
 
 
-::: tip overloaded
 
-:::
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.Vector.subtractSelf
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.Vector.multiplySelf
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.Vector.divideSelf
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.Vector.y
+
+
+
+
+
+
+The vertical y-component of the vector.
+
+
+
+
+
+
+
 
 
 </div>
@@ -647,7 +591,18 @@ Add `x` / `y` values to their respective component value on the instance.
 
 <div class="instance">
 
-## Two.Vector.addSelf
+## Two.Vector.divideSelf.divideSelf
+
+
+__Returns__:
+
+
+
++ `Two.Vector`
+
+
+
+- An instance of itself for the purpose of chaining.
 
 
 
@@ -657,9 +612,18 @@ Add `x` / `y` values to their respective component value on the instance.
 
 
 
+| Argument | Description |
+| ---- | ----------- |
+| `x` |  |
+| `y` |  |
 
 
+Divide `x` / `y` values to their respective component value on the instance.
 
+
+::: tip overloaded
+
+:::
 
 
 </div>
@@ -797,7 +761,18 @@ Subtract `x` / `y` values to their respective component value on the instance.
 
 <div class="instance">
 
-## Two.Vector.subtract
+## Two.Vector.set
+
+
+__Returns__:
+
+
+
++ `Two.Vector`
+
+
+
+- An instance of itself for the purpose of chaining.
 
 
 
@@ -807,31 +782,13 @@ Subtract `x` / `y` values to their respective component value on the instance.
 
 
 
+| Argument | Description |
+| ---- | ----------- |
+| `x` |  |
+| `y` |  |
 
 
-
-
-
-</div>
-
-
-
----
-
-<div class="instance">
-
-## Two.Vector.subSelf
-
-
-
-
-
-
-
-
-
-
-
+Set the x / y components of a vector to specific number values.
 
 
 
@@ -843,7 +800,56 @@ Subtract `x` / `y` values to their respective component value on the instance.
 
 <div class="instance">
 
-## Two.Vector.subtractSelf
+## Two.Vector.copy
+
+
+__Returns__:
+
+
+
++ `Two.Vector`
+
+
+
+- An instance of itself for the purpose of chaining.
+
+
+
+
+
+
+
+
+
+| Argument | Description |
+| ---- | ----------- |
+| `v` |  |
+
+
+Copy the x / y components of another object `v`.
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.Vector.clear
+
+
+__Returns__:
+
+
+
++ `Two.Vector`
+
+
+
+- An instance of itself for the purpose of chaining.
 
 
 
@@ -855,6 +861,7 @@ Subtract `x` / `y` values to their respective component value on the instance.
 
 
 
+Set the x / y component values of the vector to zero.
 
 
 
@@ -993,7 +1000,18 @@ Multiply `x` / `y` values to their respective component value on the instance.
 
 <div class="instance">
 
-## Two.Vector.multiplySelf
+## Two.Vector.clone
+
+
+__Returns__:
+
+
+
++ `Two.Vector`
+
+
+
+- A new instance of [Two.Vector](/documentation/vector).
 
 
 
@@ -1005,6 +1023,7 @@ Multiply `x` / `y` values to their respective component value on the instance.
 
 
 
+Create a new vector and copy the existing values onto the newly created instance.
 
 
 
@@ -1169,7 +1188,18 @@ Divide `x` / `y` values to their respective component value on the instance.
 
 <div class="instance">
 
-## Two.Vector.divideSelf
+## Two.Vector.add
+
+
+__Returns__:
+
+
+
++ `Two.Vector`
+
+
+
+- An instance of itself for the purpose of chaining.
 
 
 
@@ -1179,9 +1209,17 @@ Divide `x` / `y` values to their respective component value on the instance.
 
 
 
+| Argument | Description |
+| ---- | ----------- |
+| `v` |  |
 
 
+Add an object with x / y component values to the instance.
 
+
+::: tip overloaded
+
+:::
 
 
 </div>
@@ -1307,14 +1345,18 @@ Get the length of a vector.
 
 <div class="instance">
 
-## Two.Vector.lengthSquared
+## Two.Vector.add
 
 
 __Returns__:
 
 
 
-+ `Number`
++ `Two.Vector`
+
+
+
+- An instance of itself for the purpose of chaining.
 
 
 
@@ -1324,12 +1366,17 @@ __Returns__:
 
 
 
+| Argument | Description |
+| ---- | ----------- |
+| `v` |  |
 
 
+Add the **same** number to both x / y component values of the instance.
 
 
-Get the length of the vector to the power of two. Widely used as less expensive than [Two.Vector.length](/documentation/vector#two-vector-length), because it isn't square-rooting any numbers.
+::: tip overloaded
 
+:::
 
 
 </div>
@@ -1645,43 +1692,6 @@ Rotate a vector.
 
 ---
 
-<div class="static">
-
-## Two.Vector.subtract.Two.Vector.subtract
-
-
-__Returns__:
-
-
-
-+ `Two.Vector`
-
-
-
-
-
-
-
-
-
-
-
-| Argument | Description |
-| ---- | ----------- |
-| `v1` |  |
-| `v2` |  |
-
-
-Subtract two vectors: `v2` from `v1`.
-
-
-
-</div>
-
-
-
----
-
 <div class="instance">
 
 ## Two.Vector.addSelf.addSelf
@@ -2403,18 +2413,14 @@ Divide the **same** number to both x / y component values of the instance.
 
 <div class="instance">
 
-## Two.Vector.divideSelf.divideSelf
+## Two.Vector.lengthSquared
 
 
 __Returns__:
 
 
 
-+ `Two.Vector`
-
-
-
-- An instance of itself for the purpose of chaining.
++ `Number`
 
 
 
@@ -2424,18 +2430,12 @@ __Returns__:
 
 
 
-| Argument | Description |
-| ---- | ----------- |
-| `x` |  |
-| `y` |  |
 
 
-Divide `x` / `y` values to their respective component value on the instance.
 
 
-::: tip overloaded
+Get the length of the vector to the power of two. Widely used as less expensive than [Two.Vector.length](/documentation/vector#two-vector-length), because it isn't square-rooting any numbers.
 
-:::
 
 
 </div>

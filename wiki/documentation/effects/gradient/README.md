@@ -16,108 +16,6 @@ This is the base class for constructing different types of gradients with Two.js
 
 ---
 
-<div class="instance">
-
-## Two.Gradient.id
-
-
-
-
-
-
-Session specific unique identifier.
-
-
-
-
-
-
-
-
-::: tip nota-bene
-In the [Two.SvgRenderer](/documentation/svgrenderer) change this to change the underlying SVG element's id too.
-:::
-
-
-</div>
-
-
-
----
-
-<div class="instance">
-
-## Two.Gradient.spread
-
-
-
-
-
-
-Indicates what happens if the gradient starts or ends inside the bounds of the target rectangle. Possible values are `'pad'`, `'reflect'`, and `'repeat'`.
-
-
-
-
-
-
-
-
-
-</div>
-
-
-
----
-
-<div class="instance">
-
-## Two.Gradient.stops
-
-
-
-
-
-
-An ordered list of [Two.Stop](/documentation/stop)s for rendering the gradient.
-
-
-
-
-
-
-
-
-
-</div>
-
-
-
----
-
-<div class="instance">
-
-## Two.Gradient.Stop
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</div>
-
-
-
----
-
 <div class="static">
 
 ## Two.Gradient.Properties
@@ -229,6 +127,108 @@ Cached method to let [Two.Gradient](/documentation/gradient) know vertices have 
 
 
 Cached method to let [Two.Gradient](/documentation/gradient) know vertices have been removed from the instance.
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.Gradient.id
+
+
+
+
+
+
+Session specific unique identifier.
+
+
+
+
+
+
+
+
+::: tip nota-bene
+In the [Two.SvgRenderer](/documentation/svgrenderer) change this to change the underlying SVG element's id too.
+:::
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.Gradient.spread
+
+
+
+
+
+
+Indicates what happens if the gradient starts or ends inside the bounds of the target rectangle. Possible values are `'pad'`, `'reflect'`, and `'repeat'`.
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.Gradient.stops
+
+
+
+
+
+
+An ordered list of [Two.Stop](/documentation/stop)s for rendering the gradient.
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.Gradient.Stop
+
+
+
+
+
+
+
+
+
+
+
 
 
 

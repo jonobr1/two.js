@@ -21,6 +21,57 @@ __Extends__: `Two.Path`
 
 ---
 
+<div class="static">
+
+## Two.Rectangle.Properties
+
+
+
+
+
+
+A list of properties that are on every [Two.Rectangle](/documentation/rectangle).
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="static">
+
+## Two.Rectangle.MakeObservable
+
+
+
+
+
+
+
+
+| Argument | Description |
+| ---- | ----------- |
+| `object` | The object to make observable. |
+
+
+Convenience function to apply observable qualities of a [Two.Rectangle](/documentation/rectangle) to any object. Handy if you'd like to extend the [Two.Rectangle](/documentation/rectangle) class on a custom class.
+
+
+
+</div>
+
+
+
+---
+
 <div class="instance">
 
 ## Two.Rectangle.width
@@ -87,57 +138,6 @@ A two-component vector describing the origin offset to draw the rectangle. Defau
 
 
 
-
-
-
-</div>
-
-
-
----
-
-<div class="static">
-
-## Two.Rectangle.Properties
-
-
-
-
-
-
-A list of properties that are on every [Two.Rectangle](/documentation/rectangle).
-
-
-
-
-
-
-
-
-
-</div>
-
-
-
----
-
-<div class="static">
-
-## Two.Rectangle.MakeObservable
-
-
-
-
-
-
-
-
-| Argument | Description |
-| ---- | ----------- |
-| `object` | The object to make observable. |
-
-
-Convenience function to apply observable qualities of a [Two.Rectangle](/documentation/rectangle) to any object. Handy if you'd like to extend the [Two.Rectangle](/documentation/rectangle) class on a custom class.
 
 
 

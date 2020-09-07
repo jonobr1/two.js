@@ -22,6 +22,55 @@ __Extends__: `Two.Gradient`
 
 ---
 
+<div class="static">
+
+## Two.LinearGradient.MakeObservable
+
+
+
+
+
+
+
+
+| Argument | Description |
+| ---- | ----------- |
+| `object` | The object to make observable. |
+
+
+Convenience function to apply observable qualities of a [Two.LinearGradient](/documentation/lineargradient) to any object. Handy if you'd like to extend the [Two.LinearGradient](/documentation/lineargradient) class on a custom class.
+
+
+
+</div>
+
+
+
+---
+
+<div class="static">
+
+## Two.LinearGradient.FlagEndPoints
+
+
+
+
+
+
+
+
+
+
+Cached method to let renderers know end points have been updated on a [Two.LinearGradient](/documentation/lineargradient).
+
+
+
+</div>
+
+
+
+---
+
 <div class="instance">
 
 ## Two.LinearGradient.left
@@ -86,55 +135,6 @@ The x and y value for where the second end point is placed on the canvas.
 
 
 
-
-
-
-</div>
-
-
-
----
-
-<div class="static">
-
-## Two.LinearGradient.MakeObservable
-
-
-
-
-
-
-
-
-| Argument | Description |
-| ---- | ----------- |
-| `object` | The object to make observable. |
-
-
-Convenience function to apply observable qualities of a [Two.LinearGradient](/documentation/lineargradient) to any object. Handy if you'd like to extend the [Two.LinearGradient](/documentation/lineargradient) class on a custom class.
-
-
-
-</div>
-
-
-
----
-
-<div class="static">
-
-## Two.LinearGradient.FlagEndPoints
-
-
-
-
-
-
-
-
-
-
-Cached method to let renderers know end points have been updated on a [Two.LinearGradient](/documentation/lineargradient).
 
 
 

@@ -18,81 +18,6 @@
 
 ---
 
-<div class="instance">
-
-## Two.Stop.offset
-
-
-
-
-
-
-The offset percentage of the stop represented as a zero-to-one value.
-
-
-
-
-
-
-
-
-
-</div>
-
-
-
----
-
-<div class="instance">
-
-## Two.Stop.opacity
-
-
-
-
-
-
-The alpha percentage of the stop represented as a zero-to-one value.
-
-
-
-
-
-
-
-
-
-</div>
-
-
-
----
-
-<div class="instance">
-
-## Two.Stop.color
-
-
-
-
-
-
-The color of the stop.
-
-
-
-
-
-
-
-
-
-</div>
-
-
-
----
-
 <div class="static">
 
 ## Two.Stop.Index
@@ -160,6 +85,81 @@ A list of properties that are on every [Two.Stop](/documentation/stop).
 
 
 Convenience function to apply observable qualities of a [Two.Stop](/documentation/stop) to any object. Handy if you'd like to extend the [Two.Stop](/documentation/stop) class on a custom class.
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.Stop.offset
+
+
+
+
+
+
+The offset percentage of the stop represented as a zero-to-one value.
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.Stop.opacity
+
+
+
+
+
+
+The alpha percentage of the stop represented as a zero-to-one value.
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.Stop.color
+
+
+
+
+
+
+The color of the stop.
+
+
+
+
+
+
 
 
 

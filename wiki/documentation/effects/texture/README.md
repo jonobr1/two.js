@@ -19,139 +19,6 @@ Fundamental to work with bitmap data, a.k.a. pregenerated imagery, in Two.js. Su
 
 ---
 
-<div class="instance">
-
-## Two.Texture.loaded
-
-
-
-
-
-
-Shorthand value to determine if image has been loaded into the texture.
-
-
-
-
-
-
-
-
-
-</div>
-
-
-
----
-
-<div class="instance">
-
-## Two.Texture.repeat
-
-
-
-
-
-
-CSS style declaration to tile [Two.Path](/documentation/path). Valid values include: `'no-repeat'`, `'repeat'`, `'repeat-x'`, `'repeat-y'`.
-
-
-
-
-
-
-
-
-
-</div>
-
-
-
----
-
-<div class="instance">
-
-## Two.Texture.offset
-
-
-
-
-
-
-A two-component vector describing any pixel offset of the texture when applied to a [Two.Path](/documentation/path).
-
-
-
-
-
-
-
-
-
-</div>
-
-
-
----
-
-<div class="instance">
-
-## Two.Texture.src
-
-
-
-
-
-
-The URL path to the image data.
-
-
-
-
-
-
-
-
-::: tip nota-bene
-This property is ultimately serialized in a [Two.Registry](/documentation/registry) to cache retrieval.
-:::
-
-
-</div>
-
-
-
----
-
-<div class="instance">
-
-## Two.Texture.image
-
-
-
-
-
-
-The corresponding DOM Element of the texture. Can be a `<img />`, `<canvas />`, or `<video />` element. See [Two.Texture.RegularExpressions](/documentation/texture#two-texture-regularexpressions) for a full list of supported elements.
-
-
-
-
-
-
-
-
-::: tip nota-bene
-In headless environments this is a `Canvas.Image` object. See [https://github.com/Automattic/node-canvas](https://github.com/Automattic/node-canvas) for more information on headless image objects.
-:::
-
-
-</div>
-
-
-
----
-
 <div class="static">
 
 ## Two.Texture.Properties
@@ -498,6 +365,139 @@ Cached method to let renderers know `scale` has been updated on a [Two.Texture](
 
 Convenience function to apply observable qualities of a [Two.Texture](/documentation/texture) to any object. Handy if you'd like to extend or inherit the [Two.Texture](/documentation/texture) class on a custom class.
 
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.Texture.loaded
+
+
+
+
+
+
+Shorthand value to determine if image has been loaded into the texture.
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.Texture.repeat
+
+
+
+
+
+
+CSS style declaration to tile [Two.Path](/documentation/path). Valid values include: `'no-repeat'`, `'repeat'`, `'repeat-x'`, `'repeat-y'`.
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.Texture.offset
+
+
+
+
+
+
+A two-component vector describing any pixel offset of the texture when applied to a [Two.Path](/documentation/path).
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.Texture.src
+
+
+
+
+
+
+The URL path to the image data.
+
+
+
+
+
+
+
+
+::: tip nota-bene
+This property is ultimately serialized in a [Two.Registry](/documentation/registry) to cache retrieval.
+:::
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.Texture.image
+
+
+
+
+
+
+The corresponding DOM Element of the texture. Can be a `<img />`, `<canvas />`, or `<video />` element. See [Two.Texture.RegularExpressions](/documentation/texture#two-texture-regularexpressions) for a full list of supported elements.
+
+
+
+
+
+
+
+
+::: tip nota-bene
+In headless environments this is a `Canvas.Image` object. See [https://github.com/Automattic/node-canvas](https://github.com/Automattic/node-canvas) for more information on headless image objects.
+:::
 
 
 </div>

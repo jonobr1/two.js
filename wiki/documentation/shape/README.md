@@ -13,6 +13,55 @@ The foundational transformation object for the Two.js scenegraph.
 
 ---
 
+<div class="static">
+
+## Two.Shape.FlagMatrix
+
+
+
+
+
+
+
+
+
+
+Utility function used in conjunction with event handlers to update the flagMatrix of a shape.
+
+
+
+</div>
+
+
+
+---
+
+<div class="static">
+
+## Two.Shape.MakeObservable
+
+
+
+
+
+
+
+
+| Argument | Description |
+| ---- | ----------- |
+| `object` | The object to make observable. |
+
+
+Convenience function to apply observable qualities of a [Two.Shape](/documentation/shape) to any object. Handy if you'd like to extend the [Two.Shape](/documentation/shape) class on a custom class.
+
+
+
+</div>
+
+
+
+---
+
 <div class="instance">
 
 ## Two.Shape.id
@@ -167,55 +216,6 @@ The value for how much the shape is scaled relative to its parent.
 ::: tip nota-bene
 This value can be replaced with a [Two.Vector](/documentation/vector) to do non-uniform scaling. e.g: `shape.scale = new Two.Vector(2, 1);`
 :::
-
-
-</div>
-
-
-
----
-
-<div class="static">
-
-## Two.Shape.FlagMatrix
-
-
-
-
-
-
-
-
-
-
-Utility function used in conjunction with event handlers to update the flagMatrix of a shape.
-
-
-
-</div>
-
-
-
----
-
-<div class="static">
-
-## Two.Shape.MakeObservable
-
-
-
-
-
-
-
-
-| Argument | Description |
-| ---- | ----------- |
-| `object` | The object to make observable. |
-
-
-Convenience function to apply observable qualities of a [Two.Shape](/documentation/shape) to any object. Handy if you'd like to extend the [Two.Shape](/documentation/shape) class on a custom class.
-
 
 
 </div>

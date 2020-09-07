@@ -11,85 +11,6 @@
 
 ---
 
-<div class="instance">
-
-## Two.Group.additions
-
-
-
-
-
-
-
-
-
-
-
-
-An automatically updated list of children that need to be appended to the renderer's scenegraph.
-
-
-
-</div>
-
-
-
----
-
-<div class="instance">
-
-## Two.Group.subtractions
-
-
-
-
-
-
-
-
-
-
-
-
-An automatically updated list of children that need to be removed from the renderer's scenegraph.
-
-
-
-</div>
-
-
-
----
-
-<div class="instance">
-
-## Two.Group.additions
-
-
-
-
-
-
-
-
-
-
-
-
-A list of all the children in the scenegraph.
-
-
-::: tip nota-bene
-Ther order of this list indicates the order each element is rendered to the screen.
-:::
-
-
-</div>
-
-
-
----
-
 <div class="static">
 
 ## Two.Group.Children
@@ -104,83 +25,6 @@ Ther order of this list indicates the order each element is rendered to the scre
 
 
 A children collection which is accesible both by index and by object `id`.
-
-
-
-</div>
-
-
-
----
-
-<div class="instance">
-
-## Two.Group.Children.ids
-
-
-
-
-
-
-Map of all elements in the list keyed by `id`s.
-
-
-
-
-
-
-
-
-
-</div>
-
-
-
----
-
-<div class="instance">
-
-## Two.Group.Children.attach
-
-
-
-
-
-
-
-
-| Argument | Description |
-| ---- | ----------- |
-| `` |  |
-
-
-Adds elements to the `ids` map.
-
-
-
-</div>
-
-
-
----
-
-<div class="instance">
-
-## Two.Group.Children.detach
-
-
-
-
-
-
-
-
-| Argument | Description |
-| ---- | ----------- |
-| `` |  |
-
-
-Removes elements to the `ids` map.
 
 
 
@@ -352,6 +196,164 @@ Convenience function to apply observable qualities of a [Two.Group](/documentati
 | ---- | ----------- |
 | `group` | The group to apply getters and setters. |
 | `key` | The key which will become a property on the group. |
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.Group.beginning
+
+
+
+
+
+
+Number between zero and one to state the beginning of where the path is rendered.
+
+
+
+
+
+[Two.Group.beginning](/documentation/group#two-group-beginning) is a percentage value that represents at what percentage into all child shapes should the renderer start drawing.
+
+
+::: tip nota-bene
+This is great for animating in and out stroked paths in conjunction with [Two.Group.ending](/documentation/group#two-group-ending).
+:::
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.Group.additions
+
+
+
+
+
+
+
+
+
+
+
+
+An automatically updated list of children that need to be appended to the renderer's scenegraph.
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.Group.additions
+
+
+
+
+
+
+
+
+
+
+
+
+A list of all the children in the scenegraph.
+
+
+::: tip nota-bene
+Ther order of this list indicates the order each element is rendered to the screen.
+:::
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.Group.Children.ids
+
+
+
+
+
+
+Map of all elements in the list keyed by `id`s.
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.Group.mask
+
+
+
+
+
+
+The Two.js object to clip from a group's rendering.
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.Group.length
+
+
+
+
+
+
+The sum of distances between all child lengths.
+
+
+
 
 
 
@@ -649,25 +651,21 @@ Determines whether or not Two.js should calculate curves, lines, and commands au
 
 <div class="instance">
 
-## Two.Group.beginning
+## Two.Group.subtractions
 
 
 
 
 
 
-Number between zero and one to state the beginning of where the path is rendered.
 
 
 
 
 
-[Two.Group.beginning](/documentation/group#two-group-beginning) is a percentage value that represents at what percentage into all child shapes should the renderer start drawing.
 
+An automatically updated list of children that need to be removed from the renderer's scenegraph.
 
-::: tip nota-bene
-This is great for animating in and out stroked paths in conjunction with [Two.Group.ending](/documentation/group#two-group-ending).
-:::
 
 
 </div>
@@ -707,20 +705,30 @@ This is great for animating in and out stroked paths in conjunction with [Two.Gr
 
 <div class="instance">
 
-## Two.Group.length
+## Two.Group.getByClassName
+
+
+__Returns__:
+
+
+
++ `Array.<Two.Shape>`
+
+
+
+- Or empty array if nothing is found.
 
 
 
 
 
 
-The sum of distances between all child lengths.
 
 
 
 
 
-
+Recursively search for classes. Returns an array of matching elements.
 
 
 
@@ -732,20 +740,21 @@ The sum of distances between all child lengths.
 
 <div class="instance">
 
-## Two.Group.mask
+## Two.Group.Children.detach
 
 
 
 
 
 
-The Two.js object to clip from a group's rendering.
 
 
+| Argument | Description |
+| ---- | ----------- |
+| `` |  |
 
 
-
-
+Removes elements to the `ids` map.
 
 
 
@@ -907,18 +916,7 @@ Recursively search for id. Returns the first element found.
 
 <div class="instance">
 
-## Two.Group.getByClassName
-
-
-__Returns__:
-
-
-
-+ `Array.<Two.Shape>`
-
-
-
-- Or empty array if nothing is found.
+## Two.Group.Children.attach
 
 
 
@@ -927,10 +925,12 @@ __Returns__:
 
 
 
+| Argument | Description |
+| ---- | ----------- |
+| `` |  |
 
 
-
-Recursively search for classes. Returns an array of matching elements.
+Adds elements to the `ids` map.
 
 
 

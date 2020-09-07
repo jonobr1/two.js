@@ -21,6 +21,31 @@ This class is used by [Two](/documentation/) when constructing with `type` of `T
 
 ---
 
+<div class="static">
+
+## Two.WebGLRenderer.Utils
+
+
+
+
+
+
+A massive object filled with utility functions and properties to render Two.js objects to a `<canvas />` through the WebGL API.
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
 <div class="instance">
 
 ## Two.WebGLRenderer.domElement
@@ -131,31 +156,6 @@ Associated two dimensional context to render on the `<canvas />`.
 
 
 Associated WebGL program to render all elements from the scenegraph.
-
-
-
-
-
-
-
-
-
-</div>
-
-
-
----
-
-<div class="static">
-
-## Two.WebGLRenderer.Utils
-
-
-
-
-
-
-A massive object filled with utility functions and properties to render Two.js objects to a `<canvas />` through the WebGL API.
 
 
 

@@ -24,70 +24,6 @@ A class to store 3 x 3 transformation matrix information. In addition to storing
 
 ---
 
-<div class="instance">
-
-## Two.Matrix.elements
-
-
-
-
-
-
-The underlying data stored as an array.
-
-
-
-
-
-
-
-
-
-</div>
-
-
-
----
-
-<div class="static">
-
-## Utils.getComputedMatrix
-
-
-__Returns__:
-
-
-
-+ `Two.Matrix`
-
-
-
-The computed matrix of a nested object. If no `matrix` was passed in arguments then a `new Two.Matrix` is returned.
-
-
-
-
-
-
-
-
-
-| Argument | Description |
-| ---- | ----------- |
-| `object` | The Two.js object that has a matrix property to calculate from. |
-| `matrix` | The matrix to apply calculated transformations to if available. |
-
-
-Method to get the world space transformation of a given object in a Two.js scene.
-
-
-
-</div>
-
-
-
----
-
 <div class="static">
 
 ## Two.Matrix.Identity
@@ -144,6 +80,31 @@ __Returns__:
 
 
 Multiply two matrices together and return the result.
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.Matrix.elements
+
+
+
+
+
+
+The underlying data stored as an array.
+
+
+
+
+
+
 
 
 
@@ -288,7 +249,7 @@ Turn matrix to the identity, like resetting.
 
 ---
 
-<div class="static">
+<div class="instance">
 
 ## Two.Matrix.multiply
 
@@ -314,7 +275,7 @@ Multiply all components of the matrix against a single scalar value.
 
 ---
 
-<div class="static">
+<div class="instance">
 
 ## Two.Matrix.multiply
 
@@ -342,7 +303,7 @@ Multiply all components of a matrix against a 3 component vector.
 
 ---
 
-<div class="static">
+<div class="instance">
 
 ## Two.Matrix.multiply
 
@@ -404,7 +365,7 @@ Return an inverted version of the matrix. If no optional one is passed a new mat
 
 <div class="instance">
 
-## Two.Matrix.scale
+## Two.Matrix.clone
 
 
 
@@ -413,12 +374,9 @@ Return an inverted version of the matrix. If no optional one is passed a new mat
 
 
 
-| Argument | Description |
-| ---- | ----------- |
-| `scale` | The one dimensional scale to apply to the matrix. |
 
 
-Uniformly scale the transformation matrix.
+Clone the current matrix.
 
 
 
@@ -677,7 +635,7 @@ Create a JSON compatible object that represents information of the matrix.
 
 <div class="instance">
 
-## Two.Matrix.clone
+## Two.Matrix.scale
 
 
 
@@ -686,9 +644,12 @@ Create a JSON compatible object that represents information of the matrix.
 
 
 
+| Argument | Description |
+| ---- | ----------- |
+| `scale` | The one dimensional scale to apply to the matrix. |
 
 
-Clone the current matrix.
+Uniformly scale the transformation matrix.
 
 
 

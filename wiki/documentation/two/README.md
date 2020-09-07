@@ -21,92 +21,6 @@ The entrypoint for Two.js. Instantiate a `new Two` in order to setup a scene to 
 
 ---
 
-<div class="instance">
-
-## Two.appendTo
-
-
-
-
-
-
-
-
-| Argument | Description |
-| ---- | ----------- |
-| `elem` | The DOM element to append the Two.js stage to. |
-
-
-Shorthand method to append your instance of Two.js to the `document`.
-
-
-
-</div>
-
-
-
----
-
-<div class="instance">
-
-## Two.play
-
-
-
-
-__Triggers__:
-
-+ `Two.Events.Types.event:play event`
-
-
-
-
-
-
-
-
-Call to start an internal animation loop.
-
-
-::: tip nota-bene
-This function initiates a `requestAnimationFrame` loop.
-:::
-
-
-</div>
-
-
-
----
-
-<div class="instance">
-
-## Two.pause
-
-
-
-
-__Triggers__:
-
-+ `Two.Events.Types.event:pause event`
-
-
-
-
-
-
-
-
-Call to stop the internal animation loop for a specific instance of Two.js.
-
-
-
-</div>
-
-
-
----
-
 <div class="static">
 
 ## Two.release
@@ -136,6 +50,31 @@ The object passed for event deallocation.
 
 
 Release an arbitrary class' events from the Two.js corpus and recurse through its children and or vertices.
+
+
+
+</div>
+
+
+
+---
+
+<div class="static">
+
+## Two.Commands
+
+
+
+
+
+
+Map of possible path commands. Taken from the SVG specification.
+
+
+
+
+
+
 
 
 
@@ -196,6 +135,100 @@ __Triggers__:
 
 
 Render all drawable and visible objects of the scene.
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.makeStar
+
+
+__Returns__:
+
+
+
++ `Two.Star`
+
+
+
+
+
+
+
+
+
+
+
+| Argument | Description |
+| ---- | ----------- |
+| `x` |  |
+| `y` |  |
+| `outerRadius` |  |
+| `innerRadius` |  |
+| `sides` |  |
+
+
+Creates a Two.js star and adds it to the scene.
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.appendTo
+
+
+
+
+
+
+
+
+| Argument | Description |
+| ---- | ----------- |
+| `elem` | The DOM element to append the Two.js stage to. |
+
+
+Shorthand method to append your instance of Two.js to the `document`.
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.pause
+
+
+
+
+__Triggers__:
+
++ `Two.Events.Types.event:pause event`
+
+
+
+
+
+
+
+
+Call to stop the internal animation loop for a specific instance of Two.js.
 
 
 
@@ -518,17 +551,14 @@ Creates a Two.js ellipse and adds it to the scene.
 
 <div class="instance">
 
-## Two.makeStar
-
-
-__Returns__:
+## Two.play
 
 
 
-+ `Two.Star`
 
+__Triggers__:
 
-
++ `Two.Events.Types.event:play event`
 
 
 
@@ -537,17 +567,12 @@ __Returns__:
 
 
 
-| Argument | Description |
-| ---- | ----------- |
-| `x` |  |
-| `y` |  |
-| `outerRadius` |  |
-| `innerRadius` |  |
-| `sides` |  |
+Call to start an internal animation loop.
 
 
-Creates a Two.js star and adds it to the scene.
-
+::: tip nota-bene
+This function initiates a `requestAnimationFrame` loop.
+:::
 
 
 </div>
@@ -1050,31 +1075,6 @@ __Returns__:
 
 
 Load an SVG file or SVG text and interpret it into Two.js legible objects.
-
-
-
-</div>
-
-
-
----
-
-<div class="static">
-
-## Two.Commands
-
-
-
-
-
-
-Map of possible path commands. Taken from the SVG specification.
-
-
-
-
-
-
 
 
 

@@ -23,6 +23,57 @@ A convenient package to display still or animated images through a tiled image s
 
 ---
 
+<div class="static">
+
+## Two.Sprite.Properties
+
+
+
+
+
+
+A list of properties that are on every [Two.Sprite](/documentation/sprite).
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="static">
+
+## Two.Sprite.MakeObservable
+
+
+
+
+
+
+
+
+| Argument | Description |
+| ---- | ----------- |
+| `object` | The object to make observable. |
+
+
+Convenience function to apply observable qualities of a [Two.Sprite](/documentation/sprite) to any object. Handy if you'd like to extend or inherit the [Two.Sprite](/documentation/sprite) class on a custom class.
+
+
+
+</div>
+
+
+
+---
+
 <div class="instance">
 
 ## Two.Sprite.texture
@@ -139,57 +190,6 @@ The index of the current tile of the sprite to display. Defaults to `0`.
 
 
 
-
-
-
-</div>
-
-
-
----
-
-<div class="static">
-
-## Two.Sprite.Properties
-
-
-
-
-
-
-A list of properties that are on every [Two.Sprite](/documentation/sprite).
-
-
-
-
-
-
-
-
-
-</div>
-
-
-
----
-
-<div class="static">
-
-## Two.Sprite.MakeObservable
-
-
-
-
-
-
-
-
-| Argument | Description |
-| ---- | ----------- |
-| `object` | The object to make observable. |
-
-
-Convenience function to apply observable qualities of a [Two.Sprite](/documentation/sprite) to any object. Handy if you'd like to extend or inherit the [Two.Sprite](/documentation/sprite) class on a custom class.
 
 
 

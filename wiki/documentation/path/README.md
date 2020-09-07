@@ -21,16 +21,16 @@ This is the primary primitive class for creating all drawable shapes in Two.js. 
 
 ---
 
-<div class="instance">
+<div class="static">
 
-## Two.Path.closed
-
-
+## Two.Path.Properties
 
 
 
 
-Determines whether a final line is drawn between the final point in the `vertices` array and the first point.
+
+
+A list of properties that are on every [Two.Path](/documentation/path).
 
 
 
@@ -46,16 +46,182 @@ Determines whether a final line is drawn between the final point in the `vertice
 
 ---
 
+<div class="static">
+
+## Two.Path.FlagVertices
+
+
+
+
+
+
+
+
+
+
+Cached method to let renderers know vertices have been updated on a [Two.Path](/documentation/path).
+
+
+
+</div>
+
+
+
+---
+
+<div class="static">
+
+## Two.Path.BindVertices
+
+
+
+
+
+
+
+
+
+
+Cached method to let [Two.Path](/documentation/path) know vertices have been added to the instance.
+
+
+
+</div>
+
+
+
+---
+
+<div class="static">
+
+## Two.Path.UnbindVertices
+
+
+
+
+
+
+
+
+
+
+Cached method to let [Two.Path](/documentation/path) know vertices have been removed from the instance.
+
+
+
+</div>
+
+
+
+---
+
+<div class="static">
+
+## Two.Path.FlagFill
+
+
+
+
+
+
+
+
+
+
+Cached method to let [Two.Path](/documentation/path) know the fill has changed.
+
+
+
+</div>
+
+
+
+---
+
+<div class="static">
+
+## Two.Path.FlagFill
+
+
+
+
+
+
+
+
+
+
+Cached method to let [Two.Path](/documentation/path) know the stroke has changed.
+
+
+
+</div>
+
+
+
+---
+
+<div class="static">
+
+## Two.Path.MakeObservable
+
+
+
+
+
+
+
+
+| Argument | Description |
+| ---- | ----------- |
+| `object` | The object to make observable. |
+
+
+Convenience function to apply observable qualities of a [Two.Path](/documentation/path) to any object. Handy if you'd like to extend the [Two.Path](/documentation/path) class on a custom class.
+
+
+
+</div>
+
+
+
+---
+
 <div class="instance">
 
-## Two.Path.curved
+## Two.Path.dashes
 
 
 
 
 
 
-When the path is `automatic = true` this boolean determines whether the lines between the points are curved or not.
+Array of numbers. Odd indices represent dash length. Even indices represent dash space.
+
+
+
+
+
+A list of numbers that represent the repeated dash length and dash space applied to the stroke of the text.
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.Path.closed
+
+
+
+
+
+
+Determines whether a final line is drawn between the final point in the `vertices` array and the first point.
 
 
 
@@ -422,20 +588,20 @@ Determines whether or not Two.js should calculate curves, lines, and commands au
 
 <div class="instance">
 
-## Two.Path.dashes
+## Two.Path.curved
 
 
 
 
 
 
-Array of numbers. Odd indices represent dash length. Even indices represent dash space.
+When the path is `automatic = true` this boolean determines whether the lines between the points are curved or not.
 
 
 
 
 
-A list of numbers that represent the repeated dash length and dash space applied to the stroke of the text.
+
 
 
 
@@ -461,172 +627,6 @@ A number in pixels to offset [Two.Path.dashes](/documentation/path#two-path-dash
 
 
 
-
-
-
-</div>
-
-
-
----
-
-<div class="static">
-
-## Two.Path.Properties
-
-
-
-
-
-
-A list of properties that are on every [Two.Path](/documentation/path).
-
-
-
-
-
-
-
-
-
-</div>
-
-
-
----
-
-<div class="static">
-
-## Two.Path.FlagVertices
-
-
-
-
-
-
-
-
-
-
-Cached method to let renderers know vertices have been updated on a [Two.Path](/documentation/path).
-
-
-
-</div>
-
-
-
----
-
-<div class="static">
-
-## Two.Path.BindVertices
-
-
-
-
-
-
-
-
-
-
-Cached method to let [Two.Path](/documentation/path) know vertices have been added to the instance.
-
-
-
-</div>
-
-
-
----
-
-<div class="static">
-
-## Two.Path.UnbindVertices
-
-
-
-
-
-
-
-
-
-
-Cached method to let [Two.Path](/documentation/path) know vertices have been removed from the instance.
-
-
-
-</div>
-
-
-
----
-
-<div class="static">
-
-## Two.Path.FlagFill
-
-
-
-
-
-
-
-
-
-
-Cached method to let [Two.Path](/documentation/path) know the fill has changed.
-
-
-
-</div>
-
-
-
----
-
-<div class="static">
-
-## Two.Path.FlagFill
-
-
-
-
-
-
-
-
-
-
-Cached method to let [Two.Path](/documentation/path) know the stroke has changed.
-
-
-
-</div>
-
-
-
----
-
-<div class="static">
-
-## Two.Path.MakeObservable
-
-
-
-
-
-
-
-
-| Argument | Description |
-| ---- | ----------- |
-| `object` | The object to make observable. |
-
-
-Convenience function to apply observable qualities of a [Two.Path](/documentation/path) to any object. Handy if you'd like to extend the [Two.Path](/documentation/path) class on a custom class.
 
 
 
@@ -692,6 +692,29 @@ This property is currently not working becuase of SVG spec issues found here {@l
 
 <div class="instance">
 
+## Two.Path.center
+
+
+
+
+
+
+
+
+
+
+Orient the vertices of the shape to the center of the path.
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
 ## Two.Path.clone
 
 
@@ -717,39 +740,6 @@ __Returns__:
 
 
 Create a new instance of [Two.Path](/documentation/path) with the same properties of the current path.
-
-
-
-</div>
-
-
-
----
-
-<div class="instance">
-
-## Two.Path.toObject
-
-
-__Returns__:
-
-
-
-+ `Object`
-
-
-
-
-
-
-
-
-
-
-
-
-
-Return a JSON compatible plain object that represents the path.
 
 
 
@@ -830,7 +820,14 @@ Orient the vertices of the shape to the upper left-hand corner of the path.
 
 <div class="instance">
 
-## Two.Path.center
+## Two.Path.toObject
+
+
+__Returns__:
+
+
+
++ `Object`
 
 
 
@@ -841,7 +838,10 @@ Orient the vertices of the shape to the upper left-hand corner of the path.
 
 
 
-Orient the vertices of the shape to the center of the path.
+
+
+
+Return a JSON compatible plain object that represents the path.
 
 
 

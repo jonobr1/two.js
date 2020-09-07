@@ -21,81 +21,6 @@ A convenient package to display still or animated images organized as a series o
 
 ---
 
-<div class="instance">
-
-## Two.ImageSequence.textures
-
-
-
-
-
-
-A list of textures to be used as frames for animating the [Two.ImageSequence](/documentation/imagesequence).
-
-
-
-
-
-
-
-
-
-</div>
-
-
-
----
-
-<div class="instance">
-
-## Two.ImageSequence.frameRate
-
-
-
-
-
-
-The number of frames to animate against per second.
-
-
-
-
-
-
-
-
-
-</div>
-
-
-
----
-
-<div class="instance">
-
-## Two.ImageSequence.index
-
-
-
-
-
-
-The index of the current tile of the sprite to display. Defaults to `0`.
-
-
-
-
-
-
-
-
-
-</div>
-
-
-
----
-
 <div class="static">
 
 ## Two.ImageSequence.Properties
@@ -270,6 +195,81 @@ Shorthand function to prepare source image material into readable format by [Two
 
 
 Function used internally by [Two.ImageSequence](/documentation/imagesequence) to parse arguments and return [Two.Texture](/documentation/texture)s.
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.ImageSequence.textures
+
+
+
+
+
+
+A list of textures to be used as frames for animating the [Two.ImageSequence](/documentation/imagesequence).
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.ImageSequence.frameRate
+
+
+
+
+
+
+The number of frames to animate against per second.
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.ImageSequence.index
+
+
+
+
+
+
+The index of the current tile of the sprite to display. Defaults to `0`.
+
+
+
+
+
+
 
 
 

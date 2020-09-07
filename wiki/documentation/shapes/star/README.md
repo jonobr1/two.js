@@ -22,6 +22,57 @@ __Extends__: `Two.Path`
 
 ---
 
+<div class="static">
+
+## Two.Star.Properties
+
+
+
+
+
+
+A list of properties that are on every [Two.Star](/documentation/star).
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="static">
+
+## Two.Star.MakeObservable
+
+
+
+
+
+
+
+
+| Argument | Description |
+| ---- | ----------- |
+| `object` | The object to make observable. |
+
+
+Convenience function to apply observable qualities of a [Two.Star](/documentation/star) to any object. Handy if you'd like to extend the [Two.Star](/documentation/star) class on a custom class.
+
+
+
+</div>
+
+
+
+---
+
 <div class="instance">
 
 ## Two.Star.innerRadius
@@ -88,57 +139,6 @@ The amount of sides the star has.
 
 
 
-
-
-
-</div>
-
-
-
----
-
-<div class="static">
-
-## Two.Star.Properties
-
-
-
-
-
-
-A list of properties that are on every [Two.Star](/documentation/star).
-
-
-
-
-
-
-
-
-
-</div>
-
-
-
----
-
-<div class="static">
-
-## Two.Star.MakeObservable
-
-
-
-
-
-
-
-
-| Argument | Description |
-| ---- | ----------- |
-| `object` | The object to make observable. |
-
-
-Convenience function to apply observable qualities of a [Two.Star](/documentation/star) to any object. Handy if you'd like to extend the [Two.Star](/documentation/star) class on a custom class.
 
 
 

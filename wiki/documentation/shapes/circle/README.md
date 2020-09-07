@@ -21,31 +21,6 @@ __Extends__: `Two.Path`
 
 ---
 
-<div class="instance">
-
-## Two.Circle.radius
-
-
-
-
-
-
-The size of the radius of the circle.
-
-
-
-
-
-
-
-
-
-</div>
-
-
-
----
-
 <div class="static">
 
 ## Two.Circle.Properties
@@ -88,6 +63,31 @@ A list of properties that are on every [Two.Circle](/documentation/circle).
 
 
 Convenience function to apply observable qualities of a [Two.Circle](/documentation/circle) to any object. Handy if you'd like to extend the [Two.Circle](/documentation/circle) class on a custom class.
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance">
+
+## Two.Circle.radius
+
+
+
+
+
+
+The size of the radius of the circle.
+
+
+
+
+
+
 
 
 
