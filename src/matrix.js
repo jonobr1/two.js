@@ -1,4 +1,4 @@
-import {NumArray, toFixed} from './utils/math.js';
+import { NumArray, toFixed, getComputedMatrix, setMatrix } from './utils/math.js';
 import Events from './events.js';
 import _ from './utils/underscore.js';
 
@@ -44,38 +44,7 @@ var Matrix = function(a, b, c, d, e, f) {
 
 };
 
-/**
- * @name Utils.getComputedMatrix
- * @function
- * @param {Two.Shape} object - The Two.js object that has a matrix property to calculate from.
- * @param {Two.Matrix} [matrix] - The matrix to apply calculated transformations to if available.
- * @returns {Two.Matrix} The computed matrix of a nested object. If no `matrix` was passed in arguments then a `new Two.Matrix` is returned.
- * @description Method to get the world space transformation of a given object in a Two.js scene.
- */
-var getComputedMatrix = function(object, matrix) {
-
-  matrix = (matrix && matrix.identity()) || new Matrix();
-  var parent = object, matrices = [];
-
-  while (parent && parent._matrix) {
-    matrices.push(parent._matrix);
-    parent = parent.parent;
-  }
-
-  matrices.reverse();
-
-  for (var i = 0; i < matrices.length; i++) {
-
-    var m = matrices[i];
-    var e = m.elements;
-    matrix.multiply(
-      e[0], e[1], e[2], e[3], e[4], e[5], e[6], e[7], e[8], e[9]);
-
-  }
-
-  return matrix;
-
-};
+setMatrix(Matrix);
 
 _.extend(Matrix, {
 
@@ -253,14 +222,14 @@ _.extend(Matrix.prototype, Events, {
   },
 
   /**
-   * @name Two.Matrix.multiply
+   * @name Two.Matrix#multiply
    * @function
    * @param {Number} a - The scalar to be multiplied.
    * @description Multiply all components of the matrix against a single scalar value.
    */
 
   /**
-   * @name Two.Matrix.multiply
+   * @name Two.Matrix#multiply
    * @function
    * @param {Number} a - The x component to be multiplied.
    * @param {Number} b - The y component to be multiplied.
@@ -269,7 +238,7 @@ _.extend(Matrix.prototype, Events, {
    */
 
   /**
-   * @name Two.Matrix.multiply
+   * @name Two.Matrix#multiply
    * @function
    * @param {Number} a - The value at the first column and first row of the matrix to be multiplied.
    * @param {Number} b - The value at the second column and first row of the matrix to be multiplied.
@@ -633,4 +602,3 @@ _.extend(Matrix.prototype, Events, {
 });
 
 export default Matrix;
-export {getComputedMatrix};

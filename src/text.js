@@ -1,4 +1,4 @@
-import {getComputedMatrix} from './matrix.js';
+import { getComputedMatrix } from './utils/math.js';
 import Events from './events.js';
 import defineGetterSetter from './utils/get-set.js';
 import _ from './utils/underscore.js';

@@ -9,9 +9,7 @@ import Group from '../group.js';
 import Vector from '../vector.js';
 import Constants from '../constants.js';
 
-/**
- * Constants
- */
+// Constants
 var emptyArray = [];
 var TWO_PI = Math.PI * 2,
   max = Math.max,
