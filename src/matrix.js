@@ -226,6 +226,7 @@ _.extend(Matrix.prototype, Events, {
    * @function
    * @param {Number} a - The scalar to be multiplied.
    * @description Multiply all components of the matrix against a single scalar value.
+   * @overloaded
    */
 
   /**
@@ -235,6 +236,7 @@ _.extend(Matrix.prototype, Events, {
    * @param {Number} b - The y component to be multiplied.
    * @param {Number} c - The z component to be multiplied.
    * @description Multiply all components of a matrix against a 3 component vector.
+   * @overloaded
    */
 
   /**
@@ -250,6 +252,7 @@ _.extend(Matrix.prototype, Events, {
    * @param {Number} h - The value at the second column and third row of the matrix to be multiplied.
    * @param {Number} i - The value at the third column and third row of the matrix to be multiplied.
    * @description Multiply all components of a matrix against another matrix.
+   * @overloaded
    */
   multiply: function(a, b, c, d, e, f, g, h, i) {
 

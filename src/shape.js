@@ -244,7 +244,7 @@ _.extend(Shape.prototype, Events, {
   // _clip: false,
 
   /**
-   * @name Two.Group#className
+   * @name Two.Shape#className
    * @property {String} - A class to be applied to the element to be compatible with CSS styling.
    * @nota-bene Only available for the SVG renderer.
    */

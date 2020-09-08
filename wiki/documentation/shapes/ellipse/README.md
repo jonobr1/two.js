@@ -22,9 +22,11 @@ __Extends__: `Two.Path`
 
 ---
 
-<div class="static">
+<div class="static ">
 
 ## Two.Ellipse.Properties
+
+
 
 
 
@@ -47,9 +49,11 @@ A list of properties that are on every [Two.Ellipse](/documentation/ellipse).
 
 ---
 
-<div class="static">
+<div class="static ">
 
 ## Two.Ellipse.MakeObservable
+
+
 
 
 
@@ -73,9 +77,11 @@ Convenience function to apply observable qualities of a [Two.Ellipse](/documenta
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Ellipse.width
+
+
 
 
 
@@ -98,9 +104,11 @@ The width of the ellipse.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Ellipse.height
+
+
 
 
 
@@ -123,9 +131,11 @@ The height of the ellipse.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Ellipse.clone
+
+
 
 
 __Returns__:
@@ -159,9 +169,11 @@ Create a new instance of [Two.Polygon](/documentation/polygon) with the same pro
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Ellipse.toObject
+
+
 
 
 __Returns__:

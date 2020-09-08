@@ -13,9 +13,11 @@ The foundational transformation object for the Two.js scenegraph.
 
 ---
 
-<div class="static">
+<div class="static ">
 
 ## Two.Shape.FlagMatrix
+
+
 
 
 
@@ -36,9 +38,11 @@ Utility function used in conjunction with event handlers to update the flagMatri
 
 ---
 
-<div class="static">
+<div class="static ">
 
 ## Two.Shape.MakeObservable
+
+
 
 
 
@@ -62,9 +66,11 @@ Convenience function to apply observable qualities of a [Two.Shape](/documentati
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Shape.id
+
+
 
 
 
@@ -80,9 +86,11 @@ Session specific unique identifier.
 
 
 
+
 ::: tip nota-bene
 In the [Two.SvgRenderer](/documentation/svgrenderer) change this to change the underlying SVG element's id too.
 :::
+
 
 
 </div>
@@ -91,9 +99,11 @@ In the [Two.SvgRenderer](/documentation/svgrenderer) change this to change the u
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Shape.classList
+
+
 
 
 
@@ -116,9 +126,11 @@ A list of class strings stored if imported / interpreted  from an SVG element.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Shape.matrix
+
+
 
 
 
@@ -134,9 +146,11 @@ A list of class strings stored if imported / interpreted  from an SVG element.
 The transformation matrix of the shape.
 
 
+
 ::: tip nota-bene
 [Two.Shape.translation](/documentation/shape#two-shape-translation), [Two.Shape.rotation](/documentation/shape#two-shape-rotation), and [Two.Shape.scale](/documentation/shape#two-shape-scale) apply their values to the matrix when changed. The matrix is what is sent to the renderer to be drawn.
 :::
+
 
 
 </div>
@@ -145,9 +159,11 @@ The transformation matrix of the shape.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Shape.translation
+
+
 
 
 
@@ -170,9 +186,11 @@ The x and y value for where the shape is placed relative to its parent.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Shape.rotation
+
+
 
 
 
@@ -195,9 +213,11 @@ The value in radians for how much the shape is rotated relative to its parent.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Shape.scale
+
+
 
 
 
@@ -213,9 +233,11 @@ The value for how much the shape is scaled relative to its parent.
 
 
 
+
 ::: tip nota-bene
 This value can be replaced with a [Two.Vector](/documentation/vector) to do non-uniform scaling. e.g: `shape.scale = new Two.Vector(2, 1);`
 :::
+
 
 
 </div>
@@ -224,9 +246,11 @@ This value can be replaced with a [Two.Vector](/documentation/vector) to do non-
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
-## Two.Group.className
+## Two.Shape.className
+
+
 
 
 
@@ -242,9 +266,11 @@ A class to be applied to the element to be compatible with CSS styling.
 
 
 
+
 ::: tip nota-bene
 Only available for the SVG renderer.
 :::
+
 
 
 </div>
@@ -253,9 +279,11 @@ Only available for the SVG renderer.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Shape.addTo
+
+
 
 
 
@@ -279,9 +307,11 @@ Convenience method to add itself to the scenegraph.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Shape.clone
+
+
 
 
 __Returns__:

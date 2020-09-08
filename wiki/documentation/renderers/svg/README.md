@@ -19,9 +19,11 @@ This class is used by [Two](/documentation/) when constructing with `type` of `T
 
 ---
 
-<div class="static">
+<div class="static ">
 
 ## Two.SVGRenderer.Utils
+
+
 
 
 
@@ -44,9 +46,11 @@ A massive object filled with utility functions and properties to render Two.js o
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.SVGRenderer.domElement
+
+
 
 
 
@@ -69,9 +73,11 @@ The `<svg />` associated with the Two.js scene.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.SVGRenderer.scene
+
+
 
 
 
@@ -94,9 +100,11 @@ The root group of the scenegraph.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.SVGRenderer.defs
+
+
 
 
 
@@ -119,9 +127,11 @@ The `<defs />` to apply gradients, patterns, and bitmap imagery.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.SVGRenderer.setSize
+
+
 
 
 
@@ -139,9 +149,11 @@ The `<defs />` to apply gradients, patterns, and bitmap imagery.
 Change the size of the renderer.
 
 
+
 ::: tip nota-bene
 Triggers a `Two.Events.resize`.
 :::
+
 
 
 </div>
@@ -150,9 +162,11 @@ Triggers a `Two.Events.resize`.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.SVGRenderer.render
+
+
 
 
 

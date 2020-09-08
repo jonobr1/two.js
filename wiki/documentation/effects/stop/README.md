@@ -18,9 +18,11 @@
 
 ---
 
-<div class="static">
+<div class="static ">
 
 ## Two.Stop.Index
+
+
 
 
 
@@ -43,9 +45,11 @@ The current index being referenced for calculating a stop's default offset value
 
 ---
 
-<div class="static">
+<div class="static ">
 
 ## Two.Stop.Properties
+
+
 
 
 
@@ -68,9 +72,11 @@ A list of properties that are on every [Two.Stop](/documentation/stop).
 
 ---
 
-<div class="static">
+<div class="static ">
 
 ## Two.Stop.MakeObservable
+
+
 
 
 
@@ -94,9 +100,11 @@ Convenience function to apply observable qualities of a [Two.Stop](/documentatio
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Stop.offset
+
+
 
 
 
@@ -119,9 +127,11 @@ The offset percentage of the stop represented as a zero-to-one value.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Stop.opacity
+
+
 
 
 
@@ -144,9 +154,11 @@ The alpha percentage of the stop represented as a zero-to-one value.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Stop.color
+
+
 
 
 
@@ -169,9 +181,11 @@ The color of the stop.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Stop.clone
+
+
 
 
 __Returns__:
@@ -205,9 +219,11 @@ Create a new instance of [Two.Stop](/documentation/stop) with the same propertie
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Stop.toObject
+
+
 
 
 __Returns__:

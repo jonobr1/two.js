@@ -59,7 +59,8 @@ _.extend(Vector, {
 
   /**
    * @name Two.Vector.subtract
-   * @borrows Two.Vector.sub as Two.Vector.subtract
+   * @function
+   * @description Alias for {@link Two.Vector.sub}.
    */
   subtract: function(v1, v2) {
     return Vector.sub(v1, v2);
@@ -269,7 +270,8 @@ _.extend(Vector.prototype, Events, {
 
   /**
    * @name Two.Vector#addSelf
-   * @borrows Two.Vector#add as Two.Vector#addSelf
+   * @function
+   * @description Alias for {@link Two.Vector.add}.
    */
   addSelf: function(v) {
     return this.add.apply(this, arguments);
@@ -322,7 +324,8 @@ _.extend(Vector.prototype, Events, {
 
   /**
    * @name Two.Vector#subtract
-   * @borrows Two.Vector#sub as Two.Vector#subtract
+   * @function
+   * @description Alias for {@link Two.Vector.sub}.
    */
   subtract: function() {
     return this.sub.apply(this, arguments);
@@ -330,7 +333,8 @@ _.extend(Vector.prototype, Events, {
 
   /**
    * @name Two.Vector#subSelf
-   * @borrows Two.Vector#sub as Two.Vector#subSelf
+   * @function
+   * @description Alias for {@link Two.Vector.sub}.
    */
   subSelf: function(v) {
     return this.sub.apply(this, arguments);
@@ -338,7 +342,8 @@ _.extend(Vector.prototype, Events, {
 
   /**
    * @name Two.Vector#subtractSelf
-   * @borrows Two.Vector#sub as Two.Vector#subtractSelf
+   * @function
+   * @description Alias for {@link Two.Vector.sub}.
    */
   subtractSelf: function(v) {
     return this.sub.apply(this, arguments);
@@ -391,7 +396,8 @@ _.extend(Vector.prototype, Events, {
 
   /**
    * @name Two.Vector#multiplySelf
-   * @borrows Two.Vector#multiply as Two.Vector#multiplySelf
+   * @function
+   * @description Alias for {@link Two.Vector.multiply}.
    */
   multiplySelf: function(v) {
     return this.multiply.apply(this, arguments);
@@ -460,7 +466,8 @@ _.extend(Vector.prototype, Events, {
 
   /**
    * @name Two.Vector#divideSelf
-   * @borrows Two.Vector#divide as Two.Vector#divideSelf
+   * @function
+   * @description Alias for {@link Two.Vector.divide}.
    */
   divideSelf: function(v) {
     return this.divide.apply(this, arguments);

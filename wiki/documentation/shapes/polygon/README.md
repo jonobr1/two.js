@@ -21,9 +21,11 @@ __Extends__: `Two.Path`
 
 ---
 
-<div class="static">
+<div class="static ">
 
 ## Two.Polygon.Properties
+
+
 
 
 
@@ -46,9 +48,11 @@ A list of properties that are on every [Two.Polygon](/documentation/polygon).
 
 ---
 
-<div class="static">
+<div class="static ">
 
 ## Two.Polygon.MakeObservable
+
+
 
 
 
@@ -72,9 +76,11 @@ Convenience function to apply observable qualities of a [Two.Polygon](/documenta
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Polygon.width
+
+
 
 
 
@@ -97,9 +103,11 @@ The size of the width of the polygon.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Polygon.height
+
+
 
 
 
@@ -122,9 +130,11 @@ The size of the height of the polygon.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Polygon.sides
+
+
 
 
 
@@ -147,9 +157,11 @@ The amount of sides the polyogn has.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Polygon.clone
+
+
 
 
 __Returns__:
@@ -183,9 +195,11 @@ Create a new instance of [Two.Polygon](/documentation/polygon) with the same pro
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Polygon.toObject
+
+
 
 
 __Returns__:

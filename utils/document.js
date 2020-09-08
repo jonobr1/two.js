@@ -45,10 +45,10 @@ _.each(sourceFiles, function(file) {
     } else {
 
       expandLink(object, 'description');
-      _.each(object.params, expandParam);
-      _.each(object.returns, expandParam);
-      _.each(object.properties, expandParam);
-      _.each(object.tags, expandTag);
+      _.each(object.params, expandParam, object);
+      _.each(object.returns, expandParam, object);
+      _.each(object.properties, expandParam, object);
+      _.each(object.tags, expandTag, object);
 
     }
 
@@ -67,10 +67,16 @@ _.each(sourceFiles, function(file) {
     }
   });
 
-  citationsByScope.instance.sort(sortByFunctionThenAlphabetical);
+  // citationsByScope.instance.sort(sortByFunctionThenAlphabetical);
   // citationsByScope.static.sort(sortByFunctionThenAlphabetical);
 
   citations = citationsByScope.static.concat(citationsByScope.instance)
+
+  // console.log(
+  //   citations.map(function(a) {
+  //     return a.scope + '-' + a.longname;
+  //   })
+  // );
 
   // fs.mkdirSync(outputDir, { recursive: true });
   fs.writeFileSync(outputFile.replace('README.md', 'docs.json'),
@@ -116,7 +122,16 @@ function getRoot(citations) {
 }
 
 function expandTag(tag) {
-  expandLink(tag, 'text');
+  switch (tag.title) {
+    case 'overloaded':
+      this.overloaded = true;
+      delete tag.title;
+      delete tag.originalTitle;
+      delete tag.text;
+      break;
+    default:
+      expandLink(tag, 'text');
+  }
 }
 
 function expandParam(param) {

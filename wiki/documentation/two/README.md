@@ -21,9 +21,132 @@ The entrypoint for Two.js. Instantiate a `new Two` in order to setup a scene to 
 
 ---
 
-<div class="static">
+<div class="static ">
+
+## Two.Commands
+
+
+
+
+
+
+
+
+Map of possible path commands. Taken from the SVG specification.
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance ">
+
+## Two.appendTo
+
+
+
+
+
+
+
+
+
+
+| Argument | Description |
+| ---- | ----------- |
+| `elem` | The DOM element to append the Two.js stage to. |
+
+
+Shorthand method to append your instance of Two.js to the `document`.
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance ">
+
+## Two.play
+
+
+
+
+
+
+__Triggers__:
+
++ `Two.Events.Types.event:play event`
+
+
+
+
+
+
+
+
+Call to start an internal animation loop.
+
+
+
+::: tip nota-bene
+This function initiates a `requestAnimationFrame` loop.
+:::
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance ">
+
+## Two.pause
+
+
+
+
+
+
+__Triggers__:
+
++ `Two.Events.Types.event:pause event`
+
+
+
+
+
+
+
+
+Call to stop the internal animation loop for a specific instance of Two.js.
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance ">
 
 ## Two.release
+
+
 
 
 __Returns__:
@@ -59,34 +182,11 @@ Release an arbitrary class' events from the Two.js corpus and recurse through it
 
 ---
 
-<div class="static">
-
-## Two.Commands
-
-
-
-
-
-
-Map of possible path commands. Taken from the SVG specification.
-
-
-
-
-
-
-
-
-
-</div>
-
-
-
----
-
-<div class="instance">
+<div class="instance ">
 
 ## Two.update
+
+
 
 
 
@@ -105,9 +205,11 @@ __Triggers__:
 Update positions and calculations in one pass before rendering. Then render to the canvas.
 
 
+
 ::: tip nota-bene
 This function is called automatically if using [Two.play](/documentation/play) or the `autostart` parameter in construction.
 :::
+
 
 
 </div>
@@ -116,9 +218,11 @@ This function is called automatically if using [Two.play](/documentation/play) o
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.render
+
+
 
 
 
@@ -144,103 +248,11 @@ Render all drawable and visible objects of the scene.
 
 ---
 
-<div class="instance">
-
-## Two.makeStar
-
-
-__Returns__:
-
-
-
-+ `Two.Star`
-
-
-
-
-
-
-
-
-
-
-
-| Argument | Description |
-| ---- | ----------- |
-| `x` |  |
-| `y` |  |
-| `outerRadius` |  |
-| `innerRadius` |  |
-| `sides` |  |
-
-
-Creates a Two.js star and adds it to the scene.
-
-
-
-</div>
-
-
-
----
-
-<div class="instance">
-
-## Two.appendTo
-
-
-
-
-
-
-
-
-| Argument | Description |
-| ---- | ----------- |
-| `elem` | The DOM element to append the Two.js stage to. |
-
-
-Shorthand method to append your instance of Two.js to the `document`.
-
-
-
-</div>
-
-
-
----
-
-<div class="instance">
-
-## Two.pause
-
-
-
-
-__Triggers__:
-
-+ `Two.Events.Types.event:pause event`
-
-
-
-
-
-
-
-
-Call to stop the internal animation loop for a specific instance of Two.js.
-
-
-
-</div>
-
-
-
----
-
-<div class="instance">
+<div class="instance ">
 
 ## Two.add
+
+
 
 
 
@@ -264,9 +276,11 @@ A shorthand method to add specific Two.js objects to the scene.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.remove
+
+
 
 
 
@@ -290,9 +304,11 @@ A shorthand method to remove specific Two.js objects from the scene.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.clear
+
+
 
 
 
@@ -313,9 +329,11 @@ Remove all all Two.js objects from the scene.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.makeLine
+
+
 
 
 __Returns__:
@@ -352,9 +370,11 @@ Creates a Two.js line and adds it to the scene.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.makeArrow
+
+
 
 
 __Returns__:
@@ -391,9 +411,11 @@ Creates a Two.js arrow and adds it to the scene.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.makeRectangle
+
+
 
 
 __Returns__:
@@ -430,9 +452,11 @@ Creates a Two.js rectangle and adds it to the scene.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.makeRoundedRectangle
+
+
 
 
 __Returns__:
@@ -470,9 +494,11 @@ Creates a Two.js rounded rectangle and adds it to the scene.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.makeCircle
+
+
 
 
 __Returns__:
@@ -509,9 +535,11 @@ Creates a Two.js circle and adds it to the scene.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.makeEllipse
+
+
 
 
 __Returns__:
@@ -549,30 +577,40 @@ Creates a Two.js ellipse and adds it to the scene.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
-## Two.play
-
-
-
-
-__Triggers__:
-
-+ `Two.Events.Types.event:play event`
+## Two.makeStar
 
 
 
 
+__Returns__:
+
+
+
++ `Two.Star`
 
 
 
 
-Call to start an internal animation loop.
 
 
-::: tip nota-bene
-This function initiates a `requestAnimationFrame` loop.
-:::
+
+
+
+
+
+| Argument | Description |
+| ---- | ----------- |
+| `x` |  |
+| `y` |  |
+| `outerRadius` |  |
+| `innerRadius` |  |
+| `sides` |  |
+
+
+Creates a Two.js star and adds it to the scene.
+
 
 
 </div>
@@ -581,9 +619,11 @@ This function initiates a `requestAnimationFrame` loop.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.makeCurve
+
+
 
 
 __Returns__:
@@ -613,9 +653,11 @@ __Returns__:
 Creates a Two.js path that is curved and adds it to the scene.
 
 
+
 ::: tip nota-bene
 In either case of passing an array or passing numbered arguments the last argument is an optional `Boolean` that defines whether the path should be open or closed.
 :::
+
 
 
 </div>
@@ -624,9 +666,11 @@ In either case of passing an array or passing numbered arguments the last argume
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.makePolygon
+
+
 
 
 __Returns__:
@@ -663,9 +707,11 @@ Creates a Two.js polygon and adds it to the scene.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.makeArcSegment
+
+
 
 
 
@@ -695,9 +741,11 @@ Creates a Two.js polygon and adds it to the scene.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.makePath
+
+
 
 
 __Returns__:
@@ -725,9 +773,11 @@ __Returns__:
 Creates a Two.js path and adds it to the scene.
 
 
+
 ::: tip nota-bene
 In either case of passing an array or passing numbered arguments the last argument is an optional `Boolean` that defines whether the path should be open or closed.
 :::
+
 
 
 </div>
@@ -736,9 +786,11 @@ In either case of passing an array or passing numbered arguments the last argume
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.makeText
+
+
 
 
 __Returns__:
@@ -775,9 +827,11 @@ Creates a Two.js text object and adds it to the scene.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.makeLinearGradient
+
+
 
 
 __Returns__:
@@ -815,9 +869,11 @@ Creates a Two.js linear gradient and ads it to the scene. In the case of an effe
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.makeRadialGradient
+
+
 
 
 __Returns__:
@@ -854,9 +910,11 @@ Creates a Two.js linear-gradient object and ads it to the scene. In the case of 
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.makeSprite
+
+
 
 
 __Returns__:
@@ -896,9 +954,11 @@ Creates a Two.js sprite object and adds it to the scene. Sprites can be used for
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.makeImageSequence
+
+
 
 
 __Returns__:
@@ -936,9 +996,11 @@ Creates a Two.js image sequence object and adds it to the scene.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.makeTexture
+
+
 
 
 __Returns__:
@@ -973,9 +1035,11 @@ Creates a Two.js texture object.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.makeGroup
+
+
 
 
 __Returns__:
@@ -1009,9 +1073,11 @@ Creates a Two.js group object and adds it to the scene.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.interpret
+
+
 
 
 __Returns__:
@@ -1047,9 +1113,11 @@ Interpret an SVG Node and add it to this instance's scene. The distinction shoul
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.load
+
+
 
 
 __Returns__:

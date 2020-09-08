@@ -19,9 +19,13 @@ __Extends__: `<%= root.augments %>`
 
 ---
 
-<div class="<%= item.scope %>">
+<div class="<%= item.scope %> <%= item.overloaded ? 'overloaded' : '' %>">
 
 ## <%= item.longname.replace(/\#/ig, '.') %>
+
+<% if (item.overloaded) { %>
+_Overloaded_
+<% } %>
 
 <% if (item.returns && item.returns.length > 0) { %>
 __Returns__:
@@ -58,9 +62,11 @@ __Triggers__:
 <%= item.description %>
 
 <% _.each(item.tags, function(tag) { %>
+<% if (tag.title && tag.text) { %>
 ::: tip <%= tag.title %>
 <%= tag.text %>
 :::
+<% } %>
 <% }); %>
 
 </div>

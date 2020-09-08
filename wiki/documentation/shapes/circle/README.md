@@ -21,9 +21,11 @@ __Extends__: `Two.Path`
 
 ---
 
-<div class="static">
+<div class="static ">
 
 ## Two.Circle.Properties
+
+
 
 
 
@@ -46,9 +48,11 @@ A list of properties that are on every [Two.Circle](/documentation/circle).
 
 ---
 
-<div class="static">
+<div class="static ">
 
 ## Two.Circle.MakeObservable
+
+
 
 
 
@@ -72,9 +76,11 @@ Convenience function to apply observable qualities of a [Two.Circle](/documentat
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Circle.radius
+
+
 
 
 
@@ -97,9 +103,11 @@ The size of the radius of the circle.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Circle.clone
+
+
 
 
 __Returns__:
@@ -133,9 +141,11 @@ Create a new instance of [Two.Circle](/documentation/circle) with the same prope
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Circle.toObject
+
+
 
 
 __Returns__:

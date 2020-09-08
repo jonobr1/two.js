@@ -194,7 +194,7 @@ _.extend(Two.prototype, Events, {
   },
 
   /**
-   * @name Two.release
+   * @name Two#release
    * @function
    * @param {Object} obj
    * @returns {Object} The object passed for event deallocation.

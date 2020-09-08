@@ -23,9 +23,11 @@ A convenient package to display still or animated images through a tiled image s
 
 ---
 
-<div class="static">
+<div class="static ">
 
 ## Two.Sprite.Properties
+
+
 
 
 
@@ -48,9 +50,11 @@ A list of properties that are on every [Two.Sprite](/documentation/sprite).
 
 ---
 
-<div class="static">
+<div class="static ">
 
 ## Two.Sprite.MakeObservable
+
+
 
 
 
@@ -74,9 +78,11 @@ Convenience function to apply observable qualities of a [Two.Sprite](/documentat
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Sprite.texture
+
+
 
 
 
@@ -99,9 +105,11 @@ The texture to be used as bitmap data to display image in the scene.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Sprite.columns
+
+
 
 
 
@@ -124,9 +132,11 @@ The number of columns to split the texture into. Defaults to `1`.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Sprite.rows
+
+
 
 
 
@@ -149,9 +159,11 @@ The number of rows to split the texture into. Defaults to `1`.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Sprite.frameRate
+
+
 
 
 
@@ -174,9 +186,11 @@ The number of frames to animate against per second. Defaults to `0` for non-anim
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Sprite.index
+
+
 
 
 
@@ -199,9 +213,11 @@ The index of the current tile of the sprite to display. Defaults to `0`.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Sprite.play
+
+
 
 
 
@@ -227,9 +243,11 @@ Initiate animation playback of a [Two.Sprite](/documentation/sprite).
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Sprite.pause
+
+
 
 
 
@@ -250,9 +268,11 @@ Halt animation playback of a [Two.Sprite](/documentation/sprite).
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Sprite.stop
+
+
 
 
 
@@ -273,9 +293,11 @@ Halt animation playback of a [Two.Sprite](/documentation/sprite) and set the cur
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Sprite.clone
+
+
 
 
 __Returns__:
@@ -309,9 +331,11 @@ Create a new instance of [Two.Sprite](/documentation/sprite) with the same prope
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Sprite.toObject
+
+
 
 
 __Returns__:

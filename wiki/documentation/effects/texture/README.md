@@ -19,9 +19,11 @@ Fundamental to work with bitmap data, a.k.a. pregenerated imagery, in Two.js. Su
 
 ---
 
-<div class="static">
+<div class="static ">
 
 ## Two.Texture.Properties
+
+
 
 
 
@@ -44,9 +46,11 @@ A list of properties that are on every [Two.Texture](/documentation/texture).
 
 ---
 
-<div class="static">
+<div class="static ">
 
 ## Two.Texture.RegularExpressions
+
+
 
 
 
@@ -69,9 +73,11 @@ A map of compatible DOM Elements categorized by media format.
 
 ---
 
-<div class="static">
+<div class="static ">
 
 ## Two.Texture.ImageRegistry
+
+
 
 
 
@@ -87,9 +93,11 @@ A canonical listing of image data used in a single session of Two.js.
 
 
 
+
 ::: tip nota-bene
 This object is used to cache image data between different textures.
 :::
+
 
 
 </div>
@@ -98,9 +106,11 @@ This object is used to cache image data between different textures.
 
 ---
 
-<div class="static">
+<div class="static ">
 
 ## Two.Texture.getAbsoluteURL
+
+
 
 
 __Returns__:
@@ -138,9 +148,11 @@ Serializes a URL as an absolute path for canonical attribution in [Two.ImageRegi
 
 ---
 
-<div class="static">
+<div class="static ">
 
 ## Two.Texture.loadHeadlessBuffer
+
+
 
 
 
@@ -160,9 +172,11 @@ Loads an image as a buffer in headless environments.
 
 
 
+
 ::: tip nota-bene
 - This function uses node's `fs.readFileSync` to spoof the `<img />` loading process in the browser.
 :::
+
 
 
 </div>
@@ -171,9 +185,11 @@ Loads an image as a buffer in headless environments.
 
 ---
 
-<div class="static">
+<div class="static ">
 
 ## Two.Texture.getTag
+
+
 
 
 __Returns__:
@@ -211,9 +227,11 @@ Retrieves the tag name of an image, video, or canvas node.
 
 ---
 
-<div class="static">
+<div class="static ">
 
 ## Two.Texture.getImage
+
+
 
 
 __Returns__:
@@ -251,9 +269,11 @@ Convenience function to set [Two.Texture.image](/documentation/texture#two-textu
 
 ---
 
-<div class="static">
+<div class="static ">
 
 ## Two.Register
+
+
 
 
 
@@ -274,9 +294,11 @@ A collection of functions to register different types of textures. Used internal
 
 ---
 
-<div class="static">
+<div class="static ">
 
 ## Two.Texture.load
+
+
 
 
 
@@ -301,9 +323,11 @@ A collection of functions to register different types of textures. Used internal
 
 ---
 
-<div class="static">
+<div class="static ">
 
 ## Two.Texture.FlagOffset
+
+
 
 
 
@@ -324,9 +348,11 @@ Cached method to let renderers know `offset` has been updated on a [Two.Texture]
 
 ---
 
-<div class="static">
+<div class="static ">
 
 ## Two.Texture.FlagScale
+
+
 
 
 
@@ -347,9 +373,11 @@ Cached method to let renderers know `scale` has been updated on a [Two.Texture](
 
 ---
 
-<div class="static">
+<div class="static ">
 
 ## Two.Texture.MakeObservable
+
+
 
 
 
@@ -373,9 +401,11 @@ Convenience function to apply observable qualities of a [Two.Texture](/documenta
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Texture.loaded
+
+
 
 
 
@@ -398,9 +428,11 @@ Shorthand value to determine if image has been loaded into the texture.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Texture.repeat
+
+
 
 
 
@@ -423,9 +455,11 @@ CSS style declaration to tile [Two.Path](/documentation/path). Valid values incl
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Texture.offset
+
+
 
 
 
@@ -448,9 +482,11 @@ A two-component vector describing any pixel offset of the texture when applied t
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Texture.src
+
+
 
 
 
@@ -466,9 +502,11 @@ The URL path to the image data.
 
 
 
+
 ::: tip nota-bene
 This property is ultimately serialized in a [Two.Registry](/documentation/registry) to cache retrieval.
 :::
+
 
 
 </div>
@@ -477,9 +515,11 @@ This property is ultimately serialized in a [Two.Registry](/documentation/regist
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Texture.image
+
+
 
 
 
@@ -495,9 +535,11 @@ The corresponding DOM Element of the texture. Can be a `<img />`, `<canvas />`, 
 
 
 
+
 ::: tip nota-bene
 In headless environments this is a `Canvas.Image` object. See [https://github.com/Automattic/node-canvas](https://github.com/Automattic/node-canvas) for more information on headless image objects.
 :::
+
 
 
 </div>
@@ -506,9 +548,11 @@ In headless environments this is a `Canvas.Image` object. See [https://github.co
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Texture.clone
+
+
 
 
 __Returns__:
@@ -539,9 +583,11 @@ Create a new instance of [Two.Texture](/documentation/texture) with the same pro
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Texture.toObject
+
+
 
 
 __Returns__:

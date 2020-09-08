@@ -160,13 +160,15 @@ var Events = {
 
 /**
  * @name Two.Events.bind
- * @borrows Two.Events.on as Two.Events.bind
+ * @function
+ * @description Alias for {@link Two.Events.on}.
  */
 Events.bind = Events.on;
 
 /**
  * @name Two.Events.unbind
- * @borrows Two.Events.off as Two.Events.unbind
+ * @function
+ * @description Alias for {@link Two.Events.off}.
  */
 Events.unbind = Events.off;
 

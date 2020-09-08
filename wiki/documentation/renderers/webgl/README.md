@@ -21,9 +21,11 @@ This class is used by [Two](/documentation/) when constructing with `type` of `T
 
 ---
 
-<div class="static">
+<div class="static ">
 
 ## Two.WebGLRenderer.Utils
+
+
 
 
 
@@ -46,9 +48,11 @@ A massive object filled with utility functions and properties to render Two.js o
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.WebGLRenderer.domElement
+
+
 
 
 
@@ -71,9 +75,11 @@ The `<canvas />` associated with the Two.js scene.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.WebGLRenderer.scene
+
+
 
 
 
@@ -96,9 +102,11 @@ The root group of the scenegraph.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.WebGLRenderer.overdraw
+
+
 
 
 
@@ -121,9 +129,11 @@ Determines whether the canvas clears the background each draw call.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.WebGLRenderer.ctx
+
+
 
 
 
@@ -146,9 +156,11 @@ Associated two dimensional context to render on the `<canvas />`.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.WebGLRenderer.program
+
+
 
 
 
@@ -171,9 +183,11 @@ Associated WebGL program to render all elements from the scenegraph.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.WebGLRenderer.setSize
+
+
 
 
 
@@ -204,9 +218,11 @@ Change the size of the renderer.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.WebGLRenderer.render
+
+
 
 
 

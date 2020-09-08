@@ -24,9 +24,11 @@ __Extends__: `Two.Path`
 
 ---
 
-<div class="static">
+<div class="static ">
 
 ## Two.ArcSegment.Properties
+
+
 
 
 
@@ -49,9 +51,11 @@ A list of properties that are on every [Two.ArcSegment](/documentation/arcsegmen
 
 ---
 
-<div class="static">
+<div class="static ">
 
 ## Two.ArcSegment.MakeObservable
+
+
 
 
 
@@ -75,9 +79,11 @@ Convenience function to apply observable qualities of a [Two.ArcSegment](/docume
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.ArcSegment.innerRadius
+
+
 
 
 
@@ -100,9 +106,11 @@ The size of the inner radius of the arc segment.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.ArcSegment.outerRadius
+
+
 
 
 
@@ -125,9 +133,11 @@ The size of the outer radius of the arc segment.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.ArcSegment.startRadius
+
+
 
 
 
@@ -150,9 +160,11 @@ The angle of one side for the arc segment.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.ArcSegment.endAngle
+
+
 
 
 
@@ -175,9 +187,11 @@ The angle of the other side for the arc segment.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.ArcSegment.clone
+
+
 
 
 __Returns__:
@@ -211,9 +225,11 @@ Create a new instance of [Two.ArcSegment](/documentation/arcsegment) with the sa
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.ArcSegment.toObject
+
+
 
 
 __Returns__:

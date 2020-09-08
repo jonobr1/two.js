@@ -11,9 +11,11 @@
 
 ---
 
-<div class="static">
+<div class="static ">
 
 ## Two.Group.Children
+
+
 
 
 
@@ -34,9 +36,11 @@ A children collection which is accesible both by index and by object `id`.
 
 ---
 
-<div class="static">
+<div class="static ">
 
 ## Two.Group.InsertChildren
+
+
 
 
 
@@ -57,9 +61,11 @@ Cached method to let renderers know children have been added to a [Two.Group](/d
 
 ---
 
-<div class="static">
+<div class="static ">
 
 ## Two.Group.RemoveChildren
+
+
 
 
 
@@ -80,9 +86,11 @@ Cached method to let renderers know children have been removed from a [Two.Group
 
 ---
 
-<div class="static">
+<div class="static ">
 
 ## Two.Group.OrderChildren
+
+
 
 
 
@@ -103,9 +111,11 @@ Cached method to let renderers know order has been updated on a [Two.Group](/doc
 
 ---
 
-<div class="static">
+<div class="static ">
 
 ## Two.Group.Properties
+
+
 
 
 
@@ -128,9 +138,11 @@ A list of properties that are on every [Two.Group](/documentation/group).
 
 ---
 
-<div class="static">
+<div class="static ">
 
 ## Two.Group.MakeObservable
+
+
 
 
 
@@ -154,9 +166,11 @@ Convenience function to apply observable qualities of a [Two.Group](/documentati
 
 ---
 
-<div class="static">
+<div class="static ">
 
 ## Two.Group.MakeGetterSetters
+
+
 
 
 
@@ -181,9 +195,11 @@ Convenience function to apply observable qualities of a [Two.Group](/documentati
 
 ---
 
-<div class="static">
+<div class="static ">
 
 ## Two.Group.MakeGetterSetter
+
+
 
 
 
@@ -208,38 +224,11 @@ Convenience function to apply observable qualities of a [Two.Group](/documentati
 
 ---
 
-<div class="instance">
-
-## Two.Group.beginning
-
-
-
-
-
-
-Number between zero and one to state the beginning of where the path is rendered.
-
-
-
-
-
-[Two.Group.beginning](/documentation/group#two-group-beginning) is a percentage value that represents at what percentage into all child shapes should the renderer start drawing.
-
-
-::: tip nota-bene
-This is great for animating in and out stroked paths in conjunction with [Two.Group.ending](/documentation/group#two-group-ending).
-:::
-
-
-</div>
-
-
-
----
-
-<div class="instance">
+<div class="instance ">
 
 ## Two.Group.additions
+
+
 
 
 
@@ -262,396 +251,11 @@ An automatically updated list of children that need to be appended to the render
 
 ---
 
-<div class="instance">
-
-## Two.Group.additions
-
-
-
-
-
-
-
-
-
-
-
-
-A list of all the children in the scenegraph.
-
-
-::: tip nota-bene
-Ther order of this list indicates the order each element is rendered to the screen.
-:::
-
-
-</div>
-
-
-
----
-
-<div class="instance">
-
-## Two.Group.Children.ids
-
-
-
-
-
-
-Map of all elements in the list keyed by `id`s.
-
-
-
-
-
-
-
-
-
-</div>
-
-
-
----
-
-<div class="instance">
-
-## Two.Group.mask
-
-
-
-
-
-
-The Two.js object to clip from a group's rendering.
-
-
-
-
-
-
-
-
-
-</div>
-
-
-
----
-
-<div class="instance">
-
-## Two.Group.length
-
-
-
-
-
-
-The sum of distances between all child lengths.
-
-
-
-
-
-
-
-
-
-</div>
-
-
-
----
-
-<div class="instance">
-
-## Two.Group.fill
-
-
-
-
-
-
-The value of what all child shapes should be filled in with.
-
-
-
-
-
-
-
-
-
-</div>
-
-
-
----
-
-<div class="instance">
-
-## Two.Group.stroke
-
-
-
-
-
-
-The value of what all child shapes should be outlined in with.
-
-
-
-
-
-
-
-
-
-</div>
-
-
-
----
-
-<div class="instance">
-
-## Two.Group.linewidth
-
-
-
-
-
-
-The thickness in pixels of the stroke for all child shapes.
-
-
-
-
-
-
-
-
-
-</div>
-
-
-
----
-
-<div class="instance">
-
-## Two.Group.opacity
-
-
-
-
-
-
-The opaqueness of all child shapes.
-
-
-
-
-
-
-
-
-::: tip nota-bene
-Becomes multiplied by the individual child's opacity property.
-:::
-
-
-</div>
-
-
-
----
-
-<div class="instance">
-
-## Two.Group.visible
-
-
-
-
-
-
-Display the path or not.
-
-
-
-
-
-
-
-
-::: tip nota-bene
-For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](/documentation/webglrenderer) when set to false all updating is disabled improving performance dramatically with many objects in the scene.
-:::
-
-
-</div>
-
-
-
----
-
-<div class="instance">
-
-## Two.Group.cap
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</div>
-
-
-
----
-
-<div class="instance">
-
-## Two.Group.join
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</div>
-
-
-
----
-
-<div class="instance">
-
-## Two.Group.miter
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</div>
-
-
-
----
-
-<div class="instance">
-
-## Two.Group.closed
-
-
-
-
-
-
-Determines whether a final line is drawn between the final point in the `vertices` array and the first point of all child shapes.
-
-
-
-
-
-
-
-
-
-</div>
-
-
-
----
-
-<div class="instance">
-
-## Two.Group.curved
-
-
-
-
-
-
-When the child's path is `automatic = true` this boolean determines whether the lines between the points are curved or not.
-
-
-
-
-
-
-
-
-
-</div>
-
-
-
----
-
-<div class="instance">
-
-## Two.Group.automatic
-
-
-
-
-
-
-Determines whether or not Two.js should calculate curves, lines, and commands automatically for you or to let the developer manipulate them for themselves.
-
-
-
-
-
-
-
-
-
-</div>
-
-
-
----
-
-<div class="instance">
+<div class="instance ">
 
 ## Two.Group.subtractions
+
+
 
 
 
@@ -674,49 +278,42 @@ An automatically updated list of children that need to be removed from the rende
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
-## Two.Group.ending
-
-
-
-
-
-
-Number between zero and one to state the ending of where the path is rendered.
+## Two.Group.additions
 
 
 
 
 
-[Two.Group.ending](/documentation/group#two-group-ending) is a percentage value that represents at what percentage into all child shapes should the renderer start drawing.
+
+
+
+
+
+
+
+
+
+A list of all the children in the scenegraph.
+
 
 
 ::: tip nota-bene
-This is great for animating in and out stroked paths in conjunction with [Two.Group.beginning](/documentation/group#two-group-beginning).
+Ther order of this list indicates the order each element is rendered to the screen.
 :::
 
 
+
 </div>
 
 
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
-## Two.Group.getByClassName
-
-
-__Returns__:
-
-
-
-+ `Array.<Two.Shape>`
-
-
-
-- Or empty array if nothing is found.
+## Two.Group.Children.ids
 
 
 
@@ -725,10 +322,13 @@ __Returns__:
 
 
 
+Map of all elements in the list keyed by `id`s.
 
 
 
-Recursively search for classes. Returns an array of matching elements.
+
+
+
 
 
 
@@ -738,9 +338,39 @@ Recursively search for classes. Returns an array of matching elements.
 
 ---
 
-<div class="instance">
+<div class="instance ">
+
+## Two.Group.Children.attach
+
+
+
+
+
+
+
+
+
+
+| Argument | Description |
+| ---- | ----------- |
+| `` |  |
+
+
+Adds elements to the `ids` map.
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance ">
 
 ## Two.Group.Children.detach
+
+
 
 
 
@@ -764,9 +394,440 @@ Removes elements to the `ids` map.
 
 ---
 
-<div class="instance">
+<div class="instance ">
+
+## Two.Group.fill
+
+
+
+
+
+
+
+
+The value of what all child shapes should be filled in with.
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance ">
+
+## Two.Group.stroke
+
+
+
+
+
+
+
+
+The value of what all child shapes should be outlined in with.
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance ">
+
+## Two.Group.linewidth
+
+
+
+
+
+
+
+
+The thickness in pixels of the stroke for all child shapes.
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance ">
+
+## Two.Group.opacity
+
+
+
+
+
+
+
+
+The opaqueness of all child shapes.
+
+
+
+
+
+
+
+
+
+::: tip nota-bene
+Becomes multiplied by the individual child's opacity property.
+:::
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance ">
+
+## Two.Group.visible
+
+
+
+
+
+
+
+
+Display the path or not.
+
+
+
+
+
+
+
+
+
+::: tip nota-bene
+For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](/documentation/webglrenderer) when set to false all updating is disabled improving performance dramatically with many objects in the scene.
+:::
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance ">
+
+## Two.Group.cap
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance ">
+
+## Two.Group.join
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance ">
+
+## Two.Group.miter
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance ">
+
+## Two.Group.closed
+
+
+
+
+
+
+
+
+Determines whether a final line is drawn between the final point in the `vertices` array and the first point of all child shapes.
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance ">
+
+## Two.Group.curved
+
+
+
+
+
+
+
+
+When the child's path is `automatic = true` this boolean determines whether the lines between the points are curved or not.
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance ">
+
+## Two.Group.automatic
+
+
+
+
+
+
+
+
+Determines whether or not Two.js should calculate curves, lines, and commands automatically for you or to let the developer manipulate them for themselves.
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance ">
+
+## Two.Group.beginning
+
+
+
+
+
+
+
+
+Number between zero and one to state the beginning of where the path is rendered.
+
+
+
+
+
+[Two.Group.beginning](/documentation/group#two-group-beginning) is a percentage value that represents at what percentage into all child shapes should the renderer start drawing.
+
+
+
+::: tip nota-bene
+This is great for animating in and out stroked paths in conjunction with [Two.Group.ending](/documentation/group#two-group-ending).
+:::
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance ">
+
+## Two.Group.ending
+
+
+
+
+
+
+
+
+Number between zero and one to state the ending of where the path is rendered.
+
+
+
+
+
+[Two.Group.ending](/documentation/group#two-group-ending) is a percentage value that represents at what percentage into all child shapes should the renderer start drawing.
+
+
+
+::: tip nota-bene
+This is great for animating in and out stroked paths in conjunction with [Two.Group.beginning](/documentation/group#two-group-beginning).
+:::
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance ">
+
+## Two.Group.length
+
+
+
+
+
+
+
+
+The sum of distances between all child lengths.
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance ">
+
+## Two.Group.mask
+
+
+
+
+
+
+
+
+The Two.js object to clip from a group's rendering.
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance ">
 
 ## Two.Group.clone
+
+
 
 
 __Returns__:
@@ -800,9 +861,11 @@ Create a new instance of [Two.Group](/documentation/group) with the same propert
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Group.toObject
+
+
 
 
 __Returns__:
@@ -833,9 +896,11 @@ Return a JSON compatible plain object that represents the group.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Group.corner
+
+
 
 
 
@@ -856,9 +921,11 @@ Orient the children of the group to the upper left-hand corner of that group.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Group.center
+
+
 
 
 
@@ -879,9 +946,11 @@ Orient the children of the group to the center of that group.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Group.getById
+
+
 
 
 __Returns__:
@@ -914,23 +983,34 @@ Recursively search for id. Returns the first element found.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
-## Two.Group.Children.attach
-
-
+## Two.Group.getByClassName
 
 
 
 
+__Returns__:
 
 
-| Argument | Description |
-| ---- | ----------- |
-| `` |  |
+
++ `Array.<Two.Shape>`
 
 
-Adds elements to the `ids` map.
+
+- Or empty array if nothing is found.
+
+
+
+
+
+
+
+
+
+
+
+Recursively search for classes. Returns an array of matching elements.
 
 
 
@@ -940,9 +1020,11 @@ Adds elements to the `ids` map.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Group.getByType
+
+
 
 
 __Returns__:
@@ -975,9 +1057,11 @@ Recursively search for children of a specific type, e.g. [Two.Path](/documentati
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Group.add
+
+
 
 
 
@@ -1001,9 +1085,11 @@ Add objects to the group.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Group.add
+
+
 
 
 
@@ -1027,9 +1113,11 @@ Remove objects from the group.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Group.getBoundingClientRect
+
+
 
 
 __Returns__:
@@ -1065,9 +1153,11 @@ Return an object with top, left, right, bottom, width, and height parameters of 
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Group.noFill
+
+
 
 
 
@@ -1088,9 +1178,11 @@ Apply `noFill` method to all child shapes.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Group.noStroke
+
+
 
 
 
@@ -1111,9 +1203,11 @@ Apply `noStroke` method to all child shapes.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Group.subdivide
+
+
 
 
 

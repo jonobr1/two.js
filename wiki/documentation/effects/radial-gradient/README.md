@@ -23,9 +23,11 @@ __Extends__: `Two.Gradient`
 
 ---
 
-<div class="static">
+<div class="static ">
 
 ## Two.RadialGradient.Properties
+
+
 
 
 
@@ -48,9 +50,11 @@ A list of properties that are on every [Two.RadialGradient](/documentation/radia
 
 ---
 
-<div class="static">
+<div class="static ">
 
 ## Two.RadialGradient.MakeObservable
+
+
 
 
 
@@ -74,9 +78,11 @@ Convenience function to apply observable qualities of a [Two.RadialGradient](/do
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.RadialGradient.center
+
+
 
 
 
@@ -99,9 +105,11 @@ The x and y value for where the origin of the radial gradient is.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.RadialGradient.focal
+
+
 
 
 
@@ -117,9 +125,11 @@ The x and y value for where the focal point of the radial gradient is.
 
 
 
+
 ::: tip nota-bene
 This effects the spray or spread of the radial gradient.
 :::
+
 
 
 </div>
@@ -128,7 +138,7 @@ This effects the spray or spread of the radial gradient.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.RadialGradient.Stop
 
@@ -145,15 +155,19 @@ This effects the spray or spread of the radial gradient.
 
 
 
+
+
 </div>
 
 
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.RadialGradient.clone
+
+
 
 
 __Returns__:
@@ -187,9 +201,11 @@ Create a new instance of [Two.RadialGradient](/documentation/radialgradient) wit
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.RadialGradient.toObject
+
+
 
 
 __Returns__:

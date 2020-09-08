@@ -16,9 +16,11 @@ This is the base class for constructing different types of gradients with Two.js
 
 ---
 
-<div class="static">
+<div class="static ">
 
 ## Two.Gradient.Properties
+
+
 
 
 
@@ -41,9 +43,11 @@ A list of properties that are on every [Two.Gradient](/documentation/gradient).
 
 ---
 
-<div class="static">
+<div class="static ">
 
 ## Two.Gradient.MakeObservable
+
+
 
 
 
@@ -67,9 +71,11 @@ Convenience function to apply observable qualities of a [Two.Gradient](/document
 
 ---
 
-<div class="static">
+<div class="static ">
 
 ## Two.Gradient.FlagStops
+
+
 
 
 
@@ -90,9 +96,11 @@ Cached method to let renderers know stops have been updated on a [Two.Gradient](
 
 ---
 
-<div class="static">
+<div class="static ">
 
 ## Two.Gradient.BindVertices
+
+
 
 
 
@@ -113,9 +121,11 @@ Cached method to let [Two.Gradient](/documentation/gradient) know vertices have 
 
 ---
 
-<div class="static">
+<div class="static ">
 
 ## Two.Gradient.UnbindStops
+
+
 
 
 
@@ -136,9 +146,11 @@ Cached method to let [Two.Gradient](/documentation/gradient) know vertices have 
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Gradient.id
+
+
 
 
 
@@ -154,9 +166,11 @@ Session specific unique identifier.
 
 
 
+
 ::: tip nota-bene
 In the [Two.SvgRenderer](/documentation/svgrenderer) change this to change the underlying SVG element's id too.
 :::
+
 
 
 </div>
@@ -165,9 +179,11 @@ In the [Two.SvgRenderer](/documentation/svgrenderer) change this to change the u
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Gradient.spread
+
+
 
 
 
@@ -190,9 +206,11 @@ Indicates what happens if the gradient starts or ends inside the bounds of the t
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Gradient.stops
+
+
 
 
 
@@ -215,9 +233,11 @@ An ordered list of [Two.Stop](/documentation/stop)s for rendering the gradient.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Gradient.Stop
+
+
 
 
 
@@ -238,9 +258,11 @@ An ordered list of [Two.Stop](/documentation/stop)s for rendering the gradient.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Gradient.clone
+
+
 
 
 __Returns__:
@@ -274,9 +296,11 @@ Create a new instance of [Two.Gradient](/documentation/gradient) with the same p
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Gradient.toObject
+
+
 
 
 __Returns__:

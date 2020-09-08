@@ -23,9 +23,11 @@ __Extends__: `Two.Path`
 
 ---
 
-<div class="static">
+<div class="static ">
 
 ## Two.RoundedRectangle.Properties
+
+
 
 
 
@@ -48,9 +50,11 @@ A list of properties that are on every [Two.RoundedRectangle](/documentation/rou
 
 ---
 
-<div class="static">
+<div class="static ">
 
 ## Two.RoundedRectangle.FlagRadius
+
+
 
 
 
@@ -73,9 +77,11 @@ A convenience function to trigger the flag for radius changing.
 
 ---
 
-<div class="static">
+<div class="static ">
 
 ## Two.RoundedRectangle.MakeObservable
+
+
 
 
 
@@ -99,9 +105,11 @@ Convenience function to apply observable qualities of a [Two.RoundedRectangle](/
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.RoundedRectangle.width
+
+
 
 
 
@@ -124,9 +132,11 @@ The width of the rounded rectangle.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.RoundedRectangle.height
+
+
 
 
 
@@ -149,9 +159,11 @@ The height of the rounded rectangle.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.RoundedRectangle.radius
+
+
 
 
 
@@ -174,9 +186,11 @@ The size of the radius of the rounded rectangle.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.RoundedRectangle.clone
+
+
 
 
 __Returns__:
@@ -210,9 +224,11 @@ Create a new instance of [Two.RoundedRectangle](/documentation/roundedrectangle)
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.RoundedRectangle.toObject
+
+
 
 
 __Returns__:

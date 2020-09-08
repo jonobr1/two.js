@@ -11,9 +11,11 @@ An arbitrary class to manage a directory of things. Mainly used for keeping tabs
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Registry.add
+
+
 
 
 
@@ -38,9 +40,11 @@ Adds any value to the directory. Assigned by the `id`.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Registry.remove
+
+
 
 
 
@@ -64,9 +68,11 @@ Remove any value from the directory by its `id`.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Registry.get
+
+
 
 
 __Returns__:
@@ -98,9 +104,11 @@ Get a registered value by its `id`.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.Registry.contains
+
+
 
 
 __Returns__:

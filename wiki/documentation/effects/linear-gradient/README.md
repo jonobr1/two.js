@@ -22,9 +22,11 @@ __Extends__: `Two.Gradient`
 
 ---
 
-<div class="static">
+<div class="static ">
 
 ## Two.LinearGradient.MakeObservable
+
+
 
 
 
@@ -48,9 +50,11 @@ Convenience function to apply observable qualities of a [Two.LinearGradient](/do
 
 ---
 
-<div class="static">
+<div class="static ">
 
 ## Two.LinearGradient.FlagEndPoints
+
+
 
 
 
@@ -71,9 +75,11 @@ Cached method to let renderers know end points have been updated on a [Two.Linea
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.LinearGradient.left
+
+
 
 
 
@@ -96,9 +102,11 @@ The x and y value for where the first end point is placed on the canvas.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.LinearGradient.right
+
+
 
 
 
@@ -121,9 +129,11 @@ The x and y value for where the second end point is placed on the canvas.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.LinearGradient.Stop
+
+
 
 
 
@@ -144,9 +154,11 @@ The x and y value for where the second end point is placed on the canvas.
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.LinearGradient.clone
+
+
 
 
 __Returns__:
@@ -180,9 +192,11 @@ Create a new instance of [Two.LinearGradient](/documentation/lineargradient) wit
 
 ---
 
-<div class="instance">
+<div class="instance ">
 
 ## Two.LinearGradient.toObject
+
+
 
 
 __Returns__:
