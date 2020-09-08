@@ -387,13 +387,15 @@ SOFTWARE.
 
   /**
    * @name Two.Events.bind
-   * @borrows Two.Events.on as Two.Events.bind
+   * @function
+   * @description Alias for {@link Two.Events.on}.
    */
   Events.bind = Events.on;
 
   /**
    * @name Two.Events.unbind
-   * @borrows Two.Events.off as Two.Events.unbind
+   * @function
+   * @description Alias for {@link Two.Events.off}.
    */
   Events.unbind = Events.off;
 
@@ -455,7 +457,8 @@ SOFTWARE.
 
     /**
      * @name Two.Vector.subtract
-     * @borrows Two.Vector.sub as Two.Vector.subtract
+     * @function
+     * @description Alias for {@link Two.Vector.sub}.
      */
     subtract: function(v1, v2) {
       return Vector.sub(v1, v2);
@@ -665,7 +668,8 @@ SOFTWARE.
 
     /**
      * @name Two.Vector#addSelf
-     * @borrows Two.Vector#add as Two.Vector#addSelf
+     * @function
+     * @description Alias for {@link Two.Vector.add}.
      */
     addSelf: function(v) {
       return this.add.apply(this, arguments);
@@ -718,7 +722,8 @@ SOFTWARE.
 
     /**
      * @name Two.Vector#subtract
-     * @borrows Two.Vector#sub as Two.Vector#subtract
+     * @function
+     * @description Alias for {@link Two.Vector.sub}.
      */
     subtract: function() {
       return this.sub.apply(this, arguments);
@@ -726,7 +731,8 @@ SOFTWARE.
 
     /**
      * @name Two.Vector#subSelf
-     * @borrows Two.Vector#sub as Two.Vector#subSelf
+     * @function
+     * @description Alias for {@link Two.Vector.sub}.
      */
     subSelf: function(v) {
       return this.sub.apply(this, arguments);
@@ -734,7 +740,8 @@ SOFTWARE.
 
     /**
      * @name Two.Vector#subtractSelf
-     * @borrows Two.Vector#sub as Two.Vector#subtractSelf
+     * @function
+     * @description Alias for {@link Two.Vector.sub}.
      */
     subtractSelf: function(v) {
       return this.sub.apply(this, arguments);
@@ -787,7 +794,8 @@ SOFTWARE.
 
     /**
      * @name Two.Vector#multiplySelf
-     * @borrows Two.Vector#multiply as Two.Vector#multiplySelf
+     * @function
+     * @description Alias for {@link Two.Vector.multiply}.
      */
     multiplySelf: function(v) {
       return this.multiply.apply(this, arguments);
@@ -856,7 +864,8 @@ SOFTWARE.
 
     /**
      * @name Two.Vector#divideSelf
-     * @borrows Two.Vector#divide as Two.Vector#divideSelf
+     * @function
+     * @description Alias for {@link Two.Vector.divide}.
      */
     divideSelf: function(v) {
       return this.divide.apply(this, arguments);
@@ -1719,23 +1728,25 @@ SOFTWARE.
     },
 
     /**
-     * @name Two.Matrix.multiply
+     * @name Two.Matrix#multiply
      * @function
      * @param {Number} a - The scalar to be multiplied.
      * @description Multiply all components of the matrix against a single scalar value.
+     * @overloaded
      */
 
     /**
-     * @name Two.Matrix.multiply
+     * @name Two.Matrix#multiply
      * @function
      * @param {Number} a - The x component to be multiplied.
      * @param {Number} b - The y component to be multiplied.
      * @param {Number} c - The z component to be multiplied.
      * @description Multiply all components of a matrix against a 3 component vector.
+     * @overloaded
      */
 
     /**
-     * @name Two.Matrix.multiply
+     * @name Two.Matrix#multiply
      * @function
      * @param {Number} a - The value at the first column and first row of the matrix to be multiplied.
      * @param {Number} b - The value at the second column and first row of the matrix to be multiplied.
@@ -1747,6 +1758,7 @@ SOFTWARE.
      * @param {Number} h - The value at the second column and third row of the matrix to be multiplied.
      * @param {Number} i - The value at the third column and third row of the matrix to be multiplied.
      * @description Multiply all components of a matrix against another matrix.
+     * @overloaded
      */
     multiply: function(a, b, c, d, e, f, g, h, i) {
 
@@ -2131,7 +2143,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2020-09-07T20:16:37.646Z',
+    PublishDate: '2020-09-08T21:01:18.674Z',
 
     /**
      * @name Two.Identifier
@@ -2924,7 +2936,7 @@ SOFTWARE.
     // _clip: false,
 
     /**
-     * @name Two.Group#className
+     * @name Two.Shape#className
      * @property {String} - A class to be applied to the element to be compatible with CSS styling.
      * @nota-bene Only available for the SVG renderer.
      */
@@ -4034,9 +4046,7 @@ SOFTWARE.
 
   }
 
-  /**
-   * Constants
-   */
+  // Constants
   var emptyArray = [];
   var TWO_PI = Math.PI * 2,
     max$1 = Math.max,
@@ -14891,7 +14901,7 @@ SOFTWARE.
     },
 
     /**
-     * @name Two.release
+     * @name Two#release
      * @function
      * @param {Object} obj
      * @returns {Object} The object passed for event deallocation.
