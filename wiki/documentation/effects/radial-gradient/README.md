@@ -1,7 +1,11 @@
 # Two.RadialGradient
 
 
+<div class="extends">
+
 __Extends__: `Two.Gradient`
+
+</div>
 
 
 
@@ -34,7 +38,13 @@ __Extends__: `Two.Gradient`
 
 
 
+<div class="properties">
+
 A list of properties that are on every [Two.RadialGradient](/documentation/radialgradient).
+
+</div>
+
+
 
 
 
@@ -63,12 +73,24 @@ A list of properties that are on every [Two.RadialGradient](/documentation/radia
 
 
 
+<div class="params">
+
 | Argument | Description |
 | ---- | ----------- |
 | `object` | The object to make observable. |
+</div>
 
+
+
+
+<div class="description">
 
 Convenience function to apply observable qualities of a [Two.RadialGradient](/documentation/radialgradient) to any object. Handy if you'd like to extend the [Two.RadialGradient](/documentation/radialgradient) class on a custom class.
+
+</div>
+
+
+
 
 
 
@@ -89,7 +111,13 @@ Convenience function to apply observable qualities of a [Two.RadialGradient](/do
 
 
 
+<div class="properties">
+
 The x and y value for where the origin of the radial gradient is.
+
+</div>
+
+
 
 
 
@@ -116,19 +144,29 @@ The x and y value for where the origin of the radial gradient is.
 
 
 
+<div class="properties">
+
 The x and y value for where the focal point of the radial gradient is.
 
+</div>
 
 
 
 
 
 
+
+
+<div class="tags">
 
 
 ::: tip nota-bene
 This effects the spray or spread of the radial gradient.
 :::
+
+
+</div>
+
 
 
 
@@ -157,6 +195,14 @@ This effects the spray or spread of the radial gradient.
 
 
 
+
+<div class="see">
+
+[Two.Stop](/documentation/stop)
+
+</div>
+
+
 </div>
 
 
@@ -170,6 +216,8 @@ This effects the spray or spread of the radial gradient.
 
 
 
+<div class="returns">
+
 __Returns__:
 
 
@@ -179,19 +227,32 @@ __Returns__:
 
 
 
+</div>
 
 
 
 
 
 
+
+<div class="params">
 
 | Argument | Description |
 | ---- | ----------- |
 | `parent` | The parent group or scene to add the clone to. |
+</div>
 
+
+
+
+<div class="description">
 
 Create a new instance of [Two.RadialGradient](/documentation/radialgradient) with the same properties of the current path.
+
+</div>
+
+
+
 
 
 
@@ -208,6 +269,8 @@ Create a new instance of [Two.RadialGradient](/documentation/radialgradient) wit
 
 
 
+<div class="returns">
+
 __Returns__:
 
 
@@ -217,6 +280,7 @@ __Returns__:
 
 
 
+</div>
 
 
 
@@ -225,8 +289,16 @@ __Returns__:
 
 
 
+
+
+<div class="description">
 
 Return a JSON compatible plain object that represents the path.
+
+</div>
+
+
+
 
 
 

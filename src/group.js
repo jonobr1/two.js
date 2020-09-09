@@ -4,14 +4,19 @@ import _ from './utils/underscore.js';
 
 import Vector from './vector.js';
 import Shape from './shape.js';
+import Children from './children.js';
 
 // Constants
 
 var min = Math.min, max = Math.max;
 
 /**
- * @class
  * @name Two.Group
+ * @class
+ * @extends Two.Shape
+ * @param {Two.Shape[]} [children] - A list of objects that inherit {@link Two.Shape}. For instance, the array could be a {@link Two.Path}, {@link Two.Text}, and {@link Two.RoundedRectangle}.
+ * @description This is the primary class for grouping objects that are then drawn in Two.js. In Illustrator this is a group, in After Effects it would be a Null Object. Whichever the case, the `Two.Group` contains a transformation matrix and commands to style its children, but it by itself doesn't render to the screen.
+ * @nota-bene The {@link Two#scene} is an instance of `Two.Group`.
  */
 var Group = function(children) {
 
@@ -35,74 +40,13 @@ var Group = function(children) {
 
   /**
    * @name Two.Group#additions
-   * @property {Two.Group.Children[]}
+   * @property {Two.Group.Children}
    * @description A list of all the children in the scenegraph.
    * @nota-bene Ther order of this list indicates the order each element is rendered to the screen.
    */
   this.children = Array.isArray(children) ? children : Array.prototype.slice.call(arguments);
 
 };
-
-/**
- * @class
- * @name Two.Group.Children
- * @extends Two.Utils.Collection
- * @description A children collection which is accesible both by index and by object `id`.
- */
-var Children = function() {
-
-  Collection.apply(this, arguments);
-
-  Object.defineProperty(this, '_events', {
-    value : {},
-    enumerable: false
-  });
-
-  /**
-   * @name Two.Group.Children#ids
-   * @property {Object} - Map of all elements in the list keyed by `id`s.
-   */
-  this.ids = {};
-
-  this.on(Events.Types.insert, this.attach);
-  this.on(Events.Types.remove, this.detach);
-  Children.prototype.attach.apply(this, arguments);
-
-};
-
-Children.prototype = new Collection();
-
-_.extend(Children.prototype, {
-
-  constructor: Children,
-
-  /**
-   * @function
-   * @name Two.Group.Children#attach
-   * @param {Two.Shape[]}
-   * @description Adds elements to the `ids` map.
-   */
-  attach: function(children) {
-    for (var i = 0; i < children.length; i++) {
-      this.ids[children[i].id] = children[i];
-    }
-    return this;
-  },
-
-  /**
-   * @function
-   * @name Two.Group.Children#detach
-   * @param {Two.Shape[]}
-   * @description Removes elements to the `ids` map.
-   */
-  detach: function(children) {
-    for (var i = 0; i < children.length; i++) {
-      delete this.ids[children[i].id];
-    }
-    return this;
-  }
-
-});
 
 _.extend(Group, {
 
@@ -111,6 +55,7 @@ _.extend(Group, {
   /**
    * @name Two.Group.InsertChildren
    * @function
+   * @param {Two.Shape[]} children - The objects to be inserted.
    * @description Cached method to let renderers know children have been added to a {@link Two.Group}.
    */
   InsertChildren: function(children) {
@@ -122,6 +67,7 @@ _.extend(Group, {
   /**
    * @name Two.Group.RemoveChildren
    * @function
+   * @param {Two.Shape[]} children - The objects to be removed.
    * @description Cached method to let renderers know children have been removed from a {@link Two.Group}.
    */
   RemoveChildren: function(children) {
@@ -287,6 +233,7 @@ _.extend(Group, {
    * @function
    * @param {Two.Group} group - The group to apply getters and setters.
    * @param {Object} properties - A key / value object containing properties to inherit.
+   * @description Convenience method to apply getter / setter logic on an array of properties. Used in {@link Two.Group.MakeObservable}.
    */
   MakeGetterSetters: function(group, properties) {
 
@@ -305,6 +252,7 @@ _.extend(Group, {
    * @function
    * @param {Two.Group} group - The group to apply getters and setters.
    * @param {String} key - The key which will become a property on the group.
+   * @description Convenience method to apply getter / setter logic specific to how `Two.Group`s trickle down styles to their children. Used in {@link Two.Group.MakeObservable}.
    */
   MakeGetterSetter: function(group, key) {
 
@@ -689,7 +637,7 @@ _.extend(Group.prototype, Shape.prototype, {
   /**
    * @name Two.Group#add
    * @function
-   * @param {Two.Shape[]} objects - An array of objects to be added. Can be also added as individual arguments.
+   * @param {Two.Shape[]} objects - An array of objects to be added. Can be also be supplied as individual arguments.
    * @description Add objects to the group.
    */
   add: function(objects) {

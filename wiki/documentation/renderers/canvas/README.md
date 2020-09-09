@@ -1,7 +1,11 @@
 # Two.CanvasRenderer
 
 
+<div class="extends">
+
 __Extends__: `Two.Events`
+
+</div>
 
 
 This class is used by [Two](/documentation/) when constructing with `type` of `Two.Types.canvas`. It takes Two.js' scenegraph and renders it to a `<canvas />`.
@@ -32,7 +36,13 @@ This class is used by [Two](/documentation/) when constructing with `type` of `T
 
 
 
+<div class="properties">
+
 A massive object filled with utility functions and properties to render Two.js objects to a `<canvas />`.
+
+</div>
+
+
 
 
 
@@ -59,7 +69,13 @@ A massive object filled with utility functions and properties to render Two.js o
 
 
 
+<div class="properties">
+
 The `<canvas />` associated with the Two.js scene.
+
+</div>
+
+
 
 
 
@@ -86,7 +102,13 @@ The `<canvas />` associated with the Two.js scene.
 
 
 
+<div class="properties">
+
 Associated two dimensional context to render on the `<canvas />`.
+
+</div>
+
+
 
 
 
@@ -113,7 +135,13 @@ Associated two dimensional context to render on the `<canvas />`.
 
 
 
+<div class="properties">
+
 Determines whether the canvas clears the background each draw call.
+
+</div>
+
+
 
 
 
@@ -140,7 +168,13 @@ Determines whether the canvas clears the background each draw call.
 
 
 
+<div class="properties">
+
 The root group of the scenegraph.
+
+</div>
+
+
 
 
 
@@ -165,23 +199,38 @@ The root group of the scenegraph.
 
 
 
+<div class="fires">
+
 __Triggers__:
 
 + `event:resize`
 
+</div>
 
 
 
 
+
+<div class="params">
 
 | Argument | Description |
 | ---- | ----------- |
 | `width` | The new width of the renderer. |
 | `height` | The new height of the renderer. |
 | `ratio` | The new pixel ratio (pixel density) of the renderer. Defaults to calculate the pixel density of the user's screen. |
+</div>
 
+
+
+
+<div class="description">
 
 Change the size of the renderer.
+
+</div>
+
+
+
 
 
 
@@ -206,7 +255,15 @@ Change the size of the renderer.
 
 
 
+
+<div class="description">
+
 Render the current scene to the `<canvas />`.
+
+</div>
+
+
+
 
 
 

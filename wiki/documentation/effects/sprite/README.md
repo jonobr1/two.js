@@ -1,10 +1,14 @@
 # Two.Sprite
 
 
+<div class="extends">
+
 __Extends__: `Two.Rectangle`
 
+</div>
 
-A convenient package to display still or animated images through a tiled image source. For more information on the principals of animated imagery through tiling see [Texture Atlas][https://en.wikipedia.org/wiki/Texture_atlas](https://en.wikipedia.org/wiki/Texture_atlas) on Wikipedia..
+
+A convenient package to display still or animated images through a tiled image source. For more information on the principals of animated imagery through tiling see [Texture Atlas](https://en.wikipedia.org/wiki/Texture_atlas) on Wikipedia.
 
 
 ### Constructor
@@ -34,7 +38,13 @@ A convenient package to display still or animated images through a tiled image s
 
 
 
+<div class="properties">
+
 A list of properties that are on every [Two.Sprite](/documentation/sprite).
+
+</div>
+
+
 
 
 
@@ -63,12 +73,24 @@ A list of properties that are on every [Two.Sprite](/documentation/sprite).
 
 
 
+<div class="params">
+
 | Argument | Description |
 | ---- | ----------- |
 | `object` | The object to make observable. |
+</div>
 
+
+
+
+<div class="description">
 
 Convenience function to apply observable qualities of a [Two.Sprite](/documentation/sprite) to any object. Handy if you'd like to extend or inherit the [Two.Sprite](/documentation/sprite) class on a custom class.
+
+</div>
+
+
+
 
 
 
@@ -89,7 +111,13 @@ Convenience function to apply observable qualities of a [Two.Sprite](/documentat
 
 
 
+<div class="properties">
+
 The texture to be used as bitmap data to display image in the scene.
+
+</div>
+
+
 
 
 
@@ -116,7 +144,13 @@ The texture to be used as bitmap data to display image in the scene.
 
 
 
+<div class="properties">
+
 The number of columns to split the texture into. Defaults to `1`.
+
+</div>
+
+
 
 
 
@@ -143,7 +177,13 @@ The number of columns to split the texture into. Defaults to `1`.
 
 
 
+<div class="properties">
+
 The number of rows to split the texture into. Defaults to `1`.
+
+</div>
+
+
 
 
 
@@ -170,7 +210,13 @@ The number of rows to split the texture into. Defaults to `1`.
 
 
 
+<div class="properties">
+
 The number of frames to animate against per second. Defaults to `0` for non-animated sprites.
+
+</div>
+
+
 
 
 
@@ -197,7 +243,13 @@ The number of frames to animate against per second. Defaults to `0` for non-anim
 
 
 
+<div class="properties">
+
 The index of the current tile of the sprite to display. Defaults to `0`.
+
+</div>
+
+
 
 
 
@@ -226,14 +278,26 @@ The index of the current tile of the sprite to display. Defaults to `0`.
 
 
 
+<div class="params">
+
 | Argument | Description |
 | ---- | ----------- |
 | `firstFrame` | The index of the frame to start the animation with. |
 | `lastFrame` | The index of the frame to end the animation with. Defaults to the last item in the [Two.Sprite.textures](/documentation/sprite#two-sprite-textures). |
 | `onLastFrame` | Optional callback function to be triggered after playing the last frame. This fires multiple times when the sprite is looped. |
+</div>
 
+
+
+
+<div class="description">
 
 Initiate animation playback of a [Two.Sprite](/documentation/sprite).
+
+</div>
+
+
+
 
 
 
@@ -258,7 +322,15 @@ Initiate animation playback of a [Two.Sprite](/documentation/sprite).
 
 
 
+
+<div class="description">
+
 Halt animation playback of a [Two.Sprite](/documentation/sprite).
+
+</div>
+
+
+
 
 
 
@@ -283,7 +355,15 @@ Halt animation playback of a [Two.Sprite](/documentation/sprite).
 
 
 
+
+<div class="description">
+
 Halt animation playback of a [Two.Sprite](/documentation/sprite) and set the current frame back to the first frame.
+
+</div>
+
+
+
 
 
 
@@ -300,6 +380,8 @@ Halt animation playback of a [Two.Sprite](/documentation/sprite) and set the cur
 
 
 
+<div class="returns">
+
 __Returns__:
 
 
@@ -309,19 +391,32 @@ __Returns__:
 
 
 
+</div>
 
 
 
 
 
 
+
+<div class="params">
 
 | Argument | Description |
 | ---- | ----------- |
 | `parent` | The parent group or scene to add the clone to. |
+</div>
 
+
+
+
+<div class="description">
 
 Create a new instance of [Two.Sprite](/documentation/sprite) with the same properties of the current sprite.
+
+</div>
+
+
+
 
 
 
@@ -338,6 +433,8 @@ Create a new instance of [Two.Sprite](/documentation/sprite) with the same prope
 
 
 
+<div class="returns">
+
 __Returns__:
 
 
@@ -347,6 +444,7 @@ __Returns__:
 
 
 
+</div>
 
 
 
@@ -355,8 +453,16 @@ __Returns__:
 
 
 
+
+
+<div class="description">
 
 Return a JSON compatible plain object that represents the path.
+
+</div>
+
+
+
 
 
 

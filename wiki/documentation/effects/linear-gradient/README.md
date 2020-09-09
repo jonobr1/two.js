@@ -1,7 +1,11 @@
 # Two.LinearGradient
 
 
+<div class="extends">
+
 __Extends__: `Two.Gradient`
+
+</div>
 
 
 
@@ -35,12 +39,24 @@ __Extends__: `Two.Gradient`
 
 
 
+<div class="params">
+
 | Argument | Description |
 | ---- | ----------- |
 | `object` | The object to make observable. |
+</div>
 
+
+
+
+<div class="description">
 
 Convenience function to apply observable qualities of a [Two.LinearGradient](/documentation/lineargradient) to any object. Handy if you'd like to extend the [Two.LinearGradient](/documentation/lineargradient) class on a custom class.
+
+</div>
+
+
+
 
 
 
@@ -65,7 +81,15 @@ Convenience function to apply observable qualities of a [Two.LinearGradient](/do
 
 
 
+
+<div class="description">
+
 Cached method to let renderers know end points have been updated on a [Two.LinearGradient](/documentation/lineargradient).
+
+</div>
+
+
+
 
 
 
@@ -86,7 +110,13 @@ Cached method to let renderers know end points have been updated on a [Two.Linea
 
 
 
+<div class="properties">
+
 The x and y value for where the first end point is placed on the canvas.
+
+</div>
+
+
 
 
 
@@ -113,7 +143,13 @@ The x and y value for where the first end point is placed on the canvas.
 
 
 
+<div class="properties">
+
 The x and y value for where the second end point is placed on the canvas.
+
+</div>
+
+
 
 
 
@@ -148,6 +184,14 @@ The x and y value for where the second end point is placed on the canvas.
 
 
 
+
+<div class="see">
+
+[Two.Stop](/documentation/stop)
+
+</div>
+
+
 </div>
 
 
@@ -161,6 +205,8 @@ The x and y value for where the second end point is placed on the canvas.
 
 
 
+<div class="returns">
+
 __Returns__:
 
 
@@ -170,19 +216,32 @@ __Returns__:
 
 
 
+</div>
 
 
 
 
 
 
+
+<div class="params">
 
 | Argument | Description |
 | ---- | ----------- |
 | `parent` | The parent group or scene to add the clone to. |
+</div>
 
+
+
+
+<div class="description">
 
 Create a new instance of [Two.LinearGradient](/documentation/lineargradient) with the same properties of the current path.
+
+</div>
+
+
+
 
 
 
@@ -199,6 +258,8 @@ Create a new instance of [Two.LinearGradient](/documentation/lineargradient) wit
 
 
 
+<div class="returns">
+
 __Returns__:
 
 
@@ -208,6 +269,7 @@ __Returns__:
 
 
 
+</div>
 
 
 
@@ -216,8 +278,16 @@ __Returns__:
 
 
 
+
+
+<div class="description">
 
 Return a JSON compatible plain object that represents the path.
+
+</div>
+
+
+
 
 
 

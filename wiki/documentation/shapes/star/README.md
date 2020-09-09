@@ -1,7 +1,11 @@
 # Two.Star
 
 
+<div class="extends">
+
 __Extends__: `Two.Path`
+
+</div>
 
 
 
@@ -33,7 +37,13 @@ __Extends__: `Two.Path`
 
 
 
+<div class="properties">
+
 A list of properties that are on every [Two.Star](/documentation/star).
+
+</div>
+
+
 
 
 
@@ -62,12 +72,24 @@ A list of properties that are on every [Two.Star](/documentation/star).
 
 
 
+<div class="params">
+
 | Argument | Description |
 | ---- | ----------- |
 | `object` | The object to make observable. |
+</div>
 
+
+
+
+<div class="description">
 
 Convenience function to apply observable qualities of a [Two.Star](/documentation/star) to any object. Handy if you'd like to extend the [Two.Star](/documentation/star) class on a custom class.
+
+</div>
+
+
+
 
 
 
@@ -88,7 +110,13 @@ Convenience function to apply observable qualities of a [Two.Star](/documentatio
 
 
 
+<div class="properties">
+
 The size of the inner radius of the star.
+
+</div>
+
+
 
 
 
@@ -115,7 +143,13 @@ The size of the inner radius of the star.
 
 
 
+<div class="properties">
+
 The size of the outer radius of the star.
+
+</div>
+
+
 
 
 
@@ -142,7 +176,13 @@ The size of the outer radius of the star.
 
 
 
+<div class="properties">
+
 The amount of sides the star has.
+
+</div>
+
+
 
 
 
@@ -165,6 +205,8 @@ The amount of sides the star has.
 
 
 
+<div class="returns">
+
 __Returns__:
 
 
@@ -174,19 +216,32 @@ __Returns__:
 
 
 
+</div>
 
 
 
 
 
 
+
+<div class="params">
 
 | Argument | Description |
 | ---- | ----------- |
 | `parent` | The parent group or scene to add the clone to. |
+</div>
 
+
+
+
+<div class="description">
 
 Create a new instance of [Two.Star](/documentation/star) with the same properties of the current path.
+
+</div>
+
+
+
 
 
 
@@ -203,6 +258,8 @@ Create a new instance of [Two.Star](/documentation/star) with the same propertie
 
 
 
+<div class="returns">
+
 __Returns__:
 
 
@@ -212,6 +269,7 @@ __Returns__:
 
 
 
+</div>
 
 
 
@@ -220,8 +278,16 @@ __Returns__:
 
 
 
+
+
+<div class="description">
 
 Return a JSON compatible plain object that represents the path.
+
+</div>
+
+
+
 
 
 

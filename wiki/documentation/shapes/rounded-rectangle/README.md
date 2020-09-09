@@ -1,7 +1,11 @@
 # Two.RoundedRectangle
 
 
+<div class="extends">
+
 __Extends__: `Two.Path`
+
+</div>
 
 
 
@@ -34,7 +38,13 @@ __Extends__: `Two.Path`
 
 
 
+<div class="properties">
+
 A list of properties that are on every [Two.RoundedRectangle](/documentation/roundedrectangle).
+
+</div>
+
+
 
 
 
@@ -61,7 +71,13 @@ A list of properties that are on every [Two.RoundedRectangle](/documentation/rou
 
 
 
+<div class="properties">
+
 A convenience function to trigger the flag for radius changing.
+
+</div>
+
+
 
 
 
@@ -90,12 +106,24 @@ A convenience function to trigger the flag for radius changing.
 
 
 
+<div class="params">
+
 | Argument | Description |
 | ---- | ----------- |
 | `object` | The object to make observable. |
+</div>
 
+
+
+
+<div class="description">
 
 Convenience function to apply observable qualities of a [Two.RoundedRectangle](/documentation/roundedrectangle) to any object. Handy if you'd like to extend the [Two.RoundedRectangle](/documentation/roundedrectangle) class on a custom class.
+
+</div>
+
+
+
 
 
 
@@ -116,7 +144,13 @@ Convenience function to apply observable qualities of a [Two.RoundedRectangle](/
 
 
 
+<div class="properties">
+
 The width of the rounded rectangle.
+
+</div>
+
+
 
 
 
@@ -143,7 +177,13 @@ The width of the rounded rectangle.
 
 
 
+<div class="properties">
+
 The height of the rounded rectangle.
+
+</div>
+
+
 
 
 
@@ -170,7 +210,13 @@ The height of the rounded rectangle.
 
 
 
+<div class="properties">
+
 The size of the radius of the rounded rectangle.
+
+</div>
+
+
 
 
 
@@ -193,6 +239,8 @@ The size of the radius of the rounded rectangle.
 
 
 
+<div class="returns">
+
 __Returns__:
 
 
@@ -202,19 +250,32 @@ __Returns__:
 
 
 
+</div>
 
 
 
 
 
 
+
+<div class="params">
 
 | Argument | Description |
 | ---- | ----------- |
 | `parent` | The parent group or scene to add the clone to. |
+</div>
 
+
+
+
+<div class="description">
 
 Create a new instance of [Two.RoundedRectangle](/documentation/roundedrectangle) with the same properties of the current path.
+
+</div>
+
+
+
 
 
 
@@ -231,6 +292,8 @@ Create a new instance of [Two.RoundedRectangle](/documentation/roundedrectangle)
 
 
 
+<div class="returns">
+
 __Returns__:
 
 
@@ -240,6 +303,7 @@ __Returns__:
 
 
 
+</div>
 
 
 
@@ -248,8 +312,16 @@ __Returns__:
 
 
 
+
+
+<div class="description">
 
 Return a JSON compatible plain object that represents the path.
+
+</div>
+
+
+
 
 
 

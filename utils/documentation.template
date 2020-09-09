@@ -1,7 +1,11 @@
 # <%= root.longname %>
 
 <% if (root.augments) { %>
+<div class="extends">
+
 __Extends__: `<%= root.augments %>`
+
+</div>
 <% } %>
 
 <%= root.description %>
@@ -24,10 +28,16 @@ __Extends__: `<%= root.augments %>`
 ## <%= item.longname.replace(/\#/ig, '.') %>
 
 <% if (item.overloaded) { %>
+<div class="overloaded-label">
+
 _Overloaded_
+
+</div>
 <% } %>
 
 <% if (item.returns && item.returns.length > 0) { %>
+<div class="returns">
+
 __Returns__:
 <% _.each(item.returns, function(result) { %>
 <% if (result.type) { %>
@@ -39,35 +49,65 @@ __Returns__:
 <%= result.description %>
 <% } %>
 <% }); %>
+</div>
 <% } %>
 
 <% if (item.fires && item.fires.length > 0) { %>
+<div class="fires">
+
 __Triggers__:
 <% _.each(item.fires, function(name) { %>
 + `<%= name %>`
 <% }); %>
+</div>
 <% } %>
 
+<% if (item.properties && item.properties.length > 0) { %>
+<div class="properties">
 <% _.each(item.properties, function(property) { %>
 <%= property.description %>
 <% }); %>
+</div>
+<% } %>
 
+<% if (item.params && item.params.length > 0 ) { %>
+<div class="params">
 <% _.each(item.params, function(param, i) { %><% if (i <= 0) { %>
 | Argument | Description |
 | ---- | ----------- |
 | `<%= param.name %>` | <%= param.description %> |<% } else { %>
 | `<%= param.name %>` | <%= param.description %> |<% } %><% }); %>
+</div>
+<% } %>
 
+
+<% if (item.description) { %>
+<div class="description">
 
 <%= item.description %>
 
+</div>
+<% } %>
+
+<% if (item.tags && item.tags.length > 0) { %>
+<div class="tags">
 <% _.each(item.tags, function(tag) { %>
 <% if (tag.title && tag.text) { %>
 ::: tip <%= tag.title %>
-<%= tag.text %>
+<%= tag.text || '&nbsp;' %>
 :::
 <% } %>
 <% }); %>
+</div>
+<% } %>
+
+<% if (item.see && item.see.length > 0) { %>
+<div class="see">
+<% _.each(item.see, function(see) { %>
+<%= see %>
+<% }); %>
+</div>
+<% } %>
 
 </div>
 

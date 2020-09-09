@@ -1,7 +1,11 @@
 # Two.Text
 
 
+<div class="extends">
+
 __Extends__: `Two.Shape`
+
+</div>
 
 
 This is a primitive class for creating drawable text that can be added to the scenegraph.
@@ -32,7 +36,13 @@ This is a primitive class for creating drawable text that can be added to the sc
 
 
 
+<div class="properties">
+
 Approximate aspect ratio of a typeface's character width to height.
+
+</div>
+
+
 
 
 
@@ -59,7 +69,13 @@ Approximate aspect ratio of a typeface's character width to height.
 
 
 
+<div class="properties">
+
 A list of properties that are on every [Two.Text](/documentation/text).
+
+</div>
+
+
 
 
 
@@ -90,7 +106,15 @@ A list of properties that are on every [Two.Text](/documentation/text).
 
 
 
+
+<div class="description">
+
 Cached method to let renderers know the fill property have been updated on a [Two.Text](/documentation/text).
+
+</div>
+
+
+
 
 
 
@@ -115,7 +139,15 @@ Cached method to let renderers know the fill property have been updated on a [Tw
 
 
 
+
+<div class="description">
+
 Cached method to let renderers know the stroke property have been updated on a [Two.Text](/documentation/text).
+
+</div>
+
+
+
 
 
 
@@ -136,14 +168,32 @@ Cached method to let renderers know the stroke property have been updated on a [
 
 
 
+<div class="properties">
+
 Array of numbers. Odd indices represent dash length. Even indices represent dash space.
 
+</div>
 
 
 
+
+
+
+<div class="description">
 
 A list of numbers that represent the repeated dash length and dash space applied to the stroke of the text.
 
+</div>
+
+
+
+
+
+<div class="see">
+
+[https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray) for more information on the SVG stroke-dasharray attribute.
+
+</div>
 
 
 </div>
@@ -163,7 +213,13 @@ A list of numbers that represent the repeated dash length and dash space applied
 
 
 
+<div class="properties">
+
 A number in pixels to offset [Two.Text.dashes](/documentation/text#two-text-dashes) display.
+
+</div>
+
+
 
 
 
@@ -190,7 +246,13 @@ A number in pixels to offset [Two.Text.dashes](/documentation/text#two-text-dash
 
 
 
+<div class="properties">
+
 The characters to be rendered to the the screen. Referred to in the documentation sometimes as the `message`.
+
+</div>
+
+
 
 
 
@@ -217,7 +279,13 @@ The characters to be rendered to the the screen. Referred to in the documentatio
 
 
 
+<div class="properties">
+
 The font family Two.js should attempt to regsiter for rendering. The default value is `'sans-serif'`. Comma separated font names can be supplied as a "stack", similar to the CSS implementation of `font-family`.
+
+</div>
+
+
 
 
 
@@ -244,7 +312,13 @@ The font family Two.js should attempt to regsiter for rendering. The default val
 
 
 
+<div class="properties">
+
 The font size in Two.js point space. Defaults to `13`.
+
+</div>
+
+
 
 
 
@@ -271,7 +345,13 @@ The font size in Two.js point space. Defaults to `13`.
 
 
 
+<div class="properties">
+
 The height between lines measured from base to base in Two.js point space. Defaults to `17`.
+
+</div>
+
+
 
 
 
@@ -298,7 +378,13 @@ The height between lines measured from base to base in Two.js point space. Defau
 
 
 
+<div class="properties">
+
 Alignment of text in relation to [Two.Text.translation](/documentation/text#two-text-translation)'s coordinates. Possible values include `'left'`, `'center'`, `'right'`. Defaults to `'center'`.
+
+</div>
+
+
 
 
 
@@ -325,7 +411,13 @@ Alignment of text in relation to [Two.Text.translation](/documentation/text#two-
 
 
 
+<div class="properties">
+
 The vertical aligment of the text in relation to [Two.Text.translation](/documentation/text#two-text-translation)'s coordinates. Possible values include `'top'`, `'middle'`, `'bottom'`, and `'baseline'`. Defaults to `'baseline'`.
+
+</div>
+
+
 
 
 
@@ -352,7 +444,13 @@ The vertical aligment of the text in relation to [Two.Text.translation](/documen
 
 
 
+<div class="properties">
+
 The font's style. Possible values include '`normal`', `'italic'`. Defaults to `'normal'`.
+
+</div>
+
+
 
 
 
@@ -379,7 +477,13 @@ The font's style. Possible values include '`normal`', `'italic'`. Defaults to `'
 
 
 
+<div class="properties">
+
 A number at intervals of 100 to describe the font's weight. This compatibility varies with the typeface's variant weights. Larger values are bolder. Smaller values are thinner. Defaults to `'500'`.
+
+</div>
+
+
 
 
 
@@ -406,7 +510,13 @@ A number at intervals of 100 to describe the font's weight. This compatibility v
 
 
 
+<div class="properties">
+
 String to delineate whether text should be decorated with for instance an `'underline'`. Defaults to `'none'`.
+
+</div>
+
+
 
 
 
@@ -433,14 +543,26 @@ String to delineate whether text should be decorated with for instance an `'unde
 
 
 
+<div class="properties">
+
 The value of what the text object should be filled in with.
 
+</div>
 
 
 
 
 
 
+
+
+
+
+<div class="see">
+
+[https://developer.mozilla.org/en-US/docs/Web/CSS/color_value](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value) for more information on CSS Colors.
+
+</div>
 
 
 </div>
@@ -460,14 +582,26 @@ The value of what the text object should be filled in with.
 
 
 
+<div class="properties">
+
 The value of what the text object should be filled in with.
 
+</div>
 
 
 
 
 
 
+
+
+
+
+<div class="see">
+
+[https://developer.mozilla.org/en-US/docs/Web/CSS/color_value](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value) for more information on CSS Colors.
+
+</div>
 
 
 </div>
@@ -487,7 +621,13 @@ The value of what the text object should be filled in with.
 
 
 
+<div class="properties">
+
 The thickness in pixels of the stroke.
+
+</div>
+
+
 
 
 
@@ -514,19 +654,29 @@ The thickness in pixels of the stroke.
 
 
 
+<div class="properties">
+
 The opaqueness of the text object.
 
+</div>
 
 
 
 
 
 
+
+
+<div class="tags">
 
 
 ::: tip nota-bene
 Can be used in conjunction with CSS Colors that have an alpha value.
 :::
+
+
+</div>
+
 
 
 
@@ -547,7 +697,13 @@ Can be used in conjunction with CSS Colors that have an alpha value.
 
 
 
+<div class="properties">
+
 A class to be applied to the element to be compatible with CSS styling. Only available for the [Two.SvgRenderer](/documentation/svgrenderer).
+
+</div>
+
+
 
 
 
@@ -574,19 +730,29 @@ A class to be applied to the element to be compatible with CSS styling. Only ava
 
 
 
+<div class="properties">
+
 Display the text object or not.
 
+</div>
 
 
 
 
 
 
+
+
+<div class="tags">
 
 
 ::: tip nota-bene
 For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](/documentation/webglrenderer) when set to false all updating is disabled improving performance dramatically with many objects in the scene.
 :::
+
+
+</div>
+
 
 
 
@@ -607,19 +773,29 @@ For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](
 
 
 
+<div class="properties">
+
 Object to define clipping area.
 
+</div>
 
 
 
 
 
 
+
+
+<div class="tags">
 
 
 ::: tip nota-bene
 This property is currently not working becuase of SVG spec issues found here {@link https://code.google.com/p/chromium/issues/detail?id=370951}.
 :::
+
+
+</div>
+
 
 
 
@@ -644,7 +820,15 @@ This property is currently not working becuase of SVG spec issues found here {@l
 
 
 
+
+<div class="description">
+
 Remove self from the scene / parent.
+
+</div>
+
+
+
 
 
 
@@ -661,6 +845,8 @@ Remove self from the scene / parent.
 
 
 
+<div class="returns">
+
 __Returns__:
 
 
@@ -670,19 +856,32 @@ __Returns__:
 
 
 
+</div>
 
 
 
 
 
 
+
+<div class="params">
 
 | Argument | Description |
 | ---- | ----------- |
 | `parent` | The parent group or scene to add the clone to. |
+</div>
 
+
+
+
+<div class="description">
 
 Create a new instance of [Two.Text](/documentation/text) with the same properties of the current text object.
+
+</div>
+
+
+
 
 
 
@@ -699,6 +898,8 @@ Create a new instance of [Two.Text](/documentation/text) with the same propertie
 
 
 
+<div class="returns">
+
 __Returns__:
 
 
@@ -708,6 +909,7 @@ __Returns__:
 
 
 
+</div>
 
 
 
@@ -716,8 +918,16 @@ __Returns__:
 
 
 
+
+
+<div class="description">
 
 Return a JSON compatible plain object that represents the text object.
+
+</div>
+
+
+
 
 
 
@@ -742,7 +952,15 @@ Return a JSON compatible plain object that represents the text object.
 
 
 
+
+<div class="description">
+
 Short hand method to set fill to `transparent`.
+
+</div>
+
+
+
 
 
 
@@ -767,7 +985,15 @@ Short hand method to set fill to `transparent`.
 
 
 
+
+<div class="description">
+
 Short hand method to set stroke to `transparent`.
+
+</div>
+
+
+
 
 
 
@@ -784,6 +1010,8 @@ Short hand method to set stroke to `transparent`.
 
 
 
+<div class="returns">
+
 __Returns__:
 
 
@@ -795,19 +1023,32 @@ __Returns__:
 - Returns object with top, left, right, bottom, width, height attributes.
 
 
+</div>
 
 
 
 
 
 
+
+<div class="params">
 
 | Argument | Description |
 | ---- | ----------- |
 | `shallow` | Describes whether to calculate off local matrix or world matrix. |
+</div>
 
+
+
+
+<div class="description">
 
 Return an object with top, left, right, bottom, width, and height parameters of the text object.
+
+</div>
+
+
+
 
 
 

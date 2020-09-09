@@ -1,7 +1,11 @@
 # Two.ArcSegment
 
 
+<div class="extends">
+
 __Extends__: `Two.Path`
+
+</div>
 
 
 
@@ -35,7 +39,13 @@ __Extends__: `Two.Path`
 
 
 
+<div class="properties">
+
 A list of properties that are on every [Two.ArcSegment](/documentation/arcsegment).
+
+</div>
+
+
 
 
 
@@ -64,12 +74,24 @@ A list of properties that are on every [Two.ArcSegment](/documentation/arcsegmen
 
 
 
+<div class="params">
+
 | Argument | Description |
 | ---- | ----------- |
 | `object` | The object to make observable. |
+</div>
 
+
+
+
+<div class="description">
 
 Convenience function to apply observable qualities of a [Two.ArcSegment](/documentation/arcsegment) to any object. Handy if you'd like to extend the [Two.ArcSegment](/documentation/arcsegment) class on a custom class.
+
+</div>
+
+
+
 
 
 
@@ -90,7 +112,13 @@ Convenience function to apply observable qualities of a [Two.ArcSegment](/docume
 
 
 
+<div class="properties">
+
 The size of the inner radius of the arc segment.
+
+</div>
+
+
 
 
 
@@ -117,7 +145,13 @@ The size of the inner radius of the arc segment.
 
 
 
+<div class="properties">
+
 The size of the outer radius of the arc segment.
+
+</div>
+
+
 
 
 
@@ -144,7 +178,13 @@ The size of the outer radius of the arc segment.
 
 
 
+<div class="properties">
+
 The angle of one side for the arc segment.
+
+</div>
+
+
 
 
 
@@ -171,7 +211,13 @@ The angle of one side for the arc segment.
 
 
 
+<div class="properties">
+
 The angle of the other side for the arc segment.
+
+</div>
+
+
 
 
 
@@ -194,6 +240,8 @@ The angle of the other side for the arc segment.
 
 
 
+<div class="returns">
+
 __Returns__:
 
 
@@ -203,19 +251,32 @@ __Returns__:
 
 
 
+</div>
 
 
 
 
 
 
+
+<div class="params">
 
 | Argument | Description |
 | ---- | ----------- |
 | `parent` | The parent group or scene to add the clone to. |
+</div>
 
+
+
+
+<div class="description">
 
 Create a new instance of [Two.ArcSegment](/documentation/arcsegment) with the same properties of the current path.
+
+</div>
+
+
+
 
 
 
@@ -232,6 +293,8 @@ Create a new instance of [Two.ArcSegment](/documentation/arcsegment) with the sa
 
 
 
+<div class="returns">
+
 __Returns__:
 
 
@@ -241,6 +304,7 @@ __Returns__:
 
 
 
+</div>
 
 
 
@@ -249,8 +313,16 @@ __Returns__:
 
 
 
+
+
+<div class="description">
 
 Return a JSON compatible plain object that represents the path.
+
+</div>
+
+
+
 
 
 

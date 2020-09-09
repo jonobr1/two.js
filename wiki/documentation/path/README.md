@@ -1,7 +1,11 @@
 # Two.Path
 
 
+<div class="extends">
+
 __Extends__: `Two.Shape`
+
+</div>
 
 
 This is the primary primitive class for creating all drawable shapes in Two.js. Unless specified methods return their instance of `Two.Path` for the purpose of chaining.
@@ -32,7 +36,13 @@ This is the primary primitive class for creating all drawable shapes in Two.js. 
 
 
 
+<div class="properties">
+
 A list of properties that are on every [Two.Path](/documentation/path).
+
+</div>
+
+
 
 
 
@@ -63,7 +73,15 @@ A list of properties that are on every [Two.Path](/documentation/path).
 
 
 
+
+<div class="description">
+
 Cached method to let renderers know vertices have been updated on a [Two.Path](/documentation/path).
+
+</div>
+
+
+
 
 
 
@@ -88,7 +106,15 @@ Cached method to let renderers know vertices have been updated on a [Two.Path](/
 
 
 
+
+<div class="description">
+
 Cached method to let [Two.Path](/documentation/path) know vertices have been added to the instance.
+
+</div>
+
+
+
 
 
 
@@ -113,7 +139,15 @@ Cached method to let [Two.Path](/documentation/path) know vertices have been add
 
 
 
+
+<div class="description">
+
 Cached method to let [Two.Path](/documentation/path) know vertices have been removed from the instance.
+
+</div>
+
+
+
 
 
 
@@ -137,9 +171,17 @@ Cached method to let [Two.Path](/documentation/path) know vertices have been rem
 
 
 
+
+
+<div class="description">
 
 Cached method to let [Two.Path](/documentation/path) know the fill has changed.
 
+</div>
+
+
+
+
 
 
 </div>
@@ -163,7 +205,15 @@ Cached method to let [Two.Path](/documentation/path) know the fill has changed.
 
 
 
+
+<div class="description">
+
 Cached method to let [Two.Path](/documentation/path) know the stroke has changed.
+
+</div>
+
+
+
 
 
 
@@ -186,12 +236,24 @@ Cached method to let [Two.Path](/documentation/path) know the stroke has changed
 
 
 
+<div class="params">
+
 | Argument | Description |
 | ---- | ----------- |
 | `object` | The object to make observable. |
+</div>
 
+
+
+
+<div class="description">
 
 Convenience function to apply observable qualities of a [Two.Path](/documentation/path) to any object. Handy if you'd like to extend the [Two.Path](/documentation/path) class on a custom class.
+
+</div>
+
+
+
 
 
 
@@ -212,7 +274,13 @@ Convenience function to apply observable qualities of a [Two.Path](/documentatio
 
 
 
+<div class="properties">
+
 Determines whether a final line is drawn between the final point in the `vertices` array and the first point.
+
+</div>
+
+
 
 
 
@@ -239,7 +307,13 @@ Determines whether a final line is drawn between the final point in the `vertice
 
 
 
+<div class="properties">
+
 When the path is `automatic = true` this boolean determines whether the lines between the points are curved or not.
+
+</div>
+
+
 
 
 
@@ -266,19 +340,35 @@ When the path is `automatic = true` this boolean determines whether the lines be
 
 
 
+<div class="properties">
+
 Number between zero and one to state the beginning of where the path is rendered.
 
+</div>
 
 
 
+
+
+
+<div class="description">
 
 [Two.Path.beginning](/documentation/path#two-path-beginning) is a percentage value that represents at what percentage into the path should the renderer start drawing.
 
+</div>
+
+
+
+<div class="tags">
 
 
 ::: tip nota-bene
 This is great for animating in and out stroked paths in conjunction with [Two.Path.ending](/documentation/path#two-path-ending).
 :::
+
+
+</div>
+
 
 
 
@@ -299,19 +389,35 @@ This is great for animating in and out stroked paths in conjunction with [Two.Pa
 
 
 
+<div class="properties">
+
 Number between zero and one to state the ending of where the path is rendered.
 
+</div>
 
 
 
+
+
+
+<div class="description">
 
 [Two.Path.ending](/documentation/path#two-path-ending) is a percentage value that represents at what percentage into the path should the renderer start drawing.
 
+</div>
+
+
+
+<div class="tags">
 
 
 ::: tip nota-bene
 This is great for animating in and out stroked paths in conjunction with [Two.Path.beginning](/documentation/path#two-path-beginning).
 :::
+
+
+</div>
+
 
 
 
@@ -332,14 +438,26 @@ This is great for animating in and out stroked paths in conjunction with [Two.Pa
 
 
 
+<div class="properties">
+
 The value of what the path should be filled in with.
 
+</div>
 
 
 
 
 
 
+
+
+
+
+<div class="see">
+
+[https://developer.mozilla.org/en-US/docs/Web/CSS/color_value](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value) for more information on CSS Colors.
+
+</div>
 
 
 </div>
@@ -359,14 +477,26 @@ The value of what the path should be filled in with.
 
 
 
+<div class="properties">
+
 The value of what the path should be outlined in with.
 
+</div>
 
 
 
 
 
 
+
+
+
+
+<div class="see">
+
+[https://developer.mozilla.org/en-US/docs/Web/CSS/color_value](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value) for more information on CSS Colors.
+
+</div>
 
 
 </div>
@@ -386,7 +516,13 @@ The value of what the path should be outlined in with.
 
 
 
+<div class="properties">
+
 The thickness in pixels of the stroke.
+
+</div>
+
+
 
 
 
@@ -413,19 +549,29 @@ The thickness in pixels of the stroke.
 
 
 
+<div class="properties">
+
 The opaqueness of the path.
 
+</div>
 
 
 
 
 
 
+
+
+<div class="tags">
 
 
 ::: tip nota-bene
 Can be used in conjunction with CSS Colors that have an alpha value.
 :::
+
+
+</div>
+
 
 
 
@@ -446,19 +592,29 @@ Can be used in conjunction with CSS Colors that have an alpha value.
 
 
 
+<div class="properties">
+
 A class to be applied to the element to be compatible with CSS styling.
 
+</div>
 
 
 
 
 
 
+
+
+<div class="tags">
 
 
 ::: tip nota-bene
 Only available for the SVG renderer.
 :::
+
+
+</div>
+
 
 
 
@@ -479,19 +635,29 @@ Only available for the SVG renderer.
 
 
 
+<div class="properties">
+
 Display the path or not.
 
+</div>
 
 
 
 
 
 
+
+
+<div class="tags">
 
 
 ::: tip nota-bene
 For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](/documentation/webglrenderer) when set to false all updating is disabled improving performance dramatically with many objects in the scene.
 :::
+
+
+</div>
+
 
 
 
@@ -512,6 +678,11 @@ For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](
 
 
 
+<div class="properties">
+
+
+
+</div>
 
 
 
@@ -520,6 +691,13 @@ For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](
 
 
 
+
+
+<div class="see">
+
+[https://www.w3.org/TR/SVG11/painting.html#StrokeLinecapProperty](https://www.w3.org/TR/SVG11/painting.html#StrokeLinecapProperty)
+
+</div>
 
 
 </div>
@@ -539,6 +717,11 @@ For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](
 
 
 
+<div class="properties">
+
+
+
+</div>
 
 
 
@@ -547,6 +730,13 @@ For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](
 
 
 
+
+
+<div class="see">
+
+[https://www.w3.org/TR/SVG11/painting.html#StrokeLinejoinProperty](https://www.w3.org/TR/SVG11/painting.html#StrokeLinejoinProperty)
+
+</div>
 
 
 </div>
@@ -566,6 +756,11 @@ For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](
 
 
 
+<div class="properties">
+
+
+
+</div>
 
 
 
@@ -574,6 +769,13 @@ For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](
 
 
 
+
+
+<div class="see">
+
+[https://www.w3.org/TR/SVG11/painting.html#StrokeMiterlimitProperty](https://www.w3.org/TR/SVG11/painting.html#StrokeMiterlimitProperty)
+
+</div>
 
 
 </div>
@@ -593,19 +795,35 @@ For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](
 
 
 
+<div class="properties">
+
 An ordered list of anchor points for rendering the path.
 
+</div>
 
 
 
+
+
+
+<div class="description">
 
 A list of [Two.Anchor](/documentation/anchor) objects that consist of what form the path takes.
 
+</div>
+
+
+
+<div class="tags">
 
 
 ::: tip nota-bene
 The array when manipulating is actually a [Two.Utils.Collection](/documentation/utils#two-utils-collection).
 :::
+
+
+</div>
+
 
 
 
@@ -626,7 +844,13 @@ The array when manipulating is actually a [Two.Utils.Collection](/documentation/
 
 
 
+<div class="properties">
+
 Determines whether or not Two.js should calculate curves, lines, and commands automatically for you or to let the developer manipulate them for themselves.
+
+</div>
+
+
 
 
 
@@ -653,14 +877,32 @@ Determines whether or not Two.js should calculate curves, lines, and commands au
 
 
 
+<div class="properties">
+
 Array of numbers. Odd indices represent dash length. Even indices represent dash space.
 
+</div>
 
 
 
+
+
+
+<div class="description">
 
 A list of numbers that represent the repeated dash length and dash space applied to the stroke of the text.
 
+</div>
+
+
+
+
+
+<div class="see">
+
+[https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray) for more information on the SVG stroke-dasharray attribute.
+
+</div>
 
 
 </div>
@@ -680,7 +922,13 @@ A list of numbers that represent the repeated dash length and dash space applied
 
 
 
+<div class="properties">
+
 A number in pixels to offset [Two.Path.dashes](/documentation/path#two-path-dashes) display.
+
+</div>
+
+
 
 
 
@@ -707,7 +955,13 @@ A number in pixels to offset [Two.Path.dashes](/documentation/path#two-path-dash
 
 
 
+<div class="properties">
+
 The sum of distances between all [Two.Path.vertices](/documentation/path#two-path-vertices).
+
+</div>
+
+
 
 
 
@@ -734,19 +988,29 @@ The sum of distances between all [Two.Path.vertices](/documentation/path#two-pat
 
 
 
+<div class="properties">
+
 Object to define clipping area.
 
+</div>
 
 
 
 
 
 
+
+
+<div class="tags">
 
 
 ::: tip nota-bene
 This property is currently not working becuase of SVG spec issues found here {@link https://code.google.com/p/chromium/issues/detail?id=370951}.
 :::
+
+
+</div>
+
 
 
 
@@ -763,6 +1027,8 @@ This property is currently not working becuase of SVG spec issues found here {@l
 
 
 
+<div class="returns">
+
 __Returns__:
 
 
@@ -772,19 +1038,32 @@ __Returns__:
 
 
 
+</div>
 
 
 
 
 
 
+
+<div class="params">
 
 | Argument | Description |
 | ---- | ----------- |
 | `parent` | The parent group or scene to add the clone to. |
+</div>
 
+
+
+
+<div class="description">
 
 Create a new instance of [Two.Path](/documentation/path) with the same properties of the current path.
+
+</div>
+
+
+
 
 
 
@@ -801,6 +1080,8 @@ Create a new instance of [Two.Path](/documentation/path) with the same propertie
 
 
 
+<div class="returns">
+
 __Returns__:
 
 
@@ -810,6 +1091,7 @@ __Returns__:
 
 
 
+</div>
 
 
 
@@ -818,8 +1100,16 @@ __Returns__:
 
 
 
+
+
+<div class="description">
 
 Return a JSON compatible plain object that represents the path.
+
+</div>
+
+
+
 
 
 
@@ -844,7 +1134,15 @@ Return a JSON compatible plain object that represents the path.
 
 
 
+
+<div class="description">
+
 Short hand method to set fill to `transparent`.
+
+</div>
+
+
+
 
 
 
@@ -869,7 +1167,15 @@ Short hand method to set fill to `transparent`.
 
 
 
+
+<div class="description">
+
 Short hand method to set stroke to `transparent`.
+
+</div>
+
+
+
 
 
 
@@ -894,7 +1200,15 @@ Short hand method to set stroke to `transparent`.
 
 
 
+
+<div class="description">
+
 Orient the vertices of the shape to the upper left-hand corner of the path.
+
+</div>
+
+
+
 
 
 
@@ -919,7 +1233,15 @@ Orient the vertices of the shape to the upper left-hand corner of the path.
 
 
 
+
+<div class="description">
+
 Orient the vertices of the shape to the center of the path.
+
+</div>
+
+
+
 
 
 
@@ -944,7 +1266,15 @@ Orient the vertices of the shape to the center of the path.
 
 
 
+
+<div class="description">
+
 Remove self from the scene / parent.
+
+</div>
+
+
+
 
 
 
@@ -961,6 +1291,8 @@ Remove self from the scene / parent.
 
 
 
+<div class="returns">
+
 __Returns__:
 
 
@@ -972,19 +1304,32 @@ __Returns__:
 - Returns object with top, left, right, bottom, width, height attributes.
 
 
+</div>
 
 
 
 
 
 
+
+<div class="params">
 
 | Argument | Description |
 | ---- | ----------- |
 | `shallow` | Describes whether to calculate off local matrix or world matrix. |
+</div>
 
+
+
+
+<div class="description">
 
 Return an object with top, left, right, bottom, width, and height parameters of the path.
+
+</div>
+
+
+
 
 
 
@@ -1001,6 +1346,8 @@ Return an object with top, left, right, bottom, width, and height parameters of 
 
 
 
+<div class="returns">
+
 __Returns__:
 
 
@@ -1010,20 +1357,33 @@ __Returns__:
 
 
 
+</div>
 
 
 
 
 
 
+
+<div class="params">
 
 | Argument | Description |
 | ---- | ----------- |
 | `t` | Percentage value describing where on the Two.Path to estimate and assign coordinate values. |
 | `obj` | Object to apply calculated x, y to. If none available returns new Object. |
+</div>
 
+
+
+
+<div class="description">
 
 Given a float `t` from 0 to 1, return a point or assign a passed `obj`'s coordinates to that percentage on this Two.Path's curve.
+
+</div>
+
+
+
 
 
 
@@ -1048,13 +1408,25 @@ Given a float `t` from 0 to 1, return a point or assign a passed `obj`'s coordin
 
 
 
+
+<div class="description">
+
 Based on closed / curved and sorting of vertices plot where all points should be and where the respective handles should be too.
 
+</div>
+
+
+
+<div class="tags">
 
 
 ::: tip nota-bene
 While this method is public it is internally called by [Two.Path._update](/documentation/path#two-path-_update) when `automatic = true`.
 :::
+
+
+</div>
+
 
 
 
@@ -1077,12 +1449,24 @@ While this method is public it is internally called by [Two.Path._update](/docum
 
 
 
+<div class="params">
+
 | Argument | Description |
 | ---- | ----------- |
 | `limit` | How many times to recurse subdivisions. |
+</div>
 
+
+
+
+<div class="description">
 
 Insert a [Two.Anchor](/documentation/anchor) at the midpoint between every item in [Two.Path.vertices](/documentation/path#two-path-vertices).
+
+</div>
+
+
+
 
 
 

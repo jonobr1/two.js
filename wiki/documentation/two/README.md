@@ -32,7 +32,13 @@ The entrypoint for Two.js. Instantiate a `new Two` in order to setup a scene to 
 
 
 
+<div class="properties">
+
 Map of possible path commands. Taken from the SVG specification.
+
+</div>
+
+
 
 
 
@@ -61,12 +67,24 @@ Map of possible path commands. Taken from the SVG specification.
 
 
 
+<div class="params">
+
 | Argument | Description |
 | ---- | ----------- |
 | `elem` | The DOM element to append the Two.js stage to. |
+</div>
 
+
+
+
+<div class="description">
 
 Shorthand method to append your instance of Two.js to the `document`.
+
+</div>
+
+
+
 
 
 
@@ -85,24 +103,39 @@ Shorthand method to append your instance of Two.js to the `document`.
 
 
 
+<div class="fires">
+
 __Triggers__:
 
 + `Two.Events.Types.event:play event`
 
+</div>
 
 
 
 
 
 
+
+
+<div class="description">
 
 Call to start an internal animation loop.
 
+</div>
+
+
+
+<div class="tags">
 
 
 ::: tip nota-bene
 This function initiates a `requestAnimationFrame` loop.
 :::
+
+
+</div>
+
 
 
 
@@ -121,18 +154,29 @@ This function initiates a `requestAnimationFrame` loop.
 
 
 
+<div class="fires">
+
 __Triggers__:
 
 + `Two.Events.Types.event:pause event`
 
+</div>
 
 
 
 
 
 
+
+
+<div class="description">
 
 Call to stop the internal animation loop for a specific instance of Two.js.
+
+</div>
+
+
+
 
 
 
@@ -149,6 +193,8 @@ Call to stop the internal animation loop for a specific instance of Two.js.
 
 
 
+<div class="returns">
+
 __Returns__:
 
 
@@ -160,19 +206,32 @@ __Returns__:
 The object passed for event deallocation.
 
 
+</div>
 
 
 
 
 
 
+
+<div class="params">
 
 | Argument | Description |
 | ---- | ----------- |
 | `obj` |  |
+</div>
 
+
+
+
+<div class="description">
 
 Release an arbitrary class' events from the Two.js corpus and recurse through its children and or vertices.
+
+</div>
+
+
+
 
 
 
@@ -191,24 +250,39 @@ Release an arbitrary class' events from the Two.js corpus and recurse through it
 
 
 
+<div class="fires">
+
 __Triggers__:
 
 + `Two.Events.Types.event:update event`
 
+</div>
 
 
 
 
 
 
+
+
+<div class="description">
 
 Update positions and calculations in one pass before rendering. Then render to the canvas.
 
+</div>
+
+
+
+<div class="tags">
 
 
 ::: tip nota-bene
 This function is called automatically if using [Two.play](/documentation/play) or the `autostart` parameter in construction.
 :::
+
+
+</div>
+
 
 
 
@@ -227,18 +301,29 @@ This function is called automatically if using [Two.play](/documentation/play) o
 
 
 
+<div class="fires">
+
 __Triggers__:
 
 + `event:render`
 
+</div>
 
 
 
 
 
 
+
+
+<div class="description">
 
 Render all drawable and visible objects of the scene.
+
+</div>
+
+
+
 
 
 
@@ -261,12 +346,24 @@ Render all drawable and visible objects of the scene.
 
 
 
+<div class="params">
+
 | Argument | Description |
 | ---- | ----------- |
 | `objects` | An array of Two.js objects. Alternatively can add objects as individual arguments. |
+</div>
 
+
+
+
+<div class="description">
 
 A shorthand method to add specific Two.js objects to the scene.
+
+</div>
+
+
+
 
 
 
@@ -289,12 +386,24 @@ A shorthand method to add specific Two.js objects to the scene.
 
 
 
+<div class="params">
+
 | Argument | Description |
 | ---- | ----------- |
 | `objects` | An array of Two.js objects. |
+</div>
 
+
+
+
+<div class="description">
 
 A shorthand method to remove specific Two.js objects from the scene.
+
+</div>
+
+
+
 
 
 
@@ -319,7 +428,15 @@ A shorthand method to remove specific Two.js objects from the scene.
 
 
 
+
+<div class="description">
+
 Remove all all Two.js objects from the scene.
+
+</div>
+
+
+
 
 
 
@@ -336,6 +453,8 @@ Remove all all Two.js objects from the scene.
 
 
 
+<div class="returns">
+
 __Returns__:
 
 
@@ -345,12 +464,15 @@ __Returns__:
 
 
 
+</div>
 
 
 
 
 
 
+
+<div class="params">
 
 | Argument | Description |
 | ---- | ----------- |
@@ -358,9 +480,19 @@ __Returns__:
 | `y1` |  |
 | `x2` |  |
 | `y2` |  |
+</div>
 
+
+
+
+<div class="description">
 
 Creates a Two.js line and adds it to the scene.
+
+</div>
+
+
+
 
 
 
@@ -377,6 +509,8 @@ Creates a Two.js line and adds it to the scene.
 
 
 
+<div class="returns">
+
 __Returns__:
 
 
@@ -386,12 +520,15 @@ __Returns__:
 
 
 
+</div>
 
 
 
 
 
 
+
+<div class="params">
 
 | Argument | Description |
 | ---- | ----------- |
@@ -399,9 +536,19 @@ __Returns__:
 | `y1` |  |
 | `x2` |  |
 | `y2` |  |
+</div>
 
+
+
+
+<div class="description">
 
 Creates a Two.js arrow and adds it to the scene.
+
+</div>
+
+
+
 
 
 
@@ -418,6 +565,8 @@ Creates a Two.js arrow and adds it to the scene.
 
 
 
+<div class="returns">
+
 __Returns__:
 
 
@@ -427,12 +576,15 @@ __Returns__:
 
 
 
+</div>
 
 
 
 
 
 
+
+<div class="params">
 
 | Argument | Description |
 | ---- | ----------- |
@@ -440,9 +592,19 @@ __Returns__:
 | `y` |  |
 | `width` |  |
 | `height` |  |
+</div>
 
+
+
+
+<div class="description">
 
 Creates a Two.js rectangle and adds it to the scene.
+
+</div>
+
+
+
 
 
 
@@ -459,6 +621,8 @@ Creates a Two.js rectangle and adds it to the scene.
 
 
 
+<div class="returns">
+
 __Returns__:
 
 
@@ -468,12 +632,15 @@ __Returns__:
 
 
 
+</div>
 
 
 
 
 
 
+
+<div class="params">
 
 | Argument | Description |
 | ---- | ----------- |
@@ -482,9 +649,19 @@ __Returns__:
 | `width` |  |
 | `height` |  |
 | `sides` |  |
+</div>
 
+
+
+
+<div class="description">
 
 Creates a Two.js rounded rectangle and adds it to the scene.
+
+</div>
+
+
+
 
 
 
@@ -501,6 +678,8 @@ Creates a Two.js rounded rectangle and adds it to the scene.
 
 
 
+<div class="returns">
+
 __Returns__:
 
 
@@ -510,12 +689,15 @@ __Returns__:
 
 
 
+</div>
 
 
 
 
 
 
+
+<div class="params">
 
 | Argument | Description |
 | ---- | ----------- |
@@ -523,9 +705,19 @@ __Returns__:
 | `y` |  |
 | `radius` |  |
 | `resolution` |  |
+</div>
 
+
+
+
+<div class="description">
 
 Creates a Two.js circle and adds it to the scene.
+
+</div>
+
+
+
 
 
 
@@ -542,6 +734,8 @@ Creates a Two.js circle and adds it to the scene.
 
 
 
+<div class="returns">
+
 __Returns__:
 
 
@@ -551,12 +745,15 @@ __Returns__:
 
 
 
+</div>
 
 
 
 
 
 
+
+<div class="params">
 
 | Argument | Description |
 | ---- | ----------- |
@@ -565,9 +762,19 @@ __Returns__:
 | `rx` |  |
 | `ry` |  |
 | `resolution` |  |
+</div>
 
+
+
+
+<div class="description">
 
 Creates a Two.js ellipse and adds it to the scene.
+
+</div>
+
+
+
 
 
 
@@ -584,6 +791,8 @@ Creates a Two.js ellipse and adds it to the scene.
 
 
 
+<div class="returns">
+
 __Returns__:
 
 
@@ -593,12 +802,15 @@ __Returns__:
 
 
 
+</div>
 
 
 
 
 
 
+
+<div class="params">
 
 | Argument | Description |
 | ---- | ----------- |
@@ -607,9 +819,19 @@ __Returns__:
 | `outerRadius` |  |
 | `innerRadius` |  |
 | `sides` |  |
+</div>
 
+
+
+
+<div class="description">
 
 Creates a Two.js star and adds it to the scene.
+
+</div>
+
+
+
 
 
 
@@ -626,6 +848,8 @@ Creates a Two.js star and adds it to the scene.
 
 
 
+<div class="returns">
+
 __Returns__:
 
 
@@ -637,26 +861,43 @@ __Returns__:
 - Where `path.curved` is set to `true`.
 
 
+</div>
 
 
 
 
 
 
+
+<div class="params">
 
 | Argument | Description |
 | ---- | ----------- |
 | `points` | An array of [Two.Anchor](/documentation/anchor) points. |
 | `` | Alternatively you can pass alternating `x` / `y` coordinate values as individual arguments. These will be combined into [Two.Anchor](/documentation/anchor)s for use in the path. |
+</div>
 
+
+
+
+<div class="description">
 
 Creates a Two.js path that is curved and adds it to the scene.
 
+</div>
+
+
+
+<div class="tags">
 
 
 ::: tip nota-bene
 In either case of passing an array or passing numbered arguments the last argument is an optional `Boolean` that defines whether the path should be open or closed.
 :::
+
+
+</div>
+
 
 
 
@@ -673,6 +914,8 @@ In either case of passing an array or passing numbered arguments the last argume
 
 
 
+<div class="returns">
+
 __Returns__:
 
 
@@ -682,12 +925,15 @@ __Returns__:
 
 
 
+</div>
 
 
 
 
 
 
+
+<div class="params">
 
 | Argument | Description |
 | ---- | ----------- |
@@ -695,9 +941,19 @@ __Returns__:
 | `y` |  |
 | `radius` |  |
 | `sides` |  |
+</div>
 
+
+
+
+<div class="description">
 
 Creates a Two.js polygon and adds it to the scene.
+
+</div>
+
+
+
 
 
 
@@ -720,6 +976,8 @@ Creates a Two.js polygon and adds it to the scene.
 
 
 
+<div class="params">
+
 | Argument | Description |
 | ---- | ----------- |
 | `x` |  |
@@ -729,6 +987,10 @@ Creates a Two.js polygon and adds it to the scene.
 | `startAngle` |  |
 | `endAngle` |  |
 | `resolution` | The number of vertices that should comprise the arc segment. |
+</div>
+
+
+
 
 
 
@@ -748,6 +1010,8 @@ Creates a Two.js polygon and adds it to the scene.
 
 
 
+<div class="returns">
+
 __Returns__:
 
 
@@ -757,26 +1021,43 @@ __Returns__:
 
 
 
+</div>
 
 
 
 
 
 
+
+<div class="params">
 
 | Argument | Description |
 | ---- | ----------- |
 | `points` | An array of [Two.Anchor](/documentation/anchor) points. |
 | `` | Alternatively you can pass alternating `x` / `y` coordinate values as individual arguments. These will be combined into [Two.Anchor](/documentation/anchor)s for use in the path. |
+</div>
 
+
+
+
+<div class="description">
 
 Creates a Two.js path and adds it to the scene.
 
+</div>
+
+
+
+<div class="tags">
 
 
 ::: tip nota-bene
 In either case of passing an array or passing numbered arguments the last argument is an optional `Boolean` that defines whether the path should be open or closed.
 :::
+
+
+</div>
+
 
 
 
@@ -793,6 +1074,8 @@ In either case of passing an array or passing numbered arguments the last argume
 
 
 
+<div class="returns">
+
 __Returns__:
 
 
@@ -802,12 +1085,15 @@ __Returns__:
 
 
 
+</div>
 
 
 
 
 
 
+
+<div class="params">
 
 | Argument | Description |
 | ---- | ----------- |
@@ -815,9 +1101,19 @@ __Returns__:
 | `x` |  |
 | `y` |  |
 | `styles` | An object to describe any of the [Two.Text.Properties](/documentation/text#two-text-properties) including `fill`, `stroke`, `linewidth`, `family`, `alignment`, `leading`, `opacity`, etc.. |
+</div>
 
+
+
+
+<div class="description">
 
 Creates a Two.js text object and adds it to the scene.
+
+</div>
+
+
+
 
 
 
@@ -834,6 +1130,8 @@ Creates a Two.js text object and adds it to the scene.
 
 
 
+<div class="returns">
+
 __Returns__:
 
 
@@ -843,12 +1141,15 @@ __Returns__:
 
 
 
+</div>
 
 
 
 
 
 
+
+<div class="params">
 
 | Argument | Description |
 | ---- | ----------- |
@@ -857,9 +1158,19 @@ __Returns__:
 | `x2` |  |
 | `y2` |  |
 | `stops` | Any number of color stops sometimes reffered to as ramp stops. If none are supplied then the default black-to-white two stop gradient is applied. |
+</div>
 
+
+
+
+<div class="description">
 
 Creates a Two.js linear gradient and ads it to the scene. In the case of an effect it's added to an invisible "definitions" group.
+
+</div>
+
+
+
 
 
 
@@ -876,6 +1187,8 @@ Creates a Two.js linear gradient and ads it to the scene. In the case of an effe
 
 
 
+<div class="returns">
+
 __Returns__:
 
 
@@ -885,12 +1198,15 @@ __Returns__:
 
 
 
+</div>
 
 
 
 
 
 
+
+<div class="params">
 
 | Argument | Description |
 | ---- | ----------- |
@@ -898,9 +1214,19 @@ __Returns__:
 | `y1` |  |
 | `radius` |  |
 | `stops` | Any number of color stops sometimes reffered to as ramp stops. If none are supplied then the default black-to-white two stop gradient is applied. |
+</div>
 
+
+
+
+<div class="description">
 
 Creates a Two.js linear-gradient object and ads it to the scene. In the case of an effect it's added to an invisible "definitions" group.
+
+</div>
+
+
+
 
 
 
@@ -917,6 +1243,8 @@ Creates a Two.js linear-gradient object and ads it to the scene. In the case of 
 
 
 
+<div class="returns">
+
 __Returns__:
 
 
@@ -926,12 +1254,15 @@ __Returns__:
 
 
 
+</div>
 
 
 
 
 
 
+
+<div class="params">
 
 | Argument | Description |
 | ---- | ----------- |
@@ -942,9 +1273,19 @@ __Returns__:
 | `rows` |  |
 | `frameRate` |  |
 | `autostart` |  |
+</div>
 
+
+
+
+<div class="description">
 
 Creates a Two.js sprite object and adds it to the scene. Sprites can be used for still images as well as animations.
+
+</div>
+
+
+
 
 
 
@@ -961,6 +1302,8 @@ Creates a Two.js sprite object and adds it to the scene. Sprites can be used for
 
 
 
+<div class="returns">
+
 __Returns__:
 
 
@@ -970,12 +1313,15 @@ __Returns__:
 
 
 
+</div>
 
 
 
 
 
 
+
+<div class="params">
 
 | Argument | Description |
 | ---- | ----------- |
@@ -984,9 +1330,19 @@ __Returns__:
 | `y` |  |
 | `frameRate` |  |
 | `autostart` |  |
+</div>
 
+
+
+
+<div class="description">
 
 Creates a Two.js image sequence object and adds it to the scene.
+
+</div>
+
+
+
 
 
 
@@ -1003,6 +1359,8 @@ Creates a Two.js image sequence object and adds it to the scene.
 
 
 
+<div class="returns">
+
 __Returns__:
 
 
@@ -1012,20 +1370,33 @@ __Returns__:
 
 
 
+</div>
 
 
 
 
 
 
+
+<div class="params">
 
 | Argument | Description |
 | ---- | ----------- |
 | `pathOrSource` | The URL path to an image or a DOM image-like element. |
 | `callback` | Function to be invoked when the image is loaded. |
+</div>
 
+
+
+
+<div class="description">
 
 Creates a Two.js texture object.
+
+</div>
+
+
+
 
 
 
@@ -1042,6 +1413,8 @@ Creates a Two.js texture object.
 
 
 
+<div class="returns">
+
 __Returns__:
 
 
@@ -1051,19 +1424,32 @@ __Returns__:
 
 
 
+</div>
 
 
 
 
 
 
+
+<div class="params">
 
 | Argument | Description |
 | ---- | ----------- |
 | `objects` | Two.js objects to be added to the group in the form of an array or as individual arguments. |
+</div>
 
+
+
+
+<div class="description">
 
 Creates a Two.js group object and adds it to the scene.
+
+</div>
+
+
+
 
 
 
@@ -1080,6 +1466,8 @@ Creates a Two.js group object and adds it to the scene.
 
 
 
+<div class="returns">
+
 __Returns__:
 
 
@@ -1089,21 +1477,34 @@ __Returns__:
 
 
 
+</div>
 
 
 
 
 
 
+
+<div class="params">
 
 | Argument | Description |
 | ---- | ----------- |
 | `svgNode` | The SVG node to be parsed. |
 | `shallow` | Don't create a top-most group but append all content directly. |
 | `add` | – Automatically add the reconstructed SVG node to scene. |
+</div>
 
+
+
+
+<div class="description">
 
 Interpret an SVG Node and add it to this instance's scene. The distinction should be made that this doesn't `import` svg's, it solely interprets them into something compatible for Two.js - this is slightly different than a direct transcription.
+
+</div>
+
+
+
 
 
 
@@ -1120,6 +1521,8 @@ Interpret an SVG Node and add it to this instance's scene. The distinction shoul
 
 
 
+<div class="returns">
+
 __Returns__:
 
 
@@ -1129,20 +1532,33 @@ __Returns__:
 
 
 
+</div>
 
 
 
 
 
 
+
+<div class="params">
 
 | Argument | Description |
 | ---- | ----------- |
 | `pathOrSVGContent` | The URL path of an SVG file or an SVG document as text. |
 | `callback` | Function to call once loading has completed. |
+</div>
 
+
+
+
+<div class="description">
 
 Load an SVG file or SVG text and interpret it into Two.js legible objects.
+
+</div>
+
+
+
 
 
 

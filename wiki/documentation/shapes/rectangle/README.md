@@ -1,7 +1,11 @@
 # Two.Rectangle
 
 
+<div class="extends">
+
 __Extends__: `Two.Path`
+
+</div>
 
 
 
@@ -32,7 +36,13 @@ __Extends__: `Two.Path`
 
 
 
+<div class="properties">
+
 A list of properties that are on every [Two.Rectangle](/documentation/rectangle).
+
+</div>
+
+
 
 
 
@@ -61,12 +71,24 @@ A list of properties that are on every [Two.Rectangle](/documentation/rectangle)
 
 
 
+<div class="params">
+
 | Argument | Description |
 | ---- | ----------- |
 | `object` | The object to make observable. |
+</div>
 
+
+
+
+<div class="description">
 
 Convenience function to apply observable qualities of a [Two.Rectangle](/documentation/rectangle) to any object. Handy if you'd like to extend the [Two.Rectangle](/documentation/rectangle) class on a custom class.
+
+</div>
+
+
+
 
 
 
@@ -87,7 +109,13 @@ Convenience function to apply observable qualities of a [Two.Rectangle](/documen
 
 
 
+<div class="properties">
+
 The size of the width of the rectangle.
+
+</div>
+
+
 
 
 
@@ -114,7 +142,13 @@ The size of the width of the rectangle.
 
 
 
+<div class="properties">
+
 The size of the height of the rectangle.
+
+</div>
+
+
 
 
 
@@ -141,7 +175,13 @@ The size of the height of the rectangle.
 
 
 
+<div class="properties">
+
 A two-component vector describing the origin offset to draw the rectangle. Default is `0, 0`.
+
+</div>
+
+
 
 
 
@@ -164,6 +204,8 @@ A two-component vector describing the origin offset to draw the rectangle. Defau
 
 
 
+<div class="returns">
+
 __Returns__:
 
 
@@ -173,19 +215,32 @@ __Returns__:
 
 
 
+</div>
 
 
 
 
 
 
+
+<div class="params">
 
 | Argument | Description |
 | ---- | ----------- |
 | `parent` | The parent group or scene to add the clone to. |
+</div>
 
+
+
+
+<div class="description">
 
 Create a new instance of [Two.Rectangle](/documentation/rectangle) with the same properties of the current path.
+
+</div>
+
+
+
 
 
 
@@ -202,6 +257,8 @@ Create a new instance of [Two.Rectangle](/documentation/rectangle) with the same
 
 
 
+<div class="returns">
+
 __Returns__:
 
 
@@ -211,6 +268,7 @@ __Returns__:
 
 
 
+</div>
 
 
 
@@ -219,8 +277,16 @@ __Returns__:
 
 
 
+
+
+<div class="description">
 
 Return a JSON compatible plain object that represents the path.
+
+</div>
+
+
+
 
 
 

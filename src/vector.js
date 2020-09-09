@@ -496,7 +496,7 @@ _.extend(Vector.prototype, Events, {
    * @name Two.Vector#negate
    * @function
    * @returns {Number}
-   * @description Get the [dot product]{@link https://en.wikipedia.org/wiki/Dot_product} of the vector.
+   * @description Get the [dot product](https://en.wikipedia.org/wiki/Dot_product) of the vector.
    */
   dot: function(v) {
     return this.x * v.x + this.y * v.y;
@@ -582,7 +582,7 @@ _.extend(Vector.prototype, Events, {
    * @param {Two.Vector} v - The destination vector to step towards.
    * @param {Number} t - The zero to one value of how close the current vector gets to the destination vector.
    * @description Linear interpolate one vector to another by an amount `t` defined as a zero to one number.
-   * @see [Matt DesLauriers]{@link https://twitter.com/mattdesl/status/1031305279227478016} has a good thread about this.
+   * @see [Matt DesLauriers](https://twitter.com/mattdesl/status/1031305279227478016) has a good thread about this.
    */
   lerp: function(v, t) {
     var x = (v.x - this.x) * t + this.x;

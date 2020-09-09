@@ -49,6 +49,7 @@ _.each(sourceFiles, function(file) {
       _.each(object.returns, expandParam, object);
       _.each(object.properties, expandParam, object);
       _.each(object.tags, expandTag, object);
+      object.see = _.map(object.see, expandSee, object);
 
     }
 
@@ -121,6 +122,10 @@ function getRoot(citations) {
   return null;
 }
 
+function expandSee(see) {
+  return expandLink({ text: see }, 'text').text;
+}
+
 function expandTag(tag) {
   switch (tag.title) {
     case 'overloaded':
@@ -184,6 +189,8 @@ function expandLink(object, property) {
   if (shouldRecurse) {
     expandLink(object, property);
   }
+
+  return object;
 
 }
 

@@ -257,7 +257,7 @@ var getCurveBoundingBox = function(x1, y1, x2, y2, x3, y3, x4, y4) {
  * @param {Number} b
  * @param {Integer} n
  * @description Integration for `getCurveLength` calculations.
- * @see [Paper.js]{@link https://github.com/paperjs/paper.js/blob/master/src/util/Numerical.js#L101}
+ * @see [Paper.js](@link https://github.com/paperjs/paper.js/blob/master/src/util/Numerical.js#L101)
  */
 var integrate = function(f, a, b, n) {
   var x = Curve.abscissas[n - 2],

@@ -1,7 +1,11 @@
 # Two.Anchor
 
 
+<div class="extends">
+
 __Extends__: `Two.Vector`
+
+</div>
 
 
 An object that holds 3 [Two.Vector](/documentation/vector)s, the anchor point and its corresponding handles: `left` and `right`. In order to properly describe the bezier curve about the point there is also a command property to describe what type of drawing should occur when Two.js renders the anchors.
@@ -37,12 +41,24 @@ An object that holds 3 [Two.Vector](/documentation/vector)s, the anchor point an
 
 
 
+<div class="params">
+
 | Argument | Description |
 | ---- | ----------- |
 | `anchor` | The instance to append the `control`object to. |
+</div>
 
+
+
+
+<div class="description">
 
 Adds the `controls` property as an object with `left` and `right` properties to access the bezier control handles that define how the curve is drawn. It also sets the `relative` property to `true` making vectors in the `controls` object relative to their corresponding root anchor point.
+
+</div>
+
+
+
 
 
 
@@ -65,12 +81,24 @@ Adds the `controls` property as an object with `left` and `right` properties to 
 
 
 
+<div class="params">
+
 | Argument | Description |
 | ---- | ----------- |
 | `object` | The object to make observable. |
+</div>
 
+
+
+
+<div class="description">
 
 Convenience function to apply observable qualities of a [Two.Anchor](/documentation/anchor) to any object. Handy if you'd like to extend the [Two.Anchor](/documentation/anchor) class on a custom class.
+
+</div>
+
+
+
 
 
 
@@ -91,13 +119,25 @@ Convenience function to apply observable qualities of a [Two.Anchor](/documentat
 
 
 
+<div class="properties">
+
+
+
+</div>
 
 
 
 
 
+
+<div class="description">
 
 An plain object that holds the controls handles for a [Two.Anchor](/documentation/anchor).
+
+</div>
+
+
+
 
 
 
@@ -118,13 +158,25 @@ An plain object that holds the controls handles for a [Two.Anchor](/documentatio
 
 
 
+<div class="properties">
+
+
+
+</div>
 
 
 
 
 
+
+<div class="description">
 
 The "left" control point to define handles on a bezier curve.
+
+</div>
+
+
+
 
 
 
@@ -145,13 +197,25 @@ The "left" control point to define handles on a bezier curve.
 
 
 
+<div class="properties">
+
+
+
+</div>
 
 
 
 
 
+
+<div class="description">
 
 The "left" control point to define handles on a bezier curve.
+
+</div>
+
+
+
 
 
 
@@ -172,13 +236,25 @@ The "left" control point to define handles on a bezier curve.
 
 
 
+<div class="properties">
+
+
+
+</div>
 
 
 
 
 
+
+<div class="description">
 
 A draw command associated with the anchor point.
+
+</div>
+
+
+
 
 
 
@@ -199,13 +275,25 @@ A draw command associated with the anchor point.
 
 
 
+<div class="properties">
+
+
+
+</div>
 
 
 
 
 
+
+<div class="description">
 
 A boolean to render control points relative to the root anchor point or in global coordinate-space to the rest of the scene.
+
+</div>
+
+
+
 
 
 
@@ -230,7 +318,15 @@ A boolean to render control points relative to the root anchor point or in globa
 
 
 
+
+<div class="description">
+
 Convenience method used mainly by [Two.Path.vertices](/documentation/path#two-path-vertices) to listen and propagate changes from control points up to their respective anchors and further if necessary.
+
+</div>
+
+
+
 
 
 
@@ -255,7 +351,15 @@ Convenience method used mainly by [Two.Path.vertices](/documentation/path#two-pa
 
 
 
+
+<div class="description">
+
 Convenience method used mainly by [Two.Path.vertices](/documentation/path#two-path-vertices) to ignore changes from a specific anchor's control points.
+
+</div>
+
+
+
 
 
 
@@ -278,12 +382,24 @@ Convenience method used mainly by [Two.Path.vertices](/documentation/path#two-pa
 
 
 
+<div class="params">
+
 | Argument | Description |
 | ---- | ----------- |
 | `v` | The anchor to apply values to. |
+</div>
 
+
+
+
+<div class="description">
 
 Copy the properties of one [Two.Anchor](/documentation/anchor) onto another.
+
+</div>
+
+
+
 
 
 
@@ -300,6 +416,8 @@ Copy the properties of one [Two.Anchor](/documentation/anchor) onto another.
 
 
 
+<div class="returns">
+
 __Returns__:
 
 
@@ -309,6 +427,7 @@ __Returns__:
 
 
 
+</div>
 
 
 
@@ -317,8 +436,16 @@ __Returns__:
 
 
 
+
+
+<div class="description">
 
 Create a new [Two.Anchor](/documentation/anchor), set all its values to the current instance and return it for use.
+
+</div>
+
+
+
 
 
 
@@ -335,6 +462,8 @@ Create a new [Two.Anchor](/documentation/anchor), set all its values to the curr
 
 
 
+<div class="returns">
+
 __Returns__:
 
 
@@ -346,6 +475,7 @@ __Returns__:
 - An object with properties filled out to mirror [Two.Anchor](/documentation/anchor).
 
 
+</div>
 
 
 
@@ -354,8 +484,16 @@ __Returns__:
 
 
 
+
+
+<div class="description">
 
 Create a JSON compatible plain object of the current instance. Intended for use with storing values in a database.
+
+</div>
+
+
+
 
 
 
@@ -372,6 +510,8 @@ Create a JSON compatible plain object of the current instance. Intended for use 
 
 
 
+<div class="returns">
+
 __Returns__:
 
 
@@ -383,6 +523,7 @@ __Returns__:
 - A String with comma-separated values reflecting the various values on the current instance.
 
 
+</div>
 
 
 
@@ -391,8 +532,16 @@ __Returns__:
 
 
 
+
+
+<div class="description">
 
 Create a string form of the current instance. Intended for use with storing values in a database. This is lighter to store than the JSON compatible [Two.Anchor.toObject](/documentation/anchor#two-anchor-toobject).
+
+</div>
+
+
+
 
 
 

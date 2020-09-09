@@ -888,7 +888,7 @@ _.extend(Vector.prototype, Events, {
    * @name Two.Vector#negate
    * @function
    * @returns {Number}
-   * @description Get the [dot product]{@link https://en.wikipedia.org/wiki/Dot_product} of the vector.
+   * @description Get the [dot product](https://en.wikipedia.org/wiki/Dot_product) of the vector.
    */
   dot: function(v) {
     return this.x * v.x + this.y * v.y;
@@ -974,7 +974,7 @@ _.extend(Vector.prototype, Events, {
    * @param {Two.Vector} v - The destination vector to step towards.
    * @param {Number} t - The zero to one value of how close the current vector gets to the destination vector.
    * @description Linear interpolate one vector to another by an amount `t` defined as a zero to one number.
-   * @see [Matt DesLauriers]{@link https://twitter.com/mattdesl/status/1031305279227478016} has a good thread about this.
+   * @see [Matt DesLauriers](https://twitter.com/mattdesl/status/1031305279227478016) has a good thread about this.
    */
   lerp: function(v, t) {
     var x = (v.x - this.x) * t + this.x;
@@ -2137,7 +2137,7 @@ var Constants = {
    * @name Two.PublishDate
    * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
    */
-  PublishDate: '2020-09-08T21:01:18.674Z',
+  PublishDate: '2020-09-09T22:59:56.834Z',
 
   /**
    * @name Two.Identifier
@@ -2418,7 +2418,7 @@ var getCurveBoundingBox = function(x1, y1, x2, y2, x3, y3, x4, y4) {
  * @param {Number} b
  * @param {Integer} n
  * @description Integration for `getCurveLength` calculations.
- * @see [Paper.js]{@link https://github.com/paperjs/paper.js/blob/master/src/util/Numerical.js#L101}
+ * @see [Paper.js](@link https://github.com/paperjs/paper.js/blob/master/src/util/Numerical.js#L101)
  */
 var integrate = function(f, a, b, n) {
   var x = Curve.abscissas[n - 2],
@@ -2611,7 +2611,7 @@ var getBackingStoreRatio = function(ctx) {
  * @function
  * @param {CanvasRenderingContext2D} ctx
  * @returns {Number} The ratio of a unit in Two.js to the pixel density of a session's screen.
- * @see [High DPI Rendering]{@link http://www.html5rocks.com/en/tutorials/canvas/hidpi/}
+ * @see [High DPI Rendering](http://www.html5rocks.com/en/tutorials/canvas/hidpi/)
  */
 var getRatio = function(ctx) {
   return devicePixelRatio / getBackingStoreRatio(ctx);
@@ -3030,44 +3030,6 @@ _.extend(Shape.prototype, Events, {
 
 Shape.MakeObservable(Shape.prototype);
 
-// Constants
-
-var min = Math.min, max = Math.max;
-
-/**
- * @class
- * @name Two.Group
- */
-var Group = function(children) {
-
-  Shape.call(this, true);
-
-  this._renderer.type = 'group';
-
-  /**
-   * @name Two.Group#additions
-   * @property {Two.Shape[]}
-   * @description An automatically updated list of children that need to be appended to the renderer's scenegraph.
-   */
-  this.additions = [];
-
-  /**
-   * @name Two.Group#subtractions
-   * @property {Two.Shape[]}
-   * @description An automatically updated list of children that need to be removed from the renderer's scenegraph.
-   */
-  this.subtractions = [];
-
-  /**
-   * @name Two.Group#additions
-   * @property {Two.Group.Children[]}
-   * @description A list of all the children in the scenegraph.
-   * @nota-bene Ther order of this list indicates the order each element is rendered to the screen.
-   */
-  this.children = Array.isArray(children) ? children : Array.prototype.slice.call(arguments);
-
-};
-
 /**
  * @class
  * @name Two.Group.Children
@@ -3104,7 +3066,7 @@ _.extend(Children.prototype, {
   /**
    * @function
    * @name Two.Group.Children#attach
-   * @param {Two.Shape[]}
+   * @param {Two.Shape[]} children - The objects which extend {@link Two.Shape} to be added.
    * @description Adds elements to the `ids` map.
    */
   attach: function(children) {
@@ -3117,7 +3079,7 @@ _.extend(Children.prototype, {
   /**
    * @function
    * @name Two.Group.Children#detach
-   * @param {Two.Shape[]}
+   * @param {Two.Shape[]} children - The objects which extend {@link Two.Shape} to be removed.
    * @description Removes elements to the `ids` map.
    */
   detach: function(children) {
@@ -3129,6 +3091,48 @@ _.extend(Children.prototype, {
 
 });
 
+// Constants
+
+var min = Math.min, max = Math.max;
+
+/**
+ * @name Two.Group
+ * @class
+ * @extends Two.Shape
+ * @param {Two.Shape[]} [children] - A list of objects that inherit {@link Two.Shape}. For instance, the array could be a {@link Two.Path}, {@link Two.Text}, and {@link Two.RoundedRectangle}.
+ * @description This is the primary class for grouping objects that are then drawn in Two.js. In Illustrator this is a group, in After Effects it would be a Null Object. Whichever the case, the `Two.Group` contains a transformation matrix and commands to style its children, but it by itself doesn't render to the screen.
+ * @nota-bene The {@link Two#scene} is an instance of `Two.Group`.
+ */
+var Group = function(children) {
+
+  Shape.call(this, true);
+
+  this._renderer.type = 'group';
+
+  /**
+   * @name Two.Group#additions
+   * @property {Two.Shape[]}
+   * @description An automatically updated list of children that need to be appended to the renderer's scenegraph.
+   */
+  this.additions = [];
+
+  /**
+   * @name Two.Group#subtractions
+   * @property {Two.Shape[]}
+   * @description An automatically updated list of children that need to be removed from the renderer's scenegraph.
+   */
+  this.subtractions = [];
+
+  /**
+   * @name Two.Group#additions
+   * @property {Two.Group.Children}
+   * @description A list of all the children in the scenegraph.
+   * @nota-bene Ther order of this list indicates the order each element is rendered to the screen.
+   */
+  this.children = Array.isArray(children) ? children : Array.prototype.slice.call(arguments);
+
+};
+
 _.extend(Group, {
 
   Children: Children,
@@ -3136,6 +3140,7 @@ _.extend(Group, {
   /**
    * @name Two.Group.InsertChildren
    * @function
+   * @param {Two.Shape[]} children - The objects to be inserted.
    * @description Cached method to let renderers know children have been added to a {@link Two.Group}.
    */
   InsertChildren: function(children) {
@@ -3147,6 +3152,7 @@ _.extend(Group, {
   /**
    * @name Two.Group.RemoveChildren
    * @function
+   * @param {Two.Shape[]} children - The objects to be removed.
    * @description Cached method to let renderers know children have been removed from a {@link Two.Group}.
    */
   RemoveChildren: function(children) {
@@ -3312,6 +3318,7 @@ _.extend(Group, {
    * @function
    * @param {Two.Group} group - The group to apply getters and setters.
    * @param {Object} properties - A key / value object containing properties to inherit.
+   * @description Convenience method to apply getter / setter logic on an array of properties. Used in {@link Two.Group.MakeObservable}.
    */
   MakeGetterSetters: function(group, properties) {
 
@@ -3330,6 +3337,7 @@ _.extend(Group, {
    * @function
    * @param {Two.Group} group - The group to apply getters and setters.
    * @param {String} key - The key which will become a property on the group.
+   * @description Convenience method to apply getter / setter logic specific to how `Two.Group`s trickle down styles to their children. Used in {@link Two.Group.MakeObservable}.
    */
   MakeGetterSetter: function(group, key) {
 
@@ -3714,7 +3722,7 @@ _.extend(Group.prototype, Shape.prototype, {
   /**
    * @name Two.Group#add
    * @function
-   * @param {Two.Shape[]} objects - An array of objects to be added. Can be also added as individual arguments.
+   * @param {Two.Shape[]} objects - An array of objects to be added. Can be also be supplied as individual arguments.
    * @description Add objects to the group.
    */
   add: function(objects) {
@@ -4991,7 +4999,7 @@ var CanvasShim = {
    * @param {canvas} canvas - The instanced `Canvas` object provided by `node-canvas`.
    * @param {Image} [Image] - The prototypical `Image` object provided by `node-canvas`. This is only necessary to pass if you're going to load bitmap imagery.
    * @returns {canvas} Returns the instanced canvas object you passed from with additional attributes needed for Two.js.
-   * @description Convenience method for defining all the dependencies from the npm package `node-canvas`. See [node-canvas]{@link https://github.com/Automattic/node-canvas} for additional information on setting up HTML5 `<canvas />` drawing in a node.js environment.
+   * @description Convenience method for defining all the dependencies from the npm package `node-canvas`. See [node-canvas](https://github.com/Automattic/node-canvas) for additional information on setting up HTML5 `<canvas />` drawing in a node.js environment.
    */
   shim: function(canvas, Image) {
     Renderer.Utils.shim(canvas);
@@ -11250,7 +11258,7 @@ ImageSequence.MakeObservable(ImageSequence.prototype);
  * @param {Integer} [cols=1] - The number of columns the sprite contains.
  * @param {Integer} [rows=1] - The number of rows the sprite contains.
  * @param {Integer} [frameRate=0] - The frame rate at which the partitions of the image should playback at.
- * @description A convenient package to display still or animated images through a tiled image source. For more information on the principals of animated imagery through tiling see [Texture Atlas]{@link https://en.wikipedia.org/wiki/Texture_atlas} on Wikipedia..
+ * @description A convenient package to display still or animated images through a tiled image source. For more information on the principals of animated imagery through tiling see [Texture Atlas](https://en.wikipedia.org/wiki/Texture_atlas) on Wikipedia.
  */
 var Sprite = function(path, ox, oy, cols, rows, frameRate) {
 

@@ -1,7 +1,11 @@
 # Two.Line
 
 
+<div class="extends">
+
 __Extends__: `Two.Path`
+
+</div>
 
 
 

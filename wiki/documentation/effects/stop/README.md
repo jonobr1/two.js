@@ -29,7 +29,13 @@
 
 
 
+<div class="properties">
+
 The current index being referenced for calculating a stop's default offset value.
+
+</div>
+
+
 
 
 
@@ -56,7 +62,13 @@ The current index being referenced for calculating a stop's default offset value
 
 
 
+<div class="properties">
+
 A list of properties that are on every [Two.Stop](/documentation/stop).
+
+</div>
+
+
 
 
 
@@ -85,12 +97,24 @@ A list of properties that are on every [Two.Stop](/documentation/stop).
 
 
 
+<div class="params">
+
 | Argument | Description |
 | ---- | ----------- |
 | `object` | The object to make observable. |
+</div>
 
+
+
+
+<div class="description">
 
 Convenience function to apply observable qualities of a [Two.Stop](/documentation/stop) to any object. Handy if you'd like to extend the [Two.Stop](/documentation/stop) class on a custom class.
+
+</div>
+
+
+
 
 
 
@@ -111,7 +135,13 @@ Convenience function to apply observable qualities of a [Two.Stop](/documentatio
 
 
 
+<div class="properties">
+
 The offset percentage of the stop represented as a zero-to-one value.
+
+</div>
+
+
 
 
 
@@ -138,7 +168,13 @@ The offset percentage of the stop represented as a zero-to-one value.
 
 
 
+<div class="properties">
+
 The alpha percentage of the stop represented as a zero-to-one value.
+
+</div>
+
+
 
 
 
@@ -165,7 +201,13 @@ The alpha percentage of the stop represented as a zero-to-one value.
 
 
 
+<div class="properties">
+
 The color of the stop.
+
+</div>
+
+
 
 
 
@@ -188,6 +230,8 @@ The color of the stop.
 
 
 
+<div class="returns">
+
 __Returns__:
 
 
@@ -197,19 +241,32 @@ __Returns__:
 
 
 
+</div>
 
 
 
 
 
 
+
+<div class="params">
 
 | Argument | Description |
 | ---- | ----------- |
 | `parent` | The parent group or scene to add the clone to. |
+</div>
 
+
+
+
+<div class="description">
 
 Create a new instance of [Two.Stop](/documentation/stop) with the same properties of the current path.
+
+</div>
+
+
+
 
 
 
@@ -226,6 +283,8 @@ Create a new instance of [Two.Stop](/documentation/stop) with the same propertie
 
 
 
+<div class="returns">
+
 __Returns__:
 
 
@@ -235,6 +294,7 @@ __Returns__:
 
 
 
+</div>
 
 
 
@@ -243,8 +303,16 @@ __Returns__:
 
 
 
+
+
+<div class="description">
 
 Return a JSON compatible plain object that represents the path.
+
+</div>
+
+
+
 
 
 
