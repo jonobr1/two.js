@@ -10,6 +10,14 @@ __Extends__: `<%= root.augments %>`
 
 <%= root.description %>
 
+<% if (root.meta) { %>
+<div class="meta">
+
+  [Source Code](<%= 'https://github.com/jonobr1/two.js/blob/dev/' + root.meta.path.replace(/^[\w\d\/]*two\.js\//i, '') + '/' + root.meta.filename + '#L' + root.meta.lineno %>)
+
+</div>
+<% } %>
+
 <% if (root.params && root.params.length > 0) { %>
 ### Constructor
 <% } %>
@@ -23,7 +31,7 @@ __Extends__: `<%= root.augments %>`
 
 ---
 
-<div class="<%= item.scope %> <%= item.overloaded ? 'overloaded' : '' %>">
+<div class="<%= item.scope %> <%= item.kind %> <%= item.overloaded ? 'overloaded' : '' %>">
 
 ## <%= item.longname.replace(/\#/ig, '.') %>
 
@@ -85,6 +93,14 @@ __Triggers__:
 <div class="description">
 
 <%= item.description %>
+
+</div>
+<% } %>
+
+<% if (item.meta) { %>
+<div class="meta">
+
+  [Source Code](<%= 'https://github.com/jonobr1/two.js/blob/dev/' + item.meta.path.replace(/^[\w\d\/]*two\.js\//i, '') + '/' + item.meta.filename + '#L' + item.meta.lineno %>)
 
 </div>
 <% } %>

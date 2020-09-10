@@ -11,6 +11,14 @@ __Extends__: `Two.Events`
 This class is used by [Two](/documentation/) when constructing with `type` of `Two.Types.webgl`. It takes Two.js' scenegraph and renders it to a `<canvas />` through the WebGL api.
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/webgl.js#L1109)
+
+</div>
+
+
+
 ### Constructor
 
 
@@ -25,7 +33,7 @@ This class is used by [Two](/documentation/) when constructing with `type` of `T
 
 ---
 
-<div class="static ">
+<div class="static member ">
 
 ## Two.WebGLRenderer.Utils
 
@@ -49,6 +57,14 @@ A massive object filled with utility functions and properties to render Two.js o
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/webgl.js#L1228)
+
+</div>
+
+
+
 
 
 
@@ -58,7 +74,7 @@ A massive object filled with utility functions and properties to render Two.js o
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.WebGLRenderer.domElement
 
@@ -82,6 +98,14 @@ The `<canvas />` associated with the Two.js scene.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/webgl.js#L1124)
+
+</div>
+
+
+
 
 
 
@@ -91,7 +115,7 @@ The `<canvas />` associated with the Two.js scene.
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.WebGLRenderer.scene
 
@@ -115,6 +139,14 @@ The root group of the scenegraph.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/webgl.js#L1135)
+
+</div>
+
+
+
 
 
 
@@ -124,7 +156,7 @@ The root group of the scenegraph.
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.WebGLRenderer.overdraw
 
@@ -148,6 +180,14 @@ Determines whether the canvas clears the background each draw call.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/webgl.js#L1161)
+
+</div>
+
+
+
 
 
 
@@ -157,7 +197,7 @@ Determines whether the canvas clears the background each draw call.
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.WebGLRenderer.ctx
 
@@ -181,6 +221,14 @@ Associated two dimensional context to render on the `<canvas />`.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/webgl.js#L1168)
+
+</div>
+
+
+
 
 
 
@@ -190,7 +238,7 @@ Associated two dimensional context to render on the `<canvas />`.
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.WebGLRenderer.program
 
@@ -214,6 +262,14 @@ Associated WebGL program to render all elements from the scenegraph.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/webgl.js#L1186)
+
+</div>
+
+
+
 
 
 
@@ -223,7 +279,7 @@ Associated WebGL program to render all elements from the scenegraph.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.WebGLRenderer.setSize
 
@@ -264,6 +320,14 @@ Change the size of the renderer.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/webgl.js#L1240)
+
+</div>
+
+
+
 
 
 
@@ -273,7 +337,7 @@ Change the size of the renderer.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.WebGLRenderer.render
 
@@ -292,6 +356,14 @@ Change the size of the renderer.
 <div class="description">
 
 Render the current scene to the `<canvas />`.
+
+</div>
+
+
+
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/webgl.js#L1281)
 
 </div>
 

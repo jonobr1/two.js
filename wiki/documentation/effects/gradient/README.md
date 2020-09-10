@@ -5,6 +5,14 @@
 This is the base class for constructing different types of gradients with Two.js. The two common gradients are [Two.LinearGradient](/documentation/lineargradient) and [Two.RadialGradient](/documentation/radialgradient).
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L9)
+
+</div>
+
+
+
 ### Constructor
 
 
@@ -16,7 +24,7 @@ This is the base class for constructing different types of gradients with Two.js
 
 ---
 
-<div class="static ">
+<div class="static member ">
 
 ## Two.Gradient.Properties
 
@@ -40,6 +48,14 @@ A list of properties that are on every [Two.Gradient](/documentation/gradient).
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L62)
+
+</div>
+
+
+
 
 
 
@@ -49,7 +65,7 @@ A list of properties that are on every [Two.Gradient](/documentation/gradient).
 
 ---
 
-<div class="static ">
+<div class="static function ">
 
 ## Two.Gradient.MakeObservable
 
@@ -80,6 +96,14 @@ Convenience function to apply observable qualities of a [Two.Gradient](/document
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L70)
+
+</div>
+
+
+
 
 
 
@@ -89,7 +113,7 @@ Convenience function to apply observable qualities of a [Two.Gradient](/document
 
 ---
 
-<div class="static ">
+<div class="static function ">
 
 ## Two.Gradient.FlagStops
 
@@ -113,6 +137,14 @@ Cached method to let renderers know stops have been updated on a [Two.Gradient](
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L118)
+
+</div>
+
+
+
 
 
 
@@ -122,7 +154,7 @@ Cached method to let renderers know stops have been updated on a [Two.Gradient](
 
 ---
 
-<div class="static ">
+<div class="static function ">
 
 ## Two.Gradient.BindVertices
 
@@ -146,6 +178,14 @@ Cached method to let [Two.Gradient](/documentation/gradient) know vertices have 
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L127)
+
+</div>
+
+
+
 
 
 
@@ -155,7 +195,7 @@ Cached method to let [Two.Gradient](/documentation/gradient) know vertices have 
 
 ---
 
-<div class="static ">
+<div class="static function ">
 
 ## Two.Gradient.UnbindStops
 
@@ -179,6 +219,14 @@ Cached method to let [Two.Gradient](/documentation/gradient) know vertices have 
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L146)
+
+</div>
+
+
+
 
 
 
@@ -188,7 +236,7 @@ Cached method to let [Two.Gradient](/documentation/gradient) know vertices have 
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.Gradient.id
 
@@ -212,6 +260,14 @@ Session specific unique identifier.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L27)
+
+</div>
+
+
+
 <div class="tags">
 
 
@@ -231,7 +287,7 @@ In the [Two.SvgRenderer](/documentation/svgrenderer) change this to change the u
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.Gradient.spread
 
@@ -255,6 +311,14 @@ Indicates what happens if the gradient starts or ends inside the bounds of the t
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L39)
+
+</div>
+
+
+
 
 
 <div class="see">
@@ -270,7 +334,7 @@ Indicates what happens if the gradient starts or ends inside the bounds of the t
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.Gradient.stops
 
@@ -294,6 +358,14 @@ An ordered list of [Two.Stop](/documentation/stop)s for rendering the gradient.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L46)
+
+</div>
+
+
+
 
 
 
@@ -303,7 +375,7 @@ An ordered list of [Two.Stop](/documentation/stop)s for rendering the gradient.
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.Gradient.Stop
 
@@ -318,6 +390,14 @@ An ordered list of [Two.Stop](/documentation/stop)s for rendering the gradient.
 
 
 
+
+
+
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L56)
+
+</div>
 
 
 
@@ -336,7 +416,7 @@ An ordered list of [Two.Stop](/documentation/stop)s for rendering the gradient.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.Gradient.clone
 
@@ -380,6 +460,14 @@ Create a new instance of [Two.Gradient](/documentation/gradient) with the same p
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L180)
+
+</div>
+
+
+
 
 
 
@@ -389,7 +477,7 @@ Create a new instance of [Two.Gradient](/documentation/gradient) with the same p
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.Gradient.toObject
 
@@ -421,6 +509,14 @@ __Returns__:
 <div class="description">
 
 Return a JSON compatible plain object that represents the path.
+
+</div>
+
+
+
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L207)
 
 </div>
 

@@ -11,6 +11,14 @@ __Extends__: `Two.Path`
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js#L11)
+
+</div>
+
+
+
 ### Constructor
 
 
@@ -25,7 +33,7 @@ __Extends__: `Two.Path`
 
 ---
 
-<div class="static ">
+<div class="static member ">
 
 ## Two.Circle.Properties
 
@@ -49,6 +57,14 @@ A list of properties that are on every [Two.Circle](/documentation/circle).
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js#L51)
+
+</div>
+
+
+
 
 
 
@@ -58,7 +74,7 @@ A list of properties that are on every [Two.Circle](/documentation/circle).
 
 ---
 
-<div class="static ">
+<div class="static function ">
 
 ## Two.Circle.MakeObservable
 
@@ -89,6 +105,14 @@ Convenience function to apply observable qualities of a [Two.Circle](/documentat
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js#L57)
+
+</div>
+
+
+
 
 
 
@@ -98,7 +122,7 @@ Convenience function to apply observable qualities of a [Two.Circle](/documentat
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.Circle.radius
 
@@ -122,6 +146,14 @@ The size of the radius of the circle.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js#L32)
+
+</div>
+
+
+
 
 
 
@@ -131,7 +163,7 @@ The size of the radius of the circle.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.Circle.clone
 
@@ -175,6 +207,14 @@ Create a new instance of [Two.Circle](/documentation/circle) with the same prope
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js#L149)
+
+</div>
+
+
+
 
 
 
@@ -184,7 +224,7 @@ Create a new instance of [Two.Circle](/documentation/circle) with the same prope
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.Circle.toObject
 
@@ -216,6 +256,14 @@ __Returns__:
 <div class="description">
 
 Return a JSON compatible plain object that represents the path.
+
+</div>
+
+
+
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js#L180)
 
 </div>
 

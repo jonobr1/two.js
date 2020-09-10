@@ -5,13 +5,21 @@
 An arbitrary class to manage a directory of things. Mainly used for keeping tabs of textures in Two.js.
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/registry.js#L3)
+
+</div>
+
+
+
 
 
 
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.Registry.add
 
@@ -43,6 +51,14 @@ Adds any value to the directory. Assigned by the `id`.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/registry.js#L18)
+
+</div>
+
+
+
 
 
 
@@ -52,7 +68,7 @@ Adds any value to the directory. Assigned by the `id`.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.Registry.remove
 
@@ -83,6 +99,14 @@ Remove any value from the directory by its `id`.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/registry.js#L30)
+
+</div>
+
+
+
 
 
 
@@ -92,7 +116,7 @@ Remove any value from the directory by its `id`.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.Registry.get
 
@@ -134,6 +158,14 @@ Get a registered value by its `id`.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/registry.js#L41)
+
+</div>
+
+
+
 
 
 
@@ -143,7 +175,7 @@ Get a registered value by its `id`.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.Registry.contains
 
@@ -182,6 +214,14 @@ __Returns__:
 <div class="description">
 
 Convenience method to see if a value is registered to an `id` already.
+
+</div>
+
+
+
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/registry.js#L52)
 
 </div>
 

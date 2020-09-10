@@ -5,6 +5,14 @@
 A class to store x / y component vector data. In addition to storing data `Two.Vector` has suped up methods for commonplace mathematical operations.
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L4)
+
+</div>
+
+
+
 ### Constructor
 
 
@@ -17,7 +25,7 @@ A class to store x / y component vector data. In addition to storing data `Two.V
 
 ---
 
-<div class="static ">
+<div class="static member ">
 
 ## Two.Vector.zero
 
@@ -41,6 +49,14 @@ Handy reference to a vector with component values 0, 0 at all times.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L29)
+
+</div>
+
+
+
 
 
 
@@ -50,7 +66,7 @@ Handy reference to a vector with component values 0, 0 at all times.
 
 ---
 
-<div class="static ">
+<div class="static function ">
 
 ## Two.Vector.add
 
@@ -95,6 +111,14 @@ Add two vectors together.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L36)
+
+</div>
+
+
+
 
 
 
@@ -104,7 +128,7 @@ Add two vectors together.
 
 ---
 
-<div class="static ">
+<div class="static function ">
 
 ## Two.Vector.sub
 
@@ -149,6 +173,14 @@ Subtract two vectors: `v2` from `v1`.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L48)
+
+</div>
+
+
+
 
 
 
@@ -158,7 +190,7 @@ Subtract two vectors: `v2` from `v1`.
 
 ---
 
-<div class="static ">
+<div class="static function ">
 
 ## Two.Vector.subtract
 
@@ -182,6 +214,14 @@ Alias for [Two.Vector.sub](/documentation/vector#two-vector-sub).
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L60)
+
+</div>
+
+
+
 
 
 
@@ -191,7 +231,7 @@ Alias for [Two.Vector.sub](/documentation/vector#two-vector-sub).
 
 ---
 
-<div class="static ">
+<div class="static function ">
 
 ## Two.Vector.ratioBetween
 
@@ -232,6 +272,14 @@ The ratio betwen two points `v1` and `v2`.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L69)
+
+</div>
+
+
+
 
 
 
@@ -241,7 +289,7 @@ The ratio betwen two points `v1` and `v2`.
 
 ---
 
-<div class="static ">
+<div class="static function ">
 
 ## Two.Vector.angleBetween
 
@@ -282,6 +330,14 @@ The angle between points `v1` and `v2`.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L82)
+
+</div>
+
+
+
 
 
 
@@ -291,7 +347,7 @@ The angle between points `v1` and `v2`.
 
 ---
 
-<div class="static ">
+<div class="static function ">
 
 ## Two.Vector.distanceBetween
 
@@ -332,6 +388,14 @@ The distance between points `v1` and `v2`. Distance is always positive.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L109)
+
+</div>
+
+
+
 
 
 
@@ -341,7 +405,7 @@ The distance between points `v1` and `v2`. Distance is always positive.
 
 ---
 
-<div class="static ">
+<div class="static function ">
 
 ## Two.Vector.distanceBetweenSquared
 
@@ -382,6 +446,14 @@ The squared distance between points `v1` and `v2`.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L122)
+
+</div>
+
+
+
 
 
 
@@ -391,7 +463,7 @@ The squared distance between points `v1` and `v2`.
 
 ---
 
-<div class="static ">
+<div class="static function ">
 
 ## Two.Vector.MakeObservable
 
@@ -422,6 +494,14 @@ Convenience function to apply observable qualities of a [Two.Vector](/documentat
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L138)
+
+</div>
+
+
+
 
 
 
@@ -431,7 +511,7 @@ Convenience function to apply observable qualities of a [Two.Vector](/documentat
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.Vector.x
 
@@ -455,6 +535,14 @@ The horizontal x-component of the vector.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L13)
+
+</div>
+
+
+
 
 
 
@@ -464,7 +552,7 @@ The horizontal x-component of the vector.
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.Vector.y
 
@@ -488,6 +576,14 @@ The vertical y-component of the vector.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L19)
+
+</div>
+
+
+
 
 
 
@@ -497,7 +593,7 @@ The vertical y-component of the vector.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.Vector.set
 
@@ -544,6 +640,14 @@ Set the x / y components of a vector to specific number values.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L177)
+
+</div>
+
+
+
 
 
 
@@ -553,7 +657,7 @@ Set the x / y components of a vector to specific number values.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.Vector.copy
 
@@ -599,6 +703,14 @@ Copy the x / y components of another object `v`.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L191)
+
+</div>
+
+
+
 
 
 
@@ -608,7 +720,7 @@ Copy the x / y components of another object `v`.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.Vector.clear
 
@@ -647,6 +759,14 @@ Set the x / y component values of the vector to zero.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L204)
+
+</div>
+
+
+
 
 
 
@@ -656,7 +776,7 @@ Set the x / y component values of the vector to zero.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.Vector.clone
 
@@ -695,6 +815,14 @@ Create a new vector and copy the existing values onto the newly created instance
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L216)
+
+</div>
+
+
+
 
 
 
@@ -704,7 +832,7 @@ Create a new vector and copy the existing values onto the newly created instance
 
 ---
 
-<div class="instance overloaded">
+<div class="instance function overloaded">
 
 ## Two.Vector.add
 
@@ -756,6 +884,14 @@ Add an object with x / y component values to the instance.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L226)
+
+</div>
+
+
+
 <div class="tags">
 
 
@@ -771,7 +907,7 @@ Add an object with x / y component values to the instance.
 
 ---
 
-<div class="instance overloaded">
+<div class="instance function overloaded">
 
 ## Two.Vector.add
 
@@ -823,6 +959,14 @@ Add the **same** number to both x / y component values of the instance.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L235)
+
+</div>
+
+
+
 <div class="tags">
 
 
@@ -838,7 +982,7 @@ Add the **same** number to both x / y component values of the instance.
 
 ---
 
-<div class="instance overloaded">
+<div class="instance function overloaded">
 
 ## Two.Vector.add
 
@@ -891,6 +1035,14 @@ Add `x` / `y` values to their respective component value on the instance.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L244)
+
+</div>
+
+
+
 <div class="tags">
 
 
@@ -906,7 +1058,7 @@ Add `x` / `y` values to their respective component value on the instance.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.Vector.addSelf
 
@@ -930,6 +1082,14 @@ Alias for [Two.Vector.add](/documentation/vector#two-vector-add).
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L271)
+
+</div>
+
+
+
 
 
 
@@ -939,7 +1099,7 @@ Alias for [Two.Vector.add](/documentation/vector#two-vector-add).
 
 ---
 
-<div class="instance overloaded">
+<div class="instance function overloaded">
 
 ## Two.Vector.sub
 
@@ -991,6 +1151,14 @@ Subtract an object with x / y component values to the instance.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L280)
+
+</div>
+
+
+
 <div class="tags">
 
 
@@ -1006,7 +1174,7 @@ Subtract an object with x / y component values to the instance.
 
 ---
 
-<div class="instance overloaded">
+<div class="instance function overloaded">
 
 ## Two.Vector.sub
 
@@ -1058,6 +1226,14 @@ Subtract the **same** number to both x / y component values of the instance.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L289)
+
+</div>
+
+
+
 <div class="tags">
 
 
@@ -1073,7 +1249,7 @@ Subtract the **same** number to both x / y component values of the instance.
 
 ---
 
-<div class="instance overloaded">
+<div class="instance function overloaded">
 
 ## Two.Vector.sub
 
@@ -1126,6 +1302,14 @@ Subtract `x` / `y` values to their respective component value on the instance.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L298)
+
+</div>
+
+
+
 <div class="tags">
 
 
@@ -1141,7 +1325,7 @@ Subtract `x` / `y` values to their respective component value on the instance.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.Vector.subtract
 
@@ -1165,6 +1349,14 @@ Alias for [Two.Vector.sub](/documentation/vector#two-vector-sub).
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L325)
+
+</div>
+
+
+
 
 
 
@@ -1174,7 +1366,7 @@ Alias for [Two.Vector.sub](/documentation/vector#two-vector-sub).
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.Vector.subSelf
 
@@ -1198,6 +1390,14 @@ Alias for [Two.Vector.sub](/documentation/vector#two-vector-sub).
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L334)
+
+</div>
+
+
+
 
 
 
@@ -1207,7 +1407,7 @@ Alias for [Two.Vector.sub](/documentation/vector#two-vector-sub).
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.Vector.subtractSelf
 
@@ -1231,6 +1431,14 @@ Alias for [Two.Vector.sub](/documentation/vector#two-vector-sub).
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L343)
+
+</div>
+
+
+
 
 
 
@@ -1240,7 +1448,7 @@ Alias for [Two.Vector.sub](/documentation/vector#two-vector-sub).
 
 ---
 
-<div class="instance overloaded">
+<div class="instance function overloaded">
 
 ## Two.Vector.multiply
 
@@ -1292,6 +1500,14 @@ Multiply an object with x / y component values to the instance.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L352)
+
+</div>
+
+
+
 <div class="tags">
 
 
@@ -1307,7 +1523,7 @@ Multiply an object with x / y component values to the instance.
 
 ---
 
-<div class="instance overloaded">
+<div class="instance function overloaded">
 
 ## Two.Vector.multiply
 
@@ -1359,6 +1575,14 @@ Multiply the **same** number to both x / y component values of the instance.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L361)
+
+</div>
+
+
+
 <div class="tags">
 
 
@@ -1374,7 +1598,7 @@ Multiply the **same** number to both x / y component values of the instance.
 
 ---
 
-<div class="instance overloaded">
+<div class="instance function overloaded">
 
 ## Two.Vector.multiply
 
@@ -1427,6 +1651,14 @@ Multiply `x` / `y` values to their respective component value on the instance.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L370)
+
+</div>
+
+
+
 <div class="tags">
 
 
@@ -1442,7 +1674,7 @@ Multiply `x` / `y` values to their respective component value on the instance.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.Vector.multiplySelf
 
@@ -1466,6 +1698,14 @@ Alias for [Two.Vector.multiply](/documentation/vector#two-vector-multiply).
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L397)
+
+</div>
+
+
+
 
 
 
@@ -1475,7 +1715,7 @@ Alias for [Two.Vector.multiply](/documentation/vector#two-vector-multiply).
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.Vector.multiplyScalar
 
@@ -1506,6 +1746,14 @@ Mulitiply the vector by a single number. Shorthand to call [Two.Vector.multiply]
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L406)
+
+</div>
+
+
+
 
 
 
@@ -1515,7 +1763,7 @@ Mulitiply the vector by a single number. Shorthand to call [Two.Vector.multiply]
 
 ---
 
-<div class="instance overloaded">
+<div class="instance function overloaded">
 
 ## Two.Vector.divide
 
@@ -1567,6 +1815,14 @@ Divide an object with x / y component values to the instance.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L416)
+
+</div>
+
+
+
 <div class="tags">
 
 
@@ -1582,7 +1838,7 @@ Divide an object with x / y component values to the instance.
 
 ---
 
-<div class="instance overloaded">
+<div class="instance function overloaded">
 
 ## Two.Vector.divide
 
@@ -1634,6 +1890,14 @@ Divide the **same** number to both x / y component values of the instance.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L425)
+
+</div>
+
+
+
 <div class="tags">
 
 
@@ -1649,7 +1913,7 @@ Divide the **same** number to both x / y component values of the instance.
 
 ---
 
-<div class="instance overloaded">
+<div class="instance function overloaded">
 
 ## Two.Vector.divide
 
@@ -1702,6 +1966,14 @@ Divide `x` / `y` values to their respective component value on the instance.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L434)
+
+</div>
+
+
+
 <div class="tags">
 
 
@@ -1717,7 +1989,7 @@ Divide `x` / `y` values to their respective component value on the instance.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.Vector.divideSelf
 
@@ -1741,6 +2013,14 @@ Alias for [Two.Vector.divide](/documentation/vector#two-vector-divide).
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L467)
+
+</div>
+
+
+
 
 
 
@@ -1750,7 +2030,7 @@ Alias for [Two.Vector.divide](/documentation/vector#two-vector-divide).
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.Vector.divideScalar
 
@@ -1781,6 +2061,14 @@ Divide the vector by a single number. Shorthand to call [Two.Vector.divide](/doc
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L476)
+
+</div>
+
+
+
 
 
 
@@ -1790,7 +2078,7 @@ Divide the vector by a single number. Shorthand to call [Two.Vector.divide](/doc
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.Vector.negate
 
@@ -1814,6 +2102,14 @@ Invert each component's sign value.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L486)
+
+</div>
+
+
+
 
 
 
@@ -1823,7 +2119,7 @@ Invert each component's sign value.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.Vector.negate
 
@@ -1860,6 +2156,14 @@ Get the [dot product](https://en.wikipedia.org/wiki/Dot_product) of the vector.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L495)
+
+</div>
+
+
+
 
 
 
@@ -1869,7 +2173,7 @@ Get the [dot product](https://en.wikipedia.org/wiki/Dot_product) of the vector.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.Vector.length
 
@@ -1906,6 +2210,14 @@ Get the length of a vector.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L505)
+
+</div>
+
+
+
 
 
 
@@ -1915,7 +2227,7 @@ Get the length of a vector.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.Vector.lengthSquared
 
@@ -1952,6 +2264,14 @@ Get the length of the vector to the power of two. Widely used as less expensive 
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L515)
+
+</div>
+
+
+
 
 
 
@@ -1961,7 +2281,7 @@ Get the length of the vector to the power of two. Widely used as less expensive 
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.Vector.normalize
 
@@ -1985,6 +2305,14 @@ Normalize the vector from negative one to one.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L525)
+
+</div>
+
+
+
 
 
 
@@ -1994,7 +2322,7 @@ Normalize the vector from negative one to one.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.Vector.distanceTo
 
@@ -2031,6 +2359,14 @@ Get the distance between two vectors.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L534)
+
+</div>
+
+
+
 
 
 
@@ -2040,7 +2376,7 @@ Get the distance between two vectors.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.Vector.distanceToSquared
 
@@ -2077,6 +2413,14 @@ Get the distance between two vectors to the power of two. Widely used as less ex
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L544)
+
+</div>
+
+
+
 
 
 
@@ -2086,7 +2430,7 @@ Get the distance between two vectors to the power of two. Widely used as less ex
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.Vector.setLength
 
@@ -2117,6 +2461,14 @@ Set the length of a vector.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L556)
+
+</div>
+
+
+
 
 
 
@@ -2126,7 +2478,7 @@ Set the length of a vector.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.Vector.equals
 
@@ -2171,6 +2523,14 @@ Qualify if one vector roughly equal another. With a margin of error defined by e
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L566)
+
+</div>
+
+
+
 
 
 
@@ -2180,7 +2540,7 @@ Qualify if one vector roughly equal another. With a margin of error defined by e
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.Vector.lerp
 
@@ -2212,6 +2572,14 @@ Linear interpolate one vector to another by an amount `t` defined as a zero to o
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L579)
+
+</div>
+
+
+
 
 
 <div class="see">
@@ -2227,7 +2595,7 @@ Linear interpolate one vector to another by an amount `t` defined as a zero to o
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.Vector.isZero
 
@@ -2271,6 +2639,14 @@ Check to see if vector is roughly zero, based on the `epsilon` precision value.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L593)
+
+</div>
+
+
+
 
 
 
@@ -2280,7 +2656,7 @@ Check to see if vector is roughly zero, based on the `epsilon` precision value.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.Vector.toString
 
@@ -2317,6 +2693,14 @@ Return a comma-separated string of x, y value. Great for storing in a database.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L605)
+
+</div>
+
+
+
 
 
 
@@ -2326,7 +2710,7 @@ Return a comma-separated string of x, y value. Great for storing in a database.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.Vector.toObject
 
@@ -2363,6 +2747,14 @@ Return a JSON compatible plain object that represents the vector.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L615)
+
+</div>
+
+
+
 
 
 
@@ -2372,7 +2764,7 @@ Return a JSON compatible plain object that represents the vector.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.Vector.rotate
 
@@ -2398,6 +2790,14 @@ Return a JSON compatible plain object that represents the vector.
 <div class="description">
 
 Rotate a vector.
+
+</div>
+
+
+
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L625)
 
 </div>
 

@@ -11,6 +11,14 @@ __Extends__: `Two.Gradient`
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/radial-gradient.js#L9)
+
+</div>
+
+
+
 ### Constructor
 
 
@@ -27,7 +35,7 @@ __Extends__: `Two.Gradient`
 
 ---
 
-<div class="static ">
+<div class="static member ">
 
 ## Two.RadialGradient.Properties
 
@@ -51,6 +59,14 @@ A list of properties that are on every [Two.RadialGradient](/documentation/radia
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/radial-gradient.js#L74)
+
+</div>
+
+
+
 
 
 
@@ -60,7 +76,7 @@ A list of properties that are on every [Two.RadialGradient](/documentation/radia
 
 ---
 
-<div class="static ">
+<div class="static function ">
 
 ## Two.RadialGradient.MakeObservable
 
@@ -91,6 +107,14 @@ Convenience function to apply observable qualities of a [Two.RadialGradient](/do
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/radial-gradient.js#L82)
+
+</div>
+
+
+
 
 
 
@@ -100,7 +124,7 @@ Convenience function to apply observable qualities of a [Two.RadialGradient](/do
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.RadialGradient.center
 
@@ -124,6 +148,14 @@ The x and y value for where the origin of the radial gradient is.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/radial-gradient.js#L27)
+
+</div>
+
+
+
 
 
 
@@ -133,7 +165,7 @@ The x and y value for where the origin of the radial gradient is.
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.RadialGradient.focal
 
@@ -157,6 +189,14 @@ The x and y value for where the focal point of the radial gradient is.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/radial-gradient.js#L38)
+
+</div>
+
+
+
 <div class="tags">
 
 
@@ -176,7 +216,7 @@ This effects the spray or spread of the radial gradient.
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.RadialGradient.Stop
 
@@ -191,6 +231,14 @@ This effects the spray or spread of the radial gradient.
 
 
 
+
+
+
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/radial-gradient.js#L68)
+
+</div>
 
 
 
@@ -209,7 +257,7 @@ This effects the spray or spread of the radial gradient.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.RadialGradient.clone
 
@@ -253,6 +301,14 @@ Create a new instance of [Two.RadialGradient](/documentation/radialgradient) wit
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/radial-gradient.js#L121)
+
+</div>
+
+
+
 
 
 
@@ -262,7 +318,7 @@ Create a new instance of [Two.RadialGradient](/documentation/radialgradient) wit
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.RadialGradient.toObject
 
@@ -294,6 +350,14 @@ __Returns__:
 <div class="description">
 
 Return a JSON compatible plain object that represents the path.
+
+</div>
+
+
+
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/radial-gradient.js#L149)
 
 </div>
 

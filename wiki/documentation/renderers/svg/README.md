@@ -11,6 +11,14 @@ __Extends__: `Two.Events`
 This class is used by [Two](/documentation/) when constructing with `type` of `Two.Types.svg` (the default type). It takes Two.js' scenegraph and renders it to a `<svg />`.
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/svg.js#L886)
+
+</div>
+
+
+
 ### Constructor
 
 
@@ -23,7 +31,7 @@ This class is used by [Two](/documentation/) when constructing with `type` of `T
 
 ---
 
-<div class="static ">
+<div class="static member ">
 
 ## Two.SVGRenderer.Utils
 
@@ -47,6 +55,14 @@ A massive object filled with utility functions and properties to render Two.js o
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/svg.js#L922)
+
+</div>
+
+
+
 
 
 
@@ -56,7 +72,7 @@ A massive object filled with utility functions and properties to render Two.js o
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.SVGRenderer.domElement
 
@@ -80,6 +96,14 @@ The `<svg />` associated with the Two.js scene.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/svg.js#L896)
+
+</div>
+
+
+
 
 
 
@@ -89,7 +113,7 @@ The `<svg />` associated with the Two.js scene.
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.SVGRenderer.scene
 
@@ -113,6 +137,14 @@ The root group of the scenegraph.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/svg.js#L902)
+
+</div>
+
+
+
 
 
 
@@ -122,7 +154,7 @@ The root group of the scenegraph.
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.SVGRenderer.defs
 
@@ -146,6 +178,14 @@ The `<defs />` to apply gradients, patterns, and bitmap imagery.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/svg.js#L909)
+
+</div>
+
+
+
 
 
 
@@ -155,7 +195,7 @@ The `<defs />` to apply gradients, patterns, and bitmap imagery.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.SVGRenderer.setSize
 
@@ -187,6 +227,14 @@ Change the size of the renderer.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/svg.js#L934)
+
+</div>
+
+
+
 <div class="tags">
 
 
@@ -206,7 +254,7 @@ Triggers a `Two.Events.resize`.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.SVGRenderer.render
 
@@ -225,6 +273,14 @@ Triggers a `Two.Events.resize`.
 <div class="description">
 
 Render the current scene to the `<svg />`.
+
+</div>
+
+
+
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/svg.js#L956)
 
 </div>
 

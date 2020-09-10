@@ -5,6 +5,14 @@
 The entrypoint for Two.js. Instantiate a `new Two` in order to setup a scene to render to. `Two` is also the publicly accessible namespace that all other sub-classes, functions, and utilities attach to.
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L58)
+
+</div>
+
+
+
 ### Constructor
 
 
@@ -21,7 +29,7 @@ The entrypoint for Two.js. Instantiate a `new Two` in order to setup a scene to 
 
 ---
 
-<div class="static ">
+<div class="static member ">
 
 ## Two.Commands
 
@@ -45,6 +53,14 @@ Map of possible path commands. Taken from the SVG specification.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L903)
+
+</div>
+
+
+
 
 
 
@@ -54,7 +70,7 @@ Map of possible path commands. Taken from the SVG specification.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.appendTo
 
@@ -85,6 +101,14 @@ Shorthand method to append your instance of Two.js to the `document`.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L151)
+
+</div>
+
+
+
 
 
 
@@ -94,7 +118,7 @@ Shorthand method to append your instance of Two.js to the `document`.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.play
 
@@ -126,6 +150,14 @@ Call to start an internal animation loop.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L164)
+
+</div>
+
+
+
 <div class="tags">
 
 
@@ -145,7 +177,7 @@ This function initiates a `requestAnimationFrame` loop.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.pause
 
@@ -177,6 +209,14 @@ Call to stop the internal animation loop for a specific instance of Two.js.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L179)
+
+</div>
+
+
+
 
 
 
@@ -186,7 +226,7 @@ Call to stop the internal animation loop for a specific instance of Two.js.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.release
 
@@ -232,6 +272,14 @@ Release an arbitrary class' events from the Two.js corpus and recurse through it
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L196)
+
+</div>
+
+
+
 
 
 
@@ -241,7 +289,7 @@ Release an arbitrary class' events from the Two.js corpus and recurse through it
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.update
 
@@ -273,6 +321,14 @@ Update positions and calculations in one pass before rendering. Then render to t
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L234)
+
+</div>
+
+
+
 <div class="tags">
 
 
@@ -292,7 +348,7 @@ This function is called automatically if using [Two.play](/documentation/play) o
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.render
 
@@ -324,6 +380,14 @@ Render all drawable and visible objects of the scene.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L265)
+
+</div>
+
+
+
 
 
 
@@ -333,7 +397,7 @@ Render all drawable and visible objects of the scene.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.add
 
@@ -364,6 +428,14 @@ A shorthand method to add specific Two.js objects to the scene.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L279)
+
+</div>
+
+
+
 
 
 
@@ -373,7 +445,7 @@ A shorthand method to add specific Two.js objects to the scene.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.remove
 
@@ -404,6 +476,14 @@ A shorthand method to remove specific Two.js objects from the scene.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L297)
+
+</div>
+
+
+
 
 
 
@@ -413,7 +493,7 @@ A shorthand method to remove specific Two.js objects from the scene.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.clear
 
@@ -437,6 +517,14 @@ Remove all all Two.js objects from the scene.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L316)
+
+</div>
+
+
+
 
 
 
@@ -446,7 +534,7 @@ Remove all all Two.js objects from the scene.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.makeLine
 
@@ -493,6 +581,14 @@ Creates a Two.js line and adds it to the scene.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L328)
+
+</div>
+
+
+
 
 
 
@@ -502,7 +598,7 @@ Creates a Two.js line and adds it to the scene.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.makeArrow
 
@@ -549,6 +645,14 @@ Creates a Two.js arrow and adds it to the scene.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L347)
+
+</div>
+
+
+
 
 
 
@@ -558,7 +662,7 @@ Creates a Two.js arrow and adds it to the scene.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.makeRectangle
 
@@ -605,6 +709,14 @@ Creates a Two.js rectangle and adds it to the scene.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L392)
+
+</div>
+
+
+
 
 
 
@@ -614,7 +726,7 @@ Creates a Two.js rectangle and adds it to the scene.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.makeRoundedRectangle
 
@@ -662,6 +774,14 @@ Creates a Two.js rounded rectangle and adds it to the scene.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L411)
+
+</div>
+
+
+
 
 
 
@@ -671,7 +791,7 @@ Creates a Two.js rounded rectangle and adds it to the scene.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.makeCircle
 
@@ -718,6 +838,14 @@ Creates a Two.js circle and adds it to the scene.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L431)
+
+</div>
+
+
+
 
 
 
@@ -727,7 +855,7 @@ Creates a Two.js circle and adds it to the scene.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.makeEllipse
 
@@ -775,6 +903,14 @@ Creates a Two.js ellipse and adds it to the scene.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L450)
+
+</div>
+
+
+
 
 
 
@@ -784,7 +920,7 @@ Creates a Two.js ellipse and adds it to the scene.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.makeStar
 
@@ -832,6 +968,14 @@ Creates a Two.js star and adds it to the scene.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L470)
+
+</div>
+
+
+
 
 
 
@@ -841,7 +985,7 @@ Creates a Two.js star and adds it to the scene.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.makeCurve
 
@@ -888,6 +1032,14 @@ Creates a Two.js path that is curved and adds it to the scene.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L490)
+
+</div>
+
+
+
 <div class="tags">
 
 
@@ -907,7 +1059,7 @@ In either case of passing an array or passing numbered arguments the last argume
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.makePolygon
 
@@ -954,6 +1106,14 @@ Creates a Two.js polygon and adds it to the scene.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L526)
+
+</div>
+
+
+
 
 
 
@@ -963,7 +1123,7 @@ Creates a Two.js polygon and adds it to the scene.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.makeArcSegment
 
@@ -994,6 +1154,14 @@ Creates a Two.js polygon and adds it to the scene.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L545)
+
+</div>
+
+
+
 
 
 
@@ -1003,7 +1171,7 @@ Creates a Two.js polygon and adds it to the scene.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.makePath
 
@@ -1048,6 +1216,14 @@ Creates a Two.js path and adds it to the scene.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L562)
+
+</div>
+
+
+
 <div class="tags">
 
 
@@ -1067,7 +1243,7 @@ In either case of passing an array or passing numbered arguments the last argume
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.makeText
 
@@ -1114,6 +1290,14 @@ Creates a Two.js text object and adds it to the scene.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L601)
+
+</div>
+
+
+
 
 
 
@@ -1123,7 +1307,7 @@ Creates a Two.js text object and adds it to the scene.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.makeLinearGradient
 
@@ -1171,6 +1355,14 @@ Creates a Two.js linear gradient and ads it to the scene. In the case of an effe
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L617)
+
+</div>
+
+
+
 
 
 
@@ -1180,7 +1372,7 @@ Creates a Two.js linear gradient and ads it to the scene. In the case of an effe
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.makeRadialGradient
 
@@ -1227,6 +1419,14 @@ Creates a Two.js linear-gradient object and ads it to the scene. In the case of 
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L639)
+
+</div>
+
+
+
 
 
 
@@ -1236,7 +1436,7 @@ Creates a Two.js linear-gradient object and ads it to the scene. In the case of 
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.makeSprite
 
@@ -1286,6 +1486,14 @@ Creates a Two.js sprite object and adds it to the scene. Sprites can be used for
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L660)
+
+</div>
+
+
+
 
 
 
@@ -1295,7 +1503,7 @@ Creates a Two.js sprite object and adds it to the scene. Sprites can be used for
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.makeImageSequence
 
@@ -1343,6 +1551,14 @@ Creates a Two.js image sequence object and adds it to the scene.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L685)
+
+</div>
+
+
+
 
 
 
@@ -1352,7 +1568,7 @@ Creates a Two.js image sequence object and adds it to the scene.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.makeTexture
 
@@ -1397,6 +1613,14 @@ Creates a Two.js texture object.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L708)
+
+</div>
+
+
+
 
 
 
@@ -1406,7 +1630,7 @@ Creates a Two.js texture object.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.makeGroup
 
@@ -1450,6 +1674,14 @@ Creates a Two.js group object and adds it to the scene.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L723)
+
+</div>
+
+
+
 
 
 
@@ -1459,7 +1691,7 @@ Creates a Two.js group object and adds it to the scene.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.interpret
 
@@ -1505,6 +1737,14 @@ Interpret an SVG Node and add it to this instance's scene. The distinction shoul
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L745)
+
+</div>
+
+
+
 
 
 
@@ -1514,7 +1754,7 @@ Interpret an SVG Node and add it to this instance's scene. The distinction shoul
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.load
 
@@ -1554,6 +1794,14 @@ __Returns__:
 <div class="description">
 
 Load an SVG file or SVG text and interpret it into Two.js legible objects.
+
+</div>
+
+
+
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L778)
 
 </div>
 

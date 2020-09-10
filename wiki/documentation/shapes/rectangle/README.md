@@ -11,6 +11,14 @@ __Extends__: `Two.Path`
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/rectangle.js#L10)
+
+</div>
+
+
+
 ### Constructor
 
 
@@ -25,7 +33,7 @@ __Extends__: `Two.Path`
 
 ---
 
-<div class="static ">
+<div class="static member ">
 
 ## Two.Rectangle.Properties
 
@@ -49,6 +57,14 @@ A list of properties that are on every [Two.Rectangle](/documentation/rectangle)
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/rectangle.js#L53)
+
+</div>
+
+
+
 
 
 
@@ -58,7 +74,7 @@ A list of properties that are on every [Two.Rectangle](/documentation/rectangle)
 
 ---
 
-<div class="static ">
+<div class="static function ">
 
 ## Two.Rectangle.MakeObservable
 
@@ -89,6 +105,14 @@ Convenience function to apply observable qualities of a [Two.Rectangle](/documen
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/rectangle.js#L59)
+
+</div>
+
+
+
 
 
 
@@ -98,7 +122,7 @@ Convenience function to apply observable qualities of a [Two.Rectangle](/documen
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.Rectangle.width
 
@@ -122,6 +146,14 @@ The size of the width of the rectangle.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/rectangle.js#L29)
+
+</div>
+
+
+
 
 
 
@@ -131,7 +163,7 @@ The size of the width of the rectangle.
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.Rectangle.height
 
@@ -155,6 +187,14 @@ The size of the height of the rectangle.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/rectangle.js#L34)
+
+</div>
+
+
+
 
 
 
@@ -164,7 +204,7 @@ The size of the height of the rectangle.
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.Rectangle.origin
 
@@ -188,6 +228,14 @@ A two-component vector describing the origin offset to draw the rectangle. Defau
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/rectangle.js#L40)
+
+</div>
+
+
+
 
 
 
@@ -197,7 +245,7 @@ A two-component vector describing the origin offset to draw the rectangle. Defau
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.Rectangle.clone
 
@@ -241,6 +289,14 @@ Create a new instance of [Two.Rectangle](/documentation/rectangle) with the same
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/rectangle.js#L168)
+
+</div>
+
+
+
 
 
 
@@ -250,7 +306,7 @@ Create a new instance of [Two.Rectangle](/documentation/rectangle) with the same
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.Rectangle.toObject
 
@@ -282,6 +338,14 @@ __Returns__:
 <div class="description">
 
 Return a JSON compatible plain object that represents the path.
+
+</div>
+
+
+
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/rectangle.js#L199)
 
 </div>
 

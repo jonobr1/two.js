@@ -5,6 +5,14 @@
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L4)
+
+</div>
+
+
+
 ### Constructor
 
 
@@ -18,7 +26,7 @@
 
 ---
 
-<div class="static ">
+<div class="static member ">
 
 ## Two.Stop.Index
 
@@ -42,6 +50,14 @@ The current index being referenced for calculating a stop's default offset value
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L50)
+
+</div>
+
+
+
 
 
 
@@ -51,7 +67,7 @@ The current index being referenced for calculating a stop's default offset value
 
 ---
 
-<div class="static ">
+<div class="static member ">
 
 ## Two.Stop.Properties
 
@@ -75,6 +91,14 @@ A list of properties that are on every [Two.Stop](/documentation/stop).
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L56)
+
+</div>
+
+
+
 
 
 
@@ -84,7 +108,7 @@ A list of properties that are on every [Two.Stop](/documentation/stop).
 
 ---
 
-<div class="static ">
+<div class="static function ">
 
 ## Two.Stop.MakeObservable
 
@@ -115,6 +139,14 @@ Convenience function to apply observable qualities of a [Two.Stop](/documentatio
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L66)
+
+</div>
+
+
+
 
 
 
@@ -124,7 +156,7 @@ Convenience function to apply observable qualities of a [Two.Stop](/documentatio
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.Stop.offset
 
@@ -148,6 +180,14 @@ The offset percentage of the stop represented as a zero-to-one value.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L24)
+
+</div>
+
+
+
 
 
 
@@ -157,7 +197,7 @@ The offset percentage of the stop represented as a zero-to-one value.
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.Stop.opacity
 
@@ -181,6 +221,14 @@ The alpha percentage of the stop represented as a zero-to-one value.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L31)
+
+</div>
+
+
+
 
 
 
@@ -190,7 +238,7 @@ The alpha percentage of the stop represented as a zero-to-one value.
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.Stop.color
 
@@ -214,6 +262,14 @@ The color of the stop.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L37)
+
+</div>
+
+
+
 
 
 
@@ -223,7 +279,7 @@ The color of the stop.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.Stop.clone
 
@@ -267,6 +323,14 @@ Create a new instance of [Two.Stop](/documentation/stop) with the same propertie
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L104)
+
+</div>
+
+
+
 
 
 
@@ -276,7 +340,7 @@ Create a new instance of [Two.Stop](/documentation/stop) with the same propertie
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.Stop.toObject
 
@@ -308,6 +372,14 @@ __Returns__:
 <div class="description">
 
 Return a JSON compatible plain object that represents the path.
+
+</div>
+
+
+
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L123)
 
 </div>
 

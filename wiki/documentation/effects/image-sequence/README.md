@@ -11,6 +11,14 @@ __Extends__: `Two.Rectangle`
 A convenient package to display still or animated images organized as a series of still images.
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/image-sequence.js#L13)
+
+</div>
+
+
+
 ### Constructor
 
 
@@ -25,7 +33,7 @@ A convenient package to display still or animated images organized as a series o
 
 ---
 
-<div class="static ">
+<div class="static member ">
 
 ## Two.ImageSequence.Properties
 
@@ -49,6 +57,14 @@ A list of properties that are on every [Two.ImageSequence](/documentation/images
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/image-sequence.js#L77)
+
+</div>
+
+
+
 
 
 
@@ -58,7 +74,7 @@ A list of properties that are on every [Two.ImageSequence](/documentation/images
 
 ---
 
-<div class="static ">
+<div class="static member ">
 
 ## Two.ImageSequence.DefaultFrameRate
 
@@ -82,6 +98,14 @@ default frame rate that [Two.ImageSequence.frameRate](/documentation/imagesequen
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/image-sequence.js#L86)
+
+</div>
+
+
+
 
 
 
@@ -91,7 +115,7 @@ default frame rate that [Two.ImageSequence.frameRate](/documentation/imagesequen
 
 ---
 
-<div class="static ">
+<div class="static function ">
 
 ## Two.ImageSequence.FlagTextures
 
@@ -115,6 +139,14 @@ Cached method to let renderers know textures have been updated on a [Two.ImageSe
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/image-sequence.js#L92)
+
+</div>
+
+
+
 
 
 
@@ -124,7 +156,7 @@ Cached method to let renderers know textures have been updated on a [Two.ImageSe
 
 ---
 
-<div class="static ">
+<div class="static function ">
 
 ## Two.ImageSequence.BindTextures
 
@@ -148,6 +180,14 @@ Cached method to let [Two.ImageSequence](/documentation/imagesequence) know text
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/image-sequence.js#L101)
+
+</div>
+
+
+
 
 
 
@@ -157,7 +197,7 @@ Cached method to let [Two.ImageSequence](/documentation/imagesequence) know text
 
 ---
 
-<div class="static ">
+<div class="static function ">
 
 ## Two.ImageSequence.UnbindVertices
 
@@ -181,6 +221,14 @@ Cached method to let [Two.ImageSequence](/documentation/imagesequence) know text
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/image-sequence.js#L117)
+
+</div>
+
+
+
 
 
 
@@ -190,7 +238,7 @@ Cached method to let [Two.ImageSequence](/documentation/imagesequence) know text
 
 ---
 
-<div class="static ">
+<div class="static function ">
 
 ## Two.ImageSequence.MakeObservable
 
@@ -221,6 +269,14 @@ Convenience function to apply observable qualities of a [Two.ImageSequence](/doc
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/image-sequence.js#L133)
+
+</div>
+
+
+
 
 
 
@@ -230,7 +286,7 @@ Convenience function to apply observable qualities of a [Two.ImageSequence](/doc
 
 ---
 
-<div class="static ">
+<div class="static member ">
 
 ## Two.ImageSequence.GenerateTexture
 
@@ -280,6 +336,14 @@ Function used internally by [Two.ImageSequence](/documentation/imagesequence) to
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/image-sequence.js#L182)
+
+</div>
+
+
+
 
 
 
@@ -289,7 +353,7 @@ Function used internally by [Two.ImageSequence](/documentation/imagesequence) to
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.ImageSequence.textures
 
@@ -313,6 +377,14 @@ A list of textures to be used as frames for animating the [Two.ImageSequence](/d
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/image-sequence.js#L41)
+
+</div>
+
+
+
 
 
 
@@ -322,7 +394,7 @@ A list of textures to be used as frames for animating the [Two.ImageSequence](/d
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.ImageSequence.frameRate
 
@@ -346,6 +418,14 @@ The number of frames to animate against per second.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/image-sequence.js#L57)
+
+</div>
+
+
+
 
 
 
@@ -355,7 +435,7 @@ The number of frames to animate against per second.
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.ImageSequence.index
 
@@ -379,6 +459,14 @@ The index of the current tile of the sprite to display. Defaults to `0`.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/image-sequence.js#L67)
+
+</div>
+
+
+
 
 
 
@@ -388,7 +476,7 @@ The index of the current tile of the sprite to display. Defaults to `0`.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.ImageSequence.play
 
@@ -421,6 +509,14 @@ Initiate animation playback of a [Two.ImageSequence](/documentation/imagesequenc
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/image-sequence.js#L305)
+
+</div>
+
+
+
 
 
 
@@ -430,7 +526,7 @@ Initiate animation playback of a [Two.ImageSequence](/documentation/imagesequenc
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.ImageSequence.pause
 
@@ -454,6 +550,14 @@ Halt animation playback of a [Two.ImageSequence](/documentation/imagesequence).
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/image-sequence.js#L341)
+
+</div>
+
+
+
 
 
 
@@ -463,7 +567,7 @@ Halt animation playback of a [Two.ImageSequence](/documentation/imagesequence).
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.ImageSequence.stop
 
@@ -487,6 +591,14 @@ Halt animation playback of a [Two.ImageSequence](/documentation/imagesequence) a
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/image-sequence.js#L353)
+
+</div>
+
+
+
 
 
 
@@ -496,7 +608,7 @@ Halt animation playback of a [Two.ImageSequence](/documentation/imagesequence) a
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.ImageSequence.clone
 
@@ -540,6 +652,14 @@ Create a new instance of [Two.ImageSequence](/documentation/imagesequence) with 
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/image-sequence.js#L367)
+
+</div>
+
+
+
 
 
 
@@ -549,7 +669,7 @@ Create a new instance of [Two.ImageSequence](/documentation/imagesequence) with 
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.ImageSequence.toObject
 
@@ -581,6 +701,14 @@ __Returns__:
 <div class="description">
 
 Return a JSON compatible plain object that represents the path.
+
+</div>
+
+
+
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/image-sequence.js#L393)
 
 </div>
 

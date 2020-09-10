@@ -11,6 +11,14 @@ __Extends__: `Two.Gradient`
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/linear-gradient.js#L8)
+
+</div>
+
+
+
 ### Constructor
 
 
@@ -26,7 +34,7 @@ __Extends__: `Two.Gradient`
 
 ---
 
-<div class="static ">
+<div class="static function ">
 
 ## Two.LinearGradient.MakeObservable
 
@@ -57,6 +65,14 @@ Convenience function to apply observable qualities of a [Two.LinearGradient](/do
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/linear-gradient.js#L61)
+
+</div>
+
+
+
 
 
 
@@ -66,7 +82,7 @@ Convenience function to apply observable qualities of a [Two.LinearGradient](/do
 
 ---
 
-<div class="static ">
+<div class="static function ">
 
 ## Two.LinearGradient.FlagEndPoints
 
@@ -90,6 +106,14 @@ Cached method to let renderers know end points have been updated on a [Two.Linea
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/linear-gradient.js#L71)
+
+</div>
+
+
+
 
 
 
@@ -99,7 +123,7 @@ Cached method to let renderers know end points have been updated on a [Two.Linea
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.LinearGradient.left
 
@@ -123,6 +147,14 @@ The x and y value for where the first end point is placed on the canvas.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/linear-gradient.js#L27)
+
+</div>
+
+
+
 
 
 
@@ -132,7 +164,7 @@ The x and y value for where the first end point is placed on the canvas.
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.LinearGradient.right
 
@@ -156,6 +188,14 @@ The x and y value for where the second end point is placed on the canvas.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/linear-gradient.js#L32)
+
+</div>
+
+
+
 
 
 
@@ -165,7 +205,7 @@ The x and y value for where the second end point is placed on the canvas.
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.LinearGradient.Stop
 
@@ -180,6 +220,14 @@ The x and y value for where the second end point is placed on the canvas.
 
 
 
+
+
+
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/linear-gradient.js#L55)
+
+</div>
 
 
 
@@ -198,7 +246,7 @@ The x and y value for where the second end point is placed on the canvas.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.LinearGradient.clone
 
@@ -242,6 +290,14 @@ Create a new instance of [Two.LinearGradient](/documentation/lineargradient) wit
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/linear-gradient.js#L93)
+
+</div>
+
+
+
 
 
 
@@ -251,7 +307,7 @@ Create a new instance of [Two.LinearGradient](/documentation/lineargradient) wit
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.LinearGradient.toObject
 
@@ -283,6 +339,14 @@ __Returns__:
 <div class="description">
 
 Return a JSON compatible plain object that represents the path.
+
+</div>
+
+
+
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/linear-gradient.js#L121)
 
 </div>
 

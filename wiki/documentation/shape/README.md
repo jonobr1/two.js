@@ -11,13 +11,21 @@ __Extends__: `Events`
 The foundational transformation object for the Two.js scenegraph.
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L9)
+
+</div>
+
+
+
 
 
 
 
 ---
 
-<div class="static ">
+<div class="static function ">
 
 ## Two.Shape.FlagMatrix
 
@@ -41,6 +49,14 @@ Utility function used in conjunction with event handlers to update the flagMatri
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L73)
+
+</div>
+
+
+
 
 
 
@@ -50,7 +66,7 @@ Utility function used in conjunction with event handlers to update the flagMatri
 
 ---
 
-<div class="static ">
+<div class="static function ">
 
 ## Two.Shape.MakeObservable
 
@@ -81,6 +97,14 @@ Convenience function to apply observable qualities of a [Two.Shape](/documentati
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L82)
+
+</div>
+
+
+
 
 
 
@@ -90,7 +114,7 @@ Convenience function to apply observable qualities of a [Two.Shape](/documentati
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.Shape.id
 
@@ -114,6 +138,14 @@ Session specific unique identifier.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L28)
+
+</div>
+
+
+
 <div class="tags">
 
 
@@ -133,7 +165,7 @@ In the [Two.SvgRenderer](/documentation/svgrenderer) change this to change the u
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.Shape.classList
 
@@ -163,6 +195,14 @@ A list of class strings stored if imported / interpreted  from an SVG element.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L35)
+
+</div>
+
+
+
 
 
 
@@ -172,7 +212,7 @@ A list of class strings stored if imported / interpreted  from an SVG element.
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.Shape.matrix
 
@@ -202,6 +242,14 @@ The transformation matrix of the shape.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L42)
+
+</div>
+
+
+
 <div class="tags">
 
 
@@ -221,7 +269,7 @@ The transformation matrix of the shape.
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.Shape.translation
 
@@ -245,6 +293,14 @@ The x and y value for where the shape is placed relative to its parent.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L50)
+
+</div>
+
+
+
 
 
 
@@ -254,7 +310,7 @@ The x and y value for where the shape is placed relative to its parent.
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.Shape.rotation
 
@@ -278,6 +334,14 @@ The value in radians for how much the shape is rotated relative to its parent.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L56)
+
+</div>
+
+
+
 
 
 
@@ -287,7 +351,7 @@ The value in radians for how much the shape is rotated relative to its parent.
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.Shape.scale
 
@@ -311,6 +375,14 @@ The value for how much the shape is scaled relative to its parent.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L62)
+
+</div>
+
+
+
 <div class="tags">
 
 
@@ -330,7 +402,7 @@ This value can be replaced with a [Two.Vector](/documentation/vector) to do non-
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.Shape.className
 
@@ -354,6 +426,14 @@ A class to be applied to the element to be compatible with CSS styling.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L246)
+
+</div>
+
+
+
 <div class="tags">
 
 
@@ -373,7 +453,7 @@ Only available for the SVG renderer.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.Shape.addTo
 
@@ -404,6 +484,14 @@ Convenience method to add itself to the scenegraph.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L255)
+
+</div>
+
+
+
 
 
 
@@ -413,7 +501,7 @@ Convenience method to add itself to the scenegraph.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.Shape.clone
 
@@ -452,6 +540,14 @@ __Returns__:
 <div class="description">
 
 Create a new [Two.Shape](/documentation/shape) with the same values as the current shape.
+
+</div>
+
+
+
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L266)
 
 </div>
 

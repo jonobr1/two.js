@@ -11,6 +11,14 @@ __Extends__: `Two.Vector`
 An object that holds 3 [Two.Vector](/documentation/vector)s, the anchor point and its corresponding handles: `left` and `right`. In order to properly describe the bezier curve about the point there is also a command property to describe what type of drawing should occur when Two.js renders the anchors.
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L7)
+
+</div>
+
+
+
 ### Constructor
 
 
@@ -28,7 +36,7 @@ An object that holds 3 [Two.Vector](/documentation/vector)s, the anchor point an
 
 ---
 
-<div class="static ">
+<div class="static function ">
 
 ## Two.Anchor.AppendCurveProperties
 
@@ -59,6 +67,14 @@ Adds the `controls` property as an object with `left` and `right` properties to 
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L60)
+
+</div>
+
+
+
 
 
 
@@ -68,7 +84,7 @@ Adds the `controls` property as an object with `left` and `right` properties to 
 
 ---
 
-<div class="static ">
+<div class="static function ">
 
 ## Two.Anchor.MakeObservable
 
@@ -99,6 +115,14 @@ Convenience function to apply observable qualities of a [Two.Anchor](/documentat
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L93)
+
+</div>
+
+
+
 
 
 
@@ -108,7 +132,7 @@ Convenience function to apply observable qualities of a [Two.Anchor](/documentat
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.Anchor.controls
 
@@ -138,6 +162,14 @@ An plain object that holds the controls handles for a [Two.Anchor](/documentatio
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L70)
+
+</div>
+
+
+
 
 
 
@@ -147,7 +179,7 @@ An plain object that holds the controls handles for a [Two.Anchor](/documentatio
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.Anchor.controls.left
 
@@ -177,6 +209,14 @@ The "left" control point to define handles on a bezier curve.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L77)
+
+</div>
+
+
+
 
 
 
@@ -186,7 +226,7 @@ The "left" control point to define handles on a bezier curve.
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.Anchor.controls.right
 
@@ -216,6 +256,14 @@ The "left" control point to define handles on a bezier curve.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L84)
+
+</div>
+
+
+
 
 
 
@@ -225,7 +273,7 @@ The "left" control point to define handles on a bezier curve.
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.Anchor.command
 
@@ -255,6 +303,14 @@ A draw command associated with the anchor point.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L101)
+
+</div>
+
+
+
 
 
 
@@ -264,7 +320,7 @@ A draw command associated with the anchor point.
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.Anchor.relative
 
@@ -294,6 +350,14 @@ A boolean to render control points relative to the root anchor point or in globa
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L124)
+
+</div>
+
+
+
 
 
 
@@ -303,7 +367,7 @@ A boolean to render control points relative to the root anchor point or in globa
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.Anchor.listen
 
@@ -327,6 +391,14 @@ Convenience method used mainly by [Two.Path.vertices](/documentation/path#two-pa
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L168)
+
+</div>
+
+
+
 
 
 
@@ -336,7 +408,7 @@ Convenience method used mainly by [Two.Path.vertices](/documentation/path#two-pa
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.Anchor.ignore
 
@@ -360,6 +432,14 @@ Convenience method used mainly by [Two.Path.vertices](/documentation/path#two-pa
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L186)
+
+</div>
+
+
+
 
 
 
@@ -369,7 +449,7 @@ Convenience method used mainly by [Two.Path.vertices](/documentation/path#two-pa
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.Anchor.copy
 
@@ -400,6 +480,14 @@ Copy the properties of one [Two.Anchor](/documentation/anchor) onto another.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L200)
+
+</div>
+
+
+
 
 
 
@@ -409,7 +497,7 @@ Copy the properties of one [Two.Anchor](/documentation/anchor) onto another.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.Anchor.clone
 
@@ -446,6 +534,14 @@ Create a new [Two.Anchor](/documentation/anchor), set all its values to the curr
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L239)
+
+</div>
+
+
+
 
 
 
@@ -455,7 +551,7 @@ Create a new [Two.Anchor](/documentation/anchor), set all its values to the curr
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.Anchor.toObject
 
@@ -494,6 +590,14 @@ Create a JSON compatible plain object of the current instance. Intended for use 
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L263)
+
+</div>
+
+
+
 
 
 
@@ -503,7 +607,7 @@ Create a JSON compatible plain object of the current instance. Intended for use 
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.Anchor.toString
 
@@ -537,6 +641,14 @@ __Returns__:
 <div class="description">
 
 Create a string form of the current instance. Intended for use with storing values in a database. This is lighter to store than the JSON compatible [Two.Anchor.toObject](/documentation/anchor#two-anchor-toobject).
+
+</div>
+
+
+
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L289)
 
 </div>
 

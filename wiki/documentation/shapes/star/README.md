@@ -11,6 +11,14 @@ __Extends__: `Two.Path`
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/star.js#L10)
+
+</div>
+
+
+
 ### Constructor
 
 
@@ -26,7 +34,7 @@ __Extends__: `Two.Path`
 
 ---
 
-<div class="static ">
+<div class="static member ">
 
 ## Two.Star.Properties
 
@@ -50,6 +58,14 @@ A list of properties that are on every [Two.Star](/documentation/star).
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/star.js#L60)
+
+</div>
+
+
+
 
 
 
@@ -59,7 +75,7 @@ A list of properties that are on every [Two.Star](/documentation/star).
 
 ---
 
-<div class="static ">
+<div class="static function ">
 
 ## Two.Star.MakeObservable
 
@@ -90,6 +106,14 @@ Convenience function to apply observable qualities of a [Two.Star](/documentatio
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/star.js#L66)
+
+</div>
+
+
+
 
 
 
@@ -99,7 +123,7 @@ Convenience function to apply observable qualities of a [Two.Star](/documentatio
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.Star.innerRadius
 
@@ -123,6 +147,14 @@ The size of the inner radius of the star.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/star.js#L37)
+
+</div>
+
+
+
 
 
 
@@ -132,7 +164,7 @@ The size of the inner radius of the star.
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.Star.outerRadius
 
@@ -156,6 +188,14 @@ The size of the outer radius of the star.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/star.js#L42)
+
+</div>
+
+
+
 
 
 
@@ -165,7 +205,7 @@ The size of the outer radius of the star.
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.Star.sides
 
@@ -189,6 +229,14 @@ The amount of sides the star has.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/star.js#L47)
+
+</div>
+
+
+
 
 
 
@@ -198,7 +246,7 @@ The amount of sides the star has.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.Star.clone
 
@@ -242,6 +290,14 @@ Create a new instance of [Two.Star](/documentation/star) with the same propertie
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/star.js#L186)
+
+</div>
+
+
+
 
 
 
@@ -251,7 +307,7 @@ Create a new instance of [Two.Star](/documentation/star) with the same propertie
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.Star.toObject
 
@@ -283,6 +339,14 @@ __Returns__:
 <div class="description">
 
 Return a JSON compatible plain object that represents the path.
+
+</div>
+
+
+
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/star.js#L221)
 
 </div>
 

@@ -11,6 +11,14 @@ __Extends__: `Two.Events`
 This class is used by [Two](/documentation/) when constructing with `type` of `Two.Types.canvas`. It takes Two.js' scenegraph and renders it to a `<canvas />`.
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/canvas.js#L752)
+
+</div>
+
+
+
 ### Constructor
 
 
@@ -25,7 +33,7 @@ This class is used by [Two](/documentation/) when constructing with `type` of `T
 
 ---
 
-<div class="static ">
+<div class="static member ">
 
 ## Two.CanvasRenderer.Utils
 
@@ -49,6 +57,14 @@ A massive object filled with utility functions and properties to render Two.js o
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/canvas.js#L801)
+
+</div>
+
+
+
 
 
 
@@ -58,7 +74,7 @@ A massive object filled with utility functions and properties to render Two.js o
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.CanvasRenderer.domElement
 
@@ -82,6 +98,14 @@ The `<canvas />` associated with the Two.js scene.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/canvas.js#L767)
+
+</div>
+
+
+
 
 
 
@@ -91,7 +115,7 @@ The `<canvas />` associated with the Two.js scene.
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.CanvasRenderer.ctx
 
@@ -115,6 +139,14 @@ Associated two dimensional context to render on the `<canvas />`.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/canvas.js#L773)
+
+</div>
+
+
+
 
 
 
@@ -124,7 +156,7 @@ Associated two dimensional context to render on the `<canvas />`.
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.CanvasRenderer.overdraw
 
@@ -148,6 +180,14 @@ Determines whether the canvas clears the background each draw call.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/canvas.js#L779)
+
+</div>
+
+
+
 
 
 
@@ -157,7 +197,7 @@ Determines whether the canvas clears the background each draw call.
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.CanvasRenderer.scene
 
@@ -181,6 +221,14 @@ The root group of the scenegraph.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/canvas.js#L790)
+
+</div>
+
+
+
 
 
 
@@ -190,7 +238,7 @@ The root group of the scenegraph.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.CanvasRenderer.setSize
 
@@ -231,6 +279,14 @@ Change the size of the renderer.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/canvas.js#L813)
+
+</div>
+
+
+
 
 
 
@@ -240,7 +296,7 @@ Change the size of the renderer.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.CanvasRenderer.render
 
@@ -259,6 +315,14 @@ Change the size of the renderer.
 <div class="description">
 
 Render the current scene to the `<canvas />`.
+
+</div>
+
+
+
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/canvas.js#L843)
 
 </div>
 

@@ -11,6 +11,14 @@ __Extends__: `Two.Path`
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/ellipse.js#L11)
+
+</div>
+
+
+
 ### Constructor
 
 
@@ -26,7 +34,7 @@ __Extends__: `Two.Path`
 
 ---
 
-<div class="static ">
+<div class="static member ">
 
 ## Two.Ellipse.Properties
 
@@ -50,6 +58,14 @@ A list of properties that are on every [Two.Ellipse](/documentation/ellipse).
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/ellipse.js#L55)
+
+</div>
+
+
+
 
 
 
@@ -59,7 +75,7 @@ A list of properties that are on every [Two.Ellipse](/documentation/ellipse).
 
 ---
 
-<div class="static ">
+<div class="static function ">
 
 ## Two.Ellipse.MakeObservable
 
@@ -90,6 +106,14 @@ Convenience function to apply observable qualities of a [Two.Ellipse](/documenta
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/ellipse.js#L61)
+
+</div>
+
+
+
 
 
 
@@ -99,7 +123,7 @@ Convenience function to apply observable qualities of a [Two.Ellipse](/documenta
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.Ellipse.width
 
@@ -123,6 +147,14 @@ The width of the ellipse.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/ellipse.js#L37)
+
+</div>
+
+
+
 
 
 
@@ -132,7 +164,7 @@ The width of the ellipse.
 
 ---
 
-<div class="instance ">
+<div class="instance member ">
 
 ## Two.Ellipse.height
 
@@ -156,6 +188,14 @@ The height of the ellipse.
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/ellipse.js#L42)
+
+</div>
+
+
+
 
 
 
@@ -165,7 +205,7 @@ The height of the ellipse.
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.Ellipse.clone
 
@@ -209,6 +249,14 @@ Create a new instance of [Two.Polygon](/documentation/polygon) with the same pro
 
 
 
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/ellipse.js#L164)
+
+</div>
+
+
+
 
 
 
@@ -218,7 +266,7 @@ Create a new instance of [Two.Polygon](/documentation/polygon) with the same pro
 
 ---
 
-<div class="instance ">
+<div class="instance function ">
 
 ## Two.Ellipse.toObject
 
@@ -250,6 +298,14 @@ __Returns__:
 <div class="description">
 
 Return a JSON compatible plain object that represents the path.
+
+</div>
+
+
+
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/ellipse.js#L198)
 
 </div>
 
