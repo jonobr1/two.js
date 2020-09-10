@@ -24,10 +24,10 @@ This class is used by [Two](/documentation/) when constructing with `type` of `T
 
 | Argument | Description |
 | ---- | ----------- |
-| `parameters` | This object is inherited when constructing a new instance of [Two](/documentation/). |
-| `parameters.domElement` | The `<canvas />` to draw to. If none given a new one will be constructed. |
-| `parameters.overdraw` | Determines whether the canvas should clear the background or not. Defaults to `true`. |
-| `parameters.smoothing` | Determines whether the canvas should antialias drawing. Set it to `false` when working with pixel art. `false` can lead to better performance, since it would use a cheaper interpolation algorithm. |
+|  `parameters`  | This object is inherited when constructing a new instance of [Two](/documentation/). |
+|  `parameters.domElement`  | The `<canvas />` to draw to. If none given a new one will be constructed. |
+|  `parameters.overdraw`  | Determines whether the canvas should clear the background or not. Defaults to `true`. |
+|  `parameters.smoothing`  | Determines whether the canvas should antialias drawing. Set it to `false` when working with pixel art. `false` can lead to better performance, since it would use a cheaper interpolation algorithm. |
 
 
 
@@ -263,9 +263,9 @@ __Triggers__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `width` | The new width of the renderer. |
-| `height` | The new height of the renderer. |
-| `ratio` | The new pixel ratio (pixel density) of the renderer. Defaults to calculate the pixel density of the user's screen. |
+|  `width`  | The new width of the renderer. |
+|  `height`  | The new height of the renderer. |
+|  `ratio`  | The new pixel ratio (pixel density) of the renderer. Defaults to calculate the pixel density of the user's screen. |
 </div>
 
 

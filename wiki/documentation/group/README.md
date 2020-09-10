@@ -24,7 +24,7 @@ This is the primary class for grouping objects that are then drawn in Two.js. In
 
 | Argument | Description |
 | ---- | ----------- |
-| `children` | A list of objects that inherit [Two.Shape](/documentation/shape). For instance, the array could be a [Two.Path](/documentation/path), [Two.Text](/documentation/text), and [Two.RoundedRectangle](/documentation/roundedrectangle). |
+|  `children`  | A list of objects that inherit [Two.Shape](/documentation/shape). For instance, the array could be a [Two.Path](/documentation/path), [Two.Text](/documentation/text), and [Two.RoundedRectangle](/documentation/roundedrectangle). |
 
 
 
@@ -47,7 +47,7 @@ This is the primary class for grouping objects that are then drawn in Two.js. In
 
 | Argument | Description |
 | ---- | ----------- |
-| `children` | The objects to be inserted. |
+|  `children`  | The objects to be inserted. |
 </div>
 
 
@@ -95,7 +95,7 @@ Cached method to let renderers know children have been added to a [Two.Group](/d
 
 | Argument | Description |
 | ---- | ----------- |
-| `children` | The objects to be removed. |
+|  `children`  | The objects to be removed. |
 </div>
 
 
@@ -225,7 +225,7 @@ A list of properties that are on every [Two.Group](/documentation/group).
 
 | Argument | Description |
 | ---- | ----------- |
-| `object` | The object to make observable. |
+|  `object`  | The object to make observable. |
 </div>
 
 
@@ -273,8 +273,8 @@ Convenience function to apply observable qualities of a [Two.Group](/documentati
 
 | Argument | Description |
 | ---- | ----------- |
-| `group` | The group to apply getters and setters. |
-| `properties` | A key / value object containing properties to inherit. |
+|  `group`  | The group to apply getters and setters. |
+|  `properties`  | A key / value object containing properties to inherit. |
 </div>
 
 
@@ -322,8 +322,8 @@ Convenience method to apply getter / setter logic on an array of properties. Use
 
 | Argument | Description |
 | ---- | ----------- |
-| `group` | The group to apply getters and setters. |
-| `key` | The key which will become a property on the group. |
+|  `group`  | The group to apply getters and setters. |
+|  `key`  | The key which will become a property on the group. |
 </div>
 
 
@@ -1232,7 +1232,7 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `parent` | The parent group or scene to add the clone to. |
+|  `parent`  | The parent group or scene to add the clone to. |
 </div>
 
 
@@ -1584,7 +1584,7 @@ Recursively search for children of a specific type, e.g. [Two.Path](/documentati
 
 | Argument | Description |
 | ---- | ----------- |
-| `objects` | An array of objects to be added. Can be also be supplied as individual arguments. |
+|  `objects`  | An array of objects to be added. Can be also be supplied as individual arguments. |
 </div>
 
 
@@ -1632,7 +1632,7 @@ Add objects to the group.
 
 | Argument | Description |
 | ---- | ----------- |
-| `objects` | An array of objects to be removed. Can be also removed as individual arguments. |
+|  `objects`  | An array of objects to be removed. Can be also removed as individual arguments. |
 </div>
 
 
@@ -1695,7 +1695,7 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `shallow` | Describes whether to calculate off local matrix or world matrix. |
+|  `shallow`  | Describes whether to calculate off local matrix or world matrix. |
 </div>
 
 

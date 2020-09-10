@@ -18,12 +18,12 @@ The entrypoint for Two.js. Instantiate a `new Two` in order to setup a scene to 
 
 | Argument | Description |
 | ---- | ----------- |
-| `options` |  |
-| `options.fullscreen` | Set to `true` to automatically make the stage adapt to the width and height of the parent document. This parameter overrides `width` and `height` parameters if set to `true`. |
-| `options.width` | The width of the stage on construction. This can be set at a later time. |
-| `options.height` | The height of the stage on construction. This can be set at a later time. |
-| `options.type` | The type of renderer to setup drawing with. See [Two.Types](/documentation/types) for available options. |
-| `options.autostart` | Set to `true` to add the instance to draw on `requestAnimationFrame`. This is a convenient substitute for [Two.play](/documentation/play). |
+|  `options`  |  |
+|  `options.fullscreen`  | Set to `true` to automatically make the stage adapt to the width and height of the parent document. This parameter overrides `width` and `height` parameters if set to `true`. |
+|  `options.width`  | The width of the stage on construction. This can be set at a later time. |
+|  `options.height`  | The height of the stage on construction. This can be set at a later time. |
+|  `options.type`  | The type of renderer to setup drawing with. See [Two.Types](/documentation/types) for available options. |
+|  `options.autostart`  | Set to `true` to add the instance to draw on `requestAnimationFrame`. This is a convenient substitute for [Two.play](/documentation/play). |
 
 
 
@@ -87,7 +87,7 @@ Map of possible path commands. Taken from the SVG specification.
 
 | Argument | Description |
 | ---- | ----------- |
-| `elem` | The DOM element to append the Two.js stage to. |
+|  `elem`  | The DOM element to append the Two.js stage to. |
 </div>
 
 
@@ -258,7 +258,7 @@ The object passed for event deallocation.
 
 | Argument | Description |
 | ---- | ----------- |
-| `obj` |  |
+|  `obj`  |  |
 </div>
 
 
@@ -414,7 +414,7 @@ Render all drawable and visible objects of the scene.
 
 | Argument | Description |
 | ---- | ----------- |
-| `objects` | An array of Two.js objects. Alternatively can add objects as individual arguments. |
+|  `objects`  | An array of Two.js objects. Alternatively can add objects as individual arguments. |
 </div>
 
 
@@ -462,7 +462,7 @@ A shorthand method to add specific Two.js objects to the scene.
 
 | Argument | Description |
 | ---- | ----------- |
-| `objects` | An array of Two.js objects. |
+|  `objects`  | An array of Two.js objects. |
 </div>
 
 
@@ -564,10 +564,10 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `x1` |  |
-| `y1` |  |
-| `x2` |  |
-| `y2` |  |
+|  `x1`  |  |
+|  `y1`  |  |
+|  `x2`  |  |
+|  `y2`  |  |
 </div>
 
 
@@ -628,10 +628,10 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `x1` |  |
-| `y1` |  |
-| `x2` |  |
-| `y2` |  |
+|  `x1`  |  |
+|  `y1`  |  |
+|  `x2`  |  |
+|  `y2`  |  |
 </div>
 
 
@@ -692,10 +692,10 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `x` |  |
-| `y` |  |
-| `width` |  |
-| `height` |  |
+|  `x`  |  |
+|  `y`  |  |
+|  `width`  |  |
+|  `height`  |  |
 </div>
 
 
@@ -756,11 +756,11 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `x` |  |
-| `y` |  |
-| `width` |  |
-| `height` |  |
-| `sides` |  |
+|  `x`  |  |
+|  `y`  |  |
+|  `width`  |  |
+|  `height`  |  |
+|  `sides`  |  |
 </div>
 
 
@@ -821,10 +821,10 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `x` |  |
-| `y` |  |
-| `radius` |  |
-| `resolution` |  |
+|  `x`  |  |
+|  `y`  |  |
+|  `radius`  |  |
+|  `resolution`  |  |
 </div>
 
 
@@ -885,11 +885,11 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `x` |  |
-| `y` |  |
-| `rx` |  |
-| `ry` |  |
-| `resolution` |  |
+|  `x`  |  |
+|  `y`  |  |
+|  `rx`  |  |
+|  `ry`  |  |
+|  `resolution`  |  |
 </div>
 
 
@@ -950,11 +950,11 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `x` |  |
-| `y` |  |
-| `outerRadius` |  |
-| `innerRadius` |  |
-| `sides` |  |
+|  `x`  |  |
+|  `y`  |  |
+|  `outerRadius`  |  |
+|  `innerRadius`  |  |
+|  `sides`  |  |
 </div>
 
 
@@ -1017,8 +1017,8 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `points` | An array of [Two.Anchor](/documentation/anchor) points. |
-| `` | Alternatively you can pass alternating `x` / `y` coordinate values as individual arguments. These will be combined into [Two.Anchor](/documentation/anchor)s for use in the path. |
+|  `points`  | An array of [Two.Anchor](/documentation/anchor) points. |
+|  | Alternatively you can pass alternating `x` / `y` coordinate values as individual arguments. These will be combined into [Two.Anchor](/documentation/anchor)s for use in the path. |
 </div>
 
 
@@ -1089,10 +1089,10 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `x` |  |
-| `y` |  |
-| `radius` |  |
-| `sides` |  |
+|  `x`  |  |
+|  `y`  |  |
+|  `radius`  |  |
+|  `sides`  |  |
 </div>
 
 
@@ -1140,13 +1140,13 @@ Creates a Two.js polygon and adds it to the scene.
 
 | Argument | Description |
 | ---- | ----------- |
-| `x` |  |
-| `y` |  |
-| `innerRadius` |  |
-| `outerRadius` |  |
-| `startAngle` |  |
-| `endAngle` |  |
-| `resolution` | The number of vertices that should comprise the arc segment. |
+|  `x`  |  |
+|  `y`  |  |
+|  `innerRadius`  |  |
+|  `outerRadius`  |  |
+|  `startAngle`  |  |
+|  `endAngle`  |  |
+|  `resolution`  | The number of vertices that should comprise the arc segment. |
 </div>
 
 
@@ -1201,8 +1201,8 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `points` | An array of [Two.Anchor](/documentation/anchor) points. |
-| `` | Alternatively you can pass alternating `x` / `y` coordinate values as individual arguments. These will be combined into [Two.Anchor](/documentation/anchor)s for use in the path. |
+|  `points`  | An array of [Two.Anchor](/documentation/anchor) points. |
+|  | Alternatively you can pass alternating `x` / `y` coordinate values as individual arguments. These will be combined into [Two.Anchor](/documentation/anchor)s for use in the path. |
 </div>
 
 
@@ -1273,10 +1273,10 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `message` |  |
-| `x` |  |
-| `y` |  |
-| `styles` | An object to describe any of the [Two.Text.Properties](/documentation/text#two-text-properties) including `fill`, `stroke`, `linewidth`, `family`, `alignment`, `leading`, `opacity`, etc.. |
+|  `message`  |  |
+|  `x`  |  |
+|  `y`  |  |
+|  `styles`  | An object to describe any of the [Two.Text.Properties](/documentation/text#two-text-properties) including `fill`, `stroke`, `linewidth`, `family`, `alignment`, `leading`, `opacity`, etc.. |
 </div>
 
 
@@ -1337,11 +1337,11 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `x1` |  |
-| `y1` |  |
-| `x2` |  |
-| `y2` |  |
-| `stops` | Any number of color stops sometimes reffered to as ramp stops. If none are supplied then the default black-to-white two stop gradient is applied. |
+|  `x1`  |  |
+|  `y1`  |  |
+|  `x2`  |  |
+|  `y2`  |  |
+|  `stops`  | Any number of color stops sometimes reffered to as ramp stops. If none are supplied then the default black-to-white two stop gradient is applied. |
 </div>
 
 
@@ -1402,10 +1402,10 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `x1` |  |
-| `y1` |  |
-| `radius` |  |
-| `stops` | Any number of color stops sometimes reffered to as ramp stops. If none are supplied then the default black-to-white two stop gradient is applied. |
+|  `x1`  |  |
+|  `y1`  |  |
+|  `radius`  |  |
+|  `stops`  | Any number of color stops sometimes reffered to as ramp stops. If none are supplied then the default black-to-white two stop gradient is applied. |
 </div>
 
 
@@ -1466,13 +1466,13 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `pathOrTexture` | The URL path to an image or an already created [Two.Texture](/documentation/texture). |
-| `x` |  |
-| `y` |  |
-| `columns` |  |
-| `rows` |  |
-| `frameRate` |  |
-| `autostart` |  |
+|  `pathOrTexture`  | The URL path to an image or an already created [Two.Texture](/documentation/texture). |
+|  `x`  |  |
+|  `y`  |  |
+|  `columns`  |  |
+|  `rows`  |  |
+|  `frameRate`  |  |
+|  `autostart`  |  |
 </div>
 
 
@@ -1533,11 +1533,11 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `pathsOrTextures` | An array of paths or of [Two.Textures](/documentation/textures). |
-| `x` |  |
-| `y` |  |
-| `frameRate` |  |
-| `autostart` |  |
+|  `pathsOrTextures`  | An array of paths or of [Two.Textures](/documentation/textures). |
+|  `x`  |  |
+|  `y`  |  |
+|  `frameRate`  |  |
+|  `autostart`  |  |
 </div>
 
 
@@ -1598,8 +1598,8 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `pathOrSource` | The URL path to an image or a DOM image-like element. |
-| `callback` | Function to be invoked when the image is loaded. |
+|  `pathOrSource`  | The URL path to an image or a DOM image-like element. |
+|  `callback`  | Function to be invoked when the image is loaded. |
 </div>
 
 
@@ -1660,7 +1660,7 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `objects` | Two.js objects to be added to the group in the form of an array or as individual arguments. |
+|  `objects`  | Two.js objects to be added to the group in the form of an array or as individual arguments. |
 </div>
 
 
@@ -1721,9 +1721,9 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `svgNode` | The SVG node to be parsed. |
-| `shallow` | Don't create a top-most group but append all content directly. |
-| `add` | – Automatically add the reconstructed SVG node to scene. |
+|  `svgNode`  | The SVG node to be parsed. |
+|  `shallow`  | Don't create a top-most group but append all content directly. |
+|  `add`  | – Automatically add the reconstructed SVG node to scene. |
 </div>
 
 
@@ -1784,8 +1784,8 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `pathOrSVGContent` | The URL path of an SVG file or an SVG document as text. |
-| `callback` | Function to call once loading has completed. |
+|  `pathOrSVGContent`  | The URL path of an SVG file or an SVG document as text. |
+|  `callback`  | Function to call once loading has completed. |
 </div>
 
 

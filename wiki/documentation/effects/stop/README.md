@@ -18,9 +18,9 @@
 
 | Argument | Description |
 | ---- | ----------- |
-| `offset` | The offset percentage of the stop represented as a zero-to-one value. Default value flip flops from zero-to-one as new stops are created. |
-| `color` | The color of the stop. Default value flip flops from white to black as new stops are created. |
-| `opacity` | The opacity value. Default value is 1, cannot be lower than 0. |
+|  `offset`  | The offset percentage of the stop represented as a zero-to-one value. Default value flip flops from zero-to-one as new stops are created. |
+|  `color`  | The color of the stop. Default value flip flops from white to black as new stops are created. |
+|  `opacity`  | The opacity value. Default value is 1, cannot be lower than 0. |
 
 
 
@@ -125,7 +125,7 @@ A list of properties that are on every [Two.Stop](/documentation/stop).
 
 | Argument | Description |
 | ---- | ----------- |
-| `object` | The object to make observable. |
+|  `object`  | The object to make observable. |
 </div>
 
 
@@ -309,7 +309,7 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `parent` | The parent group or scene to add the clone to. |
+|  `parent`  | The parent group or scene to add the clone to. |
 </div>
 
 

@@ -24,13 +24,13 @@ __Extends__: `Two.Path`
 
 | Argument | Description |
 | ---- | ----------- |
-| `x` | The x position of the arc segment. |
-| `y` | The y position of the arc segment. |
-| `innerRadius` | The inner radius value of the arc segment. |
-| `outerRadius` | The outer radius value of the arc segment. |
-| `startAngle` | The start angle of the arc segment in radians. |
-| `endAngle` | The end angle of the arc segment in radians. |
-| `resolution` | The number of vertices used to construct the arc segment. |
+|  `x`  | The x position of the arc segment. |
+|  `y`  | The y position of the arc segment. |
+|  `innerRadius`  | The inner radius value of the arc segment. |
+|  `outerRadius`  | The outer radius value of the arc segment. |
+|  `startAngle`  | The start angle of the arc segment in radians. |
+|  `endAngle`  | The end angle of the arc segment in radians. |
+|  `resolution`  | The number of vertices used to construct the arc segment. |
 
 
 
@@ -94,7 +94,7 @@ A list of properties that are on every [Two.ArcSegment](/documentation/arcsegmen
 
 | Argument | Description |
 | ---- | ----------- |
-| `object` | The object to make observable. |
+|  `object`  | The object to make observable. |
 </div>
 
 
@@ -319,7 +319,7 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `parent` | The parent group or scene to add the clone to. |
+|  `parent`  | The parent group or scene to add the clone to. |
 </div>
 
 

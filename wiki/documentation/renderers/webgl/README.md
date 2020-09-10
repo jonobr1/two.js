@@ -24,10 +24,10 @@ This class is used by [Two](/documentation/) when constructing with `type` of `T
 
 | Argument | Description |
 | ---- | ----------- |
-| `parameters` | This object is inherited when constructing a new instance of [Two](/documentation/). |
-| `parameters.domElement` | The `<canvas />` to draw to. If none given a new one will be constructed. |
-| `parameters.offscreenElement` | The offscreen two dimensional `<canvas />` to render each element on WebGL texture updates. |
-| `parameters.antialias` | Determines whether the canvas should clear render with antialias on. |
+|  `parameters`  | This object is inherited when constructing a new instance of [Two](/documentation/). |
+|  `parameters.domElement`  | The `<canvas />` to draw to. If none given a new one will be constructed. |
+|  `parameters.offscreenElement`  | The offscreen two dimensional `<canvas />` to render each element on WebGL texture updates. |
+|  `parameters.antialias`  | Determines whether the canvas should clear render with antialias on. |
 
 
 
@@ -304,9 +304,9 @@ __Triggers__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `width` | The new width of the renderer. |
-| `height` | The new height of the renderer. |
-| `ratio` | The new pixel ratio (pixel density) of the renderer. Defaults to calculate the pixel density of the user's screen. |
+|  `width`  | The new width of the renderer. |
+|  `height`  | The new height of the renderer. |
+|  `ratio`  | The new pixel ratio (pixel density) of the renderer. Defaults to calculate the pixel density of the user's screen. |
 </div>
 
 

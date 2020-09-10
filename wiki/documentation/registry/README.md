@@ -36,8 +36,8 @@ An arbitrary class to manage a directory of things. Mainly used for keeping tabs
 
 | Argument | Description |
 | ---- | ----------- |
-| `id` | A unique identifier. |
-| `value` | Any type of variable to be registered to the directory. |
+|  `id`  | A unique identifier. |
+|  `value`  | Any type of variable to be registered to the directory. |
 </div>
 
 
@@ -85,7 +85,7 @@ Adds any value to the directory. Assigned by the `id`.
 
 | Argument | Description |
 | ---- | ----------- |
-| `id` | A unique identifier. |
+|  `id`  | A unique identifier. |
 </div>
 
 
@@ -144,7 +144,7 @@ The associated value. If unavailable then `undefined` is returned.
 
 | Argument | Description |
 | ---- | ----------- |
-| `id` | A unique identifier. |
+|  `id`  | A unique identifier. |
 </div>
 
 
@@ -205,7 +205,7 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `id` | A unique identifier. |
+|  `id`  | A unique identifier. |
 </div>
 
 

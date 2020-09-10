@@ -24,8 +24,8 @@ Fundamental to work with bitmap data, a.k.a. pregenerated imagery, in Two.js. Su
 
 | Argument | Description |
 | ---- | ----------- |
-| `src` | The URL path to an image file or an `<img />` element. |
-| `callback` | An optional callback function once the image has been loaded. |
+|  `src`  | The URL path to an image file or an `<img />` element. |
+|  `callback`  | An optional callback function once the image has been loaded. |
 
 
 
@@ -202,7 +202,7 @@ Serializes a URL as an absolute path for canonical attribution in [Two.ImageRegi
 
 | Argument | Description |
 | ---- | ----------- |
-| `path` |  |
+|  `path`  |  |
 </div>
 
 
@@ -250,8 +250,8 @@ Loads an image as a buffer in headless environments.
 
 | Argument | Description |
 | ---- | ----------- |
-| `texture` | The [Two.Texture](/documentation/texture) to be loaded. |
-| `loaded` | The callback function to be triggered once the image is loaded. |
+|  `texture`  | The [Two.Texture](/documentation/texture) to be loaded. |
+|  `loaded`  | The callback function to be triggered once the image is loaded. |
 </div>
 
 
@@ -324,7 +324,7 @@ Retrieves the tag name of an image, video, or canvas node.
 
 | Argument | Description |
 | ---- | ----------- |
-| `` | The image to infer the tag name from. |
+|  | The image to infer the tag name from. |
 </div>
 
 
@@ -387,7 +387,7 @@ Convenience function to set [Two.Texture.image](/documentation/texture#two-textu
 
 | Argument | Description |
 | ---- | ----------- |
-| `src` | The URL path of the image. |
+|  `src`  | The URL path of the image. |
 </div>
 
 
@@ -470,8 +470,8 @@ A collection of functions to register different types of textures. Used internal
 
 | Argument | Description |
 | ---- | ----------- |
-| `texture` | The texture to load. |
-| `callback` | The function to be called once the texture is loaded. |
+|  `texture`  | The texture to load. |
+|  `callback`  | The function to be called once the texture is loaded. |
 </div>
 
 
@@ -595,7 +595,7 @@ Cached method to let renderers know `scale` has been updated on a [Two.Texture](
 
 | Argument | Description |
 | ---- | ----------- |
-| `object` | The object to make observable. |
+|  `object`  | The object to make observable. |
 </div>
 
 

@@ -18,15 +18,15 @@ A class to store 3 x 3 transformation matrix information. In addition to storing
 
 | Argument | Description |
 | ---- | ----------- |
-| `a` | The value for element at the first column and first row. |
-| `b` | The value for element at the second column and first row. |
-| `c` | The value for element at the third column and first row. |
-| `d` | The value for element at the first column and second row. |
-| `e` | The value for element at the second column and second row. |
-| `f` | The value for element at the third column and second row. |
-| `g` | The value for element at the first column and third row. |
-| `h` | The value for element at the second column and third row. |
-| `i` | The value for element at the third column and third row. |
+|  `a`  | The value for element at the first column and first row. |
+|  `b`  | The value for element at the second column and first row. |
+|  `c`  | The value for element at the third column and first row. |
+|  `d`  | The value for element at the first column and second row. |
+|  `e`  | The value for element at the second column and second row. |
+|  `f`  | The value for element at the third column and second row. |
+|  `g`  | The value for element at the first column and third row. |
+|  `h`  | The value for element at the second column and third row. |
+|  `i`  | The value for element at the third column and third row. |
 
 
 
@@ -105,9 +105,9 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `A` |  |
-| `B` |  |
-| `C` | An optional matrix to apply the multiplication to. |
+|  `A`  |  |
+|  `B`  |  |
+|  `C`  | An optional matrix to apply the multiplication to. |
 </div>
 
 
@@ -247,15 +247,15 @@ Determines whether Two.js automatically calculates the values for the matrix or 
 
 | Argument | Description |
 | ---- | ----------- |
-| `a` | The value for element at the first column and first row. |
-| `b` | The value for element at the second column and first row. |
-| `c` | The value for element at the third column and first row. |
-| `d` | The value for element at the first column and second row. |
-| `e` | The value for element at the second column and second row. |
-| `f` | The value for element at the third column and second row. |
-| `g` | The value for element at the first column and third row. |
-| `h` | The value for element at the second column and third row. |
-| `i` | The value for element at the third column and third row. |
+|  `a`  | The value for element at the first column and first row. |
+|  `b`  | The value for element at the second column and first row. |
+|  `c`  | The value for element at the third column and first row. |
+|  `d`  | The value for element at the first column and second row. |
+|  `e`  | The value for element at the second column and second row. |
+|  `f`  | The value for element at the third column and second row. |
+|  `g`  | The value for element at the first column and third row. |
+|  `h`  | The value for element at the second column and third row. |
+|  `i`  | The value for element at the third column and third row. |
 </div>
 
 
@@ -303,7 +303,7 @@ Set an array of values onto the matrix. Order described in [Two.Matrix](/documen
 
 | Argument | Description |
 | ---- | ----------- |
-| `a` | The array of elements to apply. |
+|  `a`  | The array of elements to apply. |
 </div>
 
 
@@ -439,7 +439,7 @@ _Overloaded_
 
 | Argument | Description |
 | ---- | ----------- |
-| `a` | The scalar to be multiplied. |
+|  `a`  | The scalar to be multiplied. |
 </div>
 
 
@@ -499,9 +499,9 @@ _Overloaded_
 
 | Argument | Description |
 | ---- | ----------- |
-| `a` | The x component to be multiplied. |
-| `b` | The y component to be multiplied. |
-| `c` | The z component to be multiplied. |
+|  `a`  | The x component to be multiplied. |
+|  `b`  | The y component to be multiplied. |
+|  `c`  | The z component to be multiplied. |
 </div>
 
 
@@ -561,15 +561,15 @@ _Overloaded_
 
 | Argument | Description |
 | ---- | ----------- |
-| `a` | The value at the first column and first row of the matrix to be multiplied. |
-| `b` | The value at the second column and first row of the matrix to be multiplied. |
-| `c` | The value at the third column and first row of the matrix to be multiplied. |
-| `d` | The value at the first column and second row of the matrix to be multiplied. |
-| `e` | The value at the second column and second row of the matrix to be multiplied. |
-| `f` | The value at the third column and second row of the matrix to be multiplied. |
-| `g` | The value at the first column and third row of the matrix to be multiplied. |
-| `h` | The value at the second column and third row of the matrix to be multiplied. |
-| `i` | The value at the third column and third row of the matrix to be multiplied. |
+|  `a`  | The value at the first column and first row of the matrix to be multiplied. |
+|  `b`  | The value at the second column and first row of the matrix to be multiplied. |
+|  `c`  | The value at the third column and first row of the matrix to be multiplied. |
+|  `d`  | The value at the first column and second row of the matrix to be multiplied. |
+|  `e`  | The value at the second column and second row of the matrix to be multiplied. |
+|  `f`  | The value at the third column and second row of the matrix to be multiplied. |
+|  `g`  | The value at the first column and third row of the matrix to be multiplied. |
+|  `h`  | The value at the second column and third row of the matrix to be multiplied. |
+|  `i`  | The value at the third column and third row of the matrix to be multiplied. |
 </div>
 
 
@@ -623,7 +623,7 @@ Multiply all components of a matrix against another matrix.
 
 | Argument | Description |
 | ---- | ----------- |
-| `out` | The optional matrix to apply the inversion to. |
+|  `out`  | The optional matrix to apply the inversion to. |
 </div>
 
 
@@ -671,7 +671,7 @@ Return an inverted version of the matrix. If no optional one is passed a new mat
 
 | Argument | Description |
 | ---- | ----------- |
-| `scale` | The one dimensional scale to apply to the matrix. |
+|  `scale`  | The one dimensional scale to apply to the matrix. |
 </div>
 
 
@@ -719,8 +719,8 @@ Uniformly scale the transformation matrix.
 
 | Argument | Description |
 | ---- | ----------- |
-| `sx` | The horizontal scale factor. |
-| `sy` | The vertical scale factor |
+|  `sx`  | The horizontal scale factor. |
+|  `sy`  | The vertical scale factor |
 </div>
 
 
@@ -768,7 +768,7 @@ Scale the transformation matrix in two dimensions.
 
 | Argument | Description |
 | ---- | ----------- |
-| `radians` | The amount to rotate in radians. |
+|  `radians`  | The amount to rotate in radians. |
 </div>
 
 
@@ -816,8 +816,8 @@ Rotate the matrix.
 
 | Argument | Description |
 | ---- | ----------- |
-| `x` | The horizontal translation value to apply. |
-| `y` | The vertical translation value to apply. |
+|  `x`  | The horizontal translation value to apply. |
+|  `y`  | The vertical translation value to apply. |
 </div>
 
 
@@ -865,7 +865,7 @@ Translate the matrix.
 
 | Argument | Description |
 | ---- | ----------- |
-| `radians` | The amount to skew in radians. |
+|  `radians`  | The amount to skew in radians. |
 </div>
 
 
@@ -913,7 +913,7 @@ Skew the matrix by an angle in the x axis direction.
 
 | Argument | Description |
 | ---- | ----------- |
-| `radians` | The amount to skew in radians. |
+|  `radians`  | The amount to skew in radians. |
 </div>
 
 
@@ -976,7 +976,7 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `fullMatrix` | Return the full 9 elements of the matrix or just 6 for 2D transformations. |
+|  `fullMatrix`  | Return the full 9 elements of the matrix or just 6 for 2D transformations. |
 </div>
 
 
@@ -1024,8 +1024,8 @@ Create a transform string. Used for the Two.js rendering APIs.
 
 | Argument | Description |
 | ---- | ----------- |
-| `fullMatrix` | Return the full 9 elements of the matrix or just 6 in the format for 2D transformations. |
-| `output` | An array empty or otherwise to apply the values to. |
+|  `fullMatrix`  | Return the full 9 elements of the matrix or just 6 in the format for 2D transformations. |
+|  `output`  | An array empty or otherwise to apply the values to. |
 </div>
 
 
@@ -1073,8 +1073,8 @@ Create a transform array. Used for the Two.js rendering APIs.
 
 | Argument | Description |
 | ---- | ----------- |
-| `fullMatrix` | Return the full 9 elements of the matrix or just 6 for 2D transformations. |
-| `output` | An array empty or otherwise to apply the values to. |
+|  `fullMatrix`  | Return the full 9 elements of the matrix or just 6 for 2D transformations. |
+|  `output`  | An array empty or otherwise to apply the values to. |
 </div>
 
 

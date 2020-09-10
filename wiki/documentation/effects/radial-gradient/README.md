@@ -24,12 +24,12 @@ __Extends__: `Two.Gradient`
 
 | Argument | Description |
 | ---- | ----------- |
-| `x` | The x position of the origin of the radial gradient. |
-| `y` | The y position of the origin of the radial gradient. |
-| `radius` | The radius of the radial gradient. |
-| `stops` | A list of [Two.Stop](/documentation/stop)s that contain the gradient fill pattern for the gradient. |
-| `focalX` | The x position of the focal point on the radial gradient. |
-| `focalY` | The y position of the focal point on the radial gradient. |
+|  `x`  | The x position of the origin of the radial gradient. |
+|  `y`  | The y position of the origin of the radial gradient. |
+|  `radius`  | The radius of the radial gradient. |
+|  `stops`  | A list of [Two.Stop](/documentation/stop)s that contain the gradient fill pattern for the gradient. |
+|  `focalX`  | The x position of the focal point on the radial gradient. |
+|  `focalY`  | The y position of the focal point on the radial gradient. |
 
 
 
@@ -93,7 +93,7 @@ A list of properties that are on every [Two.RadialGradient](/documentation/radia
 
 | Argument | Description |
 | ---- | ----------- |
-| `object` | The object to make observable. |
+|  `object`  | The object to make observable. |
 </div>
 
 
@@ -287,7 +287,7 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `parent` | The parent group or scene to add the clone to. |
+|  `parent`  | The parent group or scene to add the clone to. |
 </div>
 
 

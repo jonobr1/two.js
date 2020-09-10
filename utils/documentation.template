@@ -24,8 +24,8 @@ __Extends__: `<%= root.augments %>`
 <% _.each(root.params, function(param, i) { %><% if (i <= 0) { %>
 | Argument | Description |
 | ---- | ----------- |
-| `<%= param.name %>` | <%= param.description %> |<% } else { %>
-| `<%= param.name %>` | <%= param.description %> |<% } %><% }); %>
+| <% if (param.name) { %> `<%= param.name %>` <% } %> | <%= param.description %> |<% } else { %>
+| <% if (param.name) { %> `<%= param.name %>` <% } %> | <%= param.description %> |<% } %><% }); %>
 
 <% _.each(citations, function(item) { %>
 
@@ -83,8 +83,8 @@ __Triggers__:
 <% _.each(item.params, function(param, i) { %><% if (i <= 0) { %>
 | Argument | Description |
 | ---- | ----------- |
-| `<%= param.name %>` | <%= param.description %> |<% } else { %>
-| `<%= param.name %>` | <%= param.description %> |<% } %><% }); %>
+| <% if (param.name) { %> `<%= param.name %>` <% } %> | <%= param.description %> |<% } else { %>
+| <% if (param.name) { %> `<%= param.name %>` <% } %> | <%= param.description %> |<% } %><% }); %>
 </div>
 <% } %>
 

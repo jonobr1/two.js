@@ -18,8 +18,8 @@ A class to store x / y component vector data. In addition to storing data `Two.V
 
 | Argument | Description |
 | ---- | ----------- |
-| `x` | Any number to represent the horizontal x-component of the vector. |
-| `y` | Any number to represent the vertical y-component of the vector. |
+|  `x`  | Any number to represent the horizontal x-component of the vector. |
+|  `y`  | Any number to represent the vertical y-component of the vector. |
 
 
 
@@ -96,8 +96,8 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `v1` |  |
-| `v2` |  |
+|  `v1`  |  |
+|  `v2`  |  |
 </div>
 
 
@@ -158,8 +158,8 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `v1` |  |
-| `v2` |  |
+|  `v1`  |  |
+|  `v2`  |  |
 </div>
 
 
@@ -263,8 +263,8 @@ The ratio betwen two points `v1` and `v2`.
 
 | Argument | Description |
 | ---- | ----------- |
-| `A` |  |
-| `B` |  |
+|  `A`  |  |
+|  `B`  |  |
 </div>
 
 
@@ -321,8 +321,8 @@ The angle between points `v1` and `v2`.
 
 | Argument | Description |
 | ---- | ----------- |
-| `v1` |  |
-| `v2` |  |
+|  `v1`  |  |
+|  `v2`  |  |
 </div>
 
 
@@ -379,8 +379,8 @@ The distance between points `v1` and `v2`. Distance is always positive.
 
 | Argument | Description |
 | ---- | ----------- |
-| `v1` |  |
-| `v2` |  |
+|  `v1`  |  |
+|  `v2`  |  |
 </div>
 
 
@@ -437,8 +437,8 @@ The squared distance between points `v1` and `v2`.
 
 | Argument | Description |
 | ---- | ----------- |
-| `v1` |  |
-| `v2` |  |
+|  `v1`  |  |
+|  `v2`  |  |
 </div>
 
 
@@ -480,7 +480,7 @@ The squared distance between points `v1` and `v2`.
 
 | Argument | Description |
 | ---- | ----------- |
-| `object` | The object to make observable. |
+|  `object`  | The object to make observable. |
 </div>
 
 
@@ -625,8 +625,8 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `x` |  |
-| `y` |  |
+|  `x`  |  |
+|  `y`  |  |
 </div>
 
 
@@ -689,7 +689,7 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `v` |  |
+|  `v`  |  |
 </div>
 
 
@@ -870,7 +870,7 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `v` |  |
+|  `v`  |  |
 </div>
 
 
@@ -945,7 +945,7 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `v` |  |
+|  `v`  |  |
 </div>
 
 
@@ -1020,8 +1020,8 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `x` |  |
-| `y` |  |
+|  `x`  |  |
+|  `y`  |  |
 </div>
 
 
@@ -1137,7 +1137,7 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `v` |  |
+|  `v`  |  |
 </div>
 
 
@@ -1212,7 +1212,7 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `v` |  |
+|  `v`  |  |
 </div>
 
 
@@ -1287,8 +1287,8 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `x` |  |
-| `y` |  |
+|  `x`  |  |
+|  `y`  |  |
 </div>
 
 
@@ -1486,7 +1486,7 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `v` |  |
+|  `v`  |  |
 </div>
 
 
@@ -1561,7 +1561,7 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `v` |  |
+|  `v`  |  |
 </div>
 
 
@@ -1636,8 +1636,8 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `x` |  |
-| `y` |  |
+|  `x`  |  |
+|  `y`  |  |
 </div>
 
 
@@ -1732,7 +1732,7 @@ Alias for [Two.Vector.multiply](/documentation/vector#two-vector-multiply).
 
 | Argument | Description |
 | ---- | ----------- |
-| `s` | The scalar to multiply by. |
+|  `s`  | The scalar to multiply by. |
 </div>
 
 
@@ -1801,7 +1801,7 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `v` |  |
+|  `v`  |  |
 </div>
 
 
@@ -1876,7 +1876,7 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `v` |  |
+|  `v`  |  |
 </div>
 
 
@@ -1951,8 +1951,8 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `x` |  |
-| `y` |  |
+|  `x`  |  |
+|  `y`  |  |
 </div>
 
 
@@ -2047,7 +2047,7 @@ Alias for [Two.Vector.divide](/documentation/vector#two-vector-divide).
 
 | Argument | Description |
 | ---- | ----------- |
-| `s` | The scalar to divide by. |
+|  `s`  | The scalar to divide by. |
 </div>
 
 
@@ -2447,7 +2447,7 @@ Get the distance between two vectors to the power of two. Widely used as less ex
 
 | Argument | Description |
 | ---- | ----------- |
-| `l` | length to set vector to. |
+|  `l`  | length to set vector to. |
 </div>
 
 
@@ -2508,8 +2508,8 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `v` | The vector to compare against. |
-| `eps` | An options epsilon for precision. |
+|  `v`  | The vector to compare against. |
+|  `eps`  | An options epsilon for precision. |
 </div>
 
 
@@ -2557,8 +2557,8 @@ Qualify if one vector roughly equal another. With a margin of error defined by e
 
 | Argument | Description |
 | ---- | ----------- |
-| `v` | The destination vector to step towards. |
-| `t` | The zero to one value of how close the current vector gets to the destination vector. |
+|  `v`  | The destination vector to step towards. |
+|  `t`  | The zero to one value of how close the current vector gets to the destination vector. |
 </div>
 
 
@@ -2625,7 +2625,7 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `eps` | Optional precision amount to check against. |
+|  `eps`  | Optional precision amount to check against. |
 </div>
 
 
@@ -2781,7 +2781,7 @@ Return a JSON compatible plain object that represents the vector.
 
 | Argument | Description |
 | ---- | ----------- |
-| `radians` | The amoun to rotate the vector by. |
+|  `radians`  | The amoun to rotate the vector by. |
 </div>
 
 

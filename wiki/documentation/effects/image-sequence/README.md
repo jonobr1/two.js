@@ -24,10 +24,10 @@ A convenient package to display still or animated images organized as a series o
 
 | Argument | Description |
 | ---- | ----------- |
-| `paths` | A list of URLs or [Two.Texture](/documentation/texture)s. |
-| `ox` | The initial `x` position of the Two.ImageSequence. |
-| `oy` | The initial `y` position of the Two.ImageSequence. |
-| `frameRate` | The frame rate at which the images should playback at. |
+|  `paths`  | A list of URLs or [Two.Texture](/documentation/texture)s. |
+|  `ox`  | The initial `x` position of the Two.ImageSequence. |
+|  `oy`  | The initial `y` position of the Two.ImageSequence. |
+|  `frameRate`  | The frame rate at which the images should playback at. |
 
 
 
@@ -255,7 +255,7 @@ Cached method to let [Two.ImageSequence](/documentation/imagesequence) know text
 
 | Argument | Description |
 | ---- | ----------- |
-| `object` | The object to make observable. |
+|  `object`  | The object to make observable. |
 </div>
 
 
@@ -322,7 +322,7 @@ Shorthand function to prepare source image material into readable format by [Two
 
 | Argument | Description |
 | ---- | ----------- |
-| `textureOrString` | The texture or string to create a [Two.Texture](/documentation/texture) from. |
+|  `textureOrString`  | The texture or string to create a [Two.Texture](/documentation/texture) from. |
 </div>
 
 
@@ -493,9 +493,9 @@ The index of the current tile of the sprite to display. Defaults to `0`.
 
 | Argument | Description |
 | ---- | ----------- |
-| `firstFrame` | The index of the frame to start the animation with. |
-| `lastFrame` | The index of the frame to end the animation with. Defaults to the last item in the [Two.ImageSequence.textures](/documentation/imagesequence#two-imagesequence-textures). |
-| `onLastFrame` | Optional callback function to be triggered after playing the last frame. This fires multiple times when the image sequence is looped. |
+|  `firstFrame`  | The index of the frame to start the animation with. |
+|  `lastFrame`  | The index of the frame to end the animation with. Defaults to the last item in the [Two.ImageSequence.textures](/documentation/imagesequence#two-imagesequence-textures). |
+|  `onLastFrame`  | Optional callback function to be triggered after playing the last frame. This fires multiple times when the image sequence is looped. |
 </div>
 
 
@@ -638,7 +638,7 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `parent` | The parent group or scene to add the clone to. |
+|  `parent`  | The parent group or scene to add the clone to. |
 </div>
 
 

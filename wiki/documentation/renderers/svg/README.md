@@ -24,8 +24,8 @@ This class is used by [Two](/documentation/) when constructing with `type` of `T
 
 | Argument | Description |
 | ---- | ----------- |
-| `parameters` | This object is inherited when constructing a new instance of [Two](/documentation/). |
-| `parameters.domElement` | The `<svg />` to draw to. If none given a new one will be constructed. |
+|  `parameters`  | This object is inherited when constructing a new instance of [Two](/documentation/). |
+|  `parameters.domElement`  | The `<svg />` to draw to. If none given a new one will be constructed. |
 
 
 
@@ -212,8 +212,8 @@ The `<defs />` to apply gradients, patterns, and bitmap imagery.
 
 | Argument | Description |
 | ---- | ----------- |
-| `width` | The new width of the renderer. |
-| `height` | The new height of the renderer. |
+|  `width`  | The new width of the renderer. |
+|  `height`  | The new height of the renderer. |
 </div>
 
 

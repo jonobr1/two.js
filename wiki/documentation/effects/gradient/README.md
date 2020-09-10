@@ -18,7 +18,7 @@ This is the base class for constructing different types of gradients with Two.js
 
 | Argument | Description |
 | ---- | ----------- |
-| `stops` | A list of [Two.Stop](/documentation/stop)s that contain the gradient fill pattern for the gradient. |
+|  `stops`  | A list of [Two.Stop](/documentation/stop)s that contain the gradient fill pattern for the gradient. |
 
 
 
@@ -82,7 +82,7 @@ A list of properties that are on every [Two.Gradient](/documentation/gradient).
 
 | Argument | Description |
 | ---- | ----------- |
-| `object` | The object to make observable. |
+|  `object`  | The object to make observable. |
 </div>
 
 
@@ -446,7 +446,7 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `parent` | The parent group or scene to add the clone to. |
+|  `parent`  | The parent group or scene to add the clone to. |
 </div>
 
 

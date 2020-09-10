@@ -24,12 +24,12 @@ A convenient package to display still or animated images through a tiled image s
 
 | Argument | Description |
 | ---- | ----------- |
-| `path` | The URL path or [Two.Texture](/documentation/texture) to be used as the bitmap data displayed on the sprite. |
-| `ox` | The initial `x` position of the Two.Sprite. |
-| `oy` | The initial `y` position of the Two.Sprite. |
-| `cols` | The number of columns the sprite contains. |
-| `rows` | The number of rows the sprite contains. |
-| `frameRate` | The frame rate at which the partitions of the image should playback at. |
+|  `path`  | The URL path or [Two.Texture](/documentation/texture) to be used as the bitmap data displayed on the sprite. |
+|  `ox`  | The initial `x` position of the Two.Sprite. |
+|  `oy`  | The initial `y` position of the Two.Sprite. |
+|  `cols`  | The number of columns the sprite contains. |
+|  `rows`  | The number of rows the sprite contains. |
+|  `frameRate`  | The frame rate at which the partitions of the image should playback at. |
 
 
 
@@ -93,7 +93,7 @@ A list of properties that are on every [Two.Sprite](/documentation/sprite).
 
 | Argument | Description |
 | ---- | ----------- |
-| `object` | The object to make observable. |
+|  `object`  | The object to make observable. |
 </div>
 
 
@@ -346,9 +346,9 @@ The index of the current tile of the sprite to display. Defaults to `0`.
 
 | Argument | Description |
 | ---- | ----------- |
-| `firstFrame` | The index of the frame to start the animation with. |
-| `lastFrame` | The index of the frame to end the animation with. Defaults to the last item in the [Two.Sprite.textures](/documentation/sprite#two-sprite-textures). |
-| `onLastFrame` | Optional callback function to be triggered after playing the last frame. This fires multiple times when the sprite is looped. |
+|  `firstFrame`  | The index of the frame to start the animation with. |
+|  `lastFrame`  | The index of the frame to end the animation with. Defaults to the last item in the [Two.Sprite.textures](/documentation/sprite#two-sprite-textures). |
+|  `onLastFrame`  | Optional callback function to be triggered after playing the last frame. This fires multiple times when the sprite is looped. |
 </div>
 
 
@@ -491,7 +491,7 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `parent` | The parent group or scene to add the clone to. |
+|  `parent`  | The parent group or scene to add the clone to. |
 </div>
 
 

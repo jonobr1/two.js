@@ -24,11 +24,11 @@ __Extends__: `Two.Gradient`
 
 | Argument | Description |
 | ---- | ----------- |
-| `x1` | The x position of the first end point of the linear gradient. |
-| `y1` | The y position of the first end point of the linear gradient. |
-| `x2` | The x position of the second end point of the linear gradient. |
-| `y2` | The y position of the second end point of the linear gradient. |
-| `stops` | A list of [Two.Stop](/documentation/stop)s that contain the gradient fill pattern for the gradient. |
+|  `x1`  | The x position of the first end point of the linear gradient. |
+|  `y1`  | The y position of the first end point of the linear gradient. |
+|  `x2`  | The x position of the second end point of the linear gradient. |
+|  `y2`  | The y position of the second end point of the linear gradient. |
+|  `stops`  | A list of [Two.Stop](/documentation/stop)s that contain the gradient fill pattern for the gradient. |
 
 
 
@@ -51,7 +51,7 @@ __Extends__: `Two.Gradient`
 
 | Argument | Description |
 | ---- | ----------- |
-| `object` | The object to make observable. |
+|  `object`  | The object to make observable. |
 </div>
 
 
@@ -276,7 +276,7 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `parent` | The parent group or scene to add the clone to. |
+|  `parent`  | The parent group or scene to add the clone to. |
 </div>
 
 

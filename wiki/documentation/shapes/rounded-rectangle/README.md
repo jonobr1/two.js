@@ -24,12 +24,12 @@ __Extends__: `Two.Path`
 
 | Argument | Description |
 | ---- | ----------- |
-| `x` | The x position of the rounded rectangle. |
-| `y` | The y position of the rounded rectangle. |
-| `width` | The width value of the rounded rectangle. |
-| `height` | The width value of the rounded rectangle. |
-| `radius` | The radius value of the rounded rectangle. |
-| `resolution` | The number of vertices used to construct the rounded rectangle. |
+|  `x`  | The x position of the rounded rectangle. |
+|  `y`  | The y position of the rounded rectangle. |
+|  `width`  | The width value of the rounded rectangle. |
+|  `height`  | The width value of the rounded rectangle. |
+|  `radius`  | The radius value of the rounded rectangle. |
+|  `resolution`  | The number of vertices used to construct the rounded rectangle. |
 
 
 
@@ -134,7 +134,7 @@ A convenience function to trigger the flag for radius changing.
 
 | Argument | Description |
 | ---- | ----------- |
-| `object` | The object to make observable. |
+|  `object`  | The object to make observable. |
 </div>
 
 
@@ -318,7 +318,7 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `parent` | The parent group or scene to add the clone to. |
+|  `parent`  | The parent group or scene to add the clone to. |
 </div>
 
 

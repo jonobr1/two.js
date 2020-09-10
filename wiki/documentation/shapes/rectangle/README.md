@@ -24,10 +24,10 @@ __Extends__: `Two.Path`
 
 | Argument | Description |
 | ---- | ----------- |
-| `x` | The x position of the rectangle. |
-| `y` | The y position of the rectangle. |
-| `width` | The width value of the rectangle. |
-| `height` | The width value of the rectangle. |
+|  `x`  | The x position of the rectangle. |
+|  `y`  | The y position of the rectangle. |
+|  `width`  | The width value of the rectangle. |
+|  `height`  | The width value of the rectangle. |
 
 
 
@@ -91,7 +91,7 @@ A list of properties that are on every [Two.Rectangle](/documentation/rectangle)
 
 | Argument | Description |
 | ---- | ----------- |
-| `object` | The object to make observable. |
+|  `object`  | The object to make observable. |
 </div>
 
 
@@ -275,7 +275,7 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `parent` | The parent group or scene to add the clone to. |
+|  `parent`  | The parent group or scene to add the clone to. |
 </div>
 
 

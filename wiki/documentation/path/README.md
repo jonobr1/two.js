@@ -24,10 +24,10 @@ This is the primary primitive class for creating all drawable shapes in Two.js. 
 
 | Argument | Description |
 | ---- | ----------- |
-| `vertices` | A list of [Two.Anchor](/documentation/anchor)s that represent the order and coordinates to construct the rendered shape. |
-| `closed` | Describes whether the shape is closed or open. |
-| `curved` | Describes whether the shape automatically calculates bezier handles for each vertex. |
-| `manual` | Describes whether the developer controls how vertices are plotted or if Two.js automatically plots coordinates based on closed and curved booleans. |
+|  `vertices`  | A list of [Two.Anchor](/documentation/anchor)s that represent the order and coordinates to construct the rendered shape. |
+|  `closed`  | Describes whether the shape is closed or open. |
+|  `curved`  | Describes whether the shape automatically calculates bezier handles for each vertex. |
+|  `manual`  | Describes whether the developer controls how vertices are plotted or if Two.js automatically plots coordinates based on closed and curved booleans. |
 
 
 
@@ -296,7 +296,7 @@ Cached method to let [Two.Path](/documentation/path) know the stroke has changed
 
 | Argument | Description |
 | ---- | ----------- |
-| `object` | The object to make observable. |
+|  `object`  | The object to make observable. |
 </div>
 
 
@@ -1266,7 +1266,7 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `parent` | The parent group or scene to add the clone to. |
+|  `parent`  | The parent group or scene to add the clone to. |
 </div>
 
 
@@ -1588,7 +1588,7 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `shallow` | Describes whether to calculate off local matrix or world matrix. |
+|  `shallow`  | Describes whether to calculate off local matrix or world matrix. |
 </div>
 
 
@@ -1649,8 +1649,8 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `t` | Percentage value describing where on the Two.Path to estimate and assign coordinate values. |
-| `obj` | Object to apply calculated x, y to. If none available returns new Object. |
+|  `t`  | Percentage value describing where on the Two.Path to estimate and assign coordinate values. |
+|  `obj`  | Object to apply calculated x, y to. If none available returns new Object. |
 </div>
 
 
@@ -1749,7 +1749,7 @@ While this method is public it is internally called by [Two.Path._update](/docum
 
 | Argument | Description |
 | ---- | ----------- |
-| `limit` | How many times to recurse subdivisions. |
+|  `limit`  | How many times to recurse subdivisions. |
 </div>
 
 

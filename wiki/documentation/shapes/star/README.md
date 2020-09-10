@@ -24,11 +24,11 @@ __Extends__: `Two.Path`
 
 | Argument | Description |
 | ---- | ----------- |
-| `x` | The x position of the star. |
-| `y` | The y position of the star. |
-| `innerRadius` | The inner radius value of the star. |
-| `outerRadius` | The outer radius value of the star. |
-| `sides` | The number of sides used to construct the star. |
+|  `x`  | The x position of the star. |
+|  `y`  | The y position of the star. |
+|  `innerRadius`  | The inner radius value of the star. |
+|  `outerRadius`  | The outer radius value of the star. |
+|  `sides`  | The number of sides used to construct the star. |
 
 
 
@@ -92,7 +92,7 @@ A list of properties that are on every [Two.Star](/documentation/star).
 
 | Argument | Description |
 | ---- | ----------- |
-| `object` | The object to make observable. |
+|  `object`  | The object to make observable. |
 </div>
 
 
@@ -276,7 +276,7 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `parent` | The parent group or scene to add the clone to. |
+|  `parent`  | The parent group or scene to add the clone to. |
 </div>
 
 

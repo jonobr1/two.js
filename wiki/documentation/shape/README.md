@@ -83,7 +83,7 @@ Utility function used in conjunction with event handlers to update the flagMatri
 
 | Argument | Description |
 | ---- | ----------- |
-| `object` | The object to make observable. |
+|  `object`  | The object to make observable. |
 </div>
 
 
@@ -470,7 +470,7 @@ Only available for the SVG renderer.
 
 | Argument | Description |
 | ---- | ----------- |
-| `group` | The parent the shape adds itself to. |
+|  `group`  | The parent the shape adds itself to. |
 </div>
 
 
@@ -531,7 +531,7 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `parent` | Optional argument to automatically add the shape to a scenegraph. |
+|  `parent`  | Optional argument to automatically add the shape to a scenegraph. |
 </div>
 
 

@@ -24,10 +24,10 @@ This is a primitive class for creating drawable text that can be added to the sc
 
 | Argument | Description |
 | ---- | ----------- |
-| `message` | The String to be rendered to the scene. |
-| `x` | The position in the x direction for the object. |
-| `y` | The position in the y direction for the object. |
-| `styles` | An object where styles are applied. Attribute must exist in Two.Text.Properties. |
+|  `message`  | The String to be rendered to the scene. |
+|  `x`  | The position in the x direction for the object. |
+|  `y`  | The position in the y direction for the object. |
+|  `styles`  | An object where styles are applied. Attribute must exist in Two.Text.Properties. |
 
 
 
@@ -1060,7 +1060,7 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `parent` | The parent group or scene to add the clone to. |
+|  `parent`  | The parent group or scene to add the clone to. |
 </div>
 
 
@@ -1259,7 +1259,7 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `shallow` | Describes whether to calculate off local matrix or world matrix. |
+|  `shallow`  | Describes whether to calculate off local matrix or world matrix. |
 </div>
 
 

@@ -24,10 +24,10 @@ __Extends__: `Two.Path`
 
 | Argument | Description |
 | ---- | ----------- |
-| `x` | The x position of the circle. |
-| `y` | The y position of the circle. |
-| `radius` | The radius value of the circle. |
-| `resolution` | The number of vertices used to construct the circle. |
+|  `x`  | The x position of the circle. |
+|  `y`  | The y position of the circle. |
+|  `radius`  | The radius value of the circle. |
+|  `resolution`  | The number of vertices used to construct the circle. |
 
 
 
@@ -91,7 +91,7 @@ A list of properties that are on every [Two.Circle](/documentation/circle).
 
 | Argument | Description |
 | ---- | ----------- |
-| `object` | The object to make observable. |
+|  `object`  | The object to make observable. |
 </div>
 
 
@@ -193,7 +193,7 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `parent` | The parent group or scene to add the clone to. |
+|  `parent`  | The parent group or scene to add the clone to. |
 </div>
 
 

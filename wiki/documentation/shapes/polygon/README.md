@@ -24,10 +24,10 @@ __Extends__: `Two.Path`
 
 | Argument | Description |
 | ---- | ----------- |
-| `x` | The x position of the polygon. |
-| `y` | The y position of the polygon. |
-| `radius` | The radius value of the polygon. |
-| `sides` | The number of vertices used to construct the polygon. |
+|  `x`  | The x position of the polygon. |
+|  `y`  | The y position of the polygon. |
+|  `radius`  | The radius value of the polygon. |
+|  `sides`  | The number of vertices used to construct the polygon. |
 
 
 
@@ -91,7 +91,7 @@ A list of properties that are on every [Two.Polygon](/documentation/polygon).
 
 | Argument | Description |
 | ---- | ----------- |
-| `object` | The object to make observable. |
+|  `object`  | The object to make observable. |
 </div>
 
 
@@ -275,7 +275,7 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-| `parent` | The parent group or scene to add the clone to. |
+|  `parent`  | The parent group or scene to add the clone to. |
 </div>
 
 

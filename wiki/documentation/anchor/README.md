@@ -24,13 +24,13 @@ An object that holds 3 [Two.Vector](/documentation/vector)s, the anchor point an
 
 | Argument | Description |
 | ---- | ----------- |
-| `x` | The x position of the root anchor point. |
-| `y` | The y position of the root anchor point. |
-| `lx` | The x position of the left handle point. |
-| `ly` | The y position of the left handle point. |
-| `rx` | The x position of the right handle point. |
-| `ry` | The y position of the right handle point. |
-| `command` | The command to describe how to render. Applicable commands are [Two.Commands](/documentation/commands) |
+|  `x`  | The x position of the root anchor point. |
+|  `y`  | The y position of the root anchor point. |
+|  `lx`  | The x position of the left handle point. |
+|  `ly`  | The y position of the left handle point. |
+|  `rx`  | The x position of the right handle point. |
+|  `ry`  | The y position of the right handle point. |
+|  `command`  | The command to describe how to render. Applicable commands are [Two.Commands](/documentation/commands) |
 
 
 
@@ -53,7 +53,7 @@ An object that holds 3 [Two.Vector](/documentation/vector)s, the anchor point an
 
 | Argument | Description |
 | ---- | ----------- |
-| `anchor` | The instance to append the `control`object to. |
+|  `anchor`  | The instance to append the `control`object to. |
 </div>
 
 
@@ -101,7 +101,7 @@ Adds the `controls` property as an object with `left` and `right` properties to 
 
 | Argument | Description |
 | ---- | ----------- |
-| `object` | The object to make observable. |
+|  `object`  | The object to make observable. |
 </div>
 
 
@@ -466,7 +466,7 @@ Convenience method used mainly by [Two.Path.vertices](/documentation/path#two-pa
 
 | Argument | Description |
 | ---- | ----------- |
-| `v` | The anchor to apply values to. |
+|  `v`  | The anchor to apply values to. |
 </div>
 
 
