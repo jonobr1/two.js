@@ -1,3 +1,9 @@
+---
+prev: false
+next: false
+pageClass: documentation-class
+---
+
 # <%= root.longname %>
 
 <% if (root.augments) { %>

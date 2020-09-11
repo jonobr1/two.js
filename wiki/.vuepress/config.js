@@ -4,9 +4,26 @@ var sourceFiles = require('../../utils/source-files');
 
 var fileSizes = getJSON('../../utils/file-sizes.json');
 
+var root = { title: 'Base', children: [] };
+var effects = { title: 'Effects', children: [] };
+var renderers = { title: 'Renderers', children: [] };
+var shapes = { title: 'Shapes', children: [] };
+
+var sidebarForDocs = [root, effects, renderers, shapes];
+
 for (var i = 0; i < sourceFiles.length; i++) {
-  var name = sourceFiles[i];
-  sourceFiles[i] = name.replace('src/', '').replace('.js', '/');
+  var name = sourceFiles[i].replace('src/', '').replace('.js', '/');
+
+  if (name.match('effects')) {
+    effects.children.push(name);
+  } else if (name.match('renderers')) {
+    renderers.children.push(name);
+  } else if (name.match('shapes')) {
+    shapes.children.push(name);
+  } else {
+    root.children.push(name);
+  }
+
 }
 
 function getJSON(filepath) {
@@ -54,7 +71,7 @@ module.exports = {
     ],
     sidebar: {
       '/change-log/': ['/change-log/'],
-      '/documentation/': sourceFiles
+      '/documentation/': sidebarForDocs
     },
     markdown: {
       lineNumbers: true
