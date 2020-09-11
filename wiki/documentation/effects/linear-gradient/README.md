@@ -1,3 +1,7 @@
+---
+pageClass: documentation-class
+---
+
 # Two.LinearGradient
 
 
