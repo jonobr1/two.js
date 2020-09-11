@@ -76,6 +76,6 @@ module.exports = {
     markdown: {
       lineNumbers: true
     },
-    plugins: ['@vuepress/medium-zoom', '@vuepress/nprogress']
+    plugins: ['@vuepress/nprogress']
   }
 };

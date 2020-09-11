@@ -4,3 +4,4 @@ styles/
 junk/
 *.log
 docs.json
+package-lock.json
