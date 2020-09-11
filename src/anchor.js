@@ -116,7 +116,7 @@ _.extend(Anchor, {
         if (this._command === Commands.curve && !_.isObject(this.controls)) {
           Anchor.AppendCurveProperties(this);
         }
-        return this.trigger(Events.Types.change);
+        this.trigger(Events.Types.change);
       }
 
     });
@@ -135,11 +135,10 @@ _.extend(Anchor, {
       },
 
       set: function(b) {
-        if (this._relative == b) {
-          return this;
+        if (this._relative != b) {
+          this._relative = !!b;
+          this.trigger(Events.Types.change);
         }
-        this._relative = !!b;
-        return this.trigger(Events.Types.change);
       }
 
     });

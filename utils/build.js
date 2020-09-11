@@ -38,7 +38,7 @@ async function buildModule(inputPath, name, outputDirectory, inputOptions, outpu
   format.plugins = [terser()];
   var minifiedOutput = await generateOutput(bundle, name, Object.assign(format, outputOptions));
 
-  format = { format: 'esm' }
+  format = { format: 'esm' };
   var esmOutput = await generateOutput(bundle, name, Object.assign(format, outputOptions));
 
   var moduleName = path.parse(inputPath).name;
@@ -81,7 +81,7 @@ function formatFileSize(v) {
 
 async function build() {
 
-  var startTime, elasped;
+  var startTime, elapsed;
 
   startTime = Date.now();
   await buildModule('src/two.js', 'Two', 'build/');

@@ -71,7 +71,7 @@ _.each(sourceFiles, function(file) {
   // citationsByScope.instance.sort(sortByFunctionThenAlphabetical);
   // citationsByScope.static.sort(sortByFunctionThenAlphabetical);
 
-  citations = citationsByScope.static.concat(citationsByScope.instance)
+  citations = citationsByScope.static.concat(citationsByScope.instance);
 
   // console.log(
   //   citations.map(function(a) {
@@ -159,7 +159,7 @@ function expandLink(object, property) {
 
       if (/http/i.test(name)) {
 
-        object[property] = value.replace(regex, '[$1]($1)')
+        object[property] = value.replace(regex, '[$1]($1)');
         shouldRecurse = true;
 
       } else {
