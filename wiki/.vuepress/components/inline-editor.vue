@@ -43,6 +43,7 @@
       function recompile(e) {
         if (two) {
           two.release(two.scene);
+          Two.instances.length = 0;
         }
         container.innerHTML = '';
         var source = e.view.state.doc.toString() + '\nreturn two;';

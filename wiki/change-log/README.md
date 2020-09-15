@@ -5,6 +5,7 @@ sidebarDepth: 2
 # Change Log
 
 ## Nightly
++ Added a `fitted` argument to the `Two` constructor
 + Simplified `Two.release` method
 + Added support for scientific notation in `Two.interpret`
 + Added `Two.Text.decoration` styling to `Two.CanvasRenderer` and `Two.WebGLRenderer`

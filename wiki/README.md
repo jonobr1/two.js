@@ -44,12 +44,19 @@ For a list of all properties and construction parameters check out the [document
 ```
 // Make an instance of two and place it on the page.
 // `container` is an element that is provided in this sandbox.
-var params = { width: 285, height: 200 };
+var params = { fitted: true };
 var two = new Two(params).appendTo(container);
 
 // two has convenience methods to create shapes.
-var circle = two.makeCircle(72, 100, 50);
-var rect = two.makeRectangle(213, 100, 100, 100);
+var radius = 50;
+var x = two.width * 0.5;
+var y = two.height * 0.5 - radius * 2;
+var circle = two.makeCircle(x, y, radius);
+
+y = two.height * 0.5 + radius * 2;
+var width = 100;
+var height = 100;
+var rect = two.makeRectangle(x, y, width, height);
 
 // The object returned has many stylable properties:
 circle.fill = '#FF8000';

@@ -2142,7 +2142,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2020-09-15T15:37:59.669Z',
+    PublishDate: '2020-09-15T16:04:51.685Z',
 
     /**
      * @name Two.Identifier
@@ -14787,6 +14787,7 @@ SOFTWARE.
 
     var params = _.defaults(options || {}, {
       fullscreen: false,
+      fitted: false,
       width: 640,
       height: 480,
       type: Two.Types.svg,
@@ -14815,7 +14816,7 @@ SOFTWARE.
 
     if (params.fullscreen) {
 
-      var fitted = fitToWindow.bind(this);
+      this.fitted = fitToWindow.bind(this);
       _.extend(document.body.style, {
         overflow: 'hidden',
         margin: 0,
@@ -14834,9 +14835,16 @@ SOFTWARE.
         bottom: 0,
         position: 'fixed'
       });
-      dom.bind(root$1, 'resize', fitted);
-      fitted();
+      dom.bind(root$1, 'resize', this.fitted);
+      this.fitted();
 
+    } else if (params.fitted) {
+
+      this.fitted = fitToParent.bind(this);
+      _.extend(this.renderer.domElement.style, {
+        display: 'block'
+      });
+      dom.bind(root$1, 'resize', this.fitted);
 
     } else if (!_.isElement(params.domElement)) {
 
@@ -14871,6 +14879,9 @@ SOFTWARE.
     appendTo: function(elem) {
 
       elem.appendChild(this.renderer.domElement);
+      if (this.fitted) {
+        this.fitted();
+      }
       return this;
 
     },
@@ -15549,6 +15560,22 @@ SOFTWARE.
   function fitToWindow() {
 
     var wr = document.body.getBoundingClientRect();
+
+    var width = this.width = wr.width;
+    var height = this.height = wr.height;
+
+    this.renderer.setSize(width, height, this.ratio);
+
+  }
+
+  function fitToParent() {
+
+    var parent = this.renderer.domElement.parentElement;
+    if (!parent) {
+      console.warn('Two.js: Attempting to fit to parent, but no parent found.');
+      return;
+    }
+    var wr = parent.getBoundingClientRect();
 
     var width = this.width = wr.width;
     var height = this.height = wr.height;
