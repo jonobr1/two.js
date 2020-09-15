@@ -5,6 +5,7 @@ sidebarDepth: 2
 # Change Log
 
 ## Nightly
++ Simplified `Two.release` method
 + Added support for scientific notation in `Two.interpret`
 + Added `Two.Text.decoration` styling to `Two.CanvasRenderer` and `Two.WebGLRenderer`
 + Increased precision on `Two.Utils.toFixed` for Firefox transformation engine performance increase

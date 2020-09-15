@@ -24,7 +24,7 @@ SOFTWARE.
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
-  (global = global || self, global.Two = factory());
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.Two = factory());
 }(this, (function () { 'use strict';
 
   /**
@@ -1319,7 +1319,7 @@ SOFTWARE.
           if (this._command === Commands.curve && !_.isObject(this.controls)) {
             Anchor.AppendCurveProperties(this);
           }
-          return this.trigger(Events.Types.change);
+          this.trigger(Events.Types.change);
         }
 
       });
@@ -1338,11 +1338,10 @@ SOFTWARE.
         },
 
         set: function(b) {
-          if (this._relative == b) {
-            return this;
+          if (this._relative != b) {
+            this._relative = !!b;
+            this.trigger(Events.Types.change);
           }
-          this._relative = !!b;
-          return this.trigger(Events.Types.change);
         }
 
       });
@@ -2143,7 +2142,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2020-09-09T22:59:56.834Z',
+    PublishDate: '2020-09-15T15:37:59.669Z',
 
     /**
      * @name Two.Identifier
@@ -14917,6 +14916,8 @@ SOFTWARE.
      */
     release: function(obj) {
 
+      var i, v, child;
+
       if (!_.isObject(obj)) {
         return;
       }
@@ -14929,17 +14930,19 @@ SOFTWARE.
         if (typeof obj.vertices.unbind === 'function') {
           obj.vertices.unbind();
         }
-        _.each(obj.vertices, function(v) {
+        for (i = 0; i < obj.vertices.length; i++) {
+          v = obj.vertices[i];
           if (typeof v.unbind === 'function') {
             v.unbind();
           }
-        });
+        }
       }
 
       if (obj.children) {
-        _.each(obj.children, function(obj) {
-          this.release(obj);
-        });
+        for (i = 0; i < obj.children.length; i++) {
+          child = obj.children[i];
+          this.release(child);
+        }
       }
 
       return obj;

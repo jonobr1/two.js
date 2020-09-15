@@ -202,6 +202,8 @@ _.extend(Two.prototype, Events, {
    */
   release: function(obj) {
 
+    var i, v, child;
+
     if (!_.isObject(obj)) {
       return;
     }
@@ -214,17 +216,19 @@ _.extend(Two.prototype, Events, {
       if (typeof obj.vertices.unbind === 'function') {
         obj.vertices.unbind();
       }
-      _.each(obj.vertices, function(v) {
+      for (i = 0; i < obj.vertices.length; i++) {
+        v = obj.vertices[i];
         if (typeof v.unbind === 'function') {
           v.unbind();
         }
-      });
+      }
     }
 
     if (obj.children) {
-      _.each(obj.children, function(obj) {
-        this.release(obj);
-      });
+      for (i = 0; i < obj.children.length; i++) {
+        child = obj.children[i];
+        this.release(child);
+      }
     }
 
     return obj;
