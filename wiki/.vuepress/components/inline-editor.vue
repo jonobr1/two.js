@@ -11,9 +11,10 @@
 
   var EditorView = require('@codemirror/next/view').EditorView;
   var EditorState = require('@codemirror/next/state').EditorState;
-  var BasicSetup = require('@codemirror/next/basic-setup').basicSetup;
-  var JavaScriptSupport = require('@codemirror/next/lang-javascript').javascript;
   var Two = require('../../../build/two.module.js').default;
+
+  var EditorSetup = require('./editor-extensions').default;
+  var CustomTheme = require('./editor-theme.js').default;
 
   module.exports = {
     name: 'inline-editor',
@@ -29,12 +30,10 @@
       var view = new EditorView({
         state: EditorState.create({
           doc: code,
-          extensions: [
-            BasicSetup.concat([
-              JavaScriptSupport()
-            ]),
-            EditorView.updateListener.of(recompile)
-          ]
+          extensions: EditorSetup.concat([
+            EditorView.updateListener.of(recompile),
+            CustomTheme
+          ])
         })
       });
 
@@ -43,7 +42,7 @@
       function recompile(e) {
         if (two) {
           two.release(two.scene);
-          Two.instances.length = 0;
+          Two.Instances.length = 0;
         }
         container.innerHTML = '';
         var source = e.view.state.doc.toString() + '\nreturn two;';
@@ -90,6 +89,13 @@
     & > div {
       width: 50%;
       flex-grow: 1;
+      border-top: 1px solid rgb(221, 221, 221);
+      border-left: 1px solid rgb(221, 221, 221);
+      border-bottom: 1px solid rgb(221, 221, 221);
+    }
+    div.result {
+      border-right: 1px solid rgb(221, 221, 221);
+      box-sizing: border-box;
     }
   }
 
