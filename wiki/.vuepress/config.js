@@ -34,7 +34,7 @@ function getJSON(filepath) {
 module.exports = {
   head: [
     ['link', { rel: 'icon', href: '/images/favicon.gif' }],
-    ['link', { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Anonymous+Pro&display=swap' }]
+    ['link', { rel: 'stylesheet', href: 'https://use.typekit.net/edp1hux.css' }]
   ],
   themeConfig: {
     repo: 'jonobr1/two.js',

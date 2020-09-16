@@ -1,0 +1,39 @@
+body {
+
+  font-family: "proxima-nova", arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  word-spacing: 0.1875rem;
+
+  p {
+    line-height: 1.5rem;
+  }
+
+  a {
+    color: $green;
+    border-color: $green;
+    text-decoration: none;
+    border-bottom-width: 0.125rem;
+    border-bottom-style: solid;
+    &:visited {
+      text-decoration: none;
+      color: $orange;
+      border-color: $orange;
+    }
+    &:hover {
+      color: $red;
+      border-color: $red;
+      text-decoration: none;
+    }
+    &.header-anchor {
+      border-bottom-width: 0;
+    }
+  }
+
+  .theme-default-content {
+    a:hover {
+      text-decoration: none !important;
+    }
+  }
+
+}

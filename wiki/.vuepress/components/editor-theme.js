@@ -23,7 +23,7 @@ var theme = EditorView.theme({
   },
 
   'content, scroller': {
-    fontFamily: '"Anonymous Pro", "Ubuntu Mono", monospace',
+    fontFamily: '"Anonymous Pro", monospace',
     fontSize: '1em',
     lineHeight: '1.5em',
   },
