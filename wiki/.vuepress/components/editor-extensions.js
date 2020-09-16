@@ -25,7 +25,10 @@ export default [
   lineNumbers(),
   highlightSpecialChars(),
   history(),
-  foldGutter(),
+  foldGutter({
+    openText: '▶',
+    closedText: '▼'
+  }),
   multipleSelections(),
   indentOnInput(),
   defaultHighlighter,

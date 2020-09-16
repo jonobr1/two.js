@@ -18,14 +18,21 @@ var theme = EditorView.theme({
     caretColor: '#000',
     color: black,
     backgroundColor: white,
-    outline: 'none !important',
-    '& ::selection': { backgroundColor: yellow },
+    outline: 'none !important'
   },
 
   'content, scroller': {
-    fontFamily: '"Anonymous Pro", monospace',
-    fontSize: '1em',
-    lineHeight: '1.5em',
+    fontFamily: 'anonymous-pro, monospace',
+    fontSize: '1rem',
+    lineHeight: '1.5rem',
+  },
+
+  content: {
+    '& ::selection': { backgroundColor: yellow },
+  },
+
+  scroller: {
+    userSelect: 'none'
   },
 
   activeLine: { backgroundColor: '#fffcd8' },
@@ -38,14 +45,25 @@ var theme = EditorView.theme({
 
   gutters: {
     backgroundColor: 'white',
-    borderRight: '1px solid rgb(221, 221, 221)'
+    borderRight: '1px solid rgb(221, 221, 221)',
+
   },
   'gutterElement-lineNumber': {
-    padding: '0px 3px 0px 16px !important'
+    fontSize: '0.75rem',
+    padding: '0 0 0 16px !important'
   },
   'gutterElement-foldGutter span': {
+    fontSize: '0.6rem',
     display: 'block',
-    marginTop: '-3px'
+    lineHeight: '24px',
+    padding: '0 4px 0 4px'
+  },
+
+  foldPlaceholder: {
+    margin: '0 4px 0 3px',
+    paddingLeft: '7px',
+    paddingRight: '5px',
+    backgroundColor: '#efefef'
   }
 
 });
