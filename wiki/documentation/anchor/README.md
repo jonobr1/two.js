@@ -397,7 +397,7 @@ Convenience method used mainly by [Two.Path.vertices](/documentation/path#two-pa
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L168)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L167)
 
 </div>
 
@@ -438,7 +438,7 @@ Convenience method used mainly by [Two.Path.vertices](/documentation/path#two-pa
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L186)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L185)
 
 </div>
 
@@ -486,7 +486,7 @@ Copy the properties of one [Two.Anchor](/documentation/anchor) onto another.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L200)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L199)
 
 </div>
 
@@ -540,7 +540,7 @@ Create a new [Two.Anchor](/documentation/anchor), set all its values to the curr
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L239)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L238)
 
 </div>
 
@@ -596,7 +596,7 @@ Create a JSON compatible plain object of the current instance. Intended for use 
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L263)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L262)
 
 </div>
 
@@ -652,7 +652,7 @@ Create a string form of the current instance. Intended for use with storing valu
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L289)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L288)
 
 </div>
 

@@ -2142,7 +2142,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2020-09-15T16:04:51.685Z',
+    PublishDate: '2020-09-17T13:22:52.747Z',
 
     /**
      * @name Two.Identifier
@@ -14774,7 +14774,8 @@ SOFTWARE.
    * @class
    * @global
    * @param {Object} [options]
-   * @param {Boolean} [options.fullscreen=false] - Set to `true` to automatically make the stage adapt to the width and height of the parent document. This parameter overrides `width` and `height` parameters if set to `true`.
+   * @param {Boolean} [options.fullscreen=false] - Set to `true` to automatically make the stage adapt to the width and height of the parent document. This parameter overrides `width` and `height` parameters if set to `true`. This overrides `options.fitted` as well.
+   * @param {Boolean} [options.fitted=false] = Set to `true` to automatically make the stage adapt to the width and height of the parent element. This parameter overrides `width` and `height` parameters if set to `true`.
    * @param {Number} [options.width=640] - The width of the stage on construction. This can be set at a later time.
    * @param {Number} [options.height=480] - The height of the stage on construction. This can be set at a later time.
    * @param {String} [options.type=Two.Types.svg] - The type of renderer to setup drawing with. See {@link Two.Types} for available options.
@@ -14814,9 +14815,15 @@ SOFTWARE.
     this.setPlaying(params.autostart);
     this.frameCount = 0;
 
+    /**
+     * @name Two#fit
+     * @function
+     * @description If `options.fullscreen` or `options.fitted` in construction create this function. It sets the `width` and `height` of the instance to its respective parent `window` or `element` depending on the `options` passed.
+     */
     if (params.fullscreen) {
 
-      this.fitted = fitToWindow.bind(this);
+      this.fit = fitToWindow.bind(this);
+      this.fit.attachedTo = null;
       _.extend(document.body.style, {
         overflow: 'hidden',
         margin: 0,
@@ -14835,16 +14842,15 @@ SOFTWARE.
         bottom: 0,
         position: 'fixed'
       });
-      dom.bind(root$1, 'resize', this.fitted);
-      this.fitted();
+      this.fit();
 
     } else if (params.fitted) {
 
-      this.fitted = fitToParent.bind(this);
+      this.fit = fitToParent.bind(this);
+      this.fit.attachedTo = null;
       _.extend(this.renderer.domElement.style, {
         display: 'block'
       });
-      dom.bind(root$1, 'resize', this.fitted);
 
     } else if (!_.isElement(params.domElement)) {
 
@@ -14879,10 +14885,7 @@ SOFTWARE.
     appendTo: function(elem) {
 
       elem.appendChild(this.renderer.domElement);
-      if (this.fitted) {
-        this.fitted();
-      }
-      return this;
+      return this.update();
 
     },
 
@@ -14975,6 +14978,26 @@ SOFTWARE.
         this.timeDelta = parseFloat((now - this._lastFrame).toFixed(3));
       }
       this._lastFrame = now;
+
+      if (this.fit) {
+
+        var parent = this.renderer.domElement.parentElement;
+
+        if (this.fit.attachedTo !== parent) {
+
+          if (this.fit.attachedTo) {
+            dom.unbind(this.fit.attachedTo, 'resize', this.fit);
+          }
+
+          if (parent) {
+            dom.bind(parent, 'resize', this.fit);
+            this.fit.attachedTo = parent;
+            this.fit();
+          }
+
+        }
+
+      }
 
       var width = this.width;
       var height = this.height;

@@ -5,7 +5,7 @@ sidebarDepth: 2
 # Change Log
 
 ## Nightly
-+ Added a `fitted` argument to the `Two` constructor
++ Added a `fitted` argument to the `Two` constructor to make instance adaptively match the size of its parent element
 + Simplified `Two.release` method
 + Added support for scientific notation in `Two.interpret`
 + Added `Two.Text.decoration` styling to `Two.CanvasRenderer` and `Two.WebGLRenderer`
