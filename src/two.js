@@ -850,7 +850,7 @@ _.extend(Two.prototype, Events, {
 
     }).bind(this);
 
-    if (/.*\.svg$/ig.test(text)) {
+    if (/.*\.svg/ig.test(text)) {
 
       xhr(text, attach);
 

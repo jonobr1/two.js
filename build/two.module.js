@@ -2136,7 +2136,7 @@ var Constants = {
    * @name Two.PublishDate
    * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
    */
-  PublishDate: '2020-09-17T13:22:52.747Z',
+  PublishDate: '2020-09-17T21:43:35.140Z',
 
   /**
    * @name Two.Identifier
@@ -15558,7 +15558,7 @@ _.extend(Two.prototype, Events, {
 
     }).bind(this);
 
-    if (/.*\.svg$/ig.test(text)) {
+    if (/.*\.svg/ig.test(text)) {
 
       xhr(text, attach);
 
