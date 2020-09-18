@@ -171,7 +171,12 @@ _.extend(Two.prototype, Events, {
   appendTo: function(elem) {
 
     elem.appendChild(this.renderer.domElement);
-    return this.update();
+
+    if (this.fit) {
+      this.update();
+    }
+
+    return this;
 
   },
 

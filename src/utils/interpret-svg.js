@@ -21,6 +21,7 @@ import Stop from '../effects/stop.js';
 import Gradient from '../effects/gradient.js';
 import LinearGradient from '../effects/linear-gradient.js';
 import RadialGradient from '../effects/radial-gradient.js';
+import Text from '../text.js';
 
 import Constants from '../constants.js';
 
@@ -339,6 +340,24 @@ var applySvgAttributes = function(node, elem, parentStyles) {
           console.warn(error.name, error.message);
         }
         elem.translation[key] = parseFloat(value);
+        break;
+      case 'font-family':
+        elem.family = value;
+        break;
+      case 'font-size':
+        elem.size = value;
+        break;
+      case 'font-weight':
+        elem.weight = value;
+        break;
+      case 'font-style':
+        elem.style = value;
+        break;
+      case 'text-decoration':
+        elem.decoration = value;
+        break;
+      case 'line-height':
+        elem.leading = value;
         break;
     }
   }
@@ -1132,6 +1151,17 @@ var read = {
     applySvgAttributes.call(this, node, gradient, parentStyles);
 
     return gradient;
+
+  },
+
+  text: function(node, parentStyles) {
+
+    var message = node.textContent;
+    var text = new Text(message);
+
+    applySvgAttributes.call(this, node, text, parentStyles);
+
+    return text;
 
   }
 

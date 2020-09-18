@@ -5,6 +5,7 @@ sidebarDepth: 2
 # Change Log
 
 ## Nightly
++ Added basic text support in `Two.interpret`
 + Exposed `Two.fit` for external use
 + Added a `fitted` argument to the `Two` constructor to make instance adaptively match the size of its parent element
 + Simplified `Two.release` method
