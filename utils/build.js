@@ -2,6 +2,7 @@ var rollup = require('rollup');
 var fs = require('fs');
 var path = require('path');
 var _ = require('underscore');
+var gzip = require('gzip-size')
 var terser = require('rollup-plugin-terser').terser;
 
 var publishDateString = (new Date()).toISOString();
@@ -54,19 +55,24 @@ async function buildModule(inputPath, name, outputDirectory, inputOptions, outpu
 
 function publishModule() {
 
-  var stats, result = {};
+  var size, result = {};
 
-  stats = fs.statSync(path.resolve(__dirname, '../build/two.js'));
-  result.development = formatFileSize(stats.size);
+  size = getFileSize(path.resolve(__dirname, '../build/two.js'));
+  result.development = formatFileSize(size);
 
-  stats = fs.statSync(path.resolve(__dirname, '../build/two.min.js'));
-  result.production = formatFileSize(stats.size);
+  size = getFileSize(path.resolve(__dirname, '../build/two.min.js'));
+  result.production = formatFileSize(size);
 
   var contents = JSON.stringify(result);
   var outputPath = path.resolve(__dirname, './file-sizes.json');
 
   return fs.promises.writeFile(outputPath, contents);
 
+}
+
+function getFileSize(filepath) {
+  var file = fs.readFileSync(filepath);
+  return gzip.sync(file);
 }
 
 function formatFileSize(v) {

@@ -58,6 +58,7 @@
     "@codemirror/next": "^0.12.0",
     "@vuepress/plugin-nprogress": "^1.5.4",
     "eslint": "^7.8.1",
+    "gzip-size": "^5.1.1",
     "jsdoc-api": "^6.0.0",
     "qunit": "^2.11.2",
     "resemblejs": "^3.2.5",

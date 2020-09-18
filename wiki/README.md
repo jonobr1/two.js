@@ -4,9 +4,9 @@ A two-dimensional drawing api geared towards modern web browsers. It is renderer
 
 ## Download
 
-[Development Version](https://raw.githubusercontent.com/jonobr1/two.js/master/build/two.js): Uncompressed with comments about {{ $themeConfig.developmentSize }}.
+[Development Version](https://raw.githubusercontent.com/jonobr1/two.js/master/build/two.js): Uncompressed with comments about {{ $themeConfig.developmentSize }} gzipped.
 
-[Production Version](https://raw.githubusercontent.com/jonobr1/two.js/master/build/two.min.js): Minified using [Rollup](https://rollupjs.org/) about {{ $themeConfig.productionSize }}.
+[Production Version](https://raw.githubusercontent.com/jonobr1/two.js/master/build/two.min.js): Minified using [Rollup](https://rollupjs.org/) about {{ $themeConfig.productionSize }} gzipped.
 
 ::: tip
 Prior to v0.7.0-alpha.1 Two.js requires Underscore.js and Backbone.js Events. If you're already loading these files elsewhere then you can build the project yourself and get the file size even smaller. For more information on custom builds check out the source on github.
