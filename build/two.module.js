@@ -2136,7 +2136,7 @@ var Constants = {
    * @name Two.PublishDate
    * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
    */
-  PublishDate: '2020-09-21T14:08:47.828Z',
+  PublishDate: '2020-09-21T18:57:01.240Z',
 
   /**
    * @name Two.Identifier
@@ -14849,6 +14849,7 @@ _.extend(Renderer$2.prototype, Events, {
  * @param {Number} [options.height=480] - The height of the stage on construction. This can be set at a later time.
  * @param {String} [options.type=Two.Types.svg] - The type of renderer to setup drawing with. See {@link Two.Types} for available options.
  * @param {Boolean} [options.autostart=false] - Set to `true` to add the instance to draw on `requestAnimationFrame`. This is a convenient substitute for {@link Two#play}.
+ * @param {Element} [options.domElement] - The canvas or SVG element to draw into. This overrides the `options.type` argument.
  * @description The entrypoint for Two.js. Instantiate a `new Two` in order to setup a scene to render to. `Two` is also the publicly accessible namespace that all other sub-classes, functions, and utilities attach to.
  */
 var Two = function(options) {
@@ -14892,7 +14893,8 @@ var Two = function(options) {
   if (params.fullscreen) {
 
     this.fit = fitToWindow.bind(this);
-    this.fit.attachedTo = null;
+    this.fit.domElement = window;
+    this.fit.attached = true;
     _.extend(document.body.style, {
       overflow: 'hidden',
       margin: 0,
@@ -14911,12 +14913,12 @@ var Two = function(options) {
       bottom: 0,
       position: 'fixed'
     });
+    dom.bind(this.fit.domElement, 'resize', this.fit);
     this.fit();
 
   } else if (params.fitted) {
 
     this.fit = fitToParent.bind(this);
-    this.fit.attachedTo = null;
     _.extend(this.renderer.domElement.style, {
       display: 'block'
     });
@@ -14956,6 +14958,10 @@ _.extend(Two.prototype, Events, {
     elem.appendChild(this.renderer.domElement);
 
     if (this.fit) {
+      if (this.fit.domElement !== window) {
+        this.fit.domElement = elem;
+        this.fit.attached = false;
+      }
       this.update();
     }
 
@@ -15053,23 +15059,11 @@ _.extend(Two.prototype, Events, {
     }
     this._lastFrame = now;
 
-    if (this.fit) {
+    if (this.fit && !this.fit.attached) {
 
-      var parent = this.renderer.domElement.parentElement;
-
-      if (this.fit.attachedTo !== parent) {
-
-        if (this.fit.attachedTo) {
-          dom.unbind(this.fit.attachedTo, 'resize', this.fit);
-        }
-
-        if (parent) {
-          dom.bind(parent, 'resize', this.fit);
-          this.fit.attachedTo = parent;
-          this.fit();
-        }
-
-      }
+        dom.bind(this.fit.domElement, 'resize', this.fit);
+        this.fit.attached = true;
+        this.fit();
 
     }
 
