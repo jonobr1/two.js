@@ -1,7 +1,7 @@
 import root from './root.js';
 import Commands from './path-commands.js';
-import {decomposeMatrix} from './math.js';
-import {getReflection} from './curves.js';
+import { decomposeMatrix } from './math.js';
+import { getReflection } from './curves.js';
 import _ from './underscore.js';
 import TwoError from './error.js';
 import Registry from '../registry.js';
@@ -24,6 +24,28 @@ import RadialGradient from '../effects/radial-gradient.js';
 import Text from '../text.js';
 
 import Constants from '../constants.js';
+
+var alignments = {
+  start: 'left',
+  middle: 'center',
+  end: 'right'
+};
+
+/**
+ * @name Utils.getAlignment
+ * @function
+ * @param {AlignmentString}
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/text-anchor}
+ */
+var getAlignment = function(anchor) {
+  return alignments[anchor];
+};
+
+var getBaseline = function(node) {
+  var a = node.getAttribute('dominant-baseline');
+  var b = node.getAttribute('alignment-baseline');
+  return a || b;
+};
 
 /**
  * @name Utils.extractCSSText
@@ -342,22 +364,34 @@ var applySvgAttributes = function(node, elem, parentStyles) {
         elem.translation[key] = parseFloat(value);
         break;
       case 'font-family':
-        elem.family = value;
+        if (elem instanceof Text) {
+          elem.family = value;
+        }
         break;
       case 'font-size':
-        elem.size = value;
+        if (elem instanceof Text) {
+          elem.size = value;
+        }
         break;
       case 'font-weight':
-        elem.weight = value;
+        if (elem instanceof Text) {
+          elem.weight = value;
+        }
         break;
       case 'font-style':
-        elem.style = value;
+        if (elem instanceof Text) {
+          elem.style = value;
+        }
         break;
       case 'text-decoration':
-        elem.decoration = value;
+        if (elem instanceof Text) {
+          elem.decoration = value;
+        }
         break;
       case 'line-height':
-        elem.leading = value;
+        if (elem instanceof Text) {
+          elem.leading = value;
+        }
         break;
     }
   }
@@ -941,10 +975,13 @@ var read = {
     var y = parseFloat(node.getAttribute('cy'));
     var r = parseFloat(node.getAttribute('r'));
 
-    var circle = new Circle(x, y, r).noStroke();
+    var circle = new Circle(0, 0, r).noStroke();
     circle.fill = 'black';
 
     applySvgAttributes.call(this, node, circle, parentStyles);
+
+    circle.translation.x = x;
+    circle.translation.y = y;
 
     return circle;
 
@@ -957,10 +994,13 @@ var read = {
     var width = parseFloat(node.getAttribute('rx'));
     var height = parseFloat(node.getAttribute('ry'));
 
-    var ellipse = new Ellipse(x, y, width, height).noStroke();
+    var ellipse = new Ellipse(0, 0, width, height).noStroke();
     ellipse.fill = 'black';
 
     applySvgAttributes.call(this, node, ellipse, parentStyles);
+
+    ellipse.translation.x = x;
+    ellipse.translation.y = y;
 
     return ellipse;
 
@@ -983,7 +1023,7 @@ var read = {
     var w2 = width / 2;
     var h2 = height / 2;
 
-    var rect = new Rectangle(x + w2, y + h2, width, height)
+    var rect = new Rectangle(0, 0, width, height)
       .noStroke();
     rect.fill = 'black';
 
@@ -1012,7 +1052,7 @@ var read = {
     var h2 = height / 2;
     var radius = new Vector(rx, ry);
 
-    var rect = new RoundedRectangle(x + w2, y + h2, width, height, radius)
+    var rect = new RoundedRectangle(0, 0, width, height, radius)
       .noStroke();
     rect.fill = 'black';
 
@@ -1156,10 +1196,16 @@ var read = {
 
   text: function(node, parentStyles) {
 
+    var alignment = getAlignment(node.getAttribute('text-anchor')) || 'left';
+    var baseline = getBaseline(node) || 'baseline';
     var message = node.textContent;
+
     var text = new Text(message);
 
     applySvgAttributes.call(this, node, text, parentStyles);
+
+    text.alignment = alignment;
+    text.baseline = baseline;
 
     return text;
 
