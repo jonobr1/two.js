@@ -283,7 +283,6 @@ _.extend(Texture, {
         texture.image.removeEventListener('error', error, false);
         texture.image.width = texture.image.videoWidth;
         texture.image.height = texture.image.videoHeight;
-        texture.image.play();
         if (typeof callback === 'function') {
           callback();
         }
@@ -295,18 +294,20 @@ _.extend(Texture, {
       };
 
       texture._src = Texture.getAbsoluteURL(texture._src);
-      texture.image.addEventListener('canplaythrough', loaded, false);
-      texture.image.addEventListener('error', error, false);
 
-      if (texture.image && texture.image.getAttribute('two-src')) {
-        return;
+      if (!texture.image.getAttribute('two-src')) {
+        texture.image.setAttribute('two-src', texture.src);
+        Texture.ImageRegistry.add(texture.src, texture.image);
       }
 
-      texture.image.setAttribute('two-src', texture.src);
-      Texture.ImageRegistry.add(texture.src, texture.image);
-      texture.image.src = texture.src;
-      texture.image.loop = true;
-      texture.image.load();
+      if (texture.image.readyState >= 4) {
+        loaded();
+      } else {
+        texture.image.addEventListener('canplaythrough', loaded, false);
+        texture.image.addEventListener('error', error, false);
+        texture.image.src = texture.src;
+        texture.image.load();
+      }
 
     }
   },
