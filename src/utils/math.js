@@ -12,13 +12,15 @@ var Matrix;
 var decomposeMatrix = function(matrix) {
 
   // TODO: Include skewX, skewY
+  // https://math.stackexchange.com/questions/237369/given-this-transformation-matrix-how-do-i-decompose-it-into-translation-rotati/417813
+  // https://stackoverflow.com/questions/45159314/decompose-2d-transformation-matrix
 
   return {
       translateX: matrix.e,
       translateY: matrix.f,
-      scaleX: matrix.a,
-      scaleY: matrix.d,
-      rotation: 180 * Math.asin(matrix.b) / Math.PI
+      scaleX: Math.sqrt(matrix.a * matrix.a + matrix.b * matrix.b),
+      scaleY: Math.sqrt(matrix.c * matrix.c + matrix.d * matrix.d),
+      rotation: 180 * Math.atan2(matrix.b, matrix.a) / Math.PI
   };
 
 };

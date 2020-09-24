@@ -60,9 +60,9 @@ var decomposeMatrix = function(matrix) {
   return {
       translateX: matrix.e,
       translateY: matrix.f,
-      scaleX: matrix.a,
-      scaleY: matrix.d,
-      rotation: 180 * Math.asin(matrix.b) / Math.PI
+      scaleX: Math.sqrt(matrix.a * matrix.a + matrix.b * matrix.b),
+      scaleY: Math.sqrt(matrix.c * matrix.c + matrix.d * matrix.d),
+      rotation: 180 * Math.atan2(matrix.b, matrix.a) / Math.PI
   };
 
 };
@@ -2136,7 +2136,7 @@ var Constants = {
    * @name Two.PublishDate
    * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
    */
-  PublishDate: '2020-09-21T19:14:02.080Z',
+  PublishDate: '2020-09-24T15:00:11.954Z',
 
   /**
    * @name Two.Identifier
@@ -9834,6 +9834,10 @@ var applySvgAttributes = function(node, elem, parentStyles) {
 
         var x = parseFloat((styles.x + '').replace('px'));
         var y = parseFloat((styles.y + '').replace('px'));
+
+        if (node.localName === 'ellipse') {
+          console.log(transforms);
+        }
 
         // Override based on attributes.
         if (x) {
