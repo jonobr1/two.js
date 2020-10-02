@@ -968,4 +968,4 @@ _.extend(Renderer.prototype, Events, {
 
 });
 
-  export default Renderer;
+export default Renderer;

@@ -79,7 +79,7 @@ _.extend(Text, {
    */
   Properties: [
     'value', 'family', 'size', 'leading', 'alignment', 'linewidth', 'style',
-    'className', 'weight', 'decoration', 'baseline', 'opacity', 'visible',
+    'weight', 'decoration', 'baseline', 'opacity', 'visible', 'className',
     'fill', 'stroke',
   ],
 
@@ -105,7 +105,7 @@ _.extend(Text, {
 
     Shape.MakeObservable(object);
 
-    _.each(Text.Properties.slice(0, 13), defineGetterSetter, object);
+    _.each(Text.Properties.slice(0, 12), defineGetterSetter, object);
 
     Object.defineProperty(object, 'fill', {
       enumerable: true,
@@ -597,7 +597,8 @@ _.extend(Text.prototype, Shape.prototype, {
       this._flagLeading = this._flagAlignment = this._flagFill =
       this._flagStroke = this._flagLinewidth = this._flagOpacity =
       this._flagVisible = this._flagClip = this._flagDecoration =
-      this._flagClassName = this._flagBaseline = false;
+      this._flagClassName = this._flagBaseline = this._flagWeight =
+        this._flagStyle = false;
 
     Shape.prototype.flagReset.call(this);
 

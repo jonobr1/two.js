@@ -160,7 +160,7 @@ _.extend(Shape, {
 
       set: function(v) {
 
-        this._flagClassName  = this._className !== v;
+        this._flagClassName = this._className !== v;
 
         if (this._flagClassName) {
 

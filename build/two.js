@@ -62,6 +62,8 @@ SOFTWARE.
   var decomposeMatrix = function(matrix) {
 
     // TODO: Include skewX, skewY
+    // https://math.stackexchange.com/questions/237369/given-this-transformation-matrix-how-do-i-decompose-it-into-translation-rotati/417813
+    // https://stackoverflow.com/questions/45159314/decompose-2d-transformation-matrix
 
     return {
         translateX: matrix.e,
@@ -2142,7 +2144,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2020-09-24T15:00:11.954Z',
+    PublishDate: '2020-10-02T15:55:37.675Z',
 
     /**
      * @name Two.Identifier
@@ -2851,7 +2853,7 @@ SOFTWARE.
 
         set: function(v) {
 
-          this._flagClassName  = this._className !== v;
+          this._flagClassName = this._className !== v;
 
           if (this._flagClassName) {
 
@@ -9070,7 +9072,7 @@ SOFTWARE.
      */
     Properties: [
       'value', 'family', 'size', 'leading', 'alignment', 'linewidth', 'style',
-      'className', 'weight', 'decoration', 'baseline', 'opacity', 'visible',
+      'weight', 'decoration', 'baseline', 'opacity', 'visible', 'className',
       'fill', 'stroke',
     ],
 
@@ -9096,7 +9098,7 @@ SOFTWARE.
 
       Shape.MakeObservable(object);
 
-      _.each(Text.Properties.slice(0, 13), defineGetterSetter, object);
+      _.each(Text.Properties.slice(0, 12), defineGetterSetter, object);
 
       Object.defineProperty(object, 'fill', {
         enumerable: true,
@@ -9588,7 +9590,8 @@ SOFTWARE.
         this._flagLeading = this._flagAlignment = this._flagFill =
         this._flagStroke = this._flagLinewidth = this._flagOpacity =
         this._flagVisible = this._flagClip = this._flagDecoration =
-        this._flagClassName = this._flagBaseline = false;
+        this._flagClassName = this._flagBaseline = this._flagWeight =
+          this._flagStyle = false;
 
       Shape.prototype.flagReset.call(this);
 
@@ -9840,10 +9843,6 @@ SOFTWARE.
 
           var x = parseFloat((styles.x + '').replace('px'));
           var y = parseFloat((styles.y + '').replace('px'));
-
-          if (node.localName === 'ellipse') {
-            console.log(transforms);
-          }
 
           // Override based on attributes.
           if (x) {
