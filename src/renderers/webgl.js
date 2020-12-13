@@ -445,6 +445,7 @@ var webgl = {
       var parent = this.parent;
       var flagParentMatrix = parent._matrix.manual || parent._flagMatrix;
       var flagMatrix = this._matrix.manual || this._flagMatrix;
+      var parentChanged = this._renderer.parent !== parent;
       var flagTexture = this._flagVertices || this._flagFill
         || (this._fill instanceof LinearGradient && (this._fill._flagSpread || this._fill._flagStops || this._fill._flagEndPoints))
         || (this._fill instanceof RadialGradient && (this._fill._flagSpread || this._fill._flagStops || this._fill._flagRadius || this._fill._flagCenter || this._fill._flagFocal))
@@ -458,7 +459,7 @@ var webgl = {
         || (this.dashes && this.dashes.length > 0)
         || !this._renderer.texture;
 
-      if (flagParentMatrix || flagMatrix) {
+      if (flagParentMatrix || flagMatrix || parentChanged) {
 
         if (!this._renderer.matrix) {
           this._renderer.matrix = new NumArray(9);
@@ -481,6 +482,9 @@ var webgl = {
           this._renderer.scale.y = this._scale * parent._renderer.scale.y;
         }
 
+        if (parentChanged) {
+          this._renderer.parent = parent;
+        }
       }
 
       if (flagTexture) {
@@ -775,6 +779,7 @@ var webgl = {
       var parent = this.parent;
       var flagParentMatrix = parent._matrix.manual || parent._flagMatrix;
       var flagMatrix = this._matrix.manual || this._flagMatrix;
+      var parentChanged = this._renderer.parent !== parent;
       var flagTexture = this._flagVertices || this._flagFill
         || (this._fill instanceof LinearGradient && (this._fill._flagSpread || this._fill._flagStops || this._fill._flagEndPoints))
         || (this._fill instanceof RadialGradient && (this._fill._flagSpread || this._fill._flagStops || this._fill._flagRadius || this._fill._flagCenter || this._fill._flagFocal))
@@ -790,7 +795,7 @@ var webgl = {
         || (this.dashes && this.dashes.length > 0)
         || !this._renderer.texture;
 
-      if (flagParentMatrix || flagMatrix) {
+      if (flagParentMatrix || flagMatrix || parentChanged) {
 
         if (!this._renderer.matrix) {
           this._renderer.matrix = new NumArray(9);
@@ -813,6 +818,9 @@ var webgl = {
           this._renderer.scale.y = this._scale * parent._renderer.scale.y;
         }
 
+        if (parentChanged) {
+          this._renderer.parent = parent;
+        }
       }
 
       if (flagTexture) {
