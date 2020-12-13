@@ -442,7 +442,7 @@ var webgl = {
 
       // Calculate what changed
 
-      var parent = this.parent;
+      var parent = forcedParent || this.parent;
       var flagParentMatrix = parent._matrix.manual || parent._flagMatrix;
       var flagMatrix = this._matrix.manual || this._flagMatrix;
       var flagTexture = this._flagVertices || this._flagFill
@@ -772,7 +772,7 @@ var webgl = {
 
       // Calculate what changed
 
-      var parent = this.parent;
+      var parent = forcedParent || this.parent;
       var flagParentMatrix = parent._matrix.manual || parent._flagMatrix;
       var flagMatrix = this._matrix.manual || this._flagMatrix;
       var flagTexture = this._flagVertices || this._flagFill
