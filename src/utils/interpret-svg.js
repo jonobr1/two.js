@@ -251,28 +251,34 @@ var applySvgAttributes = function(node, elem, parentStyles) {
         // Might happen when transform string is empty or not valid.
         if (m === null) break;
 
-        // // Option 1: edit the underlying matrix and don't force an auto calc.
-        // var m = node.getCTM();
-        // elem._matrix.manual = true;
-        // elem._matrix.set(m.a, m.b, m.c, m.d, m.e, m.f);
+        if (Constants.AutoCalculateImportedMatrices) {
 
-        // Option 2: Decompose and infer Two.js related properties.
-        var transforms = decomposeMatrix(m);
+          // Decompose and infer Two.js related properties.
+          var transforms = decomposeMatrix(m);
 
-        elem.translation.set(transforms.translateX, transforms.translateY);
-        elem.rotation = Math.PI * (transforms.rotation / 180);
-        elem.scale = new Vector(transforms.scaleX, transforms.scaleY);
+          elem.translation.set(transforms.translateX, transforms.translateY);
+          elem.rotation = Math.PI * (transforms.rotation / 180);
+          elem.scale = new Vector(transforms.scaleX, transforms.scaleY);
 
-        var x = parseFloat((styles.x + '').replace('px'));
-        var y = parseFloat((styles.y + '').replace('px'));
+          var x = parseFloat((styles.x + '').replace('px'));
+          var y = parseFloat((styles.y + '').replace('px'));
 
-        // Override based on attributes.
-        if (x) {
-          elem.translation.x = x;
-        }
+          // Override based on attributes.
+          if (x) {
+            elem.translation.x = x;
+          }
 
-        if (y) {
-          elem.translation.y = y;
+          if (y) {
+            elem.translation.y = y;
+          }
+
+        } else {
+
+          // Edit the underlying matrix and don't force an auto calc.
+          var m = node.getCTM();
+          elem._matrix.manual = true;
+          elem._matrix.set(m.a, m.b, m.c, m.d, m.e, m.f);
+
         }
 
         break;
