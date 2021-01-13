@@ -5,6 +5,7 @@ sidebarDepth: 2
 # Change Log
 
 ## Nightly
++ Added `Two.AutoCalculateImportedMatrices` to control different ways of importing SVG transformations
 + Fixed `Two.Text.className` application
 + Added basic text support in `Two.interpret`
 + Exposed `Two.fit` for external use
