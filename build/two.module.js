@@ -2138,7 +2138,7 @@ var Constants = {
    * @name Two.PublishDate
    * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
    */
-  PublishDate: '2020-10-02T15:55:37.675Z',
+  PublishDate: '2021-01-13T01:52:11.262Z',
 
   /**
    * @name Two.Identifier
@@ -2151,6 +2151,13 @@ var Constants = {
    * @property {Number} - Default amount of vertices to be used for interpreting Arcs and ArcSegments.
    */
   Resolution: 12,
+
+  /**
+   * @name Two.AutoCalculateImportedMatrices
+   * @property {Boolean} - When importing SVGs through the {@link two#interpret} and {@link two#load}, this boolean determines whether Two.js infers and then overrides the exact transformation matrix of the reference SVG.
+   * @nota-bene `false` copies the exact transformation matrix values, but also sets the path's `matrix.manual = true`.
+   */
+  AutoCalculateImportedMatrices: true,
 
   /**
    * @name Two.Instances
@@ -9823,28 +9830,34 @@ var applySvgAttributes = function(node, elem, parentStyles) {
         // Might happen when transform string is empty or not valid.
         if (m === null) break;
 
-        // // Option 1: edit the underlying matrix and don't force an auto calc.
-        // var m = node.getCTM();
-        // elem._matrix.manual = true;
-        // elem._matrix.set(m.a, m.b, m.c, m.d, m.e, m.f);
+        if (Constants.AutoCalculateImportedMatrices) {
 
-        // Option 2: Decompose and infer Two.js related properties.
-        var transforms = decomposeMatrix(m);
+          // Decompose and infer Two.js related properties.
+          var transforms = decomposeMatrix(m);
 
-        elem.translation.set(transforms.translateX, transforms.translateY);
-        elem.rotation = Math.PI * (transforms.rotation / 180);
-        elem.scale = new Vector(transforms.scaleX, transforms.scaleY);
+          elem.translation.set(transforms.translateX, transforms.translateY);
+          elem.rotation = Math.PI * (transforms.rotation / 180);
+          elem.scale = new Vector(transforms.scaleX, transforms.scaleY);
 
-        var x = parseFloat((styles.x + '').replace('px'));
-        var y = parseFloat((styles.y + '').replace('px'));
+          var x = parseFloat((styles.x + '').replace('px'));
+          var y = parseFloat((styles.y + '').replace('px'));
 
-        // Override based on attributes.
-        if (x) {
-          elem.translation.x = x;
-        }
+          // Override based on attributes.
+          if (x) {
+            elem.translation.x = x;
+          }
 
-        if (y) {
-          elem.translation.y = y;
+          if (y) {
+            elem.translation.y = y;
+          }
+
+        } else {
+
+          // Edit the underlying matrix and don't force an auto calc.
+          var m = node.getCTM();
+          elem._matrix.manual = true;
+          elem._matrix.set(m.a, m.b, m.c, m.d, m.e, m.f);
+
         }
 
         break;
@@ -13641,17 +13654,19 @@ var webgl = {
       if (this._mask) {
 
         // Stencil away everything that isn't rendered by the mask
-
         gl.clear(gl.STENCIL_BUFFER_BIT);
         gl.enable(gl.STENCIL_TEST);
 
         gl.stencilFunc(gl.ALWAYS, 1, 0);
         gl.stencilOp(gl.KEEP, gl.KEEP, gl.REPLACE);
+        // Don't draw the element onto the canvas, only onto the stencil buffer
+        gl.colorMask(false, false, false, false);
 
         webgl[this._mask._renderer.type].render.call(this._mask, gl, program, this);
 
         gl.stencilFunc(gl.EQUAL, 1, 0xff);
         gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
+        gl.colorMask(true, true, true, true);
 
       }
 
@@ -13985,9 +14000,10 @@ var webgl = {
 
       // Calculate what changed
 
-      var parent = this.parent;
+      var parent = forcedParent || this.parent;
       var flagParentMatrix = parent._matrix.manual || parent._flagMatrix;
       var flagMatrix = this._matrix.manual || this._flagMatrix;
+      var parentChanged = this._renderer.parent !== parent;
       var flagTexture = this._flagVertices || this._flagFill
         || (this._fill instanceof LinearGradient && (this._fill._flagSpread || this._fill._flagStops || this._fill._flagEndPoints))
         || (this._fill instanceof RadialGradient && (this._fill._flagSpread || this._fill._flagStops || this._fill._flagRadius || this._fill._flagCenter || this._fill._flagFocal))
@@ -14001,7 +14017,7 @@ var webgl = {
         || (this.dashes && this.dashes.length > 0)
         || !this._renderer.texture;
 
-      if (flagParentMatrix || flagMatrix) {
+      if (flagParentMatrix || flagMatrix || parentChanged) {
 
         if (!this._renderer.matrix) {
           this._renderer.matrix = new NumArray(9);
@@ -14024,6 +14040,9 @@ var webgl = {
           this._renderer.scale.y = this._scale * parent._renderer.scale.y;
         }
 
+        if (parentChanged) {
+          this._renderer.parent = parent;
+        }
       }
 
       if (flagTexture) {
@@ -14313,9 +14332,10 @@ var webgl = {
 
       // Calculate what changed
 
-      var parent = this.parent;
+      var parent = forcedParent || this.parent;
       var flagParentMatrix = parent._matrix.manual || parent._flagMatrix;
       var flagMatrix = this._matrix.manual || this._flagMatrix;
+      var parentChanged = this._renderer.parent !== parent;
       var flagTexture = this._flagVertices || this._flagFill
         || (this._fill instanceof LinearGradient && (this._fill._flagSpread || this._fill._flagStops || this._fill._flagEndPoints))
         || (this._fill instanceof RadialGradient && (this._fill._flagSpread || this._fill._flagStops || this._fill._flagRadius || this._fill._flagCenter || this._fill._flagFocal))
@@ -14331,7 +14351,7 @@ var webgl = {
         || (this.dashes && this.dashes.length > 0)
         || !this._renderer.texture;
 
-      if (flagParentMatrix || flagMatrix) {
+      if (flagParentMatrix || flagMatrix || parentChanged) {
 
         if (!this._renderer.matrix) {
           this._renderer.matrix = new NumArray(9);
@@ -14354,6 +14374,9 @@ var webgl = {
           this._renderer.scale.y = this._scale * parent._renderer.scale.y;
         }
 
+        if (parentChanged) {
+          this._renderer.parent = parent;
+        }
       }
 
       if (flagTexture) {
