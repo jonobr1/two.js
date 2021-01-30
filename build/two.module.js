@@ -1,7 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2012 - 2020 jonobr1 / http://jonobr1.com
+Copyright (c) 2012 - 2021 jonobr1 / http://jonobr1.com
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -2138,7 +2138,7 @@ var Constants = {
    * @name Two.PublishDate
    * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
    */
-  PublishDate: '2021-01-13T01:57:28.198Z',
+  PublishDate: '2021-01-30T16:44:07.612Z',
 
   /**
    * @name Two.Identifier
