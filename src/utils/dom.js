@@ -1,8 +1,7 @@
 import root from './root.js';
+import _ from './underscore.js';
 
 var dom = {
-
-  temp: (root.document ? root.document.createElement('div') : {}),
 
   hasEventListeners: typeof root.addEventListener === 'function',
 
@@ -51,5 +50,21 @@ var dom = {
   }
 
 };
+
+var temp = (root.document ? root.document.createElement('div') : {});
+temp.id = 'help-two-load';
+
+Object.defineProperty(dom, 'temp', {
+  enumerable: true,
+  get: function() {
+    if (_.isElement(temp) && !root.document.body.contains(temp)) {
+      _.extend(temp.style, {
+        display: 'none'
+      });
+      document.body.appendChild(temp);
+    }
+    return temp;
+  }
+});
 
 export default dom;
