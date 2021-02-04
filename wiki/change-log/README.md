@@ -5,6 +5,9 @@ sidebarDepth: 2
 # Change Log
 
 ## Nightly
++ `Two.load` appends a hidden DOM element to the document's `<head />` so that `getComputedStyles` works more consistently with `Two.interpret`
+
+## January 12, 2021
 + Added `Two.AutoCalculateImportedMatrices` to control different ways of importing SVG transformations
 + Fixed `Two.Text.className` application
 + Added basic text support in `Two.interpret`
@@ -21,7 +24,7 @@ sidebarDepth: 2
 + Made Two.js compatible with `import` modules [@adroitwhiz](https://github.com/adroitwhiz)
 + Added wiki as [VuePress](https://vuepress.vuejs.org/) project
 
-## January, 2020 [v0.7.0](https://github.com/jonobr1/two.js/releases/tag/v0.7.0)
+## January 22, 2020 [v0.7.0](https://github.com/jonobr1/two.js/releases/tag/v0.7.0)
 + Exposed `resolution` parameter in `Two.makeCircle` and `Two.makeEllipse` as the final parameter
 + Made `Two.Circle` and `Two.Ellipse` recalculate controls points on `_update` and made vertex amounts cyclical [@adroitwhiz](https://github.com/adroitwhiz)
 + Added [ESLint](https://eslint.org/) scripts to development environment [@adroitwhiz](https://github.com/adroitwhiz)
