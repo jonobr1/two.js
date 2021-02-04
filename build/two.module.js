@@ -2138,7 +2138,7 @@ var Constants = {
    * @name Two.PublishDate
    * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
    */
-  PublishDate: '2021-01-30T16:44:07.612Z',
+  PublishDate: '2021-02-04T17:05:59.946Z',
 
   /**
    * @name Two.Identifier
@@ -5022,8 +5022,6 @@ var CanvasShim = {
 
 var dom = {
 
-  temp: (root$1.document ? root$1.document.createElement('div') : {}),
-
   hasEventListeners: typeof root$1.addEventListener === 'function',
 
   bind: function(elem, event, func, bool) {
@@ -5071,6 +5069,22 @@ var dom = {
   }
 
 };
+
+var temp = (root$1.document ? root$1.document.createElement('div') : {});
+temp.id = 'help-two-load';
+
+Object.defineProperty(dom, 'temp', {
+  enumerable: true,
+  get: function() {
+    if (_.isElement(temp) && !root$1.document.head.contains(temp)) {
+      _.extend(temp.style, {
+        display: 'none'
+      });
+      root$1.document.head.appendChild(temp);
+    }
+    return temp;
+  }
+});
 
 /**
  * @name Utils.Error
