@@ -57,11 +57,11 @@ temp.id = 'help-two-load';
 Object.defineProperty(dom, 'temp', {
   enumerable: true,
   get: function() {
-    if (_.isElement(temp) && !root.document.body.contains(temp)) {
+    if (_.isElement(temp) && !root.document.head.contains(temp)) {
       _.extend(temp.style, {
         display: 'none'
       });
-      document.body.appendChild(temp);
+      root.document.head.appendChild(temp);
     }
     return temp;
   }
