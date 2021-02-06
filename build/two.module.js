@@ -2138,7 +2138,7 @@ var Constants = {
    * @name Two.PublishDate
    * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
    */
-  PublishDate: '2021-02-04T17:05:59.946Z',
+  PublishDate: '2021-02-06T04:17:47.498Z',
 
   /**
    * @name Two.Identifier
@@ -9757,12 +9757,7 @@ var extrapolateScientificNotation = function(command) {
       var match = matches[i];
       var items = match.split(/e/i);
       var value = parseFloat(items[0]);
-      var coefficient = Math.pow(10, parseFloat(items[1]));
-      if (coefficient < 0) {
-        value /= coefficient;
-      } else {
-        value *= coefficient;
-      }
+      value = value.toLocaleString('fullwide', { useGrouping:false });
       command = command.replace(match, value);
     }
   }
@@ -10136,7 +10131,7 @@ var read = {
     var points = node.getAttribute('points');
 
     var verts = [];
-    points.replace(/(-?[\d.?]+)[,|\s](-?[\d.?]+)/g, function(match, p1, p2) {
+    points.replace(/(-?[\d\.eE-]+)[,|\s](-?[\d\.eE-]+)/g, function(match, p1, p2) {
       verts.push(new Anchor(parseFloat(p1), parseFloat(p2)));
     });
 
