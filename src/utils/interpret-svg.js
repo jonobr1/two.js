@@ -164,12 +164,7 @@ var extrapolateScientificNotation = function(command) {
       var match = matches[i];
       var items = match.split(/e/i);
       var value = parseFloat(items[0]);
-      var coefficient = Math.pow(10, parseFloat(items[1]));
-      if (coefficient < 0) {
-        value /= coefficient;
-      } else {
-        value *= coefficient;
-      }
+      value = value.toLocaleString('fullwide', { useGrouping:false });
       command = command.replace(match, value);
     }
   }
@@ -588,7 +583,7 @@ var read = {
 
         var type = command[0];
         var lower = type.toLowerCase();
-        var items = command.slice(1).trim().split(/[\s,]+|(?=[\s\d][+-])/);
+        var items = command.slice(1).trim().split(/[\s,]+|(?=\s?[+-])/);
         var pre, post, result = [], bin;
         var hasDoubleDecimals = false;
 
@@ -700,10 +695,10 @@ var read = {
         var lower = type.toLowerCase();
 
         coords = command.slice(1).trim();
-        coords = coords.replace(/(-?\d+(?:\.\d*)?)[eE]([\+\-]?\d+)/g, function(match, n1, n2) {
+        coords = coords.replace(/(-?\d+(?:\.\d*)?)[eE]([+-]?\d+)/g, function(match, n1, n2) {
           return parseFloat(n1) * Math.pow(10, n2);
         });
-        coords = coords.split(/[\s,]+|(?=[\s\d][+-])/);
+        coords = coords.split(/[\s,]+|(?=\s?[+-])/);
         relative = type === lower;
 
         var x1, y1, x2, y2, x3, y3, x4, y4, reflection;
