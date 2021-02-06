@@ -543,7 +543,7 @@ var read = {
     var points = node.getAttribute('points');
 
     var verts = [];
-    points.replace(/(-?[\d.?]+)[,|\s](-?[\d.?]+)/g, function(match, p1, p2) {
+    points.replace(/(-?[\d\.eE-]+)[,|\s](-?[\d\.eE-]+)/g, function(match, p1, p2) {
       verts.push(new Anchor(parseFloat(p1), parseFloat(p2)));
     });
 
@@ -588,7 +588,7 @@ var read = {
 
         var type = command[0];
         var lower = type.toLowerCase();
-        var items = command.slice(1).trim().split(/[\s,]+|(?=\s?[+-])/);
+        var items = command.slice(1).trim().split(/[\s,]+|(?=[\s\d][+-])/);
         var pre, post, result = [], bin;
         var hasDoubleDecimals = false;
 
@@ -700,10 +700,10 @@ var read = {
         var lower = type.toLowerCase();
 
         coords = command.slice(1).trim();
-        coords = coords.replace(/(-?\d+(?:\.\d*)?)[eE]([+-]?\d+)/g, function(match, n1, n2) {
+        coords = coords.replace(/(-?\d+(?:\.\d*)?)[eE]([\+\-]?\d+)/g, function(match, n1, n2) {
           return parseFloat(n1) * Math.pow(10, n2);
         });
-        coords = coords.split(/[\s,]+|(?=\s?[+-])/);
+        coords = coords.split(/[\s,]+|(?=[\s\d][+-])/);
         relative = type === lower;
 
         var x1, y1, x2, y2, x3, y3, x4, y4, reflection;
