@@ -5,6 +5,7 @@ sidebarDepth: 2
 # Change Log
 
 ## Nightly
++ Improved scientific notation interpretation in SVG elements
 + `Two.load` appends a hidden DOM element to the document's `<head />` so that `getComputedStyles` works more consistently with `Two.interpret`
 
 ## January 12, 2021
