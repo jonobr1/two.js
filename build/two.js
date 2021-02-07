@@ -2144,7 +2144,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2021-02-06T04:17:47.498Z',
+    PublishDate: '2021-02-07T04:11:21.538Z',
 
     /**
      * @name Two.Identifier
@@ -3192,7 +3192,6 @@ SOFTWARE.
       'fill',
       'stroke',
       'linewidth',
-      'visible',
       'cap',
       'join',
       'miter',
@@ -3212,6 +3211,21 @@ SOFTWARE.
 
       var properties = Group.Properties;
 
+      Object.defineProperty(object, 'visible', {
+
+        enumerable: true,
+
+        get: function() {
+          return this._visible;
+        },
+
+        set: function(v) {
+          this._flagVisible = this._visible !== v || this._flagVisible;
+          this._visible = v;
+        }
+
+      });
+
       Object.defineProperty(object, 'opacity', {
 
         enumerable: true,
@@ -3221,7 +3235,7 @@ SOFTWARE.
         },
 
         set: function(v) {
-          this._flagOpacity = this._opacity !== v;
+          this._flagOpacity = this._opacity !== v || this._flagOpacity;
           this._opacity = v;
         }
 
@@ -3236,7 +3250,7 @@ SOFTWARE.
         },
 
         set: function(v) {
-          this._flagBeginning = this._beginning !== v;
+          this._flagBeginning = this._beginning !== v || this._flagBeginning;
           this._beginning = v;
         }
 
@@ -3251,7 +3265,7 @@ SOFTWARE.
         },
 
         set: function(v) {
-          this._flagEnding = this._ending !== v;
+          this._flagEnding = this._ending !== v || this._flagEnding;
           this._ending = v;
         }
 
@@ -3388,56 +3402,62 @@ SOFTWARE.
     /**
      * @name Two.Group#_flagAdditions
      * @private
-     * @property {Boolean} - Determines whether the {@link Two.Group#additions} need updating.
+     * @property {Boolean} - Determines whether the {@link Two.Group#additions} needs updating.
      */
     _flagAdditions: false,
 
     /**
      * @name Two.Group#_flagSubtractions
      * @private
-     * @property {Boolean} - Determines whether the {@link Two.Group#subtractions} need updating.
+     * @property {Boolean} - Determines whether the {@link Two.Group#subtractions} needs updating.
      */
     _flagSubtractions: false,
 
     /**
      * @name Two.Group#_flagOrder
      * @private
-     * @property {Boolean} - Determines whether the {@link Two.Group#order} need updating.
+     * @property {Boolean} - Determines whether the {@link Two.Group#order} needs updating.
      */
     _flagOrder: false,
 
     /**
+     * @name Two.Group#_flagVisible
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Group#visible} needs updating.
+     */
+
+    /**
      * @name Two.Group#_flagOpacity
      * @private
-     * @property {Boolean} - Determines whether the {@link Two.Group#opacity} need updating.
+     * @property {Boolean} - Determines whether the {@link Two.Group#opacity} needs updating.
      */
     _flagOpacity: true,
 
     /**
      * @name Two.Group#_flagBeginning
      * @private
-     * @property {Boolean} - Determines whether the {@link Two.Group#beginning} need updating.
+     * @property {Boolean} - Determines whether the {@link Two.Group#beginning} needs updating.
      */
     _flagBeginning: false,
 
     /**
      * @name Two.Group#_flagEnding
      * @private
-     * @property {Boolean} - Determines whether the {@link Two.Group#ending} need updating.
+     * @property {Boolean} - Determines whether the {@link Two.Group#ending} needs updating.
      */
     _flagEnding: false,
 
     /**
      * @name Two.Group#_flagLength
      * @private
-     * @property {Boolean} - Determines whether the {@link Two.Group#length} need updating.
+     * @property {Boolean} - Determines whether the {@link Two.Group#length} needs updating.
      */
     _flagLength: false,
 
     /**
      * @name Two.Group#_flagMask
      * @private
-     * @property {Boolean} - Determines whether the {@link Two.Group#mask} need updating.
+     * @property {Boolean} - Determines whether the {@link Two.Group#mask} needs updating.
      */
     _flagMask: false,
 
@@ -4112,6 +4132,10 @@ SOFTWARE.
         // TODO: Add a check here to only invoke _update if need be.
         this._update();
 
+        if (!this._visible) {
+          return this;
+        }
+
         var matrix = this._matrix.elements;
         var parent = this.parent;
         this._renderer.opacity = this._opacity
@@ -4133,7 +4157,7 @@ SOFTWARE.
         if (shouldIsolate) {
           ctx.save();
           if (!defaultMatrix) {
-            ctx.transform(  matrix[0], matrix[3], matrix[1],
+            ctx.transform(matrix[0], matrix[3], matrix[1],
               matrix[4], matrix[2], matrix[5]);
           }
         }
@@ -4142,7 +4166,7 @@ SOFTWARE.
           canvas[mask._renderer.type].render.call(mask, ctx, true);
         }
 
-        if (this.opacity > 0 && this.scale !== 0) {
+        if (this._opacity > 0 && this._scale !== 0) {
           for (var i = 0; i < this.children.length; i++) {
             var child = this.children[i];
             canvas[child._renderer.type].render.call(child, ctx);
@@ -12889,7 +12913,8 @@ SOFTWARE.
         // Shortcut for hidden objects.
         // Doesn't reset the flags, so changes are stored and
         // applied once the object is visible again
-        if (this._opacity === 0 && !this._flagOpacity) {
+        if ((!this._visible && !this._flagVisible)
+          || (this._opacity === 0 && !this._flagOpacity)) {
           return this;
         }
 
@@ -12918,6 +12943,10 @@ SOFTWARE.
 
         if (this._flagOpacity) {
           this._renderer.elem.setAttribute('opacity', this._opacity);
+        }
+
+        if (this._flagVisible) {
+          this._renderer.elem.setAttribute('visibility', this._visible ? 'visible' : 'none');
         }
 
         if (this._flagClassName) {
@@ -13627,6 +13656,10 @@ SOFTWARE.
       render: function(gl, program) {
 
         this._update();
+
+        if (!this._visible) {
+          return;
+        }
 
         var parent = this.parent;
         var flagParentMatrix = (parent._matrix && parent._matrix.manual) || parent._flagMatrix;
