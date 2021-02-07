@@ -5,6 +5,7 @@ sidebarDepth: 2
 # Change Log
 
 ## Nightly
++ `Two.Group.visible` is a property held on the group and does not trickle down to children
 + Improved scientific notation interpretation in SVG elements
 + `Two.load` appends a hidden DOM element to the document's `<head />` so that `getComputedStyles` works more consistently with `Two.interpret`
 
