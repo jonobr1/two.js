@@ -93,7 +93,6 @@ _.extend(Group, {
     'fill',
     'stroke',
     'linewidth',
-    'visible',
     'cap',
     'join',
     'miter',
@@ -113,6 +112,21 @@ _.extend(Group, {
 
     var properties = Group.Properties;
 
+    Object.defineProperty(object, 'visible', {
+
+      enumerable: true,
+
+      get: function() {
+        return this._visible;
+      },
+
+      set: function(v) {
+        this._flagVisible = this._visible !== v || this._flagVisible;
+        this._visible = v;
+      }
+
+    });
+
     Object.defineProperty(object, 'opacity', {
 
       enumerable: true,
@@ -122,7 +136,7 @@ _.extend(Group, {
       },
 
       set: function(v) {
-        this._flagOpacity = this._opacity !== v;
+        this._flagOpacity = this._opacity !== v || this._flagOpacity;
         this._opacity = v;
       }
 
@@ -137,7 +151,7 @@ _.extend(Group, {
       },
 
       set: function(v) {
-        this._flagBeginning = this._beginning !== v;
+        this._flagBeginning = this._beginning !== v || this._flagBeginning;
         this._beginning = v;
       }
 
@@ -152,7 +166,7 @@ _.extend(Group, {
       },
 
       set: function(v) {
-        this._flagEnding = this._ending !== v;
+        this._flagEnding = this._ending !== v || this._flagEnding;
         this._ending = v;
       }
 
@@ -289,56 +303,62 @@ _.extend(Group.prototype, Shape.prototype, {
   /**
    * @name Two.Group#_flagAdditions
    * @private
-   * @property {Boolean} - Determines whether the {@link Two.Group#additions} need updating.
+   * @property {Boolean} - Determines whether the {@link Two.Group#additions} needs updating.
    */
   _flagAdditions: false,
 
   /**
    * @name Two.Group#_flagSubtractions
    * @private
-   * @property {Boolean} - Determines whether the {@link Two.Group#subtractions} need updating.
+   * @property {Boolean} - Determines whether the {@link Two.Group#subtractions} needs updating.
    */
   _flagSubtractions: false,
 
   /**
    * @name Two.Group#_flagOrder
    * @private
-   * @property {Boolean} - Determines whether the {@link Two.Group#order} need updating.
+   * @property {Boolean} - Determines whether the {@link Two.Group#order} needs updating.
    */
   _flagOrder: false,
 
   /**
+   * @name Two.Group#_flagVisible
+   * @private
+   * @property {Boolean} - Determines whether the {@link Two.Group#visible} needs updating.
+   */
+
+  /**
    * @name Two.Group#_flagOpacity
    * @private
-   * @property {Boolean} - Determines whether the {@link Two.Group#opacity} need updating.
+   * @property {Boolean} - Determines whether the {@link Two.Group#opacity} needs updating.
    */
   _flagOpacity: true,
 
   /**
    * @name Two.Group#_flagBeginning
    * @private
-   * @property {Boolean} - Determines whether the {@link Two.Group#beginning} need updating.
+   * @property {Boolean} - Determines whether the {@link Two.Group#beginning} needs updating.
    */
   _flagBeginning: false,
 
   /**
    * @name Two.Group#_flagEnding
    * @private
-   * @property {Boolean} - Determines whether the {@link Two.Group#ending} need updating.
+   * @property {Boolean} - Determines whether the {@link Two.Group#ending} needs updating.
    */
   _flagEnding: false,
 
   /**
    * @name Two.Group#_flagLength
    * @private
-   * @property {Boolean} - Determines whether the {@link Two.Group#length} need updating.
+   * @property {Boolean} - Determines whether the {@link Two.Group#length} needs updating.
    */
   _flagLength: false,
 
   /**
    * @name Two.Group#_flagMask
    * @private
-   * @property {Boolean} - Determines whether the {@link Two.Group#mask} need updating.
+   * @property {Boolean} - Determines whether the {@link Two.Group#mask} needs updating.
    */
   _flagMask: false,
 

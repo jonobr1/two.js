@@ -268,7 +268,8 @@ var svg = {
       // Shortcut for hidden objects.
       // Doesn't reset the flags, so changes are stored and
       // applied once the object is visible again
-      if (this._opacity === 0 && !this._flagOpacity) {
+      if ((!this._visible && !this._flagVisible)
+        || (this._opacity === 0 && !this._flagOpacity)) {
         return this;
       }
 
@@ -297,6 +298,10 @@ var svg = {
 
       if (this._flagOpacity) {
         this._renderer.elem.setAttribute('opacity', this._opacity);
+      }
+
+      if (this._flagVisible) {
+        this._renderer.elem.setAttribute('display', this._visible ? 'inline' : 'none');
       }
 
       if (this._flagClassName) {

@@ -59,6 +59,10 @@ var canvas = {
       // TODO: Add a check here to only invoke _update if need be.
       this._update();
 
+      if (!this._visible) {
+        return this;
+      }
+
       var matrix = this._matrix.elements;
       var parent = this.parent;
       this._renderer.opacity = this._opacity
@@ -80,7 +84,7 @@ var canvas = {
       if (shouldIsolate) {
         ctx.save();
         if (!defaultMatrix) {
-          ctx.transform(  matrix[0], matrix[3], matrix[1],
+          ctx.transform(matrix[0], matrix[3], matrix[1],
             matrix[4], matrix[2], matrix[5]);
         }
       }
@@ -89,7 +93,7 @@ var canvas = {
         canvas[mask._renderer.type].render.call(mask, ctx, true);
       }
 
-      if (this.opacity > 0 && this.scale !== 0) {
+      if (this._opacity > 0 && this._scale !== 0) {
         for (var i = 0; i < this.children.length; i++) {
           var child = this.children[i];
           canvas[child._renderer.type].render.call(child, ctx);
