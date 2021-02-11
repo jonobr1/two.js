@@ -2,7 +2,7 @@ var rollup = require('rollup');
 var fs = require('fs');
 var path = require('path');
 var _ = require('underscore');
-var gzip = require('gzip-size')
+var gzip = require('gzip-size');
 var terser = require('rollup-plugin-terser').terser;
 
 var publishDateString = (new Date()).toISOString();

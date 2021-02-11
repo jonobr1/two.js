@@ -61,7 +61,7 @@ _.each(sourceFiles, function(file) {
   };
 
   _.each(citations, function(citation) {
-    if (/\#/i.test(citation.longname)) {
+    if (/#/i.test(citation.longname)) {
       citationsByScope.instance.push(citation);
     } else {
       citationsByScope.static.push(citation);
@@ -150,7 +150,7 @@ function expandLink(object, property) {
 
   if (value) {
 
-    var regex = /\{\@link ([\w\d\:\/\?\-\.\#]*)\}/i;
+    var regex = /\{@link ([\w\d:/?\-.#]*)\}/i;
     var link = value.match(regex);
 
     if (link && link.length > 1) {
@@ -164,7 +164,7 @@ function expandLink(object, property) {
 
       } else {
 
-        var fragments = name.split(/[\.\#]/i);
+        var fragments = name.split(/[.#]/i);
 
         var directory = fragments[1] || '';
         var hash = fragments.length > 2 ? fragments.join('-') : '';
