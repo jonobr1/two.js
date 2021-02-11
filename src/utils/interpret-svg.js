@@ -157,7 +157,7 @@ var applySvgViewBox = function(node, value) {
 };
 
 var extrapolateScientificNotation = function(command) {
-  var regex = /[\+\-]?[\d\.]*e[\-\+]?\d*/ig;
+  var regex = /[+-]?[\d.]*e[-+]?\d*/ig;
   var matches = command.match(regex);
   if (matches && matches.length > 0) {
     for (var i = 0; i < matches.length; i++) {
@@ -182,7 +182,7 @@ var extrapolateScientificNotation = function(command) {
  */
 var applySvgAttributes = function(node, elem, parentStyles) {
 
-  var  styles = {}, attributes = {}, extracted = {}, i, key, value, attr;
+  var  styles = {}, attributes = {}, extracted = {}, i, m, key, value, attr;
 
   // Not available in non browser environments
   if (root.getComputedStyle) {
@@ -239,7 +239,7 @@ var applySvgAttributes = function(node, elem, parentStyles) {
       case 'transform':
         // TODO: Check this out https://github.com/paperjs/paper.js/blob/develop/src/svg/SvgImport.js#L315
         if (/none/i.test(value)) break;
-        var m = (node.transform && node.transform.baseVal && node.transform.baseVal.length > 0)
+        m = (node.transform && node.transform.baseVal && node.transform.baseVal.length > 0)
           ? node.transform.baseVal[0].matrix
           : (node.getCTM ? node.getCTM() : null);
 
@@ -270,7 +270,7 @@ var applySvgAttributes = function(node, elem, parentStyles) {
         } else {
 
           // Edit the underlying matrix and don't force an auto calc.
-          var m = node.getCTM();
+          m = node.getCTM();
           elem._matrix.manual = true;
           elem._matrix.set(m.a, m.b, m.c, m.d, m.e, m.f);
 
@@ -469,16 +469,17 @@ var read = {
 
   use: function(node, styles) {
 
+    var error;
     var href = node.getAttribute('href') || node.getAttribute('xlink:href');
     if (!href) {
-      var error = new TwoError('encountered <use /> with no href.');
+      error = new TwoError('encountered <use /> with no href.');
       console.warn(error.name, error.message);
       return null;
     }
 
     var id = href.slice(1);
     if (!read.defs.current.contains(id)) {
-      var error = new TwoError(
+      error = new TwoError(
         'unable to find element for reference ' + href + '.');
       console.warn(error.name, error.message);
       return null;
@@ -538,7 +539,7 @@ var read = {
     var points = node.getAttribute('points');
 
     var verts = [];
-    points.replace(/(-?[\d\.eE-]+)[,|\s](-?[\d\.eE-]+)/g, function(match, p1, p2) {
+    points.replace(/(-?[\d.eE-]+)[,|\s](-?[\d.eE-]+)/g, function(match, p1, p2) {
       verts.push(new Anchor(parseFloat(p1), parseFloat(p2)));
     });
 
