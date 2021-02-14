@@ -25,6 +25,11 @@ import Text from '../text.js';
 
 import Constants from '../constants.js';
 
+// https://github.com/jonobr1/two.js/issues/507#issuecomment-777159213
+var regex = {
+  path: /[+-]?(?:\d*\.\d+|\d+)(?:[eE][+-]\d+)?/g
+};
+
 var alignments = {
   start: 'left',
   middle: 'center',
@@ -154,21 +159,6 @@ var applySvgViewBox = function(node, value) {
 
   return node;
 
-};
-
-var extrapolateScientificNotation = function(command) {
-  var regex = /[+-]?[\d.]*e[-+]?\d*/ig;
-  var matches = command.match(regex);
-  if (matches && matches.length > 0) {
-    for (var i = 0; i < matches.length; i++) {
-      var match = matches[i];
-      var items = match.split(/e/i);
-      var value = parseFloat(items[0]);
-      value = value.toLocaleString('fullwide', { useGrouping:false });
-      command = command.replace(match, value);
-    }
-  }
-  return command;
 };
 
 /**
@@ -577,47 +567,12 @@ var read = {
 
       _.each(commands.slice(0), function(command, i) {
 
-        var number, fid, lid, numbers, first, s;
-        var j, k, ct, l, times;
-
-        command = extrapolateScientificNotation(command);
-
-        var type = command[0];
+        var items = command.slice(1).trim().match(regex.path);
+        var type = command[0]
         var lower = type.toLowerCase();
-        var items = command.slice(1).trim().split(/[\s,]+|(?=\s?[+-])/);
-        var pre, post, result = [], bin;
-        var hasDoubleDecimals = false;
+        var bin, j, l, ct, times, result = [];
 
-        // Handle double decimal values e.g: 48.6037.71.8
-        // Like: https://m.abcsofchinese.com/images/svg/亼ji2.svg
-        for (j = 0; j < items.length; j++) {
-
-          number = items[j];
-          fid = number.indexOf('.');
-          lid = number.lastIndexOf('.');
-
-          if (fid !== lid) {
-
-            numbers = number.split('.');
-            first = numbers[0] + '.' + numbers[1];
-
-            items.splice(j, 1, first);
-
-            for (s = 2; s < numbers.length; s++) {
-              items.splice(j + s - 1, 0, '0.' + numbers[s]);
-            }
-
-            hasDoubleDecimals = true;
-
-          }
-
-        }
-
-        if (hasDoubleDecimals) {
-          command = type + items.join(',');
-        }
-
-        if (i <= 0) {
+        if (i === 0) {
           commands = [];
         }
 
@@ -695,11 +650,7 @@ var read = {
         var type = command[0];
         var lower = type.toLowerCase();
 
-        coords = command.slice(1).trim();
-        coords = coords.replace(/(-?\d+(?:\.\d*)?)[eE]([+-]?\d+)/g, function(match, n1, n2) {
-          return parseFloat(n1) * Math.pow(10, n2);
-        });
-        coords = coords.split(/[\s,]+|(?=\s?[+-])/);
+        coords = command.slice(1).trim().match(regex.path);
         relative = type === lower;
 
         var x1, y1, x2, y2, x3, y3, x4, y4, reflection;
