@@ -568,7 +568,7 @@ var read = {
       _.each(commands.slice(0), function(command, i) {
 
         var items = command.slice(1).trim().match(regex.path);
-        var type = command[0]
+        var type = command[0];
         var lower = type.toLowerCase();
         var bin, j, l, ct, times, result = [];
 

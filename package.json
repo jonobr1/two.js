@@ -21,7 +21,7 @@
     "docs:generate": "node ./utils/document",
     "docs:dev": "vuepress dev wiki",
     "docs:build": "vuepress build wiki",
-    "lint": "eslint ."
+    "lint": "eslint . --fix"
   },
   "directories": {
     "doc": "wiki/documentation",
