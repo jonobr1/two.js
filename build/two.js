@@ -2144,7 +2144,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2021-02-07T04:11:21.538Z',
+    PublishDate: '2021-02-14T17:00:16.871Z',
 
     /**
      * @name Two.Identifier
@@ -9648,6 +9648,10 @@ SOFTWARE.
 
   Text.MakeObservable(Text.prototype);
 
+  var regex$1 = {
+    path: /[+-]?(?:\d*\.\d+|\d+)(?:[eE][+-]\d+)?/g
+  };
+
   var alignments = {
     start: 'left',
     middle: 'center',
@@ -9779,21 +9783,6 @@ SOFTWARE.
 
   };
 
-  var extrapolateScientificNotation = function(command) {
-    var regex = /[\+\-]?[\d\.]*e[\-\+]?\d*/ig;
-    var matches = command.match(regex);
-    if (matches && matches.length > 0) {
-      for (var i = 0; i < matches.length; i++) {
-        var match = matches[i];
-        var items = match.split(/e/i);
-        var value = parseFloat(items[0]);
-        value = value.toLocaleString('fullwide', { useGrouping:false });
-        command = command.replace(match, value);
-      }
-    }
-    return command;
-  };
-
   /**
    * @name Utils.applySvgAttributes
    * @function
@@ -9805,7 +9794,7 @@ SOFTWARE.
    */
   var applySvgAttributes = function(node, elem, parentStyles) {
 
-    var  styles = {}, attributes = {}, extracted = {}, i, key, value, attr;
+    var  styles = {}, attributes = {}, extracted = {}, i, m, key, value, attr;
 
     // Not available in non browser environments
     if (root$1.getComputedStyle) {
@@ -9862,7 +9851,7 @@ SOFTWARE.
         case 'transform':
           // TODO: Check this out https://github.com/paperjs/paper.js/blob/develop/src/svg/SvgImport.js#L315
           if (/none/i.test(value)) break;
-          var m = (node.transform && node.transform.baseVal && node.transform.baseVal.length > 0)
+          m = (node.transform && node.transform.baseVal && node.transform.baseVal.length > 0)
             ? node.transform.baseVal[0].matrix
             : (node.getCTM ? node.getCTM() : null);
 
@@ -9893,7 +9882,7 @@ SOFTWARE.
           } else {
 
             // Edit the underlying matrix and don't force an auto calc.
-            var m = node.getCTM();
+            m = node.getCTM();
             elem._matrix.manual = true;
             elem._matrix.set(m.a, m.b, m.c, m.d, m.e, m.f);
 
@@ -10092,16 +10081,17 @@ SOFTWARE.
 
     use: function(node, styles) {
 
+      var error;
       var href = node.getAttribute('href') || node.getAttribute('xlink:href');
       if (!href) {
-        var error = new TwoError('encountered <use /> with no href.');
+        error = new TwoError('encountered <use /> with no href.');
         console.warn(error.name, error.message);
         return null;
       }
 
       var id = href.slice(1);
       if (!read.defs.current.contains(id)) {
-        var error = new TwoError(
+        error = new TwoError(
           'unable to find element for reference ' + href + '.');
         console.warn(error.name, error.message);
         return null;
@@ -10161,7 +10151,7 @@ SOFTWARE.
       var points = node.getAttribute('points');
 
       var verts = [];
-      points.replace(/(-?[\d\.eE-]+)[,|\s](-?[\d\.eE-]+)/g, function(match, p1, p2) {
+      points.replace(/(-?[\d.eE-]+)[,|\s](-?[\d.eE-]+)/g, function(match, p1, p2) {
         verts.push(new Anchor(parseFloat(p1), parseFloat(p2)));
       });
 
@@ -10199,47 +10189,12 @@ SOFTWARE.
 
         _.each(commands.slice(0), function(command, i) {
 
-          var number, fid, lid, numbers, first, s;
-          var j, ct, l, times;
-
-          command = extrapolateScientificNotation(command);
-
+          var items = command.slice(1).trim().match(regex$1.path);
           var type = command[0];
           var lower = type.toLowerCase();
-          var items = command.slice(1).trim().split(/[\s,]+|(?=\s?[+-])/);
-          var result = [], bin;
-          var hasDoubleDecimals = false;
+          var bin, j, l, ct, times, result = [];
 
-          // Handle double decimal values e.g: 48.6037.71.8
-          // Like: https://m.abcsofchinese.com/images/svg/亼ji2.svg
-          for (j = 0; j < items.length; j++) {
-
-            number = items[j];
-            fid = number.indexOf('.');
-            lid = number.lastIndexOf('.');
-
-            if (fid !== lid) {
-
-              numbers = number.split('.');
-              first = numbers[0] + '.' + numbers[1];
-
-              items.splice(j, 1, first);
-
-              for (s = 2; s < numbers.length; s++) {
-                items.splice(j + s - 1, 0, '0.' + numbers[s]);
-              }
-
-              hasDoubleDecimals = true;
-
-            }
-
-          }
-
-          if (hasDoubleDecimals) {
-            command = type + items.join(',');
-          }
-
-          if (i <= 0) {
+          if (i === 0) {
             commands = [];
           }
 
@@ -10317,11 +10272,7 @@ SOFTWARE.
           var type = command[0];
           var lower = type.toLowerCase();
 
-          coords = command.slice(1).trim();
-          coords = coords.replace(/(-?\d+(?:\.\d*)?)[eE]([+-]?\d+)/g, function(match, n1, n2) {
-            return parseFloat(n1) * Math.pow(10, n2);
-          });
-          coords = coords.split(/[\s,]+|(?=\s?[+-])/);
+          coords = command.slice(1).trim().match(regex$1.path);
           relative = type === lower;
 
           var x1, y1, x2, y2, x3, y3, x4, y4, reflection;
@@ -12946,7 +12897,7 @@ SOFTWARE.
         }
 
         if (this._flagVisible) {
-          this._renderer.elem.setAttribute('visibility', this._visible ? 'visible' : 'none');
+          this._renderer.elem.setAttribute('display', this._visible ? 'inline' : 'none');
         }
 
         if (this._flagClassName) {
