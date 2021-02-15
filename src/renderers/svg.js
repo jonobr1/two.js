@@ -263,8 +263,6 @@ var svg = {
 
     render: function(domElement) {
 
-      this._update();
-
       // Shortcut for hidden objects.
       // Doesn't reset the flags, so changes are stored and
       // applied once the object is visible again
@@ -272,6 +270,8 @@ var svg = {
         || (this._opacity === 0 && !this._flagOpacity)) {
         return this;
       }
+
+      this._update();
 
       if (!this._renderer.elem) {
         this._renderer.elem = svg.createElement('g', {
@@ -359,14 +359,14 @@ var svg = {
 
     render: function(domElement) {
 
-      this._update();
-
       // Shortcut for hidden objects.
       // Doesn't reset the flags, so changes are stored and
       // applied once the object is visible again
       if (this._opacity === 0 && !this._flagOpacity) {
         return this;
       }
+
+      this._update();
 
       // Collect any attribute that needs to be changed here
       var changed = {};
