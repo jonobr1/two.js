@@ -179,6 +179,8 @@ _.extend(Rectangle.prototype, Path.prototype, {
     clone.translation.copy(this.translation);
     clone.rotation = this.rotation;
     clone.scale = this.scale;
+    clone.skewX = this.skewX;
+    clone.skewY = this.skewY;
 
     if (this.matrix.manual) {
       clone.matrix.copy(this.matrix);

@@ -704,6 +704,8 @@ _.extend(Path.prototype, Shape.prototype, {
     clone.translation.copy(this.translation);
     clone.rotation = this.rotation;
     clone.scale = this.scale;
+    clone.skewX = this.skewX;
+    clone.skewY = this.skewY;
 
     if (this.matrix.manual) {
       clone.matrix.copy(this.matrix);
@@ -740,6 +742,8 @@ _.extend(Path.prototype, Shape.prototype, {
     result.translation = this.translation.toObject();
     result.rotation = this.rotation;
     result.scale = this.scale instanceof Vector ? this.scale.toObject() : this.scale;
+    result.skewX = this.skewX;
+    result.skewY = this.skewY;
 
     if (this.matrix.manual) {
       result.matrix = this.matrix.toObject();
