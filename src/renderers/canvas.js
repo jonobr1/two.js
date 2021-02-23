@@ -56,12 +56,11 @@ var canvas = {
 
     render: function(ctx) {
 
-      // TODO: Add a check here to only invoke _update if need be.
-      this._update();
-
       if (!this._visible) {
         return this;
       }
+
+      this._update();
 
       var matrix = this._matrix.elements;
       var parent = this.parent;
@@ -126,15 +125,21 @@ var canvas = {
           closed, commands, length, last, next, prev, a, b, c, d, ux, uy, vx, vy,
           ar, bl, br, cl, x, y, mask, clip, defaultMatrix, isOffset, dashes;
 
-      // TODO: Add a check here to only invoke _update if need be.
+      // mask = this._mask;
+      clip = this._clip;
+      opacity = this._opacity * this.parent._renderer.opacity;
+      visible = this._visible;
+
+      if (!forced && (!visible || clip || opacity === 0)) {
+        return this;
+      }
+
       this._update();
 
       matrix = this._matrix.elements;
       stroke = this._stroke;
       linewidth = this._linewidth;
       fill = this._fill;
-      opacity = this._opacity * this.parent._renderer.opacity;
-      visible = this._visible;
       cap = this._cap;
       join = this._join;
       miter = this._miter;
@@ -144,13 +149,6 @@ var canvas = {
       last = length - 1;
       defaultMatrix = isDefaultMatrix(matrix);
       dashes = this.dashes;
-
-      // mask = this._mask;
-      clip = this._clip;
-
-      if (!forced && (!visible || clip)) {
-        return this;
-      }
 
       // Transform
       if (!defaultMatrix) {
@@ -366,7 +364,15 @@ var canvas = {
 
     render: function(ctx, forced, parentClipped) {
 
-      // TODO: Add a check here to only invoke _update if need be.
+      var opacity = this._opacity * this.parent._renderer.opacity;
+      var visible = this._visible;
+      // mask = this._mask;
+      var clip = this._clip;
+
+      if (!forced && (!visible || clip || opacity === 0)) {
+        return this;
+      }
+
       this._update();
 
       var matrix = this._matrix.elements;
@@ -374,8 +380,6 @@ var canvas = {
       var linewidth = this._linewidth;
       var fill = this._fill;
       var decoration = this._decoration;
-      var opacity = this._opacity * this.parent._renderer.opacity;
-      var visible = this._visible;
       var defaultMatrix = isDefaultMatrix(matrix);
       var isOffset = fill._renderer && fill._renderer.offset
         && stroke._renderer && stroke._renderer.offset;
@@ -384,13 +388,6 @@ var canvas = {
       var baseline = this._baseline;
 
       var a, b, c, d, e, sx, sy, x1, y1, x2, y2;
-
-      // mask = this._mask;
-      var clip = this._clip;
-
-      if (!forced && (!visible || clip)) {
-        return this;
-      }
 
       // Transform
       if (!defaultMatrix) {

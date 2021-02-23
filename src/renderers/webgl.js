@@ -55,11 +55,11 @@ var webgl = {
 
     render: function(gl, program) {
 
-      this._update();
-
       if (!this._visible) {
         return;
       }
+
+      this._update();
 
       var parent = this.parent;
       var flagParentMatrix = (parent._matrix && parent._matrix.manual) || parent._flagMatrix;
