@@ -1,17 +1,10 @@
 import Two from '../build/two.module.js';
 
-var extend = function(base, obj) {
-  for (var k in obj) {
-    base[k] = obj[k];
-  }
-  return base;
-};
-
 var Surface = function(object) {
   this.object = object;
 };
 
-extend(Surface.prototype, {
+Two.Utils.extend(Surface.prototype, {
 
   limits: function(min, max) {
 
@@ -60,7 +53,7 @@ var ZUI = function(group, domElement) {
 
 };
 
-extend(ZUI, {
+Two.Utils.extend(ZUI, {
 
   Surface: Surface,
 
@@ -96,7 +89,7 @@ extend(ZUI, {
 
 });
 
-extend(ZUI.prototype, {
+Two.Utils.extend(ZUI.prototype, {
 
   constructor: ZUI,
 
@@ -194,7 +187,7 @@ extend(ZUI.prototype, {
   updateOffset: function() {
 
     var rect = this.viewport.getBoundingClientRect();
-    extend(this.viewportOffset, rect);
+    Two.Utils.extend(this.viewportOffset, rect);
 
     this.viewportOffset.left -= document.body.scrollLeft;
     this.viewportOffset.top -= document.body.scrollTop;
