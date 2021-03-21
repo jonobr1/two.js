@@ -2144,7 +2144,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2021-02-14T17:00:16.871Z',
+    PublishDate: '2021-03-21T22:14:43.733Z',
 
     /**
      * @name Two.Identifier
@@ -2702,6 +2702,10 @@ SOFTWARE.
       Array.prototype.reverse.apply(this, arguments);
       this.trigger(Events.Types.order);
       return this;
+    },
+
+    indexOf: function() {
+      return Array.prototype.indexOf.apply(this, arguments);
     }
 
   });
@@ -2850,6 +2854,23 @@ SOFTWARE.
         }
       });
 
+      Object.defineProperty(object, 'id', {
+        enumerable: true,
+        get: function() {
+          return this._id;
+        },
+        set: function(v) {
+          if (v === this._id) {
+            return;
+          }
+          this._id = v;
+          this._flagId = true;
+          if (this.parent) {
+            this.parent._flagId = true;
+          }
+        }
+      });
+
       Object.defineProperty(object, 'className', {
 
         enumerable: true,
@@ -2894,6 +2915,13 @@ SOFTWARE.
     // Flags
 
     /**
+     * @name Two.Shape#_id
+     * @private
+     * @property {Boolean} - Determines whether the id needs updating.
+     */
+    _flagId: true,
+
+    /**
      * @name Two.Shape#_flagMatrix
      * @private
      * @property {Boolean} - Determines whether the matrix needs updating.
@@ -2918,6 +2946,8 @@ SOFTWARE.
     _flagClassName: false,
 
     // Underlying Properties
+
+    _id: '',
 
     /**
      * @name Two.Shape#_translation
@@ -3034,7 +3064,8 @@ SOFTWARE.
      */
     flagReset: function() {
 
-      this._flagMatrix = this._flagScale = this._flagClassName = false;
+      this._flagId = this._flagMatrix = this._flagScale =
+        this._flagClassName = false;
 
       return this;
 
@@ -3816,8 +3847,15 @@ SOFTWARE.
 
       // Remove the objects
       for (var i = 0; i < objects.length; i++) {
-        if (!objects[i] || !(this.children.ids[objects[i].id])) continue;
-        this.children.splice(Array.prototype.indexOf.call(this.children, objects[i]), 1);
+        var object = objects[i];
+        if (!object || !this.children.ids[object.id]) {
+          console.log('DNE', object.id);
+          continue;
+        }
+        var index = this.children.indexOf(object);
+        if (index >= 0) {
+          this.children.splice(index, 1);
+        }
       }
 
       return this;
@@ -3959,6 +3997,17 @@ SOFTWARE.
 
         }
 
+      }
+
+      if (this._flagId) {
+        // Means the group's id changed or one of its children's ids
+        // changed and as such we need to update the map of ids the
+        // Two.Group.children has.
+        this.children.ids = {};
+        for (var i = 0; i < this.children.length; i++) {
+          var child = this.children[i];
+          this.children.ids[child.id] = child;
+        }
       }
 
       return Shape.prototype._update.apply(this, arguments);
@@ -4129,12 +4178,11 @@ SOFTWARE.
 
       render: function(ctx) {
 
-        // TODO: Add a check here to only invoke _update if need be.
-        this._update();
-
         if (!this._visible) {
           return this;
         }
+
+        this._update();
 
         var matrix = this._matrix.elements;
         var parent = this.parent;
@@ -4199,15 +4247,21 @@ SOFTWARE.
             closed, commands, length, last, next, prev, a, b, c, d, ux, uy, vx, vy,
             ar, bl, br, cl, x, y, clip, defaultMatrix, isOffset, dashes;
 
-        // TODO: Add a check here to only invoke _update if need be.
+        // mask = this._mask;
+        clip = this._clip;
+        opacity = this._opacity * this.parent._renderer.opacity;
+        visible = this._visible;
+
+        if (!forced && (!visible || clip || opacity === 0)) {
+          return this;
+        }
+
         this._update();
 
         matrix = this._matrix.elements;
         stroke = this._stroke;
         linewidth = this._linewidth;
         fill = this._fill;
-        opacity = this._opacity * this.parent._renderer.opacity;
-        visible = this._visible;
         cap = this._cap;
         join = this._join;
         miter = this._miter;
@@ -4217,13 +4271,6 @@ SOFTWARE.
         last = length - 1;
         defaultMatrix = isDefaultMatrix(matrix);
         dashes = this.dashes;
-
-        // mask = this._mask;
-        clip = this._clip;
-
-        if (!forced && (!visible || clip)) {
-          return this;
-        }
 
         // Transform
         if (!defaultMatrix) {
@@ -4439,7 +4486,15 @@ SOFTWARE.
 
       render: function(ctx, forced, parentClipped) {
 
-        // TODO: Add a check here to only invoke _update if need be.
+        var opacity = this._opacity * this.parent._renderer.opacity;
+        var visible = this._visible;
+        // mask = this._mask;
+        var clip = this._clip;
+
+        if (!forced && (!visible || clip || opacity === 0)) {
+          return this;
+        }
+
         this._update();
 
         var matrix = this._matrix.elements;
@@ -4447,8 +4502,6 @@ SOFTWARE.
         var linewidth = this._linewidth;
         var fill = this._fill;
         var decoration = this._decoration;
-        var opacity = this._opacity * this.parent._renderer.opacity;
-        var visible = this._visible;
         var defaultMatrix = isDefaultMatrix(matrix);
         var isOffset = fill._renderer && fill._renderer.offset
           && stroke._renderer && stroke._renderer.offset;
@@ -4457,13 +4510,6 @@ SOFTWARE.
         var baseline = this._baseline;
 
         var a, b, c, d, e, sx, sy, x1, y1, x2, y2;
-
-        // mask = this._mask;
-        var clip = this._clip;
-
-        if (!forced && (!visible || clip)) {
-          return this;
-        }
 
         // Transform
         if (!defaultMatrix) {
@@ -9648,6 +9694,7 @@ SOFTWARE.
 
   Text.MakeObservable(Text.prototype);
 
+  // https://github.com/jonobr1/two.js/issues/507#issuecomment-777159213
   var regex$1 = {
     path: /[+-]?(?:\d*\.\d+|\d+)(?:[eE][+-]\d+)?/g
   };
@@ -12859,8 +12906,6 @@ SOFTWARE.
 
       render: function(domElement) {
 
-        this._update();
-
         // Shortcut for hidden objects.
         // Doesn't reset the flags, so changes are stored and
         // applied once the object is visible again
@@ -12868,6 +12913,8 @@ SOFTWARE.
           || (this._opacity === 0 && !this._flagOpacity)) {
           return this;
         }
+
+        this._update();
 
         if (!this._renderer.elem) {
           this._renderer.elem = svg.createElement('g', {
@@ -12955,14 +13002,14 @@ SOFTWARE.
 
       render: function(domElement) {
 
-        this._update();
-
         // Shortcut for hidden objects.
         // Doesn't reset the flags, so changes are stored and
         // applied once the object is visible again
         if (this._opacity === 0 && !this._flagOpacity) {
           return this;
         }
+
+        this._update();
 
         // Collect any attribute that needs to be changed here
         var changed = {};
@@ -13606,11 +13653,11 @@ SOFTWARE.
 
       render: function(gl, program) {
 
-        this._update();
-
         if (!this._visible) {
           return;
         }
+
+        this._update();
 
         var parent = this.parent;
         var flagParentMatrix = (parent._matrix && parent._matrix.manual) || parent._flagMatrix;
