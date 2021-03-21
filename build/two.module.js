@@ -2138,7 +2138,7 @@ var Constants = {
    * @name Two.PublishDate
    * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
    */
-  PublishDate: '2021-03-21T22:14:43.733Z',
+  PublishDate: '2021-03-21T22:21:56.565Z',
 
   /**
    * @name Two.Identifier
@@ -3843,7 +3843,6 @@ _.extend(Group.prototype, Shape.prototype, {
     for (var i = 0; i < objects.length; i++) {
       var object = objects[i];
       if (!object || !this.children.ids[object.id]) {
-        console.log('DNE', object.id);
         continue;
       }
       var index = this.children.indexOf(object);
@@ -3955,6 +3954,8 @@ _.extend(Group.prototype, Shape.prototype, {
    */
   _update: function() {
 
+    var i, child;
+
     if (this._flagBeginning || this._flagEnding) {
 
       var beginning = Math.min(this._beginning, this._ending);
@@ -3965,10 +3966,10 @@ _.extend(Group.prototype, Shape.prototype, {
       var bd = beginning * length;
       var ed = ending * length;
 
-      for (var i = 0; i < this.children.length; i++) {
+      for (i = 0; i < this.children.length; i++) {
 
-        var child = this.children[i];
         var l = child.length;
+        child = this.children[i];
 
         if (bd > sum + l) {
           child.beginning = 1;
@@ -3998,8 +3999,8 @@ _.extend(Group.prototype, Shape.prototype, {
       // changed and as such we need to update the map of ids the
       // Two.Group.children has.
       this.children.ids = {};
-      for (var i = 0; i < this.children.length; i++) {
-        var child = this.children[i];
+      for (i = 0; i < this.children.length; i++) {
+        child = this.children[i];
         this.children.ids[child.id] = child;
       }
     }
