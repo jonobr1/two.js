@@ -5,6 +5,7 @@ sidebarDepth: 2
 # Change Log
 
 ## Nightly
++ Made `Two.Group` listen to `Two.Shape.id` changes through new observable property and flags
 + Improved `Two.interpret` performance and functionality through improved regular expressions [@adroitwhiz](https://github.com/adroitwhiz)
 + `Two.Group.visible` is a property held on the group and does not trickle down to children
 + Improved scientific notation interpretation in SVG elements
