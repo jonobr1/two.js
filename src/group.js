@@ -717,8 +717,15 @@ _.extend(Group.prototype, Shape.prototype, {
 
     // Remove the objects
     for (var i = 0; i < objects.length; i++) {
-      if (!objects[i] || !(this.children.ids[objects[i].id])) continue;
-      this.children.splice(Array.prototype.indexOf.call(this.children, objects[i]), 1);
+      var object = objects[i];
+      if (!object || !this.children.ids[object.id]) {
+        console.log('DNE', object.id);
+        continue;
+      }
+      var index = this.children.indexOf(object);
+      if (index >= 0) {
+        this.children.splice(index, 1);
+      }
     }
 
     return this;
@@ -861,6 +868,17 @@ _.extend(Group.prototype, Shape.prototype, {
 
       }
 
+    }
+
+    if (this._flagId) {
+      // Means the group's id changed or one of its children's ids
+      // changed and as such we need to update the map of ids the
+      // Two.Group.children has.
+      this.children.ids = {};
+      for (var i = 0; i < this.children.length; i++) {
+        var child = this.children[i];
+        this.children.ids[child.id] = child;
+      }
     }
 
     return Shape.prototype._update.apply(this, arguments);

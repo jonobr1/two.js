@@ -150,6 +150,23 @@ _.extend(Shape, {
       }
     });
 
+    Object.defineProperty(object, 'id', {
+      enumerable: true,
+      get: function() {
+        return this._id;
+      },
+      set: function(v) {
+        if (v === this._id) {
+          return;
+        }
+        this._id = v;
+        this._flagId = true;
+        if (this.parent) {
+          this.parent._flagId = true;
+        }
+      }
+    });
+
     Object.defineProperty(object, 'className', {
 
       enumerable: true,
@@ -194,6 +211,13 @@ _.extend(Shape.prototype, Events, {
   // Flags
 
   /**
+   * @name Two.Shape#_id
+   * @private
+   * @property {Boolean} - Determines whether the id needs updating.
+   */
+  _flagId: true,
+
+  /**
    * @name Two.Shape#_flagMatrix
    * @private
    * @property {Boolean} - Determines whether the matrix needs updating.
@@ -218,6 +242,8 @@ _.extend(Shape.prototype, Events, {
   _flagClassName: false,
 
   // Underlying Properties
+
+  _id: '',
 
   /**
    * @name Two.Shape#_translation
@@ -334,7 +360,8 @@ _.extend(Shape.prototype, Events, {
    */
   flagReset: function() {
 
-    this._flagMatrix = this._flagScale = this._flagClassName = false;
+    this._flagId = this._flagMatrix = this._flagScale =
+      this._flagClassName = false;
 
     return this;
 

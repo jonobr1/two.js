@@ -73,6 +73,10 @@ _.extend(Collection.prototype, Events, {
     Array.prototype.reverse.apply(this, arguments);
     this.trigger(Events.Types.order);
     return this;
+  },
+
+  indexOf: function() {
+    return Array.prototype.indexOf.apply(this, arguments);
   }
 
 });
