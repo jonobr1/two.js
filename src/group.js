@@ -830,7 +830,7 @@ _.extend(Group.prototype, Shape.prototype, {
    */
   _update: function() {
 
-    var i, child;
+    var i, l, child;
 
     if (this._flagBeginning || this._flagEnding) {
 
@@ -845,8 +845,8 @@ _.extend(Group.prototype, Shape.prototype, {
 
       for (i = 0; i < this.children.length; i++) {
 
-        var l = child.length;
         child = this.children[i];
+        l = child.length;
 
         if (bd > sum + l) {
           child.beginning = 1;

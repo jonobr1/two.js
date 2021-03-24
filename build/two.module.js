@@ -2151,7 +2151,7 @@ var Constants = {
    * @name Two.PublishDate
    * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
    */
-  PublishDate: '2021-03-24T20:47:27.840Z',
+  PublishDate: '2021-03-24T20:51:11.945Z',
 
   /**
    * @name Two.Identifier
@@ -3964,7 +3964,7 @@ _.extend(Group.prototype, Shape.prototype, {
    */
   _update: function() {
 
-    var i, child;
+    var i, l, child;
 
     if (this._flagBeginning || this._flagEnding) {
 
@@ -3978,8 +3978,8 @@ _.extend(Group.prototype, Shape.prototype, {
 
       for (i = 0; i < this.children.length; i++) {
 
-        var l = child.length;
         child = this.children[i];
+        l = child.length;
 
         if (bd > sum + l) {
           child.beginning = 1;
