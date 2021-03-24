@@ -17,7 +17,7 @@ var TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin;
  * @param {Number} outerRadius - The outer radius value of the star.
  * @param {Number} [sides=5] - The number of sides used to construct the star.
  */
-var Star = function(ox, oy, ir, or, sides) {
+function Star(ox, oy, ir, or, sides) {
 
   if (arguments.length <= 3) {
     or = ir;
@@ -80,6 +80,8 @@ _.extend(Star, {
 
 _.extend(Star.prototype, Path.prototype, {
 
+  constructor: Star,
+
   /**
    * @name Two.Star#_flagInnerRadius
    * @private
@@ -117,8 +119,6 @@ _.extend(Star.prototype, Path.prototype, {
    * @see {@link Two.Star#sides}
    */
   _sides: 0,
-
-  constructor: Star,
 
   /**
    * @name Two.Star#_update

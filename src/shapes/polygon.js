@@ -16,7 +16,7 @@ var TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin;
  * @param {Number} radius - The radius value of the polygon.
  * @param {Number} [sides=12] - The number of vertices used to construct the polygon.
  */
-var Polygon = function(ox, oy, r, sides) {
+function Polygon(ox, oy, r, sides) {
 
   sides = Math.max(sides || 0, 3);
 
@@ -71,6 +71,8 @@ _.extend(Polygon, {
 
 _.extend(Polygon.prototype, Path.prototype, {
 
+  constructor: Polygon,
+
   /**
    * @name Two.Polygon#_flagWidth
    * @private
@@ -108,8 +110,6 @@ _.extend(Polygon.prototype, Path.prototype, {
    * @see {@link Two.Polygon#sides}
    */
   _sides: 0,
-
-  constructor: Polygon,
 
   /**
    * @name Two.Polygon#_update

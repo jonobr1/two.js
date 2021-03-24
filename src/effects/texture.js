@@ -32,7 +32,7 @@ if (root.document) {
  * @param {Function} [callback] - An optional callback function once the image has been loaded.
  * @description Fundamental to work with bitmap data, a.k.a. pregenerated imagery, in Two.js. Supported formats include jpg, png, gif, and tiff. See {@link Two.Texture.RegularExpressions} for a full list of supported formats.
  */
-var Texture = function(src, callback) {
+function Texture(src, callback) {
 
   this._renderer = {};
   this._renderer.type = 'texture';
@@ -445,6 +445,8 @@ _.extend(Texture, {
 
 _.extend(Texture.prototype, Events, Shape.prototype, {
 
+  constructor: Texture,
+
   /**
    * @name Two.Texture#_flagSrc
    * @private
@@ -535,8 +537,6 @@ _.extend(Texture.prototype, Events, Shape.prototype, {
    * @see {@link Two.Texture#offset}
    */
   _offset: null,
-
-  constructor: Texture,
 
   /**
    * @name Two.Texture#clone

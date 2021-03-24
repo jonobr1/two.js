@@ -16,7 +16,7 @@ import Vector from '../vector.js';
  * @param {Two.Stop[]} [stops] - A list of {@link Two.Stop}s that contain the gradient fill pattern for the gradient.
  * @nota-bene The linear gradient lives within the space of the parent object's matrix space.
  */
-var LinearGradient = function(x1, y1, x2, y2, stops) {
+function LinearGradient(x1, y1, x2, y2, stops) {
 
   Gradient.call(this, stops);
 
@@ -81,14 +81,14 @@ _.extend(LinearGradient, {
 
 _.extend(LinearGradient.prototype, Gradient.prototype, {
 
+  constructor: LinearGradient,
+
   /**
    * @name Two.LinearGradient#_flagEndPoints
    * @private
    * @property {Boolean} - Determines whether the {@link Two.LinearGradient#left} or {@link Two.LinearGradient#right} changed and needs to update.
    */
   _flagEndPoints: false,
-
-  constructor: LinearGradient,
 
   /**
    * @name Two.LinearGradient#clone

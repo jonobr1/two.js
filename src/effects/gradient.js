@@ -12,7 +12,7 @@ import Stop from './stop.js';
  * @param {Two.Stop[]} [stops] - A list of {@link Two.Stop}s that contain the gradient fill pattern for the gradient.
  * @description This is the base class for constructing different types of gradients with Two.js. The two common gradients are {@link Two.LinearGradient} and {@link Two.RadialGradient}.
  */
-var Gradient = function(stops) {
+function Gradient(stops) {
 
   /**
    * @name Two.Gradient#_renderer
@@ -47,7 +47,9 @@ var Gradient = function(stops) {
    * @name Two.Gradient#stops
    * @property {Two.Stop[]} - An ordered list of {@link Two.Stop}s for rendering the gradient.
    */
-  this.stops = stops;
+  if (stops) {
+    this.stops = stops;
+  }
 
 };
 
@@ -163,6 +165,8 @@ _.extend(Gradient, {
 });
 
 _.extend(Gradient.prototype, Events, {
+
+  constructor: Gradient,
 
   /**
    * @name Two.Gradient#_flagStops

@@ -13,10 +13,10 @@ import Vector from '../vector.js';
  * @extends Two.Path
  * @param {Number} [x=0] - The x position of the rectangle.
  * @param {Number} [y=0] - The y position of the rectangle.
- * @param {Number} width - The width value of the rectangle.
- * @param {Number} height - The width value of the rectangle.
+ * @param {Number} [width] - The width value of the rectangle.
+ * @param {Number} [height] - The width value of the rectangle.
  */
-var Rectangle = function(x, y, width, height) {
+function Rectangle(x, y, width, height) {
 
   Path.call(this, [
     new Anchor(),
@@ -88,6 +88,8 @@ _.extend(Rectangle, {
 
 _.extend(Rectangle.prototype, Path.prototype, {
 
+  constructor: Rectangle,
+
   /**
    * @name Two.Rectangle#_flagWidth
    * @private
@@ -115,8 +117,6 @@ _.extend(Rectangle.prototype, Path.prototype, {
   _height: 0,
 
   _origin: null,
-
-  constructor: Rectangle,
 
   /**
    * @name Two.Rectangle#_update

@@ -1131,7 +1131,7 @@ webgl.ctx = webgl.canvas.getContext('2d');
  * @description This class is used by {@link Two} when constructing with `type` of `Two.Types.webgl`. It takes Two.js' scenegraph and renders it to a `<canvas />` through the WebGL api.
  * @see {@link https://www.khronos.org/registry/webgl/specs/latest/1.0/}
  */
-var Renderer = function(params) {
+function Renderer(params) {
 
   var gl, vs, fs;
 

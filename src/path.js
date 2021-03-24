@@ -37,7 +37,7 @@ var min = Math.min, max = Math.max, round = Math.round,
  * @param {Boolean} [manual=false] - Describes whether the developer controls how vertices are plotted or if Two.js automatically plots coordinates based on closed and curved booleans.
  * @description This is the primary primitive class for creating all drawable shapes in Two.js. Unless specified methods return their instance of `Two.Path` for the purpose of chaining.
  */
-var Path = function(vertices, closed, curved, manual) {
+function Path(vertices, closed, curved, manual) {
 
   Shape.call(this);
 
@@ -483,6 +483,8 @@ _.extend(Path, {
 
 _.extend(Path.prototype, Shape.prototype, {
 
+  constructor: Path,
+
   // Flags
   // http://en.wikipedia.org/wiki/Flag
 
@@ -676,8 +678,6 @@ _.extend(Path.prototype, Shape.prototype, {
    * @see {@link Two.Path#dashes}
    */
   _dashes: [],
-
-  constructor: Path,
 
   /**
    * @name Two.Path#clone

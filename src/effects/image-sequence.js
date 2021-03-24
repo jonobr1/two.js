@@ -20,7 +20,7 @@ import Texture from './texture.js';
  * @param {Integer} [frameRate=30] - The frame rate at which the images should playback at.
  * @description A convenient package to display still or animated images organized as a series of still images.
  */
-var ImageSequence = function(paths, ox, oy, frameRate) {
+function ImageSequence(paths, ox, oy, frameRate) {
 
   // Not using default constructor of Rectangle due to odd `beginning` / `ending` behavior.
   // See: https://github.com/jonobr1/two.js/issues/383
@@ -198,6 +198,8 @@ _.extend(ImageSequence, {
 
 _.extend(ImageSequence.prototype, Rectangle.prototype, {
 
+  constructor: ImageSequence,
+
   /**
    * @name Two.ImageSequence#_flagTextures
    * @private
@@ -299,8 +301,6 @@ _.extend(ImageSequence.prototype, Rectangle.prototype, {
    * @see {@link Two.ImageSequence#origin}
    */
   _origin: null,
-
-  constructor: ImageSequence,
 
   /**
    * @name Two.ImageSequence#play

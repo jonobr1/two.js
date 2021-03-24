@@ -760,7 +760,7 @@ var canvas = {
  * @param {Boolean} [parameters.smoothing=true] - Determines whether the canvas should antialias drawing. Set it to `false` when working with pixel art. `false` can lead to better performance, since it would use a cheaper interpolation algorithm.
  * @description This class is used by {@link Two} when constructing with `type` of `Two.Types.canvas`. It takes Two.js' scenegraph and renders it to a `<canvas />`.
  */
-var Renderer = function(params) {
+function Renderer(params) {
 
   // It might not make a big difference on GPU backed canvases.
   var smoothing = (params.smoothing !== false);

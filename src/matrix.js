@@ -22,7 +22,7 @@ var array = [];
  * @description A class to store 3 x 3 transformation matrix information. In addition to storing data `Two.Matrix` has suped up methods for commonplace mathematical operations.
  * @nota-bene Order is based on how to construct transformation strings for the browser.
  */
-var Matrix = function(a, b, c, d, e, f) {
+function Matrix(a, b, c, d, e, f) {
 
   /**
    * @name Two.Matrix#elements

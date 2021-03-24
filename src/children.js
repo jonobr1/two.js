@@ -8,7 +8,7 @@ import Collection from './collection.js';
  * @extends Two.Utils.Collection
  * @description A children collection which is accesible both by index and by object `id`.
  */
-var Children = function() {
+function Children() {
 
   Collection.apply(this, arguments);
 

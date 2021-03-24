@@ -5,7 +5,7 @@ import _ from './utils/underscore.js';
  * @class
  * @description An arbitrary class to manage a directory of things. Mainly used for keeping tabs of textures in Two.js.
  */
-var Registry = function() {
+function Registry() {
 
   this.map = {};
 

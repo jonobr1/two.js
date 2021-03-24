@@ -12,7 +12,7 @@ import Constants from './constants.js';
  * @extends Events
  * @description The foundational transformation object for the Two.js scenegraph.
  */
-var Shape = function() {
+function Shape() {
 
   /**
    * @name Two.Shape#_renderer
@@ -208,6 +208,8 @@ _.extend(Shape, {
 
 _.extend(Shape.prototype, Events, {
 
+  constructor: Shape,
+
   // Flags
 
   /**
@@ -275,8 +277,6 @@ _.extend(Shape.prototype, Events, {
    * @nota-bene Only available for the SVG renderer.
    */
   _className: '',
-
-  constructor: Shape,
 
   /**
    * @name Two.Shape#addTo

@@ -896,7 +896,7 @@ var svg = {
  * @param {Element} [parameters.domElement] - The `<svg />` to draw to. If none given a new one will be constructed.
  * @description This class is used by {@link Two} when constructing with `type` of `Two.Types.svg` (the default type). It takes Two.js' scenegraph and renders it to a `<svg />`.
  */
-var Renderer = function(params) {
+function Renderer(params) {
 
   /**
    * @name Two.SVGRenderer#domElement

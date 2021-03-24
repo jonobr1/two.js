@@ -8,7 +8,7 @@ import _ from './utils/underscore.js';
  * @extends Utils.Events
  * @description An `Array` like object with additional event propagation on actions. `pop`, `shift`, and `splice` trigger `removed` events. `push`, `unshift`, and `splice` with more than 2 arguments trigger 'inserted'. Finally, `sort` and `reverse` trigger `order` events.
  */
-var Collection = function() {
+function Collection() {
 
   Array.call(this);
 
@@ -21,9 +21,10 @@ var Collection = function() {
 };
 
 Collection.prototype = new Array();
-Collection.prototype.constructor = Collection;
 
 _.extend(Collection.prototype, Events, {
+
+  constructor: Collection,
 
   pop: function() {
     var popped = Array.prototype.pop.apply(this, arguments);

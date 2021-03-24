@@ -18,7 +18,7 @@ var min = Math.min, max = Math.max;
  * @description This is the primary class for grouping objects that are then drawn in Two.js. In Illustrator this is a group, in After Effects it would be a Null Object. Whichever the case, the `Two.Group` contains a transformation matrix and commands to style its children, but it by itself doesn't render to the screen.
  * @nota-bene The {@link Two#scene} is an instance of `Two.Group`.
  */
-var Group = function(children) {
+function Group(children) {
 
   Shape.call(this, true);
 
@@ -297,6 +297,8 @@ _.extend(Group, {
 
 _.extend(Group.prototype, Shape.prototype, {
 
+  constructor: Group,
+
   // Flags
   // http://en.wikipedia.org/wiki/Flag
 
@@ -464,8 +466,6 @@ _.extend(Group.prototype, Shape.prototype, {
    * @property {Two.Shape} - The Two.js object to clip from a group's rendering.
    */
   _mask: null,
-
-  constructor: Group,
 
   /**
    * @name Two.Group#clone

@@ -9,7 +9,7 @@ import Events from '../events.js';
  * @param {Number} [opacity] - The opacity value. Default value is 1, cannot be lower than 0.
  * @nota-bene Used specifically in conjunction with {@link Two.Gradient}s to control color graduation.
  */
-var Stop = function(offset, color, opacity) {
+function Stop(offset, color, opacity) {
 
   /**
    * @name Two.Stop#_renderer
@@ -155,6 +155,5 @@ _.extend(Stop.prototype, Events, {
 });
 
 Stop.MakeObservable(Stop.prototype);
-Stop.prototype.constructor = Stop;
 
 export default Stop;
