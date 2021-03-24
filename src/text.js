@@ -192,7 +192,7 @@ _.extend(Text, {
 
 _.extend(Text.prototype, Shape.prototype, {
 
-  constructor: text,
+  constructor: Text,
 
   // Flags
   // http://en.wikipedia.org/wiki/Flag

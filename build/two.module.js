@@ -323,6 +323,9 @@ Events.bind = addEventListener;
  */
 Events.unbind = removeEventListener;
 
+/**
+ * @returns {Events} - Returns an instance of self for the purpose of chaining.
+ */
 function addEventListener(name, handler) {
 
   var scope = this;
@@ -336,6 +339,9 @@ function addEventListener(name, handler) {
 
 }
 
+/**
+ * @returns {Events} - Returns an instance of self for the purpose of chaining.
+ */
 function removeEventListener(name, handler) {
 
   var scope = this;
@@ -2145,7 +2151,7 @@ var Constants = {
    * @name Two.PublishDate
    * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
    */
-  PublishDate: '2021-03-24T20:25:55.671Z',
+  PublishDate: '2021-03-24T20:47:27.840Z',
 
   /**
    * @name Two.Identifier
@@ -8555,8 +8561,8 @@ Path.MakeObservable(Line.prototype);
  * @extends Two.Path
  * @param {Number} [x=0] - The x position of the rectangle.
  * @param {Number} [y=0] - The y position of the rectangle.
- * @param {Number} width - The width value of the rectangle.
- * @param {Number} height - The width value of the rectangle.
+ * @param {Number} [width] - The width value of the rectangle.
+ * @param {Number} [height] - The width value of the rectangle.
  */
 function Rectangle(x, y, width, height) {
 
@@ -9091,11 +9097,12 @@ RoundedRectangle.MakeObservable(RoundedRectangle.prototype);
  * @name Two.Text
  * @class
  * @extends Two.Shape
- * @param {String} message - The String to be rendered to the scene.
+ * @param {String} [message] - The String to be rendered to the scene.
  * @param {Number} [x=0] - The position in the x direction for the object.
  * @param {Number} [y=0] - The position in the y direction for the object.
  * @param {Object} [styles] - An object where styles are applied. Attribute must exist in Two.Text.Properties.
  * @description This is a primitive class for creating drawable text that can be added to the scenegraph.
+ * @returns {Two.Text}
  */
 function Text(message, x, y, styles) {
 
@@ -9108,10 +9115,10 @@ function Text(message, x, y, styles) {
   this.value = message;
 
   if (typeof x === 'number') {
-      this.translation.x = x;
+    this.translation.x = x;
   }
   if (typeof y === 'number') {
-      this.translation.y = y;
+    this.translation.y = y;
   }
 
   /**
@@ -9267,7 +9274,7 @@ _.extend(Text, {
 
 _.extend(Text.prototype, Shape.prototype, {
 
-  constructor: text,
+  constructor: Text,
 
   // Flags
   // http://en.wikipedia.org/wiki/Flag
