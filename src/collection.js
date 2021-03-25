@@ -18,7 +18,7 @@ function Collection() {
     Array.prototype.push.apply(this, arguments[0]);
   }
 
-};
+}
 
 Collection.prototype = new Array();
 

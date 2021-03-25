@@ -9,7 +9,7 @@ function Registry() {
 
   this.map = {};
 
-};
+}
 
 _.extend(Registry.prototype, {
 

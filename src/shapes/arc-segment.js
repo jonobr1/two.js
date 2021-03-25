@@ -62,7 +62,7 @@ function ArcSegment(ox, oy, ir, or, sa, ea, res) {
     this.translation.y = oy;
   }
 
-};
+}
 
 _.extend(ArcSegment, {
 

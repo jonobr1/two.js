@@ -61,7 +61,7 @@ function RadialGradient(cx, cy, r, stops, fx, fy) {
     this.focal.y = fy;
   }
 
-};
+}
 
 _.extend(RadialGradient, {
 

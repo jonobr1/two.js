@@ -70,7 +70,7 @@ function ImageSequence(paths, ox, oy, frameRate) {
    */
   this.index = 0;
 
-};
+}
 
 _.extend(ImageSequence, {
 

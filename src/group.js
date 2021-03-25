@@ -46,7 +46,7 @@ function Group(children) {
    */
   this.children = Array.isArray(children) ? children : Array.prototype.slice.call(arguments);
 
-};
+}
 
 _.extend(Group, {
 

@@ -79,7 +79,7 @@ function Sprite(path, ox, oy, cols, rows, frameRate) {
    */
   this.index = 0;
 
-};
+}
 
 _.extend(Sprite, {
 

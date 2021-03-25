@@ -42,7 +42,7 @@ function Matrix(a, b, c, d, e, f) {
     this.set(elements);
   }
 
-};
+}
 
 setMatrix(Matrix);
 

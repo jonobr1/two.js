@@ -64,7 +64,7 @@ function Text(message, x, y, styles) {
 
   }, this);
 
-};
+}
 
 _.extend(Text, {
 

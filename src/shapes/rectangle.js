@@ -46,7 +46,7 @@ function Rectangle(x, y, width, height) {
 
   this._update();
 
-};
+}
 
 _.extend(Rectangle, {
 

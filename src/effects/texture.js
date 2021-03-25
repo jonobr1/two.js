@@ -97,7 +97,7 @@ function Texture(src, callback) {
 
   this._update();
 
-};
+}
 
 _.extend(Texture, {
 

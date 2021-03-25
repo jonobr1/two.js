@@ -794,7 +794,7 @@ function Renderer(params) {
    */
   this.scene = new Group();
   this.scene.parent = this;
-};
+}
 
 
 _.extend(Renderer, {

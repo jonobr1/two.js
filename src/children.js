@@ -27,7 +27,7 @@ function Children() {
   this.on(Events.Types.remove, this.detach);
   Children.prototype.attach.apply(this, arguments);
 
-};
+}
 
 Children.prototype = new Collection();
 

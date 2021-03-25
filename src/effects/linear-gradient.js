@@ -48,7 +48,7 @@ function LinearGradient(x1, y1, x2, y2, stops) {
     this.right.y = y2;
   }
 
-};
+}
 
 _.extend(LinearGradient, {
 

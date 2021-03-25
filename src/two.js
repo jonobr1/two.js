@@ -156,7 +156,7 @@ function Two(options) {
     raf.init();
   }
 
-};
+}
 
 _.extend(Two, Constants);
 

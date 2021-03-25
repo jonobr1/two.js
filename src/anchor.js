@@ -53,7 +53,7 @@ function Anchor(x, y, lx, ly, rx, ry, command) {
     this.controls.right.y = ry;
   }
 
-};
+}
 
 _.extend(Anchor, {
 

@@ -22,7 +22,7 @@ function Vector(x, y) {
    */
   this.y = y || 0;
 
-};
+}
 
 _.extend(Vector, {
 

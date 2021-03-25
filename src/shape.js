@@ -66,7 +66,7 @@ function Shape() {
    */
   this.scale = 1;
 
-};
+}
 
 _.extend(Shape, {
 

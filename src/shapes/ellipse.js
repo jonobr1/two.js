@@ -48,7 +48,7 @@ function Ellipse(ox, oy, rx, ry, resolution) {
   this._update();
   this.translation.set(ox, oy);
 
-};
+}
 
 _.extend(Ellipse, {
 

@@ -43,7 +43,7 @@ function Stop(offset, color, opacity) {
 
   Stop.Index = (Stop.Index + 1) % 2;
 
-};
+}
 
 _.extend(Stop, {
 

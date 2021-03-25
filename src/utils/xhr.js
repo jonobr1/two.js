@@ -20,6 +20,6 @@ function xhr(path, callback) {
   xhr.send();
   return xhr;
 
-};
+}
 
 export default xhr;

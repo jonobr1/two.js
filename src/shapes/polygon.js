@@ -44,7 +44,7 @@ function Polygon(ox, oy, r, sides) {
   this._update();
   this.translation.set(ox, oy);
 
-};
+}
 
 _.extend(Polygon, {
 

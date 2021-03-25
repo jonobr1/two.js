@@ -53,7 +53,7 @@ function Star(ox, oy, ir, or, sides) {
   this._update();
   this.translation.set(ox, oy);
 
-};
+}
 
 _.extend(Star, {
 

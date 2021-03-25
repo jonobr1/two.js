@@ -7,7 +7,7 @@ import _ from './underscore.js';
 function TwoError(message) {
   this.name = 'Two.js';
   this.message = message;
-};
+}
 
 TwoError.prototype = new Error();
 

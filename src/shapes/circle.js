@@ -44,7 +44,7 @@ function Circle(ox, oy, r, resolution) {
     this.translation.y = oy;
   }
 
-};
+}
 
 _.extend(Circle, {
 

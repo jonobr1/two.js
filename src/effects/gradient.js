@@ -51,7 +51,7 @@ function Gradient(stops) {
     this.stops = stops;
   }
 
-};
+}
 
 _.extend(Gradient, {
 

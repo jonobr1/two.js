@@ -920,7 +920,7 @@ function Renderer(params) {
   this.domElement.defs = this.defs;
   this.domElement.style.overflow = 'hidden';
 
-};
+}
 
 _.extend(Renderer, {
 

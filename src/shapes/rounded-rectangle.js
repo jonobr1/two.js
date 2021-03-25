@@ -62,7 +62,7 @@ function RoundedRectangle(ox, oy, width, height, radius) {
   this._update();
   this.translation.set(ox, oy);
 
-};
+}
 
 _.extend(RoundedRectangle, {
 

@@ -171,7 +171,7 @@ function Path(vertices, closed, curved, manual) {
    */
   this.dashes.offset = 0;
 
-};
+}
 
 _.extend(Path, {
 

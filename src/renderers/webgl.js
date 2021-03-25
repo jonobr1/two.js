@@ -1235,7 +1235,7 @@ function Renderer(params) {
 
   gl.blendEquation(gl.FUNC_ADD);
   gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-};
+}
 
 _.extend(Renderer, {
 
