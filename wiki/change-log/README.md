@@ -5,6 +5,8 @@ sidebarDepth: 2
 # Change Log
 
 ## Nightly
+
+## March 26, 2021
 + Exposed `Two.Shape.renderer` for easier access to underlying SVG elements
 + Added Typescript declaration types to Two.js
 + Made `Two.Group` listen to `Two.Shape.id` changes through new observable property and flags
