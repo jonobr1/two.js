@@ -12,16 +12,15 @@ import Stop from './stop.js';
  * @param {Two.Stop[]} [stops] - A list of {@link Two.Stop}s that contain the gradient fill pattern for the gradient.
  * @description This is the base class for constructing different types of gradients with Two.js. The two common gradients are {@link Two.LinearGradient} and {@link Two.RadialGradient}.
  */
-var Gradient = function(stops) {
+function Gradient(stops) {
 
   /**
-   * @name Two.Gradient#_renderer
+   * @name Two.Gradient#renderer
    * @property {Object}
-   * @private
-   * @description A private object to store relevant renderer specific variables.
-   * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `gradient._renderer.elem`.
+   * @description Object access to store relevant renderer specific variables. Warning: manipulating this object can create unintended consequences.
+   * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `shape.renderer.elem`.
    */
-  this._renderer = {};
+  this.renderer = {};
   this._renderer.type = 'gradient';
 
   /**
@@ -47,9 +46,11 @@ var Gradient = function(stops) {
    * @name Two.Gradient#stops
    * @property {Two.Stop[]} - An ordered list of {@link Two.Stop}s for rendering the gradient.
    */
-  this.stops = stops;
+  if (stops) {
+    this.stops = stops;
+  }
 
-};
+}
 
 _.extend(Gradient, {
 
@@ -113,6 +114,20 @@ _.extend(Gradient, {
 
     });
 
+    Object.defineProperty(object, 'renderer', {
+
+      enumerable: false,
+
+      get: function() {
+        return this._renderer;
+      },
+
+      set: function(obj) {
+        this._renderer = obj;
+      }
+
+    });
+
   },
 
   /**
@@ -163,6 +178,8 @@ _.extend(Gradient, {
 });
 
 _.extend(Gradient.prototype, Events, {
+
+  constructor: Gradient,
 
   /**
    * @name Two.Gradient#_flagStops

@@ -8,7 +8,7 @@ import Collection from './collection.js';
  * @extends Two.Utils.Collection
  * @description A children collection which is accesible both by index and by object `id`.
  */
-var Children = function() {
+function Children() {
 
   Collection.apply(this, arguments);
 
@@ -27,7 +27,7 @@ var Children = function() {
   this.on(Events.Types.remove, this.detach);
   Children.prototype.attach.apply(this, arguments);
 
-};
+}
 
 Children.prototype = new Collection();
 

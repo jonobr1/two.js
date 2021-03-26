@@ -245,7 +245,7 @@ Convenience function to apply observable qualities of a [Two.Group](/documentati
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L106)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L105)
 
 </div>
 
@@ -294,7 +294,7 @@ Convenience method to apply getter / setter logic on an array of properties. Use
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L231)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L245)
 
 </div>
 
@@ -343,7 +343,7 @@ Convenience method to apply getter / setter logic specific to how `Two.Group`s t
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L250)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L264)
 
 </div>
 
@@ -535,7 +535,7 @@ The value of what all child shapes should be filled in with.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L347)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L369)
 
 </div>
 
@@ -582,7 +582,7 @@ The value of what all child shapes should be outlined in with.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L354)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L376)
 
 </div>
 
@@ -629,7 +629,7 @@ The thickness in pixels of the stroke for all child shapes.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L361)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L383)
 
 </div>
 
@@ -670,7 +670,7 @@ The opaqueness of all child shapes.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L367)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L389)
 
 </div>
 
@@ -721,7 +721,7 @@ Display the path or not.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L374)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L396)
 
 </div>
 
@@ -772,7 +772,7 @@ For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L381)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L403)
 
 </div>
 
@@ -819,7 +819,7 @@ For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L388)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L410)
 
 </div>
 
@@ -866,7 +866,7 @@ For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L395)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L417)
 
 </div>
 
@@ -913,7 +913,7 @@ Determines whether a final line is drawn between the final point in the `vertice
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L402)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L424)
 
 </div>
 
@@ -954,7 +954,7 @@ When the child's path is `automatic = true` this boolean determines whether the 
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L408)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L430)
 
 </div>
 
@@ -995,7 +995,7 @@ Determines whether or not Two.js should calculate curves, lines, and commands au
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L414)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L436)
 
 </div>
 
@@ -1042,7 +1042,7 @@ Number between zero and one to state the beginning of where the path is rendered
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L420)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L442)
 
 </div>
 
@@ -1099,7 +1099,7 @@ Number between zero and one to state the ending of where the path is rendered.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L428)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L450)
 
 </div>
 
@@ -1150,7 +1150,7 @@ The sum of distances between all child lengths.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L436)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L458)
 
 </div>
 
@@ -1191,7 +1191,7 @@ The Two.js object to clip from a group's rendering.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L442)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L464)
 
 </div>
 
@@ -1252,7 +1252,7 @@ Create a new instance of [Two.Group](/documentation/group) with the same propert
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L450)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L470)
 
 </div>
 
@@ -1306,7 +1306,7 @@ Return a JSON compatible plain object that represents the group.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L495)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L515)
 
 </div>
 
@@ -1347,7 +1347,7 @@ Orient the children of the group to the upper left-hand corner of that group.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L525)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L545)
 
 </div>
 
@@ -1388,7 +1388,7 @@ Orient the children of the group to the center of that group.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L543)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L563)
 
 </div>
 
@@ -1444,7 +1444,7 @@ Recursively search for id. Returns the first element found.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L567)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L587)
 
 </div>
 
@@ -1500,7 +1500,7 @@ Recursively search for classes. Returns an array of matching elements.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L591)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L611)
 
 </div>
 
@@ -1556,7 +1556,7 @@ Recursively search for children of a specific type, e.g. [Two.Path](/documentati
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L614)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L634)
 
 </div>
 
@@ -1604,7 +1604,7 @@ Add objects to the group.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L637)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L657)
 
 </div>
 
@@ -1652,7 +1652,7 @@ Remove objects from the group.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L671)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L691)
 
 </div>
 
@@ -1715,7 +1715,7 @@ Return an object with top, left, right, bottom, width, and height parameters of 
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L708)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L734)
 
 </div>
 
@@ -1756,7 +1756,7 @@ Apply `noFill` method to all child shapes.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L760)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L786)
 
 </div>
 
@@ -1797,7 +1797,7 @@ Apply `noStroke` method to all child shapes.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L772)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L798)
 
 </div>
 
@@ -1838,7 +1838,7 @@ Apply `subdivide` method to all child shapes.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L784)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L810)
 
 </div>
 

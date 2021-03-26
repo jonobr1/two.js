@@ -396,6 +396,29 @@ QUnit.test('Two.Collection', function(assert) {
 
 });
 
+QUnit.test('Two.Children', function(assert) {
+
+  assert.expect(3);
+
+  var group = new Two.Group();
+  var shape = new Two.Shape();
+
+  group.add(shape);
+  shape._update(true);
+
+  assert.equal(shape.id in group.children.ids, true, 'Two.Children properly adds child elements to list.');
+
+  group.remove(shape);
+  group._update(true);
+  assert.equal(shape.id in group.children.ids, false, 'Two.Children properly removes child element from list.');
+
+  group.add(shape);
+  shape.id = 'custom';
+  shape._update(true);
+  assert.equal(shape.id in group.children.ids, true, 'Two.Children properly updates ids map when child id changes.');
+
+});
+
 QUnit.test('Two.Shape', function(assert) {
 
   assert.expect(11);

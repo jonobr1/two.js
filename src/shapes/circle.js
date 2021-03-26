@@ -17,7 +17,7 @@ var cos = Math.cos, sin = Math.sin;
  * @param {Number} radius - The radius value of the circle.
  * @param {Number} [resolution=4] - The number of vertices used to construct the circle.
  */
-var Circle = function(ox, oy, r, resolution) {
+function Circle(ox, oy, r, resolution) {
 
   // At least 2 vertices are required for proper circlage
   var amount = resolution ? Math.max(resolution, 2) : 4;
@@ -44,7 +44,7 @@ var Circle = function(ox, oy, r, resolution) {
     this.translation.y = oy;
   }
 
-};
+}
 
 _.extend(Circle, {
 
@@ -71,6 +71,8 @@ _.extend(Circle, {
 
 _.extend(Circle.prototype, Path.prototype, {
 
+  constructor: Circle,
+
   /**
    * @name Two.Circle#_flagRadius
    * @private
@@ -84,8 +86,6 @@ _.extend(Circle.prototype, Path.prototype, {
    * @see {@link Two.Circle#radius}
    */
   _radius: 0,
-
-  constructor: Circle,
 
   /**
    * @name Two.Circle#_update

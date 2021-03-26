@@ -61,7 +61,7 @@ A list of properties that are on every [Two.Texture](/documentation/texture).
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L104)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L110)
 
 </div>
 
@@ -102,7 +102,7 @@ A map of compatible DOM Elements categorized by media format.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L114)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L120)
 
 </div>
 
@@ -143,7 +143,7 @@ A canonical listing of image data used in a single session of Two.js.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L120)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L126)
 
 </div>
 
@@ -216,7 +216,7 @@ Serializes a URL as an absolute path for canonical attribution in [Two.ImageRegi
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L127)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L133)
 
 </div>
 
@@ -265,7 +265,7 @@ Loads an image as a buffer in headless environments.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L142)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L148)
 
 </div>
 
@@ -338,7 +338,7 @@ Retrieves the tag name of an image, video, or canvas node.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L156)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L162)
 
 </div>
 
@@ -401,7 +401,7 @@ Convenience function to set [Two.Texture.image](/documentation/texture#two-textu
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L168)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L174)
 
 </div>
 
@@ -442,7 +442,7 @@ A collection of functions to register different types of textures. Used internal
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L210)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L216)
 
 </div>
 
@@ -485,7 +485,7 @@ A collection of functions to register different types of textures. Used internal
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L314)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L321)
 
 </div>
 
@@ -526,7 +526,7 @@ Cached method to let renderers know `offset` has been updated on a [Two.Texture]
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L346)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L353)
 
 </div>
 
@@ -567,7 +567,7 @@ Cached method to let renderers know `scale` has been updated on a [Two.Texture](
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L355)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L362)
 
 </div>
 
@@ -615,11 +615,68 @@ Convenience function to apply observable qualities of a [Two.Texture](/documenta
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L364)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L371)
 
 </div>
 
 
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance member ">
+
+## Two.Texture.renderer
+
+
+
+
+
+
+
+
+<div class="properties">
+
+
+
+</div>
+
+
+
+
+
+
+<div class="description">
+
+Object access to store relevant renderer specific variables. Warning: manipulating this object can create unintended consequences.
+
+</div>
+
+
+
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L37)
+
+</div>
+
+
+
+<div class="tags">
+
+
+::: tip nota-bene
+With the [Two.SvgRenderer](/documentation/svgrenderer) you can access the underlying SVG element created via `shape.renderer.elem`.
+:::
+
+
+</div>
 
 
 
@@ -656,7 +713,7 @@ Shorthand value to determine if image has been loaded into the texture.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L45)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L51)
 
 </div>
 
@@ -697,7 +754,7 @@ CSS style declaration to tile [Two.Path](/documentation/path). Valid values incl
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L51)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L57)
 
 </div>
 
@@ -744,7 +801,7 @@ A two-component vector describing any pixel offset of the texture when applied t
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L58)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L64)
 
 </div>
 
@@ -785,7 +842,7 @@ The URL path to the image data.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L74)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L80)
 
 </div>
 
@@ -836,7 +893,7 @@ The corresponding DOM Element of the texture. Can be a `<img />`, `<canvas />`, 
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L89)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L95)
 
 </div>
 
@@ -900,7 +957,7 @@ Create a new instance of [Two.Texture](/documentation/texture) with the same pro
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L540)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L561)
 
 </div>
 
@@ -954,7 +1011,7 @@ Return a JSON compatible plain object that represents the texture.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L554)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L575)
 
 </div>
 

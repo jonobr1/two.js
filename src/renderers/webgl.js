@@ -55,11 +55,11 @@ var webgl = {
 
     render: function(gl, program) {
 
-      this._update();
-
       if (!this._visible) {
         return;
       }
+
+      this._update();
 
       var parent = this.parent;
       var flagParentMatrix = (parent._matrix && parent._matrix.manual) || parent._flagMatrix;
@@ -1131,7 +1131,7 @@ webgl.ctx = webgl.canvas.getContext('2d');
  * @description This class is used by {@link Two} when constructing with `type` of `Two.Types.webgl`. It takes Two.js' scenegraph and renders it to a `<canvas />` through the WebGL api.
  * @see {@link https://www.khronos.org/registry/webgl/specs/latest/1.0/}
  */
-var Renderer = function(params) {
+function Renderer(params) {
 
   var gl, vs, fs;
 
@@ -1235,7 +1235,7 @@ var Renderer = function(params) {
 
   gl.blendEquation(gl.FUNC_ADD);
   gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-};
+}
 
 _.extend(Renderer, {
 

@@ -18,7 +18,7 @@ import Vector from '../vector.js';
  * @param {Number} radius - The radius value of the rounded rectangle.
  * @param {Number} [resolution=12] - The number of vertices used to construct the rounded rectangle.
  */
-var RoundedRectangle = function(ox, oy, width, height, radius) {
+function RoundedRectangle(ox, oy, width, height, radius) {
 
   if (typeof radius === 'undefined') {
     radius = Math.floor(Math.min(width, height) / 12);
@@ -62,7 +62,7 @@ var RoundedRectangle = function(ox, oy, width, height, radius) {
   this._update();
   this.translation.set(ox, oy);
 
-};
+}
 
 _.extend(RoundedRectangle, {
 
@@ -119,6 +119,8 @@ _.extend(RoundedRectangle, {
 
 _.extend(RoundedRectangle.prototype, Path.prototype, {
 
+  constructor: RoundedRectangle,
+
   /**
    * @name Two.RoundedRectangle#_flagWidth
    * @private
@@ -156,8 +158,6 @@ _.extend(RoundedRectangle.prototype, Path.prototype, {
    * @see {@link Two.RoundedRectangle#radius}
    */
   _radius: 0,
-
-  constructor: RoundedRectangle,
 
   /**
    * @name Two.RoundedRectangle#_update

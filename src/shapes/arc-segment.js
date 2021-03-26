@@ -21,7 +21,7 @@ var TWO_PI = Math.PI * 2, HALF_PI = Math.PI / 2;
  * @param {Radians} endAngle - The end angle of the arc segment in radians.
  * @param {Number} [resolution=24] - The number of vertices used to construct the arc segment.
  */
-var ArcSegment = function(ox, oy, ir, or, sa, ea, res) {
+function ArcSegment(ox, oy, ir, or, sa, ea, res) {
 
   var amount = res || (Constants.Resolution * 3);
   var points = [];
@@ -62,7 +62,7 @@ var ArcSegment = function(ox, oy, ir, or, sa, ea, res) {
     this.translation.y = oy;
   }
 
-};
+}
 
 _.extend(ArcSegment, {
 
@@ -88,6 +88,8 @@ _.extend(ArcSegment, {
 });
 
 _.extend(ArcSegment.prototype, Path.prototype, {
+
+  constructor: ArcSegment,
 
   /**
    * @name Two.ArcSegment#_flagStartAngle
@@ -138,8 +140,6 @@ _.extend(ArcSegment.prototype, Path.prototype, {
    * @see {@link Two.ArcSegment#outerRadius}
    */
   _outerRadius: 0,
-
-  constructor: ArcSegment,
 
   /**
    * @name Two.ArcSegment#_update

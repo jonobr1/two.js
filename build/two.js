@@ -227,7 +227,164 @@ SOFTWARE.
     performance: ((root$1.performance && root$1.performance.now) ? root$1.performance : Date),
   };
 
-  var trigger = function(obj, events, args) {
+  /**
+   * @name Utils.Events
+   * @interface
+   * @description Object inherited by many Two.js objects in order to facilitate custom events.
+   */
+  var Events = {
+
+    /**
+     * @name Utils.Events.on
+     * @function
+     * @param {String} [name] - The name of the event to bind a function to.
+     * @param {Function} [handler] - The function to be invoked when the event is dispatched.
+     * @description Call to add a listener to a specific event name.
+     */
+    on: addEventListener,
+
+    /**
+     * @name Utils.Events.off
+     * @function
+     * @param {String} [name] - The name of the event intended to be removed.
+     * @param {Function} [handler] - The handler intended to be reomved.
+     * @description Call to remove listeners from a specific event. If only `name` is passed then all the handlers attached to that `name` will be removed. If no arguments are passed then all handlers for every event on the obejct are removed.
+     */
+    off: removeEventListener,
+
+    /**
+     * @name Utils.Events.trigger
+     * @function
+     * @param {String} name - The name of the event to dispatch.
+     * @param arguments - Anything can be passed after the name and those will be passed on to handlers attached to the event in the order they are passed.
+     * @description Call to trigger a custom event. Any additional arguments passed after the name will be passed along to the attached handlers.
+     */
+    trigger: function(name) {
+      var scope = this;
+      if (!scope._events) return scope;
+      var args = Array.prototype.slice.call(arguments, 1);
+      var events = scope._events[name];
+      if (events) dispatch(scope, events, args);
+      return scope;
+    },
+
+    listen: function(obj, name, handler) {
+
+      var bound = this;
+
+      if (obj) {
+
+        var event = function () {
+          handler.apply(bound, arguments);
+        };
+
+        // Add references about the object that assigned this listener
+        event.obj = obj;
+        event.name = name;
+        event.handler = handler;
+
+        obj.on(name, event);
+
+      }
+
+      return bound;
+
+    },
+
+    ignore: function(obj, name, handler) {
+
+      var scope = this;
+      obj.off(name, handler);
+      return scope;
+
+    },
+
+    Types: {
+      play: 'play',
+      pause: 'pause',
+      update: 'update',
+      render: 'render',
+      resize: 'resize',
+      change: 'change',
+      remove: 'remove',
+      insert: 'insert',
+      order: 'order',
+      load: 'load'
+    }
+
+  };
+
+
+  /**
+   * @name Two.Events.bind
+   * @function
+   * @description Alias for {@link Two.Events.on}.
+   */
+  Events.bind = addEventListener;
+
+  /**
+   * @name Two.Events.unbind
+   * @function
+   * @description Alias for {@link Two.Events.off}.
+   */
+  Events.unbind = removeEventListener;
+
+  /**
+   * @returns {Events} - Returns an instance of self for the purpose of chaining.
+   */
+  function addEventListener(name, handler) {
+
+    var scope = this;
+
+    scope._events || (scope._events = {});
+    var list = scope._events[name] || (scope._events[name] = []);
+
+    list.push(handler);
+
+    return scope;
+
+  }
+
+  /**
+   * @returns {Events} - Returns an instance of self for the purpose of chaining.
+   */
+  function removeEventListener(name, handler) {
+
+    var scope = this;
+
+    if (!scope._events) {
+      return scope;
+    }
+    if (!name && !handler) {
+      scope._events = {};
+      return scope;
+    }
+
+    var names = name ? [name] : Object.keys(scope._events);
+    for (var i = 0, l = names.length; i < l; i++) {
+
+      name = names[i];
+      var list = scope._events[name];
+
+      if (list) {
+        var events = [];
+        if (handler) {
+          for (var j = 0, k = list.length; j < k; j++) {
+            var ev = list[j];
+            ev = ev.handler ? ev.handler : ev;
+            if (handler && handler !== ev) {
+              events.push(ev);
+            }
+          }
+        }
+        scope._events[name] = events;
+      }
+    }
+
+    return scope;
+  }
+
+  function dispatch(obj, events, args) {
     var method;
     switch (args.length) {
     case 0:
@@ -258,148 +415,7 @@ SOFTWARE.
     for (var i = 0; i < events.length; i++) {
       method(i);
     }
-  };
-
-  /**
-   * @name Utils.Events
-   * @interface
-   * @description Object inherited by many Two.js objects in order to facilitate custom events.
-   */
-  var Events = {
-
-    /**
-     * @name Utils.Events.on
-     * @function
-     * @param {String} name - The name of the event to bind a function to.
-     * @param {Function} handler - The function to be invoked when the event is dispatched.
-     * @description Call to add a listener to a specific event name.
-     */
-    on: function(name, handler) {
-
-      this._events || (this._events = {});
-      var list = this._events[name] || (this._events[name] = []);
-
-      list.push(handler);
-
-      return this;
-
-    },
-
-    /**
-     * @name Utils.Events.off
-     * @function
-     * @param {String} [name] - The name of the event intended to be removed.
-     * @param {Function} [handler] - The handler intended to be reomved.
-     * @description Call to remove listeners from a specific event. If only `name` is passed then all the handlers attached to that `name` will be removed. If no arguments are passed then all handlers for every event on the obejct are removed.
-     */
-    off: function(name, handler) {
-
-      if (!this._events) {
-        return this;
-      }
-      if (!name && !handler) {
-        this._events = {};
-        return this;
-      }
-
-      var names = name ? [name] : Object.keys(this._events);
-      for (var i = 0, l = names.length; i < l; i++) {
-
-        name = names[i];
-        var list = this._events[name];
-
-        if (list) {
-          var events = [];
-          if (handler) {
-            for (var j = 0, k = list.length; j < k; j++) {
-              var ev = list[j];
-              ev = ev.handler ? ev.handler : ev;
-              if (handler && handler !== ev) {
-                events.push(ev);
-              }
-            }
-          }
-          this._events[name] = events;
-        }
-      }
-
-      return this;
-    },
-
-    /**
-     * @name Utils.Events.trigger
-     * @function
-     * @param {String} name - The name of the event to dispatch.
-     * @param arguments - Anything can be passed after the name and those will be passed on to handlers attached to the event in the order they are passed.
-     * @description Call to trigger a custom event. Any additional arguments passed after the name will be passed along to the attached handlers.
-     */
-    trigger: function(name) {
-      if (!this._events) return this;
-      var args = Array.prototype.slice.call(arguments, 1);
-      var events = this._events[name];
-      if (events) trigger(this, events, args);
-      return this;
-    },
-
-    listen: function(obj, name, handler) {
-
-      var bound = this;
-
-      if (obj) {
-
-        var event = function () {
-          handler.apply(bound, arguments);
-        };
-
-        // Add references about the object that assigned this listener
-        event.obj = obj;
-        event.name = name;
-        event.handler = handler;
-
-        obj.on(name, event);
-
-      }
-
-      return this;
-
-    },
-
-    ignore: function(obj, name, handler) {
-
-      obj.off(name, handler);
-      return this;
-
-    },
-
-    Types: {
-      play: 'play',
-      pause: 'pause',
-      update: 'update',
-      render: 'render',
-      resize: 'resize',
-      change: 'change',
-      remove: 'remove',
-      insert: 'insert',
-      order: 'order',
-      load: 'load'
-    }
-
-  };
-
-
-  /**
-   * @name Two.Events.bind
-   * @function
-   * @description Alias for {@link Two.Events.on}.
-   */
-  Events.bind = Events.on;
-
-  /**
-   * @name Two.Events.unbind
-   * @function
-   * @description Alias for {@link Two.Events.off}.
-   */
-  Events.unbind = Events.off;
+  }
 
   /**
    * @name Two.Vector
@@ -408,7 +424,7 @@ SOFTWARE.
    * @param {Number} [y=0] - Any number to represent the vertical y-component of the vector.
    * @description A class to store x / y component vector data. In addition to storing data `Two.Vector` has suped up methods for commonplace mathematical operations.
    */
-  var Vector = function(x, y) {
+  function Vector(x, y) {
 
     /**
      * @name Two.Vector#x
@@ -422,7 +438,7 @@ SOFTWARE.
      */
     this.y = y || 0;
 
-  };
+  }
 
   _.extend(Vector, {
 
@@ -1222,7 +1238,7 @@ SOFTWARE.
    * @extends Two.Vector
    * @description An object that holds 3 {@link Two.Vector}s, the anchor point and its corresponding handles: `left` and `right`. In order to properly describe the bezier curve about the point there is also a command property to describe what type of drawing should occur when Two.js renders the anchors.
    */
-  var Anchor = function(x, y, lx, ly, rx, ry, command) {
+  function Anchor(x, y, lx, ly, rx, ry, command) {
 
     Vector.call(this, x, y);
 
@@ -1258,7 +1274,7 @@ SOFTWARE.
       this.controls.right.y = ry;
     }
 
-  };
+  }
 
   _.extend(Anchor, {
 
@@ -1529,7 +1545,7 @@ SOFTWARE.
    * @description A class to store 3 x 3 transformation matrix information. In addition to storing data `Two.Matrix` has suped up methods for commonplace mathematical operations.
    * @nota-bene Order is based on how to construct transformation strings for the browser.
    */
-  var Matrix$1 = function(a, b, c, d, e, f) {
+  function Matrix$1(a, b, c, d, e, f) {
 
     /**
      * @name Two.Matrix#elements
@@ -1549,7 +1565,7 @@ SOFTWARE.
       this.set(elements);
     }
 
-  };
+  }
 
   setMatrix(Matrix$1);
 
@@ -2144,7 +2160,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2021-02-14T17:00:16.871Z',
+    PublishDate: '2021-03-26T16:14:37.868Z',
 
     /**
      * @name Two.Identifier
@@ -2637,7 +2653,7 @@ SOFTWARE.
    * @extends Utils.Events
    * @description An `Array` like object with additional event propagation on actions. `pop`, `shift`, and `splice` trigger `removed` events. `push`, `unshift`, and `splice` with more than 2 arguments trigger 'inserted'. Finally, `sort` and `reverse` trigger `order` events.
    */
-  var Collection = function() {
+  function Collection() {
 
     Array.call(this);
 
@@ -2647,12 +2663,13 @@ SOFTWARE.
       Array.prototype.push.apply(this, arguments[0]);
     }
 
-  };
+  }
 
   Collection.prototype = new Array();
-  Collection.prototype.constructor = Collection;
 
   _.extend(Collection.prototype, Events, {
+
+    constructor: Collection,
 
     pop: function() {
       var popped = Array.prototype.pop.apply(this, arguments);
@@ -2702,6 +2719,10 @@ SOFTWARE.
       Array.prototype.reverse.apply(this, arguments);
       this.trigger(Events.Types.order);
       return this;
+    },
+
+    indexOf: function() {
+      return Array.prototype.indexOf.apply(this, arguments);
     }
 
   });
@@ -2712,16 +2733,15 @@ SOFTWARE.
    * @extends Events
    * @description The foundational transformation object for the Two.js scenegraph.
    */
-  var Shape = function() {
+  function Shape() {
 
     /**
-     * @name Two.Shape#_renderer
+     * @name Two.Shape#renderer
      * @property {Object}
-     * @private
-     * @description A private object to store relevant renderer specific variables.
-     * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `shape._renderer.elem`.
+     * @description Object access to store relevant renderer specific variables. Warning: manipulating this object can create unintended consequences.
+     * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `shape.renderer.elem`.
      */
-    this._renderer = {};
+    this.renderer = {};
     this._renderer.flagMatrix = Shape.FlagMatrix.bind(this);
     this.isShape = true;
 
@@ -2766,7 +2786,7 @@ SOFTWARE.
      */
     this.scale = 1;
 
-  };
+  }
 
   _.extend(Shape, {
 
@@ -2850,6 +2870,23 @@ SOFTWARE.
         }
       });
 
+      Object.defineProperty(object, 'id', {
+        enumerable: true,
+        get: function() {
+          return this._id;
+        },
+        set: function(v) {
+          if (v === this._id) {
+            return;
+          }
+          this._id = v;
+          this._flagId = true;
+          if (this.parent) {
+            this.parent._flagId = true;
+          }
+        }
+      });
+
       Object.defineProperty(object, 'className', {
 
         enumerable: true,
@@ -2885,13 +2922,36 @@ SOFTWARE.
 
       });
 
+      Object.defineProperty(object, 'renderer', {
+
+        enumerable: false,
+
+        get: function() {
+          return this._renderer;
+        },
+
+        set: function(obj) {
+          this._renderer = obj;
+        }
+
+      });
+
     }
 
   });
 
   _.extend(Shape.prototype, Events, {
 
+    constructor: Shape,
+
     // Flags
+
+    /**
+     * @name Two.Shape#_id
+     * @private
+     * @property {Boolean} - Determines whether the id needs updating.
+     */
+    _flagId: true,
 
     /**
      * @name Two.Shape#_flagMatrix
@@ -2918,6 +2978,8 @@ SOFTWARE.
     _flagClassName: false,
 
     // Underlying Properties
+
+    _id: '',
 
     /**
      * @name Two.Shape#_translation
@@ -2949,8 +3011,6 @@ SOFTWARE.
      * @nota-bene Only available for the SVG renderer.
      */
     _className: '',
-
-    constructor: Shape,
 
     /**
      * @name Two.Shape#addTo
@@ -3034,7 +3094,8 @@ SOFTWARE.
      */
     flagReset: function() {
 
-      this._flagMatrix = this._flagScale = this._flagClassName = false;
+      this._flagId = this._flagMatrix = this._flagScale =
+        this._flagClassName = false;
 
       return this;
 
@@ -3050,7 +3111,7 @@ SOFTWARE.
    * @extends Two.Utils.Collection
    * @description A children collection which is accesible both by index and by object `id`.
    */
-  var Children = function() {
+  function Children() {
 
     Collection.apply(this, arguments);
 
@@ -3069,7 +3130,7 @@ SOFTWARE.
     this.on(Events.Types.remove, this.detach);
     Children.prototype.attach.apply(this, arguments);
 
-  };
+  }
 
   Children.prototype = new Collection();
 
@@ -3117,7 +3178,7 @@ SOFTWARE.
    * @description This is the primary class for grouping objects that are then drawn in Two.js. In Illustrator this is a group, in After Effects it would be a Null Object. Whichever the case, the `Two.Group` contains a transformation matrix and commands to style its children, but it by itself doesn't render to the screen.
    * @nota-bene The {@link Two#scene} is an instance of `Two.Group`.
    */
-  var Group = function(children) {
+  function Group(children) {
 
     Shape.call(this, true);
 
@@ -3145,7 +3206,7 @@ SOFTWARE.
      */
     this.children = Array.isArray(children) ? children : Array.prototype.slice.call(arguments);
 
-  };
+  }
 
   _.extend(Group, {
 
@@ -3396,6 +3457,8 @@ SOFTWARE.
 
   _.extend(Group.prototype, Shape.prototype, {
 
+    constructor: Group,
+
     // Flags
     // http://en.wikipedia.org/wiki/Flag
 
@@ -3563,8 +3626,6 @@ SOFTWARE.
      * @property {Two.Shape} - The Two.js object to clip from a group's rendering.
      */
     _mask: null,
-
-    constructor: Group,
 
     /**
      * @name Two.Group#clone
@@ -3816,8 +3877,14 @@ SOFTWARE.
 
       // Remove the objects
       for (var i = 0; i < objects.length; i++) {
-        if (!objects[i] || !(this.children.ids[objects[i].id])) continue;
-        this.children.splice(Array.prototype.indexOf.call(this.children, objects[i]), 1);
+        var object = objects[i];
+        if (!object || !this.children.ids[object.id]) {
+          continue;
+        }
+        var index = this.children.indexOf(object);
+        if (index >= 0) {
+          this.children.splice(index, 1);
+        }
       }
 
       return this;
@@ -3923,6 +3990,8 @@ SOFTWARE.
      */
     _update: function() {
 
+      var i, l, child;
+
       if (this._flagBeginning || this._flagEnding) {
 
         var beginning = Math.min(this._beginning, this._ending);
@@ -3933,10 +4002,10 @@ SOFTWARE.
         var bd = beginning * length;
         var ed = ending * length;
 
-        for (var i = 0; i < this.children.length; i++) {
+        for (i = 0; i < this.children.length; i++) {
 
-          var child = this.children[i];
-          var l = child.length;
+          child = this.children[i];
+          l = child.length;
 
           if (bd > sum + l) {
             child.beginning = 1;
@@ -3959,6 +4028,17 @@ SOFTWARE.
 
         }
 
+      }
+
+      if (this._flagId) {
+        // Means the group's id changed or one of its children's ids
+        // changed and as such we need to update the map of ids the
+        // Two.Group.children has.
+        this.children.ids = {};
+        for (i = 0; i < this.children.length; i++) {
+          child = this.children[i];
+          this.children.ids[child.id] = child;
+        }
       }
 
       return Shape.prototype._update.apply(this, arguments);
@@ -4129,12 +4209,11 @@ SOFTWARE.
 
       render: function(ctx) {
 
-        // TODO: Add a check here to only invoke _update if need be.
-        this._update();
-
         if (!this._visible) {
           return this;
         }
+
+        this._update();
 
         var matrix = this._matrix.elements;
         var parent = this.parent;
@@ -4199,15 +4278,21 @@ SOFTWARE.
             closed, commands, length, last, next, prev, a, b, c, d, ux, uy, vx, vy,
             ar, bl, br, cl, x, y, clip, defaultMatrix, isOffset, dashes;
 
-        // TODO: Add a check here to only invoke _update if need be.
+        // mask = this._mask;
+        clip = this._clip;
+        opacity = this._opacity * this.parent._renderer.opacity;
+        visible = this._visible;
+
+        if (!forced && (!visible || clip || opacity === 0)) {
+          return this;
+        }
+
         this._update();
 
         matrix = this._matrix.elements;
         stroke = this._stroke;
         linewidth = this._linewidth;
         fill = this._fill;
-        opacity = this._opacity * this.parent._renderer.opacity;
-        visible = this._visible;
         cap = this._cap;
         join = this._join;
         miter = this._miter;
@@ -4217,13 +4302,6 @@ SOFTWARE.
         last = length - 1;
         defaultMatrix = isDefaultMatrix(matrix);
         dashes = this.dashes;
-
-        // mask = this._mask;
-        clip = this._clip;
-
-        if (!forced && (!visible || clip)) {
-          return this;
-        }
 
         // Transform
         if (!defaultMatrix) {
@@ -4439,7 +4517,15 @@ SOFTWARE.
 
       render: function(ctx, forced, parentClipped) {
 
-        // TODO: Add a check here to only invoke _update if need be.
+        var opacity = this._opacity * this.parent._renderer.opacity;
+        var visible = this._visible;
+        // mask = this._mask;
+        var clip = this._clip;
+
+        if (!forced && (!visible || clip || opacity === 0)) {
+          return this;
+        }
+
         this._update();
 
         var matrix = this._matrix.elements;
@@ -4447,8 +4533,6 @@ SOFTWARE.
         var linewidth = this._linewidth;
         var fill = this._fill;
         var decoration = this._decoration;
-        var opacity = this._opacity * this.parent._renderer.opacity;
-        var visible = this._visible;
         var defaultMatrix = isDefaultMatrix(matrix);
         var isOffset = fill._renderer && fill._renderer.offset
           && stroke._renderer && stroke._renderer.offset;
@@ -4457,13 +4541,6 @@ SOFTWARE.
         var baseline = this._baseline;
 
         var a, b, c, d, e, sx, sy, x1, y1, x2, y2;
-
-        // mask = this._mask;
-        var clip = this._clip;
-
-        if (!forced && (!visible || clip)) {
-          return this;
-        }
 
         // Transform
         if (!defaultMatrix) {
@@ -4835,7 +4912,7 @@ SOFTWARE.
    * @param {Boolean} [parameters.smoothing=true] - Determines whether the canvas should antialias drawing. Set it to `false` when working with pixel art. `false` can lead to better performance, since it would use a cheaper interpolation algorithm.
    * @description This class is used by {@link Two} when constructing with `type` of `Two.Types.canvas`. It takes Two.js' scenegraph and renders it to a `<canvas />`.
    */
-  var Renderer = function(params) {
+  function Renderer(params) {
 
     // It might not make a big difference on GPU backed canvases.
     var smoothing = (params.smoothing !== false);
@@ -4869,7 +4946,7 @@ SOFTWARE.
      */
     this.scene = new Group();
     this.scene.parent = this;
-  };
+  }
 
 
   _.extend(Renderer, {
@@ -5121,14 +5198,16 @@ SOFTWARE.
    * @class
    * @description Custom error throwing for Two.js specific identification.
    */
-  var TwoError = function(message) {
+  function TwoError(message) {
     this.name = 'Two.js';
     this.message = message;
-  };
-
+  }
 
   TwoError.prototype = new Error();
-  TwoError.prototype.constructor = TwoError;
+
+  _.extend(TwoError.prototype, {
+    constructor: TwoError
+  });
 
   /**
    * @name Utils.defineGetterSetter
@@ -5161,11 +5240,11 @@ SOFTWARE.
    * @class
    * @description An arbitrary class to manage a directory of things. Mainly used for keeping tabs of textures in Two.js.
    */
-  var Registry = function() {
+  function Registry() {
 
     this.map = {};
 
-  };
+  }
 
   _.extend(Registry.prototype, {
 
@@ -5226,16 +5305,15 @@ SOFTWARE.
    * @param {Number} [opacity] - The opacity value. Default value is 1, cannot be lower than 0.
    * @nota-bene Used specifically in conjunction with {@link Two.Gradient}s to control color graduation.
    */
-  var Stop = function(offset, color, opacity) {
+  function Stop(offset, color, opacity) {
 
     /**
-     * @name Two.Stop#_renderer
+     * @name Two.Stop#renderer
      * @property {Object}
-     * @private
-     * @description A private object to store relevant renderer specific variables.
-     * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `stop._renderer.elem`.
+     * @description Object access to store relevant renderer specific variables. Warning: manipulating this object can create unintended consequences.
+     * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `shape.renderer.elem`.
      */
-    this._renderer = {};
+    this.renderer = {};
     this._renderer.type = 'stop';
 
     /**
@@ -5260,7 +5338,7 @@ SOFTWARE.
 
     Stop.Index = (Stop.Index + 1) % 2;
 
-  };
+  }
 
   _.extend(Stop, {
 
@@ -5309,6 +5387,20 @@ SOFTWARE.
         });
 
       }, object);
+
+      Object.defineProperty(object, 'renderer', {
+
+        enumerable: false,
+
+        get: function() {
+          return this._renderer;
+        },
+
+        set: function(obj) {
+          this._renderer = obj;
+        }
+
+      });
 
     }
 
@@ -5372,7 +5464,6 @@ SOFTWARE.
   });
 
   Stop.MakeObservable(Stop.prototype);
-  Stop.prototype.constructor = Stop;
 
   /**
    * @name Two.Gradient
@@ -5380,16 +5471,15 @@ SOFTWARE.
    * @param {Two.Stop[]} [stops] - A list of {@link Two.Stop}s that contain the gradient fill pattern for the gradient.
    * @description This is the base class for constructing different types of gradients with Two.js. The two common gradients are {@link Two.LinearGradient} and {@link Two.RadialGradient}.
    */
-  var Gradient = function(stops) {
+  function Gradient(stops) {
 
     /**
-     * @name Two.Gradient#_renderer
+     * @name Two.Gradient#renderer
      * @property {Object}
-     * @private
-     * @description A private object to store relevant renderer specific variables.
-     * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `gradient._renderer.elem`.
+     * @description Object access to store relevant renderer specific variables. Warning: manipulating this object can create unintended consequences.
+     * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `shape.renderer.elem`.
      */
-    this._renderer = {};
+    this.renderer = {};
     this._renderer.type = 'gradient';
 
     /**
@@ -5415,9 +5505,11 @@ SOFTWARE.
      * @name Two.Gradient#stops
      * @property {Two.Stop[]} - An ordered list of {@link Two.Stop}s for rendering the gradient.
      */
-    this.stops = stops;
+    if (stops) {
+      this.stops = stops;
+    }
 
-  };
+  }
 
   _.extend(Gradient, {
 
@@ -5481,6 +5573,20 @@ SOFTWARE.
 
       });
 
+      Object.defineProperty(object, 'renderer', {
+
+        enumerable: false,
+
+        get: function() {
+          return this._renderer;
+        },
+
+        set: function(obj) {
+          this._renderer = obj;
+        }
+
+      });
+
     },
 
     /**
@@ -5531,6 +5637,8 @@ SOFTWARE.
   });
 
   _.extend(Gradient.prototype, Events, {
+
+    constructor: Gradient,
 
     /**
      * @name Two.Gradient#_flagStops
@@ -5641,7 +5749,7 @@ SOFTWARE.
    * @param {Two.Stop[]} [stops] - A list of {@link Two.Stop}s that contain the gradient fill pattern for the gradient.
    * @nota-bene The linear gradient lives within the space of the parent object's matrix space.
    */
-  var LinearGradient = function(x1, y1, x2, y2, stops) {
+  function LinearGradient(x1, y1, x2, y2, stops) {
 
     Gradient.call(this, stops);
 
@@ -5673,7 +5781,7 @@ SOFTWARE.
       this.right.y = y2;
     }
 
-  };
+  }
 
   _.extend(LinearGradient, {
 
@@ -5706,14 +5814,14 @@ SOFTWARE.
 
   _.extend(LinearGradient.prototype, Gradient.prototype, {
 
+    constructor: LinearGradient,
+
     /**
      * @name Two.LinearGradient#_flagEndPoints
      * @private
      * @property {Boolean} - Determines whether the {@link Two.LinearGradient#left} or {@link Two.LinearGradient#right} changed and needs to update.
      */
     _flagEndPoints: false,
-
-    constructor: LinearGradient,
 
     /**
      * @name Two.LinearGradient#clone
@@ -5805,12 +5913,12 @@ SOFTWARE.
    * @param {Number} [x=0] - The x position of the origin of the radial gradient.
    * @param {Number} [y=0] - The y position of the origin of the radial gradient.
    * @param {Number} [radius=0] - The radius of the radial gradient.
-   * @param {Two.Stop[]} [stops] - A list of {@link Two.Stop}s that contain the gradient fill pattern for the gradient.
+   * @param {Two.Stop[]} stops - A list of {@link Two.Stop}s that contain the gradient fill pattern for the gradient.
    * @param {Number} [focalX=0] - The x position of the focal point on the radial gradient.
    * @param {Number} [focalY=0] - The y position of the focal point on the radial gradient.
    * @nota-bene The radial gradient lives within the space of the parent object's matrix space.
    */
-  var RadialGradient = function(cx, cy, r, stops, fx, fy) {
+  function RadialGradient(cx, cy, r, stops, fx, fy) {
 
     Gradient.call(this, stops);
 
@@ -5853,7 +5961,7 @@ SOFTWARE.
       this.focal.y = fy;
     }
 
-  };
+  }
 
   _.extend(RadialGradient, {
 
@@ -5889,6 +5997,8 @@ SOFTWARE.
 
   _.extend(RadialGradient.prototype, Gradient.prototype, {
 
+    constructor: RadialGradient,
+
     /**
      * @name Two.RadialGradient#_flagRadius
      * @private
@@ -5907,8 +6017,6 @@ SOFTWARE.
      * @property {Boolean} - Determines whether the {@link Two.RadialGradient#focal} changed and needs to update.
      */
     _flagFocal: false,
-
-    constructor: RadialGradient,
 
     /**
      * @name Two.RadialGradient#clone
@@ -6017,9 +6125,15 @@ SOFTWARE.
    * @param {Function} [callback] - An optional callback function once the image has been loaded.
    * @description Fundamental to work with bitmap data, a.k.a. pregenerated imagery, in Two.js. Supported formats include jpg, png, gif, and tiff. See {@link Two.Texture.RegularExpressions} for a full list of supported formats.
    */
-  var Texture = function(src, callback) {
+  function Texture(src, callback) {
 
-    this._renderer = {};
+    /**
+     * @name Two.Texture#renderer
+     * @property {Object}
+     * @description Object access to store relevant renderer specific variables. Warning: manipulating this object can create unintended consequences.
+     * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `shape.renderer.elem`.
+     */
+    this.renderer = {};
     this._renderer.type = 'texture';
     this._renderer.flagOffset = Texture.FlagOffset.bind(this);
     this._renderer.flagScale = Texture.FlagScale.bind(this);
@@ -6082,7 +6196,7 @@ SOFTWARE.
 
     this._update();
 
-  };
+  }
 
   _.extend(Texture, {
 
@@ -6424,11 +6538,27 @@ SOFTWARE.
         }
       });
 
+      Object.defineProperty(object, 'renderer', {
+
+        enumerable: false,
+
+        get: function() {
+          return this._renderer;
+        },
+
+        set: function(obj) {
+          this._renderer = obj;
+        }
+
+      });
+
     }
 
   });
 
   _.extend(Texture.prototype, Events, Shape.prototype, {
+
+    constructor: Texture,
 
     /**
      * @name Two.Texture#_flagSrc
@@ -6520,8 +6650,6 @@ SOFTWARE.
      * @see {@link Two.Texture#offset}
      */
     _offset: null,
-
-    constructor: Texture,
 
     /**
      * @name Two.Texture#clone
@@ -6620,7 +6748,7 @@ SOFTWARE.
    * @param {Boolean} [manual=false] - Describes whether the developer controls how vertices are plotted or if Two.js automatically plots coordinates based on closed and curved booleans.
    * @description This is the primary primitive class for creating all drawable shapes in Two.js. Unless specified methods return their instance of `Two.Path` for the purpose of chaining.
    */
-  var Path = function(vertices, closed, curved, manual) {
+  function Path(vertices, closed, curved, manual) {
 
     Shape.call(this);
 
@@ -6754,7 +6882,7 @@ SOFTWARE.
      */
     this.dashes.offset = 0;
 
-  };
+  }
 
   _.extend(Path, {
 
@@ -7066,6 +7194,8 @@ SOFTWARE.
 
   _.extend(Path.prototype, Shape.prototype, {
 
+    constructor: Path,
+
     // Flags
     // http://en.wikipedia.org/wiki/Flag
 
@@ -7259,8 +7389,6 @@ SOFTWARE.
      * @see {@link Two.Path#dashes}
      */
     _dashes: [],
-
-    constructor: Path,
 
     /**
      * @name Two.Path#clone
@@ -8086,7 +8214,7 @@ SOFTWARE.
    * @param {Number} radius - The radius value of the circle.
    * @param {Number} [resolution=4] - The number of vertices used to construct the circle.
    */
-  var Circle = function(ox, oy, r, resolution) {
+  function Circle(ox, oy, r, resolution) {
 
     // At least 2 vertices are required for proper circlage
     var amount = resolution ? Math.max(resolution, 2) : 4;
@@ -8113,7 +8241,7 @@ SOFTWARE.
       this.translation.y = oy;
     }
 
-  };
+  }
 
   _.extend(Circle, {
 
@@ -8140,6 +8268,8 @@ SOFTWARE.
 
   _.extend(Circle.prototype, Path.prototype, {
 
+    constructor: Circle,
+
     /**
      * @name Two.Circle#_flagRadius
      * @private
@@ -8153,8 +8283,6 @@ SOFTWARE.
      * @see {@link Two.Circle#radius}
      */
     _radius: 0,
-
-    constructor: Circle,
 
     /**
      * @name Two.Circle#_update
@@ -8281,7 +8409,7 @@ SOFTWARE.
    * @param {Number} ry - The radius value of the ellipse in the y direction.
    * @param {Number} [resolution=4] - The number of vertices used to construct the ellipse.
    */
-  var Ellipse = function(ox, oy, rx, ry, resolution) {
+  function Ellipse(ox, oy, rx, ry, resolution) {
 
     if (typeof ry !== 'number') {
       ry = rx;
@@ -8311,7 +8439,7 @@ SOFTWARE.
     this._update();
     this.translation.set(ox, oy);
 
-  };
+  }
 
   _.extend(Ellipse, {
 
@@ -8489,7 +8617,7 @@ SOFTWARE.
    * @param {Number} [x2=0] - The x position of the second vertex on the line.
    * @param {Number} [y2=0] - The y position of the second vertex on the line.
    */
-  var Line = function(x1, y1, x2, y2) {
+  function Line(x1, y1, x2, y2) {
 
     Path.call(this, [
         new Anchor(x1, y1),
@@ -8501,10 +8629,13 @@ SOFTWARE.
 
     this.automatic = false;
 
-  };
+  }
 
-  _.extend(Line.prototype, Path.prototype);
-  Line.prototype.constructor = Line;
+  _.extend(Line.prototype, Path.prototype, {
+
+    constructor: Line
+
+  });
 
   Path.MakeObservable(Line.prototype);
 
@@ -8514,10 +8645,10 @@ SOFTWARE.
    * @extends Two.Path
    * @param {Number} [x=0] - The x position of the rectangle.
    * @param {Number} [y=0] - The y position of the rectangle.
-   * @param {Number} width - The width value of the rectangle.
-   * @param {Number} height - The width value of the rectangle.
+   * @param {Number} [width] - The width value of the rectangle.
+   * @param {Number} [height] - The width value of the rectangle.
    */
-  var Rectangle = function(x, y, width, height) {
+  function Rectangle(x, y, width, height) {
 
     Path.call(this, [
       new Anchor(),
@@ -8547,7 +8678,7 @@ SOFTWARE.
 
     this._update();
 
-  };
+  }
 
   _.extend(Rectangle, {
 
@@ -8589,6 +8720,8 @@ SOFTWARE.
 
   _.extend(Rectangle.prototype, Path.prototype, {
 
+    constructor: Rectangle,
+
     /**
      * @name Two.Rectangle#_flagWidth
      * @private
@@ -8616,8 +8749,6 @@ SOFTWARE.
     _height: 0,
 
     _origin: null,
-
-    constructor: Rectangle,
 
     /**
      * @name Two.Rectangle#_update
@@ -8728,7 +8859,7 @@ SOFTWARE.
    * @param {Number} radius - The radius value of the rounded rectangle.
    * @param {Number} [resolution=12] - The number of vertices used to construct the rounded rectangle.
    */
-  var RoundedRectangle = function(ox, oy, width, height, radius) {
+  function RoundedRectangle(ox, oy, width, height, radius) {
 
     if (typeof radius === 'undefined') {
       radius = Math.floor(Math.min(width, height) / 12);
@@ -8772,7 +8903,7 @@ SOFTWARE.
     this._update();
     this.translation.set(ox, oy);
 
-  };
+  }
 
   _.extend(RoundedRectangle, {
 
@@ -8829,6 +8960,8 @@ SOFTWARE.
 
   _.extend(RoundedRectangle.prototype, Path.prototype, {
 
+    constructor: RoundedRectangle,
+
     /**
      * @name Two.RoundedRectangle#_flagWidth
      * @private
@@ -8866,8 +8999,6 @@ SOFTWARE.
      * @see {@link Two.RoundedRectangle#radius}
      */
     _radius: 0,
-
-    constructor: RoundedRectangle,
 
     /**
      * @name Two.RoundedRectangle#_update
@@ -9052,13 +9183,14 @@ SOFTWARE.
    * @name Two.Text
    * @class
    * @extends Two.Shape
-   * @param {String} message - The String to be rendered to the scene.
+   * @param {String} [message] - The String to be rendered to the scene.
    * @param {Number} [x=0] - The position in the x direction for the object.
    * @param {Number} [y=0] - The position in the y direction for the object.
    * @param {Object} [styles] - An object where styles are applied. Attribute must exist in Two.Text.Properties.
    * @description This is a primitive class for creating drawable text that can be added to the scenegraph.
+   * @returns {Two.Text}
    */
-  var Text = function(message, x, y, styles) {
+  function Text(message, x, y, styles) {
 
     Shape.call(this);
 
@@ -9069,10 +9201,10 @@ SOFTWARE.
     this.value = message;
 
     if (typeof x === 'number') {
-        this.translation.x = x;
+      this.translation.x = x;
     }
     if (typeof y === 'number') {
-        this.translation.y = y;
+      this.translation.y = y;
     }
 
     /**
@@ -9101,7 +9233,7 @@ SOFTWARE.
 
     }, this);
 
-  };
+  }
 
   _.extend(Text, {
 
@@ -9228,6 +9360,8 @@ SOFTWARE.
   });
 
   _.extend(Text.prototype, Shape.prototype, {
+
+    constructor: Text,
 
     // Flags
     // http://en.wikipedia.org/wiki/Flag
@@ -9454,8 +9588,6 @@ SOFTWARE.
      */
     _dashes: [],
 
-    constructor: Text,
-
     /**
      * @name Two.Text#remove
      * @function
@@ -9648,6 +9780,7 @@ SOFTWARE.
 
   Text.MakeObservable(Text.prototype);
 
+  // https://github.com/jonobr1/two.js/issues/507#issuecomment-777159213
   var regex$1 = {
     path: /[+-]?(?:\d*\.\d+|\d+)(?:[eE][+-]\d+)?/g
   };
@@ -10796,7 +10929,7 @@ SOFTWARE.
    * @returns {XMLHttpRequest} The constructed and called XHR request.
    * @description Canonical method to initiate `GET` requests in the browser. Mainly used by {@link Two#load} method.
    */
-  var xhr = function(path, callback) {
+  function xhr(path, callback) {
 
     var xhr = new XMLHttpRequest();
     xhr.open('GET', path);
@@ -10810,7 +10943,7 @@ SOFTWARE.
     xhr.send();
     return xhr;
 
-  };
+  }
 
   /**
    * @name Two.ImageSequence
@@ -10822,7 +10955,7 @@ SOFTWARE.
    * @param {Integer} [frameRate=30] - The frame rate at which the images should playback at.
    * @description A convenient package to display still or animated images organized as a series of still images.
    */
-  var ImageSequence = function(paths, ox, oy, frameRate) {
+  function ImageSequence(paths, ox, oy, frameRate) {
 
     // Not using default constructor of Rectangle due to odd `beginning` / `ending` behavior.
     // See: https://github.com/jonobr1/two.js/issues/383
@@ -10872,7 +11005,7 @@ SOFTWARE.
      */
     this.index = 0;
 
-  };
+  }
 
   _.extend(ImageSequence, {
 
@@ -11000,6 +11133,8 @@ SOFTWARE.
 
   _.extend(ImageSequence.prototype, Rectangle.prototype, {
 
+    constructor: ImageSequence,
+
     /**
      * @name Two.ImageSequence#_flagTextures
      * @private
@@ -11101,8 +11236,6 @@ SOFTWARE.
      * @see {@link Two.ImageSequence#origin}
      */
     _origin: null,
-
-    constructor: ImageSequence,
 
     /**
      * @name Two.ImageSequence#play
@@ -11341,7 +11474,7 @@ SOFTWARE.
    * @param {Integer} [frameRate=0] - The frame rate at which the partitions of the image should playback at.
    * @description A convenient package to display still or animated images through a tiled image source. For more information on the principals of animated imagery through tiling see [Texture Atlas](https://en.wikipedia.org/wiki/Texture_atlas) on Wikipedia.
    */
-  var Sprite = function(path, ox, oy, cols, rows, frameRate) {
+  function Sprite(path, ox, oy, cols, rows, frameRate) {
 
     // Not using default constructor of Rectangle due to odd `beginning` / `ending` behavior.
     // See: https://github.com/jonobr1/two.js/issues/383
@@ -11400,7 +11533,7 @@ SOFTWARE.
      */
     this.index = 0;
 
-  };
+  }
 
   _.extend(Sprite, {
 
@@ -11428,6 +11561,8 @@ SOFTWARE.
   });
 
   _.extend(Sprite.prototype, Rectangle.prototype, {
+
+    constructor: Sprite,
 
     /**
      * @name Two.Sprite#_flagTexture
@@ -11558,8 +11693,6 @@ SOFTWARE.
      * @see {@link Two.Sprite#origin}
      */
     _origin: null,
-
-    constructor: Sprite,
 
     /**
      * @name Two.Sprite#play
@@ -11800,7 +11933,7 @@ SOFTWARE.
    * @param {Radians} endAngle - The end angle of the arc segment in radians.
    * @param {Number} [resolution=24] - The number of vertices used to construct the arc segment.
    */
-  var ArcSegment = function(ox, oy, ir, or, sa, ea, res) {
+  function ArcSegment(ox, oy, ir, or, sa, ea, res) {
 
     var amount = res || (Constants.Resolution * 3);
     var points = [];
@@ -11841,7 +11974,7 @@ SOFTWARE.
       this.translation.y = oy;
     }
 
-  };
+  }
 
   _.extend(ArcSegment, {
 
@@ -11867,6 +12000,8 @@ SOFTWARE.
   });
 
   _.extend(ArcSegment.prototype, Path.prototype, {
+
+    constructor: ArcSegment,
 
     /**
      * @name Two.ArcSegment#_flagStartAngle
@@ -11917,8 +12052,6 @@ SOFTWARE.
      * @see {@link Two.ArcSegment#outerRadius}
      */
     _outerRadius: 0,
-
-    constructor: ArcSegment,
 
     /**
      * @name Two.ArcSegment#_update
@@ -12160,7 +12293,7 @@ SOFTWARE.
    * @param {Number} radius - The radius value of the polygon.
    * @param {Number} [sides=12] - The number of vertices used to construct the polygon.
    */
-  var Polygon = function(ox, oy, r, sides) {
+  function Polygon(ox, oy, r, sides) {
 
     sides = Math.max(sides || 0, 3);
 
@@ -12188,7 +12321,7 @@ SOFTWARE.
     this._update();
     this.translation.set(ox, oy);
 
-  };
+  }
 
   _.extend(Polygon, {
 
@@ -12214,6 +12347,8 @@ SOFTWARE.
   });
 
   _.extend(Polygon.prototype, Path.prototype, {
+
+    constructor: Polygon,
 
     /**
      * @name Two.Polygon#_flagWidth
@@ -12252,8 +12387,6 @@ SOFTWARE.
      * @see {@link Two.Polygon#sides}
      */
     _sides: 0,
-
-    constructor: Polygon,
 
     /**
      * @name Two.Polygon#_update
@@ -12381,7 +12514,7 @@ SOFTWARE.
    * @param {Number} outerRadius - The outer radius value of the star.
    * @param {Number} [sides=5] - The number of sides used to construct the star.
    */
-  var Star = function(ox, oy, ir, or, sides) {
+  function Star(ox, oy, ir, or, sides) {
 
     if (arguments.length <= 3) {
       or = ir;
@@ -12415,7 +12548,7 @@ SOFTWARE.
     this._update();
     this.translation.set(ox, oy);
 
-  };
+  }
 
   _.extend(Star, {
 
@@ -12441,6 +12574,8 @@ SOFTWARE.
   });
 
   _.extend(Star.prototype, Path.prototype, {
+
+    constructor: Star,
 
     /**
      * @name Two.Star#_flagInnerRadius
@@ -12479,8 +12614,6 @@ SOFTWARE.
      * @see {@link Two.Star#sides}
      */
     _sides: 0,
-
-    constructor: Star,
 
     /**
      * @name Two.Star#_update
@@ -12859,8 +12992,6 @@ SOFTWARE.
 
       render: function(domElement) {
 
-        this._update();
-
         // Shortcut for hidden objects.
         // Doesn't reset the flags, so changes are stored and
         // applied once the object is visible again
@@ -12868,6 +12999,8 @@ SOFTWARE.
           || (this._opacity === 0 && !this._flagOpacity)) {
           return this;
         }
+
+        this._update();
 
         if (!this._renderer.elem) {
           this._renderer.elem = svg.createElement('g', {
@@ -12955,14 +13088,14 @@ SOFTWARE.
 
       render: function(domElement) {
 
-        this._update();
-
         // Shortcut for hidden objects.
         // Doesn't reset the flags, so changes are stored and
         // applied once the object is visible again
         if (this._opacity === 0 && !this._flagOpacity) {
           return this;
         }
+
+        this._update();
 
         // Collect any attribute that needs to be changed here
         var changed = {};
@@ -13492,7 +13625,7 @@ SOFTWARE.
    * @param {Element} [parameters.domElement] - The `<svg />` to draw to. If none given a new one will be constructed.
    * @description This class is used by {@link Two} when constructing with `type` of `Two.Types.svg` (the default type). It takes Two.js' scenegraph and renders it to a `<svg />`.
    */
-  var Renderer$1 = function(params) {
+  function Renderer$1(params) {
 
     /**
      * @name Two.SVGRenderer#domElement
@@ -13516,7 +13649,7 @@ SOFTWARE.
     this.domElement.defs = this.defs;
     this.domElement.style.overflow = 'hidden';
 
-  };
+  }
 
   _.extend(Renderer$1, {
 
@@ -13606,11 +13739,11 @@ SOFTWARE.
 
       render: function(gl, program) {
 
-        this._update();
-
         if (!this._visible) {
           return;
         }
+
+        this._update();
 
         var parent = this.parent;
         var flagParentMatrix = (parent._matrix && parent._matrix.manual) || parent._flagMatrix;
@@ -14679,7 +14812,7 @@ SOFTWARE.
    * @description This class is used by {@link Two} when constructing with `type` of `Two.Types.webgl`. It takes Two.js' scenegraph and renders it to a `<canvas />` through the WebGL api.
    * @see {@link https://www.khronos.org/registry/webgl/specs/latest/1.0/}
    */
-  var Renderer$2 = function(params) {
+  function Renderer$2(params) {
 
     var gl, vs, fs;
 
@@ -14783,7 +14916,7 @@ SOFTWARE.
 
     gl.blendEquation(gl.FUNC_ADD);
     gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-  };
+  }
 
   _.extend(Renderer$2, {
 
@@ -14878,7 +15011,7 @@ SOFTWARE.
    * @param {Element} [options.domElement] - The canvas or SVG element to draw into. This overrides the `options.type` argument.
    * @description The entrypoint for Two.js. Instantiate a `new Two` in order to setup a scene to render to. `Two` is also the publicly accessible namespace that all other sub-classes, functions, and utilities attach to.
    */
-  var Two = function(options) {
+  function Two(options) {
 
     // Determine what Renderer to use and setup a scene.
 
@@ -14965,7 +15098,7 @@ SOFTWARE.
       raf.init();
     }
 
-  };
+  }
 
   _.extend(Two, Constants);
 

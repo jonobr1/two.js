@@ -20,7 +20,7 @@ import Texture from './texture.js';
  * @param {Integer} [frameRate=0] - The frame rate at which the partitions of the image should playback at.
  * @description A convenient package to display still or animated images through a tiled image source. For more information on the principals of animated imagery through tiling see [Texture Atlas](https://en.wikipedia.org/wiki/Texture_atlas) on Wikipedia.
  */
-var Sprite = function(path, ox, oy, cols, rows, frameRate) {
+function Sprite(path, ox, oy, cols, rows, frameRate) {
 
   // Not using default constructor of Rectangle due to odd `beginning` / `ending` behavior.
   // See: https://github.com/jonobr1/two.js/issues/383
@@ -79,7 +79,7 @@ var Sprite = function(path, ox, oy, cols, rows, frameRate) {
    */
   this.index = 0;
 
-};
+}
 
 _.extend(Sprite, {
 
@@ -107,6 +107,8 @@ _.extend(Sprite, {
 });
 
 _.extend(Sprite.prototype, Rectangle.prototype, {
+
+  constructor: Sprite,
 
   /**
    * @name Two.Sprite#_flagTexture
@@ -237,8 +239,6 @@ _.extend(Sprite.prototype, Rectangle.prototype, {
    * @see {@link Two.Sprite#origin}
    */
   _origin: null,
-
-  constructor: Sprite,
 
   /**
    * @name Two.Sprite#play

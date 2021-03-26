@@ -18,7 +18,7 @@ var cos = Math.cos, sin = Math.sin;
  * @param {Number} ry - The radius value of the ellipse in the y direction.
  * @param {Number} [resolution=4] - The number of vertices used to construct the ellipse.
  */
-var Ellipse = function(ox, oy, rx, ry, resolution) {
+function Ellipse(ox, oy, rx, ry, resolution) {
 
   if (typeof ry !== 'number') {
     ry = rx;
@@ -48,7 +48,7 @@ var Ellipse = function(ox, oy, rx, ry, resolution) {
   this._update();
   this.translation.set(ox, oy);
 
-};
+}
 
 _.extend(Ellipse, {
 

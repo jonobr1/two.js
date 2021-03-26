@@ -13,12 +13,12 @@ import Vector from '../vector.js';
  * @param {Number} [x=0] - The x position of the origin of the radial gradient.
  * @param {Number} [y=0] - The y position of the origin of the radial gradient.
  * @param {Number} [radius=0] - The radius of the radial gradient.
- * @param {Two.Stop[]} [stops] - A list of {@link Two.Stop}s that contain the gradient fill pattern for the gradient.
+ * @param {Two.Stop[]} stops - A list of {@link Two.Stop}s that contain the gradient fill pattern for the gradient.
  * @param {Number} [focalX=0] - The x position of the focal point on the radial gradient.
  * @param {Number} [focalY=0] - The y position of the focal point on the radial gradient.
  * @nota-bene The radial gradient lives within the space of the parent object's matrix space.
  */
-var RadialGradient = function(cx, cy, r, stops, fx, fy) {
+function RadialGradient(cx, cy, r, stops, fx, fy) {
 
   Gradient.call(this, stops);
 
@@ -61,7 +61,7 @@ var RadialGradient = function(cx, cy, r, stops, fx, fy) {
     this.focal.y = fy;
   }
 
-};
+}
 
 _.extend(RadialGradient, {
 
@@ -97,6 +97,8 @@ _.extend(RadialGradient, {
 
 _.extend(RadialGradient.prototype, Gradient.prototype, {
 
+  constructor: RadialGradient,
+
   /**
    * @name Two.RadialGradient#_flagRadius
    * @private
@@ -115,8 +117,6 @@ _.extend(RadialGradient.prototype, Gradient.prototype, {
    * @property {Boolean} - Determines whether the {@link Two.RadialGradient#focal} changed and needs to update.
    */
   _flagFocal: false,
-
-  constructor: RadialGradient,
 
   /**
    * @name Two.RadialGradient#clone

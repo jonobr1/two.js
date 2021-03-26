@@ -14,13 +14,14 @@ import Texture from './effects/texture.js';
  * @name Two.Text
  * @class
  * @extends Two.Shape
- * @param {String} message - The String to be rendered to the scene.
+ * @param {String} [message] - The String to be rendered to the scene.
  * @param {Number} [x=0] - The position in the x direction for the object.
  * @param {Number} [y=0] - The position in the y direction for the object.
  * @param {Object} [styles] - An object where styles are applied. Attribute must exist in Two.Text.Properties.
  * @description This is a primitive class for creating drawable text that can be added to the scenegraph.
+ * @returns {Two.Text}
  */
-var Text = function(message, x, y, styles) {
+function Text(message, x, y, styles) {
 
   Shape.call(this);
 
@@ -31,10 +32,10 @@ var Text = function(message, x, y, styles) {
   this.value = message;
 
   if (typeof x === 'number') {
-      this.translation.x = x;
+    this.translation.x = x;
   }
   if (typeof y === 'number') {
-      this.translation.y = y;
+    this.translation.y = y;
   }
 
   /**
@@ -63,7 +64,7 @@ var Text = function(message, x, y, styles) {
 
   }, this);
 
-};
+}
 
 _.extend(Text, {
 
@@ -190,6 +191,8 @@ _.extend(Text, {
 });
 
 _.extend(Text.prototype, Shape.prototype, {
+
+  constructor: Text,
 
   // Flags
   // http://en.wikipedia.org/wiki/Flag
@@ -415,8 +418,6 @@ _.extend(Text.prototype, Shape.prototype, {
    * @see {@link Two.Text#dashes}
    */
   _dashes: [],
-
-  constructor: Text,
 
   /**
    * @name Two.Text#remove

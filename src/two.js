@@ -69,7 +69,7 @@ import Constants from './constants.js';
  * @param {Element} [options.domElement] - The canvas or SVG element to draw into. This overrides the `options.type` argument.
  * @description The entrypoint for Two.js. Instantiate a `new Two` in order to setup a scene to render to. `Two` is also the publicly accessible namespace that all other sub-classes, functions, and utilities attach to.
  */
-var Two = function(options) {
+function Two(options) {
 
   // Determine what Renderer to use and setup a scene.
 
@@ -156,7 +156,7 @@ var Two = function(options) {
     raf.init();
   }
 
-};
+}
 
 _.extend(Two, Constants);
 

@@ -13,7 +13,7 @@ import Anchor from '../anchor.js';
  * @param {Number} [x2=0] - The x position of the second vertex on the line.
  * @param {Number} [y2=0] - The y position of the second vertex on the line.
  */
-var Line = function(x1, y1, x2, y2) {
+function Line(x1, y1, x2, y2) {
 
   var width = x2 - x1;
   var height = y2 - y1;
@@ -31,10 +31,13 @@ var Line = function(x1, y1, x2, y2) {
 
   this.automatic = false;
 
-};
+}
 
-_.extend(Line.prototype, Path.prototype);
-Line.prototype.constructor = Line;
+_.extend(Line.prototype, Path.prototype, {
+
+  constructor: Line
+
+});
 
 Path.MakeObservable(Line.prototype);
 

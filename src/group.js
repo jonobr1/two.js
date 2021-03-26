@@ -18,7 +18,7 @@ var min = Math.min, max = Math.max;
  * @description This is the primary class for grouping objects that are then drawn in Two.js. In Illustrator this is a group, in After Effects it would be a Null Object. Whichever the case, the `Two.Group` contains a transformation matrix and commands to style its children, but it by itself doesn't render to the screen.
  * @nota-bene The {@link Two#scene} is an instance of `Two.Group`.
  */
-var Group = function(children) {
+function Group(children) {
 
   Shape.call(this, true);
 
@@ -46,7 +46,7 @@ var Group = function(children) {
    */
   this.children = Array.isArray(children) ? children : Array.prototype.slice.call(arguments);
 
-};
+}
 
 _.extend(Group, {
 
@@ -297,6 +297,8 @@ _.extend(Group, {
 
 _.extend(Group.prototype, Shape.prototype, {
 
+  constructor: Group,
+
   // Flags
   // http://en.wikipedia.org/wiki/Flag
 
@@ -464,8 +466,6 @@ _.extend(Group.prototype, Shape.prototype, {
    * @property {Two.Shape} - The Two.js object to clip from a group's rendering.
    */
   _mask: null,
-
-  constructor: Group,
 
   /**
    * @name Two.Group#clone
@@ -717,8 +717,14 @@ _.extend(Group.prototype, Shape.prototype, {
 
     // Remove the objects
     for (var i = 0; i < objects.length; i++) {
-      if (!objects[i] || !(this.children.ids[objects[i].id])) continue;
-      this.children.splice(Array.prototype.indexOf.call(this.children, objects[i]), 1);
+      var object = objects[i];
+      if (!object || !this.children.ids[object.id]) {
+        continue;
+      }
+      var index = this.children.indexOf(object);
+      if (index >= 0) {
+        this.children.splice(index, 1);
+      }
     }
 
     return this;
@@ -824,6 +830,8 @@ _.extend(Group.prototype, Shape.prototype, {
    */
   _update: function() {
 
+    var i, l, child;
+
     if (this._flagBeginning || this._flagEnding) {
 
       var beginning = Math.min(this._beginning, this._ending);
@@ -835,10 +843,10 @@ _.extend(Group.prototype, Shape.prototype, {
       var ed = ending * length;
       var distance = (ed - bd);
 
-      for (var i = 0; i < this.children.length; i++) {
+      for (i = 0; i < this.children.length; i++) {
 
-        var child = this.children[i];
-        var l = child.length;
+        child = this.children[i];
+        l = child.length;
 
         if (bd > sum + l) {
           child.beginning = 1;
@@ -861,6 +869,17 @@ _.extend(Group.prototype, Shape.prototype, {
 
       }
 
+    }
+
+    if (this._flagId) {
+      // Means the group's id changed or one of its children's ids
+      // changed and as such we need to update the map of ids the
+      // Two.Group.children has.
+      this.children.ids = {};
+      for (i = 0; i < this.children.length; i++) {
+        child = this.children[i];
+        this.children.ids[child.id] = child;
+      }
     }
 
     return Shape.prototype._update.apply(this, arguments);

@@ -12,16 +12,15 @@ import Constants from './constants.js';
  * @extends Events
  * @description The foundational transformation object for the Two.js scenegraph.
  */
-var Shape = function() {
+function Shape() {
 
   /**
-   * @name Two.Shape#_renderer
+   * @name Two.Shape#renderer
    * @property {Object}
-   * @private
-   * @description A private object to store relevant renderer specific variables.
-   * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `shape._renderer.elem`.
+   * @description Object access to store relevant renderer specific variables. Warning: manipulating this object can create unintended consequences.
+   * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `shape.renderer.elem`.
    */
-  this._renderer = {};
+  this.renderer = {};
   this._renderer.flagMatrix = Shape.FlagMatrix.bind(this);
   this.isShape = true;
 
@@ -80,7 +79,7 @@ var Shape = function() {
    */
   this.skewY = 0;
 
-};
+}
 
 _.extend(Shape, {
 
@@ -186,6 +185,23 @@ _.extend(Shape, {
       }
     });
 
+    Object.defineProperty(object, 'id', {
+      enumerable: true,
+      get: function() {
+        return this._id;
+      },
+      set: function(v) {
+        if (v === this._id) {
+          return;
+        }
+        this._id = v;
+        this._flagId = true;
+        if (this.parent) {
+          this.parent._flagId = true;
+        }
+      }
+    });
+
     Object.defineProperty(object, 'className', {
 
       enumerable: true,
@@ -221,13 +237,36 @@ _.extend(Shape, {
 
     });
 
+    Object.defineProperty(object, 'renderer', {
+
+      enumerable: false,
+
+      get: function() {
+        return this._renderer;
+      },
+
+      set: function(obj) {
+        this._renderer = obj;
+      }
+
+    });
+
   }
 
 });
 
 _.extend(Shape.prototype, Events, {
 
+  constructor: Shape,
+
   // Flags
+
+  /**
+   * @name Two.Shape#_id
+   * @private
+   * @property {Boolean} - Determines whether the id needs updating.
+   */
+  _flagId: true,
 
   /**
    * @name Two.Shape#_flagMatrix
@@ -254,6 +293,8 @@ _.extend(Shape.prototype, Events, {
   _flagClassName: false,
 
   // Underlying Properties
+
+  _id: '',
 
   /**
    * @name Two.Shape#_translation
@@ -299,8 +340,6 @@ _.extend(Shape.prototype, Events, {
    * @nota-bene Only available for the SVG renderer.
    */
   _className: '',
-
-  constructor: Shape,
 
   /**
    * @name Two.Shape#addTo
@@ -387,7 +426,8 @@ _.extend(Shape.prototype, Events, {
    */
   flagReset: function() {
 
-    this._flagMatrix = this._flagScale = this._flagClassName = false;
+    this._flagId = this._flagMatrix = this._flagScale =
+      this._flagClassName = false;
 
     return this;
 

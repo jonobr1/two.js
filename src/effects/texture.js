@@ -32,9 +32,15 @@ if (root.document) {
  * @param {Function} [callback] - An optional callback function once the image has been loaded.
  * @description Fundamental to work with bitmap data, a.k.a. pregenerated imagery, in Two.js. Supported formats include jpg, png, gif, and tiff. See {@link Two.Texture.RegularExpressions} for a full list of supported formats.
  */
-var Texture = function(src, callback) {
+function Texture(src, callback) {
 
-  this._renderer = {};
+  /**
+   * @name Two.Texture#renderer
+   * @property {Object}
+   * @description Object access to store relevant renderer specific variables. Warning: manipulating this object can create unintended consequences.
+   * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `shape.renderer.elem`.
+   */
+  this.renderer = {};
   this._renderer.type = 'texture';
   this._renderer.flagOffset = Texture.FlagOffset.bind(this);
   this._renderer.flagScale = Texture.FlagScale.bind(this);
@@ -97,7 +103,7 @@ var Texture = function(src, callback) {
 
   this._update();
 
-};
+}
 
 _.extend(Texture, {
 
@@ -439,11 +445,27 @@ _.extend(Texture, {
       }
     });
 
+    Object.defineProperty(object, 'renderer', {
+
+      enumerable: false,
+
+      get: function() {
+        return this._renderer;
+      },
+
+      set: function(obj) {
+        this._renderer = obj;
+      }
+
+    });
+
   }
 
 });
 
 _.extend(Texture.prototype, Events, Shape.prototype, {
+
+  constructor: Texture,
 
   /**
    * @name Two.Texture#_flagSrc
@@ -535,8 +557,6 @@ _.extend(Texture.prototype, Events, Shape.prototype, {
    * @see {@link Two.Texture#offset}
    */
   _offset: null,
-
-  constructor: Texture,
 
   /**
    * @name Two.Texture#clone

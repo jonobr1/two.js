@@ -1,15 +1,18 @@
+import _ from './underscore.js';
 /**
  * @name Utils.Error
  * @class
  * @description Custom error throwing for Two.js specific identification.
  */
-var TwoError = function(message) {
+function TwoError(message) {
   this.name = 'Two.js';
   this.message = message;
-};
-
+}
 
 TwoError.prototype = new Error();
-TwoError.prototype.constructor = TwoError;
+
+_.extend(TwoError.prototype, {
+  constructor: TwoError
+});
 
 export default TwoError;
