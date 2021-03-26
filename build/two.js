@@ -439,6 +439,7 @@ SOFTWARE.
     this.y = y || 0;
 
   }
+
   _.extend(Vector, {
 
     /**
@@ -1274,6 +1275,7 @@ SOFTWARE.
     }
 
   }
+
   _.extend(Anchor, {
 
     /**
@@ -1564,6 +1566,7 @@ SOFTWARE.
     }
 
   }
+
   setMatrix(Matrix$1);
 
   _.extend(Matrix$1, {
@@ -2157,7 +2160,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2021-03-24T20:51:11.945Z',
+    PublishDate: '2021-03-26T16:14:37.868Z',
 
     /**
      * @name Two.Identifier
@@ -2661,6 +2664,7 @@ SOFTWARE.
     }
 
   }
+
   Collection.prototype = new Array();
 
   _.extend(Collection.prototype, Events, {
@@ -2732,13 +2736,12 @@ SOFTWARE.
   function Shape() {
 
     /**
-     * @name Two.Shape#_renderer
+     * @name Two.Shape#renderer
      * @property {Object}
-     * @private
-     * @description A private object to store relevant renderer specific variables.
-     * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `shape._renderer.elem`.
+     * @description Object access to store relevant renderer specific variables. Warning: manipulating this object can create unintended consequences.
+     * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `shape.renderer.elem`.
      */
-    this._renderer = {};
+    this.renderer = {};
     this._renderer.flagMatrix = Shape.FlagMatrix.bind(this);
     this.isShape = true;
 
@@ -2784,6 +2787,7 @@ SOFTWARE.
     this.scale = 1;
 
   }
+
   _.extend(Shape, {
 
     /**
@@ -2914,6 +2918,20 @@ SOFTWARE.
 
           this._className = v;
 
+        }
+
+      });
+
+      Object.defineProperty(object, 'renderer', {
+
+        enumerable: false,
+
+        get: function() {
+          return this._renderer;
+        },
+
+        set: function(obj) {
+          this._renderer = obj;
         }
 
       });
@@ -3113,6 +3131,7 @@ SOFTWARE.
     Children.prototype.attach.apply(this, arguments);
 
   }
+
   Children.prototype = new Collection();
 
   _.extend(Children.prototype, {
@@ -3188,6 +3207,7 @@ SOFTWARE.
     this.children = Array.isArray(children) ? children : Array.prototype.slice.call(arguments);
 
   }
+
   _.extend(Group, {
 
     Children: Children,
@@ -4928,6 +4948,7 @@ SOFTWARE.
     this.scene.parent = this;
   }
 
+
   _.extend(Renderer, {
 
     /**
@@ -5181,6 +5202,7 @@ SOFTWARE.
     this.name = 'Two.js';
     this.message = message;
   }
+
   TwoError.prototype = new Error();
 
   _.extend(TwoError.prototype, {
@@ -5223,6 +5245,7 @@ SOFTWARE.
     this.map = {};
 
   }
+
   _.extend(Registry.prototype, {
 
     constructor: Registry,
@@ -5285,13 +5308,12 @@ SOFTWARE.
   function Stop(offset, color, opacity) {
 
     /**
-     * @name Two.Stop#_renderer
+     * @name Two.Stop#renderer
      * @property {Object}
-     * @private
-     * @description A private object to store relevant renderer specific variables.
-     * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `stop._renderer.elem`.
+     * @description Object access to store relevant renderer specific variables. Warning: manipulating this object can create unintended consequences.
+     * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `shape.renderer.elem`.
      */
-    this._renderer = {};
+    this.renderer = {};
     this._renderer.type = 'stop';
 
     /**
@@ -5317,6 +5339,7 @@ SOFTWARE.
     Stop.Index = (Stop.Index + 1) % 2;
 
   }
+
   _.extend(Stop, {
 
     /**
@@ -5364,6 +5387,20 @@ SOFTWARE.
         });
 
       }, object);
+
+      Object.defineProperty(object, 'renderer', {
+
+        enumerable: false,
+
+        get: function() {
+          return this._renderer;
+        },
+
+        set: function(obj) {
+          this._renderer = obj;
+        }
+
+      });
 
     }
 
@@ -5437,13 +5474,12 @@ SOFTWARE.
   function Gradient(stops) {
 
     /**
-     * @name Two.Gradient#_renderer
+     * @name Two.Gradient#renderer
      * @property {Object}
-     * @private
-     * @description A private object to store relevant renderer specific variables.
-     * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `gradient._renderer.elem`.
+     * @description Object access to store relevant renderer specific variables. Warning: manipulating this object can create unintended consequences.
+     * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `shape.renderer.elem`.
      */
-    this._renderer = {};
+    this.renderer = {};
     this._renderer.type = 'gradient';
 
     /**
@@ -5474,6 +5510,7 @@ SOFTWARE.
     }
 
   }
+
   _.extend(Gradient, {
 
     /**
@@ -5532,6 +5569,20 @@ SOFTWARE.
           // Bind Initial Stops
           bindStops(this._stops);
 
+        }
+
+      });
+
+      Object.defineProperty(object, 'renderer', {
+
+        enumerable: false,
+
+        get: function() {
+          return this._renderer;
+        },
+
+        set: function(obj) {
+          this._renderer = obj;
         }
 
       });
@@ -5731,6 +5782,7 @@ SOFTWARE.
     }
 
   }
+
   _.extend(LinearGradient, {
 
     /**
@@ -5910,6 +5962,7 @@ SOFTWARE.
     }
 
   }
+
   _.extend(RadialGradient, {
 
     /**
@@ -6074,7 +6127,13 @@ SOFTWARE.
    */
   function Texture(src, callback) {
 
-    this._renderer = {};
+    /**
+     * @name Two.Texture#renderer
+     * @property {Object}
+     * @description Object access to store relevant renderer specific variables. Warning: manipulating this object can create unintended consequences.
+     * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `shape.renderer.elem`.
+     */
+    this.renderer = {};
     this._renderer.type = 'texture';
     this._renderer.flagOffset = Texture.FlagOffset.bind(this);
     this._renderer.flagScale = Texture.FlagScale.bind(this);
@@ -6138,6 +6197,7 @@ SOFTWARE.
     this._update();
 
   }
+
   _.extend(Texture, {
 
     /**
@@ -6478,6 +6538,20 @@ SOFTWARE.
         }
       });
 
+      Object.defineProperty(object, 'renderer', {
+
+        enumerable: false,
+
+        get: function() {
+          return this._renderer;
+        },
+
+        set: function(obj) {
+          this._renderer = obj;
+        }
+
+      });
+
     }
 
   });
@@ -6809,6 +6883,7 @@ SOFTWARE.
     this.dashes.offset = 0;
 
   }
+
   _.extend(Path, {
 
     /**
@@ -8167,6 +8242,7 @@ SOFTWARE.
     }
 
   }
+
   _.extend(Circle, {
 
     /**
@@ -8364,6 +8440,7 @@ SOFTWARE.
     this.translation.set(ox, oy);
 
   }
+
   _.extend(Ellipse, {
 
     /**
@@ -8553,6 +8630,7 @@ SOFTWARE.
     this.automatic = false;
 
   }
+
   _.extend(Line.prototype, Path.prototype, {
 
     constructor: Line
@@ -8601,6 +8679,7 @@ SOFTWARE.
     this._update();
 
   }
+
   _.extend(Rectangle, {
 
     /**
@@ -8825,6 +8904,7 @@ SOFTWARE.
     this.translation.set(ox, oy);
 
   }
+
   _.extend(RoundedRectangle, {
 
     /**
@@ -9154,6 +9234,7 @@ SOFTWARE.
     }, this);
 
   }
+
   _.extend(Text, {
 
     /**
@@ -10925,6 +11006,7 @@ SOFTWARE.
     this.index = 0;
 
   }
+
   _.extend(ImageSequence, {
 
     /**
@@ -11452,6 +11534,7 @@ SOFTWARE.
     this.index = 0;
 
   }
+
   _.extend(Sprite, {
 
     /**
@@ -11892,6 +11975,7 @@ SOFTWARE.
     }
 
   }
+
   _.extend(ArcSegment, {
 
     /**
@@ -12238,6 +12322,7 @@ SOFTWARE.
     this.translation.set(ox, oy);
 
   }
+
   _.extend(Polygon, {
 
     /**
@@ -12464,6 +12549,7 @@ SOFTWARE.
     this.translation.set(ox, oy);
 
   }
+
   _.extend(Star, {
 
     /**
@@ -13564,6 +13650,7 @@ SOFTWARE.
     this.domElement.style.overflow = 'hidden';
 
   }
+
   _.extend(Renderer$1, {
 
     /**
@@ -14830,6 +14917,7 @@ SOFTWARE.
     gl.blendEquation(gl.FUNC_ADD);
     gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
   }
+
   _.extend(Renderer$2, {
 
     /**
@@ -15011,6 +15099,7 @@ SOFTWARE.
     }
 
   }
+
   _.extend(Two, Constants);
 
   _.extend(Two.prototype, Events, {
