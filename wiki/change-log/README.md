@@ -5,6 +5,7 @@ sidebarDepth: 2
 # Change Log
 
 ## Nightly
++ Added `Two.Shape.skewX` and `Two.Shape.skewY` [@gburlet](https://github.com/gburlet)
 
 ## March 26, 2021
 + Exposed `Two.Shape.renderer` for easier access to underlying SVG elements
