@@ -42,7 +42,7 @@ function Shape() {
    * @name Two.Shape#matrix
    * @property {Two.Matrix}
    * @description The transformation matrix of the shape.
-   * @nota-bene {@link Two.Shape#translation}, {@link Two.Shape#rotation}, and {@link Two.Shape#scale} apply their values to the matrix when changed. The matrix is what is sent to the renderer to be drawn.
+   * @nota-bene {@link Two.Shape#translation}, {@link Two.Shape#rotation}, {@link Two.Shape#scale}, {@link Two.Shape#skewX}, and {@link Two.Shape#skewY} apply their values to the matrix when changed. The matrix is what is sent to the renderer to be drawn.
    */
   this.matrix = new Matrix();
 
@@ -64,6 +64,20 @@ function Shape() {
    * @nota-bene This value can be replaced with a {@link Two.Vector} to do non-uniform scaling. e.g: `shape.scale = new Two.Vector(2, 1);`
    */
   this.scale = 1;
+
+  /**
+   * @name Two.Shape#skewX
+   * @property {Radians} - The value in radians for how much the shape is skewed relative to its parent.
+   * @description Skew the shape by an angle in the x axis direction.
+   */
+  this.skewX = 0;
+
+  /**
+   * @name Two.Shape#skewY
+   * @property {Radians} - The value in radians for how much the shape is skewed relative to its parent.
+   * @description Skew the shape by an angle in the y axis direction.
+   */
+  this.skewY = 0;
 
 }
 
@@ -135,6 +149,28 @@ _.extend(Shape, {
         this._flagMatrix = true;
         this._flagScale = true;
 
+      }
+    });
+
+    Object.defineProperty(object, 'skewX', {
+      enumerable: true,
+      get: function() {
+        return this._skewX;
+      },
+      set: function(v) {
+        this._skewX = v;
+        this._flagMatrix = true;
+      }
+    });
+
+    Object.defineProperty(object, 'skewY', {
+      enumerable: true,
+      get: function() {
+        return this._skewY;
+      },
+      set: function(v) {
+        this._skewY = v;
+        this._flagMatrix = true;
       }
     });
 
@@ -281,6 +317,20 @@ _.extend(Shape.prototype, Events, {
    */
   _scale: 1,
 
+  /**
+   * @name Two.Shape#_skewX
+   * @private
+   * @property {Radians} - The rotation value in radians.
+   */
+  _skewX: 0,
+
+  /**
+   * @name Two.Shape#_skewY
+   * @private
+   * @property {Radians} - The rotation value in radians.
+   */
+  _skewY: 0,
+
   // _mask: null,
   // _clip: false,
 
@@ -316,6 +366,8 @@ _.extend(Shape.prototype, Events, {
     clone.translation.copy(this.translation);
     clone.rotation = this.rotation;
     clone.scale = this.scale;
+    clone.skewX = this.skewX;
+    clone.skewY = this.skewY;
 
     if (this.matrix.manual) {
       clone.matrix.copy(this.matrix);
@@ -352,7 +404,8 @@ _.extend(Shape.prototype, Events, {
         }
 
         this._matrix.rotate(this.rotation);
-
+        this._matrix.skewX(this.skewX);
+        this._matrix.skewY(this.skewY);
     }
 
     if (bubbles) {
