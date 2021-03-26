@@ -15,13 +15,12 @@ import Stop from './stop.js';
 function Gradient(stops) {
 
   /**
-   * @name Two.Gradient#_renderer
+   * @name Two.Gradient#renderer
    * @property {Object}
-   * @private
-   * @description A private object to store relevant renderer specific variables.
-   * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `gradient._renderer.elem`.
+   * @description Object access to store relevant renderer specific variables. Warning: manipulating this object can create unintended consequences.
+   * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `shape.renderer.elem`.
    */
-  this._renderer = {};
+  this.renderer = {};
   this._renderer.type = 'gradient';
 
   /**
@@ -111,6 +110,20 @@ _.extend(Gradient, {
         // Bind Initial Stops
         bindStops(this._stops);
 
+      }
+
+    });
+
+    Object.defineProperty(object, 'renderer', {
+
+      enumerable: false,
+
+      get: function() {
+        return this._renderer;
+      },
+
+      set: function(obj) {
+        this._renderer = obj;
       }
 
     });

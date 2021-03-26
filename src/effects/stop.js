@@ -12,13 +12,12 @@ import Events from '../events.js';
 function Stop(offset, color, opacity) {
 
   /**
-   * @name Two.Stop#_renderer
+   * @name Two.Stop#renderer
    * @property {Object}
-   * @private
-   * @description A private object to store relevant renderer specific variables.
-   * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `stop._renderer.elem`.
+   * @description Object access to store relevant renderer specific variables. Warning: manipulating this object can create unintended consequences.
+   * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `shape.renderer.elem`.
    */
-  this._renderer = {};
+  this.renderer = {};
   this._renderer.type = 'stop';
 
   /**
@@ -92,6 +91,20 @@ _.extend(Stop, {
       });
 
     }, object);
+
+    Object.defineProperty(object, 'renderer', {
+
+      enumerable: false,
+
+      get: function() {
+        return this._renderer;
+      },
+
+      set: function(obj) {
+        this._renderer = obj;
+      }
+
+    });
 
   }
 

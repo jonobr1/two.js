@@ -34,7 +34,13 @@ if (root.document) {
  */
 function Texture(src, callback) {
 
-  this._renderer = {};
+  /**
+   * @name Two.Texture#renderer
+   * @property {Object}
+   * @description Object access to store relevant renderer specific variables. Warning: manipulating this object can create unintended consequences.
+   * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `shape.renderer.elem`.
+   */
+  this.renderer = {};
   this._renderer.type = 'texture';
   this._renderer.flagOffset = Texture.FlagOffset.bind(this);
   this._renderer.flagScale = Texture.FlagScale.bind(this);
@@ -437,6 +443,20 @@ _.extend(Texture, {
         this._flagScale = true;
 
       }
+    });
+
+    Object.defineProperty(object, 'renderer', {
+
+      enumerable: false,
+
+      get: function() {
+        return this._renderer;
+      },
+
+      set: function(obj) {
+        this._renderer = obj;
+      }
+
     });
 
   }

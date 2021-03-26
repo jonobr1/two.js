@@ -56,7 +56,7 @@ The current index being referenced for calculating a stop's default offset value
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L50)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L49)
 
 </div>
 
@@ -97,7 +97,7 @@ A list of properties that are on every [Two.Stop](/documentation/stop).
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L56)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L55)
 
 </div>
 
@@ -145,11 +145,68 @@ Convenience function to apply observable qualities of a [Two.Stop](/documentatio
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L66)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L65)
 
 </div>
 
 
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance member ">
+
+## Two.Stop.renderer
+
+
+
+
+
+
+
+
+<div class="properties">
+
+
+
+</div>
+
+
+
+
+
+
+<div class="description">
+
+Object access to store relevant renderer specific variables. Warning: manipulating this object can create unintended consequences.
+
+</div>
+
+
+
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L14)
+
+</div>
+
+
+
+<div class="tags">
+
+
+::: tip nota-bene
+With the [Two.SvgRenderer](/documentation/svgrenderer) you can access the underlying SVG element created via `shape.renderer.elem`.
+:::
+
+
+</div>
 
 
 
@@ -186,7 +243,7 @@ The offset percentage of the stop represented as a zero-to-one value.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L24)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L23)
 
 </div>
 
@@ -227,7 +284,7 @@ The alpha percentage of the stop represented as a zero-to-one value.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L31)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L30)
 
 </div>
 
@@ -268,7 +325,7 @@ The color of the stop.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L37)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L36)
 
 </div>
 
@@ -329,7 +386,7 @@ Create a new instance of [Two.Stop](/documentation/stop) with the same propertie
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L104)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L117)
 
 </div>
 
@@ -383,7 +440,7 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L123)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L136)
 
 </div>
 

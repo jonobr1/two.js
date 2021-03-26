@@ -54,7 +54,7 @@ A list of properties that are on every [Two.Gradient](/documentation/gradient).
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L62)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L63)
 
 </div>
 
@@ -102,7 +102,7 @@ Convenience function to apply observable qualities of a [Two.Gradient](/document
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L70)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L71)
 
 </div>
 
@@ -143,7 +143,7 @@ Cached method to let renderers know stops have been updated on a [Two.Gradient](
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L118)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L133)
 
 </div>
 
@@ -184,7 +184,7 @@ Cached method to let [Two.Gradient](/documentation/gradient) know vertices have 
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L127)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L142)
 
 </div>
 
@@ -225,11 +225,68 @@ Cached method to let [Two.Gradient](/documentation/gradient) know vertices have 
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L146)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L161)
 
 </div>
 
 
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance member ">
+
+## Two.Gradient.renderer
+
+
+
+
+
+
+
+
+<div class="properties">
+
+
+
+</div>
+
+
+
+
+
+
+<div class="description">
+
+Object access to store relevant renderer specific variables. Warning: manipulating this object can create unintended consequences.
+
+</div>
+
+
+
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L17)
+
+</div>
+
+
+
+<div class="tags">
+
+
+::: tip nota-bene
+With the [Two.SvgRenderer](/documentation/svgrenderer) you can access the underlying SVG element created via `shape.renderer.elem`.
+:::
+
+
+</div>
 
 
 
@@ -266,7 +323,7 @@ Session specific unique identifier.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L27)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L26)
 
 </div>
 
@@ -317,7 +374,7 @@ Indicates what happens if the gradient starts or ends inside the bounds of the t
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L39)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L38)
 
 </div>
 
@@ -364,7 +421,7 @@ An ordered list of [Two.Stop](/documentation/stop)s for rendering the gradient.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L46)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L45)
 
 </div>
 
@@ -399,7 +456,7 @@ An ordered list of [Two.Stop](/documentation/stop)s for rendering the gradient.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L56)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L57)
 
 </div>
 
@@ -466,7 +523,7 @@ Create a new instance of [Two.Gradient](/documentation/gradient) with the same p
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L180)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L197)
 
 </div>
 
@@ -520,7 +577,7 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L207)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L224)
 
 </div>
 

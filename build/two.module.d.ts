@@ -353,13 +353,12 @@ declare module "shape" {
     function Shape(): void;
     class Shape {
         /**
-         * @name Two.Shape#_renderer
+         * @name Two.Shape#renderer
          * @property {Object}
-         * @private
-         * @description A private object to store relevant renderer specific variables.
-         * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `shape._renderer.elem`.
+         * @description Object access to store relevant renderer specific variables. Warning: manipulating this object can create unintended consequences.
+         * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `shape.renderer.elem`.
          */
-        private _renderer;
+        renderer: {};
         isShape: boolean;
         /**
          * @name Two.Shape#id
@@ -601,13 +600,12 @@ declare module "effects/stop" {
          */
         constructor(offset?: number, color?: any, opacity?: number);
         /**
-         * @name Two.Stop#_renderer
+         * @name Two.Stop#renderer
          * @property {Object}
-         * @private
-         * @description A private object to store relevant renderer specific variables.
-         * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `stop._renderer.elem`.
+         * @description Object access to store relevant renderer specific variables. Warning: manipulating this object can create unintended consequences.
+         * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `shape.renderer.elem`.
          */
-        private _renderer;
+        renderer: {};
         /**
          * @name Two.Stop#offset
          * @property {Number} - The offset percentage of the stop represented as a zero-to-one value.
@@ -643,13 +641,12 @@ declare module "effects/gradient" {
          */
         constructor(stops?: any[]);
         /**
-         * @name Two.Gradient#_renderer
+         * @name Two.Gradient#renderer
          * @property {Object}
-         * @private
-         * @description A private object to store relevant renderer specific variables.
-         * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `gradient._renderer.elem`.
+         * @description Object access to store relevant renderer specific variables. Warning: manipulating this object can create unintended consequences.
+         * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `shape.renderer.elem`.
          */
-        private _renderer;
+        renderer: {};
         /**
          * @name Two.Gradient#id
          * @property {String} - Session specific unique identifier.
@@ -868,7 +865,13 @@ declare module "effects/texture" {
          * @description Fundamental to work with bitmap data, a.k.a. pregenerated imagery, in Two.js. Supported formats include jpg, png, gif, and tiff. See {@link Two.Texture.RegularExpressions} for a full list of supported formats.
          */
         constructor(src?: string | any, callback?: Function);
-        _renderer: {};
+        /**
+         * @name Two.Texture#renderer
+         * @property {Object}
+         * @description Object access to store relevant renderer specific variables. Warning: manipulating this object can create unintended consequences.
+         * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `shape.renderer.elem`.
+         */
+        renderer: {};
         id: string;
         classList: any[];
         /**
