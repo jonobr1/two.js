@@ -11,9 +11,7 @@
     "package.json",
     "LICENSE",
     "README.md",
-    "build/two.js",
-    "build/two.min.js",
-    "build/two.module.js",
+    "build",
     "extras",
     "src"
   ],
