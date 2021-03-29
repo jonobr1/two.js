@@ -1,4 +1,4 @@
-import Two from '../build/two.module.js';
+import Two from '../../build/two.module.js';
 
 var Surface = function(object) {
   this.object = object;
