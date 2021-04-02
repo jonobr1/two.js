@@ -2150,7 +2150,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2021-04-02T21:03:16.690Z',
+    PublishDate: '2021-04-02T22:19:24.644Z',
 
     /**
      * @name Two.Identifier
@@ -8365,7 +8365,7 @@ SOFTWARE.
 
           var v = this.vertices[i];
 
-          v.command = i === 0 ? Commands.movet : Commands.curve;
+          v.command = i === 0 ? Commands.move : Commands.curve;
           v.set(x, y);
           v.controls.left.set(lx, ly);
           v.controls.right.set(rx, ry);
