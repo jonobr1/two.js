@@ -53,7 +53,7 @@ SOFTWARE.
   var Matrix;
 
   /**
-   * @name Utils.decomposeMatrix
+   * @name Two.Utils.decomposeMatrix
    * @function
    * @param {Two.Matrix} matrix - The matrix to decompose.
    * @returns {Object} An object containing relevant skew values.
@@ -80,7 +80,7 @@ SOFTWARE.
   };
 
   /**
-   * @name Utils.getComputedMatrix
+   * @name Two.Utils.getComputedMatrix
    * @function
    * @param {Two.Shape} object - The Two.js object that has a matrix property to calculate from.
    * @param {Two.Matrix} [matrix] - The matrix to apply calculated transformations to if available.
@@ -113,7 +113,7 @@ SOFTWARE.
   };
 
   /**
-   * @name Utils.lerp
+   * @name Two.Utils.lerp
    * @function
    * @param {Number} a - Start value.
    * @param {Number} b - End value.
@@ -126,7 +126,7 @@ SOFTWARE.
   };
 
   /**
-   * @name Utils.mod
+   * @name Two.Utils.mod
    * @param {Number} v - The value to modulo
    * @param {Number} l - The value to modulo by
    * @returns {Number}
@@ -145,7 +145,7 @@ SOFTWARE.
   var NumArray = root$1.Float32Array || Array;
 
   /**
-  * @name Utils.toFixed
+  * @name Two.Utils.toFixed
   * @function
   * @param {Number} v - Any float
   * @returns {Number} That float trimmed to the third decimal place.
@@ -228,14 +228,14 @@ SOFTWARE.
   };
 
   /**
-   * @name Utils.Events
-   * @interface
+   * @name Two.Events
+   * @class
    * @description Object inherited by many Two.js objects in order to facilitate custom events.
    */
   var Events = {
 
     /**
-     * @name Utils.Events.on
+     * @name Two.Events#on
      * @function
      * @param {String} [name] - The name of the event to bind a function to.
      * @param {Function} [handler] - The function to be invoked when the event is dispatched.
@@ -244,7 +244,7 @@ SOFTWARE.
     on: addEventListener,
 
     /**
-     * @name Utils.Events.off
+     * @name Two.Events#off
      * @function
      * @param {String} [name] - The name of the event intended to be removed.
      * @param {Function} [handler] - The handler intended to be reomved.
@@ -253,7 +253,7 @@ SOFTWARE.
     off: removeEventListener,
 
     /**
-     * @name Utils.Events.trigger
+     * @name Two.Events#trigger
      * @function
      * @param {String} name - The name of the event to dispatch.
      * @param arguments - Anything can be passed after the name and those will be passed on to handlers attached to the event in the order they are passed.
@@ -299,6 +299,10 @@ SOFTWARE.
 
     },
 
+    /**
+     * @name Two.Events.Types
+     * @property {Object} - Object of different types of Two.js specific events.
+     */
     Types: {
       play: 'play',
       pause: 'pause',
@@ -330,7 +334,8 @@ SOFTWARE.
   Events.unbind = removeEventListener;
 
   /**
-   * @returns {Events} - Returns an instance of self for the purpose of chaining.
+   * @private
+   * @returns {Two.Events} - Returns an instance of self for the purpose of chaining.
    */
   function addEventListener(name, handler) {
 
@@ -346,7 +351,8 @@ SOFTWARE.
   }
 
   /**
-   * @returns {Events} - Returns an instance of self for the purpose of chaining.
+   * @private
+   * @returns {Two.Events} - Returns an instance of self for the purpose of chaining.
    */
   function removeEventListener(name, handler) {
 
@@ -500,7 +506,7 @@ SOFTWARE.
      * @function
      * @param {Two.Vector} v1
      * @param {Two.Vector} v2
-     * @returns {Radians} The angle between points `v1` and `v2`.
+     * @returns {Number} The angle between points `v1` and `v2`.
      */
     angleBetween: function(v1, v2) {
 
@@ -595,7 +601,6 @@ SOFTWARE.
      * @function
      * @param {Number} x
      * @param {Number} y
-     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
      * @description Set the x / y components of a vector to specific number values.
      */
     set: function(x, y) {
@@ -608,7 +613,6 @@ SOFTWARE.
      * @name Two.Vector#copy
      * @function
      * @param {Two.Vector} v
-     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
      * @description Copy the x / y components of another object `v`.
      */
     copy: function(v) {
@@ -620,7 +624,6 @@ SOFTWARE.
     /**
      * @name Two.Vector#clear
      * @function
-     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
      * @description Set the x / y component values of the vector to zero.
      */
     clear: function() {
@@ -632,7 +635,6 @@ SOFTWARE.
     /**
      * @name Two.Vector#clone
      * @function
-     * @returns {Two.Vector} - A new instance of {@link Two.Vector}.
      * @description Create a new vector and copy the existing values onto the newly created instance.
      */
     clone: function() {
@@ -643,7 +645,6 @@ SOFTWARE.
      * @name Two.Vector#add
      * @function
      * @param {Two.Vector} v
-     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
      * @description Add an object with x / y component values to the instance.
      * @overloaded
      */
@@ -652,7 +653,6 @@ SOFTWARE.
      * @name Two.Vector#add
      * @function
      * @param {Number} v
-     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
      * @description Add the **same** number to both x / y component values of the instance.
      * @overloaded
      */
@@ -662,7 +662,6 @@ SOFTWARE.
      * @function
      * @param {Number} x
      * @param {Number} y
-     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
      * @description Add `x` / `y` values to their respective component value on the instance.
      * @overloaded
      */
@@ -697,7 +696,6 @@ SOFTWARE.
      * @name Two.Vector#sub
      * @function
      * @param {Two.Vector} v
-     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
      * @description Subtract an object with x / y component values to the instance.
      * @overloaded
      */
@@ -706,7 +704,6 @@ SOFTWARE.
      * @name Two.Vector#sub
      * @function
      * @param {Number} v
-     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
      * @description Subtract the **same** number to both x / y component values of the instance.
      * @overloaded
      */
@@ -716,7 +713,6 @@ SOFTWARE.
      * @function
      * @param {Number} x
      * @param {Number} y
-     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
      * @description Subtract `x` / `y` values to their respective component value on the instance.
      * @overloaded
      */
@@ -769,7 +765,6 @@ SOFTWARE.
      * @name Two.Vector#multiply
      * @function
      * @param {Two.Vector} v
-     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
      * @description Multiply an object with x / y component values to the instance.
      * @overloaded
      */
@@ -778,7 +773,6 @@ SOFTWARE.
      * @name Two.Vector#multiply
      * @function
      * @param {Number} v
-     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
      * @description Multiply the **same** number to both x / y component values of the instance.
      * @overloaded
      */
@@ -788,7 +782,6 @@ SOFTWARE.
      * @function
      * @param {Number} x
      * @param {Number} y
-     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
      * @description Multiply `x` / `y` values to their respective component value on the instance.
      * @overloaded
      */
@@ -833,7 +826,6 @@ SOFTWARE.
      * @name Two.Vector#divide
      * @function
      * @param {Two.Vector} v
-     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
      * @description Divide an object with x / y component values to the instance.
      * @overloaded
      */
@@ -842,7 +834,6 @@ SOFTWARE.
      * @name Two.Vector#divide
      * @function
      * @param {Number} v
-     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
      * @description Divide the **same** number to both x / y component values of the instance.
      * @overloaded
      */
@@ -852,7 +843,6 @@ SOFTWARE.
      * @function
      * @param {Number} x
      * @param {Number} y
-     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
      * @description Divide `x` / `y` values to their respective component value on the instance.
      * @overloaded
      */
@@ -1041,12 +1031,12 @@ SOFTWARE.
     /**
      * @name Two.Vector#rotate
      * @function
-     * @param {Radians} radians - The amoun to rotate the vector by.
+     * @param {Number} Number - The amoun to rotate the vector by.
      * @description Rotate a vector.
      */
-    rotate: function(radians) {
-      var cos = Math.cos(radians);
-      var sin = Math.sin(radians);
+    rotate: function(Number) {
+      var cos = Math.cos(Number);
+      var sin = Math.sin(Number);
       this.x = this.x * cos - this.y * sin;
       this.y = this.x * sin + this.y * cos;
       return this;
@@ -1191,9 +1181,9 @@ SOFTWARE.
       return { x: this._x, y: this._y };
     },
 
-    rotate: function (radians) {
-      var cos = Math.cos(radians);
-      var sin = Math.sin(radians);
+    rotate: function (Number) {
+      var cos = Math.cos(Number);
+      var sin = Math.sin(Number);
       this._x = this._x * cos - this._y * sin;
       this._y = this._x * sin + this._y * cos;
       return this;
@@ -1915,13 +1905,13 @@ SOFTWARE.
     /**
      * @name Two.Matrix#rotate
      * @function
-     * @param {Radians} radians - The amount to rotate in radians.
+     * @param {Number} Number - The amount to rotate in Number.
      * @description Rotate the matrix.
      */
-    rotate: function(radians) {
+    rotate: function(Number) {
 
-      var c = cos(radians);
-      var s = sin(radians);
+      var c = cos(Number);
+      var s = sin(Number);
 
       return this.multiply(c, -s, 0, s, c, 0, 0, 0, 1);
 
@@ -1943,12 +1933,12 @@ SOFTWARE.
     /**
      * @name Two.Matrix#skewX
      * @function
-     * @param {Radians} radians - The amount to skew in radians.
+     * @param {Number} Number - The amount to skew in Number.
      * @description Skew the matrix by an angle in the x axis direction.
      */
-    skewX: function(radians) {
+    skewX: function(Number) {
 
-      var a = tan(radians);
+      var a = tan(Number);
 
       return this.multiply(1, a, 0, 0, 1, 0, 0, 0, 1);
 
@@ -1957,12 +1947,12 @@ SOFTWARE.
     /**
      * @name Two.Matrix#skewY
      * @function
-     * @param {Radians} radians - The amount to skew in radians.
+     * @param {Number} Number - The amount to skew in Number.
      * @description Skew the matrix by an angle in the y axis direction.
      */
-    skewY: function(radians) {
+    skewY: function(Number) {
 
-      var a = tan(radians);
+      var a = tan(Number);
 
       return this.multiply(1, 0, 0, a, 1, 0, 0, 0, 1);
 
@@ -2133,7 +2123,7 @@ SOFTWARE.
 
     /**
      * @name Two.nextFrameID
-     * @property {Integer}
+     * @property {Number}
      * @description The id of the next requestAnimationFrame function.
      */
     nextFrameID: null,
@@ -2160,7 +2150,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2021-03-26T16:14:37.868Z',
+    PublishDate: '2021-04-02T20:42:48.163Z',
 
     /**
      * @name Two.Identifier
@@ -2190,7 +2180,7 @@ SOFTWARE.
     /**
      * @function Two.uniqueId
      * @description Simple method to access an incrementing value. Used for `id` allocation on all Two.js objects.
-     * @returns {Number} Ever increasing integer.
+     * @returns {Number} Ever increasing Number.
      */
     uniqueId: function() {
       return count++;
@@ -2201,7 +2191,7 @@ SOFTWARE.
   var HALF_PI = Math.PI / 2;
 
   /**
-   * @name Utils.Curve
+   * @name Two.Utils.Curve
    * @property {Object} - Additional utility constant variables related to curve math and calculations.
    */
   var Curve = {
@@ -2260,7 +2250,7 @@ SOFTWARE.
   };
 
   /**
-   * @name Utils.getComponentOnCubicBezier
+   * @name Two.Utils.getComponentOnCubicBezier
    * @function
    * @param {Number} t - Zero-to-one value describing what percentage to calculate.
    * @param {Number} a - The firt point's component value.
@@ -2276,7 +2266,7 @@ SOFTWARE.
   };
 
   /**
-   * @name Utils.subdivide
+   * @name Two.Utils.subdivide
    * @function
    * @param {Number} x1 - x position of first anchor point.
    * @param {Number} y1 - y position of first anchor point.
@@ -2286,7 +2276,7 @@ SOFTWARE.
    * @param {Number} y3 - y position of second anchor point's "left" bezier handle.
    * @param {Number} x4 - x position of second anchor point.
    * @param {Number} y4 - y position of second anchor point.
-   * @param {Number} [limit=Utils.Curve.RecursionLimit] - The amount of vertices to create by subdividing.
+   * @param {Number} [limit=Two.Utils.Curve.RecursionLimit] - The amount of vertices to create by subdividing.
    * @returns {Anchor[]} A list of anchor points ordered in between `x1`, `y1` and `x4`, `y4`
    * @description Given 2 points (a, b) and corresponding control point for each return an array of points that represent points plotted along the curve. The number of returned points is determined by `limit`.
    */
@@ -2315,7 +2305,7 @@ SOFTWARE.
   };
 
   /**
-   * @name Utils.getCurveLength
+   * @name Two.Utils.getCurveLength
    * @function
    * @param {Number} x1 - x position of first anchor point.
    * @param {Number} y1 - y position of first anchor point.
@@ -2325,7 +2315,7 @@ SOFTWARE.
    * @param {Number} y3 - y position of second anchor point's "left" bezier handle.
    * @param {Number} x4 - x position of second anchor point.
    * @param {Number} y4 - y position of second anchor point.
-   * @param {Number} [limit=Utils.Curve.RecursionLimit] - The amount of vertices to create by subdividing.
+   * @param {Number} [limit=Two.Utils.Curve.RecursionLimit] - The amount of vertices to create by subdividing.
    * @returns {Number} The length of a curve.
    * @description Given 2 points (a, b) and corresponding control point for each, return a float that represents the length of the curve using Gauss-Legendre algorithm. Limit iterations of calculation by `limit`.
    */
@@ -2362,7 +2352,7 @@ SOFTWARE.
   };
 
   /**
-   * @name Utils.getCurveBoundingBox
+   * @name Two.Utils.getCurveBoundingBox
    * @function
    * @param {Number} x1 - x position of first anchor point.
    * @param {Number} y1 - y position of first anchor point.
@@ -2441,12 +2431,12 @@ SOFTWARE.
   };
 
   /**
-   * @name Utils.integrate
+   * @name Two.Utils.integrate
    * @function
    * @param {Function} f
    * @param {Number} a
    * @param {Number} b
-   * @param {Integer} n
+   * @param {Number} n
    * @description Integration for `getCurveLength` calculations.
    * @see [Paper.js](@link https://github.com/paperjs/paper.js/blob/master/src/util/Numerical.js#L101)
    */
@@ -2466,7 +2456,7 @@ SOFTWARE.
   };
 
   /**
-   * @name Utils.getCurveFromPoints
+   * @name Two.Utils.getCurveFromPoints
    * @function
    * @param {Anchor[]} points
    * @param {Boolean} closed
@@ -2499,7 +2489,7 @@ SOFTWARE.
   };
 
   /**
-   * @name Utils.getControlPoints
+   * @name Two.Utils.getControlPoints
    * @function
    * @param {Anchor} a
    * @param {Anchor} b
@@ -2555,7 +2545,7 @@ SOFTWARE.
   };
 
   /**
-   * @name Utils.getReflection
+   * @name Two.Utils.getReflection
    * @function
    * @param {Vector} a
    * @param {Vector} b
@@ -2574,14 +2564,14 @@ SOFTWARE.
   };
 
   /**
-   * @name Utils.getAnchorsFromArcData
+   * @name Two.Utils.getAnchorsFromArcData
    * @function
    * @param {Vector} center
-   * @param {Radians} xAxisRotation
+   * @param {Number} xAxisRotation
    * @param {Number} rx - x radius
    * @param {Number} ry - y radius
-   * @param {Radians} ts
-   * @param {Radians} td
+   * @param {Number} ts
+   * @param {Number} td
    * @param {Boolean} [ccw=false] - Set path traversal to counter-clockwise
    */
   var getAnchorsFromArcData = function(center, xAxisRotation, rx, ry, ts, td, ccw) {
@@ -2637,7 +2627,7 @@ SOFTWARE.
   };
 
   /**
-   * @name Utils.getRatio
+   * @name Two.Utils.getRatio
    * @function
    * @param {CanvasRenderingContext2D} ctx
    * @returns {Number} The ratio of a unit in Two.js to the pixel density of a session's screen.
@@ -2648,9 +2638,9 @@ SOFTWARE.
   };
 
   /**
-   * @name Utils.Collection
+   * @name Two.Collection
    * @class
-   * @extends Utils.Events
+   * @extends Two.Events
    * @description An `Array` like object with additional event propagation on actions. `pop`, `shift`, and `splice` trigger `removed` events. `push`, `unshift`, and `splice` with more than 2 arguments trigger 'inserted'. Finally, `sort` and `reverse` trigger `order` events.
    */
   function Collection() {
@@ -2730,7 +2720,7 @@ SOFTWARE.
   /**
    * @name Two.Shape
    * @class
-   * @extends Events
+   * @extends Two.Events
    * @description The foundational transformation object for the Two.js scenegraph.
    */
   function Shape() {
@@ -2763,7 +2753,7 @@ SOFTWARE.
      * @name Two.Shape#matrix
      * @property {Two.Matrix}
      * @description The transformation matrix of the shape.
-     * @nota-bene {@link Two.Shape#translation}, {@link Two.Shape#rotation}, and {@link Two.Shape#scale} apply their values to the matrix when changed. The matrix is what is sent to the renderer to be drawn.
+     * @nota-bene {@link Two.Shape#translation}, {@link Two.Shape#rotation}, {@link Two.Shape#scale}, {@link Two.Shape#skewX}, and {@link Two.Shape#skewY} apply their values to the matrix when changed. The matrix is what is sent to the renderer to be drawn.
      */
     this.matrix = new Matrix$1();
 
@@ -2775,7 +2765,7 @@ SOFTWARE.
 
     /**
      * @name Two.Shape#rotation
-     * @property {Radians} - The value in radians for how much the shape is rotated relative to its parent.
+     * @property {Number} - The value in Number for how much the shape is rotated relative to its parent.
      */
     this.rotation = 0;
 
@@ -2785,6 +2775,20 @@ SOFTWARE.
      * @nota-bene This value can be replaced with a {@link Two.Vector} to do non-uniform scaling. e.g: `shape.scale = new Two.Vector(2, 1);`
      */
     this.scale = 1;
+
+    /**
+     * @name Two.Shape#skewX
+     * @property {Number} - The value in Number for how much the shape is skewed relative to its parent.
+     * @description Skew the shape by an angle in the x axis direction.
+     */
+    this.skewX = 0;
+
+    /**
+     * @name Two.Shape#skewY
+     * @property {Number} - The value in Number for how much the shape is skewed relative to its parent.
+     * @description Skew the shape by an angle in the y axis direction.
+     */
+    this.skewY = 0;
 
   }
 
@@ -2856,6 +2860,28 @@ SOFTWARE.
           this._flagMatrix = true;
           this._flagScale = true;
 
+        }
+      });
+
+      Object.defineProperty(object, 'skewX', {
+        enumerable: true,
+        get: function() {
+          return this._skewX;
+        },
+        set: function(v) {
+          this._skewX = v;
+          this._flagMatrix = true;
+        }
+      });
+
+      Object.defineProperty(object, 'skewY', {
+        enumerable: true,
+        get: function() {
+          return this._skewY;
+        },
+        set: function(v) {
+          this._skewY = v;
+          this._flagMatrix = true;
         }
       });
 
@@ -2991,7 +3017,7 @@ SOFTWARE.
     /**
      * @name Two.Shape#_rotation
      * @private
-     * @property {Radians} - The rotation value in radians.
+     * @property {Number} - The rotation value in Number.
      */
     _rotation: 0,
 
@@ -3001,6 +3027,20 @@ SOFTWARE.
      * @property {Two.Vector} - The translation values as a {@link Two.Vector}.
      */
     _scale: 1,
+
+    /**
+     * @name Two.Shape#_skewX
+     * @private
+     * @property {Number} - The rotation value in Number.
+     */
+    _skewX: 0,
+
+    /**
+     * @name Two.Shape#_skewY
+     * @private
+     * @property {Number} - The rotation value in Number.
+     */
+    _skewY: 0,
 
     // _mask: null,
     // _clip: false,
@@ -3037,6 +3077,8 @@ SOFTWARE.
       clone.translation.copy(this.translation);
       clone.rotation = this.rotation;
       clone.scale = this.scale;
+      clone.skewX = this.skewX;
+      clone.skewY = this.skewY;
 
       if (this.matrix.manual) {
         clone.matrix.copy(this.matrix);
@@ -3073,7 +3115,8 @@ SOFTWARE.
           }
 
           this._matrix.rotate(this.rotation);
-
+          this._matrix.skewX(this.skewX);
+          this._matrix.skewY(this.skewY);
       }
 
       if (bubbles) {
@@ -3108,7 +3151,7 @@ SOFTWARE.
   /**
    * @class
    * @name Two.Group.Children
-   * @extends Two.Utils.Collection
+   * @extends Two.Collection
    * @description A children collection which is accesible both by index and by object `id`.
    */
   function Children() {
@@ -3199,7 +3242,7 @@ SOFTWARE.
     this.subtractions = [];
 
     /**
-     * @name Two.Group#additions
+     * @name Two.Group#children
      * @property {Two.Group.Children}
      * @description A list of all the children in the scenegraph.
      * @nota-bene Ther order of this list indicates the order each element is rendered to the screen.
@@ -3528,15 +3571,15 @@ SOFTWARE.
 
     /**
      * @name Two.Group#fill
-     * @property {(CssColor|Two.Gradient|Two.Texture)} - The value of what all child shapes should be filled in with.
-     * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS Colors.
+     * @property {(String|Two.Gradient|Two.Texture)} - The value of what all child shapes should be filled in with.
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
      */
     _fill: '#fff',
 
     /**
      * @name Two.Group#stroke
-     * @property {(CssColor|Two.Gradient|Two.Texture)} - The value of what all child shapes should be outlined in with.
-     * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS Colors.
+     * @property {(String|Two.Gradient|Two.Texture)} - The value of what all child shapes should be outlined in with.
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
      */
     _stroke: '#000',
 
@@ -5109,7 +5152,7 @@ SOFTWARE.
     isHeadless: false,
 
     /**
-     * @name Utils.shim
+     * @name Two.Utils.shim
      * @function
      * @param {canvas} canvas - The instanced `Canvas` object provided by `node-canvas`.
      * @param {Image} [Image] - The prototypical `Image` object provided by `node-canvas`. This is only necessary to pass if you're going to load bitmap imagery.
@@ -5194,7 +5237,7 @@ SOFTWARE.
   });
 
   /**
-   * @name Utils.Error
+   * @name Two.Utils.Error
    * @class
    * @description Custom error throwing for Two.js specific identification.
    */
@@ -5210,7 +5253,7 @@ SOFTWARE.
   });
 
   /**
-   * @name Utils.defineGetterSetter
+   * @name Two.Utils.defineGetterSetter
    * @function
    * @this Two#
    * @param {String} property - The property to add an enumerable getter / setter to.
@@ -5301,7 +5344,7 @@ SOFTWARE.
    * @name Two.Stop
    * @class
    * @param {Number} [offset] - The offset percentage of the stop represented as a zero-to-one value. Default value flip flops from zero-to-one as new stops are created.
-   * @param {CssColor} [color] - The color of the stop. Default value flip flops from white to black as new stops are created.
+   * @param {String} [color] - The color of the stop. Default value flip flops from white to black as new stops are created.
    * @param {Number} [opacity] - The opacity value. Default value is 1, cannot be lower than 0.
    * @nota-bene Used specifically in conjunction with {@link Two.Gradient}s to control color graduation.
    */
@@ -5331,7 +5374,7 @@ SOFTWARE.
 
     /**
      * @name Two.Stop#color
-     * @property {CssColor} - The color of the stop.
+     * @property {String} - The color of the stop.
      */
     this.color = (typeof color === 'string') ? color
       : Stop.Index <= 0 ? '#fff' : '#000';
@@ -5913,7 +5956,7 @@ SOFTWARE.
    * @param {Number} [x=0] - The x position of the origin of the radial gradient.
    * @param {Number} [y=0] - The y position of the origin of the radial gradient.
    * @param {Number} [radius=0] - The radius of the radial gradient.
-   * @param {Two.Stop[]} stops - A list of {@link Two.Stop}s that contain the gradient fill pattern for the gradient.
+   * @param {Two.Stop[]} [stops] - A list of {@link Two.Stop}s that contain the gradient fill pattern for the gradient.
    * @param {Number} [focalX=0] - The x position of the focal point on the radial gradient.
    * @param {Number} [focalY=0] - The y position of the focal point on the radial gradient.
    * @nota-bene The radial gradient lives within the space of the parent object's matrix space.
@@ -6121,7 +6164,7 @@ SOFTWARE.
    * @name Two.Texture
    * @class
    * @extends Two.Shape
-   * @param {String|ImageElement} [src] - The URL path to an image file or an `<img />` element.
+   * @param {String|HTMLImageElement} [src] - The URL path to an image file or an `<img />` element.
    * @param {Function} [callback] - An optional callback function once the image has been loaded.
    * @description Fundamental to work with bitmap data, a.k.a. pregenerated imagery, in Two.js. Supported formats include jpg, png, gif, and tiff. See {@link Two.Texture.RegularExpressions} for a full list of supported formats.
    */
@@ -6255,7 +6298,7 @@ SOFTWARE.
     /**
      * @name Two.Texture.getTag
      * @property {Function} - Retrieves the tag name of an image, video, or canvas node.
-     * @param {ImageElement} - The image to infer the tag name from.
+     * @param {HTMLImageElement} - The image to infer the tag name from.
      * @returns {String} - Returns the tag name of an image, video, or canvas node.
      */
     getTag: function(image) {
@@ -6268,7 +6311,7 @@ SOFTWARE.
      * @name Two.Texture.getImage
      * @property {Function} - Convenience function to set {@link Two.Texture#image} properties with canonincal versions set in {@link Two.Texture.ImageRegistry}.
      * @param {String} src - The URL path of the image.
-     * @returns {ImageElement} - Returns either a cached version of the image or a new one that is registered in {@link Two.Texture.ImageRegistry}.
+     * @returns {HTMLImageElement} - Returns either a cached version of the image or a new one that is registered in {@link Two.Texture.ImageRegistry}.
      */
     getImage: function(src) {
 
@@ -6794,15 +6837,15 @@ SOFTWARE.
 
     /**
      * @name Two.Path#fill
-     * @property {(CssColor|Two.Gradient|Two.Texture)} - The value of what the path should be filled in with.
-     * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS Colors.
+     * @property {(String|Two.Gradient|Two.Texture)} - The value of what the path should be filled in with.
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
      */
     this.fill = '#fff';
 
     /**
      * @name Two.Path#stroke
-     * @property {(CssColor|Two.Gradient|Two.Texture)} - The value of what the path should be outlined in with.
-     * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS Colors.
+     * @property {(String|Two.Gradient|Two.Texture)} - The value of what the path should be outlined in with.
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
      */
     this.stroke = '#000';
 
@@ -6858,7 +6901,7 @@ SOFTWARE.
      * @name Two.Path#vertices
      * @property {Two.Anchor[]} - An ordered list of anchor points for rendering the path.
      * @description A list of {@link Two.Anchor} objects that consist of what form the path takes.
-     * @nota-bene The array when manipulating is actually a {@link Two.Utils.Collection}.
+     * @nota-bene The array when manipulating is actually a {@link Two.Collection}.
      */
     this.vertices = vertices;
 
@@ -7415,6 +7458,8 @@ SOFTWARE.
       clone.translation.copy(this.translation);
       clone.rotation = this.rotation;
       clone.scale = this.scale;
+      clone.skewX = this.skewX;
+      clone.skewY = this.skewY;
 
       if (this.matrix.manual) {
         clone.matrix.copy(this.matrix);
@@ -7451,6 +7496,8 @@ SOFTWARE.
       result.translation = this.translation.toObject();
       result.rotation = this.rotation;
       result.scale = this.scale instanceof Vector ? this.scale.toObject() : this.scale;
+      result.skewX = this.skewX;
+      result.skewY = this.skewY;
 
       if (this.matrix.manual) {
         result.matrix = this.matrix.toObject();
@@ -7804,7 +7851,7 @@ SOFTWARE.
     /**
      * @name Two.Path#subdivide
      * @function
-     * @param {Integer} limit - How many times to recurse subdivisions.
+     * @param {Number} limit - How many times to recurse subdivisions.
      * @description Insert a {@link Two.Anchor} at the midpoint between every item in {@link Two.Path#vertices}.
      */
     subdivide: function(limit) {
@@ -7887,7 +7934,7 @@ SOFTWARE.
      * @name Two.Path#_updateLength
      * @function
      * @private
-     * @param {Integer} [limit=] -
+     * @param {Number} [limit=] -
      * @param {Boolean} [silent=false] - If set to `true` then the path isn't updated before calculation. Useful for internal use.
      * @description Recalculate the {@link Two.Path#length} value.
      */
@@ -8114,7 +8161,7 @@ SOFTWARE.
    * @protected
    * @param {Two.Path} path - The path to analyze against.
    * @param {Number} target - The target length at which to find an anchor.
-   * @returns {Integer}
+   * @returns {Number}
    * @description Return the id of an anchor based on a target length.
    */
   function getIdByLength(path, target) {
@@ -8211,7 +8258,7 @@ SOFTWARE.
    * @extends Two.Path
    * @param {Number} [x=0] - The x position of the circle.
    * @param {Number} [y=0] - The y position of the circle.
-   * @param {Number} radius - The radius value of the circle.
+   * @param {Number} [radius=0] - The radius value of the circle.
    * @param {Number} [resolution=4] - The number of vertices used to construct the circle.
    */
   function Circle(ox, oy, r, resolution) {
@@ -8230,7 +8277,9 @@ SOFTWARE.
      * @name Two.Circle#radius
      * @property {Number} - The size of the radius of the circle.
      */
-    this.radius = r;
+    if (typeof r === 'number') {
+      this.radius = r;
+    }
 
     this._update();
 
@@ -8357,6 +8406,8 @@ SOFTWARE.
       clone.translation.copy(this.translation);
       clone.rotation = this.rotation;
       clone.scale = this.scale;
+      clone.skewX = this.skewX;
+      clone.skewY = this.skewY;
 
       if (this.matrix.manual) {
         clone.matrix.copy(this.matrix);
@@ -8405,13 +8456,13 @@ SOFTWARE.
    * @extends Two.Path
    * @param {Number} [x=0] - The x position of the ellipse.
    * @param {Number} [y=0] - The y position of the ellipse.
-   * @param {Number} rx - The radius value of the ellipse in the x direction.
-   * @param {Number} ry - The radius value of the ellipse in the y direction.
+   * @param {Number} [rx=0] - The radius value of the ellipse in the x direction.
+   * @param {Number} [ry=0] - The radius value of the ellipse in the y direction.
    * @param {Number} [resolution=4] - The number of vertices used to construct the ellipse.
    */
   function Ellipse(ox, oy, rx, ry, resolution) {
 
-    if (typeof ry !== 'number') {
+    if (typeof ry !== 'number' && typeof rx === 'number') {
       ry = rx;
     }
 
@@ -8429,12 +8480,17 @@ SOFTWARE.
      * @name Two.Ellipse#width
      * @property {Number} - The width of the ellipse.
      */
-    this.width = rx * 2;
+    if (typeof rx === 'number') {
+      this.width = rx * 2;
+    }
+
     /**
      * @name Two.Ellipse#height
      * @property {Number} - The height of the ellipse.
      */
-    this.height = ry * 2;
+    if (typeof ry === 'number') {
+      this.height = ry * 2;
+    }
 
     this._update();
     this.translation.set(ox, oy);
@@ -8569,6 +8625,8 @@ SOFTWARE.
       clone.translation.copy(this.translation);
       clone.rotation = this.rotation;
       clone.scale = this.scale;
+      clone.skewX = this.skewX;
+      clone.skewY = this.skewY;
 
       if (this.matrix.manual) {
         clone.matrix.copy(this.matrix);
@@ -8811,6 +8869,8 @@ SOFTWARE.
       clone.translation.copy(this.translation);
       clone.rotation = this.rotation;
       clone.scale = this.scale;
+      clone.skewX = this.skewX;
+      clone.skewY = this.skewY;
 
       if (this.matrix.manual) {
         clone.matrix.copy(this.matrix);
@@ -8854,14 +8914,15 @@ SOFTWARE.
    * @extends Two.Path
    * @param {Number} [x=0] - The x position of the rounded rectangle.
    * @param {Number} [y=0] - The y position of the rounded rectangle.
-   * @param {Number} width - The width value of the rounded rectangle.
-   * @param {Number} height - The width value of the rounded rectangle.
-   * @param {Number} radius - The radius value of the rounded rectangle.
+   * @param {Number} [width=0] - The width value of the rounded rectangle.
+   * @param {Number} [height=0] - The width value of the rounded rectangle.
+   * @param {Number} [radius=0] - The radius value of the rounded rectangle.
    * @param {Number} [resolution=12] - The number of vertices used to construct the rounded rectangle.
    */
   function RoundedRectangle(ox, oy, width, height, radius) {
 
-    if (typeof radius === 'undefined') {
+    if (typeof radius === 'undefined' &&
+      typeof width === 'number' && typeof height === 'number') {
       radius = Math.floor(Math.min(width, height) / 12);
     }
 
@@ -8888,17 +8949,25 @@ SOFTWARE.
      * @name Two.RoundedRectangle#width
      * @property {Number} - The width of the rounded rectangle.
      */
-    this.width = width;
+    if (typeof width === 'number') {
+      this.width = width;
+    }
+
     /**
      * @name Two.RoundedRectangle#height
      * @property {Number} - The height of the rounded rectangle.
      */
-    this.height = height;
+    if (typeof height === 'number') {
+      this.height = height;
+    }
+
     /**
      * @name Two.RoundedRectangle#radius
      * @property {Number} - The size of the radius of the rounded rectangle.
      */
-    this.radius = radius;
+    if (typeof radius === 'number') {
+      this.radius = radius;
+    }
 
     this._update();
     this.translation.set(ox, oy);
@@ -8998,7 +9067,7 @@ SOFTWARE.
      * @private
      * @see {@link Two.RoundedRectangle#radius}
      */
-    _radius: 0,
+    _radius: 12,
 
     /**
      * @name Two.RoundedRectangle#_update
@@ -9137,6 +9206,8 @@ SOFTWARE.
       clone.translation.copy(this.translation);
       clone.rotation = this.rotation;
       clone.scale = this.scale;
+      clone.skewX = this.skewX;
+      clone.skewY = this.skewY;
 
       if (this.matrix.manual) {
         clone.matrix.copy(this.matrix);
@@ -9536,15 +9607,15 @@ SOFTWARE.
 
     /**
      * @name Two.Text#fill
-     * @property {(CssColor|Two.Gradient|Two.Texture)} - The value of what the text object should be filled in with.
-     * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS Colors.
+     * @property {(String|Two.Gradient|Two.Texture)} - The value of what the text object should be filled in with.
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
      */
     _fill: '#000',
 
     /**
      * @name Two.Text#stroke
-     * @property {(CssColor|Two.Gradient|Two.Texture)} - The value of what the text object should be filled in with.
-     * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS Colors.
+     * @property {(String|Two.Gradient|Two.Texture)} - The value of what the text object should be filled in with.
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
      */
     _stroke: 'transparent',
 
@@ -9792,7 +9863,7 @@ SOFTWARE.
   };
 
   /**
-   * @name Utils.getAlignment
+   * @name Two.Utils.getAlignment
    * @function
    * @param {AlignmentString}
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/text-anchor}
@@ -9808,7 +9879,7 @@ SOFTWARE.
   };
 
   /**
-   * @name Utils.extractCSSText
+   * @name Two.Utils.extractCSSText
    * @function
    * @param {String} text - The CSS text body to be parsed and extracted.
    * @param {Object} [styles] - The styles object to apply CSS key values to.
@@ -9840,9 +9911,9 @@ SOFTWARE.
   };
 
   /**
-   * @name Utils.getSvgStyles
+   * @name Two.Utils.getSvgStyles
    * @function
-   * @param {SvgNode} node - The SVG node to parse.
+   * @param {SVGElement} node - The SVG node to parse.
    * @returns {Object} styles
    * @description Get the CSS comands from the `style` attribute of an SVG node and apply them as key value pairs to a JavaScript object.
    */
@@ -9890,7 +9961,7 @@ SOFTWARE.
   };
 
   /**
-   * @name Utils.applySvgViewBox
+   * @name Two.Utils.applySvgViewBox
    * @function
    * @param {Two.Shape} node - The Two.js object to apply viewbox matrix to
    * @param {String} value - The viewBox value from the SVG attribute
@@ -9917,9 +9988,9 @@ SOFTWARE.
   };
 
   /**
-   * @name Utils.applySvgAttributes
+   * @name Two.Utils.applySvgAttributes
    * @function
-   * @param {SvgNode} node - An SVG Node to extrapolate attributes from.
+   * @param {SVGElement} node - An SVG Node to extrapolate attributes from.
    * @param {Two.Shape} elem - The Two.js object to apply extrapolated attributes to.
    * @returns {Two.Shape} The Two.js object passed now with applied attributes.
    * @description This function iterates through an SVG Node's properties and stores ones of interest. It tries to resolve styles applied via CSS as well.
@@ -10147,9 +10218,9 @@ SOFTWARE.
   };
 
   /**
-   * @name Utils.updateDefsCache
+   * @name Two.Utils.updateDefsCache
    * @function
-   * @param {SvgNode} node - The SVG Node with which to update the defs cache.
+   * @param {SVGElement} node - The SVG Node with which to update the defs cache.
    * @param {Object} Object - The defs cache to be updated.
    * @description Update the cache of children of <defs /> tags.
    */
@@ -10166,7 +10237,7 @@ SOFTWARE.
   };
 
   /**
-   * @name Utils.getScene
+   * @name Two.Utils.getScene
    * @param {Two.Shape} node - The currently available object in the scenegraph.
    * @returns {Group} - The highest order {@link Two.Group} in the scenegraph.
    * @property {Function}
@@ -10182,7 +10253,7 @@ SOFTWARE.
   };
 
   /**
-   * @name Utils.read
+   * @name Two.Utils.read
    * @property {Object} read - A map of functions to read any number of SVG node types and create Two.js equivalents of them. Primarily used by the {@link Two#interpret} method.
    */
   var read = {
@@ -10922,7 +10993,7 @@ SOFTWARE.
   };
 
   /**
-   * @name Utils.xhr
+   * @name Two.Utils.xhr
    * @function
    * @param {String} path
    * @param {Function} callback
@@ -10952,7 +11023,7 @@ SOFTWARE.
    * @param {String|String[]|Two.Texture|Two.Texture[]} paths - A list of URLs or {@link Two.Texture}s.
    * @param {Number} [ox=0] - The initial `x` position of the Two.ImageSequence.
    * @param {Number} [oy=0] - The initial `y` position of the Two.ImageSequence.
-   * @param {Integer} [frameRate=30] - The frame rate at which the images should playback at.
+   * @param {Number} [frameRate=30] - The frame rate at which the images should playback at.
    * @description A convenient package to display still or animated images organized as a series of still images.
    */
   function ImageSequence(paths, ox, oy, frameRate) {
@@ -10991,7 +11062,7 @@ SOFTWARE.
 
     /**
      * @name Two.ImageSequence#frameRate
-     * @property {Integer} - The number of frames to animate against per second.
+     * @property {Number} - The number of frames to animate against per second.
      */
     if (typeof frameRate === 'number') {
       this.frameRate = frameRate;
@@ -11001,7 +11072,7 @@ SOFTWARE.
 
     /**
      * @name Two.ImageSequence#index
-     * @property {Integer} - The index of the current tile of the sprite to display. Defaults to `0`.
+     * @property {Number} - The index of the current tile of the sprite to display. Defaults to `0`.
      */
     this.index = 0;
 
@@ -11161,7 +11232,7 @@ SOFTWARE.
     /**
      * @name Two.ImageSequence#_amount
      * @private
-     * @property {Integer} - Number of frames for a given {@link Two.ImageSequence}.
+     * @property {Number} - Number of frames for a given {@link Two.ImageSequence}.
      */
     _amount: 1,
 
@@ -11175,7 +11246,7 @@ SOFTWARE.
     /**
      * @name Two.ImageSequence#_index
      * @private
-     * @property {Integer} - The current frame the {@link Two.ImageSequence} is currently displaying.
+     * @property {Number} - The current frame the {@link Two.ImageSequence} is currently displaying.
      */
     _index: 0,
 
@@ -11196,14 +11267,14 @@ SOFTWARE.
     /**
      * @name Two.ImageSequence#_firstFrame
      * @private
-     * @property {Integer} - The frame the {@link Two.ImageSequence} should start with.
+     * @property {Number} - The frame the {@link Two.ImageSequence} should start with.
      */
     _firstFrame: 0,
 
     /**
      * @name Two.ImageSequence#_lastFrame
      * @private
-     * @property {Integer} - The frame the {@link Two.ImageSequence} should end with.
+     * @property {Number} - The frame the {@link Two.ImageSequence} should end with.
      */
     _lastFrame: 0,
 
@@ -11240,8 +11311,8 @@ SOFTWARE.
     /**
      * @name Two.ImageSequence#play
      * @function
-     * @param {Integer} [firstFrame=0] - The index of the frame to start the animation with.
-     * @param {Integer} [lastFrame] - The index of the frame to end the animation with. Defaults to the last item in the {@link Two.ImageSequence#textures}.
+     * @param {Number} [firstFrame=0] - The index of the frame to start the animation with.
+     * @param {Number} [lastFrame] - The index of the frame to end the animation with. Defaults to the last item in the {@link Two.ImageSequence#textures}.
      * @param {Function} [onLastFrame] - Optional callback function to be triggered after playing the last frame. This fires multiple times when the image sequence is looped.
      * @description Initiate animation playback of a {@link Two.ImageSequence}.
      */
@@ -11469,9 +11540,9 @@ SOFTWARE.
    * @param {String|Two.Texture} [path] - The URL path or {@link Two.Texture} to be used as the bitmap data displayed on the sprite.
    * @param {Number} [ox=0] - The initial `x` position of the Two.Sprite.
    * @param {Number} [oy=0] - The initial `y` position of the Two.Sprite.
-   * @param {Integer} [cols=1] - The number of columns the sprite contains.
-   * @param {Integer} [rows=1] - The number of rows the sprite contains.
-   * @param {Integer} [frameRate=0] - The frame rate at which the partitions of the image should playback at.
+   * @param {Number} [cols=1] - The number of columns the sprite contains.
+   * @param {Number} [rows=1] - The number of rows the sprite contains.
+   * @param {Number} [frameRate=0] - The frame rate at which the partitions of the image should playback at.
    * @description A convenient package to display still or animated images through a tiled image source. For more information on the principals of animated imagery through tiling see [Texture Atlas](https://en.wikipedia.org/wiki/Texture_atlas) on Wikipedia.
    */
   function Sprite(path, ox, oy, cols, rows, frameRate) {
@@ -11505,7 +11576,7 @@ SOFTWARE.
 
     /**
      * @name Two.Sprite#columns
-     * @property {Integer} - The number of columns to split the texture into. Defaults to `1`.
+     * @property {Number} - The number of columns to split the texture into. Defaults to `1`.
      */
     if (typeof cols === 'number') {
       this.columns = cols;
@@ -11513,7 +11584,7 @@ SOFTWARE.
 
     /**
      * @name Two.Sprite#rows
-     * @property {Integer} - The number of rows to split the texture into. Defaults to `1`.
+     * @property {Number} - The number of rows to split the texture into. Defaults to `1`.
      */
     if (typeof rows === 'number') {
       this.rows = rows;
@@ -11521,7 +11592,7 @@ SOFTWARE.
 
     /**
      * @name Two.Sprite#frameRate
-     * @property {Integer} - The number of frames to animate against per second. Defaults to `0` for non-animated sprites.
+     * @property {Number} - The number of frames to animate against per second. Defaults to `0` for non-animated sprites.
      */
     if (typeof frameRate === 'number') {
       this.frameRate = frameRate;
@@ -11529,7 +11600,7 @@ SOFTWARE.
 
     /**
      * @name Two.Sprite#index
-     * @property {Integer} - The index of the current tile of the sprite to display. Defaults to `0`.
+     * @property {Number} - The index of the current tile of the sprite to display. Defaults to `0`.
      */
     this.index = 0;
 
@@ -11604,7 +11675,7 @@ SOFTWARE.
     /**
      * @name Two.Sprite#_amount
      * @private
-     * @property {Integer} - Number of frames for a given {@link Two.Sprite}.
+     * @property {Number} - Number of frames for a given {@link Two.Sprite}.
      */
     _amount: 1,
 
@@ -11632,14 +11703,14 @@ SOFTWARE.
     /**
      * @name Two.Sprite#_firstFrame
      * @private
-     * @property {Integer} - The frame the {@link Two.Sprite} should start with.
+     * @property {Number} - The frame the {@link Two.Sprite} should start with.
      */
     _firstFrame: 0,
 
     /**
      * @name Two.Sprite#_lastFrame
      * @private
-     * @property {Integer} - The frame the {@link Two.Sprite} should end with.
+     * @property {Number} - The frame the {@link Two.Sprite} should end with.
      */
     _lastFrame: 0,
 
@@ -11683,7 +11754,7 @@ SOFTWARE.
     /**
      * @name Two.Sprite#_index
      * @private
-     * @property {Integer} - The current frame the {@link Two.Sprite} is currently displaying.
+     * @property {Number} - The current frame the {@link Two.Sprite} is currently displaying.
      */
     _index: 0,
 
@@ -11697,8 +11768,8 @@ SOFTWARE.
     /**
      * @name Two.Sprite#play
      * @function
-     * @param {Integer} [firstFrame=0] - The index of the frame to start the animation with.
-     * @param {Integer} [lastFrame] - The index of the frame to end the animation with. Defaults to the last item in the {@link Two.Sprite#textures}.
+     * @param {Number} [firstFrame=0] - The index of the frame to start the animation with.
+     * @param {Number} [lastFrame] - The index of the frame to end the animation with. Defaults to the last item in the {@link Two.Sprite#textures}.
      * @param {Function} [onLastFrame] - Optional callback function to be triggered after playing the last frame. This fires multiple times when the sprite is looped.
      * @description Initiate animation playback of a {@link Two.Sprite}.
      */
@@ -11927,10 +11998,10 @@ SOFTWARE.
    * @extends Two.Path
    * @param {Number} [x=0] - The x position of the arc segment.
    * @param {Number} [y=0] - The y position of the arc segment.
-   * @param {Number} innerRadius - The inner radius value of the arc segment.
-   * @param {Number} outerRadius - The outer radius value of the arc segment.
-   * @param {Radians} startAngle - The start angle of the arc segment in radians.
-   * @param {Radians} endAngle - The end angle of the arc segment in radians.
+   * @param {Number} [innerRadius=0] - The inner radius value of the arc segment.
+   * @param {Number} [outerRadius=0] - The outer radius value of the arc segment.
+   * @param {Number} [startAngle=0] - The start angle of the arc segment in Number.
+   * @param {Number} [endAngle=6.2831] - The end angle of the arc segment in Number.
    * @param {Number} [resolution=24] - The number of vertices used to construct the arc segment.
    */
   function ArcSegment(ox, oy, ir, or, sa, ea, res) {
@@ -11947,23 +12018,33 @@ SOFTWARE.
      * @name Two.ArcSegment#innerRadius
      * @property {Number} - The size of the inner radius of the arc segment.
      */
-    this.innerRadius = ir;
+    if (typeof ir === 'number') {
+      this.innerRadius = ir;
+    }
+
     /**
      * @name Two.ArcSegment#outerRadius
      * @property {Number} - The size of the outer radius of the arc segment.
      */
-    this.outerRadius = or;
+    if (typeof or === 'number') {
+      this.outerRadius = or;
+    }
 
     /**
      * @name Two.ArcSegment#startRadius
-     * @property {Radians} - The angle of one side for the arc segment.
+     * @property {Number} - The angle of one side for the arc segment.
      */
-    this.startAngle = sa;
+    if (typeof sa === 'number') {
+      this.startAngle = sa;
+    }
+
     /**
      * @name Two.ArcSegment#endAngle
-     * @property {Radians} - The angle of the other side for the arc segment.
+     * @property {Number} - The angle of the other side for the arc segment.
      */
-    this.endAngle = ea;
+    if (typeof ea === 'number') {
+      this.endAngle = ea;
+    }
 
     this._update();
 
@@ -12243,6 +12324,8 @@ SOFTWARE.
       clone.translation.copy(this.translation);
       clone.rotation = this.rotation;
       clone.scale = this.scale;
+      clone.skewX = this.skewX;
+      clone.skewY = this.skewY;
 
       if (this.matrix.manual) {
         clone.matrix.copy(this.matrix);
@@ -12290,7 +12373,7 @@ SOFTWARE.
    * @extends Two.Path
    * @param {Number} [x=0] - The x position of the polygon.
    * @param {Number} [y=0] - The y position of the polygon.
-   * @param {Number} radius - The radius value of the polygon.
+   * @param {Number} [radius=0] - The radius value of the polygon.
    * @param {Number} [sides=12] - The number of vertices used to construct the polygon.
    */
   function Polygon(ox, oy, r, sides) {
@@ -12306,20 +12389,34 @@ SOFTWARE.
      * @name Two.Polygon#width
      * @property {Number} - The size of the width of the polygon.
      */
-    this.width = r * 2;
+    if (typeof r === 'number') {
+      this.width = r * 2;
+    }
+
     /**
      * @name Two.Polygon#height
      * @property {Number} - The size of the height of the polygon.
      */
-    this.height = r * 2;
+    if (typeof r === 'number') {
+      this.height = r * 2;
+    }
+
     /**
      * @name Two.Polygon#sides
      * @property {Number} - The amount of sides the polyogn has.
      */
-    this.sides = sides;
+    if (typeof sides === 'number') {
+      this.sides = sides;
+    }
 
     this._update();
-    this.translation.set(ox, oy);
+
+    if (typeof ox === 'number') {
+      this.translation.x = ox;
+    }
+    if (typeof oy === 'number') {
+      this.translation.y = oy;
+    }
 
   }
 
@@ -12463,6 +12560,8 @@ SOFTWARE.
       clone.translation.copy(this.translation);
       clone.rotation = this.rotation;
       clone.scale = this.scale;
+      clone.skewX = this.skewX;
+      clone.skewY = this.skewY;
 
       if (this.matrix.manual) {
         clone.matrix.copy(this.matrix);
@@ -12510,8 +12609,8 @@ SOFTWARE.
    * @extends Two.Path
    * @param {Number} [x=0] - The x position of the star.
    * @param {Number} [y=0] - The y position of the star.
-   * @param {Number} innerRadius - The inner radius value of the star.
-   * @param {Number} outerRadius - The outer radius value of the star.
+   * @param {Number} [innerRadius=0] - The inner radius value of the star.
+   * @param {Number} [outerRadius=0] - The outer radius value of the star.
    * @param {Number} [sides=5] - The number of sides used to construct the star.
    */
   function Star(ox, oy, ir, or, sides) {
@@ -12533,20 +12632,34 @@ SOFTWARE.
      * @name Two.Star#innerRadius
      * @property {Number} - The size of the inner radius of the star.
      */
-    this.innerRadius = ir;
+    if (typeof ir === 'number') {
+      this.innerRadius = ir;
+    }
+
     /**
      * @name Two.Star#outerRadius
      * @property {Number} - The size of the outer radius of the star.
      */
-    this.outerRadius = or;
+    if (typeof or === 'number') {
+      this.outerRadius = or;
+    }
+
     /**
      * @name Two.Star#sides
      * @property {Number} - The amount of sides the star has.
      */
-    this.sides = sides;
+    if (typeof sides === 'number') {
+      this.sides = sides;
+    }
 
     this._update();
-    this.translation.set(ox, oy);
+
+    if (typeof ox === 'number') {
+      this.translation.x = ox;
+    }
+    if (typeof oy === 'number') {
+      this.translation.y = oy;
+    }
 
   }
 
@@ -12696,6 +12809,8 @@ SOFTWARE.
       clone.translation.copy(this.translation);
       clone.rotation = this.rotation;
       clone.scale = this.scale;
+      clone.skewX = this.skewX;
+      clone.skewY = this.skewY;
 
       if (this.matrix.manual) {
         clone.matrix.copy(this.matrix);
@@ -14807,7 +14922,7 @@ SOFTWARE.
    * @extends Two.Events
    * @param {Object} [parameters] - This object is inherited when constructing a new instance of {@link Two}.
    * @param {Element} [parameters.domElement] - The `<canvas />` to draw to. If none given a new one will be constructed.
-   * @param {CanvasElement} [parameters.offscreenElement] - The offscreen two dimensional `<canvas />` to render each element on WebGL texture updates.
+   * @param {HTMLCanvasElement} [parameters.offscreenElement] - The offscreen two dimensional `<canvas />` to render each element on WebGL texture updates.
    * @param {Boolean} [parameters.antialias] - Determines whether the canvas should clear render with antialias on.
    * @description This class is used by {@link Two} when constructing with `type` of `Two.Types.webgl`. It takes Two.js' scenegraph and renders it to a `<canvas />` through the WebGL api.
    * @see {@link https://www.khronos.org/registry/webgl/specs/latest/1.0/}
@@ -15600,7 +15715,7 @@ SOFTWARE.
      * @param {Number} y1
      * @param {Number} x2
      * @param {Number} y2
-     * @param {...Two.Stop} [stops] - Any number of color stops sometimes reffered to as ramp stops. If none are supplied then the default black-to-white two stop gradient is applied.
+     * @param {...Two.Stop} stops - Any number of color stops sometimes reffered to as ramp stops. If none are supplied then the default black-to-white two stop gradient is applied.
      * @returns {Two.LinearGradient}
      * @description Creates a Two.js linear gradient and ads it to the scene. In the case of an effect it's added to an invisible "definitions" group.
      */
@@ -15621,7 +15736,7 @@ SOFTWARE.
      * @param {Number} x1
      * @param {Number} y1
      * @param {Number} radius
-     * @param {...Two.Stop} [stops] - Any number of color stops sometimes reffered to as ramp stops. If none are supplied then the default black-to-white two stop gradient is applied.
+     * @param {...Two.Stop} stops - Any number of color stops sometimes reffered to as ramp stops. If none are supplied then the default black-to-white two stop gradient is applied.
      * @returns {Two.RadialGradient}
      * @description Creates a Two.js linear-gradient object and ads it to the scene. In the case of an effect it's added to an invisible "definitions" group.
      */
@@ -15644,7 +15759,7 @@ SOFTWARE.
      * @param {Number} y
      * @param {Number} [columns=1]
      * @param {Number} [rows=1]
-     * @param {Integer} [frameRate=0]
+     * @param {Number} [frameRate=0]
      * @param {Boolean} [autostart=false]
      * @returns {Two.Sprite}
      * @description Creates a Two.js sprite object and adds it to the scene. Sprites can be used for still images as well as animations.
@@ -15687,7 +15802,7 @@ SOFTWARE.
     /**
      * @name Two#makeTexture
      * @function
-     * @param {(String|Image|Canvas|Video)} [pathOrSource] - The URL path to an image or a DOM image-like element.
+     * @param {(String|HTMLImageElement|HTMLCanvasElement|HTMLVideoElement)} [pathOrSource] - The URL path to an image or a DOM image-like element.
      * @param {Function} [callback] - Function to be invoked when the image is loaded.
      * @returns {Two.Texture}
      * @description Creates a Two.js texture object.
@@ -15724,15 +15839,15 @@ SOFTWARE.
     /**
      * @name Two#interpret
      * @function
-     * @param {SvgNode} svgNode - The SVG node to be parsed.
+     * @param {SVGElement} SVGElement - The SVG node to be parsed.
      * @param {Boolean} shallow - Don't create a top-most group but append all content directly.
      * @param {Boolean} add – Automatically add the reconstructed SVG node to scene.
      * @returns {Two.Group}
      * @description Interpret an SVG Node and add it to this instance's scene. The distinction should be made that this doesn't `import` svg's, it solely interprets them into something compatible for Two.js - this is slightly different than a direct transcription.
      */
-    interpret: function(svgNode, shallow, add) {
+    interpret: function(SVGElement, shallow, add) {
 
-      var tag = svgNode.tagName.toLowerCase();
+      var tag = SVGElement.tagName.toLowerCase();
 
       add = (typeof add !== 'undefined') ? add : true;
 
@@ -15740,7 +15855,7 @@ SOFTWARE.
         return null;
       }
 
-      var node = read[tag].call(this, svgNode);
+      var node = read[tag].call(this, SVGElement);
 
       if (add) {
         this.add(shallow && node instanceof Group ? node.children : node);
@@ -15757,7 +15872,7 @@ SOFTWARE.
     /**
      * @name Two#load
      * @function
-     * @param {String|SvgNode} pathOrSVGContent - The URL path of an SVG file or an SVG document as text.
+     * @param {String|SVGElement} pathOrSVGContent - The URL path of an SVG file or an SVG document as text.
      * @param {Function} callback - Function to call once loading has completed.
      * @returns {Two.Group}
      * @description Load an SVG file or SVG text and interpret it into Two.js legible objects.
@@ -15895,12 +16010,12 @@ SOFTWARE.
     SVGRenderer: Renderer$1,
     WebGLRenderer: Renderer$2,
 
-    /**
-     * @name Two.Commands
-     * @property {Object} - Map of possible path commands. Taken from the SVG specification.
-     */
     Commands: Commands,
 
+    /**
+     * @name Two.Utils
+     * @property {Object} - A massive object filled with utility functions and properties.
+     */
     Utils: _.extend({
 
       Error: TwoError,
