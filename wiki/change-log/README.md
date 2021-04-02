@@ -4,6 +4,8 @@ sidebarDepth: 2
 
 # Change Log
 
+## Nightly
+
 ## April 2, 2021 [v0.7.4](https://github.com/jonobr1/two.js/releases/tag/v0.7.4)
 + Improved Typescript type declarations
 + Successfully export `extras/` directory in both JavaScript and JavaScript Module format
