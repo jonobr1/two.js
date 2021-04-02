@@ -159,8 +159,7 @@ _.extend(Polygon.prototype, Path.prototype, {
           this.vertices[i].set(x, y);
         }
 
-        this.vertices[i].command = i === 0
-          ? Commands.move : Commands.line;
+        this.vertices[i].command = i === 0 ? Commands.move : Commands.line;
 
       }
 
