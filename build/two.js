@@ -2150,7 +2150,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2021-04-02T20:42:48.163Z',
+    PublishDate: '2021-04-02T21:03:16.690Z',
 
     /**
      * @name Two.Identifier
@@ -8365,7 +8365,7 @@ SOFTWARE.
 
           var v = this.vertices[i];
 
-          v.command = Commands.curve;
+          v.command = i === 0 ? Commands.movet : Commands.curve;
           v.set(x, y);
           v.controls.left.set(lx, ly);
           v.controls.right.set(rx, ry);
@@ -8581,7 +8581,7 @@ SOFTWARE.
 
           var v = this.vertices[i];
 
-          v.command = Commands.curve;
+          v.command = i === 0 ? Commands.move : Commands.curve;
           v.set(x, y);
           v.controls.left.set(lx, ly);
           v.controls.right.set(rx, ry);
@@ -12519,8 +12519,7 @@ SOFTWARE.
             this.vertices[i].set(x, y);
           }
 
-          this.vertices[i].command = i === 0
-            ? Commands.move : Commands.line;
+          this.vertices[i].command = i === 0 ? Commands.move : Commands.line;
 
         }
 
@@ -12763,8 +12762,7 @@ SOFTWARE.
             this.vertices[i].set(x, y);
           }
 
-          this.vertices[i].command = i === 0
-            ? Commands.move : Commands.line;
+          this.vertices[i].command = i === 0 ? Commands.move : Commands.line;
 
         }
 
