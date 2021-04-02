@@ -37,7 +37,7 @@ The entrypoint for Two.js. Instantiate a `new Two` in order to setup a scene to 
 
 <div class="static member ">
 
-## Two.Commands
+## Two.Utils
 
 
 
@@ -48,7 +48,7 @@ The entrypoint for Two.js. Instantiate a `new Two` in order to setup a scene to 
 
 <div class="properties">
 
-Map of possible path commands. Taken from the SVG specification.
+A massive object filled with utility functions and properties.
 
 </div>
 
@@ -61,7 +61,7 @@ Map of possible path commands. Taken from the SVG specification.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L956)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L958)
 
 </div>
 
@@ -1768,7 +1768,7 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-|  `svgNode`  | The SVG node to be parsed. |
+|  `SVGElement`  | The SVG node to be parsed. |
 |  `shallow`  | Don't create a top-most group but append all content directly. |
 |  `add`  | – Automatically add the reconstructed SVG node to scene. |
 </div>

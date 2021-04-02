@@ -349,7 +349,7 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/rectangle.js#L199)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/rectangle.js#L201)
 
 </div>
 

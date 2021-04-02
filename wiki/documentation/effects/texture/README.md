@@ -366,7 +366,7 @@ __Returns__:
 
 
 
-+ `ImageElement`
++ `HTMLImageElement`
 
 
 

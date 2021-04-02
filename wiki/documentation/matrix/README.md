@@ -772,7 +772,7 @@ Scale the transformation matrix in two dimensions.
 
 | Argument | Description |
 | ---- | ----------- |
-|  `radians`  | The amount to rotate in radians. |
+|  `Number`  | The amount to rotate in Number. |
 </div>
 
 
@@ -869,7 +869,7 @@ Translate the matrix.
 
 | Argument | Description |
 | ---- | ----------- |
-|  `radians`  | The amount to skew in radians. |
+|  `Number`  | The amount to skew in Number. |
 </div>
 
 
@@ -917,7 +917,7 @@ Skew the matrix by an angle in the x axis direction.
 
 | Argument | Description |
 | ---- | ----------- |
-|  `radians`  | The amount to skew in radians. |
+|  `Number`  | The amount to skew in Number. |
 </div>
 
 

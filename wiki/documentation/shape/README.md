@@ -7,7 +7,7 @@ pageClass: documentation-class
 
 <div class="extends">
 
-__Extends__: `Events`
+__Extends__: `Two.Events`
 
 </div>
 
@@ -55,7 +55,7 @@ Utility function used in conjunction with event handlers to update the flagMatri
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L72)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L86)
 
 </div>
 
@@ -103,7 +103,7 @@ Convenience function to apply observable qualities of a [Two.Shape](/documentati
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L81)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L95)
 
 </div>
 
@@ -315,7 +315,7 @@ The transformation matrix of the shape.
 
 
 ::: tip nota-bene
-[Two.Shape.translation](/documentation/shape#two-shape-translation), [Two.Shape.rotation](/documentation/shape#two-shape-rotation), and [Two.Shape.scale](/documentation/shape#two-shape-scale) apply their values to the matrix when changed. The matrix is what is sent to the renderer to be drawn.
+[Two.Shape.translation](/documentation/shape#two-shape-translation), [Two.Shape.rotation](/documentation/shape#two-shape-rotation), [Two.Shape.scale](/documentation/shape#two-shape-scale), [Two.Shape.skewX](/documentation/shape#two-shape-skewx), and [Two.Shape.skewY](/documentation/shape#two-shape-skewy) apply their values to the matrix when changed. The matrix is what is sent to the renderer to be drawn.
 :::
 
 
@@ -384,7 +384,7 @@ The x and y value for where the shape is placed relative to its parent.
 
 <div class="properties">
 
-The value in radians for how much the shape is rotated relative to its parent.
+The value in Number for how much the shape is rotated relative to its parent.
 
 </div>
 
@@ -465,6 +465,100 @@ This value can be replaced with a [Two.Vector](/documentation/vector) to do non-
 
 <div class="instance member ">
 
+## Two.Shape.skewX
+
+
+
+
+
+
+
+
+<div class="properties">
+
+The value in Number for how much the shape is skewed relative to its parent.
+
+</div>
+
+
+
+
+
+
+<div class="description">
+
+Skew the shape by an angle in the x axis direction.
+
+</div>
+
+
+
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L68)
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance member ">
+
+## Two.Shape.skewY
+
+
+
+
+
+
+
+
+<div class="properties">
+
+The value in Number for how much the shape is skewed relative to its parent.
+
+</div>
+
+
+
+
+
+
+<div class="description">
+
+Skew the shape by an angle in the y axis direction.
+
+</div>
+
+
+
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L75)
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance member ">
+
 ## Two.Shape.className
 
 
@@ -489,7 +583,7 @@ A class to be applied to the element to be compatible with CSS styling.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L287)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L337)
 
 </div>
 
@@ -547,7 +641,7 @@ Convenience method to add itself to the scenegraph.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L294)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L344)
 
 </div>
 
@@ -608,7 +702,7 @@ Create a new [Two.Shape](/documentation/shape) with the same values as the curre
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L305)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L355)
 
 </div>
 

@@ -65,7 +65,7 @@ A list of properties that are on every [Two.RoundedRectangle](/documentation/rou
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/rounded-rectangle.js#L69)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/rounded-rectangle.js#L78)
 
 </div>
 
@@ -106,7 +106,7 @@ A convenience function to trigger the flag for radius changing.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/rounded-rectangle.js#L75)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/rounded-rectangle.js#L84)
 
 </div>
 
@@ -154,7 +154,7 @@ Convenience function to apply observable qualities of a [Two.RoundedRectangle](/
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/rounded-rectangle.js#L83)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/rounded-rectangle.js#L92)
 
 </div>
 
@@ -195,7 +195,7 @@ The width of the rounded rectangle.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/rounded-rectangle.js#L46)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/rounded-rectangle.js#L47)
 
 </div>
 
@@ -236,7 +236,7 @@ The height of the rounded rectangle.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/rounded-rectangle.js#L51)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/rounded-rectangle.js#L55)
 
 </div>
 
@@ -277,7 +277,7 @@ The size of the radius of the rounded rectangle.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/rounded-rectangle.js#L56)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/rounded-rectangle.js#L63)
 
 </div>
 
@@ -338,7 +338,7 @@ Create a new instance of [Two.RoundedRectangle](/documentation/roundedrectangle)
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/rounded-rectangle.js#L281)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/rounded-rectangle.js#L290)
 
 </div>
 
@@ -392,7 +392,7 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/rounded-rectangle.js#L316)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/rounded-rectangle.js#L327)
 
 </div>
 

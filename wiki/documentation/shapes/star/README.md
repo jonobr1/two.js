@@ -64,7 +64,7 @@ A list of properties that are on every [Two.Star](/documentation/star).
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/star.js#L60)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/star.js#L74)
 
 </div>
 
@@ -112,7 +112,7 @@ Convenience function to apply observable qualities of a [Two.Star](/documentatio
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/star.js#L66)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/star.js#L80)
 
 </div>
 
@@ -194,7 +194,7 @@ The size of the outer radius of the star.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/star.js#L42)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/star.js#L45)
 
 </div>
 
@@ -235,7 +235,7 @@ The amount of sides the star has.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/star.js#L47)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/star.js#L53)
 
 </div>
 
@@ -296,7 +296,7 @@ Create a new instance of [Two.Star](/documentation/star) with the same propertie
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/star.js#L186)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/star.js#L200)
 
 </div>
 
@@ -350,7 +350,7 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/star.js#L221)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/star.js#L237)
 
 </div>
 

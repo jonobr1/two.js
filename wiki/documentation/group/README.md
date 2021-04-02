@@ -454,7 +454,7 @@ An automatically updated list of children that need to be removed from the rende
 
 <div class="instance member ">
 
-## Two.Group.additions
+## Two.Group.children
 
 
 
@@ -545,7 +545,7 @@ The value of what all child shapes should be filled in with.
 
 <div class="see">
 
-[https://developer.mozilla.org/en-US/docs/Web/CSS/color_value](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value) for more information on CSS Colors.
+[https://developer.mozilla.org/en-US/docs/Web/CSS/color_value](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value) for more information on CSS's colors as `String`.
 
 </div>
 
@@ -592,7 +592,7 @@ The value of what all child shapes should be outlined in with.
 
 <div class="see">
 
-[https://developer.mozilla.org/en-US/docs/Web/CSS/color_value](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value) for more information on CSS Colors.
+[https://developer.mozilla.org/en-US/docs/Web/CSS/color_value](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value) for more information on CSS's colors as `String`.
 
 </div>
 

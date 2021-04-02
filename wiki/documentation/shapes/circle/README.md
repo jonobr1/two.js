@@ -63,7 +63,7 @@ A list of properties that are on every [Two.Circle](/documentation/circle).
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js#L51)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js#L53)
 
 </div>
 
@@ -111,7 +111,7 @@ Convenience function to apply observable qualities of a [Two.Circle](/documentat
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js#L57)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js#L59)
 
 </div>
 
@@ -213,7 +213,7 @@ Create a new instance of [Two.Circle](/documentation/circle) with the same prope
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js#L149)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js#L151)
 
 </div>
 
@@ -267,7 +267,7 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js#L180)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js#L184)
 
 </div>
 

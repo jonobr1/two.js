@@ -63,7 +63,7 @@ A list of properties that are on every [Two.Polygon](/documentation/polygon).
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/polygon.js#L51)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/polygon.js#L65)
 
 </div>
 
@@ -111,7 +111,7 @@ Convenience function to apply observable qualities of a [Two.Polygon](/documenta
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/polygon.js#L57)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/polygon.js#L71)
 
 </div>
 
@@ -193,7 +193,7 @@ The size of the height of the polygon.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/polygon.js#L33)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/polygon.js#L36)
 
 </div>
 
@@ -234,7 +234,7 @@ The amount of sides the polyogn has.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/polygon.js#L38)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/polygon.js#L44)
 
 </div>
 
@@ -295,7 +295,7 @@ Create a new instance of [Two.Polygon](/documentation/polygon) with the same pro
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/polygon.js#L175)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/polygon.js#L189)
 
 </div>
 
@@ -349,7 +349,7 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/polygon.js#L206)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/polygon.js#L222)
 
 </div>
 
