@@ -9,7 +9,7 @@ import Constants from './constants.js';
 /**
  * @name Two.Shape
  * @class
- * @extends Events
+ * @extends Two.Events
  * @description The foundational transformation object for the Two.js scenegraph.
  */
 function Shape() {
@@ -54,7 +54,7 @@ function Shape() {
 
   /**
    * @name Two.Shape#rotation
-   * @property {Radians} - The value in radians for how much the shape is rotated relative to its parent.
+   * @property {Number} - The value in Number for how much the shape is rotated relative to its parent.
    */
   this.rotation = 0;
 
@@ -67,14 +67,14 @@ function Shape() {
 
   /**
    * @name Two.Shape#skewX
-   * @property {Radians} - The value in radians for how much the shape is skewed relative to its parent.
+   * @property {Number} - The value in Number for how much the shape is skewed relative to its parent.
    * @description Skew the shape by an angle in the x axis direction.
    */
   this.skewX = 0;
 
   /**
    * @name Two.Shape#skewY
-   * @property {Radians} - The value in radians for how much the shape is skewed relative to its parent.
+   * @property {Number} - The value in Number for how much the shape is skewed relative to its parent.
    * @description Skew the shape by an angle in the y axis direction.
    */
   this.skewY = 0;
@@ -306,7 +306,7 @@ _.extend(Shape.prototype, Events, {
   /**
    * @name Two.Shape#_rotation
    * @private
-   * @property {Radians} - The rotation value in radians.
+   * @property {Number} - The rotation value in Number.
    */
   _rotation: 0,
 
@@ -320,14 +320,14 @@ _.extend(Shape.prototype, Events, {
   /**
    * @name Two.Shape#_skewX
    * @private
-   * @property {Radians} - The rotation value in radians.
+   * @property {Number} - The rotation value in Number.
    */
   _skewX: 0,
 
   /**
    * @name Two.Shape#_skewY
    * @private
-   * @property {Radians} - The rotation value in radians.
+   * @property {Number} - The rotation value in Number.
    */
   _skewY: 0,
 

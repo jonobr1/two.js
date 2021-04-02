@@ -14,13 +14,13 @@ var cos = Math.cos, sin = Math.sin;
  * @extends Two.Path
  * @param {Number} [x=0] - The x position of the ellipse.
  * @param {Number} [y=0] - The y position of the ellipse.
- * @param {Number} rx - The radius value of the ellipse in the x direction.
- * @param {Number} ry - The radius value of the ellipse in the y direction.
+ * @param {Number} [rx=0] - The radius value of the ellipse in the x direction.
+ * @param {Number} [ry=0] - The radius value of the ellipse in the y direction.
  * @param {Number} [resolution=4] - The number of vertices used to construct the ellipse.
  */
 function Ellipse(ox, oy, rx, ry, resolution) {
 
-  if (typeof ry !== 'number') {
+  if (typeof ry !== 'number' && typeof rx === 'number') {
     ry = rx;
   }
 
@@ -38,12 +38,17 @@ function Ellipse(ox, oy, rx, ry, resolution) {
    * @name Two.Ellipse#width
    * @property {Number} - The width of the ellipse.
    */
-  this.width = rx * 2;
+  if (typeof rx === 'number') {
+    this.width = rx * 2;
+  }
+
   /**
    * @name Two.Ellipse#height
    * @property {Number} - The height of the ellipse.
    */
-  this.height = ry * 2;
+  if (typeof ry === 'number') {
+    this.height = ry * 2;
+  }
 
   this._update();
   this.translation.set(ox, oy);

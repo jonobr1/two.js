@@ -17,7 +17,7 @@ import Texture from './texture.js';
  * @param {String|String[]|Two.Texture|Two.Texture[]} paths - A list of URLs or {@link Two.Texture}s.
  * @param {Number} [ox=0] - The initial `x` position of the Two.ImageSequence.
  * @param {Number} [oy=0] - The initial `y` position of the Two.ImageSequence.
- * @param {Integer} [frameRate=30] - The frame rate at which the images should playback at.
+ * @param {Number} [frameRate=30] - The frame rate at which the images should playback at.
  * @description A convenient package to display still or animated images organized as a series of still images.
  */
 function ImageSequence(paths, ox, oy, frameRate) {
@@ -56,7 +56,7 @@ function ImageSequence(paths, ox, oy, frameRate) {
 
   /**
    * @name Two.ImageSequence#frameRate
-   * @property {Integer} - The number of frames to animate against per second.
+   * @property {Number} - The number of frames to animate against per second.
    */
   if (typeof frameRate === 'number') {
     this.frameRate = frameRate;
@@ -66,7 +66,7 @@ function ImageSequence(paths, ox, oy, frameRate) {
 
   /**
    * @name Two.ImageSequence#index
-   * @property {Integer} - The index of the current tile of the sprite to display. Defaults to `0`.
+   * @property {Number} - The index of the current tile of the sprite to display. Defaults to `0`.
    */
   this.index = 0;
 
@@ -226,7 +226,7 @@ _.extend(ImageSequence.prototype, Rectangle.prototype, {
   /**
    * @name Two.ImageSequence#_amount
    * @private
-   * @property {Integer} - Number of frames for a given {@link Two.ImageSequence}.
+   * @property {Number} - Number of frames for a given {@link Two.ImageSequence}.
    */
   _amount: 1,
 
@@ -240,7 +240,7 @@ _.extend(ImageSequence.prototype, Rectangle.prototype, {
   /**
    * @name Two.ImageSequence#_index
    * @private
-   * @property {Integer} - The current frame the {@link Two.ImageSequence} is currently displaying.
+   * @property {Number} - The current frame the {@link Two.ImageSequence} is currently displaying.
    */
   _index: 0,
 
@@ -261,14 +261,14 @@ _.extend(ImageSequence.prototype, Rectangle.prototype, {
   /**
    * @name Two.ImageSequence#_firstFrame
    * @private
-   * @property {Integer} - The frame the {@link Two.ImageSequence} should start with.
+   * @property {Number} - The frame the {@link Two.ImageSequence} should start with.
    */
   _firstFrame: 0,
 
   /**
    * @name Two.ImageSequence#_lastFrame
    * @private
-   * @property {Integer} - The frame the {@link Two.ImageSequence} should end with.
+   * @property {Number} - The frame the {@link Two.ImageSequence} should end with.
    */
   _lastFrame: 0,
 
@@ -305,8 +305,8 @@ _.extend(ImageSequence.prototype, Rectangle.prototype, {
   /**
    * @name Two.ImageSequence#play
    * @function
-   * @param {Integer} [firstFrame=0] - The index of the frame to start the animation with.
-   * @param {Integer} [lastFrame] - The index of the frame to end the animation with. Defaults to the last item in the {@link Two.ImageSequence#textures}.
+   * @param {Number} [firstFrame=0] - The index of the frame to start the animation with.
+   * @param {Number} [lastFrame] - The index of the frame to end the animation with. Defaults to the last item in the {@link Two.ImageSequence#textures}.
    * @param {Function} [onLastFrame] - Optional callback function to be triggered after playing the last frame. This fires multiple times when the image sequence is looped.
    * @description Initiate animation playback of a {@link Two.ImageSequence}.
    */

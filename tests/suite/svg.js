@@ -457,7 +457,7 @@
 
     var elem = two.renderer.domElement.querySelector('#' + shape.id);
     var matrix = elem.getAttribute('transform');
-    assert.equal(matrix.match(/matrix\((.*)\)/)[1], shape._matrix.toString(), 'Two.Shape._matrix gets and sets proplery.');
+    assert.equal(matrix.match(/matrix\((.*)\)/)[1], shape._matrix.toString(), 'Two.Shape._matrix gets and sets properly.');
 
     assert.equal(elem.getAttribute('fill'), shape.fill, 'Two.Shape.fill gets and sets properly.');
     assert.equal(elem.getAttribute('stroke'), shape.stroke, 'Two.Shape.stroke gets and sets properly.');

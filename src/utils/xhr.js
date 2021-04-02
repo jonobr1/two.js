@@ -1,5 +1,5 @@
 /**
- * @name Utils.xhr
+ * @name Two.Utils.xhr
  * @function
  * @param {String} path
  * @param {Function} callback

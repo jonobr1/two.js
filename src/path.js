@@ -83,15 +83,15 @@ function Path(vertices, closed, curved, manual) {
 
   /**
    * @name Two.Path#fill
-   * @property {(CssColor|Two.Gradient|Two.Texture)} - The value of what the path should be filled in with.
-   * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS Colors.
+   * @property {(String|Two.Gradient|Two.Texture)} - The value of what the path should be filled in with.
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
    */
   this.fill = '#fff';
 
   /**
    * @name Two.Path#stroke
-   * @property {(CssColor|Two.Gradient|Two.Texture)} - The value of what the path should be outlined in with.
-   * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS Colors.
+   * @property {(String|Two.Gradient|Two.Texture)} - The value of what the path should be outlined in with.
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
    */
   this.stroke = '#000';
 
@@ -147,7 +147,7 @@ function Path(vertices, closed, curved, manual) {
    * @name Two.Path#vertices
    * @property {Two.Anchor[]} - An ordered list of anchor points for rendering the path.
    * @description A list of {@link Two.Anchor} objects that consist of what form the path takes.
-   * @nota-bene The array when manipulating is actually a {@link Two.Utils.Collection}.
+   * @nota-bene The array when manipulating is actually a {@link Two.Collection}.
    */
   this.vertices = vertices;
 
@@ -1097,7 +1097,7 @@ _.extend(Path.prototype, Shape.prototype, {
   /**
    * @name Two.Path#subdivide
    * @function
-   * @param {Integer} limit - How many times to recurse subdivisions.
+   * @param {Number} limit - How many times to recurse subdivisions.
    * @description Insert a {@link Two.Anchor} at the midpoint between every item in {@link Two.Path#vertices}.
    */
   subdivide: function(limit) {
@@ -1180,7 +1180,7 @@ _.extend(Path.prototype, Shape.prototype, {
    * @name Two.Path#_updateLength
    * @function
    * @private
-   * @param {Integer} [limit=] -
+   * @param {Number} [limit=] -
    * @param {Boolean} [silent=false] - If set to `true` then the path isn't updated before calculation. Useful for internal use.
    * @description Recalculate the {@link Two.Path#length} value.
    */
@@ -1408,7 +1408,7 @@ function contains(path, t) {
  * @protected
  * @param {Two.Path} path - The path to analyze against.
  * @param {Number} target - The target length at which to find an anchor.
- * @returns {Integer}
+ * @returns {Number}
  * @description Return the id of an anchor based on a target length.
  */
 function getIdByLength(path, target) {

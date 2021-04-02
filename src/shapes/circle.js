@@ -14,7 +14,7 @@ var cos = Math.cos, sin = Math.sin;
  * @extends Two.Path
  * @param {Number} [x=0] - The x position of the circle.
  * @param {Number} [y=0] - The y position of the circle.
- * @param {Number} radius - The radius value of the circle.
+ * @param {Number} [radius=0] - The radius value of the circle.
  * @param {Number} [resolution=4] - The number of vertices used to construct the circle.
  */
 function Circle(ox, oy, r, resolution) {
@@ -33,7 +33,9 @@ function Circle(ox, oy, r, resolution) {
    * @name Two.Circle#radius
    * @property {Number} - The size of the radius of the circle.
    */
-  this.radius = r;
+  if (typeof r === 'number') {
+    this.radius = r;
+  }
 
   this._update();
 

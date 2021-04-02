@@ -589,8 +589,8 @@ QUnit.test('Two.Texture', function(assert) {
       window.location.protocol, '//', window.location.host, path
     ].join('');
 
-    assert.equal(tb.src, absolutePath, 'Two.Texture takes in image and applies path proplery.');
-    assert.equal(tb.image, ta.image, 'Two.Texture takes in image and applies registered image tag proplery.');
+    assert.equal(tb.src, absolutePath, 'Two.Texture takes in image and applies path properly.');
+    assert.equal(tb.image, ta.image, 'Two.Texture takes in image and applies registered image tag properly.');
     assert.equal(tb.loaded, true, 'Two.Texture takes in image and applies loaded property properly.');
     assert.done();
 

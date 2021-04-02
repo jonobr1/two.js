@@ -1,5 +1,5 @@
 /**
- * @name Utils.defineGetterSetter
+ * @name Two.Utils.defineGetterSetter
  * @function
  * @this Two#
  * @param {String} property - The property to add an enumerable getter / setter to.

@@ -10,7 +10,7 @@ import Constants from '../constants.js';
 var HALF_PI = Math.PI / 2;
 
 /**
- * @name Utils.Curve
+ * @name Two.Utils.Curve
  * @property {Object} - Additional utility constant variables related to curve math and calculations.
  */
 var Curve = {
@@ -69,7 +69,7 @@ var Curve = {
 };
 
 /**
- * @name Utils.getComponentOnCubicBezier
+ * @name Two.Utils.getComponentOnCubicBezier
  * @function
  * @param {Number} t - Zero-to-one value describing what percentage to calculate.
  * @param {Number} a - The firt point's component value.
@@ -85,7 +85,7 @@ var getComponentOnCubicBezier = function(t, a, b, c, d) {
 };
 
 /**
- * @name Utils.subdivide
+ * @name Two.Utils.subdivide
  * @function
  * @param {Number} x1 - x position of first anchor point.
  * @param {Number} y1 - y position of first anchor point.
@@ -95,7 +95,7 @@ var getComponentOnCubicBezier = function(t, a, b, c, d) {
  * @param {Number} y3 - y position of second anchor point's "left" bezier handle.
  * @param {Number} x4 - x position of second anchor point.
  * @param {Number} y4 - y position of second anchor point.
- * @param {Number} [limit=Utils.Curve.RecursionLimit] - The amount of vertices to create by subdividing.
+ * @param {Number} [limit=Two.Utils.Curve.RecursionLimit] - The amount of vertices to create by subdividing.
  * @returns {Anchor[]} A list of anchor points ordered in between `x1`, `y1` and `x4`, `y4`
  * @description Given 2 points (a, b) and corresponding control point for each return an array of points that represent points plotted along the curve. The number of returned points is determined by `limit`.
  */
@@ -124,7 +124,7 @@ var subdivide = function(x1, y1, x2, y2, x3, y3, x4, y4, limit) {
 };
 
 /**
- * @name Utils.getCurveLength
+ * @name Two.Utils.getCurveLength
  * @function
  * @param {Number} x1 - x position of first anchor point.
  * @param {Number} y1 - y position of first anchor point.
@@ -134,7 +134,7 @@ var subdivide = function(x1, y1, x2, y2, x3, y3, x4, y4, limit) {
  * @param {Number} y3 - y position of second anchor point's "left" bezier handle.
  * @param {Number} x4 - x position of second anchor point.
  * @param {Number} y4 - y position of second anchor point.
- * @param {Number} [limit=Utils.Curve.RecursionLimit] - The amount of vertices to create by subdividing.
+ * @param {Number} [limit=Two.Utils.Curve.RecursionLimit] - The amount of vertices to create by subdividing.
  * @returns {Number} The length of a curve.
  * @description Given 2 points (a, b) and corresponding control point for each, return a float that represents the length of the curve using Gauss-Legendre algorithm. Limit iterations of calculation by `limit`.
  */
@@ -171,7 +171,7 @@ var getCurveLength = function(x1, y1, x2, y2, x3, y3, x4, y4, limit) {
 };
 
 /**
- * @name Utils.getCurveBoundingBox
+ * @name Two.Utils.getCurveBoundingBox
  * @function
  * @param {Number} x1 - x position of first anchor point.
  * @param {Number} y1 - y position of first anchor point.
@@ -250,12 +250,12 @@ var getCurveBoundingBox = function(x1, y1, x2, y2, x3, y3, x4, y4) {
 };
 
 /**
- * @name Utils.integrate
+ * @name Two.Utils.integrate
  * @function
  * @param {Function} f
  * @param {Number} a
  * @param {Number} b
- * @param {Integer} n
+ * @param {Number} n
  * @description Integration for `getCurveLength` calculations.
  * @see [Paper.js](@link https://github.com/paperjs/paper.js/blob/master/src/util/Numerical.js#L101)
  */
@@ -275,7 +275,7 @@ var integrate = function(f, a, b, n) {
 };
 
 /**
- * @name Utils.getCurveFromPoints
+ * @name Two.Utils.getCurveFromPoints
  * @function
  * @param {Anchor[]} points
  * @param {Boolean} closed
@@ -308,7 +308,7 @@ var getCurveFromPoints = function(points, closed) {
 };
 
 /**
- * @name Utils.getControlPoints
+ * @name Two.Utils.getControlPoints
  * @function
  * @param {Anchor} a
  * @param {Anchor} b
@@ -364,7 +364,7 @@ var getControlPoints = function(a, b, c) {
 };
 
 /**
- * @name Utils.getReflection
+ * @name Two.Utils.getReflection
  * @function
  * @param {Vector} a
  * @param {Vector} b
@@ -383,14 +383,14 @@ var getReflection = function(a, b, relative) {
 };
 
 /**
- * @name Utils.getAnchorsFromArcData
+ * @name Two.Utils.getAnchorsFromArcData
  * @function
  * @param {Vector} center
- * @param {Radians} xAxisRotation
+ * @param {Number} xAxisRotation
  * @param {Number} rx - x radius
  * @param {Number} ry - y radius
- * @param {Radians} ts
- * @param {Radians} td
+ * @param {Number} ts
+ * @param {Number} td
  * @param {Boolean} [ccw=false] - Set path traversal to counter-clockwise
  */
 var getAnchorsFromArcData = function(center, xAxisRotation, rx, ry, ts, td, ccw) {

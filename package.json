@@ -3,7 +3,7 @@
   "version": "v0.7.4",
   "description": "A renderer agnostic two-dimensional drawing api for the web.",
   "module": "build/two.module.js",
-  "types": "build/two.module.d.ts",
+  "types": "types.d.ts",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
   },
@@ -21,7 +21,7 @@
     "docs:dev": "vuepress dev wiki",
     "docs:build": "vuepress build wiki",
     "lint": "eslint . --fix",
-    "types": "tsc --outFile build/two.module.d.ts"
+    "types": "jsdoc -t node_modules/tsd-jsdoc/dist -r src -d ."
   },
   "directories": {
     "doc": "wiki/documentation",
@@ -59,12 +59,13 @@
     "@vuepress/plugin-nprogress": "^1.5.4",
     "eslint": "^7.8.1",
     "gzip-size": "^5.1.1",
+    "jsdoc": "^3.6.6",
     "jsdoc-api": "^6.0.0",
     "qunit": "^2.11.2",
     "resemblejs": "^3.2.5",
     "rollup": "^2.26.11",
     "rollup-plugin-terser": "^7.0.2",
-    "typescript": "^4.2.3",
+    "tsd-jsdoc": "^2.5.0",
     "underscore": "^1.11.0",
     "vuepress": "^1.5.4"
   },

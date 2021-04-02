@@ -39,7 +39,7 @@ function Group(children) {
   this.subtractions = [];
 
   /**
-   * @name Two.Group#additions
+   * @name Two.Group#children
    * @property {Two.Group.Children}
    * @description A list of all the children in the scenegraph.
    * @nota-bene Ther order of this list indicates the order each element is rendered to the screen.
@@ -368,15 +368,15 @@ _.extend(Group.prototype, Shape.prototype, {
 
   /**
    * @name Two.Group#fill
-   * @property {(CssColor|Two.Gradient|Two.Texture)} - The value of what all child shapes should be filled in with.
-   * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS Colors.
+   * @property {(String|Two.Gradient|Two.Texture)} - The value of what all child shapes should be filled in with.
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
    */
   _fill: '#fff',
 
   /**
    * @name Two.Group#stroke
-   * @property {(CssColor|Two.Gradient|Two.Texture)} - The value of what all child shapes should be outlined in with.
-   * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS Colors.
+   * @property {(String|Two.Gradient|Two.Texture)} - The value of what all child shapes should be outlined in with.
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
    */
   _stroke: '#000',
 

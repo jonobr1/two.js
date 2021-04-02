@@ -1,12 +1,12 @@
 /**
- * @name Utils.Events
- * @interface
+ * @name Two.Events
+ * @class
  * @description Object inherited by many Two.js objects in order to facilitate custom events.
  */
 var Events = {
 
   /**
-   * @name Utils.Events.on
+   * @name Two.Events#on
    * @function
    * @param {String} [name] - The name of the event to bind a function to.
    * @param {Function} [handler] - The function to be invoked when the event is dispatched.
@@ -15,7 +15,7 @@ var Events = {
   on: addEventListener,
 
   /**
-   * @name Utils.Events.off
+   * @name Two.Events#off
    * @function
    * @param {String} [name] - The name of the event intended to be removed.
    * @param {Function} [handler] - The handler intended to be reomved.
@@ -24,7 +24,7 @@ var Events = {
   off: removeEventListener,
 
   /**
-   * @name Utils.Events.trigger
+   * @name Two.Events#trigger
    * @function
    * @param {String} name - The name of the event to dispatch.
    * @param arguments - Anything can be passed after the name and those will be passed on to handlers attached to the event in the order they are passed.
@@ -70,6 +70,10 @@ var Events = {
 
   },
 
+  /**
+   * @name Two.Events.Types
+   * @property {Object} - Object of different types of Two.js specific events.
+   */
   Types: {
     play: 'play',
     pause: 'pause',
@@ -101,7 +105,8 @@ Events.bind = addEventListener;
 Events.unbind = removeEventListener;
 
 /**
- * @returns {Events} - Returns an instance of self for the purpose of chaining.
+ * @private
+ * @returns {Two.Events} - Returns an instance of self for the purpose of chaining.
  */
 function addEventListener(name, handler) {
 
@@ -117,7 +122,8 @@ function addEventListener(name, handler) {
 }
 
 /**
- * @returns {Events} - Returns an instance of self for the purpose of chaining.
+ * @private
+ * @returns {Two.Events} - Returns an instance of self for the purpose of chaining.
  */
 function removeEventListener(name, handler) {
 

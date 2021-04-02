@@ -84,7 +84,7 @@ _.extend(Vector, {
    * @function
    * @param {Two.Vector} v1
    * @param {Two.Vector} v2
-   * @returns {Radians} The angle between points `v1` and `v2`.
+   * @returns {Number} The angle between points `v1` and `v2`.
    */
   angleBetween: function(v1, v2) {
 
@@ -179,7 +179,6 @@ _.extend(Vector.prototype, Events, {
    * @function
    * @param {Number} x
    * @param {Number} y
-   * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
    * @description Set the x / y components of a vector to specific number values.
    */
   set: function(x, y) {
@@ -192,7 +191,6 @@ _.extend(Vector.prototype, Events, {
    * @name Two.Vector#copy
    * @function
    * @param {Two.Vector} v
-   * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
    * @description Copy the x / y components of another object `v`.
    */
   copy: function(v) {
@@ -204,7 +202,6 @@ _.extend(Vector.prototype, Events, {
   /**
    * @name Two.Vector#clear
    * @function
-   * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
    * @description Set the x / y component values of the vector to zero.
    */
   clear: function() {
@@ -216,7 +213,6 @@ _.extend(Vector.prototype, Events, {
   /**
    * @name Two.Vector#clone
    * @function
-   * @returns {Two.Vector} - A new instance of {@link Two.Vector}.
    * @description Create a new vector and copy the existing values onto the newly created instance.
    */
   clone: function() {
@@ -227,7 +223,6 @@ _.extend(Vector.prototype, Events, {
    * @name Two.Vector#add
    * @function
    * @param {Two.Vector} v
-   * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
    * @description Add an object with x / y component values to the instance.
    * @overloaded
    */
@@ -236,7 +231,6 @@ _.extend(Vector.prototype, Events, {
    * @name Two.Vector#add
    * @function
    * @param {Number} v
-   * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
    * @description Add the **same** number to both x / y component values of the instance.
    * @overloaded
    */
@@ -246,7 +240,6 @@ _.extend(Vector.prototype, Events, {
    * @function
    * @param {Number} x
    * @param {Number} y
-   * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
    * @description Add `x` / `y` values to their respective component value on the instance.
    * @overloaded
    */
@@ -281,7 +274,6 @@ _.extend(Vector.prototype, Events, {
    * @name Two.Vector#sub
    * @function
    * @param {Two.Vector} v
-   * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
    * @description Subtract an object with x / y component values to the instance.
    * @overloaded
    */
@@ -290,7 +282,6 @@ _.extend(Vector.prototype, Events, {
    * @name Two.Vector#sub
    * @function
    * @param {Number} v
-   * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
    * @description Subtract the **same** number to both x / y component values of the instance.
    * @overloaded
    */
@@ -300,7 +291,6 @@ _.extend(Vector.prototype, Events, {
    * @function
    * @param {Number} x
    * @param {Number} y
-   * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
    * @description Subtract `x` / `y` values to their respective component value on the instance.
    * @overloaded
    */
@@ -353,7 +343,6 @@ _.extend(Vector.prototype, Events, {
    * @name Two.Vector#multiply
    * @function
    * @param {Two.Vector} v
-   * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
    * @description Multiply an object with x / y component values to the instance.
    * @overloaded
    */
@@ -362,7 +351,6 @@ _.extend(Vector.prototype, Events, {
    * @name Two.Vector#multiply
    * @function
    * @param {Number} v
-   * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
    * @description Multiply the **same** number to both x / y component values of the instance.
    * @overloaded
    */
@@ -372,7 +360,6 @@ _.extend(Vector.prototype, Events, {
    * @function
    * @param {Number} x
    * @param {Number} y
-   * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
    * @description Multiply `x` / `y` values to their respective component value on the instance.
    * @overloaded
    */
@@ -417,7 +404,6 @@ _.extend(Vector.prototype, Events, {
    * @name Two.Vector#divide
    * @function
    * @param {Two.Vector} v
-   * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
    * @description Divide an object with x / y component values to the instance.
    * @overloaded
    */
@@ -426,7 +412,6 @@ _.extend(Vector.prototype, Events, {
    * @name Two.Vector#divide
    * @function
    * @param {Number} v
-   * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
    * @description Divide the **same** number to both x / y component values of the instance.
    * @overloaded
    */
@@ -436,7 +421,6 @@ _.extend(Vector.prototype, Events, {
    * @function
    * @param {Number} x
    * @param {Number} y
-   * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
    * @description Divide `x` / `y` values to their respective component value on the instance.
    * @overloaded
    */
@@ -625,12 +609,12 @@ _.extend(Vector.prototype, Events, {
   /**
    * @name Two.Vector#rotate
    * @function
-   * @param {Radians} radians - The amoun to rotate the vector by.
+   * @param {Number} Number - The amoun to rotate the vector by.
    * @description Rotate a vector.
    */
-  rotate: function(radians) {
-    var cos = Math.cos(radians);
-    var sin = Math.sin(radians);
+  rotate: function(Number) {
+    var cos = Math.cos(Number);
+    var sin = Math.sin(Number);
     this.x = this.x * cos - this.y * sin;
     this.y = this.x * sin + this.y * cos;
     return this;
@@ -775,9 +759,9 @@ var BoundProto = {
     return { x: this._x, y: this._y };
   },
 
-  rotate: function (radians) {
-    var cos = Math.cos(radians);
-    var sin = Math.sin(radians);
+  rotate: function (Number) {
+    var cos = Math.cos(Number);
+    var sin = Math.sin(Number);
     this._x = this._x * cos - this._y * sin;
     this._y = this._x * sin + this._y * cos;
     return this;

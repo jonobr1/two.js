@@ -5,7 +5,7 @@ import Collection from './collection.js';
 /**
  * @class
  * @name Two.Group.Children
- * @extends Two.Utils.Collection
+ * @extends Two.Collection
  * @description A children collection which is accesible both by index and by object `id`.
  */
 function Children() {

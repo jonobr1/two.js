@@ -1,6 +1,6 @@
 import _ from './underscore.js';
 /**
- * @name Utils.Error
+ * @name Two.Utils.Error
  * @class
  * @description Custom error throwing for Two.js specific identification.
  */

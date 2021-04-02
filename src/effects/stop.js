@@ -5,7 +5,7 @@ import Events from '../events.js';
  * @name Two.Stop
  * @class
  * @param {Number} [offset] - The offset percentage of the stop represented as a zero-to-one value. Default value flip flops from zero-to-one as new stops are created.
- * @param {CssColor} [color] - The color of the stop. Default value flip flops from white to black as new stops are created.
+ * @param {String} [color] - The color of the stop. Default value flip flops from white to black as new stops are created.
  * @param {Number} [opacity] - The opacity value. Default value is 1, cannot be lower than 0.
  * @nota-bene Used specifically in conjunction with {@link Two.Gradient}s to control color graduation.
  */
@@ -35,7 +35,7 @@ function Stop(offset, color, opacity) {
 
   /**
    * @name Two.Stop#color
-   * @property {CssColor} - The color of the stop.
+   * @property {String} - The color of the stop.
    */
   this.color = (typeof color === 'string') ? color
     : Stop.Index <= 0 ? '#fff' : '#000';

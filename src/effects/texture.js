@@ -28,7 +28,7 @@ if (root.document) {
  * @name Two.Texture
  * @class
  * @extends Two.Shape
- * @param {String|ImageElement} [src] - The URL path to an image file or an `<img />` element.
+ * @param {String|HTMLImageElement} [src] - The URL path to an image file or an `<img />` element.
  * @param {Function} [callback] - An optional callback function once the image has been loaded.
  * @description Fundamental to work with bitmap data, a.k.a. pregenerated imagery, in Two.js. Supported formats include jpg, png, gif, and tiff. See {@link Two.Texture.RegularExpressions} for a full list of supported formats.
  */
@@ -162,7 +162,7 @@ _.extend(Texture, {
   /**
    * @name Two.Texture.getTag
    * @property {Function} - Retrieves the tag name of an image, video, or canvas node.
-   * @param {ImageElement} - The image to infer the tag name from.
+   * @param {HTMLImageElement} - The image to infer the tag name from.
    * @returns {String} - Returns the tag name of an image, video, or canvas node.
    */
   getTag: function(image) {
@@ -175,7 +175,7 @@ _.extend(Texture, {
    * @name Two.Texture.getImage
    * @property {Function} - Convenience function to set {@link Two.Texture#image} properties with canonincal versions set in {@link Two.Texture.ImageRegistry}.
    * @param {String} src - The URL path of the image.
-   * @returns {ImageElement} - Returns either a cached version of the image or a new one that is registered in {@link Two.Texture.ImageRegistry}.
+   * @returns {HTMLImageElement} - Returns either a cached version of the image or a new one that is registered in {@link Two.Texture.ImageRegistry}.
    */
   getImage: function(src) {
 

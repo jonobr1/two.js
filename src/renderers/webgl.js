@@ -1126,7 +1126,7 @@ webgl.ctx = webgl.canvas.getContext('2d');
  * @extends Two.Events
  * @param {Object} [parameters] - This object is inherited when constructing a new instance of {@link Two}.
  * @param {Element} [parameters.domElement] - The `<canvas />` to draw to. If none given a new one will be constructed.
- * @param {CanvasElement} [parameters.offscreenElement] - The offscreen two dimensional `<canvas />` to render each element on WebGL texture updates.
+ * @param {HTMLCanvasElement} [parameters.offscreenElement] - The offscreen two dimensional `<canvas />` to render each element on WebGL texture updates.
  * @param {Boolean} [parameters.antialias] - Determines whether the canvas should clear render with antialias on.
  * @description This class is used by {@link Two} when constructing with `type` of `Two.Types.webgl`. It takes Two.js' scenegraph and renders it to a `<canvas />` through the WebGL api.
  * @see {@link https://www.khronos.org/registry/webgl/specs/latest/1.0/}

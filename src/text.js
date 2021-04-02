@@ -367,15 +367,15 @@ _.extend(Text.prototype, Shape.prototype, {
 
   /**
    * @name Two.Text#fill
-   * @property {(CssColor|Two.Gradient|Two.Texture)} - The value of what the text object should be filled in with.
-   * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS Colors.
+   * @property {(String|Two.Gradient|Two.Texture)} - The value of what the text object should be filled in with.
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
    */
   _fill: '#000',
 
   /**
    * @name Two.Text#stroke
-   * @property {(CssColor|Two.Gradient|Two.Texture)} - The value of what the text object should be filled in with.
-   * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS Colors.
+   * @property {(String|Two.Gradient|Two.Texture)} - The value of what the text object should be filled in with.
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
    */
   _stroke: 'transparent',
 

@@ -13,7 +13,7 @@ var TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin;
  * @extends Two.Path
  * @param {Number} [x=0] - The x position of the polygon.
  * @param {Number} [y=0] - The y position of the polygon.
- * @param {Number} radius - The radius value of the polygon.
+ * @param {Number} [radius=0] - The radius value of the polygon.
  * @param {Number} [sides=12] - The number of vertices used to construct the polygon.
  */
 function Polygon(ox, oy, r, sides) {
@@ -29,20 +29,34 @@ function Polygon(ox, oy, r, sides) {
    * @name Two.Polygon#width
    * @property {Number} - The size of the width of the polygon.
    */
-  this.width = r * 2;
+  if (typeof r === 'number') {
+    this.width = r * 2;
+  }
+
   /**
    * @name Two.Polygon#height
    * @property {Number} - The size of the height of the polygon.
    */
-  this.height = r * 2;
+  if (typeof r === 'number') {
+    this.height = r * 2;
+  }
+
   /**
    * @name Two.Polygon#sides
    * @property {Number} - The amount of sides the polyogn has.
    */
-  this.sides = sides;
+  if (typeof sides === 'number') {
+    this.sides = sides;
+  }
 
   this._update();
-  this.translation.set(ox, oy);
+
+  if (typeof ox === 'number') {
+    this.translation.x = ox;
+  }
+  if (typeof oy === 'number') {
+    this.translation.y = oy;
+  }
 
 }
 

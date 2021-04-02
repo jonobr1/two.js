@@ -3,7 +3,7 @@ import root from './root.js';
 var Matrix;
 
 /**
- * @name Utils.decomposeMatrix
+ * @name Two.Utils.decomposeMatrix
  * @function
  * @param {Two.Matrix} matrix - The matrix to decompose.
  * @returns {Object} An object containing relevant skew values.
@@ -30,7 +30,7 @@ var setMatrix = function(M) {
 };
 
 /**
- * @name Utils.getComputedMatrix
+ * @name Two.Utils.getComputedMatrix
  * @function
  * @param {Two.Shape} object - The Two.js object that has a matrix property to calculate from.
  * @param {Two.Matrix} [matrix] - The matrix to apply calculated transformations to if available.
@@ -63,7 +63,7 @@ var getComputedMatrix = function(object, matrix) {
 };
 
 /**
- * @name Utils.lerp
+ * @name Two.Utils.lerp
  * @function
  * @param {Number} a - Start value.
  * @param {Number} b - End value.
@@ -76,7 +76,7 @@ var lerp = function(a, b, t) {
 };
 
 /**
- * @name Utils.mod
+ * @name Two.Utils.mod
  * @param {Number} v - The value to modulo
  * @param {Number} l - The value to modulo by
  * @returns {Number}
@@ -95,7 +95,7 @@ var mod = function(v, l) {
 var NumArray = root.Float32Array || Array;
 
 /**
-* @name Utils.toFixed
+* @name Two.Utils.toFixed
 * @function
 * @param {Number} v - Any float
 * @returns {Number} That float trimmed to the third decimal place.

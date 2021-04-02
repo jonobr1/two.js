@@ -37,7 +37,7 @@ var alignments = {
 };
 
 /**
- * @name Utils.getAlignment
+ * @name Two.Utils.getAlignment
  * @function
  * @param {AlignmentString}
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/text-anchor}
@@ -53,7 +53,7 @@ var getBaseline = function(node) {
 };
 
 /**
- * @name Utils.extractCSSText
+ * @name Two.Utils.extractCSSText
  * @function
  * @param {String} text - The CSS text body to be parsed and extracted.
  * @param {Object} [styles] - The styles object to apply CSS key values to.
@@ -85,9 +85,9 @@ var extractCSSText = function(text, styles) {
 };
 
 /**
- * @name Utils.getSvgStyles
+ * @name Two.Utils.getSvgStyles
  * @function
- * @param {SvgNode} node - The SVG node to parse.
+ * @param {SVGElement} node - The SVG node to parse.
  * @returns {Object} styles
  * @description Get the CSS comands from the `style` attribute of an SVG node and apply them as key value pairs to a JavaScript object.
  */
@@ -135,7 +135,7 @@ var getSvgAttributes = function(node) {
 };
 
 /**
- * @name Utils.applySvgViewBox
+ * @name Two.Utils.applySvgViewBox
  * @function
  * @param {Two.Shape} node - The Two.js object to apply viewbox matrix to
  * @param {String} value - The viewBox value from the SVG attribute
@@ -162,9 +162,9 @@ var applySvgViewBox = function(node, value) {
 };
 
 /**
- * @name Utils.applySvgAttributes
+ * @name Two.Utils.applySvgAttributes
  * @function
- * @param {SvgNode} node - An SVG Node to extrapolate attributes from.
+ * @param {SVGElement} node - An SVG Node to extrapolate attributes from.
  * @param {Two.Shape} elem - The Two.js object to apply extrapolated attributes to.
  * @returns {Two.Shape} The Two.js object passed now with applied attributes.
  * @description This function iterates through an SVG Node's properties and stores ones of interest. It tries to resolve styles applied via CSS as well.
@@ -392,9 +392,9 @@ var applySvgAttributes = function(node, elem, parentStyles) {
 };
 
 /**
- * @name Utils.updateDefsCache
+ * @name Two.Utils.updateDefsCache
  * @function
- * @param {SvgNode} node - The SVG Node with which to update the defs cache.
+ * @param {SVGElement} node - The SVG Node with which to update the defs cache.
  * @param {Object} Object - The defs cache to be updated.
  * @description Update the cache of children of <defs /> tags.
  */
@@ -411,7 +411,7 @@ var updateDefsCache = function(node, defsCache) {
 };
 
 /**
- * @name Utils.getScene
+ * @name Two.Utils.getScene
  * @param {Two.Shape} node - The currently available object in the scenegraph.
  * @returns {Group} - The highest order {@link Two.Group} in the scenegraph.
  * @property {Function}
@@ -427,7 +427,7 @@ var getScene = function(node) {
 };
 
 /**
- * @name Utils.read
+ * @name Two.Utils.read
  * @property {Object} read - A map of functions to read any number of SVG node types and create Two.js equivalents of them. Primarily used by the {@link Two#interpret} method.
  */
 var read = {

@@ -4,7 +4,7 @@ var Constants = {
 
   /**
    * @name Two.nextFrameID
-   * @property {Integer}
+   * @property {Number}
    * @description The id of the next requestAnimationFrame function.
    */
   nextFrameID: null,
@@ -61,7 +61,7 @@ var Constants = {
   /**
    * @function Two.uniqueId
    * @description Simple method to access an incrementing value. Used for `id` allocation on all Two.js objects.
-   * @returns {Number} Ever increasing integer.
+   * @returns {Number} Ever increasing Number.
    */
   uniqueId: function() {
     return count++;
