@@ -4,10 +4,12 @@ sidebarDepth: 2
 
 # Change Log
 
-## Nightly
+## April 2, 2021 [v0.7.4](https://github.com/jonobr1/two.js/releases/tag/v0.7.4)
++ Improved Typescript type declarations
++ Successfully export `extras/` directory in both JavaScript and JavaScript Module format
 + Added `Two.Shape.skewX` and `Two.Shape.skewY` [@gburlet](https://github.com/gburlet)
 
-## March 26, 2021
+## March 26, 2021 [v0.7.3](https://github.com/jonobr1/two.js/releases/tag/v0.7.3)
 + Exposed `Two.Shape.renderer` for easier access to underlying SVG elements
 + Added Typescript declaration types to Two.js
 + Made `Two.Group` listen to `Two.Shape.id` changes through new observable property and flags
@@ -16,7 +18,7 @@ sidebarDepth: 2
 + Improved scientific notation interpretation in SVG elements
 + `Two.load` appends a hidden DOM element to the document's `<head />` so that `getComputedStyles` works more consistently with `Two.interpret`
 
-## January 12, 2021
+## January 12, 2021 [v0.7.1](https://github.com/jonobr1/two.js/releases/tag/v0.7.1)
 + Added `Two.AutoCalculateImportedMatrices` to control different ways of importing SVG transformations
 + Fixed `Two.Text.className` application
 + Added basic text support in `Two.interpret`
