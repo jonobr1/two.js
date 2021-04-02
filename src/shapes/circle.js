@@ -121,7 +121,7 @@ _.extend(Circle.prototype, Path.prototype, {
 
         var v = this.vertices[i];
 
-        v.command = i === 0 ? Commands.movet : Commands.curve;
+        v.command = i === 0 ? Commands.move : Commands.curve;
         v.set(x, y);
         v.controls.left.set(lx, ly);
         v.controls.right.set(rx, ry);
