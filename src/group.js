@@ -211,12 +211,19 @@ _.extend(Group, {
 
         if (this._children) {
           this._children.unbind();
+          if (this._children.length > 0) {
+            removeChildren(this._children);
+          }
         }
 
         this._children = new Children(children);
         this._children.bind(Events.Types.insert, insertChildren);
         this._children.bind(Events.Types.remove, removeChildren);
         this._children.bind(Events.Types.order, orderChildren);
+
+        if (children.length > 0) {
+          insertChildren(children);
+        }
 
       }
 

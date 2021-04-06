@@ -8,7 +8,7 @@ import Collection from './collection.js';
  * @extends Two.Collection
  * @description A children collection which is accesible both by index and by object `id`.
  */
-function Children() {
+function Children(children) {
 
   Collection.apply(this, arguments);
 
@@ -23,14 +23,12 @@ function Children() {
    */
   this.ids = {};
 
+  this.attach(
+    Array.isArray(children) ? children : Array.prototype.slice.call(arguments)
+  );
+
   this.on(Events.Types.insert, this.attach);
   this.on(Events.Types.remove, this.detach);
-
-  if (arguments[0] && Array.isArray(arguments[0]) && arguments[0].length > 0) {
-    Children.prototype.attach.apply(this, arguments[0]);
-  } else if (arguments.length > 0) {
-    Children.prototype.attach.apply(this, arguments);
-  }
 
 }
 
@@ -48,7 +46,10 @@ _.extend(Children.prototype, {
    */
   attach: function(children) {
     for (var i = 0; i < children.length; i++) {
-      this.ids[children[i].id] = children[i];
+      var child = children[i];
+      if (child && child.id) {
+        this.ids[child.id] = child;
+      }
     }
     return this;
   },
