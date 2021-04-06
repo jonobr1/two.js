@@ -10,6 +10,8 @@ import LinearGradient from './effects/linear-gradient.js';
 import RadialGradient from './effects/radial-gradient.js';
 import Texture from './effects/texture.js';
 
+var min = Math.min, max = Math.max;
+
 /**
  * @name Two.Text
  * @class
@@ -536,6 +538,7 @@ _.extend(Text.prototype, Shape.prototype, {
 
     var height = this.leading;
     var width = this.value.length * this.size * Text.Ratio;
+    var border = (this._linewidth || 0) / 2;
 
     switch (this.alignment) {
       case 'left':

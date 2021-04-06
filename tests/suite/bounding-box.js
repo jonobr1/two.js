@@ -10,7 +10,7 @@
 
   QUnit.test('Two.Path.getBoundingClientRect', function(assert) {
 
-    assert.expect(4);
+    assert.expect(5);
     // assert.done = assert.async(4);
 
     (function() {
@@ -117,6 +117,30 @@
 
       assert.equal(a1, a2, true, 'Two.Path.getBoundingClientRect properly calculates rotated circles (projected).');
 
+      QUnit.Utils.addElemToTest(assert.test, [two.renderer.domElement]);
+
+    })();
+
+    (function() {
+
+      var two = new Two({
+        width: 400,
+        height: 400
+      });
+
+      var answer = {"top":175.72990523278713,"left":157.11276014745235,"right":242.88723985254765,"bottom":224.27009476721287,"width":85.7744797050953,"height":48.540189534425735};
+      var shape = two.makeText('Hello World', 200, 200);
+      shape.rotation = Math.PI / 8;
+      shape.noStroke().fill = 'rgb(60, 209, 201)';
+
+      var box = two.makeRectangle(answer.left + answer.width / 2, answer.top + answer.height / 2, answer.width, answer.height);
+      box.noFill();
+
+      two.update();
+
+      assert.equal(_.isEqual(answer, shape.getBoundingClientRect()), true, 'Two.Text.getBoundingClientRect properly calculates rotated shapes.');
+
+      console.log(JSON.stringify(shape.getBoundingClientRect()));
       QUnit.Utils.addElemToTest(assert.test, [two.renderer.domElement]);
 
     })();

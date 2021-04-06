@@ -855,7 +855,7 @@ _.extend(Path.prototype, Shape.prototype, {
 
     matrix = shallow ? this._matrix : getComputedMatrix(this);
 
-    border = this.linewidth / 2;
+    border = (this.linewidth || 0) / 2;
     l = this._renderer.vertices.length;
 
     if (l <= 0) {
