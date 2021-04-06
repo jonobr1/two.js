@@ -5,6 +5,9 @@ sidebarDepth: 2
 # Change Log
 
 ## Nightly
++ Improved `Two.Children` and `Two.Collection` instantiation versatility
++ Improved `Two.Group.getBoundingClientRect`, `Two.Path.getBoundingClientRect`, and `Two.Text.getBoundingClientRect`
++ Added `Two.Shape.boundingBox` for view frustum culling
 + Improved higher level shapes', like `Two.Circle`, ability to handle zeroed out arguments
 
 ## April 2, 2021 [v0.7.4](https://github.com/jonobr1/two.js/releases/tag/v0.7.4)
