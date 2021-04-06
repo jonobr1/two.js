@@ -67,17 +67,26 @@ function Shape() {
 
   /**
    * @name Two.Shape#skewX
-   * @property {Number} - The value in Number for how much the shape is skewed relative to its parent.
+   * @property {Number} - The value for how much the shape is skewed relative to its parent.
    * @description Skew the shape by an angle in the x axis direction.
    */
   this.skewX = 0;
 
   /**
    * @name Two.Shape#skewY
-   * @property {Number} - The value in Number for how much the shape is skewed relative to its parent.
+   * @property {Number} - The value for how much the shape is skewed relative to its parent.
    * @description Skew the shape by an angle in the y axis direction.
    */
   this.skewY = 0;
+
+  /**
+   * @name Two.Shape#boundingBox
+   * @property {Object} - An object that contains bounding box information respective to its own transformation matrix.
+   */
+  this._boundingBox = {
+    width: 0,
+    height: 0
+  };
 
 }
 
@@ -90,6 +99,26 @@ _.extend(Shape, {
    */
   FlagMatrix: function() {
     this._flagMatrix = true;
+    this._flagBoundingBox = true;
+    if (this.parent) {
+      this.parent._flagBoundingBox = true;
+    }
+  },
+
+  /**
+   * @name Two.Shape.UpdateBoundingBox
+   * @function
+   * @description Utility function used to update a {@link Two.Shape#boundingBox}
+   */
+  UpdateBoundingBox: function() {
+
+    if (this.getBoundingClientRect) {
+      this.getBoundingClientRect(true, this._boundingBox);
+    }
+    this._flagBoundingBox = false;
+
+    return this;
+
   },
 
   /**
@@ -160,6 +189,7 @@ _.extend(Shape, {
       set: function(v) {
         this._skewX = v;
         this._flagMatrix = true;
+        this._flagScale = true;
       }
     });
 
@@ -171,6 +201,17 @@ _.extend(Shape, {
       set: function(v) {
         this._skewY = v;
         this._flagMatrix = true;
+        this._flagScale = true;
+      }
+    });
+
+    Object.defineProperty(object, 'boundingBox', {
+      enumerable: true,
+      get: function() {
+        if (this._flagBoundingBox) {
+          Shape.UpdateBoundingBox.call(this);
+        }
+        return this._boundingBox;
       }
     });
 
@@ -282,6 +323,13 @@ _.extend(Shape.prototype, Events, {
    */
   _flagScale: false,
 
+  /**
+   * @name Two.Shape#_flagBoundingBox
+   * @private
+   * @property {Boolean} - Determines whether the boundingBox needs updating.
+   */
+  _flagBoundingBox: false,
+
   // _flagMask: false,
   // _flagClip: false,
 
@@ -320,16 +368,23 @@ _.extend(Shape.prototype, Events, {
   /**
    * @name Two.Shape#_skewX
    * @private
-   * @property {Number} - The rotation value in Number.
+   * @property {Number}
    */
   _skewX: 0,
 
   /**
    * @name Two.Shape#_skewY
    * @private
-   * @property {Number} - The rotation value in Number.
+   * @property {Number}
    */
   _skewY: 0,
+
+  /**
+   * @name Two.Shape#_boundingBox
+   * @private
+   * @property {Object}
+   */
+  _boundingBox: null,
 
   // _mask: null,
   // _clip: false,

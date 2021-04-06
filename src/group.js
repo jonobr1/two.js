@@ -738,7 +738,8 @@ _.extend(Group.prototype, Shape.prototype, {
    * @returns {Object} - Returns object with top, left, right, bottom, width, height attributes.
    * @description Return an object with top, left, right, bottom, width, and height parameters of the group.
    */
-  getBoundingClientRect: function(shallow) {
+  getBoundingClientRect: function(shallow, reference) {
+
     var rect;
 
     // TODO: Update this to not __always__ update. Just when it needs to.
@@ -758,7 +759,7 @@ _.extend(Group.prototype, Shape.prototype, {
         continue;
       }
 
-      rect = child.getBoundingClientRect(shallow);
+      rect = child.boundingBox;
 
       if (typeof rect.top !== 'number'   || typeof rect.left !== 'number' ||
           typeof rect.right !== 'number' || typeof rect.bottom !== 'number') {
@@ -770,6 +771,16 @@ _.extend(Group.prototype, Shape.prototype, {
       right = max(rect.right, right);
       bottom = max(rect.bottom, bottom);
 
+    }
+
+    if (_.isObject(reference)) {
+      reference.top = top;
+      reference.left = left;
+      reference.right = right;
+      reference.bottom = bottom;
+      reference.width = right - left;
+      reference.height = bottom - top;
+      return reference;
     }
 
     return {

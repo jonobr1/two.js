@@ -208,7 +208,9 @@ _.extend(Path, {
   FlagVertices: function() {
     this._flagVertices = true;
     this._flagLength = true;
+    this._flagBoundingBox = true;
     if (this.parent) {
+      this.parent._flagBoundingBox = true;
       this.parent._flagLength = true;
     }
   },
@@ -843,7 +845,7 @@ _.extend(Path.prototype, Shape.prototype, {
    * @returns {Object} - Returns object with top, left, right, bottom, width, height attributes.
    * @description Return an object with top, left, right, bottom, width, and height parameters of the path.
    */
-  getBoundingClientRect: function(shallow) {
+  getBoundingClientRect: function(shallow, reference) {
     var matrix, border, l, x, y, i, v0, c0, c1, v1;
 
     var left = Infinity, right = -Infinity,
@@ -858,10 +860,22 @@ _.extend(Path.prototype, Shape.prototype, {
     l = this._renderer.vertices.length;
 
     if (l <= 0) {
+
+      if (_.isObject(reference)) {
+        delete reference.top;
+        delete reference.left;
+        delete reference.right;
+        delete reference.bottom;
+        reference.width = 0;
+        reference.height = 0;
+        return reference;
+      }
+
       return {
         width: 0,
         height: 0
       };
+
     }
 
     for (i = 0; i < l; i++) {
@@ -921,6 +935,16 @@ _.extend(Path.prototype, Shape.prototype, {
 
       }
 
+    }
+
+    if (_.isObject(reference)) {
+      reference.top = top;
+      reference.left = left;
+      reference.right = right;
+      reference.bottom = bottom;
+      reference.width = right - left;
+      reference.height = bottom - top;
+      return reference;
     }
 
     return {
