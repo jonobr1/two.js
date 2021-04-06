@@ -748,7 +748,8 @@ _.extend(Group.prototype, Shape.prototype, {
    */
   getBoundingClientRect: function(shallow, reference) {
 
-    var rect, matrix, a, b, c, d;
+    var rect, matrix, a, b, c, d,
+      isScene = this.parent && this.parent.domElement;
 
     if (!this._renderer.suppressUpdate) {
       this._update(!shallow);
@@ -797,6 +798,48 @@ _.extend(Group.prototype, Shape.prototype, {
       left = min(a.x, b.x, c.x, d.x);
       right = max(a.x, b.x, c.x, d.x);
       bottom = max(a.y, b.y, c.y, d.y);
+
+    } else {
+
+      if (isScene) {
+
+        if (_.isObject(reference)) {
+          reference.top = 0;
+          reference.left = 0;
+          reference.right = this.parent.width;
+          reference.bottom = this.parent.height;
+          reference.width = this.parent.width;
+          reference.height = this.parent.height;
+          return reference;
+        }
+
+        return {
+          top: 0,
+          left: 0,
+          right: this.parent.width,
+          bottom: this.parent.height,
+          width: this.parent.width,
+          height: this.parent.height
+        };
+
+      } else {
+
+        if (_.isObject(reference)) {
+          delete reference.top;
+          delete reference.left;
+          delete reference.right;
+          delete reference.bottom;
+          reference.width = 0;
+          reference.height = 0;
+          return reference;
+        }
+
+        return {
+          width: 0,
+          height: 0
+        };
+
+      }
 
     }
 

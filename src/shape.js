@@ -144,17 +144,17 @@ _.extend(Shape, {
   },
 
   /**
-   * @name Two.Shape.IsOffScreen
+   * @name Two.Shape.IsOffscreen
    * @function
    * @param {Object} boundingBox - The {@link Two.Shape#worldBoundingBox} to check
    * @param {Object} renderer - The Two.js renderer that has canvas dimensions to check against
    * @description Indicates if the given bounding box is within the bounds of the rendered screen.
    * @returns {Boolean}
    */
-  IsOffScreen: function(boundingBox, renderer) {
-    return boundingBox.top > renderer.height ||
-      boundingBox.left > renderer.width || boundingBox.right < 0 ||
-      boundingBox.bottom < 0;
+  IsOffscreen: function(boundingBox, renderer) {
+    return (boundingBox.width === 0 && boundingBox.height === 0) ||
+      boundingBox.top > renderer.height || boundingBox.left > renderer.width ||
+      boundingBox.right < 0 || boundingBox.bottom < 0;
   },
 
   /**
