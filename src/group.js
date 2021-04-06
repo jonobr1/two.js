@@ -1,5 +1,6 @@
 import Collection from './collection.js';
 import Events from './events.js';
+import { getComputedMatrix } from './utils/math.js';
 import _ from './utils/underscore.js';
 
 import Vector from './vector.js';
@@ -556,12 +557,13 @@ _.extend(Group.prototype, Shape.prototype, {
    */
   corner: function() {
 
-    var rect = this.getBoundingClientRect(true);
-    var corner = { x: rect.left, y: rect.top };
+    var rect = this.getBoundingClientRect();
 
-    this.children.forEach(function(child) {
-      child.translation.sub(corner);
-    });
+    for (var i = 0; i < this.children.length; i++) {
+      var child = this.children[i];
+      child.translation.x -= rect.left;
+      child.translation.y -= rect.top;
+    }
 
     return this;
 
@@ -574,18 +576,17 @@ _.extend(Group.prototype, Shape.prototype, {
    */
   center: function() {
 
-    var rect = this.getBoundingClientRect(true);
+    var rect = this.getBoundingClientRect();
+    var cx = rect.left + rect.width / 2 - this.translation.x;
+    var cy = rect.top + rect.height / 2 - this.translation.y;
 
-    rect.centroid = {
-      x: rect.left + rect.width / 2 - this.translation.x,
-      y: rect.top + rect.height / 2 - this.translation.y
-    };
-
-    this.children.forEach(function(child) {
+    for (var i = 0; i < this.children.length; i++) {
+      var child = this.children[i];
       if (child.isShape) {
-        child.translation.sub(rect.centroid);
+        child.translation.x -= cx;
+        child.translation.y -= cy;
       }
-    });
+    }
 
     return this;
 
@@ -746,7 +747,7 @@ _.extend(Group.prototype, Shape.prototype, {
    * @description Return an object with top, left, right, bottom, width, and height parameters of the group.
    */
   getBoundingClientRect: function(shallow) {
-    var rect;
+    var rect, matrix, a, b, c, d;
 
     // TODO: Update this to not __always__ update. Just when it needs to.
     this._update(true);
@@ -756,6 +757,8 @@ _.extend(Group.prototype, Shape.prototype, {
         top = Infinity, bottom = -Infinity;
 
     var regex = /texture|gradient/i;
+
+    matrix = shallow ? this._matrix : getComputedMatrix(this);
 
     for (var i = 0; i < this.children.length; i++) {
 
@@ -776,6 +779,20 @@ _.extend(Group.prototype, Shape.prototype, {
       left = min(rect.left, left);
       right = max(rect.right, right);
       bottom = max(rect.bottom, bottom);
+
+    }
+
+    if (shallow) {
+
+      a = matrix.multiply(left, top, 1);
+      b = matrix.multiply(left, bottom, 1);
+      c = matrix.multiply(right, top, 1);
+      d = matrix.multiply(right, bottom, 1);
+
+      top = min(a.y, b.y, c.y, d.y);
+      left = min(a.x, b.x, c.x, d.x);
+      right = max(a.x, b.x, c.x, d.x);
+      bottom = max(a.y, b.y, c.y, d.y);
 
     }
 
