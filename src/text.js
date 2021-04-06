@@ -526,7 +526,7 @@ _.extend(Text.prototype, Shape.prototype, {
    */
   getBoundingClientRect: function(shallow) {
 
-    var matrix, border, l, x, y, i, v;
+    var matrix, border, l, x, y, i, v, a, b, c, d;
     var left, right, top, bottom;
 
     // TODO: Update this to not __always__ update. Just when it needs to.
@@ -539,41 +539,41 @@ _.extend(Text.prototype, Shape.prototype, {
 
     switch (this.alignment) {
       case 'left':
-        left = 0;
-        right = width;
+        left = - border;
+        right = width + border;
         break;
       case 'right':
-        left = - width;
-        right = 0;
+        left = - (width + border);
+        right = border;
         break;
       default:
-        left = - width / 2;
-        right = width / 2;
+        left = - (width / 2 + border);
+        right = width / 2 + border;
     }
 
     switch (this.baseline) {
       case 'top':
-        top = 0;
-        bottom = height;
+        top = - border;
+        bottom = height + border;
         break;
       case 'bottom':
-        top = - height;
-        bottom = 0;
+        top = - (height + border);
+        bottom = border;
         break;
       default:
-        top = - height / 2;
-        bottom = height / 2;
+        top = - (height / 2 + border);
+        bottom = height / 2 + border;
     }
 
-    v = matrix.multiply(left, top, 1);
+    a = matrix.multiply(left, top, 1);
+    b = matrix.multiply(left, bottom, 1);
+    c = matrix.multiply(right, top, 1);
+    d = matrix.multiply(right, bottom, 1);
 
-    top = v.y;
-    left = v.x;
-
-    v = matrix.multiply(right, bottom, 1);
-
-    right = v.x;
-    bottom = v.y;
+    top = min(a.y, b.y, c.y, d.y);
+    left = min(a.x, b.x, c.x, d.x);
+    right = max(a.x, b.x, c.x, d.x);
+    bottom = max(a.y, b.y, c.y, d.y);
 
     return {
       top: top,
