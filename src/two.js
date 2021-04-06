@@ -315,6 +315,10 @@ _.extend(Two.prototype, Events, {
       renderer.setSize(width, height, this.ratio);
     }
 
+    if (this.culling !== renderer.culling) {
+      renderer.culling = this.culling;
+    }
+
     this.trigger(Events.Types.update, this.frameCount, this.timeDelta);
 
     return this.render();
