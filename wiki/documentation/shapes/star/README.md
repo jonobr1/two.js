@@ -296,7 +296,7 @@ Create a new instance of [Two.Star](/documentation/star) with the same propertie
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/star.js#L200)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/star.js#L199)
 
 </div>
 
@@ -350,7 +350,7 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/star.js#L237)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/star.js#L236)
 
 </div>
 

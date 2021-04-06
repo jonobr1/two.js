@@ -55,7 +55,151 @@ Utility function used in conjunction with event handlers to update the flagMatri
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L86)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L107)
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="static function ">
+
+## Two.Shape.UpdateBoundingBox
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="description">
+
+Utility function used to update a [Two.Shape.boundingBox](/documentation/shape#two-shape-boundingbox).
+
+</div>
+
+
+
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L122)
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="static function ">
+
+## Two.Shape.UpdateWorldBoundingBox
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="description">
+
+Utility function used to update a [Two.Shape.worldBoundingBox](/documentation/shape#two-shape-worldboundingbox).
+
+</div>
+
+
+
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L134)
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="static function ">
+
+## Two.Shape.IsOffScreen
+
+
+
+
+<div class="returns">
+
+__Returns__:
+
+
+
++ `Boolean`
+
+
+
+
+</div>
+
+
+
+
+
+
+
+<div class="params">
+
+| Argument | Description |
+| ---- | ----------- |
+|  `boundingBox`  | The [Two.Shape.worldBoundingBox](/documentation/shape#two-shape-worldboundingbox) to check |
+|  `renderer`  | The Two.js renderer that has canvas dimensions to check against |
+</div>
+
+
+
+
+<div class="description">
+
+Indicates if the given bounding box is within the bounds of the rendered screen.
+
+</div>
+
+
+
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L146)
 
 </div>
 
@@ -103,7 +247,7 @@ Convenience function to apply observable qualities of a [Two.Shape](/documentati
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L95)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L160)
 
 </div>
 
@@ -201,7 +345,7 @@ Session specific unique identifier.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L27)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L30)
 
 </div>
 
@@ -258,7 +402,7 @@ A list of class strings stored if imported / interpreted  from an SVG element.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L34)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L37)
 
 </div>
 
@@ -305,7 +449,7 @@ The transformation matrix of the shape.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L41)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L44)
 
 </div>
 
@@ -356,7 +500,7 @@ The x and y value for where the shape is placed relative to its parent.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L49)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L52)
 
 </div>
 
@@ -397,7 +541,7 @@ The value in Number for how much the shape is rotated relative to its parent.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L55)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L58)
 
 </div>
 
@@ -438,7 +582,7 @@ The value for how much the shape is scaled relative to its parent.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L61)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L64)
 
 </div>
 
@@ -476,7 +620,7 @@ This value can be replaced with a [Two.Vector](/documentation/vector) to do non-
 
 <div class="properties">
 
-The value in Number for how much the shape is skewed relative to its parent.
+The value for how much the shape is skewed relative to its parent.
 
 </div>
 
@@ -495,7 +639,7 @@ Skew the shape by an angle in the x axis direction.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L68)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L71)
 
 </div>
 
@@ -523,7 +667,7 @@ Skew the shape by an angle in the x axis direction.
 
 <div class="properties">
 
-The value in Number for how much the shape is skewed relative to its parent.
+The value for how much the shape is skewed relative to its parent.
 
 </div>
 
@@ -542,7 +686,89 @@ Skew the shape by an angle in the y axis direction.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L75)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L78)
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance member ">
+
+## Two.Shape.boundingBox
+
+
+
+
+
+
+
+
+<div class="properties">
+
+An object that contains bounding box information respective to its own transformation matrix.
+
+</div>
+
+
+
+
+
+
+
+
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L85)
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance member ">
+
+## Two.Shape.worldBoundingBox
+
+
+
+
+
+
+
+
+<div class="properties">
+
+An object that contains bounding box information respective to how it is rendered on the screen.
+
+</div>
+
+
+
+
+
+
+
+
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L94)
 
 </div>
 
@@ -583,7 +809,7 @@ A class to be applied to the element to be compatible with CSS styling.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L337)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L445)
 
 </div>
 
@@ -641,7 +867,7 @@ Convenience method to add itself to the scenegraph.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L344)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L452)
 
 </div>
 
@@ -702,7 +928,7 @@ Create a new [Two.Shape](/documentation/shape) with the same values as the curre
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L355)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L463)
 
 </div>
 

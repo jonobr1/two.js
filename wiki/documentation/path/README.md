@@ -145,7 +145,7 @@ Cached method to let [Two.Path](/documentation/path) know vertices have been add
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L216)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L220)
 
 </div>
 
@@ -186,7 +186,7 @@ Cached method to let [Two.Path](/documentation/path) know vertices have been rem
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L234)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L238)
 
 </div>
 
@@ -227,7 +227,7 @@ Cached method to let [Two.Path](/documentation/path) know the fill has changed.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L250)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L254)
 
 </div>
 
@@ -268,7 +268,7 @@ Cached method to let [Two.Path](/documentation/path) know the stroke has changed
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L259)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L263)
 
 </div>
 
@@ -316,7 +316,7 @@ Convenience function to apply observable qualities of a [Two.Path](/documentatio
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L268)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L272)
 
 </div>
 
@@ -1174,7 +1174,7 @@ The sum of distances between all [Two.Path.vertices](/documentation/path#two-pat
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L336)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L340)
 
 </div>
 
@@ -1215,7 +1215,7 @@ Object to define clipping area.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L451)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L455)
 
 </div>
 
@@ -1286,7 +1286,7 @@ Create a new instance of [Two.Path](/documentation/path) with the same propertie
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L682)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L686)
 
 </div>
 
@@ -1340,7 +1340,7 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L722)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L726)
 
 </div>
 
@@ -1381,7 +1381,7 @@ Short hand method to set fill to `transparent`.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L756)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L760)
 
 </div>
 
@@ -1422,7 +1422,7 @@ Short hand method to set stroke to `transparent`.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L766)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L770)
 
 </div>
 
@@ -1463,7 +1463,7 @@ Orient the vertices of the shape to the upper left-hand corner of the path.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L776)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L780)
 
 </div>
 
@@ -1504,7 +1504,7 @@ Orient the vertices of the shape to the center of the path.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L800)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L805)
 
 </div>
 
@@ -1545,7 +1545,7 @@ Remove self from the scene / parent.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L822)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L827)
 
 </div>
 
@@ -1608,7 +1608,7 @@ Return an object with top, left, right, bottom, width, and height parameters of 
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L839)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L844)
 
 </div>
 
@@ -1670,7 +1670,7 @@ Given a float `t` from 0 to 1, return a point or assign a passed `obj`'s coordin
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L937)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L969)
 
 </div>
 
@@ -1711,7 +1711,7 @@ Based on closed / curved and sorting of vertices plot where all points should be
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L1076)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L1108)
 
 </div>
 
@@ -1769,7 +1769,7 @@ Insert a [Two.Anchor](/documentation/anchor) at the midpoint between every item 
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L1097)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L1129)
 
 </div>
 

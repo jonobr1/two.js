@@ -1211,18 +1211,40 @@ declare namespace Two {
         scale: {};
         /**
          * Skew the shape by an angle in the x axis direction.
-         * @property undefined - The value in Number for how much the shape is skewed relative to its parent.
+         * @property undefined - The value for how much the shape is skewed relative to its parent.
          */
         skewX: {};
         /**
          * Skew the shape by an angle in the y axis direction.
-         * @property undefined - The value in Number for how much the shape is skewed relative to its parent.
+         * @property undefined - The value for how much the shape is skewed relative to its parent.
          */
         skewY: {};
+        /**
+         * @property undefined - An object that contains bounding box information respective to its own transformation matrix.
+         */
+        boundingBox: {};
+        /**
+         * @property undefined - An object that contains bounding box information respective to how it is rendered on the screen.
+         */
+        worldBoundingBox: {};
         /**
          * Utility function used in conjunction with event handlers to update the flagMatrix of a shape.
          */
         static FlagMatrix(): void;
+        /**
+         * Utility function used to update a {@link Two.Shape#boundingBox}.
+         */
+        static UpdateBoundingBox(): void;
+        /**
+         * Utility function used to update a {@link Two.Shape#worldBoundingBox}.
+         */
+        static UpdateWorldBoundingBox(): void;
+        /**
+         * Indicates if the given bounding box is within the bounds of the rendered screen.
+         * @param boundingBox - The {@link Two.Shape#worldBoundingBox} to check
+         * @param renderer - The Two.js renderer that has canvas dimensions to check against
+         */
+        static IsOffScreen(boundingBox: any, renderer: any): boolean;
         /**
          * Convenience function to apply observable qualities of a {@link Two.Shape} to any object. Handy if you'd like to extend the {@link Two.Shape} class on a custom class.
          * @param object - The object to make observable.
@@ -1930,6 +1952,9 @@ declare class Two {
      * @returns Ever increasing Number.
      */
     static uniqueId(): number;
+    renderer: {};
+    playing: {};
+    frameCount: {};
     /**
      * If `options.fullscreen` or `options.fitted` in construction create this function. It sets the `width` and `height` of the instance to its respective parent `window` or `element` depending on the `options` passed.
      */

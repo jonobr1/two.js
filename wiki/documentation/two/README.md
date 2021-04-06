@@ -61,7 +61,130 @@ A massive object filled with utility functions and properties.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L958)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L970)
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance member ">
+
+## Two.renderer
+
+
+
+
+
+
+
+
+<div class="properties">
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L101)
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance member ">
+
+## Two.playing
+
+
+
+
+
+
+
+
+<div class="properties">
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L107)
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance member ">
+
+## Two.frameCount
+
+
+
+
+
+
+
+
+<div class="properties">
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L113)
 
 </div>
 
@@ -102,7 +225,7 @@ If `options.fullscreen` or `options.fitted` in construction create this function
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L105)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L119)
 
 </div>
 
@@ -150,7 +273,7 @@ Shorthand method to append your instance of Two.js to the `document`.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L167)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L181)
 
 </div>
 
@@ -199,7 +322,7 @@ Call to start an internal animation loop.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L189)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L203)
 
 </div>
 
@@ -258,7 +381,7 @@ Call to stop the internal animation loop for a specific instance of Two.js.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L204)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L218)
 
 </div>
 
@@ -321,7 +444,7 @@ Release an arbitrary class' events from the Two.js corpus and recurse through it
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L221)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L235)
 
 </div>
 
@@ -370,7 +493,7 @@ Update positions and calculations in one pass before rendering. Then render to t
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L263)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L277)
 
 </div>
 
@@ -429,7 +552,7 @@ Render all drawable and visible objects of the scene.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L302)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L314)
 
 </div>
 
@@ -477,7 +600,7 @@ A shorthand method to add specific Two.js objects to the scene.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L316)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L328)
 
 </div>
 
@@ -525,7 +648,7 @@ A shorthand method to remove specific Two.js objects from the scene.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L334)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L346)
 
 </div>
 
@@ -566,7 +689,7 @@ Remove all all Two.js objects from the scene.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L353)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L365)
 
 </div>
 
@@ -630,7 +753,7 @@ Creates a Two.js line and adds it to the scene.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L365)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L377)
 
 </div>
 
@@ -694,7 +817,7 @@ Creates a Two.js arrow and adds it to the scene.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L384)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L396)
 
 </div>
 
@@ -758,7 +881,7 @@ Creates a Two.js rectangle and adds it to the scene.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L429)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L441)
 
 </div>
 
@@ -823,7 +946,7 @@ Creates a Two.js rounded rectangle and adds it to the scene.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L448)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L460)
 
 </div>
 
@@ -887,7 +1010,7 @@ Creates a Two.js circle and adds it to the scene.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L468)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L480)
 
 </div>
 
@@ -952,7 +1075,7 @@ Creates a Two.js ellipse and adds it to the scene.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L487)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L499)
 
 </div>
 
@@ -1017,7 +1140,7 @@ Creates a Two.js star and adds it to the scene.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L507)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L519)
 
 </div>
 
@@ -1081,7 +1204,7 @@ Creates a Two.js path that is curved and adds it to the scene.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L527)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L539)
 
 </div>
 
@@ -1155,7 +1278,7 @@ Creates a Two.js polygon and adds it to the scene.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L563)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L575)
 
 </div>
 
@@ -1203,7 +1326,7 @@ Creates a Two.js polygon and adds it to the scene.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L582)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L594)
 
 </div>
 
@@ -1265,7 +1388,7 @@ Creates a Two.js path and adds it to the scene.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L599)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L611)
 
 </div>
 
@@ -1339,7 +1462,7 @@ Creates a Two.js text object and adds it to the scene.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L638)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L650)
 
 </div>
 
@@ -1404,7 +1527,7 @@ Creates a Two.js linear gradient and ads it to the scene. In the case of an effe
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L654)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L666)
 
 </div>
 
@@ -1468,7 +1591,7 @@ Creates a Two.js linear-gradient object and ads it to the scene. In the case of 
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L676)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L688)
 
 </div>
 
@@ -1535,7 +1658,7 @@ Creates a Two.js sprite object and adds it to the scene. Sprites can be used for
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L697)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L709)
 
 </div>
 
@@ -1600,7 +1723,7 @@ Creates a Two.js image sequence object and adds it to the scene.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L722)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L734)
 
 </div>
 
@@ -1662,7 +1785,7 @@ Creates a Two.js texture object.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L745)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L757)
 
 </div>
 
@@ -1723,7 +1846,7 @@ Creates a Two.js group object and adds it to the scene.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L760)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L772)
 
 </div>
 
@@ -1786,7 +1909,7 @@ Interpret an SVG Node and add it to this instance's scene. The distinction shoul
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L782)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L794)
 
 </div>
 
@@ -1848,7 +1971,7 @@ Load an SVG file or SVG text and interpret it into Two.js legible objects.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L815)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L827)
 
 </div>
 
