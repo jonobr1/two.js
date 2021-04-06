@@ -25,7 +25,12 @@ function Children() {
 
   this.on(Events.Types.insert, this.attach);
   this.on(Events.Types.remove, this.detach);
-  Children.prototype.attach.apply(this, arguments);
+
+  if (arguments[0] && Array.isArray(arguments[0]) && arguments[0].length > 0) {
+    Children.prototype.attach.apply(this, arguments[0]);
+  } else if (arguments.length > 0) {
+    Children.prototype.attach.apply(this, arguments);
+  }
 
 }
 
