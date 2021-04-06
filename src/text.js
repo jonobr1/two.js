@@ -81,8 +81,9 @@ _.extend(Text, {
    * @property {String[]} - A list of properties that are on every {@link Two.Text}.
    */
   Properties: [
-    'value', 'family', 'size', 'leading', 'alignment', 'linewidth', 'style',
-    'weight', 'decoration', 'baseline', 'opacity', 'visible', 'className',
+    'value', 'family', 'size', 'leading', 'alignment', 'linewidth', 'weight',
+    'baseline',
+    'style', 'decoration', 'opacity', 'visible', 'className',
     'fill', 'stroke',
   ],
 
@@ -108,7 +109,27 @@ _.extend(Text, {
 
     Shape.MakeObservable(object);
 
-    _.each(Text.Properties.slice(0, 12), defineGetterSetter, object);
+    _.each(Text.Properties.slice(0, 7), function(property) {
+
+      var object = this;
+      var secret = '_' + property;
+      var flag = '_flag' + property.charAt(0).toUpperCase() + property.slice(1);
+
+      Object.defineProperty(object, property, {
+        enumerable: true,
+        get: function() {
+          return this[secret];
+        },
+        set: function(v) {
+          this[secret] = v;
+          this[flag] = true;
+          this._flagBoundingBox = true;
+          this._flagWorldBoundingBox = true;
+        }
+      });
+    }, object);
+
+    _.each(Text.Properties.slice(8, 12), defineGetterSetter, object);
 
     Object.defineProperty(object, 'fill', {
       enumerable: true,
@@ -531,8 +552,9 @@ _.extend(Text.prototype, Shape.prototype, {
     var matrix, l, x, y, i, v, a, b, c, d;
     var left, right, top, bottom;
 
-    // TODO: Update this to not __always__ update. Just when it needs to.
-    this._update(true);
+    if (!this._renderer.suppressUpdate) {
+      this._update(!shallow);
+    }
 
     matrix = shallow ? this._matrix : getComputedMatrix(this);
 

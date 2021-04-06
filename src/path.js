@@ -1,6 +1,6 @@
 import Commands from './utils/path-commands.js';
 import Collection from './collection.js';
-import {getComputedMatrix, lerp, mod} from './utils/math.js';
+import { getComputedMatrix, lerp, mod } from './utils/math.js';
 import {
   getComponentOnCubicBezier,
   getCurveBoundingBox,
@@ -209,8 +209,10 @@ _.extend(Path, {
     this._flagVertices = true;
     this._flagLength = true;
     this._flagBoundingBox = true;
+    this._flagWorldBoundingBox = true;
     if (this.parent) {
       this.parent._flagBoundingBox = true;
+      this.parent._flagWorldBoundingBox = true;
       this.parent._flagLength = true;
     }
   },
@@ -852,8 +854,9 @@ _.extend(Path.prototype, Shape.prototype, {
     var left = Infinity, right = -Infinity,
         top = Infinity, bottom = -Infinity;
 
-    // TODO: Update this to not __always__ update. Just when it needs to.
-    this._update(true);
+    if (!this._renderer.suppressUpdate) {
+      this._update(!shallow);
+    }
 
     matrix = shallow ? this._matrix : getComputedMatrix(this);
 

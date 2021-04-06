@@ -67,7 +67,6 @@ import Constants from './constants.js';
  * @param {String} [options.type=Two.Types.svg] - The type of renderer to setup drawing with. See {@link Two.Types} for available options.
  * @param {Boolean} [options.autostart=false] - Set to `true` to add the instance to draw on `requestAnimationFrame`. This is a convenient substitute for {@link Two#play}.
  * @param {Element} [options.domElement] - The canvas or SVG element to draw into. This overrides the `options.type` argument.
- * @param {Boolean} [options.culling=true] - Determines whether Two.js should update only shapes that exist within the bounds of the viewport.
  * @description The entrypoint for Two.js. Instantiate a `new Two` in order to setup a scene to render to. `Two` is also the publicly accessible namespace that all other sub-classes, functions, and utilities attach to.
  */
 function Two(options) {
@@ -80,8 +79,7 @@ function Two(options) {
     width: 640,
     height: 480,
     type: Two.Types.svg,
-    autostart: false,
-    culling: true
+    autostart: false
   });
 
   _.each(params, function(v, k) {
@@ -105,12 +103,6 @@ function Two(options) {
    * @property {Two.SVGRenderer|Two.CanvasRenderer|Two.WebGLRenderer}
    */
   this.renderer = new Two[this.type](this);
-
-  /**
-   * @name Two#culling
-   * @property {Boolean}
-   */
-  this.culling = params.culling;
 
   /**
    * @name Two#playing
@@ -311,10 +303,6 @@ _.extend(Two.prototype, Events, {
     // Update width / height for the renderer
     if (width !== renderer.width || height !== renderer.height) {
       renderer.setSize(width, height, this.ratio);
-    }
-
-    if (this.culling !== renderer.culling) {
-      renderer.culling = this.culling;
     }
 
     this.trigger(Events.Types.update, this.frameCount, this.timeDelta);

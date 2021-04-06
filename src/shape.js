@@ -20,7 +20,10 @@ function Shape() {
    * @description Object access to store relevant renderer specific variables. Warning: manipulating this object can create unintended consequences.
    * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `shape.renderer.elem`.
    */
-  this.renderer = {};
+  this.renderer = {
+    culling: true,
+    suppressUpdate: false
+  };
   this._renderer.flagMatrix = Shape.FlagMatrix.bind(this);
   this.isShape = true;
 
@@ -88,6 +91,15 @@ function Shape() {
     height: 0
   };
 
+  /**
+   * @name Two.Shape#worldBoundingBox
+   * @property {Object} - An object that contains bounding box information respective to how it is rendered on the screen.
+   */
+  this._worldBoundingBox = {
+    width: 0,
+    height: 0
+  };
+
 }
 
 _.extend(Shape, {
@@ -100,25 +112,49 @@ _.extend(Shape, {
   FlagMatrix: function() {
     this._flagMatrix = true;
     this._flagBoundingBox = true;
+    this._flagWorldBoundingBox = true;
     if (this.parent) {
       this.parent._flagBoundingBox = true;
+      this.parent._flagWorldBoundingBox = true;
     }
   },
 
   /**
    * @name Two.Shape.UpdateBoundingBox
    * @function
-   * @description Utility function used to update a {@link Two.Shape#boundingBox}
+   * @description Utility function used to update a {@link Two.Shape#boundingBox}.
    */
   UpdateBoundingBox: function() {
-
     if (this.getBoundingClientRect) {
       this.getBoundingClientRect(true, this._boundingBox);
     }
     this._flagBoundingBox = false;
+  },
 
-    return this;
+  /**
+   * @name Two.Shape.UpdateWorldBoundingBox
+   * @function
+   * @description Utility function used to update a {@link Two.Shape#worldBoundingBox}.
+   */
+  UpdateWorldBoundingBox: function() {
+    if (this.getBoundingClientRect) {
+      this.getBoundingClientRect(false, this._worldBoundingBox);
+    }
+    this._flagWorldBoundingBox = false;
+  },
 
+  /**
+   * @name Two.Shape.IsOffScreen
+   * @function
+   * @param {Object} boundingBox - The {@link Two.Shape#worldBoundingBox} to check
+   * @param {Object} renderer - The Two.js renderer that has canvas dimensions to check against
+   * @description Indicates if the given bounding box is within the bounds of the rendered screen.
+   * @returns {Boolean}
+   */
+  IsOffScreen: function(boundingBox, renderer) {
+    return boundingBox.top > renderer.height ||
+      boundingBox.left > renderer.width || boundingBox.right < 0 ||
+      boundingBox.bottom < 0;
   },
 
   /**
@@ -215,6 +251,16 @@ _.extend(Shape, {
       }
     });
 
+    Object.defineProperty(object, 'worldBoundingBox', {
+      enumerable: true,
+      get: function() {
+        if (this._flagWorldBoundingBox) {
+          Shape.UpdateWorldBoundingBox.call(this);
+        }
+        return this._worldBoundingBox;
+      }
+    });
+
     Object.defineProperty(object, 'matrix', {
       enumerable: true,
       get: function() {
@@ -305,30 +351,37 @@ _.extend(Shape.prototype, Events, {
   /**
    * @name Two.Shape#_id
    * @private
-   * @property {Boolean} - Determines whether the id needs updating.
+   * @property {Boolean} - Determines whether the `id` needs updating.
    */
   _flagId: true,
 
   /**
    * @name Two.Shape#_flagMatrix
    * @private
-   * @property {Boolean} - Determines whether the matrix needs updating.
+   * @property {Boolean} - Determines whether the `matrix` needs updating.
    */
   _flagMatrix: true,
 
   /**
    * @name Two.Shape#_flagScale
    * @private
-   * @property {Boolean} - Determines whether the scale needs updating.
+   * @property {Boolean} - Determines whether the `scale` needs updating.
    */
   _flagScale: false,
 
   /**
    * @name Two.Shape#_flagBoundingBox
    * @private
-   * @property {Boolean} - Determines whether the boundingBox needs updating.
+   * @property {Boolean} - Determines whether the `boundingBox` needs updating.
    */
   _flagBoundingBox: false,
+
+  /**
+   * @name Two.Shape#_flagWorldBoundingBox
+   * @private
+   * @property {Boolean} - Determines whether the `worldBoundingBox` needs updating.
+   */
+  _flagWorldBoundingBox: false,
 
   // _flagMask: false,
   // _flagClip: false,
@@ -461,6 +514,7 @@ _.extend(Shape.prototype, Events, {
         this._matrix.rotate(this.rotation);
         this._matrix.skewX(this.skewX);
         this._matrix.skewY(this.skewY);
+
     }
 
     if (bubbles) {

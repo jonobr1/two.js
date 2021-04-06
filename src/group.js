@@ -750,12 +750,14 @@ _.extend(Group.prototype, Shape.prototype, {
 
     var rect, matrix, a, b, c, d;
 
-    // TODO: Update this to not __always__ update. Just when it needs to.
-    this._update(true);
+    if (!this._renderer.suppressUpdate) {
+      this._update(!shallow);
+    }
 
     // Variables need to be defined here, because of nested nature of groups.
     var left = Infinity, right = -Infinity,
-        top = Infinity, bottom = -Infinity;
+        top = Infinity, bottom = -Infinity,
+        changed = false;
 
     var regex = /texture|gradient/i;
 
@@ -780,18 +782,23 @@ _.extend(Group.prototype, Shape.prototype, {
       left = min(rect.left, left);
       right = max(rect.right, right);
       bottom = max(rect.bottom, bottom);
+      changed = true;
 
     }
 
-    a = matrix.multiply(left, top, 1);
-    b = matrix.multiply(left, bottom, 1);
-    c = matrix.multiply(right, top, 1);
-    d = matrix.multiply(right, bottom, 1);
+    if (changed) {
 
-    top = min(a.y, b.y, c.y, d.y);
-    left = min(a.x, b.x, c.x, d.x);
-    right = max(a.x, b.x, c.x, d.x);
-    bottom = max(a.y, b.y, c.y, d.y);
+      a = matrix.multiply(left, top, 1);
+      b = matrix.multiply(left, bottom, 1);
+      c = matrix.multiply(right, top, 1);
+      d = matrix.multiply(right, bottom, 1);
+
+      top = min(a.y, b.y, c.y, d.y);
+      left = min(a.x, b.x, c.x, d.x);
+      right = max(a.x, b.x, c.x, d.x);
+      bottom = max(a.y, b.y, c.y, d.y);
+
+    }
 
     if (_.isObject(reference)) {
       reference.top = top;

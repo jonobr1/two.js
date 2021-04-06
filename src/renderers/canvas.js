@@ -1,10 +1,11 @@
 import Commands from '../utils/path-commands.js';
-import {mod} from '../utils/math.js';
-import {Curve} from '../utils/curves.js';
+import { mod } from '../utils/math.js';
+import { Curve } from '../utils/curves.js';
 import Events from '../events.js';
 import getRatio from '../utils/get-ratio.js';
 import _ from '../utils/underscore.js';
 
+import Shape from '../shape.js';
 import Group from '../group.js';
 import Vector from '../vector.js';
 import Constants from '../constants.js';
@@ -50,17 +51,26 @@ var canvas = {
 
   group: {
 
-    renderChild: function(child) {
-      canvas[child._renderer.type].render.call(child, this.ctx, true, this.clip);
-    },
+    render: function(root) {
 
-    render: function(ctx) {
+      var ctx = root.ctx;
 
       if (!this._visible) {
         return this;
       }
 
       this._update();
+
+      var boundingBox;
+
+      if (this._renderer.culling) {
+        this._renderer.suppressUpdate = true;
+        boundingBox = this.worldBoundingBox;
+        this._renderer.suppressUpdate = false;
+        if (Shape.IsOffScreen(boundingBox, root)) {
+          return this;
+        }
+      }
 
       var matrix = this._matrix.elements;
       var parent = this.parent;
@@ -89,13 +99,13 @@ var canvas = {
       }
 
       if (mask) {
-        canvas[mask._renderer.type].render.call(mask, ctx, true);
+        canvas[mask._renderer.type].render.call(mask, root, true);
       }
 
       if (this._opacity > 0 && this._scale !== 0) {
         for (var i = 0; i < this.children.length; i++) {
           var child = this.children[i];
-          canvas[child._renderer.type].render.call(child, ctx);
+          canvas[child._renderer.type].render.call(child, root);
         }
       }
 
@@ -119,8 +129,9 @@ var canvas = {
 
   path: {
 
-    render: function(ctx, forced, parentClipped) {
+    render: function(root, forced, parentClipped) {
 
+      var ctx = root.ctx;
       var matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter,
           closed, commands, length, last, next, prev, a, b, c, d, ux, uy, vx, vy,
           ar, bl, br, cl, x, y, mask, clip, defaultMatrix, isOffset, dashes;
@@ -135,6 +146,17 @@ var canvas = {
       }
 
       this._update();
+
+      var boundingBox;
+
+      if (this._renderer.culling) {
+        this._renderer.suppressUpdate = true;
+        boundingBox = this.worldBoundingBox;
+        this._renderer.suppressUpdate = false;
+        if (Shape.IsOffScreen(boundingBox, root)) {
+          return this;
+        }
+      }
 
       matrix = this._matrix.elements;
       stroke = this._stroke;
@@ -161,7 +183,7 @@ var canvas = {
       // https://code.google.com/p/chromium/issues/detail?id=370951
 
       // if (mask) {
-      //   canvas[mask._renderer.type].render.call(mask, ctx, true);
+      //   canvas[mask._renderer.type].render.call(mask, root, true);
       // }
 
       // Styles
@@ -169,7 +191,7 @@ var canvas = {
         if (typeof fill === 'string') {
           ctx.fillStyle = fill;
         } else {
-          canvas[fill._renderer.type].render.call(fill, ctx);
+          canvas[fill._renderer.type].render.call(fill, root);
           ctx.fillStyle = fill._renderer.effect;
         }
       }
@@ -177,7 +199,7 @@ var canvas = {
         if (typeof stroke === 'string') {
           ctx.strokeStyle = stroke;
         } else {
-          canvas[stroke._renderer.type].render.call(stroke, ctx);
+          canvas[stroke._renderer.type].render.call(stroke, root);
           ctx.strokeStyle = stroke._renderer.effect;
         }
         if (linewidth) {
@@ -231,7 +253,8 @@ var canvas = {
             var ax = a.x;
             var ay = a.y;
 
-            canvas.renderSvgArcCommand(ctx, ax, ay, rx, ry, largeArcFlag, sweepFlag, xAxisRotation, x, y);
+            canvas.renderSvgArcCommand(ctx, ax, ay, rx, ry,
+              largeArcFlag, sweepFlag, xAxisRotation, x, y);
             break;
 
           case Commands.curve:
@@ -362,8 +385,9 @@ var canvas = {
 
   text: {
 
-    render: function(ctx, forced, parentClipped) {
+    render: function(root, forced, parentClipped) {
 
+      var ctx = root.ctx;
       var opacity = this._opacity * this.parent._renderer.opacity;
       var visible = this._visible;
       // mask = this._mask;
@@ -374,6 +398,17 @@ var canvas = {
       }
 
       this._update();
+
+      var boundingBox;
+
+      if (this._renderer.culling) {
+        this._renderer.suppressUpdate = true;
+        boundingBox = this.worldBoundingBox;
+        this._renderer.suppressUpdate = false;
+        if (Shape.IsOffScreen(boundingBox, root)) {
+          return this;
+        }
+      }
 
       var matrix = this._matrix.elements;
       var stroke = this._stroke;
@@ -400,7 +435,7 @@ var canvas = {
       // https://code.google.com/p/chromium/issues/detail?id=370951
 
       // if (mask) {
-      //   canvas[mask._renderer.type].render.call(mask, ctx, true);
+      //   canvas[mask._renderer.type].render.call(mask, root, true);
       // }
 
       if (!isOffset) {
@@ -416,7 +451,7 @@ var canvas = {
         if (typeof fill === 'string') {
           ctx.fillStyle = fill;
         } else {
-          canvas[fill._renderer.type].render.call(fill, ctx);
+          canvas[fill._renderer.type].render.call(fill, root);
           ctx.fillStyle = fill._renderer.effect;
         }
       }
@@ -424,7 +459,7 @@ var canvas = {
         if (typeof stroke === 'string') {
           ctx.strokeStyle = stroke;
         } else {
-          canvas[stroke._renderer.type].render.call(stroke, ctx);
+          canvas[stroke._renderer.type].render.call(stroke, root);
           ctx.strokeStyle = stroke._renderer.effect;
         }
         if (linewidth) {
@@ -578,8 +613,9 @@ var canvas = {
 
   'linear-gradient': {
 
-    render: function(ctx) {
+    render: function(root) {
 
+      var ctx = root.ctx;
       this._update();
 
       if (!this._renderer.effect || this._flagEndPoints || this._flagStops) {
@@ -604,8 +640,9 @@ var canvas = {
 
   'radial-gradient': {
 
-    render: function(ctx) {
+    render: function(root) {
 
+      var ctx = root.ctx;
       this._update();
 
       if (!this._renderer.effect || this._flagCenter || this._flagFocal
@@ -631,8 +668,9 @@ var canvas = {
 
   texture: {
 
-    render: function(ctx) {
+    render: function(root) {
 
+      var ctx = root.ctx;
       this._update();
 
       var image = this.image;
@@ -859,7 +897,7 @@ _.extend(Renderer.prototype, Events, {
       this.ctx.clearRect(0, 0, this.width, this.height);
     }
 
-    canvas.group.render.call(this.scene, this.ctx);
+    canvas.group.render.call(this.scene, this);
 
     if (!isOne) {
       this.ctx.restore();
