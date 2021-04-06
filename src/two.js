@@ -276,12 +276,10 @@ _.extend(Two.prototype, Events, {
     }
     this._lastFrame = now;
 
-    if (this.fit && !this.fit.attached) {
-
+    if (this.fit && this.fit.domElement && !this.fit.attached) {
         dom.bind(this.fit.domElement, 'resize', this.fit);
         this.fit.attached = true;
         this.fit();
-
     }
 
     var width = this.width;
