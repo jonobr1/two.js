@@ -12,7 +12,9 @@ function Collection() {
   Array.call(this);
 
   if (arguments[0] && Array.isArray(arguments[0])) {
-    Array.prototype.push.apply(this, arguments[0]);
+    if (arguments[0].length > 0) {
+      Array.prototype.push.apply(this, arguments[0]);
+    }
   } else if (arguments.length > 0) {
     Array.prototype.push.apply(this, arguments);
   }
