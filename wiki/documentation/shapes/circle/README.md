@@ -213,7 +213,7 @@ Create a new instance of [Two.Circle](/documentation/circle) with the same prope
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js#L151)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js#L157)
 
 </div>
 
@@ -267,7 +267,7 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js#L184)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js#L190)
 
 </div>
 

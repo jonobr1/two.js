@@ -2144,7 +2144,7 @@ var Constants = {
    * @name Two.PublishDate
    * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
    */
-  PublishDate: '2021-04-23T16:24:19.927Z',
+  PublishDate: '2021-04-23T17:59:51.706Z',
 
   /**
    * @name Two.Identifier
@@ -8298,7 +8298,7 @@ function Circle(ox, oy, r, resolution) {
 
   var points = [];
   for (var i = 0; i < amount; i++) {
-    points.push(new Anchor());
+    points.push(new Anchor(0, 0, 0, 0, 0, 0));
   }
 
   Path.call(this, points, true, true, true);
@@ -8374,14 +8374,20 @@ _.extend(Circle.prototype, Path.prototype, {
   _update: function() {
 
     if (this._flagRadius) {
-      // Coefficient for approximating circular arcs with Bezier curves
-      var c = (4 / 3) * Math.tan(Math.PI / (this.vertices.length * 2));
 
+      var length = this.vertices.length;
+
+      if (!this._closed && length > 2) {
+        length -= 1;
+      }
+
+      // Coefficient for approximating circular arcs with Bezier curves
+      var c = (4 / 3) * Math.tan(Math.PI / (length * 2));
       var radius = this._radius;
       var rc = radius * c;
 
-      for (var i = 0, numVertices = this.vertices.length; i < numVertices; i++) {
-        var pct = i / numVertices;
+      for (var i = 0; i < this.vertices.length; i++) {
+        var pct = i / length;
         var theta = pct * TWO_PI$4;
 
         var x = radius * cos$3(theta);
