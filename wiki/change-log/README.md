@@ -4,7 +4,7 @@ sidebarDepth: 2
 
 # Change Log
 
-## Nightly
+## April 23, 2021 [v0.7.5](https://github.com/jonobr1/two.js/releases/tag/v0.7.5)
 + Improved `Two.Circle.beginning` & `Two.Circle.ending` behavior
 + Improved `fitted` logic on instances of `Two`
 + Improved `Two.Children` and `Two.Collection` instantiation versatility
