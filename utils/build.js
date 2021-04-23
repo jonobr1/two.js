@@ -6,7 +6,7 @@ var gzip = require('gzip-size');
 var terser = require('rollup-plugin-terser').terser;
 
 var publishDateString = (new Date()).toISOString();
-
+var config = getJSON(path.resolve(__dirname, '../package.json'));
 var outputOptions = { name: 'Two' };
 
 async function generateOutput(bundle, outputName, outputOptions) {
@@ -18,6 +18,7 @@ async function generateOutput(bundle, outputName, outputOptions) {
 
   var template = _.template(code);
   return template({
+    version: config.version,
     publishDate: publishDateString
   });
 
@@ -98,6 +99,11 @@ async function build() {
   await publishModule();
   console.log('Published additional statistics to wiki:', elapsed / 1000, 'seconds');
 
+}
+
+function getJSON(filepath) {
+  var buffer = fs.readFileSync(filepath);
+  return JSON.parse(buffer);
 }
 
 build();
