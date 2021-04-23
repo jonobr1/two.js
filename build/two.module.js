@@ -44,7 +44,7 @@ if (typeof window !== 'undefined') {
 
 var root$1 = root;
 
-var Matrix;
+var Matrix$1;
 
 /**
  * @name Two.Utils.decomposeMatrix
@@ -70,7 +70,7 @@ var decomposeMatrix = function(matrix) {
 };
 
 var setMatrix = function(M) {
-  Matrix = M;
+  Matrix$1 = M;
 };
 
 /**
@@ -83,7 +83,7 @@ var setMatrix = function(M) {
  */
 var getComputedMatrix = function(object, matrix) {
 
-  matrix = (matrix && matrix.identity()) || new Matrix();
+  matrix = (matrix && matrix.identity()) || new Matrix$1();
   var parent = object, matrices = [];
 
   while (parent && parent._matrix) {
@@ -1511,7 +1511,7 @@ Anchor.MakeObservable(Anchor.prototype);
 
 // Constants
 
-var cos = Math.cos, sin = Math.sin, tan = Math.tan;
+var cos$5 = Math.cos, sin$5 = Math.sin, tan = Math.tan;
 var array = [];
 
 /**
@@ -1529,7 +1529,7 @@ var array = [];
  * @description A class to store 3 x 3 transformation matrix information. In addition to storing data `Two.Matrix` has suped up methods for commonplace mathematical operations.
  * @nota-bene Order is based on how to construct transformation strings for the browser.
  */
-function Matrix$1(a, b, c, d, e, f) {
+function Matrix(a, b, c, d, e, f) {
 
   /**
    * @name Two.Matrix#elements
@@ -1551,9 +1551,9 @@ function Matrix$1(a, b, c, d, e, f) {
 
 }
 
-setMatrix(Matrix$1);
+setMatrix(Matrix);
 
-_.extend(Matrix$1, {
+_.extend(Matrix, {
 
   /**
    * @name Two.Matrix.Identity
@@ -1621,9 +1621,9 @@ _.extend(Matrix$1, {
 
 });
 
-_.extend(Matrix$1.prototype, Events, {
+_.extend(Matrix.prototype, Events, {
 
-  constructor: Matrix$1,
+  constructor: Matrix,
 
   /**
    * @name Two.Matrix#manual
@@ -1714,15 +1714,15 @@ _.extend(Matrix$1.prototype, Events, {
    */
   identity: function() {
 
-    this.elements[0] = Matrix$1.Identity[0];
-    this.elements[1] = Matrix$1.Identity[1];
-    this.elements[2] = Matrix$1.Identity[2];
-    this.elements[3] = Matrix$1.Identity[3];
-    this.elements[4] = Matrix$1.Identity[4];
-    this.elements[5] = Matrix$1.Identity[5];
-    this.elements[6] = Matrix$1.Identity[6];
-    this.elements[7] = Matrix$1.Identity[7];
-    this.elements[8] = Matrix$1.Identity[8];
+    this.elements[0] = Matrix.Identity[0];
+    this.elements[1] = Matrix.Identity[1];
+    this.elements[2] = Matrix.Identity[2];
+    this.elements[3] = Matrix.Identity[3];
+    this.elements[4] = Matrix.Identity[4];
+    this.elements[5] = Matrix.Identity[5];
+    this.elements[6] = Matrix.Identity[6];
+    this.elements[7] = Matrix.Identity[7];
+    this.elements[8] = Matrix.Identity[8];
 
     return this.trigger(Events.Types.change);
 
@@ -1838,7 +1838,7 @@ _.extend(Matrix$1.prototype, Events, {
   inverse: function(out) {
 
     var a = this.elements;
-    out = out || new Matrix$1();
+    out = out || new Matrix();
 
     var a00 = a[0], a01 = a[1], a02 = a[2];
     var a10 = a[3], a11 = a[4], a12 = a[5];
@@ -1904,8 +1904,8 @@ _.extend(Matrix$1.prototype, Events, {
    */
   rotate: function(Number) {
 
-    var c = cos(Number);
-    var s = sin(Number);
+    var c = cos$5(Number);
+    var s = sin$5(Number);
 
     return this.multiply(c, -s, 0, s, c, 0, 0, 0, 1);
 
@@ -2105,7 +2105,7 @@ _.extend(Matrix$1.prototype, Events, {
    */
   clone: function() {
 
-    return new Matrix$1().copy(this);
+    return new Matrix().copy(this);
 
   }
 
@@ -2144,7 +2144,7 @@ var Constants = {
    * @name Two.PublishDate
    * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
    */
-  PublishDate: '2021-04-23T15:38:11.605Z',
+  PublishDate: '2021-04-23T16:24:19.927Z',
 
   /**
    * @name Two.Identifier
@@ -2182,7 +2182,7 @@ var Constants = {
 
 };
 
-var HALF_PI = Math.PI / 2;
+var HALF_PI$3 = Math.PI / 2;
 
 /**
  * @name Two.Utils.Curve
@@ -2313,7 +2313,7 @@ var subdivide = function(x1, y1, x2, y2, x3, y3, x4, y4, limit) {
  * @returns {Number} The length of a curve.
  * @description Given 2 points (a, b) and corresponding control point for each, return a float that represents the length of the curve using Gauss-Legendre algorithm. Limit iterations of calculation by `limit`.
  */
-var getCurveLength = function(x1, y1, x2, y2, x3, y3, x4, y4, limit) {
+var getCurveLength$1 = function(x1, y1, x2, y2, x3, y3, x4, y4, limit) {
 
   // TODO: Better / fuzzier equality check
   // Linear calculation
@@ -2514,9 +2514,9 @@ var getControlPoints = function(a, b, c) {
   d2 *= 0.33;
 
   if (a2 < a1) {
-    mid += HALF_PI;
+    mid += HALF_PI$3;
   } else {
-    mid -= HALF_PI;
+    mid -= HALF_PI$3;
   }
 
   b.controls.left.x = Math.cos(mid) * d1;
@@ -2570,7 +2570,7 @@ var getReflection = function(a, b, relative) {
  */
 var getAnchorsFromArcData = function(center, xAxisRotation, rx, ry, ts, td, ccw) {
 
-  var matrix = new Matrix$1()
+  new Matrix()
     .translate(center.x, center.y)
     .rotate(xAxisRotation);
 
@@ -2601,7 +2601,7 @@ var Curves = /*#__PURE__*/Object.freeze({
   Curve: Curve,
   getComponentOnCubicBezier: getComponentOnCubicBezier,
   subdivide: subdivide,
-  getCurveLength: getCurveLength,
+  getCurveLength: getCurveLength$1,
   getCurveBoundingBox: getCurveBoundingBox,
   integrate: integrate,
   getCurveFromPoints: getCurveFromPoints,
@@ -2751,7 +2751,7 @@ function Shape() {
    * @description The transformation matrix of the shape.
    * @nota-bene {@link Two.Shape#translation}, {@link Two.Shape#rotation}, {@link Two.Shape#scale}, {@link Two.Shape#skewX}, and {@link Two.Shape#skewY} apply their values to the matrix when changed. The matrix is what is sent to the renderer to be drawn.
    */
-  this.matrix = new Matrix$1();
+  this.matrix = new Matrix();
 
   /**
    * @name Two.Shape#translation
@@ -3213,7 +3213,7 @@ _.extend(Children.prototype, {
 
 // Constants
 
-var min = Math.min, max = Math.max;
+var min$3 = Math.min, max$3 = Math.max;
 
 /**
  * @name Two.Group
@@ -3761,12 +3761,13 @@ _.extend(Group.prototype, Shape.prototype, {
    */
   corner: function() {
 
-    var rect = this.getBoundingClientRect(true);
-    var corner = { x: rect.left, y: rect.top };
+    var rect = this.getBoundingClientRect();
 
-    this.children.forEach(function(child) {
-      child.translation.sub(corner);
-    });
+    for (var i = 0; i < this.children.length; i++) {
+      var child = this.children[i];
+      child.translation.x -= rect.left;
+      child.translation.y -= rect.top;
+    }
 
     return this;
 
@@ -3779,18 +3780,17 @@ _.extend(Group.prototype, Shape.prototype, {
    */
   center: function() {
 
-    var rect = this.getBoundingClientRect(true);
+    var rect = this.getBoundingClientRect();
+    var cx = rect.left + rect.width / 2 - this.translation.x;
+    var cy = rect.top + rect.height / 2 - this.translation.y;
 
-    rect.centroid = {
-      x: rect.left + rect.width / 2 - this.translation.x,
-      y: rect.top + rect.height / 2 - this.translation.y
-    };
-
-    this.children.forEach(function(child) {
+    for (var i = 0; i < this.children.length; i++) {
+      var child = this.children[i];
       if (child.isShape) {
-        child.translation.sub(rect.centroid);
+        child.translation.x -= cx;
+        child.translation.y -= cy;
       }
-    });
+    }
 
     return this;
 
@@ -3951,7 +3951,7 @@ _.extend(Group.prototype, Shape.prototype, {
    * @description Return an object with top, left, right, bottom, width, and height parameters of the group.
    */
   getBoundingClientRect: function(shallow) {
-    var rect;
+    var rect, matrix, a, b, c, d;
 
     // TODO: Update this to not __always__ update. Just when it needs to.
     this._update(true);
@@ -3961,6 +3961,8 @@ _.extend(Group.prototype, Shape.prototype, {
         top = Infinity, bottom = -Infinity;
 
     var regex = /texture|gradient/i;
+
+    matrix = shallow ? this._matrix : getComputedMatrix(this);
 
     for (var i = 0; i < this.children.length; i++) {
 
@@ -3977,10 +3979,24 @@ _.extend(Group.prototype, Shape.prototype, {
         continue;
       }
 
-      top = min(rect.top, top);
-      left = min(rect.left, left);
-      right = max(rect.right, right);
-      bottom = max(rect.bottom, bottom);
+      top = min$3(rect.top, top);
+      left = min$3(rect.left, left);
+      right = max$3(rect.right, right);
+      bottom = max$3(rect.bottom, bottom);
+
+    }
+
+    if (shallow) {
+
+      a = matrix.multiply(left, top, 1);
+      b = matrix.multiply(left, bottom, 1);
+      c = matrix.multiply(right, top, 1);
+      d = matrix.multiply(right, bottom, 1);
+
+      top = min$3(a.y, b.y, c.y, d.y);
+      left = min$3(a.x, b.x, c.x, d.x);
+      right = max$3(a.x, b.x, c.x, d.x);
+      bottom = max$3(a.y, b.y, c.y, d.y);
 
     }
 
@@ -4216,12 +4232,12 @@ function replaceParent(child, newParent) {
 
 // Constants
 var emptyArray = [];
-var TWO_PI = Math.PI * 2,
-  max$1 = Math.max,
-  min$1 = Math.min,
+var TWO_PI$5 = Math.PI * 2,
+  max$2 = Math.max,
+  min$2 = Math.min,
   abs = Math.abs,
-  sin$1 = Math.sin,
-  cos$1 = Math.cos,
+  sin$4 = Math.sin,
+  cos$4 = Math.cos,
   acos = Math.acos,
   sqrt = Math.sqrt;
 
@@ -4430,7 +4446,7 @@ var canvas = {
             var largeArcFlag = b.largeArcFlag;
             var sweepFlag = b.sweepFlag;
 
-            prev = closed ? mod(i - 1, length) : max$1(i - 1, 0);
+            prev = closed ? mod(i - 1, length) : max$2(i - 1, 0);
             a = commands[prev];
 
             var ax = a.x;
@@ -4902,8 +4918,8 @@ var canvas = {
     // Compute (x1′, y1′)
     var dx2 = (ax - x) / 2.0;
     var dy2 = (ay - y) / 2.0;
-    var x1p = cos$1(xAxisRotation) * dx2 + sin$1(xAxisRotation) * dy2;
-    var y1p = - sin$1(xAxisRotation) * dx2 + cos$1(xAxisRotation) * dy2;
+    var x1p = cos$4(xAxisRotation) * dx2 + sin$4(xAxisRotation) * dy2;
+    var y1p = - sin$4(xAxisRotation) * dx2 + cos$4(xAxisRotation) * dy2;
 
     // Compute (cx′, cy′)
     var rxs = rx * rx;
@@ -4927,21 +4943,21 @@ var canvas = {
 
     var dq = (rxs * y1ps + rys * x1ps);
     var pq = (rxs * rys - dq) / dq;
-    var q = sqrt(max$1(0, pq));
+    var q = sqrt(max$2(0, pq));
     if (largeArcFlag === sweepFlag) q = - q;
     var cxp = q * rx * y1p / ry;
     var cyp = - q * ry * x1p / rx;
 
     // Step 3: Compute (cx, cy) from (cx′, cy′)
-    var cx = cos$1(xAxisRotation) * cxp
-      - sin$1(xAxisRotation) * cyp + (ax + x) / 2;
-    var cy = sin$1(xAxisRotation) * cxp
-      + cos$1(xAxisRotation) * cyp + (ay + y) / 2;
+    var cx = cos$4(xAxisRotation) * cxp
+      - sin$4(xAxisRotation) * cyp + (ax + x) / 2;
+    var cy = sin$4(xAxisRotation) * cxp
+      + cos$4(xAxisRotation) * cyp + (ay + y) / 2;
 
     // Step 4: Compute θ1 and Δθ
     var startAngle = svgAngle(1, 0, (x1p - cxp) / rx, (y1p - cyp) / ry);
     var delta = svgAngle((x1p - cxp) / rx, (y1p - cyp) / ry,
-      (- x1p - cxp) / rx, (- y1p - cyp) / ry) % TWO_PI;
+      (- x1p - cxp) / rx, (- y1p - cyp) / ry) % TWO_PI$5;
 
     var endAngle = startAngle + delta;
 
@@ -4964,7 +4980,7 @@ var canvas = {
  * @param {Boolean} [parameters.smoothing=true] - Determines whether the canvas should antialias drawing. Set it to `false` when working with pixel art. `false` can lead to better performance, since it would use a cheaper interpolation algorithm.
  * @description This class is used by {@link Two} when constructing with `type` of `Two.Types.canvas`. It takes Two.js' scenegraph and renders it to a `<canvas />`.
  */
-function Renderer(params) {
+function Renderer$2(params) {
 
   // It might not make a big difference on GPU backed canvases.
   var smoothing = (params.smoothing !== false);
@@ -5001,7 +5017,7 @@ function Renderer(params) {
 }
 
 
-_.extend(Renderer, {
+_.extend(Renderer$2, {
 
   /**
    * @name Two.CanvasRenderer.Utils
@@ -5011,9 +5027,9 @@ _.extend(Renderer, {
 
 });
 
-_.extend(Renderer.prototype, Events, {
+_.extend(Renderer$2.prototype, Events, {
 
-  constructor: Renderer,
+  constructor: Renderer$2,
 
   /**
    * @name Two.CanvasRenderer#setSize
@@ -5082,7 +5098,7 @@ function renderArcEstimate(ctx, ox, oy, rx, ry, startAngle, endAngle, clockwise,
   var samePoints = Math.abs(deltaAngle) < epsilon;
 
   // ensures that deltaAngle is 0 .. 2 PI
-  deltaAngle = mod(deltaAngle, TWO_PI);
+  deltaAngle = mod(deltaAngle, TWO_PI$5);
 
   if (deltaAngle < epsilon) {
 
@@ -5092,7 +5108,7 @@ function renderArcEstimate(ctx, ox, oy, rx, ry, startAngle, endAngle, clockwise,
 
     } else {
 
-      deltaAngle = TWO_PI;
+      deltaAngle = TWO_PI$5;
 
     }
 
@@ -5100,13 +5116,13 @@ function renderArcEstimate(ctx, ox, oy, rx, ry, startAngle, endAngle, clockwise,
 
   if (clockwise === true && ! samePoints) {
 
-    if (deltaAngle === TWO_PI) {
+    if (deltaAngle === TWO_PI$5) {
 
-      deltaAngle = - TWO_PI;
+      deltaAngle = - TWO_PI$5;
 
     } else {
 
-      deltaAngle = deltaAngle - TWO_PI;
+      deltaAngle = deltaAngle - TWO_PI$5;
 
     }
 
@@ -5145,7 +5161,7 @@ function svgAngle(ux, uy, vx, vy) {
   var dot = ux * vx + uy * vy;
   var len = sqrt(ux * ux + uy * uy) *  sqrt(vx * vx + vy * vy);
   // floating point precision, slightly over values appear
-  var ang = acos(max$1(-1, min$1(1, dot / len)));
+  var ang = acos(max$2(-1, min$2(1, dot / len)));
   if ((ux * vy - uy * vx) < 0) {
     ang = - ang;
   }
@@ -5169,7 +5185,7 @@ var CanvasShim = {
    * @description Convenience method for defining all the dependencies from the npm package `node-canvas`. See [node-canvas](https://github.com/Automattic/node-canvas) for additional information on setting up HTML5 `<canvas />` drawing in a node.js environment.
    */
   shim: function(canvas, Image) {
-    Renderer.Utils.shim(canvas);
+    Renderer$2.Utils.shim(canvas);
     if (typeof Image !== 'undefined') {
       CanvasShim.Image = Image;
     }
@@ -5599,7 +5615,7 @@ _.extend(Gradient, {
 
       set: function(stops) {
 
-        var updateStops = this._renderer.flagStops;
+        this._renderer.flagStops;
         var bindStops = this._renderer.bindStops;
         var unbindStops = this._renderer.unbindStops;
 
@@ -6159,7 +6175,7 @@ _.extend(RadialGradient.prototype, Gradient.prototype, {
 RadialGradient.MakeObservable(RadialGradient.prototype);
 
 var anchor;
-var regex = {
+var regex$1 = {
   video: /\.(mp4|webm|ogg)$/i,
   image: /\.(jpe?g|png|gif|tiff|webp)$/i,
   effect: /texture|gradient/i
@@ -6266,7 +6282,7 @@ _.extend(Texture, {
    * @name Two.Texture.RegularExpressions
    * @property {Object} - A map of compatible DOM Elements categorized by media format.
    */
-  RegularExpressions: regex,
+  RegularExpressions: regex$1,
 
   /**
    * @name Two.Texture.ImageRegistry
@@ -6336,11 +6352,11 @@ _.extend(Texture, {
 
       // TODO: Fix for headless environments
       image = new CanvasShim.Image();
-      Renderer.Utils.shim(image, 'img');
+      Renderer$2.Utils.shim(image, 'img');
 
     } else if (root$1.document) {
 
-      if (regex.video.test(absoluteSrc)) {
+      if (regex$1.video.test(absoluteSrc)) {
         image = document.createElement('video');
       } else {
         image = document.createElement('img');
@@ -6471,7 +6487,7 @@ _.extend(Texture, {
    */
   load: function(texture, callback) {
 
-    var src = texture.src;
+    texture.src;
     var image = texture.image;
     var tag = Texture.getTag(image);
 
@@ -6788,7 +6804,7 @@ Texture.MakeObservable(Texture.prototype);
 
 // Constants
 
-var min$2 = Math.min, max$2 = Math.max, ceil = Math.ceil, floor = Math.floor;
+var min$1 = Math.min, max$1 = Math.max, ceil = Math.ceil, floor = Math.floor;
 
 /**
  * @name Two.Path
@@ -6960,7 +6976,7 @@ _.extend(Path, {
   ],
 
   Utils: {
-    getCurveLength: getCurveLength$1
+    getCurveLength: getCurveLength
   },
 
   /**
@@ -7180,7 +7196,7 @@ _.extend(Path, {
 
       set: function(vertices) {
 
-        var updateVertices = this._renderer.flagVertices;
+        this._renderer.flagVertices;
         var bindVertices = this._renderer.bindVertices;
         var unbindVertices = this._renderer.unbindVertices;
 
@@ -7543,18 +7559,19 @@ _.extend(Path.prototype, Shape.prototype, {
    */
   corner: function() {
 
-    var rect = this.getBoundingClientRect(true);
+    var rect = this.getBoundingClientRect();
+    var hw = rect.width / 2;
+    var hh = rect.height / 2;
+    var cx = rect.left + rect.width / 2;
+    var cy = rect.top + rect.height / 2;
 
-    rect.centroid = {
-      x: rect.left + rect.width / 2,
-      y: rect.top + rect.height / 2
-    };
-
-    _.each(this.vertices, function(v) {
-      v.subSelf(rect.centroid);
-      v.x += rect.width / 2;
-      v.y += rect.height / 2;
-    });
+    for (var i = 0; i < this.vertices.length; i++) {
+      var v = this.vertices[i];
+      v.x -= cx;
+      v.y -= cy;
+      v.x += hw;
+      v.y += hh;
+    }
 
     return this;
 
@@ -7567,16 +7584,16 @@ _.extend(Path.prototype, Shape.prototype, {
    */
   center: function() {
 
-    var rect = this.getBoundingClientRect(true);
+    var rect = this.getBoundingClientRect();
 
-    rect.centroid = {
-      x: rect.left + rect.width / 2 - this.translation.x,
-      y: rect.top + rect.height / 2 - this.translation.y
-    };
+    var cx = rect.left + rect.width / 2 - this.translation.x;
+    var cy = rect.top + rect.height / 2 - this.translation.y;
 
-    _.each(this.vertices, function(v) {
-      v.subSelf(rect.centroid);
-    });
+    for (var i = 0; i < this.vertices.length; i++) {
+      var v = this.vertices[i];
+      v.x -= cx;
+      v.y -= cy;
+    }
 
     return this;
 
@@ -7607,7 +7624,7 @@ _.extend(Path.prototype, Shape.prototype, {
    * @description Return an object with top, left, right, bottom, width, and height parameters of the path.
    */
   getBoundingClientRect: function(shallow) {
-    var matrix, border, l, i, v0, c0, c1, v1;
+    var matrix, border, l, i, v0, v1, c0x, c0y, c1x, c1y, a, b, c, d;
 
     var left = Infinity, right = -Infinity,
         top = Infinity, bottom = -Infinity;
@@ -7617,7 +7634,7 @@ _.extend(Path.prototype, Shape.prototype, {
 
     matrix = shallow ? this._matrix : getComputedMatrix(this);
 
-    border = this.linewidth / 2;
+    border = (this.linewidth || 0) / 2;
     l = this._renderer.vertices.length;
 
     if (l <= 0) {
@@ -7636,55 +7653,59 @@ _.extend(Path.prototype, Shape.prototype, {
 
       if (v0.controls && v1.controls) {
 
+        c0x = v0.controls.right.x;
+        c0y = v0.controls.right.y;
+
         if (v0.relative) {
-          c0 = matrix.multiply(
-            v0.controls.right.x + v0.x, v0.controls.right.y + v0.y, 1);
-        } else {
-          c0 = matrix.multiply(
-            v0.controls.right.x, v0.controls.right.y, 1);
+          c0x += v0.x;
+          c0y += v0.y;
         }
-        v0 = matrix.multiply(v0.x, v0.y, 1);
+
+        c1x = v1.controls.left.x;
+        c1y = v1.controls.left.y;
 
         if (v1.relative) {
-          c1 = matrix.multiply(
-            v1.controls.left.x + v1.x, v1.controls.left.y + v1.y, 1);
-        } else {
-          c1 = matrix.multiply(
-            v1.controls.left.x, v1.controls.left.y, 1);
+          c1x += v1.x;
+          c1y += v1.y;
         }
-        v1 = matrix.multiply(v1.x, v1.y, 1);
 
-        var bb = getCurveBoundingBox(
-          v0.x, v0.y, c0.x, c0.y, c1.x, c1.y, v1.x, v1.y);
+        var bb = getCurveBoundingBox(v0.x, v0.y,
+          c0x, c0y, c1x, c1y, v1.x, v1.y);
 
-        top = min$2(bb.min.y - border, top);
-        left = min$2(bb.min.x - border, left);
-        right = max$2(bb.max.x + border, right);
-        bottom = max$2(bb.max.y + border, bottom);
+        top = min$1(bb.min.y - border, top);
+        left = min$1(bb.min.x - border, left);
+        right = max$1(bb.max.x + border, right);
+        bottom = max$1(bb.max.y + border, bottom);
 
       } else {
 
         if (i <= 1) {
 
-          v0 = matrix.multiply(v0.x, v0.y, 1);
-
-          top = min$2(v0.y - border, top);
-          left = min$2(v0.x - border, left);
-          right = max$2(v0.x + border, right);
-          bottom = max$2(v0.y + border, bottom);
+          top = min$1(v0.y - border, top);
+          left = min$1(v0.x - border, left);
+          right = max$1(v0.x + border, right);
+          bottom = max$1(v0.y + border, bottom);
 
         }
 
-        v1 = matrix.multiply(v1.x, v1.y, 1);
-
-        top = min$2(v1.y - border, top);
-        left = min$2(v1.x - border, left);
-        right = max$2(v1.x + border, right);
-        bottom = max$2(v1.y + border, bottom);
+        top = min$1(v1.y - border, top);
+        left = min$1(v1.x - border, left);
+        right = max$1(v1.x + border, right);
+        bottom = max$1(v1.y + border, bottom);
 
       }
 
     }
+
+    a = matrix.multiply(left, top, 1);
+    b = matrix.multiply(left, bottom, 1);
+    c = matrix.multiply(right, top, 1);
+    d = matrix.multiply(right, bottom, 1);
+
+    top = min$1(a.y, b.y, c.y, d.y);
+    left = min$1(a.x, b.x, c.x, d.x);
+    right = max$1(a.x, b.x, c.x, d.x);
+    bottom = max$1(a.y, b.y, c.y, d.y);
 
     return {
       top: top,
@@ -7971,14 +7992,14 @@ _.extend(Path.prototype, Shape.prototype, {
         return;
       }
 
-      this._lengths[i] = getCurveLength$1(a, b, limit);
+      this._lengths[i] = getCurveLength(a, b, limit);
       sum += this._lengths[i];
 
       if (i >= last && closed) {
 
         b = this.vertices[(i + 1) % length];
 
-        this._lengths[i + 1] = getCurveLength$1(a, b, limit);
+        this._lengths[i + 1] = getCurveLength(a, b, limit);
         sum += this._lengths[i + 1];
 
       }
@@ -8198,7 +8219,7 @@ function getIdByLength(path, target) {
 
 }
 
-function getCurveLength$1(a, b, limit) {
+function getCurveLength(a, b, limit) {
   // TODO: DRYness
   var x1, x2, x3, x4, y1, y2, y3, y4;
 
@@ -8224,7 +8245,7 @@ function getCurveLength$1(a, b, limit) {
     y3 += a.y;
   }
 
-  return getCurveLength(x1, y1, x2, y2, x3, y3, x4, y4, limit);
+  return getCurveLength$1(x1, y1, x2, y2, x3, y3, x4, y4, limit);
 
 }
 
@@ -8258,8 +8279,8 @@ function getSubdivisions(a, b, limit) {
 
 }
 
-var TWO_PI$1 = Math.PI * 2, HALF_PI$1 = Math.PI / 2;
-var cos$2 = Math.cos, sin$2 = Math.sin;
+var TWO_PI$4 = Math.PI * 2, HALF_PI$2 = Math.PI / 2;
+var cos$3 = Math.cos, sin$3 = Math.sin;
 
 /**
  * @name Two.Circle
@@ -8361,16 +8382,16 @@ _.extend(Circle.prototype, Path.prototype, {
 
       for (var i = 0, numVertices = this.vertices.length; i < numVertices; i++) {
         var pct = i / numVertices;
-        var theta = pct * TWO_PI$1;
+        var theta = pct * TWO_PI$4;
 
-        var x = radius * cos$2(theta);
-        var y = radius * sin$2(theta);
+        var x = radius * cos$3(theta);
+        var y = radius * sin$3(theta);
 
-        var lx = rc * cos$2(theta - HALF_PI$1);
-        var ly = rc * sin$2(theta - HALF_PI$1);
+        var lx = rc * cos$3(theta - HALF_PI$2);
+        var ly = rc * sin$3(theta - HALF_PI$2);
 
-        var rx = rc * cos$2(theta + HALF_PI$1);
-        var ry = rc * sin$2(theta + HALF_PI$1);
+        var rx = rc * cos$3(theta + HALF_PI$2);
+        var ry = rc * sin$3(theta + HALF_PI$2);
 
         var v = this.vertices[i];
 
@@ -8456,8 +8477,8 @@ _.extend(Circle.prototype, Path.prototype, {
 
 Circle.MakeObservable(Circle.prototype);
 
-var TWO_PI$2 = Math.PI * 2, HALF_PI$2 = Math.PI / 2;
-var cos$3 = Math.cos, sin$3 = Math.sin;
+var TWO_PI$3 = Math.PI * 2, HALF_PI$1 = Math.PI / 2;
+var cos$2 = Math.cos, sin$2 = Math.sin;
 
 /**
  * @name Two.Ellipse
@@ -8577,16 +8598,16 @@ _.extend(Ellipse.prototype, Path.prototype, {
 
       for (var i = 0, numVertices = this.vertices.length; i < numVertices; i++) {
         var pct = i / numVertices;
-        var theta = pct * TWO_PI$2;
+        var theta = pct * TWO_PI$3;
 
-        var x = radiusX * cos$3(theta);
-        var y = radiusY * sin$3(theta);
+        var x = radiusX * cos$2(theta);
+        var y = radiusY * sin$2(theta);
 
-        var lx = radiusX * c * cos$3(theta - HALF_PI$2);
-        var ly = radiusY * c * sin$3(theta - HALF_PI$2);
+        var lx = radiusX * c * cos$2(theta - HALF_PI$1);
+        var ly = radiusY * c * sin$2(theta - HALF_PI$1);
 
-        var rx = radiusX * c * cos$3(theta + HALF_PI$2);
-        var ry = radiusY * c * sin$3(theta + HALF_PI$2);
+        var rx = radiusX * c * cos$2(theta + HALF_PI$1);
+        var ry = radiusY * c * sin$2(theta + HALF_PI$1);
 
         var v = this.vertices[i];
 
@@ -9259,6 +9280,8 @@ _.extend(RoundedRectangle.prototype, Path.prototype, {
 
 RoundedRectangle.MakeObservable(RoundedRectangle.prototype);
 
+var min = Math.min, max = Math.max;
+
 /**
  * @name Two.Text
  * @class
@@ -9775,7 +9798,7 @@ _.extend(Text.prototype, Shape.prototype, {
    */
   getBoundingClientRect: function(shallow) {
 
-    var matrix, v;
+    var matrix, a, b, c, d;
     var left, right, top, bottom;
 
     // TODO: Update this to not __always__ update. Just when it needs to.
@@ -9785,44 +9808,45 @@ _.extend(Text.prototype, Shape.prototype, {
 
     var height = this.leading;
     var width = this.value.length * this.size * Text.Ratio;
+    var border = (this._linewidth || 0) / 2;
 
     switch (this.alignment) {
       case 'left':
-        left = 0;
-        right = width;
+        left = - border;
+        right = width + border;
         break;
       case 'right':
-        left = - width;
-        right = 0;
+        left = - (width + border);
+        right = border;
         break;
       default:
-        left = - width / 2;
-        right = width / 2;
+        left = - (width / 2 + border);
+        right = width / 2 + border;
     }
 
     switch (this.baseline) {
       case 'top':
-        top = 0;
-        bottom = height;
+        top = - border;
+        bottom = height + border;
         break;
       case 'bottom':
-        top = - height;
-        bottom = 0;
+        top = - (height + border);
+        bottom = border;
         break;
       default:
-        top = - height / 2;
-        bottom = height / 2;
+        top = - (height / 2 + border);
+        bottom = height / 2 + border;
     }
 
-    v = matrix.multiply(left, top, 1);
+    a = matrix.multiply(left, top, 1);
+    b = matrix.multiply(left, bottom, 1);
+    c = matrix.multiply(right, top, 1);
+    d = matrix.multiply(right, bottom, 1);
 
-    top = v.y;
-    left = v.x;
-
-    v = matrix.multiply(right, bottom, 1);
-
-    right = v.x;
-    bottom = v.y;
+    top = min(a.y, b.y, c.y, d.y);
+    left = min(a.x, b.x, c.x, d.x);
+    right = max(a.x, b.x, c.x, d.x);
+    bottom = max(a.y, b.y, c.y, d.y);
 
     return {
       top: top,
@@ -9861,7 +9885,7 @@ _.extend(Text.prototype, Shape.prototype, {
 Text.MakeObservable(Text.prototype);
 
 // https://github.com/jonobr1/two.js/issues/507#issuecomment-777159213
-var regex$1 = {
+var regex = {
   path: /[+-]?(?:\d*\.\d+|\d+)(?:[eE][+-]\d+)?/g
 };
 
@@ -10277,7 +10301,7 @@ var read = {
     }
 
     var svg = read.g.call(this, node);
-    var viewBox = node.getAttribute('viewBox');
+    node.getAttribute('viewBox');
 
     svg.defs = defs;  // Export out the <defs /> for later use
     // Utils.applySvgViewBox(svg, viewBox);
@@ -10402,7 +10426,7 @@ var read = {
 
       _.each(commands.slice(0), function(command, i) {
 
-        var items = command.slice(1).trim().match(regex$1.path);
+        var items = command.slice(1).trim().match(regex.path);
         var type = command[0];
         var lower = type.toLowerCase();
         var bin, j, l, ct, times, result = [];
@@ -10485,7 +10509,7 @@ var read = {
         var type = command[0];
         var lower = type.toLowerCase();
 
-        coords = command.slice(1).trim().match(regex$1.path);
+        coords = command.slice(1).trim().match(regex.path);
         relative = type === lower;
 
         var x1, y1, x2, y2, x3, y3, x4, y4, reflection;
@@ -10803,8 +10827,8 @@ var read = {
       return read['rounded-rect'](node);
     }
 
-    var x = parseFloat(node.getAttribute('x')) || 0;
-    var y = parseFloat(node.getAttribute('y')) || 0;
+    parseFloat(node.getAttribute('x')) || 0;
+    parseFloat(node.getAttribute('y')) || 0;
     var width = parseFloat(node.getAttribute('width'));
     var height = parseFloat(node.getAttribute('height'));
 
@@ -10828,8 +10852,8 @@ var read = {
 
   'rounded-rect': function(node, parentStyles) {
 
-    var x = parseFloat(node.getAttribute('x')) || 0;
-    var y = parseFloat(node.getAttribute('y')) || 0;
+    parseFloat(node.getAttribute('x')) || 0;
+    parseFloat(node.getAttribute('y')) || 0;
     var rx = parseFloat(node.getAttribute('rx')) || 0;
     var ry = parseFloat(node.getAttribute('ry')) || 0;
 
@@ -11166,7 +11190,7 @@ _.extend(ImageSequence, {
 
       set: function(textures) {
 
-        var updateTextures = this._renderer.flagTextures;
+        this._renderer.flagTextures;
         var bindTextures = this._renderer.bindTextures;
         var unbindTextures = this._renderer.unbindTextures;
 
@@ -11999,7 +12023,7 @@ _.extend(Sprite.prototype, Rectangle.prototype, {
 
 Sprite.MakeObservable(Sprite.prototype);
 
-var TWO_PI$3 = Math.PI * 2, HALF_PI$3 = Math.PI / 2;
+var TWO_PI$2 = Math.PI * 2, HALF_PI = Math.PI / 2;
 
 /**
  * @name Two.ArcSegment
@@ -12129,7 +12153,7 @@ _.extend(ArcSegment.prototype, Path.prototype, {
    * @private
    * @see {@link Two.ArcSegment#endAngle}
    */
-  _endAngle: TWO_PI$3,
+  _endAngle: TWO_PI$2,
   /**
    * @name Two.ArcSegment#_innerRadius
    * @private
@@ -12162,7 +12186,7 @@ _.extend(ArcSegment.prototype, Path.prototype, {
       var ir = this._innerRadius;
       var or = this._outerRadius;
 
-      var connected = mod(sa, TWO_PI$3) === mod(ea, TWO_PI$3);
+      var connected = mod(sa, TWO_PI$2) === mod(ea, TWO_PI$2);
       var punctured = ir > 0;
 
       var vertices = this.vertices;
@@ -12204,10 +12228,10 @@ _.extend(ArcSegment.prototype, Path.prototype, {
 
         if (v.command === Commands.curve) {
           var amp = or * step / Math.PI;
-          v.controls.left.x = amp * Math.cos(theta - HALF_PI$3);
-          v.controls.left.y = amp * Math.sin(theta - HALF_PI$3);
-          v.controls.right.x = amp * Math.cos(theta + HALF_PI$3);
-          v.controls.right.y = amp * Math.sin(theta + HALF_PI$3);
+          v.controls.left.x = amp * Math.cos(theta - HALF_PI);
+          v.controls.left.y = amp * Math.sin(theta - HALF_PI);
+          v.controls.right.x = amp * Math.cos(theta + HALF_PI);
+          v.controls.right.y = amp * Math.sin(theta + HALF_PI);
           if (i === 1) {
             v.controls.left.multiplyScalar(2);
           }
@@ -12255,10 +12279,10 @@ _.extend(ArcSegment.prototype, Path.prototype, {
 
           if (v.command === Commands.curve) {
             amp = ir * step / Math.PI;
-            v.controls.left.x = amp * Math.cos(theta + HALF_PI$3);
-            v.controls.left.y = amp * Math.sin(theta + HALF_PI$3);
-            v.controls.right.x = amp * Math.cos(theta - HALF_PI$3);
-            v.controls.right.y = amp * Math.sin(theta - HALF_PI$3);
+            v.controls.left.x = amp * Math.cos(theta + HALF_PI);
+            v.controls.left.y = amp * Math.sin(theta + HALF_PI);
+            v.controls.right.x = amp * Math.cos(theta - HALF_PI);
+            v.controls.right.y = amp * Math.sin(theta - HALF_PI);
             if (i === 1) {
               v.controls.left.multiplyScalar(2);
             }
@@ -12374,7 +12398,7 @@ _.extend(ArcSegment.prototype, Path.prototype, {
 
 ArcSegment.MakeObservable(ArcSegment.prototype);
 
-var TWO_PI$4 = Math.PI * 2, cos$4 = Math.cos, sin$4 = Math.sin;
+var TWO_PI$1 = Math.PI * 2, cos$1 = Math.cos, sin$1 = Math.sin;
 
 /**
  * @name Two.Polygon
@@ -12518,9 +12542,9 @@ _.extend(Polygon.prototype, Path.prototype, {
       for (var i = 0; i < amount; i++) {
 
         var pct = (i + 0.5) / sides;
-        var theta = TWO_PI$4 * pct + Math.PI / 2;
-        var x = this._width * cos$4(theta) / 2;
-        var y = this._height * sin$4(theta) / 2;
+        var theta = TWO_PI$1 * pct + Math.PI / 2;
+        var x = this._width * cos$1(theta) / 2;
+        var y = this._height * sin$1(theta) / 2;
 
         if (i >= length) {
           this.vertices.push(new Anchor(x, y));
@@ -12609,7 +12633,7 @@ _.extend(Polygon.prototype, Path.prototype, {
 
 Polygon.MakeObservable(Polygon.prototype);
 
-var TWO_PI$5 = Math.PI * 2, cos$5 = Math.cos, sin$5 = Math.sin;
+var TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin;
 
 /**
  * @name Two.Star
@@ -12760,10 +12784,10 @@ _.extend(Star.prototype, Path.prototype, {
       for (var i = 0; i < amount; i++) {
 
         var pct = (i + 0.5) / sides;
-        var theta = TWO_PI$5 * pct;
+        var theta = TWO_PI * pct;
         var r = (!(i % 2) ? this._innerRadius : this._outerRadius) / 2;
-        var x = r * cos$5(theta);
-        var y = r * sin$5(theta);
+        var x = r * cos(theta);
+        var y = r * sin(theta);
 
         if (i >= length) {
           this.vertices.push(new Anchor(x, y));
@@ -13826,10 +13850,10 @@ _.extend(Renderer$1.prototype, Events, {
 
 // Constants
 
-var multiplyMatrix = Matrix$1.Multiply,
+var multiplyMatrix = Matrix.Multiply,
   identity = [1, 0, 0, 0, 1, 0, 0, 0, 1],
   transformation = new NumArray(9),
-  CanvasUtils = Renderer.Utils;
+  CanvasUtils = Renderer$2.Utils;
 
 var webgl = {
 
@@ -13843,7 +13867,7 @@ var webgl = {
     right: 'end'
   },
 
-  matrix: new Matrix$1(),
+  matrix: new Matrix(),
 
   group: {
 
@@ -14362,8 +14386,8 @@ var webgl = {
       var opacity = elem._renderer.opacity || elem._opacity;
       var dashes = elem.dashes;
       var decoration = elem._decoration;
-      var alignment = CanvasUtils.alignments[elem._alignment] || elem._alignment;
-      var baseline = elem._baseline;
+      CanvasUtils.alignments[elem._alignment] || elem._alignment;
+      elem._baseline;
 
       canvas.width = Math.max(Math.ceil(elem._renderer.rect.width * scale.x), 1);
       canvas.height = Math.max(Math.ceil(elem._renderer.rect.height * scale.y), 1);
@@ -14934,7 +14958,7 @@ webgl.ctx = webgl.canvas.getContext('2d');
  * @description This class is used by {@link Two} when constructing with `type` of `Two.Types.webgl`. It takes Two.js' scenegraph and renders it to a `<canvas />` through the WebGL api.
  * @see {@link https://www.khronos.org/registry/webgl/specs/latest/1.0/}
  */
-function Renderer$2(params) {
+function Renderer(params) {
 
   var gl, vs, fs;
 
@@ -15040,7 +15064,7 @@ function Renderer$2(params) {
   gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
 }
 
-_.extend(Renderer$2, {
+_.extend(Renderer, {
 
   /**
    * @name Two.WebGLRenderer.Utils
@@ -15050,9 +15074,9 @@ _.extend(Renderer$2, {
 
 });
 
-_.extend(Renderer$2.prototype, Events, {
+_.extend(Renderer.prototype, Events, {
 
-  constructor: Renderer$2,
+  constructor: Renderer,
 
   /**
    * @name Two.WebGLRenderer#setSize
@@ -15987,7 +16011,7 @@ _.extend(Two, {
   Collection: Collection,
   Events: Events,
   Group: Group,
-  Matrix: Matrix$1,
+  Matrix: Matrix,
   Path: Path,
   Registry: Registry,
   Shape: Shape,
@@ -16011,9 +16035,9 @@ _.extend(Two, {
   RoundedRectangle: RoundedRectangle,
   Star: Star,
 
-  CanvasRenderer: Renderer,
+  CanvasRenderer: Renderer$2,
   SVGRenderer: Renderer$1,
-  WebGLRenderer: Renderer$2,
+  WebGLRenderer: Renderer,
 
   Commands: Commands,
 

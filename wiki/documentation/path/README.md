@@ -1504,7 +1504,7 @@ Orient the vertices of the shape to the center of the path.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L800)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L801)
 
 </div>
 
@@ -1545,7 +1545,7 @@ Remove self from the scene / parent.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L822)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L823)
 
 </div>
 
@@ -1608,7 +1608,7 @@ Return an object with top, left, right, bottom, width, and height parameters of 
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L839)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L840)
 
 </div>
 
@@ -1670,7 +1670,7 @@ Given a float `t` from 0 to 1, return a point or assign a passed `obj`'s coordin
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L937)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L942)
 
 </div>
 
@@ -1711,7 +1711,7 @@ Based on closed / curved and sorting of vertices plot where all points should be
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L1076)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L1081)
 
 </div>
 
@@ -1769,7 +1769,7 @@ Insert a [Two.Anchor](/documentation/anchor) at the midpoint between every item 
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L1097)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L1102)
 
 </div>
 
