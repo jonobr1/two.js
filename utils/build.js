@@ -7,7 +7,6 @@ var terser = require('rollup-plugin-terser').terser;
 
 var publishDateString = (new Date()).toISOString();
 var config = getJSON(path.resolve(__dirname, '../package.json'));
-var outputOptions = { name: 'Two' };
 
 async function generateOutput(bundle, outputName, outputOptions) {
 

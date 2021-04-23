@@ -1,4 +1,3 @@
-import Collection from './collection.js';
 import Events from './events.js';
 import { getComputedMatrix } from './utils/math.js';
 import _ from './utils/underscore.js';
@@ -865,7 +864,6 @@ _.extend(Group.prototype, Shape.prototype, {
 
       var bd = beginning * length;
       var ed = ending * length;
-      var distance = (ed - bd);
 
       for (i = 0; i < this.children.length; i++) {
 

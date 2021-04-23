@@ -151,7 +151,6 @@ _.extend(ImageSequence, {
 
       set: function(textures) {
 
-        var updateTextures = this._renderer.flagTextures;
         var bindTextures = this._renderer.bindTextures;
         var unbindTextures = this._renderer.unbindTextures;
 

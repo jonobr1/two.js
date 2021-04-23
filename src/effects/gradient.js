@@ -88,7 +88,6 @@ _.extend(Gradient, {
 
       set: function(stops) {
 
-        var updateStops = this._renderer.flagStops;
         var bindStops = this._renderer.bindStops;
         var unbindStops = this._renderer.unbindStops;
 

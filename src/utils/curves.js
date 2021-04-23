@@ -4,7 +4,6 @@ import _ from './underscore.js';
 
 import Anchor from '../anchor.js';
 import Vector from '../vector.js';
-import Matrix from '../matrix.js';
 import Constants from '../constants.js';
 
 var HALF_PI = Math.PI / 2;
@@ -225,7 +224,7 @@ var getCurveBoundingBox = function(x1, y1, x2, y2, x3, y3, x4, y4) {
       }
   }
 
-  var x, y, j = tvalues.length;
+  var j = tvalues.length;
   var jlen = j;
   var mt;
 
@@ -394,10 +393,6 @@ var getReflection = function(a, b, relative) {
  * @param {Boolean} [ccw=false] - Set path traversal to counter-clockwise
  */
 var getAnchorsFromArcData = function(center, xAxisRotation, rx, ry, ts, td, ccw) {
-
-  var matrix = new Matrix()
-    .translate(center.x, center.y)
-    .rotate(xAxisRotation);
 
   var resolution = Constants.Resolution;
 

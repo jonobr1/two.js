@@ -528,7 +528,7 @@ _.extend(Text.prototype, Shape.prototype, {
    */
   getBoundingClientRect: function(shallow) {
 
-    var matrix, l, x, y, i, v, a, b, c, d;
+    var matrix, a, b, c, d;
     var left, right, top, bottom;
 
     // TODO: Update this to not __always__ update. Just when it needs to.

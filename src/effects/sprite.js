@@ -363,7 +363,7 @@ _.extend(Sprite.prototype, Rectangle.prototype, {
     var rows = this._rows;
 
     var width, height, elapsed, amount, duration;
-    var index, iw, ih, isRange, frames;
+    var index, iw, ih, frames;
 
     if (this._flagColumns || this._flagRows) {
       this._amount = this._columns * this._rows;

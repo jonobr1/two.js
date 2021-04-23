@@ -482,8 +482,6 @@ QUnit.test('Children adding and removing', function(assert) {
   var group1 = new Two.Group();
   var group2 = new Two.Group();
   var group3 = new Two.Group();
-  var group4 = new Two.Group();
-  var group5 = new Two.Group();
 
   var poly1 = new Two.Path([new Two.Vector(0, 0)]);
   var poly2 = new Two.Path([new Two.Vector(0, 0)]);

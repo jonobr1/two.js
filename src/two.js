@@ -9,7 +9,6 @@ import defineGetterSetter from './utils/get-set.js';
 import interpretSVG from './utils/interpret-svg.js';
 import * as math from './utils/math.js';
 import Commands from './utils/path-commands.js';
-import root from './utils/root.js';
 import _ from './utils/underscore.js';
 import xhr from './utils/xhr.js';
 

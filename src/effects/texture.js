@@ -326,7 +326,6 @@ _.extend(Texture, {
    */
   load: function(texture, callback) {
 
-    var src = texture.src;
     var image = texture.image;
     var tag = Texture.getTag(image);
 

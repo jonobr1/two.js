@@ -1,4 +1,4 @@
-import { NumArray, toFixed, getComputedMatrix, setMatrix } from './utils/math.js';
+import { NumArray, toFixed, setMatrix } from './utils/math.js';
 import Events from './events.js';
 import _ from './utils/underscore.js';
 

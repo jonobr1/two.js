@@ -24,7 +24,7 @@ import Texture from './effects/texture.js';
 
 // Constants
 
-var min = Math.min, max = Math.max, round = Math.round,
+var min = Math.min, max = Math.max,
   ceil = Math.ceil, floor = Math.floor;
 
 /**
@@ -417,7 +417,6 @@ _.extend(Path, {
 
       set: function(vertices) {
 
-        var updateVertices = this._renderer.flagVertices;
         var bindVertices = this._renderer.bindVertices;
         var unbindVertices = this._renderer.unbindVertices;
 
@@ -845,7 +844,7 @@ _.extend(Path.prototype, Shape.prototype, {
    * @description Return an object with top, left, right, bottom, width, and height parameters of the path.
    */
   getBoundingClientRect: function(shallow) {
-    var matrix, border, l, x, y, i, v0, v1, c0x, c0y, c1x, c1y, a, b, c, d;
+    var matrix, border, l, i, v0, v1, c0x, c0y, c1x, c1y, a, b, c, d;
 
     var left = Infinity, right = -Infinity,
         top = Infinity, bottom = -Infinity;
@@ -1257,7 +1256,6 @@ _.extend(Path.prototype, Shape.prototype, {
       }
 
       var l = this._collection.length;
-      var last = l - 1;
       var closed = this._closed;
 
       var beginning = Math.min(this._beginning, this._ending);

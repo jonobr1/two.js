@@ -234,7 +234,7 @@
 
       for (var i in a) {
 
-        var check, isElse = false;
+        var check;
 
         if (Array.isArray(a[i])) {
           check = Utils.shapeEquals(a[i], Array.prototype.slice.call(q[i]));
