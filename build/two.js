@@ -2150,7 +2150,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2021-04-23T14:49:23.113Z',
+    PublishDate: '2021-04-23T15:38:11.605Z',
 
     /**
      * @name Two.Identifier
@@ -2647,10 +2647,12 @@ SOFTWARE.
 
     Array.call(this);
 
-    if (arguments.length > 1) {
+    if (arguments[0] && Array.isArray(arguments[0])) {
+      if (arguments[0].length > 0) {
+        Array.prototype.push.apply(this, arguments[0]);
+      }
+    } else if (arguments.length > 0) {
       Array.prototype.push.apply(this, arguments);
-    } else if (arguments[0] && Array.isArray(arguments[0])) {
-      Array.prototype.push.apply(this, arguments[0]);
     }
 
   }
@@ -3154,7 +3156,7 @@ SOFTWARE.
    * @extends Two.Collection
    * @description A children collection which is accesible both by index and by object `id`.
    */
-  function Children() {
+  function Children(children) {
 
     Collection.apply(this, arguments);
 
@@ -3169,9 +3171,12 @@ SOFTWARE.
      */
     this.ids = {};
 
+    this.attach(
+      Array.isArray(children) ? children : Array.prototype.slice.call(arguments)
+    );
+
     this.on(Events.Types.insert, this.attach);
     this.on(Events.Types.remove, this.detach);
-    Children.prototype.attach.apply(this, arguments);
 
   }
 
@@ -3189,7 +3194,10 @@ SOFTWARE.
      */
     attach: function(children) {
       for (var i = 0; i < children.length; i++) {
-        this.ids[children[i].id] = children[i];
+        var child = children[i];
+        if (child && child.id) {
+          this.ids[child.id] = child;
+        }
       }
       return this;
     },
@@ -3414,12 +3422,19 @@ SOFTWARE.
 
           if (this._children) {
             this._children.unbind();
+            if (this._children.length > 0) {
+              removeChildren(this._children);
+            }
           }
 
           this._children = new Children(children);
           this._children.bind(Events.Types.insert, insertChildren);
           this._children.bind(Events.Types.remove, removeChildren);
           this._children.bind(Events.Types.order, orderChildren);
+
+          if (children.length > 0) {
+            insertChildren(children);
+          }
 
         }
 
@@ -15331,12 +15346,10 @@ SOFTWARE.
       }
       this._lastFrame = now;
 
-      if (this.fit && !this.fit.attached) {
-
+      if (this.fit && this.fit.domElement && !this.fit.attached) {
           dom.bind(this.fit.domElement, 'resize', this.fit);
           this.fit.attached = true;
           this.fit();
-
       }
 
       var width = this.width;
