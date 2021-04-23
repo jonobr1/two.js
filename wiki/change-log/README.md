@@ -5,6 +5,9 @@ sidebarDepth: 2
 # Change Log
 
 ## Nightly
++ Improved `fitted` logic on instances of `Two`
++ Improved `Two.Children` and `Two.Collection` instantiation versatility
++ Improved `Two.Group.getBoundingClientRect`, `Two.Path.getBoundingClientRect`, and `Two.Text.getBoundingClientRect`
 + Improved higher level shapes', like `Two.Circle`, ability to handle zeroed out arguments
 
 ## April 2, 2021 [v0.7.4](https://github.com/jonobr1/two.js/releases/tag/v0.7.4)
