@@ -5,6 +5,7 @@ sidebarDepth: 2
 # Change Log
 
 ## Nightly
++ Improved `Two.Circle.beginning` & `Two.Circle.ending` behavior
 + Improved `fitted` logic on instances of `Two`
 + Improved `Two.Children` and `Two.Collection` instantiation versatility
 + Improved `Two.Group.getBoundingClientRect`, `Two.Path.getBoundingClientRect`, and `Two.Text.getBoundingClientRect`
