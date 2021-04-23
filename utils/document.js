@@ -11,11 +11,6 @@ var template = _.template(
   )
 );
 
-var alphabet = [
-  'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
-  'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
-];
-
 _.each(sourceFiles, function(file) {
 
   var sourceFile = path.resolve(__dirname, '../' + file);
@@ -92,24 +87,7 @@ _.each(sourceFiles, function(file) {
 
 });
 
-function sortByFunctionThenAlphabetical(a, b) {
-
-  var isFunctionA = /function/i.test(a.kind);
-  var isFunctionB = /function/i.test(b.kind);
-
-  if (!isFunctionA && isFunctionB) return - 1;
-  if (isFunctionA === isFunctionB) return 0;
-  // if (isFunctionA === isFunctionB) {
-  //   var ida = alphabet.indexOf(a.name[0]);
-  //   var idb = alphabet.indexOf(b.name[0]);
-  //   return ida - idb;
-  // }
-  if (isFunctionA && !isFunctionB) return 1;
-
-}
-
 function getRoot(citations) {
-  var result = null;
   var list = citations.slice(0);
   for (var i = 0; i < list.length; i++) {
     var citation = list[i];

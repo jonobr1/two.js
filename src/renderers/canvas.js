@@ -123,7 +123,7 @@ var canvas = {
 
       var matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter,
           closed, commands, length, last, next, prev, a, b, c, d, ux, uy, vx, vy,
-          ar, bl, br, cl, x, y, mask, clip, defaultMatrix, isOffset, dashes;
+          ar, bl, br, cl, x, y, clip, defaultMatrix, isOffset, dashes;
 
       // mask = this._mask;
       clip = this._clip;
@@ -636,7 +636,6 @@ var canvas = {
       this._update();
 
       var image = this.image;
-      var repeat;
 
       if (!this._renderer.effect || ((this._flagLoaded || this._flagImage || this._flagVideo || this._flagRepeat) && this.loaded)) {
         this._renderer.effect = ctx.createPattern(this.image, this._repeat);
@@ -948,10 +947,6 @@ function svgAngle(ux, uy, vx, vy) {
 
   return ang;
 
-}
-
-function resetTransform(ctx) {
-  ctx.setTransform(1, 0, 0, 1, 0, 0);
 }
 
 export default Renderer;

@@ -442,7 +442,7 @@ var read = {
     }
 
     var svg = read.g.call(this, node);
-    var viewBox = node.getAttribute('viewBox');
+    // var viewBox = node.getAttribute('viewBox');
 
     svg.defs = defs;  // Export out the <defs /> for later use
     // Utils.applySvgViewBox(svg, viewBox);
@@ -495,7 +495,7 @@ var read = {
 
   g: function(node, parentStyles) {
 
-    var styles, attrs;
+    var styles;
     var group = new Group();
 
     applySvgAttributes.call(this, node, group, parentStyles);
@@ -968,8 +968,6 @@ var read = {
       return read['rounded-rect'](node);
     }
 
-    var x = parseFloat(node.getAttribute('x')) || 0;
-    var y = parseFloat(node.getAttribute('y')) || 0;
     var width = parseFloat(node.getAttribute('width'));
     var height = parseFloat(node.getAttribute('height'));
 
@@ -993,8 +991,6 @@ var read = {
 
   'rounded-rect': function(node, parentStyles) {
 
-    var x = parseFloat(node.getAttribute('x')) || 0;
-    var y = parseFloat(node.getAttribute('y')) || 0;
     var rx = parseFloat(node.getAttribute('rx')) || 0;
     var ry = parseFloat(node.getAttribute('ry')) || 0;
 

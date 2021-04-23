@@ -28,8 +28,6 @@ function Star(ox, oy, ir, or, sides) {
     sides = 5;
   }
 
-  var length = sides * 2;
-
   Path.call(this);
   this.closed = true;
   this.automatic = false;

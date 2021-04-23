@@ -22,7 +22,7 @@
       ratio: deviceRatio
     });
 
-    var line = two.makeLine(0, 0, two.width, two.height);
+    two.makeLine(0, 0, two.width, two.height);
 
     two.update();
 
@@ -42,7 +42,7 @@
       ratio: deviceRatio
     });
 
-    var rect = two.makeRectangle(two.width / 2, two.height / 2, 100, 100);
+    two.makeRectangle(two.width / 2, two.height / 2, 100, 100);
 
     two.update();
 
@@ -62,7 +62,7 @@
       ratio: deviceRatio
     });
 
-    var ellipse = two.makeEllipse(two.width / 2, two.height / 2, 100, 100);
+    two.makeEllipse(two.width / 2, two.height / 2, 100, 100);
 
     two.update();
 
@@ -83,7 +83,7 @@
       ratio: deviceRatio
     });
 
-    var circle = two.makeCircle(two.width / 2, two.height / 2, 50);
+    two.makeCircle(two.width / 2, two.height / 2, 50);
 
     two.update();
 
@@ -111,7 +111,7 @@
       var y = i % 2 ? 25 : 75;
       points.push(new Two.Vector(x, y));
     }
-    var poly = two.makePath(points, true);
+    two.makePath(points, true);
 
     two.update();
 
@@ -139,7 +139,7 @@
       var y = i % 2 ? 25 : 75;
       points.push(new Two.Vector(x, y));
     }
-    var poly = two.makeCurve(points, true);
+    two.makeCurve(points, true);
 
     two.update();
 
@@ -251,14 +251,10 @@
 
       two.update();
 
-      var elem = two.renderer.domElement.querySelector('#' + sequence.id);
-      var id = sequence.textures[sequence.index].id;
-
       QUnit.Utils.compare.call(assert, './images/canvas/image-sequence-1' + suffix, two.renderer, 'Two.ImageSequence applied the correct texture properly.', function() {
 
         sequence.index = 7;
         texture = sequence.textures[sequence.index];
-        id = texture.id;
         texture._flagImage = true;
 
         texture.bind(Two.Events.Types.load, function() {

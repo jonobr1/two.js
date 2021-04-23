@@ -15,12 +15,6 @@ import Anchor from '../anchor.js';
  */
 function Line(x1, y1, x2, y2) {
 
-  var width = x2 - x1;
-  var height = y2 - y1;
-
-  var w2 = width / 2;
-  var h2 = height / 2;
-
   Path.call(this, [
       new Anchor(x1, y1),
       new Anchor(x2, y2)
