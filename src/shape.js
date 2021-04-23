@@ -21,7 +21,7 @@ function Shape() {
    * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `shape.renderer.elem`.
    */
   this.renderer = {
-    culling: true,
+    culling: false,
     suppressUpdate: false
   };
   this._renderer.flagMatrix = Shape.FlagMatrix.bind(this);
