@@ -140,7 +140,6 @@
 
       assert.equal(_.isEqual(answer, shape.getBoundingClientRect()), true, 'Two.Text.getBoundingClientRect properly calculates rotated shapes.');
 
-      console.log(JSON.stringify(shape.getBoundingClientRect()));
       QUnit.Utils.addElemToTest(assert.test, [two.renderer.domElement]);
 
     })();
