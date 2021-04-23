@@ -2138,13 +2138,13 @@ var Constants = {
    * @name Two.Version
    * @property {String} - The current working version of the library.
    */
-  Version: 'v0.7.1',
+  Version: 'v0.7.5',
 
   /**
    * @name Two.PublishDate
    * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
    */
-  PublishDate: '2021-04-02T22:19:24.644Z',
+  PublishDate: '2021-04-23T14:49:23.113Z',
 
   /**
    * @name Two.Identifier

@@ -25,7 +25,7 @@ var Constants = {
    * @name Two.Version
    * @property {String} - The current working version of the library.
    */
-  Version: 'v0.7.1',
+  Version: '<%= version %>',
 
   /**
    * @name Two.PublishDate
