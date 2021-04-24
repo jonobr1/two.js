@@ -53,7 +53,7 @@ function LinearGradient(x1, y1, x2, y2, stops) {
 _.extend(LinearGradient, {
 
   /**
-   * @name Two.LinearGradient#Stop
+   * @name Two.LinearGradient.Stop
    * @see {@link Two.Stop}
    */
   Stop: Stop,

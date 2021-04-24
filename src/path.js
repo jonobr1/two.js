@@ -1408,7 +1408,7 @@ function contains(path, t) {
 }
 
 /**
- * @protected
+ * @private
  * @param {Two.Path} path - The path to analyze against.
  * @param {Number} target - The target length at which to find an anchor.
  * @returns {Number}

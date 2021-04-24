@@ -42,7 +42,7 @@ _.extend(Registry.prototype, {
    * @name Two.Registry#get
    * @function
    * @param {String} id - A unique identifier.
-   * @returns The associated value. If unavailable then `undefined` is returned.
+   * @returns {?Object} The associated value. If unavailable then `undefined` is returned.
    * @description Get a registered value by its `id`.
    */
   get: function(id) {

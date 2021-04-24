@@ -131,7 +131,7 @@ declare namespace Two {
          * @property undefined - An ordered list of {@link Two.Stop}s for rendering the gradient.
          */
         stops: {};
-        Stop: any;
+        static Stop: any;
         /**
          * @property undefined - A list of properties that are on every {@link Two.Gradient}.
          */
@@ -258,7 +258,7 @@ declare namespace Two {
          * @property undefined - The x and y value for where the second end point is placed on the canvas.
          */
         right: {};
-        Stop: any;
+        static Stop: any;
         /**
          * Convenience function to apply observable qualities of a {@link Two.LinearGradient} to any object. Handy if you'd like to extend the {@link Two.LinearGradient} class on a custom class.
          * @param object - The object to make observable.
@@ -296,7 +296,7 @@ declare namespace Two {
          * @property undefined - The x and y value for where the focal point of the radial gradient is.
          */
         focal: {};
-        Stop: any;
+        static Stop: any;
         /**
          * @property undefined - A list of properties that are on every {@link Two.RadialGradient}.
          */
@@ -1867,13 +1867,6 @@ declare namespace Two {
 }
 
 /**
- * Return the id of an anchor based on a target length.
- * @param path - The path to analyze against.
- * @param target - The target length at which to find an anchor.
- */
-declare function getIdByLength(path: Two.Path, target: number): number;
-
-/**
  * The entrypoint for Two.js. Instantiate a `new Two` in order to setup a scene to render to. `Two` is also the publicly accessible namespace that all other sub-classes, functions, and utilities attach to.
  * @param [options.fullscreen = false] - Set to `true` to automatically make the stage adapt to the width and height of the parent document. This parameter overrides `width` and `height` parameters if set to `true`. This overrides `options.fitted` as well.
  * @param [options.fitted = false] - = Set to `true` to automatically make the stage adapt to the width and height of the parent element. This parameter overrides `width` and `height` parameters if set to `true`.
@@ -1883,7 +1876,7 @@ declare function getIdByLength(path: Two.Path, target: number): number;
  * @param [options.autostart = false] - Set to `true` to add the instance to draw on `requestAnimationFrame`. This is a convenient substitute for {@link Two#play}.
  * @param [options.domElement] - The canvas or SVG element to draw into. This overrides the `options.type` argument.
  */
-declare class Two {
+declare class Two extends Two.Events {
     constructor(options?: {
         fullscreen?: boolean;
         fitted?: boolean;
@@ -1935,6 +1928,40 @@ declare class Two {
      */
     fit(): void;
     /**
+     * @property type - A string representing which type of renderer the instance has instantiated.
+     */
+    type: {
+        type: string;
+    };
+    /**
+     * @property undefined - The instantiated rendering class for the instance. For a list of possible rendering types check out Two.Types.
+     */
+    renderer: {};
+    /**
+     * @property undefined - The base level {@link Two.Group} which houses all objects for the instance. Because it is a {@link Two.Group} transformations can be applied to it that will affect all objects in the instance. This is handy as a makeshift inverted camera.
+     */
+    scene: {};
+    /**
+     * @property undefined - The width of the instance's dom element.
+     */
+    width: {};
+    /**
+     * @property undefined - The height of the instance's dom element.
+     */
+    height: {};
+    /**
+     * @property undefined - An integer representing how many frames have elapsed.
+     */
+    frameCount: {};
+    /**
+     * @property undefined - A number representing how much time has elapsed since the last frame in milliseconds.
+     */
+    timeDelta: {};
+    /**
+     * @property undefined - A boolean representing whether or not the instance is being updated through the automatic `requestAnimationFrame`.
+     */
+    playing: {};
+    /**
      * Shorthand method to append your instance of Two.js to the `document`.
      * @param elem - The DOM element to append the Two.js stage to.
      */
@@ -1955,11 +1982,11 @@ declare class Two {
     /**
      * Update positions and calculations in one pass before rendering. Then render to the canvas.
      */
-    update: any;
+    update(): void;
     /**
      * Render all drawable and visible objects of the scene.
      */
-    render: any;
+    render(): void;
     /**
      * A shorthand method to add specific Two.js objects to the scene.
      * @param [objects] - An array of Two.js objects. Alternatively can add objects as individual arguments.
@@ -1971,7 +1998,7 @@ declare class Two {
      */
     remove(objects?: Two.Shape[] | Two.Shape): void;
     /**
-     * Remove all all Two.js objects from the scene.
+     * Removes all objects from the instance's scene. If you intend to have the browser garbage collect this, don't forget to delete the references in your application as well.
      */
     clear(): void;
     /**

@@ -77,6 +77,7 @@ var lerp = function(a, b, t) {
 
 /**
  * @name Two.Utils.mod
+ * @function
  * @param {Number} v - The value to modulo
  * @param {Number} l - The value to modulo by
  * @returns {Number}

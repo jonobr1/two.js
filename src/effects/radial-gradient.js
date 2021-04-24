@@ -66,7 +66,7 @@ function RadialGradient(cx, cy, r, stops, fx, fy) {
 _.extend(RadialGradient, {
 
   /**
-   * @name Two.RadialGradient#Stop
+   * @name Two.RadialGradient.Stop
    * @see {@link Two.Stop}
    */
   Stop: Stop,

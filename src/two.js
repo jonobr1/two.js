@@ -164,6 +164,54 @@ _.extend(Two.prototype, Events, {
   constructor: Two,
 
   /**
+   * @name Two#type
+   * @property {String} type - A string representing which type of renderer the instance has instantiated.
+   */
+  type: '',
+
+  /**
+   * @name Two#renderer
+   * @property {(Two.SVGRenderer|Two.CanvasRenderer|Two.WebGLRenderer)} - The instantiated rendering class for the instance. For a list of possible rendering types check out Two.Types.
+   */
+  renderer: null,
+
+  /**
+   * @name Two#scene
+   * @property {Two.Group} - The base level {@link Two.Group} which houses all objects for the instance. Because it is a {@link Two.Group} transformations can be applied to it that will affect all objects in the instance. This is handy as a makeshift inverted camera.
+   */
+  scene: null,
+
+  /**
+   * @name Two#width
+   * @property {Number} - The width of the instance's dom element.
+   */
+  width: 0,
+
+  /**
+   * @name Two#height
+   * @property {Number} - The height of the instance's dom element.
+   */
+  height: 0,
+
+  /**
+   * @name Two#frameCount
+   * @property {Number} - An integer representing how many frames have elapsed.
+   */
+  frameCount: 0,
+
+  /**
+   * @name Two#timeDelta
+   * @property {Number} - A number representing how much time has elapsed since the last frame in milliseconds.
+   */
+  timeDelta: 0,
+
+  /**
+   * @name Two#playing
+   * @property {Boolean} - A boolean representing whether or not the instance is being updated through the automatic `requestAnimationFrame`.
+   */
+  playing: false,
+
+  /**
    * @name Two#appendTo
    * @function
    * @param {Element} elem - The DOM element to append the Two.js stage to.
@@ -261,6 +309,7 @@ _.extend(Two.prototype, Events, {
 
   /**
    * @name Two#update
+   * @function
    * @fires Two.Events.Types.update event
    * @description Update positions and calculations in one pass before rendering. Then render to the canvas.
    * @nota-bene This function is called automatically if using {@link Two#play} or the `autostart` parameter in construction.
@@ -298,6 +347,7 @@ _.extend(Two.prototype, Events, {
 
   /**
    * @name Two#render
+   * @function
    * @fires render
    * @description Render all drawable and visible objects of the scene.
    */
@@ -350,7 +400,7 @@ _.extend(Two.prototype, Events, {
   /**
    * @name Two#clear
    * @function
-   * @description Remove all all Two.js objects from the scene.
+   * @description Removes all objects from the instance's scene. If you intend to have the browser garbage collect this, don't forget to delete the references in your application as well.
    */
   clear: function() {
 

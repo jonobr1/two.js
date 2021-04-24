@@ -22,7 +22,7 @@
     "docs:dev": "vuepress dev wiki",
     "docs:build": "vuepress build wiki",
     "lint": "eslint . --fix",
-    "types": "jsdoc -t node_modules/tsd-jsdoc/dist -r src -d ."
+    "types": "jsdoc -c ./jsdoc-conf.json"
   },
   "directories": {
     "doc": "wiki/documentation",
@@ -62,12 +62,13 @@
     "gzip-size": "^5.1.1",
     "jsdoc": "^3.6.6",
     "jsdoc-api": "^6.0.0",
+    "jsdoc-export-default-interop": "^0.3.1",
     "qunit": "^2.11.2",
     "resemblejs": "^3.2.5",
     "rollup": "^2.26.11",
     "rollup-plugin-terser": "^7.0.2",
     "tsd-jsdoc": "^2.5.0",
-    "underscore": "^1.11.0",
+    "underscore": "^1.13.0",
     "vuepress": "^1.5.4"
   },
   "autoupdate": {

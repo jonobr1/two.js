@@ -55,7 +55,7 @@ function Gradient(stops) {
 _.extend(Gradient, {
 
   /**
-   * @name Two.Gradient#Stop
+   * @name Two.Gradient.Stop
    * @see {@link Two.Stop}
    */
   Stop: Stop,

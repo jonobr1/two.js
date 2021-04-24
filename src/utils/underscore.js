@@ -53,7 +53,7 @@ var _ = {
     return obj;
   },
   /**
-   * @name Utils.performance
+   * @name Two.Utils.performance
    * @property {Date} - A special `Date` like object to get the current millis of the session. Used internally to calculate time between frames.
    * e.g: `Utils.performance.now() // milliseconds since epoch`
    */
