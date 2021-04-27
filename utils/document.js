@@ -11,11 +11,6 @@ var template = _.template(
   )
 );
 
-var alphabet = [
-  'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
-  'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
-];
-
 _.each(sourceFiles, function(file) {
 
   var sourceFile = path.resolve(__dirname, '../' + file);
@@ -61,7 +56,7 @@ _.each(sourceFiles, function(file) {
   };
 
   _.each(citations, function(citation) {
-    if (/\#/i.test(citation.longname)) {
+    if (/#/i.test(citation.longname)) {
       citationsByScope.instance.push(citation);
     } else {
       citationsByScope.static.push(citation);
@@ -92,24 +87,7 @@ _.each(sourceFiles, function(file) {
 
 });
 
-function sortByFunctionThenAlphabetical(a, b) {
-
-  var isFunctionA = /function/i.test(a.kind);
-  var isFunctionB = /function/i.test(b.kind);
-
-  if (!isFunctionA && isFunctionB) return - 1;
-  if (isFunctionA === isFunctionB) return 0;
-  // if (isFunctionA === isFunctionB) {
-  //   var ida = alphabet.indexOf(a.name[0]);
-  //   var idb = alphabet.indexOf(b.name[0]);
-  //   return ida - idb;
-  // }
-  if (isFunctionA && !isFunctionB) return 1;
-
-}
-
 function getRoot(citations) {
-  var result = null;
   var list = citations.slice(0);
   for (var i = 0; i < list.length; i++) {
     var citation = list[i];
@@ -150,7 +128,7 @@ function expandLink(object, property) {
 
   if (value) {
 
-    var regex = /\{\@link ([\w\d\:\/\?\-\.\#]*)\}/i;
+    var regex = /\{@link ([\w\d:/?\-.#]*)\}/i;
     var link = value.match(regex);
 
     if (link && link.length > 1) {
@@ -164,7 +142,7 @@ function expandLink(object, property) {
 
       } else {
 
-        var fragments = name.split(/[\.\#]/i);
+        var fragments = name.split(/[.#]/i);
 
         var directory = fragments[1] || '';
         var hash = fragments.length > 2 ? fragments.join('-') : '';

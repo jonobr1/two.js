@@ -13,11 +13,11 @@ var TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin;
  * @extends Two.Path
  * @param {Number} [x=0] - The x position of the star.
  * @param {Number} [y=0] - The y position of the star.
- * @param {Number} innerRadius - The inner radius value of the star.
- * @param {Number} outerRadius - The outer radius value of the star.
+ * @param {Number} [innerRadius=0] - The inner radius value of the star.
+ * @param {Number} [outerRadius=0] - The outer radius value of the star.
  * @param {Number} [sides=5] - The number of sides used to construct the star.
  */
-var Star = function(ox, oy, ir, or, sides) {
+function Star(ox, oy, ir, or, sides) {
 
   if (arguments.length <= 3) {
     or = ir;
@@ -28,8 +28,6 @@ var Star = function(ox, oy, ir, or, sides) {
     sides = 5;
   }
 
-  var length = sides * 2;
-
   Path.call(this);
   this.closed = true;
   this.automatic = false;
@@ -38,22 +36,36 @@ var Star = function(ox, oy, ir, or, sides) {
    * @name Two.Star#innerRadius
    * @property {Number} - The size of the inner radius of the star.
    */
-  this.innerRadius = ir;
+  if (typeof ir === 'number') {
+    this.innerRadius = ir;
+  }
+
   /**
    * @name Two.Star#outerRadius
    * @property {Number} - The size of the outer radius of the star.
    */
-  this.outerRadius = or;
+  if (typeof or === 'number') {
+    this.outerRadius = or;
+  }
+
   /**
    * @name Two.Star#sides
    * @property {Number} - The amount of sides the star has.
    */
-  this.sides = sides;
+  if (typeof sides === 'number') {
+    this.sides = sides;
+  }
 
   this._update();
-  this.translation.set(ox, oy);
 
-};
+  if (typeof ox === 'number') {
+    this.translation.x = ox;
+  }
+  if (typeof oy === 'number') {
+    this.translation.y = oy;
+  }
+
+}
 
 _.extend(Star, {
 
@@ -79,6 +91,8 @@ _.extend(Star, {
 });
 
 _.extend(Star.prototype, Path.prototype, {
+
+  constructor: Star,
 
   /**
    * @name Two.Star#_flagInnerRadius
@@ -118,8 +132,6 @@ _.extend(Star.prototype, Path.prototype, {
    */
   _sides: 0,
 
-  constructor: Star,
-
   /**
    * @name Two.Star#_update
    * @function
@@ -155,8 +167,7 @@ _.extend(Star.prototype, Path.prototype, {
           this.vertices[i].set(x, y);
         }
 
-        this.vertices[i].command = i === 0
-          ? Commands.move : Commands.line;
+        this.vertices[i].command = i === 0 ? Commands.move : Commands.line;
 
       }
 
@@ -201,6 +212,8 @@ _.extend(Star.prototype, Path.prototype, {
     clone.translation.copy(this.translation);
     clone.rotation = this.rotation;
     clone.scale = this.scale;
+    clone.skewX = this.skewX;
+    clone.skewY = this.skewY;
 
     if (this.matrix.manual) {
       clone.matrix.copy(this.matrix);

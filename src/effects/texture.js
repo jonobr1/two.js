@@ -28,13 +28,19 @@ if (root.document) {
  * @name Two.Texture
  * @class
  * @extends Two.Shape
- * @param {String|ImageElement} [src] - The URL path to an image file or an `<img />` element.
+ * @param {String|HTMLImageElement} [src] - The URL path to an image file or an `<img />` element.
  * @param {Function} [callback] - An optional callback function once the image has been loaded.
  * @description Fundamental to work with bitmap data, a.k.a. pregenerated imagery, in Two.js. Supported formats include jpg, png, gif, and tiff. See {@link Two.Texture.RegularExpressions} for a full list of supported formats.
  */
-var Texture = function(src, callback) {
+function Texture(src, callback) {
 
-  this._renderer = {};
+  /**
+   * @name Two.Texture#renderer
+   * @property {Object}
+   * @description Object access to store relevant renderer specific variables. Warning: manipulating this object can create unintended consequences.
+   * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `shape.renderer.elem`.
+   */
+  this.renderer = {};
   this._renderer.type = 'texture';
   this._renderer.flagOffset = Texture.FlagOffset.bind(this);
   this._renderer.flagScale = Texture.FlagScale.bind(this);
@@ -97,7 +103,7 @@ var Texture = function(src, callback) {
 
   this._update();
 
-};
+}
 
 _.extend(Texture, {
 
@@ -156,7 +162,7 @@ _.extend(Texture, {
   /**
    * @name Two.Texture.getTag
    * @property {Function} - Retrieves the tag name of an image, video, or canvas node.
-   * @param {ImageElement} - The image to infer the tag name from.
+   * @param {HTMLImageElement} - The image to infer the tag name from.
    * @returns {String} - Returns the tag name of an image, video, or canvas node.
    */
   getTag: function(image) {
@@ -169,7 +175,7 @@ _.extend(Texture, {
    * @name Two.Texture.getImage
    * @property {Function} - Convenience function to set {@link Two.Texture#image} properties with canonincal versions set in {@link Two.Texture.ImageRegistry}.
    * @param {String} src - The URL path of the image.
-   * @returns {ImageElement} - Returns either a cached version of the image or a new one that is registered in {@link Two.Texture.ImageRegistry}.
+   * @returns {HTMLImageElement} - Returns either a cached version of the image or a new one that is registered in {@link Two.Texture.ImageRegistry}.
    */
   getImage: function(src) {
 
@@ -320,7 +326,6 @@ _.extend(Texture, {
    */
   load: function(texture, callback) {
 
-    var src = texture.src;
     var image = texture.image;
     var tag = Texture.getTag(image);
 
@@ -439,11 +444,27 @@ _.extend(Texture, {
       }
     });
 
+    Object.defineProperty(object, 'renderer', {
+
+      enumerable: false,
+
+      get: function() {
+        return this._renderer;
+      },
+
+      set: function(obj) {
+        this._renderer = obj;
+      }
+
+    });
+
   }
 
 });
 
 _.extend(Texture.prototype, Events, Shape.prototype, {
+
+  constructor: Texture,
 
   /**
    * @name Two.Texture#_flagSrc
@@ -535,8 +556,6 @@ _.extend(Texture.prototype, Events, Shape.prototype, {
    * @see {@link Two.Texture#offset}
    */
   _offset: null,
-
-  constructor: Texture,
 
   /**
    * @name Two.Texture#clone

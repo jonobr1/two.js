@@ -15,12 +15,12 @@ import Texture from './texture.js';
  * @param {String|Two.Texture} [path] - The URL path or {@link Two.Texture} to be used as the bitmap data displayed on the sprite.
  * @param {Number} [ox=0] - The initial `x` position of the Two.Sprite.
  * @param {Number} [oy=0] - The initial `y` position of the Two.Sprite.
- * @param {Integer} [cols=1] - The number of columns the sprite contains.
- * @param {Integer} [rows=1] - The number of rows the sprite contains.
- * @param {Integer} [frameRate=0] - The frame rate at which the partitions of the image should playback at.
+ * @param {Number} [cols=1] - The number of columns the sprite contains.
+ * @param {Number} [rows=1] - The number of rows the sprite contains.
+ * @param {Number} [frameRate=0] - The frame rate at which the partitions of the image should playback at.
  * @description A convenient package to display still or animated images through a tiled image source. For more information on the principals of animated imagery through tiling see [Texture Atlas](https://en.wikipedia.org/wiki/Texture_atlas) on Wikipedia.
  */
-var Sprite = function(path, ox, oy, cols, rows, frameRate) {
+function Sprite(path, ox, oy, cols, rows, frameRate) {
 
   // Not using default constructor of Rectangle due to odd `beginning` / `ending` behavior.
   // See: https://github.com/jonobr1/two.js/issues/383
@@ -51,7 +51,7 @@ var Sprite = function(path, ox, oy, cols, rows, frameRate) {
 
   /**
    * @name Two.Sprite#columns
-   * @property {Integer} - The number of columns to split the texture into. Defaults to `1`.
+   * @property {Number} - The number of columns to split the texture into. Defaults to `1`.
    */
   if (typeof cols === 'number') {
     this.columns = cols;
@@ -59,7 +59,7 @@ var Sprite = function(path, ox, oy, cols, rows, frameRate) {
 
   /**
    * @name Two.Sprite#rows
-   * @property {Integer} - The number of rows to split the texture into. Defaults to `1`.
+   * @property {Number} - The number of rows to split the texture into. Defaults to `1`.
    */
   if (typeof rows === 'number') {
     this.rows = rows;
@@ -67,7 +67,7 @@ var Sprite = function(path, ox, oy, cols, rows, frameRate) {
 
   /**
    * @name Two.Sprite#frameRate
-   * @property {Integer} - The number of frames to animate against per second. Defaults to `0` for non-animated sprites.
+   * @property {Number} - The number of frames to animate against per second. Defaults to `0` for non-animated sprites.
    */
   if (typeof frameRate === 'number') {
     this.frameRate = frameRate;
@@ -75,11 +75,11 @@ var Sprite = function(path, ox, oy, cols, rows, frameRate) {
 
   /**
    * @name Two.Sprite#index
-   * @property {Integer} - The index of the current tile of the sprite to display. Defaults to `0`.
+   * @property {Number} - The index of the current tile of the sprite to display. Defaults to `0`.
    */
   this.index = 0;
 
-};
+}
 
 _.extend(Sprite, {
 
@@ -107,6 +107,8 @@ _.extend(Sprite, {
 });
 
 _.extend(Sprite.prototype, Rectangle.prototype, {
+
+  constructor: Sprite,
 
   /**
    * @name Two.Sprite#_flagTexture
@@ -148,7 +150,7 @@ _.extend(Sprite.prototype, Rectangle.prototype, {
   /**
    * @name Two.Sprite#_amount
    * @private
-   * @property {Integer} - Number of frames for a given {@link Two.Sprite}.
+   * @property {Number} - Number of frames for a given {@link Two.Sprite}.
    */
   _amount: 1,
 
@@ -176,14 +178,14 @@ _.extend(Sprite.prototype, Rectangle.prototype, {
   /**
    * @name Two.Sprite#_firstFrame
    * @private
-   * @property {Integer} - The frame the {@link Two.Sprite} should start with.
+   * @property {Number} - The frame the {@link Two.Sprite} should start with.
    */
   _firstFrame: 0,
 
   /**
    * @name Two.Sprite#_lastFrame
    * @private
-   * @property {Integer} - The frame the {@link Two.Sprite} should end with.
+   * @property {Number} - The frame the {@link Two.Sprite} should end with.
    */
   _lastFrame: 0,
 
@@ -227,7 +229,7 @@ _.extend(Sprite.prototype, Rectangle.prototype, {
   /**
    * @name Two.Sprite#_index
    * @private
-   * @property {Integer} - The current frame the {@link Two.Sprite} is currently displaying.
+   * @property {Number} - The current frame the {@link Two.Sprite} is currently displaying.
    */
   _index: 0,
 
@@ -238,13 +240,11 @@ _.extend(Sprite.prototype, Rectangle.prototype, {
    */
   _origin: null,
 
-  constructor: Sprite,
-
   /**
    * @name Two.Sprite#play
    * @function
-   * @param {Integer} [firstFrame=0] - The index of the frame to start the animation with.
-   * @param {Integer} [lastFrame] - The index of the frame to end the animation with. Defaults to the last item in the {@link Two.Sprite#textures}.
+   * @param {Number} [firstFrame=0] - The index of the frame to start the animation with.
+   * @param {Number} [lastFrame] - The index of the frame to end the animation with. Defaults to the last item in the {@link Two.Sprite#textures}.
    * @param {Function} [onLastFrame] - Optional callback function to be triggered after playing the last frame. This fires multiple times when the sprite is looped.
    * @description Initiate animation playback of a {@link Two.Sprite}.
    */
@@ -363,7 +363,7 @@ _.extend(Sprite.prototype, Rectangle.prototype, {
     var rows = this._rows;
 
     var width, height, elapsed, amount, duration;
-    var index, iw, ih, isRange, frames;
+    var index, iw, ih, frames;
 
     if (this._flagColumns || this._flagRows) {
       this._amount = this._columns * this._rows;

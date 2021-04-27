@@ -11,7 +11,7 @@
 	},
 	"rules": {
 		"semi": ["error", "always"],
-		"no-unused-vars": "off"
+		"no-unused-vars": ["error", {"args": "none"}]
 	},
 	"overrides": [
 		{
@@ -25,7 +25,7 @@
 			}
 		},
 		{
-			"files": ["tests/**"],
+			"files": ["tests/**", "extras/js/**"],
 			"globals": {
 				"QUnit": "writable",
 				"resemble": "writable",

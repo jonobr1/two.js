@@ -50,10 +50,10 @@ SOFTWARE.
 
   var root$1 = root;
 
-  var Matrix;
+  var Matrix$1;
 
   /**
-   * @name Utils.decomposeMatrix
+   * @name Two.Utils.decomposeMatrix
    * @function
    * @param {Two.Matrix} matrix - The matrix to decompose.
    * @returns {Object} An object containing relevant skew values.
@@ -76,11 +76,11 @@ SOFTWARE.
   };
 
   var setMatrix = function(M) {
-    Matrix = M;
+    Matrix$1 = M;
   };
 
   /**
-   * @name Utils.getComputedMatrix
+   * @name Two.Utils.getComputedMatrix
    * @function
    * @param {Two.Shape} object - The Two.js object that has a matrix property to calculate from.
    * @param {Two.Matrix} [matrix] - The matrix to apply calculated transformations to if available.
@@ -89,7 +89,7 @@ SOFTWARE.
    */
   var getComputedMatrix = function(object, matrix) {
 
-    matrix = (matrix && matrix.identity()) || new Matrix();
+    matrix = (matrix && matrix.identity()) || new Matrix$1();
     var parent = object, matrices = [];
 
     while (parent && parent._matrix) {
@@ -113,7 +113,7 @@ SOFTWARE.
   };
 
   /**
-   * @name Utils.lerp
+   * @name Two.Utils.lerp
    * @function
    * @param {Number} a - Start value.
    * @param {Number} b - End value.
@@ -126,7 +126,7 @@ SOFTWARE.
   };
 
   /**
-   * @name Utils.mod
+   * @name Two.Utils.mod
    * @param {Number} v - The value to modulo
    * @param {Number} l - The value to modulo by
    * @returns {Number}
@@ -145,7 +145,7 @@ SOFTWARE.
   var NumArray = root$1.Float32Array || Array;
 
   /**
-  * @name Utils.toFixed
+  * @name Two.Utils.toFixed
   * @function
   * @param {Number} v - Any float
   * @returns {Number} That float trimmed to the third decimal place.
@@ -227,7 +227,170 @@ SOFTWARE.
     performance: ((root$1.performance && root$1.performance.now) ? root$1.performance : Date),
   };
 
-  var trigger = function(obj, events, args) {
+  /**
+   * @name Two.Events
+   * @class
+   * @description Object inherited by many Two.js objects in order to facilitate custom events.
+   */
+  var Events = {
+
+    /**
+     * @name Two.Events#on
+     * @function
+     * @param {String} [name] - The name of the event to bind a function to.
+     * @param {Function} [handler] - The function to be invoked when the event is dispatched.
+     * @description Call to add a listener to a specific event name.
+     */
+    on: addEventListener,
+
+    /**
+     * @name Two.Events#off
+     * @function
+     * @param {String} [name] - The name of the event intended to be removed.
+     * @param {Function} [handler] - The handler intended to be reomved.
+     * @description Call to remove listeners from a specific event. If only `name` is passed then all the handlers attached to that `name` will be removed. If no arguments are passed then all handlers for every event on the obejct are removed.
+     */
+    off: removeEventListener,
+
+    /**
+     * @name Two.Events#trigger
+     * @function
+     * @param {String} name - The name of the event to dispatch.
+     * @param arguments - Anything can be passed after the name and those will be passed on to handlers attached to the event in the order they are passed.
+     * @description Call to trigger a custom event. Any additional arguments passed after the name will be passed along to the attached handlers.
+     */
+    trigger: function(name) {
+      var scope = this;
+      if (!scope._events) return scope;
+      var args = Array.prototype.slice.call(arguments, 1);
+      var events = scope._events[name];
+      if (events) dispatch(scope, events, args);
+      return scope;
+    },
+
+    listen: function(obj, name, handler) {
+
+      var bound = this;
+
+      if (obj) {
+
+        var event = function () {
+          handler.apply(bound, arguments);
+        };
+
+        // Add references about the object that assigned this listener
+        event.obj = obj;
+        event.name = name;
+        event.handler = handler;
+
+        obj.on(name, event);
+
+      }
+
+      return bound;
+
+    },
+
+    ignore: function(obj, name, handler) {
+
+      var scope = this;
+      obj.off(name, handler);
+      return scope;
+
+    },
+
+    /**
+     * @name Two.Events.Types
+     * @property {Object} - Object of different types of Two.js specific events.
+     */
+    Types: {
+      play: 'play',
+      pause: 'pause',
+      update: 'update',
+      render: 'render',
+      resize: 'resize',
+      change: 'change',
+      remove: 'remove',
+      insert: 'insert',
+      order: 'order',
+      load: 'load'
+    }
+
+  };
+
+
+  /**
+   * @name Two.Events.bind
+   * @function
+   * @description Alias for {@link Two.Events.on}.
+   */
+  Events.bind = addEventListener;
+
+  /**
+   * @name Two.Events.unbind
+   * @function
+   * @description Alias for {@link Two.Events.off}.
+   */
+  Events.unbind = removeEventListener;
+
+  /**
+   * @private
+   * @returns {Two.Events} - Returns an instance of self for the purpose of chaining.
+   */
+  function addEventListener(name, handler) {
+
+    var scope = this;
+
+    scope._events || (scope._events = {});
+    var list = scope._events[name] || (scope._events[name] = []);
+
+    list.push(handler);
+
+    return scope;
+
+  }
+
+  /**
+   * @private
+   * @returns {Two.Events} - Returns an instance of self for the purpose of chaining.
+   */
+  function removeEventListener(name, handler) {
+
+    var scope = this;
+
+    if (!scope._events) {
+      return scope;
+    }
+    if (!name && !handler) {
+      scope._events = {};
+      return scope;
+    }
+
+    var names = name ? [name] : Object.keys(scope._events);
+    for (var i = 0, l = names.length; i < l; i++) {
+
+      name = names[i];
+      var list = scope._events[name];
+
+      if (list) {
+        var events = [];
+        if (handler) {
+          for (var j = 0, k = list.length; j < k; j++) {
+            var ev = list[j];
+            ev = ev.handler ? ev.handler : ev;
+            if (handler && handler !== ev) {
+              events.push(ev);
+            }
+          }
+        }
+        scope._events[name] = events;
+      }
+    }
+
+    return scope;
+  }
+
+  function dispatch(obj, events, args) {
     var method;
     switch (args.length) {
     case 0:
@@ -258,148 +421,7 @@ SOFTWARE.
     for (var i = 0; i < events.length; i++) {
       method(i);
     }
-  };
-
-  /**
-   * @name Utils.Events
-   * @interface
-   * @description Object inherited by many Two.js objects in order to facilitate custom events.
-   */
-  var Events = {
-
-    /**
-     * @name Utils.Events.on
-     * @function
-     * @param {String} name - The name of the event to bind a function to.
-     * @param {Function} handler - The function to be invoked when the event is dispatched.
-     * @description Call to add a listener to a specific event name.
-     */
-    on: function(name, handler) {
-
-      this._events || (this._events = {});
-      var list = this._events[name] || (this._events[name] = []);
-
-      list.push(handler);
-
-      return this;
-
-    },
-
-    /**
-     * @name Utils.Events.off
-     * @function
-     * @param {String} [name] - The name of the event intended to be removed.
-     * @param {Function} [handler] - The handler intended to be reomved.
-     * @description Call to remove listeners from a specific event. If only `name` is passed then all the handlers attached to that `name` will be removed. If no arguments are passed then all handlers for every event on the obejct are removed.
-     */
-    off: function(name, handler) {
-
-      if (!this._events) {
-        return this;
-      }
-      if (!name && !handler) {
-        this._events = {};
-        return this;
-      }
-
-      var names = name ? [name] : Object.keys(this._events);
-      for (var i = 0, l = names.length; i < l; i++) {
-
-        name = names[i];
-        var list = this._events[name];
-
-        if (list) {
-          var events = [];
-          if (handler) {
-            for (var j = 0, k = list.length; j < k; j++) {
-              var ev = list[j];
-              ev = ev.handler ? ev.handler : ev;
-              if (handler && handler !== ev) {
-                events.push(ev);
-              }
-            }
-          }
-          this._events[name] = events;
-        }
-      }
-
-      return this;
-    },
-
-    /**
-     * @name Utils.Events.trigger
-     * @function
-     * @param {String} name - The name of the event to dispatch.
-     * @param arguments - Anything can be passed after the name and those will be passed on to handlers attached to the event in the order they are passed.
-     * @description Call to trigger a custom event. Any additional arguments passed after the name will be passed along to the attached handlers.
-     */
-    trigger: function(name) {
-      if (!this._events) return this;
-      var args = Array.prototype.slice.call(arguments, 1);
-      var events = this._events[name];
-      if (events) trigger(this, events, args);
-      return this;
-    },
-
-    listen: function(obj, name, handler) {
-
-      var bound = this;
-
-      if (obj) {
-
-        var event = function () {
-          handler.apply(bound, arguments);
-        };
-
-        // Add references about the object that assigned this listener
-        event.obj = obj;
-        event.name = name;
-        event.handler = handler;
-
-        obj.on(name, event);
-
-      }
-
-      return this;
-
-    },
-
-    ignore: function(obj, name, handler) {
-
-      obj.off(name, handler);
-      return this;
-
-    },
-
-    Types: {
-      play: 'play',
-      pause: 'pause',
-      update: 'update',
-      render: 'render',
-      resize: 'resize',
-      change: 'change',
-      remove: 'remove',
-      insert: 'insert',
-      order: 'order',
-      load: 'load'
-    }
-
-  };
-
-
-  /**
-   * @name Two.Events.bind
-   * @function
-   * @description Alias for {@link Two.Events.on}.
-   */
-  Events.bind = Events.on;
-
-  /**
-   * @name Two.Events.unbind
-   * @function
-   * @description Alias for {@link Two.Events.off}.
-   */
-  Events.unbind = Events.off;
+  }
 
   /**
    * @name Two.Vector
@@ -408,7 +430,7 @@ SOFTWARE.
    * @param {Number} [y=0] - Any number to represent the vertical y-component of the vector.
    * @description A class to store x / y component vector data. In addition to storing data `Two.Vector` has suped up methods for commonplace mathematical operations.
    */
-  var Vector = function(x, y) {
+  function Vector(x, y) {
 
     /**
      * @name Two.Vector#x
@@ -422,7 +444,7 @@ SOFTWARE.
      */
     this.y = y || 0;
 
-  };
+  }
 
   _.extend(Vector, {
 
@@ -484,7 +506,7 @@ SOFTWARE.
      * @function
      * @param {Two.Vector} v1
      * @param {Two.Vector} v2
-     * @returns {Radians} The angle between points `v1` and `v2`.
+     * @returns {Number} The angle between points `v1` and `v2`.
      */
     angleBetween: function(v1, v2) {
 
@@ -579,7 +601,6 @@ SOFTWARE.
      * @function
      * @param {Number} x
      * @param {Number} y
-     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
      * @description Set the x / y components of a vector to specific number values.
      */
     set: function(x, y) {
@@ -592,7 +613,6 @@ SOFTWARE.
      * @name Two.Vector#copy
      * @function
      * @param {Two.Vector} v
-     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
      * @description Copy the x / y components of another object `v`.
      */
     copy: function(v) {
@@ -604,7 +624,6 @@ SOFTWARE.
     /**
      * @name Two.Vector#clear
      * @function
-     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
      * @description Set the x / y component values of the vector to zero.
      */
     clear: function() {
@@ -616,7 +635,6 @@ SOFTWARE.
     /**
      * @name Two.Vector#clone
      * @function
-     * @returns {Two.Vector} - A new instance of {@link Two.Vector}.
      * @description Create a new vector and copy the existing values onto the newly created instance.
      */
     clone: function() {
@@ -627,7 +645,6 @@ SOFTWARE.
      * @name Two.Vector#add
      * @function
      * @param {Two.Vector} v
-     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
      * @description Add an object with x / y component values to the instance.
      * @overloaded
      */
@@ -636,7 +653,6 @@ SOFTWARE.
      * @name Two.Vector#add
      * @function
      * @param {Number} v
-     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
      * @description Add the **same** number to both x / y component values of the instance.
      * @overloaded
      */
@@ -646,7 +662,6 @@ SOFTWARE.
      * @function
      * @param {Number} x
      * @param {Number} y
-     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
      * @description Add `x` / `y` values to their respective component value on the instance.
      * @overloaded
      */
@@ -681,7 +696,6 @@ SOFTWARE.
      * @name Two.Vector#sub
      * @function
      * @param {Two.Vector} v
-     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
      * @description Subtract an object with x / y component values to the instance.
      * @overloaded
      */
@@ -690,7 +704,6 @@ SOFTWARE.
      * @name Two.Vector#sub
      * @function
      * @param {Number} v
-     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
      * @description Subtract the **same** number to both x / y component values of the instance.
      * @overloaded
      */
@@ -700,7 +713,6 @@ SOFTWARE.
      * @function
      * @param {Number} x
      * @param {Number} y
-     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
      * @description Subtract `x` / `y` values to their respective component value on the instance.
      * @overloaded
      */
@@ -753,7 +765,6 @@ SOFTWARE.
      * @name Two.Vector#multiply
      * @function
      * @param {Two.Vector} v
-     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
      * @description Multiply an object with x / y component values to the instance.
      * @overloaded
      */
@@ -762,7 +773,6 @@ SOFTWARE.
      * @name Two.Vector#multiply
      * @function
      * @param {Number} v
-     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
      * @description Multiply the **same** number to both x / y component values of the instance.
      * @overloaded
      */
@@ -772,7 +782,6 @@ SOFTWARE.
      * @function
      * @param {Number} x
      * @param {Number} y
-     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
      * @description Multiply `x` / `y` values to their respective component value on the instance.
      * @overloaded
      */
@@ -817,7 +826,6 @@ SOFTWARE.
      * @name Two.Vector#divide
      * @function
      * @param {Two.Vector} v
-     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
      * @description Divide an object with x / y component values to the instance.
      * @overloaded
      */
@@ -826,7 +834,6 @@ SOFTWARE.
      * @name Two.Vector#divide
      * @function
      * @param {Number} v
-     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
      * @description Divide the **same** number to both x / y component values of the instance.
      * @overloaded
      */
@@ -836,7 +843,6 @@ SOFTWARE.
      * @function
      * @param {Number} x
      * @param {Number} y
-     * @returns {Two.Vector} - An instance of itself for the purpose of chaining.
      * @description Divide `x` / `y` values to their respective component value on the instance.
      * @overloaded
      */
@@ -1025,12 +1031,12 @@ SOFTWARE.
     /**
      * @name Two.Vector#rotate
      * @function
-     * @param {Radians} radians - The amoun to rotate the vector by.
+     * @param {Number} Number - The amoun to rotate the vector by.
      * @description Rotate a vector.
      */
-    rotate: function(radians) {
-      var cos = Math.cos(radians);
-      var sin = Math.sin(radians);
+    rotate: function(Number) {
+      var cos = Math.cos(Number);
+      var sin = Math.sin(Number);
       this.x = this.x * cos - this.y * sin;
       this.y = this.x * sin + this.y * cos;
       return this;
@@ -1175,9 +1181,9 @@ SOFTWARE.
       return { x: this._x, y: this._y };
     },
 
-    rotate: function (radians) {
-      var cos = Math.cos(radians);
-      var sin = Math.sin(radians);
+    rotate: function (Number) {
+      var cos = Math.cos(Number);
+      var sin = Math.sin(Number);
       this._x = this._x * cos - this._y * sin;
       this._y = this._x * sin + this._y * cos;
       return this;
@@ -1222,7 +1228,7 @@ SOFTWARE.
    * @extends Two.Vector
    * @description An object that holds 3 {@link Two.Vector}s, the anchor point and its corresponding handles: `left` and `right`. In order to properly describe the bezier curve about the point there is also a command property to describe what type of drawing should occur when Two.js renders the anchors.
    */
-  var Anchor = function(x, y, lx, ly, rx, ry, command) {
+  function Anchor(x, y, lx, ly, rx, ry, command) {
 
     Vector.call(this, x, y);
 
@@ -1258,7 +1264,7 @@ SOFTWARE.
       this.controls.right.y = ry;
     }
 
-  };
+  }
 
   _.extend(Anchor, {
 
@@ -1511,7 +1517,7 @@ SOFTWARE.
 
   // Constants
 
-  var cos = Math.cos, sin = Math.sin, tan = Math.tan;
+  var cos$5 = Math.cos, sin$5 = Math.sin, tan = Math.tan;
   var array = [];
 
   /**
@@ -1529,7 +1535,7 @@ SOFTWARE.
    * @description A class to store 3 x 3 transformation matrix information. In addition to storing data `Two.Matrix` has suped up methods for commonplace mathematical operations.
    * @nota-bene Order is based on how to construct transformation strings for the browser.
    */
-  var Matrix$1 = function(a, b, c, d, e, f) {
+  function Matrix(a, b, c, d, e, f) {
 
     /**
      * @name Two.Matrix#elements
@@ -1549,11 +1555,11 @@ SOFTWARE.
       this.set(elements);
     }
 
-  };
+  }
 
-  setMatrix(Matrix$1);
+  setMatrix(Matrix);
 
-  _.extend(Matrix$1, {
+  _.extend(Matrix, {
 
     /**
      * @name Two.Matrix.Identity
@@ -1621,9 +1627,9 @@ SOFTWARE.
 
   });
 
-  _.extend(Matrix$1.prototype, Events, {
+  _.extend(Matrix.prototype, Events, {
 
-    constructor: Matrix$1,
+    constructor: Matrix,
 
     /**
      * @name Two.Matrix#manual
@@ -1714,15 +1720,15 @@ SOFTWARE.
      */
     identity: function() {
 
-      this.elements[0] = Matrix$1.Identity[0];
-      this.elements[1] = Matrix$1.Identity[1];
-      this.elements[2] = Matrix$1.Identity[2];
-      this.elements[3] = Matrix$1.Identity[3];
-      this.elements[4] = Matrix$1.Identity[4];
-      this.elements[5] = Matrix$1.Identity[5];
-      this.elements[6] = Matrix$1.Identity[6];
-      this.elements[7] = Matrix$1.Identity[7];
-      this.elements[8] = Matrix$1.Identity[8];
+      this.elements[0] = Matrix.Identity[0];
+      this.elements[1] = Matrix.Identity[1];
+      this.elements[2] = Matrix.Identity[2];
+      this.elements[3] = Matrix.Identity[3];
+      this.elements[4] = Matrix.Identity[4];
+      this.elements[5] = Matrix.Identity[5];
+      this.elements[6] = Matrix.Identity[6];
+      this.elements[7] = Matrix.Identity[7];
+      this.elements[8] = Matrix.Identity[8];
 
       return this.trigger(Events.Types.change);
 
@@ -1838,7 +1844,7 @@ SOFTWARE.
     inverse: function(out) {
 
       var a = this.elements;
-      out = out || new Matrix$1();
+      out = out || new Matrix();
 
       var a00 = a[0], a01 = a[1], a02 = a[2];
       var a10 = a[3], a11 = a[4], a12 = a[5];
@@ -1899,13 +1905,13 @@ SOFTWARE.
     /**
      * @name Two.Matrix#rotate
      * @function
-     * @param {Radians} radians - The amount to rotate in radians.
+     * @param {Number} Number - The amount to rotate in Number.
      * @description Rotate the matrix.
      */
-    rotate: function(radians) {
+    rotate: function(Number) {
 
-      var c = cos(radians);
-      var s = sin(radians);
+      var c = cos$5(Number);
+      var s = sin$5(Number);
 
       return this.multiply(c, -s, 0, s, c, 0, 0, 0, 1);
 
@@ -1927,12 +1933,12 @@ SOFTWARE.
     /**
      * @name Two.Matrix#skewX
      * @function
-     * @param {Radians} radians - The amount to skew in radians.
+     * @param {Number} Number - The amount to skew in Number.
      * @description Skew the matrix by an angle in the x axis direction.
      */
-    skewX: function(radians) {
+    skewX: function(Number) {
 
-      var a = tan(radians);
+      var a = tan(Number);
 
       return this.multiply(1, a, 0, 0, 1, 0, 0, 0, 1);
 
@@ -1941,12 +1947,12 @@ SOFTWARE.
     /**
      * @name Two.Matrix#skewY
      * @function
-     * @param {Radians} radians - The amount to skew in radians.
+     * @param {Number} Number - The amount to skew in Number.
      * @description Skew the matrix by an angle in the y axis direction.
      */
-    skewY: function(radians) {
+    skewY: function(Number) {
 
-      var a = tan(radians);
+      var a = tan(Number);
 
       return this.multiply(1, 0, 0, a, 1, 0, 0, 0, 1);
 
@@ -2105,7 +2111,7 @@ SOFTWARE.
      */
     clone: function() {
 
-      return new Matrix$1().copy(this);
+      return new Matrix().copy(this);
 
     }
 
@@ -2117,7 +2123,7 @@ SOFTWARE.
 
     /**
      * @name Two.nextFrameID
-     * @property {Integer}
+     * @property {Number}
      * @description The id of the next requestAnimationFrame function.
      */
     nextFrameID: null,
@@ -2138,13 +2144,13 @@ SOFTWARE.
      * @name Two.Version
      * @property {String} - The current working version of the library.
      */
-    Version: 'v0.7.1',
+    Version: 'v0.7.5',
 
     /**
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2021-02-06T04:17:47.498Z',
+    PublishDate: '2021-04-23T17:59:51.706Z',
 
     /**
      * @name Two.Identifier
@@ -2174,7 +2180,7 @@ SOFTWARE.
     /**
      * @function Two.uniqueId
      * @description Simple method to access an incrementing value. Used for `id` allocation on all Two.js objects.
-     * @returns {Number} Ever increasing integer.
+     * @returns {Number} Ever increasing Number.
      */
     uniqueId: function() {
       return count++;
@@ -2182,10 +2188,10 @@ SOFTWARE.
 
   };
 
-  var HALF_PI = Math.PI / 2;
+  var HALF_PI$3 = Math.PI / 2;
 
   /**
-   * @name Utils.Curve
+   * @name Two.Utils.Curve
    * @property {Object} - Additional utility constant variables related to curve math and calculations.
    */
   var Curve = {
@@ -2244,7 +2250,7 @@ SOFTWARE.
   };
 
   /**
-   * @name Utils.getComponentOnCubicBezier
+   * @name Two.Utils.getComponentOnCubicBezier
    * @function
    * @param {Number} t - Zero-to-one value describing what percentage to calculate.
    * @param {Number} a - The firt point's component value.
@@ -2260,7 +2266,7 @@ SOFTWARE.
   };
 
   /**
-   * @name Utils.subdivide
+   * @name Two.Utils.subdivide
    * @function
    * @param {Number} x1 - x position of first anchor point.
    * @param {Number} y1 - y position of first anchor point.
@@ -2270,7 +2276,7 @@ SOFTWARE.
    * @param {Number} y3 - y position of second anchor point's "left" bezier handle.
    * @param {Number} x4 - x position of second anchor point.
    * @param {Number} y4 - y position of second anchor point.
-   * @param {Number} [limit=Utils.Curve.RecursionLimit] - The amount of vertices to create by subdividing.
+   * @param {Number} [limit=Two.Utils.Curve.RecursionLimit] - The amount of vertices to create by subdividing.
    * @returns {Anchor[]} A list of anchor points ordered in between `x1`, `y1` and `x4`, `y4`
    * @description Given 2 points (a, b) and corresponding control point for each return an array of points that represent points plotted along the curve. The number of returned points is determined by `limit`.
    */
@@ -2299,7 +2305,7 @@ SOFTWARE.
   };
 
   /**
-   * @name Utils.getCurveLength
+   * @name Two.Utils.getCurveLength
    * @function
    * @param {Number} x1 - x position of first anchor point.
    * @param {Number} y1 - y position of first anchor point.
@@ -2309,11 +2315,11 @@ SOFTWARE.
    * @param {Number} y3 - y position of second anchor point's "left" bezier handle.
    * @param {Number} x4 - x position of second anchor point.
    * @param {Number} y4 - y position of second anchor point.
-   * @param {Number} [limit=Utils.Curve.RecursionLimit] - The amount of vertices to create by subdividing.
+   * @param {Number} [limit=Two.Utils.Curve.RecursionLimit] - The amount of vertices to create by subdividing.
    * @returns {Number} The length of a curve.
    * @description Given 2 points (a, b) and corresponding control point for each, return a float that represents the length of the curve using Gauss-Legendre algorithm. Limit iterations of calculation by `limit`.
    */
-  var getCurveLength = function(x1, y1, x2, y2, x3, y3, x4, y4, limit) {
+  var getCurveLength$1 = function(x1, y1, x2, y2, x3, y3, x4, y4, limit) {
 
     // TODO: Better / fuzzier equality check
     // Linear calculation
@@ -2346,7 +2352,7 @@ SOFTWARE.
   };
 
   /**
-   * @name Utils.getCurveBoundingBox
+   * @name Two.Utils.getCurveBoundingBox
    * @function
    * @param {Number} x1 - x position of first anchor point.
    * @param {Number} y1 - y position of first anchor point.
@@ -2425,12 +2431,12 @@ SOFTWARE.
   };
 
   /**
-   * @name Utils.integrate
+   * @name Two.Utils.integrate
    * @function
    * @param {Function} f
    * @param {Number} a
    * @param {Number} b
-   * @param {Integer} n
+   * @param {Number} n
    * @description Integration for `getCurveLength` calculations.
    * @see [Paper.js](@link https://github.com/paperjs/paper.js/blob/master/src/util/Numerical.js#L101)
    */
@@ -2450,7 +2456,7 @@ SOFTWARE.
   };
 
   /**
-   * @name Utils.getCurveFromPoints
+   * @name Two.Utils.getCurveFromPoints
    * @function
    * @param {Anchor[]} points
    * @param {Boolean} closed
@@ -2483,7 +2489,7 @@ SOFTWARE.
   };
 
   /**
-   * @name Utils.getControlPoints
+   * @name Two.Utils.getControlPoints
    * @function
    * @param {Anchor} a
    * @param {Anchor} b
@@ -2514,9 +2520,9 @@ SOFTWARE.
     d2 *= 0.33;
 
     if (a2 < a1) {
-      mid += HALF_PI;
+      mid += HALF_PI$3;
     } else {
-      mid -= HALF_PI;
+      mid -= HALF_PI$3;
     }
 
     b.controls.left.x = Math.cos(mid) * d1;
@@ -2539,7 +2545,7 @@ SOFTWARE.
   };
 
   /**
-   * @name Utils.getReflection
+   * @name Two.Utils.getReflection
    * @function
    * @param {Vector} a
    * @param {Vector} b
@@ -2558,19 +2564,19 @@ SOFTWARE.
   };
 
   /**
-   * @name Utils.getAnchorsFromArcData
+   * @name Two.Utils.getAnchorsFromArcData
    * @function
    * @param {Vector} center
-   * @param {Radians} xAxisRotation
+   * @param {Number} xAxisRotation
    * @param {Number} rx - x radius
    * @param {Number} ry - y radius
-   * @param {Radians} ts
-   * @param {Radians} td
+   * @param {Number} ts
+   * @param {Number} td
    * @param {Boolean} [ccw=false] - Set path traversal to counter-clockwise
    */
   var getAnchorsFromArcData = function(center, xAxisRotation, rx, ry, ts, td, ccw) {
 
-    var matrix = new Matrix$1()
+    new Matrix()
       .translate(center.x, center.y)
       .rotate(xAxisRotation);
 
@@ -2601,7 +2607,7 @@ SOFTWARE.
     Curve: Curve,
     getComponentOnCubicBezier: getComponentOnCubicBezier,
     subdivide: subdivide,
-    getCurveLength: getCurveLength,
+    getCurveLength: getCurveLength$1,
     getCurveBoundingBox: getCurveBoundingBox,
     integrate: integrate,
     getCurveFromPoints: getCurveFromPoints,
@@ -2621,7 +2627,7 @@ SOFTWARE.
   };
 
   /**
-   * @name Utils.getRatio
+   * @name Two.Utils.getRatio
    * @function
    * @param {CanvasRenderingContext2D} ctx
    * @returns {Number} The ratio of a unit in Two.js to the pixel density of a session's screen.
@@ -2632,27 +2638,30 @@ SOFTWARE.
   };
 
   /**
-   * @name Utils.Collection
+   * @name Two.Collection
    * @class
-   * @extends Utils.Events
+   * @extends Two.Events
    * @description An `Array` like object with additional event propagation on actions. `pop`, `shift`, and `splice` trigger `removed` events. `push`, `unshift`, and `splice` with more than 2 arguments trigger 'inserted'. Finally, `sort` and `reverse` trigger `order` events.
    */
-  var Collection = function() {
+  function Collection() {
 
     Array.call(this);
 
-    if (arguments.length > 1) {
+    if (arguments[0] && Array.isArray(arguments[0])) {
+      if (arguments[0].length > 0) {
+        Array.prototype.push.apply(this, arguments[0]);
+      }
+    } else if (arguments.length > 0) {
       Array.prototype.push.apply(this, arguments);
-    } else if (arguments[0] && Array.isArray(arguments[0])) {
-      Array.prototype.push.apply(this, arguments[0]);
     }
 
-  };
+  }
 
   Collection.prototype = new Array();
-  Collection.prototype.constructor = Collection;
 
   _.extend(Collection.prototype, Events, {
+
+    constructor: Collection,
 
     pop: function() {
       var popped = Array.prototype.pop.apply(this, arguments);
@@ -2702,6 +2711,10 @@ SOFTWARE.
       Array.prototype.reverse.apply(this, arguments);
       this.trigger(Events.Types.order);
       return this;
+    },
+
+    indexOf: function() {
+      return Array.prototype.indexOf.apply(this, arguments);
     }
 
   });
@@ -2709,19 +2722,18 @@ SOFTWARE.
   /**
    * @name Two.Shape
    * @class
-   * @extends Events
+   * @extends Two.Events
    * @description The foundational transformation object for the Two.js scenegraph.
    */
-  var Shape = function() {
+  function Shape() {
 
     /**
-     * @name Two.Shape#_renderer
+     * @name Two.Shape#renderer
      * @property {Object}
-     * @private
-     * @description A private object to store relevant renderer specific variables.
-     * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `shape._renderer.elem`.
+     * @description Object access to store relevant renderer specific variables. Warning: manipulating this object can create unintended consequences.
+     * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `shape.renderer.elem`.
      */
-    this._renderer = {};
+    this.renderer = {};
     this._renderer.flagMatrix = Shape.FlagMatrix.bind(this);
     this.isShape = true;
 
@@ -2743,9 +2755,9 @@ SOFTWARE.
      * @name Two.Shape#matrix
      * @property {Two.Matrix}
      * @description The transformation matrix of the shape.
-     * @nota-bene {@link Two.Shape#translation}, {@link Two.Shape#rotation}, and {@link Two.Shape#scale} apply their values to the matrix when changed. The matrix is what is sent to the renderer to be drawn.
+     * @nota-bene {@link Two.Shape#translation}, {@link Two.Shape#rotation}, {@link Two.Shape#scale}, {@link Two.Shape#skewX}, and {@link Two.Shape#skewY} apply their values to the matrix when changed. The matrix is what is sent to the renderer to be drawn.
      */
-    this.matrix = new Matrix$1();
+    this.matrix = new Matrix();
 
     /**
      * @name Two.Shape#translation
@@ -2755,7 +2767,7 @@ SOFTWARE.
 
     /**
      * @name Two.Shape#rotation
-     * @property {Radians} - The value in radians for how much the shape is rotated relative to its parent.
+     * @property {Number} - The value in Number for how much the shape is rotated relative to its parent.
      */
     this.rotation = 0;
 
@@ -2766,7 +2778,21 @@ SOFTWARE.
      */
     this.scale = 1;
 
-  };
+    /**
+     * @name Two.Shape#skewX
+     * @property {Number} - The value in Number for how much the shape is skewed relative to its parent.
+     * @description Skew the shape by an angle in the x axis direction.
+     */
+    this.skewX = 0;
+
+    /**
+     * @name Two.Shape#skewY
+     * @property {Number} - The value in Number for how much the shape is skewed relative to its parent.
+     * @description Skew the shape by an angle in the y axis direction.
+     */
+    this.skewY = 0;
+
+  }
 
   _.extend(Shape, {
 
@@ -2839,6 +2865,28 @@ SOFTWARE.
         }
       });
 
+      Object.defineProperty(object, 'skewX', {
+        enumerable: true,
+        get: function() {
+          return this._skewX;
+        },
+        set: function(v) {
+          this._skewX = v;
+          this._flagMatrix = true;
+        }
+      });
+
+      Object.defineProperty(object, 'skewY', {
+        enumerable: true,
+        get: function() {
+          return this._skewY;
+        },
+        set: function(v) {
+          this._skewY = v;
+          this._flagMatrix = true;
+        }
+      });
+
       Object.defineProperty(object, 'matrix', {
         enumerable: true,
         get: function() {
@@ -2847,6 +2895,23 @@ SOFTWARE.
         set: function(v) {
           this._matrix = v;
           this._flagMatrix = true;
+        }
+      });
+
+      Object.defineProperty(object, 'id', {
+        enumerable: true,
+        get: function() {
+          return this._id;
+        },
+        set: function(v) {
+          if (v === this._id) {
+            return;
+          }
+          this._id = v;
+          this._flagId = true;
+          if (this.parent) {
+            this.parent._flagId = true;
+          }
         }
       });
 
@@ -2885,13 +2950,36 @@ SOFTWARE.
 
       });
 
+      Object.defineProperty(object, 'renderer', {
+
+        enumerable: false,
+
+        get: function() {
+          return this._renderer;
+        },
+
+        set: function(obj) {
+          this._renderer = obj;
+        }
+
+      });
+
     }
 
   });
 
   _.extend(Shape.prototype, Events, {
 
+    constructor: Shape,
+
     // Flags
+
+    /**
+     * @name Two.Shape#_id
+     * @private
+     * @property {Boolean} - Determines whether the id needs updating.
+     */
+    _flagId: true,
 
     /**
      * @name Two.Shape#_flagMatrix
@@ -2919,6 +3007,8 @@ SOFTWARE.
 
     // Underlying Properties
 
+    _id: '',
+
     /**
      * @name Two.Shape#_translation
      * @private
@@ -2929,7 +3019,7 @@ SOFTWARE.
     /**
      * @name Two.Shape#_rotation
      * @private
-     * @property {Radians} - The rotation value in radians.
+     * @property {Number} - The rotation value in Number.
      */
     _rotation: 0,
 
@@ -2940,6 +3030,20 @@ SOFTWARE.
      */
     _scale: 1,
 
+    /**
+     * @name Two.Shape#_skewX
+     * @private
+     * @property {Number} - The rotation value in Number.
+     */
+    _skewX: 0,
+
+    /**
+     * @name Two.Shape#_skewY
+     * @private
+     * @property {Number} - The rotation value in Number.
+     */
+    _skewY: 0,
+
     // _mask: null,
     // _clip: false,
 
@@ -2949,8 +3053,6 @@ SOFTWARE.
      * @nota-bene Only available for the SVG renderer.
      */
     _className: '',
-
-    constructor: Shape,
 
     /**
      * @name Two.Shape#addTo
@@ -2977,6 +3079,8 @@ SOFTWARE.
       clone.translation.copy(this.translation);
       clone.rotation = this.rotation;
       clone.scale = this.scale;
+      clone.skewX = this.skewX;
+      clone.skewY = this.skewY;
 
       if (this.matrix.manual) {
         clone.matrix.copy(this.matrix);
@@ -3013,7 +3117,8 @@ SOFTWARE.
           }
 
           this._matrix.rotate(this.rotation);
-
+          this._matrix.skewX(this.skewX);
+          this._matrix.skewY(this.skewY);
       }
 
       if (bubbles) {
@@ -3034,7 +3139,8 @@ SOFTWARE.
      */
     flagReset: function() {
 
-      this._flagMatrix = this._flagScale = this._flagClassName = false;
+      this._flagId = this._flagMatrix = this._flagScale =
+        this._flagClassName = false;
 
       return this;
 
@@ -3047,10 +3153,10 @@ SOFTWARE.
   /**
    * @class
    * @name Two.Group.Children
-   * @extends Two.Utils.Collection
+   * @extends Two.Collection
    * @description A children collection which is accesible both by index and by object `id`.
    */
-  var Children = function() {
+  function Children(children) {
 
     Collection.apply(this, arguments);
 
@@ -3065,11 +3171,14 @@ SOFTWARE.
      */
     this.ids = {};
 
+    this.attach(
+      Array.isArray(children) ? children : Array.prototype.slice.call(arguments)
+    );
+
     this.on(Events.Types.insert, this.attach);
     this.on(Events.Types.remove, this.detach);
-    Children.prototype.attach.apply(this, arguments);
 
-  };
+  }
 
   Children.prototype = new Collection();
 
@@ -3085,7 +3194,10 @@ SOFTWARE.
      */
     attach: function(children) {
       for (var i = 0; i < children.length; i++) {
-        this.ids[children[i].id] = children[i];
+        var child = children[i];
+        if (child && child.id) {
+          this.ids[child.id] = child;
+        }
       }
       return this;
     },
@@ -3107,7 +3219,7 @@ SOFTWARE.
 
   // Constants
 
-  var min = Math.min, max = Math.max;
+  var min$3 = Math.min, max$3 = Math.max;
 
   /**
    * @name Two.Group
@@ -3117,7 +3229,7 @@ SOFTWARE.
    * @description This is the primary class for grouping objects that are then drawn in Two.js. In Illustrator this is a group, in After Effects it would be a Null Object. Whichever the case, the `Two.Group` contains a transformation matrix and commands to style its children, but it by itself doesn't render to the screen.
    * @nota-bene The {@link Two#scene} is an instance of `Two.Group`.
    */
-  var Group = function(children) {
+  function Group(children) {
 
     Shape.call(this, true);
 
@@ -3138,14 +3250,14 @@ SOFTWARE.
     this.subtractions = [];
 
     /**
-     * @name Two.Group#additions
+     * @name Two.Group#children
      * @property {Two.Group.Children}
      * @description A list of all the children in the scenegraph.
      * @nota-bene Ther order of this list indicates the order each element is rendered to the screen.
      */
     this.children = Array.isArray(children) ? children : Array.prototype.slice.call(arguments);
 
-  };
+  }
 
   _.extend(Group, {
 
@@ -3192,7 +3304,6 @@ SOFTWARE.
       'fill',
       'stroke',
       'linewidth',
-      'visible',
       'cap',
       'join',
       'miter',
@@ -3212,6 +3323,21 @@ SOFTWARE.
 
       var properties = Group.Properties;
 
+      Object.defineProperty(object, 'visible', {
+
+        enumerable: true,
+
+        get: function() {
+          return this._visible;
+        },
+
+        set: function(v) {
+          this._flagVisible = this._visible !== v || this._flagVisible;
+          this._visible = v;
+        }
+
+      });
+
       Object.defineProperty(object, 'opacity', {
 
         enumerable: true,
@@ -3221,7 +3347,7 @@ SOFTWARE.
         },
 
         set: function(v) {
-          this._flagOpacity = this._opacity !== v;
+          this._flagOpacity = this._opacity !== v || this._flagOpacity;
           this._opacity = v;
         }
 
@@ -3236,7 +3362,7 @@ SOFTWARE.
         },
 
         set: function(v) {
-          this._flagBeginning = this._beginning !== v;
+          this._flagBeginning = this._beginning !== v || this._flagBeginning;
           this._beginning = v;
         }
 
@@ -3251,7 +3377,7 @@ SOFTWARE.
         },
 
         set: function(v) {
-          this._flagEnding = this._ending !== v;
+          this._flagEnding = this._ending !== v || this._flagEnding;
           this._ending = v;
         }
 
@@ -3296,12 +3422,19 @@ SOFTWARE.
 
           if (this._children) {
             this._children.unbind();
+            if (this._children.length > 0) {
+              removeChildren(this._children);
+            }
           }
 
           this._children = new Children(children);
           this._children.bind(Events.Types.insert, insertChildren);
           this._children.bind(Events.Types.remove, removeChildren);
           this._children.bind(Events.Types.order, orderChildren);
+
+          if (children.length > 0) {
+            insertChildren(children);
+          }
 
         }
 
@@ -3382,62 +3515,70 @@ SOFTWARE.
 
   _.extend(Group.prototype, Shape.prototype, {
 
+    constructor: Group,
+
     // Flags
     // http://en.wikipedia.org/wiki/Flag
 
     /**
      * @name Two.Group#_flagAdditions
      * @private
-     * @property {Boolean} - Determines whether the {@link Two.Group#additions} need updating.
+     * @property {Boolean} - Determines whether the {@link Two.Group#additions} needs updating.
      */
     _flagAdditions: false,
 
     /**
      * @name Two.Group#_flagSubtractions
      * @private
-     * @property {Boolean} - Determines whether the {@link Two.Group#subtractions} need updating.
+     * @property {Boolean} - Determines whether the {@link Two.Group#subtractions} needs updating.
      */
     _flagSubtractions: false,
 
     /**
      * @name Two.Group#_flagOrder
      * @private
-     * @property {Boolean} - Determines whether the {@link Two.Group#order} need updating.
+     * @property {Boolean} - Determines whether the {@link Two.Group#order} needs updating.
      */
     _flagOrder: false,
 
     /**
+     * @name Two.Group#_flagVisible
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Group#visible} needs updating.
+     */
+
+    /**
      * @name Two.Group#_flagOpacity
      * @private
-     * @property {Boolean} - Determines whether the {@link Two.Group#opacity} need updating.
+     * @property {Boolean} - Determines whether the {@link Two.Group#opacity} needs updating.
      */
     _flagOpacity: true,
 
     /**
      * @name Two.Group#_flagBeginning
      * @private
-     * @property {Boolean} - Determines whether the {@link Two.Group#beginning} need updating.
+     * @property {Boolean} - Determines whether the {@link Two.Group#beginning} needs updating.
      */
     _flagBeginning: false,
 
     /**
      * @name Two.Group#_flagEnding
      * @private
-     * @property {Boolean} - Determines whether the {@link Two.Group#ending} need updating.
+     * @property {Boolean} - Determines whether the {@link Two.Group#ending} needs updating.
      */
     _flagEnding: false,
 
     /**
      * @name Two.Group#_flagLength
      * @private
-     * @property {Boolean} - Determines whether the {@link Two.Group#length} need updating.
+     * @property {Boolean} - Determines whether the {@link Two.Group#length} needs updating.
      */
     _flagLength: false,
 
     /**
      * @name Two.Group#_flagMask
      * @private
-     * @property {Boolean} - Determines whether the {@link Two.Group#mask} need updating.
+     * @property {Boolean} - Determines whether the {@link Two.Group#mask} needs updating.
      */
     _flagMask: false,
 
@@ -3445,15 +3586,15 @@ SOFTWARE.
 
     /**
      * @name Two.Group#fill
-     * @property {(CssColor|Two.Gradient|Two.Texture)} - The value of what all child shapes should be filled in with.
-     * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS Colors.
+     * @property {(String|Two.Gradient|Two.Texture)} - The value of what all child shapes should be filled in with.
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
      */
     _fill: '#fff',
 
     /**
      * @name Two.Group#stroke
-     * @property {(CssColor|Two.Gradient|Two.Texture)} - The value of what all child shapes should be outlined in with.
-     * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS Colors.
+     * @property {(String|Two.Gradient|Two.Texture)} - The value of what all child shapes should be outlined in with.
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
      */
     _stroke: '#000',
 
@@ -3544,8 +3685,6 @@ SOFTWARE.
      */
     _mask: null,
 
-    constructor: Group,
-
     /**
      * @name Two.Group#clone
      * @function
@@ -3628,12 +3767,13 @@ SOFTWARE.
      */
     corner: function() {
 
-      var rect = this.getBoundingClientRect(true);
-      var corner = { x: rect.left, y: rect.top };
+      var rect = this.getBoundingClientRect();
 
-      this.children.forEach(function(child) {
-        child.translation.sub(corner);
-      });
+      for (var i = 0; i < this.children.length; i++) {
+        var child = this.children[i];
+        child.translation.x -= rect.left;
+        child.translation.y -= rect.top;
+      }
 
       return this;
 
@@ -3646,18 +3786,17 @@ SOFTWARE.
      */
     center: function() {
 
-      var rect = this.getBoundingClientRect(true);
+      var rect = this.getBoundingClientRect();
+      var cx = rect.left + rect.width / 2 - this.translation.x;
+      var cy = rect.top + rect.height / 2 - this.translation.y;
 
-      rect.centroid = {
-        x: rect.left + rect.width / 2 - this.translation.x,
-        y: rect.top + rect.height / 2 - this.translation.y
-      };
-
-      this.children.forEach(function(child) {
+      for (var i = 0; i < this.children.length; i++) {
+        var child = this.children[i];
         if (child.isShape) {
-          child.translation.sub(rect.centroid);
+          child.translation.x -= cx;
+          child.translation.y -= cy;
         }
-      });
+      }
 
       return this;
 
@@ -3796,8 +3935,14 @@ SOFTWARE.
 
       // Remove the objects
       for (var i = 0; i < objects.length; i++) {
-        if (!objects[i] || !(this.children.ids[objects[i].id])) continue;
-        this.children.splice(Array.prototype.indexOf.call(this.children, objects[i]), 1);
+        var object = objects[i];
+        if (!object || !this.children.ids[object.id]) {
+          continue;
+        }
+        var index = this.children.indexOf(object);
+        if (index >= 0) {
+          this.children.splice(index, 1);
+        }
       }
 
       return this;
@@ -3812,7 +3957,7 @@ SOFTWARE.
      * @description Return an object with top, left, right, bottom, width, and height parameters of the group.
      */
     getBoundingClientRect: function(shallow) {
-      var rect;
+      var rect, matrix, a, b, c, d;
 
       // TODO: Update this to not __always__ update. Just when it needs to.
       this._update(true);
@@ -3822,6 +3967,8 @@ SOFTWARE.
           top = Infinity, bottom = -Infinity;
 
       var regex = /texture|gradient/i;
+
+      matrix = shallow ? this._matrix : getComputedMatrix(this);
 
       for (var i = 0; i < this.children.length; i++) {
 
@@ -3838,10 +3985,24 @@ SOFTWARE.
           continue;
         }
 
-        top = min(rect.top, top);
-        left = min(rect.left, left);
-        right = max(rect.right, right);
-        bottom = max(rect.bottom, bottom);
+        top = min$3(rect.top, top);
+        left = min$3(rect.left, left);
+        right = max$3(rect.right, right);
+        bottom = max$3(rect.bottom, bottom);
+
+      }
+
+      if (shallow) {
+
+        a = matrix.multiply(left, top, 1);
+        b = matrix.multiply(left, bottom, 1);
+        c = matrix.multiply(right, top, 1);
+        d = matrix.multiply(right, bottom, 1);
+
+        top = min$3(a.y, b.y, c.y, d.y);
+        left = min$3(a.x, b.x, c.x, d.x);
+        right = max$3(a.x, b.x, c.x, d.x);
+        bottom = max$3(a.y, b.y, c.y, d.y);
 
       }
 
@@ -3903,6 +4064,8 @@ SOFTWARE.
      */
     _update: function() {
 
+      var i, l, child;
+
       if (this._flagBeginning || this._flagEnding) {
 
         var beginning = Math.min(this._beginning, this._ending);
@@ -3913,10 +4076,10 @@ SOFTWARE.
         var bd = beginning * length;
         var ed = ending * length;
 
-        for (var i = 0; i < this.children.length; i++) {
+        for (i = 0; i < this.children.length; i++) {
 
-          var child = this.children[i];
-          var l = child.length;
+          child = this.children[i];
+          l = child.length;
 
           if (bd > sum + l) {
             child.beginning = 1;
@@ -3939,6 +4102,17 @@ SOFTWARE.
 
         }
 
+      }
+
+      if (this._flagId) {
+        // Means the group's id changed or one of its children's ids
+        // changed and as such we need to update the map of ids the
+        // Two.Group.children has.
+        this.children.ids = {};
+        for (i = 0; i < this.children.length; i++) {
+          child = this.children[i];
+          this.children.ids[child.id] = child;
+        }
       }
 
       return Shape.prototype._update.apply(this, arguments);
@@ -4064,12 +4238,12 @@ SOFTWARE.
 
   // Constants
   var emptyArray = [];
-  var TWO_PI = Math.PI * 2,
-    max$1 = Math.max,
-    min$1 = Math.min,
+  var TWO_PI$5 = Math.PI * 2,
+    max$2 = Math.max,
+    min$2 = Math.min,
     abs = Math.abs,
-    sin$1 = Math.sin,
-    cos$1 = Math.cos,
+    sin$4 = Math.sin,
+    cos$4 = Math.cos,
     acos = Math.acos,
     sqrt = Math.sqrt;
 
@@ -4109,7 +4283,10 @@ SOFTWARE.
 
       render: function(ctx) {
 
-        // TODO: Add a check here to only invoke _update if need be.
+        if (!this._visible) {
+          return this;
+        }
+
         this._update();
 
         var matrix = this._matrix.elements;
@@ -4133,7 +4310,7 @@ SOFTWARE.
         if (shouldIsolate) {
           ctx.save();
           if (!defaultMatrix) {
-            ctx.transform(  matrix[0], matrix[3], matrix[1],
+            ctx.transform(matrix[0], matrix[3], matrix[1],
               matrix[4], matrix[2], matrix[5]);
           }
         }
@@ -4142,7 +4319,7 @@ SOFTWARE.
           canvas[mask._renderer.type].render.call(mask, ctx, true);
         }
 
-        if (this.opacity > 0 && this.scale !== 0) {
+        if (this._opacity > 0 && this._scale !== 0) {
           for (var i = 0; i < this.children.length; i++) {
             var child = this.children[i];
             canvas[child._renderer.type].render.call(child, ctx);
@@ -4175,15 +4352,21 @@ SOFTWARE.
             closed, commands, length, last, next, prev, a, b, c, d, ux, uy, vx, vy,
             ar, bl, br, cl, x, y, clip, defaultMatrix, isOffset, dashes;
 
-        // TODO: Add a check here to only invoke _update if need be.
+        // mask = this._mask;
+        clip = this._clip;
+        opacity = this._opacity * this.parent._renderer.opacity;
+        visible = this._visible;
+
+        if (!forced && (!visible || clip || opacity === 0)) {
+          return this;
+        }
+
         this._update();
 
         matrix = this._matrix.elements;
         stroke = this._stroke;
         linewidth = this._linewidth;
         fill = this._fill;
-        opacity = this._opacity * this.parent._renderer.opacity;
-        visible = this._visible;
         cap = this._cap;
         join = this._join;
         miter = this._miter;
@@ -4193,13 +4376,6 @@ SOFTWARE.
         last = length - 1;
         defaultMatrix = isDefaultMatrix(matrix);
         dashes = this.dashes;
-
-        // mask = this._mask;
-        clip = this._clip;
-
-        if (!forced && (!visible || clip)) {
-          return this;
-        }
 
         // Transform
         if (!defaultMatrix) {
@@ -4276,7 +4452,7 @@ SOFTWARE.
               var largeArcFlag = b.largeArcFlag;
               var sweepFlag = b.sweepFlag;
 
-              prev = closed ? mod(i - 1, length) : max$1(i - 1, 0);
+              prev = closed ? mod(i - 1, length) : max$2(i - 1, 0);
               a = commands[prev];
 
               var ax = a.x;
@@ -4415,7 +4591,15 @@ SOFTWARE.
 
       render: function(ctx, forced, parentClipped) {
 
-        // TODO: Add a check here to only invoke _update if need be.
+        var opacity = this._opacity * this.parent._renderer.opacity;
+        var visible = this._visible;
+        // mask = this._mask;
+        var clip = this._clip;
+
+        if (!forced && (!visible || clip || opacity === 0)) {
+          return this;
+        }
+
         this._update();
 
         var matrix = this._matrix.elements;
@@ -4423,8 +4607,6 @@ SOFTWARE.
         var linewidth = this._linewidth;
         var fill = this._fill;
         var decoration = this._decoration;
-        var opacity = this._opacity * this.parent._renderer.opacity;
-        var visible = this._visible;
         var defaultMatrix = isDefaultMatrix(matrix);
         var isOffset = fill._renderer && fill._renderer.offset
           && stroke._renderer && stroke._renderer.offset;
@@ -4433,13 +4615,6 @@ SOFTWARE.
         var baseline = this._baseline;
 
         var a, b, c, d, e, sx, sy, x1, y1, x2, y2;
-
-        // mask = this._mask;
-        var clip = this._clip;
-
-        if (!forced && (!visible || clip)) {
-          return this;
-        }
 
         // Transform
         if (!defaultMatrix) {
@@ -4749,8 +4924,8 @@ SOFTWARE.
       // Compute (x1′, y1′)
       var dx2 = (ax - x) / 2.0;
       var dy2 = (ay - y) / 2.0;
-      var x1p = cos$1(xAxisRotation) * dx2 + sin$1(xAxisRotation) * dy2;
-      var y1p = - sin$1(xAxisRotation) * dx2 + cos$1(xAxisRotation) * dy2;
+      var x1p = cos$4(xAxisRotation) * dx2 + sin$4(xAxisRotation) * dy2;
+      var y1p = - sin$4(xAxisRotation) * dx2 + cos$4(xAxisRotation) * dy2;
 
       // Compute (cx′, cy′)
       var rxs = rx * rx;
@@ -4774,21 +4949,21 @@ SOFTWARE.
 
       var dq = (rxs * y1ps + rys * x1ps);
       var pq = (rxs * rys - dq) / dq;
-      var q = sqrt(max$1(0, pq));
+      var q = sqrt(max$2(0, pq));
       if (largeArcFlag === sweepFlag) q = - q;
       var cxp = q * rx * y1p / ry;
       var cyp = - q * ry * x1p / rx;
 
       // Step 3: Compute (cx, cy) from (cx′, cy′)
-      var cx = cos$1(xAxisRotation) * cxp
-        - sin$1(xAxisRotation) * cyp + (ax + x) / 2;
-      var cy = sin$1(xAxisRotation) * cxp
-        + cos$1(xAxisRotation) * cyp + (ay + y) / 2;
+      var cx = cos$4(xAxisRotation) * cxp
+        - sin$4(xAxisRotation) * cyp + (ax + x) / 2;
+      var cy = sin$4(xAxisRotation) * cxp
+        + cos$4(xAxisRotation) * cyp + (ay + y) / 2;
 
       // Step 4: Compute θ1 and Δθ
       var startAngle = svgAngle(1, 0, (x1p - cxp) / rx, (y1p - cyp) / ry);
       var delta = svgAngle((x1p - cxp) / rx, (y1p - cyp) / ry,
-        (- x1p - cxp) / rx, (- y1p - cyp) / ry) % TWO_PI;
+        (- x1p - cxp) / rx, (- y1p - cyp) / ry) % TWO_PI$5;
 
       var endAngle = startAngle + delta;
 
@@ -4811,7 +4986,7 @@ SOFTWARE.
    * @param {Boolean} [parameters.smoothing=true] - Determines whether the canvas should antialias drawing. Set it to `false` when working with pixel art. `false` can lead to better performance, since it would use a cheaper interpolation algorithm.
    * @description This class is used by {@link Two} when constructing with `type` of `Two.Types.canvas`. It takes Two.js' scenegraph and renders it to a `<canvas />`.
    */
-  var Renderer = function(params) {
+  function Renderer$2(params) {
 
     // It might not make a big difference on GPU backed canvases.
     var smoothing = (params.smoothing !== false);
@@ -4845,10 +5020,10 @@ SOFTWARE.
      */
     this.scene = new Group();
     this.scene.parent = this;
-  };
+  }
 
 
-  _.extend(Renderer, {
+  _.extend(Renderer$2, {
 
     /**
      * @name Two.CanvasRenderer.Utils
@@ -4858,9 +5033,9 @@ SOFTWARE.
 
   });
 
-  _.extend(Renderer.prototype, Events, {
+  _.extend(Renderer$2.prototype, Events, {
 
-    constructor: Renderer,
+    constructor: Renderer$2,
 
     /**
      * @name Two.CanvasRenderer#setSize
@@ -4929,7 +5104,7 @@ SOFTWARE.
     var samePoints = Math.abs(deltaAngle) < epsilon;
 
     // ensures that deltaAngle is 0 .. 2 PI
-    deltaAngle = mod(deltaAngle, TWO_PI);
+    deltaAngle = mod(deltaAngle, TWO_PI$5);
 
     if (deltaAngle < epsilon) {
 
@@ -4939,7 +5114,7 @@ SOFTWARE.
 
       } else {
 
-        deltaAngle = TWO_PI;
+        deltaAngle = TWO_PI$5;
 
       }
 
@@ -4947,13 +5122,13 @@ SOFTWARE.
 
     if (clockwise === true && ! samePoints) {
 
-      if (deltaAngle === TWO_PI) {
+      if (deltaAngle === TWO_PI$5) {
 
-        deltaAngle = - TWO_PI;
+        deltaAngle = - TWO_PI$5;
 
       } else {
 
-        deltaAngle = deltaAngle - TWO_PI;
+        deltaAngle = deltaAngle - TWO_PI$5;
 
       }
 
@@ -4992,7 +5167,7 @@ SOFTWARE.
     var dot = ux * vx + uy * vy;
     var len = sqrt(ux * ux + uy * uy) *  sqrt(vx * vx + vy * vy);
     // floating point precision, slightly over values appear
-    var ang = acos(max$1(-1, min$1(1, dot / len)));
+    var ang = acos(max$2(-1, min$2(1, dot / len)));
     if ((ux * vy - uy * vx) < 0) {
       ang = - ang;
     }
@@ -5008,7 +5183,7 @@ SOFTWARE.
     isHeadless: false,
 
     /**
-     * @name Utils.shim
+     * @name Two.Utils.shim
      * @function
      * @param {canvas} canvas - The instanced `Canvas` object provided by `node-canvas`.
      * @param {Image} [Image] - The prototypical `Image` object provided by `node-canvas`. This is only necessary to pass if you're going to load bitmap imagery.
@@ -5016,7 +5191,7 @@ SOFTWARE.
      * @description Convenience method for defining all the dependencies from the npm package `node-canvas`. See [node-canvas](https://github.com/Automattic/node-canvas) for additional information on setting up HTML5 `<canvas />` drawing in a node.js environment.
      */
     shim: function(canvas, Image) {
-      Renderer.Utils.shim(canvas);
+      Renderer$2.Utils.shim(canvas);
       if (typeof Image !== 'undefined') {
         CanvasShim.Image = Image;
       }
@@ -5093,21 +5268,23 @@ SOFTWARE.
   });
 
   /**
-   * @name Utils.Error
+   * @name Two.Utils.Error
    * @class
    * @description Custom error throwing for Two.js specific identification.
    */
-  var TwoError = function(message) {
+  function TwoError(message) {
     this.name = 'Two.js';
     this.message = message;
-  };
-
+  }
 
   TwoError.prototype = new Error();
-  TwoError.prototype.constructor = TwoError;
+
+  _.extend(TwoError.prototype, {
+    constructor: TwoError
+  });
 
   /**
-   * @name Utils.defineGetterSetter
+   * @name Two.Utils.defineGetterSetter
    * @function
    * @this Two#
    * @param {String} property - The property to add an enumerable getter / setter to.
@@ -5137,11 +5314,11 @@ SOFTWARE.
    * @class
    * @description An arbitrary class to manage a directory of things. Mainly used for keeping tabs of textures in Two.js.
    */
-  var Registry = function() {
+  function Registry() {
 
     this.map = {};
 
-  };
+  }
 
   _.extend(Registry.prototype, {
 
@@ -5198,20 +5375,19 @@ SOFTWARE.
    * @name Two.Stop
    * @class
    * @param {Number} [offset] - The offset percentage of the stop represented as a zero-to-one value. Default value flip flops from zero-to-one as new stops are created.
-   * @param {CssColor} [color] - The color of the stop. Default value flip flops from white to black as new stops are created.
+   * @param {String} [color] - The color of the stop. Default value flip flops from white to black as new stops are created.
    * @param {Number} [opacity] - The opacity value. Default value is 1, cannot be lower than 0.
    * @nota-bene Used specifically in conjunction with {@link Two.Gradient}s to control color graduation.
    */
-  var Stop = function(offset, color, opacity) {
+  function Stop(offset, color, opacity) {
 
     /**
-     * @name Two.Stop#_renderer
+     * @name Two.Stop#renderer
      * @property {Object}
-     * @private
-     * @description A private object to store relevant renderer specific variables.
-     * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `stop._renderer.elem`.
+     * @description Object access to store relevant renderer specific variables. Warning: manipulating this object can create unintended consequences.
+     * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `shape.renderer.elem`.
      */
-    this._renderer = {};
+    this.renderer = {};
     this._renderer.type = 'stop';
 
     /**
@@ -5229,14 +5405,14 @@ SOFTWARE.
 
     /**
      * @name Two.Stop#color
-     * @property {CssColor} - The color of the stop.
+     * @property {String} - The color of the stop.
      */
     this.color = (typeof color === 'string') ? color
       : Stop.Index <= 0 ? '#fff' : '#000';
 
     Stop.Index = (Stop.Index + 1) % 2;
 
-  };
+  }
 
   _.extend(Stop, {
 
@@ -5285,6 +5461,20 @@ SOFTWARE.
         });
 
       }, object);
+
+      Object.defineProperty(object, 'renderer', {
+
+        enumerable: false,
+
+        get: function() {
+          return this._renderer;
+        },
+
+        set: function(obj) {
+          this._renderer = obj;
+        }
+
+      });
 
     }
 
@@ -5348,7 +5538,6 @@ SOFTWARE.
   });
 
   Stop.MakeObservable(Stop.prototype);
-  Stop.prototype.constructor = Stop;
 
   /**
    * @name Two.Gradient
@@ -5356,16 +5545,15 @@ SOFTWARE.
    * @param {Two.Stop[]} [stops] - A list of {@link Two.Stop}s that contain the gradient fill pattern for the gradient.
    * @description This is the base class for constructing different types of gradients with Two.js. The two common gradients are {@link Two.LinearGradient} and {@link Two.RadialGradient}.
    */
-  var Gradient = function(stops) {
+  function Gradient(stops) {
 
     /**
-     * @name Two.Gradient#_renderer
+     * @name Two.Gradient#renderer
      * @property {Object}
-     * @private
-     * @description A private object to store relevant renderer specific variables.
-     * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `gradient._renderer.elem`.
+     * @description Object access to store relevant renderer specific variables. Warning: manipulating this object can create unintended consequences.
+     * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `shape.renderer.elem`.
      */
-    this._renderer = {};
+    this.renderer = {};
     this._renderer.type = 'gradient';
 
     /**
@@ -5391,9 +5579,11 @@ SOFTWARE.
      * @name Two.Gradient#stops
      * @property {Two.Stop[]} - An ordered list of {@link Two.Stop}s for rendering the gradient.
      */
-    this.stops = stops;
+    if (stops) {
+      this.stops = stops;
+    }
 
-  };
+  }
 
   _.extend(Gradient, {
 
@@ -5431,7 +5621,7 @@ SOFTWARE.
 
         set: function(stops) {
 
-          var updateStops = this._renderer.flagStops;
+          this._renderer.flagStops;
           var bindStops = this._renderer.bindStops;
           var unbindStops = this._renderer.unbindStops;
 
@@ -5453,6 +5643,20 @@ SOFTWARE.
           // Bind Initial Stops
           bindStops(this._stops);
 
+        }
+
+      });
+
+      Object.defineProperty(object, 'renderer', {
+
+        enumerable: false,
+
+        get: function() {
+          return this._renderer;
+        },
+
+        set: function(obj) {
+          this._renderer = obj;
         }
 
       });
@@ -5507,6 +5711,8 @@ SOFTWARE.
   });
 
   _.extend(Gradient.prototype, Events, {
+
+    constructor: Gradient,
 
     /**
      * @name Two.Gradient#_flagStops
@@ -5617,7 +5823,7 @@ SOFTWARE.
    * @param {Two.Stop[]} [stops] - A list of {@link Two.Stop}s that contain the gradient fill pattern for the gradient.
    * @nota-bene The linear gradient lives within the space of the parent object's matrix space.
    */
-  var LinearGradient = function(x1, y1, x2, y2, stops) {
+  function LinearGradient(x1, y1, x2, y2, stops) {
 
     Gradient.call(this, stops);
 
@@ -5649,7 +5855,7 @@ SOFTWARE.
       this.right.y = y2;
     }
 
-  };
+  }
 
   _.extend(LinearGradient, {
 
@@ -5682,14 +5888,14 @@ SOFTWARE.
 
   _.extend(LinearGradient.prototype, Gradient.prototype, {
 
+    constructor: LinearGradient,
+
     /**
      * @name Two.LinearGradient#_flagEndPoints
      * @private
      * @property {Boolean} - Determines whether the {@link Two.LinearGradient#left} or {@link Two.LinearGradient#right} changed and needs to update.
      */
     _flagEndPoints: false,
-
-    constructor: LinearGradient,
 
     /**
      * @name Two.LinearGradient#clone
@@ -5786,7 +5992,7 @@ SOFTWARE.
    * @param {Number} [focalY=0] - The y position of the focal point on the radial gradient.
    * @nota-bene The radial gradient lives within the space of the parent object's matrix space.
    */
-  var RadialGradient = function(cx, cy, r, stops, fx, fy) {
+  function RadialGradient(cx, cy, r, stops, fx, fy) {
 
     Gradient.call(this, stops);
 
@@ -5829,7 +6035,7 @@ SOFTWARE.
       this.focal.y = fy;
     }
 
-  };
+  }
 
   _.extend(RadialGradient, {
 
@@ -5865,6 +6071,8 @@ SOFTWARE.
 
   _.extend(RadialGradient.prototype, Gradient.prototype, {
 
+    constructor: RadialGradient,
+
     /**
      * @name Two.RadialGradient#_flagRadius
      * @private
@@ -5883,8 +6091,6 @@ SOFTWARE.
      * @property {Boolean} - Determines whether the {@link Two.RadialGradient#focal} changed and needs to update.
      */
     _flagFocal: false,
-
-    constructor: RadialGradient,
 
     /**
      * @name Two.RadialGradient#clone
@@ -5975,7 +6181,7 @@ SOFTWARE.
   RadialGradient.MakeObservable(RadialGradient.prototype);
 
   var anchor;
-  var regex = {
+  var regex$1 = {
     video: /\.(mp4|webm|ogg)$/i,
     image: /\.(jpe?g|png|gif|tiff|webp)$/i,
     effect: /texture|gradient/i
@@ -5989,13 +6195,19 @@ SOFTWARE.
    * @name Two.Texture
    * @class
    * @extends Two.Shape
-   * @param {String|ImageElement} [src] - The URL path to an image file or an `<img />` element.
+   * @param {String|HTMLImageElement} [src] - The URL path to an image file or an `<img />` element.
    * @param {Function} [callback] - An optional callback function once the image has been loaded.
    * @description Fundamental to work with bitmap data, a.k.a. pregenerated imagery, in Two.js. Supported formats include jpg, png, gif, and tiff. See {@link Two.Texture.RegularExpressions} for a full list of supported formats.
    */
-  var Texture = function(src, callback) {
+  function Texture(src, callback) {
 
-    this._renderer = {};
+    /**
+     * @name Two.Texture#renderer
+     * @property {Object}
+     * @description Object access to store relevant renderer specific variables. Warning: manipulating this object can create unintended consequences.
+     * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `shape.renderer.elem`.
+     */
+    this.renderer = {};
     this._renderer.type = 'texture';
     this._renderer.flagOffset = Texture.FlagOffset.bind(this);
     this._renderer.flagScale = Texture.FlagScale.bind(this);
@@ -6058,7 +6270,7 @@ SOFTWARE.
 
     this._update();
 
-  };
+  }
 
   _.extend(Texture, {
 
@@ -6076,7 +6288,7 @@ SOFTWARE.
      * @name Two.Texture.RegularExpressions
      * @property {Object} - A map of compatible DOM Elements categorized by media format.
      */
-    RegularExpressions: regex,
+    RegularExpressions: regex$1,
 
     /**
      * @name Two.Texture.ImageRegistry
@@ -6117,7 +6329,7 @@ SOFTWARE.
     /**
      * @name Two.Texture.getTag
      * @property {Function} - Retrieves the tag name of an image, video, or canvas node.
-     * @param {ImageElement} - The image to infer the tag name from.
+     * @param {HTMLImageElement} - The image to infer the tag name from.
      * @returns {String} - Returns the tag name of an image, video, or canvas node.
      */
     getTag: function(image) {
@@ -6130,7 +6342,7 @@ SOFTWARE.
      * @name Two.Texture.getImage
      * @property {Function} - Convenience function to set {@link Two.Texture#image} properties with canonincal versions set in {@link Two.Texture.ImageRegistry}.
      * @param {String} src - The URL path of the image.
-     * @returns {ImageElement} - Returns either a cached version of the image or a new one that is registered in {@link Two.Texture.ImageRegistry}.
+     * @returns {HTMLImageElement} - Returns either a cached version of the image or a new one that is registered in {@link Two.Texture.ImageRegistry}.
      */
     getImage: function(src) {
 
@@ -6146,11 +6358,11 @@ SOFTWARE.
 
         // TODO: Fix for headless environments
         image = new CanvasShim.Image();
-        Renderer.Utils.shim(image, 'img');
+        Renderer$2.Utils.shim(image, 'img');
 
       } else if (root$1.document) {
 
-        if (regex.video.test(absoluteSrc)) {
+        if (regex$1.video.test(absoluteSrc)) {
           image = document.createElement('video');
         } else {
           image = document.createElement('img');
@@ -6281,7 +6493,7 @@ SOFTWARE.
      */
     load: function(texture, callback) {
 
-      var src = texture.src;
+      texture.src;
       var image = texture.image;
       var tag = Texture.getTag(image);
 
@@ -6400,11 +6612,27 @@ SOFTWARE.
         }
       });
 
+      Object.defineProperty(object, 'renderer', {
+
+        enumerable: false,
+
+        get: function() {
+          return this._renderer;
+        },
+
+        set: function(obj) {
+          this._renderer = obj;
+        }
+
+      });
+
     }
 
   });
 
   _.extend(Texture.prototype, Events, Shape.prototype, {
+
+    constructor: Texture,
 
     /**
      * @name Two.Texture#_flagSrc
@@ -6497,8 +6725,6 @@ SOFTWARE.
      */
     _offset: null,
 
-    constructor: Texture,
-
     /**
      * @name Two.Texture#clone
      * @function
@@ -6584,7 +6810,7 @@ SOFTWARE.
 
   // Constants
 
-  var min$2 = Math.min, max$2 = Math.max, ceil = Math.ceil, floor = Math.floor;
+  var min$1 = Math.min, max$1 = Math.max, ceil = Math.ceil, floor = Math.floor;
 
   /**
    * @name Two.Path
@@ -6596,7 +6822,7 @@ SOFTWARE.
    * @param {Boolean} [manual=false] - Describes whether the developer controls how vertices are plotted or if Two.js automatically plots coordinates based on closed and curved booleans.
    * @description This is the primary primitive class for creating all drawable shapes in Two.js. Unless specified methods return their instance of `Two.Path` for the purpose of chaining.
    */
-  var Path = function(vertices, closed, curved, manual) {
+  function Path(vertices, closed, curved, manual) {
 
     Shape.call(this);
 
@@ -6642,15 +6868,15 @@ SOFTWARE.
 
     /**
      * @name Two.Path#fill
-     * @property {(CssColor|Two.Gradient|Two.Texture)} - The value of what the path should be filled in with.
-     * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS Colors.
+     * @property {(String|Two.Gradient|Two.Texture)} - The value of what the path should be filled in with.
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
      */
     this.fill = '#fff';
 
     /**
      * @name Two.Path#stroke
-     * @property {(CssColor|Two.Gradient|Two.Texture)} - The value of what the path should be outlined in with.
-     * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS Colors.
+     * @property {(String|Two.Gradient|Two.Texture)} - The value of what the path should be outlined in with.
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
      */
     this.stroke = '#000';
 
@@ -6706,7 +6932,7 @@ SOFTWARE.
      * @name Two.Path#vertices
      * @property {Two.Anchor[]} - An ordered list of anchor points for rendering the path.
      * @description A list of {@link Two.Anchor} objects that consist of what form the path takes.
-     * @nota-bene The array when manipulating is actually a {@link Two.Utils.Collection}.
+     * @nota-bene The array when manipulating is actually a {@link Two.Collection}.
      */
     this.vertices = vertices;
 
@@ -6730,7 +6956,7 @@ SOFTWARE.
      */
     this.dashes.offset = 0;
 
-  };
+  }
 
   _.extend(Path, {
 
@@ -6756,7 +6982,7 @@ SOFTWARE.
     ],
 
     Utils: {
-      getCurveLength: getCurveLength$1
+      getCurveLength: getCurveLength
     },
 
     /**
@@ -6976,7 +7202,7 @@ SOFTWARE.
 
         set: function(vertices) {
 
-          var updateVertices = this._renderer.flagVertices;
+          this._renderer.flagVertices;
           var bindVertices = this._renderer.bindVertices;
           var unbindVertices = this._renderer.unbindVertices;
 
@@ -7041,6 +7267,8 @@ SOFTWARE.
   });
 
   _.extend(Path.prototype, Shape.prototype, {
+
+    constructor: Path,
 
     // Flags
     // http://en.wikipedia.org/wiki/Flag
@@ -7236,8 +7464,6 @@ SOFTWARE.
      */
     _dashes: [],
 
-    constructor: Path,
-
     /**
      * @name Two.Path#clone
      * @function
@@ -7263,6 +7489,8 @@ SOFTWARE.
       clone.translation.copy(this.translation);
       clone.rotation = this.rotation;
       clone.scale = this.scale;
+      clone.skewX = this.skewX;
+      clone.skewY = this.skewY;
 
       if (this.matrix.manual) {
         clone.matrix.copy(this.matrix);
@@ -7299,6 +7527,8 @@ SOFTWARE.
       result.translation = this.translation.toObject();
       result.rotation = this.rotation;
       result.scale = this.scale instanceof Vector ? this.scale.toObject() : this.scale;
+      result.skewX = this.skewX;
+      result.skewY = this.skewY;
 
       if (this.matrix.manual) {
         result.matrix = this.matrix.toObject();
@@ -7335,18 +7565,19 @@ SOFTWARE.
      */
     corner: function() {
 
-      var rect = this.getBoundingClientRect(true);
+      var rect = this.getBoundingClientRect();
+      var hw = rect.width / 2;
+      var hh = rect.height / 2;
+      var cx = rect.left + rect.width / 2;
+      var cy = rect.top + rect.height / 2;
 
-      rect.centroid = {
-        x: rect.left + rect.width / 2,
-        y: rect.top + rect.height / 2
-      };
-
-      _.each(this.vertices, function(v) {
-        v.subSelf(rect.centroid);
-        v.x += rect.width / 2;
-        v.y += rect.height / 2;
-      });
+      for (var i = 0; i < this.vertices.length; i++) {
+        var v = this.vertices[i];
+        v.x -= cx;
+        v.y -= cy;
+        v.x += hw;
+        v.y += hh;
+      }
 
       return this;
 
@@ -7359,16 +7590,16 @@ SOFTWARE.
      */
     center: function() {
 
-      var rect = this.getBoundingClientRect(true);
+      var rect = this.getBoundingClientRect();
 
-      rect.centroid = {
-        x: rect.left + rect.width / 2 - this.translation.x,
-        y: rect.top + rect.height / 2 - this.translation.y
-      };
+      var cx = rect.left + rect.width / 2 - this.translation.x;
+      var cy = rect.top + rect.height / 2 - this.translation.y;
 
-      _.each(this.vertices, function(v) {
-        v.subSelf(rect.centroid);
-      });
+      for (var i = 0; i < this.vertices.length; i++) {
+        var v = this.vertices[i];
+        v.x -= cx;
+        v.y -= cy;
+      }
 
       return this;
 
@@ -7399,7 +7630,7 @@ SOFTWARE.
      * @description Return an object with top, left, right, bottom, width, and height parameters of the path.
      */
     getBoundingClientRect: function(shallow) {
-      var matrix, border, l, i, v0, c0, c1, v1;
+      var matrix, border, l, i, v0, v1, c0x, c0y, c1x, c1y, a, b, c, d;
 
       var left = Infinity, right = -Infinity,
           top = Infinity, bottom = -Infinity;
@@ -7409,7 +7640,7 @@ SOFTWARE.
 
       matrix = shallow ? this._matrix : getComputedMatrix(this);
 
-      border = this.linewidth / 2;
+      border = (this.linewidth || 0) / 2;
       l = this._renderer.vertices.length;
 
       if (l <= 0) {
@@ -7428,55 +7659,59 @@ SOFTWARE.
 
         if (v0.controls && v1.controls) {
 
+          c0x = v0.controls.right.x;
+          c0y = v0.controls.right.y;
+
           if (v0.relative) {
-            c0 = matrix.multiply(
-              v0.controls.right.x + v0.x, v0.controls.right.y + v0.y, 1);
-          } else {
-            c0 = matrix.multiply(
-              v0.controls.right.x, v0.controls.right.y, 1);
+            c0x += v0.x;
+            c0y += v0.y;
           }
-          v0 = matrix.multiply(v0.x, v0.y, 1);
+
+          c1x = v1.controls.left.x;
+          c1y = v1.controls.left.y;
 
           if (v1.relative) {
-            c1 = matrix.multiply(
-              v1.controls.left.x + v1.x, v1.controls.left.y + v1.y, 1);
-          } else {
-            c1 = matrix.multiply(
-              v1.controls.left.x, v1.controls.left.y, 1);
+            c1x += v1.x;
+            c1y += v1.y;
           }
-          v1 = matrix.multiply(v1.x, v1.y, 1);
 
-          var bb = getCurveBoundingBox(
-            v0.x, v0.y, c0.x, c0.y, c1.x, c1.y, v1.x, v1.y);
+          var bb = getCurveBoundingBox(v0.x, v0.y,
+            c0x, c0y, c1x, c1y, v1.x, v1.y);
 
-          top = min$2(bb.min.y - border, top);
-          left = min$2(bb.min.x - border, left);
-          right = max$2(bb.max.x + border, right);
-          bottom = max$2(bb.max.y + border, bottom);
+          top = min$1(bb.min.y - border, top);
+          left = min$1(bb.min.x - border, left);
+          right = max$1(bb.max.x + border, right);
+          bottom = max$1(bb.max.y + border, bottom);
 
         } else {
 
           if (i <= 1) {
 
-            v0 = matrix.multiply(v0.x, v0.y, 1);
-
-            top = min$2(v0.y - border, top);
-            left = min$2(v0.x - border, left);
-            right = max$2(v0.x + border, right);
-            bottom = max$2(v0.y + border, bottom);
+            top = min$1(v0.y - border, top);
+            left = min$1(v0.x - border, left);
+            right = max$1(v0.x + border, right);
+            bottom = max$1(v0.y + border, bottom);
 
           }
 
-          v1 = matrix.multiply(v1.x, v1.y, 1);
-
-          top = min$2(v1.y - border, top);
-          left = min$2(v1.x - border, left);
-          right = max$2(v1.x + border, right);
-          bottom = max$2(v1.y + border, bottom);
+          top = min$1(v1.y - border, top);
+          left = min$1(v1.x - border, left);
+          right = max$1(v1.x + border, right);
+          bottom = max$1(v1.y + border, bottom);
 
         }
 
       }
+
+      a = matrix.multiply(left, top, 1);
+      b = matrix.multiply(left, bottom, 1);
+      c = matrix.multiply(right, top, 1);
+      d = matrix.multiply(right, bottom, 1);
+
+      top = min$1(a.y, b.y, c.y, d.y);
+      left = min$1(a.x, b.x, c.x, d.x);
+      right = max$1(a.x, b.x, c.x, d.x);
+      bottom = max$1(a.y, b.y, c.y, d.y);
 
       return {
         top: top,
@@ -7652,7 +7887,7 @@ SOFTWARE.
     /**
      * @name Two.Path#subdivide
      * @function
-     * @param {Integer} limit - How many times to recurse subdivisions.
+     * @param {Number} limit - How many times to recurse subdivisions.
      * @description Insert a {@link Two.Anchor} at the midpoint between every item in {@link Two.Path#vertices}.
      */
     subdivide: function(limit) {
@@ -7735,7 +7970,7 @@ SOFTWARE.
      * @name Two.Path#_updateLength
      * @function
      * @private
-     * @param {Integer} [limit=] -
+     * @param {Number} [limit=] -
      * @param {Boolean} [silent=false] - If set to `true` then the path isn't updated before calculation. Useful for internal use.
      * @description Recalculate the {@link Two.Path#length} value.
      */
@@ -7763,14 +7998,14 @@ SOFTWARE.
           return;
         }
 
-        this._lengths[i] = getCurveLength$1(a, b, limit);
+        this._lengths[i] = getCurveLength(a, b, limit);
         sum += this._lengths[i];
 
         if (i >= last && closed) {
 
           b = this.vertices[(i + 1) % length];
 
-          this._lengths[i + 1] = getCurveLength$1(a, b, limit);
+          this._lengths[i + 1] = getCurveLength(a, b, limit);
           sum += this._lengths[i + 1];
 
         }
@@ -7962,7 +8197,7 @@ SOFTWARE.
    * @protected
    * @param {Two.Path} path - The path to analyze against.
    * @param {Number} target - The target length at which to find an anchor.
-   * @returns {Integer}
+   * @returns {Number}
    * @description Return the id of an anchor based on a target length.
    */
   function getIdByLength(path, target) {
@@ -7990,7 +8225,7 @@ SOFTWARE.
 
   }
 
-  function getCurveLength$1(a, b, limit) {
+  function getCurveLength(a, b, limit) {
     // TODO: DRYness
     var x1, x2, x3, x4, y1, y2, y3, y4;
 
@@ -8016,7 +8251,7 @@ SOFTWARE.
       y3 += a.y;
     }
 
-    return getCurveLength(x1, y1, x2, y2, x3, y3, x4, y4, limit);
+    return getCurveLength$1(x1, y1, x2, y2, x3, y3, x4, y4, limit);
 
   }
 
@@ -8050,8 +8285,8 @@ SOFTWARE.
 
   }
 
-  var TWO_PI$1 = Math.PI * 2, HALF_PI$1 = Math.PI / 2;
-  var cos$2 = Math.cos, sin$2 = Math.sin;
+  var TWO_PI$4 = Math.PI * 2, HALF_PI$2 = Math.PI / 2;
+  var cos$3 = Math.cos, sin$3 = Math.sin;
 
   /**
    * @name Two.Circle
@@ -8059,17 +8294,17 @@ SOFTWARE.
    * @extends Two.Path
    * @param {Number} [x=0] - The x position of the circle.
    * @param {Number} [y=0] - The y position of the circle.
-   * @param {Number} radius - The radius value of the circle.
+   * @param {Number} [radius=0] - The radius value of the circle.
    * @param {Number} [resolution=4] - The number of vertices used to construct the circle.
    */
-  var Circle = function(ox, oy, r, resolution) {
+  function Circle(ox, oy, r, resolution) {
 
     // At least 2 vertices are required for proper circlage
     var amount = resolution ? Math.max(resolution, 2) : 4;
 
     var points = [];
     for (var i = 0; i < amount; i++) {
-      points.push(new Anchor());
+      points.push(new Anchor(0, 0, 0, 0, 0, 0));
     }
 
     Path.call(this, points, true, true, true);
@@ -8078,7 +8313,9 @@ SOFTWARE.
      * @name Two.Circle#radius
      * @property {Number} - The size of the radius of the circle.
      */
-    this.radius = r;
+    if (typeof r === 'number') {
+      this.radius = r;
+    }
 
     this._update();
 
@@ -8089,7 +8326,7 @@ SOFTWARE.
       this.translation.y = oy;
     }
 
-  };
+  }
 
   _.extend(Circle, {
 
@@ -8116,6 +8353,8 @@ SOFTWARE.
 
   _.extend(Circle.prototype, Path.prototype, {
 
+    constructor: Circle,
+
     /**
      * @name Two.Circle#_flagRadius
      * @private
@@ -8130,8 +8369,6 @@ SOFTWARE.
      */
     _radius: 0,
 
-    constructor: Circle,
-
     /**
      * @name Two.Circle#_update
      * @function
@@ -8143,28 +8380,34 @@ SOFTWARE.
     _update: function() {
 
       if (this._flagRadius) {
-        // Coefficient for approximating circular arcs with Bezier curves
-        var c = (4 / 3) * Math.tan(Math.PI / (this.vertices.length * 2));
 
+        var length = this.vertices.length;
+
+        if (!this._closed && length > 2) {
+          length -= 1;
+        }
+
+        // Coefficient for approximating circular arcs with Bezier curves
+        var c = (4 / 3) * Math.tan(Math.PI / (length * 2));
         var radius = this._radius;
         var rc = radius * c;
 
-        for (var i = 0, numVertices = this.vertices.length; i < numVertices; i++) {
-          var pct = i / numVertices;
-          var theta = pct * TWO_PI$1;
+        for (var i = 0; i < this.vertices.length; i++) {
+          var pct = i / length;
+          var theta = pct * TWO_PI$4;
 
-          var x = radius * cos$2(theta);
-          var y = radius * sin$2(theta);
+          var x = radius * cos$3(theta);
+          var y = radius * sin$3(theta);
 
-          var lx = rc * cos$2(theta - HALF_PI$1);
-          var ly = rc * sin$2(theta - HALF_PI$1);
+          var lx = rc * cos$3(theta - HALF_PI$2);
+          var ly = rc * sin$3(theta - HALF_PI$2);
 
-          var rx = rc * cos$2(theta + HALF_PI$1);
-          var ry = rc * sin$2(theta + HALF_PI$1);
+          var rx = rc * cos$3(theta + HALF_PI$2);
+          var ry = rc * sin$3(theta + HALF_PI$2);
 
           var v = this.vertices[i];
 
-          v.command = Commands.curve;
+          v.command = i === 0 ? Commands.move : Commands.curve;
           v.set(x, y);
           v.controls.left.set(lx, ly);
           v.controls.right.set(rx, ry);
@@ -8205,6 +8448,8 @@ SOFTWARE.
       clone.translation.copy(this.translation);
       clone.rotation = this.rotation;
       clone.scale = this.scale;
+      clone.skewX = this.skewX;
+      clone.skewY = this.skewY;
 
       if (this.matrix.manual) {
         clone.matrix.copy(this.matrix);
@@ -8244,8 +8489,8 @@ SOFTWARE.
 
   Circle.MakeObservable(Circle.prototype);
 
-  var TWO_PI$2 = Math.PI * 2, HALF_PI$2 = Math.PI / 2;
-  var cos$3 = Math.cos, sin$3 = Math.sin;
+  var TWO_PI$3 = Math.PI * 2, HALF_PI$1 = Math.PI / 2;
+  var cos$2 = Math.cos, sin$2 = Math.sin;
 
   /**
    * @name Two.Ellipse
@@ -8253,13 +8498,13 @@ SOFTWARE.
    * @extends Two.Path
    * @param {Number} [x=0] - The x position of the ellipse.
    * @param {Number} [y=0] - The y position of the ellipse.
-   * @param {Number} rx - The radius value of the ellipse in the x direction.
-   * @param {Number} ry - The radius value of the ellipse in the y direction.
+   * @param {Number} [rx=0] - The radius value of the ellipse in the x direction.
+   * @param {Number} [ry=0] - The radius value of the ellipse in the y direction.
    * @param {Number} [resolution=4] - The number of vertices used to construct the ellipse.
    */
-  var Ellipse = function(ox, oy, rx, ry, resolution) {
+  function Ellipse(ox, oy, rx, ry, resolution) {
 
-    if (typeof ry !== 'number') {
+    if (typeof ry !== 'number' && typeof rx === 'number') {
       ry = rx;
     }
 
@@ -8277,17 +8522,22 @@ SOFTWARE.
      * @name Two.Ellipse#width
      * @property {Number} - The width of the ellipse.
      */
-    this.width = rx * 2;
+    if (typeof rx === 'number') {
+      this.width = rx * 2;
+    }
+
     /**
      * @name Two.Ellipse#height
      * @property {Number} - The height of the ellipse.
      */
-    this.height = ry * 2;
+    if (typeof ry === 'number') {
+      this.height = ry * 2;
+    }
 
     this._update();
     this.translation.set(ox, oy);
 
-  };
+  }
 
   _.extend(Ellipse, {
 
@@ -8360,20 +8610,20 @@ SOFTWARE.
 
         for (var i = 0, numVertices = this.vertices.length; i < numVertices; i++) {
           var pct = i / numVertices;
-          var theta = pct * TWO_PI$2;
+          var theta = pct * TWO_PI$3;
 
-          var x = radiusX * cos$3(theta);
-          var y = radiusY * sin$3(theta);
+          var x = radiusX * cos$2(theta);
+          var y = radiusY * sin$2(theta);
 
-          var lx = radiusX * c * cos$3(theta - HALF_PI$2);
-          var ly = radiusY * c * sin$3(theta - HALF_PI$2);
+          var lx = radiusX * c * cos$2(theta - HALF_PI$1);
+          var ly = radiusY * c * sin$2(theta - HALF_PI$1);
 
-          var rx = radiusX * c * cos$3(theta + HALF_PI$2);
-          var ry = radiusY * c * sin$3(theta + HALF_PI$2);
+          var rx = radiusX * c * cos$2(theta + HALF_PI$1);
+          var ry = radiusY * c * sin$2(theta + HALF_PI$1);
 
           var v = this.vertices[i];
 
-          v.command = Commands.curve;
+          v.command = i === 0 ? Commands.move : Commands.curve;
           v.set(x, y);
           v.controls.left.set(lx, ly);
           v.controls.right.set(rx, ry);
@@ -8417,6 +8667,8 @@ SOFTWARE.
       clone.translation.copy(this.translation);
       clone.rotation = this.rotation;
       clone.scale = this.scale;
+      clone.skewX = this.skewX;
+      clone.skewY = this.skewY;
 
       if (this.matrix.manual) {
         clone.matrix.copy(this.matrix);
@@ -8465,7 +8717,7 @@ SOFTWARE.
    * @param {Number} [x2=0] - The x position of the second vertex on the line.
    * @param {Number} [y2=0] - The y position of the second vertex on the line.
    */
-  var Line = function(x1, y1, x2, y2) {
+  function Line(x1, y1, x2, y2) {
 
     Path.call(this, [
         new Anchor(x1, y1),
@@ -8477,10 +8729,13 @@ SOFTWARE.
 
     this.automatic = false;
 
-  };
+  }
 
-  _.extend(Line.prototype, Path.prototype);
-  Line.prototype.constructor = Line;
+  _.extend(Line.prototype, Path.prototype, {
+
+    constructor: Line
+
+  });
 
   Path.MakeObservable(Line.prototype);
 
@@ -8490,10 +8745,10 @@ SOFTWARE.
    * @extends Two.Path
    * @param {Number} [x=0] - The x position of the rectangle.
    * @param {Number} [y=0] - The y position of the rectangle.
-   * @param {Number} width - The width value of the rectangle.
-   * @param {Number} height - The width value of the rectangle.
+   * @param {Number} [width] - The width value of the rectangle.
+   * @param {Number} [height] - The width value of the rectangle.
    */
-  var Rectangle = function(x, y, width, height) {
+  function Rectangle(x, y, width, height) {
 
     Path.call(this, [
       new Anchor(),
@@ -8523,7 +8778,7 @@ SOFTWARE.
 
     this._update();
 
-  };
+  }
 
   _.extend(Rectangle, {
 
@@ -8565,6 +8820,8 @@ SOFTWARE.
 
   _.extend(Rectangle.prototype, Path.prototype, {
 
+    constructor: Rectangle,
+
     /**
      * @name Two.Rectangle#_flagWidth
      * @private
@@ -8592,8 +8849,6 @@ SOFTWARE.
     _height: 0,
 
     _origin: null,
-
-    constructor: Rectangle,
 
     /**
      * @name Two.Rectangle#_update
@@ -8656,6 +8911,8 @@ SOFTWARE.
       clone.translation.copy(this.translation);
       clone.rotation = this.rotation;
       clone.scale = this.scale;
+      clone.skewX = this.skewX;
+      clone.skewY = this.skewY;
 
       if (this.matrix.manual) {
         clone.matrix.copy(this.matrix);
@@ -8699,14 +8956,15 @@ SOFTWARE.
    * @extends Two.Path
    * @param {Number} [x=0] - The x position of the rounded rectangle.
    * @param {Number} [y=0] - The y position of the rounded rectangle.
-   * @param {Number} width - The width value of the rounded rectangle.
-   * @param {Number} height - The width value of the rounded rectangle.
-   * @param {Number} radius - The radius value of the rounded rectangle.
+   * @param {Number} [width=0] - The width value of the rounded rectangle.
+   * @param {Number} [height=0] - The width value of the rounded rectangle.
+   * @param {Number} [radius=0] - The radius value of the rounded rectangle.
    * @param {Number} [resolution=12] - The number of vertices used to construct the rounded rectangle.
    */
-  var RoundedRectangle = function(ox, oy, width, height, radius) {
+  function RoundedRectangle(ox, oy, width, height, radius) {
 
-    if (typeof radius === 'undefined') {
+    if (typeof radius === 'undefined' &&
+      typeof width === 'number' && typeof height === 'number') {
       radius = Math.floor(Math.min(width, height) / 12);
     }
 
@@ -8733,22 +8991,30 @@ SOFTWARE.
      * @name Two.RoundedRectangle#width
      * @property {Number} - The width of the rounded rectangle.
      */
-    this.width = width;
+    if (typeof width === 'number') {
+      this.width = width;
+    }
+
     /**
      * @name Two.RoundedRectangle#height
      * @property {Number} - The height of the rounded rectangle.
      */
-    this.height = height;
+    if (typeof height === 'number') {
+      this.height = height;
+    }
+
     /**
      * @name Two.RoundedRectangle#radius
      * @property {Number} - The size of the radius of the rounded rectangle.
      */
-    this.radius = radius;
+    if (typeof radius === 'number') {
+      this.radius = radius;
+    }
 
     this._update();
     this.translation.set(ox, oy);
 
-  };
+  }
 
   _.extend(RoundedRectangle, {
 
@@ -8805,6 +9071,8 @@ SOFTWARE.
 
   _.extend(RoundedRectangle.prototype, Path.prototype, {
 
+    constructor: RoundedRectangle,
+
     /**
      * @name Two.RoundedRectangle#_flagWidth
      * @private
@@ -8841,9 +9109,7 @@ SOFTWARE.
      * @private
      * @see {@link Two.RoundedRectangle#radius}
      */
-    _radius: 0,
-
-    constructor: RoundedRectangle,
+    _radius: 12,
 
     /**
      * @name Two.RoundedRectangle#_update
@@ -8982,6 +9248,8 @@ SOFTWARE.
       clone.translation.copy(this.translation);
       clone.rotation = this.rotation;
       clone.scale = this.scale;
+      clone.skewX = this.skewX;
+      clone.skewY = this.skewY;
 
       if (this.matrix.manual) {
         clone.matrix.copy(this.matrix);
@@ -9024,17 +9292,20 @@ SOFTWARE.
 
   RoundedRectangle.MakeObservable(RoundedRectangle.prototype);
 
+  var min = Math.min, max = Math.max;
+
   /**
    * @name Two.Text
    * @class
    * @extends Two.Shape
-   * @param {String} message - The String to be rendered to the scene.
+   * @param {String} [message] - The String to be rendered to the scene.
    * @param {Number} [x=0] - The position in the x direction for the object.
    * @param {Number} [y=0] - The position in the y direction for the object.
    * @param {Object} [styles] - An object where styles are applied. Attribute must exist in Two.Text.Properties.
    * @description This is a primitive class for creating drawable text that can be added to the scenegraph.
+   * @returns {Two.Text}
    */
-  var Text = function(message, x, y, styles) {
+  function Text(message, x, y, styles) {
 
     Shape.call(this);
 
@@ -9045,10 +9316,10 @@ SOFTWARE.
     this.value = message;
 
     if (typeof x === 'number') {
-        this.translation.x = x;
+      this.translation.x = x;
     }
     if (typeof y === 'number') {
-        this.translation.y = y;
+      this.translation.y = y;
     }
 
     /**
@@ -9077,7 +9348,7 @@ SOFTWARE.
 
     }, this);
 
-  };
+  }
 
   _.extend(Text, {
 
@@ -9204,6 +9475,8 @@ SOFTWARE.
   });
 
   _.extend(Text.prototype, Shape.prototype, {
+
+    constructor: Text,
 
     // Flags
     // http://en.wikipedia.org/wiki/Flag
@@ -9378,15 +9651,15 @@ SOFTWARE.
 
     /**
      * @name Two.Text#fill
-     * @property {(CssColor|Two.Gradient|Two.Texture)} - The value of what the text object should be filled in with.
-     * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS Colors.
+     * @property {(String|Two.Gradient|Two.Texture)} - The value of what the text object should be filled in with.
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
      */
     _fill: '#000',
 
     /**
      * @name Two.Text#stroke
-     * @property {(CssColor|Two.Gradient|Two.Texture)} - The value of what the text object should be filled in with.
-     * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS Colors.
+     * @property {(String|Two.Gradient|Two.Texture)} - The value of what the text object should be filled in with.
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
      */
     _stroke: 'transparent',
 
@@ -9429,8 +9702,6 @@ SOFTWARE.
      * @see {@link Two.Text#dashes}
      */
     _dashes: [],
-
-    constructor: Text,
 
     /**
      * @name Two.Text#remove
@@ -9539,7 +9810,7 @@ SOFTWARE.
      */
     getBoundingClientRect: function(shallow) {
 
-      var matrix, v;
+      var matrix, a, b, c, d;
       var left, right, top, bottom;
 
       // TODO: Update this to not __always__ update. Just when it needs to.
@@ -9549,44 +9820,45 @@ SOFTWARE.
 
       var height = this.leading;
       var width = this.value.length * this.size * Text.Ratio;
+      var border = (this._linewidth || 0) / 2;
 
       switch (this.alignment) {
         case 'left':
-          left = 0;
-          right = width;
+          left = - border;
+          right = width + border;
           break;
         case 'right':
-          left = - width;
-          right = 0;
+          left = - (width + border);
+          right = border;
           break;
         default:
-          left = - width / 2;
-          right = width / 2;
+          left = - (width / 2 + border);
+          right = width / 2 + border;
       }
 
       switch (this.baseline) {
         case 'top':
-          top = 0;
-          bottom = height;
+          top = - border;
+          bottom = height + border;
           break;
         case 'bottom':
-          top = - height;
-          bottom = 0;
+          top = - (height + border);
+          bottom = border;
           break;
         default:
-          top = - height / 2;
-          bottom = height / 2;
+          top = - (height / 2 + border);
+          bottom = height / 2 + border;
       }
 
-      v = matrix.multiply(left, top, 1);
+      a = matrix.multiply(left, top, 1);
+      b = matrix.multiply(left, bottom, 1);
+      c = matrix.multiply(right, top, 1);
+      d = matrix.multiply(right, bottom, 1);
 
-      top = v.y;
-      left = v.x;
-
-      v = matrix.multiply(right, bottom, 1);
-
-      right = v.x;
-      bottom = v.y;
+      top = min(a.y, b.y, c.y, d.y);
+      left = min(a.x, b.x, c.x, d.x);
+      right = max(a.x, b.x, c.x, d.x);
+      bottom = max(a.y, b.y, c.y, d.y);
 
       return {
         top: top,
@@ -9624,6 +9896,11 @@ SOFTWARE.
 
   Text.MakeObservable(Text.prototype);
 
+  // https://github.com/jonobr1/two.js/issues/507#issuecomment-777159213
+  var regex = {
+    path: /[+-]?(?:\d*\.\d+|\d+)(?:[eE][+-]\d+)?/g
+  };
+
   var alignments = {
     start: 'left',
     middle: 'center',
@@ -9631,7 +9908,7 @@ SOFTWARE.
   };
 
   /**
-   * @name Utils.getAlignment
+   * @name Two.Utils.getAlignment
    * @function
    * @param {AlignmentString}
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/text-anchor}
@@ -9647,7 +9924,7 @@ SOFTWARE.
   };
 
   /**
-   * @name Utils.extractCSSText
+   * @name Two.Utils.extractCSSText
    * @function
    * @param {String} text - The CSS text body to be parsed and extracted.
    * @param {Object} [styles] - The styles object to apply CSS key values to.
@@ -9679,9 +9956,9 @@ SOFTWARE.
   };
 
   /**
-   * @name Utils.getSvgStyles
+   * @name Two.Utils.getSvgStyles
    * @function
-   * @param {SvgNode} node - The SVG node to parse.
+   * @param {SVGElement} node - The SVG node to parse.
    * @returns {Object} styles
    * @description Get the CSS comands from the `style` attribute of an SVG node and apply them as key value pairs to a JavaScript object.
    */
@@ -9729,7 +10006,7 @@ SOFTWARE.
   };
 
   /**
-   * @name Utils.applySvgViewBox
+   * @name Two.Utils.applySvgViewBox
    * @function
    * @param {Two.Shape} node - The Two.js object to apply viewbox matrix to
    * @param {String} value - The viewBox value from the SVG attribute
@@ -9755,25 +10032,10 @@ SOFTWARE.
 
   };
 
-  var extrapolateScientificNotation = function(command) {
-    var regex = /[\+\-]?[\d\.]*e[\-\+]?\d*/ig;
-    var matches = command.match(regex);
-    if (matches && matches.length > 0) {
-      for (var i = 0; i < matches.length; i++) {
-        var match = matches[i];
-        var items = match.split(/e/i);
-        var value = parseFloat(items[0]);
-        value = value.toLocaleString('fullwide', { useGrouping:false });
-        command = command.replace(match, value);
-      }
-    }
-    return command;
-  };
-
   /**
-   * @name Utils.applySvgAttributes
+   * @name Two.Utils.applySvgAttributes
    * @function
-   * @param {SvgNode} node - An SVG Node to extrapolate attributes from.
+   * @param {SVGElement} node - An SVG Node to extrapolate attributes from.
    * @param {Two.Shape} elem - The Two.js object to apply extrapolated attributes to.
    * @returns {Two.Shape} The Two.js object passed now with applied attributes.
    * @description This function iterates through an SVG Node's properties and stores ones of interest. It tries to resolve styles applied via CSS as well.
@@ -9781,7 +10043,7 @@ SOFTWARE.
    */
   var applySvgAttributes = function(node, elem, parentStyles) {
 
-    var  styles = {}, attributes = {}, extracted = {}, i, key, value, attr;
+    var  styles = {}, attributes = {}, extracted = {}, i, m, key, value, attr;
 
     // Not available in non browser environments
     if (root$1.getComputedStyle) {
@@ -9838,7 +10100,7 @@ SOFTWARE.
         case 'transform':
           // TODO: Check this out https://github.com/paperjs/paper.js/blob/develop/src/svg/SvgImport.js#L315
           if (/none/i.test(value)) break;
-          var m = (node.transform && node.transform.baseVal && node.transform.baseVal.length > 0)
+          m = (node.transform && node.transform.baseVal && node.transform.baseVal.length > 0)
             ? node.transform.baseVal[0].matrix
             : (node.getCTM ? node.getCTM() : null);
 
@@ -9869,7 +10131,7 @@ SOFTWARE.
           } else {
 
             // Edit the underlying matrix and don't force an auto calc.
-            var m = node.getCTM();
+            m = node.getCTM();
             elem._matrix.manual = true;
             elem._matrix.set(m.a, m.b, m.c, m.d, m.e, m.f);
 
@@ -10001,9 +10263,9 @@ SOFTWARE.
   };
 
   /**
-   * @name Utils.updateDefsCache
+   * @name Two.Utils.updateDefsCache
    * @function
-   * @param {SvgNode} node - The SVG Node with which to update the defs cache.
+   * @param {SVGElement} node - The SVG Node with which to update the defs cache.
    * @param {Object} Object - The defs cache to be updated.
    * @description Update the cache of children of <defs /> tags.
    */
@@ -10020,7 +10282,7 @@ SOFTWARE.
   };
 
   /**
-   * @name Utils.getScene
+   * @name Two.Utils.getScene
    * @param {Two.Shape} node - The currently available object in the scenegraph.
    * @returns {Group} - The highest order {@link Two.Group} in the scenegraph.
    * @property {Function}
@@ -10036,7 +10298,7 @@ SOFTWARE.
   };
 
   /**
-   * @name Utils.read
+   * @name Two.Utils.read
    * @property {Object} read - A map of functions to read any number of SVG node types and create Two.js equivalents of them. Primarily used by the {@link Two#interpret} method.
    */
   var read = {
@@ -10051,7 +10313,7 @@ SOFTWARE.
       }
 
       var svg = read.g.call(this, node);
-      var viewBox = node.getAttribute('viewBox');
+      node.getAttribute('viewBox');
 
       svg.defs = defs;  // Export out the <defs /> for later use
       // Utils.applySvgViewBox(svg, viewBox);
@@ -10068,16 +10330,17 @@ SOFTWARE.
 
     use: function(node, styles) {
 
+      var error;
       var href = node.getAttribute('href') || node.getAttribute('xlink:href');
       if (!href) {
-        var error = new TwoError('encountered <use /> with no href.');
+        error = new TwoError('encountered <use /> with no href.');
         console.warn(error.name, error.message);
         return null;
       }
 
       var id = href.slice(1);
       if (!read.defs.current.contains(id)) {
-        var error = new TwoError(
+        error = new TwoError(
           'unable to find element for reference ' + href + '.');
         console.warn(error.name, error.message);
         return null;
@@ -10137,7 +10400,7 @@ SOFTWARE.
       var points = node.getAttribute('points');
 
       var verts = [];
-      points.replace(/(-?[\d\.eE-]+)[,|\s](-?[\d\.eE-]+)/g, function(match, p1, p2) {
+      points.replace(/(-?[\d.eE-]+)[,|\s](-?[\d.eE-]+)/g, function(match, p1, p2) {
         verts.push(new Anchor(parseFloat(p1), parseFloat(p2)));
       });
 
@@ -10175,47 +10438,12 @@ SOFTWARE.
 
         _.each(commands.slice(0), function(command, i) {
 
-          var number, fid, lid, numbers, first, s;
-          var j, ct, l, times;
-
-          command = extrapolateScientificNotation(command);
-
+          var items = command.slice(1).trim().match(regex.path);
           var type = command[0];
           var lower = type.toLowerCase();
-          var items = command.slice(1).trim().split(/[\s,]+|(?=\s?[+-])/);
-          var result = [], bin;
-          var hasDoubleDecimals = false;
+          var bin, j, l, ct, times, result = [];
 
-          // Handle double decimal values e.g: 48.6037.71.8
-          // Like: https://m.abcsofchinese.com/images/svg/亼ji2.svg
-          for (j = 0; j < items.length; j++) {
-
-            number = items[j];
-            fid = number.indexOf('.');
-            lid = number.lastIndexOf('.');
-
-            if (fid !== lid) {
-
-              numbers = number.split('.');
-              first = numbers[0] + '.' + numbers[1];
-
-              items.splice(j, 1, first);
-
-              for (s = 2; s < numbers.length; s++) {
-                items.splice(j + s - 1, 0, '0.' + numbers[s]);
-              }
-
-              hasDoubleDecimals = true;
-
-            }
-
-          }
-
-          if (hasDoubleDecimals) {
-            command = type + items.join(',');
-          }
-
-          if (i <= 0) {
+          if (i === 0) {
             commands = [];
           }
 
@@ -10293,11 +10521,7 @@ SOFTWARE.
           var type = command[0];
           var lower = type.toLowerCase();
 
-          coords = command.slice(1).trim();
-          coords = coords.replace(/(-?\d+(?:\.\d*)?)[eE]([+-]?\d+)/g, function(match, n1, n2) {
-            return parseFloat(n1) * Math.pow(10, n2);
-          });
-          coords = coords.split(/[\s,]+|(?=\s?[+-])/);
+          coords = command.slice(1).trim().match(regex.path);
           relative = type === lower;
 
           var x1, y1, x2, y2, x3, y3, x4, y4, reflection;
@@ -10615,8 +10839,8 @@ SOFTWARE.
         return read['rounded-rect'](node);
       }
 
-      var x = parseFloat(node.getAttribute('x')) || 0;
-      var y = parseFloat(node.getAttribute('y')) || 0;
+      parseFloat(node.getAttribute('x')) || 0;
+      parseFloat(node.getAttribute('y')) || 0;
       var width = parseFloat(node.getAttribute('width'));
       var height = parseFloat(node.getAttribute('height'));
 
@@ -10640,8 +10864,8 @@ SOFTWARE.
 
     'rounded-rect': function(node, parentStyles) {
 
-      var x = parseFloat(node.getAttribute('x')) || 0;
-      var y = parseFloat(node.getAttribute('y')) || 0;
+      parseFloat(node.getAttribute('x')) || 0;
+      parseFloat(node.getAttribute('y')) || 0;
       var rx = parseFloat(node.getAttribute('rx')) || 0;
       var ry = parseFloat(node.getAttribute('ry')) || 0;
 
@@ -10814,14 +11038,14 @@ SOFTWARE.
   };
 
   /**
-   * @name Utils.xhr
+   * @name Two.Utils.xhr
    * @function
    * @param {String} path
    * @param {Function} callback
    * @returns {XMLHttpRequest} The constructed and called XHR request.
    * @description Canonical method to initiate `GET` requests in the browser. Mainly used by {@link Two#load} method.
    */
-  var xhr = function(path, callback) {
+  function xhr(path, callback) {
 
     var xhr = new XMLHttpRequest();
     xhr.open('GET', path);
@@ -10835,7 +11059,7 @@ SOFTWARE.
     xhr.send();
     return xhr;
 
-  };
+  }
 
   /**
    * @name Two.ImageSequence
@@ -10844,10 +11068,10 @@ SOFTWARE.
    * @param {String|String[]|Two.Texture|Two.Texture[]} paths - A list of URLs or {@link Two.Texture}s.
    * @param {Number} [ox=0] - The initial `x` position of the Two.ImageSequence.
    * @param {Number} [oy=0] - The initial `y` position of the Two.ImageSequence.
-   * @param {Integer} [frameRate=30] - The frame rate at which the images should playback at.
+   * @param {Number} [frameRate=30] - The frame rate at which the images should playback at.
    * @description A convenient package to display still or animated images organized as a series of still images.
    */
-  var ImageSequence = function(paths, ox, oy, frameRate) {
+  function ImageSequence(paths, ox, oy, frameRate) {
 
     // Not using default constructor of Rectangle due to odd `beginning` / `ending` behavior.
     // See: https://github.com/jonobr1/two.js/issues/383
@@ -10883,7 +11107,7 @@ SOFTWARE.
 
     /**
      * @name Two.ImageSequence#frameRate
-     * @property {Integer} - The number of frames to animate against per second.
+     * @property {Number} - The number of frames to animate against per second.
      */
     if (typeof frameRate === 'number') {
       this.frameRate = frameRate;
@@ -10893,11 +11117,11 @@ SOFTWARE.
 
     /**
      * @name Two.ImageSequence#index
-     * @property {Integer} - The index of the current tile of the sprite to display. Defaults to `0`.
+     * @property {Number} - The index of the current tile of the sprite to display. Defaults to `0`.
      */
     this.index = 0;
 
-  };
+  }
 
   _.extend(ImageSequence, {
 
@@ -10978,7 +11202,7 @@ SOFTWARE.
 
         set: function(textures) {
 
-          var updateTextures = this._renderer.flagTextures;
+          this._renderer.flagTextures;
           var bindTextures = this._renderer.bindTextures;
           var unbindTextures = this._renderer.unbindTextures;
 
@@ -11025,6 +11249,8 @@ SOFTWARE.
 
   _.extend(ImageSequence.prototype, Rectangle.prototype, {
 
+    constructor: ImageSequence,
+
     /**
      * @name Two.ImageSequence#_flagTextures
      * @private
@@ -11051,7 +11277,7 @@ SOFTWARE.
     /**
      * @name Two.ImageSequence#_amount
      * @private
-     * @property {Integer} - Number of frames for a given {@link Two.ImageSequence}.
+     * @property {Number} - Number of frames for a given {@link Two.ImageSequence}.
      */
     _amount: 1,
 
@@ -11065,7 +11291,7 @@ SOFTWARE.
     /**
      * @name Two.ImageSequence#_index
      * @private
-     * @property {Integer} - The current frame the {@link Two.ImageSequence} is currently displaying.
+     * @property {Number} - The current frame the {@link Two.ImageSequence} is currently displaying.
      */
     _index: 0,
 
@@ -11086,14 +11312,14 @@ SOFTWARE.
     /**
      * @name Two.ImageSequence#_firstFrame
      * @private
-     * @property {Integer} - The frame the {@link Two.ImageSequence} should start with.
+     * @property {Number} - The frame the {@link Two.ImageSequence} should start with.
      */
     _firstFrame: 0,
 
     /**
      * @name Two.ImageSequence#_lastFrame
      * @private
-     * @property {Integer} - The frame the {@link Two.ImageSequence} should end with.
+     * @property {Number} - The frame the {@link Two.ImageSequence} should end with.
      */
     _lastFrame: 0,
 
@@ -11127,13 +11353,11 @@ SOFTWARE.
      */
     _origin: null,
 
-    constructor: ImageSequence,
-
     /**
      * @name Two.ImageSequence#play
      * @function
-     * @param {Integer} [firstFrame=0] - The index of the frame to start the animation with.
-     * @param {Integer} [lastFrame] - The index of the frame to end the animation with. Defaults to the last item in the {@link Two.ImageSequence#textures}.
+     * @param {Number} [firstFrame=0] - The index of the frame to start the animation with.
+     * @param {Number} [lastFrame] - The index of the frame to end the animation with. Defaults to the last item in the {@link Two.ImageSequence#textures}.
      * @param {Function} [onLastFrame] - Optional callback function to be triggered after playing the last frame. This fires multiple times when the image sequence is looped.
      * @description Initiate animation playback of a {@link Two.ImageSequence}.
      */
@@ -11361,12 +11585,12 @@ SOFTWARE.
    * @param {String|Two.Texture} [path] - The URL path or {@link Two.Texture} to be used as the bitmap data displayed on the sprite.
    * @param {Number} [ox=0] - The initial `x` position of the Two.Sprite.
    * @param {Number} [oy=0] - The initial `y` position of the Two.Sprite.
-   * @param {Integer} [cols=1] - The number of columns the sprite contains.
-   * @param {Integer} [rows=1] - The number of rows the sprite contains.
-   * @param {Integer} [frameRate=0] - The frame rate at which the partitions of the image should playback at.
+   * @param {Number} [cols=1] - The number of columns the sprite contains.
+   * @param {Number} [rows=1] - The number of rows the sprite contains.
+   * @param {Number} [frameRate=0] - The frame rate at which the partitions of the image should playback at.
    * @description A convenient package to display still or animated images through a tiled image source. For more information on the principals of animated imagery through tiling see [Texture Atlas](https://en.wikipedia.org/wiki/Texture_atlas) on Wikipedia.
    */
-  var Sprite = function(path, ox, oy, cols, rows, frameRate) {
+  function Sprite(path, ox, oy, cols, rows, frameRate) {
 
     // Not using default constructor of Rectangle due to odd `beginning` / `ending` behavior.
     // See: https://github.com/jonobr1/two.js/issues/383
@@ -11397,7 +11621,7 @@ SOFTWARE.
 
     /**
      * @name Two.Sprite#columns
-     * @property {Integer} - The number of columns to split the texture into. Defaults to `1`.
+     * @property {Number} - The number of columns to split the texture into. Defaults to `1`.
      */
     if (typeof cols === 'number') {
       this.columns = cols;
@@ -11405,7 +11629,7 @@ SOFTWARE.
 
     /**
      * @name Two.Sprite#rows
-     * @property {Integer} - The number of rows to split the texture into. Defaults to `1`.
+     * @property {Number} - The number of rows to split the texture into. Defaults to `1`.
      */
     if (typeof rows === 'number') {
       this.rows = rows;
@@ -11413,7 +11637,7 @@ SOFTWARE.
 
     /**
      * @name Two.Sprite#frameRate
-     * @property {Integer} - The number of frames to animate against per second. Defaults to `0` for non-animated sprites.
+     * @property {Number} - The number of frames to animate against per second. Defaults to `0` for non-animated sprites.
      */
     if (typeof frameRate === 'number') {
       this.frameRate = frameRate;
@@ -11421,11 +11645,11 @@ SOFTWARE.
 
     /**
      * @name Two.Sprite#index
-     * @property {Integer} - The index of the current tile of the sprite to display. Defaults to `0`.
+     * @property {Number} - The index of the current tile of the sprite to display. Defaults to `0`.
      */
     this.index = 0;
 
-  };
+  }
 
   _.extend(Sprite, {
 
@@ -11453,6 +11677,8 @@ SOFTWARE.
   });
 
   _.extend(Sprite.prototype, Rectangle.prototype, {
+
+    constructor: Sprite,
 
     /**
      * @name Two.Sprite#_flagTexture
@@ -11494,7 +11720,7 @@ SOFTWARE.
     /**
      * @name Two.Sprite#_amount
      * @private
-     * @property {Integer} - Number of frames for a given {@link Two.Sprite}.
+     * @property {Number} - Number of frames for a given {@link Two.Sprite}.
      */
     _amount: 1,
 
@@ -11522,14 +11748,14 @@ SOFTWARE.
     /**
      * @name Two.Sprite#_firstFrame
      * @private
-     * @property {Integer} - The frame the {@link Two.Sprite} should start with.
+     * @property {Number} - The frame the {@link Two.Sprite} should start with.
      */
     _firstFrame: 0,
 
     /**
      * @name Two.Sprite#_lastFrame
      * @private
-     * @property {Integer} - The frame the {@link Two.Sprite} should end with.
+     * @property {Number} - The frame the {@link Two.Sprite} should end with.
      */
     _lastFrame: 0,
 
@@ -11573,7 +11799,7 @@ SOFTWARE.
     /**
      * @name Two.Sprite#_index
      * @private
-     * @property {Integer} - The current frame the {@link Two.Sprite} is currently displaying.
+     * @property {Number} - The current frame the {@link Two.Sprite} is currently displaying.
      */
     _index: 0,
 
@@ -11584,13 +11810,11 @@ SOFTWARE.
      */
     _origin: null,
 
-    constructor: Sprite,
-
     /**
      * @name Two.Sprite#play
      * @function
-     * @param {Integer} [firstFrame=0] - The index of the frame to start the animation with.
-     * @param {Integer} [lastFrame] - The index of the frame to end the animation with. Defaults to the last item in the {@link Two.Sprite#textures}.
+     * @param {Number} [firstFrame=0] - The index of the frame to start the animation with.
+     * @param {Number} [lastFrame] - The index of the frame to end the animation with. Defaults to the last item in the {@link Two.Sprite#textures}.
      * @param {Function} [onLastFrame] - Optional callback function to be triggered after playing the last frame. This fires multiple times when the sprite is looped.
      * @description Initiate animation playback of a {@link Two.Sprite}.
      */
@@ -11811,7 +12035,7 @@ SOFTWARE.
 
   Sprite.MakeObservable(Sprite.prototype);
 
-  var TWO_PI$3 = Math.PI * 2, HALF_PI$3 = Math.PI / 2;
+  var TWO_PI$2 = Math.PI * 2, HALF_PI = Math.PI / 2;
 
   /**
    * @name Two.ArcSegment
@@ -11819,13 +12043,13 @@ SOFTWARE.
    * @extends Two.Path
    * @param {Number} [x=0] - The x position of the arc segment.
    * @param {Number} [y=0] - The y position of the arc segment.
-   * @param {Number} innerRadius - The inner radius value of the arc segment.
-   * @param {Number} outerRadius - The outer radius value of the arc segment.
-   * @param {Radians} startAngle - The start angle of the arc segment in radians.
-   * @param {Radians} endAngle - The end angle of the arc segment in radians.
+   * @param {Number} [innerRadius=0] - The inner radius value of the arc segment.
+   * @param {Number} [outerRadius=0] - The outer radius value of the arc segment.
+   * @param {Number} [startAngle=0] - The start angle of the arc segment in Number.
+   * @param {Number} [endAngle=6.2831] - The end angle of the arc segment in Number.
    * @param {Number} [resolution=24] - The number of vertices used to construct the arc segment.
    */
-  var ArcSegment = function(ox, oy, ir, or, sa, ea, res) {
+  function ArcSegment(ox, oy, ir, or, sa, ea, res) {
 
     var amount = res || (Constants.Resolution * 3);
     var points = [];
@@ -11839,23 +12063,33 @@ SOFTWARE.
      * @name Two.ArcSegment#innerRadius
      * @property {Number} - The size of the inner radius of the arc segment.
      */
-    this.innerRadius = ir;
+    if (typeof ir === 'number') {
+      this.innerRadius = ir;
+    }
+
     /**
      * @name Two.ArcSegment#outerRadius
      * @property {Number} - The size of the outer radius of the arc segment.
      */
-    this.outerRadius = or;
+    if (typeof or === 'number') {
+      this.outerRadius = or;
+    }
 
     /**
      * @name Two.ArcSegment#startRadius
-     * @property {Radians} - The angle of one side for the arc segment.
+     * @property {Number} - The angle of one side for the arc segment.
      */
-    this.startAngle = sa;
+    if (typeof sa === 'number') {
+      this.startAngle = sa;
+    }
+
     /**
      * @name Two.ArcSegment#endAngle
-     * @property {Radians} - The angle of the other side for the arc segment.
+     * @property {Number} - The angle of the other side for the arc segment.
      */
-    this.endAngle = ea;
+    if (typeof ea === 'number') {
+      this.endAngle = ea;
+    }
 
     this._update();
 
@@ -11866,7 +12100,7 @@ SOFTWARE.
       this.translation.y = oy;
     }
 
-  };
+  }
 
   _.extend(ArcSegment, {
 
@@ -11892,6 +12126,8 @@ SOFTWARE.
   });
 
   _.extend(ArcSegment.prototype, Path.prototype, {
+
+    constructor: ArcSegment,
 
     /**
      * @name Two.ArcSegment#_flagStartAngle
@@ -11929,7 +12165,7 @@ SOFTWARE.
      * @private
      * @see {@link Two.ArcSegment#endAngle}
      */
-    _endAngle: TWO_PI$3,
+    _endAngle: TWO_PI$2,
     /**
      * @name Two.ArcSegment#_innerRadius
      * @private
@@ -11942,8 +12178,6 @@ SOFTWARE.
      * @see {@link Two.ArcSegment#outerRadius}
      */
     _outerRadius: 0,
-
-    constructor: ArcSegment,
 
     /**
      * @name Two.ArcSegment#_update
@@ -11964,7 +12198,7 @@ SOFTWARE.
         var ir = this._innerRadius;
         var or = this._outerRadius;
 
-        var connected = mod(sa, TWO_PI$3) === mod(ea, TWO_PI$3);
+        var connected = mod(sa, TWO_PI$2) === mod(ea, TWO_PI$2);
         var punctured = ir > 0;
 
         var vertices = this.vertices;
@@ -12006,10 +12240,10 @@ SOFTWARE.
 
           if (v.command === Commands.curve) {
             var amp = or * step / Math.PI;
-            v.controls.left.x = amp * Math.cos(theta - HALF_PI$3);
-            v.controls.left.y = amp * Math.sin(theta - HALF_PI$3);
-            v.controls.right.x = amp * Math.cos(theta + HALF_PI$3);
-            v.controls.right.y = amp * Math.sin(theta + HALF_PI$3);
+            v.controls.left.x = amp * Math.cos(theta - HALF_PI);
+            v.controls.left.y = amp * Math.sin(theta - HALF_PI);
+            v.controls.right.x = amp * Math.cos(theta + HALF_PI);
+            v.controls.right.y = amp * Math.sin(theta + HALF_PI);
             if (i === 1) {
               v.controls.left.multiplyScalar(2);
             }
@@ -12057,10 +12291,10 @@ SOFTWARE.
 
             if (v.command === Commands.curve) {
               amp = ir * step / Math.PI;
-              v.controls.left.x = amp * Math.cos(theta + HALF_PI$3);
-              v.controls.left.y = amp * Math.sin(theta + HALF_PI$3);
-              v.controls.right.x = amp * Math.cos(theta - HALF_PI$3);
-              v.controls.right.y = amp * Math.sin(theta - HALF_PI$3);
+              v.controls.left.x = amp * Math.cos(theta + HALF_PI);
+              v.controls.left.y = amp * Math.sin(theta + HALF_PI);
+              v.controls.right.x = amp * Math.cos(theta - HALF_PI);
+              v.controls.right.y = amp * Math.sin(theta - HALF_PI);
               if (i === 1) {
                 v.controls.left.multiplyScalar(2);
               }
@@ -12135,6 +12369,8 @@ SOFTWARE.
       clone.translation.copy(this.translation);
       clone.rotation = this.rotation;
       clone.scale = this.scale;
+      clone.skewX = this.skewX;
+      clone.skewY = this.skewY;
 
       if (this.matrix.manual) {
         clone.matrix.copy(this.matrix);
@@ -12174,7 +12410,7 @@ SOFTWARE.
 
   ArcSegment.MakeObservable(ArcSegment.prototype);
 
-  var TWO_PI$4 = Math.PI * 2, cos$4 = Math.cos, sin$4 = Math.sin;
+  var TWO_PI$1 = Math.PI * 2, cos$1 = Math.cos, sin$1 = Math.sin;
 
   /**
    * @name Two.Polygon
@@ -12182,10 +12418,10 @@ SOFTWARE.
    * @extends Two.Path
    * @param {Number} [x=0] - The x position of the polygon.
    * @param {Number} [y=0] - The y position of the polygon.
-   * @param {Number} radius - The radius value of the polygon.
+   * @param {Number} [radius=0] - The radius value of the polygon.
    * @param {Number} [sides=12] - The number of vertices used to construct the polygon.
    */
-  var Polygon = function(ox, oy, r, sides) {
+  function Polygon(ox, oy, r, sides) {
 
     sides = Math.max(sides || 0, 3);
 
@@ -12198,22 +12434,36 @@ SOFTWARE.
      * @name Two.Polygon#width
      * @property {Number} - The size of the width of the polygon.
      */
-    this.width = r * 2;
+    if (typeof r === 'number') {
+      this.width = r * 2;
+    }
+
     /**
      * @name Two.Polygon#height
      * @property {Number} - The size of the height of the polygon.
      */
-    this.height = r * 2;
+    if (typeof r === 'number') {
+      this.height = r * 2;
+    }
+
     /**
      * @name Two.Polygon#sides
      * @property {Number} - The amount of sides the polyogn has.
      */
-    this.sides = sides;
+    if (typeof sides === 'number') {
+      this.sides = sides;
+    }
 
     this._update();
-    this.translation.set(ox, oy);
 
-  };
+    if (typeof ox === 'number') {
+      this.translation.x = ox;
+    }
+    if (typeof oy === 'number') {
+      this.translation.y = oy;
+    }
+
+  }
 
   _.extend(Polygon, {
 
@@ -12239,6 +12489,8 @@ SOFTWARE.
   });
 
   _.extend(Polygon.prototype, Path.prototype, {
+
+    constructor: Polygon,
 
     /**
      * @name Two.Polygon#_flagWidth
@@ -12278,8 +12530,6 @@ SOFTWARE.
      */
     _sides: 0,
 
-    constructor: Polygon,
-
     /**
      * @name Two.Polygon#_update
      * @function
@@ -12304,9 +12554,9 @@ SOFTWARE.
         for (var i = 0; i < amount; i++) {
 
           var pct = (i + 0.5) / sides;
-          var theta = TWO_PI$4 * pct + Math.PI / 2;
-          var x = this._width * cos$4(theta) / 2;
-          var y = this._height * sin$4(theta) / 2;
+          var theta = TWO_PI$1 * pct + Math.PI / 2;
+          var x = this._width * cos$1(theta) / 2;
+          var y = this._height * sin$1(theta) / 2;
 
           if (i >= length) {
             this.vertices.push(new Anchor(x, y));
@@ -12314,8 +12564,7 @@ SOFTWARE.
             this.vertices[i].set(x, y);
           }
 
-          this.vertices[i].command = i === 0
-            ? Commands.move : Commands.line;
+          this.vertices[i].command = i === 0 ? Commands.move : Commands.line;
 
         }
 
@@ -12355,6 +12604,8 @@ SOFTWARE.
       clone.translation.copy(this.translation);
       clone.rotation = this.rotation;
       clone.scale = this.scale;
+      clone.skewX = this.skewX;
+      clone.skewY = this.skewY;
 
       if (this.matrix.manual) {
         clone.matrix.copy(this.matrix);
@@ -12394,7 +12645,7 @@ SOFTWARE.
 
   Polygon.MakeObservable(Polygon.prototype);
 
-  var TWO_PI$5 = Math.PI * 2, cos$5 = Math.cos, sin$5 = Math.sin;
+  var TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin;
 
   /**
    * @name Two.Star
@@ -12402,11 +12653,11 @@ SOFTWARE.
    * @extends Two.Path
    * @param {Number} [x=0] - The x position of the star.
    * @param {Number} [y=0] - The y position of the star.
-   * @param {Number} innerRadius - The inner radius value of the star.
-   * @param {Number} outerRadius - The outer radius value of the star.
+   * @param {Number} [innerRadius=0] - The inner radius value of the star.
+   * @param {Number} [outerRadius=0] - The outer radius value of the star.
    * @param {Number} [sides=5] - The number of sides used to construct the star.
    */
-  var Star = function(ox, oy, ir, or, sides) {
+  function Star(ox, oy, ir, or, sides) {
 
     if (arguments.length <= 3) {
       or = ir;
@@ -12425,22 +12676,36 @@ SOFTWARE.
      * @name Two.Star#innerRadius
      * @property {Number} - The size of the inner radius of the star.
      */
-    this.innerRadius = ir;
+    if (typeof ir === 'number') {
+      this.innerRadius = ir;
+    }
+
     /**
      * @name Two.Star#outerRadius
      * @property {Number} - The size of the outer radius of the star.
      */
-    this.outerRadius = or;
+    if (typeof or === 'number') {
+      this.outerRadius = or;
+    }
+
     /**
      * @name Two.Star#sides
      * @property {Number} - The amount of sides the star has.
      */
-    this.sides = sides;
+    if (typeof sides === 'number') {
+      this.sides = sides;
+    }
 
     this._update();
-    this.translation.set(ox, oy);
 
-  };
+    if (typeof ox === 'number') {
+      this.translation.x = ox;
+    }
+    if (typeof oy === 'number') {
+      this.translation.y = oy;
+    }
+
+  }
 
   _.extend(Star, {
 
@@ -12466,6 +12731,8 @@ SOFTWARE.
   });
 
   _.extend(Star.prototype, Path.prototype, {
+
+    constructor: Star,
 
     /**
      * @name Two.Star#_flagInnerRadius
@@ -12505,8 +12772,6 @@ SOFTWARE.
      */
     _sides: 0,
 
-    constructor: Star,
-
     /**
      * @name Two.Star#_update
      * @function
@@ -12531,10 +12796,10 @@ SOFTWARE.
         for (var i = 0; i < amount; i++) {
 
           var pct = (i + 0.5) / sides;
-          var theta = TWO_PI$5 * pct;
+          var theta = TWO_PI * pct;
           var r = (!(i % 2) ? this._innerRadius : this._outerRadius) / 2;
-          var x = r * cos$5(theta);
-          var y = r * sin$5(theta);
+          var x = r * cos(theta);
+          var y = r * sin(theta);
 
           if (i >= length) {
             this.vertices.push(new Anchor(x, y));
@@ -12542,8 +12807,7 @@ SOFTWARE.
             this.vertices[i].set(x, y);
           }
 
-          this.vertices[i].command = i === 0
-            ? Commands.move : Commands.line;
+          this.vertices[i].command = i === 0 ? Commands.move : Commands.line;
 
         }
 
@@ -12588,6 +12852,8 @@ SOFTWARE.
       clone.translation.copy(this.translation);
       clone.rotation = this.rotation;
       clone.scale = this.scale;
+      clone.skewX = this.skewX;
+      clone.skewY = this.skewY;
 
       if (this.matrix.manual) {
         clone.matrix.copy(this.matrix);
@@ -12884,14 +13150,15 @@ SOFTWARE.
 
       render: function(domElement) {
 
-        this._update();
-
         // Shortcut for hidden objects.
         // Doesn't reset the flags, so changes are stored and
         // applied once the object is visible again
-        if (this._opacity === 0 && !this._flagOpacity) {
+        if ((!this._visible && !this._flagVisible)
+          || (this._opacity === 0 && !this._flagOpacity)) {
           return this;
         }
+
+        this._update();
 
         if (!this._renderer.elem) {
           this._renderer.elem = svg.createElement('g', {
@@ -12918,6 +13185,10 @@ SOFTWARE.
 
         if (this._flagOpacity) {
           this._renderer.elem.setAttribute('opacity', this._opacity);
+        }
+
+        if (this._flagVisible) {
+          this._renderer.elem.setAttribute('display', this._visible ? 'inline' : 'none');
         }
 
         if (this._flagClassName) {
@@ -12975,14 +13246,14 @@ SOFTWARE.
 
       render: function(domElement) {
 
-        this._update();
-
         // Shortcut for hidden objects.
         // Doesn't reset the flags, so changes are stored and
         // applied once the object is visible again
         if (this._opacity === 0 && !this._flagOpacity) {
           return this;
         }
+
+        this._update();
 
         // Collect any attribute that needs to be changed here
         var changed = {};
@@ -13512,7 +13783,7 @@ SOFTWARE.
    * @param {Element} [parameters.domElement] - The `<svg />` to draw to. If none given a new one will be constructed.
    * @description This class is used by {@link Two} when constructing with `type` of `Two.Types.svg` (the default type). It takes Two.js' scenegraph and renders it to a `<svg />`.
    */
-  var Renderer$1 = function(params) {
+  function Renderer$1(params) {
 
     /**
      * @name Two.SVGRenderer#domElement
@@ -13536,7 +13807,7 @@ SOFTWARE.
     this.domElement.defs = this.defs;
     this.domElement.style.overflow = 'hidden';
 
-  };
+  }
 
   _.extend(Renderer$1, {
 
@@ -13591,10 +13862,10 @@ SOFTWARE.
 
   // Constants
 
-  var multiplyMatrix = Matrix$1.Multiply,
+  var multiplyMatrix = Matrix.Multiply,
     identity = [1, 0, 0, 0, 1, 0, 0, 0, 1],
     transformation = new NumArray(9),
-    CanvasUtils = Renderer.Utils;
+    CanvasUtils = Renderer$2.Utils;
 
   var webgl = {
 
@@ -13608,7 +13879,7 @@ SOFTWARE.
       right: 'end'
     },
 
-    matrix: new Matrix$1(),
+    matrix: new Matrix(),
 
     group: {
 
@@ -13625,6 +13896,10 @@ SOFTWARE.
       },
 
       render: function(gl, program) {
+
+        if (!this._visible) {
+          return;
+        }
 
         this._update();
 
@@ -14123,8 +14398,8 @@ SOFTWARE.
         var opacity = elem._renderer.opacity || elem._opacity;
         var dashes = elem.dashes;
         var decoration = elem._decoration;
-        var alignment = CanvasUtils.alignments[elem._alignment] || elem._alignment;
-        var baseline = elem._baseline;
+        CanvasUtils.alignments[elem._alignment] || elem._alignment;
+        elem._baseline;
 
         canvas.width = Math.max(Math.ceil(elem._renderer.rect.width * scale.x), 1);
         canvas.height = Math.max(Math.ceil(elem._renderer.rect.height * scale.y), 1);
@@ -14690,12 +14965,12 @@ SOFTWARE.
    * @extends Two.Events
    * @param {Object} [parameters] - This object is inherited when constructing a new instance of {@link Two}.
    * @param {Element} [parameters.domElement] - The `<canvas />` to draw to. If none given a new one will be constructed.
-   * @param {CanvasElement} [parameters.offscreenElement] - The offscreen two dimensional `<canvas />` to render each element on WebGL texture updates.
+   * @param {HTMLCanvasElement} [parameters.offscreenElement] - The offscreen two dimensional `<canvas />` to render each element on WebGL texture updates.
    * @param {Boolean} [parameters.antialias] - Determines whether the canvas should clear render with antialias on.
    * @description This class is used by {@link Two} when constructing with `type` of `Two.Types.webgl`. It takes Two.js' scenegraph and renders it to a `<canvas />` through the WebGL api.
    * @see {@link https://www.khronos.org/registry/webgl/specs/latest/1.0/}
    */
-  var Renderer$2 = function(params) {
+  function Renderer(params) {
 
     var gl, vs, fs;
 
@@ -14799,9 +15074,9 @@ SOFTWARE.
 
     gl.blendEquation(gl.FUNC_ADD);
     gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-  };
+  }
 
-  _.extend(Renderer$2, {
+  _.extend(Renderer, {
 
     /**
      * @name Two.WebGLRenderer.Utils
@@ -14811,9 +15086,9 @@ SOFTWARE.
 
   });
 
-  _.extend(Renderer$2.prototype, Events, {
+  _.extend(Renderer.prototype, Events, {
 
-    constructor: Renderer$2,
+    constructor: Renderer,
 
     /**
      * @name Two.WebGLRenderer#setSize
@@ -14894,7 +15169,7 @@ SOFTWARE.
    * @param {Element} [options.domElement] - The canvas or SVG element to draw into. This overrides the `options.type` argument.
    * @description The entrypoint for Two.js. Instantiate a `new Two` in order to setup a scene to render to. `Two` is also the publicly accessible namespace that all other sub-classes, functions, and utilities attach to.
    */
-  var Two = function(options) {
+  function Two(options) {
 
     // Determine what Renderer to use and setup a scene.
 
@@ -14981,7 +15256,7 @@ SOFTWARE.
       raf.init();
     }
 
-  };
+  }
 
   _.extend(Two, Constants);
 
@@ -15101,12 +15376,10 @@ SOFTWARE.
       }
       this._lastFrame = now;
 
-      if (this.fit && !this.fit.attached) {
-
+      if (this.fit && this.fit.domElement && !this.fit.attached) {
           dom.bind(this.fit.domElement, 'resize', this.fit);
           this.fit.attached = true;
           this.fit();
-
       }
 
       var width = this.width;
@@ -15483,7 +15756,7 @@ SOFTWARE.
      * @param {Number} y1
      * @param {Number} x2
      * @param {Number} y2
-     * @param {...Two.Stop} [stops] - Any number of color stops sometimes reffered to as ramp stops. If none are supplied then the default black-to-white two stop gradient is applied.
+     * @param {...Two.Stop} stops - Any number of color stops sometimes reffered to as ramp stops. If none are supplied then the default black-to-white two stop gradient is applied.
      * @returns {Two.LinearGradient}
      * @description Creates a Two.js linear gradient and ads it to the scene. In the case of an effect it's added to an invisible "definitions" group.
      */
@@ -15504,7 +15777,7 @@ SOFTWARE.
      * @param {Number} x1
      * @param {Number} y1
      * @param {Number} radius
-     * @param {...Two.Stop} [stops] - Any number of color stops sometimes reffered to as ramp stops. If none are supplied then the default black-to-white two stop gradient is applied.
+     * @param {...Two.Stop} stops - Any number of color stops sometimes reffered to as ramp stops. If none are supplied then the default black-to-white two stop gradient is applied.
      * @returns {Two.RadialGradient}
      * @description Creates a Two.js linear-gradient object and ads it to the scene. In the case of an effect it's added to an invisible "definitions" group.
      */
@@ -15527,7 +15800,7 @@ SOFTWARE.
      * @param {Number} y
      * @param {Number} [columns=1]
      * @param {Number} [rows=1]
-     * @param {Integer} [frameRate=0]
+     * @param {Number} [frameRate=0]
      * @param {Boolean} [autostart=false]
      * @returns {Two.Sprite}
      * @description Creates a Two.js sprite object and adds it to the scene. Sprites can be used for still images as well as animations.
@@ -15570,7 +15843,7 @@ SOFTWARE.
     /**
      * @name Two#makeTexture
      * @function
-     * @param {(String|Image|Canvas|Video)} [pathOrSource] - The URL path to an image or a DOM image-like element.
+     * @param {(String|HTMLImageElement|HTMLCanvasElement|HTMLVideoElement)} [pathOrSource] - The URL path to an image or a DOM image-like element.
      * @param {Function} [callback] - Function to be invoked when the image is loaded.
      * @returns {Two.Texture}
      * @description Creates a Two.js texture object.
@@ -15607,15 +15880,15 @@ SOFTWARE.
     /**
      * @name Two#interpret
      * @function
-     * @param {SvgNode} svgNode - The SVG node to be parsed.
+     * @param {SVGElement} SVGElement - The SVG node to be parsed.
      * @param {Boolean} shallow - Don't create a top-most group but append all content directly.
      * @param {Boolean} add – Automatically add the reconstructed SVG node to scene.
      * @returns {Two.Group}
      * @description Interpret an SVG Node and add it to this instance's scene. The distinction should be made that this doesn't `import` svg's, it solely interprets them into something compatible for Two.js - this is slightly different than a direct transcription.
      */
-    interpret: function(svgNode, shallow, add) {
+    interpret: function(SVGElement, shallow, add) {
 
-      var tag = svgNode.tagName.toLowerCase();
+      var tag = SVGElement.tagName.toLowerCase();
 
       add = (typeof add !== 'undefined') ? add : true;
 
@@ -15623,7 +15896,7 @@ SOFTWARE.
         return null;
       }
 
-      var node = read[tag].call(this, svgNode);
+      var node = read[tag].call(this, SVGElement);
 
       if (add) {
         this.add(shallow && node instanceof Group ? node.children : node);
@@ -15640,7 +15913,7 @@ SOFTWARE.
     /**
      * @name Two#load
      * @function
-     * @param {String|SvgNode} pathOrSVGContent - The URL path of an SVG file or an SVG document as text.
+     * @param {String|SVGElement} pathOrSVGContent - The URL path of an SVG file or an SVG document as text.
      * @param {Function} callback - Function to call once loading has completed.
      * @returns {Two.Group}
      * @description Load an SVG file or SVG text and interpret it into Two.js legible objects.
@@ -15750,7 +16023,7 @@ SOFTWARE.
     Collection: Collection,
     Events: Events,
     Group: Group,
-    Matrix: Matrix$1,
+    Matrix: Matrix,
     Path: Path,
     Registry: Registry,
     Shape: Shape,
@@ -15774,16 +16047,16 @@ SOFTWARE.
     RoundedRectangle: RoundedRectangle,
     Star: Star,
 
-    CanvasRenderer: Renderer,
+    CanvasRenderer: Renderer$2,
     SVGRenderer: Renderer$1,
-    WebGLRenderer: Renderer$2,
+    WebGLRenderer: Renderer,
 
-    /**
-     * @name Two.Commands
-     * @property {Object} - Map of possible path commands. Taken from the SVG specification.
-     */
     Commands: Commands,
 
+    /**
+     * @name Two.Utils
+     * @property {Object} - A massive object filled with utility functions and properties.
+     */
     Utils: _.extend({
 
       Error: TwoError,

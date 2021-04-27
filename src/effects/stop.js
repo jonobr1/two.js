@@ -5,20 +5,19 @@ import Events from '../events.js';
  * @name Two.Stop
  * @class
  * @param {Number} [offset] - The offset percentage of the stop represented as a zero-to-one value. Default value flip flops from zero-to-one as new stops are created.
- * @param {CssColor} [color] - The color of the stop. Default value flip flops from white to black as new stops are created.
+ * @param {String} [color] - The color of the stop. Default value flip flops from white to black as new stops are created.
  * @param {Number} [opacity] - The opacity value. Default value is 1, cannot be lower than 0.
  * @nota-bene Used specifically in conjunction with {@link Two.Gradient}s to control color graduation.
  */
-var Stop = function(offset, color, opacity) {
+function Stop(offset, color, opacity) {
 
   /**
-   * @name Two.Stop#_renderer
+   * @name Two.Stop#renderer
    * @property {Object}
-   * @private
-   * @description A private object to store relevant renderer specific variables.
-   * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `stop._renderer.elem`.
+   * @description Object access to store relevant renderer specific variables. Warning: manipulating this object can create unintended consequences.
+   * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `shape.renderer.elem`.
    */
-  this._renderer = {};
+  this.renderer = {};
   this._renderer.type = 'stop';
 
   /**
@@ -36,14 +35,14 @@ var Stop = function(offset, color, opacity) {
 
   /**
    * @name Two.Stop#color
-   * @property {CssColor} - The color of the stop.
+   * @property {String} - The color of the stop.
    */
   this.color = (typeof color === 'string') ? color
     : Stop.Index <= 0 ? '#fff' : '#000';
 
   Stop.Index = (Stop.Index + 1) % 2;
 
-};
+}
 
 _.extend(Stop, {
 
@@ -92,6 +91,20 @@ _.extend(Stop, {
       });
 
     }, object);
+
+    Object.defineProperty(object, 'renderer', {
+
+      enumerable: false,
+
+      get: function() {
+        return this._renderer;
+      },
+
+      set: function(obj) {
+        this._renderer = obj;
+      }
+
+    });
 
   }
 
@@ -155,6 +168,5 @@ _.extend(Stop.prototype, Events, {
 });
 
 Stop.MakeObservable(Stop.prototype);
-Stop.prototype.constructor = Stop;
 
 export default Stop;

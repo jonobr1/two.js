@@ -17,7 +17,7 @@ This class is used by [Two](/documentation/) when constructing with `type` of `T
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/svg.js#L886)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/svg.js#L891)
 
 </div>
 
@@ -61,7 +61,7 @@ A massive object filled with utility functions and properties to render Two.js o
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/svg.js#L922)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/svg.js#L927)
 
 </div>
 
@@ -102,7 +102,7 @@ The `<svg />` associated with the Two.js scene.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/svg.js#L896)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/svg.js#L901)
 
 </div>
 
@@ -143,7 +143,7 @@ The root group of the scenegraph.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/svg.js#L902)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/svg.js#L907)
 
 </div>
 
@@ -184,7 +184,7 @@ The `<defs />` to apply gradients, patterns, and bitmap imagery.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/svg.js#L909)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/svg.js#L914)
 
 </div>
 
@@ -233,7 +233,7 @@ Change the size of the renderer.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/svg.js#L934)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/svg.js#L939)
 
 </div>
 
@@ -284,7 +284,7 @@ Render the current scene to the `<svg />`.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/svg.js#L956)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/svg.js#L961)
 
 </div>
 

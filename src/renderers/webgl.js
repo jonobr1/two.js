@@ -55,6 +55,10 @@ var webgl = {
 
     render: function(gl, program) {
 
+      if (!this._visible) {
+        return;
+      }
+
       this._update();
 
       var parent = this.parent;
@@ -552,8 +556,6 @@ var webgl = {
       var opacity = elem._renderer.opacity || elem._opacity;
       var dashes = elem.dashes;
       var decoration = elem._decoration;
-      var alignment = CanvasUtils.alignments[elem._alignment] || elem._alignment;
-      var baseline = elem._baseline;
 
       canvas.width = Math.max(Math.ceil(elem._renderer.rect.width * scale.x), 1);
       canvas.height = Math.max(Math.ceil(elem._renderer.rect.height * scale.y), 1);
@@ -672,7 +674,6 @@ var webgl = {
       if (/(underline|strikethrough)/i.test(decoration)) {
 
         var metrics = ctx.measureText(elem.value);
-        var scalar = 1;
 
         switch (decoration) {
           case 'underline':
@@ -682,7 +683,6 @@ var webgl = {
           case 'strikethrough':
             y1 = 0;
             y2 = 0;
-            scalar = 0.5;
             break;
         }
 
@@ -945,7 +945,6 @@ var webgl = {
       this._update();
 
       var image = this.image;
-      var repeat;
 
       if (((this._flagLoaded || this._flagImage || this._flagVideo || this._flagRepeat) && this.loaded)) {
         this._renderer.effect = ctx.createPattern(image, this._repeat);
@@ -1122,12 +1121,12 @@ webgl.ctx = webgl.canvas.getContext('2d');
  * @extends Two.Events
  * @param {Object} [parameters] - This object is inherited when constructing a new instance of {@link Two}.
  * @param {Element} [parameters.domElement] - The `<canvas />` to draw to. If none given a new one will be constructed.
- * @param {CanvasElement} [parameters.offscreenElement] - The offscreen two dimensional `<canvas />` to render each element on WebGL texture updates.
+ * @param {HTMLCanvasElement} [parameters.offscreenElement] - The offscreen two dimensional `<canvas />` to render each element on WebGL texture updates.
  * @param {Boolean} [parameters.antialias] - Determines whether the canvas should clear render with antialias on.
  * @description This class is used by {@link Two} when constructing with `type` of `Two.Types.webgl`. It takes Two.js' scenegraph and renders it to a `<canvas />` through the WebGL api.
  * @see {@link https://www.khronos.org/registry/webgl/specs/latest/1.0/}
  */
-var Renderer = function(params) {
+function Renderer(params) {
 
   var gl, vs, fs;
 
@@ -1231,7 +1230,7 @@ var Renderer = function(params) {
 
   gl.blendEquation(gl.FUNC_ADD);
   gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-};
+}
 
 _.extend(Renderer, {
 

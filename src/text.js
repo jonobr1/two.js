@@ -10,17 +10,20 @@ import LinearGradient from './effects/linear-gradient.js';
 import RadialGradient from './effects/radial-gradient.js';
 import Texture from './effects/texture.js';
 
+var min = Math.min, max = Math.max;
+
 /**
  * @name Two.Text
  * @class
  * @extends Two.Shape
- * @param {String} message - The String to be rendered to the scene.
+ * @param {String} [message] - The String to be rendered to the scene.
  * @param {Number} [x=0] - The position in the x direction for the object.
  * @param {Number} [y=0] - The position in the y direction for the object.
  * @param {Object} [styles] - An object where styles are applied. Attribute must exist in Two.Text.Properties.
  * @description This is a primitive class for creating drawable text that can be added to the scenegraph.
+ * @returns {Two.Text}
  */
-var Text = function(message, x, y, styles) {
+function Text(message, x, y, styles) {
 
   Shape.call(this);
 
@@ -31,10 +34,10 @@ var Text = function(message, x, y, styles) {
   this.value = message;
 
   if (typeof x === 'number') {
-      this.translation.x = x;
+    this.translation.x = x;
   }
   if (typeof y === 'number') {
-      this.translation.y = y;
+    this.translation.y = y;
   }
 
   /**
@@ -63,7 +66,7 @@ var Text = function(message, x, y, styles) {
 
   }, this);
 
-};
+}
 
 _.extend(Text, {
 
@@ -190,6 +193,8 @@ _.extend(Text, {
 });
 
 _.extend(Text.prototype, Shape.prototype, {
+
+  constructor: Text,
 
   // Flags
   // http://en.wikipedia.org/wiki/Flag
@@ -364,15 +369,15 @@ _.extend(Text.prototype, Shape.prototype, {
 
   /**
    * @name Two.Text#fill
-   * @property {(CssColor|Two.Gradient|Two.Texture)} - The value of what the text object should be filled in with.
-   * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS Colors.
+   * @property {(String|Two.Gradient|Two.Texture)} - The value of what the text object should be filled in with.
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
    */
   _fill: '#000',
 
   /**
    * @name Two.Text#stroke
-   * @property {(CssColor|Two.Gradient|Two.Texture)} - The value of what the text object should be filled in with.
-   * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS Colors.
+   * @property {(String|Two.Gradient|Two.Texture)} - The value of what the text object should be filled in with.
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
    */
   _stroke: 'transparent',
 
@@ -415,8 +420,6 @@ _.extend(Text.prototype, Shape.prototype, {
    * @see {@link Two.Text#dashes}
    */
   _dashes: [],
-
-  constructor: Text,
 
   /**
    * @name Two.Text#remove
@@ -525,7 +528,7 @@ _.extend(Text.prototype, Shape.prototype, {
    */
   getBoundingClientRect: function(shallow) {
 
-    var matrix, border, l, x, y, i, v;
+    var matrix, a, b, c, d;
     var left, right, top, bottom;
 
     // TODO: Update this to not __always__ update. Just when it needs to.
@@ -535,44 +538,45 @@ _.extend(Text.prototype, Shape.prototype, {
 
     var height = this.leading;
     var width = this.value.length * this.size * Text.Ratio;
+    var border = (this._linewidth || 0) / 2;
 
     switch (this.alignment) {
       case 'left':
-        left = 0;
-        right = width;
+        left = - border;
+        right = width + border;
         break;
       case 'right':
-        left = - width;
-        right = 0;
+        left = - (width + border);
+        right = border;
         break;
       default:
-        left = - width / 2;
-        right = width / 2;
+        left = - (width / 2 + border);
+        right = width / 2 + border;
     }
 
     switch (this.baseline) {
       case 'top':
-        top = 0;
-        bottom = height;
+        top = - border;
+        bottom = height + border;
         break;
       case 'bottom':
-        top = - height;
-        bottom = 0;
+        top = - (height + border);
+        bottom = border;
         break;
       default:
-        top = - height / 2;
-        bottom = height / 2;
+        top = - (height / 2 + border);
+        bottom = height / 2 + border;
     }
 
-    v = matrix.multiply(left, top, 1);
+    a = matrix.multiply(left, top, 1);
+    b = matrix.multiply(left, bottom, 1);
+    c = matrix.multiply(right, top, 1);
+    d = matrix.multiply(right, bottom, 1);
 
-    top = v.y;
-    left = v.x;
-
-    v = matrix.multiply(right, bottom, 1);
-
-    right = v.x;
-    bottom = v.y;
+    top = min(a.y, b.y, c.y, d.y);
+    left = min(a.x, b.x, c.x, d.x);
+    right = max(a.x, b.x, c.x, d.x);
+    bottom = max(a.y, b.y, c.y, d.y);
 
     return {
       top: top,

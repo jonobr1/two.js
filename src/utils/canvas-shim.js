@@ -7,7 +7,7 @@ var CanvasShim = {
   isHeadless: false,
 
   /**
-   * @name Utils.shim
+   * @name Two.Utils.shim
    * @function
    * @param {canvas} canvas - The instanced `Canvas` object provided by `node-canvas`.
    * @param {Image} [Image] - The prototypical `Image` object provided by `node-canvas`. This is only necessary to pass if you're going to load bitmap imagery.

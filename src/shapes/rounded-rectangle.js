@@ -13,14 +13,15 @@ import Vector from '../vector.js';
  * @extends Two.Path
  * @param {Number} [x=0] - The x position of the rounded rectangle.
  * @param {Number} [y=0] - The y position of the rounded rectangle.
- * @param {Number} width - The width value of the rounded rectangle.
- * @param {Number} height - The width value of the rounded rectangle.
- * @param {Number} radius - The radius value of the rounded rectangle.
+ * @param {Number} [width=0] - The width value of the rounded rectangle.
+ * @param {Number} [height=0] - The width value of the rounded rectangle.
+ * @param {Number} [radius=0] - The radius value of the rounded rectangle.
  * @param {Number} [resolution=12] - The number of vertices used to construct the rounded rectangle.
  */
-var RoundedRectangle = function(ox, oy, width, height, radius) {
+function RoundedRectangle(ox, oy, width, height, radius) {
 
-  if (typeof radius === 'undefined') {
+  if (typeof radius === 'undefined' &&
+    typeof width === 'number' && typeof height === 'number') {
     radius = Math.floor(Math.min(width, height) / 12);
   }
 
@@ -47,22 +48,30 @@ var RoundedRectangle = function(ox, oy, width, height, radius) {
    * @name Two.RoundedRectangle#width
    * @property {Number} - The width of the rounded rectangle.
    */
-  this.width = width;
+  if (typeof width === 'number') {
+    this.width = width;
+  }
+
   /**
    * @name Two.RoundedRectangle#height
    * @property {Number} - The height of the rounded rectangle.
    */
-  this.height = height;
+  if (typeof height === 'number') {
+    this.height = height;
+  }
+
   /**
    * @name Two.RoundedRectangle#radius
    * @property {Number} - The size of the radius of the rounded rectangle.
    */
-  this.radius = radius;
+  if (typeof radius === 'number') {
+    this.radius = radius;
+  }
 
   this._update();
   this.translation.set(ox, oy);
 
-};
+}
 
 _.extend(RoundedRectangle, {
 
@@ -119,6 +128,8 @@ _.extend(RoundedRectangle, {
 
 _.extend(RoundedRectangle.prototype, Path.prototype, {
 
+  constructor: RoundedRectangle,
+
   /**
    * @name Two.RoundedRectangle#_flagWidth
    * @private
@@ -155,9 +166,7 @@ _.extend(RoundedRectangle.prototype, Path.prototype, {
    * @private
    * @see {@link Two.RoundedRectangle#radius}
    */
-  _radius: 0,
-
-  constructor: RoundedRectangle,
+  _radius: 12,
 
   /**
    * @name Two.RoundedRectangle#_update
@@ -296,6 +305,8 @@ _.extend(RoundedRectangle.prototype, Path.prototype, {
     clone.translation.copy(this.translation);
     clone.rotation = this.rotation;
     clone.scale = this.scale;
+    clone.skewX = this.skewX;
+    clone.skewY = this.skewY;
 
     if (this.matrix.manual) {
       clone.matrix.copy(this.matrix);

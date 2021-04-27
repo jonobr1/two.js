@@ -1,29 +1,31 @@
 import Events from './events.js';
 import _ from './utils/underscore.js';
 
-
 /**
- * @name Utils.Collection
+ * @name Two.Collection
  * @class
- * @extends Utils.Events
+ * @extends Two.Events
  * @description An `Array` like object with additional event propagation on actions. `pop`, `shift`, and `splice` trigger `removed` events. `push`, `unshift`, and `splice` with more than 2 arguments trigger 'inserted'. Finally, `sort` and `reverse` trigger `order` events.
  */
-var Collection = function() {
+function Collection() {
 
   Array.call(this);
 
-  if (arguments.length > 1) {
+  if (arguments[0] && Array.isArray(arguments[0])) {
+    if (arguments[0].length > 0) {
+      Array.prototype.push.apply(this, arguments[0]);
+    }
+  } else if (arguments.length > 0) {
     Array.prototype.push.apply(this, arguments);
-  } else if (arguments[0] && Array.isArray(arguments[0])) {
-    Array.prototype.push.apply(this, arguments[0]);
   }
 
-};
+}
 
 Collection.prototype = new Array();
-Collection.prototype.constructor = Collection;
 
 _.extend(Collection.prototype, Events, {
+
+  constructor: Collection,
 
   pop: function() {
     var popped = Array.prototype.pop.apply(this, arguments);
@@ -73,6 +75,10 @@ _.extend(Collection.prototype, Events, {
     Array.prototype.reverse.apply(this, arguments);
     this.trigger(Events.Types.order);
     return this;
+  },
+
+  indexOf: function() {
+    return Array.prototype.indexOf.apply(this, arguments);
   }
 
 });

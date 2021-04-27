@@ -14,17 +14,17 @@ var cos = Math.cos, sin = Math.sin;
  * @extends Two.Path
  * @param {Number} [x=0] - The x position of the circle.
  * @param {Number} [y=0] - The y position of the circle.
- * @param {Number} radius - The radius value of the circle.
+ * @param {Number} [radius=0] - The radius value of the circle.
  * @param {Number} [resolution=4] - The number of vertices used to construct the circle.
  */
-var Circle = function(ox, oy, r, resolution) {
+function Circle(ox, oy, r, resolution) {
 
   // At least 2 vertices are required for proper circlage
   var amount = resolution ? Math.max(resolution, 2) : 4;
 
   var points = [];
   for (var i = 0; i < amount; i++) {
-    points.push(new Anchor());
+    points.push(new Anchor(0, 0, 0, 0, 0, 0));
   }
 
   Path.call(this, points, true, true, true);
@@ -33,7 +33,9 @@ var Circle = function(ox, oy, r, resolution) {
    * @name Two.Circle#radius
    * @property {Number} - The size of the radius of the circle.
    */
-  this.radius = r;
+  if (typeof r === 'number') {
+    this.radius = r;
+  }
 
   this._update();
 
@@ -44,7 +46,7 @@ var Circle = function(ox, oy, r, resolution) {
     this.translation.y = oy;
   }
 
-};
+}
 
 _.extend(Circle, {
 
@@ -71,6 +73,8 @@ _.extend(Circle, {
 
 _.extend(Circle.prototype, Path.prototype, {
 
+  constructor: Circle,
+
   /**
    * @name Two.Circle#_flagRadius
    * @private
@@ -85,8 +89,6 @@ _.extend(Circle.prototype, Path.prototype, {
    */
   _radius: 0,
 
-  constructor: Circle,
-
   /**
    * @name Two.Circle#_update
    * @function
@@ -98,14 +100,20 @@ _.extend(Circle.prototype, Path.prototype, {
   _update: function() {
 
     if (this._flagRadius) {
-      // Coefficient for approximating circular arcs with Bezier curves
-      var c = (4 / 3) * Math.tan(Math.PI / (this.vertices.length * 2));
 
+      var length = this.vertices.length;
+
+      if (!this._closed && length > 2) {
+        length -= 1;
+      }
+
+      // Coefficient for approximating circular arcs with Bezier curves
+      var c = (4 / 3) * Math.tan(Math.PI / (length * 2));
       var radius = this._radius;
       var rc = radius * c;
 
-      for (var i = 0, numVertices = this.vertices.length; i < numVertices; i++) {
-        var pct = i / numVertices;
+      for (var i = 0; i < this.vertices.length; i++) {
+        var pct = i / length;
         var theta = pct * TWO_PI;
 
         var x = radius * cos(theta);
@@ -119,7 +127,7 @@ _.extend(Circle.prototype, Path.prototype, {
 
         var v = this.vertices[i];
 
-        v.command = Commands.curve;
+        v.command = i === 0 ? Commands.move : Commands.curve;
         v.set(x, y);
         v.controls.left.set(lx, ly);
         v.controls.right.set(rx, ry);
@@ -160,6 +168,8 @@ _.extend(Circle.prototype, Path.prototype, {
     clone.translation.copy(this.translation);
     clone.rotation = this.rotation;
     clone.scale = this.scale;
+    clone.skewX = this.skewX;
+    clone.skewY = this.skewY;
 
     if (this.matrix.manual) {
       clone.matrix.copy(this.matrix);

@@ -25,7 +25,7 @@ import Texture from './effects/texture.js';
 
 // Constants
 
-var min = Math.min, max = Math.max, round = Math.round,
+var min = Math.min, max = Math.max,
   ceil = Math.ceil, floor = Math.floor;
 
 /**
@@ -38,7 +38,7 @@ var min = Math.min, max = Math.max, round = Math.round,
  * @param {Boolean} [manual=false] - Describes whether the developer controls how vertices are plotted or if Two.js automatically plots coordinates based on closed and curved booleans.
  * @description This is the primary primitive class for creating all drawable shapes in Two.js. Unless specified methods return their instance of `Two.Path` for the purpose of chaining.
  */
-var Path = function(vertices, closed, curved, manual) {
+function Path(vertices, closed, curved, manual) {
 
   Shape.call(this);
 
@@ -84,15 +84,15 @@ var Path = function(vertices, closed, curved, manual) {
 
   /**
    * @name Two.Path#fill
-   * @property {(CssColor|Two.Gradient|Two.Texture)} - The value of what the path should be filled in with.
-   * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS Colors.
+   * @property {(String|Two.Gradient|Two.Texture)} - The value of what the path should be filled in with.
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
    */
   this.fill = '#fff';
 
   /**
    * @name Two.Path#stroke
-   * @property {(CssColor|Two.Gradient|Two.Texture)} - The value of what the path should be outlined in with.
-   * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS Colors.
+   * @property {(String|Two.Gradient|Two.Texture)} - The value of what the path should be outlined in with.
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
    */
   this.stroke = '#000';
 
@@ -148,7 +148,7 @@ var Path = function(vertices, closed, curved, manual) {
    * @name Two.Path#vertices
    * @property {Two.Anchor[]} - An ordered list of anchor points for rendering the path.
    * @description A list of {@link Two.Anchor} objects that consist of what form the path takes.
-   * @nota-bene The array when manipulating is actually a {@link Two.Utils.Collection}.
+   * @nota-bene The array when manipulating is actually a {@link Two.Collection}.
    */
   this.vertices = vertices;
 
@@ -172,7 +172,7 @@ var Path = function(vertices, closed, curved, manual) {
    */
   this.dashes.offset = 0;
 
-};
+}
 
 _.extend(Path, {
 
@@ -418,7 +418,6 @@ _.extend(Path, {
 
       set: function(vertices) {
 
-        var updateVertices = this._renderer.flagVertices;
         var bindVertices = this._renderer.bindVertices;
         var unbindVertices = this._renderer.unbindVertices;
 
@@ -483,6 +482,8 @@ _.extend(Path, {
 });
 
 _.extend(Path.prototype, Shape.prototype, {
+
+  constructor: Path,
 
   // Flags
   // http://en.wikipedia.org/wiki/Flag
@@ -678,8 +679,6 @@ _.extend(Path.prototype, Shape.prototype, {
    */
   _dashes: [],
 
-  constructor: Path,
-
   /**
    * @name Two.Path#clone
    * @function
@@ -705,6 +704,8 @@ _.extend(Path.prototype, Shape.prototype, {
     clone.translation.copy(this.translation);
     clone.rotation = this.rotation;
     clone.scale = this.scale;
+    clone.skewX = this.skewX;
+    clone.skewY = this.skewY;
 
     if (this.matrix.manual) {
       clone.matrix.copy(this.matrix);
@@ -741,6 +742,8 @@ _.extend(Path.prototype, Shape.prototype, {
     result.translation = this.translation.toObject();
     result.rotation = this.rotation;
     result.scale = this.scale instanceof Vector ? this.scale.toObject() : this.scale;
+    result.skewX = this.skewX;
+    result.skewY = this.skewY;
 
     if (this.matrix.manual) {
       result.matrix = this.matrix.toObject();
@@ -777,18 +780,19 @@ _.extend(Path.prototype, Shape.prototype, {
    */
   corner: function() {
 
-    var rect = this.getBoundingClientRect(true);
+    var rect = this.getBoundingClientRect();
+    var hw = rect.width / 2;
+    var hh = rect.height / 2;
+    var cx = rect.left + rect.width / 2;
+    var cy = rect.top + rect.height / 2;
 
-    rect.centroid = {
-      x: rect.left + rect.width / 2,
-      y: rect.top + rect.height / 2
-    };
-
-    _.each(this.vertices, function(v) {
-      v.subSelf(rect.centroid);
-      v.x += rect.width / 2;
-      v.y += rect.height / 2;
-    });
+    for (var i = 0; i < this.vertices.length; i++) {
+      var v = this.vertices[i];
+      v.x -= cx;
+      v.y -= cy;
+      v.x += hw;
+      v.y += hh;
+    }
 
     return this;
 
@@ -801,16 +805,16 @@ _.extend(Path.prototype, Shape.prototype, {
    */
   center: function() {
 
-    var rect = this.getBoundingClientRect(true);
+    var rect = this.getBoundingClientRect();
 
-    rect.centroid = {
-      x: rect.left + rect.width / 2 - this.translation.x,
-      y: rect.top + rect.height / 2 - this.translation.y
-    };
+    var cx = rect.left + rect.width / 2 - this.translation.x;
+    var cy = rect.top + rect.height / 2 - this.translation.y;
 
-    _.each(this.vertices, function(v) {
-      v.subSelf(rect.centroid);
-    });
+    for (var i = 0; i < this.vertices.length; i++) {
+      var v = this.vertices[i];
+      v.x -= cx;
+      v.y -= cy;
+    }
 
     return this;
 
@@ -841,7 +845,7 @@ _.extend(Path.prototype, Shape.prototype, {
    * @description Return an object with top, left, right, bottom, width, and height parameters of the path.
    */
   getBoundingClientRect: function(shallow) {
-    var matrix, border, l, x, y, i, v0, c0, c1, v1;
+    var matrix, border, l, i, v0, v1, c0x, c0y, c1x, c1y, a, b, c, d;
 
     var left = Infinity, right = -Infinity,
         top = Infinity, bottom = -Infinity;
@@ -851,7 +855,7 @@ _.extend(Path.prototype, Shape.prototype, {
 
     matrix = shallow ? this._matrix : getComputedMatrix(this);
 
-    border = this.linewidth / 2;
+    border = (this.linewidth || 0) / 2;
     l = this._renderer.vertices.length;
 
     if (l <= 0) {
@@ -870,26 +874,24 @@ _.extend(Path.prototype, Shape.prototype, {
 
       if (v0.controls && v1.controls) {
 
+        c0x = v0.controls.right.x;
+        c0y = v0.controls.right.y;
+
         if (v0.relative) {
-          c0 = matrix.multiply(
-            v0.controls.right.x + v0.x, v0.controls.right.y + v0.y, 1);
-        } else {
-          c0 = matrix.multiply(
-            v0.controls.right.x, v0.controls.right.y, 1);
+          c0x += v0.x;
+          c0y += v0.y;
         }
-        v0 = matrix.multiply(v0.x, v0.y, 1);
+
+        c1x = v1.controls.left.x;
+        c1y = v1.controls.left.y;
 
         if (v1.relative) {
-          c1 = matrix.multiply(
-            v1.controls.left.x + v1.x, v1.controls.left.y + v1.y, 1);
-        } else {
-          c1 = matrix.multiply(
-            v1.controls.left.x, v1.controls.left.y, 1);
+          c1x += v1.x;
+          c1y += v1.y;
         }
-        v1 = matrix.multiply(v1.x, v1.y, 1);
 
-        var bb = getCurveBoundingBox(
-          v0.x, v0.y, c0.x, c0.y, c1.x, c1.y, v1.x, v1.y);
+        var bb = getCurveBoundingBox(v0.x, v0.y,
+          c0x, c0y, c1x, c1y, v1.x, v1.y);
 
         top = min(bb.min.y - border, top);
         left = min(bb.min.x - border, left);
@@ -900,16 +902,12 @@ _.extend(Path.prototype, Shape.prototype, {
 
         if (i <= 1) {
 
-          v0 = matrix.multiply(v0.x, v0.y, 1);
-
           top = min(v0.y - border, top);
           left = min(v0.x - border, left);
           right = max(v0.x + border, right);
           bottom = max(v0.y + border, bottom);
 
         }
-
-        v1 = matrix.multiply(v1.x, v1.y, 1);
 
         top = min(v1.y - border, top);
         left = min(v1.x - border, left);
@@ -919,6 +917,16 @@ _.extend(Path.prototype, Shape.prototype, {
       }
 
     }
+
+    a = matrix.multiply(left, top, 1);
+    b = matrix.multiply(left, bottom, 1);
+    c = matrix.multiply(right, top, 1);
+    d = matrix.multiply(right, bottom, 1);
+
+    top = min(a.y, b.y, c.y, d.y);
+    left = min(a.x, b.x, c.x, d.x);
+    right = max(a.x, b.x, c.x, d.x);
+    bottom = max(a.y, b.y, c.y, d.y);
 
     return {
       top: top,
@@ -1107,7 +1115,7 @@ _.extend(Path.prototype, Shape.prototype, {
   /**
    * @name Two.Path#subdivide
    * @function
-   * @param {Integer} limit - How many times to recurse subdivisions.
+   * @param {Number} limit - How many times to recurse subdivisions.
    * @description Insert a {@link Two.Anchor} at the midpoint between every item in {@link Two.Path#vertices}.
    */
   subdivide: function(limit) {
@@ -1190,7 +1198,7 @@ _.extend(Path.prototype, Shape.prototype, {
    * @name Two.Path#_updateLength
    * @function
    * @private
-   * @param {Integer} [limit=] -
+   * @param {Number} [limit=] -
    * @param {Boolean} [silent=false] - If set to `true` then the path isn't updated before calculation. Useful for internal use.
    * @description Recalculate the {@link Two.Path#length} value.
    */
@@ -1262,7 +1270,6 @@ _.extend(Path.prototype, Shape.prototype, {
       }
 
       var l = this._collection.length;
-      var last = l - 1;
       var closed = this._closed;
 
       var beginning = Math.min(this._beginning, this._ending);
@@ -1415,10 +1422,10 @@ function contains(path, t) {
 }
 
 /**
- * @protected
+ * @private
  * @param {Two.Path} path - The path to analyze against.
  * @param {Number} target - The target length at which to find an anchor.
- * @returns {Integer}
+ * @returns {Number}
  * @description Return the id of an anchor based on a target length.
  */
 function getIdByLength(path, target) {

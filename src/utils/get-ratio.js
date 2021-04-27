@@ -11,7 +11,7 @@ var getBackingStoreRatio = function(ctx) {
 };
 
 /**
- * @name Utils.getRatio
+ * @name Two.Utils.getRatio
  * @function
  * @param {CanvasRenderingContext2D} ctx
  * @returns {Number} The ratio of a unit in Two.js to the pixel density of a session's screen.

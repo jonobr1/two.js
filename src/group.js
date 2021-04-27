@@ -1,5 +1,5 @@
-import Collection from './collection.js';
 import Events from './events.js';
+import { getComputedMatrix } from './utils/math.js';
 import _ from './utils/underscore.js';
 
 import Vector from './vector.js';
@@ -18,7 +18,7 @@ var min = Math.min, max = Math.max;
  * @description This is the primary class for grouping objects that are then drawn in Two.js. In Illustrator this is a group, in After Effects it would be a Null Object. Whichever the case, the `Two.Group` contains a transformation matrix and commands to style its children, but it by itself doesn't render to the screen.
  * @nota-bene The {@link Two#scene} is an instance of `Two.Group`.
  */
-var Group = function(children) {
+function Group(children) {
 
   Shape.call(this, true);
 
@@ -39,14 +39,14 @@ var Group = function(children) {
   this.subtractions = [];
 
   /**
-   * @name Two.Group#additions
+   * @name Two.Group#children
    * @property {Two.Group.Children}
    * @description A list of all the children in the scenegraph.
    * @nota-bene Ther order of this list indicates the order each element is rendered to the screen.
    */
   this.children = Array.isArray(children) ? children : Array.prototype.slice.call(arguments);
 
-};
+}
 
 _.extend(Group, {
 
@@ -93,7 +93,6 @@ _.extend(Group, {
     'fill',
     'stroke',
     'linewidth',
-    'visible',
     'cap',
     'join',
     'miter',
@@ -113,6 +112,21 @@ _.extend(Group, {
 
     var properties = Group.Properties;
 
+    Object.defineProperty(object, 'visible', {
+
+      enumerable: true,
+
+      get: function() {
+        return this._visible;
+      },
+
+      set: function(v) {
+        this._flagVisible = this._visible !== v || this._flagVisible;
+        this._visible = v;
+      }
+
+    });
+
     Object.defineProperty(object, 'opacity', {
 
       enumerable: true,
@@ -122,7 +136,7 @@ _.extend(Group, {
       },
 
       set: function(v) {
-        this._flagOpacity = this._opacity !== v;
+        this._flagOpacity = this._opacity !== v || this._flagOpacity;
         this._opacity = v;
       }
 
@@ -137,7 +151,7 @@ _.extend(Group, {
       },
 
       set: function(v) {
-        this._flagBeginning = this._beginning !== v;
+        this._flagBeginning = this._beginning !== v || this._flagBeginning;
         this._beginning = v;
       }
 
@@ -152,7 +166,7 @@ _.extend(Group, {
       },
 
       set: function(v) {
-        this._flagEnding = this._ending !== v;
+        this._flagEnding = this._ending !== v || this._flagEnding;
         this._ending = v;
       }
 
@@ -197,12 +211,19 @@ _.extend(Group, {
 
         if (this._children) {
           this._children.unbind();
+          if (this._children.length > 0) {
+            removeChildren(this._children);
+          }
         }
 
         this._children = new Children(children);
         this._children.bind(Events.Types.insert, insertChildren);
         this._children.bind(Events.Types.remove, removeChildren);
         this._children.bind(Events.Types.order, orderChildren);
+
+        if (children.length > 0) {
+          insertChildren(children);
+        }
 
       }
 
@@ -283,62 +304,70 @@ _.extend(Group, {
 
 _.extend(Group.prototype, Shape.prototype, {
 
+  constructor: Group,
+
   // Flags
   // http://en.wikipedia.org/wiki/Flag
 
   /**
    * @name Two.Group#_flagAdditions
    * @private
-   * @property {Boolean} - Determines whether the {@link Two.Group#additions} need updating.
+   * @property {Boolean} - Determines whether the {@link Two.Group#additions} needs updating.
    */
   _flagAdditions: false,
 
   /**
    * @name Two.Group#_flagSubtractions
    * @private
-   * @property {Boolean} - Determines whether the {@link Two.Group#subtractions} need updating.
+   * @property {Boolean} - Determines whether the {@link Two.Group#subtractions} needs updating.
    */
   _flagSubtractions: false,
 
   /**
    * @name Two.Group#_flagOrder
    * @private
-   * @property {Boolean} - Determines whether the {@link Two.Group#order} need updating.
+   * @property {Boolean} - Determines whether the {@link Two.Group#order} needs updating.
    */
   _flagOrder: false,
 
   /**
+   * @name Two.Group#_flagVisible
+   * @private
+   * @property {Boolean} - Determines whether the {@link Two.Group#visible} needs updating.
+   */
+
+  /**
    * @name Two.Group#_flagOpacity
    * @private
-   * @property {Boolean} - Determines whether the {@link Two.Group#opacity} need updating.
+   * @property {Boolean} - Determines whether the {@link Two.Group#opacity} needs updating.
    */
   _flagOpacity: true,
 
   /**
    * @name Two.Group#_flagBeginning
    * @private
-   * @property {Boolean} - Determines whether the {@link Two.Group#beginning} need updating.
+   * @property {Boolean} - Determines whether the {@link Two.Group#beginning} needs updating.
    */
   _flagBeginning: false,
 
   /**
    * @name Two.Group#_flagEnding
    * @private
-   * @property {Boolean} - Determines whether the {@link Two.Group#ending} need updating.
+   * @property {Boolean} - Determines whether the {@link Two.Group#ending} needs updating.
    */
   _flagEnding: false,
 
   /**
    * @name Two.Group#_flagLength
    * @private
-   * @property {Boolean} - Determines whether the {@link Two.Group#length} need updating.
+   * @property {Boolean} - Determines whether the {@link Two.Group#length} needs updating.
    */
   _flagLength: false,
 
   /**
    * @name Two.Group#_flagMask
    * @private
-   * @property {Boolean} - Determines whether the {@link Two.Group#mask} need updating.
+   * @property {Boolean} - Determines whether the {@link Two.Group#mask} needs updating.
    */
   _flagMask: false,
 
@@ -346,15 +375,15 @@ _.extend(Group.prototype, Shape.prototype, {
 
   /**
    * @name Two.Group#fill
-   * @property {(CssColor|Two.Gradient|Two.Texture)} - The value of what all child shapes should be filled in with.
-   * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS Colors.
+   * @property {(String|Two.Gradient|Two.Texture)} - The value of what all child shapes should be filled in with.
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
    */
   _fill: '#fff',
 
   /**
    * @name Two.Group#stroke
-   * @property {(CssColor|Two.Gradient|Two.Texture)} - The value of what all child shapes should be outlined in with.
-   * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS Colors.
+   * @property {(String|Two.Gradient|Two.Texture)} - The value of what all child shapes should be outlined in with.
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
    */
   _stroke: '#000',
 
@@ -445,8 +474,6 @@ _.extend(Group.prototype, Shape.prototype, {
    */
   _mask: null,
 
-  constructor: Group,
-
   /**
    * @name Two.Group#clone
    * @function
@@ -529,12 +556,13 @@ _.extend(Group.prototype, Shape.prototype, {
    */
   corner: function() {
 
-    var rect = this.getBoundingClientRect(true);
-    var corner = { x: rect.left, y: rect.top };
+    var rect = this.getBoundingClientRect();
 
-    this.children.forEach(function(child) {
-      child.translation.sub(corner);
-    });
+    for (var i = 0; i < this.children.length; i++) {
+      var child = this.children[i];
+      child.translation.x -= rect.left;
+      child.translation.y -= rect.top;
+    }
 
     return this;
 
@@ -547,18 +575,17 @@ _.extend(Group.prototype, Shape.prototype, {
    */
   center: function() {
 
-    var rect = this.getBoundingClientRect(true);
+    var rect = this.getBoundingClientRect();
+    var cx = rect.left + rect.width / 2 - this.translation.x;
+    var cy = rect.top + rect.height / 2 - this.translation.y;
 
-    rect.centroid = {
-      x: rect.left + rect.width / 2 - this.translation.x,
-      y: rect.top + rect.height / 2 - this.translation.y
-    };
-
-    this.children.forEach(function(child) {
+    for (var i = 0; i < this.children.length; i++) {
+      var child = this.children[i];
       if (child.isShape) {
-        child.translation.sub(rect.centroid);
+        child.translation.x -= cx;
+        child.translation.y -= cy;
       }
-    });
+    }
 
     return this;
 
@@ -697,8 +724,14 @@ _.extend(Group.prototype, Shape.prototype, {
 
     // Remove the objects
     for (var i = 0; i < objects.length; i++) {
-      if (!objects[i] || !(this.children.ids[objects[i].id])) continue;
-      this.children.splice(Array.prototype.indexOf.call(this.children, objects[i]), 1);
+      var object = objects[i];
+      if (!object || !this.children.ids[object.id]) {
+        continue;
+      }
+      var index = this.children.indexOf(object);
+      if (index >= 0) {
+        this.children.splice(index, 1);
+      }
     }
 
     return this;
@@ -713,7 +746,7 @@ _.extend(Group.prototype, Shape.prototype, {
    * @description Return an object with top, left, right, bottom, width, and height parameters of the group.
    */
   getBoundingClientRect: function(shallow) {
-    var rect;
+    var rect, matrix, a, b, c, d;
 
     // TODO: Update this to not __always__ update. Just when it needs to.
     this._update(true);
@@ -723,6 +756,8 @@ _.extend(Group.prototype, Shape.prototype, {
         top = Infinity, bottom = -Infinity;
 
     var regex = /texture|gradient/i;
+
+    matrix = shallow ? this._matrix : getComputedMatrix(this);
 
     for (var i = 0; i < this.children.length; i++) {
 
@@ -743,6 +778,20 @@ _.extend(Group.prototype, Shape.prototype, {
       left = min(rect.left, left);
       right = max(rect.right, right);
       bottom = max(rect.bottom, bottom);
+
+    }
+
+    if (shallow) {
+
+      a = matrix.multiply(left, top, 1);
+      b = matrix.multiply(left, bottom, 1);
+      c = matrix.multiply(right, top, 1);
+      d = matrix.multiply(right, bottom, 1);
+
+      top = min(a.y, b.y, c.y, d.y);
+      left = min(a.x, b.x, c.x, d.x);
+      right = max(a.x, b.x, c.x, d.x);
+      bottom = max(a.y, b.y, c.y, d.y);
 
     }
 
@@ -804,6 +853,8 @@ _.extend(Group.prototype, Shape.prototype, {
    */
   _update: function() {
 
+    var i, l, child;
+
     if (this._flagBeginning || this._flagEnding) {
 
       var beginning = Math.min(this._beginning, this._ending);
@@ -813,12 +864,11 @@ _.extend(Group.prototype, Shape.prototype, {
 
       var bd = beginning * length;
       var ed = ending * length;
-      var distance = (ed - bd);
 
-      for (var i = 0; i < this.children.length; i++) {
+      for (i = 0; i < this.children.length; i++) {
 
-        var child = this.children[i];
-        var l = child.length;
+        child = this.children[i];
+        l = child.length;
 
         if (bd > sum + l) {
           child.beginning = 1;
@@ -841,6 +891,17 @@ _.extend(Group.prototype, Shape.prototype, {
 
       }
 
+    }
+
+    if (this._flagId) {
+      // Means the group's id changed or one of its children's ids
+      // changed and as such we need to update the map of ids the
+      // Two.Group.children has.
+      this.children.ids = {};
+      for (i = 0; i < this.children.length; i++) {
+        child = this.children[i];
+        this.children.ids[child.id] = child;
+      }
     }
 
     return Shape.prototype._update.apply(this, arguments);

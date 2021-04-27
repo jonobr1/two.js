@@ -9,19 +9,18 @@ import Constants from './constants.js';
 /**
  * @name Two.Shape
  * @class
- * @extends Events
+ * @extends Two.Events
  * @description The foundational transformation object for the Two.js scenegraph.
  */
-var Shape = function() {
+function Shape() {
 
   /**
-   * @name Two.Shape#_renderer
+   * @name Two.Shape#renderer
    * @property {Object}
-   * @private
-   * @description A private object to store relevant renderer specific variables.
-   * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `shape._renderer.elem`.
+   * @description Object access to store relevant renderer specific variables. Warning: manipulating this object can create unintended consequences.
+   * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `shape.renderer.elem`.
    */
-  this._renderer = {};
+  this.renderer = {};
   this._renderer.flagMatrix = Shape.FlagMatrix.bind(this);
   this.isShape = true;
 
@@ -43,7 +42,7 @@ var Shape = function() {
    * @name Two.Shape#matrix
    * @property {Two.Matrix}
    * @description The transformation matrix of the shape.
-   * @nota-bene {@link Two.Shape#translation}, {@link Two.Shape#rotation}, and {@link Two.Shape#scale} apply their values to the matrix when changed. The matrix is what is sent to the renderer to be drawn.
+   * @nota-bene {@link Two.Shape#translation}, {@link Two.Shape#rotation}, {@link Two.Shape#scale}, {@link Two.Shape#skewX}, and {@link Two.Shape#skewY} apply their values to the matrix when changed. The matrix is what is sent to the renderer to be drawn.
    */
   this.matrix = new Matrix();
 
@@ -55,7 +54,7 @@ var Shape = function() {
 
   /**
    * @name Two.Shape#rotation
-   * @property {Radians} - The value in radians for how much the shape is rotated relative to its parent.
+   * @property {Number} - The value in Number for how much the shape is rotated relative to its parent.
    */
   this.rotation = 0;
 
@@ -66,7 +65,21 @@ var Shape = function() {
    */
   this.scale = 1;
 
-};
+  /**
+   * @name Two.Shape#skewX
+   * @property {Number} - The value in Number for how much the shape is skewed relative to its parent.
+   * @description Skew the shape by an angle in the x axis direction.
+   */
+  this.skewX = 0;
+
+  /**
+   * @name Two.Shape#skewY
+   * @property {Number} - The value in Number for how much the shape is skewed relative to its parent.
+   * @description Skew the shape by an angle in the y axis direction.
+   */
+  this.skewY = 0;
+
+}
 
 _.extend(Shape, {
 
@@ -139,6 +152,28 @@ _.extend(Shape, {
       }
     });
 
+    Object.defineProperty(object, 'skewX', {
+      enumerable: true,
+      get: function() {
+        return this._skewX;
+      },
+      set: function(v) {
+        this._skewX = v;
+        this._flagMatrix = true;
+      }
+    });
+
+    Object.defineProperty(object, 'skewY', {
+      enumerable: true,
+      get: function() {
+        return this._skewY;
+      },
+      set: function(v) {
+        this._skewY = v;
+        this._flagMatrix = true;
+      }
+    });
+
     Object.defineProperty(object, 'matrix', {
       enumerable: true,
       get: function() {
@@ -147,6 +182,23 @@ _.extend(Shape, {
       set: function(v) {
         this._matrix = v;
         this._flagMatrix = true;
+      }
+    });
+
+    Object.defineProperty(object, 'id', {
+      enumerable: true,
+      get: function() {
+        return this._id;
+      },
+      set: function(v) {
+        if (v === this._id) {
+          return;
+        }
+        this._id = v;
+        this._flagId = true;
+        if (this.parent) {
+          this.parent._flagId = true;
+        }
       }
     });
 
@@ -185,13 +237,36 @@ _.extend(Shape, {
 
     });
 
+    Object.defineProperty(object, 'renderer', {
+
+      enumerable: false,
+
+      get: function() {
+        return this._renderer;
+      },
+
+      set: function(obj) {
+        this._renderer = obj;
+      }
+
+    });
+
   }
 
 });
 
 _.extend(Shape.prototype, Events, {
 
+  constructor: Shape,
+
   // Flags
+
+  /**
+   * @name Two.Shape#_id
+   * @private
+   * @property {Boolean} - Determines whether the id needs updating.
+   */
+  _flagId: true,
 
   /**
    * @name Two.Shape#_flagMatrix
@@ -219,6 +294,8 @@ _.extend(Shape.prototype, Events, {
 
   // Underlying Properties
 
+  _id: '',
+
   /**
    * @name Two.Shape#_translation
    * @private
@@ -229,7 +306,7 @@ _.extend(Shape.prototype, Events, {
   /**
    * @name Two.Shape#_rotation
    * @private
-   * @property {Radians} - The rotation value in radians.
+   * @property {Number} - The rotation value in Number.
    */
   _rotation: 0,
 
@@ -240,6 +317,20 @@ _.extend(Shape.prototype, Events, {
    */
   _scale: 1,
 
+  /**
+   * @name Two.Shape#_skewX
+   * @private
+   * @property {Number} - The rotation value in Number.
+   */
+  _skewX: 0,
+
+  /**
+   * @name Two.Shape#_skewY
+   * @private
+   * @property {Number} - The rotation value in Number.
+   */
+  _skewY: 0,
+
   // _mask: null,
   // _clip: false,
 
@@ -249,8 +340,6 @@ _.extend(Shape.prototype, Events, {
    * @nota-bene Only available for the SVG renderer.
    */
   _className: '',
-
-  constructor: Shape,
 
   /**
    * @name Two.Shape#addTo
@@ -277,6 +366,8 @@ _.extend(Shape.prototype, Events, {
     clone.translation.copy(this.translation);
     clone.rotation = this.rotation;
     clone.scale = this.scale;
+    clone.skewX = this.skewX;
+    clone.skewY = this.skewY;
 
     if (this.matrix.manual) {
       clone.matrix.copy(this.matrix);
@@ -313,7 +404,8 @@ _.extend(Shape.prototype, Events, {
         }
 
         this._matrix.rotate(this.rotation);
-
+        this._matrix.skewX(this.skewX);
+        this._matrix.skewY(this.skewY);
     }
 
     if (bubbles) {
@@ -334,7 +426,8 @@ _.extend(Shape.prototype, Events, {
    */
   flagReset: function() {
 
-    this._flagMatrix = this._flagScale = this._flagClassName = false;
+    this._flagId = this._flagMatrix = this._flagScale =
+      this._flagClassName = false;
 
     return this;
 

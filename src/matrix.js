@@ -1,4 +1,4 @@
-import { NumArray, toFixed, getComputedMatrix, setMatrix } from './utils/math.js';
+import { NumArray, toFixed, setMatrix } from './utils/math.js';
 import Events from './events.js';
 import _ from './utils/underscore.js';
 
@@ -22,7 +22,7 @@ var array = [];
  * @description A class to store 3 x 3 transformation matrix information. In addition to storing data `Two.Matrix` has suped up methods for commonplace mathematical operations.
  * @nota-bene Order is based on how to construct transformation strings for the browser.
  */
-var Matrix = function(a, b, c, d, e, f) {
+function Matrix(a, b, c, d, e, f) {
 
   /**
    * @name Two.Matrix#elements
@@ -42,7 +42,7 @@ var Matrix = function(a, b, c, d, e, f) {
     this.set(elements);
   }
 
-};
+}
 
 setMatrix(Matrix);
 
@@ -392,13 +392,13 @@ _.extend(Matrix.prototype, Events, {
   /**
    * @name Two.Matrix#rotate
    * @function
-   * @param {Radians} radians - The amount to rotate in radians.
+   * @param {Number} Number - The amount to rotate in Number.
    * @description Rotate the matrix.
    */
-  rotate: function(radians) {
+  rotate: function(Number) {
 
-    var c = cos(radians);
-    var s = sin(radians);
+    var c = cos(Number);
+    var s = sin(Number);
 
     return this.multiply(c, -s, 0, s, c, 0, 0, 0, 1);
 
@@ -420,12 +420,12 @@ _.extend(Matrix.prototype, Events, {
   /**
    * @name Two.Matrix#skewX
    * @function
-   * @param {Radians} radians - The amount to skew in radians.
+   * @param {Number} Number - The amount to skew in Number.
    * @description Skew the matrix by an angle in the x axis direction.
    */
-  skewX: function(radians) {
+  skewX: function(Number) {
 
-    var a = tan(radians);
+    var a = tan(Number);
 
     return this.multiply(1, a, 0, 0, 1, 0, 0, 0, 1);
 
@@ -434,12 +434,12 @@ _.extend(Matrix.prototype, Events, {
   /**
    * @name Two.Matrix#skewY
    * @function
-   * @param {Radians} radians - The amount to skew in radians.
+   * @param {Number} Number - The amount to skew in Number.
    * @description Skew the matrix by an angle in the y axis direction.
    */
-  skewY: function(radians) {
+  skewY: function(Number) {
 
-    var a = tan(radians);
+    var a = tan(Number);
 
     return this.multiply(1, 0, 0, a, 1, 0, 0, 0, 1);
 

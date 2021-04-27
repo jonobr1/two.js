@@ -263,14 +263,15 @@ var svg = {
 
     render: function(domElement) {
 
-      this._update();
-
       // Shortcut for hidden objects.
       // Doesn't reset the flags, so changes are stored and
       // applied once the object is visible again
-      if (this._opacity === 0 && !this._flagOpacity) {
+      if ((!this._visible && !this._flagVisible)
+        || (this._opacity === 0 && !this._flagOpacity)) {
         return this;
       }
+
+      this._update();
 
       if (!this._renderer.elem) {
         this._renderer.elem = svg.createElement('g', {
@@ -297,6 +298,10 @@ var svg = {
 
       if (this._flagOpacity) {
         this._renderer.elem.setAttribute('opacity', this._opacity);
+      }
+
+      if (this._flagVisible) {
+        this._renderer.elem.setAttribute('display', this._visible ? 'inline' : 'none');
       }
 
       if (this._flagClassName) {
@@ -354,14 +359,14 @@ var svg = {
 
     render: function(domElement) {
 
-      this._update();
-
       // Shortcut for hidden objects.
       // Doesn't reset the flags, so changes are stored and
       // applied once the object is visible again
       if (this._opacity === 0 && !this._flagOpacity) {
         return this;
       }
+
+      this._update();
 
       // Collect any attribute that needs to be changed here
       var changed = {};
@@ -891,7 +896,7 @@ var svg = {
  * @param {Element} [parameters.domElement] - The `<svg />` to draw to. If none given a new one will be constructed.
  * @description This class is used by {@link Two} when constructing with `type` of `Two.Types.svg` (the default type). It takes Two.js' scenegraph and renders it to a `<svg />`.
  */
-var Renderer = function(params) {
+function Renderer(params) {
 
   /**
    * @name Two.SVGRenderer#domElement
@@ -915,7 +920,7 @@ var Renderer = function(params) {
   this.domElement.defs = this.defs;
   this.domElement.style.overflow = 'hidden';
 
-};
+}
 
 _.extend(Renderer, {
 

@@ -5,11 +5,11 @@ import _ from './utils/underscore.js';
  * @class
  * @description An arbitrary class to manage a directory of things. Mainly used for keeping tabs of textures in Two.js.
  */
-var Registry = function() {
+function Registry() {
 
   this.map = {};
 
-};
+}
 
 _.extend(Registry.prototype, {
 
@@ -42,7 +42,7 @@ _.extend(Registry.prototype, {
    * @name Two.Registry#get
    * @function
    * @param {String} id - A unique identifier.
-   * @returns The associated value. If unavailable then `undefined` is returned.
+   * @returns {?Object} The associated value. If unavailable then `undefined` is returned.
    * @description Get a registered value by its `id`.
    */
   get: function(id) {

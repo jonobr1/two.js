@@ -15,13 +15,13 @@ var TWO_PI = Math.PI * 2, HALF_PI = Math.PI / 2;
  * @extends Two.Path
  * @param {Number} [x=0] - The x position of the arc segment.
  * @param {Number} [y=0] - The y position of the arc segment.
- * @param {Number} innerRadius - The inner radius value of the arc segment.
- * @param {Number} outerRadius - The outer radius value of the arc segment.
- * @param {Radians} startAngle - The start angle of the arc segment in radians.
- * @param {Radians} endAngle - The end angle of the arc segment in radians.
+ * @param {Number} [innerRadius=0] - The inner radius value of the arc segment.
+ * @param {Number} [outerRadius=0] - The outer radius value of the arc segment.
+ * @param {Number} [startAngle=0] - The start angle of the arc segment in Number.
+ * @param {Number} [endAngle=6.2831] - The end angle of the arc segment in Number.
  * @param {Number} [resolution=24] - The number of vertices used to construct the arc segment.
  */
-var ArcSegment = function(ox, oy, ir, or, sa, ea, res) {
+function ArcSegment(ox, oy, ir, or, sa, ea, res) {
 
   var amount = res || (Constants.Resolution * 3);
   var points = [];
@@ -35,23 +35,33 @@ var ArcSegment = function(ox, oy, ir, or, sa, ea, res) {
    * @name Two.ArcSegment#innerRadius
    * @property {Number} - The size of the inner radius of the arc segment.
    */
-  this.innerRadius = ir;
+  if (typeof ir === 'number') {
+    this.innerRadius = ir;
+  }
+
   /**
    * @name Two.ArcSegment#outerRadius
    * @property {Number} - The size of the outer radius of the arc segment.
    */
-  this.outerRadius = or;
+  if (typeof or === 'number') {
+    this.outerRadius = or;
+  }
 
   /**
    * @name Two.ArcSegment#startRadius
-   * @property {Radians} - The angle of one side for the arc segment.
+   * @property {Number} - The angle of one side for the arc segment.
    */
-  this.startAngle = sa;
+  if (typeof sa === 'number') {
+    this.startAngle = sa;
+  }
+
   /**
    * @name Two.ArcSegment#endAngle
-   * @property {Radians} - The angle of the other side for the arc segment.
+   * @property {Number} - The angle of the other side for the arc segment.
    */
-  this.endAngle = ea;
+  if (typeof ea === 'number') {
+    this.endAngle = ea;
+  }
 
   this._update();
 
@@ -62,7 +72,7 @@ var ArcSegment = function(ox, oy, ir, or, sa, ea, res) {
     this.translation.y = oy;
   }
 
-};
+}
 
 _.extend(ArcSegment, {
 
@@ -88,6 +98,8 @@ _.extend(ArcSegment, {
 });
 
 _.extend(ArcSegment.prototype, Path.prototype, {
+
+  constructor: ArcSegment,
 
   /**
    * @name Two.ArcSegment#_flagStartAngle
@@ -138,8 +150,6 @@ _.extend(ArcSegment.prototype, Path.prototype, {
    * @see {@link Two.ArcSegment#outerRadius}
    */
   _outerRadius: 0,
-
-  constructor: ArcSegment,
 
   /**
    * @name Two.ArcSegment#_update
@@ -331,6 +341,8 @@ _.extend(ArcSegment.prototype, Path.prototype, {
     clone.translation.copy(this.translation);
     clone.rotation = this.rotation;
     clone.scale = this.scale;
+    clone.skewX = this.skewX;
+    clone.skewY = this.skewY;
 
     if (this.matrix.manual) {
       clone.matrix.copy(this.matrix);

@@ -396,6 +396,29 @@ QUnit.test('Two.Collection', function(assert) {
 
 });
 
+QUnit.test('Two.Children', function(assert) {
+
+  assert.expect(3);
+
+  var group = new Two.Group();
+  var shape = new Two.Shape();
+
+  group.add(shape);
+  shape._update(true);
+
+  assert.equal(shape.id in group.children.ids, true, 'Two.Children properly adds child elements to list.');
+
+  group.remove(shape);
+  group._update(true);
+  assert.equal(shape.id in group.children.ids, false, 'Two.Children properly removes child element from list.');
+
+  group.add(shape);
+  shape.id = 'custom';
+  shape._update(true);
+  assert.equal(shape.id in group.children.ids, true, 'Two.Children properly updates ids map when child id changes.');
+
+});
+
 QUnit.test('Two.Shape', function(assert) {
 
   assert.expect(11);
@@ -459,8 +482,6 @@ QUnit.test('Children adding and removing', function(assert) {
   var group1 = new Two.Group();
   var group2 = new Two.Group();
   var group3 = new Two.Group();
-  var group4 = new Two.Group();
-  var group5 = new Two.Group();
 
   var poly1 = new Two.Path([new Two.Vector(0, 0)]);
   var poly2 = new Two.Path([new Two.Vector(0, 0)]);
@@ -566,8 +587,8 @@ QUnit.test('Two.Texture', function(assert) {
       window.location.protocol, '//', window.location.host, path
     ].join('');
 
-    assert.equal(tb.src, absolutePath, 'Two.Texture takes in image and applies path proplery.');
-    assert.equal(tb.image, ta.image, 'Two.Texture takes in image and applies registered image tag proplery.');
+    assert.equal(tb.src, absolutePath, 'Two.Texture takes in image and applies path properly.');
+    assert.equal(tb.image, ta.image, 'Two.Texture takes in image and applies registered image tag properly.');
     assert.equal(tb.loaded, true, 'Two.Texture takes in image and applies loaded property properly.');
     assert.done();
 

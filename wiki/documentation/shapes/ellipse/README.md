@@ -64,7 +64,7 @@ A list of properties that are on every [Two.Ellipse](/documentation/ellipse).
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/ellipse.js#L55)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/ellipse.js#L60)
 
 </div>
 
@@ -112,7 +112,7 @@ Convenience function to apply observable qualities of a [Two.Ellipse](/documenta
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/ellipse.js#L61)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/ellipse.js#L66)
 
 </div>
 
@@ -194,7 +194,7 @@ The height of the ellipse.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/ellipse.js#L42)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/ellipse.js#L45)
 
 </div>
 
@@ -255,7 +255,7 @@ Create a new instance of [Two.Polygon](/documentation/polygon) with the same pro
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/ellipse.js#L164)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/ellipse.js#L169)
 
 </div>
 
@@ -309,7 +309,7 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/ellipse.js#L198)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/ellipse.js#L205)
 
 </div>
 

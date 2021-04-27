@@ -4,11 +4,28 @@ sidebarDepth: 2
 
 # Change Log
 
-## Nightly
+## April 23, 2021 [v0.7.5](https://github.com/jonobr1/two.js/releases/tag/v0.7.5)
++ Improved `Two.Circle.beginning` & `Two.Circle.ending` behavior
++ Improved `fitted` logic on instances of `Two`
++ Improved `Two.Children` and `Two.Collection` instantiation versatility
++ Improved `Two.Group.getBoundingClientRect`, `Two.Path.getBoundingClientRect`, and `Two.Text.getBoundingClientRect`
++ Improved higher level shapes', like `Two.Circle`, ability to handle zeroed out arguments
+
+## April 2, 2021 [v0.7.4](https://github.com/jonobr1/two.js/releases/tag/v0.7.4)
++ Improved Typescript type declarations
++ Successfully export `extras/` directory in both JavaScript and JavaScript Module format
++ Added `Two.Shape.skewX` and `Two.Shape.skewY` [@gburlet](https://github.com/gburlet)
+
+## March 26, 2021 [v0.7.3](https://github.com/jonobr1/two.js/releases/tag/v0.7.3)
++ Exposed `Two.Shape.renderer` for easier access to underlying SVG elements
++ Added Typescript declaration types to Two.js
++ Made `Two.Group` listen to `Two.Shape.id` changes through new observable property and flags
++ Improved `Two.interpret` performance and functionality through improved regular expressions [@adroitwhiz](https://github.com/adroitwhiz)
++ `Two.Group.visible` is a property held on the group and does not trickle down to children
 + Improved scientific notation interpretation in SVG elements
 + `Two.load` appends a hidden DOM element to the document's `<head />` so that `getComputedStyles` works more consistently with `Two.interpret`
 
-## January 12, 2021
+## January 12, 2021 [v0.7.1](https://github.com/jonobr1/two.js/releases/tag/v0.7.1)
 + Added `Two.AutoCalculateImportedMatrices` to control different ways of importing SVG transformations
 + Fixed `Two.Text.className` application
 + Added basic text support in `Two.interpret`

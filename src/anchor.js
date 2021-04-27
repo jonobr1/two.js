@@ -17,7 +17,7 @@ import Vector from './vector.js';
  * @extends Two.Vector
  * @description An object that holds 3 {@link Two.Vector}s, the anchor point and its corresponding handles: `left` and `right`. In order to properly describe the bezier curve about the point there is also a command property to describe what type of drawing should occur when Two.js renders the anchors.
  */
-var Anchor = function(x, y, lx, ly, rx, ry, command) {
+function Anchor(x, y, lx, ly, rx, ry, command) {
 
   Vector.call(this, x, y);
 
@@ -53,7 +53,7 @@ var Anchor = function(x, y, lx, ly, rx, ry, command) {
     this.controls.right.y = ry;
   }
 
-};
+}
 
 _.extend(Anchor, {
 

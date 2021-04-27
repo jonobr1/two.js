@@ -18,7 +18,7 @@ import Vector from '../vector.js';
  * @param {Number} [focalY=0] - The y position of the focal point on the radial gradient.
  * @nota-bene The radial gradient lives within the space of the parent object's matrix space.
  */
-var RadialGradient = function(cx, cy, r, stops, fx, fy) {
+function RadialGradient(cx, cy, r, stops, fx, fy) {
 
   Gradient.call(this, stops);
 
@@ -61,12 +61,12 @@ var RadialGradient = function(cx, cy, r, stops, fx, fy) {
     this.focal.y = fy;
   }
 
-};
+}
 
 _.extend(RadialGradient, {
 
   /**
-   * @name Two.RadialGradient#Stop
+   * @name Two.RadialGradient.Stop
    * @see {@link Two.Stop}
    */
   Stop: Stop,
@@ -97,6 +97,8 @@ _.extend(RadialGradient, {
 
 _.extend(RadialGradient.prototype, Gradient.prototype, {
 
+  constructor: RadialGradient,
+
   /**
    * @name Two.RadialGradient#_flagRadius
    * @private
@@ -115,8 +117,6 @@ _.extend(RadialGradient.prototype, Gradient.prototype, {
    * @property {Boolean} - Determines whether the {@link Two.RadialGradient#focal} changed and needs to update.
    */
   _flagFocal: false,
-
-  constructor: RadialGradient,
 
   /**
    * @name Two.RadialGradient#clone

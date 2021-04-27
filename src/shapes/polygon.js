@@ -13,10 +13,10 @@ var TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin;
  * @extends Two.Path
  * @param {Number} [x=0] - The x position of the polygon.
  * @param {Number} [y=0] - The y position of the polygon.
- * @param {Number} radius - The radius value of the polygon.
+ * @param {Number} [radius=0] - The radius value of the polygon.
  * @param {Number} [sides=12] - The number of vertices used to construct the polygon.
  */
-var Polygon = function(ox, oy, r, sides) {
+function Polygon(ox, oy, r, sides) {
 
   sides = Math.max(sides || 0, 3);
 
@@ -29,22 +29,36 @@ var Polygon = function(ox, oy, r, sides) {
    * @name Two.Polygon#width
    * @property {Number} - The size of the width of the polygon.
    */
-  this.width = r * 2;
+  if (typeof r === 'number') {
+    this.width = r * 2;
+  }
+
   /**
    * @name Two.Polygon#height
    * @property {Number} - The size of the height of the polygon.
    */
-  this.height = r * 2;
+  if (typeof r === 'number') {
+    this.height = r * 2;
+  }
+
   /**
    * @name Two.Polygon#sides
    * @property {Number} - The amount of sides the polyogn has.
    */
-  this.sides = sides;
+  if (typeof sides === 'number') {
+    this.sides = sides;
+  }
 
   this._update();
-  this.translation.set(ox, oy);
 
-};
+  if (typeof ox === 'number') {
+    this.translation.x = ox;
+  }
+  if (typeof oy === 'number') {
+    this.translation.y = oy;
+  }
+
+}
 
 _.extend(Polygon, {
 
@@ -70,6 +84,8 @@ _.extend(Polygon, {
 });
 
 _.extend(Polygon.prototype, Path.prototype, {
+
+  constructor: Polygon,
 
   /**
    * @name Two.Polygon#_flagWidth
@@ -109,8 +125,6 @@ _.extend(Polygon.prototype, Path.prototype, {
    */
   _sides: 0,
 
-  constructor: Polygon,
-
   /**
    * @name Two.Polygon#_update
    * @function
@@ -145,8 +159,7 @@ _.extend(Polygon.prototype, Path.prototype, {
           this.vertices[i].set(x, y);
         }
 
-        this.vertices[i].command = i === 0
-          ? Commands.move : Commands.line;
+        this.vertices[i].command = i === 0 ? Commands.move : Commands.line;
 
       }
 
@@ -186,6 +199,8 @@ _.extend(Polygon.prototype, Path.prototype, {
     clone.translation.copy(this.translation);
     clone.rotation = this.rotation;
     clone.scale = this.scale;
+    clone.skewX = this.skewX;
+    clone.skewY = this.skewY;
 
     if (this.matrix.manual) {
       clone.matrix.copy(this.matrix);

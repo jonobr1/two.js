@@ -5,10 +5,10 @@ import Collection from './collection.js';
 /**
  * @class
  * @name Two.Group.Children
- * @extends Two.Utils.Collection
+ * @extends Two.Collection
  * @description A children collection which is accesible both by index and by object `id`.
  */
-var Children = function() {
+function Children(children) {
 
   Collection.apply(this, arguments);
 
@@ -23,11 +23,14 @@ var Children = function() {
    */
   this.ids = {};
 
+  this.attach(
+    Array.isArray(children) ? children : Array.prototype.slice.call(arguments)
+  );
+
   this.on(Events.Types.insert, this.attach);
   this.on(Events.Types.remove, this.detach);
-  Children.prototype.attach.apply(this, arguments);
 
-};
+}
 
 Children.prototype = new Collection();
 
@@ -43,7 +46,10 @@ _.extend(Children.prototype, {
    */
   attach: function(children) {
     for (var i = 0; i < children.length; i++) {
-      this.ids[children[i].id] = children[i];
+      var child = children[i];
+      if (child && child.id) {
+        this.ids[child.id] = child;
+      }
     }
     return this;
   },

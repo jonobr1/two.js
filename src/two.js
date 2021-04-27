@@ -9,7 +9,6 @@ import defineGetterSetter from './utils/get-set.js';
 import interpretSVG from './utils/interpret-svg.js';
 import * as math from './utils/math.js';
 import Commands from './utils/path-commands.js';
-import root from './utils/root.js';
 import _ from './utils/underscore.js';
 import xhr from './utils/xhr.js';
 
@@ -69,7 +68,7 @@ import Constants from './constants.js';
  * @param {Element} [options.domElement] - The canvas or SVG element to draw into. This overrides the `options.type` argument.
  * @description The entrypoint for Two.js. Instantiate a `new Two` in order to setup a scene to render to. `Two` is also the publicly accessible namespace that all other sub-classes, functions, and utilities attach to.
  */
-var Two = function(options) {
+function Two(options) {
 
   // Determine what Renderer to use and setup a scene.
 
@@ -156,13 +155,61 @@ var Two = function(options) {
     raf.init();
   }
 
-};
+}
 
 _.extend(Two, Constants);
 
 _.extend(Two.prototype, Events, {
 
   constructor: Two,
+
+  /**
+   * @name Two#type
+   * @property {String} type - A string representing which type of renderer the instance has instantiated.
+   */
+  type: '',
+
+  /**
+   * @name Two#renderer
+   * @property {(Two.SVGRenderer|Two.CanvasRenderer|Two.WebGLRenderer)} - The instantiated rendering class for the instance. For a list of possible rendering types check out Two.Types.
+   */
+  renderer: null,
+
+  /**
+   * @name Two#scene
+   * @property {Two.Group} - The base level {@link Two.Group} which houses all objects for the instance. Because it is a {@link Two.Group} transformations can be applied to it that will affect all objects in the instance. This is handy as a makeshift inverted camera.
+   */
+  scene: null,
+
+  /**
+   * @name Two#width
+   * @property {Number} - The width of the instance's dom element.
+   */
+  width: 0,
+
+  /**
+   * @name Two#height
+   * @property {Number} - The height of the instance's dom element.
+   */
+  height: 0,
+
+  /**
+   * @name Two#frameCount
+   * @property {Number} - An integer representing how many frames have elapsed.
+   */
+  frameCount: 0,
+
+  /**
+   * @name Two#timeDelta
+   * @property {Number} - A number representing how much time has elapsed since the last frame in milliseconds.
+   */
+  timeDelta: 0,
+
+  /**
+   * @name Two#playing
+   * @property {Boolean} - A boolean representing whether or not the instance is being updated through the automatic `requestAnimationFrame`.
+   */
+  playing: false,
 
   /**
    * @name Two#appendTo
@@ -262,6 +309,7 @@ _.extend(Two.prototype, Events, {
 
   /**
    * @name Two#update
+   * @function
    * @fires Two.Events.Types.update event
    * @description Update positions and calculations in one pass before rendering. Then render to the canvas.
    * @nota-bene This function is called automatically if using {@link Two#play} or the `autostart` parameter in construction.
@@ -276,12 +324,10 @@ _.extend(Two.prototype, Events, {
     }
     this._lastFrame = now;
 
-    if (this.fit && !this.fit.attached) {
-
+    if (this.fit && this.fit.domElement && !this.fit.attached) {
         dom.bind(this.fit.domElement, 'resize', this.fit);
         this.fit.attached = true;
         this.fit();
-
     }
 
     var width = this.width;
@@ -301,6 +347,7 @@ _.extend(Two.prototype, Events, {
 
   /**
    * @name Two#render
+   * @function
    * @fires render
    * @description Render all drawable and visible objects of the scene.
    */
@@ -353,7 +400,7 @@ _.extend(Two.prototype, Events, {
   /**
    * @name Two#clear
    * @function
-   * @description Remove all all Two.js objects from the scene.
+   * @description Removes all objects from the instance's scene. If you intend to have the browser garbage collect this, don't forget to delete the references in your application as well.
    */
   clear: function() {
 
@@ -658,7 +705,7 @@ _.extend(Two.prototype, Events, {
    * @param {Number} y1
    * @param {Number} x2
    * @param {Number} y2
-   * @param {...Two.Stop} [stops] - Any number of color stops sometimes reffered to as ramp stops. If none are supplied then the default black-to-white two stop gradient is applied.
+   * @param {...Two.Stop} stops - Any number of color stops sometimes reffered to as ramp stops. If none are supplied then the default black-to-white two stop gradient is applied.
    * @returns {Two.LinearGradient}
    * @description Creates a Two.js linear gradient and ads it to the scene. In the case of an effect it's added to an invisible "definitions" group.
    */
@@ -679,7 +726,7 @@ _.extend(Two.prototype, Events, {
    * @param {Number} x1
    * @param {Number} y1
    * @param {Number} radius
-   * @param {...Two.Stop} [stops] - Any number of color stops sometimes reffered to as ramp stops. If none are supplied then the default black-to-white two stop gradient is applied.
+   * @param {...Two.Stop} stops - Any number of color stops sometimes reffered to as ramp stops. If none are supplied then the default black-to-white two stop gradient is applied.
    * @returns {Two.RadialGradient}
    * @description Creates a Two.js linear-gradient object and ads it to the scene. In the case of an effect it's added to an invisible "definitions" group.
    */
@@ -702,7 +749,7 @@ _.extend(Two.prototype, Events, {
    * @param {Number} y
    * @param {Number} [columns=1]
    * @param {Number} [rows=1]
-   * @param {Integer} [frameRate=0]
+   * @param {Number} [frameRate=0]
    * @param {Boolean} [autostart=false]
    * @returns {Two.Sprite}
    * @description Creates a Two.js sprite object and adds it to the scene. Sprites can be used for still images as well as animations.
@@ -745,7 +792,7 @@ _.extend(Two.prototype, Events, {
   /**
    * @name Two#makeTexture
    * @function
-   * @param {(String|Image|Canvas|Video)} [pathOrSource] - The URL path to an image or a DOM image-like element.
+   * @param {(String|HTMLImageElement|HTMLCanvasElement|HTMLVideoElement)} [pathOrSource] - The URL path to an image or a DOM image-like element.
    * @param {Function} [callback] - Function to be invoked when the image is loaded.
    * @returns {Two.Texture}
    * @description Creates a Two.js texture object.
@@ -782,15 +829,15 @@ _.extend(Two.prototype, Events, {
   /**
    * @name Two#interpret
    * @function
-   * @param {SvgNode} svgNode - The SVG node to be parsed.
+   * @param {SVGElement} SVGElement - The SVG node to be parsed.
    * @param {Boolean} shallow - Don't create a top-most group but append all content directly.
    * @param {Boolean} add – Automatically add the reconstructed SVG node to scene.
    * @returns {Two.Group}
    * @description Interpret an SVG Node and add it to this instance's scene. The distinction should be made that this doesn't `import` svg's, it solely interprets them into something compatible for Two.js - this is slightly different than a direct transcription.
    */
-  interpret: function(svgNode, shallow, add) {
+  interpret: function(SVGElement, shallow, add) {
 
-    var tag = svgNode.tagName.toLowerCase();
+    var tag = SVGElement.tagName.toLowerCase();
 
     add = (typeof add !== 'undefined') ? add : true;
 
@@ -798,7 +845,7 @@ _.extend(Two.prototype, Events, {
       return null;
     }
 
-    var node = interpretSVG[tag].call(this, svgNode);
+    var node = interpretSVG[tag].call(this, SVGElement);
 
     if (add) {
       this.add(shallow && node instanceof Group ? node.children : node);
@@ -815,7 +862,7 @@ _.extend(Two.prototype, Events, {
   /**
    * @name Two#load
    * @function
-   * @param {String|SvgNode} pathOrSVGContent - The URL path of an SVG file or an SVG document as text.
+   * @param {String|SVGElement} pathOrSVGContent - The URL path of an SVG file or an SVG document as text.
    * @param {Function} callback - Function to call once loading has completed.
    * @returns {Two.Group}
    * @description Load an SVG file or SVG text and interpret it into Two.js legible objects.
@@ -953,12 +1000,12 @@ _.extend(Two, {
   SVGRenderer: SVGRenderer,
   WebGLRenderer: WebGLRenderer,
 
-  /**
-   * @name Two.Commands
-   * @property {Object} - Map of possible path commands. Taken from the SVG specification.
-   */
   Commands: Commands,
 
+  /**
+   * @name Two.Utils
+   * @property {Object} - A massive object filled with utility functions and properties.
+   */
   Utils: _.extend({
 
     Error: TwoError,

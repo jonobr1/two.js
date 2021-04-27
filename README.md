@@ -1,8 +1,13 @@
 # Two.js
 
+[![NPM Package][npm]][npm-url]
+[![Build Size][build-size]][build-size-url]
+[![NPM Downloads][npm-downloads]][npmtrends-url]
+[![Language Grade][lgtm]][lgtm-url]
+
 A two-dimensional drawing api meant for modern browsers. It is renderer agnostic enabling the same api to render in multiple contexts: webgl, canvas2d, and svg.
 
-[Home](http://two.js.org) • [Releases](https://github.com/jonobr1/two.js/releases) • [Examples](http://two.js.org/#examples) • [Documentation](http://two.js.org/#documentation) • [Change Log](http://two.js.org/change-log/) • [Help](https://github.com/jonobr1/two.js/issues?labels=question)
+[Home](http://two.js.org) • [Releases](https://github.com/jonobr1/two.js/releases) • [Examples](http://two.js.org/#examples) • [Documentation](http://two.js.org/#documentation) • [Change Log](https://github.com/jonobr1/two.js/tree/dev/wiki/change-log) • [Help](https://github.com/jonobr1/two.js/issues/new/choose)
 
 ## Usage
 Download the latest [minified library](https://raw.github.com/jonobr1/two.js/dev/build/two.min.js) and include it in your html.
@@ -109,3 +114,12 @@ process.exit();
 
 ## Change Log
 Two.js has been in operation since 2012. For a full list of changes from its first alpha version built with [Three.js](http://threejs.org/) to the most up-to-date tweaks. Check out the wiki [here](./wiki/change-log).
+
+[npm]: https://img.shields.io/npm/v/two.js
+[npm-url]: https://www.npmjs.com/package/two.js
+[build-size]: https://badgen.net/bundlephobia/minzip/two.js
+[build-size-url]: https://bundlephobia.com/result?p=two.js
+[npm-downloads]: https://img.shields.io/npm/dm/two.js
+[npmtrends-url]: https://www.npmtrends.com/two.js
+[lgtm]: https://img.shields.io/lgtm/alerts/github/jonobr1/two.js
+[lgtm-url]: https://lgtm.com/projects/g/jonobr1/two.js/
