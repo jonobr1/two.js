@@ -307,6 +307,30 @@ var getCurveFromPoints = function(points, closed) {
 
 };
 
+var smooth = function(points, magnitude, closed) {
+
+  var l = points.length, last = l - 1;
+
+  for (var i = 0; i < l; i++) {
+
+    var point = points[i];
+
+    if (!_.isObject(point.controls)) {
+      Anchor.AppendCurveProperties(point);
+    }
+
+    var prev = closed ? mod(i - 1, l) : Math.max(i - 1, 0);
+    var next = closed ? mod(i + 1, l) : Math.min(i + 1, last);
+
+    var a = points[prev];
+    var b = point;
+    var c = points[next];
+    getControlPoints(a, b, c, magnitude);
+
+  }
+
+};
+
 /**
  * @name Utils.getControlPoints
  * @function
@@ -316,7 +340,7 @@ var getCurveFromPoints = function(points, closed) {
  * @returns {Anchor} Returns the passed middle point `b`.
  * @description Given three coordinates set the control points for the middle, b, vertex based on its position with the adjacent points.
  */
-var getControlPoints = function(a, b, c) {
+var getControlPoints = function(a, b, c, t) {
 
   var a1 = Vector.angleBetween(a, b);
   var a2 = Vector.angleBetween(c, b);
@@ -335,8 +359,12 @@ var getControlPoints = function(a, b, c) {
     return b;
   }
 
-  d1 *= 0.33; // Why 0.33?
-  d2 *= 0.33;
+  if (t === undefined) {
+    t = 1;
+  }
+
+  d1 *= 0.33 * t; // Why 0.33?
+  d2 *= 0.33 * t;
 
   if (a2 < a1) {
     mid += HALF_PI;
@@ -430,6 +458,7 @@ var getAnchorsFromArcData = function(center, xAxisRotation, rx, ry, ts, td, ccw)
 export {
   Curve,
   getComponentOnCubicBezier,
+  smooth,
   subdivide,
   getCurveLength,
   getCurveBoundingBox,

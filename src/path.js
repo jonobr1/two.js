@@ -5,6 +5,7 @@ import {
   getComponentOnCubicBezier,
   getCurveBoundingBox,
   getCurveFromPoints,
+  smooth,
   subdivide,
   getCurveLength as utilGetCurveLength
 } from './utils/curves.js';
@@ -1086,6 +1087,19 @@ _.extend(Path.prototype, Shape.prototype, {
       this._collection[i].command = i === 0 ? Commands.move : Commands.line;
     }
 
+    return this;
+
+  },
+
+  smooth: function(t) {
+
+    if (this._automatic) {
+      // Stop automatically plotting vertices.
+      this._automatic = false;
+    }
+
+    smooth(this._collection, t, this.closed);
+    this._renderer.flagVertices();
     return this;
 
   },
