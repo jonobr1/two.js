@@ -142,7 +142,7 @@ _.extend(Star.prototype, Path.prototype, {
    */
   _update: function() {
 
-    if (this._flagInnerRadius || this._flagOuterRadius || this._flagSides) {
+    if (this._flagVertices || this._flagInnerRadius || this._flagOuterRadius || this._flagSides) {
 
       var sides = this._sides * 2;
       var amount = sides + 1;

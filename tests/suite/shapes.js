@@ -98,7 +98,7 @@ QUnit.test('Two.Ellipse', function(assert) {
   path.closed = false;
   path._update();
 
-  assert.equal(path.vertices[0].equals(path.vertices[path.vertices.length - 1]), true, 'Circle has standardized vertex generation when shape is not closed');
+  assert.equal(path.vertices[0].equals(path.vertices[path.vertices.length - 1]), true, 'Ellipse has standardized vertex generation when shape is not closed');
 
 });
 
@@ -159,7 +159,7 @@ QUnit.test('Two.Rectangle', function(assert) {
   path.closed = false;
   path._update();
 
-  assert.equal(path.vertices[0].equals(path.vertices[path.vertices.length - 1]), true, 'Circle has standardized vertex generation when shape is not closed');
+  assert.equal(path.vertices[0].equals(path.vertices[path.vertices.length - 1]), true, 'Rectangle has standardized vertex generation when shape is not closed');
 
 });
 
@@ -203,7 +203,7 @@ QUnit.test('Two.RoundedRectangle', function(assert) {
 
 QUnit.test('Two.Star', function(assert) {
 
-  assert.expect(Two.Star.Properties.length * 4);
+  assert.expect(Two.Star.Properties.length * 4 + 1);
 
   var innerRadius = 50;
   var outerRadius = 75;
@@ -227,5 +227,10 @@ QUnit.test('Two.Star', function(assert) {
     var prop = Two.Star.Properties[i];
     assert.equal(path['_flag' + prop.charAt(0).toUpperCase() + prop.slice(1)], false, 'Reset flag ' + prop + ' correctly.');
   }
+
+  path.closed = false;
+  path._update();
+
+  assert.equal(path.vertices[0].equals(path.vertices[path.vertices.length - 1]), true, 'Star has standardized vertex generation when shape is not closed');
 
 });
