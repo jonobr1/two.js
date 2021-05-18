@@ -135,7 +135,7 @@ _.extend(Polygon.prototype, Path.prototype, {
    */
   _update: function() {
 
-    if (this._flagWidth || this._flagHeight || this._flagSides) {
+    if (this._flagVertices || this._flagWidth || this._flagHeight || this._flagSides) {
 
       var sides = this._sides;
       var amount = sides + 1;

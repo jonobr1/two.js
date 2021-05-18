@@ -104,7 +104,7 @@ QUnit.test('Two.Ellipse', function(assert) {
 
 QUnit.test('Two.Polygon', function(assert) {
 
-  assert.expect(Two.Polygon.Properties.length * 4);
+  assert.expect(Two.Polygon.Properties.length * 4 + 1);
 
   var radius = 50;
   var sides = 5;
@@ -127,6 +127,11 @@ QUnit.test('Two.Polygon', function(assert) {
     var prop = Two.Polygon.Properties[i];
     assert.equal(path['_flag' + prop.charAt(0).toUpperCase() + prop.slice(1)], false, 'Reset flag ' + prop + ' correctly.');
   }
+
+  path.closed = false;
+  path._update();
+
+  assert.equal(path.vertices[0].equals(path.vertices[path.vertices.length - 1]), true, 'Polygon has standardized vertex generation when shape is not closed');
 
 });
 

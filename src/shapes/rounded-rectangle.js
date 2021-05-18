@@ -178,7 +178,7 @@ _.extend(RoundedRectangle.prototype, Path.prototype, {
    */
   _update: function() {
 
-    if (this._flagWidth || this._flagHeight || this._flagRadius) {
+    if (this._flagVertices || this._flagWidth || this._flagHeight || this._flagRadius) {
 
       var width = this._width;
       var height = this._height;
