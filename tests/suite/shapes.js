@@ -3,7 +3,7 @@ QUnit.module('Primitives');
 
 QUnit.test('Two.ArcSegment', function(assert) {
 
-  assert.expect(Two.ArcSegment.Properties.length * 4 + 1);
+  assert.expect(Two.ArcSegment.Properties.length * 4 + 2);
 
   var innerRadius = 5;
   var outerRadius = 10;
@@ -32,6 +32,11 @@ QUnit.test('Two.ArcSegment', function(assert) {
     var prop = Two.ArcSegment.Properties[i];
     assert.equal(path['_flag' + prop.charAt(0).toUpperCase() + prop.slice(1)], false, 'Reset flag ' + prop + ' correctly.');
   }
+
+  path.closed = false;
+  path._update();
+
+  assert.equal(path.vertices[0].equals(path.vertices[path.vertices.length - 1]), true, 'Circle has standardized vertex generation when shape is not closed');
 
 });
 

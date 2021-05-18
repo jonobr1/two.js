@@ -161,8 +161,8 @@ _.extend(ArcSegment.prototype, Path.prototype, {
    */
   _update: function() {
 
-    if (this._flagStartAngle || this._flagEndAngle || this._flagInnerRadius
-      || this._flagOuterRadius) {
+    if (this._flagVertices || this._flagStartAngle || this._flagEndAngle
+      || this._flagInnerRadius || this._flagOuterRadius) {
 
       var sa = this._startAngle;
       var ea = this._endAngle;
