@@ -127,6 +127,7 @@ SOFTWARE.
 
   /**
    * @name Two.Utils.mod
+   * @function
    * @param {Number} v - The value to modulo
    * @param {Number} l - The value to modulo by
    * @returns {Number}
@@ -220,7 +221,7 @@ SOFTWARE.
       return obj;
     },
     /**
-     * @name Utils.performance
+     * @name Two.Utils.performance
      * @property {Date} - A special `Date` like object to get the current millis of the session. Used internally to calculate time between frames.
      * e.g: `Utils.performance.now() // milliseconds since epoch`
      */
@@ -1515,6 +1516,522 @@ SOFTWARE.
 
   Anchor.MakeObservable(Anchor.prototype);
 
+  var count = 0;
+
+  var Constants = {
+
+    /**
+     * @name Two.nextFrameID
+     * @property {Number}
+     * @description The id of the next requestAnimationFrame function.
+     */
+    nextFrameID: null,
+
+    // Primitive
+
+    /**
+     * @name Two.Types
+     * @property {Object} - The different rendering types available in the library.
+     */
+    Types: {
+      webgl: 'WebGLRenderer',
+      svg: 'SVGRenderer',
+      canvas: 'CanvasRenderer'
+    },
+
+    /**
+     * @name Two.Version
+     * @property {String} - The current working version of the library.
+     */
+    Version: 'v0.7.6',
+
+    /**
+     * @name Two.PublishDate
+     * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
+     */
+    PublishDate: '2021-05-18T16:58:15.695Z',
+
+    /**
+     * @name Two.Identifier
+     * @property {String} - String prefix for all Two.js object's ids. This trickles down to SVG ids.
+     */
+    Identifier: 'two-',
+
+    /**
+     * @name Two.Resolution
+     * @property {Number} - Default amount of vertices to be used for interpreting Arcs and ArcSegments.
+     */
+    Resolution: 12,
+
+    /**
+     * @name Two.AutoCalculateImportedMatrices
+     * @property {Boolean} - When importing SVGs through the {@link two#interpret} and {@link two#load}, this boolean determines whether Two.js infers and then overrides the exact transformation matrix of the reference SVG.
+     * @nota-bene `false` copies the exact transformation matrix values, but also sets the path's `matrix.manual = true`.
+     */
+    AutoCalculateImportedMatrices: true,
+
+    /**
+     * @name Two.Instances
+     * @property {Two[]} - Registered list of all Two.js instances in the current session.
+     */
+    Instances: [],
+
+    /**
+     * @function Two.uniqueId
+     * @description Simple method to access an incrementing value. Used for `id` allocation on all Two.js objects.
+     * @returns {Number} Ever increasing Number.
+     */
+    uniqueId: function() {
+      return count++;
+    }
+
+  };
+
+  var HALF_PI$3 = Math.PI / 2;
+
+  /**
+   * @name Two.Utils.Curve
+   * @property {Object} - Additional utility constant variables related to curve math and calculations.
+   */
+  var Curve = {
+
+    CollinearityEpsilon: Math.pow(10, -30),
+
+    RecursionLimit: 16,
+
+    CuspLimit: 0,
+
+    Tolerance: {
+      distance: 0.25,
+      angle: 0,
+      epsilon: Number.EPSILON
+    },
+
+    // Lookup tables for abscissas and weights with values for n = 2 .. 16.
+    // As values are symmetric, only store half of them and adapt algorithm
+    // to factor in symmetry.
+    abscissas: [
+      [  0.5773502691896257645091488],
+      [0,0.7745966692414833770358531],
+      [  0.3399810435848562648026658,0.8611363115940525752239465],
+      [0,0.5384693101056830910363144,0.9061798459386639927976269],
+      [  0.2386191860831969086305017,0.6612093864662645136613996,0.9324695142031520278123016],
+      [0,0.4058451513773971669066064,0.7415311855993944398638648,0.9491079123427585245261897],
+      [  0.1834346424956498049394761,0.5255324099163289858177390,0.7966664774136267395915539,0.9602898564975362316835609],
+      [0,0.3242534234038089290385380,0.6133714327005903973087020,0.8360311073266357942994298,0.9681602395076260898355762],
+      [  0.1488743389816312108848260,0.4333953941292471907992659,0.6794095682990244062343274,0.8650633666889845107320967,0.9739065285171717200779640],
+      [0,0.2695431559523449723315320,0.5190961292068118159257257,0.7301520055740493240934163,0.8870625997680952990751578,0.9782286581460569928039380],
+      [  0.1252334085114689154724414,0.3678314989981801937526915,0.5873179542866174472967024,0.7699026741943046870368938,0.9041172563704748566784659,0.9815606342467192506905491],
+      [0,0.2304583159551347940655281,0.4484927510364468528779129,0.6423493394403402206439846,0.8015780907333099127942065,0.9175983992229779652065478,0.9841830547185881494728294],
+      [  0.1080549487073436620662447,0.3191123689278897604356718,0.5152486363581540919652907,0.6872929048116854701480198,0.8272013150697649931897947,0.9284348836635735173363911,0.9862838086968123388415973],
+      [0,0.2011940939974345223006283,0.3941513470775633698972074,0.5709721726085388475372267,0.7244177313601700474161861,0.8482065834104272162006483,0.9372733924007059043077589,0.9879925180204854284895657],
+      [  0.0950125098376374401853193,0.2816035507792589132304605,0.4580167776572273863424194,0.6178762444026437484466718,0.7554044083550030338951012,0.8656312023878317438804679,0.9445750230732325760779884,0.9894009349916499325961542]
+    ],
+
+    weights: [
+      [1],
+      [0.8888888888888888888888889,0.5555555555555555555555556],
+      [0.6521451548625461426269361,0.3478548451374538573730639],
+      [0.5688888888888888888888889,0.4786286704993664680412915,0.2369268850561890875142640],
+      [0.4679139345726910473898703,0.3607615730481386075698335,0.1713244923791703450402961],
+      [0.4179591836734693877551020,0.3818300505051189449503698,0.2797053914892766679014678,0.1294849661688696932706114],
+      [0.3626837833783619829651504,0.3137066458778872873379622,0.2223810344533744705443560,0.1012285362903762591525314],
+      [0.3302393550012597631645251,0.3123470770400028400686304,0.2606106964029354623187429,0.1806481606948574040584720,0.0812743883615744119718922],
+      [0.2955242247147528701738930,0.2692667193099963550912269,0.2190863625159820439955349,0.1494513491505805931457763,0.0666713443086881375935688],
+      [0.2729250867779006307144835,0.2628045445102466621806889,0.2331937645919904799185237,0.1862902109277342514260976,0.1255803694649046246346943,0.0556685671161736664827537],
+      [0.2491470458134027850005624,0.2334925365383548087608499,0.2031674267230659217490645,0.1600783285433462263346525,0.1069393259953184309602547,0.0471753363865118271946160],
+      [0.2325515532308739101945895,0.2262831802628972384120902,0.2078160475368885023125232,0.1781459807619457382800467,0.1388735102197872384636018,0.0921214998377284479144218,0.0404840047653158795200216],
+      [0.2152638534631577901958764,0.2051984637212956039659241,0.1855383974779378137417166,0.1572031671581935345696019,0.1215185706879031846894148,0.0801580871597602098056333,0.0351194603317518630318329],
+      [0.2025782419255612728806202,0.1984314853271115764561183,0.1861610000155622110268006,0.1662692058169939335532009,0.1395706779261543144478048,0.1071592204671719350118695,0.0703660474881081247092674,0.0307532419961172683546284],
+      [0.1894506104550684962853967,0.1826034150449235888667637,0.1691565193950025381893121,0.1495959888165767320815017,0.1246289712555338720524763,0.0951585116824927848099251,0.0622535239386478928628438,0.0271524594117540948517806]
+    ]
+
+  };
+
+  /**
+   * @name Two.Utils.getComponentOnCubicBezier
+   * @function
+   * @param {Number} t - Zero-to-one value describing what percentage to calculate.
+   * @param {Number} a - The firt point's component value.
+   * @param {Number} b - The first point's bezier component value.
+   * @param {Number} c - The second point's bezier component value.
+   * @param {Number} d - The second point's component value.
+   * @returns {Number} The coordinate value for a specific component along a cubic bezier curve by `t`.
+   */
+  var getComponentOnCubicBezier = function(t, a, b, c, d) {
+    var k = 1 - t;
+    return (k * k * k * a) + (3 * k * k * t * b) + (3 * k * t * t * c) +
+        (t * t * t * d);
+  };
+
+  /**
+   * @name Two.Utils.subdivide
+   * @function
+   * @param {Number} x1 - x position of first anchor point.
+   * @param {Number} y1 - y position of first anchor point.
+   * @param {Number} x2 - x position of first anchor point's "right" bezier handle.
+   * @param {Number} y2 - y position of first anchor point's "right" bezier handle.
+   * @param {Number} x3 - x position of second anchor point's "left" bezier handle.
+   * @param {Number} y3 - y position of second anchor point's "left" bezier handle.
+   * @param {Number} x4 - x position of second anchor point.
+   * @param {Number} y4 - y position of second anchor point.
+   * @param {Number} [limit=Two.Utils.Curve.RecursionLimit] - The amount of vertices to create by subdividing.
+   * @returns {Anchor[]} A list of anchor points ordered in between `x1`, `y1` and `x4`, `y4`
+   * @description Given 2 points (a, b) and corresponding control point for each return an array of points that represent points plotted along the curve. The number of returned points is determined by `limit`.
+   */
+  var subdivide = function(x1, y1, x2, y2, x3, y3, x4, y4, limit) {
+
+    limit = limit || Curve.RecursionLimit;
+    var amount = limit + 1;
+
+    // TODO: Abstract 0.001 to a limiting variable
+    // Don't recurse if the end points are identical
+    if (Math.abs(x1 - x4) < 0.001 && Math.abs(y1 - y4) < 0.001) {
+      return [new Anchor(x4, y4)];
+    }
+
+    var result = [];
+
+    for (var i = 0; i < amount; i++) {
+      var t = i / amount;
+      var x = getComponentOnCubicBezier(t, x1, x2, x3, x4);
+      var y = getComponentOnCubicBezier(t, y1, y2, y3, y4);
+      result.push(new Anchor(x, y));
+    }
+
+    return result;
+
+  };
+
+  /**
+   * @name Two.Utils.getCurveLength
+   * @function
+   * @param {Number} x1 - x position of first anchor point.
+   * @param {Number} y1 - y position of first anchor point.
+   * @param {Number} x2 - x position of first anchor point's "right" bezier handle.
+   * @param {Number} y2 - y position of first anchor point's "right" bezier handle.
+   * @param {Number} x3 - x position of second anchor point's "left" bezier handle.
+   * @param {Number} y3 - y position of second anchor point's "left" bezier handle.
+   * @param {Number} x4 - x position of second anchor point.
+   * @param {Number} y4 - y position of second anchor point.
+   * @param {Number} [limit=Two.Utils.Curve.RecursionLimit] - The amount of vertices to create by subdividing.
+   * @returns {Number} The length of a curve.
+   * @description Given 2 points (a, b) and corresponding control point for each, return a float that represents the length of the curve using Gauss-Legendre algorithm. Limit iterations of calculation by `limit`.
+   */
+  var getCurveLength$1 = function(x1, y1, x2, y2, x3, y3, x4, y4, limit) {
+
+    // TODO: Better / fuzzier equality check
+    // Linear calculation
+    if (x1 === x2 && y1 === y2 && x3 === x4 && y3 === y4) {
+      var dx = x4 - x1;
+      var dy = y4 - y1;
+      return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    // Calculate the coefficients of a Bezier derivative.
+    var ax = 9 * (x2 - x3) + 3 * (x4 - x1),
+      bx = 6 * (x1 + x3) - 12 * x2,
+      cx = 3 * (x2 - x1),
+
+      ay = 9 * (y2 - y3) + 3 * (y4 - y1),
+      by = 6 * (y1 + y3) - 12 * y2,
+      cy = 3 * (y2 - y1);
+
+    var integrand = function(t) {
+      // Calculate quadratic equations of derivatives for x and y
+      var dx = (ax * t + bx) * t + cx,
+        dy = (ay * t + by) * t + cy;
+      return Math.sqrt(dx * dx + dy * dy);
+    };
+
+    return integrate(
+      integrand, 0, 1, limit || Curve.RecursionLimit
+    );
+
+  };
+
+  /**
+   * @name Two.Utils.getCurveBoundingBox
+   * @function
+   * @param {Number} x1 - x position of first anchor point.
+   * @param {Number} y1 - y position of first anchor point.
+   * @param {Number} x2 - x position of first anchor point's "right" bezier handle.
+   * @param {Number} y2 - y position of first anchor point's "right" bezier handle.
+   * @param {Number} x3 - x position of second anchor point's "left" bezier handle.
+   * @param {Number} y3 - y position of second anchor point's "left" bezier handle.
+   * @param {Number} x4 - x position of second anchor point.
+   * @param {Number} y4 - y position of second anchor point.
+   * @returns {Object} Object contains min and max `x` / `y` bounds.
+   * @see {@link https://github.com/adobe-webplatform/Snap.svg/blob/master/src/path.js#L856}
+   */
+  var getCurveBoundingBox = function(x1, y1, x2, y2, x3, y3, x4, y4) {
+
+    var tvalues = [];
+    var bounds = [[], []];
+    var a, b, c, t, t1, t2, b2ac, sqrtb2ac;
+
+    for (var i = 0; i < 2; ++i) {
+        if (i == 0) {
+          b = 6 * x1 - 12 * x2 + 6 * x3;
+          a = -3 * x1 + 9 * x2 - 9 * x3 + 3 * x4;
+          c = 3 * x2 - 3 * x1;
+        } else {
+          b = 6 * y1 - 12 * y2 + 6 * y3;
+          a = -3 * y1 + 9 * y2 - 9 * y3 + 3 * y4;
+          c = 3 * y2 - 3 * y1;
+        }
+        if (Math.abs(a) < 1e-12) {
+          if (Math.abs(b) < 1e-12) {
+            continue;
+          }
+          t = -c / b;
+          if (0 < t && t < 1) {
+            tvalues.push(t);
+          }
+          continue;
+        }
+        b2ac = b * b - 4 * c * a;
+        sqrtb2ac = Math.sqrt(b2ac);
+        if (b2ac < 0) {
+          continue;
+        }
+        t1 = (-b + sqrtb2ac) / (2 * a);
+        if (0 < t1 && t1 < 1) {
+          tvalues.push(t1);
+        }
+        t2 = (-b - sqrtb2ac) / (2 * a);
+        if (0 < t2 && t2 < 1) {
+          tvalues.push(t2);
+        }
+    }
+
+    var j = tvalues.length;
+    var jlen = j;
+    var mt;
+
+    while (j--) {
+      t = tvalues[j];
+      mt = 1 - t;
+      bounds[0][j] = mt * mt * mt * x1 + 3 * mt * mt * t * x2 + 3 * mt * t * t * x3 + t * t * t * x4;
+      bounds[1][j] = mt * mt * mt * y1 + 3 * mt * mt * t * y2 + 3 * mt * t * t * y3 + t * t * t * y4;
+    }
+
+    bounds[0][jlen] = x1;
+    bounds[1][jlen] = y1;
+    bounds[0][jlen + 1] = x4;
+    bounds[1][jlen + 1] = y4;
+    bounds[0].length = bounds[1].length = jlen + 2;
+
+    return {
+      min: { x: Math.min.apply(0, bounds[0]), y: Math.min.apply(0, bounds[1]) },
+      max: { x: Math.max.apply(0, bounds[0]), y: Math.max.apply(0, bounds[1]) }
+    };
+
+  };
+
+  /**
+   * @name Two.Utils.integrate
+   * @function
+   * @param {Function} f
+   * @param {Number} a
+   * @param {Number} b
+   * @param {Number} n
+   * @description Integration for `getCurveLength` calculations.
+   * @see [Paper.js](@link https://github.com/paperjs/paper.js/blob/master/src/util/Numerical.js#L101)
+   */
+  var integrate = function(f, a, b, n) {
+    var x = Curve.abscissas[n - 2],
+      w = Curve.weights[n - 2],
+      A = 0.5 * (b - a),
+      B = A + a,
+      i = 0,
+      m = (n + 1) >> 1,
+      sum = n & 1 ? w[i++] * f(B) : 0; // Handle odd n
+    while (i < m) {
+      var Ax = A * x[i];
+      sum += w[i++] * (f(B + Ax) + f(B - Ax));
+    }
+    return A * sum;
+  };
+
+  /**
+   * @name Two.Utils.getCurveFromPoints
+   * @function
+   * @param {Anchor[]} points
+   * @param {Boolean} closed
+   * @description Sets the bezier handles on {@link Anchor}s in the `points` list with estimated values to create a catmull-rom like curve. Used by {@link Two.Path#plot}.
+   */
+  var getCurveFromPoints = function(points, closed) {
+
+    var l = points.length, last = l - 1;
+
+    for (var i = 0; i < l; i++) {
+
+      var point = points[i];
+
+      if (!_.isObject(point.controls)) {
+        Anchor.AppendCurveProperties(point);
+      }
+
+      var prev = closed ? mod(i - 1, l) : Math.max(i - 1, 0);
+      var next = closed ? mod(i + 1, l) : Math.min(i + 1, last);
+
+      var a = points[prev];
+      var b = point;
+      var c = points[next];
+      getControlPoints(a, b, c);
+
+      b.command = i === 0 ? Commands.move : Commands.curve;
+
+    }
+
+  };
+
+  /**
+   * @name Two.Utils.getControlPoints
+   * @function
+   * @param {Anchor} a
+   * @param {Anchor} b
+   * @param {Anchor} c
+   * @returns {Anchor} Returns the passed middle point `b`.
+   * @description Given three coordinates set the control points for the middle, b, vertex based on its position with the adjacent points.
+   */
+  var getControlPoints = function(a, b, c) {
+
+    var a1 = Vector.angleBetween(a, b);
+    var a2 = Vector.angleBetween(c, b);
+
+    var d1 = Vector.distanceBetween(a, b);
+    var d2 = Vector.distanceBetween(c, b);
+
+    var mid = (a1 + a2) / 2;
+
+    // TODO: Issue 73
+    if (d1 < 0.0001 || d2 < 0.0001) {
+      if (typeof b.relative === 'boolean' && !b.relative) {
+        b.controls.left.copy(b);
+        b.controls.right.copy(b);
+      }
+      return b;
+    }
+
+    d1 *= 0.33; // Why 0.33?
+    d2 *= 0.33;
+
+    if (a2 < a1) {
+      mid += HALF_PI$3;
+    } else {
+      mid -= HALF_PI$3;
+    }
+
+    b.controls.left.x = Math.cos(mid) * d1;
+    b.controls.left.y = Math.sin(mid) * d1;
+
+    mid -= Math.PI;
+
+    b.controls.right.x = Math.cos(mid) * d2;
+    b.controls.right.y = Math.sin(mid) * d2;
+
+    if (typeof b.relative === 'boolean' && !b.relative) {
+      b.controls.left.x += b.x;
+      b.controls.left.y += b.y;
+      b.controls.right.x += b.x;
+      b.controls.right.y += b.y;
+    }
+
+    return b;
+
+  };
+
+  /**
+   * @name Two.Utils.getReflection
+   * @function
+   * @param {Vector} a
+   * @param {Vector} b
+   * @param {Boolean} [relative=false]
+   * @returns {Vector} New {@link Vector} that represents the reflection point.
+   * @description Get the reflection of a point `b` about point `a`. Where `a` is in absolute space and `b` is relative to `a`.
+   * @see {@link http://www.w3.org/TR/SVG11/implnote.html#PathElementImplementationNotes}
+   */
+  var getReflection = function(a, b, relative) {
+
+    return new Vector(
+      2 * a.x - (b.x + a.x) - (relative ? a.x : 0),
+      2 * a.y - (b.y + a.y) - (relative ? a.y : 0)
+    );
+
+  };
+
+  /**
+   * @name Two.Utils.getAnchorsFromArcData
+   * @function
+   * @param {Vector} center
+   * @param {Number} xAxisRotation
+   * @param {Number} rx - x radius
+   * @param {Number} ry - y radius
+   * @param {Number} ts
+   * @param {Number} td
+   * @param {Boolean} [ccw=false] - Set path traversal to counter-clockwise
+   */
+  var getAnchorsFromArcData = function(center, xAxisRotation, rx, ry, ts, td, ccw) {
+
+    var resolution = Constants.Resolution;
+
+    for (var i = 0; i < resolution; i++) {
+      var pct = (i + 1) / resolution;
+      if (ccw) {
+        pct = 1 - pct;
+      }
+
+      var theta = pct * td + ts;
+      var x = rx * Math.cos(theta);
+      var y = ry * Math.sin(theta);
+
+      // x += center.x;
+      // y += center.y;
+
+      var anchor = new Anchor(x, y);
+      Anchor.AppendCurveProperties(anchor);
+      anchor.command = Commands.line;
+    }
+
+  };
+
+  var Curves = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    Curve: Curve,
+    getComponentOnCubicBezier: getComponentOnCubicBezier,
+    subdivide: subdivide,
+    getCurveLength: getCurveLength$1,
+    getCurveBoundingBox: getCurveBoundingBox,
+    integrate: integrate,
+    getCurveFromPoints: getCurveFromPoints,
+    getControlPoints: getControlPoints,
+    getReflection: getReflection,
+    getAnchorsFromArcData: getAnchorsFromArcData
+  });
+
+  var devicePixelRatio = root$1.devicePixelRatio || 1;
+
+  var getBackingStoreRatio = function(ctx) {
+    return ctx.webkitBackingStorePixelRatio ||
+    ctx.mozBackingStorePixelRatio ||
+    ctx.msBackingStorePixelRatio ||
+    ctx.oBackingStorePixelRatio ||
+    ctx.backingStorePixelRatio || 1;
+  };
+
+  /**
+   * @name Two.Utils.getRatio
+   * @function
+   * @param {CanvasRenderingContext2D} ctx
+   * @returns {Number} The ratio of a unit in Two.js to the pixel density of a session's screen.
+   * @see [High DPI Rendering](http://www.html5rocks.com/en/tutorials/canvas/hidpi/)
+   */
+  var getRatio = function(ctx) {
+    return devicePixelRatio / getBackingStoreRatio(ctx);
+  };
+
   // Constants
 
   var cos$5 = Math.cos, sin$5 = Math.sin, tan = Math.tan;
@@ -2117,608 +2634,6 @@ SOFTWARE.
 
   });
 
-  var count = 0;
-
-  var Constants = {
-
-    /**
-     * @name Two.nextFrameID
-     * @property {Number}
-     * @description The id of the next requestAnimationFrame function.
-     */
-    nextFrameID: null,
-
-    // Primitive
-
-    /**
-     * @name Two.Types
-     * @property {Object} - The different rendering types available in the library.
-     */
-    Types: {
-      webgl: 'WebGLRenderer',
-      svg: 'SVGRenderer',
-      canvas: 'CanvasRenderer'
-    },
-
-    /**
-     * @name Two.Version
-     * @property {String} - The current working version of the library.
-     */
-    Version: 'v0.7.5',
-
-    /**
-     * @name Two.PublishDate
-     * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
-     */
-    PublishDate: '2021-04-23T17:59:51.706Z',
-
-    /**
-     * @name Two.Identifier
-     * @property {String} - String prefix for all Two.js object's ids. This trickles down to SVG ids.
-     */
-    Identifier: 'two-',
-
-    /**
-     * @name Two.Resolution
-     * @property {Number} - Default amount of vertices to be used for interpreting Arcs and ArcSegments.
-     */
-    Resolution: 12,
-
-    /**
-     * @name Two.AutoCalculateImportedMatrices
-     * @property {Boolean} - When importing SVGs through the {@link two#interpret} and {@link two#load}, this boolean determines whether Two.js infers and then overrides the exact transformation matrix of the reference SVG.
-     * @nota-bene `false` copies the exact transformation matrix values, but also sets the path's `matrix.manual = true`.
-     */
-    AutoCalculateImportedMatrices: true,
-
-    /**
-     * @name Two.Instances
-     * @property {Two[]} - Registered list of all Two.js instances in the current session.
-     */
-    Instances: [],
-
-    /**
-     * @function Two.uniqueId
-     * @description Simple method to access an incrementing value. Used for `id` allocation on all Two.js objects.
-     * @returns {Number} Ever increasing Number.
-     */
-    uniqueId: function() {
-      return count++;
-    }
-
-  };
-
-  var HALF_PI$3 = Math.PI / 2;
-
-  /**
-   * @name Two.Utils.Curve
-   * @property {Object} - Additional utility constant variables related to curve math and calculations.
-   */
-  var Curve = {
-
-    CollinearityEpsilon: Math.pow(10, -30),
-
-    RecursionLimit: 16,
-
-    CuspLimit: 0,
-
-    Tolerance: {
-      distance: 0.25,
-      angle: 0,
-      epsilon: Number.EPSILON
-    },
-
-    // Lookup tables for abscissas and weights with values for n = 2 .. 16.
-    // As values are symmetric, only store half of them and adapt algorithm
-    // to factor in symmetry.
-    abscissas: [
-      [  0.5773502691896257645091488],
-      [0,0.7745966692414833770358531],
-      [  0.3399810435848562648026658,0.8611363115940525752239465],
-      [0,0.5384693101056830910363144,0.9061798459386639927976269],
-      [  0.2386191860831969086305017,0.6612093864662645136613996,0.9324695142031520278123016],
-      [0,0.4058451513773971669066064,0.7415311855993944398638648,0.9491079123427585245261897],
-      [  0.1834346424956498049394761,0.5255324099163289858177390,0.7966664774136267395915539,0.9602898564975362316835609],
-      [0,0.3242534234038089290385380,0.6133714327005903973087020,0.8360311073266357942994298,0.9681602395076260898355762],
-      [  0.1488743389816312108848260,0.4333953941292471907992659,0.6794095682990244062343274,0.8650633666889845107320967,0.9739065285171717200779640],
-      [0,0.2695431559523449723315320,0.5190961292068118159257257,0.7301520055740493240934163,0.8870625997680952990751578,0.9782286581460569928039380],
-      [  0.1252334085114689154724414,0.3678314989981801937526915,0.5873179542866174472967024,0.7699026741943046870368938,0.9041172563704748566784659,0.9815606342467192506905491],
-      [0,0.2304583159551347940655281,0.4484927510364468528779129,0.6423493394403402206439846,0.8015780907333099127942065,0.9175983992229779652065478,0.9841830547185881494728294],
-      [  0.1080549487073436620662447,0.3191123689278897604356718,0.5152486363581540919652907,0.6872929048116854701480198,0.8272013150697649931897947,0.9284348836635735173363911,0.9862838086968123388415973],
-      [0,0.2011940939974345223006283,0.3941513470775633698972074,0.5709721726085388475372267,0.7244177313601700474161861,0.8482065834104272162006483,0.9372733924007059043077589,0.9879925180204854284895657],
-      [  0.0950125098376374401853193,0.2816035507792589132304605,0.4580167776572273863424194,0.6178762444026437484466718,0.7554044083550030338951012,0.8656312023878317438804679,0.9445750230732325760779884,0.9894009349916499325961542]
-    ],
-
-    weights: [
-      [1],
-      [0.8888888888888888888888889,0.5555555555555555555555556],
-      [0.6521451548625461426269361,0.3478548451374538573730639],
-      [0.5688888888888888888888889,0.4786286704993664680412915,0.2369268850561890875142640],
-      [0.4679139345726910473898703,0.3607615730481386075698335,0.1713244923791703450402961],
-      [0.4179591836734693877551020,0.3818300505051189449503698,0.2797053914892766679014678,0.1294849661688696932706114],
-      [0.3626837833783619829651504,0.3137066458778872873379622,0.2223810344533744705443560,0.1012285362903762591525314],
-      [0.3302393550012597631645251,0.3123470770400028400686304,0.2606106964029354623187429,0.1806481606948574040584720,0.0812743883615744119718922],
-      [0.2955242247147528701738930,0.2692667193099963550912269,0.2190863625159820439955349,0.1494513491505805931457763,0.0666713443086881375935688],
-      [0.2729250867779006307144835,0.2628045445102466621806889,0.2331937645919904799185237,0.1862902109277342514260976,0.1255803694649046246346943,0.0556685671161736664827537],
-      [0.2491470458134027850005624,0.2334925365383548087608499,0.2031674267230659217490645,0.1600783285433462263346525,0.1069393259953184309602547,0.0471753363865118271946160],
-      [0.2325515532308739101945895,0.2262831802628972384120902,0.2078160475368885023125232,0.1781459807619457382800467,0.1388735102197872384636018,0.0921214998377284479144218,0.0404840047653158795200216],
-      [0.2152638534631577901958764,0.2051984637212956039659241,0.1855383974779378137417166,0.1572031671581935345696019,0.1215185706879031846894148,0.0801580871597602098056333,0.0351194603317518630318329],
-      [0.2025782419255612728806202,0.1984314853271115764561183,0.1861610000155622110268006,0.1662692058169939335532009,0.1395706779261543144478048,0.1071592204671719350118695,0.0703660474881081247092674,0.0307532419961172683546284],
-      [0.1894506104550684962853967,0.1826034150449235888667637,0.1691565193950025381893121,0.1495959888165767320815017,0.1246289712555338720524763,0.0951585116824927848099251,0.0622535239386478928628438,0.0271524594117540948517806]
-    ]
-
-  };
-
-  /**
-   * @name Two.Utils.getComponentOnCubicBezier
-   * @function
-   * @param {Number} t - Zero-to-one value describing what percentage to calculate.
-   * @param {Number} a - The firt point's component value.
-   * @param {Number} b - The first point's bezier component value.
-   * @param {Number} c - The second point's bezier component value.
-   * @param {Number} d - The second point's component value.
-   * @returns {Number} The coordinate value for a specific component along a cubic bezier curve by `t`.
-   */
-  var getComponentOnCubicBezier = function(t, a, b, c, d) {
-    var k = 1 - t;
-    return (k * k * k * a) + (3 * k * k * t * b) + (3 * k * t * t * c) +
-        (t * t * t * d);
-  };
-
-  /**
-   * @name Two.Utils.subdivide
-   * @function
-   * @param {Number} x1 - x position of first anchor point.
-   * @param {Number} y1 - y position of first anchor point.
-   * @param {Number} x2 - x position of first anchor point's "right" bezier handle.
-   * @param {Number} y2 - y position of first anchor point's "right" bezier handle.
-   * @param {Number} x3 - x position of second anchor point's "left" bezier handle.
-   * @param {Number} y3 - y position of second anchor point's "left" bezier handle.
-   * @param {Number} x4 - x position of second anchor point.
-   * @param {Number} y4 - y position of second anchor point.
-   * @param {Number} [limit=Two.Utils.Curve.RecursionLimit] - The amount of vertices to create by subdividing.
-   * @returns {Anchor[]} A list of anchor points ordered in between `x1`, `y1` and `x4`, `y4`
-   * @description Given 2 points (a, b) and corresponding control point for each return an array of points that represent points plotted along the curve. The number of returned points is determined by `limit`.
-   */
-  var subdivide = function(x1, y1, x2, y2, x3, y3, x4, y4, limit) {
-
-    limit = limit || Curve.RecursionLimit;
-    var amount = limit + 1;
-
-    // TODO: Abstract 0.001 to a limiting variable
-    // Don't recurse if the end points are identical
-    if (Math.abs(x1 - x4) < 0.001 && Math.abs(y1 - y4) < 0.001) {
-      return [new Anchor(x4, y4)];
-    }
-
-    var result = [];
-
-    for (var i = 0; i < amount; i++) {
-      var t = i / amount;
-      var x = getComponentOnCubicBezier(t, x1, x2, x3, x4);
-      var y = getComponentOnCubicBezier(t, y1, y2, y3, y4);
-      result.push(new Anchor(x, y));
-    }
-
-    return result;
-
-  };
-
-  /**
-   * @name Two.Utils.getCurveLength
-   * @function
-   * @param {Number} x1 - x position of first anchor point.
-   * @param {Number} y1 - y position of first anchor point.
-   * @param {Number} x2 - x position of first anchor point's "right" bezier handle.
-   * @param {Number} y2 - y position of first anchor point's "right" bezier handle.
-   * @param {Number} x3 - x position of second anchor point's "left" bezier handle.
-   * @param {Number} y3 - y position of second anchor point's "left" bezier handle.
-   * @param {Number} x4 - x position of second anchor point.
-   * @param {Number} y4 - y position of second anchor point.
-   * @param {Number} [limit=Two.Utils.Curve.RecursionLimit] - The amount of vertices to create by subdividing.
-   * @returns {Number} The length of a curve.
-   * @description Given 2 points (a, b) and corresponding control point for each, return a float that represents the length of the curve using Gauss-Legendre algorithm. Limit iterations of calculation by `limit`.
-   */
-  var getCurveLength$1 = function(x1, y1, x2, y2, x3, y3, x4, y4, limit) {
-
-    // TODO: Better / fuzzier equality check
-    // Linear calculation
-    if (x1 === x2 && y1 === y2 && x3 === x4 && y3 === y4) {
-      var dx = x4 - x1;
-      var dy = y4 - y1;
-      return Math.sqrt(dx * dx + dy * dy);
-    }
-
-    // Calculate the coefficients of a Bezier derivative.
-    var ax = 9 * (x2 - x3) + 3 * (x4 - x1),
-      bx = 6 * (x1 + x3) - 12 * x2,
-      cx = 3 * (x2 - x1),
-
-      ay = 9 * (y2 - y3) + 3 * (y4 - y1),
-      by = 6 * (y1 + y3) - 12 * y2,
-      cy = 3 * (y2 - y1);
-
-    var integrand = function(t) {
-      // Calculate quadratic equations of derivatives for x and y
-      var dx = (ax * t + bx) * t + cx,
-        dy = (ay * t + by) * t + cy;
-      return Math.sqrt(dx * dx + dy * dy);
-    };
-
-    return integrate(
-      integrand, 0, 1, limit || Curve.RecursionLimit
-    );
-
-  };
-
-  /**
-   * @name Two.Utils.getCurveBoundingBox
-   * @function
-   * @param {Number} x1 - x position of first anchor point.
-   * @param {Number} y1 - y position of first anchor point.
-   * @param {Number} x2 - x position of first anchor point's "right" bezier handle.
-   * @param {Number} y2 - y position of first anchor point's "right" bezier handle.
-   * @param {Number} x3 - x position of second anchor point's "left" bezier handle.
-   * @param {Number} y3 - y position of second anchor point's "left" bezier handle.
-   * @param {Number} x4 - x position of second anchor point.
-   * @param {Number} y4 - y position of second anchor point.
-   * @returns {Object} Object contains min and max `x` / `y` bounds.
-   * @see {@link https://github.com/adobe-webplatform/Snap.svg/blob/master/src/path.js#L856}
-   */
-  var getCurveBoundingBox = function(x1, y1, x2, y2, x3, y3, x4, y4) {
-
-    var tvalues = [];
-    var bounds = [[], []];
-    var a, b, c, t, t1, t2, b2ac, sqrtb2ac;
-
-    for (var i = 0; i < 2; ++i) {
-        if (i == 0) {
-          b = 6 * x1 - 12 * x2 + 6 * x3;
-          a = -3 * x1 + 9 * x2 - 9 * x3 + 3 * x4;
-          c = 3 * x2 - 3 * x1;
-        } else {
-          b = 6 * y1 - 12 * y2 + 6 * y3;
-          a = -3 * y1 + 9 * y2 - 9 * y3 + 3 * y4;
-          c = 3 * y2 - 3 * y1;
-        }
-        if (Math.abs(a) < 1e-12) {
-          if (Math.abs(b) < 1e-12) {
-            continue;
-          }
-          t = -c / b;
-          if (0 < t && t < 1) {
-            tvalues.push(t);
-          }
-          continue;
-        }
-        b2ac = b * b - 4 * c * a;
-        sqrtb2ac = Math.sqrt(b2ac);
-        if (b2ac < 0) {
-          continue;
-        }
-        t1 = (-b + sqrtb2ac) / (2 * a);
-        if (0 < t1 && t1 < 1) {
-          tvalues.push(t1);
-        }
-        t2 = (-b - sqrtb2ac) / (2 * a);
-        if (0 < t2 && t2 < 1) {
-          tvalues.push(t2);
-        }
-    }
-
-    var j = tvalues.length;
-    var jlen = j;
-    var mt;
-
-    while (j--) {
-      t = tvalues[j];
-      mt = 1 - t;
-      bounds[0][j] = mt * mt * mt * x1 + 3 * mt * mt * t * x2 + 3 * mt * t * t * x3 + t * t * t * x4;
-      bounds[1][j] = mt * mt * mt * y1 + 3 * mt * mt * t * y2 + 3 * mt * t * t * y3 + t * t * t * y4;
-    }
-
-    bounds[0][jlen] = x1;
-    bounds[1][jlen] = y1;
-    bounds[0][jlen + 1] = x4;
-    bounds[1][jlen + 1] = y4;
-    bounds[0].length = bounds[1].length = jlen + 2;
-
-    return {
-      min: { x: Math.min.apply(0, bounds[0]), y: Math.min.apply(0, bounds[1]) },
-      max: { x: Math.max.apply(0, bounds[0]), y: Math.max.apply(0, bounds[1]) }
-    };
-
-  };
-
-  /**
-   * @name Two.Utils.integrate
-   * @function
-   * @param {Function} f
-   * @param {Number} a
-   * @param {Number} b
-   * @param {Number} n
-   * @description Integration for `getCurveLength` calculations.
-   * @see [Paper.js](@link https://github.com/paperjs/paper.js/blob/master/src/util/Numerical.js#L101)
-   */
-  var integrate = function(f, a, b, n) {
-    var x = Curve.abscissas[n - 2],
-      w = Curve.weights[n - 2],
-      A = 0.5 * (b - a),
-      B = A + a,
-      i = 0,
-      m = (n + 1) >> 1,
-      sum = n & 1 ? w[i++] * f(B) : 0; // Handle odd n
-    while (i < m) {
-      var Ax = A * x[i];
-      sum += w[i++] * (f(B + Ax) + f(B - Ax));
-    }
-    return A * sum;
-  };
-
-  /**
-   * @name Two.Utils.getCurveFromPoints
-   * @function
-   * @param {Anchor[]} points
-   * @param {Boolean} closed
-   * @description Sets the bezier handles on {@link Anchor}s in the `points` list with estimated values to create a catmull-rom like curve. Used by {@link Two.Path#plot}.
-   */
-  var getCurveFromPoints = function(points, closed) {
-
-    var l = points.length, last = l - 1;
-
-    for (var i = 0; i < l; i++) {
-
-      var point = points[i];
-
-      if (!_.isObject(point.controls)) {
-        Anchor.AppendCurveProperties(point);
-      }
-
-      var prev = closed ? mod(i - 1, l) : Math.max(i - 1, 0);
-      var next = closed ? mod(i + 1, l) : Math.min(i + 1, last);
-
-      var a = points[prev];
-      var b = point;
-      var c = points[next];
-      getControlPoints(a, b, c);
-
-      b.command = i === 0 ? Commands.move : Commands.curve;
-
-    }
-
-  };
-
-  /**
-   * @name Two.Utils.getControlPoints
-   * @function
-   * @param {Anchor} a
-   * @param {Anchor} b
-   * @param {Anchor} c
-   * @returns {Anchor} Returns the passed middle point `b`.
-   * @description Given three coordinates set the control points for the middle, b, vertex based on its position with the adjacent points.
-   */
-  var getControlPoints = function(a, b, c) {
-
-    var a1 = Vector.angleBetween(a, b);
-    var a2 = Vector.angleBetween(c, b);
-
-    var d1 = Vector.distanceBetween(a, b);
-    var d2 = Vector.distanceBetween(c, b);
-
-    var mid = (a1 + a2) / 2;
-
-    // TODO: Issue 73
-    if (d1 < 0.0001 || d2 < 0.0001) {
-      if (typeof b.relative === 'boolean' && !b.relative) {
-        b.controls.left.copy(b);
-        b.controls.right.copy(b);
-      }
-      return b;
-    }
-
-    d1 *= 0.33; // Why 0.33?
-    d2 *= 0.33;
-
-    if (a2 < a1) {
-      mid += HALF_PI$3;
-    } else {
-      mid -= HALF_PI$3;
-    }
-
-    b.controls.left.x = Math.cos(mid) * d1;
-    b.controls.left.y = Math.sin(mid) * d1;
-
-    mid -= Math.PI;
-
-    b.controls.right.x = Math.cos(mid) * d2;
-    b.controls.right.y = Math.sin(mid) * d2;
-
-    if (typeof b.relative === 'boolean' && !b.relative) {
-      b.controls.left.x += b.x;
-      b.controls.left.y += b.y;
-      b.controls.right.x += b.x;
-      b.controls.right.y += b.y;
-    }
-
-    return b;
-
-  };
-
-  /**
-   * @name Two.Utils.getReflection
-   * @function
-   * @param {Vector} a
-   * @param {Vector} b
-   * @param {Boolean} [relative=false]
-   * @returns {Vector} New {@link Vector} that represents the reflection point.
-   * @description Get the reflection of a point `b` about point `a`. Where `a` is in absolute space and `b` is relative to `a`.
-   * @see {@link http://www.w3.org/TR/SVG11/implnote.html#PathElementImplementationNotes}
-   */
-  var getReflection = function(a, b, relative) {
-
-    return new Vector(
-      2 * a.x - (b.x + a.x) - (relative ? a.x : 0),
-      2 * a.y - (b.y + a.y) - (relative ? a.y : 0)
-    );
-
-  };
-
-  /**
-   * @name Two.Utils.getAnchorsFromArcData
-   * @function
-   * @param {Vector} center
-   * @param {Number} xAxisRotation
-   * @param {Number} rx - x radius
-   * @param {Number} ry - y radius
-   * @param {Number} ts
-   * @param {Number} td
-   * @param {Boolean} [ccw=false] - Set path traversal to counter-clockwise
-   */
-  var getAnchorsFromArcData = function(center, xAxisRotation, rx, ry, ts, td, ccw) {
-
-    new Matrix()
-      .translate(center.x, center.y)
-      .rotate(xAxisRotation);
-
-    var resolution = Constants.Resolution;
-
-    for (var i = 0; i < resolution; i++) {
-      var pct = (i + 1) / resolution;
-      if (ccw) {
-        pct = 1 - pct;
-      }
-
-      var theta = pct * td + ts;
-      var x = rx * Math.cos(theta);
-      var y = ry * Math.sin(theta);
-
-      // x += center.x;
-      // y += center.y;
-
-      var anchor = new Anchor(x, y);
-      Anchor.AppendCurveProperties(anchor);
-      anchor.command = Commands.line;
-    }
-
-  };
-
-  var Curves = /*#__PURE__*/Object.freeze({
-    __proto__: null,
-    Curve: Curve,
-    getComponentOnCubicBezier: getComponentOnCubicBezier,
-    subdivide: subdivide,
-    getCurveLength: getCurveLength$1,
-    getCurveBoundingBox: getCurveBoundingBox,
-    integrate: integrate,
-    getCurveFromPoints: getCurveFromPoints,
-    getControlPoints: getControlPoints,
-    getReflection: getReflection,
-    getAnchorsFromArcData: getAnchorsFromArcData
-  });
-
-  var devicePixelRatio = root$1.devicePixelRatio || 1;
-
-  var getBackingStoreRatio = function(ctx) {
-    return ctx.webkitBackingStorePixelRatio ||
-    ctx.mozBackingStorePixelRatio ||
-    ctx.msBackingStorePixelRatio ||
-    ctx.oBackingStorePixelRatio ||
-    ctx.backingStorePixelRatio || 1;
-  };
-
-  /**
-   * @name Two.Utils.getRatio
-   * @function
-   * @param {CanvasRenderingContext2D} ctx
-   * @returns {Number} The ratio of a unit in Two.js to the pixel density of a session's screen.
-   * @see [High DPI Rendering](http://www.html5rocks.com/en/tutorials/canvas/hidpi/)
-   */
-  var getRatio = function(ctx) {
-    return devicePixelRatio / getBackingStoreRatio(ctx);
-  };
-
-  /**
-   * @name Two.Collection
-   * @class
-   * @extends Two.Events
-   * @description An `Array` like object with additional event propagation on actions. `pop`, `shift`, and `splice` trigger `removed` events. `push`, `unshift`, and `splice` with more than 2 arguments trigger 'inserted'. Finally, `sort` and `reverse` trigger `order` events.
-   */
-  function Collection() {
-
-    Array.call(this);
-
-    if (arguments[0] && Array.isArray(arguments[0])) {
-      if (arguments[0].length > 0) {
-        Array.prototype.push.apply(this, arguments[0]);
-      }
-    } else if (arguments.length > 0) {
-      Array.prototype.push.apply(this, arguments);
-    }
-
-  }
-
-  Collection.prototype = new Array();
-
-  _.extend(Collection.prototype, Events, {
-
-    constructor: Collection,
-
-    pop: function() {
-      var popped = Array.prototype.pop.apply(this, arguments);
-      this.trigger(Events.Types.remove, [popped]);
-      return popped;
-    },
-
-    shift: function() {
-      var shifted = Array.prototype.shift.apply(this, arguments);
-      this.trigger(Events.Types.remove, [shifted]);
-      return shifted;
-    },
-
-    push: function() {
-      var pushed = Array.prototype.push.apply(this, arguments);
-      this.trigger(Events.Types.insert, arguments);
-      return pushed;
-    },
-
-    unshift: function() {
-      var unshifted = Array.prototype.unshift.apply(this, arguments);
-      this.trigger(Events.Types.insert, arguments);
-      return unshifted;
-    },
-
-    splice: function() {
-      var spliced = Array.prototype.splice.apply(this, arguments);
-      var inserted;
-
-      this.trigger(Events.Types.remove, spliced);
-
-      if (arguments.length > 2) {
-        inserted = this.slice(arguments[0], arguments[0] + arguments.length - 2);
-        this.trigger(Events.Types.insert, inserted);
-        this.trigger(Events.Types.order);
-      }
-      return spliced;
-    },
-
-    sort: function() {
-      Array.prototype.sort.apply(this, arguments);
-      this.trigger(Events.Types.order);
-      return this;
-    },
-
-    reverse: function() {
-      Array.prototype.reverse.apply(this, arguments);
-      this.trigger(Events.Types.order);
-      return this;
-    },
-
-    indexOf: function() {
-      return Array.prototype.indexOf.apply(this, arguments);
-    }
-
-  });
-
   /**
    * @name Two.Shape
    * @class
@@ -3149,6 +3064,88 @@ SOFTWARE.
   });
 
   Shape.MakeObservable(Shape.prototype);
+
+  /**
+   * @name Two.Collection
+   * @class
+   * @extends Two.Events
+   * @description An `Array` like object with additional event propagation on actions. `pop`, `shift`, and `splice` trigger `removed` events. `push`, `unshift`, and `splice` with more than 2 arguments trigger 'inserted'. Finally, `sort` and `reverse` trigger `order` events.
+   */
+  function Collection() {
+
+    Array.call(this);
+
+    if (arguments[0] && Array.isArray(arguments[0])) {
+      if (arguments[0].length > 0) {
+        Array.prototype.push.apply(this, arguments[0]);
+      }
+    } else if (arguments.length > 0) {
+      Array.prototype.push.apply(this, arguments);
+    }
+
+  }
+
+  Collection.prototype = new Array();
+
+  _.extend(Collection.prototype, Events, {
+
+    constructor: Collection,
+
+    pop: function() {
+      var popped = Array.prototype.pop.apply(this, arguments);
+      this.trigger(Events.Types.remove, [popped]);
+      return popped;
+    },
+
+    shift: function() {
+      var shifted = Array.prototype.shift.apply(this, arguments);
+      this.trigger(Events.Types.remove, [shifted]);
+      return shifted;
+    },
+
+    push: function() {
+      var pushed = Array.prototype.push.apply(this, arguments);
+      this.trigger(Events.Types.insert, arguments);
+      return pushed;
+    },
+
+    unshift: function() {
+      var unshifted = Array.prototype.unshift.apply(this, arguments);
+      this.trigger(Events.Types.insert, arguments);
+      return unshifted;
+    },
+
+    splice: function() {
+      var spliced = Array.prototype.splice.apply(this, arguments);
+      var inserted;
+
+      this.trigger(Events.Types.remove, spliced);
+
+      if (arguments.length > 2) {
+        inserted = this.slice(arguments[0], arguments[0] + arguments.length - 2);
+        this.trigger(Events.Types.insert, inserted);
+        this.trigger(Events.Types.order);
+      }
+      return spliced;
+    },
+
+    sort: function() {
+      Array.prototype.sort.apply(this, arguments);
+      this.trigger(Events.Types.order);
+      return this;
+    },
+
+    reverse: function() {
+      Array.prototype.reverse.apply(this, arguments);
+      this.trigger(Events.Types.order);
+      return this;
+    },
+
+    indexOf: function() {
+      return Array.prototype.indexOf.apply(this, arguments);
+    }
+
+  });
 
   /**
    * @class
@@ -5351,7 +5348,7 @@ SOFTWARE.
      * @name Two.Registry#get
      * @function
      * @param {String} id - A unique identifier.
-     * @returns The associated value. If unavailable then `undefined` is returned.
+     * @returns {?Object} The associated value. If unavailable then `undefined` is returned.
      * @description Get a registered value by its `id`.
      */
     get: function(id) {
@@ -5588,7 +5585,7 @@ SOFTWARE.
   _.extend(Gradient, {
 
     /**
-     * @name Two.Gradient#Stop
+     * @name Two.Gradient.Stop
      * @see {@link Two.Stop}
      */
     Stop: Stop,
@@ -5621,7 +5618,6 @@ SOFTWARE.
 
         set: function(stops) {
 
-          this._renderer.flagStops;
           var bindStops = this._renderer.bindStops;
           var unbindStops = this._renderer.unbindStops;
 
@@ -5860,7 +5856,7 @@ SOFTWARE.
   _.extend(LinearGradient, {
 
     /**
-     * @name Two.LinearGradient#Stop
+     * @name Two.LinearGradient.Stop
      * @see {@link Two.Stop}
      */
     Stop: Stop,
@@ -6040,7 +6036,7 @@ SOFTWARE.
   _.extend(RadialGradient, {
 
     /**
-     * @name Two.RadialGradient#Stop
+     * @name Two.RadialGradient.Stop
      * @see {@link Two.Stop}
      */
     Stop: Stop,
@@ -6493,7 +6489,6 @@ SOFTWARE.
      */
     load: function(texture, callback) {
 
-      texture.src;
       var image = texture.image;
       var tag = Texture.getTag(image);
 
@@ -6810,7 +6805,8 @@ SOFTWARE.
 
   // Constants
 
-  var min$1 = Math.min, max$1 = Math.max, ceil = Math.ceil, floor = Math.floor;
+  var min$1 = Math.min, max$1 = Math.max,
+    ceil = Math.ceil, floor = Math.floor;
 
   /**
    * @name Two.Path
@@ -7202,7 +7198,6 @@ SOFTWARE.
 
         set: function(vertices) {
 
-          this._renderer.flagVertices;
           var bindVertices = this._renderer.bindVertices;
           var unbindVertices = this._renderer.unbindVertices;
 
@@ -8194,7 +8189,7 @@ SOFTWARE.
   }
 
   /**
-   * @protected
+   * @private
    * @param {Two.Path} path - The path to analyze against.
    * @param {Number} target - The target length at which to find an anchor.
    * @returns {Number}
@@ -8379,7 +8374,7 @@ SOFTWARE.
      */
     _update: function() {
 
-      if (this._flagRadius) {
+      if (this._flagVertices || this._flagRadius) {
 
         var length = this.vertices.length;
 
@@ -8602,14 +8597,21 @@ SOFTWARE.
      */
     _update: function() {
 
-      if (this._flagWidth || this._flagHeight) {
+      if (this._flagVertices || this._flagWidth || this._flagHeight) {
+
+        var length = this.vertices.length;
+
+        if (!this._closed && length > 2) {
+          length -= 1;
+        }
+
         // Coefficient for approximating circular arcs with Bezier curves
         var c = (4 / 3) * Math.tan(Math.PI / (this.vertices.length * 2));
         var radiusX = this._width / 2;
         var radiusY = this._height / 2;
 
-        for (var i = 0, numVertices = this.vertices.length; i < numVertices; i++) {
-          var pct = i / numVertices;
+        for (var i = 0; i < this.vertices.length; i++) {
+          var pct = i / length;
           var theta = pct * TWO_PI$3;
 
           var x = radiusX * cos$2(theta);
@@ -8860,10 +8862,14 @@ SOFTWARE.
      */
     _update: function() {
 
-      if (this._flagWidth || this._flagHeight) {
+      if (this._flagVertices || this._flagWidth || this._flagHeight) {
 
         var xr = this._width / 2;
         var yr = this._height / 2;
+
+        if (!this._closed && this.vertices.length === 4) {
+          this.vertices.push(new Anchor());
+        }
 
         this.vertices[0].set(-xr, -yr).add(this._origin).command = Commands.move;
         this.vertices[1].set(xr, -yr).add(this._origin).command = Commands.line;
@@ -9121,7 +9127,7 @@ SOFTWARE.
      */
     _update: function() {
 
-      if (this._flagWidth || this._flagHeight || this._flagRadius) {
+      if (this._flagVertices || this._flagWidth || this._flagHeight || this._flagRadius) {
 
         var width = this._width;
         var height = this._height;
@@ -10313,7 +10319,7 @@ SOFTWARE.
       }
 
       var svg = read.g.call(this, node);
-      node.getAttribute('viewBox');
+      // var viewBox = node.getAttribute('viewBox');
 
       svg.defs = defs;  // Export out the <defs /> for later use
       // Utils.applySvgViewBox(svg, viewBox);
@@ -10839,8 +10845,6 @@ SOFTWARE.
         return read['rounded-rect'](node);
       }
 
-      parseFloat(node.getAttribute('x')) || 0;
-      parseFloat(node.getAttribute('y')) || 0;
       var width = parseFloat(node.getAttribute('width'));
       var height = parseFloat(node.getAttribute('height'));
 
@@ -10864,8 +10868,6 @@ SOFTWARE.
 
     'rounded-rect': function(node, parentStyles) {
 
-      parseFloat(node.getAttribute('x')) || 0;
-      parseFloat(node.getAttribute('y')) || 0;
       var rx = parseFloat(node.getAttribute('rx')) || 0;
       var ry = parseFloat(node.getAttribute('ry')) || 0;
 
@@ -11202,7 +11204,6 @@ SOFTWARE.
 
         set: function(textures) {
 
-          this._renderer.flagTextures;
           var bindTextures = this._renderer.bindTextures;
           var unbindTextures = this._renderer.unbindTextures;
 
@@ -12189,8 +12190,8 @@ SOFTWARE.
      */
     _update: function() {
 
-      if (this._flagStartAngle || this._flagEndAngle || this._flagInnerRadius
-        || this._flagOuterRadius) {
+      if (this._flagVertices || this._flagStartAngle || this._flagEndAngle
+        || this._flagInnerRadius || this._flagOuterRadius) {
 
         var sa = this._startAngle;
         var ea = this._endAngle;
@@ -12540,7 +12541,7 @@ SOFTWARE.
      */
     _update: function() {
 
-      if (this._flagWidth || this._flagHeight || this._flagSides) {
+      if (this._flagVertices || this._flagWidth || this._flagHeight || this._flagSides) {
 
         var sides = this._sides;
         var amount = sides + 1;
@@ -12782,7 +12783,7 @@ SOFTWARE.
      */
     _update: function() {
 
-      if (this._flagInnerRadius || this._flagOuterRadius || this._flagSides) {
+      if (this._flagVertices || this._flagInnerRadius || this._flagOuterRadius || this._flagSides) {
 
         var sides = this._sides * 2;
         var amount = sides + 1;
@@ -14398,8 +14399,6 @@ SOFTWARE.
         var opacity = elem._renderer.opacity || elem._opacity;
         var dashes = elem.dashes;
         var decoration = elem._decoration;
-        CanvasUtils.alignments[elem._alignment] || elem._alignment;
-        elem._baseline;
 
         canvas.width = Math.max(Math.ceil(elem._renderer.rect.width * scale.x), 1);
         canvas.height = Math.max(Math.ceil(elem._renderer.rect.height * scale.y), 1);
@@ -15265,6 +15264,54 @@ SOFTWARE.
     constructor: Two,
 
     /**
+     * @name Two#type
+     * @property {String} type - A string representing which type of renderer the instance has instantiated.
+     */
+    type: '',
+
+    /**
+     * @name Two#renderer
+     * @property {(Two.SVGRenderer|Two.CanvasRenderer|Two.WebGLRenderer)} - The instantiated rendering class for the instance. For a list of possible rendering types check out Two.Types.
+     */
+    renderer: null,
+
+    /**
+     * @name Two#scene
+     * @property {Two.Group} - The base level {@link Two.Group} which houses all objects for the instance. Because it is a {@link Two.Group} transformations can be applied to it that will affect all objects in the instance. This is handy as a makeshift inverted camera.
+     */
+    scene: null,
+
+    /**
+     * @name Two#width
+     * @property {Number} - The width of the instance's dom element.
+     */
+    width: 0,
+
+    /**
+     * @name Two#height
+     * @property {Number} - The height of the instance's dom element.
+     */
+    height: 0,
+
+    /**
+     * @name Two#frameCount
+     * @property {Number} - An integer representing how many frames have elapsed.
+     */
+    frameCount: 0,
+
+    /**
+     * @name Two#timeDelta
+     * @property {Number} - A number representing how much time has elapsed since the last frame in milliseconds.
+     */
+    timeDelta: 0,
+
+    /**
+     * @name Two#playing
+     * @property {Boolean} - A boolean representing whether or not the instance is being updated through the automatic `requestAnimationFrame`.
+     */
+    playing: false,
+
+    /**
      * @name Two#appendTo
      * @function
      * @param {Element} elem - The DOM element to append the Two.js stage to.
@@ -15362,6 +15409,7 @@ SOFTWARE.
 
     /**
      * @name Two#update
+     * @function
      * @fires Two.Events.Types.update event
      * @description Update positions and calculations in one pass before rendering. Then render to the canvas.
      * @nota-bene This function is called automatically if using {@link Two#play} or the `autostart` parameter in construction.
@@ -15399,6 +15447,7 @@ SOFTWARE.
 
     /**
      * @name Two#render
+     * @function
      * @fires render
      * @description Render all drawable and visible objects of the scene.
      */
@@ -15451,7 +15500,7 @@ SOFTWARE.
     /**
      * @name Two#clear
      * @function
-     * @description Remove all all Two.js objects from the scene.
+     * @description Removes all objects from the instance's scene. If you intend to have the browser garbage collect this, don't forget to delete the references in your application as well.
      */
     clear: function() {
 
