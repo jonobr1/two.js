@@ -37,7 +37,7 @@ QUnit.test('Two.ArcSegment', function(assert) {
 
 QUnit.test('Two.Circle', function(assert) {
 
-  assert.expect(Two.Circle.Properties.length * 4 + 1);
+  assert.expect(Two.Circle.Properties.length * 4 + 2);
 
   var radius = 50;
   var properties = [radius];
@@ -61,11 +61,16 @@ QUnit.test('Two.Circle', function(assert) {
     assert.equal(path['_flag' + prop.charAt(0).toUpperCase() + prop.slice(1)], false, 'Reset flag ' + prop + ' correctly.');
   }
 
+  path.closed = false;
+  path._update();
+
+  assert.equal(path.vertices[0].equals(path.vertices[path.vertices.length - 1]), true, 'Circle has standardized vertex generation when shape is not closed');
+
 });
 
 QUnit.test('Two.Ellipse', function(assert) {
 
-  assert.expect(Two.Ellipse.Properties.length * 4 + 1);
+  assert.expect(Two.Ellipse.Properties.length * 4 + 2);
 
   var rx = 50;
   var ry = 75;
@@ -89,6 +94,11 @@ QUnit.test('Two.Ellipse', function(assert) {
     var prop = Two.Ellipse.Properties[i];
     assert.equal(path['_flag' + prop.charAt(0).toUpperCase() + prop.slice(1)], false, 'Reset flag ' + prop + ' correctly.');
   }
+
+  path.closed = false;
+  path._update();
+
+  assert.equal(path.vertices[0].equals(path.vertices[path.vertices.length - 1]), true, 'Circle has standardized vertex generation when shape is not closed');
 
 });
 
@@ -122,7 +132,7 @@ QUnit.test('Two.Polygon', function(assert) {
 
 QUnit.test('Two.Rectangle', function(assert) {
 
-  assert.expect(Two.Rectangle.Properties.length * 4);
+  assert.expect(Two.Rectangle.Properties.length * 4 + 1);
 
   var width = 50;
   var height = 75;
@@ -145,6 +155,11 @@ QUnit.test('Two.Rectangle', function(assert) {
     var prop = Two.Rectangle.Properties[i];
     assert.equal(path['_flag' + prop.charAt(0).toUpperCase() + prop.slice(1)], false, 'Reset flag ' + prop + ' correctly.');
   }
+
+  path.closed = false;
+  path._update();
+
+  assert.equal(path.vertices[0].equals(path.vertices[path.vertices.length - 1]), true, 'Circle has standardized vertex generation when shape is not closed');
 
 });
 

@@ -118,14 +118,21 @@ _.extend(Ellipse.prototype, Path.prototype, {
    */
   _update: function() {
 
-    if (this._flagWidth || this._flagHeight) {
+    if (this._flagVertices || this._flagWidth || this._flagHeight) {
+
+      var length = this.vertices.length;
+
+      if (!this._closed && length > 2) {
+        length -= 1;
+      }
+
       // Coefficient for approximating circular arcs with Bezier curves
       var c = (4 / 3) * Math.tan(Math.PI / (this.vertices.length * 2));
       var radiusX = this._width / 2;
       var radiusY = this._height / 2;
 
-      for (var i = 0, numVertices = this.vertices.length; i < numVertices; i++) {
-        var pct = i / numVertices;
+      for (var i = 0; i < this.vertices.length; i++) {
+        var pct = i / length;
         var theta = pct * TWO_PI;
 
         var x = radiusX * cos(theta);

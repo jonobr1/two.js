@@ -99,7 +99,7 @@ _.extend(Circle.prototype, Path.prototype, {
    */
   _update: function() {
 
-    if (this._flagRadius) {
+    if (this._flagVertices || this._flagRadius) {
 
       var length = this.vertices.length;
 
