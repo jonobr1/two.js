@@ -128,10 +128,14 @@ _.extend(Rectangle.prototype, Path.prototype, {
    */
   _update: function() {
 
-    if (this._flagWidth || this._flagHeight) {
+    if (this._flagVertices || this._flagWidth || this._flagHeight) {
 
       var xr = this._width / 2;
       var yr = this._height / 2;
+
+      if (!this._closed && this.vertices.length === 4) {
+        this.vertices.push(new Anchor());
+      }
 
       this.vertices[0].set(-xr, -yr).add(this._origin).command = Commands.move;
       this.vertices[1].set(xr, -yr).add(this._origin).command = Commands.line;
