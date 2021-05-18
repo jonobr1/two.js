@@ -165,7 +165,7 @@ QUnit.test('Two.Rectangle', function(assert) {
 
 QUnit.test('Two.RoundedRectangle', function(assert) {
 
-  assert.expect(Two.RoundedRectangle.Properties.length * 4 + 4);
+  assert.expect(Two.RoundedRectangle.Properties.length * 4 + 5);
 
   var width = 50;
   var height = 75;
@@ -198,6 +198,11 @@ QUnit.test('Two.RoundedRectangle', function(assert) {
   }
 
   assert.equal(path._flagRadius, false, 'Reset flag radius correctly.');
+
+  path.closed = false;
+  path._update();
+
+  assert.equal(path.vertices[0].equals(path.vertices[path.vertices.length - 1]), true, 'RoundedRectangle has standardized vertex generation when shape is not closed');
 
 });
 
