@@ -4,6 +4,7 @@ sidebarDepth: 2
 
 # Change Log
 ## Nightly
++ Fixed `id` setting on all objects of Two.js
 + Fixed `Two.ArcSegment.clone` outer radius issue
 + Standardized vertex generation in higher order primitives
 + Type declaration improvements
