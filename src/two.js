@@ -165,7 +165,7 @@ _.extend(Two.prototype, Events, {
 
   /**
    * @name Two#type
-   * @property {String} type - A string representing which type of renderer the instance has instantiated.
+   * @property {String} - A string representing which type of renderer the instance has instantiated.
    */
   type: '',
 

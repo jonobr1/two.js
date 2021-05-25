@@ -1876,7 +1876,7 @@ declare namespace Two {
  * @param [options.autostart = false] - Set to `true` to add the instance to draw on `requestAnimationFrame`. This is a convenient substitute for {@link Two#play}.
  * @param [options.domElement] - The canvas or SVG element to draw into. This overrides the `options.type` argument.
  */
-declare class Two extends Two.Events {
+declare class Two {
     constructor(options?: {
         fullscreen?: boolean;
         fitted?: boolean;
@@ -1928,11 +1928,9 @@ declare class Two extends Two.Events {
      */
     fit(): void;
     /**
-     * @property type - A string representing which type of renderer the instance has instantiated.
+     * @property undefined - A string representing which type of renderer the instance has instantiated.
      */
-    type: {
-        type: string;
-    };
+    type: string;
     /**
      * @property undefined - The instantiated rendering class for the instance. For a list of possible rendering types check out Two.Types.
      */

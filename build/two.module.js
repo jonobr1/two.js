@@ -1543,7 +1543,7 @@ var Constants = {
    * @name Two.PublishDate
    * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
    */
-  PublishDate: '2021-05-18T16:58:15.695Z',
+  PublishDate: '2021-05-25T17:18:09.415Z',
 
   /**
    * @name Two.Identifier
@@ -12354,7 +12354,7 @@ _.extend(ArcSegment.prototype, Path.prototype, {
   clone: function(parent) {
 
     var ir = this.innerRadius;
-    var or = this.outerradius;
+    var or = this.outerRadius;
     var sa = this.startAngle;
     var ea = this.endAngle;
     var resolution = this.vertices.length;
@@ -15259,7 +15259,7 @@ _.extend(Two.prototype, Events, {
 
   /**
    * @name Two#type
-   * @property {String} type - A string representing which type of renderer the instance has instantiated.
+   * @property {String} - A string representing which type of renderer the instance has instantiated.
    */
   type: '',
 
