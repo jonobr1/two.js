@@ -127,6 +127,20 @@ _.extend(Gradient, {
 
     });
 
+    Object.defineProperty(object, 'id', {
+
+      enumerable: true,
+
+      get: function() {
+        return this._id;
+      },
+
+      set: function(v) {
+        this._id = v;
+      }
+
+    });
+
   },
 
   /**
@@ -181,17 +195,26 @@ _.extend(Gradient.prototype, Events, {
   constructor: Gradient,
 
   /**
+   * @name Two.Gradient#_flagId
+   * @private
+   * @property {Boolean} - Determines whether the {@link Two.Gradient#id} needs updating.
+   */
+  _flagId: false,
+
+  /**
    * @name Two.Gradient#_flagStops
    * @private
-   * @property {Boolean} - Determines whether the {@link Two.Gradient#stops} need updating.
+   * @property {Boolean} - Determines whether the {@link Two.Gradient#stops} needs updating.
    */
   _flagStops: false,
   /**
    * @name Two.Gradient#_flagSpread
    * @private
-   * @property {Boolean} - Determines whether the {@link Two.Gradient#spread} need updating.
+   * @property {Boolean} - Determines whether the {@link Two.Gradient#spread} needs updating.
    */
   _flagSpread: false,
+
+  _id: '',
 
   /**
    * @name Two.Gradient#clone
