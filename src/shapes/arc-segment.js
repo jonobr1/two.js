@@ -331,7 +331,7 @@ _.extend(ArcSegment.prototype, Path.prototype, {
   clone: function(parent) {
 
     var ir = this.innerRadius;
-    var or = this.outerradius;
+    var or = this.outerRadius;
     var sa = this.startAngle;
     var ea = this.endAngle;
     var resolution = this.vertices.length;
