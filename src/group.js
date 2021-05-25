@@ -893,17 +893,6 @@ _.extend(Group.prototype, Shape.prototype, {
 
     }
 
-    if (this._flagId) {
-      // Means the group's id changed or one of its children's ids
-      // changed and as such we need to update the map of ids the
-      // Two.Group.children has.
-      this.children.ids = {};
-      for (i = 0; i < this.children.length; i++) {
-        child = this.children[i];
-        this.children.ids[child.id] = child;
-      }
-    }
-
     return Shape.prototype._update.apply(this, arguments);
 
   },

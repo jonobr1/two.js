@@ -296,6 +296,10 @@ var svg = {
         svg[child._renderer.type].render.call(child, domElement);
       }
 
+      if (this._flagId) {
+        this._renderer.elem.setAttribute('id', this._id);
+      }
+
       if (this._flagOpacity) {
         this._renderer.elem.setAttribute('opacity', this._opacity);
       }
@@ -377,6 +381,10 @@ var svg = {
         changed.transform = 'matrix(' + this._matrix.toString() + ')';
       }
 
+      if (this._flagId) {
+        changed.id = this._id;
+      }
+
       if (this._flagVertices) {
         var vertices = svg.toString(this._renderer.vertices, this._closed);
         changed.d = vertices;
@@ -440,7 +448,7 @@ var svg = {
       // create it with all necessary attributes.
       if (!this._renderer.elem) {
 
-        changed.id = this.id;
+        changed.id = this._id;
         this._renderer.elem = svg.createElement('path', changed);
         domElement.appendChild(this._renderer.elem);
 
@@ -496,6 +504,10 @@ var svg = {
 
       if (flagMatrix) {
         changed.transform = 'matrix(' + this._matrix.toString() + ')';
+      }
+
+      if (this._flagId) {
+        changed.id = this._id;
       }
 
       if (this._flagFamily) {
@@ -557,7 +569,7 @@ var svg = {
 
       if (!this._renderer.elem) {
 
-        changed.id = this.id;
+        changed.id = this._id;
 
         this._renderer.elem = svg.createElement('text', changed);
         domElement.defs.appendChild(this._renderer.elem);
@@ -605,6 +617,10 @@ var svg = {
 
       var changed = {};
 
+      if (this._flagId) {
+        changed.id = this._id;
+      }
+
       if (this._flagEndPoints) {
         changed.x1 = this.left._x;
         changed.y1 = this.left._y;
@@ -620,7 +636,7 @@ var svg = {
       // create it with all necessary attributes.
       if (!this._renderer.elem) {
 
-        changed.id = this.id;
+        changed.id = this._id;
         changed.gradientUnits = 'userSpaceOnUse';
         this._renderer.elem = svg.createElement('linearGradient', changed);
         domElement.defs.appendChild(this._renderer.elem);
@@ -689,6 +705,10 @@ var svg = {
 
       var changed = {};
 
+      if (this._flagId) {
+        changed.id = this._id;
+      }
+
       if (this._flagCenter) {
         changed.cx = this.center._x;
         changed.cy = this.center._y;
@@ -710,7 +730,7 @@ var svg = {
       // create it with all necessary attributes.
       if (!this._renderer.elem) {
 
-        changed.id = this.id;
+        changed.id = this._id;
         changed.gradientUnits = 'userSpaceOnUse';
         this._renderer.elem = svg.createElement('radialGradient', changed);
         domElement.defs.appendChild(this._renderer.elem);
@@ -780,6 +800,10 @@ var svg = {
       var changed = {};
       var styles = { x: 0, y: 0 };
       var image = this.image;
+
+      if (this._flagId) {
+        changed.id = this._id;
+      }
 
       if (this._flagLoaded && this.loaded) {
 
@@ -864,7 +888,7 @@ var svg = {
 
       if (!this._renderer.elem) {
 
-        changed.id = this.id;
+        changed.id = this._id;
         changed.patternUnits = 'userSpaceOnUse';
         this._renderer.elem = svg.createElement('pattern', changed);
         domElement.defs.appendChild(this._renderer.elem);

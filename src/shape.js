@@ -191,13 +191,15 @@ _.extend(Shape, {
         return this._id;
       },
       set: function(v) {
+        var id = this._id;
         if (v === this._id) {
           return;
         }
         this._id = v;
         this._flagId = true;
         if (this.parent) {
-          this.parent._flagId = true;
+          delete this.parent.children.ids[id];
+          this.parent.children.ids[this._id] = this;
         }
       }
     });
