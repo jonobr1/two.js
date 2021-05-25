@@ -1549,7 +1549,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2021-05-25T17:18:09.415Z',
+    PublishDate: '2021-05-25T23:00:49.762Z',
 
     /**
      * @name Two.Identifier
@@ -2819,13 +2819,15 @@ SOFTWARE.
           return this._id;
         },
         set: function(v) {
+          var id = this._id;
           if (v === this._id) {
             return;
           }
           this._id = v;
           this._flagId = true;
           if (this.parent) {
-            this.parent._flagId = true;
+            delete this.parent.children.ids[id];
+            this.parent.children.ids[this._id] = this;
           }
         }
       });
@@ -4099,17 +4101,6 @@ SOFTWARE.
 
         }
 
-      }
-
-      if (this._flagId) {
-        // Means the group's id changed or one of its children's ids
-        // changed and as such we need to update the map of ids the
-        // Two.Group.children has.
-        this.children.ids = {};
-        for (i = 0; i < this.children.length; i++) {
-          child = this.children[i];
-          this.children.ids[child.id] = child;
-        }
       }
 
       return Shape.prototype._update.apply(this, arguments);
@@ -5657,6 +5648,20 @@ SOFTWARE.
 
       });
 
+      Object.defineProperty(object, 'id', {
+
+        enumerable: true,
+
+        get: function() {
+          return this._id;
+        },
+
+        set: function(v) {
+          this._id = v;
+        }
+
+      });
+
     },
 
     /**
@@ -5711,17 +5716,26 @@ SOFTWARE.
     constructor: Gradient,
 
     /**
+     * @name Two.Gradient#_flagId
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Gradient#id} needs updating.
+     */
+    _flagId: false,
+
+    /**
      * @name Two.Gradient#_flagStops
      * @private
-     * @property {Boolean} - Determines whether the {@link Two.Gradient#stops} need updating.
+     * @property {Boolean} - Determines whether the {@link Two.Gradient#stops} needs updating.
      */
     _flagStops: false,
     /**
      * @name Two.Gradient#_flagSpread
      * @private
-     * @property {Boolean} - Determines whether the {@link Two.Gradient#spread} need updating.
+     * @property {Boolean} - Determines whether the {@link Two.Gradient#spread} needs updating.
      */
     _flagSpread: false,
+
+    _id: '',
 
     /**
      * @name Two.Gradient#clone
@@ -13184,6 +13198,10 @@ SOFTWARE.
           svg[child._renderer.type].render.call(child, domElement);
         }
 
+        if (this._flagId) {
+          this._renderer.elem.setAttribute('id', this._id);
+        }
+
         if (this._flagOpacity) {
           this._renderer.elem.setAttribute('opacity', this._opacity);
         }
@@ -13265,6 +13283,10 @@ SOFTWARE.
           changed.transform = 'matrix(' + this._matrix.toString() + ')';
         }
 
+        if (this._flagId) {
+          changed.id = this._id;
+        }
+
         if (this._flagVertices) {
           var vertices = svg.toString(this._renderer.vertices, this._closed);
           changed.d = vertices;
@@ -13328,7 +13350,7 @@ SOFTWARE.
         // create it with all necessary attributes.
         if (!this._renderer.elem) {
 
-          changed.id = this.id;
+          changed.id = this._id;
           this._renderer.elem = svg.createElement('path', changed);
           domElement.appendChild(this._renderer.elem);
 
@@ -13384,6 +13406,10 @@ SOFTWARE.
 
         if (flagMatrix) {
           changed.transform = 'matrix(' + this._matrix.toString() + ')';
+        }
+
+        if (this._flagId) {
+          changed.id = this._id;
         }
 
         if (this._flagFamily) {
@@ -13445,7 +13471,7 @@ SOFTWARE.
 
         if (!this._renderer.elem) {
 
-          changed.id = this.id;
+          changed.id = this._id;
 
           this._renderer.elem = svg.createElement('text', changed);
           domElement.defs.appendChild(this._renderer.elem);
@@ -13493,6 +13519,10 @@ SOFTWARE.
 
         var changed = {};
 
+        if (this._flagId) {
+          changed.id = this._id;
+        }
+
         if (this._flagEndPoints) {
           changed.x1 = this.left._x;
           changed.y1 = this.left._y;
@@ -13508,7 +13538,7 @@ SOFTWARE.
         // create it with all necessary attributes.
         if (!this._renderer.elem) {
 
-          changed.id = this.id;
+          changed.id = this._id;
           changed.gradientUnits = 'userSpaceOnUse';
           this._renderer.elem = svg.createElement('linearGradient', changed);
           domElement.defs.appendChild(this._renderer.elem);
@@ -13577,6 +13607,10 @@ SOFTWARE.
 
         var changed = {};
 
+        if (this._flagId) {
+          changed.id = this._id;
+        }
+
         if (this._flagCenter) {
           changed.cx = this.center._x;
           changed.cy = this.center._y;
@@ -13598,7 +13632,7 @@ SOFTWARE.
         // create it with all necessary attributes.
         if (!this._renderer.elem) {
 
-          changed.id = this.id;
+          changed.id = this._id;
           changed.gradientUnits = 'userSpaceOnUse';
           this._renderer.elem = svg.createElement('radialGradient', changed);
           domElement.defs.appendChild(this._renderer.elem);
@@ -13668,6 +13702,10 @@ SOFTWARE.
         var changed = {};
         var styles = { x: 0, y: 0 };
         var image = this.image;
+
+        if (this._flagId) {
+          changed.id = this._id;
+        }
 
         if (this._flagLoaded && this.loaded) {
 
@@ -13752,7 +13790,7 @@ SOFTWARE.
 
         if (!this._renderer.elem) {
 
-          changed.id = this.id;
+          changed.id = this._id;
           changed.patternUnits = 'userSpaceOnUse';
           this._renderer.elem = svg.createElement('pattern', changed);
           domElement.defs.appendChild(this._renderer.elem);
