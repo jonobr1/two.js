@@ -1,3 +1,5 @@
+import Events from './events.js';
+
 /**
  * @name Two.Vector
  * @class
@@ -5,12 +7,13 @@
  * @param {Number} [y=0] - Any number to represent the vertical y-component of the vector.
  * @description A class to store x / y component vector data. In addition to storing data `Two.Vector` has suped up methods for commonplace mathematical operations.
  */
-class Vector {
+class Vector extends Events {
 
-  x = 0
-  y = 0
+  _x = 0;
+  _y = 0;
 
   constructor(x = 0, y = 0) {
+    super();
     /**
      * @name Two.Vector#x
      * @property {Number} - The horizontal x-component of the vector.
@@ -22,6 +25,30 @@ class Vector {
      * @property {Number} - The vertical y-component of the vector.
      */
     this.y = y;
+  }
+
+  get x() {
+    return this._x;
+  }
+  set x(v) {
+    if (this._x !== v) {
+      this._x = v;
+      if (this._bound) {
+        this.dispatchEvent(Events.Types.change);
+      }
+    }
+  }
+
+  get y() {
+    return this._y;
+  }
+  set y(v) {
+    if (this._y !== v) {
+      this._y = v;
+      if (this._bound) {
+        this.dispatchEvent(Events.Types.change);
+      }
+    }
   }
 
   /**

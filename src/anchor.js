@@ -1,5 +1,5 @@
 import Commands from './utils/path-commands.js';
-
+import Events from './events.js';
 import Vector from './vector.js';
 
 /**
@@ -17,31 +17,119 @@ import Vector from './vector.js';
  */
 class Anchor extends Vector {
 
-  x = 0
-  y = 0
   controls = {
     left: new Vector(),
     right: new Vector()
-  }
-  command = Commands.move
-  relative = true
+  };
+  _command = Commands.move;
+  _relative = true;
 
-  rx = 0
-  ry = 0
-  xAxisRotation = 0
-  largeArcFlag = 0
-  sweepFlag = 1
+  _rx = 0;
+  _ry = 0;
+  _xAxisRotation = 0;
+  _largeArcFlag = 0;
+  _sweepFlag = 1;
 
-  constructor(x = 0, y = 0, lx = 0, ly = 0, rx = 0, ry = 0, command = Commands.move) {
+  constructor(x = 0, y = 0, ax = 0, ay = 0, bx = 0, by = 0, command = Commands.move) {
 
     super(x, y);
 
     this.command = command;
     this.relative = true;
 
-    this.controls.left.set(lx, ly);
-    this.controls.right.set(rx, ry);
+    this.controls.left.set(ax, ay).addEventListener(Anchor.broadcast);
+    this.controls.right.set(bx, by).addEventListener(Anchor.broadcast);
 
+  }
+
+  static broadcast() {
+    if (this._bound) {
+      this.dispatchEvent(Events.Types.change);
+    }
+  }
+
+  get command() {
+    return this._command;
+  }
+  set command(command) {
+    if (this._command !== command) {
+      this._command = command;
+      if (this._bound) {
+        this.dispatchEvent(Events.Types.change);
+      }
+    }
+  }
+
+  get relative() {
+    return this._relative;
+  }
+  set relative(relative) {
+    if (this._relative !== !!relative) {
+      this._relative = !!relative;
+      if (this._bound) {
+        this.dispatchEvent(Events.Types.change);
+      }
+    }
+  }
+
+  get rx() {
+    return this._rx;
+  }
+  set rx(rx) {
+    if (this._rx !== rx) {
+      this._rx = rx;
+      if (this._bound) {
+        this.dispatchEvent(Events.Types.change);
+      }
+    }
+  }
+
+  get ry() {
+    return this._ry;
+  }
+  set ry(ry) {
+    if (this._ry !== ry) {
+      this._ry = ry;
+      if (this._bound) {
+        this.dispatchEvent(Events.Types.change);
+      }
+    }
+  }
+
+  get xAxisRotation() {
+    return this._xAxisRotation;
+  }
+  set xAxisRotation(xAxisRotation) {
+    if (this._xAxisRotation !== xAxisRotation) {
+      this._xAxisRotation = xAxisRotation;
+      if (this._bound) {
+        this.dispatchEvent(Events.Types.change);
+      }
+    }
+  }
+
+  get largeArcFlag() {
+    return this._largeArcFlag;
+  }
+  set largeArcFlag(largeArcFlag) {
+    if (this._largeArcFlag !== largeArcFlag) {
+      this._largeArcFlag = largeArcFlag;
+      if (this._bound) {
+        this.dispatchEvent(Events.Types.change);
+      }
+    }
+  }
+
+  get sweepFlag() {
+    return this._sweepFlag;
+  }
+  set sweepFlag(sweepFlag) {
+    if (this._sweepFlag !== sweepFlag) {
+      this._sweepFlag = sweepFlag;
+      if (this._bound) {
+        this.dispatchEvent(Events.Types.change);
+      }
+    }
   }
 
   /**
@@ -90,7 +178,7 @@ class Anchor extends Vector {
 
     return this;
 
-  },
+  }
 
   /**
    * @name Two.Anchor#clone
@@ -100,7 +188,7 @@ class Anchor extends Vector {
    */
   clone() {
     return new Anchor().copy(this);
-  },
+  }
 
   /**
    * @name Two.Anchor#toObject
@@ -124,7 +212,7 @@ class Anchor extends Vector {
       largeArcFlag: this.largeArcFlag,
       sweepFlag: this.sweepFlag
     };
-  },
+  }
 
   /**
    * @name Two.Anchor#toString

@@ -3,78 +3,174 @@
  * @class
  * @description Object inherited by many Two.js objects in order to facilitate custom events.
  */
-var Events = {
+class Events {
+
+  _events;
+  _bound = false;
+
+  constructor() {
+    this._events = {};
+  }
 
   /**
-   * @name Two.Events#on
+   * @name Two.Events#addEventListener
    * @function
    * @param {String} [name] - The name of the event to bind a function to.
    * @param {Function} [handler] - The function to be invoked when the event is dispatched.
    * @description Call to add a listener to a specific event name.
    */
-  on: addEventListener,
+  addEventListener(name, handler) {
+
+    const list = this._events[name] || (this._events[name] = []);
+    list.push(handler);
+    this._bound = true;
+
+    return this;
+
+  }
 
   /**
-   * @name Two.Events#off
+   * @name Two.Events#on
+   * @function
+   * @description Alias for {@link Two.Events#addEventListener}.
+   */
+  on() {
+    return this.addEventListener.apply(this, arguments);
+  }
+  /**
+   * @name Two.Events#bind
+   * @function
+   * @description Alias for {@link Two.Events#addEventListener}.
+   */
+  bind() {
+    return this.addEventListener.apply(this, arguments);
+  }
+
+  /**
+   * @name Two.Events#removeEventListener
    * @function
    * @param {String} [name] - The name of the event intended to be removed.
    * @param {Function} [handler] - The handler intended to be reomved.
    * @description Call to remove listeners from a specific event. If only `name` is passed then all the handlers attached to that `name` will be removed. If no arguments are passed then all handlers for every event on the obejct are removed.
    */
-  off: removeEventListener,
+  removeEventListener(name, handler) {
+
+    if (!this._events) {
+      return this;
+    }
+    if (!name && !handler) {
+      this._events = {};
+      this._bound = false;
+      return this;
+    }
+
+    const names = name ? [name] : Object.keys(this._events);
+    for (let i = 0, l = names.length; i < l; i++) {
+
+      name = names[i];
+      let list = this._events[name];
+
+      if (list) {
+        let events = [];
+        if (handler) {
+          for (let j = 0, k = list.length; j < k; j++) {
+            let e = list[j];
+            e = e.handler ? e.handler : e;
+            if (handler && handler !== e) {
+              events.push(e);
+            }
+          }
+        }
+        this._events[name] = events;
+      }
+    }
+
+    return this;
+
+  }
 
   /**
-   * @name Two.Events#trigger
+   * @name Two.Events#off
+   * @function
+   * @description Alias for {@link Two.Events#removeEventListener}.
+   */
+  off() {
+    return this.removeEventListener.apply(this, arguments);
+  }
+  /**
+   * @name Two.Events#unbind
+   * @function
+   * @description Alias for {@link Two.Events#removeEventListener}.
+   */
+  unbind() {
+    return this.removeEventListener.apply(this, arguments);
+  }
+
+  /**
+   * @name Two.Events#dispatchEvent
    * @function
    * @param {String} name - The name of the event to dispatch.
    * @param arguments - Anything can be passed after the name and those will be passed on to handlers attached to the event in the order they are passed.
    * @description Call to trigger a custom event. Any additional arguments passed after the name will be passed along to the attached handlers.
    */
-  trigger: function(name) {
-    var scope = this;
-    if (!scope._events) return scope;
-    var args = Array.prototype.slice.call(arguments, 1);
-    var events = scope._events[name];
-    if (events) dispatch(scope, events, args);
-    return scope;
-  },
+  dispatchEvent(name) {
 
-  listen: function(obj, name, handler) {
+    if (!this._events) {
+      return this;
+    }
 
-    var bound = this;
+    const args = Array.prototype.slice.call(arguments, 1);
+    const events = this._events[name];
+
+    if (events) {
+      for (var i = 0; i < events.length; i++) {
+        events[i].call(this, ...args);
+      }
+    }
+
+    return this;
+
+  }
+
+  trigger() {
+    return this.dispatchEvent.apply(this, arguments);
+  }
+
+  listen(obj, name, handler) {
+
+    const scope = this;
 
     if (obj) {
 
-      var event = function () {
-        handler.apply(bound, arguments);
+      function e() {
+        handler.apply(scope, arguments);
       };
 
       // Add references about the object that assigned this listener
-      event.obj = obj;
-      event.name = name;
-      event.handler = handler;
+      e.obj = obj;
+      e.name = name;
+      e.handler = handler;
 
-      obj.on(name, event);
+      obj.on(name, e);
 
     }
 
-    return bound;
-
-  },
-
-  ignore: function(obj, name, handler) {
-
-    var scope = this;
-    obj.off(name, handler);
     return scope;
 
-  },
+  }
+
+  ignore(obj, name, handler) {
+
+    obj.off(name, handler);
+    return this;
+
+  }
 
   /**
    * @name Two.Events.Types
    * @property {Object} - Object of different types of Two.js specific events.
    */
-  Types: {
+  static Types = {
     play: 'play',
     pause: 'pause',
     update: 'update',
@@ -87,111 +183,6 @@ var Events = {
     load: 'load'
   }
 
-};
-
-
-/**
- * @name Two.Events.bind
- * @function
- * @description Alias for {@link Two.Events.on}.
- */
-Events.bind = addEventListener;
-
-/**
- * @name Two.Events.unbind
- * @function
- * @description Alias for {@link Two.Events.off}.
- */
-Events.unbind = removeEventListener;
-
-/**
- * @private
- * @returns {Two.Events} - Returns an instance of self for the purpose of chaining.
- */
-function addEventListener(name, handler) {
-
-  var scope = this;
-
-  scope._events || (scope._events = {});
-  var list = scope._events[name] || (scope._events[name] = []);
-
-  list.push(handler);
-
-  return scope;
-
-}
-
-/**
- * @private
- * @returns {Two.Events} - Returns an instance of self for the purpose of chaining.
- */
-function removeEventListener(name, handler) {
-
-  var scope = this;
-
-  if (!scope._events) {
-    return scope;
-  }
-  if (!name && !handler) {
-    scope._events = {};
-    return scope;
-  }
-
-  var names = name ? [name] : Object.keys(scope._events);
-  for (var i = 0, l = names.length; i < l; i++) {
-
-    name = names[i];
-    var list = scope._events[name];
-
-    if (list) {
-      var events = [];
-      if (handler) {
-        for (var j = 0, k = list.length; j < k; j++) {
-          var ev = list[j];
-          ev = ev.handler ? ev.handler : ev;
-          if (handler && handler !== ev) {
-            events.push(ev);
-          }
-        }
-      }
-      scope._events[name] = events;
-    }
-  }
-
-  return scope;
-}
-
-function dispatch(obj, events, args) {
-  var method;
-  switch (args.length) {
-  case 0:
-    method = function(i) {
-      events[i].call(obj, args[0]);
-    };
-    break;
-  case 1:
-    method = function(i) {
-      events[i].call(obj, args[0], args[1]);
-    };
-    break;
-  case 2:
-    method = function(i) {
-      events[i].call(obj, args[0], args[1], args[2]);
-    };
-    break;
-  case 3:
-    method = function(i) {
-      events[i].call(obj, args[0], args[1], args[2], args[3]);
-    };
-    break;
-  default:
-    method = function(i) {
-      events[i].apply(obj, args);
-    };
-  }
-  for (var i = 0; i < events.length; i++) {
-    method(i);
-  }
 }
 
 export default Events;
