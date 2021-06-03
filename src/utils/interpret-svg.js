@@ -8,7 +8,6 @@ import Registry from '../registry.js';
 
 import Anchor from '../anchor.js';
 import Vector from '../vector.js';
-import Matrix from '../matrix.js';
 import Path from '../path.js';
 import Group from '../group.js';
 
@@ -195,6 +194,7 @@ var applySvgViewBox = function(node, value) {
 var applySvgAttributes = function(node, elem, parentStyles) {
 
   var styles = {}, attributes = {}, extracted = {}, i, m, key, value, attr;
+  var transforms, x, y;
   var id, scene, ref, tagName;
 
   // Not available in non browser environments
@@ -258,7 +258,7 @@ var applySvgAttributes = function(node, elem, parentStyles) {
 
         if (m === null) break;
 
-        var transforms = decomposeMatrix(m);
+        transforms = decomposeMatrix(m);
 
         switch (elem._renderer.type) {
           case 'linear-gradient':
@@ -290,14 +290,14 @@ var applySvgAttributes = function(node, elem, parentStyles) {
         if (Constants.AutoCalculateImportedMatrices) {
 
           // Decompose and infer Two.js related properties.
-          var transforms = decomposeMatrix(m);
+          transforms = decomposeMatrix(m);
 
           elem.translation.set(transforms.translateX, transforms.translateY);
           elem.rotation = Math.PI * (transforms.rotation / 180);
           elem.scale = new Vector(transforms.scaleX, transforms.scaleY);
 
-          var x = parseFloat((styles.x + '').replace('px'));
-          var y = parseFloat((styles.y + '').replace('px'));
+          x = parseFloat((styles.x + '').replace('px'));
+          y = parseFloat((styles.y + '').replace('px'));
 
           // Override based on attributes.
           if (x) {
@@ -373,7 +373,7 @@ var applySvgAttributes = function(node, elem, parentStyles) {
           key = '_' + key;
         }
         if (/url\(#.*\)/i.test(value)) {
-          id = value.replace(/url\(#(.*)\)/i, '$1')
+          id = value.replace(/url\(#(.*)\)/i, '$1');
           if (read.defs.current && read.defs.current.contains(id)) {
             ref = read.defs.current.get(id);
             tagName = getTagName(ref.nodeName);
