@@ -8,6 +8,7 @@ import Registry from '../registry.js';
 
 import Anchor from '../anchor.js';
 import Vector from '../vector.js';
+import Matrix from '../matrix.js';
 import Path from '../path.js';
 import Group from '../group.js';
 
@@ -50,6 +51,27 @@ var getBaseline = function(node) {
   var a = node.getAttribute('dominant-baseline');
   var b = node.getAttribute('alignment-baseline');
   return a || b;
+};
+
+var getTagName = function(tag) {
+  return tag.replace(/svg:/ig, '').toLowerCase();
+};
+
+var applyTransformsToVector = function(transforms, vector) {
+
+  vector.x += transforms.translateX;
+  vector.y += transforms.translateY;
+
+  vector.x *= transforms.scaleX;
+  vector.y *= transforms.scaleY;
+
+  if (transforms.rotation !== 0) {
+    // TODO: Test further
+    var l = vector.length();
+    vector.x = l * Math.cos(transforms.rotation);
+    vector.y = l * Math.sin(transforms.rotation);
+  }
+
 };
 
 /**
@@ -172,7 +194,8 @@ var applySvgViewBox = function(node, value) {
  */
 var applySvgAttributes = function(node, elem, parentStyles) {
 
-  var  styles = {}, attributes = {}, extracted = {}, i, m, key, value, attr;
+  var styles = {}, attributes = {}, extracted = {}, i, m, key, value, attr;
+  var id, scene, ref, tagName;
 
   // Not available in non browser environments
   if (root.getComputedStyle) {
@@ -226,6 +249,34 @@ var applySvgAttributes = function(node, elem, parentStyles) {
     value = styles[key];
 
     switch (key) {
+      case 'gradientTransform':
+        // TODO: Check this out https://github.com/paperjs/paper.js/blob/develop/src/svg/SvgImport.js#L315
+        if (/none/i.test(value)) break;
+        m = (node.gradientTransform && node.gradientTransform.baseVal && node.gradientTransform.baseVal.length > 0)
+          ? node.gradientTransform.baseVal[0].matrix
+          : (node.getCTM ? node.getCTM() : null);
+
+        if (m === null) break;
+
+        var transforms = decomposeMatrix(m);
+
+        switch (elem._renderer.type) {
+          case 'linear-gradient':
+            applyTransformsToVector(transforms, elem.left);
+            applyTransformsToVector(transforms, elem.right);
+            break;
+          case 'radial-gradient':
+            elem.center.x += transforms.translateX;
+            elem.center.y += transforms.translateY;
+
+            elem.focal.x += transforms.translateX;
+            elem.focal.y += transforms.translateY;
+
+            elem.radius *= Math.max(transforms.scaleX, transforms.scaleY);
+            break;
+        }
+
+        break;
       case 'transform':
         // TODO: Check this out https://github.com/paperjs/paper.js/blob/develop/src/svg/SvgImport.js#L315
         if (/none/i.test(value)) break;
@@ -322,9 +373,16 @@ var applySvgAttributes = function(node, elem, parentStyles) {
           key = '_' + key;
         }
         if (/url\(#.*\)/i.test(value)) {
-          var scene = getScene(this);
-          elem[key] = scene.getById(
-            value.replace(/url\(#(.*)\)/i, '$1'));
+          id = value.replace(/url\(#(.*)\)/i, '$1')
+          if (read.defs.current && read.defs.current.contains(id)) {
+            ref = read.defs.current.get(id);
+            tagName = getTagName(ref.nodeName);
+            ref = read[tagName].call(this, ref, {});
+          } else {
+            scene = getScene(this);
+            ref = scene.getById(id);
+          }
+          elem[key] = ref;
         } else {
           elem[key] = (/none/i.test(value)) ? 'transparent' : value;
         }
@@ -403,7 +461,7 @@ var updateDefsCache = function(node, defsCache) {
     var n = node.childNodes[i];
     if (!n.id) continue;
 
-    var tagName = n.localName;
+    var tagName = getTagName(node.nodeName);
     if (tagName === '#text') continue;
 
     defsCache.add(n.id, n);
@@ -488,7 +546,7 @@ var read = {
       }
     }
 
-    var tagName = fullNode.localName;
+    var tagName = getTagName(fullNode.nodeName);
     return read[tagName].call(this, fullNode, styles);
 
   },
@@ -510,7 +568,7 @@ var read = {
       var tag = n.nodeName;
       if (!tag) return;
 
-      var tagName = tag.replace(/svg:/ig, '').toLowerCase();
+      var tagName = getTagName(tag);
 
       if (tagName in read) {
         var o = read[tagName].call(group, n, styles);
