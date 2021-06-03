@@ -779,7 +779,7 @@ _.extend(Path.prototype, Shape.prototype, {
    */
   corner: function() {
 
-    var rect = this.getBoundingClientRect();
+    var rect = this.getBoundingClientRect(true);
     var hw = rect.width / 2;
     var hh = rect.height / 2;
     var cx = rect.left + rect.width / 2;
@@ -804,7 +804,7 @@ _.extend(Path.prototype, Shape.prototype, {
    */
   center: function() {
 
-    var rect = this.getBoundingClientRect();
+    var rect = this.getBoundingClientRect(true);
 
     var cx = rect.left + rect.width / 2 - this.translation.x;
     var cy = rect.top + rect.height / 2 - this.translation.y;
