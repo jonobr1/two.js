@@ -8,6 +8,9 @@ sidebarDepth: 2
 + Fixed `Two.ArcSegment.clone` outer radius issue
 + Standardized vertex generation in higher order primitives
 + Type declaration improvements
++ Improved `Two.Group.center`, `Two.Group.corner`, `Two.Path.center`, `Two.Path.corner`
++ Improved SVG gradient interpretation
++ Added `<defs />` interpretation
 
 ## April 23, 2021 [v0.7.5](https://github.com/jonobr1/two.js/releases/tag/v0.7.5)
 + Improved `Two.Circle.beginning` & `Two.Circle.ending` behavior
