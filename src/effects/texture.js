@@ -112,6 +112,7 @@ _.extend(Texture, {
    * @property {String[]} - A list of properties that are on every {@link Two.Texture}.
    */
   Properties: [
+    'id',
     'src',
     'loaded',
     'repeat'
@@ -467,6 +468,13 @@ _.extend(Texture.prototype, Events, Shape.prototype, {
   constructor: Texture,
 
   /**
+   * @name Two.Texture#_flagId
+   * @private
+   * @property {Boolean} - Determines whether the {@link Two.Texture#id} needs updating.
+   */
+  _flagId: false,
+
+  /**
    * @name Two.Texture#_flagSrc
    * @private
    * @property {Boolean} - Determines whether the {@link Two.Texture#src} needs updating.
@@ -514,6 +522,13 @@ _.extend(Texture.prototype, Events, Shape.prototype, {
    * @property {Boolean} - Determines whether the {@link Two.Texture#scale} needs updating.
    */
   _flagScale: false,
+
+  /**
+   * @name Two.Texture#_id
+   * @private
+   * @see {@link Two.Texture#id}
+   */
+  _id: '',
 
   /**
    * @name Two.Texture#_src
