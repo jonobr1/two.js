@@ -556,7 +556,7 @@ _.extend(Group.prototype, Shape.prototype, {
    */
   corner: function() {
 
-    var rect = this.getBoundingClientRect();
+    var rect = this.getBoundingClientRect(true);
 
     for (var i = 0; i < this.children.length; i++) {
       var child = this.children[i];
@@ -575,7 +575,7 @@ _.extend(Group.prototype, Shape.prototype, {
    */
   center: function() {
 
-    var rect = this.getBoundingClientRect();
+    var rect = this.getBoundingClientRect(true);
     var cx = rect.left + rect.width / 2 - this.translation.x;
     var cy = rect.top + rect.height / 2 - this.translation.y;
 
@@ -746,7 +746,7 @@ _.extend(Group.prototype, Shape.prototype, {
    * @description Return an object with top, left, right, bottom, width, and height parameters of the group.
    */
   getBoundingClientRect: function(shallow) {
-    var rect, matrix, a, b, c, d;
+    var rect, matrix, a, b, c, d, tc, lc, rc, bc;
 
     // TODO: Update this to not __always__ update. Just when it needs to.
     this._update(true);
@@ -769,8 +769,12 @@ _.extend(Group.prototype, Shape.prototype, {
 
       rect = child.getBoundingClientRect(shallow);
 
-      if (typeof rect.top !== 'number'   || typeof rect.left !== 'number' ||
-          typeof rect.right !== 'number' || typeof rect.bottom !== 'number') {
+      tc = typeof rect.top !== 'number' || _.isNaN(rect.top) || !isFinite(rect.top);
+      lc = typeof rect.left !== 'number' || _.isNaN(rect.left) || !isFinite(rect.left);
+      rc = typeof rect.right !== 'number' || _.isNaN(rect.right) || !isFinite(rect.right);
+      bc = typeof rect.bottom !== 'number' || _.isNaN(rect.bottom) || !isFinite(rect.bottom);
+
+      if (tc || lc || rc || bc) {
         continue;
       }
 

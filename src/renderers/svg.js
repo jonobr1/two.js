@@ -478,13 +478,13 @@ var svg = {
       // polygons. Uncomment when this bug is fixed:
       // https://code.google.com/p/chromium/issues/detail?id=370951
 
-      // if (this._flagMask) {
-      //   if (this._mask) {
-      //     elem.setAttribute('clip-path', 'url(#' + this._mask.id + ')');
-      //   } else {
-      //     elem.removeAttribute('clip-path');
-      //   }
-      // }
+      if (this._flagMask) {
+        if (this._mask) {
+          this._renderer.elem.setAttribute('clip-path', 'url(#' + this._mask.id + ')');
+        } else {
+          this._renderer.elem.removeAttribute('clip-path');
+        }
+      }
 
       return this.flagReset();
 
@@ -595,6 +595,18 @@ var svg = {
           this.parent._renderer.elem.appendChild(elem); // TODO: should be insertBefore
         }
 
+      }
+
+      // Commented two-way functionality of clips / masks with groups and
+      // polygons. Uncomment when this bug is fixed:
+      // https://code.google.com/p/chromium/issues/detail?id=370951
+
+      if (this._flagMask) {
+        if (this._mask) {
+          this._renderer.elem.setAttribute('clip-path', 'url(#' + this._mask.id + ')');
+        } else {
+          this._renderer.elem.removeAttribute('clip-path');
+        }
       }
 
       if (this._flagValue) {

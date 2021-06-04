@@ -870,7 +870,7 @@ _.extend(Two.prototype, Events, {
   load: function(text, callback) {
 
     var group = new Group();
-    var elem, i, j;
+    var elem, i, j, child;
 
     var attach = (function(data) {
 
@@ -879,9 +879,10 @@ _.extend(Two.prototype, Events, {
       for (i = 0; i < dom.temp.children.length; i++) {
         elem = dom.temp.children[i];
         if (/svg/i.test(elem.nodeName)) {
+          child = this.interpret(elem);
           // Two.Utils.applySvgViewBox.call(this, group, elem.getAttribute('viewBox'));
-          for (j = 0; j < elem.children.length; j++) {
-            group.add(this.interpret(elem.children[j]));
+          for (j = 0; j < child.children.length; j++) {
+            group.add(child.children[j]);
           }
         } else {
           group.add(this.interpret(elem));

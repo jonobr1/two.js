@@ -164,6 +164,24 @@ _.extend(Text, {
       }
     });
 
+    Object.defineProperty(object, 'mask', {
+
+      enumerable: true,
+
+      get: function() {
+        return this._mask;
+      },
+
+      set: function(v) {
+        this._mask = v;
+        this._flagMask = true;
+        if (!v.clip) {
+          v.clip = true;
+        }
+      }
+
+    });
+
     Object.defineProperty(object, 'clip', {
       enumerable: true,
       get: function() {
@@ -305,6 +323,13 @@ _.extend(Text.prototype, Shape.prototype, {
   _flagVisible: true,
 
   /**
+   * @name Two.Path#_flagMask
+   * @private
+   * @property {Boolean} - Determines whether the {@link Two.Path#mask} needs updating.
+   */
+  _flagMask: false,
+
+  /**
    * @name Two.Text#_flagClip
    * @private
    * @property {Boolean} - Determines whether the {@link Two.Text#clip} need updating.
@@ -406,6 +431,13 @@ _.extend(Text.prototype, Shape.prototype, {
    * @nota-bene For {@link Two.CanvasRenderer} and {@link Two.WebGLRenderer} when set to false all updating is disabled improving performance dramatically with many objects in the scene.
    */
   _visible: true,
+
+  /**
+   * @name Two.Text#mask
+   * @property {Two.Shape} - The shape whose alpha property becomes a clipping area for the text.
+   * @nota-bene This property is currently not working becuase of SVG spec issues found here {@link https://code.google.com/p/chromium/issues/detail?id=370951}.
+   */
+  _mask: null,
 
   /**
    * @name Two.Text#clip

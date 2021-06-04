@@ -123,9 +123,9 @@ var canvas = {
 
       var matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter,
           closed, commands, length, last, next, prev, a, b, c, d, ux, uy, vx, vy,
-          ar, bl, br, cl, x, y, clip, defaultMatrix, isOffset, dashes;
+          ar, bl, br, cl, x, y, mask, clip, defaultMatrix, isOffset, dashes;
 
-      // mask = this._mask;
+      mask = this._mask;
       clip = this._clip;
       opacity = this._opacity * this.parent._renderer.opacity;
       visible = this._visible;
@@ -159,10 +159,9 @@ var canvas = {
       // Commented two-way functionality of clips / masks with groups and
       // polygons. Uncomment when this bug is fixed:
       // https://code.google.com/p/chromium/issues/detail?id=370951
-
-      // if (mask) {
-      //   canvas[mask._renderer.type].render.call(mask, ctx, true);
-      // }
+      if (mask) {
+        canvas[mask._renderer.type].render.call(mask, ctx, true);
+      }
 
       // Styles
       if (fill) {
@@ -366,7 +365,7 @@ var canvas = {
 
       var opacity = this._opacity * this.parent._renderer.opacity;
       var visible = this._visible;
-      // mask = this._mask;
+      var mask = this._mask;
       var clip = this._clip;
 
       if (!forced && (!visible || clip || opacity === 0)) {
@@ -398,10 +397,9 @@ var canvas = {
       // Commented two-way functionality of clips / masks with groups and
       // polygons. Uncomment when this bug is fixed:
       // https://code.google.com/p/chromium/issues/detail?id=370951
-
-      // if (mask) {
-      //   canvas[mask._renderer.type].render.call(mask, ctx, true);
-      // }
+      if (mask) {
+        canvas[mask._renderer.type].render.call(mask, ctx, true);
+      }
 
       if (!isOffset) {
         ctx.font = [this._style, this._weight, this._size + 'px/' +
