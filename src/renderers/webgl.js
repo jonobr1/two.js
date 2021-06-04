@@ -493,6 +493,25 @@ var webgl = {
         }
       }
 
+      if (this._mask) {
+
+        // Stencil away everything that isn't rendered by the mask
+        gl.clear(gl.STENCIL_BUFFER_BIT);
+        gl.enable(gl.STENCIL_TEST);
+
+        gl.stencilFunc(gl.ALWAYS, 1, 0);
+        gl.stencilOp(gl.KEEP, gl.KEEP, gl.REPLACE);
+        // Don't draw the element onto the canvas, only onto the stencil buffer
+        gl.colorMask(false, false, false, false);
+
+        webgl[this._mask._renderer.type].render.call(this._mask, gl, program, this);
+
+        gl.stencilFunc(gl.EQUAL, 1, 0xff);
+        gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
+        gl.colorMask(true, true, true, true);
+
+      }
+
       if (flagTexture) {
 
         if (!this._renderer.rect) {
@@ -518,10 +537,6 @@ var webgl = {
 
       }
 
-      // if (this._mask) {
-      //   webgl[this._mask._renderer.type].render.call(mask, gl, program, this);
-      // }
-
       if (this._clip && !forcedParent) {
         return;
       }
@@ -534,6 +549,10 @@ var webgl = {
       gl.uniformMatrix3fv(program.matrix, false, this._renderer.matrix);
       gl.uniform4f(program.rect, rect.left, rect.top, rect.right, rect.bottom);
       gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+      if (this._mask) {
+        gl.disable(gl.STENCIL_TEST);
+      }
 
       return this.flagReset();
 
@@ -825,6 +844,25 @@ var webgl = {
         }
       }
 
+      if (this._mask) {
+
+        // Stencil away everything that isn't rendered by the mask
+        gl.clear(gl.STENCIL_BUFFER_BIT);
+        gl.enable(gl.STENCIL_TEST);
+
+        gl.stencilFunc(gl.ALWAYS, 1, 0);
+        gl.stencilOp(gl.KEEP, gl.KEEP, gl.REPLACE);
+        // Don't draw the element onto the canvas, only onto the stencil buffer
+        gl.colorMask(false, false, false, false);
+
+        webgl[this._mask._renderer.type].render.call(this._mask, gl, program, this);
+
+        gl.stencilFunc(gl.EQUAL, 1, 0xff);
+        gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
+        gl.colorMask(true, true, true, true);
+
+      }
+
       if (flagTexture) {
 
         if (!this._renderer.rect) {
@@ -850,10 +888,6 @@ var webgl = {
 
       }
 
-      // if (this._mask) {
-      //   webgl[this._mask._renderer.type].render.call(mask, gl, program, this);
-      // }
-
       if (this._clip && !forcedParent) {
         return;
       }
@@ -866,6 +900,10 @@ var webgl = {
       gl.uniformMatrix3fv(program.matrix, false, this._renderer.matrix);
       gl.uniform4f(program.rect, rect.left, rect.top, rect.right, rect.bottom);
       gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+      if (this._mask) {
+        gl.disable(gl.STENCIL_TEST);
+      }
 
       return this.flagReset();
 

@@ -448,9 +448,31 @@ _.extend(Path, {
     });
 
     /**
-     * @name Two.Path#clip
-     * @property {Two.Shape} - Object to define clipping area.
+     * @name Two.Path#mask
+     * @property {Two.Shape} - The shape whose alpha property becomes a clipping area for the path.
      * @nota-bene This property is currently not working becuase of SVG spec issues found here {@link https://code.google.com/p/chromium/issues/detail?id=370951}.
+     */
+    Object.defineProperty(object, 'mask', {
+
+      enumerable: true,
+
+      get: function() {
+        return this._mask;
+      },
+
+      set: function(v) {
+        this._mask = v;
+        this._flagMask = true;
+        if (!v.clip) {
+          v.clip = true;
+        }
+      }
+
+    });
+
+    /**
+     * @name Two.Path#clip
+     * @property {Boolean} - Tells Two.js renderer if this object represents a mask for another object (or not).
      */
     Object.defineProperty(object, 'clip', {
       enumerable: true,
@@ -558,6 +580,13 @@ _.extend(Path.prototype, Shape.prototype, {
   _flagMiter: true,
 
   /**
+   * @name Two.Path#_flagMask
+   * @private
+   * @property {Boolean} - Determines whether the {@link Two.Path#mask} needs updating.
+   */
+  _flagMask: false,
+
+  /**
    * @name Two.Path#_flagClip
    * @private
    * @property {Boolean} - Determines whether the {@link Two.Path#clip} needs updating.
@@ -663,6 +692,13 @@ _.extend(Path.prototype, Shape.prototype, {
    * @see {@link Two.Path#ending}
    */
   _ending: 1.0,
+
+  /**
+   * @name Two.Path#_mask
+   * @private
+   * @see {@link Two.Path#mask}
+   */
+  _mask: null,
 
   /**
    * @name Two.Path#_clip

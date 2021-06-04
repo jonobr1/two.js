@@ -333,9 +333,6 @@ _.extend(Shape.prototype, Events, {
    */
   _skewY: 0,
 
-  // _mask: null,
-  // _clip: false,
-
   /**
    * @name Two.Shape#className
    * @property {String} - A class to be applied to the element to be compatible with CSS styling.
