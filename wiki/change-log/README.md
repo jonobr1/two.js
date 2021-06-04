@@ -11,6 +11,8 @@ sidebarDepth: 2
 + Improved `Two.Group.center`, `Two.Group.corner`, `Two.Path.center`, `Two.Path.corner`
 + Improved SVG gradient interpretation
 + Added `<defs />` interpretation
++ Added `Two.Path.mask` and `Two.Text.mask` properties
++ Standardized `Texture.id` to be compliant with other `Two.Shape.id`
 
 ## April 23, 2021 [v0.7.5](https://github.com/jonobr1/two.js/releases/tag/v0.7.5)
 + Improved `Two.Circle.beginning` & `Two.Circle.ending` behavior
