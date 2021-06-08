@@ -1543,7 +1543,7 @@ var Constants = {
    * @name Two.PublishDate
    * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
    */
-  PublishDate: '2021-06-04T23:39:22.539Z',
+  PublishDate: '2021-06-08T20:19:33.699Z',
 
   /**
    * @name Two.Identifier
@@ -4333,11 +4333,13 @@ var canvas = {
 
       var matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter,
           closed, commands, length, last, next, prev, a, b, c, d, ux, uy, vx, vy,
-          ar, bl, br, cl, x, y, mask, clip, defaultMatrix, isOffset, dashes;
+          ar, bl, br, cl, x, y, mask, clip, defaultMatrix, isOffset, dashes, po;
 
+      po = (this.parent && this.parent._renderer)
+        ? this.parent._renderer.opacity : 1;
       mask = this._mask;
       clip = this._clip;
-      opacity = this._opacity * this.parent._renderer.opacity;
+      opacity = this._opacity * (po || 1);
       visible = this._visible;
 
       if (!forced && (!visible || clip || opacity === 0)) {
@@ -4573,7 +4575,9 @@ var canvas = {
 
     render: function(ctx, forced, parentClipped) {
 
-      var opacity = this._opacity * this.parent._renderer.opacity;
+      var po = (this.parent && this.parent._renderer)
+        ? this.parent._renderer.opacity : 1;
+      var opacity = this._opacity * po;
       var visible = this._visible;
       var mask = this._mask;
       var clip = this._clip;
@@ -8338,6 +8342,678 @@ function getSubdivisions(a, b, limit) {
 
 }
 
+/**
+ * @name Two.Rectangle
+ * @class
+ * @extends Two.Path
+ * @param {Number} [x=0] - The x position of the rectangle.
+ * @param {Number} [y=0] - The y position of the rectangle.
+ * @param {Number} [width] - The width value of the rectangle.
+ * @param {Number} [height] - The width value of the rectangle.
+ */
+function Rectangle(x, y, width, height) {
+
+  Path.call(this, [
+    new Anchor(),
+    new Anchor(),
+    new Anchor(),
+    new Anchor()
+    // new Anchor() // TODO: Figure out how to handle this for `beginning` / `ending` animations
+  ], true, false, true);
+
+  /**
+   * @name Two.Rectangle#width
+   * @property {Number} - The size of the width of the rectangle.
+   */
+  this.width = width;
+  /**
+   * @name Two.Rectangle#height
+   * @property {Number} - The size of the height of the rectangle.
+   */
+  this.height = height;
+
+  /**
+   * @name Two.Rectangle#origin
+   * @property {Number} - A two-component vector describing the origin offset to draw the rectangle. Default is `0, 0`.
+   */
+  this.origin = new Vector();
+  this.translation.set(x, y);
+
+  this._update();
+
+}
+
+_.extend(Rectangle, {
+
+  /**
+   * @name Two.Rectangle.Properties
+   * @property {String[]} - A list of properties that are on every {@link Two.Rectangle}.
+   */
+  Properties: ['width', 'height'],
+
+  /**
+   * @name Two.Rectangle.MakeObservable
+   * @function
+   * @param {Object} object - The object to make observable.
+   * @description Convenience function to apply observable qualities of a {@link Two.Rectangle} to any object. Handy if you'd like to extend the {@link Two.Rectangle} class on a custom class.
+   */
+  MakeObservable: function(object) {
+
+    Path.MakeObservable(object);
+    _.each(Rectangle.Properties, defineGetterSetter, object);
+
+    Object.defineProperty(object, 'origin', {
+      enumerable: true,
+      get: function() {
+        return this._origin;
+      },
+      set: function(v) {
+        if (this._origin) {
+          this._origin.unbind(Events.Types.change, this._renderer.flagVertices);
+        }
+        this._origin = v;
+        this._origin.bind(Events.Types.change, this._renderer.flagVertices);
+        this._renderer.flagVertices();
+      }
+    });
+
+  }
+
+});
+
+_.extend(Rectangle.prototype, Path.prototype, {
+
+  constructor: Rectangle,
+
+  /**
+   * @name Two.Rectangle#_flagWidth
+   * @private
+   * @property {Boolean} - Determines whether the {@link Two.Rectangle#width} needs updating.
+   */
+  _flagWidth: 0,
+  /**
+   * @name Two.Rectangle#_flagHeight
+   * @private
+   * @property {Boolean} - Determines whether the {@link Two.Rectangle#height} needs updating.
+   */
+  _flagHeight: 0,
+
+  /**
+   * @name Two.Rectangle#_width
+   * @private
+   * @see {@link Two.Rectangle#width}
+   */
+  _width: 0,
+  /**
+   * @name Two.Rectangle#_height
+   * @private
+   * @see {@link Two.Rectangle#height}
+   */
+  _height: 0,
+
+  _origin: null,
+
+  /**
+   * @name Two.Rectangle#_update
+   * @function
+   * @private
+   * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+   * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
+   * @nota-bene Try not to call this method more than once a frame.
+   */
+  _update: function() {
+
+    if (this._flagVertices || this._flagWidth || this._flagHeight) {
+
+      var xr = this._width / 2;
+      var yr = this._height / 2;
+
+      if (!this._closed && this.vertices.length === 4) {
+        this.vertices.push(new Anchor());
+      }
+
+      this.vertices[0].set(-xr, -yr).add(this._origin).command = Commands.move;
+      this.vertices[1].set(xr, -yr).add(this._origin).command = Commands.line;
+      this.vertices[2].set(xr, yr).add(this._origin).command = Commands.line;
+      this.vertices[3].set(-xr, yr).add(this._origin).command = Commands.line;
+      // FYI: Two.Sprite and Two.ImageSequence have 4 verts
+      if (this.vertices[4]) {
+        this.vertices[4].set(-xr, -yr).add(this._origin).command = Commands.line;
+      }
+
+    }
+
+    Path.prototype._update.call(this);
+
+    return this;
+
+  },
+
+  /**
+   * @name Two.Rectangle#flagReset
+   * @function
+   * @private
+   * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+   */
+  flagReset: function() {
+
+    this._flagWidth = this._flagHeight = false;
+    Path.prototype.flagReset.call(this);
+
+    return this;
+
+  },
+
+  /**
+   * @name Two.Rectangle#clone
+   * @function
+   * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+   * @returns {Two.Rectangle}
+   * @description Create a new instance of {@link Two.Rectangle} with the same properties of the current path.
+   */
+  clone: function(parent) {
+
+    var clone = new Rectangle(0, 0, this.width, this.height);
+
+    clone.translation.copy(this.translation);
+    clone.rotation = this.rotation;
+    clone.scale = this.scale;
+    clone.skewX = this.skewX;
+    clone.skewY = this.skewY;
+
+    if (this.matrix.manual) {
+      clone.matrix.copy(this.matrix);
+    }
+
+    _.each(Path.Properties, function(k) {
+      clone[k] = this[k];
+    }, this);
+
+    if (parent) {
+      parent.add(clone);
+    }
+
+    return clone;
+
+  },
+
+  /**
+   * @name Two.Rectangle#toObject
+   * @function
+   * @returns {Object}
+   * @description Return a JSON compatible plain object that represents the path.
+   */
+  toObject: function() {
+
+    var object = Path.prototype.toObject.call(this);
+    object.width = this.width;
+    object.height = this.height;
+    object.origin = this.origin.toObject();
+    return object;
+
+  }
+
+});
+
+Rectangle.MakeObservable(Rectangle.prototype);
+
+/**
+ * @name Two.Sprite
+ * @class
+ * @extends Two.Rectangle
+ * @param {String|Two.Texture} [path] - The URL path or {@link Two.Texture} to be used as the bitmap data displayed on the sprite.
+ * @param {Number} [ox=0] - The initial `x` position of the Two.Sprite.
+ * @param {Number} [oy=0] - The initial `y` position of the Two.Sprite.
+ * @param {Number} [cols=1] - The number of columns the sprite contains.
+ * @param {Number} [rows=1] - The number of rows the sprite contains.
+ * @param {Number} [frameRate=0] - The frame rate at which the partitions of the image should playback at.
+ * @description A convenient package to display still or animated images through a tiled image source. For more information on the principals of animated imagery through tiling see [Texture Atlas](https://en.wikipedia.org/wiki/Texture_atlas) on Wikipedia.
+ */
+function Sprite(path, ox, oy, cols, rows, frameRate) {
+
+  // Not using default constructor of Rectangle due to odd `beginning` / `ending` behavior.
+  // See: https://github.com/jonobr1/two.js/issues/383
+  Path.call(this, [
+    new Anchor(),
+    new Anchor(),
+    new Anchor(),
+    new Anchor()
+  ], true);
+
+  this.noStroke();
+  this.noFill();
+
+  /**
+   * @name Two.Sprite#texture
+   * @property {Two.Texture} - The texture to be used as bitmap data to display image in the scene.
+   */
+  if (path instanceof Texture) {
+    this.texture = path;
+  } else if (typeof path === 'string') {
+    this.texture = new Texture(path);
+  }
+
+  this.origin = new Vector();
+
+  this._update();
+  this.translation.set(ox || 0, oy || 0);
+
+  /**
+   * @name Two.Sprite#columns
+   * @property {Number} - The number of columns to split the texture into. Defaults to `1`.
+   */
+  if (typeof cols === 'number') {
+    this.columns = cols;
+  }
+
+  /**
+   * @name Two.Sprite#rows
+   * @property {Number} - The number of rows to split the texture into. Defaults to `1`.
+   */
+  if (typeof rows === 'number') {
+    this.rows = rows;
+  }
+
+  /**
+   * @name Two.Sprite#frameRate
+   * @property {Number} - The number of frames to animate against per second. Defaults to `0` for non-animated sprites.
+   */
+  if (typeof frameRate === 'number') {
+    this.frameRate = frameRate;
+  }
+
+  /**
+   * @name Two.Sprite#index
+   * @property {Number} - The index of the current tile of the sprite to display. Defaults to `0`.
+   */
+  this.index = 0;
+
+}
+
+_.extend(Sprite, {
+
+  /**
+   * @name Two.Sprite.Properties
+   * @property {String[]} - A list of properties that are on every {@link Two.Sprite}.
+   */
+  Properties: [
+    'texture', 'columns', 'rows', 'frameRate', 'index'
+  ],
+
+  /**
+   * @name Two.Sprite.MakeObservable
+   * @function
+   * @param {Object} object - The object to make observable.
+   * @description Convenience function to apply observable qualities of a {@link Two.Sprite} to any object. Handy if you'd like to extend or inherit the {@link Two.Sprite} class on a custom class.
+   */
+  MakeObservable: function(obj) {
+
+    Rectangle.MakeObservable(obj);
+    _.each(Sprite.Properties, defineGetterSetter, obj);
+
+  }
+
+});
+
+_.extend(Sprite.prototype, Rectangle.prototype, {
+
+  constructor: Sprite,
+
+  /**
+   * @name Two.Sprite#_flagTexture
+   * @private
+   * @property {Boolean} - Determines whether the {@link Two.Sprite#texture} needs updating.
+   */
+  _flagTexture: false,
+
+  /**
+   * @name Two.Sprite#_flagColumns
+   * @private
+   * @property {Boolean} - Determines whether the {@link Two.Sprite#columns} need updating.
+   */
+  _flagColumns: false,
+
+  /**
+   * @name Two.Sprite#_flagRows
+   * @private
+   * @property {Boolean} - Determines whether the {@link Two.Sprite#rows} need updating.
+   */
+  _flagRows: false,
+
+  /**
+   * @name Two.Sprite#_flagFrameRate
+   * @private
+   * @property {Boolean} - Determines whether the {@link Two.Sprite#flagFrameRate} needs updating.
+   */
+  _flagFrameRate: false,
+
+  /**
+   * @name Two.Sprite#_flagIndex
+   * @private
+   * @property {Boolean} - Determines whether the {@link Two.Sprite#index} needs updating.
+   */
+  flagIndex: false,
+
+  // Private variables
+
+  /**
+   * @name Two.Sprite#_amount
+   * @private
+   * @property {Number} - Number of frames for a given {@link Two.Sprite}.
+   */
+  _amount: 1,
+
+  /**
+   * @name Two.Sprite#_duration
+   * @private
+   * @property {Number} - Number of milliseconds a {@link Two.Sprite}.
+   */
+  _duration: 0,
+
+  /**
+   * @name Two.Sprite#_startTime
+   * @private
+   * @property {Milliseconds} - Epoch time in milliseconds of when the {@link Two.Sprite} started.
+   */
+  _startTime: 0,
+
+  /**
+   * @name Two.Sprite#_playing
+   * @private
+   * @property {Boolean} - Dictates whether the {@link Two.Sprite} is animating or not.
+   */
+  _playing: false,
+
+  /**
+   * @name Two.Sprite#_firstFrame
+   * @private
+   * @property {Number} - The frame the {@link Two.Sprite} should start with.
+   */
+  _firstFrame: 0,
+
+  /**
+   * @name Two.Sprite#_lastFrame
+   * @private
+   * @property {Number} - The frame the {@link Two.Sprite} should end with.
+   */
+  _lastFrame: 0,
+
+  /**
+   * @name Two.Sprite#_playing
+   * @private
+   * @property {Boolean} - Dictates whether the {@link Two.Sprite} should loop or not.
+   */
+  _loop: true,
+
+  // Exposed through getter-setter
+
+  /**
+   * @name Two.Sprite#_texture
+   * @private
+   * @see {@link Two.Sprite#texture}
+   */
+  _texture: null,
+
+  /**
+   * @name Two.Sprite#_columns
+   * @private
+   * @see {@link Two.Sprite#columns}
+   */
+  _columns: 1,
+
+  /**
+   * @name Two.Sprite#_rows
+   * @private
+   * @see {@link Two.Sprite#rows}
+   */
+  _rows: 1,
+
+  /**
+   * @name Two.Sprite#_frameRate
+   * @private
+   * @see {@link Two.Sprite#frameRate}
+   */
+  _frameRate: 0,
+
+  /**
+   * @name Two.Sprite#_index
+   * @private
+   * @property {Number} - The current frame the {@link Two.Sprite} is currently displaying.
+   */
+  _index: 0,
+
+  /**
+   * @name Two.Sprite#_origin
+   * @private
+   * @see {@link Two.Sprite#origin}
+   */
+  _origin: null,
+
+  /**
+   * @name Two.Sprite#play
+   * @function
+   * @param {Number} [firstFrame=0] - The index of the frame to start the animation with.
+   * @param {Number} [lastFrame] - The index of the frame to end the animation with. Defaults to the last item in the {@link Two.Sprite#textures}.
+   * @param {Function} [onLastFrame] - Optional callback function to be triggered after playing the last frame. This fires multiple times when the sprite is looped.
+   * @description Initiate animation playback of a {@link Two.Sprite}.
+   */
+  play: function(firstFrame, lastFrame, onLastFrame) {
+
+    this._playing = true;
+    this._firstFrame = 0;
+    this._lastFrame = this.amount - 1;
+    this._startTime = _.performance.now();
+
+    if (typeof firstFrame === 'number') {
+      this._firstFrame = firstFrame;
+    }
+    if (typeof lastFrame === 'number') {
+      this._lastFrame = lastFrame;
+    }
+    if (typeof onLastFrame === 'function') {
+      this._onLastFrame = onLastFrame;
+    } else {
+      delete this._onLastFrame;
+    }
+
+    if (this._index !== this._firstFrame) {
+      this._startTime -= 1000 * Math.abs(this._index - this._firstFrame)
+        / this._frameRate;
+    }
+
+    return this;
+
+  },
+
+  /**
+   * @name Two.Sprite#pause
+   * @function
+   * @description Halt animation playback of a {@link Two.Sprite}.
+   */
+  pause: function() {
+
+    this._playing = false;
+    return this;
+
+  },
+
+  /**
+   * @name Two.Sprite#stop
+   * @function
+   * @description Halt animation playback of a {@link Two.Sprite} and set the current frame back to the first frame.
+   */
+  stop: function() {
+
+    this._playing = false;
+    this._index = 0;
+
+    return this;
+
+  },
+
+  /**
+   * @name Two.Sprite#clone
+   * @function
+   * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+   * @returns {Two.Sprite}
+   * @description Create a new instance of {@link Two.Sprite} with the same properties of the current sprite.
+   */
+  clone: function(parent) {
+
+    var clone = new Sprite(
+      this.texture, this.translation.x, this.translation.y,
+      this.columns, this.rows, this.frameRate
+    );
+
+    if (this.playing) {
+      clone.play(this._firstFrame, this._lastFrame);
+      clone._loop = this._loop;
+    }
+
+    if (parent) {
+      parent.add(clone);
+    }
+
+    return clone;
+
+  },
+
+  /**
+   * @name Two.Sprite#toObject
+   * @function
+   * @returns {Object}
+   * @description Return a JSON compatible plain object that represents the path.
+   */
+  toObject: function() {
+    var object = Rectangle.prototype.toObject.call(this);
+    object.texture = this.texture.toObject();
+    object.columns = this.columns;
+    object.rows = this.rows;
+    object.frameRate = this.frameRate;
+    object.index = this.index;
+    object._firstFrame = this._firstFrame;
+    object._lastFrame = this._lastFrame;
+    object._loop = this._loop;
+    return object;
+  },
+
+  /**
+   * @name Two.Sprite#_update
+   * @function
+   * @private
+   * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+   * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
+   * @nota-bene Try not to call this method more than once a frame.
+   */
+  _update: function() {
+
+    var effect = this._texture;
+    var cols = this._columns;
+    var rows = this._rows;
+
+    var width, height, elapsed, amount, duration;
+    var index, iw, ih, frames;
+
+    if (this._flagColumns || this._flagRows) {
+      this._amount = this._columns * this._rows;
+    }
+
+    if (this._flagFrameRate) {
+      this._duration = 1000 * this._amount / this._frameRate;
+    }
+
+    if (this._flagTexture) {
+      this.fill = this._texture;
+    }
+
+    if (this._texture.loaded) {
+
+      iw = effect.image.width;
+      ih = effect.image.height;
+
+      width = iw / cols;
+      height = ih / rows;
+      amount = this._amount;
+
+      if (this.width !== width) {
+        this.width = width;
+      }
+      if (this.height !== height) {
+        this.height = height;
+      }
+
+      if (this._playing && this._frameRate > 0) {
+
+        if (_.isNaN(this._lastFrame)) {
+          this._lastFrame = amount - 1;
+        }
+
+        // TODO: Offload perf logic to instance of `Two`.
+        elapsed = _.performance.now() - this._startTime;
+        frames = this._lastFrame + 1;
+        duration = 1000 * (frames - this._firstFrame) / this._frameRate;
+
+        if (this._loop) {
+          elapsed = elapsed % duration;
+        } else {
+          elapsed = Math.min(elapsed, duration);
+        }
+
+        index = lerp(this._firstFrame, frames, elapsed / duration);
+        index = Math.floor(index);
+
+        if (index !== this._index) {
+          this._index = index;
+          if (index >= this._lastFrame - 1 && this._onLastFrame) {
+            this._onLastFrame();  // Shortcut for chainable sprite animations
+          }
+        }
+
+      }
+
+      var col = this._index % cols;
+      var row = Math.floor(this._index / cols);
+
+      var ox = - width * col + (iw - width) / 2;
+      var oy = - height * row + (ih - height) / 2;
+
+      // TODO: Improve performance
+      if (ox !== effect.offset.x) {
+        effect.offset.x = ox;
+      }
+      if (oy !== effect.offset.y) {
+        effect.offset.y = oy;
+      }
+
+    }
+
+    Rectangle.prototype._update.call(this);
+
+    return this;
+
+  },
+
+  /**
+   * @name Two.Sprite#flagReset
+   * @function
+   * @private
+   * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+   */
+  flagReset: function() {
+
+    this._flagTexture = this._flagColumns = this._flagRows
+      = this._flagFrameRate = false;
+
+    Rectangle.prototype.flagReset.call(this);
+
+    return this;
+  }
+
+
+});
+
+Sprite.MakeObservable(Sprite.prototype);
+
 var TWO_PI$4 = Math.PI * 2, HALF_PI$2 = Math.PI / 2;
 var cos$3 = Math.cos, sin$3 = Math.sin;
 
@@ -8798,221 +9474,6 @@ _.extend(Line.prototype, Path.prototype, {
 });
 
 Path.MakeObservable(Line.prototype);
-
-/**
- * @name Two.Rectangle
- * @class
- * @extends Two.Path
- * @param {Number} [x=0] - The x position of the rectangle.
- * @param {Number} [y=0] - The y position of the rectangle.
- * @param {Number} [width] - The width value of the rectangle.
- * @param {Number} [height] - The width value of the rectangle.
- */
-function Rectangle(x, y, width, height) {
-
-  Path.call(this, [
-    new Anchor(),
-    new Anchor(),
-    new Anchor(),
-    new Anchor()
-    // new Anchor() // TODO: Figure out how to handle this for `beginning` / `ending` animations
-  ], true, false, true);
-
-  /**
-   * @name Two.Rectangle#width
-   * @property {Number} - The size of the width of the rectangle.
-   */
-  this.width = width;
-  /**
-   * @name Two.Rectangle#height
-   * @property {Number} - The size of the height of the rectangle.
-   */
-  this.height = height;
-
-  /**
-   * @name Two.Rectangle#origin
-   * @property {Number} - A two-component vector describing the origin offset to draw the rectangle. Default is `0, 0`.
-   */
-  this.origin = new Vector();
-  this.translation.set(x, y);
-
-  this._update();
-
-}
-
-_.extend(Rectangle, {
-
-  /**
-   * @name Two.Rectangle.Properties
-   * @property {String[]} - A list of properties that are on every {@link Two.Rectangle}.
-   */
-  Properties: ['width', 'height'],
-
-  /**
-   * @name Two.Rectangle.MakeObservable
-   * @function
-   * @param {Object} object - The object to make observable.
-   * @description Convenience function to apply observable qualities of a {@link Two.Rectangle} to any object. Handy if you'd like to extend the {@link Two.Rectangle} class on a custom class.
-   */
-  MakeObservable: function(object) {
-
-    Path.MakeObservable(object);
-    _.each(Rectangle.Properties, defineGetterSetter, object);
-
-    Object.defineProperty(object, 'origin', {
-      enumerable: true,
-      get: function() {
-        return this._origin;
-      },
-      set: function(v) {
-        if (this._origin) {
-          this._origin.unbind(Events.Types.change, this._renderer.flagVertices);
-        }
-        this._origin = v;
-        this._origin.bind(Events.Types.change, this._renderer.flagVertices);
-        this._renderer.flagVertices();
-      }
-    });
-
-  }
-
-});
-
-_.extend(Rectangle.prototype, Path.prototype, {
-
-  constructor: Rectangle,
-
-  /**
-   * @name Two.Rectangle#_flagWidth
-   * @private
-   * @property {Boolean} - Determines whether the {@link Two.Rectangle#width} needs updating.
-   */
-  _flagWidth: 0,
-  /**
-   * @name Two.Rectangle#_flagHeight
-   * @private
-   * @property {Boolean} - Determines whether the {@link Two.Rectangle#height} needs updating.
-   */
-  _flagHeight: 0,
-
-  /**
-   * @name Two.Rectangle#_width
-   * @private
-   * @see {@link Two.Rectangle#width}
-   */
-  _width: 0,
-  /**
-   * @name Two.Rectangle#_height
-   * @private
-   * @see {@link Two.Rectangle#height}
-   */
-  _height: 0,
-
-  _origin: null,
-
-  /**
-   * @name Two.Rectangle#_update
-   * @function
-   * @private
-   * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
-   * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
-   * @nota-bene Try not to call this method more than once a frame.
-   */
-  _update: function() {
-
-    if (this._flagVertices || this._flagWidth || this._flagHeight) {
-
-      var xr = this._width / 2;
-      var yr = this._height / 2;
-
-      if (!this._closed && this.vertices.length === 4) {
-        this.vertices.push(new Anchor());
-      }
-
-      this.vertices[0].set(-xr, -yr).add(this._origin).command = Commands.move;
-      this.vertices[1].set(xr, -yr).add(this._origin).command = Commands.line;
-      this.vertices[2].set(xr, yr).add(this._origin).command = Commands.line;
-      this.vertices[3].set(-xr, yr).add(this._origin).command = Commands.line;
-      // FYI: Two.Sprite and Two.ImageSequence have 4 verts
-      if (this.vertices[4]) {
-        this.vertices[4].set(-xr, -yr).add(this._origin).command = Commands.line;
-      }
-
-    }
-
-    Path.prototype._update.call(this);
-
-    return this;
-
-  },
-
-  /**
-   * @name Two.Rectangle#flagReset
-   * @function
-   * @private
-   * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
-   */
-  flagReset: function() {
-
-    this._flagWidth = this._flagHeight = false;
-    Path.prototype.flagReset.call(this);
-
-    return this;
-
-  },
-
-  /**
-   * @name Two.Rectangle#clone
-   * @function
-   * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
-   * @returns {Two.Rectangle}
-   * @description Create a new instance of {@link Two.Rectangle} with the same properties of the current path.
-   */
-  clone: function(parent) {
-
-    var clone = new Rectangle(0, 0, this.width, this.height);
-
-    clone.translation.copy(this.translation);
-    clone.rotation = this.rotation;
-    clone.scale = this.scale;
-    clone.skewX = this.skewX;
-    clone.skewY = this.skewY;
-
-    if (this.matrix.manual) {
-      clone.matrix.copy(this.matrix);
-    }
-
-    _.each(Path.Properties, function(k) {
-      clone[k] = this[k];
-    }, this);
-
-    if (parent) {
-      parent.add(clone);
-    }
-
-    return clone;
-
-  },
-
-  /**
-   * @name Two.Rectangle#toObject
-   * @function
-   * @returns {Object}
-   * @description Return a JSON compatible plain object that represents the path.
-   */
-  toObject: function() {
-
-    var object = Path.prototype.toObject.call(this);
-    object.width = this.width;
-    object.height = this.height;
-    object.origin = this.origin.toObject();
-    return object;
-
-  }
-
-});
-
-Rectangle.MakeObservable(Rectangle.prototype);
 
 /**
  * @name Two.RoundedRectangle
@@ -10334,6 +10795,27 @@ var applySvgAttributes = function(node, elem, parentStyles) {
         }
         elem.opacity = parseFloat(value);
         break;
+      case 'clip-path':
+        if (/url\(#.*\)/i.test(value)) {
+          id = value.replace(/url\(#(.*)\)/i, '$1');
+          if (read.defs.current && read.defs.current.contains(id)) {
+            ref = read.defs.current.get(id);
+            if (ref && ref.childNodes.length > 0) {
+              ref = ref.childNodes[0];
+              tagName = getTagName(ref.nodeName);
+              elem.mask = read[tagName].call(this, ref, {});
+              switch (elem._renderer.type) {
+                case 'path':
+                  // The matrix here needs to change to insure that the object
+                  // clipping is in the same coordinate space as the `elem`.
+                  elem.position.add(elem.mask.position);
+                  elem.mask.position.clear();
+                  break;
+              }
+            }
+          }
+        }
+        break;
       case 'fill':
       case 'stroke':
         if (elem instanceof Group) {
@@ -11183,6 +11665,41 @@ var read = {
 
     return text;
 
+  },
+
+  clippath: function(node, parentStyles) {
+    if (read.defs.current && !read.defs.current.contains(node.id)) {
+      read.defs.current.add(node.id, node);
+    }
+    return null;
+  },
+
+  image: function(node, parentStyles) {
+
+    var href = node.getAttribute('href') || node.getAttribute('xlink:href');
+    if (!href) {
+      var error = new TwoError('encountered <image /> with no href.');
+      console.warn(error.name, error.message);
+      return null;
+    }
+
+    var x = parseFloat(node.getAttribute('x')) || 0;
+    var y = parseFloat(node.getAttribute('y')) || 0;
+    var width = parseFloat(node.getAttribute('width'));
+    var height = parseFloat(node.getAttribute('height'));
+
+    var sprite = new Sprite(href, x, y);
+
+    if (!_.isNaN(width)) {
+      sprite.width = width;
+    }
+    if (!_.isNaN(height)) {
+      sprite.height = height;
+    }
+
+    applySvgAttributes.call(this, node, sprite, parentStyles);
+
+    return sprite;
   }
 
 };
@@ -11726,463 +12243,6 @@ _.extend(ImageSequence.prototype, Rectangle.prototype, {
 });
 
 ImageSequence.MakeObservable(ImageSequence.prototype);
-
-/**
- * @name Two.Sprite
- * @class
- * @extends Two.Rectangle
- * @param {String|Two.Texture} [path] - The URL path or {@link Two.Texture} to be used as the bitmap data displayed on the sprite.
- * @param {Number} [ox=0] - The initial `x` position of the Two.Sprite.
- * @param {Number} [oy=0] - The initial `y` position of the Two.Sprite.
- * @param {Number} [cols=1] - The number of columns the sprite contains.
- * @param {Number} [rows=1] - The number of rows the sprite contains.
- * @param {Number} [frameRate=0] - The frame rate at which the partitions of the image should playback at.
- * @description A convenient package to display still or animated images through a tiled image source. For more information on the principals of animated imagery through tiling see [Texture Atlas](https://en.wikipedia.org/wiki/Texture_atlas) on Wikipedia.
- */
-function Sprite(path, ox, oy, cols, rows, frameRate) {
-
-  // Not using default constructor of Rectangle due to odd `beginning` / `ending` behavior.
-  // See: https://github.com/jonobr1/two.js/issues/383
-  Path.call(this, [
-    new Anchor(),
-    new Anchor(),
-    new Anchor(),
-    new Anchor()
-  ], true);
-
-  this.noStroke();
-  this.noFill();
-
-  /**
-   * @name Two.Sprite#texture
-   * @property {Two.Texture} - The texture to be used as bitmap data to display image in the scene.
-   */
-  if (path instanceof Texture) {
-    this.texture = path;
-  } else if (typeof path === 'string') {
-    this.texture = new Texture(path);
-  }
-
-  this.origin = new Vector();
-
-  this._update();
-  this.translation.set(ox || 0, oy || 0);
-
-  /**
-   * @name Two.Sprite#columns
-   * @property {Number} - The number of columns to split the texture into. Defaults to `1`.
-   */
-  if (typeof cols === 'number') {
-    this.columns = cols;
-  }
-
-  /**
-   * @name Two.Sprite#rows
-   * @property {Number} - The number of rows to split the texture into. Defaults to `1`.
-   */
-  if (typeof rows === 'number') {
-    this.rows = rows;
-  }
-
-  /**
-   * @name Two.Sprite#frameRate
-   * @property {Number} - The number of frames to animate against per second. Defaults to `0` for non-animated sprites.
-   */
-  if (typeof frameRate === 'number') {
-    this.frameRate = frameRate;
-  }
-
-  /**
-   * @name Two.Sprite#index
-   * @property {Number} - The index of the current tile of the sprite to display. Defaults to `0`.
-   */
-  this.index = 0;
-
-}
-
-_.extend(Sprite, {
-
-  /**
-   * @name Two.Sprite.Properties
-   * @property {String[]} - A list of properties that are on every {@link Two.Sprite}.
-   */
-  Properties: [
-    'texture', 'columns', 'rows', 'frameRate', 'index'
-  ],
-
-  /**
-   * @name Two.Sprite.MakeObservable
-   * @function
-   * @param {Object} object - The object to make observable.
-   * @description Convenience function to apply observable qualities of a {@link Two.Sprite} to any object. Handy if you'd like to extend or inherit the {@link Two.Sprite} class on a custom class.
-   */
-  MakeObservable: function(obj) {
-
-    Rectangle.MakeObservable(obj);
-    _.each(Sprite.Properties, defineGetterSetter, obj);
-
-  }
-
-});
-
-_.extend(Sprite.prototype, Rectangle.prototype, {
-
-  constructor: Sprite,
-
-  /**
-   * @name Two.Sprite#_flagTexture
-   * @private
-   * @property {Boolean} - Determines whether the {@link Two.Sprite#texture} needs updating.
-   */
-  _flagTexture: false,
-
-  /**
-   * @name Two.Sprite#_flagColumns
-   * @private
-   * @property {Boolean} - Determines whether the {@link Two.Sprite#columns} need updating.
-   */
-  _flagColumns: false,
-
-  /**
-   * @name Two.Sprite#_flagRows
-   * @private
-   * @property {Boolean} - Determines whether the {@link Two.Sprite#rows} need updating.
-   */
-  _flagRows: false,
-
-  /**
-   * @name Two.Sprite#_flagFrameRate
-   * @private
-   * @property {Boolean} - Determines whether the {@link Two.Sprite#flagFrameRate} needs updating.
-   */
-  _flagFrameRate: false,
-
-  /**
-   * @name Two.Sprite#_flagIndex
-   * @private
-   * @property {Boolean} - Determines whether the {@link Two.Sprite#index} needs updating.
-   */
-  flagIndex: false,
-
-  // Private variables
-
-  /**
-   * @name Two.Sprite#_amount
-   * @private
-   * @property {Number} - Number of frames for a given {@link Two.Sprite}.
-   */
-  _amount: 1,
-
-  /**
-   * @name Two.Sprite#_duration
-   * @private
-   * @property {Number} - Number of milliseconds a {@link Two.Sprite}.
-   */
-  _duration: 0,
-
-  /**
-   * @name Two.Sprite#_startTime
-   * @private
-   * @property {Milliseconds} - Epoch time in milliseconds of when the {@link Two.Sprite} started.
-   */
-  _startTime: 0,
-
-  /**
-   * @name Two.Sprite#_playing
-   * @private
-   * @property {Boolean} - Dictates whether the {@link Two.Sprite} is animating or not.
-   */
-  _playing: false,
-
-  /**
-   * @name Two.Sprite#_firstFrame
-   * @private
-   * @property {Number} - The frame the {@link Two.Sprite} should start with.
-   */
-  _firstFrame: 0,
-
-  /**
-   * @name Two.Sprite#_lastFrame
-   * @private
-   * @property {Number} - The frame the {@link Two.Sprite} should end with.
-   */
-  _lastFrame: 0,
-
-  /**
-   * @name Two.Sprite#_playing
-   * @private
-   * @property {Boolean} - Dictates whether the {@link Two.Sprite} should loop or not.
-   */
-  _loop: true,
-
-  // Exposed through getter-setter
-
-  /**
-   * @name Two.Sprite#_texture
-   * @private
-   * @see {@link Two.Sprite#texture}
-   */
-  _texture: null,
-
-  /**
-   * @name Two.Sprite#_columns
-   * @private
-   * @see {@link Two.Sprite#columns}
-   */
-  _columns: 1,
-
-  /**
-   * @name Two.Sprite#_rows
-   * @private
-   * @see {@link Two.Sprite#rows}
-   */
-  _rows: 1,
-
-  /**
-   * @name Two.Sprite#_frameRate
-   * @private
-   * @see {@link Two.Sprite#frameRate}
-   */
-  _frameRate: 0,
-
-  /**
-   * @name Two.Sprite#_index
-   * @private
-   * @property {Number} - The current frame the {@link Two.Sprite} is currently displaying.
-   */
-  _index: 0,
-
-  /**
-   * @name Two.Sprite#_origin
-   * @private
-   * @see {@link Two.Sprite#origin}
-   */
-  _origin: null,
-
-  /**
-   * @name Two.Sprite#play
-   * @function
-   * @param {Number} [firstFrame=0] - The index of the frame to start the animation with.
-   * @param {Number} [lastFrame] - The index of the frame to end the animation with. Defaults to the last item in the {@link Two.Sprite#textures}.
-   * @param {Function} [onLastFrame] - Optional callback function to be triggered after playing the last frame. This fires multiple times when the sprite is looped.
-   * @description Initiate animation playback of a {@link Two.Sprite}.
-   */
-  play: function(firstFrame, lastFrame, onLastFrame) {
-
-    this._playing = true;
-    this._firstFrame = 0;
-    this._lastFrame = this.amount - 1;
-    this._startTime = _.performance.now();
-
-    if (typeof firstFrame === 'number') {
-      this._firstFrame = firstFrame;
-    }
-    if (typeof lastFrame === 'number') {
-      this._lastFrame = lastFrame;
-    }
-    if (typeof onLastFrame === 'function') {
-      this._onLastFrame = onLastFrame;
-    } else {
-      delete this._onLastFrame;
-    }
-
-    if (this._index !== this._firstFrame) {
-      this._startTime -= 1000 * Math.abs(this._index - this._firstFrame)
-        / this._frameRate;
-    }
-
-    return this;
-
-  },
-
-  /**
-   * @name Two.Sprite#pause
-   * @function
-   * @description Halt animation playback of a {@link Two.Sprite}.
-   */
-  pause: function() {
-
-    this._playing = false;
-    return this;
-
-  },
-
-  /**
-   * @name Two.Sprite#stop
-   * @function
-   * @description Halt animation playback of a {@link Two.Sprite} and set the current frame back to the first frame.
-   */
-  stop: function() {
-
-    this._playing = false;
-    this._index = 0;
-
-    return this;
-
-  },
-
-  /**
-   * @name Two.Sprite#clone
-   * @function
-   * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
-   * @returns {Two.Sprite}
-   * @description Create a new instance of {@link Two.Sprite} with the same properties of the current sprite.
-   */
-  clone: function(parent) {
-
-    var clone = new Sprite(
-      this.texture, this.translation.x, this.translation.y,
-      this.columns, this.rows, this.frameRate
-    );
-
-    if (this.playing) {
-      clone.play(this._firstFrame, this._lastFrame);
-      clone._loop = this._loop;
-    }
-
-    if (parent) {
-      parent.add(clone);
-    }
-
-    return clone;
-
-  },
-
-  /**
-   * @name Two.Sprite#toObject
-   * @function
-   * @returns {Object}
-   * @description Return a JSON compatible plain object that represents the path.
-   */
-  toObject: function() {
-    var object = Rectangle.prototype.toObject.call(this);
-    object.texture = this.texture.toObject();
-    object.columns = this.columns;
-    object.rows = this.rows;
-    object.frameRate = this.frameRate;
-    object.index = this.index;
-    object._firstFrame = this._firstFrame;
-    object._lastFrame = this._lastFrame;
-    object._loop = this._loop;
-    return object;
-  },
-
-  /**
-   * @name Two.Sprite#_update
-   * @function
-   * @private
-   * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
-   * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
-   * @nota-bene Try not to call this method more than once a frame.
-   */
-  _update: function() {
-
-    var effect = this._texture;
-    var cols = this._columns;
-    var rows = this._rows;
-
-    var width, height, elapsed, amount, duration;
-    var index, iw, ih, frames;
-
-    if (this._flagColumns || this._flagRows) {
-      this._amount = this._columns * this._rows;
-    }
-
-    if (this._flagFrameRate) {
-      this._duration = 1000 * this._amount / this._frameRate;
-    }
-
-    if (this._flagTexture) {
-      this.fill = this._texture;
-    }
-
-    if (this._texture.loaded) {
-
-      iw = effect.image.width;
-      ih = effect.image.height;
-
-      width = iw / cols;
-      height = ih / rows;
-      amount = this._amount;
-
-      if (this.width !== width) {
-        this.width = width;
-      }
-      if (this.height !== height) {
-        this.height = height;
-      }
-
-      if (this._playing && this._frameRate > 0) {
-
-        if (_.isNaN(this._lastFrame)) {
-          this._lastFrame = amount - 1;
-        }
-
-        // TODO: Offload perf logic to instance of `Two`.
-        elapsed = _.performance.now() - this._startTime;
-        frames = this._lastFrame + 1;
-        duration = 1000 * (frames - this._firstFrame) / this._frameRate;
-
-        if (this._loop) {
-          elapsed = elapsed % duration;
-        } else {
-          elapsed = Math.min(elapsed, duration);
-        }
-
-        index = lerp(this._firstFrame, frames, elapsed / duration);
-        index = Math.floor(index);
-
-        if (index !== this._index) {
-          this._index = index;
-          if (index >= this._lastFrame - 1 && this._onLastFrame) {
-            this._onLastFrame();  // Shortcut for chainable sprite animations
-          }
-        }
-
-      }
-
-      var col = this._index % cols;
-      var row = Math.floor(this._index / cols);
-
-      var ox = - width * col + (iw - width) / 2;
-      var oy = - height * row + (ih - height) / 2;
-
-      // TODO: Improve performance
-      if (ox !== effect.offset.x) {
-        effect.offset.x = ox;
-      }
-      if (oy !== effect.offset.y) {
-        effect.offset.y = oy;
-      }
-
-    }
-
-    Rectangle.prototype._update.call(this);
-
-    return this;
-
-  },
-
-  /**
-   * @name Two.Sprite#flagReset
-   * @function
-   * @private
-   * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
-   */
-  flagReset: function() {
-
-    this._flagTexture = this._flagColumns = this._flagRows
-      = this._flagFrameRate = false;
-
-    Rectangle.prototype.flagReset.call(this);
-
-    return this;
-  }
-
-
-});
-
-Sprite.MakeObservable(Sprite.prototype);
 
 var TWO_PI$2 = Math.PI * 2, HALF_PI = Math.PI / 2;
 
@@ -13223,20 +13283,16 @@ var svg = {
 
   },
 
-  getClip: function(shape) {
+  getClip: function(shape, domElement) {
 
     var clip = shape._renderer.clip;
 
     if (!clip) {
 
-      var root = shape;
-
-      while (root.parent) {
-        root = root.parent;
-      }
-
-      clip = shape._renderer.clip = svg.createElement('clipPath');
-      root.defs.appendChild(clip);
+      clip = shape._renderer.clip = svg.createElement('clipPath', {
+        'clip-rule': 'nonzero'
+      });
+      domElement.defs.appendChild(clip);
 
     }
 
@@ -13366,7 +13422,7 @@ var svg = {
 
       // if (this._flagClip) {
 
-      //   clip = svg.getClip(this);
+      //   clip = svg.getClip(this, domElement);
       //   elem = this._renderer.elem;
 
       //   if (this._clip) {
@@ -13383,6 +13439,7 @@ var svg = {
 
       if (this._flagMask) {
         if (this._mask) {
+          svg[this._mask._renderer.type].render.call(this._mask, domElement);
           this._renderer.elem.setAttribute('clip-path', 'url(#' + this._mask.id + ')');
         } else {
           this._renderer.elem.removeAttribute('clip-path');
@@ -13495,7 +13552,7 @@ var svg = {
 
       if (this._flagClip) {
 
-        var clip = svg.getClip(this);
+        var clip = svg.getClip(this, domElement);
         var elem = this._renderer.elem;
 
         if (this._clip) {
@@ -13516,6 +13573,7 @@ var svg = {
 
       if (this._flagMask) {
         if (this._mask) {
+          svg[this._mask._renderer.type].render.call(this._mask, domElement);
           this._renderer.elem.setAttribute('clip-path', 'url(#' + this._mask.id + ')');
         } else {
           this._renderer.elem.removeAttribute('clip-path');
@@ -13618,7 +13676,7 @@ var svg = {
 
       if (this._flagClip) {
 
-        var clip = svg.getClip(this);
+        var clip = svg.getClip(this, domElement);
         var elem = this._renderer.elem;
 
         if (this._clip) {
@@ -13639,6 +13697,7 @@ var svg = {
 
       if (this._flagMask) {
         if (this._mask) {
+          svg[this._mask._renderer.type].render.call(this._mask, domElement);
           this._renderer.elem.setAttribute('clip-path', 'url(#' + this._mask.id + ')');
         } else {
           this._renderer.elem.removeAttribute('clip-path');
