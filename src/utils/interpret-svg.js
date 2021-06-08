@@ -1259,7 +1259,7 @@ var read = {
     var x = parseFloat(node.getAttribute('x')) || 0;
     var y = parseFloat(node.getAttribute('y')) || 0;
     var width = parseFloat(node.getAttribute('width'));
-    var height = parseFloat(node.getAttribute('height'))
+    var height = parseFloat(node.getAttribute('height'));
 
     var sprite = new Sprite(href, x, y);
 
