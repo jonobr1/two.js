@@ -187,20 +187,16 @@ var svg = {
 
   },
 
-  getClip: function(shape) {
+  getClip: function(shape, domElement) {
 
     var clip = shape._renderer.clip;
 
     if (!clip) {
 
-      var root = shape;
-
-      while (root.parent) {
-        root = root.parent;
-      }
-
-      clip = shape._renderer.clip = svg.createElement('clipPath');
-      root.defs.appendChild(clip);
+      clip = shape._renderer.clip = svg.createElement('clipPath', {
+        'clip-rule': 'nonzero'
+      });
+      domElement.defs.appendChild(clip);
 
     }
 
@@ -330,7 +326,7 @@ var svg = {
 
       // if (this._flagClip) {
 
-      //   clip = svg.getClip(this);
+      //   clip = svg.getClip(this, domElement);
       //   elem = this._renderer.elem;
 
       //   if (this._clip) {
@@ -347,6 +343,7 @@ var svg = {
 
       if (this._flagMask) {
         if (this._mask) {
+          svg[this._mask._renderer.type].render.call(this._mask, domElement);
           this._renderer.elem.setAttribute('clip-path', 'url(#' + this._mask.id + ')');
         } else {
           this._renderer.elem.removeAttribute('clip-path');
@@ -459,7 +456,7 @@ var svg = {
 
       if (this._flagClip) {
 
-        var clip = svg.getClip(this);
+        var clip = svg.getClip(this, domElement);
         var elem = this._renderer.elem;
 
         if (this._clip) {
@@ -480,6 +477,7 @@ var svg = {
 
       if (this._flagMask) {
         if (this._mask) {
+          svg[this._mask._renderer.type].render.call(this._mask, domElement);
           this._renderer.elem.setAttribute('clip-path', 'url(#' + this._mask.id + ')');
         } else {
           this._renderer.elem.removeAttribute('clip-path');
@@ -582,7 +580,7 @@ var svg = {
 
       if (this._flagClip) {
 
-        var clip = svg.getClip(this);
+        var clip = svg.getClip(this, domElement);
         var elem = this._renderer.elem;
 
         if (this._clip) {
@@ -603,6 +601,7 @@ var svg = {
 
       if (this._flagMask) {
         if (this._mask) {
+          svg[this._mask._renderer.type].render.call(this._mask, domElement);
           this._renderer.elem.setAttribute('clip-path', 'url(#' + this._mask.id + ')');
         } else {
           this._renderer.elem.removeAttribute('clip-path');

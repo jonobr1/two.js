@@ -9,6 +9,7 @@ import Registry from '../registry.js';
 import Anchor from '../anchor.js';
 import Vector from '../vector.js';
 import Path from '../path.js';
+import Sprite from '../effects/sprite.js';
 import Group from '../group.js';
 
 import Circle from '../shapes/circle.js';
@@ -366,6 +367,27 @@ var applySvgAttributes = function(node, elem, parentStyles) {
           break;
         }
         elem.opacity = parseFloat(value);
+        break;
+      case 'clip-path':
+        if (/url\(#.*\)/i.test(value)) {
+          id = value.replace(/url\(#(.*)\)/i, '$1');
+          if (read.defs.current && read.defs.current.contains(id)) {
+            ref = read.defs.current.get(id);
+            if (ref && ref.childNodes.length > 0) {
+              ref = ref.childNodes[0];
+              tagName = getTagName(ref.nodeName);
+              elem.mask = read[tagName].call(this, ref, {});
+              switch (elem._renderer.type) {
+                case 'path':
+                  // The matrix here needs to change to insure that the object
+                  // clipping is in the same coordinate space as the `elem`.
+                  elem.position.add(elem.mask.position);
+                  elem.mask.position.clear();
+                  break;
+              }
+            }
+          }
+        }
         break;
       case 'fill':
       case 'stroke':
@@ -1216,6 +1238,41 @@ var read = {
 
     return text;
 
+  },
+
+  clippath: function(node, parentStyles) {
+    if (read.defs.current && !read.defs.current.contains(node.id)) {
+      read.defs.current.add(node.id, node);
+    }
+    return null;
+  },
+
+  image: function(node, parentStyles) {
+
+    var href = node.getAttribute('href') || node.getAttribute('xlink:href');
+    if (!href) {
+      var error = new TwoError('encountered <image /> with no href.');
+      console.warn(error.name, error.message);
+      return null;
+    }
+
+    var x = parseFloat(node.getAttribute('x')) || 0;
+    var y = parseFloat(node.getAttribute('y')) || 0;
+    var width = parseFloat(node.getAttribute('width'));
+    var height = parseFloat(node.getAttribute('height'))
+
+    var sprite = new Sprite(href, x, y);
+
+    if (!_.isNaN(width)) {
+      sprite.width = width;
+    }
+    if (!_.isNaN(height)) {
+      sprite.height = height;
+    }
+
+    applySvgAttributes.call(this, node, sprite, parentStyles);
+
+    return sprite;
   }
 
 };
