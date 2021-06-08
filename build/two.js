@@ -1549,7 +1549,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2021-05-25T23:00:49.762Z',
+    PublishDate: '2021-06-04T23:39:22.539Z',
 
     /**
      * @name Two.Identifier
@@ -2961,9 +2961,6 @@ SOFTWARE.
      */
     _skewY: 0,
 
-    // _mask: null,
-    // _clip: false,
-
     /**
      * @name Two.Shape#className
      * @property {String} - A class to be applied to the element to be compatible with CSS styling.
@@ -3766,7 +3763,7 @@ SOFTWARE.
      */
     corner: function() {
 
-      var rect = this.getBoundingClientRect();
+      var rect = this.getBoundingClientRect(true);
 
       for (var i = 0; i < this.children.length; i++) {
         var child = this.children[i];
@@ -3785,7 +3782,7 @@ SOFTWARE.
      */
     center: function() {
 
-      var rect = this.getBoundingClientRect();
+      var rect = this.getBoundingClientRect(true);
       var cx = rect.left + rect.width / 2 - this.translation.x;
       var cy = rect.top + rect.height / 2 - this.translation.y;
 
@@ -3956,7 +3953,7 @@ SOFTWARE.
      * @description Return an object with top, left, right, bottom, width, and height parameters of the group.
      */
     getBoundingClientRect: function(shallow) {
-      var rect, matrix, a, b, c, d;
+      var rect, matrix, a, b, c, d, tc, lc, rc, bc;
 
       // TODO: Update this to not __always__ update. Just when it needs to.
       this._update(true);
@@ -3979,8 +3976,12 @@ SOFTWARE.
 
         rect = child.getBoundingClientRect(shallow);
 
-        if (typeof rect.top !== 'number'   || typeof rect.left !== 'number' ||
-            typeof rect.right !== 'number' || typeof rect.bottom !== 'number') {
+        tc = typeof rect.top !== 'number' || _.isNaN(rect.top) || !isFinite(rect.top);
+        lc = typeof rect.left !== 'number' || _.isNaN(rect.left) || !isFinite(rect.left);
+        rc = typeof rect.right !== 'number' || _.isNaN(rect.right) || !isFinite(rect.right);
+        bc = typeof rect.bottom !== 'number' || _.isNaN(rect.bottom) || !isFinite(rect.bottom);
+
+        if (tc || lc || rc || bc) {
           continue;
         }
 
@@ -4338,9 +4339,9 @@ SOFTWARE.
 
         var matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter,
             closed, commands, length, last, next, prev, a, b, c, d, ux, uy, vx, vy,
-            ar, bl, br, cl, x, y, clip, defaultMatrix, isOffset, dashes;
+            ar, bl, br, cl, x, y, mask, clip, defaultMatrix, isOffset, dashes;
 
-        // mask = this._mask;
+        mask = this._mask;
         clip = this._clip;
         opacity = this._opacity * this.parent._renderer.opacity;
         visible = this._visible;
@@ -4374,10 +4375,9 @@ SOFTWARE.
         // Commented two-way functionality of clips / masks with groups and
         // polygons. Uncomment when this bug is fixed:
         // https://code.google.com/p/chromium/issues/detail?id=370951
-
-        // if (mask) {
-        //   canvas[mask._renderer.type].render.call(mask, ctx, true);
-        // }
+        if (mask) {
+          canvas[mask._renderer.type].render.call(mask, ctx, true);
+        }
 
         // Styles
         if (fill) {
@@ -4581,7 +4581,7 @@ SOFTWARE.
 
         var opacity = this._opacity * this.parent._renderer.opacity;
         var visible = this._visible;
-        // mask = this._mask;
+        var mask = this._mask;
         var clip = this._clip;
 
         if (!forced && (!visible || clip || opacity === 0)) {
@@ -4613,10 +4613,9 @@ SOFTWARE.
         // Commented two-way functionality of clips / masks with groups and
         // polygons. Uncomment when this bug is fixed:
         // https://code.google.com/p/chromium/issues/detail?id=370951
-
-        // if (mask) {
-        //   canvas[mask._renderer.type].render.call(mask, ctx, true);
-        // }
+        if (mask) {
+          canvas[mask._renderer.type].render.call(mask, ctx, true);
+        }
 
         if (!isOffset) {
           ctx.font = [this._style, this._weight, this._size + 'px/' +
@@ -6289,6 +6288,7 @@ SOFTWARE.
      * @property {String[]} - A list of properties that are on every {@link Two.Texture}.
      */
     Properties: [
+      'id',
       'src',
       'loaded',
       'repeat'
@@ -6644,6 +6644,13 @@ SOFTWARE.
     constructor: Texture,
 
     /**
+     * @name Two.Texture#_flagId
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Texture#id} needs updating.
+     */
+    _flagId: false,
+
+    /**
      * @name Two.Texture#_flagSrc
      * @private
      * @property {Boolean} - Determines whether the {@link Two.Texture#src} needs updating.
@@ -6691,6 +6698,13 @@ SOFTWARE.
      * @property {Boolean} - Determines whether the {@link Two.Texture#scale} needs updating.
      */
     _flagScale: false,
+
+    /**
+     * @name Two.Texture#_id
+     * @private
+     * @see {@link Two.Texture#id}
+     */
+    _id: '',
 
     /**
      * @name Two.Texture#_src
@@ -7243,9 +7257,31 @@ SOFTWARE.
       });
 
       /**
-       * @name Two.Path#clip
-       * @property {Two.Shape} - Object to define clipping area.
+       * @name Two.Path#mask
+       * @property {Two.Shape} - The shape whose alpha property becomes a clipping area for the path.
        * @nota-bene This property is currently not working becuase of SVG spec issues found here {@link https://code.google.com/p/chromium/issues/detail?id=370951}.
+       */
+      Object.defineProperty(object, 'mask', {
+
+        enumerable: true,
+
+        get: function() {
+          return this._mask;
+        },
+
+        set: function(v) {
+          this._mask = v;
+          this._flagMask = true;
+          if (!v.clip) {
+            v.clip = true;
+          }
+        }
+
+      });
+
+      /**
+       * @name Two.Path#clip
+       * @property {Boolean} - Tells Two.js renderer if this object represents a mask for another object (or not).
        */
       Object.defineProperty(object, 'clip', {
         enumerable: true,
@@ -7353,6 +7389,13 @@ SOFTWARE.
     _flagMiter: true,
 
     /**
+     * @name Two.Path#_flagMask
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Path#mask} needs updating.
+     */
+    _flagMask: false,
+
+    /**
      * @name Two.Path#_flagClip
      * @private
      * @property {Boolean} - Determines whether the {@link Two.Path#clip} needs updating.
@@ -7458,6 +7501,13 @@ SOFTWARE.
      * @see {@link Two.Path#ending}
      */
     _ending: 1.0,
+
+    /**
+     * @name Two.Path#_mask
+     * @private
+     * @see {@link Two.Path#mask}
+     */
+    _mask: null,
 
     /**
      * @name Two.Path#_clip
@@ -7574,7 +7624,7 @@ SOFTWARE.
      */
     corner: function() {
 
-      var rect = this.getBoundingClientRect();
+      var rect = this.getBoundingClientRect(true);
       var hw = rect.width / 2;
       var hh = rect.height / 2;
       var cx = rect.left + rect.width / 2;
@@ -7599,7 +7649,7 @@ SOFTWARE.
      */
     center: function() {
 
-      var rect = this.getBoundingClientRect();
+      var rect = this.getBoundingClientRect(true);
 
       var cx = rect.left + rect.width / 2 - this.translation.x;
       var cy = rect.top + rect.height / 2 - this.translation.y;
@@ -9466,6 +9516,24 @@ SOFTWARE.
         }
       });
 
+      Object.defineProperty(object, 'mask', {
+
+        enumerable: true,
+
+        get: function() {
+          return this._mask;
+        },
+
+        set: function(v) {
+          this._mask = v;
+          this._flagMask = true;
+          if (!v.clip) {
+            v.clip = true;
+          }
+        }
+
+      });
+
       Object.defineProperty(object, 'clip', {
         enumerable: true,
         get: function() {
@@ -9607,6 +9675,13 @@ SOFTWARE.
     _flagVisible: true,
 
     /**
+     * @name Two.Path#_flagMask
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Path#mask} needs updating.
+     */
+    _flagMask: false,
+
+    /**
      * @name Two.Text#_flagClip
      * @private
      * @property {Boolean} - Determines whether the {@link Two.Text#clip} need updating.
@@ -9708,6 +9783,13 @@ SOFTWARE.
      * @nota-bene For {@link Two.CanvasRenderer} and {@link Two.WebGLRenderer} when set to false all updating is disabled improving performance dramatically with many objects in the scene.
      */
     _visible: true,
+
+    /**
+     * @name Two.Text#mask
+     * @property {Two.Shape} - The shape whose alpha property becomes a clipping area for the text.
+     * @nota-bene This property is currently not working becuase of SVG spec issues found here {@link https://code.google.com/p/chromium/issues/detail?id=370951}.
+     */
+    _mask: null,
 
     /**
      * @name Two.Text#clip
@@ -9943,6 +10025,27 @@ SOFTWARE.
     return a || b;
   };
 
+  var getTagName = function(tag) {
+    return tag.replace(/svg:/ig, '').toLowerCase();
+  };
+
+  var applyTransformsToVector = function(transforms, vector) {
+
+    vector.x += transforms.translateX;
+    vector.y += transforms.translateY;
+
+    vector.x *= transforms.scaleX;
+    vector.y *= transforms.scaleY;
+
+    if (transforms.rotation !== 0) {
+      // TODO: Test further
+      var l = vector.length();
+      vector.x = l * Math.cos(transforms.rotation);
+      vector.y = l * Math.sin(transforms.rotation);
+    }
+
+  };
+
   /**
    * @name Two.Utils.extractCSSText
    * @function
@@ -10063,7 +10166,9 @@ SOFTWARE.
    */
   var applySvgAttributes = function(node, elem, parentStyles) {
 
-    var  styles = {}, attributes = {}, extracted = {}, i, m, key, value, attr;
+    var styles = {}, attributes = {}, extracted = {}, i, m, key, value, attr;
+    var transforms, x, y;
+    var id, scene, ref, tagName;
 
     // Not available in non browser environments
     if (root$1.getComputedStyle) {
@@ -10117,6 +10222,34 @@ SOFTWARE.
       value = styles[key];
 
       switch (key) {
+        case 'gradientTransform':
+          // TODO: Check this out https://github.com/paperjs/paper.js/blob/develop/src/svg/SvgImport.js#L315
+          if (/none/i.test(value)) break;
+          m = (node.gradientTransform && node.gradientTransform.baseVal && node.gradientTransform.baseVal.length > 0)
+            ? node.gradientTransform.baseVal[0].matrix
+            : (node.getCTM ? node.getCTM() : null);
+
+          if (m === null) break;
+
+          transforms = decomposeMatrix(m);
+
+          switch (elem._renderer.type) {
+            case 'linear-gradient':
+              applyTransformsToVector(transforms, elem.left);
+              applyTransformsToVector(transforms, elem.right);
+              break;
+            case 'radial-gradient':
+              elem.center.x += transforms.translateX;
+              elem.center.y += transforms.translateY;
+
+              elem.focal.x += transforms.translateX;
+              elem.focal.y += transforms.translateY;
+
+              elem.radius *= Math.max(transforms.scaleX, transforms.scaleY);
+              break;
+          }
+
+          break;
         case 'transform':
           // TODO: Check this out https://github.com/paperjs/paper.js/blob/develop/src/svg/SvgImport.js#L315
           if (/none/i.test(value)) break;
@@ -10130,14 +10263,14 @@ SOFTWARE.
           if (Constants.AutoCalculateImportedMatrices) {
 
             // Decompose and infer Two.js related properties.
-            var transforms = decomposeMatrix(m);
+            transforms = decomposeMatrix(m);
 
             elem.translation.set(transforms.translateX, transforms.translateY);
             elem.rotation = Math.PI * (transforms.rotation / 180);
             elem.scale = new Vector(transforms.scaleX, transforms.scaleY);
 
-            var x = parseFloat((styles.x + '').replace('px'));
-            var y = parseFloat((styles.y + '').replace('px'));
+            x = parseFloat((styles.x + '').replace('px'));
+            y = parseFloat((styles.y + '').replace('px'));
 
             // Override based on attributes.
             if (x) {
@@ -10213,9 +10346,16 @@ SOFTWARE.
             key = '_' + key;
           }
           if (/url\(#.*\)/i.test(value)) {
-            var scene = getScene(this);
-            elem[key] = scene.getById(
-              value.replace(/url\(#(.*)\)/i, '$1'));
+            id = value.replace(/url\(#(.*)\)/i, '$1');
+            if (read.defs.current && read.defs.current.contains(id)) {
+              ref = read.defs.current.get(id);
+              tagName = getTagName(ref.nodeName);
+              ref = read[tagName].call(this, ref, {});
+            } else {
+              scene = getScene(this);
+              ref = scene.getById(id);
+            }
+            elem[key] = ref;
           } else {
             elem[key] = (/none/i.test(value)) ? 'transparent' : value;
           }
@@ -10294,7 +10434,7 @@ SOFTWARE.
       var n = node.childNodes[i];
       if (!n.id) continue;
 
-      var tagName = n.localName;
+      var tagName = getTagName(node.nodeName);
       if (tagName === '#text') continue;
 
       defsCache.add(n.id, n);
@@ -10379,7 +10519,7 @@ SOFTWARE.
         }
       }
 
-      var tagName = fullNode.localName;
+      var tagName = getTagName(fullNode.nodeName);
       return read[tagName].call(this, fullNode, styles);
 
     },
@@ -10401,7 +10541,7 @@ SOFTWARE.
         var tag = n.nodeName;
         if (!tag) return;
 
-        var tagName = tag.replace(/svg:/ig, '').toLowerCase();
+        var tagName = getTagName(tag);
 
         if (tagName in read) {
           var o = read[tagName].call(group, n, styles);
@@ -13380,13 +13520,13 @@ SOFTWARE.
         // polygons. Uncomment when this bug is fixed:
         // https://code.google.com/p/chromium/issues/detail?id=370951
 
-        // if (this._flagMask) {
-        //   if (this._mask) {
-        //     elem.setAttribute('clip-path', 'url(#' + this._mask.id + ')');
-        //   } else {
-        //     elem.removeAttribute('clip-path');
-        //   }
-        // }
+        if (this._flagMask) {
+          if (this._mask) {
+            this._renderer.elem.setAttribute('clip-path', 'url(#' + this._mask.id + ')');
+          } else {
+            this._renderer.elem.removeAttribute('clip-path');
+          }
+        }
 
         return this.flagReset();
 
@@ -13497,6 +13637,18 @@ SOFTWARE.
             this.parent._renderer.elem.appendChild(elem); // TODO: should be insertBefore
           }
 
+        }
+
+        // Commented two-way functionality of clips / masks with groups and
+        // polygons. Uncomment when this bug is fixed:
+        // https://code.google.com/p/chromium/issues/detail?id=370951
+
+        if (this._flagMask) {
+          if (this._mask) {
+            this._renderer.elem.setAttribute('clip-path', 'url(#' + this._mask.id + ')');
+          } else {
+            this._renderer.elem.removeAttribute('clip-path');
+          }
         }
 
         if (this._flagValue) {
@@ -14374,6 +14526,25 @@ SOFTWARE.
           }
         }
 
+        if (this._mask) {
+
+          // Stencil away everything that isn't rendered by the mask
+          gl.clear(gl.STENCIL_BUFFER_BIT);
+          gl.enable(gl.STENCIL_TEST);
+
+          gl.stencilFunc(gl.ALWAYS, 1, 0);
+          gl.stencilOp(gl.KEEP, gl.KEEP, gl.REPLACE);
+          // Don't draw the element onto the canvas, only onto the stencil buffer
+          gl.colorMask(false, false, false, false);
+
+          webgl[this._mask._renderer.type].render.call(this._mask, gl, program, this);
+
+          gl.stencilFunc(gl.EQUAL, 1, 0xff);
+          gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
+          gl.colorMask(true, true, true, true);
+
+        }
+
         if (flagTexture) {
 
           if (!this._renderer.rect) {
@@ -14399,10 +14570,6 @@ SOFTWARE.
 
         }
 
-        // if (this._mask) {
-        //   webgl[this._mask._renderer.type].render.call(mask, gl, program, this);
-        // }
-
         if (this._clip && !forcedParent) {
           return;
         }
@@ -14415,6 +14582,10 @@ SOFTWARE.
         gl.uniformMatrix3fv(program.matrix, false, this._renderer.matrix);
         gl.uniform4f(program.rect, rect.left, rect.top, rect.right, rect.bottom);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+        if (this._mask) {
+          gl.disable(gl.STENCIL_TEST);
+        }
 
         return this.flagReset();
 
@@ -14706,6 +14877,25 @@ SOFTWARE.
           }
         }
 
+        if (this._mask) {
+
+          // Stencil away everything that isn't rendered by the mask
+          gl.clear(gl.STENCIL_BUFFER_BIT);
+          gl.enable(gl.STENCIL_TEST);
+
+          gl.stencilFunc(gl.ALWAYS, 1, 0);
+          gl.stencilOp(gl.KEEP, gl.KEEP, gl.REPLACE);
+          // Don't draw the element onto the canvas, only onto the stencil buffer
+          gl.colorMask(false, false, false, false);
+
+          webgl[this._mask._renderer.type].render.call(this._mask, gl, program, this);
+
+          gl.stencilFunc(gl.EQUAL, 1, 0xff);
+          gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
+          gl.colorMask(true, true, true, true);
+
+        }
+
         if (flagTexture) {
 
           if (!this._renderer.rect) {
@@ -14731,10 +14921,6 @@ SOFTWARE.
 
         }
 
-        // if (this._mask) {
-        //   webgl[this._mask._renderer.type].render.call(mask, gl, program, this);
-        // }
-
         if (this._clip && !forcedParent) {
           return;
         }
@@ -14747,6 +14933,10 @@ SOFTWARE.
         gl.uniformMatrix3fv(program.matrix, false, this._renderer.matrix);
         gl.uniform4f(program.rect, rect.left, rect.top, rect.right, rect.bottom);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+        if (this._mask) {
+          gl.disable(gl.STENCIL_TEST);
+        }
 
         return this.flagReset();
 
@@ -16008,7 +16198,7 @@ SOFTWARE.
     load: function(text, callback) {
 
       var group = new Group();
-      var elem, i, j;
+      var elem, i, j, child;
 
       var attach = (function(data) {
 
@@ -16017,9 +16207,10 @@ SOFTWARE.
         for (i = 0; i < dom.temp.children.length; i++) {
           elem = dom.temp.children[i];
           if (/svg/i.test(elem.nodeName)) {
+            child = this.interpret(elem);
             // Two.Utils.applySvgViewBox.call(this, group, elem.getAttribute('viewBox'));
-            for (j = 0; j < elem.children.length; j++) {
-              group.add(this.interpret(elem.children[j]));
+            for (j = 0; j < child.children.length; j++) {
+              group.add(child.children[j]);
             }
           } else {
             group.add(this.interpret(elem));
