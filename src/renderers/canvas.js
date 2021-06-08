@@ -123,11 +123,13 @@ var canvas = {
 
       var matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter,
           closed, commands, length, last, next, prev, a, b, c, d, ux, uy, vx, vy,
-          ar, bl, br, cl, x, y, mask, clip, defaultMatrix, isOffset, dashes;
+          ar, bl, br, cl, x, y, mask, clip, defaultMatrix, isOffset, dashes, po;
 
+      po = (this.parent && this.parent._renderer)
+        ? this.parent._renderer.opacity : 1;
       mask = this._mask;
       clip = this._clip;
-      opacity = this._opacity * this.parent._renderer.opacity;
+      opacity = this._opacity * (po || 1);
       visible = this._visible;
 
       if (!forced && (!visible || clip || opacity === 0)) {
@@ -363,7 +365,9 @@ var canvas = {
 
     render: function(ctx, forced, parentClipped) {
 
-      var opacity = this._opacity * this.parent._renderer.opacity;
+      var po = (this.parent && this.parent._renderer)
+        ? this.parent._renderer.opacity : 1;
+      var opacity = this._opacity * po;
       var visible = this._visible;
       var mask = this._mask;
       var clip = this._clip;
