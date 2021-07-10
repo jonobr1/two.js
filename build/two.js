@@ -1549,7 +1549,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2021-06-08T20:19:33.699Z',
+    PublishDate: '2021-07-10T14:53:41.922Z',
 
     /**
      * @name Two.Identifier
@@ -10811,6 +10811,7 @@ SOFTWARE.
                 tagName = getTagName(ref.nodeName);
                 elem.mask = read[tagName].call(this, ref, {});
                 switch (elem._renderer.type) {
+                  case 'text':
                   case 'path':
                     // The matrix here needs to change to insure that the object
                     // clipping is in the same coordinate space as the `elem`.
