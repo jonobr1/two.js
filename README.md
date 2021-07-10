@@ -111,7 +111,7 @@ In adddition to importing, the published packages of Two.js include the specific
 import Vector from 'two.js/src/vector.js';
 ```
 
-! While useful, the main import of the `Two` namespace imports all modules. So, you there isn't yet proper tree shaking implemented for the library, though it's on the roadmap.
+_While useful, the main import of the `Two` namespace imports all modules. So, you there isn't yet proper tree shaking implemented for the library, though it's on the roadmap._
 
 ### Running in Headless Environments
 
