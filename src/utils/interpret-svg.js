@@ -378,6 +378,7 @@ var applySvgAttributes = function(node, elem, parentStyles) {
               tagName = getTagName(ref.nodeName);
               elem.mask = read[tagName].call(this, ref, {});
               switch (elem._renderer.type) {
+                case 'text':
                 case 'path':
                   // The matrix here needs to change to insure that the object
                   // clipping is in the same coordinate space as the `elem`.
