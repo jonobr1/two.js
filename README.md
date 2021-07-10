@@ -66,6 +66,53 @@ And the resulting `/build/two.js` and `/build/two.min.js` will be updated to you
 
 ---
 
+### Using ES6 Imports
+
+As of version `v0.7.5+` Two.js is compatible with EcmaScript 6 imports. This is typically employed in contemporary frameworks like [React](https://reactjs.org/) and [Angular](https://angularjs.org/) as well as bundling libraries like [webpack](https://webpack.js.org/), [esbuild](https://esbuild.github.io/), and [gulp](https://gulpjs.com/). This adaptation of the boilerplate can be found on [CodeSandbox](https://codesandbox.io/s/beautiful-wilbur-ygxbc?file=/src/App.js:0-664):
+
+```jsx
+import React, { useEffect, useRef } from "react";
+import Two from "two.js";
+
+export default function App() {
+  var domElement = useRef();
+
+  useEffect(setup, []);
+
+  function setup() {
+    var two = new Two({
+      fullscreen: true,
+      autostart: true
+    }).appendTo(domElement.current);
+
+    var rect = two.makeRectangle(two.width / 2, two.height / 2, 50, 50);
+    two.bind("update", update);
+
+    return unmount;
+
+    function unmount() {
+      two.unbind("update");
+      two.pause();
+      domElement.current.removeChild(two.renderer.domElement);
+    }
+
+    function update() {
+      rect.rotation += 0.001;
+    }
+  }
+
+  return <div ref={domElement} />;
+}
+```
+
+In adddition to importing, the published packages of Two.js include the specific modules. So, if necessary you can import specific modules from the source code and bundle / minify for yourself like so:
+
+```javascript
+import Vector from 'two.js/src/vector.js';
+```
+
+! While useful, the main import of the `Two` namespace imports all modules. So, you there isn't yet proper tree shaking implemented for the library, though it's on the roadmap.
+
 ### Running in Headless Environments
 
 As of version `v0.7.x` Two.js can also run in a headless environment, namely running on the server with the help of a library called [Node Canvas](https://github.com/Automattic/node-canvas). We don't add Node Canvas to dependencies of Two.js because it's _not necessary_ to run it in the browser. However, it has all the hooks setup to run in a cloud environment. To get started follow the installation instructions on Automattic's [readme](https://github.com/Automattic/node-canvas#installation). After you've done that run:
