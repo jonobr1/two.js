@@ -68,7 +68,7 @@ And the resulting `/build/two.js` and `/build/two.min.js` will be updated to you
 
 ### Using ES6 Imports
 
-As of version `v0.7.5+` Two.js is compatible with EcmaScript 6 imports. This is typically employed in contemporary frameworks like [React](https://reactjs.org/) and [Angular](https://angularjs.org/) as well as bundling libraries like [webpack](https://webpack.js.org/), [esbuild](https://esbuild.github.io/), and [gulp](https://gulpjs.com/). This adaptation of the boilerplate can be found on CodeSandbox:
+As of version `v0.7.5+` Two.js is compatible with EcmaScript 6 imports. This is typically employed in contemporary frameworks like [React](https://reactjs.org/) and [Angular](https://angularjs.org/) as well as bundling libraries like [webpack](https://webpack.js.org/), [esbuild](https://esbuild.github.io/), and [gulp](https://gulpjs.com/). This adaptation of the boilerplate can be found on [CodeSandbox](https://codesandbox.io/s/beautiful-wilbur-ygxbc?file=/src/App.js:0-664):
 
 ```jsx
 import React, { useEffect, useRef } from "react";
