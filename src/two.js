@@ -277,7 +277,7 @@ _.extend(Two.prototype, Events, {
     var i, v, child;
 
     if (!_.isObject(obj)) {
-      return;
+      return this.release(this.scene);
     }
 
     if (typeof obj.unbind === 'function') {
@@ -293,6 +293,14 @@ _.extend(Two.prototype, Events, {
         if (typeof v.unbind === 'function') {
           v.unbind();
         }
+        if (v.controls) {
+          if (v.controls.left && typeof v.controls.left.unbind === 'function') {
+            v.controls.left.unbind();
+          }
+          if (v.controls.right && typeof v.controls.right.unbind === 'function') {
+            v.controls.right.unbind();
+          }
+        }
       }
     }
 
@@ -300,6 +308,9 @@ _.extend(Two.prototype, Events, {
       for (i = 0; i < obj.children.length; i++) {
         child = obj.children[i];
         this.release(child);
+      }
+      if (typeof obj.children.unbind === 'function') {
+        obj.children.unbind();
       }
     }
 
