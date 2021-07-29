@@ -1537,13 +1537,13 @@ var Constants = {
    * @name Two.Version
    * @property {String} - The current working version of the library.
    */
-  Version: 'v0.7.8',
+  Version: 'v0.7.9',
 
   /**
    * @name Two.PublishDate
    * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
    */
-  PublishDate: '2021-07-14T02:15:23.697Z',
+  PublishDate: '2021-07-29T16:28:10.868Z',
 
   /**
    * @name Two.Identifier
@@ -15659,7 +15659,7 @@ _.extend(Two.prototype, Events, {
     var i, v, child;
 
     if (!_.isObject(obj)) {
-      return;
+      return this.release(this.scene);
     }
 
     if (typeof obj.unbind === 'function') {
@@ -15675,6 +15675,14 @@ _.extend(Two.prototype, Events, {
         if (typeof v.unbind === 'function') {
           v.unbind();
         }
+        if (v.controls) {
+          if (v.controls.left && typeof v.controls.left.unbind === 'function') {
+            v.controls.left.unbind();
+          }
+          if (v.controls.right && typeof v.controls.right.unbind === 'function') {
+            v.controls.right.unbind();
+          }
+        }
       }
     }
 
@@ -15682,6 +15690,9 @@ _.extend(Two.prototype, Events, {
       for (i = 0; i < obj.children.length; i++) {
         child = obj.children[i];
         this.release(child);
+      }
+      if (typeof obj.children.unbind === 'function') {
+        obj.children.unbind();
       }
     }
 
