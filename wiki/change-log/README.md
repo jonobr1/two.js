@@ -3,6 +3,8 @@ sidebarDepth: 2
 ---
 
 # Change Log
+## Nightly
++ Made `Two.release` mimic behavior of `Two.remove`
 ## July 13, 2021 [v0.7.7](https://github.com/jonobr1/two.js/releases/tag/v0.7.7)
 + Made `types.d.ts` a shim of a module so that it can at least be loaded in TypeScript projects while the ES6 class declaration is still work-in-progress
 
