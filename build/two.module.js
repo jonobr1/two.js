@@ -1543,7 +1543,7 @@ var Constants = {
    * @name Two.PublishDate
    * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
    */
-  PublishDate: '2021-07-29T16:28:10.868Z',
+  PublishDate: '2021-08-04T15:10:52.714Z',
 
   /**
    * @name Two.Identifier
@@ -4415,7 +4415,7 @@ var canvas = {
 
       ctx.beginPath();
 
-      for (var i = 0; i < commands.length; i++) {
+      for (var i = 0; i < length; i++) {
 
         b = commands[i];
 
@@ -4559,6 +4559,129 @@ var canvas = {
 
       if (clip && !parentClipped) {
         ctx.clip();
+      }
+
+      if (dashes && dashes.length > 0) {
+        ctx.setLineDash(emptyArray);
+      }
+
+      return this.flagReset();
+
+    }
+
+  },
+
+  points: {
+
+    render: function(ctx, forced, parentClipped) {
+
+      var matrix, stroke, linewidth, fill, opacity, visible, size, commands,
+          length, b, x, y, defaultMatrix, isOffset, dashes, po;
+
+      po = (this.parent && this.parent._renderer)
+        ? this.parent._renderer.opacity : 1;
+      opacity = this._opacity * (po || 1);
+      visible = this._visible;
+
+      if (!forced && (!visible || opacity === 0)) {
+        return this;
+      }
+
+      this._update();
+
+      matrix = this._matrix.elements;
+      stroke = this._stroke;
+      linewidth = this._linewidth;
+      fill = this._fill;
+      commands = this._renderer.vertices; // Commands
+      length = commands.length;
+      defaultMatrix = isDefaultMatrix(matrix);
+      dashes = this.dashes;
+      size = this._size;
+
+      // Transform
+      if (!defaultMatrix) {
+        ctx.save();
+        ctx.transform(matrix[0], matrix[3], matrix[1], matrix[4], matrix[2], matrix[5]);
+      }
+
+      // Styles
+      if (fill) {
+        if (typeof fill === 'string') {
+          ctx.fillStyle = fill;
+        } else {
+          canvas[fill._renderer.type].render.call(fill, ctx);
+          ctx.fillStyle = fill._renderer.effect;
+        }
+      }
+      if (stroke) {
+        if (typeof stroke === 'string') {
+          ctx.strokeStyle = stroke;
+        } else {
+          canvas[stroke._renderer.type].render.call(stroke, ctx);
+          ctx.strokeStyle = stroke._renderer.effect;
+        }
+        if (linewidth) {
+          ctx.lineWidth = linewidth;
+        }
+      }
+      if (typeof opacity === 'number') {
+        ctx.globalAlpha = opacity;
+      }
+
+      if (dashes && dashes.length > 0) {
+        ctx.lineDashOffset = dashes.offset || 0;
+        ctx.setLineDash(dashes);
+      }
+
+      ctx.beginPath();
+
+      for (var i = 0; i < length; i++) {
+
+        b = commands[i];
+
+        x = b.x;
+        y = b.y;
+
+        ctx.moveTo(x, y);
+        ctx.arc(x, y, size, 0, TWO_PI$5);
+
+      }
+
+      if (!parentClipped) {
+        if (!canvas.isHidden.test(fill)) {
+          isOffset = fill._renderer && fill._renderer.offset;
+          if (isOffset) {
+            ctx.save();
+            ctx.translate(
+              - fill._renderer.offset.x, - fill._renderer.offset.y);
+            ctx.scale(fill._renderer.scale.x, fill._renderer.scale.y);
+          }
+          ctx.fill();
+          if (isOffset) {
+            ctx.restore();
+          }
+        }
+        if (!canvas.isHidden.test(stroke)) {
+          isOffset = stroke._renderer && stroke._renderer.offset;
+          if (isOffset) {
+            ctx.save();
+            ctx.translate(
+              - stroke._renderer.offset.x, - stroke._renderer.offset.y);
+            ctx.scale(stroke._renderer.scale.x, stroke._renderer.scale.y);
+            ctx.lineWidth = linewidth / stroke._renderer.scale.x;
+          }
+          ctx.stroke();
+          if (isOffset) {
+            ctx.restore();
+          }
+        }
+      }
+
+      // Loose ends
+
+      if (!defaultMatrix) {
+        ctx.restore();
       }
 
       if (dashes && dashes.length > 0) {
@@ -6832,7 +6955,7 @@ Texture.MakeObservable(Texture.prototype);
 // Constants
 
 var min$1 = Math.min, max$1 = Math.max,
-  ceil = Math.ceil, floor = Math.floor;
+  ceil$1 = Math.ceil, floor$1 = Math.floor;
 
 /**
  * @name Two.Path
@@ -7428,7 +7551,7 @@ _.extend(Path.prototype, Shape.prototype, {
    * @private
    * @see {@link Two.Path#linewidth}
    */
-  _linewidth: 1.0,
+  _linewidth: 1,
 
   /**
    * @name Two.Path#_opacity
@@ -8107,8 +8230,8 @@ _.extend(Path.prototype, Shape.prototype, {
       var bid = getIdByLength(this, beginning * this._length);
       var eid = getIdByLength(this, ending * this._length);
 
-      var low = ceil(bid);
-      var high = floor(eid);
+      var low = ceil$1(bid);
+      var high = floor$1(eid);
 
       var left, right, prev, next, v;
 
@@ -12620,6 +12743,365 @@ _.extend(ArcSegment.prototype, Path.prototype, {
 
 ArcSegment.MakeObservable(ArcSegment.prototype);
 
+var ceil = Math.ceil;
+var floor = Math.floor;
+
+function Points(vertices) {
+
+  Shape.call(this);
+
+  this._renderer.type = 'points';
+  this._renderer.flagVertices = Path.FlagVertices.bind(this);
+  this._renderer.bindVertices = Path.BindVertices.bind(this);
+  this._renderer.unbindVertices = Path.UnbindVertices.bind(this);
+
+  this._renderer.flagFill = Path.FlagFill.bind(this);
+  this._renderer.flagStroke = Path.FlagStroke.bind(this);
+  this._renderer.vertices = [];
+  this._renderer.collection = [];
+
+  this.vertices = vertices;
+
+}
+
+_.extend(Points, {
+
+  Properties: [
+    'fill',
+    'stroke',
+    'linewidth',
+    'opacity',
+    'visible',
+    'size',
+
+    'beginning',
+    'ending'
+  ],
+
+  MakeObservable: function(object) {
+
+    Shape.MakeObservable(object);
+
+    _.each(Points.Properties.slice(2, 6), defineGetterSetter, object);
+
+    Object.defineProperty(object, 'fill', {
+      enumerable: true,
+      get: function() {
+        return this._fill;
+      },
+      set: function(f) {
+
+        if (this._fill instanceof Gradient
+          || this._fill instanceof LinearGradient
+          || this._fill instanceof RadialGradient
+          || this._fill instanceof Texture) {
+          this._fill.unbind(Events.Types.change, this._renderer.flagFill);
+        }
+
+        this._fill = f;
+        this._flagFill = true;
+
+        if (this._fill instanceof Gradient
+          || this._fill instanceof LinearGradient
+          || this._fill instanceof RadialGradient
+          || this._fill instanceof Texture) {
+          this._fill.bind(Events.Types.change, this._renderer.flagFill);
+        }
+
+      }
+    });
+
+    Object.defineProperty(object, 'stroke', {
+      enumerable: true,
+      get: function() {
+        return this._stroke;
+      },
+      set: function(f) {
+
+        if (this._stroke instanceof Gradient
+          || this._stroke instanceof LinearGradient
+          || this._stroke instanceof RadialGradient
+          || this._stroke instanceof Texture) {
+          this._stroke.unbind(Events.Types.change, this._renderer.flagStroke);
+        }
+
+        this._stroke = f;
+        this._flagStroke = true;
+
+        if (this._stroke instanceof Gradient
+          || this._stroke instanceof LinearGradient
+          || this._stroke instanceof RadialGradient
+          || this._stroke instanceof Texture) {
+          this._stroke.bind(Events.Types.change, this._renderer.flagStroke);
+        }
+
+      }
+    });
+
+    /**
+     * @name Two.Points#length
+     * @property {Number} - The sum of distances between all {@link Two.Points#vertices}.
+     */
+    Object.defineProperty(object, 'length', {
+      get: function() {
+        if (this._flagLength) {
+          this._updateLength();
+        }
+        return this._length;
+      }
+    });
+
+    Object.defineProperty(object, 'beginning', {
+      enumerable: true,
+      get: function() {
+        return this._beginning;
+      },
+      set: function(v) {
+        this._beginning = v;
+        this._flagVertices = true;
+      }
+    });
+
+    Object.defineProperty(object, 'ending', {
+      enumerable: true,
+      get: function() {
+        return this._ending;
+      },
+      set: function(v) {
+        this._ending = v;
+        this._flagVertices = true;
+      }
+    });
+
+    Object.defineProperty(object, 'vertices', {
+
+      enumerable: true,
+
+      get: function() {
+        return this._collection;
+      },
+
+      set: function(vertices) {
+
+        var bindVertices = this._renderer.bindVertices;
+        var unbindVertices = this._renderer.unbindVertices;
+
+        // Remove previous listeners
+        if (this._collection) {
+          this._collection
+            .unbind(Events.Types.insert, bindVertices)
+            .unbind(Events.Types.remove, unbindVertices);
+        }
+
+        // Create new Collection with copy of vertices
+        if (vertices instanceof Collection) {
+          this._collection = vertices;
+        } else {
+          this._collection = new Collection(vertices || []);
+        }
+
+
+        // Listen for Collection changes and bind / unbind
+        this._collection
+          .bind(Events.Types.insert, bindVertices)
+          .bind(Events.Types.remove, unbindVertices);
+
+        // Bind Initial Vertices
+        bindVertices(this._collection);
+
+      }
+
+    });
+
+  }
+
+});
+
+_.extend(Points.prototype, Shape.prototype, {
+
+  constructor: Points,
+
+  _flagVertices: true,
+  _flagLength: true,
+  _flagFill: true,
+  _flagStroke: true,
+  _flagLinewidth: true,
+  _flagOpacity: true,
+  _flagVisible: true,
+  _flagSize: true,
+
+  _length: 0,
+  _fill: '#fff',
+  _stroke: '#000',
+  _linewidth: 1,
+  _opacity: 1.0,
+  _visible: true,
+  _size: 1,
+  _beginning: 0,
+  _ending: 1,
+
+  clone: function(parent) {
+
+    var clone = new Points();
+
+    for (var j = 0; j < this.vertices.length; j++) {
+      clone.vertices.push(this.vertices[j].clone());
+    }
+
+    for (var i = 0; i < Points.Properties.length; i++) {
+      var k = Points.Properties[i];
+      clone[k] = this[k];
+    }
+
+    clone.className = this.className;
+
+    clone.translation.copy(this.translation);
+    clone.rotation = this.rotation;
+    clone.scale = this.scale;
+    clone.skewX = this.skewX;
+    clone.skewY = this.skewY;
+
+    if (this.matrix.manual) {
+      clone.matrix.copy(this.matrix);
+    }
+
+    if (parent) {
+      parent.add(clone);
+    }
+
+    return clone._update();
+
+  },
+
+  toObject: function() {
+
+    var result = {
+      vertices: this.vertices.map(function(v) {
+        return v.toObject();
+      })
+    };
+
+    _.each(Points.Properties, function(k) {
+      result[k] = this[k];
+    }, this);
+
+    result.className = this.className;
+
+    result.translation = this.translation.toObject();
+    result.rotation = this.rotation;
+    result.scale = this.scale instanceof Vector ? this.scale.toObject() : this.scale;
+    result.skewX = this.skewX;
+    result.skewY = this.skewY;
+
+    if (this.matrix.manual) {
+      result.matrix = this.matrix.toObject();
+    }
+
+    return result;
+
+  },
+
+  noFill: Path.prototype.noFill,
+
+  noStroke: Path.prototype.noStroke,
+
+  corner: Path.prototype.corner,
+
+  center: Path.prototype.center,
+
+  remove: Path.prototype.remove,
+
+  getBoundingClientRect: Path.prototype.getBoundingClientRect,
+
+  getPointAt: Path.prototype.getPointAt,
+
+  subdivide: Path.prototype.subdivide,
+
+  _updateLength: Path.prototype._updateLength,
+
+  _update: function() {
+
+    if (this._flagVertices) {
+
+      if (this._flagLength) {
+        this._updateLength(undefined, true);
+      }
+
+      var l = this._collection.length;
+
+      var beginning = Math.min(this._beginning, this._ending);
+      var ending = Math.max(this._beginning, this._ending);
+
+      var bid = getIdByLength(this, beginning * this._length);
+      var eid = getIdByLength(this, ending * this._length);
+
+      var low = ceil(bid);
+      var high = floor(eid);
+
+      var left, right, v;
+
+      this._renderer.vertices.length = 0;
+
+      for (var i = 0; i < l; i++) {
+
+        if (this._renderer.collection.length <= i) {
+          this._renderer.collection.push(new Vector());
+        }
+
+        if (i > high && !right) {
+
+          v = this._renderer.collection[i];
+          v.copy(this._collection[i]);
+          this.getPointAt(ending, v);
+          v.command = this._renderer.collection[i].command;
+          this._renderer.vertices.push(v);
+
+          right = v;
+
+        } else if (i >= low && i <= high) {
+
+          v = this._renderer.collection[i]
+            .copy(this._collection[i]);
+          this._renderer.vertices.push(v);
+
+          if (i === high && contains(this, ending)) {
+            right = v;
+          } else if (i === low && contains(this, beginning)) {
+            left = v;
+            left.command = Commands.move;
+          }
+
+        }
+
+      }
+
+      // Prepend the trimmed point if necessary.
+      if (low > 0 && !left) {
+
+        i = low - 1;
+
+        v = this._renderer.collection[i];
+        v.copy(this._collection[i]);
+        this.getPointAt(beginning, v);
+        v.command = Commands.move;
+        this._renderer.vertices.unshift(v);
+
+        left = v;
+
+      }
+
+    }
+
+    Shape.prototype._update.apply(this, arguments);
+
+    return this;
+
+  }
+
+});
+
+Points.MakeObservable(Points.prototype);
+
 var TWO_PI$1 = Math.PI * 2, cos$1 = Math.cos, sin$1 = Math.sin;
 
 /**
@@ -13284,6 +13766,24 @@ var svg = {
 
   },
 
+  pointsToString: function(points, size) {
+
+    var string = '';
+
+    for (var i = 0; i < points.length; i++) {
+
+      var x = points[i].x;
+      var y = points[i].y;
+
+      string += Commands.move + ' ' + x + ' ' + y + ' ';
+      string += 'a ' + size + ' ' + size + ' 0 1 0 0.01 0 Z';
+
+    }
+
+    return string;
+
+  },
+
   getClip: function(shape, domElement) {
 
     var clip = shape._renderer.clip;
@@ -13579,6 +14079,98 @@ var svg = {
         } else {
           this._renderer.elem.removeAttribute('clip-path');
         }
+      }
+
+      return this.flagReset();
+
+    }
+
+  },
+
+  points: {
+
+    render: function(domElement) {
+
+      // Shortcut for hidden objects.
+      // Doesn't reset the flags, so changes are stored and
+      // applied once the object is visible again
+      if (this._opacity === 0 && !this._flagOpacity) {
+        return this;
+      }
+
+      this._update();
+
+      // Collect any attribute that needs to be changed here
+      var changed = {};
+
+      var flagMatrix = this._matrix.manual || this._flagMatrix;
+
+      if (flagMatrix) {
+        changed.transform = 'matrix(' + this._matrix.toString() + ')';
+      }
+
+      if (this._flagId) {
+        changed.id = this._id;
+      }
+
+      if (this._flagVertices || this._flagSize) {
+        var vertices = svg.pointsToString(this._renderer.vertices, this._size);
+        changed.d = vertices;
+      }
+
+      if (this._fill && this._fill._renderer) {
+        this._fill._update();
+        svg[this._fill._renderer.type].render.call(this._fill, domElement, true);
+      }
+
+      if (this._flagFill) {
+        changed.fill = this._fill && this._fill.id
+          ? 'url(#' + this._fill.id + ')' : this._fill;
+      }
+
+      if (this._stroke && this._stroke._renderer) {
+        this._stroke._update();
+        svg[this._stroke._renderer.type].render.call(this._stroke, domElement, true);
+      }
+
+      if (this._flagStroke) {
+        changed.stroke = this._stroke && this._stroke.id
+          ? 'url(#' + this._stroke.id + ')' : this._stroke;
+      }
+
+      if (this._flagLinewidth) {
+        changed['stroke-width'] = this._linewidth;
+      }
+
+      if (this._flagOpacity) {
+        changed['stroke-opacity'] = this._opacity;
+        changed['fill-opacity'] = this._opacity;
+      }
+
+      if (this._flagClassName) {
+        changed['class'] = this.classList.join(' ');
+      }
+
+      if (this._flagVisible) {
+        changed.visibility = this._visible ? 'visible' : 'hidden';
+      }
+
+      if (this.dashes && this.dashes.length > 0) {
+        changed['stroke-dasharray'] = this.dashes.join(' ');
+        changed['stroke-dashoffset'] = this.dashes.offset || 0;
+      }
+
+      // If there is no attached DOM element yet,
+      // create it with all necessary attributes.
+      if (!this._renderer.elem) {
+
+        changed.id = this._id;
+        this._renderer.elem = svg.createElement('path', changed);
+        domElement.appendChild(this._renderer.elem);
+
+      // Otherwise apply all pending attributes
+      } else {
+        svg.setAttributes(this._renderer.elem, changed);
       }
 
       return this.flagReset();
@@ -14645,6 +15237,18 @@ var webgl = {
 
     }
 
+  },
+
+  points: {
+    updateCanvas: function() {
+      console.warn('Two.Points.updateCanvas not yet implemented in WebGLRenderer.');
+    },
+    render: function() {
+      console.warn('Two.Points.render not yet implemented in WebGLRenderer.');
+    },
+    getBoundingClientRect: function() {
+      console.warn('Two.Points.getBoundingClientRect not yet implemented in WebGLRenderer.');
+    }
   },
 
   text: {
@@ -16385,6 +16989,7 @@ _.extend(Two, {
   Circle: Circle,
   Ellipse: Ellipse,
   Line: Line,
+  Points: Points,
   Polygon: Polygon,
   Rectangle: Rectangle,
   RoundedRectangle: RoundedRectangle,
