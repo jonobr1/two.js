@@ -41,6 +41,7 @@ import ArcSegment from './shapes/arc-segment.js';
 import Circle from './shapes/circle.js';
 import Ellipse from './shapes/ellipse.js';
 import Line from './shapes/line.js';
+import Points from './shapes/points.js';
 import Polygon from './shapes/polygon.js';
 import Rectangle from './shapes/rectangle.js';
 import RoundedRectangle from './shapes/rounded-rectangle.js';
@@ -1003,6 +1004,7 @@ _.extend(Two, {
   Circle: Circle,
   Ellipse: Ellipse,
   Line: Line,
+  Points: Points,
   Polygon: Polygon,
   Rectangle: Rectangle,
   RoundedRectangle: RoundedRectangle,
