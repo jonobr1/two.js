@@ -621,7 +621,7 @@ _.extend(Path.prototype, Shape.prototype, {
    * @private
    * @see {@link Two.Path#linewidth}
    */
-  _linewidth: 1.0,
+  _linewidth: 1,
 
   /**
    * @name Two.Path#_opacity
@@ -1536,3 +1536,4 @@ function getSubdivisions(a, b, limit) {
 }
 
 export default Path;
+export { contains, getCurveLength, getIdByLength, getSubdivisions };
