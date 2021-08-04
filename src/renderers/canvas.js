@@ -361,6 +361,131 @@ var canvas = {
 
   },
 
+  points: {
+
+    render: function(ctx, forced, parentClipped) {
+
+      var matrix, stroke, linewidth, fill, opacity, visible, size, commands,
+          length, last, next, prev, a, b, c, d, ux, uy, vx, vy,
+          ar, bl, br, cl, x, y, mask, clip, defaultMatrix, isOffset, dashes, po;
+
+      po = (this.parent && this.parent._renderer)
+        ? this.parent._renderer.opacity : 1;
+      opacity = this._opacity * (po || 1);
+      visible = this._visible;
+
+      if (!forced && (!visible || opacity === 0)) {
+        return this;
+      }
+
+      this._update();
+
+      matrix = this._matrix.elements;
+      stroke = this._stroke;
+      linewidth = this._linewidth;
+      fill = this._fill;
+      commands = this._renderer.vertices; // Commands
+      length = commands.length;
+      last = length - 1;
+      defaultMatrix = isDefaultMatrix(matrix);
+      dashes = this.dashes;
+      size = this._size;
+
+      // Transform
+      if (!defaultMatrix) {
+        ctx.save();
+        ctx.transform(matrix[0], matrix[3], matrix[1], matrix[4], matrix[2], matrix[5]);
+      }
+
+      // Styles
+      if (fill) {
+        if (typeof fill === 'string') {
+          ctx.fillStyle = fill;
+        } else {
+          canvas[fill._renderer.type].render.call(fill, ctx);
+          ctx.fillStyle = fill._renderer.effect;
+        }
+      }
+      if (stroke) {
+        if (typeof stroke === 'string') {
+          ctx.strokeStyle = stroke;
+        } else {
+          canvas[stroke._renderer.type].render.call(stroke, ctx);
+          ctx.strokeStyle = stroke._renderer.effect;
+        }
+        if (linewidth) {
+          ctx.lineWidth = linewidth;
+        }
+      }
+      if (typeof opacity === 'number') {
+        ctx.globalAlpha = opacity;
+      }
+
+      if (dashes && dashes.length > 0) {
+        ctx.lineDashOffset = dashes.offset || 0;
+        ctx.setLineDash(dashes);
+      }
+
+      ctx.beginPath();
+
+      for (var i = 0; i < commands.length; i++) {
+
+        b = commands[i];
+
+        x = b.x;
+        y = b.y;
+
+        ctx.moveTo(x, y);
+        ctx.arc(x, y, size, 0, TWO_PI);
+
+      }
+
+      if (!parentClipped) {
+        if (!canvas.isHidden.test(fill)) {
+          isOffset = fill._renderer && fill._renderer.offset;
+          if (isOffset) {
+            ctx.save();
+            ctx.translate(
+              - fill._renderer.offset.x, - fill._renderer.offset.y);
+            ctx.scale(fill._renderer.scale.x, fill._renderer.scale.y);
+          }
+          ctx.fill();
+          if (isOffset) {
+            ctx.restore();
+          }
+        }
+        if (!canvas.isHidden.test(stroke)) {
+          isOffset = stroke._renderer && stroke._renderer.offset;
+          if (isOffset) {
+            ctx.save();
+            ctx.translate(
+              - stroke._renderer.offset.x, - stroke._renderer.offset.y);
+            ctx.scale(stroke._renderer.scale.x, stroke._renderer.scale.y);
+            ctx.lineWidth = linewidth / stroke._renderer.scale.x;
+          }
+          ctx.stroke();
+          if (isOffset) {
+            ctx.restore();
+          }
+        }
+      }
+
+      // Loose ends
+
+      if (!defaultMatrix) {
+        ctx.restore();
+      }
+
+      if (dashes && dashes.length > 0) {
+        ctx.setLineDash(emptyArray);
+      }
+
+      return this.flagReset();
+
+    }
+
+  },
+
   text: {
 
     render: function(ctx, forced, parentClipped) {
