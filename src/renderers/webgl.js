@@ -560,6 +560,18 @@ var webgl = {
 
   },
 
+  points: {
+    updateCanvas: function() {
+      console.warn('Two.Points.updateCanvas not yet implemented in WebGLRenderer.');
+    },
+    render: function() {
+      console.warn('Two.Points.render not yet implemented in WebGLRenderer.');
+    },
+    getBoundingClientRect: function() {
+      console.warn('Two.Points.getBoundingClientRect not yet implemented in WebGLRenderer.');
+    }
+  },
+
   text: {
 
     updateCanvas: function(elem) {
