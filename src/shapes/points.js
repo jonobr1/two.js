@@ -308,7 +308,7 @@ _.extend(Points.prototype, Shape.prototype, {
       var low = ceil(bid);
       var high = floor(eid);
 
-      var left, right, prev, next, v;
+      var left, right, v;
 
       this._renderer.vertices.length = 0;
 
@@ -327,7 +327,6 @@ _.extend(Points.prototype, Shape.prototype, {
           this._renderer.vertices.push(v);
 
           right = v;
-          prev = this._collection[i - 1];
 
         } else if (i >= low && i <= high) {
 
@@ -358,7 +357,6 @@ _.extend(Points.prototype, Shape.prototype, {
         this._renderer.vertices.unshift(v);
 
         left = v;
-        next = this._collection[i + 1];
 
       }
 

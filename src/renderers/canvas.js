@@ -205,7 +205,7 @@ var canvas = {
 
       ctx.beginPath();
 
-      for (var i = 0; i < commands.length; i++) {
+      for (var i = 0; i < length; i++) {
 
         b = commands[i];
 
@@ -366,8 +366,7 @@ var canvas = {
     render: function(ctx, forced, parentClipped) {
 
       var matrix, stroke, linewidth, fill, opacity, visible, size, commands,
-          length, last, next, prev, a, b, c, d, ux, uy, vx, vy,
-          ar, bl, br, cl, x, y, mask, clip, defaultMatrix, isOffset, dashes, po;
+          length, b, x, y, defaultMatrix, isOffset, dashes, po;
 
       po = (this.parent && this.parent._renderer)
         ? this.parent._renderer.opacity : 1;
@@ -386,7 +385,6 @@ var canvas = {
       fill = this._fill;
       commands = this._renderer.vertices; // Commands
       length = commands.length;
-      last = length - 1;
       defaultMatrix = isDefaultMatrix(matrix);
       dashes = this.dashes;
       size = this._size;
@@ -428,7 +426,7 @@ var canvas = {
 
       ctx.beginPath();
 
-      for (var i = 0; i < commands.length; i++) {
+      for (var i = 0; i < length; i++) {
 
         b = commands[i];
 
