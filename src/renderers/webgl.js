@@ -26,6 +26,15 @@ var multiplyMatrix = Matrix.Multiply,
   transformation = new NumArray(9),
   CanvasUtils = CanvasRenderer.Utils;
 
+var quad = new NumArray([
+  0, 0,
+  1, 0,
+  0, 1,
+  0, 1,
+  1, 0,
+  1, 1
+]);
+
 var webgl = {
 
   precision: 0.9,
@@ -552,13 +561,34 @@ var webgl = {
         return this;
       }
 
-      gl.useProgram(program);
+      if (programs.current !== program) {
 
-      gl.uniform2f(
-        gl.getUniformLocation(program, 'u_resolution'),
-        programs.resolution.width,
-        programs.resolution.height
-      );
+        gl.useProgram(program);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, programs.buffers.position);
+        gl.vertexAttribPointer(program.position, 2, gl.FLOAT, false, 0, 0);
+        gl.enableVertexAttribArray(program.position);
+        gl.bufferData(gl.ARRAY_BUFFER, quad, gl.STATIC_DRAW);
+
+        if (!programs.resolution.flagged) {
+          gl.uniform2f(
+            gl.getUniformLocation(program, 'u_resolution'),
+            programs.resolution.width,
+            programs.resolution.height
+          );
+        }
+
+        programs.current = program;
+
+      }
+
+      if (programs.resolution.flagged) {
+        gl.uniform2f(
+          gl.getUniformLocation(program, 'u_resolution'),
+          programs.resolution.width,
+          programs.resolution.height
+        );
+      }
 
       // Draw Texture
       gl.bindTexture(gl.TEXTURE_2D, this._renderer.texture);
@@ -794,13 +824,25 @@ var webgl = {
         size *= Math.max(this._renderer.scale.x, this._renderer.scale.y);
       }
 
-      gl.useProgram(program);
+      if (programs.current !== program) {
+        gl.useProgram(program);
+        if (!programs.resolution.flagged) {
+          gl.uniform2f(
+            gl.getUniformLocation(program, 'u_resolution'),
+            programs.resolution.width,
+            programs.resolution.height
+          );
+        }
+        programs.current = program;
+      }
 
-      gl.uniform2f(
-        gl.getUniformLocation(program, 'u_resolution'),
-        programs.resolution.width,
-        programs.resolution.height
-      );
+      if (programs.resolution.flagged) {
+        gl.uniform2f(
+          gl.getUniformLocation(program, 'u_resolution'),
+          programs.resolution.width,
+          programs.resolution.height
+        );
+      }
 
       // Draw Texture
       gl.bindTexture(gl.TEXTURE_2D, this._renderer.texture);
@@ -1149,13 +1191,34 @@ var webgl = {
         return this;
       }
 
-      gl.useProgram(program);
+      if (programs.current !== program) {
 
-      gl.uniform2f(
-        gl.getUniformLocation(program, 'u_resolution'),
-        programs.resolution.width,
-        programs.resolution.height
-      );
+        gl.useProgram(program);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, programs.buffers.position);
+        gl.vertexAttribPointer(program.position, 2, gl.FLOAT, false, 0, 0);
+        gl.enableVertexAttribArray(program.position);
+        gl.bufferData(gl.ARRAY_BUFFER, quad, gl.STATIC_DRAW);
+
+        if (!programs.resolution.flagged) {
+          gl.uniform2f(
+            gl.getUniformLocation(program, 'u_resolution'),
+            programs.resolution.width,
+            programs.resolution.height
+          );
+        }
+
+        programs.current = program;
+
+      }
+
+      if (programs.resolution.flagged) {
+        gl.uniform2f(
+          gl.getUniformLocation(program, 'u_resolution'),
+          programs.resolution.width,
+          programs.resolution.height
+        );
+      }
 
       // Draw Texture
       gl.bindTexture(gl.TEXTURE_2D, this._renderer.texture);
@@ -1440,9 +1503,15 @@ function Renderer(params) {
    * @property {Object} - Associated WebGL programs to render all elements from the scenegraph.
    */
   this.programs = {
+    current: null,
+    buffers: {
+      position: gl.createBuffer()
+    },
     resolution: {
       width: 0,
-      height: 0
+      height: 0,
+      ratio: 1,
+      flagged: false
     }
   };
 
@@ -1461,17 +1530,7 @@ function Renderer(params) {
   gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
   gl.vertexAttribPointer(program.position, 2, gl.FLOAT, false, 0, 0);
   gl.enableVertexAttribArray(program.position);
-  gl.bufferData(
-    gl.ARRAY_BUFFER,
-    new NumArray([
-      0, 0,
-      1, 0,
-      0, 1,
-      0, 1,
-      1, 0,
-      1, 1
-    ]),
-    gl.STATIC_DRAW);
+  gl.bufferData(gl.ARRAY_BUFFER, quad, gl.STATIC_DRAW);
 
   // Compile Base Shaders to draw in pixel space.
   vs = shaders.create(gl, shaders.points.vertex, shaders.types.vertex);
@@ -1551,6 +1610,7 @@ _.extend(Renderer.prototype, Events, {
     this.programs.resolution.width = w;
     this.programs.resolution.height = h;
     this.programs.resolution.ratio = this.ratio;
+    this.programs.resolution.flagged = true;
 
     return this.trigger(Events.Types.resize, width, height, ratio);
 
@@ -1571,6 +1631,7 @@ _.extend(Renderer.prototype, Events, {
 
     webgl.group.render.call(this.scene, gl, this.programs);
     this._flagMatrix = false;
+    this.programs.resolution.flagged = true;
 
     return this;
 
