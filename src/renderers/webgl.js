@@ -1,7 +1,7 @@
 import Commands from '../utils/path-commands.js';
 
 import root from '../utils/root.js';
-import {mod, NumArray} from '../utils/math.js';
+import { getPoT, mod, NumArray, TWO_PI } from '../utils/math.js';
 import Events from '../events.js';
 import TwoError from '../utils/error.js';
 import getRatio from '../utils/get-ratio.js';
@@ -561,8 +561,100 @@ var webgl = {
   },
 
   points: {
-    updateCanvas: function() {
-      console.warn('Two.Points.updateCanvas not yet implemented in WebGLRenderer.');
+
+    // The canvas is a texture that is a rendering of one vertex
+    updateCanvas: function(elem) {
+
+      var isOffset;
+
+      var commands = elem._renderer.vertices;
+      var canvas = this.canvas;
+      var ctx = this.ctx;
+
+      // Styles
+      var stroke = elem._stroke;
+      var linewidth = elem._linewidth;
+      var fill = elem._fill;
+      var opacity = elem._renderer.opacity || elem._opacity;
+      var dashes = elem.dashes;
+      var length = commands.length;
+      var size = this._size;
+
+      canvas.width = getPoT(size + linewidth);
+      canvas.height = canvas.width;
+
+      var cx = canvas.width / 2;
+      var cy = canvas.height / 2;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      if (fill) {
+        if (typeof fill === 'string') {
+          ctx.fillStyle = fill;
+        } else {
+          webgl[fill._renderer.type].render.call(fill, ctx, elem);
+          ctx.fillStyle = fill._renderer.effect;
+        }
+      }
+      if (stroke) {
+        if (typeof stroke === 'string') {
+          ctx.strokeStyle = stroke;
+        } else {
+          webgl[stroke._renderer.type].render.call(stroke, ctx, elem);
+          ctx.strokeStyle = stroke._renderer.effect;
+        }
+        if (linewidth) {
+          ctx.lineWidth = linewidth;
+        }
+      }
+      if (typeof opacity === 'number') {
+        ctx.globalAlpha = opacity;
+      }
+
+      if (dashes && dashes.length > 0) {
+        ctx.lineDashOffset = dashes.offset || 0;
+        ctx.setLineDash(dashes);
+      }
+
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.arc(cx, cy, size, 0, TWO_PI);
+
+      // Loose ends
+
+      if (closed) {
+        ctx.closePath();
+      }
+
+      if (!webgl.isHidden.test(fill)) {
+        isOffset = fill._renderer && fill._renderer.offset;
+        if (isOffset) {
+          ctx.save();
+          ctx.translate(
+            - fill._renderer.offset.x, - fill._renderer.offset.y);
+          ctx.scale(fill._renderer.scale.x, fill._renderer.scale.y);
+        }
+        ctx.fill();
+        if (isOffset) {
+          ctx.restore();
+        }
+      }
+
+      if (!webgl.isHidden.test(stroke)) {
+        isOffset = stroke._renderer && stroke._renderer.offset;
+        if (isOffset) {
+          ctx.save();
+          ctx.translate(
+            - stroke._renderer.offset.x, - stroke._renderer.offset.y);
+          ctx.scale(stroke._renderer.scale.x, stroke._renderer.scale.y);
+          ctx.lineWidth = linewidth / stroke._renderer.scale.x;
+        }
+        ctx.stroke();
+        if (isOffset) {
+          ctx.restore();
+        }
+      }
+
     },
     render: function() {
       console.warn('Two.Points.render not yet implemented in WebGLRenderer.');
@@ -1124,19 +1216,19 @@ var webgl = {
     vertex: [
       'precision mediump float;',
       'attribute vec2 a_position;',
-      '',
+
       'uniform mat3 u_matrix;',
       'uniform vec2 u_resolution;',
       'uniform vec4 u_rect;',
-      '',
+
       'varying vec2 v_textureCoords;',
-      '',
+
       'void main() {',
       '   vec2 rectCoords = (a_position * (u_rect.zw - u_rect.xy)) + u_rect.xy;',
       '   vec2 projected = (u_matrix * vec3(rectCoords, 1.0)).xy;',
       '   vec2 normal = projected / u_resolution;',
       '   vec2 clipspace = (normal * 2.0) - 1.0;',
-      '',
+
       '   gl_Position = vec4(clipspace * vec2(1.0, -1.0), 0.0, 1.0);',
       '   v_textureCoords = a_position;',
       '}'
@@ -1144,10 +1236,10 @@ var webgl = {
 
     fragment: [
       'precision mediump float;',
-      '',
+
       'uniform sampler2D u_image;',
       'varying vec2 v_textureCoords;',
-      '',
+
       'void main() {',
       '  vec4 texel = texture2D(u_image, v_textureCoords);',
       '  if (texel.a == 0.0) {',
