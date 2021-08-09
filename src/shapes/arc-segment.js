@@ -1,13 +1,11 @@
 import Commands from '../utils/path-commands.js';
-import {mod} from '../utils/math.js';
+import { mod, HALF_PI, TWO_PI } from '../utils/math.js';
 import defineGetterSetter from '../utils/get-set.js';
 import _ from '../utils/underscore.js';
 
 import Path from '../path.js';
 import Anchor from '../anchor.js';
 import Constants from '../constants.js';
-
-var TWO_PI = Math.PI * 2, HALF_PI = Math.PI / 2;
 
 /**
  * @name Two.ArcSegment

@@ -1,6 +1,8 @@
 import root from './root.js';
 
 var Matrix;
+var TWO_PI = Math.PI * 2;
+var HALF_PI = Math.PI * 0.5;
 
 /**
  * @name Two.Utils.decomposeMatrix
@@ -76,6 +78,17 @@ var lerp = function(a, b, t) {
 };
 
 /**
+ * @name Two.Utils.getPoT
+ * @param {Number} value - The number to find the nearest power-of-two value
+ * @returns {Number}
+ * @description Rounds a number up to the nearest power-of-two value.
+ * @see {@link https://en.wikipedia.org/wiki/Power_of_two}
+ */
+var getPoT = function(value) {
+  return Math.pow(2, Math.round(Math.log(value) / Math.log(2)));
+};
+
+/**
  * @name Two.Utils.mod
  * @function
  * @param {Number} v - The value to modulo
@@ -109,5 +122,6 @@ var toFixed = function(v) {
 
 
 export {
-  decomposeMatrix, getComputedMatrix, setMatrix, lerp, mod, NumArray, toFixed
+  decomposeMatrix, getComputedMatrix, getPoT, setMatrix, lerp, mod, NumArray,
+  toFixed, TWO_PI, HALF_PI
 };

@@ -1,11 +1,12 @@
 import Commands from '../utils/path-commands.js';
+import { TWO_PI } from '../utils/math.js';
 import defineGetterSetter from '../utils/get-set.js';
 import _ from '../utils/underscore.js';
 
 import Path from '../path.js';
 import Anchor from '../anchor.js';
 
-var TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin;
+var cos = Math.cos, sin = Math.sin;
 
 /**
  * @name Two.Polygon

@@ -1,6 +1,6 @@
 import Commands from '../utils/path-commands.js';
-import {mod} from '../utils/math.js';
-import {Curve} from '../utils/curves.js';
+import { mod, TWO_PI } from '../utils/math.js';
+import { Curve } from '../utils/curves.js';
 import Events from '../events.js';
 import getRatio from '../utils/get-ratio.js';
 import _ from '../utils/underscore.js';
@@ -11,8 +11,7 @@ import Constants from '../constants.js';
 
 // Constants
 var emptyArray = [];
-var TWO_PI = Math.PI * 2,
-  max = Math.max,
+var max = Math.max,
   min = Math.min,
   abs = Math.abs,
   sin = Math.sin,
