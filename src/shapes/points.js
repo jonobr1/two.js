@@ -1,4 +1,4 @@
-import { NumArray, toFixed } from '../utils/math.js';
+import { NumArray } from '../utils/math.js';
 import defineGetterSetter from '../utils/get-set.js';
 import _ from '../utils/underscore.js';
 
