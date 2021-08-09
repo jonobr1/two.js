@@ -2,6 +2,7 @@ import Commands from '../utils/path-commands.js';
 
 import root from '../utils/root.js';
 import { getPoT, mod, NumArray, TWO_PI } from '../utils/math.js';
+import shaders from '../utils/shaders.js';
 import Events from '../events.js';
 import TwoError from '../utils/error.js';
 import getRatio from '../utils/get-ratio.js';
@@ -567,7 +568,6 @@ var webgl = {
 
       var isOffset;
 
-      var commands = elem._renderer.vertices;
       var canvas = this.canvas;
       var ctx = this.ctx;
 
@@ -577,7 +577,6 @@ var webgl = {
       var fill = elem._fill;
       var opacity = elem._renderer.opacity || elem._opacity;
       var dashes = elem.dashes;
-      var length = commands.length;
       var size = this._size;
 
       canvas.width = getPoT(size + linewidth);
@@ -1189,68 +1188,6 @@ var webgl = {
 
   },
 
-  shaders: {
-
-    create: function(gl, source, type) {
-      var shader, compiled, error;
-      shader = gl.createShader(gl[type]);
-      gl.shaderSource(shader, source);
-      gl.compileShader(shader);
-
-      compiled = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
-      if (!compiled) {
-        error = gl.getShaderInfoLog(shader);
-        gl.deleteShader(shader);
-        throw new TwoError('unable to compile shader ' + shader + ': ' + error);
-      }
-
-      return shader;
-
-    },
-
-    types: {
-      vertex: 'VERTEX_SHADER',
-      fragment: 'FRAGMENT_SHADER'
-    },
-
-    vertex: [
-      'precision mediump float;',
-      'attribute vec2 a_position;',
-
-      'uniform mat3 u_matrix;',
-      'uniform vec2 u_resolution;',
-      'uniform vec4 u_rect;',
-
-      'varying vec2 v_textureCoords;',
-
-      'void main() {',
-      '   vec2 rectCoords = (a_position * (u_rect.zw - u_rect.xy)) + u_rect.xy;',
-      '   vec2 projected = (u_matrix * vec3(rectCoords, 1.0)).xy;',
-      '   vec2 normal = projected / u_resolution;',
-      '   vec2 clipspace = (normal * 2.0) - 1.0;',
-
-      '   gl_Position = vec4(clipspace * vec2(1.0, -1.0), 0.0, 1.0);',
-      '   v_textureCoords = a_position;',
-      '}'
-    ].join('\n'),
-
-    fragment: [
-      'precision mediump float;',
-
-      'uniform sampler2D u_image;',
-      'varying vec2 v_textureCoords;',
-
-      'void main() {',
-      '  vec4 texel = texture2D(u_image, v_textureCoords);',
-      '  if (texel.a == 0.0) {',
-      '    discard;',
-      '  }',
-      '  gl_FragColor = texel;',
-      '}'
-    ].join('\n')
-
-  },
-
   TextureRegistry: new Registry()
 
 };
@@ -1329,10 +1266,10 @@ function Renderer(params) {
   }
 
   // Compile Base Shaders to draw in pixel space.
-  vs = webgl.shaders.create(
-    gl, webgl.shaders.vertex, webgl.shaders.types.vertex);
-  fs = webgl.shaders.create(
-    gl, webgl.shaders.fragment, webgl.shaders.types.fragment);
+  vs = shaders.create(
+    gl, shaders.path.vertex, shaders.types.vertex);
+  fs = shaders.create(
+    gl, shaders.path.fragment, shaders.types.fragment);
 
   /**
    * @name Two.WebGLRenderer#program
