@@ -6,7 +6,7 @@
 
   QUnit.module('WebGLRenderer');
 
-  var getRatio = function(v) { return window.devicePixelRatio;};
+  var getRatio = function(v) { return Math.round(window.devicePixelRatio); };
   var deviceRatio = getRatio(document.createElement('canvas').getContext('2d'));
   var suffix = '@' + deviceRatio + 'x.png';
 
