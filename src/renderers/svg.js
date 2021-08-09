@@ -190,6 +190,7 @@ var svg = {
   pointsToString: function(points, size) {
 
     var string = '';
+    var r = size * 0.5;
 
     for (var i = 0; i < points.length; i++) {
 
@@ -197,7 +198,7 @@ var svg = {
       var y = points[i].y;
 
       string += Commands.move + ' ' + x + ' ' + y + ' ';
-      string += 'a ' + size + ' ' + size + ' 0 1 0 0.01 0 Z';
+      string += 'a ' + r + ' ' + r + ' 0 1 0 0.01 0 Z';
 
     }
 
@@ -534,8 +535,12 @@ var svg = {
         changed.id = this._id;
       }
 
-      if (this._flagVertices || this._flagSize) {
-        var vertices = svg.pointsToString(this._renderer.vertices, this._size);
+      if (this._flagVertices || this._flagSize || this._flagSizeAttenuation) {
+        var size = this._size;
+        if (this._sizeAttenuation) {
+          console.warn('[SVGRenderer] Two.Points: need to implement size attenuation.');
+        }
+        var vertices = svg.pointsToString(this._renderer.collection, size);
         changed.d = vertices;
       }
 

@@ -1,4 +1,4 @@
-import Commands from '../utils/path-commands.js';
+import { NumArray, toFixed } from '../utils/math.js';
 import defineGetterSetter from '../utils/get-set.js';
 import _ from '../utils/underscore.js';
 
@@ -6,7 +6,7 @@ import Collection from '../collection.js';
 import Events from '../events.js';
 import Vector from '../vector.js';
 import Shape from '../shape.js';
-import Path, { contains, getIdByLength } from '../path.js';
+import Path, { getIdByLength } from '../path.js';
 
 import Gradient from '../effects/gradient.js';
 import LinearGradient from '../effects/linear-gradient.js';
@@ -27,8 +27,8 @@ function Points(vertices) {
 
   this._renderer.flagFill = Path.FlagFill.bind(this);
   this._renderer.flagStroke = Path.FlagStroke.bind(this);
-  this._renderer.vertices = [];
-  this._renderer.collection = [];
+  this._renderer.vertices = null;
+  this._renderer.collection = null;
 
   this.vertices = vertices;
 
@@ -43,6 +43,7 @@ _.extend(Points, {
     'opacity',
     'visible',
     'size',
+    'sizeAttenuation',
 
     'beginning',
     'ending'
@@ -52,7 +53,7 @@ _.extend(Points, {
 
     Shape.MakeObservable(object);
 
-    _.each(Points.Properties.slice(2, 6), defineGetterSetter, object);
+    _.each(Points.Properties.slice(2, 7), defineGetterSetter, object);
 
     Object.defineProperty(object, 'fill', {
       enumerable: true,
@@ -199,6 +200,7 @@ _.extend(Points.prototype, Shape.prototype, {
   _flagOpacity: true,
   _flagVisible: true,
   _flagSize: true,
+  _flagSizeAttenuation: true,
 
   _length: 0,
   _fill: '#fff',
@@ -207,6 +209,7 @@ _.extend(Points.prototype, Shape.prototype, {
   _opacity: 1.0,
   _visible: true,
   _size: 1,
+  _sizeAttenuation: false,
   _beginning: 0,
   _ending: 1,
 
@@ -297,8 +300,6 @@ _.extend(Points.prototype, Shape.prototype, {
         this._updateLength(undefined, true);
       }
 
-      var l = this._collection.length;
-
       var beginning = Math.min(this._beginning, this._ending);
       var ending = Math.max(this._beginning, this._ending);
 
@@ -308,55 +309,19 @@ _.extend(Points.prototype, Shape.prototype, {
       var low = ceil(bid);
       var high = floor(eid);
 
-      var left, right, v;
+      var v;
 
-      this._renderer.vertices.length = 0;
+      this._renderer.vertices = new NumArray((high - low + 1) * 2);
+      this._renderer.collection = [];
 
-      for (var i = 0; i < l; i++) {
+      for (var i = low; i <= high; i++) {
 
-        if (this._renderer.collection.length <= i) {
-          this._renderer.collection.push(new Vector());
-        }
+        var j = i - low;
 
-        if (i > high && !right) {
-
-          v = this._renderer.collection[i];
-          v.copy(this._collection[i]);
-          this.getPointAt(ending, v);
-          v.command = this._renderer.collection[i].command;
-          this._renderer.vertices.push(v);
-
-          right = v;
-
-        } else if (i >= low && i <= high) {
-
-          v = this._renderer.collection[i]
-            .copy(this._collection[i]);
-          this._renderer.vertices.push(v);
-
-          if (i === high && contains(this, ending)) {
-            right = v;
-          } else if (i === low && contains(this, beginning)) {
-            left = v;
-            left.command = Commands.move;
-          }
-
-        }
-
-      }
-
-      // Prepend the trimmed point if necessary.
-      if (low > 0 && !left) {
-
-        i = low - 1;
-
-        v = this._renderer.collection[i];
-        v.copy(this._collection[i]);
-        this.getPointAt(beginning, v);
-        v.command = Commands.move;
-        this._renderer.vertices.unshift(v);
-
-        left = v;
+        v = this._collection[i];
+        this._renderer.collection.push(v);
+        this._renderer.vertices[j * 2 + 0] = v.x;
+        this._renderer.vertices[j * 2 + 1] = v.y;
 
       }
 

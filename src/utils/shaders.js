@@ -73,13 +73,11 @@ var shaders = {
       uniform float u_size;
       uniform mat3 u_matrix;
       uniform vec2 u_resolution;
-      uniform vec4 u_rect;
 
       varying vec2 v_textureCoords;
 
       void main() {
-        vec2 rectCoords = (a_position * (u_rect.zw - u_rect.xy)) + u_rect.xy;
-        vec2 projected = (u_matrix * vec3(rectCoords, 1.0)).xy;
+        vec2 projected = (u_matrix * vec3(a_position, 1.0)).xy;
         vec2 normal = projected / u_resolution;
         vec2 clipspace = (normal * 2.0) - 1.0;
 
@@ -92,8 +90,14 @@ var shaders = {
     fragment: `
       precision mediump float;
 
+      uniform sampler2D u_image;
+
       void main() {
-        gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+        vec4 texel = texture2D(u_image, gl_PointCoord);
+        if (texel.a == 0.0) {
+          discard;
+        }
+        gl_FragColor = texel;
       }
     `
 

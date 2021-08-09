@@ -382,7 +382,7 @@ var canvas = {
       stroke = this._stroke;
       linewidth = this._linewidth;
       fill = this._fill;
-      commands = this._renderer.vertices; // Commands
+      commands = this._renderer.collection; // Commands
       length = commands.length;
       defaultMatrix = isDefaultMatrix(matrix);
       dashes = this.dashes;
@@ -425,6 +425,11 @@ var canvas = {
 
       ctx.beginPath();
 
+      var radius = size * 0.5;
+      if (this._sizeAttenuation) {
+        console.warn('[CanvasRenderer] Two.Points: need to implement size attenuation.');
+      }
+
       for (var i = 0; i < length; i++) {
 
         b = commands[i];
@@ -432,8 +437,8 @@ var canvas = {
         x = b.x;
         y = b.y;
 
-        ctx.moveTo(x, y);
-        ctx.arc(x, y, size, 0, TWO_PI);
+        ctx.moveTo(x + radius, y);
+        ctx.arc(x, y, radius, 0, TWO_PI);
 
       }
 

@@ -84,8 +84,13 @@ var lerp = function(a, b, t) {
  * @description Rounds a number up to the nearest power-of-two value.
  * @see {@link https://en.wikipedia.org/wiki/Power_of_two}
  */
+var pots = [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096];
 var getPoT = function(value) {
-  return Math.pow(2, Math.round(Math.log(value) / Math.log(2)));
+  var i = 0;
+  while (pots[i] && pots[i] < value) {
+    i++;
+  }
+  return pots[i];
 };
 
 /**
@@ -107,6 +112,7 @@ var mod = function(v, l) {
 };
 
 var NumArray = root.Float32Array || Array;
+var floor = Math.floor;
 
 /**
 * @name Two.Utils.toFixed
@@ -117,7 +123,7 @@ var NumArray = root.Float32Array || Array;
 * @see {@link http://jsperf.com/parsefloat-tofixed-vs-math-round/18}
 */
 var toFixed = function(v) {
-  return Math.floor(v * 1000000) / 1000000;
+  return floor(v * 1000000) / 1000000;
 };
 
 
