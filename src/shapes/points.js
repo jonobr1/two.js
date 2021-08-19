@@ -32,6 +32,9 @@ function Points(vertices) {
 
   this.vertices = vertices;
 
+  this.dashes = [];
+  this.dashes.offset = 0;
+
 }
 
 _.extend(Points, {
@@ -184,6 +187,19 @@ _.extend(Points, {
 
     });
 
+    Object.defineProperty(object, 'dashes', {
+      enumerable: true,
+      get: function() {
+        return this._dashes;
+      },
+      set: function(v) {
+        if(typeof v.offset !== 'number') {
+          v.offset = this._dashes.offset || 0;
+        }
+        this._dashes = v;
+      }
+    });
+
   }
 
 });
@@ -211,7 +227,8 @@ _.extend(Points.prototype, Shape.prototype, {
   _size: 1,
   _sizeAttenuation: false,
   _beginning: 0,
-  _ending: 1,
+  _ending: 1.0,
+  _dashes: null,
 
   clone: function(parent) {
 
