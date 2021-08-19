@@ -1,6 +1,6 @@
 import Commands from './utils/path-commands.js';
 import Collection from './collection.js';
-import {getComputedMatrix, lerp, mod} from './utils/math.js';
+import { getComputedMatrix, lerp, mod } from './utils/math.js';
 import {
   getComponentOnCubicBezier,
   getCurveBoundingBox,
@@ -1141,7 +1141,7 @@ _.extend(Path.prototype, Shape.prototype, {
    * @description Insert a {@link Two.Anchor} at the midpoint between every item in {@link Two.Path#vertices}.
    */
   subdivide: function(limit) {
-    //TODO: DRYness (function below)
+    // TODO: DRYness (function below)
     this._update();
 
     var last = this.vertices.length - 1;
@@ -1225,7 +1225,7 @@ _.extend(Path.prototype, Shape.prototype, {
    * @description Recalculate the {@link Two.Path#length} value.
    */
   _updateLength: function(limit, silent) {
-    //TODO: DRYness (function above)
+    // TODO: DRYness (function above)
     if (!silent) {
       this._update();
     }
