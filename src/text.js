@@ -200,7 +200,7 @@ _.extend(Text, {
       },
       set: function(v) {
         if (typeof v.offset !== 'number') {
-          v.offset = this._dashes.offset || 0;
+          v.offset = (this.dashes && this._dashes.offset) || 0;
         }
         this._dashes = v;
       }
