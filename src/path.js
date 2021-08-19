@@ -712,7 +712,7 @@ _.extend(Path.prototype, Shape.prototype, {
    * @private
    * @see {@link Two.Path#dashes}
    */
-  _dashes: [],
+  _dashes: null,
 
   /**
    * @name Two.Path#clone

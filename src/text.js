@@ -451,7 +451,7 @@ _.extend(Text.prototype, Shape.prototype, {
    * @private
    * @see {@link Two.Text#dashes}
    */
-  _dashes: [],
+  _dashes: null,
 
   /**
    * @name Two.Text#remove
