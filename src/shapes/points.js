@@ -16,6 +16,13 @@ import Texture from '../effects/texture.js';
 var ceil = Math.ceil;
 var floor = Math.floor;
 
+/**
+ * @name Two.Points
+ * @class
+ * @extends Two.Shape
+ * @param {Two.Vector[]} [vertices] - A list of {@link Two.Vector}s that represent the order and coordinates to construct a rendered set of points.
+ * @description This is a primary primitive class for quickly and easily drawing points in Two.js. Unless specified methods return their instance of `Two.Points` for the purpose of chaining.
+ */
 function Points(vertices) {
 
   Shape.call(this);
@@ -30,9 +37,70 @@ function Points(vertices) {
   this._renderer.vertices = null;
   this._renderer.collection = null;
 
+  /**
+   * @name Two.Points#beginning
+   * @property {Number} - Number between zero and one to state the beginning of where the path is rendered.
+   * @description {@link Two.Points#beginning} is a percentage value that represents at what percentage into the path should the renderer start drawing.
+   */
+  this.beginning = 0;
+
+  /**
+   * @name Two.Points#ending
+   * @property {Number} - Number between zero and one to state the ending of where the path is rendered.
+   * @description {@link Two.Points#ending} is a percentage value that represents at what percentage into the path should the renderer start drawing.
+   */
+  this.ending = 1;
+
+  // Style properties
+
+  /**
+   * @name Two.Points#fill
+   * @property {(String|Two.Gradient|Two.Texture)} - The value of what the path should be filled in with.
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
+   */
+  this.fill = '#fff';
+
+  /**
+   * @name Two.Points#stroke
+   * @property {(String|Two.Gradient|Two.Texture)} - The value of what the path should be outlined in with.
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
+   */
+  this.stroke = '#000';
+
+  /**
+   * @name Two.Points#className
+   * @property {String} - A class to be applied to the element to be compatible with CSS styling.
+   * @nota-bene Only available for the SVG renderer.
+   */
+  this.className = '';
+
+  /**
+   * @name Two.Points#visible
+   * @property {Boolean} - Display the points or not.
+   * @nota-bene For {@link Two.CanvasRenderer} and {@link Two.WebGLRenderer} when set to false all updating is disabled improving performance dramatically with many objects in the scene.
+   */
+  this.visible = true;
+
+  /**
+   * @name Two.Points#vertices
+   * @property {Two.Vector[]} - An ordered list of vector points for rendering points.
+   * @description A list of {@link Two.Vector} objects that consist of which coordinates to draw points at.
+   * @nota-bene The array when manipulating is actually a {@link Two.Collection}.
+   */
   this.vertices = vertices;
 
+  /**
+   * @name Two.Points#dashes
+   * @property {Number[]} - Array of numbers. Odd indices represent dash length. Even indices represent dash space.
+   * @description A list of numbers that represent the repeated dash length and dash space applied to the stroke of the text.
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray} for more information on the SVG stroke-dasharray attribute.
+   */
   this.dashes = [];
+
+  /**
+   * @name Two.Points#dashes#offset
+   * @property {Number} - A number in pixels to offset {@link Two.Points#dashes} display.
+   */
   this.dashes.offset = 0;
 
 }
@@ -230,6 +298,13 @@ _.extend(Points.prototype, Shape.prototype, {
   _ending: 1.0,
   _dashes: null,
 
+  /**
+   * @name Two.Points#clone
+   * @function
+   * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+   * @returns {Two.Points}
+   * @description Create a new instance of {@link Two.Points} with the same properties of the current path.
+   */
   clone: function(parent) {
 
     var clone = new Points();
@@ -263,6 +338,12 @@ _.extend(Points.prototype, Shape.prototype, {
 
   },
 
+  /**
+   * @name Two.Points#toObject
+   * @function
+   * @returns {Object}
+   * @description Return a JSON compatible plain object that represents the points object.
+   */
   toObject: function() {
 
     var result = {
@@ -291,24 +372,76 @@ _.extend(Points.prototype, Shape.prototype, {
 
   },
 
+  /**
+   * @name Two.Points#noFill
+   * @function
+   * @description Short hand method to set fill to `transparent`.
+   */
   noFill: Path.prototype.noFill,
 
+  /**
+   * @name Two.Points#noStroke
+   * @function
+   * @description Short hand method to set stroke to `transparent`.
+   */
   noStroke: Path.prototype.noStroke,
 
+  /**
+   * @name Two.Points#corner
+   * @function
+   * @description Orient the vertices of the shape to the upper left-hand corner of the points object.
+   */
   corner: Path.prototype.corner,
 
+  /**
+   * @name Two.Points#center
+   * @function
+   * @description Orient the vertices of the shape to the center of the points object.
+   */
   center: Path.prototype.center,
 
+  /**
+   * @name Two.Points#remove
+   * @function
+   * @description Remove self from the scene / parent.
+   */
   remove: Path.prototype.remove,
 
+  /**
+   * @name Two.Points#getBoundingClientRect
+   * @function
+   * @param {Boolean} [shallow=false] - Describes whether to calculate off local matrix or world matrix.
+   * @returns {Object} - Returns object with top, left, right, bottom, width, height attributes.
+   * @description Return an object with top, left, right, bottom, width, and height parameters of the path.
+   */
   getBoundingClientRect: Path.prototype.getBoundingClientRect,
 
-  getPointAt: Path.prototype.getPointAt,
-
+  /**
+   * @name Two.Points#subdivide
+   * @function
+   * @param {Number} limit - How many times to recurse subdivisions.
+   * @description Insert a {@link Two.Vector} at the midpoint between every item in {@link Two.Points#vertices}.
+   */
   subdivide: Path.prototype.subdivide,
 
+  /**
+   * @name Two.Points#_updateLength
+   * @function
+   * @private
+   * @param {Number} [limit] -
+   * @param {Boolean} [silent=false] - If set to `true` then the points object isn't updated before calculation. Useful for internal use.
+   * @description Recalculate the {@link Two.Points#length} value.
+   */
   _updateLength: Path.prototype._updateLength,
 
+  /**
+   * @name Two.Points#_update
+   * @function
+   * @private
+   * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+   * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
+   * @nota-bene Try not to call this method more than once a frame.
+   */
   _update: function() {
 
     if (this._flagVertices) {
