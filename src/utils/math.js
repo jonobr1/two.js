@@ -11,18 +11,31 @@ var HALF_PI = Math.PI * 0.5;
  * @returns {Object} An object containing relevant skew values.
  * @description Decompose a 2D 3x3 Matrix to find the skew.
  */
-var decomposeMatrix = function(matrix) {
+var decomposeMatrix = function(matrix, b, c, d, e, f) {
 
   // TODO: Include skewX, skewY
   // https://math.stackexchange.com/questions/237369/given-this-transformation-matrix-how-do-i-decompose-it-into-translation-rotati/417813
   // https://stackoverflow.com/questions/45159314/decompose-2d-transformation-matrix
 
+  var a;
+
+  if (arguments.length <= 1) {
+    a = matrix.a;
+    b = matrix.b;
+    c = matrix.c;
+    d = matrix.d;
+    e = matrix.e;
+    f = matrix.f;
+  } else {
+    a = matrix;
+  }
+
   return {
-      translateX: matrix.e,
-      translateY: matrix.f,
-      scaleX: Math.sqrt(matrix.a * matrix.a + matrix.b * matrix.b),
-      scaleY: Math.sqrt(matrix.c * matrix.c + matrix.d * matrix.d),
-      rotation: 180 * Math.atan2(matrix.b, matrix.a) / Math.PI
+    translateX: e,
+    translateY: f,
+    scaleX: Math.sqrt(a * a + b * b),
+    scaleY: Math.sqrt(c * c + d * d),
+    rotation: 180 * Math.atan2(b, a) / Math.PI
   };
 
 };

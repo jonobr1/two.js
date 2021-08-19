@@ -1,5 +1,5 @@
 import Commands from '../utils/path-commands.js';
-import { mod, TWO_PI } from '../utils/math.js';
+import { decomposeMatrix, getComputedMatrix, mod, TWO_PI } from '../utils/math.js';
 import { Curve } from '../utils/curves.js';
 import Events from '../events.js';
 import getRatio from '../utils/get-ratio.js';
@@ -7,7 +7,10 @@ import _ from '../utils/underscore.js';
 
 import Group from '../group.js';
 import Vector from '../vector.js';
+import Matrix from '../matrix.js';
 import Constants from '../constants.js';
+
+var matrix =  new Matrix();
 
 // Constants
 var emptyArray = [];
@@ -364,7 +367,7 @@ var canvas = {
 
     render: function(ctx, forced, parentClipped) {
 
-      var matrix, stroke, linewidth, fill, opacity, visible, size, commands,
+      var me, stroke, linewidth, fill, opacity, visible, size, commands,
           length, b, x, y, defaultMatrix, isOffset, dashes, po;
 
       po = (this.parent && this.parent._renderer)
@@ -378,20 +381,20 @@ var canvas = {
 
       this._update();
 
-      matrix = this._matrix.elements;
+      me = this._matrix.elements;
       stroke = this._stroke;
       linewidth = this._linewidth;
       fill = this._fill;
       commands = this._renderer.collection; // Commands
       length = commands.length;
-      defaultMatrix = isDefaultMatrix(matrix);
+      defaultMatrix = isDefaultMatrix(me);
       dashes = this.dashes;
       size = this._size;
 
       // Transform
       if (!defaultMatrix) {
         ctx.save();
-        ctx.transform(matrix[0], matrix[3], matrix[1], matrix[4], matrix[2], matrix[5]);
+        ctx.transform(me[0], me[3], me[1], me[4], me[2], me[5]);
       }
 
       // Styles
@@ -425,9 +428,13 @@ var canvas = {
 
       ctx.beginPath();
 
-      var radius = size * 0.5;
-      if (this._sizeAttenuation) {
-        console.warn('[CanvasRenderer] Two.Points: need to implement size attenuation.');
+      var radius = size * 0.5, m;
+
+      if (!this._sizeAttenuation) {
+        getComputedMatrix(this, matrix);
+        me = matrix.elements;
+        m = decomposeMatrix(me[0], me[3], me[1], me[4], me[2], me[5]);
+        radius /= Math.max(m.scaleX, m.scaleY);
       }
 
       for (var i = 0; i < length; i++) {

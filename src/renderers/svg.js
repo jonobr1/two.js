@@ -1,10 +1,13 @@
 import Commands from '../utils/path-commands.js';
-import {mod, toFixed} from '../utils/math.js';
+import { decomposeMatrix, getComputedMatrix, mod, toFixed } from '../utils/math.js';
 import Events from '../events.js';
 import _ from '../utils/underscore.js';
 
 import Group from '../group.js';
 import Vector from '../vector.js';
+import Matrix from '../matrix.js';
+
+var matrix = new Matrix();
 
 var svg = {
 
@@ -537,8 +540,11 @@ var svg = {
 
       if (this._flagVertices || this._flagSize || this._flagSizeAttenuation) {
         var size = this._size;
-        if (this._sizeAttenuation) {
-          console.warn('[SVGRenderer] Two.Points: need to implement size attenuation.');
+        if (!this._sizeAttenuation) {
+          getComputedMatrix(this, matrix);
+          var me = matrix.elements;
+          var m = decomposeMatrix(me[0], me[3], me[1], me[4], me[2], me[5]);
+          size /= Math.max(m.scaleX, m.scaleY);
         }
         var vertices = svg.pointsToString(this._renderer.collection, size);
         changed.d = vertices;
