@@ -432,8 +432,8 @@ var canvas = {
 
       if (!this._sizeAttenuation) {
         getComputedMatrix(this, matrix);
-        me = matrix.elements;
-        m = decomposeMatrix(me[0], me[3], me[1], me[4], me[2], me[5]);
+        m = matrix.elements;
+        m = decomposeMatrix(m[0], m[3], m[1], m[4], m[2], m[5]);
         radius /= Math.max(m.scaleX, m.scaleY);
       }
 
