@@ -1,5 +1,6 @@
 import { NumArray } from '../utils/math.js';
 import defineGetterSetter from '../utils/get-set.js';
+import { subdivide } from '../utils/curves.js';
 import _ from '../utils/underscore.js';
 
 import Collection from '../collection.js';
@@ -422,7 +423,33 @@ _.extend(Points.prototype, Shape.prototype, {
    * @param {Number} limit - How many times to recurse subdivisions.
    * @description Insert a {@link Two.Vector} at the midpoint between every item in {@link Two.Points#vertices}.
    */
-  subdivide: Path.prototype.subdivide,
+  subdivide: function(limit) {
+    // TODO: DRYness (function below)
+    this._update();
+    var points = [];
+    for (var i = 0; i < this.vertices.length; i++) {
+
+      var a = this.vertices[i];
+      var b = this.vertices[i - 1];
+
+      if (!b) {
+        continue;
+      }
+
+      var x1 = a.x;
+      var y1 = a.y;
+      var x2 = b.x;
+      var y2 = b.y;
+      var subdivisions = subdivide(x1, y1, x1, y1, x2, y2, x2, y2, limit);
+
+      points = points.concat(subdvisions);
+
+    }
+
+    this.vertices = points;
+    return this;
+
+  },
 
   /**
    * @name Two.Points#_updateLength
