@@ -1220,7 +1220,7 @@ _.extend(Path.prototype, Shape.prototype, {
    * @name Two.Path#_updateLength
    * @function
    * @private
-   * @param {Number} [limit=] -
+   * @param {Number} [limit] -
    * @param {Boolean} [silent=false] - If set to `true` then the path isn't updated before calculation. Useful for internal use.
    * @description Recalculate the {@link Two.Path#length} value.
    */
