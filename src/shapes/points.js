@@ -442,7 +442,7 @@ _.extend(Points.prototype, Shape.prototype, {
       var y2 = b.y;
       var subdivisions = subdivide(x1, y1, x1, y1, x2, y2, x2, y2, limit);
 
-      points = points.concat(subdvisions);
+      points = points.concat(subdivisions);
 
     }
 
