@@ -1584,7 +1584,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2021-08-20T00:12:04.617Z',
+    PublishDate: '2021-08-20T01:48:52.881Z',
 
     /**
      * @name Two.Identifier
@@ -17238,6 +17238,7 @@ SOFTWARE.
      * @param {Number} startAngle
      * @param {Number} endAngle
      * @param {Number} [resolution=Two.Resolution] - The number of vertices that should comprise the arc segment.
+     * @returns {Two.ArcSegment}
      */
     makeArcSegment: function(ox, oy, ir, or, sa, ea, res) {
       var arcSegment = new ArcSegment(ox, oy, ir, or, sa, ea, res);
@@ -17246,9 +17247,40 @@ SOFTWARE.
     },
 
     /**
+     * @name Two#makePoints
+     * @function
+     * @param {Two.Vector[]} [points] - An array of {@link Two.Vector} points
+     * @param {...Number} - Alternatively you can pass alternating `x` / `y` coordinate values as individual agrguments. These will be combined into {@link Two.Vector}s for use in the points object.
+     * @returns {Two.Points}
+     * @description Creates a Two.js points object and adds it to the current scene.
+     */
+    makePoints: function(p) {
+
+      var l = arguments.length, vertices = p;
+      if (!Array.isArray(p)) {
+        vertices = [];
+        for (var i = 0; i < l; i+=2) {
+          var x = arguments[i];
+          if (typeof x !== 'number') {
+            break;
+          }
+          var y = arguments[i + 1];
+          vertices.push(new Vector(x, y));
+        }
+      }
+
+      var points = new Points(vertices);
+
+      this.scene.add(points);
+
+      return points;
+
+    },
+
+    /**
      * @name Two#makePath
      * @function
-     * @param {Two.Anchor[]} [points] - An array of {@link Two.Anchor} points.
+     * @param {Two.Anchor[]} [points] - An array of {@link Two.Anchor} points
      * @param {...Number} - Alternatively you can pass alternating `x` / `y` coordinate values as individual arguments. These will be combined into {@link Two.Anchor}s for use in the path.
      * @returns {Two.Path}
      * @description Creates a Two.js path and adds it to the scene.
