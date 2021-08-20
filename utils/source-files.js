@@ -13,6 +13,7 @@ var sourceFiles = [
   'src/shapes/rectangle.js',
   'src/shapes/ellipse.js',
   'src/shapes/circle.js',
+  'src/shapes/points.js',
   'src/shapes/polygon.js',
   'src/shapes/arc-segment.js',
   'src/shapes/star.js',
