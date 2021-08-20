@@ -1404,10 +1404,10 @@ _.extend(Path.prototype, Shape.prototype, {
    */
   flagReset: function() {
 
-    this._flagVertices =  this._flagFill =  this._flagStroke =
-        this._flagLinewidth = this._flagOpacity = this._flagVisible =
-        this._flagCap = this._flagJoin = this._flagMiter =
-        this._flagClip = false;
+    this._flagVertices = this._flagLength = this._flagFill =  this._flagStroke =
+      this._flagLinewidth = this._flagOpacity = this._flagVisible =
+      this._flagCap = this._flagJoin = this._flagMiter =
+      this._flagClip = false;
 
     Shape.prototype.flagReset.call(this);
 

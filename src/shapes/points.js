@@ -515,6 +515,24 @@ _.extend(Points.prototype, Shape.prototype, {
 
     return this;
 
+  },
+
+  /**
+   * @name Two.Points#flagReset
+   * @function
+   * @private
+   * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+   */
+  flagReset: function() {
+
+    this._flagVertices = this._flagLength = this._flagFill =  this._flagStroke =
+      this._flagLinewidth = this._flagOpacity = this._flagVisible =
+      this._flagSize = this._flagSizeAttenuation = false;
+
+    Shape.prototype.flagReset.call(this);
+
+    return this;
+
   }
 
 });
