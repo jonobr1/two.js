@@ -32,7 +32,6 @@ QUnit.test('Two.Points', function(assert) {
   assert.equal(points.sizeAttenuation, true, 'Can get property sizeAttenuation correctly.');
   assert.equal(points._sizeAttenuation, true, 'Can set property sizeAttenuation correctly.');
 
-  var dashes = [2, 2];
   points.dashes = [2, 2];
   assert.equal(points.dashes.length === 2 && points.dashes[0] === 2 && points.dashes[1] === 2, true, 'Can get property dashes correctly.');
   assert.equal(points._dashes.length === 2 && points._dashes[0] === 2 && points._dashes[1] === 2, true, 'Can set property dashes correctly.');
