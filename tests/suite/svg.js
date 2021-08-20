@@ -90,6 +90,26 @@
 
   });
 
+  QUnit.test('Two.makePoints', function(assert) {
+
+    assert.expect(1);
+
+    var two = new Two({
+      width: 400,
+      height: 400
+    });
+
+    var points = two.makePoints(200, 200, 205, 200, 195, 200);
+
+    two.update();
+
+    var elem = two.renderer.domElement.querySelector('#' + points.id);
+    assert.equal(elem.getAttribute('d'), 'M 200 200 a 0.5 0.5 0 1 0 0.01 0 ZM 205 200 a 0.5 0.5 0 1 0 0.01 0 ZM 195 200 a 0.5 0.5 0 1 0 0.01 0 Z', 'Two.makePoints applies d attribute properly.');
+
+    QUnit.Utils.addInstanceToTest(assert.test, two);
+
+  });
+
   QUnit.test('Two.makePath', function(assert) {
 
     assert.expect(2);
