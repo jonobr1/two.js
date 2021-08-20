@@ -39,6 +39,13 @@ function Points(vertices) {
   this._renderer.collection = null;
 
   /**
+   * @name Two.Points#sizeAttenuation
+   * @property {Boolean} - Boolean dictating whether Two.js should scale the size of the points based on its matrix hierarcy.
+   * @description Set to `true` if you'd like the size of the points to be relative to the scale of its parents; `false` to disregard. Default is `false`.
+   */
+  this.sizeAttenuation = false;
+
+  /**
    * @name Two.Points#beginning
    * @property {Number} - Number between zero and one to state the beginning of where the path is rendered.
    * @description {@link Two.Points#beginning} is a percentage value that represents at what percentage into the path should the renderer start drawing.
