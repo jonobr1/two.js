@@ -198,10 +198,10 @@ var svg = {
     for (var i = 0; i < points.length; i++) {
 
       var x = points[i].x;
-      var y = points[i].y;
+      var y = points[i].y - r;
 
       string += Commands.move + ' ' + x + ' ' + y + ' ';
-      string += 'a ' + r + ' ' + r + ' 0 1 0 0.01 0 Z';
+      string += 'a ' + r + ' ' + r + ' 0 1 0 0.001 0 Z';
 
     }
 
