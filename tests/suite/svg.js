@@ -104,7 +104,7 @@
     two.update();
 
     var elem = two.renderer.domElement.querySelector('#' + points.id);
-    assert.equal(elem.getAttribute('d'), 'M 200 200 a 0.5 0.5 0 1 0 0.01 0 ZM 205 200 a 0.5 0.5 0 1 0 0.01 0 ZM 195 200 a 0.5 0.5 0 1 0 0.01 0 Z', 'Two.makePoints applies d attribute properly.');
+    assert.equal(elem.getAttribute('d'), 'M 200 199.5 a 0.5 0.5 0 1 0 0.001 0 ZM 205 199.5 a 0.5 0.5 0 1 0 0.001 0 ZM 195 199.5 a 0.5 0.5 0 1 0 0.001 0 Z', 'Two.makePoints applies d attribute properly.');
 
     QUnit.Utils.addInstanceToTest(assert.test, two);
 

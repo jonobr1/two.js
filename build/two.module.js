@@ -1578,7 +1578,7 @@ var Constants = {
    * @name Two.PublishDate
    * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
    */
-  PublishDate: '2021-08-20T01:48:52.881Z',
+  PublishDate: '2021-09-03T15:35:14.310Z',
 
   /**
    * @name Two.Identifier
@@ -13981,10 +13981,10 @@ var svg = {
     for (var i = 0; i < points.length; i++) {
 
       var x = points[i].x;
-      var y = points[i].y;
+      var y = points[i].y - r;
 
       string += Commands.move + ' ' + x + ' ' + y + ' ';
-      string += 'a ' + r + ' ' + r + ' 0 1 0 0.01 0 Z';
+      string += 'a ' + r + ' ' + r + ' 0 1 0 0.001 0 Z';
 
     }
 
