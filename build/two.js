@@ -1584,7 +1584,7 @@ SOFTWARE.
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2021-09-03T15:35:14.310Z',
+    PublishDate: '2021-09-17T15:45:03.858Z',
 
     /**
      * @name Two.Identifier
@@ -17504,7 +17504,7 @@ SOFTWARE.
     load: function(text, callback) {
 
       var group = new Group();
-      var elem, i, j, child;
+      var elem, i, child;
 
       var attach = (function(data) {
 
@@ -17513,13 +17513,13 @@ SOFTWARE.
         for (i = 0; i < dom.temp.children.length; i++) {
           elem = dom.temp.children[i];
           if (/svg/i.test(elem.nodeName)) {
-            child = this.interpret(elem);
+            child = this.interpret(elem, false, false);
             // Two.Utils.applySvgViewBox.call(this, group, elem.getAttribute('viewBox'));
-            for (j = 0; j < child.children.length; j++) {
-              group.add(child.children[j]);
+            while (child.children.length > 0) {
+              group.add(child.children[0]);
             }
           } else {
-            group.add(this.interpret(elem));
+            group.add(this.interpret(elem, false, false));
           }
         }
 
