@@ -923,13 +923,13 @@ _.extend(Two.prototype, Events, {
       for (i = 0; i < dom.temp.children.length; i++) {
         elem = dom.temp.children[i];
         if (/svg/i.test(elem.nodeName)) {
-          child = this.interpret(elem);
+          child = this.interpret(elem, false, false);
           // Two.Utils.applySvgViewBox.call(this, group, elem.getAttribute('viewBox'));
-          for (j = 0; j < child.children.length; j++) {
-            group.add(child.children[j]);
+          while (child.children.length > 0) {
+            group.add(child.children[0]);
           }
         } else {
-          group.add(this.interpret(elem));
+          group.add(this.interpret(elem, false, false));
         }
       }
 
