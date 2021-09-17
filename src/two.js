@@ -914,7 +914,7 @@ _.extend(Two.prototype, Events, {
   load: function(text, callback) {
 
     var group = new Group();
-    var elem, i, j, child;
+    var elem, i, child;
 
     var attach = (function(data) {
 
