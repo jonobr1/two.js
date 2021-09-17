@@ -4,6 +4,7 @@ sidebarDepth: 2
 
 # Change Log
 ## Nightly
++ Improved `Two.load` group duplication
 + Added `Two.Points` and `Two.makePoints` to all renderers
 + Made `Two.release` mimic behavior of `Two.remove`
 
