@@ -137,13 +137,13 @@ _.extend(Rectangle.prototype, Path.prototype, {
         this.vertices.push(new Anchor());
       }
 
-      this.vertices[0].set(-xr, -yr).add(this._origin).command = Commands.move;
-      this.vertices[1].set(xr, -yr).add(this._origin).command = Commands.line;
-      this.vertices[2].set(xr, yr).add(this._origin).command = Commands.line;
-      this.vertices[3].set(-xr, yr).add(this._origin).command = Commands.line;
+      this.vertices[0].set(-xr, -yr).sub(this._origin).command = Commands.move;
+      this.vertices[1].set(xr, -yr).sub(this._origin).command = Commands.line;
+      this.vertices[2].set(xr, yr).sub(this._origin).command = Commands.line;
+      this.vertices[3].set(-xr, yr).sub(this._origin).command = Commands.line;
       // FYI: Two.Sprite and Two.ImageSequence have 4 verts
       if (this.vertices[4]) {
-        this.vertices[4].set(-xr, -yr).add(this._origin).command = Commands.line;
+        this.vertices[4].set(-xr, -yr).sub(this._origin).command = Commands.line;
       }
 
     }

@@ -875,7 +875,7 @@ _.extend(Two.prototype, Events, {
    * @function
    * @param {SVGElement} SVGElement - The SVG node to be parsed.
    * @param {Boolean} shallow - Don't create a top-most group but append all content directly.
-   * @param {Boolean} add – Automatically add the reconstructed SVG node to scene.
+   * @param {Boolean} [add=true] – Automatically add the reconstructed SVG node to scene.
    * @returns {Two.Group}
    * @description Interpret an SVG Node and add it to this instance's scene. The distinction should be made that this doesn't `import` svg's, it solely interprets them into something compatible for Two.js - this is slightly different than a direct transcription.
    */
@@ -922,14 +922,9 @@ _.extend(Two.prototype, Events, {
 
       for (i = 0; i < dom.temp.children.length; i++) {
         elem = dom.temp.children[i];
-        if (/svg/i.test(elem.nodeName)) {
-          child = this.interpret(elem, false, false);
-          // Two.Utils.applySvgViewBox.call(this, group, elem.getAttribute('viewBox'));
-          while (child.children.length > 0) {
-            group.add(child.children[0]);
-          }
-        } else {
-          group.add(this.interpret(elem, false, false));
+        child = this.interpret(elem, false, false);
+        if (child !== null) {
+          group.add(child);
         }
       }
 
