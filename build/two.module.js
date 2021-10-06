@@ -1578,7 +1578,7 @@ var Constants = {
    * @name Two.PublishDate
    * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
    */
-  PublishDate: '2021-09-17T15:45:03.858Z',
+  PublishDate: '2021-10-06T18:55:22.073Z',
 
   /**
    * @name Two.Identifier
@@ -7742,7 +7742,13 @@ _.extend(Path.prototype, Shape.prototype, {
     };
 
     _.each(Path.Properties, function(k) {
-      result[k] = this[k];
+      if (typeof this[k] !== 'undefined') {
+        if (this[k].toObject) {
+          result[k] = this[k].toObject();
+        } else {
+          result[k] = this[k];
+        }
+      }
     }, this);
 
     result.className = this.className;
@@ -8638,13 +8644,13 @@ _.extend(Rectangle.prototype, Path.prototype, {
         this.vertices.push(new Anchor());
       }
 
-      this.vertices[0].set(-xr, -yr).add(this._origin).command = Commands.move;
-      this.vertices[1].set(xr, -yr).add(this._origin).command = Commands.line;
-      this.vertices[2].set(xr, yr).add(this._origin).command = Commands.line;
-      this.vertices[3].set(-xr, yr).add(this._origin).command = Commands.line;
+      this.vertices[0].set(-xr, -yr).sub(this._origin).command = Commands.move;
+      this.vertices[1].set(xr, -yr).sub(this._origin).command = Commands.line;
+      this.vertices[2].set(xr, yr).sub(this._origin).command = Commands.line;
+      this.vertices[3].set(-xr, yr).sub(this._origin).command = Commands.line;
       // FYI: Two.Sprite and Two.ImageSequence have 4 verts
       if (this.vertices[4]) {
-        this.vertices[4].set(-xr, -yr).add(this._origin).command = Commands.line;
+        this.vertices[4].set(-xr, -yr).sub(this._origin).command = Commands.line;
       }
 
     }
@@ -10619,7 +10625,8 @@ Text.MakeObservable(Text.prototype);
 
 // https://github.com/jonobr1/two.js/issues/507#issuecomment-777159213
 var regex = {
-  path: /[+-]?(?:\d*\.\d+|\d+)(?:[eE][+-]\d+)?/g
+  path: /[+-]?(?:\d*\.\d+|\d+)(?:[eE][+-]\d+)?/g,
+  unitSuffix: /[a-zA-Z%]*/i
 };
 
 var alignments = {
@@ -10757,18 +10764,49 @@ var getSvgAttributes = function(node) {
  */
 var applySvgViewBox = function(node, value) {
 
-  var elements = value.split(/\s/);
+  var elements = value.split(/[\s,]/);
 
-  var x = parseFloat(elements[0]);
-  var y = parseFloat(elements[1]);
+  var x = - parseFloat(elements[0]);
+  var y = - parseFloat(elements[1]);
   var width = parseFloat(elements[2]);
   var height = parseFloat(elements[3]);
 
-  var s = Math.min(this.width / width, this.height / height);
+  if (x && y) {
+    for (var i = 0; i < node.children.length; i++) {
+      var child = node.children[i];
+      if ('translation' in child) {
+        child.translation.add(x, y);
+      } else if ('x' in child) {
+        child.x = x;
+      } else if ('y' in child) {
+        child.y = y;
+      }
+    }
+  }
 
-  node.translation.x -= x * s;
-  node.translation.y -= y * s;
-  node.scale = s;
+  var xExists = typeof node.x === 'number';
+  var yExists = typeof node.y === 'number';
+  var widthExists = typeof node.width === 'number';
+  var heightExists = typeof node.height === 'number';
+
+  if (xExists) {
+    node.translation.x += node.x;
+  }
+  if (yExists) {
+    node.translation.y += node.y;
+  }
+  if (widthExists || heightExists) {
+    node.scale = new Vector(1, 1);
+  }
+  if (widthExists) {
+    node.scale.x = node.width / width;
+  }
+  if (heightExists) {
+    node.scale.y = node.height / height;
+  }
+
+  node.mask = new Rectangle(0, 0, width, height);
+  node.mask.origin.set(- width / 2, - height / 2);
 
   return node;
 
@@ -10785,7 +10823,8 @@ var applySvgViewBox = function(node, value) {
  */
 var applySvgAttributes = function(node, elem, parentStyles) {
 
-  var styles = {}, attributes = {}, extracted = {}, i, m, key, value, attr;
+  var styles = {}, attributes = {}, extracted = {},
+    i, m, key, value, prop, attr;
   var transforms, x, y;
   var id, scene, ref, tagName;
 
@@ -10910,9 +10949,6 @@ var applySvgAttributes = function(node, elem, parentStyles) {
         }
 
         break;
-      case 'viewBox':
-        applySvgViewBox.call(this, elem, value);
-        break;
       case 'visible':
         if (elem instanceof Group) {
           elem._visible = value;
@@ -10983,11 +11019,10 @@ var applySvgAttributes = function(node, elem, parentStyles) {
         break;
       case 'fill':
       case 'stroke':
-        if (elem instanceof Group) {
-          key = '_' + key;
-        }
+        prop = (elem instanceof Group ? '_' : '') + key;
         if (/url\(#.*\)/i.test(value)) {
           id = value.replace(/url\(#(.*)\)/i, '$1');
+          node.setAttribute(key, value.replace(/\)/i, '-' + Constants.Identifier + 'applied)'));
           if (read.defs.current && read.defs.current.contains(id)) {
             ref = read.defs.current.get(id);
             tagName = getTagName(ref.nodeName);
@@ -10996,9 +11031,9 @@ var applySvgAttributes = function(node, elem, parentStyles) {
             scene = getScene(this);
             ref = scene.getById(id);
           }
-          elem[key] = ref;
+          elem[prop] = ref;
         } else {
-          elem[key] = (/none/i.test(value)) ? 'transparent' : value;
+          elem[prop] = (/none/i.test(value)) ? 'transparent' : value;
         }
         break;
       case 'id':
@@ -11114,10 +11149,35 @@ var read = {
     }
 
     var svg = read.g.call(this, node);
-    // var viewBox = node.getAttribute('viewBox');
+    var viewBox = node.getAttribute('viewBox');
+    var x = node.getAttribute('x');
+    var y = node.getAttribute('y');
+    var width = node.getAttribute('width');
+    var height = node.getAttribute('height');
 
     svg.defs = defs;  // Export out the <defs /> for later use
-    // Utils.applySvgViewBox(svg, viewBox);
+
+    var viewBoxExists = viewBox !== null;
+    var xExists = x !== null;
+    var yExists = y !== null;
+    var widthExists = width !== null;
+    var heightExists = height !== null;
+
+    if (xExists) {
+      svg.x = parseFloat(x.replace(regex.unitSuffix, ''));
+    }
+    if (yExists) {
+      svg.y = parseFloat(y.replace(regex.unitSuffix, ''));
+    }
+    if (widthExists) {
+      svg.width = parseFloat(width.replace(regex.unitSuffix, ''));
+    }
+    if (heightExists) {
+      svg.height = parseFloat(height.replace(regex.unitSuffix, ''));
+    }
+    if (viewBoxExists) {
+      applySvgViewBox(svg, viewBox);
+    }
 
     delete read.defs.current;
 
@@ -17459,7 +17519,7 @@ _.extend(Two.prototype, Events, {
    * @function
    * @param {SVGElement} SVGElement - The SVG node to be parsed.
    * @param {Boolean} shallow - Don't create a top-most group but append all content directly.
-   * @param {Boolean} add – Automatically add the reconstructed SVG node to scene.
+   * @param {Boolean} [add=true] – Automatically add the reconstructed SVG node to scene.
    * @returns {Two.Group}
    * @description Interpret an SVG Node and add it to this instance's scene. The distinction should be made that this doesn't `import` svg's, it solely interprets them into something compatible for Two.js - this is slightly different than a direct transcription.
    */
@@ -17506,14 +17566,9 @@ _.extend(Two.prototype, Events, {
 
       for (i = 0; i < dom.temp.children.length; i++) {
         elem = dom.temp.children[i];
-        if (/svg/i.test(elem.nodeName)) {
-          child = this.interpret(elem, false, false);
-          // Two.Utils.applySvgViewBox.call(this, group, elem.getAttribute('viewBox'));
-          while (child.children.length > 0) {
-            group.add(child.children[0]);
-          }
-        } else {
-          group.add(this.interpret(elem, false, false));
+        child = this.interpret(elem, false, false);
+        if (child !== null) {
+          group.add(child);
         }
       }
 
