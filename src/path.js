@@ -769,7 +769,13 @@ _.extend(Path.prototype, Shape.prototype, {
     };
 
     _.each(Path.Properties, function(k) {
-      result[k] = this[k];
+      if (typeof this[k] !== 'undefined') {
+        if (this[k].toObject) {
+          result[k] = this[k].toObject();
+        } else {
+          result[k] = this[k];
+        }
+      }
     }, this);
 
     result.className = this.className;
