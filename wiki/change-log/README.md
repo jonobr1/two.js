@@ -7,6 +7,7 @@ sidebarDepth: 2
 + Made `Two.load` and `Two.interpret` consistently apply SVG `viewBox`
 + Made `Two.Rectangle.origin` act as inverse anchor positioning
 + Made `Two.Path.toObject` objectify `fill` and `stroke` attributes that are `Two.Texture` and `Two.Gradient`
++ Improved reassigned id selection on interpreted SVG elements
 + Improved `Two.load` group duplication
 + Added `Two.Points` and `Two.makePoints` to all renderers
 + Made `Two.release` mimic behavior of `Two.remove`
