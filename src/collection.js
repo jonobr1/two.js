@@ -9,13 +9,12 @@ import Events from './events.js';
 
 class Collection extends Array {
 
-  _events;
+  _events = {};
   _bound = false;
 
   constructor() {
 
     super();
-    Events.call(this);
 
     if (arguments[0] && Array.isArray(arguments[0])) {
       if (arguments[0].length > 0) {
