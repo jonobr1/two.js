@@ -200,7 +200,7 @@ _.extend(Text, {
       },
       set: function(v) {
         if (typeof v.offset !== 'number') {
-          v.offset = this._dashes.offset || 0;
+          v.offset = (this.dashes && this._dashes.offset) || 0;
         }
         this._dashes = v;
       }
@@ -451,7 +451,7 @@ _.extend(Text.prototype, Shape.prototype, {
    * @private
    * @see {@link Two.Text#dashes}
    */
-  _dashes: [],
+  _dashes: null,
 
   /**
    * @name Two.Text#remove

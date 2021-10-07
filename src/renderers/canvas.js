@@ -1,18 +1,20 @@
 import Commands from '../utils/path-commands.js';
-import {mod} from '../utils/math.js';
-import {Curve} from '../utils/curves.js';
+import { decomposeMatrix, getComputedMatrix, mod, TWO_PI } from '../utils/math.js';
+import { Curve } from '../utils/curves.js';
 import Events from '../events.js';
 import getRatio from '../utils/get-ratio.js';
 import _ from '../utils/underscore.js';
 
 import Group from '../group.js';
 import Vector from '../vector.js';
+import Matrix from '../matrix.js';
 import Constants from '../constants.js';
+
+var matrix =  new Matrix();
 
 // Constants
 var emptyArray = [];
-var TWO_PI = Math.PI * 2,
-  max = Math.max,
+var max = Math.max,
   min = Math.min,
   abs = Math.abs,
   sin = Math.sin,
@@ -205,7 +207,7 @@ var canvas = {
 
       ctx.beginPath();
 
-      for (var i = 0; i < commands.length; i++) {
+      for (var i = 0; i < length; i++) {
 
         b = commands[i];
 
@@ -349,6 +351,138 @@ var canvas = {
 
       if (clip && !parentClipped) {
         ctx.clip();
+      }
+
+      if (dashes && dashes.length > 0) {
+        ctx.setLineDash(emptyArray);
+      }
+
+      return this.flagReset();
+
+    }
+
+  },
+
+  points: {
+
+    render: function(ctx, forced, parentClipped) {
+
+      var me, stroke, linewidth, fill, opacity, visible, size, commands,
+          length, b, x, y, defaultMatrix, isOffset, dashes, po;
+
+      po = (this.parent && this.parent._renderer)
+        ? this.parent._renderer.opacity : 1;
+      opacity = this._opacity * (po || 1);
+      visible = this._visible;
+
+      if (!forced && (!visible || opacity === 0)) {
+        return this;
+      }
+
+      this._update();
+
+      me = this._matrix.elements;
+      stroke = this._stroke;
+      linewidth = this._linewidth;
+      fill = this._fill;
+      commands = this._renderer.collection; // Commands
+      length = commands.length;
+      defaultMatrix = isDefaultMatrix(me);
+      dashes = this.dashes;
+      size = this._size;
+
+      // Transform
+      if (!defaultMatrix) {
+        ctx.save();
+        ctx.transform(me[0], me[3], me[1], me[4], me[2], me[5]);
+      }
+
+      // Styles
+      if (fill) {
+        if (typeof fill === 'string') {
+          ctx.fillStyle = fill;
+        } else {
+          canvas[fill._renderer.type].render.call(fill, ctx);
+          ctx.fillStyle = fill._renderer.effect;
+        }
+      }
+      if (stroke) {
+        if (typeof stroke === 'string') {
+          ctx.strokeStyle = stroke;
+        } else {
+          canvas[stroke._renderer.type].render.call(stroke, ctx);
+          ctx.strokeStyle = stroke._renderer.effect;
+        }
+        if (linewidth) {
+          ctx.lineWidth = linewidth;
+        }
+      }
+      if (typeof opacity === 'number') {
+        ctx.globalAlpha = opacity;
+      }
+
+      if (dashes && dashes.length > 0) {
+        ctx.lineDashOffset = dashes.offset || 0;
+        ctx.setLineDash(dashes);
+      }
+
+      ctx.beginPath();
+
+      var radius = size * 0.5, m;
+
+      if (!this._sizeAttenuation) {
+        getComputedMatrix(this, matrix);
+        m = matrix.elements;
+        m = decomposeMatrix(m[0], m[3], m[1], m[4], m[2], m[5]);
+        radius /= Math.max(m.scaleX, m.scaleY);
+      }
+
+      for (var i = 0; i < length; i++) {
+
+        b = commands[i];
+
+        x = b.x;
+        y = b.y;
+
+        ctx.moveTo(x + radius, y);
+        ctx.arc(x, y, radius, 0, TWO_PI);
+
+      }
+
+      if (!parentClipped) {
+        if (!canvas.isHidden.test(fill)) {
+          isOffset = fill._renderer && fill._renderer.offset;
+          if (isOffset) {
+            ctx.save();
+            ctx.translate(
+              - fill._renderer.offset.x, - fill._renderer.offset.y);
+            ctx.scale(fill._renderer.scale.x, fill._renderer.scale.y);
+          }
+          ctx.fill();
+          if (isOffset) {
+            ctx.restore();
+          }
+        }
+        if (!canvas.isHidden.test(stroke)) {
+          isOffset = stroke._renderer && stroke._renderer.offset;
+          if (isOffset) {
+            ctx.save();
+            ctx.translate(
+              - stroke._renderer.offset.x, - stroke._renderer.offset.y);
+            ctx.scale(stroke._renderer.scale.x, stroke._renderer.scale.y);
+            ctx.lineWidth = linewidth / stroke._renderer.scale.x;
+          }
+          ctx.stroke();
+          if (isOffset) {
+            ctx.restore();
+          }
+        }
+      }
+
+      // Loose ends
+
+      if (!defaultMatrix) {
+        ctx.restore();
       }
 
       if (dashes && dashes.length > 0) {

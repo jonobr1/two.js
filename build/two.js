@@ -51,6 +51,8 @@ SOFTWARE.
   var root$1 = root;
 
   var Matrix$1;
+  var TWO_PI = Math.PI * 2;
+  var HALF_PI = Math.PI * 0.5;
 
   /**
    * @name Two.Utils.decomposeMatrix
@@ -59,18 +61,31 @@ SOFTWARE.
    * @returns {Object} An object containing relevant skew values.
    * @description Decompose a 2D 3x3 Matrix to find the skew.
    */
-  var decomposeMatrix = function(matrix) {
+  var decomposeMatrix = function(matrix, b, c, d, e, f) {
 
     // TODO: Include skewX, skewY
     // https://math.stackexchange.com/questions/237369/given-this-transformation-matrix-how-do-i-decompose-it-into-translation-rotati/417813
     // https://stackoverflow.com/questions/45159314/decompose-2d-transformation-matrix
 
+    var a;
+
+    if (arguments.length <= 1) {
+      a = matrix.a;
+      b = matrix.b;
+      c = matrix.c;
+      d = matrix.d;
+      e = matrix.e;
+      f = matrix.f;
+    } else {
+      a = matrix;
+    }
+
     return {
-        translateX: matrix.e,
-        translateY: matrix.f,
-        scaleX: Math.sqrt(matrix.a * matrix.a + matrix.b * matrix.b),
-        scaleY: Math.sqrt(matrix.c * matrix.c + matrix.d * matrix.d),
-        rotation: 180 * Math.atan2(matrix.b, matrix.a) / Math.PI
+      translateX: e,
+      translateY: f,
+      scaleX: Math.sqrt(a * a + b * b),
+      scaleY: Math.sqrt(c * c + d * d),
+      rotation: 180 * Math.atan2(b, a) / Math.PI
     };
 
   };
@@ -126,6 +141,22 @@ SOFTWARE.
   };
 
   /**
+   * @name Two.Utils.getPoT
+   * @param {Number} value - The number to find the nearest power-of-two value
+   * @returns {Number}
+   * @description Rounds a number up to the nearest power-of-two value.
+   * @see {@link https://en.wikipedia.org/wiki/Power_of_two}
+   */
+  var pots = [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096];
+  var getPoT = function(value) {
+    var i = 0;
+    while (pots[i] && pots[i] < value) {
+      i++;
+    }
+    return pots[i];
+  };
+
+  /**
    * @name Two.Utils.mod
    * @function
    * @param {Number} v - The value to modulo
@@ -144,6 +175,7 @@ SOFTWARE.
   };
 
   var NumArray = root$1.Float32Array || Array;
+  var floor$2 = Math.floor;
 
   /**
   * @name Two.Utils.toFixed
@@ -154,18 +186,21 @@ SOFTWARE.
   * @see {@link http://jsperf.com/parsefloat-tofixed-vs-math-round/18}
   */
   var toFixed = function(v) {
-    return Math.floor(v * 1000000) / 1000000;
+    return floor$2(v * 1000000) / 1000000;
   };
 
   var math = /*#__PURE__*/Object.freeze({
     __proto__: null,
     decomposeMatrix: decomposeMatrix,
     getComputedMatrix: getComputedMatrix,
+    getPoT: getPoT,
     setMatrix: setMatrix,
     lerp: lerp,
     mod: mod,
     NumArray: NumArray,
-    toFixed: toFixed
+    toFixed: toFixed,
+    TWO_PI: TWO_PI,
+    HALF_PI: HALF_PI
   });
 
   var slice = Array.prototype.slice;
@@ -1543,13 +1578,13 @@ SOFTWARE.
      * @name Two.Version
      * @property {String} - The current working version of the library.
      */
-    Version: 'v0.7.8',
+    Version: 'v0.7.9',
 
     /**
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2021-07-14T02:15:23.697Z',
+    PublishDate: '2021-10-06T18:55:22.073Z',
 
     /**
      * @name Two.Identifier
@@ -1586,8 +1621,6 @@ SOFTWARE.
     }
 
   };
-
-  var HALF_PI$3 = Math.PI / 2;
 
   /**
    * @name Two.Utils.Curve
@@ -1919,9 +1952,9 @@ SOFTWARE.
     d2 *= 0.33;
 
     if (a2 < a1) {
-      mid += HALF_PI$3;
+      mid += HALF_PI;
     } else {
-      mid -= HALF_PI$3;
+      mid -= HALF_PI;
     }
 
     b.controls.left.x = Math.cos(mid) * d1;
@@ -4225,10 +4258,11 @@ SOFTWARE.
 
   }
 
+  var matrix$1 =  new Matrix();
+
   // Constants
   var emptyArray = [];
-  var TWO_PI$5 = Math.PI * 2,
-    max$2 = Math.max,
+  var max$2 = Math.max,
     min$2 = Math.min,
     abs = Math.abs,
     sin$4 = Math.sin,
@@ -4421,7 +4455,7 @@ SOFTWARE.
 
         ctx.beginPath();
 
-        for (var i = 0; i < commands.length; i++) {
+        for (var i = 0; i < length; i++) {
 
           b = commands[i];
 
@@ -4565,6 +4599,138 @@ SOFTWARE.
 
         if (clip && !parentClipped) {
           ctx.clip();
+        }
+
+        if (dashes && dashes.length > 0) {
+          ctx.setLineDash(emptyArray);
+        }
+
+        return this.flagReset();
+
+      }
+
+    },
+
+    points: {
+
+      render: function(ctx, forced, parentClipped) {
+
+        var me, stroke, linewidth, fill, opacity, visible, size, commands,
+            length, b, x, y, defaultMatrix, isOffset, dashes, po;
+
+        po = (this.parent && this.parent._renderer)
+          ? this.parent._renderer.opacity : 1;
+        opacity = this._opacity * (po || 1);
+        visible = this._visible;
+
+        if (!forced && (!visible || opacity === 0)) {
+          return this;
+        }
+
+        this._update();
+
+        me = this._matrix.elements;
+        stroke = this._stroke;
+        linewidth = this._linewidth;
+        fill = this._fill;
+        commands = this._renderer.collection; // Commands
+        length = commands.length;
+        defaultMatrix = isDefaultMatrix(me);
+        dashes = this.dashes;
+        size = this._size;
+
+        // Transform
+        if (!defaultMatrix) {
+          ctx.save();
+          ctx.transform(me[0], me[3], me[1], me[4], me[2], me[5]);
+        }
+
+        // Styles
+        if (fill) {
+          if (typeof fill === 'string') {
+            ctx.fillStyle = fill;
+          } else {
+            canvas[fill._renderer.type].render.call(fill, ctx);
+            ctx.fillStyle = fill._renderer.effect;
+          }
+        }
+        if (stroke) {
+          if (typeof stroke === 'string') {
+            ctx.strokeStyle = stroke;
+          } else {
+            canvas[stroke._renderer.type].render.call(stroke, ctx);
+            ctx.strokeStyle = stroke._renderer.effect;
+          }
+          if (linewidth) {
+            ctx.lineWidth = linewidth;
+          }
+        }
+        if (typeof opacity === 'number') {
+          ctx.globalAlpha = opacity;
+        }
+
+        if (dashes && dashes.length > 0) {
+          ctx.lineDashOffset = dashes.offset || 0;
+          ctx.setLineDash(dashes);
+        }
+
+        ctx.beginPath();
+
+        var radius = size * 0.5, m;
+
+        if (!this._sizeAttenuation) {
+          getComputedMatrix(this, matrix$1);
+          m = matrix$1.elements;
+          m = decomposeMatrix(m[0], m[3], m[1], m[4], m[2], m[5]);
+          radius /= Math.max(m.scaleX, m.scaleY);
+        }
+
+        for (var i = 0; i < length; i++) {
+
+          b = commands[i];
+
+          x = b.x;
+          y = b.y;
+
+          ctx.moveTo(x + radius, y);
+          ctx.arc(x, y, radius, 0, TWO_PI);
+
+        }
+
+        if (!parentClipped) {
+          if (!canvas.isHidden.test(fill)) {
+            isOffset = fill._renderer && fill._renderer.offset;
+            if (isOffset) {
+              ctx.save();
+              ctx.translate(
+                - fill._renderer.offset.x, - fill._renderer.offset.y);
+              ctx.scale(fill._renderer.scale.x, fill._renderer.scale.y);
+            }
+            ctx.fill();
+            if (isOffset) {
+              ctx.restore();
+            }
+          }
+          if (!canvas.isHidden.test(stroke)) {
+            isOffset = stroke._renderer && stroke._renderer.offset;
+            if (isOffset) {
+              ctx.save();
+              ctx.translate(
+                - stroke._renderer.offset.x, - stroke._renderer.offset.y);
+              ctx.scale(stroke._renderer.scale.x, stroke._renderer.scale.y);
+              ctx.lineWidth = linewidth / stroke._renderer.scale.x;
+            }
+            ctx.stroke();
+            if (isOffset) {
+              ctx.restore();
+            }
+          }
+        }
+
+        // Loose ends
+
+        if (!defaultMatrix) {
+          ctx.restore();
         }
 
         if (dashes && dashes.length > 0) {
@@ -4954,7 +5120,7 @@ SOFTWARE.
       // Step 4: Compute θ1 and Δθ
       var startAngle = svgAngle(1, 0, (x1p - cxp) / rx, (y1p - cyp) / ry);
       var delta = svgAngle((x1p - cxp) / rx, (y1p - cyp) / ry,
-        (- x1p - cxp) / rx, (- y1p - cyp) / ry) % TWO_PI$5;
+        (- x1p - cxp) / rx, (- y1p - cyp) / ry) % TWO_PI;
 
       var endAngle = startAngle + delta;
 
@@ -5095,7 +5261,7 @@ SOFTWARE.
     var samePoints = Math.abs(deltaAngle) < epsilon;
 
     // ensures that deltaAngle is 0 .. 2 PI
-    deltaAngle = mod(deltaAngle, TWO_PI$5);
+    deltaAngle = mod(deltaAngle, TWO_PI);
 
     if (deltaAngle < epsilon) {
 
@@ -5105,7 +5271,7 @@ SOFTWARE.
 
       } else {
 
-        deltaAngle = TWO_PI$5;
+        deltaAngle = TWO_PI;
 
       }
 
@@ -5113,13 +5279,13 @@ SOFTWARE.
 
     if (clockwise === true && ! samePoints) {
 
-      if (deltaAngle === TWO_PI$5) {
+      if (deltaAngle === TWO_PI) {
 
-        deltaAngle = - TWO_PI$5;
+        deltaAngle = - TWO_PI;
 
       } else {
 
-        deltaAngle = deltaAngle - TWO_PI$5;
+        deltaAngle = deltaAngle - TWO_PI;
 
       }
 
@@ -6838,7 +7004,7 @@ SOFTWARE.
   // Constants
 
   var min$1 = Math.min, max$1 = Math.max,
-    ceil = Math.ceil, floor = Math.floor;
+    ceil$1 = Math.ceil, floor$1 = Math.floor;
 
   /**
    * @name Two.Path
@@ -7305,7 +7471,7 @@ SOFTWARE.
         },
         set: function(v) {
           if (typeof v.offset !== 'number') {
-            v.offset = this._dashes.offset || 0;
+            v.offset = (this.dashes && this._dashes.offset) || 0;
           }
           this._dashes = v;
         }
@@ -7434,7 +7600,7 @@ SOFTWARE.
      * @private
      * @see {@link Two.Path#linewidth}
      */
-    _linewidth: 1.0,
+    _linewidth: 1,
 
     /**
      * @name Two.Path#_opacity
@@ -7525,7 +7691,7 @@ SOFTWARE.
      * @private
      * @see {@link Two.Path#dashes}
      */
-    _dashes: [],
+    _dashes: null,
 
     /**
      * @name Two.Path#clone
@@ -7582,7 +7748,13 @@ SOFTWARE.
       };
 
       _.each(Path.Properties, function(k) {
-        result[k] = this[k];
+        if (typeof this[k] !== 'undefined') {
+          if (this[k].toObject) {
+            result[k] = this[k].toObject();
+          } else {
+            result[k] = this[k];
+          }
+        }
       }, this);
 
       result.className = this.className;
@@ -7790,10 +7962,10 @@ SOFTWARE.
     /**
      * @name Two.Path#getPointAt
      * @function
-     * @param {Boolean} t - Percentage value describing where on the Two.Path to estimate and assign coordinate values.
-     * @param {Two.Vector} [obj=undefined] - Object to apply calculated x, y to. If none available returns new Object.
+     * @param {Boolean} t - Percentage value describing where on the {@link Two.Path} to estimate and assign coordinate values.
+     * @param {Two.Vector} [object] - Object to apply calculated x, y to. If none available returns new `Object`.
      * @returns {Object}
-     * @description Given a float `t` from 0 to 1, return a point or assign a passed `obj`'s coordinates to that percentage on this Two.Path's curve.
+     * @description Given a float `t` from 0 to 1, return a point or assign a passed `obj`'s coordinates to that percentage on this {@link Two.Path}'s curve.
      */
     getPointAt: function(t, obj) {
 
@@ -7954,7 +8126,7 @@ SOFTWARE.
      * @description Insert a {@link Two.Anchor} at the midpoint between every item in {@link Two.Path#vertices}.
      */
     subdivide: function(limit) {
-      //TODO: DRYness (function below)
+      // TODO: DRYness (function below)
       this._update();
 
       var last = this.vertices.length - 1;
@@ -8033,12 +8205,12 @@ SOFTWARE.
      * @name Two.Path#_updateLength
      * @function
      * @private
-     * @param {Number} [limit=] -
+     * @param {Number} [limit] -
      * @param {Boolean} [silent=false] - If set to `true` then the path isn't updated before calculation. Useful for internal use.
      * @description Recalculate the {@link Two.Path#length} value.
      */
     _updateLength: function(limit, silent) {
-      //TODO: DRYness (function above)
+      // TODO: DRYness (function above)
       if (!silent) {
         this._update();
       }
@@ -8113,8 +8285,8 @@ SOFTWARE.
         var bid = getIdByLength(this, beginning * this._length);
         var eid = getIdByLength(this, ending * this._length);
 
-        var low = ceil(bid);
-        var high = floor(eid);
+        var low = ceil$1(bid);
+        var high = floor$1(eid);
 
         var left, right, prev, next, v;
 
@@ -8217,10 +8389,10 @@ SOFTWARE.
      */
     flagReset: function() {
 
-      this._flagVertices =  this._flagFill =  this._flagStroke =
-          this._flagLinewidth = this._flagOpacity = this._flagVisible =
-          this._flagCap = this._flagJoin = this._flagMiter =
-          this._flagClip = false;
+      this._flagVertices = this._flagLength = this._flagFill =  this._flagStroke =
+        this._flagLinewidth = this._flagOpacity = this._flagVisible =
+        this._flagCap = this._flagJoin = this._flagMiter =
+        this._flagClip = false;
 
       Shape.prototype.flagReset.call(this);
 
@@ -8478,13 +8650,13 @@ SOFTWARE.
           this.vertices.push(new Anchor());
         }
 
-        this.vertices[0].set(-xr, -yr).add(this._origin).command = Commands.move;
-        this.vertices[1].set(xr, -yr).add(this._origin).command = Commands.line;
-        this.vertices[2].set(xr, yr).add(this._origin).command = Commands.line;
-        this.vertices[3].set(-xr, yr).add(this._origin).command = Commands.line;
+        this.vertices[0].set(-xr, -yr).sub(this._origin).command = Commands.move;
+        this.vertices[1].set(xr, -yr).sub(this._origin).command = Commands.line;
+        this.vertices[2].set(xr, yr).sub(this._origin).command = Commands.line;
+        this.vertices[3].set(-xr, yr).sub(this._origin).command = Commands.line;
         // FYI: Two.Sprite and Two.ImageSequence have 4 verts
         if (this.vertices[4]) {
-          this.vertices[4].set(-xr, -yr).add(this._origin).command = Commands.line;
+          this.vertices[4].set(-xr, -yr).sub(this._origin).command = Commands.line;
         }
 
       }
@@ -9020,7 +9192,6 @@ SOFTWARE.
 
   Sprite.MakeObservable(Sprite.prototype);
 
-  var TWO_PI$4 = Math.PI * 2, HALF_PI$2 = Math.PI / 2;
   var cos$3 = Math.cos, sin$3 = Math.sin;
 
   /**
@@ -9129,16 +9300,16 @@ SOFTWARE.
 
         for (var i = 0; i < this.vertices.length; i++) {
           var pct = i / length;
-          var theta = pct * TWO_PI$4;
+          var theta = pct * TWO_PI;
 
           var x = radius * cos$3(theta);
           var y = radius * sin$3(theta);
 
-          var lx = rc * cos$3(theta - HALF_PI$2);
-          var ly = rc * sin$3(theta - HALF_PI$2);
+          var lx = rc * cos$3(theta - HALF_PI);
+          var ly = rc * sin$3(theta - HALF_PI);
 
-          var rx = rc * cos$3(theta + HALF_PI$2);
-          var ry = rc * sin$3(theta + HALF_PI$2);
+          var rx = rc * cos$3(theta + HALF_PI);
+          var ry = rc * sin$3(theta + HALF_PI);
 
           var v = this.vertices[i];
 
@@ -9224,7 +9395,6 @@ SOFTWARE.
 
   Circle.MakeObservable(Circle.prototype);
 
-  var TWO_PI$3 = Math.PI * 2, HALF_PI$1 = Math.PI / 2;
   var cos$2 = Math.cos, sin$2 = Math.sin;
 
   /**
@@ -9352,16 +9522,16 @@ SOFTWARE.
 
         for (var i = 0; i < this.vertices.length; i++) {
           var pct = i / length;
-          var theta = pct * TWO_PI$3;
+          var theta = pct * TWO_PI;
 
           var x = radiusX * cos$2(theta);
           var y = radiusY * sin$2(theta);
 
-          var lx = radiusX * c * cos$2(theta - HALF_PI$1);
-          var ly = radiusY * c * sin$2(theta - HALF_PI$1);
+          var lx = radiusX * c * cos$2(theta - HALF_PI);
+          var ly = radiusY * c * sin$2(theta - HALF_PI);
 
-          var rx = radiusX * c * cos$2(theta + HALF_PI$1);
-          var ry = radiusY * c * sin$2(theta + HALF_PI$1);
+          var rx = radiusX * c * cos$2(theta + HALF_PI);
+          var ry = radiusY * c * sin$2(theta + HALF_PI);
 
           var v = this.vertices[i];
 
@@ -10013,7 +10183,7 @@ SOFTWARE.
         },
         set: function(v) {
           if (typeof v.offset !== 'number') {
-            v.offset = this._dashes.offset || 0;
+            v.offset = (this.dashes && this._dashes.offset) || 0;
           }
           this._dashes = v;
         }
@@ -10264,7 +10434,7 @@ SOFTWARE.
      * @private
      * @see {@link Two.Text#dashes}
      */
-    _dashes: [],
+    _dashes: null,
 
     /**
      * @name Two.Text#remove
@@ -10461,7 +10631,8 @@ SOFTWARE.
 
   // https://github.com/jonobr1/two.js/issues/507#issuecomment-777159213
   var regex = {
-    path: /[+-]?(?:\d*\.\d+|\d+)(?:[eE][+-]\d+)?/g
+    path: /[+-]?(?:\d*\.\d+|\d+)(?:[eE][+-]\d+)?/g,
+    unitSuffix: /[a-zA-Z%]*/i
   };
 
   var alignments = {
@@ -10599,18 +10770,49 @@ SOFTWARE.
    */
   var applySvgViewBox = function(node, value) {
 
-    var elements = value.split(/\s/);
+    var elements = value.split(/[\s,]/);
 
-    var x = parseFloat(elements[0]);
-    var y = parseFloat(elements[1]);
+    var x = - parseFloat(elements[0]);
+    var y = - parseFloat(elements[1]);
     var width = parseFloat(elements[2]);
     var height = parseFloat(elements[3]);
 
-    var s = Math.min(this.width / width, this.height / height);
+    if (x && y) {
+      for (var i = 0; i < node.children.length; i++) {
+        var child = node.children[i];
+        if ('translation' in child) {
+          child.translation.add(x, y);
+        } else if ('x' in child) {
+          child.x = x;
+        } else if ('y' in child) {
+          child.y = y;
+        }
+      }
+    }
 
-    node.translation.x -= x * s;
-    node.translation.y -= y * s;
-    node.scale = s;
+    var xExists = typeof node.x === 'number';
+    var yExists = typeof node.y === 'number';
+    var widthExists = typeof node.width === 'number';
+    var heightExists = typeof node.height === 'number';
+
+    if (xExists) {
+      node.translation.x += node.x;
+    }
+    if (yExists) {
+      node.translation.y += node.y;
+    }
+    if (widthExists || heightExists) {
+      node.scale = new Vector(1, 1);
+    }
+    if (widthExists) {
+      node.scale.x = node.width / width;
+    }
+    if (heightExists) {
+      node.scale.y = node.height / height;
+    }
+
+    node.mask = new Rectangle(0, 0, width, height);
+    node.mask.origin.set(- width / 2, - height / 2);
 
     return node;
 
@@ -10627,7 +10829,8 @@ SOFTWARE.
    */
   var applySvgAttributes = function(node, elem, parentStyles) {
 
-    var styles = {}, attributes = {}, extracted = {}, i, m, key, value, attr;
+    var styles = {}, attributes = {}, extracted = {},
+      i, m, key, value, prop, attr;
     var transforms, x, y;
     var id, scene, ref, tagName;
 
@@ -10752,9 +10955,6 @@ SOFTWARE.
           }
 
           break;
-        case 'viewBox':
-          applySvgViewBox.call(this, elem, value);
-          break;
         case 'visible':
           if (elem instanceof Group) {
             elem._visible = value;
@@ -10825,11 +11025,10 @@ SOFTWARE.
           break;
         case 'fill':
         case 'stroke':
-          if (elem instanceof Group) {
-            key = '_' + key;
-          }
+          prop = (elem instanceof Group ? '_' : '') + key;
           if (/url\(#.*\)/i.test(value)) {
             id = value.replace(/url\(#(.*)\)/i, '$1');
+            node.setAttribute(key, value.replace(/\)/i, '-' + Constants.Identifier + 'applied)'));
             if (read.defs.current && read.defs.current.contains(id)) {
               ref = read.defs.current.get(id);
               tagName = getTagName(ref.nodeName);
@@ -10838,9 +11037,9 @@ SOFTWARE.
               scene = getScene(this);
               ref = scene.getById(id);
             }
-            elem[key] = ref;
+            elem[prop] = ref;
           } else {
-            elem[key] = (/none/i.test(value)) ? 'transparent' : value;
+            elem[prop] = (/none/i.test(value)) ? 'transparent' : value;
           }
           break;
         case 'id':
@@ -10956,10 +11155,35 @@ SOFTWARE.
       }
 
       var svg = read.g.call(this, node);
-      // var viewBox = node.getAttribute('viewBox');
+      var viewBox = node.getAttribute('viewBox');
+      var x = node.getAttribute('x');
+      var y = node.getAttribute('y');
+      var width = node.getAttribute('width');
+      var height = node.getAttribute('height');
 
       svg.defs = defs;  // Export out the <defs /> for later use
-      // Utils.applySvgViewBox(svg, viewBox);
+
+      var viewBoxExists = viewBox !== null;
+      var xExists = x !== null;
+      var yExists = y !== null;
+      var widthExists = width !== null;
+      var heightExists = height !== null;
+
+      if (xExists) {
+        svg.x = parseFloat(x.replace(regex.unitSuffix, ''));
+      }
+      if (yExists) {
+        svg.y = parseFloat(y.replace(regex.unitSuffix, ''));
+      }
+      if (widthExists) {
+        svg.width = parseFloat(width.replace(regex.unitSuffix, ''));
+      }
+      if (heightExists) {
+        svg.height = parseFloat(height.replace(regex.unitSuffix, ''));
+      }
+      if (viewBoxExists) {
+        applySvgViewBox(svg, viewBox);
+      }
 
       delete read.defs.current;
 
@@ -12251,8 +12475,6 @@ SOFTWARE.
 
   ImageSequence.MakeObservable(ImageSequence.prototype);
 
-  var TWO_PI$2 = Math.PI * 2, HALF_PI = Math.PI / 2;
-
   /**
    * @name Two.ArcSegment
    * @class
@@ -12381,7 +12603,7 @@ SOFTWARE.
      * @private
      * @see {@link Two.ArcSegment#endAngle}
      */
-    _endAngle: TWO_PI$2,
+    _endAngle: TWO_PI,
     /**
      * @name Two.ArcSegment#_innerRadius
      * @private
@@ -12414,7 +12636,7 @@ SOFTWARE.
         var ir = this._innerRadius;
         var or = this._outerRadius;
 
-        var connected = mod(sa, TWO_PI$2) === mod(ea, TWO_PI$2);
+        var connected = mod(sa, TWO_PI) === mod(ea, TWO_PI);
         var punctured = ir > 0;
 
         var vertices = this.vertices;
@@ -12626,7 +12848,532 @@ SOFTWARE.
 
   ArcSegment.MakeObservable(ArcSegment.prototype);
 
-  var TWO_PI$1 = Math.PI * 2, cos$1 = Math.cos, sin$1 = Math.sin;
+  var ceil = Math.ceil;
+  var floor = Math.floor;
+
+  /**
+   * @name Two.Points
+   * @class
+   * @extends Two.Shape
+   * @param {Two.Vector[]} [vertices] - A list of {@link Two.Vector}s that represent the order and coordinates to construct a rendered set of points.
+   * @description This is a primary primitive class for quickly and easily drawing points in Two.js. Unless specified methods return their instance of `Two.Points` for the purpose of chaining.
+   */
+  function Points(vertices) {
+
+    Shape.call(this);
+
+    this._renderer.type = 'points';
+    this._renderer.flagVertices = Path.FlagVertices.bind(this);
+    this._renderer.bindVertices = Path.BindVertices.bind(this);
+    this._renderer.unbindVertices = Path.UnbindVertices.bind(this);
+
+    this._renderer.flagFill = Path.FlagFill.bind(this);
+    this._renderer.flagStroke = Path.FlagStroke.bind(this);
+    this._renderer.vertices = null;
+    this._renderer.collection = null;
+
+    /**
+     * @name Two.Points#sizeAttenuation
+     * @property {Boolean} - Boolean dictating whether Two.js should scale the size of the points based on its matrix hierarcy.
+     * @description Set to `true` if you'd like the size of the points to be relative to the scale of its parents; `false` to disregard. Default is `false`.
+     */
+    this.sizeAttenuation = false;
+
+    /**
+     * @name Two.Points#beginning
+     * @property {Number} - Number between zero and one to state the beginning of where the path is rendered.
+     * @description {@link Two.Points#beginning} is a percentage value that represents at what percentage into the path should the renderer start drawing.
+     */
+    this.beginning = 0;
+
+    /**
+     * @name Two.Points#ending
+     * @property {Number} - Number between zero and one to state the ending of where the path is rendered.
+     * @description {@link Two.Points#ending} is a percentage value that represents at what percentage into the path should the renderer start drawing.
+     */
+    this.ending = 1;
+
+    // Style properties
+
+    /**
+     * @name Two.Points#fill
+     * @property {(String|Two.Gradient|Two.Texture)} - The value of what the path should be filled in with.
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
+     */
+    this.fill = '#fff';
+
+    /**
+     * @name Two.Points#stroke
+     * @property {(String|Two.Gradient|Two.Texture)} - The value of what the path should be outlined in with.
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
+     */
+    this.stroke = '#000';
+
+    /**
+     * @name Two.Points#className
+     * @property {String} - A class to be applied to the element to be compatible with CSS styling.
+     * @nota-bene Only available for the SVG renderer.
+     */
+    this.className = '';
+
+    /**
+     * @name Two.Points#visible
+     * @property {Boolean} - Display the points or not.
+     * @nota-bene For {@link Two.CanvasRenderer} and {@link Two.WebGLRenderer} when set to false all updating is disabled improving performance dramatically with many objects in the scene.
+     */
+    this.visible = true;
+
+    /**
+     * @name Two.Points#vertices
+     * @property {Two.Vector[]} - An ordered list of vector points for rendering points.
+     * @description A list of {@link Two.Vector} objects that consist of which coordinates to draw points at.
+     * @nota-bene The array when manipulating is actually a {@link Two.Collection}.
+     */
+    this.vertices = vertices;
+
+    /**
+     * @name Two.Points#dashes
+     * @property {Number[]} - Array of numbers. Odd indices represent dash length. Even indices represent dash space.
+     * @description A list of numbers that represent the repeated dash length and dash space applied to the stroke of the text.
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray} for more information on the SVG stroke-dasharray attribute.
+     */
+    this.dashes = [];
+
+    /**
+     * @name Two.Points#dashes#offset
+     * @property {Number} - A number in pixels to offset {@link Two.Points#dashes} display.
+     */
+    this.dashes.offset = 0;
+
+  }
+
+  _.extend(Points, {
+
+    Properties: [
+      'fill',
+      'stroke',
+      'linewidth',
+      'opacity',
+      'visible',
+      'size',
+      'sizeAttenuation',
+
+      'beginning',
+      'ending'
+    ],
+
+    MakeObservable: function(object) {
+
+      Shape.MakeObservable(object);
+
+      _.each(Points.Properties.slice(2, 7), defineGetterSetter, object);
+
+      Object.defineProperty(object, 'fill', {
+        enumerable: true,
+        get: function() {
+          return this._fill;
+        },
+        set: function(f) {
+
+          if (this._fill instanceof Gradient
+            || this._fill instanceof LinearGradient
+            || this._fill instanceof RadialGradient
+            || this._fill instanceof Texture) {
+            this._fill.unbind(Events.Types.change, this._renderer.flagFill);
+          }
+
+          this._fill = f;
+          this._flagFill = true;
+
+          if (this._fill instanceof Gradient
+            || this._fill instanceof LinearGradient
+            || this._fill instanceof RadialGradient
+            || this._fill instanceof Texture) {
+            this._fill.bind(Events.Types.change, this._renderer.flagFill);
+          }
+
+        }
+      });
+
+      Object.defineProperty(object, 'stroke', {
+        enumerable: true,
+        get: function() {
+          return this._stroke;
+        },
+        set: function(f) {
+
+          if (this._stroke instanceof Gradient
+            || this._stroke instanceof LinearGradient
+            || this._stroke instanceof RadialGradient
+            || this._stroke instanceof Texture) {
+            this._stroke.unbind(Events.Types.change, this._renderer.flagStroke);
+          }
+
+          this._stroke = f;
+          this._flagStroke = true;
+
+          if (this._stroke instanceof Gradient
+            || this._stroke instanceof LinearGradient
+            || this._stroke instanceof RadialGradient
+            || this._stroke instanceof Texture) {
+            this._stroke.bind(Events.Types.change, this._renderer.flagStroke);
+          }
+
+        }
+      });
+
+      /**
+       * @name Two.Points#length
+       * @property {Number} - The sum of distances between all {@link Two.Points#vertices}.
+       */
+      Object.defineProperty(object, 'length', {
+        get: function() {
+          if (this._flagLength) {
+            this._updateLength();
+          }
+          return this._length;
+        }
+      });
+
+      Object.defineProperty(object, 'beginning', {
+        enumerable: true,
+        get: function() {
+          return this._beginning;
+        },
+        set: function(v) {
+          this._beginning = v;
+          this._flagVertices = true;
+        }
+      });
+
+      Object.defineProperty(object, 'ending', {
+        enumerable: true,
+        get: function() {
+          return this._ending;
+        },
+        set: function(v) {
+          this._ending = v;
+          this._flagVertices = true;
+        }
+      });
+
+      Object.defineProperty(object, 'vertices', {
+
+        enumerable: true,
+
+        get: function() {
+          return this._collection;
+        },
+
+        set: function(vertices) {
+
+          var bindVertices = this._renderer.bindVertices;
+          var unbindVertices = this._renderer.unbindVertices;
+
+          // Remove previous listeners
+          if (this._collection) {
+            this._collection
+              .unbind(Events.Types.insert, bindVertices)
+              .unbind(Events.Types.remove, unbindVertices);
+          }
+
+          // Create new Collection with copy of vertices
+          if (vertices instanceof Collection) {
+            this._collection = vertices;
+          } else {
+            this._collection = new Collection(vertices || []);
+          }
+
+
+          // Listen for Collection changes and bind / unbind
+          this._collection
+            .bind(Events.Types.insert, bindVertices)
+            .bind(Events.Types.remove, unbindVertices);
+
+          // Bind Initial Vertices
+          bindVertices(this._collection);
+
+        }
+
+      });
+
+      Object.defineProperty(object, 'dashes', {
+        enumerable: true,
+        get: function() {
+          return this._dashes;
+        },
+        set: function(v) {
+          if(typeof v.offset !== 'number') {
+            v.offset = (this.dashes && this._dashes.offset) || 0;
+          }
+          this._dashes = v;
+        }
+      });
+
+    }
+
+  });
+
+  _.extend(Points.prototype, Shape.prototype, {
+
+    constructor: Points,
+
+    _flagVertices: true,
+    _flagLength: true,
+    _flagFill: true,
+    _flagStroke: true,
+    _flagLinewidth: true,
+    _flagOpacity: true,
+    _flagVisible: true,
+    _flagSize: true,
+    _flagSizeAttenuation: true,
+
+    _length: 0,
+    _fill: '#fff',
+    _stroke: '#000',
+    _linewidth: 1,
+    _opacity: 1.0,
+    _visible: true,
+    _size: 1,
+    _sizeAttenuation: false,
+    _beginning: 0,
+    _ending: 1.0,
+    _dashes: null,
+
+    /**
+     * @name Two.Points#clone
+     * @function
+     * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+     * @returns {Two.Points}
+     * @description Create a new instance of {@link Two.Points} with the same properties of the current path.
+     */
+    clone: function(parent) {
+
+      var clone = new Points();
+
+      for (var j = 0; j < this.vertices.length; j++) {
+        clone.vertices.push(this.vertices[j].clone());
+      }
+
+      for (var i = 0; i < Points.Properties.length; i++) {
+        var k = Points.Properties[i];
+        clone[k] = this[k];
+      }
+
+      clone.className = this.className;
+
+      clone.translation.copy(this.translation);
+      clone.rotation = this.rotation;
+      clone.scale = this.scale;
+      clone.skewX = this.skewX;
+      clone.skewY = this.skewY;
+
+      if (this.matrix.manual) {
+        clone.matrix.copy(this.matrix);
+      }
+
+      if (parent) {
+        parent.add(clone);
+      }
+
+      return clone._update();
+
+    },
+
+    /**
+     * @name Two.Points#toObject
+     * @function
+     * @returns {Object}
+     * @description Return a JSON compatible plain object that represents the points object.
+     */
+    toObject: function() {
+
+      var result = {
+        vertices: this.vertices.map(function(v) {
+          return v.toObject();
+        })
+      };
+
+      _.each(Points.Properties, function(k) {
+        result[k] = this[k];
+      }, this);
+
+      result.className = this.className;
+
+      result.translation = this.translation.toObject();
+      result.rotation = this.rotation;
+      result.scale = this.scale instanceof Vector ? this.scale.toObject() : this.scale;
+      result.skewX = this.skewX;
+      result.skewY = this.skewY;
+
+      if (this.matrix.manual) {
+        result.matrix = this.matrix.toObject();
+      }
+
+      return result;
+
+    },
+
+    /**
+     * @name Two.Points#noFill
+     * @function
+     * @description Short hand method to set fill to `transparent`.
+     */
+    noFill: Path.prototype.noFill,
+
+    /**
+     * @name Two.Points#noStroke
+     * @function
+     * @description Short hand method to set stroke to `transparent`.
+     */
+    noStroke: Path.prototype.noStroke,
+
+    /**
+     * @name Two.Points#corner
+     * @function
+     * @description Orient the vertices of the shape to the upper left-hand corner of the points object.
+     */
+    corner: Path.prototype.corner,
+
+    /**
+     * @name Two.Points#center
+     * @function
+     * @description Orient the vertices of the shape to the center of the points object.
+     */
+    center: Path.prototype.center,
+
+    /**
+     * @name Two.Points#remove
+     * @function
+     * @description Remove self from the scene / parent.
+     */
+    remove: Path.prototype.remove,
+
+    /**
+     * @name Two.Points#getBoundingClientRect
+     * @function
+     * @param {Boolean} [shallow=false] - Describes whether to calculate off local matrix or world matrix.
+     * @returns {Object} - Returns object with top, left, right, bottom, width, height attributes.
+     * @description Return an object with top, left, right, bottom, width, and height parameters of the path.
+     */
+    getBoundingClientRect: Path.prototype.getBoundingClientRect,
+
+    /**
+     * @name Two.Points#subdivide
+     * @function
+     * @param {Number} limit - How many times to recurse subdivisions.
+     * @description Insert a {@link Two.Vector} at the midpoint between every item in {@link Two.Points#vertices}.
+     */
+    subdivide: function(limit) {
+      // TODO: DRYness (function below)
+      this._update();
+      var points = [];
+      for (var i = 0; i < this.vertices.length; i++) {
+
+        var a = this.vertices[i];
+        var b = this.vertices[i - 1];
+
+        if (!b) {
+          continue;
+        }
+
+        var x1 = a.x;
+        var y1 = a.y;
+        var x2 = b.x;
+        var y2 = b.y;
+        var subdivisions = subdivide(x1, y1, x1, y1, x2, y2, x2, y2, limit);
+
+        points = points.concat(subdivisions);
+
+      }
+
+      this.vertices = points;
+      return this;
+
+    },
+
+    /**
+     * @name Two.Points#_updateLength
+     * @function
+     * @private
+     * @param {Number} [limit] -
+     * @param {Boolean} [silent=false] - If set to `true` then the points object isn't updated before calculation. Useful for internal use.
+     * @description Recalculate the {@link Two.Points#length} value.
+     */
+    _updateLength: Path.prototype._updateLength,
+
+    /**
+     * @name Two.Points#_update
+     * @function
+     * @private
+     * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+     * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
+     * @nota-bene Try not to call this method more than once a frame.
+     */
+    _update: function() {
+
+      if (this._flagVertices) {
+
+        if (this._flagLength) {
+          this._updateLength(undefined, true);
+        }
+
+        var beginning = Math.min(this._beginning, this._ending);
+        var ending = Math.max(this._beginning, this._ending);
+
+        var bid = getIdByLength(this, beginning * this._length);
+        var eid = getIdByLength(this, ending * this._length);
+
+        var low = ceil(bid);
+        var high = floor(eid);
+
+        var v;
+
+        this._renderer.vertices = new NumArray((high - low + 1) * 2);
+        this._renderer.collection = [];
+
+        for (var i = low; i <= high; i++) {
+
+          var j = i - low;
+
+          v = this._collection[i];
+          this._renderer.collection.push(v);
+          this._renderer.vertices[j * 2 + 0] = v.x;
+          this._renderer.vertices[j * 2 + 1] = v.y;
+
+        }
+
+      }
+
+      Shape.prototype._update.apply(this, arguments);
+
+      return this;
+
+    },
+
+    /**
+     * @name Two.Points#flagReset
+     * @function
+     * @private
+     * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+     */
+    flagReset: function() {
+
+      this._flagVertices = this._flagLength = this._flagFill =  this._flagStroke =
+        this._flagLinewidth = this._flagOpacity = this._flagVisible =
+        this._flagSize = this._flagSizeAttenuation = false;
+
+      Shape.prototype.flagReset.call(this);
+
+      return this;
+
+    }
+
+  });
+
+  Points.MakeObservable(Points.prototype);
+
+  var cos$1 = Math.cos, sin$1 = Math.sin;
 
   /**
    * @name Two.Polygon
@@ -12770,7 +13517,7 @@ SOFTWARE.
         for (var i = 0; i < amount; i++) {
 
           var pct = (i + 0.5) / sides;
-          var theta = TWO_PI$1 * pct + Math.PI / 2;
+          var theta = TWO_PI * pct + Math.PI / 2;
           var x = this._width * cos$1(theta) / 2;
           var y = this._height * sin$1(theta) / 2;
 
@@ -12861,7 +13608,7 @@ SOFTWARE.
 
   Polygon.MakeObservable(Polygon.prototype);
 
-  var TWO_PI = Math.PI * 2, cos = Math.cos, sin = Math.sin;
+  var cos = Math.cos, sin = Math.sin;
 
   /**
    * @name Two.Star
@@ -13109,6 +13856,8 @@ SOFTWARE.
 
   Star.MakeObservable(Star.prototype);
 
+  var matrix = new Matrix();
+
   var svg = {
 
     version: 1.1,
@@ -13283,6 +14032,25 @@ SOFTWARE.
         }
 
         string += command + ' ';
+
+      }
+
+      return string;
+
+    },
+
+    pointsToString: function(points, size) {
+
+      var string = '';
+      var r = size * 0.5;
+
+      for (var i = 0; i < points.length; i++) {
+
+        var x = points[i].x;
+        var y = points[i].y - r;
+
+        string += Commands.move + ' ' + x + ' ' + y + ' ';
+        string += 'a ' + r + ' ' + r + ' 0 1 0 0.001 0 Z';
 
       }
 
@@ -13585,6 +14353,105 @@ SOFTWARE.
           } else {
             this._renderer.elem.removeAttribute('clip-path');
           }
+        }
+
+        return this.flagReset();
+
+      }
+
+    },
+
+    points: {
+
+      render: function(domElement) {
+
+        // Shortcut for hidden objects.
+        // Doesn't reset the flags, so changes are stored and
+        // applied once the object is visible again
+        if (this._opacity === 0 && !this._flagOpacity) {
+          return this;
+        }
+
+        this._update();
+
+        // Collect any attribute that needs to be changed here
+        var changed = {};
+
+        var flagMatrix = this._matrix.manual || this._flagMatrix;
+
+        if (flagMatrix) {
+          changed.transform = 'matrix(' + this._matrix.toString() + ')';
+        }
+
+        if (this._flagId) {
+          changed.id = this._id;
+        }
+
+        if (this._flagVertices || this._flagSize || this._flagSizeAttenuation) {
+          var size = this._size;
+          if (!this._sizeAttenuation) {
+            getComputedMatrix(this, matrix);
+            var me = matrix.elements;
+            var m = decomposeMatrix(me[0], me[3], me[1], me[4], me[2], me[5]);
+            size /= Math.max(m.scaleX, m.scaleY);
+          }
+          var vertices = svg.pointsToString(this._renderer.collection, size);
+          changed.d = vertices;
+        }
+
+        if (this._fill && this._fill._renderer) {
+          this._fill._update();
+          svg[this._fill._renderer.type].render.call(this._fill, domElement, true);
+        }
+
+        if (this._flagFill) {
+          changed.fill = this._fill && this._fill.id
+            ? 'url(#' + this._fill.id + ')' : this._fill;
+        }
+
+        if (this._stroke && this._stroke._renderer) {
+          this._stroke._update();
+          svg[this._stroke._renderer.type].render.call(this._stroke, domElement, true);
+        }
+
+        if (this._flagStroke) {
+          changed.stroke = this._stroke && this._stroke.id
+            ? 'url(#' + this._stroke.id + ')' : this._stroke;
+        }
+
+        if (this._flagLinewidth) {
+          changed['stroke-width'] = this._linewidth;
+        }
+
+        if (this._flagOpacity) {
+          changed['stroke-opacity'] = this._opacity;
+          changed['fill-opacity'] = this._opacity;
+        }
+
+        if (this._flagClassName) {
+          changed['class'] = this.classList.join(' ');
+        }
+
+        if (this._flagVisible) {
+          changed.visibility = this._visible ? 'visible' : 'hidden';
+        }
+
+        if (this.dashes && this.dashes.length > 0) {
+          changed['stroke-dasharray'] = this.dashes.join(' ');
+          changed['stroke-dashoffset'] = this.dashes.offset || 0;
+        }
+
+        // If there is no attached DOM element yet,
+        // create it with all necessary attributes.
+        if (!this._renderer.elem) {
+
+          changed.id = this._id;
+          this._renderer.elem = svg.createElement('path', changed);
+          domElement.appendChild(this._renderer.elem);
+
+        // Otherwise apply all pending attributes
+        } else {
+          svg.setAttributes(this._renderer.elem, changed);
         }
 
         return this.flagReset();
@@ -14111,6 +14978,111 @@ SOFTWARE.
 
   });
 
+  var shaders = {
+
+    create: function(gl, source, type) {
+      var shader, compiled, error;
+      shader = gl.createShader(gl[type]);
+      gl.shaderSource(shader, source);
+      gl.compileShader(shader);
+
+      compiled = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
+      if (!compiled) {
+        error = gl.getShaderInfoLog(shader);
+        gl.deleteShader(shader);
+        throw new TwoError('unable to compile shader ' + shader + ': ' + error);
+      }
+
+      return shader;
+
+    },
+
+    types: {
+      vertex: 'VERTEX_SHADER',
+      fragment: 'FRAGMENT_SHADER'
+    },
+
+    path : {
+
+      vertex:`
+      precision mediump float;
+      attribute vec2 a_position;
+
+      uniform mat3 u_matrix;
+      uniform vec2 u_resolution;
+      uniform vec4 u_rect;
+
+      varying vec2 v_textureCoords;
+
+      void main() {
+        vec2 rectCoords = (a_position * (u_rect.zw - u_rect.xy)) + u_rect.xy;
+        vec2 projected = (u_matrix * vec3(rectCoords, 1.0)).xy;
+        vec2 normal = projected / u_resolution;
+        vec2 clipspace = (normal * 2.0) - 1.0;
+
+        gl_Position = vec4(clipspace * vec2(1.0, -1.0), 0.0, 1.0);
+        v_textureCoords = a_position;
+      }
+    `,
+
+      fragment: `
+      precision mediump float;
+
+      uniform sampler2D u_image;
+      varying vec2 v_textureCoords;
+
+      void main() {
+        vec4 texel = texture2D(u_image, v_textureCoords);
+        if (texel.a == 0.0) {
+          discard;
+        }
+        gl_FragColor = texel;
+      }
+    `,
+
+    },
+
+    points: {
+
+      vertex: `
+      precision mediump float;
+      attribute vec2 a_position;
+
+      uniform float u_size;
+      uniform mat3 u_matrix;
+      uniform vec2 u_resolution;
+
+      varying vec2 v_textureCoords;
+
+      void main() {
+        vec2 projected = (u_matrix * vec3(a_position, 1.0)).xy;
+        vec2 normal = projected / u_resolution;
+        vec2 clipspace = (normal * 2.0) - 1.0;
+
+        gl_PointSize = u_size;
+        gl_Position = vec4(clipspace * vec2(1.0, -1.0), 0.0, 1.0);
+        v_textureCoords = a_position;
+      }
+    `,
+
+      fragment: `
+      precision mediump float;
+
+      uniform sampler2D u_image;
+
+      void main() {
+        vec4 texel = texture2D(u_image, gl_PointCoord);
+        if (texel.a == 0.0) {
+          discard;
+        }
+        gl_FragColor = texel;
+      }
+    `
+
+    }
+
+  };
+
   // Constants
 
   var multiplyMatrix = Matrix.Multiply,
@@ -14118,7 +15090,18 @@ SOFTWARE.
     transformation = new NumArray(9),
     CanvasUtils = Renderer$2.Utils;
 
+  var quad = new NumArray([
+    0, 0,
+    1, 0,
+    0, 1,
+    0, 1,
+    1, 0,
+    1, 1
+  ]);
+
   var webgl = {
+
+    precision: 0.9,
 
     isHidden: /(undefined|none|transparent)/i,
 
@@ -14139,14 +15122,20 @@ SOFTWARE.
           for (var i = 0; i < child.children.length; i++) {
             webgl.group.removeChild(child.children[i], gl);
           }
-          return;
         }
         // Deallocate texture to free up gl memory.
-        gl.deleteTexture(child._renderer.texture);
-        delete child._renderer.texture;
+        if (child._renderer.texture) {
+          gl.deleteTexture(child._renderer.texture);
+          delete child._renderer.texture;
+        }
+        // Deallocate vertices to free up gl memory.
+        if (child._renderer.positionBuffer) {
+          gl.deleteBuffer(child._renderer.positionBuffer);
+          delete child._renderer.positionBuffer;
+        }
       },
 
-      render: function(gl, program) {
+      render: function(gl, programs) {
 
         if (!this._visible) {
           return;
@@ -14203,7 +15192,7 @@ SOFTWARE.
           // Don't draw the element onto the canvas, only onto the stencil buffer
           gl.colorMask(false, false, false, false);
 
-          webgl[this._mask._renderer.type].render.call(this._mask, gl, program, this);
+          webgl[this._mask._renderer.type].render.call(this._mask, gl, programs, this);
 
           gl.stencilFunc(gl.EQUAL, 1, 0xff);
           gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
@@ -14225,7 +15214,7 @@ SOFTWARE.
 
         for (i = 0; i < this.children.length; i++) {
           var child = this.children[i];
-          webgl[child._renderer.type].render.call(child, gl, program);
+          webgl[child._renderer.type].render.call(child, gl, programs);
         }
 
         if (this._mask) {
@@ -14531,7 +15520,7 @@ SOFTWARE.
 
       },
 
-      render: function(gl, program, forcedParent) {
+      render: function(gl, programs, forcedParent) {
 
         if (!this._visible || !this._opacity) {
           return this;
@@ -14542,6 +15531,7 @@ SOFTWARE.
         // Calculate what changed
 
         var parent = forcedParent || this.parent;
+        var program = programs[this._renderer.type];
         var flagParentMatrix = parent._matrix.manual || parent._flagMatrix;
         var flagMatrix = this._matrix.manual || this._flagMatrix;
         var parentChanged = this._renderer.parent !== parent;
@@ -14597,7 +15587,7 @@ SOFTWARE.
           // Don't draw the element onto the canvas, only onto the stencil buffer
           gl.colorMask(false, false, false, false);
 
-          webgl[this._mask._renderer.type].render.call(this._mask, gl, program, this);
+          webgl[this._mask._renderer.type].render.call(this._mask, gl, programs, this);
 
           gl.stencilFunc(gl.EQUAL, 1, 0xff);
           gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
@@ -14613,7 +15603,8 @@ SOFTWARE.
 
           this._renderer.opacity = this._opacity * parent._renderer.opacity;
 
-          webgl.path.getBoundingClientRect(this._renderer.vertices, this._linewidth, this._renderer.rect);
+          webgl.path.getBoundingClientRect(
+            this._renderer.vertices, this._linewidth, this._renderer.rect);
 
           webgl.updateTexture.call(webgl, gl, this);
 
@@ -14630,8 +15621,37 @@ SOFTWARE.
 
         }
 
-        if (this._clip && !forcedParent) {
-          return;
+        if (this._clip && !forcedParent || !this._renderer.texture) {
+          return this;
+        }
+
+        if (programs.current !== program) {
+
+          gl.useProgram(program);
+
+          gl.bindBuffer(gl.ARRAY_BUFFER, programs.buffers.position);
+          gl.vertexAttribPointer(program.position, 2, gl.FLOAT, false, 0, 0);
+          gl.enableVertexAttribArray(program.position);
+          gl.bufferData(gl.ARRAY_BUFFER, quad, gl.STATIC_DRAW);
+
+          if (!programs.resolution.flagged) {
+            gl.uniform2f(
+              gl.getUniformLocation(program, 'u_resolution'),
+              programs.resolution.width,
+              programs.resolution.height
+            );
+          }
+
+          programs.current = program;
+
+        }
+
+        if (programs.resolution.flagged) {
+          gl.uniform2f(
+            gl.getUniformLocation(program, 'u_resolution'),
+            programs.resolution.width,
+            programs.resolution.height
+          );
         }
 
         // Draw Texture
@@ -14646,6 +15666,255 @@ SOFTWARE.
         if (this._mask) {
           gl.disable(gl.STENCIL_TEST);
         }
+
+        return this.flagReset();
+
+      }
+
+    },
+
+    points: {
+
+      // The canvas is a texture that is a rendering of one vertex
+      updateCanvas: function(elem) {
+
+        var isOffset;
+
+        var canvas = this.canvas;
+        var ctx = this.ctx;
+
+        // Styles
+        var stroke = elem._stroke;
+        var linewidth = elem._linewidth;
+        var fill = elem._fill;
+        var opacity = elem._renderer.opacity || elem._opacity;
+        var dashes = elem.dashes;
+        var size = elem._size;
+        var dimension = size;
+
+        if (!(webgl.isHidden.test(stroke))) {
+          dimension += linewidth;
+        }
+
+        canvas.width = getPoT(dimension);
+        canvas.height = canvas.width;
+
+        var aspect = dimension / canvas.width;
+
+        var cx = canvas.width / 2;
+        var cy = canvas.height / 2;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        if (fill) {
+          if (typeof fill === 'string') {
+            ctx.fillStyle = fill;
+          } else {
+            webgl[fill._renderer.type].render.call(fill, ctx, elem);
+            ctx.fillStyle = fill._renderer.effect;
+          }
+        }
+        if (stroke) {
+          if (typeof stroke === 'string') {
+            ctx.strokeStyle = stroke;
+          } else {
+            webgl[stroke._renderer.type].render.call(stroke, ctx, elem);
+            ctx.strokeStyle = stroke._renderer.effect;
+          }
+          if (linewidth) {
+            ctx.lineWidth = linewidth / aspect;
+          }
+        }
+        if (typeof opacity === 'number') {
+          ctx.globalAlpha = opacity;
+        }
+
+        if (dashes && dashes.length > 0) {
+          ctx.lineDashOffset = dashes.offset || 0;
+          ctx.setLineDash(dashes);
+        }
+
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.scale(webgl.precision, webgl.precision); // Precision for even rendering
+        ctx.beginPath();
+        ctx.arc(0, 0, (size / aspect) * 0.5, 0, TWO_PI);
+        ctx.restore();
+
+        // Loose ends
+
+        if (closed) {
+          ctx.closePath();
+        }
+
+        if (!webgl.isHidden.test(fill)) {
+          isOffset = fill._renderer && fill._renderer.offset;
+          if (isOffset) {
+            ctx.save();
+            ctx.translate(
+              - fill._renderer.offset.x, - fill._renderer.offset.y);
+            ctx.scale(fill._renderer.scale.x, fill._renderer.scale.y);
+          }
+          ctx.fill();
+          if (isOffset) {
+            ctx.restore();
+          }
+        }
+
+        if (!webgl.isHidden.test(stroke)) {
+          isOffset = stroke._renderer && stroke._renderer.offset;
+          if (isOffset) {
+            ctx.save();
+            ctx.translate(
+              - stroke._renderer.offset.x, - stroke._renderer.offset.y);
+            ctx.scale(stroke._renderer.scale.x, stroke._renderer.scale.y);
+            ctx.lineWidth = linewidth / stroke._renderer.scale.x;
+          }
+          ctx.stroke();
+          if (isOffset) {
+            ctx.restore();
+          }
+        }
+
+      },
+
+      render: function(gl, programs, forcedParent) {
+
+        if (!this._visible || !this._opacity) {
+          return this;
+        }
+
+        this._update();
+
+        // Calculate what changed
+
+        var parent = forcedParent || this.parent;
+        var program = programs[this._renderer.type];
+        var size = this._size;
+        var sizeAttenuation = this._sizeAttenuation;
+        var stroke = this._stroke;
+        var linewidth = this._linewidth;
+        var flagParentMatrix = parent._matrix.manual || parent._flagMatrix;
+        var flagMatrix = this._matrix.manual || this._flagMatrix;
+        var parentChanged = this._renderer.parent !== parent;
+        var commands = this._renderer.vertices;
+        var length = this._renderer.collection.length;
+        var flagVertices = this._flagVertices;
+        var flagTexture = this._flagFill
+          || (this._fill instanceof LinearGradient && (this._fill._flagSpread || this._fill._flagStops || this._fill._flagEndPoints))
+          || (this._fill instanceof RadialGradient && (this._fill._flagSpread || this._fill._flagStops || this._fill._flagRadius || this._fill._flagCenter || this._fill._flagFocal))
+          || (this._fill instanceof Texture && (this._fill._flagLoaded && this._fill.loaded || this._fill._flagImage || this._fill._flagVideo || this._fill._flagRepeat || this._fill._flagOffset || this._fill._flagScale))
+          || (this._stroke instanceof LinearGradient && (this._stroke._flagSpread || this._stroke._flagStops || this._stroke._flagEndPoints))
+          || (this._stroke instanceof RadialGradient && (this._stroke._flagSpread || this._stroke._flagStops || this._stroke._flagRadius || this._stroke._flagCenter || this._stroke._flagFocal))
+          || (this._stroke instanceof Texture && (this._stroke._flagLoaded && this._stroke.loaded || this._stroke._flagImage || this._stroke._flagVideo || this._stroke._flagRepeat || this._stroke._flagOffset || this._fill._flagScale))
+          || this._flagStroke || this._flagLinewidth || this._flagOpacity
+          || parent._flagOpacity || this._flagVisible || this._flagScale
+          || (this.dashes && this.dashes.length > 0)
+          || !this._renderer.texture;
+
+        if (flagParentMatrix || flagMatrix || parentChanged) {
+
+          if (!this._renderer.matrix) {
+            this._renderer.matrix = new NumArray(9);
+          }
+
+          // Reduce amount of object / array creation / deletion
+
+          this._matrix.toTransformArray(true, transformation);
+
+          multiplyMatrix(transformation, parent._renderer.matrix, this._renderer.matrix);
+
+          if (!(this._renderer.scale instanceof Vector)) {
+            this._renderer.scale = new Vector();
+          }
+          if (this._scale instanceof Vector) {
+            this._renderer.scale.x = this._scale.x * parent._renderer.scale.x;
+            this._renderer.scale.y = this._scale.y * parent._renderer.scale.y;
+          } else {
+            this._renderer.scale.x = this._scale * parent._renderer.scale.x;
+            this._renderer.scale.y = this._scale * parent._renderer.scale.y;
+          }
+
+          if (parentChanged) {
+            this._renderer.parent = parent;
+          }
+
+        }
+
+        if (flagVertices) {
+
+          var positionBuffer = this._renderer.positionBuffer;
+          if (positionBuffer) {
+            gl.deleteBuffer(positionBuffer);
+          }
+
+          // Bind the vertex buffer
+          this._renderer.positionBuffer = gl.createBuffer();
+          gl.bindBuffer(gl.ARRAY_BUFFER, this._renderer.positionBuffer);
+          gl.vertexAttribPointer(program.position, 2, gl.FLOAT, false, 0, 0);
+          gl.enableVertexAttribArray(program.position);
+          gl.bufferData(gl.ARRAY_BUFFER, commands, gl.STATIC_DRAW);
+
+        }
+
+        if (flagTexture) {
+
+          this._renderer.opacity = this._opacity * parent._renderer.opacity;
+
+          webgl.updateTexture.call(webgl, gl, this);
+
+        } else {
+
+          // We still need to update child Two elements on the fill and
+          // stroke properties.
+          if (this._fill && this._fill._update) {
+            this._fill._update();
+          }
+          if (this._stroke && this._stroke._update) {
+            this._stroke._update();
+          }
+
+        }
+
+        if (this._clip && !forcedParent || !this._renderer.texture) {
+          return this;
+        }
+
+        if (!webgl.isHidden.test(stroke)) {
+          size += linewidth;
+        }
+        size /= webgl.precision;
+        if (sizeAttenuation) {
+          size *= Math.max(this._renderer.scale.x, this._renderer.scale.y);
+        }
+
+        if (programs.current !== program) {
+          gl.useProgram(program);
+          if (!programs.resolution.flagged) {
+            gl.uniform2f(
+              gl.getUniformLocation(program, 'u_resolution'),
+              programs.resolution.width,
+              programs.resolution.height
+            );
+          }
+          programs.current = program;
+        }
+
+        if (programs.resolution.flagged) {
+          gl.uniform2f(
+            gl.getUniformLocation(program, 'u_resolution'),
+            programs.resolution.width,
+            programs.resolution.height
+          );
+        }
+
+        // Draw Texture
+        gl.bindTexture(gl.TEXTURE_2D, this._renderer.texture);
+
+        // Draw Points
+        gl.uniformMatrix3fv(program.matrix, false, this._renderer.matrix);
+        gl.uniform1f(program.size, size * programs.resolution.ratio);
+        gl.drawArrays(gl.POINTS, 0, length);
 
         return this.flagReset();
 
@@ -14880,7 +16149,7 @@ SOFTWARE.
 
       },
 
-      render: function(gl, program, forcedParent) {
+      render: function(gl, programs, forcedParent) {
 
         if (!this._visible || !this._opacity) {
           return this;
@@ -14891,6 +16160,7 @@ SOFTWARE.
         // Calculate what changed
 
         var parent = forcedParent || this.parent;
+        var program = programs[this._renderer.type];
         var flagParentMatrix = parent._matrix.manual || parent._flagMatrix;
         var flagMatrix = this._matrix.manual || this._flagMatrix;
         var parentChanged = this._renderer.parent !== parent;
@@ -14948,7 +16218,7 @@ SOFTWARE.
           // Don't draw the element onto the canvas, only onto the stencil buffer
           gl.colorMask(false, false, false, false);
 
-          webgl[this._mask._renderer.type].render.call(this._mask, gl, program, this);
+          webgl[this._mask._renderer.type].render.call(this._mask, gl, programs, this);
 
           gl.stencilFunc(gl.EQUAL, 1, 0xff);
           gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
@@ -14981,8 +16251,37 @@ SOFTWARE.
 
         }
 
-        if (this._clip && !forcedParent) {
-          return;
+        if (this._clip && !forcedParent || !this._renderer.texture) {
+          return this;
+        }
+
+        if (programs.current !== program) {
+
+          gl.useProgram(program);
+
+          gl.bindBuffer(gl.ARRAY_BUFFER, programs.buffers.position);
+          gl.vertexAttribPointer(program.position, 2, gl.FLOAT, false, 0, 0);
+          gl.enableVertexAttribArray(program.position);
+          gl.bufferData(gl.ARRAY_BUFFER, quad, gl.STATIC_DRAW);
+
+          if (!programs.resolution.flagged) {
+            gl.uniform2f(
+              gl.getUniformLocation(program, 'u_resolution'),
+              programs.resolution.width,
+              programs.resolution.height
+            );
+          }
+
+          programs.current = program;
+
+        }
+
+        if (programs.resolution.flagged) {
+          gl.uniform2f(
+            gl.getUniformLocation(program, 'u_resolution'),
+            programs.resolution.width,
+            programs.resolution.height
+          );
         }
 
         // Draw Texture
@@ -15132,6 +16431,14 @@ SOFTWARE.
 
       this[elem._renderer.type].updateCanvas.call(webgl, elem);
 
+      if (this.canvas.width <= 0 || this.canvas.height <= 0) {
+        if (elem._renderer.texture) {
+          gl.deleteTexture(elem._renderer.texture);
+        }
+        delete elem._renderer.texture;
+        return;
+      }
+
       if (!elem._renderer.texture) {
         elem._renderer.texture = gl.createTexture();
       }
@@ -15145,10 +16452,6 @@ SOFTWARE.
       // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
       // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
       // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-
-      if (this.canvas.width <= 0 || this.canvas.height <= 0) {
-        return;
-      }
 
       // Upload the image into the texture.
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.canvas);
@@ -15178,68 +16481,6 @@ SOFTWARE.
 
     },
 
-    shaders: {
-
-      create: function(gl, source, type) {
-        var shader, compiled, error;
-        shader = gl.createShader(gl[type]);
-        gl.shaderSource(shader, source);
-        gl.compileShader(shader);
-
-        compiled = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
-        if (!compiled) {
-          error = gl.getShaderInfoLog(shader);
-          gl.deleteShader(shader);
-          throw new TwoError('unable to compile shader ' + shader + ': ' + error);
-        }
-
-        return shader;
-
-      },
-
-      types: {
-        vertex: 'VERTEX_SHADER',
-        fragment: 'FRAGMENT_SHADER'
-      },
-
-      vertex: [
-        'precision mediump float;',
-        'attribute vec2 a_position;',
-        '',
-        'uniform mat3 u_matrix;',
-        'uniform vec2 u_resolution;',
-        'uniform vec4 u_rect;',
-        '',
-        'varying vec2 v_textureCoords;',
-        '',
-        'void main() {',
-        '   vec2 rectCoords = (a_position * (u_rect.zw - u_rect.xy)) + u_rect.xy;',
-        '   vec2 projected = (u_matrix * vec3(rectCoords, 1.0)).xy;',
-        '   vec2 normal = projected / u_resolution;',
-        '   vec2 clipspace = (normal * 2.0) - 1.0;',
-        '',
-        '   gl_Position = vec4(clipspace * vec2(1.0, -1.0), 0.0, 1.0);',
-        '   v_textureCoords = a_position;',
-        '}'
-      ].join('\n'),
-
-      fragment: [
-        'precision mediump float;',
-        '',
-        'uniform sampler2D u_image;',
-        'varying vec2 v_textureCoords;',
-        '',
-        'void main() {',
-        '  vec4 texel = texture2D(u_image, v_textureCoords);',
-        '  if (texel.a == 0.0) {',
-        '    discard;',
-        '  }',
-        '  gl_FragColor = texel;',
-        '}'
-      ].join('\n')
-
-    },
-
     TextureRegistry: new Registry()
 
   };
@@ -15259,7 +16500,7 @@ SOFTWARE.
    */
   function Renderer(params) {
 
-    var gl, vs, fs;
+    var gl, program, vs, fs;
 
     /**
      * @name Two.WebGLRenderer#domElement
@@ -15318,41 +16559,55 @@ SOFTWARE.
     }
 
     // Compile Base Shaders to draw in pixel space.
-    vs = webgl.shaders.create(
-      gl, webgl.shaders.vertex, webgl.shaders.types.vertex);
-    fs = webgl.shaders.create(
-      gl, webgl.shaders.fragment, webgl.shaders.types.fragment);
+    vs = shaders.create(gl, shaders.path.vertex, shaders.types.vertex);
+    fs = shaders.create(gl, shaders.path.fragment, shaders.types.fragment);
 
     /**
-     * @name Two.WebGLRenderer#program
-     * @property {WebGLProgram} - Associated WebGL program to render all elements from the scenegraph.
+     * @name Two.WebGLRenderer#programs
+     * @property {Object} - Associated WebGL programs to render all elements from the scenegraph.
      */
-    this.program = webgl.program.create(gl, [vs, fs]);
-    gl.useProgram(this.program);
+    this.programs = {
+      current: null,
+      buffers: {
+        position: gl.createBuffer()
+      },
+      resolution: {
+        width: 0,
+        height: 0,
+        ratio: 1,
+        flagged: false
+      }
+    };
+
+    program = this.programs.path = webgl.program.create(gl, [vs, fs]);
+    this.programs.text = this.programs.path;
 
     // Create and bind the drawing buffer
 
     // look up where the vertex data needs to go.
-    this.program.position = gl.getAttribLocation(this.program, 'a_position');
-    this.program.matrix = gl.getUniformLocation(this.program, 'u_matrix');
-    this.program.rect = gl.getUniformLocation(this.program, 'u_rect');
+    program.position = gl.getAttribLocation(program, 'a_position');
+    program.matrix = gl.getUniformLocation(program, 'u_matrix');
+    program.rect = gl.getUniformLocation(program, 'u_rect');
 
     // Bind the vertex buffer
     var positionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-    gl.vertexAttribPointer(this.program.position, 2, gl.FLOAT, false, 0, 0);
-    gl.enableVertexAttribArray(this.program.position);
-    gl.bufferData(
-      gl.ARRAY_BUFFER,
-      new NumArray([
-        0, 0,
-        1, 0,
-        0, 1,
-        0, 1,
-        1, 0,
-        1, 1
-      ]),
-      gl.STATIC_DRAW);
+    gl.vertexAttribPointer(program.position, 2, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(program.position);
+    gl.bufferData(gl.ARRAY_BUFFER, quad, gl.STATIC_DRAW);
+
+    // Compile Base Shaders to draw in pixel space.
+    vs = shaders.create(gl, shaders.points.vertex, shaders.types.vertex);
+    fs = shaders.create(gl, shaders.points.fragment, shaders.types.fragment);
+
+    program = this.programs.points = webgl.program.create(gl, [vs, fs]);
+
+    // Create and bind the drawing buffer
+
+    // look up where the vertex data needs to go.
+    program.position = gl.getAttribLocation(program, 'a_position');
+    program.matrix = gl.getUniformLocation(program, 'u_matrix');
+    program.size = gl.getUniformLocation(program, 'u_size');
 
     // Setup some initial statements of the gl context
     gl.enable(gl.BLEND);
@@ -15388,10 +16643,13 @@ SOFTWARE.
      */
     setSize: function(width, height, ratio) {
 
+      var w, h;
+      var ctx = this.ctx;
+
       this.width = width;
       this.height = height;
 
-      this.ratio = typeof ratio === 'undefined' ? getRatio(this.ctx) : ratio;
+      this.ratio = typeof ratio === 'undefined' ? getRatio(ctx) : ratio;
 
       this.domElement.width = width * this.ratio;
       this.domElement.height = height * this.ratio;
@@ -15408,11 +16666,15 @@ SOFTWARE.
 
       this._flagMatrix = true;
 
-      this.ctx.viewport(0, 0, width * this.ratio, height * this.ratio);
+      w = width * this.ratio;
+      h = height * this.ratio;
 
-      var resolutionLocation = this.ctx.getUniformLocation(
-        this.program, 'u_resolution');
-      this.ctx.uniform2f(resolutionLocation, width * this.ratio, height * this.ratio);
+      ctx.viewport(0, 0, w, h);
+
+      this.programs.resolution.width = w;
+      this.programs.resolution.height = h;
+      this.programs.resolution.ratio = this.ratio;
+      this.programs.resolution.flagged = true;
 
       return this.trigger(Events.Types.resize, width, height, ratio);
 
@@ -15431,8 +16693,9 @@ SOFTWARE.
         gl.clear(gl.COLOR_BUFFER_BIT);
       }
 
-      webgl.group.render.call(this.scene, gl, this.program);
+      webgl.group.render.call(this.scene, gl, this.programs);
       this._flagMatrix = false;
+      this.programs.resolution.flagged = true;
 
       return this;
 
@@ -15665,7 +16928,7 @@ SOFTWARE.
       var i, v, child;
 
       if (!_.isObject(obj)) {
-        return;
+        return this.release(this.scene);
       }
 
       if (typeof obj.unbind === 'function') {
@@ -15681,6 +16944,14 @@ SOFTWARE.
           if (typeof v.unbind === 'function') {
             v.unbind();
           }
+          if (v.controls) {
+            if (v.controls.left && typeof v.controls.left.unbind === 'function') {
+              v.controls.left.unbind();
+            }
+            if (v.controls.right && typeof v.controls.right.unbind === 'function') {
+              v.controls.right.unbind();
+            }
+          }
         }
       }
 
@@ -15688,6 +16959,9 @@ SOFTWARE.
         for (i = 0; i < obj.children.length; i++) {
           child = obj.children[i];
           this.release(child);
+        }
+        if (typeof obj.children.unbind === 'function') {
+          obj.children.unbind();
         }
       }
 
@@ -16024,6 +17298,7 @@ SOFTWARE.
      * @param {Number} startAngle
      * @param {Number} endAngle
      * @param {Number} [resolution=Two.Resolution] - The number of vertices that should comprise the arc segment.
+     * @returns {Two.ArcSegment}
      */
     makeArcSegment: function(ox, oy, ir, or, sa, ea, res) {
       var arcSegment = new ArcSegment(ox, oy, ir, or, sa, ea, res);
@@ -16032,9 +17307,40 @@ SOFTWARE.
     },
 
     /**
+     * @name Two#makePoints
+     * @function
+     * @param {Two.Vector[]} [points] - An array of {@link Two.Vector} points
+     * @param {...Number} - Alternatively you can pass alternating `x` / `y` coordinate values as individual agrguments. These will be combined into {@link Two.Vector}s for use in the points object.
+     * @returns {Two.Points}
+     * @description Creates a Two.js points object and adds it to the current scene.
+     */
+    makePoints: function(p) {
+
+      var l = arguments.length, vertices = p;
+      if (!Array.isArray(p)) {
+        vertices = [];
+        for (var i = 0; i < l; i+=2) {
+          var x = arguments[i];
+          if (typeof x !== 'number') {
+            break;
+          }
+          var y = arguments[i + 1];
+          vertices.push(new Vector(x, y));
+        }
+      }
+
+      var points = new Points(vertices);
+
+      this.scene.add(points);
+
+      return points;
+
+    },
+
+    /**
      * @name Two#makePath
      * @function
-     * @param {Two.Anchor[]} [points] - An array of {@link Two.Anchor} points.
+     * @param {Two.Anchor[]} [points] - An array of {@link Two.Anchor} points
      * @param {...Number} - Alternatively you can pass alternating `x` / `y` coordinate values as individual arguments. These will be combined into {@link Two.Anchor}s for use in the path.
      * @returns {Two.Path}
      * @description Creates a Two.js path and adds it to the scene.
@@ -16219,7 +17525,7 @@ SOFTWARE.
      * @function
      * @param {SVGElement} SVGElement - The SVG node to be parsed.
      * @param {Boolean} shallow - Don't create a top-most group but append all content directly.
-     * @param {Boolean} add – Automatically add the reconstructed SVG node to scene.
+     * @param {Boolean} [add=true] – Automatically add the reconstructed SVG node to scene.
      * @returns {Two.Group}
      * @description Interpret an SVG Node and add it to this instance's scene. The distinction should be made that this doesn't `import` svg's, it solely interprets them into something compatible for Two.js - this is slightly different than a direct transcription.
      */
@@ -16258,7 +17564,7 @@ SOFTWARE.
     load: function(text, callback) {
 
       var group = new Group();
-      var elem, i, j, child;
+      var elem, i, child;
 
       var attach = (function(data) {
 
@@ -16266,14 +17572,9 @@ SOFTWARE.
 
         for (i = 0; i < dom.temp.children.length; i++) {
           elem = dom.temp.children[i];
-          if (/svg/i.test(elem.nodeName)) {
-            child = this.interpret(elem);
-            // Two.Utils.applySvgViewBox.call(this, group, elem.getAttribute('viewBox'));
-            for (j = 0; j < child.children.length; j++) {
-              group.add(child.children[j]);
-            }
-          } else {
-            group.add(this.interpret(elem));
+          child = this.interpret(elem, false, false);
+          if (child !== null) {
+            group.add(child);
           }
         }
 
@@ -16380,6 +17681,7 @@ SOFTWARE.
     Circle: Circle,
     Ellipse: Ellipse,
     Line: Line,
+    Points: Points,
     Polygon: Polygon,
     Rectangle: Rectangle,
     RoundedRectangle: RoundedRectangle,

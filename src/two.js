@@ -41,6 +41,7 @@ import ArcSegment from './shapes/arc-segment.js';
 import Circle from './shapes/circle.js';
 import Ellipse from './shapes/ellipse.js';
 import Line from './shapes/line.js';
+import Points from './shapes/points.js';
 import Polygon from './shapes/polygon.js';
 import Rectangle from './shapes/rectangle.js';
 import RoundedRectangle from './shapes/rounded-rectangle.js';
@@ -277,7 +278,7 @@ _.extend(Two.prototype, Events, {
     var i, v, child;
 
     if (!_.isObject(obj)) {
-      return;
+      return this.release(this.scene);
     }
 
     if (typeof obj.unbind === 'function') {
@@ -293,6 +294,14 @@ _.extend(Two.prototype, Events, {
         if (typeof v.unbind === 'function') {
           v.unbind();
         }
+        if (v.controls) {
+          if (v.controls.left && typeof v.controls.left.unbind === 'function') {
+            v.controls.left.unbind();
+          }
+          if (v.controls.right && typeof v.controls.right.unbind === 'function') {
+            v.controls.right.unbind();
+          }
+        }
       }
     }
 
@@ -300,6 +309,9 @@ _.extend(Two.prototype, Events, {
       for (i = 0; i < obj.children.length; i++) {
         child = obj.children[i];
         this.release(child);
+      }
+      if (typeof obj.children.unbind === 'function') {
+        obj.children.unbind();
       }
     }
 
@@ -636,6 +648,7 @@ _.extend(Two.prototype, Events, {
    * @param {Number} startAngle
    * @param {Number} endAngle
    * @param {Number} [resolution=Two.Resolution] - The number of vertices that should comprise the arc segment.
+   * @returns {Two.ArcSegment}
    */
   makeArcSegment: function(ox, oy, ir, or, sa, ea, res) {
     var arcSegment = new ArcSegment(ox, oy, ir, or, sa, ea, res);
@@ -644,9 +657,40 @@ _.extend(Two.prototype, Events, {
   },
 
   /**
+   * @name Two#makePoints
+   * @function
+   * @param {Two.Vector[]} [points] - An array of {@link Two.Vector} points
+   * @param {...Number} - Alternatively you can pass alternating `x` / `y` coordinate values as individual agrguments. These will be combined into {@link Two.Vector}s for use in the points object.
+   * @returns {Two.Points}
+   * @description Creates a Two.js points object and adds it to the current scene.
+   */
+  makePoints: function(p) {
+
+    var l = arguments.length, vertices = p;
+    if (!Array.isArray(p)) {
+      vertices = [];
+      for (var i = 0; i < l; i+=2) {
+        var x = arguments[i];
+        if (typeof x !== 'number') {
+          break;
+        }
+        var y = arguments[i + 1];
+        vertices.push(new Vector(x, y));
+      }
+    }
+
+    var points = new Points(vertices);
+
+    this.scene.add(points);
+
+    return points;
+
+  },
+
+  /**
    * @name Two#makePath
    * @function
-   * @param {Two.Anchor[]} [points] - An array of {@link Two.Anchor} points.
+   * @param {Two.Anchor[]} [points] - An array of {@link Two.Anchor} points
    * @param {...Number} - Alternatively you can pass alternating `x` / `y` coordinate values as individual arguments. These will be combined into {@link Two.Anchor}s for use in the path.
    * @returns {Two.Path}
    * @description Creates a Two.js path and adds it to the scene.
@@ -831,7 +875,7 @@ _.extend(Two.prototype, Events, {
    * @function
    * @param {SVGElement} SVGElement - The SVG node to be parsed.
    * @param {Boolean} shallow - Don't create a top-most group but append all content directly.
-   * @param {Boolean} add – Automatically add the reconstructed SVG node to scene.
+   * @param {Boolean} [add=true] – Automatically add the reconstructed SVG node to scene.
    * @returns {Two.Group}
    * @description Interpret an SVG Node and add it to this instance's scene. The distinction should be made that this doesn't `import` svg's, it solely interprets them into something compatible for Two.js - this is slightly different than a direct transcription.
    */
@@ -870,7 +914,7 @@ _.extend(Two.prototype, Events, {
   load: function(text, callback) {
 
     var group = new Group();
-    var elem, i, j, child;
+    var elem, i, child;
 
     var attach = (function(data) {
 
@@ -878,14 +922,9 @@ _.extend(Two.prototype, Events, {
 
       for (i = 0; i < dom.temp.children.length; i++) {
         elem = dom.temp.children[i];
-        if (/svg/i.test(elem.nodeName)) {
-          child = this.interpret(elem);
-          // Two.Utils.applySvgViewBox.call(this, group, elem.getAttribute('viewBox'));
-          for (j = 0; j < child.children.length; j++) {
-            group.add(child.children[j]);
-          }
-        } else {
-          group.add(this.interpret(elem));
+        child = this.interpret(elem, false, false);
+        if (child !== null) {
+          group.add(child);
         }
       }
 
@@ -992,6 +1031,7 @@ _.extend(Two, {
   Circle: Circle,
   Ellipse: Ellipse,
   Line: Line,
+  Points: Points,
   Polygon: Polygon,
   Rectangle: Rectangle,
   RoundedRectangle: RoundedRectangle,

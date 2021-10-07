@@ -1,10 +1,13 @@
 import Commands from '../utils/path-commands.js';
-import {mod, toFixed} from '../utils/math.js';
+import { decomposeMatrix, getComputedMatrix, mod, toFixed } from '../utils/math.js';
 import Events from '../events.js';
 import _ from '../utils/underscore.js';
 
 import Group from '../group.js';
 import Vector from '../vector.js';
+import Matrix from '../matrix.js';
+
+var matrix = new Matrix();
 
 var svg = {
 
@@ -180,6 +183,25 @@ var svg = {
       }
 
       string += command + ' ';
+
+    }
+
+    return string;
+
+  },
+
+  pointsToString: function(points, size) {
+
+    var string = '';
+    var r = size * 0.5;
+
+    for (var i = 0; i < points.length; i++) {
+
+      var x = points[i].x;
+      var y = points[i].y - r;
+
+      string += Commands.move + ' ' + x + ' ' + y + ' ';
+      string += 'a ' + r + ' ' + r + ' 0 1 0 0.001 0 Z';
 
     }
 
@@ -482,6 +504,105 @@ var svg = {
         } else {
           this._renderer.elem.removeAttribute('clip-path');
         }
+      }
+
+      return this.flagReset();
+
+    }
+
+  },
+
+  points: {
+
+    render: function(domElement) {
+
+      // Shortcut for hidden objects.
+      // Doesn't reset the flags, so changes are stored and
+      // applied once the object is visible again
+      if (this._opacity === 0 && !this._flagOpacity) {
+        return this;
+      }
+
+      this._update();
+
+      // Collect any attribute that needs to be changed here
+      var changed = {};
+
+      var flagMatrix = this._matrix.manual || this._flagMatrix;
+
+      if (flagMatrix) {
+        changed.transform = 'matrix(' + this._matrix.toString() + ')';
+      }
+
+      if (this._flagId) {
+        changed.id = this._id;
+      }
+
+      if (this._flagVertices || this._flagSize || this._flagSizeAttenuation) {
+        var size = this._size;
+        if (!this._sizeAttenuation) {
+          getComputedMatrix(this, matrix);
+          var me = matrix.elements;
+          var m = decomposeMatrix(me[0], me[3], me[1], me[4], me[2], me[5]);
+          size /= Math.max(m.scaleX, m.scaleY);
+        }
+        var vertices = svg.pointsToString(this._renderer.collection, size);
+        changed.d = vertices;
+      }
+
+      if (this._fill && this._fill._renderer) {
+        this._fill._update();
+        svg[this._fill._renderer.type].render.call(this._fill, domElement, true);
+      }
+
+      if (this._flagFill) {
+        changed.fill = this._fill && this._fill.id
+          ? 'url(#' + this._fill.id + ')' : this._fill;
+      }
+
+      if (this._stroke && this._stroke._renderer) {
+        this._stroke._update();
+        svg[this._stroke._renderer.type].render.call(this._stroke, domElement, true);
+      }
+
+      if (this._flagStroke) {
+        changed.stroke = this._stroke && this._stroke.id
+          ? 'url(#' + this._stroke.id + ')' : this._stroke;
+      }
+
+      if (this._flagLinewidth) {
+        changed['stroke-width'] = this._linewidth;
+      }
+
+      if (this._flagOpacity) {
+        changed['stroke-opacity'] = this._opacity;
+        changed['fill-opacity'] = this._opacity;
+      }
+
+      if (this._flagClassName) {
+        changed['class'] = this.classList.join(' ');
+      }
+
+      if (this._flagVisible) {
+        changed.visibility = this._visible ? 'visible' : 'hidden';
+      }
+
+      if (this.dashes && this.dashes.length > 0) {
+        changed['stroke-dasharray'] = this.dashes.join(' ');
+        changed['stroke-dashoffset'] = this.dashes.offset || 0;
+      }
+
+      // If there is no attached DOM element yet,
+      // create it with all necessary attributes.
+      if (!this._renderer.elem) {
+
+        changed.id = this._id;
+        this._renderer.elem = svg.createElement('path', changed);
+        domElement.appendChild(this._renderer.elem);
+
+      // Otherwise apply all pending attributes
+      } else {
+        svg.setAttributes(this._renderer.elem, changed);
       }
 
       return this.flagReset();

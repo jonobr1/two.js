@@ -6,7 +6,7 @@
 
   QUnit.module('CanvasRenderer');
 
-  var getRatio = function(v) { return window.devicePixelRatio;};
+  var getRatio = function(v) { return Math.round(window.devicePixelRatio); };
   var deviceRatio = getRatio(document.createElement('canvas').getContext('2d'));
   var suffix = '@' + deviceRatio + 'x.png';
 
@@ -88,6 +88,29 @@
     two.update();
 
     QUnit.Utils.compare.call(assert, './images/canvas/circle' + suffix, two.renderer, 'Two.makeCircle renders properly.');
+
+  });
+
+  QUnit.test('Two.makePoints', function(assert) {
+
+    assert.expect(1);
+    assert.done = assert.async(1);
+
+    var two = new Two({
+      type: Two.Types.canvas,
+      width: 400,
+      height: 400,
+      ratio: 1
+    });
+
+    var points = two.makePoints(200, 200, 220, 200, 180, 200);
+    points.size = 10;
+    points.noStroke();
+    points.fill = '#00AEFF';
+
+    two.update();
+
+    QUnit.Utils.compare.call(assert, './images/canvas/points' + suffix, two.renderer, 'Two.makePoints renders properly.');
 
   });
 

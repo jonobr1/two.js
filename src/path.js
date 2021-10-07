@@ -1,6 +1,6 @@
 import Commands from './utils/path-commands.js';
 import Collection from './collection.js';
-import {getComputedMatrix, lerp, mod} from './utils/math.js';
+import { getComputedMatrix, lerp, mod } from './utils/math.js';
 import {
   getComponentOnCubicBezier,
   getCurveBoundingBox,
@@ -492,7 +492,7 @@ _.extend(Path, {
       },
       set: function(v) {
         if (typeof v.offset !== 'number') {
-          v.offset = this._dashes.offset || 0;
+          v.offset = (this.dashes && this._dashes.offset) || 0;
         }
         this._dashes = v;
       }
@@ -621,7 +621,7 @@ _.extend(Path.prototype, Shape.prototype, {
    * @private
    * @see {@link Two.Path#linewidth}
    */
-  _linewidth: 1.0,
+  _linewidth: 1,
 
   /**
    * @name Two.Path#_opacity
@@ -712,7 +712,7 @@ _.extend(Path.prototype, Shape.prototype, {
    * @private
    * @see {@link Two.Path#dashes}
    */
-  _dashes: [],
+  _dashes: null,
 
   /**
    * @name Two.Path#clone
@@ -769,7 +769,13 @@ _.extend(Path.prototype, Shape.prototype, {
     };
 
     _.each(Path.Properties, function(k) {
-      result[k] = this[k];
+      if (typeof this[k] !== 'undefined') {
+        if (this[k].toObject) {
+          result[k] = this[k].toObject();
+        } else {
+          result[k] = this[k];
+        }
+      }
     }, this);
 
     result.className = this.className;
@@ -977,10 +983,10 @@ _.extend(Path.prototype, Shape.prototype, {
   /**
    * @name Two.Path#getPointAt
    * @function
-   * @param {Boolean} t - Percentage value describing where on the Two.Path to estimate and assign coordinate values.
-   * @param {Two.Vector} [obj=undefined] - Object to apply calculated x, y to. If none available returns new Object.
+   * @param {Boolean} t - Percentage value describing where on the {@link Two.Path} to estimate and assign coordinate values.
+   * @param {Two.Vector} [object] - Object to apply calculated x, y to. If none available returns new `Object`.
    * @returns {Object}
-   * @description Given a float `t` from 0 to 1, return a point or assign a passed `obj`'s coordinates to that percentage on this Two.Path's curve.
+   * @description Given a float `t` from 0 to 1, return a point or assign a passed `obj`'s coordinates to that percentage on this {@link Two.Path}'s curve.
    */
   getPointAt: function(t, obj) {
 
@@ -1141,7 +1147,7 @@ _.extend(Path.prototype, Shape.prototype, {
    * @description Insert a {@link Two.Anchor} at the midpoint between every item in {@link Two.Path#vertices}.
    */
   subdivide: function(limit) {
-    //TODO: DRYness (function below)
+    // TODO: DRYness (function below)
     this._update();
 
     var last = this.vertices.length - 1;
@@ -1220,12 +1226,12 @@ _.extend(Path.prototype, Shape.prototype, {
    * @name Two.Path#_updateLength
    * @function
    * @private
-   * @param {Number} [limit=] -
+   * @param {Number} [limit] -
    * @param {Boolean} [silent=false] - If set to `true` then the path isn't updated before calculation. Useful for internal use.
    * @description Recalculate the {@link Two.Path#length} value.
    */
   _updateLength: function(limit, silent) {
-    //TODO: DRYness (function above)
+    // TODO: DRYness (function above)
     if (!silent) {
       this._update();
     }
@@ -1404,10 +1410,10 @@ _.extend(Path.prototype, Shape.prototype, {
    */
   flagReset: function() {
 
-    this._flagVertices =  this._flagFill =  this._flagStroke =
-        this._flagLinewidth = this._flagOpacity = this._flagVisible =
-        this._flagCap = this._flagJoin = this._flagMiter =
-        this._flagClip = false;
+    this._flagVertices = this._flagLength = this._flagFill =  this._flagStroke =
+      this._flagLinewidth = this._flagOpacity = this._flagVisible =
+      this._flagCap = this._flagJoin = this._flagMiter =
+      this._flagClip = false;
 
     Shape.prototype.flagReset.call(this);
 
@@ -1536,3 +1542,4 @@ function getSubdivisions(a, b, limit) {
 }
 
 export default Path;
+export { contains, getCurveLength, getIdByLength, getSubdivisions };

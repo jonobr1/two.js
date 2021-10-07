@@ -196,7 +196,7 @@
 
           var domElement = document.createElement('li');
           renderer.domElement.title = 'Computed Image';
-          renderer.domElement.style.border = '1px solid #ccc';
+          renderer.domElement.style.border = '1px solid #000';
           renderer.domElement.style.width = renderer.domElement.style.height = 200 + 'px';
           renderer.domElement.style.marginLeft = 10 + 'px';
 

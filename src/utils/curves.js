@@ -1,12 +1,10 @@
-import {mod} from './math.js';
+import { mod, HALF_PI } from './math.js';
 import Commands from './path-commands.js';
 import _ from './underscore.js';
 
 import Anchor from '../anchor.js';
 import Vector from '../vector.js';
 import Constants from '../constants.js';
-
-var HALF_PI = Math.PI / 2;
 
 /**
  * @name Two.Utils.Curve

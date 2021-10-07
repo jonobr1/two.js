@@ -1,7 +1,8 @@
 import Commands from '../utils/path-commands.js';
 
 import root from '../utils/root.js';
-import {mod, NumArray} from '../utils/math.js';
+import { getPoT, mod, NumArray, TWO_PI } from '../utils/math.js';
+import shaders from '../utils/shaders.js';
 import Events from '../events.js';
 import TwoError from '../utils/error.js';
 import getRatio from '../utils/get-ratio.js';
@@ -25,7 +26,18 @@ var multiplyMatrix = Matrix.Multiply,
   transformation = new NumArray(9),
   CanvasUtils = CanvasRenderer.Utils;
 
+var quad = new NumArray([
+  0, 0,
+  1, 0,
+  0, 1,
+  0, 1,
+  1, 0,
+  1, 1
+]);
+
 var webgl = {
+
+  precision: 0.9,
 
   isHidden: /(undefined|none|transparent)/i,
 
@@ -46,14 +58,20 @@ var webgl = {
         for (var i = 0; i < child.children.length; i++) {
           webgl.group.removeChild(child.children[i], gl);
         }
-        return;
       }
       // Deallocate texture to free up gl memory.
-      gl.deleteTexture(child._renderer.texture);
-      delete child._renderer.texture;
+      if (child._renderer.texture) {
+        gl.deleteTexture(child._renderer.texture);
+        delete child._renderer.texture;
+      }
+      // Deallocate vertices to free up gl memory.
+      if (child._renderer.positionBuffer) {
+        gl.deleteBuffer(child._renderer.positionBuffer);
+        delete child._renderer.positionBuffer;
+      }
     },
 
-    render: function(gl, program) {
+    render: function(gl, programs) {
 
       if (!this._visible) {
         return;
@@ -110,7 +128,7 @@ var webgl = {
         // Don't draw the element onto the canvas, only onto the stencil buffer
         gl.colorMask(false, false, false, false);
 
-        webgl[this._mask._renderer.type].render.call(this._mask, gl, program, this);
+        webgl[this._mask._renderer.type].render.call(this._mask, gl, programs, this);
 
         gl.stencilFunc(gl.EQUAL, 1, 0xff);
         gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
@@ -132,7 +150,7 @@ var webgl = {
 
       for (i = 0; i < this.children.length; i++) {
         var child = this.children[i];
-        webgl[child._renderer.type].render.call(child, gl, program);
+        webgl[child._renderer.type].render.call(child, gl, programs);
       }
 
       if (this._mask) {
@@ -438,7 +456,7 @@ var webgl = {
 
     },
 
-    render: function(gl, program, forcedParent) {
+    render: function(gl, programs, forcedParent) {
 
       if (!this._visible || !this._opacity) {
         return this;
@@ -449,6 +467,7 @@ var webgl = {
       // Calculate what changed
 
       var parent = forcedParent || this.parent;
+      var program = programs[this._renderer.type];
       var flagParentMatrix = parent._matrix.manual || parent._flagMatrix;
       var flagMatrix = this._matrix.manual || this._flagMatrix;
       var parentChanged = this._renderer.parent !== parent;
@@ -504,7 +523,7 @@ var webgl = {
         // Don't draw the element onto the canvas, only onto the stencil buffer
         gl.colorMask(false, false, false, false);
 
-        webgl[this._mask._renderer.type].render.call(this._mask, gl, program, this);
+        webgl[this._mask._renderer.type].render.call(this._mask, gl, programs, this);
 
         gl.stencilFunc(gl.EQUAL, 1, 0xff);
         gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
@@ -520,7 +539,8 @@ var webgl = {
 
         this._renderer.opacity = this._opacity * parent._renderer.opacity;
 
-        webgl.path.getBoundingClientRect(this._renderer.vertices, this._linewidth, this._renderer.rect);
+        webgl.path.getBoundingClientRect(
+          this._renderer.vertices, this._linewidth, this._renderer.rect);
 
         webgl.updateTexture.call(webgl, gl, this);
 
@@ -537,8 +557,37 @@ var webgl = {
 
       }
 
-      if (this._clip && !forcedParent) {
-        return;
+      if (this._clip && !forcedParent || !this._renderer.texture) {
+        return this;
+      }
+
+      if (programs.current !== program) {
+
+        gl.useProgram(program);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, programs.buffers.position);
+        gl.vertexAttribPointer(program.position, 2, gl.FLOAT, false, 0, 0);
+        gl.enableVertexAttribArray(program.position);
+        gl.bufferData(gl.ARRAY_BUFFER, quad, gl.STATIC_DRAW);
+
+        if (!programs.resolution.flagged) {
+          gl.uniform2f(
+            gl.getUniformLocation(program, 'u_resolution'),
+            programs.resolution.width,
+            programs.resolution.height
+          );
+        }
+
+        programs.current = program;
+
+      }
+
+      if (programs.resolution.flagged) {
+        gl.uniform2f(
+          gl.getUniformLocation(program, 'u_resolution'),
+          programs.resolution.width,
+          programs.resolution.height
+        );
       }
 
       // Draw Texture
@@ -553,6 +602,255 @@ var webgl = {
       if (this._mask) {
         gl.disable(gl.STENCIL_TEST);
       }
+
+      return this.flagReset();
+
+    }
+
+  },
+
+  points: {
+
+    // The canvas is a texture that is a rendering of one vertex
+    updateCanvas: function(elem) {
+
+      var isOffset;
+
+      var canvas = this.canvas;
+      var ctx = this.ctx;
+
+      // Styles
+      var stroke = elem._stroke;
+      var linewidth = elem._linewidth;
+      var fill = elem._fill;
+      var opacity = elem._renderer.opacity || elem._opacity;
+      var dashes = elem.dashes;
+      var size = elem._size;
+      var dimension = size;
+
+      if (!(webgl.isHidden.test(stroke))) {
+        dimension += linewidth;
+      }
+
+      canvas.width = getPoT(dimension);
+      canvas.height = canvas.width;
+
+      var aspect = dimension / canvas.width;
+
+      var cx = canvas.width / 2;
+      var cy = canvas.height / 2;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      if (fill) {
+        if (typeof fill === 'string') {
+          ctx.fillStyle = fill;
+        } else {
+          webgl[fill._renderer.type].render.call(fill, ctx, elem);
+          ctx.fillStyle = fill._renderer.effect;
+        }
+      }
+      if (stroke) {
+        if (typeof stroke === 'string') {
+          ctx.strokeStyle = stroke;
+        } else {
+          webgl[stroke._renderer.type].render.call(stroke, ctx, elem);
+          ctx.strokeStyle = stroke._renderer.effect;
+        }
+        if (linewidth) {
+          ctx.lineWidth = linewidth / aspect;
+        }
+      }
+      if (typeof opacity === 'number') {
+        ctx.globalAlpha = opacity;
+      }
+
+      if (dashes && dashes.length > 0) {
+        ctx.lineDashOffset = dashes.offset || 0;
+        ctx.setLineDash(dashes);
+      }
+
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.scale(webgl.precision, webgl.precision); // Precision for even rendering
+      ctx.beginPath();
+      ctx.arc(0, 0, (size / aspect) * 0.5, 0, TWO_PI);
+      ctx.restore();
+
+      // Loose ends
+
+      if (closed) {
+        ctx.closePath();
+      }
+
+      if (!webgl.isHidden.test(fill)) {
+        isOffset = fill._renderer && fill._renderer.offset;
+        if (isOffset) {
+          ctx.save();
+          ctx.translate(
+            - fill._renderer.offset.x, - fill._renderer.offset.y);
+          ctx.scale(fill._renderer.scale.x, fill._renderer.scale.y);
+        }
+        ctx.fill();
+        if (isOffset) {
+          ctx.restore();
+        }
+      }
+
+      if (!webgl.isHidden.test(stroke)) {
+        isOffset = stroke._renderer && stroke._renderer.offset;
+        if (isOffset) {
+          ctx.save();
+          ctx.translate(
+            - stroke._renderer.offset.x, - stroke._renderer.offset.y);
+          ctx.scale(stroke._renderer.scale.x, stroke._renderer.scale.y);
+          ctx.lineWidth = linewidth / stroke._renderer.scale.x;
+        }
+        ctx.stroke();
+        if (isOffset) {
+          ctx.restore();
+        }
+      }
+
+    },
+
+    render: function(gl, programs, forcedParent) {
+
+      if (!this._visible || !this._opacity) {
+        return this;
+      }
+
+      this._update();
+
+      // Calculate what changed
+
+      var parent = forcedParent || this.parent;
+      var program = programs[this._renderer.type];
+      var size = this._size;
+      var sizeAttenuation = this._sizeAttenuation;
+      var stroke = this._stroke;
+      var linewidth = this._linewidth;
+      var flagParentMatrix = parent._matrix.manual || parent._flagMatrix;
+      var flagMatrix = this._matrix.manual || this._flagMatrix;
+      var parentChanged = this._renderer.parent !== parent;
+      var commands = this._renderer.vertices;
+      var length = this._renderer.collection.length;
+      var flagVertices = this._flagVertices;
+      var flagTexture = this._flagFill
+        || (this._fill instanceof LinearGradient && (this._fill._flagSpread || this._fill._flagStops || this._fill._flagEndPoints))
+        || (this._fill instanceof RadialGradient && (this._fill._flagSpread || this._fill._flagStops || this._fill._flagRadius || this._fill._flagCenter || this._fill._flagFocal))
+        || (this._fill instanceof Texture && (this._fill._flagLoaded && this._fill.loaded || this._fill._flagImage || this._fill._flagVideo || this._fill._flagRepeat || this._fill._flagOffset || this._fill._flagScale))
+        || (this._stroke instanceof LinearGradient && (this._stroke._flagSpread || this._stroke._flagStops || this._stroke._flagEndPoints))
+        || (this._stroke instanceof RadialGradient && (this._stroke._flagSpread || this._stroke._flagStops || this._stroke._flagRadius || this._stroke._flagCenter || this._stroke._flagFocal))
+        || (this._stroke instanceof Texture && (this._stroke._flagLoaded && this._stroke.loaded || this._stroke._flagImage || this._stroke._flagVideo || this._stroke._flagRepeat || this._stroke._flagOffset || this._fill._flagScale))
+        || this._flagStroke || this._flagLinewidth || this._flagOpacity
+        || parent._flagOpacity || this._flagVisible || this._flagScale
+        || (this.dashes && this.dashes.length > 0)
+        || !this._renderer.texture;
+
+      if (flagParentMatrix || flagMatrix || parentChanged) {
+
+        if (!this._renderer.matrix) {
+          this._renderer.matrix = new NumArray(9);
+        }
+
+        // Reduce amount of object / array creation / deletion
+
+        this._matrix.toTransformArray(true, transformation);
+
+        multiplyMatrix(transformation, parent._renderer.matrix, this._renderer.matrix);
+
+        if (!(this._renderer.scale instanceof Vector)) {
+          this._renderer.scale = new Vector();
+        }
+        if (this._scale instanceof Vector) {
+          this._renderer.scale.x = this._scale.x * parent._renderer.scale.x;
+          this._renderer.scale.y = this._scale.y * parent._renderer.scale.y;
+        } else {
+          this._renderer.scale.x = this._scale * parent._renderer.scale.x;
+          this._renderer.scale.y = this._scale * parent._renderer.scale.y;
+        }
+
+        if (parentChanged) {
+          this._renderer.parent = parent;
+        }
+
+      }
+
+      if (flagVertices) {
+
+        var positionBuffer = this._renderer.positionBuffer;
+        if (positionBuffer) {
+          gl.deleteBuffer(positionBuffer);
+        }
+
+        // Bind the vertex buffer
+        this._renderer.positionBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, this._renderer.positionBuffer);
+        gl.vertexAttribPointer(program.position, 2, gl.FLOAT, false, 0, 0);
+        gl.enableVertexAttribArray(program.position);
+        gl.bufferData(gl.ARRAY_BUFFER, commands, gl.STATIC_DRAW);
+
+      }
+
+      if (flagTexture) {
+
+        this._renderer.opacity = this._opacity * parent._renderer.opacity;
+
+        webgl.updateTexture.call(webgl, gl, this);
+
+      } else {
+
+        // We still need to update child Two elements on the fill and
+        // stroke properties.
+        if (this._fill && this._fill._update) {
+          this._fill._update();
+        }
+        if (this._stroke && this._stroke._update) {
+          this._stroke._update();
+        }
+
+      }
+
+      if (this._clip && !forcedParent || !this._renderer.texture) {
+        return this;
+      }
+
+      if (!webgl.isHidden.test(stroke)) {
+        size += linewidth;
+      }
+      size /= webgl.precision;
+      if (sizeAttenuation) {
+        size *= Math.max(this._renderer.scale.x, this._renderer.scale.y);
+      }
+
+      if (programs.current !== program) {
+        gl.useProgram(program);
+        if (!programs.resolution.flagged) {
+          gl.uniform2f(
+            gl.getUniformLocation(program, 'u_resolution'),
+            programs.resolution.width,
+            programs.resolution.height
+          );
+        }
+        programs.current = program;
+      }
+
+      if (programs.resolution.flagged) {
+        gl.uniform2f(
+          gl.getUniformLocation(program, 'u_resolution'),
+          programs.resolution.width,
+          programs.resolution.height
+        );
+      }
+
+      // Draw Texture
+      gl.bindTexture(gl.TEXTURE_2D, this._renderer.texture);
+
+      // Draw Points
+      gl.uniformMatrix3fv(program.matrix, false, this._renderer.matrix);
+      gl.uniform1f(program.size, size * programs.resolution.ratio);
+      gl.drawArrays(gl.POINTS, 0, length);
 
       return this.flagReset();
 
@@ -787,7 +1085,7 @@ var webgl = {
 
     },
 
-    render: function(gl, program, forcedParent) {
+    render: function(gl, programs, forcedParent) {
 
       if (!this._visible || !this._opacity) {
         return this;
@@ -798,6 +1096,7 @@ var webgl = {
       // Calculate what changed
 
       var parent = forcedParent || this.parent;
+      var program = programs[this._renderer.type];
       var flagParentMatrix = parent._matrix.manual || parent._flagMatrix;
       var flagMatrix = this._matrix.manual || this._flagMatrix;
       var parentChanged = this._renderer.parent !== parent;
@@ -855,7 +1154,7 @@ var webgl = {
         // Don't draw the element onto the canvas, only onto the stencil buffer
         gl.colorMask(false, false, false, false);
 
-        webgl[this._mask._renderer.type].render.call(this._mask, gl, program, this);
+        webgl[this._mask._renderer.type].render.call(this._mask, gl, programs, this);
 
         gl.stencilFunc(gl.EQUAL, 1, 0xff);
         gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
@@ -888,8 +1187,37 @@ var webgl = {
 
       }
 
-      if (this._clip && !forcedParent) {
-        return;
+      if (this._clip && !forcedParent || !this._renderer.texture) {
+        return this;
+      }
+
+      if (programs.current !== program) {
+
+        gl.useProgram(program);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, programs.buffers.position);
+        gl.vertexAttribPointer(program.position, 2, gl.FLOAT, false, 0, 0);
+        gl.enableVertexAttribArray(program.position);
+        gl.bufferData(gl.ARRAY_BUFFER, quad, gl.STATIC_DRAW);
+
+        if (!programs.resolution.flagged) {
+          gl.uniform2f(
+            gl.getUniformLocation(program, 'u_resolution'),
+            programs.resolution.width,
+            programs.resolution.height
+          );
+        }
+
+        programs.current = program;
+
+      }
+
+      if (programs.resolution.flagged) {
+        gl.uniform2f(
+          gl.getUniformLocation(program, 'u_resolution'),
+          programs.resolution.width,
+          programs.resolution.height
+        );
       }
 
       // Draw Texture
@@ -1039,6 +1367,14 @@ var webgl = {
 
     this[elem._renderer.type].updateCanvas.call(webgl, elem);
 
+    if (this.canvas.width <= 0 || this.canvas.height <= 0) {
+      if (elem._renderer.texture) {
+        gl.deleteTexture(elem._renderer.texture);
+      }
+      delete elem._renderer.texture;
+      return;
+    }
+
     if (!elem._renderer.texture) {
       elem._renderer.texture = gl.createTexture();
     }
@@ -1052,10 +1388,6 @@ var webgl = {
     // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
     // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
     // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-
-    if (this.canvas.width <= 0 || this.canvas.height <= 0) {
-      return;
-    }
 
     // Upload the image into the texture.
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.canvas);
@@ -1085,68 +1417,6 @@ var webgl = {
 
   },
 
-  shaders: {
-
-    create: function(gl, source, type) {
-      var shader, compiled, error;
-      shader = gl.createShader(gl[type]);
-      gl.shaderSource(shader, source);
-      gl.compileShader(shader);
-
-      compiled = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
-      if (!compiled) {
-        error = gl.getShaderInfoLog(shader);
-        gl.deleteShader(shader);
-        throw new TwoError('unable to compile shader ' + shader + ': ' + error);
-      }
-
-      return shader;
-
-    },
-
-    types: {
-      vertex: 'VERTEX_SHADER',
-      fragment: 'FRAGMENT_SHADER'
-    },
-
-    vertex: [
-      'precision mediump float;',
-      'attribute vec2 a_position;',
-      '',
-      'uniform mat3 u_matrix;',
-      'uniform vec2 u_resolution;',
-      'uniform vec4 u_rect;',
-      '',
-      'varying vec2 v_textureCoords;',
-      '',
-      'void main() {',
-      '   vec2 rectCoords = (a_position * (u_rect.zw - u_rect.xy)) + u_rect.xy;',
-      '   vec2 projected = (u_matrix * vec3(rectCoords, 1.0)).xy;',
-      '   vec2 normal = projected / u_resolution;',
-      '   vec2 clipspace = (normal * 2.0) - 1.0;',
-      '',
-      '   gl_Position = vec4(clipspace * vec2(1.0, -1.0), 0.0, 1.0);',
-      '   v_textureCoords = a_position;',
-      '}'
-    ].join('\n'),
-
-    fragment: [
-      'precision mediump float;',
-      '',
-      'uniform sampler2D u_image;',
-      'varying vec2 v_textureCoords;',
-      '',
-      'void main() {',
-      '  vec4 texel = texture2D(u_image, v_textureCoords);',
-      '  if (texel.a == 0.0) {',
-      '    discard;',
-      '  }',
-      '  gl_FragColor = texel;',
-      '}'
-    ].join('\n')
-
-  },
-
   TextureRegistry: new Registry()
 
 };
@@ -1166,7 +1436,7 @@ webgl.ctx = webgl.canvas.getContext('2d');
  */
 function Renderer(params) {
 
-  var gl, vs, fs;
+  var gl, program, vs, fs;
 
   /**
    * @name Two.WebGLRenderer#domElement
@@ -1225,41 +1495,55 @@ function Renderer(params) {
   }
 
   // Compile Base Shaders to draw in pixel space.
-  vs = webgl.shaders.create(
-    gl, webgl.shaders.vertex, webgl.shaders.types.vertex);
-  fs = webgl.shaders.create(
-    gl, webgl.shaders.fragment, webgl.shaders.types.fragment);
+  vs = shaders.create(gl, shaders.path.vertex, shaders.types.vertex);
+  fs = shaders.create(gl, shaders.path.fragment, shaders.types.fragment);
 
   /**
-   * @name Two.WebGLRenderer#program
-   * @property {WebGLProgram} - Associated WebGL program to render all elements from the scenegraph.
+   * @name Two.WebGLRenderer#programs
+   * @property {Object} - Associated WebGL programs to render all elements from the scenegraph.
    */
-  this.program = webgl.program.create(gl, [vs, fs]);
-  gl.useProgram(this.program);
+  this.programs = {
+    current: null,
+    buffers: {
+      position: gl.createBuffer()
+    },
+    resolution: {
+      width: 0,
+      height: 0,
+      ratio: 1,
+      flagged: false
+    }
+  };
+
+  program = this.programs.path = webgl.program.create(gl, [vs, fs]);
+  this.programs.text = this.programs.path;
 
   // Create and bind the drawing buffer
 
   // look up where the vertex data needs to go.
-  this.program.position = gl.getAttribLocation(this.program, 'a_position');
-  this.program.matrix = gl.getUniformLocation(this.program, 'u_matrix');
-  this.program.rect = gl.getUniformLocation(this.program, 'u_rect');
+  program.position = gl.getAttribLocation(program, 'a_position');
+  program.matrix = gl.getUniformLocation(program, 'u_matrix');
+  program.rect = gl.getUniformLocation(program, 'u_rect');
 
   // Bind the vertex buffer
   var positionBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-  gl.vertexAttribPointer(this.program.position, 2, gl.FLOAT, false, 0, 0);
-  gl.enableVertexAttribArray(this.program.position);
-  gl.bufferData(
-    gl.ARRAY_BUFFER,
-    new NumArray([
-      0, 0,
-      1, 0,
-      0, 1,
-      0, 1,
-      1, 0,
-      1, 1
-    ]),
-    gl.STATIC_DRAW);
+  gl.vertexAttribPointer(program.position, 2, gl.FLOAT, false, 0, 0);
+  gl.enableVertexAttribArray(program.position);
+  gl.bufferData(gl.ARRAY_BUFFER, quad, gl.STATIC_DRAW);
+
+  // Compile Base Shaders to draw in pixel space.
+  vs = shaders.create(gl, shaders.points.vertex, shaders.types.vertex);
+  fs = shaders.create(gl, shaders.points.fragment, shaders.types.fragment);
+
+  program = this.programs.points = webgl.program.create(gl, [vs, fs]);
+
+  // Create and bind the drawing buffer
+
+  // look up where the vertex data needs to go.
+  program.position = gl.getAttribLocation(program, 'a_position');
+  program.matrix = gl.getUniformLocation(program, 'u_matrix');
+  program.size = gl.getUniformLocation(program, 'u_size');
 
   // Setup some initial statements of the gl context
   gl.enable(gl.BLEND);
@@ -1295,10 +1579,13 @@ _.extend(Renderer.prototype, Events, {
    */
   setSize: function(width, height, ratio) {
 
+    var w, h;
+    var ctx = this.ctx;
+
     this.width = width;
     this.height = height;
 
-    this.ratio = typeof ratio === 'undefined' ? getRatio(this.ctx) : ratio;
+    this.ratio = typeof ratio === 'undefined' ? getRatio(ctx) : ratio;
 
     this.domElement.width = width * this.ratio;
     this.domElement.height = height * this.ratio;
@@ -1315,11 +1602,15 @@ _.extend(Renderer.prototype, Events, {
 
     this._flagMatrix = true;
 
-    this.ctx.viewport(0, 0, width * this.ratio, height * this.ratio);
+    w = width * this.ratio;
+    h = height * this.ratio;
 
-    var resolutionLocation = this.ctx.getUniformLocation(
-      this.program, 'u_resolution');
-    this.ctx.uniform2f(resolutionLocation, width * this.ratio, height * this.ratio);
+    ctx.viewport(0, 0, w, h);
+
+    this.programs.resolution.width = w;
+    this.programs.resolution.height = h;
+    this.programs.resolution.ratio = this.ratio;
+    this.programs.resolution.flagged = true;
 
     return this.trigger(Events.Types.resize, width, height, ratio);
 
@@ -1338,8 +1629,9 @@ _.extend(Renderer.prototype, Events, {
       gl.clear(gl.COLOR_BUFFER_BIT);
     }
 
-    webgl.group.render.call(this.scene, gl, this.program);
+    webgl.group.render.call(this.scene, gl, this.programs);
     this._flagMatrix = false;
+    this.programs.resolution.flagged = true;
 
     return this;
 
