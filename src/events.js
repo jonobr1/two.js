@@ -140,10 +140,6 @@ class Events {
 
     if (obj) {
 
-      function e() {
-        handler.apply(scope, arguments);
-      };
-
       // Add references about the object that assigned this listener
       e.obj = obj;
       e.name = name;
@@ -151,6 +147,10 @@ class Events {
 
       obj.on(name, e);
 
+    }
+
+    function e() {
+      handler.apply(scope, arguments);
     }
 
     return scope;

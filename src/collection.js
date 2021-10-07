@@ -1,5 +1,4 @@
 import Events from './events.js';
-import _ from './utils/underscore.js';
 
 /**
  * @name Two.Collection
@@ -38,19 +37,19 @@ class Collection extends Array {
     var shifted = super.shift.apply(this, arguments);
     this.trigger(Events.Types.remove, [shifted]);
     return shifted;
-  },
+  }
 
   push() {
     var pushed = super.push.apply(this, arguments);
     this.trigger(Events.Types.insert, arguments);
     return pushed;
-  },
+  }
 
   unshift() {
     var unshifted = super.unshift.apply(this, arguments);
     this.trigger(Events.Types.insert, arguments);
     return unshifted;
-  },
+  }
 
   splice() {
     var spliced = super.splice.apply(this, arguments);
@@ -64,19 +63,19 @@ class Collection extends Array {
       this.trigger(Events.Types.order);
     }
     return spliced;
-  },
+  }
 
   sort() {
     super.sort.apply(this, arguments);
     this.trigger(Events.Types.order);
     return this;
-  },
+  }
 
   reverse() {
     super.reverse.apply(this, arguments);
     this.trigger(Events.Types.order);
     return this;
-  },
+  }
 
   indexOf() {
     return super.indexOf.apply(this, arguments);
