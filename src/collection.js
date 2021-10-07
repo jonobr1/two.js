@@ -9,8 +9,20 @@ import Events from './events.js';
 
 class Collection extends Array {
 
+  // Warning: Multiple inheritance hack
   _events = {};
   _bound = false;
+
+  addEventListener = Events.prototype.addEventListener;
+  on = Events.prototype.on;
+  bind = Events.prototype.bind;
+  removeEventListener = Events.prototype.removeEventListener;
+  off = Events.prototype.off;
+  unbind = Events.prototype.unbind;
+  dispatchEvent = Events.prototype.dispatchEvent;
+  trigger = Events.prototype.trigger;
+  listen = Events.prototype.listen;
+  ignore = Events.prototype.ignore;
 
   constructor() {
 
@@ -78,7 +90,5 @@ class Collection extends Array {
   }
 
 }
-
-Object.assign(Collection.prototype, Events.prototype);
 
 export default Collection;
