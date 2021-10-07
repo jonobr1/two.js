@@ -5,12 +5,10 @@
  */
 class Events {
 
-  _events;
+  _events = {};
   _bound = false;
 
-  constructor() {
-    this._events = {};
-  }
+  constructor() {}
 
   /**
    * @name Two.Events#addEventListener
