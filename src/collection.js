@@ -27,37 +27,34 @@ class Collection extends Array {
   }
 
   pop() {
-    var popped = super.pop.apply(this, arguments);
+    const popped = super.pop.apply(this, arguments);
     this.trigger(Events.Types.remove, [popped]);
     return popped;
   }
 
   shift() {
-    var shifted = super.shift.apply(this, arguments);
+    const shifted = super.shift.apply(this, arguments);
     this.trigger(Events.Types.remove, [shifted]);
     return shifted;
   }
 
   push() {
-    var pushed = super.push.apply(this, arguments);
+    const pushed = super.push.apply(this, arguments);
     this.trigger(Events.Types.insert, arguments);
     return pushed;
   }
 
   unshift() {
-    var unshifted = super.unshift.apply(this, arguments);
+    const unshifted = super.unshift.apply(this, arguments);
     this.trigger(Events.Types.insert, arguments);
     return unshifted;
   }
 
   splice() {
-    var spliced = super.splice.apply(this, arguments);
-    var inserted;
-
+    const spliced = super.splice.apply(this, arguments);
     this.trigger(Events.Types.remove, spliced);
-
     if (arguments.length > 2) {
-      inserted = this.slice(arguments[0], arguments[0] + arguments.length - 2);
+      const inserted = this.slice(arguments[0], arguments[0] + arguments.length - 2);
       this.trigger(Events.Types.insert, inserted);
       this.trigger(Events.Types.order);
     }

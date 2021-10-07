@@ -4,8 +4,8 @@ import _ from './utils/underscore.js';
 
 // Constants
 
-var cos = Math.cos, sin = Math.sin, tan = Math.tan;
-var array = [];
+const cos = Math.cos, sin = Math.sin, tan = Math.tan;
+const array = [];
 
 /**
  * @name Two.Matrix

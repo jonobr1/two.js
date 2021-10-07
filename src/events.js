@@ -121,7 +121,7 @@ class Events {
     const events = this._events[name];
 
     if (events) {
-      for (var i = 0; i < events.length; i++) {
+      for (const i = 0; i < events.length; i++) {
         events[i].call(this, ...args);
       }
     }
