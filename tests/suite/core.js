@@ -17,7 +17,7 @@ QUnit.test('Two.Events', function(assert) {
 
   assert.expect(1);
 
-  var item = new Events();
+  var item = new Two.Events();
 
   item.bind('change', function(message) {
     assert.equal(message, 'hello', 'Bound Two.Events successfully.');

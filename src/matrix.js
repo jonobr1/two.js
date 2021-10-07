@@ -1,6 +1,5 @@
 import { NumArray, toFixed, setMatrix } from './utils/math.js';
 import Events from './events.js';
-import _ from './utils/underscore.js';
 
 // Constants
 
@@ -38,6 +37,8 @@ class Matrix extends Events {
   manual = false;
 
   constructor(a, b, c, d, e, f) {
+
+    super();
 
     let elements = a;
     if (!Array.isArray(elements)) {
