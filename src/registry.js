@@ -1,5 +1,3 @@
-import _ from './utils/underscore.js';
-
 /**
  * @name Two.Registry
  * @class
