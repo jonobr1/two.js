@@ -1,6 +1,6 @@
-var count = 0;
+let count = 0;
 
-var Constants = {
+const Constants = {
 
   /**
    * @name Two.nextFrameID
