@@ -10,19 +10,52 @@ import Events from './events.js';
 class Collection extends Array {
 
   // Warning: Multiple inheritance hack
-  _events = {};
-  _bound = false;
+  #events = new Events();
 
-  addEventListener = Events.prototype.addEventListener;
-  on = Events.prototype.on;
-  bind = Events.prototype.bind;
-  removeEventListener = Events.prototype.removeEventListener;
-  off = Events.prototype.off;
-  unbind = Events.prototype.unbind;
-  dispatchEvent = Events.prototype.dispatchEvent;
-  trigger = Events.prototype.trigger;
-  listen = Events.prototype.listen;
-  ignore = Events.prototype.ignore;
+  // Getters and setters aren't enumerable
+  get _events() {
+    return this.#events._events;
+  }
+  set _events(v) {
+    this.#events._events = v;
+  }
+  get _bound() {
+    return this.#events._bound;
+  }
+  set _bound(v) {
+    this.#events._bound = v;
+  }
+
+  get addEventListener() {
+    return this.#events.addEventListener;
+  }
+  get on() {
+    return this.#events.on;
+  }
+  get bind() {
+    return this.#events.bind;
+  }
+  get removeEventListener() {
+    return this.#events.removeEventListener;
+  }
+  get off() {
+    return this.#events.off;
+  }
+  get unbind() {
+    return this.#events.unbind;
+  }
+  get dispatchEvent() {
+    return this.#events.dispatchEvent;
+  }
+  get trigger() {
+    return this.#events.trigger;
+  }
+  get listen() {
+    return this.#events.listen;
+  }
+  get ignore() {
+    return this.#events.ignore;
+  }
 
   constructor() {
 
