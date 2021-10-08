@@ -13,7 +13,21 @@ class Vector extends Events {
   _y = 0;
 
   constructor(x = 0, y = 0) {
+
     super();
+
+    Object.defineProperty(this, 'x', {
+      enumerable: true,
+      get: getX,
+      set: setX
+    });
+
+    Object.defineProperty(this, 'y', {
+      enumerable: true,
+      get: getY,
+      set: setY
+    });
+
     /**
      * @name Two.Vector#x
      * @property {Number} - The horizontal x-component of the vector.
@@ -25,30 +39,7 @@ class Vector extends Events {
      * @property {Number} - The vertical y-component of the vector.
      */
     this.y = y;
-  }
 
-  get x() {
-    return this._x;
-  }
-  set x(v) {
-    if (this._x !== v) {
-      this._x = v;
-      if (this._bound) {
-        this.dispatchEvent(Events.Types.change);
-      }
-    }
-  }
-
-  get y() {
-    return this._y;
-  }
-  set y(v) {
-    if (this._y !== v) {
-      this._y = v;
-      if (this._bound) {
-        this.dispatchEvent(Events.Types.change);
-      }
-    }
   }
 
   /**
@@ -599,6 +590,32 @@ class Vector extends Events {
     return this;
   }
 
+}
+
+function getX() {
+  return this._x;
+}
+
+function setX(v) {
+  if (this._x !== v) {
+    this._x = v;
+    if (this._bound) {
+      this.dispatchEvent(Events.Types.change);
+    }
+  }
+}
+
+function getY() {
+  return this._y;
+}
+
+function setY(v) {
+  if (this._y !== v) {
+    this._y = v;
+    if (this._bound) {
+      this.dispatchEvent(Events.Types.change);
+    }
+  }
 }
 
 export default Vector;
