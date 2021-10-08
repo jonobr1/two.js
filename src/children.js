@@ -1,5 +1,4 @@
 import Events from './events.js';
-import _ from './utils/underscore.js';
 import Collection from './collection.js';
 
 /**
@@ -37,8 +36,8 @@ class Children extends Collection {
    * @description Adds elements to the `ids` map.
    */
   attach(children) {
-    for (var i = 0; i < children.length; i++) {
-      var child = children[i];
+    for (let i = 0; i < children.length; i++) {
+      const child = children[i];
       if (child && child.id) {
         this.ids[child.id] = child;
       }
@@ -53,7 +52,7 @@ class Children extends Collection {
    * @description Removes elements to the `ids` map.
    */
   detach(children) {
-    for (var i = 0; i < children.length; i++) {
+    for (let i = 0; i < children.length; i++) {
       delete this.ids[children[i].id];
     }
     return this;
