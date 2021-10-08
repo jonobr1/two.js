@@ -5,6 +5,7 @@ sidebarDepth: 2
 # Change Log
 ## Nightly
 + Converted `Two.Matrix` to EcmaScript 6 class
++ Converted `Two.Registry` to EcmaScript 6 class
 + Converted `Two.Children` to EcmaScript 6 class
 + Converted `Two.Collection` to EcmaScript 6 class
 + Converted `Two.Events` to EcmaScript 6 class
