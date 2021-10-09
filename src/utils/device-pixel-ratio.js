@@ -21,4 +21,4 @@ function getRatio(ctx) {
   return devicePixelRatio / getBackingStoreRatio(ctx);
 }
 
-export getRatio;
+export { getRatio };

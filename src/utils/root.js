@@ -1,10 +1,12 @@
 
+let root;
+
 if (typeof window !== 'undefined') {
-  const root = window;
+  root = window;
 } else if (typeof global !== 'undefined') {
-  const root = global;
+  root = global;
 } else if (typeof self !== 'undefined') {
-  const root = self;
+  root = self;
 }
 
-export root;
+export { root };
