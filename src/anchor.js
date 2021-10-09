@@ -34,6 +34,48 @@ class Anchor extends Vector {
 
     super(x, y);
 
+    Object.defineProperty(this, 'command', {
+      enumerable: true,
+      get: getCommand,
+      set: setCommand
+    });
+
+    Object.defineProperty(this, 'relative', {
+      enumerable: true,
+      get: getRelative,
+      set: setRelative
+    });
+
+    Object.defineProperty(this, 'rx', {
+      enumerable: true,
+      get: getRx,
+      set: setRx
+    });
+
+    Object.defineProperty(this, 'ry', {
+      enumerable: true,
+      get: getRy,
+      set: setRy
+    });
+
+    Object.defineProperty(this, 'xAxisRotation', {
+      enumerable: true,
+      get: getXAxisRotation,
+      set: setXAxisRotation
+    });
+
+    Object.defineProperty(this, 'largeArcFlag', {
+      enumerable: true,
+      get: getLargeArcFlag,
+      set: setLargeArcFlag
+    });
+
+    Object.defineProperty(this, 'sweepFlag', {
+      enumerable: true,
+      get: getSweepFlag,
+      set: setSweepFlag
+    });
+
     this.command = command;
     this.relative = true;
 
@@ -45,90 +87,6 @@ class Anchor extends Vector {
   static broadcast() {
     if (this._bound) {
       this.dispatchEvent(Events.Types.change);
-    }
-  }
-
-  get command() {
-    return this._command;
-  }
-  set command(command) {
-    if (this._command !== command) {
-      this._command = command;
-      if (this._bound) {
-        this.dispatchEvent(Events.Types.change);
-      }
-    }
-  }
-
-  get relative() {
-    return this._relative;
-  }
-  set relative(relative) {
-    if (this._relative !== !!relative) {
-      this._relative = !!relative;
-      if (this._bound) {
-        this.dispatchEvent(Events.Types.change);
-      }
-    }
-  }
-
-  get rx() {
-    return this._rx;
-  }
-  set rx(rx) {
-    if (this._rx !== rx) {
-      this._rx = rx;
-      if (this._bound) {
-        this.dispatchEvent(Events.Types.change);
-      }
-    }
-  }
-
-  get ry() {
-    return this._ry;
-  }
-  set ry(ry) {
-    if (this._ry !== ry) {
-      this._ry = ry;
-      if (this._bound) {
-        this.dispatchEvent(Events.Types.change);
-      }
-    }
-  }
-
-  get xAxisRotation() {
-    return this._xAxisRotation;
-  }
-  set xAxisRotation(xAxisRotation) {
-    if (this._xAxisRotation !== xAxisRotation) {
-      this._xAxisRotation = xAxisRotation;
-      if (this._bound) {
-        this.dispatchEvent(Events.Types.change);
-      }
-    }
-  }
-
-  get largeArcFlag() {
-    return this._largeArcFlag;
-  }
-  set largeArcFlag(largeArcFlag) {
-    if (this._largeArcFlag !== largeArcFlag) {
-      this._largeArcFlag = largeArcFlag;
-      if (this._bound) {
-        this.dispatchEvent(Events.Types.change);
-      }
-    }
-  }
-
-  get sweepFlag() {
-    return this._sweepFlag;
-  }
-  set sweepFlag(sweepFlag) {
-    if (this._sweepFlag !== sweepFlag) {
-      this._sweepFlag = sweepFlag;
-      if (this._bound) {
-        this.dispatchEvent(Events.Types.change);
-      }
     }
   }
 
@@ -224,6 +182,90 @@ class Anchor extends Vector {
     return JSON.stringify(this.toObject());
   }
 
+}
+
+function getCommand() {
+  return this._command;
+}
+function setCommand(command) {
+  if (this._command !== command) {
+    this._command = command;
+    if (this._bound) {
+      this.dispatchEvent(Events.Types.change);
+    }
+  }
+}
+
+function getRelative() {
+  return this._relative;
+}
+function setRelative(relative) {
+  if (this._relative !== !!relative) {
+    this._relative = !!relative;
+    if (this._bound) {
+      this.dispatchEvent(Events.Types.change);
+    }
+  }
+}
+
+function getRx() {
+  return this._rx;
+}
+function setRx(rx) {
+  if (this._rx !== rx) {
+    this._rx = rx;
+    if (this._bound) {
+      this.dispatchEvent(Events.Types.change);
+    }
+  }
+}
+
+function getRy() {
+  return this._ry;
+}
+function setRy(ry) {
+  if (this._ry !== ry) {
+    this._ry = ry;
+    if (this._bound) {
+      this.dispatchEvent(Events.Types.change);
+    }
+  }
+}
+
+function getXAxisRotation() {
+  return this._xAxisRotation;
+}
+function setXAxisRotation(xAxisRotation) {
+  if (this._xAxisRotation !== xAxisRotation) {
+    this._xAxisRotation = xAxisRotation;
+    if (this._bound) {
+      this.dispatchEvent(Events.Types.change);
+    }
+  }
+}
+
+function getLargeArcFlag() {
+  return this._largeArcFlag;
+}
+function setLargeArcFlag(largeArcFlag) {
+  if (this._largeArcFlag !== largeArcFlag) {
+    this._largeArcFlag = largeArcFlag;
+    if (this._bound) {
+      this.dispatchEvent(Events.Types.change);
+    }
+  }
+}
+
+function getSweepFlag() {
+  return this._sweepFlag;
+}
+function setSweepFlag(sweepFlag) {
+  if (this._sweepFlag !== sweepFlag) {
+    this._sweepFlag = sweepFlag;
+    if (this._bound) {
+      this.dispatchEvent(Events.Types.change);
+    }
+  }
 }
 
 export default Anchor;
