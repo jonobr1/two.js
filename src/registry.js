@@ -3,7 +3,7 @@
  * @class
  * @description An arbitrary class to manage a directory of things. Mainly used for keeping tabs of textures in Two.js.
  */
-class Registry {
+export class Registry {
 
   map = {};
 
@@ -55,5 +55,3 @@ class Registry {
   }
 
 }
-
-export default Registry;

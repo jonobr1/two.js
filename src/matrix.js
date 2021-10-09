@@ -1,5 +1,5 @@
 import { NumArray, toFixed, setMatrix } from './utils/math.js';
-import Events from './events.js';
+import { Events } from './events.js';
 
 // Constants
 
@@ -21,7 +21,7 @@ const array = [];
  * @description A class to store 3 x 3 transformation matrix information. In addition to storing data `Two.Matrix` has suped up methods for commonplace mathematical operations.
  * @nota-bene Order is based on how to construct transformation strings for the browser.
  */
-class Matrix extends Events {
+export class Matrix extends Events {
 
   /**
    * @name Two.Matrix#elements
@@ -598,5 +598,3 @@ class Matrix extends Events {
 }
 
 setMatrix(Matrix);
-
-export default Matrix;
