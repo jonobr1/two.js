@@ -5,7 +5,7 @@ import { getPoT, mod, NumArray, TWO_PI } from '../utils/math.js';
 import shaders from '../utils/shaders.js';
 import Events from '../events.js';
 import TwoError from '../utils/error.js';
-import getRatio from '../utils/get-ratio.js';
+import { getRatio } from '../utils/device-pixel-ratio.js';
 import _ from '../utils/underscore.js';
 
 import Group from '../group.js';

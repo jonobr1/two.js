@@ -2,7 +2,7 @@ import Commands from '../utils/path-commands.js';
 import { decomposeMatrix, getComputedMatrix, mod, TWO_PI } from '../utils/math.js';
 import { Curve } from '../utils/curves.js';
 import Events from '../events.js';
-import getRatio from '../utils/get-ratio.js';
+import { getRatio } from '../utils/device-pixel-ratio.js';
 import _ from '../utils/underscore.js';
 
 import Group from '../group.js';
