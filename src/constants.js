@@ -1,6 +1,6 @@
 let count = 0;
 
-const Constants = {
+export const Constants = {
 
   /**
    * @name Two.nextFrameID
@@ -68,5 +68,3 @@ const Constants = {
   }
 
 };
-
-export default Constants;

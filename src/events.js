@@ -3,7 +3,7 @@
  * @class
  * @description Object inherited by many Two.js objects in order to facilitate custom events.
  */
-class Events {
+export class Events {
 
   _events = {};
   _bound = false;
@@ -182,5 +182,3 @@ class Events {
   }
 
 }
-
-export default Events;

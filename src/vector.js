@@ -1,4 +1,4 @@
-import Events from './events.js';
+import { Events } from './events.js';
 
 /**
  * @name Two.Vector
@@ -7,7 +7,7 @@ import Events from './events.js';
  * @param {Number} [y=0] - Any number to represent the vertical y-component of the vector.
  * @description A class to store x / y component vector data. In addition to storing data `Two.Vector` has suped up methods for commonplace mathematical operations.
  */
-class Vector extends Events {
+export class Vector extends Events {
 
   _x = 0;
   _y = 0;
@@ -617,5 +617,3 @@ function setY(v) {
     }
   }
 }
-
-export default Vector;

@@ -1,5 +1,5 @@
-import Events from './events.js';
-import Collection from './collection.js';
+import { Events } from './events.js';
+import { Collection } from './collection.js';
 
 /**
  * @class
@@ -7,7 +7,7 @@ import Collection from './collection.js';
  * @extends Two.Collection
  * @description A children collection which is accesible both by index and by object `id`.
  */
-class Children extends Collection {
+export class Children extends Collection {
 
   /**
    * @name Two.Group.Children#ids
@@ -59,5 +59,3 @@ class Children extends Collection {
   }
 
 }
-
-export default Children;

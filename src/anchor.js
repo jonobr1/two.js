@@ -1,6 +1,6 @@
-import Commands from './utils/path-commands.js';
-import Events from './events.js';
-import Vector from './vector.js';
+import { Commands } from './utils/path-commands.js';
+import { Events } from './events.js';
+import { Vector } from './vector.js';
 
 /**
  * @class
@@ -15,7 +15,7 @@ import Vector from './vector.js';
  * @extends Two.Vector
  * @description An object that holds 3 {@link Two.Vector}s, the anchor point and its corresponding handles: `left` and `right`. In order to properly describe the bezier curve about the point there is also a command property to describe what type of drawing should occur when Two.js renders the anchors.
  */
-class Anchor extends Vector {
+export class Anchor extends Vector {
 
   controls = {
     left: new Vector(),
@@ -267,5 +267,3 @@ function setSweepFlag(sweepFlag) {
     }
   }
 }
-
-export default Anchor;
