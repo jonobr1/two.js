@@ -1,6 +1,6 @@
-import CanvasRenderer from '../renderers/canvas.js';
+import { CanvasRenderer } from '../renderers/canvas.js';
 
-var CanvasShim = {
+export const CanvasShim = {
 
   Image: null,
 
@@ -24,5 +24,3 @@ var CanvasShim = {
   }
 
 };
-
-export default CanvasShim;
