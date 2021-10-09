@@ -1,5 +1,5 @@
 {
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "extras/jsm/**/*"],
   "compilerOptions": {
     "allowJs": true,
     "declaration": true,
