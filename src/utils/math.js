@@ -105,7 +105,7 @@ function getPoT(value) {
     i++;
   }
   return pots[i];
-};
+}
 
 /**
  * @name Two.Utils.mod
@@ -123,7 +123,7 @@ function mod(v, l) {
 
   return v % l;
 
-};
+}
 
 const NumArray = root.Float32Array || Array;
 const floor = Math.floor;
