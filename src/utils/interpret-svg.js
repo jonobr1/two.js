@@ -541,7 +541,7 @@ function getScene(node) {
  * @name Two.Utils.read
  * @property {Object} read - A map of functions to read any number of SVG node types and create Two.js equivalents of them. Primarily used by the {@link Two#interpret} method.
  */
-const read = {
+export const read = {
 
   svg: function(node) {
 
@@ -1334,5 +1334,3 @@ const read = {
   }
 
 };
-
-export default read;
