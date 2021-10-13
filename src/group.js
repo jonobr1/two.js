@@ -787,7 +787,7 @@ export class Group extends Shape {
 
     }
 
-    return Shape.prototype._update.apply(this, arguments);
+    return super._update.apply(this, arguments);
 
   }
 
@@ -812,7 +812,7 @@ export class Group extends Shape {
     this._flagOrder = this._flagMask = this._flagOpacity =
       this._flagBeginning = this._flagEnding = false;
 
-    Shape.prototype.flagReset.call(this);
+    super.flagReset.call(this);
 
     return this;
 
