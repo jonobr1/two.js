@@ -3,135 +3,6 @@ import { Events } from './events.js';
 import { Matrix } from './matrix.js';
 import { Vector } from './vector.js';
 
-const translation = {
-  enumerable: false,
-  get: function() {
-    return this._translation;
-  },
-  set: function(v) {
-    if (this._translation) {
-      this._translation.unbind(Events.Types.change, this._renderer.flagMatrix);
-    }
-    this._translation = v;
-    this._translation.bind(Events.Types.change, this._renderer.flagMatrix);
-    FlagMatrix.call(this);
-  }
-};
-
-const rotation = {
-  enumerable: true,
-  get: function() {
-    return this._rotation;
-  },
-  set: function(v) {
-    this._rotation = v;
-    this._flagMatrix = true;
-  }
-};
-
-const scale = {
-  enumerable: true,
-  get: function() {
-    return this._scale;
-  },
-  set: function(v) {
-    if (this._scale instanceof Vector) {
-      this._scale.unbind(Events.Types.change, this._renderer.flagMatrix);
-    }
-    this._scale = v;
-    if (this._scale instanceof Vector) {
-      this._scale.bind(Events.Types.change, this._renderer.flagMatrix);
-    }
-    this._flagMatrix = true;
-    this._flagScale = true;
-  }
-};
-
-const skewX = {
-  enumerable: true,
-  get: function() {
-    return this._skewX;
-  },
-  set: function(v) {
-    this._skewX = v;
-    this._flagMatrix = true;
-  }
-};
-
-const skewY = {
-  enumerable: true,
-  get: function() {
-    return this._skewY;
-  },
-  set: function(v) {
-    this._skewY = v;
-    this._flagMatrix = true;
-  }
-};
-
-const matrix = {
-  enumerable: true,
-  get: function() {
-    return this._matrix;
-  },
-  set: function(v) {
-    this._matrix = v;
-    this._flagMatrix = true;
-  }
-};
-
-const id = {
-  enumerable: true,
-  get: function() {
-    return this._id;
-  },
-  set: function(v) {
-    const id = this._id;
-    if (v === this._id) {
-      return;
-    }
-    this._id = v;
-    this._flagId = true;
-    if (this.parent) {
-      delete this.parent.children.ids[id];
-      this.parent.children.ids[this._id] = this;
-    }
-  }
-};
-
-const className = {
-  enumerable: true,
-  get: function() {
-    return this._className;
-  },
-  set: function(v) {
-    this._flagClassName = this._className !== v;
-    if (this._flagClassName) {
-      const prev = this._className.split(/\s+?/);
-      const dest = v.split(/\s+?/);
-      for (let i = 0; i < prev.length; i++) {
-        const className = prev[i];
-        const index = Array.prototype.indexOf.call(this.classList, className);
-        if (index >= 0) {
-          this.classList.splice(index, 1);
-        }
-      }
-      this.classList = this.classList.concat(dest);
-    }
-    this._className = v;
-  }
-};
-
-const renderer = {
-  enumerable: false,
-  get: function() {
-    return this._renderer;
-  },
-  set: function(obj) {
-    this._renderer = obj;
-  }
-};
-
 /**
  * @name Two.Shape
  * @class
@@ -391,6 +262,135 @@ export class Shape extends Events {
   }
 
 }
+
+const translation = {
+  enumerable: false,
+  get: function() {
+    return this._translation;
+  },
+  set: function(v) {
+    if (this._translation) {
+      this._translation.unbind(Events.Types.change, this._renderer.flagMatrix);
+    }
+    this._translation = v;
+    this._translation.bind(Events.Types.change, this._renderer.flagMatrix);
+    FlagMatrix.call(this);
+  }
+};
+
+const rotation = {
+  enumerable: true,
+  get: function() {
+    return this._rotation;
+  },
+  set: function(v) {
+    this._rotation = v;
+    this._flagMatrix = true;
+  }
+};
+
+const scale = {
+  enumerable: true,
+  get: function() {
+    return this._scale;
+  },
+  set: function(v) {
+    if (this._scale instanceof Vector) {
+      this._scale.unbind(Events.Types.change, this._renderer.flagMatrix);
+    }
+    this._scale = v;
+    if (this._scale instanceof Vector) {
+      this._scale.bind(Events.Types.change, this._renderer.flagMatrix);
+    }
+    this._flagMatrix = true;
+    this._flagScale = true;
+  }
+};
+
+const skewX = {
+  enumerable: true,
+  get: function() {
+    return this._skewX;
+  },
+  set: function(v) {
+    this._skewX = v;
+    this._flagMatrix = true;
+  }
+};
+
+const skewY = {
+  enumerable: true,
+  get: function() {
+    return this._skewY;
+  },
+  set: function(v) {
+    this._skewY = v;
+    this._flagMatrix = true;
+  }
+};
+
+const matrix = {
+  enumerable: true,
+  get: function() {
+    return this._matrix;
+  },
+  set: function(v) {
+    this._matrix = v;
+    this._flagMatrix = true;
+  }
+};
+
+const id = {
+  enumerable: true,
+  get: function() {
+    return this._id;
+  },
+  set: function(v) {
+    const id = this._id;
+    if (v === this._id) {
+      return;
+    }
+    this._id = v;
+    this._flagId = true;
+    if (this.parent) {
+      delete this.parent.children.ids[id];
+      this.parent.children.ids[this._id] = this;
+    }
+  }
+};
+
+const className = {
+  enumerable: true,
+  get: function() {
+    return this._className;
+  },
+  set: function(v) {
+    this._flagClassName = this._className !== v;
+    if (this._flagClassName) {
+      const prev = this._className.split(/\s+?/);
+      const dest = v.split(/\s+?/);
+      for (let i = 0; i < prev.length; i++) {
+        const className = prev[i];
+        const index = Array.prototype.indexOf.call(this.classList, className);
+        if (index >= 0) {
+          this.classList.splice(index, 1);
+        }
+      }
+      this.classList = this.classList.concat(dest);
+    }
+    this._className = v;
+  }
+};
+
+const renderer = {
+  enumerable: false,
+  get: function() {
+    return this._renderer;
+  },
+  set: function(obj) {
+    this._renderer = obj;
+  }
+};
 
 /**
  * @name FlagMatrix
