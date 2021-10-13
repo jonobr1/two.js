@@ -862,23 +862,6 @@ _.extend(Path.prototype, Shape.prototype, {
   },
 
   /**
-   * @name Two.Path#remove
-   * @function
-   * @description Remove self from the scene / parent.
-   */
-  remove: function() {
-
-    if (!this.parent) {
-      return this;
-    }
-
-    this.parent.remove(this);
-
-    return this;
-
-  },
-
-  /**
    * @name Two.Path#getBoundingClientRect
    * @function
    * @param {Boolean} [shallow=false] - Describes whether to calculate off local matrix or world matrix.

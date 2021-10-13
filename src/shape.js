@@ -91,17 +91,17 @@ export class Shape extends Events {
 
     super();
 
-    Object.defineProperty(this, 'translation', translation);
-    Object.defineProperty(this, 'position', translation);
-    Object.defineProperty(this, 'rotation', rotation);
-    Object.defineProperty(this, 'scale', scale);
-    Object.defineProperty(this, 'skewX', skewX);
-    Object.defineProperty(this, 'skewY', skewY);
-    Object.defineProperty(this, 'matrix', matrix);
+    Object.defineProperty(this, 'translation', proto.translation);
+    Object.defineProperty(this, 'position', proto.translation);
+    Object.defineProperty(this, 'rotation', proto.rotation);
+    Object.defineProperty(this, 'scale', proto.scale);
+    Object.defineProperty(this, 'skewX', proto.skewX);
+    Object.defineProperty(this, 'skewY', proto.skewY);
+    Object.defineProperty(this, 'matrix', proto.matrix);
 
-    Object.defineProperty(this, 'id', id);
-    Object.defineProperty(this, 'className', className);
-    Object.defineProperty(this, 'renderer', renderer);
+    Object.defineProperty(this, 'id', proto.id);
+    Object.defineProperty(this, 'className', proto.className);
+    Object.defineProperty(this, 'renderer', proto.renderer);
 
     /**
      * @name Two.Shape#renderer
@@ -179,6 +179,23 @@ export class Shape extends Events {
     group.add(this);
     return this;
   }
+
+  /**
+   * @name Two.Text#remove
+   * @function
+   * @description Remove self from the scene / parent.
+   */
+  remove() {
+
+    if (!this.parent) {
+      return this;
+    }
+
+    this.parent.remove(this);
+
+    return this;
+
+  },
 
   /**
    * @name Two.Shape#clone
@@ -263,22 +280,21 @@ export class Shape extends Events {
 
 }
 
-const translation = {
-  enumerable: false,
-  get: function() {
-    return this._translation;
-  },
-  set: function(v) {
-    if (this._translation) {
-      this._translation.unbind(Events.Types.change, this._renderer.flagMatrix);
-    }
-    this._translation = v;
-    this._translation.bind(Events.Types.change, this._renderer.flagMatrix);
-    FlagMatrix.call(this);
-  }
-};
-
 const proto = {
+  translation: {
+    enumerable: false,
+    get: function() {
+      return this._translation;
+    },
+    set: function(v) {
+      if (this._translation) {
+        this._translation.unbind(Events.Types.change, this._renderer.flagMatrix);
+      }
+      this._translation = v;
+      this._translation.bind(Events.Types.change, this._renderer.flagMatrix);
+      FlagMatrix.call(this);
+    }
+  },
   rotation: {
     enumerable: true,
     get: function() {

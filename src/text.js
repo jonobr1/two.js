@@ -1,16 +1,15 @@
 import { getComputedMatrix } from './utils/math.js';
-import Events from './events.js';
-import defineGetterSetter from './utils/get-set.js';
-import _ from './utils/underscore.js';
+import { Events } from './events.js';
+import { _ } from './utils/underscore.js';
 
-import Shape from './shape.js';
+import { Shape } from './shape.js';
 
-import Gradient from './effects/gradient.js';
-import LinearGradient from './effects/linear-gradient.js';
-import RadialGradient from './effects/radial-gradient.js';
-import Texture from './effects/texture.js';
+import { Gradient } from './effects/gradient.js';
+import { LinearGradient } from './effects/linear-gradient.js';
+import { RadialGradient } from './effects/radial-gradient.js';
+import { Texture } from './effects/texture.js';
 
-var min = Math.min, max = Math.max;
+const min = Math.min, max = Math.max;
 
 /**
  * @name Two.Text
@@ -23,318 +22,119 @@ var min = Math.min, max = Math.max;
  * @description This is a primitive class for creating drawable text that can be added to the scenegraph.
  * @returns {Two.Text}
  */
-function Text(message, x, y, styles) {
-
-  Shape.call(this);
-
-  this._renderer.type = 'text';
-  this._renderer.flagFill = Text.FlagFill.bind(this);
-  this._renderer.flagStroke = Text.FlagStroke.bind(this);
-
-  this.value = message;
-
-  if (typeof x === 'number') {
-    this.translation.x = x;
-  }
-  if (typeof y === 'number') {
-    this.translation.y = y;
-  }
-
-  /**
-   * @name Two.Text#dashes
-   * @property {Number[]} - Array of numbers. Odd indices represent dash length. Even indices represent dash space.
-   * @description A list of numbers that represent the repeated dash length and dash space applied to the stroke of the text.
-   * @see {@link https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray} for more information on the SVG stroke-dasharray attribute.
-   */
-  this.dashes = [];
-
-  /**
-   * @name Two.Text#dashes#offset
-   * @property {Number} - A number in pixels to offset {@link Two.Text#dashes} display.
-   */
-  this.dashes.offset = 0;
-
-  if (!_.isObject(styles)) {
-    return this;
-  }
-
-  _.each(Text.Properties, function(property) {
-
-    if (property in styles) {
-      this[property] = styles[property];
-    }
-
-  }, this);
-
-}
-
-_.extend(Text, {
-
-  /**
-   * @name Two.Text.Ratio
-   * @property {Number} - Approximate aspect ratio of a typeface's character width to height.
-   */
-  Ratio: 0.6,
-
-  /**
-   * @name Two.Text.Properties
-   * @property {String[]} - A list of properties that are on every {@link Two.Text}.
-   */
-  Properties: [
-    'value', 'family', 'size', 'leading', 'alignment', 'linewidth', 'style',
-    'weight', 'decoration', 'baseline', 'opacity', 'visible', 'className',
-    'fill', 'stroke',
-  ],
-
-  /**
-   * @name Two.Text.FlagFill
-   * @function
-   * @description Cached method to let renderers know the fill property have been updated on a {@link Two.Text}.
-   */
-  FlagFill: function() {
-    this._flagFill = true;
-  },
-
-  /**
-   * @name Two.Text.FlagStroke
-   * @function
-   * @description Cached method to let renderers know the stroke property have been updated on a {@link Two.Text}.
-   */
-  FlagStroke: function() {
-    this._flagStroke = true;
-  },
-
-  MakeObservable: function(object) {
-
-    Shape.MakeObservable(object);
-
-    _.each(Text.Properties.slice(0, 12), defineGetterSetter, object);
-
-    Object.defineProperty(object, 'fill', {
-      enumerable: true,
-      get: function() {
-        return this._fill;
-      },
-      set: function(f) {
-
-        if (this._fill instanceof Gradient
-          || this._fill instanceof LinearGradient
-          || this._fill instanceof RadialGradient
-          || this._fill instanceof Texture) {
-          this._fill.unbind(Events.Types.change, this._renderer.flagFill);
-        }
-
-        this._fill = f;
-        this._flagFill = true;
-
-        if (this._fill instanceof Gradient
-          || this._fill instanceof LinearGradient
-          || this._fill instanceof RadialGradient
-          || this._fill instanceof Texture) {
-          this._fill.bind(Events.Types.change, this._renderer.flagFill);
-        }
-
-      }
-    });
-
-    Object.defineProperty(object, 'stroke', {
-      enumerable: true,
-      get: function() {
-        return this._stroke;
-      },
-      set: function(f) {
-
-        if (this._stroke instanceof Gradient
-          || this._stroke instanceof LinearGradient
-          || this._stroke instanceof RadialGradient
-          || this._stroke instanceof Texture) {
-          this._stroke.unbind(Events.Types.change, this._renderer.flagStroke);
-        }
-
-        this._stroke = f;
-        this._flagStroke = true;
-
-        if (this._stroke instanceof Gradient
-          || this._stroke instanceof LinearGradient
-          || this._stroke instanceof RadialGradient
-          || this._stroke instanceof Texture) {
-          this._stroke.bind(Events.Types.change, this._renderer.flagStroke);
-        }
-
-      }
-    });
-
-    Object.defineProperty(object, 'mask', {
-
-      enumerable: true,
-
-      get: function() {
-        return this._mask;
-      },
-
-      set: function(v) {
-        this._mask = v;
-        this._flagMask = true;
-        if (!v.clip) {
-          v.clip = true;
-        }
-      }
-
-    });
-
-    Object.defineProperty(object, 'clip', {
-      enumerable: true,
-      get: function() {
-        return this._clip;
-      },
-      set: function(v) {
-        this._clip = v;
-        this._flagClip = true;
-      }
-    });
-
-    Object.defineProperty(object, 'dashes', {
-      enumerable: true,
-      get: function() {
-        return this._dashes;
-      },
-      set: function(v) {
-        if (typeof v.offset !== 'number') {
-          v.offset = (this.dashes && this._dashes.offset) || 0;
-        }
-        this._dashes = v;
-      }
-    });
-
-  }
-
-});
-
-_.extend(Text.prototype, Shape.prototype, {
-
-  constructor: Text,
-
-  // Flags
-  // http://en.wikipedia.org/wiki/Flag
+export class Text extends Shape {
 
   /**
    * @name Two.Text#_flagValue
    * @private
    * @property {Boolean} - Determines whether the {@link Two.Text#value} need updating.
    */
-  _flagValue: true,
+  _flagValue = true;
 
   /**
    * @name Two.Text#_flagFamily
    * @private
    * @property {Boolean} - Determines whether the {@link Two.Text#family} need updating.
    */
-  _flagFamily: true,
+  _flagFamily = true;
 
   /**
    * @name Two.Text#_flagSize
    * @private
    * @property {Boolean} - Determines whether the {@link Two.Text#size} need updating.
    */
-  _flagSize: true,
+  _flagSize = true;
 
   /**
    * @name Two.Text#_flagLeading
    * @private
    * @property {Boolean} - Determines whether the {@link Two.Text#leading} need updating.
    */
-  _flagLeading: true,
+  _flagLeading = true;
 
   /**
    * @name Two.Text#_flagAlignment
    * @private
    * @property {Boolean} - Determines whether the {@link Two.Text#alignment} need updating.
    */
-  _flagAlignment: true,
+  _flagAlignment = true;
 
   /**
    * @name Two.Text#_flagBaseline
    * @private
    * @property {Boolean} - Determines whether the {@link Two.Text#baseline} need updating.
    */
-  _flagBaseline: true,
+  _flagBaseline = true;
 
   /**
    * @name Two.Text#_flagStyle
    * @private
    * @property {Boolean} - Determines whether the {@link Two.Text#style} need updating.
    */
-  _flagStyle: true,
+  _flagStyle = true;
 
   /**
    * @name Two.Text#_flagWeight
    * @private
    * @property {Boolean} - Determines whether the {@link Two.Text#weight} need updating.
    */
-  _flagWeight: true,
+  _flagWeight = true;
 
   /**
    * @name Two.Text#_flagDecoration
    * @private
    * @property {Boolean} - Determines whether the {@link Two.Text#decoration} need updating.
    */
-  _flagDecoration: true,
+  _flagDecoration = true;
 
   /**
    * @name Two.Text#_flagFill
    * @private
    * @property {Boolean} - Determines whether the {@link Two.Text#fill} need updating.
    */
-  _flagFill: true,
+  _flagFill = true;
 
   /**
    * @name Two.Text#_flagStroke
    * @private
    * @property {Boolean} - Determines whether the {@link Two.Text#stroke} need updating.
    */
-  _flagStroke: true,
+  _flagStroke = true;
 
   /**
    * @name Two.Text#_flagLinewidth
    * @private
    * @property {Boolean} - Determines whether the {@link Two.Text#linewidth} need updating.
    */
-  _flagLinewidth: true,
+  _flagLinewidth = true;
 
   /**
    * @name Two.Text#_flagOpacity
    * @private
    * @property {Boolean} - Determines whether the {@link Two.Text#opacity} need updating.
    */
-  _flagOpacity: true,
-
-  /**
-   * @name Two.Text#_flagClassName
-   * @private
-   * @property {Boolean} - Determines whether the {@link Two.Text#className} need updating.
-   */
-  _flagClassName: true,
+  _flagOpacity = true;
 
   /**
    * @name Two.Text#_flagVisible
    * @private
    * @property {Boolean} - Determines whether the {@link Two.Text#visible} need updating.
    */
-  _flagVisible: true,
+  _flagVisible = true;
 
   /**
    * @name Two.Path#_flagMask
    * @private
    * @property {Boolean} - Determines whether the {@link Two.Path#mask} needs updating.
    */
-  _flagMask: false,
+  _flagMask = false;
 
   /**
    * @name Two.Text#_flagClip
    * @private
    * @property {Boolean} - Determines whether the {@link Two.Text#clip} need updating.
    */
-  _flagClip: false,
+  _flagClip = false;
 
   // Underlying Properties
 
@@ -342,133 +142,188 @@ _.extend(Text.prototype, Shape.prototype, {
    * @name Two.Text#value
    * @property {String} - The characters to be rendered to the the screen. Referred to in the documentation sometimes as the `message`.
    */
-  _value: '',
+  _value = '';
 
   /**
    * @name Two.Text#family
    * @property {String} - The font family Two.js should attempt to regsiter for rendering. The default value is `'sans-serif'`. Comma separated font names can be supplied as a "stack", similar to the CSS implementation of `font-family`.
    */
-  _family: 'sans-serif',
+  _family = 'sans-serif';
 
   /**
    * @name Two.Text#size
    * @property {Number} - The font size in Two.js point space. Defaults to `13`.
    */
-  _size: 13,
+  _size = 13;
 
   /**
    * @name Two.Text#leading
    * @property {Number} - The height between lines measured from base to base in Two.js point space. Defaults to `17`.
    */
-  _leading: 17,
+  _leading = 17;
 
   /**
    * @name Two.Text#alignment
    * @property {String} - Alignment of text in relation to {@link Two.Text#translation}'s coordinates. Possible values include `'left'`, `'center'`, `'right'`. Defaults to `'center'`.
    */
-  _alignment: 'center',
+  _alignment = 'center';
 
   /**
    * @name Two.Text#baseline
    * @property {String} - The vertical aligment of the text in relation to {@link Two.Text#translation}'s coordinates. Possible values include `'top'`, `'middle'`, `'bottom'`, and `'baseline'`. Defaults to `'baseline'`.
    */
-  _baseline: 'middle',
+  _baseline = 'middle';
 
   /**
    * @name Two.Text#style
    * @property {String} - The font's style. Possible values include '`normal`', `'italic'`. Defaults to `'normal'`.
    */
-  _style: 'normal',
+  _style = 'normal';
 
   /**
    * @name Two.Text#weight
    * @property {Number} - A number at intervals of 100 to describe the font's weight. This compatibility varies with the typeface's variant weights. Larger values are bolder. Smaller values are thinner. Defaults to `'500'`.
    */
-  _weight: 500,
+  _weight = 500;
 
   /**
    * @name Two.Text#decoration
    * @property {String} - String to delineate whether text should be decorated with for instance an `'underline'`. Defaults to `'none'`.
    */
-  _decoration: 'none',
+  _decoration = 'none';
 
   /**
    * @name Two.Text#fill
    * @property {(String|Two.Gradient|Two.Texture)} - The value of what the text object should be filled in with.
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
    */
-  _fill: '#000',
+  _fill = '#000';
 
   /**
    * @name Two.Text#stroke
    * @property {(String|Two.Gradient|Two.Texture)} - The value of what the text object should be filled in with.
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
    */
-  _stroke: 'transparent',
+  _stroke = 'transparent';
 
   /**
    * @name Two.Text#linewidth
    * @property {Number} - The thickness in pixels of the stroke.
    */
-  _linewidth: 1,
+  _linewidth = 1;
 
   /**
    * @name Two.Text#opacity
    * @property {Number} - The opaqueness of the text object.
    * @nota-bene Can be used in conjunction with CSS Colors that have an alpha value.
    */
-  _opacity: 1,
-
-  /**
-   * @name Two.Text#className
-   * @property {String} - A class to be applied to the element to be compatible with CSS styling. Only available for the {@link Two.SvgRenderer}.
-   */
-  _className: '',
+  _opacity = 1;
 
   /**
    * @name Two.Text#visible
    * @property {Boolean} - Display the text object or not.
    * @nota-bene For {@link Two.CanvasRenderer} and {@link Two.WebGLRenderer} when set to false all updating is disabled improving performance dramatically with many objects in the scene.
    */
-  _visible: true,
+  _visible = true;
 
   /**
    * @name Two.Text#mask
    * @property {Two.Shape} - The shape whose alpha property becomes a clipping area for the text.
    * @nota-bene This property is currently not working becuase of SVG spec issues found here {@link https://code.google.com/p/chromium/issues/detail?id=370951}.
    */
-  _mask: null,
+  _mask = null;
 
   /**
    * @name Two.Text#clip
    * @property {Two.Shape} - Object to define clipping area.
    * @nota-bene This property is currently not working becuase of SVG spec issues found here {@link https://code.google.com/p/chromium/issues/detail?id=370951}.
    */
-  _clip: false,
+  _clip = false;
 
   /**
    * @name Two.Text#_dashes
    * @private
    * @see {@link Two.Text#dashes}
    */
-  _dashes: null,
+  _dashes = null;
 
-  /**
-   * @name Two.Text#remove
-   * @function
-   * @description Remove self from the scene / parent.
-   */
-  remove: function() {
+  constructor() {
 
-    if (!this.parent) {
+    super();
+
+    Object.definePropert(this, 'value', proto.value);
+    Object.definePropert(this, 'family', proto.family);
+    Object.definePropert(this, 'size', proto.size);
+    Object.definePropert(this, 'leading', proto.leading);
+    Object.definePropert(this, 'alignment', proto.alignment);
+    Object.definePropert(this, 'linewidth', proto.linewidth);
+    Object.definePropert(this, 'style', proto.style);
+    Object.definePropert(this, 'weight', proto.weight);
+    Object.definePropert(this, 'decoration', proto.decoration);
+    Object.definePropert(this, 'baseline', proto.baseline);
+    Object.definePropert(this, 'opacity', proto.opacity);
+    Object.definePropert(this, 'visible', proto.visible);
+    Object.defineProperty(this, 'fill', proto.fill);
+    Object.defineProperty(this, 'stroke', proto.stroke);
+    Object.defineProperty(this, 'mask', proto.mask);
+    Object.defineProperty(this, 'clip', proto.clip);
+    Object.defineProperty(this, 'dashes', proto.dashes);
+
+    this._renderer.type = 'text';
+    this._renderer.flagFill = FlagFill.bind(this);
+    this._renderer.flagStroke = FlagStroke.bind(this);
+
+    this.value = message;
+
+    if (typeof x === 'number') {
+      this.translation.x = x;
+    }
+    if (typeof y === 'number') {
+      this.translation.y = y;
+    }
+
+    /**
+     * @name Two.Text#dashes
+     * @property {Number[]} - Array of numbers. Odd indices represent dash length. Even indices represent dash space.
+     * @description A list of numbers that represent the repeated dash length and dash space applied to the stroke of the text.
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray} for more information on the SVG stroke-dasharray attribute.
+     */
+    this.dashes = [];
+
+    /**
+     * @name Two.Text#dashes#offset
+     * @property {Number} - A number in pixels to offset {@link Two.Text#dashes} display.
+     */
+    this.dashes.offset = 0;
+
+    if (!_.isObject(styles)) {
       return this;
     }
 
-    this.parent.remove(this);
+    for (let i = 0; i < Text.Properties.length; i++) {
+      const property = Text.Properties[i];
+      if (property in styles) {
+        this[property] = styles[property];
+      }
+    }
 
-    return this;
+  }
 
-  },
+  /**
+   * @name Two.Text.Ratio
+   * @property {Number} - Approximate aspect ratio of a typeface's character width to height.
+   */
+  static Ratio = 0.6;
+
+  /**
+   * @name Two.Text.Properties
+   * @property {String[]} - A list of properties that are on every {@link Two.Text}.
+   */
+  static Properties = [
+    'value', 'family', 'size', 'leading', 'alignment', 'linewidth', 'style',
+    'weight', 'decoration', 'baseline', 'opacity', 'visible',
+    'fill', 'stroke'
+  ];
 
   /**
    * @name Two.Text#clone
@@ -477,9 +332,9 @@ _.extend(Text.prototype, Shape.prototype, {
    * @returns {Two.Text}
    * @description Create a new instance of {@link Two.Text} with the same properties of the current text object.
    */
-  clone: function(parent) {
+  clone(parent) {
 
-    var clone = new Text(this.value);
+    const clone = new Text(this.value);
     clone.translation.copy(this.translation);
     clone.rotation = this.rotation;
     clone.scale = this.scale;
@@ -498,7 +353,7 @@ _.extend(Text.prototype, Shape.prototype, {
 
     return clone._update();
 
-  },
+  }
 
   /**
    * @name Two.Text#toObject
@@ -506,9 +361,9 @@ _.extend(Text.prototype, Shape.prototype, {
    * @returns {Object}
    * @description Return a JSON compatible plain object that represents the text object.
    */
-  toObject: function() {
+  toObject() {
 
-    var result = {
+    const result = {
       translation: this.translation.toObject(),
       rotation: this.rotation,
       scale: this.scale
@@ -524,28 +379,28 @@ _.extend(Text.prototype, Shape.prototype, {
 
     return result;
 
-  },
+  }
 
   /**
    * @name Two.Text#noFill
    * @function
    * @description Short hand method to set fill to `transparent`.
    */
-  noFill: function() {
+  noFill() {
     this.fill = 'transparent';
     return this;
-  },
+  }
 
   /**
    * @name Two.Text#noStroke
    * @function
    * @description Short hand method to set stroke to `transparent`.
    */
-  noStroke: function() {
+  noStroke() {
     this.stroke = undefined;
     this.linewidth = undefined;
     return this;
-  },
+  }
 
   // A shim to not break `getBoundingClientRect` calls.
   // TODO: Implement a way to calculate proper bounding
@@ -558,19 +413,19 @@ _.extend(Text.prototype, Shape.prototype, {
    * @returns {Object} - Returns object with top, left, right, bottom, width, height attributes.
    * @description Return an object with top, left, right, bottom, width, and height parameters of the text object.
    */
-  getBoundingClientRect: function(shallow) {
+  getBoundingClientRect(shallow) {
 
-    var matrix, a, b, c, d;
-    var left, right, top, bottom;
+    let matrix, a, b, c, d;
+    let left, right, top, bottom;
 
     // TODO: Update this to not __always__ update. Just when it needs to.
     this._update(true);
 
     matrix = shallow ? this._matrix : getComputedMatrix(this);
 
-    var height = this.leading;
-    var width = this.value.length * this.size * Text.Ratio;
-    var border = (this._linewidth || 0) / 2;
+    const height = this.leading;
+    const width = this.value.length * this.size * Text.Ratio;
+    const border = (this._linewidth || 0) / 2;
 
     switch (this.alignment) {
       case 'left':
@@ -629,6 +484,8 @@ _.extend(Text.prototype, Shape.prototype, {
    */
   flagReset: function() {
 
+    super.flagReset.call(this);
+
     this._flagValue = this._flagFamily = this._flagSize =
       this._flagLeading = this._flagAlignment = this._flagFill =
       this._flagStroke = this._flagLinewidth = this._flagOpacity =
@@ -636,14 +493,239 @@ _.extend(Text.prototype, Shape.prototype, {
       this._flagClassName = this._flagBaseline = this._flagWeight =
         this._flagStyle = false;
 
-    Shape.prototype.flagReset.call(this);
-
     return this;
 
   }
 
-});
+}
 
-Text.MakeObservable(Text.prototype);
+const proto = {
+  value: {
+    enumerable: true,
+    get: function() {
+      return this._value;
+    },
+    set: function(v) {
+      this._value = v;
+      this._flagValue = true;
+    }
+  },
+  family: {
+    enumerable: true,
+    get: function() {
+      return this._family;
+    },
+    set: function(v) {
+      this._family = v;
+      this._flagFamily = true;
+    }
+  },
+  size: {
+    enumerable: true,
+    get: function() {
+      return this._size;
+    },
+    set: function(v) {
+      this._size = v;
+      this._flagSize = true;
+    }
+  },
+  leading: {
+    enumerable: true,
+    get: function() {
+      return this._leading;
+    },
+    set: function(v) {
+      this._leading = v;
+      this._flagLeading = true;
+    }
+  },
+  alignment: {
+    enumerable: true,
+    get: function() {
+      return this._alignment;
+    },
+    set: function(v) {
+      this._alignment = v;
+      this._flagAlignment = true;
+    }
+  },
+  linewidth: {
+    enumerable: true,
+    get: function() {
+      return this._linewidth;
+    },
+    set: function(v) {
+      this._linewidth = v;
+      this._flagLinewidth = true;
+    }
+  },
+  style: {
+    enumerable: true,
+    get: function() {
+      return this._style;
+    },
+    set: function(v) {
+      this._style = v;
+      this._flagStyle = true;
+    }
+  },
+  weight: {
+    enumerable: true,
+    get: function() {
+      return this._weight;
+    },
+    set: function(v) {
+      this._weight = v;
+      this._flagWeight = true;
+    }
+  },
+  decoration: {
+    enumerable: true,
+    get: function() {
+      return this._decoration;
+    },
+    set: function(v) {
+      this._decoration = v;
+      this._flagDecoration = true;
+    }
+  },
+  baseline: {
+    enumerable: true,
+    get: function() {
+      return this._baseline;
+    },
+    set: function(v) {
+      this._baseline = v;
+      this._flagBaseline = true;
+    }
+  },
+  opacity: {
+    enumerable: true,
+    get: function() {
+      return this._opacity;
+    },
+    set: function(v) {
+      this._opacity = v;
+      this._flagOpacity = true;
+    }
+  },
+  visible: {
+    enumerable: true,
+    get: function() {
+      return this._visible;
+    },
+    set: function(v) {
+      this._visible = v;
+      this._flagVisible = true;
+    }
+  },
+  fill: {
+    enumerable: true,
+    get: function() {
+      return this._fill;
+    },
+    set: function(f) {
 
-export default Text;
+      if (this._fill instanceof Gradient
+        || this._fill instanceof LinearGradient
+        || this._fill instanceof RadialGradient
+        || this._fill instanceof Texture) {
+        this._fill.unbind(Events.Types.change, this._renderer.flagFill);
+      }
+
+      this._fill = f;
+      this._flagFill = true;
+
+      if (this._fill instanceof Gradient
+        || this._fill instanceof LinearGradient
+        || this._fill instanceof RadialGradient
+        || this._fill instanceof Texture) {
+        this._fill.bind(Events.Types.change, this._renderer.flagFill);
+      }
+
+    }
+  },
+  stroke: {
+    enumerable: true,
+    get: function() {
+      return this._stroke;
+    },
+    set: function(f) {
+
+      if (this._stroke instanceof Gradient
+        || this._stroke instanceof LinearGradient
+        || this._stroke instanceof RadialGradient
+        || this._stroke instanceof Texture) {
+        this._stroke.unbind(Events.Types.change, this._renderer.flagStroke);
+      }
+
+      this._stroke = f;
+      this._flagStroke = true;
+
+      if (this._stroke instanceof Gradient
+        || this._stroke instanceof LinearGradient
+        || this._stroke instanceof RadialGradient
+        || this._stroke instanceof Texture) {
+        this._stroke.bind(Events.Types.change, this._renderer.flagStroke);
+      }
+
+    }
+  },
+  mask: {
+    enumerable: true,
+    get: function() {
+      return this._mask;
+    },
+    set: function(v) {
+      this._mask = v;
+      this._flagMask = true;
+      if (!v.clip) {
+        v.clip = true;
+      }
+    }
+
+  },
+  clip: {
+    enumerable: true,
+    get: function() {
+      return this._clip;
+    },
+    set: function(v) {
+      this._clip = v;
+      this._flagClip = true;
+    }
+  },
+  dashes: {
+    enumerable: true,
+    get: function() {
+      return this._dashes;
+    },
+    set: function(v) {
+      if (typeof v.offset !== 'number') {
+        v.offset = (this.dashes && this._dashes.offset) || 0;
+      }
+      this._dashes = v;
+    }
+  }
+};
+
+/**
+ * @name Two.Text.FlagFill
+ * @function
+ * @private
+ * @description Cached method to let renderers know the fill property have been updated on a {@link Two.Text}.
+ */
+function FlagFill() {
+  this._flagFill = true;
+}
+
+/**
+ * @name Two.Text.FlagStroke
+ * @function
+ * @private
+ * @description Cached method to let renderers know the stroke property have been updated on a {@link Two.Text}.
+ */
+function FlagStroke() {
+  this._flagStroke = true;
+}
