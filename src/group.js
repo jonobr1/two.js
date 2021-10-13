@@ -189,100 +189,22 @@ export class Group extends Shape {
 
     super();
 
-    Object.defineProperty(this, 'visible', {
-      enumerable: true,
-      get: getVisible,
-      set: setVisible
-    });
-
-    Object.defineProperty(this, 'opacity', {
-      enumerable: true,
-      get: getOpacity,
-      set: setOpacity
-    });
-
-    Object.defineProperty(this, 'beginning', {
-      enumerable: true,
-      get: getBeginning,
-      set: setBeginning
-    });
-
-    Object.defineProperty(this, 'ending', {
-      enumerable: true,
-      get: getEnding,
-      set: setEnding
-    });
-
-    Object.defineProperty(this, 'length', {
-      enumerable: true,
-      get: getLength
-    });
-
-    Object.defineProperty(this, 'fill', {
-      enumerable: true,
-      get: getFill,
-      set: setFill
-    });
-
-    Object.defineProperty(this, 'stroke', {
-      enumerable: true,
-      get: getStroke,
-      set: setStroke
-    });
-
-    Object.defineProperty(this, 'linewidth', {
-      enumerable: true,
-      get: getLinewidth,
-      set: setLinewidth
-    });
-
-    Object.defineProperty(this, 'cap', {
-      enumerable: true,
-      get: getCap,
-      set: setCap
-    });
-
-    Object.defineProperty(this, 'join', {
-      enumerable: true,
-      get: getJoin,
-      set: setJoin
-    });
-
-    Object.defineProperty(this, 'miter', {
-      enumerable: true,
-      get: getMiter,
-      set: setMiter
-    });
-
-    Object.defineProperty(this, 'closed', {
-      enumerable: true,
-      get: getClosed,
-      set: setClosed
-    });
-
-    Object.defineProperty(this, 'curved', {
-      enumerable: true,
-      get: getCurved,
-      set: setCurved
-    });
-
-    Object.defineProperty(this, 'automatic', {
-      enumerable: true,
-      get: getAutomatic,
-      set: setAutomatic
-    });
-
-    Object.defineProperty(this, 'children', {
-      enumerable: true,
-      get: getChildren,
-      set: setChildren
-    });
-
-    Object.defineProperty(this, 'mask', {
-      enumerable: true,
-      get: getMask,
-      set: setMask
-    });
+    Object.defineProperty(this, 'visible', proto.visible);
+    Object.defineProperty(this, 'opacity', proto.opacity);
+    Object.defineProperty(this, 'beginning', proto.beginning);
+    Object.defineProperty(this, 'ending', proto.ending);
+    Object.defineProperty(this, 'length', proto.length);
+    Object.defineProperty(this, 'fill', proto.fill);
+    Object.defineProperty(this, 'stroke', proto.stroke);
+    Object.defineProperty(this, 'linewidth', proto.linewidth);
+    Object.defineProperty(this, 'cap', proto.cap);
+    Object.defineProperty(this, 'join', proto.join);
+    Object.defineProperty(this, 'miter', proto.miter);
+    Object.defineProperty(this, 'closed', proto.closed);
+    Object.defineProperty(this, 'curved', proto.curved);
+    Object.defineProperty(this, 'automatic', proto.automatic);
+    Object.defineProperty(this, 'children', proto.children);
+    Object.defineProperty(this, 'mask', proto.mask);
 
     //
 
@@ -820,188 +742,223 @@ export class Group extends Shape {
 
 }
 
-function getVisible() {
-  return this._visible;
-}
-function setVisible(v) {
-  this._flagVisible = this._visible !== v || this._flagVisible;
-  this._visible = v;
-}
-
-function getOpacity() {
-  return this._opacity;
-}
-function setOpacity(v) {
-  this._flagOpacity = this._opacity !== v || this._flagOpacity;
-  this._opacity = v;
-}
-
-function getBeginning() {
-  return this._beginning;
-}
-function setBeginning(v) {
-  this._flagBeginning = this._beginning !== v || this._flagBeginning;
-  this._beginning = v;
-}
-
-function getEnding() {
-  return this._ending;
-}
-function setEnding(v) {
-  this._flagEnding = this._ending !== v || this._flagEnding;
-  this._ending = v;
-}
-
-function getLength() {
-  if (this._flagLength || this._length <= 0) {
-    this._length = 0;
-    if (!this.children) {
+const proto = {
+  visible: {
+    enumerable: true,
+    get: function() {
+      return this._visible;
+    },
+    set: function(v) {
+      this._flagVisible = this._visible !== v || this._flagVisible;
+      this._visible = v;
+    }
+  },
+  opacity: {
+    enumerable: true,
+    get: function() {
+      return this._opacity;
+    },
+    set: function(v) {
+      this._flagOpacity = this._opacity !== v || this._flagOpacity;
+      this._opacity = v;
+    }
+  },
+  beginning: {
+    enumerable: true,
+    get: function() {
+      return this._beginning;
+    },
+    set: function(v) {
+      this._flagBeginning = this._beginning !== v || this._flagBeginning;
+      this._beginning = v;
+    }
+  },
+  ending: {
+    enumerable: true,
+    get: function() {
+      return this._ending;
+    },
+    set: function(v) {
+      this._flagEnding = this._ending !== v || this._flagEnding;
+      this._ending = v;
+    }
+  },
+  length: {
+    enumerable: true,
+    get: function() {
+      if (this._flagLength || this._length <= 0) {
+        this._length = 0;
+        if (!this.children) {
+          return this._length;
+        }
+        for (let i = 0; i < this.children.length; i++) {
+          const child = this.children[i];
+          this._length += child.length;
+        }
+      }
       return this._length;
     }
-    for (let i = 0; i < this.children.length; i++) {
-      const child = this.children[i];
-      this._length += child.length;
+  },
+  fill: {
+    enumerable: true,
+    get: function() {
+      return this._fill;
+    },
+    set: function(v) {
+      this._fill = v;
+      for (let i = 0; i < this.children.length; i++) {
+        const child = this.children[i];
+        child.fill = v;
+      }
+    }
+  },
+  stroke: {
+    enumerable: true,
+    get: function() {
+      return this._stroke;
+    },
+    set: function(v) {
+      this._stroke = v;
+      for (let i = 0; i < this.children.length; i++) {
+        const child = this.children[i];
+        child.stroke = v;
+      }
+    }
+  },
+  linewidth: {
+    enumerable: true,
+    get: function() {
+      return this._linewidth;
+    },
+    set: function(v) {
+      this._linewidth = v;
+      for (let i = 0; i < this.children.length; i++) {
+        const child = this.children[i];
+        child.linewidth = v;
+      }
+    }
+  },
+  join: {
+    enumerable: true,
+    get: function() {
+      return this._join;
+    },
+    set: function(v) {
+      this._join = v;
+      for (let i = 0; i < this.children.length; i++) {
+        const child = this.children[i];
+        child.join = v;
+      }
+    }
+  },
+  miter: {
+    enumerable: true,
+    get: function() {
+      return this._miter;
+    },
+    set: function(v) {
+      this._miter = v;
+      for (let i = 0; i < this.children.length; i++) {
+        const child = this.children[i];
+        child.miter = v;
+      }
+    }
+  },
+  cap: {
+    enumerable: true,
+    get: function() {
+      return this._cap;
+    },
+    set: function(v) {
+      this._cap = v;
+      for (let i = 0; i < this.children.length; i++) {
+        const child = this.children[i];
+        child.cap = v;
+      }
+    }
+  },
+  closed: {
+    enumerable: true,
+    get: function() {
+      return this._closed;
+    },
+    set: function(v) {
+      this._closed = v;
+      for (let i = 0; i < this.children.length; i++) {
+        const child = this.children[i];
+        child.closed = v;
+      }
+    }
+  },
+  curved: {
+    enumerable: true,
+    get: function() {
+      return this._curved;
+    },
+    set: function(v) {
+      this._curved = v;
+      for (let i = 0; i < this.children.length; i++) {
+        const child = this.children[i];
+        child.curved = v;
+      }
+    }
+  },
+  automatic: {
+    enumerable: true,
+    get: function() {
+      return this._automatic;
+    },
+    set: function(v) {
+      this._automatic = v;
+      for (let i = 0; i < this.children.length; i++) {
+        const child = this.children[i];
+        child.automatic = v;
+      }
+    }
+  },
+  children: {
+    enumerable: true,
+    get: function() {
+      return this._children;
+    },
+    set: function(children) {
+
+      const insertChildren = Group.InsertChildren.bind(this);
+      const removeChildren = Group.RemoveChildren.bind(this);
+      const orderChildren = Group.OrderChildren.bind(this);
+
+      if (this._children) {
+        this._children.unbind();
+        if (this._children.length > 0) {
+          removeChildren(this._children);
+        }
+      }
+
+      this._children = new Children(children);
+      this._children.bind(Events.Types.insert, insertChildren);
+      this._children.bind(Events.Types.remove, removeChildren);
+      this._children.bind(Events.Types.order, orderChildren);
+
+      if (children.length > 0) {
+        insertChildren(children);
+      }
+
+    }
+  },
+  mask: {
+    enumerable: true,
+    get: function() {
+      return this._mask;
+    },
+    set: function(v) {
+      this._mask = v;
+      this._flagMask = true;
+      if (!v.clip) {
+        v.clip = true;
+      }
     }
   }
-  return this._length;
-}
-
-function getFill() {
-  return this._fill;
-}
-function setFill(v) {
-  this._fill = v;
-  for (let i = 0; i < this.children.length; i++) {
-    const child = this.children[i];
-    child.fill = v;
-  }
-}
-
-function getStroke() {
-  return this._stroke;
-}
-function setStroke(v) {
-  this._stroke = v;
-  for (let i = 0; i < this.children.length; i++) {
-    const child = this.children[i];
-    child.stroke = v;
-  }
-}
-
-function getLinewidth() {
-  return this._linewidth;
-}
-function setLinewidth(v) {
-  this._linewidth = v;
-  for (let i = 0; i < this.children.length; i++) {
-    const child = this.children[i];
-    child.linewidth = v;
-  }
-}
-
-function getJoin() {
-  return this._join;
-}
-function setJoin(v) {
-  this._join = v;
-  for (let i = 0; i < this.children.length; i++) {
-    const child = this.children[i];
-    child.join = v;
-  }
-}
-
-function getMiter() {
-  return this._miter;
-}
-function setMiter(v) {
-  this._miter = v;
-  for (let i = 0; i < this.children.length; i++) {
-    const child = this.children[i];
-    child.miter = v;
-  }
-}
-
-function getCap() {
-  return this._cap;
-}
-function setCap(v) {
-  this._cap = v;
-  for (let i = 0; i < this.children.length; i++) {
-    const child = this.children[i];
-    child.cap = v;
-  }
-}
-
-function getClosed() {
-  return this._closed;
-}
-function setClosed(v) {
-  this._closed = v;
-  for (let i = 0; i < this.children.length; i++) {
-    const child = this.children[i];
-    child.closed = v;
-  }
-}
-
-function getCurved() {
-  return this._curved;
-}
-function setCurved(v) {
-  this._curved = v;
-  for (let i = 0; i < this.children.length; i++) {
-    const child = this.children[i];
-    child.curved = v;
-  }
-}
-
-function getAutomatic() {
-  return this._automatic;
-}
-function setAutomatic(v) {
-  this._automatic = v;
-  for (let i = 0; i < this.children.length; i++) {
-    const child = this.children[i];
-    child.automatic = v;
-  }
-}
-
-function getChildren() {
-  return this._children;
-}
-function setChildren(children) {
-
-  const insertChildren = Group.InsertChildren.bind(this);
-  const removeChildren = Group.RemoveChildren.bind(this);
-  const orderChildren = Group.OrderChildren.bind(this);
-
-  if (this._children) {
-    this._children.unbind();
-    if (this._children.length > 0) {
-      removeChildren(this._children);
-    }
-  }
-
-  this._children = new Children(children);
-  this._children.bind(Events.Types.insert, insertChildren);
-  this._children.bind(Events.Types.remove, removeChildren);
-  this._children.bind(Events.Types.order, orderChildren);
-
-  if (children.length > 0) {
-    insertChildren(children);
-  }
-
-}
-
-function getMask() {
-  return this._mask;
-}
-function setMask(v) {
-  this._mask = v;
-  this._flagMask = true;
-  if (!v.clip) {
-    v.clip = true;
-  }
-}
+};
 
 // /**
 //  * Helper function used to sync parent-child relationship within the

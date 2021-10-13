@@ -254,8 +254,8 @@ export class Shape extends Events {
    */
   flagReset() {
 
-    this._flagId = this._flagMatrix = this._flagScale
-      = this._flagClassName = false;
+    this._flagId = this._flagMatrix = this._flagScale =
+      this._flagClassName = false;
 
     return this;
 
@@ -278,117 +278,114 @@ const translation = {
   }
 };
 
-const rotation = {
-  enumerable: true,
-  get: function() {
-    return this._rotation;
-  },
-  set: function(v) {
-    this._rotation = v;
-    this._flagMatrix = true;
-  }
-};
-
-const scale = {
-  enumerable: true,
-  get: function() {
-    return this._scale;
-  },
-  set: function(v) {
-    if (this._scale instanceof Vector) {
-      this._scale.unbind(Events.Types.change, this._renderer.flagMatrix);
+const proto = {
+  rotation: {
+    enumerable: true,
+    get: function() {
+      return this._rotation;
+    },
+    set: function(v) {
+      this._rotation = v;
+      this._flagMatrix = true;
     }
-    this._scale = v;
-    if (this._scale instanceof Vector) {
-      this._scale.bind(Events.Types.change, this._renderer.flagMatrix);
-    }
-    this._flagMatrix = true;
-    this._flagScale = true;
-  }
-};
-
-const skewX = {
-  enumerable: true,
-  get: function() {
-    return this._skewX;
   },
-  set: function(v) {
-    this._skewX = v;
-    this._flagMatrix = true;
-  }
-};
-
-const skewY = {
-  enumerable: true,
-  get: function() {
-    return this._skewY;
-  },
-  set: function(v) {
-    this._skewY = v;
-    this._flagMatrix = true;
-  }
-};
-
-const matrix = {
-  enumerable: true,
-  get: function() {
-    return this._matrix;
-  },
-  set: function(v) {
-    this._matrix = v;
-    this._flagMatrix = true;
-  }
-};
-
-const id = {
-  enumerable: true,
-  get: function() {
-    return this._id;
-  },
-  set: function(v) {
-    const id = this._id;
-    if (v === this._id) {
-      return;
-    }
-    this._id = v;
-    this._flagId = true;
-    if (this.parent) {
-      delete this.parent.children.ids[id];
-      this.parent.children.ids[this._id] = this;
-    }
-  }
-};
-
-const className = {
-  enumerable: true,
-  get: function() {
-    return this._className;
-  },
-  set: function(v) {
-    this._flagClassName = this._className !== v;
-    if (this._flagClassName) {
-      const prev = this._className.split(/\s+?/);
-      const dest = v.split(/\s+?/);
-      for (let i = 0; i < prev.length; i++) {
-        const className = prev[i];
-        const index = Array.prototype.indexOf.call(this.classList, className);
-        if (index >= 0) {
-          this.classList.splice(index, 1);
-        }
+  scale: {
+    enumerable: true,
+    get: function() {
+      return this._scale;
+    },
+    set: function(v) {
+      if (this._scale instanceof Vector) {
+        this._scale.unbind(Events.Types.change, this._renderer.flagMatrix);
       }
-      this.classList = this.classList.concat(dest);
+      this._scale = v;
+      if (this._scale instanceof Vector) {
+        this._scale.bind(Events.Types.change, this._renderer.flagMatrix);
+      }
+      this._flagMatrix = true;
+      this._flagScale = true;
     }
-    this._className = v;
-  }
-};
-
-const renderer = {
-  enumerable: false,
-  get: function() {
-    return this._renderer;
   },
-  set: function(obj) {
-    this._renderer = obj;
+  skewX: {
+    enumerable: true,
+    get: function() {
+      return this._skewX;
+    },
+    set: function(v) {
+      this._skewX = v;
+      this._flagMatrix = true;
+    }
+  },
+  skewY: {
+    enumerable: true,
+    get: function() {
+      return this._skewY;
+    },
+    set: function(v) {
+      this._skewY = v;
+      this._flagMatrix = true;
+    }
+  },
+  matrix: {
+    enumerable: true,
+    get: function() {
+      return this._matrix;
+    },
+    set: function(v) {
+      this._matrix = v;
+      this._flagMatrix = true;
+    }
+  },
+
+  id: {
+    enumerable: true,
+    get: function() {
+      return this._id;
+    },
+    set: function(v) {
+      const id = this._id;
+      if (v === this._id) {
+        return;
+      }
+      this._id = v;
+      this._flagId = true;
+      if (this.parent) {
+        delete this.parent.children.ids[id];
+        this.parent.children.ids[this._id] = this;
+      }
+    }
+  },
+
+  className: {
+    enumerable: true,
+    get: function() {
+      return this._className;
+    },
+    set: function(v) {
+      this._flagClassName = this._className !== v;
+      if (this._flagClassName) {
+        const prev = this._className.split(/\s+?/);
+        const dest = v.split(/\s+?/);
+        for (let i = 0; i < prev.length; i++) {
+          const className = prev[i];
+          const index = Array.prototype.indexOf.call(this.classList, className);
+          if (index >= 0) {
+            this.classList.splice(index, 1);
+          }
+        }
+        this.classList = this.classList.concat(dest);
+      }
+      this._className = v;
+    }
+  },
+  renderer: {
+    enumerable: false,
+    get: function() {
+      return this._renderer;
+    },
+    set: function(obj) {
+      this._renderer = obj;
+    }
   }
 };
 
