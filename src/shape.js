@@ -1,10 +1,7 @@
+import { Constants } from './constants.js';
 import { Events } from './events.js';
-import { _ } from './utils/underscore.js';
-
 import { Matrix } from './matrix.js';
 import { Vector } from './vector.js';
-
-import { Constants } from './constants.js';
 
 const translation = {
   enumerable: false,
@@ -143,7 +140,81 @@ const renderer = {
  */
 export class Shape extends Events {
 
-  renderer = {};
+  /**
+   * @name Two.Shape#_id
+   * @private
+   * @property {Boolean} - Determines whether the id needs updating.
+   */
+  _flagId = true;
+
+  /**
+   * @name Two.Shape#_flagMatrix
+   * @private
+   * @property {Boolean} - Determines whether the matrix needs updating.
+   */
+  _flagMatrix = true;
+
+  /**
+   * @name Two.Shape#_flagScale
+   * @private
+   * @property {Boolean} - Determines whether the scale needs updating.
+   */
+  _flagScale = false;
+
+  /**
+   * @name Two.Shape#_flagClassName
+   * @private
+   * @property {Boolean} - Determines whether the {@link Two.Group#className} need updating.
+   */
+  _flagClassName = false;
+
+  // Underlying Properties
+
+  _renderer = {};
+
+  _id = '';
+
+  /**
+   * @name Two.Shape#_translation
+   * @private
+   * @property {Two.Vector} - The translation values as a {@link Two.Vector}.
+   */
+  _translation = null;
+
+  /**
+   * @name Two.Shape#_rotation
+   * @private
+   * @property {Number} - The rotation value in Number.
+   */
+  _rotation = 0;
+
+  /**
+   * @name Two.Shape#_translation
+   * @private
+   * @property {Two.Vector} - The translation values as a {@link Two.Vector}.
+   */
+  _scale = 1;
+
+  /**
+   * @name Two.Shape#_skewX
+   * @private
+   * @property {Number} - The rotation value in Number.
+   */
+  _skewX = 0;
+
+  /**
+   * @name Two.Shape#_skewY
+   * @private
+   * @property {Number} - The rotation value in Number.
+   */
+  _skewY = 0;
+
+  /**
+   * @name Two.Shape#className
+   * @property {String} - A class to be applied to the element to be compatible with CSS styling.
+   * @nota-bene Only available for the SVG renderer.
+   */
+  _className = '';
 
   constructor() {
 
@@ -167,7 +238,6 @@ export class Shape extends Events {
      * @description Object access to store relevant renderer specific variables. Warning: manipulating this object can create unintended consequences.
      * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `shape.renderer.elem`.
      */
-    this.renderer = {};
     this._renderer.flagMatrix = FlagMatrix.bind(this);
     this.isShape = true;
 
@@ -228,111 +298,16 @@ export class Shape extends Events {
 
   }
 
-}
-
-/**
- * @name Two.Shape.FlagMatrix
- * @function
- * @private
- * @description Utility function used in conjunction with event handlers to update the flagMatrix of a shape.
- */
-function FlagMatrix() {
-  this._flagMatrix = true;
-}
-
-_.extend(Shape.prototype, Events, {
-
-  constructor: Shape,
-
-  // Flags
-
-  /**
-   * @name Two.Shape#_id
-   * @private
-   * @property {Boolean} - Determines whether the id needs updating.
-   */
-  _flagId: true,
-
-  /**
-   * @name Two.Shape#_flagMatrix
-   * @private
-   * @property {Boolean} - Determines whether the matrix needs updating.
-   */
-  _flagMatrix: true,
-
-  /**
-   * @name Two.Shape#_flagScale
-   * @private
-   * @property {Boolean} - Determines whether the scale needs updating.
-   */
-  _flagScale: false,
-
-  // _flagMask: false,
-  // _flagClip: false,
-
-  /**
-   * @name Two.Shape#_flagClassName
-   * @private
-   * @property {Boolean} - Determines whether the {@link Two.Group#className} need updating.
-   */
-  _flagClassName: false,
-
-  // Underlying Properties
-
-  _id: '',
-
-  /**
-   * @name Two.Shape#_translation
-   * @private
-   * @property {Two.Vector} - The translation values as a {@link Two.Vector}.
-   */
-  _translation: null,
-
-  /**
-   * @name Two.Shape#_rotation
-   * @private
-   * @property {Number} - The rotation value in Number.
-   */
-  _rotation: 0,
-
-  /**
-   * @name Two.Shape#_translation
-   * @private
-   * @property {Two.Vector} - The translation values as a {@link Two.Vector}.
-   */
-  _scale: 1,
-
-  /**
-   * @name Two.Shape#_skewX
-   * @private
-   * @property {Number} - The rotation value in Number.
-   */
-  _skewX: 0,
-
-  /**
-   * @name Two.Shape#_skewY
-   * @private
-   * @property {Number} - The rotation value in Number.
-   */
-  _skewY: 0,
-
-  /**
-   * @name Two.Shape#className
-   * @property {String} - A class to be applied to the element to be compatible with CSS styling.
-   * @nota-bene Only available for the SVG renderer.
-   */
-  _className: '',
-
   /**
    * @name Two.Shape#addTo
    * @function
    * @param {Two.Group} group - The parent the shape adds itself to.
    * @description Convenience method to add itself to the scenegraph.
    */
-  addTo: function(group) {
+  addTo(group) {
     group.add(this);
     return this;
-  },
+  }
 
   /**
    * @name Two.Shape#clone
@@ -341,7 +316,7 @@ _.extend(Shape.prototype, Events, {
    * @returns {Two.Shape}
    * @description Create a new {@link Two.Shape} with the same values as the current shape.
    */
-  clone: function(parent) {
+  clone(parent) {
 
     const clone = new Shape();
 
@@ -361,7 +336,7 @@ _.extend(Shape.prototype, Events, {
 
     return clone._update();
 
-  },
+  }
 
   /**
    * @name Two.Shape#_update
@@ -371,7 +346,7 @@ _.extend(Shape.prototype, Events, {
    * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
    * @nota-bene Try not to call this method more than once a frame.
    */
-  _update: function(bubbles) {
+  _update(bubbles) {
 
     if (!this._matrix.manual && this._flagMatrix) {
 
@@ -398,7 +373,7 @@ _.extend(Shape.prototype, Events, {
 
     return this;
 
-  },
+  }
 
   /**
    * @name Two.Shape#flagReset
@@ -406,7 +381,7 @@ _.extend(Shape.prototype, Events, {
    * @private
    * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
    */
-  flagReset: function() {
+  flagReset() {
 
     this._flagId = this._flagMatrix = this._flagScale
       = this._flagClassName = false;
@@ -415,4 +390,14 @@ _.extend(Shape.prototype, Events, {
 
   }
 
-});
+}
+
+/**
+ * @name FlagMatrix
+ * @function
+ * @private
+ * @description Utility function used in conjunction with event handlers to update the flagMatrix of a shape.
+ */
+function FlagMatrix() {
+  this._flagMatrix = true;
+}
