@@ -16,17 +16,8 @@ export class Vector extends Events {
 
     super();
 
-    Object.defineProperty(this, 'x', {
-      enumerable: true,
-      get: getX,
-      set: setX
-    });
-
-    Object.defineProperty(this, 'y', {
-      enumerable: true,
-      get: getY,
-      set: setY
-    });
+    Object.defineProperty(this, 'x', proto.x);
+    Object.defineProperty(this, 'y', proto.y);
 
     /**
      * @name Two.Vector#x
@@ -592,28 +583,33 @@ export class Vector extends Events {
 
 }
 
-function getX() {
-  return this._x;
-}
-
-function setX(v) {
-  if (this._x !== v) {
-    this._x = v;
-    if (this._bound) {
-      this.dispatchEvent(Events.Types.change);
+const proto = {
+  x: {
+    enumerable: true,
+    get: function() {
+      return this._x;
+    },
+    set: function(v) {
+      if (this._x !== v) {
+        this._x = v;
+        if (this._bound) {
+          this.dispatchEvent(Events.Types.change);
+        }
+      }
+    }
+  },
+  y: {
+    enumerable: true,
+    get: function() {
+      return this._y;
+    },
+    set: function(v) {
+      if (this._y !== v) {
+        this._y = v;
+        if (this._bound) {
+          this.dispatchEvent(Events.Types.change);
+        }
+      }
     }
   }
-}
-
-function getY() {
-  return this._y;
-}
-
-function setY(v) {
-  if (this._y !== v) {
-    this._y = v;
-    if (this._bound) {
-      this.dispatchEvent(Events.Types.change);
-    }
-  }
-}
+};
