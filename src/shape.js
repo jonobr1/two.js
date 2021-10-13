@@ -195,7 +195,7 @@ export class Shape extends Events {
 
     return this;
 
-  },
+  }
 
   /**
    * @name Two.Shape#clone

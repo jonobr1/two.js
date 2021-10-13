@@ -247,7 +247,7 @@ export class Text extends Shape {
    */
   _dashes = null;
 
-  constructor() {
+  constructor(message, x, y, styles) {
 
     super();
 
@@ -474,7 +474,7 @@ export class Text extends Shape {
       height: bottom - top
     };
 
-  },
+  }
 
   /**
    * @name Two.Text#flagReset
@@ -482,7 +482,7 @@ export class Text extends Shape {
    * @private
    * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
    */
-  flagReset: function() {
+  flagReset() {
 
     super.flagReset.call(this);
 
