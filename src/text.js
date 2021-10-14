@@ -251,23 +251,9 @@ export class Text extends Shape {
 
     super();
 
-    Object.definePropert(this, 'value', proto.value);
-    Object.definePropert(this, 'family', proto.family);
-    Object.definePropert(this, 'size', proto.size);
-    Object.definePropert(this, 'leading', proto.leading);
-    Object.definePropert(this, 'alignment', proto.alignment);
-    Object.definePropert(this, 'linewidth', proto.linewidth);
-    Object.definePropert(this, 'style', proto.style);
-    Object.definePropert(this, 'weight', proto.weight);
-    Object.definePropert(this, 'decoration', proto.decoration);
-    Object.definePropert(this, 'baseline', proto.baseline);
-    Object.definePropert(this, 'opacity', proto.opacity);
-    Object.definePropert(this, 'visible', proto.visible);
-    Object.defineProperty(this, 'fill', proto.fill);
-    Object.defineProperty(this, 'stroke', proto.stroke);
-    Object.defineProperty(this, 'mask', proto.mask);
-    Object.defineProperty(this, 'clip', proto.clip);
-    Object.defineProperty(this, 'dashes', proto.dashes);
+    for (let prop in proto) {
+      Object.defineProperty(this, prop, proto[prop]);
+    }
 
     this._renderer.type = 'text';
     this._renderer.flagFill = FlagFill.bind(this);

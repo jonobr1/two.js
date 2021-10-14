@@ -189,22 +189,9 @@ export class Group extends Shape {
 
     super();
 
-    Object.defineProperty(this, 'visible', proto.visible);
-    Object.defineProperty(this, 'opacity', proto.opacity);
-    Object.defineProperty(this, 'beginning', proto.beginning);
-    Object.defineProperty(this, 'ending', proto.ending);
-    Object.defineProperty(this, 'length', proto.length);
-    Object.defineProperty(this, 'fill', proto.fill);
-    Object.defineProperty(this, 'stroke', proto.stroke);
-    Object.defineProperty(this, 'linewidth', proto.linewidth);
-    Object.defineProperty(this, 'cap', proto.cap);
-    Object.defineProperty(this, 'join', proto.join);
-    Object.defineProperty(this, 'miter', proto.miter);
-    Object.defineProperty(this, 'closed', proto.closed);
-    Object.defineProperty(this, 'curved', proto.curved);
-    Object.defineProperty(this, 'automatic', proto.automatic);
-    Object.defineProperty(this, 'children', proto.children);
-    Object.defineProperty(this, 'mask', proto.mask);
+    for (let prop in proto) {
+      Object.defineProperty(this, prop, proto[prop]);
+    }
 
     //
 

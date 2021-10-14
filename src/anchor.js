@@ -34,13 +34,17 @@ export class Anchor extends Vector {
 
     super(x, y);
 
-    Object.defineProperty(this, 'command', proto.command);
-    Object.defineProperty(this, 'relative', proto.relative);
-    Object.defineProperty(this, 'rx', proto.rx);
-    Object.defineProperty(this, 'ry', proto.ry);
-    Object.defineProperty(this, 'xAxisRotation', proto.xAxisRotation);
-    Object.defineProperty(this, 'largeArcFlag', proto.largeArcFlag);
-    Object.defineProperty(this, 'sweepFlag', proto.sweepFlag);
+    for (let prop in proto) {
+      Object.defineProperty(this, prop, proto[prop]);
+    }
+
+    // Object.defineProperty(this, 'command', proto.command);
+    // Object.defineProperty(this, 'relative', proto.relative);
+    // Object.defineProperty(this, 'rx', proto.rx);
+    // Object.defineProperty(this, 'ry', proto.ry);
+    // Object.defineProperty(this, 'xAxisRotation', proto.xAxisRotation);
+    // Object.defineProperty(this, 'largeArcFlag', proto.largeArcFlag);
+    // Object.defineProperty(this, 'sweepFlag', proto.sweepFlag);
 
     this.command = command;
     this.relative = true;

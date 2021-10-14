@@ -91,17 +91,9 @@ export class Shape extends Events {
 
     super();
 
-    Object.defineProperty(this, 'translation', proto.translation);
-    Object.defineProperty(this, 'position', proto.translation);
-    Object.defineProperty(this, 'rotation', proto.rotation);
-    Object.defineProperty(this, 'scale', proto.scale);
-    Object.defineProperty(this, 'skewX', proto.skewX);
-    Object.defineProperty(this, 'skewY', proto.skewY);
-    Object.defineProperty(this, 'matrix', proto.matrix);
-
-    Object.defineProperty(this, 'id', proto.id);
-    Object.defineProperty(this, 'className', proto.className);
-    Object.defineProperty(this, 'renderer', proto.renderer);
+    for (let prop in proto) {
+      Object.defineProperty(this, prop, proto[prop]);
+    }
 
     /**
      * @name Two.Shape#renderer
