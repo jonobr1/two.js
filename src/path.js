@@ -1,5 +1,5 @@
-import Commands from './utils/path-commands.js';
-import Collection from './collection.js';
+import { Commands } from './utils/path-commands.js';
+import { Collection } from './collection.js';
 import { getComputedMatrix, lerp, mod } from './utils/math.js';
 import {
   getComponentOnCubicBezier,
@@ -8,23 +8,23 @@ import {
   subdivide,
   getCurveLength as utilGetCurveLength
 } from './utils/curves.js';
-import defineGetterSetter from './utils/get-set.js';
-import _ from './utils/underscore.js';
+import { defineGetterSetter } from './utils/get-set.js';
+import { _ } from './utils/underscore.js';
 
 
-import Shape from './shape.js';
-import Events from './events.js';
-import Vector from './vector.js';
-import Anchor from './anchor.js';
+import { Shape } from './shape.js';
+import { Events } from './events.js';
+import { Vector } from './vector.js';
+import { Anchor } from './anchor.js';
 
-import Gradient from './effects/gradient.js';
-import LinearGradient from './effects/linear-gradient.js';
-import RadialGradient from './effects/radial-gradient.js';
-import Texture from './effects/texture.js';
+import { Gradient } from './effects/gradient.js';
+import { LinearGradient } from './effects/linear-gradient.js';
+import { RadialGradient } from './effects/radial-gradient.js';
+import { Texture } from './effects/texture.js';
 
 // Constants
 
-var min = Math.min, max = Math.max,
+const min = Math.min, max = Math.max,
   ceil = Math.ceil, floor = Math.floor;
 
 /**
@@ -222,7 +222,7 @@ _.extend(Path, {
 
     // This function is called a lot
     // when importing a large SVG
-    var i = items.length;
+    let i = items.length;
     while (i--) {
       items[i].bind(Events.Types.change, this._renderer.flagVertices);
     }
@@ -238,7 +238,7 @@ _.extend(Path, {
    */
   UnbindVertices: function(items) {
 
-    var i = items.length;
+    let i = items.length;
     while (i--) {
       items[i].unbind(Events.Types.change, this._renderer.flagVertices);
     }
@@ -378,7 +378,7 @@ _.extend(Path, {
           return;
         }
         this._automatic = !!v;
-        var method = this._automatic ? 'ignore' : 'listen';
+        const method = this._automatic ? 'ignore' : 'listen';
         _.each(this.vertices, function(v) {
           v[method]();
         });
@@ -417,8 +417,8 @@ _.extend(Path, {
 
       set: function(vertices) {
 
-        var bindVertices = this._renderer.bindVertices;
-        var unbindVertices = this._renderer.unbindVertices;
+        const bindVertices = this._renderer.bindVertices;
+        const unbindVertices = this._renderer.unbindVertices;
 
         // Remove previous listeners
         if (this._collection) {
@@ -723,14 +723,14 @@ _.extend(Path.prototype, Shape.prototype, {
    */
   clone: function(parent) {
 
-    var clone = new Path();
+    const clone = new Path();
 
-    for (var j = 0; j < this.vertices.length; j++) {
+    for (let j = 0; j < this.vertices.length; j++) {
       clone.vertices.push(this.vertices[j].clone());
     }
 
-    for (var i = 0; i < Path.Properties.length; i++) {
-      var k = Path.Properties[i];
+    for (let i = 0; i < Path.Properties.length; i++) {
+      const k = Path.Properties[i];
       clone[k] = this[k];
     }
 
@@ -762,7 +762,7 @@ _.extend(Path.prototype, Shape.prototype, {
    */
   toObject: function() {
 
-    var result = {
+    const result = {
       vertices: this.vertices.map(function(v) {
         return v.toObject();
       })
@@ -821,14 +821,14 @@ _.extend(Path.prototype, Shape.prototype, {
    */
   corner: function() {
 
-    var rect = this.getBoundingClientRect(true);
-    var hw = rect.width / 2;
-    var hh = rect.height / 2;
-    var cx = rect.left + rect.width / 2;
-    var cy = rect.top + rect.height / 2;
+    const rect = this.getBoundingClientRect(true);
+    const hw = rect.width / 2;
+    const hh = rect.height / 2;
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
 
-    for (var i = 0; i < this.vertices.length; i++) {
-      var v = this.vertices[i];
+    for (let i = 0; i < this.vertices.length; i++) {
+      const v = this.vertices[i];
       v.x -= cx;
       v.y -= cy;
       v.x += hw;
@@ -846,13 +846,13 @@ _.extend(Path.prototype, Shape.prototype, {
    */
   center: function() {
 
-    var rect = this.getBoundingClientRect(true);
+    const rect = this.getBoundingClientRect(true);
 
-    var cx = rect.left + rect.width / 2 - this.translation.x;
-    var cy = rect.top + rect.height / 2 - this.translation.y;
+    const cx = rect.left + rect.width / 2 - this.translation.x;
+    const cy = rect.top + rect.height / 2 - this.translation.y;
 
-    for (var i = 0; i < this.vertices.length; i++) {
-      var v = this.vertices[i];
+    for (let i = 0; i < this.vertices.length; i++) {
+      const v = this.vertices[i];
       v.x -= cx;
       v.y -= cy;
     }
@@ -869,9 +869,10 @@ _.extend(Path.prototype, Shape.prototype, {
    * @description Return an object with top, left, right, bottom, width, and height parameters of the path.
    */
   getBoundingClientRect: function(shallow) {
-    var matrix, border, l, i, v0, v1, c0x, c0y, c1x, c1y, a, b, c, d;
 
-    var left = Infinity, right = -Infinity,
+    let matrix, border, l, i, v0, v1, c0x, c0y, c1x, c1y, a, b, c, d;
+
+    let left = Infinity, right = -Infinity,
         top = Infinity, bottom = -Infinity;
 
     // TODO: Update this to not __always__ update. Just when it needs to.
@@ -914,7 +915,7 @@ _.extend(Path.prototype, Shape.prototype, {
           c1y += v1.y;
         }
 
-        var bb = getCurveBoundingBox(v0.x, v0.y,
+        const bb = getCurveBoundingBox(v0.x, v0.y,
           c0x, c0y, c1x, c1y, v1.x, v1.y);
 
         top = min(bb.min.y - border, top);
@@ -973,16 +974,16 @@ _.extend(Path.prototype, Shape.prototype, {
    */
   getPointAt: function(t, obj) {
 
-    var ia, ib, result;
-    var x, x1, x2, x3, x4, y, y1, y2, y3, y4, left, right;
-    var target = this.length * Math.min(Math.max(t, 0), 1);
-    var length = this.vertices.length;
-    var last = length - 1;
+    let ia, ib, result;
+    let x, x1, x2, x3, x4, y, y1, y2, y3, y4, left, right;
+    let target = this.length * Math.min(Math.max(t, 0), 1);
+    const length = this.vertices.length;
+    const last = length - 1;
 
-    var a = null;
-    var b = null;
+    let a = null;
+    let b = null;
 
-    for (var i = 0, l = this._lengths.length, sum = 0; i < l; i++) {
+    for (let i = 0, l = this._lengths.length, sum = 0; i < l; i++) {
 
       if (sum + this._lengths[i] >= target) {
 
@@ -1051,18 +1052,18 @@ _.extend(Path.prototype, Shape.prototype, {
     y = getComponentOnCubicBezier(t, y1, y2, y3, y4);
 
     // Higher order points for control calculation.
-    var t1x = lerp(x1, x2, t);
-    var t1y = lerp(y1, y2, t);
-    var t2x = lerp(x2, x3, t);
-    var t2y = lerp(y2, y3, t);
-    var t3x = lerp(x3, x4, t);
-    var t3y = lerp(y3, y4, t);
+    const t1x = lerp(x1, x2, t);
+    const t1y = lerp(y1, y2, t);
+    const t2x = lerp(x2, x3, t);
+    const t2y = lerp(y2, y3, t);
+    const t3x = lerp(x3, x4, t);
+    const t3y = lerp(y3, y4, t);
 
     // Calculate the returned points control points.
-    var brx = lerp(t1x, t2x, t);
-    var bry = lerp(t1y, t2y, t);
-    var alx = lerp(t2x, t3x, t);
-    var aly = lerp(t2y, t3y, t);
+    const brx = lerp(t1x, t2x, t);
+    const bry = lerp(t1y, t2y, t);
+    const alx = lerp(t2x, t3x, t);
+    const aly = lerp(t2y, t3y, t);
 
     if (_.isObject(obj)) {
 
@@ -1115,7 +1116,7 @@ _.extend(Path.prototype, Shape.prototype, {
       return this;
     }
 
-    for (var i = 0; i < this._collection.length; i++) {
+    for (let i = 0; i < this._collection.length; i++) {
       this._collection[i].command = i === 0 ? Commands.move : Commands.line;
     }
 
@@ -1133,10 +1134,11 @@ _.extend(Path.prototype, Shape.prototype, {
     // TODO: DRYness (function below)
     this._update();
 
-    var last = this.vertices.length - 1;
-    var b = this.vertices[last];
-    var closed = this._closed || this.vertices[last]._command === Commands.close;
-    var points = [];
+    const last = this.vertices.length - 1;
+    const closed = this._closed || this.vertices[last]._command === Commands.close;
+    let b = this.vertices[last];
+    let points = [], verts;
+
     _.each(this.vertices, function(a, i) {
 
       if (i <= 0 && !closed) {
@@ -1153,7 +1155,7 @@ _.extend(Path.prototype, Shape.prototype, {
         return;
       }
 
-      var verts = getSubdivisions(a, b, limit);
+      verts = getSubdivisions(a, b, limit);
       points = points.concat(verts);
 
       // Assign commands to all the verts
@@ -1219,11 +1221,12 @@ _.extend(Path.prototype, Shape.prototype, {
       this._update();
     }
 
-    var length = this.vertices.length;
-    var last = length - 1;
-    var b = this.vertices[last];
-    var closed = false;//this._closed || this.vertices[last]._command === Commands.close;
-    var sum = 0;
+    const length = this.vertices.length;
+    const last = length - 1;
+    const closed = false;//this._closed || this.vertices[last]._command === Commands.close;
+
+    let b = this.vertices[last];
+    let sum = 0;
 
     if (typeof this._lengths === 'undefined') {
       this._lengths = [];
@@ -1280,23 +1283,23 @@ _.extend(Path.prototype, Shape.prototype, {
         this._updateLength(undefined, true);
       }
 
-      var l = this._collection.length;
-      var closed = this._closed;
+      const l = this._collection.length;
+      const closed = this._closed;
 
-      var beginning = Math.min(this._beginning, this._ending);
-      var ending = Math.max(this._beginning, this._ending);
+      const beginning = Math.min(this._beginning, this._ending);
+      const ending = Math.max(this._beginning, this._ending);
 
-      var bid = getIdByLength(this, beginning * this._length);
-      var eid = getIdByLength(this, ending * this._length);
+      const bid = getIdByLength(this, beginning * this._length);
+      const eid = getIdByLength(this, ending * this._length);
 
-      var low = ceil(bid);
-      var high = floor(eid);
+      const low = ceil(bid);
+      const high = floor(eid);
 
-      var left, right, prev, next, v;
+      let left, right, prev, next, v, i;
 
       this._renderer.vertices.length = 0;
 
-      for (var i = 0; i < l; i++) {
+      for (i = 0; i < l; i++) {
 
         if (this._renderer.collection.length <= i) {
           // Expected to be `relative` anchor points.
@@ -1416,12 +1419,12 @@ function contains(path, t) {
     return true;
   }
 
-  var length = path._length;
-  var target = length * t;
-  var elapsed = 0;
+  const length = path._length;
+  const target = length * t;
+  let elapsed = 0;
 
-  for (var i = 0; i < path._lengths.length; i++) {
-    var dist = path._lengths[i];
+  for (let i = 0; i < path._lengths.length; i++) {
+    const dist = path._lengths[i];
     if (elapsed >= target) {
       return target - elapsed >= 0;
     }
@@ -1441,7 +1444,7 @@ function contains(path, t) {
  */
 function getIdByLength(path, target) {
 
-  var total = path._length;
+  const total = path._length;
 
   if (target <= 0) {
     return 0;
@@ -1449,7 +1452,7 @@ function getIdByLength(path, target) {
     return path._lengths.length - 1;
   }
 
-  for (var i = 0, sum = 0; i < path._lengths.length; i++) {
+  for (let i = 0, sum = 0; i < path._lengths.length; i++) {
 
     if (sum + path._lengths[i] >= target) {
       target -= sum;
@@ -1466,10 +1469,10 @@ function getIdByLength(path, target) {
 
 function getCurveLength(a, b, limit) {
   // TODO: DRYness
-  var x1, x2, x3, x4, y1, y2, y3, y4;
+  let x1, x2, x3, x4, y1, y2, y3, y4;
 
-  var right = b.controls && b.controls.right;
-  var left = a.controls && a.controls.left;
+  const right = b.controls && b.controls.right;
+  const left = a.controls && a.controls.left;
 
   x1 = b.x;
   y1 = b.y;
@@ -1496,10 +1499,10 @@ function getCurveLength(a, b, limit) {
 
 function getSubdivisions(a, b, limit) {
   // TODO: DRYness
-  var x1, x2, x3, x4, y1, y2, y3, y4;
+  let x1, x2, x3, x4, y1, y2, y3, y4;
 
-  var right = b.controls && b.controls.right;
-  var left = a.controls && a.controls.left;
+  const right = b.controls && b.controls.right;
+  const left = a.controls && a.controls.left;
 
   x1 = b.x;
   y1 = b.y;
