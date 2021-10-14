@@ -339,9 +339,10 @@ export class Text extends Shape {
     clone.rotation = this.rotation;
     clone.scale = this.scale;
 
-    _.each(Text.Properties, function(property) {
-      clone[property] = this[property];
-    }, this);
+    for (let i = 0; i < Text.Properties.length; i++) {
+      const prop = Text.Properties[i];
+      clone[prop] = this[prop];
+    }
 
     if (this.matrix.manual) {
       clone.matrix.copy(this.matrix);
@@ -373,9 +374,10 @@ export class Text extends Shape {
       result.matrix = this.matrix.toObject();
     }
 
-    _.each(Text.Properties, function(property) {
-      result[property] = this[property];
-    }, this);
+    for (let i = 0; i < Text.Properties.length; i++) {
+      const prop = Text.Properties[i];
+      result[prop] = this[prop];
+    }
 
     return result;
 
