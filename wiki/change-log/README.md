@@ -4,6 +4,7 @@ sidebarDepth: 2
 
 # Change Log
 ## Nightly
++ Converted `Two.ArcSegment` to EcmaScript 6 class
 + Converted `Two.Path` to EcmaScript 6 class
 + Converted `Two.Group` to EcmaScript 6 class
 + Converted `Two.Text` to EcmaScript 6 class
