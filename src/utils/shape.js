@@ -1,4 +1,4 @@
-import { subdivide, getCurveLength as gcl } from './utils/curves.js';
+import { subdivide, getCurveLength as gcl } from './curves.js';
 
 /**
  * @private
