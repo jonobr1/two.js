@@ -4,6 +4,7 @@ sidebarDepth: 2
 
 # Change Log
 ## Nightly
++ Converted `Two.Points` to EcmaScript 6 class
 + Converted `Two.Line` to EcmaScript 6 class
 + Converted `Two.Ellipse` to EcmaScript 6 class
 + Converted `Two.Circle` to EcmaScript 6 class
