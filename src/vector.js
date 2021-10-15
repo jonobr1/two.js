@@ -16,8 +16,9 @@ export class Vector extends Events {
 
     super();
 
-    Object.defineProperty(this, 'x', proto.x);
-    Object.defineProperty(this, 'y', proto.y);
+    for (let prop in proto) {
+      Object.defineProperty(this, prop, proto[prop]);
+    }
 
     /**
      * @name Two.Vector#x
