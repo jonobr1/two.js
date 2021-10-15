@@ -80,6 +80,10 @@ export class ArcSegment extends Path {
 
     super(points, true, false, true);
 
+    for (let prop in ArcSegment.properties) {
+      Object.defineProperty(this, prop, proto[prop]);
+    }
+
     /**
      * @name Two.ArcSegment#innerRadius
      * @property {Number} - The size of the inner radius of the arc segment.
@@ -358,3 +362,46 @@ export class ArcSegment extends Path {
   }
 
 }
+
+const proto = {
+  startAngle: {
+    enumerable: true,
+    get: function() {
+      return this._startAngle;
+    },
+    set: function(v) {
+      this._startAngle = v;
+      this._flagStartAngle = true;
+    }
+  },
+  endAngle: {
+    enumerable: true,
+    get: function() {
+      return this._endAngle;
+    },
+    set: function(v) {
+      this._endAngle = v;
+      this._flagEndAngle = true;
+    }
+  },
+  innerRadius: {
+    enumerable: true,
+    get: function() {
+      return this._innerRadius;
+    },
+    set: function(v) {
+      this._innerRadius = v;
+      this._flagInnerRadius = true;
+    }
+  },
+  outerRadius: {
+    enumerable: true,
+    get: function() {
+      return this._outerRadius;
+    },
+    set: function(v) {
+      this._outerRadius = v;
+      this._flagOuterRadius = true;
+    }
+  }
+};
