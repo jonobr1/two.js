@@ -4,6 +4,7 @@ sidebarDepth: 2
 
 # Change Log
 ## Nightly
++ Converted `Two.Polygon` to EcmaScript 6 class
 + Converted `Two.Points` to EcmaScript 6 class
 + Converted `Two.Line` to EcmaScript 6 class
 + Converted `Two.Ellipse` to EcmaScript 6 class
