@@ -1,12 +1,10 @@
-import Commands from '../utils/path-commands.js';
+import { Commands } from '../utils/path-commands.js';
 import { TWO_PI } from '../utils/math.js';
-import defineGetterSetter from '../utils/get-set.js';
-import _ from '../utils/underscore.js';
 
-import Path from '../path.js';
-import Anchor from '../anchor.js';
+import { Path } from '../path.js';
+import { Anchor } from '../anchor.js';
 
-var cos = Math.cos, sin = Math.sin;
+const cos = Math.cos, sin = Math.sin;
 
 /**
  * @name Two.Star
@@ -18,120 +16,107 @@ var cos = Math.cos, sin = Math.sin;
  * @param {Number} [outerRadius=0] - The outer radius value of the star.
  * @param {Number} [sides=5] - The number of sides used to construct the star.
  */
-function Star(ox, oy, ir, or, sides) {
-
-  if (arguments.length <= 3) {
-    or = ir;
-    ir = or / 2;
-  }
-
-  if (typeof sides !== 'number' || sides <= 0) {
-    sides = 5;
-  }
-
-  Path.call(this);
-  this.closed = true;
-  this.automatic = false;
-
-  /**
-   * @name Two.Star#innerRadius
-   * @property {Number} - The size of the inner radius of the star.
-   */
-  if (typeof ir === 'number') {
-    this.innerRadius = ir;
-  }
-
-  /**
-   * @name Two.Star#outerRadius
-   * @property {Number} - The size of the outer radius of the star.
-   */
-  if (typeof or === 'number') {
-    this.outerRadius = or;
-  }
-
-  /**
-   * @name Two.Star#sides
-   * @property {Number} - The amount of sides the star has.
-   */
-  if (typeof sides === 'number') {
-    this.sides = sides;
-  }
-
-  this._update();
-
-  if (typeof ox === 'number') {
-    this.translation.x = ox;
-  }
-  if (typeof oy === 'number') {
-    this.translation.y = oy;
-  }
-
-}
-
-_.extend(Star, {
-
-  /**
-   * @name Two.Star.Properties
-   * @property {String[]} - A list of properties that are on every {@link Two.Star}.
-   */
-  Properties: ['innerRadius', 'outerRadius', 'sides'],
-
-  /**
-   * @name Two.Star.MakeObservable
-   * @function
-   * @param {Object} object - The object to make observable.
-   * @description Convenience function to apply observable qualities of a {@link Two.Star} to any object. Handy if you'd like to extend the {@link Two.Star} class on a custom class.
-   */
-  MakeObservable: function(obj) {
-
-    Path.MakeObservable(obj);
-    _.each(Star.Properties, defineGetterSetter, obj);
-
-  }
-
-});
-
-_.extend(Star.prototype, Path.prototype, {
-
-  constructor: Star,
+export class Star extends Path {
 
   /**
    * @name Two.Star#_flagInnerRadius
    * @private
    * @property {Boolean} - Determines whether the {@link Two.Star#innerRadius} needs updating.
    */
-  _flagInnerRadius: false,
+  _flagInnerRadius = false;
   /**
    * @name Two.Star#_flagOuterRadius
    * @private
    * @property {Boolean} - Determines whether the {@link Two.Star#outerRadius} needs updating.
    */
-  _flagOuterRadius: false,
+  _flagOuterRadius = false;
   /**
    * @name Two.Star#_flagSides
    * @private
    * @property {Boolean} - Determines whether the {@link Two.Star#sides} needs updating.
    */
-  _flagSides: false,
+  _flagSides = false;
 
   /**
    * @name Two.Star#_innerRadius
    * @private
    * @see {@link Two.Star#innerRadius}
    */
-  _innerRadius: 0,
+  _innerRadius = 0;
   /**
    * @name Two.Star#_outerRadius
    * @private
    * @see {@link Two.Star#outerRadius}
    */
-  _outerRadius: 0,
+  _outerRadius = 0;
   /**
    * @name Two.Star#_sides
    * @private
    * @see {@link Two.Star#sides}
    */
-  _sides: 0,
+  _sides = 0;
+
+  constructor(ox, oy, ir, or, sides) {
+
+    if (arguments.length <= 3) {
+      or = ir;
+      ir = or / 2;
+    }
+
+    if (typeof sides !== 'number' || sides <= 0) {
+      sides = 5;
+    }
+
+    super();
+
+    for (let prop in proto) {
+      Object.defineProperty(this, prop, proto[prop]);
+    }
+
+    this.closed = true;
+    this.automatic = false;
+
+    /**
+     * @name Two.Star#innerRadius
+     * @property {Number} - The size of the inner radius of the star.
+     */
+    if (typeof ir === 'number') {
+      this.innerRadius = ir;
+    }
+
+    /**
+     * @name Two.Star#outerRadius
+     * @property {Number} - The size of the outer radius of the star.
+     */
+    if (typeof or === 'number') {
+      this.outerRadius = or;
+    }
+
+    /**
+     * @name Two.Star#sides
+     * @property {Number} - The amount of sides the star has.
+     */
+    if (typeof sides === 'number') {
+      this.sides = sides;
+    }
+
+    this._update();
+
+    if (typeof ox === 'number') {
+      this.translation.x = ox;
+    }
+    if (typeof oy === 'number') {
+      this.translation.y = oy;
+    }
+
+  }
+
+  /**
+   * @name Two.Star.Properties
+   * @property {String[]} - A list of properties that are on every {@link Two.Star}.
+   */
+  static Properties = ['innerRadius', 'outerRadius', 'sides'];
+
 
   /**
    * @name Two.Star#_update
@@ -141,26 +126,26 @@ _.extend(Star.prototype, Path.prototype, {
    * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
    * @nota-bene Try not to call this method more than once a frame.
    */
-  _update: function() {
+  _update() {
 
     if (this._flagVertices || this._flagInnerRadius || this._flagOuterRadius || this._flagSides) {
 
-      var sides = this._sides * 2;
-      var amount = sides + 1;
-      var length = this.vertices.length;
+      const sides = this._sides * 2;
+      const amount = sides + 1;
+      let length = this.vertices.length;
 
       if (length > sides) {
         this.vertices.splice(sides - 1, length - sides);
         length = sides;
       }
 
-      for (var i = 0; i < amount; i++) {
+      for (let i = 0; i < amount; i++) {
 
-        var pct = (i + 0.5) / sides;
-        var theta = TWO_PI * pct;
-        var r = (!(i % 2) ? this._innerRadius : this._outerRadius) / 2;
-        var x = r * cos(theta);
-        var y = r * sin(theta);
+        const pct = (i + 0.5) / sides;
+        const theta = TWO_PI * pct;
+        const r = (!(i % 2) ? this._innerRadius : this._outerRadius) / 2;
+        const x = r * cos(theta);
+        const y = r * sin(theta);
 
         if (i >= length) {
           this.vertices.push(new Anchor(x, y));
@@ -174,11 +159,11 @@ _.extend(Star.prototype, Path.prototype, {
 
     }
 
-    Path.prototype._update.call(this);
+    super._update.call(this);
 
     return this;
 
-  },
+  }
 
   /**
    * @name Two.Star#flagReset
@@ -186,14 +171,14 @@ _.extend(Star.prototype, Path.prototype, {
    * @private
    * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
    */
-  flagReset: function() {
+  flagReset() {
 
     this._flagInnerRadius = this._flagOuterRadius = this._flagSides = false;
-    Path.prototype.flagReset.call(this);
+    super.flagReset.call(this);
 
     return this;
 
-  },
+  }
 
   /**
    * @name Two.Star#clone
@@ -202,13 +187,13 @@ _.extend(Star.prototype, Path.prototype, {
    * @returns {Two.Star}
    * @description Create a new instance of {@link Two.Star} with the same properties of the current path.
    */
-  clone: function(parent) {
+  clone(parent) {
 
-    var ir = this.innerRadius;
-    var or = this.outerRadius;
-    var sides = this.sides;
+    const ir = this.innerRadius;
+    const or = this.outerRadius;
+    const sides = this.sides;
 
-    var clone = new Star(0, 0, ir, or, sides);
+    const clone = new Star(0, 0, ir, or, sides);
 
     clone.translation.copy(this.translation);
     clone.rotation = this.rotation;
@@ -220,9 +205,10 @@ _.extend(Star.prototype, Path.prototype, {
       clone.matrix.copy(this.matrix);
     }
 
-    _.each(Path.Properties, function(k) {
+    for (let i = 0; i < Path.Properties.length; i++) {
+      const k = Path.Properties[i];
       clone[k] = this[k];
-    }, this);
+    }
 
     if (parent) {
       parent.add(clone);
@@ -230,7 +216,7 @@ _.extend(Star.prototype, Path.prototype, {
 
     return clone;
 
-  },
+  }
 
   /**
    * @name Two.Star#toObject
@@ -238,20 +224,50 @@ _.extend(Star.prototype, Path.prototype, {
    * @returns {Object}
    * @description Return a JSON compatible plain object that represents the path.
    */
-  toObject: function() {
+  toObject() {
 
-    var object = Path.prototype.toObject.call(this);
+    const object = super.toObject.call(this);
 
-    _.each(Star.Properties, function(property) {
-      object[property] = this[property];
-    }, this);
+    for (let i = 0; i < Star.Properties.length; i++) {
+      const k = Star.Properties[i];
+      object[k] = this[k];
+    }
 
     return object;
 
   }
 
-});
+}
 
-Star.MakeObservable(Star.prototype);
-
-export default Star;
+const proto = {
+  innerRadius: {
+    enumerable: true,
+    get: function() {
+      return this._innerRadius;
+    },
+    set: function(v) {
+      this._innerRadius = v;
+      this._flagInnerRadius = true;
+    }
+  },
+  outerRadius: {
+    enumerable: true,
+    get: function() {
+      return this._ourterRadius;
+    },
+    set: function(v) {
+      this._ourterRadius = v;
+      this._flagOuterRadius = true;
+    }
+  },
+  sides: {
+    enumerable: true,
+    get: function() {
+      return this._sides;
+    },
+    set: function(v) {
+      this._sides = v;
+      this._flagSides = true;
+    }
+  }
+};
