@@ -4,6 +4,8 @@ sidebarDepth: 2
 
 # Change Log
 ## Nightly
++ Converted `Two.Star` to EcmaScript 6 class
++ Converted `Two.RoundedRectangle` to EcmaScript 6 class
 + Converted `Two.Rectangle` to EcmaScript 6 class
 + Converted `Two.Polygon` to EcmaScript 6 class
 + Converted `Two.Points` to EcmaScript 6 class
