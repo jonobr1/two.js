@@ -1,6 +1,5 @@
 import { Commands } from '../utils/path-commands.js';
 import { HALF_PI, TWO_PI } from '../utils/math.js';
-import { _ } from '../utils/underscore.js';
 
 import { Path } from '../path.js';
 import { Anchor } from '../anchor.js';
@@ -180,9 +179,10 @@ export class Ellipse extends Path {
       clone.matrix.copy(this.matrix);
     }
 
-    _.each(Path.Properties, function(k) {
+    for (let i = 0; i < Path.Properties.length; i++) {
+      const k = Path.Properties[i];
       clone[k] = this[k];
-    }, this);
+    }
 
     if (parent) {
       parent.add(clone);
@@ -202,9 +202,10 @@ export class Ellipse extends Path {
 
     const object = super.toObject.call(this);
 
-    _.each(Ellipse.Properties, function(property) {
-      object[property] = this[property];
-    }, this);
+    for (let i = 0; i < Ellipse.Properties.length; i++) {
+      const k = Ellipse.Properties[i];
+      object[k] = this[k];
+    }
 
     return object;
 

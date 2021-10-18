@@ -1,6 +1,5 @@
 import { Commands } from '../utils/path-commands.js';
 import { mod, HALF_PI, TWO_PI } from '../utils/math.js';
-import { _ } from '../utils/underscore.js';
 
 import { Path } from '../path.js';
 import { Anchor } from '../anchor.js';
@@ -331,9 +330,10 @@ export class ArcSegment extends Path {
       clone.matrix.copy(this.matrix);
     }
 
-    _.each(Path.Properties, function(k) {
+    for (let i = 0; i < Path.Properties.length; i++) {
+      const k = Path.Properties[i];
       clone[k] = this[k];
-    }, this);
+    }
 
     if (parent) {
       parent.add(clone);
@@ -353,9 +353,10 @@ export class ArcSegment extends Path {
 
     const object = super.toObject.call(this);
 
-    _.each(ArcSegment.Properties, function(property) {
-      object[property] = this[property];
-    }, this);
+    for (let i = 0; i < ArcSegment.Properties.length; i++) {
+      const k = ArcSegment.Properties[i];
+      object[k] = this[k];
+    }
 
     return object;
 

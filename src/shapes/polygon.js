@@ -1,6 +1,5 @@
 import { Commands } from '../utils/path-commands.js';
 import { TWO_PI } from '../utils/math.js';
-import { _ } from '../utils/underscore.js';
 
 import { Path } from '../path.js';
 import { Anchor } from '../anchor.js';
@@ -191,9 +190,10 @@ export class Polygon extends Path {
       clone.matrix.copy(this.matrix);
     }
 
-    _.each(Path.Properties, function(k) {
+    for (let i = 0; i < Path.Properties.length; i++) {
+      const k = Path.Properties[i];
       clone[k] = this[k];
-    }, this);
+    }
 
     if (parent) {
       parent.add(clone);
@@ -213,9 +213,10 @@ export class Polygon extends Path {
 
     const object = super.toObject.call(this);
 
-    _.each(Polygon.Properties, function(property) {
-      object[property] = this[property];
-    }, this);
+    for (let i = 0; i < Polygon.Properties.length; i++) {
+      const k = Polygon.Properties[i];
+      object[k] = this[k];
+    }
 
     return object;
 

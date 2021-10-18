@@ -1,6 +1,5 @@
 import { Commands } from '../utils/path-commands.js';
 import { HALF_PI, TWO_PI } from '../utils/math.js';
-import { _ } from '../utils/underscore.js';
 
 import { Path } from '../path.js';
 import { Anchor } from '../anchor.js';
@@ -158,9 +157,10 @@ export class Circle extends Path {
       clone.matrix.copy(this.matrix);
     }
 
-    _.each(Path.Properties, function(k) {
+    for (let i = 0; i < Path.Properties.length; i++) {
+      const k = Path.Properties[i];
       clone[k] = this[k];
-    }, this);
+    }
 
     if (parent) {
       parent.add(clone);
@@ -180,9 +180,10 @@ export class Circle extends Path {
 
     const object = super.toObject.call(this);
 
-    _.each(Circle.Properties, function(property) {
-      object[property] = this[property];
-    }, this);
+    for (let i = 0; i < Circle.Properties.length; i++) {
+      const k = Circle.Properties[i];
+      object[k] = this[k];
+    }
 
     return object;
 
