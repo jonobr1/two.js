@@ -161,6 +161,14 @@ export class Shape extends Events {
 
   }
 
+  get renderer() {
+    return this._renderer;
+  }
+
+  set renderer(v) {
+    this._renderer = v;
+  }
+
   /**
    * @name Two.Shape#addTo
    * @function
@@ -384,15 +392,6 @@ const proto = {
         this.classList = this.classList.concat(dest);
       }
       this._className = v;
-    }
-  },
-  renderer: {
-    enumerable: false,
-    get: function() {
-      return this._renderer;
-    },
-    set: function(obj) {
-      this._renderer = obj;
     }
   }
 };
