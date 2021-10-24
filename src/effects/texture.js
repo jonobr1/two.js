@@ -172,7 +172,7 @@ export class Texture extends Shape {
     this.offset = new Vector();
 
     if (typeof callback === 'function') {
-      var loaded = (function() {
+      const loaded = (function() {
         this.unbind(Events.Types.load, loaded);
         if (typeof callback === 'function') {
           callback();
@@ -189,7 +189,7 @@ export class Texture extends Shape {
     if (typeof src === 'string') {
       this.src = src;
     } else if (typeof src === 'object') {
-      var elemString = Object.prototype.toString.call(src);
+      const elemString = Object.prototype.toString.call(src);
       if (
         elemString === '[object HTMLImageElement]' ||
         elemString === '[object HTMLCanvasElement]' ||
@@ -277,13 +277,13 @@ export class Texture extends Shape {
    */
   static getImage(src) {
 
-    var absoluteSrc = Texture.getAbsoluteURL(src);
+    const absoluteSrc = Texture.getAbsoluteURL(src);
 
     if (Texture.ImageRegistry.contains(absoluteSrc)) {
       return Texture.ImageRegistry.get(absoluteSrc);
     }
 
-    var image;
+    let image;
 
     if (CanvasShim.Image) {
 
@@ -326,9 +326,9 @@ export class Texture extends Shape {
     },
     img: function(texture, callback) {
 
-      var image = texture.image;
+      const image = texture.image;
 
-      var loaded = function(e) {
+      const loaded = function(e) {
         if (!CanvasShim.isHeadless && image.removeEventListener && typeof image.removeEventListener === 'function') {
           image.removeEventListener('load', loaded, false);
           image.removeEventListener('error', error, false);
@@ -337,7 +337,7 @@ export class Texture extends Shape {
           callback();
         }
       };
-      var error = function(e) {
+      const error = function(e) {
         if (!CanvasShim.isHeadless && typeof image.removeEventListener === 'function') {
           image.removeEventListener('load', loaded, false);
           image.removeEventListener('error', error, false);
@@ -382,7 +382,7 @@ export class Texture extends Shape {
         throw new TwoError('video textures are not implemented in headless environments.');
       }
 
-      var loaded = function(e) {
+      const loaded = function(e) {
         texture.image.removeEventListener('canplaythrough', loaded, false);
         texture.image.removeEventListener('error', error, false);
         texture.image.width = texture.image.videoWidth;
@@ -391,7 +391,7 @@ export class Texture extends Shape {
           callback();
         }
       };
-      var error = function(e) {
+      const error = function(e) {
         texture.image.removeEventListener('canplaythrough', loaded, false);
         texture.image.removeEventListener('error', error, false);
         throw new TwoError('unable to load ' + texture.src);
@@ -424,8 +424,8 @@ export class Texture extends Shape {
    */
   static load(texture, callback) {
 
-    var image = texture.image;
-    var tag = Texture.getTag(image);
+    let image = texture.image;
+    let tag = Texture.getTag(image);
 
     if (texture._flagImage) {
       if (/canvas/i.test(tag)) {
@@ -454,7 +454,7 @@ export class Texture extends Shape {
    * @description Create a new instance of {@link Two.Texture} with the same properties of the current texture.
    */
   clone() {
-    var clone = new Texture(this.src);
+    const clone = new Texture(this.src);
     clone.repeat = this.repeat;
     clone.offset.copy(this.origin);
     clone.scale = this.scale;
@@ -540,8 +540,8 @@ const proto = {
     },
     set: function(image) {
 
-      var tag = Texture.getTag(image);
-      var index;
+      const tag = Texture.getTag(image);
+      let index;
 
       switch (tag) {
         case 'canvas':
