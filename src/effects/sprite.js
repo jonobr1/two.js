@@ -1,12 +1,9 @@
-import defineGetterSetter from '../utils/get-set.js';
-import {lerp} from '../utils/math.js';
-import _ from '../utils/underscore.js';
+import { lerp } from '../utils/math.js';
+import { _ } from '../utils/underscore.js';
 
-import Path from '../path.js';
-import Anchor from '../anchor.js';
-import Vector from '../vector.js';
-import Rectangle from '../shapes/rectangle.js';
-import Texture from './texture.js';
+import { Vector } from '../vector.js';
+import { Rectangle } from '../shapes/rectangle.js';
+import { Texture } from './texture.js';
 
 /**
  * @name Two.Sprite
@@ -20,130 +17,42 @@ import Texture from './texture.js';
  * @param {Number} [frameRate=0] - The frame rate at which the partitions of the image should playback at.
  * @description A convenient package to display still or animated images through a tiled image source. For more information on the principals of animated imagery through tiling see [Texture Atlas](https://en.wikipedia.org/wiki/Texture_atlas) on Wikipedia.
  */
-function Sprite(path, ox, oy, cols, rows, frameRate) {
-
-  // Not using default constructor of Rectangle due to odd `beginning` / `ending` behavior.
-  // See: https://github.com/jonobr1/two.js/issues/383
-  Path.call(this, [
-    new Anchor(),
-    new Anchor(),
-    new Anchor(),
-    new Anchor()
-  ], true);
-
-  this.noStroke();
-  this.noFill();
-
-  /**
-   * @name Two.Sprite#texture
-   * @property {Two.Texture} - The texture to be used as bitmap data to display image in the scene.
-   */
-  if (path instanceof Texture) {
-    this.texture = path;
-  } else if (typeof path === 'string') {
-    this.texture = new Texture(path);
-  }
-
-  this.origin = new Vector();
-
-  this._update();
-  this.translation.set(ox || 0, oy || 0);
-
-  /**
-   * @name Two.Sprite#columns
-   * @property {Number} - The number of columns to split the texture into. Defaults to `1`.
-   */
-  if (typeof cols === 'number') {
-    this.columns = cols;
-  }
-
-  /**
-   * @name Two.Sprite#rows
-   * @property {Number} - The number of rows to split the texture into. Defaults to `1`.
-   */
-  if (typeof rows === 'number') {
-    this.rows = rows;
-  }
-
-  /**
-   * @name Two.Sprite#frameRate
-   * @property {Number} - The number of frames to animate against per second. Defaults to `0` for non-animated sprites.
-   */
-  if (typeof frameRate === 'number') {
-    this.frameRate = frameRate;
-  }
-
-  /**
-   * @name Two.Sprite#index
-   * @property {Number} - The index of the current tile of the sprite to display. Defaults to `0`.
-   */
-  this.index = 0;
-
-}
-
-_.extend(Sprite, {
-
-  /**
-   * @name Two.Sprite.Properties
-   * @property {String[]} - A list of properties that are on every {@link Two.Sprite}.
-   */
-  Properties: [
-    'texture', 'columns', 'rows', 'frameRate', 'index'
-  ],
-
-  /**
-   * @name Two.Sprite.MakeObservable
-   * @function
-   * @param {Object} object - The object to make observable.
-   * @description Convenience function to apply observable qualities of a {@link Two.Sprite} to any object. Handy if you'd like to extend or inherit the {@link Two.Sprite} class on a custom class.
-   */
-  MakeObservable: function(obj) {
-
-    Rectangle.MakeObservable(obj);
-    _.each(Sprite.Properties, defineGetterSetter, obj);
-
-  }
-
-});
-
-_.extend(Sprite.prototype, Rectangle.prototype, {
-
-  constructor: Sprite,
+export class Sprite extends Rectangle {
 
   /**
    * @name Two.Sprite#_flagTexture
    * @private
    * @property {Boolean} - Determines whether the {@link Two.Sprite#texture} needs updating.
    */
-  _flagTexture: false,
+  _flagTexture = false;
 
   /**
    * @name Two.Sprite#_flagColumns
    * @private
    * @property {Boolean} - Determines whether the {@link Two.Sprite#columns} need updating.
    */
-  _flagColumns: false,
+  _flagColumns = false;
 
   /**
    * @name Two.Sprite#_flagRows
    * @private
    * @property {Boolean} - Determines whether the {@link Two.Sprite#rows} need updating.
    */
-  _flagRows: false,
+  _flagRows = false;
 
   /**
    * @name Two.Sprite#_flagFrameRate
    * @private
    * @property {Boolean} - Determines whether the {@link Two.Sprite#flagFrameRate} needs updating.
    */
-  _flagFrameRate: false,
+  _flagFrameRate = false;
 
   /**
    * @name Two.Sprite#_flagIndex
    * @private
    * @property {Boolean} - Determines whether the {@link Two.Sprite#index} needs updating.
    */
-  flagIndex: false,
+  _flagIndex = false;
 
   // Private variables
 
@@ -152,49 +61,49 @@ _.extend(Sprite.prototype, Rectangle.prototype, {
    * @private
    * @property {Number} - Number of frames for a given {@link Two.Sprite}.
    */
-  _amount: 1,
+  _amount = 1;
 
   /**
    * @name Two.Sprite#_duration
    * @private
    * @property {Number} - Number of milliseconds a {@link Two.Sprite}.
    */
-  _duration: 0,
+  _duration = 0;
 
   /**
    * @name Two.Sprite#_startTime
    * @private
    * @property {Milliseconds} - Epoch time in milliseconds of when the {@link Two.Sprite} started.
    */
-  _startTime: 0,
+  _startTime = 0;
 
   /**
    * @name Two.Sprite#_playing
    * @private
    * @property {Boolean} - Dictates whether the {@link Two.Sprite} is animating or not.
    */
-  _playing: false,
+  _playing = false;
 
   /**
    * @name Two.Sprite#_firstFrame
    * @private
    * @property {Number} - The frame the {@link Two.Sprite} should start with.
    */
-  _firstFrame: 0,
+  _firstFrame = 0;
 
   /**
    * @name Two.Sprite#_lastFrame
    * @private
    * @property {Number} - The frame the {@link Two.Sprite} should end with.
    */
-  _lastFrame: 0,
+  _lastFrame = 0;
 
   /**
    * @name Two.Sprite#_playing
    * @private
    * @property {Boolean} - Dictates whether the {@link Two.Sprite} should loop or not.
    */
-  _loop: true,
+  _loop = true;
 
   // Exposed through getter-setter
 
@@ -203,42 +112,107 @@ _.extend(Sprite.prototype, Rectangle.prototype, {
    * @private
    * @see {@link Two.Sprite#texture}
    */
-  _texture: null,
+  _texture = null;
 
   /**
    * @name Two.Sprite#_columns
    * @private
    * @see {@link Two.Sprite#columns}
    */
-  _columns: 1,
+  _columns = 1;
 
   /**
    * @name Two.Sprite#_rows
    * @private
    * @see {@link Two.Sprite#rows}
    */
-  _rows: 1,
+  _rows = 1;
 
   /**
    * @name Two.Sprite#_frameRate
    * @private
    * @see {@link Two.Sprite#frameRate}
    */
-  _frameRate: 0,
+  _frameRate = 0;
 
   /**
    * @name Two.Sprite#_index
    * @private
    * @property {Number} - The current frame the {@link Two.Sprite} is currently displaying.
    */
-  _index: 0,
+  _index = 0;
 
   /**
    * @name Two.Sprite#_origin
    * @private
    * @see {@link Two.Sprite#origin}
    */
-  _origin: null,
+  _origin = null;
+
+  constructor(path, ox, oy, cols, rows, frameRate) {
+
+    super(ox, oy, 0, 0);
+
+    for (let prop in proto) {
+      Object.defineProperty(this, prop, proto[prop]);
+    }
+
+    this.noStroke();
+    this.noFill();
+
+    /**
+     * @name Two.Sprite#texture
+     * @property {Two.Texture} - The texture to be used as bitmap data to display image in the scene.
+     */
+    if (path instanceof Texture) {
+      this.texture = path;
+    } else if (typeof path === 'string') {
+      this.texture = new Texture(path);
+    }
+
+    this.origin = new Vector();
+
+    this._update();
+
+    /**
+     * @name Two.Sprite#columns
+     * @property {Number} - The number of columns to split the texture into. Defaults to `1`.
+     */
+    if (typeof cols === 'number') {
+      this.columns = cols;
+    }
+
+    /**
+     * @name Two.Sprite#rows
+     * @property {Number} - The number of rows to split the texture into. Defaults to `1`.
+     */
+    if (typeof rows === 'number') {
+      this.rows = rows;
+    }
+
+    /**
+     * @name Two.Sprite#frameRate
+     * @property {Number} - The number of frames to animate against per second. Defaults to `0` for non-animated sprites.
+     */
+    if (typeof frameRate === 'number') {
+      this.frameRate = frameRate;
+    }
+
+    /**
+     * @name Two.Sprite#index
+     * @property {Number} - The index of the current tile of the sprite to display. Defaults to `0`.
+     */
+    this.index = 0;
+
+  }
+
+  /**
+   * @name Two.Sprite.Properties
+   * @property {String[]} - A list of properties that are on every {@link Two.Sprite}.
+   */
+  static Properties = [
+    'texture', 'columns', 'rows', 'frameRate', 'index'
+  ];
 
   /**
    * @name Two.Sprite#play
@@ -248,7 +222,7 @@ _.extend(Sprite.prototype, Rectangle.prototype, {
    * @param {Function} [onLastFrame] - Optional callback function to be triggered after playing the last frame. This fires multiple times when the sprite is looped.
    * @description Initiate animation playback of a {@link Two.Sprite}.
    */
-  play: function(firstFrame, lastFrame, onLastFrame) {
+  play(firstFrame, lastFrame, onLastFrame) {
 
     this._playing = true;
     this._firstFrame = 0;
@@ -274,33 +248,33 @@ _.extend(Sprite.prototype, Rectangle.prototype, {
 
     return this;
 
-  },
+  }
 
   /**
    * @name Two.Sprite#pause
    * @function
    * @description Halt animation playback of a {@link Two.Sprite}.
    */
-  pause: function() {
+  pause() {
 
     this._playing = false;
     return this;
 
-  },
+  }
 
   /**
    * @name Two.Sprite#stop
    * @function
    * @description Halt animation playback of a {@link Two.Sprite} and set the current frame back to the first frame.
    */
-  stop: function() {
+  stop() {
 
     this._playing = false;
     this._index = 0;
 
     return this;
 
-  },
+  }
 
   /**
    * @name Two.Sprite#clone
@@ -309,7 +283,7 @@ _.extend(Sprite.prototype, Rectangle.prototype, {
    * @returns {Two.Sprite}
    * @description Create a new instance of {@link Two.Sprite} with the same properties of the current sprite.
    */
-  clone: function(parent) {
+  clone(parent) {
 
     var clone = new Sprite(
       this.texture, this.translation.x, this.translation.y,
@@ -327,7 +301,7 @@ _.extend(Sprite.prototype, Rectangle.prototype, {
 
     return clone;
 
-  },
+  }
 
   /**
    * @name Two.Sprite#toObject
@@ -335,8 +309,8 @@ _.extend(Sprite.prototype, Rectangle.prototype, {
    * @returns {Object}
    * @description Return a JSON compatible plain object that represents the path.
    */
-  toObject: function() {
-    var object = Rectangle.prototype.toObject.call(this);
+  toObject() {
+    var object = super.toObject.call(this);
     object.texture = this.texture.toObject();
     object.columns = this.columns;
     object.rows = this.rows;
@@ -346,7 +320,7 @@ _.extend(Sprite.prototype, Rectangle.prototype, {
     object._lastFrame = this._lastFrame;
     object._loop = this._loop;
     return object;
-  },
+  }
 
   /**
    * @name Two.Sprite#_update
@@ -356,7 +330,7 @@ _.extend(Sprite.prototype, Rectangle.prototype, {
    * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
    * @nota-bene Try not to call this method more than once a frame.
    */
-  _update: function() {
+  _update() {
 
     var effect = this._texture;
     var cols = this._columns;
@@ -438,11 +412,11 @@ _.extend(Sprite.prototype, Rectangle.prototype, {
 
     }
 
-    Rectangle.prototype._update.call(this);
+    super._update.call(this);
 
     return this;
 
-  },
+  }
 
   /**
    * @name Two.Sprite#flagReset
@@ -450,19 +424,67 @@ _.extend(Sprite.prototype, Rectangle.prototype, {
    * @private
    * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
    */
-  flagReset: function() {
+  flagReset() {
 
     this._flagTexture = this._flagColumns = this._flagRows
       = this._flagFrameRate = false;
 
-    Rectangle.prototype.flagReset.call(this);
+    super.flagReset.call(this);
 
     return this;
   }
 
+}
 
-});
-
-Sprite.MakeObservable(Sprite.prototype);
-
-export default Sprite;
+const proto = {
+  texture: {
+    enumerable: true,
+    get: function() {
+      return this._texture;
+    },
+    set: function(v) {
+      this._texture = v;
+      this._flagTexture = true;
+    }
+  },
+  columns: {
+    enumerable: true,
+    get: function() {
+      return this._columns;
+    },
+    set: function(v) {
+      this._columns = v;
+      this._flagColumns = true;
+    }
+  },
+  rows: {
+    enumerable: true,
+    get: function() {
+      return this._rows;
+    },
+    set: function(v) {
+      this._rows = v;
+      this._flagRows = true;
+    }
+  },
+  frameRate: {
+    enumerable: true,
+    get: function() {
+      return this._frameRate;
+    },
+    set: function(v) {
+      this._frameRate = v;
+      this._flagFrameRate = true;
+    }
+  },
+  index: {
+    enumerable: true,
+    get: function() {
+      return this._index;
+    },
+    set: function(v) {
+      this._index = v;
+      this._flagIndex = true;
+    }
+  }
+};
