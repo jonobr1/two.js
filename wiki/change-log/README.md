@@ -4,6 +4,8 @@ sidebarDepth: 2
 
 # Change Log
 ## Nightly
++ Converted `Two.Sprite` to EcmaScript 6 class
++ Converted `Two.Texture` to EcmaScript 6 class
 + Converted `Two.Stop` to EcmaScript 6 class
 + Converted `Two.RadialGradient` to EcmaScript 6 class
 + Converted `Two.LinearGradient` to EcmaScript 6 class
