@@ -285,7 +285,7 @@ export class Sprite extends Rectangle {
    */
   clone(parent) {
 
-    var clone = new Sprite(
+    const clone = new Sprite(
       this.texture, this.translation.x, this.translation.y,
       this.columns, this.rows, this.frameRate
     );
@@ -310,7 +310,7 @@ export class Sprite extends Rectangle {
    * @description Return a JSON compatible plain object that represents the path.
    */
   toObject() {
-    var object = super.toObject.call(this);
+    const object = super.toObject.call(this);
     object.texture = this.texture.toObject();
     object.columns = this.columns;
     object.rows = this.rows;
@@ -332,12 +332,12 @@ export class Sprite extends Rectangle {
    */
   _update() {
 
-    var effect = this._texture;
-    var cols = this._columns;
-    var rows = this._rows;
+    const effect = this._texture;
+    const cols = this._columns;
+    const rows = this._rows;
 
-    var width, height, elapsed, amount, duration;
-    var index, iw, ih, frames;
+    let width, height, elapsed, amount, duration;
+    let index, iw, ih, frames;
 
     if (this._flagColumns || this._flagRows) {
       this._amount = this._columns * this._rows;
@@ -396,11 +396,11 @@ export class Sprite extends Rectangle {
 
       }
 
-      var col = this._index % cols;
-      var row = Math.floor(this._index / cols);
+      const col = this._index % cols;
+      const row = Math.floor(this._index / cols);
 
-      var ox = - width * col + (iw - width) / 2;
-      var oy = - height * row + (ih - height) / 2;
+      const ox = - width * col + (iw - width) / 2;
+      const oy = - height * row + (ih - height) / 2;
 
       // TODO: Improve performance
       if (ox !== effect.offset.x) {
