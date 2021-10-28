@@ -1,15 +1,15 @@
-import Commands from '../utils/path-commands.js';
+import { Commands } from '../utils/path-commands.js';
 import { decomposeMatrix, getComputedMatrix, mod, toFixed } from '../utils/math.js';
-import Events from '../events.js';
-import _ from '../utils/underscore.js';
+import { Events } from '../events.js';
+import { _ } from '../utils/underscore.js';
 
-import Group from '../group.js';
-import Vector from '../vector.js';
-import Matrix from '../matrix.js';
+import { Group } from '../group.js';
+import { Vector } from '../vector.js';
+import { Matrix } from '../matrix.js';
 
-var matrix = new Matrix();
+const matrix = new Matrix();
 
-var svg = {
+const svg = {
 
   version: 1.1,
 
@@ -24,8 +24,8 @@ var svg = {
 
   // Create an svg namespaced element.
   createElement: function(name, attrs) {
-    var tag = name;
-    var elem = document.createElementNS(svg.ns, tag);
+    const tag = name;
+    const elem = document.createElementNS(svg.ns, tag);
     if (tag === 'svg') {
       attrs = _.defaults(attrs || {}, {
         version: svg.version
@@ -39,8 +39,8 @@ var svg = {
 
   // Add attributes from an svg element.
   setAttributes: function(elem, attrs) {
-    var keys = Object.keys(attrs);
-    for (var i = 0; i < keys.length; i++) {
+    const keys = Object.keys(attrs);
+    for (let i = 0; i < keys.length; i++) {
       if (/href/.test(keys[i])) {
         elem.setAttributeNS(svg.xlink, keys[i], attrs[keys[i]]);
       } else {
@@ -52,7 +52,7 @@ var svg = {
 
   // Remove attributes from an svg element.
   removeAttributes: function(elem, attrs) {
-    for (var key in attrs) {
+    for (let key in attrs) {
       elem.removeAttribute(key);
     }
     return this;
@@ -64,27 +64,28 @@ var svg = {
   // second.
   toString: function(points, closed) {
 
-    var l = points.length,
+    let l = points.length,
       last = l - 1,
       d, // The elusive last Commands.move point
       string = '';
 
-    for (var i = 0; i < l; i++) {
-      var b = points[i];
-      var command;
-      var prev = closed ? mod(i - 1, l) : Math.max(i - 1, 0);
-      var next = closed ? mod(i + 1, l) : Math.min(i + 1, last);
+    for (let i = 0; i < l; i++) {
 
-      var a = points[prev];
-      var c = points[next];
+      const b = points[i];
 
-      var vx, vy, ux, uy, ar, bl, br, cl;
-      var rx, ry, xAxisRotation, largeArcFlag, sweepFlag;
+      const prev = closed ? mod(i - 1, l) : Math.max(i - 1, 0);
+      const next = closed ? mod(i + 1, l) : Math.min(i + 1, last);
+      const a = points[prev];
+
+      let command;
+      let c = points[next];
+      let vx, vy, ux, uy, ar, bl, br, cl;
+      let rx, ry, xAxisRotation, largeArcFlag, sweepFlag;
 
       // Access x and y directly,
       // bypassing the getter
-      var x = toFixed(b.x);
-      var y = toFixed(b.y);
+      let x = toFixed(b.x);
+      let y = toFixed(b.y);
 
       switch (b.command) {
 
@@ -192,13 +193,13 @@ var svg = {
 
   pointsToString: function(points, size) {
 
-    var string = '';
-    var r = size * 0.5;
+    let string = '';
+    const r = size * 0.5;
 
     for (var i = 0; i < points.length; i++) {
 
-      var x = points[i].x;
-      var y = points[i].y - r;
+      const x = points[i].x;
+      const y = points[i].y - r;
 
       string += Commands.move + ' ' + x + ' ' + y + ' ';
       string += 'a ' + r + ' ' + r + ' 0 1 0 0.001 0 Z';
@@ -211,7 +212,7 @@ var svg = {
 
   getClip: function(shape, domElement) {
 
-    var clip = shape._renderer.clip;
+    let clip = shape._renderer.clip;
 
     if (!clip) {
 
@@ -232,13 +233,13 @@ var svg = {
     // TODO: How does this effect a f
     appendChild: function(object) {
 
-      var elem = object._renderer.elem;
+      const elem = object._renderer.elem;
 
       if (!elem) {
         return;
       }
 
-      var tag = elem.nodeName;
+      const tag = elem.nodeName;
 
       if (!tag || /(radial|linear)gradient/i.test(tag) || object._clip) {
         return;
@@ -250,13 +251,13 @@ var svg = {
 
     removeChild: function(object) {
 
-      var elem = object._renderer.elem;
+      const elem = object._renderer.elem;
 
       if (!elem || elem.parentNode != this.elem) {
         return;
       }
 
-      var tag = elem.nodeName;
+      const tag = elem.nodeName;
 
       if (!tag) {
         return;
@@ -299,8 +300,8 @@ var svg = {
       }
 
       // _Update styles for the <g>
-      var flagMatrix = this._matrix.manual || this._flagMatrix;
-      var context = {
+      const flagMatrix = this._matrix.manual || this._flagMatrix;
+      const context = {
         domElement: domElement,
         elem: this._renderer.elem
       };
@@ -309,8 +310,8 @@ var svg = {
         this._renderer.elem.setAttribute('transform', 'matrix(' + this._matrix.toString() + ')');
       }
 
-      for (var i = 0; i < this.children.length; i++) {
-        var child = this.children[i];
+      for (let i = 0; i < this.children.length; i++) {
+        const child = this.children[i];
         svg[child._renderer.type].render.call(child, domElement);
       }
 
@@ -392,9 +393,9 @@ var svg = {
       this._update();
 
       // Collect any attribute that needs to be changed here
-      var changed = {};
+      const changed = {};
 
-      var flagMatrix = this._matrix.manual || this._flagMatrix;
+      const flagMatrix = this._matrix.manual || this._flagMatrix;
 
       if (flagMatrix) {
         changed.transform = 'matrix(' + this._matrix.toString() + ')';
@@ -405,7 +406,7 @@ var svg = {
       }
 
       if (this._flagVertices) {
-        var vertices = svg.toString(this._renderer.vertices, this._closed);
+        const vertices = svg.toString(this._renderer.vertices, this._closed);
         changed.d = vertices;
       }
 
@@ -478,8 +479,8 @@ var svg = {
 
       if (this._flagClip) {
 
-        var clip = svg.getClip(this, domElement);
-        var elem = this._renderer.elem;
+        const clip = svg.getClip(this, domElement);
+        const elem = this._renderer.elem;
 
         if (this._clip) {
           elem.removeAttribute('id');
@@ -526,9 +527,9 @@ var svg = {
       this._update();
 
       // Collect any attribute that needs to be changed here
-      var changed = {};
+      const changed = {};
 
-      var flagMatrix = this._matrix.manual || this._flagMatrix;
+      const flagMatrix = this._matrix.manual || this._flagMatrix;
 
       if (flagMatrix) {
         changed.transform = 'matrix(' + this._matrix.toString() + ')';
@@ -539,14 +540,14 @@ var svg = {
       }
 
       if (this._flagVertices || this._flagSize || this._flagSizeAttenuation) {
-        var size = this._size;
+        let size = this._size;
         if (!this._sizeAttenuation) {
           getComputedMatrix(this, matrix);
-          var me = matrix.elements;
-          var m = decomposeMatrix(me[0], me[3], me[1], me[4], me[2], me[5]);
+          const me = matrix.elements;
+          const m = decomposeMatrix(me[0], me[3], me[1], me[4], me[2], me[5]);
           size /= Math.max(m.scaleX, m.scaleY);
         }
-        var vertices = svg.pointsToString(this._renderer.collection, size);
+        const vertices = svg.pointsToString(this._renderer.collection, size);
         changed.d = vertices;
       }
 
@@ -617,9 +618,9 @@ var svg = {
 
       this._update();
 
-      var changed = {};
+      const changed = {};
 
-      var flagMatrix = this._matrix.manual || this._flagMatrix;
+      const flagMatrix = this._matrix.manual || this._flagMatrix;
 
       if (flagMatrix) {
         changed.transform = 'matrix(' + this._matrix.toString() + ')';
@@ -701,8 +702,8 @@ var svg = {
 
       if (this._flagClip) {
 
-        var clip = svg.getClip(this, domElement);
-        var elem = this._renderer.elem;
+        const clip = svg.getClip(this, domElement);
+        const elem = this._renderer.elem;
 
         if (this._clip) {
           elem.removeAttribute('id');
@@ -747,7 +748,7 @@ var svg = {
         this._update();
       }
 
-      var changed = {};
+      const changed = {};
 
       if (this._flagId) {
         changed.id = this._id;
@@ -782,7 +783,7 @@ var svg = {
 
       if (this._flagStops) {
 
-        var lengthChanged = this._renderer.elem.childNodes.length
+        const lengthChanged = this._renderer.elem.childNodes.length
           !== this.stops.length;
 
         if (lengthChanged) {
@@ -791,10 +792,10 @@ var svg = {
           }
         }
 
-        for (var i = 0; i < this.stops.length; i++) {
+        for (let i = 0; i < this.stops.length; i++) {
 
-          var stop = this.stops[i];
-          var attrs = {};
+          const stop = this.stops[i];
+          const attrs = {};
 
           if (stop._flagOffset) {
             attrs.offset = 100 * stop._offset + '%';
@@ -835,12 +836,11 @@ var svg = {
         this._update();
       }
 
-      var changed = {};
+      const changed = {};
 
       if (this._flagId) {
         changed.id = this._id;
       }
-
       if (this._flagCenter) {
         changed.cx = this.center._x;
         changed.cy = this.center._y;
@@ -849,11 +849,9 @@ var svg = {
         changed.fx = this.focal._x;
         changed.fy = this.focal._y;
       }
-
       if (this._flagRadius) {
         changed.r = this._radius;
       }
-
       if (this._flagSpread) {
         changed.spreadMethod = this._spread;
       }
@@ -876,7 +874,7 @@ var svg = {
 
       if (this._flagStops) {
 
-        var lengthChanged = this._renderer.elem.childNodes.length
+        const lengthChanged = this._renderer.elem.childNodes.length
           !== this.stops.length;
 
         if (lengthChanged) {
@@ -885,10 +883,10 @@ var svg = {
           }
         }
 
-        for (var i = 0; i < this.stops.length; i++) {
+        for (let i = 0; i < this.stops.length; i++) {
 
-          var stop = this.stops[i];
-          var attrs = {};
+          const stop = this.stops[i];
+          const attrs = {};
 
           if (stop._flagOffset) {
             attrs.offset = 100 * stop._offset + '%';
@@ -929,9 +927,9 @@ var svg = {
         this._update();
       }
 
-      var changed = {};
-      var styles = { x: 0, y: 0 };
-      var image = this.image;
+      const changed = {};
+      const styles = { x: 0, y: 0 };
+      const image = this.image;
 
       if (this._flagId) {
         changed.id = this._id;
@@ -1052,45 +1050,41 @@ var svg = {
  * @param {Element} [parameters.domElement] - The `<svg />` to draw to. If none given a new one will be constructed.
  * @description This class is used by {@link Two} when constructing with `type` of `Two.Types.svg` (the default type). It takes Two.js' scenegraph and renders it to a `<svg />`.
  */
-function Renderer(params) {
+export class Renderer extends Events {
 
-  /**
-   * @name Two.SVGRenderer#domElement
-   * @property {Element} - The `<svg />` associated with the Two.js scene.
-   */
-  this.domElement = params.domElement || svg.createElement('svg');
+  constructor(params) {
 
-  /**
-   * @name Two.SVGRenderer#scene
-   * @property {Two.Group} - The root group of the scenegraph.
-   */
-  this.scene = new Group();
-  this.scene.parent = this;
+    super();
 
-  /**
-   * @name Two.SVGRenderer#defs
-   * @property {SvgDefintionsElement} - The `<defs />` to apply gradients, patterns, and bitmap imagery.
-   */
-  this.defs = svg.createElement('defs');
-  this.domElement.appendChild(this.defs);
-  this.domElement.defs = this.defs;
-  this.domElement.style.overflow = 'hidden';
+    /**
+     * @name Two.SVGRenderer#domElement
+     * @property {Element} - The `<svg />` associated with the Two.js scene.
+     */
+    this.domElement = params.domElement || svg.createElement('svg');
 
-}
+    /**
+     * @name Two.SVGRenderer#scene
+     * @property {Two.Group} - The root group of the scenegraph.
+     */
+    this.scene = new Group();
+    this.scene.parent = this;
 
-_.extend(Renderer, {
+    /**
+     * @name Two.SVGRenderer#defs
+     * @property {SvgDefintionsElement} - The `<defs />` to apply gradients, patterns, and bitmap imagery.
+     */
+    this.defs = svg.createElement('defs');
+    this.domElement.appendChild(this.defs);
+    this.domElement.defs = this.defs;
+    this.domElement.style.overflow = 'hidden';
+
+  }
 
   /**
    * @name Two.SVGRenderer.Utils
    * @property {Object} - A massive object filled with utility functions and properties to render Two.js objects to a `<svg />`.
    */
-  Utils: svg
-
-});
-
-_.extend(Renderer.prototype, Events, {
-
-  constructor: Renderer,
+  static Utils = svg;
 
   /**
    * @name Two.SVGRenderer#setSize
@@ -1100,7 +1094,7 @@ _.extend(Renderer.prototype, Events, {
    * @description Change the size of the renderer.
    * @nota-bene Triggers a `Two.Events.resize`.
    */
-  setSize: function(width, height) {
+  setSize(width, height) {
 
     this.width = width;
     this.height = height;
@@ -1112,14 +1106,14 @@ _.extend(Renderer.prototype, Events, {
 
     return this.trigger(Events.Types.resize, width, height);
 
-  },
+  }
 
   /**
    * @name Two.SVGRenderer#render
    * @function
    * @description Render the current scene to the `<svg />`.
    */
-  render: function() {
+  render() {
 
     svg.group.render.call(this.scene, this.domElement);
 
@@ -1127,6 +1121,4 @@ _.extend(Renderer.prototype, Events, {
 
   }
 
-});
-
-export default Renderer;
+}
