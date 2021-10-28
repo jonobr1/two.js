@@ -54,8 +54,8 @@ function getAlignment(anchor) {
 }
 
 function getBaseline(node) {
-  var a = node.getAttribute('dominant-baseline');
-  var b = node.getAttribute('alignment-baseline');
+  const a = node.getAttribute('dominant-baseline');
+  const b = node.getAttribute('alignment-baseline');
   return a || b;
 }
 
@@ -73,7 +73,7 @@ function applyTransformsToVector(transforms, vector) {
 
   if (transforms.rotation !== 0) {
     // TODO: Test further
-    var l = vector.length();
+    const l = vector.length();
     vector.x = l * Math.cos(transforms.rotation);
     vector.y = l * Math.sin(transforms.rotation);
   }
@@ -809,7 +809,7 @@ export const read = {
               );
               // Make coord be the last `m` command
               for (let j = points.length - 1; j >= 0; j--) {
-                var point = points[j];
+                const point = points[j];
                 if (/m/i.test(point.command)) {
                   coord = point;
                   break;

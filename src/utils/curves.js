@@ -186,7 +186,7 @@ function getCurveBoundingBox(x1, y1, x2, y2, x3, y3, x4, y4) {
   const bounds = [[], []];
   let a, b, c, t, t1, t2, b2ac, sqrtb2ac;
 
-  for (var i = 0; i < 2; ++i) {
+  for (let i = 0; i < 2; ++i) {
       if (i == 0) {
         b = 6 * x1 - 12 * x2 + 6 * x3;
         a = -3 * x1 + 9 * x2 - 9 * x3 + 3 * x4;
@@ -281,7 +281,7 @@ function getCurveFromPoints(points, closed) {
 
   const l = points.length, last = l - 1;
 
-  for (var i = 0; i < l; i++) {
+  for (let i = 0; i < l; i++) {
 
     const point = points[i];
 
