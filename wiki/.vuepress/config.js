@@ -51,9 +51,9 @@ module.exports = {
     developmentSize: fileSizes.development,
     productionSize: fileSizes.production,
     nav: [
-      {
-        text: 'Overview', link: '/'
-      },
+      // {
+      //   text: 'Overview', link: '/'
+      // },
       {
         text: 'Examples', link: '/examples/'
       },
@@ -65,10 +65,10 @@ module.exports = {
       },
       {
         text: 'Change Log', link: '/change-log/'
-      },
-      {
-        text: 'Sponsors', link: '/sponsor'
       }
+      // {
+      //   text: 'Sponsors', link: '/sponsor'
+      // }
     ],
     sidebar: {
       '/change-log/': ['/change-log/'],
