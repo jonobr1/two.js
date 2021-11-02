@@ -41,10 +41,11 @@
     border: 2px solid $green;
     border-radius: 9999px;
     padding: .5rem 1rem;
-    margin: 0 1rem 0 0;
+    margin: 0 1rem .5rem 0;
 
     .label {
       font-weight: 600;
     }
   }
+  /*once in button list, can use last child to have smarter styling*/
 </style>
