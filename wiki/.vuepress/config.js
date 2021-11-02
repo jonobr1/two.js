@@ -36,8 +36,6 @@ for (var i = 0; i < sourceFiles.length; i++) {
 
 }
 
-console.log(sidebarForDocs);
-
 function getJSON(filepath) {
   var file = fs.readFileSync(path.resolve(__dirname, filepath));
   return JSON.parse(file);
