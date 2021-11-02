@@ -73,7 +73,7 @@ _.each(sourceFiles, function(file) {
   //   })
   // );
 
-  // fs.mkdirSync(outputDir, { recursive: true });
+  fs.mkdirSync(outputDir, { recursive: true });
   fs.writeFileSync(outputFile.replace('README.md', 'docs.json'),
     JSON.stringify(citations));
 

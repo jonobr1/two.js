@@ -1,6 +1,9 @@
 var sourceFiles = [
   'src/two.js',
   'src/registry.js',
+  'src/collection.js',
+  'src/children.js',
+  'src/events.js',
   'src/vector.js',
   'src/anchor.js',
   'src/matrix.js',
