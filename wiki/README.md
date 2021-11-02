@@ -2,13 +2,17 @@
 
 A two-dimensional drawing api geared towards modern web browsers. It is renderer agnostic enabling the same api to draw in multiple contexts: svg, canvas, and webgl.
 
+<div>
 <custom-button text="Github" type="github" href="https://github.com/jonobr1/two.js" />
-<custom-button text="Sponsor" type="sponsor" href="https://raw.githubusercontent.com/jonobr1/two.js/master/build/two.min.js" />
-<line-break />
+<custom-button text="Sponsor" type="sponsor" href="/sponsor" />
+</div>
+
 ## Download
-<line-break />
+
+<div>
 <custom-button text="Development" type="download" href="https://raw.githubusercontent.com/jonobr1/two.js/master/build/two.js" :size="$themeConfig.developmentSize" />
 <custom-button text="Production" type="download" href="https://raw.githubusercontent.com/jonobr1/two.js/master/build/two.min.js" :size="$themeConfig.productionSize" />
+</div>
 
 ::: tip
 Prior to v0.7.0-alpha.1 Two.js requires Underscore.js and Backbone.js Events. If you're already loading these files elsewhere then you can build the project yourself and get the file size even smaller. For more information on custom builds check out the source on github.
