@@ -64,14 +64,14 @@ module.exports = {
       // {
       //   text: 'Overview', link: '/'
       // },
-      {
-        text: 'Examples', link: '/examples/'
-      },
       // {
       //   text: 'Projects', link: '/projects/'
       // },
       {
-        text: 'Documentation', link: '/documentation/two/'
+        text: 'Docs', link: '/documentation/two/'
+      },
+      {
+        text: 'Examples', link: '/examples/'
       },
       {
         text: 'Change Log', link: '/change-log/'
