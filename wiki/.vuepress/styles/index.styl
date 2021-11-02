@@ -199,8 +199,42 @@ body {
 
 }
 
+.search-box input { /* left out of body to preserve default mobile styling */
+  width: 22.5rem;
+}
+
 /* Move these into custom Navbar template once/if we do that */
 body {
+  .search-box {
+      input:focus {
+      border-color: $orangeBorder;
+      color: $textColor;
+    }
+
+    .suggestions {
+      padding: 0rem;
+
+      &:hover {
+        border-color: $orangeBorder;
+      }
+
+      .suggestion {
+        font-size: 1rem;
+        line-height: auto;
+        font-weight: normal;
+        padding: .75rem 1.25rem;
+
+        a {
+          color: $sidebarText;
+        }
+      }
+
+      .suggestion.focused {
+        background-color: $orangebg;
+        a { color: $orange; }
+      }
+    }
+  }
 
  .navbar {
   padding-top: 0;
@@ -305,4 +339,95 @@ body {
     background-size: 100%;
     background-repeat: no-repeat;
   }
+}
+
+body {
+  .sidebar-heading {
+    color: $sidebarText;
+    font-size: 1rem;
+
+    &.open {
+      color: $orange;
+    }
+
+  }
+
+  a.sidebar-link {
+    color: $sidebarText;
+    font-size: 1rem;
+
+    &.active {
+      color: $orange;
+      border-left-color: transparent;
+    }
+  }
+
+  .sidebar {
+    .sidebar-links li:not(:first-child) {
+      margin-top: 0px;
+    }
+
+    .sidebar-sub-headers {
+      border-left: 4px solid $orange;
+      margin-left: 3em;
+      padding-left: 0px;
+      font-size: 1rem;
+
+      a.sidebar-link {
+        padding-left: 1rem;
+      }
+    }
+
+    .arrow {
+      display: none;
+    }
+  }
+}
+
+tr {
+  background-color: #f9f9f9;
+}
+
+tr:nth-child(2n), thead tr {
+  background-color: transparent;
+}
+
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+table tr th,
+table tr td {
+  border: none;
+  border-right: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+}
+table tr th:first-child,
+table tr td:first-child {
+  border-left: 1px solid #eee;
+}
+table tr th {
+  background: transparent;
+  border-top: 1px solid #eee;
+  text-align: left;
+}
+
+/* top-left border-radius */
+table tr:first-child th:first-child {
+  border-top-left-radius: 6px;
+}
+
+/* top-right border-radius */
+table tr:first-child th:last-child {
+  border-top-right-radius: 6px;
+}
+
+/* bottom-left border-radius */
+table tr:last-child td:first-child {
+  border-bottom-left-radius: 6px;
+}
+
+/* bottom-right border-radius */
+table tr:last-child td:last-child {
+  border-bottom-right-radius: 6px;
 }
