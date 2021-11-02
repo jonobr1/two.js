@@ -4,9 +4,12 @@ body {
   font-size: 1rem;
   line-height: 1.5rem;
   word-spacing: 0.1875rem;
+  color: $textColor;
 
   p {
     line-height: 1.5rem;
+    margin-top: 0;
+    margin-bottom: 1.25rem;
   }
 
   .nav-item > a:not(.external):hover,
@@ -15,18 +18,18 @@ body {
   .page-edit .edit-link a,
   a {
     color: $green;
-    border-color: $green;
+    //border-color: $green;
     text-decoration: none;
-    border-bottom-width: 0.125rem;
-    border-bottom-style: solid;
+    //border-bottom-width: 0.125rem;
+    //border-bottom-style: solid;
     &:visited {
       text-decoration: none;
-      color: $orange;
-      border-color: $orange;
+      //color: $orange;
+      //border-color: $orange;
     }
     &:hover {
-      color: $red;
-      border-color: $red;
+      color: $orange;
+      //border-color: $red;
       text-decoration: none;
     }
     &.header-anchor {
@@ -47,7 +50,7 @@ body {
       font-size: 1rem;
       border-radius: 0;
       padding: 0;
-      color: #555;
+      color: $codeColor;
     }
 
     div[class*="language-"]::before {
@@ -103,13 +106,13 @@ body {
     .token.doctype,
     .token.cdata {
       // color: #999;
-      color: #555;
+      color: $codeColor;
       font-style: italic;
     }
 
     .token.punctuation {
       // color: #ccc;
-      color: #555;
+      color: $codeColor;
     }
 
     .token.tag,
@@ -117,22 +120,25 @@ body {
     .token.namespace,
     .token.deleted {
       // color: #e2777a;
-      color: #555;
+      color: $codeColor;
     }
 
     .token.function-name {
       // color: #6196cc;
-      color: #555;
+      color: $codeColor;
     }
 
     .token.boolean {
       color: #2aa89a;
     }
 
-    .token.number,
-    .token.function {
+    .token.number {
       color: rgb(255, 64, 64);
       // color: #f08d49;
+    }
+    
+    .token.function {
+      color: $codeColor;
     }
 
     .token.property,
@@ -165,7 +171,7 @@ body {
     .token.entity,
     .token.url {
       // color: #67cdcc;
-      color: #555;
+      color: $codeColor;
     }
 
     .token.important,
@@ -182,15 +188,90 @@ body {
 
     .token.inserted {
       // color: green;
-      color: #555;
+      color: $codeColor;
     }
 
   }
 
   div[class*="language-"] {
-    background: transparent;
-    border-left: 1px solid #ccc;
-    border-radius: 0;
+    background: rgba(255,244,95,.2);
+    border: none;
+    font-weight: bold;
+    color: $codeColor;
   }
 
+}
+
+/* Move these into custom Navbar template once/if we do that */
+body {
+
+ .navbar {
+  padding-top: 0;
+  padding-bottom: 0;
+
+    .links {
+      top: 0;
+      height: 100%
+
+      .search-box {
+        padding-top: .7rem;
+      }
+    }
+  }
+
+  .nav-links {
+    .nav-item {
+      height: 100%;
+      line-height: 3.5rem;
+    }
+    .nav-item a {
+    font-size: 1rem;
+    color: $textColor;
+    height: 100%;
+    line-height: 3.5rem;
+    border-top: 2px solid $white;
+    transition: color .2s, border-color .2s;
+    }
+    .nav-item a:hover {
+      border: none;
+      border-top: 2px solid $orange;
+      color: $orange;
+    }
+  }
+}
+
+.theme-default-content:not(.custom) {
+  max-width: 860px;
+  
+  h1 {
+    font-size: 2.25rem;
+  }
+  h1:first-child + p {
+    margin-top: 1rem;    
+  }
+  h2 {
+    display: inline-block;
+    font-size: 1.25rem;
+    border: none;
+    border-top: 2px solid $black;
+    padding-top: .625rem;
+    margin: 3rem 0 1.25rem 0;
+  }
+  h4 {
+    margin: 0 0 .25rem 0;
+    padding: 0rem;
+  }
+  ul {
+    margin: 0;
+  }
+  li {
+    padding-left: .5rem;
+  }
+}
+
+.custom-block.tip {
+  background-color: $purplebg;
+  color: $purple;
+  border: none;
+  margin: 2rem 0;
 }
