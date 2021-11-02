@@ -8,11 +8,19 @@ var root = { title: 'Base', children: [] };
 var effects = { title: 'Effects', children: [] };
 var renderers = { title: 'Renderers', children: [] };
 var shapes = { title: 'Shapes', children: [] };
+var extras = { title: 'Extras', children: [] };
 
-var sidebarForDocs = [root, effects, renderers, shapes];
+var sidebarForDocs = [root, effects, renderers, shapes, extras];
 
 for (var i = 0; i < sourceFiles.length; i++) {
-  var name = sourceFiles[i].replace('src/', '').replace('.js', '/');
+
+  // var name = sourceFiles[i].replace(/.*\/([a-zA-Z\-]*)\.js$/i, '$1');
+  var name = sourceFiles[i]
+    .replace('jsm/', '')
+    .replace('extras', '/extras')
+    .replace('src/', '/').replace('.js', '/');
+
+  name = `/documentation${name}`;
 
   if (name.match('effects')) {
     effects.children.push(name);
@@ -20,11 +28,15 @@ for (var i = 0; i < sourceFiles.length; i++) {
     renderers.children.push(name);
   } else if (name.match('shapes')) {
     shapes.children.push(name);
+  } else if (name.match('extras')) {
+    extras.children.push(name);
   } else {
     root.children.push(name);
   }
 
 }
+
+console.log(sidebarForDocs);
 
 function getJSON(filepath) {
   var file = fs.readFileSync(path.resolve(__dirname, filepath));
