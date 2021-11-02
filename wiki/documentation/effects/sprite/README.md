@@ -351,7 +351,7 @@ The index of the current tile of the sprite to display. Defaults to `0`.
 | Argument | Description |
 | ---- | ----------- |
 |  `firstFrame`  | The index of the frame to start the animation with. |
-|  `lastFrame`  | The index of the frame to end the animation with. Defaults to the last item in the [Two.Sprite.textures](/documentation/sprite#two-sprite-textures). |
+|  `lastFrame`  | The index of the frame to end the animation with. Defaults to the last item in the [Two.Sprite.textures](/documentation/sprite/#two-sprite-textures). |
 |  `onLastFrame`  | Optional callback function to be triggered after playing the last frame. This fires multiple times when the sprite is looped. |
 </div>
 

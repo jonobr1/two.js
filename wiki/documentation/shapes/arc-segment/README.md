@@ -17,7 +17,7 @@ __Extends__: `Two.Path`
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/arc-segment.js#L12)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/arc-segment.js#L10)
 
 </div>
 
@@ -66,7 +66,7 @@ A list of properties that are on every [Two.ArcSegment](/documentation/arcsegmen
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/arc-segment.js#L79)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/arc-segment.js#L77)
 
 </div>
 
@@ -114,7 +114,7 @@ Convenience function to apply observable qualities of a [Two.ArcSegment](/docume
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/arc-segment.js#L85)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/arc-segment.js#L83)
 
 </div>
 
@@ -155,7 +155,7 @@ The size of the inner radius of the arc segment.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/arc-segment.js#L34)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/arc-segment.js#L32)
 
 </div>
 
@@ -196,7 +196,7 @@ The size of the outer radius of the arc segment.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/arc-segment.js#L42)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/arc-segment.js#L40)
 
 </div>
 
@@ -237,7 +237,7 @@ The angle of one side for the arc segment.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/arc-segment.js#L50)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/arc-segment.js#L48)
 
 </div>
 
@@ -278,7 +278,7 @@ The angle of the other side for the arc segment.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/arc-segment.js#L58)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/arc-segment.js#L56)
 
 </div>
 
@@ -339,7 +339,7 @@ Create a new instance of [Two.ArcSegment](/documentation/arcsegment) with the sa
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/arc-segment.js#L324)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/arc-segment.js#L322)
 
 </div>
 
@@ -393,7 +393,7 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/arc-segment.js#L363)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/arc-segment.js#L361)
 
 </div>
 

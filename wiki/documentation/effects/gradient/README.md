@@ -30,6 +30,47 @@ This is the base class for constructing different types of gradients with Two.js
 
 <div class="static member ">
 
+## Two.Gradient.Stop
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L57)
+
+</div>
+
+
+
+
+
+<div class="see">
+
+[Two.Stop](/documentation/stop)
+
+</div>
+
+
+</div>
+
+
+
+---
+
+<div class="static member ">
+
 ## Two.Gradient.Properties
 
 
@@ -143,7 +184,7 @@ Cached method to let renderers know stops have been updated on a [Two.Gradient](
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L133)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L146)
 
 </div>
 
@@ -184,7 +225,7 @@ Cached method to let [Two.Gradient](/documentation/gradient) know vertices have 
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L142)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L155)
 
 </div>
 
@@ -225,7 +266,7 @@ Cached method to let [Two.Gradient](/documentation/gradient) know vertices have 
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L161)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L174)
 
 </div>
 
@@ -436,47 +477,6 @@ An ordered list of [Two.Stop](/documentation/stop)s for rendering the gradient.
 
 ---
 
-<div class="instance member ">
-
-## Two.Gradient.Stop
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="meta">
-
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L57)
-
-</div>
-
-
-
-
-
-<div class="see">
-
-[Two.Stop](/documentation/stop)
-
-</div>
-
-
-</div>
-
-
-
----
-
 <div class="instance function ">
 
 ## Two.Gradient.clone
@@ -523,7 +523,7 @@ Create a new instance of [Two.Gradient](/documentation/gradient) with the same p
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L197)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L219)
 
 </div>
 
@@ -577,7 +577,7 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L224)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L246)
 
 </div>
 

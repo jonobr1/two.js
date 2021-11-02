@@ -255,7 +255,7 @@ Create a new instance of [Two.Polygon](/documentation/polygon) with the same pro
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/ellipse.js#L169)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/ellipse.js#L176)
 
 </div>
 
@@ -309,7 +309,7 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/ellipse.js#L205)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/ellipse.js#L212)
 
 </div>
 

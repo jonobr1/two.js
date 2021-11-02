@@ -91,7 +91,7 @@ A list of properties that are on every [Two.ImageSequence](/documentation/images
 
 <div class="properties">
 
-default frame rate that [Two.ImageSequence.frameRate](/documentation/imagesequence#two-imagesequence-framerate) is set to when instantiated.
+default frame rate that [Two.ImageSequence.frameRate](/documentation/imagesequence/#two-imagesequence-framerate) is set to when instantiated.
 
 </div>
 
@@ -342,7 +342,7 @@ Function used internally by [Two.ImageSequence](/documentation/imagesequence) to
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/image-sequence.js#L182)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/image-sequence.js#L181)
 
 </div>
 
@@ -498,7 +498,7 @@ The index of the current tile of the sprite to display. Defaults to `0`.
 | Argument | Description |
 | ---- | ----------- |
 |  `firstFrame`  | The index of the frame to start the animation with. |
-|  `lastFrame`  | The index of the frame to end the animation with. Defaults to the last item in the [Two.ImageSequence.textures](/documentation/imagesequence#two-imagesequence-textures). |
+|  `lastFrame`  | The index of the frame to end the animation with. Defaults to the last item in the [Two.ImageSequence.textures](/documentation/imagesequence/#two-imagesequence-textures). |
 |  `onLastFrame`  | Optional callback function to be triggered after playing the last frame. This fires multiple times when the image sequence is looped. |
 </div>
 
@@ -515,7 +515,7 @@ Initiate animation playback of a [Two.ImageSequence](/documentation/imagesequenc
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/image-sequence.js#L305)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/image-sequence.js#L304)
 
 </div>
 
@@ -556,7 +556,7 @@ Halt animation playback of a [Two.ImageSequence](/documentation/imagesequence).
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/image-sequence.js#L341)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/image-sequence.js#L340)
 
 </div>
 
@@ -597,7 +597,7 @@ Halt animation playback of a [Two.ImageSequence](/documentation/imagesequence) a
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/image-sequence.js#L353)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/image-sequence.js#L352)
 
 </div>
 
@@ -658,7 +658,7 @@ Create a new instance of [Two.ImageSequence](/documentation/imagesequence) with 
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/image-sequence.js#L367)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/image-sequence.js#L366)
 
 </div>
 
@@ -712,7 +712,7 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/image-sequence.js#L393)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/image-sequence.js#L392)
 
 </div>
 

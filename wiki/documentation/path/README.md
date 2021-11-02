@@ -437,7 +437,7 @@ Number between zero and one to state the beginning of where the path is rendered
 
 <div class="description">
 
-[Two.Path.beginning](/documentation/path#two-path-beginning) is a percentage value that represents at what percentage into the path should the renderer start drawing.
+[Two.Path.beginning](/documentation/path/#two-path-beginning) is a percentage value that represents at what percentage into the path should the renderer start drawing.
 
 </div>
 
@@ -455,7 +455,7 @@ Number between zero and one to state the beginning of where the path is rendered
 
 
 ::: tip nota-bene
-This is great for animating in and out stroked paths in conjunction with [Two.Path.ending](/documentation/path#two-path-ending).
+This is great for animating in and out stroked paths in conjunction with [Two.Path.ending](/documentation/path/#two-path-ending).
 :::
 
 
@@ -494,7 +494,7 @@ Number between zero and one to state the ending of where the path is rendered.
 
 <div class="description">
 
-[Two.Path.ending](/documentation/path#two-path-ending) is a percentage value that represents at what percentage into the path should the renderer start drawing.
+[Two.Path.ending](/documentation/path/#two-path-ending) is a percentage value that represents at what percentage into the path should the renderer start drawing.
 
 </div>
 
@@ -512,7 +512,7 @@ Number between zero and one to state the ending of where the path is rendered.
 
 
 ::: tip nota-bene
-This is great for animating in and out stroked paths in conjunction with [Two.Path.beginning](/documentation/path#two-path-beginning).
+This is great for animating in and out stroked paths in conjunction with [Two.Path.beginning](/documentation/path/#two-path-beginning).
 :::
 
 
@@ -1120,7 +1120,7 @@ A list of numbers that represent the repeated dash length and dash space applied
 
 <div class="properties">
 
-A number in pixels to offset [Two.Path.dashes](/documentation/path#two-path-dashes) display.
+A number in pixels to offset [Two.Path.dashes](/documentation/path/#two-path-dashes) display.
 
 </div>
 
@@ -1161,7 +1161,7 @@ A number in pixels to offset [Two.Path.dashes](/documentation/path#two-path-dash
 
 <div class="properties">
 
-The sum of distances between all [Two.Path.vertices](/documentation/path#two-path-vertices).
+The sum of distances between all [Two.Path.vertices](/documentation/path/#two-path-vertices).
 
 </div>
 
@@ -1191,7 +1191,7 @@ The sum of distances between all [Two.Path.vertices](/documentation/path#two-pat
 
 <div class="instance member ">
 
-## Two.Path.clip
+## Two.Path.mask
 
 
 
@@ -1202,7 +1202,7 @@ The sum of distances between all [Two.Path.vertices](/documentation/path#two-pat
 
 <div class="properties">
 
-Object to define clipping area.
+The shape whose alpha property becomes a clipping area for the path.
 
 </div>
 
@@ -1215,7 +1215,7 @@ Object to define clipping area.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L451)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L450)
 
 </div>
 
@@ -1230,6 +1230,47 @@ This property is currently not working becuase of SVG spec issues found here {@l
 
 
 </div>
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance member ">
+
+## Two.Path.clip
+
+
+
+
+
+
+
+
+<div class="properties">
+
+Tells Two.js renderer if this object represents a mask for another object (or not).
+
+</div>
+
+
+
+
+
+
+
+
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L473)
+
+</div>
+
+
 
 
 
@@ -1286,7 +1327,7 @@ Create a new instance of [Two.Path](/documentation/path) with the same propertie
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L682)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L717)
 
 </div>
 
@@ -1340,7 +1381,7 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L722)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L757)
 
 </div>
 
@@ -1381,7 +1422,7 @@ Short hand method to set fill to `transparent`.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L756)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L797)
 
 </div>
 
@@ -1422,7 +1463,7 @@ Short hand method to set stroke to `transparent`.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L766)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L807)
 
 </div>
 
@@ -1463,7 +1504,7 @@ Orient the vertices of the shape to the upper left-hand corner of the path.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L776)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L817)
 
 </div>
 
@@ -1504,7 +1545,7 @@ Orient the vertices of the shape to the center of the path.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L801)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L842)
 
 </div>
 
@@ -1545,7 +1586,7 @@ Remove self from the scene / parent.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L823)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L864)
 
 </div>
 
@@ -1608,7 +1649,7 @@ Return an object with top, left, right, bottom, width, and height parameters of 
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L840)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L881)
 
 </div>
 
@@ -1653,8 +1694,8 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-|  `t`  | Percentage value describing where on the Two.Path to estimate and assign coordinate values. |
-|  `obj`  | Object to apply calculated x, y to. If none available returns new Object. |
+|  `t`  | Percentage value describing where on the [Two.Path](/documentation/path) to estimate and assign coordinate values. |
+|  `object`  | Object to apply calculated x, y to. If none available returns new `Object`. |
 </div>
 
 
@@ -1662,7 +1703,7 @@ __Returns__:
 
 <div class="description">
 
-Given a float `t` from 0 to 1, return a point or assign a passed `obj`'s coordinates to that percentage on this Two.Path's curve.
+Given a float `t` from 0 to 1, return a point or assign a passed `obj`'s coordinates to that percentage on this [Two.Path](/documentation/path)'s curve.
 
 </div>
 
@@ -1670,7 +1711,7 @@ Given a float `t` from 0 to 1, return a point or assign a passed `obj`'s coordin
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L942)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L983)
 
 </div>
 
@@ -1711,7 +1752,7 @@ Based on closed / curved and sorting of vertices plot where all points should be
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L1081)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L1122)
 
 </div>
 
@@ -1721,7 +1762,7 @@ Based on closed / curved and sorting of vertices plot where all points should be
 
 
 ::: tip nota-bene
-While this method is public it is internally called by [Two.Path._update](/documentation/path#two-path-_update) when `automatic = true`.
+While this method is public it is internally called by [Two.Path._update](/documentation/path/#two-path-_update) when `automatic = true`.
 :::
 
 
@@ -1761,7 +1802,7 @@ While this method is public it is internally called by [Two.Path._update](/docum
 
 <div class="description">
 
-Insert a [Two.Anchor](/documentation/anchor) at the midpoint between every item in [Two.Path.vertices](/documentation/path#two-path-vertices).
+Insert a [Two.Anchor](/documentation/anchor) at the midpoint between every item in [Two.Path.vertices](/documentation/path/#two-path-vertices).
 
 </div>
 
@@ -1769,7 +1810,7 @@ Insert a [Two.Anchor](/documentation/anchor) at the midpoint between every item 
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L1102)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L1143)
 
 </div>
 

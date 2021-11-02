@@ -315,7 +315,7 @@ The transformation matrix of the shape.
 
 
 ::: tip nota-bene
-[Two.Shape.translation](/documentation/shape#two-shape-translation), [Two.Shape.rotation](/documentation/shape#two-shape-rotation), [Two.Shape.scale](/documentation/shape#two-shape-scale), [Two.Shape.skewX](/documentation/shape#two-shape-skewx), and [Two.Shape.skewY](/documentation/shape#two-shape-skewy) apply their values to the matrix when changed. The matrix is what is sent to the renderer to be drawn.
+[Two.Shape.translation](/documentation/shape/#two-shape-translation), [Two.Shape.rotation](/documentation/shape/#two-shape-rotation), [Two.Shape.scale](/documentation/shape/#two-shape-scale), [Two.Shape.skewX](/documentation/shape/#two-shape-skewx), and [Two.Shape.skewY](/documentation/shape/#two-shape-skewy) apply their values to the matrix when changed. The matrix is what is sent to the renderer to be drawn.
 :::
 
 
@@ -583,7 +583,7 @@ A class to be applied to the element to be compatible with CSS styling.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L337)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L336)
 
 </div>
 
@@ -641,7 +641,7 @@ Convenience method to add itself to the scenegraph.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L344)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L343)
 
 </div>
 
@@ -702,7 +702,7 @@ Create a new [Two.Shape](/documentation/shape) with the same values as the curre
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L355)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L354)
 
 </div>
 

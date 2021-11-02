@@ -212,7 +212,7 @@ Subtract two vectors: `v2` from `v1`.
 
 <div class="description">
 
-Alias for [Two.Vector.sub](/documentation/vector#two-vector-sub).
+Alias for [Two.Vector.sub](/documentation/vector/#two-vector-sub).
 
 </div>
 
@@ -975,7 +975,7 @@ Add `x` / `y` values to their respective component value on the instance.
 
 <div class="description">
 
-Alias for [Two.Vector.add](/documentation/vector#two-vector-add).
+Alias for [Two.Vector.add](/documentation/vector/#two-vector-add).
 
 </div>
 
@@ -1197,7 +1197,7 @@ Subtract `x` / `y` values to their respective component value on the instance.
 
 <div class="description">
 
-Alias for [Two.Vector.sub](/documentation/vector#two-vector-sub).
+Alias for [Two.Vector.sub](/documentation/vector/#two-vector-sub).
 
 </div>
 
@@ -1238,7 +1238,7 @@ Alias for [Two.Vector.sub](/documentation/vector#two-vector-sub).
 
 <div class="description">
 
-Alias for [Two.Vector.sub](/documentation/vector#two-vector-sub).
+Alias for [Two.Vector.sub](/documentation/vector/#two-vector-sub).
 
 </div>
 
@@ -1279,7 +1279,7 @@ Alias for [Two.Vector.sub](/documentation/vector#two-vector-sub).
 
 <div class="description">
 
-Alias for [Two.Vector.sub](/documentation/vector#two-vector-sub).
+Alias for [Two.Vector.sub](/documentation/vector/#two-vector-sub).
 
 </div>
 
@@ -1501,7 +1501,7 @@ Multiply `x` / `y` values to their respective component value on the instance.
 
 <div class="description">
 
-Alias for [Two.Vector.multiply](/documentation/vector#two-vector-multiply).
+Alias for [Two.Vector.multiply](/documentation/vector/#two-vector-multiply).
 
 </div>
 
@@ -1549,7 +1549,7 @@ Alias for [Two.Vector.multiply](/documentation/vector#two-vector-multiply).
 
 <div class="description">
 
-Mulitiply the vector by a single number. Shorthand to call [Two.Vector.multiply](/documentation/vector#two-vector-multiply) directly.
+Mulitiply the vector by a single number. Shorthand to call [Two.Vector.multiply](/documentation/vector/#two-vector-multiply) directly.
 
 </div>
 
@@ -1771,7 +1771,7 @@ Divide `x` / `y` values to their respective component value on the instance.
 
 <div class="description">
 
-Alias for [Two.Vector.divide](/documentation/vector#two-vector-divide).
+Alias for [Two.Vector.divide](/documentation/vector/#two-vector-divide).
 
 </div>
 
@@ -1819,7 +1819,7 @@ Alias for [Two.Vector.divide](/documentation/vector#two-vector-divide).
 
 <div class="description">
 
-Divide the vector by a single number. Shorthand to call [Two.Vector.divide](/documentation/vector#two-vector-divide) directly.
+Divide the vector by a single number. Shorthand to call [Two.Vector.divide](/documentation/vector/#two-vector-divide) directly.
 
 </div>
 
@@ -2022,7 +2022,7 @@ __Returns__:
 
 <div class="description">
 
-Get the length of the vector to the power of two. Widely used as less expensive than [Two.Vector.length](/documentation/vector#two-vector-length), because it isn't square-rooting any numbers.
+Get the length of the vector to the power of two. Widely used as less expensive than [Two.Vector.length](/documentation/vector/#two-vector-length), because it isn't square-rooting any numbers.
 
 </div>
 
@@ -2171,7 +2171,7 @@ __Returns__:
 
 <div class="description">
 
-Get the distance between two vectors to the power of two. Widely used as less expensive than [Two.Vector.distanceTo](/documentation/vector#two-vector-distanceto), because it isn't square-rooting any numbers.
+Get the distance between two vectors to the power of two. Widely used as less expensive than [Two.Vector.distanceTo](/documentation/vector/#two-vector-distanceto), because it isn't square-rooting any numbers.
 
 </div>
 

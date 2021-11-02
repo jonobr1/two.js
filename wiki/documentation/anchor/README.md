@@ -389,7 +389,7 @@ A boolean to render control points relative to the root anchor point or in globa
 
 <div class="description">
 
-Convenience method used mainly by [Two.Path.vertices](/documentation/path#two-path-vertices) to listen and propagate changes from control points up to their respective anchors and further if necessary.
+Convenience method used mainly by [Two.Path.vertices](/documentation/path/#two-path-vertices) to listen and propagate changes from control points up to their respective anchors and further if necessary.
 
 </div>
 
@@ -430,7 +430,7 @@ Convenience method used mainly by [Two.Path.vertices](/documentation/path#two-pa
 
 <div class="description">
 
-Convenience method used mainly by [Two.Path.vertices](/documentation/path#two-path-vertices) to ignore changes from a specific anchor's control points.
+Convenience method used mainly by [Two.Path.vertices](/documentation/path/#two-path-vertices) to ignore changes from a specific anchor's control points.
 
 </div>
 
@@ -644,7 +644,7 @@ __Returns__:
 
 <div class="description">
 
-Create a string form of the current instance. Intended for use with storing values in a database. This is lighter to store than the JSON compatible [Two.Anchor.toObject](/documentation/anchor#two-anchor-toobject).
+Create a string form of the current instance. Intended for use with storing values in a database. This is lighter to store than the JSON compatible [Two.Anchor.toObject](/documentation/anchor/#two-anchor-toobject).
 
 </div>
 

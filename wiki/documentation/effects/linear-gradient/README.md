@@ -38,6 +38,47 @@ __Extends__: `Two.Gradient`
 
 ---
 
+<div class="static member ">
+
+## Two.LinearGradient.Stop
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/linear-gradient.js#L55)
+
+</div>
+
+
+
+
+
+<div class="see">
+
+[Two.Stop](/documentation/stop)
+
+</div>
+
+
+</div>
+
+
+
+---
+
 <div class="static function ">
 
 ## Two.LinearGradient.MakeObservable
@@ -201,47 +242,6 @@ The x and y value for where the second end point is placed on the canvas.
 
 
 
-
-
-</div>
-
-
-
----
-
-<div class="instance member ">
-
-## Two.LinearGradient.Stop
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="meta">
-
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/linear-gradient.js#L55)
-
-</div>
-
-
-
-
-
-<div class="see">
-
-[Two.Stop](/documentation/stop)
-
-</div>
 
 
 </div>

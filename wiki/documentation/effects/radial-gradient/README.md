@@ -41,6 +41,47 @@ __Extends__: `Two.Gradient`
 
 <div class="static member ">
 
+## Two.RadialGradient.Stop
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/radial-gradient.js#L68)
+
+</div>
+
+
+
+
+
+<div class="see">
+
+[Two.Stop](/documentation/stop)
+
+</div>
+
+
+</div>
+
+
+
+---
+
+<div class="static member ">
+
 ## Two.RadialGradient.Properties
 
 
@@ -212,47 +253,6 @@ This effects the spray or spread of the radial gradient.
 </div>
 
 
-
-
-</div>
-
-
-
----
-
-<div class="instance member ">
-
-## Two.RadialGradient.Stop
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="meta">
-
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/radial-gradient.js#L68)
-
-</div>
-
-
-
-
-
-<div class="see">
-
-[Two.Stop](/documentation/stop)
-
-</div>
 
 
 </div>

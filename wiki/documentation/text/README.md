@@ -267,7 +267,7 @@ A list of numbers that represent the repeated dash length and dash space applied
 
 <div class="properties">
 
-A number in pixels to offset [Two.Text.dashes](/documentation/text#two-text-dashes) display.
+A number in pixels to offset [Two.Text.dashes](/documentation/text/#two-text-dashes) display.
 
 </div>
 
@@ -321,7 +321,7 @@ The characters to be rendered to the the screen. Referred to in the documentatio
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L316)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L341)
 
 </div>
 
@@ -362,7 +362,7 @@ The font family Two.js should attempt to regsiter for rendering. The default val
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L322)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L347)
 
 </div>
 
@@ -403,7 +403,7 @@ The font size in Two.js point space. Defaults to `13`.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L328)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L353)
 
 </div>
 
@@ -444,7 +444,7 @@ The height between lines measured from base to base in Two.js point space. Defau
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L334)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L359)
 
 </div>
 
@@ -472,7 +472,7 @@ The height between lines measured from base to base in Two.js point space. Defau
 
 <div class="properties">
 
-Alignment of text in relation to [Two.Text.translation](/documentation/text#two-text-translation)'s coordinates. Possible values include `'left'`, `'center'`, `'right'`. Defaults to `'center'`.
+Alignment of text in relation to [Two.Text.translation](/documentation/text/#two-text-translation)'s coordinates. Possible values include `'left'`, `'center'`, `'right'`. Defaults to `'center'`.
 
 </div>
 
@@ -485,7 +485,7 @@ Alignment of text in relation to [Two.Text.translation](/documentation/text#two-
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L340)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L365)
 
 </div>
 
@@ -513,7 +513,7 @@ Alignment of text in relation to [Two.Text.translation](/documentation/text#two-
 
 <div class="properties">
 
-The vertical aligment of the text in relation to [Two.Text.translation](/documentation/text#two-text-translation)'s coordinates. Possible values include `'top'`, `'middle'`, `'bottom'`, and `'baseline'`. Defaults to `'baseline'`.
+The vertical aligment of the text in relation to [Two.Text.translation](/documentation/text/#two-text-translation)'s coordinates. Possible values include `'top'`, `'middle'`, `'bottom'`, and `'baseline'`. Defaults to `'baseline'`.
 
 </div>
 
@@ -526,7 +526,7 @@ The vertical aligment of the text in relation to [Two.Text.translation](/documen
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L346)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L371)
 
 </div>
 
@@ -567,7 +567,7 @@ The font's style. Possible values include '`normal`', `'italic'`. Defaults to `'
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L352)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L377)
 
 </div>
 
@@ -608,7 +608,7 @@ A number at intervals of 100 to describe the font's weight. This compatibility v
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L358)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L383)
 
 </div>
 
@@ -649,7 +649,7 @@ String to delineate whether text should be decorated with for instance an `'unde
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L364)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L389)
 
 </div>
 
@@ -690,7 +690,7 @@ The value of what the text object should be filled in with.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L370)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L395)
 
 </div>
 
@@ -737,7 +737,7 @@ The value of what the text object should be filled in with.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L377)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L402)
 
 </div>
 
@@ -784,7 +784,7 @@ The thickness in pixels of the stroke.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L384)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L409)
 
 </div>
 
@@ -825,7 +825,7 @@ The opaqueness of the text object.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L390)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L415)
 
 </div>
 
@@ -876,7 +876,7 @@ A class to be applied to the element to be compatible with CSS styling. Only ava
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L397)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L422)
 
 </div>
 
@@ -917,7 +917,7 @@ Display the text object or not.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L403)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L428)
 
 </div>
 
@@ -928,6 +928,57 @@ Display the text object or not.
 
 ::: tip nota-bene
 For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](/documentation/webglrenderer) when set to false all updating is disabled improving performance dramatically with many objects in the scene.
+:::
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+---
+
+<div class="instance member ">
+
+## Two.Text.mask
+
+
+
+
+
+
+
+
+<div class="properties">
+
+The shape whose alpha property becomes a clipping area for the text.
+
+</div>
+
+
+
+
+
+
+
+
+<div class="meta">
+
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L435)
+
+</div>
+
+
+
+<div class="tags">
+
+
+::: tip nota-bene
+This property is currently not working becuase of SVG spec issues found here {@link https://code.google.com/p/chromium/issues/detail?id=370951}.
 :::
 
 
@@ -968,7 +1019,7 @@ Object to define clipping area.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L410)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L442)
 
 </div>
 
@@ -1019,7 +1070,7 @@ Remove self from the scene / parent.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L424)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L456)
 
 </div>
 
@@ -1080,7 +1131,7 @@ Create a new instance of [Two.Text](/documentation/text) with the same propertie
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L441)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L473)
 
 </div>
 
@@ -1134,7 +1185,7 @@ Return a JSON compatible plain object that represents the text object.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L471)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L503)
 
 </div>
 
@@ -1175,7 +1226,7 @@ Short hand method to set fill to `transparent`.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L497)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L529)
 
 </div>
 
@@ -1216,7 +1267,7 @@ Short hand method to set stroke to `transparent`.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L507)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L539)
 
 </div>
 
@@ -1279,7 +1330,7 @@ Return an object with top, left, right, bottom, width, and height parameters of 
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L522)
+  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L554)
 
 </div>
 

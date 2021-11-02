@@ -133,6 +133,10 @@ __Returns__:
 
 
 
++ `Object`
+
+
+
 The associated value. If unavailable then `undefined` is returned.
 
 
