@@ -37,8 +37,8 @@ module.exports = {
     ['link', { rel: 'stylesheet', href: 'https://use.typekit.net/edp1hux.css' }]
   ],
   themeConfig: {
-    repo: 'jonobr1/two.js',
-    repoLabel: 'Github',
+    //repo: 'jonobr1/two.js',
+    //repoLabel: 'Github',
     docsDir: 'wiki',
     docsBranch: 'dev',
     editLinks: true,
