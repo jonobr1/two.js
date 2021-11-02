@@ -13,16 +13,15 @@ var template = _.template(
 
 _.each(sourceFiles, function(file) {
 
-  var sourceFile = path.resolve(__dirname, '../' + file);
+  var sourceFile = path.resolve(__dirname, '../', file);
   var outputDir = path.resolve(__dirname,
-    '../' + file.replace('src/', 'wiki/documentation/').replace('.js', '/')
+    '../wiki/documentation/', file.replace('jsm/', '').replace('src/', '').replace('.js', '/')
   );
   var outputFile = path.join(outputDir, '/README.md');
 
   var citations = compiler.explainSync({
       files: sourceFile,
-      cache: false,
-      configure: path.resolve(__dirname, '../jsdoc-conf.json')
+      cache: false
   });
 
   citations.slice(0).forEach(function(object) {
@@ -153,7 +152,7 @@ function expandLink(object, property) {
           ']',
           '(/documentation/',
           directory.toLowerCase(),
-          hash ? '#' + hash.toLowerCase() : '',
+          hash ? '/#' + hash.toLowerCase() : '',
           ')'
         ].join(''));
         shouldRecurse = true;

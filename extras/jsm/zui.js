@@ -30,6 +30,12 @@ Two.Utils.extend(Surface.prototype, {
 
 });
 
+/**
+ * @name Two.ZUI
+ * @class
+ * @param {Two.Group} group - The scene or group to
+ * @param {HTMLElement} [domElement=document.body] - The HTML Element to attach event listeners to.
+ */
 var ZUI = function(group, domElement) {
 
   this.limits = {
@@ -126,9 +132,8 @@ Two.Utils.extend(ZUI.prototype, {
 
   },
 
-  /**
-   * Conversion Functions
-   */
+
+  // Conversion Functions
 
   clientToSurface: function(x, y) {
     this.updateOffset();
@@ -143,10 +148,6 @@ Two.Utils.extend(ZUI.prototype, {
     var sm = this.surfaceMatrix.multiply.apply(this.surfaceMatrix, [v.x, v.y, v.z]);
     return vo.multiply.apply(vo, [sm.x, sm.y, sm.z]);
   },
-
-  /**
-   *
-   */
 
   zoomBy: function(byF, clientX, clientY) {
     var s = ZUI.PositionToScale(this.zoom + byF);
