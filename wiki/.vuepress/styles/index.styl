@@ -12,24 +12,16 @@ body {
     margin-bottom: 1.25rem;
   }
 
-  .nav-item > a:not(.external):hover,
-  .nav-links a,
-  .nav-links a.router-link-active,
   .page-edit .edit-link a,
   a {
     color: $green;
-    //border-color: $green;
     text-decoration: none;
-    //border-bottom-width: 0.125rem;
-    //border-bottom-style: solid;
+
     &:visited {
       text-decoration: none;
-      //color: $orange;
-      //border-color: $orange;
     }
     &:hover {
       color: $orange;
-      //border-color: $red;
       text-decoration: none;
     }
     &.header-anchor {
@@ -242,9 +234,15 @@ body {
       transition: color .2s, border-color .2s;
       }
       
-      a:hover, a.router-link-active {
-        border: none;
-        border-top: 2px solid $orange;
+      a:hover {
+        border-bottom: none;
+        border-top-color: $blue;
+        color: $blue;
+      }
+
+      a.router-link-active {
+        border-bottom: none;
+        border-top-color: $orange;
         color: $orange;
       }
     }
