@@ -3,7 +3,7 @@
 A two-dimensional drawing api geared towards modern web browsers. It is renderer agnostic enabling the same api to draw in multiple contexts: svg, canvas, and webgl.
 
 <custom-button text="Github" type="github" href="https://github.com/jonobr1/two.js" />
-<custom-button text="Sponsor" type="sponsors" href="https://raw.githubusercontent.com/jonobr1/two.js/master/build/two.min.js" />
+<custom-button text="Sponsor" type="sponsor" href="https://raw.githubusercontent.com/jonobr1/two.js/master/build/two.min.js" />
 <line-break />
 ## Download
 <line-break />

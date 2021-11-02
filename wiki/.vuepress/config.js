@@ -49,12 +49,12 @@ module.exports = {
   themeConfig: {
     //repo: 'jonobr1/two.js',
     //repoLabel: 'Github',
+    logo: '/images/logo.svg',
     docsDir: 'wiki',
     docsBranch: 'dev',
     editLinks: true,
     editLinkText: 'See a typo? Help us improve it.',
     smoothScroll: true,
-    nav: [],
     lastUpdated: 'Last Updated',
     activeHeaderLinks: false,
     searchPlaceholder: 'Search...',
