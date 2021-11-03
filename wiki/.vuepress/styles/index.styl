@@ -32,17 +32,25 @@ body {
   .theme-default-content {
 
     a:hover {
-      text-decoration: none !important;
+      text-decoration: none;
     }
 
-    pre[class*="language-"] code,
     code {
       font-family: "anonymous-pro", monospace;
-      background: transparent;
-      font-size: 1rem;
-      border-radius: 0;
-      padding: 0;
+      font-size: .95rem;
       color: $codeColor;
+      padding: .2rem .4rem;
+      border-radius: 4px;
+      background: #f6f6f6;
+    }
+
+    a code {
+      background: transparent;
+    }
+
+    pre[class*="language-"] code {
+      color: $textColor;
+      font-size: 1rem;
     }
 
     div[class*="language-"]::before {
@@ -284,7 +292,6 @@ body {
 }
 
 .theme-default-content:not(.custom) {
-  max-width: 860px;
   
   h1 {
     font-size: 2.25rem;
@@ -470,3 +477,7 @@ table tr:last-child td:first-child {
 table tr:last-child td:last-child {
   border-bottom-right-radius: 6px;
 }
+
+.returns {
+  margin: 0 0 1.25rem 0;
+  }
