@@ -10,7 +10,7 @@ A class to store 3 x 3 transformation matrix information. In addition to storing
 
 
 <div class="meta">
-  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/matrix.js" />
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/matrix.js" />
 </div>
 
 
@@ -20,24 +20,25 @@ A class to store 3 x 3 transformation matrix information. In addition to storing
 
 | Argument | Description |
 | ---- | ----------- |
-|  `a`  | The value for element at the first column and first row. |
-|  `b`  | The value for element at the second column and first row. |
-|  `c`  | The value for element at the third column and first row. |
-|  `d`  | The value for element at the first column and second row. |
-|  `e`  | The value for element at the second column and second row. |
-|  `f`  | The value for element at the third column and second row. |
-|  `g`  | The value for element at the first column and third row. |
-|  `h`  | The value for element at the second column and third row. |
-|  `i`  | The value for element at the third column and third row. |
+|  a  | The value for element at the first column and first row. |
+|  b  | The value for element at the second column and first row. |
+|  c  | The value for element at the third column and first row. |
+|  d  | The value for element at the first column and second row. |
+|  e  | The value for element at the second column and second row. |
+|  f  | The value for element at the third column and second row. |
+|  g  | The value for element at the first column and third row. |
+|  h  | The value for element at the second column and third row. |
+|  i  | The value for element at the third column and third row. |
 
 
-
----
 
 <div class="static member ">
 
 ## Identity
-<span class="longname">Two.Matrix.Identity</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Matrix.</span><span class="shortname">Identity</span></h2>
+
+
 
 
 
@@ -61,7 +62,7 @@ A stored reference to the default value of a 3 x 3 matrix.
 
 <div class="meta">
 
-  [matrix.js:51](https://github.com/jonobr1/two.js/blob/dev/src/matrix.js#L51)
+  [`matrix.js:51`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/matrix.js#L51)
 
 </div>
 
@@ -73,25 +74,19 @@ A stored reference to the default value of a 3 x 3 matrix.
 </div>
 
 
-
----
 
 <div class="static function ">
 
 ## Multiply
-<span class="longname">Two.Matrix.Multiply</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Matrix.</span><span class="shortname">Multiply</span></h2>
 
 
 
 
 <div class="returns">
 
-__Returns__:
-
-
-
-+ `Two.Matrix`
-
+__Returns__: Two.Matrix
 
 
 - If an optional `C` matrix isn't passed then a new one is created and returned.
@@ -105,13 +100,15 @@ __Returns__:
 
 
 
+
+
 <div class="params">
 
 | Argument | Description |
 | ---- | ----------- |
-|  `A`  |  |
-|  `B`  |  |
-|  `C`  | An optional matrix to apply the multiplication to. |
+|  A  |  |
+|  B  |  |
+|  C  | An optional matrix to apply the multiplication to. |
 </div>
 
 
@@ -127,7 +124,7 @@ Multiply two matrices together and return the result.
 
 <div class="meta">
 
-  [matrix.js:61](https://github.com/jonobr1/two.js/blob/dev/src/matrix.js#L61)
+  [`matrix.js:61`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/matrix.js#L61)
 
 </div>
 
@@ -139,13 +136,14 @@ Multiply two matrices together and return the result.
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## elements
-<span class="longname">Two.Matrix.elements</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Matrix.</span><span class="shortname">elements</span></h2>
+
+
 
 
 
@@ -169,7 +167,7 @@ The underlying data stored as an array.
 
 <div class="meta">
 
-  [matrix.js:27](https://github.com/jonobr1/two.js/blob/dev/src/matrix.js#L27)
+  [`matrix.js:27`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/matrix.js#L27)
 
 </div>
 
@@ -181,13 +179,14 @@ The underlying data stored as an array.
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## manual
-<span class="longname">Two.Matrix.manual</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Matrix.</span><span class="shortname">manual</span></h2>
+
+
 
 
 
@@ -211,7 +210,7 @@ Determines whether Two.js automatically calculates the values for the matrix or 
 
 <div class="meta">
 
-  [matrix.js:121](https://github.com/jonobr1/two.js/blob/dev/src/matrix.js#L121)
+  [`matrix.js:121`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/matrix.js#L121)
 
 </div>
 
@@ -234,12 +233,13 @@ Determines whether Two.js automatically calculates the values for the matrix or 
 
 
 
----
-
 <div class="instance function ">
 
 ## set
-<span class="longname">Two.Matrix.set</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Matrix.</span><span class="shortname">set</span></h2>
+
+
 
 
 
@@ -254,15 +254,15 @@ Determines whether Two.js automatically calculates the values for the matrix or 
 
 | Argument | Description |
 | ---- | ----------- |
-|  `a`  | The value for element at the first column and first row. |
-|  `b`  | The value for element at the second column and first row. |
-|  `c`  | The value for element at the third column and first row. |
-|  `d`  | The value for element at the first column and second row. |
-|  `e`  | The value for element at the second column and second row. |
-|  `f`  | The value for element at the third column and second row. |
-|  `g`  | The value for element at the first column and third row. |
-|  `h`  | The value for element at the second column and third row. |
-|  `i`  | The value for element at the third column and third row. |
+|  a  | The value for element at the first column and first row. |
+|  b  | The value for element at the second column and first row. |
+|  c  | The value for element at the third column and first row. |
+|  d  | The value for element at the first column and second row. |
+|  e  | The value for element at the second column and second row. |
+|  f  | The value for element at the third column and second row. |
+|  g  | The value for element at the first column and third row. |
+|  h  | The value for element at the second column and third row. |
+|  i  | The value for element at the third column and third row. |
 </div>
 
 
@@ -278,7 +278,7 @@ Set an array of values onto the matrix. Order described in [Two.Matrix](/documen
 
 <div class="meta">
 
-  [matrix.js:128](https://github.com/jonobr1/two.js/blob/dev/src/matrix.js#L128)
+  [`matrix.js:128`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/matrix.js#L128)
 
 </div>
 
@@ -290,13 +290,14 @@ Set an array of values onto the matrix. Order described in [Two.Matrix](/documen
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## set
-<span class="longname">Two.Matrix.set</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Matrix.</span><span class="shortname">set</span></h2>
+
+
 
 
 
@@ -311,7 +312,7 @@ Set an array of values onto the matrix. Order described in [Two.Matrix](/documen
 
 | Argument | Description |
 | ---- | ----------- |
-|  `a`  | The array of elements to apply. |
+|  a  | The array of elements to apply. |
 </div>
 
 
@@ -327,7 +328,7 @@ Set an array of values onto the matrix. Order described in [Two.Matrix](/documen
 
 <div class="meta">
 
-  [matrix.js:143](https://github.com/jonobr1/two.js/blob/dev/src/matrix.js#L143)
+  [`matrix.js:143`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/matrix.js#L143)
 
 </div>
 
@@ -339,13 +340,14 @@ Set an array of values onto the matrix. Order described in [Two.Matrix](/documen
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## copy
-<span class="longname">Two.Matrix.copy</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Matrix.</span><span class="shortname">copy</span></h2>
+
+
 
 
 
@@ -369,7 +371,7 @@ Copy the matrix of one to the current instance.
 
 <div class="meta">
 
-  [matrix.js:180](https://github.com/jonobr1/two.js/blob/dev/src/matrix.js#L180)
+  [`matrix.js:180`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/matrix.js#L180)
 
 </div>
 
@@ -381,13 +383,14 @@ Copy the matrix of one to the current instance.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## identity
-<span class="longname">Two.Matrix.identity</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Matrix.</span><span class="shortname">identity</span></h2>
+
+
 
 
 
@@ -411,7 +414,7 @@ Turn matrix to the identity, like resetting.
 
 <div class="meta">
 
-  [matrix.js:203](https://github.com/jonobr1/two.js/blob/dev/src/matrix.js#L203)
+  [`matrix.js:203`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/matrix.js#L203)
 
 </div>
 
@@ -423,13 +426,12 @@ Turn matrix to the identity, like resetting.
 </div>
 
 
-
----
 
 <div class="instance function overloaded">
 
 ## multiply
-<span class="longname">Two.Matrix.multiply</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Matrix.</span><span class="shortname">multiply</span></h2>
 
 
 <div class="overloaded-label">
@@ -446,11 +448,13 @@ _Overloaded_
 
 
 
+
+
 <div class="params">
 
 | Argument | Description |
 | ---- | ----------- |
-|  `a`  | The scalar to be multiplied. |
+|  a  | The scalar to be multiplied. |
 </div>
 
 
@@ -466,7 +470,7 @@ Multiply all components of the matrix against a single scalar value.
 
 <div class="meta">
 
-  [matrix.js:224](https://github.com/jonobr1/two.js/blob/dev/src/matrix.js#L224)
+  [`matrix.js:224`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/matrix.js#L224)
 
 </div>
 
@@ -485,12 +489,11 @@ Multiply all components of the matrix against a single scalar value.
 
 
 
----
-
 <div class="instance function overloaded">
 
 ## multiply
-<span class="longname">Two.Matrix.multiply</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Matrix.</span><span class="shortname">multiply</span></h2>
 
 
 <div class="overloaded-label">
@@ -507,13 +510,15 @@ _Overloaded_
 
 
 
+
+
 <div class="params">
 
 | Argument | Description |
 | ---- | ----------- |
-|  `a`  | The x component to be multiplied. |
-|  `b`  | The y component to be multiplied. |
-|  `c`  | The z component to be multiplied. |
+|  a  | The x component to be multiplied. |
+|  b  | The y component to be multiplied. |
+|  c  | The z component to be multiplied. |
 </div>
 
 
@@ -529,7 +534,7 @@ Multiply all components of a matrix against a 3 component vector.
 
 <div class="meta">
 
-  [matrix.js:232](https://github.com/jonobr1/two.js/blob/dev/src/matrix.js#L232)
+  [`matrix.js:232`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/matrix.js#L232)
 
 </div>
 
@@ -548,12 +553,11 @@ Multiply all components of a matrix against a 3 component vector.
 
 
 
----
-
 <div class="instance function overloaded">
 
 ## multiply
-<span class="longname">Two.Matrix.multiply</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Matrix.</span><span class="shortname">multiply</span></h2>
 
 
 <div class="overloaded-label">
@@ -570,19 +574,21 @@ _Overloaded_
 
 
 
+
+
 <div class="params">
 
 | Argument | Description |
 | ---- | ----------- |
-|  `a`  | The value at the first column and first row of the matrix to be multiplied. |
-|  `b`  | The value at the second column and first row of the matrix to be multiplied. |
-|  `c`  | The value at the third column and first row of the matrix to be multiplied. |
-|  `d`  | The value at the first column and second row of the matrix to be multiplied. |
-|  `e`  | The value at the second column and second row of the matrix to be multiplied. |
-|  `f`  | The value at the third column and second row of the matrix to be multiplied. |
-|  `g`  | The value at the first column and third row of the matrix to be multiplied. |
-|  `h`  | The value at the second column and third row of the matrix to be multiplied. |
-|  `i`  | The value at the third column and third row of the matrix to be multiplied. |
+|  a  | The value at the first column and first row of the matrix to be multiplied. |
+|  b  | The value at the second column and first row of the matrix to be multiplied. |
+|  c  | The value at the third column and first row of the matrix to be multiplied. |
+|  d  | The value at the first column and second row of the matrix to be multiplied. |
+|  e  | The value at the second column and second row of the matrix to be multiplied. |
+|  f  | The value at the third column and second row of the matrix to be multiplied. |
+|  g  | The value at the first column and third row of the matrix to be multiplied. |
+|  h  | The value at the second column and third row of the matrix to be multiplied. |
+|  i  | The value at the third column and third row of the matrix to be multiplied. |
 </div>
 
 
@@ -598,7 +604,7 @@ Multiply all components of a matrix against another matrix.
 
 <div class="meta">
 
-  [matrix.js:242](https://github.com/jonobr1/two.js/blob/dev/src/matrix.js#L242)
+  [`matrix.js:242`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/matrix.js#L242)
 
 </div>
 
@@ -617,12 +623,13 @@ Multiply all components of a matrix against another matrix.
 
 
 
----
-
 <div class="instance function ">
 
 ## inverse
-<span class="longname">Two.Matrix.inverse</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Matrix.</span><span class="shortname">inverse</span></h2>
+
+
 
 
 
@@ -637,7 +644,7 @@ Multiply all components of a matrix against another matrix.
 
 | Argument | Description |
 | ---- | ----------- |
-|  `out`  | The optional matrix to apply the inversion to. |
+|  out  | The optional matrix to apply the inversion to. |
 </div>
 
 
@@ -653,7 +660,7 @@ Return an inverted version of the matrix. If no optional one is passed a new mat
 
 <div class="meta">
 
-  [matrix.js:325](https://github.com/jonobr1/two.js/blob/dev/src/matrix.js#L325)
+  [`matrix.js:325`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/matrix.js#L325)
 
 </div>
 
@@ -665,13 +672,14 @@ Return an inverted version of the matrix. If no optional one is passed a new mat
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## scale
-<span class="longname">Two.Matrix.scale</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Matrix.</span><span class="shortname">scale</span></h2>
+
+
 
 
 
@@ -686,7 +694,7 @@ Return an inverted version of the matrix. If no optional one is passed a new mat
 
 | Argument | Description |
 | ---- | ----------- |
-|  `scale`  | The one dimensional scale to apply to the matrix. |
+|  scale  | The one dimensional scale to apply to the matrix. |
 </div>
 
 
@@ -702,7 +710,7 @@ Uniformly scale the transformation matrix.
 
 <div class="meta">
 
-  [matrix.js:367](https://github.com/jonobr1/two.js/blob/dev/src/matrix.js#L367)
+  [`matrix.js:367`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/matrix.js#L367)
 
 </div>
 
@@ -714,13 +722,14 @@ Uniformly scale the transformation matrix.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## scale
-<span class="longname">Two.Matrix.scale</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Matrix.</span><span class="shortname">scale</span></h2>
+
+
 
 
 
@@ -735,8 +744,8 @@ Uniformly scale the transformation matrix.
 
 | Argument | Description |
 | ---- | ----------- |
-|  `sx`  | The horizontal scale factor. |
-|  `sy`  | The vertical scale factor |
+|  sx  | The horizontal scale factor. |
+|  sy  | The vertical scale factor |
 </div>
 
 
@@ -752,7 +761,7 @@ Scale the transformation matrix in two dimensions.
 
 <div class="meta">
 
-  [matrix.js:374](https://github.com/jonobr1/two.js/blob/dev/src/matrix.js#L374)
+  [`matrix.js:374`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/matrix.js#L374)
 
 </div>
 
@@ -764,13 +773,14 @@ Scale the transformation matrix in two dimensions.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## rotate
-<span class="longname">Two.Matrix.rotate</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Matrix.</span><span class="shortname">rotate</span></h2>
+
+
 
 
 
@@ -785,7 +795,7 @@ Scale the transformation matrix in two dimensions.
 
 | Argument | Description |
 | ---- | ----------- |
-|  `Number`  | The amount to rotate in Number. |
+|  Number  | The amount to rotate in Number. |
 </div>
 
 
@@ -801,7 +811,7 @@ Rotate the matrix.
 
 <div class="meta">
 
-  [matrix.js:392](https://github.com/jonobr1/two.js/blob/dev/src/matrix.js#L392)
+  [`matrix.js:392`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/matrix.js#L392)
 
 </div>
 
@@ -813,13 +823,14 @@ Rotate the matrix.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## translate
-<span class="longname">Two.Matrix.translate</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Matrix.</span><span class="shortname">translate</span></h2>
+
+
 
 
 
@@ -834,8 +845,8 @@ Rotate the matrix.
 
 | Argument | Description |
 | ---- | ----------- |
-|  `x`  | The horizontal translation value to apply. |
-|  `y`  | The vertical translation value to apply. |
+|  x  | The horizontal translation value to apply. |
+|  y  | The vertical translation value to apply. |
 </div>
 
 
@@ -851,7 +862,7 @@ Translate the matrix.
 
 <div class="meta">
 
-  [matrix.js:407](https://github.com/jonobr1/two.js/blob/dev/src/matrix.js#L407)
+  [`matrix.js:407`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/matrix.js#L407)
 
 </div>
 
@@ -863,13 +874,14 @@ Translate the matrix.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## skewX
-<span class="longname">Two.Matrix.skewX</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Matrix.</span><span class="shortname">skewX</span></h2>
+
+
 
 
 
@@ -884,7 +896,7 @@ Translate the matrix.
 
 | Argument | Description |
 | ---- | ----------- |
-|  `Number`  | The amount to skew in Number. |
+|  Number  | The amount to skew in Number. |
 </div>
 
 
@@ -900,7 +912,7 @@ Skew the matrix by an angle in the x axis direction.
 
 <div class="meta">
 
-  [matrix.js:420](https://github.com/jonobr1/two.js/blob/dev/src/matrix.js#L420)
+  [`matrix.js:420`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/matrix.js#L420)
 
 </div>
 
@@ -912,13 +924,14 @@ Skew the matrix by an angle in the x axis direction.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## skewY
-<span class="longname">Two.Matrix.skewY</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Matrix.</span><span class="shortname">skewY</span></h2>
+
+
 
 
 
@@ -933,7 +946,7 @@ Skew the matrix by an angle in the x axis direction.
 
 | Argument | Description |
 | ---- | ----------- |
-|  `Number`  | The amount to skew in Number. |
+|  Number  | The amount to skew in Number. |
 </div>
 
 
@@ -949,7 +962,7 @@ Skew the matrix by an angle in the y axis direction.
 
 <div class="meta">
 
-  [matrix.js:434](https://github.com/jonobr1/two.js/blob/dev/src/matrix.js#L434)
+  [`matrix.js:434`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/matrix.js#L434)
 
 </div>
 
@@ -961,25 +974,19 @@ Skew the matrix by an angle in the y axis direction.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## toString
-<span class="longname">Two.Matrix.toString</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Matrix.</span><span class="shortname">toString</span></h2>
 
 
 
 
 <div class="returns">
 
-__Returns__:
-
-
-
-+ `String`
-
+__Returns__: String
 
 
 - The transformation matrix as a 6 component string separated by spaces.
@@ -993,11 +1000,13 @@ __Returns__:
 
 
 
+
+
 <div class="params">
 
 | Argument | Description |
 | ---- | ----------- |
-|  `fullMatrix`  | Return the full 9 elements of the matrix or just 6 for 2D transformations. |
+|  fullMatrix  | Return the full 9 elements of the matrix or just 6 for 2D transformations. |
 </div>
 
 
@@ -1013,7 +1022,7 @@ Create a transform string. Used for the Two.js rendering APIs.
 
 <div class="meta">
 
-  [matrix.js:448](https://github.com/jonobr1/two.js/blob/dev/src/matrix.js#L448)
+  [`matrix.js:448`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/matrix.js#L448)
 
 </div>
 
@@ -1025,13 +1034,14 @@ Create a transform string. Used for the Two.js rendering APIs.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## toTransformArray
-<span class="longname">Two.Matrix.toTransformArray</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Matrix.</span><span class="shortname">toTransformArray</span></h2>
+
+
 
 
 
@@ -1046,8 +1056,8 @@ Create a transform string. Used for the Two.js rendering APIs.
 
 | Argument | Description |
 | ---- | ----------- |
-|  `fullMatrix`  | Return the full 9 elements of the matrix or just 6 in the format for 2D transformations. |
-|  `output`  | An array empty or otherwise to apply the values to. |
+|  fullMatrix  | Return the full 9 elements of the matrix or just 6 in the format for 2D transformations. |
+|  output  | An array empty or otherwise to apply the values to. |
 </div>
 
 
@@ -1063,7 +1073,7 @@ Create a transform array. Used for the Two.js rendering APIs.
 
 <div class="meta">
 
-  [matrix.js:464](https://github.com/jonobr1/two.js/blob/dev/src/matrix.js#L464)
+  [`matrix.js:464`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/matrix.js#L464)
 
 </div>
 
@@ -1075,13 +1085,14 @@ Create a transform array. Used for the Two.js rendering APIs.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## toArray
-<span class="longname">Two.Matrix.toArray</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Matrix.</span><span class="shortname">toArray</span></h2>
+
+
 
 
 
@@ -1096,8 +1107,8 @@ Create a transform array. Used for the Two.js rendering APIs.
 
 | Argument | Description |
 | ---- | ----------- |
-|  `fullMatrix`  | Return the full 9 elements of the matrix or just 6 for 2D transformations. |
-|  `output`  | An array empty or otherwise to apply the values to. |
+|  fullMatrix  | Return the full 9 elements of the matrix or just 6 for 2D transformations. |
+|  output  | An array empty or otherwise to apply the values to. |
 </div>
 
 
@@ -1113,7 +1124,7 @@ Create a transform array. Used for the Two.js rendering APIs.
 
 <div class="meta">
 
-  [matrix.js:523](https://github.com/jonobr1/two.js/blob/dev/src/matrix.js#L523)
+  [`matrix.js:523`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/matrix.js#L523)
 
 </div>
 
@@ -1125,13 +1136,14 @@ Create a transform array. Used for the Two.js rendering APIs.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## toObject
-<span class="longname">Two.Matrix.toObject</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Matrix.</span><span class="shortname">toObject</span></h2>
+
+
 
 
 
@@ -1155,7 +1167,7 @@ Create a JSON compatible object that represents information of the matrix.
 
 <div class="meta">
 
-  [matrix.js:582](https://github.com/jonobr1/two.js/blob/dev/src/matrix.js#L582)
+  [`matrix.js:582`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/matrix.js#L582)
 
 </div>
 
@@ -1167,13 +1179,14 @@ Create a JSON compatible object that represents information of the matrix.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## clone
-<span class="longname">Two.Matrix.clone</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Matrix.</span><span class="shortname">clone</span></h2>
+
+
 
 
 
@@ -1197,7 +1210,7 @@ Clone the current matrix.
 
 <div class="meta">
 
-  [matrix.js:594](https://github.com/jonobr1/two.js/blob/dev/src/matrix.js#L594)
+  [`matrix.js:594`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/matrix.js#L594)
 
 </div>
 

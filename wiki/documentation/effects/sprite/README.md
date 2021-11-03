@@ -16,7 +16,7 @@ A convenient package to display still or animated images through a tiled image s
 
 
 <div class="meta">
-  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/effects/sprite.js" />
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/sprite.js" />
 </div>
 
 
@@ -26,21 +26,22 @@ A convenient package to display still or animated images through a tiled image s
 
 | Argument | Description |
 | ---- | ----------- |
-|  `path`  | The URL path or [Two.Texture](/documentation/texture) to be used as the bitmap data displayed on the sprite. |
-|  `ox`  | The initial `x` position of the Two.Sprite. |
-|  `oy`  | The initial `y` position of the Two.Sprite. |
-|  `cols`  | The number of columns the sprite contains. |
-|  `rows`  | The number of rows the sprite contains. |
-|  `frameRate`  | The frame rate at which the partitions of the image should playback at. |
+|  path  | The URL path or [Two.Texture](/documentation/texture) to be used as the bitmap data displayed on the sprite. |
+|  ox  | The initial `x` position of the Two.Sprite. |
+|  oy  | The initial `y` position of the Two.Sprite. |
+|  cols  | The number of columns the sprite contains. |
+|  rows  | The number of rows the sprite contains. |
+|  frameRate  | The frame rate at which the partitions of the image should playback at. |
 
 
-
----
 
 <div class="static member ">
 
 ## Properties
-<span class="longname">Two.Sprite.Properties</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Sprite.</span><span class="shortname">Properties</span></h2>
+
+
 
 
 
@@ -64,7 +65,7 @@ A list of properties that are on every [Two.Sprite](/documentation/sprite).
 
 <div class="meta">
 
-  [sprite.js:86](https://github.com/jonobr1/two.js/blob/dev/src/effects/sprite.js#L86)
+  [`sprite.js:86`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/sprite.js#L86)
 
 </div>
 
@@ -76,13 +77,14 @@ A list of properties that are on every [Two.Sprite](/documentation/sprite).
 </div>
 
 
-
----
 
 <div class="static function ">
 
 ## MakeObservable
-<span class="longname">Two.Sprite.MakeObservable</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Sprite.</span><span class="shortname">MakeObservable</span></h2>
+
+
 
 
 
@@ -97,7 +99,7 @@ A list of properties that are on every [Two.Sprite](/documentation/sprite).
 
 | Argument | Description |
 | ---- | ----------- |
-|  `object`  | The object to make observable. |
+|  object  | The object to make observable. |
 </div>
 
 
@@ -113,7 +115,7 @@ Convenience function to apply observable qualities of a [Two.Sprite](/documentat
 
 <div class="meta">
 
-  [sprite.js:94](https://github.com/jonobr1/two.js/blob/dev/src/effects/sprite.js#L94)
+  [`sprite.js:94`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/sprite.js#L94)
 
 </div>
 
@@ -125,13 +127,14 @@ Convenience function to apply observable qualities of a [Two.Sprite](/documentat
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## texture
-<span class="longname">Two.Sprite.texture</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Sprite.</span><span class="shortname">texture</span></h2>
+
+
 
 
 
@@ -155,7 +158,7 @@ The texture to be used as bitmap data to display image in the scene.
 
 <div class="meta">
 
-  [sprite.js:37](https://github.com/jonobr1/two.js/blob/dev/src/effects/sprite.js#L37)
+  [`sprite.js:37`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/sprite.js#L37)
 
 </div>
 
@@ -167,13 +170,14 @@ The texture to be used as bitmap data to display image in the scene.
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## columns
-<span class="longname">Two.Sprite.columns</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Sprite.</span><span class="shortname">columns</span></h2>
+
+
 
 
 
@@ -197,7 +201,7 @@ The number of columns to split the texture into. Defaults to `1`.
 
 <div class="meta">
 
-  [sprite.js:52](https://github.com/jonobr1/two.js/blob/dev/src/effects/sprite.js#L52)
+  [`sprite.js:52`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/sprite.js#L52)
 
 </div>
 
@@ -209,13 +213,14 @@ The number of columns to split the texture into. Defaults to `1`.
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## rows
-<span class="longname">Two.Sprite.rows</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Sprite.</span><span class="shortname">rows</span></h2>
+
+
 
 
 
@@ -239,7 +244,7 @@ The number of rows to split the texture into. Defaults to `1`.
 
 <div class="meta">
 
-  [sprite.js:60](https://github.com/jonobr1/two.js/blob/dev/src/effects/sprite.js#L60)
+  [`sprite.js:60`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/sprite.js#L60)
 
 </div>
 
@@ -251,13 +256,14 @@ The number of rows to split the texture into. Defaults to `1`.
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## frameRate
-<span class="longname">Two.Sprite.frameRate</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Sprite.</span><span class="shortname">frameRate</span></h2>
+
+
 
 
 
@@ -281,7 +287,7 @@ The number of frames to animate against per second. Defaults to `0` for non-anim
 
 <div class="meta">
 
-  [sprite.js:68](https://github.com/jonobr1/two.js/blob/dev/src/effects/sprite.js#L68)
+  [`sprite.js:68`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/sprite.js#L68)
 
 </div>
 
@@ -293,13 +299,14 @@ The number of frames to animate against per second. Defaults to `0` for non-anim
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## index
-<span class="longname">Two.Sprite.index</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Sprite.</span><span class="shortname">index</span></h2>
+
+
 
 
 
@@ -323,7 +330,7 @@ The index of the current tile of the sprite to display. Defaults to `0`.
 
 <div class="meta">
 
-  [sprite.js:76](https://github.com/jonobr1/two.js/blob/dev/src/effects/sprite.js#L76)
+  [`sprite.js:76`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/sprite.js#L76)
 
 </div>
 
@@ -335,13 +342,14 @@ The index of the current tile of the sprite to display. Defaults to `0`.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## play
-<span class="longname">Two.Sprite.play</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Sprite.</span><span class="shortname">play</span></h2>
+
+
 
 
 
@@ -356,9 +364,9 @@ The index of the current tile of the sprite to display. Defaults to `0`.
 
 | Argument | Description |
 | ---- | ----------- |
-|  `firstFrame`  | The index of the frame to start the animation with. |
-|  `lastFrame`  | The index of the frame to end the animation with. Defaults to the last item in the [Two.Sprite.textures](/documentation/sprite/#two-sprite-textures). |
-|  `onLastFrame`  | Optional callback function to be triggered after playing the last frame. This fires multiple times when the sprite is looped. |
+|  firstFrame  | The index of the frame to start the animation with. |
+|  lastFrame  | The index of the frame to end the animation with. Defaults to the last item in the [Two.Sprite.textures](/documentation/sprite/#two-sprite-textures). |
+|  onLastFrame  | Optional callback function to be triggered after playing the last frame. This fires multiple times when the sprite is looped. |
 </div>
 
 
@@ -374,7 +382,7 @@ Initiate animation playback of a [Two.Sprite](/documentation/sprite).
 
 <div class="meta">
 
-  [sprite.js:243](https://github.com/jonobr1/two.js/blob/dev/src/effects/sprite.js#L243)
+  [`sprite.js:243`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/sprite.js#L243)
 
 </div>
 
@@ -386,13 +394,14 @@ Initiate animation playback of a [Two.Sprite](/documentation/sprite).
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## pause
-<span class="longname">Two.Sprite.pause</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Sprite.</span><span class="shortname">pause</span></h2>
+
+
 
 
 
@@ -416,7 +425,7 @@ Halt animation playback of a [Two.Sprite](/documentation/sprite).
 
 <div class="meta">
 
-  [sprite.js:279](https://github.com/jonobr1/two.js/blob/dev/src/effects/sprite.js#L279)
+  [`sprite.js:279`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/sprite.js#L279)
 
 </div>
 
@@ -428,13 +437,14 @@ Halt animation playback of a [Two.Sprite](/documentation/sprite).
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## stop
-<span class="longname">Two.Sprite.stop</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Sprite.</span><span class="shortname">stop</span></h2>
+
+
 
 
 
@@ -458,7 +468,7 @@ Halt animation playback of a [Two.Sprite](/documentation/sprite) and set the cur
 
 <div class="meta">
 
-  [sprite.js:291](https://github.com/jonobr1/two.js/blob/dev/src/effects/sprite.js#L291)
+  [`sprite.js:291`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/sprite.js#L291)
 
 </div>
 
@@ -470,29 +480,25 @@ Halt animation playback of a [Two.Sprite](/documentation/sprite) and set the cur
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## clone
-<span class="longname">Two.Sprite.clone</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Sprite.</span><span class="shortname">clone</span></h2>
 
 
 
 
 <div class="returns">
 
-__Returns__:
-
-
-
-+ `Two.Sprite`
-
+__Returns__: Two.Sprite
 
 
 
 </div>
+
+
 
 
 
@@ -504,7 +510,7 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-|  `parent`  | The parent group or scene to add the clone to. |
+|  parent  | The parent group or scene to add the clone to. |
 </div>
 
 
@@ -520,7 +526,7 @@ Create a new instance of [Two.Sprite](/documentation/sprite) with the same prope
 
 <div class="meta">
 
-  [sprite.js:305](https://github.com/jonobr1/two.js/blob/dev/src/effects/sprite.js#L305)
+  [`sprite.js:305`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/sprite.js#L305)
 
 </div>
 
@@ -532,29 +538,25 @@ Create a new instance of [Two.Sprite](/documentation/sprite) with the same prope
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## toObject
-<span class="longname">Two.Sprite.toObject</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Sprite.</span><span class="shortname">toObject</span></h2>
 
 
 
 
 <div class="returns">
 
-__Returns__:
-
-
-
-+ `Object`
-
+__Returns__: Object
 
 
 
 </div>
+
+
 
 
 
@@ -575,7 +577,7 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  [sprite.js:332](https://github.com/jonobr1/two.js/blob/dev/src/effects/sprite.js#L332)
+  [`sprite.js:332`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/sprite.js#L332)
 
 </div>
 

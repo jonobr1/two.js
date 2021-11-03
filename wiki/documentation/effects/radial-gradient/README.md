@@ -16,7 +16,7 @@ __Extends__: [Two.Gradient](/documentation/effects/gradient/)
 
 
 <div class="meta">
-  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/effects/radial-gradient.js" />
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/radial-gradient.js" />
 </div>
 
 
@@ -26,21 +26,22 @@ __Extends__: [Two.Gradient](/documentation/effects/gradient/)
 
 | Argument | Description |
 | ---- | ----------- |
-|  `x`  | The x position of the origin of the radial gradient. |
-|  `y`  | The y position of the origin of the radial gradient. |
-|  `radius`  | The radius of the radial gradient. |
-|  `stops`  | A list of [Two.Stop](/documentation/stop)s that contain the gradient fill pattern for the gradient. |
-|  `focalX`  | The x position of the focal point on the radial gradient. |
-|  `focalY`  | The y position of the focal point on the radial gradient. |
+|  x  | The x position of the origin of the radial gradient. |
+|  y  | The y position of the origin of the radial gradient. |
+|  radius  | The radius of the radial gradient. |
+|  stops  | A list of [Two.Stop](/documentation/stop)s that contain the gradient fill pattern for the gradient. |
+|  focalX  | The x position of the focal point on the radial gradient. |
+|  focalY  | The y position of the focal point on the radial gradient. |
 
 
-
----
 
 <div class="static member ">
 
 ## Stop
-<span class="longname">Two.RadialGradient.Stop</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.RadialGradient.</span><span class="shortname">Stop</span></h2>
+
+
 
 
 
@@ -58,7 +59,7 @@ __Extends__: [Two.Gradient](/documentation/effects/gradient/)
 
 <div class="meta">
 
-  [radial-gradient.js:68](https://github.com/jonobr1/two.js/blob/dev/src/effects/radial-gradient.js#L68)
+  [`radial-gradient.js:68`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/radial-gradient.js#L68)
 
 </div>
 
@@ -77,12 +78,13 @@ __Extends__: [Two.Gradient](/documentation/effects/gradient/)
 
 
 
----
-
 <div class="static member ">
 
 ## Properties
-<span class="longname">Two.RadialGradient.Properties</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.RadialGradient.</span><span class="shortname">Properties</span></h2>
+
+
 
 
 
@@ -106,7 +108,7 @@ A list of properties that are on every [Two.RadialGradient](/documentation/radia
 
 <div class="meta">
 
-  [radial-gradient.js:74](https://github.com/jonobr1/two.js/blob/dev/src/effects/radial-gradient.js#L74)
+  [`radial-gradient.js:74`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/radial-gradient.js#L74)
 
 </div>
 
@@ -118,13 +120,14 @@ A list of properties that are on every [Two.RadialGradient](/documentation/radia
 </div>
 
 
-
----
 
 <div class="static function ">
 
 ## MakeObservable
-<span class="longname">Two.RadialGradient.MakeObservable</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.RadialGradient.</span><span class="shortname">MakeObservable</span></h2>
+
+
 
 
 
@@ -139,7 +142,7 @@ A list of properties that are on every [Two.RadialGradient](/documentation/radia
 
 | Argument | Description |
 | ---- | ----------- |
-|  `object`  | The object to make observable. |
+|  object  | The object to make observable. |
 </div>
 
 
@@ -155,7 +158,7 @@ Convenience function to apply observable qualities of a [Two.RadialGradient](/do
 
 <div class="meta">
 
-  [radial-gradient.js:82](https://github.com/jonobr1/two.js/blob/dev/src/effects/radial-gradient.js#L82)
+  [`radial-gradient.js:82`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/radial-gradient.js#L82)
 
 </div>
 
@@ -167,13 +170,14 @@ Convenience function to apply observable qualities of a [Two.RadialGradient](/do
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## center
-<span class="longname">Two.RadialGradient.center</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.RadialGradient.</span><span class="shortname">center</span></h2>
+
+
 
 
 
@@ -197,7 +201,7 @@ The x and y value for where the origin of the radial gradient is.
 
 <div class="meta">
 
-  [radial-gradient.js:27](https://github.com/jonobr1/two.js/blob/dev/src/effects/radial-gradient.js#L27)
+  [`radial-gradient.js:27`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/radial-gradient.js#L27)
 
 </div>
 
@@ -209,13 +213,14 @@ The x and y value for where the origin of the radial gradient is.
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## focal
-<span class="longname">Two.RadialGradient.focal</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.RadialGradient.</span><span class="shortname">focal</span></h2>
+
+
 
 
 
@@ -239,7 +244,7 @@ The x and y value for where the focal point of the radial gradient is.
 
 <div class="meta">
 
-  [radial-gradient.js:38](https://github.com/jonobr1/two.js/blob/dev/src/effects/radial-gradient.js#L38)
+  [`radial-gradient.js:38`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/radial-gradient.js#L38)
 
 </div>
 
@@ -262,24 +267,18 @@ This effects the spray or spread of the radial gradient.
 
 
 
----
-
 <div class="instance function ">
 
 ## clone
-<span class="longname">Two.RadialGradient.clone</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.RadialGradient.</span><span class="shortname">clone</span></h2>
 
 
 
 
 <div class="returns">
 
-__Returns__:
-
-
-
-+ `Two.Gradient`
-
+__Returns__: Two.Gradient
 
 
 
@@ -291,11 +290,13 @@ __Returns__:
 
 
 
+
+
 <div class="params">
 
 | Argument | Description |
 | ---- | ----------- |
-|  `parent`  | The parent group or scene to add the clone to. |
+|  parent  | The parent group or scene to add the clone to. |
 </div>
 
 
@@ -311,7 +312,7 @@ Create a new instance of [Two.RadialGradient](/documentation/radialgradient) wit
 
 <div class="meta">
 
-  [radial-gradient.js:121](https://github.com/jonobr1/two.js/blob/dev/src/effects/radial-gradient.js#L121)
+  [`radial-gradient.js:121`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/radial-gradient.js#L121)
 
 </div>
 
@@ -323,29 +324,25 @@ Create a new instance of [Two.RadialGradient](/documentation/radialgradient) wit
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## toObject
-<span class="longname">Two.RadialGradient.toObject</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.RadialGradient.</span><span class="shortname">toObject</span></h2>
 
 
 
 
 <div class="returns">
 
-__Returns__:
-
-
-
-+ `Object`
-
+__Returns__: Object
 
 
 
 </div>
+
+
 
 
 
@@ -366,7 +363,7 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  [radial-gradient.js:149](https://github.com/jonobr1/two.js/blob/dev/src/effects/radial-gradient.js#L149)
+  [`radial-gradient.js:149`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/radial-gradient.js#L149)
 
 </div>
 

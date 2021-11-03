@@ -16,7 +16,7 @@ This is the primary primitive class for creating all drawable shapes in Two.js. 
 
 
 <div class="meta">
-  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/path.js" />
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/path.js" />
 </div>
 
 
@@ -26,19 +26,20 @@ This is the primary primitive class for creating all drawable shapes in Two.js. 
 
 | Argument | Description |
 | ---- | ----------- |
-|  `vertices`  | A list of [Two.Anchor](/documentation/anchor)s that represent the order and coordinates to construct the rendered shape. |
-|  `closed`  | Describes whether the shape is closed or open. |
-|  `curved`  | Describes whether the shape automatically calculates bezier handles for each vertex. |
-|  `manual`  | Describes whether the developer controls how vertices are plotted or if Two.js automatically plots coordinates based on closed and curved booleans. |
+|  vertices  | A list of [Two.Anchor](/documentation/anchor)s that represent the order and coordinates to construct the rendered shape. |
+|  closed  | Describes whether the shape is closed or open. |
+|  curved  | Describes whether the shape automatically calculates bezier handles for each vertex. |
+|  manual  | Describes whether the developer controls how vertices are plotted or if Two.js automatically plots coordinates based on closed and curved booleans. |
 
 
-
----
 
 <div class="static member ">
 
 ## Properties
-<span class="longname">Two.Path.Properties</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">Properties</span></h2>
+
+
 
 
 
@@ -62,7 +63,7 @@ A list of properties that are on every [Two.Path](/documentation/path).
 
 <div class="meta">
 
-  [path.js:178](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L178)
+  [`path.js:178`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/path.js#L178)
 
 </div>
 
@@ -74,13 +75,14 @@ A list of properties that are on every [Two.Path](/documentation/path).
 </div>
 
 
-
----
 
 <div class="static function ">
 
 ## FlagVertices
-<span class="longname">Two.Path.FlagVertices</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">FlagVertices</span></h2>
+
+
 
 
 
@@ -104,7 +106,7 @@ Cached method to let renderers know vertices have been updated on a [Two.Path](/
 
 <div class="meta">
 
-  [path.js:203](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L203)
+  [`path.js:203`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/path.js#L203)
 
 </div>
 
@@ -116,13 +118,14 @@ Cached method to let renderers know vertices have been updated on a [Two.Path](/
 </div>
 
 
-
----
 
 <div class="static function ">
 
 ## BindVertices
-<span class="longname">Two.Path.BindVertices</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">BindVertices</span></h2>
+
+
 
 
 
@@ -146,7 +149,7 @@ Cached method to let [Two.Path](/documentation/path) know vertices have been add
 
 <div class="meta">
 
-  [path.js:216](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L216)
+  [`path.js:216`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/path.js#L216)
 
 </div>
 
@@ -158,13 +161,14 @@ Cached method to let [Two.Path](/documentation/path) know vertices have been add
 </div>
 
 
-
----
 
 <div class="static function ">
 
 ## UnbindVertices
-<span class="longname">Two.Path.UnbindVertices</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">UnbindVertices</span></h2>
+
+
 
 
 
@@ -188,7 +192,7 @@ Cached method to let [Two.Path](/documentation/path) know vertices have been rem
 
 <div class="meta">
 
-  [path.js:234](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L234)
+  [`path.js:234`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/path.js#L234)
 
 </div>
 
@@ -200,13 +204,14 @@ Cached method to let [Two.Path](/documentation/path) know vertices have been rem
 </div>
 
 
-
----
 
 <div class="static function ">
 
 ## FlagFill
-<span class="longname">Two.Path.FlagFill</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">FlagFill</span></h2>
+
+
 
 
 
@@ -230,7 +235,7 @@ Cached method to let [Two.Path](/documentation/path) know the fill has changed.
 
 <div class="meta">
 
-  [path.js:250](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L250)
+  [`path.js:250`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/path.js#L250)
 
 </div>
 
@@ -242,13 +247,14 @@ Cached method to let [Two.Path](/documentation/path) know the fill has changed.
 </div>
 
 
-
----
 
 <div class="static function ">
 
 ## FlagFill
-<span class="longname">Two.Path.FlagFill</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">FlagFill</span></h2>
+
+
 
 
 
@@ -272,7 +278,7 @@ Cached method to let [Two.Path](/documentation/path) know the stroke has changed
 
 <div class="meta">
 
-  [path.js:259](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L259)
+  [`path.js:259`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/path.js#L259)
 
 </div>
 
@@ -284,13 +290,14 @@ Cached method to let [Two.Path](/documentation/path) know the stroke has changed
 </div>
 
 
-
----
 
 <div class="static function ">
 
 ## MakeObservable
-<span class="longname">Two.Path.MakeObservable</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">MakeObservable</span></h2>
+
+
 
 
 
@@ -305,7 +312,7 @@ Cached method to let [Two.Path](/documentation/path) know the stroke has changed
 
 | Argument | Description |
 | ---- | ----------- |
-|  `object`  | The object to make observable. |
+|  object  | The object to make observable. |
 </div>
 
 
@@ -321,7 +328,7 @@ Convenience function to apply observable qualities of a [Two.Path](/documentatio
 
 <div class="meta">
 
-  [path.js:268](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L268)
+  [`path.js:268`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/path.js#L268)
 
 </div>
 
@@ -333,13 +340,14 @@ Convenience function to apply observable qualities of a [Two.Path](/documentatio
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## closed
-<span class="longname">Two.Path.closed</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">closed</span></h2>
+
+
 
 
 
@@ -363,7 +371,7 @@ Determines whether a final line is drawn between the final point in the `vertice
 
 <div class="meta">
 
-  [path.js:54](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L54)
+  [`path.js:54`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/path.js#L54)
 
 </div>
 
@@ -375,13 +383,14 @@ Determines whether a final line is drawn between the final point in the `vertice
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## curved
-<span class="longname">Two.Path.curved</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">curved</span></h2>
+
+
 
 
 
@@ -405,7 +414,7 @@ When the path is `automatic = true` this boolean determines whether the lines be
 
 <div class="meta">
 
-  [path.js:60](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L60)
+  [`path.js:60`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/path.js#L60)
 
 </div>
 
@@ -417,13 +426,14 @@ When the path is `automatic = true` this boolean determines whether the lines be
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## beginning
-<span class="longname">Two.Path.beginning</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">beginning</span></h2>
+
+
 
 
 
@@ -453,7 +463,7 @@ Number between zero and one to state the beginning of where the path is rendered
 
 <div class="meta">
 
-  [path.js:66](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L66)
+  [`path.js:66`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/path.js#L66)
 
 </div>
 
@@ -476,12 +486,13 @@ This is great for animating in and out stroked paths in conjunction with [Two.Pa
 
 
 
----
-
 <div class="instance member ">
 
 ## ending
-<span class="longname">Two.Path.ending</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">ending</span></h2>
+
+
 
 
 
@@ -511,7 +522,7 @@ Number between zero and one to state the ending of where the path is rendered.
 
 <div class="meta">
 
-  [path.js:74](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L74)
+  [`path.js:74`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/path.js#L74)
 
 </div>
 
@@ -534,12 +545,13 @@ This is great for animating in and out stroked paths in conjunction with [Two.Pa
 
 
 
----
-
 <div class="instance member ">
 
 ## fill
-<span class="longname">Two.Path.fill</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">fill</span></h2>
+
+
 
 
 
@@ -563,7 +575,7 @@ The value of what the path should be filled in with.
 
 <div class="meta">
 
-  [path.js:84](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L84)
+  [`path.js:84`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/path.js#L84)
 
 </div>
 
@@ -582,12 +594,13 @@ The value of what the path should be filled in with.
 
 
 
----
-
 <div class="instance member ">
 
 ## stroke
-<span class="longname">Two.Path.stroke</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">stroke</span></h2>
+
+
 
 
 
@@ -611,7 +624,7 @@ The value of what the path should be outlined in with.
 
 <div class="meta">
 
-  [path.js:91](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L91)
+  [`path.js:91`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/path.js#L91)
 
 </div>
 
@@ -630,12 +643,13 @@ The value of what the path should be outlined in with.
 
 
 
----
-
 <div class="instance member ">
 
 ## linewidth
-<span class="longname">Two.Path.linewidth</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">linewidth</span></h2>
+
+
 
 
 
@@ -659,7 +673,7 @@ The thickness in pixels of the stroke.
 
 <div class="meta">
 
-  [path.js:98](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L98)
+  [`path.js:98`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/path.js#L98)
 
 </div>
 
@@ -671,13 +685,14 @@ The thickness in pixels of the stroke.
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## opacity
-<span class="longname">Two.Path.opacity</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">opacity</span></h2>
+
+
 
 
 
@@ -701,7 +716,7 @@ The opaqueness of the path.
 
 <div class="meta">
 
-  [path.js:104](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L104)
+  [`path.js:104`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/path.js#L104)
 
 </div>
 
@@ -724,12 +739,13 @@ Can be used in conjunction with CSS Colors that have an alpha value.
 
 
 
----
-
 <div class="instance member ">
 
 ## className
-<span class="longname">Two.Path.className</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">className</span></h2>
+
+
 
 
 
@@ -753,7 +769,7 @@ A class to be applied to the element to be compatible with CSS styling.
 
 <div class="meta">
 
-  [path.js:111](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L111)
+  [`path.js:111`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/path.js#L111)
 
 </div>
 
@@ -776,12 +792,13 @@ Only available for the SVG renderer.
 
 
 
----
-
 <div class="instance member ">
 
 ## visible
-<span class="longname">Two.Path.visible</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">visible</span></h2>
+
+
 
 
 
@@ -805,7 +822,7 @@ Display the path or not.
 
 <div class="meta">
 
-  [path.js:118](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L118)
+  [`path.js:118`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/path.js#L118)
 
 </div>
 
@@ -828,12 +845,13 @@ For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](
 
 
 
----
-
 <div class="instance member ">
 
 ## cap
-<span class="longname">Two.Path.cap</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">cap</span></h2>
+
+
 
 
 
@@ -857,7 +875,7 @@ For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](
 
 <div class="meta">
 
-  [path.js:125](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L125)
+  [`path.js:125`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/path.js#L125)
 
 </div>
 
@@ -876,12 +894,13 @@ For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](
 
 
 
----
-
 <div class="instance member ">
 
 ## join
-<span class="longname">Two.Path.join</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">join</span></h2>
+
+
 
 
 
@@ -905,7 +924,7 @@ For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](
 
 <div class="meta">
 
-  [path.js:132](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L132)
+  [`path.js:132`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/path.js#L132)
 
 </div>
 
@@ -924,12 +943,13 @@ For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](
 
 
 
----
-
 <div class="instance member ">
 
 ## miter
-<span class="longname">Two.Path.miter</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">miter</span></h2>
+
+
 
 
 
@@ -953,7 +973,7 @@ For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](
 
 <div class="meta">
 
-  [path.js:139](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L139)
+  [`path.js:139`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/path.js#L139)
 
 </div>
 
@@ -972,12 +992,13 @@ For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](
 
 
 
----
-
 <div class="instance member ">
 
 ## vertices
-<span class="longname">Two.Path.vertices</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">vertices</span></h2>
+
+
 
 
 
@@ -1007,7 +1028,7 @@ A list of [Two.Anchor](/documentation/anchor) objects that consist of what form 
 
 <div class="meta">
 
-  [path.js:146](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L146)
+  [`path.js:146`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/path.js#L146)
 
 </div>
 
@@ -1030,12 +1051,13 @@ The array when manipulating is actually a [Two.Collection](/documentation/collec
 
 
 
----
-
 <div class="instance member ">
 
 ## automatic
-<span class="longname">Two.Path.automatic</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">automatic</span></h2>
+
+
 
 
 
@@ -1059,7 +1081,7 @@ Determines whether or not Two.js should calculate curves, lines, and commands au
 
 <div class="meta">
 
-  [path.js:154](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L154)
+  [`path.js:154`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/path.js#L154)
 
 </div>
 
@@ -1071,13 +1093,14 @@ Determines whether or not Two.js should calculate curves, lines, and commands au
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## dashes
-<span class="longname">Two.Path.dashes</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">dashes</span></h2>
+
+
 
 
 
@@ -1107,7 +1130,7 @@ A list of numbers that represent the repeated dash length and dash space applied
 
 <div class="meta">
 
-  [path.js:160](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L160)
+  [`path.js:160`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/path.js#L160)
 
 </div>
 
@@ -1126,12 +1149,13 @@ A list of numbers that represent the repeated dash length and dash space applied
 
 
 
----
-
 <div class="instance member ">
 
 ## dashes.offset
-<span class="longname">Two.Path.dashes.offset</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">dashes.offset</span></h2>
+
+
 
 
 
@@ -1155,7 +1179,7 @@ A number in pixels to offset [Two.Path.dashes](/documentation/path/#two-path-das
 
 <div class="meta">
 
-  [path.js:168](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L168)
+  [`path.js:168`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/path.js#L168)
 
 </div>
 
@@ -1167,13 +1191,14 @@ A number in pixels to offset [Two.Path.dashes](/documentation/path/#two-path-das
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## length
-<span class="longname">Two.Path.length</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">length</span></h2>
+
+
 
 
 
@@ -1197,7 +1222,7 @@ The sum of distances between all [Two.Path.vertices](/documentation/path/#two-pa
 
 <div class="meta">
 
-  [path.js:336](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L336)
+  [`path.js:336`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/path.js#L336)
 
 </div>
 
@@ -1209,13 +1234,14 @@ The sum of distances between all [Two.Path.vertices](/documentation/path/#two-pa
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## mask
-<span class="longname">Two.Path.mask</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">mask</span></h2>
+
+
 
 
 
@@ -1239,7 +1265,7 @@ The shape whose alpha property becomes a clipping area for the path.
 
 <div class="meta">
 
-  [path.js:450](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L450)
+  [`path.js:450`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/path.js#L450)
 
 </div>
 
@@ -1262,12 +1288,13 @@ This property is currently not working becuase of SVG spec issues found here {@l
 
 
 
----
-
 <div class="instance member ">
 
 ## clip
-<span class="longname">Two.Path.clip</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">clip</span></h2>
+
+
 
 
 
@@ -1291,7 +1318,7 @@ Tells Two.js renderer if this object represents a mask for another object (or no
 
 <div class="meta">
 
-  [path.js:473](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L473)
+  [`path.js:473`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/path.js#L473)
 
 </div>
 
@@ -1303,29 +1330,25 @@ Tells Two.js renderer if this object represents a mask for another object (or no
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## clone
-<span class="longname">Two.Path.clone</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">clone</span></h2>
 
 
 
 
 <div class="returns">
 
-__Returns__:
-
-
-
-+ `Two.Path`
-
+__Returns__: Two.Path
 
 
 
 </div>
+
+
 
 
 
@@ -1337,7 +1360,7 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-|  `parent`  | The parent group or scene to add the clone to. |
+|  parent  | The parent group or scene to add the clone to. |
 </div>
 
 
@@ -1353,7 +1376,7 @@ Create a new instance of [Two.Path](/documentation/path) with the same propertie
 
 <div class="meta">
 
-  [path.js:717](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L717)
+  [`path.js:717`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/path.js#L717)
 
 </div>
 
@@ -1365,29 +1388,25 @@ Create a new instance of [Two.Path](/documentation/path) with the same propertie
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## toObject
-<span class="longname">Two.Path.toObject</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">toObject</span></h2>
 
 
 
 
 <div class="returns">
 
-__Returns__:
-
-
-
-+ `Object`
-
+__Returns__: Object
 
 
 
 </div>
+
+
 
 
 
@@ -1408,7 +1427,7 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  [path.js:757](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L757)
+  [`path.js:757`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/path.js#L757)
 
 </div>
 
@@ -1420,13 +1439,14 @@ Return a JSON compatible plain object that represents the path.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## noFill
-<span class="longname">Two.Path.noFill</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">noFill</span></h2>
+
+
 
 
 
@@ -1450,7 +1470,7 @@ Short hand method to set fill to `transparent`.
 
 <div class="meta">
 
-  [path.js:797](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L797)
+  [`path.js:797`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/path.js#L797)
 
 </div>
 
@@ -1462,13 +1482,14 @@ Short hand method to set fill to `transparent`.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## noStroke
-<span class="longname">Two.Path.noStroke</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">noStroke</span></h2>
+
+
 
 
 
@@ -1492,7 +1513,7 @@ Short hand method to set stroke to `transparent`.
 
 <div class="meta">
 
-  [path.js:807](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L807)
+  [`path.js:807`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/path.js#L807)
 
 </div>
 
@@ -1504,13 +1525,14 @@ Short hand method to set stroke to `transparent`.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## corner
-<span class="longname">Two.Path.corner</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">corner</span></h2>
+
+
 
 
 
@@ -1534,7 +1556,7 @@ Orient the vertices of the shape to the upper left-hand corner of the path.
 
 <div class="meta">
 
-  [path.js:817](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L817)
+  [`path.js:817`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/path.js#L817)
 
 </div>
 
@@ -1546,13 +1568,14 @@ Orient the vertices of the shape to the upper left-hand corner of the path.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## center
-<span class="longname">Two.Path.center</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">center</span></h2>
+
+
 
 
 
@@ -1576,7 +1599,7 @@ Orient the vertices of the shape to the center of the path.
 
 <div class="meta">
 
-  [path.js:842](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L842)
+  [`path.js:842`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/path.js#L842)
 
 </div>
 
@@ -1588,13 +1611,14 @@ Orient the vertices of the shape to the center of the path.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## remove
-<span class="longname">Two.Path.remove</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">remove</span></h2>
+
+
 
 
 
@@ -1618,7 +1642,7 @@ Remove self from the scene / parent.
 
 <div class="meta">
 
-  [path.js:864](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L864)
+  [`path.js:864`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/path.js#L864)
 
 </div>
 
@@ -1630,25 +1654,19 @@ Remove self from the scene / parent.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## getBoundingClientRect
-<span class="longname">Two.Path.getBoundingClientRect</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">getBoundingClientRect</span></h2>
 
 
 
 
 <div class="returns">
 
-__Returns__:
-
-
-
-+ `Object`
-
+__Returns__: Object
 
 
 - Returns object with top, left, right, bottom, width, height attributes.
@@ -1662,11 +1680,13 @@ __Returns__:
 
 
 
+
+
 <div class="params">
 
 | Argument | Description |
 | ---- | ----------- |
-|  `shallow`  | Describes whether to calculate off local matrix or world matrix. |
+|  shallow  | Describes whether to calculate off local matrix or world matrix. |
 </div>
 
 
@@ -1682,7 +1702,7 @@ Return an object with top, left, right, bottom, width, and height parameters of 
 
 <div class="meta">
 
-  [path.js:881](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L881)
+  [`path.js:881`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/path.js#L881)
 
 </div>
 
@@ -1694,29 +1714,25 @@ Return an object with top, left, right, bottom, width, and height parameters of 
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## getPointAt
-<span class="longname">Two.Path.getPointAt</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">getPointAt</span></h2>
 
 
 
 
 <div class="returns">
 
-__Returns__:
-
-
-
-+ `Object`
-
+__Returns__: Object
 
 
 
 </div>
+
+
 
 
 
@@ -1728,8 +1744,8 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-|  `t`  | Percentage value describing where on the [Two.Path](/documentation/path) to estimate and assign coordinate values. |
-|  `object`  | Object to apply calculated x, y to. If none available returns new `Object`. |
+|  t  | Percentage value describing where on the [Two.Path](/documentation/path) to estimate and assign coordinate values. |
+|  object  | Object to apply calculated x, y to. If none available returns new `Object`. |
 </div>
 
 
@@ -1745,7 +1761,7 @@ Given a float `t` from 0 to 1, return a point or assign a passed `obj`'s coordin
 
 <div class="meta">
 
-  [path.js:983](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L983)
+  [`path.js:983`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/path.js#L983)
 
 </div>
 
@@ -1757,13 +1773,14 @@ Given a float `t` from 0 to 1, return a point or assign a passed `obj`'s coordin
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## plot
-<span class="longname">Two.Path.plot</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">plot</span></h2>
+
+
 
 
 
@@ -1787,7 +1804,7 @@ Based on closed / curved and sorting of vertices plot where all points should be
 
 <div class="meta">
 
-  [path.js:1122](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L1122)
+  [`path.js:1122`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/path.js#L1122)
 
 </div>
 
@@ -1810,12 +1827,13 @@ While this method is public it is internally called by [Two.Path._update](/docum
 
 
 
----
-
 <div class="instance function ">
 
 ## subdivide
-<span class="longname">Two.Path.subdivide</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">subdivide</span></h2>
+
+
 
 
 
@@ -1830,7 +1848,7 @@ While this method is public it is internally called by [Two.Path._update](/docum
 
 | Argument | Description |
 | ---- | ----------- |
-|  `limit`  | How many times to recurse subdivisions. |
+|  limit  | How many times to recurse subdivisions. |
 </div>
 
 
@@ -1846,7 +1864,7 @@ Insert a [Two.Anchor](/documentation/anchor) at the midpoint between every item 
 
 <div class="meta">
 
-  [path.js:1143](https://github.com/jonobr1/two.js/blob/dev/src/path.js#L1143)
+  [`path.js:1143`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/path.js#L1143)
 
 </div>
 

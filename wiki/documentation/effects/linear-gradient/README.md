@@ -16,7 +16,7 @@ __Extends__: [Two.Gradient](/documentation/effects/gradient/)
 
 
 <div class="meta">
-  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/effects/linear-gradient.js" />
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/linear-gradient.js" />
 </div>
 
 
@@ -26,20 +26,21 @@ __Extends__: [Two.Gradient](/documentation/effects/gradient/)
 
 | Argument | Description |
 | ---- | ----------- |
-|  `x1`  | The x position of the first end point of the linear gradient. |
-|  `y1`  | The y position of the first end point of the linear gradient. |
-|  `x2`  | The x position of the second end point of the linear gradient. |
-|  `y2`  | The y position of the second end point of the linear gradient. |
-|  `stops`  | A list of [Two.Stop](/documentation/stop)s that contain the gradient fill pattern for the gradient. |
+|  x1  | The x position of the first end point of the linear gradient. |
+|  y1  | The y position of the first end point of the linear gradient. |
+|  x2  | The x position of the second end point of the linear gradient. |
+|  y2  | The y position of the second end point of the linear gradient. |
+|  stops  | A list of [Two.Stop](/documentation/stop)s that contain the gradient fill pattern for the gradient. |
 
 
-
----
 
 <div class="static member ">
 
 ## Stop
-<span class="longname">Two.LinearGradient.Stop</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.LinearGradient.</span><span class="shortname">Stop</span></h2>
+
+
 
 
 
@@ -57,7 +58,7 @@ __Extends__: [Two.Gradient](/documentation/effects/gradient/)
 
 <div class="meta">
 
-  [linear-gradient.js:55](https://github.com/jonobr1/two.js/blob/dev/src/effects/linear-gradient.js#L55)
+  [`linear-gradient.js:55`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/linear-gradient.js#L55)
 
 </div>
 
@@ -76,12 +77,13 @@ __Extends__: [Two.Gradient](/documentation/effects/gradient/)
 
 
 
----
-
 <div class="static function ">
 
 ## MakeObservable
-<span class="longname">Two.LinearGradient.MakeObservable</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.LinearGradient.</span><span class="shortname">MakeObservable</span></h2>
+
+
 
 
 
@@ -96,7 +98,7 @@ __Extends__: [Two.Gradient](/documentation/effects/gradient/)
 
 | Argument | Description |
 | ---- | ----------- |
-|  `object`  | The object to make observable. |
+|  object  | The object to make observable. |
 </div>
 
 
@@ -112,7 +114,7 @@ Convenience function to apply observable qualities of a [Two.LinearGradient](/do
 
 <div class="meta">
 
-  [linear-gradient.js:61](https://github.com/jonobr1/two.js/blob/dev/src/effects/linear-gradient.js#L61)
+  [`linear-gradient.js:61`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/linear-gradient.js#L61)
 
 </div>
 
@@ -124,13 +126,14 @@ Convenience function to apply observable qualities of a [Two.LinearGradient](/do
 </div>
 
 
-
----
 
 <div class="static function ">
 
 ## FlagEndPoints
-<span class="longname">Two.LinearGradient.FlagEndPoints</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.LinearGradient.</span><span class="shortname">FlagEndPoints</span></h2>
+
+
 
 
 
@@ -154,7 +157,7 @@ Cached method to let renderers know end points have been updated on a [Two.Linea
 
 <div class="meta">
 
-  [linear-gradient.js:71](https://github.com/jonobr1/two.js/blob/dev/src/effects/linear-gradient.js#L71)
+  [`linear-gradient.js:71`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/linear-gradient.js#L71)
 
 </div>
 
@@ -166,13 +169,14 @@ Cached method to let renderers know end points have been updated on a [Two.Linea
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## left
-<span class="longname">Two.LinearGradient.left</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.LinearGradient.</span><span class="shortname">left</span></h2>
+
+
 
 
 
@@ -196,7 +200,7 @@ The x and y value for where the first end point is placed on the canvas.
 
 <div class="meta">
 
-  [linear-gradient.js:27](https://github.com/jonobr1/two.js/blob/dev/src/effects/linear-gradient.js#L27)
+  [`linear-gradient.js:27`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/linear-gradient.js#L27)
 
 </div>
 
@@ -208,13 +212,14 @@ The x and y value for where the first end point is placed on the canvas.
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## right
-<span class="longname">Two.LinearGradient.right</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.LinearGradient.</span><span class="shortname">right</span></h2>
+
+
 
 
 
@@ -238,7 +243,7 @@ The x and y value for where the second end point is placed on the canvas.
 
 <div class="meta">
 
-  [linear-gradient.js:32](https://github.com/jonobr1/two.js/blob/dev/src/effects/linear-gradient.js#L32)
+  [`linear-gradient.js:32`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/linear-gradient.js#L32)
 
 </div>
 
@@ -250,29 +255,25 @@ The x and y value for where the second end point is placed on the canvas.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## clone
-<span class="longname">Two.LinearGradient.clone</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.LinearGradient.</span><span class="shortname">clone</span></h2>
 
 
 
 
 <div class="returns">
 
-__Returns__:
-
-
-
-+ `Two.Gradient`
-
+__Returns__: Two.Gradient
 
 
 
 </div>
+
+
 
 
 
@@ -284,7 +285,7 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-|  `parent`  | The parent group or scene to add the clone to. |
+|  parent  | The parent group or scene to add the clone to. |
 </div>
 
 
@@ -300,7 +301,7 @@ Create a new instance of [Two.LinearGradient](/documentation/lineargradient) wit
 
 <div class="meta">
 
-  [linear-gradient.js:93](https://github.com/jonobr1/two.js/blob/dev/src/effects/linear-gradient.js#L93)
+  [`linear-gradient.js:93`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/linear-gradient.js#L93)
 
 </div>
 
@@ -312,29 +313,25 @@ Create a new instance of [Two.LinearGradient](/documentation/lineargradient) wit
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## toObject
-<span class="longname">Two.LinearGradient.toObject</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.LinearGradient.</span><span class="shortname">toObject</span></h2>
 
 
 
 
 <div class="returns">
 
-__Returns__:
-
-
-
-+ `Object`
-
+__Returns__: Object
 
 
 
 </div>
+
+
 
 
 
@@ -355,7 +352,7 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  [linear-gradient.js:121](https://github.com/jonobr1/two.js/blob/dev/src/effects/linear-gradient.js#L121)
+  [`linear-gradient.js:121`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/linear-gradient.js#L121)
 
 </div>
 

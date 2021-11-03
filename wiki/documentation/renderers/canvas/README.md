@@ -16,7 +16,7 @@ This class is used by [Two](/documentation/) when constructing with `type` of `T
 
 
 <div class="meta">
-  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/renderers/canvas.js" />
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\renderers/canvas.js" />
 </div>
 
 
@@ -26,19 +26,20 @@ This class is used by [Two](/documentation/) when constructing with `type` of `T
 
 | Argument | Description |
 | ---- | ----------- |
-|  `parameters`  | This object is inherited when constructing a new instance of [Two](/documentation/). |
-|  `parameters.domElement`  | The `<canvas />` to draw to. If none given a new one will be constructed. |
-|  `parameters.overdraw`  | Determines whether the canvas should clear the background or not. Defaults to `true`. |
-|  `parameters.smoothing`  | Determines whether the canvas should antialias drawing. Set it to `false` when working with pixel art. `false` can lead to better performance, since it would use a cheaper interpolation algorithm. |
+|  parameters  | This object is inherited when constructing a new instance of [Two](/documentation/). |
+|  parameters.domElement  | The `<canvas />` to draw to. If none given a new one will be constructed. |
+|  parameters.overdraw  | Determines whether the canvas should clear the background or not. Defaults to `true`. |
+|  parameters.smoothing  | Determines whether the canvas should antialias drawing. Set it to `false` when working with pixel art. `false` can lead to better performance, since it would use a cheaper interpolation algorithm. |
 
 
-
----
 
 <div class="static member ">
 
 ## Utils
-<span class="longname">Two.CanvasRenderer.Utils</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.CanvasRenderer.</span><span class="shortname">Utils</span></h2>
+
+
 
 
 
@@ -62,7 +63,7 @@ A massive object filled with utility functions and properties to render Two.js o
 
 <div class="meta">
 
-  [canvas.js:937](https://github.com/jonobr1/two.js/blob/dev/src/renderers/canvas.js#L937)
+  [`canvas.js:937`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\renderers/canvas.js#L937)
 
 </div>
 
@@ -74,13 +75,14 @@ A massive object filled with utility functions and properties to render Two.js o
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## domElement
-<span class="longname">Two.CanvasRenderer.domElement</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.CanvasRenderer.</span><span class="shortname">domElement</span></h2>
+
+
 
 
 
@@ -104,7 +106,7 @@ The `<canvas />` associated with the Two.js scene.
 
 <div class="meta">
 
-  [canvas.js:903](https://github.com/jonobr1/two.js/blob/dev/src/renderers/canvas.js#L903)
+  [`canvas.js:903`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\renderers/canvas.js#L903)
 
 </div>
 
@@ -116,13 +118,14 @@ The `<canvas />` associated with the Two.js scene.
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## ctx
-<span class="longname">Two.CanvasRenderer.ctx</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.CanvasRenderer.</span><span class="shortname">ctx</span></h2>
+
+
 
 
 
@@ -146,7 +149,7 @@ Associated two dimensional context to render on the `<canvas />`.
 
 <div class="meta">
 
-  [canvas.js:909](https://github.com/jonobr1/two.js/blob/dev/src/renderers/canvas.js#L909)
+  [`canvas.js:909`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\renderers/canvas.js#L909)
 
 </div>
 
@@ -158,13 +161,14 @@ Associated two dimensional context to render on the `<canvas />`.
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## overdraw
-<span class="longname">Two.CanvasRenderer.overdraw</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.CanvasRenderer.</span><span class="shortname">overdraw</span></h2>
+
+
 
 
 
@@ -188,7 +192,7 @@ Determines whether the canvas clears the background each draw call.
 
 <div class="meta">
 
-  [canvas.js:915](https://github.com/jonobr1/two.js/blob/dev/src/renderers/canvas.js#L915)
+  [`canvas.js:915`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\renderers/canvas.js#L915)
 
 </div>
 
@@ -200,13 +204,14 @@ Determines whether the canvas clears the background each draw call.
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## scene
-<span class="longname">Two.CanvasRenderer.scene</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.CanvasRenderer.</span><span class="shortname">scene</span></h2>
+
+
 
 
 
@@ -230,7 +235,7 @@ The root group of the scenegraph.
 
 <div class="meta">
 
-  [canvas.js:926](https://github.com/jonobr1/two.js/blob/dev/src/renderers/canvas.js#L926)
+  [`canvas.js:926`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\renderers/canvas.js#L926)
 
 </div>
 
@@ -242,13 +247,14 @@ The root group of the scenegraph.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## setSize
-<span class="longname">Two.CanvasRenderer.setSize</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.CanvasRenderer.</span><span class="shortname">setSize</span></h2>
+
+
 
 
 
@@ -271,9 +277,9 @@ __Triggers__:
 
 | Argument | Description |
 | ---- | ----------- |
-|  `width`  | The new width of the renderer. |
-|  `height`  | The new height of the renderer. |
-|  `ratio`  | The new pixel ratio (pixel density) of the renderer. Defaults to calculate the pixel density of the user's screen. |
+|  width  | The new width of the renderer. |
+|  height  | The new height of the renderer. |
+|  ratio  | The new pixel ratio (pixel density) of the renderer. Defaults to calculate the pixel density of the user's screen. |
 </div>
 
 
@@ -289,7 +295,7 @@ Change the size of the renderer.
 
 <div class="meta">
 
-  [canvas.js:949](https://github.com/jonobr1/two.js/blob/dev/src/renderers/canvas.js#L949)
+  [`canvas.js:949`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\renderers/canvas.js#L949)
 
 </div>
 
@@ -301,13 +307,14 @@ Change the size of the renderer.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## render
-<span class="longname">Two.CanvasRenderer.render</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.CanvasRenderer.</span><span class="shortname">render</span></h2>
+
+
 
 
 
@@ -331,7 +338,7 @@ Render the current scene to the `<canvas />`.
 
 <div class="meta">
 
-  [canvas.js:979](https://github.com/jonobr1/two.js/blob/dev/src/renderers/canvas.js#L979)
+  [`canvas.js:979`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\renderers/canvas.js#L979)
 
 </div>
 

@@ -16,7 +16,7 @@ This class is used by [Two](/documentation/) when constructing with `type` of `T
 
 
 <div class="meta">
-  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/renderers/webgl.js" />
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\renderers/webgl.js" />
 </div>
 
 
@@ -26,19 +26,20 @@ This class is used by [Two](/documentation/) when constructing with `type` of `T
 
 | Argument | Description |
 | ---- | ----------- |
-|  `parameters`  | This object is inherited when constructing a new instance of [Two](/documentation/). |
-|  `parameters.domElement`  | The `<canvas />` to draw to. If none given a new one will be constructed. |
-|  `parameters.offscreenElement`  | The offscreen two dimensional `<canvas />` to render each element on WebGL texture updates. |
-|  `parameters.antialias`  | Determines whether the canvas should clear render with antialias on. |
+|  parameters  | This object is inherited when constructing a new instance of [Two](/documentation/). |
+|  parameters.domElement  | The `<canvas />` to draw to. If none given a new one will be constructed. |
+|  parameters.offscreenElement  | The offscreen two dimensional `<canvas />` to render each element on WebGL texture updates. |
+|  parameters.antialias  | Determines whether the canvas should clear render with antialias on. |
 
 
-
----
 
 <div class="static member ">
 
 ## Utils
-<span class="longname">Two.WebGLRenderer.Utils</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.WebGLRenderer.</span><span class="shortname">Utils</span></h2>
+
+
 
 
 
@@ -62,7 +63,7 @@ A massive object filled with utility functions and properties to render Two.js o
 
 <div class="meta">
 
-  [webgl.js:1559](https://github.com/jonobr1/two.js/blob/dev/src/renderers/webgl.js#L1559)
+  [`webgl.js:1559`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\renderers/webgl.js#L1559)
 
 </div>
 
@@ -74,13 +75,14 @@ A massive object filled with utility functions and properties to render Two.js o
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## domElement
-<span class="longname">Two.WebGLRenderer.domElement</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.WebGLRenderer.</span><span class="shortname">domElement</span></h2>
+
+
 
 
 
@@ -104,7 +106,7 @@ The `<canvas />` associated with the Two.js scene.
 
 <div class="meta">
 
-  [webgl.js:1441](https://github.com/jonobr1/two.js/blob/dev/src/renderers/webgl.js#L1441)
+  [`webgl.js:1441`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\renderers/webgl.js#L1441)
 
 </div>
 
@@ -116,13 +118,14 @@ The `<canvas />` associated with the Two.js scene.
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## scene
-<span class="longname">Two.WebGLRenderer.scene</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.WebGLRenderer.</span><span class="shortname">scene</span></h2>
+
+
 
 
 
@@ -146,7 +149,7 @@ The root group of the scenegraph.
 
 <div class="meta">
 
-  [webgl.js:1452](https://github.com/jonobr1/two.js/blob/dev/src/renderers/webgl.js#L1452)
+  [`webgl.js:1452`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\renderers/webgl.js#L1452)
 
 </div>
 
@@ -158,13 +161,14 @@ The root group of the scenegraph.
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## overdraw
-<span class="longname">Two.WebGLRenderer.overdraw</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.WebGLRenderer.</span><span class="shortname">overdraw</span></h2>
+
+
 
 
 
@@ -188,7 +192,7 @@ Determines whether the canvas clears the background each draw call.
 
 <div class="meta">
 
-  [webgl.js:1478](https://github.com/jonobr1/two.js/blob/dev/src/renderers/webgl.js#L1478)
+  [`webgl.js:1478`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\renderers/webgl.js#L1478)
 
 </div>
 
@@ -200,13 +204,14 @@ Determines whether the canvas clears the background each draw call.
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## ctx
-<span class="longname">Two.WebGLRenderer.ctx</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.WebGLRenderer.</span><span class="shortname">ctx</span></h2>
+
+
 
 
 
@@ -230,7 +235,7 @@ Associated two dimensional context to render on the `<canvas />`.
 
 <div class="meta">
 
-  [webgl.js:1485](https://github.com/jonobr1/two.js/blob/dev/src/renderers/webgl.js#L1485)
+  [`webgl.js:1485`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\renderers/webgl.js#L1485)
 
 </div>
 
@@ -242,13 +247,14 @@ Associated two dimensional context to render on the `<canvas />`.
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## programs
-<span class="longname">Two.WebGLRenderer.programs</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.WebGLRenderer.</span><span class="shortname">programs</span></h2>
+
+
 
 
 
@@ -272,7 +278,7 @@ Associated WebGL programs to render all elements from the scenegraph.
 
 <div class="meta">
 
-  [webgl.js:1501](https://github.com/jonobr1/two.js/blob/dev/src/renderers/webgl.js#L1501)
+  [`webgl.js:1501`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\renderers/webgl.js#L1501)
 
 </div>
 
@@ -284,13 +290,14 @@ Associated WebGL programs to render all elements from the scenegraph.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## setSize
-<span class="longname">Two.WebGLRenderer.setSize</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.WebGLRenderer.</span><span class="shortname">setSize</span></h2>
+
+
 
 
 
@@ -313,9 +320,9 @@ __Triggers__:
 
 | Argument | Description |
 | ---- | ----------- |
-|  `width`  | The new width of the renderer. |
-|  `height`  | The new height of the renderer. |
-|  `ratio`  | The new pixel ratio (pixel density) of the renderer. Defaults to calculate the pixel density of the user's screen. |
+|  width  | The new width of the renderer. |
+|  height  | The new height of the renderer. |
+|  ratio  | The new pixel ratio (pixel density) of the renderer. Defaults to calculate the pixel density of the user's screen. |
 </div>
 
 
@@ -331,7 +338,7 @@ Change the size of the renderer.
 
 <div class="meta">
 
-  [webgl.js:1571](https://github.com/jonobr1/two.js/blob/dev/src/renderers/webgl.js#L1571)
+  [`webgl.js:1571`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\renderers/webgl.js#L1571)
 
 </div>
 
@@ -343,13 +350,14 @@ Change the size of the renderer.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## render
-<span class="longname">Two.WebGLRenderer.render</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.WebGLRenderer.</span><span class="shortname">render</span></h2>
+
+
 
 
 
@@ -373,7 +381,7 @@ Render the current scene to the `<canvas />`.
 
 <div class="meta">
 
-  [webgl.js:1619](https://github.com/jonobr1/two.js/blob/dev/src/renderers/webgl.js#L1619)
+  [`webgl.js:1619`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\renderers/webgl.js#L1619)
 
 </div>
 

@@ -16,7 +16,7 @@ __Extends__: [Two.Path](/documentation/path/)
 
 
 <div class="meta">
-  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/shapes/rectangle.js" />
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/rectangle.js" />
 </div>
 
 
@@ -26,19 +26,20 @@ __Extends__: [Two.Path](/documentation/path/)
 
 | Argument | Description |
 | ---- | ----------- |
-|  `x`  | The x position of the rectangle. |
-|  `y`  | The y position of the rectangle. |
-|  `width`  | The width value of the rectangle. |
-|  `height`  | The width value of the rectangle. |
+|  x  | The x position of the rectangle. |
+|  y  | The y position of the rectangle. |
+|  width  | The width value of the rectangle. |
+|  height  | The width value of the rectangle. |
 
 
-
----
 
 <div class="static member ">
 
 ## Properties
-<span class="longname">Two.Rectangle.Properties</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Rectangle.</span><span class="shortname">Properties</span></h2>
+
+
 
 
 
@@ -62,7 +63,7 @@ A list of properties that are on every [Two.Rectangle](/documentation/rectangle)
 
 <div class="meta">
 
-  [rectangle.js:53](https://github.com/jonobr1/two.js/blob/dev/src/shapes/rectangle.js#L53)
+  [`rectangle.js:53`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/rectangle.js#L53)
 
 </div>
 
@@ -74,13 +75,14 @@ A list of properties that are on every [Two.Rectangle](/documentation/rectangle)
 </div>
 
 
-
----
 
 <div class="static function ">
 
 ## MakeObservable
-<span class="longname">Two.Rectangle.MakeObservable</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Rectangle.</span><span class="shortname">MakeObservable</span></h2>
+
+
 
 
 
@@ -95,7 +97,7 @@ A list of properties that are on every [Two.Rectangle](/documentation/rectangle)
 
 | Argument | Description |
 | ---- | ----------- |
-|  `object`  | The object to make observable. |
+|  object  | The object to make observable. |
 </div>
 
 
@@ -111,7 +113,7 @@ Convenience function to apply observable qualities of a [Two.Rectangle](/documen
 
 <div class="meta">
 
-  [rectangle.js:59](https://github.com/jonobr1/two.js/blob/dev/src/shapes/rectangle.js#L59)
+  [`rectangle.js:59`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/rectangle.js#L59)
 
 </div>
 
@@ -123,13 +125,14 @@ Convenience function to apply observable qualities of a [Two.Rectangle](/documen
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## width
-<span class="longname">Two.Rectangle.width</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Rectangle.</span><span class="shortname">width</span></h2>
+
+
 
 
 
@@ -153,7 +156,7 @@ The size of the width of the rectangle.
 
 <div class="meta">
 
-  [rectangle.js:29](https://github.com/jonobr1/two.js/blob/dev/src/shapes/rectangle.js#L29)
+  [`rectangle.js:29`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/rectangle.js#L29)
 
 </div>
 
@@ -165,13 +168,14 @@ The size of the width of the rectangle.
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## height
-<span class="longname">Two.Rectangle.height</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Rectangle.</span><span class="shortname">height</span></h2>
+
+
 
 
 
@@ -195,7 +199,7 @@ The size of the height of the rectangle.
 
 <div class="meta">
 
-  [rectangle.js:34](https://github.com/jonobr1/two.js/blob/dev/src/shapes/rectangle.js#L34)
+  [`rectangle.js:34`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/rectangle.js#L34)
 
 </div>
 
@@ -207,13 +211,14 @@ The size of the height of the rectangle.
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## origin
-<span class="longname">Two.Rectangle.origin</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Rectangle.</span><span class="shortname">origin</span></h2>
+
+
 
 
 
@@ -237,7 +242,7 @@ A two-component vector describing the origin offset to draw the rectangle. Defau
 
 <div class="meta">
 
-  [rectangle.js:40](https://github.com/jonobr1/two.js/blob/dev/src/shapes/rectangle.js#L40)
+  [`rectangle.js:40`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/rectangle.js#L40)
 
 </div>
 
@@ -249,29 +254,25 @@ A two-component vector describing the origin offset to draw the rectangle. Defau
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## clone
-<span class="longname">Two.Rectangle.clone</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Rectangle.</span><span class="shortname">clone</span></h2>
 
 
 
 
 <div class="returns">
 
-__Returns__:
-
-
-
-+ `Two.Rectangle`
-
+__Returns__: Two.Rectangle
 
 
 
 </div>
+
+
 
 
 
@@ -283,7 +284,7 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-|  `parent`  | The parent group or scene to add the clone to. |
+|  parent  | The parent group or scene to add the clone to. |
 </div>
 
 
@@ -299,7 +300,7 @@ Create a new instance of [Two.Rectangle](/documentation/rectangle) with the same
 
 <div class="meta">
 
-  [rectangle.js:172](https://github.com/jonobr1/two.js/blob/dev/src/shapes/rectangle.js#L172)
+  [`rectangle.js:172`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/rectangle.js#L172)
 
 </div>
 
@@ -311,29 +312,25 @@ Create a new instance of [Two.Rectangle](/documentation/rectangle) with the same
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## toObject
-<span class="longname">Two.Rectangle.toObject</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Rectangle.</span><span class="shortname">toObject</span></h2>
 
 
 
 
 <div class="returns">
 
-__Returns__:
-
-
-
-+ `Object`
-
+__Returns__: Object
 
 
 
 </div>
+
+
 
 
 
@@ -354,7 +351,7 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  [rectangle.js:205](https://github.com/jonobr1/two.js/blob/dev/src/shapes/rectangle.js#L205)
+  [`rectangle.js:205`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/rectangle.js#L205)
 
 </div>
 

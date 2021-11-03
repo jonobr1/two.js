@@ -10,7 +10,7 @@ pageClass: documentation-class
 
 
 <div class="meta">
-  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js" />
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/stop.js" />
 </div>
 
 
@@ -20,18 +20,19 @@ pageClass: documentation-class
 
 | Argument | Description |
 | ---- | ----------- |
-|  `offset`  | The offset percentage of the stop represented as a zero-to-one value. Default value flip flops from zero-to-one as new stops are created. |
-|  `color`  | The color of the stop. Default value flip flops from white to black as new stops are created. |
-|  `opacity`  | The opacity value. Default value is 1, cannot be lower than 0. |
+|  offset  | The offset percentage of the stop represented as a zero-to-one value. Default value flip flops from zero-to-one as new stops are created. |
+|  color  | The color of the stop. Default value flip flops from white to black as new stops are created. |
+|  opacity  | The opacity value. Default value is 1, cannot be lower than 0. |
 
 
-
----
 
 <div class="static member ">
 
 ## Index
-<span class="longname">Two.Stop.Index</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Stop.</span><span class="shortname">Index</span></h2>
+
+
 
 
 
@@ -55,7 +56,7 @@ The current index being referenced for calculating a stop's default offset value
 
 <div class="meta">
 
-  [stop.js:49](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L49)
+  [`stop.js:49`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/stop.js#L49)
 
 </div>
 
@@ -67,13 +68,14 @@ The current index being referenced for calculating a stop's default offset value
 </div>
 
 
-
----
 
 <div class="static member ">
 
 ## Properties
-<span class="longname">Two.Stop.Properties</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Stop.</span><span class="shortname">Properties</span></h2>
+
+
 
 
 
@@ -97,7 +99,7 @@ A list of properties that are on every [Two.Stop](/documentation/stop).
 
 <div class="meta">
 
-  [stop.js:55](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L55)
+  [`stop.js:55`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/stop.js#L55)
 
 </div>
 
@@ -109,13 +111,14 @@ A list of properties that are on every [Two.Stop](/documentation/stop).
 </div>
 
 
-
----
 
 <div class="static function ">
 
 ## MakeObservable
-<span class="longname">Two.Stop.MakeObservable</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Stop.</span><span class="shortname">MakeObservable</span></h2>
+
+
 
 
 
@@ -130,7 +133,7 @@ A list of properties that are on every [Two.Stop](/documentation/stop).
 
 | Argument | Description |
 | ---- | ----------- |
-|  `object`  | The object to make observable. |
+|  object  | The object to make observable. |
 </div>
 
 
@@ -146,7 +149,7 @@ Convenience function to apply observable qualities of a [Two.Stop](/documentatio
 
 <div class="meta">
 
-  [stop.js:65](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L65)
+  [`stop.js:65`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/stop.js#L65)
 
 </div>
 
@@ -158,13 +161,14 @@ Convenience function to apply observable qualities of a [Two.Stop](/documentatio
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## renderer
-<span class="longname">Two.Stop.renderer</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Stop.</span><span class="shortname">renderer</span></h2>
+
+
 
 
 
@@ -194,7 +198,7 @@ Object access to store relevant renderer specific variables. Warning: manipulati
 
 <div class="meta">
 
-  [stop.js:14](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L14)
+  [`stop.js:14`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/stop.js#L14)
 
 </div>
 
@@ -217,12 +221,13 @@ With the [Two.SvgRenderer](/documentation/svgrenderer) you can access the underl
 
 
 
----
-
 <div class="instance member ">
 
 ## offset
-<span class="longname">Two.Stop.offset</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Stop.</span><span class="shortname">offset</span></h2>
+
+
 
 
 
@@ -246,7 +251,7 @@ The offset percentage of the stop represented as a zero-to-one value.
 
 <div class="meta">
 
-  [stop.js:23](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L23)
+  [`stop.js:23`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/stop.js#L23)
 
 </div>
 
@@ -258,13 +263,14 @@ The offset percentage of the stop represented as a zero-to-one value.
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## opacity
-<span class="longname">Two.Stop.opacity</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Stop.</span><span class="shortname">opacity</span></h2>
+
+
 
 
 
@@ -288,7 +294,7 @@ The alpha percentage of the stop represented as a zero-to-one value.
 
 <div class="meta">
 
-  [stop.js:30](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L30)
+  [`stop.js:30`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/stop.js#L30)
 
 </div>
 
@@ -300,13 +306,14 @@ The alpha percentage of the stop represented as a zero-to-one value.
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## color
-<span class="longname">Two.Stop.color</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Stop.</span><span class="shortname">color</span></h2>
+
+
 
 
 
@@ -330,7 +337,7 @@ The color of the stop.
 
 <div class="meta">
 
-  [stop.js:36](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L36)
+  [`stop.js:36`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/stop.js#L36)
 
 </div>
 
@@ -342,29 +349,25 @@ The color of the stop.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## clone
-<span class="longname">Two.Stop.clone</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Stop.</span><span class="shortname">clone</span></h2>
 
 
 
 
 <div class="returns">
 
-__Returns__:
-
-
-
-+ `Two.Stop`
-
+__Returns__: Two.Stop
 
 
 
 </div>
+
+
 
 
 
@@ -376,7 +379,7 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-|  `parent`  | The parent group or scene to add the clone to. |
+|  parent  | The parent group or scene to add the clone to. |
 </div>
 
 
@@ -392,7 +395,7 @@ Create a new instance of [Two.Stop](/documentation/stop) with the same propertie
 
 <div class="meta">
 
-  [stop.js:117](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L117)
+  [`stop.js:117`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/stop.js#L117)
 
 </div>
 
@@ -404,29 +407,25 @@ Create a new instance of [Two.Stop](/documentation/stop) with the same propertie
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## toObject
-<span class="longname">Two.Stop.toObject</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Stop.</span><span class="shortname">toObject</span></h2>
 
 
 
 
 <div class="returns">
 
-__Returns__:
-
-
-
-+ `Object`
-
+__Returns__: Object
 
 
 
 </div>
+
+
 
 
 
@@ -447,7 +446,7 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  [stop.js:136](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L136)
+  [`stop.js:136`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/stop.js#L136)
 
 </div>
 

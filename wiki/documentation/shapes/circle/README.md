@@ -16,7 +16,7 @@ __Extends__: [Two.Path](/documentation/path/)
 
 
 <div class="meta">
-  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js" />
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/circle.js" />
 </div>
 
 
@@ -26,19 +26,20 @@ __Extends__: [Two.Path](/documentation/path/)
 
 | Argument | Description |
 | ---- | ----------- |
-|  `x`  | The x position of the circle. |
-|  `y`  | The y position of the circle. |
-|  `radius`  | The radius value of the circle. |
-|  `resolution`  | The number of vertices used to construct the circle. |
+|  x  | The x position of the circle. |
+|  y  | The y position of the circle. |
+|  radius  | The radius value of the circle. |
+|  resolution  | The number of vertices used to construct the circle. |
 
 
-
----
 
 <div class="static member ">
 
 ## Properties
-<span class="longname">Two.Circle.Properties</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Circle.</span><span class="shortname">Properties</span></h2>
+
+
 
 
 
@@ -62,7 +63,7 @@ A list of properties that are on every [Two.Circle](/documentation/circle).
 
 <div class="meta">
 
-  [circle.js:53](https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js#L53)
+  [`circle.js:53`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/circle.js#L53)
 
 </div>
 
@@ -74,13 +75,14 @@ A list of properties that are on every [Two.Circle](/documentation/circle).
 </div>
 
 
-
----
 
 <div class="static function ">
 
 ## MakeObservable
-<span class="longname">Two.Circle.MakeObservable</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Circle.</span><span class="shortname">MakeObservable</span></h2>
+
+
 
 
 
@@ -95,7 +97,7 @@ A list of properties that are on every [Two.Circle](/documentation/circle).
 
 | Argument | Description |
 | ---- | ----------- |
-|  `object`  | The object to make observable. |
+|  object  | The object to make observable. |
 </div>
 
 
@@ -111,7 +113,7 @@ Convenience function to apply observable qualities of a [Two.Circle](/documentat
 
 <div class="meta">
 
-  [circle.js:59](https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js#L59)
+  [`circle.js:59`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/circle.js#L59)
 
 </div>
 
@@ -123,13 +125,14 @@ Convenience function to apply observable qualities of a [Two.Circle](/documentat
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## radius
-<span class="longname">Two.Circle.radius</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Circle.</span><span class="shortname">radius</span></h2>
+
+
 
 
 
@@ -153,7 +156,7 @@ The size of the radius of the circle.
 
 <div class="meta">
 
-  [circle.js:32](https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js#L32)
+  [`circle.js:32`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/circle.js#L32)
 
 </div>
 
@@ -165,29 +168,25 @@ The size of the radius of the circle.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## clone
-<span class="longname">Two.Circle.clone</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Circle.</span><span class="shortname">clone</span></h2>
 
 
 
 
 <div class="returns">
 
-__Returns__:
-
-
-
-+ `Two.Circle`
-
+__Returns__: Two.Circle
 
 
 
 </div>
+
+
 
 
 
@@ -199,7 +198,7 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-|  `parent`  | The parent group or scene to add the clone to. |
+|  parent  | The parent group or scene to add the clone to. |
 </div>
 
 
@@ -215,7 +214,7 @@ Create a new instance of [Two.Circle](/documentation/circle) with the same prope
 
 <div class="meta">
 
-  [circle.js:157](https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js#L157)
+  [`circle.js:157`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/circle.js#L157)
 
 </div>
 
@@ -227,29 +226,25 @@ Create a new instance of [Two.Circle](/documentation/circle) with the same prope
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## toObject
-<span class="longname">Two.Circle.toObject</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Circle.</span><span class="shortname">toObject</span></h2>
 
 
 
 
 <div class="returns">
 
-__Returns__:
-
-
-
-+ `Object`
-
+__Returns__: Object
 
 
 
 </div>
+
+
 
 
 
@@ -270,7 +265,7 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  [circle.js:190](https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js#L190)
+  [`circle.js:190`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/circle.js#L190)
 
 </div>
 

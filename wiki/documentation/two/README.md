@@ -10,7 +10,7 @@ The entrypoint for Two.js. Instantiate a `new Two` in order to setup a scene to 
 
 
 <div class="meta">
-  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/two.js" />
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js" />
 </div>
 
 
@@ -20,23 +20,24 @@ The entrypoint for Two.js. Instantiate a `new Two` in order to setup a scene to 
 
 | Argument | Description |
 | ---- | ----------- |
-|  `options`  |  |
-|  `options.fullscreen`  | Set to `true` to automatically make the stage adapt to the width and height of the parent document. This parameter overrides `width` and `height` parameters if set to `true`. This overrides `options.fitted` as well. |
-|  `options.fitted`  | = Set to `true` to automatically make the stage adapt to the width and height of the parent element. This parameter overrides `width` and `height` parameters if set to `true`. |
-|  `options.width`  | The width of the stage on construction. This can be set at a later time. |
-|  `options.height`  | The height of the stage on construction. This can be set at a later time. |
-|  `options.type`  | The type of renderer to setup drawing with. See [Two.Types](/documentation/types) for available options. |
-|  `options.autostart`  | Set to `true` to add the instance to draw on `requestAnimationFrame`. This is a convenient substitute for [Two.play](/documentation/play). |
-|  `options.domElement`  | The canvas or SVG element to draw into. This overrides the `options.type` argument. |
+|  options  |  |
+|  options.fullscreen  | Set to `true` to automatically make the stage adapt to the width and height of the parent document. This parameter overrides `width` and `height` parameters if set to `true`. This overrides `options.fitted` as well. |
+|  options.fitted  | = Set to `true` to automatically make the stage adapt to the width and height of the parent element. This parameter overrides `width` and `height` parameters if set to `true`. |
+|  options.width  | The width of the stage on construction. This can be set at a later time. |
+|  options.height  | The height of the stage on construction. This can be set at a later time. |
+|  options.type  | The type of renderer to setup drawing with. See [Two.Types](/documentation/types) for available options. |
+|  options.autostart  | Set to `true` to add the instance to draw on `requestAnimationFrame`. This is a convenient substitute for [Two.play](/documentation/play). |
+|  options.domElement  | The canvas or SVG element to draw into. This overrides the `options.type` argument. |
 
 
-
----
 
 <div class="static member ">
 
-## 
-<span class="longname">Two.Utils</span>
+## Utils
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">Utils</span></h2>
+
+
 
 
 
@@ -60,7 +61,7 @@ A massive object filled with utility functions and properties.
 
 <div class="meta">
 
-  [two.js:1046](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L1046)
+  [`two.js:1046`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L1046)
 
 </div>
 
@@ -72,13 +73,14 @@ A massive object filled with utility functions and properties.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
-## 
-<span class="longname">Two.fit</span>
+## fit
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">fit</span></h2>
+
+
 
 
 
@@ -102,7 +104,7 @@ If `options.fullscreen` or `options.fitted` in construction create this function
 
 <div class="meta">
 
-  [two.js:105](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L105)
+  [`two.js:105`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L105)
 
 </div>
 
@@ -114,13 +116,14 @@ If `options.fullscreen` or `options.fitted` in construction create this function
 </div>
 
 
-
----
 
 <div class="instance member ">
 
-## 
-<span class="longname">Two.type</span>
+## type
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">type</span></h2>
+
+
 
 
 
@@ -144,7 +147,7 @@ A string representing which type of renderer the instance has instantiated.
 
 <div class="meta">
 
-  [two.js:167](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L167)
+  [`two.js:167`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L167)
 
 </div>
 
@@ -156,13 +159,14 @@ A string representing which type of renderer the instance has instantiated.
 </div>
 
 
-
----
 
 <div class="instance member ">
 
-## 
-<span class="longname">Two.renderer</span>
+## renderer
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">renderer</span></h2>
+
+
 
 
 
@@ -186,7 +190,7 @@ The instantiated rendering class for the instance. For a list of possible render
 
 <div class="meta">
 
-  [two.js:173](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L173)
+  [`two.js:173`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L173)
 
 </div>
 
@@ -198,13 +202,14 @@ The instantiated rendering class for the instance. For a list of possible render
 </div>
 
 
-
----
 
 <div class="instance member ">
 
-## 
-<span class="longname">Two.scene</span>
+## scene
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">scene</span></h2>
+
+
 
 
 
@@ -228,7 +233,7 @@ The base level [Two.Group](/documentation/group) which houses all objects for th
 
 <div class="meta">
 
-  [two.js:179](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L179)
+  [`two.js:179`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L179)
 
 </div>
 
@@ -240,13 +245,14 @@ The base level [Two.Group](/documentation/group) which houses all objects for th
 </div>
 
 
-
----
 
 <div class="instance member ">
 
-## 
-<span class="longname">Two.width</span>
+## width
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">width</span></h2>
+
+
 
 
 
@@ -270,7 +276,7 @@ The width of the instance's dom element.
 
 <div class="meta">
 
-  [two.js:185](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L185)
+  [`two.js:185`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L185)
 
 </div>
 
@@ -282,13 +288,14 @@ The width of the instance's dom element.
 </div>
 
 
-
----
 
 <div class="instance member ">
 
-## 
-<span class="longname">Two.height</span>
+## height
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">height</span></h2>
+
+
 
 
 
@@ -312,7 +319,7 @@ The height of the instance's dom element.
 
 <div class="meta">
 
-  [two.js:191](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L191)
+  [`two.js:191`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L191)
 
 </div>
 
@@ -324,13 +331,14 @@ The height of the instance's dom element.
 </div>
 
 
-
----
 
 <div class="instance member ">
 
-## 
-<span class="longname">Two.frameCount</span>
+## frameCount
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">frameCount</span></h2>
+
+
 
 
 
@@ -354,7 +362,7 @@ An integer representing how many frames have elapsed.
 
 <div class="meta">
 
-  [two.js:197](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L197)
+  [`two.js:197`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L197)
 
 </div>
 
@@ -366,13 +374,14 @@ An integer representing how many frames have elapsed.
 </div>
 
 
-
----
 
 <div class="instance member ">
 
-## 
-<span class="longname">Two.timeDelta</span>
+## timeDelta
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">timeDelta</span></h2>
+
+
 
 
 
@@ -396,7 +405,7 @@ A number representing how much time has elapsed since the last frame in millisec
 
 <div class="meta">
 
-  [two.js:203](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L203)
+  [`two.js:203`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L203)
 
 </div>
 
@@ -408,13 +417,14 @@ A number representing how much time has elapsed since the last frame in millisec
 </div>
 
 
-
----
 
 <div class="instance member ">
 
-## 
-<span class="longname">Two.playing</span>
+## playing
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">playing</span></h2>
+
+
 
 
 
@@ -438,7 +448,7 @@ A boolean representing whether or not the instance is being updated through the 
 
 <div class="meta">
 
-  [two.js:209](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L209)
+  [`two.js:209`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L209)
 
 </div>
 
@@ -450,13 +460,14 @@ A boolean representing whether or not the instance is being updated through the 
 </div>
 
 
-
----
 
 <div class="instance function ">
 
-## 
-<span class="longname">Two.appendTo</span>
+## appendTo
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">appendTo</span></h2>
+
+
 
 
 
@@ -471,7 +482,7 @@ A boolean representing whether or not the instance is being updated through the 
 
 | Argument | Description |
 | ---- | ----------- |
-|  `elem`  | The DOM element to append the Two.js stage to. |
+|  elem  | The DOM element to append the Two.js stage to. |
 </div>
 
 
@@ -487,7 +498,7 @@ Shorthand method to append your instance of Two.js to the `document`.
 
 <div class="meta">
 
-  [two.js:215](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L215)
+  [`two.js:215`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L215)
 
 </div>
 
@@ -499,13 +510,14 @@ Shorthand method to append your instance of Two.js to the `document`.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
-## 
-<span class="longname">Two.play</span>
+## play
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">play</span></h2>
+
+
 
 
 
@@ -537,7 +549,7 @@ Call to start an internal animation loop.
 
 <div class="meta">
 
-  [two.js:237](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L237)
+  [`two.js:237`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L237)
 
 </div>
 
@@ -560,12 +572,13 @@ This function initiates a `requestAnimationFrame` loop.
 
 
 
----
-
 <div class="instance function ">
 
-## 
-<span class="longname">Two.pause</span>
+## pause
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">pause</span></h2>
+
+
 
 
 
@@ -597,7 +610,7 @@ Call to stop the internal animation loop for a specific instance of Two.js.
 
 <div class="meta">
 
-  [two.js:252](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L252)
+  [`two.js:252`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L252)
 
 </div>
 
@@ -609,25 +622,19 @@ Call to stop the internal animation loop for a specific instance of Two.js.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
-## 
-<span class="longname">Two.release</span>
+## release
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">release</span></h2>
 
 
 
 
 <div class="returns">
 
-__Returns__:
-
-
-
-+ `Object`
-
+__Returns__: Object
 
 
 The object passed for event deallocation.
@@ -641,11 +648,13 @@ The object passed for event deallocation.
 
 
 
+
+
 <div class="params">
 
 | Argument | Description |
 | ---- | ----------- |
-|  `obj`  |  |
+|  obj  |  |
 </div>
 
 
@@ -661,7 +670,7 @@ Release an arbitrary class' events from the Two.js corpus and recurse through it
 
 <div class="meta">
 
-  [two.js:269](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L269)
+  [`two.js:269`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L269)
 
 </div>
 
@@ -673,13 +682,14 @@ Release an arbitrary class' events from the Two.js corpus and recurse through it
 </div>
 
 
-
----
 
 <div class="instance function ">
 
-## 
-<span class="longname">Two.update</span>
+## update
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">update</span></h2>
+
+
 
 
 
@@ -711,7 +721,7 @@ Update positions and calculations in one pass before rendering. Then render to t
 
 <div class="meta">
 
-  [two.js:322](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L322)
+  [`two.js:322`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L322)
 
 </div>
 
@@ -734,12 +744,13 @@ This function is called automatically if using [Two.play](/documentation/play) o
 
 
 
----
-
 <div class="instance function ">
 
-## 
-<span class="longname">Two.render</span>
+## render
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">render</span></h2>
+
+
 
 
 
@@ -771,7 +782,7 @@ Render all drawable and visible objects of the scene.
 
 <div class="meta">
 
-  [two.js:360](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L360)
+  [`two.js:360`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L360)
 
 </div>
 
@@ -783,13 +794,14 @@ Render all drawable and visible objects of the scene.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
-## 
-<span class="longname">Two.add</span>
+## add
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">add</span></h2>
+
+
 
 
 
@@ -804,7 +816,7 @@ Render all drawable and visible objects of the scene.
 
 | Argument | Description |
 | ---- | ----------- |
-|  `objects`  | An array of Two.js objects. Alternatively can add objects as individual arguments. |
+|  objects  | An array of Two.js objects. Alternatively can add objects as individual arguments. |
 </div>
 
 
@@ -820,7 +832,7 @@ A shorthand method to add specific Two.js objects to the scene.
 
 <div class="meta">
 
-  [two.js:375](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L375)
+  [`two.js:375`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L375)
 
 </div>
 
@@ -832,13 +844,14 @@ A shorthand method to add specific Two.js objects to the scene.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
-## 
-<span class="longname">Two.remove</span>
+## remove
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">remove</span></h2>
+
+
 
 
 
@@ -853,7 +866,7 @@ A shorthand method to add specific Two.js objects to the scene.
 
 | Argument | Description |
 | ---- | ----------- |
-|  `objects`  | An array of Two.js objects. |
+|  objects  | An array of Two.js objects. |
 </div>
 
 
@@ -869,7 +882,7 @@ A shorthand method to remove specific Two.js objects from the scene.
 
 <div class="meta">
 
-  [two.js:393](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L393)
+  [`two.js:393`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L393)
 
 </div>
 
@@ -881,13 +894,14 @@ A shorthand method to remove specific Two.js objects from the scene.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
-## 
-<span class="longname">Two.clear</span>
+## clear
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">clear</span></h2>
+
+
 
 
 
@@ -911,7 +925,7 @@ Removes all objects from the instance's scene. If you intend to have the browser
 
 <div class="meta">
 
-  [two.js:412](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L412)
+  [`two.js:412`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L412)
 
 </div>
 
@@ -923,29 +937,25 @@ Removes all objects from the instance's scene. If you intend to have the browser
 </div>
 
 
-
----
 
 <div class="instance function ">
 
-## 
-<span class="longname">Two.makeLine</span>
+## makeLine
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">makeLine</span></h2>
 
 
 
 
 <div class="returns">
 
-__Returns__:
-
-
-
-+ `Two.Line`
-
+__Returns__: Two.Line
 
 
 
 </div>
+
+
 
 
 
@@ -957,10 +967,10 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-|  `x1`  |  |
-|  `y1`  |  |
-|  `x2`  |  |
-|  `y2`  |  |
+|  x1  |  |
+|  y1  |  |
+|  x2  |  |
+|  y2  |  |
 </div>
 
 
@@ -976,7 +986,7 @@ Creates a Two.js line and adds it to the scene.
 
 <div class="meta">
 
-  [two.js:424](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L424)
+  [`two.js:424`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L424)
 
 </div>
 
@@ -988,29 +998,25 @@ Creates a Two.js line and adds it to the scene.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
-## 
-<span class="longname">Two.makeArrow</span>
+## makeArrow
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">makeArrow</span></h2>
 
 
 
 
 <div class="returns">
 
-__Returns__:
-
-
-
-+ `Two.Path`
-
+__Returns__: Two.Path
 
 
 
 </div>
+
+
 
 
 
@@ -1022,10 +1028,10 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-|  `x1`  |  |
-|  `y1`  |  |
-|  `x2`  |  |
-|  `y2`  |  |
+|  x1  |  |
+|  y1  |  |
+|  x2  |  |
+|  y2  |  |
 </div>
 
 
@@ -1041,7 +1047,7 @@ Creates a Two.js arrow and adds it to the scene.
 
 <div class="meta">
 
-  [two.js:443](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L443)
+  [`two.js:443`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L443)
 
 </div>
 
@@ -1053,29 +1059,25 @@ Creates a Two.js arrow and adds it to the scene.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
-## 
-<span class="longname">Two.makeRectangle</span>
+## makeRectangle
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">makeRectangle</span></h2>
 
 
 
 
 <div class="returns">
 
-__Returns__:
-
-
-
-+ `Two.Rectangle`
-
+__Returns__: Two.Rectangle
 
 
 
 </div>
+
+
 
 
 
@@ -1087,10 +1089,10 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-|  `x`  |  |
-|  `y`  |  |
-|  `width`  |  |
-|  `height`  |  |
+|  x  |  |
+|  y  |  |
+|  width  |  |
+|  height  |  |
 </div>
 
 
@@ -1106,7 +1108,7 @@ Creates a Two.js rectangle and adds it to the scene.
 
 <div class="meta">
 
-  [two.js:488](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L488)
+  [`two.js:488`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L488)
 
 </div>
 
@@ -1118,29 +1120,25 @@ Creates a Two.js rectangle and adds it to the scene.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
-## 
-<span class="longname">Two.makeRoundedRectangle</span>
+## makeRoundedRectangle
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">makeRoundedRectangle</span></h2>
 
 
 
 
 <div class="returns">
 
-__Returns__:
-
-
-
-+ `Two.Rectangle`
-
+__Returns__: Two.Rectangle
 
 
 
 </div>
+
+
 
 
 
@@ -1152,11 +1150,11 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-|  `x`  |  |
-|  `y`  |  |
-|  `width`  |  |
-|  `height`  |  |
-|  `sides`  |  |
+|  x  |  |
+|  y  |  |
+|  width  |  |
+|  height  |  |
+|  sides  |  |
 </div>
 
 
@@ -1172,7 +1170,7 @@ Creates a Two.js rounded rectangle and adds it to the scene.
 
 <div class="meta">
 
-  [two.js:507](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L507)
+  [`two.js:507`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L507)
 
 </div>
 
@@ -1184,29 +1182,25 @@ Creates a Two.js rounded rectangle and adds it to the scene.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
-## 
-<span class="longname">Two.makeCircle</span>
+## makeCircle
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">makeCircle</span></h2>
 
 
 
 
 <div class="returns">
 
-__Returns__:
-
-
-
-+ `Two.Circle`
-
+__Returns__: Two.Circle
 
 
 
 </div>
+
+
 
 
 
@@ -1218,10 +1212,10 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-|  `x`  |  |
-|  `y`  |  |
-|  `radius`  |  |
-|  `resolution`  |  |
+|  x  |  |
+|  y  |  |
+|  radius  |  |
+|  resolution  |  |
 </div>
 
 
@@ -1237,7 +1231,7 @@ Creates a Two.js circle and adds it to the scene.
 
 <div class="meta">
 
-  [two.js:527](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L527)
+  [`two.js:527`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L527)
 
 </div>
 
@@ -1249,29 +1243,25 @@ Creates a Two.js circle and adds it to the scene.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
-## 
-<span class="longname">Two.makeEllipse</span>
+## makeEllipse
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">makeEllipse</span></h2>
 
 
 
 
 <div class="returns">
 
-__Returns__:
-
-
-
-+ `Two.Ellipse`
-
+__Returns__: Two.Ellipse
 
 
 
 </div>
+
+
 
 
 
@@ -1283,11 +1273,11 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-|  `x`  |  |
-|  `y`  |  |
-|  `rx`  |  |
-|  `ry`  |  |
-|  `resolution`  |  |
+|  x  |  |
+|  y  |  |
+|  rx  |  |
+|  ry  |  |
+|  resolution  |  |
 </div>
 
 
@@ -1303,7 +1293,7 @@ Creates a Two.js ellipse and adds it to the scene.
 
 <div class="meta">
 
-  [two.js:546](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L546)
+  [`two.js:546`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L546)
 
 </div>
 
@@ -1315,29 +1305,25 @@ Creates a Two.js ellipse and adds it to the scene.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
-## 
-<span class="longname">Two.makeStar</span>
+## makeStar
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">makeStar</span></h2>
 
 
 
 
 <div class="returns">
 
-__Returns__:
-
-
-
-+ `Two.Star`
-
+__Returns__: Two.Star
 
 
 
 </div>
+
+
 
 
 
@@ -1349,11 +1335,11 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-|  `x`  |  |
-|  `y`  |  |
-|  `outerRadius`  |  |
-|  `innerRadius`  |  |
-|  `sides`  |  |
+|  x  |  |
+|  y  |  |
+|  outerRadius  |  |
+|  innerRadius  |  |
+|  sides  |  |
 </div>
 
 
@@ -1369,7 +1355,7 @@ Creates a Two.js star and adds it to the scene.
 
 <div class="meta">
 
-  [two.js:566](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L566)
+  [`two.js:566`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L566)
 
 </div>
 
@@ -1381,25 +1367,19 @@ Creates a Two.js star and adds it to the scene.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
-## 
-<span class="longname">Two.makeCurve</span>
+## makeCurve
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">makeCurve</span></h2>
 
 
 
 
 <div class="returns">
 
-__Returns__:
-
-
-
-+ `Two.Path`
-
+__Returns__: Two.Path
 
 
 - Where `path.curved` is set to `true`.
@@ -1413,11 +1393,13 @@ __Returns__:
 
 
 
+
+
 <div class="params">
 
 | Argument | Description |
 | ---- | ----------- |
-|  `points`  | An array of [Two.Anchor](/documentation/anchor) points. |
+|  points  | An array of [Two.Anchor](/documentation/anchor) points. |
 |  | Alternatively you can pass alternating `x` / `y` coordinate values as individual arguments. These will be combined into [Two.Anchor](/documentation/anchor)s for use in the path. |
 </div>
 
@@ -1434,7 +1416,7 @@ Creates a Two.js path that is curved and adds it to the scene.
 
 <div class="meta">
 
-  [two.js:586](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L586)
+  [`two.js:586`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L586)
 
 </div>
 
@@ -1457,24 +1439,18 @@ In either case of passing an array or passing numbered arguments the last argume
 
 
 
----
-
 <div class="instance function ">
 
-## 
-<span class="longname">Two.makePolygon</span>
+## makePolygon
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">makePolygon</span></h2>
 
 
 
 
 <div class="returns">
 
-__Returns__:
-
-
-
-+ `Two.Polygon`
-
+__Returns__: Two.Polygon
 
 
 
@@ -1486,14 +1462,16 @@ __Returns__:
 
 
 
+
+
 <div class="params">
 
 | Argument | Description |
 | ---- | ----------- |
-|  `x`  |  |
-|  `y`  |  |
-|  `radius`  |  |
-|  `sides`  |  |
+|  x  |  |
+|  y  |  |
+|  radius  |  |
+|  sides  |  |
 </div>
 
 
@@ -1509,7 +1487,7 @@ Creates a Two.js polygon and adds it to the scene.
 
 <div class="meta">
 
-  [two.js:622](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L622)
+  [`two.js:622`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L622)
 
 </div>
 
@@ -1521,29 +1499,25 @@ Creates a Two.js polygon and adds it to the scene.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
-## 
-<span class="longname">Two.makeArcSegment</span>
+## makeArcSegment
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">makeArcSegment</span></h2>
 
 
 
 
 <div class="returns">
 
-__Returns__:
-
-
-
-+ `Two.ArcSegment`
-
+__Returns__: Two.ArcSegment
 
 
 
 </div>
+
+
 
 
 
@@ -1555,13 +1529,13 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-|  `x`  |  |
-|  `y`  |  |
-|  `innerRadius`  |  |
-|  `outerRadius`  |  |
-|  `startAngle`  |  |
-|  `endAngle`  |  |
-|  `resolution`  | The number of vertices that should comprise the arc segment. |
+|  x  |  |
+|  y  |  |
+|  innerRadius  |  |
+|  outerRadius  |  |
+|  startAngle  |  |
+|  endAngle  |  |
+|  resolution  | The number of vertices that should comprise the arc segment. |
 </div>
 
 
@@ -1571,7 +1545,7 @@ __Returns__:
 
 <div class="meta">
 
-  [two.js:641](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L641)
+  [`two.js:641`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L641)
 
 </div>
 
@@ -1583,29 +1557,25 @@ __Returns__:
 </div>
 
 
-
----
 
 <div class="instance function ">
 
-## 
-<span class="longname">Two.makePoints</span>
+## makePoints
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">makePoints</span></h2>
 
 
 
 
 <div class="returns">
 
-__Returns__:
-
-
-
-+ `Two.Points`
-
+__Returns__: Two.Points
 
 
 
 </div>
+
+
 
 
 
@@ -1617,7 +1587,7 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-|  `points`  | An array of [Two.Vector](/documentation/vector) points |
+|  points  | An array of [Two.Vector](/documentation/vector) points |
 |  | Alternatively you can pass alternating `x` / `y` coordinate values as individual agrguments. These will be combined into [Two.Vector](/documentation/vector)s for use in the points object. |
 </div>
 
@@ -1634,7 +1604,7 @@ Creates a Two.js points object and adds it to the current scene.
 
 <div class="meta">
 
-  [two.js:659](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L659)
+  [`two.js:659`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L659)
 
 </div>
 
@@ -1646,29 +1616,25 @@ Creates a Two.js points object and adds it to the current scene.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
-## 
-<span class="longname">Two.makePath</span>
+## makePath
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">makePath</span></h2>
 
 
 
 
 <div class="returns">
 
-__Returns__:
-
-
-
-+ `Two.Path`
-
+__Returns__: Two.Path
 
 
 
 </div>
+
+
 
 
 
@@ -1680,7 +1646,7 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-|  `points`  | An array of [Two.Anchor](/documentation/anchor) points |
+|  points  | An array of [Two.Anchor](/documentation/anchor) points |
 |  | Alternatively you can pass alternating `x` / `y` coordinate values as individual arguments. These will be combined into [Two.Anchor](/documentation/anchor)s for use in the path. |
 </div>
 
@@ -1697,7 +1663,7 @@ Creates a Two.js path and adds it to the scene.
 
 <div class="meta">
 
-  [two.js:690](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L690)
+  [`two.js:690`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L690)
 
 </div>
 
@@ -1720,24 +1686,18 @@ In either case of passing an array or passing numbered arguments the last argume
 
 
 
----
-
 <div class="instance function ">
 
-## 
-<span class="longname">Two.makeText</span>
+## makeText
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">makeText</span></h2>
 
 
 
 
 <div class="returns">
 
-__Returns__:
-
-
-
-+ `Two.Text`
-
+__Returns__: Two.Text
 
 
 
@@ -1749,14 +1709,16 @@ __Returns__:
 
 
 
+
+
 <div class="params">
 
 | Argument | Description |
 | ---- | ----------- |
-|  `message`  |  |
-|  `x`  |  |
-|  `y`  |  |
-|  `styles`  | An object to describe any of the [Two.Text.Properties](/documentation/text/#two-text-properties) including `fill`, `stroke`, `linewidth`, `family`, `alignment`, `leading`, `opacity`, etc.. |
+|  message  |  |
+|  x  |  |
+|  y  |  |
+|  styles  | An object to describe any of the [Two.Text.Properties](/documentation/text/#two-text-properties) including `fill`, `stroke`, `linewidth`, `family`, `alignment`, `leading`, `opacity`, etc.. |
 </div>
 
 
@@ -1772,7 +1734,7 @@ Creates a Two.js text object and adds it to the scene.
 
 <div class="meta">
 
-  [two.js:729](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L729)
+  [`two.js:729`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L729)
 
 </div>
 
@@ -1784,29 +1746,25 @@ Creates a Two.js text object and adds it to the scene.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
-## 
-<span class="longname">Two.makeLinearGradient</span>
+## makeLinearGradient
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">makeLinearGradient</span></h2>
 
 
 
 
 <div class="returns">
 
-__Returns__:
-
-
-
-+ `Two.LinearGradient`
-
+__Returns__: Two.LinearGradient
 
 
 
 </div>
+
+
 
 
 
@@ -1818,11 +1776,11 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-|  `x1`  |  |
-|  `y1`  |  |
-|  `x2`  |  |
-|  `y2`  |  |
-|  `stops`  | Any number of color stops sometimes reffered to as ramp stops. If none are supplied then the default black-to-white two stop gradient is applied. |
+|  x1  |  |
+|  y1  |  |
+|  x2  |  |
+|  y2  |  |
+|  stops  | Any number of color stops sometimes reffered to as ramp stops. If none are supplied then the default black-to-white two stop gradient is applied. |
 </div>
 
 
@@ -1838,7 +1796,7 @@ Creates a Two.js linear gradient and ads it to the scene. In the case of an effe
 
 <div class="meta">
 
-  [two.js:745](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L745)
+  [`two.js:745`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L745)
 
 </div>
 
@@ -1850,29 +1808,25 @@ Creates a Two.js linear gradient and ads it to the scene. In the case of an effe
 </div>
 
 
-
----
 
 <div class="instance function ">
 
-## 
-<span class="longname">Two.makeRadialGradient</span>
+## makeRadialGradient
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">makeRadialGradient</span></h2>
 
 
 
 
 <div class="returns">
 
-__Returns__:
-
-
-
-+ `Two.RadialGradient`
-
+__Returns__: Two.RadialGradient
 
 
 
 </div>
+
+
 
 
 
@@ -1884,10 +1838,10 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-|  `x1`  |  |
-|  `y1`  |  |
-|  `radius`  |  |
-|  `stops`  | Any number of color stops sometimes reffered to as ramp stops. If none are supplied then the default black-to-white two stop gradient is applied. |
+|  x1  |  |
+|  y1  |  |
+|  radius  |  |
+|  stops  | Any number of color stops sometimes reffered to as ramp stops. If none are supplied then the default black-to-white two stop gradient is applied. |
 </div>
 
 
@@ -1903,7 +1857,7 @@ Creates a Two.js linear-gradient object and ads it to the scene. In the case of 
 
 <div class="meta">
 
-  [two.js:767](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L767)
+  [`two.js:767`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L767)
 
 </div>
 
@@ -1915,29 +1869,25 @@ Creates a Two.js linear-gradient object and ads it to the scene. In the case of 
 </div>
 
 
-
----
 
 <div class="instance function ">
 
-## 
-<span class="longname">Two.makeSprite</span>
+## makeSprite
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">makeSprite</span></h2>
 
 
 
 
 <div class="returns">
 
-__Returns__:
-
-
-
-+ `Two.Sprite`
-
+__Returns__: Two.Sprite
 
 
 
 </div>
+
+
 
 
 
@@ -1949,13 +1899,13 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-|  `pathOrTexture`  | The URL path to an image or an already created [Two.Texture](/documentation/texture). |
-|  `x`  |  |
-|  `y`  |  |
-|  `columns`  |  |
-|  `rows`  |  |
-|  `frameRate`  |  |
-|  `autostart`  |  |
+|  pathOrTexture  | The URL path to an image or an already created [Two.Texture](/documentation/texture). |
+|  x  |  |
+|  y  |  |
+|  columns  |  |
+|  rows  |  |
+|  frameRate  |  |
+|  autostart  |  |
 </div>
 
 
@@ -1971,7 +1921,7 @@ Creates a Two.js sprite object and adds it to the scene. Sprites can be used for
 
 <div class="meta">
 
-  [two.js:788](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L788)
+  [`two.js:788`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L788)
 
 </div>
 
@@ -1983,29 +1933,25 @@ Creates a Two.js sprite object and adds it to the scene. Sprites can be used for
 </div>
 
 
-
----
 
 <div class="instance function ">
 
-## 
-<span class="longname">Two.makeImageSequence</span>
+## makeImageSequence
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">makeImageSequence</span></h2>
 
 
 
 
 <div class="returns">
 
-__Returns__:
-
-
-
-+ `Two.ImageSequence`
-
+__Returns__: Two.ImageSequence
 
 
 
 </div>
+
+
 
 
 
@@ -2017,11 +1963,11 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-|  `pathsOrTextures`  | An array of paths or of [Two.Textures](/documentation/textures). |
-|  `x`  |  |
-|  `y`  |  |
-|  `frameRate`  |  |
-|  `autostart`  |  |
+|  pathsOrTextures  | An array of paths or of [Two.Textures](/documentation/textures). |
+|  x  |  |
+|  y  |  |
+|  frameRate  |  |
+|  autostart  |  |
 </div>
 
 
@@ -2037,7 +1983,7 @@ Creates a Two.js image sequence object and adds it to the scene.
 
 <div class="meta">
 
-  [two.js:813](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L813)
+  [`two.js:813`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L813)
 
 </div>
 
@@ -2049,29 +1995,25 @@ Creates a Two.js image sequence object and adds it to the scene.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
-## 
-<span class="longname">Two.makeTexture</span>
+## makeTexture
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">makeTexture</span></h2>
 
 
 
 
 <div class="returns">
 
-__Returns__:
-
-
-
-+ `Two.Texture`
-
+__Returns__: Two.Texture
 
 
 
 </div>
+
+
 
 
 
@@ -2083,8 +2025,8 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-|  `pathOrSource`  | The URL path to an image or a DOM image-like element. |
-|  `callback`  | Function to be invoked when the image is loaded. |
+|  pathOrSource  | The URL path to an image or a DOM image-like element. |
+|  callback  | Function to be invoked when the image is loaded. |
 </div>
 
 
@@ -2100,7 +2042,7 @@ Creates a Two.js texture object.
 
 <div class="meta">
 
-  [two.js:836](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L836)
+  [`two.js:836`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L836)
 
 </div>
 
@@ -2112,29 +2054,25 @@ Creates a Two.js texture object.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
-## 
-<span class="longname">Two.makeGroup</span>
+## makeGroup
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">makeGroup</span></h2>
 
 
 
 
 <div class="returns">
 
-__Returns__:
-
-
-
-+ `Two.Group`
-
+__Returns__: Two.Group
 
 
 
 </div>
+
+
 
 
 
@@ -2146,7 +2084,7 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-|  `objects`  | Two.js objects to be added to the group in the form of an array or as individual arguments. |
+|  objects  | Two.js objects to be added to the group in the form of an array or as individual arguments. |
 </div>
 
 
@@ -2162,7 +2100,7 @@ Creates a Two.js group object and adds it to the scene.
 
 <div class="meta">
 
-  [two.js:851](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L851)
+  [`two.js:851`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L851)
 
 </div>
 
@@ -2174,29 +2112,25 @@ Creates a Two.js group object and adds it to the scene.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
-## 
-<span class="longname">Two.interpret</span>
+## interpret
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">interpret</span></h2>
 
 
 
 
 <div class="returns">
 
-__Returns__:
-
-
-
-+ `Two.Group`
-
+__Returns__: Two.Group
 
 
 
 </div>
+
+
 
 
 
@@ -2208,9 +2142,9 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-|  `SVGElement`  | The SVG node to be parsed. |
-|  `shallow`  | Don't create a top-most group but append all content directly. |
-|  `add`  | – Automatically add the reconstructed SVG node to scene. |
+|  SVGElement  | The SVG node to be parsed. |
+|  shallow  | Don't create a top-most group but append all content directly. |
+|  add  | – Automatically add the reconstructed SVG node to scene. |
 </div>
 
 
@@ -2226,7 +2160,7 @@ Interpret an SVG Node and add it to this instance's scene. The distinction shoul
 
 <div class="meta">
 
-  [two.js:873](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L873)
+  [`two.js:873`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L873)
 
 </div>
 
@@ -2238,29 +2172,25 @@ Interpret an SVG Node and add it to this instance's scene. The distinction shoul
 </div>
 
 
-
----
 
 <div class="instance function ">
 
-## 
-<span class="longname">Two.load</span>
+## load
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">load</span></h2>
 
 
 
 
 <div class="returns">
 
-__Returns__:
-
-
-
-+ `Two.Group`
-
+__Returns__: Two.Group
 
 
 
 </div>
+
+
 
 
 
@@ -2272,8 +2202,8 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-|  `pathOrSVGContent`  | The URL path of an SVG file or an SVG document as text. |
-|  `callback`  | Function to call once loading has completed. |
+|  pathOrSVGContent  | The URL path of an SVG file or an SVG document as text. |
+|  callback  | Function to call once loading has completed. |
 </div>
 
 
@@ -2289,7 +2219,7 @@ Load an SVG file or SVG text and interpret it into Two.js legible objects.
 
 <div class="meta">
 
-  [two.js:906](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L906)
+  [`two.js:906`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L906)
 
 </div>
 

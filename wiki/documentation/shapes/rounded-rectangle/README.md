@@ -16,7 +16,7 @@ __Extends__: [Two.Path](/documentation/path/)
 
 
 <div class="meta">
-  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/shapes/rounded-rectangle.js" />
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/rounded-rectangle.js" />
 </div>
 
 
@@ -26,21 +26,22 @@ __Extends__: [Two.Path](/documentation/path/)
 
 | Argument | Description |
 | ---- | ----------- |
-|  `x`  | The x position of the rounded rectangle. |
-|  `y`  | The y position of the rounded rectangle. |
-|  `width`  | The width value of the rounded rectangle. |
-|  `height`  | The width value of the rounded rectangle. |
-|  `radius`  | The radius value of the rounded rectangle. |
-|  `resolution`  | The number of vertices used to construct the rounded rectangle. |
+|  x  | The x position of the rounded rectangle. |
+|  y  | The y position of the rounded rectangle. |
+|  width  | The width value of the rounded rectangle. |
+|  height  | The width value of the rounded rectangle. |
+|  radius  | The radius value of the rounded rectangle. |
+|  resolution  | The number of vertices used to construct the rounded rectangle. |
 
 
-
----
 
 <div class="static member ">
 
 ## Properties
-<span class="longname">Two.RoundedRectangle.Properties</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.RoundedRectangle.</span><span class="shortname">Properties</span></h2>
+
+
 
 
 
@@ -64,7 +65,7 @@ A list of properties that are on every [Two.RoundedRectangle](/documentation/rou
 
 <div class="meta">
 
-  [rounded-rectangle.js:78](https://github.com/jonobr1/two.js/blob/dev/src/shapes/rounded-rectangle.js#L78)
+  [`rounded-rectangle.js:78`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/rounded-rectangle.js#L78)
 
 </div>
 
@@ -76,13 +77,14 @@ A list of properties that are on every [Two.RoundedRectangle](/documentation/rou
 </div>
 
 
-
----
 
 <div class="static member ">
 
 ## FlagRadius
-<span class="longname">Two.RoundedRectangle.FlagRadius</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.RoundedRectangle.</span><span class="shortname">FlagRadius</span></h2>
+
+
 
 
 
@@ -106,7 +108,7 @@ A convenience function to trigger the flag for radius changing.
 
 <div class="meta">
 
-  [rounded-rectangle.js:84](https://github.com/jonobr1/two.js/blob/dev/src/shapes/rounded-rectangle.js#L84)
+  [`rounded-rectangle.js:84`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/rounded-rectangle.js#L84)
 
 </div>
 
@@ -118,13 +120,14 @@ A convenience function to trigger the flag for radius changing.
 </div>
 
 
-
----
 
 <div class="static function ">
 
 ## MakeObservable
-<span class="longname">Two.RoundedRectangle.MakeObservable</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.RoundedRectangle.</span><span class="shortname">MakeObservable</span></h2>
+
+
 
 
 
@@ -139,7 +142,7 @@ A convenience function to trigger the flag for radius changing.
 
 | Argument | Description |
 | ---- | ----------- |
-|  `object`  | The object to make observable. |
+|  object  | The object to make observable. |
 </div>
 
 
@@ -155,7 +158,7 @@ Convenience function to apply observable qualities of a [Two.RoundedRectangle](/
 
 <div class="meta">
 
-  [rounded-rectangle.js:92](https://github.com/jonobr1/two.js/blob/dev/src/shapes/rounded-rectangle.js#L92)
+  [`rounded-rectangle.js:92`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/rounded-rectangle.js#L92)
 
 </div>
 
@@ -167,13 +170,14 @@ Convenience function to apply observable qualities of a [Two.RoundedRectangle](/
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## width
-<span class="longname">Two.RoundedRectangle.width</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.RoundedRectangle.</span><span class="shortname">width</span></h2>
+
+
 
 
 
@@ -197,7 +201,7 @@ The width of the rounded rectangle.
 
 <div class="meta">
 
-  [rounded-rectangle.js:47](https://github.com/jonobr1/two.js/blob/dev/src/shapes/rounded-rectangle.js#L47)
+  [`rounded-rectangle.js:47`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/rounded-rectangle.js#L47)
 
 </div>
 
@@ -209,13 +213,14 @@ The width of the rounded rectangle.
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## height
-<span class="longname">Two.RoundedRectangle.height</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.RoundedRectangle.</span><span class="shortname">height</span></h2>
+
+
 
 
 
@@ -239,7 +244,7 @@ The height of the rounded rectangle.
 
 <div class="meta">
 
-  [rounded-rectangle.js:55](https://github.com/jonobr1/two.js/blob/dev/src/shapes/rounded-rectangle.js#L55)
+  [`rounded-rectangle.js:55`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/rounded-rectangle.js#L55)
 
 </div>
 
@@ -251,13 +256,14 @@ The height of the rounded rectangle.
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## radius
-<span class="longname">Two.RoundedRectangle.radius</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.RoundedRectangle.</span><span class="shortname">radius</span></h2>
+
+
 
 
 
@@ -281,7 +287,7 @@ The size of the radius of the rounded rectangle.
 
 <div class="meta">
 
-  [rounded-rectangle.js:63](https://github.com/jonobr1/two.js/blob/dev/src/shapes/rounded-rectangle.js#L63)
+  [`rounded-rectangle.js:63`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/rounded-rectangle.js#L63)
 
 </div>
 
@@ -293,29 +299,25 @@ The size of the radius of the rounded rectangle.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## clone
-<span class="longname">Two.RoundedRectangle.clone</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.RoundedRectangle.</span><span class="shortname">clone</span></h2>
 
 
 
 
 <div class="returns">
 
-__Returns__:
-
-
-
-+ `Two.RoundedRectangle`
-
+__Returns__: Two.RoundedRectangle
 
 
 
 </div>
+
+
 
 
 
@@ -327,7 +329,7 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-|  `parent`  | The parent group or scene to add the clone to. |
+|  parent  | The parent group or scene to add the clone to. |
 </div>
 
 
@@ -343,7 +345,7 @@ Create a new instance of [Two.RoundedRectangle](/documentation/roundedrectangle)
 
 <div class="meta">
 
-  [rounded-rectangle.js:290](https://github.com/jonobr1/two.js/blob/dev/src/shapes/rounded-rectangle.js#L290)
+  [`rounded-rectangle.js:290`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/rounded-rectangle.js#L290)
 
 </div>
 
@@ -355,29 +357,25 @@ Create a new instance of [Two.RoundedRectangle](/documentation/roundedrectangle)
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## toObject
-<span class="longname">Two.RoundedRectangle.toObject</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.RoundedRectangle.</span><span class="shortname">toObject</span></h2>
 
 
 
 
 <div class="returns">
 
-__Returns__:
-
-
-
-+ `Object`
-
+__Returns__: Object
 
 
 
 </div>
+
+
 
 
 
@@ -398,7 +396,7 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  [rounded-rectangle.js:327](https://github.com/jonobr1/two.js/blob/dev/src/shapes/rounded-rectangle.js#L327)
+  [`rounded-rectangle.js:327`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/rounded-rectangle.js#L327)
 
 </div>
 

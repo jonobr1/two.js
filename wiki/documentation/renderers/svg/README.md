@@ -16,7 +16,7 @@ This class is used by [Two](/documentation/) when constructing with `type` of `T
 
 
 <div class="meta">
-  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/renderers/svg.js" />
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\renderers/svg.js" />
 </div>
 
 
@@ -26,17 +26,18 @@ This class is used by [Two](/documentation/) when constructing with `type` of `T
 
 | Argument | Description |
 | ---- | ----------- |
-|  `parameters`  | This object is inherited when constructing a new instance of [Two](/documentation/). |
-|  `parameters.domElement`  | The `<svg />` to draw to. If none given a new one will be constructed. |
+|  parameters  | This object is inherited when constructing a new instance of [Two](/documentation/). |
+|  parameters.domElement  | The `<svg />` to draw to. If none given a new one will be constructed. |
 
 
-
----
 
 <div class="static member ">
 
 ## Utils
-<span class="longname">Two.SVGRenderer.Utils</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.SVGRenderer.</span><span class="shortname">Utils</span></h2>
+
+
 
 
 
@@ -60,7 +61,7 @@ A massive object filled with utility functions and properties to render Two.js o
 
 <div class="meta">
 
-  [svg.js:1083](https://github.com/jonobr1/two.js/blob/dev/src/renderers/svg.js#L1083)
+  [`svg.js:1083`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\renderers/svg.js#L1083)
 
 </div>
 
@@ -72,13 +73,14 @@ A massive object filled with utility functions and properties to render Two.js o
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## domElement
-<span class="longname">Two.SVGRenderer.domElement</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.SVGRenderer.</span><span class="shortname">domElement</span></h2>
+
+
 
 
 
@@ -102,7 +104,7 @@ The `<svg />` associated with the Two.js scene.
 
 <div class="meta">
 
-  [svg.js:1057](https://github.com/jonobr1/two.js/blob/dev/src/renderers/svg.js#L1057)
+  [`svg.js:1057`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\renderers/svg.js#L1057)
 
 </div>
 
@@ -114,13 +116,14 @@ The `<svg />` associated with the Two.js scene.
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## scene
-<span class="longname">Two.SVGRenderer.scene</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.SVGRenderer.</span><span class="shortname">scene</span></h2>
+
+
 
 
 
@@ -144,7 +147,7 @@ The root group of the scenegraph.
 
 <div class="meta">
 
-  [svg.js:1063](https://github.com/jonobr1/two.js/blob/dev/src/renderers/svg.js#L1063)
+  [`svg.js:1063`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\renderers/svg.js#L1063)
 
 </div>
 
@@ -156,13 +159,14 @@ The root group of the scenegraph.
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## defs
-<span class="longname">Two.SVGRenderer.defs</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.SVGRenderer.</span><span class="shortname">defs</span></h2>
+
+
 
 
 
@@ -186,7 +190,7 @@ The `<defs />` to apply gradients, patterns, and bitmap imagery.
 
 <div class="meta">
 
-  [svg.js:1070](https://github.com/jonobr1/two.js/blob/dev/src/renderers/svg.js#L1070)
+  [`svg.js:1070`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\renderers/svg.js#L1070)
 
 </div>
 
@@ -198,13 +202,14 @@ The `<defs />` to apply gradients, patterns, and bitmap imagery.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## setSize
-<span class="longname">Two.SVGRenderer.setSize</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.SVGRenderer.</span><span class="shortname">setSize</span></h2>
+
+
 
 
 
@@ -219,8 +224,8 @@ The `<defs />` to apply gradients, patterns, and bitmap imagery.
 
 | Argument | Description |
 | ---- | ----------- |
-|  `width`  | The new width of the renderer. |
-|  `height`  | The new height of the renderer. |
+|  width  | The new width of the renderer. |
+|  height  | The new height of the renderer. |
 </div>
 
 
@@ -236,7 +241,7 @@ Change the size of the renderer.
 
 <div class="meta">
 
-  [svg.js:1095](https://github.com/jonobr1/two.js/blob/dev/src/renderers/svg.js#L1095)
+  [`svg.js:1095`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\renderers/svg.js#L1095)
 
 </div>
 
@@ -259,12 +264,13 @@ Triggers a `Two.Events.resize`.
 
 
 
----
-
 <div class="instance function ">
 
 ## render
-<span class="longname">Two.SVGRenderer.render</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.SVGRenderer.</span><span class="shortname">render</span></h2>
+
+
 
 
 
@@ -288,7 +294,7 @@ Render the current scene to the `<svg />`.
 
 <div class="meta">
 
-  [svg.js:1117](https://github.com/jonobr1/two.js/blob/dev/src/renderers/svg.js#L1117)
+  [`svg.js:1117`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\renderers/svg.js#L1117)
 
 </div>
 

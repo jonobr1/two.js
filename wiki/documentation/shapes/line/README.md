@@ -16,7 +16,7 @@ __Extends__: [Two.Path](/documentation/path/)
 
 
 <div class="meta">
-  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/shapes/line.js" />
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/line.js" />
 </div>
 
 
@@ -26,9 +26,9 @@ __Extends__: [Two.Path](/documentation/path/)
 
 | Argument | Description |
 | ---- | ----------- |
-|  `x1`  | The x position of the first vertex on the line. |
-|  `y1`  | The y position of the first vertex on the line. |
-|  `x2`  | The x position of the second vertex on the line. |
-|  `y2`  | The y position of the second vertex on the line. |
+|  x1  | The x position of the first vertex on the line. |
+|  y1  | The y position of the first vertex on the line. |
+|  x2  | The x position of the second vertex on the line. |
+|  y2  | The y position of the second vertex on the line. |
 
 

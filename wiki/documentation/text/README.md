@@ -16,7 +16,7 @@ This is a primitive class for creating drawable text that can be added to the sc
 
 
 <div class="meta">
-  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/text.js" />
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/text.js" />
 </div>
 
 
@@ -26,19 +26,20 @@ This is a primitive class for creating drawable text that can be added to the sc
 
 | Argument | Description |
 | ---- | ----------- |
-|  `message`  | The String to be rendered to the scene. |
-|  `x`  | The position in the x direction for the object. |
-|  `y`  | The position in the y direction for the object. |
-|  `styles`  | An object where styles are applied. Attribute must exist in Two.Text.Properties. |
+|  message  | The String to be rendered to the scene. |
+|  x  | The position in the x direction for the object. |
+|  y  | The position in the y direction for the object. |
+|  styles  | An object where styles are applied. Attribute must exist in Two.Text.Properties. |
 
 
-
----
 
 <div class="static member ">
 
 ## Ratio
-<span class="longname">Two.Text.Ratio</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">Ratio</span></h2>
+
+
 
 
 
@@ -62,7 +63,7 @@ Approximate aspect ratio of a typeface's character width to height.
 
 <div class="meta">
 
-  [text.js:73](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L73)
+  [`text.js:73`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/text.js#L73)
 
 </div>
 
@@ -74,13 +75,14 @@ Approximate aspect ratio of a typeface's character width to height.
 </div>
 
 
-
----
 
 <div class="static member ">
 
 ## Properties
-<span class="longname">Two.Text.Properties</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">Properties</span></h2>
+
+
 
 
 
@@ -104,7 +106,7 @@ A list of properties that are on every [Two.Text](/documentation/text).
 
 <div class="meta">
 
-  [text.js:79](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L79)
+  [`text.js:79`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/text.js#L79)
 
 </div>
 
@@ -116,13 +118,14 @@ A list of properties that are on every [Two.Text](/documentation/text).
 </div>
 
 
-
----
 
 <div class="static function ">
 
 ## FlagFill
-<span class="longname">Two.Text.FlagFill</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">FlagFill</span></h2>
+
+
 
 
 
@@ -146,7 +149,7 @@ Cached method to let renderers know the fill property have been updated on a [Tw
 
 <div class="meta">
 
-  [text.js:89](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L89)
+  [`text.js:89`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/text.js#L89)
 
 </div>
 
@@ -158,13 +161,14 @@ Cached method to let renderers know the fill property have been updated on a [Tw
 </div>
 
 
-
----
 
 <div class="static function ">
 
 ## FlagStroke
-<span class="longname">Two.Text.FlagStroke</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">FlagStroke</span></h2>
+
+
 
 
 
@@ -188,7 +192,7 @@ Cached method to let renderers know the stroke property have been updated on a [
 
 <div class="meta">
 
-  [text.js:98](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L98)
+  [`text.js:98`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/text.js#L98)
 
 </div>
 
@@ -200,13 +204,14 @@ Cached method to let renderers know the stroke property have been updated on a [
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## dashes
-<span class="longname">Two.Text.dashes</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">dashes</span></h2>
+
+
 
 
 
@@ -236,7 +241,7 @@ A list of numbers that represent the repeated dash length and dash space applied
 
 <div class="meta">
 
-  [text.js:43](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L43)
+  [`text.js:43`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/text.js#L43)
 
 </div>
 
@@ -255,12 +260,13 @@ A list of numbers that represent the repeated dash length and dash space applied
 
 
 
----
-
 <div class="instance member ">
 
 ## dashes.offset
-<span class="longname">Two.Text.dashes.offset</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">dashes.offset</span></h2>
+
+
 
 
 
@@ -284,7 +290,7 @@ A number in pixels to offset [Two.Text.dashes](/documentation/text/#two-text-das
 
 <div class="meta">
 
-  [text.js:51](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L51)
+  [`text.js:51`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/text.js#L51)
 
 </div>
 
@@ -296,13 +302,14 @@ A number in pixels to offset [Two.Text.dashes](/documentation/text/#two-text-das
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## value
-<span class="longname">Two.Text.value</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">value</span></h2>
+
+
 
 
 
@@ -326,7 +333,7 @@ The characters to be rendered to the the screen. Referred to in the documentatio
 
 <div class="meta">
 
-  [text.js:341](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L341)
+  [`text.js:341`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/text.js#L341)
 
 </div>
 
@@ -338,13 +345,14 @@ The characters to be rendered to the the screen. Referred to in the documentatio
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## family
-<span class="longname">Two.Text.family</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">family</span></h2>
+
+
 
 
 
@@ -368,7 +376,7 @@ The font family Two.js should attempt to regsiter for rendering. The default val
 
 <div class="meta">
 
-  [text.js:347](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L347)
+  [`text.js:347`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/text.js#L347)
 
 </div>
 
@@ -380,13 +388,14 @@ The font family Two.js should attempt to regsiter for rendering. The default val
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## size
-<span class="longname">Two.Text.size</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">size</span></h2>
+
+
 
 
 
@@ -410,7 +419,7 @@ The font size in Two.js point space. Defaults to `13`.
 
 <div class="meta">
 
-  [text.js:353](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L353)
+  [`text.js:353`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/text.js#L353)
 
 </div>
 
@@ -422,13 +431,14 @@ The font size in Two.js point space. Defaults to `13`.
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## leading
-<span class="longname">Two.Text.leading</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">leading</span></h2>
+
+
 
 
 
@@ -452,7 +462,7 @@ The height between lines measured from base to base in Two.js point space. Defau
 
 <div class="meta">
 
-  [text.js:359](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L359)
+  [`text.js:359`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/text.js#L359)
 
 </div>
 
@@ -464,13 +474,14 @@ The height between lines measured from base to base in Two.js point space. Defau
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## alignment
-<span class="longname">Two.Text.alignment</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">alignment</span></h2>
+
+
 
 
 
@@ -494,7 +505,7 @@ Alignment of text in relation to [Two.Text.translation](/documentation/text/#two
 
 <div class="meta">
 
-  [text.js:365](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L365)
+  [`text.js:365`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/text.js#L365)
 
 </div>
 
@@ -506,13 +517,14 @@ Alignment of text in relation to [Two.Text.translation](/documentation/text/#two
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## baseline
-<span class="longname">Two.Text.baseline</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">baseline</span></h2>
+
+
 
 
 
@@ -536,7 +548,7 @@ The vertical aligment of the text in relation to [Two.Text.translation](/documen
 
 <div class="meta">
 
-  [text.js:371](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L371)
+  [`text.js:371`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/text.js#L371)
 
 </div>
 
@@ -548,13 +560,14 @@ The vertical aligment of the text in relation to [Two.Text.translation](/documen
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## style
-<span class="longname">Two.Text.style</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">style</span></h2>
+
+
 
 
 
@@ -578,7 +591,7 @@ The font's style. Possible values include '`normal`', `'italic'`. Defaults to `'
 
 <div class="meta">
 
-  [text.js:377](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L377)
+  [`text.js:377`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/text.js#L377)
 
 </div>
 
@@ -590,13 +603,14 @@ The font's style. Possible values include '`normal`', `'italic'`. Defaults to `'
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## weight
-<span class="longname">Two.Text.weight</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">weight</span></h2>
+
+
 
 
 
@@ -620,7 +634,7 @@ A number at intervals of 100 to describe the font's weight. This compatibility v
 
 <div class="meta">
 
-  [text.js:383](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L383)
+  [`text.js:383`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/text.js#L383)
 
 </div>
 
@@ -632,13 +646,14 @@ A number at intervals of 100 to describe the font's weight. This compatibility v
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## decoration
-<span class="longname">Two.Text.decoration</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">decoration</span></h2>
+
+
 
 
 
@@ -662,7 +677,7 @@ String to delineate whether text should be decorated with for instance an `'unde
 
 <div class="meta">
 
-  [text.js:389](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L389)
+  [`text.js:389`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/text.js#L389)
 
 </div>
 
@@ -674,13 +689,14 @@ String to delineate whether text should be decorated with for instance an `'unde
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## fill
-<span class="longname">Two.Text.fill</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">fill</span></h2>
+
+
 
 
 
@@ -704,7 +720,7 @@ The value of what the text object should be filled in with.
 
 <div class="meta">
 
-  [text.js:395](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L395)
+  [`text.js:395`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/text.js#L395)
 
 </div>
 
@@ -722,13 +738,14 @@ The value of what the text object should be filled in with.
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## stroke
-<span class="longname">Two.Text.stroke</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">stroke</span></h2>
+
+
 
 
 
@@ -752,7 +769,7 @@ The value of what the text object should be filled in with.
 
 <div class="meta">
 
-  [text.js:402](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L402)
+  [`text.js:402`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/text.js#L402)
 
 </div>
 
@@ -771,12 +788,13 @@ The value of what the text object should be filled in with.
 
 
 
----
-
 <div class="instance member ">
 
 ## linewidth
-<span class="longname">Two.Text.linewidth</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">linewidth</span></h2>
+
+
 
 
 
@@ -800,7 +818,7 @@ The thickness in pixels of the stroke.
 
 <div class="meta">
 
-  [text.js:409](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L409)
+  [`text.js:409`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/text.js#L409)
 
 </div>
 
@@ -812,13 +830,14 @@ The thickness in pixels of the stroke.
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## opacity
-<span class="longname">Two.Text.opacity</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">opacity</span></h2>
+
+
 
 
 
@@ -842,7 +861,7 @@ The opaqueness of the text object.
 
 <div class="meta">
 
-  [text.js:415](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L415)
+  [`text.js:415`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/text.js#L415)
 
 </div>
 
@@ -865,12 +884,13 @@ Can be used in conjunction with CSS Colors that have an alpha value.
 
 
 
----
-
 <div class="instance member ">
 
 ## className
-<span class="longname">Two.Text.className</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">className</span></h2>
+
+
 
 
 
@@ -894,7 +914,7 @@ A class to be applied to the element to be compatible with CSS styling. Only ava
 
 <div class="meta">
 
-  [text.js:422](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L422)
+  [`text.js:422`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/text.js#L422)
 
 </div>
 
@@ -906,13 +926,14 @@ A class to be applied to the element to be compatible with CSS styling. Only ava
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## visible
-<span class="longname">Two.Text.visible</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">visible</span></h2>
+
+
 
 
 
@@ -936,7 +957,7 @@ Display the text object or not.
 
 <div class="meta">
 
-  [text.js:428](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L428)
+  [`text.js:428`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/text.js#L428)
 
 </div>
 
@@ -959,12 +980,13 @@ For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](
 
 
 
----
-
 <div class="instance member ">
 
 ## mask
-<span class="longname">Two.Text.mask</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">mask</span></h2>
+
+
 
 
 
@@ -988,7 +1010,7 @@ The shape whose alpha property becomes a clipping area for the text.
 
 <div class="meta">
 
-  [text.js:435](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L435)
+  [`text.js:435`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/text.js#L435)
 
 </div>
 
@@ -1011,12 +1033,13 @@ This property is currently not working becuase of SVG spec issues found here {@l
 
 
 
----
-
 <div class="instance member ">
 
 ## clip
-<span class="longname">Two.Text.clip</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">clip</span></h2>
+
+
 
 
 
@@ -1040,7 +1063,7 @@ Object to define clipping area.
 
 <div class="meta">
 
-  [text.js:442](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L442)
+  [`text.js:442`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/text.js#L442)
 
 </div>
 
@@ -1063,12 +1086,13 @@ This property is currently not working becuase of SVG spec issues found here {@l
 
 
 
----
-
 <div class="instance function ">
 
 ## remove
-<span class="longname">Two.Text.remove</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">remove</span></h2>
+
+
 
 
 
@@ -1092,7 +1116,7 @@ Remove self from the scene / parent.
 
 <div class="meta">
 
-  [text.js:456](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L456)
+  [`text.js:456`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/text.js#L456)
 
 </div>
 
@@ -1104,29 +1128,25 @@ Remove self from the scene / parent.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## clone
-<span class="longname">Two.Text.clone</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">clone</span></h2>
 
 
 
 
 <div class="returns">
 
-__Returns__:
-
-
-
-+ `Two.Text`
-
+__Returns__: Two.Text
 
 
 
 </div>
+
+
 
 
 
@@ -1138,7 +1158,7 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-|  `parent`  | The parent group or scene to add the clone to. |
+|  parent  | The parent group or scene to add the clone to. |
 </div>
 
 
@@ -1154,7 +1174,7 @@ Create a new instance of [Two.Text](/documentation/text) with the same propertie
 
 <div class="meta">
 
-  [text.js:473](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L473)
+  [`text.js:473`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/text.js#L473)
 
 </div>
 
@@ -1166,29 +1186,25 @@ Create a new instance of [Two.Text](/documentation/text) with the same propertie
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## toObject
-<span class="longname">Two.Text.toObject</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">toObject</span></h2>
 
 
 
 
 <div class="returns">
 
-__Returns__:
-
-
-
-+ `Object`
-
+__Returns__: Object
 
 
 
 </div>
+
+
 
 
 
@@ -1209,7 +1225,7 @@ Return a JSON compatible plain object that represents the text object.
 
 <div class="meta">
 
-  [text.js:503](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L503)
+  [`text.js:503`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/text.js#L503)
 
 </div>
 
@@ -1221,13 +1237,14 @@ Return a JSON compatible plain object that represents the text object.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## noFill
-<span class="longname">Two.Text.noFill</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">noFill</span></h2>
+
+
 
 
 
@@ -1251,7 +1268,7 @@ Short hand method to set fill to `transparent`.
 
 <div class="meta">
 
-  [text.js:529](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L529)
+  [`text.js:529`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/text.js#L529)
 
 </div>
 
@@ -1263,13 +1280,14 @@ Short hand method to set fill to `transparent`.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## noStroke
-<span class="longname">Two.Text.noStroke</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">noStroke</span></h2>
+
+
 
 
 
@@ -1293,7 +1311,7 @@ Short hand method to set stroke to `transparent`.
 
 <div class="meta">
 
-  [text.js:539](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L539)
+  [`text.js:539`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/text.js#L539)
 
 </div>
 
@@ -1305,25 +1323,19 @@ Short hand method to set stroke to `transparent`.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## getBoundingClientRect
-<span class="longname">Two.Text.getBoundingClientRect</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">getBoundingClientRect</span></h2>
 
 
 
 
 <div class="returns">
 
-__Returns__:
-
-
-
-+ `Object`
-
+__Returns__: Object
 
 
 - Returns object with top, left, right, bottom, width, height attributes.
@@ -1337,11 +1349,13 @@ __Returns__:
 
 
 
+
+
 <div class="params">
 
 | Argument | Description |
 | ---- | ----------- |
-|  `shallow`  | Describes whether to calculate off local matrix or world matrix. |
+|  shallow  | Describes whether to calculate off local matrix or world matrix. |
 </div>
 
 
@@ -1357,7 +1371,7 @@ Return an object with top, left, right, bottom, width, and height parameters of 
 
 <div class="meta">
 
-  [text.js:554](https://github.com/jonobr1/two.js/blob/dev/src/text.js#L554)
+  [`text.js:554`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/text.js#L554)
 
 </div>
 

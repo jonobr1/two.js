@@ -16,7 +16,7 @@ This is a primary primitive class for quickly and easily drawing points in Two.j
 
 
 <div class="meta">
-  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/shapes/points.js" />
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/points.js" />
 </div>
 
 
@@ -26,16 +26,17 @@ This is a primary primitive class for quickly and easily drawing points in Two.j
 
 | Argument | Description |
 | ---- | ----------- |
-|  `vertices`  | A list of [Two.Vector](/documentation/vector)s that represent the order and coordinates to construct a rendered set of points. |
+|  vertices  | A list of [Two.Vector](/documentation/vector)s that represent the order and coordinates to construct a rendered set of points. |
 
 
-
----
 
 <div class="instance member ">
 
 ## sizeAttenuation
-<span class="longname">Two.Points.sizeAttenuation</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Points.</span><span class="shortname">sizeAttenuation</span></h2>
+
+
 
 
 
@@ -65,7 +66,7 @@ Set to `true` if you'd like the size of the points to be relative to the scale o
 
 <div class="meta">
 
-  [points.js:41](https://github.com/jonobr1/two.js/blob/dev/src/shapes/points.js#L41)
+  [`points.js:41`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/points.js#L41)
 
 </div>
 
@@ -77,13 +78,14 @@ Set to `true` if you'd like the size of the points to be relative to the scale o
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## beginning
-<span class="longname">Two.Points.beginning</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Points.</span><span class="shortname">beginning</span></h2>
+
+
 
 
 
@@ -113,7 +115,7 @@ Number between zero and one to state the beginning of where the path is rendered
 
 <div class="meta">
 
-  [points.js:48](https://github.com/jonobr1/two.js/blob/dev/src/shapes/points.js#L48)
+  [`points.js:48`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/points.js#L48)
 
 </div>
 
@@ -125,13 +127,14 @@ Number between zero and one to state the beginning of where the path is rendered
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## ending
-<span class="longname">Two.Points.ending</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Points.</span><span class="shortname">ending</span></h2>
+
+
 
 
 
@@ -161,7 +164,7 @@ Number between zero and one to state the ending of where the path is rendered.
 
 <div class="meta">
 
-  [points.js:55](https://github.com/jonobr1/two.js/blob/dev/src/shapes/points.js#L55)
+  [`points.js:55`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/points.js#L55)
 
 </div>
 
@@ -173,13 +176,14 @@ Number between zero and one to state the ending of where the path is rendered.
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## fill
-<span class="longname">Two.Points.fill</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Points.</span><span class="shortname">fill</span></h2>
+
+
 
 
 
@@ -203,7 +207,7 @@ The value of what the path should be filled in with.
 
 <div class="meta">
 
-  [points.js:64](https://github.com/jonobr1/two.js/blob/dev/src/shapes/points.js#L64)
+  [`points.js:64`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/points.js#L64)
 
 </div>
 
@@ -222,12 +226,13 @@ The value of what the path should be filled in with.
 
 
 
----
-
 <div class="instance member ">
 
 ## stroke
-<span class="longname">Two.Points.stroke</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Points.</span><span class="shortname">stroke</span></h2>
+
+
 
 
 
@@ -251,7 +256,7 @@ The value of what the path should be outlined in with.
 
 <div class="meta">
 
-  [points.js:71](https://github.com/jonobr1/two.js/blob/dev/src/shapes/points.js#L71)
+  [`points.js:71`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/points.js#L71)
 
 </div>
 
@@ -270,12 +275,13 @@ The value of what the path should be outlined in with.
 
 
 
----
-
 <div class="instance member ">
 
 ## className
-<span class="longname">Two.Points.className</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Points.</span><span class="shortname">className</span></h2>
+
+
 
 
 
@@ -299,7 +305,7 @@ A class to be applied to the element to be compatible with CSS styling.
 
 <div class="meta">
 
-  [points.js:78](https://github.com/jonobr1/two.js/blob/dev/src/shapes/points.js#L78)
+  [`points.js:78`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/points.js#L78)
 
 </div>
 
@@ -322,12 +328,13 @@ Only available for the SVG renderer.
 
 
 
----
-
 <div class="instance member ">
 
 ## visible
-<span class="longname">Two.Points.visible</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Points.</span><span class="shortname">visible</span></h2>
+
+
 
 
 
@@ -351,7 +358,7 @@ Display the points or not.
 
 <div class="meta">
 
-  [points.js:85](https://github.com/jonobr1/two.js/blob/dev/src/shapes/points.js#L85)
+  [`points.js:85`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/points.js#L85)
 
 </div>
 
@@ -374,12 +381,13 @@ For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](
 
 
 
----
-
 <div class="instance member ">
 
 ## vertices
-<span class="longname">Two.Points.vertices</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Points.</span><span class="shortname">vertices</span></h2>
+
+
 
 
 
@@ -409,7 +417,7 @@ A list of [Two.Vector](/documentation/vector) objects that consist of which coor
 
 <div class="meta">
 
-  [points.js:92](https://github.com/jonobr1/two.js/blob/dev/src/shapes/points.js#L92)
+  [`points.js:92`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/points.js#L92)
 
 </div>
 
@@ -432,12 +440,13 @@ The array when manipulating is actually a [Two.Collection](/documentation/collec
 
 
 
----
-
 <div class="instance member ">
 
 ## dashes
-<span class="longname">Two.Points.dashes</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Points.</span><span class="shortname">dashes</span></h2>
+
+
 
 
 
@@ -467,7 +476,7 @@ A list of numbers that represent the repeated dash length and dash space applied
 
 <div class="meta">
 
-  [points.js:100](https://github.com/jonobr1/two.js/blob/dev/src/shapes/points.js#L100)
+  [`points.js:100`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/points.js#L100)
 
 </div>
 
@@ -486,12 +495,13 @@ A list of numbers that represent the repeated dash length and dash space applied
 
 
 
----
-
 <div class="instance member ">
 
 ## dashes.offset
-<span class="longname">Two.Points.dashes.offset</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Points.</span><span class="shortname">dashes.offset</span></h2>
+
+
 
 
 
@@ -515,7 +525,7 @@ A number in pixels to offset [Two.Points.dashes](/documentation/points/#two-poin
 
 <div class="meta">
 
-  [points.js:108](https://github.com/jonobr1/two.js/blob/dev/src/shapes/points.js#L108)
+  [`points.js:108`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/points.js#L108)
 
 </div>
 
@@ -527,13 +537,14 @@ A number in pixels to offset [Two.Points.dashes](/documentation/points/#two-poin
 </div>
 
 
-
----
 
 <div class="instance member ">
 
 ## length
-<span class="longname">Two.Points.length</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Points.</span><span class="shortname">length</span></h2>
+
+
 
 
 
@@ -557,7 +568,7 @@ The sum of distances between all [Two.Points.vertices](/documentation/points/#tw
 
 <div class="meta">
 
-  [points.js:191](https://github.com/jonobr1/two.js/blob/dev/src/shapes/points.js#L191)
+  [`points.js:191`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/points.js#L191)
 
 </div>
 
@@ -569,29 +580,25 @@ The sum of distances between all [Two.Points.vertices](/documentation/points/#tw
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## clone
-<span class="longname">Two.Points.clone</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Points.</span><span class="shortname">clone</span></h2>
 
 
 
 
 <div class="returns">
 
-__Returns__:
-
-
-
-+ `Two.Points`
-
+__Returns__: Two.Points
 
 
 
 </div>
+
+
 
 
 
@@ -603,7 +610,7 @@ __Returns__:
 
 | Argument | Description |
 | ---- | ----------- |
-|  `parent`  | The parent group or scene to add the clone to. |
+|  parent  | The parent group or scene to add the clone to. |
 </div>
 
 
@@ -619,7 +626,7 @@ Create a new instance of [Two.Points](/documentation/points) with the same prope
 
 <div class="meta">
 
-  [points.js:309](https://github.com/jonobr1/two.js/blob/dev/src/shapes/points.js#L309)
+  [`points.js:309`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/points.js#L309)
 
 </div>
 
@@ -631,29 +638,25 @@ Create a new instance of [Two.Points](/documentation/points) with the same prope
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## toObject
-<span class="longname">Two.Points.toObject</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Points.</span><span class="shortname">toObject</span></h2>
 
 
 
 
 <div class="returns">
 
-__Returns__:
-
-
-
-+ `Object`
-
+__Returns__: Object
 
 
 
 </div>
+
+
 
 
 
@@ -674,7 +677,7 @@ Return a JSON compatible plain object that represents the points object.
 
 <div class="meta">
 
-  [points.js:349](https://github.com/jonobr1/two.js/blob/dev/src/shapes/points.js#L349)
+  [`points.js:349`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/points.js#L349)
 
 </div>
 
@@ -686,13 +689,14 @@ Return a JSON compatible plain object that represents the points object.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## noFill
-<span class="longname">Two.Points.noFill</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Points.</span><span class="shortname">noFill</span></h2>
+
+
 
 
 
@@ -716,7 +720,7 @@ Short hand method to set fill to `transparent`.
 
 <div class="meta">
 
-  [points.js:383](https://github.com/jonobr1/two.js/blob/dev/src/shapes/points.js#L383)
+  [`points.js:383`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/points.js#L383)
 
 </div>
 
@@ -728,13 +732,14 @@ Short hand method to set fill to `transparent`.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## noStroke
-<span class="longname">Two.Points.noStroke</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Points.</span><span class="shortname">noStroke</span></h2>
+
+
 
 
 
@@ -758,7 +763,7 @@ Short hand method to set stroke to `transparent`.
 
 <div class="meta">
 
-  [points.js:390](https://github.com/jonobr1/two.js/blob/dev/src/shapes/points.js#L390)
+  [`points.js:390`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/points.js#L390)
 
 </div>
 
@@ -770,13 +775,14 @@ Short hand method to set stroke to `transparent`.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## corner
-<span class="longname">Two.Points.corner</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Points.</span><span class="shortname">corner</span></h2>
+
+
 
 
 
@@ -800,7 +806,7 @@ Orient the vertices of the shape to the upper left-hand corner of the points obj
 
 <div class="meta">
 
-  [points.js:397](https://github.com/jonobr1/two.js/blob/dev/src/shapes/points.js#L397)
+  [`points.js:397`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/points.js#L397)
 
 </div>
 
@@ -812,13 +818,14 @@ Orient the vertices of the shape to the upper left-hand corner of the points obj
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## center
-<span class="longname">Two.Points.center</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Points.</span><span class="shortname">center</span></h2>
+
+
 
 
 
@@ -842,7 +849,7 @@ Orient the vertices of the shape to the center of the points object.
 
 <div class="meta">
 
-  [points.js:404](https://github.com/jonobr1/two.js/blob/dev/src/shapes/points.js#L404)
+  [`points.js:404`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/points.js#L404)
 
 </div>
 
@@ -854,13 +861,14 @@ Orient the vertices of the shape to the center of the points object.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## remove
-<span class="longname">Two.Points.remove</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Points.</span><span class="shortname">remove</span></h2>
+
+
 
 
 
@@ -884,7 +892,7 @@ Remove self from the scene / parent.
 
 <div class="meta">
 
-  [points.js:411](https://github.com/jonobr1/two.js/blob/dev/src/shapes/points.js#L411)
+  [`points.js:411`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/points.js#L411)
 
 </div>
 
@@ -896,25 +904,19 @@ Remove self from the scene / parent.
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## getBoundingClientRect
-<span class="longname">Two.Points.getBoundingClientRect</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Points.</span><span class="shortname">getBoundingClientRect</span></h2>
 
 
 
 
 <div class="returns">
 
-__Returns__:
-
-
-
-+ `Object`
-
+__Returns__: Object
 
 
 - Returns object with top, left, right, bottom, width, height attributes.
@@ -928,11 +930,13 @@ __Returns__:
 
 
 
+
+
 <div class="params">
 
 | Argument | Description |
 | ---- | ----------- |
-|  `shallow`  | Describes whether to calculate off local matrix or world matrix. |
+|  shallow  | Describes whether to calculate off local matrix or world matrix. |
 </div>
 
 
@@ -948,7 +952,7 @@ Return an object with top, left, right, bottom, width, and height parameters of 
 
 <div class="meta">
 
-  [points.js:418](https://github.com/jonobr1/two.js/blob/dev/src/shapes/points.js#L418)
+  [`points.js:418`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/points.js#L418)
 
 </div>
 
@@ -960,13 +964,14 @@ Return an object with top, left, right, bottom, width, and height parameters of 
 </div>
 
 
-
----
 
 <div class="instance function ">
 
 ## subdivide
-<span class="longname">Two.Points.subdivide</span>
+
+<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Points.</span><span class="shortname">subdivide</span></h2>
+
+
 
 
 
@@ -981,7 +986,7 @@ Return an object with top, left, right, bottom, width, and height parameters of 
 
 | Argument | Description |
 | ---- | ----------- |
-|  `limit`  | How many times to recurse subdivisions. |
+|  limit  | How many times to recurse subdivisions. |
 </div>
 
 
@@ -997,7 +1002,7 @@ Insert a [Two.Vector](/documentation/vector) at the midpoint between every item 
 
 <div class="meta">
 
-  [points.js:427](https://github.com/jonobr1/two.js/blob/dev/src/shapes/points.js#L427)
+  [`points.js:427`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/points.js#L427)
 
 </div>
 
