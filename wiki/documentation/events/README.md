@@ -25,7 +25,7 @@ Object inherited by many Two.js objects in order to facilitate custom events.
 
 <div class="static member ">
 
-## Two.Events.Types
+### Two.Events.Types
 
 
 
@@ -66,7 +66,7 @@ Object of different types of Two.js specific events.
 
 <div class="static function ">
 
-## Two.Events.bind
+### Two.Events.bind
 
 
 
@@ -107,7 +107,7 @@ Alias for [Two.Events.on](/documentation/events/#two-events-on).
 
 <div class="static function ">
 
-## Two.Events.unbind
+### Two.Events.unbind
 
 
 
@@ -148,7 +148,7 @@ Alias for [Two.Events.off](/documentation/events/#two-events-off).
 
 <div class="instance function ">
 
-## Two.Events.on
+### Two.Events.on
 
 
 
@@ -197,7 +197,7 @@ Call to add a listener to a specific event name.
 
 <div class="instance function ">
 
-## Two.Events.off
+### Two.Events.off
 
 
 
@@ -246,7 +246,7 @@ Call to remove listeners from a specific event. If only `name` is passed then al
 
 <div class="instance function ">
 
-## Two.Events.trigger
+### Two.Events.trigger
 
 
 

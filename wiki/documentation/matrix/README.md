@@ -17,7 +17,7 @@ A class to store 3 x 3 transformation matrix information. In addition to storing
 
 
 
-### Constructor
+## Constructor
 
 
 | Argument | Description |
@@ -38,7 +38,7 @@ A class to store 3 x 3 transformation matrix information. In addition to storing
 
 <div class="static member ">
 
-## Two.Matrix.Identity
+### Two.Matrix.Identity
 
 
 
@@ -79,7 +79,7 @@ A stored reference to the default value of a 3 x 3 matrix.
 
 <div class="static function ">
 
-## Two.Matrix.Multiply
+### Two.Matrix.Multiply
 
 
 
@@ -144,7 +144,7 @@ Multiply two matrices together and return the result.
 
 <div class="instance member ">
 
-## Two.Matrix.elements
+### Two.Matrix.elements
 
 
 
@@ -185,7 +185,7 @@ The underlying data stored as an array.
 
 <div class="instance member ">
 
-## Two.Matrix.manual
+### Two.Matrix.manual
 
 
 
@@ -236,7 +236,7 @@ Determines whether Two.js automatically calculates the values for the matrix or 
 
 <div class="instance function ">
 
-## Two.Matrix.set
+### Two.Matrix.set
 
 
 
@@ -292,7 +292,7 @@ Set an array of values onto the matrix. Order described in [Two.Matrix](/documen
 
 <div class="instance function ">
 
-## Two.Matrix.set
+### Two.Matrix.set
 
 
 
@@ -340,7 +340,7 @@ Set an array of values onto the matrix. Order described in [Two.Matrix](/documen
 
 <div class="instance function ">
 
-## Two.Matrix.copy
+### Two.Matrix.copy
 
 
 
@@ -381,7 +381,7 @@ Copy the matrix of one to the current instance.
 
 <div class="instance function ">
 
-## Two.Matrix.identity
+### Two.Matrix.identity
 
 
 
@@ -422,7 +422,7 @@ Turn matrix to the identity, like resetting.
 
 <div class="instance function overloaded">
 
-## Two.Matrix.multiply
+### Two.Matrix.multiply
 
 
 <div class="overloaded-label">
@@ -482,7 +482,7 @@ Multiply all components of the matrix against a single scalar value.
 
 <div class="instance function overloaded">
 
-## Two.Matrix.multiply
+### Two.Matrix.multiply
 
 
 <div class="overloaded-label">
@@ -544,7 +544,7 @@ Multiply all components of a matrix against a 3 component vector.
 
 <div class="instance function overloaded">
 
-## Two.Matrix.multiply
+### Two.Matrix.multiply
 
 
 <div class="overloaded-label">
@@ -612,7 +612,7 @@ Multiply all components of a matrix against another matrix.
 
 <div class="instance function ">
 
-## Two.Matrix.inverse
+### Two.Matrix.inverse
 
 
 
@@ -660,7 +660,7 @@ Return an inverted version of the matrix. If no optional one is passed a new mat
 
 <div class="instance function ">
 
-## Two.Matrix.scale
+### Two.Matrix.scale
 
 
 
@@ -708,7 +708,7 @@ Uniformly scale the transformation matrix.
 
 <div class="instance function ">
 
-## Two.Matrix.scale
+### Two.Matrix.scale
 
 
 
@@ -757,7 +757,7 @@ Scale the transformation matrix in two dimensions.
 
 <div class="instance function ">
 
-## Two.Matrix.rotate
+### Two.Matrix.rotate
 
 
 
@@ -805,7 +805,7 @@ Rotate the matrix.
 
 <div class="instance function ">
 
-## Two.Matrix.translate
+### Two.Matrix.translate
 
 
 
@@ -854,7 +854,7 @@ Translate the matrix.
 
 <div class="instance function ">
 
-## Two.Matrix.skewX
+### Two.Matrix.skewX
 
 
 
@@ -902,7 +902,7 @@ Skew the matrix by an angle in the x axis direction.
 
 <div class="instance function ">
 
-## Two.Matrix.skewY
+### Two.Matrix.skewY
 
 
 
@@ -950,7 +950,7 @@ Skew the matrix by an angle in the y axis direction.
 
 <div class="instance function ">
 
-## Two.Matrix.toString
+### Two.Matrix.toString
 
 
 
@@ -1013,7 +1013,7 @@ Create a transform string. Used for the Two.js rendering APIs.
 
 <div class="instance function ">
 
-## Two.Matrix.toTransformArray
+### Two.Matrix.toTransformArray
 
 
 
@@ -1062,7 +1062,7 @@ Create a transform array. Used for the Two.js rendering APIs.
 
 <div class="instance function ">
 
-## Two.Matrix.toArray
+### Two.Matrix.toArray
 
 
 
@@ -1111,7 +1111,7 @@ Create a transform array. Used for the Two.js rendering APIs.
 
 <div class="instance function ">
 
-## Two.Matrix.toObject
+### Two.Matrix.toObject
 
 
 
@@ -1152,7 +1152,7 @@ Create a JSON compatible object that represents information of the matrix.
 
 <div class="instance function ">
 
-## Two.Matrix.clone
+### Two.Matrix.clone
 
 
 

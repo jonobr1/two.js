@@ -31,7 +31,7 @@ A children collection which is accesible both by index and by object `id`.
 
 <div class="instance member ">
 
-## Two.Group.Children.ids
+### Two.Group.Children.ids
 
 
 
@@ -72,7 +72,7 @@ Map of all elements in the list keyed by `id`s.
 
 <div class="instance function ">
 
-## Two.Group.Children.attach
+### Two.Group.Children.attach
 
 
 
@@ -120,7 +120,7 @@ Adds elements to the `ids` map.
 
 <div class="instance function ">
 
-## Two.Group.Children.detach
+### Two.Group.Children.detach
 
 
 

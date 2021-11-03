@@ -23,7 +23,7 @@ This is a primary primitive class for quickly and easily drawing points in Two.j
 
 
 
-### Constructor
+## Constructor
 
 
 | Argument | Description |
@@ -36,7 +36,7 @@ This is a primary primitive class for quickly and easily drawing points in Two.j
 
 <div class="instance member ">
 
-## Two.Points.sizeAttenuation
+### Two.Points.sizeAttenuation
 
 
 
@@ -83,7 +83,7 @@ Set to `true` if you'd like the size of the points to be relative to the scale o
 
 <div class="instance member ">
 
-## Two.Points.beginning
+### Two.Points.beginning
 
 
 
@@ -130,7 +130,7 @@ Number between zero and one to state the beginning of where the path is rendered
 
 <div class="instance member ">
 
-## Two.Points.ending
+### Two.Points.ending
 
 
 
@@ -177,7 +177,7 @@ Number between zero and one to state the ending of where the path is rendered.
 
 <div class="instance member ">
 
-## Two.Points.fill
+### Two.Points.fill
 
 
 
@@ -224,7 +224,7 @@ The value of what the path should be filled in with.
 
 <div class="instance member ">
 
-## Two.Points.stroke
+### Two.Points.stroke
 
 
 
@@ -271,7 +271,7 @@ The value of what the path should be outlined in with.
 
 <div class="instance member ">
 
-## Two.Points.className
+### Two.Points.className
 
 
 
@@ -322,7 +322,7 @@ Only available for the SVG renderer.
 
 <div class="instance member ">
 
-## Two.Points.visible
+### Two.Points.visible
 
 
 
@@ -373,7 +373,7 @@ For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](
 
 <div class="instance member ">
 
-## Two.Points.vertices
+### Two.Points.vertices
 
 
 
@@ -430,7 +430,7 @@ The array when manipulating is actually a [Two.Collection](/documentation/collec
 
 <div class="instance member ">
 
-## Two.Points.dashes
+### Two.Points.dashes
 
 
 
@@ -483,7 +483,7 @@ A list of numbers that represent the repeated dash length and dash space applied
 
 <div class="instance member ">
 
-## Two.Points.dashes.offset
+### Two.Points.dashes.offset
 
 
 
@@ -524,7 +524,7 @@ A number in pixels to offset [Two.Points.dashes](/documentation/points/#two-poin
 
 <div class="instance member ">
 
-## Two.Points.length
+### Two.Points.length
 
 
 
@@ -565,7 +565,7 @@ The sum of distances between all [Two.Points.vertices](/documentation/points/#tw
 
 <div class="instance function ">
 
-## Two.Points.clone
+### Two.Points.clone
 
 
 
@@ -626,7 +626,7 @@ Create a new instance of [Two.Points](/documentation/points) with the same prope
 
 <div class="instance function ">
 
-## Two.Points.toObject
+### Two.Points.toObject
 
 
 
@@ -680,7 +680,7 @@ Return a JSON compatible plain object that represents the points object.
 
 <div class="instance function ">
 
-## Two.Points.noFill
+### Two.Points.noFill
 
 
 
@@ -721,7 +721,7 @@ Short hand method to set fill to `transparent`.
 
 <div class="instance function ">
 
-## Two.Points.noStroke
+### Two.Points.noStroke
 
 
 
@@ -762,7 +762,7 @@ Short hand method to set stroke to `transparent`.
 
 <div class="instance function ">
 
-## Two.Points.corner
+### Two.Points.corner
 
 
 
@@ -803,7 +803,7 @@ Orient the vertices of the shape to the upper left-hand corner of the points obj
 
 <div class="instance function ">
 
-## Two.Points.center
+### Two.Points.center
 
 
 
@@ -844,7 +844,7 @@ Orient the vertices of the shape to the center of the points object.
 
 <div class="instance function ">
 
-## Two.Points.remove
+### Two.Points.remove
 
 
 
@@ -885,7 +885,7 @@ Remove self from the scene / parent.
 
 <div class="instance function ">
 
-## Two.Points.getBoundingClientRect
+### Two.Points.getBoundingClientRect
 
 
 
@@ -948,7 +948,7 @@ Return an object with top, left, right, bottom, width, and height parameters of 
 
 <div class="instance function ">
 
-## Two.Points.subdivide
+### Two.Points.subdivide
 
 
 

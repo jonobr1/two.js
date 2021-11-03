@@ -17,7 +17,7 @@ This is the base class for constructing different types of gradients with Two.js
 
 
 
-### Constructor
+## Constructor
 
 
 | Argument | Description |
@@ -30,7 +30,7 @@ This is the base class for constructing different types of gradients with Two.js
 
 <div class="static member ">
 
-## Two.Gradient.Stop
+### Two.Gradient.Stop
 
 
 
@@ -71,7 +71,7 @@ This is the base class for constructing different types of gradients with Two.js
 
 <div class="static member ">
 
-## Two.Gradient.Properties
+### Two.Gradient.Properties
 
 
 
@@ -112,7 +112,7 @@ A list of properties that are on every [Two.Gradient](/documentation/gradient).
 
 <div class="static function ">
 
-## Two.Gradient.MakeObservable
+### Two.Gradient.MakeObservable
 
 
 
@@ -160,7 +160,7 @@ Convenience function to apply observable qualities of a [Two.Gradient](/document
 
 <div class="static function ">
 
-## Two.Gradient.FlagStops
+### Two.Gradient.FlagStops
 
 
 
@@ -201,7 +201,7 @@ Cached method to let renderers know stops have been updated on a [Two.Gradient](
 
 <div class="static function ">
 
-## Two.Gradient.BindVertices
+### Two.Gradient.BindVertices
 
 
 
@@ -242,7 +242,7 @@ Cached method to let [Two.Gradient](/documentation/gradient) know vertices have 
 
 <div class="static function ">
 
-## Two.Gradient.UnbindStops
+### Two.Gradient.UnbindStops
 
 
 
@@ -283,7 +283,7 @@ Cached method to let [Two.Gradient](/documentation/gradient) know vertices have 
 
 <div class="instance member ">
 
-## Two.Gradient.renderer
+### Two.Gradient.renderer
 
 
 
@@ -340,7 +340,7 @@ With the [Two.SvgRenderer](/documentation/svgrenderer) you can access the underl
 
 <div class="instance member ">
 
-## Two.Gradient.id
+### Two.Gradient.id
 
 
 
@@ -391,7 +391,7 @@ In the [Two.SvgRenderer](/documentation/svgrenderer) change this to change the u
 
 <div class="instance member ">
 
-## Two.Gradient.spread
+### Two.Gradient.spread
 
 
 
@@ -438,7 +438,7 @@ Indicates what happens if the gradient starts or ends inside the bounds of the t
 
 <div class="instance member ">
 
-## Two.Gradient.stops
+### Two.Gradient.stops
 
 
 
@@ -479,7 +479,7 @@ An ordered list of [Two.Stop](/documentation/stop)s for rendering the gradient.
 
 <div class="instance function ">
 
-## Two.Gradient.clone
+### Two.Gradient.clone
 
 
 
@@ -540,7 +540,7 @@ Create a new instance of [Two.Gradient](/documentation/gradient) with the same p
 
 <div class="instance function ">
 
-## Two.Gradient.toObject
+### Two.Gradient.toObject
 
 
 

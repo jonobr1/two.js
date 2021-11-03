@@ -31,7 +31,7 @@ The foundational transformation object for the Two.js scenegraph.
 
 <div class="static function ">
 
-## Two.Shape.FlagMatrix
+### Two.Shape.FlagMatrix
 
 
 
@@ -72,7 +72,7 @@ Utility function used in conjunction with event handlers to update the flagMatri
 
 <div class="static function ">
 
-## Two.Shape.MakeObservable
+### Two.Shape.MakeObservable
 
 
 
@@ -120,7 +120,7 @@ Convenience function to apply observable qualities of a [Two.Shape](/documentati
 
 <div class="instance member ">
 
-## Two.Shape.renderer
+### Two.Shape.renderer
 
 
 
@@ -177,7 +177,7 @@ With the [Two.SvgRenderer](/documentation/svgrenderer) you can access the underl
 
 <div class="instance member ">
 
-## Two.Shape.id
+### Two.Shape.id
 
 
 
@@ -228,7 +228,7 @@ In the [Two.SvgRenderer](/documentation/svgrenderer) change this to change the u
 
 <div class="instance member ">
 
-## Two.Shape.classList
+### Two.Shape.classList
 
 
 
@@ -275,7 +275,7 @@ A list of class strings stored if imported / interpreted  from an SVG element.
 
 <div class="instance member ">
 
-## Two.Shape.matrix
+### Two.Shape.matrix
 
 
 
@@ -332,7 +332,7 @@ The transformation matrix of the shape.
 
 <div class="instance member ">
 
-## Two.Shape.translation
+### Two.Shape.translation
 
 
 
@@ -373,7 +373,7 @@ The x and y value for where the shape is placed relative to its parent.
 
 <div class="instance member ">
 
-## Two.Shape.rotation
+### Two.Shape.rotation
 
 
 
@@ -414,7 +414,7 @@ The value in Number for how much the shape is rotated relative to its parent.
 
 <div class="instance member ">
 
-## Two.Shape.scale
+### Two.Shape.scale
 
 
 
@@ -465,7 +465,7 @@ This value can be replaced with a [Two.Vector](/documentation/vector) to do non-
 
 <div class="instance member ">
 
-## Two.Shape.skewX
+### Two.Shape.skewX
 
 
 
@@ -512,7 +512,7 @@ Skew the shape by an angle in the x axis direction.
 
 <div class="instance member ">
 
-## Two.Shape.skewY
+### Two.Shape.skewY
 
 
 
@@ -559,7 +559,7 @@ Skew the shape by an angle in the y axis direction.
 
 <div class="instance member ">
 
-## Two.Shape.className
+### Two.Shape.className
 
 
 
@@ -610,7 +610,7 @@ Only available for the SVG renderer.
 
 <div class="instance function ">
 
-## Two.Shape.addTo
+### Two.Shape.addTo
 
 
 
@@ -658,7 +658,7 @@ Convenience method to add itself to the scenegraph.
 
 <div class="instance function ">
 
-## Two.Shape.clone
+### Two.Shape.clone
 
 
 

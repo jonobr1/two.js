@@ -23,7 +23,7 @@ An object that holds 3 [Two.Vector](/documentation/vector)s, the anchor point an
 
 
 
-### Constructor
+## Constructor
 
 
 | Argument | Description |
@@ -42,7 +42,7 @@ An object that holds 3 [Two.Vector](/documentation/vector)s, the anchor point an
 
 <div class="static function ">
 
-## Two.Anchor.AppendCurveProperties
+### Two.Anchor.AppendCurveProperties
 
 
 
@@ -90,7 +90,7 @@ Adds the `controls` property as an object with `left` and `right` properties to 
 
 <div class="static function ">
 
-## Two.Anchor.MakeObservable
+### Two.Anchor.MakeObservable
 
 
 
@@ -138,7 +138,7 @@ Convenience function to apply observable qualities of a [Two.Anchor](/documentat
 
 <div class="instance member ">
 
-## Two.Anchor.controls
+### Two.Anchor.controls
 
 
 
@@ -185,7 +185,7 @@ An plain object that holds the controls handles for a [Two.Anchor](/documentatio
 
 <div class="instance member ">
 
-## Two.Anchor.controls.left
+### Two.Anchor.controls.left
 
 
 
@@ -232,7 +232,7 @@ The "left" control point to define handles on a bezier curve.
 
 <div class="instance member ">
 
-## Two.Anchor.controls.right
+### Two.Anchor.controls.right
 
 
 
@@ -279,7 +279,7 @@ The "left" control point to define handles on a bezier curve.
 
 <div class="instance member ">
 
-## Two.Anchor.command
+### Two.Anchor.command
 
 
 
@@ -326,7 +326,7 @@ A draw command associated with the anchor point.
 
 <div class="instance member ">
 
-## Two.Anchor.relative
+### Two.Anchor.relative
 
 
 
@@ -373,7 +373,7 @@ A boolean to render control points relative to the root anchor point or in globa
 
 <div class="instance function ">
 
-## Two.Anchor.listen
+### Two.Anchor.listen
 
 
 
@@ -414,7 +414,7 @@ Convenience method used mainly by [Two.Path.vertices](/documentation/path/#two-p
 
 <div class="instance function ">
 
-## Two.Anchor.ignore
+### Two.Anchor.ignore
 
 
 
@@ -455,7 +455,7 @@ Convenience method used mainly by [Two.Path.vertices](/documentation/path/#two-p
 
 <div class="instance function ">
 
-## Two.Anchor.copy
+### Two.Anchor.copy
 
 
 
@@ -503,7 +503,7 @@ Copy the properties of one [Two.Anchor](/documentation/anchor) onto another.
 
 <div class="instance function ">
 
-## Two.Anchor.clone
+### Two.Anchor.clone
 
 
 
@@ -557,7 +557,7 @@ Create a new [Two.Anchor](/documentation/anchor), set all its values to the curr
 
 <div class="instance function ">
 
-## Two.Anchor.toObject
+### Two.Anchor.toObject
 
 
 
@@ -613,7 +613,7 @@ Create a JSON compatible plain object of the current instance. Intended for use 
 
 <div class="instance function ">
 
-## Two.Anchor.toString
+### Two.Anchor.toString
 
 
 

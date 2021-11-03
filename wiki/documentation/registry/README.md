@@ -25,7 +25,7 @@ An arbitrary class to manage a directory of things. Mainly used for keeping tabs
 
 <div class="instance function ">
 
-## Two.Registry.add
+### Two.Registry.add
 
 
 
@@ -74,7 +74,7 @@ Adds any value to the directory. Assigned by the `id`.
 
 <div class="instance function ">
 
-## Two.Registry.remove
+### Two.Registry.remove
 
 
 
@@ -122,7 +122,7 @@ Remove any value from the directory by its `id`.
 
 <div class="instance function ">
 
-## Two.Registry.get
+### Two.Registry.get
 
 
 
@@ -185,7 +185,7 @@ Get a registered value by its `id`.
 
 <div class="instance function ">
 
-## Two.Registry.contains
+### Two.Registry.contains
 
 
 

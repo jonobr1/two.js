@@ -23,7 +23,7 @@ This class is used by [Two](/documentation/) when constructing with `type` of `T
 
 
 
-### Constructor
+## Constructor
 
 
 | Argument | Description |
@@ -37,7 +37,7 @@ This class is used by [Two](/documentation/) when constructing with `type` of `T
 
 <div class="static member ">
 
-## Two.SVGRenderer.Utils
+### Two.SVGRenderer.Utils
 
 
 
@@ -78,7 +78,7 @@ A massive object filled with utility functions and properties to render Two.js o
 
 <div class="instance member ">
 
-## Two.SVGRenderer.domElement
+### Two.SVGRenderer.domElement
 
 
 
@@ -119,7 +119,7 @@ The `<svg />` associated with the Two.js scene.
 
 <div class="instance member ">
 
-## Two.SVGRenderer.scene
+### Two.SVGRenderer.scene
 
 
 
@@ -160,7 +160,7 @@ The root group of the scenegraph.
 
 <div class="instance member ">
 
-## Two.SVGRenderer.defs
+### Two.SVGRenderer.defs
 
 
 
@@ -201,7 +201,7 @@ The `<defs />` to apply gradients, patterns, and bitmap imagery.
 
 <div class="instance function ">
 
-## Two.SVGRenderer.setSize
+### Two.SVGRenderer.setSize
 
 
 
@@ -260,7 +260,7 @@ Triggers a `Two.Events.resize`.
 
 <div class="instance function ">
 
-## Two.SVGRenderer.render
+### Two.SVGRenderer.render
 
 
 

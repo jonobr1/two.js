@@ -23,7 +23,7 @@ A convenient package to display still or animated images organized as a series o
 
 
 
-### Constructor
+## Constructor
 
 
 | Argument | Description |
@@ -39,7 +39,7 @@ A convenient package to display still or animated images organized as a series o
 
 <div class="static member ">
 
-## Two.ImageSequence.Properties
+### Two.ImageSequence.Properties
 
 
 
@@ -80,7 +80,7 @@ A list of properties that are on every [Two.ImageSequence](/documentation/images
 
 <div class="static member ">
 
-## Two.ImageSequence.DefaultFrameRate
+### Two.ImageSequence.DefaultFrameRate
 
 
 
@@ -121,7 +121,7 @@ default frame rate that [Two.ImageSequence.frameRate](/documentation/imagesequen
 
 <div class="static function ">
 
-## Two.ImageSequence.FlagTextures
+### Two.ImageSequence.FlagTextures
 
 
 
@@ -162,7 +162,7 @@ Cached method to let renderers know textures have been updated on a [Two.ImageSe
 
 <div class="static function ">
 
-## Two.ImageSequence.BindTextures
+### Two.ImageSequence.BindTextures
 
 
 
@@ -203,7 +203,7 @@ Cached method to let [Two.ImageSequence](/documentation/imagesequence) know text
 
 <div class="static function ">
 
-## Two.ImageSequence.UnbindVertices
+### Two.ImageSequence.UnbindVertices
 
 
 
@@ -244,7 +244,7 @@ Cached method to let [Two.ImageSequence](/documentation/imagesequence) know text
 
 <div class="static function ">
 
-## Two.ImageSequence.MakeObservable
+### Two.ImageSequence.MakeObservable
 
 
 
@@ -292,7 +292,7 @@ Convenience function to apply observable qualities of a [Two.ImageSequence](/doc
 
 <div class="static member ">
 
-## Two.ImageSequence.GenerateTexture
+### Two.ImageSequence.GenerateTexture
 
 
 
@@ -359,7 +359,7 @@ Function used internally by [Two.ImageSequence](/documentation/imagesequence) to
 
 <div class="instance member ">
 
-## Two.ImageSequence.textures
+### Two.ImageSequence.textures
 
 
 
@@ -400,7 +400,7 @@ A list of textures to be used as frames for animating the [Two.ImageSequence](/d
 
 <div class="instance member ">
 
-## Two.ImageSequence.frameRate
+### Two.ImageSequence.frameRate
 
 
 
@@ -441,7 +441,7 @@ The number of frames to animate against per second.
 
 <div class="instance member ">
 
-## Two.ImageSequence.index
+### Two.ImageSequence.index
 
 
 
@@ -482,7 +482,7 @@ The index of the current tile of the sprite to display. Defaults to `0`.
 
 <div class="instance function ">
 
-## Two.ImageSequence.play
+### Two.ImageSequence.play
 
 
 
@@ -532,7 +532,7 @@ Initiate animation playback of a [Two.ImageSequence](/documentation/imagesequenc
 
 <div class="instance function ">
 
-## Two.ImageSequence.pause
+### Two.ImageSequence.pause
 
 
 
@@ -573,7 +573,7 @@ Halt animation playback of a [Two.ImageSequence](/documentation/imagesequence).
 
 <div class="instance function ">
 
-## Two.ImageSequence.stop
+### Two.ImageSequence.stop
 
 
 
@@ -614,7 +614,7 @@ Halt animation playback of a [Two.ImageSequence](/documentation/imagesequence) a
 
 <div class="instance function ">
 
-## Two.ImageSequence.clone
+### Two.ImageSequence.clone
 
 
 
@@ -675,7 +675,7 @@ Create a new instance of [Two.ImageSequence](/documentation/imagesequence) with 
 
 <div class="instance function ">
 
-## Two.ImageSequence.toObject
+### Two.ImageSequence.toObject
 
 
 

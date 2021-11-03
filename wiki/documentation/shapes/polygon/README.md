@@ -23,7 +23,7 @@ __Extends__: `Two.Path`
 
 
 
-### Constructor
+## Constructor
 
 
 | Argument | Description |
@@ -39,7 +39,7 @@ __Extends__: `Two.Path`
 
 <div class="static member ">
 
-## Two.Polygon.Properties
+### Two.Polygon.Properties
 
 
 
@@ -80,7 +80,7 @@ A list of properties that are on every [Two.Polygon](/documentation/polygon).
 
 <div class="static function ">
 
-## Two.Polygon.MakeObservable
+### Two.Polygon.MakeObservable
 
 
 
@@ -128,7 +128,7 @@ Convenience function to apply observable qualities of a [Two.Polygon](/documenta
 
 <div class="instance member ">
 
-## Two.Polygon.width
+### Two.Polygon.width
 
 
 
@@ -169,7 +169,7 @@ The size of the width of the polygon.
 
 <div class="instance member ">
 
-## Two.Polygon.height
+### Two.Polygon.height
 
 
 
@@ -210,7 +210,7 @@ The size of the height of the polygon.
 
 <div class="instance member ">
 
-## Two.Polygon.sides
+### Two.Polygon.sides
 
 
 
@@ -251,7 +251,7 @@ The amount of sides the polyogn has.
 
 <div class="instance function ">
 
-## Two.Polygon.clone
+### Two.Polygon.clone
 
 
 
@@ -312,7 +312,7 @@ Create a new instance of [Two.Polygon](/documentation/polygon) with the same pro
 
 <div class="instance function ">
 
-## Two.Polygon.toObject
+### Two.Polygon.toObject
 
 
 

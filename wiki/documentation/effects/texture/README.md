@@ -23,7 +23,7 @@ Fundamental to work with bitmap data, a.k.a. pregenerated imagery, in Two.js. Su
 
 
 
-### Constructor
+## Constructor
 
 
 | Argument | Description |
@@ -37,7 +37,7 @@ Fundamental to work with bitmap data, a.k.a. pregenerated imagery, in Two.js. Su
 
 <div class="static member ">
 
-## Two.Texture.Properties
+### Two.Texture.Properties
 
 
 
@@ -78,7 +78,7 @@ A list of properties that are on every [Two.Texture](/documentation/texture).
 
 <div class="static member ">
 
-## Two.Texture.RegularExpressions
+### Two.Texture.RegularExpressions
 
 
 
@@ -119,7 +119,7 @@ A map of compatible DOM Elements categorized by media format.
 
 <div class="static member ">
 
-## Two.Texture.ImageRegistry
+### Two.Texture.ImageRegistry
 
 
 
@@ -170,7 +170,7 @@ This object is used to cache image data between different textures.
 
 <div class="static member ">
 
-## Two.Texture.getAbsoluteURL
+### Two.Texture.getAbsoluteURL
 
 
 
@@ -233,7 +233,7 @@ Serializes a URL as an absolute path for canonical attribution in [Two.ImageRegi
 
 <div class="static member ">
 
-## Two.Texture.loadHeadlessBuffer
+### Two.Texture.loadHeadlessBuffer
 
 
 
@@ -292,7 +292,7 @@ Loads an image as a buffer in headless environments.
 
 <div class="static member ">
 
-## Two.Texture.getTag
+### Two.Texture.getTag
 
 
 
@@ -355,7 +355,7 @@ Retrieves the tag name of an image, video, or canvas node.
 
 <div class="static member ">
 
-## Two.Texture.getImage
+### Two.Texture.getImage
 
 
 
@@ -418,7 +418,7 @@ Convenience function to set [Two.Texture.image](/documentation/texture/#two-text
 
 <div class="static interface ">
 
-## Two.Register
+### Two.Register
 
 
 
@@ -459,7 +459,7 @@ A collection of functions to register different types of textures. Used internal
 
 <div class="static function ">
 
-## Two.Texture.load
+### Two.Texture.load
 
 
 
@@ -502,7 +502,7 @@ A collection of functions to register different types of textures. Used internal
 
 <div class="static function ">
 
-## Two.Texture.FlagOffset
+### Two.Texture.FlagOffset
 
 
 
@@ -543,7 +543,7 @@ Cached method to let renderers know `offset` has been updated on a [Two.Texture]
 
 <div class="static function ">
 
-## Two.Texture.FlagScale
+### Two.Texture.FlagScale
 
 
 
@@ -584,7 +584,7 @@ Cached method to let renderers know `scale` has been updated on a [Two.Texture](
 
 <div class="static function ">
 
-## Two.Texture.MakeObservable
+### Two.Texture.MakeObservable
 
 
 
@@ -632,7 +632,7 @@ Convenience function to apply observable qualities of a [Two.Texture](/documenta
 
 <div class="instance member ">
 
-## Two.Texture.renderer
+### Two.Texture.renderer
 
 
 
@@ -689,7 +689,7 @@ With the [Two.SvgRenderer](/documentation/svgrenderer) you can access the underl
 
 <div class="instance member ">
 
-## Two.Texture.loaded
+### Two.Texture.loaded
 
 
 
@@ -730,7 +730,7 @@ Shorthand value to determine if image has been loaded into the texture.
 
 <div class="instance member ">
 
-## Two.Texture.repeat
+### Two.Texture.repeat
 
 
 
@@ -777,7 +777,7 @@ CSS style declaration to tile [Two.Path](/documentation/path). Valid values incl
 
 <div class="instance member ">
 
-## Two.Texture.offset
+### Two.Texture.offset
 
 
 
@@ -818,7 +818,7 @@ A two-component vector describing any pixel offset of the texture when applied t
 
 <div class="instance member ">
 
-## Two.Texture.src
+### Two.Texture.src
 
 
 
@@ -869,7 +869,7 @@ This property is ultimately serialized in a [Two.Registry](/documentation/regist
 
 <div class="instance member ">
 
-## Two.Texture.image
+### Two.Texture.image
 
 
 
@@ -920,7 +920,7 @@ In headless environments this is a `Canvas.Image` object. See [https://github.co
 
 <div class="instance function ">
 
-## Two.Texture.clone
+### Two.Texture.clone
 
 
 
@@ -974,7 +974,7 @@ Create a new instance of [Two.Texture](/documentation/texture) with the same pro
 
 <div class="instance function ">
 
-## Two.Texture.toObject
+### Two.Texture.toObject
 
 
 

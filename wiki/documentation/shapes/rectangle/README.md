@@ -23,7 +23,7 @@ __Extends__: `Two.Path`
 
 
 
-### Constructor
+## Constructor
 
 
 | Argument | Description |
@@ -39,7 +39,7 @@ __Extends__: `Two.Path`
 
 <div class="static member ">
 
-## Two.Rectangle.Properties
+### Two.Rectangle.Properties
 
 
 
@@ -80,7 +80,7 @@ A list of properties that are on every [Two.Rectangle](/documentation/rectangle)
 
 <div class="static function ">
 
-## Two.Rectangle.MakeObservable
+### Two.Rectangle.MakeObservable
 
 
 
@@ -128,7 +128,7 @@ Convenience function to apply observable qualities of a [Two.Rectangle](/documen
 
 <div class="instance member ">
 
-## Two.Rectangle.width
+### Two.Rectangle.width
 
 
 
@@ -169,7 +169,7 @@ The size of the width of the rectangle.
 
 <div class="instance member ">
 
-## Two.Rectangle.height
+### Two.Rectangle.height
 
 
 
@@ -210,7 +210,7 @@ The size of the height of the rectangle.
 
 <div class="instance member ">
 
-## Two.Rectangle.origin
+### Two.Rectangle.origin
 
 
 
@@ -251,7 +251,7 @@ A two-component vector describing the origin offset to draw the rectangle. Defau
 
 <div class="instance function ">
 
-## Two.Rectangle.clone
+### Two.Rectangle.clone
 
 
 
@@ -312,7 +312,7 @@ Create a new instance of [Two.Rectangle](/documentation/rectangle) with the same
 
 <div class="instance function ">
 
-## Two.Rectangle.toObject
+### Two.Rectangle.toObject
 
 
 

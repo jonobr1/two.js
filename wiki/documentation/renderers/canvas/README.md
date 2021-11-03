@@ -23,7 +23,7 @@ This class is used by [Two](/documentation/) when constructing with `type` of `T
 
 
 
-### Constructor
+## Constructor
 
 
 | Argument | Description |
@@ -39,7 +39,7 @@ This class is used by [Two](/documentation/) when constructing with `type` of `T
 
 <div class="static member ">
 
-## Two.CanvasRenderer.Utils
+### Two.CanvasRenderer.Utils
 
 
 
@@ -80,7 +80,7 @@ A massive object filled with utility functions and properties to render Two.js o
 
 <div class="instance member ">
 
-## Two.CanvasRenderer.domElement
+### Two.CanvasRenderer.domElement
 
 
 
@@ -121,7 +121,7 @@ The `<canvas />` associated with the Two.js scene.
 
 <div class="instance member ">
 
-## Two.CanvasRenderer.ctx
+### Two.CanvasRenderer.ctx
 
 
 
@@ -162,7 +162,7 @@ Associated two dimensional context to render on the `<canvas />`.
 
 <div class="instance member ">
 
-## Two.CanvasRenderer.overdraw
+### Two.CanvasRenderer.overdraw
 
 
 
@@ -203,7 +203,7 @@ Determines whether the canvas clears the background each draw call.
 
 <div class="instance member ">
 
-## Two.CanvasRenderer.scene
+### Two.CanvasRenderer.scene
 
 
 
@@ -244,7 +244,7 @@ The root group of the scenegraph.
 
 <div class="instance function ">
 
-## Two.CanvasRenderer.setSize
+### Two.CanvasRenderer.setSize
 
 
 
@@ -302,7 +302,7 @@ Change the size of the renderer.
 
 <div class="instance function ">
 
-## Two.CanvasRenderer.render
+### Two.CanvasRenderer.render
 
 
 

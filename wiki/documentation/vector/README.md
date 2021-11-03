@@ -17,7 +17,7 @@ A class to store x / y component vector data. In addition to storing data `Two.V
 
 
 
-### Constructor
+## Constructor
 
 
 | Argument | Description |
@@ -31,7 +31,7 @@ A class to store x / y component vector data. In addition to storing data `Two.V
 
 <div class="static member ">
 
-## Two.Vector.zero
+### Two.Vector.zero
 
 
 
@@ -72,7 +72,7 @@ Handy reference to a vector with component values 0, 0 at all times.
 
 <div class="static function ">
 
-## Two.Vector.add
+### Two.Vector.add
 
 
 
@@ -134,7 +134,7 @@ Add two vectors together.
 
 <div class="static function ">
 
-## Two.Vector.sub
+### Two.Vector.sub
 
 
 
@@ -196,7 +196,7 @@ Subtract two vectors: `v2` from `v1`.
 
 <div class="static function ">
 
-## Two.Vector.subtract
+### Two.Vector.subtract
 
 
 
@@ -237,7 +237,7 @@ Alias for [Two.Vector.sub](/documentation/vector/#two-vector-sub).
 
 <div class="static function ">
 
-## Two.Vector.ratioBetween
+### Two.Vector.ratioBetween
 
 
 
@@ -295,7 +295,7 @@ The ratio betwen two points `v1` and `v2`.
 
 <div class="static function ">
 
-## Two.Vector.angleBetween
+### Two.Vector.angleBetween
 
 
 
@@ -353,7 +353,7 @@ The angle between points `v1` and `v2`.
 
 <div class="static function ">
 
-## Two.Vector.distanceBetween
+### Two.Vector.distanceBetween
 
 
 
@@ -411,7 +411,7 @@ The distance between points `v1` and `v2`. Distance is always positive.
 
 <div class="static function ">
 
-## Two.Vector.distanceBetweenSquared
+### Two.Vector.distanceBetweenSquared
 
 
 
@@ -469,7 +469,7 @@ The squared distance between points `v1` and `v2`.
 
 <div class="static function ">
 
-## Two.Vector.MakeObservable
+### Two.Vector.MakeObservable
 
 
 
@@ -517,7 +517,7 @@ Convenience function to apply observable qualities of a [Two.Vector](/documentat
 
 <div class="instance member ">
 
-## Two.Vector.x
+### Two.Vector.x
 
 
 
@@ -558,7 +558,7 @@ The horizontal x-component of the vector.
 
 <div class="instance member ">
 
-## Two.Vector.y
+### Two.Vector.y
 
 
 
@@ -599,7 +599,7 @@ The vertical y-component of the vector.
 
 <div class="instance function ">
 
-## Two.Vector.set
+### Two.Vector.set
 
 
 
@@ -648,7 +648,7 @@ Set the x / y components of a vector to specific number values.
 
 <div class="instance function ">
 
-## Two.Vector.copy
+### Two.Vector.copy
 
 
 
@@ -696,7 +696,7 @@ Copy the x / y components of another object `v`.
 
 <div class="instance function ">
 
-## Two.Vector.clear
+### Two.Vector.clear
 
 
 
@@ -737,7 +737,7 @@ Set the x / y component values of the vector to zero.
 
 <div class="instance function ">
 
-## Two.Vector.clone
+### Two.Vector.clone
 
 
 
@@ -778,7 +778,7 @@ Create a new vector and copy the existing values onto the newly created instance
 
 <div class="instance function overloaded">
 
-## Two.Vector.add
+### Two.Vector.add
 
 
 <div class="overloaded-label">
@@ -838,7 +838,7 @@ Add an object with x / y component values to the instance.
 
 <div class="instance function overloaded">
 
-## Two.Vector.add
+### Two.Vector.add
 
 
 <div class="overloaded-label">
@@ -898,7 +898,7 @@ Add the **same** number to both x / y component values of the instance.
 
 <div class="instance function overloaded">
 
-## Two.Vector.add
+### Two.Vector.add
 
 
 <div class="overloaded-label">
@@ -959,7 +959,7 @@ Add `x` / `y` values to their respective component value on the instance.
 
 <div class="instance function ">
 
-## Two.Vector.addSelf
+### Two.Vector.addSelf
 
 
 
@@ -1000,7 +1000,7 @@ Alias for [Two.Vector.add](/documentation/vector/#two-vector-add).
 
 <div class="instance function overloaded">
 
-## Two.Vector.sub
+### Two.Vector.sub
 
 
 <div class="overloaded-label">
@@ -1060,7 +1060,7 @@ Subtract an object with x / y component values to the instance.
 
 <div class="instance function overloaded">
 
-## Two.Vector.sub
+### Two.Vector.sub
 
 
 <div class="overloaded-label">
@@ -1120,7 +1120,7 @@ Subtract the **same** number to both x / y component values of the instance.
 
 <div class="instance function overloaded">
 
-## Two.Vector.sub
+### Two.Vector.sub
 
 
 <div class="overloaded-label">
@@ -1181,7 +1181,7 @@ Subtract `x` / `y` values to their respective component value on the instance.
 
 <div class="instance function ">
 
-## Two.Vector.subtract
+### Two.Vector.subtract
 
 
 
@@ -1222,7 +1222,7 @@ Alias for [Two.Vector.sub](/documentation/vector/#two-vector-sub).
 
 <div class="instance function ">
 
-## Two.Vector.subSelf
+### Two.Vector.subSelf
 
 
 
@@ -1263,7 +1263,7 @@ Alias for [Two.Vector.sub](/documentation/vector/#two-vector-sub).
 
 <div class="instance function ">
 
-## Two.Vector.subtractSelf
+### Two.Vector.subtractSelf
 
 
 
@@ -1304,7 +1304,7 @@ Alias for [Two.Vector.sub](/documentation/vector/#two-vector-sub).
 
 <div class="instance function overloaded">
 
-## Two.Vector.multiply
+### Two.Vector.multiply
 
 
 <div class="overloaded-label">
@@ -1364,7 +1364,7 @@ Multiply an object with x / y component values to the instance.
 
 <div class="instance function overloaded">
 
-## Two.Vector.multiply
+### Two.Vector.multiply
 
 
 <div class="overloaded-label">
@@ -1424,7 +1424,7 @@ Multiply the **same** number to both x / y component values of the instance.
 
 <div class="instance function overloaded">
 
-## Two.Vector.multiply
+### Two.Vector.multiply
 
 
 <div class="overloaded-label">
@@ -1485,7 +1485,7 @@ Multiply `x` / `y` values to their respective component value on the instance.
 
 <div class="instance function ">
 
-## Two.Vector.multiplySelf
+### Two.Vector.multiplySelf
 
 
 
@@ -1526,7 +1526,7 @@ Alias for [Two.Vector.multiply](/documentation/vector/#two-vector-multiply).
 
 <div class="instance function ">
 
-## Two.Vector.multiplyScalar
+### Two.Vector.multiplyScalar
 
 
 
@@ -1574,7 +1574,7 @@ Mulitiply the vector by a single number. Shorthand to call [Two.Vector.multiply]
 
 <div class="instance function overloaded">
 
-## Two.Vector.divide
+### Two.Vector.divide
 
 
 <div class="overloaded-label">
@@ -1634,7 +1634,7 @@ Divide an object with x / y component values to the instance.
 
 <div class="instance function overloaded">
 
-## Two.Vector.divide
+### Two.Vector.divide
 
 
 <div class="overloaded-label">
@@ -1694,7 +1694,7 @@ Divide the **same** number to both x / y component values of the instance.
 
 <div class="instance function overloaded">
 
-## Two.Vector.divide
+### Two.Vector.divide
 
 
 <div class="overloaded-label">
@@ -1755,7 +1755,7 @@ Divide `x` / `y` values to their respective component value on the instance.
 
 <div class="instance function ">
 
-## Two.Vector.divideSelf
+### Two.Vector.divideSelf
 
 
 
@@ -1796,7 +1796,7 @@ Alias for [Two.Vector.divide](/documentation/vector/#two-vector-divide).
 
 <div class="instance function ">
 
-## Two.Vector.divideScalar
+### Two.Vector.divideScalar
 
 
 
@@ -1844,7 +1844,7 @@ Divide the vector by a single number. Shorthand to call [Two.Vector.divide](/doc
 
 <div class="instance function ">
 
-## Two.Vector.negate
+### Two.Vector.negate
 
 
 
@@ -1885,7 +1885,7 @@ Invert each component's sign value.
 
 <div class="instance function ">
 
-## Two.Vector.negate
+### Two.Vector.negate
 
 
 
@@ -1939,7 +1939,7 @@ Get the [dot product](https://en.wikipedia.org/wiki/Dot_product) of the vector.
 
 <div class="instance function ">
 
-## Two.Vector.length
+### Two.Vector.length
 
 
 
@@ -1993,7 +1993,7 @@ Get the length of a vector.
 
 <div class="instance function ">
 
-## Two.Vector.lengthSquared
+### Two.Vector.lengthSquared
 
 
 
@@ -2047,7 +2047,7 @@ Get the length of the vector to the power of two. Widely used as less expensive 
 
 <div class="instance function ">
 
-## Two.Vector.normalize
+### Two.Vector.normalize
 
 
 
@@ -2088,7 +2088,7 @@ Normalize the vector from negative one to one.
 
 <div class="instance function ">
 
-## Two.Vector.distanceTo
+### Two.Vector.distanceTo
 
 
 
@@ -2142,7 +2142,7 @@ Get the distance between two vectors.
 
 <div class="instance function ">
 
-## Two.Vector.distanceToSquared
+### Two.Vector.distanceToSquared
 
 
 
@@ -2196,7 +2196,7 @@ Get the distance between two vectors to the power of two. Widely used as less ex
 
 <div class="instance function ">
 
-## Two.Vector.setLength
+### Two.Vector.setLength
 
 
 
@@ -2244,7 +2244,7 @@ Set the length of a vector.
 
 <div class="instance function ">
 
-## Two.Vector.equals
+### Two.Vector.equals
 
 
 
@@ -2306,7 +2306,7 @@ Qualify if one vector roughly equal another. With a margin of error defined by e
 
 <div class="instance function ">
 
-## Two.Vector.lerp
+### Two.Vector.lerp
 
 
 
@@ -2361,7 +2361,7 @@ Linear interpolate one vector to another by an amount `t` defined as a zero to o
 
 <div class="instance function ">
 
-## Two.Vector.isZero
+### Two.Vector.isZero
 
 
 
@@ -2422,7 +2422,7 @@ Check to see if vector is roughly zero, based on the `epsilon` precision value.
 
 <div class="instance function ">
 
-## Two.Vector.toString
+### Two.Vector.toString
 
 
 
@@ -2476,7 +2476,7 @@ Return a comma-separated string of x, y value. Great for storing in a database.
 
 <div class="instance function ">
 
-## Two.Vector.toObject
+### Two.Vector.toObject
 
 
 
@@ -2530,7 +2530,7 @@ Return a JSON compatible plain object that represents the vector.
 
 <div class="instance function ">
 
-## Two.Vector.rotate
+### Two.Vector.rotate
 
 
 

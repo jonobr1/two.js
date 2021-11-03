@@ -23,7 +23,7 @@ This is a primitive class for creating drawable text that can be added to the sc
 
 
 
-### Constructor
+## Constructor
 
 
 | Argument | Description |
@@ -39,7 +39,7 @@ This is a primitive class for creating drawable text that can be added to the sc
 
 <div class="static member ">
 
-## Two.Text.Ratio
+### Two.Text.Ratio
 
 
 
@@ -80,7 +80,7 @@ Approximate aspect ratio of a typeface's character width to height.
 
 <div class="static member ">
 
-## Two.Text.Properties
+### Two.Text.Properties
 
 
 
@@ -121,7 +121,7 @@ A list of properties that are on every [Two.Text](/documentation/text).
 
 <div class="static function ">
 
-## Two.Text.FlagFill
+### Two.Text.FlagFill
 
 
 
@@ -162,7 +162,7 @@ Cached method to let renderers know the fill property have been updated on a [Tw
 
 <div class="static function ">
 
-## Two.Text.FlagStroke
+### Two.Text.FlagStroke
 
 
 
@@ -203,7 +203,7 @@ Cached method to let renderers know the stroke property have been updated on a [
 
 <div class="instance member ">
 
-## Two.Text.dashes
+### Two.Text.dashes
 
 
 
@@ -256,7 +256,7 @@ A list of numbers that represent the repeated dash length and dash space applied
 
 <div class="instance member ">
 
-## Two.Text.dashes.offset
+### Two.Text.dashes.offset
 
 
 
@@ -297,7 +297,7 @@ A number in pixels to offset [Two.Text.dashes](/documentation/text/#two-text-das
 
 <div class="instance member ">
 
-## Two.Text.value
+### Two.Text.value
 
 
 
@@ -338,7 +338,7 @@ The characters to be rendered to the the screen. Referred to in the documentatio
 
 <div class="instance member ">
 
-## Two.Text.family
+### Two.Text.family
 
 
 
@@ -379,7 +379,7 @@ The font family Two.js should attempt to regsiter for rendering. The default val
 
 <div class="instance member ">
 
-## Two.Text.size
+### Two.Text.size
 
 
 
@@ -420,7 +420,7 @@ The font size in Two.js point space. Defaults to `13`.
 
 <div class="instance member ">
 
-## Two.Text.leading
+### Two.Text.leading
 
 
 
@@ -461,7 +461,7 @@ The height between lines measured from base to base in Two.js point space. Defau
 
 <div class="instance member ">
 
-## Two.Text.alignment
+### Two.Text.alignment
 
 
 
@@ -502,7 +502,7 @@ Alignment of text in relation to [Two.Text.translation](/documentation/text/#two
 
 <div class="instance member ">
 
-## Two.Text.baseline
+### Two.Text.baseline
 
 
 
@@ -543,7 +543,7 @@ The vertical aligment of the text in relation to [Two.Text.translation](/documen
 
 <div class="instance member ">
 
-## Two.Text.style
+### Two.Text.style
 
 
 
@@ -584,7 +584,7 @@ The font's style. Possible values include '`normal`', `'italic'`. Defaults to `'
 
 <div class="instance member ">
 
-## Two.Text.weight
+### Two.Text.weight
 
 
 
@@ -625,7 +625,7 @@ A number at intervals of 100 to describe the font's weight. This compatibility v
 
 <div class="instance member ">
 
-## Two.Text.decoration
+### Two.Text.decoration
 
 
 
@@ -666,7 +666,7 @@ String to delineate whether text should be decorated with for instance an `'unde
 
 <div class="instance member ">
 
-## Two.Text.fill
+### Two.Text.fill
 
 
 
@@ -713,7 +713,7 @@ The value of what the text object should be filled in with.
 
 <div class="instance member ">
 
-## Two.Text.stroke
+### Two.Text.stroke
 
 
 
@@ -760,7 +760,7 @@ The value of what the text object should be filled in with.
 
 <div class="instance member ">
 
-## Two.Text.linewidth
+### Two.Text.linewidth
 
 
 
@@ -801,7 +801,7 @@ The thickness in pixels of the stroke.
 
 <div class="instance member ">
 
-## Two.Text.opacity
+### Two.Text.opacity
 
 
 
@@ -852,7 +852,7 @@ Can be used in conjunction with CSS Colors that have an alpha value.
 
 <div class="instance member ">
 
-## Two.Text.className
+### Two.Text.className
 
 
 
@@ -893,7 +893,7 @@ A class to be applied to the element to be compatible with CSS styling. Only ava
 
 <div class="instance member ">
 
-## Two.Text.visible
+### Two.Text.visible
 
 
 
@@ -944,7 +944,7 @@ For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](
 
 <div class="instance member ">
 
-## Two.Text.mask
+### Two.Text.mask
 
 
 
@@ -995,7 +995,7 @@ This property is currently not working becuase of SVG spec issues found here {@l
 
 <div class="instance member ">
 
-## Two.Text.clip
+### Two.Text.clip
 
 
 
@@ -1046,7 +1046,7 @@ This property is currently not working becuase of SVG spec issues found here {@l
 
 <div class="instance function ">
 
-## Two.Text.remove
+### Two.Text.remove
 
 
 
@@ -1087,7 +1087,7 @@ Remove self from the scene / parent.
 
 <div class="instance function ">
 
-## Two.Text.clone
+### Two.Text.clone
 
 
 
@@ -1148,7 +1148,7 @@ Create a new instance of [Two.Text](/documentation/text) with the same propertie
 
 <div class="instance function ">
 
-## Two.Text.toObject
+### Two.Text.toObject
 
 
 
@@ -1202,7 +1202,7 @@ Return a JSON compatible plain object that represents the text object.
 
 <div class="instance function ">
 
-## Two.Text.noFill
+### Two.Text.noFill
 
 
 
@@ -1243,7 +1243,7 @@ Short hand method to set fill to `transparent`.
 
 <div class="instance function ">
 
-## Two.Text.noStroke
+### Two.Text.noStroke
 
 
 
@@ -1284,7 +1284,7 @@ Short hand method to set stroke to `transparent`.
 
 <div class="instance function ">
 
-## Two.Text.getBoundingClientRect
+### Two.Text.getBoundingClientRect
 
 
 

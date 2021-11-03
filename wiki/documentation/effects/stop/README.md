@@ -17,7 +17,7 @@ pageClass: documentation-class
 
 
 
-### Constructor
+## Constructor
 
 
 | Argument | Description |
@@ -32,7 +32,7 @@ pageClass: documentation-class
 
 <div class="static member ">
 
-## Two.Stop.Index
+### Two.Stop.Index
 
 
 
@@ -73,7 +73,7 @@ The current index being referenced for calculating a stop's default offset value
 
 <div class="static member ">
 
-## Two.Stop.Properties
+### Two.Stop.Properties
 
 
 
@@ -114,7 +114,7 @@ A list of properties that are on every [Two.Stop](/documentation/stop).
 
 <div class="static function ">
 
-## Two.Stop.MakeObservable
+### Two.Stop.MakeObservable
 
 
 
@@ -162,7 +162,7 @@ Convenience function to apply observable qualities of a [Two.Stop](/documentatio
 
 <div class="instance member ">
 
-## Two.Stop.renderer
+### Two.Stop.renderer
 
 
 
@@ -219,7 +219,7 @@ With the [Two.SvgRenderer](/documentation/svgrenderer) you can access the underl
 
 <div class="instance member ">
 
-## Two.Stop.offset
+### Two.Stop.offset
 
 
 
@@ -260,7 +260,7 @@ The offset percentage of the stop represented as a zero-to-one value.
 
 <div class="instance member ">
 
-## Two.Stop.opacity
+### Two.Stop.opacity
 
 
 
@@ -301,7 +301,7 @@ The alpha percentage of the stop represented as a zero-to-one value.
 
 <div class="instance member ">
 
-## Two.Stop.color
+### Two.Stop.color
 
 
 
@@ -342,7 +342,7 @@ The color of the stop.
 
 <div class="instance function ">
 
-## Two.Stop.clone
+### Two.Stop.clone
 
 
 
@@ -403,7 +403,7 @@ Create a new instance of [Two.Stop](/documentation/stop) with the same propertie
 
 <div class="instance function ">
 
-## Two.Stop.toObject
+### Two.Stop.toObject
 
 
 

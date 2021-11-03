@@ -23,7 +23,7 @@ This is the primary primitive class for creating all drawable shapes in Two.js. 
 
 
 
-### Constructor
+## Constructor
 
 
 | Argument | Description |
@@ -39,7 +39,7 @@ This is the primary primitive class for creating all drawable shapes in Two.js. 
 
 <div class="static member ">
 
-## Two.Path.Properties
+### Two.Path.Properties
 
 
 
@@ -80,7 +80,7 @@ A list of properties that are on every [Two.Path](/documentation/path).
 
 <div class="static function ">
 
-## Two.Path.FlagVertices
+### Two.Path.FlagVertices
 
 
 
@@ -121,7 +121,7 @@ Cached method to let renderers know vertices have been updated on a [Two.Path](/
 
 <div class="static function ">
 
-## Two.Path.BindVertices
+### Two.Path.BindVertices
 
 
 
@@ -162,7 +162,7 @@ Cached method to let [Two.Path](/documentation/path) know vertices have been add
 
 <div class="static function ">
 
-## Two.Path.UnbindVertices
+### Two.Path.UnbindVertices
 
 
 
@@ -203,7 +203,7 @@ Cached method to let [Two.Path](/documentation/path) know vertices have been rem
 
 <div class="static function ">
 
-## Two.Path.FlagFill
+### Two.Path.FlagFill
 
 
 
@@ -244,7 +244,7 @@ Cached method to let [Two.Path](/documentation/path) know the fill has changed.
 
 <div class="static function ">
 
-## Two.Path.FlagFill
+### Two.Path.FlagFill
 
 
 
@@ -285,7 +285,7 @@ Cached method to let [Two.Path](/documentation/path) know the stroke has changed
 
 <div class="static function ">
 
-## Two.Path.MakeObservable
+### Two.Path.MakeObservable
 
 
 
@@ -333,7 +333,7 @@ Convenience function to apply observable qualities of a [Two.Path](/documentatio
 
 <div class="instance member ">
 
-## Two.Path.closed
+### Two.Path.closed
 
 
 
@@ -374,7 +374,7 @@ Determines whether a final line is drawn between the final point in the `vertice
 
 <div class="instance member ">
 
-## Two.Path.curved
+### Two.Path.curved
 
 
 
@@ -415,7 +415,7 @@ When the path is `automatic = true` this boolean determines whether the lines be
 
 <div class="instance member ">
 
-## Two.Path.beginning
+### Two.Path.beginning
 
 
 
@@ -472,7 +472,7 @@ This is great for animating in and out stroked paths in conjunction with [Two.Pa
 
 <div class="instance member ">
 
-## Two.Path.ending
+### Two.Path.ending
 
 
 
@@ -529,7 +529,7 @@ This is great for animating in and out stroked paths in conjunction with [Two.Pa
 
 <div class="instance member ">
 
-## Two.Path.fill
+### Two.Path.fill
 
 
 
@@ -576,7 +576,7 @@ The value of what the path should be filled in with.
 
 <div class="instance member ">
 
-## Two.Path.stroke
+### Two.Path.stroke
 
 
 
@@ -623,7 +623,7 @@ The value of what the path should be outlined in with.
 
 <div class="instance member ">
 
-## Two.Path.linewidth
+### Two.Path.linewidth
 
 
 
@@ -664,7 +664,7 @@ The thickness in pixels of the stroke.
 
 <div class="instance member ">
 
-## Two.Path.opacity
+### Two.Path.opacity
 
 
 
@@ -715,7 +715,7 @@ Can be used in conjunction with CSS Colors that have an alpha value.
 
 <div class="instance member ">
 
-## Two.Path.className
+### Two.Path.className
 
 
 
@@ -766,7 +766,7 @@ Only available for the SVG renderer.
 
 <div class="instance member ">
 
-## Two.Path.visible
+### Two.Path.visible
 
 
 
@@ -817,7 +817,7 @@ For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](
 
 <div class="instance member ">
 
-## Two.Path.cap
+### Two.Path.cap
 
 
 
@@ -864,7 +864,7 @@ For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](
 
 <div class="instance member ">
 
-## Two.Path.join
+### Two.Path.join
 
 
 
@@ -911,7 +911,7 @@ For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](
 
 <div class="instance member ">
 
-## Two.Path.miter
+### Two.Path.miter
 
 
 
@@ -958,7 +958,7 @@ For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](
 
 <div class="instance member ">
 
-## Two.Path.vertices
+### Two.Path.vertices
 
 
 
@@ -1015,7 +1015,7 @@ The array when manipulating is actually a [Two.Collection](/documentation/collec
 
 <div class="instance member ">
 
-## Two.Path.automatic
+### Two.Path.automatic
 
 
 
@@ -1056,7 +1056,7 @@ Determines whether or not Two.js should calculate curves, lines, and commands au
 
 <div class="instance member ">
 
-## Two.Path.dashes
+### Two.Path.dashes
 
 
 
@@ -1109,7 +1109,7 @@ A list of numbers that represent the repeated dash length and dash space applied
 
 <div class="instance member ">
 
-## Two.Path.dashes.offset
+### Two.Path.dashes.offset
 
 
 
@@ -1150,7 +1150,7 @@ A number in pixels to offset [Two.Path.dashes](/documentation/path/#two-path-das
 
 <div class="instance member ">
 
-## Two.Path.length
+### Two.Path.length
 
 
 
@@ -1191,7 +1191,7 @@ The sum of distances between all [Two.Path.vertices](/documentation/path/#two-pa
 
 <div class="instance member ">
 
-## Two.Path.mask
+### Two.Path.mask
 
 
 
@@ -1242,7 +1242,7 @@ This property is currently not working becuase of SVG spec issues found here {@l
 
 <div class="instance member ">
 
-## Two.Path.clip
+### Two.Path.clip
 
 
 
@@ -1283,7 +1283,7 @@ Tells Two.js renderer if this object represents a mask for another object (or no
 
 <div class="instance function ">
 
-## Two.Path.clone
+### Two.Path.clone
 
 
 
@@ -1344,7 +1344,7 @@ Create a new instance of [Two.Path](/documentation/path) with the same propertie
 
 <div class="instance function ">
 
-## Two.Path.toObject
+### Two.Path.toObject
 
 
 
@@ -1398,7 +1398,7 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="instance function ">
 
-## Two.Path.noFill
+### Two.Path.noFill
 
 
 
@@ -1439,7 +1439,7 @@ Short hand method to set fill to `transparent`.
 
 <div class="instance function ">
 
-## Two.Path.noStroke
+### Two.Path.noStroke
 
 
 
@@ -1480,7 +1480,7 @@ Short hand method to set stroke to `transparent`.
 
 <div class="instance function ">
 
-## Two.Path.corner
+### Two.Path.corner
 
 
 
@@ -1521,7 +1521,7 @@ Orient the vertices of the shape to the upper left-hand corner of the path.
 
 <div class="instance function ">
 
-## Two.Path.center
+### Two.Path.center
 
 
 
@@ -1562,7 +1562,7 @@ Orient the vertices of the shape to the center of the path.
 
 <div class="instance function ">
 
-## Two.Path.remove
+### Two.Path.remove
 
 
 
@@ -1603,7 +1603,7 @@ Remove self from the scene / parent.
 
 <div class="instance function ">
 
-## Two.Path.getBoundingClientRect
+### Two.Path.getBoundingClientRect
 
 
 
@@ -1666,7 +1666,7 @@ Return an object with top, left, right, bottom, width, and height parameters of 
 
 <div class="instance function ">
 
-## Two.Path.getPointAt
+### Two.Path.getPointAt
 
 
 
@@ -1728,7 +1728,7 @@ Given a float `t` from 0 to 1, return a point or assign a passed `obj`'s coordin
 
 <div class="instance function ">
 
-## Two.Path.plot
+### Two.Path.plot
 
 
 
@@ -1779,7 +1779,7 @@ While this method is public it is internally called by [Two.Path._update](/docum
 
 <div class="instance function ">
 
-## Two.Path.subdivide
+### Two.Path.subdivide
 
 
 

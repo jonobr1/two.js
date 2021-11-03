@@ -23,7 +23,7 @@ __Extends__: `<%= root.augments %>`
 <% } %>
 
 <% if (root.params && root.params.length > 0) { %>
-### Constructor
+## Constructor
 <% } %>
 <% _.each(root.params, function(param, i) { %><% if (i <= 0) { %>
 | Argument | Description |
@@ -37,7 +37,7 @@ __Extends__: `<%= root.augments %>`
 
 <div class="<%= item.scope %> <%= item.kind %> <%= item.overloaded ? 'overloaded' : '' %>">
 
-## <%= item.longname.replace(/\#/ig, '.') %>
+### <%= item.longname.replace(/\#/ig, '.') %>
 
 <% if (item.overloaded) { %>
 <div class="overloaded-label">

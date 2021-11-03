@@ -23,7 +23,7 @@ This is the primary class for grouping objects that are then drawn in Two.js. In
 
 
 
-### Constructor
+## Constructor
 
 
 | Argument | Description |
@@ -36,7 +36,7 @@ This is the primary class for grouping objects that are then drawn in Two.js. In
 
 <div class="static function ">
 
-## Two.Group.InsertChildren
+### Two.Group.InsertChildren
 
 
 
@@ -84,7 +84,7 @@ Cached method to let renderers know children have been added to a [Two.Group](/d
 
 <div class="static function ">
 
-## Two.Group.RemoveChildren
+### Two.Group.RemoveChildren
 
 
 
@@ -132,7 +132,7 @@ Cached method to let renderers know children have been removed from a [Two.Group
 
 <div class="static function ">
 
-## Two.Group.OrderChildren
+### Two.Group.OrderChildren
 
 
 
@@ -173,7 +173,7 @@ Cached method to let renderers know order has been updated on a [Two.Group](/doc
 
 <div class="static member ">
 
-## Two.Group.Properties
+### Two.Group.Properties
 
 
 
@@ -214,7 +214,7 @@ A list of properties that are on every [Two.Group](/documentation/group).
 
 <div class="static function ">
 
-## Two.Group.MakeObservable
+### Two.Group.MakeObservable
 
 
 
@@ -262,7 +262,7 @@ Convenience function to apply observable qualities of a [Two.Group](/documentati
 
 <div class="static function ">
 
-## Two.Group.MakeGetterSetters
+### Two.Group.MakeGetterSetters
 
 
 
@@ -311,7 +311,7 @@ Convenience method to apply getter / setter logic on an array of properties. Use
 
 <div class="static function ">
 
-## Two.Group.MakeGetterSetter
+### Two.Group.MakeGetterSetter
 
 
 
@@ -360,7 +360,7 @@ Convenience method to apply getter / setter logic specific to how `Two.Group`s t
 
 <div class="instance member ">
 
-## Two.Group.additions
+### Two.Group.additions
 
 
 
@@ -407,7 +407,7 @@ An automatically updated list of children that need to be appended to the render
 
 <div class="instance member ">
 
-## Two.Group.subtractions
+### Two.Group.subtractions
 
 
 
@@ -454,7 +454,7 @@ An automatically updated list of children that need to be removed from the rende
 
 <div class="instance member ">
 
-## Two.Group.children
+### Two.Group.children
 
 
 
@@ -511,7 +511,7 @@ Ther order of this list indicates the order each element is rendered to the scre
 
 <div class="instance member ">
 
-## Two.Group.fill
+### Two.Group.fill
 
 
 
@@ -558,7 +558,7 @@ The value of what all child shapes should be filled in with.
 
 <div class="instance member ">
 
-## Two.Group.stroke
+### Two.Group.stroke
 
 
 
@@ -605,7 +605,7 @@ The value of what all child shapes should be outlined in with.
 
 <div class="instance member ">
 
-## Two.Group.linewidth
+### Two.Group.linewidth
 
 
 
@@ -646,7 +646,7 @@ The thickness in pixels of the stroke for all child shapes.
 
 <div class="instance member ">
 
-## Two.Group.opacity
+### Two.Group.opacity
 
 
 
@@ -697,7 +697,7 @@ Becomes multiplied by the individual child's opacity property.
 
 <div class="instance member ">
 
-## Two.Group.visible
+### Two.Group.visible
 
 
 
@@ -748,7 +748,7 @@ For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](
 
 <div class="instance member ">
 
-## Two.Group.cap
+### Two.Group.cap
 
 
 
@@ -795,7 +795,7 @@ For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](
 
 <div class="instance member ">
 
-## Two.Group.join
+### Two.Group.join
 
 
 
@@ -842,7 +842,7 @@ For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](
 
 <div class="instance member ">
 
-## Two.Group.miter
+### Two.Group.miter
 
 
 
@@ -889,7 +889,7 @@ For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](
 
 <div class="instance member ">
 
-## Two.Group.closed
+### Two.Group.closed
 
 
 
@@ -930,7 +930,7 @@ Determines whether a final line is drawn between the final point in the `vertice
 
 <div class="instance member ">
 
-## Two.Group.curved
+### Two.Group.curved
 
 
 
@@ -971,7 +971,7 @@ When the child's path is `automatic = true` this boolean determines whether the 
 
 <div class="instance member ">
 
-## Two.Group.automatic
+### Two.Group.automatic
 
 
 
@@ -1012,7 +1012,7 @@ Determines whether or not Two.js should calculate curves, lines, and commands au
 
 <div class="instance member ">
 
-## Two.Group.beginning
+### Two.Group.beginning
 
 
 
@@ -1069,7 +1069,7 @@ This is great for animating in and out stroked paths in conjunction with [Two.Gr
 
 <div class="instance member ">
 
-## Two.Group.ending
+### Two.Group.ending
 
 
 
@@ -1126,7 +1126,7 @@ This is great for animating in and out stroked paths in conjunction with [Two.Gr
 
 <div class="instance member ">
 
-## Two.Group.length
+### Two.Group.length
 
 
 
@@ -1167,7 +1167,7 @@ The sum of distances between all child lengths.
 
 <div class="instance member ">
 
-## Two.Group.mask
+### Two.Group.mask
 
 
 
@@ -1208,7 +1208,7 @@ The Two.js object to clip from a group's rendering.
 
 <div class="instance function ">
 
-## Two.Group.clone
+### Two.Group.clone
 
 
 
@@ -1269,7 +1269,7 @@ Create a new instance of [Two.Group](/documentation/group) with the same propert
 
 <div class="instance function ">
 
-## Two.Group.toObject
+### Two.Group.toObject
 
 
 
@@ -1323,7 +1323,7 @@ Return a JSON compatible plain object that represents the group.
 
 <div class="instance function ">
 
-## Two.Group.corner
+### Two.Group.corner
 
 
 
@@ -1364,7 +1364,7 @@ Orient the children of the group to the upper left-hand corner of that group.
 
 <div class="instance function ">
 
-## Two.Group.center
+### Two.Group.center
 
 
 
@@ -1405,7 +1405,7 @@ Orient the children of the group to the center of that group.
 
 <div class="instance function ">
 
-## Two.Group.getById
+### Two.Group.getById
 
 
 
@@ -1461,7 +1461,7 @@ Recursively search for id. Returns the first element found.
 
 <div class="instance function ">
 
-## Two.Group.getByClassName
+### Two.Group.getByClassName
 
 
 
@@ -1517,7 +1517,7 @@ Recursively search for classes. Returns an array of matching elements.
 
 <div class="instance function ">
 
-## Two.Group.getByType
+### Two.Group.getByType
 
 
 
@@ -1573,7 +1573,7 @@ Recursively search for children of a specific type, e.g. [Two.Path](/documentati
 
 <div class="instance function ">
 
-## Two.Group.add
+### Two.Group.add
 
 
 
@@ -1621,7 +1621,7 @@ Add objects to the group.
 
 <div class="instance function ">
 
-## Two.Group.add
+### Two.Group.add
 
 
 
@@ -1669,7 +1669,7 @@ Remove objects from the group.
 
 <div class="instance function ">
 
-## Two.Group.getBoundingClientRect
+### Two.Group.getBoundingClientRect
 
 
 
@@ -1732,7 +1732,7 @@ Return an object with top, left, right, bottom, width, and height parameters of 
 
 <div class="instance function ">
 
-## Two.Group.noFill
+### Two.Group.noFill
 
 
 
@@ -1773,7 +1773,7 @@ Apply `noFill` method to all child shapes.
 
 <div class="instance function ">
 
-## Two.Group.noStroke
+### Two.Group.noStroke
 
 
 
@@ -1814,7 +1814,7 @@ Apply `noStroke` method to all child shapes.
 
 <div class="instance function ">
 
-## Two.Group.subdivide
+### Two.Group.subdivide
 
 
 

@@ -23,7 +23,7 @@ __Extends__: `Two.Path`
 
 
 
-### Constructor
+## Constructor
 
 
 | Argument | Description |
@@ -39,7 +39,7 @@ __Extends__: `Two.Path`
 
 <div class="static member ">
 
-## Two.Circle.Properties
+### Two.Circle.Properties
 
 
 
@@ -80,7 +80,7 @@ A list of properties that are on every [Two.Circle](/documentation/circle).
 
 <div class="static function ">
 
-## Two.Circle.MakeObservable
+### Two.Circle.MakeObservable
 
 
 
@@ -128,7 +128,7 @@ Convenience function to apply observable qualities of a [Two.Circle](/documentat
 
 <div class="instance member ">
 
-## Two.Circle.radius
+### Two.Circle.radius
 
 
 
@@ -169,7 +169,7 @@ The size of the radius of the circle.
 
 <div class="instance function ">
 
-## Two.Circle.clone
+### Two.Circle.clone
 
 
 
@@ -230,7 +230,7 @@ Create a new instance of [Two.Circle](/documentation/circle) with the same prope
 
 <div class="instance function ">
 
-## Two.Circle.toObject
+### Two.Circle.toObject
 
 
 

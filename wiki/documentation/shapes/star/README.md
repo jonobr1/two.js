@@ -23,7 +23,7 @@ __Extends__: `Two.Path`
 
 
 
-### Constructor
+## Constructor
 
 
 | Argument | Description |
@@ -40,7 +40,7 @@ __Extends__: `Two.Path`
 
 <div class="static member ">
 
-## Two.Star.Properties
+### Two.Star.Properties
 
 
 
@@ -81,7 +81,7 @@ A list of properties that are on every [Two.Star](/documentation/star).
 
 <div class="static function ">
 
-## Two.Star.MakeObservable
+### Two.Star.MakeObservable
 
 
 
@@ -129,7 +129,7 @@ Convenience function to apply observable qualities of a [Two.Star](/documentatio
 
 <div class="instance member ">
 
-## Two.Star.innerRadius
+### Two.Star.innerRadius
 
 
 
@@ -170,7 +170,7 @@ The size of the inner radius of the star.
 
 <div class="instance member ">
 
-## Two.Star.outerRadius
+### Two.Star.outerRadius
 
 
 
@@ -211,7 +211,7 @@ The size of the outer radius of the star.
 
 <div class="instance member ">
 
-## Two.Star.sides
+### Two.Star.sides
 
 
 
@@ -252,7 +252,7 @@ The amount of sides the star has.
 
 <div class="instance function ">
 
-## Two.Star.clone
+### Two.Star.clone
 
 
 
@@ -313,7 +313,7 @@ Create a new instance of [Two.Star](/documentation/star) with the same propertie
 
 <div class="instance function ">
 
-## Two.Star.toObject
+### Two.Star.toObject
 
 
 

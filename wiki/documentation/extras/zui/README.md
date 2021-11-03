@@ -17,7 +17,7 @@ pageClass: documentation-class
 
 
 
-### Constructor
+## Constructor
 
 
 | Argument | Description |

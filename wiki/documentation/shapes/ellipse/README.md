@@ -23,7 +23,7 @@ __Extends__: `Two.Path`
 
 
 
-### Constructor
+## Constructor
 
 
 | Argument | Description |
@@ -40,7 +40,7 @@ __Extends__: `Two.Path`
 
 <div class="static member ">
 
-## Two.Ellipse.Properties
+### Two.Ellipse.Properties
 
 
 
@@ -81,7 +81,7 @@ A list of properties that are on every [Two.Ellipse](/documentation/ellipse).
 
 <div class="static function ">
 
-## Two.Ellipse.MakeObservable
+### Two.Ellipse.MakeObservable
 
 
 
@@ -129,7 +129,7 @@ Convenience function to apply observable qualities of a [Two.Ellipse](/documenta
 
 <div class="instance member ">
 
-## Two.Ellipse.width
+### Two.Ellipse.width
 
 
 
@@ -170,7 +170,7 @@ The width of the ellipse.
 
 <div class="instance member ">
 
-## Two.Ellipse.height
+### Two.Ellipse.height
 
 
 
@@ -211,7 +211,7 @@ The height of the ellipse.
 
 <div class="instance function ">
 
-## Two.Ellipse.clone
+### Two.Ellipse.clone
 
 
 
@@ -272,7 +272,7 @@ Create a new instance of [Two.Polygon](/documentation/polygon) with the same pro
 
 <div class="instance function ">
 
-## Two.Ellipse.toObject
+### Two.Ellipse.toObject
 
 
 

@@ -17,7 +17,7 @@ The entrypoint for Two.js. Instantiate a `new Two` in order to setup a scene to 
 
 
 
-### Constructor
+## Constructor
 
 
 | Argument | Description |
@@ -37,7 +37,7 @@ The entrypoint for Two.js. Instantiate a `new Two` in order to setup a scene to 
 
 <div class="static member ">
 
-## Two.Utils
+### Two.Utils
 
 
 
@@ -78,7 +78,7 @@ A massive object filled with utility functions and properties.
 
 <div class="instance function ">
 
-## Two.fit
+### Two.fit
 
 
 
@@ -119,7 +119,7 @@ If `options.fullscreen` or `options.fitted` in construction create this function
 
 <div class="instance member ">
 
-## Two.type
+### Two.type
 
 
 
@@ -160,7 +160,7 @@ A string representing which type of renderer the instance has instantiated.
 
 <div class="instance member ">
 
-## Two.renderer
+### Two.renderer
 
 
 
@@ -201,7 +201,7 @@ The instantiated rendering class for the instance. For a list of possible render
 
 <div class="instance member ">
 
-## Two.scene
+### Two.scene
 
 
 
@@ -242,7 +242,7 @@ The base level [Two.Group](/documentation/group) which houses all objects for th
 
 <div class="instance member ">
 
-## Two.width
+### Two.width
 
 
 
@@ -283,7 +283,7 @@ The width of the instance's dom element.
 
 <div class="instance member ">
 
-## Two.height
+### Two.height
 
 
 
@@ -324,7 +324,7 @@ The height of the instance's dom element.
 
 <div class="instance member ">
 
-## Two.frameCount
+### Two.frameCount
 
 
 
@@ -365,7 +365,7 @@ An integer representing how many frames have elapsed.
 
 <div class="instance member ">
 
-## Two.timeDelta
+### Two.timeDelta
 
 
 
@@ -406,7 +406,7 @@ A number representing how much time has elapsed since the last frame in millisec
 
 <div class="instance member ">
 
-## Two.playing
+### Two.playing
 
 
 
@@ -447,7 +447,7 @@ A boolean representing whether or not the instance is being updated through the 
 
 <div class="instance function ">
 
-## Two.appendTo
+### Two.appendTo
 
 
 
@@ -495,7 +495,7 @@ Shorthand method to append your instance of Two.js to the `document`.
 
 <div class="instance function ">
 
-## Two.play
+### Two.play
 
 
 
@@ -554,7 +554,7 @@ This function initiates a `requestAnimationFrame` loop.
 
 <div class="instance function ">
 
-## Two.pause
+### Two.pause
 
 
 
@@ -603,7 +603,7 @@ Call to stop the internal animation loop for a specific instance of Two.js.
 
 <div class="instance function ">
 
-## Two.release
+### Two.release
 
 
 
@@ -666,7 +666,7 @@ Release an arbitrary class' events from the Two.js corpus and recurse through it
 
 <div class="instance function ">
 
-## Two.update
+### Two.update
 
 
 
@@ -725,7 +725,7 @@ This function is called automatically if using [Two.play](/documentation/play) o
 
 <div class="instance function ">
 
-## Two.render
+### Two.render
 
 
 
@@ -774,7 +774,7 @@ Render all drawable and visible objects of the scene.
 
 <div class="instance function ">
 
-## Two.add
+### Two.add
 
 
 
@@ -822,7 +822,7 @@ A shorthand method to add specific Two.js objects to the scene.
 
 <div class="instance function ">
 
-## Two.remove
+### Two.remove
 
 
 
@@ -870,7 +870,7 @@ A shorthand method to remove specific Two.js objects from the scene.
 
 <div class="instance function ">
 
-## Two.clear
+### Two.clear
 
 
 
@@ -911,7 +911,7 @@ Removes all objects from the instance's scene. If you intend to have the browser
 
 <div class="instance function ">
 
-## Two.makeLine
+### Two.makeLine
 
 
 
@@ -975,7 +975,7 @@ Creates a Two.js line and adds it to the scene.
 
 <div class="instance function ">
 
-## Two.makeArrow
+### Two.makeArrow
 
 
 
@@ -1039,7 +1039,7 @@ Creates a Two.js arrow and adds it to the scene.
 
 <div class="instance function ">
 
-## Two.makeRectangle
+### Two.makeRectangle
 
 
 
@@ -1103,7 +1103,7 @@ Creates a Two.js rectangle and adds it to the scene.
 
 <div class="instance function ">
 
-## Two.makeRoundedRectangle
+### Two.makeRoundedRectangle
 
 
 
@@ -1168,7 +1168,7 @@ Creates a Two.js rounded rectangle and adds it to the scene.
 
 <div class="instance function ">
 
-## Two.makeCircle
+### Two.makeCircle
 
 
 
@@ -1232,7 +1232,7 @@ Creates a Two.js circle and adds it to the scene.
 
 <div class="instance function ">
 
-## Two.makeEllipse
+### Two.makeEllipse
 
 
 
@@ -1297,7 +1297,7 @@ Creates a Two.js ellipse and adds it to the scene.
 
 <div class="instance function ">
 
-## Two.makeStar
+### Two.makeStar
 
 
 
@@ -1362,7 +1362,7 @@ Creates a Two.js star and adds it to the scene.
 
 <div class="instance function ">
 
-## Two.makeCurve
+### Two.makeCurve
 
 
 
@@ -1436,7 +1436,7 @@ In either case of passing an array or passing numbered arguments the last argume
 
 <div class="instance function ">
 
-## Two.makePolygon
+### Two.makePolygon
 
 
 
@@ -1500,7 +1500,7 @@ Creates a Two.js polygon and adds it to the scene.
 
 <div class="instance function ">
 
-## Two.makeArcSegment
+### Two.makeArcSegment
 
 
 
@@ -1561,7 +1561,7 @@ __Returns__:
 
 <div class="instance function ">
 
-## Two.makePoints
+### Two.makePoints
 
 
 
@@ -1623,7 +1623,7 @@ Creates a Two.js points object and adds it to the current scene.
 
 <div class="instance function ">
 
-## Two.makePath
+### Two.makePath
 
 
 
@@ -1695,7 +1695,7 @@ In either case of passing an array or passing numbered arguments the last argume
 
 <div class="instance function ">
 
-## Two.makeText
+### Two.makeText
 
 
 
@@ -1759,7 +1759,7 @@ Creates a Two.js text object and adds it to the scene.
 
 <div class="instance function ">
 
-## Two.makeLinearGradient
+### Two.makeLinearGradient
 
 
 
@@ -1824,7 +1824,7 @@ Creates a Two.js linear gradient and ads it to the scene. In the case of an effe
 
 <div class="instance function ">
 
-## Two.makeRadialGradient
+### Two.makeRadialGradient
 
 
 
@@ -1888,7 +1888,7 @@ Creates a Two.js linear-gradient object and ads it to the scene. In the case of 
 
 <div class="instance function ">
 
-## Two.makeSprite
+### Two.makeSprite
 
 
 
@@ -1955,7 +1955,7 @@ Creates a Two.js sprite object and adds it to the scene. Sprites can be used for
 
 <div class="instance function ">
 
-## Two.makeImageSequence
+### Two.makeImageSequence
 
 
 
@@ -2020,7 +2020,7 @@ Creates a Two.js image sequence object and adds it to the scene.
 
 <div class="instance function ">
 
-## Two.makeTexture
+### Two.makeTexture
 
 
 
@@ -2082,7 +2082,7 @@ Creates a Two.js texture object.
 
 <div class="instance function ">
 
-## Two.makeGroup
+### Two.makeGroup
 
 
 
@@ -2143,7 +2143,7 @@ Creates a Two.js group object and adds it to the scene.
 
 <div class="instance function ">
 
-## Two.interpret
+### Two.interpret
 
 
 
@@ -2206,7 +2206,7 @@ Interpret an SVG Node and add it to this instance's scene. The distinction shoul
 
 <div class="instance function ">
 
-## Two.load
+### Two.load
 
 
 
