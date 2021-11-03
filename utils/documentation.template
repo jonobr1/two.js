@@ -26,8 +26,8 @@ __Extends__: [<%= root.augments %>](<%= root.augmentsHref %>)
 <% _.each(root.params, function(param, i) { %><% if (i <= 0) { %>
 | Argument | Description |
 | ---- | ----------- |
-| <% if (param.name) { %> `<%= param.name %>` <% } %> | <%= param.description %> |<% } else { %>
-| <% if (param.name) { %> `<%= param.name %>` <% } %> | <%= param.description %> |<% } %><% }); %>
+| <% if (param.name) { %> <%= param.name %> <% } %> | <%= param.description %> |<% } else { %>
+| <% if (param.name) { %> <%= param.name %> <% } %> | <%= param.description %> |<% } %><% }); %>
 
 <% _.each(citations, function(item) { %>
 
@@ -35,7 +35,7 @@ __Extends__: [<%= root.augments %>](<%= root.augmentsHref %>)
 
 ## <%= item.shortname %>
 
-<h2 class="longname" aria-hidden="true"><%= item.longname.replace(/\#/ig, '.') %></h2>
+<h2 class="longname" aria-hidden="true"><span class="prefix"><%= item.prefixname %></span><span class="shortname"><%= item.shortname %></span></h2>
 
 <% if (item.overloaded) { %>
 <div class="overloaded-label">
@@ -45,7 +45,19 @@ _Overloaded_
 </div>
 <% } %>
 
-<% if (item.returns && item.returns.length > 0) { %>
+<% if (item.returns && item.returns.length == 1) { %>
+<div class="returns">
+
+__Returns__: <% _.each(item.returns, function(result) { %><% if (result.type) { %><% _.each(result.type.names, function(name) { %><%= name %><% }); %>
+<% } %>
+<% if (result.description) { %>
+<%= result.description %>
+<% } %>
+<% }); %>
+</div>
+<% } %>
+
+<% if (item.returns && item.returns.length > 1) { %>
 <div class="returns">
 
 __Returns__:
@@ -102,7 +114,7 @@ __Triggers__:
 <% if (item.meta) { %>
 <div class="meta">
 
-  [<%= item.meta.filename + ':' + item.meta.lineno %>](<%= 'https://github.com/jonobr1/two.js/blob/dev/' + item.meta.path.replace(/^[\w\d\/]*two\.js\//i, '') + '/' + item.meta.filename + '#L' + item.meta.lineno %>)
+  [`<%= item.meta.filename + ':' + item.meta.lineno %>`](<%= 'https://github.com/jonobr1/two.js/blob/dev/' + item.meta.path.replace(/^[\w\d\/]*two\.js\//i, '') + '/' + item.meta.filename + '#L' + item.meta.lineno %>)
 
 </div>
 <% } %>
