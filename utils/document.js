@@ -47,9 +47,11 @@ _.each(sourceFiles, function(file) {
 
       var sn;
 
-      sn = object.longname.replace(/\#/ig, '.').split('.');
-      object.shortname = sn.slice(2).join('.');
 
+      sn = object.longname.replace(/\#/ig, '.');
+      var snList = sn.split('.');
+      var snIndex = (snList.length > 2) ? 2 : 1;
+      object.shortname = snList.slice(snIndex).join('.');
       // name and href for augments property
       var an;
 
