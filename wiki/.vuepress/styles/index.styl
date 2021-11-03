@@ -270,8 +270,8 @@ body {
       
       a:hover {
         border-bottom: none;
-        border-top-color: $blue;
-        color: $blue;
+        border-top-color: $red;
+        color: $red;
       }
 
       a.router-link-active {
@@ -382,13 +382,22 @@ body {
     }
 
     .sidebar-sub-headers {
-      border-left: 4px solid $orange;
+      border-left: 2px solid $orange;
       margin-left: 3em;
       padding-left: 0px;
       font-size: 1rem;
 
       a.sidebar-link {
         padding-left: 1rem;
+        color: $orange;
+
+        &:hover {
+          color: $red;
+        }
+
+        &:.active {
+          color: $orange;
+        }
       }
     }
 
