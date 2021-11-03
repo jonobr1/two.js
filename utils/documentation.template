@@ -31,12 +31,11 @@ __Extends__: [<%= root.augments %>](<%= root.augmentsHref %>)
 
 <% _.each(citations, function(item) { %>
 
----
-
 <div class="<%= item.scope %> <%= item.kind %> <%= item.overloaded ? 'overloaded' : '' %>">
 
 ## <%= item.shortname %>
-<span class="longname"><%= item.longname.replace(/\#/ig, '.') %></span>
+
+<h2 class="longname" aria-hidden="true"><%= item.longname.replace(/\#/ig, '.') %></h2>
 
 <% if (item.overloaded) { %>
 <div class="overloaded-label">
@@ -86,8 +85,8 @@ __Triggers__:
 <% _.each(item.params, function(param, i) { %><% if (i <= 0) { %>
 | Argument | Description |
 | ---- | ----------- |
-| <% if (param.name) { %> `<%= param.name %>` <% } %> | <%= param.description %> |<% } else { %>
-| <% if (param.name) { %> `<%= param.name %>` <% } %> | <%= param.description %> |<% } %><% }); %>
+| <% if (param.name) { %> <%= param.name %> <% } %> | <%= param.description %> |<% } else { %>
+| <% if (param.name) { %> <%= param.name %> <% } %> | <%= param.description %> |<% } %><% }); %>
 </div>
 <% } %>
 
