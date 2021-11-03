@@ -1,10 +1,10 @@
 <template>
-  <a ref="link" class="button">
-    <span ref="icon" class="icon">
+  <a ref="link" class="button" :href="href">
+    <span ref="icon" class="icon" :class="type">
     </span>
-    <span ref="label" class="label"> 
+    <span ref="label" class="label"> {{ text }}
     </span>
-    <span ref="size" class="size">
+    <span ref="size" class="size"> {{ size }}
     </span>
   </a>
 </template>
@@ -20,15 +20,6 @@
       text: String,
       size: String,
       href: String
-    },
-    mounted: function() {
-      this.$refs.icon.className += " " + this._props.type;
-      this.$refs.label.innerHTML = this._props.text;
-      this.$refs.link.href = this._props.href;
-      if (this._props.size)
-        this.$refs.size.innerHTML = this._props.size;
-
-
     },
   };
 </script>
