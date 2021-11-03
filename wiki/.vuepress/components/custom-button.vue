@@ -1,5 +1,5 @@
 <template>
-  <a ref="link" class="button" :href="href">
+  <a ref="link" class="button" :class="type" :href="href">
     <span ref="icon" class="icon" :class="type">
     </span>
     <span ref="label" class="label"> {{ text }}
@@ -35,6 +35,14 @@
     margin: 0 1rem .5rem 0;
     position: relative;
     
+    &.source {
+      position: fixed;
+      top: 6rem;
+      right: 2rem;
+      left: auto;
+      bottom: auto;
+    }
+
     &:hover {
       background: $orangebg;
       color: $orange;
@@ -67,6 +75,10 @@
       &.github {
         mask-image: url(/images/github.svg);
         -webkit-mask-image: url(/images/github.svg);
+      }
+      &.source {
+        mask-image: url(/images/source.svg);
+        -webkit-mask-image: url(/images/source.svg);
       }
     }
 
