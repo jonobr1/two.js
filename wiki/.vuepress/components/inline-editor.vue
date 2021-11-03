@@ -97,6 +97,16 @@
       border-right: 1px solid rgb(221, 221, 221);
       box-sizing: border-box;
     }
+
+     @media (max-width: $MQNarrow) {
+       flex-wrap: wrap;
+      .editor {
+        border-right: 1px solid rgb(221,221,221);
+      }
+      .result {
+        overflow: hidden;
+      }
+     }
   }
 
 </style>
