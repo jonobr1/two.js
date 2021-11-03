@@ -7,7 +7,7 @@ pageClass: documentation-class
 
 <div class="extends">
 
-__Extends__: `Two.Events`
+__Extends__: [Two.Events](/documentation/events/)
 
 </div>
 
@@ -16,14 +16,12 @@ This class is used by [Two](/documentation/) when constructing with `type` of `T
 
 
 <div class="meta">
-
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/webgl.js#L1426)
-
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/renderers/webgl.js" />
 </div>
 
 
 
-## Constructor
+### Constructor
 
 
 | Argument | Description |
@@ -39,7 +37,8 @@ This class is used by [Two](/documentation/) when constructing with `type` of `T
 
 <div class="static member ">
 
-### Two.WebGLRenderer.Utils
+## Utils
+<span class="longname">Two.WebGLRenderer.Utils</span>
 
 
 
@@ -63,7 +62,7 @@ A massive object filled with utility functions and properties to render Two.js o
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/webgl.js#L1559)
+  [webgl.js:1559](https://github.com/jonobr1/two.js/blob/dev/src/renderers/webgl.js#L1559)
 
 </div>
 
@@ -80,7 +79,8 @@ A massive object filled with utility functions and properties to render Two.js o
 
 <div class="instance member ">
 
-### Two.WebGLRenderer.domElement
+## domElement
+<span class="longname">Two.WebGLRenderer.domElement</span>
 
 
 
@@ -104,7 +104,7 @@ The `<canvas />` associated with the Two.js scene.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/webgl.js#L1441)
+  [webgl.js:1441](https://github.com/jonobr1/two.js/blob/dev/src/renderers/webgl.js#L1441)
 
 </div>
 
@@ -121,7 +121,8 @@ The `<canvas />` associated with the Two.js scene.
 
 <div class="instance member ">
 
-### Two.WebGLRenderer.scene
+## scene
+<span class="longname">Two.WebGLRenderer.scene</span>
 
 
 
@@ -145,7 +146,7 @@ The root group of the scenegraph.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/webgl.js#L1452)
+  [webgl.js:1452](https://github.com/jonobr1/two.js/blob/dev/src/renderers/webgl.js#L1452)
 
 </div>
 
@@ -162,7 +163,8 @@ The root group of the scenegraph.
 
 <div class="instance member ">
 
-### Two.WebGLRenderer.overdraw
+## overdraw
+<span class="longname">Two.WebGLRenderer.overdraw</span>
 
 
 
@@ -186,7 +188,7 @@ Determines whether the canvas clears the background each draw call.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/webgl.js#L1478)
+  [webgl.js:1478](https://github.com/jonobr1/two.js/blob/dev/src/renderers/webgl.js#L1478)
 
 </div>
 
@@ -203,7 +205,8 @@ Determines whether the canvas clears the background each draw call.
 
 <div class="instance member ">
 
-### Two.WebGLRenderer.ctx
+## ctx
+<span class="longname">Two.WebGLRenderer.ctx</span>
 
 
 
@@ -227,7 +230,7 @@ Associated two dimensional context to render on the `<canvas />`.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/webgl.js#L1485)
+  [webgl.js:1485](https://github.com/jonobr1/two.js/blob/dev/src/renderers/webgl.js#L1485)
 
 </div>
 
@@ -244,7 +247,8 @@ Associated two dimensional context to render on the `<canvas />`.
 
 <div class="instance member ">
 
-### Two.WebGLRenderer.programs
+## programs
+<span class="longname">Two.WebGLRenderer.programs</span>
 
 
 
@@ -268,7 +272,7 @@ Associated WebGL programs to render all elements from the scenegraph.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/webgl.js#L1501)
+  [webgl.js:1501](https://github.com/jonobr1/two.js/blob/dev/src/renderers/webgl.js#L1501)
 
 </div>
 
@@ -285,7 +289,8 @@ Associated WebGL programs to render all elements from the scenegraph.
 
 <div class="instance function ">
 
-### Two.WebGLRenderer.setSize
+## setSize
+<span class="longname">Two.WebGLRenderer.setSize</span>
 
 
 
@@ -326,7 +331,7 @@ Change the size of the renderer.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/webgl.js#L1571)
+  [webgl.js:1571](https://github.com/jonobr1/two.js/blob/dev/src/renderers/webgl.js#L1571)
 
 </div>
 
@@ -343,7 +348,8 @@ Change the size of the renderer.
 
 <div class="instance function ">
 
-### Two.WebGLRenderer.render
+## render
+<span class="longname">Two.WebGLRenderer.render</span>
 
 
 
@@ -367,7 +373,7 @@ Render the current scene to the `<canvas />`.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/webgl.js#L1619)
+  [webgl.js:1619](https://github.com/jonobr1/two.js/blob/dev/src/renderers/webgl.js#L1619)
 
 </div>
 

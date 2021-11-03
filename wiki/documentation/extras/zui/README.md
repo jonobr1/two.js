@@ -10,14 +10,12 @@ pageClass: documentation-class
 
 
 <div class="meta">
-
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/extras/jsm/zui.js#L33)
-
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/extras/jsm/zui.js" />
 </div>
 
 
 
-## Constructor
+### Constructor
 
 
 | Argument | Description |

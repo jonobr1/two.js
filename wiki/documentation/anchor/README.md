@@ -7,7 +7,7 @@ pageClass: documentation-class
 
 <div class="extends">
 
-__Extends__: `Two.Vector`
+__Extends__: [Two.Vector](/documentation/vector/)
 
 </div>
 
@@ -16,14 +16,12 @@ An object that holds 3 [Two.Vector](/documentation/vector)s, the anchor point an
 
 
 <div class="meta">
-
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L7)
-
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/anchor.js" />
 </div>
 
 
 
-## Constructor
+### Constructor
 
 
 | Argument | Description |
@@ -42,7 +40,8 @@ An object that holds 3 [Two.Vector](/documentation/vector)s, the anchor point an
 
 <div class="static function ">
 
-### Two.Anchor.AppendCurveProperties
+## AppendCurveProperties
+<span class="longname">Two.Anchor.AppendCurveProperties</span>
 
 
 
@@ -73,7 +72,7 @@ Adds the `controls` property as an object with `left` and `right` properties to 
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L60)
+  [anchor.js:60](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L60)
 
 </div>
 
@@ -90,7 +89,8 @@ Adds the `controls` property as an object with `left` and `right` properties to 
 
 <div class="static function ">
 
-### Two.Anchor.MakeObservable
+## MakeObservable
+<span class="longname">Two.Anchor.MakeObservable</span>
 
 
 
@@ -121,7 +121,7 @@ Convenience function to apply observable qualities of a [Two.Anchor](/documentat
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L93)
+  [anchor.js:93](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L93)
 
 </div>
 
@@ -138,7 +138,8 @@ Convenience function to apply observable qualities of a [Two.Anchor](/documentat
 
 <div class="instance member ">
 
-### Two.Anchor.controls
+## controls
+<span class="longname">Two.Anchor.controls</span>
 
 
 
@@ -168,7 +169,7 @@ An plain object that holds the controls handles for a [Two.Anchor](/documentatio
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L70)
+  [anchor.js:70](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L70)
 
 </div>
 
@@ -185,7 +186,8 @@ An plain object that holds the controls handles for a [Two.Anchor](/documentatio
 
 <div class="instance member ">
 
-### Two.Anchor.controls.left
+## controls.left
+<span class="longname">Two.Anchor.controls.left</span>
 
 
 
@@ -215,7 +217,7 @@ The "left" control point to define handles on a bezier curve.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L77)
+  [anchor.js:77](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L77)
 
 </div>
 
@@ -232,7 +234,8 @@ The "left" control point to define handles on a bezier curve.
 
 <div class="instance member ">
 
-### Two.Anchor.controls.right
+## controls.right
+<span class="longname">Two.Anchor.controls.right</span>
 
 
 
@@ -262,7 +265,7 @@ The "left" control point to define handles on a bezier curve.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L84)
+  [anchor.js:84](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L84)
 
 </div>
 
@@ -279,7 +282,8 @@ The "left" control point to define handles on a bezier curve.
 
 <div class="instance member ">
 
-### Two.Anchor.command
+## command
+<span class="longname">Two.Anchor.command</span>
 
 
 
@@ -309,7 +313,7 @@ A draw command associated with the anchor point.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L101)
+  [anchor.js:101](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L101)
 
 </div>
 
@@ -326,7 +330,8 @@ A draw command associated with the anchor point.
 
 <div class="instance member ">
 
-### Two.Anchor.relative
+## relative
+<span class="longname">Two.Anchor.relative</span>
 
 
 
@@ -356,7 +361,7 @@ A boolean to render control points relative to the root anchor point or in globa
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L124)
+  [anchor.js:124](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L124)
 
 </div>
 
@@ -373,7 +378,8 @@ A boolean to render control points relative to the root anchor point or in globa
 
 <div class="instance function ">
 
-### Two.Anchor.listen
+## listen
+<span class="longname">Two.Anchor.listen</span>
 
 
 
@@ -397,7 +403,7 @@ Convenience method used mainly by [Two.Path.vertices](/documentation/path/#two-p
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L167)
+  [anchor.js:167](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L167)
 
 </div>
 
@@ -414,7 +420,8 @@ Convenience method used mainly by [Two.Path.vertices](/documentation/path/#two-p
 
 <div class="instance function ">
 
-### Two.Anchor.ignore
+## ignore
+<span class="longname">Two.Anchor.ignore</span>
 
 
 
@@ -438,7 +445,7 @@ Convenience method used mainly by [Two.Path.vertices](/documentation/path/#two-p
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L185)
+  [anchor.js:185](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L185)
 
 </div>
 
@@ -455,7 +462,8 @@ Convenience method used mainly by [Two.Path.vertices](/documentation/path/#two-p
 
 <div class="instance function ">
 
-### Two.Anchor.copy
+## copy
+<span class="longname">Two.Anchor.copy</span>
 
 
 
@@ -486,7 +494,7 @@ Copy the properties of one [Two.Anchor](/documentation/anchor) onto another.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L199)
+  [anchor.js:199](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L199)
 
 </div>
 
@@ -503,7 +511,8 @@ Copy the properties of one [Two.Anchor](/documentation/anchor) onto another.
 
 <div class="instance function ">
 
-### Two.Anchor.clone
+## clone
+<span class="longname">Two.Anchor.clone</span>
 
 
 
@@ -540,7 +549,7 @@ Create a new [Two.Anchor](/documentation/anchor), set all its values to the curr
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L238)
+  [anchor.js:238](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L238)
 
 </div>
 
@@ -557,7 +566,8 @@ Create a new [Two.Anchor](/documentation/anchor), set all its values to the curr
 
 <div class="instance function ">
 
-### Two.Anchor.toObject
+## toObject
+<span class="longname">Two.Anchor.toObject</span>
 
 
 
@@ -596,7 +606,7 @@ Create a JSON compatible plain object of the current instance. Intended for use 
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L262)
+  [anchor.js:262](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L262)
 
 </div>
 
@@ -613,7 +623,8 @@ Create a JSON compatible plain object of the current instance. Intended for use 
 
 <div class="instance function ">
 
-### Two.Anchor.toString
+## toString
+<span class="longname">Two.Anchor.toString</span>
 
 
 
@@ -652,7 +663,7 @@ Create a string form of the current instance. Intended for use with storing valu
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L288)
+  [anchor.js:288](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L288)
 
 </div>
 

@@ -10,14 +10,12 @@ pageClass: documentation-class
 
 
 <div class="meta">
-
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L4)
-
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js" />
 </div>
 
 
 
-## Constructor
+### Constructor
 
 
 | Argument | Description |
@@ -32,7 +30,8 @@ pageClass: documentation-class
 
 <div class="static member ">
 
-### Two.Stop.Index
+## Index
+<span class="longname">Two.Stop.Index</span>
 
 
 
@@ -56,7 +55,7 @@ The current index being referenced for calculating a stop's default offset value
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L49)
+  [stop.js:49](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L49)
 
 </div>
 
@@ -73,7 +72,8 @@ The current index being referenced for calculating a stop's default offset value
 
 <div class="static member ">
 
-### Two.Stop.Properties
+## Properties
+<span class="longname">Two.Stop.Properties</span>
 
 
 
@@ -97,7 +97,7 @@ A list of properties that are on every [Two.Stop](/documentation/stop).
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L55)
+  [stop.js:55](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L55)
 
 </div>
 
@@ -114,7 +114,8 @@ A list of properties that are on every [Two.Stop](/documentation/stop).
 
 <div class="static function ">
 
-### Two.Stop.MakeObservable
+## MakeObservable
+<span class="longname">Two.Stop.MakeObservable</span>
 
 
 
@@ -145,7 +146,7 @@ Convenience function to apply observable qualities of a [Two.Stop](/documentatio
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L65)
+  [stop.js:65](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L65)
 
 </div>
 
@@ -162,7 +163,8 @@ Convenience function to apply observable qualities of a [Two.Stop](/documentatio
 
 <div class="instance member ">
 
-### Two.Stop.renderer
+## renderer
+<span class="longname">Two.Stop.renderer</span>
 
 
 
@@ -192,7 +194,7 @@ Object access to store relevant renderer specific variables. Warning: manipulati
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L14)
+  [stop.js:14](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L14)
 
 </div>
 
@@ -219,7 +221,8 @@ With the [Two.SvgRenderer](/documentation/svgrenderer) you can access the underl
 
 <div class="instance member ">
 
-### Two.Stop.offset
+## offset
+<span class="longname">Two.Stop.offset</span>
 
 
 
@@ -243,7 +246,7 @@ The offset percentage of the stop represented as a zero-to-one value.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L23)
+  [stop.js:23](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L23)
 
 </div>
 
@@ -260,7 +263,8 @@ The offset percentage of the stop represented as a zero-to-one value.
 
 <div class="instance member ">
 
-### Two.Stop.opacity
+## opacity
+<span class="longname">Two.Stop.opacity</span>
 
 
 
@@ -284,7 +288,7 @@ The alpha percentage of the stop represented as a zero-to-one value.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L30)
+  [stop.js:30](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L30)
 
 </div>
 
@@ -301,7 +305,8 @@ The alpha percentage of the stop represented as a zero-to-one value.
 
 <div class="instance member ">
 
-### Two.Stop.color
+## color
+<span class="longname">Two.Stop.color</span>
 
 
 
@@ -325,7 +330,7 @@ The color of the stop.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L36)
+  [stop.js:36](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L36)
 
 </div>
 
@@ -342,7 +347,8 @@ The color of the stop.
 
 <div class="instance function ">
 
-### Two.Stop.clone
+## clone
+<span class="longname">Two.Stop.clone</span>
 
 
 
@@ -386,7 +392,7 @@ Create a new instance of [Two.Stop](/documentation/stop) with the same propertie
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L117)
+  [stop.js:117](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L117)
 
 </div>
 
@@ -403,7 +409,8 @@ Create a new instance of [Two.Stop](/documentation/stop) with the same propertie
 
 <div class="instance function ">
 
-### Two.Stop.toObject
+## toObject
+<span class="longname">Two.Stop.toObject</span>
 
 
 
@@ -440,7 +447,7 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L136)
+  [stop.js:136](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L136)
 
 </div>
 

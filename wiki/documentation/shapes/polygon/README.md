@@ -7,7 +7,7 @@ pageClass: documentation-class
 
 <div class="extends">
 
-__Extends__: `Two.Path`
+__Extends__: [Two.Path](/documentation/path/)
 
 </div>
 
@@ -16,14 +16,12 @@ __Extends__: `Two.Path`
 
 
 <div class="meta">
-
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/polygon.js#L11)
-
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/shapes/polygon.js" />
 </div>
 
 
 
-## Constructor
+### Constructor
 
 
 | Argument | Description |
@@ -39,7 +37,8 @@ __Extends__: `Two.Path`
 
 <div class="static member ">
 
-### Two.Polygon.Properties
+## Properties
+<span class="longname">Two.Polygon.Properties</span>
 
 
 
@@ -63,7 +62,7 @@ A list of properties that are on every [Two.Polygon](/documentation/polygon).
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/polygon.js#L66)
+  [polygon.js:66](https://github.com/jonobr1/two.js/blob/dev/src/shapes/polygon.js#L66)
 
 </div>
 
@@ -80,7 +79,8 @@ A list of properties that are on every [Two.Polygon](/documentation/polygon).
 
 <div class="static function ">
 
-### Two.Polygon.MakeObservable
+## MakeObservable
+<span class="longname">Two.Polygon.MakeObservable</span>
 
 
 
@@ -111,7 +111,7 @@ Convenience function to apply observable qualities of a [Two.Polygon](/documenta
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/polygon.js#L72)
+  [polygon.js:72](https://github.com/jonobr1/two.js/blob/dev/src/shapes/polygon.js#L72)
 
 </div>
 
@@ -128,7 +128,8 @@ Convenience function to apply observable qualities of a [Two.Polygon](/documenta
 
 <div class="instance member ">
 
-### Two.Polygon.width
+## width
+<span class="longname">Two.Polygon.width</span>
 
 
 
@@ -152,7 +153,7 @@ The size of the width of the polygon.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/polygon.js#L29)
+  [polygon.js:29](https://github.com/jonobr1/two.js/blob/dev/src/shapes/polygon.js#L29)
 
 </div>
 
@@ -169,7 +170,8 @@ The size of the width of the polygon.
 
 <div class="instance member ">
 
-### Two.Polygon.height
+## height
+<span class="longname">Two.Polygon.height</span>
 
 
 
@@ -193,7 +195,7 @@ The size of the height of the polygon.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/polygon.js#L37)
+  [polygon.js:37](https://github.com/jonobr1/two.js/blob/dev/src/shapes/polygon.js#L37)
 
 </div>
 
@@ -210,7 +212,8 @@ The size of the height of the polygon.
 
 <div class="instance member ">
 
-### Two.Polygon.sides
+## sides
+<span class="longname">Two.Polygon.sides</span>
 
 
 
@@ -234,7 +237,7 @@ The amount of sides the polyogn has.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/polygon.js#L45)
+  [polygon.js:45](https://github.com/jonobr1/two.js/blob/dev/src/shapes/polygon.js#L45)
 
 </div>
 
@@ -251,7 +254,8 @@ The amount of sides the polyogn has.
 
 <div class="instance function ">
 
-### Two.Polygon.clone
+## clone
+<span class="longname">Two.Polygon.clone</span>
 
 
 
@@ -295,7 +299,7 @@ Create a new instance of [Two.Polygon](/documentation/polygon) with the same pro
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/polygon.js#L189)
+  [polygon.js:189](https://github.com/jonobr1/two.js/blob/dev/src/shapes/polygon.js#L189)
 
 </div>
 
@@ -312,7 +316,8 @@ Create a new instance of [Two.Polygon](/documentation/polygon) with the same pro
 
 <div class="instance function ">
 
-### Two.Polygon.toObject
+## toObject
+<span class="longname">Two.Polygon.toObject</span>
 
 
 
@@ -349,7 +354,7 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/polygon.js#L222)
+  [polygon.js:222](https://github.com/jonobr1/two.js/blob/dev/src/shapes/polygon.js#L222)
 
 </div>
 

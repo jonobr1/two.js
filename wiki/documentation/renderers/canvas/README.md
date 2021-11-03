@@ -7,7 +7,7 @@ pageClass: documentation-class
 
 <div class="extends">
 
-__Extends__: `Two.Events`
+__Extends__: [Two.Events](/documentation/events/)
 
 </div>
 
@@ -16,14 +16,12 @@ This class is used by [Two](/documentation/) when constructing with `type` of `T
 
 
 <div class="meta">
-
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/canvas.js#L888)
-
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/renderers/canvas.js" />
 </div>
 
 
 
-## Constructor
+### Constructor
 
 
 | Argument | Description |
@@ -39,7 +37,8 @@ This class is used by [Two](/documentation/) when constructing with `type` of `T
 
 <div class="static member ">
 
-### Two.CanvasRenderer.Utils
+## Utils
+<span class="longname">Two.CanvasRenderer.Utils</span>
 
 
 
@@ -63,7 +62,7 @@ A massive object filled with utility functions and properties to render Two.js o
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/canvas.js#L937)
+  [canvas.js:937](https://github.com/jonobr1/two.js/blob/dev/src/renderers/canvas.js#L937)
 
 </div>
 
@@ -80,7 +79,8 @@ A massive object filled with utility functions and properties to render Two.js o
 
 <div class="instance member ">
 
-### Two.CanvasRenderer.domElement
+## domElement
+<span class="longname">Two.CanvasRenderer.domElement</span>
 
 
 
@@ -104,7 +104,7 @@ The `<canvas />` associated with the Two.js scene.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/canvas.js#L903)
+  [canvas.js:903](https://github.com/jonobr1/two.js/blob/dev/src/renderers/canvas.js#L903)
 
 </div>
 
@@ -121,7 +121,8 @@ The `<canvas />` associated with the Two.js scene.
 
 <div class="instance member ">
 
-### Two.CanvasRenderer.ctx
+## ctx
+<span class="longname">Two.CanvasRenderer.ctx</span>
 
 
 
@@ -145,7 +146,7 @@ Associated two dimensional context to render on the `<canvas />`.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/canvas.js#L909)
+  [canvas.js:909](https://github.com/jonobr1/two.js/blob/dev/src/renderers/canvas.js#L909)
 
 </div>
 
@@ -162,7 +163,8 @@ Associated two dimensional context to render on the `<canvas />`.
 
 <div class="instance member ">
 
-### Two.CanvasRenderer.overdraw
+## overdraw
+<span class="longname">Two.CanvasRenderer.overdraw</span>
 
 
 
@@ -186,7 +188,7 @@ Determines whether the canvas clears the background each draw call.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/canvas.js#L915)
+  [canvas.js:915](https://github.com/jonobr1/two.js/blob/dev/src/renderers/canvas.js#L915)
 
 </div>
 
@@ -203,7 +205,8 @@ Determines whether the canvas clears the background each draw call.
 
 <div class="instance member ">
 
-### Two.CanvasRenderer.scene
+## scene
+<span class="longname">Two.CanvasRenderer.scene</span>
 
 
 
@@ -227,7 +230,7 @@ The root group of the scenegraph.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/canvas.js#L926)
+  [canvas.js:926](https://github.com/jonobr1/two.js/blob/dev/src/renderers/canvas.js#L926)
 
 </div>
 
@@ -244,7 +247,8 @@ The root group of the scenegraph.
 
 <div class="instance function ">
 
-### Two.CanvasRenderer.setSize
+## setSize
+<span class="longname">Two.CanvasRenderer.setSize</span>
 
 
 
@@ -285,7 +289,7 @@ Change the size of the renderer.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/canvas.js#L949)
+  [canvas.js:949](https://github.com/jonobr1/two.js/blob/dev/src/renderers/canvas.js#L949)
 
 </div>
 
@@ -302,7 +306,8 @@ Change the size of the renderer.
 
 <div class="instance function ">
 
-### Two.CanvasRenderer.render
+## render
+<span class="longname">Two.CanvasRenderer.render</span>
 
 
 
@@ -326,7 +331,7 @@ Render the current scene to the `<canvas />`.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/renderers/canvas.js#L979)
+  [canvas.js:979](https://github.com/jonobr1/two.js/blob/dev/src/renderers/canvas.js#L979)
 
 </div>
 

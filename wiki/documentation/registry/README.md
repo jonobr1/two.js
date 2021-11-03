@@ -10,9 +10,7 @@ An arbitrary class to manage a directory of things. Mainly used for keeping tabs
 
 
 <div class="meta">
-
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/registry.js#L3)
-
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/registry.js" />
 </div>
 
 
@@ -25,7 +23,8 @@ An arbitrary class to manage a directory of things. Mainly used for keeping tabs
 
 <div class="instance function ">
 
-### Two.Registry.add
+## add
+<span class="longname">Two.Registry.add</span>
 
 
 
@@ -57,7 +56,7 @@ Adds any value to the directory. Assigned by the `id`.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/registry.js#L18)
+  [registry.js:18](https://github.com/jonobr1/two.js/blob/dev/src/registry.js#L18)
 
 </div>
 
@@ -74,7 +73,8 @@ Adds any value to the directory. Assigned by the `id`.
 
 <div class="instance function ">
 
-### Two.Registry.remove
+## remove
+<span class="longname">Two.Registry.remove</span>
 
 
 
@@ -105,7 +105,7 @@ Remove any value from the directory by its `id`.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/registry.js#L30)
+  [registry.js:30](https://github.com/jonobr1/two.js/blob/dev/src/registry.js#L30)
 
 </div>
 
@@ -122,7 +122,8 @@ Remove any value from the directory by its `id`.
 
 <div class="instance function ">
 
-### Two.Registry.get
+## get
+<span class="longname">Two.Registry.get</span>
 
 
 
@@ -168,7 +169,7 @@ Get a registered value by its `id`.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/registry.js#L41)
+  [registry.js:41](https://github.com/jonobr1/two.js/blob/dev/src/registry.js#L41)
 
 </div>
 
@@ -185,7 +186,8 @@ Get a registered value by its `id`.
 
 <div class="instance function ">
 
-### Two.Registry.contains
+## contains
+<span class="longname">Two.Registry.contains</span>
 
 
 
@@ -229,7 +231,7 @@ Convenience method to see if a value is registered to an `id` already.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/registry.js#L52)
+  [registry.js:52](https://github.com/jonobr1/two.js/blob/dev/src/registry.js#L52)
 
 </div>
 

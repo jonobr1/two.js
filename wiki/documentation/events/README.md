@@ -10,9 +10,7 @@ Object inherited by many Two.js objects in order to facilitate custom events.
 
 
 <div class="meta">
-
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/events.js#L1)
-
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/events.js" />
 </div>
 
 
@@ -25,7 +23,8 @@ Object inherited by many Two.js objects in order to facilitate custom events.
 
 <div class="static member ">
 
-### Two.Events.Types
+## Types
+<span class="longname">Two.Events.Types</span>
 
 
 
@@ -49,7 +48,7 @@ Object of different types of Two.js specific events.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/events.js#L73)
+  [events.js:73](https://github.com/jonobr1/two.js/blob/dev/src/events.js#L73)
 
 </div>
 
@@ -66,7 +65,8 @@ Object of different types of Two.js specific events.
 
 <div class="static function ">
 
-### Two.Events.bind
+## bind
+<span class="longname">Two.Events.bind</span>
 
 
 
@@ -90,7 +90,7 @@ Alias for [Two.Events.on](/documentation/events/#two-events-on).
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/events.js#L93)
+  [events.js:93](https://github.com/jonobr1/two.js/blob/dev/src/events.js#L93)
 
 </div>
 
@@ -107,7 +107,8 @@ Alias for [Two.Events.on](/documentation/events/#two-events-on).
 
 <div class="static function ">
 
-### Two.Events.unbind
+## unbind
+<span class="longname">Two.Events.unbind</span>
 
 
 
@@ -131,7 +132,7 @@ Alias for [Two.Events.off](/documentation/events/#two-events-off).
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/events.js#L100)
+  [events.js:100](https://github.com/jonobr1/two.js/blob/dev/src/events.js#L100)
 
 </div>
 
@@ -148,7 +149,8 @@ Alias for [Two.Events.off](/documentation/events/#two-events-off).
 
 <div class="instance function ">
 
-### Two.Events.on
+## on
+<span class="longname">Two.Events.on</span>
 
 
 
@@ -180,7 +182,7 @@ Call to add a listener to a specific event name.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/events.js#L8)
+  [events.js:8](https://github.com/jonobr1/two.js/blob/dev/src/events.js#L8)
 
 </div>
 
@@ -197,7 +199,8 @@ Call to add a listener to a specific event name.
 
 <div class="instance function ">
 
-### Two.Events.off
+## off
+<span class="longname">Two.Events.off</span>
 
 
 
@@ -229,7 +232,7 @@ Call to remove listeners from a specific event. If only `name` is passed then al
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/events.js#L17)
+  [events.js:17](https://github.com/jonobr1/two.js/blob/dev/src/events.js#L17)
 
 </div>
 
@@ -246,7 +249,8 @@ Call to remove listeners from a specific event. If only `name` is passed then al
 
 <div class="instance function ">
 
-### Two.Events.trigger
+## trigger
+<span class="longname">Two.Events.trigger</span>
 
 
 
@@ -278,7 +282,7 @@ Call to trigger a custom event. Any additional arguments passed after the name w
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/events.js#L26)
+  [events.js:26](https://github.com/jonobr1/two.js/blob/dev/src/events.js#L26)
 
 </div>
 

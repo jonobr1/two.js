@@ -10,14 +10,12 @@ The entrypoint for Two.js. Instantiate a `new Two` in order to setup a scene to 
 
 
 <div class="meta">
-
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L58)
-
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/two.js" />
 </div>
 
 
 
-## Constructor
+### Constructor
 
 
 | Argument | Description |
@@ -37,7 +35,8 @@ The entrypoint for Two.js. Instantiate a `new Two` in order to setup a scene to 
 
 <div class="static member ">
 
-### Two.Utils
+## 
+<span class="longname">Two.Utils</span>
 
 
 
@@ -61,7 +60,7 @@ A massive object filled with utility functions and properties.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L1046)
+  [two.js:1046](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L1046)
 
 </div>
 
@@ -78,7 +77,8 @@ A massive object filled with utility functions and properties.
 
 <div class="instance function ">
 
-### Two.fit
+## 
+<span class="longname">Two.fit</span>
 
 
 
@@ -102,7 +102,7 @@ If `options.fullscreen` or `options.fitted` in construction create this function
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L105)
+  [two.js:105](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L105)
 
 </div>
 
@@ -119,7 +119,8 @@ If `options.fullscreen` or `options.fitted` in construction create this function
 
 <div class="instance member ">
 
-### Two.type
+## 
+<span class="longname">Two.type</span>
 
 
 
@@ -143,7 +144,7 @@ A string representing which type of renderer the instance has instantiated.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L167)
+  [two.js:167](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L167)
 
 </div>
 
@@ -160,7 +161,8 @@ A string representing which type of renderer the instance has instantiated.
 
 <div class="instance member ">
 
-### Two.renderer
+## 
+<span class="longname">Two.renderer</span>
 
 
 
@@ -184,7 +186,7 @@ The instantiated rendering class for the instance. For a list of possible render
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L173)
+  [two.js:173](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L173)
 
 </div>
 
@@ -201,7 +203,8 @@ The instantiated rendering class for the instance. For a list of possible render
 
 <div class="instance member ">
 
-### Two.scene
+## 
+<span class="longname">Two.scene</span>
 
 
 
@@ -225,7 +228,7 @@ The base level [Two.Group](/documentation/group) which houses all objects for th
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L179)
+  [two.js:179](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L179)
 
 </div>
 
@@ -242,7 +245,8 @@ The base level [Two.Group](/documentation/group) which houses all objects for th
 
 <div class="instance member ">
 
-### Two.width
+## 
+<span class="longname">Two.width</span>
 
 
 
@@ -266,7 +270,7 @@ The width of the instance's dom element.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L185)
+  [two.js:185](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L185)
 
 </div>
 
@@ -283,7 +287,8 @@ The width of the instance's dom element.
 
 <div class="instance member ">
 
-### Two.height
+## 
+<span class="longname">Two.height</span>
 
 
 
@@ -307,7 +312,7 @@ The height of the instance's dom element.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L191)
+  [two.js:191](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L191)
 
 </div>
 
@@ -324,7 +329,8 @@ The height of the instance's dom element.
 
 <div class="instance member ">
 
-### Two.frameCount
+## 
+<span class="longname">Two.frameCount</span>
 
 
 
@@ -348,7 +354,7 @@ An integer representing how many frames have elapsed.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L197)
+  [two.js:197](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L197)
 
 </div>
 
@@ -365,7 +371,8 @@ An integer representing how many frames have elapsed.
 
 <div class="instance member ">
 
-### Two.timeDelta
+## 
+<span class="longname">Two.timeDelta</span>
 
 
 
@@ -389,7 +396,7 @@ A number representing how much time has elapsed since the last frame in millisec
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L203)
+  [two.js:203](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L203)
 
 </div>
 
@@ -406,7 +413,8 @@ A number representing how much time has elapsed since the last frame in millisec
 
 <div class="instance member ">
 
-### Two.playing
+## 
+<span class="longname">Two.playing</span>
 
 
 
@@ -430,7 +438,7 @@ A boolean representing whether or not the instance is being updated through the 
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L209)
+  [two.js:209](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L209)
 
 </div>
 
@@ -447,7 +455,8 @@ A boolean representing whether or not the instance is being updated through the 
 
 <div class="instance function ">
 
-### Two.appendTo
+## 
+<span class="longname">Two.appendTo</span>
 
 
 
@@ -478,7 +487,7 @@ Shorthand method to append your instance of Two.js to the `document`.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L215)
+  [two.js:215](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L215)
 
 </div>
 
@@ -495,7 +504,8 @@ Shorthand method to append your instance of Two.js to the `document`.
 
 <div class="instance function ">
 
-### Two.play
+## 
+<span class="longname">Two.play</span>
 
 
 
@@ -527,7 +537,7 @@ Call to start an internal animation loop.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L237)
+  [two.js:237](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L237)
 
 </div>
 
@@ -554,7 +564,8 @@ This function initiates a `requestAnimationFrame` loop.
 
 <div class="instance function ">
 
-### Two.pause
+## 
+<span class="longname">Two.pause</span>
 
 
 
@@ -586,7 +597,7 @@ Call to stop the internal animation loop for a specific instance of Two.js.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L252)
+  [two.js:252](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L252)
 
 </div>
 
@@ -603,7 +614,8 @@ Call to stop the internal animation loop for a specific instance of Two.js.
 
 <div class="instance function ">
 
-### Two.release
+## 
+<span class="longname">Two.release</span>
 
 
 
@@ -649,7 +661,7 @@ Release an arbitrary class' events from the Two.js corpus and recurse through it
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L269)
+  [two.js:269](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L269)
 
 </div>
 
@@ -666,7 +678,8 @@ Release an arbitrary class' events from the Two.js corpus and recurse through it
 
 <div class="instance function ">
 
-### Two.update
+## 
+<span class="longname">Two.update</span>
 
 
 
@@ -698,7 +711,7 @@ Update positions and calculations in one pass before rendering. Then render to t
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L322)
+  [two.js:322](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L322)
 
 </div>
 
@@ -725,7 +738,8 @@ This function is called automatically if using [Two.play](/documentation/play) o
 
 <div class="instance function ">
 
-### Two.render
+## 
+<span class="longname">Two.render</span>
 
 
 
@@ -757,7 +771,7 @@ Render all drawable and visible objects of the scene.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L360)
+  [two.js:360](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L360)
 
 </div>
 
@@ -774,7 +788,8 @@ Render all drawable and visible objects of the scene.
 
 <div class="instance function ">
 
-### Two.add
+## 
+<span class="longname">Two.add</span>
 
 
 
@@ -805,7 +820,7 @@ A shorthand method to add specific Two.js objects to the scene.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L375)
+  [two.js:375](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L375)
 
 </div>
 
@@ -822,7 +837,8 @@ A shorthand method to add specific Two.js objects to the scene.
 
 <div class="instance function ">
 
-### Two.remove
+## 
+<span class="longname">Two.remove</span>
 
 
 
@@ -853,7 +869,7 @@ A shorthand method to remove specific Two.js objects from the scene.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L393)
+  [two.js:393](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L393)
 
 </div>
 
@@ -870,7 +886,8 @@ A shorthand method to remove specific Two.js objects from the scene.
 
 <div class="instance function ">
 
-### Two.clear
+## 
+<span class="longname">Two.clear</span>
 
 
 
@@ -894,7 +911,7 @@ Removes all objects from the instance's scene. If you intend to have the browser
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L412)
+  [two.js:412](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L412)
 
 </div>
 
@@ -911,7 +928,8 @@ Removes all objects from the instance's scene. If you intend to have the browser
 
 <div class="instance function ">
 
-### Two.makeLine
+## 
+<span class="longname">Two.makeLine</span>
 
 
 
@@ -958,7 +976,7 @@ Creates a Two.js line and adds it to the scene.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L424)
+  [two.js:424](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L424)
 
 </div>
 
@@ -975,7 +993,8 @@ Creates a Two.js line and adds it to the scene.
 
 <div class="instance function ">
 
-### Two.makeArrow
+## 
+<span class="longname">Two.makeArrow</span>
 
 
 
@@ -1022,7 +1041,7 @@ Creates a Two.js arrow and adds it to the scene.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L443)
+  [two.js:443](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L443)
 
 </div>
 
@@ -1039,7 +1058,8 @@ Creates a Two.js arrow and adds it to the scene.
 
 <div class="instance function ">
 
-### Two.makeRectangle
+## 
+<span class="longname">Two.makeRectangle</span>
 
 
 
@@ -1086,7 +1106,7 @@ Creates a Two.js rectangle and adds it to the scene.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L488)
+  [two.js:488](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L488)
 
 </div>
 
@@ -1103,7 +1123,8 @@ Creates a Two.js rectangle and adds it to the scene.
 
 <div class="instance function ">
 
-### Two.makeRoundedRectangle
+## 
+<span class="longname">Two.makeRoundedRectangle</span>
 
 
 
@@ -1151,7 +1172,7 @@ Creates a Two.js rounded rectangle and adds it to the scene.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L507)
+  [two.js:507](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L507)
 
 </div>
 
@@ -1168,7 +1189,8 @@ Creates a Two.js rounded rectangle and adds it to the scene.
 
 <div class="instance function ">
 
-### Two.makeCircle
+## 
+<span class="longname">Two.makeCircle</span>
 
 
 
@@ -1215,7 +1237,7 @@ Creates a Two.js circle and adds it to the scene.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L527)
+  [two.js:527](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L527)
 
 </div>
 
@@ -1232,7 +1254,8 @@ Creates a Two.js circle and adds it to the scene.
 
 <div class="instance function ">
 
-### Two.makeEllipse
+## 
+<span class="longname">Two.makeEllipse</span>
 
 
 
@@ -1280,7 +1303,7 @@ Creates a Two.js ellipse and adds it to the scene.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L546)
+  [two.js:546](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L546)
 
 </div>
 
@@ -1297,7 +1320,8 @@ Creates a Two.js ellipse and adds it to the scene.
 
 <div class="instance function ">
 
-### Two.makeStar
+## 
+<span class="longname">Two.makeStar</span>
 
 
 
@@ -1345,7 +1369,7 @@ Creates a Two.js star and adds it to the scene.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L566)
+  [two.js:566](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L566)
 
 </div>
 
@@ -1362,7 +1386,8 @@ Creates a Two.js star and adds it to the scene.
 
 <div class="instance function ">
 
-### Two.makeCurve
+## 
+<span class="longname">Two.makeCurve</span>
 
 
 
@@ -1409,7 +1434,7 @@ Creates a Two.js path that is curved and adds it to the scene.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L586)
+  [two.js:586](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L586)
 
 </div>
 
@@ -1436,7 +1461,8 @@ In either case of passing an array or passing numbered arguments the last argume
 
 <div class="instance function ">
 
-### Two.makePolygon
+## 
+<span class="longname">Two.makePolygon</span>
 
 
 
@@ -1483,7 +1509,7 @@ Creates a Two.js polygon and adds it to the scene.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L622)
+  [two.js:622](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L622)
 
 </div>
 
@@ -1500,7 +1526,8 @@ Creates a Two.js polygon and adds it to the scene.
 
 <div class="instance function ">
 
-### Two.makeArcSegment
+## 
+<span class="longname">Two.makeArcSegment</span>
 
 
 
@@ -1544,7 +1571,7 @@ __Returns__:
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L641)
+  [two.js:641](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L641)
 
 </div>
 
@@ -1561,7 +1588,8 @@ __Returns__:
 
 <div class="instance function ">
 
-### Two.makePoints
+## 
+<span class="longname">Two.makePoints</span>
 
 
 
@@ -1606,7 +1634,7 @@ Creates a Two.js points object and adds it to the current scene.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L659)
+  [two.js:659](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L659)
 
 </div>
 
@@ -1623,7 +1651,8 @@ Creates a Two.js points object and adds it to the current scene.
 
 <div class="instance function ">
 
-### Two.makePath
+## 
+<span class="longname">Two.makePath</span>
 
 
 
@@ -1668,7 +1697,7 @@ Creates a Two.js path and adds it to the scene.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L690)
+  [two.js:690](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L690)
 
 </div>
 
@@ -1695,7 +1724,8 @@ In either case of passing an array or passing numbered arguments the last argume
 
 <div class="instance function ">
 
-### Two.makeText
+## 
+<span class="longname">Two.makeText</span>
 
 
 
@@ -1742,7 +1772,7 @@ Creates a Two.js text object and adds it to the scene.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L729)
+  [two.js:729](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L729)
 
 </div>
 
@@ -1759,7 +1789,8 @@ Creates a Two.js text object and adds it to the scene.
 
 <div class="instance function ">
 
-### Two.makeLinearGradient
+## 
+<span class="longname">Two.makeLinearGradient</span>
 
 
 
@@ -1807,7 +1838,7 @@ Creates a Two.js linear gradient and ads it to the scene. In the case of an effe
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L745)
+  [two.js:745](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L745)
 
 </div>
 
@@ -1824,7 +1855,8 @@ Creates a Two.js linear gradient and ads it to the scene. In the case of an effe
 
 <div class="instance function ">
 
-### Two.makeRadialGradient
+## 
+<span class="longname">Two.makeRadialGradient</span>
 
 
 
@@ -1871,7 +1903,7 @@ Creates a Two.js linear-gradient object and ads it to the scene. In the case of 
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L767)
+  [two.js:767](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L767)
 
 </div>
 
@@ -1888,7 +1920,8 @@ Creates a Two.js linear-gradient object and ads it to the scene. In the case of 
 
 <div class="instance function ">
 
-### Two.makeSprite
+## 
+<span class="longname">Two.makeSprite</span>
 
 
 
@@ -1938,7 +1971,7 @@ Creates a Two.js sprite object and adds it to the scene. Sprites can be used for
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L788)
+  [two.js:788](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L788)
 
 </div>
 
@@ -1955,7 +1988,8 @@ Creates a Two.js sprite object and adds it to the scene. Sprites can be used for
 
 <div class="instance function ">
 
-### Two.makeImageSequence
+## 
+<span class="longname">Two.makeImageSequence</span>
 
 
 
@@ -2003,7 +2037,7 @@ Creates a Two.js image sequence object and adds it to the scene.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L813)
+  [two.js:813](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L813)
 
 </div>
 
@@ -2020,7 +2054,8 @@ Creates a Two.js image sequence object and adds it to the scene.
 
 <div class="instance function ">
 
-### Two.makeTexture
+## 
+<span class="longname">Two.makeTexture</span>
 
 
 
@@ -2065,7 +2100,7 @@ Creates a Two.js texture object.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L836)
+  [two.js:836](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L836)
 
 </div>
 
@@ -2082,7 +2117,8 @@ Creates a Two.js texture object.
 
 <div class="instance function ">
 
-### Two.makeGroup
+## 
+<span class="longname">Two.makeGroup</span>
 
 
 
@@ -2126,7 +2162,7 @@ Creates a Two.js group object and adds it to the scene.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L851)
+  [two.js:851](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L851)
 
 </div>
 
@@ -2143,7 +2179,8 @@ Creates a Two.js group object and adds it to the scene.
 
 <div class="instance function ">
 
-### Two.interpret
+## 
+<span class="longname">Two.interpret</span>
 
 
 
@@ -2189,7 +2226,7 @@ Interpret an SVG Node and add it to this instance's scene. The distinction shoul
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L873)
+  [two.js:873](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L873)
 
 </div>
 
@@ -2206,7 +2243,8 @@ Interpret an SVG Node and add it to this instance's scene. The distinction shoul
 
 <div class="instance function ">
 
-### Two.load
+## 
+<span class="longname">Two.load</span>
 
 
 
@@ -2251,7 +2289,7 @@ Load an SVG file or SVG text and interpret it into Two.js legible objects.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L906)
+  [two.js:906](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L906)
 
 </div>
 

@@ -7,7 +7,7 @@ pageClass: documentation-class
 
 <div class="extends">
 
-__Extends__: `Two.Path`
+__Extends__: [Two.Path](/documentation/path/)
 
 </div>
 
@@ -16,14 +16,12 @@ __Extends__: `Two.Path`
 
 
 <div class="meta">
-
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/line.js#L7)
-
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/shapes/line.js" />
 </div>
 
 
 
-## Constructor
+### Constructor
 
 
 | Argument | Description |

@@ -7,7 +7,7 @@ pageClass: documentation-class
 
 <div class="extends">
 
-__Extends__: `Two.Events`
+__Extends__: [Two.Events](/documentation/events/)
 
 </div>
 
@@ -16,9 +16,7 @@ The foundational transformation object for the Two.js scenegraph.
 
 
 <div class="meta">
-
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L9)
-
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/shape.js" />
 </div>
 
 
@@ -31,7 +29,8 @@ The foundational transformation object for the Two.js scenegraph.
 
 <div class="static function ">
 
-### Two.Shape.FlagMatrix
+## FlagMatrix
+<span class="longname">Two.Shape.FlagMatrix</span>
 
 
 
@@ -55,7 +54,7 @@ Utility function used in conjunction with event handlers to update the flagMatri
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L86)
+  [shape.js:86](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L86)
 
 </div>
 
@@ -72,7 +71,8 @@ Utility function used in conjunction with event handlers to update the flagMatri
 
 <div class="static function ">
 
-### Two.Shape.MakeObservable
+## MakeObservable
+<span class="longname">Two.Shape.MakeObservable</span>
 
 
 
@@ -103,7 +103,7 @@ Convenience function to apply observable qualities of a [Two.Shape](/documentati
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L95)
+  [shape.js:95](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L95)
 
 </div>
 
@@ -120,7 +120,8 @@ Convenience function to apply observable qualities of a [Two.Shape](/documentati
 
 <div class="instance member ">
 
-### Two.Shape.renderer
+## renderer
+<span class="longname">Two.Shape.renderer</span>
 
 
 
@@ -150,7 +151,7 @@ Object access to store relevant renderer specific variables. Warning: manipulati
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L17)
+  [shape.js:17](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L17)
 
 </div>
 
@@ -177,7 +178,8 @@ With the [Two.SvgRenderer](/documentation/svgrenderer) you can access the underl
 
 <div class="instance member ">
 
-### Two.Shape.id
+## id
+<span class="longname">Two.Shape.id</span>
 
 
 
@@ -201,7 +203,7 @@ Session specific unique identifier.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L27)
+  [shape.js:27](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L27)
 
 </div>
 
@@ -228,7 +230,8 @@ In the [Two.SvgRenderer](/documentation/svgrenderer) change this to change the u
 
 <div class="instance member ">
 
-### Two.Shape.classList
+## classList
+<span class="longname">Two.Shape.classList</span>
 
 
 
@@ -258,7 +261,7 @@ A list of class strings stored if imported / interpreted  from an SVG element.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L34)
+  [shape.js:34](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L34)
 
 </div>
 
@@ -275,7 +278,8 @@ A list of class strings stored if imported / interpreted  from an SVG element.
 
 <div class="instance member ">
 
-### Two.Shape.matrix
+## matrix
+<span class="longname">Two.Shape.matrix</span>
 
 
 
@@ -305,7 +309,7 @@ The transformation matrix of the shape.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L41)
+  [shape.js:41](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L41)
 
 </div>
 
@@ -332,7 +336,8 @@ The transformation matrix of the shape.
 
 <div class="instance member ">
 
-### Two.Shape.translation
+## translation
+<span class="longname">Two.Shape.translation</span>
 
 
 
@@ -356,7 +361,7 @@ The x and y value for where the shape is placed relative to its parent.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L49)
+  [shape.js:49](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L49)
 
 </div>
 
@@ -373,7 +378,8 @@ The x and y value for where the shape is placed relative to its parent.
 
 <div class="instance member ">
 
-### Two.Shape.rotation
+## rotation
+<span class="longname">Two.Shape.rotation</span>
 
 
 
@@ -397,7 +403,7 @@ The value in Number for how much the shape is rotated relative to its parent.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L55)
+  [shape.js:55](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L55)
 
 </div>
 
@@ -414,7 +420,8 @@ The value in Number for how much the shape is rotated relative to its parent.
 
 <div class="instance member ">
 
-### Two.Shape.scale
+## scale
+<span class="longname">Two.Shape.scale</span>
 
 
 
@@ -438,7 +445,7 @@ The value for how much the shape is scaled relative to its parent.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L61)
+  [shape.js:61](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L61)
 
 </div>
 
@@ -465,7 +472,8 @@ This value can be replaced with a [Two.Vector](/documentation/vector) to do non-
 
 <div class="instance member ">
 
-### Two.Shape.skewX
+## skewX
+<span class="longname">Two.Shape.skewX</span>
 
 
 
@@ -495,7 +503,7 @@ Skew the shape by an angle in the x axis direction.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L68)
+  [shape.js:68](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L68)
 
 </div>
 
@@ -512,7 +520,8 @@ Skew the shape by an angle in the x axis direction.
 
 <div class="instance member ">
 
-### Two.Shape.skewY
+## skewY
+<span class="longname">Two.Shape.skewY</span>
 
 
 
@@ -542,7 +551,7 @@ Skew the shape by an angle in the y axis direction.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L75)
+  [shape.js:75](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L75)
 
 </div>
 
@@ -559,7 +568,8 @@ Skew the shape by an angle in the y axis direction.
 
 <div class="instance member ">
 
-### Two.Shape.className
+## className
+<span class="longname">Two.Shape.className</span>
 
 
 
@@ -583,7 +593,7 @@ A class to be applied to the element to be compatible with CSS styling.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L336)
+  [shape.js:336](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L336)
 
 </div>
 
@@ -610,7 +620,8 @@ Only available for the SVG renderer.
 
 <div class="instance function ">
 
-### Two.Shape.addTo
+## addTo
+<span class="longname">Two.Shape.addTo</span>
 
 
 
@@ -641,7 +652,7 @@ Convenience method to add itself to the scenegraph.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L343)
+  [shape.js:343](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L343)
 
 </div>
 
@@ -658,7 +669,8 @@ Convenience method to add itself to the scenegraph.
 
 <div class="instance function ">
 
-### Two.Shape.clone
+## clone
+<span class="longname">Two.Shape.clone</span>
 
 
 
@@ -702,7 +714,7 @@ Create a new [Two.Shape](/documentation/shape) with the same values as the curre
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L354)
+  [shape.js:354](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L354)
 
 </div>
 

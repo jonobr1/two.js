@@ -7,7 +7,7 @@ pageClass: documentation-class
 
 <div class="extends">
 
-__Extends__: `Two.Path`
+__Extends__: [Two.Path](/documentation/path/)
 
 </div>
 
@@ -16,14 +16,12 @@ __Extends__: `Two.Path`
 
 
 <div class="meta">
-
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/star.js#L11)
-
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/shapes/star.js" />
 </div>
 
 
 
-## Constructor
+### Constructor
 
 
 | Argument | Description |
@@ -40,7 +38,8 @@ __Extends__: `Two.Path`
 
 <div class="static member ">
 
-### Two.Star.Properties
+## Properties
+<span class="longname">Two.Star.Properties</span>
 
 
 
@@ -64,7 +63,7 @@ A list of properties that are on every [Two.Star](/documentation/star).
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/star.js#L73)
+  [star.js:73](https://github.com/jonobr1/two.js/blob/dev/src/shapes/star.js#L73)
 
 </div>
 
@@ -81,7 +80,8 @@ A list of properties that are on every [Two.Star](/documentation/star).
 
 <div class="static function ">
 
-### Two.Star.MakeObservable
+## MakeObservable
+<span class="longname">Two.Star.MakeObservable</span>
 
 
 
@@ -112,7 +112,7 @@ Convenience function to apply observable qualities of a [Two.Star](/documentatio
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/star.js#L79)
+  [star.js:79](https://github.com/jonobr1/two.js/blob/dev/src/shapes/star.js#L79)
 
 </div>
 
@@ -129,7 +129,8 @@ Convenience function to apply observable qualities of a [Two.Star](/documentatio
 
 <div class="instance member ">
 
-### Two.Star.innerRadius
+## innerRadius
+<span class="longname">Two.Star.innerRadius</span>
 
 
 
@@ -153,7 +154,7 @@ The size of the inner radius of the star.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/star.js#L36)
+  [star.js:36](https://github.com/jonobr1/two.js/blob/dev/src/shapes/star.js#L36)
 
 </div>
 
@@ -170,7 +171,8 @@ The size of the inner radius of the star.
 
 <div class="instance member ">
 
-### Two.Star.outerRadius
+## outerRadius
+<span class="longname">Two.Star.outerRadius</span>
 
 
 
@@ -194,7 +196,7 @@ The size of the outer radius of the star.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/star.js#L44)
+  [star.js:44](https://github.com/jonobr1/two.js/blob/dev/src/shapes/star.js#L44)
 
 </div>
 
@@ -211,7 +213,8 @@ The size of the outer radius of the star.
 
 <div class="instance member ">
 
-### Two.Star.sides
+## sides
+<span class="longname">Two.Star.sides</span>
 
 
 
@@ -235,7 +238,7 @@ The amount of sides the star has.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/star.js#L52)
+  [star.js:52](https://github.com/jonobr1/two.js/blob/dev/src/shapes/star.js#L52)
 
 </div>
 
@@ -252,7 +255,8 @@ The amount of sides the star has.
 
 <div class="instance function ">
 
-### Two.Star.clone
+## clone
+<span class="longname">Two.Star.clone</span>
 
 
 
@@ -296,7 +300,7 @@ Create a new instance of [Two.Star](/documentation/star) with the same propertie
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/star.js#L198)
+  [star.js:198](https://github.com/jonobr1/two.js/blob/dev/src/shapes/star.js#L198)
 
 </div>
 
@@ -313,7 +317,8 @@ Create a new instance of [Two.Star](/documentation/star) with the same propertie
 
 <div class="instance function ">
 
-### Two.Star.toObject
+## toObject
+<span class="longname">Two.Star.toObject</span>
 
 
 
@@ -350,7 +355,7 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/star.js#L235)
+  [star.js:235](https://github.com/jonobr1/two.js/blob/dev/src/shapes/star.js#L235)
 
 </div>
 

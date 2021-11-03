@@ -7,7 +7,7 @@ pageClass: documentation-class
 
 <div class="extends">
 
-__Extends__: `Two.Collection`
+__Extends__: [Two.Collection](/documentation/collection/)
 
 </div>
 
@@ -16,9 +16,7 @@ A children collection which is accesible both by index and by object `id`.
 
 
 <div class="meta">
-
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/children.js#L5)
-
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/children.js" />
 </div>
 
 
@@ -31,7 +29,8 @@ A children collection which is accesible both by index and by object `id`.
 
 <div class="instance member ">
 
-### Two.Group.Children.ids
+## Children.ids
+<span class="longname">Two.Group.Children.ids</span>
 
 
 
@@ -55,7 +54,7 @@ Map of all elements in the list keyed by `id`s.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/children.js#L20)
+  [children.js:20](https://github.com/jonobr1/two.js/blob/dev/src/children.js#L20)
 
 </div>
 
@@ -72,7 +71,8 @@ Map of all elements in the list keyed by `id`s.
 
 <div class="instance function ">
 
-### Two.Group.Children.attach
+## Children.attach
+<span class="longname">Two.Group.Children.attach</span>
 
 
 
@@ -103,7 +103,7 @@ Adds elements to the `ids` map.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/children.js#L41)
+  [children.js:41](https://github.com/jonobr1/two.js/blob/dev/src/children.js#L41)
 
 </div>
 
@@ -120,7 +120,8 @@ Adds elements to the `ids` map.
 
 <div class="instance function ">
 
-### Two.Group.Children.detach
+## Children.detach
+<span class="longname">Two.Group.Children.detach</span>
 
 
 
@@ -151,7 +152,7 @@ Removes elements to the `ids` map.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/children.js#L57)
+  [children.js:57](https://github.com/jonobr1/two.js/blob/dev/src/children.js#L57)
 
 </div>
 

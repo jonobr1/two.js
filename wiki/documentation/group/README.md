@@ -7,7 +7,7 @@ pageClass: documentation-class
 
 <div class="extends">
 
-__Extends__: `Two.Shape`
+__Extends__: [Two.Shape](/documentation/shape/)
 
 </div>
 
@@ -16,14 +16,12 @@ This is the primary class for grouping objects that are then drawn in Two.js. In
 
 
 <div class="meta">
-
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L13)
-
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/group.js" />
 </div>
 
 
 
-## Constructor
+### Constructor
 
 
 | Argument | Description |
@@ -36,7 +34,8 @@ This is the primary class for grouping objects that are then drawn in Two.js. In
 
 <div class="static function ">
 
-### Two.Group.InsertChildren
+## InsertChildren
+<span class="longname">Two.Group.InsertChildren</span>
 
 
 
@@ -67,7 +66,7 @@ Cached method to let renderers know children have been added to a [Two.Group](/d
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L55)
+  [group.js:55](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L55)
 
 </div>
 
@@ -84,7 +83,8 @@ Cached method to let renderers know children have been added to a [Two.Group](/d
 
 <div class="static function ">
 
-### Two.Group.RemoveChildren
+## RemoveChildren
+<span class="longname">Two.Group.RemoveChildren</span>
 
 
 
@@ -115,7 +115,7 @@ Cached method to let renderers know children have been removed from a [Two.Group
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L67)
+  [group.js:67](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L67)
 
 </div>
 
@@ -132,7 +132,8 @@ Cached method to let renderers know children have been removed from a [Two.Group
 
 <div class="static function ">
 
-### Two.Group.OrderChildren
+## OrderChildren
+<span class="longname">Two.Group.OrderChildren</span>
 
 
 
@@ -156,7 +157,7 @@ Cached method to let renderers know order has been updated on a [Two.Group](/doc
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L79)
+  [group.js:79](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L79)
 
 </div>
 
@@ -173,7 +174,8 @@ Cached method to let renderers know order has been updated on a [Two.Group](/doc
 
 <div class="static member ">
 
-### Two.Group.Properties
+## Properties
+<span class="longname">Two.Group.Properties</span>
 
 
 
@@ -197,7 +199,7 @@ A list of properties that are on every [Two.Group](/documentation/group).
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L88)
+  [group.js:88](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L88)
 
 </div>
 
@@ -214,7 +216,8 @@ A list of properties that are on every [Two.Group](/documentation/group).
 
 <div class="static function ">
 
-### Two.Group.MakeObservable
+## MakeObservable
+<span class="longname">Two.Group.MakeObservable</span>
 
 
 
@@ -245,7 +248,7 @@ Convenience function to apply observable qualities of a [Two.Group](/documentati
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L105)
+  [group.js:105](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L105)
 
 </div>
 
@@ -262,7 +265,8 @@ Convenience function to apply observable qualities of a [Two.Group](/documentati
 
 <div class="static function ">
 
-### Two.Group.MakeGetterSetters
+## MakeGetterSetters
+<span class="longname">Two.Group.MakeGetterSetters</span>
 
 
 
@@ -294,7 +298,7 @@ Convenience method to apply getter / setter logic on an array of properties. Use
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L252)
+  [group.js:252](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L252)
 
 </div>
 
@@ -311,7 +315,8 @@ Convenience method to apply getter / setter logic on an array of properties. Use
 
 <div class="static function ">
 
-### Two.Group.MakeGetterSetter
+## MakeGetterSetter
+<span class="longname">Two.Group.MakeGetterSetter</span>
 
 
 
@@ -343,7 +348,7 @@ Convenience method to apply getter / setter logic specific to how `Two.Group`s t
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L271)
+  [group.js:271](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L271)
 
 </div>
 
@@ -360,7 +365,8 @@ Convenience method to apply getter / setter logic specific to how `Two.Group`s t
 
 <div class="instance member ">
 
-### Two.Group.additions
+## additions
+<span class="longname">Two.Group.additions</span>
 
 
 
@@ -390,7 +396,7 @@ An automatically updated list of children that need to be appended to the render
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L27)
+  [group.js:27](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L27)
 
 </div>
 
@@ -407,7 +413,8 @@ An automatically updated list of children that need to be appended to the render
 
 <div class="instance member ">
 
-### Two.Group.subtractions
+## subtractions
+<span class="longname">Two.Group.subtractions</span>
 
 
 
@@ -437,7 +444,7 @@ An automatically updated list of children that need to be removed from the rende
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L34)
+  [group.js:34](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L34)
 
 </div>
 
@@ -454,7 +461,8 @@ An automatically updated list of children that need to be removed from the rende
 
 <div class="instance member ">
 
-### Two.Group.children
+## children
+<span class="longname">Two.Group.children</span>
 
 
 
@@ -484,7 +492,7 @@ A list of all the children in the scenegraph.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L41)
+  [group.js:41](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L41)
 
 </div>
 
@@ -511,7 +519,8 @@ Ther order of this list indicates the order each element is rendered to the scre
 
 <div class="instance member ">
 
-### Two.Group.fill
+## fill
+<span class="longname">Two.Group.fill</span>
 
 
 
@@ -535,7 +544,7 @@ The value of what all child shapes should be filled in with.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L376)
+  [group.js:376](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L376)
 
 </div>
 
@@ -558,7 +567,8 @@ The value of what all child shapes should be filled in with.
 
 <div class="instance member ">
 
-### Two.Group.stroke
+## stroke
+<span class="longname">Two.Group.stroke</span>
 
 
 
@@ -582,7 +592,7 @@ The value of what all child shapes should be outlined in with.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L383)
+  [group.js:383](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L383)
 
 </div>
 
@@ -605,7 +615,8 @@ The value of what all child shapes should be outlined in with.
 
 <div class="instance member ">
 
-### Two.Group.linewidth
+## linewidth
+<span class="longname">Two.Group.linewidth</span>
 
 
 
@@ -629,7 +640,7 @@ The thickness in pixels of the stroke for all child shapes.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L390)
+  [group.js:390](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L390)
 
 </div>
 
@@ -646,7 +657,8 @@ The thickness in pixels of the stroke for all child shapes.
 
 <div class="instance member ">
 
-### Two.Group.opacity
+## opacity
+<span class="longname">Two.Group.opacity</span>
 
 
 
@@ -670,7 +682,7 @@ The opaqueness of all child shapes.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L396)
+  [group.js:396](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L396)
 
 </div>
 
@@ -697,7 +709,8 @@ Becomes multiplied by the individual child's opacity property.
 
 <div class="instance member ">
 
-### Two.Group.visible
+## visible
+<span class="longname">Two.Group.visible</span>
 
 
 
@@ -721,7 +734,7 @@ Display the path or not.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L403)
+  [group.js:403](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L403)
 
 </div>
 
@@ -748,7 +761,8 @@ For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](
 
 <div class="instance member ">
 
-### Two.Group.cap
+## cap
+<span class="longname">Two.Group.cap</span>
 
 
 
@@ -772,7 +786,7 @@ For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L410)
+  [group.js:410](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L410)
 
 </div>
 
@@ -795,7 +809,8 @@ For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](
 
 <div class="instance member ">
 
-### Two.Group.join
+## join
+<span class="longname">Two.Group.join</span>
 
 
 
@@ -819,7 +834,7 @@ For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L417)
+  [group.js:417](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L417)
 
 </div>
 
@@ -842,7 +857,8 @@ For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](
 
 <div class="instance member ">
 
-### Two.Group.miter
+## miter
+<span class="longname">Two.Group.miter</span>
 
 
 
@@ -866,7 +882,7 @@ For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L424)
+  [group.js:424](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L424)
 
 </div>
 
@@ -889,7 +905,8 @@ For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](
 
 <div class="instance member ">
 
-### Two.Group.closed
+## closed
+<span class="longname">Two.Group.closed</span>
 
 
 
@@ -913,7 +930,7 @@ Determines whether a final line is drawn between the final point in the `vertice
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L431)
+  [group.js:431](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L431)
 
 </div>
 
@@ -930,7 +947,8 @@ Determines whether a final line is drawn between the final point in the `vertice
 
 <div class="instance member ">
 
-### Two.Group.curved
+## curved
+<span class="longname">Two.Group.curved</span>
 
 
 
@@ -954,7 +972,7 @@ When the child's path is `automatic = true` this boolean determines whether the 
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L437)
+  [group.js:437](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L437)
 
 </div>
 
@@ -971,7 +989,8 @@ When the child's path is `automatic = true` this boolean determines whether the 
 
 <div class="instance member ">
 
-### Two.Group.automatic
+## automatic
+<span class="longname">Two.Group.automatic</span>
 
 
 
@@ -995,7 +1014,7 @@ Determines whether or not Two.js should calculate curves, lines, and commands au
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L443)
+  [group.js:443](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L443)
 
 </div>
 
@@ -1012,7 +1031,8 @@ Determines whether or not Two.js should calculate curves, lines, and commands au
 
 <div class="instance member ">
 
-### Two.Group.beginning
+## beginning
+<span class="longname">Two.Group.beginning</span>
 
 
 
@@ -1042,7 +1062,7 @@ Number between zero and one to state the beginning of where the path is rendered
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L449)
+  [group.js:449](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L449)
 
 </div>
 
@@ -1069,7 +1089,8 @@ This is great for animating in and out stroked paths in conjunction with [Two.Gr
 
 <div class="instance member ">
 
-### Two.Group.ending
+## ending
+<span class="longname">Two.Group.ending</span>
 
 
 
@@ -1099,7 +1120,7 @@ Number between zero and one to state the ending of where the path is rendered.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L457)
+  [group.js:457](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L457)
 
 </div>
 
@@ -1126,7 +1147,8 @@ This is great for animating in and out stroked paths in conjunction with [Two.Gr
 
 <div class="instance member ">
 
-### Two.Group.length
+## length
+<span class="longname">Two.Group.length</span>
 
 
 
@@ -1150,7 +1172,7 @@ The sum of distances between all child lengths.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L465)
+  [group.js:465](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L465)
 
 </div>
 
@@ -1167,7 +1189,8 @@ The sum of distances between all child lengths.
 
 <div class="instance member ">
 
-### Two.Group.mask
+## mask
+<span class="longname">Two.Group.mask</span>
 
 
 
@@ -1191,7 +1214,7 @@ The Two.js object to clip from a group's rendering.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L471)
+  [group.js:471](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L471)
 
 </div>
 
@@ -1208,7 +1231,8 @@ The Two.js object to clip from a group's rendering.
 
 <div class="instance function ">
 
-### Two.Group.clone
+## clone
+<span class="longname">Two.Group.clone</span>
 
 
 
@@ -1252,7 +1276,7 @@ Create a new instance of [Two.Group](/documentation/group) with the same propert
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L477)
+  [group.js:477](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L477)
 
 </div>
 
@@ -1269,7 +1293,8 @@ Create a new instance of [Two.Group](/documentation/group) with the same propert
 
 <div class="instance function ">
 
-### Two.Group.toObject
+## toObject
+<span class="longname">Two.Group.toObject</span>
 
 
 
@@ -1306,7 +1331,7 @@ Return a JSON compatible plain object that represents the group.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L522)
+  [group.js:522](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L522)
 
 </div>
 
@@ -1323,7 +1348,8 @@ Return a JSON compatible plain object that represents the group.
 
 <div class="instance function ">
 
-### Two.Group.corner
+## corner
+<span class="longname">Two.Group.corner</span>
 
 
 
@@ -1347,7 +1373,7 @@ Orient the children of the group to the upper left-hand corner of that group.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L552)
+  [group.js:552](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L552)
 
 </div>
 
@@ -1364,7 +1390,8 @@ Orient the children of the group to the upper left-hand corner of that group.
 
 <div class="instance function ">
 
-### Two.Group.center
+## center
+<span class="longname">Two.Group.center</span>
 
 
 
@@ -1388,7 +1415,7 @@ Orient the children of the group to the center of that group.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L571)
+  [group.js:571](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L571)
 
 </div>
 
@@ -1405,7 +1432,8 @@ Orient the children of the group to the center of that group.
 
 <div class="instance function ">
 
-### Two.Group.getById
+## getById
+<span class="longname">Two.Group.getById</span>
 
 
 
@@ -1444,7 +1472,7 @@ Recursively search for id. Returns the first element found.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L594)
+  [group.js:594](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L594)
 
 </div>
 
@@ -1461,7 +1489,8 @@ Recursively search for id. Returns the first element found.
 
 <div class="instance function ">
 
-### Two.Group.getByClassName
+## getByClassName
+<span class="longname">Two.Group.getByClassName</span>
 
 
 
@@ -1500,7 +1529,7 @@ Recursively search for classes. Returns an array of matching elements.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L618)
+  [group.js:618](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L618)
 
 </div>
 
@@ -1517,7 +1546,8 @@ Recursively search for classes. Returns an array of matching elements.
 
 <div class="instance function ">
 
-### Two.Group.getByType
+## getByType
+<span class="longname">Two.Group.getByType</span>
 
 
 
@@ -1556,7 +1586,7 @@ Recursively search for children of a specific type, e.g. [Two.Path](/documentati
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L641)
+  [group.js:641](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L641)
 
 </div>
 
@@ -1573,7 +1603,8 @@ Recursively search for children of a specific type, e.g. [Two.Path](/documentati
 
 <div class="instance function ">
 
-### Two.Group.add
+## add
+<span class="longname">Two.Group.add</span>
 
 
 
@@ -1604,7 +1635,7 @@ Add objects to the group.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L664)
+  [group.js:664](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L664)
 
 </div>
 
@@ -1621,7 +1652,8 @@ Add objects to the group.
 
 <div class="instance function ">
 
-### Two.Group.add
+## add
+<span class="longname">Two.Group.add</span>
 
 
 
@@ -1652,7 +1684,7 @@ Remove objects from the group.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L698)
+  [group.js:698](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L698)
 
 </div>
 
@@ -1669,7 +1701,8 @@ Remove objects from the group.
 
 <div class="instance function ">
 
-### Two.Group.getBoundingClientRect
+## getBoundingClientRect
+<span class="longname">Two.Group.getBoundingClientRect</span>
 
 
 
@@ -1715,7 +1748,7 @@ Return an object with top, left, right, bottom, width, and height parameters of 
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L741)
+  [group.js:741](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L741)
 
 </div>
 
@@ -1732,7 +1765,8 @@ Return an object with top, left, right, bottom, width, and height parameters of 
 
 <div class="instance function ">
 
-### Two.Group.noFill
+## noFill
+<span class="longname">Two.Group.noFill</span>
 
 
 
@@ -1756,7 +1790,7 @@ Apply `noFill` method to all child shapes.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L813)
+  [group.js:813](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L813)
 
 </div>
 
@@ -1773,7 +1807,8 @@ Apply `noFill` method to all child shapes.
 
 <div class="instance function ">
 
-### Two.Group.noStroke
+## noStroke
+<span class="longname">Two.Group.noStroke</span>
 
 
 
@@ -1797,7 +1832,7 @@ Apply `noStroke` method to all child shapes.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L825)
+  [group.js:825](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L825)
 
 </div>
 
@@ -1814,7 +1849,8 @@ Apply `noStroke` method to all child shapes.
 
 <div class="instance function ">
 
-### Two.Group.subdivide
+## subdivide
+<span class="longname">Two.Group.subdivide</span>
 
 
 
@@ -1838,7 +1874,7 @@ Apply `subdivide` method to all child shapes.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L837)
+  [group.js:837](https://github.com/jonobr1/two.js/blob/dev/src/group.js#L837)
 
 </div>
 

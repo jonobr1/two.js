@@ -7,7 +7,7 @@ pageClass: documentation-class
 
 <div class="extends">
 
-__Extends__: `Two.Events`
+__Extends__: [Two.Events](/documentation/events/)
 
 </div>
 
@@ -16,9 +16,7 @@ An `Array` like object with additional event propagation on actions. `pop`, `shi
 
 
 <div class="meta">
-
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/collection.js#L4)
-
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/collection.js" />
 </div>
 
 

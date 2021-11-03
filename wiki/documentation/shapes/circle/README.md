@@ -7,7 +7,7 @@ pageClass: documentation-class
 
 <div class="extends">
 
-__Extends__: `Two.Path`
+__Extends__: [Two.Path](/documentation/path/)
 
 </div>
 
@@ -16,14 +16,12 @@ __Extends__: `Two.Path`
 
 
 <div class="meta">
-
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js#L11)
-
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js" />
 </div>
 
 
 
-## Constructor
+### Constructor
 
 
 | Argument | Description |
@@ -39,7 +37,8 @@ __Extends__: `Two.Path`
 
 <div class="static member ">
 
-### Two.Circle.Properties
+## Properties
+<span class="longname">Two.Circle.Properties</span>
 
 
 
@@ -63,7 +62,7 @@ A list of properties that are on every [Two.Circle](/documentation/circle).
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js#L53)
+  [circle.js:53](https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js#L53)
 
 </div>
 
@@ -80,7 +79,8 @@ A list of properties that are on every [Two.Circle](/documentation/circle).
 
 <div class="static function ">
 
-### Two.Circle.MakeObservable
+## MakeObservable
+<span class="longname">Two.Circle.MakeObservable</span>
 
 
 
@@ -111,7 +111,7 @@ Convenience function to apply observable qualities of a [Two.Circle](/documentat
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js#L59)
+  [circle.js:59](https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js#L59)
 
 </div>
 
@@ -128,7 +128,8 @@ Convenience function to apply observable qualities of a [Two.Circle](/documentat
 
 <div class="instance member ">
 
-### Two.Circle.radius
+## radius
+<span class="longname">Two.Circle.radius</span>
 
 
 
@@ -152,7 +153,7 @@ The size of the radius of the circle.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js#L32)
+  [circle.js:32](https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js#L32)
 
 </div>
 
@@ -169,7 +170,8 @@ The size of the radius of the circle.
 
 <div class="instance function ">
 
-### Two.Circle.clone
+## clone
+<span class="longname">Two.Circle.clone</span>
 
 
 
@@ -213,7 +215,7 @@ Create a new instance of [Two.Circle](/documentation/circle) with the same prope
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js#L157)
+  [circle.js:157](https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js#L157)
 
 </div>
 
@@ -230,7 +232,8 @@ Create a new instance of [Two.Circle](/documentation/circle) with the same prope
 
 <div class="instance function ">
 
-### Two.Circle.toObject
+## toObject
+<span class="longname">Two.Circle.toObject</span>
 
 
 
@@ -267,7 +270,7 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  [Source Code](https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js#L190)
+  [circle.js:190](https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js#L190)
 
 </div>
 
