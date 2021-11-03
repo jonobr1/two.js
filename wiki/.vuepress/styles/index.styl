@@ -339,6 +339,20 @@ body {
     background-size: 100%;
     background-repeat: no-repeat;
   }
+
+  a {
+    color: $purple;
+    border-bottom: 1px solid lighten($purple, 40%);
+
+    &:hover {
+      color: lighten($purple, 40%);
+      border-bottom-color: lighten($purple, 60%);
+    }
+  }
+
+  code {
+    color: $purple;
+  }
 }
 
 body {
