@@ -25,7 +25,7 @@
 </script>
 
 <style lang="stylus" scoped>
-  .button {
+  a.button {
     display: inline-block
     background: $greenbg;
     color: $green;
@@ -47,6 +47,7 @@
       background: $orangebg;
       color: $orange;
       border-color: $orange;
+      text-decoration: none;
 
       .icon {
         background-color: $orange;  

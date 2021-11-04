@@ -13,7 +13,7 @@ body {
   }
 
   .page-edit .edit-link a,
-  a {
+  .page a {
     color: $green;
     text-decoration: none;
 
@@ -21,8 +21,9 @@ body {
       text-decoration: none;
     }
     &:hover {
-      color: $orange;
+      color:  tint($green, 30%);
       text-decoration: none;
+      border-bottom: 1px solid tint($green, 60%);
     }
     &.header-anchor {
       border-bottom-width: 0;
@@ -31,10 +32,6 @@ body {
 
   .theme-default-content {
 
-    a:hover {
-      text-decoration: none;
-    }
-
     code {
       font-family: "anonymous-pro", monospace;
       font-size: .95rem;
@@ -42,11 +39,6 @@ body {
       padding: .2rem .4rem;
       border-radius: 4px;
       background: #f6f6f6;
-    }
-
-    a code {
-      background: transparent;
-      padding: 0;
     }
 
     pre[class*="language-"] code {
@@ -285,7 +277,14 @@ body {
 }
 
 .theme-default-content:not(.custom) {
-  
+  a:hover {
+    text-decoration: none;
+  }
+
+  .icon.outbound {
+    padding-left: 5px;
+  }
+
   h1 {
     font-size: 2.25rem;
   }
@@ -302,11 +301,21 @@ body {
   h2.longname {
     visibility: visible;
     font-size: 1.25rem;
-    color: $orange;
-    border-left: 2px solid $orange;
-    padding: .25rem 0 .4rem 1.25rem;
+    padding: 0;
     margin: 0 0 1.5rem 0;
     height: auto;
+
+    a{
+      color: $orange;
+      text-decoration: none;
+      border-left: 2px solid $orange;
+      padding: .25rem 0 .4rem 1.25rem;
+
+      &:hover {
+        color: $red;
+        border-color: $red;
+      }
+    }
 
     .prefix {
       //font-weight: normal;
@@ -371,11 +380,13 @@ body {
     &:hover {
       color: lighten($purple, 40%);
       border-bottom-color: lighten($purple, 60%);
+      text-decoration: none;
     }
   }
 
   code {
     color: $purple;
+    background: transparent;
   }
 }
 
@@ -383,6 +394,10 @@ body {
   .sidebar-heading {
     color: $sidebarText;
     font-size: 1rem;
+
+    &:hover {
+      color: $red;
+    }
 
     &.open {
       color: $orange;
@@ -394,9 +409,15 @@ body {
     color: $sidebarText;
     font-size: 1rem;
 
+    &:hover {
+      color: $red;
+      border-bottom: none;
+    }
+
     &.active {
       color: $orange;
       border-left-color: transparent;
+      border-bottom: none;
     }
   }
 
@@ -406,17 +427,21 @@ body {
     }
 
     .sidebar-sub-headers {
-      border-left: 2px solid $orange;
-      margin-left: 3em;
+      //border-left: 2px solid $orange;
+      margin-left: 2em;
       padding-left: 0px;
       font-size: 1rem;
 
       a.sidebar-link {
         padding-left: 1rem;
         color: $orange;
+        border-left: 2px solid $orange;
 
         &:hover {
           color: $red;
+          border-color: $red;
+          border-bottom: none;
+          box-shadow: inset 1px 0 0 0px $red;
         }
 
         &:.active {
@@ -479,6 +504,31 @@ table tr:last-child td:last-child {
   border-bottom-right-radius: 6px;
 }
 
+.meta {
+  a {
+    code {
+      background: transparent;
+      padding: 0;
+    }
+
+    &:hover {
+      border-bottom: 1px solid lighten($codeColor, 60%);
+      
+      code {
+        color: lighten($codeColor, 40%);
+      }
+    }
+  }
+}
+
+.change-log .version {
+  font-size: 1.25rem;
+  margin-left: .5rem;
+  display: inline-block;
+
+  p { display: inline; }
+}
+
 .returns {
   margin: 0 0 1.25rem 0;
-  }
+}

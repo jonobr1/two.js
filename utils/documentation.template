@@ -1,5 +1,5 @@
 ---
-pageClass: documentation-class
+pageClass: docs
 ---
 
 # <%= root.longname %>
@@ -35,7 +35,7 @@ __Extends__: [<%= root.augments %>](<%= root.augmentsHref %>)
 
 ## <%= item.shortname %>
 
-<h2 class="longname" aria-hidden="true"><span class="prefix"><%= item.prefixname %></span><span class="shortname"><%= item.shortname %></span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#<%= item.shortname %>"><span class="prefix"><%= item.prefixname %></span><span class="shortname"><%= item.shortname %></span></a></h2>
 
 <% if (item.overloaded) { %>
 <div class="overloaded-label">
