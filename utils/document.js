@@ -46,7 +46,7 @@ _.each(sourceFiles, function(file) {
       object.see = _.map(object.see, expandSee, object);
 
       var sn;
-      sn = object.longname.replace(/\#/ig, '.');
+      sn = object.longname.replace(/#/ig, '.');
       var snList = sn.split('.');
       var snIndex = (snList.length > 2) ? 2 : 1;
       object.shortname = snList.slice(snIndex).join('.');
