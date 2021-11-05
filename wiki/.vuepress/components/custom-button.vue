@@ -35,6 +35,10 @@
     margin: 0 1rem .5rem 0;
     position: relative;
     
+    span {
+      display: inline-block;
+    }
+
     &.source {
       position: fixed;
       top: 6rem;
@@ -85,6 +89,10 @@
 
     .label {
       font-weight: 600;
+    }
+
+    .size {
+      font-weight: 200;
     }
   }
 

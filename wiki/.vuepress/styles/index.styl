@@ -1,6 +1,6 @@
 body {
 
-  font-family: "proxima-nova", arial, sans-serif;
+  font-family: $fontFamily;
   font-size: 1rem;
   line-height: 1.5rem;
   // word-spacing: 0.1875rem;
@@ -16,6 +16,12 @@ body {
   .page a {
     color: $green;
     text-decoration: none;
+    font-weight: 600;
+    transition: color .2s, border-color .2s, background-color .2s;
+
+    span { //the .icon.outbound is contained in a span that adds a space to the end of links.
+      display: none;
+    }
 
     &:visited {
       text-decoration: none;
@@ -81,6 +87,8 @@ body {
       padding: 1rem;
       margin: .5em 0;
       overflow: auto;
+      font-weight: 600;
+      font-size: 1rem;
     }
 
     :not(pre) > code[class*="language-"],
@@ -323,12 +331,16 @@ body {
       }
     }
 
+    span {
+      display: inline-block;
+    }
+
     .prefix {
       //font-weight: normal;
     }
 
     .shortname {
-      //font-weight: bold;
+      //font-weight: 600;  
     }
   }
   h3 {
@@ -415,11 +427,15 @@ body {
     font-size: 1rem;
 
     &:hover {
-      color: $red;
+      color: $orange;
     }
 
     &.open {
       color: $orange;
+
+      &:hover {
+        color: $red;
+      }
     }
 
   }
@@ -485,13 +501,17 @@ body {
 
       a.sidebar-link {
         display:inline-block;
-        font-size: 1.1em;
-        line-height: 1.7;
-        font-weight: bold;
+        font-size: 1rem;
+        line-height: 1.7rem;
+        font-weight: 600;
         padding: 0.35rem 1rem 0.35rem 1.25rem;
         border-left: 0.25rem solid transparent;
       }
   }
+}
+
+th {
+  font-weight: 600;
 }
 
 tr {

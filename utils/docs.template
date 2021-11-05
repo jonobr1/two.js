@@ -7,7 +7,7 @@ pageClass: docs
 <% if (root.augments) { %>
 <div class="extends">
 
-__Extends__: [<%= root.augments %>](<%= root.augmentsHref %>)
+Extends: [<%= root.augments %>](<%= root.augmentsHref %>)
 
 </div>
 <% } %>
