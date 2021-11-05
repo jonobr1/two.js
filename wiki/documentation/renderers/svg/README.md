@@ -16,7 +16,7 @@ This class is used by [Two](/documentation/) when constructing with `type` of `T
 
 
 <div class="meta">
-  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\renderers/svg.js" />
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/renderers/svg.js" />
 </div>
 
 
@@ -61,7 +61,7 @@ A massive object filled with utility functions and properties to render Two.js o
 
 <div class="meta">
 
-  [`svg.js:1083`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\renderers/svg.js#L1083)
+  [`svg.js:1083`](https://github.com/jonobr1/two.js/blob/dev/src/renderers/svg.js#L1083)
 
 </div>
 
@@ -104,7 +104,7 @@ The `<svg />` associated with the Two.js scene.
 
 <div class="meta">
 
-  [`svg.js:1057`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\renderers/svg.js#L1057)
+  [`svg.js:1057`](https://github.com/jonobr1/two.js/blob/dev/src/renderers/svg.js#L1057)
 
 </div>
 
@@ -147,7 +147,7 @@ The root group of the scenegraph.
 
 <div class="meta">
 
-  [`svg.js:1063`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\renderers/svg.js#L1063)
+  [`svg.js:1063`](https://github.com/jonobr1/two.js/blob/dev/src/renderers/svg.js#L1063)
 
 </div>
 
@@ -190,7 +190,7 @@ The `<defs />` to apply gradients, patterns, and bitmap imagery.
 
 <div class="meta">
 
-  [`svg.js:1070`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\renderers/svg.js#L1070)
+  [`svg.js:1070`](https://github.com/jonobr1/two.js/blob/dev/src/renderers/svg.js#L1070)
 
 </div>
 
@@ -241,7 +241,7 @@ Change the size of the renderer.
 
 <div class="meta">
 
-  [`svg.js:1095`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\renderers/svg.js#L1095)
+  [`svg.js:1095`](https://github.com/jonobr1/two.js/blob/dev/src/renderers/svg.js#L1095)
 
 </div>
 
@@ -294,7 +294,7 @@ Render the current scene to the `<svg />`.
 
 <div class="meta">
 
-  [`svg.js:1117`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\renderers/svg.js#L1117)
+  [`svg.js:1117`](https://github.com/jonobr1/two.js/blob/dev/src/renderers/svg.js#L1117)
 
 </div>
 

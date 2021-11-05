@@ -16,7 +16,7 @@ An `Array` like object with additional event propagation on actions. `pop`, `shi
 
 
 <div class="meta">
-  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/collection.js" />
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/collection.js" />
 </div>
 
 

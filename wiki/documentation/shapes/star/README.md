@@ -16,7 +16,7 @@ __Extends__: [Two.Path](/documentation/path/)
 
 
 <div class="meta">
-  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/star.js" />
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/shapes/star.js" />
 </div>
 
 
@@ -64,7 +64,7 @@ A list of properties that are on every [Two.Star](/documentation/star).
 
 <div class="meta">
 
-  [`star.js:73`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/star.js#L73)
+  [`star.js:73`](https://github.com/jonobr1/two.js/blob/dev/src/shapes/star.js#L73)
 
 </div>
 
@@ -114,7 +114,7 @@ Convenience function to apply observable qualities of a [Two.Star](/documentatio
 
 <div class="meta">
 
-  [`star.js:79`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/star.js#L79)
+  [`star.js:79`](https://github.com/jonobr1/two.js/blob/dev/src/shapes/star.js#L79)
 
 </div>
 
@@ -157,7 +157,7 @@ The size of the inner radius of the star.
 
 <div class="meta">
 
-  [`star.js:36`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/star.js#L36)
+  [`star.js:36`](https://github.com/jonobr1/two.js/blob/dev/src/shapes/star.js#L36)
 
 </div>
 
@@ -200,7 +200,7 @@ The size of the outer radius of the star.
 
 <div class="meta">
 
-  [`star.js:44`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/star.js#L44)
+  [`star.js:44`](https://github.com/jonobr1/two.js/blob/dev/src/shapes/star.js#L44)
 
 </div>
 
@@ -243,7 +243,7 @@ The amount of sides the star has.
 
 <div class="meta">
 
-  [`star.js:52`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/star.js#L52)
+  [`star.js:52`](https://github.com/jonobr1/two.js/blob/dev/src/shapes/star.js#L52)
 
 </div>
 
@@ -301,7 +301,7 @@ Create a new instance of [Two.Star](/documentation/star) with the same propertie
 
 <div class="meta">
 
-  [`star.js:198`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/star.js#L198)
+  [`star.js:198`](https://github.com/jonobr1/two.js/blob/dev/src/shapes/star.js#L198)
 
 </div>
 
@@ -352,7 +352,7 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  [`star.js:235`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/star.js#L235)
+  [`star.js:235`](https://github.com/jonobr1/two.js/blob/dev/src/shapes/star.js#L235)
 
 </div>
 

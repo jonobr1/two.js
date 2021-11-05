@@ -10,7 +10,7 @@ An arbitrary class to manage a directory of things. Mainly used for keeping tabs
 
 
 <div class="meta">
-  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/registry.js" />
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/registry.js" />
 </div>
 
 
@@ -57,7 +57,7 @@ Adds any value to the directory. Assigned by the `id`.
 
 <div class="meta">
 
-  [`registry.js:18`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/registry.js#L18)
+  [`registry.js:18`](https://github.com/jonobr1/two.js/blob/dev/src/registry.js#L18)
 
 </div>
 
@@ -107,7 +107,7 @@ Remove any value from the directory by its `id`.
 
 <div class="meta">
 
-  [`registry.js:30`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/registry.js#L30)
+  [`registry.js:30`](https://github.com/jonobr1/two.js/blob/dev/src/registry.js#L30)
 
 </div>
 
@@ -167,7 +167,7 @@ Get a registered value by its `id`.
 
 <div class="meta">
 
-  [`registry.js:41`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/registry.js#L41)
+  [`registry.js:41`](https://github.com/jonobr1/two.js/blob/dev/src/registry.js#L41)
 
 </div>
 
@@ -225,7 +225,7 @@ Convenience method to see if a value is registered to an `id` already.
 
 <div class="meta">
 
-  [`registry.js:52`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/registry.js#L52)
+  [`registry.js:52`](https://github.com/jonobr1/two.js/blob/dev/src/registry.js#L52)
 
 </div>
 

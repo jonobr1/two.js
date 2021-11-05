@@ -10,7 +10,7 @@ pageClass: docs
 
 
 <div class="meta">
-  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\extras\jsm/zui.js" />
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/extras/jsm/zui.js" />
 </div>
 
 

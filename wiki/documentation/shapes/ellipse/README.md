@@ -16,7 +16,7 @@ __Extends__: [Two.Path](/documentation/path/)
 
 
 <div class="meta">
-  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/ellipse.js" />
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/shapes/ellipse.js" />
 </div>
 
 
@@ -64,7 +64,7 @@ A list of properties that are on every [Two.Ellipse](/documentation/ellipse).
 
 <div class="meta">
 
-  [`ellipse.js:60`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/ellipse.js#L60)
+  [`ellipse.js:60`](https://github.com/jonobr1/two.js/blob/dev/src/shapes/ellipse.js#L60)
 
 </div>
 
@@ -114,7 +114,7 @@ Convenience function to apply observable qualities of a [Two.Ellipse](/documenta
 
 <div class="meta">
 
-  [`ellipse.js:66`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/ellipse.js#L66)
+  [`ellipse.js:66`](https://github.com/jonobr1/two.js/blob/dev/src/shapes/ellipse.js#L66)
 
 </div>
 
@@ -157,7 +157,7 @@ The width of the ellipse.
 
 <div class="meta">
 
-  [`ellipse.js:37`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/ellipse.js#L37)
+  [`ellipse.js:37`](https://github.com/jonobr1/two.js/blob/dev/src/shapes/ellipse.js#L37)
 
 </div>
 
@@ -200,7 +200,7 @@ The height of the ellipse.
 
 <div class="meta">
 
-  [`ellipse.js:45`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/ellipse.js#L45)
+  [`ellipse.js:45`](https://github.com/jonobr1/two.js/blob/dev/src/shapes/ellipse.js#L45)
 
 </div>
 
@@ -258,7 +258,7 @@ Create a new instance of [Two.Polygon](/documentation/polygon) with the same pro
 
 <div class="meta">
 
-  [`ellipse.js:176`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/ellipse.js#L176)
+  [`ellipse.js:176`](https://github.com/jonobr1/two.js/blob/dev/src/shapes/ellipse.js#L176)
 
 </div>
 
@@ -309,7 +309,7 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  [`ellipse.js:212`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/ellipse.js#L212)
+  [`ellipse.js:212`](https://github.com/jonobr1/two.js/blob/dev/src/shapes/ellipse.js#L212)
 
 </div>
 

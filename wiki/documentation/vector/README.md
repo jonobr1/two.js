@@ -10,7 +10,7 @@ A class to store x / y component vector data. In addition to storing data `Two.V
 
 
 <div class="meta">
-  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/vector.js" />
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/vector.js" />
 </div>
 
 
@@ -55,7 +55,7 @@ Handy reference to a vector with component values 0, 0 at all times.
 
 <div class="meta">
 
-  [`vector.js:29`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/vector.js#L29)
+  [`vector.js:29`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L29)
 
 </div>
 
@@ -114,7 +114,7 @@ Add two vectors together.
 
 <div class="meta">
 
-  [`vector.js:36`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/vector.js#L36)
+  [`vector.js:36`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L36)
 
 </div>
 
@@ -173,7 +173,7 @@ Subtract two vectors: `v2` from `v1`.
 
 <div class="meta">
 
-  [`vector.js:48`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/vector.js#L48)
+  [`vector.js:48`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L48)
 
 </div>
 
@@ -216,7 +216,7 @@ Alias for [Two.Vector.sub](/documentation/vector/#two-vector-sub).
 
 <div class="meta">
 
-  [`vector.js:60`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/vector.js#L60)
+  [`vector.js:60`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L60)
 
 </div>
 
@@ -271,7 +271,7 @@ The ratio betwen two points `v1` and `v2`.
 
 <div class="meta">
 
-  [`vector.js:69`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/vector.js#L69)
+  [`vector.js:69`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L69)
 
 </div>
 
@@ -326,7 +326,7 @@ The angle between points `v1` and `v2`.
 
 <div class="meta">
 
-  [`vector.js:82`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/vector.js#L82)
+  [`vector.js:82`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L82)
 
 </div>
 
@@ -381,7 +381,7 @@ The distance between points `v1` and `v2`. Distance is always positive.
 
 <div class="meta">
 
-  [`vector.js:109`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/vector.js#L109)
+  [`vector.js:109`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L109)
 
 </div>
 
@@ -436,7 +436,7 @@ The squared distance between points `v1` and `v2`.
 
 <div class="meta">
 
-  [`vector.js:122`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/vector.js#L122)
+  [`vector.js:122`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L122)
 
 </div>
 
@@ -486,7 +486,7 @@ Convenience function to apply observable qualities of a [Two.Vector](/documentat
 
 <div class="meta">
 
-  [`vector.js:138`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/vector.js#L138)
+  [`vector.js:138`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L138)
 
 </div>
 
@@ -529,7 +529,7 @@ The horizontal x-component of the vector.
 
 <div class="meta">
 
-  [`vector.js:13`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/vector.js#L13)
+  [`vector.js:13`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L13)
 
 </div>
 
@@ -572,7 +572,7 @@ The vertical y-component of the vector.
 
 <div class="meta">
 
-  [`vector.js:19`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/vector.js#L19)
+  [`vector.js:19`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L19)
 
 </div>
 
@@ -623,7 +623,7 @@ Set the x / y components of a vector to specific number values.
 
 <div class="meta">
 
-  [`vector.js:177`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/vector.js#L177)
+  [`vector.js:177`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L177)
 
 </div>
 
@@ -673,7 +673,7 @@ Copy the x / y components of another object `v`.
 
 <div class="meta">
 
-  [`vector.js:190`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/vector.js#L190)
+  [`vector.js:190`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L190)
 
 </div>
 
@@ -716,7 +716,7 @@ Set the x / y component values of the vector to zero.
 
 <div class="meta">
 
-  [`vector.js:202`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/vector.js#L202)
+  [`vector.js:202`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L202)
 
 </div>
 
@@ -759,7 +759,7 @@ Create a new vector and copy the existing values onto the newly created instance
 
 <div class="meta">
 
-  [`vector.js:213`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/vector.js#L213)
+  [`vector.js:213`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L213)
 
 </div>
 
@@ -815,7 +815,7 @@ Add an object with x / y component values to the instance.
 
 <div class="meta">
 
-  [`vector.js:222`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/vector.js#L222)
+  [`vector.js:222`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L222)
 
 </div>
 
@@ -877,7 +877,7 @@ Add the **same** number to both x / y component values of the instance.
 
 <div class="meta">
 
-  [`vector.js:230`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/vector.js#L230)
+  [`vector.js:230`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L230)
 
 </div>
 
@@ -940,7 +940,7 @@ Add `x` / `y` values to their respective component value on the instance.
 
 <div class="meta">
 
-  [`vector.js:238`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/vector.js#L238)
+  [`vector.js:238`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L238)
 
 </div>
 
@@ -989,7 +989,7 @@ Alias for [Two.Vector.add](/documentation/vector/#two-vector-add).
 
 <div class="meta">
 
-  [`vector.js:264`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/vector.js#L264)
+  [`vector.js:264`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L264)
 
 </div>
 
@@ -1045,7 +1045,7 @@ Subtract an object with x / y component values to the instance.
 
 <div class="meta">
 
-  [`vector.js:273`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/vector.js#L273)
+  [`vector.js:273`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L273)
 
 </div>
 
@@ -1107,7 +1107,7 @@ Subtract the **same** number to both x / y component values of the instance.
 
 <div class="meta">
 
-  [`vector.js:281`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/vector.js#L281)
+  [`vector.js:281`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L281)
 
 </div>
 
@@ -1170,7 +1170,7 @@ Subtract `x` / `y` values to their respective component value on the instance.
 
 <div class="meta">
 
-  [`vector.js:289`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/vector.js#L289)
+  [`vector.js:289`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L289)
 
 </div>
 
@@ -1219,7 +1219,7 @@ Alias for [Two.Vector.sub](/documentation/vector/#two-vector-sub).
 
 <div class="meta">
 
-  [`vector.js:315`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/vector.js#L315)
+  [`vector.js:315`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L315)
 
 </div>
 
@@ -1262,7 +1262,7 @@ Alias for [Two.Vector.sub](/documentation/vector/#two-vector-sub).
 
 <div class="meta">
 
-  [`vector.js:324`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/vector.js#L324)
+  [`vector.js:324`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L324)
 
 </div>
 
@@ -1305,7 +1305,7 @@ Alias for [Two.Vector.sub](/documentation/vector/#two-vector-sub).
 
 <div class="meta">
 
-  [`vector.js:333`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/vector.js#L333)
+  [`vector.js:333`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L333)
 
 </div>
 
@@ -1361,7 +1361,7 @@ Multiply an object with x / y component values to the instance.
 
 <div class="meta">
 
-  [`vector.js:342`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/vector.js#L342)
+  [`vector.js:342`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L342)
 
 </div>
 
@@ -1423,7 +1423,7 @@ Multiply the **same** number to both x / y component values of the instance.
 
 <div class="meta">
 
-  [`vector.js:350`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/vector.js#L350)
+  [`vector.js:350`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L350)
 
 </div>
 
@@ -1486,7 +1486,7 @@ Multiply `x` / `y` values to their respective component value on the instance.
 
 <div class="meta">
 
-  [`vector.js:358`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/vector.js#L358)
+  [`vector.js:358`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L358)
 
 </div>
 
@@ -1535,7 +1535,7 @@ Alias for [Two.Vector.multiply](/documentation/vector/#two-vector-multiply).
 
 <div class="meta">
 
-  [`vector.js:384`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/vector.js#L384)
+  [`vector.js:384`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L384)
 
 </div>
 
@@ -1585,7 +1585,7 @@ Mulitiply the vector by a single number. Shorthand to call [Two.Vector.multiply]
 
 <div class="meta">
 
-  [`vector.js:393`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/vector.js#L393)
+  [`vector.js:393`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L393)
 
 </div>
 
@@ -1641,7 +1641,7 @@ Divide an object with x / y component values to the instance.
 
 <div class="meta">
 
-  [`vector.js:403`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/vector.js#L403)
+  [`vector.js:403`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L403)
 
 </div>
 
@@ -1703,7 +1703,7 @@ Divide the **same** number to both x / y component values of the instance.
 
 <div class="meta">
 
-  [`vector.js:411`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/vector.js#L411)
+  [`vector.js:411`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L411)
 
 </div>
 
@@ -1766,7 +1766,7 @@ Divide `x` / `y` values to their respective component value on the instance.
 
 <div class="meta">
 
-  [`vector.js:419`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/vector.js#L419)
+  [`vector.js:419`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L419)
 
 </div>
 
@@ -1815,7 +1815,7 @@ Alias for [Two.Vector.divide](/documentation/vector/#two-vector-divide).
 
 <div class="meta">
 
-  [`vector.js:451`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/vector.js#L451)
+  [`vector.js:451`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L451)
 
 </div>
 
@@ -1865,7 +1865,7 @@ Divide the vector by a single number. Shorthand to call [Two.Vector.divide](/doc
 
 <div class="meta">
 
-  [`vector.js:460`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/vector.js#L460)
+  [`vector.js:460`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L460)
 
 </div>
 
@@ -1908,7 +1908,7 @@ Invert each component's sign value.
 
 <div class="meta">
 
-  [`vector.js:470`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/vector.js#L470)
+  [`vector.js:470`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L470)
 
 </div>
 
@@ -1959,7 +1959,7 @@ Get the [dot product](https://en.wikipedia.org/wiki/Dot_product) of the vector.
 
 <div class="meta">
 
-  [`vector.js:479`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/vector.js#L479)
+  [`vector.js:479`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L479)
 
 </div>
 
@@ -2010,7 +2010,7 @@ Get the length of a vector.
 
 <div class="meta">
 
-  [`vector.js:489`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/vector.js#L489)
+  [`vector.js:489`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L489)
 
 </div>
 
@@ -2061,7 +2061,7 @@ Get the length of the vector to the power of two. Widely used as less expensive 
 
 <div class="meta">
 
-  [`vector.js:499`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/vector.js#L499)
+  [`vector.js:499`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L499)
 
 </div>
 
@@ -2104,7 +2104,7 @@ Normalize the vector from negative one to one.
 
 <div class="meta">
 
-  [`vector.js:509`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/vector.js#L509)
+  [`vector.js:509`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L509)
 
 </div>
 
@@ -2155,7 +2155,7 @@ Get the distance between two vectors.
 
 <div class="meta">
 
-  [`vector.js:518`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/vector.js#L518)
+  [`vector.js:518`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L518)
 
 </div>
 
@@ -2206,7 +2206,7 @@ Get the distance between two vectors to the power of two. Widely used as less ex
 
 <div class="meta">
 
-  [`vector.js:528`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/vector.js#L528)
+  [`vector.js:528`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L528)
 
 </div>
 
@@ -2256,7 +2256,7 @@ Set the length of a vector.
 
 <div class="meta">
 
-  [`vector.js:540`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/vector.js#L540)
+  [`vector.js:540`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L540)
 
 </div>
 
@@ -2315,7 +2315,7 @@ Qualify if one vector roughly equal another. With a margin of error defined by e
 
 <div class="meta">
 
-  [`vector.js:550`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/vector.js#L550)
+  [`vector.js:550`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L550)
 
 </div>
 
@@ -2366,7 +2366,7 @@ Linear interpolate one vector to another by an amount `t` defined as a zero to o
 
 <div class="meta">
 
-  [`vector.js:563`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/vector.js#L563)
+  [`vector.js:563`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L563)
 
 </div>
 
@@ -2430,7 +2430,7 @@ Check to see if vector is roughly zero, based on the `epsilon` precision value.
 
 <div class="meta">
 
-  [`vector.js:577`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/vector.js#L577)
+  [`vector.js:577`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L577)
 
 </div>
 
@@ -2481,7 +2481,7 @@ Return a comma-separated string of x, y value. Great for storing in a database.
 
 <div class="meta">
 
-  [`vector.js:589`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/vector.js#L589)
+  [`vector.js:589`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L589)
 
 </div>
 
@@ -2532,7 +2532,7 @@ Return a JSON compatible plain object that represents the vector.
 
 <div class="meta">
 
-  [`vector.js:599`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/vector.js#L599)
+  [`vector.js:599`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L599)
 
 </div>
 
@@ -2582,7 +2582,7 @@ Rotate a vector.
 
 <div class="meta">
 
-  [`vector.js:609`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/vector.js#L609)
+  [`vector.js:609`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L609)
 
 </div>
 

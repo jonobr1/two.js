@@ -16,7 +16,7 @@ The foundational transformation object for the Two.js scenegraph.
 
 
 <div class="meta">
-  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/shape.js" />
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/shape.js" />
 </div>
 
 
@@ -55,7 +55,7 @@ Utility function used in conjunction with event handlers to update the flagMatri
 
 <div class="meta">
 
-  [`shape.js:86`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/shape.js#L86)
+  [`shape.js:86`](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L86)
 
 </div>
 
@@ -105,7 +105,7 @@ Convenience function to apply observable qualities of a [Two.Shape](/documentati
 
 <div class="meta">
 
-  [`shape.js:95`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/shape.js#L95)
+  [`shape.js:95`](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L95)
 
 </div>
 
@@ -154,7 +154,7 @@ Object access to store relevant renderer specific variables. Warning: manipulati
 
 <div class="meta">
 
-  [`shape.js:17`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/shape.js#L17)
+  [`shape.js:17`](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L17)
 
 </div>
 
@@ -207,7 +207,7 @@ Session specific unique identifier.
 
 <div class="meta">
 
-  [`shape.js:27`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/shape.js#L27)
+  [`shape.js:27`](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L27)
 
 </div>
 
@@ -266,7 +266,7 @@ A list of class strings stored if imported / interpreted  from an SVG element.
 
 <div class="meta">
 
-  [`shape.js:34`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/shape.js#L34)
+  [`shape.js:34`](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L34)
 
 </div>
 
@@ -315,7 +315,7 @@ The transformation matrix of the shape.
 
 <div class="meta">
 
-  [`shape.js:41`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/shape.js#L41)
+  [`shape.js:41`](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L41)
 
 </div>
 
@@ -368,7 +368,7 @@ The x and y value for where the shape is placed relative to its parent.
 
 <div class="meta">
 
-  [`shape.js:49`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/shape.js#L49)
+  [`shape.js:49`](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L49)
 
 </div>
 
@@ -411,7 +411,7 @@ The value in Number for how much the shape is rotated relative to its parent.
 
 <div class="meta">
 
-  [`shape.js:55`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/shape.js#L55)
+  [`shape.js:55`](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L55)
 
 </div>
 
@@ -454,7 +454,7 @@ The value for how much the shape is scaled relative to its parent.
 
 <div class="meta">
 
-  [`shape.js:61`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/shape.js#L61)
+  [`shape.js:61`](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L61)
 
 </div>
 
@@ -513,7 +513,7 @@ Skew the shape by an angle in the x axis direction.
 
 <div class="meta">
 
-  [`shape.js:68`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/shape.js#L68)
+  [`shape.js:68`](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L68)
 
 </div>
 
@@ -562,7 +562,7 @@ Skew the shape by an angle in the y axis direction.
 
 <div class="meta">
 
-  [`shape.js:75`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/shape.js#L75)
+  [`shape.js:75`](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L75)
 
 </div>
 
@@ -605,7 +605,7 @@ A class to be applied to the element to be compatible with CSS styling.
 
 <div class="meta">
 
-  [`shape.js:336`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/shape.js#L336)
+  [`shape.js:336`](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L336)
 
 </div>
 
@@ -665,7 +665,7 @@ Convenience method to add itself to the scenegraph.
 
 <div class="meta">
 
-  [`shape.js:343`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/shape.js#L343)
+  [`shape.js:343`](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L343)
 
 </div>
 
@@ -723,7 +723,7 @@ Create a new [Two.Shape](/documentation/shape) with the same values as the curre
 
 <div class="meta">
 
-  [`shape.js:354`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/shape.js#L354)
+  [`shape.js:354`](https://github.com/jonobr1/two.js/blob/dev/src/shape.js#L354)
 
 </div>
 

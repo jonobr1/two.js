@@ -16,7 +16,7 @@ This class is used by [Two](/documentation/) when constructing with `type` of `T
 
 
 <div class="meta">
-  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\renderers/canvas.js" />
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/renderers/canvas.js" />
 </div>
 
 
@@ -63,7 +63,7 @@ A massive object filled with utility functions and properties to render Two.js o
 
 <div class="meta">
 
-  [`canvas.js:937`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\renderers/canvas.js#L937)
+  [`canvas.js:937`](https://github.com/jonobr1/two.js/blob/dev/src/renderers/canvas.js#L937)
 
 </div>
 
@@ -106,7 +106,7 @@ The `<canvas />` associated with the Two.js scene.
 
 <div class="meta">
 
-  [`canvas.js:903`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\renderers/canvas.js#L903)
+  [`canvas.js:903`](https://github.com/jonobr1/two.js/blob/dev/src/renderers/canvas.js#L903)
 
 </div>
 
@@ -149,7 +149,7 @@ Associated two dimensional context to render on the `<canvas />`.
 
 <div class="meta">
 
-  [`canvas.js:909`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\renderers/canvas.js#L909)
+  [`canvas.js:909`](https://github.com/jonobr1/two.js/blob/dev/src/renderers/canvas.js#L909)
 
 </div>
 
@@ -192,7 +192,7 @@ Determines whether the canvas clears the background each draw call.
 
 <div class="meta">
 
-  [`canvas.js:915`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\renderers/canvas.js#L915)
+  [`canvas.js:915`](https://github.com/jonobr1/two.js/blob/dev/src/renderers/canvas.js#L915)
 
 </div>
 
@@ -235,7 +235,7 @@ The root group of the scenegraph.
 
 <div class="meta">
 
-  [`canvas.js:926`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\renderers/canvas.js#L926)
+  [`canvas.js:926`](https://github.com/jonobr1/two.js/blob/dev/src/renderers/canvas.js#L926)
 
 </div>
 
@@ -295,7 +295,7 @@ Change the size of the renderer.
 
 <div class="meta">
 
-  [`canvas.js:949`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\renderers/canvas.js#L949)
+  [`canvas.js:949`](https://github.com/jonobr1/two.js/blob/dev/src/renderers/canvas.js#L949)
 
 </div>
 
@@ -338,7 +338,7 @@ Render the current scene to the `<canvas />`.
 
 <div class="meta">
 
-  [`canvas.js:979`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\renderers/canvas.js#L979)
+  [`canvas.js:979`](https://github.com/jonobr1/two.js/blob/dev/src/renderers/canvas.js#L979)
 
 </div>
 

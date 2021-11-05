@@ -10,7 +10,7 @@ Object inherited by many Two.js objects in order to facilitate custom events.
 
 
 <div class="meta">
-  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/events.js" />
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/events.js" />
 </div>
 
 
@@ -49,7 +49,7 @@ Object of different types of Two.js specific events.
 
 <div class="meta">
 
-  [`events.js:73`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/events.js#L73)
+  [`events.js:73`](https://github.com/jonobr1/two.js/blob/dev/src/events.js#L73)
 
 </div>
 
@@ -92,7 +92,7 @@ Alias for [Two.Events.on](/documentation/events/#two-events-on).
 
 <div class="meta">
 
-  [`events.js:93`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/events.js#L93)
+  [`events.js:93`](https://github.com/jonobr1/two.js/blob/dev/src/events.js#L93)
 
 </div>
 
@@ -135,7 +135,7 @@ Alias for [Two.Events.off](/documentation/events/#two-events-off).
 
 <div class="meta">
 
-  [`events.js:100`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/events.js#L100)
+  [`events.js:100`](https://github.com/jonobr1/two.js/blob/dev/src/events.js#L100)
 
 </div>
 
@@ -186,7 +186,7 @@ Call to add a listener to a specific event name.
 
 <div class="meta">
 
-  [`events.js:8`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/events.js#L8)
+  [`events.js:8`](https://github.com/jonobr1/two.js/blob/dev/src/events.js#L8)
 
 </div>
 
@@ -237,7 +237,7 @@ Call to remove listeners from a specific event. If only `name` is passed then al
 
 <div class="meta">
 
-  [`events.js:17`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/events.js#L17)
+  [`events.js:17`](https://github.com/jonobr1/two.js/blob/dev/src/events.js#L17)
 
 </div>
 
@@ -288,7 +288,7 @@ Call to trigger a custom event. Any additional arguments passed after the name w
 
 <div class="meta">
 
-  [`events.js:26`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/events.js#L26)
+  [`events.js:26`](https://github.com/jonobr1/two.js/blob/dev/src/events.js#L26)
 
 </div>
 

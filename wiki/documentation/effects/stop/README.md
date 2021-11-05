@@ -10,7 +10,7 @@ pageClass: docs
 
 
 <div class="meta">
-  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/stop.js" />
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js" />
 </div>
 
 
@@ -56,7 +56,7 @@ The current index being referenced for calculating a stop's default offset value
 
 <div class="meta">
 
-  [`stop.js:49`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/stop.js#L49)
+  [`stop.js:49`](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L49)
 
 </div>
 
@@ -99,7 +99,7 @@ A list of properties that are on every [Two.Stop](/documentation/stop).
 
 <div class="meta">
 
-  [`stop.js:55`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/stop.js#L55)
+  [`stop.js:55`](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L55)
 
 </div>
 
@@ -149,7 +149,7 @@ Convenience function to apply observable qualities of a [Two.Stop](/documentatio
 
 <div class="meta">
 
-  [`stop.js:65`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/stop.js#L65)
+  [`stop.js:65`](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L65)
 
 </div>
 
@@ -198,7 +198,7 @@ Object access to store relevant renderer specific variables. Warning: manipulati
 
 <div class="meta">
 
-  [`stop.js:14`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/stop.js#L14)
+  [`stop.js:14`](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L14)
 
 </div>
 
@@ -251,7 +251,7 @@ The offset percentage of the stop represented as a zero-to-one value.
 
 <div class="meta">
 
-  [`stop.js:23`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/stop.js#L23)
+  [`stop.js:23`](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L23)
 
 </div>
 
@@ -294,7 +294,7 @@ The alpha percentage of the stop represented as a zero-to-one value.
 
 <div class="meta">
 
-  [`stop.js:30`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/stop.js#L30)
+  [`stop.js:30`](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L30)
 
 </div>
 
@@ -337,7 +337,7 @@ The color of the stop.
 
 <div class="meta">
 
-  [`stop.js:36`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/stop.js#L36)
+  [`stop.js:36`](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L36)
 
 </div>
 
@@ -395,7 +395,7 @@ Create a new instance of [Two.Stop](/documentation/stop) with the same propertie
 
 <div class="meta">
 
-  [`stop.js:117`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/stop.js#L117)
+  [`stop.js:117`](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L117)
 
 </div>
 
@@ -446,7 +446,7 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  [`stop.js:136`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/stop.js#L136)
+  [`stop.js:136`](https://github.com/jonobr1/two.js/blob/dev/src/effects/stop.js#L136)
 
 </div>
 

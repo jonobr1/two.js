@@ -10,7 +10,7 @@ This is the base class for constructing different types of gradients with Two.js
 
 
 <div class="meta">
-  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/gradient.js" />
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js" />
 </div>
 
 
@@ -48,7 +48,7 @@ This is the base class for constructing different types of gradients with Two.js
 
 <div class="meta">
 
-  [`gradient.js:57`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/gradient.js#L57)
+  [`gradient.js:57`](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L57)
 
 </div>
 
@@ -97,7 +97,7 @@ A list of properties that are on every [Two.Gradient](/documentation/gradient).
 
 <div class="meta">
 
-  [`gradient.js:63`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/gradient.js#L63)
+  [`gradient.js:63`](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L63)
 
 </div>
 
@@ -147,7 +147,7 @@ Convenience function to apply observable qualities of a [Two.Gradient](/document
 
 <div class="meta">
 
-  [`gradient.js:71`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/gradient.js#L71)
+  [`gradient.js:71`](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L71)
 
 </div>
 
@@ -190,7 +190,7 @@ Cached method to let renderers know stops have been updated on a [Two.Gradient](
 
 <div class="meta">
 
-  [`gradient.js:146`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/gradient.js#L146)
+  [`gradient.js:146`](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L146)
 
 </div>
 
@@ -233,7 +233,7 @@ Cached method to let [Two.Gradient](/documentation/gradient) know vertices have 
 
 <div class="meta">
 
-  [`gradient.js:155`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/gradient.js#L155)
+  [`gradient.js:155`](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L155)
 
 </div>
 
@@ -276,7 +276,7 @@ Cached method to let [Two.Gradient](/documentation/gradient) know vertices have 
 
 <div class="meta">
 
-  [`gradient.js:174`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/gradient.js#L174)
+  [`gradient.js:174`](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L174)
 
 </div>
 
@@ -325,7 +325,7 @@ Object access to store relevant renderer specific variables. Warning: manipulati
 
 <div class="meta">
 
-  [`gradient.js:17`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/gradient.js#L17)
+  [`gradient.js:17`](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L17)
 
 </div>
 
@@ -378,7 +378,7 @@ Session specific unique identifier.
 
 <div class="meta">
 
-  [`gradient.js:26`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/gradient.js#L26)
+  [`gradient.js:26`](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L26)
 
 </div>
 
@@ -431,7 +431,7 @@ Indicates what happens if the gradient starts or ends inside the bounds of the t
 
 <div class="meta">
 
-  [`gradient.js:38`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/gradient.js#L38)
+  [`gradient.js:38`](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L38)
 
 </div>
 
@@ -480,7 +480,7 @@ An ordered list of [Two.Stop](/documentation/stop)s for rendering the gradient.
 
 <div class="meta">
 
-  [`gradient.js:45`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/gradient.js#L45)
+  [`gradient.js:45`](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L45)
 
 </div>
 
@@ -538,7 +538,7 @@ Create a new instance of [Two.Gradient](/documentation/gradient) with the same p
 
 <div class="meta">
 
-  [`gradient.js:219`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/gradient.js#L219)
+  [`gradient.js:219`](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L219)
 
 </div>
 
@@ -589,7 +589,7 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  [`gradient.js:246`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/gradient.js#L246)
+  [`gradient.js:246`](https://github.com/jonobr1/two.js/blob/dev/src/effects/gradient.js#L246)
 
 </div>
 

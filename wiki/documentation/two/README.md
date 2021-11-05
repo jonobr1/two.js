@@ -10,7 +10,7 @@ The entrypoint for Two.js. Instantiate a `new Two` in order to setup a scene to 
 
 
 <div class="meta">
-  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js" />
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/two.js" />
 </div>
 
 
@@ -61,7 +61,7 @@ A massive object filled with utility functions and properties.
 
 <div class="meta">
 
-  [`two.js:1046`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L1046)
+  [`two.js:1046`](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L1046)
 
 </div>
 
@@ -104,7 +104,7 @@ If `options.fullscreen` or `options.fitted` in construction create this function
 
 <div class="meta">
 
-  [`two.js:105`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L105)
+  [`two.js:105`](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L105)
 
 </div>
 
@@ -147,7 +147,7 @@ A string representing which type of renderer the instance has instantiated.
 
 <div class="meta">
 
-  [`two.js:167`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L167)
+  [`two.js:167`](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L167)
 
 </div>
 
@@ -190,7 +190,7 @@ The instantiated rendering class for the instance. For a list of possible render
 
 <div class="meta">
 
-  [`two.js:173`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L173)
+  [`two.js:173`](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L173)
 
 </div>
 
@@ -233,7 +233,7 @@ The base level [Two.Group](/documentation/group) which houses all objects for th
 
 <div class="meta">
 
-  [`two.js:179`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L179)
+  [`two.js:179`](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L179)
 
 </div>
 
@@ -276,7 +276,7 @@ The width of the instance's dom element.
 
 <div class="meta">
 
-  [`two.js:185`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L185)
+  [`two.js:185`](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L185)
 
 </div>
 
@@ -319,7 +319,7 @@ The height of the instance's dom element.
 
 <div class="meta">
 
-  [`two.js:191`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L191)
+  [`two.js:191`](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L191)
 
 </div>
 
@@ -362,7 +362,7 @@ An integer representing how many frames have elapsed.
 
 <div class="meta">
 
-  [`two.js:197`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L197)
+  [`two.js:197`](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L197)
 
 </div>
 
@@ -405,7 +405,7 @@ A number representing how much time has elapsed since the last frame in millisec
 
 <div class="meta">
 
-  [`two.js:203`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L203)
+  [`two.js:203`](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L203)
 
 </div>
 
@@ -448,7 +448,7 @@ A boolean representing whether or not the instance is being updated through the 
 
 <div class="meta">
 
-  [`two.js:209`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L209)
+  [`two.js:209`](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L209)
 
 </div>
 
@@ -498,7 +498,7 @@ Shorthand method to append your instance of Two.js to the `document`.
 
 <div class="meta">
 
-  [`two.js:215`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L215)
+  [`two.js:215`](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L215)
 
 </div>
 
@@ -549,7 +549,7 @@ Call to start an internal animation loop.
 
 <div class="meta">
 
-  [`two.js:237`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L237)
+  [`two.js:237`](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L237)
 
 </div>
 
@@ -610,7 +610,7 @@ Call to stop the internal animation loop for a specific instance of Two.js.
 
 <div class="meta">
 
-  [`two.js:252`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L252)
+  [`two.js:252`](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L252)
 
 </div>
 
@@ -670,7 +670,7 @@ Release an arbitrary class' events from the Two.js corpus and recurse through it
 
 <div class="meta">
 
-  [`two.js:269`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L269)
+  [`two.js:269`](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L269)
 
 </div>
 
@@ -721,7 +721,7 @@ Update positions and calculations in one pass before rendering. Then render to t
 
 <div class="meta">
 
-  [`two.js:322`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L322)
+  [`two.js:322`](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L322)
 
 </div>
 
@@ -782,7 +782,7 @@ Render all drawable and visible objects of the scene.
 
 <div class="meta">
 
-  [`two.js:360`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L360)
+  [`two.js:360`](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L360)
 
 </div>
 
@@ -832,7 +832,7 @@ A shorthand method to add specific Two.js objects to the scene.
 
 <div class="meta">
 
-  [`two.js:375`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L375)
+  [`two.js:375`](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L375)
 
 </div>
 
@@ -882,7 +882,7 @@ A shorthand method to remove specific Two.js objects from the scene.
 
 <div class="meta">
 
-  [`two.js:393`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L393)
+  [`two.js:393`](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L393)
 
 </div>
 
@@ -925,7 +925,7 @@ Removes all objects from the instance's scene. If you intend to have the browser
 
 <div class="meta">
 
-  [`two.js:412`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L412)
+  [`two.js:412`](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L412)
 
 </div>
 
@@ -986,7 +986,7 @@ Creates a Two.js line and adds it to the scene.
 
 <div class="meta">
 
-  [`two.js:424`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L424)
+  [`two.js:424`](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L424)
 
 </div>
 
@@ -1047,7 +1047,7 @@ Creates a Two.js arrow and adds it to the scene.
 
 <div class="meta">
 
-  [`two.js:443`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L443)
+  [`two.js:443`](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L443)
 
 </div>
 
@@ -1108,7 +1108,7 @@ Creates a Two.js rectangle and adds it to the scene.
 
 <div class="meta">
 
-  [`two.js:488`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L488)
+  [`two.js:488`](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L488)
 
 </div>
 
@@ -1170,7 +1170,7 @@ Creates a Two.js rounded rectangle and adds it to the scene.
 
 <div class="meta">
 
-  [`two.js:507`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L507)
+  [`two.js:507`](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L507)
 
 </div>
 
@@ -1231,7 +1231,7 @@ Creates a Two.js circle and adds it to the scene.
 
 <div class="meta">
 
-  [`two.js:527`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L527)
+  [`two.js:527`](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L527)
 
 </div>
 
@@ -1293,7 +1293,7 @@ Creates a Two.js ellipse and adds it to the scene.
 
 <div class="meta">
 
-  [`two.js:546`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L546)
+  [`two.js:546`](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L546)
 
 </div>
 
@@ -1355,7 +1355,7 @@ Creates a Two.js star and adds it to the scene.
 
 <div class="meta">
 
-  [`two.js:566`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L566)
+  [`two.js:566`](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L566)
 
 </div>
 
@@ -1416,7 +1416,7 @@ Creates a Two.js path that is curved and adds it to the scene.
 
 <div class="meta">
 
-  [`two.js:586`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L586)
+  [`two.js:586`](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L586)
 
 </div>
 
@@ -1487,7 +1487,7 @@ Creates a Two.js polygon and adds it to the scene.
 
 <div class="meta">
 
-  [`two.js:622`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L622)
+  [`two.js:622`](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L622)
 
 </div>
 
@@ -1545,7 +1545,7 @@ __Returns__: Two.ArcSegment
 
 <div class="meta">
 
-  [`two.js:641`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L641)
+  [`two.js:641`](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L641)
 
 </div>
 
@@ -1604,7 +1604,7 @@ Creates a Two.js points object and adds it to the current scene.
 
 <div class="meta">
 
-  [`two.js:659`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L659)
+  [`two.js:659`](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L659)
 
 </div>
 
@@ -1663,7 +1663,7 @@ Creates a Two.js path and adds it to the scene.
 
 <div class="meta">
 
-  [`two.js:690`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L690)
+  [`two.js:690`](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L690)
 
 </div>
 
@@ -1734,7 +1734,7 @@ Creates a Two.js text object and adds it to the scene.
 
 <div class="meta">
 
-  [`two.js:729`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L729)
+  [`two.js:729`](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L729)
 
 </div>
 
@@ -1796,7 +1796,7 @@ Creates a Two.js linear gradient and ads it to the scene. In the case of an effe
 
 <div class="meta">
 
-  [`two.js:745`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L745)
+  [`two.js:745`](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L745)
 
 </div>
 
@@ -1857,7 +1857,7 @@ Creates a Two.js linear-gradient object and ads it to the scene. In the case of 
 
 <div class="meta">
 
-  [`two.js:767`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L767)
+  [`two.js:767`](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L767)
 
 </div>
 
@@ -1921,7 +1921,7 @@ Creates a Two.js sprite object and adds it to the scene. Sprites can be used for
 
 <div class="meta">
 
-  [`two.js:788`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L788)
+  [`two.js:788`](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L788)
 
 </div>
 
@@ -1983,7 +1983,7 @@ Creates a Two.js image sequence object and adds it to the scene.
 
 <div class="meta">
 
-  [`two.js:813`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L813)
+  [`two.js:813`](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L813)
 
 </div>
 
@@ -2042,7 +2042,7 @@ Creates a Two.js texture object.
 
 <div class="meta">
 
-  [`two.js:836`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L836)
+  [`two.js:836`](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L836)
 
 </div>
 
@@ -2100,7 +2100,7 @@ Creates a Two.js group object and adds it to the scene.
 
 <div class="meta">
 
-  [`two.js:851`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L851)
+  [`two.js:851`](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L851)
 
 </div>
 
@@ -2160,7 +2160,7 @@ Interpret an SVG Node and add it to this instance's scene. The distinction shoul
 
 <div class="meta">
 
-  [`two.js:873`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L873)
+  [`two.js:873`](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L873)
 
 </div>
 
@@ -2219,7 +2219,7 @@ Load an SVG file or SVG text and interpret it into Two.js legible objects.
 
 <div class="meta">
 
-  [`two.js:906`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/two.js#L906)
+  [`two.js:906`](https://github.com/jonobr1/two.js/blob/dev/src/two.js#L906)
 
 </div>
 

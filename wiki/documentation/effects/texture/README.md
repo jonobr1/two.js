@@ -16,7 +16,7 @@ Fundamental to work with bitmap data, a.k.a. pregenerated imagery, in Two.js. Su
 
 
 <div class="meta">
-  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/texture.js" />
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js" />
 </div>
 
 
@@ -61,7 +61,7 @@ A list of properties that are on every [Two.Texture](/documentation/texture).
 
 <div class="meta">
 
-  [`texture.js:110`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/texture.js#L110)
+  [`texture.js:110`](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L110)
 
 </div>
 
@@ -104,7 +104,7 @@ A map of compatible DOM Elements categorized by media format.
 
 <div class="meta">
 
-  [`texture.js:121`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/texture.js#L121)
+  [`texture.js:121`](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L121)
 
 </div>
 
@@ -147,7 +147,7 @@ A canonical listing of image data used in a single session of Two.js.
 
 <div class="meta">
 
-  [`texture.js:127`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/texture.js#L127)
+  [`texture.js:127`](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L127)
 
 </div>
 
@@ -217,7 +217,7 @@ Serializes a URL as an absolute path for canonical attribution in [Two.ImageRegi
 
 <div class="meta">
 
-  [`texture.js:134`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/texture.js#L134)
+  [`texture.js:134`](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L134)
 
 </div>
 
@@ -268,7 +268,7 @@ Loads an image as a buffer in headless environments.
 
 <div class="meta">
 
-  [`texture.js:149`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/texture.js#L149)
+  [`texture.js:149`](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L149)
 
 </div>
 
@@ -338,7 +338,7 @@ Retrieves the tag name of an image, video, or canvas node.
 
 <div class="meta">
 
-  [`texture.js:163`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/texture.js#L163)
+  [`texture.js:163`](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L163)
 
 </div>
 
@@ -398,7 +398,7 @@ Convenience function to set [Two.Texture.image](/documentation/texture/#two-text
 
 <div class="meta">
 
-  [`texture.js:175`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/texture.js#L175)
+  [`texture.js:175`](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L175)
 
 </div>
 
@@ -441,7 +441,7 @@ A collection of functions to register different types of textures. Used internal
 
 <div class="meta">
 
-  [`texture.js:217`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/texture.js#L217)
+  [`texture.js:217`](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L217)
 
 </div>
 
@@ -486,7 +486,7 @@ A collection of functions to register different types of textures. Used internal
 
 <div class="meta">
 
-  [`texture.js:322`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/texture.js#L322)
+  [`texture.js:322`](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L322)
 
 </div>
 
@@ -529,7 +529,7 @@ Cached method to let renderers know `offset` has been updated on a [Two.Texture]
 
 <div class="meta">
 
-  [`texture.js:353`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/texture.js#L353)
+  [`texture.js:353`](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L353)
 
 </div>
 
@@ -572,7 +572,7 @@ Cached method to let renderers know `scale` has been updated on a [Two.Texture](
 
 <div class="meta">
 
-  [`texture.js:362`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/texture.js#L362)
+  [`texture.js:362`](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L362)
 
 </div>
 
@@ -622,7 +622,7 @@ Convenience function to apply observable qualities of a [Two.Texture](/documenta
 
 <div class="meta">
 
-  [`texture.js:371`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/texture.js#L371)
+  [`texture.js:371`](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L371)
 
 </div>
 
@@ -671,7 +671,7 @@ Object access to store relevant renderer specific variables. Warning: manipulati
 
 <div class="meta">
 
-  [`texture.js:37`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/texture.js#L37)
+  [`texture.js:37`](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L37)
 
 </div>
 
@@ -724,7 +724,7 @@ Shorthand value to determine if image has been loaded into the texture.
 
 <div class="meta">
 
-  [`texture.js:51`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/texture.js#L51)
+  [`texture.js:51`](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L51)
 
 </div>
 
@@ -767,7 +767,7 @@ CSS style declaration to tile [Two.Path](/documentation/path). Valid values incl
 
 <div class="meta">
 
-  [`texture.js:57`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/texture.js#L57)
+  [`texture.js:57`](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L57)
 
 </div>
 
@@ -816,7 +816,7 @@ A two-component vector describing any pixel offset of the texture when applied t
 
 <div class="meta">
 
-  [`texture.js:64`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/texture.js#L64)
+  [`texture.js:64`](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L64)
 
 </div>
 
@@ -859,7 +859,7 @@ The URL path to the image data.
 
 <div class="meta">
 
-  [`texture.js:80`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/texture.js#L80)
+  [`texture.js:80`](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L80)
 
 </div>
 
@@ -912,7 +912,7 @@ The corresponding DOM Element of the texture. Can be a `<img />`, `<canvas />`, 
 
 <div class="meta">
 
-  [`texture.js:95`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/texture.js#L95)
+  [`texture.js:95`](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L95)
 
 </div>
 
@@ -973,7 +973,7 @@ Create a new instance of [Two.Texture](/documentation/texture) with the same pro
 
 <div class="meta">
 
-  [`texture.js:575`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/texture.js#L575)
+  [`texture.js:575`](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L575)
 
 </div>
 
@@ -1024,7 +1024,7 @@ Return a JSON compatible plain object that represents the texture.
 
 <div class="meta">
 
-  [`texture.js:589`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/texture.js#L589)
+  [`texture.js:589`](https://github.com/jonobr1/two.js/blob/dev/src/effects/texture.js#L589)
 
 </div>
 

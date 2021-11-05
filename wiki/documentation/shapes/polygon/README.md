@@ -16,7 +16,7 @@ __Extends__: [Two.Path](/documentation/path/)
 
 
 <div class="meta">
-  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/polygon.js" />
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/shapes/polygon.js" />
 </div>
 
 
@@ -63,7 +63,7 @@ A list of properties that are on every [Two.Polygon](/documentation/polygon).
 
 <div class="meta">
 
-  [`polygon.js:66`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/polygon.js#L66)
+  [`polygon.js:66`](https://github.com/jonobr1/two.js/blob/dev/src/shapes/polygon.js#L66)
 
 </div>
 
@@ -113,7 +113,7 @@ Convenience function to apply observable qualities of a [Two.Polygon](/documenta
 
 <div class="meta">
 
-  [`polygon.js:72`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/polygon.js#L72)
+  [`polygon.js:72`](https://github.com/jonobr1/two.js/blob/dev/src/shapes/polygon.js#L72)
 
 </div>
 
@@ -156,7 +156,7 @@ The size of the width of the polygon.
 
 <div class="meta">
 
-  [`polygon.js:29`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/polygon.js#L29)
+  [`polygon.js:29`](https://github.com/jonobr1/two.js/blob/dev/src/shapes/polygon.js#L29)
 
 </div>
 
@@ -199,7 +199,7 @@ The size of the height of the polygon.
 
 <div class="meta">
 
-  [`polygon.js:37`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/polygon.js#L37)
+  [`polygon.js:37`](https://github.com/jonobr1/two.js/blob/dev/src/shapes/polygon.js#L37)
 
 </div>
 
@@ -242,7 +242,7 @@ The amount of sides the polyogn has.
 
 <div class="meta">
 
-  [`polygon.js:45`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/polygon.js#L45)
+  [`polygon.js:45`](https://github.com/jonobr1/two.js/blob/dev/src/shapes/polygon.js#L45)
 
 </div>
 
@@ -300,7 +300,7 @@ Create a new instance of [Two.Polygon](/documentation/polygon) with the same pro
 
 <div class="meta">
 
-  [`polygon.js:189`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/polygon.js#L189)
+  [`polygon.js:189`](https://github.com/jonobr1/two.js/blob/dev/src/shapes/polygon.js#L189)
 
 </div>
 
@@ -351,7 +351,7 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  [`polygon.js:222`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\shapes/polygon.js#L222)
+  [`polygon.js:222`](https://github.com/jonobr1/two.js/blob/dev/src/shapes/polygon.js#L222)
 
 </div>
 

@@ -16,7 +16,7 @@ A children collection which is accesible both by index and by object `id`.
 
 
 <div class="meta">
-  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/children.js" />
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/children.js" />
 </div>
 
 
@@ -55,7 +55,7 @@ Map of all elements in the list keyed by `id`s.
 
 <div class="meta">
 
-  [`children.js:20`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/children.js#L20)
+  [`children.js:20`](https://github.com/jonobr1/two.js/blob/dev/src/children.js#L20)
 
 </div>
 
@@ -105,7 +105,7 @@ Adds elements to the `ids` map.
 
 <div class="meta">
 
-  [`children.js:41`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/children.js#L41)
+  [`children.js:41`](https://github.com/jonobr1/two.js/blob/dev/src/children.js#L41)
 
 </div>
 
@@ -155,7 +155,7 @@ Removes elements to the `ids` map.
 
 <div class="meta">
 
-  [`children.js:57`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/children.js#L57)
+  [`children.js:57`](https://github.com/jonobr1/two.js/blob/dev/src/children.js#L57)
 
 </div>
 

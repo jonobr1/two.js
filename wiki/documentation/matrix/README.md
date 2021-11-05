@@ -10,7 +10,7 @@ A class to store 3 x 3 transformation matrix information. In addition to storing
 
 
 <div class="meta">
-  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/matrix.js" />
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/matrix.js" />
 </div>
 
 
@@ -62,7 +62,7 @@ A stored reference to the default value of a 3 x 3 matrix.
 
 <div class="meta">
 
-  [`matrix.js:51`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/matrix.js#L51)
+  [`matrix.js:51`](https://github.com/jonobr1/two.js/blob/dev/src/matrix.js#L51)
 
 </div>
 
@@ -124,7 +124,7 @@ Multiply two matrices together and return the result.
 
 <div class="meta">
 
-  [`matrix.js:61`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/matrix.js#L61)
+  [`matrix.js:61`](https://github.com/jonobr1/two.js/blob/dev/src/matrix.js#L61)
 
 </div>
 
@@ -167,7 +167,7 @@ The underlying data stored as an array.
 
 <div class="meta">
 
-  [`matrix.js:27`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/matrix.js#L27)
+  [`matrix.js:27`](https://github.com/jonobr1/two.js/blob/dev/src/matrix.js#L27)
 
 </div>
 
@@ -210,7 +210,7 @@ Determines whether Two.js automatically calculates the values for the matrix or 
 
 <div class="meta">
 
-  [`matrix.js:121`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/matrix.js#L121)
+  [`matrix.js:121`](https://github.com/jonobr1/two.js/blob/dev/src/matrix.js#L121)
 
 </div>
 
@@ -278,7 +278,7 @@ Set an array of values onto the matrix. Order described in [Two.Matrix](/documen
 
 <div class="meta">
 
-  [`matrix.js:128`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/matrix.js#L128)
+  [`matrix.js:128`](https://github.com/jonobr1/two.js/blob/dev/src/matrix.js#L128)
 
 </div>
 
@@ -328,7 +328,7 @@ Set an array of values onto the matrix. Order described in [Two.Matrix](/documen
 
 <div class="meta">
 
-  [`matrix.js:143`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/matrix.js#L143)
+  [`matrix.js:143`](https://github.com/jonobr1/two.js/blob/dev/src/matrix.js#L143)
 
 </div>
 
@@ -371,7 +371,7 @@ Copy the matrix of one to the current instance.
 
 <div class="meta">
 
-  [`matrix.js:180`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/matrix.js#L180)
+  [`matrix.js:180`](https://github.com/jonobr1/two.js/blob/dev/src/matrix.js#L180)
 
 </div>
 
@@ -414,7 +414,7 @@ Turn matrix to the identity, like resetting.
 
 <div class="meta">
 
-  [`matrix.js:203`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/matrix.js#L203)
+  [`matrix.js:203`](https://github.com/jonobr1/two.js/blob/dev/src/matrix.js#L203)
 
 </div>
 
@@ -470,7 +470,7 @@ Multiply all components of the matrix against a single scalar value.
 
 <div class="meta">
 
-  [`matrix.js:224`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/matrix.js#L224)
+  [`matrix.js:224`](https://github.com/jonobr1/two.js/blob/dev/src/matrix.js#L224)
 
 </div>
 
@@ -534,7 +534,7 @@ Multiply all components of a matrix against a 3 component vector.
 
 <div class="meta">
 
-  [`matrix.js:232`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/matrix.js#L232)
+  [`matrix.js:232`](https://github.com/jonobr1/two.js/blob/dev/src/matrix.js#L232)
 
 </div>
 
@@ -604,7 +604,7 @@ Multiply all components of a matrix against another matrix.
 
 <div class="meta">
 
-  [`matrix.js:242`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/matrix.js#L242)
+  [`matrix.js:242`](https://github.com/jonobr1/two.js/blob/dev/src/matrix.js#L242)
 
 </div>
 
@@ -660,7 +660,7 @@ Return an inverted version of the matrix. If no optional one is passed a new mat
 
 <div class="meta">
 
-  [`matrix.js:325`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/matrix.js#L325)
+  [`matrix.js:325`](https://github.com/jonobr1/two.js/blob/dev/src/matrix.js#L325)
 
 </div>
 
@@ -710,7 +710,7 @@ Uniformly scale the transformation matrix.
 
 <div class="meta">
 
-  [`matrix.js:367`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/matrix.js#L367)
+  [`matrix.js:367`](https://github.com/jonobr1/two.js/blob/dev/src/matrix.js#L367)
 
 </div>
 
@@ -761,7 +761,7 @@ Scale the transformation matrix in two dimensions.
 
 <div class="meta">
 
-  [`matrix.js:374`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/matrix.js#L374)
+  [`matrix.js:374`](https://github.com/jonobr1/two.js/blob/dev/src/matrix.js#L374)
 
 </div>
 
@@ -811,7 +811,7 @@ Rotate the matrix.
 
 <div class="meta">
 
-  [`matrix.js:392`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/matrix.js#L392)
+  [`matrix.js:392`](https://github.com/jonobr1/two.js/blob/dev/src/matrix.js#L392)
 
 </div>
 
@@ -862,7 +862,7 @@ Translate the matrix.
 
 <div class="meta">
 
-  [`matrix.js:407`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/matrix.js#L407)
+  [`matrix.js:407`](https://github.com/jonobr1/two.js/blob/dev/src/matrix.js#L407)
 
 </div>
 
@@ -912,7 +912,7 @@ Skew the matrix by an angle in the x axis direction.
 
 <div class="meta">
 
-  [`matrix.js:420`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/matrix.js#L420)
+  [`matrix.js:420`](https://github.com/jonobr1/two.js/blob/dev/src/matrix.js#L420)
 
 </div>
 
@@ -962,7 +962,7 @@ Skew the matrix by an angle in the y axis direction.
 
 <div class="meta">
 
-  [`matrix.js:434`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/matrix.js#L434)
+  [`matrix.js:434`](https://github.com/jonobr1/two.js/blob/dev/src/matrix.js#L434)
 
 </div>
 
@@ -1022,7 +1022,7 @@ Create a transform string. Used for the Two.js rendering APIs.
 
 <div class="meta">
 
-  [`matrix.js:448`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/matrix.js#L448)
+  [`matrix.js:448`](https://github.com/jonobr1/two.js/blob/dev/src/matrix.js#L448)
 
 </div>
 
@@ -1073,7 +1073,7 @@ Create a transform array. Used for the Two.js rendering APIs.
 
 <div class="meta">
 
-  [`matrix.js:464`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/matrix.js#L464)
+  [`matrix.js:464`](https://github.com/jonobr1/two.js/blob/dev/src/matrix.js#L464)
 
 </div>
 
@@ -1124,7 +1124,7 @@ Create a transform array. Used for the Two.js rendering APIs.
 
 <div class="meta">
 
-  [`matrix.js:523`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/matrix.js#L523)
+  [`matrix.js:523`](https://github.com/jonobr1/two.js/blob/dev/src/matrix.js#L523)
 
 </div>
 
@@ -1167,7 +1167,7 @@ Create a JSON compatible object that represents information of the matrix.
 
 <div class="meta">
 
-  [`matrix.js:582`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/matrix.js#L582)
+  [`matrix.js:582`](https://github.com/jonobr1/two.js/blob/dev/src/matrix.js#L582)
 
 </div>
 
@@ -1210,7 +1210,7 @@ Clone the current matrix.
 
 <div class="meta">
 
-  [`matrix.js:594`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src/matrix.js#L594)
+  [`matrix.js:594`](https://github.com/jonobr1/two.js/blob/dev/src/matrix.js#L594)
 
 </div>
 

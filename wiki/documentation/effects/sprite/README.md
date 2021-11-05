@@ -16,7 +16,7 @@ A convenient package to display still or animated images through a tiled image s
 
 
 <div class="meta">
-  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/sprite.js" />
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/effects/sprite.js" />
 </div>
 
 
@@ -65,7 +65,7 @@ A list of properties that are on every [Two.Sprite](/documentation/sprite).
 
 <div class="meta">
 
-  [`sprite.js:86`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/sprite.js#L86)
+  [`sprite.js:86`](https://github.com/jonobr1/two.js/blob/dev/src/effects/sprite.js#L86)
 
 </div>
 
@@ -115,7 +115,7 @@ Convenience function to apply observable qualities of a [Two.Sprite](/documentat
 
 <div class="meta">
 
-  [`sprite.js:94`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/sprite.js#L94)
+  [`sprite.js:94`](https://github.com/jonobr1/two.js/blob/dev/src/effects/sprite.js#L94)
 
 </div>
 
@@ -158,7 +158,7 @@ The texture to be used as bitmap data to display image in the scene.
 
 <div class="meta">
 
-  [`sprite.js:37`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/sprite.js#L37)
+  [`sprite.js:37`](https://github.com/jonobr1/two.js/blob/dev/src/effects/sprite.js#L37)
 
 </div>
 
@@ -201,7 +201,7 @@ The number of columns to split the texture into. Defaults to `1`.
 
 <div class="meta">
 
-  [`sprite.js:52`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/sprite.js#L52)
+  [`sprite.js:52`](https://github.com/jonobr1/two.js/blob/dev/src/effects/sprite.js#L52)
 
 </div>
 
@@ -244,7 +244,7 @@ The number of rows to split the texture into. Defaults to `1`.
 
 <div class="meta">
 
-  [`sprite.js:60`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/sprite.js#L60)
+  [`sprite.js:60`](https://github.com/jonobr1/two.js/blob/dev/src/effects/sprite.js#L60)
 
 </div>
 
@@ -287,7 +287,7 @@ The number of frames to animate against per second. Defaults to `0` for non-anim
 
 <div class="meta">
 
-  [`sprite.js:68`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/sprite.js#L68)
+  [`sprite.js:68`](https://github.com/jonobr1/two.js/blob/dev/src/effects/sprite.js#L68)
 
 </div>
 
@@ -330,7 +330,7 @@ The index of the current tile of the sprite to display. Defaults to `0`.
 
 <div class="meta">
 
-  [`sprite.js:76`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/sprite.js#L76)
+  [`sprite.js:76`](https://github.com/jonobr1/two.js/blob/dev/src/effects/sprite.js#L76)
 
 </div>
 
@@ -382,7 +382,7 @@ Initiate animation playback of a [Two.Sprite](/documentation/sprite).
 
 <div class="meta">
 
-  [`sprite.js:243`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/sprite.js#L243)
+  [`sprite.js:243`](https://github.com/jonobr1/two.js/blob/dev/src/effects/sprite.js#L243)
 
 </div>
 
@@ -425,7 +425,7 @@ Halt animation playback of a [Two.Sprite](/documentation/sprite).
 
 <div class="meta">
 
-  [`sprite.js:279`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/sprite.js#L279)
+  [`sprite.js:279`](https://github.com/jonobr1/two.js/blob/dev/src/effects/sprite.js#L279)
 
 </div>
 
@@ -468,7 +468,7 @@ Halt animation playback of a [Two.Sprite](/documentation/sprite) and set the cur
 
 <div class="meta">
 
-  [`sprite.js:291`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/sprite.js#L291)
+  [`sprite.js:291`](https://github.com/jonobr1/two.js/blob/dev/src/effects/sprite.js#L291)
 
 </div>
 
@@ -526,7 +526,7 @@ Create a new instance of [Two.Sprite](/documentation/sprite) with the same prope
 
 <div class="meta">
 
-  [`sprite.js:305`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/sprite.js#L305)
+  [`sprite.js:305`](https://github.com/jonobr1/two.js/blob/dev/src/effects/sprite.js#L305)
 
 </div>
 
@@ -577,7 +577,7 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  [`sprite.js:332`](https://github.com/jonobr1/two.js/blob/dev/C:\Users\pures\Jono\two-js\src\effects/sprite.js#L332)
+  [`sprite.js:332`](https://github.com/jonobr1/two.js/blob/dev/src/effects/sprite.js#L332)
 
 </div>
 
