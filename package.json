@@ -25,7 +25,7 @@
     "types": "jsdoc -c ./jsdoc-conf.json"
   },
   "directories": {
-    "doc": "wiki/documentation",
+    "docs": "wiki/docs",
     "test": "tests",
     "example": "wiki/examples"
   },

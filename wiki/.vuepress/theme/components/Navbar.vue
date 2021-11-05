@@ -76,8 +76,10 @@ export default {
           - (this.$refs.siteName && this.$refs.siteName.offsetWidth || 0);
 
         var content = document.getElementsByClassName("theme-default-content")[0];
-        var searchLeft = content.offsetLeft + parseFloat(window.getComputedStyle(content, null).getPropertyValue('padding-left').replace("px",""));
-        this.$refs.search.style.left = searchLeft.toString() + "px";
+        if (content) {
+          var searchLeft = content.offsetLeft + parseFloat(window.getComputedStyle(content, null).getPropertyValue('padding-left').replace("px",""));
+          this.$refs.search.style.left = searchLeft.toString() + "px";
+        }
       }
     }
     handleLinksWrapWidth()
@@ -117,7 +119,7 @@ $navbar-horizontal-padding = 1.5rem
     .search-box
       flex 0 0 auto
       vertical-align top
-      input 
+      input
         width 22.5rem;
   .links
     padding-left 1.5rem

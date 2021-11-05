@@ -7,7 +7,7 @@
 
 A two-dimensional drawing api meant for modern browsers. It is renderer agnostic enabling the same api to render in multiple contexts: webgl, canvas2d, and svg.
 
-[Home](http://two.js.org) • [Releases](https://github.com/jonobr1/two.js/releases) • [Examples](http://two.js.org/#examples) • [Documentation](http://two.js.org/#documentation) • [Change Log](https://github.com/jonobr1/two.js/tree/dev/wiki/change-log) • [Help](https://github.com/jonobr1/two.js/issues/new/choose)
+[Home](http://two.js.org) • [Releases](https://github.com/jonobr1/two.js/releases) • [Examples](http://two.js.org/#examples) • [Documentation](http://two.js.org/docs/) • [Change Log](https://github.com/jonobr1/two.js/tree/dev/wiki/change-log) • [Help](https://github.com/jonobr1/two.js/issues/new/choose)
 
 ## Usage
 Download the latest [minified library](https://raw.github.com/jonobr1/two.js/dev/build/two.min.js) and include it in your html.

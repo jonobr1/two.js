@@ -6,7 +6,7 @@ var sourceFiles = require('./source-files');
 
 var template = _.template(
   fs.readFileSync(
-    path.resolve(__dirname, './documentation.template'),
+    path.resolve(__dirname, './docs.template'),
     { encoding: 'utf8' }
   )
 );
@@ -15,7 +15,7 @@ _.each(sourceFiles, function(file) {
 
   var sourceFile = path.resolve(__dirname, '../', file);
   var outputDir = path.resolve(__dirname,
-    '../wiki/documentation/', file.replace('jsm/', '').replace('src/', '').replace('.js', '/')
+    '../wiki/docs/', file.replace('jsm/', '').replace('src/', '').replace('.js', '/')
   );
   var outputFile = path.join(outputDir, '/README.md');
 
@@ -51,7 +51,7 @@ _.each(sourceFiles, function(file) {
       var snIndex = (snList.length > 2) ? 2 : 1;
       object.shortname = snList.slice(snIndex).join('.');
       object.prefixname = sn.replace(object.shortname, "");
-      
+
       // name and href for augments property
       var an;
 
@@ -123,7 +123,7 @@ function getHref(name) {
 
   function transform(str) {
     var path = str.replace('src/', '').replace('jsm/', '').replace('.js', '');
-    return `/documentation/${path}/`;
+    return `/docs/${path}/`;
   }
 
 }
@@ -192,7 +192,7 @@ function expandLink(object, property) {
           '[',
           fragments.join('.'),
           ']',
-          '(/documentation/',
+          '(/docs/',
           directory.toLowerCase(),
           hash ? '/#' + hash.toLowerCase() : '',
           ')'

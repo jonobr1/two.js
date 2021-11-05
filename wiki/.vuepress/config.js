@@ -20,7 +20,7 @@ for (var i = 0; i < sourceFiles.length; i++) {
     .replace('extras', '/extras')
     .replace('src/', '/').replace('.js', '/');
 
-  name = `/documentation${name}`;
+  name = `/docs${name}`;
 
   if (name.match('effects')) {
     effects.children.push(name);
@@ -61,28 +61,19 @@ module.exports = {
     developmentSize: fileSizes.development,
     productionSize: fileSizes.production,
     nav: [
-      // {
-      //   text: 'Overview', link: '/'
-      // },
-      // {
-      //   text: 'Projects', link: '/projects/'
-      // },
       {
-        text: 'Docs', link: '/documentation/two/'
+        text: 'Docs', link: '/docs/'
       },
       {
-        text: 'Examples', link: 'https://codepen.io/collection/KpMkbM'
+        text: 'Examples', link: '/examples/'
       },
       {
         text: 'Change Log', link: '/change-log/'
       }
-      // {
-      //   text: 'Sponsors', link: '/sponsor'
-      // }
     ],
     sidebar: {
       '/change-log/': ['/change-log/'],
-      '/documentation/': sidebarForDocs
+      '/docs/': sidebarForDocs
     },
     markdown: {
       lineNumbers: true
