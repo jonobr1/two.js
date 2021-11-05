@@ -424,11 +424,11 @@ body {
     }
   }
 
-  .sidebar {
-    .sidebar-links li:not(:first-child) {
+  .sidebar-links li:not(:first-child) {
       margin-top: 0px;
     }
 
+  .docs .sidebar {
     .sidebar-sub-headers {
       //border-left: 2px solid $orange;
       margin-left: 2em;
@@ -456,6 +456,25 @@ body {
     .arrow {
       display: none;
     }
+  }
+}
+
+.change-log .sidebar {
+  .sidebar-link {
+    display:none;  
+  }
+  .sidebar-sub-headers {
+    padding: 0;
+    font-size: 1rem;
+
+      a.sidebar-link {
+        display:inline-block;
+        font-size: 1.1em;
+        line-height: 1.7;
+        font-weight: bold;
+        padding: 0.35rem 1rem 0.35rem 1.25rem;
+        border-left: 0.25rem solid transparent;
+      }
   }
 }
 
