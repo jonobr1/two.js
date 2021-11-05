@@ -46,7 +46,7 @@
     &:hover {
       background: $orangebg;
       color: $orange;
-      border-color: $orange;
+      border: 2px solid $orange;
       text-decoration: none;
 
       .icon {

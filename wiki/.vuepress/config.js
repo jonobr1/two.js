@@ -71,7 +71,7 @@ module.exports = {
         text: 'Docs', link: '/documentation/two/'
       },
       {
-        text: 'Examples', link: '/examples/'
+        text: 'Examples', link: 'https://codepen.io/collection/KpMkbM'
       },
       {
         text: 'Change Log', link: '/change-log/'

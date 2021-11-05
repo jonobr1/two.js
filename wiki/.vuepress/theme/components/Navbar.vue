@@ -115,10 +115,10 @@ $navbar-horizontal-padding = 1.5rem
     left: 19rem
     top: 0.7rem
     .search-box
-      flex: 0 0 auto
+      flex 0 0 auto
       vertical-align top
       input 
-        width: 22.5rem;
+        width 22.5rem;
   .links
     padding-left 1.5rem
     box-sizing border-box
@@ -129,6 +129,8 @@ $navbar-horizontal-padding = 1.5rem
     right $navbar-horizontal-padding
     top $navbar-vertical-padding
     display flex
+    .external span
+      display none
 @media (max-width: $MQMobile)
   .navbar
     padding-left 4rem
