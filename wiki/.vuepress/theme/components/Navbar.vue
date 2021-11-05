@@ -120,7 +120,33 @@ $navbar-horizontal-padding = 1.5rem
       flex 0 0 auto
       vertical-align top
       input
-        width 22.5rem;
+        font-family $fontFamily
+        width 22.5rem
+        font-size 1rem
+        font-weight 600
+        background #fff url(/images/search.svg) 0.55rem 0.25rem no-repeat
+        padding-left 2.5rem
+        &::placeholder
+          color #999
+        &:focus 
+          border-color $orangeBorder
+          color $textColor
+      ul.suggestions 
+        padding 0rem
+        top 1.85rem
+        width 25rem
+        border-color $orangeBorder
+        .suggestion
+          font-size 1rem
+          line-height auto
+          font-weight normal
+          padding .75rem 1.25rem
+          a 
+            color $sidebarText
+          &.focused 
+            background-color $orangebg
+            a 
+              color $orange
   .links
     padding-left 1.5rem
     box-sizing border-box
