@@ -54,7 +54,7 @@ In order to start any of these demos you'll want to [download](#download) two.js
 Before we get into all the fancy animating it's good to get a feel for how to make shapes in two.js. In order to do this we need to have an instance of two. This sets up a dom element that contains either an svg or canvas element to add to the webpage. The two object has a scene which holds all shapes as well as methods for creating shapes.
 
 ::: tip
-For a list of all properties and construction parameters check out the [documentation](./documentation/).
+For a list of all properties and construction parameters check out the [documentation](./documentation/two/).
 :::
 
 <inline-editor>
