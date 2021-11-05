@@ -3,7 +3,7 @@ body {
   font-family: "proxima-nova", arial, sans-serif;
   font-size: 1rem;
   line-height: 1.5rem;
-  word-spacing: 0.1875rem;
+  // word-spacing: 0.1875rem;
   color: $textColor;
 
   p {
@@ -35,7 +35,8 @@ body {
 
     code {
       font-family: "anonymous-pro", monospace;
-      font-size: .95rem;
+      font-size: .85rem;
+      line-height: 100%;
       color: $codeColor;
       padding: .2rem .4rem;
       border-radius: 4px;
@@ -130,7 +131,7 @@ body {
       color: rgb(255, 64, 64);
       // color: #f08d49;
     }
-    
+
     .token.function {
       color: $codeColor;
     }
@@ -252,7 +253,7 @@ body {
     .nav-item {
       height: 100%;
       line-height: 3.5rem;
-    
+
       a {
         font-size: 1rem;
         color: $textColor;
@@ -294,7 +295,7 @@ body {
     font-size: 2.25rem;
   }
   h1:first-child + p {
-    margin-top: 1rem;    
+    margin-top: 1rem;
   }
   h2 {
     border: none;
@@ -327,7 +328,7 @@ body {
     }
 
     .shortname {
-      //font-weight: bold;  
+      //font-weight: bold;
     }
   }
   h3 {
@@ -344,7 +345,7 @@ body {
     a {
       color: inherit;
       font-weight: inherit;
-    
+
       &:hover {
         color: inherit;
         border-bottom: none;
@@ -476,7 +477,7 @@ body {
 
 .change-log .sidebar {
   .sidebar-link {
-    display:none;  
+    display:none;
   }
   .sidebar-sub-headers {
     padding: 0;
@@ -550,7 +551,7 @@ table tr:last-child td:last-child {
 
     &:hover {
       border-bottom: 1px solid lighten($codeColor, 60%);
-      
+
       code {
         color: lighten($codeColor, 40%);
       }
