@@ -254,24 +254,28 @@ body {
       line-height: 3.5rem;
     
       a {
-      font-size: 1rem;
-      color: $textColor;
-      height: 100%;
-      line-height: 3.5rem;
-      border-top: 2px solid $white;
-      transition: color .2s, border-color .2s;
-      }
-      
-      a:hover {
-        border-bottom: none;
-        border-top-color: $red;
-        color: $red;
+        font-size: 1rem;
+        color: $textColor;
+        height: 100%;
+        line-height: 3.5rem;
+        border-top: 2px solid $white;
+        transition: color .2s, border-color .2s;
+        &:hover {
+          border-bottom: none;
+          border-top-color: $orange;
+          color: $orange;
+        }
       }
 
       a.router-link-active {
         border-bottom: none;
         border-top-color: $orange;
         color: $orange;
+        &:hover {
+          border-bottom: none;
+          border-top-color: $red;
+          color: $red;
+        }
       }
     }
   }
@@ -424,7 +428,7 @@ body {
     font-size: 1rem;
 
     &:hover {
-      color: $red;
+      color: $orange;
       border-bottom: none;
     }
 
@@ -432,6 +436,9 @@ body {
       color: $orange;
       border-left-color: transparent;
       border-bottom: none;
+      &:hover {
+        color: $red;
+      }
     }
   }
 
@@ -453,9 +460,6 @@ body {
 
         &:hover {
           color: $red;
-          border-color: $red;
-          border-bottom: none;
-          box-shadow: inset 1px 0 0 0px $red;
         }
 
         &:.active {
