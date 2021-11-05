@@ -1,9 +1,5 @@
 <template>
-  <div>
-    <p>
-      Redirecting to <code>{{ src }}</code>
-    </p>
-  </div>
+  <div></div>
 </template>
 
 <script>
