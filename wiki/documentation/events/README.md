@@ -1,5 +1,5 @@
 ---
-pageClass: documentation-class
+pageClass: docs
 ---
 
 # Two.Events
@@ -23,7 +23,7 @@ Object inherited by many Two.js objects in order to facilitate custom events.
 
 ## Types
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Events.</span><span class="shortname">Types</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#Types"><span class="prefix">Two.Events.</span><span class="shortname">Types</span></a></h2>
 
 
 
@@ -66,7 +66,7 @@ Object of different types of Two.js specific events.
 
 ## bind
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Events.</span><span class="shortname">bind</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#bind"><span class="prefix">Two.Events.</span><span class="shortname">bind</span></a></h2>
 
 
 
@@ -109,7 +109,7 @@ Alias for [Two.Events.on](/documentation/events/#two-events-on).
 
 ## unbind
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Events.</span><span class="shortname">unbind</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#unbind"><span class="prefix">Two.Events.</span><span class="shortname">unbind</span></a></h2>
 
 
 
@@ -152,7 +152,7 @@ Alias for [Two.Events.off](/documentation/events/#two-events-off).
 
 ## on
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Events.</span><span class="shortname">on</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#on"><span class="prefix">Two.Events.</span><span class="shortname">on</span></a></h2>
 
 
 
@@ -203,7 +203,7 @@ Call to add a listener to a specific event name.
 
 ## off
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Events.</span><span class="shortname">off</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#off"><span class="prefix">Two.Events.</span><span class="shortname">off</span></a></h2>
 
 
 
@@ -254,7 +254,7 @@ Call to remove listeners from a specific event. If only `name` is passed then al
 
 ## trigger
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Events.</span><span class="shortname">trigger</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#trigger"><span class="prefix">Two.Events.</span><span class="shortname">trigger</span></a></h2>
 
 
 

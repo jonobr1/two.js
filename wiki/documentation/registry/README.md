@@ -1,5 +1,5 @@
 ---
-pageClass: documentation-class
+pageClass: docs
 ---
 
 # Two.Registry
@@ -23,7 +23,7 @@ An arbitrary class to manage a directory of things. Mainly used for keeping tabs
 
 ## add
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Registry.</span><span class="shortname">add</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#add"><span class="prefix">Two.Registry.</span><span class="shortname">add</span></a></h2>
 
 
 
@@ -74,7 +74,7 @@ Adds any value to the directory. Assigned by the `id`.
 
 ## remove
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Registry.</span><span class="shortname">remove</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#remove"><span class="prefix">Two.Registry.</span><span class="shortname">remove</span></a></h2>
 
 
 
@@ -124,7 +124,7 @@ Remove any value from the directory by its `id`.
 
 ## get
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Registry.</span><span class="shortname">get</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#get"><span class="prefix">Two.Registry.</span><span class="shortname">get</span></a></h2>
 
 
 
@@ -184,7 +184,7 @@ Get a registered value by its `id`.
 
 ## contains
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Registry.</span><span class="shortname">contains</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#contains"><span class="prefix">Two.Registry.</span><span class="shortname">contains</span></a></h2>
 
 
 

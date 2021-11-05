@@ -1,5 +1,5 @@
 ---
-pageClass: documentation-class
+pageClass: docs
 ---
 
 # Two.SVGRenderer
@@ -35,7 +35,7 @@ This class is used by [Two](/documentation/) when constructing with `type` of `T
 
 ## Utils
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.SVGRenderer.</span><span class="shortname">Utils</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#Utils"><span class="prefix">Two.SVGRenderer.</span><span class="shortname">Utils</span></a></h2>
 
 
 
@@ -78,7 +78,7 @@ A massive object filled with utility functions and properties to render Two.js o
 
 ## domElement
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.SVGRenderer.</span><span class="shortname">domElement</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#domElement"><span class="prefix">Two.SVGRenderer.</span><span class="shortname">domElement</span></a></h2>
 
 
 
@@ -121,7 +121,7 @@ The `<svg />` associated with the Two.js scene.
 
 ## scene
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.SVGRenderer.</span><span class="shortname">scene</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#scene"><span class="prefix">Two.SVGRenderer.</span><span class="shortname">scene</span></a></h2>
 
 
 
@@ -164,7 +164,7 @@ The root group of the scenegraph.
 
 ## defs
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.SVGRenderer.</span><span class="shortname">defs</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#defs"><span class="prefix">Two.SVGRenderer.</span><span class="shortname">defs</span></a></h2>
 
 
 
@@ -207,7 +207,7 @@ The `<defs />` to apply gradients, patterns, and bitmap imagery.
 
 ## setSize
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.SVGRenderer.</span><span class="shortname">setSize</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#setSize"><span class="prefix">Two.SVGRenderer.</span><span class="shortname">setSize</span></a></h2>
 
 
 
@@ -268,7 +268,7 @@ Triggers a `Two.Events.resize`.
 
 ## render
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.SVGRenderer.</span><span class="shortname">render</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#render"><span class="prefix">Two.SVGRenderer.</span><span class="shortname">render</span></a></h2>
 
 
 

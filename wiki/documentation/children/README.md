@@ -1,5 +1,5 @@
 ---
-pageClass: documentation-class
+pageClass: docs
 ---
 
 # Two.Group.Children
@@ -29,7 +29,7 @@ A children collection which is accesible both by index and by object `id`.
 
 ## Children.ids
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Group.</span><span class="shortname">Children.ids</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#Children.ids"><span class="prefix">Two.Group.</span><span class="shortname">Children.ids</span></a></h2>
 
 
 
@@ -72,7 +72,7 @@ Map of all elements in the list keyed by `id`s.
 
 ## Children.attach
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Group.</span><span class="shortname">Children.attach</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#Children.attach"><span class="prefix">Two.Group.</span><span class="shortname">Children.attach</span></a></h2>
 
 
 
@@ -122,7 +122,7 @@ Adds elements to the `ids` map.
 
 ## Children.detach
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Group.</span><span class="shortname">Children.detach</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#Children.detach"><span class="prefix">Two.Group.</span><span class="shortname">Children.detach</span></a></h2>
 
 
 

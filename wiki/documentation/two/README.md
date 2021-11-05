@@ -1,5 +1,5 @@
 ---
-pageClass: documentation-class
+pageClass: docs
 ---
 
 # Two
@@ -35,7 +35,7 @@ The entrypoint for Two.js. Instantiate a `new Two` in order to setup a scene to 
 
 ## Utils
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">Utils</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#Utils"><span class="prefix">Two.</span><span class="shortname">Utils</span></a></h2>
 
 
 
@@ -78,7 +78,7 @@ A massive object filled with utility functions and properties.
 
 ## fit
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">fit</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#fit"><span class="prefix">Two.</span><span class="shortname">fit</span></a></h2>
 
 
 
@@ -121,7 +121,7 @@ If `options.fullscreen` or `options.fitted` in construction create this function
 
 ## type
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">type</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#type"><span class="prefix">Two.</span><span class="shortname">type</span></a></h2>
 
 
 
@@ -164,7 +164,7 @@ A string representing which type of renderer the instance has instantiated.
 
 ## renderer
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">renderer</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#renderer"><span class="prefix">Two.</span><span class="shortname">renderer</span></a></h2>
 
 
 
@@ -207,7 +207,7 @@ The instantiated rendering class for the instance. For a list of possible render
 
 ## scene
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">scene</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#scene"><span class="prefix">Two.</span><span class="shortname">scene</span></a></h2>
 
 
 
@@ -250,7 +250,7 @@ The base level [Two.Group](/documentation/group) which houses all objects for th
 
 ## width
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">width</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#width"><span class="prefix">Two.</span><span class="shortname">width</span></a></h2>
 
 
 
@@ -293,7 +293,7 @@ The width of the instance's dom element.
 
 ## height
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">height</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#height"><span class="prefix">Two.</span><span class="shortname">height</span></a></h2>
 
 
 
@@ -336,7 +336,7 @@ The height of the instance's dom element.
 
 ## frameCount
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">frameCount</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#frameCount"><span class="prefix">Two.</span><span class="shortname">frameCount</span></a></h2>
 
 
 
@@ -379,7 +379,7 @@ An integer representing how many frames have elapsed.
 
 ## timeDelta
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">timeDelta</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#timeDelta"><span class="prefix">Two.</span><span class="shortname">timeDelta</span></a></h2>
 
 
 
@@ -422,7 +422,7 @@ A number representing how much time has elapsed since the last frame in millisec
 
 ## playing
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">playing</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#playing"><span class="prefix">Two.</span><span class="shortname">playing</span></a></h2>
 
 
 
@@ -465,7 +465,7 @@ A boolean representing whether or not the instance is being updated through the 
 
 ## appendTo
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">appendTo</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#appendTo"><span class="prefix">Two.</span><span class="shortname">appendTo</span></a></h2>
 
 
 
@@ -515,7 +515,7 @@ Shorthand method to append your instance of Two.js to the `document`.
 
 ## play
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">play</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#play"><span class="prefix">Two.</span><span class="shortname">play</span></a></h2>
 
 
 
@@ -576,7 +576,7 @@ This function initiates a `requestAnimationFrame` loop.
 
 ## pause
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">pause</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#pause"><span class="prefix">Two.</span><span class="shortname">pause</span></a></h2>
 
 
 
@@ -627,7 +627,7 @@ Call to stop the internal animation loop for a specific instance of Two.js.
 
 ## release
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">release</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#release"><span class="prefix">Two.</span><span class="shortname">release</span></a></h2>
 
 
 
@@ -687,7 +687,7 @@ Release an arbitrary class' events from the Two.js corpus and recurse through it
 
 ## update
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">update</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#update"><span class="prefix">Two.</span><span class="shortname">update</span></a></h2>
 
 
 
@@ -748,7 +748,7 @@ This function is called automatically if using [Two.play](/documentation/play) o
 
 ## render
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">render</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#render"><span class="prefix">Two.</span><span class="shortname">render</span></a></h2>
 
 
 
@@ -799,7 +799,7 @@ Render all drawable and visible objects of the scene.
 
 ## add
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">add</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#add"><span class="prefix">Two.</span><span class="shortname">add</span></a></h2>
 
 
 
@@ -849,7 +849,7 @@ A shorthand method to add specific Two.js objects to the scene.
 
 ## remove
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">remove</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#remove"><span class="prefix">Two.</span><span class="shortname">remove</span></a></h2>
 
 
 
@@ -899,7 +899,7 @@ A shorthand method to remove specific Two.js objects from the scene.
 
 ## clear
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">clear</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#clear"><span class="prefix">Two.</span><span class="shortname">clear</span></a></h2>
 
 
 
@@ -942,7 +942,7 @@ Removes all objects from the instance's scene. If you intend to have the browser
 
 ## makeLine
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">makeLine</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#makeLine"><span class="prefix">Two.</span><span class="shortname">makeLine</span></a></h2>
 
 
 
@@ -1003,7 +1003,7 @@ Creates a Two.js line and adds it to the scene.
 
 ## makeArrow
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">makeArrow</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#makeArrow"><span class="prefix">Two.</span><span class="shortname">makeArrow</span></a></h2>
 
 
 
@@ -1064,7 +1064,7 @@ Creates a Two.js arrow and adds it to the scene.
 
 ## makeRectangle
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">makeRectangle</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#makeRectangle"><span class="prefix">Two.</span><span class="shortname">makeRectangle</span></a></h2>
 
 
 
@@ -1125,7 +1125,7 @@ Creates a Two.js rectangle and adds it to the scene.
 
 ## makeRoundedRectangle
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">makeRoundedRectangle</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#makeRoundedRectangle"><span class="prefix">Two.</span><span class="shortname">makeRoundedRectangle</span></a></h2>
 
 
 
@@ -1187,7 +1187,7 @@ Creates a Two.js rounded rectangle and adds it to the scene.
 
 ## makeCircle
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">makeCircle</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#makeCircle"><span class="prefix">Two.</span><span class="shortname">makeCircle</span></a></h2>
 
 
 
@@ -1248,7 +1248,7 @@ Creates a Two.js circle and adds it to the scene.
 
 ## makeEllipse
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">makeEllipse</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#makeEllipse"><span class="prefix">Two.</span><span class="shortname">makeEllipse</span></a></h2>
 
 
 
@@ -1310,7 +1310,7 @@ Creates a Two.js ellipse and adds it to the scene.
 
 ## makeStar
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">makeStar</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#makeStar"><span class="prefix">Two.</span><span class="shortname">makeStar</span></a></h2>
 
 
 
@@ -1372,7 +1372,7 @@ Creates a Two.js star and adds it to the scene.
 
 ## makeCurve
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">makeCurve</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#makeCurve"><span class="prefix">Two.</span><span class="shortname">makeCurve</span></a></h2>
 
 
 
@@ -1443,7 +1443,7 @@ In either case of passing an array or passing numbered arguments the last argume
 
 ## makePolygon
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">makePolygon</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#makePolygon"><span class="prefix">Two.</span><span class="shortname">makePolygon</span></a></h2>
 
 
 
@@ -1504,7 +1504,7 @@ Creates a Two.js polygon and adds it to the scene.
 
 ## makeArcSegment
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">makeArcSegment</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#makeArcSegment"><span class="prefix">Two.</span><span class="shortname">makeArcSegment</span></a></h2>
 
 
 
@@ -1562,7 +1562,7 @@ __Returns__: Two.ArcSegment
 
 ## makePoints
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">makePoints</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#makePoints"><span class="prefix">Two.</span><span class="shortname">makePoints</span></a></h2>
 
 
 
@@ -1621,7 +1621,7 @@ Creates a Two.js points object and adds it to the current scene.
 
 ## makePath
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">makePath</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#makePath"><span class="prefix">Two.</span><span class="shortname">makePath</span></a></h2>
 
 
 
@@ -1690,7 +1690,7 @@ In either case of passing an array or passing numbered arguments the last argume
 
 ## makeText
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">makeText</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#makeText"><span class="prefix">Two.</span><span class="shortname">makeText</span></a></h2>
 
 
 
@@ -1751,7 +1751,7 @@ Creates a Two.js text object and adds it to the scene.
 
 ## makeLinearGradient
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">makeLinearGradient</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#makeLinearGradient"><span class="prefix">Two.</span><span class="shortname">makeLinearGradient</span></a></h2>
 
 
 
@@ -1813,7 +1813,7 @@ Creates a Two.js linear gradient and ads it to the scene. In the case of an effe
 
 ## makeRadialGradient
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">makeRadialGradient</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#makeRadialGradient"><span class="prefix">Two.</span><span class="shortname">makeRadialGradient</span></a></h2>
 
 
 
@@ -1874,7 +1874,7 @@ Creates a Two.js linear-gradient object and ads it to the scene. In the case of 
 
 ## makeSprite
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">makeSprite</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#makeSprite"><span class="prefix">Two.</span><span class="shortname">makeSprite</span></a></h2>
 
 
 
@@ -1938,7 +1938,7 @@ Creates a Two.js sprite object and adds it to the scene. Sprites can be used for
 
 ## makeImageSequence
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">makeImageSequence</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#makeImageSequence"><span class="prefix">Two.</span><span class="shortname">makeImageSequence</span></a></h2>
 
 
 
@@ -2000,7 +2000,7 @@ Creates a Two.js image sequence object and adds it to the scene.
 
 ## makeTexture
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">makeTexture</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#makeTexture"><span class="prefix">Two.</span><span class="shortname">makeTexture</span></a></h2>
 
 
 
@@ -2059,7 +2059,7 @@ Creates a Two.js texture object.
 
 ## makeGroup
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">makeGroup</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#makeGroup"><span class="prefix">Two.</span><span class="shortname">makeGroup</span></a></h2>
 
 
 
@@ -2117,7 +2117,7 @@ Creates a Two.js group object and adds it to the scene.
 
 ## interpret
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">interpret</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#interpret"><span class="prefix">Two.</span><span class="shortname">interpret</span></a></h2>
 
 
 
@@ -2177,7 +2177,7 @@ Interpret an SVG Node and add it to this instance's scene. The distinction shoul
 
 ## load
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">load</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#load"><span class="prefix">Two.</span><span class="shortname">load</span></a></h2>
 
 
 

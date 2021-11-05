@@ -1,5 +1,5 @@
 ---
-pageClass: documentation-class
+pageClass: docs
 ---
 
 # Two.Anchor
@@ -40,7 +40,7 @@ An object that holds 3 [Two.Vector](/documentation/vector)s, the anchor point an
 
 ## AppendCurveProperties
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Anchor.</span><span class="shortname">AppendCurveProperties</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#AppendCurveProperties"><span class="prefix">Two.Anchor.</span><span class="shortname">AppendCurveProperties</span></a></h2>
 
 
 
@@ -90,7 +90,7 @@ Adds the `controls` property as an object with `left` and `right` properties to 
 
 ## MakeObservable
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Anchor.</span><span class="shortname">MakeObservable</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#MakeObservable"><span class="prefix">Two.Anchor.</span><span class="shortname">MakeObservable</span></a></h2>
 
 
 
@@ -140,7 +140,7 @@ Convenience function to apply observable qualities of a [Two.Anchor](/documentat
 
 ## controls
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Anchor.</span><span class="shortname">controls</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#controls"><span class="prefix">Two.Anchor.</span><span class="shortname">controls</span></a></h2>
 
 
 
@@ -189,7 +189,7 @@ An plain object that holds the controls handles for a [Two.Anchor](/documentatio
 
 ## controls.left
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Anchor.</span><span class="shortname">controls.left</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#controls.left"><span class="prefix">Two.Anchor.</span><span class="shortname">controls.left</span></a></h2>
 
 
 
@@ -238,7 +238,7 @@ The "left" control point to define handles on a bezier curve.
 
 ## controls.right
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Anchor.</span><span class="shortname">controls.right</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#controls.right"><span class="prefix">Two.Anchor.</span><span class="shortname">controls.right</span></a></h2>
 
 
 
@@ -287,7 +287,7 @@ The "left" control point to define handles on a bezier curve.
 
 ## command
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Anchor.</span><span class="shortname">command</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#command"><span class="prefix">Two.Anchor.</span><span class="shortname">command</span></a></h2>
 
 
 
@@ -336,7 +336,7 @@ A draw command associated with the anchor point.
 
 ## relative
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Anchor.</span><span class="shortname">relative</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#relative"><span class="prefix">Two.Anchor.</span><span class="shortname">relative</span></a></h2>
 
 
 
@@ -385,7 +385,7 @@ A boolean to render control points relative to the root anchor point or in globa
 
 ## listen
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Anchor.</span><span class="shortname">listen</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#listen"><span class="prefix">Two.Anchor.</span><span class="shortname">listen</span></a></h2>
 
 
 
@@ -428,7 +428,7 @@ Convenience method used mainly by [Two.Path.vertices](/documentation/path/#two-p
 
 ## ignore
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Anchor.</span><span class="shortname">ignore</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#ignore"><span class="prefix">Two.Anchor.</span><span class="shortname">ignore</span></a></h2>
 
 
 
@@ -471,7 +471,7 @@ Convenience method used mainly by [Two.Path.vertices](/documentation/path/#two-p
 
 ## copy
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Anchor.</span><span class="shortname">copy</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#copy"><span class="prefix">Two.Anchor.</span><span class="shortname">copy</span></a></h2>
 
 
 
@@ -521,7 +521,7 @@ Copy the properties of one [Two.Anchor](/documentation/anchor) onto another.
 
 ## clone
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Anchor.</span><span class="shortname">clone</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#clone"><span class="prefix">Two.Anchor.</span><span class="shortname">clone</span></a></h2>
 
 
 
@@ -572,7 +572,7 @@ Create a new [Two.Anchor](/documentation/anchor), set all its values to the curr
 
 ## toObject
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Anchor.</span><span class="shortname">toObject</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#toObject"><span class="prefix">Two.Anchor.</span><span class="shortname">toObject</span></a></h2>
 
 
 
@@ -625,7 +625,7 @@ Create a JSON compatible plain object of the current instance. Intended for use 
 
 ## toString
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Anchor.</span><span class="shortname">toString</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#toString"><span class="prefix">Two.Anchor.</span><span class="shortname">toString</span></a></h2>
 
 
 

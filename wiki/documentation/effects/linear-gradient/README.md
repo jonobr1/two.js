@@ -1,5 +1,5 @@
 ---
-pageClass: documentation-class
+pageClass: docs
 ---
 
 # Two.LinearGradient
@@ -38,7 +38,7 @@ __Extends__: [Two.Gradient](/documentation/effects/gradient/)
 
 ## Stop
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.LinearGradient.</span><span class="shortname">Stop</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#Stop"><span class="prefix">Two.LinearGradient.</span><span class="shortname">Stop</span></a></h2>
 
 
 
@@ -81,7 +81,7 @@ __Extends__: [Two.Gradient](/documentation/effects/gradient/)
 
 ## MakeObservable
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.LinearGradient.</span><span class="shortname">MakeObservable</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#MakeObservable"><span class="prefix">Two.LinearGradient.</span><span class="shortname">MakeObservable</span></a></h2>
 
 
 
@@ -131,7 +131,7 @@ Convenience function to apply observable qualities of a [Two.LinearGradient](/do
 
 ## FlagEndPoints
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.LinearGradient.</span><span class="shortname">FlagEndPoints</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#FlagEndPoints"><span class="prefix">Two.LinearGradient.</span><span class="shortname">FlagEndPoints</span></a></h2>
 
 
 
@@ -174,7 +174,7 @@ Cached method to let renderers know end points have been updated on a [Two.Linea
 
 ## left
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.LinearGradient.</span><span class="shortname">left</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#left"><span class="prefix">Two.LinearGradient.</span><span class="shortname">left</span></a></h2>
 
 
 
@@ -217,7 +217,7 @@ The x and y value for where the first end point is placed on the canvas.
 
 ## right
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.LinearGradient.</span><span class="shortname">right</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#right"><span class="prefix">Two.LinearGradient.</span><span class="shortname">right</span></a></h2>
 
 
 
@@ -260,7 +260,7 @@ The x and y value for where the second end point is placed on the canvas.
 
 ## clone
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.LinearGradient.</span><span class="shortname">clone</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#clone"><span class="prefix">Two.LinearGradient.</span><span class="shortname">clone</span></a></h2>
 
 
 
@@ -318,7 +318,7 @@ Create a new instance of [Two.LinearGradient](/documentation/lineargradient) wit
 
 ## toObject
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.LinearGradient.</span><span class="shortname">toObject</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#toObject"><span class="prefix">Two.LinearGradient.</span><span class="shortname">toObject</span></a></h2>
 
 
 

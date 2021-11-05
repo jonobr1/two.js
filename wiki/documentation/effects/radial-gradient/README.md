@@ -1,5 +1,5 @@
 ---
-pageClass: documentation-class
+pageClass: docs
 ---
 
 # Two.RadialGradient
@@ -39,7 +39,7 @@ __Extends__: [Two.Gradient](/documentation/effects/gradient/)
 
 ## Stop
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.RadialGradient.</span><span class="shortname">Stop</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#Stop"><span class="prefix">Two.RadialGradient.</span><span class="shortname">Stop</span></a></h2>
 
 
 
@@ -82,7 +82,7 @@ __Extends__: [Two.Gradient](/documentation/effects/gradient/)
 
 ## Properties
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.RadialGradient.</span><span class="shortname">Properties</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#Properties"><span class="prefix">Two.RadialGradient.</span><span class="shortname">Properties</span></a></h2>
 
 
 
@@ -125,7 +125,7 @@ A list of properties that are on every [Two.RadialGradient](/documentation/radia
 
 ## MakeObservable
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.RadialGradient.</span><span class="shortname">MakeObservable</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#MakeObservable"><span class="prefix">Two.RadialGradient.</span><span class="shortname">MakeObservable</span></a></h2>
 
 
 
@@ -175,7 +175,7 @@ Convenience function to apply observable qualities of a [Two.RadialGradient](/do
 
 ## center
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.RadialGradient.</span><span class="shortname">center</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#center"><span class="prefix">Two.RadialGradient.</span><span class="shortname">center</span></a></h2>
 
 
 
@@ -218,7 +218,7 @@ The x and y value for where the origin of the radial gradient is.
 
 ## focal
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.RadialGradient.</span><span class="shortname">focal</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#focal"><span class="prefix">Two.RadialGradient.</span><span class="shortname">focal</span></a></h2>
 
 
 
@@ -271,7 +271,7 @@ This effects the spray or spread of the radial gradient.
 
 ## clone
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.RadialGradient.</span><span class="shortname">clone</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#clone"><span class="prefix">Two.RadialGradient.</span><span class="shortname">clone</span></a></h2>
 
 
 
@@ -329,7 +329,7 @@ Create a new instance of [Two.RadialGradient](/documentation/radialgradient) wit
 
 ## toObject
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.RadialGradient.</span><span class="shortname">toObject</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#toObject"><span class="prefix">Two.RadialGradient.</span><span class="shortname">toObject</span></a></h2>
 
 
 

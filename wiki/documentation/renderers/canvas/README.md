@@ -1,5 +1,5 @@
 ---
-pageClass: documentation-class
+pageClass: docs
 ---
 
 # Two.CanvasRenderer
@@ -37,7 +37,7 @@ This class is used by [Two](/documentation/) when constructing with `type` of `T
 
 ## Utils
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.CanvasRenderer.</span><span class="shortname">Utils</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#Utils"><span class="prefix">Two.CanvasRenderer.</span><span class="shortname">Utils</span></a></h2>
 
 
 
@@ -80,7 +80,7 @@ A massive object filled with utility functions and properties to render Two.js o
 
 ## domElement
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.CanvasRenderer.</span><span class="shortname">domElement</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#domElement"><span class="prefix">Two.CanvasRenderer.</span><span class="shortname">domElement</span></a></h2>
 
 
 
@@ -123,7 +123,7 @@ The `<canvas />` associated with the Two.js scene.
 
 ## ctx
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.CanvasRenderer.</span><span class="shortname">ctx</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#ctx"><span class="prefix">Two.CanvasRenderer.</span><span class="shortname">ctx</span></a></h2>
 
 
 
@@ -166,7 +166,7 @@ Associated two dimensional context to render on the `<canvas />`.
 
 ## overdraw
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.CanvasRenderer.</span><span class="shortname">overdraw</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#overdraw"><span class="prefix">Two.CanvasRenderer.</span><span class="shortname">overdraw</span></a></h2>
 
 
 
@@ -209,7 +209,7 @@ Determines whether the canvas clears the background each draw call.
 
 ## scene
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.CanvasRenderer.</span><span class="shortname">scene</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#scene"><span class="prefix">Two.CanvasRenderer.</span><span class="shortname">scene</span></a></h2>
 
 
 
@@ -252,7 +252,7 @@ The root group of the scenegraph.
 
 ## setSize
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.CanvasRenderer.</span><span class="shortname">setSize</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#setSize"><span class="prefix">Two.CanvasRenderer.</span><span class="shortname">setSize</span></a></h2>
 
 
 
@@ -312,7 +312,7 @@ Change the size of the renderer.
 
 ## render
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.CanvasRenderer.</span><span class="shortname">render</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#render"><span class="prefix">Two.CanvasRenderer.</span><span class="shortname">render</span></a></h2>
 
 
 

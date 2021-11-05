@@ -1,5 +1,5 @@
 ---
-pageClass: documentation-class
+pageClass: docs
 ---
 
 # Two.Points
@@ -34,7 +34,7 @@ This is a primary primitive class for quickly and easily drawing points in Two.j
 
 ## sizeAttenuation
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Points.</span><span class="shortname">sizeAttenuation</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#sizeAttenuation"><span class="prefix">Two.Points.</span><span class="shortname">sizeAttenuation</span></a></h2>
 
 
 
@@ -83,7 +83,7 @@ Set to `true` if you'd like the size of the points to be relative to the scale o
 
 ## beginning
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Points.</span><span class="shortname">beginning</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#beginning"><span class="prefix">Two.Points.</span><span class="shortname">beginning</span></a></h2>
 
 
 
@@ -132,7 +132,7 @@ Number between zero and one to state the beginning of where the path is rendered
 
 ## ending
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Points.</span><span class="shortname">ending</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#ending"><span class="prefix">Two.Points.</span><span class="shortname">ending</span></a></h2>
 
 
 
@@ -181,7 +181,7 @@ Number between zero and one to state the ending of where the path is rendered.
 
 ## fill
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Points.</span><span class="shortname">fill</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#fill"><span class="prefix">Two.Points.</span><span class="shortname">fill</span></a></h2>
 
 
 
@@ -230,7 +230,7 @@ The value of what the path should be filled in with.
 
 ## stroke
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Points.</span><span class="shortname">stroke</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#stroke"><span class="prefix">Two.Points.</span><span class="shortname">stroke</span></a></h2>
 
 
 
@@ -279,7 +279,7 @@ The value of what the path should be outlined in with.
 
 ## className
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Points.</span><span class="shortname">className</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#className"><span class="prefix">Two.Points.</span><span class="shortname">className</span></a></h2>
 
 
 
@@ -332,7 +332,7 @@ Only available for the SVG renderer.
 
 ## visible
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Points.</span><span class="shortname">visible</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#visible"><span class="prefix">Two.Points.</span><span class="shortname">visible</span></a></h2>
 
 
 
@@ -385,7 +385,7 @@ For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](
 
 ## vertices
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Points.</span><span class="shortname">vertices</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#vertices"><span class="prefix">Two.Points.</span><span class="shortname">vertices</span></a></h2>
 
 
 
@@ -444,7 +444,7 @@ The array when manipulating is actually a [Two.Collection](/documentation/collec
 
 ## dashes
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Points.</span><span class="shortname">dashes</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#dashes"><span class="prefix">Two.Points.</span><span class="shortname">dashes</span></a></h2>
 
 
 
@@ -499,7 +499,7 @@ A list of numbers that represent the repeated dash length and dash space applied
 
 ## dashes.offset
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Points.</span><span class="shortname">dashes.offset</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#dashes.offset"><span class="prefix">Two.Points.</span><span class="shortname">dashes.offset</span></a></h2>
 
 
 
@@ -542,7 +542,7 @@ A number in pixels to offset [Two.Points.dashes](/documentation/points/#two-poin
 
 ## length
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Points.</span><span class="shortname">length</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#length"><span class="prefix">Two.Points.</span><span class="shortname">length</span></a></h2>
 
 
 
@@ -585,7 +585,7 @@ The sum of distances between all [Two.Points.vertices](/documentation/points/#tw
 
 ## clone
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Points.</span><span class="shortname">clone</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#clone"><span class="prefix">Two.Points.</span><span class="shortname">clone</span></a></h2>
 
 
 
@@ -643,7 +643,7 @@ Create a new instance of [Two.Points](/documentation/points) with the same prope
 
 ## toObject
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Points.</span><span class="shortname">toObject</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#toObject"><span class="prefix">Two.Points.</span><span class="shortname">toObject</span></a></h2>
 
 
 
@@ -694,7 +694,7 @@ Return a JSON compatible plain object that represents the points object.
 
 ## noFill
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Points.</span><span class="shortname">noFill</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#noFill"><span class="prefix">Two.Points.</span><span class="shortname">noFill</span></a></h2>
 
 
 
@@ -737,7 +737,7 @@ Short hand method to set fill to `transparent`.
 
 ## noStroke
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Points.</span><span class="shortname">noStroke</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#noStroke"><span class="prefix">Two.Points.</span><span class="shortname">noStroke</span></a></h2>
 
 
 
@@ -780,7 +780,7 @@ Short hand method to set stroke to `transparent`.
 
 ## corner
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Points.</span><span class="shortname">corner</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#corner"><span class="prefix">Two.Points.</span><span class="shortname">corner</span></a></h2>
 
 
 
@@ -823,7 +823,7 @@ Orient the vertices of the shape to the upper left-hand corner of the points obj
 
 ## center
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Points.</span><span class="shortname">center</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#center"><span class="prefix">Two.Points.</span><span class="shortname">center</span></a></h2>
 
 
 
@@ -866,7 +866,7 @@ Orient the vertices of the shape to the center of the points object.
 
 ## remove
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Points.</span><span class="shortname">remove</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#remove"><span class="prefix">Two.Points.</span><span class="shortname">remove</span></a></h2>
 
 
 
@@ -909,7 +909,7 @@ Remove self from the scene / parent.
 
 ## getBoundingClientRect
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Points.</span><span class="shortname">getBoundingClientRect</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#getBoundingClientRect"><span class="prefix">Two.Points.</span><span class="shortname">getBoundingClientRect</span></a></h2>
 
 
 
@@ -969,7 +969,7 @@ Return an object with top, left, right, bottom, width, and height parameters of 
 
 ## subdivide
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Points.</span><span class="shortname">subdivide</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#subdivide"><span class="prefix">Two.Points.</span><span class="shortname">subdivide</span></a></h2>
 
 
 

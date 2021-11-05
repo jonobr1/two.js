@@ -1,5 +1,5 @@
 ---
-pageClass: documentation-class
+pageClass: docs
 ---
 
 # Two.Circle
@@ -37,7 +37,7 @@ __Extends__: [Two.Path](/documentation/path/)
 
 ## Properties
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Circle.</span><span class="shortname">Properties</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#Properties"><span class="prefix">Two.Circle.</span><span class="shortname">Properties</span></a></h2>
 
 
 
@@ -80,7 +80,7 @@ A list of properties that are on every [Two.Circle](/documentation/circle).
 
 ## MakeObservable
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Circle.</span><span class="shortname">MakeObservable</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#MakeObservable"><span class="prefix">Two.Circle.</span><span class="shortname">MakeObservable</span></a></h2>
 
 
 
@@ -130,7 +130,7 @@ Convenience function to apply observable qualities of a [Two.Circle](/documentat
 
 ## radius
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Circle.</span><span class="shortname">radius</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#radius"><span class="prefix">Two.Circle.</span><span class="shortname">radius</span></a></h2>
 
 
 
@@ -173,7 +173,7 @@ The size of the radius of the circle.
 
 ## clone
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Circle.</span><span class="shortname">clone</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#clone"><span class="prefix">Two.Circle.</span><span class="shortname">clone</span></a></h2>
 
 
 
@@ -231,7 +231,7 @@ Create a new instance of [Two.Circle](/documentation/circle) with the same prope
 
 ## toObject
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Circle.</span><span class="shortname">toObject</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#toObject"><span class="prefix">Two.Circle.</span><span class="shortname">toObject</span></a></h2>
 
 
 

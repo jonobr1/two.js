@@ -1,5 +1,5 @@
 ---
-pageClass: documentation-class
+pageClass: docs
 ---
 
 # Two.Shape
@@ -29,7 +29,7 @@ The foundational transformation object for the Two.js scenegraph.
 
 ## FlagMatrix
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Shape.</span><span class="shortname">FlagMatrix</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#FlagMatrix"><span class="prefix">Two.Shape.</span><span class="shortname">FlagMatrix</span></a></h2>
 
 
 
@@ -72,7 +72,7 @@ Utility function used in conjunction with event handlers to update the flagMatri
 
 ## MakeObservable
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Shape.</span><span class="shortname">MakeObservable</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#MakeObservable"><span class="prefix">Two.Shape.</span><span class="shortname">MakeObservable</span></a></h2>
 
 
 
@@ -122,7 +122,7 @@ Convenience function to apply observable qualities of a [Two.Shape](/documentati
 
 ## renderer
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Shape.</span><span class="shortname">renderer</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#renderer"><span class="prefix">Two.Shape.</span><span class="shortname">renderer</span></a></h2>
 
 
 
@@ -181,7 +181,7 @@ With the [Two.SvgRenderer](/documentation/svgrenderer) you can access the underl
 
 ## id
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Shape.</span><span class="shortname">id</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#id"><span class="prefix">Two.Shape.</span><span class="shortname">id</span></a></h2>
 
 
 
@@ -234,7 +234,7 @@ In the [Two.SvgRenderer](/documentation/svgrenderer) change this to change the u
 
 ## classList
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Shape.</span><span class="shortname">classList</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#classList"><span class="prefix">Two.Shape.</span><span class="shortname">classList</span></a></h2>
 
 
 
@@ -283,7 +283,7 @@ A list of class strings stored if imported / interpreted  from an SVG element.
 
 ## matrix
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Shape.</span><span class="shortname">matrix</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#matrix"><span class="prefix">Two.Shape.</span><span class="shortname">matrix</span></a></h2>
 
 
 
@@ -342,7 +342,7 @@ The transformation matrix of the shape.
 
 ## translation
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Shape.</span><span class="shortname">translation</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#translation"><span class="prefix">Two.Shape.</span><span class="shortname">translation</span></a></h2>
 
 
 
@@ -385,7 +385,7 @@ The x and y value for where the shape is placed relative to its parent.
 
 ## rotation
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Shape.</span><span class="shortname">rotation</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#rotation"><span class="prefix">Two.Shape.</span><span class="shortname">rotation</span></a></h2>
 
 
 
@@ -428,7 +428,7 @@ The value in Number for how much the shape is rotated relative to its parent.
 
 ## scale
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Shape.</span><span class="shortname">scale</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#scale"><span class="prefix">Two.Shape.</span><span class="shortname">scale</span></a></h2>
 
 
 
@@ -481,7 +481,7 @@ This value can be replaced with a [Two.Vector](/documentation/vector) to do non-
 
 ## skewX
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Shape.</span><span class="shortname">skewX</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#skewX"><span class="prefix">Two.Shape.</span><span class="shortname">skewX</span></a></h2>
 
 
 
@@ -530,7 +530,7 @@ Skew the shape by an angle in the x axis direction.
 
 ## skewY
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Shape.</span><span class="shortname">skewY</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#skewY"><span class="prefix">Two.Shape.</span><span class="shortname">skewY</span></a></h2>
 
 
 
@@ -579,7 +579,7 @@ Skew the shape by an angle in the y axis direction.
 
 ## className
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Shape.</span><span class="shortname">className</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#className"><span class="prefix">Two.Shape.</span><span class="shortname">className</span></a></h2>
 
 
 
@@ -632,7 +632,7 @@ Only available for the SVG renderer.
 
 ## addTo
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Shape.</span><span class="shortname">addTo</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#addTo"><span class="prefix">Two.Shape.</span><span class="shortname">addTo</span></a></h2>
 
 
 
@@ -682,7 +682,7 @@ Convenience method to add itself to the scenegraph.
 
 ## clone
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Shape.</span><span class="shortname">clone</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#clone"><span class="prefix">Two.Shape.</span><span class="shortname">clone</span></a></h2>
 
 
 

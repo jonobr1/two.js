@@ -1,5 +1,5 @@
 ---
-pageClass: documentation-class
+pageClass: docs
 ---
 
 # Two.Gradient
@@ -28,7 +28,7 @@ This is the base class for constructing different types of gradients with Two.js
 
 ## Stop
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Gradient.</span><span class="shortname">Stop</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#Stop"><span class="prefix">Two.Gradient.</span><span class="shortname">Stop</span></a></h2>
 
 
 
@@ -71,7 +71,7 @@ This is the base class for constructing different types of gradients with Two.js
 
 ## Properties
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Gradient.</span><span class="shortname">Properties</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#Properties"><span class="prefix">Two.Gradient.</span><span class="shortname">Properties</span></a></h2>
 
 
 
@@ -114,7 +114,7 @@ A list of properties that are on every [Two.Gradient](/documentation/gradient).
 
 ## MakeObservable
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Gradient.</span><span class="shortname">MakeObservable</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#MakeObservable"><span class="prefix">Two.Gradient.</span><span class="shortname">MakeObservable</span></a></h2>
 
 
 
@@ -164,7 +164,7 @@ Convenience function to apply observable qualities of a [Two.Gradient](/document
 
 ## FlagStops
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Gradient.</span><span class="shortname">FlagStops</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#FlagStops"><span class="prefix">Two.Gradient.</span><span class="shortname">FlagStops</span></a></h2>
 
 
 
@@ -207,7 +207,7 @@ Cached method to let renderers know stops have been updated on a [Two.Gradient](
 
 ## BindVertices
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Gradient.</span><span class="shortname">BindVertices</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#BindVertices"><span class="prefix">Two.Gradient.</span><span class="shortname">BindVertices</span></a></h2>
 
 
 
@@ -250,7 +250,7 @@ Cached method to let [Two.Gradient](/documentation/gradient) know vertices have 
 
 ## UnbindStops
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Gradient.</span><span class="shortname">UnbindStops</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#UnbindStops"><span class="prefix">Two.Gradient.</span><span class="shortname">UnbindStops</span></a></h2>
 
 
 
@@ -293,7 +293,7 @@ Cached method to let [Two.Gradient](/documentation/gradient) know vertices have 
 
 ## renderer
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Gradient.</span><span class="shortname">renderer</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#renderer"><span class="prefix">Two.Gradient.</span><span class="shortname">renderer</span></a></h2>
 
 
 
@@ -352,7 +352,7 @@ With the [Two.SvgRenderer](/documentation/svgrenderer) you can access the underl
 
 ## id
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Gradient.</span><span class="shortname">id</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#id"><span class="prefix">Two.Gradient.</span><span class="shortname">id</span></a></h2>
 
 
 
@@ -405,7 +405,7 @@ In the [Two.SvgRenderer](/documentation/svgrenderer) change this to change the u
 
 ## spread
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Gradient.</span><span class="shortname">spread</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#spread"><span class="prefix">Two.Gradient.</span><span class="shortname">spread</span></a></h2>
 
 
 
@@ -454,7 +454,7 @@ Indicates what happens if the gradient starts or ends inside the bounds of the t
 
 ## stops
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Gradient.</span><span class="shortname">stops</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#stops"><span class="prefix">Two.Gradient.</span><span class="shortname">stops</span></a></h2>
 
 
 
@@ -497,7 +497,7 @@ An ordered list of [Two.Stop](/documentation/stop)s for rendering the gradient.
 
 ## clone
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Gradient.</span><span class="shortname">clone</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#clone"><span class="prefix">Two.Gradient.</span><span class="shortname">clone</span></a></h2>
 
 
 
@@ -555,7 +555,7 @@ Create a new instance of [Two.Gradient](/documentation/gradient) with the same p
 
 ## toObject
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Gradient.</span><span class="shortname">toObject</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#toObject"><span class="prefix">Two.Gradient.</span><span class="shortname">toObject</span></a></h2>
 
 
 

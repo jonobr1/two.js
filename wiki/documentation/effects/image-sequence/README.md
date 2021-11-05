@@ -1,5 +1,5 @@
 ---
-pageClass: documentation-class
+pageClass: docs
 ---
 
 # Two.ImageSequence
@@ -37,7 +37,7 @@ A convenient package to display still or animated images organized as a series o
 
 ## Properties
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.ImageSequence.</span><span class="shortname">Properties</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#Properties"><span class="prefix">Two.ImageSequence.</span><span class="shortname">Properties</span></a></h2>
 
 
 
@@ -80,7 +80,7 @@ A list of properties that are on every [Two.ImageSequence](/documentation/images
 
 ## DefaultFrameRate
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.ImageSequence.</span><span class="shortname">DefaultFrameRate</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#DefaultFrameRate"><span class="prefix">Two.ImageSequence.</span><span class="shortname">DefaultFrameRate</span></a></h2>
 
 
 
@@ -123,7 +123,7 @@ default frame rate that [Two.ImageSequence.frameRate](/documentation/imagesequen
 
 ## FlagTextures
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.ImageSequence.</span><span class="shortname">FlagTextures</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#FlagTextures"><span class="prefix">Two.ImageSequence.</span><span class="shortname">FlagTextures</span></a></h2>
 
 
 
@@ -166,7 +166,7 @@ Cached method to let renderers know textures have been updated on a [Two.ImageSe
 
 ## BindTextures
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.ImageSequence.</span><span class="shortname">BindTextures</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#BindTextures"><span class="prefix">Two.ImageSequence.</span><span class="shortname">BindTextures</span></a></h2>
 
 
 
@@ -209,7 +209,7 @@ Cached method to let [Two.ImageSequence](/documentation/imagesequence) know text
 
 ## UnbindVertices
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.ImageSequence.</span><span class="shortname">UnbindVertices</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#UnbindVertices"><span class="prefix">Two.ImageSequence.</span><span class="shortname">UnbindVertices</span></a></h2>
 
 
 
@@ -252,7 +252,7 @@ Cached method to let [Two.ImageSequence](/documentation/imagesequence) know text
 
 ## MakeObservable
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.ImageSequence.</span><span class="shortname">MakeObservable</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#MakeObservable"><span class="prefix">Two.ImageSequence.</span><span class="shortname">MakeObservable</span></a></h2>
 
 
 
@@ -302,7 +302,7 @@ Convenience function to apply observable qualities of a [Two.ImageSequence](/doc
 
 ## GenerateTexture
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.ImageSequence.</span><span class="shortname">GenerateTexture</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#GenerateTexture"><span class="prefix">Two.ImageSequence.</span><span class="shortname">GenerateTexture</span></a></h2>
 
 
 
@@ -366,7 +366,7 @@ Function used internally by [Two.ImageSequence](/documentation/imagesequence) to
 
 ## textures
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.ImageSequence.</span><span class="shortname">textures</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#textures"><span class="prefix">Two.ImageSequence.</span><span class="shortname">textures</span></a></h2>
 
 
 
@@ -409,7 +409,7 @@ A list of textures to be used as frames for animating the [Two.ImageSequence](/d
 
 ## frameRate
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.ImageSequence.</span><span class="shortname">frameRate</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#frameRate"><span class="prefix">Two.ImageSequence.</span><span class="shortname">frameRate</span></a></h2>
 
 
 
@@ -452,7 +452,7 @@ The number of frames to animate against per second.
 
 ## index
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.ImageSequence.</span><span class="shortname">index</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#index"><span class="prefix">Two.ImageSequence.</span><span class="shortname">index</span></a></h2>
 
 
 
@@ -495,7 +495,7 @@ The index of the current tile of the sprite to display. Defaults to `0`.
 
 ## play
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.ImageSequence.</span><span class="shortname">play</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#play"><span class="prefix">Two.ImageSequence.</span><span class="shortname">play</span></a></h2>
 
 
 
@@ -547,7 +547,7 @@ Initiate animation playback of a [Two.ImageSequence](/documentation/imagesequenc
 
 ## pause
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.ImageSequence.</span><span class="shortname">pause</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#pause"><span class="prefix">Two.ImageSequence.</span><span class="shortname">pause</span></a></h2>
 
 
 
@@ -590,7 +590,7 @@ Halt animation playback of a [Two.ImageSequence](/documentation/imagesequence).
 
 ## stop
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.ImageSequence.</span><span class="shortname">stop</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#stop"><span class="prefix">Two.ImageSequence.</span><span class="shortname">stop</span></a></h2>
 
 
 
@@ -633,7 +633,7 @@ Halt animation playback of a [Two.ImageSequence](/documentation/imagesequence) a
 
 ## clone
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.ImageSequence.</span><span class="shortname">clone</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#clone"><span class="prefix">Two.ImageSequence.</span><span class="shortname">clone</span></a></h2>
 
 
 
@@ -691,7 +691,7 @@ Create a new instance of [Two.ImageSequence](/documentation/imagesequence) with 
 
 ## toObject
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.ImageSequence.</span><span class="shortname">toObject</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#toObject"><span class="prefix">Two.ImageSequence.</span><span class="shortname">toObject</span></a></h2>
 
 
 

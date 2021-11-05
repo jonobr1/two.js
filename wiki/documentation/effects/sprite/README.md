@@ -1,5 +1,5 @@
 ---
-pageClass: documentation-class
+pageClass: docs
 ---
 
 # Two.Sprite
@@ -39,7 +39,7 @@ A convenient package to display still or animated images through a tiled image s
 
 ## Properties
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Sprite.</span><span class="shortname">Properties</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#Properties"><span class="prefix">Two.Sprite.</span><span class="shortname">Properties</span></a></h2>
 
 
 
@@ -82,7 +82,7 @@ A list of properties that are on every [Two.Sprite](/documentation/sprite).
 
 ## MakeObservable
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Sprite.</span><span class="shortname">MakeObservable</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#MakeObservable"><span class="prefix">Two.Sprite.</span><span class="shortname">MakeObservable</span></a></h2>
 
 
 
@@ -132,7 +132,7 @@ Convenience function to apply observable qualities of a [Two.Sprite](/documentat
 
 ## texture
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Sprite.</span><span class="shortname">texture</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#texture"><span class="prefix">Two.Sprite.</span><span class="shortname">texture</span></a></h2>
 
 
 
@@ -175,7 +175,7 @@ The texture to be used as bitmap data to display image in the scene.
 
 ## columns
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Sprite.</span><span class="shortname">columns</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#columns"><span class="prefix">Two.Sprite.</span><span class="shortname">columns</span></a></h2>
 
 
 
@@ -218,7 +218,7 @@ The number of columns to split the texture into. Defaults to `1`.
 
 ## rows
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Sprite.</span><span class="shortname">rows</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#rows"><span class="prefix">Two.Sprite.</span><span class="shortname">rows</span></a></h2>
 
 
 
@@ -261,7 +261,7 @@ The number of rows to split the texture into. Defaults to `1`.
 
 ## frameRate
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Sprite.</span><span class="shortname">frameRate</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#frameRate"><span class="prefix">Two.Sprite.</span><span class="shortname">frameRate</span></a></h2>
 
 
 
@@ -304,7 +304,7 @@ The number of frames to animate against per second. Defaults to `0` for non-anim
 
 ## index
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Sprite.</span><span class="shortname">index</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#index"><span class="prefix">Two.Sprite.</span><span class="shortname">index</span></a></h2>
 
 
 
@@ -347,7 +347,7 @@ The index of the current tile of the sprite to display. Defaults to `0`.
 
 ## play
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Sprite.</span><span class="shortname">play</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#play"><span class="prefix">Two.Sprite.</span><span class="shortname">play</span></a></h2>
 
 
 
@@ -399,7 +399,7 @@ Initiate animation playback of a [Two.Sprite](/documentation/sprite).
 
 ## pause
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Sprite.</span><span class="shortname">pause</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#pause"><span class="prefix">Two.Sprite.</span><span class="shortname">pause</span></a></h2>
 
 
 
@@ -442,7 +442,7 @@ Halt animation playback of a [Two.Sprite](/documentation/sprite).
 
 ## stop
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Sprite.</span><span class="shortname">stop</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#stop"><span class="prefix">Two.Sprite.</span><span class="shortname">stop</span></a></h2>
 
 
 
@@ -485,7 +485,7 @@ Halt animation playback of a [Two.Sprite](/documentation/sprite) and set the cur
 
 ## clone
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Sprite.</span><span class="shortname">clone</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#clone"><span class="prefix">Two.Sprite.</span><span class="shortname">clone</span></a></h2>
 
 
 
@@ -543,7 +543,7 @@ Create a new instance of [Two.Sprite](/documentation/sprite) with the same prope
 
 ## toObject
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Sprite.</span><span class="shortname">toObject</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#toObject"><span class="prefix">Two.Sprite.</span><span class="shortname">toObject</span></a></h2>
 
 
 

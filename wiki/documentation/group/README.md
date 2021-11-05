@@ -1,5 +1,5 @@
 ---
-pageClass: documentation-class
+pageClass: docs
 ---
 
 # Two.Group
@@ -34,7 +34,7 @@ This is the primary class for grouping objects that are then drawn in Two.js. In
 
 ## InsertChildren
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Group.</span><span class="shortname">InsertChildren</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#InsertChildren"><span class="prefix">Two.Group.</span><span class="shortname">InsertChildren</span></a></h2>
 
 
 
@@ -84,7 +84,7 @@ Cached method to let renderers know children have been added to a [Two.Group](/d
 
 ## RemoveChildren
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Group.</span><span class="shortname">RemoveChildren</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#RemoveChildren"><span class="prefix">Two.Group.</span><span class="shortname">RemoveChildren</span></a></h2>
 
 
 
@@ -134,7 +134,7 @@ Cached method to let renderers know children have been removed from a [Two.Group
 
 ## OrderChildren
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Group.</span><span class="shortname">OrderChildren</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#OrderChildren"><span class="prefix">Two.Group.</span><span class="shortname">OrderChildren</span></a></h2>
 
 
 
@@ -177,7 +177,7 @@ Cached method to let renderers know order has been updated on a [Two.Group](/doc
 
 ## Properties
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Group.</span><span class="shortname">Properties</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#Properties"><span class="prefix">Two.Group.</span><span class="shortname">Properties</span></a></h2>
 
 
 
@@ -220,7 +220,7 @@ A list of properties that are on every [Two.Group](/documentation/group).
 
 ## MakeObservable
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Group.</span><span class="shortname">MakeObservable</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#MakeObservable"><span class="prefix">Two.Group.</span><span class="shortname">MakeObservable</span></a></h2>
 
 
 
@@ -270,7 +270,7 @@ Convenience function to apply observable qualities of a [Two.Group](/documentati
 
 ## MakeGetterSetters
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Group.</span><span class="shortname">MakeGetterSetters</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#MakeGetterSetters"><span class="prefix">Two.Group.</span><span class="shortname">MakeGetterSetters</span></a></h2>
 
 
 
@@ -321,7 +321,7 @@ Convenience method to apply getter / setter logic on an array of properties. Use
 
 ## MakeGetterSetter
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Group.</span><span class="shortname">MakeGetterSetter</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#MakeGetterSetter"><span class="prefix">Two.Group.</span><span class="shortname">MakeGetterSetter</span></a></h2>
 
 
 
@@ -372,7 +372,7 @@ Convenience method to apply getter / setter logic specific to how `Two.Group`s t
 
 ## additions
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Group.</span><span class="shortname">additions</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#additions"><span class="prefix">Two.Group.</span><span class="shortname">additions</span></a></h2>
 
 
 
@@ -421,7 +421,7 @@ An automatically updated list of children that need to be appended to the render
 
 ## subtractions
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Group.</span><span class="shortname">subtractions</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#subtractions"><span class="prefix">Two.Group.</span><span class="shortname">subtractions</span></a></h2>
 
 
 
@@ -470,7 +470,7 @@ An automatically updated list of children that need to be removed from the rende
 
 ## children
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Group.</span><span class="shortname">children</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#children"><span class="prefix">Two.Group.</span><span class="shortname">children</span></a></h2>
 
 
 
@@ -529,7 +529,7 @@ Ther order of this list indicates the order each element is rendered to the scre
 
 ## fill
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Group.</span><span class="shortname">fill</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#fill"><span class="prefix">Two.Group.</span><span class="shortname">fill</span></a></h2>
 
 
 
@@ -578,7 +578,7 @@ The value of what all child shapes should be filled in with.
 
 ## stroke
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Group.</span><span class="shortname">stroke</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#stroke"><span class="prefix">Two.Group.</span><span class="shortname">stroke</span></a></h2>
 
 
 
@@ -627,7 +627,7 @@ The value of what all child shapes should be outlined in with.
 
 ## linewidth
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Group.</span><span class="shortname">linewidth</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#linewidth"><span class="prefix">Two.Group.</span><span class="shortname">linewidth</span></a></h2>
 
 
 
@@ -670,7 +670,7 @@ The thickness in pixels of the stroke for all child shapes.
 
 ## opacity
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Group.</span><span class="shortname">opacity</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#opacity"><span class="prefix">Two.Group.</span><span class="shortname">opacity</span></a></h2>
 
 
 
@@ -723,7 +723,7 @@ Becomes multiplied by the individual child's opacity property.
 
 ## visible
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Group.</span><span class="shortname">visible</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#visible"><span class="prefix">Two.Group.</span><span class="shortname">visible</span></a></h2>
 
 
 
@@ -776,7 +776,7 @@ For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](
 
 ## cap
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Group.</span><span class="shortname">cap</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#cap"><span class="prefix">Two.Group.</span><span class="shortname">cap</span></a></h2>
 
 
 
@@ -825,7 +825,7 @@ For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](
 
 ## join
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Group.</span><span class="shortname">join</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#join"><span class="prefix">Two.Group.</span><span class="shortname">join</span></a></h2>
 
 
 
@@ -874,7 +874,7 @@ For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](
 
 ## miter
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Group.</span><span class="shortname">miter</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#miter"><span class="prefix">Two.Group.</span><span class="shortname">miter</span></a></h2>
 
 
 
@@ -923,7 +923,7 @@ For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](
 
 ## closed
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Group.</span><span class="shortname">closed</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#closed"><span class="prefix">Two.Group.</span><span class="shortname">closed</span></a></h2>
 
 
 
@@ -966,7 +966,7 @@ Determines whether a final line is drawn between the final point in the `vertice
 
 ## curved
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Group.</span><span class="shortname">curved</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#curved"><span class="prefix">Two.Group.</span><span class="shortname">curved</span></a></h2>
 
 
 
@@ -1009,7 +1009,7 @@ When the child's path is `automatic = true` this boolean determines whether the 
 
 ## automatic
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Group.</span><span class="shortname">automatic</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#automatic"><span class="prefix">Two.Group.</span><span class="shortname">automatic</span></a></h2>
 
 
 
@@ -1052,7 +1052,7 @@ Determines whether or not Two.js should calculate curves, lines, and commands au
 
 ## beginning
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Group.</span><span class="shortname">beginning</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#beginning"><span class="prefix">Two.Group.</span><span class="shortname">beginning</span></a></h2>
 
 
 
@@ -1111,7 +1111,7 @@ This is great for animating in and out stroked paths in conjunction with [Two.Gr
 
 ## ending
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Group.</span><span class="shortname">ending</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#ending"><span class="prefix">Two.Group.</span><span class="shortname">ending</span></a></h2>
 
 
 
@@ -1170,7 +1170,7 @@ This is great for animating in and out stroked paths in conjunction with [Two.Gr
 
 ## length
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Group.</span><span class="shortname">length</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#length"><span class="prefix">Two.Group.</span><span class="shortname">length</span></a></h2>
 
 
 
@@ -1213,7 +1213,7 @@ The sum of distances between all child lengths.
 
 ## mask
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Group.</span><span class="shortname">mask</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#mask"><span class="prefix">Two.Group.</span><span class="shortname">mask</span></a></h2>
 
 
 
@@ -1256,7 +1256,7 @@ The Two.js object to clip from a group's rendering.
 
 ## clone
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Group.</span><span class="shortname">clone</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#clone"><span class="prefix">Two.Group.</span><span class="shortname">clone</span></a></h2>
 
 
 
@@ -1314,7 +1314,7 @@ Create a new instance of [Two.Group](/documentation/group) with the same propert
 
 ## toObject
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Group.</span><span class="shortname">toObject</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#toObject"><span class="prefix">Two.Group.</span><span class="shortname">toObject</span></a></h2>
 
 
 
@@ -1365,7 +1365,7 @@ Return a JSON compatible plain object that represents the group.
 
 ## corner
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Group.</span><span class="shortname">corner</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#corner"><span class="prefix">Two.Group.</span><span class="shortname">corner</span></a></h2>
 
 
 
@@ -1408,7 +1408,7 @@ Orient the children of the group to the upper left-hand corner of that group.
 
 ## center
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Group.</span><span class="shortname">center</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#center"><span class="prefix">Two.Group.</span><span class="shortname">center</span></a></h2>
 
 
 
@@ -1451,7 +1451,7 @@ Orient the children of the group to the center of that group.
 
 ## getById
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Group.</span><span class="shortname">getById</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#getById"><span class="prefix">Two.Group.</span><span class="shortname">getById</span></a></h2>
 
 
 
@@ -1504,7 +1504,7 @@ Recursively search for id. Returns the first element found.
 
 ## getByClassName
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Group.</span><span class="shortname">getByClassName</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#getByClassName"><span class="prefix">Two.Group.</span><span class="shortname">getByClassName</span></a></h2>
 
 
 
@@ -1557,7 +1557,7 @@ Recursively search for classes. Returns an array of matching elements.
 
 ## getByType
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Group.</span><span class="shortname">getByType</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#getByType"><span class="prefix">Two.Group.</span><span class="shortname">getByType</span></a></h2>
 
 
 
@@ -1610,7 +1610,7 @@ Recursively search for children of a specific type, e.g. [Two.Path](/documentati
 
 ## add
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Group.</span><span class="shortname">add</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#add"><span class="prefix">Two.Group.</span><span class="shortname">add</span></a></h2>
 
 
 
@@ -1660,7 +1660,7 @@ Add objects to the group.
 
 ## add
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Group.</span><span class="shortname">add</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#add"><span class="prefix">Two.Group.</span><span class="shortname">add</span></a></h2>
 
 
 
@@ -1710,7 +1710,7 @@ Remove objects from the group.
 
 ## getBoundingClientRect
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Group.</span><span class="shortname">getBoundingClientRect</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#getBoundingClientRect"><span class="prefix">Two.Group.</span><span class="shortname">getBoundingClientRect</span></a></h2>
 
 
 
@@ -1770,7 +1770,7 @@ Return an object with top, left, right, bottom, width, and height parameters of 
 
 ## noFill
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Group.</span><span class="shortname">noFill</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#noFill"><span class="prefix">Two.Group.</span><span class="shortname">noFill</span></a></h2>
 
 
 
@@ -1813,7 +1813,7 @@ Apply `noFill` method to all child shapes.
 
 ## noStroke
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Group.</span><span class="shortname">noStroke</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#noStroke"><span class="prefix">Two.Group.</span><span class="shortname">noStroke</span></a></h2>
 
 
 
@@ -1856,7 +1856,7 @@ Apply `noStroke` method to all child shapes.
 
 ## subdivide
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Group.</span><span class="shortname">subdivide</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#subdivide"><span class="prefix">Two.Group.</span><span class="shortname">subdivide</span></a></h2>
 
 
 

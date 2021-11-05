@@ -1,5 +1,5 @@
 ---
-pageClass: documentation-class
+pageClass: docs
 ---
 
 # Two.Matrix
@@ -36,7 +36,7 @@ A class to store 3 x 3 transformation matrix information. In addition to storing
 
 ## Identity
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Matrix.</span><span class="shortname">Identity</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#Identity"><span class="prefix">Two.Matrix.</span><span class="shortname">Identity</span></a></h2>
 
 
 
@@ -79,7 +79,7 @@ A stored reference to the default value of a 3 x 3 matrix.
 
 ## Multiply
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Matrix.</span><span class="shortname">Multiply</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#Multiply"><span class="prefix">Two.Matrix.</span><span class="shortname">Multiply</span></a></h2>
 
 
 
@@ -141,7 +141,7 @@ Multiply two matrices together and return the result.
 
 ## elements
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Matrix.</span><span class="shortname">elements</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#elements"><span class="prefix">Two.Matrix.</span><span class="shortname">elements</span></a></h2>
 
 
 
@@ -184,7 +184,7 @@ The underlying data stored as an array.
 
 ## manual
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Matrix.</span><span class="shortname">manual</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#manual"><span class="prefix">Two.Matrix.</span><span class="shortname">manual</span></a></h2>
 
 
 
@@ -237,7 +237,7 @@ Determines whether Two.js automatically calculates the values for the matrix or 
 
 ## set
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Matrix.</span><span class="shortname">set</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#set"><span class="prefix">Two.Matrix.</span><span class="shortname">set</span></a></h2>
 
 
 
@@ -295,7 +295,7 @@ Set an array of values onto the matrix. Order described in [Two.Matrix](/documen
 
 ## set
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Matrix.</span><span class="shortname">set</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#set"><span class="prefix">Two.Matrix.</span><span class="shortname">set</span></a></h2>
 
 
 
@@ -345,7 +345,7 @@ Set an array of values onto the matrix. Order described in [Two.Matrix](/documen
 
 ## copy
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Matrix.</span><span class="shortname">copy</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#copy"><span class="prefix">Two.Matrix.</span><span class="shortname">copy</span></a></h2>
 
 
 
@@ -388,7 +388,7 @@ Copy the matrix of one to the current instance.
 
 ## identity
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Matrix.</span><span class="shortname">identity</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#identity"><span class="prefix">Two.Matrix.</span><span class="shortname">identity</span></a></h2>
 
 
 
@@ -431,7 +431,7 @@ Turn matrix to the identity, like resetting.
 
 ## multiply
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Matrix.</span><span class="shortname">multiply</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#multiply"><span class="prefix">Two.Matrix.</span><span class="shortname">multiply</span></a></h2>
 
 
 <div class="overloaded-label">
@@ -493,7 +493,7 @@ Multiply all components of the matrix against a single scalar value.
 
 ## multiply
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Matrix.</span><span class="shortname">multiply</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#multiply"><span class="prefix">Two.Matrix.</span><span class="shortname">multiply</span></a></h2>
 
 
 <div class="overloaded-label">
@@ -557,7 +557,7 @@ Multiply all components of a matrix against a 3 component vector.
 
 ## multiply
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Matrix.</span><span class="shortname">multiply</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#multiply"><span class="prefix">Two.Matrix.</span><span class="shortname">multiply</span></a></h2>
 
 
 <div class="overloaded-label">
@@ -627,7 +627,7 @@ Multiply all components of a matrix against another matrix.
 
 ## inverse
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Matrix.</span><span class="shortname">inverse</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#inverse"><span class="prefix">Two.Matrix.</span><span class="shortname">inverse</span></a></h2>
 
 
 
@@ -677,7 +677,7 @@ Return an inverted version of the matrix. If no optional one is passed a new mat
 
 ## scale
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Matrix.</span><span class="shortname">scale</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#scale"><span class="prefix">Two.Matrix.</span><span class="shortname">scale</span></a></h2>
 
 
 
@@ -727,7 +727,7 @@ Uniformly scale the transformation matrix.
 
 ## scale
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Matrix.</span><span class="shortname">scale</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#scale"><span class="prefix">Two.Matrix.</span><span class="shortname">scale</span></a></h2>
 
 
 
@@ -778,7 +778,7 @@ Scale the transformation matrix in two dimensions.
 
 ## rotate
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Matrix.</span><span class="shortname">rotate</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#rotate"><span class="prefix">Two.Matrix.</span><span class="shortname">rotate</span></a></h2>
 
 
 
@@ -828,7 +828,7 @@ Rotate the matrix.
 
 ## translate
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Matrix.</span><span class="shortname">translate</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#translate"><span class="prefix">Two.Matrix.</span><span class="shortname">translate</span></a></h2>
 
 
 
@@ -879,7 +879,7 @@ Translate the matrix.
 
 ## skewX
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Matrix.</span><span class="shortname">skewX</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#skewX"><span class="prefix">Two.Matrix.</span><span class="shortname">skewX</span></a></h2>
 
 
 
@@ -929,7 +929,7 @@ Skew the matrix by an angle in the x axis direction.
 
 ## skewY
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Matrix.</span><span class="shortname">skewY</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#skewY"><span class="prefix">Two.Matrix.</span><span class="shortname">skewY</span></a></h2>
 
 
 
@@ -979,7 +979,7 @@ Skew the matrix by an angle in the y axis direction.
 
 ## toString
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Matrix.</span><span class="shortname">toString</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#toString"><span class="prefix">Two.Matrix.</span><span class="shortname">toString</span></a></h2>
 
 
 
@@ -1039,7 +1039,7 @@ Create a transform string. Used for the Two.js rendering APIs.
 
 ## toTransformArray
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Matrix.</span><span class="shortname">toTransformArray</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#toTransformArray"><span class="prefix">Two.Matrix.</span><span class="shortname">toTransformArray</span></a></h2>
 
 
 
@@ -1090,7 +1090,7 @@ Create a transform array. Used for the Two.js rendering APIs.
 
 ## toArray
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Matrix.</span><span class="shortname">toArray</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#toArray"><span class="prefix">Two.Matrix.</span><span class="shortname">toArray</span></a></h2>
 
 
 
@@ -1141,7 +1141,7 @@ Create a transform array. Used for the Two.js rendering APIs.
 
 ## toObject
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Matrix.</span><span class="shortname">toObject</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#toObject"><span class="prefix">Two.Matrix.</span><span class="shortname">toObject</span></a></h2>
 
 
 
@@ -1184,7 +1184,7 @@ Create a JSON compatible object that represents information of the matrix.
 
 ## clone
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Matrix.</span><span class="shortname">clone</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#clone"><span class="prefix">Two.Matrix.</span><span class="shortname">clone</span></a></h2>
 
 
 

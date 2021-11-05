@@ -1,5 +1,5 @@
 ---
-pageClass: documentation-class
+pageClass: docs
 ---
 
 # Two.Path
@@ -37,7 +37,7 @@ This is the primary primitive class for creating all drawable shapes in Two.js. 
 
 ## Properties
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">Properties</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#Properties"><span class="prefix">Two.Path.</span><span class="shortname">Properties</span></a></h2>
 
 
 
@@ -80,7 +80,7 @@ A list of properties that are on every [Two.Path](/documentation/path).
 
 ## FlagVertices
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">FlagVertices</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#FlagVertices"><span class="prefix">Two.Path.</span><span class="shortname">FlagVertices</span></a></h2>
 
 
 
@@ -123,7 +123,7 @@ Cached method to let renderers know vertices have been updated on a [Two.Path](/
 
 ## BindVertices
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">BindVertices</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#BindVertices"><span class="prefix">Two.Path.</span><span class="shortname">BindVertices</span></a></h2>
 
 
 
@@ -166,7 +166,7 @@ Cached method to let [Two.Path](/documentation/path) know vertices have been add
 
 ## UnbindVertices
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">UnbindVertices</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#UnbindVertices"><span class="prefix">Two.Path.</span><span class="shortname">UnbindVertices</span></a></h2>
 
 
 
@@ -209,7 +209,7 @@ Cached method to let [Two.Path](/documentation/path) know vertices have been rem
 
 ## FlagFill
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">FlagFill</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#FlagFill"><span class="prefix">Two.Path.</span><span class="shortname">FlagFill</span></a></h2>
 
 
 
@@ -252,7 +252,7 @@ Cached method to let [Two.Path](/documentation/path) know the fill has changed.
 
 ## FlagFill
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">FlagFill</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#FlagFill"><span class="prefix">Two.Path.</span><span class="shortname">FlagFill</span></a></h2>
 
 
 
@@ -295,7 +295,7 @@ Cached method to let [Two.Path](/documentation/path) know the stroke has changed
 
 ## MakeObservable
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">MakeObservable</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#MakeObservable"><span class="prefix">Two.Path.</span><span class="shortname">MakeObservable</span></a></h2>
 
 
 
@@ -345,7 +345,7 @@ Convenience function to apply observable qualities of a [Two.Path](/documentatio
 
 ## closed
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">closed</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#closed"><span class="prefix">Two.Path.</span><span class="shortname">closed</span></a></h2>
 
 
 
@@ -388,7 +388,7 @@ Determines whether a final line is drawn between the final point in the `vertice
 
 ## curved
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">curved</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#curved"><span class="prefix">Two.Path.</span><span class="shortname">curved</span></a></h2>
 
 
 
@@ -431,7 +431,7 @@ When the path is `automatic = true` this boolean determines whether the lines be
 
 ## beginning
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">beginning</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#beginning"><span class="prefix">Two.Path.</span><span class="shortname">beginning</span></a></h2>
 
 
 
@@ -490,7 +490,7 @@ This is great for animating in and out stroked paths in conjunction with [Two.Pa
 
 ## ending
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">ending</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#ending"><span class="prefix">Two.Path.</span><span class="shortname">ending</span></a></h2>
 
 
 
@@ -549,7 +549,7 @@ This is great for animating in and out stroked paths in conjunction with [Two.Pa
 
 ## fill
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">fill</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#fill"><span class="prefix">Two.Path.</span><span class="shortname">fill</span></a></h2>
 
 
 
@@ -598,7 +598,7 @@ The value of what the path should be filled in with.
 
 ## stroke
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">stroke</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#stroke"><span class="prefix">Two.Path.</span><span class="shortname">stroke</span></a></h2>
 
 
 
@@ -647,7 +647,7 @@ The value of what the path should be outlined in with.
 
 ## linewidth
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">linewidth</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#linewidth"><span class="prefix">Two.Path.</span><span class="shortname">linewidth</span></a></h2>
 
 
 
@@ -690,7 +690,7 @@ The thickness in pixels of the stroke.
 
 ## opacity
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">opacity</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#opacity"><span class="prefix">Two.Path.</span><span class="shortname">opacity</span></a></h2>
 
 
 
@@ -743,7 +743,7 @@ Can be used in conjunction with CSS Colors that have an alpha value.
 
 ## className
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">className</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#className"><span class="prefix">Two.Path.</span><span class="shortname">className</span></a></h2>
 
 
 
@@ -796,7 +796,7 @@ Only available for the SVG renderer.
 
 ## visible
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">visible</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#visible"><span class="prefix">Two.Path.</span><span class="shortname">visible</span></a></h2>
 
 
 
@@ -849,7 +849,7 @@ For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](
 
 ## cap
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">cap</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#cap"><span class="prefix">Two.Path.</span><span class="shortname">cap</span></a></h2>
 
 
 
@@ -898,7 +898,7 @@ For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](
 
 ## join
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">join</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#join"><span class="prefix">Two.Path.</span><span class="shortname">join</span></a></h2>
 
 
 
@@ -947,7 +947,7 @@ For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](
 
 ## miter
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">miter</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#miter"><span class="prefix">Two.Path.</span><span class="shortname">miter</span></a></h2>
 
 
 
@@ -996,7 +996,7 @@ For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](
 
 ## vertices
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">vertices</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#vertices"><span class="prefix">Two.Path.</span><span class="shortname">vertices</span></a></h2>
 
 
 
@@ -1055,7 +1055,7 @@ The array when manipulating is actually a [Two.Collection](/documentation/collec
 
 ## automatic
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">automatic</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#automatic"><span class="prefix">Two.Path.</span><span class="shortname">automatic</span></a></h2>
 
 
 
@@ -1098,7 +1098,7 @@ Determines whether or not Two.js should calculate curves, lines, and commands au
 
 ## dashes
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">dashes</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#dashes"><span class="prefix">Two.Path.</span><span class="shortname">dashes</span></a></h2>
 
 
 
@@ -1153,7 +1153,7 @@ A list of numbers that represent the repeated dash length and dash space applied
 
 ## dashes.offset
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">dashes.offset</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#dashes.offset"><span class="prefix">Two.Path.</span><span class="shortname">dashes.offset</span></a></h2>
 
 
 
@@ -1196,7 +1196,7 @@ A number in pixels to offset [Two.Path.dashes](/documentation/path/#two-path-das
 
 ## length
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">length</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#length"><span class="prefix">Two.Path.</span><span class="shortname">length</span></a></h2>
 
 
 
@@ -1239,7 +1239,7 @@ The sum of distances between all [Two.Path.vertices](/documentation/path/#two-pa
 
 ## mask
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">mask</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#mask"><span class="prefix">Two.Path.</span><span class="shortname">mask</span></a></h2>
 
 
 
@@ -1292,7 +1292,7 @@ This property is currently not working becuase of SVG spec issues found here {@l
 
 ## clip
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">clip</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#clip"><span class="prefix">Two.Path.</span><span class="shortname">clip</span></a></h2>
 
 
 
@@ -1335,7 +1335,7 @@ Tells Two.js renderer if this object represents a mask for another object (or no
 
 ## clone
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">clone</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#clone"><span class="prefix">Two.Path.</span><span class="shortname">clone</span></a></h2>
 
 
 
@@ -1393,7 +1393,7 @@ Create a new instance of [Two.Path](/documentation/path) with the same propertie
 
 ## toObject
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">toObject</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#toObject"><span class="prefix">Two.Path.</span><span class="shortname">toObject</span></a></h2>
 
 
 
@@ -1444,7 +1444,7 @@ Return a JSON compatible plain object that represents the path.
 
 ## noFill
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">noFill</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#noFill"><span class="prefix">Two.Path.</span><span class="shortname">noFill</span></a></h2>
 
 
 
@@ -1487,7 +1487,7 @@ Short hand method to set fill to `transparent`.
 
 ## noStroke
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">noStroke</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#noStroke"><span class="prefix">Two.Path.</span><span class="shortname">noStroke</span></a></h2>
 
 
 
@@ -1530,7 +1530,7 @@ Short hand method to set stroke to `transparent`.
 
 ## corner
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">corner</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#corner"><span class="prefix">Two.Path.</span><span class="shortname">corner</span></a></h2>
 
 
 
@@ -1573,7 +1573,7 @@ Orient the vertices of the shape to the upper left-hand corner of the path.
 
 ## center
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">center</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#center"><span class="prefix">Two.Path.</span><span class="shortname">center</span></a></h2>
 
 
 
@@ -1616,7 +1616,7 @@ Orient the vertices of the shape to the center of the path.
 
 ## remove
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">remove</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#remove"><span class="prefix">Two.Path.</span><span class="shortname">remove</span></a></h2>
 
 
 
@@ -1659,7 +1659,7 @@ Remove self from the scene / parent.
 
 ## getBoundingClientRect
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">getBoundingClientRect</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#getBoundingClientRect"><span class="prefix">Two.Path.</span><span class="shortname">getBoundingClientRect</span></a></h2>
 
 
 
@@ -1719,7 +1719,7 @@ Return an object with top, left, right, bottom, width, and height parameters of 
 
 ## getPointAt
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">getPointAt</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#getPointAt"><span class="prefix">Two.Path.</span><span class="shortname">getPointAt</span></a></h2>
 
 
 
@@ -1778,7 +1778,7 @@ Given a float `t` from 0 to 1, return a point or assign a passed `obj`'s coordin
 
 ## plot
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">plot</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#plot"><span class="prefix">Two.Path.</span><span class="shortname">plot</span></a></h2>
 
 
 
@@ -1831,7 +1831,7 @@ While this method is public it is internally called by [Two.Path._update](/docum
 
 ## subdivide
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Path.</span><span class="shortname">subdivide</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#subdivide"><span class="prefix">Two.Path.</span><span class="shortname">subdivide</span></a></h2>
 
 
 

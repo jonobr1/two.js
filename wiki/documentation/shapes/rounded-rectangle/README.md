@@ -1,5 +1,5 @@
 ---
-pageClass: documentation-class
+pageClass: docs
 ---
 
 # Two.RoundedRectangle
@@ -39,7 +39,7 @@ __Extends__: [Two.Path](/documentation/path/)
 
 ## Properties
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.RoundedRectangle.</span><span class="shortname">Properties</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#Properties"><span class="prefix">Two.RoundedRectangle.</span><span class="shortname">Properties</span></a></h2>
 
 
 
@@ -82,7 +82,7 @@ A list of properties that are on every [Two.RoundedRectangle](/documentation/rou
 
 ## FlagRadius
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.RoundedRectangle.</span><span class="shortname">FlagRadius</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#FlagRadius"><span class="prefix">Two.RoundedRectangle.</span><span class="shortname">FlagRadius</span></a></h2>
 
 
 
@@ -125,7 +125,7 @@ A convenience function to trigger the flag for radius changing.
 
 ## MakeObservable
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.RoundedRectangle.</span><span class="shortname">MakeObservable</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#MakeObservable"><span class="prefix">Two.RoundedRectangle.</span><span class="shortname">MakeObservable</span></a></h2>
 
 
 
@@ -175,7 +175,7 @@ Convenience function to apply observable qualities of a [Two.RoundedRectangle](/
 
 ## width
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.RoundedRectangle.</span><span class="shortname">width</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#width"><span class="prefix">Two.RoundedRectangle.</span><span class="shortname">width</span></a></h2>
 
 
 
@@ -218,7 +218,7 @@ The width of the rounded rectangle.
 
 ## height
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.RoundedRectangle.</span><span class="shortname">height</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#height"><span class="prefix">Two.RoundedRectangle.</span><span class="shortname">height</span></a></h2>
 
 
 
@@ -261,7 +261,7 @@ The height of the rounded rectangle.
 
 ## radius
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.RoundedRectangle.</span><span class="shortname">radius</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#radius"><span class="prefix">Two.RoundedRectangle.</span><span class="shortname">radius</span></a></h2>
 
 
 
@@ -304,7 +304,7 @@ The size of the radius of the rounded rectangle.
 
 ## clone
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.RoundedRectangle.</span><span class="shortname">clone</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#clone"><span class="prefix">Two.RoundedRectangle.</span><span class="shortname">clone</span></a></h2>
 
 
 
@@ -362,7 +362,7 @@ Create a new instance of [Two.RoundedRectangle](/documentation/roundedrectangle)
 
 ## toObject
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.RoundedRectangle.</span><span class="shortname">toObject</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#toObject"><span class="prefix">Two.RoundedRectangle.</span><span class="shortname">toObject</span></a></h2>
 
 
 

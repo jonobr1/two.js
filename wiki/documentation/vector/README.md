@@ -1,5 +1,5 @@
 ---
-pageClass: documentation-class
+pageClass: docs
 ---
 
 # Two.Vector
@@ -29,7 +29,7 @@ A class to store x / y component vector data. In addition to storing data `Two.V
 
 ## zero
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Vector.</span><span class="shortname">zero</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#zero"><span class="prefix">Two.Vector.</span><span class="shortname">zero</span></a></h2>
 
 
 
@@ -72,7 +72,7 @@ Handy reference to a vector with component values 0, 0 at all times.
 
 ## add
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Vector.</span><span class="shortname">add</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#add"><span class="prefix">Two.Vector.</span><span class="shortname">add</span></a></h2>
 
 
 
@@ -131,7 +131,7 @@ Add two vectors together.
 
 ## sub
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Vector.</span><span class="shortname">sub</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#sub"><span class="prefix">Two.Vector.</span><span class="shortname">sub</span></a></h2>
 
 
 
@@ -190,7 +190,7 @@ Subtract two vectors: `v2` from `v1`.
 
 ## subtract
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Vector.</span><span class="shortname">subtract</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#subtract"><span class="prefix">Two.Vector.</span><span class="shortname">subtract</span></a></h2>
 
 
 
@@ -233,7 +233,7 @@ Alias for [Two.Vector.sub](/documentation/vector/#two-vector-sub).
 
 ## ratioBetween
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Vector.</span><span class="shortname">ratioBetween</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#ratioBetween"><span class="prefix">Two.Vector.</span><span class="shortname">ratioBetween</span></a></h2>
 
 
 
@@ -288,7 +288,7 @@ The ratio betwen two points `v1` and `v2`.
 
 ## angleBetween
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Vector.</span><span class="shortname">angleBetween</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#angleBetween"><span class="prefix">Two.Vector.</span><span class="shortname">angleBetween</span></a></h2>
 
 
 
@@ -343,7 +343,7 @@ The angle between points `v1` and `v2`.
 
 ## distanceBetween
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Vector.</span><span class="shortname">distanceBetween</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#distanceBetween"><span class="prefix">Two.Vector.</span><span class="shortname">distanceBetween</span></a></h2>
 
 
 
@@ -398,7 +398,7 @@ The distance between points `v1` and `v2`. Distance is always positive.
 
 ## distanceBetweenSquared
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Vector.</span><span class="shortname">distanceBetweenSquared</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#distanceBetweenSquared"><span class="prefix">Two.Vector.</span><span class="shortname">distanceBetweenSquared</span></a></h2>
 
 
 
@@ -453,7 +453,7 @@ The squared distance between points `v1` and `v2`.
 
 ## MakeObservable
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Vector.</span><span class="shortname">MakeObservable</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#MakeObservable"><span class="prefix">Two.Vector.</span><span class="shortname">MakeObservable</span></a></h2>
 
 
 
@@ -503,7 +503,7 @@ Convenience function to apply observable qualities of a [Two.Vector](/documentat
 
 ## x
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Vector.</span><span class="shortname">x</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#x"><span class="prefix">Two.Vector.</span><span class="shortname">x</span></a></h2>
 
 
 
@@ -546,7 +546,7 @@ The horizontal x-component of the vector.
 
 ## y
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Vector.</span><span class="shortname">y</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#y"><span class="prefix">Two.Vector.</span><span class="shortname">y</span></a></h2>
 
 
 
@@ -589,7 +589,7 @@ The vertical y-component of the vector.
 
 ## set
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Vector.</span><span class="shortname">set</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#set"><span class="prefix">Two.Vector.</span><span class="shortname">set</span></a></h2>
 
 
 
@@ -640,7 +640,7 @@ Set the x / y components of a vector to specific number values.
 
 ## copy
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Vector.</span><span class="shortname">copy</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#copy"><span class="prefix">Two.Vector.</span><span class="shortname">copy</span></a></h2>
 
 
 
@@ -690,7 +690,7 @@ Copy the x / y components of another object `v`.
 
 ## clear
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Vector.</span><span class="shortname">clear</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#clear"><span class="prefix">Two.Vector.</span><span class="shortname">clear</span></a></h2>
 
 
 
@@ -733,7 +733,7 @@ Set the x / y component values of the vector to zero.
 
 ## clone
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Vector.</span><span class="shortname">clone</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#clone"><span class="prefix">Two.Vector.</span><span class="shortname">clone</span></a></h2>
 
 
 
@@ -776,7 +776,7 @@ Create a new vector and copy the existing values onto the newly created instance
 
 ## add
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Vector.</span><span class="shortname">add</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#add"><span class="prefix">Two.Vector.</span><span class="shortname">add</span></a></h2>
 
 
 <div class="overloaded-label">
@@ -838,7 +838,7 @@ Add an object with x / y component values to the instance.
 
 ## add
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Vector.</span><span class="shortname">add</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#add"><span class="prefix">Two.Vector.</span><span class="shortname">add</span></a></h2>
 
 
 <div class="overloaded-label">
@@ -900,7 +900,7 @@ Add the **same** number to both x / y component values of the instance.
 
 ## add
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Vector.</span><span class="shortname">add</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#add"><span class="prefix">Two.Vector.</span><span class="shortname">add</span></a></h2>
 
 
 <div class="overloaded-label">
@@ -963,7 +963,7 @@ Add `x` / `y` values to their respective component value on the instance.
 
 ## addSelf
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Vector.</span><span class="shortname">addSelf</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#addSelf"><span class="prefix">Two.Vector.</span><span class="shortname">addSelf</span></a></h2>
 
 
 
@@ -1006,7 +1006,7 @@ Alias for [Two.Vector.add](/documentation/vector/#two-vector-add).
 
 ## sub
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Vector.</span><span class="shortname">sub</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#sub"><span class="prefix">Two.Vector.</span><span class="shortname">sub</span></a></h2>
 
 
 <div class="overloaded-label">
@@ -1068,7 +1068,7 @@ Subtract an object with x / y component values to the instance.
 
 ## sub
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Vector.</span><span class="shortname">sub</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#sub"><span class="prefix">Two.Vector.</span><span class="shortname">sub</span></a></h2>
 
 
 <div class="overloaded-label">
@@ -1130,7 +1130,7 @@ Subtract the **same** number to both x / y component values of the instance.
 
 ## sub
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Vector.</span><span class="shortname">sub</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#sub"><span class="prefix">Two.Vector.</span><span class="shortname">sub</span></a></h2>
 
 
 <div class="overloaded-label">
@@ -1193,7 +1193,7 @@ Subtract `x` / `y` values to their respective component value on the instance.
 
 ## subtract
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Vector.</span><span class="shortname">subtract</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#subtract"><span class="prefix">Two.Vector.</span><span class="shortname">subtract</span></a></h2>
 
 
 
@@ -1236,7 +1236,7 @@ Alias for [Two.Vector.sub](/documentation/vector/#two-vector-sub).
 
 ## subSelf
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Vector.</span><span class="shortname">subSelf</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#subSelf"><span class="prefix">Two.Vector.</span><span class="shortname">subSelf</span></a></h2>
 
 
 
@@ -1279,7 +1279,7 @@ Alias for [Two.Vector.sub](/documentation/vector/#two-vector-sub).
 
 ## subtractSelf
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Vector.</span><span class="shortname">subtractSelf</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#subtractSelf"><span class="prefix">Two.Vector.</span><span class="shortname">subtractSelf</span></a></h2>
 
 
 
@@ -1322,7 +1322,7 @@ Alias for [Two.Vector.sub](/documentation/vector/#two-vector-sub).
 
 ## multiply
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Vector.</span><span class="shortname">multiply</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#multiply"><span class="prefix">Two.Vector.</span><span class="shortname">multiply</span></a></h2>
 
 
 <div class="overloaded-label">
@@ -1384,7 +1384,7 @@ Multiply an object with x / y component values to the instance.
 
 ## multiply
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Vector.</span><span class="shortname">multiply</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#multiply"><span class="prefix">Two.Vector.</span><span class="shortname">multiply</span></a></h2>
 
 
 <div class="overloaded-label">
@@ -1446,7 +1446,7 @@ Multiply the **same** number to both x / y component values of the instance.
 
 ## multiply
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Vector.</span><span class="shortname">multiply</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#multiply"><span class="prefix">Two.Vector.</span><span class="shortname">multiply</span></a></h2>
 
 
 <div class="overloaded-label">
@@ -1509,7 +1509,7 @@ Multiply `x` / `y` values to their respective component value on the instance.
 
 ## multiplySelf
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Vector.</span><span class="shortname">multiplySelf</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#multiplySelf"><span class="prefix">Two.Vector.</span><span class="shortname">multiplySelf</span></a></h2>
 
 
 
@@ -1552,7 +1552,7 @@ Alias for [Two.Vector.multiply](/documentation/vector/#two-vector-multiply).
 
 ## multiplyScalar
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Vector.</span><span class="shortname">multiplyScalar</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#multiplyScalar"><span class="prefix">Two.Vector.</span><span class="shortname">multiplyScalar</span></a></h2>
 
 
 
@@ -1602,7 +1602,7 @@ Mulitiply the vector by a single number. Shorthand to call [Two.Vector.multiply]
 
 ## divide
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Vector.</span><span class="shortname">divide</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#divide"><span class="prefix">Two.Vector.</span><span class="shortname">divide</span></a></h2>
 
 
 <div class="overloaded-label">
@@ -1664,7 +1664,7 @@ Divide an object with x / y component values to the instance.
 
 ## divide
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Vector.</span><span class="shortname">divide</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#divide"><span class="prefix">Two.Vector.</span><span class="shortname">divide</span></a></h2>
 
 
 <div class="overloaded-label">
@@ -1726,7 +1726,7 @@ Divide the **same** number to both x / y component values of the instance.
 
 ## divide
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Vector.</span><span class="shortname">divide</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#divide"><span class="prefix">Two.Vector.</span><span class="shortname">divide</span></a></h2>
 
 
 <div class="overloaded-label">
@@ -1789,7 +1789,7 @@ Divide `x` / `y` values to their respective component value on the instance.
 
 ## divideSelf
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Vector.</span><span class="shortname">divideSelf</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#divideSelf"><span class="prefix">Two.Vector.</span><span class="shortname">divideSelf</span></a></h2>
 
 
 
@@ -1832,7 +1832,7 @@ Alias for [Two.Vector.divide](/documentation/vector/#two-vector-divide).
 
 ## divideScalar
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Vector.</span><span class="shortname">divideScalar</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#divideScalar"><span class="prefix">Two.Vector.</span><span class="shortname">divideScalar</span></a></h2>
 
 
 
@@ -1882,7 +1882,7 @@ Divide the vector by a single number. Shorthand to call [Two.Vector.divide](/doc
 
 ## negate
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Vector.</span><span class="shortname">negate</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#negate"><span class="prefix">Two.Vector.</span><span class="shortname">negate</span></a></h2>
 
 
 
@@ -1925,7 +1925,7 @@ Invert each component's sign value.
 
 ## negate
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Vector.</span><span class="shortname">negate</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#negate"><span class="prefix">Two.Vector.</span><span class="shortname">negate</span></a></h2>
 
 
 
@@ -1976,7 +1976,7 @@ Get the [dot product](https://en.wikipedia.org/wiki/Dot_product) of the vector.
 
 ## length
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Vector.</span><span class="shortname">length</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#length"><span class="prefix">Two.Vector.</span><span class="shortname">length</span></a></h2>
 
 
 
@@ -2027,7 +2027,7 @@ Get the length of a vector.
 
 ## lengthSquared
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Vector.</span><span class="shortname">lengthSquared</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#lengthSquared"><span class="prefix">Two.Vector.</span><span class="shortname">lengthSquared</span></a></h2>
 
 
 
@@ -2078,7 +2078,7 @@ Get the length of the vector to the power of two. Widely used as less expensive 
 
 ## normalize
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Vector.</span><span class="shortname">normalize</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#normalize"><span class="prefix">Two.Vector.</span><span class="shortname">normalize</span></a></h2>
 
 
 
@@ -2121,7 +2121,7 @@ Normalize the vector from negative one to one.
 
 ## distanceTo
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Vector.</span><span class="shortname">distanceTo</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#distanceTo"><span class="prefix">Two.Vector.</span><span class="shortname">distanceTo</span></a></h2>
 
 
 
@@ -2172,7 +2172,7 @@ Get the distance between two vectors.
 
 ## distanceToSquared
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Vector.</span><span class="shortname">distanceToSquared</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#distanceToSquared"><span class="prefix">Two.Vector.</span><span class="shortname">distanceToSquared</span></a></h2>
 
 
 
@@ -2223,7 +2223,7 @@ Get the distance between two vectors to the power of two. Widely used as less ex
 
 ## setLength
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Vector.</span><span class="shortname">setLength</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#setLength"><span class="prefix">Two.Vector.</span><span class="shortname">setLength</span></a></h2>
 
 
 
@@ -2273,7 +2273,7 @@ Set the length of a vector.
 
 ## equals
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Vector.</span><span class="shortname">equals</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#equals"><span class="prefix">Two.Vector.</span><span class="shortname">equals</span></a></h2>
 
 
 
@@ -2332,7 +2332,7 @@ Qualify if one vector roughly equal another. With a margin of error defined by e
 
 ## lerp
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Vector.</span><span class="shortname">lerp</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#lerp"><span class="prefix">Two.Vector.</span><span class="shortname">lerp</span></a></h2>
 
 
 
@@ -2389,7 +2389,7 @@ Linear interpolate one vector to another by an amount `t` defined as a zero to o
 
 ## isZero
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Vector.</span><span class="shortname">isZero</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#isZero"><span class="prefix">Two.Vector.</span><span class="shortname">isZero</span></a></h2>
 
 
 
@@ -2447,7 +2447,7 @@ Check to see if vector is roughly zero, based on the `epsilon` precision value.
 
 ## toString
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Vector.</span><span class="shortname">toString</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#toString"><span class="prefix">Two.Vector.</span><span class="shortname">toString</span></a></h2>
 
 
 
@@ -2498,7 +2498,7 @@ Return a comma-separated string of x, y value. Great for storing in a database.
 
 ## toObject
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Vector.</span><span class="shortname">toObject</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#toObject"><span class="prefix">Two.Vector.</span><span class="shortname">toObject</span></a></h2>
 
 
 
@@ -2549,7 +2549,7 @@ Return a JSON compatible plain object that represents the vector.
 
 ## rotate
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Vector.</span><span class="shortname">rotate</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#rotate"><span class="prefix">Two.Vector.</span><span class="shortname">rotate</span></a></h2>
 
 
 

@@ -1,5 +1,5 @@
 ---
-pageClass: documentation-class
+pageClass: docs
 ---
 
 # Two.Text
@@ -37,7 +37,7 @@ This is a primitive class for creating drawable text that can be added to the sc
 
 ## Ratio
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">Ratio</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#Ratio"><span class="prefix">Two.Text.</span><span class="shortname">Ratio</span></a></h2>
 
 
 
@@ -80,7 +80,7 @@ Approximate aspect ratio of a typeface's character width to height.
 
 ## Properties
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">Properties</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#Properties"><span class="prefix">Two.Text.</span><span class="shortname">Properties</span></a></h2>
 
 
 
@@ -123,7 +123,7 @@ A list of properties that are on every [Two.Text](/documentation/text).
 
 ## FlagFill
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">FlagFill</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#FlagFill"><span class="prefix">Two.Text.</span><span class="shortname">FlagFill</span></a></h2>
 
 
 
@@ -166,7 +166,7 @@ Cached method to let renderers know the fill property have been updated on a [Tw
 
 ## FlagStroke
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">FlagStroke</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#FlagStroke"><span class="prefix">Two.Text.</span><span class="shortname">FlagStroke</span></a></h2>
 
 
 
@@ -209,7 +209,7 @@ Cached method to let renderers know the stroke property have been updated on a [
 
 ## dashes
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">dashes</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#dashes"><span class="prefix">Two.Text.</span><span class="shortname">dashes</span></a></h2>
 
 
 
@@ -264,7 +264,7 @@ A list of numbers that represent the repeated dash length and dash space applied
 
 ## dashes.offset
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">dashes.offset</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#dashes.offset"><span class="prefix">Two.Text.</span><span class="shortname">dashes.offset</span></a></h2>
 
 
 
@@ -307,7 +307,7 @@ A number in pixels to offset [Two.Text.dashes](/documentation/text/#two-text-das
 
 ## value
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">value</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#value"><span class="prefix">Two.Text.</span><span class="shortname">value</span></a></h2>
 
 
 
@@ -350,7 +350,7 @@ The characters to be rendered to the the screen. Referred to in the documentatio
 
 ## family
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">family</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#family"><span class="prefix">Two.Text.</span><span class="shortname">family</span></a></h2>
 
 
 
@@ -393,7 +393,7 @@ The font family Two.js should attempt to regsiter for rendering. The default val
 
 ## size
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">size</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#size"><span class="prefix">Two.Text.</span><span class="shortname">size</span></a></h2>
 
 
 
@@ -436,7 +436,7 @@ The font size in Two.js point space. Defaults to `13`.
 
 ## leading
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">leading</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#leading"><span class="prefix">Two.Text.</span><span class="shortname">leading</span></a></h2>
 
 
 
@@ -479,7 +479,7 @@ The height between lines measured from base to base in Two.js point space. Defau
 
 ## alignment
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">alignment</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#alignment"><span class="prefix">Two.Text.</span><span class="shortname">alignment</span></a></h2>
 
 
 
@@ -522,7 +522,7 @@ Alignment of text in relation to [Two.Text.translation](/documentation/text/#two
 
 ## baseline
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">baseline</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#baseline"><span class="prefix">Two.Text.</span><span class="shortname">baseline</span></a></h2>
 
 
 
@@ -565,7 +565,7 @@ The vertical aligment of the text in relation to [Two.Text.translation](/documen
 
 ## style
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">style</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#style"><span class="prefix">Two.Text.</span><span class="shortname">style</span></a></h2>
 
 
 
@@ -608,7 +608,7 @@ The font's style. Possible values include '`normal`', `'italic'`. Defaults to `'
 
 ## weight
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">weight</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#weight"><span class="prefix">Two.Text.</span><span class="shortname">weight</span></a></h2>
 
 
 
@@ -651,7 +651,7 @@ A number at intervals of 100 to describe the font's weight. This compatibility v
 
 ## decoration
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">decoration</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#decoration"><span class="prefix">Two.Text.</span><span class="shortname">decoration</span></a></h2>
 
 
 
@@ -694,7 +694,7 @@ String to delineate whether text should be decorated with for instance an `'unde
 
 ## fill
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">fill</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#fill"><span class="prefix">Two.Text.</span><span class="shortname">fill</span></a></h2>
 
 
 
@@ -743,7 +743,7 @@ The value of what the text object should be filled in with.
 
 ## stroke
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">stroke</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#stroke"><span class="prefix">Two.Text.</span><span class="shortname">stroke</span></a></h2>
 
 
 
@@ -792,7 +792,7 @@ The value of what the text object should be filled in with.
 
 ## linewidth
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">linewidth</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#linewidth"><span class="prefix">Two.Text.</span><span class="shortname">linewidth</span></a></h2>
 
 
 
@@ -835,7 +835,7 @@ The thickness in pixels of the stroke.
 
 ## opacity
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">opacity</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#opacity"><span class="prefix">Two.Text.</span><span class="shortname">opacity</span></a></h2>
 
 
 
@@ -888,7 +888,7 @@ Can be used in conjunction with CSS Colors that have an alpha value.
 
 ## className
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">className</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#className"><span class="prefix">Two.Text.</span><span class="shortname">className</span></a></h2>
 
 
 
@@ -931,7 +931,7 @@ A class to be applied to the element to be compatible with CSS styling. Only ava
 
 ## visible
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">visible</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#visible"><span class="prefix">Two.Text.</span><span class="shortname">visible</span></a></h2>
 
 
 
@@ -984,7 +984,7 @@ For [Two.CanvasRenderer](/documentation/canvasrenderer) and [Two.WebGLRenderer](
 
 ## mask
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">mask</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#mask"><span class="prefix">Two.Text.</span><span class="shortname">mask</span></a></h2>
 
 
 
@@ -1037,7 +1037,7 @@ This property is currently not working becuase of SVG spec issues found here {@l
 
 ## clip
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">clip</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#clip"><span class="prefix">Two.Text.</span><span class="shortname">clip</span></a></h2>
 
 
 
@@ -1090,7 +1090,7 @@ This property is currently not working becuase of SVG spec issues found here {@l
 
 ## remove
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">remove</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#remove"><span class="prefix">Two.Text.</span><span class="shortname">remove</span></a></h2>
 
 
 
@@ -1133,7 +1133,7 @@ Remove self from the scene / parent.
 
 ## clone
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">clone</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#clone"><span class="prefix">Two.Text.</span><span class="shortname">clone</span></a></h2>
 
 
 
@@ -1191,7 +1191,7 @@ Create a new instance of [Two.Text](/documentation/text) with the same propertie
 
 ## toObject
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">toObject</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#toObject"><span class="prefix">Two.Text.</span><span class="shortname">toObject</span></a></h2>
 
 
 
@@ -1242,7 +1242,7 @@ Return a JSON compatible plain object that represents the text object.
 
 ## noFill
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">noFill</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#noFill"><span class="prefix">Two.Text.</span><span class="shortname">noFill</span></a></h2>
 
 
 
@@ -1285,7 +1285,7 @@ Short hand method to set fill to `transparent`.
 
 ## noStroke
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">noStroke</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#noStroke"><span class="prefix">Two.Text.</span><span class="shortname">noStroke</span></a></h2>
 
 
 
@@ -1328,7 +1328,7 @@ Short hand method to set stroke to `transparent`.
 
 ## getBoundingClientRect
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Text.</span><span class="shortname">getBoundingClientRect</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#getBoundingClientRect"><span class="prefix">Two.Text.</span><span class="shortname">getBoundingClientRect</span></a></h2>
 
 
 

@@ -1,5 +1,5 @@
 ---
-pageClass: documentation-class
+pageClass: docs
 ---
 
 # Two.Texture
@@ -35,7 +35,7 @@ Fundamental to work with bitmap data, a.k.a. pregenerated imagery, in Two.js. Su
 
 ## Properties
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Texture.</span><span class="shortname">Properties</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#Properties"><span class="prefix">Two.Texture.</span><span class="shortname">Properties</span></a></h2>
 
 
 
@@ -78,7 +78,7 @@ A list of properties that are on every [Two.Texture](/documentation/texture).
 
 ## RegularExpressions
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Texture.</span><span class="shortname">RegularExpressions</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#RegularExpressions"><span class="prefix">Two.Texture.</span><span class="shortname">RegularExpressions</span></a></h2>
 
 
 
@@ -121,7 +121,7 @@ A map of compatible DOM Elements categorized by media format.
 
 ## ImageRegistry
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Texture.</span><span class="shortname">ImageRegistry</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#ImageRegistry"><span class="prefix">Two.Texture.</span><span class="shortname">ImageRegistry</span></a></h2>
 
 
 
@@ -174,7 +174,7 @@ This object is used to cache image data between different textures.
 
 ## getAbsoluteURL
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Texture.</span><span class="shortname">getAbsoluteURL</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#getAbsoluteURL"><span class="prefix">Two.Texture.</span><span class="shortname">getAbsoluteURL</span></a></h2>
 
 
 
@@ -234,7 +234,7 @@ Serializes a URL as an absolute path for canonical attribution in [Two.ImageRegi
 
 ## loadHeadlessBuffer
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Texture.</span><span class="shortname">loadHeadlessBuffer</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#loadHeadlessBuffer"><span class="prefix">Two.Texture.</span><span class="shortname">loadHeadlessBuffer</span></a></h2>
 
 
 
@@ -295,7 +295,7 @@ Loads an image as a buffer in headless environments.
 
 ## getTag
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Texture.</span><span class="shortname">getTag</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#getTag"><span class="prefix">Two.Texture.</span><span class="shortname">getTag</span></a></h2>
 
 
 
@@ -355,7 +355,7 @@ Retrieves the tag name of an image, video, or canvas node.
 
 ## getImage
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Texture.</span><span class="shortname">getImage</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#getImage"><span class="prefix">Two.Texture.</span><span class="shortname">getImage</span></a></h2>
 
 
 
@@ -415,7 +415,7 @@ Convenience function to set [Two.Texture.image](/documentation/texture/#two-text
 
 ## Register
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.</span><span class="shortname">Register</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#Register"><span class="prefix">Two.</span><span class="shortname">Register</span></a></h2>
 
 
 
@@ -458,7 +458,7 @@ A collection of functions to register different types of textures. Used internal
 
 ## load
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Texture.</span><span class="shortname">load</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#load"><span class="prefix">Two.Texture.</span><span class="shortname">load</span></a></h2>
 
 
 
@@ -503,7 +503,7 @@ A collection of functions to register different types of textures. Used internal
 
 ## FlagOffset
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Texture.</span><span class="shortname">FlagOffset</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#FlagOffset"><span class="prefix">Two.Texture.</span><span class="shortname">FlagOffset</span></a></h2>
 
 
 
@@ -546,7 +546,7 @@ Cached method to let renderers know `offset` has been updated on a [Two.Texture]
 
 ## FlagScale
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Texture.</span><span class="shortname">FlagScale</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#FlagScale"><span class="prefix">Two.Texture.</span><span class="shortname">FlagScale</span></a></h2>
 
 
 
@@ -589,7 +589,7 @@ Cached method to let renderers know `scale` has been updated on a [Two.Texture](
 
 ## MakeObservable
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Texture.</span><span class="shortname">MakeObservable</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#MakeObservable"><span class="prefix">Two.Texture.</span><span class="shortname">MakeObservable</span></a></h2>
 
 
 
@@ -639,7 +639,7 @@ Convenience function to apply observable qualities of a [Two.Texture](/documenta
 
 ## renderer
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Texture.</span><span class="shortname">renderer</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#renderer"><span class="prefix">Two.Texture.</span><span class="shortname">renderer</span></a></h2>
 
 
 
@@ -698,7 +698,7 @@ With the [Two.SvgRenderer](/documentation/svgrenderer) you can access the underl
 
 ## loaded
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Texture.</span><span class="shortname">loaded</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#loaded"><span class="prefix">Two.Texture.</span><span class="shortname">loaded</span></a></h2>
 
 
 
@@ -741,7 +741,7 @@ Shorthand value to determine if image has been loaded into the texture.
 
 ## repeat
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Texture.</span><span class="shortname">repeat</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#repeat"><span class="prefix">Two.Texture.</span><span class="shortname">repeat</span></a></h2>
 
 
 
@@ -790,7 +790,7 @@ CSS style declaration to tile [Two.Path](/documentation/path). Valid values incl
 
 ## offset
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Texture.</span><span class="shortname">offset</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#offset"><span class="prefix">Two.Texture.</span><span class="shortname">offset</span></a></h2>
 
 
 
@@ -833,7 +833,7 @@ A two-component vector describing any pixel offset of the texture when applied t
 
 ## src
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Texture.</span><span class="shortname">src</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#src"><span class="prefix">Two.Texture.</span><span class="shortname">src</span></a></h2>
 
 
 
@@ -886,7 +886,7 @@ This property is ultimately serialized in a [Two.Registry](/documentation/regist
 
 ## image
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Texture.</span><span class="shortname">image</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#image"><span class="prefix">Two.Texture.</span><span class="shortname">image</span></a></h2>
 
 
 
@@ -939,7 +939,7 @@ In headless environments this is a `Canvas.Image` object. See [https://github.co
 
 ## clone
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Texture.</span><span class="shortname">clone</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#clone"><span class="prefix">Two.Texture.</span><span class="shortname">clone</span></a></h2>
 
 
 
@@ -990,7 +990,7 @@ Create a new instance of [Two.Texture](/documentation/texture) with the same pro
 
 ## toObject
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Texture.</span><span class="shortname">toObject</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#toObject"><span class="prefix">Two.Texture.</span><span class="shortname">toObject</span></a></h2>
 
 
 

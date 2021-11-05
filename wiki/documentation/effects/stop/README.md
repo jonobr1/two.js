@@ -1,5 +1,5 @@
 ---
-pageClass: documentation-class
+pageClass: docs
 ---
 
 # Two.Stop
@@ -30,7 +30,7 @@ pageClass: documentation-class
 
 ## Index
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Stop.</span><span class="shortname">Index</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#Index"><span class="prefix">Two.Stop.</span><span class="shortname">Index</span></a></h2>
 
 
 
@@ -73,7 +73,7 @@ The current index being referenced for calculating a stop's default offset value
 
 ## Properties
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Stop.</span><span class="shortname">Properties</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#Properties"><span class="prefix">Two.Stop.</span><span class="shortname">Properties</span></a></h2>
 
 
 
@@ -116,7 +116,7 @@ A list of properties that are on every [Two.Stop](/documentation/stop).
 
 ## MakeObservable
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Stop.</span><span class="shortname">MakeObservable</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#MakeObservable"><span class="prefix">Two.Stop.</span><span class="shortname">MakeObservable</span></a></h2>
 
 
 
@@ -166,7 +166,7 @@ Convenience function to apply observable qualities of a [Two.Stop](/documentatio
 
 ## renderer
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Stop.</span><span class="shortname">renderer</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#renderer"><span class="prefix">Two.Stop.</span><span class="shortname">renderer</span></a></h2>
 
 
 
@@ -225,7 +225,7 @@ With the [Two.SvgRenderer](/documentation/svgrenderer) you can access the underl
 
 ## offset
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Stop.</span><span class="shortname">offset</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#offset"><span class="prefix">Two.Stop.</span><span class="shortname">offset</span></a></h2>
 
 
 
@@ -268,7 +268,7 @@ The offset percentage of the stop represented as a zero-to-one value.
 
 ## opacity
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Stop.</span><span class="shortname">opacity</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#opacity"><span class="prefix">Two.Stop.</span><span class="shortname">opacity</span></a></h2>
 
 
 
@@ -311,7 +311,7 @@ The alpha percentage of the stop represented as a zero-to-one value.
 
 ## color
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Stop.</span><span class="shortname">color</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#color"><span class="prefix">Two.Stop.</span><span class="shortname">color</span></a></h2>
 
 
 
@@ -354,7 +354,7 @@ The color of the stop.
 
 ## clone
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Stop.</span><span class="shortname">clone</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#clone"><span class="prefix">Two.Stop.</span><span class="shortname">clone</span></a></h2>
 
 
 
@@ -412,7 +412,7 @@ Create a new instance of [Two.Stop](/documentation/stop) with the same propertie
 
 ## toObject
 
-<h2 class="longname" aria-hidden="true"><span class="prefix">Two.Stop.</span><span class="shortname">toObject</span></h2>
+<h2 class="longname" aria-hidden="true"><a href="#toObject"><span class="prefix">Two.Stop.</span><span class="shortname">toObject</span></a></h2>
 
 
 
