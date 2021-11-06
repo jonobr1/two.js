@@ -18,6 +18,7 @@ body {
     text-decoration: none;
     font-weight: 600;
     transition: color .2s, border-color .2s, background-color .2s;
+    word-break: break-word;
 
     span { //the .icon.outbound is contained in a span that adds a space to the end of links.
       display: none;
@@ -47,6 +48,7 @@ body {
       padding: .2rem .4rem;
       border-radius: 4px;
       background: #f6f6f6;
+      word-break: break-word; //possibly only for mobile.
     }
 
     pre[class*="language-"] code {
@@ -558,4 +560,17 @@ table tr:last-child td:last-child {
 
 .returns {
   margin: 0 0 1.25rem 0;
+}
+
+.search-open {
+  .sidebar, .page {
+    opacity: .5;
+  }  
+}
+
+@media (max-width: $MQMobile) {
+
+  .page {
+    padding-top: 4rem;
+  }  
 }

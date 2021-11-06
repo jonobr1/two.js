@@ -1,5 +1,5 @@
 <template>
-  <header class="navbar">
+  <header class="navbar" ref="header">
     <SidebarButton @toggle-sidebar="$emit('toggle-sidebar')" />
 
     <RouterLink
@@ -9,6 +9,7 @@
       <img
         v-if="$site.themeConfig.logo"
         class="logo"
+        ref="navLogo"
         :src="$withBase($site.themeConfig.logo)"
         :alt="$siteTitle"
       >
@@ -34,7 +35,7 @@
         'max-width': linksWrapMaxWidth + 'px'
       } : {}"
     >
-      <NavLinks class="can-hide" />
+      <NavLinks />
     </div>
   </header>
 </template>
@@ -71,6 +72,16 @@ export default {
     const handleLinksWrapWidth = () => {
       if (document.documentElement.clientWidth < MOBILE_DESKTOP_BREAKPOINT) {
         this.linksWrapMaxWidth = null
+
+
+        var pathStart = this.$page.path.match(/\/.+?\//);
+        pathStart = (pathStart && pathStart.length) ? pathStart[0] : pathStart;
+        var hasSidebar = (pathStart in this.$site.themeConfig.sidebar && this.$site.themeConfig.sidebar[pathStart].length > 0);
+
+        this.$refs.header.className = (hasSidebar) ? "navbar has-sidebar" : "navbar";
+        //TODO: if home page hide sidebar toggle
+        //TODO: if has submenu, hide logo
+
       } else {
         this.linksWrapMaxWidth = this.$el.offsetWidth - NAVBAR_VERTICAL_PADDING
           - (this.$refs.siteName && this.$refs.siteName.offsetWidth || 0);
@@ -84,6 +95,9 @@ export default {
     }
     handleLinksWrapWidth()
     window.addEventListener('resize', handleLinksWrapWidth, false)
+    //TODO:
+    console.log(this.$site);
+    console.log(this.$page);
   }
 }
 function css (el, property) {
@@ -107,6 +121,7 @@ $navbar-horizontal-padding = 1.5rem
     min-width $navbarHeight - 1.4rem
     margin-right 0.8rem
     vertical-align top
+    width 5.343rem
   .site-name
     font-size 1.3rem
     font-weight 600
@@ -150,7 +165,7 @@ $navbar-horizontal-padding = 1.5rem
   .links
     padding-left 1.5rem
     box-sizing border-box
-    background-color white
+    background-color transparent
     white-space nowrap
     font-size 0.9rem
     position absolute
@@ -160,15 +175,54 @@ $navbar-horizontal-padding = 1.5rem
     .external span
       display none
 @media (max-width: $MQMobile)
+  .sidebar-button
+    display: none;
   .navbar
-    padding-left 4rem
+    width 100%
+    padding 0
+    border-bottom none
     .can-hide
       display none
+    .logo
+      width 4rem
+      margin-left 1rem
     .links
       padding-left 1.5rem
+      .nav-link
+        padding 0 0.5rem
+        font-weight 600
     .site-name
       width calc(100vw - 9.4rem)
       overflow hidden
       white-space nowrap
       text-overflow ellipsis
+    .search 
+      top 3.5rem
+      left 0
+      background-color #fff
+      width 100%
+      .search-box
+        width 100%
+        input 
+          height 3rem
+          width calc(100%-3rem)
+          background-position 0.5rem 0.75rem
+          left 0
+          border-radius 0
+          border 1px solid #e6e6e6
+          border-left none
+          border-right none
+        ul.suggestions
+          width calc(100%-3rem)
+          left 0
+          border-radius 0
+          border-right 0
+          border-left 0
+  .has-sidebar
+    .navbar
+      padding-left 4rem
+    .home-link
+      display none
+    .sidebar-button
+      display block  
 </style>
