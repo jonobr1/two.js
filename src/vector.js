@@ -1,5 +1,36 @@
 import { Events } from './events.js';
 
+const proto = {
+  x: {
+    enumerable: true,
+    get: function() {
+      return this._x;
+    },
+    set: function(v) {
+      if (this._x !== v) {
+        this._x = v;
+        if (this._bound) {
+          this.dispatchEvent(Events.Types.change);
+        }
+      }
+    }
+  },
+  y: {
+    enumerable: true,
+    get: function() {
+      return this._y;
+    },
+    set: function(v) {
+      if (this._y !== v) {
+        this._y = v;
+        if (this._bound) {
+          this.dispatchEvent(Events.Types.change);
+        }
+      }
+    }
+  }
+};
+
 /**
  * @name Two.Vector
  * @class
@@ -583,34 +614,3 @@ export class Vector extends Events {
   }
 
 }
-
-const proto = {
-  x: {
-    enumerable: true,
-    get: function() {
-      return this._x;
-    },
-    set: function(v) {
-      if (this._x !== v) {
-        this._x = v;
-        if (this._bound) {
-          this.dispatchEvent(Events.Types.change);
-        }
-      }
-    }
-  },
-  y: {
-    enumerable: true,
-    get: function() {
-      return this._y;
-    },
-    set: function(v) {
-      if (this._y !== v) {
-        this._y = v;
-        if (this._bound) {
-          this.dispatchEvent(Events.Types.change);
-        }
-      }
-    }
-  }
-};

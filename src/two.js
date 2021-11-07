@@ -6,7 +6,7 @@ import { dom } from './utils/dom.js';
 import { TwoError } from './utils/error.js';
 import { getRatio } from './utils/device-pixel-ratio.js';
 import { defineGetterSetter } from './utils/get-set.js';
-import { interpretSVG } from './utils/interpret-svg.js';
+import { read } from './utils/interpret-svg.js';
 import * as math from './utils/math.js';
 import { Commands } from './utils/path-commands.js';
 import { _ } from './utils/underscore.js';
@@ -69,7 +69,7 @@ import { Constants } from './constants.js';
  * @param {Element} [options.domElement] - The canvas or SVG element to draw into. This overrides the `options.type` argument.
  * @description The entrypoint for Two.js. Instantiate a `new Two` in order to setup a scene to render to. `Two` is also the publicly accessible namespace that all other sub-classes, functions, and utilities attach to.
  */
-export class Two extends Events {
+export default class Two extends Events {
 
   /**
    * @name Two#type
@@ -944,11 +944,11 @@ export class Two extends Events {
 
     add = (typeof add !== 'undefined') ? add : true;
 
-    if (!(tag in interpretSVG)) {
+    if (!(tag in read)) {
       return null;
     }
 
-    const node = interpretSVG[tag].call(this, SVGElement);
+    const node = read[tag].call(this, SVGElement);
 
     if (add) {
       this.add(shallow && node instanceof Group ? node.children : node);
@@ -1112,7 +1112,7 @@ _.extend(Two, {
     Error: TwoError,
     getRatio,
     defineGetterSetter,
-    read: interpretSVG,
+    read,
     xhr
 
   }, _, CanvasShim, Curves, math)
