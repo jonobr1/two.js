@@ -7,7 +7,7 @@ import { Vector } from '../vector.js';
 import { Shape } from '../shape.js';
 import { Registry } from '../registry.js';
 
-import { CanvasRenderer } from '../renderers/canvas.js';
+import { Renderer as CanvasRenderer } from '../renderers/canvas.js';
 
 import { Constants } from '../constants.js';
 

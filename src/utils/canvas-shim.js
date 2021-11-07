@@ -1,4 +1,4 @@
-import { CanvasRenderer } from '../renderers/canvas.js';
+import { Renderer as CanvasRenderer } from '../renderers/canvas.js';
 
 export const CanvasShim = {
 

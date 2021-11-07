@@ -24,7 +24,7 @@ import { LinearGradient } from '../effects/linear-gradient.js';
 import { RadialGradient } from '../effects/radial-gradient.js';
 import { Text } from '../text.js';
 
-import Constants from '../constants.js';
+import { Constants } from '../constants.js';
 
 // https://github.com/jonobr1/two.js/issues/507#issuecomment-777159213
 const regex = {

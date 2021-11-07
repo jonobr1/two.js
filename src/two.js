@@ -49,9 +49,9 @@ import { Star } from './shapes/star.js';
 
 // Renderers
 
-import { CanvasRenderer } from './renderers/canvas.js';
-import { SVGRenderer } from './renderers/svg.js';
-import { WebGLRenderer } from './renderers/webgl.js';
+import { Renderer as CanvasRenderer } from './renderers/canvas.js';
+import { Renderer as SVGRenderer } from './renderers/svg.js';
+import { Renderer as WebGLRenderer } from './renderers/webgl.js';
 
 import { Constants } from './constants.js';
 
