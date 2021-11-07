@@ -1,32 +1,32 @@
-import Commands from '../utils/path-commands.js';
+import { Commands } from '../utils/path-commands.js';
 
-import root from '../utils/root.js';
+import { root } from '../utils/root.js';
 import { getPoT, mod, NumArray, TWO_PI } from '../utils/math.js';
-import shaders from '../utils/shaders.js';
-import Events from '../events.js';
-import TwoError from '../utils/error.js';
+import { shaders } from '../utils/shaders.js';
+import { Events } from '../events.js';
+import { TwoError } from '../utils/error.js';
 import { getRatio } from '../utils/device-pixel-ratio.js';
-import _ from '../utils/underscore.js';
+import { _ } from '../utils/underscore.js';
 
-import Group from '../group.js';
-import Vector from '../vector.js';
-import Matrix from '../matrix.js';
-import Registry from '../registry.js';
+import { Group } from '../group.js';
+import { Vector } from '../vector.js';
+import { Matrix } from '../matrix.js';
+import { Registry } from '../registry.js';
 
-import LinearGradient from '../effects/linear-gradient.js';
-import RadialGradient from '../effects/radial-gradient.js';
-import Texture from '../effects/texture.js';
+import { LinearGradient } from '../effects/linear-gradient.js';
+import { RadialGradient } from '../effects/radial-gradient.js';
+import { Texture } from '../effects/texture.js';
 
-import CanvasRenderer from './canvas.js';
+import { Renderer as CanvasRenderer } from './canvas.js';
 
 // Constants
 
-var multiplyMatrix = Matrix.Multiply,
+const multiplyMatrix = Matrix.Multiply,
   identity = [1, 0, 0, 0, 1, 0, 0, 0, 1],
   transformation = new NumArray(9),
   CanvasUtils = CanvasRenderer.Utils;
 
-var quad = new NumArray([
+const quad = new NumArray([
   0, 0,
   1, 0,
   0, 1,
@@ -35,7 +35,7 @@ var quad = new NumArray([
   1, 1
 ]);
 
-var webgl = {
+const webgl = {
 
   precision: 0.9,
 
@@ -55,7 +55,7 @@ var webgl = {
 
     removeChild: function(child, gl) {
       if (child.children) {
-        for (var i = 0; i < child.children.length; i++) {
+        for (let i = 0; i < child.children.length; i++) {
           webgl.group.removeChild(child.children[i], gl);
         }
       }
@@ -79,9 +79,9 @@ var webgl = {
 
       this._update();
 
-      var parent = this.parent;
-      var flagParentMatrix = (parent._matrix && parent._matrix.manual) || parent._flagMatrix;
-      var flagMatrix = this._matrix.manual || this._flagMatrix;
+      const parent = this.parent;
+      const flagParentMatrix = (parent._matrix && parent._matrix.manual) || parent._flagMatrix;
+      const flagMatrix = this._matrix.manual || this._flagMatrix;
 
       if (flagParentMatrix || flagMatrix) {
 
@@ -141,7 +141,7 @@ var webgl = {
       this._renderer.opacity = this._opacity
         * (parent && parent._renderer ? parent._renderer.opacity : 1);
 
-      var i;
+      let i;
       if (this._flagSubtractions) {
         for (i = 0; i < this.subtractions.length; i++) {
           webgl.group.removeChild(this.subtractions[i], gl);
@@ -149,7 +149,7 @@ var webgl = {
       }
 
       for (i = 0; i < this.children.length; i++) {
-        var child = this.children[i];
+        const child = this.children[i];
         webgl[child._renderer.type].render.call(child, gl, programs);
       }
 
@@ -167,33 +167,33 @@ var webgl = {
 
     updateCanvas: function(elem) {
 
-      var next, prev, a, c, ux, uy, vx, vy, ar, bl, br, cl, x, y;
-      var isOffset;
+      let next, prev, a, c, ux, uy, vx, vy, ar, bl, br, cl, x, y;
+      let isOffset;
 
-      var commands = elem._renderer.vertices;
-      var canvas = this.canvas;
-      var ctx = this.ctx;
+      const commands = elem._renderer.vertices;
+      const canvas = this.canvas;
+      const ctx = this.ctx;
 
       // Styles
-      var scale = elem._renderer.scale;
-      var stroke = elem._stroke;
-      var linewidth = elem._linewidth;
-      var fill = elem._fill;
-      var opacity = elem._renderer.opacity || elem._opacity;
-      var cap = elem._cap;
-      var join = elem._join;
-      var miter = elem._miter;
-      var closed = elem._closed;
-      var dashes = elem.dashes;
-      var length = commands.length;
-      var last = length - 1;
+      const scale = elem._renderer.scale;
+      const stroke = elem._stroke;
+      const linewidth = elem._linewidth;
+      const fill = elem._fill;
+      const opacity = elem._renderer.opacity || elem._opacity;
+      const cap = elem._cap;
+      const join = elem._join;
+      const miter = elem._miter;
+      const closed = elem._closed;
+      const dashes = elem.dashes;
+      const length = commands.length;
+      const last = length - 1;
 
       canvas.width = Math.max(Math.ceil(elem._renderer.rect.width * scale.x), 1);
       canvas.height = Math.max(Math.ceil(elem._renderer.rect.height * scale.y), 1);
 
-      var centroid = elem._renderer.rect.centroid;
-      var cx = centroid.x;
-      var cy = centroid.y;
+      const centroid = elem._renderer.rect.centroid;
+      const cx = centroid.x;
+      const cy = centroid.y;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -234,16 +234,16 @@ var webgl = {
         ctx.setLineDash(dashes);
       }
 
-      var d;
+      let d, rx, ry, xAxisRotation, largeArcFlag, sweepFlag, ax, ay;
       ctx.save();
       ctx.scale(scale.x, scale.y);
 
       ctx.translate(cx, cy);
 
       ctx.beginPath();
-      for (var i = 0; i < commands.length; i++) {
+      for (let i = 0; i < commands.length; i++) {
 
-        var b = commands[i];
+        const b = commands[i];
 
         x = b.x;
         y = b.y;
@@ -256,17 +256,17 @@ var webgl = {
 
           case Commands.arc:
 
-            var rx = b.rx;
-            var ry = b.ry;
-            var xAxisRotation = b.xAxisRotation;
-            var largeArcFlag = b.largeArcFlag;
-            var sweepFlag = b.sweepFlag;
+            rx = b.rx;
+            ry = b.ry;
+            xAxisRotation = b.xAxisRotation;
+            largeArcFlag = b.largeArcFlag;
+            sweepFlag = b.sweepFlag;
 
             prev = closed ? mod(i - 1, length) : Math.max(i - 1, 0);
             a = commands[prev];
 
-            var ax = a.x;
-            var ay = a.y;
+            ax = a.x;
+            ay = a.y;
 
             CanvasUtils.renderSvgArcCommand(ctx, ax, ay, rx, ry, largeArcFlag, sweepFlag, xAxisRotation, x, y);
             break;
@@ -387,14 +387,14 @@ var webgl = {
     // "centered" around 0 and returns them to be anchored upper-left.
     getBoundingClientRect: function(vertices, border, rect) {
 
-      var left = Infinity, right = -Infinity,
+      let left = Infinity, right = -Infinity,
           top = Infinity, bottom = -Infinity,
           width, height;
 
       vertices.forEach(function(v) {
 
-        var x = v.x, y = v.y, controls = v.controls;
-        var a, b, c, d, cl, cr;
+        const x = v.x, y = v.y, controls = v.controls;
+        let a, b, c, d, cl, cr;
 
         top = Math.min(y, top);
         left = Math.min(x, left);
@@ -466,12 +466,12 @@ var webgl = {
 
       // Calculate what changed
 
-      var parent = forcedParent || this.parent;
-      var program = programs[this._renderer.type];
-      var flagParentMatrix = parent._matrix.manual || parent._flagMatrix;
-      var flagMatrix = this._matrix.manual || this._flagMatrix;
-      var parentChanged = this._renderer.parent !== parent;
-      var flagTexture = this._flagVertices || this._flagFill
+      const parent = forcedParent || this.parent;
+      const program = programs[this._renderer.type];
+      const flagParentMatrix = parent._matrix.manual || parent._flagMatrix;
+      const flagMatrix = this._matrix.manual || this._flagMatrix;
+      const parentChanged = this._renderer.parent !== parent;
+      const flagTexture = this._flagVertices || this._flagFill
         || (this._fill instanceof LinearGradient && (this._fill._flagSpread || this._fill._flagStops || this._fill._flagEndPoints))
         || (this._fill instanceof RadialGradient && (this._fill._flagSpread || this._fill._flagStops || this._fill._flagRadius || this._fill._flagCenter || this._fill._flagFocal))
         || (this._fill instanceof Texture && (this._fill._flagLoaded && this._fill.loaded || this._fill._flagImage || this._fill._flagVideo || this._fill._flagRepeat || this._fill._flagOffset || this._fill._flagScale))
@@ -594,7 +594,7 @@ var webgl = {
       gl.bindTexture(gl.TEXTURE_2D, this._renderer.texture);
 
       // Draw Rect
-      var rect = this._renderer.rect;
+      const rect = this._renderer.rect;
       gl.uniformMatrix3fv(program.matrix, false, this._renderer.matrix);
       gl.uniform4f(program.rect, rect.left, rect.top, rect.right, rect.bottom);
       gl.drawArrays(gl.TRIANGLES, 0, 6);
@@ -614,19 +614,19 @@ var webgl = {
     // The canvas is a texture that is a rendering of one vertex
     updateCanvas: function(elem) {
 
-      var isOffset;
+      let isOffset;
 
-      var canvas = this.canvas;
-      var ctx = this.ctx;
+      const canvas = this.canvas;
+      const ctx = this.ctx;
 
       // Styles
-      var stroke = elem._stroke;
-      var linewidth = elem._linewidth;
-      var fill = elem._fill;
-      var opacity = elem._renderer.opacity || elem._opacity;
-      var dashes = elem.dashes;
-      var size = elem._size;
-      var dimension = size;
+      const stroke = elem._stroke;
+      const linewidth = elem._linewidth;
+      const fill = elem._fill;
+      const opacity = elem._renderer.opacity || elem._opacity;
+      const dashes = elem.dashes;
+      const size = elem._size;
+      let dimension = size;
 
       if (!(webgl.isHidden.test(stroke))) {
         dimension += linewidth;
@@ -635,10 +635,10 @@ var webgl = {
       canvas.width = getPoT(dimension);
       canvas.height = canvas.width;
 
-      var aspect = dimension / canvas.width;
+      const aspect = dimension / canvas.width;
 
-      var cx = canvas.width / 2;
-      var cy = canvas.height / 2;
+      const cx = canvas.width / 2;
+      const cy = canvas.height / 2;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -724,19 +724,19 @@ var webgl = {
 
       // Calculate what changed
 
-      var parent = forcedParent || this.parent;
-      var program = programs[this._renderer.type];
-      var size = this._size;
-      var sizeAttenuation = this._sizeAttenuation;
-      var stroke = this._stroke;
-      var linewidth = this._linewidth;
-      var flagParentMatrix = parent._matrix.manual || parent._flagMatrix;
-      var flagMatrix = this._matrix.manual || this._flagMatrix;
-      var parentChanged = this._renderer.parent !== parent;
-      var commands = this._renderer.vertices;
-      var length = this._renderer.collection.length;
-      var flagVertices = this._flagVertices;
-      var flagTexture = this._flagFill
+      let size = this._size;
+      const parent = forcedParent || this.parent;
+      const program = programs[this._renderer.type];
+      const sizeAttenuation = this._sizeAttenuation;
+      const stroke = this._stroke;
+      const linewidth = this._linewidth;
+      const flagParentMatrix = parent._matrix.manual || parent._flagMatrix;
+      const flagMatrix = this._matrix.manual || this._flagMatrix;
+      const parentChanged = this._renderer.parent !== parent;
+      const commands = this._renderer.vertices;
+      const length = this._renderer.collection.length;
+      const flagVertices = this._flagVertices;
+      const flagTexture = this._flagFill
         || (this._fill instanceof LinearGradient && (this._fill._flagSpread || this._fill._flagStops || this._fill._flagEndPoints))
         || (this._fill instanceof RadialGradient && (this._fill._flagSpread || this._fill._flagStops || this._fill._flagRadius || this._fill._flagCenter || this._fill._flagFocal))
         || (this._fill instanceof Texture && (this._fill._flagLoaded && this._fill.loaded || this._fill._flagImage || this._fill._flagVideo || this._fill._flagRepeat || this._fill._flagOffset || this._fill._flagScale))
@@ -779,7 +779,7 @@ var webgl = {
 
       if (flagVertices) {
 
-        var positionBuffer = this._renderer.positionBuffer;
+        const positionBuffer = this._renderer.positionBuffer;
         if (positionBuffer) {
           gl.deleteBuffer(positionBuffer);
         }
@@ -862,27 +862,27 @@ var webgl = {
 
     updateCanvas: function(elem) {
 
-      var canvas = this.canvas;
-      var ctx = this.ctx;
+      const canvas = this.canvas;
+      const ctx = this.ctx;
 
       // Styles
-      var scale = elem._renderer.scale;
-      var stroke = elem._stroke;
-      var linewidth = elem._linewidth * scale;
-      var fill = elem._fill;
-      var opacity = elem._renderer.opacity || elem._opacity;
-      var dashes = elem.dashes;
-      var decoration = elem._decoration;
+      const scale = elem._renderer.scale;
+      const stroke = elem._stroke;
+      const linewidth = elem._linewidth * scale;
+      const fill = elem._fill;
+      const opacity = elem._renderer.opacity || elem._opacity;
+      const dashes = elem.dashes;
+      const decoration = elem._decoration;
 
       canvas.width = Math.max(Math.ceil(elem._renderer.rect.width * scale.x), 1);
       canvas.height = Math.max(Math.ceil(elem._renderer.rect.height * scale.y), 1);
 
-      var centroid = elem._renderer.rect.centroid;
-      var cx = centroid.x;
-      var cy = centroid.y;
+      const centroid = elem._renderer.rect.centroid;
+      const cx = centroid.x;
+      const cy = centroid.y;
 
-      var a, b, c, d, e, sx, sy, x1, y1, x2, y2;
-      var isOffset = fill._renderer && fill._renderer.offset
+      let a, b, c, d, e, sx, sy, x1, y1, x2, y2;
+      const isOffset = fill._renderer && fill._renderer.offset
         && stroke._renderer && stroke._renderer.offset;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -990,7 +990,7 @@ var webgl = {
       // Handle text-decoration
       if (/(underline|strikethrough)/i.test(decoration)) {
 
-        var metrics = ctx.measureText(elem.value);
+        const metrics = ctx.measureText(elem.value);
 
         switch (decoration) {
           case 'underline':
@@ -1022,7 +1022,7 @@ var webgl = {
 
     getBoundingClientRect: function(elem, rect) {
 
-      var ctx = webgl.ctx;
+      const ctx = webgl.ctx;
 
       ctx.font = [elem._style, elem._weight, elem._size + 'px/' +
         elem._leading + 'px', elem._family].join(' ');
@@ -1031,16 +1031,16 @@ var webgl = {
       ctx.textBaseline = elem._baseline;
 
       // TODO: Estimate this better
-      var width = ctx.measureText(elem._value).width * 1.25;
-      var height = Math.max(elem._size, elem._leading) * 1.25;
+      let width = ctx.measureText(elem._value).width * 1.25;
+      let height = Math.max(elem._size, elem._leading) * 1.25;
 
       if (this._linewidth && !webgl.isHidden.test(this._stroke)) {
         width += this._linewidth * 2;
         height += this._linewidth * 2;
       }
 
-      var w = width / 2;
-      var h = height / 2;
+      const w = width / 2;
+      const h = height / 2;
 
       switch (webgl.alignments[elem._alignment] || elem._alignment) {
 
@@ -1095,12 +1095,12 @@ var webgl = {
 
       // Calculate what changed
 
-      var parent = forcedParent || this.parent;
-      var program = programs[this._renderer.type];
-      var flagParentMatrix = parent._matrix.manual || parent._flagMatrix;
-      var flagMatrix = this._matrix.manual || this._flagMatrix;
-      var parentChanged = this._renderer.parent !== parent;
-      var flagTexture = this._flagVertices || this._flagFill
+      const parent = forcedParent || this.parent;
+      const program = programs[this._renderer.type];
+      const flagParentMatrix = parent._matrix.manual || parent._flagMatrix;
+      const flagMatrix = this._matrix.manual || this._flagMatrix;
+      const parentChanged = this._renderer.parent !== parent;
+      const flagTexture = this._flagVertices || this._flagFill
         || (this._fill instanceof LinearGradient && (this._fill._flagSpread || this._fill._flagStops || this._fill._flagEndPoints))
         || (this._fill instanceof RadialGradient && (this._fill._flagSpread || this._fill._flagStops || this._fill._flagRadius || this._fill._flagCenter || this._fill._flagFocal))
         || (this._fill instanceof Texture && (this._fill._flagLoaded && this._fill.loaded || this._fill._flagImage || this._fill._flagVideo || this._fill._flagRepeat || this._fill._flagOffset || this._fill._flagScale))
@@ -1224,7 +1224,7 @@ var webgl = {
       gl.bindTexture(gl.TEXTURE_2D, this._renderer.texture);
 
       // Draw Rect
-      var rect = this._renderer.rect;
+      const rect = this._renderer.rect;
       gl.uniformMatrix3fv(program.matrix, false, this._renderer.matrix);
       gl.uniform4f(program.rect, rect.left, rect.top, rect.right, rect.bottom);
       gl.drawArrays(gl.TRIANGLES, 0, 6);
@@ -1256,8 +1256,8 @@ var webgl = {
           this.right._x, this.right._y
         );
 
-        for (var i = 0; i < this.stops.length; i++) {
-          var stop = this.stops[i];
+        for (let i = 0; i < this.stops.length; i++) {
+          const stop = this.stops[i];
           this._renderer.effect.addColorStop(stop._offset, stop._color);
         }
 
@@ -1287,8 +1287,8 @@ var webgl = {
           this.focal._x, this.focal._y, this._radius
         );
 
-        for (var i = 0; i < this.stops.length; i++) {
-          var stop = this.stops[i];
+        for (let i = 0; i < this.stops.length; i++) {
+          const stop = this.stops[i];
           this._renderer.effect.addColorStop(stop._offset, stop._color);
         }
 
@@ -1310,7 +1310,7 @@ var webgl = {
 
       this._update();
 
-      var image = this.image;
+      const image = this.image;
 
       if (((this._flagLoaded || this._flagImage || this._flagVideo || this._flagRepeat) && this.loaded)) {
         this._renderer.effect = ctx.createPattern(image, this._repeat);
@@ -1397,7 +1397,7 @@ var webgl = {
   program: {
 
     create: function(gl, shaders) {
-      var program, linked, error;
+      let program, linked, error;
       program = gl.createProgram();
       _.each(shaders, function(s) {
         gl.attachShader(program, s);
@@ -1434,139 +1434,135 @@ webgl.ctx = webgl.canvas.getContext('2d');
  * @description This class is used by {@link Two} when constructing with `type` of `Two.Types.webgl`. It takes Two.js' scenegraph and renders it to a `<canvas />` through the WebGL api.
  * @see {@link https://www.khronos.org/registry/webgl/specs/latest/1.0/}
  */
-function Renderer(params) {
+export class Renderer extends Events {
 
-  var gl, program, vs, fs;
+  constructor(params) {
 
-  /**
-   * @name Two.WebGLRenderer#domElement
-   * @property {Element} - The `<canvas />` associated with the Two.js scene.
-   */
-  this.domElement = params.domElement || document.createElement('canvas');
+    super();
 
-  if (typeof params.offscreenElement !== 'undefined') {
-    webgl.canvas = params.offscreenElement;
-    webgl.ctx = webgl.canvas.getContext('2d');
-  }
+    let gl, program, vs, fs;
 
-  /**
-   * @name Two.WebGLRenderer#scene
-   * @property {Two.Group} - The root group of the scenegraph.
-   */
-  this.scene = new Group();
-  this.scene.parent = this;
+    /**
+     * @name Two.WebGLRenderer#domElement
+     * @property {Element} - The `<canvas />` associated with the Two.js scene.
+     */
+    this.domElement = params.domElement || document.createElement('canvas');
 
-  this._renderer = {
-    type: 'renderer',
-    matrix: new NumArray(identity),
-    scale: 1,
-    opacity: 1
-  };
-  this._flagMatrix = true;
-
-  // http://games.greggman.com/game/webgl-and-alpha/
-  // http://www.khronos.org/registry/webgl/specs/latest/#5.2
-  params = _.defaults(params || {}, {
-    antialias: false,
-    alpha: true,
-    premultipliedAlpha: true,
-    stencil: true,
-    preserveDrawingBuffer: true,
-    overdraw: false
-  });
-
-  /**
-   * @name Two.WebGLRenderer#overdraw
-   * @property {Boolean} - Determines whether the canvas clears the background each draw call.
-   * @default true
-   */
-  this.overdraw = params.overdraw;
-
-  /**
-   * @name Two.WebGLRenderer#ctx
-   * @property {WebGLContext} - Associated two dimensional context to render on the `<canvas />`.
-   */
-  gl = this.ctx = this.domElement.getContext('webgl', params) ||
-    this.domElement.getContext('experimental-webgl', params);
-
-  if (!this.ctx) {
-    throw new TwoError(
-      'unable to create a webgl context. Try using another renderer.');
-  }
-
-  // Compile Base Shaders to draw in pixel space.
-  vs = shaders.create(gl, shaders.path.vertex, shaders.types.vertex);
-  fs = shaders.create(gl, shaders.path.fragment, shaders.types.fragment);
-
-  /**
-   * @name Two.WebGLRenderer#programs
-   * @property {Object} - Associated WebGL programs to render all elements from the scenegraph.
-   */
-  this.programs = {
-    current: null,
-    buffers: {
-      position: gl.createBuffer()
-    },
-    resolution: {
-      width: 0,
-      height: 0,
-      ratio: 1,
-      flagged: false
+    if (typeof params.offscreenElement !== 'undefined') {
+      webgl.canvas = params.offscreenElement;
+      webgl.ctx = webgl.canvas.getContext('2d');
     }
-  };
 
-  program = this.programs.path = webgl.program.create(gl, [vs, fs]);
-  this.programs.text = this.programs.path;
+    /**
+     * @name Two.WebGLRenderer#scene
+     * @property {Two.Group} - The root group of the scenegraph.
+     */
+    this.scene = new Group();
+    this.scene.parent = this;
 
-  // Create and bind the drawing buffer
+    this._renderer = {
+      type: 'renderer',
+      matrix: new NumArray(identity),
+      scale: 1,
+      opacity: 1
+    };
+    this._flagMatrix = true;
 
-  // look up where the vertex data needs to go.
-  program.position = gl.getAttribLocation(program, 'a_position');
-  program.matrix = gl.getUniformLocation(program, 'u_matrix');
-  program.rect = gl.getUniformLocation(program, 'u_rect');
+    // http://games.greggman.com/game/webgl-and-alpha/
+    // http://www.khronos.org/registry/webgl/specs/latest/#5.2
+    params = _.defaults(params || {}, {
+      antialias: false,
+      alpha: true,
+      premultipliedAlpha: true,
+      stencil: true,
+      preserveDrawingBuffer: true,
+      overdraw: false
+    });
 
-  // Bind the vertex buffer
-  var positionBuffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-  gl.vertexAttribPointer(program.position, 2, gl.FLOAT, false, 0, 0);
-  gl.enableVertexAttribArray(program.position);
-  gl.bufferData(gl.ARRAY_BUFFER, quad, gl.STATIC_DRAW);
+    /**
+     * @name Two.WebGLRenderer#overdraw
+     * @property {Boolean} - Determines whether the canvas clears the background each draw call.
+     * @default true
+     */
+    this.overdraw = params.overdraw;
 
-  // Compile Base Shaders to draw in pixel space.
-  vs = shaders.create(gl, shaders.points.vertex, shaders.types.vertex);
-  fs = shaders.create(gl, shaders.points.fragment, shaders.types.fragment);
+    /**
+     * @name Two.WebGLRenderer#ctx
+     * @property {WebGLContext} - Associated two dimensional context to render on the `<canvas />`.
+     */
+    gl = this.ctx = this.domElement.getContext('webgl', params) ||
+      this.domElement.getContext('experimental-webgl', params);
 
-  program = this.programs.points = webgl.program.create(gl, [vs, fs]);
+    if (!this.ctx) {
+      throw new TwoError(
+        'unable to create a webgl context. Try using another renderer.');
+    }
 
-  // Create and bind the drawing buffer
+    // Compile Base Shaders to draw in pixel space.
+    vs = shaders.create(gl, shaders.path.vertex, shaders.types.vertex);
+    fs = shaders.create(gl, shaders.path.fragment, shaders.types.fragment);
 
-  // look up where the vertex data needs to go.
-  program.position = gl.getAttribLocation(program, 'a_position');
-  program.matrix = gl.getUniformLocation(program, 'u_matrix');
-  program.size = gl.getUniformLocation(program, 'u_size');
+    /**
+     * @name Two.WebGLRenderer#programs
+     * @property {Object} - Associated WebGL programs to render all elements from the scenegraph.
+     */
+    this.programs = {
+      current: null,
+      buffers: {
+        position: gl.createBuffer()
+      },
+      resolution: {
+        width: 0,
+        height: 0,
+        ratio: 1,
+        flagged: false
+      }
+    };
 
-  // Setup some initial statements of the gl context
-  gl.enable(gl.BLEND);
+    program = this.programs.path = webgl.program.create(gl, [vs, fs]);
+    this.programs.text = this.programs.path;
 
-  gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+    // Create and bind the drawing buffer
 
-  gl.blendEquation(gl.FUNC_ADD);
-  gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-}
+    // look up where the vertex data needs to go.
+    program.position = gl.getAttribLocation(program, 'a_position');
+    program.matrix = gl.getUniformLocation(program, 'u_matrix');
+    program.rect = gl.getUniformLocation(program, 'u_rect');
 
-_.extend(Renderer, {
+    // Bind the vertex buffer
+    const positionBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+    gl.vertexAttribPointer(program.position, 2, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(program.position);
+    gl.bufferData(gl.ARRAY_BUFFER, quad, gl.STATIC_DRAW);
+
+    // Compile Base Shaders to draw in pixel space.
+    vs = shaders.create(gl, shaders.points.vertex, shaders.types.vertex);
+    fs = shaders.create(gl, shaders.points.fragment, shaders.types.fragment);
+
+    program = this.programs.points = webgl.program.create(gl, [vs, fs]);
+
+    // Create and bind the drawing buffer
+
+    // look up where the vertex data needs to go.
+    program.position = gl.getAttribLocation(program, 'a_position');
+    program.matrix = gl.getUniformLocation(program, 'u_matrix');
+    program.size = gl.getUniformLocation(program, 'u_size');
+
+    // Setup some initial statements of the gl context
+    gl.enable(gl.BLEND);
+
+    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+
+    gl.blendEquation(gl.FUNC_ADD);
+    gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+  }
 
   /**
    * @name Two.WebGLRenderer.Utils
    * @property {Object} - A massive object filled with utility functions and properties to render Two.js objects to a `<canvas />` through the WebGL API.
    */
-  Utils: webgl
-
-});
-
-_.extend(Renderer.prototype, Events, {
-
-  constructor: Renderer,
+  static Utils = webgl;
 
   /**
    * @name Two.WebGLRenderer#setSize
@@ -1577,10 +1573,10 @@ _.extend(Renderer.prototype, Events, {
    * @param {Number} [ratio] - The new pixel ratio (pixel density) of the renderer. Defaults to calculate the pixel density of the user's screen.
    * @description Change the size of the renderer.
    */
-  setSize: function(width, height, ratio) {
+  setSize(width, height, ratio) {
 
-    var w, h;
-    var ctx = this.ctx;
+    let w, h;
+    const ctx = this.ctx;
 
     this.width = width;
     this.height = height;
@@ -1614,16 +1610,16 @@ _.extend(Renderer.prototype, Events, {
 
     return this.trigger(Events.Types.resize, width, height, ratio);
 
-  },
+  }
 
   /**
    * @name Two.WebGLRenderer#render
    * @function
    * @description Render the current scene to the `<canvas />`.
    */
-  render: function() {
+  render() {
 
-    var gl = this.ctx;
+    const gl = this.ctx;
 
     if (!this.overdraw) {
       gl.clear(gl.COLOR_BUFFER_BIT);
@@ -1637,6 +1633,4 @@ _.extend(Renderer.prototype, Events, {
 
   }
 
-});
-
-export default Renderer;
+}
