@@ -125,7 +125,7 @@ export class Two extends Events {
 
     // Determine what Renderer to use and setup a scene.
 
-    var params = _.defaults(options || {}, {
+    const params = _.defaults(options || {}, {
       fullscreen: false,
       fitted: false,
       width: 640,
@@ -143,7 +143,7 @@ export class Two extends Events {
 
     // Specified domElement overrides type declaration only if the element does not support declared renderer type.
     if (_.isElement(params.domElement)) {
-      var tagName = params.domElement.tagName.toLowerCase();
+      const tagName = params.domElement.tagName.toLowerCase();
       // TODO: Reconsider this if statement's logic.
       if (!/^(CanvasRenderer-canvas|WebGLRenderer-canvas|SVGRenderer-svg)$/.test(this.type+'-'+tagName)) {
         this.type = Two.Types[tagName];
@@ -328,7 +328,7 @@ export class Two extends Events {
    */
   release(obj) {
 
-    var i, v, child;
+    let i, v, child;
 
     if (!_.isObject(obj)) {
       return this.release(this.scene);
@@ -381,8 +381,8 @@ export class Two extends Events {
    */
   update() {
 
-    var animated = !!this._lastFrame;
-    var now = _.performance.now();
+    const animated = !!this._lastFrame;
+    const now = _.performance.now();
 
     if (animated) {
       this.timeDelta = parseFloat((now - this._lastFrame).toFixed(3));
@@ -395,9 +395,9 @@ export class Two extends Events {
         this.fit();
     }
 
-    var width = this.width;
-    var height = this.height;
-    var renderer = this.renderer;
+    const width = this.width;
+    const height = this.height;
+    const renderer = this.renderer;
 
     // Update width / height for the renderer
     if (width !== renderer.width || height !== renderer.height) {
@@ -433,7 +433,7 @@ export class Two extends Events {
    */
   add(o) {
 
-    var objects = o;
+    let objects = o;
     if (!(objects instanceof Array)) {
       objects = Array.prototype.slice.call(arguments);
     }
@@ -451,7 +451,7 @@ export class Two extends Events {
    */
   remove(o) {
 
-    var objects = o;
+    let objects = o;
     if (!(objects instanceof Array)) {
       objects = Array.prototype.slice.call(arguments);
     }
@@ -486,7 +486,7 @@ export class Two extends Events {
    */
   makeLine(x1, y1, x2, y2) {
 
-    var line = new Line(x1, y1, x2, y2);
+    const line = new Line(x1, y1, x2, y2);
     this.scene.add(line);
 
     return line;
@@ -505,11 +505,11 @@ export class Two extends Events {
    */
   makeArrow(x1, y1, x2, y2, size) {
 
-    var headlen = typeof size === 'number' ? size : 10;
+    const headlen = typeof size === 'number' ? size : 10;
 
-    var angle = Math.atan2(y2 - y1, x2 - x1);
+    const angle = Math.atan2(y2 - y1, x2 - x1);
 
-    var vertices = [
+    const vertices = [
 
       new Anchor(x1, y1, undefined, undefined, undefined, undefined, Commands.move),
       new Anchor(x2, y2, undefined, undefined, undefined, undefined, Commands.line),
@@ -528,7 +528,7 @@ export class Two extends Events {
 
     ];
 
-    var path = new Path(vertices, false, false, true);
+    const path = new Path(vertices, false, false, true);
     path.noFill();
     path.cap = 'round';
     path.join = 'round';
@@ -550,7 +550,7 @@ export class Two extends Events {
    */
   makeRectangle(x, y, width, height) {
 
-    var rect = new Rectangle(x, y, width, height);
+    const rect = new Rectangle(x, y, width, height);
     this.scene.add(rect);
 
     return rect;
@@ -570,7 +570,7 @@ export class Two extends Events {
    */
   makeRoundedRectangle(x, y, width, height, sides) {
 
-    var rect = new RoundedRectangle(x, y, width, height, sides);
+    const rect = new RoundedRectangle(x, y, width, height, sides);
     this.scene.add(rect);
 
     return rect;
@@ -589,7 +589,7 @@ export class Two extends Events {
    */
   makeCircle(x, y, radius, resolution) {
 
-    var circle = new Circle(x, y, radius, resolution);
+    const circle = new Circle(x, y, radius, resolution);
     this.scene.add(circle);
 
     return circle;
@@ -609,7 +609,7 @@ export class Two extends Events {
    */
   makeEllipse(x, y, rx, ry, resolution) {
 
-    var ellipse = new Ellipse(x, y, rx, ry, resolution);
+    const ellipse = new Ellipse(x, y, rx, ry, resolution);
     this.scene.add(ellipse);
 
     return ellipse;
@@ -629,7 +629,7 @@ export class Two extends Events {
    */
   makeStar(ox, oy, outerRadius, innerRadius, sides) {
 
-    var star = new Star(ox, oy, outerRadius, innerRadius, sides);
+    const star = new Star(ox, oy, outerRadius, innerRadius, sides);
     this.scene.add(star);
 
     return star;
@@ -647,22 +647,24 @@ export class Two extends Events {
    */
   makeCurve(p) {
 
-    var l = arguments.length, points = p;
+    const l = arguments.length;
+    let points = p;
+
     if (!Array.isArray(p)) {
       points = [];
-      for (var i = 0; i < l; i+=2) {
-        var x = arguments[i];
+      for (let i = 0; i < l; i+=2) {
+        const x = arguments[i];
         if (typeof x !== 'number') {
           break;
         }
-        var y = arguments[i + 1];
+        const y = arguments[i + 1];
         points.push(new Anchor(x, y));
       }
     }
 
-    var last = arguments[l - 1];
-    var curve = new Path(points, !(typeof last === 'boolean' ? last : undefined), true);
-    var rect = curve.getBoundingClientRect();
+    const last = arguments[l - 1];
+    const curve = new Path(points, !(typeof last === 'boolean' ? last : undefined), true);
+    const rect = curve.getBoundingClientRect();
     curve.center().translation
       .set(rect.left + rect.width / 2, rect.top + rect.height / 2);
 
@@ -684,7 +686,7 @@ export class Two extends Events {
    */
   makePolygon(x, y, radius, sides) {
 
-    var poly = new Polygon(x, y, radius, sides);
+    const poly = new Polygon(x, y, radius, sides);
     this.scene.add(poly);
 
     return poly;
@@ -704,7 +706,7 @@ export class Two extends Events {
    * @returns {Two.ArcSegment}
    */
   makeArcSegment(ox, oy, ir, or, sa, ea, res) {
-    var arcSegment = new ArcSegment(ox, oy, ir, or, sa, ea, res);
+    const arcSegment = new ArcSegment(ox, oy, ir, or, sa, ea, res);
     this.scene.add(arcSegment);
     return arcSegment;
   }
@@ -719,20 +721,22 @@ export class Two extends Events {
    */
   makePoints(p) {
 
-    var l = arguments.length, vertices = p;
+    const l = arguments.length;
+    let vertices = p;
+
     if (!Array.isArray(p)) {
       vertices = [];
-      for (var i = 0; i < l; i+=2) {
-        var x = arguments[i];
+      for (let i = 0; i < l; i+=2) {
+        const x = arguments[i];
         if (typeof x !== 'number') {
           break;
         }
-        var y = arguments[i + 1];
+        const y = arguments[i + 1];
         vertices.push(new Vector(x, y));
       }
     }
 
-    var points = new Points(vertices);
+    const points = new Points(vertices);
 
     this.scene.add(points);
 
@@ -751,22 +755,24 @@ export class Two extends Events {
    */
   makePath(p) {
 
-    var l = arguments.length, points = p;
+    const l = arguments.length;
+    let points = p;
+
     if (!Array.isArray(p)) {
       points = [];
-      for (var i = 0; i < l; i+=2) {
-        var x = arguments[i];
+      for (let i = 0; i < l; i+=2) {
+        const x = arguments[i];
         if (typeof x !== 'number') {
           break;
         }
-        var y = arguments[i + 1];
+        const y = arguments[i + 1];
         points.push(new Anchor(x, y));
       }
     }
 
-    var last = arguments[l - 1];
-    var path = new Path(points, !(typeof last === 'boolean' ? last : undefined));
-    var rect = path.getBoundingClientRect();
+    const last = arguments[l - 1];
+    const path = new Path(points, !(typeof last === 'boolean' ? last : undefined));
+    const rect = path.getBoundingClientRect();
     if (typeof rect.top === 'number'   && typeof rect.left === 'number' &&
         typeof rect.right === 'number' && typeof rect.bottom === 'number') {
       path.center().translation
@@ -790,7 +796,7 @@ export class Two extends Events {
    * @description Creates a Two.js text object and adds it to the scene.
    */
   makeText(message, x, y, styles) {
-    var text = new Text(message, x, y, styles);
+    const text = new Text(message, x, y, styles);
     this.add(text);
     return text;
   }
@@ -808,8 +814,8 @@ export class Two extends Events {
    */
   makeLinearGradient(x1, y1, x2, y2 /* stops */) {
 
-    var stops = Array.prototype.slice.call(arguments, 4);
-    var gradient = new LinearGradient(x1, y1, x2, y2, stops);
+    const stops = Array.prototype.slice.call(arguments, 4);
+    const gradient = new LinearGradient(x1, y1, x2, y2, stops);
 
     this.add(gradient);
 
@@ -829,8 +835,8 @@ export class Two extends Events {
    */
   makeRadialGradient(x1, y1, r /* stops */) {
 
-    var stops = Array.prototype.slice.call(arguments, 3);
-    var gradient = new RadialGradient(x1, y1, r, stops);
+    const stops = Array.prototype.slice.call(arguments, 3);
+    const gradient = new RadialGradient(x1, y1, r, stops);
 
     this.add(gradient);
 
@@ -853,7 +859,7 @@ export class Two extends Events {
    */
   makeSprite(path, x, y, cols, rows, frameRate, autostart) {
 
-    var sprite = new Sprite(path, x, y, cols, rows, frameRate);
+    const sprite = new Sprite(path, x, y, cols, rows, frameRate);
     if (autostart) {
       sprite.play();
     }
@@ -876,7 +882,7 @@ export class Two extends Events {
    */
   makeImageSequence(paths, x, y, frameRate, autostart) {
 
-    var imageSequence = new ImageSequence(paths, x, y, frameRate);
+    const imageSequence = new ImageSequence(paths, x, y, frameRate);
     if (autostart) {
       imageSequence.play();
     }
@@ -896,7 +902,7 @@ export class Two extends Events {
    */
   makeTexture(path, callback) {
 
-    var texture = new Texture(path, callback);
+    const texture = new Texture(path, callback);
     return texture;
 
   }
@@ -910,12 +916,12 @@ export class Two extends Events {
    */
   makeGroup(o) {
 
-    var objects = o;
+    let objects = o;
     if (!(objects instanceof Array)) {
       objects = Array.prototype.slice.call(arguments);
     }
 
-    var group = new Group();
+    const group = new Group();
     this.scene.add(group);
     group.add(objects);
 
@@ -934,7 +940,7 @@ export class Two extends Events {
    */
   interpret(SVGElement, shallow, add) {
 
-    var tag = SVGElement.tagName.toLowerCase();
+    const tag = SVGElement.tagName.toLowerCase();
 
     add = (typeof add !== 'undefined') ? add : true;
 
@@ -942,7 +948,7 @@ export class Two extends Events {
       return null;
     }
 
-    var node = interpretSVG[tag].call(this, SVGElement);
+    const node = interpretSVG[tag].call(this, SVGElement);
 
     if (add) {
       this.add(shallow && node instanceof Group ? node.children : node);
@@ -966,10 +972,10 @@ export class Two extends Events {
    */
   load(text, callback) {
 
-    var group = new Group();
-    var elem, i, child;
+    const group = new Group();
+    let elem, i, child;
 
-    var attach = (function(data) {
+    const attach = (function(data) {
 
       dom.temp.innerHTML = data;
 
@@ -982,7 +988,7 @@ export class Two extends Events {
       }
 
       if (typeof callback === 'function') {
-        var svg = dom.temp.children.length <= 1
+        const svg = dom.temp.children.length <= 1
           ? dom.temp.children[0] : dom.temp.children;
         callback(group, svg);
       }
@@ -1007,10 +1013,10 @@ export class Two extends Events {
 
 function fitToWindow() {
 
-  var wr = document.body.getBoundingClientRect();
+  const wr = document.body.getBoundingClientRect();
 
-  var width = this.width = wr.width;
-  var height = this.height = wr.height;
+  const width = this.width = wr.width;
+  const height = this.height = wr.height;
 
   this.renderer.setSize(width, height, this.ratio);
 
@@ -1018,15 +1024,15 @@ function fitToWindow() {
 
 function fitToParent() {
 
-  var parent = this.renderer.domElement.parentElement;
+  const parent = this.renderer.domElement.parentElement;
   if (!parent) {
     console.warn('Two.js: Attempting to fit to parent, but no parent found.');
     return;
   }
-  var wr = parent.getBoundingClientRect();
+  const wr = parent.getBoundingClientRect();
 
-  var width = this.width = wr.width;
-  var height = this.height = wr.height;
+  const width = this.width = wr.width;
+  const height = this.height = wr.height;
 
   this.renderer.setSize(width, height, this.ratio);
 
@@ -1040,12 +1046,12 @@ function updateDimensions(width, height) {
 
 // Request Animation Frame
 
-var raf = dom.getRequestAnimationFrame();
+const raf = dom.getRequestAnimationFrame();
 
 function loop() {
 
-  for (var i = 0; i < Two.Instances.length; i++) {
-    var t = Two.Instances[i];
+  for (let i = 0; i < Two.Instances.length; i++) {
+    const t = Two.Instances[i];
     if (t.playing) {
       t.update();
     }
