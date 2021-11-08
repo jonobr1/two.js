@@ -55,6 +55,7 @@ export default {
   },
   data () {
     return {
+      mobileDesktopBreakpoint: 719,
       linksWrapMaxWidth: null
     }
   },
@@ -78,18 +79,21 @@ export default {
   }, 
   methods: {
     handleSearchPosition() {
-      var content = document.getElementsByClassName("theme-default-content")[0];
-      if (content) {
-          var searchLeft = content.offsetLeft + parseFloat(window.getComputedStyle(content, null).getPropertyValue('padding-left').replace("px",""));
-          this.$refs.search.style.left = searchLeft.toString() + "px";
+      if(document.documentElement.clientWidth > this.mobileDesktopBreakpoint) {
+        var content = document.getElementsByClassName("theme-default-content")[0];
+        if (content) {
+            var searchLeft = content.offsetLeft + parseFloat(window.getComputedStyle(content, null).getPropertyValue('padding-left').replace("px",""));
+            this.$refs.search.style.left = searchLeft.toString() + "px";
+        }
+      } else {
+        this.$refs.search.style.left = "0px";
       }
     }
   },
   mounted () {
-    const MOBILE_DESKTOP_BREAKPOINT = 719 // refer to config.styl
     const NAVBAR_VERTICAL_PADDING = parseInt(css(this.$el, 'paddingLeft')) + parseInt(css(this.$el, 'paddingRight'))
     const handleLinksWrapWidth = () => {
-      if (document.documentElement.clientWidth < MOBILE_DESKTOP_BREAKPOINT) {
+      if (document.documentElement.clientWidth < this.mobileDesktopBreakpoint) {
         this.linksWrapMaxWidth = null
       } else {
         this.linksWrapMaxWidth = this.$el.offsetWidth - NAVBAR_VERTICAL_PADDING
@@ -206,7 +210,7 @@ $navbar-horizontal-padding = 1.5rem
         width 100%
         input 
           height 3rem
-          width calc(100%-3rem)
+          width calc(100% - 3rem)
           background-position 0.5rem 0.75rem
           left 0
           border-radius 0
