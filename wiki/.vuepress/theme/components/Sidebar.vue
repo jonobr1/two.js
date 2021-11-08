@@ -1,5 +1,24 @@
 <template>
   <aside class="sidebar">
+    
+    <RouterLink
+      :to="$localePath"
+      class="home-link"
+    >
+      <img
+        v-if="$site.themeConfig.logo"
+        class="logo"
+        ref="navLogo"
+        :src="$withBase($site.themeConfig.logo)"
+        :alt="$siteTitle"
+      >
+      <span
+        v-if="$siteTitle"
+        ref="siteName"
+        class="site-name"
+        :class="{ 'can-hide': $site.themeConfig.logo }"
+      >{{ $siteTitle }}</span>
+    </RouterLink>
 
     <slot name="top" />
 
@@ -23,6 +42,8 @@ export default {
 
 <style lang="stylus">
 .sidebar
+  .home-link 
+    display none
   ul
     padding 0
     margin 0
@@ -50,7 +71,15 @@ export default {
       margin-top .75rem
 @media (max-width: $MQMobile)
   .sidebar
-    padding-top 6rem
+    padding-top 0
+    z-index 30
+    .home-link 
+      display block
+      padding 1.1rem 1rem
+      border-bottom 1px solid #eee
+      line-height 1rem
+      .logo
+        width 4rem
     .nav-links
       display block
       .dropdown-wrapper .nav-dropdown .dropdown-item a.router-link-active::after
@@ -59,4 +88,5 @@ export default {
       padding 1rem 0
   .sidebar-mask 
     background-color rgba(0,0,0,.5)
+    z-index 25
 </style>
