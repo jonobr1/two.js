@@ -69,6 +69,20 @@ export default {
       var pathStart = this.$page.path.match(/\/.+?\//);
       pathStart = (pathStart && pathStart.length) ? pathStart[0] : pathStart;
       return (pathStart in this.$site.themeConfig.sidebar && this.$site.themeConfig.sidebar[pathStart].length > 0);
+    },
+  },
+  watch:{
+    $route: function(to, from){
+      setTimeout(this.handleSearchPosition, 10);
+    }
+  }, 
+  methods: {
+    handleSearchPosition() {
+      var content = document.getElementsByClassName("theme-default-content")[0];
+      if (content) {
+          var searchLeft = content.offsetLeft + parseFloat(window.getComputedStyle(content, null).getPropertyValue('padding-left').replace("px",""));
+          this.$refs.search.style.left = searchLeft.toString() + "px";
+      }
     }
   },
   mounted () {
@@ -80,19 +94,11 @@ export default {
       } else {
         this.linksWrapMaxWidth = this.$el.offsetWidth - NAVBAR_VERTICAL_PADDING
           - (this.$refs.siteName && this.$refs.siteName.offsetWidth || 0);
-
-        var content = document.getElementsByClassName("theme-default-content")[0];
-        if (content) {
-          var searchLeft = content.offsetLeft + parseFloat(window.getComputedStyle(content, null).getPropertyValue('padding-left').replace("px",""));
-          this.$refs.search.style.left = searchLeft.toString() + "px";
-        }
       }
+      this.handleSearchPosition();
     }
-    handleLinksWrapWidth()
-    window.addEventListener('resize', handleLinksWrapWidth, false)
-    //TODO:
-    console.log(this.$site);
-    console.log(this.$page);
+    handleLinksWrapWidth();
+    window.addEventListener('resize', handleLinksWrapWidth, false);
   }
 }
 function css (el, property) {
