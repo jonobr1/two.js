@@ -56,7 +56,8 @@ export default {
   data () {
     return {
       mobileDesktopBreakpoint: 719,
-      linksWrapMaxWidth: null
+      linksWrapMaxWidth: null,
+      searchOpenClass: 'search-open'
     }
   },
   computed: {
@@ -88,7 +89,28 @@ export default {
       } else {
         this.$refs.search.style.left = "0px";
       }
-    }
+    },
+    handleSearchBlur() {
+      document.getElementById("app").classList.remove(this.searchOpenClass);
+    },
+    handleSearchChange(e) {
+      console.log(e);
+      window.setTimeout(() => {
+        //option 1: if input is in focus
+        var hasContent = true;
+        //option 2: if suggestions has length
+        //var hasContent = e.target.nextElementSibling && e.target.nextElementSibling.classList.contains("suggestions");
+        //option 2: if input has value
+        //var hasContent = e.target.value.length > 0;
+        if (hasContent) {
+          if (!document.getElementById("app").classList.contains("search-open"))
+            document.getElementById("app").classList.add(this.searchOpenClass);
+        } else {
+          if (document.getElementById("app").classList.contains("search-open"))
+            document.getElementById("app").classList.remove("search-open")
+        }
+      }, 10);
+    },
   },
   mounted () {
     const NAVBAR_VERTICAL_PADDING = parseInt(css(this.$el, 'paddingLeft')) + parseInt(css(this.$el, 'paddingRight'))
@@ -103,6 +125,15 @@ export default {
     }
     handleLinksWrapWidth();
     window.addEventListener('resize', handleLinksWrapWidth, false);
+
+    var searchInput = this.$refs.search.getElementsByTagName("input");
+    if (searchInput.length) {
+      searchInput = searchInput[0];
+      searchInput.addEventListener("focus", this.handleSearchChange);
+      searchInput.addEventListener("blur", this.handleSearchBlur);
+      searchInput.addEventListener("keyup", this.handleSearchChange);
+    }
+
   }
 }
 function css (el, property) {
