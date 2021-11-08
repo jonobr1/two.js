@@ -42,12 +42,23 @@ export default {
 
 <style lang="stylus">
 .sidebar
+  .arrow 
+    display: none;
   .home-link 
     display none
   ul
     padding 0
     margin 0
     list-style-type none
+  .sidebar-heading 
+    color $sidebarText
+    font-size 1rem
+    &:hover 
+      color $orange
+    &.open 
+      color $orange
+      &:hover 
+        color $red
   a
     display inline-block
   .nav-links
@@ -66,9 +77,24 @@ export default {
     & > li > a.sidebar-link
       font-size 1.1em
       line-height 1.7
-      font-weight bold
+      font-weight 600
     & > li:not(:first-child)
-      margin-top .75rem
+      margin-top 0rem
+  a.sidebar-link
+    font-size 1em
+    line-height 1.7
+    font-weight 600
+    color $sidebarText
+    &:hover
+      color $orange
+      border-bottom none
+    &.active 
+      color $orange
+      border-left-color transparent
+      border-bottom none
+      font-weight 600
+      &:hover 
+        color: $red
 @media (max-width: $MQMobile)
   .sidebar
     padding-top 0

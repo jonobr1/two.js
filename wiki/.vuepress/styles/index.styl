@@ -392,75 +392,29 @@ body {
   }
 }
 
-body {
-  .sidebar-heading {
-    color: $sidebarText;
+
+.docs .sidebar {
+  .sidebar-sub-headers {
+    margin-left: 2em;
+    padding-left: 0px;
     font-size: 1rem;
 
-    &:hover {
+    a.sidebar-link {
+      padding-left: 1rem;
       color: $orange;
-    }
-
-    &.open {
-      color: $orange;
+      border-left: 2px solid $orange;
 
       &:hover {
         color: $red;
       }
-    }
 
-  }
-
-  a.sidebar-link {
-    color: $sidebarText;
-    font-size: 1rem;
-
-    &:hover {
-      color: $orange;
-      border-bottom: none;
-    }
-
-    &.active {
-      color: $orange;
-      border-left-color: transparent;
-      border-bottom: none;
-      &:hover {
-        color: $red;
-      }
-    }
-  }
-
-  .sidebar-links li:not(:first-child) {
-      margin-top: 0px;
-    }
-
-  .docs .sidebar {
-    .sidebar-sub-headers {
-      //border-left: 2px solid $orange;
-      margin-left: 2em;
-      padding-left: 0px;
-      font-size: 1rem;
-
-      a.sidebar-link {
-        padding-left: 1rem;
+      &:.active {
         color: $orange;
-        border-left: 2px solid $orange;
-
-        &:hover {
-          color: $red;
-        }
-
-        &:.active {
-          color: $orange;
-        }
       }
-    }
-
-    .arrow {
-      display: none;
     }
   }
 }
+
 
 .change-log .sidebar {
   .sidebar-link {
