@@ -57,7 +57,7 @@ module.exports = {
     smoothScroll: true,
     lastUpdated: 'Last Updated',
     activeHeaderLinks: false,
-    searchPlaceholder: 'Search...',
+    searchPlaceholder: 'Search',
     developmentSize: fileSizes.development,
     productionSize: fileSizes.production,
     nav: [
