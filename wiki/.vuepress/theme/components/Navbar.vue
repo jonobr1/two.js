@@ -1,5 +1,5 @@
 <template>
-  <header class="navbar" ref="header">
+  <header class="navbar" ref="header" :class="{ 'has-sidebar': hasSidebar }">
     <SidebarButton @toggle-sidebar="$emit('toggle-sidebar')" />
 
     <RouterLink
@@ -64,6 +64,11 @@ export default {
     },
     isAlgoliaSearch () {
       return this.algolia && this.algolia.apiKey && this.algolia.indexName
+    },
+    hasSidebar () {
+      var pathStart = this.$page.path.match(/\/.+?\//);
+      pathStart = (pathStart && pathStart.length) ? pathStart[0] : pathStart;
+      return (pathStart in this.$site.themeConfig.sidebar && this.$site.themeConfig.sidebar[pathStart].length > 0);
     }
   },
   mounted () {
@@ -72,16 +77,6 @@ export default {
     const handleLinksWrapWidth = () => {
       if (document.documentElement.clientWidth < MOBILE_DESKTOP_BREAKPOINT) {
         this.linksWrapMaxWidth = null
-
-
-        var pathStart = this.$page.path.match(/\/.+?\//);
-        pathStart = (pathStart && pathStart.length) ? pathStart[0] : pathStart;
-        var hasSidebar = (pathStart in this.$site.themeConfig.sidebar && this.$site.themeConfig.sidebar[pathStart].length > 0);
-
-        this.$refs.header.className = (hasSidebar) ? "navbar has-sidebar" : "navbar";
-        //TODO: if home page hide sidebar toggle
-        //TODO: if has submenu, hide logo
-
       } else {
         this.linksWrapMaxWidth = this.$el.offsetWidth - NAVBAR_VERTICAL_PADDING
           - (this.$refs.siteName && this.$refs.siteName.offsetWidth || 0);
