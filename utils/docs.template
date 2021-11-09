@@ -114,7 +114,9 @@ __Triggers__:
 <% if (item.meta) { %>
 <div class="meta">
 
-  [`<%= item.meta.filename + ':' + item.meta.lineno %>`](<%= 'https://github.com/jonobr1/two.js/blob/dev/' + item.meta.path.replace(/^[\w\d\/]*two\.js\//i, '') + '/' + item.meta.filename + '#L' + item.meta.lineno %>)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="<%= 'https://github.com/jonobr1/two.js/blob/dev/' + item.meta.path.replace(/^[\w\d\/]*two\.js\//i, '') + '/' + item.meta.filename + '#L' + item.meta.lineno %>">
+    <%= item.meta.filename + ':' + item.meta.lineno %>
+  </a>
 
 </div>
 <% } %>
