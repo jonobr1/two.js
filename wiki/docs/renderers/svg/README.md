@@ -7,7 +7,7 @@ pageClass: docs
 
 <div class="extends">
 
-__Extends__: [Two.Events](/docs/events/)
+Extends: [Two.Events](/docs/events/)
 
 </div>
 
@@ -61,7 +61,9 @@ A massive object filled with utility functions and properties to render Two.js o
 
 <div class="meta">
 
-  [`svg.js:1083`](https://github.com/jonobr1/two.js/blob/dev/src/renderers/svg.js#L1083)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/renderers/svg.js#L1083">
+    svg.js:1083
+  </a>
 
 </div>
 
@@ -104,7 +106,9 @@ The `<svg />` associated with the Two.js scene.
 
 <div class="meta">
 
-  [`svg.js:1057`](https://github.com/jonobr1/two.js/blob/dev/src/renderers/svg.js#L1057)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/renderers/svg.js#L1057">
+    svg.js:1057
+  </a>
 
 </div>
 
@@ -147,7 +151,9 @@ The root group of the scenegraph.
 
 <div class="meta">
 
-  [`svg.js:1063`](https://github.com/jonobr1/two.js/blob/dev/src/renderers/svg.js#L1063)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/renderers/svg.js#L1063">
+    svg.js:1063
+  </a>
 
 </div>
 
@@ -190,7 +196,9 @@ The `<defs />` to apply gradients, patterns, and bitmap imagery.
 
 <div class="meta">
 
-  [`svg.js:1070`](https://github.com/jonobr1/two.js/blob/dev/src/renderers/svg.js#L1070)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/renderers/svg.js#L1070">
+    svg.js:1070
+  </a>
 
 </div>
 
@@ -241,7 +249,9 @@ Change the size of the renderer.
 
 <div class="meta">
 
-  [`svg.js:1095`](https://github.com/jonobr1/two.js/blob/dev/src/renderers/svg.js#L1095)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/renderers/svg.js#L1095">
+    svg.js:1095
+  </a>
 
 </div>
 
@@ -294,7 +304,9 @@ Render the current scene to the `<svg />`.
 
 <div class="meta">
 
-  [`svg.js:1117`](https://github.com/jonobr1/two.js/blob/dev/src/renderers/svg.js#L1117)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/renderers/svg.js#L1117">
+    svg.js:1117
+  </a>
 
 </div>
 

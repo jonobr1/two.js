@@ -7,7 +7,7 @@ pageClass: docs
 
 <div class="extends">
 
-__Extends__: [Two.Vector](/docs/vector/)
+Extends: [Two.Vector](/docs/vector/)
 
 </div>
 
@@ -73,7 +73,9 @@ Adds the `controls` property as an object with `left` and `right` properties to 
 
 <div class="meta">
 
-  [`anchor.js:60`](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L60)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L60">
+    anchor.js:60
+  </a>
 
 </div>
 
@@ -123,7 +125,9 @@ Convenience function to apply observable qualities of a [Two.Anchor](/docs/ancho
 
 <div class="meta">
 
-  [`anchor.js:93`](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L93)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L93">
+    anchor.js:93
+  </a>
 
 </div>
 
@@ -172,7 +176,9 @@ An plain object that holds the controls handles for a [Two.Anchor](/docs/anchor)
 
 <div class="meta">
 
-  [`anchor.js:70`](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L70)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L70">
+    anchor.js:70
+  </a>
 
 </div>
 
@@ -221,7 +227,9 @@ The "left" control point to define handles on a bezier curve.
 
 <div class="meta">
 
-  [`anchor.js:77`](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L77)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L77">
+    anchor.js:77
+  </a>
 
 </div>
 
@@ -270,7 +278,9 @@ The "left" control point to define handles on a bezier curve.
 
 <div class="meta">
 
-  [`anchor.js:84`](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L84)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L84">
+    anchor.js:84
+  </a>
 
 </div>
 
@@ -319,7 +329,9 @@ A draw command associated with the anchor point.
 
 <div class="meta">
 
-  [`anchor.js:101`](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L101)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L101">
+    anchor.js:101
+  </a>
 
 </div>
 
@@ -368,7 +380,9 @@ A boolean to render control points relative to the root anchor point or in globa
 
 <div class="meta">
 
-  [`anchor.js:124`](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L124)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L124">
+    anchor.js:124
+  </a>
 
 </div>
 
@@ -411,7 +425,9 @@ Convenience method used mainly by [Two.Path.vertices](/docs/path/#two-path-verti
 
 <div class="meta">
 
-  [`anchor.js:167`](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L167)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L167">
+    anchor.js:167
+  </a>
 
 </div>
 
@@ -454,7 +470,9 @@ Convenience method used mainly by [Two.Path.vertices](/docs/path/#two-path-verti
 
 <div class="meta">
 
-  [`anchor.js:185`](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L185)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L185">
+    anchor.js:185
+  </a>
 
 </div>
 
@@ -504,7 +522,9 @@ Copy the properties of one [Two.Anchor](/docs/anchor) onto another.
 
 <div class="meta">
 
-  [`anchor.js:199`](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L199)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L199">
+    anchor.js:199
+  </a>
 
 </div>
 
@@ -555,7 +575,9 @@ Create a new [Two.Anchor](/docs/anchor), set all its values to the current insta
 
 <div class="meta">
 
-  [`anchor.js:238`](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L238)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L238">
+    anchor.js:238
+  </a>
 
 </div>
 
@@ -608,7 +630,9 @@ Create a JSON compatible plain object of the current instance. Intended for use 
 
 <div class="meta">
 
-  [`anchor.js:262`](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L262)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L262">
+    anchor.js:262
+  </a>
 
 </div>
 
@@ -661,7 +685,9 @@ Create a string form of the current instance. Intended for use with storing valu
 
 <div class="meta">
 
-  [`anchor.js:288`](https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L288)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/anchor.js#L288">
+    anchor.js:288
+  </a>
 
 </div>
 

@@ -7,7 +7,7 @@ pageClass: docs
 
 <div class="extends">
 
-__Extends__: [Two.Path](/docs/path/)
+Extends: [Two.Path](/docs/path/)
 
 </div>
 
@@ -63,7 +63,9 @@ A list of properties that are on every [Two.Rectangle](/docs/rectangle).
 
 <div class="meta">
 
-  [`rectangle.js:53`](https://github.com/jonobr1/two.js/blob/dev/src/shapes/rectangle.js#L53)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/shapes/rectangle.js#L53">
+    rectangle.js:53
+  </a>
 
 </div>
 
@@ -113,7 +115,9 @@ Convenience function to apply observable qualities of a [Two.Rectangle](/docs/re
 
 <div class="meta">
 
-  [`rectangle.js:59`](https://github.com/jonobr1/two.js/blob/dev/src/shapes/rectangle.js#L59)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/shapes/rectangle.js#L59">
+    rectangle.js:59
+  </a>
 
 </div>
 
@@ -156,7 +160,9 @@ The size of the width of the rectangle.
 
 <div class="meta">
 
-  [`rectangle.js:29`](https://github.com/jonobr1/two.js/blob/dev/src/shapes/rectangle.js#L29)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/shapes/rectangle.js#L29">
+    rectangle.js:29
+  </a>
 
 </div>
 
@@ -199,7 +205,9 @@ The size of the height of the rectangle.
 
 <div class="meta">
 
-  [`rectangle.js:34`](https://github.com/jonobr1/two.js/blob/dev/src/shapes/rectangle.js#L34)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/shapes/rectangle.js#L34">
+    rectangle.js:34
+  </a>
 
 </div>
 
@@ -242,7 +250,9 @@ A two-component vector describing the origin offset to draw the rectangle. Defau
 
 <div class="meta">
 
-  [`rectangle.js:40`](https://github.com/jonobr1/two.js/blob/dev/src/shapes/rectangle.js#L40)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/shapes/rectangle.js#L40">
+    rectangle.js:40
+  </a>
 
 </div>
 
@@ -300,7 +310,9 @@ Create a new instance of [Two.Rectangle](/docs/rectangle) with the same properti
 
 <div class="meta">
 
-  [`rectangle.js:172`](https://github.com/jonobr1/two.js/blob/dev/src/shapes/rectangle.js#L172)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/shapes/rectangle.js#L172">
+    rectangle.js:172
+  </a>
 
 </div>
 
@@ -351,7 +363,9 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  [`rectangle.js:205`](https://github.com/jonobr1/two.js/blob/dev/src/shapes/rectangle.js#L205)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/shapes/rectangle.js#L205">
+    rectangle.js:205
+  </a>
 
 </div>
 

@@ -55,7 +55,9 @@ Handy reference to a vector with component values 0, 0 at all times.
 
 <div class="meta">
 
-  [`vector.js:29`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L29)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L29">
+    vector.js:29
+  </a>
 
 </div>
 
@@ -114,7 +116,9 @@ Add two vectors together.
 
 <div class="meta">
 
-  [`vector.js:36`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L36)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L36">
+    vector.js:36
+  </a>
 
 </div>
 
@@ -173,7 +177,9 @@ Subtract two vectors: `v2` from `v1`.
 
 <div class="meta">
 
-  [`vector.js:48`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L48)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L48">
+    vector.js:48
+  </a>
 
 </div>
 
@@ -216,7 +222,9 @@ Alias for [Two.Vector.sub](/docs/vector/#two-vector-sub).
 
 <div class="meta">
 
-  [`vector.js:60`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L60)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L60">
+    vector.js:60
+  </a>
 
 </div>
 
@@ -271,7 +279,9 @@ The ratio betwen two points `v1` and `v2`.
 
 <div class="meta">
 
-  [`vector.js:69`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L69)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L69">
+    vector.js:69
+  </a>
 
 </div>
 
@@ -326,7 +336,9 @@ The angle between points `v1` and `v2`.
 
 <div class="meta">
 
-  [`vector.js:82`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L82)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L82">
+    vector.js:82
+  </a>
 
 </div>
 
@@ -381,7 +393,9 @@ The distance between points `v1` and `v2`. Distance is always positive.
 
 <div class="meta">
 
-  [`vector.js:109`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L109)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L109">
+    vector.js:109
+  </a>
 
 </div>
 
@@ -436,7 +450,9 @@ The squared distance between points `v1` and `v2`.
 
 <div class="meta">
 
-  [`vector.js:122`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L122)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L122">
+    vector.js:122
+  </a>
 
 </div>
 
@@ -486,7 +502,9 @@ Convenience function to apply observable qualities of a [Two.Vector](/docs/vecto
 
 <div class="meta">
 
-  [`vector.js:138`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L138)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L138">
+    vector.js:138
+  </a>
 
 </div>
 
@@ -529,7 +547,9 @@ The horizontal x-component of the vector.
 
 <div class="meta">
 
-  [`vector.js:13`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L13)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L13">
+    vector.js:13
+  </a>
 
 </div>
 
@@ -572,7 +592,9 @@ The vertical y-component of the vector.
 
 <div class="meta">
 
-  [`vector.js:19`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L19)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L19">
+    vector.js:19
+  </a>
 
 </div>
 
@@ -623,7 +645,9 @@ Set the x / y components of a vector to specific number values.
 
 <div class="meta">
 
-  [`vector.js:177`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L177)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L177">
+    vector.js:177
+  </a>
 
 </div>
 
@@ -673,7 +697,9 @@ Copy the x / y components of another object `v`.
 
 <div class="meta">
 
-  [`vector.js:190`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L190)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L190">
+    vector.js:190
+  </a>
 
 </div>
 
@@ -716,7 +742,9 @@ Set the x / y component values of the vector to zero.
 
 <div class="meta">
 
-  [`vector.js:202`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L202)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L202">
+    vector.js:202
+  </a>
 
 </div>
 
@@ -759,7 +787,9 @@ Create a new vector and copy the existing values onto the newly created instance
 
 <div class="meta">
 
-  [`vector.js:213`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L213)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L213">
+    vector.js:213
+  </a>
 
 </div>
 
@@ -815,7 +845,9 @@ Add an object with x / y component values to the instance.
 
 <div class="meta">
 
-  [`vector.js:222`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L222)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L222">
+    vector.js:222
+  </a>
 
 </div>
 
@@ -877,7 +909,9 @@ Add the **same** number to both x / y component values of the instance.
 
 <div class="meta">
 
-  [`vector.js:230`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L230)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L230">
+    vector.js:230
+  </a>
 
 </div>
 
@@ -940,7 +974,9 @@ Add `x` / `y` values to their respective component value on the instance.
 
 <div class="meta">
 
-  [`vector.js:238`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L238)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L238">
+    vector.js:238
+  </a>
 
 </div>
 
@@ -989,7 +1025,9 @@ Alias for [Two.Vector.add](/docs/vector/#two-vector-add).
 
 <div class="meta">
 
-  [`vector.js:264`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L264)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L264">
+    vector.js:264
+  </a>
 
 </div>
 
@@ -1045,7 +1083,9 @@ Subtract an object with x / y component values to the instance.
 
 <div class="meta">
 
-  [`vector.js:273`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L273)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L273">
+    vector.js:273
+  </a>
 
 </div>
 
@@ -1107,7 +1147,9 @@ Subtract the **same** number to both x / y component values of the instance.
 
 <div class="meta">
 
-  [`vector.js:281`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L281)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L281">
+    vector.js:281
+  </a>
 
 </div>
 
@@ -1170,7 +1212,9 @@ Subtract `x` / `y` values to their respective component value on the instance.
 
 <div class="meta">
 
-  [`vector.js:289`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L289)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L289">
+    vector.js:289
+  </a>
 
 </div>
 
@@ -1219,7 +1263,9 @@ Alias for [Two.Vector.sub](/docs/vector/#two-vector-sub).
 
 <div class="meta">
 
-  [`vector.js:315`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L315)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L315">
+    vector.js:315
+  </a>
 
 </div>
 
@@ -1262,7 +1308,9 @@ Alias for [Two.Vector.sub](/docs/vector/#two-vector-sub).
 
 <div class="meta">
 
-  [`vector.js:324`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L324)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L324">
+    vector.js:324
+  </a>
 
 </div>
 
@@ -1305,7 +1353,9 @@ Alias for [Two.Vector.sub](/docs/vector/#two-vector-sub).
 
 <div class="meta">
 
-  [`vector.js:333`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L333)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L333">
+    vector.js:333
+  </a>
 
 </div>
 
@@ -1361,7 +1411,9 @@ Multiply an object with x / y component values to the instance.
 
 <div class="meta">
 
-  [`vector.js:342`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L342)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L342">
+    vector.js:342
+  </a>
 
 </div>
 
@@ -1423,7 +1475,9 @@ Multiply the **same** number to both x / y component values of the instance.
 
 <div class="meta">
 
-  [`vector.js:350`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L350)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L350">
+    vector.js:350
+  </a>
 
 </div>
 
@@ -1486,7 +1540,9 @@ Multiply `x` / `y` values to their respective component value on the instance.
 
 <div class="meta">
 
-  [`vector.js:358`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L358)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L358">
+    vector.js:358
+  </a>
 
 </div>
 
@@ -1535,7 +1591,9 @@ Alias for [Two.Vector.multiply](/docs/vector/#two-vector-multiply).
 
 <div class="meta">
 
-  [`vector.js:384`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L384)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L384">
+    vector.js:384
+  </a>
 
 </div>
 
@@ -1585,7 +1643,9 @@ Mulitiply the vector by a single number. Shorthand to call [Two.Vector.multiply]
 
 <div class="meta">
 
-  [`vector.js:393`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L393)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L393">
+    vector.js:393
+  </a>
 
 </div>
 
@@ -1641,7 +1701,9 @@ Divide an object with x / y component values to the instance.
 
 <div class="meta">
 
-  [`vector.js:403`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L403)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L403">
+    vector.js:403
+  </a>
 
 </div>
 
@@ -1703,7 +1765,9 @@ Divide the **same** number to both x / y component values of the instance.
 
 <div class="meta">
 
-  [`vector.js:411`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L411)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L411">
+    vector.js:411
+  </a>
 
 </div>
 
@@ -1766,7 +1830,9 @@ Divide `x` / `y` values to their respective component value on the instance.
 
 <div class="meta">
 
-  [`vector.js:419`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L419)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L419">
+    vector.js:419
+  </a>
 
 </div>
 
@@ -1815,7 +1881,9 @@ Alias for [Two.Vector.divide](/docs/vector/#two-vector-divide).
 
 <div class="meta">
 
-  [`vector.js:451`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L451)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L451">
+    vector.js:451
+  </a>
 
 </div>
 
@@ -1865,7 +1933,9 @@ Divide the vector by a single number. Shorthand to call [Two.Vector.divide](/doc
 
 <div class="meta">
 
-  [`vector.js:460`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L460)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L460">
+    vector.js:460
+  </a>
 
 </div>
 
@@ -1908,7 +1978,9 @@ Invert each component's sign value.
 
 <div class="meta">
 
-  [`vector.js:470`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L470)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L470">
+    vector.js:470
+  </a>
 
 </div>
 
@@ -1959,7 +2031,9 @@ Get the [dot product](https://en.wikipedia.org/wiki/Dot_product) of the vector.
 
 <div class="meta">
 
-  [`vector.js:479`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L479)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L479">
+    vector.js:479
+  </a>
 
 </div>
 
@@ -2010,7 +2084,9 @@ Get the length of a vector.
 
 <div class="meta">
 
-  [`vector.js:489`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L489)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L489">
+    vector.js:489
+  </a>
 
 </div>
 
@@ -2061,7 +2137,9 @@ Get the length of the vector to the power of two. Widely used as less expensive 
 
 <div class="meta">
 
-  [`vector.js:499`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L499)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L499">
+    vector.js:499
+  </a>
 
 </div>
 
@@ -2104,7 +2182,9 @@ Normalize the vector from negative one to one.
 
 <div class="meta">
 
-  [`vector.js:509`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L509)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L509">
+    vector.js:509
+  </a>
 
 </div>
 
@@ -2155,7 +2235,9 @@ Get the distance between two vectors.
 
 <div class="meta">
 
-  [`vector.js:518`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L518)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L518">
+    vector.js:518
+  </a>
 
 </div>
 
@@ -2206,7 +2288,9 @@ Get the distance between two vectors to the power of two. Widely used as less ex
 
 <div class="meta">
 
-  [`vector.js:528`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L528)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L528">
+    vector.js:528
+  </a>
 
 </div>
 
@@ -2256,7 +2340,9 @@ Set the length of a vector.
 
 <div class="meta">
 
-  [`vector.js:540`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L540)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L540">
+    vector.js:540
+  </a>
 
 </div>
 
@@ -2315,7 +2401,9 @@ Qualify if one vector roughly equal another. With a margin of error defined by e
 
 <div class="meta">
 
-  [`vector.js:550`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L550)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L550">
+    vector.js:550
+  </a>
 
 </div>
 
@@ -2366,7 +2454,9 @@ Linear interpolate one vector to another by an amount `t` defined as a zero to o
 
 <div class="meta">
 
-  [`vector.js:563`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L563)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L563">
+    vector.js:563
+  </a>
 
 </div>
 
@@ -2430,7 +2520,9 @@ Check to see if vector is roughly zero, based on the `epsilon` precision value.
 
 <div class="meta">
 
-  [`vector.js:577`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L577)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L577">
+    vector.js:577
+  </a>
 
 </div>
 
@@ -2481,7 +2573,9 @@ Return a comma-separated string of x, y value. Great for storing in a database.
 
 <div class="meta">
 
-  [`vector.js:589`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L589)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L589">
+    vector.js:589
+  </a>
 
 </div>
 
@@ -2532,7 +2626,9 @@ Return a JSON compatible plain object that represents the vector.
 
 <div class="meta">
 
-  [`vector.js:599`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L599)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L599">
+    vector.js:599
+  </a>
 
 </div>
 
@@ -2582,7 +2678,9 @@ Rotate a vector.
 
 <div class="meta">
 
-  [`vector.js:609`](https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L609)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/vector.js#L609">
+    vector.js:609
+  </a>
 
 </div>
 

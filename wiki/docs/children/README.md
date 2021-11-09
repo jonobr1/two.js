@@ -7,7 +7,7 @@ pageClass: docs
 
 <div class="extends">
 
-__Extends__: [Two.Collection](/docs/collection/)
+Extends: [Two.Collection](/docs/collection/)
 
 </div>
 
@@ -55,7 +55,9 @@ Map of all elements in the list keyed by `id`s.
 
 <div class="meta">
 
-  [`children.js:20`](https://github.com/jonobr1/two.js/blob/dev/src/children.js#L20)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/children.js#L20">
+    children.js:20
+  </a>
 
 </div>
 
@@ -105,7 +107,9 @@ Adds elements to the `ids` map.
 
 <div class="meta">
 
-  [`children.js:41`](https://github.com/jonobr1/two.js/blob/dev/src/children.js#L41)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/children.js#L41">
+    children.js:41
+  </a>
 
 </div>
 
@@ -155,7 +159,9 @@ Removes elements to the `ids` map.
 
 <div class="meta">
 
-  [`children.js:57`](https://github.com/jonobr1/two.js/blob/dev/src/children.js#L57)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/children.js#L57">
+    children.js:57
+  </a>
 
 </div>
 

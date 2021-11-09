@@ -7,7 +7,7 @@ pageClass: docs
 
 <div class="extends">
 
-__Extends__: [Two.Events](/docs/events/)
+Extends: [Two.Events](/docs/events/)
 
 </div>
 

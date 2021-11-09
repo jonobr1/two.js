@@ -7,7 +7,7 @@ pageClass: docs
 
 <div class="extends">
 
-__Extends__: [Two.Path](/docs/path/)
+Extends: [Two.Path](/docs/path/)
 
 </div>
 

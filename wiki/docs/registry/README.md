@@ -57,7 +57,9 @@ Adds any value to the directory. Assigned by the `id`.
 
 <div class="meta">
 
-  [`registry.js:18`](https://github.com/jonobr1/two.js/blob/dev/src/registry.js#L18)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/registry.js#L18">
+    registry.js:18
+  </a>
 
 </div>
 
@@ -107,7 +109,9 @@ Remove any value from the directory by its `id`.
 
 <div class="meta">
 
-  [`registry.js:30`](https://github.com/jonobr1/two.js/blob/dev/src/registry.js#L30)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/registry.js#L30">
+    registry.js:30
+  </a>
 
 </div>
 
@@ -167,7 +171,9 @@ Get a registered value by its `id`.
 
 <div class="meta">
 
-  [`registry.js:41`](https://github.com/jonobr1/two.js/blob/dev/src/registry.js#L41)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/registry.js#L41">
+    registry.js:41
+  </a>
 
 </div>
 
@@ -225,7 +231,9 @@ Convenience method to see if a value is registered to an `id` already.
 
 <div class="meta">
 
-  [`registry.js:52`](https://github.com/jonobr1/two.js/blob/dev/src/registry.js#L52)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/registry.js#L52">
+    registry.js:52
+  </a>
 
 </div>
 

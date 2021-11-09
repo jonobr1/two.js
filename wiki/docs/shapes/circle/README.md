@@ -7,7 +7,7 @@ pageClass: docs
 
 <div class="extends">
 
-__Extends__: [Two.Path](/docs/path/)
+Extends: [Two.Path](/docs/path/)
 
 </div>
 
@@ -63,7 +63,9 @@ A list of properties that are on every [Two.Circle](/docs/circle).
 
 <div class="meta">
 
-  [`circle.js:53`](https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js#L53)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js#L53">
+    circle.js:53
+  </a>
 
 </div>
 
@@ -113,7 +115,9 @@ Convenience function to apply observable qualities of a [Two.Circle](/docs/circl
 
 <div class="meta">
 
-  [`circle.js:59`](https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js#L59)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js#L59">
+    circle.js:59
+  </a>
 
 </div>
 
@@ -156,7 +160,9 @@ The size of the radius of the circle.
 
 <div class="meta">
 
-  [`circle.js:32`](https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js#L32)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js#L32">
+    circle.js:32
+  </a>
 
 </div>
 
@@ -214,7 +220,9 @@ Create a new instance of [Two.Circle](/docs/circle) with the same properties of 
 
 <div class="meta">
 
-  [`circle.js:157`](https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js#L157)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js#L157">
+    circle.js:157
+  </a>
 
 </div>
 
@@ -265,7 +273,9 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  [`circle.js:190`](https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js#L190)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js#L190">
+    circle.js:190
+  </a>
 
 </div>
 

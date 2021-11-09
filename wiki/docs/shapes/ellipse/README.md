@@ -7,7 +7,7 @@ pageClass: docs
 
 <div class="extends">
 
-__Extends__: [Two.Path](/docs/path/)
+Extends: [Two.Path](/docs/path/)
 
 </div>
 
@@ -64,7 +64,9 @@ A list of properties that are on every [Two.Ellipse](/docs/ellipse).
 
 <div class="meta">
 
-  [`ellipse.js:60`](https://github.com/jonobr1/two.js/blob/dev/src/shapes/ellipse.js#L60)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/shapes/ellipse.js#L60">
+    ellipse.js:60
+  </a>
 
 </div>
 
@@ -114,7 +116,9 @@ Convenience function to apply observable qualities of a [Two.Ellipse](/docs/elli
 
 <div class="meta">
 
-  [`ellipse.js:66`](https://github.com/jonobr1/two.js/blob/dev/src/shapes/ellipse.js#L66)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/shapes/ellipse.js#L66">
+    ellipse.js:66
+  </a>
 
 </div>
 
@@ -157,7 +161,9 @@ The width of the ellipse.
 
 <div class="meta">
 
-  [`ellipse.js:37`](https://github.com/jonobr1/two.js/blob/dev/src/shapes/ellipse.js#L37)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/shapes/ellipse.js#L37">
+    ellipse.js:37
+  </a>
 
 </div>
 
@@ -200,7 +206,9 @@ The height of the ellipse.
 
 <div class="meta">
 
-  [`ellipse.js:45`](https://github.com/jonobr1/two.js/blob/dev/src/shapes/ellipse.js#L45)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/shapes/ellipse.js#L45">
+    ellipse.js:45
+  </a>
 
 </div>
 
@@ -258,7 +266,9 @@ Create a new instance of [Two.Polygon](/docs/polygon) with the same properties o
 
 <div class="meta">
 
-  [`ellipse.js:176`](https://github.com/jonobr1/two.js/blob/dev/src/shapes/ellipse.js#L176)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/shapes/ellipse.js#L176">
+    ellipse.js:176
+  </a>
 
 </div>
 
@@ -309,7 +319,9 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  [`ellipse.js:212`](https://github.com/jonobr1/two.js/blob/dev/src/shapes/ellipse.js#L212)
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/shapes/ellipse.js#L212">
+    ellipse.js:212
+  </a>
 
 </div>
 
