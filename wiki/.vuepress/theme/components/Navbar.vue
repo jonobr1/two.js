@@ -144,6 +144,8 @@ $navbar-horizontal-padding = 1.5rem
 .navbar
   padding $navbar-vertical-padding $navbar-horizontal-padding
   line-height $navbarHeight - 1.4rem
+  .repo-link
+    display none
   a, span, img
     display inline-block
   .logo
