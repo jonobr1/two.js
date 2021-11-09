@@ -22,11 +22,7 @@
     </RouterLink>
 
     <div class="search" ref="search">
-    <AlgoliaSearchBox
-    v-if="isAlgoliaSearch"
-    :options="algolia"
-    />
-    <SearchBox v-else-if="$site.themeConfig.search !== false && $page.frontmatter.search !== false" />
+      <SearchBox v-if="$site.themeConfig.search !== false && $page.frontmatter.search !== false" />
     </div>
 
     <div
@@ -41,8 +37,7 @@
 </template>
 
 <script>
-import AlgoliaSearchBox from '@AlgoliaSearchBox'
-import SearchBox from '@SearchBox'
+import SearchBox from '../../plugins/search/SearchBox.vue'
 import SidebarButton from '@theme/components/SidebarButton.vue'
 import NavLinks from '@theme/components/NavLinks.vue'
 export default {
@@ -50,8 +45,7 @@ export default {
   components: {
     SidebarButton,
     NavLinks,
-    SearchBox,
-    AlgoliaSearchBox
+    SearchBox
   },
   data () {
     return {
@@ -77,9 +71,12 @@ export default {
     $route: function(to, from){
       setTimeout(this.handleSearchPosition, 10);
     }
-  }, 
+  },
   methods: {
     handleSearchPosition() {
+      if (!this.$refs.search) {
+        return;
+      }
       if(document.documentElement.clientWidth > this.mobileDesktopBreakpoint) {
         var content = document.getElementsByClassName("theme-default-content")[0];
         if (content) {
@@ -94,22 +91,19 @@ export default {
       document.getElementById("app").classList.remove(this.searchOpenClass);
     },
     handleSearchChange(e) {
-      console.log(e);
-      window.setTimeout(() => {
-        //option 1: if input is in focus
-        var hasContent = true;
-        //option 2: if suggestions has length
-        //var hasContent = e.target.nextElementSibling && e.target.nextElementSibling.classList.contains("suggestions");
-        //option 2: if input has value
-        //var hasContent = e.target.value.length > 0;
-        if (hasContent) {
-          if (!document.getElementById("app").classList.contains("search-open"))
-            document.getElementById("app").classList.add(this.searchOpenClass);
-        } else {
-          if (document.getElementById("app").classList.contains("search-open"))
-            document.getElementById("app").classList.remove("search-open")
-        }
-      }, 10);
+      //option 1: if input is in focus
+      var hasContent = true;
+      //option 2: if suggestions has length
+      // var hasContent = e.target.nextElementSibling && e.target.nextElementSibling.classList.contains("suggestions");
+      //option 3: if input has value
+      // var hasContent = e.target.value.length > 0;
+      if (hasContent) {
+        if (!document.getElementById("app").classList.contains("search-open"))
+          document.getElementById("app").classList.add(this.searchOpenClass);
+      } else {
+        if (document.getElementById("app").classList.contains("search-open"))
+          document.getElementById("app").classList.remove("search-open")
+      }
     },
   },
   mounted () {
@@ -176,13 +170,14 @@ $navbar-horizontal-padding = 1.5rem
         font-size 1rem
         font-weight 600
         background #fff url(/images/search.svg) 0.55rem 0.25rem no-repeat
+        background-repeat: no-repeat
         padding-left 2.5rem
         &::placeholder
           color #999
-        &:focus 
+        &:focus
           border-color $orangeBorder
           color $textColor
-      ul.suggestions 
+      ul.suggestions
         padding 0rem
         top 1.85rem
         width 25rem
@@ -192,11 +187,11 @@ $navbar-horizontal-padding = 1.5rem
           line-height auto
           font-weight normal
           padding .75rem 1.25rem
-          a 
+          a
             color $sidebarText
-          &.focused 
+          &.focused
             background-color $orangebg
-            a 
+            a
               color $orange
   .links
     padding-left 1.5rem
@@ -232,14 +227,14 @@ $navbar-horizontal-padding = 1.5rem
       overflow hidden
       white-space nowrap
       text-overflow ellipsis
-    .search 
+    .search
       top 3.5rem
       left 0
       background-color #fff
       width 100%
       .search-box
         width 100%
-        input 
+        input
           height 3rem
           width calc(100% - 3rem)
           background-position 0.5rem 0.75rem
@@ -260,5 +255,5 @@ $navbar-horizontal-padding = 1.5rem
     .home-link
       display none
     .sidebar-button
-      display block  
+      display block
 </style>

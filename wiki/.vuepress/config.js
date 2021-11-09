@@ -1,7 +1,7 @@
 var fs = require('fs');
 var path = require('path');
-var sourceFiles = require('../../utils/source-files');
 
+var sourceFiles = require('../../utils/source-files');
 var fileSizes = getJSON('../../utils/file-sizes.json');
 
 var root = { title: 'Base', children: [] };
@@ -58,6 +58,7 @@ module.exports = {
     lastUpdated: 'Last Updated',
     activeHeaderLinks: false,
     searchPlaceholder: 'Search',
+    searchMaxSuggestions: 10,
     developmentSize: fileSizes.development,
     productionSize: fileSizes.production,
     nav: [
@@ -78,6 +79,9 @@ module.exports = {
     markdown: {
       lineNumbers: true
     },
-    plugins: ['@vuepress/nprogress']
+    plugins: {
+      '@vuepress/nprogress': true,
+      '@vuepress/search': false
+    }
   }
 };
