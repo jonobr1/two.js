@@ -99,17 +99,23 @@ export default {
             if (res.length >= max) break
             const h = p.headers[j]
             if (h.title && matchQuery(query, p, h.title)) {
-              res.push(Object.assign({}, p, {
+              var obj = Object.assign({}, p, {
                 path: p.path + '#' + h.slug,
                 header: h
-              }))
+              });
+
+              if (h.title.startsWith("#")) {
+                //console.log("match is a tag " + h.title + " with path " + obj.path);
+                obj = this.formatTagSuggestion(obj);
+              }
+
+              res.push(obj);
             }
           }
         }
       }
       return res
     },
-
     // make suggestions align right when there are not enough items
     alignRight () {
       const navCount = (this.$site.themeConfig.nav || []).length
@@ -148,6 +154,27 @@ export default {
       return searchPaths.filter(path => {
         return page.path.match(path)
       }).length > 0
+    },
+
+    formatTagSuggestion(s) {
+      var lastParent = null;
+      for (var i = 0; i < s.headers.length; i++) {
+        var header = s.headers[i];
+        if (header.level == s.header.level - 1) {
+          //set last eligible parent heading
+          lastParent = header
+        } else if (header.level == s.header.level && header.slug == s.header.slug) {
+          //stop here
+          break;
+        }
+      }
+
+      if (lastParent) {
+        s.path = s.regularPath + "#" + lastParent.slug;
+        s.title = lastParent.title;
+      }
+
+      return s;
     },
 
     onHotkey (event) {
