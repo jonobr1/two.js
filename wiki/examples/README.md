@@ -4,7 +4,7 @@ title: Two.js Examples
 lang: en-US
 ---
 
-<div class="example">
+<div class="codepen example">
 
 <a href="https://codepen.io/jonobr1/pen/MWvVBdx" target="_blank" rel="noopener noreferrer">
 
@@ -29,7 +29,7 @@ lang: en-US
 
 </div>
 
-<div class="example">
+<div class="codepen example">
 
 <a href="https://codepen.io/jonobr1/pen/yLoEEQJ" target="_blank" rel="noopener noreferrer">
 
