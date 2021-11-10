@@ -62,7 +62,6 @@ export default {
 
   computed: {
     showSuggestions () {
-      return true
       return (
         this.focused
         && this.suggestions
