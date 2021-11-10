@@ -53,6 +53,7 @@ export default {
   .sidebar-heading 
     color $sidebarText
     font-size 1rem
+    transition color .2s
     &:hover 
       color $orange
     &.open 
@@ -67,6 +68,7 @@ export default {
     padding 0.5rem 0 0.75rem 0
     a
       font-weight 600
+      transition color .2s
     .nav-item, .repo-link
       display block
       line-height 1.25rem
@@ -78,6 +80,7 @@ export default {
       font-size 1.1em
       line-height 1.7
       font-weight 600
+      transition color .2s
     & > li:not(:first-child)
       margin-top 0rem
   a.sidebar-link
@@ -85,6 +88,7 @@ export default {
     line-height 1.7
     font-weight 600
     color $sidebarText
+    transition color .2s
     &:hover
       color $orange
       border-bottom none
