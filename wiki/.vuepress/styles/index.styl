@@ -212,55 +212,6 @@ body {
 
 }
 
-/* Move these into custom Navbar template once/if we do that */
-body {
- .navbar {
-  padding-top: 0;
-  padding-bottom: 0;
-
-    .home-link {
-      padding: .7rem 0;
-    }
-
-    .links {
-      top: 0;
-      height: 100%
-    }
-  }
-
-  .nav-links {
-    .nav-item {
-      height: 100%;
-      line-height: 3.5rem;
-
-      a {
-        font-size: 1rem;
-        color: $textColor;
-        height: 100%;
-        line-height: 3.5rem;
-        border-top: 2px solid $white;
-        transition: color .2s, border-color .2s;
-        &:hover {
-          border-bottom: none;
-          border-top-color: $orange;
-          color: $orange;
-        }
-      }
-
-      a.router-link-active {
-        border-bottom: none;
-        border-top-color: $orange;
-        color: $orange;
-        &:hover {
-          border-bottom: none;
-          border-top-color: $red;
-          color: $red;
-        }
-      }
-    }
-  }
-}
-
 .theme-default-content:not(.custom) {
   a:hover {
     text-decoration: none;

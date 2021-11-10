@@ -117,7 +117,7 @@ function css (el, property) {
 </script>
 
 <style lang="stylus">
-$navbar-vertical-padding = 0.7rem
+$navbar-vertical-padding = 0rem
 $navbar-horizontal-padding = 1.5rem
 .navbar
   padding $navbar-vertical-padding $navbar-horizontal-padding
@@ -126,6 +126,8 @@ $navbar-horizontal-padding = 1.5rem
     display none
   a, span, img
     display inline-block
+  .home-link 
+    padding: .7rem 0;
   .logo
     height $navbarHeight - 1.4rem
     min-width $navbarHeight - 1.4rem
@@ -153,9 +155,33 @@ $navbar-horizontal-padding = 1.5rem
     position absolute
     right $navbar-horizontal-padding
     top $navbar-vertical-padding
+    height 100%
     display flex
     .external span
       display none
+  .nav-links 
+    .nav-item 
+      height 100%
+      line-height 3.5rem
+      a 
+        font-size 1rem
+        color $textColor
+        height 100%
+        line-height 3.5rem
+        border-top 2px solid $white
+        transition color .2s, border-color .2s
+        &:hover 
+          border-bottom none
+          border-top-color $orange
+          color $orange
+        &.router-link-active 
+          border-bottom none
+          border-top-color $orange
+          color $orange
+          &:hover 
+            border-bottom none
+            border-top-color $red
+            color $red
 @media (max-width: $MQMobile)
   .sidebar-button
     display: none;
