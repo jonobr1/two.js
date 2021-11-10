@@ -1,6 +1,8 @@
 ---
 pageClass: change-log
 sidebarDepth: 3
+title: Two.js Change Log
+lang: en-US
 ---
 
 # Change Log

@@ -1,3 +1,8 @@
+---
+title: Two.js • The 2d drawing api for the web
+lang: en-US
+---
+
 # Two.js
 
 A two-dimensional drawing api geared towards modern web browsers. It is renderer agnostic enabling the same api to draw in multiple contexts: svg, canvas, and webgl.
