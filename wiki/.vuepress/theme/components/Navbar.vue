@@ -27,6 +27,7 @@
 
     <div
       class="links"
+      ref="links"
       :style="linksWrapMaxWidth ? {
         'max-width': linksWrapMaxWidth + 'px'
       } : {}"
@@ -50,8 +51,7 @@ export default {
   data () {
     return {
       mobileDesktopBreakpoint: 719,
-      linksWrapMaxWidth: null,
-      searchOpenClass: 'search-open'
+      linksWrapMaxWidth: null
     }
   },
   computed: {
@@ -87,24 +87,6 @@ export default {
         this.$refs.search.style.left = "0px";
       }
     },
-    handleSearchBlur() {
-      document.getElementById("app").classList.remove(this.searchOpenClass);
-    },
-    handleSearchChange(e) {
-      //option 1: if input is in focus
-      var hasContent = true;
-      //option 2: if suggestions has length
-      // var hasContent = e.target.nextElementSibling && e.target.nextElementSibling.classList.contains("suggestions");
-      //option 3: if input has value
-      // var hasContent = e.target.value.length > 0;
-      if (hasContent) {
-        if (!document.getElementById("app").classList.contains("search-open"))
-          document.getElementById("app").classList.add(this.searchOpenClass);
-      } else {
-        if (document.getElementById("app").classList.contains("search-open"))
-          document.getElementById("app").classList.remove("search-open")
-      }
-    },
   },
   mounted () {
     const NAVBAR_VERTICAL_PADDING = parseInt(css(this.$el, 'paddingLeft')) + parseInt(css(this.$el, 'paddingRight'))
@@ -116,18 +98,14 @@ export default {
           - (this.$refs.siteName && this.$refs.siteName.offsetWidth || 0);
       }
       this.handleSearchPosition();
+
+      if (document.body.clientWidth < (959 + this.$refs.links.clientWidth)) {
+        //question: how to access $MQNarrow
+        //todo: recalculate and override the width and left of the search
+      }
     }
     handleLinksWrapWidth();
     window.addEventListener('resize', handleLinksWrapWidth, false);
-
-    var searchInput = this.$refs.search.getElementsByTagName("input");
-    if (searchInput.length) {
-      searchInput = searchInput[0];
-      searchInput.addEventListener("focus", this.handleSearchChange);
-      searchInput.addEventListener("blur", this.handleSearchBlur);
-      searchInput.addEventListener("keyup", this.handleSearchChange);
-    }
-
   }
 }
 function css (el, property) {
@@ -166,35 +144,6 @@ $navbar-horizontal-padding = 1.5rem
     .search-box
       flex 0 0 auto
       vertical-align top
-      input
-        font-family $fontFamily
-        width 22.5rem
-        font-size 1rem
-        font-weight 600
-        background #fff url(/images/search.svg) 0.55rem 0.25rem no-repeat
-        background-repeat: no-repeat
-        padding-left 2.5rem
-        &::placeholder
-          color #999
-        &:focus
-          border-color $orangeBorder
-          color $textColor
-      ul.suggestions
-        padding 0rem
-        top 1.85rem
-        width 25rem
-        border-color $orangeBorder
-        .suggestion
-          font-size 1rem
-          line-height auto
-          font-weight normal
-          padding .75rem 1.25rem
-          a
-            color $sidebarText
-          &.focused
-            background-color $orangebg
-            a
-              color $orange
   .links
     padding-left 1.5rem
     box-sizing border-box
@@ -234,23 +183,6 @@ $navbar-horizontal-padding = 1.5rem
       left 0
       background-color #fff
       width 100%
-      .search-box
-        width 100%
-        input
-          height 3rem
-          width calc(100% - 3rem)
-          background-position 0.5rem 0.75rem
-          left 0
-          border-radius 0
-          border 1px solid #e6e6e6
-          border-left none
-          border-right none
-        ul.suggestions
-          width calc(100%-3rem)
-          left 0
-          border-radius 0
-          border-right 0
-          border-left 0
   .has-sidebar
     .navbar
       padding-left 4rem

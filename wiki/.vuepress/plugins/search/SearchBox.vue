@@ -9,8 +9,8 @@
       autocomplete="off"
       spellcheck="false"
       @input="query = $event.target.value"
-      @focus="focused = true"
-      @blur="focused = false"
+      @focus="onFocus"
+      @blur="onBlur"
       @keyup.enter="go(focusIndex)"
       @keyup.up="onUp"
       @keyup.down="onDown"
@@ -55,12 +55,14 @@ export default {
       query: '',
       focused: false,
       focusIndex: 0,
-      placeholder: undefined
+      placeholder: undefined,
+      searchOpenClass: 'search-open'
     }
   },
 
   computed: {
     showSuggestions () {
+      return true
       return (
         this.focused
         && this.suggestions
@@ -156,6 +158,17 @@ export default {
       }
     },
 
+    onFocus () {
+      this.focused = true
+      document.getElementById("app").classList.add(this.searchOpenClass)
+
+    },
+
+    onBlur () {
+      this.focused = false
+      document.getElementById("app").classList.remove(this.searchOpenClass);
+    },
+
     onUp () {
       if (this.showSuggestions) {
         if (this.focusIndex > 0) {
@@ -204,84 +217,82 @@ export default {
   margin-right 1rem
   input
     cursor text
-    width 10rem
-    height: 2rem
+    width 22.5rem
+    height 2rem
     color lighten($textColor, 25%)
     display inline-block
     border 1px solid darken($borderColor, 10%)
     border-radius 2rem
-    font-size 0.9rem
+    font-family $fontFamily
+    font-size 1rem
+    font-weight 600
     line-height 2rem
     padding 0 0.5rem 0 2rem
     outline none
     transition all .2s ease
-    background-size 1rem
+    background-size 1rem 
+    background #fff url(/images/search.svg) 0.55rem 0.25rem no-repeat
+    padding-left 2.5rem
     &:focus
       cursor auto
       border-color $accentColor
+      color $textColor
+    &::placeholder
+      color #999
   .suggestions
     background #fff
-    width 20rem
+    width 25rem
     position absolute
-    top 2 rem
-    border 1px solid darken($borderColor, 10%)
+    top 1.85rem
+    border 1px solid $accentColor
     border-radius 6px
-    padding 0.4rem
+    padding 0rem
     list-style-type none
     &.align-right
       right 0
   .suggestion
-    line-height 1.4
-    padding 0.4rem 0.6rem
+    padding .75rem 1.25rem
     border-radius 4px
     cursor pointer
+    font-size 1rem
+    line-height auto
+    font-weight normal
     a
       white-space normal
-      color lighten($textColor, 35%)
+      color $sidebarText
       .page-title
         font-weight 600
       .header
         font-size 0.9em
         margin-left 0.25em
     &.focused
-      background-color #f3f4f5
+      background-color $orangebg
       a
         color $accentColor
-
-@media (max-width: $MQNarrow)
-  .search-box
-    input
-      cursor pointer
-      width 0
-      border-color transparent
-      position relative
-      &:focus
-        cursor text
-        left 0
-        width 10rem
 
 // Match IE11
 @media all and (-ms-high-contrast: none)
   .search-box input
     height 2rem
 
-@media (max-width: $MQNarrow) and (min-width: $MQMobile)
-  .search-box
-    .suggestions
-      left 0
-
 @media (max-width: $MQMobile)
   .search-box
     margin-right 0
+    width 100%
     input
-      left 1rem
-    .suggestions
+      height 3rem
+      width 100vw
+      background-position 0.5rem 0.75rem
+      left 0
+      border-radius 0
+      border 1px solid #e6e6e6
+      border-left none
+      border-right none
+    ul.suggestions
+      width calc(100%-3rem)
+      left 0
       right 0
-
-@media (max-width: $MQMobileNarrow)
-  .search-box
-    .suggestions
-      width calc(100vw - 4rem)
-    input:focus
-      width 8rem
+      border-radius 0
+      border-right 0
+      border-left 0
 </style>
