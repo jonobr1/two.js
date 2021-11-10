@@ -1,5 +1,7 @@
 ---
+title: Two.Texture
 pageClass: docs
+lang: en-US
 ---
 
 # Two.Texture

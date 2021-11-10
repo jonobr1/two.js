@@ -1,5 +1,7 @@
 ---
+title: Two.Ellipse
 pageClass: docs
+lang: en-US
 ---
 
 # Two.Ellipse

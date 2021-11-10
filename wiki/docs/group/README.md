@@ -1,5 +1,7 @@
 ---
+title: Two.Group
 pageClass: docs
+lang: en-US
 ---
 
 # Two.Group

@@ -1,5 +1,7 @@
 ---
+title: Two.Sprite
 pageClass: docs
+lang: en-US
 ---
 
 # Two.Sprite

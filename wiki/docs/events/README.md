@@ -1,5 +1,7 @@
 ---
+title: Two.Events
 pageClass: docs
+lang: en-US
 ---
 
 # Two.Events

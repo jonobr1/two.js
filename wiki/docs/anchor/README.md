@@ -1,5 +1,7 @@
 ---
+title: Two.Anchor
 pageClass: docs
+lang: en-US
 ---
 
 # Two.Anchor

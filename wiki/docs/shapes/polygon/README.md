@@ -1,5 +1,7 @@
 ---
+title: Two.Polygon
 pageClass: docs
+lang: en-US
 ---
 
 # Two.Polygon

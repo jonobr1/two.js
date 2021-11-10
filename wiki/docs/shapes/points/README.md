@@ -1,5 +1,7 @@
 ---
+title: Two.Points
 pageClass: docs
+lang: en-US
 ---
 
 # Two.Points

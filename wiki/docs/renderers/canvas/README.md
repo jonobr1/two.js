@@ -1,5 +1,7 @@
 ---
+title: Two.CanvasRenderer
 pageClass: docs
+lang: en-US
 ---
 
 # Two.CanvasRenderer

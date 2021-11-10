@@ -1,5 +1,7 @@
 ---
+title: Two.Shape
 pageClass: docs
+lang: en-US
 ---
 
 # Two.Shape

@@ -1,5 +1,7 @@
 ---
+title: Two.Rectangle
 pageClass: docs
+lang: en-US
 ---
 
 # Two.Rectangle

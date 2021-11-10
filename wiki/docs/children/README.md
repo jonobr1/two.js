@@ -1,5 +1,7 @@
 ---
+title: Two.Group.Children
 pageClass: docs
+lang: en-US
 ---
 
 # Two.Group.Children

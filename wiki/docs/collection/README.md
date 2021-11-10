@@ -1,5 +1,7 @@
 ---
+title: Two.Collection
 pageClass: docs
+lang: en-US
 ---
 
 # Two.Collection

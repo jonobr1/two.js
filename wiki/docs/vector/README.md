@@ -1,5 +1,7 @@
 ---
+title: Two.Vector
 pageClass: docs
+lang: en-US
 ---
 
 # Two.Vector

@@ -1,5 +1,7 @@
 ---
+title: Two.Circle
 pageClass: docs
+lang: en-US
 ---
 
 # Two.Circle

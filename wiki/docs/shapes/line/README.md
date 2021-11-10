@@ -1,5 +1,7 @@
 ---
+title: Two.Line
 pageClass: docs
+lang: en-US
 ---
 
 # Two.Line

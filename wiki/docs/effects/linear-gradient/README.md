@@ -1,5 +1,7 @@
 ---
+title: Two.LinearGradient
 pageClass: docs
+lang: en-US
 ---
 
 # Two.LinearGradient

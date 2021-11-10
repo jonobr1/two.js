@@ -1,5 +1,7 @@
 ---
+title: Two.Stop
 pageClass: docs
+lang: en-US
 ---
 
 # Two.Stop

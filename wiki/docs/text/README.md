@@ -1,5 +1,7 @@
 ---
+title: Two.Text
 pageClass: docs
+lang: en-US
 ---
 
 # Two.Text

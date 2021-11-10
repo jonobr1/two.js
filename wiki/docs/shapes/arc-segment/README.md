@@ -1,5 +1,7 @@
 ---
+title: Two.ArcSegment
 pageClass: docs
+lang: en-US
 ---
 
 # Two.ArcSegment

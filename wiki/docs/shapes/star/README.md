@@ -1,5 +1,7 @@
 ---
+title: Two.Star
 pageClass: docs
+lang: en-US
 ---
 
 # Two.Star

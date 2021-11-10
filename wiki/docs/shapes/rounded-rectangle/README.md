@@ -1,5 +1,7 @@
 ---
+title: Two.RoundedRectangle
 pageClass: docs
+lang: en-US
 ---
 
 # Two.RoundedRectangle

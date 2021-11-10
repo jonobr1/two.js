@@ -1,5 +1,7 @@
 ---
+title: Two.ImageSequence
 pageClass: docs
+lang: en-US
 ---
 
 # Two.ImageSequence

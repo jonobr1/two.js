@@ -1,5 +1,7 @@
 ---
+title: Two.SVGRenderer
 pageClass: docs
+lang: en-US
 ---
 
 # Two.SVGRenderer

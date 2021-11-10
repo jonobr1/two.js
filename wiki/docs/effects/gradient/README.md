@@ -1,5 +1,7 @@
 ---
+title: Two.Gradient
 pageClass: docs
+lang: en-US
 ---
 
 # Two.Gradient

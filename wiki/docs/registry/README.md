@@ -1,5 +1,7 @@
 ---
+title: Two.Registry
 pageClass: docs
+lang: en-US
 ---
 
 # Two.Registry

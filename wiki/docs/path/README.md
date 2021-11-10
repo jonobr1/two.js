@@ -1,5 +1,7 @@
 ---
+title: Two.Path
 pageClass: docs
+lang: en-US
 ---
 
 # Two.Path

@@ -1,5 +1,7 @@
 ---
+title: Two.WebGLRenderer
 pageClass: docs
+lang: en-US
 ---
 
 # Two.WebGLRenderer

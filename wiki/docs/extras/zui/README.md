@@ -1,5 +1,7 @@
 ---
+title: Two.ZUI
 pageClass: docs
+lang: en-US
 ---
 
 # Two.ZUI
