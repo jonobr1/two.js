@@ -37,7 +37,8 @@
           <span
             v-if="s.header"
             class="header"
-          >&gt; {{ s.header.title }}</span>
+            :class="{ 'is-tag' : s.isTag }"
+          ><span class="chevron">&gt;</span> {{ s.header.title }}</span>
         </a>
       </li>
     </ul>
@@ -172,6 +173,7 @@ export default {
       if (lastParent) {
         s.path = s.regularPath + "#" + lastParent.slug;
         s.title = lastParent.title;
+        s.isTag = true;
       }
 
       return s;
@@ -291,6 +293,9 @@ export default {
       .header
         font-size 0.9em
         margin-left 0.25em
+      .is-tag
+        .chevron
+          display none
     &.focused
       background-color $orangebg
       a
