@@ -10,7 +10,7 @@
     name: 'example-thumb',
     data() {
       return {
-        hostOptions: ["codepen","jsfiddle","codesandbox","glitch","observable"]
+        hostOptions: ["codepen","codesandbox","glitch","jsfiddle","observable"]
       }
     },
     props: {
@@ -38,29 +38,39 @@
   .thumb
     display block
     width 100%
-    height 120px
+    height 15vh
+    min-height 120px
     background-size cover
+    background-position center
   .title
-    font-size: 1rem;
-    font-weight: 600;
-    padding: .5rem .7rem;
-    border: 1px solid #ccc;
-    border-bottom: 0;
-    color: $textColor;
+    font-size 1rem
+    font-weight 600
+    padding .5rem .7rem .5rem 2.7rem
+    border 1px solid #ccc
+    border-bottom 0
+    color $textColor
+    position relative
     &:hover
-      color: $textColor;
+      color $textColor
   .type
     background-repeat no-repeat
     background-position center
-    background-size 100%
-    display inline-block
-    width 1rem
     height 1rem
-    margin-right .5rem
-    vertical-align middle
+    display inline-block
+    position absolute
+    width 2rem
+    left .5rem
+    top .7rem
     &.codepen
       background-image url(/images/codepen.svg)
-
+    &.codesandbox
+      background-image url(/images/codesandbox.svg)
+    &.glitch
+      background-image url(/images/glitch.svg)
+    &.jsfiddle
+      background-image url(/images/jsfiddle.svg)
+    &.observable
+      background-image url(/images/observable.svg)
 @media (max-width: $MQMobile)
   .thumb
     height 240px

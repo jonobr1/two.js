@@ -9,7 +9,7 @@ lang: en-US
 Various examples of how to use different features of Two.js with associated tags for easier navigation. All examples are hosted on the official [CodePen Collection](https://codepen.io/collection/DRdLJk).
 
 <div class="examples-wrapper">
-
+<!-- start example -->
 <div class="codepen example">
 
 ## Examples > Dynamic Text
@@ -28,10 +28,11 @@ Various examples of how to use different features of Two.js with associated tags
 
 ### #keypress <example-tag tag="keypress" />
 
-</div>
+</div> 
 
-</div>
-
+</div> 
+<!-- end example -->
+<!-- start example -->
 <div class="codepen example">
 
 ## Examples > Gradients
@@ -52,8 +53,69 @@ Various examples of how to use different features of Two.js with associated tags
 
 ### #mouse <example-tag tag="mouse" />
 
+</div> 
+
+</div> 
+<!-- end example -->
+<!-- start example -->
+<div class="codepen example">
+
+## Examples > Test JSFiddle
+
+<example-thumb link="https://jsfiddle.net" alt="testing js fiddle." image="https://shots.codepen.io/username/pen/yLoEEQJ-1280.jpg" name="Test JSFiddle" />
+
+<div class="tags">
+
+### #es6 <example-tag tag="es6" />
+
+</div> 
+
 </div>
+<!-- end example -->
+<!-- start example -->
+<div class="codepen example">
+
+## Examples > Test Code Sandbox
+
+<example-thumb link="https://codesandbox.io" alt="testing code sandbox." image="https://shots.codepen.io/username/pen/yLoEEQJ-1280.jpg" name="Test Code Sandbox" />
+
+<div class="tags">
+
+### #es6 <example-tag tag="es6" />
 
 </div>
 
 </div>
+<!-- end example -->
+<!-- start example -->
+<div class="codepen example"> 
+
+## Examples > Test Glitch
+
+<example-thumb link="https://glitch.com" alt="testing glitch." image="https://shots.codepen.io/username/pen/yLoEEQJ-1280.jpg" name="Test Glitch" />
+
+<div class="tags">
+
+### #es6 <example-tag tag="es6" />
+
+</div> 
+
+</div> 
+<!-- end example -->
+<!-- start example -->
+<div class="codepen example"> 
+
+## Examples > Test Observable
+
+<example-thumb link="https://observablehq.com" alt="testing observable." image="https://shots.codepen.io/username/pen/yLoEEQJ-1280.jpg" name="Test Observable" />
+
+<div class="tags">
+
+### #es6 <example-tag tag="es6" />
+
+</div> 
+
+</div> 
+<!-- end example -->
+
+</div> 
