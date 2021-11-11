@@ -74,15 +74,21 @@ export default {
   },
   methods: {
     handleSearchPosition() {
-      if (!this.$refs.search) {
+      if (!this.$refs.search && !this.$refs.navLogo && !this.refs.links) {
         return;
       }
       if(document.documentElement.clientWidth > this.mobileDesktopBreakpoint) {
+        var buffer = 50;
+        var offset = 148;
         var content = document.getElementsByClassName("theme-default-content")[0];
-        if (content) {
-            var searchLeft = content.offsetLeft + parseFloat(window.getComputedStyle(content, null).getPropertyValue('padding-left').replace("px",""));
-            this.$refs.search.style.left = searchLeft.toString() + "px";
-        }
+        if (content) //align with content
+            offset = content.offsetLeft + parseFloat(window.getComputedStyle(content, null).getPropertyValue('padding-left').replace("px",""));
+        if (offset + this.$refs.search.offsetWidth > this.$refs.links.offsetLeft + buffer
+          || offset < this.$refs.navLogo.offsetLeft + this.$refs.navLogo.offsetWidth + buffer)
+          offset = 148; //align with logo
+
+        this.$refs.search.style.left = offset.toString() + "px";
+
       } else {
         this.$refs.search.style.left = "0px";
       }

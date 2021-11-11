@@ -106,7 +106,6 @@ export default {
               });
 
               if (h.title.startsWith("#")) {
-                //console.log("match is a tag " + h.title + " with path " + obj.path);
                 obj = this.formatTagSuggestion(obj);
               }
 
@@ -245,7 +244,8 @@ export default {
   margin-right 1rem
   input
     cursor text
-    width 22.5rem
+    max-width 22.5rem
+    width 33.3vw
     height 2rem
     color lighten($textColor, 25%)
     display inline-block
@@ -269,7 +269,7 @@ export default {
       color #999
   .suggestions
     background #fff
-    width 25rem
+    width 100%
     position absolute
     top 1.85rem
     border 1px solid tint($accentColor, 50)
@@ -313,6 +313,7 @@ export default {
     input
       height 3rem
       width 100vw
+      max-width 100vw
       background-position 0.5rem 0.75rem
       left 0
       border-radius 0
