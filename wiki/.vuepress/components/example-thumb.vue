@@ -35,12 +35,11 @@
 </script>
 
 <style lang="stylus" scoped>
-  .thumb {
+  .thumb 
     display block
     width 100%
     height 120px
     background-size cover
-  }
   .title 
     font-size: 1rem;
     font-weight: 600;
@@ -62,6 +61,9 @@
     &.codepen 
       background-image url(/images/codepen.svg)
 
+@media (max-width: $MQMobile)
+  .thumb
+    height 240px
 </style>
 
 
