@@ -1,6 +1,6 @@
 <template>
 <a class="cover" :href="link" target="_blank" rel="noopener noreferrer">
-  <div class="thumb" :title="alt" :style="{ backgroundImage: 'url(' + quotedImagePath + ')' }"></div>
+  <span class="thumb" role="img" :aria-label="alt" :style="{ backgroundImage: 'url(' + quotedImagePath + ')' }"></span>
   <div class="title"><span class="type" :class="host"></span>{{ name }}</div>
 </a>
 </template>
