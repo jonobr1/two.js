@@ -12,6 +12,10 @@ body {
     margin-bottom: 1.25rem;
   }
 
+  .edit-link span {
+    display: none;
+  }
+
   .page-edit .edit-link a,
   .page a {
     color: $green;
@@ -364,6 +368,46 @@ body {
       }
     }
   }
+}
+
+.examples {
+
+  .examples-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    margin: -1rem -1rem 5rem -1rem;
+  }
+
+  .example {
+    width: 12vw;
+    min-width: 213px;
+    padding: 1rem;
+
+    h3 {
+      font-size: 0;
+      border: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    a.cover {
+      border-bottom none !important;
+      &:hover {
+        border-bottom none !important;
+      }
+    }
+
+    .thumb {
+      border-radius: .5rem .5rem 0 0;
+    }
+
+    .tags {
+      padding: .75rem .75rem .5rem .75rem;
+      border-radius: 0 0 .5rem .5rem;
+      border: 1px solid $arrowBgColor;
+    }
+  }
+
 }
 
 .change-log .sidebar {

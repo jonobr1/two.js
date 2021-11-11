@@ -4,27 +4,29 @@ title: Two.js Examples
 lang: en-US
 ---
 
+# Examples
+
+Various examples of how to use different features of Two.js with associated tags for easier navigation. All examples are hosted on the official [CodePen Collection](https://codepen.io/collection/DRdLJk).
+
+<div class="examples-wrapper">
+
 <div class="codepen example">
 
 ## Examples > Dynamic Text
 
-<a href="https://codepen.io/jonobr1/pen/MWvVBdx" target="_blank" rel="noopener noreferrer">
-
-![Scattered letters with the text, "Start Typing," in the center.](https://shots.codepen.io/username/pen/MWvVBdx-1280.jpg)
-
-</a>
+<example-thumb link="https://codepen.io/jonobr1/pen/MWvVBdx" alt="Scattered letters with the text, 'Start Typing,' in the center." image="https://shots.codepen.io/username/pen/MWvVBdx-1280.jpg" name="Dynamic Text" />
 
 <div class="tags">
 
-### #es6
+### #es6 <example-tag tag="es6" />
 
-### #import
+### #import <example-tag tag="import" />
 
-### #text
+### #text <example-tag tag="text" />
 
-### #vector
+### #vector <example-tag tag="vector" />
 
-### #keypress
+### #keypress <example-tag tag="keypress" />
 
 </div>
 
@@ -34,25 +36,23 @@ lang: en-US
 
 ## Examples > Gradients
 
-<a href="https://codepen.io/jonobr1/pen/yLoEEQJ" target="_blank" rel="noopener noreferrer">
-
-![A red radial gradient superimposed on a linear gradient moving vertically.](https://shots.codepen.io/username/pen/yLoEEQJ-1280.jpg)
-
-</a>
+<example-thumb link="https://codepen.io/jonobr1/pen/yLoEEQJ" alt="A red radial gradient superimposed on a linear gradient moving vertically." image="https://shots.codepen.io/username/pen/yLoEEQJ-1280.jpg" name="Gradients" />
 
 <div class="tags">
 
-### #es6
+### #es6 <example-tag tag="es6" />
 
-### #import
+### #import <example-tag tag="import" />
 
-### #radial-gradient
+### #radial-gradient <example-tag tag="radial-gradient" />
 
-### #linear-gradient
+### #linear-gradient <example-tag tag="linear-gradient" />
 
-### #vector
+### #vector <example-tag tag="vector" />
 
-### #mouse
+### #mouse <example-tag tag="mouse" />
+
+</div>
 
 </div>
 
