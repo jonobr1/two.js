@@ -263,7 +263,7 @@ export default {
     padding-left 2.5rem
     &:focus
       cursor auto
-      border-color $accentColor
+      border-color tint($accentColor, 50)
       color $textColor
     &::placeholder
       color #999
@@ -272,7 +272,7 @@ export default {
     width 25rem
     position absolute
     top 1.85rem
-    border 1px solid $accentColor
+    border 1px solid tint($accentColor, 50)
     border-radius 6px
     padding 0rem
     list-style-type none
@@ -297,7 +297,7 @@ export default {
         .chevron
           display none
     &.focused
-      background-color $orangebg
+      background-color tint($orange, 92)
       a
         color $accentColor
 

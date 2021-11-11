@@ -27,7 +27,7 @@
 <style lang="stylus" scoped>
   a.button {
     display: inline-block
-    background: $greenbg;
+    background: tint($green, 95);
     color: $green;
     border: 2px solid $green;
     border-radius: 9999px;
@@ -48,7 +48,7 @@
     }
 
     &:hover {
-      background: $orangebg;
+      background: tint($orange, 92);
       color: $orange;
       border: 2px solid $orange;
       text-decoration: none;
