@@ -5,6 +5,9 @@
 </template>
 
 <script>
+
+  var tags = [];
+
   module.exports = {
     name: 'example-tag',
     props: {
@@ -12,21 +15,22 @@
     },
     data() {
       return {
-        colorOptions: ["grey", "red","orange","yellow","green","blue","purple"]
+        colorOptions: ["red","orange","yellow","green","blue","purple","grey"]
       }
     },
     computed: {
       colorClass() {
-        //compute tag color
-        var num = this.colorOptions.length;
 
-        for (var i = 0; i < this._props.tag.length; i++) {
-          num += this._props.tag.charCodeAt(i) * (i+1);
-          num += i;
+        var tag = this._props.tag;
+        var index = tags.indexOf(tag);
+
+        if (index < 0) {
+          index = tags.length;
+          tags.push(tag);
         }
 
-        var index = num % this.colorOptions.length;
-        return this.colorOptions[index]
+        return this.colorOptions[index % this.colorOptions.length];
+
       }
     }
   };
@@ -46,16 +50,14 @@
     background tint($grey, 70)
   &.red
     background tint($red, 70)
-  &.orange 
+  &.orange
     background tint($orange, 70)
-  &.yellow 
+  &.yellow
     background tint($yellow, 70)
-  &.green 
+  &.green
     background tint($green, 70)
-  &.blue 
+  &.blue
     background tint($blue, 70)
-  &.purple  
+  &.purple
     background tint($purple, 70)
 </style>
-
-
