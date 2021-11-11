@@ -10,7 +10,7 @@
     name: 'example-thumb',
     data() {
       return {
-        hostOptions: ["codepen"]
+        hostOptions: ["codepen","jsfiddle","codesandbox","glitch","observable"]
       }
     },
     props: {
@@ -35,19 +35,19 @@
 </script>
 
 <style lang="stylus" scoped>
-  .thumb 
+  .thumb
     display block
     width 100%
     height 120px
     background-size cover
-  .title 
+  .title
     font-size: 1rem;
     font-weight: 600;
     padding: .5rem .7rem;
     border: 1px solid #ccc;
     border-bottom: 0;
     color: $textColor;
-    &:hover 
+    &:hover
       color: $textColor;
   .type
     background-repeat no-repeat
@@ -58,12 +58,10 @@
     height 1rem
     margin-right .5rem
     vertical-align middle
-    &.codepen 
+    &.codepen
       background-image url(/images/codepen.svg)
 
 @media (max-width: $MQMobile)
   .thumb
     height 240px
 </style>
-
-
