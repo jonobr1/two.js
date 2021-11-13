@@ -16,8 +16,6 @@
 
 <script>
 
-  var loaded = false;
-
   module.exports = {
     name: 'inline-editor',
     computed: {
@@ -44,22 +42,17 @@
     },
     mounted: function() {
 
-      var script;
-
       var textContent = getTextContent(this.$slots.default);
       this.$refs.pre.innerHTML = textContent;
 
-      if (!loaded) {
-        script = document.createElement('script');
-        script.type = 'text/javascript';
-        script.src = 'https://static.codepen.io/assets/embed/ei.js';
-        document.body.appendChild(script);
-        loaded = true;
-      }
+      var script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.src = 'https://static.codepen.io/assets/embed/ei.js';
+      script.className = 'codepen';
+      document.body.appendChild(script);
 
     },
     beforeDestroyed: function() {
-
     }
   };
 

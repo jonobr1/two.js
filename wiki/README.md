@@ -65,7 +65,8 @@ For a list of all properties and construction parameters check out the [document
 <inline-editor scripts="https://cdn.jsdelivr.net/npm/two.js@latest/build/two.js">
 // Make an instance of two and place it on the page.
 var params = { fullscreen: true };
-var two = new Two(params).appendTo(document.body);
+var elem = document.body;
+var two = new Two(params).appendTo(elem);
 
 // Two.js has convenient methods to make shapes and insert them into the scene.
 var radius = 50;
@@ -90,5 +91,76 @@ rect.noStroke();
 
 // Don’t forget to tell two to draw everything to the screen
 two.update();
+
+</inline-editor>
+
+## Shapes and Groups
+
+<h3 class="visible"><a href="#shapes-and-groups">Shapes and Groups</a></h3>
+
+Adding shapes to groups makes managing multiple shapes easier and more sane. Group's provide an easy way to move your content through `translation`, `rotation`, and `scale`. These operations emit from the coordinate space `(0, 0)`. In the example below we can see that the initial orientation of the circle and rectangle changed from the first example. These shapes are oriented around `(0, 0)`, which allows us to transform the group around the centeroid of the shapes. In addition Group's styling operations trickle down and apply to each shape.
+
+<inline-editor scripts="https://cdn.jsdelivr.net/npm/two.js@latest/build/two.js">
+var params = { fullscreen: true }
+var elem = document.body;
+var two = new Two(params).appendTo(elem);
+
+var circle = two.makeCircle(-70, 0, 50);
+var rect = two.makeRectangle(70, 0, 100, 100);
+circle.fill = '#FF8000';
+circle.stroke = 'orangered';
+rect.fill = 'rgba(0, 200, 255, 0.75)';
+rect.stroke = '#1C75BC';
+
+// Groups can take an array of shapes and/or groups.
+var group = two.makeGroup(circle, rect);
+
+// And have translation, rotation, scale like all shapes.
+group.translation.set(two.width / 2, two.height / 2);
+group.rotation = Math.PI;
+group.scale = 0.75;
+
+// You can also set the same properties a shape have.
+group.linewidth = 7;
+
+two.update();
+
+</inline-editor>
+
+## Adding Motion
+
+<h3 class="visible"><a href="#adding-motion">Adding Motion</a></h3>
+
+Finally, let's add some motion to our shapes. So far the examples use `two.update();` to draw content to the screen. The instance of two.js has two particular methods for animation. The first is `two.play();` which calls `two.update();` at 60 frames-per-second. This rate, however, will slowdown if there's too much content to render per frame.
+
+The second method is `two.bind();` This method takes a string as its first parameter indicating what event to listen to and a function as its second argument delineating what to do when the event described in the first parameter happens. To sync a function with the animation loop simply invoke `two.bind('update', referenceToFunction);` as outlined below:
+
+<inline-editor scripts="https://cdn.jsdelivr.net/npm/two.js@latest/build/two.js">
+var params = { fullscreen: true }
+var elem = document.body;
+var two = new Two(params).appendTo(elem);
+
+var circle = two.makeCircle(-70, 0, 50);
+var rect = two.makeRectangle(70, 0, 100, 100);
+circle.fill = '#FF8000';
+rect.fill = 'rgba(0, 200, 255, 0.75)';
+
+var group = two.makeGroup(circle, rect);
+group.translation.set(two.width / 2, two.height / 2);
+group.scale = 0;
+group.noStroke();
+
+// Bind a function to scale and rotate the group
+// to the animation loop.
+two.bind('update', function(frameCount) {
+  // This code is called everytime two.update() is called.
+  // Effectively 60 times per second.
+  if (group.scale > 0.9999) {
+    group.scale = group.rotation = 0;
+  }
+  var t = (1 - group.scale) * 0.125;
+  group.scale += t;
+  group.rotation += t * 4 * Math.PI;
+}).play();  // Finally, start the animation loop
 
 </inline-editor>
