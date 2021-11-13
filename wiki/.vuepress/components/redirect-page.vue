@@ -9,7 +9,7 @@
       src: String
     },
     mounted: function() {
-      this.$router.push(this._props.src).catch(() => {});
+      this.$router.replace(this._props.src).catch(() => {});
     }
   };
 </script>
