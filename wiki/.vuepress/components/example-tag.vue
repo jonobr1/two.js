@@ -15,7 +15,9 @@
     },
     data() {
       return {
-        colorOptions: ["red","orange","yellow","green","blue","purple","grey"]
+        colorOptions: [
+          'red', 'orange', 'yellow', 'green', 'blue', 'purple', 'grey'
+        ]
       }
     },
     computed: {
