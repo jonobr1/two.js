@@ -9,7 +9,7 @@ lang: en-US
 Various examples of how to use different features of Two.js with associated tags for easier navigation. All examples are hosted on the official [CodePen Collection](https://codepen.io/collection/DRdLJk).
 
 <div class="examples-wrapper">
-<!-- start example -->
+
 <div class="codepen example">
 
 ## Examples > Dynamic Text
@@ -28,11 +28,11 @@ Various examples of how to use different features of Two.js with associated tags
 
 ### #keypress <example-tag tag="keypress" />
 
-</div> 
+</div>
 
-</div> 
-<!-- end example -->
-<!-- start example -->
+</div>
+
+
 <div class="codepen example">
 
 ## Examples > Gradients
@@ -53,11 +53,11 @@ Various examples of how to use different features of Two.js with associated tags
 
 ### #mouse <example-tag tag="mouse" />
 
-</div> 
+</div>
 
-</div> 
-<!-- end example -->
-<!-- start example -->
+</div>
+
+
 <div class="codepen example">
 
 ## Examples > Test JSFiddle
@@ -68,11 +68,11 @@ Various examples of how to use different features of Two.js with associated tags
 
 ### #es6 <example-tag tag="es6" />
 
-</div> 
+</div>
 
 </div>
-<!-- end example -->
-<!-- start example -->
+
+
 <div class="codepen example">
 
 ## Examples > Test Code Sandbox
@@ -86,9 +86,9 @@ Various examples of how to use different features of Two.js with associated tags
 </div>
 
 </div>
-<!-- end example -->
-<!-- start example -->
-<div class="codepen example"> 
+
+
+<div class="codepen example">
 
 ## Examples > Test Glitch
 
@@ -98,12 +98,12 @@ Various examples of how to use different features of Two.js with associated tags
 
 ### #es6 <example-tag tag="es6" />
 
-</div> 
+</div>
 
-</div> 
-<!-- end example -->
-<!-- start example -->
-<div class="codepen example"> 
+</div>
+
+
+<div class="codepen example">
 
 ## Examples > Test Observable
 
@@ -113,9 +113,8 @@ Various examples of how to use different features of Two.js with associated tags
 
 ### #es6 <example-tag tag="es6" />
 
-</div> 
+</div>
 
-</div> 
-<!-- end example -->
+</div>
 
-</div> 
+</div>
