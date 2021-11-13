@@ -266,7 +266,7 @@ body {
     }
 
     .shortname {
-      //font-weight: 600;  
+      //font-weight: 600;
     }
   }
   h3 {
@@ -375,13 +375,18 @@ body {
   .examples-wrapper {
     display: flex;
     flex-wrap: wrap;
-    margin: -1rem -1rem 5rem -1rem;
+    margin: 0 -1rem;
   }
 
   .example {
-    padding: 1rem;
-    width: calc(33.3% - 2rem);
-    min-width: 213px;
+
+    padding: 0 0.5rem 1rem;
+    width: calc(25% - 1rem);
+
+    h2 {
+      padding: 0;
+      margin: 0;
+    }
 
     h3 {
       font-size: 0;
@@ -512,20 +517,20 @@ table tr:last-child td:last-child {
 .search-open {
   .sidebar, .page {
     opacity: .5;
-  }  
+  }
 }
 
 @media (max-width: $MQMobile) {
 
   .page {
     padding-top: 4rem;
-  }  
+  }
 
   .theme-default-content:not(.custom) {
     h2 {
       padding-top: 8rem;
       margin-top: -5rem;
-    }  
+    }
   }
 
   .examples .example {

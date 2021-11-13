@@ -40,8 +40,8 @@
 
 <style lang="stylus" scoped>
 .tag
-  border-radius 0.25rem
-  padding 0.35rem 0.75rem
+  border-radius 0.2rem
+  padding 0rem 0.75rem
   font-size .625rem
   line-height 1.25rem
   font-weight 400
