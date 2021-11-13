@@ -1,5 +1,5 @@
 ---
-title: Two.js • The 2d drawing api for the web
+title: Two.js • Homepage
 lang: en-US
 ---
 
