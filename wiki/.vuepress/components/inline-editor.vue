@@ -3,7 +3,7 @@
     :data-prefill="prefill"
     data-default-tab="js,result"
     data-editable="true"
-    data-theme-id="39877"
+    data-height="500"
     class="codepen">
 
       <pre data-lang="html"></pre>
@@ -68,7 +68,9 @@
     for (var i = 0; i < nodes.length; i++) {
       var node = nodes[i];
       if (node.children && node.children.length > 0) {
-        result += '\n';
+        if (result !== '') {
+          result += '\n';
+        }
         result += getTextContent(node.children);
         result += '\n';
       } else if (typeof node.text === 'string') {
