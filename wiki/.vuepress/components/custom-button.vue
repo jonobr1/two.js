@@ -1,10 +1,11 @@
 <template>
   <a ref="link" class="button" :class="type" :href="href">
-    <span ref="icon" class="icon" :class="type">
+    <span ref="icon" class="icon" :class="type"></span>
+    <span ref="label" class="label">
+      {{ text }}
     </span>
-    <span ref="label" class="label"> {{ text }}
-    </span>
-    <span ref="size" class="size"> {{ size }}
+    <span ref="size" class="size">
+      {{ size }}
     </span>
   </a>
 </template>
@@ -34,7 +35,7 @@
     padding: .5rem 1rem .5rem 2.75rem;
     margin: 0 1rem .5rem 0;
     position: relative;
-    
+
     span {
       display: inline-block;
     }
@@ -54,10 +55,10 @@
       text-decoration: none;
 
       .icon {
-        background-color: $orange;  
+        background-color: $orange;
       }
     }
-    
+
     .icon {
       width: 1.5em;
       height: 1.5em;
@@ -103,7 +104,7 @@
       right: 1rem;
       top: auto;
       left: auto;
-    }  
+    }
 
   }
 
