@@ -16,7 +16,7 @@ Various examples of how to use different features of Two.js with associated tags
   title="Clipping Mask"
   href="https://codepen.io/jonobr1/pen/abyRyoY"
   src="https://shots.codepen.io/jonobr1/pen/abyRyoY-512.jpg"
-  tags="es6, import, shapes, mouse, grid, sine" />
+  tags="import, shapes, mouse, grid, sine" />
 
 <example-card
   title="Dynamic Text"
@@ -28,7 +28,7 @@ Various examples of how to use different features of Two.js with associated tags
   title="Get Point on Path"
   href="https://codepen.io/jonobr1/pen/OJjBwwG"
   src="https://shots.codepen.io/jonobr1/pen/OJjBwwG-512.jpg"
-  tags="es6, import, shapes, mouse, sine" />
+  tags="import, shapes, mouse, sine" />
 
 <example-card
   title="Gradients"
@@ -40,7 +40,7 @@ Various examples of how to use different features of Two.js with associated tags
   title="Rubber Ball"
   href="https://codepen.io/jonobr1/pen/mdMzzQB"
   src="https://shots.codepen.io/jonobr1/pen/mdMzzQB-512.jpg"
-  tags="es6, import, vector, mouse, circle, vertices" />
+  tags="import, vector, mouse, circle, vertices" />
 
 <example-card
   title="Zoom & Pan UI"
