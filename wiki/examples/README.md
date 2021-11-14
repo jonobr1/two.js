@@ -37,10 +37,16 @@ Various examples of how to use different features of Two.js with associated tags
   tags="es6, import, vector, mouse, radial-gradient, linear-gradent" />
 
 <example-card
+  title="Rubber Ball"
+  href="https://codepen.io/jonobr1/pen/mdMzzQB"
+  src="https://shots.codepen.io/jonobr1/pen/mdMzzQB-512.jpg"
+  tags="es6, import, vector, mouse, circle, vertices" />
+
+<example-card
   title="Zoom & Pan UI"
   href="https://codepen.io/jonobr1/pen/PobMKwb"
   src="https://shots.codepen.io/jonobr1/pen/PobMKwb-512.jpg"
-  tags="mouse, drag, ui" />
+  tags="mouse, drag, ui, zui" />
 
 </div>
 
