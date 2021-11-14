@@ -25,6 +25,12 @@ Various examples of how to use different features of Two.js with associated tags
   tags="es6, import, text, vector, keypress" />
 
 <example-card
+  title="Get Point on Path"
+  href="https://codepen.io/jonobr1/pen/OJjBwwG"
+  src="https://shots.codepen.io/jonobr1/pen/OJjBwwG-512.jpg"
+  tags="es6, import, shapes, mouse, sine" />
+
+<example-card
   title="Gradients"
   href="https://codepen.io/jonobr1/pen/yLoEEQJ"
   src="https://shots.codepen.io/username/pen/yLoEEQJ-512.jpg"
