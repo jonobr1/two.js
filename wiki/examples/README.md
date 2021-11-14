@@ -45,6 +45,18 @@ Various examples of how to use different features of Two.js with associated tags
   tags="animated, logo, non-interactive, sine, svg" />
 
 <example-card
+  title="Basic Angular Template"
+  href="https://codesandbox.io/s/nostalgic-volhard-6zzfd"
+  src="https://screenshots.codesandbox.io/6zzfd/8.png"
+  tags="angular" />
+
+<example-card
+  title="Basic React Template"
+  href="https://codesandbox.io/s/sharp-proskuriakova-h5weu"
+  src="https://screenshots.codesandbox.io/ygxbc/0.png"
+  tags="react" />
+
+<example-card
   title="Handshake"
   href="https://codepen.io/jonobr1/pen/MWaeWRr"
   src="https://shots.codepen.io/jonobr1/pen/MWaeWRr-512.jpg"
