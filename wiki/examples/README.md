@@ -6,7 +6,7 @@ lang: en-US
 
 # Examples
 
-Various examples of how to use different features of Two.js with associated tags for convenient filtering through the global search bar up at the top.
+Various examples of how to use different features of Two.js with associated tags for convenient filtering through the global search bar up at the top. If you've made something with Two.js you'd like to share, then please [submit](https://github.com/jonobr1/two.js/issues/new?assignees=&labels=output&template=output.md&title=%5BOutput%5D) it.
 
 ### Official Examples
 

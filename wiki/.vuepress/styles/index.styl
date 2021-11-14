@@ -22,6 +22,7 @@ body {
     font-weight: 600;
     transition: color .2s, border-color .2s, background-color .2s;
     word-break: break-word;
+    border-bottom: 1px solid $green;
 
     span { //the .icon.outbound is contained in a span that adds a space to the end of links.
       display: none;
@@ -33,7 +34,7 @@ body {
     &:hover {
       color:  tint($green, 30%);
       text-decoration: none;
-      border-bottom: 1px solid tint($green, 60%);
+      border-bottom-color: tint($green, 60%);
     }
     &.header-anchor {
       border-bottom-width: 0;
@@ -283,6 +284,7 @@ body {
     a {
       color: inherit;
       font-weight: inherit;
+      border-bottom: none;
 
       &:hover {
         color: inherit;
@@ -493,15 +495,17 @@ table tr:last-child td:last-child {
 }
 
 .page a.lineno {
-  color: $codeColor;
+  color: lighten($codeColor, 40%);
   font-family: "anonymous-pro", monospace;
   font-size: .85rem;
   line-height: 100%;
   word-break: break-word; //possibly only for mobile.
+  border-bottom 1px solid lighten($codeColor, 40%);
+  padding-bottom: 0.2rem;
 
   &:hover {
-    border-bottom: 1px solid lighten($codeColor, 60%);
-    color: lighten($codeColor, 40%);
+    border-bottom-color: $codeColor;
+    color: $codeColor;
   }
 }
 
