@@ -29,6 +29,12 @@ Various examples of how to use different features of Two.js with associated tags
   tags="mouse, makeCurve, line, dashes, group" />
 
 <example-card
+  title="Rainbow"
+  href="https://codepen.io/jonobr1/pen/ieFnh"
+  src="https://shots.codepen.io/jonobr1/pen/ieFnh-800.jpg?version=1636853"
+  tags="animated, non-interactive, beginning, ending" />
+
+<example-card
   title="Animated Flag Logo"
   href="https://observablehq.com/@jonobr1/turn-any-svg-logo-into-an-animated-flag-using-two-js"
   src="https://static.observableusercontent.com/thumbnail/027c323c66df1be2917aa63b46326981c548508d5227b970ba85200a8cdc0391.jpg"
@@ -44,7 +50,7 @@ Various examples of how to use different features of Two.js with associated tags
   title="Starfield"
   href="https://observablehq.com/@phocks/two-js-starfield-experiment"
   src="https://static.observableusercontent.com/thumbnail/b4fbd836d41dee4ec08452748179567361af623aaca05c8048bdf8b7de31effc.jpg"
-  tags="animation, dark, non-interactive, webgl" />
+  tags="animated, dark, non-interactive, webgl" />
 
 <example-card
   title="South Tirol"
