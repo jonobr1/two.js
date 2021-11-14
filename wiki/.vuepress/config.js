@@ -44,7 +44,8 @@ function getJSON(filepath) {
 module.exports = {
   head: [
     ['link', { rel: 'icon', href: '/images/favicon.gif' }],
-    ['link', { rel: 'stylesheet', href: 'https://use.typekit.net/edp1hux.css' }]
+    ['link', { rel: 'stylesheet', href: 'https://use.typekit.net/edp1hux.css' }],
+    ['script', { type: 'text/javascript', src: 'https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.0/beautify.min.js', async: '' }]
   ],
   themeConfig: {
     repo: 'jonobr1/two.js',

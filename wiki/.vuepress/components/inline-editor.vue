@@ -16,6 +16,10 @@
 
 <script>
 
+  var beautifyOptions = {
+    indent_size: 2
+  };
+
   module.exports = {
     name: 'inline-editor',
     computed: {
@@ -70,7 +74,11 @@
         result += node.text;
       }
     }
-    return result;
+    if (window.js_beautify) {
+      return window.js_beautify(result, beautifyOptions);
+    } else {
+      return result;
+    }
   }
 
 </script>

@@ -38,7 +38,7 @@ npm install --save two.js@latest
   Two.js is deeply inspired by flat [motion graphics](http://en.wikipedia.org/wiki/Motion_graphics). As a result, two.js aims to make the creation and animation of flat shapes easier and more concise.
 
 * #### Scenegraph
-  At its core two.js relies on a [scenegraph](http://en.wikipedia.org/wiki/Scene_graph). This means that when you draw or create an object (a Two.Path or Two.Group), two actually stores and remembers that. After you make the object you can apply any number of operations to it — e.g: rotation, translation, scale, etc..
+  At its core two.js relies on a [scenegraph](http://en.wikipedia.org/wiki/Scene_graph). This means that when you draw or create an object (a Two.Path or Two.Group), two actually stores and remembers that. After you make the object you can apply any number of operations to it — e.g: rotation, position, scale, etc..
 
 * #### Animation Loop
   Two.js has a built in animation loop. It is simple in nature and can be automated or paired with another animation library. For more information check out the [examples](https://codepen.io/collection/KpMkbM).
@@ -98,7 +98,7 @@ two.update();
 
 <h3 class="visible"><a href="#shapes-and-groups">Shapes and Groups</a></h3>
 
-Adding shapes to groups makes managing multiple shapes easier and more sane. Group's provide an easy way to move your content through `translation`, `rotation`, and `scale`. These operations emit from the coordinate space `(0, 0)`. In the example below we can see that the initial orientation of the circle and rectangle changed from the first example. These shapes are oriented around `(0, 0)`, which allows us to transform the group around the centeroid of the shapes. In addition Group's styling operations trickle down and apply to each shape.
+Adding shapes to groups makes managing multiple shapes easier and more sane. Group's provide an easy way to move your content through `position`, `rotation`, and `scale`. These operations emit from the coordinate space `(0, 0)`. In the example below we can see that the initial orientation of the circle and rectangle changed from the first example. These shapes are oriented around `(0, 0)`, which allows us to transform the group around the centeroid of the shapes. In addition Group's styling operations trickle down and apply to each shape.
 
 <inline-editor scripts="https://cdn.jsdelivr.net/npm/two.js@latest/build/two.js">
 var params = { fullscreen: true }
@@ -115,8 +115,8 @@ rect.stroke = '#1C75BC';
 // Groups can take an array of shapes and/or groups.
 var group = two.makeGroup(circle, rect);
 
-// And have translation, rotation, scale like all shapes.
-group.translation.set(two.width / 2, two.height / 2);
+// And have position, rotation, scale like all shapes.
+group.position.set(two.width / 2, two.height / 2);
 group.rotation = Math.PI;
 group.scale = 0.75;
 
@@ -136,7 +136,7 @@ Finally, let's add some motion to our shapes. So far the examples use `two.updat
 The second method is `two.bind();` This method takes a string as its first parameter indicating what event to listen to and a function as its second argument delineating what to do when the event described in the first parameter happens. To sync a function with the animation loop simply invoke `two.bind('update', referenceToFunction);` as outlined below:
 
 <inline-editor scripts="https://cdn.jsdelivr.net/npm/two.js@latest/build/two.js">
-var params = { fullscreen: true }
+var params = { fullscreen: true };
 var elem = document.body;
 var two = new Two(params).appendTo(elem);
 
@@ -145,22 +145,26 @@ var rect = two.makeRectangle(70, 0, 100, 100);
 circle.fill = '#FF8000';
 rect.fill = 'rgba(0, 200, 255, 0.75)';
 
+var cx = two.width * 0.5;
+var cy = two.height * 0.5;
 var group = two.makeGroup(circle, rect);
-group.translation.set(two.width / 2, two.height / 2);
+group.position.set(cx, cy);
 group.scale = 0;
 group.noStroke();
 
-// Bind a function to scale and rotate the group
-// to the animation loop.
-two.bind('update', function(frameCount) {
-  // This code is called everytime two.update() is called.
-  // Effectively 60 times per second.
+// Bind a function to scale and rotate the group to the animation loop.
+two.bind('update', update);
+// Finally, start the animation loop
+two.play();
+
+function update(frameCount) {
+  // This code is called everytime two.update() is called; effectively 60 times per second.
   if (group.scale > 0.9999) {
     group.scale = group.rotation = 0;
   }
   var t = (1 - group.scale) * 0.125;
   group.scale += t;
   group.rotation += t * 4 * Math.PI;
-}).play();  // Finally, start the animation loop
+}
 
 </inline-editor>
