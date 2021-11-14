@@ -47,10 +47,16 @@ Various examples of how to use different features of Two.js with associated tags
   tags="static, non-interactive, canvas, grid" />
 
 <example-card
+  title="Twisting Squares"
+  href="https://codepen.io/daniel-hult/pen/bGbojYm"
+  src="#"
+  tags="animated, non-interactive, makeRectangle, rotation" />
+
+<example-card
   title="Starfield"
   href="https://observablehq.com/@phocks/two-js-starfield-experiment"
   src="https://static.observableusercontent.com/thumbnail/b4fbd836d41dee4ec08452748179567361af623aaca05c8048bdf8b7de31effc.jpg"
-  tags="animated, dark, non-interactive, webgl" />
+  tags="animated, non-interactive, webgl" />
 
 <example-card
   title="South Tirol"
