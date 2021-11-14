@@ -108,7 +108,7 @@
         var header = generateHeaderAtLevel(elem, 3);
 
         header.title = `${this.title} > ${header.title}`;
-        header.slug = `${mainHeader.slug}-${header.slug}`;
+        header.slug = `${mainHeader.slug}`;
         elem.id = header.slug;
 
         this.$page.headers.push(header);
