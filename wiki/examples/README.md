@@ -13,6 +13,12 @@ Various examples of how to use different features of Two.js with associated tags
 <div class="examples-wrapper">
 
 <example-card
+  title="Clipping Mask"
+  href="https://codepen.io/jonobr1/pen/abyRyoY"
+  src="https://shots.codepen.io/jonobr1/pen/abyRyoY-512.jpg"
+  tags="es6, import, shapes, mouse, grid, sine" />
+
+<example-card
   title="Dynamic Text"
   href="https://codepen.io/jonobr1/pen/MWvVBdx"
   src="https://shots.codepen.io/username/pen/MWvVBdx-512.jpg"
