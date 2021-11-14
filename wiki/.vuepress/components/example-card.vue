@@ -31,7 +31,7 @@
           'codepen', 'codesandbox', 'glitch', 'jsfiddle', 'observable'
         ],
         colors: [
-          'red', 'orange', 'yellow', 'green', 'blue', 'purple', 'grey'
+          'red', 'orange', 'yellow', 'green', 'blue', 'purple'
         ]
       }
     },
