@@ -35,6 +35,12 @@ Various examples of how to use different features of Two.js with associated tags
   tags="animated, non-interactive, beginning, ending" />
 
 <example-card
+  title="USA"
+  href="https://codepen.io/jonobr1/pen/ORrrvY"
+  src="https://shots.codepen.io/jonobr1/pen/ORrrvY-800.jpg?version=1636854"
+  tags="animated, stop-motion, svg, interpret" />
+
+<example-card
   title="Animated Flag Logo"
   href="https://observablehq.com/@jonobr1/turn-any-svg-logo-into-an-animated-flag-using-two-js"
   src="https://static.observableusercontent.com/thumbnail/027c323c66df1be2917aa63b46326981c548508d5227b970ba85200a8cdc0391.jpg"
