@@ -25,6 +25,12 @@ Various examples of how to use different features of Two.js with associated tags
   tags="es6, import, text, vector, keypress" />
 
 <example-card
+  title="Dynamic Vertices"
+  href="https://codepen.io/jonobr1/pen/gOxQRXd"
+  src="https://shots.codepen.io/jonobr1/pen/gOxQRXd-512.jpg"
+  tags="es6, import, vector, mouse, path" />
+
+<example-card
   title="Get Point on Path"
   href="https://codepen.io/jonobr1/pen/OJjBwwG"
   src="https://shots.codepen.io/jonobr1/pen/OJjBwwG-512.jpg"
