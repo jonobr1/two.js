@@ -249,10 +249,13 @@ body {
     margin-bottom: 2rem;
     a {
       color: tint($black, 15%);
-      border-bottom: 1px solid tint($black, 25%);
+      font-weight: normal;
+      border-bottom: none;
+      text-decoration: underline;
       &:hover {
         color: tint($black, 30%);
-        border-bottom-color: tint($black, 50%);
+        border-bottom: none;
+        text-decoration: underline !important;
       }
     }
     p {
