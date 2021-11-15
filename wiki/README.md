@@ -17,8 +17,8 @@ A two-dimensional drawing api geared towards modern web browsers. It is renderer
 <h3 class="visible"><a href="#download">Download</a></h3>
 
 <div>
-<custom-button text="Development" type="download" href="https://raw.githubusercontent.com/jonobr1/two.js/master/build/two.js" :size="$themeConfig.developmentSize" />
-<custom-button text="Production" type="download" href="https://raw.githubusercontent.com/jonobr1/two.js/master/build/two.min.js" :size="$themeConfig.productionSize" />
+<custom-button text="Development" type="download" href="https://raw.githubusercontent.com/jonobr1/two.js/dev/build/two.js" :size="$themeConfig.developmentSize" />
+<custom-button text="Production" type="download" href="https://raw.githubusercontent.com/jonobr1/two.js/dev/build/two.min.js" :size="$themeConfig.productionSize" />
 </div>
 
 ::: tip
