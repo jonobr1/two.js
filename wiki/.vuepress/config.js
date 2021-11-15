@@ -64,7 +64,7 @@ module.exports = {
     productionSize: fileSizes.production,
     nav: [
       {
-        text: 'Docs', link: '/docs/'
+        text: 'Docs', link: '/docs/two/'
       },
       {
         text: 'Examples', link: '/examples/'

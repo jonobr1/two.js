@@ -41,10 +41,10 @@ npm install --save two.js@latest
   At its core two.js relies on a [scenegraph](http://en.wikipedia.org/wiki/Scene_graph). This means that when you draw or create an object (a Two.Path or Two.Group), two actually stores and remembers that. After you make the object you can apply any number of operations to it — e.g: rotation, position, scale, etc..
 
 * #### Animation Loop
-  Two.js has a built in animation loop. It is simple in nature and can be automated or paired with another animation library. For more information check out the [examples](https://codepen.io/collection/KpMkbM).
+  Two.js has a built in animation loop. It is simple in nature and can be automated or paired with another animation library. For more information check out the [examples](/examples/).
 
 * #### SVG Interpreter
-  Two.js features a [Scalable Vector Graphics](http://en.wikipedia.org/wiki/Scalable_Vector_Graphics) Interpreter. This means developers and designers alike can create SVG elements in commercial applications like [Adobe Illustrator](http://www.adobe.com/products/illustrator) and bring them into your two.js scene. For more information check out the [examples](https://codepen.io/collection/KpMkbM).
+  Two.js features a [Scalable Vector Graphics](http://en.wikipedia.org/wiki/Scalable_Vector_Graphics) Interpreter. This means developers and designers alike can create SVG elements in commercial applications like [Adobe Illustrator](http://www.adobe.com/products/illustrator) and bring them into your two.js scene. For more information check out the [examples](/examples/).
 
 ## Basic Usage
 
@@ -168,3 +168,44 @@ function update(frameCount) {
 }
 
 </inline-editor>
+
+### Next Steps
+
+Now that you got a quick glimpse into some of the functionality two.js offers, check out the [official](/examples/#official-examples) and [community](/examples/#community-examples) examples to see what else you can do. These examples range from showing off specific features of the library to using the library in other environments, like [React](/examples/#react) and [Angular](/examples/#angular).
+
+Looking for more information on a specific property? Then head over to the [documentation](/docs/two/) which outlines all of the library's public features.
+
+Haven't found what you're looking for? Then ask a question on our [GitHub](https://github.com/jonobr1/two.js/issues/new?assignees=&labels=question&template=question.md&title=%5BQuestion%5D) page.
+
+---
+
+<br />
+
+#### Project Credits
+
+Two.js is dependency free, but its creation would not have been possible without these great contributions to the JavaScript ecosystem:
+
+<div class="inspiration">
+
++ [Three.js](http://threejs.org/)
++ [Vuepress](https://vuepress.vuejs.org/)
++ [Underscore.js](https://underscorejs.org/)
++ [Backbone.js](https://backbonejs.org/)
++ [QUnit](https://qunitjs.com/)
++ [Resemble.js](https://github.com/rsmbl/Resemble.js)
++ [Canvas2Blob](https://github.com/blueimp/JavaScript-Canvas-to-Blob)
++ [jsdoc](https://jsdoc.app/)
++ [ESLint](https://eslint.org/)
++ [rollup.js](https://rollupjs.org/)
+
+</div>
+
+<div class="project-footnote">
+
+Site design by [Yuin Chien](https://yuinchien.com/) • Site development in collaboration with [Tonia B](https://toniab.com/)
+
+Two.js is a project by [Jono Brandel](http://jono.fyi/) published under the [MIT License](https://github.com/jonobr1/two.js/blob/dev/LICENSE) © 2012 – {{ 1900 + new Date().getYear() }}
+
+</div>
+
+---

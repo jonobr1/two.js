@@ -212,7 +212,53 @@ body {
   .theme-default-content div[class*="language-"] {
     margin: 0.85rem 0rem;
     border-radius: 0;
-}
+  }
+
+  div.inspiration {
+    margin-bottom: 1.5rem;
+    margin-left: -0.5rem;
+    margin-right: -0.5rem;
+    ul {
+      list-style: none;
+      padding: 0;
+      li {
+        display: inline-block;
+        // padding: 0 !important;
+        padding: 0 0.4rem 0.5rem 0.4rem !important;
+        margin: 0 0.25rem;
+        position: relative;
+        a {
+          text-align: center;
+          display: block;
+          width: 100%;
+          height: 100%;
+          padding: 0.5rem !important;
+          border: 1px solid $green;
+          border-radius: 0.33rem;
+          &:hover {
+            border-color: tint($green, 30%);
+          }
+        }
+      }
+    }
+  }
+
+  div.project-footnote {
+    text-align: center;
+    font-size: 85%;
+    margin-bottom: 2rem;
+    a {
+      color: tint($black, 15%);
+      border-bottom: 1px solid tint($black, 25%);
+      &:hover {
+        color: tint($black, 30%);
+        border-bottom-color: tint($black, 50%);
+      }
+    }
+    p {
+      margin: 0;
+    }
+  }
 
 }
 
