@@ -57,6 +57,7 @@
 
     },
     beforeDestroyed: function() {
+      // TODO: Maybe remove all script tags that are codepen references
     }
   };
 
