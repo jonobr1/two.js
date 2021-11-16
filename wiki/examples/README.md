@@ -13,6 +13,12 @@ Various examples of how to use different features of Two.js with associated tags
 <div class="examples-wrapper">
 
 <example-card
+  title="Advanced Anchors"
+  href="https://codepen.io/jonobr1/pen/jOLQoov"
+  src="https://shots.codepen.io/jonobr1/pen/jOLQoov-512.jpg"
+  tags="import, interpret, mouse, points, vertices, ui" />
+
+<example-card
   title="Clipping Mask"
   href="https://codepen.io/jonobr1/pen/abyRyoY"
   src="https://shots.codepen.io/jonobr1/pen/abyRyoY-512.jpg"
