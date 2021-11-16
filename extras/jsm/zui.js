@@ -30,6 +30,12 @@ class Surface {
 
 }
 
+/**
+ * @name Two.ZUI
+ * @class
+ * @param {Two.Group} group - The scene or group to
+ * @param {HTMLElement} [domElement=document.body] - The HTML Element to attach event listeners to.
+ */
 export class ZUI {
 
   constructor(group, domElement) {

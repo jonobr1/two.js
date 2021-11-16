@@ -1,18 +1,26 @@
 var fs = require('fs');
 var path = require('path');
-var sourceFiles = require('../../utils/source-files');
 
+var sourceFiles = require('../../utils/source-files');
 var fileSizes = getJSON('../../utils/file-sizes.json');
 
 var root = { title: 'Base', children: [] };
 var effects = { title: 'Effects', children: [] };
 var renderers = { title: 'Renderers', children: [] };
 var shapes = { title: 'Shapes', children: [] };
+var extras = { title: 'Extras', children: [] };
 
-var sidebarForDocs = [root, effects, renderers, shapes];
+var sidebarForDocs = [root, effects, renderers, shapes, extras];
 
 for (var i = 0; i < sourceFiles.length; i++) {
-  var name = sourceFiles[i].replace('src/', '').replace('.js', '/');
+
+  // var name = sourceFiles[i].replace(/.*\/([a-zA-Z\-]*)\.js$/i, '$1');
+  var name = sourceFiles[i]
+    .replace('jsm/', '')
+    .replace('extras', '/extras')
+    .replace('src/', '/').replace('.js', '/');
+
+  name = `/docs${name}`;
 
   if (name.match('effects')) {
     effects.children.push(name);
@@ -20,6 +28,8 @@ for (var i = 0; i < sourceFiles.length; i++) {
     renderers.children.push(name);
   } else if (name.match('shapes')) {
     shapes.children.push(name);
+  } else if (name.match('extras')) {
+    extras.children.push(name);
   } else {
     root.children.push(name);
   }
@@ -34,49 +44,45 @@ function getJSON(filepath) {
 module.exports = {
   head: [
     ['link', { rel: 'icon', href: '/images/favicon.gif' }],
-    ['link', { rel: 'stylesheet', href: 'https://use.typekit.net/edp1hux.css' }]
+    ['link', { rel: 'stylesheet', href: 'https://use.typekit.net/edp1hux.css' }],
+    ['script', { type: 'text/javascript', src: 'https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.0/beautify.min.js', async: '' }]
   ],
   themeConfig: {
     repo: 'jonobr1/two.js',
-    repoLabel: 'Github',
+    repoLabel: 'GitHub',
+    logo: '/images/logo.svg',
     docsDir: 'wiki',
     docsBranch: 'dev',
     editLinks: true,
     editLinkText: 'See a typo? Help us improve it.',
     smoothScroll: true,
-    nav: [],
     lastUpdated: 'Last Updated',
     activeHeaderLinks: false,
-    searchPlaceholder: 'Search...',
+    searchPlaceholder: 'Search',
+    searchMaxSuggestions: 10,
     developmentSize: fileSizes.development,
     productionSize: fileSizes.production,
     nav: [
       {
-        text: 'Overview', link: '/'
+        text: 'Docs', link: '/docs/two/'
       },
       {
         text: 'Examples', link: '/examples/'
       },
-      // {
-      //   text: 'Projects', link: '/projects/'
-      // },
-      {
-        text: 'Documentation', link: '/documentation/two/'
-      },
       {
         text: 'Change Log', link: '/change-log/'
-      },
-      {
-        text: 'Sponsors', link: '/sponsor'
       }
     ],
     sidebar: {
       '/change-log/': ['/change-log/'],
-      '/documentation/': sidebarForDocs
+      '/docs/': sidebarForDocs
     },
     markdown: {
       lineNumbers: true
     },
-    plugins: ['@vuepress/nprogress']
+    plugins: {
+      '@vuepress/nprogress': true,
+      '@vuepress/search': false
+    }
   }
 };
