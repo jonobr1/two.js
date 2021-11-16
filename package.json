@@ -1,8 +1,9 @@
 {
   "name": "@jonobr1/two.js",
-  "version": "0.7.0",
+  "version": "v0.7.10",
   "description": "A renderer agnostic two-dimensional drawing api for the web.",
   "module": "build/two.module.js",
+  "types": "types.d.ts",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
   },
@@ -10,19 +11,24 @@
     "package.json",
     "LICENSE",
     "README.md",
-    "build/two.js",
-    "build/two.min.js",
-    "build/two.module.js",
+    "build",
     "extras",
-    "src"
+    "src",
+    "types.d.ts"
   ],
   "scripts": {
-    "lint": "eslint ."
+    "build": "node ./utils/build",
+    "docs:generate": "node ./utils/document",
+    "docs:dev": "vuepress dev wiki",
+    "docs:build": "vuepress build wiki",
+    "docs:publish": "./deploy.sh",
+    "lint": "eslint . --fix",
+    "types": "jsdoc -c ./jsdoc-conf.json"
   },
   "directories": {
-    "doc": "documentation",
+    "docs": "wiki/docs",
     "test": "tests",
-    "example": "utils"
+    "example": "wiki/examples"
   },
   "keywords": [
     "svg",
@@ -51,14 +57,18 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@node-minify/core": "^5.2.1",
-    "@node-minify/no-compress": "^5.2.0",
-    "@node-minify/terser": "^5.2.1",
-    "eslint": "^6.7.2",
-    "jsdoc": "~3.5.5",
-    "qunit": "^2.9.3",
-    "resemblejs": "^3.2.3",
-    "underscore": "^1.9.1"
+    "@vuepress/plugin-nprogress": "^1.5.4",
+    "eslint": "^7.8.1",
+    "gzip-size": "^5.1.1",
+    "jsdoc": "^3.6.6",
+    "jsdoc-api": "^6.0.0",
+    "qunit": "^2.11.2",
+    "resemblejs": "^3.2.5",
+    "rollup": "^2.26.11",
+    "rollup-plugin-terser": "^7.0.2",
+    "tsd-jsdoc": "^2.5.0",
+    "underscore": "^1.13.0",
+    "vuepress": "^1.5.4"
   },
   "autoupdate": {
     "source": "git",

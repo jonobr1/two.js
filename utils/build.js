@@ -1,101 +1,108 @@
-// https://npmjs.org/package/node-minify
-
+var rollup = require('rollup');
+var fs = require('fs');
 var path = require('path');
 var _ = require('underscore');
-var fs = require('fs');
+var gzip = require('gzip-size');
+var terser = require('rollup-plugin-terser').terser;
 
-var minify = require('@node-minify/core');
-var noCompress = require('@node-minify/no-compress');
-var terser = require('@node-minify/terser');
+var publishDateString = (new Date()).toISOString();
+var config = getJSON(path.resolve(__dirname, '../package.json'));
 
-var files = [
-  path.resolve(__dirname, './start-comment.js'),
-  path.resolve(__dirname, '../LICENSE'),
-  path.resolve(__dirname, './end-comment.js'),
-  path.resolve(__dirname, '../src/two.js'),
-  path.resolve(__dirname, '../src/registry.js'),
-  path.resolve(__dirname, '../src/vector.js'),
-  path.resolve(__dirname, '../src/anchor.js'),
-  path.resolve(__dirname, '../src/matrix.js'),
-  path.resolve(__dirname, '../src/renderer/svg.js'),
-  path.resolve(__dirname, '../src/renderer/canvas.js'),
-  path.resolve(__dirname, '../src/renderer/webgl.js'),
-  path.resolve(__dirname, '../src/shape.js'),
-  path.resolve(__dirname, '../src/path.js'),
-  path.resolve(__dirname, '../src/shapes/line.js'),
-  path.resolve(__dirname, '../src/shapes/rectangle.js'),
-  path.resolve(__dirname, '../src/shapes/ellipse.js'),
-  path.resolve(__dirname, '../src/shapes/circle.js'),
-  path.resolve(__dirname, '../src/shapes/polygon.js'),
-  path.resolve(__dirname, '../src/shapes/arc-segment.js'),
-  path.resolve(__dirname, '../src/shapes/star.js'),
-  path.resolve(__dirname, '../src/shapes/rounded-rectangle.js'),
-  path.resolve(__dirname, '../src/text.js'),
-  path.resolve(__dirname, '../src/effects/gradient.js'),
-  path.resolve(__dirname, '../src/effects/linear-gradient.js'),
-  path.resolve(__dirname, '../src/effects/radial-gradient.js'),
-  path.resolve(__dirname, '../src/effects/texture.js'),
-  path.resolve(__dirname, '../src/effects/sprite.js'),
-  path.resolve(__dirname, '../src/effects/image-sequence.js'),
-  path.resolve(__dirname, '../src/group.js')
-];
+async function generateOutput(bundle, outputName, outputOptions) {
 
-// Concatenated
-minify({
-  compressor: noCompress,
-  input: files,
-  output: path.resolve(__dirname, '../build/two.js'),
-  callback: function(e) {
+  var base = { name: outputName };
+  var result = await bundle.generate(Object.assign(base, outputOptions));
+  var output = result.output;
+  let code = output[0].code;
 
-    if (!e) {
+  var template = _.template(code);
+  return template({
+    version: config.version,
+    publishDate: publishDateString
+  });
 
-      console.log('concatenation complete');
-      var source = fs.readFileSync(path.resolve(__dirname, '../build/two.js'), {
-        encoding: 'utf-8'
-      });
-      var template = _.template(source);
-      source = template({
-        publishDate: (new Date()).toISOString()
-      });
-      fs.writeFileSync(path.resolve(__dirname, '../build/two.js'), source, {
-        encoding: 'utf-8'
-      });
+}
 
-      // Minified
-      minify({
-        compressor: terser,
-        input: path.resolve(__dirname, '../build/two.js'),
-        output: path.resolve(__dirname, '../build/two.min.js'),
-        callback: function(e) {
-          if (!e) {
-            console.log('minified complete');
-          } else {
-            console.log('unable to minify', e);
-          }
-        }
-      });
+async function buildModule(inputPath, name, outputDirectory, inputOptions, outputOptions) {
 
-      minify({
-        compressor: noCompress,
-        input: [
-          path.resolve(__dirname, '../build/two.js'),
-          path.resolve(__dirname, './exports.js')
-        ],
-        output: path.resolve(__dirname, '../build/two.module.js'),
-        callback: function(e) {
-          if (!e) {
-            console.log('module complete');
-          } else {
-            console.log('unable to create module', e);
-          }
-        }
-      });
+  var format;
+  var encodingType = { encoding: 'utf-8' };
+  var bundle = await rollup
+    .rollup(Object.assign({ input: inputPath }, inputOptions));
 
-    } else {
+  var license = await fs.promises.readFile(path.resolve(__dirname, '../LICENSE'), encodingType);
+  var licenseComment = ['/*', license.trim(), '*/'].join('\n');
 
-      console.log('unable to concatenate', e);
-    }
+  format = { format: 'umd' };
+  var umdOutput = await generateOutput(bundle, name, Object.assign(format, outputOptions));
 
+  format.plugins = [terser()];
+  var minifiedOutput = await generateOutput(bundle, name, Object.assign(format, outputOptions));
+
+  format = { format: 'esm' };
+  var esmOutput = await generateOutput(bundle, name, Object.assign(format, outputOptions));
+
+  var moduleName = path.parse(inputPath).name;
+  fs.promises.mkdir(outputDirectory, { recursive: true });
+
+  return Promise.all([
+    fs.promises.writeFile(path.join(outputDirectory, moduleName + '.js'), [licenseComment, umdOutput].join('\n')),
+    fs.promises.writeFile(path.join(outputDirectory, moduleName + '.module.js'), [licenseComment, esmOutput].join('\n')),
+    fs.promises.writeFile(path.join(outputDirectory, moduleName + '.min.js'), [licenseComment, minifiedOutput].join('\n'))
+  ]);
+
+}
+
+function publishModule() {
+
+  var size, result = {};
+
+  size = getFileSize(path.resolve(__dirname, '../build/two.js'));
+  result.development = formatFileSize(size);
+
+  size = getFileSize(path.resolve(__dirname, '../build/two.min.js'));
+  result.production = formatFileSize(size);
+
+  var contents = JSON.stringify(result);
+  var outputPath = path.resolve(__dirname, './file-sizes.json');
+
+  return fs.promises.writeFile(outputPath, contents);
+
+}
+
+function getFileSize(filepath) {
+  var file = fs.readFileSync(filepath);
+  return gzip.sync(file);
+}
+
+function formatFileSize(v) {
+  var sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+  var iterations = 0;
+  while (v > 1000) {
+    v *= 0.001;
+    iterations++;
   }
+  return [Math.round(v), sizes[iterations]].join('');
+}
 
-});
+async function build() {
+
+  var startTime, elapsed;
+
+  startTime = Date.now();
+  await buildModule('src/two.js', 'Two', 'build/');
+  elapsed = Date.now() - startTime;
+  console.log('Built and minified Two.js:', elapsed / 1000, 'seconds');
+
+  elapsed = Date.now() - startTime;
+  await publishModule();
+  console.log('Published additional statistics to wiki:', elapsed / 1000, 'seconds');
+
+}
+
+function getJSON(filepath) {
+  var buffer = fs.readFileSync(filepath);
+  return JSON.parse(buffer);
+}
+
+build();

@@ -10,7 +10,7 @@
   var TEMP = document.createElement('div');
   var Tolerance = 0.001;
 
-  var Utils = root.Utils = QU.Utils = {
+  var Utils = QU.Utils = {
 
     digits: function(v, d) {
 
@@ -42,7 +42,7 @@
 
       var domElement = document.createElement('li');
 
-      if (_.isArray(elem)) {
+      if (Array.isArray(elem)) {
         _.each(elem, function(el) {
           domElement.appendChild(el);
         });
@@ -64,8 +64,8 @@
 
       var elem;
 
-      if (_.isArray(two)) {
-        elem = _.map(two, function(t) {
+      if (Array.isArray(two)) {
+        elem = two.map(function(t) {
           var el = t.renderer.domElement;
           switch (el.tagName.toLowerCase()) {
             case 'svg':
@@ -196,7 +196,7 @@
 
           var domElement = document.createElement('li');
           renderer.domElement.title = 'Computed Image';
-          renderer.domElement.style.border = '1px solid #ccc';
+          renderer.domElement.style.border = '1px solid #000';
           renderer.domElement.style.width = renderer.domElement.style.height = 200 + 'px';
           renderer.domElement.style.marginLeft = 10 + 'px';
 
@@ -208,7 +208,7 @@
             document.querySelector(selector).appendChild(domElement);
           }, 100);
 
-          if (_.isFunction(callback)) {
+          if (typeof callback === 'function') {
             callback();
           }
 
@@ -221,7 +221,7 @@
     textToDOM: function(str) {
 
       TEMP.innerHTML = str;
-      return _.map(TEMP.children, function(child) {
+      return Array.prototype.map.call(TEMP.children, function(child) {
         return child;
       });
 
@@ -234,13 +234,13 @@
 
       for (var i in a) {
 
-        var check, isElse = false;
+        var check;
 
-        if (_.isArray(a[i])) {
-          check = Utils.shapeEquals(a[i], _.toArray(q[i]));
+        if (Array.isArray(a[i])) {
+          check = Utils.shapeEquals(a[i], Array.prototype.slice.call(q[i]));
         } else if (_.isObject(a[i])) {
           check = Utils.shapeEquals(a[i], q[i]);
-        } else if (_.isNumber(a[i])) {
+        } else if (typeof a[i] === 'number') {
           check = Math.abs(a[i] - q[i]) <= Tolerance; // Fuzzy checking
         } else {
           check = q[i] === a[i];

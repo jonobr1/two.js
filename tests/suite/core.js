@@ -1,10 +1,10 @@
 /**
  * Tests Two.js Core Classes Functionality:
  * + Two.Utils ( Underscore Methods )
- * + Two.Utils.Events
+ * + Two.Events
  * + Two.Vector
  * + Two.Matrix
- * + Two.Utils.Collection
+ * + Two.Collection
  * + Two.Shape
  * + Two.Registry
  * + Two.Texture
@@ -13,109 +13,17 @@
 
 QUnit.module('Core');
 
-QUnit.test('Two.Utils', function(assert) {
-
-  assert.expect(11 * 11 + 18);
-
-  var types = {
-    arguments: arguments,
-    number: 1,
-    nan: NaN,
-    null: null,
-    func: Two.Utils.identity,
-    obj: {},
-    array: [],
-    elem: document.createElement('div'),
-    date: new Date(),
-    regex: new RegExp(),
-    bool: false
-  };
-  var funcs = {
-    arguments: Two.Utils.isArguments,
-    number: Two.Utils.isNumber,
-    nan: Two.Utils.isNaN,
-    null: Two.Utils.isNull,
-    'undefined': Two.Utils.isUndefined,
-    func: Two.Utils.isFunction,
-    obj: Two.Utils.isObject,
-    array: Two.Utils.isArray,
-    elem: Two.Utils.isElement,
-    date: Two.Utils.isDate,
-    regex: Two.Utils.isRegExp,
-    bool: Two.Utils.isBoolean
-  };
-  var exceptions = {
-    numbernan: true,
-    objfunc: true,
-    objarray: true,
-    objelem: true,
-    objdate: true,
-    objregex: true
-  };
-  var keys = ['number', 'nan', 'null', 'undefined', 'func', 'obj',
-    'array', 'elem', 'date', 'regex', 'bool'];
-
-  for (var i = 0; i < keys.length; i++) {
-    var a = keys[i];
-    var func = funcs[a];
-    for (var j = 0; j < keys.length; j++) {
-      var b = keys[j];
-      var type = types[b];
-      assert.equal(func(type), exceptions[a + b] || i === j, keys[i] + ' is ' + keys[j]);
-    }
-  }
-
-  assert.equal(Two.Utils.identity(5), 5, 'identity returns passed value.');
-  assert.equal(Two.Utils.isArray(Two.Utils.toArray({})), true, 'turned {} to array.');
-  assert.equal(JSON.stringify(Two.Utils.range(0, 5)), '[0,1,2,3,4]', 'created 0-5 range successfully.');
-  assert.equal(Two.Utils.indexOf(['a', 'b', 'c'], 'b'), 1, 'indexed correctly.');
-  assert.equal(Two.Utils.has({ hello: 'foo' }, 'hello'), true, 'Object has property.');
-  assert.equal(Two.Utils.bind(function() {
-    return this.attr;
-  }, { attr: 'Two.js' })(), 'Two.js', 'Bound function properly.');
-  assert.equal(JSON.stringify(Two.Utils.extend({ a: 'b' }, { a: 'a', b: 'c' })), '{"a":"a","b":"c"}', 'Object extends properties successfully.');
-  assert.equal(JSON.stringify(Two.Utils.defaults({ a: 'b' }, { a: 'a', b: 'c' })), '{"a":"b","b":"c"}', 'Object defaults properties successfully.');
-  assert.equal(JSON.stringify(Two.Utils.keys({ a: 0, b: 1, c: 2 })), '["a","b","c"]', 'Two.Utils.keys successfully retrieves keys.');
-  assert.equal(JSON.stringify(Two.Utils.values({ a: 0, b: 1, c: 2 })), '[0,1,2]', 'Two.Utils.values successfully retrieves keys.');
-
-  var obj = { a: 0, b: 1, c: 2, d: 3 };
-  Two.Utils.each(obj, function(v, k) {
-    assert.equal(v, obj[k], 'Two.Utils.each');
-  });
-  var map = Two.Utils.map(obj, function(v, k) {
-    return k;
-  });
-  assert.equal(JSON.stringify(map), '["a","b","c","d"]', 'Two.Utils.map');
-
-  var once = Two.Utils.once(function() {
-    assert.equal(true, true, 'This test should only run once.');
-  });
-  var after = Two.Utils.after(5, function() {
-    assert.equal(true, true, 'This test should only run after 5 invocations.');
-  });
-
-  var i = 0;
-  while (i < 5) {
-    once();
-    after();
-    i++;
-  }
-
-  assert.equal(Two.Utils.uniqueId('hello-'), 'hello-1', 'uniqueId is unique-ish with proper prefixing.');
-
-});
-
-QUnit.test('Two.Utils.Events', function(assert) {
+QUnit.test('Two.Events', function(assert) {
 
   assert.expect(1);
 
   var Item = function() {};
-  Two.Utils.extend(Item.prototype, Two.Utils.Events);
+  _.extend(Item.prototype, Two.Events);
 
   var item = new Item();
 
   item.bind('change', function(message) {
-    assert.equal(message, 'hello', 'Bound Two.Utils.Events successfully.');
+    assert.equal(message, 'hello', 'Bound Two.Events successfully.');
   });
   item.trigger('change', 'hello');
   item.unbind('change');
@@ -234,7 +142,7 @@ QUnit.test('Bound Two.Vector', function(assert) {
   assert.expect(45);
 
   var vector = new Two.Vector();
-  vector.bind(Two.Events.change, _.identity);
+  vector.bind(Two.Events.Types.change, function() {});
 
   assert.equal(vector._bound, true, 'Vector is bound.');
   assert.equal(vector.x, 0, 'x property defaults to 0.');
@@ -432,7 +340,7 @@ QUnit.test('Two.Matrix', function(assert) {
 
 });
 
-QUnit.test('Two.Utils.Collection', function(assert) {
+QUnit.test('Two.Collection', function(assert) {
 
   assert.expect(14);
 
@@ -441,26 +349,26 @@ QUnit.test('Two.Utils.Collection', function(assert) {
   var vertices = poly.vertices;
   var removed;
 
-  assert.equal(vertices instanceof Two.Utils.Collection, true, 'Polyon.vertices is an instance of Two.Utils.Collection');
+  assert.equal(vertices instanceof Two.Collection, true, 'Polyon.vertices is an instance of Two.Collection');
 
-  assert.equal(vertices[0].equals(new Two.Vector(0, 0)), true, 'Two.Utils.Collection created with correct items');
+  assert.equal(vertices[0].equals(new Two.Vector(0, 0)), true, 'Two.Collection created with correct items');
 
   vertices.push(vector);
-  assert.equal(vertices.length, 2, 'Two.Utils.Collection.push added one item to the end of vertices collection');
+  assert.equal(vertices.length, 2, 'Two.Collection.push added one item to the end of vertices collection');
 
   removed = vertices.pop();
-  assert.equal(vertices.length, 1, 'Two.Utils.Collection.pop removed one item from the end of the vertices collection');
-  assert.equal(removed.equals(vector), true, 'Two.Utils.Collection.push removed the correct item');
+  assert.equal(vertices.length, 1, 'Two.Collection.pop removed one item from the end of the vertices collection');
+  assert.equal(removed.equals(vector), true, 'Two.Collection.push removed the correct item');
 
   // Clear removed to reuse
   removed = null;
 
   vertices.unshift(vector);
-  assert.equal(vertices.length, 2, 'Two.Utils.Collection.unshift added one item to the front of the vertices collection');
+  assert.equal(vertices.length, 2, 'Two.Collection.unshift added one item to the front of the vertices collection');
 
   removed = vertices.shift();
-  assert.equal(vertices.length, 1, 'Two.Utils.Collection.shift removed one item from the front of the vertices collection');
-  assert.equal(removed.equals(vector), true, 'Two.Utils.Collection.shift removed the correct item');
+  assert.equal(vertices.length, 1, 'Two.Collection.shift removed one item from the front of the vertices collection');
+  assert.equal(removed.equals(vector), true, 'Two.Collection.shift removed the correct item');
 
   // Clear removed to reuse
   removed = null;
@@ -472,19 +380,42 @@ QUnit.test('Two.Utils.Collection', function(assert) {
     new Two.Vector(4, 4)
   );
 
-  assert.equal(vertices.length, 5, 'Two.Utils.Collection.push adds several items to the end of vertices collection');
+  assert.equal(vertices.length, 5, 'Two.Collection.push adds several items to the end of vertices collection');
 
   removed = vertices.splice(2, 1, vector);
-  assert.equal(vertices.length, 5, 'Two.Utils.Collection.splice adds and removes items from the vertices collection');
-  assert.equal(removed[0].equals(new Two.Vector(2, 2)), true, 'Two.Utils.Collection.splice remove the correct items from the vertices collection');
-  assert.equal(vertices[2].equals(vector), true, 'Two.Utils.Collection.splice inserts correct item to the middle of the vertices collection');
+  assert.equal(vertices.length, 5, 'Two.Collection.splice adds and removes items from the vertices collection');
+  assert.equal(removed[0].equals(new Two.Vector(2, 2)), true, 'Two.Collection.splice remove the correct items from the vertices collection');
+  assert.equal(vertices[2].equals(vector), true, 'Two.Collection.splice inserts correct item to the middle of the vertices collection');
 
-  var a = new Two.Utils.Collection('a', 'b', 'c', 'd', 'e');
-  assert.equal(a.slice(1, 2)[0], 'b', 'Two.Utils.Collection.slice does correct beginning / end index selection.');
+  var a = new Two.Collection('a', 'b', 'c', 'd', 'e');
+  assert.equal(a.slice(1, 2)[0], 'b', 'Two.Collection.slice does correct beginning / end index selection.');
 
   a.splice(0, 0, 'z');
 
-  assert.equal(a[0], 'z', 'Two.Utils.Collection.splice correctly inserts properties.');
+  assert.equal(a[0], 'z', 'Two.Collection.splice correctly inserts properties.');
+
+});
+
+QUnit.test('Two.Children', function(assert) {
+
+  assert.expect(3);
+
+  var group = new Two.Group();
+  var shape = new Two.Shape();
+
+  group.add(shape);
+  shape._update(true);
+
+  assert.equal(shape.id in group.children.ids, true, 'Two.Children properly adds child elements to list.');
+
+  group.remove(shape);
+  group._update(true);
+  assert.equal(shape.id in group.children.ids, false, 'Two.Children properly removes child element from list.');
+
+  group.add(shape);
+  shape.id = 'custom';
+  shape._update(true);
+  assert.equal(shape.id in group.children.ids, true, 'Two.Children properly updates ids map when child id changes.');
 
 });
 
@@ -540,7 +471,7 @@ QUnit.test('Two.Shape', function(assert) {
   shape.rotation = 3.14;
   shape._update();
 
-  assert.equal(shape._matrix.toString(), '-10 0.015 -0.016 -10 0 0', 'Two.Shape.rotation works properly.');
+  assert.equal(shape._matrix.toString(), '-9.999988 0.015926 -0.015927 -9.999988 0 0', 'Two.Shape.rotation works properly.');
 
 });
 
@@ -551,8 +482,6 @@ QUnit.test('Children adding and removing', function(assert) {
   var group1 = new Two.Group();
   var group2 = new Two.Group();
   var group3 = new Two.Group();
-  var group4 = new Two.Group();
-  var group5 = new Two.Group();
 
   var poly1 = new Two.Path([new Two.Vector(0, 0)]);
   var poly2 = new Two.Path([new Two.Vector(0, 0)]);
@@ -658,8 +587,8 @@ QUnit.test('Two.Texture', function(assert) {
       window.location.protocol, '//', window.location.host, path
     ].join('');
 
-    assert.equal(tb.src, absolutePath, 'Two.Texture takes in image and applies path proplery.');
-    assert.equal(tb.image, ta.image, 'Two.Texture takes in image and applies registered image tag proplery.');
+    assert.equal(tb.src, absolutePath, 'Two.Texture takes in image and applies path properly.');
+    assert.equal(tb.image, ta.image, 'Two.Texture takes in image and applies registered image tag properly.');
     assert.equal(tb.loaded, true, 'Two.Texture takes in image and applies loaded property properly.');
     assert.done();
 
@@ -693,7 +622,7 @@ QUnit.test('Two', function(assert) {
 
   two.play();
   assert.ok(two.playing, 'Two.Utils.setPlaying applied correctly.');
-  assert.ok(_.isNumber(Two.nextFrameID), 'requestAnimationFrame runs correctly.');
+  assert.ok(typeof Two.nextFrameID === 'number', 'requestAnimationFrame runs correctly.');
 
   two.pause();
   assert.ok(!two.playing, 'Two.pause correctly stops updating.');

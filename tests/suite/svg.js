@@ -63,7 +63,7 @@
 
     var elem = two.renderer.domElement.querySelector('#' + ellipse.id);
 
-    assert.equal(elem.getAttribute('d'), 'M 100 0 C 100 55.228 55.228 100 0 100 C -55.229 100 -100 55.228 -100 0 C -100.001 -55.229 -55.229 -100 -0.001 -100 C 55.228 -100.001 100 -55.229 100 0 Z ', 'Two.makeEllipse applies d attribute properly.');
+    assert.equal(elem.getAttribute('d'), 'M 100 0 C 100 55.228474 55.228474 100 0 100 C -55.228475 100 -100 55.228474 -100 0 C -100.000001 -55.228475 -55.228475 -100 -0.000001 -100 C 55.228474 -100.000001 100 -55.228475 100 0 Z ', 'Two.makeEllipse applies d attribute properly.');
 
     QUnit.Utils.addInstanceToTest(assert.test, two);
 
@@ -84,7 +84,27 @@
 
     var elem = two.renderer.domElement.querySelector('#' + circle.id);
 
-    assert.equal(elem.getAttribute('d'), 'M 50 0 C 50 27.614 27.614 50 0 50 C -27.615 50 -50 27.614 -50 0 C -50.001 -27.615 -27.615 -50 -0.001 -50 C 27.614 -50.001 50 -27.615 50 0 Z ', 'Two.makeCircle applies d attribute properly.');
+    assert.equal(elem.getAttribute('d'), 'M 50 0 C 50 27.614237 27.614237 50 0 50 C -27.614238 50 -50 27.614237 -50 0 C -50.000001 -27.614238 -27.614238 -50 -0.000001 -50 C 27.614237 -50.000001 50 -27.614238 50 0 Z ', 'Two.makeCircle applies d attribute properly.');
+
+    QUnit.Utils.addInstanceToTest(assert.test, two);
+
+  });
+
+  QUnit.test('Two.makePoints', function(assert) {
+
+    assert.expect(1);
+
+    var two = new Two({
+      width: 400,
+      height: 400
+    });
+
+    var points = two.makePoints(200, 200, 205, 200, 195, 200);
+
+    two.update();
+
+    var elem = two.renderer.domElement.querySelector('#' + points.id);
+    assert.equal(elem.getAttribute('d'), 'M 200 199.5 a 0.5 0.5 0 1 0 0.001 0 ZM 205 199.5 a 0.5 0.5 0 1 0 0.001 0 ZM 195 199.5 a 0.5 0.5 0 1 0 0.001 0 Z', 'Two.makePoints applies d attribute properly.');
 
     QUnit.Utils.addInstanceToTest(assert.test, two);
 
@@ -100,13 +120,13 @@
     });
 
     var amount = 20;
-    var phi = 6;
-    var points = _.map(_.range(amount), function(i) {
+    var points = [];
+    for (var i = 0; i < amount; i++) {
       var pct = i / amount;
       var x = pct * 300 + 50;
       var y = i % 2 ? 25 : 75;
-      return new Two.Vector(x, y);
-    });
+      points.push(new Two.Vector(x, y));
+    }
     var poly = two.makePath(points, true);
     var path = two.makePath();
 
@@ -132,20 +152,20 @@
     });
 
     var amount = 20;
-    var phi = 6;
-    var points = _.map(_.range(amount), function(i) {
+    var points = [];
+    for (var i = 0; i < amount; i++) {
       var pct = i / amount;
       var x = pct * 300 + 50;
       var y = i % 2 ? 25 : 75;
-      return new Two.Vector(x, y);
-    });
+      points.push(new Two.Vector(x, y));
+    }
     var curve = two.makeCurve(points, true);
 
     two.update();
 
     var elem = two.renderer.domElement.querySelector('#' + curve.id);
 
-    assert.equal(elem.getAttribute('d'), 'M -142.5 25 C -142.5 25 -144.727 -25 -127.5 -25 C -110.274 -25 -129.727 24.999 -112.5 25 C -95.274 25 -114.727 -25 -97.5 -25 C -80.274 -25 -99.727 24.999 -82.5 25 C -65.274 25 -84.727 -25 -67.5 -25 C -50.274 -25 -69.727 24.999 -52.5 25 C -35.274 25 -54.727 -25 -37.5 -25 C -20.274 -25 -39.727 24.999 -22.5 25 C -5.274 25 -24.727 -25 -7.5 -25 C 9.726 -25 -9.727 24.999 7.5 25 C 24.726 25 5.273 -25 22.5 -25 C 39.726 -25 20.273 24.999 37.5 25 C 54.726 25 35.273 -25 52.5 -25 C 69.726 -25 50.273 24.999 67.5 25 C 84.726 25 65.273 -25 82.5 -25 C 99.726 -25 80.273 24.999 97.5 25 C 114.726 25 95.273 -25 112.5 -25 C 129.726 -25 110.273 24.999 127.5 25 C 144.726 25 142.5 -25 142.5 -25 ', 'The d attribute set properly.');
+    assert.equal(elem.getAttribute('d'), 'M -142.5 25 C -142.5 25 -144.726506 -25 -127.5 -25 C -110.273495 -25 -129.726506 24.999999 -112.5 25 C -95.273495 25 -114.726506 -25 -97.5 -25 C -80.273495 -25 -99.726506 24.999999 -82.5 25 C -65.273495 25 -84.726506 -25 -67.5 -25 C -50.273495 -25 -69.726506 24.999999 -52.5 25 C -35.273495 25 -54.726506 -25 -37.5 -25 C -20.273495 -25 -39.726506 24.999999 -22.5 25 C -5.273495 25 -24.726506 -25 -7.5 -25 C 9.726505 -25 -9.726506 24.999999 7.5 25 C 24.726505 25 5.273494 -25 22.5 -25 C 39.726505 -25 20.273494 24.999999 37.5 25 C 54.726505 25 35.273494 -25 52.5 -25 C 69.726505 -25 50.273494 24.999999 67.5 25 C 84.726505 25 65.273494 -25 82.5 -25 C 99.726505 -25 80.273494 24.999999 97.5 25 C 114.726505 25 95.273494 -25 112.5 -25 C 129.726505 -25 110.273494 24.999999 127.5 25 C 144.726505 25 142.5 -25 142.5 -25 ', 'The d attribute set properly.');
 
     QUnit.Utils.addInstanceToTest(assert.test, two);
 
@@ -233,7 +253,7 @@
 
     var loaded = function() {
 
-      texture.unbind(Two.Events.load, loaded);
+      texture.unbind(Two.Events.Types.load, loaded);
       two.update();
 
       var elem = two.renderer.domElement.querySelector('#' + sprite.id);
@@ -244,7 +264,7 @@
 
     };
 
-    texture.bind(Two.Events.load, loaded);
+    texture.bind(Two.Events.Types.load, loaded);
     texture._update();
     QUnit.Utils.addInstanceToTest(assert.test, two);
 
@@ -260,16 +280,17 @@
       height: 400
     });
 
-    var paths = _.map(_.range(0, 30), function(i) {
-      return '/tests/images/sequence/' + QUnit.Utils.digits(i, 5) + '.png';
-    });
+    var paths = [];
+    for (var i = 0; i < 30; i++) {
+      paths.push('/tests/images/sequence/' + QUnit.Utils.digits(i, 5) + '.png');
+    }
     var sequence = two.makeImageSequence(paths, two.width / 2, two.height / 2, 2);
     sequence.index = 3;
     var texture = sequence.textures[sequence.index];
 
     var loaded = function() {
 
-      texture.unbind(Two.Events.load, loaded);
+      texture.unbind(Two.Events.Types.load, loaded);
 
       two.update();
 
@@ -289,7 +310,7 @@
 
     };
 
-    texture.bind(Two.Events.load, loaded);
+    texture.bind(Two.Events.Types.load, loaded);
     texture._update();
 
     two.renderer.domElement.style.cursor = 'pointer';
@@ -323,7 +344,7 @@
 
     var loaded = function() {
 
-      texture.unbind(Two.Events.load, loaded);
+      texture.unbind(Two.Events.Types.load, loaded);
       two.update();
 
       assert.ok(true, 'Two.Sprite created properly.');
@@ -344,7 +365,7 @@
 
     };
 
-    texture.bind(Two.Events.load, loaded);
+    texture.bind(Two.Events.Types.load, loaded);
     texture._update();
 
     two.renderer.domElement.style.cursor = 'pointer';
@@ -456,7 +477,7 @@
 
     var elem = two.renderer.domElement.querySelector('#' + shape.id);
     var matrix = elem.getAttribute('transform');
-    assert.equal(matrix.match(/matrix\((.*)\)/)[1], shape._matrix.toString(), 'Two.Shape._matrix gets and sets proplery.');
+    assert.equal(matrix.match(/matrix\((.*)\)/)[1], shape._matrix.toString(), 'Two.Shape._matrix gets and sets properly.');
 
     assert.equal(elem.getAttribute('fill'), shape.fill, 'Two.Shape.fill gets and sets properly.');
     assert.equal(elem.getAttribute('stroke'), shape.stroke, 'Two.Shape.stroke gets and sets properly.');

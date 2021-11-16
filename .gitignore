@@ -1,5 +1,7 @@
 node_modules
 *.DS_Store
-styles/
 junk/
 *.log
+docs.json
+package-lock.json
+dist

@@ -5,22 +5,27 @@
 		"commonjs": true,
 		"amd": true
 	},
-	"globals": {
-		"global": "writable"
+	"parserOptions": {
+		"sourceType": "module",
+		"ecmaVersion": 2015
 	},
 	"rules": {
 		"semi": ["error", "always"],
-		"no-unused-vars": "off"
+		"no-unused-vars": ["error", {"args": "none"}]
 	},
 	"overrides": [
 		{
 			"files": ["utils/**"],
 			"env": {
-				"node": true
+				"node": true,
+				"es6": true
+			},
+			"parserOptions": {
+				"ecmaVersion": 8
 			}
 		},
 		{
-			"files": ["tests/**"],
+			"files": ["tests/**", "extras/js/**"],
 			"globals": {
 				"QUnit": "writable",
 				"resemble": "writable",

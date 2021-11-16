@@ -6,7 +6,7 @@
 
   QUnit.module('CanvasRenderer');
 
-  var getRatio = function(v) { return Math.round(Two.Utils.getRatio(v));};
+  var getRatio = function(v) { return Math.round(window.devicePixelRatio); };
   var deviceRatio = getRatio(document.createElement('canvas').getContext('2d'));
   var suffix = '@' + deviceRatio + 'x.png';
 
@@ -22,7 +22,7 @@
       ratio: deviceRatio
     });
 
-    var line = two.makeLine(0, 0, two.width, two.height);
+    two.makeLine(0, 0, two.width, two.height);
 
     two.update();
 
@@ -42,7 +42,7 @@
       ratio: deviceRatio
     });
 
-    var rect = two.makeRectangle(two.width / 2, two.height / 2, 100, 100);
+    two.makeRectangle(two.width / 2, two.height / 2, 100, 100);
 
     two.update();
 
@@ -62,7 +62,7 @@
       ratio: deviceRatio
     });
 
-    var ellipse = two.makeEllipse(two.width / 2, two.height / 2, 100, 100);
+    two.makeEllipse(two.width / 2, two.height / 2, 100, 100);
 
     two.update();
 
@@ -83,11 +83,34 @@
       ratio: deviceRatio
     });
 
-    var circle = two.makeCircle(two.width / 2, two.height / 2, 50);
+    two.makeCircle(two.width / 2, two.height / 2, 50);
 
     two.update();
 
     QUnit.Utils.compare.call(assert, './images/canvas/circle' + suffix, two.renderer, 'Two.makeCircle renders properly.');
+
+  });
+
+  QUnit.test('Two.makePoints', function(assert) {
+
+    assert.expect(1);
+    assert.done = assert.async(1);
+
+    var two = new Two({
+      type: Two.Types.canvas,
+      width: 400,
+      height: 400,
+      ratio: 1
+    });
+
+    var points = two.makePoints(200, 200, 220, 200, 180, 200);
+    points.size = 10;
+    points.noStroke();
+    points.fill = '#00AEFF';
+
+    two.update();
+
+    QUnit.Utils.compare.call(assert, './images/canvas/points' + suffix, two.renderer, 'Two.makePoints renders properly.');
 
   });
 
@@ -104,14 +127,14 @@
     });
 
     var amount = 20;
-    var phi = 6;
-    var points = _.map(_.range(amount), function(i) {
+    var points = [];
+    for (var i = 0; i < amount; i++) {
       var pct = i / amount;
       var x = pct * 300 + 50;
       var y = i % 2 ? 25 : 75;
-      return new Two.Vector(x, y);
-    });
-    var poly = two.makePath(points, true);
+      points.push(new Two.Vector(x, y));
+    }
+    two.makePath(points, true);
 
     two.update();
 
@@ -132,14 +155,14 @@
     });
 
     var amount = 20;
-    var phi = 6;
-    var points = _.map(_.range(amount), function(i) {
+    var points = [];
+    for (var i = 0; i < amount; i++) {
       var pct = i / amount;
       var x = pct * 300 + 50;
       var y = i % 2 ? 25 : 75;
-      return new Two.Vector(x, y);
-    });
-    var poly = two.makeCurve(points, true);
+      points.push(new Two.Vector(x, y));
+    }
+    two.makeCurve(points, true);
 
     two.update();
 
@@ -213,14 +236,14 @@
 
     var loaded = function() {
 
-      texture.unbind(Two.Events.load, loaded);
+      texture.unbind(Two.Events.Types.load, loaded);
       two.update();
 
       QUnit.Utils.compare.call(assert, './images/canvas/sprite-simple' + suffix, two.renderer, 'Two.makeSprite renders properly.');
 
     };
 
-    texture.bind(Two.Events.load, loaded);
+    texture.bind(Two.Events.Types.load, loaded);
     texture._update();
 
   });
@@ -237,32 +260,29 @@
       ratio: deviceRatio
     });
 
-    var paths = _.map(_.range(0, 30), function(i) {
-      return '/tests/images/sequence/' + QUnit.Utils.digits(i, 5) + '.png';
-    });
+    var paths = [];
+    for (var i = 0; i < 30; i++) {
+      paths.push('/tests/images/sequence/' + QUnit.Utils.digits(i, 5) + '.png');
+    }
     var sequence = two.makeImageSequence(paths, two.width / 2, two.height / 2, 2);
     sequence.index = 3;
     var texture = sequence.textures[sequence.index];
 
     var loaded = function() {
 
-      texture.unbind(Two.Events.load, loaded);
+      texture.unbind(Two.Events.Types.load, loaded);
 
       two.update();
-
-      var elem = two.renderer.domElement.querySelector('#' + sequence.id);
-      var id = sequence.textures[sequence.index].id;
 
       QUnit.Utils.compare.call(assert, './images/canvas/image-sequence-1' + suffix, two.renderer, 'Two.ImageSequence applied the correct texture properly.', function() {
 
         sequence.index = 7;
         texture = sequence.textures[sequence.index];
-        id = texture.id;
         texture._flagImage = true;
 
-        texture.bind(Two.Events.load, function() {
+        texture.bind(Two.Events.Types.load, function() {
 
-          texture.unbind(Two.Events.load);
+          texture.unbind(Two.Events.Types.load);
 
           two.update();
 
@@ -276,7 +296,7 @@
 
     };
 
-    texture.bind(Two.Events.load, loaded);
+    texture.bind(Two.Events.Types.load, loaded);
     texture._update();
 
     two.renderer.domElement.style.cursor = 'pointer';
@@ -311,7 +331,7 @@
 
     var loaded = function() {
 
-      texture.unbind(Two.Events.load, loaded);
+      texture.unbind(Two.Events.Types.load, loaded);
       two.update();
 
       QUnit.Utils.compare.call(assert, './images/canvas/image-sequence-1' + suffix, two.renderer, 'Two.makeSprite renders properly.', function() {
@@ -325,7 +345,7 @@
 
     };
 
-    texture.bind(Two.Events.load, loaded);
+    texture.bind(Two.Events.Types.load, loaded);
     texture._update();
 
     two.renderer.domElement.style.cursor = 'pointer';
