@@ -6,23 +6,22 @@ var sourceFiles = require('./source-files');
 
 var template = _.template(
   fs.readFileSync(
-    path.resolve(__dirname, './documentation.template'),
+    path.resolve(__dirname, './docs.template'),
     { encoding: 'utf8' }
   )
 );
 
 _.each(sourceFiles, function(file) {
 
-  var sourceFile = path.resolve(__dirname, '../' + file);
+  var sourceFile = path.resolve(__dirname, '../', file);
   var outputDir = path.resolve(__dirname,
-    '../' + file.replace('src/', 'wiki/documentation/').replace('.js', '/')
+    '../wiki/docs/', file.replace('jsm/', '').replace('src/', '').replace('.js', '/')
   );
   var outputFile = path.join(outputDir, '/README.md');
 
   var citations = compiler.explainSync({
       files: sourceFile,
-      cache: false,
-      configure: path.resolve(__dirname, '../jsdoc-conf.json')
+      cache: false
   });
 
   citations.slice(0).forEach(function(object) {
@@ -45,6 +44,26 @@ _.each(sourceFiles, function(file) {
       _.each(object.properties, expandParam, object);
       _.each(object.tags, expandTag, object);
       object.see = _.map(object.see, expandSee, object);
+
+      var sn;
+      sn = object.longname.replace(/#/ig, '.');
+      var snList = sn.split('.');
+      var snIndex = (snList.length > 2) ? 2 : 1;
+      object.shortname = snList.slice(snIndex).join('.');
+      object.prefixname = sn.replace(object.shortname, "");
+
+      // name and href for augments property
+      var an;
+
+      if (Array.isArray(object.augments) && object.augments.length > 0) {
+        an = object.augments[object.augments.length - 1].split('.');
+      } else if (typeof object.augments === 'string') {
+        an = object.augments.split('.');
+      }
+
+      if (an) {
+        object.augmentsHref = getHref(an.slice(1).join('.'));
+      }
 
     }
 
@@ -74,7 +93,7 @@ _.each(sourceFiles, function(file) {
   //   })
   // );
 
-  // fs.mkdirSync(outputDir, { recursive: true });
+  fs.mkdirSync(outputDir, { recursive: true });
   fs.writeFileSync(outputFile.replace('README.md', 'docs.json'),
     JSON.stringify(citations));
 
@@ -86,6 +105,28 @@ _.each(sourceFiles, function(file) {
   console.log('Generated', outputFile);
 
 });
+
+function getHref(name) {
+
+  name = name.toLowerCase();
+
+  for (var i = 0; i < sourceFiles.length; i++) {
+
+    var sf = sourceFiles[i];
+    if (sf.includes(name)) {
+      return transform(sf);
+    }
+
+  }
+
+  return null;
+
+  function transform(str) {
+    var path = str.replace('src/', '').replace('jsm/', '').replace('.js', '');
+    return `/docs/${path}/`;
+  }
+
+}
 
 function getRoot(citations) {
   var list = citations.slice(0);
@@ -151,9 +192,9 @@ function expandLink(object, property) {
           '[',
           fragments.join('.'),
           ']',
-          '(/documentation/',
+          '(/docs/',
           directory.toLowerCase(),
-          hash ? '#' + hash.toLowerCase() : '',
+          hash ? '/#' + hash.toLowerCase() : '',
           ')'
         ].join(''));
         shouldRecurse = true;

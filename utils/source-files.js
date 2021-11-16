@@ -1,6 +1,9 @@
 var sourceFiles = [
   'src/two.js',
   'src/registry.js',
+  'src/collection.js',
+  'src/children.js',
+  'src/events.js',
   'src/vector.js',
   'src/anchor.js',
   'src/matrix.js',
@@ -26,7 +29,8 @@ var sourceFiles = [
   'src/effects/texture.js',
   'src/effects/sprite.js',
   'src/effects/image-sequence.js',
-  'src/group.js'
+  'src/group.js',
+  'extras/jsm/zui.js'
 ];
 
 if (typeof module != 'undefined' && module.exports) {

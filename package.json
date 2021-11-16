@@ -21,11 +21,12 @@
     "docs:generate": "node ./utils/document",
     "docs:dev": "vuepress dev wiki",
     "docs:build": "vuepress build wiki",
+    "docs:publish": "./deploy.sh",
     "lint": "eslint . --fix",
     "types": "jsdoc -c ./jsdoc-conf.json"
   },
   "directories": {
-    "doc": "wiki/documentation",
+    "docs": "wiki/docs",
     "test": "tests",
     "example": "wiki/examples"
   },
@@ -56,13 +57,11 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@codemirror/next": "^0.12.0",
     "@vuepress/plugin-nprogress": "^1.5.4",
     "eslint": "^7.8.1",
     "gzip-size": "^5.1.1",
     "jsdoc": "^3.6.6",
     "jsdoc-api": "^6.0.0",
-    "jsdoc-export-default-interop": "^0.3.1",
     "qunit": "^2.11.2",
     "resemblejs": "^3.2.5",
     "rollup": "^2.26.11",

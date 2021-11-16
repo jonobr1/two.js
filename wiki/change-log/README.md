@@ -1,9 +1,16 @@
 ---
-sidebarDepth: 2
+pageClass: change-log
+sidebarDepth: 3
+title: Two.js Change Log
+lang: en-US
 ---
 
 # Change Log
+
 ## Nightly
+
+<h3 class="visible">Nightly</h3>
+
 + Made `Two.load` and `Two.interpret` consistently apply SVG `viewBox`
 + Made `Two.Rectangle.origin` act as inverse anchor positioning
 + Made `Two.Path.toObject` objectify `fill` and `stroke` attributes that are `Two.Texture` and `Two.Gradient`
@@ -12,10 +19,16 @@ sidebarDepth: 2
 + Added `Two.Points` and `Two.makePoints` to all renderers
 + Made `Two.release` mimic behavior of `Two.remove`
 
-## July 13, 2021 [v0.7.8](https://github.com/jonobr1/two.js/releases/tag/v0.7.8)
+## Jul 13, 2021 v0.7.8
+
+<h3 class="visible">Jul 13, 2021</h3><version-link v="v0.7.8" />
+
 + Made `types.d.ts` a shim of a module so that it can at least be loaded in TypeScript projects while the ES6 class declaration is still work-in-progress
 
-## July 10, 2021 [v0.7.6](https://github.com/jonobr1/two.js/releases/tag/v0.7.6)
+## Jul 10, 2021 v0.7.6
+
+<h3 class="visible">Jul 10, 2021</h3><version-link v="v0.7.6" />
+
 + Fixed `id` setting on all objects of Two.js
 + Fixed `Two.ArcSegment.clone` outer radius issue
 + Standardized vertex generation in higher order primitives
@@ -27,19 +40,28 @@ sidebarDepth: 2
 + Standardized `Texture.id` to be compliant with other `Two.Shape.id`
 + Added ability to interpret `<clipPath />` and `<image />` SVG elements
 
-## April 23, 2021 [v0.7.5](https://github.com/jonobr1/two.js/releases/tag/v0.7.5)
+## Apr 23, 2021 v0.7.5
+
+<h3 class="visible">Apr 23, 2021</h3><version-link v="v0.7.5" />
+
 + Improved `Two.Circle.beginning` & `Two.Circle.ending` behavior
 + Improved `fitted` logic on instances of `Two`
 + Improved `Two.Children` and `Two.Collection` instantiation versatility
 + Improved `Two.Group.getBoundingClientRect`, `Two.Path.getBoundingClientRect`, and `Two.Text.getBoundingClientRect`
 + Improved higher level shapes', like `Two.Circle`, ability to handle zeroed out arguments
 
-## April 2, 2021 [v0.7.4](https://github.com/jonobr1/two.js/releases/tag/v0.7.4)
+## Apr 2, 2021 v0.7.4
+
+<h3 class="visible">Apr 2, 2021</h3><version-link v="v0.7.4" />
+
 + Improved Typescript type declarations
 + Successfully export `extras/` directory in both JavaScript and JavaScript Module format
 + Added `Two.Shape.skewX` and `Two.Shape.skewY` [@gburlet](https://github.com/gburlet)
 
-## March 26, 2021 [v0.7.3](https://github.com/jonobr1/two.js/releases/tag/v0.7.3)
+## Mar 26, 2021 v0.7.3
+
+<h3 class="visible">Mar 26, 2021</h3><version-link v="v0.7.3" />
+
 + Exposed `Two.Shape.renderer` for easier access to underlying SVG elements
 + Added Typescript declaration types to Two.js
 + Made `Two.Group` listen to `Two.Shape.id` changes through new observable property and flags
@@ -48,7 +70,10 @@ sidebarDepth: 2
 + Improved scientific notation interpretation in SVG elements
 + `Two.load` appends a hidden DOM element to the document's `<head />` so that `getComputedStyles` works more consistently with `Two.interpret`
 
-## January 12, 2021 [v0.7.1](https://github.com/jonobr1/two.js/releases/tag/v0.7.1)
+## Jan 12, 2021 v0.7.1
+
+<h3 class="visible">Jan 12, 2021</h3><version-link v="v0.7.1" />
+
 + Added `Two.AutoCalculateImportedMatrices` to control different ways of importing SVG transformations
 + Fixed `Two.Text.className` application
 + Added basic text support in `Two.interpret`
@@ -65,7 +90,10 @@ sidebarDepth: 2
 + Made Two.js compatible with `import` modules [@adroitwhiz](https://github.com/adroitwhiz)
 + Added wiki as [VuePress](https://vuepress.vuejs.org/) project
 
-## January 22, 2020 [v0.7.0](https://github.com/jonobr1/two.js/releases/tag/v0.7.0)
+## Jan 22, 2020 v0.7.0
+
+<h3 class="visible">Jan 22, 2020</h3><version-link v="v0.7.0" />
+
 + Exposed `resolution` parameter in `Two.makeCircle` and `Two.makeEllipse` as the final parameter
 + Made `Two.Circle` and `Two.Ellipse` recalculate controls points on `_update` and made vertex amounts cyclical [@adroitwhiz](https://github.com/adroitwhiz)
 + Added [ESLint](https://eslint.org/) scripts to development environment [@adroitwhiz](https://github.com/adroitwhiz)
@@ -74,7 +102,7 @@ sidebarDepth: 2
 + Removed unnecessary `gl.colorMask` calls [@adroitwhiz](https://github.com/adroitwhiz)
 + Removed `Two.Utils.toFixed` calls on Canvas and WebGLRenderers [@adroitwhiz](https://github.com/adroitwhiz)
 + `Two.Shape.clone` clones `Two.Shape.matrix` when `Two.Shape.matrix.manual` is set to `true`
-+ Improved `Two.Group.mask` rendering in `Two.WebGLREnderer`
++ Improved `Two.Group.mask` rendering in `Two.WebGLRenderer`
 + Fixed `Two.WebGLRenderer.setSize` recursive loop error
 + Connected `Two.Shape.className` to `Two.Shape.classList` for searching and class assignment in SVG elements
 + Performance improvements on canvas HTML5 styles [@brandonheyer](https://github.com/brandonheyer)
@@ -97,15 +125,24 @@ sidebarDepth: 2
 + Added `Two.Shape.position` accessor to `Two.Shape.translation` for ease of use with [matter.js](http://brm.io/matter-js/)
 + Added `Two.Path.dashes` and `Two.Text.dashes` support to WebGL and Canvas Renderers
 
-## December 8, 2018 [v0.7.0-beta.3](https://github.com/jonobr1/two.js/releases/tag/v0.7.0-beta.3)
+## Dec 8, 2018 v0.7.0-beta.3
+
+<h3 class="visible">Dec 8, 2018</h3><version-link v="v0.7.0-beta.3" />
+
 + Canvas Renderer supports dashed and non dashed paths
 + Enforce `Two.Rectangle` has four `vertices`
 + Fixed `Two.Path.closed` on latest `ending` calculations
 
-## November 18, 2018 [v0.7.0-beta.2](https://github.com/jonobr1/two.js/releases/tag/v0.7.0-beta.2)
+## Nov 18, 2018 v0.7.0-beta.2
+
+<h3 class="visible">Nov 18, 2018</h3><version-link v="v0.7.0-beta.2" />
+
 + Updated Two.js compatibility with webpack and node-canvas 2.0.0+
 
-## November 3, 2018 [v0.7.0-beta.1](https://github.com/jonobr1/two.js/releases/tag/v0.7.0-beta.1)
+## Nov 3, 2018 v0.7.0-beta.1
+
+<h3 class="visible">Nov 3, 2018</h3><version-link v="v0.7.0-beta-1" />
+
 + Altered `Two.Path.clone` and `Two.Text.clone` to use references where possible and to `_update()` on return
 + Improved multi-decimal and arc SVG interpretation
 + Added `Two.Commands.arc` for better arc rendering across all renderers
@@ -141,7 +178,10 @@ sidebarDepth: 2
 + Added `className` property to `Two.Shape`s for easier CSS styling in `SVGRenderer` [@fr0](https://github.com/fr0)
 + `Two.Events.resize` is now bound to a renderer's `setSize` function giving a more generic solution to change scenegraph items based on dimensions changing
 
-## December 1, 2017 [v0.7.0-alpha.1](https://github.com/jonobr1/two.js/releases/tag/v0.7.0-alpha.1)
+## Dec 1, 2017 v0.7.0-alpha.1
+
+<h3 class="visible">Dec 1, 2017</h3><version-link v="v0.7.0-alpha-1" />
+
 + Fixed closed `Two.Path.getPointAt` method to clamp properly
 + Added `Two.Texture.repeat` for describing pattern invocations
 + Added `Two.Texture`, `Two.Sprite`, and `Two.ImageSequence`
@@ -166,13 +206,19 @@ sidebarDepth: 2
 + Added `remove` method to `Two.Text`
 + Fixed ordering on same parent additions for `Two.Group`
 
-## February 9, 2016 [v0.6.0](https://github.com/jonobr1/two.js/releases/tag/v0.6.0)
+## Feb 9, 2016 v0.6.0
+
+<h3 class="visible">Feb 9, 2016</h3><version-link v="v0.6.0" />
+
 + Updated `Two.CanvasRenderer.ctx.imageSmoothingEnabled` to not use deprecated invocation, [issue 178](https://github.com/jonobr1/two.js/issues/178)
 + Fixed `Two.Group.mask` in `SVGRenderer` to append to DOM correctly
 + Updated `require` imports to be compatible with [require.js](http://requirejs.org/)
 + Added `Two.Text` for programmatically writing text in Two.js
 
-## October 1, 2015 [v0.5.0](https://github.com/jonobr1/two.js/releases/tag/v0.5.0)
+## Oct 1, 2015 v0.5.0
+
+<h3 class="visible">Oct 1, 2015</h3><version-link v="v0.5.0" />
+
 + Added support for `two.interpret` to import `svg`'s gradients
 + Added `Two.Utils.xhr` and `two.load` methods to asynchronously load SVG files
 + Added `Two.Gradient`, `Two.LinearGradient`, and `Two.RadialGradient`
@@ -188,7 +234,10 @@ sidebarDepth: 2
 + Augmented `Two.Group.children` to inherit from `Two.Collection` effectively making it an array instead of a map [Leo Koppelkamm](https://github.com/ponychicken)
   - The map can still be accessed at `Two.Group.children.ids`
 
-## July 22, 2014 [v0.4.0](https://github.com/jonobr1/two.js/releases/tag/v0.4.0)
+## Jul 22, 2014 v0.4.0
+
+<h3 class="visible">Jul 22, 2014</h3> <version-link v="v0.4.0" />
+
 + Updated `Two.interpret` to handle polybezier path data
 + Added `Two.Group.mask` and `Two.Polygon.clip` in order to create clipping masks
 + `Two.Group` has own `opacity` property [Leo Koppelkamm](https://github.com/ponychicken)
@@ -226,7 +275,10 @@ sidebarDepth: 2
   - Added `_matrix.manual` to override the default behavior of a `Two.Polygon` transformation
   - Localized variables per file as much as possible to reduce Garbage Collection on runtime
 
-## October 25, 2013 [v0.3.0](https://github.com/jonobr1/two.js/tree/v0.3.0)
+## Oct 25, 2013 v0.3.0
+
+<h3 class="visible">Oct 25, 2013</h3><version-link v="v0.3.0" />
+
 + Can properly pass `domElement` on construction of new instance of two
 + Added `overdraw` boolean to `webgl` renderer [@arodic](https://github.com/arodic)
 + Added support for ie9 svg interpretation [@tomconroy](https://github.com/tomconroy)
@@ -260,8 +312,14 @@ sidebarDepth: 2
 + Added gruntfile, package.json for more integration with `npm`, and dependency free build (`build/two.clean.js`) [@iros](https://github.com/iros)
 + Crossbrowser compatibility with `noStroke` and `noFill` commands
 
-## May 3, 2013 [v0.2.0](https://github.com/jonobr1/two.js/tree/v0.2.0)
+## May 3, 2013 v0.2.0
+
+<h3 class="visible">May 3, 2013</h3><version-link v="v0.2.0" />
+
 + First alpha release
 
-## Jan 29, 2013 [v0.1.0-alpha](https://github.com/jonobr1/two.js/tree/v0.1.0-alpha)
+## Jan 29, 2013 v0.1.0-alpha
+
+<h3 class="visible">Jan 29, 2013</h3><version-link v="v0.1.0-alpha" />
+
 + Proof of Concept built from Three.js
