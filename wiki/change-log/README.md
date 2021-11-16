@@ -7,7 +7,7 @@ lang: en-US
 
 # Change Log
 
-## Nightly
+## Nov 11, 2021 v0.7.9
 
 <h3 class="visible">Nightly</h3>
 

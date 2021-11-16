@@ -1578,7 +1578,7 @@ var Constants = {
    * @name Two.PublishDate
    * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
    */
-  PublishDate: '2021-10-06T18:55:22.073Z',
+  PublishDate: '2021-11-16T14:47:14.288Z',
 
   /**
    * @name Two.Identifier
