@@ -7,9 +7,11 @@ lang: en-US
 
 # Change Log
 
+## Nightly
+
 ## Nov 11, 2021 v0.7.9
 
-<h3 class="visible">Nightly</h3>
+<h3 class="visible">Nov 11, 2021</h3><version-link v="v0.7.9" />
 
 + Made `Two.load` and `Two.interpret` consistently apply SVG `viewBox`
 + Made `Two.Rectangle.origin` act as inverse anchor positioning
