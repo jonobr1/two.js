@@ -21,6 +21,7 @@
     "docs:generate": "node ./utils/document",
     "docs:dev": "vuepress dev wiki",
     "docs:build": "vuepress build wiki",
+    "docs:publish": "./deploy.sh",
     "lint": "eslint . --fix",
     "types": "jsdoc -c ./jsdoc-conf.json"
   },
