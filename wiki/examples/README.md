@@ -87,6 +87,11 @@ Various examples of how to use different features of Two.js with associated tags
   tags="animated, logo, non-interactive, sine, svg" />
 
 <example-card
+  title="Arrow"
+  href="https://jsfiddle.net/jonobr1/0reh49of/"
+  tags="static, simple, primitive, non-interactive" />
+
+<example-card
   title="Basic Angular Template"
   href="https://codesandbox.io/s/nostalgic-volhard-6zzfd"
   src="https://screenshots.codesandbox.io/6zzfd/8.png"
@@ -97,6 +102,11 @@ Various examples of how to use different features of Two.js with associated tags
   href="https://codesandbox.io/s/sharp-proskuriakova-h5weu"
   src="https://screenshots.codesandbox.io/ygxbc/0.png"
   tags="react" />
+
+<example-card
+  title="Dashes"
+  href="https://jsfiddle.net/jonobr1/x1gc2d0L/"
+  tags="circle, animated, non-interactive, simple" />
 
 <example-card
   title="Haiku Generator"
@@ -117,6 +127,16 @@ Various examples of how to use different features of Two.js with associated tags
   tags="animated, mouse, logo, TweenMax" />
 
 <example-card
+  title="Over Google Maps"
+  href="https://jsfiddle.net/jonobr1/sj1q47vp/"
+  tags="text, interactive, ui" />
+
+<example-card
+  title="Points"
+  href="https://jsfiddle.net/jonobr1/r2zumg0w/9/"
+  tags="static, simple, primitive, non-interactive, styles" />
+
+<example-card
   title="Rain"
   href="https://codepen.io/jonobr1/pen/eedpwP"
   src="https://shots.codepen.io/jonobr1/pen/eedpwP-512.jpg"
@@ -132,7 +152,7 @@ Various examples of how to use different features of Two.js with associated tags
   title="South Tirol"
   href="https://observablehq.com/@ivanbacher/map-drawing-with-two-js-south-tirol-1"
   src="https://static.observableusercontent.com/thumbnail/75d334ea0e8fe1497f061bf43b6a1e2e624dedb7535e9fecb66dff451b0bd6ea.jpg"
-  tags="map, outline, bw" />
+  tags="map, outline, static, bw" />
 
 <example-card
   title="Sparks"
