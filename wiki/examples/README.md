@@ -22,7 +22,13 @@ Various examples of how to use different features of Two.js with associated tags
   title="Clipping Mask"
   href="https://codepen.io/jonobr1/pen/abyRyoY"
   src="https://shots.codepen.io/jonobr1/pen/abyRyoY-512.jpg"
-  tags="import, shapes, mouse, grid, sine" />
+  tags="import, mouse, shapes, grid, sine" />
+
+<example-card
+  title="Depth via Groups"
+  href="https://codepen.io/jonobr1/pen/qBXLzMq"
+  src="https://shots.codepen.io/jonobr1/pen/qBXLzMq-800.jpg"
+  tags="import, shapes, animated, non-interactive" />
 
 <example-card
   title="Dynamic Text"
