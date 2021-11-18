@@ -19,6 +19,12 @@ Various examples of how to use different features of Two.js with associated tags
   tags="import, interpret, mouse, points, vertices, ui" />
 
 <example-card
+  title="Animate Strokes"
+  href="https://codepen.io/jonobr1/pen/qBXgQQN"
+  src="https://shots.codepen.io/jonobr1/pen/qBXgQQN-512.jpg"
+  tags="import, interpret, mouse, beginning, ending" />
+
+<example-card
   title="Clipping Mask"
   href="https://codepen.io/jonobr1/pen/abyRyoY"
   src="https://shots.codepen.io/jonobr1/pen/abyRyoY-512.jpg"
