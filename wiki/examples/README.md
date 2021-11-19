@@ -209,6 +209,12 @@ Various examples of how to use different features of Two.js with associated tags
   tags="animated, non-interactive, makeRectangle, rotation" />
 
 <example-card
+  title="Animated Logo"
+  href="https://codepen.io/jonobr1/pen/poyBggB"
+  src="https://shots.codepen.io/jonobr1/pen/poyBggB-512.jpg"
+  tags="animated, non-interactive, logo, shapes" />
+
+<example-card
   title="USA"
   href="https://codepen.io/jonobr1/pen/ORrrvY"
   src="https://shots.codepen.io/jonobr1/pen/ORrrvY-512.jpg"
