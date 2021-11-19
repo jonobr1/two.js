@@ -73,6 +73,12 @@ Various examples of how to use different features of Two.js with associated tags
   tags="import, vector, mouse, circle, vertices" />
 
 <example-card
+  title="With Tween.js"
+  href="https://codepen.io/jonobr1/pen/dyzrZjM"
+  src="https://shots.codepen.io/jonobr1/pen/dyzrZjM-512.jpg"
+  tags="import, third-party, animated, non-interactive" />
+
+<example-card
   title="Zoom & Pan UI"
   href="https://codepen.io/jonobr1/pen/PobMKwb"
   src="https://shots.codepen.io/jonobr1/pen/PobMKwb-512.jpg"
@@ -158,7 +164,7 @@ Various examples of how to use different features of Two.js with associated tags
   title="South Tirol"
   href="https://observablehq.com/@ivanbacher/map-drawing-with-two-js-south-tirol-1"
   src="https://static.observableusercontent.com/thumbnail/75d334ea0e8fe1497f061bf43b6a1e2e624dedb7535e9fecb66dff451b0bd6ea.jpg"
-  tags="map, outline, static, bw" />
+  tags="map, third-party, outline, static, bw" />
 
 <example-card
   title="Sparks"
