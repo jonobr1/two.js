@@ -1572,13 +1572,13 @@ var Constants = {
    * @name Two.Version
    * @property {String} - The current working version of the library.
    */
-  Version: 'v0.7.9',
+  Version: 'v0.7.10',
 
   /**
    * @name Two.PublishDate
    * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
    */
-  PublishDate: '2021-11-16T14:47:14.288Z',
+  PublishDate: '2021-11-20T15:57:25.534Z',
 
   /**
    * @name Two.Identifier
@@ -13323,17 +13323,26 @@ _.extend(Points.prototype, Shape.prototype, {
 
       var v;
 
-      this._renderer.vertices = new NumArray((high - low + 1) * 2);
-      this._renderer.collection = [];
+      if (this._length <= 0) {
 
-      for (var i = low; i <= high; i++) {
+        this._renderer.vertices = new NumArray(0);
+        this._renderer.collection = [];
 
-        var j = i - low;
+      } else {
 
-        v = this._collection[i];
-        this._renderer.collection.push(v);
-        this._renderer.vertices[j * 2 + 0] = v.x;
-        this._renderer.vertices[j * 2 + 1] = v.y;
+        this._renderer.vertices = new NumArray((high - low + 1) * 2);
+        this._renderer.collection = [];
+
+        for (var i = low; i <= high; i++) {
+
+          var j = i - low;
+
+          v = this._collection[i];
+          this._renderer.collection.push(v);
+          this._renderer.vertices[j * 2 + 0] = v.x;
+          this._renderer.vertices[j * 2 + 1] = v.y;
+
+        }
 
       }
 
