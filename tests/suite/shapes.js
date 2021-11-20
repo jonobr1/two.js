@@ -7,7 +7,12 @@ QUnit.test('Two.Points', function(assert) {
 
   assert.expect(props.length + 13);
 
-  var points = new Two.Points([
+  var two = new Two();
+  var points = new Two.Points();
+  two.add(points);
+  two.update();
+
+  points = new Two.Points([
     new Two.Vector(0, 0),
     new Two.Vector(100, 100),
     new Two.Vector(200, 200),
@@ -47,6 +52,11 @@ QUnit.test('Two.Points', function(assert) {
     var prop = props[i];
     assert.equal(points['_flag' + prop.charAt(0).toUpperCase() + prop.slice(1)], false, 'Reset flag ' + prop + ' correctly.');
   }
+
+  points.beginning = 0.5;
+  points.ending = 0.5;
+  two.add(points);
+  two.update();
 
 });
 
