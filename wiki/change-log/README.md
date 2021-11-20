@@ -7,7 +7,11 @@ lang: en-US
 
 # Change Log
 
-## Nightly
+## Nov 20, 2021 v0.7.10
+
+<h3 class="visible">Nov 20, 2021</h3><version-link v="v0.7.10" />
+
++ Fixed empty vertices issue on `Two.Points`
 
 ## Nov 11, 2021 v0.7.9
 
