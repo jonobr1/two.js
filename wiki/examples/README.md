@@ -67,6 +67,12 @@ Various examples of how to use different features of Two.js with associated tags
   tags="import, animated, non-interactive, vertices, circle" />
 
 <example-card
+  title="Rendering Types"
+  href="https://codepen.io/jonobr1/pen/NWvJZPp"
+  src="https://shots.codepen.io/jonobr1/pen/NWvJZPp-512.jpg"
+  tags="import, animated, mouse, easing" />
+
+<example-card
   title="Rubber Ball"
   href="https://codepen.io/jonobr1/pen/mdMzzQB"
   src="https://shots.codepen.io/jonobr1/pen/mdMzzQB-512.jpg"
