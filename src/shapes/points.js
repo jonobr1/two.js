@@ -495,17 +495,26 @@ _.extend(Points.prototype, Shape.prototype, {
 
       var v;
 
-      this._renderer.vertices = new NumArray((high - low + 1) * 2);
-      this._renderer.collection = [];
+      if (this._length <= 0) {
 
-      for (var i = low; i <= high; i++) {
+        this._renderer.vertices = new NumArray(0);
+        this._renderer.collection = [];
 
-        var j = i - low;
+      } else {
 
-        v = this._collection[i];
-        this._renderer.collection.push(v);
-        this._renderer.vertices[j * 2 + 0] = v.x;
-        this._renderer.vertices[j * 2 + 1] = v.y;
+        this._renderer.vertices = new NumArray((high - low + 1) * 2);
+        this._renderer.collection = [];
+
+        for (var i = low; i <= high; i++) {
+
+          var j = i - low;
+
+          v = this._collection[i];
+          this._renderer.collection.push(v);
+          this._renderer.vertices[j * 2 + 0] = v.x;
+          this._renderer.vertices[j * 2 + 1] = v.y;
+
+        }
 
       }
 
