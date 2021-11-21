@@ -461,9 +461,12 @@ _.extend(Path, {
       },
 
       set: function(v) {
+        if (this._mask) {
+          this._mask.clip = false;
+        }
         this._mask = v;
         this._flagMask = true;
-        if (!v.clip) {
+        if (v && !v.clip) {
           v.clip = true;
         }
       }
