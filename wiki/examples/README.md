@@ -61,6 +61,12 @@ Various examples of how to use different features of Two.js with associated tags
   tags="es6, import, vector, mouse, radial-gradient, linear-gradent" />
 
 <example-card
+  title="Interpret SVG's"
+  href="https://codepen.io/jonobr1/pen/KKvYXzp"
+  src="https://shots.codepen.io/jonobr1/pen/KKvYXzp-512.jpg"
+  tags="es6, import, animated, non-interactive, vertices, scale" />
+
+<example-card
   title="Morphing Vertices"
   href="https://codepen.io/jonobr1/pen/wvqRLbR"
   src="https://shots.codepen.io/jonobr1/pen/wvqRLbR-512.jpg"
