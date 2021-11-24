@@ -1,4 +1,3 @@
-import { NumArray } from '../utils/math.js';
 import defineGetterSetter from '../utils/get-set.js';
 import { subdivide } from '../utils/curves.js';
 import _ from '../utils/underscore.js';
@@ -493,27 +492,19 @@ _.extend(Points.prototype, Shape.prototype, {
       var low = ceil(bid);
       var high = floor(eid);
 
-      var v;
+      this._renderer.vertices = [];
+      this._renderer.collection = [];
 
-      if (this._length <= 0) {
+      var j = 0, v;
 
-        this._renderer.vertices = new NumArray(0);
-        this._renderer.collection = [];
+      for (var i = 0; i < this._collection.length; i++) {
 
-      } else {
-
-        this._renderer.vertices = new NumArray((high - low + 1) * 2);
-        this._renderer.collection = [];
-
-        for (var i = low; i <= high; i++) {
-
-          var j = i - low;
-
+        if (i >= low && i <= high) {
           v = this._collection[i];
           this._renderer.collection.push(v);
           this._renderer.vertices[j * 2 + 0] = v.x;
           this._renderer.vertices[j * 2 + 1] = v.y;
-
+          j++;
         }
 
       }
