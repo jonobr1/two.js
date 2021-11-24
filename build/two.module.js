@@ -1572,13 +1572,13 @@ var Constants = {
    * @name Two.Version
    * @property {String} - The current working version of the library.
    */
-  Version: 'v0.7.10',
+  Version: 'v0.7.11',
 
   /**
    * @name Two.PublishDate
    * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
    */
-  PublishDate: '2021-11-20T15:57:25.534Z',
+  PublishDate: '2021-11-24T18:02:03.466Z',
 
   /**
    * @name Two.Identifier
@@ -3472,9 +3472,12 @@ _.extend(Group, {
       },
 
       set: function(v) {
+        if (this._mask) {
+          this._mask.clip = false;
+        }
         this._mask = v;
         this._flagMask = true;
-        if (!v.clip) {
+        if (v && !v.clip) {
           v.clip = true;
         }
       }
@@ -3798,6 +3801,11 @@ _.extend(Group.prototype, Shape.prototype, {
       child.translation.y -= rect.top;
     }
 
+    if (this.mask) {
+      this.mask.translation.x -= rect.left;
+      this.mask.translation.y -= rect.top;
+    }
+
     return this;
 
   },
@@ -3819,6 +3827,11 @@ _.extend(Group.prototype, Shape.prototype, {
         child.translation.x -= cx;
         child.translation.y -= cy;
       }
+    }
+
+    if (this.mask) {
+      this.mask.translation.x -= cx;
+      this.mask.translation.y -= cy;
     }
 
     return this;
@@ -7434,9 +7447,12 @@ _.extend(Path, {
       },
 
       set: function(v) {
+        if (this._mask) {
+          this._mask.clip = false;
+        }
         this._mask = v;
         this._flagMask = true;
-        if (!v.clip) {
+        if (v && !v.clip) {
           v.clip = true;
         }
       }
@@ -7808,6 +7824,13 @@ _.extend(Path.prototype, Shape.prototype, {
       v.y += hh;
     }
 
+    if (this.mask) {
+      this.mask.translation.x -= cx;
+      this.mask.translation.x += hw;
+      this.mask.translation.y -= cy;
+      this.mask.translation.y += hh;
+    }
+
     return this;
 
   },
@@ -7828,6 +7851,11 @@ _.extend(Path.prototype, Shape.prototype, {
       var v = this.vertices[i];
       v.x -= cx;
       v.y -= cy;
+    }
+
+    if (this.mask) {
+      this.mask.translation.x -= cx;
+      this.mask.translation.y -= cy;
     }
 
     return this;
@@ -10150,9 +10178,12 @@ _.extend(Text, {
       },
 
       set: function(v) {
+        if (this._mask) {
+          this._mask.clip = false;
+        }
         this._mask = v;
         this._flagMask = true;
-        if (!v.clip) {
+        if (v && !v.clip) {
           v.clip = true;
         }
       }
