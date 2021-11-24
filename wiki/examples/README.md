@@ -218,7 +218,7 @@ Various examples of how to use different features of Two.js with associated tags
   title="Twisting Squares"
   href="https://codepen.io/daniel-hult/pen/bGbojYm"
   src="#"
-  tags="animated, non-interactive, makeRectangle, rotation" />
+  tags="animated, non-interactive, rectangle, rotation" />
 
 <example-card
   title="Animated Logo"
@@ -236,7 +236,7 @@ Various examples of how to use different features of Two.js with associated tags
   title="Wavy Road"
   href="https://codepen.io/jonobr1/pen/ajkdp"
   src="https://shots.codepen.io/jonobr1/pen/ajkdp-512.jpg"
-  tags="mouse, makeCurve, line, dashes, group" />
+  tags="mouse, curve, line, dashes, group" />
 
 <example-card
   title="Word Stacks"
