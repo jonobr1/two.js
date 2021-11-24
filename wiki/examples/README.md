@@ -153,7 +153,7 @@ Various examples of how to use different features of Two.js with associated tags
 <example-card
   title="Insta Logo"
   href="https://codepen.io/lrsordi/pen/rvWZPm"
-  src="https://pbs.twimg.com/card_img/1459707781494099972/Kqn-kt6H?format=jpg&name=600x314"
+  src="https://shots.codepen.io/username/pen/rvWZPm-512.jpg"
   tags="animated, mouse, logo, TweenMax" />
 
 <example-card
@@ -223,7 +223,6 @@ Various examples of how to use different features of Two.js with associated tags
 <example-card
   title="Twisting Squares"
   href="https://codepen.io/daniel-hult/pen/bGbojYm"
-  src="#"
   tags="animated, non-interactive, rectangle, rotation" />
 
 <example-card
