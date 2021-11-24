@@ -68,7 +68,8 @@
     "rollup-plugin-terser": "^7.0.2",
     "tsd-jsdoc": "^2.5.0",
     "underscore": "^1.13.0",
-    "vuepress": "^1.5.4"
+    "vuepress": "^1.5.4",
+    "vuepress-plugin-sitemap": "^2.3.1"
   },
   "autoupdate": {
     "source": "git",

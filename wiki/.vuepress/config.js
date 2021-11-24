@@ -82,7 +82,15 @@ module.exports = {
     },
     plugins: {
       '@vuepress/nprogress': true,
-      '@vuepress/search': false
+      '@vuepress/search': false,
+      'sitemap': {
+        hostname: 'https://two.js.org',
+        urls: [
+          { url: '/docs/two/', changefreq: 'monthly' },
+          { url: '/examples/', changefreq: 'monthly' },
+          { url: '/change-log/', changefreq: 'monthly' }
+        ]
+      }
     }
   }
 };
