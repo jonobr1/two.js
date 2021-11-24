@@ -12,7 +12,7 @@ Object inherited by many Two.js objects in order to facilitate custom events.
 
 
 <div class="meta">
-  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/events.js" />
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/main/src/events.js" />
 </div>
 
 
@@ -51,7 +51,7 @@ Object of different types of Two.js specific events.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/events.js#L73">
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/events.js#L73">
     events.js:73
   </a>
 
@@ -96,7 +96,7 @@ Alias for [Two.Events.on](/docs/events/#two-events-on).
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/events.js#L93">
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/events.js#L93">
     events.js:93
   </a>
 
@@ -141,7 +141,7 @@ Alias for [Two.Events.off](/docs/events/#two-events-off).
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/events.js#L100">
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/events.js#L100">
     events.js:100
   </a>
 
@@ -194,7 +194,7 @@ Call to add a listener to a specific event name.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/events.js#L8">
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/events.js#L8">
     events.js:8
   </a>
 
@@ -247,7 +247,7 @@ Call to remove listeners from a specific event. If only `name` is passed then al
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/events.js#L17">
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/events.js#L17">
     events.js:17
   </a>
 
@@ -300,7 +300,7 @@ Call to trigger a custom event. Any additional arguments passed after the name w
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/events.js#L26">
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/events.js#L26">
     events.js:26
   </a>
 

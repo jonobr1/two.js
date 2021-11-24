@@ -1578,13 +1578,13 @@ SOFTWARE.
      * @name Two.Version
      * @property {String} - The current working version of the library.
      */
-    Version: 'v0.7.10',
+    Version: 'v0.7.12',
 
     /**
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2021-11-20T15:57:25.534Z',
+    PublishDate: '2021-11-24T18:52:19.187Z',
 
     /**
      * @name Two.Identifier
@@ -3478,9 +3478,12 @@ SOFTWARE.
         },
 
         set: function(v) {
+          if (this._mask) {
+            this._mask.clip = false;
+          }
           this._mask = v;
           this._flagMask = true;
-          if (!v.clip) {
+          if (v && !v.clip) {
             v.clip = true;
           }
         }
@@ -3804,6 +3807,11 @@ SOFTWARE.
         child.translation.y -= rect.top;
       }
 
+      if (this.mask) {
+        this.mask.translation.x -= rect.left;
+        this.mask.translation.y -= rect.top;
+      }
+
       return this;
 
     },
@@ -3825,6 +3833,11 @@ SOFTWARE.
           child.translation.x -= cx;
           child.translation.y -= cy;
         }
+      }
+
+      if (this.mask) {
+        this.mask.translation.x -= cx;
+        this.mask.translation.y -= cy;
       }
 
       return this;
@@ -7440,9 +7453,12 @@ SOFTWARE.
         },
 
         set: function(v) {
+          if (this._mask) {
+            this._mask.clip = false;
+          }
           this._mask = v;
           this._flagMask = true;
-          if (!v.clip) {
+          if (v && !v.clip) {
             v.clip = true;
           }
         }
@@ -7814,6 +7830,13 @@ SOFTWARE.
         v.y += hh;
       }
 
+      if (this.mask) {
+        this.mask.translation.x -= cx;
+        this.mask.translation.x += hw;
+        this.mask.translation.y -= cy;
+        this.mask.translation.y += hh;
+      }
+
       return this;
 
     },
@@ -7834,6 +7857,11 @@ SOFTWARE.
         var v = this.vertices[i];
         v.x -= cx;
         v.y -= cy;
+      }
+
+      if (this.mask) {
+        this.mask.translation.x -= cx;
+        this.mask.translation.y -= cy;
       }
 
       return this;
@@ -10156,9 +10184,12 @@ SOFTWARE.
         },
 
         set: function(v) {
+          if (this._mask) {
+            this._mask.clip = false;
+          }
           this._mask = v;
           this._flagMask = true;
-          if (!v.clip) {
+          if (v && !v.clip) {
             v.clip = true;
           }
         }
@@ -13327,27 +13358,19 @@ SOFTWARE.
         var low = ceil(bid);
         var high = floor(eid);
 
-        var v;
+        this._renderer.vertices = [];
+        this._renderer.collection = [];
 
-        if (this._length <= 0) {
+        var j = 0, v;
 
-          this._renderer.vertices = new NumArray(0);
-          this._renderer.collection = [];
+        for (var i = 0; i < this._collection.length; i++) {
 
-        } else {
-
-          this._renderer.vertices = new NumArray((high - low + 1) * 2);
-          this._renderer.collection = [];
-
-          for (var i = low; i <= high; i++) {
-
-            var j = i - low;
-
+          if (i >= low && i <= high) {
             v = this._collection[i];
             this._renderer.collection.push(v);
             this._renderer.vertices[j * 2 + 0] = v.x;
             this._renderer.vertices[j * 2 + 1] = v.y;
-
+            j++;
           }
 
         }

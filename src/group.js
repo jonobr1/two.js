@@ -238,9 +238,12 @@ _.extend(Group, {
       },
 
       set: function(v) {
+        if (this._mask) {
+          this._mask.clip = false;
+        }
         this._mask = v;
         this._flagMask = true;
-        if (!v.clip) {
+        if (v && !v.clip) {
           v.clip = true;
         }
       }
@@ -564,6 +567,11 @@ _.extend(Group.prototype, Shape.prototype, {
       child.translation.y -= rect.top;
     }
 
+    if (this.mask) {
+      this.mask.translation.x -= rect.left;
+      this.mask.translation.y -= rect.top;
+    }
+
     return this;
 
   },
@@ -585,6 +593,11 @@ _.extend(Group.prototype, Shape.prototype, {
         child.translation.x -= cx;
         child.translation.y -= cy;
       }
+    }
+
+    if (this.mask) {
+      this.mask.translation.x -= cx;
+      this.mask.translation.y -= cy;
     }
 
     return this;

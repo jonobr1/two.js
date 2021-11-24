@@ -61,6 +61,12 @@ Various examples of how to use different features of Two.js with associated tags
   tags="es6, import, vector, mouse, radial-gradient, linear-gradent" />
 
 <example-card
+  title="Interpret SVG's"
+  href="https://codepen.io/jonobr1/pen/KKvYXzp"
+  src="https://shots.codepen.io/jonobr1/pen/KKvYXzp-512.jpg"
+  tags="es6, import, animated, non-interactive, vertices, scale" />
+
+<example-card
   title="Morphing Vertices"
   href="https://codepen.io/jonobr1/pen/wvqRLbR"
   src="https://shots.codepen.io/jonobr1/pen/wvqRLbR-512.jpg"
@@ -77,6 +83,12 @@ Various examples of how to use different features of Two.js with associated tags
   href="https://codepen.io/jonobr1/pen/mdMzzQB"
   src="https://shots.codepen.io/jonobr1/pen/mdMzzQB-512.jpg"
   tags="import, vector, mouse, circle, vertices" />
+
+<example-card
+  title="Simple Pen Tool"
+  href="https://codepen.io/jonobr1/pen/gOxNejb"
+  src="https://shots.codepen.io/jonobr1/pen/gOxNejb-512.jpg"
+  tags="import, vector, mouse, ui, vertices, points, layers, group" />
 
 <example-card
   title="With Tween.js"
@@ -141,7 +153,7 @@ Various examples of how to use different features of Two.js with associated tags
 <example-card
   title="Insta Logo"
   href="https://codepen.io/lrsordi/pen/rvWZPm"
-  src="https://pbs.twimg.com/card_img/1459707781494099972/Kqn-kt6H?format=jpg&name=600x314"
+  src="https://shots.codepen.io/username/pen/rvWZPm-512.jpg"
   tags="animated, mouse, logo, TweenMax" />
 
 <example-card
@@ -211,8 +223,7 @@ Various examples of how to use different features of Two.js with associated tags
 <example-card
   title="Twisting Squares"
   href="https://codepen.io/daniel-hult/pen/bGbojYm"
-  src="#"
-  tags="animated, non-interactive, makeRectangle, rotation" />
+  tags="animated, non-interactive, rectangle, rotation" />
 
 <example-card
   title="Animated Logo"
@@ -230,7 +241,7 @@ Various examples of how to use different features of Two.js with associated tags
   title="Wavy Road"
   href="https://codepen.io/jonobr1/pen/ajkdp"
   src="https://shots.codepen.io/jonobr1/pen/ajkdp-512.jpg"
-  tags="mouse, makeCurve, line, dashes, group" />
+  tags="mouse, curve, line, dashes, group" />
 
 <example-card
   title="Word Stacks"

@@ -18,7 +18,7 @@ A children collection which is accesible both by index and by object `id`.
 
 
 <div class="meta">
-  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/children.js" />
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/main/src/children.js" />
 </div>
 
 
@@ -57,7 +57,7 @@ Map of all elements in the list keyed by `id`s.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/children.js#L20">
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/children.js#L20">
     children.js:20
   </a>
 
@@ -109,7 +109,7 @@ Adds elements to the `ids` map.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/children.js#L41">
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/children.js#L41">
     children.js:41
   </a>
 
@@ -161,7 +161,7 @@ Removes elements to the `ids` map.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/children.js#L57">
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/children.js#L57">
     children.js:57
   </a>
 

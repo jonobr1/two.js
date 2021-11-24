@@ -7,6 +7,13 @@ lang: en-US
 
 # Change Log
 
+## Nov 24, 2021 v0.7.12
+
+<h3 class="visible">Nov 24, 2021</h3><version-link v="v0.7.12" />
+
++ Made mask removal possible on `Two.Group`s, `Two.Path`s, and `Two.Points`'
++ Simplified `Two.Points.vertices` management for renderers improving adaptability
+
 ## Nov 20, 2021 v0.7.10
 
 <h3 class="visible">Nov 20, 2021</h3><version-link v="v0.7.10" />
