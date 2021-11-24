@@ -838,6 +838,13 @@ _.extend(Path.prototype, Shape.prototype, {
       v.y += hh;
     }
 
+    if (this.mask) {
+      this.mask.translation.x -= cx;
+      this.mask.translation.x += hw;
+      this.mask.translation.y -= cy;
+      this.mask.translation.y += hh;
+    }
+
     return this;
 
   },
@@ -858,6 +865,11 @@ _.extend(Path.prototype, Shape.prototype, {
       var v = this.vertices[i];
       v.x -= cx;
       v.y -= cy;
+    }
+
+    if (this.mask) {
+      this.mask.translation.x -= cx;
+      this.mask.translation.y -= cy;
     }
 
     return this;
