@@ -417,6 +417,11 @@ QUnit.test('Two.Children', function(assert) {
   shape._update(true);
   assert.equal(shape.id in group.children.ids, true, 'Two.Children properly updates ids map when child id changes.');
 
+  // Check to be able to add and remove masks freely without errors
+
+  group.mask = new Two.Rectangle(0, 0, 10, 10);
+  group.mask = null;
+
 });
 
 QUnit.test('Two.Shape', function(assert) {
