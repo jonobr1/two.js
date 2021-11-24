@@ -85,6 +85,12 @@ Various examples of how to use different features of Two.js with associated tags
   tags="import, vector, mouse, circle, vertices" />
 
 <example-card
+  title="Simple Pen Tool"
+  href="https://codepen.io/jonobr1/pen/gOxNejb"
+  src="https://shots.codepen.io/jonobr1/pen/gOxNejb-512.jpg"
+  tags="import, vector, mouse, ui, vertices, points, layers, group" />
+
+<example-card
   title="With Tween.js"
   href="https://codepen.io/jonobr1/pen/dyzrZjM"
   src="https://shots.codepen.io/jonobr1/pen/dyzrZjM-512.jpg"
