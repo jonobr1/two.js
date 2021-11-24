@@ -12,7 +12,7 @@ lang: en-US
 
 
 <div class="meta">
-  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/extras/jsm/zui.js" />
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/main/extras/jsm/zui.js" />
 </div>
 
 

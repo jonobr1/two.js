@@ -18,7 +18,7 @@ Extends: [<%= root.augments %>](<%= root.augmentsHref %>)
 
 <% if (root.meta) { %>
 <div class="meta">
-  <custom-button text="Source" type="source" href="<%= 'https://github.com/jonobr1/two.js/blob/dev/' + root.meta.path.replace(/^[\w\d\/]*two\.js\//i, '') + '/' + root.meta.filename %>" />
+  <custom-button text="Source" type="source" href="<%= 'https://github.com/jonobr1/two.js/blob/main/' + root.meta.path.replace(/^[\w\d\/]*two\.js\//i, '') + '/' + root.meta.filename %>" />
 </div>
 <% } %>
 
@@ -116,7 +116,7 @@ __Triggers__:
 <% if (item.meta) { %>
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="<%= 'https://github.com/jonobr1/two.js/blob/dev/' + item.meta.path.replace(/^[\w\d\/]*two\.js\//i, '') + '/' + item.meta.filename + '#L' + item.meta.lineno %>">
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="<%= 'https://github.com/jonobr1/two.js/blob/main/' + item.meta.path.replace(/^[\w\d\/]*two\.js\//i, '') + '/' + item.meta.filename + '#L' + item.meta.lineno %>">
     <%= item.meta.filename + ':' + item.meta.lineno %>
   </a>
 
