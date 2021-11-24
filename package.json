@@ -59,6 +59,7 @@
   "devDependencies": {
     "@vuepress/plugin-nprogress": "^1.5.4",
     "eslint": "^7.8.1",
+    "esm": "^3.2.25",
     "gzip-size": "^5.1.1",
     "jsdoc": "^3.6.6",
     "jsdoc-api": "^6.0.0",
