@@ -567,6 +567,11 @@ _.extend(Group.prototype, Shape.prototype, {
       child.translation.y -= rect.top;
     }
 
+    if (this.mask) {
+      this.mask.translation.x -= rect.left;
+      this.mask.translation.y -= rect.top;
+    }
+
     return this;
 
   },
@@ -588,6 +593,11 @@ _.extend(Group.prototype, Shape.prototype, {
         child.translation.x -= cx;
         child.translation.y -= cy;
       }
+    }
+
+    if (this.mask) {
+      this.mask.translation.x -= cx;
+      this.mask.translation.y -= cy;
     }
 
     return this;
