@@ -1578,13 +1578,13 @@ SOFTWARE.
      * @name Two.Version
      * @property {String} - The current working version of the library.
      */
-    Version: 'v0.7.11',
+    Version: 'v0.7.12',
 
     /**
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2021-11-24T18:02:03.466Z',
+    PublishDate: '2021-11-24T18:52:19.187Z',
 
     /**
      * @name Two.Identifier
@@ -13358,27 +13358,19 @@ SOFTWARE.
         var low = ceil(bid);
         var high = floor(eid);
 
-        var v;
+        this._renderer.vertices = [];
+        this._renderer.collection = [];
 
-        if (this._length <= 0) {
+        var j = 0, v;
 
-          this._renderer.vertices = new NumArray(0);
-          this._renderer.collection = [];
+        for (var i = 0; i < this._collection.length; i++) {
 
-        } else {
-
-          this._renderer.vertices = new NumArray((high - low + 1) * 2);
-          this._renderer.collection = [];
-
-          for (var i = low; i <= high; i++) {
-
-            var j = i - low;
-
+          if (i >= low && i <= high) {
             v = this._collection[i];
             this._renderer.collection.push(v);
             this._renderer.vertices[j * 2 + 0] = v.x;
             this._renderer.vertices[j * 2 + 1] = v.y;
-
+            j++;
           }
 
         }
