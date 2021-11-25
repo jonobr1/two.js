@@ -20,7 +20,7 @@ var min = Math.min, max = Math.max;
  */
 function Group(children) {
 
-  Shape.call(this, true);
+  Shape.call(this);
 
   this._renderer.type = 'group';
 
@@ -617,7 +617,7 @@ _.extend(Group.prototype, Shape.prototype, {
         return node;
       } else if (node.children) {
         for (var i = 0; i < node.children.length; i++) {
-          found = search(node.children[i], id);
+          found = search(node.children[i]);
           if (found) {
             return found;
           }
@@ -643,7 +643,7 @@ _.extend(Group.prototype, Shape.prototype, {
       if (node.children) {
         for (var i = 0; i < node.children.length; i++) {
           var child = node.children[i];
-          search(child, className);
+          search(child);
         }
       }
       return found;
@@ -671,7 +671,7 @@ _.extend(Group.prototype, Shape.prototype, {
       }
       return found;
     }
-    return search(this, type);
+    return search(this);
   },
 
   /**

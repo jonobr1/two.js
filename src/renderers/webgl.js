@@ -277,7 +277,7 @@ var webgl = {
             next = closed ? mod(i + 1, length) : Math.min(i + 1, last);
 
             a = commands[prev];
-            c = commands[next];
+
             ar = (a.controls && a.controls.right) || Vector.zero;
             bl = (b.controls && b.controls.left) || Vector.zero;
 

@@ -76,9 +76,8 @@ var svg = {
       var next = closed ? mod(i + 1, l) : Math.min(i + 1, last);
 
       var a = points[prev];
-      var c = points[next];
 
-      var vx, vy, ux, uy, ar, bl, br, cl;
+      var vx, vy, ux, uy, ar, bl, br, c, cl;
       var rx, ry, xAxisRotation, largeArcFlag, sweepFlag;
 
       // Access x and y directly,
