@@ -73,7 +73,6 @@ var svg = {
       var b = points[i];
       var command;
       var prev = closed ? mod(i - 1, l) : Math.max(i - 1, 0);
-      var next = closed ? mod(i + 1, l) : Math.min(i + 1, last);
 
       var a = points[prev];
 

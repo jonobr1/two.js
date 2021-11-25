@@ -1578,7 +1578,7 @@ var Constants = {
    * @name Two.PublishDate
    * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
    */
-  PublishDate: '2021-11-25T06:18:39.694Z',
+  PublishDate: '2021-11-25T06:22:24.735Z',
 
   /**
    * @name Two.Identifier
@@ -4495,7 +4495,6 @@ var canvas = {
           case Commands.curve:
 
             prev = closed ? mod(i - 1, length) : Math.max(i - 1, 0);
-            closed ? mod(i + 1, length) : Math.min(i + 1, last);
 
             a = commands[prev];
 
@@ -13947,7 +13946,6 @@ var svg = {
       var b = points[i];
       var command;
       var prev = closed ? mod(i - 1, l) : Math.max(i - 1, 0);
-      closed ? mod(i + 1, l) : Math.min(i + 1, last);
 
       var a = points[prev];
 
@@ -15362,7 +15360,6 @@ var webgl = {
           case Commands.curve:
 
             prev = closed ? mod(i - 1, length) : Math.max(i - 1, 0);
-            closed ? mod(i + 1, length) : Math.min(i + 1, last);
 
             a = commands[prev];
 
