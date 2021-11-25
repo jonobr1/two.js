@@ -56,6 +56,8 @@ The current index being referenced for calculating a stop's default offset value
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/stop.js#L49">
@@ -63,8 +65,6 @@ The current index being referenced for calculating a stop's default offset value
   </a>
 
 </div>
-
-
 
 
 
@@ -90,9 +90,11 @@ The current index being referenced for calculating a stop's default offset value
 
 <div class="properties">
 
-A list of properties that are on every [Two.Stop](/docs/stop).
+A list of properties that are on every [Two.Stop](/docs/effects/stop/).
 
 </div>
+
+
 
 
 
@@ -108,8 +110,6 @@ A list of properties that are on every [Two.Stop](/docs/stop).
   </a>
 
 </div>
-
-
 
 
 
@@ -147,9 +147,11 @@ A list of properties that are on every [Two.Stop](/docs/stop).
 
 <div class="description">
 
-Convenience function to apply observable qualities of a [Two.Stop](/docs/stop) to any object. Handy if you'd like to extend the [Two.Stop](/docs/stop) class on a custom class.
+Convenience function to apply observable qualities of a [Two.Stop](/docs/effects/stop/) to any object. Handy if you'd like to extend the [Two.Stop](/docs/effects/stop/) class on a custom class.
 
 </div>
+
+
 
 
 
@@ -160,8 +162,6 @@ Convenience function to apply observable qualities of a [Two.Stop](/docs/stop) t
   </a>
 
 </div>
-
-
 
 
 
@@ -204,6 +204,8 @@ Object access to store relevant renderer specific variables. Warning: manipulati
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/stop.js#L14">
@@ -218,13 +220,11 @@ Object access to store relevant renderer specific variables. Warning: manipulati
 
 
 ::: tip nota-bene
-With the [Two.SvgRenderer](/docs/svgrenderer) you can access the underlying SVG element created via `shape.renderer.elem`.
+With the [Two.SvgRenderer](/docs/two/) you can access the underlying SVG element created via `shape.renderer.elem`.
 :::
 
 
 </div>
-
-
 
 
 </div>
@@ -259,6 +259,8 @@ The offset percentage of the stop represented as a zero-to-one value.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/stop.js#L23">
@@ -266,8 +268,6 @@ The offset percentage of the stop represented as a zero-to-one value.
   </a>
 
 </div>
-
-
 
 
 
@@ -304,6 +304,8 @@ The alpha percentage of the stop represented as a zero-to-one value.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/stop.js#L30">
@@ -311,8 +313,6 @@ The alpha percentage of the stop represented as a zero-to-one value.
   </a>
 
 </div>
-
-
 
 
 
@@ -349,6 +349,8 @@ The color of the stop.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/stop.js#L36">
@@ -356,8 +358,6 @@ The color of the stop.
   </a>
 
 </div>
-
-
 
 
 
@@ -403,9 +403,11 @@ __Returns__: Two.Stop
 
 <div class="description">
 
-Create a new instance of [Two.Stop](/docs/stop) with the same properties of the current path.
+Create a new instance of [Two.Stop](/docs/effects/stop/) with the same properties of the current path.
 
 </div>
+
+
 
 
 
@@ -416,8 +418,6 @@ Create a new instance of [Two.Stop](/docs/stop) with the same properties of the 
   </a>
 
 </div>
-
-
 
 
 
@@ -462,6 +462,8 @@ Return a JSON compatible plain object that represents the path.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/stop.js#L136">
@@ -469,8 +471,6 @@ Return a JSON compatible plain object that represents the path.
   </a>
 
 </div>
-
-
 
 
 

@@ -52,9 +52,11 @@ Extends: [Two.Path](/docs/path/)
 
 <div class="properties">
 
-A list of properties that are on every [Two.Circle](/docs/circle).
+A list of properties that are on every [Two.Circle](/docs/shapes/circle/).
 
 </div>
+
+
 
 
 
@@ -70,8 +72,6 @@ A list of properties that are on every [Two.Circle](/docs/circle).
   </a>
 
 </div>
-
-
 
 
 
@@ -109,9 +109,11 @@ A list of properties that are on every [Two.Circle](/docs/circle).
 
 <div class="description">
 
-Convenience function to apply observable qualities of a [Two.Circle](/docs/circle) to any object. Handy if you'd like to extend the [Two.Circle](/docs/circle) class on a custom class.
+Convenience function to apply observable qualities of a [Two.Circle](/docs/shapes/circle/) to any object. Handy if you'd like to extend the [Two.Circle](/docs/shapes/circle/) class on a custom class.
 
 </div>
+
+
 
 
 
@@ -122,8 +124,6 @@ Convenience function to apply observable qualities of a [Two.Circle](/docs/circl
   </a>
 
 </div>
-
-
 
 
 
@@ -160,6 +160,8 @@ The size of the radius of the circle.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/circle.js#L32">
@@ -167,8 +169,6 @@ The size of the radius of the circle.
   </a>
 
 </div>
-
-
 
 
 
@@ -214,9 +214,11 @@ __Returns__: Two.Circle
 
 <div class="description">
 
-Create a new instance of [Two.Circle](/docs/circle) with the same properties of the current path.
+Create a new instance of [Two.Circle](/docs/shapes/circle/) with the same properties of the current path.
 
 </div>
+
+
 
 
 
@@ -227,8 +229,6 @@ Create a new instance of [Two.Circle](/docs/circle) with the same properties of 
   </a>
 
 </div>
-
-
 
 
 
@@ -273,6 +273,8 @@ Return a JSON compatible plain object that represents the path.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/circle.js#L190">
@@ -280,8 +282,6 @@ Return a JSON compatible plain object that represents the path.
   </a>
 
 </div>
-
-
 
 
 

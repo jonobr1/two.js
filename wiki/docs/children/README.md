@@ -55,6 +55,8 @@ Map of all elements in the list keyed by `id`s.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/children.js#L20">
@@ -62,8 +64,6 @@ Map of all elements in the list keyed by `id`s.
   </a>
 
 </div>
-
-
 
 
 
@@ -93,7 +93,7 @@ Map of all elements in the list keyed by `id`s.
 
 | Argument | Description |
 | ---- | ----------- |
-|  children  | The objects which extend [Two.Shape](/docs/shape) to be added. |
+|  children  | The objects which extend [Two.Shape](/docs/shape/) to be added. |
 </div>
 
 
@@ -107,6 +107,8 @@ Adds elements to the `ids` map.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/children.js#L41">
@@ -114,8 +116,6 @@ Adds elements to the `ids` map.
   </a>
 
 </div>
-
-
 
 
 
@@ -145,7 +145,7 @@ Adds elements to the `ids` map.
 
 | Argument | Description |
 | ---- | ----------- |
-|  children  | The objects which extend [Two.Shape](/docs/shape) to be removed. |
+|  children  | The objects which extend [Two.Shape](/docs/shape/) to be removed. |
 </div>
 
 
@@ -159,6 +159,8 @@ Removes elements to the `ids` map.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/children.js#L57">
@@ -166,8 +168,6 @@ Removes elements to the `ids` map.
   </a>
 
 </div>
-
-
 
 
 

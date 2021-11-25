@@ -53,9 +53,11 @@ Extends: [Two.Path](/docs/path/)
 
 <div class="properties">
 
-A list of properties that are on every [Two.Star](/docs/star).
+A list of properties that are on every [Two.Star](/docs/shapes/star/).
 
 </div>
+
+
 
 
 
@@ -71,8 +73,6 @@ A list of properties that are on every [Two.Star](/docs/star).
   </a>
 
 </div>
-
-
 
 
 
@@ -110,9 +110,11 @@ A list of properties that are on every [Two.Star](/docs/star).
 
 <div class="description">
 
-Convenience function to apply observable qualities of a [Two.Star](/docs/star) to any object. Handy if you'd like to extend the [Two.Star](/docs/star) class on a custom class.
+Convenience function to apply observable qualities of a [Two.Star](/docs/shapes/star/) to any object. Handy if you'd like to extend the [Two.Star](/docs/shapes/star/) class on a custom class.
 
 </div>
+
+
 
 
 
@@ -123,8 +125,6 @@ Convenience function to apply observable qualities of a [Two.Star](/docs/star) t
   </a>
 
 </div>
-
-
 
 
 
@@ -161,6 +161,8 @@ The size of the inner radius of the star.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/star.js#L36">
@@ -168,8 +170,6 @@ The size of the inner radius of the star.
   </a>
 
 </div>
-
-
 
 
 
@@ -206,6 +206,8 @@ The size of the outer radius of the star.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/star.js#L44">
@@ -213,8 +215,6 @@ The size of the outer radius of the star.
   </a>
 
 </div>
-
-
 
 
 
@@ -251,6 +251,8 @@ The amount of sides the star has.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/star.js#L52">
@@ -258,8 +260,6 @@ The amount of sides the star has.
   </a>
 
 </div>
-
-
 
 
 
@@ -305,9 +305,11 @@ __Returns__: Two.Star
 
 <div class="description">
 
-Create a new instance of [Two.Star](/docs/star) with the same properties of the current path.
+Create a new instance of [Two.Star](/docs/shapes/star/) with the same properties of the current path.
 
 </div>
+
+
 
 
 
@@ -318,8 +320,6 @@ Create a new instance of [Two.Star](/docs/star) with the same properties of the 
   </a>
 
 </div>
-
-
 
 
 
@@ -364,6 +364,8 @@ Return a JSON compatible plain object that represents the path.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/star.js#L235">
@@ -371,8 +373,6 @@ Return a JSON compatible plain object that represents the path.
   </a>
 
 </div>
-
-
 
 
 

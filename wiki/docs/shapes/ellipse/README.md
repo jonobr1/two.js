@@ -53,9 +53,11 @@ Extends: [Two.Path](/docs/path/)
 
 <div class="properties">
 
-A list of properties that are on every [Two.Ellipse](/docs/ellipse).
+A list of properties that are on every [Two.Ellipse](/docs/shapes/ellipse/).
 
 </div>
+
+
 
 
 
@@ -71,8 +73,6 @@ A list of properties that are on every [Two.Ellipse](/docs/ellipse).
   </a>
 
 </div>
-
-
 
 
 
@@ -110,9 +110,11 @@ A list of properties that are on every [Two.Ellipse](/docs/ellipse).
 
 <div class="description">
 
-Convenience function to apply observable qualities of a [Two.Ellipse](/docs/ellipse) to any object. Handy if you'd like to extend the [Two.Ellipse](/docs/ellipse) class on a custom class.
+Convenience function to apply observable qualities of a [Two.Ellipse](/docs/shapes/ellipse/) to any object. Handy if you'd like to extend the [Two.Ellipse](/docs/shapes/ellipse/) class on a custom class.
 
 </div>
+
+
 
 
 
@@ -123,8 +125,6 @@ Convenience function to apply observable qualities of a [Two.Ellipse](/docs/elli
   </a>
 
 </div>
-
-
 
 
 
@@ -161,6 +161,8 @@ The width of the ellipse.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/ellipse.js#L37">
@@ -168,8 +170,6 @@ The width of the ellipse.
   </a>
 
 </div>
-
-
 
 
 
@@ -206,6 +206,8 @@ The height of the ellipse.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/ellipse.js#L45">
@@ -213,8 +215,6 @@ The height of the ellipse.
   </a>
 
 </div>
-
-
 
 
 
@@ -260,9 +260,11 @@ __Returns__: Two.Polygon
 
 <div class="description">
 
-Create a new instance of [Two.Polygon](/docs/polygon) with the same properties of the current path.
+Create a new instance of [Two.Polygon](/docs/shapes/polygon/) with the same properties of the current path.
 
 </div>
+
+
 
 
 
@@ -273,8 +275,6 @@ Create a new instance of [Two.Polygon](/docs/polygon) with the same properties o
   </a>
 
 </div>
-
-
 
 
 
@@ -319,6 +319,8 @@ Return a JSON compatible plain object that represents the path.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/ellipse.js#L212">
@@ -326,8 +328,6 @@ Return a JSON compatible plain object that represents the path.
   </a>
 
 </div>
-
-
 
 
 
