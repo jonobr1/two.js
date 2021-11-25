@@ -5,6 +5,12 @@ body {
   // word-spacing: 0.1875rem;
   color: $textColor;
 
+  .sidebar-open {
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+  }
+
   p {
     line-height: 1.5rem;
     margin-top: 0;
@@ -570,7 +576,7 @@ table tr:last-child td:last-child {
 }
 
 .sidebar, .page {
-  transition: opacity .1s;
+  transition: opacity .35s ease-in-out;
 }
 .search-open {
   .sidebar, .page {
@@ -578,10 +584,15 @@ table tr:last-child td:last-child {
   }
 }
 
+.theme-container .sidebar-mask {
+  display: block !important;
+}
+
 @media (max-width: $MQMobile) {
 
   .page {
     padding-top: 4rem;
+    padding-bottom: 4rem !important;
   }
 
   .theme-default-content:not(.custom) {

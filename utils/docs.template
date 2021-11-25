@@ -137,6 +137,7 @@ __Triggers__:
 
 <% if (item.see && item.see.length > 0) { %>
 <div class="see">
+See: 
 <% _.each(item.see, function(see) { %>
 <%= see %>
 <% }); %>

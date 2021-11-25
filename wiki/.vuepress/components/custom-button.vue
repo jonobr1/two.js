@@ -43,9 +43,10 @@
     &.source {
       position: fixed;
       top: 6rem;
-      right: 2rem;
+      right: 1rem;
       left: auto;
       bottom: auto;
+      z-index: 10;
     }
 
     &:hover {
@@ -101,7 +102,7 @@
 
     a.button.source {
       bottom: 1rem;
-      right: 1rem;
+      right: 0.5rem;
       top: auto;
       left: auto;
     }
