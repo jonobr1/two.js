@@ -45,6 +45,7 @@ module.exports = {
   head: [
     ['link', { rel: 'icon', href: '/images/favicon.gif' }],
     ['link', { rel: 'stylesheet', href: 'https://use.typekit.net/edp1hux.css' }],
+    ['meta', { name: 'google-site-verification', content: 'eNzLpThZ5XFyxVRedxqW7JxwibqK83DLO-Pqx9rTIDo' }],
     ['meta', { property: 'og:title', content: 'Two.js' }],
     ['meta', { property: 'og:description', content: 'A renderer agnostic two-dimensional drawing api for the web.' }],
     ['meta', { property: 'og:url', content: 'https://two.js.org/' }],
