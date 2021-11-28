@@ -105,6 +105,16 @@
       right: 0.5rem;
       top: auto;
       left: auto;
+      width: 0;
+      padding: 0.5rem 1.25rem;
+      span.icon.source {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+      span.label {
+        display: none;
+      }
     }
 
   }
