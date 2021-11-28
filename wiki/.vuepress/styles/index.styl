@@ -51,10 +51,10 @@ body {
   .theme-default-content {
 
     code {
-      font-family: "anonymous-pro", monospace;
+      font-family: $codeFamily;
       font-size: .85rem;
       line-height: 100%;
-      color: $codeColor;
+      color: shade($codeColor, 50%);
       padding: .2rem .4rem;
       border-radius: 4px;
       background: #f6f6f6;
@@ -74,7 +74,8 @@ body {
     pre[class*="language-"] {
       color: #ccc;
       background: none;
-      font-family: "anonymous-pro", monospace;
+      font-family: $codeFamily;
+      // font-weight: 700;
       font-size: 1rem;
       text-align: left;
       white-space: pre;
@@ -550,7 +551,8 @@ table tr:last-child td:last-child {
 
 .page a.lineno {
   color: lighten($codeColor, 40%);
-  font-family: "anonymous-pro", monospace;
+  font-family: $codeFamily;
+  // font-weight: 700;
   font-size: .85rem;
   line-height: 100%;
   word-break: break-word; //possibly only for mobile.
