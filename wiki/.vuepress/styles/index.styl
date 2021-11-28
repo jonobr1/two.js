@@ -408,14 +408,16 @@ body {
 
 .docs .sidebar {
   .sidebar-sub-headers {
-    margin-left: 2em;
+    margin-left: calc(2em + 5px);
     padding-left: 0px;
     font-size: 1rem;
 
     a.sidebar-link {
       padding-left: 1rem;
       color: $orange;
-      border-left: 2px solid $orange;
+      border-left: 2px solid tint($orange, 20%);
+      padding-top: 0.125rem;
+      padding-bottom: 0.125rem;
 
       &:hover {
         color: $red;
