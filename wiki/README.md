@@ -205,11 +205,11 @@ Two.js is dependency free, but its creation would not have been possible without
 
 <div class="project-footnote">
 
-Site design by [Yuin](https://yuinchien.com/) • Site development in collaboration with [Tonia](https://toniab.com/)
-
 Two.js is a project by [Jono](http://jono.fyi/) and numerous [contributors](https://github.com/jonobr1/two.js/graphs/contributors)
 
-published under the [MIT License](https://github.com/jonobr1/two.js/blob/dev/LICENSE) © 2012 – {{ 1900 + new Date().getYear() }}
+Site design by [Yuin](https://yuinchien.com/) • Site development in collaboration with [Tonia](https://toniab.com/)
+
+Published under the [MIT License](https://github.com/jonobr1/two.js/blob/dev/LICENSE) © 2012 – {{ 1900 + new Date().getYear() }}
 
 </div>
 
