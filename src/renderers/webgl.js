@@ -167,7 +167,7 @@ var webgl = {
 
     updateCanvas: function(elem) {
 
-      var next, prev, a, c, ux, uy, vx, vy, ar, bl, br, cl, x, y;
+      var prev, a, c, ux, uy, vx, vy, ar, bl, br, cl, x, y;
       var isOffset;
 
       var commands = elem._renderer.vertices;
@@ -274,10 +274,9 @@ var webgl = {
           case Commands.curve:
 
             prev = closed ? mod(i - 1, length) : Math.max(i - 1, 0);
-            next = closed ? mod(i + 1, length) : Math.min(i + 1, last);
 
             a = commands[prev];
-            c = commands[next];
+
             ar = (a.controls && a.controls.right) || Vector.zero;
             bl = (b.controls && b.controls.left) || Vector.zero;
 

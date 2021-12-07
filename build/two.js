@@ -25,7 +25,7 @@ SOFTWARE.
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
   (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.Two = factory());
-}(this, (function () { 'use strict';
+})(this, (function () { 'use strict';
 
   /**
    * @name Two.Commands
@@ -414,7 +414,7 @@ SOFTWARE.
           for (var j = 0, k = list.length; j < k; j++) {
             var ev = list[j];
             ev = ev.handler ? ev.handler : ev;
-            if (handler && handler !== ev) {
+            if (handler !== ev) {
               events.push(ev);
             }
           }
@@ -1578,13 +1578,13 @@ SOFTWARE.
      * @name Two.Version
      * @property {String} - The current working version of the library.
      */
-    Version: 'v0.7.12',
+    Version: 'v0.7.13',
 
     /**
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: '2021-11-24T18:52:19.187Z',
+    PublishDate: '2021-11-25T06:22:24.735Z',
 
     /**
      * @name Two.Identifier
@@ -3260,7 +3260,7 @@ SOFTWARE.
    */
   function Group(children) {
 
-    Shape.call(this, true);
+    Shape.call(this);
 
     this._renderer.type = 'group';
 
@@ -4385,7 +4385,7 @@ SOFTWARE.
       render: function(ctx, forced, parentClipped) {
 
         var matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter,
-            closed, commands, length, last, next, prev, a, b, c, d, ux, uy, vx, vy,
+            closed, commands, length, last, prev, a, b, c, d, ux, uy, vx, vy,
             ar, bl, br, cl, x, y, mask, clip, defaultMatrix, isOffset, dashes, po;
 
         po = (this.parent && this.parent._renderer)
@@ -4501,10 +4501,9 @@ SOFTWARE.
             case Commands.curve:
 
               prev = closed ? mod(i - 1, length) : Math.max(i - 1, 0);
-              next = closed ? mod(i + 1, length) : Math.min(i + 1, last);
 
               a = commands[prev];
-              c = commands[next];
+
               ar = (a.controls && a.controls.right) || Vector.zero;
               bl = (b.controls && b.controls.left) || Vector.zero;
 
@@ -8102,7 +8101,7 @@ SOFTWARE.
         obj.controls.right.x = alx;
         obj.controls.right.y = aly;
 
-        if (!typeof obj.relative === 'boolean' || obj.relative) {
+        if (!(typeof obj.relative === 'boolean') || obj.relative) {
           obj.controls.left.x -= x;
           obj.controls.left.y -= y;
           obj.controls.right.x -= x;
@@ -8384,7 +8383,6 @@ SOFTWARE.
           v.command = Commands.move;
           this._renderer.vertices.unshift(v);
 
-          left = v;
           next = this._collection[i + 1];
 
           // Project control over the percentage `t`
@@ -13954,12 +13952,10 @@ SOFTWARE.
         var b = points[i];
         var command;
         var prev = closed ? mod(i - 1, l) : Math.max(i - 1, 0);
-        var next = closed ? mod(i + 1, l) : Math.min(i + 1, last);
 
         var a = points[prev];
-        var c = points[next];
 
-        var vx, vy, ux, uy, ar, bl, br, cl;
+        var vx, vy, ux, uy, ar, bl, br, c, cl;
         var rx, ry, xAxisRotation, largeArcFlag, sweepFlag;
 
         // Access x and y directly,
@@ -15263,7 +15259,7 @@ SOFTWARE.
 
       updateCanvas: function(elem) {
 
-        var next, prev, a, c, ux, uy, vx, vy, ar, bl, br, cl, x, y;
+        var prev, a, c, ux, uy, vx, vy, ar, bl, br, cl, x, y;
         var isOffset;
 
         var commands = elem._renderer.vertices;
@@ -15370,10 +15366,9 @@ SOFTWARE.
             case Commands.curve:
 
               prev = closed ? mod(i - 1, length) : Math.max(i - 1, 0);
-              next = closed ? mod(i + 1, length) : Math.min(i + 1, last);
 
               a = commands[prev];
-              c = commands[next];
+
               ar = (a.controls && a.controls.right) || Vector.zero;
               bl = (b.controls && b.controls.left) || Vector.zero;
 
@@ -17743,4 +17738,4 @@ SOFTWARE.
 
   return Two;
 
-})));
+}));

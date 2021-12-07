@@ -55,6 +55,8 @@ Utility function used in conjunction with event handlers to update the flagMatri
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L86">
@@ -62,8 +64,6 @@ Utility function used in conjunction with event handlers to update the flagMatri
   </a>
 
 </div>
-
-
 
 
 
@@ -101,9 +101,11 @@ Utility function used in conjunction with event handlers to update the flagMatri
 
 <div class="description">
 
-Convenience function to apply observable qualities of a [Two.Shape](/docs/shape) to any object. Handy if you'd like to extend the [Two.Shape](/docs/shape) class on a custom class.
+Convenience function to apply observable qualities of a [Two.Shape](/docs/shape/) to any object. Handy if you'd like to extend the [Two.Shape](/docs/shape/) class on a custom class.
 
 </div>
+
+
 
 
 
@@ -114,8 +116,6 @@ Convenience function to apply observable qualities of a [Two.Shape](/docs/shape)
   </a>
 
 </div>
-
-
 
 
 
@@ -158,6 +158,8 @@ Object access to store relevant renderer specific variables. Warning: manipulati
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L17">
@@ -172,13 +174,11 @@ Object access to store relevant renderer specific variables. Warning: manipulati
 
 
 ::: tip nota-bene
-With the [Two.SvgRenderer](/docs/svgrenderer) you can access the underlying SVG element created via `shape.renderer.elem`.
+With the [Two.SvgRenderer](/docs/two/) you can access the underlying SVG element created via `shape.renderer.elem`.
 :::
 
 
 </div>
-
-
 
 
 </div>
@@ -213,6 +213,8 @@ Session specific unique identifier.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L27">
@@ -227,13 +229,11 @@ Session specific unique identifier.
 
 
 ::: tip nota-bene
-In the [Two.SvgRenderer](/docs/svgrenderer) change this to change the underlying SVG element's id too.
+In the [Two.SvgRenderer](/docs/two/) change this to change the underlying SVG element's id too.
 :::
 
 
 </div>
-
-
 
 
 </div>
@@ -274,6 +274,8 @@ A list of class strings stored if imported / interpreted  from an SVG element.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L34">
@@ -281,8 +283,6 @@ A list of class strings stored if imported / interpreted  from an SVG element.
   </a>
 
 </div>
-
-
 
 
 
@@ -325,6 +325,8 @@ The transformation matrix of the shape.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L41">
@@ -339,13 +341,11 @@ The transformation matrix of the shape.
 
 
 ::: tip nota-bene
-[Two.Shape.translation](/docs/shape/#two-shape-translation), [Two.Shape.rotation](/docs/shape/#two-shape-rotation), [Two.Shape.scale](/docs/shape/#two-shape-scale), [Two.Shape.skewX](/docs/shape/#two-shape-skewx), and [Two.Shape.skewY](/docs/shape/#two-shape-skewy) apply their values to the matrix when changed. The matrix is what is sent to the renderer to be drawn.
+[Two.Shape.translation](/docs/shape/#translation), [Two.Shape.rotation](/docs/shape/#rotation), [Two.Shape.scale](/docs/shape/#scale), [Two.Shape.skewX](/docs/shape/#skewx), and [Two.Shape.skewY](/docs/shape/#skewy) apply their values to the matrix when changed. The matrix is what is sent to the renderer to be drawn.
 :::
 
 
 </div>
-
-
 
 
 </div>
@@ -380,6 +380,8 @@ The x and y value for where the shape is placed relative to its parent.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L49">
@@ -387,8 +389,6 @@ The x and y value for where the shape is placed relative to its parent.
   </a>
 
 </div>
-
-
 
 
 
@@ -425,6 +425,8 @@ The value in Number for how much the shape is rotated relative to its parent.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L55">
@@ -432,8 +434,6 @@ The value in Number for how much the shape is rotated relative to its parent.
   </a>
 
 </div>
-
-
 
 
 
@@ -470,6 +470,8 @@ The value for how much the shape is scaled relative to its parent.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L61">
@@ -484,13 +486,11 @@ The value for how much the shape is scaled relative to its parent.
 
 
 ::: tip nota-bene
-This value can be replaced with a [Two.Vector](/docs/vector) to do non-uniform scaling. e.g: `shape.scale = new Two.Vector(2, 1);`
+This value can be replaced with a [Two.Vector](/docs/vector/) to do non-uniform scaling. e.g: `shape.scale = new Two.Vector(2, 1);`
 :::
 
 
 </div>
-
-
 
 
 </div>
@@ -531,6 +531,8 @@ Skew the shape by an angle in the x axis direction.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L68">
@@ -538,8 +540,6 @@ Skew the shape by an angle in the x axis direction.
   </a>
 
 </div>
-
-
 
 
 
@@ -582,6 +582,8 @@ Skew the shape by an angle in the y axis direction.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L75">
@@ -589,8 +591,6 @@ Skew the shape by an angle in the y axis direction.
   </a>
 
 </div>
-
-
 
 
 
@@ -627,6 +627,8 @@ A class to be applied to the element to be compatible with CSS styling.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L336">
@@ -646,8 +648,6 @@ Only available for the SVG renderer.
 
 
 </div>
-
-
 
 
 </div>
@@ -689,6 +689,8 @@ Convenience method to add itself to the scenegraph.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L343">
@@ -696,8 +698,6 @@ Convenience method to add itself to the scenegraph.
   </a>
 
 </div>
-
-
 
 
 
@@ -743,9 +743,11 @@ __Returns__: Two.Shape
 
 <div class="description">
 
-Create a new [Two.Shape](/docs/shape) with the same values as the current shape.
+Create a new [Two.Shape](/docs/shape/) with the same values as the current shape.
 
 </div>
+
+
 
 
 
@@ -756,8 +758,6 @@ Create a new [Two.Shape](/docs/shape) with the same values as the current shape.
   </a>
 
 </div>
-
-
 
 
 

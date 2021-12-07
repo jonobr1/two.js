@@ -20,7 +20,7 @@ var min = Math.min, max = Math.max;
  */
 function Group(children) {
 
-  Shape.call(this, true);
+  Shape.call(this);
 
   this._renderer.type = 'group';
 
@@ -617,7 +617,7 @@ _.extend(Group.prototype, Shape.prototype, {
         return node;
       } else if (node.children) {
         for (var i = 0; i < node.children.length; i++) {
-          found = search(node.children[i], id);
+          found = search(node.children[i]);
           if (found) {
             return found;
           }
@@ -643,7 +643,7 @@ _.extend(Group.prototype, Shape.prototype, {
       if (node.children) {
         for (var i = 0; i < node.children.length; i++) {
           var child = node.children[i];
-          search(child, className);
+          search(child);
         }
       }
       return found;
@@ -671,13 +671,13 @@ _.extend(Group.prototype, Shape.prototype, {
       }
       return found;
     }
-    return search(this, type);
+    return search(this);
   },
 
   /**
    * @name Two.Group#add
    * @function
-   * @param {Two.Shape[]} objects - An array of objects to be added. Can be also be supplied as individual arguments.
+   * @param {Two.Shape[]|...Two.Shape} objects - An array of objects to be added. Can be also be supplied as individual arguments.
    * @description Add objects to the group.
    */
   add: function(objects) {
@@ -709,9 +709,9 @@ _.extend(Group.prototype, Shape.prototype, {
   },
 
   /**
-   * @name Two.Group#add
+   * @name Two.Group#remove
    * @function
-   * @param {Two.Shape[]} objects - An array of objects to be removed. Can be also removed as individual arguments.
+   * @param {Two.Shape[]|...Two.Shape} [objects=self] - An array of objects to be removed. Can be also removed as individual arguments. If no arguments are passed, then it removes itself from its parent.
    * @description Remove objects from the group.
    */
   remove: function(objects) {

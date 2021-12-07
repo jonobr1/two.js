@@ -1110,7 +1110,7 @@ _.extend(Path.prototype, Shape.prototype, {
       obj.controls.right.x = alx;
       obj.controls.right.y = aly;
 
-      if (!typeof obj.relative === 'boolean' || obj.relative) {
+      if (!(typeof obj.relative === 'boolean') || obj.relative) {
         obj.controls.left.x -= x;
         obj.controls.left.y -= y;
         obj.controls.right.x -= x;
@@ -1392,7 +1392,6 @@ _.extend(Path.prototype, Shape.prototype, {
         v.command = Commands.move;
         this._renderer.vertices.unshift(v);
 
-        left = v;
         next = this._collection[i + 1];
 
         // Project control over the percentage `t`

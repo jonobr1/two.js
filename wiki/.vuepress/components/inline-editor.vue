@@ -51,8 +51,9 @@
 
       var script = document.createElement('script');
       script.type = 'text/javascript';
-      script.src = 'https://static.codepen.io/assets/embed/ei.js';
       script.className = 'codepen';
+      script.async = '';
+      script.src = 'https://static.codepen.io/assets/embed/ei.js';
       document.body.appendChild(script);
 
     },

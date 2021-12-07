@@ -149,7 +149,7 @@ function removeEventListener(name, handler) {
         for (var j = 0, k = list.length; j < k; j++) {
           var ev = list[j];
           ev = ev.handler ? ev.handler : ev;
-          if (handler && handler !== ev) {
+          if (handler !== ev) {
             events.push(ev);
           }
         }

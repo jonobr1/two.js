@@ -28,7 +28,7 @@ This is the primary primitive class for creating all drawable shapes in Two.js. 
 
 | Argument | Description |
 | ---- | ----------- |
-|  vertices  | A list of [Two.Anchor](/docs/anchor)s that represent the order and coordinates to construct the rendered shape. |
+|  vertices  | A list of [Two.Anchor](/docs/anchor/)s that represent the order and coordinates to construct the rendered shape. |
 |  closed  | Describes whether the shape is closed or open. |
 |  curved  | Describes whether the shape automatically calculates bezier handles for each vertex. |
 |  manual  | Describes whether the developer controls how vertices are plotted or if Two.js automatically plots coordinates based on closed and curved booleans. |
@@ -52,9 +52,11 @@ This is the primary primitive class for creating all drawable shapes in Two.js. 
 
 <div class="properties">
 
-A list of properties that are on every [Two.Path](/docs/path).
+A list of properties that are on every [Two.Path](/docs/path/).
 
 </div>
+
+
 
 
 
@@ -70,8 +72,6 @@ A list of properties that are on every [Two.Path](/docs/path).
   </a>
 
 </div>
-
-
 
 
 
@@ -102,9 +102,11 @@ A list of properties that are on every [Two.Path](/docs/path).
 
 <div class="description">
 
-Cached method to let renderers know vertices have been updated on a [Two.Path](/docs/path).
+Cached method to let renderers know vertices have been updated on a [Two.Path](/docs/path/).
 
 </div>
+
+
 
 
 
@@ -115,8 +117,6 @@ Cached method to let renderers know vertices have been updated on a [Two.Path](/
   </a>
 
 </div>
-
-
 
 
 
@@ -147,9 +147,11 @@ Cached method to let renderers know vertices have been updated on a [Two.Path](/
 
 <div class="description">
 
-Cached method to let [Two.Path](/docs/path) know vertices have been added to the instance.
+Cached method to let [Two.Path](/docs/path/) know vertices have been added to the instance.
 
 </div>
+
+
 
 
 
@@ -160,8 +162,6 @@ Cached method to let [Two.Path](/docs/path) know vertices have been added to the
   </a>
 
 </div>
-
-
 
 
 
@@ -192,9 +192,11 @@ Cached method to let [Two.Path](/docs/path) know vertices have been added to the
 
 <div class="description">
 
-Cached method to let [Two.Path](/docs/path) know vertices have been removed from the instance.
+Cached method to let [Two.Path](/docs/path/) know vertices have been removed from the instance.
 
 </div>
+
+
 
 
 
@@ -209,8 +211,6 @@ Cached method to let [Two.Path](/docs/path) know vertices have been removed from
 
 
 
-
-
 </div>
 
 
@@ -237,9 +237,11 @@ Cached method to let [Two.Path](/docs/path) know vertices have been removed from
 
 <div class="description">
 
-Cached method to let [Two.Path](/docs/path) know the fill has changed.
+Cached method to let [Two.Path](/docs/path/) know the fill has changed.
 
 </div>
+
+
 
 
 
@@ -254,8 +256,6 @@ Cached method to let [Two.Path](/docs/path) know the fill has changed.
 
 
 
-
-
 </div>
 
 
@@ -282,9 +282,11 @@ Cached method to let [Two.Path](/docs/path) know the fill has changed.
 
 <div class="description">
 
-Cached method to let [Two.Path](/docs/path) know the stroke has changed.
+Cached method to let [Two.Path](/docs/path/) know the stroke has changed.
 
 </div>
+
+
 
 
 
@@ -295,8 +297,6 @@ Cached method to let [Two.Path](/docs/path) know the stroke has changed.
   </a>
 
 </div>
-
-
 
 
 
@@ -334,9 +334,11 @@ Cached method to let [Two.Path](/docs/path) know the stroke has changed.
 
 <div class="description">
 
-Convenience function to apply observable qualities of a [Two.Path](/docs/path) to any object. Handy if you'd like to extend the [Two.Path](/docs/path) class on a custom class.
+Convenience function to apply observable qualities of a [Two.Path](/docs/path/) to any object. Handy if you'd like to extend the [Two.Path](/docs/path/) class on a custom class.
 
 </div>
+
+
 
 
 
@@ -347,8 +349,6 @@ Convenience function to apply observable qualities of a [Two.Path](/docs/path) t
   </a>
 
 </div>
-
-
 
 
 
@@ -385,6 +385,8 @@ Determines whether a final line is drawn between the final point in the `vertice
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L54">
@@ -392,8 +394,6 @@ Determines whether a final line is drawn between the final point in the `vertice
   </a>
 
 </div>
-
-
 
 
 
@@ -430,6 +430,8 @@ When the path is `automatic = true` this boolean determines whether the lines be
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L60">
@@ -437,8 +439,6 @@ When the path is `automatic = true` this boolean determines whether the lines be
   </a>
 
 </div>
-
-
 
 
 
@@ -475,9 +475,11 @@ Number between zero and one to state the beginning of where the path is rendered
 
 <div class="description">
 
-[Two.Path.beginning](/docs/path/#two-path-beginning) is a percentage value that represents at what percentage into the path should the renderer start drawing.
+[Two.Path.beginning](/docs/path/#beginning) is a percentage value that represents at what percentage into the path should the renderer start drawing.
 
 </div>
+
+
 
 
 
@@ -495,13 +497,11 @@ Number between zero and one to state the beginning of where the path is rendered
 
 
 ::: tip nota-bene
-This is great for animating in and out stroked paths in conjunction with [Two.Path.ending](/docs/path/#two-path-ending).
+This is great for animating in and out stroked paths in conjunction with [Two.Path.ending](/docs/path/#ending).
 :::
 
 
 </div>
-
-
 
 
 </div>
@@ -536,9 +536,11 @@ Number between zero and one to state the ending of where the path is rendered.
 
 <div class="description">
 
-[Two.Path.ending](/docs/path/#two-path-ending) is a percentage value that represents at what percentage into the path should the renderer start drawing.
+[Two.Path.ending](/docs/path/#ending) is a percentage value that represents at what percentage into the path should the renderer start drawing.
 
 </div>
+
+
 
 
 
@@ -556,13 +558,11 @@ Number between zero and one to state the ending of where the path is rendered.
 
 
 ::: tip nota-bene
-This is great for animating in and out stroked paths in conjunction with [Two.Path.beginning](/docs/path/#two-path-beginning).
+This is great for animating in and out stroked paths in conjunction with [Two.Path.beginning](/docs/path/#beginning).
 :::
 
 
 </div>
-
-
 
 
 </div>
@@ -597,6 +597,14 @@ The value of what the path should be filled in with.
 
 
 
+<div class="see">
+
+See: [https://developer.mozilla.org/en-US/docs/Web/CSS/color_value](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value) for more information on CSS's colors as `String`.
+
+</div>
+
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L84">
@@ -606,14 +614,6 @@ The value of what the path should be filled in with.
 </div>
 
 
-
-
-
-<div class="see">
-
-[https://developer.mozilla.org/en-US/docs/Web/CSS/color_value](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value) for more information on CSS's colors as `String`.
-
-</div>
 
 
 </div>
@@ -648,6 +648,14 @@ The value of what the path should be outlined in with.
 
 
 
+<div class="see">
+
+See: [https://developer.mozilla.org/en-US/docs/Web/CSS/color_value](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value) for more information on CSS's colors as `String`.
+
+</div>
+
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L91">
@@ -657,14 +665,6 @@ The value of what the path should be outlined in with.
 </div>
 
 
-
-
-
-<div class="see">
-
-[https://developer.mozilla.org/en-US/docs/Web/CSS/color_value](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value) for more information on CSS's colors as `String`.
-
-</div>
 
 
 </div>
@@ -699,6 +699,8 @@ The thickness in pixels of the stroke.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L98">
@@ -706,8 +708,6 @@ The thickness in pixels of the stroke.
   </a>
 
 </div>
-
-
 
 
 
@@ -744,6 +744,8 @@ The opaqueness of the path.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L104">
@@ -763,8 +765,6 @@ Can be used in conjunction with CSS Colors that have an alpha value.
 
 
 </div>
-
-
 
 
 </div>
@@ -799,6 +799,8 @@ A class to be applied to the element to be compatible with CSS styling.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L111">
@@ -818,8 +820,6 @@ Only available for the SVG renderer.
 
 
 </div>
-
-
 
 
 </div>
@@ -854,6 +854,8 @@ Display the path or not.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L118">
@@ -868,13 +870,11 @@ Display the path or not.
 
 
 ::: tip nota-bene
-For [Two.CanvasRenderer](/docs/canvasrenderer) and [Two.WebGLRenderer](/docs/webglrenderer) when set to false all updating is disabled improving performance dramatically with many objects in the scene.
+For [Two.CanvasRenderer](/docs/renderers/canvas/) and [Two.WebGLRenderer](/docs/renderers/webgl/) when set to false all updating is disabled improving performance dramatically with many objects in the scene.
 :::
 
 
 </div>
-
-
 
 
 </div>
@@ -909,6 +909,14 @@ For [Two.CanvasRenderer](/docs/canvasrenderer) and [Two.WebGLRenderer](/docs/web
 
 
 
+<div class="see">
+
+See: [https://www.w3.org/TR/SVG11/painting.html#StrokeLinecapProperty](https://www.w3.org/TR/SVG11/painting.html#StrokeLinecapProperty)
+
+</div>
+
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L125">
@@ -918,14 +926,6 @@ For [Two.CanvasRenderer](/docs/canvasrenderer) and [Two.WebGLRenderer](/docs/web
 </div>
 
 
-
-
-
-<div class="see">
-
-[https://www.w3.org/TR/SVG11/painting.html#StrokeLinecapProperty](https://www.w3.org/TR/SVG11/painting.html#StrokeLinecapProperty)
-
-</div>
 
 
 </div>
@@ -960,6 +960,14 @@ For [Two.CanvasRenderer](/docs/canvasrenderer) and [Two.WebGLRenderer](/docs/web
 
 
 
+<div class="see">
+
+See: [https://www.w3.org/TR/SVG11/painting.html#StrokeLinejoinProperty](https://www.w3.org/TR/SVG11/painting.html#StrokeLinejoinProperty)
+
+</div>
+
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L132">
@@ -969,14 +977,6 @@ For [Two.CanvasRenderer](/docs/canvasrenderer) and [Two.WebGLRenderer](/docs/web
 </div>
 
 
-
-
-
-<div class="see">
-
-[https://www.w3.org/TR/SVG11/painting.html#StrokeLinejoinProperty](https://www.w3.org/TR/SVG11/painting.html#StrokeLinejoinProperty)
-
-</div>
 
 
 </div>
@@ -1011,6 +1011,14 @@ For [Two.CanvasRenderer](/docs/canvasrenderer) and [Two.WebGLRenderer](/docs/web
 
 
 
+<div class="see">
+
+See: [https://www.w3.org/TR/SVG11/painting.html#StrokeMiterlimitProperty](https://www.w3.org/TR/SVG11/painting.html#StrokeMiterlimitProperty)
+
+</div>
+
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L139">
@@ -1020,14 +1028,6 @@ For [Two.CanvasRenderer](/docs/canvasrenderer) and [Two.WebGLRenderer](/docs/web
 </div>
 
 
-
-
-
-<div class="see">
-
-[https://www.w3.org/TR/SVG11/painting.html#StrokeMiterlimitProperty](https://www.w3.org/TR/SVG11/painting.html#StrokeMiterlimitProperty)
-
-</div>
 
 
 </div>
@@ -1062,9 +1062,11 @@ An ordered list of anchor points for rendering the path.
 
 <div class="description">
 
-A list of [Two.Anchor](/docs/anchor) objects that consist of what form the path takes.
+A list of [Two.Anchor](/docs/anchor/) objects that consist of what form the path takes.
 
 </div>
+
+
 
 
 
@@ -1082,13 +1084,11 @@ A list of [Two.Anchor](/docs/anchor) objects that consist of what form the path 
 
 
 ::: tip nota-bene
-The array when manipulating is actually a [Two.Collection](/docs/collection).
+The array when manipulating is actually a [Two.Collection](/docs/collection/).
 :::
 
 
 </div>
-
-
 
 
 </div>
@@ -1123,6 +1123,8 @@ Determines whether or not Two.js should calculate curves, lines, and commands au
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L154">
@@ -1130,8 +1132,6 @@ Determines whether or not Two.js should calculate curves, lines, and commands au
   </a>
 
 </div>
-
-
 
 
 
@@ -1174,6 +1174,14 @@ A list of numbers that represent the repeated dash length and dash space applied
 
 
 
+<div class="see">
+
+See: [https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray) for more information on the SVG stroke-dasharray attribute.
+
+</div>
+
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L160">
@@ -1183,14 +1191,6 @@ A list of numbers that represent the repeated dash length and dash space applied
 </div>
 
 
-
-
-
-<div class="see">
-
-[https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray) for more information on the SVG stroke-dasharray attribute.
-
-</div>
 
 
 </div>
@@ -1214,9 +1214,11 @@ A list of numbers that represent the repeated dash length and dash space applied
 
 <div class="properties">
 
-A number in pixels to offset [Two.Path.dashes](/docs/path/#two-path-dashes) display.
+A number in pixels to offset [Two.Path.dashes](/docs/path/#dashes) display.
 
 </div>
+
+
 
 
 
@@ -1232,8 +1234,6 @@ A number in pixels to offset [Two.Path.dashes](/docs/path/#two-path-dashes) disp
   </a>
 
 </div>
-
-
 
 
 
@@ -1259,9 +1259,11 @@ A number in pixels to offset [Two.Path.dashes](/docs/path/#two-path-dashes) disp
 
 <div class="properties">
 
-The sum of distances between all [Two.Path.vertices](/docs/path/#two-path-vertices).
+The sum of distances between all [Two.Path.vertices](/docs/path/#vertices).
 
 </div>
+
+
 
 
 
@@ -1277,8 +1279,6 @@ The sum of distances between all [Two.Path.vertices](/docs/path/#two-path-vertic
   </a>
 
 </div>
-
-
 
 
 
@@ -1315,6 +1315,8 @@ The shape whose alpha property becomes a clipping area for the path.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L450">
@@ -1334,8 +1336,6 @@ This property is currently not working becuase of SVG spec issues found here {@l
 
 
 </div>
-
-
 
 
 </div>
@@ -1370,6 +1370,8 @@ Tells Two.js renderer if this object represents a mask for another object (or no
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L476">
@@ -1377,8 +1379,6 @@ Tells Two.js renderer if this object represents a mask for another object (or no
   </a>
 
 </div>
-
-
 
 
 
@@ -1424,9 +1424,11 @@ __Returns__: Two.Path
 
 <div class="description">
 
-Create a new instance of [Two.Path](/docs/path) with the same properties of the current path.
+Create a new instance of [Two.Path](/docs/path/) with the same properties of the current path.
 
 </div>
+
+
 
 
 
@@ -1437,8 +1439,6 @@ Create a new instance of [Two.Path](/docs/path) with the same properties of the 
   </a>
 
 </div>
-
-
 
 
 
@@ -1483,6 +1483,8 @@ Return a JSON compatible plain object that represents the path.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L760">
@@ -1490,8 +1492,6 @@ Return a JSON compatible plain object that represents the path.
   </a>
 
 </div>
-
-
 
 
 
@@ -1528,6 +1528,8 @@ Short hand method to set fill to `transparent`.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L800">
@@ -1535,8 +1537,6 @@ Short hand method to set fill to `transparent`.
   </a>
 
 </div>
-
-
 
 
 
@@ -1573,6 +1573,8 @@ Short hand method to set stroke to `transparent`.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L810">
@@ -1580,8 +1582,6 @@ Short hand method to set stroke to `transparent`.
   </a>
 
 </div>
-
-
 
 
 
@@ -1618,6 +1618,8 @@ Orient the vertices of the shape to the upper left-hand corner of the path.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L820">
@@ -1625,8 +1627,6 @@ Orient the vertices of the shape to the upper left-hand corner of the path.
   </a>
 
 </div>
-
-
 
 
 
@@ -1663,6 +1663,8 @@ Orient the vertices of the shape to the center of the path.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L852">
@@ -1670,8 +1672,6 @@ Orient the vertices of the shape to the center of the path.
   </a>
 
 </div>
-
-
 
 
 
@@ -1708,6 +1708,8 @@ Remove self from the scene / parent.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L879">
@@ -1715,8 +1717,6 @@ Remove self from the scene / parent.
   </a>
 
 </div>
-
-
 
 
 
@@ -1770,6 +1770,8 @@ Return an object with top, left, right, bottom, width, and height parameters of 
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L896">
@@ -1777,8 +1779,6 @@ Return an object with top, left, right, bottom, width, and height parameters of 
   </a>
 
 </div>
-
-
 
 
 
@@ -1816,7 +1816,7 @@ __Returns__: Object
 
 | Argument | Description |
 | ---- | ----------- |
-|  t  | Percentage value describing where on the [Two.Path](/docs/path) to estimate and assign coordinate values. |
+|  t  | Percentage value describing where on the [Two.Path](/docs/path/) to estimate and assign coordinate values. |
 |  object  | Object to apply calculated x, y to. If none available returns new `Object`. |
 </div>
 
@@ -1825,9 +1825,11 @@ __Returns__: Object
 
 <div class="description">
 
-Given a float `t` from 0 to 1, return a point or assign a passed `obj`'s coordinates to that percentage on this [Two.Path](/docs/path)'s curve.
+Given a float `t` from 0 to 1, return a point or assign a passed `obj`'s coordinates to that percentage on this [Two.Path](/docs/path/)'s curve.
 
 </div>
+
+
 
 
 
@@ -1838,8 +1840,6 @@ Given a float `t` from 0 to 1, return a point or assign a passed `obj`'s coordin
   </a>
 
 </div>
-
-
 
 
 
@@ -1876,6 +1876,8 @@ Based on closed / curved and sorting of vertices plot where all points should be
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L1137">
@@ -1890,13 +1892,11 @@ Based on closed / curved and sorting of vertices plot where all points should be
 
 
 ::: tip nota-bene
-While this method is public it is internally called by [Two.Path._update](/docs/path/#two-path-_update) when `automatic = true`.
+While this method is public it is internally called by [Two.Path._update](/docs/path/#_update) when `automatic = true`.
 :::
 
 
 </div>
-
-
 
 
 </div>
@@ -1932,9 +1932,11 @@ While this method is public it is internally called by [Two.Path._update](/docs/
 
 <div class="description">
 
-Insert a [Two.Anchor](/docs/anchor) at the midpoint between every item in [Two.Path.vertices](/docs/path/#two-path-vertices).
+Insert a [Two.Anchor](/docs/anchor/) at the midpoint between every item in [Two.Path.vertices](/docs/path/#vertices).
 
 </div>
+
+
 
 
 
@@ -1945,8 +1947,6 @@ Insert a [Two.Anchor](/docs/anchor) at the midpoint between every item in [Two.P
   </a>
 
 </div>
-
-
 
 
 

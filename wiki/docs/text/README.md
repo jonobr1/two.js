@@ -63,6 +63,8 @@ Approximate aspect ratio of a typeface's character width to height.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L73">
@@ -70,8 +72,6 @@ Approximate aspect ratio of a typeface's character width to height.
   </a>
 
 </div>
-
-
 
 
 
@@ -97,9 +97,11 @@ Approximate aspect ratio of a typeface's character width to height.
 
 <div class="properties">
 
-A list of properties that are on every [Two.Text](/docs/text).
+A list of properties that are on every [Two.Text](/docs/text/).
 
 </div>
+
+
 
 
 
@@ -115,8 +117,6 @@ A list of properties that are on every [Two.Text](/docs/text).
   </a>
 
 </div>
-
-
 
 
 
@@ -147,9 +147,11 @@ A list of properties that are on every [Two.Text](/docs/text).
 
 <div class="description">
 
-Cached method to let renderers know the fill property have been updated on a [Two.Text](/docs/text).
+Cached method to let renderers know the fill property have been updated on a [Two.Text](/docs/text/).
 
 </div>
+
+
 
 
 
@@ -160,8 +162,6 @@ Cached method to let renderers know the fill property have been updated on a [Tw
   </a>
 
 </div>
-
-
 
 
 
@@ -192,9 +192,11 @@ Cached method to let renderers know the fill property have been updated on a [Tw
 
 <div class="description">
 
-Cached method to let renderers know the stroke property have been updated on a [Two.Text](/docs/text).
+Cached method to let renderers know the stroke property have been updated on a [Two.Text](/docs/text/).
 
 </div>
+
+
 
 
 
@@ -205,8 +207,6 @@ Cached method to let renderers know the stroke property have been updated on a [
   </a>
 
 </div>
-
-
 
 
 
@@ -249,6 +249,14 @@ A list of numbers that represent the repeated dash length and dash space applied
 
 
 
+<div class="see">
+
+See: [https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray) for more information on the SVG stroke-dasharray attribute.
+
+</div>
+
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L43">
@@ -258,14 +266,6 @@ A list of numbers that represent the repeated dash length and dash space applied
 </div>
 
 
-
-
-
-<div class="see">
-
-[https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray) for more information on the SVG stroke-dasharray attribute.
-
-</div>
 
 
 </div>
@@ -289,9 +289,11 @@ A list of numbers that represent the repeated dash length and dash space applied
 
 <div class="properties">
 
-A number in pixels to offset [Two.Text.dashes](/docs/text/#two-text-dashes) display.
+A number in pixels to offset [Two.Text.dashes](/docs/text/#dashes) display.
 
 </div>
+
+
 
 
 
@@ -307,8 +309,6 @@ A number in pixels to offset [Two.Text.dashes](/docs/text/#two-text-dashes) disp
   </a>
 
 </div>
-
-
 
 
 
@@ -345,6 +345,8 @@ The characters to be rendered to the the screen. Referred to in the documentatio
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L344">
@@ -352,8 +354,6 @@ The characters to be rendered to the the screen. Referred to in the documentatio
   </a>
 
 </div>
-
-
 
 
 
@@ -390,6 +390,8 @@ The font family Two.js should attempt to regsiter for rendering. The default val
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L350">
@@ -397,8 +399,6 @@ The font family Two.js should attempt to regsiter for rendering. The default val
   </a>
 
 </div>
-
-
 
 
 
@@ -435,6 +435,8 @@ The font size in Two.js point space. Defaults to `13`.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L356">
@@ -442,8 +444,6 @@ The font size in Two.js point space. Defaults to `13`.
   </a>
 
 </div>
-
-
 
 
 
@@ -480,6 +480,8 @@ The height between lines measured from base to base in Two.js point space. Defau
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L362">
@@ -487,8 +489,6 @@ The height between lines measured from base to base in Two.js point space. Defau
   </a>
 
 </div>
-
-
 
 
 
@@ -514,9 +514,11 @@ The height between lines measured from base to base in Two.js point space. Defau
 
 <div class="properties">
 
-Alignment of text in relation to [Two.Text.translation](/docs/text/#two-text-translation)'s coordinates. Possible values include `'left'`, `'center'`, `'right'`. Defaults to `'center'`.
+Alignment of text in relation to [Two.Text.translation](/docs/text/#translation)'s coordinates. Possible values include `'left'`, `'center'`, `'right'`. Defaults to `'center'`.
 
 </div>
+
+
 
 
 
@@ -532,8 +534,6 @@ Alignment of text in relation to [Two.Text.translation](/docs/text/#two-text-tra
   </a>
 
 </div>
-
-
 
 
 
@@ -559,9 +559,11 @@ Alignment of text in relation to [Two.Text.translation](/docs/text/#two-text-tra
 
 <div class="properties">
 
-The vertical aligment of the text in relation to [Two.Text.translation](/docs/text/#two-text-translation)'s coordinates. Possible values include `'top'`, `'middle'`, `'bottom'`, and `'baseline'`. Defaults to `'baseline'`.
+The vertical aligment of the text in relation to [Two.Text.translation](/docs/text/#translation)'s coordinates. Possible values include `'top'`, `'middle'`, `'bottom'`, and `'baseline'`. Defaults to `'baseline'`.
 
 </div>
+
+
 
 
 
@@ -577,8 +579,6 @@ The vertical aligment of the text in relation to [Two.Text.translation](/docs/te
   </a>
 
 </div>
-
-
 
 
 
@@ -615,6 +615,8 @@ The font's style. Possible values include '`normal`', `'italic'`. Defaults to `'
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L380">
@@ -622,8 +624,6 @@ The font's style. Possible values include '`normal`', `'italic'`. Defaults to `'
   </a>
 
 </div>
-
-
 
 
 
@@ -660,6 +660,8 @@ A number at intervals of 100 to describe the font's weight. This compatibility v
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L386">
@@ -667,8 +669,6 @@ A number at intervals of 100 to describe the font's weight. This compatibility v
   </a>
 
 </div>
-
-
 
 
 
@@ -705,6 +705,8 @@ String to delineate whether text should be decorated with for instance an `'unde
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L392">
@@ -712,8 +714,6 @@ String to delineate whether text should be decorated with for instance an `'unde
   </a>
 
 </div>
-
-
 
 
 
@@ -750,6 +750,14 @@ The value of what the text object should be filled in with.
 
 
 
+<div class="see">
+
+See: [https://developer.mozilla.org/en-US/docs/Web/CSS/color_value](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value) for more information on CSS's colors as `String`.
+
+</div>
+
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L398">
@@ -759,14 +767,6 @@ The value of what the text object should be filled in with.
 </div>
 
 
-
-
-
-<div class="see">
-
-[https://developer.mozilla.org/en-US/docs/Web/CSS/color_value](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value) for more information on CSS's colors as `String`.
-
-</div>
 
 
 </div>
@@ -801,6 +801,14 @@ The value of what the text object should be filled in with.
 
 
 
+<div class="see">
+
+See: [https://developer.mozilla.org/en-US/docs/Web/CSS/color_value](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value) for more information on CSS's colors as `String`.
+
+</div>
+
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L405">
@@ -810,14 +818,6 @@ The value of what the text object should be filled in with.
 </div>
 
 
-
-
-
-<div class="see">
-
-[https://developer.mozilla.org/en-US/docs/Web/CSS/color_value](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value) for more information on CSS's colors as `String`.
-
-</div>
 
 
 </div>
@@ -852,6 +852,8 @@ The thickness in pixels of the stroke.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L412">
@@ -859,8 +861,6 @@ The thickness in pixels of the stroke.
   </a>
 
 </div>
-
-
 
 
 
@@ -897,6 +897,8 @@ The opaqueness of the text object.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L418">
@@ -916,8 +918,6 @@ Can be used in conjunction with CSS Colors that have an alpha value.
 
 
 </div>
-
-
 
 
 </div>
@@ -941,9 +941,11 @@ Can be used in conjunction with CSS Colors that have an alpha value.
 
 <div class="properties">
 
-A class to be applied to the element to be compatible with CSS styling. Only available for the [Two.SvgRenderer](/docs/svgrenderer).
+A class to be applied to the element to be compatible with CSS styling. Only available for the [Two.SvgRenderer](/docs/two/).
 
 </div>
+
+
 
 
 
@@ -959,8 +961,6 @@ A class to be applied to the element to be compatible with CSS styling. Only ava
   </a>
 
 </div>
-
-
 
 
 
@@ -997,6 +997,8 @@ Display the text object or not.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L431">
@@ -1011,13 +1013,11 @@ Display the text object or not.
 
 
 ::: tip nota-bene
-For [Two.CanvasRenderer](/docs/canvasrenderer) and [Two.WebGLRenderer](/docs/webglrenderer) when set to false all updating is disabled improving performance dramatically with many objects in the scene.
+For [Two.CanvasRenderer](/docs/renderers/canvas/) and [Two.WebGLRenderer](/docs/renderers/webgl/) when set to false all updating is disabled improving performance dramatically with many objects in the scene.
 :::
 
 
 </div>
-
-
 
 
 </div>
@@ -1052,6 +1052,8 @@ The shape whose alpha property becomes a clipping area for the text.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L438">
@@ -1071,8 +1073,6 @@ This property is currently not working becuase of SVG spec issues found here {@l
 
 
 </div>
-
-
 
 
 </div>
@@ -1107,6 +1107,8 @@ Object to define clipping area.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L445">
@@ -1126,8 +1128,6 @@ This property is currently not working becuase of SVG spec issues found here {@l
 
 
 </div>
-
-
 
 
 </div>
@@ -1162,6 +1162,8 @@ Remove self from the scene / parent.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L459">
@@ -1169,8 +1171,6 @@ Remove self from the scene / parent.
   </a>
 
 </div>
-
-
 
 
 
@@ -1216,9 +1216,11 @@ __Returns__: Two.Text
 
 <div class="description">
 
-Create a new instance of [Two.Text](/docs/text) with the same properties of the current text object.
+Create a new instance of [Two.Text](/docs/text/) with the same properties of the current text object.
 
 </div>
+
+
 
 
 
@@ -1229,8 +1231,6 @@ Create a new instance of [Two.Text](/docs/text) with the same properties of the 
   </a>
 
 </div>
-
-
 
 
 
@@ -1275,6 +1275,8 @@ Return a JSON compatible plain object that represents the text object.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L506">
@@ -1282,8 +1284,6 @@ Return a JSON compatible plain object that represents the text object.
   </a>
 
 </div>
-
-
 
 
 
@@ -1320,6 +1320,8 @@ Short hand method to set fill to `transparent`.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L532">
@@ -1327,8 +1329,6 @@ Short hand method to set fill to `transparent`.
   </a>
 
 </div>
-
-
 
 
 
@@ -1365,6 +1365,8 @@ Short hand method to set stroke to `transparent`.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L542">
@@ -1372,8 +1374,6 @@ Short hand method to set stroke to `transparent`.
   </a>
 
 </div>
-
-
 
 
 
@@ -1427,6 +1427,8 @@ Return an object with top, left, right, bottom, width, and height parameters of 
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L557">
@@ -1434,8 +1436,6 @@ Return an object with top, left, right, bottom, width, and height parameters of 
   </a>
 
 </div>
-
-
 
 
 

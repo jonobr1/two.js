@@ -124,7 +124,7 @@ var canvas = {
     render: function(ctx, forced, parentClipped) {
 
       var matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter,
-          closed, commands, length, last, next, prev, a, b, c, d, ux, uy, vx, vy,
+          closed, commands, length, last, prev, a, b, c, d, ux, uy, vx, vy,
           ar, bl, br, cl, x, y, mask, clip, defaultMatrix, isOffset, dashes, po;
 
       po = (this.parent && this.parent._renderer)
@@ -240,10 +240,9 @@ var canvas = {
           case Commands.curve:
 
             prev = closed ? mod(i - 1, length) : Math.max(i - 1, 0);
-            next = closed ? mod(i + 1, length) : Math.min(i + 1, last);
 
             a = commands[prev];
-            c = commands[next];
+
             ar = (a.controls && a.controls.right) || Vector.zero;
             bl = (b.controls && b.controls.left) || Vector.zero;
 

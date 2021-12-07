@@ -14,7 +14,7 @@ Extends: [Two.Shape](/docs/shape/)
 </div>
 
 
-Fundamental to work with bitmap data, a.k.a. pregenerated imagery, in Two.js. Supported formats include jpg, png, gif, and tiff. See [Two.Texture.RegularExpressions](/docs/texture/#two-texture-regularexpressions) for a full list of supported formats.
+Fundamental to work with bitmap data, a.k.a. pregenerated imagery, in Two.js. Supported formats include jpg, png, gif, and tiff. See [Two.Texture.RegularExpressions](/docs/effects/texture/#regularexpressions) for a full list of supported formats.
 
 
 <div class="meta">
@@ -50,9 +50,11 @@ Fundamental to work with bitmap data, a.k.a. pregenerated imagery, in Two.js. Su
 
 <div class="properties">
 
-A list of properties that are on every [Two.Texture](/docs/texture).
+A list of properties that are on every [Two.Texture](/docs/effects/texture/).
 
 </div>
+
+
 
 
 
@@ -68,8 +70,6 @@ A list of properties that are on every [Two.Texture](/docs/texture).
   </a>
 
 </div>
-
-
 
 
 
@@ -106,6 +106,8 @@ A map of compatible DOM Elements categorized by media format.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L121">
@@ -113,8 +115,6 @@ A map of compatible DOM Elements categorized by media format.
   </a>
 
 </div>
-
-
 
 
 
@@ -151,6 +151,8 @@ A canonical listing of image data used in a single session of Two.js.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L127">
@@ -170,8 +172,6 @@ This object is used to cache image data between different textures.
 
 
 </div>
-
-
 
 
 </div>
@@ -205,7 +205,7 @@ __Returns__: String
 
 <div class="properties">
 
-Serializes a URL as an absolute path for canonical attribution in [Two.ImageRegistry](/docs/imageregistry).
+Serializes a URL as an absolute path for canonical attribution in [Two.ImageRegistry](/docs/two/).
 
 </div>
 
@@ -223,6 +223,8 @@ Serializes a URL as an absolute path for canonical attribution in [Two.ImageRegi
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L134">
@@ -230,8 +232,6 @@ Serializes a URL as an absolute path for canonical attribution in [Two.ImageRegi
   </a>
 
 </div>
-
-
 
 
 
@@ -267,9 +267,11 @@ Loads an image as a buffer in headless environments.
 
 | Argument | Description |
 | ---- | ----------- |
-|  texture  | The [Two.Texture](/docs/texture) to be loaded. |
+|  texture  | The [Two.Texture](/docs/effects/texture/) to be loaded. |
 |  loaded  | The callback function to be triggered once the image is loaded. |
 </div>
+
+
 
 
 
@@ -295,8 +297,6 @@ Loads an image as a buffer in headless environments.
 
 
 </div>
-
-
 
 
 </div>
@@ -348,6 +348,8 @@ Retrieves the tag name of an image, video, or canvas node.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L163">
@@ -355,8 +357,6 @@ Retrieves the tag name of an image, video, or canvas node.
   </a>
 
 </div>
-
-
 
 
 
@@ -379,7 +379,7 @@ Retrieves the tag name of an image, video, or canvas node.
 __Returns__: HTMLImageElement
 
 
-- Returns either a cached version of the image or a new one that is registered in [Two.Texture.ImageRegistry](/docs/texture/#two-texture-imageregistry).
+- Returns either a cached version of the image or a new one that is registered in [Two.Texture.ImageRegistry](/docs/effects/texture/#imageregistry).
 
 
 </div>
@@ -392,7 +392,7 @@ __Returns__: HTMLImageElement
 
 <div class="properties">
 
-Convenience function to set [Two.Texture.image](/docs/texture/#two-texture-image) properties with canonincal versions set in [Two.Texture.ImageRegistry](/docs/texture/#two-texture-imageregistry).
+Convenience function to set [Two.Texture.image](/docs/effects/texture/#image) properties with canonincal versions set in [Two.Texture.ImageRegistry](/docs/effects/texture/#imageregistry).
 
 </div>
 
@@ -410,6 +410,8 @@ Convenience function to set [Two.Texture.image](/docs/texture/#two-texture-image
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L175">
@@ -417,8 +419,6 @@ Convenience function to set [Two.Texture.image](/docs/texture/#two-texture-image
   </a>
 
 </div>
-
-
 
 
 
@@ -449,9 +449,11 @@ Convenience function to set [Two.Texture.image](/docs/texture/#two-texture-image
 
 <div class="description">
 
-A collection of functions to register different types of textures. Used internally by a [Two.Texture](/docs/texture).
+A collection of functions to register different types of textures. Used internally by a [Two.Texture](/docs/effects/texture/).
 
 </div>
+
+
 
 
 
@@ -462,8 +464,6 @@ A collection of functions to register different types of textures. Used internal
   </a>
 
 </div>
-
-
 
 
 
@@ -502,6 +502,8 @@ A collection of functions to register different types of textures. Used internal
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L322">
@@ -509,8 +511,6 @@ A collection of functions to register different types of textures. Used internal
   </a>
 
 </div>
-
-
 
 
 
@@ -541,9 +541,11 @@ A collection of functions to register different types of textures. Used internal
 
 <div class="description">
 
-Cached method to let renderers know `offset` has been updated on a [Two.Texture](/docs/texture).
+Cached method to let renderers know `offset` has been updated on a [Two.Texture](/docs/effects/texture/).
 
 </div>
+
+
 
 
 
@@ -554,8 +556,6 @@ Cached method to let renderers know `offset` has been updated on a [Two.Texture]
   </a>
 
 </div>
-
-
 
 
 
@@ -586,9 +586,11 @@ Cached method to let renderers know `offset` has been updated on a [Two.Texture]
 
 <div class="description">
 
-Cached method to let renderers know `scale` has been updated on a [Two.Texture](/docs/texture).
+Cached method to let renderers know `scale` has been updated on a [Two.Texture](/docs/effects/texture/).
 
 </div>
+
+
 
 
 
@@ -599,8 +601,6 @@ Cached method to let renderers know `scale` has been updated on a [Two.Texture](
   </a>
 
 </div>
-
-
 
 
 
@@ -638,9 +638,11 @@ Cached method to let renderers know `scale` has been updated on a [Two.Texture](
 
 <div class="description">
 
-Convenience function to apply observable qualities of a [Two.Texture](/docs/texture) to any object. Handy if you'd like to extend or inherit the [Two.Texture](/docs/texture) class on a custom class.
+Convenience function to apply observable qualities of a [Two.Texture](/docs/effects/texture/) to any object. Handy if you'd like to extend or inherit the [Two.Texture](/docs/effects/texture/) class on a custom class.
 
 </div>
+
+
 
 
 
@@ -651,8 +653,6 @@ Convenience function to apply observable qualities of a [Two.Texture](/docs/text
   </a>
 
 </div>
-
-
 
 
 
@@ -695,6 +695,8 @@ Object access to store relevant renderer specific variables. Warning: manipulati
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L37">
@@ -709,13 +711,11 @@ Object access to store relevant renderer specific variables. Warning: manipulati
 
 
 ::: tip nota-bene
-With the [Two.SvgRenderer](/docs/svgrenderer) you can access the underlying SVG element created via `shape.renderer.elem`.
+With the [Two.SvgRenderer](/docs/two/) you can access the underlying SVG element created via `shape.renderer.elem`.
 :::
 
 
 </div>
-
-
 
 
 </div>
@@ -750,6 +750,8 @@ Shorthand value to determine if image has been loaded into the texture.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L51">
@@ -757,8 +759,6 @@ Shorthand value to determine if image has been loaded into the texture.
   </a>
 
 </div>
-
-
 
 
 
@@ -784,7 +784,7 @@ Shorthand value to determine if image has been loaded into the texture.
 
 <div class="properties">
 
-CSS style declaration to tile [Two.Path](/docs/path). Valid values include: `'no-repeat'`, `'repeat'`, `'repeat-x'`, `'repeat-y'`.
+CSS style declaration to tile [Two.Path](/docs/path/). Valid values include: `'no-repeat'`, `'repeat'`, `'repeat-x'`, `'repeat-y'`.
 
 </div>
 
@@ -792,6 +792,14 @@ CSS style declaration to tile [Two.Path](/docs/path). Valid values include: `'no
 
 
 
+
+
+
+<div class="see">
+
+See: [https://www.w3.org/TR/2dcontext/#dom-context-2d-createpattern](https://www.w3.org/TR/2dcontext/#dom-context-2d-createpattern)
+
+</div>
 
 
 
@@ -804,14 +812,6 @@ CSS style declaration to tile [Two.Path](/docs/path). Valid values include: `'no
 </div>
 
 
-
-
-
-<div class="see">
-
-[https://www.w3.org/TR/2dcontext/#dom-context-2d-createpattern](https://www.w3.org/TR/2dcontext/#dom-context-2d-createpattern)
-
-</div>
 
 
 </div>
@@ -835,9 +835,11 @@ CSS style declaration to tile [Two.Path](/docs/path). Valid values include: `'no
 
 <div class="properties">
 
-A two-component vector describing any pixel offset of the texture when applied to a [Two.Path](/docs/path).
+A two-component vector describing any pixel offset of the texture when applied to a [Two.Path](/docs/path/).
 
 </div>
+
+
 
 
 
@@ -853,8 +855,6 @@ A two-component vector describing any pixel offset of the texture when applied t
   </a>
 
 </div>
-
-
 
 
 
@@ -891,6 +891,8 @@ The URL path to the image data.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L80">
@@ -905,13 +907,11 @@ The URL path to the image data.
 
 
 ::: tip nota-bene
-This property is ultimately serialized in a [Two.Registry](/docs/registry) to cache retrieval.
+This property is ultimately serialized in a [Two.Registry](/docs/registry/) to cache retrieval.
 :::
 
 
 </div>
-
-
 
 
 </div>
@@ -935,9 +935,11 @@ This property is ultimately serialized in a [Two.Registry](/docs/registry) to ca
 
 <div class="properties">
 
-The corresponding DOM Element of the texture. Can be a `<img />`, `<canvas />`, or `<video />` element. See [Two.Texture.RegularExpressions](/docs/texture/#two-texture-regularexpressions) for a full list of supported elements.
+The corresponding DOM Element of the texture. Can be a `<img />`, `<canvas />`, or `<video />` element. See [Two.Texture.RegularExpressions](/docs/effects/texture/#regularexpressions) for a full list of supported elements.
 
 </div>
+
+
 
 
 
@@ -965,8 +967,6 @@ In headless environments this is a `Canvas.Image` object. See [https://github.co
 
 
 </div>
-
-
 
 
 </div>
@@ -1003,9 +1003,11 @@ __Returns__: Two.Texture
 
 <div class="description">
 
-Create a new instance of [Two.Texture](/docs/texture) with the same properties of the current texture.
+Create a new instance of [Two.Texture](/docs/effects/texture/) with the same properties of the current texture.
 
 </div>
+
+
 
 
 
@@ -1016,8 +1018,6 @@ Create a new instance of [Two.Texture](/docs/texture) with the same properties o
   </a>
 
 </div>
-
-
 
 
 
@@ -1062,6 +1062,8 @@ Return a JSON compatible plain object that represents the texture.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L589">
@@ -1069,8 +1071,6 @@ Return a JSON compatible plain object that represents the texture.
   </a>
 
 </div>
-
-
 
 
 

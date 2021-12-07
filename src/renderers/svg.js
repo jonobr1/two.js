@@ -73,12 +73,10 @@ var svg = {
       var b = points[i];
       var command;
       var prev = closed ? mod(i - 1, l) : Math.max(i - 1, 0);
-      var next = closed ? mod(i + 1, l) : Math.min(i + 1, last);
 
       var a = points[prev];
-      var c = points[next];
 
-      var vx, vy, ux, uy, ar, bl, br, cl;
+      var vx, vy, ux, uy, ar, bl, br, c, cl;
       var rx, ry, xAxisRotation, largeArcFlag, sweepFlag;
 
       // Access x and y directly,

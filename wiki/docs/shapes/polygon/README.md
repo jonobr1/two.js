@@ -52,9 +52,11 @@ Extends: [Two.Path](/docs/path/)
 
 <div class="properties">
 
-A list of properties that are on every [Two.Polygon](/docs/polygon).
+A list of properties that are on every [Two.Polygon](/docs/shapes/polygon/).
 
 </div>
+
+
 
 
 
@@ -70,8 +72,6 @@ A list of properties that are on every [Two.Polygon](/docs/polygon).
   </a>
 
 </div>
-
-
 
 
 
@@ -109,9 +109,11 @@ A list of properties that are on every [Two.Polygon](/docs/polygon).
 
 <div class="description">
 
-Convenience function to apply observable qualities of a [Two.Polygon](/docs/polygon) to any object. Handy if you'd like to extend the [Two.Polygon](/docs/polygon) class on a custom class.
+Convenience function to apply observable qualities of a [Two.Polygon](/docs/shapes/polygon/) to any object. Handy if you'd like to extend the [Two.Polygon](/docs/shapes/polygon/) class on a custom class.
 
 </div>
+
+
 
 
 
@@ -122,8 +124,6 @@ Convenience function to apply observable qualities of a [Two.Polygon](/docs/poly
   </a>
 
 </div>
-
-
 
 
 
@@ -160,6 +160,8 @@ The size of the width of the polygon.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/polygon.js#L29">
@@ -167,8 +169,6 @@ The size of the width of the polygon.
   </a>
 
 </div>
-
-
 
 
 
@@ -205,6 +205,8 @@ The size of the height of the polygon.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/polygon.js#L37">
@@ -212,8 +214,6 @@ The size of the height of the polygon.
   </a>
 
 </div>
-
-
 
 
 
@@ -250,6 +250,8 @@ The amount of sides the polyogn has.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/polygon.js#L45">
@@ -257,8 +259,6 @@ The amount of sides the polyogn has.
   </a>
 
 </div>
-
-
 
 
 
@@ -304,9 +304,11 @@ __Returns__: Two.Polygon
 
 <div class="description">
 
-Create a new instance of [Two.Polygon](/docs/polygon) with the same properties of the current path.
+Create a new instance of [Two.Polygon](/docs/shapes/polygon/) with the same properties of the current path.
 
 </div>
+
+
 
 
 
@@ -317,8 +319,6 @@ Create a new instance of [Two.Polygon](/docs/polygon) with the same properties o
   </a>
 
 </div>
-
-
 
 
 
@@ -363,6 +363,8 @@ Return a JSON compatible plain object that represents the path.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/polygon.js#L222">
@@ -370,8 +372,6 @@ Return a JSON compatible plain object that represents the path.
   </a>
 
 </div>
-
-
 
 
 

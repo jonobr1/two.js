@@ -45,8 +45,20 @@ module.exports = {
   head: [
     ['link', { rel: 'icon', href: '/images/favicon.gif' }],
     ['link', { rel: 'stylesheet', href: 'https://use.typekit.net/edp1hux.css' }],
+    ['meta', { name: 'google-site-verification', content: 'eNzLpThZ5XFyxVRedxqW7JxwibqK83DLO-Pqx9rTIDo' }],
+    ['meta', { property: 'og:title', content: 'Two.js' }],
+    ['meta', { property: 'og:description', content: 'A renderer agnostic two-dimensional drawing api for the web.' }],
+    ['meta', { property: 'og:url', content: 'https://two.js.org/' }],
+    ['meta', { property: 'og:type', content: 'website' }],
+    ['meta', { property: 'og:image', content: 'https://two.js.org/images/thumbnail.jpg' }],
+    ['meta', { name: 'twitter:card', content: 'summary' }],
+    ['meta', { name: 'twitter:site', content: '@jonofyi' }],
+    ['meta', { name: 'twitter:title', content: 'Two.js' }],
+    ['meta', { name: 'twitter:description', content: 'A renderer agnostic two-dimensional drawing api for the web.' }],
+    ['meta', { name: 'twitter:image', content: 'https://two.js.org/images/thumbnail.jpg' }],
     ['script', { type: 'text/javascript', src: 'https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.0/beautify.min.js', async: '' }]
   ],
+  description: 'A renderer agnostic two-dimensional drawing api for the web.',
   themeConfig: {
     repo: 'jonobr1/two.js',
     repoLabel: 'GitHub',
@@ -79,10 +91,6 @@ module.exports = {
     },
     markdown: {
       lineNumbers: true
-    },
-    plugins: {
-      '@vuepress/nprogress': true,
-      '@vuepress/search': false
     }
   }
 };

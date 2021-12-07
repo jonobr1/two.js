@@ -28,7 +28,7 @@ A convenient package to display still or animated images organized as a series o
 
 | Argument | Description |
 | ---- | ----------- |
-|  paths  | A list of URLs or [Two.Texture](/docs/texture)s. |
+|  paths  | A list of URLs or [Two.Texture](/docs/effects/texture/)s. |
 |  ox  | The initial `x` position of the Two.ImageSequence. |
 |  oy  | The initial `y` position of the Two.ImageSequence. |
 |  frameRate  | The frame rate at which the images should playback at. |
@@ -52,9 +52,11 @@ A convenient package to display still or animated images organized as a series o
 
 <div class="properties">
 
-A list of properties that are on every [Two.ImageSequence](/docs/imagesequence).
+A list of properties that are on every [Two.ImageSequence](/docs/effects/image-sequence/).
 
 </div>
+
+
 
 
 
@@ -70,8 +72,6 @@ A list of properties that are on every [Two.ImageSequence](/docs/imagesequence).
   </a>
 
 </div>
-
-
 
 
 
@@ -97,9 +97,11 @@ A list of properties that are on every [Two.ImageSequence](/docs/imagesequence).
 
 <div class="properties">
 
-default frame rate that [Two.ImageSequence.frameRate](/docs/imagesequence/#two-imagesequence-framerate) is set to when instantiated.
+default frame rate that [Two.ImageSequence.frameRate](/docs/effects/image-sequence/#framerate) is set to when instantiated.
 
 </div>
+
+
 
 
 
@@ -115,8 +117,6 @@ default frame rate that [Two.ImageSequence.frameRate](/docs/imagesequence/#two-i
   </a>
 
 </div>
-
-
 
 
 
@@ -147,9 +147,11 @@ default frame rate that [Two.ImageSequence.frameRate](/docs/imagesequence/#two-i
 
 <div class="description">
 
-Cached method to let renderers know textures have been updated on a [Two.ImageSequence](/docs/imagesequence).
+Cached method to let renderers know textures have been updated on a [Two.ImageSequence](/docs/effects/image-sequence/).
 
 </div>
+
+
 
 
 
@@ -160,8 +162,6 @@ Cached method to let renderers know textures have been updated on a [Two.ImageSe
   </a>
 
 </div>
-
-
 
 
 
@@ -192,9 +192,11 @@ Cached method to let renderers know textures have been updated on a [Two.ImageSe
 
 <div class="description">
 
-Cached method to let [Two.ImageSequence](/docs/imagesequence) know textures have been added to the instance.
+Cached method to let [Two.ImageSequence](/docs/effects/image-sequence/) know textures have been added to the instance.
 
 </div>
+
+
 
 
 
@@ -205,8 +207,6 @@ Cached method to let [Two.ImageSequence](/docs/imagesequence) know textures have
   </a>
 
 </div>
-
-
 
 
 
@@ -237,9 +237,11 @@ Cached method to let [Two.ImageSequence](/docs/imagesequence) know textures have
 
 <div class="description">
 
-Cached method to let [Two.ImageSequence](/docs/imagesequence) know textures have been removed from the instance.
+Cached method to let [Two.ImageSequence](/docs/effects/image-sequence/) know textures have been removed from the instance.
 
 </div>
+
+
 
 
 
@@ -250,8 +252,6 @@ Cached method to let [Two.ImageSequence](/docs/imagesequence) know textures have
   </a>
 
 </div>
-
-
 
 
 
@@ -289,9 +289,11 @@ Cached method to let [Two.ImageSequence](/docs/imagesequence) know textures have
 
 <div class="description">
 
-Convenience function to apply observable qualities of a [Two.ImageSequence](/docs/imagesequence) to any object. Handy if you'd like to extend or inherit the [Two.ImageSequence](/docs/imagesequence) class on a custom class.
+Convenience function to apply observable qualities of a [Two.ImageSequence](/docs/effects/image-sequence/) to any object. Handy if you'd like to extend or inherit the [Two.ImageSequence](/docs/effects/image-sequence/) class on a custom class.
 
 </div>
+
+
 
 
 
@@ -302,8 +304,6 @@ Convenience function to apply observable qualities of a [Two.ImageSequence](/doc
   </a>
 
 </div>
-
-
 
 
 
@@ -337,7 +337,7 @@ __Returns__: Two.Texture
 
 <div class="properties">
 
-Shorthand function to prepare source image material into readable format by [Two.ImageSequence](/docs/imagesequence).
+Shorthand function to prepare source image material into readable format by [Two.ImageSequence](/docs/effects/image-sequence/).
 
 </div>
 
@@ -347,7 +347,7 @@ Shorthand function to prepare source image material into readable format by [Two
 
 | Argument | Description |
 | ---- | ----------- |
-|  textureOrString  | The texture or string to create a [Two.Texture](/docs/texture) from. |
+|  textureOrString  | The texture or string to create a [Two.Texture](/docs/effects/texture/) from. |
 </div>
 
 
@@ -355,9 +355,11 @@ Shorthand function to prepare source image material into readable format by [Two
 
 <div class="description">
 
-Function used internally by [Two.ImageSequence](/docs/imagesequence) to parse arguments and return [Two.Texture](/docs/texture)s.
+Function used internally by [Two.ImageSequence](/docs/effects/image-sequence/) to parse arguments and return [Two.Texture](/docs/effects/texture/)s.
 
 </div>
+
+
 
 
 
@@ -368,8 +370,6 @@ Function used internally by [Two.ImageSequence](/docs/imagesequence) to parse ar
   </a>
 
 </div>
-
-
 
 
 
@@ -395,9 +395,11 @@ Function used internally by [Two.ImageSequence](/docs/imagesequence) to parse ar
 
 <div class="properties">
 
-A list of textures to be used as frames for animating the [Two.ImageSequence](/docs/imagesequence).
+A list of textures to be used as frames for animating the [Two.ImageSequence](/docs/effects/image-sequence/).
 
 </div>
+
+
 
 
 
@@ -413,8 +415,6 @@ A list of textures to be used as frames for animating the [Two.ImageSequence](/d
   </a>
 
 </div>
-
-
 
 
 
@@ -451,6 +451,8 @@ The number of frames to animate against per second.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/image-sequence.js#L57">
@@ -458,8 +460,6 @@ The number of frames to animate against per second.
   </a>
 
 </div>
-
-
 
 
 
@@ -496,6 +496,8 @@ The index of the current tile of the sprite to display. Defaults to `0`.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/image-sequence.js#L67">
@@ -503,8 +505,6 @@ The index of the current tile of the sprite to display. Defaults to `0`.
   </a>
 
 </div>
-
-
 
 
 
@@ -535,7 +535,7 @@ The index of the current tile of the sprite to display. Defaults to `0`.
 | Argument | Description |
 | ---- | ----------- |
 |  firstFrame  | The index of the frame to start the animation with. |
-|  lastFrame  | The index of the frame to end the animation with. Defaults to the last item in the [Two.ImageSequence.textures](/docs/imagesequence/#two-imagesequence-textures). |
+|  lastFrame  | The index of the frame to end the animation with. Defaults to the last item in the [Two.ImageSequence.textures](/docs/effects/image-sequence/#textures). |
 |  onLastFrame  | Optional callback function to be triggered after playing the last frame. This fires multiple times when the image sequence is looped. |
 </div>
 
@@ -544,9 +544,11 @@ The index of the current tile of the sprite to display. Defaults to `0`.
 
 <div class="description">
 
-Initiate animation playback of a [Two.ImageSequence](/docs/imagesequence).
+Initiate animation playback of a [Two.ImageSequence](/docs/effects/image-sequence/).
 
 </div>
+
+
 
 
 
@@ -557,8 +559,6 @@ Initiate animation playback of a [Two.ImageSequence](/docs/imagesequence).
   </a>
 
 </div>
-
-
 
 
 
@@ -589,9 +589,11 @@ Initiate animation playback of a [Two.ImageSequence](/docs/imagesequence).
 
 <div class="description">
 
-Halt animation playback of a [Two.ImageSequence](/docs/imagesequence).
+Halt animation playback of a [Two.ImageSequence](/docs/effects/image-sequence/).
 
 </div>
+
+
 
 
 
@@ -602,8 +604,6 @@ Halt animation playback of a [Two.ImageSequence](/docs/imagesequence).
   </a>
 
 </div>
-
-
 
 
 
@@ -634,9 +634,11 @@ Halt animation playback of a [Two.ImageSequence](/docs/imagesequence).
 
 <div class="description">
 
-Halt animation playback of a [Two.ImageSequence](/docs/imagesequence) and set the current frame back to the first frame.
+Halt animation playback of a [Two.ImageSequence](/docs/effects/image-sequence/) and set the current frame back to the first frame.
 
 </div>
+
+
 
 
 
@@ -647,8 +649,6 @@ Halt animation playback of a [Two.ImageSequence](/docs/imagesequence) and set th
   </a>
 
 </div>
-
-
 
 
 
@@ -694,9 +694,11 @@ __Returns__: Two.ImageSequence
 
 <div class="description">
 
-Create a new instance of [Two.ImageSequence](/docs/imagesequence) with the same properties of the current image sequence.
+Create a new instance of [Two.ImageSequence](/docs/effects/image-sequence/) with the same properties of the current image sequence.
 
 </div>
+
+
 
 
 
@@ -707,8 +709,6 @@ Create a new instance of [Two.ImageSequence](/docs/imagesequence) with the same 
   </a>
 
 </div>
-
-
 
 
 
@@ -753,6 +753,8 @@ Return a JSON compatible plain object that represents the path.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/image-sequence.js#L392">
@@ -760,8 +762,6 @@ Return a JSON compatible plain object that represents the path.
   </a>
 
 </div>
-
-
 
 
 

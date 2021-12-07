@@ -408,7 +408,7 @@ function removeEventListener(name, handler) {
         for (var j = 0, k = list.length; j < k; j++) {
           var ev = list[j];
           ev = ev.handler ? ev.handler : ev;
-          if (handler && handler !== ev) {
+          if (handler !== ev) {
             events.push(ev);
           }
         }
@@ -1572,13 +1572,13 @@ var Constants = {
    * @name Two.Version
    * @property {String} - The current working version of the library.
    */
-  Version: 'v0.7.12',
+  Version: 'v0.7.13',
 
   /**
    * @name Two.PublishDate
    * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
    */
-  PublishDate: '2021-11-24T18:52:19.187Z',
+  PublishDate: '2021-11-25T06:22:24.735Z',
 
   /**
    * @name Two.Identifier
@@ -3254,7 +3254,7 @@ var min$3 = Math.min, max$3 = Math.max;
  */
 function Group(children) {
 
-  Shape.call(this, true);
+  Shape.call(this);
 
   this._renderer.type = 'group';
 
@@ -4379,7 +4379,7 @@ var canvas = {
     render: function(ctx, forced, parentClipped) {
 
       var matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter,
-          closed, commands, length, last, next, prev, a, b, c, d, ux, uy, vx, vy,
+          closed, commands, length, last, prev, a, b, c, d, ux, uy, vx, vy,
           ar, bl, br, cl, x, y, mask, clip, defaultMatrix, isOffset, dashes, po;
 
       po = (this.parent && this.parent._renderer)
@@ -4495,10 +4495,9 @@ var canvas = {
           case Commands.curve:
 
             prev = closed ? mod(i - 1, length) : Math.max(i - 1, 0);
-            next = closed ? mod(i + 1, length) : Math.min(i + 1, last);
 
             a = commands[prev];
-            c = commands[next];
+
             ar = (a.controls && a.controls.right) || Vector.zero;
             bl = (b.controls && b.controls.left) || Vector.zero;
 
@@ -8096,7 +8095,7 @@ _.extend(Path.prototype, Shape.prototype, {
       obj.controls.right.x = alx;
       obj.controls.right.y = aly;
 
-      if (!typeof obj.relative === 'boolean' || obj.relative) {
+      if (!(typeof obj.relative === 'boolean') || obj.relative) {
         obj.controls.left.x -= x;
         obj.controls.left.y -= y;
         obj.controls.right.x -= x;
@@ -8378,7 +8377,6 @@ _.extend(Path.prototype, Shape.prototype, {
         v.command = Commands.move;
         this._renderer.vertices.unshift(v);
 
-        left = v;
         next = this._collection[i + 1];
 
         // Project control over the percentage `t`
@@ -13948,12 +13946,10 @@ var svg = {
       var b = points[i];
       var command;
       var prev = closed ? mod(i - 1, l) : Math.max(i - 1, 0);
-      var next = closed ? mod(i + 1, l) : Math.min(i + 1, last);
 
       var a = points[prev];
-      var c = points[next];
 
-      var vx, vy, ux, uy, ar, bl, br, cl;
+      var vx, vy, ux, uy, ar, bl, br, c, cl;
       var rx, ry, xAxisRotation, largeArcFlag, sweepFlag;
 
       // Access x and y directly,
@@ -15257,7 +15253,7 @@ var webgl = {
 
     updateCanvas: function(elem) {
 
-      var next, prev, a, c, ux, uy, vx, vy, ar, bl, br, cl, x, y;
+      var prev, a, c, ux, uy, vx, vy, ar, bl, br, cl, x, y;
       var isOffset;
 
       var commands = elem._renderer.vertices;
@@ -15364,10 +15360,9 @@ var webgl = {
           case Commands.curve:
 
             prev = closed ? mod(i - 1, length) : Math.max(i - 1, 0);
-            next = closed ? mod(i + 1, length) : Math.min(i + 1, last);
 
             a = commands[prev];
-            c = commands[next];
+
             ar = (a.controls && a.controls.right) || Vector.zero;
             bl = (b.controls && b.controls.left) || Vector.zero;
 
@@ -17735,4 +17730,4 @@ _.extend(Two, {
 
 });
 
-export default Two;
+export { Two as default };

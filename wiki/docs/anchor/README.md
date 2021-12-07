@@ -14,7 +14,7 @@ Extends: [Two.Vector](/docs/vector/)
 </div>
 
 
-An object that holds 3 [Two.Vector](/docs/vector)s, the anchor point and its corresponding handles: `left` and `right`. In order to properly describe the bezier curve about the point there is also a command property to describe what type of drawing should occur when Two.js renders the anchors.
+An object that holds 3 [Two.Vector](/docs/vector/)s, the anchor point and its corresponding handles: `left` and `right`. In order to properly describe the bezier curve about the point there is also a command property to describe what type of drawing should occur when Two.js renders the anchors.
 
 
 <div class="meta">
@@ -34,7 +34,7 @@ An object that holds 3 [Two.Vector](/docs/vector)s, the anchor point and its cor
 |  ly  | The y position of the left handle point. |
 |  rx  | The x position of the right handle point. |
 |  ry  | The y position of the right handle point. |
-|  command  | The command to describe how to render. Applicable commands are [Two.Commands](/docs/commands) |
+|  command  | The command to describe how to render. Applicable commands are [Two.Commands](/docs/two/) |
 
 
 
@@ -73,6 +73,8 @@ Adds the `controls` property as an object with `left` and `right` properties to 
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/anchor.js#L60">
@@ -80,8 +82,6 @@ Adds the `controls` property as an object with `left` and `right` properties to 
   </a>
 
 </div>
-
-
 
 
 
@@ -119,9 +119,11 @@ Adds the `controls` property as an object with `left` and `right` properties to 
 
 <div class="description">
 
-Convenience function to apply observable qualities of a [Two.Anchor](/docs/anchor) to any object. Handy if you'd like to extend the [Two.Anchor](/docs/anchor) class on a custom class.
+Convenience function to apply observable qualities of a [Two.Anchor](/docs/anchor/) to any object. Handy if you'd like to extend the [Two.Anchor](/docs/anchor/) class on a custom class.
 
 </div>
+
+
 
 
 
@@ -132,8 +134,6 @@ Convenience function to apply observable qualities of a [Two.Anchor](/docs/ancho
   </a>
 
 </div>
-
-
 
 
 
@@ -170,9 +170,11 @@ Convenience function to apply observable qualities of a [Two.Anchor](/docs/ancho
 
 <div class="description">
 
-An plain object that holds the controls handles for a [Two.Anchor](/docs/anchor).
+An plain object that holds the controls handles for a [Two.Anchor](/docs/anchor/).
 
 </div>
+
+
 
 
 
@@ -183,8 +185,6 @@ An plain object that holds the controls handles for a [Two.Anchor](/docs/anchor)
   </a>
 
 </div>
-
-
 
 
 
@@ -227,6 +227,8 @@ The "left" control point to define handles on a bezier curve.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/anchor.js#L77">
@@ -234,8 +236,6 @@ The "left" control point to define handles on a bezier curve.
   </a>
 
 </div>
-
-
 
 
 
@@ -278,6 +278,8 @@ The "left" control point to define handles on a bezier curve.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/anchor.js#L84">
@@ -285,8 +287,6 @@ The "left" control point to define handles on a bezier curve.
   </a>
 
 </div>
-
-
 
 
 
@@ -329,6 +329,8 @@ A draw command associated with the anchor point.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/anchor.js#L101">
@@ -336,8 +338,6 @@ A draw command associated with the anchor point.
   </a>
 
 </div>
-
-
 
 
 
@@ -380,6 +380,8 @@ A boolean to render control points relative to the root anchor point or in globa
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/anchor.js#L124">
@@ -387,8 +389,6 @@ A boolean to render control points relative to the root anchor point or in globa
   </a>
 
 </div>
-
-
 
 
 
@@ -419,9 +419,11 @@ A boolean to render control points relative to the root anchor point or in globa
 
 <div class="description">
 
-Convenience method used mainly by [Two.Path.vertices](/docs/path/#two-path-vertices) to listen and propagate changes from control points up to their respective anchors and further if necessary.
+Convenience method used mainly by [Two.Path.vertices](/docs/path/#vertices) to listen and propagate changes from control points up to their respective anchors and further if necessary.
 
 </div>
+
+
 
 
 
@@ -432,8 +434,6 @@ Convenience method used mainly by [Two.Path.vertices](/docs/path/#two-path-verti
   </a>
 
 </div>
-
-
 
 
 
@@ -464,9 +464,11 @@ Convenience method used mainly by [Two.Path.vertices](/docs/path/#two-path-verti
 
 <div class="description">
 
-Convenience method used mainly by [Two.Path.vertices](/docs/path/#two-path-vertices) to ignore changes from a specific anchor's control points.
+Convenience method used mainly by [Two.Path.vertices](/docs/path/#vertices) to ignore changes from a specific anchor's control points.
 
 </div>
+
+
 
 
 
@@ -477,8 +479,6 @@ Convenience method used mainly by [Two.Path.vertices](/docs/path/#two-path-verti
   </a>
 
 </div>
-
-
 
 
 
@@ -516,9 +516,11 @@ Convenience method used mainly by [Two.Path.vertices](/docs/path/#two-path-verti
 
 <div class="description">
 
-Copy the properties of one [Two.Anchor](/docs/anchor) onto another.
+Copy the properties of one [Two.Anchor](/docs/anchor/) onto another.
 
 </div>
+
+
 
 
 
@@ -529,8 +531,6 @@ Copy the properties of one [Two.Anchor](/docs/anchor) onto another.
   </a>
 
 </div>
-
-
 
 
 
@@ -569,9 +569,11 @@ __Returns__: Two.Anchor
 
 <div class="description">
 
-Create a new [Two.Anchor](/docs/anchor), set all its values to the current instance and return it for use.
+Create a new [Two.Anchor](/docs/anchor/), set all its values to the current instance and return it for use.
 
 </div>
+
+
 
 
 
@@ -582,8 +584,6 @@ Create a new [Two.Anchor](/docs/anchor), set all its values to the current insta
   </a>
 
 </div>
-
-
 
 
 
@@ -606,7 +606,7 @@ Create a new [Two.Anchor](/docs/anchor), set all its values to the current insta
 __Returns__: Object
 
 
-- An object with properties filled out to mirror [Two.Anchor](/docs/anchor).
+- An object with properties filled out to mirror [Two.Anchor](/docs/anchor/).
 
 
 </div>
@@ -630,6 +630,8 @@ Create a JSON compatible plain object of the current instance. Intended for use 
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/anchor.js#L262">
@@ -637,8 +639,6 @@ Create a JSON compatible plain object of the current instance. Intended for use 
   </a>
 
 </div>
-
-
 
 
 
@@ -679,9 +679,11 @@ __Returns__: String
 
 <div class="description">
 
-Create a string form of the current instance. Intended for use with storing values in a database. This is lighter to store than the JSON compatible [Two.Anchor.toObject](/docs/anchor/#two-anchor-toobject).
+Create a string form of the current instance. Intended for use with storing values in a database. This is lighter to store than the JSON compatible [Two.Anchor.toObject](/docs/anchor/#toobject).
 
 </div>
+
+
 
 
 
@@ -692,8 +694,6 @@ Create a string form of the current instance. Intended for use with storing valu
   </a>
 
 </div>
-
-
 
 
 

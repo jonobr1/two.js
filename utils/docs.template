@@ -113,6 +113,14 @@ __Triggers__:
 </div>
 <% } %>
 
+<% if (item.see && item.see.length > 0) { %>
+<div class="see">
+
+See: <%= _.map(item.see, function(see) { return see; }).join(', ') %>
+
+</div>
+<% } %>
+
 <% if (item.meta) { %>
 <div class="meta">
 
@@ -131,14 +139,6 @@ __Triggers__:
 <%= tag.text || '&nbsp;' %>
 :::
 <% } %>
-<% }); %>
-</div>
-<% } %>
-
-<% if (item.see && item.see.length > 0) { %>
-<div class="see">
-<% _.each(item.see, function(see) { %>
-<%= see %>
 <% }); %>
 </div>
 <% } %>

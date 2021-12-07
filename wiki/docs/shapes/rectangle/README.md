@@ -52,9 +52,11 @@ Extends: [Two.Path](/docs/path/)
 
 <div class="properties">
 
-A list of properties that are on every [Two.Rectangle](/docs/rectangle).
+A list of properties that are on every [Two.Rectangle](/docs/shapes/rectangle/).
 
 </div>
+
+
 
 
 
@@ -70,8 +72,6 @@ A list of properties that are on every [Two.Rectangle](/docs/rectangle).
   </a>
 
 </div>
-
-
 
 
 
@@ -109,9 +109,11 @@ A list of properties that are on every [Two.Rectangle](/docs/rectangle).
 
 <div class="description">
 
-Convenience function to apply observable qualities of a [Two.Rectangle](/docs/rectangle) to any object. Handy if you'd like to extend the [Two.Rectangle](/docs/rectangle) class on a custom class.
+Convenience function to apply observable qualities of a [Two.Rectangle](/docs/shapes/rectangle/) to any object. Handy if you'd like to extend the [Two.Rectangle](/docs/shapes/rectangle/) class on a custom class.
 
 </div>
+
+
 
 
 
@@ -122,8 +124,6 @@ Convenience function to apply observable qualities of a [Two.Rectangle](/docs/re
   </a>
 
 </div>
-
-
 
 
 
@@ -160,6 +160,8 @@ The size of the width of the rectangle.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/rectangle.js#L29">
@@ -167,8 +169,6 @@ The size of the width of the rectangle.
   </a>
 
 </div>
-
-
 
 
 
@@ -205,6 +205,8 @@ The size of the height of the rectangle.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/rectangle.js#L34">
@@ -212,8 +214,6 @@ The size of the height of the rectangle.
   </a>
 
 </div>
-
-
 
 
 
@@ -250,6 +250,8 @@ A two-component vector describing the origin offset to draw the rectangle. Defau
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/rectangle.js#L40">
@@ -257,8 +259,6 @@ A two-component vector describing the origin offset to draw the rectangle. Defau
   </a>
 
 </div>
-
-
 
 
 
@@ -304,9 +304,11 @@ __Returns__: Two.Rectangle
 
 <div class="description">
 
-Create a new instance of [Two.Rectangle](/docs/rectangle) with the same properties of the current path.
+Create a new instance of [Two.Rectangle](/docs/shapes/rectangle/) with the same properties of the current path.
 
 </div>
+
+
 
 
 
@@ -317,8 +319,6 @@ Create a new instance of [Two.Rectangle](/docs/rectangle) with the same properti
   </a>
 
 </div>
-
-
 
 
 
@@ -363,6 +363,8 @@ Return a JSON compatible plain object that represents the path.
 
 
 
+
+
 <div class="meta">
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/rectangle.js#L205">
@@ -370,8 +372,6 @@ Return a JSON compatible plain object that represents the path.
   </a>
 
 </div>
-
-
 
 
 
