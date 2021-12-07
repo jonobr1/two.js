@@ -1726,9 +1726,9 @@ Add objects to the group.
 
 <div class="instance function ">
 
-## add
+## remove
 
-<h2 class="longname" aria-hidden="true"><a href="#add"><span class="prefix">Two.Group.</span><span class="shortname">add</span></a></h2>
+<h2 class="longname" aria-hidden="true"><a href="#remove"><span class="prefix">Two.Group.</span><span class="shortname">remove</span></a></h2>
 
 
 
@@ -1745,7 +1745,7 @@ Add objects to the group.
 
 | Argument | Description |
 | ---- | ----------- |
-|  objects  | An array of objects to be removed. Can be also removed as individual arguments. |
+|  objects  | An array of objects to be removed. Can be also removed as individual arguments. If no arguments are passed, then it removes itself from its parent. |
 </div>
 
 
