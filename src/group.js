@@ -677,7 +677,7 @@ _.extend(Group.prototype, Shape.prototype, {
   /**
    * @name Two.Group#add
    * @function
-   * @param {Two.Shape[]} objects - An array of objects to be added. Can be also be supplied as individual arguments.
+   * @param {Two.Shape[]|...Two.Shape} objects - An array of objects to be added. Can be also be supplied as individual arguments.
    * @description Add objects to the group.
    */
   add: function(objects) {
@@ -709,9 +709,9 @@ _.extend(Group.prototype, Shape.prototype, {
   },
 
   /**
-   * @name Two.Group#add
+   * @name Two.Group#remove
    * @function
-   * @param {Two.Shape[]} objects - An array of objects to be removed. Can be also removed as individual arguments.
+   * @param {Two.Shape[]|...Two.Shape} [objects=self] - An array of objects to be removed. Can be also removed as individual arguments. If no arguments are passed, then it removes itself from its parent.
    * @description Remove objects from the group.
    */
   remove: function(objects) {
