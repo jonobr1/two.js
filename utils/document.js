@@ -168,7 +168,7 @@ function getRoot(citations, shouldSplice) {
     var citation = list[i];
     if (/class/i.test(citation.kind)) {
       var index = _.indexOf(citations, citation);
-      if (!!shouldSplice) {
+      if (shouldSplice) {
         citations.splice(index, 1);
       }
       return citation;
