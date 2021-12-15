@@ -44,10 +44,10 @@ function Gradient(stops) {
 
   /**
    * @name Two.Gradient#units
-   * @property {String} [units='userSpaceOnUse'] - Indicates how coordinate values are interpreted by the renderer. Possible values are `'userSpaceOnUse'` and `'objectBoundingBox'`.
+   * @property {String} [units='objectBoundingBox'] - Indicates how coordinate values are interpreted by the renderer. Possible values are `'userSpaceOnUse'` and `'objectBoundingBox'`.
    * @see {@link https://www.w3.org/TR/SVG11/pservers.html#RadialGradientElementGradientUnitsAttribute} for more information
    */
-  this.units = 'userSpaceOnUse';
+  this.units = 'objectBoundingBox';
 
   /**
    * @name Two.Gradient#stops
