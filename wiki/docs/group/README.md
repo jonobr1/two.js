@@ -18,7 +18,7 @@ This is the primary class for grouping objects that are then drawn in Two.js. In
 
 
 <div class="meta">
-  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/group.js" />
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/main/src/group.js" />
 </div>
 
 
@@ -28,7 +28,7 @@ This is the primary class for grouping objects that are then drawn in Two.js. In
 
 | Argument | Description |
 | ---- | ----------- |
-|  children  | A list of objects that inherit [Two.Shape](/docs/shape). For instance, the array could be a [Two.Path](/docs/path), [Two.Text](/docs/text), and [Two.RoundedRectangle](/docs/roundedrectangle). |
+|  children  | A list of objects that inherit [Two.Shape](/docs/shape/). For instance, the array could be a [Two.Path](/docs/path/), [Two.Text](/docs/text/), and [Two.RoundedRectangle](/docs/shapes/rounded-rectangle/). |
 
 
 
@@ -61,21 +61,21 @@ This is the primary class for grouping objects that are then drawn in Two.js. In
 
 <div class="description">
 
-Cached method to let renderers know children have been added to a [Two.Group](/docs/group).
+Cached method to let renderers know children have been added to a [Two.Group](/docs/group/).
 
 </div>
+
+
 
 
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/group.js#L55">
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L55">
     group.js:55
   </a>
 
 </div>
-
-
 
 
 
@@ -113,21 +113,21 @@ Cached method to let renderers know children have been added to a [Two.Group](/d
 
 <div class="description">
 
-Cached method to let renderers know children have been removed from a [Two.Group](/docs/group).
+Cached method to let renderers know children have been removed from a [Two.Group](/docs/group/).
 
 </div>
+
+
 
 
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/group.js#L67">
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L67">
     group.js:67
   </a>
 
 </div>
-
-
 
 
 
@@ -158,21 +158,21 @@ Cached method to let renderers know children have been removed from a [Two.Group
 
 <div class="description">
 
-Cached method to let renderers know order has been updated on a [Two.Group](/docs/group).
+Cached method to let renderers know order has been updated on a [Two.Group](/docs/group/).
 
 </div>
+
+
 
 
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/group.js#L79">
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L79">
     group.js:79
   </a>
 
 </div>
-
-
 
 
 
@@ -198,9 +198,11 @@ Cached method to let renderers know order has been updated on a [Two.Group](/doc
 
 <div class="properties">
 
-A list of properties that are on every [Two.Group](/docs/group).
+A list of properties that are on every [Two.Group](/docs/group/).
 
 </div>
+
+
 
 
 
@@ -211,13 +213,11 @@ A list of properties that are on every [Two.Group](/docs/group).
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/group.js#L88">
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L88">
     group.js:88
   </a>
 
 </div>
-
-
 
 
 
@@ -255,21 +255,21 @@ A list of properties that are on every [Two.Group](/docs/group).
 
 <div class="description">
 
-Convenience function to apply observable qualities of a [Two.Group](/docs/group) to any object. Handy if you'd like to extend the [Two.Group](/docs/group) class on a custom class.
+Convenience function to apply observable qualities of a [Two.Group](/docs/group/) to any object. Handy if you'd like to extend the [Two.Group](/docs/group/) class on a custom class.
 
 </div>
+
+
 
 
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/group.js#L105">
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L105">
     group.js:105
   </a>
 
 </div>
-
-
 
 
 
@@ -308,21 +308,21 @@ Convenience function to apply observable qualities of a [Two.Group](/docs/group)
 
 <div class="description">
 
-Convenience method to apply getter / setter logic on an array of properties. Used in [Two.Group.MakeObservable](/docs/group/#two-group-makeobservable).
+Convenience method to apply getter / setter logic on an array of properties. Used in [Two.Group.MakeObservable](/docs/group/#makeobservable).
 
 </div>
+
+
 
 
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/group.js#L252">
-    group.js:252
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L255">
+    group.js:255
   </a>
 
 </div>
-
-
 
 
 
@@ -361,21 +361,21 @@ Convenience method to apply getter / setter logic on an array of properties. Use
 
 <div class="description">
 
-Convenience method to apply getter / setter logic specific to how `Two.Group`s trickle down styles to their children. Used in [Two.Group.MakeObservable](/docs/group/#two-group-makeobservable).
+Convenience method to apply getter / setter logic specific to how `Two.Group`s trickle down styles to their children. Used in [Two.Group.MakeObservable](/docs/group/#makeobservable).
 
 </div>
+
+
 
 
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/group.js#L271">
-    group.js:271
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L274">
+    group.js:274
   </a>
 
 </div>
-
-
 
 
 
@@ -418,15 +418,15 @@ An automatically updated list of children that need to be appended to the render
 
 
 
+
+
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/group.js#L27">
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L27">
     group.js:27
   </a>
 
 </div>
-
-
 
 
 
@@ -469,15 +469,15 @@ An automatically updated list of children that need to be removed from the rende
 
 
 
+
+
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/group.js#L34">
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L34">
     group.js:34
   </a>
 
 </div>
-
-
 
 
 
@@ -520,9 +520,11 @@ A list of all the children in the scenegraph.
 
 
 
+
+
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/group.js#L41">
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L41">
     group.js:41
   </a>
 
@@ -539,8 +541,6 @@ Ther order of this list indicates the order each element is rendered to the scre
 
 
 </div>
-
-
 
 
 </div>
@@ -575,23 +575,23 @@ The value of what all child shapes should be filled in with.
 
 
 
+<div class="see">
+
+See: [https://developer.mozilla.org/en-US/docs/Web/CSS/color_value](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value) for more information on CSS's colors as `String`.
+
+</div>
+
+
+
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/group.js#L376">
-    group.js:376
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L379">
+    group.js:379
   </a>
 
 </div>
 
 
-
-
-
-<div class="see">
-
-[https://developer.mozilla.org/en-US/docs/Web/CSS/color_value](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value) for more information on CSS's colors as `String`.
-
-</div>
 
 
 </div>
@@ -626,23 +626,23 @@ The value of what all child shapes should be outlined in with.
 
 
 
+<div class="see">
+
+See: [https://developer.mozilla.org/en-US/docs/Web/CSS/color_value](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value) for more information on CSS's colors as `String`.
+
+</div>
+
+
+
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/group.js#L383">
-    group.js:383
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L386">
+    group.js:386
   </a>
 
 </div>
 
 
-
-
-
-<div class="see">
-
-[https://developer.mozilla.org/en-US/docs/Web/CSS/color_value](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value) for more information on CSS's colors as `String`.
-
-</div>
 
 
 </div>
@@ -677,15 +677,15 @@ The thickness in pixels of the stroke for all child shapes.
 
 
 
+
+
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/group.js#L390">
-    group.js:390
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L393">
+    group.js:393
   </a>
 
 </div>
-
-
 
 
 
@@ -722,10 +722,12 @@ The opaqueness of all child shapes.
 
 
 
+
+
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/group.js#L396">
-    group.js:396
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L399">
+    group.js:399
   </a>
 
 </div>
@@ -741,8 +743,6 @@ Becomes multiplied by the individual child's opacity property.
 
 
 </div>
-
-
 
 
 </div>
@@ -777,10 +777,12 @@ Display the path or not.
 
 
 
+
+
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/group.js#L403">
-    group.js:403
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L406">
+    group.js:406
   </a>
 
 </div>
@@ -791,13 +793,11 @@ Display the path or not.
 
 
 ::: tip nota-bene
-For [Two.CanvasRenderer](/docs/canvasrenderer) and [Two.WebGLRenderer](/docs/webglrenderer) when set to false all updating is disabled improving performance dramatically with many objects in the scene.
+For [Two.CanvasRenderer](/docs/renderers/canvas/) and [Two.WebGLRenderer](/docs/renderers/webgl/) when set to false all updating is disabled improving performance dramatically with many objects in the scene.
 :::
 
 
 </div>
-
-
 
 
 </div>
@@ -832,23 +832,23 @@ For [Two.CanvasRenderer](/docs/canvasrenderer) and [Two.WebGLRenderer](/docs/web
 
 
 
+<div class="see">
+
+See: [https://www.w3.org/TR/SVG11/painting.html#StrokeLinecapProperty](https://www.w3.org/TR/SVG11/painting.html#StrokeLinecapProperty)
+
+</div>
+
+
+
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/group.js#L410">
-    group.js:410
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L413">
+    group.js:413
   </a>
 
 </div>
 
 
-
-
-
-<div class="see">
-
-[https://www.w3.org/TR/SVG11/painting.html#StrokeLinecapProperty](https://www.w3.org/TR/SVG11/painting.html#StrokeLinecapProperty)
-
-</div>
 
 
 </div>
@@ -883,23 +883,23 @@ For [Two.CanvasRenderer](/docs/canvasrenderer) and [Two.WebGLRenderer](/docs/web
 
 
 
+<div class="see">
+
+See: [https://www.w3.org/TR/SVG11/painting.html#StrokeLinejoinProperty](https://www.w3.org/TR/SVG11/painting.html#StrokeLinejoinProperty)
+
+</div>
+
+
+
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/group.js#L417">
-    group.js:417
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L420">
+    group.js:420
   </a>
 
 </div>
 
 
-
-
-
-<div class="see">
-
-[https://www.w3.org/TR/SVG11/painting.html#StrokeLinejoinProperty](https://www.w3.org/TR/SVG11/painting.html#StrokeLinejoinProperty)
-
-</div>
 
 
 </div>
@@ -934,23 +934,23 @@ For [Two.CanvasRenderer](/docs/canvasrenderer) and [Two.WebGLRenderer](/docs/web
 
 
 
+<div class="see">
+
+See: [https://www.w3.org/TR/SVG11/painting.html#StrokeMiterlimitProperty](https://www.w3.org/TR/SVG11/painting.html#StrokeMiterlimitProperty)
+
+</div>
+
+
+
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/group.js#L424">
-    group.js:424
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L427">
+    group.js:427
   </a>
 
 </div>
 
 
-
-
-
-<div class="see">
-
-[https://www.w3.org/TR/SVG11/painting.html#StrokeMiterlimitProperty](https://www.w3.org/TR/SVG11/painting.html#StrokeMiterlimitProperty)
-
-</div>
 
 
 </div>
@@ -985,15 +985,15 @@ Determines whether a final line is drawn between the final point in the `vertice
 
 
 
+
+
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/group.js#L431">
-    group.js:431
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L434">
+    group.js:434
   </a>
 
 </div>
-
-
 
 
 
@@ -1030,15 +1030,15 @@ When the child's path is `automatic = true` this boolean determines whether the 
 
 
 
+
+
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/group.js#L437">
-    group.js:437
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L440">
+    group.js:440
   </a>
 
 </div>
-
-
 
 
 
@@ -1075,15 +1075,15 @@ Determines whether or not Two.js should calculate curves, lines, and commands au
 
 
 
+
+
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/group.js#L443">
-    group.js:443
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L446">
+    group.js:446
   </a>
 
 </div>
-
-
 
 
 
@@ -1120,16 +1120,18 @@ Number between zero and one to state the beginning of where the path is rendered
 
 <div class="description">
 
-[Two.Group.beginning](/docs/group/#two-group-beginning) is a percentage value that represents at what percentage into all child shapes should the renderer start drawing.
+[Two.Group.beginning](/docs/group/#beginning) is a percentage value that represents at what percentage into all child shapes should the renderer start drawing.
 
 </div>
 
 
 
+
+
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/group.js#L449">
-    group.js:449
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L452">
+    group.js:452
   </a>
 
 </div>
@@ -1140,13 +1142,11 @@ Number between zero and one to state the beginning of where the path is rendered
 
 
 ::: tip nota-bene
-This is great for animating in and out stroked paths in conjunction with [Two.Group.ending](/docs/group/#two-group-ending).
+This is great for animating in and out stroked paths in conjunction with [Two.Group.ending](/docs/group/#ending).
 :::
 
 
 </div>
-
-
 
 
 </div>
@@ -1181,16 +1181,18 @@ Number between zero and one to state the ending of where the path is rendered.
 
 <div class="description">
 
-[Two.Group.ending](/docs/group/#two-group-ending) is a percentage value that represents at what percentage into all child shapes should the renderer start drawing.
+[Two.Group.ending](/docs/group/#ending) is a percentage value that represents at what percentage into all child shapes should the renderer start drawing.
 
 </div>
 
 
 
+
+
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/group.js#L457">
-    group.js:457
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L460">
+    group.js:460
   </a>
 
 </div>
@@ -1201,13 +1203,11 @@ Number between zero and one to state the ending of where the path is rendered.
 
 
 ::: tip nota-bene
-This is great for animating in and out stroked paths in conjunction with [Two.Group.beginning](/docs/group/#two-group-beginning).
+This is great for animating in and out stroked paths in conjunction with [Two.Group.beginning](/docs/group/#beginning).
 :::
 
 
 </div>
-
-
 
 
 </div>
@@ -1242,15 +1242,15 @@ The sum of distances between all child lengths.
 
 
 
+
+
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/group.js#L465">
-    group.js:465
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L468">
+    group.js:468
   </a>
 
 </div>
-
-
 
 
 
@@ -1287,15 +1287,15 @@ The Two.js object to clip from a group's rendering.
 
 
 
+
+
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/group.js#L471">
-    group.js:471
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L474">
+    group.js:474
   </a>
 
 </div>
-
-
 
 
 
@@ -1341,21 +1341,21 @@ __Returns__: Two.Group
 
 <div class="description">
 
-Create a new instance of [Two.Group](/docs/group) with the same properties of the current group.
+Create a new instance of [Two.Group](/docs/group/) with the same properties of the current group.
 
 </div>
+
+
 
 
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/group.js#L477">
-    group.js:477
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L480">
+    group.js:480
   </a>
 
 </div>
-
-
 
 
 
@@ -1400,15 +1400,15 @@ Return a JSON compatible plain object that represents the group.
 
 
 
+
+
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/group.js#L522">
-    group.js:522
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L525">
+    group.js:525
   </a>
 
 </div>
-
-
 
 
 
@@ -1445,15 +1445,15 @@ Orient the children of the group to the upper left-hand corner of that group.
 
 
 
+
+
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/group.js#L552">
-    group.js:552
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L555">
+    group.js:555
   </a>
 
 </div>
-
-
 
 
 
@@ -1490,15 +1490,15 @@ Orient the children of the group to the center of that group.
 
 
 
+
+
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/group.js#L571">
-    group.js:571
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L579">
+    group.js:579
   </a>
 
 </div>
-
-
 
 
 
@@ -1545,15 +1545,15 @@ Recursively search for id. Returns the first element found.
 
 
 
+
+
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/group.js#L594">
-    group.js:594
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L607">
+    group.js:607
   </a>
 
 </div>
-
-
 
 
 
@@ -1600,15 +1600,15 @@ Recursively search for classes. Returns an array of matching elements.
 
 
 
+
+
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/group.js#L618">
-    group.js:618
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L631">
+    group.js:631
   </a>
 
 </div>
-
-
 
 
 
@@ -1649,21 +1649,21 @@ __Returns__: Array.<Two.Shape>
 
 <div class="description">
 
-Recursively search for children of a specific type, e.g. [Two.Path](/docs/path). Pass a reference to this type as the param. Returns an array of matching elements.
+Recursively search for children of a specific type, e.g. [Two.Path](/docs/path/). Pass a reference to this type as the param. Returns an array of matching elements.
 
 </div>
+
+
 
 
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/group.js#L641">
-    group.js:641
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L654">
+    group.js:654
   </a>
 
 </div>
-
-
 
 
 
@@ -1707,15 +1707,15 @@ Add objects to the group.
 
 
 
+
+
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/group.js#L664">
-    group.js:664
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L677">
+    group.js:677
   </a>
 
 </div>
-
-
 
 
 
@@ -1726,9 +1726,9 @@ Add objects to the group.
 
 <div class="instance function ">
 
-## add
+## remove
 
-<h2 class="longname" aria-hidden="true"><a href="#add"><span class="prefix">Two.Group.</span><span class="shortname">add</span></a></h2>
+<h2 class="longname" aria-hidden="true"><a href="#remove"><span class="prefix">Two.Group.</span><span class="shortname">remove</span></a></h2>
 
 
 
@@ -1745,7 +1745,7 @@ Add objects to the group.
 
 | Argument | Description |
 | ---- | ----------- |
-|  objects  | An array of objects to be removed. Can be also removed as individual arguments. |
+|  objects  | An array of objects to be removed. Can be also removed as individual arguments. If no arguments are passed, then it removes itself from its parent. |
 </div>
 
 
@@ -1759,15 +1759,15 @@ Remove objects from the group.
 
 
 
+
+
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/group.js#L698">
-    group.js:698
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L711">
+    group.js:711
   </a>
 
 </div>
-
-
 
 
 
@@ -1821,15 +1821,15 @@ Return an object with top, left, right, bottom, width, and height parameters of 
 
 
 
+
+
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/group.js#L741">
-    group.js:741
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L754">
+    group.js:754
   </a>
 
 </div>
-
-
 
 
 
@@ -1866,15 +1866,15 @@ Apply `noFill` method to all child shapes.
 
 
 
+
+
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/group.js#L813">
-    group.js:813
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L826">
+    group.js:826
   </a>
 
 </div>
-
-
 
 
 
@@ -1911,15 +1911,15 @@ Apply `noStroke` method to all child shapes.
 
 
 
+
+
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/group.js#L825">
-    group.js:825
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L838">
+    group.js:838
   </a>
 
 </div>
-
-
 
 
 
@@ -1956,15 +1956,15 @@ Apply `subdivide` method to all child shapes.
 
 
 
+
+
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/group.js#L837">
-    group.js:837
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L850">
+    group.js:850
   </a>
 
 </div>
-
-
 
 
 

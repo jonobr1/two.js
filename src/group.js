@@ -363,6 +363,11 @@ export class Group extends Shape {
       child.translation.y -= rect.top;
     }
 
+    if (this.mask) {
+      this.mask.translation.x -= rect.left;
+      this.mask.translation.y -= rect.top;
+    }
+
     return this;
 
   }
@@ -384,6 +389,11 @@ export class Group extends Shape {
         child.translation.x -= cx;
         child.translation.y -= cy;
       }
+    }
+
+    if (this.mask) {
+      this.mask.translation.x -= cx;
+      this.mask.translation.y -= cy;
     }
 
     return this;
@@ -463,7 +473,7 @@ export class Group extends Shape {
   /**
    * @name Two.Group#add
    * @function
-   * @param {Two.Shape[]} objects - An array of objects to be added. Can be also be supplied as individual arguments.
+   * @param {Two.Shape[]|...Two.Shape} objects - An array of objects to be added. Can be also be supplied as individual arguments.
    * @description Add objects to the group.
    */
   add(objects) {
@@ -495,9 +505,9 @@ export class Group extends Shape {
   }
 
   /**
-   * @name Two.Group#add
+   * @name Two.Group#remove
    * @function
-   * @param {Two.Shape[]} objects - An array of objects to be removed. Can be also removed as individual arguments.
+   * @param {Two.Shape[]|...Two.Shape} [objects=self] - An array of objects to be removed. Can be also removed as individual arguments. If no arguments are passed, then it removes itself from its parent.
    * @description Remove objects from the group.
    */
   remove(objects) {

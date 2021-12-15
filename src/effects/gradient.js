@@ -53,6 +53,13 @@ export class Gradient {
     this.spread = 'pad';
 
     /**
+     * @name Two.Gradient#units
+     * @property {String} [units='objectBoundingBox'] - Indicates how coordinate values are interpreted by the renderer. Possible values are `'userSpaceOnUse'` and `'objectBoundingBox'`.
+     * @see {@link https://www.w3.org/TR/SVG11/pservers.html#RadialGradientElementGradientUnitsAttribute} for more information
+     */
+    this.units = 'objectBoundingBox';
+
+    /**
      * @name Two.Gradient#stops
      * @property {Two.Stop[]} - An ordered list of {@link Two.Stop}s for rendering the gradient.
      */
@@ -72,7 +79,7 @@ export class Gradient {
    * @name Two.Gradient.Properties
    * @property {String[]} - A list of properties that are on every {@link Two.Gradient}.
    */
-  static Properties = ['spread', 'stops', 'renderer', 'id'];
+  static Properties = ['spread', 'stops', 'renderer', 'id', 'units'];
 
   /**
    * @name Two.Gradient#clone
@@ -149,7 +156,7 @@ export class Gradient {
    */
   flagReset() {
 
-    this._flagSpread = this._flagStops = false;
+    this._flagSpread = this._flagUnits = this._flagStops = false;
 
     return this;
 

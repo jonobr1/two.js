@@ -4,7 +4,7 @@
     <h2 ref="h2">{{ title }}</h2>
 
     <a class="cover" :href="href" target="_blank" rel="noopener noreferrer">
-      <span class="thumb" role="img" :style="{ backgroundImage: `url(${src})` }"></span>
+      <span class="thumb" role="img" :style="{ backgroundImage: `url(${src || '/images/thumbnail.svg'})` }"></span>
       <div class="title">
         <span class="type" :class="platform"></span> {{ title }}
       </div>

@@ -18,7 +18,7 @@ Extends: [Two.Path](/docs/path/)
 
 
 <div class="meta">
-  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/shapes/arc-segment.js" />
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/arc-segment.js" />
 </div>
 
 
@@ -55,9 +55,11 @@ Extends: [Two.Path](/docs/path/)
 
 <div class="properties">
 
-A list of properties that are on every [Two.ArcSegment](/docs/arcsegment).
+A list of properties that are on every [Two.ArcSegment](/docs/shapes/arc-segment/).
 
 </div>
+
+
 
 
 
@@ -68,13 +70,11 @@ A list of properties that are on every [Two.ArcSegment](/docs/arcsegment).
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/shapes/arc-segment.js#L77">
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/arc-segment.js#L77">
     arc-segment.js:77
   </a>
 
 </div>
-
-
 
 
 
@@ -112,21 +112,21 @@ A list of properties that are on every [Two.ArcSegment](/docs/arcsegment).
 
 <div class="description">
 
-Convenience function to apply observable qualities of a [Two.ArcSegment](/docs/arcsegment) to any object. Handy if you'd like to extend the [Two.ArcSegment](/docs/arcsegment) class on a custom class.
+Convenience function to apply observable qualities of a [Two.ArcSegment](/docs/shapes/arc-segment/) to any object. Handy if you'd like to extend the [Two.ArcSegment](/docs/shapes/arc-segment/) class on a custom class.
 
 </div>
+
+
 
 
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/shapes/arc-segment.js#L83">
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/arc-segment.js#L83">
     arc-segment.js:83
   </a>
 
 </div>
-
-
 
 
 
@@ -163,15 +163,15 @@ The size of the inner radius of the arc segment.
 
 
 
+
+
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/shapes/arc-segment.js#L32">
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/arc-segment.js#L32">
     arc-segment.js:32
   </a>
 
 </div>
-
-
 
 
 
@@ -208,15 +208,15 @@ The size of the outer radius of the arc segment.
 
 
 
+
+
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/shapes/arc-segment.js#L40">
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/arc-segment.js#L40">
     arc-segment.js:40
   </a>
 
 </div>
-
-
 
 
 
@@ -253,15 +253,15 @@ The angle of one side for the arc segment.
 
 
 
+
+
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/shapes/arc-segment.js#L48">
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/arc-segment.js#L48">
     arc-segment.js:48
   </a>
 
 </div>
-
-
 
 
 
@@ -298,15 +298,15 @@ The angle of the other side for the arc segment.
 
 
 
+
+
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/shapes/arc-segment.js#L56">
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/arc-segment.js#L56">
     arc-segment.js:56
   </a>
 
 </div>
-
-
 
 
 
@@ -352,21 +352,21 @@ __Returns__: Two.ArcSegment
 
 <div class="description">
 
-Create a new instance of [Two.ArcSegment](/docs/arcsegment) with the same properties of the current path.
+Create a new instance of [Two.ArcSegment](/docs/shapes/arc-segment/) with the same properties of the current path.
 
 </div>
+
+
 
 
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/shapes/arc-segment.js#L322">
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/arc-segment.js#L322">
     arc-segment.js:322
   </a>
 
 </div>
-
-
 
 
 
@@ -411,15 +411,15 @@ Return a JSON compatible plain object that represents the path.
 
 
 
+
+
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/shapes/arc-segment.js#L361">
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/arc-segment.js#L361">
     arc-segment.js:361
   </a>
 
 </div>
-
-
 
 
 

@@ -524,6 +524,13 @@ export class Path extends Shape {
       v.y += hh;
     }
 
+    if (this.mask) {
+      this.mask.translation.x -= cx;
+      this.mask.translation.x += hw;
+      this.mask.translation.y -= cy;
+      this.mask.translation.y += hh;
+    }
+
     return this;
 
   }
@@ -544,6 +551,11 @@ export class Path extends Shape {
       const v = this.vertices[i];
       v.x -= cx;
       v.y -= cy;
+    }
+
+    if (this.mask) {
+      this.mask.translation.x -= cx;
+      this.mask.translation.y -= cy;
     }
 
     return this;
@@ -768,7 +780,7 @@ export class Path extends Shape {
       obj.controls.right.x = alx;
       obj.controls.right.y = aly;
 
-      if (!typeof obj.relative === 'boolean' || obj.relative) {
+      if (!(typeof obj.relative === 'boolean') || obj.relative) {
         obj.controls.left.x -= x;
         obj.controls.left.y -= y;
         obj.controls.right.x -= x;
@@ -1052,7 +1064,6 @@ export class Path extends Shape {
         v.command = Commands.move;
         this._renderer.vertices.unshift(v);
 
-        left = v;
         next = this._collection[i + 1];
 
         // Project control over the percentage `t`

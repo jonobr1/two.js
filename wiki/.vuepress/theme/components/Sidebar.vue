@@ -1,6 +1,6 @@
 <template>
   <aside class="sidebar">
-    
+
     <RouterLink
       :to="$localePath"
       class="home-link"
@@ -42,23 +42,24 @@ export default {
 
 <style lang="stylus">
 .sidebar
-  .arrow 
+  transition transform 0.35s ease-in-out
+  .arrow
     display: none;
-  .home-link 
+  .home-link
     display none
   ul
     padding 0
     margin 0
     list-style-type none
-  .sidebar-heading 
+  .sidebar-heading
     color $sidebarText
     font-size 1rem
     transition color .2s
-    &:hover 
+    &:hover
       color $orange
-    &.open 
+    &.open
       color $orange
-      &:hover 
+      &:hover
         color $red
   a
     display inline-block
@@ -92,18 +93,24 @@ export default {
     &:hover
       color $orange
       border-bottom none
-    &.active 
+    &.active
       color $orange
       border-left-color transparent
       border-bottom none
       font-weight 600
-      &:hover 
+      &:hover
         color: $red
+.sidebar-mask
+  transition opacity 0.35s ease-in-out
+  background-color rgba(0,0,0,.5)
+  z-index -1
+  opacity 0
+
 @media (max-width: $MQMobile)
   .sidebar
     padding-top 0
     z-index 30
-    .home-link 
+    .home-link
       display block
       padding 1.1rem 1rem
       border-bottom 1px solid #eee
@@ -116,7 +123,7 @@ export default {
         top calc(1rem - 2px)
     & > .sidebar-links
       padding 1rem 0
-  .sidebar-mask 
-    background-color rgba(0,0,0,.5)
+  .sidebar-open .sidebar-mask
+    opacity 1
     z-index 25
 </style>

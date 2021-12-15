@@ -167,7 +167,7 @@ const canvas = {
         if (typeof fill === 'string') {
           ctx.fillStyle = fill;
         } else {
-          canvas[fill._renderer.type].render.call(fill, ctx);
+          canvas[fill._renderer.type].render.call(fill, ctx, this);
           ctx.fillStyle = fill._renderer.effect;
         }
       }
@@ -175,7 +175,7 @@ const canvas = {
         if (typeof stroke === 'string') {
           ctx.strokeStyle = stroke;
         } else {
-          canvas[stroke._renderer.type].render.call(stroke, ctx);
+          canvas[stroke._renderer.type].render.call(stroke, ctx, this);
           ctx.strokeStyle = stroke._renderer.effect;
         }
         if (linewidth) {
@@ -238,10 +238,9 @@ const canvas = {
           case Commands.curve:
 
             prev = closed ? mod(i - 1, length) : Math.max(i - 1, 0);
-            next = closed ? mod(i + 1, length) : Math.min(i + 1, last);
 
             a = commands[prev];
-            c = commands[next];
+
             ar = (a.controls && a.controls.right) || Vector.zero;
             bl = (b.controls && b.controls.left) || Vector.zero;
 
@@ -400,7 +399,7 @@ const canvas = {
         if (typeof fill === 'string') {
           ctx.fillStyle = fill;
         } else {
-          canvas[fill._renderer.type].render.call(fill, ctx);
+          canvas[fill._renderer.type].render.call(fill, ctx, this);
           ctx.fillStyle = fill._renderer.effect;
         }
       }
@@ -408,7 +407,7 @@ const canvas = {
         if (typeof stroke === 'string') {
           ctx.strokeStyle = stroke;
         } else {
-          canvas[stroke._renderer.type].render.call(stroke, ctx);
+          canvas[stroke._renderer.type].render.call(stroke, ctx, this);
           ctx.strokeStyle = stroke._renderer.effect;
         }
         if (linewidth) {
@@ -550,7 +549,7 @@ const canvas = {
         if (typeof fill === 'string') {
           ctx.fillStyle = fill;
         } else {
-          canvas[fill._renderer.type].render.call(fill, ctx);
+          canvas[fill._renderer.type].render.call(fill, ctx, this);
           ctx.fillStyle = fill._renderer.effect;
         }
       }
@@ -558,7 +557,7 @@ const canvas = {
         if (typeof stroke === 'string') {
           ctx.strokeStyle = stroke;
         } else {
-          canvas[stroke._renderer.type].render.call(stroke, ctx);
+          canvas[stroke._renderer.type].render.call(stroke, ctx, this);
           ctx.strokeStyle = stroke._renderer.effect;
         }
         if (linewidth) {
@@ -712,16 +711,29 @@ const canvas = {
 
   'linear-gradient': {
 
-    render: function(ctx) {
+    render: function(ctx, parent) {
 
       this._update();
 
-      if (!this._renderer.effect || this._flagEndPoints || this._flagStops) {
+      if (!this._renderer.effect || this._flagEndPoints || this._flagStops
+        || this._flagUnits) {
 
-        this._renderer.effect = ctx.createLinearGradient(
-          this.left._x, this.left._y,
-          this.right._x, this.right._y
-        );
+        var rect;
+        var lx = this.left._x;
+        var ly = this.left._y;
+        var rx = this.right._x;
+        var ry = this.right._y;
+
+        if (/objectBoundingBox/i.test(this._units)) {
+          // Convert objectBoundingBox units to userSpaceOnUse units
+          rect = parent.getBoundingClientRect(true);
+          lx = (lx - 0.5) * rect.width;
+          ly = (ly - 0.5) * rect.height;
+          rx = (rx - 0.5) * rect.width;
+          ry = (ry - 0.5) * rect.height;
+        }
+
+        this._renderer.effect = ctx.createLinearGradient(lx, ly, rx, ry);
 
         for (let i = 0; i < this.stops.length; i++) {
           const stop = this.stops[i];
@@ -738,17 +750,30 @@ const canvas = {
 
   'radial-gradient': {
 
-    render: function(ctx) {
+    render: function(ctx, parent) {
 
       this._update();
 
       if (!this._renderer.effect || this._flagCenter || this._flagFocal
-          || this._flagRadius || this._flagStops) {
+          || this._flagRadius || this._flagStops || this._flagUnits) {
 
-        this._renderer.effect = ctx.createRadialGradient(
-          this.center._x, this.center._y, 0,
-          this.focal._x, this.focal._y, this._radius
-        );
+        var rect;
+        var cx = this.center._x;
+        var cy = this.center._y;
+        var fx = this.focal._x;
+        var fy = this.focal._y;
+
+        if (/objectBoundingBox/i.test(this._units)) {
+          // Convert objectBoundingBox units to userSpaceOnUse units
+          rect = parent.getBoundingClientRect(true);
+          cx = (cx - 0.5) * rect.width;
+          cy = (cy - 0.5) * rect.height;
+          fx = (fx - 0.5) * rect.width;
+          fy = (fy - 0.5) * rect.height;
+        }
+
+        this._renderer.effect = ctx.createRadialGradient(cx, cy,
+          0, fx, fy, this._radius);
 
         for (let i = 0; i < this.stops.length; i++) {
           const stop = this.stops[i];

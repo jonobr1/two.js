@@ -18,7 +18,7 @@ Extends: [Two.Path](/docs/path/)
 
 
 <div class="meta">
-  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js" />
+  <custom-button text="Source" type="source" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/circle.js" />
 </div>
 
 
@@ -52,9 +52,11 @@ Extends: [Two.Path](/docs/path/)
 
 <div class="properties">
 
-A list of properties that are on every [Two.Circle](/docs/circle).
+A list of properties that are on every [Two.Circle](/docs/shapes/circle/).
 
 </div>
+
+
 
 
 
@@ -65,13 +67,11 @@ A list of properties that are on every [Two.Circle](/docs/circle).
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js#L53">
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/circle.js#L53">
     circle.js:53
   </a>
 
 </div>
-
-
 
 
 
@@ -109,21 +109,21 @@ A list of properties that are on every [Two.Circle](/docs/circle).
 
 <div class="description">
 
-Convenience function to apply observable qualities of a [Two.Circle](/docs/circle) to any object. Handy if you'd like to extend the [Two.Circle](/docs/circle) class on a custom class.
+Convenience function to apply observable qualities of a [Two.Circle](/docs/shapes/circle/) to any object. Handy if you'd like to extend the [Two.Circle](/docs/shapes/circle/) class on a custom class.
 
 </div>
+
+
 
 
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js#L59">
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/circle.js#L59">
     circle.js:59
   </a>
 
 </div>
-
-
 
 
 
@@ -160,15 +160,15 @@ The size of the radius of the circle.
 
 
 
+
+
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js#L32">
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/circle.js#L32">
     circle.js:32
   </a>
 
 </div>
-
-
 
 
 
@@ -214,21 +214,21 @@ __Returns__: Two.Circle
 
 <div class="description">
 
-Create a new instance of [Two.Circle](/docs/circle) with the same properties of the current path.
+Create a new instance of [Two.Circle](/docs/shapes/circle/) with the same properties of the current path.
 
 </div>
+
+
 
 
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js#L157">
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/circle.js#L157">
     circle.js:157
   </a>
 
 </div>
-
-
 
 
 
@@ -273,15 +273,15 @@ Return a JSON compatible plain object that represents the path.
 
 
 
+
+
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js#L190">
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/circle.js#L190">
     circle.js:190
   </a>
 
 </div>
-
-
 
 
 

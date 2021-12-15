@@ -46,6 +46,9 @@ npm install --save two.js@latest
 * #### SVG Interpreter
   Two.js features a [Scalable Vector Graphics](http://en.wikipedia.org/wiki/Scalable_Vector_Graphics) Interpreter. This means developers and designers alike can create SVG elements in commercial applications like [Adobe Illustrator](http://www.adobe.com/products/illustrator) and bring them into your two.js scene. For more information check out the [examples](/examples/).
 
+* #### Friends with Bitmap Imagery
+  Despite its early focus on easing vector shape creation and animation, Two.js offers many easy-to-use features to handle and render bitmap images. Easily load single images, sprite sheets, and image sequences with just a few method calls.
+
 ## Basic Usage
 
 <h3 class="visible"><a href="#basic-usage">Basic Usage</a></h3>
@@ -202,11 +205,11 @@ Two.js is dependency free, but its creation would not have been possible without
 
 <div class="project-footnote">
 
-Site design by [Yuin](https://yuinchien.com/) • Site development in collaboration with [Tonia](https://toniab.com/)
-
 Two.js is a project by [Jono](http://jono.fyi/) and numerous [contributors](https://github.com/jonobr1/two.js/graphs/contributors)
 
-published under the [MIT License](https://github.com/jonobr1/two.js/blob/dev/LICENSE) © 2012 – {{ 1900 + new Date().getYear() }}
+Site design by [Yuin](https://yuinchien.com/) • Site development in collaboration with [Tonia](https://toniab.com/)
+
+Published under the [MIT License](https://github.com/jonobr1/two.js/blob/dev/LICENSE) © 2012 – {{ 1900 + new Date().getYear() }}
 
 </div>
 

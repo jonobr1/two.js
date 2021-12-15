@@ -333,27 +333,16 @@ export class Points extends Shape {
       const low = ceil(bid);
       const high = floor(eid);
 
-      let v;
+      let j = 0, v;
 
-      if (this._length <= 0) {
+      for (let i = 0; i < this._collection.length; i++) {
 
-        this._renderer.vertices = new NumArray(0);
-        this._renderer.collection = [];
-
-      } else {
-
-        this._renderer.vertices = new NumArray((high - low + 1) * 2);
-        this._renderer.collection = [];
-
-        for (var i = low; i <= high; i++) {
-
-          var j = i - low;
-
+        if (i >= low && i <= high) {
           v = this._collection[i];
           this._renderer.collection.push(v);
           this._renderer.vertices[j * 2 + 0] = v.x;
           this._renderer.vertices[j * 2 + 1] = v.y;
-
+          j++;
         }
 
       }
