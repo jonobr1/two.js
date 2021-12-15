@@ -29,6 +29,7 @@ import Constants from '../constants.js';
 // https://github.com/jonobr1/two.js/issues/507#issuecomment-777159213
 var regex = {
   path: /[+-]?(?:\d*\.\d+|\d+)(?:[eE][+-]\d+)?/g,
+  cssBackgroundImage: /url\(['"]?#([\w\d-_]*)['"]?\)/i,
   unitSuffix: /[a-zA-Z%]*/i
 };
 
@@ -399,8 +400,8 @@ var applySvgAttributes = function(node, elem, parentStyles) {
         elem.opacity = parseFloat(value);
         break;
       case 'clip-path':
-        if (/url\(#.*\)/i.test(value)) {
-          id = value.replace(/url\(#(.*)\)/i, '$1');
+        if (regex.cssBackgroundImage.test(value)) {
+          id = value.replace(regex.cssBackgroundImage, '$1');
           if (read.defs.current && read.defs.current.contains(id)) {
             ref = read.defs.current.get(id);
             if (ref && ref.childNodes.length > 0) {
@@ -423,13 +424,18 @@ var applySvgAttributes = function(node, elem, parentStyles) {
       case 'fill':
       case 'stroke':
         prop = (elem instanceof Group ? '_' : '') + key;
-        if (/url\(#.*\)/i.test(value)) {
-          id = value.replace(/url\(#(.*)\)/i, '$1');
-          node.setAttribute(key, value.replace(/\)/i, '-' + Constants.Identifier + 'applied)'));
+        if (regex.cssBackgroundImage.test(value)) {
+          id = value.replace(regex.cssBackgroundImage, '$1');
+          // Overwritten id for non-conflicts on same page SVG documents
+          // TODO: Make this non-descructive
+          // node.setAttribute('two-' + key, value.replace(/\)/i, '-' + Constants.Identifier + 'applied)'));
           if (read.defs.current && read.defs.current.contains(id)) {
             ref = read.defs.current.get(id);
-            tagName = getTagName(ref.nodeName);
-            ref = read[tagName].call(this, ref, {});
+            if (!ref.object) {
+              tagName = getTagName(ref.nodeName);
+              ref.object = read[tagName].call(this, ref, {});
+            }
+            ref = ref.object;
           } else {
             scene = getScene(this);
             ref = scene.getById(id);
@@ -443,7 +449,7 @@ var applySvgAttributes = function(node, elem, parentStyles) {
         elem.id = value;
         // Overwritten id for non-conflicts on same page SVG documents
         // TODO: Make this non-descructive
-        node.id = value + '-' + Constants.Identifier + 'applied';
+        // node.id = value + '-' + Constants.Identifier + 'applied';
         break;
       case 'class':
       case 'className':
@@ -1168,13 +1174,30 @@ var read = {
 
   lineargradient: function(node, parentStyles) {
 
-    var x1 = parseFloat(node.getAttribute('x1'));
-    var y1 = parseFloat(node.getAttribute('y1'));
-    var x2 = parseFloat(node.getAttribute('x2'));
-    var y2 = parseFloat(node.getAttribute('y2'));
+    var units = node.getAttribute('gradientUnits');
+    var spread = node.getAttribute('spreadMethod');
+
+    if (!units) {
+      units = 'objectBoundingBox';
+    }
+    if (!spread) {
+      spread = 'pad';
+    }
+
+    var x1 = parseFloat(node.getAttribute('x1') || 0);
+    var y1 = parseFloat(node.getAttribute('y1') || 0);
+    var x2 = parseFloat(node.getAttribute('x2') || 0);
+    var y2 = parseFloat(node.getAttribute('y2') || 0);
 
     var ox = (x2 + x1) / 2;
     var oy = (y2 + y1) / 2;
+
+    if (/userSpaceOnUse/i.test(units)) {
+      x1 -= ox;
+      y1 -= oy;
+      x2 -= ox;
+      y2 -= oy;
+    }
 
     var stops = [];
     for (var i = 0; i < node.children.length; i++) {
@@ -1208,8 +1231,10 @@ var read = {
 
     }
 
-    var gradient = new LinearGradient(x1 - ox, y1 - oy, x2 - ox,
-      y2 - oy, stops);
+    var gradient = new LinearGradient(x1, y1, x2, y2, stops);
+
+    gradient.spread = spread;
+    gradient.units = units;
 
     applySvgAttributes.call(this, node, gradient, parentStyles);
 
@@ -1218,6 +1243,16 @@ var read = {
   },
 
   radialgradient: function(node, parentStyles) {
+
+    var units = node.getAttribute('gradientUnits');
+    var spread = node.getAttribute('spreadMethod');
+
+    if (!units) {
+      units = 'objectBoundingBox';
+    }
+    if (!spread) {
+      spread = 'pad';
+    }
 
     var cx = parseFloat(node.getAttribute('cx')) || 0;
     var cy = parseFloat(node.getAttribute('cy')) || 0;
@@ -1237,6 +1272,13 @@ var read = {
     var ox = Math.abs(cx + fx) / 2;
     var oy = Math.abs(cy + fy) / 2;
 
+    if (/userSpaceOnUse/i.test(units)) {
+      cx -= ox;
+      cy -= oy;
+      fx -= ox;
+      fy -= oy;
+    }
+
     var stops = [];
     for (var i = 0; i < node.children.length; i++) {
 
@@ -1269,8 +1311,8 @@ var read = {
 
     }
 
-    var gradient = new RadialGradient(cx - ox, cy - oy, r,
-      stops, fx - ox, fy - oy);
+    var gradient = new RadialGradient(cx, cy, r,
+      stops, fx, fy);
 
     applySvgAttributes.call(this, node, gradient, parentStyles);
 
