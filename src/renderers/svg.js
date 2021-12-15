@@ -762,12 +762,15 @@ var svg = {
         changed.spreadMethod = this._spread;
       }
 
+      if (this._flagUnits) {
+        changed.gradientUnits = this._units;
+      }
+
       // If there is no attached DOM element yet,
       // create it with all necessary attributes.
       if (!this._renderer.elem) {
 
         changed.id = this._id;
-        changed.gradientUnits = 'userSpaceOnUse';
         this._renderer.elem = svg.createElement('linearGradient', changed);
         domElement.defs.appendChild(this._renderer.elem);
 
@@ -856,12 +859,15 @@ var svg = {
         changed.spreadMethod = this._spread;
       }
 
+      if (this._flagUnits) {
+        changed.gradientUnits = this._units;
+      }
+
       // If there is no attached DOM element yet,
       // create it with all necessary attributes.
       if (!this._renderer.elem) {
 
         changed.id = this._id;
-        changed.gradientUnits = 'userSpaceOnUse';
         this._renderer.elem = svg.createElement('radialGradient', changed);
         domElement.defs.appendChild(this._renderer.elem);
 
