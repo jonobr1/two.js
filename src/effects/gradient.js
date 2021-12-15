@@ -37,10 +37,17 @@ function Gradient(stops) {
 
   /**
    * @name Two.Gradient#spread
-   * @property {String} - Indicates what happens if the gradient starts or ends inside the bounds of the target rectangle. Possible values are `'pad'`, `'reflect'`, and `'repeat'`.
+   * @property {String} [spread='pad'] - Indicates what happens if the gradient starts or ends inside the bounds of the target rectangle. Possible values are `'pad'`, `'reflect'`, and `'repeat'`.
    * @see {@link https://www.w3.org/TR/SVG11/pservers.html#LinearGradientElementSpreadMethodAttribute} for more information
    */
   this.spread = 'pad';
+
+  /**
+   * @name Two.Gradient#units
+   * @property {String} [units='userSpaceOnUse'] - Indicates how coordinate values are interpreted by the renderer. Possible values are `'userSpaceOnUse'` and `'objectBoundingBox'`.
+   * @see {@link https://www.w3.org/TR/SVG11/pservers.html#RadialGradientElementGradientUnitsAttribute} for more information
+   */
+  this.units = 'userSpaceOnUse';
 
   /**
    * @name Two.Gradient#stops
@@ -65,7 +72,7 @@ _.extend(Gradient, {
    * @property {String[]} - A list of properties that are on every {@link Two.Gradient}.
    */
   Properties: [
-    'spread'
+    'spread', 'units'
   ],
 
   /**
@@ -213,8 +220,16 @@ _.extend(Gradient.prototype, Events, {
    * @property {Boolean} - Determines whether the {@link Two.Gradient#spread} needs updating.
    */
   _flagSpread: false,
+  /**
+   * @name Two.Gradient#_flagUnits
+   * @private
+   * @property {Boolean} - Determins whether the {@link Two.Gradient#units} needs updating.
+   */
+  _flagUnits: false,
 
   _id: '',
+  _spread: '',
+  _units: '',
 
   /**
    * @name Two.Gradient#clone
@@ -291,7 +306,7 @@ _.extend(Gradient.prototype, Events, {
    */
   flagReset: function() {
 
-    this._flagSpread = this._flagStops = false;
+    this._flagSpread = this._flagUnits = this._flagStops = false;
 
     return this;
 

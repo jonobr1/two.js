@@ -1174,6 +1174,16 @@ var read = {
 
   lineargradient: function(node, parentStyles) {
 
+    var units = node.getAttribute('gradientUnits');
+    var spread = node.getAttribute('spreadMethod');
+
+    if (!units) {
+      units = 'objectBoundingBox';
+    }
+    if (!spread) {
+      spread = 'pad';
+    }
+
     var x1 = parseFloat(node.getAttribute('x1') || 0);
     var y1 = parseFloat(node.getAttribute('y1') || 0);
     var x2 = parseFloat(node.getAttribute('x2') || 0);
@@ -1181,6 +1191,13 @@ var read = {
 
     var ox = (x2 + x1) / 2;
     var oy = (y2 + y1) / 2;
+
+    if (/userSpaceOnUse/i.test(units)) {
+      x1 -= ox;
+      y1 -= oy;
+      x2 -= ox;
+      y2 -= oy;
+    }
 
     var stops = [];
     for (var i = 0; i < node.children.length; i++) {
@@ -1214,8 +1231,10 @@ var read = {
 
     }
 
-    var gradient = new LinearGradient(x1 - ox, y1 - oy, x2 - ox,
-      y2 - oy, stops);
+    var gradient = new LinearGradient(x1, y1, x2, y2, stops);
+
+    gradient.spread = spread;
+    gradient.units = units;
 
     applySvgAttributes.call(this, node, gradient, parentStyles);
 
@@ -1224,6 +1243,16 @@ var read = {
   },
 
   radialgradient: function(node, parentStyles) {
+
+    var units = node.getAttribute('gradientUnits');
+    var spread = node.getAttribute('spreadMethod');
+
+    if (!units) {
+      units = 'objectBoundingBox';
+    }
+    if (!spread) {
+      spread = 'pad';
+    }
 
     var cx = parseFloat(node.getAttribute('cx')) || 0;
     var cy = parseFloat(node.getAttribute('cy')) || 0;
@@ -1243,6 +1272,13 @@ var read = {
     var ox = Math.abs(cx + fx) / 2;
     var oy = Math.abs(cy + fy) / 2;
 
+    if (/userSpaceOnUse/i.test(units)) {
+      cx -= ox;
+      cy -= oy;
+      fx -= ox;
+      fy -= oy;
+    }
+
     var stops = [];
     for (var i = 0; i < node.children.length; i++) {
 
@@ -1275,8 +1311,8 @@ var read = {
 
     }
 
-    var gradient = new RadialGradient(cx - ox, cy - oy, r,
-      stops, fx - ox, fy - oy);
+    var gradient = new RadialGradient(cx, cy, r,
+      stops, fx, fy);
 
     applySvgAttributes.call(this, node, gradient, parentStyles);
 
