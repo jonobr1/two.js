@@ -29,6 +29,7 @@ import Constants from '../constants.js';
 // https://github.com/jonobr1/two.js/issues/507#issuecomment-777159213
 var regex = {
   path: /[+-]?(?:\d*\.\d+|\d+)(?:[eE][+-]\d+)?/g,
+  cssBackgroundImage: /url\(['"]?#(.*)['"]?\)/i,
   unitSuffix: /[a-zA-Z%]*/i
 };
 
@@ -399,8 +400,8 @@ var applySvgAttributes = function(node, elem, parentStyles) {
         elem.opacity = parseFloat(value);
         break;
       case 'clip-path':
-        if (/url\(#.*\)/i.test(value)) {
-          id = value.replace(/url\(#(.*)\)/i, '$1');
+        if (regex.cssBackgroundImage.test(value)) {
+          id = value.replace(regex.cssBackgroundImage, '$1');
           if (read.defs.current && read.defs.current.contains(id)) {
             ref = read.defs.current.get(id);
             if (ref && ref.childNodes.length > 0) {
@@ -423,9 +424,8 @@ var applySvgAttributes = function(node, elem, parentStyles) {
       case 'fill':
       case 'stroke':
         prop = (elem instanceof Group ? '_' : '') + key;
-        if (/url\(#.*\)/i.test(value)) {
-          id = value.replace(/url\(#(.*)\)/i, '$1');
-          node.setAttribute(key, value.replace(/\)/i, '-' + Constants.Identifier + 'applied)'));
+        if (regex.cssBackgroundImage.test(value)) {
+          id = value.replace(regex.cssBackgroundImage, '$1');
           if (read.defs.current && read.defs.current.contains(id)) {
             ref = read.defs.current.get(id);
             tagName = getTagName(ref.nodeName);
