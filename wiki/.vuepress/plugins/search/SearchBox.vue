@@ -321,7 +321,6 @@ export default {
       border-left none
       border-right none
     ul.suggestions
-      width calc(100%-3rem)
       left 0
       right 0
       border-radius 0
