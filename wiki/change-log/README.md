@@ -9,6 +9,13 @@ lang: en-US
 
 ## Nightly
 
++ Improved SVG gradient interpretation
++ `Two.interpret` can properly unwrap CSS `url()` commands
++ Added `Two.Gradient.units` and respected in all renderers
++ Default units space for `Two.Gradient` is `objectBoundingBox`
++ Removed destructive attribute assignments in `Two.interpret`
++ Interpreted gradients are reused as `<defs />`
+
 ## Nov 24, 2021 v0.7.12
 
 <h3 class="visible">Nov 24, 2021</h3><version-link v="v0.7.12" />
