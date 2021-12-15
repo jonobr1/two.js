@@ -29,7 +29,7 @@ import Constants from '../constants.js';
 // https://github.com/jonobr1/two.js/issues/507#issuecomment-777159213
 var regex = {
   path: /[+-]?(?:\d*\.\d+|\d+)(?:[eE][+-]\d+)?/g,
-  cssBackgroundImage: /url\(['"]?#(.*)['"]?\)/i,
+  cssBackgroundImage: /url\(['"]?#([\w\d-_]*)['"]?\)/i,
   unitSuffix: /[a-zA-Z%]*/i
 };
 
@@ -426,10 +426,16 @@ var applySvgAttributes = function(node, elem, parentStyles) {
         prop = (elem instanceof Group ? '_' : '') + key;
         if (regex.cssBackgroundImage.test(value)) {
           id = value.replace(regex.cssBackgroundImage, '$1');
+          // Overwritten id for non-conflicts on same page SVG documents
+          // TODO: Make this non-descructive
+          // node.setAttribute('two-' + key, value.replace(/\)/i, '-' + Constants.Identifier + 'applied)'));
           if (read.defs.current && read.defs.current.contains(id)) {
             ref = read.defs.current.get(id);
-            tagName = getTagName(ref.nodeName);
-            ref = read[tagName].call(this, ref, {});
+            if (!ref.object) {
+              tagName = getTagName(ref.nodeName);
+              ref.object = read[tagName].call(this, ref, {});
+            }
+            ref = ref.object;
           } else {
             scene = getScene(this);
             ref = scene.getById(id);
@@ -443,7 +449,7 @@ var applySvgAttributes = function(node, elem, parentStyles) {
         elem.id = value;
         // Overwritten id for non-conflicts on same page SVG documents
         // TODO: Make this non-descructive
-        node.id = value + '-' + Constants.Identifier + 'applied';
+        // node.id = value + '-' + Constants.Identifier + 'applied';
         break;
       case 'class':
       case 'className':
