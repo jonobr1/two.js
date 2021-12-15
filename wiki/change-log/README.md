@@ -7,7 +7,9 @@ lang: en-US
 
 # Change Log
 
-## Nightly
+## Dec 15, 2021 v0.7.13
+
+<h3 class="visible">Dec 15, 2021</h3><version-link v="v0.7.13" />
 
 + Improved SVG gradient interpretation
 + `Two.interpret` can properly unwrap CSS `url()` commands
