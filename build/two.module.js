@@ -1578,7 +1578,7 @@ var Constants = {
    * @name Two.PublishDate
    * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
    */
-  PublishDate: '2021-11-25T06:22:24.735Z',
+  PublishDate: '2021-12-15T21:23:06.163Z',
 
   /**
    * @name Two.Identifier
@@ -3911,7 +3911,7 @@ _.extend(Group.prototype, Shape.prototype, {
   /**
    * @name Two.Group#add
    * @function
-   * @param {Two.Shape[]} objects - An array of objects to be added. Can be also be supplied as individual arguments.
+   * @param {Two.Shape[]|...Two.Shape} objects - An array of objects to be added. Can be also be supplied as individual arguments.
    * @description Add objects to the group.
    */
   add: function(objects) {
@@ -3943,9 +3943,9 @@ _.extend(Group.prototype, Shape.prototype, {
   },
 
   /**
-   * @name Two.Group#add
+   * @name Two.Group#remove
    * @function
-   * @param {Two.Shape[]} objects - An array of objects to be removed. Can be also removed as individual arguments.
+   * @param {Two.Shape[]|...Two.Shape} [objects=self] - An array of objects to be removed. Can be also removed as individual arguments. If no arguments are passed, then it removes itself from its parent.
    * @description Remove objects from the group.
    */
   remove: function(objects) {
@@ -4427,7 +4427,7 @@ var canvas = {
         if (typeof fill === 'string') {
           ctx.fillStyle = fill;
         } else {
-          canvas[fill._renderer.type].render.call(fill, ctx);
+          canvas[fill._renderer.type].render.call(fill, ctx, this);
           ctx.fillStyle = fill._renderer.effect;
         }
       }
@@ -4435,7 +4435,7 @@ var canvas = {
         if (typeof stroke === 'string') {
           ctx.strokeStyle = stroke;
         } else {
-          canvas[stroke._renderer.type].render.call(stroke, ctx);
+          canvas[stroke._renderer.type].render.call(stroke, ctx, this);
           ctx.strokeStyle = stroke._renderer.effect;
         }
         if (linewidth) {
@@ -4656,7 +4656,7 @@ var canvas = {
         if (typeof fill === 'string') {
           ctx.fillStyle = fill;
         } else {
-          canvas[fill._renderer.type].render.call(fill, ctx);
+          canvas[fill._renderer.type].render.call(fill, ctx, this);
           ctx.fillStyle = fill._renderer.effect;
         }
       }
@@ -4664,7 +4664,7 @@ var canvas = {
         if (typeof stroke === 'string') {
           ctx.strokeStyle = stroke;
         } else {
-          canvas[stroke._renderer.type].render.call(stroke, ctx);
+          canvas[stroke._renderer.type].render.call(stroke, ctx, this);
           ctx.strokeStyle = stroke._renderer.effect;
         }
         if (linewidth) {
@@ -4806,7 +4806,7 @@ var canvas = {
         if (typeof fill === 'string') {
           ctx.fillStyle = fill;
         } else {
-          canvas[fill._renderer.type].render.call(fill, ctx);
+          canvas[fill._renderer.type].render.call(fill, ctx, this);
           ctx.fillStyle = fill._renderer.effect;
         }
       }
@@ -4814,7 +4814,7 @@ var canvas = {
         if (typeof stroke === 'string') {
           ctx.strokeStyle = stroke;
         } else {
-          canvas[stroke._renderer.type].render.call(stroke, ctx);
+          canvas[stroke._renderer.type].render.call(stroke, ctx, this);
           ctx.strokeStyle = stroke._renderer.effect;
         }
         if (linewidth) {
@@ -4968,16 +4968,29 @@ var canvas = {
 
   'linear-gradient': {
 
-    render: function(ctx) {
+    render: function(ctx, parent) {
 
       this._update();
 
-      if (!this._renderer.effect || this._flagEndPoints || this._flagStops) {
+      if (!this._renderer.effect || this._flagEndPoints || this._flagStops
+        || this._flagUnits) {
 
-        this._renderer.effect = ctx.createLinearGradient(
-          this.left._x, this.left._y,
-          this.right._x, this.right._y
-        );
+        var rect;
+        var lx = this.left._x;
+        var ly = this.left._y;
+        var rx = this.right._x;
+        var ry = this.right._y;
+
+        if (/objectBoundingBox/i.test(this._units)) {
+          // Convert objectBoundingBox units to userSpaceOnUse units
+          rect = parent.getBoundingClientRect(true);
+          lx = (lx - 0.5) * rect.width;
+          ly = (ly - 0.5) * rect.height;
+          rx = (rx - 0.5) * rect.width;
+          ry = (ry - 0.5) * rect.height;
+        }
+
+        this._renderer.effect = ctx.createLinearGradient(lx, ly, rx, ry);
 
         for (var i = 0; i < this.stops.length; i++) {
           var stop = this.stops[i];
@@ -4994,17 +5007,30 @@ var canvas = {
 
   'radial-gradient': {
 
-    render: function(ctx) {
+    render: function(ctx, parent) {
 
       this._update();
 
       if (!this._renderer.effect || this._flagCenter || this._flagFocal
-          || this._flagRadius || this._flagStops) {
+          || this._flagRadius || this._flagStops || this._flagUnits) {
 
-        this._renderer.effect = ctx.createRadialGradient(
-          this.center._x, this.center._y, 0,
-          this.focal._x, this.focal._y, this._radius
-        );
+        var rect;
+        var cx = this.center._x;
+        var cy = this.center._y;
+        var fx = this.focal._x;
+        var fy = this.focal._y;
+
+        if (/objectBoundingBox/i.test(this._units)) {
+          // Convert objectBoundingBox units to userSpaceOnUse units
+          rect = parent.getBoundingClientRect(true);
+          cx = (cx - 0.5) * rect.width;
+          cy = (cy - 0.5) * rect.height;
+          fx = (fx - 0.5) * rect.width;
+          fy = (fy - 0.5) * rect.height;
+        }
+
+        this._renderer.effect = ctx.createRadialGradient(cx, cy,
+          0, fx, fy, this._radius);
 
         for (var i = 0; i < this.stops.length; i++) {
           var stop = this.stops[i];
@@ -5733,10 +5759,17 @@ function Gradient(stops) {
 
   /**
    * @name Two.Gradient#spread
-   * @property {String} - Indicates what happens if the gradient starts or ends inside the bounds of the target rectangle. Possible values are `'pad'`, `'reflect'`, and `'repeat'`.
+   * @property {String} [spread='pad'] - Indicates what happens if the gradient starts or ends inside the bounds of the target rectangle. Possible values are `'pad'`, `'reflect'`, and `'repeat'`.
    * @see {@link https://www.w3.org/TR/SVG11/pservers.html#LinearGradientElementSpreadMethodAttribute} for more information
    */
   this.spread = 'pad';
+
+  /**
+   * @name Two.Gradient#units
+   * @property {String} [units='objectBoundingBox'] - Indicates how coordinate values are interpreted by the renderer. Possible values are `'userSpaceOnUse'` and `'objectBoundingBox'`.
+   * @see {@link https://www.w3.org/TR/SVG11/pservers.html#RadialGradientElementGradientUnitsAttribute} for more information
+   */
+  this.units = 'objectBoundingBox';
 
   /**
    * @name Two.Gradient#stops
@@ -5761,7 +5794,7 @@ _.extend(Gradient, {
    * @property {String[]} - A list of properties that are on every {@link Two.Gradient}.
    */
   Properties: [
-    'spread'
+    'spread', 'units'
   ],
 
   /**
@@ -5909,8 +5942,16 @@ _.extend(Gradient.prototype, Events, {
    * @property {Boolean} - Determines whether the {@link Two.Gradient#spread} needs updating.
    */
   _flagSpread: false,
+  /**
+   * @name Two.Gradient#_flagUnits
+   * @private
+   * @property {Boolean} - Determins whether the {@link Two.Gradient#units} needs updating.
+   */
+  _flagUnits: false,
 
   _id: '',
+  _spread: '',
+  _units: '',
 
   /**
    * @name Two.Gradient#clone
@@ -5987,7 +6028,7 @@ _.extend(Gradient.prototype, Events, {
    */
   flagReset: function() {
 
-    this._flagSpread = this._flagStops = false;
+    this._flagSpread = this._flagUnits = this._flagStops = false;
 
     return this;
 
@@ -10655,6 +10696,7 @@ Text.MakeObservable(Text.prototype);
 // https://github.com/jonobr1/two.js/issues/507#issuecomment-777159213
 var regex = {
   path: /[+-]?(?:\d*\.\d+|\d+)(?:[eE][+-]\d+)?/g,
+  cssBackgroundImage: /url\(['"]?#([\w\d-_]*)['"]?\)/i,
   unitSuffix: /[a-zA-Z%]*/i
 };
 
@@ -11025,8 +11067,8 @@ var applySvgAttributes = function(node, elem, parentStyles) {
         elem.opacity = parseFloat(value);
         break;
       case 'clip-path':
-        if (/url\(#.*\)/i.test(value)) {
-          id = value.replace(/url\(#(.*)\)/i, '$1');
+        if (regex.cssBackgroundImage.test(value)) {
+          id = value.replace(regex.cssBackgroundImage, '$1');
           if (read.defs.current && read.defs.current.contains(id)) {
             ref = read.defs.current.get(id);
             if (ref && ref.childNodes.length > 0) {
@@ -11049,13 +11091,18 @@ var applySvgAttributes = function(node, elem, parentStyles) {
       case 'fill':
       case 'stroke':
         prop = (elem instanceof Group ? '_' : '') + key;
-        if (/url\(#.*\)/i.test(value)) {
-          id = value.replace(/url\(#(.*)\)/i, '$1');
-          node.setAttribute(key, value.replace(/\)/i, '-' + Constants.Identifier + 'applied)'));
+        if (regex.cssBackgroundImage.test(value)) {
+          id = value.replace(regex.cssBackgroundImage, '$1');
+          // Overwritten id for non-conflicts on same page SVG documents
+          // TODO: Make this non-descructive
+          // node.setAttribute('two-' + key, value.replace(/\)/i, '-' + Constants.Identifier + 'applied)'));
           if (read.defs.current && read.defs.current.contains(id)) {
             ref = read.defs.current.get(id);
-            tagName = getTagName(ref.nodeName);
-            ref = read[tagName].call(this, ref, {});
+            if (!ref.object) {
+              tagName = getTagName(ref.nodeName);
+              ref.object = read[tagName].call(this, ref, {});
+            }
+            ref = ref.object;
           } else {
             scene = getScene(this);
             ref = scene.getById(id);
@@ -11069,7 +11116,7 @@ var applySvgAttributes = function(node, elem, parentStyles) {
         elem.id = value;
         // Overwritten id for non-conflicts on same page SVG documents
         // TODO: Make this non-descructive
-        node.id = value + '-' + Constants.Identifier + 'applied';
+        // node.id = value + '-' + Constants.Identifier + 'applied';
         break;
       case 'class':
       case 'className':
@@ -11794,13 +11841,30 @@ var read = {
 
   lineargradient: function(node, parentStyles) {
 
-    var x1 = parseFloat(node.getAttribute('x1'));
-    var y1 = parseFloat(node.getAttribute('y1'));
-    var x2 = parseFloat(node.getAttribute('x2'));
-    var y2 = parseFloat(node.getAttribute('y2'));
+    var units = node.getAttribute('gradientUnits');
+    var spread = node.getAttribute('spreadMethod');
+
+    if (!units) {
+      units = 'objectBoundingBox';
+    }
+    if (!spread) {
+      spread = 'pad';
+    }
+
+    var x1 = parseFloat(node.getAttribute('x1') || 0);
+    var y1 = parseFloat(node.getAttribute('y1') || 0);
+    var x2 = parseFloat(node.getAttribute('x2') || 0);
+    var y2 = parseFloat(node.getAttribute('y2') || 0);
 
     var ox = (x2 + x1) / 2;
     var oy = (y2 + y1) / 2;
+
+    if (/userSpaceOnUse/i.test(units)) {
+      x1 -= ox;
+      y1 -= oy;
+      x2 -= ox;
+      y2 -= oy;
+    }
 
     var stops = [];
     for (var i = 0; i < node.children.length; i++) {
@@ -11834,8 +11898,10 @@ var read = {
 
     }
 
-    var gradient = new LinearGradient(x1 - ox, y1 - oy, x2 - ox,
-      y2 - oy, stops);
+    var gradient = new LinearGradient(x1, y1, x2, y2, stops);
+
+    gradient.spread = spread;
+    gradient.units = units;
 
     applySvgAttributes.call(this, node, gradient, parentStyles);
 
@@ -11844,6 +11910,13 @@ var read = {
   },
 
   radialgradient: function(node, parentStyles) {
+
+    var units = node.getAttribute('gradientUnits');
+    node.getAttribute('spreadMethod');
+
+    if (!units) {
+      units = 'objectBoundingBox';
+    }
 
     var cx = parseFloat(node.getAttribute('cx')) || 0;
     var cy = parseFloat(node.getAttribute('cy')) || 0;
@@ -11863,6 +11936,13 @@ var read = {
     var ox = Math.abs(cx + fx) / 2;
     var oy = Math.abs(cy + fy) / 2;
 
+    if (/userSpaceOnUse/i.test(units)) {
+      cx -= ox;
+      cy -= oy;
+      fx -= ox;
+      fy -= oy;
+    }
+
     var stops = [];
     for (var i = 0; i < node.children.length; i++) {
 
@@ -11895,8 +11975,8 @@ var read = {
 
     }
 
-    var gradient = new RadialGradient(cx - ox, cy - oy, r,
-      stops, fx - ox, fy - oy);
+    var gradient = new RadialGradient(cx, cy, r,
+      stops, fx, fy);
 
     applySvgAttributes.call(this, node, gradient, parentStyles);
 
@@ -14635,12 +14715,15 @@ var svg = {
         changed.spreadMethod = this._spread;
       }
 
+      if (this._flagUnits) {
+        changed.gradientUnits = this._units;
+      }
+
       // If there is no attached DOM element yet,
       // create it with all necessary attributes.
       if (!this._renderer.elem) {
 
         changed.id = this._id;
-        changed.gradientUnits = 'userSpaceOnUse';
         this._renderer.elem = svg.createElement('linearGradient', changed);
         domElement.defs.appendChild(this._renderer.elem);
 
@@ -14729,12 +14812,15 @@ var svg = {
         changed.spreadMethod = this._spread;
       }
 
+      if (this._flagUnits) {
+        changed.gradientUnits = this._units;
+      }
+
       // If there is no attached DOM element yet,
       // create it with all necessary attributes.
       if (!this._renderer.elem) {
 
         changed.id = this._id;
-        changed.gradientUnits = 'userSpaceOnUse';
         this._renderer.elem = svg.createElement('radialGradient', changed);
         domElement.defs.appendChild(this._renderer.elem);
 
@@ -16326,7 +16412,7 @@ var webgl = {
 
   'linear-gradient': {
 
-    render: function(ctx, elem) {
+    render: function(ctx, parent) {
 
       if (!ctx.canvas.getContext('2d')) {
         return;
@@ -16334,12 +16420,25 @@ var webgl = {
 
       this._update();
 
-      if (!this._renderer.effect || this._flagEndPoints || this._flagStops) {
+      if (!this._renderer.effect || this._flagEndPoints || this._flagStops
+        || this._flagUnits) {
 
-        this._renderer.effect = ctx.createLinearGradient(
-          this.left._x, this.left._y,
-          this.right._x, this.right._y
-        );
+        var rect;
+        var lx = this.left._x;
+        var ly = this.left._y;
+        var rx = this.right._x;
+        var ry = this.right._y;
+
+        if (/objectBoundingBox/i.test(this._units)) {
+          // Convert objectBoundingBox units to userSpaceOnUse units
+          rect = parent.getBoundingClientRect(true);
+          lx = (lx - 0.5) * rect.width;
+          ly = (ly - 0.5) * rect.height;
+          rx = (rx - 0.5) * rect.width;
+          ry = (ry - 0.5) * rect.height;
+        }
+
+        this._renderer.effect = ctx.createLinearGradient(lx, ly, rx, ry);
 
         for (var i = 0; i < this.stops.length; i++) {
           var stop = this.stops[i];
@@ -16356,7 +16455,7 @@ var webgl = {
 
   'radial-gradient': {
 
-    render: function(ctx, elem) {
+    render: function(ctx, parent) {
 
       if (!ctx.canvas.getContext('2d')) {
         return;
@@ -16365,12 +16464,25 @@ var webgl = {
       this._update();
 
       if (!this._renderer.effect || this._flagCenter || this._flagFocal
-          || this._flagRadius || this._flagStops) {
+          || this._flagRadius || this._flagStops || this._flagUnits) {
 
-        this._renderer.effect = ctx.createRadialGradient(
-          this.center._x, this.center._y, 0,
-          this.focal._x, this.focal._y, this._radius
-        );
+        var rect;
+        var cx = this.center._x;
+        var cy = this.center._y;
+        var fx = this.focal._x;
+        var fy = this.focal._y;
+
+        if (/objectBoundingBox/i.test(this._units)) {
+          // Convert objectBoundingBox units to userSpaceOnUse units
+          rect = parent.getBoundingClientRect(true);
+          cx = (cx - 0.5) * rect.width;
+          cy = (cy - 0.5) * rect.height;
+          fx = (fx - 0.5) * rect.width;
+          fy = (fy - 0.5) * rect.height;
+        }
+
+        this._renderer.effect = ctx.createRadialGradient(cx, cy,
+          0, fx, fy, this._radius);
 
         for (var i = 0; i < this.stops.length; i++) {
           var stop = this.stops[i];
