@@ -759,6 +759,7 @@ var canvas = {
       if (!this._renderer.effect || this._flagCenter || this._flagFocal
           || this._flagRadius || this._flagStops || this._flagUnits) {
 
+        var rect;
         var cx = this.center._x;
         var cy = this.center._y;
         var fx = this.focal._x;
