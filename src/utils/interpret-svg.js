@@ -1168,10 +1168,10 @@ var read = {
 
   lineargradient: function(node, parentStyles) {
 
-    var x1 = parseFloat(node.getAttribute('x1'));
-    var y1 = parseFloat(node.getAttribute('y1'));
-    var x2 = parseFloat(node.getAttribute('x2'));
-    var y2 = parseFloat(node.getAttribute('y2'));
+    var x1 = parseFloat(node.getAttribute('x1') || 0);
+    var y1 = parseFloat(node.getAttribute('y1') || 0);
+    var x2 = parseFloat(node.getAttribute('x2') || 0);
+    var y2 = parseFloat(node.getAttribute('y2') || 0);
 
     var ox = (x2 + x1) / 2;
     var oy = (y2 + y1) / 2;
