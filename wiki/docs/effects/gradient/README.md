@@ -58,8 +58,8 @@ See: [Two.Stop](/docs/effects/stop/)
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L57">
-    gradient.js:57
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L64">
+    gradient.js:64
   </a>
 
 </div>
@@ -103,8 +103,8 @@ A list of properties that are on every [Two.Gradient](/docs/effects/gradient/).
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L63">
-    gradient.js:63
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L70">
+    gradient.js:70
   </a>
 
 </div>
@@ -155,8 +155,8 @@ Convenience function to apply observable qualities of a [Two.Gradient](/docs/eff
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L71">
-    gradient.js:71
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L78">
+    gradient.js:78
   </a>
 
 </div>
@@ -200,8 +200,8 @@ Cached method to let renderers know stops have been updated on a [Two.Gradient](
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L146">
-    gradient.js:146
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L153">
+    gradient.js:153
   </a>
 
 </div>
@@ -245,8 +245,8 @@ Cached method to let [Two.Gradient](/docs/effects/gradient/) know vertices have 
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L155">
-    gradient.js:155
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L162">
+    gradient.js:162
   </a>
 
 </div>
@@ -290,8 +290,8 @@ Cached method to let [Two.Gradient](/docs/effects/gradient/) know vertices have 
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L174">
-    gradient.js:174
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L181">
+    gradient.js:181
   </a>
 
 </div>
@@ -472,6 +472,57 @@ See: [https://www.w3.org/TR/SVG11/pservers.html#LinearGradientElementSpreadMetho
 
 <div class="instance member ">
 
+## units
+
+<h2 class="longname" aria-hidden="true"><a href="#units"><span class="prefix">Two.Gradient.</span><span class="shortname">units</span></a></h2>
+
+
+
+
+
+
+
+
+
+
+<div class="properties">
+
+Indicates how coordinate values are interpreted by the renderer. Possible values are `'userSpaceOnUse'` and `'objectBoundingBox'`.
+
+</div>
+
+
+
+
+
+
+
+
+<div class="see">
+
+See: [https://www.w3.org/TR/SVG11/pservers.html#RadialGradientElementGradientUnitsAttribute](https://www.w3.org/TR/SVG11/pservers.html#RadialGradientElementGradientUnitsAttribute) for more information
+
+</div>
+
+
+
+<div class="meta">
+
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L45">
+    gradient.js:45
+  </a>
+
+</div>
+
+
+
+
+</div>
+
+
+
+<div class="instance member ">
+
 ## stops
 
 <h2 class="longname" aria-hidden="true"><a href="#stops"><span class="prefix">Two.Gradient.</span><span class="shortname">stops</span></a></h2>
@@ -502,8 +553,8 @@ An ordered list of [Two.Stop](/docs/effects/stop/)s for rendering the gradient.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L45">
-    gradient.js:45
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L52">
+    gradient.js:52
   </a>
 
 </div>
@@ -562,8 +613,8 @@ Create a new instance of [Two.Gradient](/docs/effects/gradient/) with the same p
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L219">
-    gradient.js:219
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L234">
+    gradient.js:234
   </a>
 
 </div>
@@ -615,8 +666,8 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L246">
-    gradient.js:246
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L261">
+    gradient.js:261
   </a>
 
 </div>
