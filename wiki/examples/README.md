@@ -139,6 +139,12 @@ Various examples of how to use different features of Two.js with associated tags
   tags="circle, animated, non-interactive, simple" />
 
 <example-card
+  title="GM: Animated Sticker"
+  href="https://codepen.io/jonobr1/pen/QWqdVLb"
+  src="https://shots.codepen.io/jonobr1/pen/QWqdVLb-512.jpg"
+  tags="svg, interpret, getComputedMatrix, gradient, non-interactive, animated" />
+
+<example-card
   title="Haiku Generator"
   href="https://glitch.com/~haiku-generator"
   src="https://cdn.glitch.me/project-avatar/fb84449e-ddab-4960-a4b0-6e08a0d280a6.png?2019-03-09T12:31:45.056Z"
