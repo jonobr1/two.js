@@ -503,6 +503,8 @@ var applySvgAttributes = function(node, elem, parentStyles) {
     }
   }
 
+  if (Object.keys(node.dataset).length) elem.dataset = node.dataset;
+
   return styles;
 
 };
@@ -660,6 +662,8 @@ var read = {
         }
       }
     }
+
+    if (group.classList.length > 0) group._flagClassName = true;
 
     return group;
 

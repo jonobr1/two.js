@@ -370,6 +370,12 @@ var svg = {
         }
       }
 
+      if (this.dataset) {
+        for (var key in this.dataset) {
+          this._renderer.elem.setAttribute('data-' + key, this.dataset[key]);
+        }
+      }
+
       return this.flagReset();
 
     }
