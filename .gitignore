@@ -5,3 +5,4 @@ junk/
 docs.json
 package-lock.json
 dist
+.idea
