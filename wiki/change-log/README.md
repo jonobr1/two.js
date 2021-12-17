@@ -7,6 +7,10 @@ lang: en-US
 
 # Change Log
 
+## Nightly
+
++ `Two.interpret` inherits classes and `data-*` attributes [@elShiaLabeouf](https://github.com/elShiaLabeouf)
+
 ## Dec 15, 2021 v0.7.13
 
 <h3 class="visible">Dec 15, 2021</h3><version-link v="v0.7.13" />
