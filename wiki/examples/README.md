@@ -73,6 +73,12 @@ Various examples of how to use different features of Two.js with associated tags
   tags="import, animated, non-interactive, vertices, circle" />
 
 <example-card
+  title="Particle Sandbox"
+  href="https://codesandbox.io/s/twojs-particle-sandbox-wsxcx"
+  src="https://codesandbox.io/api/v1/sandboxes/wsxcx/screenshot.png"
+  tags="import, react, sandbox, vertices, position, rotation, scale, canvas, webgl, svg, test, renderers, memory" />
+
+<example-card
   title="Rendering Types"
   href="https://codepen.io/jonobr1/pen/NWvJZPp"
   src="https://shots.codepen.io/jonobr1/pen/NWvJZPp-512.jpg"
