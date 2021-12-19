@@ -164,7 +164,7 @@ Two.js has been in operation since 2012. For a full list of changes from its fir
 
 ---
 
-#### And a big thank you to our sponsors:
+#### And a big thank you to our sponsors who include:
 [Epilogue Press](https://github.com/epiloguepress)
 
 [npm]: https://img.shields.io/npm/v/two.js
