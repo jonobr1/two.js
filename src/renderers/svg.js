@@ -196,7 +196,7 @@ const svg = {
     let string = '';
     const r = size * 0.5;
 
-    for (var i = 0; i < points.length; i++) {
+    for (let i = 0; i < points.length; i++) {
 
       const x = points[i].x;
       const y = points[i].y - r;
@@ -374,7 +374,7 @@ const svg = {
       }
 
       if (this.dataset) {
-        for (var key in this.dataset) {
+        for (let key in this.dataset) {
           this._renderer.elem.setAttribute('data-' + key, this.dataset[key]);
         }
       }

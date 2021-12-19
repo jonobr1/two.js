@@ -9,32 +9,6 @@ lang: en-US
 
 ## Nightly
 
-+ `Two.interpret` inherits classes and `data-*` attributes [@elShiaLabeouf](https://github.com/elShiaLabeouf)
-
-## Dec 15, 2021 v0.7.13
-
-<h3 class="visible">Dec 15, 2021</h3><version-link v="v0.7.13" />
-
-+ Improved SVG gradient interpretation
-+ `Two.interpret` can properly unwrap CSS `url()` commands
-+ Added `Two.Gradient.units` and respected in all renderers
-+ Default units space for `Two.Gradient` is `objectBoundingBox`
-+ Removed destructive attribute assignments in `Two.interpret`
-+ Interpreted gradients are reused as `<defs />`
-
-## Nov 24, 2021 v0.7.12
-
-<h3 class="visible">Nov 24, 2021</h3><version-link v="v0.7.12" />
-
-+ Made mask removal possible on `Two.Group`s, `Two.Path`s, and `Two.Points`'
-+ Simplified `Two.Points.vertices` management for renderers improving adaptability
-
-## Nov 20, 2021 v0.7.10
-
-<h3 class="visible">Nov 20, 2021</h3><version-link v="v0.7.10" />
-
-+ Fixed empty vertices issue on `Two.Points`
-
 <h3 class="visible">Nightly</h3>
 
 + Converted `Two.ImageSequence` to EcmaScript 6 class
@@ -64,6 +38,31 @@ lang: en-US
 + Converted `Two.Events` to EcmaScript 6 class
 + Converted `Two.Anchor` to EcmaScript 6 class
 + Converted `Two.Vector` to EcmaScript 6 class
++ `Two.interpret` inherits classes and `data-*` attributes [@elShiaLabeouf](https://github.com/elShiaLabeouf)
+
+## Dec 15, 2021 v0.7.13
+
+<h3 class="visible">Dec 15, 2021</h3><version-link v="v0.7.13" />
+
++ Improved SVG gradient interpretation
++ `Two.interpret` can properly unwrap CSS `url()` commands
++ Added `Two.Gradient.units` and respected in all renderers
++ Default units space for `Two.Gradient` is `objectBoundingBox`
++ Removed destructive attribute assignments in `Two.interpret`
++ Interpreted gradients are reused as `<defs />`
+
+## Nov 24, 2021 v0.7.12
+
+<h3 class="visible">Nov 24, 2021</h3><version-link v="v0.7.12" />
+
++ Made mask removal possible on `Two.Group`s, `Two.Path`s, and `Two.Points`'
++ Simplified `Two.Points.vertices` management for renderers improving adaptability
+
+## Nov 20, 2021 v0.7.10
+
+<h3 class="visible">Nov 20, 2021</h3><version-link v="v0.7.10" />
+
++ Fixed empty vertices issue on `Two.Points`
 
 ## Nov 11, 2021 v0.7.9
 

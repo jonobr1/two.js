@@ -1251,11 +1251,11 @@ const webgl = {
       if (!this._renderer.effect || this._flagEndPoints || this._flagStops
         || this._flagUnits) {
 
-        var rect;
-        var lx = this.left._x;
-        var ly = this.left._y;
-        var rx = this.right._x;
-        var ry = this.right._y;
+        let rect;
+        let lx = this.left._x;
+        let ly = this.left._y;
+        let rx = this.right._x;
+        let ry = this.right._y;
 
         if (/objectBoundingBox/i.test(this._units)) {
           // Convert objectBoundingBox units to userSpaceOnUse units
@@ -1294,11 +1294,11 @@ const webgl = {
       if (!this._renderer.effect || this._flagCenter || this._flagFocal
           || this._flagRadius || this._flagStops || this._flagUnits) {
 
-        var rect;
-        var cx = this.center._x;
-        var cy = this.center._y;
-        var fx = this.focal._x;
-        var fy = this.focal._y;
+        let rect;
+        let cx = this.center._x;
+        let cy = this.center._y;
+        let fx = this.focal._x;
+        let fy = this.focal._y;
 
         if (/objectBoundingBox/i.test(this._units)) {
           // Convert objectBoundingBox units to userSpaceOnUse units

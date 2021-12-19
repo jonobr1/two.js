@@ -1236,7 +1236,7 @@ export const read = {
 
     }
 
-    var gradient = new LinearGradient(x1, y1, x2, y2, stops);
+    const gradient = new LinearGradient(x1, y1, x2, y2, stops);
 
     gradient.spread = spread;
     gradient.units = units;
@@ -1316,8 +1316,7 @@ export const read = {
 
     }
 
-    var gradient = new RadialGradient(cx, cy, r,
-      stops, fx, fy);
+    const gradient = new RadialGradient(cx, cy, r, stops, fx, fy);
 
     applySvgAttributes.call(this, node, gradient, parentStyles);
 
