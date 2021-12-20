@@ -18,6 +18,7 @@
   ],
   "scripts": {
     "build": "node ./utils/build",
+    "dev": "esbuild --servedir=. --serve=8080",
     "docs:generate": "node ./utils/document",
     "docs:dev": "vuepress dev wiki",
     "docs:build": "vuepress build wiki",
@@ -61,6 +62,7 @@
     "@vuepress/plugin-nprogress": "^1.5.4",
     "chalk": "^2.4.2",
     "commander": "^2.20.3",
+    "esbuild": "^0.14.6",
     "eslint": "^7.8.1",
     "esm": "^3.2.25",
     "gzip-size": "^5.1.1",
@@ -68,9 +70,6 @@
     "jsdoc-api": "^6.0.0",
     "qunit": "^2.11.2",
     "resemblejs": "^3.2.5",
-    "rollup": "^2.26.11",
-    "rollup-plugin-terser": "^7.0.2",
-    "tsd-jsdoc": "^2.5.0",
     "underscore": "^1.13.0",
     "vuepress": "^1.5.4",
     "vuepress-plugin-sitemap": "^2.3.1"
