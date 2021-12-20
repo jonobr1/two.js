@@ -14,7 +14,7 @@ Extends: [Two.Events](/docs/events/)
 </div>
 
 
-This class is used by [Two](/docs/two/) when constructing with `type` of `Two.Types.canvas`. It takes Two.js' scenegraph and renders it to a `<canvas />`.
+This class is used by [Two]() when constructing with `type` of `Two.Types.canvas`. It takes Two.js' scenegraph and renders it to a `<canvas />`.
 
 
 <div class="meta">
@@ -28,7 +28,7 @@ This class is used by [Two](/docs/two/) when constructing with `type` of `Two.Ty
 
 | Argument | Description |
 | ---- | ----------- |
-|  parameters  | This object is inherited when constructing a new instance of [Two](/docs/two/). |
+|  parameters  | This object is inherited when constructing a new instance of [Two](). |
 |  parameters.domElement  | The `<canvas />` to draw to. If none given a new one will be constructed. |
 |  parameters.overdraw  | Determines whether the canvas should clear the background or not. Defaults to `true`. |
 |  parameters.smoothing  | Determines whether the canvas should antialias drawing. Set it to `false` when working with pixel art. `false` can lead to better performance, since it would use a cheaper interpolation algorithm. |
@@ -67,8 +67,8 @@ A massive object filled with utility functions and properties to render Two.js o
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/renderers/canvas.js#L962">
-    canvas.js:962
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/renderers/canvas.js#L964">
+    canvas.js:964
   </a>
 
 </div>
@@ -112,8 +112,8 @@ The `<canvas />` associated with the Two.js scene.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/renderers/canvas.js#L928">
-    canvas.js:928
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/renderers/canvas.js#L932">
+    canvas.js:932
   </a>
 
 </div>
@@ -157,8 +157,8 @@ Associated two dimensional context to render on the `<canvas />`.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/renderers/canvas.js#L934">
-    canvas.js:934
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/renderers/canvas.js#L938">
+    canvas.js:938
   </a>
 
 </div>
@@ -202,8 +202,8 @@ Determines whether the canvas clears the background each draw call.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/renderers/canvas.js#L940">
-    canvas.js:940
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/renderers/canvas.js#L944">
+    canvas.js:944
   </a>
 
 </div>
@@ -247,8 +247,8 @@ The root group of the scenegraph.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/renderers/canvas.js#L951">
-    canvas.js:951
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/renderers/canvas.js#L955">
+    canvas.js:955
   </a>
 
 </div>
@@ -309,8 +309,8 @@ Change the size of the renderer.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/renderers/canvas.js#L974">
-    canvas.js:974
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/renderers/canvas.js#L970">
+    canvas.js:970
   </a>
 
 </div>
@@ -354,8 +354,8 @@ Render the current scene to the `<canvas />`.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/renderers/canvas.js#L1004">
-    canvas.js:1004
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/renderers/canvas.js#L1000">
+    canvas.js:1000
   </a>
 
 </div>

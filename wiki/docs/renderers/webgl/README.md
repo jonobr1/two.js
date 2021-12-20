@@ -14,7 +14,7 @@ Extends: [Two.Events](/docs/events/)
 </div>
 
 
-This class is used by [Two](/docs/two/) when constructing with `type` of `Two.Types.webgl`. It takes Two.js' scenegraph and renders it to a `<canvas />` through the WebGL api.
+This class is used by [Two]() when constructing with `type` of `Two.Types.webgl`. It takes Two.js' scenegraph and renders it to a `<canvas />` through the WebGL api.
 
 
 <div class="meta">
@@ -28,7 +28,7 @@ This class is used by [Two](/docs/two/) when constructing with `type` of `Two.Ty
 
 | Argument | Description |
 | ---- | ----------- |
-|  parameters  | This object is inherited when constructing a new instance of [Two](/docs/two/). |
+|  parameters  | This object is inherited when constructing a new instance of [Two](). |
 |  parameters.domElement  | The `<canvas />` to draw to. If none given a new one will be constructed. |
 |  parameters.offscreenElement  | The offscreen two dimensional `<canvas />` to render each element on WebGL texture updates. |
 |  parameters.antialias  | Determines whether the canvas should clear render with antialias on. |
@@ -67,8 +67,8 @@ A massive object filled with utility functions and properties to render Two.js o
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/renderers/webgl.js#L1584">
-    webgl.js:1584
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/renderers/webgl.js#L1586">
+    webgl.js:1586
   </a>
 
 </div>
@@ -112,8 +112,8 @@ The `<canvas />` associated with the Two.js scene.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/renderers/webgl.js#L1466">
-    webgl.js:1466
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/renderers/webgl.js#L1470">
+    webgl.js:1470
   </a>
 
 </div>
@@ -157,8 +157,8 @@ The root group of the scenegraph.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/renderers/webgl.js#L1477">
-    webgl.js:1477
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/renderers/webgl.js#L1481">
+    webgl.js:1481
   </a>
 
 </div>
@@ -202,8 +202,8 @@ Determines whether the canvas clears the background each draw call.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/renderers/webgl.js#L1503">
-    webgl.js:1503
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/renderers/webgl.js#L1507">
+    webgl.js:1507
   </a>
 
 </div>
@@ -247,8 +247,8 @@ Associated two dimensional context to render on the `<canvas />`.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/renderers/webgl.js#L1510">
-    webgl.js:1510
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/renderers/webgl.js#L1514">
+    webgl.js:1514
   </a>
 
 </div>
@@ -292,8 +292,8 @@ Associated WebGL programs to render all elements from the scenegraph.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/renderers/webgl.js#L1526">
-    webgl.js:1526
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/renderers/webgl.js#L1530">
+    webgl.js:1530
   </a>
 
 </div>
@@ -354,8 +354,8 @@ Change the size of the renderer.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/renderers/webgl.js#L1596">
-    webgl.js:1596
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/renderers/webgl.js#L1592">
+    webgl.js:1592
   </a>
 
 </div>
@@ -399,8 +399,8 @@ Render the current scene to the `<canvas />`.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/renderers/webgl.js#L1644">
-    webgl.js:1644
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/renderers/webgl.js#L1640">
+    webgl.js:1640
   </a>
 
 </div>
