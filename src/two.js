@@ -65,6 +65,7 @@ const Utils = _.extend({
  * @name Two
  * @class
  * @global
+ * @extends Two.Events
  * @param {Object} [options]
  * @param {Boolean} [options.fullscreen=false] - Set to `true` to automatically make the stage adapt to the width and height of the parent document. This parameter overrides `width` and `height` parameters if set to `true`. This overrides `options.fitted` as well.
  * @param {Boolean} [options.fitted=false] = Set to `true` to automatically make the stage adapt to the width and height of the parent element. This parameter overrides `width` and `height` parameters if set to `true`.
@@ -75,7 +76,55 @@ const Utils = _.extend({
  * @param {Element} [options.domElement] - The canvas or SVG element to draw into. This overrides the `options.type` argument.
  * @description The entrypoint for Two.js. Instantiate a `new Two` in order to setup a scene to render to. `Two` is also the publicly accessible namespace that all other sub-classes, functions, and utilities attach to.
  */
-export default class Two extends Events {
+export default class Two {
+
+  // Warning: inherit events while overriding static properties
+  #events = new Events();
+
+  // Getters and setters aren't enumerable
+  get _events() {
+    return this.#events._events;
+  }
+  set _events(v) {
+    this.#events._events = v;
+  }
+  get _bound() {
+    return this.#events._bound;
+  }
+  set _bound(v) {
+    this.#events._bound = v;
+  }
+
+  addEventListener() {
+    return this.#events.addEventListener.apply(this, arguments);
+  }
+  on() {
+    return this.#events.addEventListener.apply(this, arguments);
+  }
+  bind() {
+    return this.#events.addEventListener.apply(this, arguments);
+  }
+  removeEventListener() {
+    return this.#events.removeEventListener.apply(this, arguments);
+  }
+  off() {
+    return this.#events.removeEventListener.apply(this, arguments);
+  }
+  unbind() {
+    return this.#events.removeEventListener.apply(this, arguments);
+  }
+  dispatchEvent() {
+    return this.#events.dispatchEvent.apply(this, arguments);
+  }
+  trigger() {
+    return this.#events.dispatchEvent.apply(this, arguments);
+  }
+  listen() {
+    return this.#events.listen.apply(this, arguments);
+  }
+  ignore() {
+    return this.#events.ignore.apply(this, arguments);
+  }
 
   /**
    * @name Two#type
@@ -126,8 +175,6 @@ export default class Two extends Events {
   playing = false;
 
   constructor(options) {
-
-    super();
 
     // Determine what Renderer to use and setup a scene.
 

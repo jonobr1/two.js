@@ -181,4 +181,9 @@ export class Events {
     load: 'load'
   }
 
+  static Methods = [
+    'addEventListener', 'on', 'removeEventListener', 'off', 'unbind',
+    'dispatchEvent', 'trigger', 'listen', 'ignore'
+  ];
+
 }

@@ -26,35 +26,35 @@ export class Collection extends Array {
     this.#events._bound = v;
   }
 
-  get addEventListener() {
-    return this.#events.addEventListener;
+  addEventListener() {
+    return this.#events.addEventListener.apply(this, arguments);
   }
-  get on() {
-    return this.#events.on;
+  on() {
+    return this.#events.on.apply(this, arguments);
   }
-  get bind() {
-    return this.#events.bind;
+  bind() {
+    return this.#events.bind.apply(this, arguments);
   }
-  get removeEventListener() {
-    return this.#events.removeEventListener;
+  removeEventListener() {
+    return this.#events.removeEventListener.apply(this, arguments);
   }
-  get off() {
-    return this.#events.off;
+  off() {
+    return this.#events.off.apply(this, arguments);
   }
-  get unbind() {
-    return this.#events.unbind;
+  unbind() {
+    return this.#events.unbind.apply(this, arguments);
   }
-  get dispatchEvent() {
-    return this.#events.dispatchEvent;
+  dispatchEvent() {
+    return this.#events.dispatchEvent.apply(this, arguments);
   }
-  get trigger() {
-    return this.#events.trigger;
+  trigger() {
+    return this.#events.trigger.apply(this, arguments);
   }
-  get listen() {
-    return this.#events.listen;
+  listen() {
+    return this.#events.listen.apply(this, arguments);
   }
-  get ignore() {
-    return this.#events.ignore;
+  ignore() {
+    return this.#events.ignore.apply(this, arguments);
   }
 
   constructor() {
