@@ -5,7 +5,6 @@ import * as Curves from './utils/curves.js';
 import { dom } from './utils/dom.js';
 import { TwoError } from './utils/error.js';
 import { getRatio } from './utils/device-pixel-ratio.js';
-import { defineGetterSetter } from './utils/get-set.js';
 import { read } from './utils/interpret-svg.js';
 import * as math from './utils/math.js';
 import { Commands } from './utils/path-commands.js';
@@ -1111,7 +1110,6 @@ _.extend(Two, {
 
     Error: TwoError,
     getRatio,
-    defineGetterSetter,
     read,
     xhr
 
