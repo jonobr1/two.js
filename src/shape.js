@@ -170,7 +170,6 @@ export class Shape extends Events {
 
   /**
    * @name Two.Shape#translation
-   * @property
    * @description Alias for {@link Two.Shape#position}.
    */
   get translation() {
