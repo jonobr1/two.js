@@ -54,6 +54,13 @@ import { Renderer as WebGLRenderer } from './renderers/webgl.js';
 
 import { Constants } from './constants.js';
 
+const Utils = _.extend({
+  Error: TwoError,
+  getRatio,
+  read,
+  xhr
+}, _, CanvasShim, Curves, math);
+
 /**
  * @name Two
  * @class
@@ -263,6 +270,47 @@ export default class Two extends Events {
    * @returns {Number} Ever increasing Number.
    */
   static uniqueId = Constants.uniqueId;
+
+  static Anchor = Anchor;
+  static Collection = Collection;
+  static Events = Events;
+  static Group = Group;
+  static Matrix = Matrix;
+  static Path = Path;
+  static Registry = Registry;
+  static Shape = Shape;
+  static Text = Text;
+  static Vector = Vector;
+
+  static Gradient = Gradient;
+  static ImageSequence = ImageSequence;
+  static LinearGradient = LinearGradient;
+  static RadialGradient = RadialGradient;
+  static Sprite = Sprite;
+  static Stop = Stop;
+  static Texture = Texture;
+
+  static ArcSegment = ArcSegment;
+  static Circle = Circle;
+  static Ellipse = Ellipse;
+  static Line = Line;
+  static Points = Points;
+  static Polygon = Polygon;
+  static Rectangle = Rectangle;
+  static RoundedRectangle = RoundedRectangle;
+  static Star = Star;
+
+  static CanvasRenderer = CanvasRenderer;
+  static SVGRenderer = SVGRenderer;
+  static WebGLRenderer = WebGLRenderer;
+
+  static Commands = Commands;
+
+  /**
+   * @name Two.Utils
+   * @property {Object} - A massive object filled with utility functions and properties.
+   */
+  static Utils = Utils;
 
   /**
    * @name Two#appendTo
@@ -1064,55 +1112,3 @@ raf.init = function() {
   loop();
   raf.init = function() {};
 };
-
-_.extend(Two, {
-
-  Anchor,
-  Collection,
-  Events,
-  Group,
-  Matrix,
-  Path,
-  Registry,
-  Shape,
-  Text,
-  Vector,
-
-  Gradient,
-  ImageSequence,
-  LinearGradient,
-  RadialGradient,
-  Sprite,
-  Stop,
-  Texture,
-
-  ArcSegment,
-  Circle,
-  Ellipse,
-  Line,
-  Points,
-  Polygon,
-  Rectangle,
-  RoundedRectangle,
-  Star,
-
-  CanvasRenderer,
-  SVGRenderer,
-  WebGLRenderer,
-
-  Commands,
-
-  /**
-   * @name Two.Utils
-   * @property {Object} - A massive object filled with utility functions and properties.
-   */
-  Utils: _.extend({
-
-    Error: TwoError,
-    getRatio,
-    read,
-    xhr
-
-  }, _, CanvasShim, Curves, math)
-
-});
