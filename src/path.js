@@ -1464,3 +1464,11 @@ function FlagFill() {
 function FlagStroke() {
   this._flagStroke = true;
 }
+
+export {
+  FlagVertices,
+  BindVertices,
+  UnbindVertices,
+  FlagFill,
+  FlagStroke
+};

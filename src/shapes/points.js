@@ -7,7 +7,10 @@ import { Collection } from '../collection.js';
 import { Events } from '../events.js';
 import { Vector } from '../vector.js';
 import { Shape } from '../shape.js';
-import { Path } from '../path.js';
+import {
+  Path,
+  FlagVertices, BindVertices, UnbindVertices, FlagFill, FlagStroke
+} from '../path.js';
 
 import { Gradient } from '../effects/gradient.js';
 import { LinearGradient } from '../effects/linear-gradient.js';
@@ -57,12 +60,12 @@ export class Points extends Shape {
     }
 
     this._renderer.type = 'points';
-    this._renderer.flagVertices = Path.FlagVertices.bind(this);
-    this._renderer.bindVertices = Path.BindVertices.bind(this);
-    this._renderer.unbindVertices = Path.UnbindVertices.bind(this);
+    this._renderer.flagVertices = FlagVertices.bind(this);
+    this._renderer.bindVertices = BindVertices.bind(this);
+    this._renderer.unbindVertices = UnbindVertices.bind(this);
 
-    this._renderer.flagFill = Path.FlagFill.bind(this);
-    this._renderer.flagStroke = Path.FlagStroke.bind(this);
+    this._renderer.flagFill = FlagFill.bind(this);
+    this._renderer.flagStroke = FlagStroke.bind(this);
     this._renderer.vertices = null;
     this._renderer.collection = null;
 
@@ -334,6 +337,9 @@ export class Points extends Shape {
       const high = floor(eid);
 
       let j = 0, v;
+
+      this._renderer.vertices = [];
+      this._renderer.collection = [];
 
       for (let i = 0; i < this._collection.length; i++) {
 

@@ -79,7 +79,7 @@ export class ArcSegment extends Path {
 
     super(points, true, false, true);
 
-    for (let prop in ArcSegment.properties) {
+    for (let prop in proto) {
       Object.defineProperty(this, prop, proto[prop]);
     }
 

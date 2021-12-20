@@ -46,11 +46,11 @@ export class Shape extends Events {
   _id = '';
 
   /**
-   * @name Two.Shape#_translation
+   * @name Two.Shape#_position
    * @private
    * @property {Two.Vector} - The translation values as a {@link Two.Vector}.
    */
-  _translation = null;
+  _position = null;
 
   /**
    * @name Two.Shape#_rotation
@@ -60,9 +60,9 @@ export class Shape extends Events {
   _rotation = 0;
 
   /**
-   * @name Two.Shape#_translation
+   * @name Two.Shape#_scale
    * @private
-   * @property {Two.Vector} - The translation values as a {@link Two.Vector}.
+   * @property {Number|Two.Vector} - The scale value in Number. Can be a vector for non-uniform scaling.
    */
   _scale = 1;
 
@@ -122,15 +122,15 @@ export class Shape extends Events {
      * @name Two.Shape#matrix
      * @property {Two.Matrix}
      * @description The transformation matrix of the shape.
-     * @nota-bene {@link Two.Shape#translation}, {@link Two.Shape#rotation}, {@link Two.Shape#scale}, {@link Two.Shape#skewX}, and {@link Two.Shape#skewY} apply their values to the matrix when changed. The matrix is what is sent to the renderer to be drawn.
+     * @nota-bene {@link Two.Shape#position}, {@link Two.Shape#rotation}, {@link Two.Shape#scale}, {@link Two.Shape#skewX}, and {@link Two.Shape#skewY} apply their values to the matrix when changed. The matrix is what is sent to the renderer to be drawn.
      */
     this.matrix = new Matrix();
 
     /**
-     * @name Two.Shape#translation
+     * @name Two.Shape#position
      * @property {Two.Vector} - The x and y value for where the shape is placed relative to its parent.
      */
-    this.translation = new Vector();
+    this.position = new Vector();
 
     /**
      * @name Two.Shape#rotation
@@ -164,9 +164,20 @@ export class Shape extends Events {
   get renderer() {
     return this._renderer;
   }
-
   set renderer(v) {
     this._renderer = v;
+  }
+
+  /**
+   * @name Two.Shape#translation
+   * @property
+   * @description Alias for {@link Two.Shape#position}.
+   */
+  get translation() {
+    return proto.position.get.apply(this, arguments);
+  }
+  set translation(v) {
+    proto.position.set.apply(this, arguments);
   }
 
   /**
@@ -208,7 +219,7 @@ export class Shape extends Events {
 
     const clone = new Shape();
 
-    clone.translation.copy(this.translation);
+    clone.position.copy(this.position);
     clone.rotation = this.rotation;
     clone.scale = this.scale;
     clone.skewX = this.skewX;
@@ -240,7 +251,7 @@ export class Shape extends Events {
 
       this._matrix
         .identity()
-        .translate(this.translation.x, this.translation.y);
+        .translate(this.position.x, this.position.y);
 
         if (this._scale instanceof Vector) {
           this._matrix.scale(this._scale.x, this._scale.y);
@@ -281,17 +292,17 @@ export class Shape extends Events {
 }
 
 const proto = {
-  translation: {
-    enumerable: false,
+  position: {
+    enumerable: true,
     get: function() {
-      return this._translation;
+      return this._position;
     },
     set: function(v) {
-      if (this._translation) {
-        this._translation.unbind(Events.Types.change, this._renderer.flagMatrix);
+      if (this._position) {
+        this._position.unbind(Events.Types.change, this._renderer.flagMatrix);
       }
-      this._translation = v;
-      this._translation.bind(Events.Types.change, this._renderer.flagMatrix);
+      this._position = v;
+      this._position.bind(Events.Types.change, this._renderer.flagMatrix);
       FlagMatrix.call(this);
     }
   },

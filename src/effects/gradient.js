@@ -11,16 +11,21 @@ import { Stop } from './stop.js';
  * @param {Two.Stop[]} [stops] - A list of {@link Two.Stop}s that contain the gradient fill pattern for the gradient.
  * @description This is the base class for constructing different types of gradients with Two.js. The two common gradients are {@link Two.LinearGradient} and {@link Two.RadialGradient}.
  */
-export class Gradient {
+export class Gradient extends Events {
 
   _flagId = false;
   _flagStops = false;
   _flagSpread = false;
+  _flagUnits = false;
 
   _renderer = { type: 'gradient' };
   _id = '';
+  _spread = '';
+  _units = '';
 
   constructor(stops) {
+
+    super();
 
     for (let prop in proto) {
       Object.defineProperty(this, prop, proto[prop]);
@@ -166,12 +171,23 @@ export class Gradient {
 
 const proto = {
   spread: {
+    enumerable: true,
     get: function() {
       return this._spread;
     },
     set: function(v) {
       this._spread = v;
       this._flagSpread = true;
+    }
+  },
+  units: {
+    enumerable: true,
+    get: function() {
+      return this._units;
+    },
+    set: function(v) {
+      this._units = v;
+      this._flagUnits = true;
     }
   },
   stops: {
