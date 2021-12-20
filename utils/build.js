@@ -1,61 +1,78 @@
-var rollup = require('rollup');
-var fs = require('fs');
-var path = require('path');
-var _ = require('underscore');
-var gzip = require('gzip-size');
-var terser = require('rollup-plugin-terser').terser;
+const esbuild = require('esbuild');
+const fs = require('fs');
+const path = require('path');
+const _ = require('underscore');
+const gzip = require('gzip-size');
 
-var publishDateString = (new Date()).toISOString();
-var config = getJSON(path.resolve(__dirname, '../package.json'));
+const publishDateString = (new Date()).toISOString();
+const config = getJSON(path.resolve(__dirname, '../package.json'));
+const paths = {
+  entry: path.resolve(__dirname, '../src/two.js'),
+  umd: path.resolve(__dirname, '../build/two.js'),
+  esm: path.resolve(__dirname, '../build/two.module.js'),
+  min: path.resolve(__dirname, '../build/two.min.js'),
+  license: path.resolve(__dirname, '../LICENSE')
+};
 
-async function generateOutput(bundle, outputName, outputOptions) {
+async function buildModules() {
 
-  var base = { name: outputName };
-  var result = await bundle.generate(Object.assign(base, outputOptions));
-  var output = result.output;
-  let code = output[0].code;
-
-  var template = _.template(code);
-  return template({
-    version: config.version,
-    publishDate: publishDateString
+  esbuild.buildSync({
+    entryPoints: [paths.entry],
+    outfile: paths.umd,
+    bundle: true,
+    format: 'iife',
+    globalName: 'Two'
   });
 
-}
+  esbuild.buildSync({
+    entryPoints: [paths.entry],
+    outfile: paths.esm,
+    bundle: true,
+    target: 'es6',
+    format: 'esm'
+  });
 
-async function buildModule(inputPath, name, outputDirectory, inputOptions, outputOptions) {
+  esbuild.buildSync({
+    entryPoints: [paths.entry],
+    outfile: paths.min,
+    bundle: true,
+    minify: true,
+    format: 'iife',
+    globalName: 'Two'
+  });
 
-  var format;
-  var encodingType = { encoding: 'utf-8' };
-  var bundle = await rollup
-    .rollup(Object.assign({ input: inputPath }, inputOptions));
+  const license = await fs.promises.readFile(paths.license, { encoding: 'utf-8' });
+  const licenseComment = ['/*', license.trim(), '*/'].join('\n');
 
-  var license = await fs.promises.readFile(path.resolve(__dirname, '../LICENSE'), encodingType);
-  var licenseComment = ['/*', license.trim(), '*/'].join('\n');
-
-  format = { format: 'umd' };
-  var umdOutput = await generateOutput(bundle, name, Object.assign(format, outputOptions));
-
-  format.plugins = [terser()];
-  var minifiedOutput = await generateOutput(bundle, name, Object.assign(format, outputOptions));
-
-  format = { format: 'esm' };
-  var esmOutput = await generateOutput(bundle, name, Object.assign(format, outputOptions));
-
-  var moduleName = path.parse(inputPath).name;
-  fs.promises.mkdir(outputDirectory, { recursive: true });
+  const umdOutput = await fs.promises.readFile(paths.umd);
+  const esmOutput = await fs.promises.readFile(paths.esm);
+  const minOutput = await fs.promises.readFile(paths.min);
 
   return Promise.all([
-    fs.promises.writeFile(path.join(outputDirectory, moduleName + '.js'), [licenseComment, umdOutput].join('\n')),
-    fs.promises.writeFile(path.join(outputDirectory, moduleName + '.module.js'), [licenseComment, esmOutput].join('\n')),
-    fs.promises.writeFile(path.join(outputDirectory, moduleName + '.min.js'), [licenseComment, minifiedOutput].join('\n'))
+    fs.promises.writeFile(paths.umd, [licenseComment, template(umdOutput, true)].join('\n')),
+    fs.promises.writeFile(paths.esm, [licenseComment, template(esmOutput, false)].join('\n')),
+    fs.promises.writeFile(paths.min, [licenseComment, template(minOutput, true)].join('\n'))
   ]);
 
 }
 
+function template(buffer, isExposed) {
+  const code = buffer.toString();
+  const generate = _.template(code);
+  let result = generate({
+    version: config.version,
+    publishDate: publishDateString
+  });
+  if (isExposed) {
+    result = result.replace(/\}\)\(\);/, '})().default;');
+  }
+  return result;
+}
+
 function publishModule() {
 
-  var size, result = {};
+  let size;
+  const result = {};
 
   size = getFileSize(path.resolve(__dirname, '../build/two.js'));
   result.development = formatFileSize(size);
@@ -63,21 +80,21 @@ function publishModule() {
   size = getFileSize(path.resolve(__dirname, '../build/two.min.js'));
   result.production = formatFileSize(size);
 
-  var contents = JSON.stringify(result);
-  var outputPath = path.resolve(__dirname, './file-sizes.json');
+  const contents = JSON.stringify(result);
+  const outputPath = path.resolve(__dirname, './file-sizes.json');
 
   return fs.promises.writeFile(outputPath, contents);
 
 }
 
 function getFileSize(filepath) {
-  var file = fs.readFileSync(filepath);
+  const file = fs.readFileSync(filepath);
   return gzip.sync(file);
 }
 
 function formatFileSize(v) {
-  var sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
-  var iterations = 0;
+  const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+  let iterations = 0;
   while (v > 1000) {
     v *= 0.001;
     iterations++;
@@ -87,10 +104,10 @@ function formatFileSize(v) {
 
 async function build() {
 
-  var startTime, elapsed;
+  let startTime, elapsed;
 
   startTime = Date.now();
-  await buildModule('src/two.js', 'Two', 'build/');
+  buildModules();
   elapsed = Date.now() - startTime;
   console.log('Built and minified Two.js:', elapsed / 1000, 'seconds');
 
@@ -101,7 +118,7 @@ async function build() {
 }
 
 function getJSON(filepath) {
-  var buffer = fs.readFileSync(filepath);
+  const buffer = fs.readFileSync(filepath);
   return JSON.parse(buffer);
 }
 
