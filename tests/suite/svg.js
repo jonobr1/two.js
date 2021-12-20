@@ -196,7 +196,7 @@
     assert.equal(parseFloat(elem.getAttribute('x2')), 0, 'The x2 attribute applied properly.');
     assert.equal(parseFloat(elem.getAttribute('y2')), 200, 'The y2 attribute applied properly.');
     assert.equal(elem.getAttribute('spreadMethod'), 'pad', 'The spreadMethod attribute applied properly.');
-    assert.equal(elem.getAttribute('gradientUnits'), 'userSpaceOnUse', 'The gradientUnits attribute applied properly.');
+    assert.equal(elem.getAttribute('gradientUnits'), 'objectBoundingBox', 'The gradientUnits attribute applied properly.');
     assert.equal(elem.innerHTML, '<stop offset="0%" stop-color="rgb(255, 100, 100)" stop-opacity="1"></stop><stop offset="100%" stop-color="rgb(100, 100, 255)" stop-opacity="1"></stop>', 'The innerHTML applied properly.');
 
     QUnit.Utils.addInstanceToTest(assert.test, two);
@@ -230,7 +230,7 @@
     assert.equal(parseFloat(elem.getAttribute('fy')), 0, 'The fy attribute applied properly.');
     assert.equal(parseFloat(elem.getAttribute('r')), 200, 'The r attribute applied properly.');
     assert.equal(elem.getAttribute('spreadMethod'), 'pad', 'The spreadMethod attribute applied properly.');
-    assert.equal(elem.getAttribute('gradientUnits'), 'userSpaceOnUse', 'The gradeintUnits attribute applied properly.');
+    assert.equal(elem.getAttribute('gradientUnits'), 'objectBoundingBox', 'The gradeintUnits attribute applied properly.');
     assert.equal(elem.innerHTML, '<stop offset="0%" stop-color="rgb(255, 100, 100)" stop-opacity="1"></stop><stop offset="100%" stop-color="rgb(100, 100, 255)" stop-opacity="1"></stop>', 'The innerHTML applied properly.');
 
     QUnit.Utils.addInstanceToTest(assert.test, two);

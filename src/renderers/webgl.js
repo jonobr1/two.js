@@ -1242,7 +1242,7 @@ var webgl = {
 
     render: function(ctx, parent) {
 
-      if (!ctx.canvas.getContext('2d')) {
+      if (!ctx.canvas.getContext('2d') || !parent) {
         return;
       }
 
@@ -1285,7 +1285,7 @@ var webgl = {
 
     render: function(ctx, parent) {
 
-      if (!ctx.canvas.getContext('2d')) {
+      if (!ctx.canvas.getContext('2d') || !parent) {
         return;
       }
 
@@ -1299,18 +1299,20 @@ var webgl = {
         var cy = this.center._y;
         var fx = this.focal._x;
         var fy = this.focal._y;
+        var radius = this._radius;
 
         if (/objectBoundingBox/i.test(this._units)) {
           // Convert objectBoundingBox units to userSpaceOnUse units
           rect = parent.getBoundingClientRect(true);
-          cx = (cx - 0.5) * rect.width;
-          cy = (cy - 0.5) * rect.height;
-          fx = (fx - 0.5) * rect.width;
-          fy = (fy - 0.5) * rect.height;
+          cx = cx * rect.width * 0.5;
+          cy = cy * rect.height * 0.5;
+          fx = fx * rect.width * 0.5;
+          fy = fy * rect.height * 0.5;
+          radius *= Math.min(rect.width, rect.height) * 0.5;
         }
 
         this._renderer.effect = ctx.createRadialGradient(cx, cy,
-          0, fx, fy, this._radius);
+          0, fx, fy, radius);
 
         for (var i = 0; i < this.stops.length; i++) {
           var stop = this.stops[i];
