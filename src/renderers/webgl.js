@@ -167,7 +167,7 @@ const webgl = {
 
     updateCanvas: function(elem) {
 
-      let next, prev, a, c, ux, uy, vx, vy, ar, bl, br, cl, x, y;
+      let prev, a, c, ux, uy, vx, vy, ar, bl, br, cl, x, y;
       let isOffset;
 
       const commands = elem._renderer.vertices;

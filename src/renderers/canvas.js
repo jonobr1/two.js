@@ -119,7 +119,7 @@ const canvas = {
     render: function(ctx, forced, parentClipped) {
 
       let matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter,
-          closed, commands, length, last, next, prev, a, b, c, d, ux, uy, vx, vy,
+          closed, commands, length, last, prev, a, b, c, d, ux, uy, vx, vy,
           ar, bl, br, cl, x, y, mask, clip, defaultMatrix, isOffset, dashes, po;
 
       po = (this.parent && this.parent._renderer)

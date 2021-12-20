@@ -1,4 +1,3 @@
-import { NumArray } from '../utils/math.js';
 import { subdivide } from '../utils/curves.js';
 import { getIdByLength } from '../utils/shape.js';
 import { _ } from '../utils/underscore.js';
