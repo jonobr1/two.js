@@ -74,7 +74,7 @@ function Path(vertices, closed, curved, manual) {
   /**
    * @name Two.Path#ending
    * @property {Number} - Number between zero and one to state the ending of where the path is rendered.
-   * @description {@link Two.Path#ending} is a percentage value that represents at what percentage into the path should the renderer start drawing.
+   * @description {@link Two.Path#ending} is a percentage value that represents at what percentage into the path should the renderer stop drawing.
    * @nota-bene This is great for animating in and out stroked paths in conjunction with {@link Two.Path#beginning}.
    */
   this.ending = 1;
