@@ -46,7 +46,7 @@ function ArcSegment(ox, oy, ir, or, sa, ea, res) {
   }
 
   /**
-   * @name Two.ArcSegment#startRadius
+   * @name Two.ArcSegment#startAngle
    * @property {Number} - The angle of one side for the arc segment.
    */
   if (typeof sa === 'number') {
