@@ -227,9 +227,9 @@ The size of the outer radius of the arc segment.
 
 <div class="instance member ">
 
-## startRadius
+## startAngle
 
-<h2 class="longname" aria-hidden="true"><a href="#startRadius"><span class="prefix">Two.ArcSegment.</span><span class="shortname">startRadius</span></a></h2>
+<h2 class="longname" aria-hidden="true"><a href="#startAngle"><span class="prefix">Two.ArcSegment.</span><span class="shortname">startAngle</span></a></h2>
 
 
 
