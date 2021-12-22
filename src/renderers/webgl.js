@@ -71,6 +71,7 @@ const webgl = {
       }
     },
 
+    /** @type {(gl: any, programs: any) => any} */
     render: function(gl, programs) {
 
       if (!this._visible) {
