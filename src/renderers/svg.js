@@ -374,9 +374,7 @@ const svg = {
       }
 
       if (this.dataset) {
-        for (let key in this.dataset) {
-          this._renderer.elem.setAttribute('data-' + key, this.dataset[key]);
-        }
+        Object.assign(this._renderer.elem.dataset, this.dataset)
       }
 
       return this.flagReset();

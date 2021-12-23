@@ -100,7 +100,7 @@ export class ArcSegment extends Path {
     }
 
     /**
-     * @name Two.ArcSegment#startRadius
+     * @name Two.ArcSegment#startAngle
      * @property {Number} - The angle of one side for the arc segment.
      */
     if (typeof sa === 'number') {

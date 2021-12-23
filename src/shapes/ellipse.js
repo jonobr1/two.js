@@ -32,13 +32,13 @@ export class Ellipse extends Path {
   _flagHeight = false;
 
   /**
-   * @name Two.Polygon#_width
+   * @name Two.Ellipse#_width
    * @private
    * @see {@link Two.Ellipse#width}
    */
   _width = 0;
   /**
-   * @name Two.Polygon#_height
+   * @name Two.Ellipse#_height
    * @private
    * @see {@link Two.Ellipse#height}
    */
@@ -159,8 +159,8 @@ export class Ellipse extends Path {
    * @name Two.Ellipse#clone
    * @function
    * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
-   * @returns {Two.Polygon}
-   * @description Create a new instance of {@link Two.Polygon} with the same properties of the current path.
+   * @returns {Two.Ellipse}
+   * @description Create a new instance of {@link Two.Ellipse} with the same properties of the current path.
    */
   clone(parent) {
 

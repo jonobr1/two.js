@@ -208,7 +208,7 @@ __Returns__: Two.Polygon
 
 <div class="description">
 
-Create a new instance of [Two.Polygon](/docs/shapes/polygon/) with the same properties of the current path.
+Create a new instance of [Two.Ellipse](/docs/shapes/ellipse/) with the same properties of the current path.
 
 </div>
 
