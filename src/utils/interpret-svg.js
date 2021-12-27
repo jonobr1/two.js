@@ -454,6 +454,7 @@ var applySvgAttributes = function(node, elem, parentStyles) {
       case 'class':
       case 'className':
         elem.classList = value.split(' ');
+        elem._flagClassName = true;
         break;
       case 'x':
       case 'y':
@@ -662,8 +663,6 @@ var read = {
         }
       }
     }
-
-    if (group.classList.length > 0) group._flagClassName = true;
 
     return group;
 
