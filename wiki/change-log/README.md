@@ -9,6 +9,7 @@ lang: en-US
 
 ## Nightly
 
++ `Two.interpret` appropriately inherits classes to `<g />` tags [@elShiaLabeouf](https://github.com/elShiaLabeouf)
 + `Two.interpret` inherits classes and `data-*` attributes [@elShiaLabeouf](https://github.com/elShiaLabeouf)
 
 ## Dec 15, 2021 v0.7.13
