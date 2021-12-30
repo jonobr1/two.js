@@ -41,8 +41,12 @@ export class Anchor extends Vector {
     this.command = command;
     this.relative = true;
 
-    this.controls.left.set(ax, ay).addEventListener(Anchor.broadcast);
-    this.controls.right.set(bx, by).addEventListener(Anchor.broadcast);
+    const broadcast = Anchor.broadcast.bind(this);
+
+    this.controls.left.set(ax, ay)
+      .addEventListener(Events.Types.change, broadcast);
+    this.controls.right.set(bx, by)
+      .addEventListener(Events.Types.change, broadcast);
 
   }
 
