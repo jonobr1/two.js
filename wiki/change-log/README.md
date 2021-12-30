@@ -9,8 +9,6 @@ lang: en-US
 
 ## Nightly
 
-<h3 class="visible">Nightly</h3>
-
 + Converted `Two.ImageSequence` to EcmaScript 6 class
 + Converted `Two.Sprite` to EcmaScript 6 class
 + Converted `Two.Texture` to EcmaScript 6 class
@@ -38,6 +36,7 @@ lang: en-US
 + Converted `Two.Events` to EcmaScript 6 class
 + Converted `Two.Anchor` to EcmaScript 6 class
 + Converted `Two.Vector` to EcmaScript 6 class
++ `Two.interpret` appropriately inherits classes to `<g />` tags [@elShiaLabeouf](https://github.com/elShiaLabeouf)
 + `Two.interpret` inherits classes and `data-*` attributes [@elShiaLabeouf](https://github.com/elShiaLabeouf)
 
 ## Dec 15, 2021 v0.7.13
