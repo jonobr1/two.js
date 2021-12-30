@@ -371,7 +371,7 @@ var svg = {
       }
 
       if (this.dataset) {
-        Object.assign(this._renderer.elem.dataset, this.dataset)
+        Object.assign(this._renderer.elem.dataset, this.dataset);
       }
 
       return this.flagReset();
