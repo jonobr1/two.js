@@ -33,7 +33,7 @@ QUnit.test('Two.Events', function(assert) {
 
 QUnit.test('Two.Vector', function(assert) {
 
-  assert.expect(45);
+  assert.expect(48);
 
   var vector = new Two.Vector();
 
@@ -133,7 +133,14 @@ QUnit.test('Two.Vector', function(assert) {
 
   vector.set(9, 3);
   vector.rotate(Math.PI / 2);
-  assert.equal(vector.equals({ x: - 2.9999999999999996, y: - 2.9999999999999996}), true, 'Two.Vector.rotate applies x, y properly.');
+  assert.equal(vector.equals({ x: - 2.9999999999999996, y: 9 }), true, 'Two.Vector.rotate applies x, y properly.');
+  vector.rotate(Math.PI / 2);
+  assert.equal(vector.equals({ x: -9, y: -2.999999999999999 }), true, 'Two.Vector.rotate applies x, y properly.');
+  vector.rotate(Math.PI / 2);
+  assert.equal(vector.equals({ x: 2.9999999999999987, y: - 9 }), true, 'Two.Vector.rotate applies x, y properly.');
+  vector.rotate(Math.PI / 2);
+  assert.equal(vector.equals({ x: 9, y: 2.9999999999999982 }), true, 'Two.Vector.rotate applies x, y properly.');
+
 
 });
 

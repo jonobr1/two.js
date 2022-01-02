@@ -609,14 +609,16 @@ _.extend(Vector.prototype, Events, {
   /**
    * @name Two.Vector#rotate
    * @function
-   * @param {Number} Number - The amoun to rotate the vector by.
+   * @param {Number} theta - The amount to rotate the vector by.
    * @description Rotate a vector.
    */
-  rotate: function(Number) {
-    var cos = Math.cos(Number);
-    var sin = Math.sin(Number);
-    this.x = this.x * cos - this.y * sin;
-    this.y = this.x * sin + this.y * cos;
+  rotate: function(theta) {
+    var x = this.x;
+    var y = this.y;
+    var cos = Math.cos(theta);
+    var sin = Math.sin(theta);
+    this.x = x * cos - y * sin;
+    this.y = x * sin + y * cos;
     return this;
   }
 
