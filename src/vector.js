@@ -606,10 +606,12 @@ export class Vector extends Events {
    * @description Rotate a vector.
    */
   rotate(radians) {
-    const cos = Math.cos(radians);
-    const sin = Math.sin(radians);
-    this.x = this.x * cos - this.y * sin;
-    this.y = this.x * sin + this.y * cos;
+    const x = this.x;
+    const y = this.y;
+    const cos = Math.cos(theta);
+    const sin = Math.sin(theta);
+    this.x = x * cos - y * sin;
+    this.y = x * sin + y * cos;
     return this;
   }
 
