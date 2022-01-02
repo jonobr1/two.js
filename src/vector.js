@@ -761,11 +761,13 @@ var BoundProto = {
     return { x: this._x, y: this._y };
   },
 
-  rotate: function (Number) {
-    var cos = Math.cos(Number);
-    var sin = Math.sin(Number);
-    this._x = this._x * cos - this._y * sin;
-    this._y = this._x * sin + this._y * cos;
+  rotate: function (theta) {
+    var _x = this._x;
+    var _y = this._y;
+    var cos = Math.cos(theta);
+    var sin = Math.sin(theta);
+    this._x = _x * cos - _y * sin;
+    this._y = _x * sin + _y * cos;
     return this;
   }
 
