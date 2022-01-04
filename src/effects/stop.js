@@ -13,6 +13,48 @@ import { Element } from '../element.js';
  */
 export class Stop extends Element {
 
+  /**
+   * @name Two.Stop#_flagOffset
+   * @private
+   * @property {Boolean} - Determines whether the {@link Two.Stop#offset} needs updating.
+   */
+  _flagOffset = true;
+
+  /**
+   * @name Two.Stop#_flagOpacity
+   * @private
+   * @property {Boolean} - Determines whether the {@link Two.Stop#opacity} needs updating.
+   */
+  _flagOpacity = true;
+
+  /**
+   * @name Two.Stop#_flagColor
+   * @private
+   * @property {Boolean} - Determines whether the {@link Two.Stop#color} needs updating.
+   */
+  _flagColor = true;
+
+  /**
+   * @name Two.Stop#_offset
+   * @private
+   * @see {@link Two.Stop#offset}
+   */
+  _offset = 0;
+
+  /**
+   * @name Two.Stop#_opacity
+   * @private
+   * @see {@link Two.Stop#opacity}
+   */
+  _opacity = 1;
+
+  /**
+   * @name Two.Stop#_color
+   * @private
+   * @see {@link Two.Stop#color}
+   */
+  _color = '#fff';
+
   constructor(offset, color, opacity) {
 
     super();
@@ -122,7 +164,7 @@ const proto = {
     },
     set: function(v) {
       this._offset = v;
-      this._flagOffset = v;
+      this._flagOffset = true;
       if (this.parent) {
         this.parent._flagStops = true;
       }
@@ -135,7 +177,7 @@ const proto = {
     },
     set: function(v) {
       this._opacity = v;
-      this._flagOpacity = v;
+      this._flagOpacity = true;
       if (this.parent) {
         this.parent._flagStops = true;
       }
@@ -148,7 +190,7 @@ const proto = {
     },
     set: function(v) {
       this._color = v;
-      this._flagColor = v;
+      this._flagColor = true;
       if (this.parent) {
         this.parent._flagStops = true;
       }
