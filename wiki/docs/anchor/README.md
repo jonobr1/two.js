@@ -77,8 +77,8 @@ Copy the properties of one [Two.Anchor](/docs/anchor/) onto another.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/anchor.js#L55">
-    anchor.js:55
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/anchor.js#L59">
+    anchor.js:59
   </a>
 
 </div>
@@ -130,8 +130,8 @@ Create a new [Two.Anchor](/docs/anchor/), set all its values to the current inst
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/anchor.js#L103">
-    anchor.js:103
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/anchor.js#L107">
+    anchor.js:107
   </a>
 
 </div>
@@ -185,8 +185,8 @@ Create a JSON compatible plain object of the current instance. Intended for use 
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/anchor.js#L113">
-    anchor.js:113
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/anchor.js#L117">
+    anchor.js:117
   </a>
 
 </div>
@@ -240,8 +240,8 @@ Create a string form of the current instance. Intended for use with storing valu
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/anchor.js#L137">
-    anchor.js:137
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/anchor.js#L141">
+    anchor.js:141
   </a>
 
 </div>

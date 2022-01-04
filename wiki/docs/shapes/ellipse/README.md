@@ -182,7 +182,7 @@ The height of the ellipse.
 
 <div class="returns">
 
-__Returns__: Two.Polygon
+__Returns__: Two.Ellipse
 
 
 

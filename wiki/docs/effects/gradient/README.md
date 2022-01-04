@@ -7,6 +7,12 @@ lang: en-US
 # Two.Gradient
 
 
+<div class="extends">
+
+Extends: [Two.Element](/docs/element/)
+
+</div>
+
 
 This is the base class for constructing different types of gradients with Two.js. The two common gradients are [Two.LinearGradient](/docs/effects/linear-gradient/) and [Two.RadialGradient](/docs/effects/radial-gradient/).
 
@@ -58,8 +64,8 @@ See: [Two.Stop](/docs/effects/stop/)
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L77">
-    gradient.js:77
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L78">
+    gradient.js:78
   </a>
 
 </div>
@@ -103,8 +109,8 @@ A list of properties that are on every [Two.Gradient](/docs/effects/gradient/).
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L83">
-    gradient.js:83
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L84">
+    gradient.js:84
   </a>
 
 </div>
@@ -154,8 +160,8 @@ Object access to store relevant renderer specific variables. Warning: manipulati
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L34">
-    gradient.js:34
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L35">
+    gradient.js:35
   </a>
 
 </div>
@@ -209,8 +215,8 @@ Session specific unique identifier.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L41">
-    gradient.js:41
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L42">
+    gradient.js:42
   </a>
 
 </div>
@@ -270,8 +276,8 @@ See: [https://www.w3.org/TR/SVG11/pservers.html#LinearGradientElementSpreadMetho
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L53">
-    gradient.js:53
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L54">
+    gradient.js:54
   </a>
 
 </div>
@@ -321,8 +327,8 @@ See: [https://www.w3.org/TR/SVG11/pservers.html#RadialGradientElementGradientUni
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L60">
-    gradient.js:60
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L61">
+    gradient.js:61
   </a>
 
 </div>
@@ -366,8 +372,8 @@ An ordered list of [Two.Stop](/docs/effects/stop/)s for rendering the gradient.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L67">
-    gradient.js:67
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L68">
+    gradient.js:68
   </a>
 
 </div>
@@ -426,8 +432,8 @@ Create a new instance of [Two.Gradient](/docs/effects/gradient/) with the same p
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L89">
-    gradient.js:89
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L90">
+    gradient.js:90
   </a>
 
 </div>
@@ -479,8 +485,8 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L116">
-    gradient.js:116
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L117">
+    gradient.js:117
   </a>
 
 </div>

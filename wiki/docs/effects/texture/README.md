@@ -9,7 +9,7 @@ lang: en-US
 
 <div class="extends">
 
-Extends: [Two.Shape](/docs/shape/)
+Extends: [Two.Element](/docs/element/)
 
 </div>
 
@@ -65,8 +65,8 @@ A list of properties that are on every [Two.Texture](/docs/effects/texture/).
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L212">
-    texture.js:212
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L200">
+    texture.js:200
   </a>
 
 </div>
@@ -110,8 +110,8 @@ A map of compatible DOM Elements categorized by media format.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L218">
-    texture.js:218
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L208">
+    texture.js:208
   </a>
 
 </div>
@@ -155,8 +155,8 @@ A canonical listing of image data used in a single session of Two.js.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L224">
-    texture.js:224
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L214">
+    texture.js:214
   </a>
 
 </div>
@@ -227,8 +227,8 @@ Serializes a URL as an absolute path for canonical attribution in [Two.ImageRegi
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L231">
-    texture.js:231
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L221">
+    texture.js:221
   </a>
 
 </div>
@@ -280,8 +280,8 @@ Loads an image as a buffer in headless environments.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L246">
-    texture.js:246
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L236">
+    texture.js:236
   </a>
 
 </div>
@@ -352,8 +352,8 @@ Retrieves the tag name of an image, video, or canvas node.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L260">
-    texture.js:260
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L250">
+    texture.js:250
   </a>
 
 </div>
@@ -414,8 +414,8 @@ Convenience function to set [Two.Texture.image](/docs/effects/texture/#image) pr
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L272">
-    texture.js:272
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L262">
+    texture.js:262
   </a>
 
 </div>
@@ -459,8 +459,8 @@ A collection of functions to register different types of textures. Used internal
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L314">
-    texture.js:314
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L304">
+    texture.js:304
   </a>
 
 </div>
@@ -506,8 +506,8 @@ A collection of functions to register different types of textures. Used internal
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L419">
-    texture.js:419
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L409">
+    texture.js:409
   </a>
 
 </div>
@@ -551,8 +551,8 @@ Cached method to let renderers know `offset` has been updated on a [Two.Texture]
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L604">
-    texture.js:604
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L623">
+    texture.js:623
   </a>
 
 </div>
@@ -596,8 +596,8 @@ Cached method to let renderers know `scale` has been updated on a [Two.Texture](
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L613">
-    texture.js:613
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L632">
+    texture.js:632
   </a>
 
 </div>
@@ -641,8 +641,8 @@ Shorthand value to determine if image has been loaded into the texture.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L155">
-    texture.js:155
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L143">
+    texture.js:143
   </a>
 
 </div>
@@ -692,8 +692,8 @@ See: [https://www.w3.org/TR/2dcontext/#dom-context-2d-createpattern](https://www
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L161">
-    texture.js:161
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L149">
+    texture.js:149
   </a>
 
 </div>
@@ -737,8 +737,8 @@ A two-component vector describing any pixel offset of the texture when applied t
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L168">
-    texture.js:168
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L156">
+    texture.js:156
   </a>
 
 </div>
@@ -782,8 +782,8 @@ The URL path to the image data.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L184">
-    texture.js:184
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L172">
+    texture.js:172
   </a>
 
 </div>
@@ -837,8 +837,8 @@ The corresponding DOM Element of the texture. Can be a `<img />`, `<canvas />`, 
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L199">
-    texture.js:199
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L187">
+    texture.js:187
   </a>
 
 </div>
@@ -900,8 +900,8 @@ Create a new instance of [Two.Texture](/docs/effects/texture/) with the same pro
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L450">
-    texture.js:450
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L440">
+    texture.js:440
   </a>
 
 </div>
@@ -953,8 +953,8 @@ Return a JSON compatible plain object that represents the texture.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L464">
-    texture.js:464
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L454">
+    texture.js:454
   </a>
 
 </div>
