@@ -9,6 +9,7 @@ lang: en-US
 
 ## Nightly
 
++ Added `Two.Element` as an EcmaScript 6 class
 + Converted `Two.ImageSequence` to EcmaScript 6 class
 + Converted `Two.Sprite` to EcmaScript 6 class
 + Converted `Two.Texture` to EcmaScript 6 class
