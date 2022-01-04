@@ -302,44 +302,72 @@ export class ImageSequence extends Rectangle {
    */
   _update() {
 
-    const effects = this._textures;
+    const effect = this._textures;
     let width, height, elapsed, amount, duration, texture;
     let index, frames;
 
-    if (this._flagTextures) {
-      this._amount = effects.length;
-    }
+    if (effect) {
 
-    if (this._flagFrameRate) {
-      this._duration = 1000 * this._amount / this._frameRate;
-    }
-
-    if (this._playing && this._frameRate > 0) {
-
-      amount = this._amount;
-
-      if (_.isNaN(this._lastFrame)) {
-        this._lastFrame = amount - 1;
+      if (this._flagTextures) {
+        this._amount = effect.length;
       }
 
-      // TODO: Offload perf logic to instance of `Two`.
-      elapsed = _.performance.now() - this._startTime;
-      frames = this._lastFrame + 1;
-      duration = 1000 * (frames - this._firstFrame) / this._frameRate;
-
-      if (this._loop) {
-        elapsed = elapsed % duration;
-      } else {
-        elapsed = Math.min(elapsed, duration);
+      if (this._flagFrameRate) {
+        this._duration = 1000 * this._amount / this._frameRate;
       }
 
-      index = lerp(this._firstFrame, frames, elapsed / duration);
-      index = Math.floor(index);
+      if (this._playing && this._frameRate > 0) {
 
-      if (index !== this._index) {
+        amount = this._amount;
 
-        this._index = index;
-        texture = effects[this._index];
+        if (_.isNaN(this._lastFrame)) {
+          this._lastFrame = amount - 1;
+        }
+
+        // TODO: Offload perf logic to instance of `Two`.
+        elapsed = _.performance.now() - this._startTime;
+        frames = this._lastFrame + 1;
+        duration = 1000 * (frames - this._firstFrame) / this._frameRate;
+
+        if (this._loop) {
+          elapsed = elapsed % duration;
+        } else {
+          elapsed = Math.min(elapsed, duration);
+        }
+
+        index = lerp(this._firstFrame, frames, elapsed / duration);
+        index = Math.floor(index);
+
+        if (index !== this._index) {
+
+          this._index = index;
+          texture = effect[this._index];
+
+          if (texture.loaded) {
+
+            width = texture.image.width;
+            height = texture.image.height;
+
+            if (this.width !== width) {
+              this.width = width;
+            }
+            if (this.height !== height) {
+              this.height = height;
+            }
+
+            this.fill = texture;
+
+            if (index >= this._lastFrame - 1 && this._onLastFrame) {
+              this._onLastFrame();  // Shortcut for chainable sprite animations
+            }
+
+          }
+
+        }
+
+      } else if (this._flagIndex || !(this.fill instanceof Texture)) {
+
+        texture = effect[this._index];
 
         if (texture.loaded) {
 
@@ -353,35 +381,11 @@ export class ImageSequence extends Rectangle {
             this.height = height;
           }
 
-          this.fill = texture;
-
-          if (index >= this._lastFrame - 1 && this._onLastFrame) {
-            this._onLastFrame();  // Shortcut for chainable sprite animations
-          }
-
         }
+
+        this.fill = texture;
 
       }
-
-    } else if (this._flagIndex || !(this.fill instanceof Texture)) {
-
-      texture = effects[this._index];
-
-      if (texture.loaded) {
-
-        width = texture.image.width;
-        height = texture.image.height;
-
-        if (this.width !== width) {
-          this.width = width;
-        }
-        if (this.height !== height) {
-          this.height = height;
-        }
-
-      }
-
-      this.fill = texture;
 
     }
 
