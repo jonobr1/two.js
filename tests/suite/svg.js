@@ -417,6 +417,8 @@
     text.fill = '#00aeff';
     text.noStroke();
 
+    text.className = 'hello world';
+
     two.update();
 
     var elem = two.renderer.domElement.querySelector('#' + text.id);
@@ -436,7 +438,7 @@
     assert.equal(elem.getAttribute('stroke-width'), 'undefined', 'The stroke-width attribute applied properly.');
     assert.equal(elem.getAttribute('opacity'), '1', 'The opacity attribute applied properly.');
     assert.equal(elem.getAttribute('visibility'), 'visible', 'The visibility attribute applied properly.');
-    assert.equal(elem.getAttribute('class'), '', 'The class attribute applied properly.');
+    assert.equal(elem.getAttribute('class'), 'hello world', 'The class attribute applied properly.');
     assert.equal(elem.innerHTML, text.value, 'The value attribute applied properly.');
 
     QUnit.Utils.addInstanceToTest(assert.test, two);
