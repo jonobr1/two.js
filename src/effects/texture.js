@@ -4,7 +4,6 @@ import { TwoError } from '../utils/error.js';
 import { CanvasShim } from '../utils/canvas-shim.js';
 
 import { Vector } from '../vector.js';
-import { Shape } from '../shape.js';
 import { Registry } from '../registry.js';
 
 import { Renderer as CanvasRenderer } from '../renderers/canvas.js';
@@ -25,12 +24,12 @@ if (root.document) {
 /**
  * @name Two.Texture
  * @class
- * @extends Two.Shape
+ * @extends Two.Events
  * @param {String|HTMLImageElement} [src] - The URL path to an image file or an `<img />` element.
  * @param {Function} [callback] - An optional callback function once the image has been loaded.
  * @description Fundamental to work with bitmap data, a.k.a. pregenerated imagery, in Two.js. Supported formats include jpg, png, gif, and tiff. See {@link Two.Texture.RegularExpressions} for a full list of supported formats.
  */
-export class Texture extends Shape {
+export class Texture extends Events {
 
   /**
    * @name Two.Texture#_flagId
@@ -88,6 +87,8 @@ export class Texture extends Shape {
    */
   _flagScale = false;
 
+  _renderer = {};
+
   /**
    * @name Two.Texture#_id
    * @private
@@ -137,9 +138,18 @@ export class Texture extends Shape {
    */
   _offset = null;
 
+  /**
+   * @name Two.Texture#className
+   * @property {String} - A class to be applied to the element to be compatible with CSS styling.
+   * @nota-bene Only available for the SVG renderer.
+   */
+  _className = '';
+
   constructor(src, callback) {
 
     super();
+
+    this._renderer = {};
 
     for (let prop in proto) {
       Object.defineProperty(this, prop, proto[prop]);
@@ -213,7 +223,9 @@ export class Texture extends Shape {
    * @name Two.Texture.Properties
    * @property {String[]} - A list of properties that are on every {@link Two.Texture}.
    */
-  static Properties = ['id', 'src', 'loaded', 'repeat', 'scale', 'offset', 'image'];
+  static Properties = [
+    'id', 'className', 'src', 'loaded', 'repeat', 'scale', 'offset', 'image'
+  ];
 
   /**
    * @name Two.Texture.RegularExpressions
@@ -507,8 +519,6 @@ export class Texture extends Shape {
       this._flagVideo = true;
     }
 
-    super._update.call(this);
-
     return this;
 
   }
@@ -521,10 +531,8 @@ export class Texture extends Shape {
    */
   flagReset() {
 
-    this._flagSrc = this._flagImage = this._flagLoaded
+    this._flagSrc = this._flagImage = this._flagLoaded = this._flagRepeat
       = this._flagVideo = this._flagScale = this._flagOffset = false;
-
-    super.flagReset.call(this);
 
     return this;
 
@@ -533,6 +541,88 @@ export class Texture extends Shape {
 }
 
 const proto = {
+
+  renderer: {
+    enumerable: true,
+    get: function() {
+      return this._renderer;
+    },
+    set: function(obj) {
+      this._renderer = obj;
+    }
+  },
+  id: {
+    enumerable: true,
+    get: function() {
+      return this._id;
+    },
+    set: function(v) {
+      const id = this._id;
+      if (v === this._id) {
+        return;
+      }
+      this._id = v;
+      this._flagId = true;
+      if (this.parent) {
+        delete this.parent.children.ids[id];
+        this.parent.children.ids[this._id] = this;
+      }
+    }
+  },
+  className: {
+    enumerable: true,
+    get: function() {
+      return this._className;
+    },
+    set: function(v) {
+      this._flagClassName = this._className !== v;
+      if (this._flagClassName) {
+        const prev = this._className.split(/\s+?/);
+        const dest = v.split(/\s+?/);
+        for (let i = 0; i < prev.length; i++) {
+          const className = prev[i];
+          const index = Array.prototype.indexOf.call(this.classList, className);
+          if (index >= 0) {
+            this.classList.splice(index, 1);
+          }
+        }
+        this.classList = this.classList.concat(dest);
+      }
+      this._className = v;
+    }
+  }
+
+  src: {
+    enumerable: true,
+    get: function() {
+      return this._src;
+    },
+    set: function(v) {
+      this._src = v;
+      this._flagSrc = true;
+    }
+  },
+  loaded: {
+    enumerable: true,
+    get: function() {
+      return this._loaded;
+    },
+    set: function(v) {
+      this._loaded = v;
+      this._flagLoaded = true;
+    }
+  },
+  repeat: {
+    enumerable: true,
+    get: function() {
+      return this._repeat;
+    },
+    set: function(v) {
+      this._repeat = v;
+      this._flagRepeat = true;
+    }
+  },
+
   image: {
     enumerable: true,
     get: function() {
@@ -599,6 +689,7 @@ const proto = {
 
     }
   }
+
 };
 
 /**
