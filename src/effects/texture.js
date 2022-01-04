@@ -512,6 +512,8 @@ export class Texture extends Element {
     this._flagSrc = this._flagImage = this._flagLoaded = this._flagRepeat
       = this._flagVideo = this._flagScale = this._flagOffset = false;
 
+    super.flagReset.call(this);
+
     return this;
 
   }

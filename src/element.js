@@ -23,17 +23,16 @@ export class Element extends Events {
   _flagClassName = false;
 
   /**
-   * @name Two.Element#_renderer
-   * @private
+   * @name Two.Element#renderer
    * @property {Object} - Object access to store relevant renderer specific variables. Warning: manipulating this object can create unintended consequences.
    * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `shape.renderer.elem`.
    */
   _renderer = {};
 
   /**
-   * @name Two.Element#_id
-   * @private
-   * @see {@link Two.Element#id}
+   * @name Two.Element#id
+   * @property {String} - Session specific unique identifier.
+   * @nota-bene In the {@link Two.SvgRenderer} change this to change the underlying SVG element's id too.
    */
   _id = '';
 
@@ -61,6 +60,15 @@ export class Element extends Events {
 
   }
 
+  /**
+   * @name Two.Element#flagReset
+   * @function
+   * @description Called internally by Two.js's renderer to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+   */
+  flagReset() {
+    this._flagId = this._flagClassName = false;
+  }
+
 }
 
 const proto = {
@@ -68,9 +76,6 @@ const proto = {
     enumerable: false,
     get: function() {
       return this._renderer;
-    },
-    set: function(obj) {
-      this._renderer = obj;
     }
   },
   id: {

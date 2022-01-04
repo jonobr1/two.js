@@ -106,6 +106,8 @@ export class Stop extends Element {
 
     this._flagOffset = this._flagColor = this._flagOpacity = false;
 
+    super.flagReset.call(this);
+
     return this;
 
   }

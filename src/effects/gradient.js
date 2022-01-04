@@ -164,6 +164,8 @@ export class Gradient extends Element {
 
     this._flagSpread = this._flagUnits = this._flagStops = false;
 
+    super.flagReset.call(this);
+
     return this;
 
   }

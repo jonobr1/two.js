@@ -250,8 +250,9 @@ export class Shape extends Element {
    */
   flagReset() {
 
-    this._flagId = this._flagMatrix = this._flagScale =
-      this._flagClassName = false;
+    this._flagMatrix = this._flagScale = false;
+
+    super.flagReset.call(this);
 
     return this;
 
