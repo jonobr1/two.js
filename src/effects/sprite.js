@@ -339,75 +339,79 @@ export class Sprite extends Rectangle {
     let width, height, elapsed, amount, duration;
     let index, iw, ih, frames;
 
-    if (this._flagColumns || this._flagRows) {
-      this._amount = this._columns * this._rows;
-    }
+    if (effect) {
 
-    if (this._flagFrameRate) {
-      this._duration = 1000 * this._amount / this._frameRate;
-    }
-
-    if (this._flagTexture) {
-      this.fill = this._texture;
-    }
-
-    if (this._texture.loaded) {
-
-      iw = effect.image.width;
-      ih = effect.image.height;
-
-      width = iw / cols;
-      height = ih / rows;
-      amount = this._amount;
-
-      if (this.width !== width) {
-        this.width = width;
-      }
-      if (this.height !== height) {
-        this.height = height;
+      if (this._flagColumns || this._flagRows) {
+        this._amount = this._columns * this._rows;
       }
 
-      if (this._playing && this._frameRate > 0) {
+      if (this._flagFrameRate) {
+        this._duration = 1000 * this._amount / this._frameRate;
+      }
 
-        if (_.isNaN(this._lastFrame)) {
-          this._lastFrame = amount - 1;
+      if (this._flagTexture) {
+        this.fill = effect;
+      }
+
+      if (effect.loaded) {
+
+        iw = effect.image.width;
+        ih = effect.image.height;
+
+        width = iw / cols;
+        height = ih / rows;
+        amount = this._amount;
+
+        if (this.width !== width) {
+          this.width = width;
+        }
+        if (this.height !== height) {
+          this.height = height;
         }
 
-        // TODO: Offload perf logic to instance of `Two`.
-        elapsed = _.performance.now() - this._startTime;
-        frames = this._lastFrame + 1;
-        duration = 1000 * (frames - this._firstFrame) / this._frameRate;
+        if (this._playing && this._frameRate > 0) {
 
-        if (this._loop) {
-          elapsed = elapsed % duration;
-        } else {
-          elapsed = Math.min(elapsed, duration);
-        }
-
-        index = lerp(this._firstFrame, frames, elapsed / duration);
-        index = Math.floor(index);
-
-        if (index !== this._index) {
-          this._index = index;
-          if (index >= this._lastFrame - 1 && this._onLastFrame) {
-            this._onLastFrame();  // Shortcut for chainable sprite animations
+          if (_.isNaN(this._lastFrame)) {
+            this._lastFrame = amount - 1;
           }
+
+          // TODO: Offload perf logic to instance of `Two`.
+          elapsed = _.performance.now() - this._startTime;
+          frames = this._lastFrame + 1;
+          duration = 1000 * (frames - this._firstFrame) / this._frameRate;
+
+          if (this._loop) {
+            elapsed = elapsed % duration;
+          } else {
+            elapsed = Math.min(elapsed, duration);
+          }
+
+          index = lerp(this._firstFrame, frames, elapsed / duration);
+          index = Math.floor(index);
+
+          if (index !== this._index) {
+            this._index = index;
+            if (index >= this._lastFrame - 1 && this._onLastFrame) {
+              this._onLastFrame();  // Shortcut for chainable sprite animations
+            }
+          }
+
         }
 
-      }
+        const col = this._index % cols;
+        const row = Math.floor(this._index / cols);
 
-      const col = this._index % cols;
-      const row = Math.floor(this._index / cols);
+        const ox = - width * col + (iw - width) / 2;
+        const oy = - height * row + (ih - height) / 2;
 
-      const ox = - width * col + (iw - width) / 2;
-      const oy = - height * row + (ih - height) / 2;
+        // TODO: Improve performance
+        if (ox !== effect.offset.x) {
+          effect.offset.x = ox;
+        }
+        if (oy !== effect.offset.y) {
+          effect.offset.y = oy;
+        }
 
-      // TODO: Improve performance
-      if (ox !== effect.offset.x) {
-        effect.offset.x = ox;
-      }
-      if (oy !== effect.offset.y) {
-        effect.offset.y = oy;
       }
 
     }
