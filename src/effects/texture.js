@@ -1,5 +1,6 @@
 import { root } from '../utils/root.js';
 import { Events } from '../events.js';
+import { Element } from '../element.js';
 import { TwoError } from '../utils/error.js';
 import { CanvasShim } from '../utils/canvas-shim.js';
 
@@ -24,19 +25,12 @@ if (root.document) {
 /**
  * @name Two.Texture
  * @class
- * @extends Two.Events
+ * @extends Two.Element
  * @param {String|HTMLImageElement} [src] - The URL path to an image file or an `<img />` element.
  * @param {Function} [callback] - An optional callback function once the image has been loaded.
  * @description Fundamental to work with bitmap data, a.k.a. pregenerated imagery, in Two.js. Supported formats include jpg, png, gif, and tiff. See {@link Two.Texture.RegularExpressions} for a full list of supported formats.
  */
-export class Texture extends Events {
-
-  /**
-   * @name Two.Texture#_flagId
-   * @private
-   * @property {Boolean} - Determines whether the {@link Two.Texture#id} needs updating.
-   */
-  _flagId = false;
+export class Texture extends Element {
 
   /**
    * @name Two.Texture#_flagSrc
@@ -87,15 +81,6 @@ export class Texture extends Events {
    */
   _flagScale = false;
 
-  _renderer = {};
-
-  /**
-   * @name Two.Texture#_id
-   * @private
-   * @see {@link Two.Texture#id}
-   */
-  _id = '';
-
   /**
    * @name Two.Texture#_src
    * @private
@@ -137,13 +122,6 @@ export class Texture extends Events {
    * @see {@link Two.Texture#offset}
    */
   _offset = null;
-
-  /**
-   * @name Two.Texture#className
-   * @property {String} - A class to be applied to the element to be compatible with CSS styling.
-   * @nota-bene Only available for the SVG renderer.
-   */
-  _className = '';
 
   constructor(src, callback) {
 
@@ -541,56 +519,6 @@ export class Texture extends Events {
 }
 
 const proto = {
-
-  renderer: {
-    enumerable: true,
-    get: function() {
-      return this._renderer;
-    },
-    set: function(obj) {
-      this._renderer = obj;
-    }
-  },
-  id: {
-    enumerable: true,
-    get: function() {
-      return this._id;
-    },
-    set: function(v) {
-      const id = this._id;
-      if (v === this._id) {
-        return;
-      }
-      this._id = v;
-      this._flagId = true;
-      if (this.parent) {
-        delete this.parent.children.ids[id];
-        this.parent.children.ids[this._id] = this;
-      }
-    }
-  },
-  className: {
-    enumerable: true,
-    get: function() {
-      return this._className;
-    },
-    set: function(v) {
-      this._flagClassName = this._className !== v;
-      if (this._flagClassName) {
-        const prev = this._className.split(/\s+?/);
-        const dest = v.split(/\s+?/);
-        for (let i = 0; i < prev.length; i++) {
-          const className = prev[i];
-          const index = Array.prototype.indexOf.call(this.classList, className);
-          if (index >= 0) {
-            this.classList.splice(index, 1);
-          }
-        }
-        this.classList = this.classList.concat(dest);
-      }
-      this._className = v;
-    }
-  }
 
   src: {
     enumerable: true,

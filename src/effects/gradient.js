@@ -1,5 +1,6 @@
 import { Collection } from '../collection.js';
 import { Events } from '../events.js';
+import { Element } from '../element.js';
 import { _ } from '../utils/underscore.js';
 
 import { Constants } from '../constants.js';
@@ -8,18 +9,16 @@ import { Stop } from './stop.js';
 /**
  * @name Two.Gradient
  * @class
+ * @extends Two.Element
  * @param {Two.Stop[]} [stops] - A list of {@link Two.Stop}s that contain the gradient fill pattern for the gradient.
  * @description This is the base class for constructing different types of gradients with Two.js. The two common gradients are {@link Two.LinearGradient} and {@link Two.RadialGradient}.
  */
-export class Gradient extends Events {
+export class Gradient extends Element {
 
-  _flagId = false;
   _flagStops = false;
   _flagSpread = false;
   _flagUnits = false;
 
-  _renderer = { type: 'gradient' };
-  _id = '';
   _spread = '';
   _units = '';
 
@@ -30,6 +29,8 @@ export class Gradient extends Events {
     for (let prop in proto) {
       Object.defineProperty(this, prop, proto[prop]);
     }
+
+    this._renderer.type = 'gradient';
 
     /**
      * @name Two.Gradient#renderer
@@ -223,24 +224,6 @@ const proto = {
 
     }
 
-  },
-  renderer: {
-    enumerable: false,
-    get: function() {
-      return this._renderer;
-    },
-    set: function(obj) {
-      this._renderer = obj;
-    }
-  },
-  id: {
-    enumerable: true,
-    get: function() {
-      return this._id;
-    },
-    set: function(v) {
-      this._id = v;
-    }
   }
 };
 

@@ -1,22 +1,16 @@
 import { Constants } from './constants.js';
 import { Events } from './events.js';
+import { Element } from './element.js';
 import { Matrix } from './matrix.js';
 import { Vector } from './vector.js';
 
 /**
  * @name Two.Shape
  * @class
- * @extends Two.Events
+ * @extends Two.Element
  * @description The foundational transformation object for the Two.js scenegraph.
  */
-export class Shape extends Events {
-
-  /**
-   * @name Two.Shape#_id
-   * @private
-   * @property {Boolean} - Determines whether the id needs updating.
-   */
-  _flagId = true;
+export class Shape extends Element {
 
   /**
    * @name Two.Shape#_flagMatrix
@@ -32,18 +26,7 @@ export class Shape extends Events {
    */
   _flagScale = false;
 
-  /**
-   * @name Two.Shape#_flagClassName
-   * @private
-   * @property {Boolean} - Determines whether the {@link Two.Group#className} need updating.
-   */
-  _flagClassName = false;
-
   // Underlying Properties
-
-  _renderer = {};
-
-  _id = '';
 
   /**
    * @name Two.Shape#_position
@@ -80,13 +63,6 @@ export class Shape extends Events {
    */
   _skewY = 0;
 
-  /**
-   * @name Two.Shape#className
-   * @property {String} - A class to be applied to the element to be compatible with CSS styling.
-   * @nota-bene Only available for the SVG renderer.
-   */
-  _className = '';
-
   constructor() {
 
     super();
@@ -110,13 +86,6 @@ export class Shape extends Events {
      * @nota-bene In the {@link Two.SvgRenderer} change this to change the underlying SVG element's id too.
      */
     this.id = Constants.Identifier + Constants.uniqueId();
-
-    /**
-     * @name Two.Shape#classList
-     * @property {String[]}
-     * @description A list of class strings stored if imported / interpreted  from an SVG element.
-     */
-    this.classList = [];
 
     /**
      * @name Two.Shape#matrix
@@ -291,15 +260,6 @@ export class Shape extends Events {
 }
 
 const proto = {
-  renderer: {
-    enumerable: true,
-    get: function() {
-      return this._renderer;
-    },
-    set: function(obj) {
-      this._renderer = obj;
-    }
-  },
   position: {
     enumerable: true,
     get: function() {
@@ -369,48 +329,6 @@ const proto = {
     set: function(v) {
       this._matrix = v;
       this._flagMatrix = true;
-    }
-  },
-
-  id: {
-    enumerable: true,
-    get: function() {
-      return this._id;
-    },
-    set: function(v) {
-      const id = this._id;
-      if (v === this._id) {
-        return;
-      }
-      this._id = v;
-      this._flagId = true;
-      if (this.parent) {
-        delete this.parent.children.ids[id];
-        this.parent.children.ids[this._id] = this;
-      }
-    }
-  },
-
-  className: {
-    enumerable: true,
-    get: function() {
-      return this._className;
-    },
-    set: function(v) {
-      this._flagClassName = this._className !== v;
-      if (this._flagClassName) {
-        const prev = this._className.split(/\s+?/);
-        const dest = v.split(/\s+?/);
-        for (let i = 0; i < prev.length; i++) {
-          const className = prev[i];
-          const index = Array.prototype.indexOf.call(this.classList, className);
-          if (index >= 0) {
-            this.classList.splice(index, 1);
-          }
-        }
-        this.classList = this.classList.concat(dest);
-      }
-      this._className = v;
     }
   }
 };
