@@ -291,6 +291,15 @@ export class Shape extends Events {
 }
 
 const proto = {
+  renderer: {
+    enumerable: true,
+    get: function() {
+      return this._renderer;
+    },
+    set: function(obj) {
+      this._renderer = obj;
+    }
+  },
   position: {
     enumerable: true,
     get: function() {
