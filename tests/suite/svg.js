@@ -125,7 +125,7 @@
       var pct = i / amount;
       var x = pct * 300 + 50;
       var y = i % 2 ? 25 : 75;
-      points.push(new Two.Vector(x, y));
+      points.push(new Two.Anchor(x, y));
     }
     var poly = two.makePath(points, true);
     var path = two.makePath();
