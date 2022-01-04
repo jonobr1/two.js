@@ -71,7 +71,12 @@ const webgl = {
       }
     },
 
-    /** @type {(gl: any, programs: any) => any} */
+    /**
+     * @function
+     // * @type {(gl: any, programs: any) => any}
+     * @param {WebGLContext} gl
+     * @param {Object} programs
+     */
     render: function(gl, programs) {
 
       if (!this._visible) {
