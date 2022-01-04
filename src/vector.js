@@ -34,13 +34,22 @@ const proto = {
 /**
  * @name Two.Vector
  * @class
+ * @extends Two.Events
  * @param {Number} [x=0] - Any number to represent the horizontal x-component of the vector.
  * @param {Number} [y=0] - Any number to represent the vertical y-component of the vector.
  * @description A class to store x / y component vector data. In addition to storing data `Two.Vector` has suped up methods for commonplace mathematical operations.
  */
 export class Vector extends Events {
 
+  /**
+   * @name Two.Vector#_x
+   * @private
+   */
   _x = 0;
+  /**
+   * @name Two.Vector#_y
+   * @private
+   */
   _y = 0;
 
   constructor(x = 0, y = 0) {
@@ -54,12 +63,14 @@ export class Vector extends Events {
     /**
      * @name Two.Vector#x
      * @property {Number} - The horizontal x-component of the vector.
+     * @type {Number}
      */
     this.x = x;
 
     /**
      * @name Two.Vector#y
      * @property {Number} - The vertical y-component of the vector.
+     * @type {Number}
      */
     this.y = y;
 

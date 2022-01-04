@@ -22,6 +22,12 @@ export class Element extends Events {
    */
   _flagClassName = false;
 
+  /**
+   * @name Two.Element#_renderer
+   * @private
+   * @property {Object} - Object access to store relevant renderer specific variables. Warning: manipulating this object can create unintended consequences.
+   * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `shape.renderer.elem`.
+   */
   _renderer = {};
 
   /**
