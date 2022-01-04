@@ -285,11 +285,6 @@ function getCurveFromPoints(points, closed) {
 
     const point = points[i];
 
-    // TODO: Test to ensure this isn't necessary
-    // if (!_.isObject(point.controls)) {
-    //   Anchor.AppendCurveProperties(point);
-    // }
-
     const prev = closed ? mod(i - 1, l) : Math.max(i - 1, 0);
     const next = closed ? mod(i + 1, l) : Math.min(i + 1, last);
 

@@ -771,20 +771,20 @@ export class Path extends Shape {
       obj.x = x;
       obj.y = y;
 
-      if (!_.isObject(obj.controls)) {
-        Anchor.AppendCurveProperties(obj);
-      }
+      if (obj instanceof Anchor) {
 
-      obj.controls.left.x = brx;
-      obj.controls.left.y = bry;
-      obj.controls.right.x = alx;
-      obj.controls.right.y = aly;
+        obj.controls.left.x = brx;
+        obj.controls.left.y = bry;
+        obj.controls.right.x = alx;
+        obj.controls.right.y = aly;
 
-      if (!(typeof obj.relative === 'boolean') || obj.relative) {
-        obj.controls.left.x -= x;
-        obj.controls.left.y -= y;
-        obj.controls.right.x -= x;
-        obj.controls.right.y -= y;
+        if (!(typeof obj.relative === 'boolean') || obj.relative) {
+          obj.controls.left.x -= x;
+          obj.controls.left.y -= y;
+          obj.controls.right.x -= x;
+          obj.controls.right.y -= y;
+        }
+
       }
 
       obj.t = t;

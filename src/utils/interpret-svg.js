@@ -921,10 +921,6 @@ export const read = {
               y4 += y1;
             }
 
-            if (!_.isObject(coord.controls)) {
-              Anchor.AppendCurveProperties(coord);
-            }
-
             coord.controls.right.set(x2 - coord.x, y2 - coord.y);
             result = new Anchor(
               x4, y4,
@@ -977,10 +973,6 @@ export const read = {
               y3 += y1;
               x4 += x1;
               y4 += y1;
-            }
-
-            if (!_.isObject(coord.controls)) {
-              Anchor.AppendCurveProperties(coord);
             }
 
             coord.controls.right.set(
