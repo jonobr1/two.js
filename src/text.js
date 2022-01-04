@@ -668,7 +668,7 @@ const proto = {
     set: function(v) {
       this._mask = v;
       this._flagMask = true;
-      if (!v.clip) {
+      if (_.isObject(v) && !v.clip) {
         v.clip = true;
       }
     }
