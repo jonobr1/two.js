@@ -88,7 +88,7 @@ export class Ellipse extends Path {
    * @name Two.Ellipse.Properties
    * @property {String[]} - A list of properties that are on every {@link Two.Ellipse}.
    */
-  Properties = ['width', 'height'];
+  static Properties = ['width', 'height'];
 
   /**
    * @name Two.Ellipse#_update
