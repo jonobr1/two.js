@@ -145,11 +145,12 @@ declare module "src/vector" {
     /**
      * @name Two.Vector
      * @class
+     * @extends Two.Events
      * @param {Number} [x=0] - Any number to represent the horizontal x-component of the vector.
      * @param {Number} [y=0] - Any number to represent the vertical y-component of the vector.
      * @description A class to store x / y component vector data. In addition to storing data `Two.Vector` has suped up methods for commonplace mathematical operations.
      */
-    export class Vector extends Events {
+    export class Vector {
         /**
          * @name Two.Vector.zero
          * @readonly
@@ -213,16 +214,26 @@ declare module "src/vector" {
          */
         static distanceBetweenSquared(v1: any, v2: any): number;
         constructor(x?: number, y?: number);
-        _x: number;
-        _y: number;
+        /**
+         * @name Two.Vector#_x
+         * @private
+         */
+        private _x;
+        /**
+         * @name Two.Vector#_y
+         * @private
+         */
+        private _y;
         /**
          * @name Two.Vector#x
          * @property {Number} - The horizontal x-component of the vector.
+         * @type {Number}
          */
         x: number;
         /**
          * @name Two.Vector#y
          * @property {Number} - The vertical y-component of the vector.
+         * @type {Number}
          */
         y: number;
         set(x: any, y: any): Vector;
@@ -468,6 +479,13 @@ declare module "src/vector" {
          */
         isZero(eps?: number): boolean;
         /**
+         * @name Two.Vector#toString
+         * @function
+         * @returns {String}
+         * @description Return a comma-separated string of x, y value. Great for storing in a database.
+         */
+        toString(): string;
+        /**
          * @name Two.Vector#toObject
          * @function
          * @returns {Object}
@@ -482,7 +500,6 @@ declare module "src/vector" {
          */
         rotate(radians: number): Vector;
     }
-    import { Events } from "src/events";
 }
 declare module "src/anchor" {
     /**
@@ -716,6 +733,53 @@ declare module "src/utils/underscore" {
         export const performance: any;
     }
 }
+declare module "src/element" {
+    /**
+     * @name Two.Element
+     * @class
+     * @extends Two.Events
+     * @description The foundational object for the Two.js scenegraph.
+     */
+    export class Element {
+        /**
+         * @name Two.Element#_flagId
+         * @private
+         * @property {Boolean} - Determines whether the {@link Two.Element#id} needs updating.
+         */
+        private _flagId;
+        /**
+         * @name Two.Element#_flagClassName
+         * @private
+         * @property {Boolean} - Determines whether the {@link Two.Group#className} need updating.
+         */
+        private _flagClassName;
+        /**
+         * @name Two.Element#_renderer
+         * @private
+         * @property {Object} - Object access to store relevant renderer specific variables. Warning: manipulating this object can create unintended consequences.
+         * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `shape.renderer.elem`.
+         */
+        private _renderer;
+        /**
+         * @name Two.Element#_id
+         * @private
+         * @see {@link Two.Element#id}
+         */
+        private _id;
+        /**
+         * @name Two.Element#className
+         * @property {String} - A class to be applied to the element to be compatible with CSS styling.
+         * @nota-bene Only available for the SVG renderer.
+         */
+        _className: string;
+        /**
+         * @name Two.Element#classList
+         * @property {String[]}
+         * @description A list of class strings stored if imported / interpreted  from an SVG element.
+         */
+        classList: any[];
+    }
+}
 declare module "src/matrix" {
     /**
      * @name Two.Matrix
@@ -921,16 +985,10 @@ declare module "src/shape" {
     /**
      * @name Two.Shape
      * @class
-     * @extends Two.Events
+     * @extends Two.Element
      * @description The foundational transformation object for the Two.js scenegraph.
      */
     export class Shape {
-        /**
-         * @name Two.Shape#_id
-         * @private
-         * @property {Boolean} - Determines whether the id needs updating.
-         */
-        private _flagId;
         /**
          * @name Two.Shape#_flagMatrix
          * @private
@@ -943,14 +1001,6 @@ declare module "src/shape" {
          * @property {Boolean} - Determines whether the scale needs updating.
          */
         private _flagScale;
-        /**
-         * @name Two.Shape#_flagClassName
-         * @private
-         * @property {Boolean} - Determines whether the {@link Two.Group#className} need updating.
-         */
-        private _flagClassName;
-        _renderer: {};
-        _id: string;
         /**
          * @name Two.Shape#_position
          * @private
@@ -981,12 +1031,6 @@ declare module "src/shape" {
          * @property {Number} - The rotation value in Number.
          */
         private _skewY;
-        /**
-         * @name Two.Shape#className
-         * @property {String} - A class to be applied to the element to be compatible with CSS styling.
-         * @nota-bene Only available for the SVG renderer.
-         */
-        _className: string;
         isShape: boolean;
         /**
          * @name Two.Shape#id
@@ -994,12 +1038,6 @@ declare module "src/shape" {
          * @nota-bene In the {@link Two.SvgRenderer} change this to change the underlying SVG element's id too.
          */
         id: string;
-        /**
-         * @name Two.Shape#classList
-         * @property {String[]}
-         * @description A list of class strings stored if imported / interpreted  from an SVG element.
-         */
-        classList: any[];
         /**
          * @name Two.Shape#matrix
          * @property {Two.Matrix}
@@ -1035,8 +1073,9 @@ declare module "src/shape" {
          * @description Skew the shape by an angle in the y axis direction.
          */
         skewY: number;
-        set renderer(arg: {});
-        get renderer(): {};
+        set renderer(arg: any);
+        get renderer(): any;
+        _renderer: any;
         set translation(arg: any);
         /**
          * @name Two.Shape#translation
@@ -1080,6 +1119,8 @@ declare module "src/shape" {
          * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
          */
         private flagReset;
+        _flagId: boolean;
+        _flagClassName: boolean;
     }
     import { Matrix } from "src/matrix";
     import { Vector } from "src/vector";
@@ -1115,6 +1156,7 @@ declare module "src/collection" {
         sort(...args: any[]): Collection;
         reverse(...args: any[]): Collection;
         indexOf(...args: any[]): any;
+        #private;
     }
 }
 declare module "src/children" {
@@ -1628,12 +1670,13 @@ declare module "src/effects/stop" {
     /**
      * @name Two.Stop
      * @class
+     * @extends Two.Element
      * @param {Number} [offset] - The offset percentage of the stop represented as a zero-to-one value. Default value flip flops from zero-to-one as new stops are created.
      * @param {String} [color] - The color of the stop. Default value flip flops from white to black as new stops are created.
      * @param {Number} [opacity] - The opacity value. Default value is 1, cannot be lower than 0.
      * @nota-bene Used specifically in conjunction with {@link Two.Gradient}s to control color graduation.
      */
-    export class Stop extends Events {
+    export class Stop {
         /**
          * @name Two.Stop.Index
          * @property {Number} - The current index being referenced for calculating a stop's default offset value.
@@ -1645,13 +1688,6 @@ declare module "src/effects/stop" {
          */
         static Properties: string[];
         constructor(offset: any, color: any, opacity: any);
-        /**
-         * @name Two.Stop#renderer
-         * @property {Object}
-         * @description Object access to store relevant renderer specific variables. Warning: manipulating this object can create unintended consequences.
-         * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `shape.renderer.elem`.
-         */
-        renderer: {};
         /**
          * @name Two.Stop#offset
          * @property {Number} - The offset percentage of the stop represented as a zero-to-one value.
@@ -1693,16 +1729,16 @@ declare module "src/effects/stop" {
         _flagColor: boolean;
         _flagOpacity: boolean;
     }
-    import { Events } from "src/events";
 }
 declare module "src/effects/gradient" {
     /**
      * @name Two.Gradient
      * @class
+     * @extends Two.Element
      * @param {Two.Stop[]} [stops] - A list of {@link Two.Stop}s that contain the gradient fill pattern for the gradient.
      * @description This is the base class for constructing different types of gradients with Two.js. The two common gradients are {@link Two.LinearGradient} and {@link Two.RadialGradient}.
      */
-    export class Gradient extends Events {
+    export class Gradient {
         /**
          * @name Two.Gradient.Stop
          * @see {@link Two.Stop}
@@ -1714,14 +1750,9 @@ declare module "src/effects/gradient" {
          */
         static Properties: string[];
         constructor(stops: any);
-        _flagId: boolean;
         _flagStops: boolean;
         _flagSpread: boolean;
         _flagUnits: boolean;
-        _renderer: {
-            type: string;
-        };
-        _id: string;
         _spread: string;
         _units: string;
         /**
@@ -1782,7 +1813,6 @@ declare module "src/effects/gradient" {
          */
         private flagReset;
     }
-    import { Events } from "src/events";
     import { Stop } from "src/effects/stop";
 }
 declare module "src/effects/linear-gradient" {
@@ -1955,7 +1985,7 @@ declare module "src/effects/texture" {
     /**
      * @name Two.Texture
      * @class
-     * @extends Two.Shape
+     * @extends Two.Element
      * @param {String|HTMLImageElement} [src] - The URL path to an image file or an `<img />` element.
      * @param {Function} [callback] - An optional callback function once the image has been loaded.
      * @description Fundamental to work with bitmap data, a.k.a. pregenerated imagery, in Two.js. Supported formats include jpg, png, gif, and tiff. See {@link Two.Texture.RegularExpressions} for a full list of supported formats.
@@ -2029,12 +2059,6 @@ declare module "src/effects/texture" {
         static load(texture: any, callback: Function): void;
         constructor(src: any, callback: any);
         /**
-         * @name Two.Texture#_flagId
-         * @private
-         * @property {Boolean} - Determines whether the {@link Two.Texture#id} needs updating.
-         */
-        private _flagId;
-        /**
          * @name Two.Texture#_flagSrc
          * @private
          * @property {Boolean} - Determines whether the {@link Two.Texture#src} needs updating.
@@ -2077,12 +2101,6 @@ declare module "src/effects/texture" {
          */
         private _flagScale;
         /**
-         * @name Two.Texture#_id
-         * @private
-         * @see {@link Two.Texture#id}
-         */
-        private _id;
-        /**
          * @name Two.Texture#_src
          * @private
          * @see {@link Two.Texture#src}
@@ -2118,6 +2136,7 @@ declare module "src/effects/texture" {
          * @see {@link Two.Texture#offset}
          */
         private _offset;
+        _renderer: {};
         id: string;
         classList: any[];
         /**
@@ -4221,7 +4240,12 @@ declare module "src/renderers/webgl" {
             matrix: Matrix;
             group: {
                 removeChild: (child: any, gl: any) => void;
-                /** @type {(gl: any, programs: any) => any} */
+                /**
+                 * @function
+                 // * @type {(gl: any, programs: any) => any}
+                 * @param {WebGLContext} gl
+                 * @param {Object} programs
+                 */
                 render: (gl: any, programs: any) => any;
             };
             path: {
@@ -4775,6 +4799,7 @@ declare module "src/two" {
          * @description Load an SVG file or SVG text and interpret it into Two.js legible objects.
          */
         load(text: any, callback: Function): typeof Group;
+        #private;
     }
     import { Line } from "src/shapes/line";
     import { Path } from "src/path";
