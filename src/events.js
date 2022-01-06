@@ -74,7 +74,7 @@ export class Events {
           for (let j = 0, k = list.length; j < k; j++) {
             let e = list[j];
             e = e.handler ? e.handler : e;
-            if (handler && handler !== e) {
+            if (handler !== e) {
               events.push(e);
             }
           }
