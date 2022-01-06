@@ -413,7 +413,7 @@ export class Group extends Shape {
         return node;
       } else if (node.children) {
         for (let i = 0; i < node.children.length; i++) {
-          found = search(node.children[i], id);
+          found = search(node.children[i]);
           if (found) {
             return found;
           }
@@ -439,7 +439,7 @@ export class Group extends Shape {
       if (node.children) {
         for (let i = 0; i < node.children.length; i++) {
           const child = node.children[i];
-          search(child, className);
+          search(child);
         }
       }
       return found;
@@ -467,7 +467,7 @@ export class Group extends Shape {
       }
       return found;
     }
-    return search(this, type);
+    return search(this);
   }
 
   /**

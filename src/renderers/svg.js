@@ -74,11 +74,9 @@ const svg = {
       const b = points[i];
 
       const prev = closed ? mod(i - 1, l) : Math.max(i - 1, 0);
-      const next = closed ? mod(i + 1, l) : Math.min(i + 1, last);
       const a = points[prev];
 
-      let command;
-      let c = points[next];
+      let command, c;
       let vx, vy, ux, uy, ar, bl, br, cl;
       let rx, ry, xAxisRotation, largeArcFlag, sweepFlag;
 

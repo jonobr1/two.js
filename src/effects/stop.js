@@ -1,5 +1,4 @@
 import { _ } from '../utils/underscore.js';
-import { Events } from '../events.js';
 import { Element } from '../element.js';
 
 /**

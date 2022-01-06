@@ -1039,12 +1039,12 @@ export class Renderer extends Events {
 
 function renderArcEstimate(ctx, ox, oy, rx, ry, startAngle, endAngle, clockwise, xAxisRotation) {
 
+  const delta = endAngle - startAngle;
   const epsilon = Curve.Tolerance.epsilon;
-  const samePoints = Math.abs(deltaAngle) < epsilon;
-  let deltaAngle = endAngle - startAngle;
+  const samePoints = Math.abs(delta) < epsilon;
 
   // ensures that deltaAngle is 0 .. 2 PI
-  deltaAngle = mod(deltaAngle, TWO_PI);
+  let deltaAngle = mod(delta, TWO_PI);
 
   if (deltaAngle < epsilon) {
 
@@ -1060,7 +1060,7 @@ function renderArcEstimate(ctx, ox, oy, rx, ry, startAngle, endAngle, clockwise,
 
   }
 
-  if (clockwise === true && ! samePoints) {
+  if (clockwise === true && !samePoints) {
 
     if (deltaAngle === TWO_PI) {
 

@@ -41,7 +41,7 @@ export class Anchor extends Vector {
     this.command = command;
     this.relative = true;
 
-    const broadcast = Anchor.broadcast.bind(this);
+    const broadcast = Anchor.makeBroadcast(this);
 
     this.controls.left.set(ax, ay)
       .addEventListener(Events.Types.change, broadcast);
@@ -50,9 +50,12 @@ export class Anchor extends Vector {
 
   }
 
-  static broadcast() {
-    if (this._bound) {
-      this.dispatchEvent(Events.Types.change);
+  static makeBroadcast(scope) {
+    return broadcast;
+    function broadcast() {
+      if (scope._bound) {
+        scope.dispatchEvent(Events.Types.change);
+      }
     }
   }
 
