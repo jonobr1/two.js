@@ -1,15 +1,15 @@
-import Two from '../../build/two.module.js';
+import { Matrix } from '../../src/matrix.js';
 
-var Surface = function(object) {
-  this.object = object;
-};
+class Surface {
 
-Two.Utils.extend(Surface.prototype, {
+  constructor(object) {
+    this.object = object;
+  }
 
-  limits: function(min, max) {
+  limits(min, max) {
 
-    var min_exists = typeof min !== 'undefined';
-    var max_exists = typeof max !== 'undefined';
+    const min_exists = typeof min !== 'undefined';
+    const max_exists = typeof max !== 'undefined';
 
     if (!max_exists && !min_exists) {
       return { min: this.min, max: this.max };
@@ -20,15 +20,15 @@ Two.Utils.extend(Surface.prototype, {
 
     return this;
 
-  },
+  }
 
-  apply: function(px, py, s) {
+  apply(px, py, s) {
     this.object.translation.set(px, py);
     this.object.scale = s;
     return this;
   }
 
-});
+}
 
 /**
  * @name Two.ZUI
@@ -36,77 +36,75 @@ Two.Utils.extend(Surface.prototype, {
  * @param {Two.Group} group - The scene or group to
  * @param {HTMLElement} [domElement=document.body] - The HTML Element to attach event listeners to.
  */
-var ZUI = function(group, domElement) {
+export class ZUI {
 
-  this.limits = {
-    scale: ZUI.Limit.clone(),
-    x: ZUI.Limit.clone(),
-    y: ZUI.Limit.clone()
-  };
+  constructor(group, domElement) {
 
-  this.viewport = domElement || document.body;
-  this.viewportOffset = {
-    matrix: new Two.Matrix()
-  };
+    this.limits = {
+      scale: ZUI.Limit.clone(),
+      x: ZUI.Limit.clone(),
+      y: ZUI.Limit.clone()
+    };
 
-  this.surfaceMatrix = new Two.Matrix();
+    this.viewport = domElement || document.body;
+    this.viewportOffset = {
+      top: 0,
+      left: 0,
+      matrix: new Matrix()
+    };
 
-  this.surfaces = [];
-  this.reset();
-  this.updateSurface();
+    this.surfaceMatrix = new Matrix();
 
-  this.add(new Surface(group));
+    this.surfaces = [];
+    this.reset();
+    this.updateSurface();
 
-};
+    this.add(new Surface(group));
 
-Two.Utils.extend(ZUI, {
+  }
 
-  Surface: Surface,
+  static Surface = Surface;
 
-  Clamp: function(v, min, max) {
+  static Clamp(v, min, max) {
     return Math.min(Math.max(v, min), max);
-  },
+  }
 
-  Limit: {
+  static Limit = {
     min: -Infinity,
     max: Infinity,
     clone: function() {
-      var result = {};
-      for (var k in this) {
+      const result = {};
+      for (let k in this) {
         result[k] = this[k];
       }
       return result;
     }
-  },
+  }
 
-  TranslateMatrix: function(m, x, y) {
+  static TranslateMatrix(m, x, y) {
     m.elements[2] += x;
     m.elements[5] += y;
     return m;
-  },
+  }
 
-  PositionToScale: function(pos) {
+  static PositionToScale(pos) {
     return Math.exp(pos);
-  },
+  }
 
-  ScaleToPosition: function(scale) {
+  static ScaleToPosition(scale) {
     return Math.log(scale);
   }
 
-});
+  //
 
-Two.Utils.extend(ZUI.prototype, {
-
-  constructor: ZUI,
-
-  add: function(surface) {
+  add(surface) {
     this.surfaces.push(surface);
-    var limits = surface.limits();
+    const limits = surface.limits();
     this.addLimits(limits.min, limits.max);
     return this;
-  },
+  }
 
-  addLimits: function(min, max, type) {
+  addLimits(min, max, type) {
 
     type = type || 'scale';
 
@@ -130,68 +128,64 @@ Two.Utils.extend(ZUI.prototype, {
 
     return this;
 
-  },
+  }
 
-
-  // Conversion Functions
-
-  clientToSurface: function(x, y) {
+  clientToSurface(x, y) {
     this.updateOffset();
-    var m = this.surfaceMatrix.inverse();
-    var n = this.viewportOffset.matrix.inverse().multiply(x, y, 1);
+    const m = this.surfaceMatrix.inverse();
+    const n = this.viewportOffset.matrix.inverse().multiply(x, y, 1);
     return m.multiply.apply(m, [n.x, n.y, n.z]);
-  },
+  }
 
-  surfaceToClient: function(v) {
+  surfaceToClient(v) {
     this.updateOffset();
-    var vo = this.viewportOffset.matrix.clone();
-    var sm = this.surfaceMatrix.multiply.apply(this.surfaceMatrix, [v.x, v.y, v.z]);
+    const vo = this.viewportOffset.matrix.clone();
+    const sm = this.surfaceMatrix.multiply.apply(this.surfaceMatrix, [v.x, v.y, v.z]);
     return vo.multiply.apply(vo, [sm.x, sm.y, sm.z]);
-  },
+  }
 
-  zoomBy: function(byF, clientX, clientY) {
-    var s = ZUI.PositionToScale(this.zoom + byF);
+  zoomBy(byF, clientX, clientY) {
+    const s = ZUI.PositionToScale(this.zoom + byF);
     this.zoomSet(s, clientX, clientY);
     return this;
-  },
+  }
 
-  zoomSet: function(zoom, clientX, clientY) {
+  zoomSet(zoom, clientX, clientY) {
 
-    var newScale = this.fitToLimits(zoom);
+    const newScale = this.fitToLimits(zoom);
     this.zoom = ZUI.ScaleToPosition(newScale);
 
     if (newScale === this.scale) {
       return this;
     }
 
-    var sf = this.clientToSurface(clientX, clientY);
-    var scaleBy = newScale / this.scale;
+    const sf = this.clientToSurface(clientX, clientY);
+    const scaleBy = newScale / this.scale;
 
     this.surfaceMatrix.scale(scaleBy);
     this.scale = newScale;
 
-    var c = this.surfaceToClient(sf);
-    var dx = clientX - c.x;
-    var dy = clientY - c.y;
+    const c = this.surfaceToClient(sf);
+    const dx = clientX - c.x;
+    const dy = clientY - c.y;
     this.translateSurface(dx, dy);
 
     return this;
 
-  },
+  }
 
-  translateSurface: function(x, y) {
+  translateSurface(x, y) {
     ZUI.TranslateMatrix(this.surfaceMatrix, x, y);
     this.updateSurface();
     return this;
-  },
+  }
 
-  updateOffset: function() {
+  updateOffset() {
 
-    var rect = this.viewport.getBoundingClientRect();
-    Two.Utils.extend(this.viewportOffset, rect);
+    const rect = this.viewport.getBoundingClientRect();
 
-    this.viewportOffset.left -= document.body.scrollLeft;
-    this.viewportOffset.top -= document.body.scrollTop;
+    this.viewportOffset.left = rect.left - document.body.scrollLeft;
+    this.viewportOffset.top = rect.top - document.body.scrollTop;
 
     this.viewportOffset.matrix
       .identity()
@@ -199,30 +193,28 @@ Two.Utils.extend(ZUI.prototype, {
 
     return this;
 
-  },
+  }
 
-  updateSurface: function() {
+  updateSurface() {
 
-    var e = this.surfaceMatrix.elements;
-    for (var i = 0; i < this.surfaces.length; i++) {
+    const e = this.surfaceMatrix.elements;
+    for (let i = 0; i < this.surfaces.length; i++) {
       this.surfaces[i].apply(e[2], e[5], e[0]);
     }
 
     return this;
 
-  },
+  }
 
-  reset: function() {
+  reset() {
     this.zoom = 0;
     this.scale = 1.0;
     this.surfaceMatrix.identity();
     return this;
-  },
+  }
 
-  fitToLimits: function(s) {
+  fitToLimits(s) {
     return ZUI.Clamp(s, this.limits.scale.min, this.limits.scale.max);
   }
 
-});
-
-export default ZUI;
+}

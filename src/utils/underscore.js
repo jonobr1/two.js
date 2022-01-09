@@ -1,15 +1,15 @@
-import root from './root.js';
+import { root } from './root.js';
 
-var slice = Array.prototype.slice;
+const slice = Array.prototype.slice;
 
-var isArrayLike = function(collection) {
+function isArrayLike(collection) {
   if (collection === null || collection === undefined) return false;
-  var length = collection.length;
+  const length = collection.length;
   // Arrays cannot hold more than 2^32 - 1 items
   return (typeof length == 'number' && length >= 0 && length < 4294967296);
-};
+}
 
-var _ = {
+export const _ = {
   isNaN: function(obj) {
     return typeof obj === 'number' && obj !== +obj;
   },
@@ -17,37 +17,37 @@ var _ = {
     return !!(obj && obj.nodeType === 1);
   },
   isObject: function(obj) {
-    var type = typeof obj;
+    const type = typeof obj;
     return type === 'function' || type === 'object' && !!obj;
   },
   extend: function(base) {
-    var sources = slice.call(arguments, 1);
-    for (var i = 0; i < sources.length; i++) {
-      var obj = sources[i];
-      for (var k in obj) {
+    const sources = slice.call(arguments, 1);
+    for (let i = 0; i < sources.length; i++) {
+      const obj = sources[i];
+      for (let k in obj) {
         base[k] = obj[k];
       }
     }
     return base;
   },
   defaults: function(base) {
-    var sources = slice.call(arguments, 1);
-    for (var i = 0; i < sources.length; i++) {
-      var obj = sources[i];
-      for (var k in obj) {
+    const sources = slice.call(arguments, 1);
+    for (let i = 0; i < sources.length; i++) {
+      const obj = sources[i];
+      for (let k in obj) {
         if (base[k] === void 0) {
-        base[k] = obj[k];
+          base[k] = obj[k];
         }
       }
     }
     return base;
   },
   each: function(obj, iteratee, context) {
-    var ctx = context || this;
-    var keys = !isArrayLike(obj) && Object.keys(obj);
-    var length = (keys || obj).length;
-    for (var i = 0; i < length; i++) {
-      var k = keys ? keys[i] : i;
+    const ctx = context || this;
+    const keys = !isArrayLike(obj) && Object.keys(obj);
+    const length = (keys || obj).length;
+    for (let i = 0; i < length; i++) {
+      const k = keys ? keys[i] : i;
       iteratee.call(ctx, obj[k], k, obj);
     }
     return obj;
@@ -59,5 +59,3 @@ var _ = {
    */
   performance: ((root.performance && root.performance.now) ? root.performance : Date),
 };
-
-export default _;

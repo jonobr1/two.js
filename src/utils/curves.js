@@ -1,16 +1,15 @@
 import { mod, HALF_PI } from './math.js';
-import Commands from './path-commands.js';
-import _ from './underscore.js';
+import { Commands } from './path-commands.js';
 
-import Anchor from '../anchor.js';
-import Vector from '../vector.js';
-import Constants from '../constants.js';
+import { Anchor } from '../anchor.js';
+import { Vector } from '../vector.js';
+import { Constants } from '../constants.js';
 
 /**
  * @name Two.Utils.Curve
  * @property {Object} - Additional utility constant variables related to curve math and calculations.
  */
-var Curve = {
+const Curve = {
 
   CollinearityEpsilon: Math.pow(10, -30),
 
@@ -75,11 +74,11 @@ var Curve = {
  * @param {Number} d - The second point's component value.
  * @returns {Number} The coordinate value for a specific component along a cubic bezier curve by `t`.
  */
-var getComponentOnCubicBezier = function(t, a, b, c, d) {
-  var k = 1 - t;
+function getComponentOnCubicBezier(t, a, b, c, d) {
+  const k = 1 - t;
   return (k * k * k * a) + (3 * k * k * t * b) + (3 * k * t * t * c) +
       (t * t * t * d);
-};
+}
 
 /**
  * @name Two.Utils.subdivide
@@ -96,10 +95,10 @@ var getComponentOnCubicBezier = function(t, a, b, c, d) {
  * @returns {Anchor[]} A list of anchor points ordered in between `x1`, `y1` and `x4`, `y4`
  * @description Given 2 points (a, b) and corresponding control point for each return an array of points that represent points plotted along the curve. The number of returned points is determined by `limit`.
  */
-var subdivide = function(x1, y1, x2, y2, x3, y3, x4, y4, limit) {
+function subdivide(x1, y1, x2, y2, x3, y3, x4, y4, limit) {
 
   limit = limit || Curve.RecursionLimit;
-  var amount = limit + 1;
+  const amount = limit + 1;
 
   // TODO: Abstract 0.001 to a limiting variable
   // Don't recurse if the end points are identical
@@ -107,18 +106,18 @@ var subdivide = function(x1, y1, x2, y2, x3, y3, x4, y4, limit) {
     return [new Anchor(x4, y4)];
   }
 
-  var result = [];
+  const result = [];
 
-  for (var i = 0; i < amount; i++) {
-    var t = i / amount;
-    var x = getComponentOnCubicBezier(t, x1, x2, x3, x4);
-    var y = getComponentOnCubicBezier(t, y1, y2, y3, y4);
+  for (let i = 0; i < amount; i++) {
+    const t = i / amount;
+    const x = getComponentOnCubicBezier(t, x1, x2, x3, x4);
+    const y = getComponentOnCubicBezier(t, y1, y2, y3, y4);
     result.push(new Anchor(x, y));
   }
 
   return result;
 
-};
+}
 
 /**
  * @name Two.Utils.getCurveLength
@@ -135,18 +134,18 @@ var subdivide = function(x1, y1, x2, y2, x3, y3, x4, y4, limit) {
  * @returns {Number} The length of a curve.
  * @description Given 2 points (a, b) and corresponding control point for each, return a float that represents the length of the curve using Gauss-Legendre algorithm. Limit iterations of calculation by `limit`.
  */
-var getCurveLength = function(x1, y1, x2, y2, x3, y3, x4, y4, limit) {
+function getCurveLength(x1, y1, x2, y2, x3, y3, x4, y4, limit) {
 
   // TODO: Better / fuzzier equality check
   // Linear calculation
   if (x1 === x2 && y1 === y2 && x3 === x4 && y3 === y4) {
-    var dx = x4 - x1;
-    var dy = y4 - y1;
+    const dx = x4 - x1;
+    const dy = y4 - y1;
     return Math.sqrt(dx * dx + dy * dy);
   }
 
   // Calculate the coefficients of a Bezier derivative.
-  var ax = 9 * (x2 - x3) + 3 * (x4 - x1),
+  const ax = 9 * (x2 - x3) + 3 * (x4 - x1),
     bx = 6 * (x1 + x3) - 12 * x2,
     cx = 3 * (x2 - x1),
 
@@ -154,18 +153,18 @@ var getCurveLength = function(x1, y1, x2, y2, x3, y3, x4, y4, limit) {
     by = 6 * (y1 + y3) - 12 * y2,
     cy = 3 * (y2 - y1);
 
-  var integrand = function(t) {
+  function integrand(t) {
     // Calculate quadratic equations of derivatives for x and y
-    var dx = (ax * t + bx) * t + cx,
+    const dx = (ax * t + bx) * t + cx,
       dy = (ay * t + by) * t + cy;
     return Math.sqrt(dx * dx + dy * dy);
-  };
+  }
 
   return integrate(
     integrand, 0, 1, limit || Curve.RecursionLimit
   );
 
-};
+}
 
 /**
  * @name Two.Utils.getCurveBoundingBox
@@ -181,13 +180,13 @@ var getCurveLength = function(x1, y1, x2, y2, x3, y3, x4, y4, limit) {
  * @returns {Object} Object contains min and max `x` / `y` bounds.
  * @see {@link https://github.com/adobe-webplatform/Snap.svg/blob/master/src/path.js#L856}
  */
-var getCurveBoundingBox = function(x1, y1, x2, y2, x3, y3, x4, y4) {
+function getCurveBoundingBox(x1, y1, x2, y2, x3, y3, x4, y4) {
 
-  var tvalues = [];
-  var bounds = [[], []];
-  var a, b, c, t, t1, t2, b2ac, sqrtb2ac;
+  const tvalues = [];
+  const bounds = [[], []];
+  let a, b, c, t, t1, t2, b2ac, sqrtb2ac;
 
-  for (var i = 0; i < 2; ++i) {
+  for (let i = 0; i < 2; ++i) {
       if (i == 0) {
         b = 6 * x1 - 12 * x2 + 6 * x3;
         a = -3 * x1 + 9 * x2 - 9 * x3 + 3 * x4;
@@ -222,9 +221,9 @@ var getCurveBoundingBox = function(x1, y1, x2, y2, x3, y3, x4, y4) {
       }
   }
 
-  var j = tvalues.length;
-  var jlen = j;
-  var mt;
+  let j = tvalues.length;
+  let jlen = j;
+  let mt;
 
   while (j--) {
     t = tvalues[j];
@@ -244,7 +243,7 @@ var getCurveBoundingBox = function(x1, y1, x2, y2, x3, y3, x4, y4) {
     max: { x: Math.max.apply(0, bounds[0]), y: Math.max.apply(0, bounds[1]) }
   };
 
-};
+}
 
 /**
  * @name Two.Utils.integrate
@@ -256,8 +255,8 @@ var getCurveBoundingBox = function(x1, y1, x2, y2, x3, y3, x4, y4) {
  * @description Integration for `getCurveLength` calculations.
  * @see [Paper.js](@link https://github.com/paperjs/paper.js/blob/master/src/util/Numerical.js#L101)
  */
-var integrate = function(f, a, b, n) {
-  var x = Curve.abscissas[n - 2],
+function integrate(f, a, b, n) {
+  let x = Curve.abscissas[n - 2],
     w = Curve.weights[n - 2],
     A = 0.5 * (b - a),
     B = A + a,
@@ -265,11 +264,11 @@ var integrate = function(f, a, b, n) {
     m = (n + 1) >> 1,
     sum = n & 1 ? w[i++] * f(B) : 0; // Handle odd n
   while (i < m) {
-    var Ax = A * x[i];
+    const Ax = A * x[i];
     sum += w[i++] * (f(B + Ax) + f(B - Ax));
   }
   return A * sum;
-};
+}
 
 /**
  * @name Two.Utils.getCurveFromPoints
@@ -278,31 +277,27 @@ var integrate = function(f, a, b, n) {
  * @param {Boolean} closed
  * @description Sets the bezier handles on {@link Anchor}s in the `points` list with estimated values to create a catmull-rom like curve. Used by {@link Two.Path#plot}.
  */
-var getCurveFromPoints = function(points, closed) {
+function getCurveFromPoints(points, closed) {
 
-  var l = points.length, last = l - 1;
+  const l = points.length, last = l - 1;
 
-  for (var i = 0; i < l; i++) {
+  for (let i = 0; i < l; i++) {
 
-    var point = points[i];
+    const point = points[i];
 
-    if (!_.isObject(point.controls)) {
-      Anchor.AppendCurveProperties(point);
-    }
+    const prev = closed ? mod(i - 1, l) : Math.max(i - 1, 0);
+    const next = closed ? mod(i + 1, l) : Math.min(i + 1, last);
 
-    var prev = closed ? mod(i - 1, l) : Math.max(i - 1, 0);
-    var next = closed ? mod(i + 1, l) : Math.min(i + 1, last);
-
-    var a = points[prev];
-    var b = point;
-    var c = points[next];
+    const a = points[prev];
+    const b = point;
+    const c = points[next];
     getControlPoints(a, b, c);
 
     b.command = i === 0 ? Commands.move : Commands.curve;
 
   }
 
-};
+}
 
 /**
  * @name Two.Utils.getControlPoints
@@ -313,15 +308,15 @@ var getCurveFromPoints = function(points, closed) {
  * @returns {Anchor} Returns the passed middle point `b`.
  * @description Given three coordinates set the control points for the middle, b, vertex based on its position with the adjacent points.
  */
-var getControlPoints = function(a, b, c) {
+function getControlPoints(a, b, c) {
 
-  var a1 = Vector.angleBetween(a, b);
-  var a2 = Vector.angleBetween(c, b);
+  const a1 = Vector.angleBetween(a, b);
+  const a2 = Vector.angleBetween(c, b);
 
-  var d1 = Vector.distanceBetween(a, b);
-  var d2 = Vector.distanceBetween(c, b);
+  let d1 = Vector.distanceBetween(a, b);
+  let d2 = Vector.distanceBetween(c, b);
 
-  var mid = (a1 + a2) / 2;
+  let mid = (a1 + a2) / 2;
 
   // TODO: Issue 73
   if (d1 < 0.0001 || d2 < 0.0001) {
@@ -358,7 +353,7 @@ var getControlPoints = function(a, b, c) {
 
   return b;
 
-};
+}
 
 /**
  * @name Two.Utils.getReflection
@@ -370,14 +365,14 @@ var getControlPoints = function(a, b, c) {
  * @description Get the reflection of a point `b` about point `a`. Where `a` is in absolute space and `b` is relative to `a`.
  * @see {@link http://www.w3.org/TR/SVG11/implnote.html#PathElementImplementationNotes}
  */
-var getReflection = function(a, b, relative) {
+function getReflection(a, b, relative) {
 
   return new Vector(
     2 * a.x - (b.x + a.x) - (relative ? a.x : 0),
     2 * a.y - (b.y + a.y) - (relative ? a.y : 0)
   );
 
-};
+}
 
 /**
  * @name Two.Utils.getAnchorsFromArcData
@@ -390,35 +385,35 @@ var getReflection = function(a, b, relative) {
  * @param {Number} td
  * @param {Boolean} [ccw=false] - Set path traversal to counter-clockwise
  */
-var getAnchorsFromArcData = function(center, xAxisRotation, rx, ry, ts, td, ccw) {
+function getAnchorsFromArcData(center, xAxisRotation, rx, ry, ts, td, ccw) {
 
-  var resolution = Constants.Resolution;
+  const resolution = Constants.Resolution;
+  const anchors = [];
 
-  var anchors = [];
+  for (let i = 0; i < resolution; i++) {
 
-  for (var i = 0; i < resolution; i++) {
-    var pct = (i + 1) / resolution;
+    let pct = (i + 1) / resolution;
     if (ccw) {
       pct = 1 - pct;
     }
 
-    var theta = pct * td + ts;
-    var x = rx * Math.cos(theta);
-    var y = ry * Math.sin(theta);
+    const theta = pct * td + ts;
+    const x = rx * Math.cos(theta);
+    const y = ry * Math.sin(theta);
 
     // x += center.x;
     // y += center.y;
 
-    var anchor = new Anchor(x, y);
-    Anchor.AppendCurveProperties(anchor);
+    const anchor = new Anchor(x, y);
     anchor.command = Commands.line;
 
     // TODO: Calculate control points here...
 
     anchors.push(anchor);
+
   }
 
-};
+}
 
 export {
   Curve,

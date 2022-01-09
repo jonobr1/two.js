@@ -1,8 +1,8 @@
-import root from './root.js';
+import { root } from './root.js';
 
-var Matrix;
-var TWO_PI = Math.PI * 2;
-var HALF_PI = Math.PI * 0.5;
+let Matrix;
+const TWO_PI = Math.PI * 2;
+const HALF_PI = Math.PI * 0.5;
 
 /**
  * @name Two.Utils.decomposeMatrix
@@ -11,13 +11,13 @@ var HALF_PI = Math.PI * 0.5;
  * @returns {Object} An object containing relevant skew values.
  * @description Decompose a 2D 3x3 Matrix to find the skew.
  */
-var decomposeMatrix = function(matrix, b, c, d, e, f) {
+function decomposeMatrix(matrix, b, c, d, e, f) {
 
   // TODO: Include skewX, skewY
   // https://math.stackexchange.com/questions/237369/given-this-transformation-matrix-how-do-i-decompose-it-into-translation-rotati/417813
   // https://stackoverflow.com/questions/45159314/decompose-2d-transformation-matrix
 
-  var a;
+  let a;
 
   if (arguments.length <= 1) {
     a = matrix.a;
@@ -38,11 +38,11 @@ var decomposeMatrix = function(matrix, b, c, d, e, f) {
     rotation: 180 * Math.atan2(b, a) / Math.PI
   };
 
-};
+}
 
-var setMatrix = function(M) {
-  Matrix = M;
-};
+function setMatrix(matrix) {
+  Matrix = matrix;
+}
 
 /**
  * @name Two.Utils.getComputedMatrix
@@ -52,10 +52,11 @@ var setMatrix = function(M) {
  * @returns {Two.Matrix} The computed matrix of a nested object. If no `matrix` was passed in arguments then a `new Two.Matrix` is returned.
  * @description Method to get the world space transformation of a given object in a Two.js scene.
  */
-var getComputedMatrix = function(object, matrix) {
+function getComputedMatrix(object, matrix) {
 
   matrix = (matrix && matrix.identity()) || new Matrix();
-  var parent = object, matrices = [];
+  let parent = object;
+  const matrices = [];
 
   while (parent && parent._matrix) {
     matrices.push(parent._matrix);
@@ -64,10 +65,10 @@ var getComputedMatrix = function(object, matrix) {
 
   matrices.reverse();
 
-  for (var i = 0; i < matrices.length; i++) {
+  for (let i = 0; i < matrices.length; i++) {
 
-    var m = matrices[i];
-    var e = m.elements;
+    const m = matrices[i];
+    const e = m.elements;
     matrix.multiply(
       e[0], e[1], e[2], e[3], e[4], e[5], e[6], e[7], e[8], e[9]);
 
@@ -75,7 +76,7 @@ var getComputedMatrix = function(object, matrix) {
 
   return matrix;
 
-};
+}
 
 /**
  * @name Two.Utils.lerp
@@ -86,9 +87,9 @@ var getComputedMatrix = function(object, matrix) {
  * @returns {Number}
  * @description Linear interpolation between two values `a` and `b` by an amount `t`.
  */
-var lerp = function(a, b, t) {
+function lerp(a, b, t) {
   return t * (b - a) + a;
-};
+}
 
 /**
  * @name Two.Utils.getPoT
@@ -97,14 +98,14 @@ var lerp = function(a, b, t) {
  * @description Rounds a number up to the nearest power-of-two value.
  * @see {@link https://en.wikipedia.org/wiki/Power_of_two}
  */
-var pots = [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096];
-var getPoT = function(value) {
-  var i = 0;
+const pots = [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096];
+function getPoT(value) {
+  let i = 0;
   while (pots[i] && pots[i] < value) {
     i++;
   }
   return pots[i];
-};
+}
 
 /**
  * @name Two.Utils.mod
@@ -114,7 +115,7 @@ var getPoT = function(value) {
  * @returns {Number}
  * @description Modulo with added functionality to handle negative values in a positive manner.
  */
-var mod = function(v, l) {
+function mod(v, l) {
 
   while (v < 0) {
     v += l;
@@ -122,10 +123,10 @@ var mod = function(v, l) {
 
   return v % l;
 
-};
+}
 
-var NumArray = root.Float32Array || Array;
-var floor = Math.floor;
+const NumArray = root.Float32Array || Array;
+const floor = Math.floor;
 
 /**
 * @name Two.Utils.toFixed
@@ -135,9 +136,9 @@ var floor = Math.floor;
 * @description A pretty fast toFixed(3) alternative.
 * @see {@link http://jsperf.com/parsefloat-tofixed-vs-math-round/18}
 */
-var toFixed = function(v) {
+function toFixed(v) {
   return floor(v * 1000000) / 1000000;
-};
+}
 
 
 export {

@@ -1,37 +1,87 @@
-import _ from './utils/underscore.js';
-import Events from './events.js';
+import { Events } from './events.js';
+
+const proto = {
+  x: {
+    enumerable: true,
+    get: function() {
+      return this._x;
+    },
+    set: function(v) {
+      if (this._x !== v) {
+        this._x = v;
+        if (this._bound) {
+          this.dispatchEvent(Events.Types.change);
+        }
+      }
+    }
+  },
+  y: {
+    enumerable: true,
+    get: function() {
+      return this._y;
+    },
+    set: function(v) {
+      if (this._y !== v) {
+        this._y = v;
+        if (this._bound) {
+          this.dispatchEvent(Events.Types.change);
+        }
+      }
+    }
+  }
+};
 
 /**
  * @name Two.Vector
  * @class
+ * @extends Two.Events
  * @param {Number} [x=0] - Any number to represent the horizontal x-component of the vector.
  * @param {Number} [y=0] - Any number to represent the vertical y-component of the vector.
  * @description A class to store x / y component vector data. In addition to storing data `Two.Vector` has suped up methods for commonplace mathematical operations.
  */
-function Vector(x, y) {
+export class Vector extends Events {
 
   /**
-   * @name Two.Vector#x
-   * @property {Number} - The horizontal x-component of the vector.
+   * @name Two.Vector#_x
+   * @private
    */
-  this.x = x || 0;
-
+  _x = 0;
   /**
-   * @name Two.Vector#y
-   * @property {Number} - The vertical y-component of the vector.
+   * @name Two.Vector#_y
+   * @private
    */
-  this.y = y || 0;
+  _y = 0;
 
-}
+  constructor(x = 0, y = 0) {
 
-_.extend(Vector, {
+    super();
+
+    for (let prop in proto) {
+      Object.defineProperty(this, prop, proto[prop]);
+    }
+
+    /**
+     * @name Two.Vector#x
+     * @property {Number} - The horizontal x-component of the vector.
+     * @type {Number}
+     */
+    this.x = x;
+
+    /**
+     * @name Two.Vector#y
+     * @property {Number} - The vertical y-component of the vector.
+     * @type {Number}
+     */
+    this.y = y;
+
+  }
 
   /**
    * @name Two.Vector.zero
    * @readonly
    * @property {Two.Vector} - Handy reference to a vector with component values 0, 0 at all times.
    */
-  zero: new Vector(),
+  static zero = new Vector()
 
   /**
    * @name Two.Vector.add
@@ -41,9 +91,9 @@ _.extend(Vector, {
    * @returns {Two.Vector}
    * @description Add two vectors together.
    */
-  add: function(v1, v2) {
+  static add(v1, v2) {
     return new Vector(v1.x + v2.x, v1.y + v2.y);
-  },
+  }
 
   /**
    * @name Two.Vector.sub
@@ -53,18 +103,18 @@ _.extend(Vector, {
    * @returns {Two.Vector}
    * @description Subtract two vectors: `v2` from `v1`.
    */
-  sub: function(v1, v2) {
+  static sub(v1, v2) {
     return new Vector(v1.x - v2.x, v1.y - v2.y);
-  },
+  }
 
   /**
    * @name Two.Vector.subtract
    * @function
    * @description Alias for {@link Two.Vector.sub}.
    */
-  subtract: function(v1, v2) {
+  static subtract(v1, v2) {
     return Vector.sub(v1, v2);
-  },
+  }
 
   /**
    * @name Two.Vector.ratioBetween
@@ -73,11 +123,11 @@ _.extend(Vector, {
    * @param {Two.Vector} B
    * @returns {Number} The ratio betwen two points `v1` and `v2`.
    */
-  ratioBetween: function(v1, v2) {
+  static ratioBetween(v1, v2) {
 
     return (v1.x * v2.x + v1.y * v2.y) / (v1.length() * v2.length());
 
-  },
+  }
 
   /**
    * @name Two.Vector.angleBetween
@@ -86,25 +136,23 @@ _.extend(Vector, {
    * @param {Two.Vector} v2
    * @returns {Number} The angle between points `v1` and `v2`.
    */
-  angleBetween: function(v1, v2) {
-
-    var dx, dy;
+  static angleBetween(v1, v2) {
 
     if (arguments.length >= 4) {
 
-      dx = arguments[0] - arguments[2];
-      dy = arguments[1] - arguments[3];
+      const dx = arguments[0] - arguments[2];
+      const dy = arguments[1] - arguments[3];
 
       return Math.atan2(dy, dx);
 
     }
 
-    dx = v1.x - v2.x;
-    dy = v1.y - v2.y;
+    const dx = v1.x - v2.x;
+    const dy = v1.y - v2.y;
 
     return Math.atan2(dy, dx);
 
-  },
+  }
 
   /**
    * @name Two.Vector.distanceBetween
@@ -113,11 +161,11 @@ _.extend(Vector, {
    * @param {Two.Vector} v2
    * @returns {Number} The distance between points `v1` and `v2`. Distance is always positive.
    */
-  distanceBetween: function(v1, v2) {
+  static distanceBetween(v1, v2) {
 
     return Math.sqrt(Vector.distanceBetweenSquared(v1, v2));
 
-  },
+  }
 
   /**
    * @name Two.Vector.distanceBetweenSquared
@@ -126,66 +174,22 @@ _.extend(Vector, {
    * @param {Two.Vector} v2
    * @returns {Number} The squared distance between points `v1` and `v2`.
    */
-  distanceBetweenSquared: function(v1, v2) {
+  static distanceBetweenSquared(v1, v2) {
 
-    var dx = v1.x - v2.x;
-    var dy = v1.y - v2.y;
+    const dx = v1.x - v2.x;
+    const dy = v1.y - v2.y;
 
     return dx * dx + dy * dy;
 
-  },
-
-  /**
-   * @name Two.Vector.MakeObservable
-   * @function
-   * @param {Object} object - The object to make observable.
-   * @description Convenience function to apply observable qualities of a {@link Two.Vector} to any object. Handy if you'd like to extend the {@link Two.Vector} class on a custom class.
-   */
-  MakeObservable: function(object) {
-
-    // /**
-    //  * Override Backbone bind / on in order to add properly broadcasting.
-    //  * This allows Two.Vector to not broadcast events unless event listeners
-    //  * are explicity bound to it.
-    //  */
-
-    object.bind = object.on = function() {
-
-      if (!this._bound) {
-        this._x = this.x;
-        this._y = this.y;
-        Object.defineProperty(this, 'x', xgs);
-        Object.defineProperty(this, 'y', ygs);
-        _.extend(this, BoundProto);
-        this._bound = true; // Reserved for event initialization check
-      }
-
-      Events.bind.apply(this, arguments);
-
-      return this;
-
-    };
-
   }
 
-});
+  //
 
-_.extend(Vector.prototype, Events, {
-
-  constructor: Vector,
-
-  /**
-   * @name Two.Vector#set
-   * @function
-   * @param {Number} x
-   * @param {Number} y
-   * @description Set the x / y components of a vector to specific number values.
-   */
-  set: function(x, y) {
+  set(x, y) {
     this.x = x;
     this.y = y;
     return this;
-  },
+  }
 
   /**
    * @name Two.Vector#copy
@@ -193,31 +197,31 @@ _.extend(Vector.prototype, Events, {
    * @param {Two.Vector} v
    * @description Copy the x / y components of another object `v`.
    */
-  copy: function(v) {
+  copy(v) {
     this.x = v.x;
     this.y = v.y;
     return this;
-  },
+  }
 
   /**
    * @name Two.Vector#clear
    * @function
    * @description Set the x / y component values of the vector to zero.
    */
-  clear: function() {
+  clear() {
     this.x = 0;
     this.y = 0;
     return this;
-  },
+  }
 
   /**
    * @name Two.Vector#clone
    * @function
    * @description Create a new vector and copy the existing values onto the newly created instance.
    */
-  clone: function() {
+  clone() {
     return new Vector(this.x, this.y);
-  },
+  }
 
   /**
    * @name Two.Vector#add
@@ -243,7 +247,7 @@ _.extend(Vector.prototype, Events, {
    * @description Add `x` / `y` values to their respective component value on the instance.
    * @overloaded
    */
-  add: function(x, y) {
+  add(x, y) {
     if (arguments.length <= 0) {
       return this;
     } else if (arguments.length <= 1) {
@@ -259,16 +263,16 @@ _.extend(Vector.prototype, Events, {
       this.y += y;
     }
     return this;
-  },
+  }
 
   /**
    * @name Two.Vector#addSelf
    * @function
    * @description Alias for {@link Two.Vector.add}.
    */
-  addSelf: function(v) {
+  addSelf(v) {
     return this.add.apply(this, arguments);
-  },
+  }
 
   /**
    * @name Two.Vector#sub
@@ -294,7 +298,7 @@ _.extend(Vector.prototype, Events, {
    * @description Subtract `x` / `y` values to their respective component value on the instance.
    * @overloaded
    */
-  sub: function(x, y) {
+  sub(x, y) {
     if (arguments.length <= 0) {
       return this;
     } else if (arguments.length <= 1) {
@@ -310,34 +314,34 @@ _.extend(Vector.prototype, Events, {
       this.y -= y;
     }
     return this;
-  },
+  }
 
   /**
    * @name Two.Vector#subtract
    * @function
    * @description Alias for {@link Two.Vector.sub}.
    */
-  subtract: function() {
+  subtract() {
     return this.sub.apply(this, arguments);
-  },
+  }
 
   /**
    * @name Two.Vector#subSelf
    * @function
    * @description Alias for {@link Two.Vector.sub}.
    */
-  subSelf: function(v) {
+  subSelf(v) {
     return this.sub.apply(this, arguments);
-  },
+  }
 
   /**
    * @name Two.Vector#subtractSelf
    * @function
    * @description Alias for {@link Two.Vector.sub}.
    */
-  subtractSelf: function(v) {
+  subtractSelf(v) {
     return this.sub.apply(this, arguments);
-  },
+  }
 
   /**
    * @name Two.Vector#multiply
@@ -363,7 +367,7 @@ _.extend(Vector.prototype, Events, {
    * @description Multiply `x` / `y` values to their respective component value on the instance.
    * @overloaded
    */
-  multiply: function(x, y) {
+  multiply(x, y) {
     if (arguments.length <= 0) {
       return this;
     } else if (arguments.length <= 1) {
@@ -379,16 +383,16 @@ _.extend(Vector.prototype, Events, {
       this.y *= y;
     }
     return this;
-  },
+  }
 
   /**
    * @name Two.Vector#multiplySelf
    * @function
    * @description Alias for {@link Two.Vector.multiply}.
    */
-  multiplySelf: function(v) {
+  multiplySelf(v) {
     return this.multiply.apply(this, arguments);
-  },
+  }
 
   /**
    * @name Two.Vector#multiplyScalar
@@ -396,9 +400,9 @@ _.extend(Vector.prototype, Events, {
    * @param {Number} s - The scalar to multiply by.
    * @description Mulitiply the vector by a single number. Shorthand to call {@link Two.Vector#multiply} directly.
    */
-  multiplyScalar: function(s) {
+  multiplyScalar(s) {
     return this.multiply(s);
-  },
+  }
 
   /**
    * @name Two.Vector#divide
@@ -424,7 +428,7 @@ _.extend(Vector.prototype, Events, {
    * @description Divide `x` / `y` values to their respective component value on the instance.
    * @overloaded
    */
-  divide: function(x, y) {
+  divide(x, y) {
     if (arguments.length <= 0) {
       return this;
     } else if (arguments.length <= 1) {
@@ -439,23 +443,23 @@ _.extend(Vector.prototype, Events, {
       this.x /= x;
       this.y /= y;
     }
-    if (_.isNaN(this.x)) {
+    if (isNaN(this.x)) {
       this.x = 0;
     }
-    if (_.isNaN(this.y)) {
+    if (isNaN(this.y)) {
       this.y = 0;
     }
     return this;
-  },
+  }
 
   /**
    * @name Two.Vector#divideSelf
    * @function
    * @description Alias for {@link Two.Vector.divide}.
    */
-  divideSelf: function(v) {
+  divideSelf(v) {
     return this.divide.apply(this, arguments);
-  },
+  }
 
   /**
    * @name Two.Vector#divideScalar
@@ -463,18 +467,18 @@ _.extend(Vector.prototype, Events, {
    * @param {Number} s - The scalar to divide by.
    * @description Divide the vector by a single number. Shorthand to call {@link Two.Vector#divide} directly.
    */
-  divideScalar: function(s) {
+  divideScalar(s) {
     return this.divide(s);
-  },
+  }
 
   /**
    * @name Two.Vector#negate
    * @function
    * @description Invert each component's sign value.
    */
-  negate: function() {
+  negate() {
     return this.multiply(-1);
-  },
+  }
 
   /**
    * @name Two.Vector#negate
@@ -482,9 +486,9 @@ _.extend(Vector.prototype, Events, {
    * @returns {Number}
    * @description Get the [dot product](https://en.wikipedia.org/wiki/Dot_product) of the vector.
    */
-  dot: function(v) {
+  dot(v) {
     return this.x * v.x + this.y * v.y;
-  },
+  }
 
   /**
    * @name Two.Vector#length
@@ -492,28 +496,28 @@ _.extend(Vector.prototype, Events, {
    * @returns {Number}
    * @description Get the length of a vector.
    */
-  length: function() {
+  length() {
     return Math.sqrt(this.lengthSquared());
-  },
+  }
 
   /**
    * @name Two.Vector#lengthSquared
    * @function
    * @returns {Number}
-   * @description Get the length of the vector to the power of two. Widely used as less expensive than {@link Two.Vector#length}, because it isn't square-rooting any numbers.
+   * @description Get the length of the vector to the power of two. Widely used as less expensive than {@link Two.Vector#length} because it isn't square-rooting any numbers.
    */
-  lengthSquared: function() {
+  lengthSquared() {
     return this.x * this.x + this.y * this.y;
-  },
+  }
 
   /**
    * @name Two.Vector#normalize
    * @function
    * @description Normalize the vector from negative one to one.
    */
-  normalize: function() {
+  normalize() {
     return this.divideScalar(this.length());
-  },
+  }
 
   /**
    * @name Two.Vector#distanceTo
@@ -521,21 +525,21 @@ _.extend(Vector.prototype, Events, {
    * @returns {Number}
    * @description Get the distance between two vectors.
    */
-  distanceTo: function(v) {
+  distanceTo(v) {
     return Math.sqrt(this.distanceToSquared(v));
-  },
+  }
 
   /**
    * @name Two.Vector#distanceToSquared
    * @function
    * @returns {Number}
-   * @description Get the distance between two vectors to the power of two. Widely used as less expensive than {@link Two.Vector#distanceTo}, because it isn't square-rooting any numbers.
+   * @description Get the distance between two vectors to the power of two. Widely used as less expensive than {@link Two.Vector#distanceTo} because it isn't square-rooting any numbers.
    */
-  distanceToSquared: function(v) {
-    var dx = this.x - v.x,
-        dy = this.y - v.y;
+  distanceToSquared(v) {
+    const dx = this.x - v.x;
+    const dy = this.y - v.y;
     return dx * dx + dy * dy;
-  },
+  }
 
   /**
    * @name Two.Vector#setLength
@@ -543,9 +547,9 @@ _.extend(Vector.prototype, Events, {
    * @param {Number} l - length to set vector to.
    * @description Set the length of a vector.
    */
-  setLength: function(l) {
+  setLength(l) {
     return this.normalize().multiplyScalar(l);
-  },
+  }
 
   /**
    * @name Two.Vector#equals
@@ -555,10 +559,10 @@ _.extend(Vector.prototype, Events, {
    * @returns {Boolean}
    * @description Qualify if one vector roughly equal another. With a margin of error defined by epsilon.
    */
-  equals: function(v, eps) {
+  equals(v, eps) {
     eps = (typeof eps === 'undefined') ?  0.0001 : eps;
     return (this.distanceTo(v) < eps);
-  },
+  }
 
   /**
    * @name Two.Vector#lerp
@@ -568,11 +572,11 @@ _.extend(Vector.prototype, Events, {
    * @description Linear interpolate one vector to another by an amount `t` defined as a zero to one number.
    * @see [Matt DesLauriers](https://twitter.com/mattdesl/status/1031305279227478016) has a good thread about this.
    */
-  lerp: function(v, t) {
-    var x = (v.x - this.x) * t + this.x;
-    var y = (v.y - this.y) * t + this.y;
+  lerp(v, t) {
+    const x = (v.x - this.x) * t + this.x;
+    const y = (v.y - this.y) * t + this.y;
     return this.set(x, y);
-  },
+  }
 
   /**
    * @name Two.Vector#isZero
@@ -581,10 +585,10 @@ _.extend(Vector.prototype, Events, {
    * @returns {Boolean}
    * @description Check to see if vector is roughly zero, based on the `epsilon` precision value.
    */
-  isZero: function(eps) {
+  isZero(eps) {
     eps = (typeof eps === 'undefined') ?  0.0001 : eps;
     return (this.length() < eps);
-  },
+  }
 
   /**
    * @name Two.Vector#toString
@@ -592,9 +596,9 @@ _.extend(Vector.prototype, Events, {
    * @returns {String}
    * @description Return a comma-separated string of x, y value. Great for storing in a database.
    */
-  toString: function() {
+  toString() {
     return this.x + ', ' + this.y;
-  },
+  }
 
   /**
    * @name Two.Vector#toObject
@@ -602,199 +606,24 @@ _.extend(Vector.prototype, Events, {
    * @returns {Object}
    * @description Return a JSON compatible plain object that represents the vector.
    */
-  toObject: function() {
+  toObject() {
     return { x: this.x, y: this.y };
-  },
+  }
 
   /**
    * @name Two.Vector#rotate
    * @function
-   * @param {Number} theta - The amount to rotate the vector by.
+   * @param {Number} radians - The amount to rotate the vector by in radians.
    * @description Rotate a vector.
    */
-  rotate: function(theta) {
-    var x = this.x;
-    var y = this.y;
-    var cos = Math.cos(theta);
-    var sin = Math.sin(theta);
+  rotate(radians) {
+    const x = this.x;
+    const y = this.y;
+    const cos = Math.cos(radians);
+    const sin = Math.sin(radians);
     this.x = x * cos - y * sin;
     this.y = x * sin + y * cos;
     return this;
   }
 
-});
-
-// The same set of prototypical functions, but using the underlying
-// getter or setter for `x` and `y` values. This set of functions
-// is used instead of the previously documented ones above when
-// Two.Vector#bind is invoked and there is event dispatching processed
-// on x / y property changes.
-var BoundProto = {
-
-  constructor: Vector,
-
-  set: function(x, y) {
-    this._x = x;
-    this._y = y;
-    return this.trigger(Events.Types.change);
-  },
-
-  copy: function(v) {
-    this._x = v.x;
-    this._y = v.y;
-    return this.trigger(Events.Types.change);
-  },
-
-  clear: function() {
-    this._x = 0;
-    this._y = 0;
-    return this.trigger(Events.Types.change);
-  },
-
-  clone: function() {
-    return new Vector(this._x, this._y);
-  },
-
-  add: function(x, y) {
-    if (arguments.length <= 0) {
-      return this;
-    } else if (arguments.length <= 1) {
-      if (typeof x === 'number') {
-        this._x += x;
-        this._y += x;
-      }  else if (x && typeof x.x === 'number' && typeof x.y === 'number') {
-        this._x += x.x;
-        this._y += x.y;
-      }
-    } else {
-      this._x += x;
-      this._y += y;
-    }
-    return this.trigger(Events.Types.change);
-  },
-
-  sub: function(x, y) {
-    if (arguments.length <= 0) {
-      return this;
-    } else if (arguments.length <= 1) {
-      if (typeof x === 'number') {
-        this._x -= x;
-        this._y -= x;
-      } else if (x && typeof x.x === 'number' && typeof x.y === 'number') {
-        this._x -= x.x;
-        this._y -= x.y;
-      }
-    } else {
-      this._x -= x;
-      this._y -= y;
-    }
-    return this.trigger(Events.Types.change);
-  },
-
-  multiply: function(x, y) {
-    if (arguments.length <= 0) {
-      return this;
-    } else if (arguments.length <= 1) {
-      if (typeof x === 'number') {
-        this._x *= x;
-        this._y *= x;
-      } else if (x && typeof x.x === 'number' && typeof x.y === 'number') {
-        this._x *= x.x;
-        this._y *= x.y;
-      }
-    } else {
-      this._x *= x;
-      this._y *= y;
-    }
-    return this.trigger(Events.Types.change);
-  },
-
-  divide: function(x, y) {
-    if (arguments.length <= 0) {
-      return this;
-    } else if (arguments.length <= 1) {
-      if (typeof x === 'number') {
-        this._x /= x;
-        this._y /= x;
-      } else if (x && typeof x.x === 'number' && typeof x.y === 'number') {
-        this._x /= x.x;
-        this._y /= x.y;
-      }
-    } else {
-      this._x /= x;
-      this._y /= y;
-    }
-    if (_.isNaN(this._x)) {
-      this._x = 0;
-    }
-    if (_.isNaN(this._y)) {
-      this._y = 0;
-    }
-    return this.trigger(Events.Types.change);
-  },
-
-  dot: function(v) {
-    return this._x * v.x + this._y * v.y;
-  },
-
-  lengthSquared: function() {
-    return this._x * this._x + this._y * this._y;
-  },
-
-  distanceToSquared: function(v) {
-    var dx = this._x - v.x,
-        dy = this._y - v.y;
-    return dx * dx + dy * dy;
-  },
-
-  lerp: function(v, t) {
-    var x = (v.x - this._x) * t + this._x;
-    var y = (v.y - this._y) * t + this._y;
-    return this.set(x, y);
-  },
-
-  toString: function() {
-    return this._x + ', ' + this._y;
-  },
-
-  toObject: function() {
-    return { x: this._x, y: this._y };
-  },
-
-  rotate: function (theta) {
-    var _x = this._x;
-    var _y = this._y;
-    var cos = Math.cos(theta);
-    var sin = Math.sin(theta);
-    this._x = _x * cos - _y * sin;
-    this._y = _x * sin + _y * cos;
-    return this;
-  }
-
-};
-
-var xgs = {
-  enumerable: true,
-  get: function() {
-    return this._x;
-  },
-  set: function(v) {
-    this._x = v;
-    this.trigger(Events.Types.change, 'x');
-  }
-};
-
-var ygs = {
-  enumerable: true,
-  get: function() {
-    return this._y;
-  },
-  set: function(v) {
-    this._y = v;
-    this.trigger(Events.Types.change, 'y');
-  }
-};
-
-Vector.MakeObservable(Vector.prototype);
-
-export default Vector;
+}

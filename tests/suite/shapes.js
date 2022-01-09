@@ -13,10 +13,10 @@ QUnit.test('Two.Points', function(assert) {
   two.update();
 
   points = new Two.Points([
-    new Two.Vector(0, 0),
-    new Two.Vector(100, 100),
-    new Two.Vector(200, 200),
-    new Two.Vector(300, 300)
+    new Two.Anchor(0, 0),
+    new Two.Anchor(100, 100),
+    new Two.Anchor(200, 200),
+    new Two.Anchor(300, 300)
   ]);
 
   assert.equal(points.vertices.length, 4, 'Amount of vertices set correctly.');
@@ -234,12 +234,12 @@ QUnit.test('Two.Rectangle', function(assert) {
 
 QUnit.test('Two.RoundedRectangle', function(assert) {
 
-  assert.expect(Two.RoundedRectangle.Properties.length * 4 + 5);
+  assert.expect(Two.RoundedRectangle.Properties.length * 4 + 3);
 
   var width = 50;
   var height = 75;
   var radius = 8;
-  var properties = [width, height];
+  var properties = [width, height, radius];
 
   var path = new Two.RoundedRectangle(0, 0, width, height, radius);
 
@@ -251,12 +251,9 @@ QUnit.test('Two.RoundedRectangle', function(assert) {
     assert.equal(path['_flag' + prop.charAt(0).toUpperCase() + prop.slice(1)], true, 'Set ' + prop + '\'s property flag correctly.');
   }
 
-  assert.equal(path.radius, radius, 'Can get property radius correctly.');
-  path.radius = radius * 2;
-  assert.equal(path.radius, radius * 2, 'Can set property radius correctly.');
-  assert.equal(path._flagRadius, true, 'Set radius\' flag correctly.');
-
-  // TODO: Test Vector based radius.
+  radius = new Two.Anchor(4, 6);
+  path.radius = radius.clone();
+  assert.equal(radius.equals(path.radius), true, 'Can get and set radius as a vector correctly.');
 
   path._update();
   path.flagReset();

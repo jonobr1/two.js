@@ -107,12 +107,20 @@ async function build() {
   let startTime, elapsed;
 
   startTime = Date.now();
-  buildModules();
+  try {
+    await buildModules();
+  } catch (error) {
+    console.log(error);
+  }
   elapsed = Date.now() - startTime;
   console.log('Built and minified Two.js:', elapsed / 1000, 'seconds');
 
   elapsed = Date.now() - startTime;
-  await publishModule();
+  try {
+    await publishModule();
+  } catch (error) {
+    console.log(error);
+  }
   console.log('Published additional statistics to wiki:', elapsed / 1000, 'seconds');
 
 }

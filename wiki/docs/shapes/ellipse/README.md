@@ -68,60 +68,8 @@ A list of properties that are on every [Two.Ellipse](/docs/shapes/ellipse/).
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/ellipse.js#L60">
-    ellipse.js:60
-  </a>
-
-</div>
-
-
-
-
-</div>
-
-
-
-<div class="static function ">
-
-## MakeObservable
-
-<h2 class="longname" aria-hidden="true"><a href="#MakeObservable"><span class="prefix">Two.Ellipse.</span><span class="shortname">MakeObservable</span></a></h2>
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="params">
-
-| Argument | Description |
-| ---- | ----------- |
-|  object  | The object to make observable. |
-</div>
-
-
-
-
-<div class="description">
-
-Convenience function to apply observable qualities of a [Two.Ellipse](/docs/shapes/ellipse/) to any object. Handy if you'd like to extend the [Two.Ellipse](/docs/shapes/ellipse/) class on a custom class.
-
-</div>
-
-
-
-
-
-<div class="meta">
-
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/ellipse.js#L66">
-    ellipse.js:66
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/ellipse.js#L87">
+    ellipse.js:87
   </a>
 
 </div>
@@ -165,8 +113,8 @@ The width of the ellipse.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/ellipse.js#L37">
-    ellipse.js:37
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/ellipse.js#L66">
+    ellipse.js:66
   </a>
 
 </div>
@@ -210,8 +158,8 @@ The height of the ellipse.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/ellipse.js#L45">
-    ellipse.js:45
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/ellipse.js#L74">
+    ellipse.js:74
   </a>
 
 </div>
@@ -234,7 +182,7 @@ The height of the ellipse.
 
 <div class="returns">
 
-__Returns__: Two.Polygon
+__Returns__: Two.Ellipse
 
 
 
@@ -270,8 +218,8 @@ Create a new instance of [Two.Ellipse](/docs/shapes/ellipse/) with the same prop
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/ellipse.js#L176">
-    ellipse.js:176
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/ellipse.js#L158">
+    ellipse.js:158
   </a>
 
 </div>
@@ -323,8 +271,8 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/ellipse.js#L212">
-    ellipse.js:212
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/ellipse.js#L195">
+    ellipse.js:195
   </a>
 
 </div>

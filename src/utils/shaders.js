@@ -1,16 +1,16 @@
-import TwoError from './error.js';
+import { TwoError } from './error.js';
 
-var shaders = {
+export const shaders = {
 
   create: function(gl, source, type) {
-    var shader, compiled, error;
-    shader = gl.createShader(gl[type]);
+
+    const shader = gl.createShader(gl[type]);
     gl.shaderSource(shader, source);
     gl.compileShader(shader);
 
-    compiled = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
+    const compiled = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
     if (!compiled) {
-      error = gl.getShaderInfoLog(shader);
+      const error = gl.getShaderInfoLog(shader);
       gl.deleteShader(shader);
       throw new TwoError('unable to compile shader ' + shader + ': ' + error);
     }
@@ -104,5 +104,3 @@ var shaders = {
   }
 
 };
-
-export default shaders;

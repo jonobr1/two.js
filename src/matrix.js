@@ -1,11 +1,10 @@
 import { NumArray, toFixed, setMatrix } from './utils/math.js';
-import Events from './events.js';
-import _ from './utils/underscore.js';
+import { Events } from './events.js';
 
 // Constants
 
-var cos = Math.cos, sin = Math.sin, tan = Math.tan;
-var array = [];
+const cos = Math.cos, sin = Math.sin, tan = Math.tan;
+const array = [];
 
 /**
  * @name Two.Matrix
@@ -22,41 +21,50 @@ var array = [];
  * @description A class to store 3 x 3 transformation matrix information. In addition to storing data `Two.Matrix` has suped up methods for commonplace mathematical operations.
  * @nota-bene Order is based on how to construct transformation strings for the browser.
  */
-function Matrix(a, b, c, d, e, f) {
+export class Matrix extends Events {
 
   /**
    * @name Two.Matrix#elements
    * @property {Number[]} - The underlying data stored as an array.
    */
-  this.elements = new NumArray(9);
+  elements = new NumArray(9);
 
-  var elements = a;
-  if (!Array.isArray(elements)) {
-    elements = Array.prototype.slice.call(arguments);
+  /**
+   * @name Two.Matrix#manual
+   * @property {Boolean} - Determines whether Two.js automatically calculates the values for the matrix or if the developer intends to manage the matrix.
+   * @nota-bene - Setting to `true` nullifies {@link Two.Shape#translation}, {@link Two.Shape#rotation}, and {@link Two.Shape#scale}.
+   */
+  manual = false;
+
+  constructor(a, b, c, d, e, f) {
+
+    super();
+
+    let elements = a;
+    if (!Array.isArray(elements)) {
+      elements = Array.prototype.slice.call(arguments);
+    }
+
+    // initialize the elements with default values.
+    this.identity();
+
+    if (elements.length > 0) {
+      this.set(elements);
+    }
+
   }
 
-  // initialize the elements with default values.
-  this.identity();
-
-  if (elements.length > 0) {
-    this.set(elements);
-  }
-
-}
-
-setMatrix(Matrix);
-
-_.extend(Matrix, {
+  //
 
   /**
    * @name Two.Matrix.Identity
    * @property {Number[]} - A stored reference to the default value of a 3 x 3 matrix.
    */
-  Identity: [
+  static Identity = [
     1, 0, 0,
     0, 1, 0,
     0, 0, 1
-  ],
+  ];
 
   /**
    * @name Two.Matrix.Multiply
@@ -67,15 +75,16 @@ _.extend(Matrix, {
    * @returns {Two.Matrix} - If an optional `C` matrix isn't passed then a new one is created and returned.
    * @description Multiply two matrices together and return the result.
    */
-  Multiply: function(A, B, C) {
+  static Multiply(A, B, C) {
 
     if (B.length <= 3) { // Multiply Vector
 
-      var x, y, z, e = A;
+      const e = A;
+      let x, y, z;
 
-      var a = B[0] || 0,
-          b = B[1] || 0,
-          c = B[2] || 0;
+      const a = B[0] || 0,
+            b = B[1] || 0,
+            c = B[2] || 0;
 
       // Go down rows first
       // a, d, g, b, e, h, c, f, i
@@ -88,13 +97,13 @@ _.extend(Matrix, {
 
     }
 
-    var A0 = A[0], A1 = A[1], A2 = A[2];
-    var A3 = A[3], A4 = A[4], A5 = A[5];
-    var A6 = A[6], A7 = A[7], A8 = A[8];
+    const A0 = A[0], A1 = A[1], A2 = A[2];
+    const A3 = A[3], A4 = A[4], A5 = A[5];
+    const A6 = A[6], A7 = A[7], A8 = A[8];
 
-    var B0 = B[0], B1 = B[1], B2 = B[2];
-    var B3 = B[3], B4 = B[4], B5 = B[5];
-    var B6 = B[6], B7 = B[7], B8 = B[8];
+    const B0 = B[0], B1 = B[1], B2 = B[2];
+    const B3 = B[3], B4 = B[4], B5 = B[5];
+    const B6 = B[6], B7 = B[7], B8 = B[8];
 
     C = C || new NumArray(9);
 
@@ -111,19 +120,6 @@ _.extend(Matrix, {
     return C;
 
   }
-
-});
-
-_.extend(Matrix.prototype, Events, {
-
-  constructor: Matrix,
-
-  /**
-   * @name Two.Matrix#manual
-   * @property {Boolean} - Determines whether Two.js automatically calculates the values for the matrix or if the developer intends to manage the matrix.
-   * @nota-bene - Setting to `true` nullifies {@link Two.Shape#translation}, {@link Two.Shape#rotation}, and {@link Two.Shape#scale}.
-   */
-  manual: false,
 
   /**
    * @name Two.Matrix#set
@@ -146,12 +142,10 @@ _.extend(Matrix.prototype, Events, {
     * @param {Number[]} a - The array of elements to apply.
     * @description Set an array of values onto the matrix. Order described in {@link Two.Matrix}.
     */
-  set: function(a, b, c, d, e, f, g, h, i) {
-
-    var elements;
+  set(a, b, c, d, e, f, g, h, i) {
 
     if (typeof b === 'undefined') {
-      elements = a;
+      const elements = a;
       a = elements[0];
       b = elements[1];
       c = elements[2];
@@ -175,14 +169,14 @@ _.extend(Matrix.prototype, Events, {
 
     return this.trigger(Events.Types.change);
 
-  },
+  }
 
   /**
    * @name Two.Matrix#copy
    * @function
    * @description Copy the matrix of one to the current instance.
    */
-  copy: function(m) {
+  copy(m) {
 
     this.elements[0] = m.elements[0];
     this.elements[1] = m.elements[1];
@@ -198,14 +192,14 @@ _.extend(Matrix.prototype, Events, {
 
     return this.trigger(Events.Types.change);
 
-  },
+  }
 
   /**
    * @name Two.Matrix#identity
    * @function
    * @description Turn matrix to the identity, like resetting.
    */
-  identity: function() {
+  identity() {
 
     this.elements[0] = Matrix.Identity[0];
     this.elements[1] = Matrix.Identity[1];
@@ -219,7 +213,7 @@ _.extend(Matrix.prototype, Events, {
 
     return this.trigger(Events.Types.change);
 
-  },
+  }
 
   /**
    * @name Two.Matrix#multiply
@@ -254,7 +248,7 @@ _.extend(Matrix.prototype, Events, {
    * @description Multiply all components of a matrix against another matrix.
    * @overloaded
    */
-  multiply: function(a, b, c, d, e, f, g, h, i) {
+  multiply(a, b, c, d, e, f, g, h, i) {
 
     // Multiply scalar
 
@@ -276,7 +270,6 @@ _.extend(Matrix.prototype, Events, {
 
     if (typeof d === 'undefined') { // Multiply Vector
 
-      var x, y, z;
       a = a || 0;
       b = b || 0;
       c = c || 0;
@@ -285,9 +278,9 @@ _.extend(Matrix.prototype, Events, {
       // Go down rows first
       // a, d, g, b, e, h, c, f, i
 
-      x = e[0] * a + e[1] * b + e[2] * c;
-      y = e[3] * a + e[4] * b + e[5] * c;
-      z = e[6] * a + e[7] * b + e[8] * c;
+      const x = e[0] * a + e[1] * b + e[2] * c;
+      const y = e[3] * a + e[4] * b + e[5] * c;
+      const z = e[6] * a + e[7] * b + e[8] * c;
 
       return { x: x, y: y, z: z };
 
@@ -295,16 +288,16 @@ _.extend(Matrix.prototype, Events, {
 
     // Multiple matrix
 
-    var A = this.elements;
-    var B = [a, b, c, d, e, f, g, h, i];
+    const A = this.elements;
+    const B = [a, b, c, d, e, f, g, h, i];
 
-    var A0 = A[0], A1 = A[1], A2 = A[2];
-    var A3 = A[3], A4 = A[4], A5 = A[5];
-    var A6 = A[6], A7 = A[7], A8 = A[8];
+    const A0 = A[0], A1 = A[1], A2 = A[2];
+    const A3 = A[3], A4 = A[4], A5 = A[5];
+    const A6 = A[6], A7 = A[7], A8 = A[8];
 
-    var B0 = B[0], B1 = B[1], B2 = B[2];
-    var B3 = B[3], B4 = B[4], B5 = B[5];
-    var B6 = B[6], B7 = B[7], B8 = B[8];
+    const B0 = B[0], B1 = B[1], B2 = B[2];
+    const B3 = B[3], B4 = B[4], B5 = B[5];
+    const B6 = B[6], B7 = B[7], B8 = B[8];
 
     this.elements[0] = A0 * B0 + A1 * B3 + A2 * B6;
     this.elements[1] = A0 * B1 + A1 * B4 + A2 * B7;
@@ -320,7 +313,7 @@ _.extend(Matrix.prototype, Events, {
 
     return this.trigger(Events.Types.change);
 
-  },
+  }
 
   /**
    * @name Two.Matrix#inverse
@@ -328,21 +321,21 @@ _.extend(Matrix.prototype, Events, {
    * @param {Two.Matrix} [out] - The optional matrix to apply the inversion to.
    * @description Return an inverted version of the matrix. If no optional one is passed a new matrix is created and returned.
    */
-  inverse: function(out) {
+  inverse(out) {
 
-    var a = this.elements;
+    const a = this.elements;
     out = out || new Matrix();
 
-    var a00 = a[0], a01 = a[1], a02 = a[2];
-    var a10 = a[3], a11 = a[4], a12 = a[5];
-    var a20 = a[6], a21 = a[7], a22 = a[8];
+    const a00 = a[0], a01 = a[1], a02 = a[2];
+    const a10 = a[3], a11 = a[4], a12 = a[5];
+    const a20 = a[6], a21 = a[7], a22 = a[8];
 
-    var b01 = a22 * a11 - a12 * a21;
-    var b11 = -a22 * a10 + a12 * a20;
-    var b21 = a21 * a10 - a11 * a20;
+    const b01 = a22 * a11 - a12 * a21;
+    const b11 = -a22 * a10 + a12 * a20;
+    const b21 = a21 * a10 - a11 * a20;
 
     // Calculate the determinant
-    var det = a00 * b01 + a01 * b11 + a02 * b21;
+    let det = a00 * b01 + a01 * b11 + a02 * b21;
 
     if (!det) {
       return null;
@@ -362,7 +355,7 @@ _.extend(Matrix.prototype, Events, {
 
     return out;
 
-  },
+  }
 
   /**
    * @name Two.Matrix#scale
@@ -378,16 +371,16 @@ _.extend(Matrix.prototype, Events, {
    * @param {Number} sy - The vertical scale factor
    * @description Scale the transformation matrix in two dimensions.
    */
-  scale: function(sx, sy) {
+  scale(sx, sy) {
 
-    var l = arguments.length;
+    const l = arguments.length;
     if (l <= 1) {
       sy = sx;
     }
 
     return this.multiply(sx, 0, 0, 0, sy, 0, 0, 0, 1);
 
-  },
+  }
 
   /**
    * @name Two.Matrix#rotate
@@ -395,14 +388,14 @@ _.extend(Matrix.prototype, Events, {
    * @param {Number} Number - The amount to rotate in Number.
    * @description Rotate the matrix.
    */
-  rotate: function(Number) {
+  rotate(Number) {
 
-    var c = cos(Number);
-    var s = sin(Number);
+    const c = cos(Number);
+    const s = sin(Number);
 
     return this.multiply(c, -s, 0, s, c, 0, 0, 0, 1);
 
-  },
+  }
 
   /**
    * @name Two.Matrix#translate
@@ -411,11 +404,11 @@ _.extend(Matrix.prototype, Events, {
    * @param {Number} y - The vertical translation value to apply.
    * @description Translate the matrix.
    */
-  translate: function(x, y) {
+  translate(x, y) {
 
     return this.multiply(1, 0, x, 0, 1, y, 0, 0, 1);
 
-  },
+  }
 
   /**
    * @name Two.Matrix#skewX
@@ -423,13 +416,13 @@ _.extend(Matrix.prototype, Events, {
    * @param {Number} Number - The amount to skew in Number.
    * @description Skew the matrix by an angle in the x axis direction.
    */
-  skewX: function(Number) {
+  skewX(Number) {
 
-    var a = tan(Number);
+    const a = tan(Number);
 
     return this.multiply(1, a, 0, 0, 1, 0, 0, 0, 1);
 
-  },
+  }
 
   /**
    * @name Two.Matrix#skewY
@@ -437,13 +430,13 @@ _.extend(Matrix.prototype, Events, {
    * @param {Number} Number - The amount to skew in Number.
    * @description Skew the matrix by an angle in the y axis direction.
    */
-  skewY: function(Number) {
+  skewY(Number) {
 
-    var a = tan(Number);
+    const a = tan(Number);
 
     return this.multiply(1, 0, 0, a, 1, 0, 0, 0, 1);
 
-  },
+  }
 
   /**
    * @name Two.Matrix#toString
@@ -452,14 +445,14 @@ _.extend(Matrix.prototype, Events, {
    * @returns {String} - The transformation matrix as a 6 component string separated by spaces.
    * @description Create a transform string. Used for the Two.js rendering APIs.
    */
-  toString: function(fullMatrix) {
+  toString(fullMatrix) {
 
     array.length = 0;
     this.toTransformArray(fullMatrix, array);
 
     return array.map(toFixed).join(' ');
 
-  },
+  }
 
   /**
    * @name Two.Matrix#toTransformArray
@@ -468,23 +461,23 @@ _.extend(Matrix.prototype, Events, {
    * @param {Number[]} [output] - An array empty or otherwise to apply the values to.
    * @description Create a transform array. Used for the Two.js rendering APIs.
    */
-  toTransformArray: function(fullMatrix, output) {
+  toTransformArray(fullMatrix, output) {
 
-    var elements = this.elements;
-    var hasOutput = !!output;
+    const elements = this.elements;
+    const hasOutput = !!output;
 
-    var a = elements[0];
-    var b = elements[1];
-    var c = elements[2];
-    var d = elements[3];
-    var e = elements[4];
-    var f = elements[5];
+    const a = elements[0];
+    const b = elements[1];
+    const c = elements[2];
+    const d = elements[3];
+    const e = elements[4];
+    const f = elements[5];
 
     if (fullMatrix) {
 
-      var g = elements[6];
-      var h = elements[7];
-      var i = elements[8];
+      const g = elements[6];
+      const h = elements[7];
+      const i = elements[8];
 
       if (hasOutput) {
         output[0] = a;
@@ -518,7 +511,7 @@ _.extend(Matrix.prototype, Events, {
       a, d, b, e, c, f  // Specific format see LN:19
     ];
 
-  },
+  }
 
   /**
    * @name Two.Matrix#toArray
@@ -527,23 +520,23 @@ _.extend(Matrix.prototype, Events, {
    * @param {Number[]} [output] - An array empty or otherwise to apply the values to.
    * @description Create a transform array. Used for the Two.js rendering APIs.
    */
-  toArray: function(fullMatrix, output) {
+  toArray(fullMatrix, output) {
 
-    var elements = this.elements;
-    var hasOutput = !!output;
+    const elements = this.elements;
+    const hasOutput = !!output;
 
-    var a = elements[0];
-    var b = elements[1];
-    var c = elements[2];
-    var d = elements[3];
-    var e = elements[4];
-    var f = elements[5];
+    const a = elements[0];
+    const b = elements[1];
+    const c = elements[2];
+    const d = elements[3];
+    const e = elements[4];
+    const f = elements[5];
 
     if (fullMatrix) {
 
-      var g = elements[6];
-      var h = elements[7];
-      var i = elements[8];
+      const g = elements[6];
+      const h = elements[7];
+      const i = elements[8];
 
       if (hasOutput) {
         output[0] = a;
@@ -577,31 +570,31 @@ _.extend(Matrix.prototype, Events, {
       a, b, c, d, e, f
     ];
 
-  },
+  }
 
   /**
    * @name Two.Matrix#toObject
    * @function
    * @description Create a JSON compatible object that represents information of the matrix.
    */
-  toObject: function() {
+  toObject() {
     return {
       elements: this.toArray(true),
       manual: !!this.manual
     };
-  },
+  }
 
   /**
    * @name Two.Matrix#clone
    * @function
    * @description Clone the current matrix.
    */
-  clone: function() {
+  clone() {
 
     return new Matrix().copy(this);
 
   }
 
-});
+}
 
-export default Matrix;
+setMatrix(Matrix);

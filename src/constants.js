@@ -1,6 +1,6 @@
-var count = 0;
+let count = 0;
 
-var Constants = {
+export const Constants = {
 
   /**
    * @name Two.nextFrameID
@@ -47,7 +47,7 @@ var Constants = {
 
   /**
    * @name Two.AutoCalculateImportedMatrices
-   * @property {Boolean} - When importing SVGs through the {@link two#interpret} and {@link two#load}, this boolean determines whether Two.js infers and then overrides the exact transformation matrix of the reference SVG.
+   * @property {Boolean} - When importing SVGs through the {@link Two#interpret} and {@link Two#load}, this boolean determines whether Two.js infers and then overrides the exact transformation matrix of the reference SVG.
    * @nota-bene `false` copies the exact transformation matrix values, but also sets the path's `matrix.manual = true`.
    */
   AutoCalculateImportedMatrices: true,
@@ -68,5 +68,3 @@ var Constants = {
   }
 
 };
-
-export default Constants;

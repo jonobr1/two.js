@@ -259,7 +259,7 @@ function getDirectoryMatch(str) {
       index = i;
     }
   }
-  if (i < 0) {
+  if (index < 0) {
     return null;
   }
   return directory[index].dir;

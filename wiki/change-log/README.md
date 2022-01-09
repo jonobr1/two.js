@@ -9,6 +9,34 @@ lang: en-US
 
 ## Nightly
 
++ Added `Two.Element` as an EcmaScript 6 class
++ Converted `Two.ImageSequence` to EcmaScript 6 class
++ Converted `Two.Sprite` to EcmaScript 6 class
++ Converted `Two.Texture` to EcmaScript 6 class
++ Converted `Two.Stop` to EcmaScript 6 class
++ Converted `Two.RadialGradient` to EcmaScript 6 class
++ Converted `Two.LinearGradient` to EcmaScript 6 class
++ Converted `Two.Gradient` to EcmaScript 6 class
++ Converted `Two.Star` to EcmaScript 6 class
++ Converted `Two.RoundedRectangle` to EcmaScript 6 class
++ Converted `Two.Rectangle` to EcmaScript 6 class
++ Converted `Two.Polygon` to EcmaScript 6 class
++ Converted `Two.Points` to EcmaScript 6 class
++ Converted `Two.Line` to EcmaScript 6 class
++ Converted `Two.Ellipse` to EcmaScript 6 class
++ Converted `Two.Circle` to EcmaScript 6 class
++ Converted `Two.ArcSegment` to EcmaScript 6 class
++ Converted `Two.Path` to EcmaScript 6 class
++ Converted `Two.Group` to EcmaScript 6 class
++ Converted `Two.Text` to EcmaScript 6 class
++ Converted `Two.Shape` to EcmaScript 6 class
++ Converted `Two.Matrix` to EcmaScript 6 class
++ Converted `Two.Registry` to EcmaScript 6 class
++ Converted `Two.Children` to EcmaScript 6 class
++ Converted `Two.Collection` to EcmaScript 6 class
++ Converted `Two.Events` to EcmaScript 6 class
++ Converted `Two.Anchor` to EcmaScript 6 class
++ Converted `Two.Vector` to EcmaScript 6 class
 + `Two.interpret` appropriately inherits classes to `<g />` tags [@elShiaLabeouf](https://github.com/elShiaLabeouf)
 + `Two.interpret` inherits classes and `data-*` attributes [@elShiaLabeouf](https://github.com/elShiaLabeouf)
 
