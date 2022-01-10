@@ -276,7 +276,7 @@ export default class Two {
 
   /**
    * @name Two.Version
-   * @property {String} - The current working version of the library.
+   * @property {String} - The current working version of the library, `$version`.
    */
   static Version = Constants.Version;
 
