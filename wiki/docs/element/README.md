@@ -265,7 +265,7 @@ A list of class strings stored if imported / interpreted  from an SVG element.
 
 <div class="description">
 
-Called internally by the renderer to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+Called internally by Two.js's renderer to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
 
 </div>
 

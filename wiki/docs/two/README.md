@@ -101,7 +101,7 @@ The different rendering types available in the library.
 
 <div class="properties">
 
-The current working version of the library.
+The current working version of the library, `v0.8.0`.
 
 </div>
 

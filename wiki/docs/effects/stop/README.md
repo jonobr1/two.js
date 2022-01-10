@@ -66,8 +66,8 @@ The current index being referenced for calculating a stop's default offset value
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/stop.js#L50">
-    stop.js:50
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/stop.js#L91">
+    stop.js:91
   </a>
 
 </div>
@@ -111,8 +111,8 @@ A list of properties that are on every [Two.Stop](/docs/effects/stop/).
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/stop.js#L56">
-    stop.js:56
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/stop.js#L97">
+    stop.js:97
   </a>
 
 </div>
@@ -156,8 +156,8 @@ The offset percentage of the stop represented as a zero-to-one value.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/stop.js#L26">
-    stop.js:26
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/stop.js#L67">
+    stop.js:67
   </a>
 
 </div>
@@ -201,8 +201,8 @@ The alpha percentage of the stop represented as a zero-to-one value.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/stop.js#L33">
-    stop.js:33
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/stop.js#L74">
+    stop.js:74
   </a>
 
 </div>
@@ -246,8 +246,8 @@ The color of the stop.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/stop.js#L39">
-    stop.js:39
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/stop.js#L80">
+    stop.js:80
   </a>
 
 </div>
@@ -306,8 +306,8 @@ Create a new instance of [Two.Stop](/docs/effects/stop/) with the same propertie
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/stop.js#L62">
-    stop.js:62
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/stop.js#L103">
+    stop.js:103
   </a>
 
 </div>
@@ -359,8 +359,8 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/stop.js#L81">
-    stop.js:81
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/stop.js#L122">
+    stop.js:122
   </a>
 
 </div>
