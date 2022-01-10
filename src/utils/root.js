@@ -1,4 +1,6 @@
-var root;
+
+let root;
+
 if (typeof window !== 'undefined') {
   root = window;
 } else if (typeof global !== 'undefined') {
@@ -7,4 +9,4 @@ if (typeof window !== 'undefined') {
   root = self;
 }
 
-export default root;
+export { root };

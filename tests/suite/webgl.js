@@ -132,7 +132,7 @@
       var pct = i / amount;
       var x = pct * 300 + 50;
       var y = i % 2 ? 25 : 75;
-      points.push(new Two.Vector(x, y));
+      points.push(new Two.Anchor(x, y));
     }
     two.makePath(points, true);
 
@@ -160,7 +160,7 @@
       var pct = i / amount;
       var x = pct * 300 + 50;
       var y = i % 2 ? 25 : 75;
-      points.push(new Two.Vector(x, y));
+      points.push(new Two.Anchor(x, y));
     }
     two.makeCurve(points, true);
 
@@ -206,7 +206,7 @@
       ratio: deviceRatio
     });
 
-    var gradient = two.makeRadialGradient(0, 0, two.height / 2,
+    var gradient = two.makeRadialGradient(0, 0, 4,
       new Two.Gradient.Stop(0, 'rgb(255, 100, 100)'), new Two.Gradient.Stop(1, 'rgb(100, 100, 255)'));
 
     var rect = two.makeRectangle(two.width / 2, two.height / 2, two.width / 4, two.height / 4);

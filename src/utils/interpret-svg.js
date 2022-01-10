@@ -1,43 +1,48 @@
-import root from './root.js';
-import Commands from './path-commands.js';
+import { root } from './root.js';
+import { Commands } from './path-commands.js';
 import { decomposeMatrix } from './math.js';
 import { getReflection } from './curves.js';
-import _ from './underscore.js';
-import TwoError from './error.js';
-import Registry from '../registry.js';
+import { _ } from './underscore.js';
+import { TwoError } from './error.js';
+import { Registry } from '../registry.js';
 
-import Anchor from '../anchor.js';
-import Vector from '../vector.js';
-import Path from '../path.js';
-import Sprite from '../effects/sprite.js';
-import Group from '../group.js';
+import { Anchor } from '../anchor.js';
+import { Vector } from '../vector.js';
+import { Path } from '../path.js';
+import { Sprite } from '../effects/sprite.js';
+import { Group } from '../group.js';
 
-import Circle from '../shapes/circle.js';
-import Ellipse from '../shapes/ellipse.js';
-import Line from '../shapes/line.js';
-import Rectangle from '../shapes/rectangle.js';
-import RoundedRectangle from '../shapes/rounded-rectangle.js';
+import { Circle } from '../shapes/circle.js';
+import { Ellipse } from '../shapes/ellipse.js';
+import { Line } from '../shapes/line.js';
+import { Rectangle } from '../shapes/rectangle.js';
+import { RoundedRectangle } from '../shapes/rounded-rectangle.js';
 
-import Stop from '../effects/stop.js';
-import Gradient from '../effects/gradient.js';
-import LinearGradient from '../effects/linear-gradient.js';
-import RadialGradient from '../effects/radial-gradient.js';
-import Text from '../text.js';
+import { Stop } from '../effects/stop.js';
+import { Gradient } from '../effects/gradient.js';
+import { LinearGradient } from '../effects/linear-gradient.js';
+import { RadialGradient } from '../effects/radial-gradient.js';
+import { Text } from '../text.js';
 
-import Constants from '../constants.js';
+import { Constants } from '../constants.js';
 
 // https://github.com/jonobr1/two.js/issues/507#issuecomment-777159213
-var regex = {
+const regex = {
   path: /[+-]?(?:\d*\.\d+|\d+)(?:[eE][+-]\d+)?/g,
   cssBackgroundImage: /url\(['"]?#([\w\d-_]*)['"]?\)/i,
   unitSuffix: /[a-zA-Z%]*/i
 };
 
-var alignments = {
+const alignments = {
   start: 'left',
   middle: 'center',
   end: 'right'
 };
+
+// Reserved attributes to remove
+const reservedAttributesToRemove = ['id', 'class', 'transform', 'xmlns', 'viewBox'];
+
+const overwriteAttrs = ['x', 'y', 'width', 'height', 'href', 'xlink:href'];
 
 /**
  * @name Two.Utils.getAlignment
@@ -45,21 +50,21 @@ var alignments = {
  * @param {AlignmentString}
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/text-anchor}
  */
-var getAlignment = function(anchor) {
+function getAlignment(anchor) {
   return alignments[anchor];
-};
+}
 
-var getBaseline = function(node) {
-  var a = node.getAttribute('dominant-baseline');
-  var b = node.getAttribute('alignment-baseline');
+function getBaseline(node) {
+  const a = node.getAttribute('dominant-baseline');
+  const b = node.getAttribute('alignment-baseline');
   return a || b;
-};
+}
 
-var getTagName = function(tag) {
+function getTagName(tag) {
   return tag.replace(/svg:/ig, '').toLowerCase();
-};
+}
 
-var applyTransformsToVector = function(transforms, vector) {
+function applyTransformsToVector(transforms, vector) {
 
   vector.x += transforms.translateX;
   vector.y += transforms.translateY;
@@ -69,12 +74,12 @@ var applyTransformsToVector = function(transforms, vector) {
 
   if (transforms.rotation !== 0) {
     // TODO: Test further
-    var l = vector.length();
+    const l = vector.length();
     vector.x = l * Math.cos(transforms.rotation);
     vector.y = l * Math.sin(transforms.rotation);
   }
 
-};
+}
 
 /**
  * @name Two.Utils.extractCSSText
@@ -84,20 +89,18 @@ var applyTransformsToVector = function(transforms, vector) {
  * @returns {Object} styles
  * @description Parse CSS text body and apply them as key value pairs to a JavaScript object.
  */
-var extractCSSText = function(text, styles) {
-
-  var commands, command, name, value;
+function extractCSSText(text, styles) {
 
   if (!styles) {
     styles = {};
   }
 
-  commands = text.split(';');
+  const commands = text.split(';');
 
-  for (var i = 0; i < commands.length; i++) {
-    command = commands[i].split(':');
-    name = command[0];
-    value = command[1];
+  for (let i = 0; i < commands.length; i++) {
+    const command = commands[i].split(':');
+    const name = command[0];
+    const value = command[1];
     if (typeof name === 'undefined' || typeof value === 'undefined') {
       continue;
     }
@@ -106,7 +109,7 @@ var extractCSSText = function(text, styles) {
 
   return styles;
 
-};
+}
 
 /**
  * @name Two.Utils.getSvgStyles
@@ -115,16 +118,16 @@ var extractCSSText = function(text, styles) {
  * @returns {Object} styles
  * @description Get the CSS comands from the `style` attribute of an SVG node and apply them as key value pairs to a JavaScript object.
  */
-var getSvgStyles = function(node) {
+function getSvgStyles(node) {
 
-  var styles = {};
-  var attributes = getSvgAttributes(node);
-  var length = Math.max(attributes.length, node.style.length);
+  const styles = {};
+  const attributes = getSvgAttributes(node);
+  const length = Math.max(attributes.length, node.style.length);
 
-  for (var i = 0; i < length; i++) {
+  for (let i = 0; i < length; i++) {
 
-    var command = node.style[i];
-    var attribute = attributes[i];
+    const command = node.style[i];
+    const attribute = attributes[i];
 
     if (command) {
       styles[command] = node.style[command];
@@ -137,18 +140,15 @@ var getSvgStyles = function(node) {
 
   return styles;
 
-};
+}
 
-var getSvgAttributes = function(node) {
+function getSvgAttributes(node) {
 
-  var attributes = node.getAttributeNames();
+  const attributes = node.getAttributeNames();
 
-  // Reserved attributes to remove
-  var keywords = ['id', 'class', 'transform', 'xmlns', 'viewBox'];
-
-  for (var i = 0; i < keywords.length; i++) {
-    var keyword = keywords[i];
-    var index = Array.prototype.indexOf.call(attributes, keyword);
+  for (let i = 0; i < reservedAttributesToRemove.length; i++) {
+    const keyword = reservedAttributesToRemove[i];
+    const index = Array.prototype.indexOf.call(attributes, keyword);
     if (index >= 0) {
       attributes.splice(index, 1);
     }
@@ -156,7 +156,7 @@ var getSvgAttributes = function(node) {
 
   return attributes;
 
-};
+}
 
 /**
  * @name Two.Utils.applySvgViewBox
@@ -166,18 +166,18 @@ var getSvgAttributes = function(node) {
  * @returns {Two.Shape} node
  * @description Applies the transform of the SVG Viewbox on a given node.
  */
-var applySvgViewBox = function(node, value) {
+function applySvgViewBox(node, value) {
 
-  var elements = value.split(/[\s,]/);
+  const elements = value.split(/[\s,]/);
 
-  var x = - parseFloat(elements[0]);
-  var y = - parseFloat(elements[1]);
-  var width = parseFloat(elements[2]);
-  var height = parseFloat(elements[3]);
+  const x = - parseFloat(elements[0]);
+  const y = - parseFloat(elements[1]);
+  const width = parseFloat(elements[2]);
+  const height = parseFloat(elements[3]);
 
   if (x && y) {
-    for (var i = 0; i < node.children.length; i++) {
-      var child = node.children[i];
+    for (let i = 0; i < node.children.length; i++) {
+      const child = node.children[i];
       if ('translation' in child) {
         child.translation.add(x, y);
       } else if ('x' in child) {
@@ -188,10 +188,10 @@ var applySvgViewBox = function(node, value) {
     }
   }
 
-  var xExists = typeof node.x === 'number';
-  var yExists = typeof node.y === 'number';
-  var widthExists = typeof node.width === 'number';
-  var heightExists = typeof node.height === 'number';
+  const xExists = typeof node.x === 'number';
+  const yExists = typeof node.y === 'number';
+  const widthExists = typeof node.width === 'number';
+  const heightExists = typeof node.height === 'number';
 
   if (xExists) {
     node.translation.x += node.x;
@@ -214,7 +214,7 @@ var applySvgViewBox = function(node, value) {
 
   return node;
 
-};
+}
 
 /**
  * @name Two.Utils.applySvgAttributes
@@ -225,17 +225,18 @@ var applySvgViewBox = function(node, value) {
  * @description This function iterates through an SVG Node's properties and stores ones of interest. It tries to resolve styles applied via CSS as well.
  * @TODO Reverse calculate {@link Two.Gradient}s for fill / stroke of any given path.
  */
-var applySvgAttributes = function(node, elem, parentStyles) {
+function applySvgAttributes(node, elem, parentStyles) {
 
-  var styles = {}, attributes = {}, extracted = {},
-    i, m, key, value, prop, attr;
-  var transforms, x, y;
-  var id, scene, ref, tagName;
+  const styles = {}, attributes = {}, extracted = {};
+  let i, m, key, value, prop, attr;
+  let transforms, x, y;
+  let id, scene, ref, tagName;
+  let ca, cb, cc, error;
 
   // Not available in non browser environments
   if (root.getComputedStyle) {
     // Convert CSSStyleDeclaration to a normal object
-    var computedStyles = root.getComputedStyle(node);
+    const computedStyles = root.getComputedStyle(node);
     i = computedStyles.length;
 
     while (i--) {
@@ -454,17 +455,18 @@ var applySvgAttributes = function(node, elem, parentStyles) {
       case 'class':
       case 'className':
         elem.classList = value.split(' ');
+        elem._flagClassName = true;
         break;
       case 'x':
       case 'y':
-        var ca = elem instanceof Gradient;
-        var cb = elem instanceof LinearGradient;
-        var cc = elem instanceof RadialGradient;
+        ca = elem instanceof Gradient;
+        cb = elem instanceof LinearGradient;
+        cc = elem instanceof RadialGradient;
         if (ca || cb || cc) {
           break;
         }
         if (value.match('[a-z%]$') && !value.endsWith('px')) {
-          var error = new TwoError(
+          error = new TwoError(
             'only pixel values are supported with the ' + key + ' attribute.');
           console.warn(error.name, error.message);
         }
@@ -503,9 +505,11 @@ var applySvgAttributes = function(node, elem, parentStyles) {
     }
   }
 
+  if (Object.keys(node.dataset).length) elem.dataset = node.dataset;
+
   return styles;
 
-};
+}
 
 /**
  * @name Two.Utils.updateDefsCache
@@ -514,17 +518,17 @@ var applySvgAttributes = function(node, elem, parentStyles) {
  * @param {Object} Object - The defs cache to be updated.
  * @description Update the cache of children of <defs /> tags.
  */
-var updateDefsCache = function(node, defsCache) {
-  for (var i = 0, l = node.childNodes.length; i < l; i++) {
-    var n = node.childNodes[i];
+function updateDefsCache(node, defsCache) {
+  for (let i = 0, l = node.childNodes.length; i < l; i++) {
+    const n = node.childNodes[i];
     if (!n.id) continue;
 
-    var tagName = getTagName(node.nodeName);
+    const tagName = getTagName(node.nodeName);
     if (tagName === '#text') continue;
 
     defsCache.add(n.id, n);
   }
-};
+}
 
 /**
  * @name Two.Utils.getScene
@@ -532,7 +536,7 @@ var updateDefsCache = function(node, defsCache) {
  * @returns {Group} - The highest order {@link Two.Group} in the scenegraph.
  * @property {Function}
  */
-var getScene = function(node) {
+function getScene(node) {
 
   while (node.parent) {
     node = node.parent;
@@ -540,37 +544,37 @@ var getScene = function(node) {
 
   return node.scene;
 
-};
+}
 
 /**
  * @name Two.Utils.read
  * @property {Object} read - A map of functions to read any number of SVG node types and create Two.js equivalents of them. Primarily used by the {@link Two#interpret} method.
  */
-var read = {
+export const read = {
 
   svg: function(node) {
 
-    var defs = read.defs.current = new Registry();
-    var elements = node.getElementsByTagName('defs');
+    const defs = read.defs.current = new Registry();
+    const elements = node.getElementsByTagName('defs');
 
-    for (var i = 0; i < elements.length; i++) {
+    for (let i = 0; i < elements.length; i++) {
       updateDefsCache(elements[i], defs);
     }
 
-    var svg = read.g.call(this, node);
-    var viewBox = node.getAttribute('viewBox');
-    var x = node.getAttribute('x');
-    var y = node.getAttribute('y');
-    var width = node.getAttribute('width');
-    var height = node.getAttribute('height');
+    const svg = read.g.call(this, node);
+    const viewBox = node.getAttribute('viewBox');
+    const x = node.getAttribute('x');
+    const y = node.getAttribute('y');
+    const width = node.getAttribute('width');
+    const height = node.getAttribute('height');
 
     svg.defs = defs;  // Export out the <defs /> for later use
 
-    var viewBoxExists = viewBox !== null;
-    var xExists = x !== null;
-    var yExists = y !== null;
-    var widthExists = width !== null;
-    var heightExists = height !== null;
+    const viewBoxExists = viewBox !== null;
+    const xExists = x !== null;
+    const yExists = y !== null;
+    const widthExists = width !== null;
+    const heightExists = height !== null;
 
     if (xExists) {
       svg.x = parseFloat(x.replace(regex.unitSuffix, ''));
@@ -600,15 +604,16 @@ var read = {
 
   use: function(node, styles) {
 
-    var error;
-    var href = node.getAttribute('href') || node.getAttribute('xlink:href');
+    let error;
+
+    const href = node.getAttribute('href') || node.getAttribute('xlink:href');
     if (!href) {
       error = new TwoError('encountered <use /> with no href.');
       console.warn(error.name, error.message);
       return null;
     }
 
-    var id = href.slice(1);
+    const id = href.slice(1);
     if (!read.defs.current.contains(id)) {
       error = new TwoError(
         'unable to find element for reference ' + href + '.');
@@ -616,45 +621,43 @@ var read = {
       return null;
     }
 
-    var template = read.defs.current.get(id);
-    var fullNode = template.cloneNode(true);
-    var overwriteAttrs = ['x', 'y', 'width', 'height', 'href', 'xlink:href'];
+    const template = read.defs.current.get(id);
+    const fullNode = template.cloneNode(true);
 
-    for (var i = 0; i < node.attributes.length; i++) {
-      var attr = node.attributes[i];
-      var ca = overwriteAttrs.includes(attr.nodeName);
-      var cb = !fullNode.hasAttribute(attr.nodeName);
+    for (let i = 0; i < node.attributes.length; i++) {
+      const attr = node.attributes[i];
+      const ca = overwriteAttrs.includes(attr.nodeName);
+      const cb = !fullNode.hasAttribute(attr.nodeName);
       if (ca || cb) {
         fullNode.setAttribute(attr.nodeName, attr.value);
       }
     }
 
-    var tagName = getTagName(fullNode.nodeName);
+    const tagName = getTagName(fullNode.nodeName);
     return read[tagName].call(this, fullNode, styles);
 
   },
 
   g: function(node, parentStyles) {
 
-    var styles;
-    var group = new Group();
+    const group = new Group();
 
     applySvgAttributes.call(this, node, group, parentStyles);
 
     this.add(group);
 
     // Switched up order to inherit more specific styles
-    styles = getSvgStyles.call(this, node);
+    const styles = getSvgStyles.call(this, node);
 
-    for (var i = 0, l = node.childNodes.length; i < l; i++) {
-      var n = node.childNodes[i];
-      var tag = n.nodeName;
+    for (let i = 0, l = node.childNodes.length; i < l; i++) {
+      const n = node.childNodes[i];
+      const tag = n.nodeName;
       if (!tag) return;
 
-      var tagName = getTagName(tag);
+      const tagName = getTagName(tag);
 
       if (tagName in read) {
-        var o = read[tagName].call(group, n, styles);
+        const o = read[tagName].call(group, n, styles);
         if (!!o && !o.parent) {
           group.add(o);
         }
@@ -667,14 +670,14 @@ var read = {
 
   polygon: function(node, parentStyles) {
 
-    var points = node.getAttribute('points');
+    const points = node.getAttribute('points');
 
-    var verts = [];
+    const verts = [];
     points.replace(/(-?[\d.eE-]+)[,|\s](-?[\d.eE-]+)/g, function(match, p1, p2) {
       verts.push(new Anchor(parseFloat(p1), parseFloat(p2)));
     });
 
-    var poly = new Path(verts, true).noStroke();
+    const poly = new Path(verts, true).noStroke();
     poly.fill = 'black';
 
     applySvgAttributes.call(this, node, poly, parentStyles);
@@ -684,34 +687,35 @@ var read = {
   },
 
   polyline: function(node, parentStyles) {
-    var poly = read.polygon.call(this, node, parentStyles);
+    const poly = read.polygon.call(this, node, parentStyles);
     poly.closed = false;
     return poly;
   },
 
   path: function(node, parentStyles) {
 
-    var path = node.getAttribute('d');
-    var points = [];
-    var closed = false, relative = false;
+    let path = node.getAttribute('d');
+    let points = [];
+    let closed = false, relative = false;
 
     if (path) {
 
       // Create a Two.Path from the paths.
 
-      var coord = new Anchor();
-      var control, coords;
-      var commands = path.match(/[a-df-z][^a-df-z]*/ig);
-      var last = commands.length - 1;
+      let coord = new Anchor();
+      let control, coords;
+      let commands = path.match(/[a-df-z][^a-df-z]*/ig);
+      const last = commands.length - 1;
 
       // Split up polybeziers
 
       _.each(commands.slice(0), function(command, i) {
 
-        var items = command.slice(1).trim().match(regex.path);
-        var type = command[0];
-        var lower = type.toLowerCase();
-        var bin, j, l, ct, times, result = [];
+        const items = command.slice(1).trim().match(regex.path);
+        const type = command[0];
+        const lower = type.toLowerCase();
+        let bin, j, l, ct, times;
+        const result = [];
 
         if (i === 0) {
           commands = [];
@@ -787,14 +791,16 @@ var read = {
 
       _.each(commands, function(command, i) {
 
-        var result, x, y;
-        var type = command[0];
-        var lower = type.toLowerCase();
+        let result, x, y;
+        const type = command[0];
+        const lower = type.toLowerCase();
 
         coords = command.slice(1).trim().match(regex.path);
         relative = type === lower;
 
-        var x1, y1, x2, y2, x3, y3, x4, y4, reflection;
+        let x1, y1, x2, y2, x3, y3, x4, y4, reflection;
+        let a, b;
+        let anchor, rx, ry, xAxisRotation, largeArcFlag, sweepFlag;
 
         switch (lower) {
 
@@ -811,8 +817,8 @@ var read = {
                 Commands.close
               );
               // Make coord be the last `m` command
-              for (var j = points.length - 1; j >= 0; j--) {
-                var point = points[j];
+              for (let j = points.length - 1; j >= 0; j--) {
+                const point = points[j];
                 if (/m/i.test(point.command)) {
                   coord = point;
                   break;
@@ -849,8 +855,8 @@ var read = {
           case 'h':
           case 'v':
 
-            var a = /h/i.test(lower) ? 'x' : 'y';
-            var b = /x/i.test(a) ? 'y' : 'x';
+            a = /h/i.test(lower) ? 'x' : 'y';
+            b = /x/i.test(a) ? 'y' : 'x';
 
             result = new Anchor(
               undefined, undefined,
@@ -915,10 +921,6 @@ var read = {
               y4 += y1;
             }
 
-            if (!_.isObject(coord.controls)) {
-              Anchor.AppendCurveProperties(coord);
-            }
-
             coord.controls.right.set(x2 - coord.x, y2 - coord.y);
             result = new Anchor(
               x4, y4,
@@ -973,10 +975,6 @@ var read = {
               y4 += y1;
             }
 
-            if (!_.isObject(coord.controls)) {
-              Anchor.AppendCurveProperties(coord);
-            }
-
             coord.controls.right.set(
               (x2 - coord.x) * 0.33, (y2 - coord.y) * 0.33);
             result = new Anchor(
@@ -996,11 +994,11 @@ var read = {
             x1 = coord.x;
             y1 = coord.y;
 
-            var rx = parseFloat(coords[0]);
-            var ry = parseFloat(coords[1]);
-            var xAxisRotation = parseFloat(coords[2]);// * PI / 180;
-            var largeArcFlag = parseFloat(coords[3]);
-            var sweepFlag = parseFloat(coords[4]);
+            rx = parseFloat(coords[0]);
+            ry = parseFloat(coords[1]);
+            xAxisRotation = parseFloat(coords[2]);// * PI / 180;
+            largeArcFlag = parseFloat(coords[3]);
+            sweepFlag = parseFloat(coords[4]);
 
             x4 = parseFloat(coords[5]);
             y4 = parseFloat(coords[6]);
@@ -1010,7 +1008,7 @@ var read = {
               y4 += y1;
             }
 
-            var anchor = new Anchor(x4, y4);
+            anchor = new Anchor(x4, y4);
             anchor.command = Commands.arc;
             anchor.rx = rx;
             anchor.ry = ry;
@@ -1042,7 +1040,7 @@ var read = {
     path = new Path(points, closed, undefined, true).noStroke();
     path.fill = 'black';
 
-    var rect = path.getBoundingClientRect(true);
+    const rect = path.getBoundingClientRect(true);
 
     // Center objects to stay consistent
     // with the rest of the Two.js API.
@@ -1065,11 +1063,11 @@ var read = {
 
   circle: function(node, parentStyles) {
 
-    var x = parseFloat(node.getAttribute('cx'));
-    var y = parseFloat(node.getAttribute('cy'));
-    var r = parseFloat(node.getAttribute('r'));
+    const x = parseFloat(node.getAttribute('cx'));
+    const y = parseFloat(node.getAttribute('cy'));
+    const r = parseFloat(node.getAttribute('r'));
 
-    var circle = new Circle(0, 0, r).noStroke();
+    const circle = new Circle(0, 0, r).noStroke();
     circle.fill = 'black';
 
     applySvgAttributes.call(this, node, circle, parentStyles);
@@ -1083,12 +1081,12 @@ var read = {
 
   ellipse: function(node, parentStyles) {
 
-    var x = parseFloat(node.getAttribute('cx'));
-    var y = parseFloat(node.getAttribute('cy'));
-    var width = parseFloat(node.getAttribute('rx'));
-    var height = parseFloat(node.getAttribute('ry'));
+    const x = parseFloat(node.getAttribute('cx'));
+    const y = parseFloat(node.getAttribute('cy'));
+    const width = parseFloat(node.getAttribute('rx'));
+    const height = parseFloat(node.getAttribute('ry'));
 
-    var ellipse = new Ellipse(0, 0, width, height).noStroke();
+    const ellipse = new Ellipse(0, 0, width, height).noStroke();
     ellipse.fill = 'black';
 
     applySvgAttributes.call(this, node, ellipse, parentStyles);
@@ -1102,21 +1100,20 @@ var read = {
 
   rect: function(node, parentStyles) {
 
-    var rx = parseFloat(node.getAttribute('rx'));
-    var ry = parseFloat(node.getAttribute('ry'));
+    const rx = parseFloat(node.getAttribute('rx'));
+    const ry = parseFloat(node.getAttribute('ry'));
 
     if (!_.isNaN(rx) || !_.isNaN(ry)) {
       return read['rounded-rect'](node);
     }
 
-    var width = parseFloat(node.getAttribute('width'));
-    var height = parseFloat(node.getAttribute('height'));
+    const width = parseFloat(node.getAttribute('width'));
+    const height = parseFloat(node.getAttribute('height'));
 
-    var w2 = width / 2;
-    var h2 = height / 2;
+    const w2 = width / 2;
+    const h2 = height / 2;
 
-    var rect = new Rectangle(0, 0, width, height)
-      .noStroke();
+    const rect = new Rectangle(0, 0, width, height).noStroke();
     rect.fill = 'black';
 
     applySvgAttributes.call(this, node, rect, parentStyles);
@@ -1132,18 +1129,17 @@ var read = {
 
   'rounded-rect': function(node, parentStyles) {
 
-    var rx = parseFloat(node.getAttribute('rx')) || 0;
-    var ry = parseFloat(node.getAttribute('ry')) || 0;
+    const rx = parseFloat(node.getAttribute('rx')) || 0;
+    const ry = parseFloat(node.getAttribute('ry')) || 0;
 
-    var width = parseFloat(node.getAttribute('width'));
-    var height = parseFloat(node.getAttribute('height'));
+    const width = parseFloat(node.getAttribute('width'));
+    const height = parseFloat(node.getAttribute('height'));
 
-    var w2 = width / 2;
-    var h2 = height / 2;
-    var radius = new Vector(rx, ry);
+    const w2 = width / 2;
+    const h2 = height / 2;
+    const radius = new Vector(rx, ry);
 
-    var rect = new RoundedRectangle(0, 0, width, height, radius)
-      .noStroke();
+    const rect = new RoundedRectangle(0, 0, width, height, radius).noStroke();
     rect.fill = 'black';
 
     applySvgAttributes.call(this, node, rect, parentStyles);
@@ -1159,12 +1155,12 @@ var read = {
 
   line: function(node, parentStyles) {
 
-    var x1 = parseFloat(node.getAttribute('x1'));
-    var y1 = parseFloat(node.getAttribute('y1'));
-    var x2 = parseFloat(node.getAttribute('x2'));
-    var y2 = parseFloat(node.getAttribute('y2'));
+    const x1 = parseFloat(node.getAttribute('x1'));
+    const y1 = parseFloat(node.getAttribute('y1'));
+    const x2 = parseFloat(node.getAttribute('x2'));
+    const y2 = parseFloat(node.getAttribute('y2'));
 
-    var line = new Line(x1, y1, x2, y2).noFill();
+    const line = new Line(x1, y1, x2, y2).noFill();
 
     applySvgAttributes.call(this, node, line, parentStyles);
 
@@ -1174,8 +1170,8 @@ var read = {
 
   lineargradient: function(node, parentStyles) {
 
-    var units = node.getAttribute('gradientUnits');
-    var spread = node.getAttribute('spreadMethod');
+    let units = node.getAttribute('gradientUnits');
+    let spread = node.getAttribute('spreadMethod');
 
     if (!units) {
       units = 'objectBoundingBox';
@@ -1184,13 +1180,13 @@ var read = {
       spread = 'pad';
     }
 
-    var x1 = parseFloat(node.getAttribute('x1') || 0);
-    var y1 = parseFloat(node.getAttribute('y1') || 0);
-    var x2 = parseFloat(node.getAttribute('x2') || 0);
-    var y2 = parseFloat(node.getAttribute('y2') || 0);
+    let x1 = parseFloat(node.getAttribute('x1') || 0);
+    let y1 = parseFloat(node.getAttribute('y1') || 0);
+    let x2 = parseFloat(node.getAttribute('x2') || 0);
+    let y2 = parseFloat(node.getAttribute('y2') || 0);
 
-    var ox = (x2 + x1) / 2;
-    var oy = (y2 + y1) / 2;
+    const ox = (x2 + x1) / 2;
+    const oy = (y2 + y1) / 2;
 
     if (/userSpaceOnUse/i.test(units)) {
       x1 -= ox;
@@ -1199,22 +1195,22 @@ var read = {
       y2 -= oy;
     }
 
-    var stops = [];
-    for (var i = 0; i < node.children.length; i++) {
+    const stops = [];
+    for (let i = 0; i < node.children.length; i++) {
 
-      var child = node.children[i];
+      const child = node.children[i];
 
-      var offset = child.getAttribute('offset');
+      let offset = child.getAttribute('offset');
       if (/%/ig.test(offset)) {
         offset = parseFloat(offset.replace(/%/ig, '')) / 100;
       }
       offset = parseFloat(offset);
 
-      var color = child.getAttribute('stop-color');
-      var opacity = child.getAttribute('stop-opacity');
-      var style = child.getAttribute('style');
+      let color = child.getAttribute('stop-color');
+      let opacity = child.getAttribute('stop-opacity');
+      let style = child.getAttribute('style');
 
-      var matches;
+      let matches;
       if (color === null) {
         matches = style ? style.match(/stop-color:\s?([#a-fA-F0-9]*)/) : false;
         color = matches && matches.length > 1 ? matches[1] : undefined;
@@ -1231,7 +1227,7 @@ var read = {
 
     }
 
-    var gradient = new LinearGradient(x1, y1, x2, y2, stops);
+    const gradient = new LinearGradient(x1, y1, x2, y2, stops);
 
     gradient.spread = spread;
     gradient.units = units;
@@ -1244,8 +1240,8 @@ var read = {
 
   radialgradient: function(node, parentStyles) {
 
-    var units = node.getAttribute('gradientUnits');
-    var spread = node.getAttribute('spreadMethod');
+    let units = node.getAttribute('gradientUnits');
+    let spread = node.getAttribute('spreadMethod');
 
     if (!units) {
       units = 'objectBoundingBox';
@@ -1254,12 +1250,12 @@ var read = {
       spread = 'pad';
     }
 
-    var cx = parseFloat(node.getAttribute('cx')) || 0;
-    var cy = parseFloat(node.getAttribute('cy')) || 0;
-    var r = parseFloat(node.getAttribute('r'));
+    let cx = parseFloat(node.getAttribute('cx')) || 0;
+    let cy = parseFloat(node.getAttribute('cy')) || 0;
+    let r = parseFloat(node.getAttribute('r'));
 
-    var fx = parseFloat(node.getAttribute('fx'));
-    var fy = parseFloat(node.getAttribute('fy'));
+    let fx = parseFloat(node.getAttribute('fx'));
+    let fy = parseFloat(node.getAttribute('fy'));
 
     if (_.isNaN(fx)) {
       fx = cx;
@@ -1269,8 +1265,8 @@ var read = {
       fy = cy;
     }
 
-    var ox = Math.abs(cx + fx) / 2;
-    var oy = Math.abs(cy + fy) / 2;
+    const ox = Math.abs(cx + fx) / 2;
+    const oy = Math.abs(cy + fy) / 2;
 
     if (/userSpaceOnUse/i.test(units)) {
       cx -= ox;
@@ -1279,22 +1275,22 @@ var read = {
       fy -= oy;
     }
 
-    var stops = [];
-    for (var i = 0; i < node.children.length; i++) {
+    const stops = [];
+    for (let i = 0; i < node.children.length; i++) {
 
-      var child = node.children[i];
+      const child = node.children[i];
 
-      var offset = child.getAttribute('offset');
+      let offset = child.getAttribute('offset');
       if (/%/ig.test(offset)) {
         offset = parseFloat(offset.replace(/%/ig, '')) / 100;
       }
       offset = parseFloat(offset);
 
-      var color = child.getAttribute('stop-color');
-      var opacity = child.getAttribute('stop-opacity');
-      var style = child.getAttribute('style');
+      let color = child.getAttribute('stop-color');
+      let opacity = child.getAttribute('stop-opacity');
+      let style = child.getAttribute('style');
 
-      var matches;
+      let matches;
       if (color === null) {
         matches = style ? style.match(/stop-color:\s?([#a-fA-F0-9]*)/) : false;
         color = matches && matches.length > 1 ? matches[1] : undefined;
@@ -1311,8 +1307,7 @@ var read = {
 
     }
 
-    var gradient = new RadialGradient(cx, cy, r,
-      stops, fx, fy);
+    const gradient = new RadialGradient(cx, cy, r, stops, fx, fy);
 
     applySvgAttributes.call(this, node, gradient, parentStyles);
 
@@ -1322,11 +1317,11 @@ var read = {
 
   text: function(node, parentStyles) {
 
-    var alignment = getAlignment(node.getAttribute('text-anchor')) || 'left';
-    var baseline = getBaseline(node) || 'baseline';
-    var message = node.textContent;
+    const alignment = getAlignment(node.getAttribute('text-anchor')) || 'left';
+    const baseline = getBaseline(node) || 'baseline';
+    const message = node.textContent;
 
-    var text = new Text(message);
+    const text = new Text(message);
 
     applySvgAttributes.call(this, node, text, parentStyles);
 
@@ -1346,19 +1341,21 @@ var read = {
 
   image: function(node, parentStyles) {
 
-    var href = node.getAttribute('href') || node.getAttribute('xlink:href');
+    let error;
+
+    const href = node.getAttribute('href') || node.getAttribute('xlink:href');
     if (!href) {
-      var error = new TwoError('encountered <image /> with no href.');
+      error = new TwoError('encountered <image /> with no href.');
       console.warn(error.name, error.message);
       return null;
     }
 
-    var x = parseFloat(node.getAttribute('x')) || 0;
-    var y = parseFloat(node.getAttribute('y')) || 0;
-    var width = parseFloat(node.getAttribute('width'));
-    var height = parseFloat(node.getAttribute('height'));
+    const x = parseFloat(node.getAttribute('x')) || 0;
+    const y = parseFloat(node.getAttribute('y')) || 0;
+    const width = parseFloat(node.getAttribute('width'));
+    const height = parseFloat(node.getAttribute('height'));
 
-    var sprite = new Sprite(href, x, y);
+    const sprite = new Sprite(href, x, y);
 
     if (!_.isNaN(width)) {
       sprite.width = width;
@@ -1373,5 +1370,3 @@ var read = {
   }
 
 };
-
-export default read;

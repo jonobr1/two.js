@@ -105,13 +105,13 @@ export default function App() {
 }
 ```
 
-In adddition to importing, the published packages of Two.js include the specific modules. So, if necessary you can import specific modules from the source code and bundle / minify for yourself like so:
+In addition to importing, the published packages of Two.js include the specific modules. So, if necessary you can import specific modules from the source code and bundle / minify for yourself like so:
 
 ```javascript
-import Vector from 'two.js/src/vector.js';
+import { Vector } from 'two.js/src/vector.js';
 ```
 
-_While useful, the main import of the `Two` namespace imports all modules. So, you there isn't yet proper tree shaking implemented for the library, though it's on the roadmap._
+_While useful, the main import of the `Two` namespace imports all modules. So, there isn't yet proper tree shaking implemented for the library, though it's on the roadmap._
 
 ### Running in Headless Environments
 
@@ -161,6 +161,11 @@ process.exit();
 
 ## Change Log
 Two.js has been in operation since 2012. For a full list of changes from its first alpha version built with [Three.js](http://threejs.org/) to the most up-to-date tweaks. Check out the wiki [here](./wiki/change-log).
+
+---
+
+#### And a big thank you to our sponsors who include:
+[Epilogue Press](https://github.com/epiloguepress)
 
 [npm]: https://img.shields.io/npm/v/two.js
 [npm-url]: https://www.npmjs.com/package/two.js

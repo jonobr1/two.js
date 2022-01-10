@@ -1,20 +1,20 @@
-import Commands from '../utils/path-commands.js';
+import { Commands } from '../utils/path-commands.js';
 import { decomposeMatrix, getComputedMatrix, mod, TWO_PI } from '../utils/math.js';
 import { Curve } from '../utils/curves.js';
-import Events from '../events.js';
-import getRatio from '../utils/get-ratio.js';
-import _ from '../utils/underscore.js';
+import { Events } from '../events.js';
+import { getRatio } from '../utils/device-pixel-ratio.js';
+import { _ } from '../utils/underscore.js';
 
-import Group from '../group.js';
-import Vector from '../vector.js';
-import Matrix from '../matrix.js';
-import Constants from '../constants.js';
+import { Group } from '../group.js';
+import { Vector } from '../vector.js';
+import { Matrix } from '../matrix.js';
+import { Constants } from '../constants.js';
 
-var matrix =  new Matrix();
+const matrix =  new Matrix();
 
 // Constants
-var emptyArray = [];
-var max = Math.max,
+const emptyArray = [];
+const max = Math.max,
   min = Math.min,
   abs = Math.abs,
   sin = Math.sin,
@@ -22,12 +22,7 @@ var max = Math.max,
   acos = Math.acos,
   sqrt = Math.sqrt;
 
-// Returns true if this is a non-transforming matrix
-var isDefaultMatrix = function (m) {
-  return (m[0] == 1 && m[3] == 0 && m[1] == 0 && m[4] == 1 && m[2] == 0 && m[5] == 0);
-};
-
-var canvas = {
+const canvas = {
 
   isHidden: /(undefined|none|transparent)/i,
 
@@ -64,16 +59,16 @@ var canvas = {
 
       this._update();
 
-      var matrix = this._matrix.elements;
-      var parent = this.parent;
+      const matrix = this._matrix.elements;
+      const parent = this.parent;
       this._renderer.opacity = this._opacity
         * (parent && parent._renderer ? parent._renderer.opacity : 1);
 
-      var mask = this._mask;
-      // var clip = this._clip;
+      const mask = this._mask;
+      // const clip = this._clip;
 
-      var defaultMatrix = isDefaultMatrix(matrix);
-      var shouldIsolate = !defaultMatrix || !!mask;
+      const defaultMatrix = isDefaultMatrix(matrix);
+      const shouldIsolate = !defaultMatrix || !!mask;
 
       if (!this._renderer.context) {
         this._renderer.context = {};
@@ -95,8 +90,8 @@ var canvas = {
       }
 
       if (this._opacity > 0 && this._scale !== 0) {
-        for (var i = 0; i < this.children.length; i++) {
-          var child = this.children[i];
+        for (let i = 0; i < this.children.length; i++) {
+          const child = this.children[i];
           canvas[child._renderer.type].render.call(child, ctx);
         }
       }
@@ -123,7 +118,7 @@ var canvas = {
 
     render: function(ctx, forced, parentClipped) {
 
-      var matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter,
+      let matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter,
           closed, commands, length, last, prev, a, b, c, d, ux, uy, vx, vy,
           ar, bl, br, cl, x, y, mask, clip, defaultMatrix, isOffset, dashes, po;
 
@@ -207,7 +202,9 @@ var canvas = {
 
       ctx.beginPath();
 
-      for (var i = 0; i < length; i++) {
+      let rx, ry, xAxisRotation, largeArcFlag, sweepFlag, ax, ay;
+
+      for (let i = 0; i < length; i++) {
 
         b = commands[i];
 
@@ -222,19 +219,20 @@ var canvas = {
 
           case Commands.arc:
 
-            var rx = b.rx;
-            var ry = b.ry;
-            var xAxisRotation = b.xAxisRotation;
-            var largeArcFlag = b.largeArcFlag;
-            var sweepFlag = b.sweepFlag;
+            rx = b.rx;
+            ry = b.ry;
+            xAxisRotation = b.xAxisRotation;
+            largeArcFlag = b.largeArcFlag;
+            sweepFlag = b.sweepFlag;
 
             prev = closed ? mod(i - 1, length) : max(i - 1, 0);
             a = commands[prev];
 
-            var ax = a.x;
-            var ay = a.y;
+            ax = a.x;
+            ay = a.y;
 
-            canvas.renderSvgArcCommand(ctx, ax, ay, rx, ry, largeArcFlag, sweepFlag, xAxisRotation, x, y);
+            canvas.renderSvgArcCommand(ctx, ax, ay, rx, ry, largeArcFlag,
+              sweepFlag, xAxisRotation, x, y);
             break;
 
           case Commands.curve:
@@ -366,7 +364,7 @@ var canvas = {
 
     render: function(ctx, forced, parentClipped) {
 
-      var me, stroke, linewidth, fill, opacity, visible, size, commands,
+      let me, stroke, linewidth, fill, opacity, visible, size, commands,
           length, b, x, y, defaultMatrix, isOffset, dashes, po;
 
       po = (this.parent && this.parent._renderer)
@@ -427,7 +425,7 @@ var canvas = {
 
       ctx.beginPath();
 
-      var radius = size * 0.5, m;
+      let radius = size * 0.5, m;
 
       if (!this._sizeAttenuation) {
         getComputedMatrix(this, matrix);
@@ -436,7 +434,7 @@ var canvas = {
         radius /= Math.max(m.scaleX, m.scaleY);
       }
 
-      for (var i = 0; i < length; i++) {
+      for (let i = 0; i < length; i++) {
 
         b = commands[i];
 
@@ -498,12 +496,12 @@ var canvas = {
 
     render: function(ctx, forced, parentClipped) {
 
-      var po = (this.parent && this.parent._renderer)
+      const po = (this.parent && this.parent._renderer)
         ? this.parent._renderer.opacity : 1;
-      var opacity = this._opacity * po;
-      var visible = this._visible;
-      var mask = this._mask;
-      var clip = this._clip;
+      const opacity = this._opacity * po;
+      const visible = this._visible;
+      const mask = this._mask;
+      const clip = this._clip;
 
       if (!forced && (!visible || clip || opacity === 0)) {
         return this;
@@ -511,19 +509,19 @@ var canvas = {
 
       this._update();
 
-      var matrix = this._matrix.elements;
-      var stroke = this._stroke;
-      var linewidth = this._linewidth;
-      var fill = this._fill;
-      var decoration = this._decoration;
-      var defaultMatrix = isDefaultMatrix(matrix);
-      var isOffset = fill._renderer && fill._renderer.offset
+      const matrix = this._matrix.elements;
+      const stroke = this._stroke;
+      const linewidth = this._linewidth;
+      const fill = this._fill;
+      const decoration = this._decoration;
+      const defaultMatrix = isDefaultMatrix(matrix);
+      const isOffset = fill._renderer && fill._renderer.offset
         && stroke._renderer && stroke._renderer.offset;
-      var dashes = this.dashes;
-      var alignment = canvas.alignments[this._alignment] || this._alignment;
-      var baseline = this._baseline;
+      const dashes = this.dashes;
+      const alignment = canvas.alignments[this._alignment] || this._alignment;
+      const baseline = this._baseline;
 
-      var a, b, c, d, e, sx, sy, x1, y1, x2, y2;
+      let a, b, c, d, e, sx, sy, x1, y1, x2, y2;
 
       // Transform
       if (!defaultMatrix) {
@@ -639,8 +637,8 @@ var canvas = {
       // Handle text-decoration
       if (/(underline|strikethrough)/i.test(decoration)) {
 
-        var metrics = ctx.measureText(this.value);
-        var scalar = 1;
+        const metrics = ctx.measureText(this.value);
+        let scalar = 1;
 
         switch (decoration) {
           case 'underline':
@@ -715,16 +713,20 @@ var canvas = {
 
     render: function(ctx, parent) {
 
+      if (!parent) {
+        return;
+      }
+
       this._update();
 
       if (!this._renderer.effect || this._flagEndPoints || this._flagStops
         || this._flagUnits) {
 
-        var rect;
-        var lx = this.left._x;
-        var ly = this.left._y;
-        var rx = this.right._x;
-        var ry = this.right._y;
+        let rect;
+        let lx = this.left._x;
+        let ly = this.left._y;
+        let rx = this.right._x;
+        let ry = this.right._y;
 
         if (/objectBoundingBox/i.test(this._units)) {
           // Convert objectBoundingBox units to userSpaceOnUse units
@@ -737,8 +739,8 @@ var canvas = {
 
         this._renderer.effect = ctx.createLinearGradient(lx, ly, rx, ry);
 
-        for (var i = 0; i < this.stops.length; i++) {
-          var stop = this.stops[i];
+        for (let i = 0; i < this.stops.length; i++) {
+          const stop = this.stops[i];
           this._renderer.effect.addColorStop(stop._offset, stop._color);
         }
 
@@ -754,31 +756,37 @@ var canvas = {
 
     render: function(ctx, parent) {
 
+      if (!parent) {
+        return;
+      }
+
       this._update();
 
       if (!this._renderer.effect || this._flagCenter || this._flagFocal
           || this._flagRadius || this._flagStops || this._flagUnits) {
 
-        var rect;
-        var cx = this.center._x;
-        var cy = this.center._y;
-        var fx = this.focal._x;
-        var fy = this.focal._y;
+        let rect;
+        let cx = this.center._x;
+        let cy = this.center._y;
+        let fx = this.focal._x;
+        let fy = this.focal._y;
+        let radius = this._radius;
 
         if (/objectBoundingBox/i.test(this._units)) {
           // Convert objectBoundingBox units to userSpaceOnUse units
           rect = parent.getBoundingClientRect(true);
-          cx = (cx - 0.5) * rect.width;
-          cy = (cy - 0.5) * rect.height;
-          fx = (fx - 0.5) * rect.width;
-          fy = (fy - 0.5) * rect.height;
+          cx = cx * rect.width * 0.5;
+          cy = cy * rect.height * 0.5;
+          fx = fx * rect.width * 0.5;
+          fy = fy * rect.height * 0.5;
+          radius *= Math.min(rect.width, rect.height) * 0.5;
         }
 
         this._renderer.effect = ctx.createRadialGradient(cx, cy,
-          0, fx, fy, this._radius);
+          0, fx, fy, radius);
 
-        for (var i = 0; i < this.stops.length; i++) {
-          var stop = this.stops[i];
+        for (let i = 0; i < this.stops.length; i++) {
+          const stop = this.stops[i];
           this._renderer.effect.addColorStop(stop._offset, stop._color);
         }
 
@@ -796,7 +804,7 @@ var canvas = {
 
       this._update();
 
-      var image = this.image;
+      const image = this.image;
 
       if (!this._renderer.effect || ((this._flagLoaded || this._flagImage || this._flagVideo || this._flagRepeat) && this.loaded)) {
         this._renderer.effect = ctx.createPattern(this.image, this._repeat);
@@ -856,24 +864,24 @@ var canvas = {
     ry = abs(ry);
 
     // Compute (x1′, y1′)
-    var dx2 = (ax - x) / 2.0;
-    var dy2 = (ay - y) / 2.0;
-    var x1p = cos(xAxisRotation) * dx2 + sin(xAxisRotation) * dy2;
-    var y1p = - sin(xAxisRotation) * dx2 + cos(xAxisRotation) * dy2;
+    const dx2 = (ax - x) / 2.0;
+    const dy2 = (ay - y) / 2.0;
+    const x1p = cos(xAxisRotation) * dx2 + sin(xAxisRotation) * dy2;
+    const y1p = - sin(xAxisRotation) * dx2 + cos(xAxisRotation) * dy2;
 
     // Compute (cx′, cy′)
-    var rxs = rx * rx;
-    var rys = ry * ry;
-    var x1ps = x1p * x1p;
-    var y1ps = y1p * y1p;
+    const x1ps = x1p * x1p;
+    const y1ps = y1p * y1p;
+    let rxs = rx * rx;
+    let rys = ry * ry;
 
     // Ensure radii are large enough
-    var cr = x1ps / rxs + y1ps / rys;
+    const cr = x1ps / rxs + y1ps / rys;
 
     if (cr > 1) {
 
       // scale up rx,ry equally so cr == 1
-      var s = sqrt(cr);
+      const s = sqrt(cr);
       rx = s * rx;
       ry = s * ry;
       rxs = rx * rx;
@@ -881,27 +889,29 @@ var canvas = {
 
     }
 
-    var dq = (rxs * y1ps + rys * x1ps);
-    var pq = (rxs * rys - dq) / dq;
-    var q = sqrt(max(0, pq));
+    const dq = (rxs * y1ps + rys * x1ps);
+    const pq = (rxs * rys - dq) / dq;
+    let q = sqrt(max(0, pq));
+
     if (largeArcFlag === sweepFlag) q = - q;
-    var cxp = q * rx * y1p / ry;
-    var cyp = - q * ry * x1p / rx;
+
+    const cxp = q * rx * y1p / ry;
+    const cyp = - q * ry * x1p / rx;
 
     // Step 3: Compute (cx, cy) from (cx′, cy′)
-    var cx = cos(xAxisRotation) * cxp
+    const cx = cos(xAxisRotation) * cxp
       - sin(xAxisRotation) * cyp + (ax + x) / 2;
-    var cy = sin(xAxisRotation) * cxp
+    const cy = sin(xAxisRotation) * cxp
       + cos(xAxisRotation) * cyp + (ay + y) / 2;
 
     // Step 4: Compute θ1 and Δθ
-    var startAngle = svgAngle(1, 0, (x1p - cxp) / rx, (y1p - cyp) / ry);
-    var delta = svgAngle((x1p - cxp) / rx, (y1p - cyp) / ry,
+    const startAngle = svgAngle(1, 0, (x1p - cxp) / rx, (y1p - cyp) / ry);
+    const delta = svgAngle((x1p - cxp) / rx, (y1p - cyp) / ry,
       (- x1p - cxp) / rx, (- y1p - cyp) / ry) % TWO_PI;
 
-    var endAngle = startAngle + delta;
+    const endAngle = startAngle + delta;
 
-    var clockwise = sweepFlag === 0;
+    const clockwise = sweepFlag === 0;
 
     renderArcEstimate(ctx, cx, cy, rx, ry, startAngle, endAngle,
       clockwise, xAxisRotation);
@@ -920,56 +930,52 @@ var canvas = {
  * @param {Boolean} [parameters.smoothing=true] - Determines whether the canvas should antialias drawing. Set it to `false` when working with pixel art. `false` can lead to better performance, since it would use a cheaper interpolation algorithm.
  * @description This class is used by {@link Two} when constructing with `type` of `Two.Types.canvas`. It takes Two.js' scenegraph and renders it to a `<canvas />`.
  */
-function Renderer(params) {
+export class Renderer extends Events {
 
-  // It might not make a big difference on GPU backed canvases.
-  var smoothing = (params.smoothing !== false);
+  constructor(params) {
 
-  /**
-   * @name Two.CanvasRenderer#domElement
-   * @property {Element} - The `<canvas />` associated with the Two.js scene.
-   */
-  this.domElement = params.domElement || document.createElement('canvas');
+    super();
 
-  /**
-   * @name Two.CanvasRenderer#ctx
-   * @property {Canvas2DContext} - Associated two dimensional context to render on the `<canvas />`.
-   */
-  this.ctx = this.domElement.getContext('2d');
+    // It might not make a big difference on GPU backed canvases.
+    const smoothing = (params.smoothing !== false);
 
-  /**
-   * @name Two.CanvasRenderer#overdraw
-   * @property {Boolean} - Determines whether the canvas clears the background each draw call.
-   * @default true
-   */
-  this.overdraw = params.overdraw || false;
+    /**
+     * @name Two.CanvasRenderer#domElement
+     * @property {Element} - The `<canvas />` associated with the Two.js scene.
+     */
+    this.domElement = params.domElement || document.createElement('canvas');
 
-  if (typeof this.ctx.imageSmoothingEnabled !== 'undefined') {
-    this.ctx.imageSmoothingEnabled = smoothing;
+    /**
+     * @name Two.CanvasRenderer#ctx
+     * @property {Canvas2DContext} - Associated two dimensional context to render on the `<canvas />`.
+     */
+    this.ctx = this.domElement.getContext('2d');
+
+    /**
+     * @name Two.CanvasRenderer#overdraw
+     * @property {Boolean} - Determines whether the canvas clears the background each draw call.
+     * @default true
+     */
+    this.overdraw = params.overdraw || false;
+
+    if (typeof this.ctx.imageSmoothingEnabled !== 'undefined') {
+      this.ctx.imageSmoothingEnabled = smoothing;
+    }
+
+    /**
+     * @name Two.CanvasRenderer#scene
+     * @property {Two.Group} - The root group of the scenegraph.
+     */
+    this.scene = new Group();
+    this.scene.parent = this;
+
   }
-
-  /**
-   * @name Two.CanvasRenderer#scene
-   * @property {Two.Group} - The root group of the scenegraph.
-   */
-  this.scene = new Group();
-  this.scene.parent = this;
-}
-
-
-_.extend(Renderer, {
 
   /**
    * @name Two.CanvasRenderer.Utils
    * @property {Object} - A massive object filled with utility functions and properties to render Two.js objects to a `<canvas />`.
    */
-  Utils: canvas
-
-});
-
-_.extend(Renderer.prototype, Events, {
-
-  constructor: Renderer,
+  static Utils = canvas;
 
   /**
    * @name Two.CanvasRenderer#setSize
@@ -980,7 +986,7 @@ _.extend(Renderer.prototype, Events, {
    * @param {Number} [ratio] - The new pixel ratio (pixel density) of the renderer. Defaults to calculate the pixel density of the user's screen.
    * @description Change the size of the renderer.
    */
-  setSize: function(width, height, ratio) {
+  setSize(width, height, ratio) {
 
     this.width = width;
     this.height = height;
@@ -999,16 +1005,16 @@ _.extend(Renderer.prototype, Events, {
 
     return this.trigger(Events.Types.resize, width, height, ratio);
 
-  },
+  }
 
   /**
    * @name Two.CanvasRenderer#render
    * @function
    * @description Render the current scene to the `<canvas />`.
    */
-  render: function() {
+  render() {
 
-    var isOne = this.ratio === 1;
+    const isOne = this.ratio === 1;
 
     if (!isOne) {
       this.ctx.save();
@@ -1029,16 +1035,16 @@ _.extend(Renderer.prototype, Events, {
 
   }
 
-});
+}
 
 function renderArcEstimate(ctx, ox, oy, rx, ry, startAngle, endAngle, clockwise, xAxisRotation) {
 
-  var epsilon = Curve.Tolerance.epsilon;
-  var deltaAngle = endAngle - startAngle;
-  var samePoints = Math.abs(deltaAngle) < epsilon;
+  const delta = endAngle - startAngle;
+  const epsilon = Curve.Tolerance.epsilon;
+  const samePoints = Math.abs(delta) < epsilon;
 
   // ensures that deltaAngle is 0 .. 2 PI
-  deltaAngle = mod(deltaAngle, TWO_PI);
+  let deltaAngle = mod(delta, TWO_PI);
 
   if (deltaAngle < epsilon) {
 
@@ -1054,7 +1060,7 @@ function renderArcEstimate(ctx, ox, oy, rx, ry, startAngle, endAngle, clockwise,
 
   }
 
-  if (clockwise === true && ! samePoints) {
+  if (clockwise === true && !samePoints) {
 
     if (deltaAngle === TWO_PI) {
 
@@ -1068,21 +1074,21 @@ function renderArcEstimate(ctx, ox, oy, rx, ry, startAngle, endAngle, clockwise,
 
   }
 
-  for (var i = 0; i < Constants.Resolution; i++) {
+  for (let i = 0; i < Constants.Resolution; i++) {
 
-    var t = i / (Constants.Resolution - 1);
+    const t = i / (Constants.Resolution - 1);
 
-    var angle = startAngle + t * deltaAngle;
-    var x = ox + rx * Math.cos(angle);
-    var y = oy + ry * Math.sin(angle);
+    const angle = startAngle + t * deltaAngle;
+    let x = ox + rx * Math.cos(angle);
+    let y = oy + ry * Math.sin(angle);
 
     if (xAxisRotation !== 0) {
 
-      var cos = Math.cos(xAxisRotation);
-      var sin = Math.sin(xAxisRotation);
+      const cos = Math.cos(xAxisRotation);
+      const sin = Math.sin(xAxisRotation);
 
-      var tx = x - ox;
-      var ty = y - oy;
+      const tx = x - ox;
+      const ty = y - oy;
 
       // Rotate the point about the center of the ellipse.
       x = tx * cos - ty * sin + ox;
@@ -1098,10 +1104,10 @@ function renderArcEstimate(ctx, ox, oy, rx, ry, startAngle, endAngle, clockwise,
 
 function svgAngle(ux, uy, vx, vy) {
 
-  var dot = ux * vx + uy * vy;
-  var len = sqrt(ux * ux + uy * uy) *  sqrt(vx * vx + vy * vy);
+  const dot = ux * vx + uy * vy;
+  const len = sqrt(ux * ux + uy * uy) *  sqrt(vx * vx + vy * vy);
   // floating point precision, slightly over values appear
-  var ang = acos(max(-1, min(1, dot / len)));
+  let ang = acos(max(-1, min(1, dot / len)));
   if ((ux * vy - uy * vx) < 0) {
     ang = - ang;
   }
@@ -1110,4 +1116,7 @@ function svgAngle(ux, uy, vx, vy) {
 
 }
 
-export default Renderer;
+// Returns true if this is a non-transforming matrix
+function isDefaultMatrix(m) {
+  return (m[0] == 1 && m[3] == 0 && m[1] == 0 && m[4] == 1 && m[2] == 0 && m[5] == 0);
+}

@@ -17,10 +17,7 @@ QUnit.test('Two.Events', function(assert) {
 
   assert.expect(1);
 
-  var Item = function() {};
-  _.extend(Item.prototype, Two.Events);
-
-  var item = new Item();
+  var item = new Two.Events();
 
   item.bind('change', function(message) {
     assert.equal(message, 'hello', 'Bound Two.Events successfully.');
@@ -33,9 +30,9 @@ QUnit.test('Two.Events', function(assert) {
 
 QUnit.test('Two.Vector', function(assert) {
 
-  assert.expect(45);
+  assert.expect(48);
 
-  var vector = new Two.Vector();
+  var vector = new Two.Anchor();
 
   assert.equal(vector.x, 0, 'x property defaults to 0.');
   assert.equal(vector.y, 0, 'y property defaults to 0.');
@@ -133,7 +130,14 @@ QUnit.test('Two.Vector', function(assert) {
 
   vector.set(9, 3);
   vector.rotate(Math.PI / 2);
-  assert.equal(vector.equals({ x: - 2.9999999999999996, y: - 2.9999999999999996}), true, 'Two.Vector.rotate applies x, y properly.');
+  assert.equal(vector.equals({ x: - 2.9999999999999996, y: 9 }), true, 'Two.Vector.rotate applies x, y properly.');
+  vector.rotate(Math.PI / 2);
+  assert.equal(vector.equals({ x: -9, y: -2.999999999999999 }), true, 'Two.Vector.rotate applies x, y properly.');
+  vector.rotate(Math.PI / 2);
+  assert.equal(vector.equals({ x: 2.9999999999999987, y: - 9 }), true, 'Two.Vector.rotate applies x, y properly.');
+  vector.rotate(Math.PI / 2);
+  assert.equal(vector.equals({ x: 9, y: 2.9999999999999982 }), true, 'Two.Vector.rotate applies x, y properly.');
+
 
 });
 
@@ -141,7 +145,7 @@ QUnit.test('Bound Two.Vector', function(assert) {
 
   assert.expect(45);
 
-  var vector = new Two.Vector();
+  var vector = new Two.Anchor();
   vector.bind(Two.Events.Types.change, function() {});
 
   assert.equal(vector._bound, true, 'Vector is bound.');
@@ -344,14 +348,14 @@ QUnit.test('Two.Collection', function(assert) {
 
   assert.expect(14);
 
-  var poly = new Two.Path([new Two.Vector(0, 0)]);
-  var vector = new Two.Vector(150, 150);
+  var poly = new Two.Path([new Two.Anchor(0, 0)]);
+  var vector = new Two.Anchor(150, 150);
   var vertices = poly.vertices;
   var removed;
 
   assert.equal(vertices instanceof Two.Collection, true, 'Polyon.vertices is an instance of Two.Collection');
 
-  assert.equal(vertices[0].equals(new Two.Vector(0, 0)), true, 'Two.Collection created with correct items');
+  assert.equal(vertices[0].equals(new Two.Anchor(0, 0)), true, 'Two.Collection created with correct items');
 
   vertices.push(vector);
   assert.equal(vertices.length, 2, 'Two.Collection.push added one item to the end of vertices collection');
@@ -374,17 +378,17 @@ QUnit.test('Two.Collection', function(assert) {
   removed = null;
 
   vertices.push(
-    new Two.Vector(1, 1),
-    new Two.Vector(2, 2),
-    new Two.Vector(3, 3),
-    new Two.Vector(4, 4)
+    new Two.Anchor(1, 1),
+    new Two.Anchor(2, 2),
+    new Two.Anchor(3, 3),
+    new Two.Anchor(4, 4)
   );
 
   assert.equal(vertices.length, 5, 'Two.Collection.push adds several items to the end of vertices collection');
 
   removed = vertices.splice(2, 1, vector);
   assert.equal(vertices.length, 5, 'Two.Collection.splice adds and removes items from the vertices collection');
-  assert.equal(removed[0].equals(new Two.Vector(2, 2)), true, 'Two.Collection.splice remove the correct items from the vertices collection');
+  assert.equal(removed[0].equals(new Two.Anchor(2, 2)), true, 'Two.Collection.splice remove the correct items from the vertices collection');
   assert.equal(vertices[2].equals(vector), true, 'Two.Collection.splice inserts correct item to the middle of the vertices collection');
 
   var a = new Two.Collection('a', 'b', 'c', 'd', 'e');
@@ -439,7 +443,7 @@ QUnit.test('Two.Shape', function(assert) {
 
   assert.equal(shape._matrix.toString(), '1 0 0 1 50 25', 'Two.Shape.translation binds properly.');
 
-  shape.translation = new Two.Vector(25, 50);
+  shape.translation = new Two.Anchor(25, 50);
   shape._update();
 
   assert.equal(shape._matrix.toString(), '1 0 0 1 25 50', 'Two.Shape.translation binds properly.');
@@ -455,7 +459,7 @@ QUnit.test('Two.Shape', function(assert) {
 
   assert.equal(shape._matrix.toString(), '3 0 0 3 0 0', 'Two.Shape.scale uniform scale works properly.');
 
-  shape.scale = new Two.Vector(1, 2);
+  shape.scale = new Two.Anchor(1, 2);
   shape._update();
 
   assert.equal(shape._matrix.toString(), '1 0 0 2 0 0', 'Two.Shape.scale 2 dimension scale works properly.');
@@ -488,11 +492,11 @@ QUnit.test('Children adding and removing', function(assert) {
   var group2 = new Two.Group();
   var group3 = new Two.Group();
 
-  var poly1 = new Two.Path([new Two.Vector(0, 0)]);
-  var poly2 = new Two.Path([new Two.Vector(0, 0)]);
-  var poly3 = new Two.Path([new Two.Vector(0, 0)]);
-  var poly4 = new Two.Path([new Two.Vector(0, 0)]);
-  var poly5 = new Two.Path([new Two.Vector(0, 0)]);
+  var poly1 = new Two.Path([new Two.Anchor(0, 0)]);
+  var poly2 = new Two.Path([new Two.Anchor(0, 0)]);
+  var poly3 = new Two.Path([new Two.Anchor(0, 0)]);
+  var poly4 = new Two.Path([new Two.Anchor(0, 0)]);
+  var poly5 = new Two.Path([new Two.Anchor(0, 0)]);
 
 
   poly1.addTo(group1);

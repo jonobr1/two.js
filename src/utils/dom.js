@@ -1,7 +1,7 @@
-import root from './root.js';
-import _ from './underscore.js';
+import { root } from './root.js';
+import { _ } from './underscore.js';
 
-var dom = {
+export const dom = {
 
   hasEventListeners: typeof root.addEventListener === 'function',
 
@@ -25,24 +25,34 @@ var dom = {
 
   getRequestAnimationFrame: function() {
 
-    var lastTime = 0;
-    var vendors = ['ms', 'moz', 'webkit', 'o'];
-    var request = root.requestAnimationFrame, cancel;
+    const vendors = ['ms', 'moz', 'webkit', 'o'];
 
-    if(!request) {
-      for (var i = 0; i < vendors.length; i++) {
+    let lastTime = 0;
+    let request = root.requestAnimationFrame;
+
+    if (!request) {
+
+      for (let i = 0; i < vendors.length; i++) {
         request = root[vendors[i] + 'RequestAnimationFrame'] || request;
-        cancel = root[vendors[i] + 'CancelAnimationFrame']
-          || root[vendors[i] + 'CancelRequestAnimationFrame'] || cancel;
       }
 
-      request = request || function(callback, element) {
-        var currTime = new Date().getTime();
-        var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-        var id = root.setTimeout(function() { callback(currTime + timeToCall); }, timeToCall);
-        lastTime = currTime + timeToCall;
-        return id;
-      };
+      request = request || fallbackRequest;
+
+    }
+
+    function fallbackRequest(callback, element) {
+
+      const currTime = new Date().getTime();
+      const timeToCall = Math.max(0, 16 - (currTime - lastTime));
+      const id = root.setTimeout(nextRequest, timeToCall);
+      lastTime = currTime + timeToCall;
+
+      function nextRequest() {
+        callback(currTime + timeToCall);
+      }
+
+      return id;
+
     }
 
     return request;
@@ -51,20 +61,16 @@ var dom = {
 
 };
 
-var temp = (root.document ? root.document.createElement('div') : {});
+const temp = (root.document ? root.document.createElement('div') : {});
 temp.id = 'help-two-load';
 
 Object.defineProperty(dom, 'temp', {
   enumerable: true,
   get: function() {
     if (_.isElement(temp) && !root.document.head.contains(temp)) {
-      _.extend(temp.style, {
-        display: 'none'
-      });
+      temp.style.display = 'none';
       root.document.head.appendChild(temp);
     }
     return temp;
   }
 });
-
-export default dom;

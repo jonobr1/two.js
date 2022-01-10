@@ -89,7 +89,7 @@ __Triggers__:
 <% if (item.properties && item.properties.length > 0) { %>
 <div class="properties">
 <% _.each(item.properties, function(property) { %>
-<%= property.description %>
+<%= package.template(property.description) %>
 <% }); %>
 </div>
 <% } %>

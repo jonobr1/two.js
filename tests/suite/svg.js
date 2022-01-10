@@ -125,7 +125,7 @@
       var pct = i / amount;
       var x = pct * 300 + 50;
       var y = i % 2 ? 25 : 75;
-      points.push(new Two.Vector(x, y));
+      points.push(new Two.Anchor(x, y));
     }
     var poly = two.makePath(points, true);
     var path = two.makePath();
@@ -157,7 +157,7 @@
       var pct = i / amount;
       var x = pct * 300 + 50;
       var y = i % 2 ? 25 : 75;
-      points.push(new Two.Vector(x, y));
+      points.push(new Two.Anchor(x, y));
     }
     var curve = two.makeCurve(points, true);
 
@@ -196,7 +196,7 @@
     assert.equal(parseFloat(elem.getAttribute('x2')), 0, 'The x2 attribute applied properly.');
     assert.equal(parseFloat(elem.getAttribute('y2')), 200, 'The y2 attribute applied properly.');
     assert.equal(elem.getAttribute('spreadMethod'), 'pad', 'The spreadMethod attribute applied properly.');
-    assert.equal(elem.getAttribute('gradientUnits'), 'userSpaceOnUse', 'The gradientUnits attribute applied properly.');
+    assert.equal(elem.getAttribute('gradientUnits'), 'objectBoundingBox', 'The gradientUnits attribute applied properly.');
     assert.equal(elem.innerHTML, '<stop offset="0%" stop-color="rgb(255, 100, 100)" stop-opacity="1"></stop><stop offset="100%" stop-color="rgb(100, 100, 255)" stop-opacity="1"></stop>', 'The innerHTML applied properly.');
 
     QUnit.Utils.addInstanceToTest(assert.test, two);
@@ -230,7 +230,7 @@
     assert.equal(parseFloat(elem.getAttribute('fy')), 0, 'The fy attribute applied properly.');
     assert.equal(parseFloat(elem.getAttribute('r')), 200, 'The r attribute applied properly.');
     assert.equal(elem.getAttribute('spreadMethod'), 'pad', 'The spreadMethod attribute applied properly.');
-    assert.equal(elem.getAttribute('gradientUnits'), 'userSpaceOnUse', 'The gradeintUnits attribute applied properly.');
+    assert.equal(elem.getAttribute('gradientUnits'), 'objectBoundingBox', 'The gradeintUnits attribute applied properly.');
     assert.equal(elem.innerHTML, '<stop offset="0%" stop-color="rgb(255, 100, 100)" stop-opacity="1"></stop><stop offset="100%" stop-color="rgb(100, 100, 255)" stop-opacity="1"></stop>', 'The innerHTML applied properly.');
 
     QUnit.Utils.addInstanceToTest(assert.test, two);
@@ -417,6 +417,8 @@
     text.fill = '#00aeff';
     text.noStroke();
 
+    text.className = 'hello world';
+
     two.update();
 
     var elem = two.renderer.domElement.querySelector('#' + text.id);
@@ -436,7 +438,7 @@
     assert.equal(elem.getAttribute('stroke-width'), 'undefined', 'The stroke-width attribute applied properly.');
     assert.equal(elem.getAttribute('opacity'), '1', 'The opacity attribute applied properly.');
     assert.equal(elem.getAttribute('visibility'), 'visible', 'The visibility attribute applied properly.');
-    assert.equal(elem.getAttribute('class'), '', 'The class attribute applied properly.');
+    assert.equal(elem.getAttribute('class'), 'hello world', 'The class attribute applied properly.');
     assert.equal(elem.innerHTML, text.value, 'The value attribute applied properly.');
 
     QUnit.Utils.addInstanceToTest(assert.test, two);

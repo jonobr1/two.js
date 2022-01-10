@@ -10,6 +10,7 @@ var sourceFiles = [
   'src/renderers/svg.js',
   'src/renderers/canvas.js',
   'src/renderers/webgl.js',
+  'src/element.js',
   'src/shape.js',
   'src/path.js',
   'src/shapes/line.js',
