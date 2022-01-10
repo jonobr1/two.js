@@ -4,7 +4,7 @@ var path = require('path');
 var compiler = require('jsdoc-api');
 var sourceFiles = require('./source-files');
 
-var package = JSON.parse(fs.readFileSync(
+var pkg = JSON.parse(fs.readFileSync(
   path.resolve(__dirname, '../package.json')));
 var directory = [];
 
@@ -15,13 +15,13 @@ var template = _.template(
   )
 );
 
-package.template = function(str) {
+pkg.template = function(str) {
   if (typeof str === 'string') {
     var regex = /\$\w*/g;
     var match = str.match(regex);
     if (match && match.length > 0) {
       var prop = match[0].replace('$', '');
-      str = str.replace(regex, package[prop]);
+      str = str.replace(regex, pkg[prop]);
     }
   }
   return str;
@@ -144,10 +144,10 @@ function process() {
     fs.writeFileSync(outputFile, template({
       root: getRoot(citations, true),
       citations: citations,
-      package: package
+      package: pkg
     }));
 
-    // console.log('Generated', outputFile);
+    console.log('Generated', outputFile);
 
   });
 
