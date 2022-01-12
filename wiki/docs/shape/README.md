@@ -65,8 +65,8 @@ Object access to store relevant renderer specific variables. Warning: manipulati
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L74">
-    shape.js:74
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L89">
+    shape.js:89
   </a>
 
 </div>
@@ -120,8 +120,8 @@ Session specific unique identifier.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L83">
-    shape.js:83
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L98">
+    shape.js:98
   </a>
 
 </div>
@@ -181,8 +181,8 @@ The transformation matrix of the shape.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L90">
-    shape.js:90
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L105">
+    shape.js:105
   </a>
 
 </div>
@@ -198,6 +198,57 @@ The transformation matrix of the shape.
 
 
 </div>
+
+
+</div>
+
+
+
+<div class="instance member ">
+
+## worldMatrix
+
+<h2 class="longname" aria-hidden="true"><a href="#worldMatrix"><span class="prefix">Two.Shape.</span><span class="shortname">worldMatrix</span></a></h2>
+
+
+
+
+
+
+
+
+
+
+<div class="properties">
+
+
+
+</div>
+
+
+
+
+
+
+<div class="description">
+
+The transformation matrix of the shape in the scene.
+
+</div>
+
+
+
+
+
+<div class="meta">
+
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L113">
+    shape.js:113
+  </a>
+
+</div>
+
+
 
 
 </div>
@@ -236,8 +287,8 @@ The x and y value for where the shape is placed relative to its parent.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L98">
-    shape.js:98
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L120">
+    shape.js:120
   </a>
 
 </div>
@@ -281,8 +332,8 @@ The value in Number for how much the shape is rotated relative to its parent.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L104">
-    shape.js:104
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L126">
+    shape.js:126
   </a>
 
 </div>
@@ -326,8 +377,8 @@ The value for how much the shape is scaled relative to its parent.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L110">
-    shape.js:110
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L132">
+    shape.js:132
   </a>
 
 </div>
@@ -387,8 +438,8 @@ Skew the shape by an angle in the x axis direction.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L117">
-    shape.js:117
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L139">
+    shape.js:139
   </a>
 
 </div>
@@ -438,8 +489,8 @@ Skew the shape by an angle in the y axis direction.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L124">
-    shape.js:124
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L146">
+    shape.js:146
   </a>
 
 </div>
@@ -483,8 +534,8 @@ Alias for [Two.Shape.position](/docs/shape/#position).
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L140">
-    shape.js:140
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L162">
+    shape.js:162
   </a>
 
 </div>
@@ -535,8 +586,8 @@ Convenience method to add itself to the scenegraph.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L151">
-    shape.js:151
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L173">
+    shape.js:173
   </a>
 
 </div>
@@ -580,8 +631,8 @@ Remove self from the scene / parent.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L162">
-    shape.js:162
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L184">
+    shape.js:184
   </a>
 
 </div>
@@ -640,8 +691,8 @@ Create a new [Two.Shape](/docs/shape/) with the same values as the current shape
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L179">
-    shape.js:179
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L201">
+    shape.js:201
   </a>
 
 </div>
