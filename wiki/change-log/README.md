@@ -5,11 +5,13 @@ title: Two.js Change Log
 lang: en-US
 ---
 
+## Nightly
+
++ Added `Two.Shape.worldMatrix`
+
 ## Jan 10, 2022 v0.8.0
 
 <h3 class="visible">Jan 10, 2022</h3><version-link v="v0.8.0" />
-
-## Nightly
 
 + Added `Two.Element` as an EcmaScript 6 class
 + Converted `Two.ImageSequence` to EcmaScript 6 class
