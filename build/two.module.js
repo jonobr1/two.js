@@ -717,7 +717,7 @@ var Constants = {
     canvas: "CanvasRenderer"
   },
   Version: "v0.8.1",
-  PublishDate: "2022-01-12T04:52:15.191Z",
+  PublishDate: "2022-01-12T04:54:18.560Z",
   Identifier: "two-",
   Resolution: 12,
   AutoCalculateImportedMatrices: true,
@@ -10170,7 +10170,7 @@ var _Two = class {
         callback(group, svg2);
       }
     }.bind(this);
-    if (/.*\.svg/ig.test(text)) {
+    if (/\.svg$/i.test(text)) {
       xhr(text, attach);
       return group;
     }
