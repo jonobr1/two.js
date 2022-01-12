@@ -1089,7 +1089,7 @@ export default class Two {
 
     }).bind(this);
 
-    if (/.*\.svg/ig.test(text)) {
+    if (/\.svg$/i.test(text)) {
 
       xhr(text, attach);
 
