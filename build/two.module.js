@@ -717,7 +717,7 @@ var Constants = {
     canvas: "CanvasRenderer"
   },
   Version: "v0.8.1",
-  PublishDate: "2022-01-12T04:43:38.441Z",
+  PublishDate: "2022-01-12T04:52:15.191Z",
   Identifier: "two-",
   Resolution: 12,
   AutoCalculateImportedMatrices: true,
@@ -6758,6 +6758,8 @@ var read = {
       stops.push(new Stop(offset, color, opacity));
     }
     const gradient = new RadialGradient(cx, cy, r, stops, fx, fy);
+    gradient.spread = spread;
+    gradient.units = units;
     applySvgAttributes.call(this, node, gradient, parentStyles);
     return gradient;
   },
