@@ -1309,6 +1309,9 @@ export const read = {
 
     const gradient = new RadialGradient(cx, cy, r, stops, fx, fy);
 
+    gradient.spread = spread;
+    gradient.units = units;
+
     applySvgAttributes.call(this, node, gradient, parentStyles);
 
     return gradient;
