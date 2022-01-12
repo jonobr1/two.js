@@ -21,6 +21,13 @@ export class Shape extends Element {
   _flagMatrix = true;
 
   /**
+   * @name Two.Shape#_flagWorldMatrix
+   * @private
+   * @property {Boolean} - Determines whether the world matrix needs updating.
+   */
+  _flagWorldMatrix = true;
+
+  /**
    * @name Two.Shape#_flagScale
    * @private
    * @property {Boolean} - Determines whether the scale needs updating.
@@ -239,6 +246,8 @@ export class Shape extends Element {
 
     if (!this._matrix.manual && this._flagMatrix) {
 
+      this._flagWorldMatrix = true;
+
       this._matrix
         .identity()
         .translate(this.position.x, this.position.y);
@@ -357,8 +366,9 @@ const proto = {
   worldMatrix: {
     enumerable: true,
     get: function() {
-      if (this._flagMatrix) {
+      if (this._flagWorldMatrix) {
         getComputedMatrix(this, this._worldMatrix);
+        this._flagWorldMatrix = false;
       }
       return this._worldMatrix;
     },
