@@ -3,6 +3,7 @@ import { Events } from './events.js';
 import { Element } from './element.js';
 import { Matrix } from './matrix.js';
 import { Vector } from './vector.js';
+import { getComputedMatrix } from './utils/math.js';
 
 /**
  * @name Two.Shape
@@ -27,6 +28,20 @@ export class Shape extends Element {
   _flagScale = false;
 
   // Underlying Properties
+
+  /**
+   * @name Two.Shape#_matrix
+   * @private
+   * @property {Two.Matrix} - The matrix value of the shape's position, rotation, and scale.
+   */
+  _matrix = null;
+
+  /**
+   * @name Two.Shape#_worldMatrix
+   * @private
+   * @property {Two.Matrix} - The matrix value of the shape's position, rotation, and scale in the scene.
+   */
+  _worldMatrix = null;
 
   /**
    * @name Two.Shape#_position
@@ -94,6 +109,13 @@ export class Shape extends Element {
      * @nota-bene {@link Two.Shape#position}, {@link Two.Shape#rotation}, {@link Two.Shape#scale}, {@link Two.Shape#skewX}, and {@link Two.Shape#skewY} apply their values to the matrix when changed. The matrix is what is sent to the renderer to be drawn.
      */
     this.matrix = new Matrix();
+
+    /**
+     * @name Two.Shape#worldMatrix
+     * @property {Two.Matrix}
+     * @description The transformation matrix of the shape in the scene.
+     */
+    this.worldMatrix = new Matrix();
 
     /**
      * @name Two.Shape#position
@@ -330,6 +352,17 @@ const proto = {
     set: function(v) {
       this._matrix = v;
       this._flagMatrix = true;
+    }
+  },
+  worldMatrix: {
+    enumerable: true,
+    get: function() {
+      // TODO: Make DRY
+      getComputedMatrix(this, this._worldMatrix);
+      return this._worldMatrix;
+    },
+    set: function(v) {
+      this._worldMatrix = v;
     }
   }
 };
