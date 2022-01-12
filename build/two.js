@@ -740,8 +740,8 @@ var Two = (() => {
       svg: "SVGRenderer",
       canvas: "CanvasRenderer"
     },
-    Version: "v0.8.0",
-    PublishDate: "2022-01-10T19:20:16.973Z",
+    Version: "v0.8.1",
+    PublishDate: "2022-01-12T04:43:38.441Z",
     Identifier: "two-",
     Resolution: 12,
     AutoCalculateImportedMatrices: true,
@@ -1418,6 +1418,8 @@ var Two = (() => {
   var Shape = class extends Element {
     _flagMatrix = true;
     _flagScale = false;
+    _matrix = null;
+    _worldMatrix = null;
     _position = null;
     _rotation = 0;
     _scale = 1;
@@ -1432,6 +1434,7 @@ var Two = (() => {
       this.isShape = true;
       this.id = Constants.Identifier + Constants.uniqueId();
       this.matrix = new Matrix2();
+      this.worldMatrix = new Matrix2();
       this.position = new Vector();
       this.rotation = 0;
       this.scale = 1;
@@ -1571,6 +1574,16 @@ var Two = (() => {
       set: function(v) {
         this._matrix = v;
         this._flagMatrix = true;
+      }
+    },
+    worldMatrix: {
+      enumerable: true,
+      get: function() {
+        getComputedMatrix(this, this._worldMatrix);
+        return this._worldMatrix;
+      },
+      set: function(v) {
+        this._worldMatrix = v;
       }
     }
   };

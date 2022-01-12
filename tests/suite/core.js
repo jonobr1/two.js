@@ -430,7 +430,7 @@ QUnit.test('Two.Children', function(assert) {
 
 QUnit.test('Two.Shape', function(assert) {
 
-  assert.expect(11);
+  assert.expect(13);
 
   var shape = new Two.Shape();
   assert.equal(shape.translation.toString(), '0, 0', 'Two.Shape.translation constructed properly.');
@@ -481,6 +481,18 @@ QUnit.test('Two.Shape', function(assert) {
   shape._update();
 
   assert.equal(shape._matrix.toString(), '-9.999988 0.015926 -0.015927 -9.999988 0 0', 'Two.Shape.rotation works properly.');
+
+  assert.equal(shape.worldMatrix.toString(), '-9.999988 0.015926 -0.015927 -9.999988 0 0', 'Two.Shape.worldMatrix locally updates properly.');
+
+  var scene = new Two.Group();
+
+  scene.add(shape);
+
+  scene.position.x = 100;
+
+  scene._update();
+
+  assert.equal(shape.worldMatrix.toString(), '-9.999988 0.015926 -0.015927 -9.999988 100 0', 'Two.Shape.worldMatrix properly calculates world matrix.');
 
 });
 
