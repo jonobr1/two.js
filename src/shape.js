@@ -182,7 +182,7 @@ export class Shape extends Element {
   }
 
   /**
-   * @name Two.Text#remove
+   * @name Two.Shape#remove
    * @function
    * @description Remove self from the scene / parent.
    */

@@ -603,7 +603,7 @@ Convenience method to add itself to the scenegraph.
 
 ## remove
 
-<h2 class="longname" aria-hidden="true"><a href="#remove"><span class="prefix">Two.Text.</span><span class="shortname">remove</span></a></h2>
+<h2 class="longname" aria-hidden="true"><a href="#remove"><span class="prefix">Two.Shape.</span><span class="shortname">remove</span></a></h2>
 
 
 
