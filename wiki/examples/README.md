@@ -97,6 +97,12 @@ Various examples of how to use different features of Two.js with associated tags
   tags="import, vector, mouse, ui, vertices, points, layers, group" />
 
 <example-card
+  title="Watch Face"
+  href="https://codepen.io/jonobr1/pen/MWEzMGv"
+  src="https://shots.codepen.io/jonobr1/pen/MWEzMGv-512.jpg"
+  tags="line, dashes, group, cap, rotation, text, non-interactive" />
+
+<example-card
   title="With Tween.js"
   href="https://codepen.io/jonobr1/pen/dyzrZjM"
   src="https://shots.codepen.io/jonobr1/pen/dyzrZjM-512.jpg"
