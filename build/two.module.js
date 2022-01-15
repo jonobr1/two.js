@@ -717,7 +717,7 @@ var Constants = {
     canvas: "CanvasRenderer"
   },
   Version: "v0.8.1",
-  PublishDate: "2022-01-12T04:54:18.560Z",
+  PublishDate: "2022-01-15T03:16:08.891Z",
   Identifier: "two-",
   Resolution: 12,
   AutoCalculateImportedMatrices: true,
@@ -4470,7 +4470,8 @@ __publicField(Path, "Properties", [
   "ending"
 ]);
 __publicField(Path, "Utils", {
-  getCurveLength: getCurveLength2
+  getCurveLength: getCurveLength2,
+  interpret: read.path
 });
 var proto11 = {
   linewidth: {
@@ -6335,7 +6336,12 @@ var read = {
     return group;
   },
   polygon: function(node, parentStyles) {
-    const points = node.getAttribute("points");
+    let points;
+    if (typeof node === "string") {
+      points = node;
+    } else {
+      points = node.getAttribute("points");
+    }
     const verts = [];
     points.replace(/(-?[\d.eE-]+)[,|\s](-?[\d.eE-]+)/g, function(match, p1, p2) {
       verts.push(new Anchor(parseFloat(p1), parseFloat(p2)));
@@ -6351,7 +6357,12 @@ var read = {
     return poly;
   },
   path: function(node, parentStyles) {
-    let path = node.getAttribute("d");
+    let path;
+    if (typeof node === "string") {
+      path = node;
+    } else {
+      path = node.getAttribute("d");
+    }
     let points = [];
     let closed2 = false, relative = false;
     if (path) {
