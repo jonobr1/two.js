@@ -516,7 +516,7 @@ declare module "src/anchor" {
      * @description An object that holds 3 {@link Two.Vector}s, the anchor point and its corresponding handles: `left` and `right`. In order to properly describe the bezier curve about the point there is also a command property to describe what type of drawing should occur when Two.js renders the anchors.
      */
     export class Anchor {
-        static broadcast(): void;
+        static makeBroadcast(scope: any): () => void;
         constructor(x?: number, y?: number, ax?: number, ay?: number, bx?: number, by?: number, command?: string);
         controls: {
             left: Vector;
@@ -754,18 +754,17 @@ declare module "src/element" {
          */
         private _flagClassName;
         /**
-         * @name Two.Element#_renderer
-         * @private
+         * @name Two.Element#renderer
          * @property {Object} - Object access to store relevant renderer specific variables. Warning: manipulating this object can create unintended consequences.
          * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `shape.renderer.elem`.
          */
-        private _renderer;
+        _renderer: {};
         /**
-         * @name Two.Element#_id
-         * @private
-         * @see {@link Two.Element#id}
+         * @name Two.Element#id
+         * @property {String} - Session specific unique identifier.
+         * @nota-bene In the {@link Two.SvgRenderer} change this to change the underlying SVG element's id too.
          */
-        private _id;
+        _id: string;
         /**
          * @name Two.Element#className
          * @property {String} - A class to be applied to the element to be compatible with CSS styling.
@@ -778,6 +777,12 @@ declare module "src/element" {
          * @description A list of class strings stored if imported / interpreted  from an SVG element.
          */
         classList: any[];
+        /**
+         * @name Two.Element#flagReset
+         * @function
+         * @description Called internally by Two.js's renderer to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+         */
+        flagReset(): void;
     }
 }
 declare module "src/matrix" {
@@ -1002,6 +1007,18 @@ declare module "src/shape" {
          */
         private _flagScale;
         /**
+         * @name Two.Shape#_matrix
+         * @private
+         * @property {Two.Matrix} - The matrix value of the shape's position, rotation, and scale.
+         */
+        private _matrix;
+        /**
+         * @name Two.Shape#_worldMatrix
+         * @private
+         * @property {Two.Matrix} - The matrix value of the shape's position, rotation, and scale in the scene.
+         */
+        private _worldMatrix;
+        /**
          * @name Two.Shape#_position
          * @private
          * @property {Two.Vector} - The translation values as a {@link Two.Vector}.
@@ -1045,6 +1062,12 @@ declare module "src/shape" {
          * @nota-bene {@link Two.Shape#position}, {@link Two.Shape#rotation}, {@link Two.Shape#scale}, {@link Two.Shape#skewX}, and {@link Two.Shape#skewY} apply their values to the matrix when changed. The matrix is what is sent to the renderer to be drawn.
          */
         matrix: Matrix;
+        /**
+         * @name Two.Shape#worldMatrix
+         * @property {Two.Matrix}
+         * @description The transformation matrix of the shape in the scene.
+         */
+        worldMatrix: Matrix;
         /**
          * @name Two.Shape#position
          * @property {Two.Vector} - The x and y value for where the shape is placed relative to its parent.
@@ -1090,7 +1113,7 @@ declare module "src/shape" {
          */
         addTo(group: any): Shape;
         /**
-         * @name Two.Text#remove
+         * @name Two.Shape#remove
          * @function
          * @description Remove self from the scene / parent.
          */
@@ -1119,8 +1142,6 @@ declare module "src/shape" {
          * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
          */
         private flagReset;
-        _flagId: boolean;
-        _flagClassName: boolean;
     }
     import { Matrix } from "src/matrix";
     import { Vector } from "src/vector";
@@ -1689,6 +1710,42 @@ declare module "src/effects/stop" {
         static Properties: string[];
         constructor(offset: any, color: any, opacity: any);
         /**
+         * @name Two.Stop#_flagOffset
+         * @private
+         * @property {Boolean} - Determines whether the {@link Two.Stop#offset} needs updating.
+         */
+        private _flagOffset;
+        /**
+         * @name Two.Stop#_flagOpacity
+         * @private
+         * @property {Boolean} - Determines whether the {@link Two.Stop#opacity} needs updating.
+         */
+        private _flagOpacity;
+        /**
+         * @name Two.Stop#_flagColor
+         * @private
+         * @property {Boolean} - Determines whether the {@link Two.Stop#color} needs updating.
+         */
+        private _flagColor;
+        /**
+         * @name Two.Stop#_offset
+         * @private
+         * @see {@link Two.Stop#offset}
+         */
+        private _offset;
+        /**
+         * @name Two.Stop#_opacity
+         * @private
+         * @see {@link Two.Stop#opacity}
+         */
+        private _opacity;
+        /**
+         * @name Two.Stop#_color
+         * @private
+         * @see {@link Two.Stop#color}
+         */
+        private _color;
+        /**
          * @name Two.Stop#offset
          * @property {Number} - The offset percentage of the stop represented as a zero-to-one value.
          */
@@ -1725,9 +1782,6 @@ declare module "src/effects/stop" {
          * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
          */
         private flagReset;
-        _flagOffset: boolean;
-        _flagColor: boolean;
-        _flagOpacity: boolean;
     }
 }
 declare module "src/effects/gradient" {
@@ -2215,6 +2269,14 @@ declare module "src/path" {
         static Properties: string[];
         static Utils: {
             getCurveLength: typeof getCurveLength;
+            /**
+             * @name Two.Path.Utils.interpret
+             * @function
+             * @param {String|SVGPath} node - The SVG Path node to interpret. Alternatively, this can be a string of commands, known as the `d` attribute of an SVG Path.
+             * @param {Object} [parentStyles] - The styles the path should inherit from its parent.
+             * @returns {Two.Path}
+             */
+            interpret: (node: any, parentStyles: any) => Path;
         };
         constructor(vertices: any, closed: any, curved: any, manual: any);
         /**
@@ -2985,6 +3047,11 @@ declare module "src/shapes/ellipse" {
      * @param {Number} [resolution=4] - The number of vertices used to construct the ellipse.
      */
     export class Ellipse {
+        /**
+         * @name Two.Ellipse.Properties
+         * @property {String[]} - A list of properties that are on every {@link Two.Ellipse}.
+         */
+        static Properties: string[];
         constructor(ox: any, oy: any, rx: any, ry: any, resolution: any);
         /**
          * @name Two.Ellipse#_flagWidth
@@ -3012,11 +3079,6 @@ declare module "src/shapes/ellipse" {
         private _height;
         width: number;
         height: number;
-        /**
-         * @name Two.Ellipse.Properties
-         * @property {String[]} - A list of properties that are on every {@link Two.Ellipse}.
-         */
-        Properties: string[];
         /**
          * @name Two.Ellipse#_update
          * @function
@@ -3438,7 +3500,7 @@ declare module "src/utils/interpret-svg" {
         g: (node: any, parentStyles: any) => Group;
         polygon: (node: any, parentStyles: any) => Path;
         polyline: (node: any, parentStyles: any) => any;
-        path: (node: any, parentStyles: any) => any;
+        path: (node: any, parentStyles: any) => Path;
         circle: (node: any, parentStyles: any) => any;
         ellipse: (node: any, parentStyles: any) => any;
         rect: (node: any, parentStyles: any) => any;
@@ -4371,7 +4433,7 @@ declare module "src/two" {
         };
         /**
          * @name Two.Version
-         * @property {String} - The current working version of the library.
+         * @property {String} - The current working version of the library, `$version`.
          */
         static Version: string;
         /**
