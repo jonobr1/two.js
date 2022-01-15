@@ -8,6 +8,7 @@ lang: en-US
 ## Nightly
 
 + Added `Two.Shape.worldMatrix`
++ Added `Two.Path.Utils.interpret` which allows for string interpretation
 
 ## Jan 10, 2022 v0.8.0
 
