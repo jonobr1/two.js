@@ -670,7 +670,13 @@ export const read = {
 
   polygon: function(node, parentStyles) {
 
-    const points = node.getAttribute('points');
+    let points;
+
+    if (typeof node === 'string') {
+      points = node;
+    } else {
+      points = node.getAttribute('points');
+    }
 
     const verts = [];
     points.replace(/(-?[\d.eE-]+)[,|\s](-?[\d.eE-]+)/g, function(match, p1, p2) {
@@ -694,7 +700,14 @@ export const read = {
 
   path: function(node, parentStyles) {
 
-    let path = node.getAttribute('d');
+    let path;
+
+    if (typeof node === 'string') {
+      path = node;
+    } else {
+      path = node.getAttribute('d');
+    }
+
     let points = [];
     let closed = false, relative = false;
 
