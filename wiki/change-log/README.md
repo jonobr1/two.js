@@ -7,6 +7,7 @@ lang: en-US
 
 ## Nightly
 
++ Fixed `Two.Path.begining` and `Two.Path.ending` interpolation when `Two.Anchor.relative = false`
 + Added `Two.Shape.worldMatrix`
 + Added `Two.Path.Utils.interpret` which allows for string interpretation
 
