@@ -57,5 +57,5 @@ export const _ = {
    * @property {Date} - A special `Date` like object to get the current millis of the session. Used internally to calculate time between frames.
    * e.g: `Utils.performance.now() // milliseconds since epoch`
    */
-  performance: ((root.performance && root.performance.now) ? root.performance : Date),
+  performance: ((root.performance && root.performance.now) ? root.performance : Date)
 };
