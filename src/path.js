@@ -4,7 +4,6 @@ import { getComputedMatrix, lerp, mod } from './utils/math.js';
 import { getComponentOnCubicBezier, getCurveBoundingBox, getCurveFromPoints } from './utils/curves.js';
 import { contains, getIdByLength, getCurveLength, getSubdivisions } from './utils/shape.js';
 import { _ } from './utils/underscore.js';
-import { read } from './utils/interpret-svg.js';
 
 import { Shape } from './shape.js';
 import { Events } from './events.js';
@@ -400,15 +399,7 @@ export class Path extends Shape {
   ];
 
   static Utils = {
-    getCurveLength,
-    /**
-     * @name Two.Path.Utils.interpret
-     * @function
-     * @param {String|SVGPath} node - The SVG Path node to interpret. Alternatively, this can be a string of commands, known as the `d` attribute of an SVG Path.
-     * @param {Object} [parentStyles] - The styles the path should inherit from its parent.
-     * @returns {Two.Path}
-     */
-    interpret: read.path
+    getCurveLength
   };
 
   /**

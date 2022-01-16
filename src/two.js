@@ -57,6 +57,13 @@ import { Constants } from './constants.js';
 const Utils = _.extend({
   Error: TwoError,
   getRatio,
+  /**
+   * @name Two.Utils.read.path
+   * @function
+   * @param {String|SVGPath} node - The SVG Path node to interpret. Alternatively, this can be a string of commands, known as the `d` attribute of an SVG Path.
+   * @param {Object} [parentStyles] - The styles the path should inherit from its parent.
+   * @returns {Two.Path}
+   */
   read,
   xhr
 }, _, CanvasShim, Curves, math);
