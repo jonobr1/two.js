@@ -8,8 +8,8 @@ lang: en-US
 ## Nightly
 
 + Fixed `Two.Path.begining` and `Two.Path.ending` interpolation when `Two.Anchor.relative = false`
++ Added `Two.Utils.read.path(string)` which allows for string interpretation of an SVG path's `d` attribute
 + Added `Two.Shape.worldMatrix`
-+ Added `Two.Path.Utils.interpret` which allows for string interpretation
 
 ## Jan 10, 2022 v0.8.0
 
