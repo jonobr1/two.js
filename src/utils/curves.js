@@ -310,39 +310,82 @@ function getCurveFromPoints(points, closed) {
  */
 function getControlPoints(a, b, c) {
 
+  const displacement = 0.33; // Why this value specifically?
   const a1 = Vector.angleBetween(a, b);
   const a2 = Vector.angleBetween(c, b);
 
   let d1 = Vector.distanceBetween(a, b);
   let d2 = Vector.distanceBetween(c, b);
 
-  let mid = (a1 + a2) / 2;
+  const hasLeft = d1 > 0.0001;
+  const hasRight = d2 > 0.0001;
 
-  // TODO: Issue 73
-  if (d1 < 0.0001 || d2 < 0.0001) {
-    if (typeof b.relative === 'boolean' && !b.relative) {
+  let p;
+  let mid = 0;
+  let count = 0;
+
+  if (!hasLeft || !hasRight) {
+    b.controls.left.clear();
+    b.controls.right.clear();
+    if (!b.relative) {
       b.controls.left.copy(b);
       b.controls.right.copy(b);
     }
     return b;
   }
 
-  d1 *= 0.33; // Why 0.33?
-  d2 *= 0.33;
-
-  if (a2 < a1) {
-    mid += HALF_PI;
-  } else {
-    mid -= HALF_PI;
+  if (hasLeft) {
+    mid += a1;
+    count++;
+  }
+  if (hasRight) {
+    mid += a2;
+    count++;
   }
 
-  b.controls.left.x = Math.cos(mid) * d1;
-  b.controls.left.y = Math.sin(mid) * d1;
+  mid /= Math.max(count, 1);
 
-  mid -= Math.PI;
+  if (hasLeft && hasRight) {
+    if (a2 < a1) {
+      mid += HALF_PI;
+    } else {
+      mid -= HALF_PI;
+    }
+  } else if (hasLeft) {
+    p = getReflection(b, a);
+    mid = Vector.angleBetween(p, b);
+  } else if (hasRight) {
+    p = getReflection(b, c);
+    mid = Vector.angleBetween(b, p);
+  }
 
-  b.controls.right.x = Math.cos(mid) * d2;
-  b.controls.right.y = Math.sin(mid) * d2;
+  if (d1 < 0.0001) {
+
+    b.controls.left.clear();
+
+  } else {
+
+    d1 *= displacement;
+
+    b.controls.left.x = Math.cos(mid) * d1;
+    b.controls.left.y = Math.sin(mid) * d1;
+
+  }
+
+  if (d2 < 0.0001) {
+
+    b.controls.right.clear();
+
+  } else {
+
+    d2 *= displacement;
+
+    mid -= Math.PI;
+
+    b.controls.right.x = Math.cos(mid) * d2;
+    b.controls.right.y = Math.sin(mid) * d2;
+
+  }
 
   if (typeof b.relative === 'boolean' && !b.relative) {
     b.controls.left.x += b.x;
@@ -362,7 +405,7 @@ function getControlPoints(a, b, c) {
  * @param {Vector} b
  * @param {Boolean} [relative=false]
  * @returns {Vector} New {@link Vector} that represents the reflection point.
- * @description Get the reflection of a point `b` about point `a`. Where `a` is in absolute space and `b` is relative to `a`.
+ * @description Get the reflection of a point `b` about point `a`. Where `a` is in absolute space and `b` can be relative to `a`.
  * @see {@link http://www.w3.org/TR/SVG11/implnote.html#PathElementImplementationNotes}
  */
 function getReflection(a, b, relative) {
