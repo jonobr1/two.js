@@ -20,6 +20,8 @@ import { Texture } from './effects/texture.js';
 const min = Math.min, max = Math.max,
   ceil = Math.ceil, floor = Math.floor;
 
+const vector = new Vector();
+
 /**
  * @name Two.Path
  * @class
@@ -1008,8 +1010,7 @@ export class Path extends Shape {
 
         if (i > high && !right) {
 
-          v = this._renderer.collection[i];
-          v.copy(this._collection[i]);
+          v = this._renderer.collection[i].copy(this._collection[i]);
           this.getPointAt(ending, v);
           v.command = this._renderer.collection[i].command;
           this._renderer.vertices.push(v);
@@ -1021,10 +1022,14 @@ export class Path extends Shape {
           // of the in-between point
           if (prev && prev.controls) {
 
-            v.controls.right.clear();
+            if (v.controls.relative) {
+              v.controls.right.clear();
+            } else {
+              v.controls.right.copy(v);
+            }
 
             this._renderer.collection[i - 1].controls.right
-              .clear()
+              .copy(prev)
               .lerp(prev.controls.right, v.t);
 
           }
@@ -1038,13 +1043,21 @@ export class Path extends Shape {
           if (i === high && contains(this, ending)) {
             right = v;
             if (!closed && right.controls) {
-              right.controls.right.clear();
+              if (right.relative) {
+                right.controls.right.clear();
+              } else {
+                right.controls.right.copy(right);
+              }
             }
           } else if (i === low && contains(this, beginning)) {
             left = v;
             left.command = Commands.move;
             if (!closed && left.controls) {
-              left.controls.left.clear();
+              if (left.relative) {
+                left.controls.left.clear();
+              } else {
+                left.controls.left.copy(left);
+              }
             }
           }
 
@@ -1057,8 +1070,7 @@ export class Path extends Shape {
 
         i = low - 1;
 
-        v = this._renderer.collection[i];
-        v.copy(this._collection[i]);
+        v = this._renderer.collection[i].copy(this._collection[i]);
         this.getPointAt(beginning, v);
         v.command = Commands.move;
         this._renderer.vertices.unshift(v);
@@ -1071,9 +1083,16 @@ export class Path extends Shape {
 
           v.controls.left.clear();
 
-          this._renderer.collection[i + 1].controls.left
-            .copy(next.controls.left)
-            .lerp(Vector.zero, v.t);
+          if (next.relative) {
+            this._renderer.collection[i + 1].controls.left
+              .copy(next.controls.left)
+              .lerp(Vector.zero, v.t);
+          } else {
+            vector.copy(next);
+            this._renderer.collection[i + 1].controls.left
+              .copy(next.controls.left)
+              .lerp(next, v.t);
+          }
 
         }
 

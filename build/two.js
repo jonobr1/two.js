@@ -741,7 +741,7 @@ var Two = (() => {
       canvas: "CanvasRenderer"
     },
     Version: "v0.8.1",
-    PublishDate: "2022-01-16T02:17:08.539Z",
+    PublishDate: "2022-01-16T05:04:32.871Z",
     Identifier: "two-",
     Resolution: 12,
     AutoCalculateImportedMatrices: true,
@@ -907,32 +907,30 @@ var Two = (() => {
     }
   }
   function getControlPoints(a, b, c) {
-    const displacement = 0.33;
     const a1 = Vector.angleBetween(a, b);
     const a2 = Vector.angleBetween(c, b);
     let d1 = Vector.distanceBetween(a, b);
     let d2 = Vector.distanceBetween(c, b);
     let mid = (a1 + a2) / 2;
+    if (d1 < 1e-4 || d2 < 1e-4) {
+      if (typeof b.relative === "boolean" && !b.relative) {
+        b.controls.left.copy(b);
+        b.controls.right.copy(b);
+      }
+      return b;
+    }
+    d1 *= 0.33;
+    d2 *= 0.33;
     if (a2 < a1) {
       mid += HALF_PI;
     } else {
       mid -= HALF_PI;
     }
-    if (d1 < 1e-4) {
-      b.controls.left.clear(b);
-    } else {
-      d1 *= displacement;
-      b.controls.left.x = Math.cos(mid) * d1;
-      b.controls.left.y = Math.sin(mid) * d1;
-    }
-    if (d2 < 1e-4) {
-      b.controls.right.clear(b);
-    } else {
-      d2 *= displacement;
-      mid -= Math.PI;
-      b.controls.right.x = Math.cos(mid) * d2;
-      b.controls.right.y = Math.sin(mid) * d2;
-    }
+    b.controls.left.x = Math.cos(mid) * d1;
+    b.controls.left.y = Math.sin(mid) * d1;
+    mid -= Math.PI;
+    b.controls.right.x = Math.cos(mid) * d2;
+    b.controls.right.y = Math.sin(mid) * d2;
     if (typeof b.relative === "boolean" && !b.relative) {
       b.controls.left.x += b.x;
       b.controls.left.y += b.y;
@@ -3999,6 +3997,7 @@ var Two = (() => {
   var max3 = Math.max;
   var ceil = Math.ceil;
   var floor2 = Math.floor;
+  var vector = new Vector();
   var _Path = class extends Shape {
     _flagVertices = true;
     _flagLength = true;
@@ -4426,16 +4425,19 @@ var Two = (() => {
             this._renderer.collection.push(new Anchor());
           }
           if (i > high && !right) {
-            v = this._renderer.collection[i];
-            v.copy(this._collection[i]);
+            v = this._renderer.collection[i].copy(this._collection[i]);
             this.getPointAt(ending, v);
             v.command = this._renderer.collection[i].command;
             this._renderer.vertices.push(v);
             right = v;
             prev = this._collection[i - 1];
             if (prev && prev.controls) {
-              v.controls.right.clear();
-              this._renderer.collection[i - 1].controls.right.clear().lerp(prev.controls.right, v.t);
+              if (v.controls.relative) {
+                v.controls.right.clear();
+              } else {
+                v.controls.right.copy(v);
+              }
+              this._renderer.collection[i - 1].controls.right.copy(prev).lerp(prev.controls.right, v.t);
             }
           } else if (i >= low && i <= high) {
             v = this._renderer.collection[i].copy(this._collection[i]);
@@ -4443,28 +4445,40 @@ var Two = (() => {
             if (i === high && contains(this, ending)) {
               right = v;
               if (!closed2 && right.controls) {
-                right.controls.right.clear();
+                if (right.relative) {
+                  right.controls.right.clear();
+                } else {
+                  right.controls.right.copy(right);
+                }
               }
             } else if (i === low && contains(this, beginning)) {
               left = v;
               left.command = Commands.move;
               if (!closed2 && left.controls) {
-                left.controls.left.clear();
+                if (left.relative) {
+                  left.controls.left.clear();
+                } else {
+                  left.controls.left.copy(left);
+                }
               }
             }
           }
         }
         if (low > 0 && !left) {
           i = low - 1;
-          v = this._renderer.collection[i];
-          v.copy(this._collection[i]);
+          v = this._renderer.collection[i].copy(this._collection[i]);
           this.getPointAt(beginning, v);
           v.command = Commands.move;
           this._renderer.vertices.unshift(v);
           next = this._collection[i + 1];
           if (next && next.controls) {
             v.controls.left.clear();
-            this._renderer.collection[i + 1].controls.left.copy(next.controls.left).lerp(Vector.zero, v.t);
+            if (next.relative) {
+              this._renderer.collection[i + 1].controls.left.copy(next.controls.left).lerp(Vector.zero, v.t);
+            } else {
+              vector.copy(next);
+              this._renderer.collection[i + 1].controls.left.copy(next.controls.left).lerp(next, v.t);
+            }
           }
         }
       }
@@ -5932,15 +5946,15 @@ var Two = (() => {
   function getTagName(tag) {
     return tag.replace(/svg:/ig, "").toLowerCase();
   }
-  function applyTransformsToVector(transforms, vector) {
-    vector.x += transforms.translateX;
-    vector.y += transforms.translateY;
-    vector.x *= transforms.scaleX;
-    vector.y *= transforms.scaleY;
+  function applyTransformsToVector(transforms, vector2) {
+    vector2.x += transforms.translateX;
+    vector2.y += transforms.translateY;
+    vector2.x *= transforms.scaleX;
+    vector2.y *= transforms.scaleY;
     if (transforms.rotation !== 0) {
-      const l = vector.length();
-      vector.x = l * Math.cos(transforms.rotation);
-      vector.y = l * Math.sin(transforms.rotation);
+      const l = vector2.length();
+      vector2.x = l * Math.cos(transforms.rotation);
+      vector2.y = l * Math.sin(transforms.rotation);
     }
   }
   function extractCSSText(text, styles) {
