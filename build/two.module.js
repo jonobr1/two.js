@@ -717,7 +717,7 @@ var Constants = {
     canvas: "CanvasRenderer"
   },
   Version: "v0.8.1",
-  PublishDate: "2022-01-15T03:16:08.891Z",
+  PublishDate: "2022-01-16T02:17:08.539Z",
   Identifier: "two-",
   Resolution: 12,
   AutoCalculateImportedMatrices: true,
@@ -883,30 +883,32 @@ function getCurveFromPoints(points, closed2) {
   }
 }
 function getControlPoints(a, b, c) {
+  const displacement = 0.33;
   const a1 = Vector.angleBetween(a, b);
   const a2 = Vector.angleBetween(c, b);
   let d1 = Vector.distanceBetween(a, b);
   let d2 = Vector.distanceBetween(c, b);
   let mid = (a1 + a2) / 2;
-  if (d1 < 1e-4 || d2 < 1e-4) {
-    if (typeof b.relative === "boolean" && !b.relative) {
-      b.controls.left.copy(b);
-      b.controls.right.copy(b);
-    }
-    return b;
-  }
-  d1 *= 0.33;
-  d2 *= 0.33;
   if (a2 < a1) {
     mid += HALF_PI;
   } else {
     mid -= HALF_PI;
   }
-  b.controls.left.x = Math.cos(mid) * d1;
-  b.controls.left.y = Math.sin(mid) * d1;
-  mid -= Math.PI;
-  b.controls.right.x = Math.cos(mid) * d2;
-  b.controls.right.y = Math.sin(mid) * d2;
+  if (d1 < 1e-4) {
+    b.controls.left.clear(b);
+  } else {
+    d1 *= displacement;
+    b.controls.left.x = Math.cos(mid) * d1;
+    b.controls.left.y = Math.sin(mid) * d1;
+  }
+  if (d2 < 1e-4) {
+    b.controls.right.clear(b);
+  } else {
+    d2 *= displacement;
+    mid -= Math.PI;
+    b.controls.right.x = Math.cos(mid) * d2;
+    b.controls.right.y = Math.sin(mid) * d2;
+  }
   if (typeof b.relative === "boolean" && !b.relative) {
     b.controls.left.x += b.x;
     b.controls.left.y += b.y;
@@ -4470,8 +4472,7 @@ __publicField(Path, "Properties", [
   "ending"
 ]);
 __publicField(Path, "Utils", {
-  getCurveLength: getCurveLength2,
-  interpret: read.path
+  getCurveLength: getCurveLength2
 });
 var proto11 = {
   linewidth: {
