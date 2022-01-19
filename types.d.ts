@@ -1,4 +1,4 @@
-declare module "src/utils/path-commands" {
+declare module "two.js/src/utils/path-commands" {
     export namespace Commands {
         export const move: string;
         export const line: string;
@@ -7,10 +7,10 @@ declare module "src/utils/path-commands" {
         export const close: string;
     }
 }
-declare module "src/utils/root" {
+declare module "two.js/src/utils/root" {
     export let root: any;
 }
-declare module "src/utils/math" {
+declare module "two.js/src/utils/math" {
     /**
      * @name Two.Utils.decomposeMatrix
      * @function
@@ -62,7 +62,7 @@ declare module "src/utils/math" {
     export const TWO_PI: number;
     export const HALF_PI: number;
 }
-declare module "src/events" {
+declare module "two.js/src/events" {
     /**
      * @name Two.Events
      * @class
@@ -141,7 +141,7 @@ declare module "src/events" {
         ignore(obj: any, name: any, handler: any): Events;
     }
 }
-declare module "src/vector" {
+declare module "two.js/src/vector" {
     /**
      * @name Two.Vector
      * @class
@@ -501,7 +501,7 @@ declare module "src/vector" {
         rotate(radians: number): Vector;
     }
 }
-declare module "src/anchor" {
+declare module "two.js/src/anchor" {
     /**
      * @class
      * @name Two.Anchor
@@ -567,9 +567,9 @@ declare module "src/anchor" {
          */
         toString(): string;
     }
-    import { Vector } from "src/vector";
+    import { Vector } from "two.js/src/vector";
 }
-declare module "src/constants" {
+declare module "two.js/src/constants" {
     export namespace Constants {
         export const nextFrameID: any;
         export namespace Types {
@@ -586,7 +586,7 @@ declare module "src/constants" {
         export function uniqueId(): number;
     }
 }
-declare module "src/utils/curves" {
+declare module "two.js/src/utils/curves" {
     export namespace Curve {
         export const CollinearityEpsilon: number;
         export const RecursionLimit: number;
@@ -709,10 +709,10 @@ declare module "src/utils/curves" {
      * @param {Boolean} [ccw=false] - Set path traversal to counter-clockwise
      */
     export function getAnchorsFromArcData(center: Vector, xAxisRotation: number, rx: number, ry: number, ts: number, td: number, ccw?: boolean): void;
-    import { Anchor } from "src/anchor";
-    import { Vector } from "src/vector";
+    import { Anchor } from "two.js/src/anchor";
+    import { Vector } from "two.js/src/vector";
 }
-declare module "src/utils/device-pixel-ratio" {
+declare module "two.js/src/utils/device-pixel-ratio" {
     /**
      * @name Two.Utils.getRatio
      * @function
@@ -722,7 +722,7 @@ declare module "src/utils/device-pixel-ratio" {
      */
     export function getRatio(ctx: CanvasRenderingContext2D): number;
 }
-declare module "src/utils/underscore" {
+declare module "two.js/src/utils/underscore" {
     export namespace _ {
         export function isNaN(obj: any): boolean;
         export function isElement(obj: any): boolean;
@@ -733,7 +733,7 @@ declare module "src/utils/underscore" {
         export const performance: any;
     }
 }
-declare module "src/element" {
+declare module "two.js/src/element" {
     /**
      * @name Two.Element
      * @class
@@ -785,7 +785,7 @@ declare module "src/element" {
         flagReset(): void;
     }
 }
-declare module "src/matrix" {
+declare module "two.js/src/matrix" {
     /**
      * @name Two.Matrix
      * @class
@@ -984,9 +984,9 @@ declare module "src/matrix" {
          */
         clone(): any;
     }
-    import { Events } from "src/events";
+    import { Events } from "two.js/src/events";
 }
-declare module "src/shape" {
+declare module "two.js/src/shape" {
     /**
      * @name Two.Shape
      * @class
@@ -1143,10 +1143,10 @@ declare module "src/shape" {
          */
         private flagReset;
     }
-    import { Matrix } from "src/matrix";
-    import { Vector } from "src/vector";
+    import { Matrix } from "two.js/src/matrix";
+    import { Vector } from "two.js/src/vector";
 }
-declare module "src/collection" {
+declare module "two.js/src/collection" {
     /**
      * @name Two.Collection
      * @class
@@ -1155,8 +1155,10 @@ declare module "src/collection" {
      */
     export class Collection {
         constructor(...args: any[]);
-        set _events(arg: {});
-        get _events(): {};
+        /**
+         * @private
+         */
+        private _events;
         set _bound(arg: boolean);
         get _bound(): boolean;
         addEventListener(...args: any[]): any;
@@ -1177,10 +1179,9 @@ declare module "src/collection" {
         sort(...args: any[]): Collection;
         reverse(...args: any[]): Collection;
         indexOf(...args: any[]): any;
-        #private;
     }
 }
-declare module "src/children" {
+declare module "two.js/src/children" {
     /**
      * @class
      * @name Two.Group.Children
@@ -1210,7 +1211,7 @@ declare module "src/children" {
         detach(children: any[]): Children;
     }
 }
-declare module "src/group" {
+declare module "two.js/src/group" {
     /**
      * @name Two.Group
      * @class
@@ -1510,9 +1511,9 @@ declare module "src/group" {
          */
         private flagReset;
     }
-    import { Children } from "src/children";
+    import { Children } from "two.js/src/children";
 }
-declare module "src/renderers/canvas" {
+declare module "two.js/src/renderers/canvas" {
     /**
      * @name Two.CanvasRenderer
      * @class
@@ -1602,21 +1603,21 @@ declare module "src/renderers/canvas" {
          */
         render(): Renderer;
     }
-    import { Group } from "src/group";
+    import { Group } from "two.js/src/group";
 }
-declare module "src/utils/canvas-shim" {
+declare module "two.js/src/utils/canvas-shim" {
     export namespace CanvasShim {
         export const Image: any;
         export const isHeadless: boolean;
         export function shim(canvas: any, Image?: new (width?: number, height?: number) => HTMLImageElement): any;
     }
 }
-declare module "src/utils/dom" {
+declare module "two.js/src/utils/dom" {
     export namespace dom {
         export const temp: any;
     }
 }
-declare module "src/utils/error" {
+declare module "two.js/src/utils/error" {
     /**
      * @name Two.Utils.Error
      * @class
@@ -1626,7 +1627,7 @@ declare module "src/utils/error" {
         constructor(message: any);
     }
 }
-declare module "src/registry" {
+declare module "two.js/src/registry" {
     /**
      * @name Two.Registry
      * @class
@@ -1667,7 +1668,7 @@ declare module "src/registry" {
         contains(id: string): boolean;
     }
 }
-declare module "src/utils/shape" {
+declare module "two.js/src/utils/shape" {
     /**
      * @private
      * @param {Two.Path} path - The path to analyze against.
@@ -1685,9 +1686,9 @@ declare module "src/utils/shape" {
      */
     export function getIdByLength(path: any, target: number): number;
     export function getCurveLength(a: any, b: any, limit: any): number;
-    export function getSubdivisions(a: any, b: any, limit: any): import("src/anchor").Anchor[];
+    export function getSubdivisions(a: any, b: any, limit: any): import("two.js/src/anchor").Anchor[];
 }
-declare module "src/effects/stop" {
+declare module "two.js/src/effects/stop" {
     /**
      * @name Two.Stop
      * @class
@@ -1784,7 +1785,7 @@ declare module "src/effects/stop" {
         private flagReset;
     }
 }
-declare module "src/effects/gradient" {
+declare module "two.js/src/effects/gradient" {
     /**
      * @name Two.Gradient
      * @class
@@ -1867,9 +1868,9 @@ declare module "src/effects/gradient" {
          */
         private flagReset;
     }
-    import { Stop } from "src/effects/stop";
+    import { Stop } from "two.js/src/effects/stop";
 }
-declare module "src/effects/linear-gradient" {
+declare module "two.js/src/effects/linear-gradient" {
     /**
      * @name Two.LinearGradient
      * @class
@@ -1939,10 +1940,10 @@ declare module "src/effects/linear-gradient" {
          */
         private flagReset;
     }
-    import { Vector } from "src/vector";
-    import { Stop } from "src/effects/stop";
+    import { Vector } from "two.js/src/vector";
+    import { Stop } from "two.js/src/effects/stop";
 }
-declare module "src/effects/radial-gradient" {
+declare module "two.js/src/effects/radial-gradient" {
     /**
      * @name Two.RadialGradient
      * @class
@@ -2032,10 +2033,10 @@ declare module "src/effects/radial-gradient" {
          */
         private flagReset;
     }
-    import { Vector } from "src/vector";
-    import { Stop } from "src/effects/stop";
+    import { Vector } from "two.js/src/vector";
+    import { Stop } from "two.js/src/effects/stop";
 }
-declare module "src/effects/texture" {
+declare module "two.js/src/effects/texture" {
     /**
      * @name Two.Texture
      * @class
@@ -2247,10 +2248,10 @@ declare module "src/effects/texture" {
          */
         private flagReset;
     }
-    import { Vector } from "src/vector";
-    import { Registry } from "src/registry";
+    import { Vector } from "two.js/src/vector";
+    import { Registry } from "two.js/src/registry";
 }
-declare module "src/path" {
+declare module "two.js/src/path" {
     /**
      * @name Two.Path
      * @class
@@ -2269,14 +2270,6 @@ declare module "src/path" {
         static Properties: string[];
         static Utils: {
             getCurveLength: typeof getCurveLength;
-            /**
-             * @name Two.Path.Utils.interpret
-             * @function
-             * @param {String|SVGPath} node - The SVG Path node to interpret. Alternatively, this can be a string of commands, known as the `d` attribute of an SVG Path.
-             * @param {Object} [parentStyles] - The styles the path should inherit from its parent.
-             * @returns {Two.Path}
-             */
-            interpret: (node: any, parentStyles: any) => Path;
         };
         constructor(vertices: any, closed: any, curved: any, manual: any);
         /**
@@ -2636,7 +2629,7 @@ declare module "src/path" {
          */
         private flagReset;
     }
-    import { getCurveLength } from "src/utils/shape";
+    import { getCurveLength } from "two.js/src/utils/shape";
     /**
      * @name FlagVertices
      * @private
@@ -2683,7 +2676,7 @@ declare module "src/path" {
         _flagStroke: boolean;
     }
 }
-declare module "src/shapes/rectangle" {
+declare module "two.js/src/shapes/rectangle" {
     /**
      * @name Two.Rectangle
      * @class
@@ -2772,9 +2765,9 @@ declare module "src/shapes/rectangle" {
          */
         toObject(): any;
     }
-    import { Vector } from "src/vector";
+    import { Vector } from "two.js/src/vector";
 }
-declare module "src/effects/sprite" {
+declare module "two.js/src/effects/sprite" {
     /**
      * @name Two.Sprite
      * @class
@@ -2969,10 +2962,10 @@ declare module "src/effects/sprite" {
          */
         private flagReset;
     }
-    import { Texture } from "src/effects/texture";
-    import { Vector } from "src/vector";
+    import { Texture } from "two.js/src/effects/texture";
+    import { Vector } from "two.js/src/vector";
 }
-declare module "src/shapes/circle" {
+declare module "two.js/src/shapes/circle" {
     /**
      * @name Two.Circle
      * @class
@@ -3035,7 +3028,7 @@ declare module "src/shapes/circle" {
         toObject(): any;
     }
 }
-declare module "src/shapes/ellipse" {
+declare module "two.js/src/shapes/ellipse" {
     /**
      * @name Two.Ellipse
      * @class
@@ -3112,7 +3105,7 @@ declare module "src/shapes/ellipse" {
         toObject(): any;
     }
 }
-declare module "src/shapes/line" {
+declare module "two.js/src/shapes/line" {
     /**
      * @name Two.Line
      * @class
@@ -3127,7 +3120,7 @@ declare module "src/shapes/line" {
         automatic: boolean;
     }
 }
-declare module "src/shapes/rounded-rectangle" {
+declare module "two.js/src/shapes/rounded-rectangle" {
     /**
      * @name Two.RoundedRectangle
      * @class
@@ -3220,7 +3213,7 @@ declare module "src/shapes/rounded-rectangle" {
         toObject(): any;
     }
 }
-declare module "src/text" {
+declare module "two.js/src/text" {
     /**
      * @name Two.Text
      * @class
@@ -3488,7 +3481,7 @@ declare module "src/text" {
         _flagClassName: boolean;
     }
 }
-declare module "src/utils/interpret-svg" {
+declare module "two.js/src/utils/interpret-svg" {
     /**
      * @name Two.Utils.read
      * @property {Object} read - A map of functions to read any number of SVG node types and create Two.js equivalents of them. Primarily used by the {@link Two#interpret} method.
@@ -3512,14 +3505,14 @@ declare module "src/utils/interpret-svg" {
         clippath: (node: any, parentStyles: any) => any;
         image: (node: any, parentStyles: any) => Sprite;
     };
-    import { Group } from "src/group";
-    import { Path } from "src/path";
-    import { LinearGradient } from "src/effects/linear-gradient";
-    import { RadialGradient } from "src/effects/radial-gradient";
-    import { Text } from "src/text";
-    import { Sprite } from "src/effects/sprite";
+    import { Group } from "two.js/src/group";
+    import { Path } from "two.js/src/path";
+    import { LinearGradient } from "two.js/src/effects/linear-gradient";
+    import { RadialGradient } from "two.js/src/effects/radial-gradient";
+    import { Text } from "two.js/src/text";
+    import { Sprite } from "two.js/src/effects/sprite";
 }
-declare module "src/utils/xhr" {
+declare module "two.js/src/utils/xhr" {
     /**
      * @name Two.Utils.xhr
      * @function
@@ -3530,7 +3523,7 @@ declare module "src/utils/xhr" {
      */
     export function xhr(path: string, callback: Function): XMLHttpRequest;
 }
-declare module "src/effects/image-sequence" {
+declare module "two.js/src/effects/image-sequence" {
     /**
      * @name Two.ImageSequence
      * @class
@@ -3702,9 +3695,9 @@ declare module "src/effects/image-sequence" {
          */
         private flagReset;
     }
-    import { Vector } from "src/vector";
+    import { Vector } from "two.js/src/vector";
 }
-declare module "src/shapes/arc-segment" {
+declare module "two.js/src/shapes/arc-segment" {
     /**
      * @name Two.ArcSegment
      * @class
@@ -3809,7 +3802,7 @@ declare module "src/shapes/arc-segment" {
         toObject(): any;
     }
 }
-declare module "src/shapes/points" {
+declare module "two.js/src/shapes/points" {
     /**
      * @name Two.Points
      * @class
@@ -3976,9 +3969,9 @@ declare module "src/shapes/points" {
          */
         private flagReset;
     }
-    import { Path } from "src/path";
+    import { Path } from "two.js/src/path";
 }
-declare module "src/shapes/polygon" {
+declare module "two.js/src/shapes/polygon" {
     /**
      * @name Two.Polygon
      * @class
@@ -4069,7 +4062,7 @@ declare module "src/shapes/polygon" {
         toObject(): any;
     }
 }
-declare module "src/shapes/star" {
+declare module "two.js/src/shapes/star" {
     /**
      * @name Two.Star
      * @class
@@ -4161,7 +4154,7 @@ declare module "src/shapes/star" {
         toObject(): any;
     }
 }
-declare module "src/renderers/svg" {
+declare module "two.js/src/renderers/svg" {
     /**
      * @name Two.SVGRenderer
      * @class
@@ -4250,9 +4243,9 @@ declare module "src/renderers/svg" {
          */
         render(): Renderer;
     }
-    import { Group } from "src/group";
+    import { Group } from "two.js/src/group";
 }
-declare module "src/utils/shaders" {
+declare module "two.js/src/utils/shaders" {
     export namespace shaders {
         export function create(gl: any, source: any, type: any): any;
         export namespace types {
@@ -4273,7 +4266,7 @@ declare module "src/utils/shaders" {
         }
     }
 }
-declare module "src/renderers/webgl" {
+declare module "two.js/src/renderers/webgl" {
     /**
      * @name Two.WebGLRenderer
      * @class
@@ -4400,11 +4393,11 @@ declare module "src/renderers/webgl" {
          */
         render(): Renderer;
     }
-    import { Group } from "src/group";
-    import { Matrix } from "src/matrix";
-    import { Registry } from "src/registry";
+    import { Group } from "two.js/src/group";
+    import { Matrix } from "two.js/src/matrix";
+    import { Registry } from "two.js/src/registry";
 }
-declare module "src/two" {
+declare module "two.js" {
     /**
      * @name Two
      * @class
@@ -4510,8 +4503,10 @@ declare module "src/two" {
          */
         static Utils: any;
         constructor(options: any);
-        set _events(arg: {});
-        get _events(): {};
+        /**
+         * @private
+         */
+        private _events;
         set _bound(arg: boolean);
         get _bound(): boolean;
         addEventListener(...args: any[]): any;
@@ -4861,39 +4856,38 @@ declare module "src/two" {
          * @description Load an SVG file or SVG text and interpret it into Two.js legible objects.
          */
         load(text: any, callback: Function): typeof Group;
-        #private;
     }
-    import { Line } from "src/shapes/line";
-    import { Path } from "src/path";
-    import { Rectangle } from "src/shapes/rectangle";
-    import { Circle } from "src/shapes/circle";
-    import { Ellipse } from "src/shapes/ellipse";
-    import { Star } from "src/shapes/star";
-    import { Polygon } from "src/shapes/polygon";
-    import { ArcSegment } from "src/shapes/arc-segment";
-    import { Points } from "src/shapes/points";
-    import { Text } from "src/text";
-    import { LinearGradient } from "src/effects/linear-gradient";
-    import { RadialGradient } from "src/effects/radial-gradient";
-    import { Sprite } from "src/effects/sprite";
-    import { ImageSequence } from "src/effects/image-sequence";
-    import { Texture } from "src/effects/texture";
-    import { Group } from "src/group";
-    import { Anchor } from "src/anchor";
-    import { Collection } from "src/collection";
-    import { Events } from "src/events";
-    import { Matrix } from "src/matrix";
-    import { Registry } from "src/registry";
-    import { Shape } from "src/shape";
-    import { Vector } from "src/vector";
-    import { Gradient } from "src/effects/gradient";
-    import { Stop } from "src/effects/stop";
-    import { RoundedRectangle } from "src/shapes/rounded-rectangle";
-    import { Renderer as CanvasRenderer } from "src/renderers/canvas";
-    import { Renderer as SVGRenderer } from "src/renderers/svg";
-    import { Renderer as WebGLRenderer } from "src/renderers/webgl";
+    import { Line } from "two.js/src/shapes/line";
+    import { Path } from "two.js/src/path";
+    import { Rectangle } from "two.js/src/shapes/rectangle";
+    import { Circle } from "two.js/src/shapes/circle";
+    import { Ellipse } from "two.js/src/shapes/ellipse";
+    import { Star } from "two.js/src/shapes/star";
+    import { Polygon } from "two.js/src/shapes/polygon";
+    import { ArcSegment } from "two.js/src/shapes/arc-segment";
+    import { Points } from "two.js/src/shapes/points";
+    import { Text } from "two.js/src/text";
+    import { LinearGradient } from "two.js/src/effects/linear-gradient";
+    import { RadialGradient } from "two.js/src/effects/radial-gradient";
+    import { Sprite } from "two.js/src/effects/sprite";
+    import { ImageSequence } from "two.js/src/effects/image-sequence";
+    import { Texture } from "two.js/src/effects/texture";
+    import { Group } from "two.js/src/group";
+    import { Anchor } from "two.js/src/anchor";
+    import { Collection } from "two.js/src/collection";
+    import { Events } from "two.js/src/events";
+    import { Matrix } from "two.js/src/matrix";
+    import { Registry } from "two.js/src/registry";
+    import { Shape } from "two.js/src/shape";
+    import { Vector } from "two.js/src/vector";
+    import { Gradient } from "two.js/src/effects/gradient";
+    import { Stop } from "two.js/src/effects/stop";
+    import { RoundedRectangle } from "two.js/src/shapes/rounded-rectangle";
+    import { Renderer as CanvasRenderer } from "two.js/src/renderers/canvas";
+    import { Renderer as SVGRenderer } from "two.js/src/renderers/svg";
+    import { Renderer as WebGLRenderer } from "two.js/src/renderers/webgl";
 }
-declare module "extras/jsm/zui" {
+declare module "two.js/extras/jsm/zui" {
     /**
      * @name Two.ZUI
      * @class
@@ -4939,7 +4933,7 @@ declare module "extras/jsm/zui" {
         reset(): ZUI;
         fitToLimits(s: any): number;
     }
-    import { Matrix } from "src/matrix";
+    import { Matrix } from "two.js/src/matrix";
     class Surface {
         constructor(object: any);
         object: any;
