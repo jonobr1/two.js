@@ -5,8 +5,12 @@ title: Two.js Change Log
 lang: en-US
 ---
 
-## Nightly
+## Jan 19, 2022 v0.8.1
 
+<h3 class="visible">Jan 19, 2022</h3><version-link v="v0.8.1" />
+
++ Improved `types.d.ts` to better reference intended library access
++ Removed `#` private declared variables for better EcmaScript compatibility
 + Fixed `Two.Path.begining` and `Two.Path.ending` interpolation when `Two.Anchor.relative = false`
 + Added `Two.Utils.read.path(string)` which allows for string interpretation of an SVG path's `d` attribute
 + Added `Two.Shape.worldMatrix`
