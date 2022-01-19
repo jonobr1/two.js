@@ -49,19 +49,6 @@ var Two = (() => {
     __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
     return value;
   };
-  var __accessCheck = (obj, member, msg) => {
-    if (!member.has(obj))
-      throw TypeError("Cannot " + msg);
-  };
-  var __privateGet = (obj, member, getter) => {
-    __accessCheck(obj, member, "read from private field");
-    return getter ? getter.call(obj) : member.get(obj);
-  };
-  var __privateAdd = (obj, member, value) => {
-    if (member.has(obj))
-      throw TypeError("Cannot add the same private member more than once");
-    member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
-  };
 
   // src/two.js
   var two_exports = {};
@@ -741,7 +728,7 @@ var Two = (() => {
       canvas: "CanvasRenderer"
     },
     Version: "v0.8.1",
-    PublishDate: "2022-01-16T05:04:32.871Z",
+    PublishDate: "2022-01-19T16:35:44.846Z",
     Identifier: "two-",
     Resolution: 12,
     AutoCalculateImportedMatrices: true,
@@ -1593,48 +1580,42 @@ var Two = (() => {
 
   // src/collection.js
   var Collection = class extends Array {
-    #events = new Events();
-    get _events() {
-      return this.#events._events;
-    }
-    set _events(v) {
-      this.#events._events = v;
-    }
+    _events = new Events();
     get _bound() {
-      return this.#events._bound;
+      return this._events._bound;
     }
     set _bound(v) {
-      this.#events._bound = v;
+      this._events._bound = v;
     }
     addEventListener() {
-      return this.#events.addEventListener.apply(this, arguments);
+      return this._events.addEventListener.apply(this, arguments);
     }
     on() {
-      return this.#events.on.apply(this, arguments);
+      return this._events.on.apply(this, arguments);
     }
     bind() {
-      return this.#events.bind.apply(this, arguments);
+      return this._events.bind.apply(this, arguments);
     }
     removeEventListener() {
-      return this.#events.removeEventListener.apply(this, arguments);
+      return this._events.removeEventListener.apply(this, arguments);
     }
     off() {
-      return this.#events.off.apply(this, arguments);
+      return this._events.off.apply(this, arguments);
     }
     unbind() {
-      return this.#events.unbind.apply(this, arguments);
+      return this._events.unbind.apply(this, arguments);
     }
     dispatchEvent() {
-      return this.#events.dispatchEvent.apply(this, arguments);
+      return this._events.dispatchEvent.apply(this, arguments);
     }
     trigger() {
-      return this.#events.trigger.apply(this, arguments);
+      return this._events.trigger.apply(this, arguments);
     }
     listen() {
-      return this.#events.listen.apply(this, arguments);
+      return this._events.listen.apply(this, arguments);
     }
     ignore() {
-      return this.#events.ignore.apply(this, arguments);
+      return this._events.ignore.apply(this, arguments);
     }
     constructor() {
       super();
@@ -9797,18 +9778,53 @@ var Two = (() => {
     read,
     xhr
   }, _, CanvasShim, curves_exports, math_exports);
-  var _events;
   var _Two = class {
+    _events = new Events();
+    get _bound() {
+      return this._events._bound;
+    }
+    set _bound(v) {
+      this._events._bound = v;
+    }
+    addEventListener() {
+      return this._events.addEventListener.apply(this, arguments);
+    }
+    on() {
+      return this._events.addEventListener.apply(this, arguments);
+    }
+    bind() {
+      return this._events.addEventListener.apply(this, arguments);
+    }
+    removeEventListener() {
+      return this._events.removeEventListener.apply(this, arguments);
+    }
+    off() {
+      return this._events.removeEventListener.apply(this, arguments);
+    }
+    unbind() {
+      return this._events.removeEventListener.apply(this, arguments);
+    }
+    dispatchEvent() {
+      return this._events.dispatchEvent.apply(this, arguments);
+    }
+    trigger() {
+      return this._events.dispatchEvent.apply(this, arguments);
+    }
+    listen() {
+      return this._events.listen.apply(this, arguments);
+    }
+    ignore() {
+      return this._events.ignore.apply(this, arguments);
+    }
+    type = "";
+    renderer = null;
+    scene = null;
+    width = 0;
+    height = 0;
+    frameCount = 0;
+    timeDelta = 0;
+    playing = false;
     constructor(options) {
-      __privateAdd(this, _events, new Events());
-      __publicField(this, "type", "");
-      __publicField(this, "renderer", null);
-      __publicField(this, "scene", null);
-      __publicField(this, "width", 0);
-      __publicField(this, "height", 0);
-      __publicField(this, "frameCount", 0);
-      __publicField(this, "timeDelta", 0);
-      __publicField(this, "playing", false);
       const params = _.defaults(options || {}, {
         fullscreen: false,
         fitted: false,
@@ -9872,48 +9888,6 @@ var Two = (() => {
       if (params.autostart) {
         raf.init();
       }
-    }
-    get _events() {
-      return __privateGet(this, _events)._events;
-    }
-    set _events(v) {
-      __privateGet(this, _events)._events = v;
-    }
-    get _bound() {
-      return __privateGet(this, _events)._bound;
-    }
-    set _bound(v) {
-      __privateGet(this, _events)._bound = v;
-    }
-    addEventListener() {
-      return __privateGet(this, _events).addEventListener.apply(this, arguments);
-    }
-    on() {
-      return __privateGet(this, _events).addEventListener.apply(this, arguments);
-    }
-    bind() {
-      return __privateGet(this, _events).addEventListener.apply(this, arguments);
-    }
-    removeEventListener() {
-      return __privateGet(this, _events).removeEventListener.apply(this, arguments);
-    }
-    off() {
-      return __privateGet(this, _events).removeEventListener.apply(this, arguments);
-    }
-    unbind() {
-      return __privateGet(this, _events).removeEventListener.apply(this, arguments);
-    }
-    dispatchEvent() {
-      return __privateGet(this, _events).dispatchEvent.apply(this, arguments);
-    }
-    trigger() {
-      return __privateGet(this, _events).dispatchEvent.apply(this, arguments);
-    }
-    listen() {
-      return __privateGet(this, _events).listen.apply(this, arguments);
-    }
-    ignore() {
-      return __privateGet(this, _events).ignore.apply(this, arguments);
     }
     appendTo(elem) {
       elem.appendChild(this.renderer.domElement);
@@ -10227,7 +10201,6 @@ var Two = (() => {
     }
   };
   var Two = _Two;
-  _events = new WeakMap();
   __publicField(Two, "nextFrameID", Constants.nextFrameID);
   __publicField(Two, "Types", Constants.Types);
   __publicField(Two, "Version", Constants.Version);

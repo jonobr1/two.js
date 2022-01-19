@@ -31,19 +31,6 @@ var __publicField = (obj, key, value) => {
   __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
   return value;
 };
-var __accessCheck = (obj, member, msg) => {
-  if (!member.has(obj))
-    throw TypeError("Cannot " + msg);
-};
-var __privateGet = (obj, member, getter) => {
-  __accessCheck(obj, member, "read from private field");
-  return getter ? getter.call(obj) : member.get(obj);
-};
-var __privateAdd = (obj, member, value) => {
-  if (member.has(obj))
-    throw TypeError("Cannot add the same private member more than once");
-  member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
-};
 
 // src/utils/path-commands.js
 var Commands = {
@@ -717,7 +704,7 @@ var Constants = {
     canvas: "CanvasRenderer"
   },
   Version: "v0.8.1",
-  PublishDate: "2022-01-16T05:04:32.871Z",
+  PublishDate: "2022-01-19T16:35:44.846Z",
   Identifier: "two-",
   Resolution: 12,
   AutoCalculateImportedMatrices: true,
@@ -1568,11 +1555,10 @@ function FlagMatrix() {
 }
 
 // src/collection.js
-var _events;
 var Collection = class extends Array {
   constructor() {
     super();
-    __privateAdd(this, _events, new Events());
+    __publicField(this, "_events", new Events());
     if (arguments[0] && Array.isArray(arguments[0])) {
       if (arguments[0].length > 0) {
         this.push.apply(this, arguments[0]);
@@ -1581,47 +1567,41 @@ var Collection = class extends Array {
       this.push.apply(this, arguments);
     }
   }
-  get _events() {
-    return __privateGet(this, _events)._events;
-  }
-  set _events(v) {
-    __privateGet(this, _events)._events = v;
-  }
   get _bound() {
-    return __privateGet(this, _events)._bound;
+    return this._events._bound;
   }
   set _bound(v) {
-    __privateGet(this, _events)._bound = v;
+    this._events._bound = v;
   }
   addEventListener() {
-    return __privateGet(this, _events).addEventListener.apply(this, arguments);
+    return this._events.addEventListener.apply(this, arguments);
   }
   on() {
-    return __privateGet(this, _events).on.apply(this, arguments);
+    return this._events.on.apply(this, arguments);
   }
   bind() {
-    return __privateGet(this, _events).bind.apply(this, arguments);
+    return this._events.bind.apply(this, arguments);
   }
   removeEventListener() {
-    return __privateGet(this, _events).removeEventListener.apply(this, arguments);
+    return this._events.removeEventListener.apply(this, arguments);
   }
   off() {
-    return __privateGet(this, _events).off.apply(this, arguments);
+    return this._events.off.apply(this, arguments);
   }
   unbind() {
-    return __privateGet(this, _events).unbind.apply(this, arguments);
+    return this._events.unbind.apply(this, arguments);
   }
   dispatchEvent() {
-    return __privateGet(this, _events).dispatchEvent.apply(this, arguments);
+    return this._events.dispatchEvent.apply(this, arguments);
   }
   trigger() {
-    return __privateGet(this, _events).trigger.apply(this, arguments);
+    return this._events.trigger.apply(this, arguments);
   }
   listen() {
-    return __privateGet(this, _events).listen.apply(this, arguments);
+    return this._events.listen.apply(this, arguments);
   }
   ignore() {
-    return __privateGet(this, _events).ignore.apply(this, arguments);
+    return this._events.ignore.apply(this, arguments);
   }
   pop() {
     const popped = super.pop.apply(this, arguments);
@@ -1667,7 +1647,6 @@ var Collection = class extends Array {
     return super.indexOf.apply(this, arguments);
   }
 };
-_events = new WeakMap();
 
 // src/children.js
 var Children = class extends Collection {
@@ -9775,10 +9754,9 @@ var Utils = _.extend({
   read,
   xhr
 }, _, CanvasShim, curves_exports, math_exports);
-var _events2;
 var _Two = class {
   constructor(options) {
-    __privateAdd(this, _events2, new Events());
+    __publicField(this, "_events", new Events());
     __publicField(this, "type", "");
     __publicField(this, "renderer", null);
     __publicField(this, "scene", null);
@@ -9851,47 +9829,41 @@ var _Two = class {
       raf.init();
     }
   }
-  get _events() {
-    return __privateGet(this, _events2)._events;
-  }
-  set _events(v) {
-    __privateGet(this, _events2)._events = v;
-  }
   get _bound() {
-    return __privateGet(this, _events2)._bound;
+    return this._events._bound;
   }
   set _bound(v) {
-    __privateGet(this, _events2)._bound = v;
+    this._events._bound = v;
   }
   addEventListener() {
-    return __privateGet(this, _events2).addEventListener.apply(this, arguments);
+    return this._events.addEventListener.apply(this, arguments);
   }
   on() {
-    return __privateGet(this, _events2).addEventListener.apply(this, arguments);
+    return this._events.addEventListener.apply(this, arguments);
   }
   bind() {
-    return __privateGet(this, _events2).addEventListener.apply(this, arguments);
+    return this._events.addEventListener.apply(this, arguments);
   }
   removeEventListener() {
-    return __privateGet(this, _events2).removeEventListener.apply(this, arguments);
+    return this._events.removeEventListener.apply(this, arguments);
   }
   off() {
-    return __privateGet(this, _events2).removeEventListener.apply(this, arguments);
+    return this._events.removeEventListener.apply(this, arguments);
   }
   unbind() {
-    return __privateGet(this, _events2).removeEventListener.apply(this, arguments);
+    return this._events.removeEventListener.apply(this, arguments);
   }
   dispatchEvent() {
-    return __privateGet(this, _events2).dispatchEvent.apply(this, arguments);
+    return this._events.dispatchEvent.apply(this, arguments);
   }
   trigger() {
-    return __privateGet(this, _events2).dispatchEvent.apply(this, arguments);
+    return this._events.dispatchEvent.apply(this, arguments);
   }
   listen() {
-    return __privateGet(this, _events2).listen.apply(this, arguments);
+    return this._events.listen.apply(this, arguments);
   }
   ignore() {
-    return __privateGet(this, _events2).ignore.apply(this, arguments);
+    return this._events.ignore.apply(this, arguments);
   }
   appendTo(elem) {
     elem.appendChild(this.renderer.domElement);
@@ -10205,7 +10177,6 @@ var _Two = class {
   }
 };
 var Two = _Two;
-_events2 = new WeakMap();
 __publicField(Two, "nextFrameID", Constants.nextFrameID);
 __publicField(Two, "Types", Constants.Types);
 __publicField(Two, "Version", Constants.Version);
