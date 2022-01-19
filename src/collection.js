@@ -10,51 +10,48 @@ import { Events } from './events.js';
 export class Collection extends Array {
 
   // Warning: Multiple inheritance hack
-  #events = new Events();
+  /**
+   * @private
+   */
+  _events = new Events();
 
   // Getters and setters aren't enumerable
-  get _events() {
-    return this.#events._events;
-  }
-  set _events(v) {
-    this.#events._events = v;
-  }
   get _bound() {
-    return this.#events._bound;
+    return this._events._bound;
   }
   set _bound(v) {
-    this.#events._bound = v;
+    this._events._bound = v;
   }
 
   addEventListener() {
-    return this.#events.addEventListener.apply(this, arguments);
+    return this._events.addEventListener.apply(this, arguments);
   }
   on() {
-    return this.#events.on.apply(this, arguments);
+    return this._events.on.apply(this, arguments);
   }
   bind() {
-    return this.#events.bind.apply(this, arguments);
+    return this._events.bind.apply(this, arguments);
   }
   removeEventListener() {
-    return this.#events.removeEventListener.apply(this, arguments);
+    return this._events.removeEventListener.apply(this, arguments);
   }
   off() {
-    return this.#events.off.apply(this, arguments);
+    return this._events.off.apply(this, arguments);
   }
   unbind() {
-    return this.#events.unbind.apply(this, arguments);
+    return this._events.unbind.apply(this, arguments);
   }
   dispatchEvent() {
-    return this.#events.dispatchEvent.apply(this, arguments);
+    return this._events.dispatchEvent.apply(this, arguments);
   }
   trigger() {
-    return this.#events.trigger.apply(this, arguments);
+    return this._events.trigger.apply(this, arguments);
   }
   listen() {
-    return this.#events.listen.apply(this, arguments);
+    return this._events.listen.apply(this, arguments);
   }
   ignore() {
-    return this.#events.ignore.apply(this, arguments);
+    return this._events.ignore.apply(this, arguments);
   }
 
   constructor() {

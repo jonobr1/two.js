@@ -86,51 +86,48 @@ const Utils = _.extend({
 export default class Two {
 
   // Warning: inherit events while overriding static properties
-  #events = new Events();
+  /**
+   * @private
+   */
+  _events = new Events();
 
   // Getters and setters aren't enumerable
-  get _events() {
-    return this.#events._events;
-  }
-  set _events(v) {
-    this.#events._events = v;
-  }
   get _bound() {
-    return this.#events._bound;
+    return this._events._bound;
   }
   set _bound(v) {
-    this.#events._bound = v;
+    this._events._bound = v;
   }
 
   addEventListener() {
-    return this.#events.addEventListener.apply(this, arguments);
+    return this._events.addEventListener.apply(this, arguments);
   }
   on() {
-    return this.#events.addEventListener.apply(this, arguments);
+    return this._events.addEventListener.apply(this, arguments);
   }
   bind() {
-    return this.#events.addEventListener.apply(this, arguments);
+    return this._events.addEventListener.apply(this, arguments);
   }
   removeEventListener() {
-    return this.#events.removeEventListener.apply(this, arguments);
+    return this._events.removeEventListener.apply(this, arguments);
   }
   off() {
-    return this.#events.removeEventListener.apply(this, arguments);
+    return this._events.removeEventListener.apply(this, arguments);
   }
   unbind() {
-    return this.#events.removeEventListener.apply(this, arguments);
+    return this._events.removeEventListener.apply(this, arguments);
   }
   dispatchEvent() {
-    return this.#events.dispatchEvent.apply(this, arguments);
+    return this._events.dispatchEvent.apply(this, arguments);
   }
   trigger() {
-    return this.#events.dispatchEvent.apply(this, arguments);
+    return this._events.dispatchEvent.apply(this, arguments);
   }
   listen() {
-    return this.#events.listen.apply(this, arguments);
+    return this._events.listen.apply(this, arguments);
   }
   ignore() {
-    return this.#events.ignore.apply(this, arguments);
+    return this._events.ignore.apply(this, arguments);
   }
 
   /**
