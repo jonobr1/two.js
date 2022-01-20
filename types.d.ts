@@ -1,10 +1,10 @@
 declare module "two.js/src/utils/path-commands" {
     export namespace Commands {
-        export const move: string;
-        export const line: string;
-        export const curve: string;
-        export const arc: string;
-        export const close: string;
+        const move: string;
+        const line: string;
+        const curve: string;
+        const arc: string;
+        const close: string;
     }
 }
 declare module "two.js/src/utils/root" {
@@ -18,7 +18,7 @@ declare module "two.js/src/utils/math" {
      * @returns {Object} An object containing relevant skew values.
      * @description Decompose a 2D 3x3 Matrix to find the skew.
      */
-    export function decomposeMatrix(matrix: any, b: any, c: any, d: any, e: any, f: any, ...args: any[]): any;
+    export function decomposeMatrix(matrix: Two.Matrix, b: any, c: any, d: any, e: any, f: any, ...args: any[]): any;
     /**
      * @name Two.Utils.getComputedMatrix
      * @function
@@ -27,7 +27,7 @@ declare module "two.js/src/utils/math" {
      * @returns {Two.Matrix} The computed matrix of a nested object. If no `matrix` was passed in arguments then a `new Two.Matrix` is returned.
      * @description Method to get the world space transformation of a given object in a Two.js scene.
      */
-    export function getComputedMatrix(object: any, matrix?: any): any;
+    export function getComputedMatrix(object: Two.Shape, matrix?: Two.Matrix): Two.Matrix;
     export function getPoT(value: any): number;
     export function setMatrix(matrix: any): void;
     /**
@@ -145,12 +145,12 @@ declare module "two.js/src/vector" {
     /**
      * @name Two.Vector
      * @class
-     * @extends Two.Events
+
      * @param {Number} [x=0] - Any number to represent the horizontal x-component of the vector.
      * @param {Number} [y=0] - Any number to represent the vertical y-component of the vector.
      * @description A class to store x / y component vector data. In addition to storing data `Two.Vector` has suped up methods for commonplace mathematical operations.
      */
-    export class Vector {
+    export class Vector extends Events {
         /**
          * @name Two.Vector.zero
          * @readonly
@@ -165,7 +165,7 @@ declare module "two.js/src/vector" {
          * @returns {Two.Vector}
          * @description Add two vectors together.
          */
-        static add(v1: any, v2: any): any;
+        static add(v1: Two.Vector, v2: Two.Vector): Two.Vector;
         /**
          * @name Two.Vector.sub
          * @function
@@ -174,13 +174,13 @@ declare module "two.js/src/vector" {
          * @returns {Two.Vector}
          * @description Subtract two vectors: `v2` from `v1`.
          */
-        static sub(v1: any, v2: any): any;
+        static sub(v1: Two.Vector, v2: Two.Vector): Two.Vector;
         /**
          * @name Two.Vector.subtract
          * @function
          * @description Alias for {@link Two.Vector.sub}.
          */
-        static subtract(v1: any, v2: any): any;
+        static subtract(v1: any, v2: any): Two.Vector;
         /**
          * @name Two.Vector.ratioBetween
          * @function
@@ -196,7 +196,7 @@ declare module "two.js/src/vector" {
          * @param {Two.Vector} v2
          * @returns {Number} The angle between points `v1` and `v2`.
          */
-        static angleBetween(v1: any, v2: any, ...args: any[]): number;
+        static angleBetween(v1: Two.Vector, v2: Two.Vector, ...args: any[]): number;
         /**
          * @name Two.Vector.distanceBetween
          * @function
@@ -204,7 +204,7 @@ declare module "two.js/src/vector" {
          * @param {Two.Vector} v2
          * @returns {Number} The distance between points `v1` and `v2`. Distance is always positive.
          */
-        static distanceBetween(v1: any, v2: any): number;
+        static distanceBetween(v1: Two.Vector, v2: Two.Vector): number;
         /**
          * @name Two.Vector.distanceBetweenSquared
          * @function
@@ -212,7 +212,7 @@ declare module "two.js/src/vector" {
          * @param {Two.Vector} v2
          * @returns {Number} The squared distance between points `v1` and `v2`.
          */
-        static distanceBetweenSquared(v1: any, v2: any): number;
+        static distanceBetweenSquared(v1: Two.Vector, v2: Two.Vector): number;
         constructor(x?: number, y?: number);
         /**
          * @name Two.Vector#_x
@@ -243,7 +243,7 @@ declare module "two.js/src/vector" {
          * @param {Two.Vector} v
          * @description Copy the x / y components of another object `v`.
          */
-        copy(v: any): Vector;
+        copy(v: Two.Vector): Vector;
         /**
          * @name Two.Vector#clear
          * @function
@@ -460,7 +460,7 @@ declare module "two.js/src/vector" {
          * @returns {Boolean}
          * @description Qualify if one vector roughly equal another. With a margin of error defined by epsilon.
          */
-        equals(v: any, eps?: number): boolean;
+        equals(v: Two.Vector, eps?: number): boolean;
         /**
          * @name Two.Vector#lerp
          * @function
@@ -469,7 +469,7 @@ declare module "two.js/src/vector" {
          * @description Linear interpolate one vector to another by an amount `t` defined as a zero to one number.
          * @see [Matt DesLauriers](https://twitter.com/mattdesl/status/1031305279227478016) has a good thread about this.
          */
-        lerp(v: any, t: number): Vector;
+        lerp(v: Two.Vector, t: number): Vector;
         /**
          * @name Two.Vector#isZero
          * @function
@@ -478,13 +478,6 @@ declare module "two.js/src/vector" {
          * @description Check to see if vector is roughly zero, based on the `epsilon` precision value.
          */
         isZero(eps?: number): boolean;
-        /**
-         * @name Two.Vector#toString
-         * @function
-         * @returns {String}
-         * @description Return a comma-separated string of x, y value. Great for storing in a database.
-         */
-        toString(): string;
         /**
          * @name Two.Vector#toObject
          * @function
@@ -500,6 +493,7 @@ declare module "two.js/src/vector" {
          */
         rotate(radians: number): Vector;
     }
+    import { Events } from "two.js/src/events";
 }
 declare module "two.js/src/anchor" {
     /**
@@ -512,10 +506,10 @@ declare module "two.js/src/anchor" {
      * @param {Number} [rx=0] - The x position of the right handle point.
      * @param {Number} [ry=0] - The y position of the right handle point.
      * @param {String} [command=Two.Commands.move] - The command to describe how to render. Applicable commands are {@link Two.Commands}
-     * @extends Two.Vector
+
      * @description An object that holds 3 {@link Two.Vector}s, the anchor point and its corresponding handles: `left` and `right`. In order to properly describe the bezier curve about the point there is also a command property to describe what type of drawing should occur when Two.js renders the anchors.
      */
-    export class Anchor {
+    export class Anchor extends Vector {
         static makeBroadcast(scope: any): () => void;
         constructor(x?: number, y?: number, ax?: number, ay?: number, bx?: number, by?: number, command?: string);
         controls: {
@@ -531,73 +525,43 @@ declare module "two.js/src/anchor" {
         _sweepFlag: number;
         command: string;
         relative: boolean;
-        /**
-         * @name Two.Anchor#copy
-         * @function
-         * @param {Two.Anchor} v - The anchor to apply values to.
-         * @description Copy the properties of one {@link Two.Anchor} onto another.
-         */
-        copy(v: any): Anchor;
-        x: any;
-        y: any;
         rx: any;
         ry: any;
         xAxisRotation: any;
         largeArcFlag: any;
         sweepFlag: any;
-        /**
-         * @name Two.Anchor#clone
-         * @function
-         * @returns {Two.Anchor}
-         * @description Create a new {@link Two.Anchor}, set all its values to the current instance and return it for use.
-         */
-        clone(): any;
-        /**
-         * @name Two.Anchor#toObject
-         * @function
-         * @returns {Object} - An object with properties filled out to mirror {@link Two.Anchor}.
-         * @description Create a JSON compatible plain object of the current instance. Intended for use with storing values in a database.
-         */
-        toObject(): any;
-        /**
-         * @name Two.Anchor#toString
-         * @function
-         * @returns {String} - A String with comma-separated values reflecting the various values on the current instance.
-         * @description Create a string form of the current instance. Intended for use with storing values in a database. This is lighter to store than the JSON compatible {@link Two.Anchor#toObject}.
-         */
-        toString(): string;
     }
     import { Vector } from "two.js/src/vector";
 }
 declare module "two.js/src/constants" {
     export namespace Constants {
-        export const nextFrameID: any;
-        export namespace Types {
-            export const webgl: string;
-            export const svg: string;
-            export const canvas: string;
+        const nextFrameID: any;
+        namespace Types {
+            const webgl: string;
+            const svg: string;
+            const canvas: string;
         }
-        export const Version: string;
-        export const PublishDate: string;
-        export const Identifier: string;
-        export const Resolution: number;
-        export const AutoCalculateImportedMatrices: boolean;
-        export const Instances: any[];
-        export function uniqueId(): number;
+        const Version: string;
+        const PublishDate: string;
+        const Identifier: string;
+        const Resolution: number;
+        const AutoCalculateImportedMatrices: boolean;
+        const Instances: any[];
+        function uniqueId(): number;
     }
 }
 declare module "two.js/src/utils/curves" {
     export namespace Curve {
-        export const CollinearityEpsilon: number;
-        export const RecursionLimit: number;
-        export const CuspLimit: number;
-        export namespace Tolerance {
-            export const distance: number;
-            export const angle: number;
-            export const epsilon: number;
+        const CollinearityEpsilon: number;
+        const RecursionLimit: number;
+        const CuspLimit: number;
+        namespace Tolerance {
+            const distance: number;
+            const angle: number;
+            const epsilon: number;
         }
-        export const abscissas: number[][];
-        export const weights: number[][];
+        const abscissas: number[][];
+        const weights: number[][];
     }
     /**
      * @name Two.Utils.getComponentOnCubicBezier
@@ -724,23 +688,23 @@ declare module "two.js/src/utils/device-pixel-ratio" {
 }
 declare module "two.js/src/utils/underscore" {
     export namespace _ {
-        export function isNaN(obj: any): boolean;
-        export function isElement(obj: any): boolean;
-        export function isObject(obj: any): boolean;
-        export function extend(base: any, ...args: any[]): any;
-        export function defaults(base: any, ...args: any[]): any;
-        export function each(obj: any, iteratee: any, context: any): any;
-        export const performance: any;
+        function isNaN(obj: any): boolean;
+        function isElement(obj: any): boolean;
+        function isObject(obj: any): boolean;
+        function extend(base: any, ...args: any[]): any;
+        function defaults(base: any, ...args: any[]): any;
+        function each(obj: any, iteratee: any, context: any): any;
+        const performance: any;
     }
 }
 declare module "two.js/src/element" {
     /**
      * @name Two.Element
      * @class
-     * @extends Two.Events
+
      * @description The foundational object for the Two.js scenegraph.
      */
-    export class Element {
+    export class Element extends Events {
         /**
          * @name Two.Element#_flagId
          * @private
@@ -784,6 +748,7 @@ declare module "two.js/src/element" {
          */
         flagReset(): void;
     }
+    import { Events } from "two.js/src/events";
 }
 declare module "two.js/src/matrix" {
     /**
@@ -816,7 +781,7 @@ declare module "two.js/src/matrix" {
          * @returns {Two.Matrix} - If an optional `C` matrix isn't passed then a new one is created and returned.
          * @description Multiply two matrices together and return the result.
          */
-        static Multiply(A: any, B: any, C?: any): any;
+        static Multiply(A: Two.Matrix, B: Two.Matrix, C?: Two.Matrix): Two.Matrix;
         constructor(a: any, b: any, c: any, d: any, e: any, f: any, ...args: any[]);
         /**
          * @name Two.Matrix#elements
@@ -900,7 +865,7 @@ declare module "two.js/src/matrix" {
          * @param {Two.Matrix} [out] - The optional matrix to apply the inversion to.
          * @description Return an inverted version of the matrix. If no optional one is passed a new matrix is created and returned.
          */
-        inverse(out?: any): any;
+        inverse(out?: Two.Matrix): any;
         /**
          * @name Two.Matrix#scale
          * @function
@@ -990,10 +955,10 @@ declare module "two.js/src/shape" {
     /**
      * @name Two.Shape
      * @class
-     * @extends Two.Element
+
      * @description The foundational transformation object for the Two.js scenegraph.
      */
-    export class Shape {
+    export class Shape extends Element {
         /**
          * @name Two.Shape#_flagMatrix
          * @private
@@ -1098,7 +1063,6 @@ declare module "two.js/src/shape" {
         skewY: number;
         set renderer(arg: any);
         get renderer(): any;
-        _renderer: any;
         set translation(arg: any);
         /**
          * @name Two.Shape#translation
@@ -1111,7 +1075,7 @@ declare module "two.js/src/shape" {
          * @param {Two.Group} group - The parent the shape adds itself to.
          * @description Convenience method to add itself to the scenegraph.
          */
-        addTo(group: any): Shape;
+        addTo(group: Two.Group): Shape;
         /**
          * @name Two.Shape#remove
          * @function
@@ -1125,7 +1089,7 @@ declare module "two.js/src/shape" {
          * @returns {Two.Shape}
          * @description Create a new {@link Two.Shape} with the same values as the current shape.
          */
-        clone(parent?: any): any;
+        clone(parent?: Two.Group): Two.Shape;
         /**
          * @name Two.Shape#_update
          * @function
@@ -1135,14 +1099,8 @@ declare module "two.js/src/shape" {
          * @nota-bene Try not to call this method more than once a frame.
          */
         private _update;
-        /**
-         * @name Two.Shape#flagReset
-         * @function
-         * @private
-         * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
-         */
-        private flagReset;
     }
+    import { Element } from "two.js/src/element";
     import { Matrix } from "two.js/src/matrix";
     import { Vector } from "two.js/src/vector";
 }
@@ -1150,10 +1108,10 @@ declare module "two.js/src/collection" {
     /**
      * @name Two.Collection
      * @class
-     * @extends Two.Events
+
      * @description An `Array` like object with additional event propagation on actions. `pop`, `shift`, and `splice` trigger `removed` events. `push`, `unshift`, and `splice` with more than 2 arguments trigger 'inserted'. Finally, `sort` and `reverse` trigger `order` events.
      */
-    export class Collection {
+    export class Collection extends Array<any> {
         constructor(...args: any[]);
         /**
          * @private
@@ -1171,24 +1129,16 @@ declare module "two.js/src/collection" {
         trigger(...args: any[]): any;
         listen(...args: any[]): any;
         ignore(...args: any[]): any;
-        pop(...args: any[]): any;
-        shift(...args: any[]): any;
-        push(...args: any[]): any;
-        unshift(...args: any[]): any;
-        splice(...args: any[]): any;
-        sort(...args: any[]): Collection;
-        reverse(...args: any[]): Collection;
-        indexOf(...args: any[]): any;
     }
 }
 declare module "two.js/src/children" {
     /**
      * @class
      * @name Two.Group.Children
-     * @extends Two.Collection
+
      * @description A children collection which is accesible both by index and by object `id`.
      */
-    export class Children {
+    export class Children extends Collection {
         constructor(children: any, ...args: any[]);
         /**
          * @name Two.Group.Children#ids
@@ -1201,26 +1151,27 @@ declare module "two.js/src/children" {
          * @param {Two.Shape[]} children - The objects which extend {@link Two.Shape} to be added.
          * @description Adds elements to the `ids` map.
          */
-        attach(children: any[]): Children;
+        attach(children: Two.Shape[]): Children;
         /**
          * @function
          * @name Two.Group.Children#detach
          * @param {Two.Shape[]} children - The objects which extend {@link Two.Shape} to be removed.
          * @description Removes elements to the `ids` map.
          */
-        detach(children: any[]): Children;
+        detach(children: Two.Shape[]): Children;
     }
+    import { Collection } from "two.js/src/collection";
 }
 declare module "two.js/src/group" {
     /**
      * @name Two.Group
      * @class
-     * @extends Two.Shape
+
      * @param {Two.Shape[]} [children] - A list of objects that inherit {@link Two.Shape}. For instance, the array could be a {@link Two.Path}, {@link Two.Text}, and {@link Two.RoundedRectangle}.
      * @description This is the primary class for grouping objects that are then drawn in Two.js. In Illustrator this is a group, in After Effects it would be a Null Object. Whichever the case, the `Two.Group` contains a transformation matrix and commands to style its children, but it by itself doesn't render to the screen.
      * @nota-bene The {@link Two#scene} is an instance of `Two.Group`.
      */
-    export class Group {
+    export class Group extends Shape {
         static Children: typeof Children;
         /**
          * @name Two.Group.InsertChildren
@@ -1228,14 +1179,14 @@ declare module "two.js/src/group" {
          * @param {Two.Shape[]} children - The objects to be inserted.
          * @description Cached method to let renderers know children have been added to a {@link Two.Group}.
          */
-        static InsertChildren(children: any[]): void;
+        static InsertChildren(children: Two.Shape[]): void;
         /**
          * @name Two.Group.RemoveChildren
          * @function
          * @param {Two.Shape[]} children - The objects to be removed.
          * @description Cached method to let renderers know children have been removed from a {@link Two.Group}.
          */
-        static RemoveChildren(children: any[]): void;
+        static RemoveChildren(children: Two.Shape[]): void;
         /**
          * @name Two.Group.OrderChildren
          * @function
@@ -1407,14 +1358,6 @@ declare module "two.js/src/group" {
          */
         children: any;
         /**
-         * @name Two.Group#clone
-         * @function
-         * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
-         * @returns {Two.Group}
-         * @description Create a new instance of {@link Two.Group} with the same properties of the current group.
-         */
-        clone(parent?: any): any;
-        /**
          * @name Two.Group#toObject
          * @function
          * @returns {Object}
@@ -1439,21 +1382,21 @@ declare module "two.js/src/group" {
          * @description Recursively search for id. Returns the first element found.
          * @returns {Two.Shape} - Or `null` if nothing is found.
          */
-        getById(id: any): any;
+        getById(id: any): Two.Shape;
         /**
          * @name Two.Group#getByClassName
          * @function
          * @description Recursively search for classes. Returns an array of matching elements.
          * @returns {Two.Shape[]} - Or empty array if nothing is found.
          */
-        getByClassName(className: any): any[];
+        getByClassName(className: any): Two.Shape[];
         /**
          * @name Two.Group#getByType
          * @function
          * @description Recursively search for children of a specific type, e.g. {@link Two.Path}. Pass a reference to this type as the param. Returns an array of matching elements.
          * @returns {Two.Shape[]} - Empty array if nothing is found.
          */
-        getByType(type: any): any[];
+        getByType(type: any): Two.Shape[];
         /**
          * @name Two.Group#add
          * @function
@@ -1461,13 +1404,6 @@ declare module "two.js/src/group" {
          * @description Add objects to the group.
          */
         add(objects: any, ...args: any[]): Group;
-        /**
-         * @name Two.Group#remove
-         * @function
-         * @param {Two.Shape[]|...Two.Shape} [objects=self] - An array of objects to be removed. Can be also removed as individual arguments. If no arguments are passed, then it removes itself from its parent.
-         * @description Remove objects from the group.
-         */
-        remove(objects: any, ...args: any[]): Group;
         /**
          * @name Two.Group#getBoundingClientRect
          * @function
@@ -1494,37 +1430,22 @@ declare module "two.js/src/group" {
          * @description Apply `subdivide` method to all child shapes.
          */
         subdivide(...args: any[]): Group;
-        /**
-         * @name Two.Group#_update
-         * @function
-         * @private
-         * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
-         * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
-         * @nota-bene Try not to call this method more than once a frame.
-         */
-        private _update;
-        /**
-         * @name Two.Group#flagReset
-         * @function
-         * @private
-         * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
-         */
-        private flagReset;
     }
+    import { Shape } from "two.js/src/shape";
     import { Children } from "two.js/src/children";
 }
 declare module "two.js/src/renderers/canvas" {
     /**
      * @name Two.CanvasRenderer
      * @class
-     * @extends Two.Events
+
      * @param {Object} [parameters] - This object is inherited when constructing a new instance of {@link Two}.
      * @param {Element} [parameters.domElement] - The `<canvas />` to draw to. If none given a new one will be constructed.
      * @param {Boolean} [parameters.overdraw] - Determines whether the canvas should clear the background or not. Defaults to `true`.
      * @param {Boolean} [parameters.smoothing=true] - Determines whether the canvas should antialias drawing. Set it to `false` when working with pixel art. `false` can lead to better performance, since it would use a cheaper interpolation algorithm.
      * @description This class is used by {@link Two} when constructing with `type` of `Two.Types.canvas`. It takes Two.js' scenegraph and renders it to a `<canvas />`.
      */
-    export class Renderer {
+    export class Renderer extends Events {
         /**
          * @name Two.CanvasRenderer.Utils
          * @property {Object} - A massive object filled with utility functions and properties to render Two.js objects to a `<canvas />`.
@@ -1603,18 +1524,19 @@ declare module "two.js/src/renderers/canvas" {
          */
         render(): Renderer;
     }
+    import { Events } from "two.js/src/events";
     import { Group } from "two.js/src/group";
 }
 declare module "two.js/src/utils/canvas-shim" {
     export namespace CanvasShim {
-        export const Image: any;
-        export const isHeadless: boolean;
-        export function shim(canvas: any, Image?: new (width?: number, height?: number) => HTMLImageElement): any;
+        const Image: any;
+        const isHeadless: boolean;
+        function shim(canvas: any, Image?: new (width?: number, height?: number) => HTMLImageElement): any;
     }
 }
 declare module "two.js/src/utils/dom" {
     export namespace dom {
-        export const temp: any;
+        const temp: any;
     }
 }
 declare module "two.js/src/utils/error" {
@@ -1676,7 +1598,7 @@ declare module "two.js/src/utils/shape" {
      * @returns {Number}
      * @description
      */
-    export function contains(path: any, t: number): number;
+    export function contains(path: Two.Path, t: number): number;
     /**
      * @private
      * @param {Two.Path} path - The path to analyze against.
@@ -1684,7 +1606,7 @@ declare module "two.js/src/utils/shape" {
      * @returns {Number}
      * @description Return the id of an anchor based on a target length.
      */
-    export function getIdByLength(path: any, target: number): number;
+    export function getIdByLength(path: Two.Path, target: number): number;
     export function getCurveLength(a: any, b: any, limit: any): number;
     export function getSubdivisions(a: any, b: any, limit: any): import("two.js/src/anchor").Anchor[];
 }
@@ -1692,13 +1614,13 @@ declare module "two.js/src/effects/stop" {
     /**
      * @name Two.Stop
      * @class
-     * @extends Two.Element
+
      * @param {Number} [offset] - The offset percentage of the stop represented as a zero-to-one value. Default value flip flops from zero-to-one as new stops are created.
      * @param {String} [color] - The color of the stop. Default value flip flops from white to black as new stops are created.
      * @param {Number} [opacity] - The opacity value. Default value is 1, cannot be lower than 0.
      * @nota-bene Used specifically in conjunction with {@link Two.Gradient}s to control color graduation.
      */
-    export class Stop {
+    export class Stop extends Element {
         /**
          * @name Two.Stop.Index
          * @property {Number} - The current index being referenced for calculating a stop's default offset value.
@@ -1768,7 +1690,7 @@ declare module "two.js/src/effects/stop" {
          * @returns {Two.Stop}
          * @description Create a new instance of {@link Two.Stop} with the same properties of the current path.
          */
-        clone(): any;
+        clone(): Two.Stop;
         /**
          * @name Two.Stop#toObject
          * @function
@@ -1776,24 +1698,18 @@ declare module "two.js/src/effects/stop" {
          * @description Return a JSON compatible plain object that represents the path.
          */
         toObject(): any;
-        /**
-         * @name Two.Stop#flagReset
-         * @function
-         * @private
-         * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
-         */
-        private flagReset;
     }
+    import { Element } from "two.js/src/element";
 }
 declare module "two.js/src/effects/gradient" {
     /**
      * @name Two.Gradient
      * @class
-     * @extends Two.Element
+
      * @param {Two.Stop[]} [stops] - A list of {@link Two.Stop}s that contain the gradient fill pattern for the gradient.
      * @description This is the base class for constructing different types of gradients with Two.js. The two common gradients are {@link Two.LinearGradient} and {@link Two.RadialGradient}.
      */
-    export class Gradient {
+    export class Gradient extends Element {
         /**
          * @name Two.Gradient.Stop
          * @see {@link Two.Stop}
@@ -1822,7 +1738,6 @@ declare module "two.js/src/effects/gradient" {
          * @nota-bene In the {@link Two.SvgRenderer} change this to change the underlying SVG element's id too.
          */
         id: string;
-        classList: any[];
         /**
          * @name Two.Gradient#spread
          * @property {String} - Indicates what happens if the gradient starts or ends inside the bounds of the target rectangle. Possible values are `'pad'`, `'reflect'`, and `'repeat'`.
@@ -1843,7 +1758,7 @@ declare module "two.js/src/effects/gradient" {
          * @returns {Two.Gradient}
          * @description Create a new instance of {@link Two.Gradient} with the same properties of the current path.
          */
-        clone(parent?: any): any;
+        clone(parent?: Two.Group): Two.Gradient;
         /**
          * @name Two.Gradient#toObject
          * @function
@@ -1860,21 +1775,15 @@ declare module "two.js/src/effects/gradient" {
          * @nota-bene Try not to call this method more than once a frame.
          */
         private _update;
-        /**
-         * @name Two.Gradient#flagReset
-         * @function
-         * @private
-         * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
-         */
-        private flagReset;
     }
+    import { Element } from "two.js/src/element";
     import { Stop } from "two.js/src/effects/stop";
 }
 declare module "two.js/src/effects/linear-gradient" {
     /**
      * @name Two.LinearGradient
      * @class
-     * @extends Two.Gradient
+
      * @param {Number} [x1=0] - The x position of the first end point of the linear gradient.
      * @param {Number} [y1=0] - The y position of the first end point of the linear gradient.
      * @param {Number} [x2=0] - The x position of the second end point of the linear gradient.
@@ -1882,13 +1791,7 @@ declare module "two.js/src/effects/linear-gradient" {
      * @param {Two.Stop[]} [stops] - A list of {@link Two.Stop}s that contain the gradient fill pattern for the gradient.
      * @nota-bene The linear gradient lives within the space of the parent object's matrix space.
      */
-    export class LinearGradient {
-        static Properties: string[];
-        /**
-         * @name Two.LinearGradient.Stop
-         * @see {@link Two.Stop}
-         */
-        static Stop: typeof Stop;
+    export class LinearGradient extends Gradient {
         constructor(x1: any, y1: any, x2: any, y2: any, stops: any);
         /**
          * @name Two.LinearGradient#_flagEndPoints
@@ -1908,46 +1811,15 @@ declare module "two.js/src/effects/linear-gradient" {
          * @property {Two.Vector} - The x and y value for where the second end point is placed on the canvas.
          */
         right: Vector;
-        /**
-         * @name Two.LinearGradient#clone
-         * @function
-         * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
-         * @returns {Two.Gradient}
-         * @description Create a new instance of {@link Two.LinearGradient} with the same properties of the current path.
-         */
-        clone(parent?: any): any;
-        /**
-         * @name Two.LinearGradient#toObject
-         * @function
-         * @returns {Object}
-         * @description Return a JSON compatible plain object that represents the path.
-         */
-        toObject(): any;
-        /**
-         * @name Two.LinearGradient#_update
-         * @function
-         * @private
-         * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
-         * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
-         * @nota-bene Try not to call this method more than once a frame.
-         */
-        private _update;
-        /**
-         * @name Two.LinearGradient#flagReset
-         * @function
-         * @private
-         * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
-         */
-        private flagReset;
     }
+    import { Gradient } from "two.js/src/effects/gradient";
     import { Vector } from "two.js/src/vector";
-    import { Stop } from "two.js/src/effects/stop";
 }
 declare module "two.js/src/effects/radial-gradient" {
     /**
      * @name Two.RadialGradient
      * @class
-     * @extends Two.Gradient
+
      * @param {Number} [x=0] - The x position of the origin of the radial gradient.
      * @param {Number} [y=0] - The y position of the origin of the radial gradient.
      * @param {Number} [radius=0] - The radius of the radial gradient.
@@ -1956,17 +1828,7 @@ declare module "two.js/src/effects/radial-gradient" {
      * @param {Number} [focalY=0] - The y position of the focal point on the radial gradient.
      * @nota-bene The radial gradient lives within the space of the parent object's matrix space.
      */
-    export class RadialGradient {
-        /**
-         * @name Two.RadialGradient.Stop
-         * @see {@link Two.Stop}
-         */
-        static Stop: typeof Stop;
-        /**
-         * @name Two.RadialGradient.Properties
-         * @property {String[]} - A list of properties that are on every {@link Two.RadialGradient}.
-         */
-        static Properties: string[];
+    export class RadialGradient extends Gradient {
         constructor(cx: any, cy: any, r: any, stops: any, fx: any, fy: any);
         /**
          * @name Two.RadialGradient#_flagRadius
@@ -2001,51 +1863,20 @@ declare module "two.js/src/effects/radial-gradient" {
          * @nota-bene This effects the spray or spread of the radial gradient.
          */
         focal: Vector;
-        /**
-         * @name Two.RadialGradient#clone
-         * @function
-         * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
-         * @returns {Two.Gradient}
-         * @description Create a new instance of {@link Two.RadialGradient} with the same properties of the current path.
-         */
-        clone(parent?: any): any;
-        /**
-         * @name Two.RadialGradient#toObject
-         * @function
-         * @returns {Object}
-         * @description Return a JSON compatible plain object that represents the path.
-         */
-        toObject(): any;
-        /**
-         * @name Two.RadialGradient#_update
-         * @function
-         * @private
-         * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
-         * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
-         * @nota-bene Try not to call this method more than once a frame.
-         */
-        private _update;
-        /**
-         * @name Two.RadialGradient#flagReset
-         * @function
-         * @private
-         * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
-         */
-        private flagReset;
     }
+    import { Gradient } from "two.js/src/effects/gradient";
     import { Vector } from "two.js/src/vector";
-    import { Stop } from "two.js/src/effects/stop";
 }
 declare module "two.js/src/effects/texture" {
     /**
      * @name Two.Texture
      * @class
-     * @extends Two.Element
+
      * @param {String|HTMLImageElement} [src] - The URL path to an image file or an `<img />` element.
      * @param {Function} [callback] - An optional callback function once the image has been loaded.
      * @description Fundamental to work with bitmap data, a.k.a. pregenerated imagery, in Two.js. Supported formats include jpg, png, gif, and tiff. See {@link Two.Texture.RegularExpressions} for a full list of supported formats.
      */
-    export class Texture {
+    export class Texture extends Element {
         /**
          * @name Two.Texture.Properties
          * @property {String[]} - A list of properties that are on every {@link Two.Texture}.
@@ -2080,7 +1911,7 @@ declare module "two.js/src/effects/texture" {
          * @param {Function} loaded - The callback function to be triggered once the image is loaded.
          * @nota-bene - This function uses node's `fs.readFileSync` to spoof the `<img />` loading process in the browser.
          */
-        static loadHeadlessBuffer(texture: any, loaded: Function): void;
+        static loadHeadlessBuffer(texture: Two.Texture, loaded: Function): void;
         /**
          * @name Two.Texture.getTag
          * @property {Function} - Retrieves the tag name of an image, video, or canvas node.
@@ -2111,7 +1942,7 @@ declare module "two.js/src/effects/texture" {
          * @param {Two.Texture} texture - The texture to load.
          * @param {Function} callback - The function to be called once the texture is loaded.
          */
-        static load(texture: any, callback: Function): void;
+        static load(texture: Two.Texture, callback: Function): void;
         constructor(src: any, callback: any);
         /**
          * @name Two.Texture#_flagSrc
@@ -2191,9 +2022,7 @@ declare module "two.js/src/effects/texture" {
          * @see {@link Two.Texture#offset}
          */
         private _offset;
-        _renderer: {};
         id: string;
-        classList: any[];
         /**
          * @name Two.Texture#loaded
          * @property {Boolean} - Shorthand value to determine if image has been loaded into the texture.
@@ -2223,7 +2052,7 @@ declare module "two.js/src/effects/texture" {
          * @returns {Two.Texture}
          * @description Create a new instance of {@link Two.Texture} with the same properties of the current texture.
          */
-        clone(): any;
+        clone(): Two.Texture;
         /**
          * @name Two.Texture#toObject
          * @function
@@ -2240,14 +2069,8 @@ declare module "two.js/src/effects/texture" {
          * @nota-bene Try not to call this method more than once a frame.
          */
         private _update;
-        /**
-         * @name Two.Texture#flagReset
-         * @function
-         * @private
-         * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
-         */
-        private flagReset;
     }
+    import { Element } from "two.js/src/element";
     import { Vector } from "two.js/src/vector";
     import { Registry } from "two.js/src/registry";
 }
@@ -2255,14 +2078,14 @@ declare module "two.js/src/path" {
     /**
      * @name Two.Path
      * @class
-     * @extends Two.Shape
+
      * @param {Two.Anchor[]} [vertices] - A list of {@link Two.Anchor}s that represent the order and coordinates to construct the rendered shape.
      * @param {Boolean} [closed=false] - Describes whether the shape is closed or open.
      * @param {Boolean} [curved=false] - Describes whether the shape automatically calculates bezier handles for each vertex.
      * @param {Boolean} [manual=false] - Describes whether the developer controls how vertices are plotted or if Two.js automatically plots coordinates based on closed and curved booleans.
      * @description This is the primary primitive class for creating all drawable shapes in Two.js. Unless specified methods return their instance of `Two.Path` for the purpose of chaining.
      */
-    export class Path {
+    export class Path extends Shape {
         /**
          * @name Two.Path.Properties
          * @property {String[]} - A list of properties that are on every {@link Two.Path}.
@@ -2533,14 +2356,6 @@ declare module "two.js/src/path" {
          */
         dashes: any[];
         /**
-         * @name Two.Path#clone
-         * @function
-         * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
-         * @returns {Two.Path}
-         * @description Create a new instance of {@link Two.Path} with the same properties of the current path.
-         */
-        clone(parent?: any): any;
-        /**
          * @name Two.Path#toObject
          * @function
          * @returns {Object}
@@ -2612,23 +2427,8 @@ declare module "two.js/src/path" {
          */
         private _updateLength;
         _lengths: any[];
-        /**
-         * @name Two.Path#_update
-         * @function
-         * @private
-         * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
-         * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
-         * @nota-bene Try not to call this method more than once a frame.
-         */
-        private _update;
-        /**
-         * @name Two.Path#flagReset
-         * @function
-         * @private
-         * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
-         */
-        private flagReset;
     }
+    import { Shape } from "two.js/src/shape";
     import { getCurveLength } from "two.js/src/utils/shape";
     /**
      * @name FlagVertices
@@ -2680,19 +2480,13 @@ declare module "two.js/src/shapes/rectangle" {
     /**
      * @name Two.Rectangle
      * @class
-     * @extends Two.Path
+
      * @param {Number} [x=0] - The x position of the rectangle.
      * @param {Number} [y=0] - The y position of the rectangle.
      * @param {Number} [width] - The width value of the rectangle.
      * @param {Number} [height] - The width value of the rectangle.
      */
-    export class Rectangle {
-        /**
-         * @name Two.Rectangle.Properties
-         * @property {String[]} - A list of properties that are on every {@link Two.Rectangle}.
-         */
-        static Properties: string[];
-        constructor(x: any, y: any, width: any, height: any);
+    export class Rectangle extends Path {
         /**
          * @name Two.Rectangle#width
          * @property {Number} - The size of the width of the rectangle.
@@ -2733,45 +2527,15 @@ declare module "two.js/src/shapes/rectangle" {
          */
         private _height;
         _origin: any;
-        /**
-         * @name Two.Rectangle#_update
-         * @function
-         * @private
-         * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
-         * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
-         * @nota-bene Try not to call this method more than once a frame.
-         */
-        private _update;
-        /**
-         * @name Two.Rectangle#flagReset
-         * @function
-         * @private
-         * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
-         */
-        private flagReset;
-        /**
-         * @name Two.Rectangle#clone
-         * @function
-         * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
-         * @returns {Two.Rectangle}
-         * @description Create a new instance of {@link Two.Rectangle} with the same properties of the current path.
-         */
-        clone(parent?: any): any;
-        /**
-         * @name Two.Rectangle#toObject
-         * @function
-         * @returns {Object}
-         * @description Return a JSON compatible plain object that represents the path.
-         */
-        toObject(): any;
     }
+    import { Path } from "two.js/src/path";
     import { Vector } from "two.js/src/vector";
 }
 declare module "two.js/src/effects/sprite" {
     /**
      * @name Two.Sprite
      * @class
-     * @extends Two.Rectangle
+
      * @param {String|Two.Texture} [path] - The URL path or {@link Two.Texture} to be used as the bitmap data displayed on the sprite.
      * @param {Number} [ox=0] - The initial `x` position of the Two.Sprite.
      * @param {Number} [oy=0] - The initial `y` position of the Two.Sprite.
@@ -2780,12 +2544,7 @@ declare module "two.js/src/effects/sprite" {
      * @param {Number} [frameRate=0] - The frame rate at which the partitions of the image should playback at.
      * @description A convenient package to display still or animated images through a tiled image source. For more information on the principals of animated imagery through tiling see [Texture Atlas](https://en.wikipedia.org/wiki/Texture_atlas) on Wikipedia.
      */
-    export class Sprite {
-        /**
-         * @name Two.Sprite.Properties
-         * @property {String[]} - A list of properties that are on every {@link Two.Sprite}.
-         */
-        static Properties: string[];
+    export class Sprite extends Rectangle {
         constructor(path: any, ox: any, oy: any, cols: any, rows: any, frameRate: any);
         /**
          * @name Two.Sprite#_flagTexture
@@ -2889,14 +2648,7 @@ declare module "two.js/src/effects/sprite" {
          * @property {Number} - The current frame the {@link Two.Sprite} is currently displaying.
          */
         private _index;
-        /**
-         * @name Two.Sprite#_origin
-         * @private
-         * @see {@link Two.Sprite#origin}
-         */
-        private _origin;
         texture: Texture;
-        origin: Vector;
         columns: number;
         rows: number;
         frameRate: number;
@@ -2927,61 +2679,21 @@ declare module "two.js/src/effects/sprite" {
          * @description Halt animation playback of a {@link Two.Sprite} and set the current frame back to the first frame.
          */
         stop(): Sprite;
-        /**
-         * @name Two.Sprite#clone
-         * @function
-         * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
-         * @returns {Two.Sprite}
-         * @description Create a new instance of {@link Two.Sprite} with the same properties of the current sprite.
-         */
-        clone(parent?: any): any;
-        /**
-         * @name Two.Sprite#toObject
-         * @function
-         * @returns {Object}
-         * @description Return a JSON compatible plain object that represents the path.
-         */
-        toObject(): any;
-        /**
-         * @name Two.Sprite#_update
-         * @function
-         * @private
-         * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
-         * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
-         * @nota-bene Try not to call this method more than once a frame.
-         */
-        private _update;
-        fill: any;
-        width: any;
-        height: any;
-        /**
-         * @name Two.Sprite#flagReset
-         * @function
-         * @private
-         * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
-         */
-        private flagReset;
     }
+    import { Rectangle } from "two.js/src/shapes/rectangle";
     import { Texture } from "two.js/src/effects/texture";
-    import { Vector } from "two.js/src/vector";
 }
 declare module "two.js/src/shapes/circle" {
     /**
      * @name Two.Circle
      * @class
-     * @extends Two.Path
+
      * @param {Number} [x=0] - The x position of the circle.
      * @param {Number} [y=0] - The y position of the circle.
      * @param {Number} [radius=0] - The radius value of the circle.
      * @param {Number} [resolution=4] - The number of vertices used to construct the circle.
      */
-    export class Circle {
-        /**
-         * @name Two.Circle.Properties
-         * @property {String[]} - A list of properties that are on every {@link Two.Circle}.
-         */
-        static Properties: string[];
-        constructor(ox: any, oy: any, r: any, resolution: any);
+    export class Circle extends Path {
         /**
          * @name Two.Circle#_flagRadius
          * @private
@@ -2995,56 +2707,21 @@ declare module "two.js/src/shapes/circle" {
          */
         private _radius;
         radius: number;
-        /**
-         * @name Two.Circle#_update
-         * @function
-         * @private
-         * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
-         * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
-         * @nota-bene Try not to call this method more than once a frame.
-         */
-        private _update;
-        /**
-         * @name Two.Circle#flagReset
-         * @function
-         * @private
-         * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
-         */
-        private flagReset;
-        /**
-         * @name Two.Circle#clone
-         * @function
-         * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
-         * @returns {Two.Circle}
-         * @description Create a new instance of {@link Two.Circle} with the same properties of the current path.
-         */
-        clone(parent?: any): any;
-        /**
-         * @name Two.Circle#toObject
-         * @function
-         * @returns {Object}
-         * @description Return a JSON compatible plain object that represents the path.
-         */
-        toObject(): any;
     }
+    import { Path } from "two.js/src/path";
 }
 declare module "two.js/src/shapes/ellipse" {
     /**
      * @name Two.Ellipse
      * @class
-     * @extends Two.Path
+
      * @param {Number} [x=0] - The x position of the ellipse.
      * @param {Number} [y=0] - The y position of the ellipse.
      * @param {Number} [rx=0] - The radius value of the ellipse in the x direction.
      * @param {Number} [ry=0] - The radius value of the ellipse in the y direction.
      * @param {Number} [resolution=4] - The number of vertices used to construct the ellipse.
      */
-    export class Ellipse {
-        /**
-         * @name Two.Ellipse.Properties
-         * @property {String[]} - A list of properties that are on every {@link Two.Ellipse}.
-         */
-        static Properties: string[];
+    export class Ellipse extends Path {
         constructor(ox: any, oy: any, rx: any, ry: any, resolution: any);
         /**
          * @name Two.Ellipse#_flagWidth
@@ -3072,59 +2749,28 @@ declare module "two.js/src/shapes/ellipse" {
         private _height;
         width: number;
         height: number;
-        /**
-         * @name Two.Ellipse#_update
-         * @function
-         * @private
-         * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
-         * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
-         * @nota-bene Try not to call this method more than once a frame.
-         */
-        private _update;
-        /**
-         * @name Two.Ellipse#flagReset
-         * @function
-         * @private
-         * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
-         */
-        private flagReset;
-        /**
-         * @name Two.Ellipse#clone
-         * @function
-         * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
-         * @returns {Two.Ellipse}
-         * @description Create a new instance of {@link Two.Ellipse} with the same properties of the current path.
-         */
-        clone(parent?: any): any;
-        /**
-         * @name Two.Ellipse#toObject
-         * @function
-         * @returns {Object}
-         * @description Return a JSON compatible plain object that represents the path.
-         */
-        toObject(): any;
     }
+    import { Path } from "two.js/src/path";
 }
 declare module "two.js/src/shapes/line" {
     /**
      * @name Two.Line
      * @class
-     * @extends Two.Path
+
      * @param {Number} [x1=0] - The x position of the first vertex on the line.
      * @param {Number} [y1=0] - The y position of the first vertex on the line.
      * @param {Number} [x2=0] - The x position of the second vertex on the line.
      * @param {Number} [y2=0] - The y position of the second vertex on the line.
      */
-    export class Line {
-        constructor(x1: any, y1: any, x2: any, y2: any);
-        automatic: boolean;
+    export class Line extends Path {
     }
+    import { Path } from "two.js/src/path";
 }
 declare module "two.js/src/shapes/rounded-rectangle" {
     /**
      * @name Two.RoundedRectangle
      * @class
-     * @extends Two.Path
+
      * @param {Number} [x=0] - The x position of the rounded rectangle.
      * @param {Number} [y=0] - The y position of the rounded rectangle.
      * @param {Number} [width=0] - The width value of the rounded rectangle.
@@ -3132,12 +2778,7 @@ declare module "two.js/src/shapes/rounded-rectangle" {
      * @param {Number} [radius=0] - The radius value of the rounded rectangle.
      * @param {Number} [resolution=12] - The number of vertices used to construct the rounded rectangle.
      */
-    export class RoundedRectangle {
-        /**
-         * @name Two.RoundedRectangle.Properties
-         * @property {String[]} - A list of properties that are on every {@link Two.RoundedRectangle}.
-         */
-        static Properties: string[];
+    export class RoundedRectangle extends Path {
         constructor(ox: any, oy: any, width: any, height: any, radius: any);
         /**
          * @name Two.RoundedRectangle#_flagWidth
@@ -3176,48 +2817,17 @@ declare module "two.js/src/shapes/rounded-rectangle" {
          */
         private _radius;
         closed: boolean;
-        automatic: boolean;
         width: number;
         height: number;
         radius: number;
-        /**
-         * @name Two.RoundedRectangle#_update
-         * @function
-         * @private
-         * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
-         * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
-         * @nota-bene Try not to call this method more than once a frame.
-         */
-        private _update;
-        /**
-         * @name Two.RoundedRectangle#flagReset
-         * @function
-         * @private
-         * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
-         */
-        private flagReset;
-        /**
-         * @name Two.RoundedRectangle#clone
-         * @function
-         * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
-         * @returns {Two.RoundedRectangle}
-         * @description Create a new instance of {@link Two.RoundedRectangle} with the same properties of the current path.
-         */
-        clone(parent?: any): any;
-        /**
-         * @name Two.RoundedRectangle#toObject
-         * @function
-         * @returns {Object}
-         * @description Return a JSON compatible plain object that represents the path.
-         */
-        toObject(): any;
     }
+    import { Path } from "two.js/src/path";
 }
 declare module "two.js/src/text" {
     /**
      * @name Two.Text
      * @class
-     * @extends Two.Shape
+
      * @param {String} [message] - The String to be rendered to the scene.
      * @param {Number} [x=0] - The position in the x direction for the object.
      * @param {Number} [y=0] - The position in the y direction for the object.
@@ -3225,7 +2835,7 @@ declare module "two.js/src/text" {
      * @description This is a primitive class for creating drawable text that can be added to the scenegraph.
      * @returns {Two.Text}
      */
-    export class Text {
+    export class Text extends Shape {
         /**
          * @name Two.Text.Ratio
          * @property {Number} - Approximate aspect ratio of a typeface's character width to height.
@@ -3434,14 +3044,6 @@ declare module "two.js/src/text" {
          */
         dashes: any[];
         /**
-         * @name Two.Text#clone
-         * @function
-         * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
-         * @returns {Two.Text}
-         * @description Create a new instance of {@link Two.Text} with the same properties of the current text object.
-         */
-        clone(parent?: any): any;
-        /**
          * @name Two.Text#toObject
          * @function
          * @returns {Object}
@@ -3471,15 +3073,8 @@ declare module "two.js/src/text" {
          * @description Return an object with top, left, right, bottom, width, and height parameters of the text object.
          */
         getBoundingClientRect(shallow?: boolean): any;
-        /**
-         * @name Two.Text#flagReset
-         * @function
-         * @private
-         * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
-         */
-        private flagReset;
-        _flagClassName: boolean;
     }
+    import { Shape } from "two.js/src/shape";
 }
 declare module "two.js/src/utils/interpret-svg" {
     /**
@@ -3494,11 +3089,11 @@ declare module "two.js/src/utils/interpret-svg" {
         polygon: (node: any, parentStyles: any) => Path;
         polyline: (node: any, parentStyles: any) => any;
         path: (node: any, parentStyles: any) => Path;
-        circle: (node: any, parentStyles: any) => any;
-        ellipse: (node: any, parentStyles: any) => any;
-        rect: (node: any, parentStyles: any) => any;
-        'rounded-rect': (node: any, parentStyles: any) => any;
-        line: (node: any, parentStyles: any) => any;
+        circle: (node: any, parentStyles: any) => Circle;
+        ellipse: (node: any, parentStyles: any) => Ellipse;
+        rect: (node: any, parentStyles: any) => Rectangle | RoundedRectangle;
+        'rounded-rect': (node: any, parentStyles: any) => RoundedRectangle;
+        line: (node: any, parentStyles: any) => Line;
         lineargradient: (node: any, parentStyles: any) => LinearGradient;
         radialgradient: (node: any, parentStyles: any) => RadialGradient;
         text: (node: any, parentStyles: any) => Text;
@@ -3507,6 +3102,11 @@ declare module "two.js/src/utils/interpret-svg" {
     };
     import { Group } from "two.js/src/group";
     import { Path } from "two.js/src/path";
+    import { Circle } from "two.js/src/shapes/circle";
+    import { Ellipse } from "two.js/src/shapes/ellipse";
+    import { Rectangle } from "two.js/src/shapes/rectangle";
+    import { RoundedRectangle } from "two.js/src/shapes/rounded-rectangle";
+    import { Line } from "two.js/src/shapes/line";
     import { LinearGradient } from "two.js/src/effects/linear-gradient";
     import { RadialGradient } from "two.js/src/effects/radial-gradient";
     import { Text } from "two.js/src/text";
@@ -3527,25 +3127,19 @@ declare module "two.js/src/effects/image-sequence" {
     /**
      * @name Two.ImageSequence
      * @class
-     * @extends Two.Rectangle
+
      * @param {String|String[]|Two.Texture|Two.Texture[]} paths - A list of URLs or {@link Two.Texture}s.
      * @param {Number} [ox=0] - The initial `x` position of the Two.ImageSequence.
      * @param {Number} [oy=0] - The initial `y` position of the Two.ImageSequence.
      * @param {Number} [frameRate=30] - The frame rate at which the images should playback at.
      * @description A convenient package to display still or animated images organized as a series of still images.
      */
-    export class ImageSequence {
-        /**
-         * @name Two.ImageSequence.Properties
-         * @property {String[]} - A list of properties that are on every {@link Two.ImageSequence}.
-         */
-        static Properties: string[];
+    export class ImageSequence extends Rectangle {
         /**
          * @name Two.ImageSequence.DefaultFrameRate
          * @property The default frame rate that {@link Two.ImageSequence#frameRate} is set to when instantiated.
          */
         static DefaultFrameRate: number;
-        constructor(paths: any, ox: any, oy: any, frameRate: any);
         /**
          * @name Two.ImageSequence#_flagTextures
          * @private
@@ -3624,14 +3218,7 @@ declare module "two.js/src/effects/image-sequence" {
          * @see {@link Two.ImageSequence#frameRate}
          */
         private _frameRate;
-        /**
-         * @name Two.ImageSequence#_origin
-         * @private
-         * @see {@link Two.ImageSequence#origin}
-         */
-        private _origin;
         textures: any[];
-        origin: Vector;
         frameRate: number;
         /**
          * @name Two.ImageSequence#index
@@ -3660,48 +3247,14 @@ declare module "two.js/src/effects/image-sequence" {
          * @description Halt animation playback of a {@link Two.ImageSequence} and set the current frame back to the first frame.
          */
         stop(): ImageSequence;
-        /**
-         * @name Two.ImageSequence#clone
-         * @function
-         * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
-         * @returns {Two.ImageSequence}
-         * @description Create a new instance of {@link Two.ImageSequence} with the same properties of the current image sequence.
-         */
-        clone(parent?: any): any;
-        /**
-         * @name Two.ImageSequence#toObject
-         * @function
-         * @returns {Object}
-         * @description Return a JSON compatible plain object that represents the path.
-         */
-        toObject(): any;
-        /**
-         * @name Two.ImageSequence#_update
-         * @function
-         * @private
-         * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
-         * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
-         * @nota-bene Try not to call this method more than once a frame.
-         */
-        private _update;
-        width: any;
-        height: any;
-        fill: any;
-        /**
-         * @name Two.ImageSequence#flagReset
-         * @function
-         * @private
-         * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
-         */
-        private flagReset;
     }
-    import { Vector } from "two.js/src/vector";
+    import { Rectangle } from "two.js/src/shapes/rectangle";
 }
 declare module "two.js/src/shapes/arc-segment" {
     /**
      * @name Two.ArcSegment
      * @class
-     * @extends Two.Path
+
      * @param {Number} [x=0] - The x position of the arc segment.
      * @param {Number} [y=0] - The y position of the arc segment.
      * @param {Number} [innerRadius=0] - The inner radius value of the arc segment.
@@ -3710,12 +3263,7 @@ declare module "two.js/src/shapes/arc-segment" {
      * @param {Number} [endAngle=6.2831] - The end angle of the arc segment in Number.
      * @param {Number} [resolution=24] - The number of vertices used to construct the arc segment.
      */
-    export class ArcSegment {
-        /**
-         * @name Two.ArcSegment.Properties
-         * @property {String[]} - A list of properties that are on every {@link Two.ArcSegment}.
-         */
-        static Properties: string[];
+    export class ArcSegment extends Path {
         constructor(ox: any, oy: any, ir: any, or: any, sa: any, ea: any, res: any);
         /**
          * @name Two.ArcSegment#_flagStartAngle
@@ -3769,48 +3317,18 @@ declare module "two.js/src/shapes/arc-segment" {
         outerRadius: number;
         startAngle: number;
         endAngle: number;
-        /**
-         * @name Two.ArcSegment#_update
-         * @function
-         * @private
-         * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
-         * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
-         * @nota-bene Try not to call this method more than once a frame.
-         */
-        private _update;
-        /**
-         * @name Two.ArcSegment#flagReset
-         * @function
-         * @private
-         * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
-         */
-        private flagReset;
-        /**
-         * @name Two.ArcSegment#clone
-         * @function
-         * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
-         * @returns {Two.ArcSegment}
-         * @description Create a new instance of {@link Two.ArcSegment} with the same properties of the current path.
-         */
-        clone(parent?: any): any;
-        /**
-         * @name Two.ArcSegment#toObject
-         * @function
-         * @returns {Object}
-         * @description Return a JSON compatible plain object that represents the path.
-         */
-        toObject(): any;
     }
+    import { Path } from "two.js/src/path";
 }
 declare module "two.js/src/shapes/points" {
     /**
      * @name Two.Points
      * @class
-     * @extends Two.Shape
+
      * @param {Two.Vector[]} [vertices] - A list of {@link Two.Vector}s that represent the order and coordinates to construct a rendered set of points.
      * @description This is a primary primitive class for quickly and easily drawing points in Two.js. Unless specified methods return their instance of `Two.Points` for the purpose of chaining.
      */
-    export class Points {
+    export class Points extends Shape {
         static Properties: string[];
         constructor(vertices: any);
         _flagVertices: boolean;
@@ -3890,14 +3408,6 @@ declare module "two.js/src/shapes/points" {
          */
         dashes: any[];
         /**
-         * @name Two.Points#clone
-         * @function
-         * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
-         * @returns {Two.Points}
-         * @description Create a new instance of {@link Two.Points} with the same properties of the current path.
-         */
-        clone(parent?: any): any;
-        /**
          * @name Two.Points#toObject
          * @function
          * @returns {Object}
@@ -3952,42 +3462,21 @@ declare module "two.js/src/shapes/points" {
          * @description Recalculate the {@link Two.Points#length} value.
          */
         private _updateLength;
-        /**
-         * @name Two.Points#_update
-         * @function
-         * @private
-         * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
-         * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
-         * @nota-bene Try not to call this method more than once a frame.
-         */
-        private _update;
-        /**
-         * @name Two.Points#flagReset
-         * @function
-         * @private
-         * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
-         */
-        private flagReset;
     }
+    import { Shape } from "two.js/src/shape";
     import { Path } from "two.js/src/path";
 }
 declare module "two.js/src/shapes/polygon" {
     /**
      * @name Two.Polygon
      * @class
-     * @extends Two.Path
+
      * @param {Number} [x=0] - The x position of the polygon.
      * @param {Number} [y=0] - The y position of the polygon.
      * @param {Number} [radius=0] - The radius value of the polygon.
      * @param {Number} [sides=12] - The number of vertices used to construct the polygon.
      */
-    export class Polygon {
-        /**
-         * @name Two.Polygon.Properties
-         * @property {String[]} - A list of properties that are on every {@link Two.Polygon}.
-         */
-        static Properties: string[];
-        constructor(ox: any, oy: any, r: any, sides: any);
+    export class Polygon extends Path {
         /**
          * @name Two.Polygon#_flagWidth
          * @private
@@ -4025,60 +3514,24 @@ declare module "two.js/src/shapes/polygon" {
          */
         private _sides;
         closed: boolean;
-        automatic: boolean;
         width: number;
         height: number;
         sides: number;
-        /**
-         * @name Two.Polygon#_update
-         * @function
-         * @private
-         * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
-         * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
-         * @nota-bene Try not to call this method more than once a frame.
-         */
-        private _update;
-        /**
-         * @name Two.Polygon#flagReset
-         * @function
-         * @private
-         * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
-         */
-        private flagReset;
-        /**
-         * @name Two.Polygon#clone
-         * @function
-         * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
-         * @returns {Two.Polygon}
-         * @description Create a new instance of {@link Two.Polygon} with the same properties of the current path.
-         */
-        clone(parent?: any): any;
-        /**
-         * @name Two.Polygon#toObject
-         * @function
-         * @returns {Object}
-         * @description Return a JSON compatible plain object that represents the path.
-         */
-        toObject(): any;
     }
+    import { Path } from "two.js/src/path";
 }
 declare module "two.js/src/shapes/star" {
     /**
      * @name Two.Star
      * @class
-     * @extends Two.Path
+
      * @param {Number} [x=0] - The x position of the star.
      * @param {Number} [y=0] - The y position of the star.
      * @param {Number} [innerRadius=0] - The inner radius value of the star.
      * @param {Number} [outerRadius=0] - The outer radius value of the star.
      * @param {Number} [sides=5] - The number of sides used to construct the star.
      */
-    export class Star {
-        /**
-         * @name Two.Star.Properties
-         * @property {String[]} - A list of properties that are on every {@link Two.Star}.
-         */
-        static Properties: string[];
+    export class Star extends Path {
         constructor(ox: any, oy: any, ir: any, or: any, sides: any, ...args: any[]);
         /**
          * @name Two.Star#_flagInnerRadius
@@ -4117,53 +3570,22 @@ declare module "two.js/src/shapes/star" {
          */
         private _sides;
         closed: boolean;
-        automatic: boolean;
         innerRadius: number;
         outerRadius: number;
         sides: number;
-        /**
-         * @name Two.Star#_update
-         * @function
-         * @private
-         * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
-         * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
-         * @nota-bene Try not to call this method more than once a frame.
-         */
-        private _update;
-        /**
-         * @name Two.Star#flagReset
-         * @function
-         * @private
-         * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
-         */
-        private flagReset;
-        /**
-         * @name Two.Star#clone
-         * @function
-         * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
-         * @returns {Two.Star}
-         * @description Create a new instance of {@link Two.Star} with the same properties of the current path.
-         */
-        clone(parent?: any): any;
-        /**
-         * @name Two.Star#toObject
-         * @function
-         * @returns {Object}
-         * @description Return a JSON compatible plain object that represents the path.
-         */
-        toObject(): any;
     }
+    import { Path } from "two.js/src/path";
 }
 declare module "two.js/src/renderers/svg" {
     /**
      * @name Two.SVGRenderer
      * @class
-     * @extends Two.Events
+
      * @param {Object} [parameters] - This object is inherited when constructing a new instance of {@link Two}.
      * @param {Element} [parameters.domElement] - The `<svg />` to draw to. If none given a new one will be constructed.
      * @description This class is used by {@link Two} when constructing with `type` of `Two.Types.svg` (the default type). It takes Two.js' scenegraph and renders it to a `<svg />`.
      */
-    export class Renderer {
+    export class Renderer extends Events {
         /**
          * @name Two.SVGRenderer.Utils
          * @property {Object} - A massive object filled with utility functions and properties to render Two.js objects to a `<svg />`.
@@ -4243,22 +3665,23 @@ declare module "two.js/src/renderers/svg" {
          */
         render(): Renderer;
     }
+    import { Events } from "two.js/src/events";
     import { Group } from "two.js/src/group";
 }
 declare module "two.js/src/utils/shaders" {
     export namespace shaders {
-        export function create(gl: any, source: any, type: any): any;
-        export namespace types {
-            export const vertex: string;
-            export const fragment: string;
+        function create(gl: any, source: any, type: any): any;
+        namespace types {
+            const vertex: string;
+            const fragment: string;
         }
-        export namespace path {
+        namespace path {
             const vertex_1: string;
             export { vertex_1 as vertex };
             const fragment_1: string;
             export { fragment_1 as fragment };
         }
-        export namespace points {
+        namespace points {
             const vertex_2: string;
             export { vertex_2 as vertex };
             const fragment_2: string;
@@ -4270,7 +3693,7 @@ declare module "two.js/src/renderers/webgl" {
     /**
      * @name Two.WebGLRenderer
      * @class
-     * @extends Two.Events
+
      * @param {Object} [parameters] - This object is inherited when constructing a new instance of {@link Two}.
      * @param {Element} [parameters.domElement] - The `<canvas />` to draw to. If none given a new one will be constructed.
      * @param {HTMLCanvasElement} [parameters.offscreenElement] - The offscreen two dimensional `<canvas />` to render each element on WebGL texture updates.
@@ -4278,7 +3701,7 @@ declare module "two.js/src/renderers/webgl" {
      * @description This class is used by {@link Two} when constructing with `type` of `Two.Types.webgl`. It takes Two.js' scenegraph and renders it to a `<canvas />` through the WebGL api.
      * @see {@link https://www.khronos.org/registry/webgl/specs/latest/1.0/}
      */
-    export class Renderer {
+    export class Renderer extends Events {
         /**
          * @name Two.WebGLRenderer.Utils
          * @property {Object} - A massive object filled with utility functions and properties to render Two.js objects to a `<canvas />` through the WebGL API.
@@ -4393,6 +3816,7 @@ declare module "two.js/src/renderers/webgl" {
          */
         render(): Renderer;
     }
+    import { Events } from "two.js/src/events";
     import { Group } from "two.js/src/group";
     import { Matrix } from "two.js/src/matrix";
     import { Registry } from "two.js/src/registry";
@@ -4402,7 +3826,7 @@ declare module "two.js" {
      * @name Two
      * @class
      * @global
-     * @extends Two.Events
+
      * @param {Object} [options]
      * @param {Boolean} [options.fullscreen=false] - Set to `true` to automatically make the stage adapt to the width and height of the parent document. This parameter overrides `width` and `height` parameters if set to `true`. This overrides `options.fitted` as well.
      * @param {Boolean} [options.fitted=false] = Set to `true` to automatically make the stage adapt to the width and height of the parent element. This parameter overrides `width` and `height` parameters if set to `true`.
