@@ -18,7 +18,7 @@ declare module "two.js/src/utils/math" {
      * @returns {Object} An object containing relevant skew values.
      * @description Decompose a 2D 3x3 Matrix to find the skew.
      */
-    export function decomposeMatrix(matrix: Two.Matrix, b: any, c: any, d: any, e: any, f: any, ...args: any[]): any;
+    export function decomposeMatrix(matrix: Matrix, b: any, c: any, d: any, e: any, f: any, ...args: any[]): any;
     /**
      * @name Two.Utils.getComputedMatrix
      * @function
@@ -27,7 +27,7 @@ declare module "two.js/src/utils/math" {
      * @returns {Two.Matrix} The computed matrix of a nested object. If no `matrix` was passed in arguments then a `new Two.Matrix` is returned.
      * @description Method to get the world space transformation of a given object in a Two.js scene.
      */
-    export function getComputedMatrix(object: Two.Shape, matrix?: Two.Matrix): Two.Matrix;
+    export function getComputedMatrix(object: Shape, matrix?: Matrix): Matrix;
     export function getPoT(value: any): number;
     export function setMatrix(matrix: any): void;
     /**
@@ -61,6 +61,8 @@ declare module "two.js/src/utils/math" {
     export function toFixed(v: number): number;
     export const TWO_PI: number;
     export const HALF_PI: number;
+    import { Matrix } from "two.js/src/matrix";
+    import { Shape } from "two.js/src/shape";
 }
 declare module "two.js/src/events" {
     /**
@@ -165,7 +167,7 @@ declare module "two.js/src/vector" {
          * @returns {Two.Vector}
          * @description Add two vectors together.
          */
-        static add(v1: Two.Vector, v2: Two.Vector): Two.Vector;
+        static add(v1: Vector, v2: Vector): Vector;
         /**
          * @name Two.Vector.sub
          * @function
@@ -174,13 +176,13 @@ declare module "two.js/src/vector" {
          * @returns {Two.Vector}
          * @description Subtract two vectors: `v2` from `v1`.
          */
-        static sub(v1: Two.Vector, v2: Two.Vector): Two.Vector;
+        static sub(v1: Vector, v2: Vector): Vector;
         /**
          * @name Two.Vector.subtract
          * @function
          * @description Alias for {@link Two.Vector.sub}.
          */
-        static subtract(v1: any, v2: any): Two.Vector;
+        static subtract(v1: any, v2: any): Vector;
         /**
          * @name Two.Vector.ratioBetween
          * @function
@@ -196,7 +198,7 @@ declare module "two.js/src/vector" {
          * @param {Two.Vector} v2
          * @returns {Number} The angle between points `v1` and `v2`.
          */
-        static angleBetween(v1: Two.Vector, v2: Two.Vector, ...args: any[]): number;
+        static angleBetween(v1: Vector, v2: Vector, ...args: any[]): number;
         /**
          * @name Two.Vector.distanceBetween
          * @function
@@ -204,7 +206,7 @@ declare module "two.js/src/vector" {
          * @param {Two.Vector} v2
          * @returns {Number} The distance between points `v1` and `v2`. Distance is always positive.
          */
-        static distanceBetween(v1: Two.Vector, v2: Two.Vector): number;
+        static distanceBetween(v1: Vector, v2: Vector): number;
         /**
          * @name Two.Vector.distanceBetweenSquared
          * @function
@@ -212,7 +214,7 @@ declare module "two.js/src/vector" {
          * @param {Two.Vector} v2
          * @returns {Number} The squared distance between points `v1` and `v2`.
          */
-        static distanceBetweenSquared(v1: Two.Vector, v2: Two.Vector): number;
+        static distanceBetweenSquared(v1: Vector, v2: Vector): number;
         constructor(x?: number, y?: number);
         /**
          * @name Two.Vector#_x
@@ -243,7 +245,7 @@ declare module "two.js/src/vector" {
          * @param {Two.Vector} v
          * @description Copy the x / y components of another object `v`.
          */
-        copy(v: Two.Vector): Vector;
+        copy(v: Vector): Vector;
         /**
          * @name Two.Vector#clear
          * @function
@@ -460,7 +462,7 @@ declare module "two.js/src/vector" {
          * @returns {Boolean}
          * @description Qualify if one vector roughly equal another. With a margin of error defined by epsilon.
          */
-        equals(v: Two.Vector, eps?: number): boolean;
+        equals(v: Vector, eps?: number): boolean;
         /**
          * @name Two.Vector#lerp
          * @function
@@ -469,7 +471,7 @@ declare module "two.js/src/vector" {
          * @description Linear interpolate one vector to another by an amount `t` defined as a zero to one number.
          * @see [Matt DesLauriers](https://twitter.com/mattdesl/status/1031305279227478016) has a good thread about this.
          */
-        lerp(v: Two.Vector, t: number): Vector;
+        lerp(v: Vector, t: number): Vector;
         /**
          * @name Two.Vector#isZero
          * @function
@@ -781,7 +783,7 @@ declare module "two.js/src/matrix" {
          * @returns {Two.Matrix} - If an optional `C` matrix isn't passed then a new one is created and returned.
          * @description Multiply two matrices together and return the result.
          */
-        static Multiply(A: Two.Matrix, B: Two.Matrix, C?: Two.Matrix): Two.Matrix;
+        static Multiply(A: Matrix, B: Matrix, C?: Matrix): Matrix;
         constructor(a: any, b: any, c: any, d: any, e: any, f: any, ...args: any[]);
         /**
          * @name Two.Matrix#elements
@@ -865,7 +867,7 @@ declare module "two.js/src/matrix" {
          * @param {Two.Matrix} [out] - The optional matrix to apply the inversion to.
          * @description Return an inverted version of the matrix. If no optional one is passed a new matrix is created and returned.
          */
-        inverse(out?: Two.Matrix): any;
+        inverse(out?: Matrix): any;
         /**
          * @name Two.Matrix#scale
          * @function
@@ -1075,7 +1077,7 @@ declare module "two.js/src/shape" {
          * @param {Two.Group} group - The parent the shape adds itself to.
          * @description Convenience method to add itself to the scenegraph.
          */
-        addTo(group: Two.Group): Shape;
+        addTo(group: Group): Shape;
         /**
          * @name Two.Shape#remove
          * @function
@@ -1089,7 +1091,7 @@ declare module "two.js/src/shape" {
          * @returns {Two.Shape}
          * @description Create a new {@link Two.Shape} with the same values as the current shape.
          */
-        clone(parent?: Two.Group): Two.Shape;
+        clone(parent?: Group): Shape;
         /**
          * @name Two.Shape#_update
          * @function
@@ -1103,6 +1105,7 @@ declare module "two.js/src/shape" {
     import { Element } from "two.js/src/element";
     import { Matrix } from "two.js/src/matrix";
     import { Vector } from "two.js/src/vector";
+    import { Group } from "two.js/src/group";
 }
 declare module "two.js/src/collection" {
     /**
@@ -1151,16 +1154,17 @@ declare module "two.js/src/children" {
          * @param {Two.Shape[]} children - The objects which extend {@link Two.Shape} to be added.
          * @description Adds elements to the `ids` map.
          */
-        attach(children: Two.Shape[]): Children;
+        attach(children: Shape[]): Children;
         /**
          * @function
          * @name Two.Group.Children#detach
          * @param {Two.Shape[]} children - The objects which extend {@link Two.Shape} to be removed.
          * @description Removes elements to the `ids` map.
          */
-        detach(children: Two.Shape[]): Children;
+        detach(children: Shape[]): Children;
     }
     import { Collection } from "two.js/src/collection";
+    import { Shape } from "two.js/src/shape";
 }
 declare module "two.js/src/group" {
     /**
@@ -1179,14 +1183,14 @@ declare module "two.js/src/group" {
          * @param {Two.Shape[]} children - The objects to be inserted.
          * @description Cached method to let renderers know children have been added to a {@link Two.Group}.
          */
-        static InsertChildren(children: Two.Shape[]): void;
+        static InsertChildren(children: Shape[]): void;
         /**
          * @name Two.Group.RemoveChildren
          * @function
          * @param {Two.Shape[]} children - The objects to be removed.
          * @description Cached method to let renderers know children have been removed from a {@link Two.Group}.
          */
-        static RemoveChildren(children: Two.Shape[]): void;
+        static RemoveChildren(children: Shape[]): void;
         /**
          * @name Two.Group.OrderChildren
          * @function
@@ -1382,21 +1386,21 @@ declare module "two.js/src/group" {
          * @description Recursively search for id. Returns the first element found.
          * @returns {Two.Shape} - Or `null` if nothing is found.
          */
-        getById(id: any): Two.Shape;
+        getById(id: any): Shape;
         /**
          * @name Two.Group#getByClassName
          * @function
          * @description Recursively search for classes. Returns an array of matching elements.
          * @returns {Two.Shape[]} - Or empty array if nothing is found.
          */
-        getByClassName(className: any): Two.Shape[];
+        getByClassName(className: any): Shape[];
         /**
          * @name Two.Group#getByType
          * @function
          * @description Recursively search for children of a specific type, e.g. {@link Two.Path}. Pass a reference to this type as the param. Returns an array of matching elements.
          * @returns {Two.Shape[]} - Empty array if nothing is found.
          */
-        getByType(type: any): Two.Shape[];
+        getByType(type: any): Shape[];
         /**
          * @name Two.Group#add
          * @function
@@ -1598,7 +1602,7 @@ declare module "two.js/src/utils/shape" {
      * @returns {Number}
      * @description
      */
-    export function contains(path: Two.Path, t: number): number;
+    export function contains(path: Path, t: number): number;
     /**
      * @private
      * @param {Two.Path} path - The path to analyze against.
@@ -1606,9 +1610,10 @@ declare module "two.js/src/utils/shape" {
      * @returns {Number}
      * @description Return the id of an anchor based on a target length.
      */
-    export function getIdByLength(path: Two.Path, target: number): number;
+    export function getIdByLength(path: Path, target: number): number;
     export function getCurveLength(a: any, b: any, limit: any): number;
     export function getSubdivisions(a: any, b: any, limit: any): import("two.js/src/anchor").Anchor[];
+    import { Path } from "two.js/src/path";
 }
 declare module "two.js/src/effects/stop" {
     /**
@@ -1690,7 +1695,7 @@ declare module "two.js/src/effects/stop" {
          * @returns {Two.Stop}
          * @description Create a new instance of {@link Two.Stop} with the same properties of the current path.
          */
-        clone(): Two.Stop;
+        clone(): Stop;
         /**
          * @name Two.Stop#toObject
          * @function
@@ -1758,7 +1763,7 @@ declare module "two.js/src/effects/gradient" {
          * @returns {Two.Gradient}
          * @description Create a new instance of {@link Two.Gradient} with the same properties of the current path.
          */
-        clone(parent?: Two.Group): Two.Gradient;
+        clone(parent?: Group): Gradient;
         /**
          * @name Two.Gradient#toObject
          * @function
@@ -1778,6 +1783,7 @@ declare module "two.js/src/effects/gradient" {
     }
     import { Element } from "two.js/src/element";
     import { Stop } from "two.js/src/effects/stop";
+    import { Group } from "two.js/src/group";
 }
 declare module "two.js/src/effects/linear-gradient" {
     /**
@@ -1911,7 +1917,7 @@ declare module "two.js/src/effects/texture" {
          * @param {Function} loaded - The callback function to be triggered once the image is loaded.
          * @nota-bene - This function uses node's `fs.readFileSync` to spoof the `<img />` loading process in the browser.
          */
-        static loadHeadlessBuffer(texture: Two.Texture, loaded: Function): void;
+        static loadHeadlessBuffer(texture: Texture, loaded: Function): void;
         /**
          * @name Two.Texture.getTag
          * @property {Function} - Retrieves the tag name of an image, video, or canvas node.
@@ -1942,7 +1948,7 @@ declare module "two.js/src/effects/texture" {
          * @param {Two.Texture} texture - The texture to load.
          * @param {Function} callback - The function to be called once the texture is loaded.
          */
-        static load(texture: Two.Texture, callback: Function): void;
+        static load(texture: Texture, callback: Function): void;
         constructor(src: any, callback: any);
         /**
          * @name Two.Texture#_flagSrc
@@ -2052,7 +2058,7 @@ declare module "two.js/src/effects/texture" {
          * @returns {Two.Texture}
          * @description Create a new instance of {@link Two.Texture} with the same properties of the current texture.
          */
-        clone(): Two.Texture;
+        clone(): Texture;
         /**
          * @name Two.Texture#toObject
          * @function
@@ -4369,5 +4375,4 @@ declare module "two.js/extras/jsm/zui" {
         max: any;
         apply(px: any, py: any, s: any): Surface;
     }
-    export {};
 }
