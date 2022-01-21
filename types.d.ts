@@ -1176,7 +1176,7 @@ declare module "two.js/src/group" {
      * @nota-bene The {@link Two#scene} is an instance of `Two.Group`.
      */
     export class Group extends Shape {
-        static Children: typeof Children;
+        static Children: Children;
         /**
          * @name Two.Group.InsertChildren
          * @function
@@ -1719,7 +1719,7 @@ declare module "two.js/src/effects/gradient" {
          * @name Two.Gradient.Stop
          * @see {@link Two.Stop}
          */
-        static Stop: typeof Stop;
+        static Stop: Stop;
         /**
          * @name Two.Gradient.Properties
          * @property {String[]} - A list of properties that are on every {@link Two.Gradient}.
@@ -2098,7 +2098,7 @@ declare module "two.js/src/path" {
          */
         static Properties: string[];
         static Utils: {
-            getCurveLength: typeof getCurveLength;
+            getCurveLength: getCurveLength;
         };
         constructor(vertices: any, closed: any, curved: any, manual: any);
         /**
@@ -3891,35 +3891,35 @@ declare module "two.js" {
          * @returns {Number} Ever increasing Number.
          */
         static uniqueId: () => number;
-        static Anchor: typeof Anchor;
-        static Collection: typeof Collection;
-        static Events: typeof Events;
-        static Group: typeof Group;
-        static Matrix: typeof Matrix;
-        static Path: typeof Path;
-        static Registry: typeof Registry;
-        static Shape: typeof Shape;
-        static Text: typeof Text;
-        static Vector: typeof Vector;
-        static Gradient: typeof Gradient;
-        static ImageSequence: typeof ImageSequence;
-        static LinearGradient: typeof LinearGradient;
-        static RadialGradient: typeof RadialGradient;
-        static Sprite: typeof Sprite;
-        static Stop: typeof Stop;
-        static Texture: typeof Texture;
-        static ArcSegment: typeof ArcSegment;
-        static Circle: typeof Circle;
-        static Ellipse: typeof Ellipse;
-        static Line: typeof Line;
-        static Points: typeof Points;
-        static Polygon: typeof Polygon;
-        static Rectangle: typeof Rectangle;
-        static RoundedRectangle: typeof RoundedRectangle;
-        static Star: typeof Star;
-        static CanvasRenderer: typeof CanvasRenderer;
-        static SVGRenderer: typeof SVGRenderer;
-        static WebGLRenderer: typeof WebGLRenderer;
+        static Anchor: Anchor;
+        static Collection: Collection;
+        static Events: Events;
+        static Group: Group;
+        static Matrix: Matrix;
+        static Path: Path;
+        static Registry: Registry;
+        static Shape: Shape;
+        static Text: Text;
+        static Vector: Vector;
+        static Gradient: Gradient;
+        static ImageSequence: ImageSequence;
+        static LinearGradient: LinearGradient;
+        static RadialGradient: RadialGradient;
+        static Sprite: Sprite;
+        static Stop: Stop;
+        static Texture: Texture;
+        static ArcSegment: ArcSegment;
+        static Circle: Circle;
+        static Ellipse: Ellipse;
+        static Line: Line;
+        static Points: Points;
+        static Polygon: Polygon;
+        static Rectangle: Rectangle;
+        static RoundedRectangle: RoundedRectangle;
+        static Star: Star;
+        static CanvasRenderer: CanvasRenderer;
+        static SVGRenderer: SVGRenderer;
+        static WebGLRenderer: WebGLRenderer;
         static Commands: {
             move: string;
             line: string;
@@ -4067,7 +4067,7 @@ declare module "two.js" {
          * @returns {Two.Line}
          * @description Creates a Two.js line and adds it to the scene.
          */
-        makeLine(x1: number, y1: number, x2: number, y2: number): typeof Line;
+        makeLine(x1: number, y1: number, x2: number, y2: number): Line;
         /**
          * @name Two#makeArrow
          * @function
@@ -4078,7 +4078,7 @@ declare module "two.js" {
          * @returns {Two.Path}
          * @description Creates a Two.js arrow and adds it to the scene.
          */
-        makeArrow(x1: number, y1: number, x2: number, y2: number, size: any): typeof Path;
+        makeArrow(x1: number, y1: number, x2: number, y2: number, size: any): Path;
         /**
          * @name Two#makeRectangle
          * @function
@@ -4089,7 +4089,7 @@ declare module "two.js" {
          * @returns {Two.Rectangle}
          * @description Creates a Two.js rectangle and adds it to the scene.
          */
-        makeRectangle(x: number, y: number, width: number, height: number): typeof Rectangle;
+        makeRectangle(x: number, y: number, width: number, height: number): Rectangle;
         /**
          * @name Two#makeRoundedRectangle
          * @function
@@ -4101,7 +4101,7 @@ declare module "two.js" {
          * @returns {Two.Rectangle}
          * @description Creates a Two.js rounded rectangle and adds it to the scene.
          */
-        makeRoundedRectangle(x: number, y: number, width: number, height: number, sides: number): typeof Rectangle;
+        makeRoundedRectangle(x: number, y: number, width: number, height: number, sides: number): Rectangle;
         /**
          * @name Two#makeCircle
          * @function
@@ -4112,7 +4112,7 @@ declare module "two.js" {
          * @returns {Two.Circle}
          * @description Creates a Two.js circle and adds it to the scene.
          */
-        makeCircle(x: number, y: number, radius: number, resolution?: number): typeof Circle;
+        makeCircle(x: number, y: number, radius: number, resolution?: number): Circle;
         /**
          * @name Two#makeEllipse
          * @function
@@ -4124,7 +4124,7 @@ declare module "two.js" {
          * @returns {Two.Ellipse}
          * @description Creates a Two.js ellipse and adds it to the scene.
          */
-        makeEllipse(x: number, y: number, rx: number, ry: number, resolution?: number): typeof Ellipse;
+        makeEllipse(x: number, y: number, rx: number, ry: number, resolution?: number): Ellipse;
         /**
          * @name Two#makeStar
          * @function
@@ -4136,7 +4136,7 @@ declare module "two.js" {
          * @returns {Two.Star}
          * @description Creates a Two.js star and adds it to the scene.
          */
-        makeStar(ox: any, oy: any, outerRadius: number, innerRadius: number, sides: number): typeof Star;
+        makeStar(ox: any, oy: any, outerRadius: number, innerRadius: number, sides: number): Star;
         /**
          * @name Two#makeCurve
          * @function
@@ -4146,7 +4146,7 @@ declare module "two.js" {
          * @description Creates a Two.js path that is curved and adds it to the scene.
          * @nota-bene In either case of passing an array or passing numbered arguments the last argument is an optional `Boolean` that defines whether the path should be open or closed.
          */
-        makeCurve(p: any, ...args: any[]): typeof Path;
+        makeCurve(p: any, ...args: any[]): Path;
         /**
          * @name Two#makePolygon
          * @function
@@ -4157,7 +4157,7 @@ declare module "two.js" {
          * @returns {Two.Polygon}
          * @description Creates a Two.js polygon and adds it to the scene.
          */
-        makePolygon(x: number, y: number, radius: number, sides: number): typeof Polygon;
+        makePolygon(x: number, y: number, radius: number, sides: number): Polygon;
         /**
          * @name Two#makeArcSegment
          * @function
@@ -4170,7 +4170,7 @@ declare module "two.js" {
          * @param {Number} [resolution=Two.Resolution] - The number of vertices that should comprise the arc segment.
          * @returns {Two.ArcSegment}
          */
-        makeArcSegment(ox: any, oy: any, ir: any, or: any, sa: any, ea: any, res: any): typeof ArcSegment;
+        makeArcSegment(ox: any, oy: any, ir: any, or: any, sa: any, ea: any, res: any): ArcSegment;
         /**
          * @name Two#makePoints
          * @function
@@ -4179,7 +4179,7 @@ declare module "two.js" {
          * @returns {Two.Points}
          * @description Creates a Two.js points object and adds it to the current scene.
          */
-        makePoints(p: any, ...args: any[]): typeof Points;
+        makePoints(p: any, ...args: any[]): Points;
         /**
          * @name Two#makePath
          * @function
@@ -4189,7 +4189,7 @@ declare module "two.js" {
          * @description Creates a Two.js path and adds it to the scene.
          * @nota-bene In either case of passing an array or passing numbered arguments the last argument is an optional `Boolean` that defines whether the path should be open or closed.
          */
-        makePath(p: any, ...args: any[]): typeof Path;
+        makePath(p: any, ...args: any[]): Path;
         /**
          * @name Two#makeText
          * @function
@@ -4200,7 +4200,7 @@ declare module "two.js" {
          * @returns {Two.Text}
          * @description Creates a Two.js text object and adds it to the scene.
          */
-        makeText(message: string, x: number, y: number, styles?: any): typeof Text;
+        makeText(message: string, x: number, y: number, styles?: any): Text;
         /**
          * @name Two#makeLinearGradient
          * @function
@@ -4212,7 +4212,7 @@ declare module "two.js" {
          * @returns {Two.LinearGradient}
          * @description Creates a Two.js linear gradient and ads it to the scene. In the case of an effect it's added to an invisible "definitions" group.
          */
-        makeLinearGradient(x1: number, y1: number, x2: number, y2: number, ...args: any[]): typeof LinearGradient;
+        makeLinearGradient(x1: number, y1: number, x2: number, y2: number, ...args: any[]): LinearGradient;
         /**
          * @name Two#makeRadialGradient
          * @function
@@ -4223,7 +4223,7 @@ declare module "two.js" {
          * @returns {Two.RadialGradient}
          * @description Creates a Two.js linear-gradient object and ads it to the scene. In the case of an effect it's added to an invisible "definitions" group.
          */
-        makeRadialGradient(x1: number, y1: number, r: any, ...args: any[]): typeof RadialGradient;
+        makeRadialGradient(x1: number, y1: number, r: any, ...args: any[]): RadialGradient;
         /**
          * @name Two#makeSprite
          * @function
@@ -4237,7 +4237,7 @@ declare module "two.js" {
          * @returns {Two.Sprite}
          * @description Creates a Two.js sprite object and adds it to the scene. Sprites can be used for still images as well as animations.
          */
-        makeSprite(path: any, x: number, y: number, cols: any, rows?: number, frameRate?: number, autostart?: boolean): typeof Sprite;
+        makeSprite(path: any, x: number, y: number, cols: any, rows?: number, frameRate?: number, autostart?: boolean): Sprite;
         /**
          * @name Two#makeImageSequence
          * @function
@@ -4249,7 +4249,7 @@ declare module "two.js" {
          * @returns {Two.ImageSequence}
          * @description Creates a Two.js image sequence object and adds it to the scene.
          */
-        makeImageSequence(paths: any, x: number, y: number, frameRate?: number, autostart?: boolean): typeof ImageSequence;
+        makeImageSequence(paths: any, x: number, y: number, frameRate?: number, autostart?: boolean): ImageSequence;
         /**
          * @name Two#makeTexture
          * @function
@@ -4258,7 +4258,7 @@ declare module "two.js" {
          * @returns {Two.Texture}
          * @description Creates a Two.js texture object.
          */
-        makeTexture(path: any, callback?: Function): typeof Texture;
+        makeTexture(path: any, callback?: Function): Texture;
         /**
          * @name Two#makeGroup
          * @function
@@ -4266,7 +4266,7 @@ declare module "two.js" {
          * @returns {Two.Group}
          * @description Creates a Two.js group object and adds it to the scene.
          */
-        makeGroup(o: any, ...args: any[]): typeof Group;
+        makeGroup(o: any, ...args: any[]): Group;
         /**
          * @name Two#interpret
          * @function
@@ -4276,7 +4276,7 @@ declare module "two.js" {
          * @returns {Two.Group}
          * @description Interpret an SVG Node and add it to this instance's scene. The distinction should be made that this doesn't `import` svg's, it solely interprets them into something compatible for Two.js - this is slightly different than a direct transcription.
          */
-        interpret(SVGElement: SVGElement, shallow: boolean, add?: boolean): typeof Group;
+        interpret(SVGElement: SVGElement, shallow: boolean, add?: boolean): Group;
         /**
          * @name Two#load
          * @function
@@ -4285,7 +4285,7 @@ declare module "two.js" {
          * @returns {Two.Group}
          * @description Load an SVG file or SVG text and interpret it into Two.js legible objects.
          */
-        load(text: any, callback: Function): typeof Group;
+        load(text: any, callback: Function): Group;
     }
     import { Line } from "two.js/src/shapes/line";
     import { Path } from "two.js/src/path";
@@ -4325,7 +4325,7 @@ declare module "two.js/extras/jsm/zui" {
      * @param {HTMLElement} [domElement=document.body] - The HTML Element to attach event listeners to.
      */
     export class ZUI {
-        static Surface: typeof Surface;
+        static Surface: Surface;
         static Clamp(v: any, min: any, max: any): number;
         static Limit: {
             min: number;
