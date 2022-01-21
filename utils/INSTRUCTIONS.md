@@ -13,3 +13,8 @@ In output code `types.d.ts` do:
 6. Change `"src/two"` two `two.js`
 7. Change all `"src/` references to `"two.js/src/`
 8. Change all `"extras/"` references to `"two.js/extras/`
+
+Things to do to improve TypeScript Types:
+
+1. Add default values to all methods (including constructors) to clarify what is mandatory and what is optional.
+2. Figure out how to handle both ingestion of single argument Array's and full arguments as arrays.
