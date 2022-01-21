@@ -727,8 +727,8 @@ var Two = (() => {
       svg: "SVGRenderer",
       canvas: "CanvasRenderer"
     },
-    Version: "v0.8.1",
-    PublishDate: "2022-01-19T16:35:44.846Z",
+    Version: "v0.8.2",
+    PublishDate: "2022-01-21T19:48:20.441Z",
     Identifier: "two-",
     Resolution: 12,
     AutoCalculateImportedMatrices: true,
