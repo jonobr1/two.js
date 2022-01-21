@@ -5,6 +5,8 @@ title: Two.js Change Log
 lang: en-US
 ---
 
+## Nightly
+
 ## Jan 19, 2022 v0.8.1
 
 <h3 class="visible">Jan 21, 2022</h3><version-link v="v0.8.2" />
