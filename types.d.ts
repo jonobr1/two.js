@@ -2098,7 +2098,7 @@ declare module "two.js/src/path" {
          */
         static Properties: string[];
         static Utils: {
-            getCurveLength: getCurveLength;
+            getCurveLength: Function;
         };
         constructor(vertices: any, closed: any, curved: any, manual: any);
         /**
