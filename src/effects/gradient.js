@@ -85,7 +85,7 @@ export class Gradient extends Element {
    * @name Two.Gradient.Properties
    * @property {String[]} - A list of properties that are on every {@link Two.Gradient}.
    */
-  static Properties = ['spread', 'stops', 'renderer', 'id', 'units'];
+  static Properties = ['spread', 'stops', 'renderer', 'units'];
 
   /**
    * @name Two.Gradient#clone
