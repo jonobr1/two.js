@@ -60,7 +60,7 @@ export class RadialGradient extends Gradient {
      */
     this.center = new Vector();
 
-    this.radius = typeof r === 'number' ? r : 20;
+    this.radius = typeof r === 'number' ? r : 1;
 
     /**
      * @name Two.RadialGradient#focal

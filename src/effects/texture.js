@@ -202,7 +202,7 @@ export class Texture extends Element {
    * @property {String[]} - A list of properties that are on every {@link Two.Texture}.
    */
   static Properties = [
-    'id', 'className', 'src', 'loaded', 'repeat', 'scale', 'offset', 'image'
+    'src', 'loaded', 'repeat', 'scale', 'offset', 'image'
   ];
 
   /**
