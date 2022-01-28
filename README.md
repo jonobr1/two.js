@@ -109,20 +109,24 @@ In addition to importing, the published packages of Two.js include the specific 
 
 ```javascript
 import { Vector } from 'two.js/src/vector.js';
+
+// In TypeScript environments leave out the ".js"
+// when importing modules directly. e.g:
+import { Vector } from 'two.js/src/vector';
 ```
 
 _While useful, the main import of the `Two` namespace imports all modules. So, there isn't yet proper tree shaking implemented for the library, though it's on the roadmap._
 
 ### Running in Headless Environments
 
-As of version `v0.7.x` Two.js can also run in a headless environment, namely running on the server with the help of a library called [Node Canvas](https://github.com/Automattic/node-canvas). We don't add Node Canvas to dependencies of Two.js because it's _not necessary_ to run it in the browser. However, it has all the hooks setup to run in a cloud environment. To get started follow the installation instructions on Automattic's [readme](https://github.com/Automattic/node-canvas#installation). After you've done that run:
+As of version `v0.7.x` Two.js can also run in a headless environment, namely running on the server with the help of a library called [Node Canvas](https://github.com/Automattic/node-canvas). We don't add Node Canvas to dependencies of Two.js because it's _not necessary_ to run it in the browser. However, it has all the hooks set up to run in a cloud environment. To get started follow the installation instructions on Automattic's [readme](https://github.com/Automattic/node-canvas#installation). After you've done that run:
 
 ```
 npm install canvas
 npm install two.js
 ```
 
-Now in a JavaScript file setup your Two.js scenegraph and save out frames whenever you need to:
+Now in a JavaScript file set up your Two.js scenegraph and save out frames whenever you need to:
 
 ```javascript
 var { createCanvas, Image } = require('canvas');
