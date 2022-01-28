@@ -28,7 +28,8 @@
     data() {
       return {
         platforms: [
-          'codepen', 'codesandbox', 'glitch', 'jsfiddle', 'observable'
+          'internet','codepen', 'codesandbox', 'glitch', 'jsfiddle',
+          'observable'
         ],
         colors: [
           'red', 'blue', 'yellow', 'green', 'orange', 'purple'
@@ -54,7 +55,7 @@
 
         }
 
-        return '';
+        return this.platforms[0];
 
       },
       tagList() {
@@ -183,6 +184,8 @@
     background-image url(/images/jsfiddle.svg)
   &.observable
     background-image url(/images/observable.svg)
+  &.internet
+    background-image: url(/images/internet.svg)
 @media (max-width: $MQMobile)
   .thumb
     height 240px
