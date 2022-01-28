@@ -1,7 +1,21 @@
 # TypeScript Types Declaration Build Instructions
 
-1. Run `npm run types`
-2. Remove all `'.js'` import references
-3. Change `"src/two"` two `two.js`
-4. Change all `"src/` references to `"two.js/src/`
-5. Change all `"extras/"` references to `"two.js/extras/`
+1. Remove all @extends commands from `/src` and `/extras`
+2. Run `npm run types`
+
+---
+
+In output code `types.d.ts` do:
+
+3. Remove all `Two.*` references — e.g: `Two.Vector` -> `Vector`
+4. Remove all `typeof` references _except_ for static properties of Two — e.g: `Two.Group`
+5. Remove all `'.js'` import references
+6. Change `"src/two"` to `two.js`
+7. Change all `"src/` references to `"two.js/src/`
+8. Change all `"extras/"` references to `"two.js/extras/`
+9. Fix all `constructor` methods to have proper argument ingestion
+
+Things to do to improve TypeScript Types:
+
+1. Add default values to all methods (including constructors) to clarify what is mandatory and what is optional.
+2. Figure out how to handle both ingestion of single argument Array's and full arguments as arrays.
