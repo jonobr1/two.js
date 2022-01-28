@@ -123,6 +123,12 @@ Various examples of how to use different features of Two.js with associated tags
 <div class="examples-wrapper">
 
 <example-card
+  title="Two.js as Three.js Texture"
+  href="https://codepen.io/jonobr1/pen/RwjPVZg"
+  src="https://assets.codepen.io/171564/internal/screenshots/pens/RwjPVZg"
+  tags="animated, 3d, non-interactive, text, canvas" />
+
+<example-card
   title="Animated Flag"
   href="https://observablehq.com/@jonobr1/turn-any-svg-logo-into-an-animated-flag-using-two-js"
   src="https://static.observableusercontent.com/thumbnail/027c323c66df1be2917aa63b46326981c548508d5227b970ba85200a8cdc0391.jpg"
