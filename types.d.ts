@@ -784,7 +784,7 @@ declare module "two.js/src/matrix" {
          * @description Multiply two matrices together and return the result.
          */
         static Multiply(A: Matrix, B: Matrix, C?: Matrix): Matrix;
-        constructor(a: any, b: any, c: any, d: any, e: any, f: any, ...args: any[]);
+        constructor(a?: number, b?: number, c?: number, d?: number, e?: number, f?: number, ...args: number[]);
         /**
          * @name Two.Matrix#elements
          * @property {Number[]} - The underlying data stored as an array.
@@ -1142,7 +1142,7 @@ declare module "two.js/src/children" {
      * @description A children collection which is accesible both by index and by object `id`.
      */
     export class Children extends Collection {
-        constructor(children: any, ...args: any[]);
+        constructor(children?: Element[], ...args: Element[]);
         /**
          * @name Two.Group.Children#ids
          * @property {Object} - Map of all elements in the list keyed by `id`s.
@@ -1202,7 +1202,7 @@ declare module "two.js/src/group" {
          * @property {String[]} - A list of properties that are on every {@link Two.Group}.
          */
         static Properties: string[];
-        constructor(children: any, ...args: any[]);
+        constructor(children?: Element[], ...args: Element[]);
         /**
          * @name Two.Group#_flagAdditions
          * @private
@@ -1486,7 +1486,7 @@ declare module "two.js/src/renderers/canvas" {
             };
             renderSvgArcCommand: (ctx: any, ax: any, ay: any, rx: any, ry: any, largeArcFlag: any, sweepFlag: any, xAxisRotation: any, x: any, y: any) => void;
         };
-        constructor(params: any);
+        constructor(params?: any);
         /**
          * @name Two.CanvasRenderer#domElement
          * @property {Element} - The `<canvas />` associated with the Two.js scene.
@@ -1636,7 +1636,7 @@ declare module "two.js/src/effects/stop" {
          * @property {String[]} - A list of properties that are on every {@link Two.Stop}.
          */
         static Properties: string[];
-        constructor(offset: any, color: any, opacity: any);
+        constructor(offset?: number, color?: string, opacity?: number);
         /**
          * @name Two.Stop#_flagOffset
          * @private
@@ -1725,7 +1725,7 @@ declare module "two.js/src/effects/gradient" {
          * @property {String[]} - A list of properties that are on every {@link Two.Gradient}.
          */
         static Properties: string[];
-        constructor(stops: any);
+        constructor(stops?: Stop[]);
         _flagStops: boolean;
         _flagSpread: boolean;
         _flagUnits: boolean;
@@ -1798,7 +1798,7 @@ declare module "two.js/src/effects/linear-gradient" {
      * @nota-bene The linear gradient lives within the space of the parent object's matrix space.
      */
     export class LinearGradient extends Gradient {
-        constructor(x1: any, y1: any, x2: any, y2: any, stops: any);
+        constructor(x1?: number, y1?: number, x2?: number, y2?: number, stops?: Stop[]);
         /**
          * @name Two.LinearGradient#_flagEndPoints
          * @private
@@ -1819,6 +1819,7 @@ declare module "two.js/src/effects/linear-gradient" {
         right: Vector;
     }
     import { Gradient } from "two.js/src/effects/gradient";
+    import { Stop } from "two.js/src/effects/stop";
     import { Vector } from "two.js/src/vector";
 }
 declare module "two.js/src/effects/radial-gradient" {
@@ -1835,7 +1836,7 @@ declare module "two.js/src/effects/radial-gradient" {
      * @nota-bene The radial gradient lives within the space of the parent object's matrix space.
      */
     export class RadialGradient extends Gradient {
-        constructor(cx: any, cy: any, r: any, stops: any, fx: any, fy: any);
+        constructor(cx?: number, cy?: number, r?: number, stops?: Stop[], fx?: number, fy?: number);
         /**
          * @name Two.RadialGradient#_flagRadius
          * @private
@@ -1871,6 +1872,7 @@ declare module "two.js/src/effects/radial-gradient" {
         focal: Vector;
     }
     import { Gradient } from "two.js/src/effects/gradient";
+    import { Stop } from "two.js/src/effects/stop";
     import { Vector } from "two.js/src/vector";
 }
 declare module "two.js/src/effects/texture" {
@@ -1949,7 +1951,7 @@ declare module "two.js/src/effects/texture" {
          * @param {Function} callback - The function to be called once the texture is loaded.
          */
         static load(texture: Texture, callback: Function): void;
-        constructor(src: any, callback: any);
+        constructor(src?: any, callback?: Function);
         /**
          * @name Two.Texture#_flagSrc
          * @private
@@ -2100,7 +2102,7 @@ declare module "two.js/src/path" {
         static Utils: {
             getCurveLength: Function;
         };
-        constructor(vertices: any, closed: any, curved: any, manual: any);
+        constructor(vertices?: Anchor[], closed?: boolean, curved?: boolean, manual?: boolean);
         /**
          * @name Two.Path#_flagVertices
          * @private
@@ -2434,6 +2436,7 @@ declare module "two.js/src/path" {
         private _updateLength;
         _lengths: any[];
     }
+    import { Anchor } from "two.js/src/anchor";
     import { Shape } from "two.js/src/shape";
     /**
      * @name FlagVertices
@@ -2550,7 +2553,7 @@ declare module "two.js/src/effects/sprite" {
      * @description A convenient package to display still or animated images through a tiled image source. For more information on the principals of animated imagery through tiling see [Texture Atlas](https://en.wikipedia.org/wiki/Texture_atlas) on Wikipedia.
      */
     export class Sprite extends Rectangle {
-        constructor(path: any, ox: any, oy: any, cols: any, rows: any, frameRate: any);
+        constructor(path?: any, ox?: number, oy?: number, cols?: number, rows?: number, frameRate?: number);
         /**
          * @name Two.Sprite#_flagTexture
          * @private
@@ -2727,7 +2730,7 @@ declare module "two.js/src/shapes/ellipse" {
      * @param {Number} [resolution=4] - The number of vertices used to construct the ellipse.
      */
     export class Ellipse extends Path {
-        constructor(ox: any, oy: any, rx: any, ry: any, resolution: any);
+        constructor(ox?: number, oy?: number, rx?: number, ry?: number, resolution?: number);
         /**
          * @name Two.Ellipse#_flagWidth
          * @private
@@ -2784,7 +2787,7 @@ declare module "two.js/src/shapes/rounded-rectangle" {
      * @param {Number} [resolution=12] - The number of vertices used to construct the rounded rectangle.
      */
     export class RoundedRectangle extends Path {
-        constructor(ox: any, oy: any, width: any, height: any, radius: any);
+        constructor(ox?: number, oy?: number, width?: number, height?: number, radius?: number);
         /**
          * @name Two.RoundedRectangle#_flagWidth
          * @private
@@ -2851,7 +2854,7 @@ declare module "two.js/src/text" {
          * @property {String[]} - A list of properties that are on every {@link Two.Text}.
          */
         static Properties: string[];
-        constructor(message: any, x: any, y: any, styles: any);
+        constructor(message?: string, x?: number, y?: number, styles?: any);
         /**
          * @name Two.Text#_flagValue
          * @private
@@ -3269,7 +3272,7 @@ declare module "two.js/src/shapes/arc-segment" {
      * @param {Number} [resolution=24] - The number of vertices used to construct the arc segment.
      */
     export class ArcSegment extends Path {
-        constructor(ox: any, oy: any, ir: any, or: any, sa: any, ea: any, res: any);
+        constructor(ox?: number, oy?: number, ir?: number, or?: number, sa?: number, ea?: number, res?: number);
         /**
          * @name Two.ArcSegment#_flagStartAngle
          * @private
@@ -3335,7 +3338,7 @@ declare module "two.js/src/shapes/points" {
      */
     export class Points extends Shape {
         static Properties: string[];
-        constructor(vertices: any);
+        constructor(vertices?: any[]);
         _flagVertices: boolean;
         _flagLength: boolean;
         _flagFill: boolean;
@@ -3537,7 +3540,7 @@ declare module "two.js/src/shapes/star" {
      * @param {Number} [sides=5] - The number of sides used to construct the star.
      */
     export class Star extends Path {
-        constructor(ox: any, oy: any, ir: any, or: any, sides: any, ...args: any[]);
+        constructor(ox?: number, oy?: number, ir?: number, or?: number, sides?: number);
         /**
          * @name Two.Star#_flagInnerRadius
          * @private
@@ -3636,7 +3639,7 @@ declare module "two.js/src/renderers/svg" {
                 render: (domElement: any, silent: any) => any;
             };
         };
-        constructor(params: any);
+        constructor(params?: any);
         /**
          * @name Two.SVGRenderer#domElement
          * @property {Element} - The `<svg />` associated with the Two.js scene.
@@ -3760,7 +3763,7 @@ declare module "two.js/src/renderers/webgl" {
             };
             TextureRegistry: Registry;
         };
-        constructor(params: any);
+        constructor(params?: any);
         /**
          * @name Two.WebGLRenderer#domElement
          * @property {Element} - The `<canvas />` associated with the Two.js scene.
@@ -3931,7 +3934,17 @@ declare module "two.js" {
          * @property {Object} - A massive object filled with utility functions and properties.
          */
         static Utils: any;
-        constructor(options: any);
+        constructor(options?: {
+          fullscreen?: boolean,
+          fitted?: boolean,
+          autostart?: boolean,
+          width?: number,
+          height?: number,
+          type?: string,
+          domElement?: HTMLElement,
+          overdraw?: boolean,
+          smoothing?: boolean
+        });
         /**
          * @private
          */
@@ -4077,7 +4090,7 @@ declare module "two.js" {
          * @returns {Two.Path}
          * @description Creates a Two.js arrow and adds it to the scene.
          */
-        makeArrow(x1: number, y1: number, x2: number, y2: number, size: any): Path;
+        makeArrow(x1: number, y1: number, x2: number, y2: number, size: number): Path;
         /**
          * @name Two#makeRectangle
          * @function
@@ -4145,7 +4158,7 @@ declare module "two.js" {
          * @description Creates a Two.js path that is curved and adds it to the scene.
          * @nota-bene In either case of passing an array or passing numbered arguments the last argument is an optional `Boolean` that defines whether the path should be open or closed.
          */
-        makeCurve(p: any, ...args: any[]): Path;
+        makeCurve(points?: Anchor[], ...args: number[]): Path;
         /**
          * @name Two#makePolygon
          * @function
@@ -4169,7 +4182,7 @@ declare module "two.js" {
          * @param {Number} [resolution=Two.Resolution] - The number of vertices that should comprise the arc segment.
          * @returns {Two.ArcSegment}
          */
-        makeArcSegment(ox: any, oy: any, ir: any, or: any, sa: any, ea: any, res: any): ArcSegment;
+        makeArcSegment(ox: number, oy: number, ir: number, or: number, sa: number, ea: number, res?: number): ArcSegment;
         /**
          * @name Two#makePoints
          * @function
@@ -4178,7 +4191,7 @@ declare module "two.js" {
          * @returns {Two.Points}
          * @description Creates a Two.js points object and adds it to the current scene.
          */
-        makePoints(p: any, ...args: any[]): Points;
+        makePoints(points?: Vector[], ...args: number[]): Points;
         /**
          * @name Two#makePath
          * @function
@@ -4188,7 +4201,7 @@ declare module "two.js" {
          * @description Creates a Two.js path and adds it to the scene.
          * @nota-bene In either case of passing an array or passing numbered arguments the last argument is an optional `Boolean` that defines whether the path should be open or closed.
          */
-        makePath(p: any, ...args: any[]): Path;
+        makePath(points?: Anchor[], ...args: number[]): Path;
         /**
          * @name Two#makeText
          * @function
@@ -4211,7 +4224,7 @@ declare module "two.js" {
          * @returns {Two.LinearGradient}
          * @description Creates a Two.js linear gradient and ads it to the scene. In the case of an effect it's added to an invisible "definitions" group.
          */
-        makeLinearGradient(x1: number, y1: number, x2: number, y2: number, ...args: any[]): LinearGradient;
+        makeLinearGradient(x1: number, y1: number, x2: number, y2: number, ...args: Stop[]): LinearGradient;
         /**
          * @name Two#makeRadialGradient
          * @function
@@ -4222,7 +4235,7 @@ declare module "two.js" {
          * @returns {Two.RadialGradient}
          * @description Creates a Two.js linear-gradient object and ads it to the scene. In the case of an effect it's added to an invisible "definitions" group.
          */
-        makeRadialGradient(x1: number, y1: number, r: any, ...args: any[]): RadialGradient;
+        makeRadialGradient(x1: number, y1: number, r: number, ...args: Stop[]): RadialGradient;
         /**
          * @name Two#makeSprite
          * @function
@@ -4236,7 +4249,7 @@ declare module "two.js" {
          * @returns {Two.Sprite}
          * @description Creates a Two.js sprite object and adds it to the scene. Sprites can be used for still images as well as animations.
          */
-        makeSprite(path: any, x: number, y: number, cols: any, rows?: number, frameRate?: number, autostart?: boolean): Sprite;
+        makeSprite(path: any, x: number, y: number, cols?: number, rows?: number, frameRate?: number, autostart?: boolean): Sprite;
         /**
          * @name Two#makeImageSequence
          * @function
@@ -4265,7 +4278,7 @@ declare module "two.js" {
          * @returns {Two.Group}
          * @description Creates a Two.js group object and adds it to the scene.
          */
-        makeGroup(o: any, ...args: any[]): Group;
+        makeGroup(o: Element[], ...args: Element[]): Group;
         /**
          * @name Two#interpret
          * @function
@@ -4275,7 +4288,7 @@ declare module "two.js" {
          * @returns {Two.Group}
          * @description Interpret an SVG Node and add it to this instance's scene. The distinction should be made that this doesn't `import` svg's, it solely interprets them into something compatible for Two.js - this is slightly different than a direct transcription.
          */
-        interpret(SVGElement: SVGElement, shallow: boolean, add?: boolean): Group;
+        interpret(svg: SVGElement, shallow?: boolean, add?: boolean): Group;
         /**
          * @name Two#load
          * @function
@@ -4334,7 +4347,7 @@ declare module "two.js/extras/jsm/zui" {
         static TranslateMatrix(m: any, x: any, y: any): any;
         static PositionToScale(pos: any): number;
         static ScaleToPosition(scale: any): number;
-        constructor(group: any, domElement: any);
+        constructor(group?: Group, domElement?: HTMLElement);
         limits: {
             scale: {};
             x: {};
@@ -4349,7 +4362,7 @@ declare module "two.js/extras/jsm/zui" {
         surfaceMatrix: Matrix;
         surfaces: any[];
         add(surface: any): ZUI;
-        addLimits(min: any, max: any, type: any): ZUI;
+        addLimits(min: number, max: number, type?: number): ZUI;
         clientToSurface(x: any, y: any): any;
         surfaceToClient(v: any): any;
         zoomBy(byF: any, clientX: any, clientY: any): ZUI;
@@ -4363,6 +4376,7 @@ declare module "two.js/extras/jsm/zui" {
         fitToLimits(s: any): number;
     }
     import { Matrix } from "two.js/src/matrix";
+    import { Group } from "two.js/src/group";
     class Surface {
         constructor(object: any);
         object: any;

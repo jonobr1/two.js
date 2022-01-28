@@ -13,6 +13,7 @@ In output code `types.d.ts` do:
 6. Change `"src/two"` to `two.js`
 7. Change all `"src/` references to `"two.js/src/`
 8. Change all `"extras/"` references to `"two.js/extras/`
+9. Fix all `constructor` methods to have proper argument ingestion
 
 Things to do to improve TypeScript Types:
 
