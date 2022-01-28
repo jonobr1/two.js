@@ -7,7 +7,9 @@ lang: en-US
 
 ## Nightly
 
-## Jan 19, 2022 v0.8.1
++ Manually amended `types.d.ts` for better TypeScript developing
+
+## Jan 19, 2022 v0.8.2
 
 <h3 class="visible">Jan 21, 2022</h3><version-link v="v0.8.2" />
 
