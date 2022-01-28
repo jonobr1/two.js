@@ -2435,7 +2435,6 @@ declare module "two.js/src/path" {
         _lengths: any[];
     }
     import { Shape } from "two.js/src/shape";
-    import { getCurveLength } from "two.js/src/utils/shape";
     /**
      * @name FlagVertices
      * @private
