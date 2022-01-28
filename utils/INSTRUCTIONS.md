@@ -8,9 +8,9 @@
 In output code `types.d.ts` do:
 
 3. Remove all `Two.*` references — e.g: `Two.Vector` -> `Vector`
-4. Remove all `typeof` references
+4. Remove all `typeof` references _except_ for static properties of Two — e.g: `Two.Group`
 5. Remove all `'.js'` import references
-6. Change `"src/two"` two `two.js`
+6. Change `"src/two"` to `two.js`
 7. Change all `"src/` references to `"two.js/src/`
 8. Change all `"extras/"` references to `"two.js/extras/`
 
