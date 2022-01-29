@@ -703,8 +703,8 @@ var Constants = {
     svg: "SVGRenderer",
     canvas: "CanvasRenderer"
   },
-  Version: "v0.8.2",
-  PublishDate: "2022-01-21T19:48:20.441Z",
+  Version: "v0.8.3",
+  PublishDate: "2022-01-29T18:46:24.333Z",
   Identifier: "two-",
   Resolution: 12,
   AutoCalculateImportedMatrices: true,
@@ -1034,20 +1034,11 @@ var proto3 = {
       return this._className;
     },
     set: function(v) {
-      this._flagClassName = this._className !== v;
-      if (this._flagClassName) {
-        const prev = this._className.split(/\s+?/);
-        const dest = v.split(/\s+?/);
-        for (let i = 0; i < prev.length; i++) {
-          const className = prev[i];
-          const index = Array.prototype.indexOf.call(this.classList, className);
-          if (index >= 0) {
-            this.classList.splice(index, 1);
-          }
-        }
-        this.classList = this.classList.concat(dest);
+      if (this._className !== v) {
+        this._flagClassName = true;
+        this.classList = v.split(/\s+?/);
+        this._className = v;
       }
-      this._className = v;
     }
   }
 };
@@ -3345,7 +3336,7 @@ var _Gradient = class extends Element {
 };
 var Gradient = _Gradient;
 __publicField(Gradient, "Stop", Stop);
-__publicField(Gradient, "Properties", ["spread", "stops", "renderer", "id", "units"]);
+__publicField(Gradient, "Properties", ["spread", "stops", "renderer", "units"]);
 var proto7 = {
   spread: {
     enumerable: true,
@@ -3516,7 +3507,7 @@ var _RadialGradient = class extends Gradient {
     this._renderer.flagCenter = FlagCenter.bind(this);
     this._renderer.flagFocal = FlagFocal.bind(this);
     this.center = new Vector();
-    this.radius = typeof r === "number" ? r : 20;
+    this.radius = typeof r === "number" ? r : 1;
     this.focal = new Vector();
     if (typeof cx === "number") {
       this.center.x = cx;
@@ -3767,8 +3758,6 @@ var _Texture = class extends Element {
 };
 var Texture = _Texture;
 __publicField(Texture, "Properties", [
-  "id",
-  "className",
   "src",
   "loaded",
   "repeat",
