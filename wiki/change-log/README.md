@@ -7,6 +7,7 @@ lang: en-US
 
 ## Nightly
 
++ Improved `Two.Element.className` flagging and `classList` construction
 + Manually amended `types.d.ts` for better TypeScript developing
 
 ## Jan 19, 2022 v0.8.2
