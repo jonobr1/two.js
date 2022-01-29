@@ -5,7 +5,9 @@ title: Two.js Change Log
 lang: en-US
 ---
 
-## Nightly
+## Jan 29, 2022 v0.8.3
+
+<h3 class="visible">Jan 29, 2022</h3><version-link v="v0.8.3" />
 
 + Improved `Two.Element.className` flagging and `classList` construction
 + Manually amended `types.d.ts` for better TypeScript developing
