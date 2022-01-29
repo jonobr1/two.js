@@ -102,20 +102,11 @@ const proto = {
       return this._className;
     },
     set: function(v) {
-      this._flagClassName = this._className !== v;
-      if (this._flagClassName) {
-        const prev = this._className.split(/\s+?/);
-        const dest = v.split(/\s+?/);
-        for (let i = 0; i < prev.length; i++) {
-          const className = prev[i];
-          const index = Array.prototype.indexOf.call(this.classList, className);
-          if (index >= 0) {
-            this.classList.splice(index, 1);
-          }
-        }
-        this.classList = this.classList.concat(dest);
+      if (this._className !== v) {
+        this._flagClassName = true;
+        this.classList = v.split(/\s+?/);
+        this._className = v;
       }
-      this._className = v;
     }
   }
 };
