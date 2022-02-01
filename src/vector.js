@@ -481,7 +481,7 @@ export class Vector extends Events {
   }
 
   /**
-   * @name Two.Vector#negate
+   * @name Two.Vector#dot
    * @function
    * @returns {Number}
    * @description Get the [dot product](https://en.wikipedia.org/wiki/Dot_product) of the vector.
