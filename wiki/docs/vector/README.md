@@ -1898,9 +1898,9 @@ Invert each component's sign value.
 
 <div class="instance function ">
 
-## negate
+## dot
 
-<h2 class="longname" aria-hidden="true"><a href="#negate"><span class="prefix">Two.Vector.</span><span class="shortname">negate</span></a></h2>
+<h2 class="longname" aria-hidden="true"><a href="#dot"><span class="prefix">Two.Vector.</span><span class="shortname">dot</span></a></h2>
 
 
 
