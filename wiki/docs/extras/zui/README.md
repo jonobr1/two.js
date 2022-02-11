@@ -16,6 +16,8 @@ lang: en-US
 </div>
 
 
+<carbon-ads />
+
 
 ### Constructor
 

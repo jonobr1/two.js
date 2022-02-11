@@ -22,6 +22,8 @@ Extends: [Two.Path](/docs/path/)
 </div>
 
 
+<carbon-ads />
+
 
 ### Constructor
 
@@ -53,7 +55,9 @@ Extends: [Two.Path](/docs/path/)
 
 <div class="properties">
 
+
 A list of properties that are on every [Two.Star](/docs/shapes/star/).
+
 
 </div>
 
@@ -98,7 +102,9 @@ A list of properties that are on every [Two.Star](/docs/shapes/star/).
 
 <div class="properties">
 
+
 The size of the inner radius of the star.
+
 
 </div>
 
@@ -143,7 +149,9 @@ The size of the inner radius of the star.
 
 <div class="properties">
 
+
 The size of the outer radius of the star.
+
 
 </div>
 
@@ -188,7 +196,9 @@ The size of the outer radius of the star.
 
 <div class="properties">
 
+
 The amount of sides the star has.
+
 
 </div>
 

@@ -22,6 +22,8 @@ Fundamental to work with bitmap data, a.k.a. pregenerated imagery, in Two.js. Su
 </div>
 
 
+<carbon-ads />
+
 
 ### Constructor
 
@@ -50,7 +52,9 @@ Fundamental to work with bitmap data, a.k.a. pregenerated imagery, in Two.js. Su
 
 <div class="properties">
 
+
 A list of properties that are on every [Two.Texture](/docs/effects/texture/).
+
 
 </div>
 
@@ -95,7 +99,9 @@ A list of properties that are on every [Two.Texture](/docs/effects/texture/).
 
 <div class="properties">
 
+
 A map of compatible DOM Elements categorized by media format.
+
 
 </div>
 
@@ -140,7 +146,9 @@ A map of compatible DOM Elements categorized by media format.
 
 <div class="properties">
 
+
 A canonical listing of image data used in a single session of Two.js.
+
 
 </div>
 
@@ -205,7 +213,9 @@ __Returns__: String
 
 <div class="properties">
 
+
 Serializes a URL as an absolute path for canonical attribution in [Two.ImageRegistry]().
+
 
 </div>
 
@@ -257,7 +267,9 @@ Serializes a URL as an absolute path for canonical attribution in [Two.ImageRegi
 
 <div class="properties">
 
+
 Loads an image as a buffer in headless environments.
+
 
 </div>
 
@@ -330,7 +342,9 @@ __Returns__: String
 
 <div class="properties">
 
+
 Retrieves the tag name of an image, video, or canvas node.
+
 
 </div>
 
@@ -392,7 +406,9 @@ __Returns__: HTMLImageElement
 
 <div class="properties">
 
+
 Convenience function to set [Two.Texture.image](/docs/effects/texture/#image) properties with canonincal versions set in [Two.Texture.ImageRegistry](/docs/effects/texture/#imageregistry).
+
 
 </div>
 
@@ -626,7 +642,9 @@ Cached method to let renderers know `scale` has been updated on a [Two.Texture](
 
 <div class="properties">
 
+
 Shorthand value to determine if image has been loaded into the texture.
+
 
 </div>
 
@@ -671,7 +689,9 @@ Shorthand value to determine if image has been loaded into the texture.
 
 <div class="properties">
 
+
 CSS style declaration to tile [Two.Path](/docs/path/). Valid values include: `'no-repeat'`, `'repeat'`, `'repeat-x'`, `'repeat-y'`.
+
 
 </div>
 
@@ -722,7 +742,9 @@ See: [https://www.w3.org/TR/2dcontext/#dom-context-2d-createpattern](https://www
 
 <div class="properties">
 
+
 A two-component vector describing any pixel offset of the texture when applied to a [Two.Path](/docs/path/).
+
 
 </div>
 
@@ -767,7 +789,9 @@ A two-component vector describing any pixel offset of the texture when applied t
 
 <div class="properties">
 
+
 The URL path to the image data.
+
 
 </div>
 
@@ -822,7 +846,9 @@ This property is ultimately serialized in a [Two.Registry](/docs/registry/) to c
 
 <div class="properties">
 
+
 The corresponding DOM Element of the texture. Can be a `<img />`, `<canvas />`, or `<video />` element. See [Two.Texture.RegularExpressions](/docs/effects/texture/#regularexpressions) for a full list of supported elements.
+
 
 </div>
 

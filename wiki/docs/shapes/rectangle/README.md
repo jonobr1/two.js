@@ -22,6 +22,8 @@ Extends: [Two.Path](/docs/path/)
 </div>
 
 
+<carbon-ads />
+
 
 ### Constructor
 
@@ -52,7 +54,9 @@ Extends: [Two.Path](/docs/path/)
 
 <div class="properties">
 
+
 A list of properties that are on every [Two.Rectangle](/docs/shapes/rectangle/).
+
 
 </div>
 
@@ -97,7 +101,9 @@ A list of properties that are on every [Two.Rectangle](/docs/shapes/rectangle/).
 
 <div class="properties">
 
+
 The size of the width of the rectangle.
+
 
 </div>
 
@@ -142,7 +148,9 @@ The size of the width of the rectangle.
 
 <div class="properties">
 
+
 The size of the height of the rectangle.
+
 
 </div>
 
@@ -187,7 +195,9 @@ The size of the height of the rectangle.
 
 <div class="properties">
 
+
 A two-component vector describing the origin offset to draw the rectangle. Default is `0, 0`.
+
 
 </div>
 

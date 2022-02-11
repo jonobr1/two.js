@@ -16,6 +16,8 @@ A class to store 3 x 3 transformation matrix information. In addition to storing
 </div>
 
 
+<carbon-ads />
+
 
 ### Constructor
 
@@ -51,7 +53,9 @@ A class to store 3 x 3 transformation matrix information. In addition to storing
 
 <div class="properties">
 
+
 A stored reference to the default value of a 3 x 3 matrix.
+
 
 </div>
 
@@ -160,7 +164,9 @@ Multiply two matrices together and return the result.
 
 <div class="properties">
 
+
 The underlying data stored as an array.
+
 
 </div>
 
@@ -205,7 +211,9 @@ The underlying data stored as an array.
 
 <div class="properties">
 
+
 Determines whether Two.js automatically calculates the values for the matrix or if the developer intends to manage the matrix.
+
 
 </div>
 

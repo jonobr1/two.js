@@ -22,6 +22,8 @@ This is the base class for constructing different types of gradients with Two.js
 </div>
 
 
+<carbon-ads />
+
 
 ### Constructor
 
@@ -94,7 +96,9 @@ See: [Two.Stop](/docs/effects/stop/)
 
 <div class="properties">
 
+
 A list of properties that are on every [Two.Gradient](/docs/effects/gradient/).
+
 
 </div>
 
@@ -138,6 +142,8 @@ A list of properties that are on every [Two.Gradient](/docs/effects/gradient/).
 
 
 <div class="properties">
+
+
 
 
 
@@ -200,7 +206,9 @@ With the [Two.SvgRenderer]() you can access the underlying SVG element created v
 
 <div class="properties">
 
+
 Session specific unique identifier.
+
 
 </div>
 
@@ -255,7 +263,9 @@ In the [Two.SvgRenderer]() change this to change the underlying SVG element's id
 
 <div class="properties">
 
+
 Indicates what happens if the gradient starts or ends inside the bounds of the target rectangle. Possible values are `'pad'`, `'reflect'`, and `'repeat'`.
+
 
 </div>
 
@@ -306,7 +316,9 @@ See: [https://www.w3.org/TR/SVG11/pservers.html#LinearGradientElementSpreadMetho
 
 <div class="properties">
 
+
 Indicates how coordinate values are interpreted by the renderer. Possible values are `'userSpaceOnUse'` and `'objectBoundingBox'`.
+
 
 </div>
 
@@ -357,7 +369,9 @@ See: [https://www.w3.org/TR/SVG11/pservers.html#RadialGradientElementGradientUni
 
 <div class="properties">
 
+
 An ordered list of [Two.Stop](/docs/effects/stop/)s for rendering the gradient.
+
 
 </div>
 

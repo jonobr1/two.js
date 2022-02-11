@@ -22,6 +22,8 @@ Extends: [Two.Gradient](/docs/effects/gradient/)
 </div>
 
 
+<carbon-ads />
+
 
 ### Constructor
 
@@ -98,7 +100,9 @@ See: [Two.Stop](/docs/effects/stop/)
 
 <div class="properties">
 
+
 The x and y value for where the first end point is placed on the canvas.
+
 
 </div>
 
@@ -143,7 +147,9 @@ The x and y value for where the first end point is placed on the canvas.
 
 <div class="properties">
 
+
 The x and y value for where the second end point is placed on the canvas.
+
 
 </div>
 

@@ -22,6 +22,8 @@ Extends: [Two.Path](/docs/path/)
 </div>
 
 
+<carbon-ads />
+
 
 ### Constructor
 
@@ -53,7 +55,9 @@ Extends: [Two.Path](/docs/path/)
 
 <div class="properties">
 
+
 A list of properties that are on every [Two.Ellipse](/docs/shapes/ellipse/).
+
 
 </div>
 
@@ -98,7 +102,9 @@ A list of properties that are on every [Two.Ellipse](/docs/shapes/ellipse/).
 
 <div class="properties">
 
+
 The width of the ellipse.
+
 
 </div>
 
@@ -143,7 +149,9 @@ The width of the ellipse.
 
 <div class="properties">
 
+
 The height of the ellipse.
+
 
 </div>
 

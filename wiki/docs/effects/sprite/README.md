@@ -22,6 +22,8 @@ A convenient package to display still or animated images through a tiled image s
 </div>
 
 
+<carbon-ads />
+
 
 ### Constructor
 
@@ -54,7 +56,9 @@ A convenient package to display still or animated images through a tiled image s
 
 <div class="properties">
 
+
 A list of properties that are on every [Two.Sprite](/docs/effects/sprite/).
+
 
 </div>
 
@@ -99,7 +103,9 @@ A list of properties that are on every [Two.Sprite](/docs/effects/sprite/).
 
 <div class="properties">
 
+
 The texture to be used as bitmap data to display image in the scene.
+
 
 </div>
 
@@ -144,7 +150,9 @@ The texture to be used as bitmap data to display image in the scene.
 
 <div class="properties">
 
+
 The number of columns to split the texture into. Defaults to `1`.
+
 
 </div>
 
@@ -189,7 +197,9 @@ The number of columns to split the texture into. Defaults to `1`.
 
 <div class="properties">
 
+
 The number of rows to split the texture into. Defaults to `1`.
+
 
 </div>
 
@@ -234,7 +244,9 @@ The number of rows to split the texture into. Defaults to `1`.
 
 <div class="properties">
 
+
 The number of frames to animate against per second. Defaults to `0` for non-animated sprites.
+
 
 </div>
 
@@ -279,7 +291,9 @@ The number of frames to animate against per second. Defaults to `0` for non-anim
 
 <div class="properties">
 
+
 The index of the current tile of the sprite to display. Defaults to `0`.
+
 
 </div>
 

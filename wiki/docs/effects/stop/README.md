@@ -22,6 +22,8 @@ Extends: [Two.Element](/docs/element/)
 </div>
 
 
+<carbon-ads />
+
 
 ### Constructor
 
@@ -51,7 +53,9 @@ Extends: [Two.Element](/docs/element/)
 
 <div class="properties">
 
+
 The current index being referenced for calculating a stop's default offset value.
+
 
 </div>
 
@@ -96,7 +100,9 @@ The current index being referenced for calculating a stop's default offset value
 
 <div class="properties">
 
+
 A list of properties that are on every [Two.Stop](/docs/effects/stop/).
+
 
 </div>
 
@@ -141,7 +147,9 @@ A list of properties that are on every [Two.Stop](/docs/effects/stop/).
 
 <div class="properties">
 
+
 The offset percentage of the stop represented as a zero-to-one value.
+
 
 </div>
 
@@ -186,7 +194,9 @@ The offset percentage of the stop represented as a zero-to-one value.
 
 <div class="properties">
 
+
 The alpha percentage of the stop represented as a zero-to-one value.
+
 
 </div>
 
@@ -231,7 +241,9 @@ The alpha percentage of the stop represented as a zero-to-one value.
 
 <div class="properties">
 
+
 The color of the stop.
+
 
 </div>
 

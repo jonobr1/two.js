@@ -22,6 +22,8 @@ This is the primary primitive class for creating all drawable shapes in Two.js. 
 </div>
 
 
+<carbon-ads />
+
 
 ### Constructor
 
@@ -52,7 +54,9 @@ This is the primary primitive class for creating all drawable shapes in Two.js. 
 
 <div class="properties">
 
+
 A list of properties that are on every [Two.Path](/docs/path/).
+
 
 </div>
 
@@ -97,7 +101,9 @@ A list of properties that are on every [Two.Path](/docs/path/).
 
 <div class="properties">
 
+
 Determines whether a final line is drawn between the final point in the `vertices` array and the first point.
+
 
 </div>
 
@@ -142,7 +148,9 @@ Determines whether a final line is drawn between the final point in the `vertice
 
 <div class="properties">
 
+
 When the path is `automatic = true` this boolean determines whether the lines between the points are curved or not.
+
 
 </div>
 
@@ -187,7 +195,9 @@ When the path is `automatic = true` this boolean determines whether the lines be
 
 <div class="properties">
 
+
 Number between zero and one to state the beginning of where the path is rendered.
+
 
 </div>
 
@@ -248,7 +258,9 @@ This is great for animating in and out stroked paths in conjunction with [Two.Pa
 
 <div class="properties">
 
+
 Number between zero and one to state the ending of where the path is rendered.
+
 
 </div>
 
@@ -309,7 +321,9 @@ This is great for animating in and out stroked paths in conjunction with [Two.Pa
 
 <div class="properties">
 
+
 The value of what the path should be filled in with.
+
 
 </div>
 
@@ -360,7 +374,9 @@ See: [https://developer.mozilla.org/en-US/docs/Web/CSS/color_value](https://deve
 
 <div class="properties">
 
+
 The value of what the path should be outlined in with.
+
 
 </div>
 
@@ -411,7 +427,9 @@ See: [https://developer.mozilla.org/en-US/docs/Web/CSS/color_value](https://deve
 
 <div class="properties">
 
+
 The thickness in pixels of the stroke.
+
 
 </div>
 
@@ -456,7 +474,9 @@ The thickness in pixels of the stroke.
 
 <div class="properties">
 
+
 The opaqueness of the path.
+
 
 </div>
 
@@ -511,7 +531,9 @@ Can be used in conjunction with CSS Colors that have an alpha value.
 
 <div class="properties">
 
+
 A class to be applied to the element to be compatible with CSS styling.
+
 
 </div>
 
@@ -566,7 +588,9 @@ Only available for the SVG renderer.
 
 <div class="properties">
 
+
 Display the path or not.
+
 
 </div>
 
@@ -623,6 +647,8 @@ For [Two.CanvasRenderer](/docs/renderers/canvas/) and [Two.WebGLRenderer](/docs/
 
 
 
+
+
 </div>
 
 
@@ -671,6 +697,8 @@ See: [https://www.w3.org/TR/SVG11/painting.html#StrokeLinecapProperty](https://w
 
 
 <div class="properties">
+
+
 
 
 
@@ -725,6 +753,8 @@ See: [https://www.w3.org/TR/SVG11/painting.html#StrokeLinejoinProperty](https://
 
 
 
+
+
 </div>
 
 
@@ -774,7 +804,9 @@ See: [https://www.w3.org/TR/SVG11/painting.html#StrokeMiterlimitProperty](https:
 
 <div class="properties">
 
+
 An ordered list of anchor points for rendering the path.
+
 
 </div>
 
@@ -835,7 +867,9 @@ The array when manipulating is actually a [Two.Collection](/docs/collection/).
 
 <div class="properties">
 
+
 Determines whether or not Two.js should calculate curves, lines, and commands automatically for you or to let the developer manipulate them for themselves.
+
 
 </div>
 
@@ -880,7 +914,9 @@ Determines whether or not Two.js should calculate curves, lines, and commands au
 
 <div class="properties">
 
+
 Array of numbers. Odd indices represent dash length. Even indices represent dash space.
+
 
 </div>
 
@@ -937,7 +973,9 @@ See: [https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharra
 
 <div class="properties">
 
+
 A number in pixels to offset [Two.Path.dashes](/docs/path/#dashes) display.
+
 
 </div>
 
@@ -1505,7 +1543,9 @@ Insert a [Two.Anchor](/docs/anchor/) at the midpoint between every item in [Two.
 
 <div class="properties">
 
+
 The sum of distances between all [Two.Path.vertices](/docs/path/#vertices).
+
 
 </div>
 
@@ -1550,7 +1590,9 @@ The sum of distances between all [Two.Path.vertices](/docs/path/#vertices).
 
 <div class="properties">
 
+
 The shape whose alpha property becomes a clipping area for the path.
+
 
 </div>
 
@@ -1605,7 +1647,9 @@ This property is currently not working becuase of SVG spec issues found here {@l
 
 <div class="properties">
 
+
 Tells Two.js renderer if this object represents a mask for another object (or not).
+
 
 </div>
 

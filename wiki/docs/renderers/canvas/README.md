@@ -22,6 +22,8 @@ This class is used by [Two]() when constructing with `type` of `Two.Types.canvas
 </div>
 
 
+<carbon-ads />
+
 
 ### Constructor
 
@@ -52,7 +54,9 @@ This class is used by [Two]() when constructing with `type` of `Two.Types.canvas
 
 <div class="properties">
 
+
 A massive object filled with utility functions and properties to render Two.js objects to a `<canvas />`.
+
 
 </div>
 
@@ -97,7 +101,9 @@ A massive object filled with utility functions and properties to render Two.js o
 
 <div class="properties">
 
+
 The `<canvas />` associated with the Two.js scene.
+
 
 </div>
 
@@ -142,7 +148,9 @@ The `<canvas />` associated with the Two.js scene.
 
 <div class="properties">
 
+
 Associated two dimensional context to render on the `<canvas />`.
+
 
 </div>
 
@@ -187,7 +195,9 @@ Associated two dimensional context to render on the `<canvas />`.
 
 <div class="properties">
 
+
 Determines whether the canvas clears the background each draw call.
+
 
 </div>
 
@@ -232,7 +242,9 @@ Determines whether the canvas clears the background each draw call.
 
 <div class="properties">
 
+
 The root group of the scenegraph.
+
 
 </div>
 

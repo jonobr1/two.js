@@ -22,6 +22,8 @@ Extends: [Two.Path](/docs/path/)
 </div>
 
 
+<carbon-ads />
+
 
 ### Constructor
 
@@ -55,7 +57,9 @@ Extends: [Two.Path](/docs/path/)
 
 <div class="properties">
 
+
 A list of properties that are on every [Two.ArcSegment](/docs/shapes/arc-segment/).
+
 
 </div>
 
@@ -100,7 +104,9 @@ A list of properties that are on every [Two.ArcSegment](/docs/shapes/arc-segment
 
 <div class="properties">
 
+
 The size of the inner radius of the arc segment.
+
 
 </div>
 
@@ -145,7 +151,9 @@ The size of the inner radius of the arc segment.
 
 <div class="properties">
 
+
 The size of the outer radius of the arc segment.
+
 
 </div>
 
@@ -190,7 +198,9 @@ The size of the outer radius of the arc segment.
 
 <div class="properties">
 
+
 The angle of one side for the arc segment.
+
 
 </div>
 
@@ -235,7 +245,9 @@ The angle of one side for the arc segment.
 
 <div class="properties">
 
+
 The angle of the other side for the arc segment.
+
 
 </div>
 

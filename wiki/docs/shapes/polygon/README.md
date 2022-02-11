@@ -22,6 +22,8 @@ Extends: [Two.Path](/docs/path/)
 </div>
 
 
+<carbon-ads />
+
 
 ### Constructor
 
@@ -52,7 +54,9 @@ Extends: [Two.Path](/docs/path/)
 
 <div class="properties">
 
+
 A list of properties that are on every [Two.Polygon](/docs/shapes/polygon/).
+
 
 </div>
 
@@ -97,7 +101,9 @@ A list of properties that are on every [Two.Polygon](/docs/shapes/polygon/).
 
 <div class="properties">
 
+
 The size of the width of the polygon.
+
 
 </div>
 
@@ -142,7 +148,9 @@ The size of the width of the polygon.
 
 <div class="properties">
 
+
 The size of the height of the polygon.
+
 
 </div>
 
@@ -187,7 +195,9 @@ The size of the height of the polygon.
 
 <div class="properties">
 
+
 The amount of sides the polyogn has.
+
 
 </div>
 

@@ -22,6 +22,8 @@ Extends: [Two.Gradient](/docs/effects/gradient/)
 </div>
 
 
+<carbon-ads />
+
 
 ### Constructor
 
@@ -99,7 +101,9 @@ See: [Two.Stop](/docs/effects/stop/)
 
 <div class="properties">
 
+
 A list of properties that are on every [Two.RadialGradient](/docs/effects/radial-gradient/).
+
 
 </div>
 
@@ -144,7 +148,9 @@ A list of properties that are on every [Two.RadialGradient](/docs/effects/radial
 
 <div class="properties">
 
+
 The x and y value for where the origin of the radial gradient is.
+
 
 </div>
 
@@ -189,7 +195,9 @@ The x and y value for where the origin of the radial gradient is.
 
 <div class="properties">
 
+
 The x and y value for where the focal point of the radial gradient is.
+
 
 </div>
 

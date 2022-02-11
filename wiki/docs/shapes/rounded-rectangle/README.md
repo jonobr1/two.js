@@ -22,6 +22,8 @@ Extends: [Two.Path](/docs/path/)
 </div>
 
 
+<carbon-ads />
+
 
 ### Constructor
 
@@ -54,7 +56,9 @@ Extends: [Two.Path](/docs/path/)
 
 <div class="properties">
 
+
 A list of properties that are on every [Two.RoundedRectangle](/docs/shapes/rounded-rectangle/).
+
 
 </div>
 
@@ -99,7 +103,9 @@ A list of properties that are on every [Two.RoundedRectangle](/docs/shapes/round
 
 <div class="properties">
 
+
 The width of the rounded rectangle.
+
 
 </div>
 
@@ -144,7 +150,9 @@ The width of the rounded rectangle.
 
 <div class="properties">
 
+
 The height of the rounded rectangle.
+
 
 </div>
 
@@ -189,7 +197,9 @@ The height of the rounded rectangle.
 
 <div class="properties">
 
+
 The size of the radius of the rounded rectangle.
+
 
 </div>
 

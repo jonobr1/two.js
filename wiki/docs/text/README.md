@@ -22,6 +22,8 @@ This is a primitive class for creating drawable text that can be added to the sc
 </div>
 
 
+<carbon-ads />
+
 
 ### Constructor
 
@@ -52,7 +54,9 @@ This is a primitive class for creating drawable text that can be added to the sc
 
 <div class="properties">
 
+
 Approximate aspect ratio of a typeface's character width to height.
+
 
 </div>
 
@@ -97,7 +101,9 @@ Approximate aspect ratio of a typeface's character width to height.
 
 <div class="properties">
 
+
 A list of properties that are on every [Two.Text](/docs/text/).
+
 
 </div>
 
@@ -142,7 +148,9 @@ A list of properties that are on every [Two.Text](/docs/text/).
 
 <div class="properties">
 
+
 The characters to be rendered to the the screen. Referred to in the documentation sometimes as the `message`.
+
 
 </div>
 
@@ -187,7 +195,9 @@ The characters to be rendered to the the screen. Referred to in the documentatio
 
 <div class="properties">
 
+
 The font family Two.js should attempt to regsiter for rendering. The default value is `'sans-serif'`. Comma separated font names can be supplied as a "stack", similar to the CSS implementation of `font-family`.
+
 
 </div>
 
@@ -232,7 +242,9 @@ The font family Two.js should attempt to regsiter for rendering. The default val
 
 <div class="properties">
 
+
 The font size in Two.js point space. Defaults to `13`.
+
 
 </div>
 
@@ -277,7 +289,9 @@ The font size in Two.js point space. Defaults to `13`.
 
 <div class="properties">
 
+
 The height between lines measured from base to base in Two.js point space. Defaults to `17`.
+
 
 </div>
 
@@ -322,7 +336,9 @@ The height between lines measured from base to base in Two.js point space. Defau
 
 <div class="properties">
 
+
 Alignment of text in relation to [Two.Text.translation](/docs/text/#translation)'s coordinates. Possible values include `'left'`, `'center'`, `'right'`. Defaults to `'center'`.
+
 
 </div>
 
@@ -367,7 +383,9 @@ Alignment of text in relation to [Two.Text.translation](/docs/text/#translation)
 
 <div class="properties">
 
+
 The vertical aligment of the text in relation to [Two.Text.translation](/docs/text/#translation)'s coordinates. Possible values include `'top'`, `'middle'`, `'bottom'`, and `'baseline'`. Defaults to `'baseline'`.
+
 
 </div>
 
@@ -412,7 +430,9 @@ The vertical aligment of the text in relation to [Two.Text.translation](/docs/te
 
 <div class="properties">
 
+
 The font's style. Possible values include '`normal`', `'italic'`. Defaults to `'normal'`.
+
 
 </div>
 
@@ -457,7 +477,9 @@ The font's style. Possible values include '`normal`', `'italic'`. Defaults to `'
 
 <div class="properties">
 
+
 A number at intervals of 100 to describe the font's weight. This compatibility varies with the typeface's variant weights. Larger values are bolder. Smaller values are thinner. Defaults to `'500'`.
+
 
 </div>
 
@@ -502,7 +524,9 @@ A number at intervals of 100 to describe the font's weight. This compatibility v
 
 <div class="properties">
 
+
 String to delineate whether text should be decorated with for instance an `'underline'`. Defaults to `'none'`.
+
 
 </div>
 
@@ -547,7 +571,9 @@ String to delineate whether text should be decorated with for instance an `'unde
 
 <div class="properties">
 
+
 The value of what the text object should be filled in with.
+
 
 </div>
 
@@ -598,7 +624,9 @@ See: [https://developer.mozilla.org/en-US/docs/Web/CSS/color_value](https://deve
 
 <div class="properties">
 
+
 The value of what the text object should be filled in with.
+
 
 </div>
 
@@ -649,7 +677,9 @@ See: [https://developer.mozilla.org/en-US/docs/Web/CSS/color_value](https://deve
 
 <div class="properties">
 
+
 The thickness in pixels of the stroke.
+
 
 </div>
 
@@ -694,7 +724,9 @@ The thickness in pixels of the stroke.
 
 <div class="properties">
 
+
 The opaqueness of the text object.
+
 
 </div>
 
@@ -749,7 +781,9 @@ Can be used in conjunction with CSS Colors that have an alpha value.
 
 <div class="properties">
 
+
 Display the text object or not.
+
 
 </div>
 
@@ -804,7 +838,9 @@ For [Two.CanvasRenderer](/docs/renderers/canvas/) and [Two.WebGLRenderer](/docs/
 
 <div class="properties">
 
+
 The shape whose alpha property becomes a clipping area for the text.
+
 
 </div>
 
@@ -859,7 +895,9 @@ This property is currently not working becuase of SVG spec issues found here {@l
 
 <div class="properties">
 
+
 Object to define clipping area.
+
 
 </div>
 
@@ -914,7 +952,9 @@ This property is currently not working becuase of SVG spec issues found here {@l
 
 <div class="properties">
 
+
 Array of numbers. Odd indices represent dash length. Even indices represent dash space.
+
 
 </div>
 
@@ -971,7 +1011,9 @@ See: [https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharra
 
 <div class="properties">
 
+
 A number in pixels to offset [Two.Text.dashes](/docs/text/#dashes) display.
+
 
 </div>
 

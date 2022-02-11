@@ -12,6 +12,8 @@ A two-dimensional drawing api geared towards modern web browsers. It is renderer
 <custom-button text="Sponsor" type="sponsor" href="https://github.com/sponsors/jonobr1" />
 </div>
 
+<carbon-ads />
+
 ## Download
 
 <h3 class="visible"><a href="#download">Download</a></h3>

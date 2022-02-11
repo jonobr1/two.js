@@ -22,6 +22,8 @@ This is a primary primitive class for quickly and easily drawing points in Two.j
 </div>
 
 
+<carbon-ads />
+
 
 ### Constructor
 
@@ -49,7 +51,9 @@ This is a primary primitive class for quickly and easily drawing points in Two.j
 
 <div class="properties">
 
+
 Boolean dictating whether Two.js should scale the size of the points based on its matrix hierarcy.
+
 
 </div>
 
@@ -100,7 +104,9 @@ Set to `true` if you'd like the size of the points to be relative to the scale o
 
 <div class="properties">
 
+
 Number between zero and one to state the beginning of where the path is rendered.
+
 
 </div>
 
@@ -151,7 +157,9 @@ Number between zero and one to state the beginning of where the path is rendered
 
 <div class="properties">
 
+
 Number between zero and one to state the ending of where the path is rendered.
+
 
 </div>
 
@@ -202,7 +210,9 @@ Number between zero and one to state the ending of where the path is rendered.
 
 <div class="properties">
 
+
 The value of what the path should be filled in with.
+
 
 </div>
 
@@ -253,7 +263,9 @@ See: [https://developer.mozilla.org/en-US/docs/Web/CSS/color_value](https://deve
 
 <div class="properties">
 
+
 The value of what the path should be outlined in with.
+
 
 </div>
 
@@ -304,7 +316,9 @@ See: [https://developer.mozilla.org/en-US/docs/Web/CSS/color_value](https://deve
 
 <div class="properties">
 
+
 A class to be applied to the element to be compatible with CSS styling.
+
 
 </div>
 
@@ -359,7 +373,9 @@ Only available for the SVG renderer.
 
 <div class="properties">
 
+
 Display the points or not.
+
 
 </div>
 
@@ -414,7 +430,9 @@ For [Two.CanvasRenderer](/docs/renderers/canvas/) and [Two.WebGLRenderer](/docs/
 
 <div class="properties">
 
+
 An ordered list of vector points for rendering points.
+
 
 </div>
 
@@ -475,7 +493,9 @@ The array when manipulating is actually a [Two.Collection](/docs/collection/).
 
 <div class="properties">
 
+
 Array of numbers. Odd indices represent dash length. Even indices represent dash space.
+
 
 </div>
 
@@ -532,7 +552,9 @@ See: [https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharra
 
 <div class="properties">
 
+
 A number in pixels to offset [Two.Points.dashes](/docs/shapes/points/#dashes) display.
+
 
 </div>
 
@@ -984,7 +1006,9 @@ Insert a [Two.Vector](/docs/vector/) at the midpoint between every item in [Two.
 
 <div class="properties">
 
+
 The sum of distances between all [Two.Points.vertices](/docs/shapes/points/#vertices).
+
 
 </div>
 

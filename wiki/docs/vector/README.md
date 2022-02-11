@@ -22,6 +22,8 @@ A class to store x / y component vector data. In addition to storing data `Two.V
 </div>
 
 
+<carbon-ads />
+
 
 ### Constructor
 
@@ -50,7 +52,9 @@ A class to store x / y component vector data. In addition to storing data `Two.V
 
 <div class="properties">
 
+
 Handy reference to a vector with component values 0, 0 at all times.
+
 
 </div>
 
@@ -490,7 +494,9 @@ The squared distance between points `v1` and `v2`.
 
 <div class="properties">
 
+
 The horizontal x-component of the vector.
+
 
 </div>
 
@@ -535,7 +541,9 @@ The horizontal x-component of the vector.
 
 <div class="properties">
 
+
 The vertical y-component of the vector.
+
 
 </div>
 

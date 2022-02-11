@@ -22,6 +22,8 @@ A convenient package to display still or animated images organized as a series o
 </div>
 
 
+<carbon-ads />
+
 
 ### Constructor
 
@@ -52,7 +54,9 @@ A convenient package to display still or animated images organized as a series o
 
 <div class="properties">
 
+
 A list of properties that are on every [Two.ImageSequence](/docs/effects/image-sequence/).
+
 
 </div>
 
@@ -97,7 +101,9 @@ A list of properties that are on every [Two.ImageSequence](/docs/effects/image-s
 
 <div class="properties">
 
+
 default frame rate that [Two.ImageSequence.frameRate](/docs/effects/image-sequence/#framerate) is set to when instantiated.
+
 
 </div>
 
@@ -142,7 +148,9 @@ default frame rate that [Two.ImageSequence.frameRate](/docs/effects/image-sequen
 
 <div class="properties">
 
+
 A list of textures to be used as frames for animating the [Two.ImageSequence](/docs/effects/image-sequence/).
+
 
 </div>
 
@@ -187,7 +195,9 @@ A list of textures to be used as frames for animating the [Two.ImageSequence](/d
 
 <div class="properties">
 
+
 The number of frames to animate against per second.
+
 
 </div>
 
@@ -232,7 +242,9 @@ The number of frames to animate against per second.
 
 <div class="properties">
 
+
 The index of the current tile of the sprite to display. Defaults to `0`.
+
 
 </div>
 

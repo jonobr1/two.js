@@ -22,6 +22,8 @@ Extends: [Two.Path](/docs/path/)
 </div>
 
 
+<carbon-ads />
+
 
 ### Constructor
 
@@ -52,7 +54,9 @@ Extends: [Two.Path](/docs/path/)
 
 <div class="properties">
 
+
 A list of properties that are on every [Two.Circle](/docs/shapes/circle/).
+
 
 </div>
 
@@ -97,7 +101,9 @@ A list of properties that are on every [Two.Circle](/docs/shapes/circle/).
 
 <div class="properties">
 
+
 The size of the radius of the circle.
+
 
 </div>
 

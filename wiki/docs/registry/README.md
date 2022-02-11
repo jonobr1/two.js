@@ -16,6 +16,8 @@ An arbitrary class to manage a directory of things. Mainly used for keeping tabs
 </div>
 
 
+<carbon-ads />
+
 
 
 
