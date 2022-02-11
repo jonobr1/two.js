@@ -82,11 +82,11 @@ module.exports = {
         text: 'Examples', link: '/examples/'
       },
       {
-        text: 'Change Log', link: '/change-log/'
+        text: 'Changelog', link: '/changelog/'
       }
     ],
     sidebar: {
-      '/change-log/': ['/change-log/'],
+      '/changelog/': ['/changelog/'],
       '/docs/': sidebarForDocs
     },
     markdown: {
