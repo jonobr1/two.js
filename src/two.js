@@ -57,13 +57,6 @@ import { Constants } from './constants.js';
 const Utils = _.extend({
   Error: TwoError,
   getRatio,
-  /**
-   * @name Two.Utils.read.path
-   * @function
-   * @param {String|SVGPath} node - The SVG Path node to interpret. Alternatively, this can be a string of commands, known as the `d` attribute of an SVG Path.
-   * @param {Object} [parentStyles] - The styles the path should inherit from its parent.
-   * @returns {Two.Path}
-   */
   read,
   xhr
 }, _, CanvasShim, Curves, math);
@@ -75,7 +68,7 @@ const Utils = _.extend({
  * @extends Two.Events
  * @param {Object} [options]
  * @param {Boolean} [options.fullscreen=false] - Set to `true` to automatically make the stage adapt to the width and height of the parent document. This parameter overrides `width` and `height` parameters if set to `true`. This overrides `options.fitted` as well.
- * @param {Boolean} [options.fitted=false] = Set to `true` to automatically make the stage adapt to the width and height of the parent element. This parameter overrides `width` and `height` parameters if set to `true`.
+ * @param {Boolean} [options.fitted=false] - Set to `true` to automatically make the stage adapt to the width and height of the parent element. This parameter overrides `width` and `height` parameters if set to `true`.
  * @param {Number} [options.width=640] - The width of the stage on construction. This can be set at a later time.
  * @param {Number} [options.height=480] - The height of the stage on construction. This can be set at a later time.
  * @param {String} [options.type=Two.Types.svg] - The type of renderer to setup drawing with. See {@link Two.Types} for available options.
@@ -359,7 +352,9 @@ export default class Two {
 
   /**
    * @name Two.Utils
-   * @property {Object} - A massive object filled with utility functions and properties.
+   * @property {Object} Utils - A massive object filled with utility functions and properties.
+   * @property {Object} Two.Utils.read - A collection of SVG parsing functions indexed by element name.
+   * @property {Function} Two.Utils.read.path - Parse SVG path element or `d` attribute string.
    */
   static Utils = Utils;
 
@@ -388,7 +383,7 @@ export default class Two {
   /**
    * @name Two#play
    * @function
-   * @fires Two.Events.Types.play event
+   * @fires play
    * @description Call to start an internal animation loop.
    * @nota-bene This function initiates a `requestAnimationFrame` loop.
    */
@@ -403,7 +398,7 @@ export default class Two {
   /**
    * @name Two#pause
    * @function
-   * @fires Two.Events.Types.pause event
+   * @fires pause
    * @description Call to stop the internal animation loop for a specific instance of Two.js.
    */
   pause() {
@@ -473,7 +468,7 @@ export default class Two {
   /**
    * @name Two#update
    * @function
-   * @fires Two.Events.Types.update event
+   * @fires update
    * @description Update positions and calculations in one pass before rendering. Then render to the canvas.
    * @nota-bene This function is called automatically if using {@link Two#play} or the `autostart` parameter in construction.
    */
