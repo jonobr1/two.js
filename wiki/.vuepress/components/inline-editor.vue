@@ -3,6 +3,7 @@
     :data-prefill="prefill"
     data-default-tab="js,result"
     data-editable="true"
+    data-theme-id="40346"
     data-height="500"
     class="codepen">
 
