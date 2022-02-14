@@ -163,7 +163,7 @@ two.bind('update', update);
 two.play();
 
 function update(frameCount) {
-  // This code is called everytime two.update() is called; effectively 60 times per second.
+  // This code is called every time two.update() is called.
   if (group.scale > 0.9999) {
     group.scale = group.rotation = 0;
   }
