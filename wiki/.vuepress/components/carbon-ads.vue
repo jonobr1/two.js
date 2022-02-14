@@ -49,8 +49,10 @@
     display: flex;
     max-width: 330px;
     background-color: hsl(0, 0%, 98%);
-    border: 1px solid #eee;
+    border: 1px solid #ddd;
+    border-radius: 4px;
     z-index: 100;
+    overflow: hidden;
   }
 
   #carbonads a {
