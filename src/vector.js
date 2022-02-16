@@ -84,6 +84,34 @@ export class Vector extends Events {
   static zero = new Vector()
 
   /**
+   * @name Two.Vector.left
+   * @readonly
+   * @property {Two.Vector} - Handy reference to a vector with component values -1, 0 at all times.
+   */
+  static left = new Vector(-1, 0)
+
+  /**
+   * @name Two.Vector.right
+   * @readonly
+   * @property {Two.Vector} - Handy reference to a vector with component values 1, 0 at all times.
+   */
+  static right = new Vector(1, 0)
+
+  /**
+   * @name Two.Vector.up
+   * @readonly
+   * @property {Two.Vector} - Handy reference to a vector with component values 0, -1 at all times.
+   */
+  static up = new Vector(0, -1)
+
+  /**
+   * @name Two.Vector.down
+   * @readonly
+   * @property {Two.Vector} - Handy reference to a vector with component values 0, 1 at all times.
+   */
+  static down = new Vector(0, 1)
+
+  /**
    * @name Two.Vector.add
    * @function
    * @param {Two.Vector} v1
