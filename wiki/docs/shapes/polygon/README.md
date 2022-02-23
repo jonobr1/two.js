@@ -71,8 +71,55 @@ A list of properties that are on every [Two.Polygon](/docs/shapes/polygon/).
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/polygon.js#L106">
-    polygon.js:106
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/polygon.js#L114">
+    polygon.js:114
+  </a>
+
+</div>
+
+
+
+
+</div>
+
+
+
+<div class="instance member ">
+
+## radius
+
+<h2 class="longname" aria-hidden="true"><a href="#radius"><span class="prefix">Two.Polygon.</span><span class="shortname">radius</span></a></h2>
+
+
+
+
+
+
+
+
+
+
+<div class="properties">
+
+
+The radius value of the polygon.
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+<div class="meta">
+
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/polygon.js#L77">
+    polygon.js:77
   </a>
 
 </div>
@@ -118,8 +165,8 @@ The size of the width of the polygon.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/polygon.js#L71">
-    polygon.js:71
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/polygon.js#L85">
+    polygon.js:85
   </a>
 
 </div>
@@ -165,8 +212,8 @@ The size of the height of the polygon.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/polygon.js#L79">
-    polygon.js:79
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/polygon.js#L90">
+    polygon.js:90
   </a>
 
 </div>
@@ -212,8 +259,8 @@ The amount of sides the polyogn has.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/polygon.js#L87">
-    polygon.js:87
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/polygon.js#L95">
+    polygon.js:95
   </a>
 
 </div>
@@ -272,8 +319,8 @@ Create a new instance of [Two.Polygon](/docs/shapes/polygon/) with the same prop
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/polygon.js#L172">
-    polygon.js:172
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/polygon.js#L180">
+    polygon.js:180
   </a>
 
 </div>
@@ -325,8 +372,8 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/polygon.js#L206">
-    polygon.js:206
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/polygon.js#L216">
+    polygon.js:216
   </a>
 
 </div>

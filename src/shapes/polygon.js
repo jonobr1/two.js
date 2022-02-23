@@ -37,6 +37,12 @@ export class Polygon extends Path {
   _flagSides = false;
 
   /**
+   * @name Two.Polygon#_radius
+   * @private
+   * @see {@link Two.Polygon#radius}
+   */
+  _radius = 0;
+  /**
    * @name Two.Polygon#_width
    * @private
    * @see {@link Two.Polygon#width}
@@ -69,20 +75,22 @@ export class Polygon extends Path {
     this.automatic = false;
 
     /**
+     * @name Two.Polygon#radius
+     * @property {Number} - The radius value of the polygon.
+     */
+    if (typeof r === 'number') {
+      this.radius = r;
+    }
+
+    /**
      * @name Two.Polygon#width
      * @property {Number} - The size of the width of the polygon.
      */
-    if (typeof r === 'number') {
-      this.width = r * 2;
-    }
 
     /**
      * @name Two.Polygon#height
      * @property {Number} - The size of the height of the polygon.
      */
-    if (typeof r === 'number') {
-      this.height = r * 2;
-    }
 
     /**
      * @name Two.Polygon#sides
@@ -178,13 +186,15 @@ export class Polygon extends Path {
    */
   clone(parent) {
 
-    const clone = new Polygon(0, 0, this.radius, this.sides);
+    const clone = new Polygon(0, 0, 0, this.sides);
 
     clone.translation.copy(this.translation);
     clone.rotation = this.rotation;
     clone.scale = this.scale;
     clone.skewX = this.skewX;
     clone.skewY = this.skewY;
+    clone.width = this.width;
+    clone.height = this.height;
 
     if (this.matrix.manual) {
       clone.matrix.copy(this.matrix);
@@ -225,6 +235,17 @@ export class Polygon extends Path {
 }
 
 const proto = {
+  radius: {
+    enumerable: true,
+    get: function() {
+      return this._radius;
+    },
+    set: function(v) {
+      this._radius = v;
+      this.width = v * 2;
+      this.height = v * 2;
+    }
+  },
   width: {
     enumerable: true,
     get: function() {
@@ -233,6 +254,7 @@ const proto = {
     set: function(v) {
       this._width = v;
       this._flagWidth = true;
+      this._radius = Math.max(this.width, this.height) / 2;
     }
   },
   height: {
@@ -243,6 +265,7 @@ const proto = {
     set: function(v) {
       this._height = v;
       this._flagHeight = true;
+      this._radius = Math.max(this.width, this.height) / 2;
     }
   },
   sides: {
