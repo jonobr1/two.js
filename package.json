@@ -7,6 +7,18 @@
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
   },
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": "./build/two.module.js",
+      "require": "./build/two.js"
+    },
+    "./src/*": "./src/*",
+    "./extras/*": {
+      "import": "./extras/jsm/*",
+      "require": "./extras/js/*"
+    }
+  },
   "files": [
     "package.json",
     "LICENSE",
@@ -41,7 +53,9 @@
     "motiongraphics",
     "visualization",
     "dom",
-    "w3c"
+    "w3c",
+    "bitmap",
+    "vector"
   ],
   "homepage": "https://two.js.org/",
   "author": {
