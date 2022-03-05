@@ -11,6 +11,10 @@ All notable changes to this project will be documented in this file. The format 
 
 <carbon-ads />
 
+## Nightly
+
++ ___Breaking___: Added export maps so extras are imported like so `import { ZUI } from 'two.js/extras/zui.js'`
+
 ## Jan 29, 2022 v0.8.3
 
 <h3 class="visible">Jan 29, 2022</h3><version-link v="v0.8.3" />
