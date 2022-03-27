@@ -166,6 +166,12 @@ Various examples of how to use different features of Two.js with associated tags
   tags="react" />
 
 <example-card
+  title="Basic GSAP Animation Setup"
+  href="https://codepen.io/jonobr1/pen/YzYZgvq"
+  src="https://shots.codepen.io/jonobr1/pen/YzYZgvq-512.jpg"
+  tags="gsap, interactive, animated, rotation, interpret" />
+
+<example-card
   title="Dashes"
   href="https://jsfiddle.net/jonobr1/x1gc2d0L/"
   tags="circle, animated, non-interactive, simple" />
