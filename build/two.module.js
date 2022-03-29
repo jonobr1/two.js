@@ -708,7 +708,7 @@ var Constants = {
     canvas: "CanvasRenderer"
   },
   Version: "v0.8.4",
-  PublishDate: "2022-03-29T00:35:52.789Z",
+  PublishDate: "2022-03-29T00:50:26.325Z",
   Identifier: "two-",
   Resolution: 12,
   AutoCalculateImportedMatrices: true,
@@ -2968,7 +2968,7 @@ var Renderer = class extends Events {
   }
 };
 __publicField(Renderer, "Utils", canvas);
-function renderArcEstimate(ctx, ox, oy, rx, ry, startAngle, endAngle, clockwise, xAxisRotation) {
+function renderArcEstimate(ctx, ox2, oy2, rx, ry, startAngle, endAngle, clockwise, xAxisRotation) {
   const delta = endAngle - startAngle;
   const epsilon = Curve.Tolerance.epsilon;
   const samePoints = Math.abs(delta) < epsilon;
@@ -2990,15 +2990,15 @@ function renderArcEstimate(ctx, ox, oy, rx, ry, startAngle, endAngle, clockwise,
   for (let i = 0; i < Constants.Resolution; i++) {
     const t = i / (Constants.Resolution - 1);
     const angle = startAngle + t * deltaAngle;
-    let x = ox + rx * Math.cos(angle);
-    let y = oy + ry * Math.sin(angle);
+    let x = ox2 + rx * Math.cos(angle);
+    let y = oy2 + ry * Math.sin(angle);
     if (xAxisRotation !== 0) {
       const cos7 = Math.cos(xAxisRotation);
       const sin7 = Math.sin(xAxisRotation);
-      const tx = x - ox;
-      const ty = y - oy;
-      x = tx * cos7 - ty * sin7 + ox;
-      y = tx * sin7 + ty * cos7 + oy;
+      const tx = x - ox2;
+      const ty = y - oy2;
+      x = tx * cos7 - ty * sin7 + ox2;
+      y = tx * sin7 + ty * cos7 + oy2;
     }
     ctx.lineTo(x, y);
   }
@@ -3117,15 +3117,15 @@ var Registry = class {
 };
 
 // src/utils/shape.js
-function contains(path2, t) {
+function contains(path, t) {
   if (t === 0 || t === 1) {
     return true;
   }
-  const length = path2._length;
+  const length = path._length;
   const target = length * t;
   let elapsed = 0;
-  for (let i = 0; i < path2._lengths.length; i++) {
-    const dist = path2._lengths[i];
+  for (let i = 0; i < path._lengths.length; i++) {
+    const dist = path._lengths[i];
     if (elapsed >= target) {
       return target - elapsed >= 0;
     }
@@ -3133,19 +3133,19 @@ function contains(path2, t) {
   }
   return false;
 }
-function getIdByLength(path2, target) {
-  const total = path2._length;
+function getIdByLength(path, target) {
+  const total = path._length;
   if (target <= 0) {
     return 0;
   } else if (target >= total) {
-    return path2._lengths.length - 1;
+    return path._lengths.length - 1;
   }
-  for (let i = 0, sum = 0; i < path2._lengths.length; i++) {
-    if (sum + path2._lengths[i] >= target) {
+  for (let i = 0, sum = 0; i < path._lengths.length; i++) {
+    if (sum + path._lengths[i] >= target) {
       target -= sum;
-      return Math.max(i - 1, 0) + target / path2._lengths[i];
+      return Math.max(i - 1, 0) + target / path._lengths[i];
     }
-    sum += path2._lengths[i];
+    sum += path._lengths[i];
   }
   return -1;
 }
@@ -3671,11 +3671,11 @@ var _Texture = class extends Element {
     }
     this._update();
   }
-  static getAbsoluteURL(path2) {
+  static getAbsoluteURL(path) {
     if (!anchor) {
-      return path2;
+      return path;
     }
-    anchor.href = path2;
+    anchor.href = path;
     return anchor.href;
   }
   static loadHeadlessBuffer(texture, loaded) {
@@ -4722,10 +4722,15 @@ var _Rectangle = class extends Path {
     for (let prop in proto12) {
       Object.defineProperty(this, prop, proto12[prop]);
     }
-    this.width = width;
-    this.height = height;
+    this.width = typeof width === "number" ? width : 1;
+    this.height = typeof height === "number" ? height : 1;
     this.origin = new Vector();
-    this.translation.set(x, y);
+    if (typeof x === "number") {
+      this.translation.x = x;
+    }
+    if (typeof y === "number") {
+      this.translation.y = y;
+    }
     this._update();
   }
   _update() {
@@ -4819,8 +4824,8 @@ var proto12 = {
 
 // src/effects/sprite.js
 var _Sprite = class extends Rectangle {
-  constructor(path2, ox, oy, cols, rows, frameRate) {
-    super(ox, oy, 0, 0);
+  constructor(path, ox2, oy2, cols, rows, frameRate) {
+    super(ox2, oy2, 0, 0);
     __publicField(this, "_flagTexture", false);
     __publicField(this, "_flagColumns", false);
     __publicField(this, "_flagRows", false);
@@ -4844,10 +4849,10 @@ var _Sprite = class extends Rectangle {
     }
     this.noStroke();
     this.noFill();
-    if (path2 instanceof Texture) {
-      this.texture = path2;
-    } else if (typeof path2 === "string") {
-      this.texture = new Texture(path2);
+    if (path instanceof Texture) {
+      this.texture = path;
+    } else if (typeof path === "string") {
+      this.texture = new Texture(path);
     }
     this.origin = new Vector();
     this._update();
@@ -4966,13 +4971,13 @@ var _Sprite = class extends Rectangle {
         }
         const col = this._index % cols;
         const row = Math.floor(this._index / cols);
-        const ox = -width * col + (iw - width) / 2;
-        const oy = -height * row + (ih - height) / 2;
-        if (ox !== effect.offset.x) {
-          effect.offset.x = ox;
+        const ox2 = -width * col + (iw - width) / 2;
+        const oy2 = -height * row + (ih - height) / 2;
+        if (ox2 !== effect.offset.x) {
+          effect.offset.x = ox2;
         }
-        if (oy !== effect.offset.y) {
-          effect.offset.y = oy;
+        if (oy2 !== effect.offset.y) {
+          effect.offset.y = oy2;
         }
       }
     }
@@ -5050,7 +5055,7 @@ var proto13 = {
 var cos3 = Math.cos;
 var sin3 = Math.sin;
 var _Circle = class extends Path {
-  constructor(ox, oy, r, resolution) {
+  constructor(ox2, oy2, r, resolution) {
     const amount = resolution ? Math.max(resolution, 2) : 4;
     const points = [];
     for (let i = 0; i < amount; i++) {
@@ -5066,11 +5071,11 @@ var _Circle = class extends Path {
       this.radius = r;
     }
     this._update();
-    if (typeof ox === "number") {
-      this.translation.x = ox;
+    if (typeof ox2 === "number") {
+      this.translation.x = ox2;
     }
-    if (typeof oy === "number") {
-      this.translation.y = oy;
+    if (typeof oy2 === "number") {
+      this.translation.y = oy2;
     }
   }
   _update() {
@@ -5153,7 +5158,7 @@ var proto14 = {
 var cos4 = Math.cos;
 var sin4 = Math.sin;
 var _Ellipse = class extends Path {
-  constructor(ox, oy, rx, ry, resolution) {
+  constructor(x, y, rx, ry, resolution) {
     if (typeof ry !== "number" && typeof rx === "number") {
       ry = rx;
     }
@@ -5177,7 +5182,12 @@ var _Ellipse = class extends Path {
       this.height = ry * 2;
     }
     this._update();
-    this.translation.set(ox, oy);
+    if (typeof x === "number") {
+      this.translation.x = x;
+    }
+    if (typeof y === "number") {
+      this.translation.y = y;
+    }
   }
   _update() {
     if (this._flagVertices || this._flagWidth || this._flagHeight) {
@@ -5317,7 +5327,7 @@ var proto16 = {
 
 // src/shapes/rounded-rectangle.js
 var _RoundedRectangle = class extends Path {
-  constructor(ox, oy, width, height, radius) {
+  constructor(x, y, width, height, radius) {
     if (typeof radius === "undefined" && typeof width === "number" && typeof height === "number") {
       radius = Math.floor(Math.min(width, height) / 12);
     }
@@ -5348,7 +5358,12 @@ var _RoundedRectangle = class extends Path {
       this.radius = radius;
     }
     this._update();
-    this.translation.set(ox, oy);
+    if (typeof x === "number") {
+      this.translation.x = x;
+    }
+    if (typeof y === "number") {
+      this.translation.y = y;
+    }
   }
   _update() {
     if (this._flagVertices || this._flagWidth || this._flagHeight || this._flagRadius) {
@@ -6347,18 +6362,18 @@ var read = {
     return poly;
   },
   path: function(node, parentStyles) {
-    let path2;
+    let path;
     if (typeof node === "string") {
-      path2 = node;
+      path = node;
     } else {
-      path2 = node.getAttribute("d");
+      path = node.getAttribute("d");
     }
     let points = [];
     let closed2 = false, relative = false;
-    if (path2) {
+    if (path) {
       let coord = new Anchor();
       let control, coords;
-      let commands = path2.match(/[a-df-z][^a-df-z]*/ig);
+      let commands = path.match(/[a-df-z][^a-df-z]*/ig);
       const last = commands.length - 1;
       _.each(commands.slice(0), function(command, i) {
         const items = command.slice(1).trim().match(regex2.path);
@@ -6577,19 +6592,19 @@ var read = {
         }
       });
     }
-    path2 = new Path(points, closed2, void 0, true).noStroke();
-    path2.fill = "black";
-    const rect = path2.getBoundingClientRect(true);
+    path = new Path(points, closed2, void 0, true).noStroke();
+    path.fill = "black";
+    const rect = path.getBoundingClientRect(true);
     rect.centroid = {
       x: rect.left + rect.width / 2,
       y: rect.top + rect.height / 2
     };
-    _.each(path2.vertices, function(v) {
+    _.each(path.vertices, function(v) {
       v.subSelf(rect.centroid);
     });
-    applySvgAttributes.call(this, node, path2, parentStyles);
-    path2.translation.addSelf(rect.centroid);
-    return path2;
+    applySvgAttributes.call(this, node, path, parentStyles);
+    path.translation.addSelf(rect.centroid);
+    return path;
   },
   circle: function(node, parentStyles) {
     const x = parseFloat(node.getAttribute("cx"));
@@ -6668,13 +6683,13 @@ var read = {
     let y1 = parseFloat(node.getAttribute("y1") || 0);
     let x2 = parseFloat(node.getAttribute("x2") || 0);
     let y2 = parseFloat(node.getAttribute("y2") || 0);
-    const ox = (x2 + x1) / 2;
-    const oy = (y2 + y1) / 2;
+    const ox2 = (x2 + x1) / 2;
+    const oy2 = (y2 + y1) / 2;
     if (/userSpaceOnUse/i.test(units)) {
-      x1 -= ox;
-      y1 -= oy;
-      x2 -= ox;
-      y2 -= oy;
+      x1 -= ox2;
+      y1 -= oy2;
+      x2 -= ox2;
+      y2 -= oy2;
     }
     const stops = [];
     for (let i = 0; i < node.children.length; i++) {
@@ -6726,13 +6741,13 @@ var read = {
     if (_.isNaN(fy)) {
       fy = cy;
     }
-    const ox = Math.abs(cx + fx) / 2;
-    const oy = Math.abs(cy + fy) / 2;
+    const ox2 = Math.abs(cx + fx) / 2;
+    const oy2 = Math.abs(cy + fy) / 2;
     if (/userSpaceOnUse/i.test(units)) {
-      cx -= ox;
-      cy -= oy;
-      fx -= ox;
-      fy -= oy;
+      cx -= ox2;
+      cy -= oy2;
+      fx -= ox2;
+      fy -= oy2;
     }
     const stops = [];
     for (let i = 0; i < node.children.length; i++) {
@@ -6805,9 +6820,9 @@ var read = {
 };
 
 // src/utils/xhr.js
-function xhr(path2, callback) {
+function xhr(path, callback) {
   const xhr2 = new XMLHttpRequest();
-  xhr2.open("GET", path2);
+  xhr2.open("GET", path);
   xhr2.onreadystatechange = function() {
     if (xhr2.readyState === 4 && xhr2.status === 200) {
       callback(xhr2.responseText);
@@ -6819,8 +6834,8 @@ function xhr(path2, callback) {
 
 // src/effects/image-sequence.js
 var _ImageSequence = class extends Rectangle {
-  constructor(paths, ox, oy, frameRate) {
-    super(ox, oy, 0, 0);
+  constructor(paths, ox2, oy2, frameRate) {
+    super(ox2, oy2, 0, 0);
     __publicField(this, "_flagTextures", false);
     __publicField(this, "_flagFrameRate", false);
     __publicField(this, "_flagIndex", false);
@@ -7050,7 +7065,7 @@ function GenerateTexture(obj) {
 
 // src/shapes/arc-segment.js
 var _ArcSegment = class extends Path {
-  constructor(ox, oy, ir, or, sa, ea, res) {
+  constructor(ox2, oy2, ir, or, sa, ea, res) {
     const amount = res || Constants.Resolution * 3;
     const points = [];
     for (let i = 0; i < amount; i++) {
@@ -7081,11 +7096,11 @@ var _ArcSegment = class extends Path {
       this.endAngle = ea;
     }
     this._update();
-    if (typeof ox === "number") {
-      this.translation.x = ox;
+    if (typeof ox2 === "number") {
+      this.translation.x = ox2;
     }
-    if (typeof oy === "number") {
-      this.translation.y = oy;
+    if (typeof oy2 === "number") {
+      this.translation.y = oy2;
     }
   }
   _update() {
@@ -7585,7 +7600,7 @@ var proto21 = {
 var cos5 = Math.cos;
 var sin5 = Math.sin;
 var _Polygon = class extends Path {
-  constructor(ox, oy, r, sides) {
+  constructor(x, y, radius, sides) {
     sides = Math.max(sides || 0, 3);
     super();
     __publicField(this, "_flagWidth", false);
@@ -7600,18 +7615,18 @@ var _Polygon = class extends Path {
     }
     this.closed = true;
     this.automatic = false;
-    if (typeof r === "number") {
-      this.radius = r;
+    if (typeof radius === "number") {
+      this.radius = radius;
     }
     if (typeof sides === "number") {
       this.sides = sides;
     }
     this._update();
     if (typeof ox === "number") {
-      this.translation.x = ox;
+      this.translation.x = x;
     }
     if (typeof oy === "number") {
-      this.translation.y = oy;
+      this.translation.y = y;
     }
   }
   _update() {
@@ -7726,7 +7741,7 @@ var proto22 = {
 var cos6 = Math.cos;
 var sin6 = Math.sin;
 var _Star = class extends Path {
-  constructor(ox, oy, ir, or, sides) {
+  constructor(ox2, oy2, ir, or, sides) {
     if (arguments.length <= 3) {
       or = ir;
       ir = or / 2;
@@ -7756,11 +7771,11 @@ var _Star = class extends Path {
       this.sides = sides;
     }
     this._update();
-    if (typeof ox === "number") {
-      this.translation.x = ox;
+    if (typeof ox2 === "number") {
+      this.translation.x = ox2;
     }
-    if (typeof oy === "number") {
-      this.translation.y = oy;
+    if (typeof oy2 === "number") {
+      this.translation.y = oy2;
     }
   }
   _update() {
@@ -9993,12 +10008,12 @@ var _Two = class {
       new Anchor(x2, y2, void 0, void 0, void 0, void 0, Commands.move),
       new Anchor(x2 - headlen * Math.cos(angle + Math.PI / 4), y2 - headlen * Math.sin(angle + Math.PI / 4), void 0, void 0, void 0, void 0, Commands.line)
     ];
-    const path2 = new Path(vertices, false, false, true);
-    path2.noFill();
-    path2.cap = "round";
-    path2.join = "round";
-    this.scene.add(path2);
-    return path2;
+    const path = new Path(vertices, false, false, true);
+    path.noFill();
+    path.cap = "round";
+    path.join = "round";
+    this.scene.add(path);
+    return path;
   }
   makeRectangle(x, y, width, height) {
     const rect = new Rectangle(x, y, width, height);
@@ -10089,13 +10104,13 @@ var _Two = class {
       }
     }
     const last = arguments[l - 1];
-    const path2 = new Path(points, !(typeof last === "boolean" ? last : void 0));
-    const rect = path2.getBoundingClientRect();
+    const path = new Path(points, !(typeof last === "boolean" ? last : void 0));
+    const rect = path.getBoundingClientRect();
     if (typeof rect.top === "number" && typeof rect.left === "number" && typeof rect.right === "number" && typeof rect.bottom === "number") {
-      path2.center().translation.set(rect.left + rect.width / 2, rect.top + rect.height / 2);
+      path.center().translation.set(rect.left + rect.width / 2, rect.top + rect.height / 2);
     }
-    this.scene.add(path2);
-    return path2;
+    this.scene.add(path);
+    return path;
   }
   makeText(message, x, y, styles) {
     const text = new Text(message, x, y, styles);
@@ -10131,7 +10146,7 @@ var _Two = class {
     return imageSequence;
   }
   makeTexture(pathOrSource, callback) {
-    const texture = new Texture(path, callback);
+    const texture = new Texture(pathOrSource, callback);
     return texture;
   }
   makeGroup(objects) {
