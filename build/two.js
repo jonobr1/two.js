@@ -732,7 +732,7 @@ var Two = (() => {
       canvas: "CanvasRenderer"
     },
     Version: "v0.8.4",
-    PublishDate: "2022-03-29T00:50:26.325Z",
+    PublishDate: "2022-03-29T01:02:25.999Z",
     Identifier: "two-",
     Resolution: 12,
     AutoCalculateImportedMatrices: true,
@@ -10064,10 +10064,9 @@ var Two = (() => {
       this.scene.add(star);
       return star;
     }
-    makeCurve(p) {
+    makeCurve(points) {
       const l = arguments.length;
-      let points = p;
-      if (!Array.isArray(p)) {
+      if (!Array.isArray(points)) {
         points = [];
         for (let i = 0; i < l; i += 2) {
           const x = arguments[i];
