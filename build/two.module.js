@@ -503,6 +503,10 @@ var _Vector = class extends Events {
 };
 var Vector = _Vector;
 __publicField(Vector, "zero", new _Vector());
+__publicField(Vector, "left", new _Vector(-1, 0));
+__publicField(Vector, "right", new _Vector(1, 0));
+__publicField(Vector, "up", new _Vector(0, -1));
+__publicField(Vector, "down", new _Vector(0, 1));
 
 // src/anchor.js
 var Anchor = class extends Vector {
@@ -703,8 +707,8 @@ var Constants = {
     svg: "SVGRenderer",
     canvas: "CanvasRenderer"
   },
-  Version: "v0.8.3",
-  PublishDate: "2022-01-29T18:46:24.333Z",
+  Version: "v0.8.4",
+  PublishDate: "2022-03-29T00:35:52.789Z",
   Identifier: "two-",
   Resolution: 12,
   AutoCalculateImportedMatrices: true,
@@ -3113,15 +3117,15 @@ var Registry = class {
 };
 
 // src/utils/shape.js
-function contains(path, t) {
+function contains(path2, t) {
   if (t === 0 || t === 1) {
     return true;
   }
-  const length = path._length;
+  const length = path2._length;
   const target = length * t;
   let elapsed = 0;
-  for (let i = 0; i < path._lengths.length; i++) {
-    const dist = path._lengths[i];
+  for (let i = 0; i < path2._lengths.length; i++) {
+    const dist = path2._lengths[i];
     if (elapsed >= target) {
       return target - elapsed >= 0;
     }
@@ -3129,19 +3133,19 @@ function contains(path, t) {
   }
   return false;
 }
-function getIdByLength(path, target) {
-  const total = path._length;
+function getIdByLength(path2, target) {
+  const total = path2._length;
   if (target <= 0) {
     return 0;
   } else if (target >= total) {
-    return path._lengths.length - 1;
+    return path2._lengths.length - 1;
   }
-  for (let i = 0, sum = 0; i < path._lengths.length; i++) {
-    if (sum + path._lengths[i] >= target) {
+  for (let i = 0, sum = 0; i < path2._lengths.length; i++) {
+    if (sum + path2._lengths[i] >= target) {
       target -= sum;
-      return Math.max(i - 1, 0) + target / path._lengths[i];
+      return Math.max(i - 1, 0) + target / path2._lengths[i];
     }
-    sum += path._lengths[i];
+    sum += path2._lengths[i];
   }
   return -1;
 }
@@ -3209,11 +3213,14 @@ var _Stop = class extends Element {
     this.color = typeof color === "string" ? color : _Stop.Index <= 0 ? "#fff" : "#000";
     _Stop.Index = (_Stop.Index + 1) % 2;
   }
-  clone() {
+  clone(parent) {
     const clone = new _Stop();
     _.each(_Stop.Properties, function(property) {
       clone[property] = this[property];
     }, this);
+    if (parent && parent.stops) {
+      parent.stops.push(clone);
+    }
     return clone;
   }
   toObject() {
@@ -3664,11 +3671,11 @@ var _Texture = class extends Element {
     }
     this._update();
   }
-  static getAbsoluteURL(path) {
+  static getAbsoluteURL(path2) {
     if (!anchor) {
-      return path;
+      return path2;
     }
-    anchor.href = path;
+    anchor.href = path2;
     return anchor.href;
   }
   static loadHeadlessBuffer(texture, loaded) {
@@ -4812,7 +4819,7 @@ var proto12 = {
 
 // src/effects/sprite.js
 var _Sprite = class extends Rectangle {
-  constructor(path, ox, oy, cols, rows, frameRate) {
+  constructor(path2, ox, oy, cols, rows, frameRate) {
     super(ox, oy, 0, 0);
     __publicField(this, "_flagTexture", false);
     __publicField(this, "_flagColumns", false);
@@ -4837,10 +4844,10 @@ var _Sprite = class extends Rectangle {
     }
     this.noStroke();
     this.noFill();
-    if (path instanceof Texture) {
-      this.texture = path;
-    } else if (typeof path === "string") {
-      this.texture = new Texture(path);
+    if (path2 instanceof Texture) {
+      this.texture = path2;
+    } else if (typeof path2 === "string") {
+      this.texture = new Texture(path2);
     }
     this.origin = new Vector();
     this._update();
@@ -6340,18 +6347,18 @@ var read = {
     return poly;
   },
   path: function(node, parentStyles) {
-    let path;
+    let path2;
     if (typeof node === "string") {
-      path = node;
+      path2 = node;
     } else {
-      path = node.getAttribute("d");
+      path2 = node.getAttribute("d");
     }
     let points = [];
     let closed2 = false, relative = false;
-    if (path) {
+    if (path2) {
       let coord = new Anchor();
       let control, coords;
-      let commands = path.match(/[a-df-z][^a-df-z]*/ig);
+      let commands = path2.match(/[a-df-z][^a-df-z]*/ig);
       const last = commands.length - 1;
       _.each(commands.slice(0), function(command, i) {
         const items = command.slice(1).trim().match(regex2.path);
@@ -6570,19 +6577,19 @@ var read = {
         }
       });
     }
-    path = new Path(points, closed2, void 0, true).noStroke();
-    path.fill = "black";
-    const rect = path.getBoundingClientRect(true);
+    path2 = new Path(points, closed2, void 0, true).noStroke();
+    path2.fill = "black";
+    const rect = path2.getBoundingClientRect(true);
     rect.centroid = {
       x: rect.left + rect.width / 2,
       y: rect.top + rect.height / 2
     };
-    _.each(path.vertices, function(v) {
+    _.each(path2.vertices, function(v) {
       v.subSelf(rect.centroid);
     });
-    applySvgAttributes.call(this, node, path, parentStyles);
-    path.translation.addSelf(rect.centroid);
-    return path;
+    applySvgAttributes.call(this, node, path2, parentStyles);
+    path2.translation.addSelf(rect.centroid);
+    return path2;
   },
   circle: function(node, parentStyles) {
     const x = parseFloat(node.getAttribute("cx"));
@@ -6798,9 +6805,9 @@ var read = {
 };
 
 // src/utils/xhr.js
-function xhr(path, callback) {
+function xhr(path2, callback) {
   const xhr2 = new XMLHttpRequest();
-  xhr2.open("GET", path);
+  xhr2.open("GET", path2);
   xhr2.onreadystatechange = function() {
     if (xhr2.readyState === 4 && xhr2.status === 200) {
       callback(xhr2.responseText);
@@ -7584,6 +7591,7 @@ var _Polygon = class extends Path {
     __publicField(this, "_flagWidth", false);
     __publicField(this, "_flagHeight", false);
     __publicField(this, "_flagSides", false);
+    __publicField(this, "_radius", 0);
     __publicField(this, "_width", 0);
     __publicField(this, "_height", 0);
     __publicField(this, "_sides", 0);
@@ -7593,10 +7601,7 @@ var _Polygon = class extends Path {
     this.closed = true;
     this.automatic = false;
     if (typeof r === "number") {
-      this.width = r * 2;
-    }
-    if (typeof r === "number") {
-      this.height = r * 2;
+      this.radius = r;
     }
     if (typeof sides === "number") {
       this.sides = sides;
@@ -7640,12 +7645,14 @@ var _Polygon = class extends Path {
     return this;
   }
   clone(parent) {
-    const clone = new _Polygon(0, 0, this.radius, this.sides);
+    const clone = new _Polygon(0, 0, 0, this.sides);
     clone.translation.copy(this.translation);
     clone.rotation = this.rotation;
     clone.scale = this.scale;
     clone.skewX = this.skewX;
     clone.skewY = this.skewY;
+    clone.width = this.width;
+    clone.height = this.height;
     if (this.matrix.manual) {
       clone.matrix.copy(this.matrix);
     }
@@ -7670,6 +7677,17 @@ var _Polygon = class extends Path {
 var Polygon = _Polygon;
 __publicField(Polygon, "Properties", ["width", "height", "sides"]);
 var proto22 = {
+  radius: {
+    enumerable: true,
+    get: function() {
+      return this._radius;
+    },
+    set: function(v) {
+      this._radius = v;
+      this.width = v * 2;
+      this.height = v * 2;
+    }
+  },
   width: {
     enumerable: true,
     get: function() {
@@ -7678,6 +7696,7 @@ var proto22 = {
     set: function(v) {
       this._width = v;
       this._flagWidth = true;
+      this._radius = Math.max(this.width, this.height) / 2;
     }
   },
   height: {
@@ -7688,6 +7707,7 @@ var proto22 = {
     set: function(v) {
       this._height = v;
       this._flagHeight = true;
+      this._radius = Math.max(this.width, this.height) / 2;
     }
   },
   sides: {
@@ -9940,16 +9960,14 @@ var _Two = class {
     this.renderer.render();
     return this.trigger(Events.Types.render, this.frameCount++);
   }
-  add(o) {
-    let objects = o;
+  add(objects) {
     if (!(objects instanceof Array)) {
       objects = Array.prototype.slice.call(arguments);
     }
     this.scene.add(objects);
     return this;
   }
-  remove(o) {
-    let objects = o;
+  remove(objects) {
     if (!(objects instanceof Array)) {
       objects = Array.prototype.slice.call(arguments);
     }
@@ -9975,12 +9993,12 @@ var _Two = class {
       new Anchor(x2, y2, void 0, void 0, void 0, void 0, Commands.move),
       new Anchor(x2 - headlen * Math.cos(angle + Math.PI / 4), y2 - headlen * Math.sin(angle + Math.PI / 4), void 0, void 0, void 0, void 0, Commands.line)
     ];
-    const path = new Path(vertices, false, false, true);
-    path.noFill();
-    path.cap = "round";
-    path.join = "round";
-    this.scene.add(path);
-    return path;
+    const path2 = new Path(vertices, false, false, true);
+    path2.noFill();
+    path2.cap = "round";
+    path2.join = "round";
+    this.scene.add(path2);
+    return path2;
   }
   makeRectangle(x, y, width, height) {
     const rect = new Rectangle(x, y, width, height);
@@ -10002,8 +10020,8 @@ var _Two = class {
     this.scene.add(ellipse);
     return ellipse;
   }
-  makeStar(ox, oy, outerRadius, innerRadius, sides) {
-    const star = new Star(ox, oy, outerRadius, innerRadius, sides);
+  makeStar(x, y, outerRadius, innerRadius, sides) {
+    const star = new Star(x, y, outerRadius, innerRadius, sides);
     this.scene.add(star);
     return star;
   }
@@ -10033,8 +10051,8 @@ var _Two = class {
     this.scene.add(poly);
     return poly;
   }
-  makeArcSegment(ox, oy, ir, or, sa, ea, res) {
-    const arcSegment = new ArcSegment(ox, oy, ir, or, sa, ea, res);
+  makeArcSegment(x, y, innerRadius, outerRadius, startAngle, endAngle, resolution) {
+    const arcSegment = new ArcSegment(x, y, innerRadius, outerRadius, startAngle, endAngle, resolution);
     this.scene.add(arcSegment);
     return arcSegment;
   }
@@ -10071,13 +10089,13 @@ var _Two = class {
       }
     }
     const last = arguments[l - 1];
-    const path = new Path(points, !(typeof last === "boolean" ? last : void 0));
-    const rect = path.getBoundingClientRect();
+    const path2 = new Path(points, !(typeof last === "boolean" ? last : void 0));
+    const rect = path2.getBoundingClientRect();
     if (typeof rect.top === "number" && typeof rect.left === "number" && typeof rect.right === "number" && typeof rect.bottom === "number") {
-      path.center().translation.set(rect.left + rect.width / 2, rect.top + rect.height / 2);
+      path2.center().translation.set(rect.left + rect.width / 2, rect.top + rect.height / 2);
     }
-    this.scene.add(path);
-    return path;
+    this.scene.add(path2);
+    return path2;
   }
   makeText(message, x, y, styles) {
     const text = new Text(message, x, y, styles);
@@ -10090,34 +10108,33 @@ var _Two = class {
     this.add(gradient);
     return gradient;
   }
-  makeRadialGradient(x1, y1, r) {
+  makeRadialGradient(x1, y1, radius) {
     const stops = Array.prototype.slice.call(arguments, 3);
-    const gradient = new RadialGradient(x1, y1, r, stops);
+    const gradient = new RadialGradient(x1, y1, radius, stops);
     this.add(gradient);
     return gradient;
   }
-  makeSprite(path, x, y, cols, rows, frameRate, autostart) {
-    const sprite = new Sprite(path, x, y, cols, rows, frameRate);
+  makeSprite(pathOrTexture, x, y, columns, rows, frameRate, autostart) {
+    const sprite = new Sprite(pathOrTexture, x, y, columns, rows, frameRate);
     if (autostart) {
       sprite.play();
     }
     this.add(sprite);
     return sprite;
   }
-  makeImageSequence(paths, x, y, frameRate, autostart) {
-    const imageSequence = new ImageSequence(paths, x, y, frameRate);
+  makeImageSequence(pathsOrTextures, x, y, frameRate, autostart) {
+    const imageSequence = new ImageSequence(pathsOrTextures, x, y, frameRate);
     if (autostart) {
       imageSequence.play();
     }
     this.add(imageSequence);
     return imageSequence;
   }
-  makeTexture(path, callback) {
+  makeTexture(pathOrSource, callback) {
     const texture = new Texture(path, callback);
     return texture;
   }
-  makeGroup(o) {
-    let objects = o;
+  makeGroup(objects) {
     if (!(objects instanceof Array)) {
       objects = Array.prototype.slice.call(arguments);
     }
@@ -10126,13 +10143,13 @@ var _Two = class {
     group.add(objects);
     return group;
   }
-  interpret(SVGElement, shallow, add) {
-    const tag = SVGElement.tagName.toLowerCase();
+  interpret(svg2, shallow, add) {
+    const tag = svg2.tagName.toLowerCase();
     add = typeof add !== "undefined" ? add : true;
     if (!(tag in read)) {
       return null;
     }
-    const node = read[tag].call(this, SVGElement);
+    const node = read[tag].call(this, svg2);
     if (add) {
       this.add(shallow && node instanceof Group ? node.children : node);
     } else if (node.parent) {
@@ -10140,7 +10157,7 @@ var _Two = class {
     }
     return node;
   }
-  load(text, callback) {
+  load(pathOrSVGContent, callback) {
     const group = new Group();
     let elem, i, child;
     const attach = function(data) {
@@ -10157,11 +10174,11 @@ var _Two = class {
         callback(group, svg2);
       }
     }.bind(this);
-    if (/\.svg$/i.test(text)) {
-      xhr(text, attach);
+    if (/\.svg$/i.test(pathOrSVGContent)) {
+      xhr(pathOrSVGContent, attach);
       return group;
     }
-    attach(text);
+    attach(pathOrSVGContent);
     return group;
   }
 };
