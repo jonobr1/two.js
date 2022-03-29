@@ -736,12 +736,11 @@ export default class Two {
    * @description Creates a Two.js path that is curved and adds it to the scene.
    * @nota-bene In either case of passing an array or passing numbered arguments the last argument is an optional `Boolean` that defines whether the path should be open or closed.
    */
-  makeCurve(p) {
+  makeCurve(points) {
 
     const l = arguments.length;
-    let points = p;
 
-    if (!Array.isArray(p)) {
+    if (!Array.isArray(points)) {
       points = [];
       for (let i = 0; i < l; i+=2) {
         const x = arguments[i];

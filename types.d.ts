@@ -14,7 +14,7 @@ declare module "two.js/src/utils/math" {
     /**
      * @name Two.Utils.decomposeMatrix
      * @function
-     * @param {Two.Matrix} matrix - The matrix to decompose.
+     * @param {Matrix} matrix - The matrix to decompose.
      * @returns {Object} An object containing relevant skew values.
      * @description Decompose a 2D 3x3 Matrix to find the skew.
      */
@@ -22,9 +22,9 @@ declare module "two.js/src/utils/math" {
     /**
      * @name Two.Utils.getComputedMatrix
      * @function
-     * @param {Two.Shape} object - The Two.js object that has a matrix property to calculate from.
-     * @param {Two.Matrix} [matrix] - The matrix to apply calculated transformations to if available.
-     * @returns {Two.Matrix} The computed matrix of a nested object. If no `matrix` was passed in arguments then a `new Two.Matrix` is returned.
+     * @param {Shape} object - The Two.js object that has a matrix property to calculate from.
+     * @param {Matrix} [matrix] - The matrix to apply calculated transformations to if available.
+     * @returns {Matrix} The computed matrix of a nested object. If no `matrix` was passed in arguments then a `new Two.Matrix` is returned.
      * @description Method to get the world space transformation of a given object in a Two.js scene.
      */
     export function getComputedMatrix(object: Shape, matrix?: Matrix): Matrix;
@@ -156,24 +156,24 @@ declare module "two.js/src/vector" {
         /**
          * @name Two.Vector.zero
          * @readonly
-         * @property {Two.Vector} - Handy reference to a vector with component values 0, 0 at all times.
+         * @property {Vector} - Handy reference to a vector with component values 0, 0 at all times.
          */
         static readonly zero: Vector;
         /**
          * @name Two.Vector.add
          * @function
-         * @param {Two.Vector} v1
-         * @param {Two.Vector} v2
-         * @returns {Two.Vector}
+         * @param {Vector} v1
+         * @param {Vector} v2
+         * @returns {Vector}
          * @description Add two vectors together.
          */
         static add(v1: Vector, v2: Vector): Vector;
         /**
          * @name Two.Vector.sub
          * @function
-         * @param {Two.Vector} v1
-         * @param {Two.Vector} v2
-         * @returns {Two.Vector}
+         * @param {Vector} v1
+         * @param {Vector} v2
+         * @returns {Vector}
          * @description Subtract two vectors: `v2` from `v1`.
          */
         static sub(v1: Vector, v2: Vector): Vector;
@@ -186,32 +186,32 @@ declare module "two.js/src/vector" {
         /**
          * @name Two.Vector.ratioBetween
          * @function
-         * @param {Two.Vector} v1
-         * @param {Two.Vector} v2
+         * @param {Vector} v1
+         * @param {Vector} v2
          * @returns {Number} The ratio betwen two points `v1` and `v2`.
          */
         static ratioBetween(v1: any, v2: any): number;
         /**
          * @name Two.Vector.angleBetween
          * @function
-         * @param {Two.Vector} v1
-         * @param {Two.Vector} v2
+         * @param {Vector} v1
+         * @param {Vector} v2
          * @returns {Number} The angle between points `v1` and `v2`.
          */
         static angleBetween(v1: Vector, v2: Vector, ...args: any[]): number;
         /**
          * @name Two.Vector.distanceBetween
          * @function
-         * @param {Two.Vector} v1
-         * @param {Two.Vector} v2
+         * @param {Vector} v1
+         * @param {Vector} v2
          * @returns {Number} The distance between points `v1` and `v2`. Distance is always positive.
          */
         static distanceBetween(v1: Vector, v2: Vector): number;
         /**
          * @name Two.Vector.distanceBetweenSquared
          * @function
-         * @param {Two.Vector} v1
-         * @param {Two.Vector} v2
+         * @param {Vector} v1
+         * @param {Vector} v2
          * @returns {Number} The squared distance between points `v1` and `v2`.
          */
         static distanceBetweenSquared(v1: Vector, v2: Vector): number;
@@ -242,7 +242,7 @@ declare module "two.js/src/vector" {
         /**
          * @name Two.Vector#copy
          * @function
-         * @param {Two.Vector} v
+         * @param {Vector} v
          * @description Copy the x / y components of another object `v`.
          */
         copy(v: Vector): Vector;
@@ -261,7 +261,7 @@ declare module "two.js/src/vector" {
         /**
          * @name Two.Vector#add
          * @function
-         * @param {Two.Vector} v
+         * @param {Vector} v
          * @description Add an object with x / y component values to the instance.
          * @overloaded
          */
@@ -290,7 +290,7 @@ declare module "two.js/src/vector" {
         /**
          * @name Two.Vector#sub
          * @function
-         * @param {Two.Vector} v
+         * @param {Vector} v
          * @description Subtract an object with x / y component values to the instance.
          * @overloaded
          */
@@ -331,7 +331,7 @@ declare module "two.js/src/vector" {
         /**
          * @name Two.Vector#multiply
          * @function
-         * @param {Two.Vector} v
+         * @param {Vector} v
          * @description Multiply an object with x / y component values to the instance.
          * @overloaded
          */
@@ -367,7 +367,7 @@ declare module "two.js/src/vector" {
         /**
          * @name Two.Vector#divide
          * @function
-         * @param {Two.Vector} v
+         * @param {Vector} v
          * @description Divide an object with x / y component values to the instance.
          * @overloaded
          */
@@ -457,7 +457,7 @@ declare module "two.js/src/vector" {
         /**
          * @name Two.Vector#equals
          * @function
-         * @param {Two.Vector} v - The vector to compare against.
+         * @param {Vector} v - The vector to compare against.
          * @param {Number} [eps=0.0001] - An options epsilon for precision.
          * @returns {Boolean}
          * @description Qualify if one vector roughly equal another. With a margin of error defined by epsilon.
@@ -466,7 +466,7 @@ declare module "two.js/src/vector" {
         /**
          * @name Two.Vector#lerp
          * @function
-         * @param {Two.Vector} v - The destination vector to step towards.
+         * @param {Vector} v - The destination vector to step towards.
          * @param {Number} t - The zero to one value of how close the current vector gets to the destination vector.
          * @description Linear interpolate one vector to another by an amount `t` defined as a zero to one number.
          * @see [Matt DesLauriers](https://twitter.com/mattdesl/status/1031305279227478016) has a good thread about this.
@@ -777,10 +777,10 @@ declare module "two.js/src/matrix" {
         /**
          * @name Two.Matrix.Multiply
          * @function
-         * @param {Two.Matrix} A
-         * @param {Two.Matrix} B
-         * @param {Two.Matrix} [C] - An optional matrix to apply the multiplication to.
-         * @returns {Two.Matrix} - If an optional `C` matrix isn't passed then a new one is created and returned.
+         * @param {Matrix} A
+         * @param {Matrix} B
+         * @param {Matrix} [C] - An optional matrix to apply the multiplication to.
+         * @returns {Matrix} - If an optional `C` matrix isn't passed then a new one is created and returned.
          * @description Multiply two matrices together and return the result.
          */
         static Multiply(A: Matrix, B: Matrix, C?: Matrix): Matrix;
@@ -864,7 +864,7 @@ declare module "two.js/src/matrix" {
         /**
          * @name Two.Matrix#inverse
          * @function
-         * @param {Two.Matrix} [out] - The optional matrix to apply the inversion to.
+         * @param {Matrix} [out] - The optional matrix to apply the inversion to.
          * @description Return an inverted version of the matrix. If no optional one is passed a new matrix is created and returned.
          */
         inverse(out?: Matrix): any;
@@ -976,19 +976,19 @@ declare module "two.js/src/shape" {
         /**
          * @name Two.Shape#_matrix
          * @private
-         * @property {Two.Matrix} - The matrix value of the shape's position, rotation, and scale.
+         * @property {Matrix} - The matrix value of the shape's position, rotation, and scale.
          */
         private _matrix;
         /**
          * @name Two.Shape#_worldMatrix
          * @private
-         * @property {Two.Matrix} - The matrix value of the shape's position, rotation, and scale in the scene.
+         * @property {Matrix} - The matrix value of the shape's position, rotation, and scale in the scene.
          */
         private _worldMatrix;
         /**
          * @name Two.Shape#_position
          * @private
-         * @property {Two.Vector} - The translation values as a {@link Two.Vector}.
+         * @property {Vector} - The translation values as a {@link Two.Vector}.
          */
         private _position;
         /**
@@ -1000,7 +1000,7 @@ declare module "two.js/src/shape" {
         /**
          * @name Two.Shape#_scale
          * @private
-         * @property {Number|Two.Vector} - The scale value in Number. Can be a vector for non-uniform scaling.
+         * @property {Number|Vector} - The scale value in Number. Can be a vector for non-uniform scaling.
          */
         private _scale;
         /**
@@ -1024,20 +1024,20 @@ declare module "two.js/src/shape" {
         id: string;
         /**
          * @name Two.Shape#matrix
-         * @property {Two.Matrix}
+         * @property {Matrix}
          * @description The transformation matrix of the shape.
          * @nota-bene {@link Two.Shape#position}, {@link Two.Shape#rotation}, {@link Two.Shape#scale}, {@link Two.Shape#skewX}, and {@link Two.Shape#skewY} apply their values to the matrix when changed. The matrix is what is sent to the renderer to be drawn.
          */
         matrix: Matrix;
         /**
          * @name Two.Shape#worldMatrix
-         * @property {Two.Matrix}
+         * @property {Matrix}
          * @description The transformation matrix of the shape in the scene.
          */
         worldMatrix: Matrix;
         /**
          * @name Two.Shape#position
-         * @property {Two.Vector} - The x and y value for where the shape is placed relative to its parent.
+         * @property {Vector} - The x and y value for where the shape is placed relative to its parent.
          */
         position: Vector;
         /**
@@ -1074,7 +1074,7 @@ declare module "two.js/src/shape" {
         /**
          * @name Two.Shape#addTo
          * @function
-         * @param {Two.Group} group - The parent the shape adds itself to.
+         * @param {Group} group - The parent the shape adds itself to.
          * @description Convenience method to add itself to the scenegraph.
          */
         addTo(group: Group): Shape;
@@ -1087,8 +1087,8 @@ declare module "two.js/src/shape" {
         /**
          * @name Two.Shape#clone
          * @function
-         * @param {Two.Group} [parent] - Optional argument to automatically add the shape to a scenegraph.
-         * @returns {Two.Shape}
+         * @param {Group} [parent] - Optional argument to automatically add the shape to a scenegraph.
+         * @returns {Shape}
          * @description Create a new {@link Two.Shape} with the same values as the current shape.
          */
         clone(parent?: Group): Shape;
@@ -1151,14 +1151,14 @@ declare module "two.js/src/children" {
         /**
          * @function
          * @name Two.Group.Children#attach
-         * @param {Two.Shape[]} children - The objects which extend {@link Two.Shape} to be added.
+         * @param {Shape[]} children - The objects which extend {@link Two.Shape} to be added.
          * @description Adds elements to the `ids` map.
          */
         attach(children: Shape[]): Children;
         /**
          * @function
          * @name Two.Group.Children#detach
-         * @param {Two.Shape[]} children - The objects which extend {@link Two.Shape} to be removed.
+         * @param {Shape[]} children - The objects which extend {@link Two.Shape} to be removed.
          * @description Removes elements to the `ids` map.
          */
         detach(children: Shape[]): Children;
@@ -1171,7 +1171,7 @@ declare module "two.js/src/group" {
      * @name Two.Group
      * @class
 
-     * @param {Two.Shape[]} [children] - A list of objects that inherit {@link Two.Shape}. For instance, the array could be a {@link Two.Path}, {@link Two.Text}, and {@link Two.RoundedRectangle}.
+     * @param {Shape[]} [children] - A list of objects that inherit {@link Two.Shape}. For instance, the array could be a {@link Two.Path}, {@link Two.Text}, and {@link Two.RoundedRectangle}.
      * @description This is the primary class for grouping objects that are then drawn in Two.js. In Illustrator this is a group, in After Effects it would be a Null Object. Whichever the case, the `Two.Group` contains a transformation matrix and commands to style its children, but it by itself doesn't render to the screen.
      * @nota-bene The {@link Two#scene} is an instance of `Two.Group`.
      */
@@ -1180,14 +1180,14 @@ declare module "two.js/src/group" {
         /**
          * @name Two.Group.InsertChildren
          * @function
-         * @param {Two.Shape[]} children - The objects to be inserted.
+         * @param {Shape[]} children - The objects to be inserted.
          * @description Cached method to let renderers know children have been added to a {@link Two.Group}.
          */
         static InsertChildren(children: Shape[]): void;
         /**
          * @name Two.Group.RemoveChildren
          * @function
-         * @param {Two.Shape[]} children - The objects to be removed.
+         * @param {Shape[]} children - The objects to be removed.
          * @description Cached method to let renderers know children have been removed from a {@link Two.Group}.
          */
         static RemoveChildren(children: Shape[]): void;
@@ -1258,13 +1258,13 @@ declare module "two.js/src/group" {
         private _flagMask;
         /**
          * @name Two.Group#fill
-         * @property {(String|Two.Gradient|Two.Texture)} - The value of what all child shapes should be filled in with.
+         * @property {(String|Gradient|Texture)} - The value of what all child shapes should be filled in with.
          * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
          */
         _fill: string;
         /**
          * @name Two.Group#stroke
-         * @property {(String|Two.Gradient|Two.Texture)} - The value of what all child shapes should be outlined in with.
+         * @property {(String|Gradient|Texture)} - The value of what all child shapes should be outlined in with.
          * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
          */
         _stroke: string;
@@ -1339,24 +1339,24 @@ declare module "two.js/src/group" {
         _length: number;
         /**
          * @name Two.Group#mask
-         * @property {Two.Shape} - The Two.js object to clip from a group's rendering.
+         * @property {Shape} - The Two.js object to clip from a group's rendering.
          */
         _mask: any;
         /**
          * @name Two.Group#additions
-         * @property {Two.Shape[]}
+         * @property {Shape[]}
          * @description An automatically updated list of children that need to be appended to the renderer's scenegraph.
          */
         additions: any[];
         /**
          * @name Two.Group#subtractions
-         * @property {Two.Shape[]}
+         * @property {Shape[]}
          * @description An automatically updated list of children that need to be removed from the renderer's scenegraph.
          */
         subtractions: any[];
         /**
          * @name Two.Group#children
-         * @property {Two.Group.Children}
+         * @property {Group.Children}
          * @description A list of all the children in the scenegraph.
          * @nota-bene Ther order of this list indicates the order each element is rendered to the screen.
          */
@@ -1384,27 +1384,27 @@ declare module "two.js/src/group" {
          * @name Two.Group#getById
          * @function
          * @description Recursively search for id. Returns the first element found.
-         * @returns {Two.Shape} - Or `null` if nothing is found.
+         * @returns {Shape} - Or `null` if nothing is found.
          */
         getById(id: any): Shape;
         /**
          * @name Two.Group#getByClassName
          * @function
          * @description Recursively search for classes. Returns an array of matching elements.
-         * @returns {Two.Shape[]} - Or empty array if nothing is found.
+         * @returns {Shape[]} - Or empty array if nothing is found.
          */
         getByClassName(className: any): Shape[];
         /**
          * @name Two.Group#getByType
          * @function
          * @description Recursively search for children of a specific type, e.g. {@link Two.Path}. Pass a reference to this type as the param. Returns an array of matching elements.
-         * @returns {Two.Shape[]} - Empty array if nothing is found.
+         * @returns {Shape[]} - Empty array if nothing is found.
          */
         getByType(type: any): Shape[];
         /**
          * @name Two.Group#add
          * @function
-         * @param {Shape[]|...Shape} objects - An array of objects to be added. Can also be supplied as individual arguments.
+         * @param {Shape[]|...Two.Shape} objects - An array of objects to be added. Can also be supplied as individual arguments.
          * @description Add objects to the group.
          */
         add(objects: any, ...args: any[]): Group;
@@ -1505,7 +1505,7 @@ declare module "two.js/src/renderers/canvas" {
         overdraw: any;
         /**
          * @name Two.CanvasRenderer#scene
-         * @property {Two.Group} - The root group of the scenegraph.
+         * @property {Group} - The root group of the scenegraph.
          */
         scene: Group;
         /**
@@ -1597,7 +1597,7 @@ declare module "two.js/src/registry" {
 declare module "two.js/src/utils/shape" {
     /**
      * @private
-     * @param {Two.Path} path - The path to analyze against.
+     * @param {Path} path - The path to analyze against.
      * @param {Number} t -
      * @returns {Number}
      * @description
@@ -1605,7 +1605,7 @@ declare module "two.js/src/utils/shape" {
     export function contains(path: Path, t: number): number;
     /**
      * @private
-     * @param {Two.Path} path - The path to analyze against.
+     * @param {Path} path - The path to analyze against.
      * @param {Number} target - The target length at which to find an anchor.
      * @returns {Number}
      * @description Return the id of an anchor based on a target length.
@@ -1712,7 +1712,7 @@ declare module "two.js/src/effects/gradient" {
      * @name Two.Gradient
      * @class
 
-     * @param {Two.Stop[]} [stops] - A list of {@link Two.Stop}s that contain the gradient fill pattern for the gradient.
+     * @param {Stop[]} [stops] - A list of {@link Two.Stop}s that contain the gradient fill pattern for the gradient.
      * @description This is the base class for constructing different types of gradients with Two.js. The two common gradients are {@link Two.LinearGradient} and {@link Two.RadialGradient}.
      */
     export class Gradient extends Element {
@@ -1760,8 +1760,8 @@ declare module "two.js/src/effects/gradient" {
         /**
          * @name Two.Gradient#clone
          * @function
-         * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
-         * @returns {Two.Gradient}
+         * @param {Group} [parent] - The parent group or scene to add the clone to.
+         * @returns {Gradient}
          * @description Create a new instance of {@link Two.Gradient} with the same properties of the current path.
          */
         clone(parent?: Group): Gradient;
@@ -1795,7 +1795,7 @@ declare module "two.js/src/effects/linear-gradient" {
      * @param {Number} [y1=0] - The y position of the first end point of the linear gradient.
      * @param {Number} [x2=0] - The x position of the second end point of the linear gradient.
      * @param {Number} [y2=0] - The y position of the second end point of the linear gradient.
-     * @param {Two.Stop[]} [stops] - A list of {@link Two.Stop}s that contain the gradient fill pattern for the gradient.
+     * @param {Stop[]} [stops] - A list of {@link Two.Stop}s that contain the gradient fill pattern for the gradient.
      * @nota-bene The linear gradient lives within the space of the parent object's matrix space.
      */
     export class LinearGradient extends Gradient {
@@ -1810,12 +1810,12 @@ declare module "two.js/src/effects/linear-gradient" {
         _right: any;
         /**
          * @name Two.LinearGradient#left
-         * @property {Two.Vector} - The x and y value for where the first end point is placed on the canvas.
+         * @property {Vector} - The x and y value for where the first end point is placed on the canvas.
          */
         left: Vector;
         /**
          * @name Two.LinearGradient#right
-         * @property {Two.Vector} - The x and y value for where the second end point is placed on the canvas.
+         * @property {Vector} - The x and y value for where the second end point is placed on the canvas.
          */
         right: Vector;
     }
@@ -1831,7 +1831,7 @@ declare module "two.js/src/effects/radial-gradient" {
      * @param {Number} [x=0] - The x position of the origin of the radial gradient.
      * @param {Number} [y=0] - The y position of the origin of the radial gradient.
      * @param {Number} [radius=0] - The radius of the radial gradient.
-     * @param {Two.Stop[]} [stops] - A list of {@link Two.Stop}s that contain the gradient fill pattern for the gradient.
+     * @param {Stop[]} [stops] - A list of {@link Two.Stop}s that contain the gradient fill pattern for the gradient.
      * @param {Number} [focalX=0] - The x position of the focal point on the radial gradient.
      * @param {Number} [focalY=0] - The y position of the focal point on the radial gradient.
      * @nota-bene The radial gradient lives within the space of the parent object's matrix space.
@@ -1861,13 +1861,13 @@ declare module "two.js/src/effects/radial-gradient" {
         _focal: any;
         /**
          * @name Two.RadialGradient#center
-         * @property {Two.Vector} - The x and y value for where the origin of the radial gradient is.
+         * @property {Vector} - The x and y value for where the origin of the radial gradient is.
          */
         center: Vector;
         radius: number;
         /**
          * @name Two.RadialGradient#focal
-         * @property {Two.Vector} - The x and y value for where the focal point of the radial gradient is.
+         * @property {Vector} - The x and y value for where the focal point of the radial gradient is.
          * @nota-bene This effects the spray or spread of the radial gradient.
          */
         focal: Vector;
@@ -1902,7 +1902,7 @@ declare module "two.js/src/effects/texture" {
         };
         /**
          * @name Two.Texture.ImageRegistry
-         * @property {Two.Registry} - A canonical listing of image data used in a single session of Two.js.
+         * @property {Registry} - A canonical listing of image data used in a single session of Two.js.
          * @nota-bene This object is used to cache image data between different textures.
          */
         static ImageRegistry: Registry;
@@ -1916,7 +1916,7 @@ declare module "two.js/src/effects/texture" {
         /**
          * @name Two.Texture.loadHeadlessBuffer
          * @property {Function} - Loads an image as a buffer in headless environments.
-         * @param {Two.Texture} texture - The {@link Two.Texture} to be loaded.
+         * @param {Texture} texture - The {@link Two.Texture} to be loaded.
          * @param {Function} loaded - The callback function to be triggered once the image is loaded.
          * @nota-bene - This function uses node's `fs.readFileSync` to spoof the `<img />` loading process in the browser.
          */
@@ -1948,7 +1948,7 @@ declare module "two.js/src/effects/texture" {
         /**
          * @name Two.Texture.load
          * @function
-         * @param {Two.Texture} texture - The texture to load.
+         * @param {Texture} texture - The texture to load.
          * @param {Function} callback - The function to be called once the texture is loaded.
          */
         static load(texture: Texture, callback: Function): void;
@@ -2045,7 +2045,7 @@ declare module "two.js/src/effects/texture" {
         repeat: string;
         /**
          * @name Two.Texture#offset
-         * @property {Two.Vector} - A two-component vector describing any pixel offset of the texture when applied to a {@link Two.Path}.
+         * @property {Vector} - A two-component vector describing any pixel offset of the texture when applied to a {@link Two.Path}.
          */
         offset: Vector;
         src: string;
@@ -2058,7 +2058,7 @@ declare module "two.js/src/effects/texture" {
         /**
          * @name Two.Texture#clone
          * @function
-         * @returns {Two.Texture}
+         * @returns {Texture}
          * @description Create a new instance of {@link Two.Texture} with the same properties of the current texture.
          */
         clone(): Texture;
@@ -2088,7 +2088,7 @@ declare module "two.js/src/path" {
      * @name Two.Path
      * @class
 
-     * @param {Two.Anchor[]} [vertices] - A list of {@link Two.Anchor}s that represent the order and coordinates to construct the rendered shape.
+     * @param {Anchor[]} [vertices] - A list of {@link Two.Anchor}s that represent the order and coordinates to construct the rendered shape.
      * @param {Boolean} [closed=false] - Describes whether the shape is closed or open.
      * @param {Boolean} [curved=false] - Describes whether the shape automatically calculates bezier handles for each vertex.
      * @param {Boolean} [manual=false] - Describes whether the developer controls how vertices are plotted or if Two.js automatically plots coordinates based on closed and curved booleans.
@@ -2294,13 +2294,13 @@ declare module "two.js/src/path" {
         ending: number;
         /**
          * @name Two.Path#fill
-         * @property {(String|Two.Gradient|Two.Texture)} - The value of what the path should be filled in with.
+         * @property {(String|Gradient|Texture)} - The value of what the path should be filled in with.
          * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
          */
         fill: string;
         /**
          * @name Two.Path#stroke
-         * @property {(String|Two.Gradient|Two.Texture)} - The value of what the path should be outlined in with.
+         * @property {(String|Gradient|Texture)} - The value of what the path should be outlined in with.
          * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
          */
         stroke: string;
@@ -2347,7 +2347,7 @@ declare module "two.js/src/path" {
         miter: number;
         /**
          * @name Two.Path#vertices
-         * @property {Two.Anchor[]} - An ordered list of anchor points for rendering the path.
+         * @property {Anchor[]} - An ordered list of anchor points for rendering the path.
          * @description A list of {@link Two.Anchor} objects that consist of what form the path takes.
          * @nota-bene The array when manipulating is actually a {@link Two.Collection}.
          */
@@ -2407,7 +2407,7 @@ declare module "two.js/src/path" {
          * @name Two.Path#getPointAt
          * @function
          * @param {Boolean} t - Percentage value describing where on the {@link Two.Path} to estimate and assign coordinate values.
-         * @param {Two.Vector} [obj] - Object to apply calculated x, y to. If none available returns new `Object`.
+         * @param {Vector} [obj] - Object to apply calculated x, y to. If none available returns new `Object`.
          * @returns {Object}
          * @description Given a float `t` from 0 to 1, return a point or assign a passed `obj`'s coordinates to that percentage on this {@link Two.Path}'s curve.
          */
@@ -2546,7 +2546,7 @@ declare module "two.js/src/effects/sprite" {
      * @name Two.Sprite
      * @class
 
-     * @param {String|Two.Texture} [path] - The URL path or {@link Two.Texture} to be used as the bitmap data displayed on the sprite.
+     * @param {String|Texture} [path] - The URL path or {@link Two.Texture} to be used as the bitmap data displayed on the sprite.
      * @param {Number} [ox=0] - The initial `x` position of the Two.Sprite.
      * @param {Number} [oy=0] - The initial `y` position of the Two.Sprite.
      * @param {Number} [cols=1] - The number of columns the sprite contains.
@@ -2845,7 +2845,7 @@ declare module "two.js/src/text" {
      * @param {Number} [y=0] - The position in the y direction for the object.
      * @param {Object} [styles] - An object where styles are applied. Attribute must exist in Two.Text.Properties.
      * @description This is a primitive class for creating drawable text that can be added to the scenegraph.
-     * @returns {Two.Text}
+     * @returns {Text}
      */
     export class Text extends Shape {
         /**
@@ -3002,13 +3002,13 @@ declare module "two.js/src/text" {
         _decoration: string;
         /**
          * @name Two.Text#fill
-         * @property {(String|Two.Gradient|Two.Texture)} - The value of what the text object should be filled in with.
+         * @property {(String|Gradient|Texture)} - The value of what the text object should be filled in with.
          * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
          */
         _fill: string;
         /**
          * @name Two.Text#stroke
-         * @property {(String|Two.Gradient|Two.Texture)} - The value of what the text object should be filled in with.
+         * @property {(String|Gradient|Texture)} - The value of what the text object should be filled in with.
          * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
          */
         _stroke: string;
@@ -3031,13 +3031,13 @@ declare module "two.js/src/text" {
         _visible: boolean;
         /**
          * @name Two.Text#mask
-         * @property {Two.Shape} - The shape whose alpha property becomes a clipping area for the text.
+         * @property {Shape} - The shape whose alpha property becomes a clipping area for the text.
          * @nota-bene This property is currently not working becuase of SVG spec issues found here {@link https://code.google.com/p/chromium/issues/detail?id=370951}.
          */
         _mask: any;
         /**
          * @name Two.Text#clip
-         * @property {Two.Shape} - Object to define clipping area.
+         * @property {Shape} - Object to define clipping area.
          * @nota-bene This property is currently not working becuase of SVG spec issues found here {@link https://code.google.com/p/chromium/issues/detail?id=370951}.
          */
         _clip: boolean;
@@ -3140,7 +3140,7 @@ declare module "two.js/src/effects/image-sequence" {
      * @name Two.ImageSequence
      * @class
 
-     * @param {String|String[]|Two.Texture|Two.Texture[]} paths - A list of URLs or {@link Two.Texture}s.
+     * @param {String|String[]|Texture|Texture[]} paths - A list of URLs or {@link Two.Texture}s.
      * @param {Number} [ox=0] - The initial `x` position of the Two.ImageSequence.
      * @param {Number} [oy=0] - The initial `y` position of the Two.ImageSequence.
      * @param {Number} [frameRate=30] - The frame rate at which the images should playback at.
@@ -3337,7 +3337,7 @@ declare module "two.js/src/shapes/points" {
      * @name Two.Points
      * @class
 
-     * @param {Two.Vector[]} [vertices] - A list of {@link Two.Vector}s that represent the order and coordinates to construct a rendered set of points.
+     * @param {Vector[]} [vertices] - A list of {@link Two.Vector}s that represent the order and coordinates to construct a rendered set of points.
      * @description This is a primary primitive class for quickly and easily drawing points in Two.js. Unless specified methods return their instance of `Two.Points` for the purpose of chaining.
      */
     export class Points extends Shape {
@@ -3383,13 +3383,13 @@ declare module "two.js/src/shapes/points" {
         ending: number;
         /**
          * @name Two.Points#fill
-         * @property {(String|Two.Gradient|Two.Texture)} - The value of what the path should be filled in with.
+         * @property {(String|Gradient|Texture)} - The value of what the path should be filled in with.
          * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
          */
         fill: string;
         /**
          * @name Two.Points#stroke
-         * @property {(String|Two.Gradient|Two.Texture)} - The value of what the path should be outlined in with.
+         * @property {(String|Gradient|Texture)} - The value of what the path should be outlined in with.
          * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
          */
         stroke: string;
@@ -3407,7 +3407,7 @@ declare module "two.js/src/shapes/points" {
         visible: boolean;
         /**
          * @name Two.Points#vertices
-         * @property {Two.Vector[]} - An ordered list of vector points for rendering points.
+         * @property {Vector[]} - An ordered list of vector points for rendering points.
          * @description A list of {@link Two.Vector} objects that consist of which coordinates to draw points at.
          * @nota-bene The array when manipulating is actually a {@link Two.Collection}.
          */
@@ -3652,7 +3652,7 @@ declare module "two.js/src/renderers/svg" {
         domElement: any;
         /**
          * @name Two.SVGRenderer#scene
-         * @property {Two.Group} - The root group of the scenegraph.
+         * @property {Group} - The root group of the scenegraph.
          */
         scene: Group;
         /**
@@ -3776,7 +3776,7 @@ declare module "two.js/src/renderers/webgl" {
         domElement: any;
         /**
          * @name Two.WebGLRenderer#scene
-         * @property {Two.Group} - The root group of the scenegraph.
+         * @property {Group} - The root group of the scenegraph.
          */
         scene: Group;
         _renderer: {
@@ -3973,12 +3973,12 @@ declare module "two.js" {
         type: string;
         /**
          * @name Two#renderer
-         * @property {(Two.SVGRenderer|Two.CanvasRenderer|Two.WebGLRenderer)} - The instantiated rendering class for the instance. For a list of possible rendering types check out Two.Types.
+         * @property {(Two.SVGRenderer|CanvasRenderer|WebGLRenderer)} - The instantiated rendering class for the instance. For a list of possible rendering types check out Two.Types.
          */
         renderer: any;
         /**
          * @name Two#scene
-         * @property {Two.Group} - The base level {@link Two.Group} which houses all objects for the instance. Because it is a {@link Two.Group} transformations can be applied to it that will affect all objects in the instance. This is handy as a makeshift inverted camera.
+         * @property {Group} - The base level {@link Two.Group} which houses all objects for the instance. Because it is a {@link Two.Group} transformations can be applied to it that will affect all objects in the instance. This is handy as a makeshift inverted camera.
          */
         scene: any;
         /**
@@ -4081,7 +4081,7 @@ declare module "two.js" {
          * @param {Number} y1
          * @param {Number} x2
          * @param {Number} y2
-         * @returns {Two.Line}
+         * @returns {Line}
          * @description Creates a Two.js line and adds it to the scene.
          */
         makeLine(x1: number, y1: number, x2: number, y2: number): Line;
@@ -4092,7 +4092,7 @@ declare module "two.js" {
          * @param {Number} y1
          * @param {Number} x2
          * @param {Number} y2
-         * @returns {Two.Path}
+         * @returns {Path}
          * @description Creates a Two.js arrow and adds it to the scene.
          */
         makeArrow(x1: number, y1: number, x2: number, y2: number, size: number): Path;
@@ -4103,7 +4103,7 @@ declare module "two.js" {
          * @param {Number} y
          * @param {Number} width
          * @param {Number} height
-         * @returns {Two.Rectangle}
+         * @returns {Rectangle}
          * @description Creates a Two.js rectangle and adds it to the scene.
          */
         makeRectangle(x: number, y: number, width: number, height: number): Rectangle;
@@ -4115,7 +4115,7 @@ declare module "two.js" {
          * @param {Number} width
          * @param {Number} height
          * @param {Number} sides
-         * @returns {Two.Rectangle}
+         * @returns {Rectangle}
          * @description Creates a Two.js rounded rectangle and adds it to the scene.
          */
         makeRoundedRectangle(x: number, y: number, width: number, height: number, sides: number): Rectangle;
@@ -4126,7 +4126,7 @@ declare module "two.js" {
          * @param {Number} y
          * @param {Number} radius
          * @param {Number} [resolution=4]
-         * @returns {Two.Circle}
+         * @returns {Circle}
          * @description Creates a Two.js circle and adds it to the scene.
          */
         makeCircle(x: number, y: number, radius: number, resolution?: number): Circle;
@@ -4138,7 +4138,7 @@ declare module "two.js" {
          * @param {Number} rx
          * @param {Number} ry
          * @param {Number} [resolution=4]
-         * @returns {Two.Ellipse}
+         * @returns {Ellipse}
          * @description Creates a Two.js ellipse and adds it to the scene.
          */
         makeEllipse(x: number, y: number, rx: number, ry: number, resolution?: number): Ellipse;
@@ -4150,7 +4150,7 @@ declare module "two.js" {
          * @param {Number} outerRadius
          * @param {Number} innerRadius
          * @param {Number} sides
-         * @returns {Two.Star}
+         * @returns {Star}
          * @description Creates a Two.js star and adds it to the scene.
          */
         makeStar(x: any, y: any, outerRadius: number, innerRadius: number, sides: number): Star;
@@ -4159,7 +4159,7 @@ declare module "two.js" {
          * @function
          * @param {Anchor[]} [points] - An array of {@link Two.Anchor} points.
          * @param {...Number} - Alternatively you can pass alternating `x` / `y` coordinate values as individual arguments. These will be combined into {@link Two.Anchor}s for use in the path.
-         * @returns {Two.Path} - Where `path.curved` is set to `true`.
+         * @returns {Path} - Where `path.curved` is set to `true`.
          * @description Creates a Two.js path that is curved and adds it to the scene.
          * @nota-bene In either case of passing an array or passing numbered arguments the last argument is an optional `Boolean` that defines whether the path should be open or closed.
          */
@@ -4171,7 +4171,7 @@ declare module "two.js" {
          * @param {Number} y
          * @param {Number} radius
          * @param {Number} sides
-         * @returns {Two.Polygon}
+         * @returns {Polygon}
          * @description Creates a Two.js polygon and adds it to the scene.
          */
         makePolygon(x: number, y: number, radius: number, sides: number): Polygon;
@@ -4185,13 +4185,13 @@ declare module "two.js" {
          * @param {Number} startAngle
          * @param {Number} endAngle
          * @param {Number} [resolution=Two.Resolution] - The number of vertices that should comprise the arc segment.
-         * @returns {Two.ArcSegment}
+         * @returns {ArcSegment}
          */
         makeArcSegment(x: number, y: number, innerRadius: number, outerRadius: number, startAngle: number, endAngle: number, resolution?: number): ArcSegment;
         /**
          * @name Two#makePoints
          * @function
-         * @param {Two.Vector[]} [points] - An array of {@link Two.Vector} points
+         * @param {Vector[]} [points] - An array of {@link Two.Vector} points
          * @param {...Number} - Alternatively you can pass alternating `x` / `y` coordinate values as individual agrguments. These will be combined into {@link Two.Vector}s for use in the points object.
          * @returns {Points}
          * @description Creates a Two.js points object and adds it to the current scene.
@@ -4202,7 +4202,7 @@ declare module "two.js" {
          * @function
          * @param {Anchor[]} [points] - An array of {@link Two.Anchor} points
          * @param {...Number} - Alternatively you can pass alternating `x` / `y` coordinate values as individual arguments. These will be combined into {@link Two.Anchor}s for use in the path.
-         * @returns {Two.Path}
+         * @returns {Path}
          * @description Creates a Two.js path and adds it to the scene.
          * @nota-bene In either case of passing an array or passing numbered arguments the last argument is an optional `Boolean` that defines whether the path should be open or closed.
          */
@@ -4214,7 +4214,7 @@ declare module "two.js" {
          * @param {Number} x
          * @param {Number} y
          * @param {Object} [styles] - An object to describe any of the {@link Two.Text.Properties} including `fill`, `stroke`, `linewidth`, `family`, `alignment`, `leading`, `opacity`, etc..
-         * @returns {Two.Text}
+         * @returns {Text}
          * @description Creates a Two.js text object and adds it to the scene.
          */
         makeText(message: string, x: number, y: number, styles?: any): Text;
@@ -4244,26 +4244,26 @@ declare module "two.js" {
         /**
          * @name Two#makeSprite
          * @function
-         * @param {(String|Two.Texture)} pathOrTexture - The URL path to an image or an already created {@link Two.Texture}.
+         * @param {(String|Texture)} pathOrTexture - The URL path to an image or an already created {@link Two.Texture}.
          * @param {Number} x
          * @param {Number} y
          * @param {Number} [columns=1]
          * @param {Number} [rows=1]
          * @param {Number} [frameRate=0]
          * @param {Boolean} [autostart=false]
-         * @returns {Two.Sprite}
+         * @returns {Sprite}
          * @description Creates a Two.js sprite object and adds it to the scene. Sprites can be used for still images as well as animations.
          */
         makeSprite(pathOrTexture: any, x: number, y: number, columns?: number, rows?: number, frameRate?: number, autostart?: boolean): Sprite;
         /**
          * @name Two#makeImageSequence
          * @function
-         * @param {(String[]|Two.Texture[])} pathsOrTextures - An array of paths or of {@link Two.Textures}.
+         * @param {(String[]|Texture[])} pathsOrTextures - An array of paths or of {@link Two.Textures}.
          * @param {Number} x
          * @param {Number} y
          * @param {Number} [frameRate=0]
          * @param {Boolean} [autostart=false]
-         * @returns {Two.ImageSequence}
+         * @returns {ImageSequence}
          * @description Creates a Two.js image sequence object and adds it to the scene.
          */
         makeImageSequence(pathsOrTextures: any, x: number, y: number, frameRate?: number, autostart?: boolean): ImageSequence;
@@ -4290,7 +4290,7 @@ declare module "two.js" {
          * @param {SVGElement} svg - The SVG node to be parsed.
          * @param {Boolean} shallow - Don't create a top-most group but append all content directly.
          * @param {Boolean} [add=true] – Automatically add the reconstructed SVG node to scene.
-         * @returns {Two.Group}
+         * @returns {Group}
          * @description Interpret an SVG Node and add it to this instance's scene. The distinction should be made that this doesn't `import` svg's, it solely interprets them into something compatible for Two.js - this is slightly different than a direct transcription.
          */
         interpret(svg: SVGElement, shallow?: boolean, add?: boolean): Group;
@@ -4299,7 +4299,7 @@ declare module "two.js" {
          * @function
          * @param {String|SVGElement} pathOrSVGContent - The URL path of an SVG file or an SVG document as text.
          * @param {Function} callback - Function to call once loading has completed.
-         * @returns {Two.Group}
+         * @returns {Group}
          * @description Load an SVG file or SVG text and interpret it into Two.js legible objects.
          */
         load(pathOrSVGContent: any, callback: Function): Group;
@@ -4338,7 +4338,7 @@ declare module "two.js/extras/jsm/zui" {
     /**
      * @name Two.ZUI
      * @class
-     * @param {Two.Group} group - The scene or group to
+     * @param {Group} group - The scene or group to
      * @param {HTMLElement} [domElement=document.body] - The HTML Element to attach event listeners to.
      */
     export class ZUI {
