@@ -524,9 +524,8 @@ export default class Two {
    * @param {(Two.Shape[]|...Two.Shape)} [objects] - An array of Two.js objects. Alternatively can add objects as individual arguments.
    * @description A shorthand method to add specific Two.js objects to the scene.
    */
-  add(o) {
+  add(objects) {
 
-    let objects = o;
     if (!(objects instanceof Array)) {
       objects = Array.prototype.slice.call(arguments);
     }
@@ -542,9 +541,8 @@ export default class Two {
    * @param {(Two.Shape[]|...Two.Shape)} [objects] - An array of Two.js objects.
    * @description A shorthand method to remove specific Two.js objects from the scene.
    */
-  remove(o) {
+  remove(objects) {
 
-    let objects = o;
     if (!(objects instanceof Array)) {
       objects = Array.prototype.slice.call(arguments);
     }
@@ -720,9 +718,9 @@ export default class Two {
    * @returns {Two.Star}
    * @description Creates a Two.js star and adds it to the scene.
    */
-  makeStar(ox, oy, outerRadius, innerRadius, sides) {
+  makeStar(x, y, outerRadius, innerRadius, sides) {
 
-    const star = new Star(ox, oy, outerRadius, innerRadius, sides);
+    const star = new Star(x, y, outerRadius, innerRadius, sides);
     this.scene.add(star);
 
     return star;
@@ -798,8 +796,9 @@ export default class Two {
    * @param {Number} [resolution=Two.Resolution] - The number of vertices that should comprise the arc segment.
    * @returns {Two.ArcSegment}
    */
-  makeArcSegment(ox, oy, ir, or, sa, ea, res) {
-    const arcSegment = new ArcSegment(ox, oy, ir, or, sa, ea, res);
+  makeArcSegment(x, y, innerRadius, outerRadius, startAngle, endAngle, resolution) {
+    const arcSegment = new ArcSegment(
+      x, y, innerRadius, outerRadius, startAngle, endAngle, resolution);
     this.scene.add(arcSegment);
     return arcSegment;
   }
@@ -901,7 +900,7 @@ export default class Two {
    * @param {Number} y1
    * @param {Number} x2
    * @param {Number} y2
-   * @param {...Two.Stop} stops - Any number of color stops sometimes reffered to as ramp stops. If none are supplied then the default black-to-white two stop gradient is applied.
+   * @param {...Two.Stop} args - Any number of color stops sometimes reffered to as ramp stops. If none are supplied then the default black-to-white two stop gradient is applied.
    * @returns {Two.LinearGradient}
    * @description Creates a Two.js linear gradient and ads it to the scene. In the case of an effect it's added to an invisible "definitions" group.
    */
@@ -922,14 +921,14 @@ export default class Two {
    * @param {Number} x1
    * @param {Number} y1
    * @param {Number} radius
-   * @param {...Two.Stop} stops - Any number of color stops sometimes reffered to as ramp stops. If none are supplied then the default black-to-white two stop gradient is applied.
+   * @param {...Two.Stop} args - Any number of color stops sometimes reffered to as ramp stops. If none are supplied then the default black-to-white two stop gradient is applied.
    * @returns {Two.RadialGradient}
    * @description Creates a Two.js linear-gradient object and ads it to the scene. In the case of an effect it's added to an invisible "definitions" group.
    */
-  makeRadialGradient(x1, y1, r /* stops */) {
+  makeRadialGradient(x1, y1, radius /* stops */) {
 
     const stops = Array.prototype.slice.call(arguments, 3);
-    const gradient = new RadialGradient(x1, y1, r, stops);
+    const gradient = new RadialGradient(x1, y1, radius, stops);
 
     this.add(gradient);
 
@@ -950,9 +949,9 @@ export default class Two {
    * @returns {Two.Sprite}
    * @description Creates a Two.js sprite object and adds it to the scene. Sprites can be used for still images as well as animations.
    */
-  makeSprite(path, x, y, cols, rows, frameRate, autostart) {
+  makeSprite(pathOrTexture, x, y, columns, rows, frameRate, autostart) {
 
-    const sprite = new Sprite(path, x, y, cols, rows, frameRate);
+    const sprite = new Sprite(pathOrTexture, x, y, columns, rows, frameRate);
     if (autostart) {
       sprite.play();
     }
@@ -973,9 +972,9 @@ export default class Two {
    * @returns {Two.ImageSequence}
    * @description Creates a Two.js image sequence object and adds it to the scene.
    */
-  makeImageSequence(paths, x, y, frameRate, autostart) {
+  makeImageSequence(pathsOrTextures, x, y, frameRate, autostart) {
 
-    const imageSequence = new ImageSequence(paths, x, y, frameRate);
+    const imageSequence = new ImageSequence(pathsOrTextures, x, y, frameRate);
     if (autostart) {
       imageSequence.play();
     }
@@ -993,7 +992,7 @@ export default class Two {
    * @returns {Two.Texture}
    * @description Creates a Two.js texture object.
    */
-  makeTexture(path, callback) {
+  makeTexture(pathOrSource, callback) {
 
     const texture = new Texture(path, callback);
     return texture;
@@ -1007,9 +1006,8 @@ export default class Two {
    * @returns {Two.Group}
    * @description Creates a Two.js group object and adds it to the scene.
    */
-  makeGroup(o) {
+  makeGroup(objects) {
 
-    let objects = o;
     if (!(objects instanceof Array)) {
       objects = Array.prototype.slice.call(arguments);
     }
@@ -1025,15 +1023,15 @@ export default class Two {
   /**
    * @name Two#interpret
    * @function
-   * @param {SVGElement} SVGElement - The SVG node to be parsed.
+   * @param {SVGElement} svg - The SVG node to be parsed.
    * @param {Boolean} shallow - Don't create a top-most group but append all content directly.
    * @param {Boolean} [add=true] – Automatically add the reconstructed SVG node to scene.
    * @returns {Two.Group}
    * @description Interpret an SVG Node and add it to this instance's scene. The distinction should be made that this doesn't `import` svg's, it solely interprets them into something compatible for Two.js - this is slightly different than a direct transcription.
    */
-  interpret(SVGElement, shallow, add) {
+  interpret(svg, shallow, add) {
 
-    const tag = SVGElement.tagName.toLowerCase();
+    const tag = svg.tagName.toLowerCase();
 
     add = (typeof add !== 'undefined') ? add : true;
 
@@ -1041,7 +1039,7 @@ export default class Two {
       return null;
     }
 
-    const node = read[tag].call(this, SVGElement);
+    const node = read[tag].call(this, svg);
 
     if (add) {
       this.add(shallow && node instanceof Group ? node.children : node);
@@ -1063,7 +1061,7 @@ export default class Two {
    * @returns {Two.Group}
    * @description Load an SVG file or SVG text and interpret it into Two.js legible objects.
    */
-  load(text, callback) {
+  load(pathOrSVGContent, callback) {
 
     const group = new Group();
     let elem, i, child;
@@ -1088,15 +1086,15 @@ export default class Two {
 
     }).bind(this);
 
-    if (/\.svg$/i.test(text)) {
+    if (/\.svg$/i.test(pathOrSVGContent)) {
 
-      xhr(text, attach);
+      xhr(pathOrSVGContent, attach);
 
       return group;
 
     }
 
-    attach(text);
+    attach(pathOrSVGContent);
 
     return group;
 

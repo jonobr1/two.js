@@ -147,8 +147,8 @@ export class Vector extends Events {
   /**
    * @name Two.Vector.ratioBetween
    * @function
-   * @param {Two.Vector} A
-   * @param {Two.Vector} B
+   * @param {Two.Vector} v1
+   * @param {Two.Vector} v2
    * @returns {Number} The ratio betwen two points `v1` and `v2`.
    */
   static ratioBetween(v1, v2) {

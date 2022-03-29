@@ -250,7 +250,7 @@ export class Texture extends Element {
   /**
    * @name Two.Texture.getTag
    * @property {Function} - Retrieves the tag name of an image, video, or canvas node.
-   * @param {HTMLImageElement} - The image to infer the tag name from.
+   * @param {HTMLImageElement} image - The image to infer the tag name from.
    * @returns {String} - Returns the tag name of an image, video, or canvas node.
    */
   static getTag(image) {

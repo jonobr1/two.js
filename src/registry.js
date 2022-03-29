@@ -13,7 +13,7 @@ export class Registry {
    * @name Two.Registry#add
    * @function
    * @param {String} id - A unique identifier.
-   * @param value - Any type of variable to be registered to the directory.
+   * @param obj - Any type of variable to be registered to the directory.
    * @description Adds any value to the directory. Assigned by the `id`.
    */
   add(id, obj) {

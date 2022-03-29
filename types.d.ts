@@ -134,7 +134,7 @@ declare module "two.js/src/events" {
          * @name Two.Events#dispatchEvent
          * @function
          * @param {String} name - The name of the event to dispatch.
-         * @param arguments - Anything can be passed after the name and those will be passed on to handlers attached to the event in the order they are passed.
+         * @param args - Anything can be passed after the name and those will be passed on to handlers attached to the event in the order they are passed.
          * @description Call to trigger a custom event. Any additional arguments passed after the name will be passed along to the attached handlers.
          */
         dispatchEvent(name: string, ...args: any[]): Events;
@@ -186,8 +186,8 @@ declare module "two.js/src/vector" {
         /**
          * @name Two.Vector.ratioBetween
          * @function
-         * @param {Two.Vector} A
-         * @param {Two.Vector} B
+         * @param {Two.Vector} v1
+         * @param {Two.Vector} v2
          * @returns {Number} The ratio betwen two points `v1` and `v2`.
          */
         static ratioBetween(v1: any, v2: any): number;
@@ -1404,7 +1404,7 @@ declare module "two.js/src/group" {
         /**
          * @name Two.Group#add
          * @function
-         * @param {Two.Shape[]|...Two.Shape} objects - An array of objects to be added. Can be also be supplied as individual arguments.
+         * @param {Shape[]|...Shape} objects - An array of objects to be added. Can also be supplied as individual arguments.
          * @description Add objects to the group.
          */
         add(objects: any, ...args: any[]): Group;
@@ -1565,7 +1565,7 @@ declare module "two.js/src/registry" {
          * @name Two.Registry#add
          * @function
          * @param {String} id - A unique identifier.
-         * @param value - Any type of variable to be registered to the directory.
+         * @param obj - Any type of variable to be registered to the directory.
          * @description Adds any value to the directory. Assigned by the `id`.
          */
         add(id: string, obj: any): Registry;
@@ -1691,11 +1691,11 @@ declare module "two.js/src/effects/stop" {
         /**
          * @name Two.Stop#clone
          * @function
-         * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
-         * @returns {Two.Stop}
+         * @param {Gradient} [parent] - The parent group or scene to add the clone to.
+         * @returns {Stop}
          * @description Create a new instance of {@link Two.Stop} with the same properties of the current path.
          */
-        clone(): Stop;
+        clone(parent: Gradient): Stop;
         /**
          * @name Two.Stop#toObject
          * @function
@@ -1705,6 +1705,7 @@ declare module "two.js/src/effects/stop" {
         toObject(): any;
     }
     import { Element } from "two.js/src/element";
+    import { Gradient } from "two.js/src/effects/gradient";
 }
 declare module "two.js/src/effects/gradient" {
     /**
@@ -1923,7 +1924,7 @@ declare module "two.js/src/effects/texture" {
         /**
          * @name Two.Texture.getTag
          * @property {Function} - Retrieves the tag name of an image, video, or canvas node.
-         * @param {HTMLImageElement} - The image to infer the tag name from.
+         * @param {HTMLImageElement} image - The image to infer the tag name from.
          * @returns {String} - Returns the tag name of an image, video, or canvas node.
          */
         static getTag(image: any): string;
@@ -4052,17 +4053,17 @@ declare module "two.js" {
         /**
          * @name Two#add
          * @function
-         * @param {(Two.Shape[]|...Two.Shape)} [objects] - An array of Two.js objects. Alternatively can add objects as individual arguments.
+         * @param {(Shape[]|...Shape)} [objects] - An array of Two.js objects. Alternatively can add objects as individual arguments.
          * @description A shorthand method to add specific Two.js objects to the scene.
          */
-        add(o: any, ...args: any[]): Two;
+        add(objects: any, ...args: any[]): Two;
         /**
          * @name Two#remove
          * @function
-         * @param {(Two.Shape[]|...Two.Shape)} [objects] - An array of Two.js objects.
+         * @param {(Shape[]|...Shape)} [objects] - An array of Two.js objects.
          * @description A shorthand method to remove specific Two.js objects from the scene.
          */
-        remove(o: any, ...args: any[]): Two;
+        remove(objects: any, ...args: any[]): Two;
         /**
          * @name Two#clear
          * @function
@@ -4148,11 +4149,11 @@ declare module "two.js" {
          * @returns {Two.Star}
          * @description Creates a Two.js star and adds it to the scene.
          */
-        makeStar(ox: any, oy: any, outerRadius: number, innerRadius: number, sides: number): Star;
+        makeStar(x: any, y: any, outerRadius: number, innerRadius: number, sides: number): Star;
         /**
          * @name Two#makeCurve
          * @function
-         * @param {Two.Anchor[]} [points] - An array of {@link Two.Anchor} points.
+         * @param {Anchor[]} [points] - An array of {@link Two.Anchor} points.
          * @param {...Number} - Alternatively you can pass alternating `x` / `y` coordinate values as individual arguments. These will be combined into {@link Two.Anchor}s for use in the path.
          * @returns {Two.Path} - Where `path.curved` is set to `true`.
          * @description Creates a Two.js path that is curved and adds it to the scene.
@@ -4182,20 +4183,20 @@ declare module "two.js" {
          * @param {Number} [resolution=Two.Resolution] - The number of vertices that should comprise the arc segment.
          * @returns {Two.ArcSegment}
          */
-        makeArcSegment(ox: number, oy: number, ir: number, or: number, sa: number, ea: number, res?: number): ArcSegment;
+        makeArcSegment(x: number, y: number, innerRadius: number, outerRadius: number, startAngle: number, endAngle: number, resolution?: number): ArcSegment;
         /**
          * @name Two#makePoints
          * @function
          * @param {Two.Vector[]} [points] - An array of {@link Two.Vector} points
          * @param {...Number} - Alternatively you can pass alternating `x` / `y` coordinate values as individual agrguments. These will be combined into {@link Two.Vector}s for use in the points object.
-         * @returns {Two.Points}
+         * @returns {Points}
          * @description Creates a Two.js points object and adds it to the current scene.
          */
         makePoints(points?: Vector[], ...args: number[]): Points;
         /**
          * @name Two#makePath
          * @function
-         * @param {Two.Anchor[]} [points] - An array of {@link Two.Anchor} points
+         * @param {Anchor[]} [points] - An array of {@link Two.Anchor} points
          * @param {...Number} - Alternatively you can pass alternating `x` / `y` coordinate values as individual arguments. These will be combined into {@link Two.Anchor}s for use in the path.
          * @returns {Two.Path}
          * @description Creates a Two.js path and adds it to the scene.
@@ -4220,8 +4221,8 @@ declare module "two.js" {
          * @param {Number} y1
          * @param {Number} x2
          * @param {Number} y2
-         * @param {...Two.Stop} stops - Any number of color stops sometimes reffered to as ramp stops. If none are supplied then the default black-to-white two stop gradient is applied.
-         * @returns {Two.LinearGradient}
+         * @param {...Stop} args - Any number of color stops sometimes reffered to as ramp stops. If none are supplied then the default black-to-white two stop gradient is applied.
+         * @returns {LinearGradient}
          * @description Creates a Two.js linear gradient and ads it to the scene. In the case of an effect it's added to an invisible "definitions" group.
          */
         makeLinearGradient(x1: number, y1: number, x2: number, y2: number, ...args: Stop[]): LinearGradient;
@@ -4231,11 +4232,11 @@ declare module "two.js" {
          * @param {Number} x1
          * @param {Number} y1
          * @param {Number} radius
-         * @param {...Two.Stop} stops - Any number of color stops sometimes reffered to as ramp stops. If none are supplied then the default black-to-white two stop gradient is applied.
-         * @returns {Two.RadialGradient}
+         * @param {...Stop} args - Any number of color stops sometimes reffered to as ramp stops. If none are supplied then the default black-to-white two stop gradient is applied.
+         * @returns {RadialGradient}
          * @description Creates a Two.js linear-gradient object and ads it to the scene. In the case of an effect it's added to an invisible "definitions" group.
          */
-        makeRadialGradient(x1: number, y1: number, r: number, ...args: Stop[]): RadialGradient;
+        makeRadialGradient(x1: number, y1: number, radius: number, ...args: Stop[]): RadialGradient;
         /**
          * @name Two#makeSprite
          * @function
@@ -4249,7 +4250,7 @@ declare module "two.js" {
          * @returns {Two.Sprite}
          * @description Creates a Two.js sprite object and adds it to the scene. Sprites can be used for still images as well as animations.
          */
-        makeSprite(path: any, x: number, y: number, cols?: number, rows?: number, frameRate?: number, autostart?: boolean): Sprite;
+        makeSprite(pathOrTexture: any, x: number, y: number, columns?: number, rows?: number, frameRate?: number, autostart?: boolean): Sprite;
         /**
          * @name Two#makeImageSequence
          * @function
@@ -4261,28 +4262,28 @@ declare module "two.js" {
          * @returns {Two.ImageSequence}
          * @description Creates a Two.js image sequence object and adds it to the scene.
          */
-        makeImageSequence(paths: any, x: number, y: number, frameRate?: number, autostart?: boolean): ImageSequence;
+        makeImageSequence(pathsOrTextures: any, x: number, y: number, frameRate?: number, autostart?: boolean): ImageSequence;
         /**
          * @name Two#makeTexture
          * @function
          * @param {(String|HTMLImageElement|HTMLCanvasElement|HTMLVideoElement)} [pathOrSource] - The URL path to an image or a DOM image-like element.
          * @param {Function} [callback] - Function to be invoked when the image is loaded.
-         * @returns {Two.Texture}
+         * @returns {Texture}
          * @description Creates a Two.js texture object.
          */
-        makeTexture(path: any, callback?: Function): Texture;
+        makeTexture(pathOrSource: any, callback?: Function): Texture;
         /**
          * @name Two#makeGroup
          * @function
-         * @param {(Two.Shape[]|...Two.Shape)} [objects] - Two.js objects to be added to the group in the form of an array or as individual arguments.
-         * @returns {Two.Group}
+         * @param {(Shape[]|...Shape)} [objects] - Two.js objects to be added to the group in the form of an array or as individual arguments.
+         * @returns {Group}
          * @description Creates a Two.js group object and adds it to the scene.
          */
-        makeGroup(o: Element[], ...args: Element[]): Group;
+        makeGroup(objects: Element[], ...args: Element[]): Group;
         /**
          * @name Two#interpret
          * @function
-         * @param {SVGElement} SVGElement - The SVG node to be parsed.
+         * @param {SVGElement} svg - The SVG node to be parsed.
          * @param {Boolean} shallow - Don't create a top-most group but append all content directly.
          * @param {Boolean} [add=true] – Automatically add the reconstructed SVG node to scene.
          * @returns {Two.Group}
@@ -4297,7 +4298,7 @@ declare module "two.js" {
          * @returns {Two.Group}
          * @description Load an SVG file or SVG text and interpret it into Two.js legible objects.
          */
-        load(text: any, callback: Function): Group;
+        load(pathOrSVGContent: any, callback: Function): Group;
     }
     import { Line } from "two.js/src/shapes/line";
     import { Path } from "two.js/src/path";

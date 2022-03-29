@@ -108,7 +108,7 @@ export class Events {
    * @name Two.Events#dispatchEvent
    * @function
    * @param {String} name - The name of the event to dispatch.
-   * @param arguments - Anything can be passed after the name and those will be passed on to handlers attached to the event in the order they are passed.
+   * @param args - Anything can be passed after the name and those will be passed on to handlers attached to the event in the order they are passed.
    * @description Call to trigger a custom event. Any additional arguments passed after the name will be passed along to the attached handlers.
    */
   dispatchEvent(name) {

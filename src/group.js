@@ -473,7 +473,7 @@ export class Group extends Shape {
   /**
    * @name Two.Group#add
    * @function
-   * @param {Two.Shape[]|...Two.Shape} objects - An array of objects to be added. Can be also be supplied as individual arguments.
+   * @param {Two.Shape[]|...Two.Shape} objects - An array of objects to be added. Can also be supplied as individual arguments.
    * @description Add objects to the group.
    */
   add(objects) {
