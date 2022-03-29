@@ -103,17 +103,21 @@ export class Stop extends Element {
   /**
    * @name Two.Stop#clone
    * @function
-   * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+   * @param {Two.Gradient} [parent] - The parent gradient to add the clone to.
    * @returns {Two.Stop}
    * @description Create a new instance of {@link Two.Stop} with the same properties of the current path.
    */
-  clone() {
+  clone(parent) {
 
     const clone = new Stop();
 
     _.each(Stop.Properties, function(property) {
       clone[property] = this[property];
     }, this);
+
+    if (parent && parent.stops) {
+      parent.stops.push(clone);
+    }
 
     return clone;
 
