@@ -14,6 +14,7 @@ In output code `types.d.ts` do:
 7. Change all `"src/` references to `"two.js/src/`
 8. Change all `"extras/"` references to `"two.js/extras/`
 9. Fix all `constructor` methods to have proper argument ingestion
+  - Includes: `Two.Rectangle`, `Two.Circle`, `Two.Ellipse`, `Two.Line`, and `Two.Polygon`
 
 Things to do to improve TypeScript Types:
 

@@ -11,8 +11,8 @@ import { Vector } from '../vector.js';
  * @extends Two.Path
  * @param {Number} [x=0] - The x position of the rectangle.
  * @param {Number} [y=0] - The y position of the rectangle.
- * @param {Number} [width] - The width value of the rectangle.
- * @param {Number} [height] - The width value of the rectangle.
+ * @param {Number} [width=1] - The width value of the rectangle.
+ * @param {Number} [height=1] - The width value of the rectangle.
  */
 export class Rectangle extends Path {
 
@@ -36,19 +36,25 @@ export class Rectangle extends Path {
      * @name Two.Rectangle#width
      * @property {Number} - The size of the width of the rectangle.
      */
-    this.width = width;
+    this.width = typeof width === 'number' ? width : 1;
     /**
      * @name Two.Rectangle#height
      * @property {Number} - The size of the height of the rectangle.
      */
-    this.height = height;
+    this.height = typeof height === 'number' ? height : 1;
 
     /**
      * @name Two.Rectangle#origin
      * @property {Number} - A two-component vector describing the origin offset to draw the rectangle. Default is `0, 0`.
      */
     this.origin = new Vector();
-    this.translation.set(x, y);
+
+    if (typeof x === 'number') {
+      this.translation.x = x;
+    }
+    if (typeof y === 'number') {
+      this.translation.y = y;
+    }
 
     this._update();
 

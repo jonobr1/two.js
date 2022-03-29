@@ -56,7 +56,7 @@ export class RoundedRectangle extends Path {
    */
   _radius = 12;
 
-  constructor(ox, oy, width, height, radius) {
+  constructor(x, y, width, height, radius) {
 
     if (typeof radius === 'undefined' &&
       typeof width === 'number' && typeof height === 'number') {
@@ -109,7 +109,13 @@ export class RoundedRectangle extends Path {
     }
 
     this._update();
-    this.translation.set(ox, oy);
+
+    if (typeof x === 'number') {
+      this.translation.x = x;
+    }
+    if (typeof y === 'number') {
+      this.translation.y = y;
+    }
 
   }
 

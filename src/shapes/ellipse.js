@@ -44,7 +44,7 @@ export class Ellipse extends Path {
    */
   _height = 0;
 
-  constructor(ox, oy, rx, ry, resolution) {
+  constructor(x, y, rx, ry, resolution) {
 
     if (typeof ry !== 'number' && typeof rx === 'number') {
       ry = rx;
@@ -80,7 +80,13 @@ export class Ellipse extends Path {
     }
 
     this._update();
-    this.translation.set(ox, oy);
+
+    if (typeof x === 'number') {
+      this.translation.x = x;
+    }
+    if (typeof y === 'number') {
+      this.translation.y = y;
+    }
 
   }
 

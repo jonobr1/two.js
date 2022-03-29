@@ -994,7 +994,7 @@ export default class Two {
    */
   makeTexture(pathOrSource, callback) {
 
-    const texture = new Texture(path, callback);
+    const texture = new Texture(pathOrSource, callback);
     return texture;
 
   }

@@ -61,7 +61,7 @@ export class Polygon extends Path {
    */
   _sides = 0;
 
-  constructor(ox, oy, r, sides) {
+  constructor(x, y, radius, sides) {
 
     sides = Math.max(sides || 0, 3);
 
@@ -78,8 +78,8 @@ export class Polygon extends Path {
      * @name Two.Polygon#radius
      * @property {Number} - The radius value of the polygon.
      */
-    if (typeof r === 'number') {
-      this.radius = r;
+    if (typeof radius === 'number') {
+      this.radius = radius;
     }
 
     /**
@@ -103,10 +103,10 @@ export class Polygon extends Path {
     this._update();
 
     if (typeof ox === 'number') {
-      this.translation.x = ox;
+      this.translation.x = x;
     }
     if (typeof oy === 'number') {
-      this.translation.y = oy;
+      this.translation.y = y;
     }
 
   }

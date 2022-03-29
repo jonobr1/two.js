@@ -2492,10 +2492,11 @@ declare module "two.js/src/shapes/rectangle" {
 
      * @param {Number} [x=0] - The x position of the rectangle.
      * @param {Number} [y=0] - The y position of the rectangle.
-     * @param {Number} [width] - The width value of the rectangle.
-     * @param {Number} [height] - The width value of the rectangle.
+     * @param {Number} [width=1] - The width value of the rectangle.
+     * @param {Number} [height=1] - The width value of the rectangle.
      */
     export class Rectangle extends Path {
+        constructor(x?: number, y?: number, width?: number, height?: number);
         /**
          * @name Two.Rectangle#width
          * @property {Number} - The size of the width of the rectangle.
@@ -2715,6 +2716,7 @@ declare module "two.js/src/shapes/circle" {
          * @see {@link Two.Circle#radius}
          */
         private _radius;
+        constructor(x?: number, y?: number, radius?: number, resolution?:number);
         radius: number;
     }
     import { Path } from "two.js/src/path";
@@ -2731,7 +2733,7 @@ declare module "two.js/src/shapes/ellipse" {
      * @param {Number} [resolution=4] - The number of vertices used to construct the ellipse.
      */
     export class Ellipse extends Path {
-        constructor(ox?: number, oy?: number, rx?: number, ry?: number, resolution?: number);
+        constructor(x?: number, y?: number, rx?: number, ry?: number, resolution?: number);
         /**
          * @name Two.Ellipse#_flagWidth
          * @private
@@ -2772,6 +2774,7 @@ declare module "two.js/src/shapes/line" {
      * @param {Number} [y2=0] - The y position of the second vertex on the line.
      */
     export class Line extends Path {
+      constructor(x1?: number, y1?: number, x2?: number, y2?: number);
     }
     import { Path } from "two.js/src/path";
 }
@@ -2788,7 +2791,7 @@ declare module "two.js/src/shapes/rounded-rectangle" {
      * @param {Number} [resolution=12] - The number of vertices used to construct the rounded rectangle.
      */
     export class RoundedRectangle extends Path {
-        constructor(ox?: number, oy?: number, width?: number, height?: number, radius?: number);
+        constructor(x?: number, y?: number, width?: number, height?: number, radius?: number);
         /**
          * @name Two.RoundedRectangle#_flagWidth
          * @private
@@ -3522,6 +3525,7 @@ declare module "two.js/src/shapes/polygon" {
          * @see {@link Two.Polygon#sides}
          */
         private _sides;
+        constructor(x?: number, y?: number, radius?: number, sides?: number);
         closed: boolean;
         width: number;
         height: number;
