@@ -72,8 +72,8 @@ A list of properties that are on every [Two.Ellipse](/docs/shapes/ellipse/).
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/ellipse.js#L87">
-    ellipse.js:87
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/ellipse.js#L93">
+    ellipse.js:93
   </a>
 
 </div>
@@ -226,8 +226,8 @@ Create a new instance of [Two.Ellipse](/docs/shapes/ellipse/) with the same prop
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/ellipse.js#L158">
-    ellipse.js:158
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/ellipse.js#L164">
+    ellipse.js:164
   </a>
 
 </div>
@@ -279,8 +279,8 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/ellipse.js#L195">
-    ellipse.js:195
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/ellipse.js#L201">
+    ellipse.js:201
   </a>
 
 </div>

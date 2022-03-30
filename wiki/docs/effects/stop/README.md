@@ -300,7 +300,7 @@ __Returns__: Two.Stop
 
 | Argument | Description |
 | ---- | ----------- |
-|  parent  | The parent group or scene to add the clone to. |
+|  parent  | The parent gradient to add the clone to. |
 </div>
 
 
@@ -371,8 +371,8 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/stop.js#L122">
-    stop.js:122
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/stop.js#L126">
+    stop.js:126
   </a>
 
 </div>

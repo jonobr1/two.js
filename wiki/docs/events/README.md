@@ -378,7 +378,7 @@ Alias for [Two.Events.removeEventListener](/docs/events/#removeeventlistener).
 | Argument | Description |
 | ---- | ----------- |
 |  name  | The name of the event to dispatch. |
-|  arguments  | Anything can be passed after the name and those will be passed on to handlers attached to the event in the order they are passed. |
+|  args  | Anything can be passed after the name and those will be passed on to handlers attached to the event in the order they are passed. |
 </div>
 
 

@@ -1388,7 +1388,7 @@ __Returns__: Object
 | Argument | Description |
 | ---- | ----------- |
 |  t  | Percentage value describing where on the [Two.Path](/docs/path/) to estimate and assign coordinate values. |
-|  object  | Object to apply calculated x, y to. If none available returns new `Object`. |
+|  obj  | Object to apply calculated x, y to. If none available returns new `Object`. |
 </div>
 
 

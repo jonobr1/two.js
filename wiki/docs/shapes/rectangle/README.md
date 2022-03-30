@@ -71,8 +71,8 @@ A list of properties that are on every [Two.Rectangle](/docs/shapes/rectangle/).
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/rectangle.js#L57">
-    rectangle.js:57
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/rectangle.js#L63">
+    rectangle.js:63
   </a>
 
 </div>
@@ -272,8 +272,8 @@ Create a new instance of [Two.Rectangle](/docs/shapes/rectangle/) with the same 
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/rectangle.js#L142">
-    rectangle.js:142
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/rectangle.js#L148">
+    rectangle.js:148
   </a>
 
 </div>
@@ -325,8 +325,8 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/rectangle.js#L176">
-    rectangle.js:176
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/rectangle.js#L182">
+    rectangle.js:182
   </a>
 
 </div>

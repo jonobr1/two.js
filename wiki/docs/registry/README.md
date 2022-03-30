@@ -45,7 +45,7 @@ An arbitrary class to manage a directory of things. Mainly used for keeping tabs
 | Argument | Description |
 | ---- | ----------- |
 |  id  | A unique identifier. |
-|  value  | Any type of variable to be registered to the directory. |
+|  obj  | Any type of variable to be registered to the directory. |
 </div>
 
 

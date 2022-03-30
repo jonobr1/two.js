@@ -468,8 +468,8 @@ The ratio betwen two points `v1` and `v2`.
 
 | Argument | Description |
 | ---- | ----------- |
-|  A  |  |
-|  B  |  |
+|  v1  |  |
+|  v2  |  |
 </div>
 
 

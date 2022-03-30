@@ -354,7 +354,7 @@ Retrieves the tag name of an image, video, or canvas node.
 
 | Argument | Description |
 | ---- | ----------- |
-|  | The image to infer the tag name from. |
+|  image  | The image to infer the tag name from. |
 </div>
 
 

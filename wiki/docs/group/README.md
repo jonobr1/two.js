@@ -1575,7 +1575,7 @@ Recursively search for children of a specific type, e.g. [Two.Path](/docs/path/)
 
 | Argument | Description |
 | ---- | ----------- |
-|  objects  | An array of objects to be added. Can be also be supplied as individual arguments. |
+|  objects  | An array of objects to be added. Can also be supplied as individual arguments. |
 </div>
 
 
