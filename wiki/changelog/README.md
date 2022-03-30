@@ -11,7 +11,9 @@ All notable changes to this project will be documented in this file. The format 
 
 <carbon-ads />
 
-## Nightly
+## Mar 29, 2022 v0.8.4
+
+<h3 class="visible">Mar 29, 2022</h3><version-link v="v0.8.4" />
 
 + Added `Two.Gradient` parent parameter to `Two.Stop.clone`
 + ___Breaking___: Added export maps so extras are imported like so `import { ZUI } from 'two.js/extras/zui.js'`
