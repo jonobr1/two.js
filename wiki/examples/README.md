@@ -168,7 +168,7 @@ Various examples of how to use different features of Two.js with associated tags
 <example-card
   title="Basic GSAP Animation Setup"
   href="https://codepen.io/jonobr1/pen/YzYZgvq"
-  src="https://shots.codepen.io/jonobr1/pen/YzYZgvq-512.jpg"
+  src="https://assets.codepen.io/171564/internal/screenshots/pens/YzYZgvq.custom.png"
   tags="gsap, interactive, animated, rotation, interpret" />
 
 <example-card
