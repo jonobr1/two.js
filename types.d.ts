@@ -1261,87 +1261,87 @@ declare module "two.js/src/group" {
          * @property {(String|Gradient|Texture)} - The value of what all child shapes should be filled in with.
          * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
          */
-        _fill: string;
+        fill: string;
         /**
          * @name Two.Group#stroke
          * @property {(String|Gradient|Texture)} - The value of what all child shapes should be outlined in with.
          * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
          */
-        _stroke: string;
+        stroke: string;
         /**
          * @name Two.Group#linewidth
          * @property {Number} - The thickness in pixels of the stroke for all child shapes.
          */
-        _linewidth: number;
+        linewidth: number;
         /**
          * @name Two.Group#opacity
          * @property {Number} - The opaqueness of all child shapes.
          * @nota-bene Becomes multiplied by the individual child's opacity property.
          */
-        _opacity: number;
+        opacity: number;
         /**
          * @name Two.Group#visible
          * @property {Boolean} - Display the path or not.
          * @nota-bene For {@link Two.CanvasRenderer} and {@link Two.WebGLRenderer} when set to false all updating is disabled improving performance dramatically with many objects in the scene.
          */
-        _visible: boolean;
+        visible: boolean;
         /**
          * @name Two.Group#cap
          * @property {String}
          * @see {@link https://www.w3.org/TR/SVG11/painting.html#StrokeLinecapProperty}
          */
-        _cap: string;
+        cap: string;
         /**
          * @name Two.Group#join
          * @property {String}
          * @see {@link https://www.w3.org/TR/SVG11/painting.html#StrokeLinejoinProperty}
          */
-        _join: string;
+        join: string;
         /**
          * @name Two.Group#miter
          * @property {String}
          * @see {@link https://www.w3.org/TR/SVG11/painting.html#StrokeMiterlimitProperty}
          */
-        _miter: number;
+        miter: number;
         /**
          * @name Two.Group#closed
          * @property {Boolean} - Determines whether a final line is drawn between the final point in the `vertices` array and the first point of all child shapes.
          */
-        _closed: boolean;
+        closed: boolean;
         /**
          * @name Two.Group#curved
          * @property {Boolean} - When the child's path is `automatic = true` this boolean determines whether the lines between the points are curved or not.
          */
-        _curved: boolean;
+        curved: boolean;
         /**
          * @name Two.Group#automatic
          * @property {Boolean} - Determines whether or not Two.js should calculate curves, lines, and commands automatically for you or to let the developer manipulate them for themselves.
          */
-        _automatic: boolean;
+        automatic: boolean;
         /**
          * @name Two.Group#beginning
          * @property {Number} - Number between zero and one to state the beginning of where the path is rendered.
          * @description {@link Two.Group#beginning} is a percentage value that represents at what percentage into all child shapes should the renderer start drawing.
          * @nota-bene This is great for animating in and out stroked paths in conjunction with {@link Two.Group#ending}.
          */
-        _beginning: number;
+        beginning: number;
         /**
          * @name Two.Group#ending
          * @property {Number} - Number between zero and one to state the ending of where the path is rendered.
          * @description {@link Two.Group#ending} is a percentage value that represents at what percentage into all child shapes should the renderer start drawing.
          * @nota-bene This is great for animating in and out stroked paths in conjunction with {@link Two.Group#beginning}.
          */
-        _ending: number;
+        ending: number;
         /**
          * @name Two.Group#length
          * @property {Number} - The sum of distances between all child lengths.
          */
-        _length: number;
+        length: number;
         /**
          * @name Two.Group#mask
          * @property {Shape} - The Two.js object to clip from a group's rendering.
          */
-        _mask: any;
+        mask: any;
         /**
          * @name Two.Group#additions
          * @property {Shape[]}
@@ -1434,6 +1434,14 @@ declare module "two.js/src/group" {
          * @description Apply `subdivide` method to all child shapes.
          */
         subdivide(...args: any[]): Group;
+        /**
+         * @name Two.Group#clone
+         * @function
+         * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+         * @returns {Two.Group}
+         * @description Create a new instance of {@link Two.Group} with the same properties of the current group.
+         */
+        clone(parent?: Group): Group;
     }
     import { Shape } from "two.js/src/shape";
     import { Children } from "two.js/src/children";
