@@ -4166,12 +4166,13 @@ declare module "two.js" {
          * @name Two#makeCurve
          * @function
          * @param {Anchor[]} [points] - An array of {@link Two.Anchor} points.
+         * @param {Boolean} [opened=false] - By default the curve is a closed path. If you'd like the curve to be open, then pass `true`.
          * @param {...Number} - Alternatively you can pass alternating `x` / `y` coordinate values as individual arguments. These will be combined into {@link Two.Anchor}s for use in the path.
          * @returns {Path} - Where `path.curved` is set to `true`.
          * @description Creates a Two.js path that is curved and adds it to the scene.
          * @nota-bene In either case of passing an array or passing numbered arguments the last argument is an optional `Boolean` that defines whether the path should be open or closed.
          */
-        makeCurve(points?: Anchor[], ...args: number[]): Path;
+        makeCurve(points?: Anchor[], opened?: false, ...args: number[]): Path;
         /**
          * @name Two#makePolygon
          * @function
@@ -4209,12 +4210,13 @@ declare module "two.js" {
          * @name Two#makePath
          * @function
          * @param {Anchor[]} [points] - An array of {@link Two.Anchor} points
+         * @param {Boolean} [opened=false] - By default the returned object is a closed path. If you'd like the curve to be open, then pass `true`.
          * @param {...Number} - Alternatively you can pass alternating `x` / `y` coordinate values as individual arguments. These will be combined into {@link Two.Anchor}s for use in the path.
          * @returns {Path}
          * @description Creates a Two.js path and adds it to the scene.
          * @nota-bene In either case of passing an array or passing numbered arguments the last argument is an optional `Boolean` that defines whether the path should be open or closed.
          */
-        makePath(points?: Anchor[], ...args: number[]): Path;
+        makePath(points?: Anchor[], opened?: false, ...args: number[]): Path;
         /**
          * @name Two#makeText
          * @function
