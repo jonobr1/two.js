@@ -707,8 +707,8 @@ var Constants = {
     svg: "SVGRenderer",
     canvas: "CanvasRenderer"
   },
-  Version: "v0.8.4",
-  PublishDate: "2022-03-29T01:02:25.999Z",
+  Version: "v0.8.6",
+  PublishDate: "2022-04-27T00:08:13.425Z",
   Identifier: "two-",
   Resolution: 12,
   AutoCalculateImportedMatrices: true,
@@ -4385,12 +4385,16 @@ var _Path = class extends Shape {
           right = v;
           prev = this._collection[i - 1];
           if (prev && prev.controls) {
-            if (v.controls.relative) {
+            if (v.relative) {
               v.controls.right.clear();
             } else {
               v.controls.right.copy(v);
             }
-            this._renderer.collection[i - 1].controls.right.copy(prev).lerp(prev.controls.right, v.t);
+            if (prev.relative) {
+              this._renderer.collection[i - 1].controls.right.copy(prev.controls.right).lerp(Vector.zero, 1 - v.t);
+            } else {
+              this._renderer.collection[i - 1].controls.right.copy(prev.controls.right).lerp(prev, 1 - v.t);
+            }
           }
         } else if (i >= low && i <= high) {
           v = this._renderer.collection[i].copy(this._collection[i]);
