@@ -1022,15 +1022,21 @@ export class Path extends Shape {
           // of the in-between point
           if (prev && prev.controls) {
 
-            if (v.controls.relative) {
+            if (v.relative) {
               v.controls.right.clear();
             } else {
               v.controls.right.copy(v);
             }
 
-            this._renderer.collection[i - 1].controls.right
-              .copy(prev)
-              .lerp(prev.controls.right, v.t);
+            if (prev.relative) {
+              this._renderer.collection[i - 1].controls.right
+                .copy(prev.controls.right)
+                .lerp(Vector.zero, 1 - v.t);
+            } else {
+              this._renderer.collection[i - 1].controls.right
+                .copy(prev.controls.right)
+                .lerp(prev, 1 - v.t);
+            }
 
           }
 
