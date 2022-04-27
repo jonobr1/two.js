@@ -11,6 +11,10 @@ All notable changes to this project will be documented in this file. The format 
 
 <carbon-ads />
 
+## Nightly
+
++ Fixed `Two.Path.ending` when `Two.Path.curved = true`
+
 ## Mar 29, 2022 v0.8.4
 
 <h3 class="visible">Mar 29, 2022</h3><version-link v="v0.8.4" />
