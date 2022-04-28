@@ -18,7 +18,8 @@ declare module "two.js/src/utils/math" {
      * @returns {Object} An object containing relevant skew values.
      * @description Decompose a 2D 3x3 Matrix to find the skew.
      */
-    export function decomposeMatrix(matrix: Matrix, b: any, c: any, d: any, e: any, f: any, ...args: any[]): any;
+    export function decomposeMatrix(matrix: Matrix): any;
+    export function decomposeMatrix(a: number, b: number, c: number, d: number, e: number, f: number): any;
     /**
      * @name Two.Utils.getComputedMatrix
      * @function
@@ -182,7 +183,7 @@ declare module "two.js/src/vector" {
          * @function
          * @description Alias for {@link Two.Vector.sub}.
          */
-        static subtract(v1: any, v2: any): Vector;
+        static subtract(v1: Vector, v2: Vector): Vector;
         /**
          * @name Two.Vector.ratioBetween
          * @function
@@ -190,7 +191,7 @@ declare module "two.js/src/vector" {
          * @param {Vector} v2
          * @returns {Number} The ratio betwen two points `v1` and `v2`.
          */
-        static ratioBetween(v1: any, v2: any): number;
+        static ratioBetween(v1: Vector, v2: Vector): number;
         /**
          * @name Two.Vector.angleBetween
          * @function
@@ -198,7 +199,8 @@ declare module "two.js/src/vector" {
          * @param {Vector} v2
          * @returns {Number} The angle between points `v1` and `v2`.
          */
-        static angleBetween(v1: Vector, v2: Vector, ...args: any[]): number;
+        static angleBetween(v1: Vector, v2: Vector): number;
+        static angleBetween(x1: number, y1: number, x2: number, y2: number): number;
         /**
          * @name Two.Vector.distanceBetween
          * @function
@@ -238,7 +240,7 @@ declare module "two.js/src/vector" {
          * @type {Number}
          */
         y: number;
-        set(x: any, y: any): Vector;
+        set(x: number, y: number): Vector;
         /**
          * @name Two.Vector#copy
          * @function
@@ -265,6 +267,7 @@ declare module "two.js/src/vector" {
          * @description Add an object with x / y component values to the instance.
          * @overloaded
          */
+        add(v: Vector): Vector;
         /**
          * @name Two.Vector#add
          * @function
@@ -272,6 +275,7 @@ declare module "two.js/src/vector" {
          * @description Add the **same** number to both x / y component values of the instance.
          * @overloaded
          */
+        add(v: number): Vector;
         /**
          * @name Two.Vector#add
          * @function
@@ -280,13 +284,15 @@ declare module "two.js/src/vector" {
          * @description Add `x` / `y` values to their respective component value on the instance.
          * @overloaded
          */
-        add(x: number, y: number, ...args: any[]): Vector;
+        add(x: number, y: number): Vector;
         /**
          * @name Two.Vector#addSelf
          * @function
          * @description Alias for {@link Two.Vector.add}.
          */
-        addSelf(v: any, ...args: any[]): any;
+        addSelf(x: number, y: number): Vector;
+        addSelf(v: Vector): Vector;
+        addSelf(v: number): Vector;
         /**
          * @name Two.Vector#sub
          * @function
@@ -294,6 +300,7 @@ declare module "two.js/src/vector" {
          * @description Subtract an object with x / y component values to the instance.
          * @overloaded
          */
+        sub(v: Vector): Vector;
         /**
          * @name Two.Vector#sub
          * @function
@@ -301,6 +308,7 @@ declare module "two.js/src/vector" {
          * @description Subtract the **same** number to both x / y component values of the instance.
          * @overloaded
          */
+        sub(v: number): Vector;
         /**
          * @name Two.Vector#sub
          * @function
@@ -309,25 +317,31 @@ declare module "two.js/src/vector" {
          * @description Subtract `x` / `y` values to their respective component value on the instance.
          * @overloaded
          */
-        sub(x: number, y: number, ...args: any[]): Vector;
+        sub(x: number, y: number): Vector;
         /**
          * @name Two.Vector#subtract
          * @function
          * @description Alias for {@link Two.Vector.sub}.
          */
-        subtract(...args: any[]): any;
+        subtract(x: number, y: number): Vector;
+        subtract(v: number): Vector;
+        subtract(v: Vector): Vector;
         /**
          * @name Two.Vector#subSelf
          * @function
          * @description Alias for {@link Two.Vector.sub}.
          */
-        subSelf(v: any, ...args: any[]): any;
+        subSelf(x: number, y: number): Vector;
+        subSelf(v: number): Vector;
+        subSelf(v: Vector): Vector;
         /**
          * @name Two.Vector#subtractSelf
          * @function
          * @description Alias for {@link Two.Vector.sub}.
          */
-        subtractSelf(v: any, ...args: any[]): any;
+        subtractSelft(x: number, y: number): Vector;
+        subtractSelft(v: number): Vector;
+        subtractSelft(v: Vector): Vector;
         /**
          * @name Two.Vector#multiply
          * @function
@@ -335,6 +349,7 @@ declare module "two.js/src/vector" {
          * @description Multiply an object with x / y component values to the instance.
          * @overloaded
          */
+        multiply(v: number): Vector;
         /**
          * @name Two.Vector#multiply
          * @function
@@ -342,6 +357,7 @@ declare module "two.js/src/vector" {
          * @description Multiply the **same** number to both x / y component values of the instance.
          * @overloaded
          */
+        multiply(v: Vector): Vector;
         /**
          * @name Two.Vector#multiply
          * @function
@@ -350,7 +366,7 @@ declare module "two.js/src/vector" {
          * @description Multiply `x` / `y` values to their respective component value on the instance.
          * @overloaded
          */
-        multiply(x: number, y: number, ...args: any[]): Vector;
+        multiply(x: number, y: number): Vector;
         /**
          * @name Two.Vector#multiplySelf
          * @function
@@ -371,6 +387,7 @@ declare module "two.js/src/vector" {
          * @description Divide an object with x / y component values to the instance.
          * @overloaded
          */
+        divide(v: Vector): Vector;
         /**
          * @name Two.Vector#divide
          * @function
@@ -378,6 +395,7 @@ declare module "two.js/src/vector" {
          * @description Divide the **same** number to both x / y component values of the instance.
          * @overloaded
          */
+        divide(v: number): Vector;
         /**
          * @name Two.Vector#divide
          * @function
@@ -386,13 +404,15 @@ declare module "two.js/src/vector" {
          * @description Divide `x` / `y` values to their respective component value on the instance.
          * @overloaded
          */
-        divide(x: number, y: number, ...args: any[]): Vector;
+        divide(x: number, y: number): Vector;
         /**
          * @name Two.Vector#divideSelf
          * @function
          * @description Alias for {@link Two.Vector.divide}.
          */
-        divideSelf(v: any, ...args: any[]): any;
+        divideSelf(x: number, y: number): Vector;
+        divideSelf(v: number): Vector;
+        divideSelf(v: Vector): Vector;
         /**
          * @name Two.Vector#divideScalar
          * @function
@@ -412,7 +432,7 @@ declare module "two.js/src/vector" {
          * @returns {Number}
          * @description Get the [dot product](https://en.wikipedia.org/wiki/Dot_product) of the vector.
          */
-        dot(v: any): number;
+        dot(v: Vector): number;
         /**
          * @name Two.Vector#length
          * @function
@@ -446,7 +466,7 @@ declare module "two.js/src/vector" {
          * @returns {Number}
          * @description Get the distance between two vectors to the power of two. Widely used as less expensive than {@link Two.Vector#distanceTo} because it isn't square-rooting any numbers.
          */
-        distanceToSquared(v: any): number;
+        distanceToSquared(v: Vector): number;
         /**
          * @name Two.Vector#setLength
          * @function
@@ -784,12 +804,13 @@ declare module "two.js/src/matrix" {
          * @description Multiply two matrices together and return the result.
          */
         static Multiply(A: Matrix, B: Matrix, C?: Matrix): Matrix;
-        constructor(a?: number, b?: number, c?: number, d?: number, e?: number, f?: number, ...args: number[]);
+        constructor(elements: number[]);
+        constructor(a?: number, b?: number, c?: number, d?: number, e?: number, f?: number);
         /**
          * @name Two.Matrix#elements
          * @property {Number[]} - The underlying data stored as an array.
          */
-        elements: any;
+        elements: number[];
         /**
          * @name Two.Matrix#manual
          * @property {Boolean} - Determines whether Two.js automatically calculates the values for the matrix or if the developer intends to manage the matrix.
@@ -1142,7 +1163,8 @@ declare module "two.js/src/children" {
      * @description A children collection which is accesible both by index and by object `id`.
      */
     export class Children extends Collection {
-        constructor(children?: Element[], ...args: Element[]);
+        constructor(children?: Element[]);
+        constructor(...args: Element[]);
         /**
          * @name Two.Group.Children#ids
          * @property {Object} - Map of all elements in the list keyed by `id`s.
@@ -1202,7 +1224,8 @@ declare module "two.js/src/group" {
          * @property {String[]} - A list of properties that are on every {@link Two.Group}.
          */
         static Properties: string[];
-        constructor(children?: Element[], ...args: Element[]);
+        constructor(children?: Element[]);
+        constructor(...args: Element[]);
         /**
          * @name Two.Group#_flagAdditions
          * @private
@@ -1408,7 +1431,8 @@ declare module "two.js/src/group" {
          * @params {...Element} [args] - Alternatively pass shapes as each argument
          * @description Add objects to the group.
          */
-        add(objects: Element, ...args: Element[]): Group;
+        add(objects: Element): Group;
+        add(...args: Element[]): Group;
         /**
          * @name Two.Group#getBoundingClientRect
          * @function
@@ -1434,7 +1458,7 @@ declare module "two.js/src/group" {
          * @function
          * @description Apply `subdivide` method to all child shapes.
          */
-        subdivide(...args: any[]): Group;
+        subdivide(limit?: number): Group;
         /**
          * @name Two.Group#clone
          * @function
@@ -4067,18 +4091,30 @@ declare module "two.js" {
          * @name Two#add
          * @function
          * @param {Element[]} [objects] - An array of Two.js objects. Alternatively can add objects as individual arguments.
+         * @description A shorthand method to add specific Two.js objects to the scene.
+         */
+        add(objects: Element): Two;
+        /**
+         * @name Two#add
+         * @function
          * @param {...Element} [args] - Alternatively pass each shape as an argument
          * @description A shorthand method to add specific Two.js objects to the scene.
          */
-        add(objects: Element, ...args: Element[]): Two;
+        add(...args: Element[]): Two;
         /**
          * @name Two#remove
          * @function
          * @param {Element[]} [objects] - An array of Two.js objects.
+         * @description A shorthand method to remove specific Two.js objects from the scene.
+         */
+        remove(objects: Element): Two;
+        /**
+         * @name Two#remove
+         * @function
          * @param {...Element} [args] - Alternatively pass each shape as an argument
          * @description A shorthand method to remove specific Two.js objects from the scene.
          */
-        remove(objects: Element, ...args: Element[]): Two;
+        remove(...args: Element[]): Two;
         /**
          * @name Two#clear
          * @function
@@ -4169,12 +4205,20 @@ declare module "two.js" {
          * @name Two#makeCurve
          * @function
          * @param {Anchor[]} [points] - An array of {@link Two.Anchor} points.
+         * @returns {Path} - Where `path.curved` is set to `true`.
+         * @description Creates a Two.js path that is curved and adds it to the scene.
+         * @nota-bene In either case of passing an array or passing numbered arguments the last argument is an optional `Boolean` that defines whether the path should be open or closed.
+         */
+        makeCurve(points?: Anchor[]): Path;
+        /**
+         * @name Two#makeCurve
+         * @function
          * @param {...Number} [args] - Alternatively you can pass alternating `x` / `y` coordinate values as individual arguments. These will be combined into {@link Two.Anchor}s for use in the path.
          * @returns {Path} - Where `path.curved` is set to `true`.
          * @description Creates a Two.js path that is curved and adds it to the scene.
          * @nota-bene In either case of passing an array or passing numbered arguments the last argument is an optional `Boolean` that defines whether the path should be open or closed.
          */
-        makeCurve(points?: Anchor[], ...args: number[]): Path;
+        makeCurve(...args: number[]): Path;
         /**
          * @name Two#makePolygon
          * @function
@@ -4203,21 +4247,36 @@ declare module "two.js" {
          * @name Two#makePoints
          * @function
          * @param {Vector[]} [points] - An array of {@link Two.Vector} points
+         * @returns {Points}
+         * @description Creates a Two.js points object and adds it to the current scene.
+         */
+        makePoints(points?: Vector[]): Points;
+        /**
+         * @name Two#makePoints
+         * @function
          * @param {...Number} [args] - Alternatively you can pass alternating `x` / `y` coordinate values as individual agrguments. These will be combined into {@link Two.Vector}s for use in the points object.
          * @returns {Points}
          * @description Creates a Two.js points object and adds it to the current scene.
          */
-        makePoints(points?: Vector[], ...args: number[]): Points;
+        makePoints(...args: number[]): Points;
         /**
          * @name Two#makePath
          * @function
          * @param {Anchor[]} [points] - An array of {@link Two.Anchor} points
+         * @returns {Path}
+         * @description Creates a Two.js path and adds it to the scene.
+         * @nota-bene In either case of passing an array or passing numbered arguments the last argument is an optional `Boolean` that defines whether the path should be open or closed.
+         */
+        makePath(points?: Anchor[]): Path;
+        /**
+         * @name Two#makePath
+         * @function
          * @param {...Number} [args] - Alternatively you can pass alternating `x` / `y` coordinate values as individual arguments. These will be combined into {@link Two.Anchor}s for use in the path.
          * @returns {Path}
          * @description Creates a Two.js path and adds it to the scene.
          * @nota-bene In either case of passing an array or passing numbered arguments the last argument is an optional `Boolean` that defines whether the path should be open or closed.
          */
-        makePath(points?: Anchor[], ...args: number[]): Path;
+        makePath(...args: number[]): Path;
         /**
          * @name Two#makeText
          * @function
@@ -4291,11 +4350,18 @@ declare module "two.js" {
          * @name Two#makeGroup
          * @function
          * @param {Element[]} [objects] - Two.js objects to be added to the group in the form of an array or as individual arguments.
+         * @returns {Group}
+         * @description Creates a Two.js group object and adds it to the scene.
+         */
+        makeGroup(objects?: Element[]): Group;
+        /**
+         * @name Two#makeGroup
+         * @function
          * @param {...Element} [args] - Alternatively pass each element as an argument
          * @returns {Group}
          * @description Creates a Two.js group object and adds it to the scene.
          */
-        makeGroup(objects: Element[], ...args: Element[]): Group;
+        makeGroup(...args: Element[]): Group;
         /**
          * @name Two#interpret
          * @function
