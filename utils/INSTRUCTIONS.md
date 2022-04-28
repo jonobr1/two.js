@@ -16,6 +16,8 @@ In output code `types.d.ts` do:
 9. Fix all `constructor` methods to have proper argument ingestion
   - Includes: `Two.Rectangle`, `Two.Circle`, `Two.Ellipse`, `Two.Line`, and `Two.Polygon`
 10. Fix private property assignment on `Two.Group`. e.g: `_stroke` -> `stroke`
+  - Includes `Two.Text`
+11. Add optional overloaded functions to `Two.makeCurve` and `Two.makePath` for `closed` attribute
 
 Things to do to improve TypeScript Types:
 
