@@ -1404,10 +1404,11 @@ declare module "two.js/src/group" {
         /**
          * @name Two.Group#add
          * @function
-         * @param {Shape[]|...Two.Shape} objects - An array of objects to be added. Can also be supplied as individual arguments.
+         * @param {Element[]} objects - An array of objects to be added. Can also be supplied as individual arguments.
+         * @params {...Element} [args] - Alternatively pass shapes as each argument
          * @description Add objects to the group.
          */
-        add(objects: any, ...args: any[]): Group;
+        add(objects: Element, ...args: Element[]): Group;
         /**
          * @name Two.Group#getBoundingClientRect
          * @function
@@ -4065,17 +4066,19 @@ declare module "two.js" {
         /**
          * @name Two#add
          * @function
-         * @param {(Shape[]|...Shape)} [objects] - An array of Two.js objects. Alternatively can add objects as individual arguments.
+         * @param {Element[]} [objects] - An array of Two.js objects. Alternatively can add objects as individual arguments.
+         * @param {...Element} [args] - Alternatively pass each shape as an argument
          * @description A shorthand method to add specific Two.js objects to the scene.
          */
-        add(objects: any, ...args: any[]): Two;
+        add(objects: Element, ...args: Element[]): Two;
         /**
          * @name Two#remove
          * @function
-         * @param {(Shape[]|...Shape)} [objects] - An array of Two.js objects.
+         * @param {Element[]} [objects] - An array of Two.js objects.
+         * @param {...Element} [args] - Alternatively pass each shape as an argument
          * @description A shorthand method to remove specific Two.js objects from the scene.
          */
-        remove(objects: any, ...args: any[]): Two;
+        remove(objects: Element, ...args: Element[]): Two;
         /**
          * @name Two#clear
          * @function
@@ -4166,7 +4169,7 @@ declare module "two.js" {
          * @name Two#makeCurve
          * @function
          * @param {Anchor[]} [points] - An array of {@link Two.Anchor} points.
-         * @param {...Number} - Alternatively you can pass alternating `x` / `y` coordinate values as individual arguments. These will be combined into {@link Two.Anchor}s for use in the path.
+         * @param {...Number} [args] - Alternatively you can pass alternating `x` / `y` coordinate values as individual arguments. These will be combined into {@link Two.Anchor}s for use in the path.
          * @returns {Path} - Where `path.curved` is set to `true`.
          * @description Creates a Two.js path that is curved and adds it to the scene.
          * @nota-bene In either case of passing an array or passing numbered arguments the last argument is an optional `Boolean` that defines whether the path should be open or closed.
@@ -4200,7 +4203,7 @@ declare module "two.js" {
          * @name Two#makePoints
          * @function
          * @param {Vector[]} [points] - An array of {@link Two.Vector} points
-         * @param {...Number} - Alternatively you can pass alternating `x` / `y` coordinate values as individual agrguments. These will be combined into {@link Two.Vector}s for use in the points object.
+         * @param {...Number} [args] - Alternatively you can pass alternating `x` / `y` coordinate values as individual agrguments. These will be combined into {@link Two.Vector}s for use in the points object.
          * @returns {Points}
          * @description Creates a Two.js points object and adds it to the current scene.
          */
@@ -4209,7 +4212,7 @@ declare module "two.js" {
          * @name Two#makePath
          * @function
          * @param {Anchor[]} [points] - An array of {@link Two.Anchor} points
-         * @param {...Number} - Alternatively you can pass alternating `x` / `y` coordinate values as individual arguments. These will be combined into {@link Two.Anchor}s for use in the path.
+         * @param {...Number} [args] - Alternatively you can pass alternating `x` / `y` coordinate values as individual arguments. These will be combined into {@link Two.Anchor}s for use in the path.
          * @returns {Path}
          * @description Creates a Two.js path and adds it to the scene.
          * @nota-bene In either case of passing an array or passing numbered arguments the last argument is an optional `Boolean` that defines whether the path should be open or closed.
@@ -4287,7 +4290,8 @@ declare module "two.js" {
         /**
          * @name Two#makeGroup
          * @function
-         * @param {(Shape[]|...Shape)} [objects] - Two.js objects to be added to the group in the form of an array or as individual arguments.
+         * @param {Element[]} [objects] - Two.js objects to be added to the group in the form of an array or as individual arguments.
+         * @param {...Element} [args] - Alternatively pass each element as an argument
          * @returns {Group}
          * @description Creates a Two.js group object and adds it to the scene.
          */
