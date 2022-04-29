@@ -11,13 +11,18 @@ All notable changes to this project will be documented in this file. The format 
 
 <carbon-ads />
 
-## Nightly
+## Apr 29, 2022 v0.8.6
 
-+ Fixed `Two.Path.ending` when `Two.Path.curved = true`
+<h3 class="visible">Apr 29, 2022</h3><version-link v="v0.8.6" />
 
-## Mar 29, 2022 v0.8.4
++ Fixed documentation links
++ Made `Two.Group` and `Two.Text` properties public in TypeScript types
++ Added overloaded methods to TypeScript types
++ Fixed `Two.Path.ending` discrepancies when `Two.Path.curved = true`
 
-<h3 class="visible">Mar 29, 2022</h3><version-link v="v0.8.4" />
+## Mar 29, 2022 v0.8.5
+
+<h3 class="visible">Mar 29, 2022</h3><version-link v="v0.8.5" />
 
 + Added `Two.Gradient` parent parameter to `Two.Stop.clone`
 + ___Breaking___: Added export maps so extras are imported like so `import { ZUI } from 'two.js/extras/zui.js'`

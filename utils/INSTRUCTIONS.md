@@ -18,6 +18,7 @@ In output code `types.d.ts` do:
 10. Fix private property assignment on `Two.Group`. e.g: `_stroke` -> `stroke`
   - Includes `Two.Text`
 11. Add optional overloaded functions to `Two.makeCurve` and `Two.makePath` for `closed` attribute
+  - And other functions with `...` argument syntax
 
 Things to do to improve TypeScript Types:
 
