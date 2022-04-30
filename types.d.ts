@@ -4090,31 +4090,31 @@ declare module "two.js" {
         /**
          * @name Two#add
          * @function
-         * @param {Element[]} [objects] - An array of Two.js objects. Alternatively can add objects as individual arguments.
+         * @param {TwoElement[]} [objects] - An array of Two.js objects. Alternatively can add objects as individual arguments.
          * @description A shorthand method to add specific Two.js objects to the scene.
          */
-        add(objects: Element): Two;
+        add(objects: TwoElement): Two;
         /**
          * @name Two#add
          * @function
-         * @param {...Element} [args] - Alternatively pass each shape as an argument
+         * @param {...TwoElement} [args] - Alternatively pass each shape as an argument
          * @description A shorthand method to add specific Two.js objects to the scene.
          */
-        add(...args: Element[]): Two;
+        add(...args: TwoElement[]): Two;
         /**
          * @name Two#remove
          * @function
-         * @param {Element[]} [objects] - An array of Two.js objects.
+         * @param {TwoElement[]} [objects] - An array of Two.js objects.
          * @description A shorthand method to remove specific Two.js objects from the scene.
          */
-        remove(objects: Element): Two;
+        remove(objects: TwoElement): Two;
         /**
          * @name Two#remove
          * @function
-         * @param {...Element} [args] - Alternatively pass each shape as an argument
+         * @param {...TwoElement} [args] - Alternatively pass each shape as an argument
          * @description A shorthand method to remove specific Two.js objects from the scene.
          */
-        remove(...args: Element[]): Two;
+        remove(...args: TwoElement[]): Two;
         /**
          * @name Two#clear
          * @function
@@ -4349,19 +4349,19 @@ declare module "two.js" {
         /**
          * @name Two#makeGroup
          * @function
-         * @param {Element[]} [objects] - Two.js objects to be added to the group in the form of an array or as individual arguments.
+         * @param {TwoElement[]} [objects] - Two.js objects to be added to the group in the form of an array or as individual arguments.
          * @returns {Group}
          * @description Creates a Two.js group object and adds it to the scene.
          */
-        makeGroup(objects?: Element[]): Group;
+        makeGroup(objects?: TwoElement[]): Group;
         /**
          * @name Two#makeGroup
          * @function
-         * @param {...Element} [args] - Alternatively pass each element as an argument
+         * @param {...TwoElement} [args] - Alternatively pass each element as an argument
          * @returns {Group}
          * @description Creates a Two.js group object and adds it to the scene.
          */
-        makeGroup(...args: Element[]): Group;
+        makeGroup(...args: TwoElement[]): Group;
         /**
          * @name Two#interpret
          * @function
@@ -4411,6 +4411,7 @@ declare module "two.js" {
     import { Renderer as CanvasRenderer } from "two.js/src/renderers/canvas";
     import { Renderer as SVGRenderer } from "two.js/src/renderers/svg";
     import { Renderer as WebGLRenderer } from "two.js/src/renderers/webgl";
+    import { Element as TwoElement } from 'two.js/src/element'
 }
 declare module "two.js/extras/jsm/zui" {
     /**
