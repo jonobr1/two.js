@@ -4411,7 +4411,39 @@ declare module "two.js" {
     import { Renderer as CanvasRenderer } from "two.js/src/renderers/canvas";
     import { Renderer as SVGRenderer } from "two.js/src/renderers/svg";
     import { Renderer as WebGLRenderer } from "two.js/src/renderers/webgl";
-    import { Element as TwoElement } from 'two.js/src/element'
+    import { Element as TwoElement } from 'two.js/src/element';
+    export {
+      Line,
+      Path,
+      Rectangle,
+      Circle,
+      Ellipse,
+      Star,
+      Polygon,
+      ArcSegment,
+      Points,
+      Text,
+      LinearGradient,
+      RadialGradient,
+      Sprite,
+      ImageSequence,
+      Texture,
+      Group,
+      Anchor,
+      Collection,
+      Events,
+      Matrix,
+      Registry,
+      Shape,
+      Vector,
+      Gradient,
+      Stop,
+      RoundedRectangle,
+      CanvasRenderer,
+      SVGRenderer,
+      WebGLRenderer,
+      TwoElement as Element
+    };
 }
 declare module "two.js/extras/jsm/zui" {
     /**
