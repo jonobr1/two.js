@@ -11,9 +11,9 @@ All notable changes to this project will be documented in this file. The format 
 
 <carbon-ads />
 
-## Apr 29, 2022 v0.8.6
+## May 9, 2022 v0.8.7
 
-<h3 class="visible">Apr 29, 2022</h3><version-link v="v0.8.6" />
+<h3 class="visible">May 9, 2022</h3><version-link v="v0.8.7" />
 
 + Fixed documentation links
 + Made `Two.Group` and `Two.Text` properties public in TypeScript types

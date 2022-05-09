@@ -707,8 +707,8 @@ var Constants = {
     svg: "SVGRenderer",
     canvas: "CanvasRenderer"
   },
-  Version: "v0.8.6",
-  PublishDate: "2022-04-27T00:08:13.425Z",
+  Version: "v0.8.7",
+  PublishDate: "2022-05-09T17:14:19.407Z",
   Identifier: "two-",
   Resolution: 12,
   AutoCalculateImportedMatrices: true,
