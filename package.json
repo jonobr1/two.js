@@ -7,18 +7,6 @@
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
   },
-  "exports": {
-    "./package.json": "./package.json",
-    ".": {
-      "import": "./build/two.module.js",
-      "require": "./build/two.js"
-    },
-    "./src/*": "./src/*",
-    "./extras/*": {
-      "import": "./extras/jsm/*",
-      "require": "./extras/js/*"
-    }
-  },
   "files": [
     "package.json",
     "LICENSE",
