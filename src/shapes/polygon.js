@@ -102,10 +102,10 @@ export class Polygon extends Path {
 
     this._update();
 
-    if (typeof ox === 'number') {
+    if (typeof x === 'number') {
       this.translation.x = x;
     }
-    if (typeof oy === 'number') {
+    if (typeof y === 'number') {
       this.translation.y = y;
     }
 
