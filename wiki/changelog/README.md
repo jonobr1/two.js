@@ -11,6 +11,10 @@ All notable changes to this project will be documented in this file. The format 
 
 <carbon-ads />
 
+## Nightly
+
++ Made `/extras/js/zui.js` ES6 compliant
+
 ## May 9, 2022 v0.8.7
 
 <h3 class="visible">May 9, 2022</h3><version-link v="v0.8.7" />
