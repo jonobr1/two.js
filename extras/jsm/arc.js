@@ -1,8 +1,8 @@
-import { TWO_PI } from '../utils/math.js';
-import { Resolution } from '../src/constants.js';
+import { TWO_PI } from '../../src/utils/math.js';
+import { Constants } from '../../src/constants.js';
 
-import { Anchor } from '../src/anchor.js';
-import { Path } from '../src/path.js';
+import { Anchor } from '../../src/anchor.js';
+import { Path } from '../../src/path.js';
 
 const cos = Math.cos, sin = Math.sin;
 
@@ -33,7 +33,7 @@ export class Arc extends Path {
   constructor(x, y, width, height, startAngle, endAngle, resolution) {
 
     if (typeof resolution !== 'number') {
-      resolution = Resolution;
+      resolution = Constants.Resolution;
     }
 
     const points = [];
@@ -108,7 +108,7 @@ export class Arc extends Path {
     if (this._flagVertices || this._flagRadius || this._flagStartAngle
       || this._flagEndAngle) {
 
-      const { width, height, startAngle, endAngle, vertices } = this.vertices;
+      const { width, height, startAngle, endAngle, vertices } = this;
       const rx = width / 2;
       const ry = height / 2;
 

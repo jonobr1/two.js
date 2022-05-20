@@ -105,7 +105,7 @@
       if (this._flagVertices || this._flagRadius || this._flagStartAngle
         || this._flagEndAngle) {
 
-        const { width, height, startAngle, endAngle, vertices } = this.vertices;
+        const { width, height, startAngle, endAngle, vertices } = this;
         const rx = width / 2;
         const ry = height / 2;
 
