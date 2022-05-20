@@ -31,6 +31,7 @@ var sourceFiles = [
   'src/effects/sprite.js',
   'src/effects/image-sequence.js',
   'src/group.js',
+  'extras/jsm/arc.js',
   'extras/jsm/zui.js'
 ];
 
