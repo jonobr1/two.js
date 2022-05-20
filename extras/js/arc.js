@@ -4,7 +4,7 @@
   const cos = Math.cos, sin = Math.sin;
 
   /**
-   * @name Two.Circle
+   * @name Two.Arc
    * @class
    * @extends Two.Path
    * @param {Number} [x=0] - The x position of the arc.
@@ -90,6 +90,10 @@
 
     }
 
+    /**
+     * @name Two.Arc.Properties
+     * @property {String[]} - A list of properties that are on every {@link Two.Arc}.
+     */
     static Properties = ['width', 'height', 'startAngle', 'endAngle'];
 
     /**
