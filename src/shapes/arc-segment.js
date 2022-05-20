@@ -69,7 +69,7 @@ export class ArcSegment extends Path {
    */
   _outerRadius = 0;
 
-  constructor(ox, oy, ir, or, sa, ea, res) {
+  constructor(x, y, ir, or, sa, ea, res) {
 
     const amount = res || (Constants.Resolution * 3);
     const points = [];
@@ -117,11 +117,11 @@ export class ArcSegment extends Path {
 
     this._update();
 
-    if (typeof ox === 'number') {
-      this.translation.x = ox;
+    if (typeof x === 'number') {
+      this.translation.x = x;
     }
-    if (typeof oy === 'number') {
-      this.translation.y = oy;
+    if (typeof y === 'number') {
+      this.translation.y = y;
     }
 
   }
