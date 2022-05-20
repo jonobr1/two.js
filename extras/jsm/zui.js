@@ -35,6 +35,7 @@ class Surface {
  * @class
  * @param {Two.Group} group - The scene or group to
  * @param {HTMLElement} [domElement=document.body] - The HTML Element to attach event listeners to.
+ * @description {@link Two.ZUI} is an extra class to turn your Two.js scene into a Google Maps or Adobe Illustrator style interface. See {@link https://codepen.io/jonobr1/pen/PobMKwb} for example usage.
  */
 export class ZUI {
 
