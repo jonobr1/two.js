@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file. The format 
 
 + Added method documentation to `Two.ZUI`
 + Made `/extras/js/zui.js` ES6 compliant
++ Improved `types.d.ts`
 
 ## May 9, 2022 v0.8.7
 
