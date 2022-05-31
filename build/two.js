@@ -731,8 +731,8 @@ var Two = (() => {
       svg: "SVGRenderer",
       canvas: "CanvasRenderer"
     },
-    Version: "v0.8.7",
-    PublishDate: "2022-05-09T17:14:19.407Z",
+    Version: "v0.8.8",
+    PublishDate: "2022-05-31T23:13:22.429Z",
     Identifier: "two-",
     Resolution: 12,
     AutoCalculateImportedMatrices: true,
@@ -2992,7 +2992,7 @@ var Two = (() => {
     }
   };
   __publicField(Renderer, "Utils", canvas);
-  function renderArcEstimate(ctx, ox2, oy2, rx, ry, startAngle, endAngle, clockwise, xAxisRotation) {
+  function renderArcEstimate(ctx, ox, oy, rx, ry, startAngle, endAngle, clockwise, xAxisRotation) {
     const delta = endAngle - startAngle;
     const epsilon = Curve.Tolerance.epsilon;
     const samePoints = Math.abs(delta) < epsilon;
@@ -3014,15 +3014,15 @@ var Two = (() => {
     for (let i = 0; i < Constants.Resolution; i++) {
       const t = i / (Constants.Resolution - 1);
       const angle = startAngle + t * deltaAngle;
-      let x = ox2 + rx * Math.cos(angle);
-      let y = oy2 + ry * Math.sin(angle);
+      let x = ox + rx * Math.cos(angle);
+      let y = oy + ry * Math.sin(angle);
       if (xAxisRotation !== 0) {
         const cos7 = Math.cos(xAxisRotation);
         const sin7 = Math.sin(xAxisRotation);
-        const tx = x - ox2;
-        const ty = y - oy2;
-        x = tx * cos7 - ty * sin7 + ox2;
-        y = tx * sin7 + ty * cos7 + oy2;
+        const tx = x - ox;
+        const ty = y - oy;
+        x = tx * cos7 - ty * sin7 + ox;
+        y = tx * sin7 + ty * cos7 + oy;
       }
       ctx.lineTo(x, y);
     }
@@ -4018,8 +4018,8 @@ var Two = (() => {
       this._renderer.flagStroke = FlagStroke.bind(this);
       this._renderer.vertices = [];
       this._renderer.collection = [];
-      this._closed = !!closed2;
-      this._curved = !!curved;
+      this.closed = !!closed2;
+      this.curved = !!curved;
       this.beginning = 0;
       this.ending = 1;
       this.fill = "#fff";
@@ -4870,8 +4870,8 @@ var Two = (() => {
     _frameRate = 0;
     _index = 0;
     _origin = null;
-    constructor(path, ox2, oy2, cols, rows, frameRate) {
-      super(ox2, oy2, 0, 0);
+    constructor(path, ox, oy, cols, rows, frameRate) {
+      super(ox, oy, 0, 0);
       for (let prop in proto13) {
         Object.defineProperty(this, prop, proto13[prop]);
       }
@@ -4999,13 +4999,13 @@ var Two = (() => {
           }
           const col = this._index % cols;
           const row = Math.floor(this._index / cols);
-          const ox2 = -width * col + (iw - width) / 2;
-          const oy2 = -height * row + (ih - height) / 2;
-          if (ox2 !== effect.offset.x) {
-            effect.offset.x = ox2;
+          const ox = -width * col + (iw - width) / 2;
+          const oy = -height * row + (ih - height) / 2;
+          if (ox !== effect.offset.x) {
+            effect.offset.x = ox;
           }
-          if (oy2 !== effect.offset.y) {
-            effect.offset.y = oy2;
+          if (oy !== effect.offset.y) {
+            effect.offset.y = oy;
           }
         }
       }
@@ -5085,7 +5085,7 @@ var Two = (() => {
   var _Circle = class extends Path {
     _flagRadius = false;
     _radius = 0;
-    constructor(ox2, oy2, r, resolution) {
+    constructor(ox, oy, r, resolution) {
       const amount = resolution ? Math.max(resolution, 2) : 4;
       const points = [];
       for (let i = 0; i < amount; i++) {
@@ -5099,11 +5099,11 @@ var Two = (() => {
         this.radius = r;
       }
       this._update();
-      if (typeof ox2 === "number") {
-        this.translation.x = ox2;
+      if (typeof ox === "number") {
+        this.translation.x = ox;
       }
-      if (typeof oy2 === "number") {
-        this.translation.y = oy2;
+      if (typeof oy === "number") {
+        this.translation.y = oy;
       }
     }
     _update() {
@@ -6711,13 +6711,13 @@ var Two = (() => {
       let y1 = parseFloat(node.getAttribute("y1") || 0);
       let x2 = parseFloat(node.getAttribute("x2") || 0);
       let y2 = parseFloat(node.getAttribute("y2") || 0);
-      const ox2 = (x2 + x1) / 2;
-      const oy2 = (y2 + y1) / 2;
+      const ox = (x2 + x1) / 2;
+      const oy = (y2 + y1) / 2;
       if (/userSpaceOnUse/i.test(units)) {
-        x1 -= ox2;
-        y1 -= oy2;
-        x2 -= ox2;
-        y2 -= oy2;
+        x1 -= ox;
+        y1 -= oy;
+        x2 -= ox;
+        y2 -= oy;
       }
       const stops = [];
       for (let i = 0; i < node.children.length; i++) {
@@ -6769,13 +6769,13 @@ var Two = (() => {
       if (_.isNaN(fy)) {
         fy = cy;
       }
-      const ox2 = Math.abs(cx + fx) / 2;
-      const oy2 = Math.abs(cy + fy) / 2;
+      const ox = Math.abs(cx + fx) / 2;
+      const oy = Math.abs(cy + fy) / 2;
       if (/userSpaceOnUse/i.test(units)) {
-        cx -= ox2;
-        cy -= oy2;
-        fx -= ox2;
-        fy -= oy2;
+        cx -= ox;
+        cy -= oy;
+        fx -= ox;
+        fy -= oy;
       }
       const stops = [];
       for (let i = 0; i < node.children.length; i++) {
@@ -6876,8 +6876,8 @@ var Two = (() => {
     _textures = null;
     _frameRate = 0;
     _origin = null;
-    constructor(paths, ox2, oy2, frameRate) {
-      super(ox2, oy2, 0, 0);
+    constructor(paths, ox, oy, frameRate) {
+      super(ox, oy, 0, 0);
       for (let prop in proto19) {
         Object.defineProperty(this, prop, proto19[prop]);
       }
@@ -7101,7 +7101,7 @@ var Two = (() => {
     _endAngle = TWO_PI;
     _innerRadius = 0;
     _outerRadius = 0;
-    constructor(ox2, oy2, ir, or, sa, ea, res) {
+    constructor(x, y, ir, or, sa, ea, res) {
       const amount = res || Constants.Resolution * 3;
       const points = [];
       for (let i = 0; i < amount; i++) {
@@ -7124,11 +7124,11 @@ var Two = (() => {
         this.endAngle = ea;
       }
       this._update();
-      if (typeof ox2 === "number") {
-        this.translation.x = ox2;
+      if (typeof x === "number") {
+        this.translation.x = x;
       }
-      if (typeof oy2 === "number") {
-        this.translation.y = oy2;
+      if (typeof y === "number") {
+        this.translation.y = y;
       }
     }
     _update() {
@@ -7650,10 +7650,10 @@ var Two = (() => {
         this.sides = sides;
       }
       this._update();
-      if (typeof ox === "number") {
+      if (typeof x === "number") {
         this.translation.x = x;
       }
-      if (typeof oy === "number") {
+      if (typeof y === "number") {
         this.translation.y = y;
       }
     }
@@ -7775,7 +7775,7 @@ var Two = (() => {
     _innerRadius = 0;
     _outerRadius = 0;
     _sides = 0;
-    constructor(ox2, oy2, ir, or, sides) {
+    constructor(ox, oy, ir, or, sides) {
       if (arguments.length <= 3) {
         or = ir;
         ir = or / 2;
@@ -7799,11 +7799,11 @@ var Two = (() => {
         this.sides = sides;
       }
       this._update();
-      if (typeof ox2 === "number") {
-        this.translation.x = ox2;
+      if (typeof ox === "number") {
+        this.translation.x = ox;
       }
-      if (typeof oy2 === "number") {
-        this.translation.y = oy2;
+      if (typeof oy === "number") {
+        this.translation.y = oy;
       }
     }
     _update() {
