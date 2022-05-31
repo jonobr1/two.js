@@ -1071,7 +1071,7 @@ declare module "two.js/src/shape" {
          * @property {Number} - The value for how much the shape is scaled relative to its parent.
          * @nota-bene This value can be replaced with a {@link Two.Vector} to do non-uniform scaling. e.g: `shape.scale = new Two.Vector(2, 1);`
          */
-        scale: number;
+        scale: number|Vector;
         /**
          * @name Two.Shape#skewX
          * @property {Number} - The value in Number for how much the shape is skewed relative to its parent.
@@ -1086,12 +1086,12 @@ declare module "two.js/src/shape" {
         skewY: number;
         set renderer(arg: any);
         get renderer(): any;
-        set translation(arg: any);
+        set translation(arg: Vector);
         /**
          * @name Two.Shape#translation
          * @description Alias for {@link Two.Shape#position}.
          */
-        get translation(): any;
+        get translation(): Vector;
         /**
          * @name Two.Shape#addTo
          * @function
