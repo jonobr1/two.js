@@ -3480,25 +3480,25 @@ declare module "two.js/src/shapes/points" {
          * @function
          * @description Short hand method to set fill to `transparent`.
          */
-        noFill: () => Path;
+        noFill: () => Points;
         /**
          * @name Two.Points#noStroke
          * @function
          * @description Short hand method to set stroke to `transparent`.
          */
-        noStroke: () => Path;
+        noStroke: () => Points;
         /**
          * @name Two.Points#corner
          * @function
          * @description Orient the vertices of the shape to the upper left-hand corner of the points object.
          */
-        corner: () => Path;
+        corner: () => Points;
         /**
          * @name Two.Points#center
          * @function
          * @description Orient the vertices of the shape to the center of the points object.
          */
-        center: () => Path;
+        center: () => Points;
         /**
          * @name Two.Points#getBoundingClientRect
          * @function
