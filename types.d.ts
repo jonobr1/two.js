@@ -2408,7 +2408,7 @@ declare module "two.js/src/path" {
          * @description A list of numbers that represent the repeated dash length and dash space applied to the stroke of the text.
          * @see {@link https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray} for more information on the SVG stroke-dasharray attribute.
          */
-        dashes: any[];
+        dashes: number[];
         /**
          * @name Two.Path#toObject
          * @function
@@ -3104,7 +3104,7 @@ declare module "two.js/src/text" {
          * @description A list of numbers that represent the repeated dash length and dash space applied to the stroke of the text.
          * @see {@link https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray} for more information on the SVG stroke-dasharray attribute.
          */
-        dashes: any[];
+        dashes: number[];
         /**
          * @name Two.Text#toObject
          * @function
@@ -3467,7 +3467,7 @@ declare module "two.js/src/shapes/points" {
          * @description A list of numbers that represent the repeated dash length and dash space applied to the stroke of the text.
          * @see {@link https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray} for more information on the SVG stroke-dasharray attribute.
          */
-        dashes: any[];
+        dashes: number[];
         /**
          * @name Two.Points#toObject
          * @function
