@@ -11,7 +11,9 @@ All notable changes to this project will be documented in this file. The format 
 
 <carbon-ads />
 
-## Nightly
+## May 31, 2022 v0.8.8
+
+<h3 class="visible">May 31, 2022</h3><version-link v="v0.8.8" />
 
 + Added `Two.Arc` to `/extras` directory
 + Made `/extras/js/zui.js` ES6 compliant
