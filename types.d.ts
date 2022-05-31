@@ -1071,7 +1071,7 @@ declare module "two.js/src/shape" {
          * @property {Number} - The value for how much the shape is scaled relative to its parent.
          * @nota-bene This value can be replaced with a {@link Two.Vector} to do non-uniform scaling. e.g: `shape.scale = new Two.Vector(2, 1);`
          */
-        scale: number;
+        scale: number|Vector;
         /**
          * @name Two.Shape#skewX
          * @property {Number} - The value in Number for how much the shape is skewed relative to its parent.
@@ -1086,12 +1086,12 @@ declare module "two.js/src/shape" {
         skewY: number;
         set renderer(arg: any);
         get renderer(): any;
-        set translation(arg: any);
+        set translation(arg: Vector);
         /**
          * @name Two.Shape#translation
          * @description Alias for {@link Two.Shape#position}.
          */
-        get translation(): any;
+        get translation(): Vector;
         /**
          * @name Two.Shape#addTo
          * @function
@@ -1284,13 +1284,13 @@ declare module "two.js/src/group" {
          * @property {(String|Gradient|Texture)} - The value of what all child shapes should be filled in with.
          * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
          */
-        fill: string;
+        fill: string|Gradient|Texture;
         /**
          * @name Two.Group#stroke
          * @property {(String|Gradient|Texture)} - The value of what all child shapes should be outlined in with.
          * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
          */
-        stroke: string;
+        stroke: string|Gradient|Texture;
         /**
          * @name Two.Group#linewidth
          * @property {Number} - The thickness in pixels of the stroke for all child shapes.
@@ -1470,6 +1470,8 @@ declare module "two.js/src/group" {
     }
     import { Shape } from "two.js/src/shape";
     import { Children } from "two.js/src/children";
+    import { Gradient } from "two.js/src/effects/gradient";
+    import { Texture } from "two.js/src/effects/texture";
 }
 declare module "two.js/src/renderers/canvas" {
     /**
@@ -2312,6 +2314,16 @@ declare module "two.js/src/path" {
          */
         private _dashes;
         /**
+         * @name Two.Path#closed
+         * @property {Boolean} - Determines whether a final line is drawn between the final point in the `vertices` array and the first point.
+         */
+        closed: boolean;
+        /**
+         * @name Two.Path#curved
+         * @property {Boolean} - When the path is `automatic = true` this boolean determines whether the lines between the points are curved or not.
+         */
+        curved: boolean;
+        /**
          * @name Two.Path#beginning
          * @property {Number} - Number between zero and one to state the beginning of where the path is rendered.
          * @description {@link Two.Path#beginning} is a percentage value that represents at what percentage into the path should the renderer start drawing.
@@ -2330,13 +2342,13 @@ declare module "two.js/src/path" {
          * @property {(String|Gradient|Texture)} - The value of what the path should be filled in with.
          * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
          */
-        fill: string;
+        fill: string|Gradient|Texture;
         /**
          * @name Two.Path#stroke
          * @property {(String|Gradient|Texture)} - The value of what the path should be outlined in with.
          * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
          */
-        stroke: string;
+        stroke: string|Gradient|Texture;
         /**
          * @name Two.Path#linewidth
          * @property {Number} - The thickness in pixels of the stroke.
@@ -2396,7 +2408,7 @@ declare module "two.js/src/path" {
          * @description A list of numbers that represent the repeated dash length and dash space applied to the stroke of the text.
          * @see {@link https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray} for more information on the SVG stroke-dasharray attribute.
          */
-        dashes: any[];
+        dashes: number[];
         /**
          * @name Two.Path#toObject
          * @function
@@ -2472,6 +2484,8 @@ declare module "two.js/src/path" {
     }
     import { Anchor } from "two.js/src/anchor";
     import { Shape } from "two.js/src/shape";
+    import { Gradient } from "two.js/src/effects/gradient";
+    import { Texture } from "two.js/src/effects/texture";
     /**
      * @name FlagVertices
      * @private
@@ -3048,13 +3062,13 @@ declare module "two.js/src/text" {
          * @property {(String|Gradient|Texture)} - The value of what the text object should be filled in with.
          * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
          */
-        fill: string;
+        fill: string|Gradient|Texture;
         /**
          * @name Two.Text#stroke
          * @property {(String|Gradient|Texture)} - The value of what the text object should be filled in with.
          * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
          */
-        stroke: string;
+        stroke: string|Gradient|Texture;
         /**
          * @name Two.Text#linewidth
          * @property {Number} - The thickness in pixels of the stroke.
@@ -3090,7 +3104,7 @@ declare module "two.js/src/text" {
          * @description A list of numbers that represent the repeated dash length and dash space applied to the stroke of the text.
          * @see {@link https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray} for more information on the SVG stroke-dasharray attribute.
          */
-        dashes: any[];
+        dashes: number[];
         /**
          * @name Two.Text#toObject
          * @function
@@ -3120,6 +3134,8 @@ declare module "two.js/src/text" {
         getBoundingClientRect(shallow?: boolean): any;
     }
     import { Shape } from "two.js/src/shape";
+    import { Gradient } from "two.js/src/effects/gradient";
+    import { Texture } from "two.js/src/effects/texture";
 }
 declare module "two.js/src/utils/interpret-svg" {
     /**
@@ -3376,26 +3392,26 @@ declare module "two.js/src/shapes/points" {
     export class Points extends Shape {
         static Properties: string[];
         constructor(vertices?: any[]);
-        _flagVertices: boolean;
-        _flagLength: boolean;
-        _flagFill: boolean;
-        _flagStroke: boolean;
-        _flagLinewidth: boolean;
-        _flagOpacity: boolean;
-        _flagVisible: boolean;
-        _flagSize: boolean;
-        _flagSizeAttenuation: boolean;
-        _length: number;
-        _fill: string;
-        _stroke: string;
-        _linewidth: number;
-        _opacity: number;
-        _visible: boolean;
-        _size: number;
-        _sizeAttenuation: boolean;
-        _beginning: number;
-        _ending: number;
-        _dashes: any;
+        private _flagVertices;
+        private _flagLength;
+        private _flagFill;
+        private _flagStroke;
+        private _flagLinewidth;
+        private _flagOpacity;
+        private _flagVisible;
+        private _flagSize;
+        private _flagSizeAttenuation;
+        private _length;
+        private _fill;
+        private _stroke;
+        private _linewidth;
+        private _opacity;
+        private _visible;
+        private _size;
+        private _sizeAttenuation;
+        private _beginning;
+        private _ending;
+        private _dashes;
         /**
          * @name Two.Points#sizeAttenuation
          * @property {Boolean} - Boolean dictating whether Two.js should scale the size of the points based on its matrix hierarcy.
@@ -3419,13 +3435,13 @@ declare module "two.js/src/shapes/points" {
          * @property {(String|Gradient|Texture)} - The value of what the path should be filled in with.
          * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
          */
-        fill: string;
+        fill: string|Gradient|Texture;
         /**
          * @name Two.Points#stroke
          * @property {(String|Gradient|Texture)} - The value of what the path should be outlined in with.
          * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
          */
-        stroke: string;
+        stroke: string|Gradient|Texture;
         /**
          * @name Two.Points#className
          * @property {String} - A class to be applied to the element to be compatible with CSS styling.
@@ -3451,7 +3467,7 @@ declare module "two.js/src/shapes/points" {
          * @description A list of numbers that represent the repeated dash length and dash space applied to the stroke of the text.
          * @see {@link https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray} for more information on the SVG stroke-dasharray attribute.
          */
-        dashes: any[];
+        dashes: number[];
         /**
          * @name Two.Points#toObject
          * @function
@@ -3464,25 +3480,25 @@ declare module "two.js/src/shapes/points" {
          * @function
          * @description Short hand method to set fill to `transparent`.
          */
-        noFill: () => Path;
+        noFill: () => Points;
         /**
          * @name Two.Points#noStroke
          * @function
          * @description Short hand method to set stroke to `transparent`.
          */
-        noStroke: () => Path;
+        noStroke: () => Points;
         /**
          * @name Two.Points#corner
          * @function
          * @description Orient the vertices of the shape to the upper left-hand corner of the points object.
          */
-        corner: () => Path;
+        corner: () => Points;
         /**
          * @name Two.Points#center
          * @function
          * @description Orient the vertices of the shape to the center of the points object.
          */
-        center: () => Path;
+        center: () => Points;
         /**
          * @name Two.Points#getBoundingClientRect
          * @function
@@ -3509,7 +3525,8 @@ declare module "two.js/src/shapes/points" {
         private _updateLength;
     }
     import { Shape } from "two.js/src/shape";
-    import { Path } from "two.js/src/path";
+    import { Gradient } from "two.js/src/effects/gradient";
+    import { Texture } from "two.js/src/effects/texture";
 }
 declare module "two.js/src/shapes/polygon" {
     /**
