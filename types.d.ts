@@ -2312,6 +2312,16 @@ declare module "two.js/src/path" {
          */
         private _dashes;
         /**
+         * @name Two.Path#closed
+         * @property {Boolean} - Determines whether a final line is drawn between the final point in the `vertices` array and the first point.
+         */
+        closed: boolean;
+        /**
+         * @name Two.Path#curved
+         * @property {Boolean} - When the path is `automatic = true` this boolean determines whether the lines between the points are curved or not.
+         */
+        curved: boolean;
+        /**
          * @name Two.Path#beginning
          * @property {Number} - Number between zero and one to state the beginning of where the path is rendered.
          * @description {@link Two.Path#beginning} is a percentage value that represents at what percentage into the path should the renderer start drawing.
