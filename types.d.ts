@@ -1284,13 +1284,13 @@ declare module "two.js/src/group" {
          * @property {(String|Gradient|Texture)} - The value of what all child shapes should be filled in with.
          * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
          */
-        fill: string;
+        fill: string|Gradient|Texture;
         /**
          * @name Two.Group#stroke
          * @property {(String|Gradient|Texture)} - The value of what all child shapes should be outlined in with.
          * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
          */
-        stroke: string;
+        stroke: string|Gradient|Texture;
         /**
          * @name Two.Group#linewidth
          * @property {Number} - The thickness in pixels of the stroke for all child shapes.
@@ -1470,6 +1470,8 @@ declare module "two.js/src/group" {
     }
     import { Shape } from "two.js/src/shape";
     import { Children } from "two.js/src/children";
+    import { Gradient } from "two.js/src/effects/gradient";
+    import { Texture } from "two.js/src/effects/texture";
 }
 declare module "two.js/src/renderers/canvas" {
     /**
@@ -2340,13 +2342,13 @@ declare module "two.js/src/path" {
          * @property {(String|Gradient|Texture)} - The value of what the path should be filled in with.
          * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
          */
-        fill: string;
+        fill: string|Gradient|Texture;
         /**
          * @name Two.Path#stroke
          * @property {(String|Gradient|Texture)} - The value of what the path should be outlined in with.
          * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
          */
-        stroke: string;
+        stroke: string|Gradient|Texture;
         /**
          * @name Two.Path#linewidth
          * @property {Number} - The thickness in pixels of the stroke.
@@ -2482,6 +2484,8 @@ declare module "two.js/src/path" {
     }
     import { Anchor } from "two.js/src/anchor";
     import { Shape } from "two.js/src/shape";
+    import { Gradient } from "two.js/src/effects/gradient";
+    import { Texture } from "two.js/src/effects/texture";
     /**
      * @name FlagVertices
      * @private
@@ -3058,13 +3062,13 @@ declare module "two.js/src/text" {
          * @property {(String|Gradient|Texture)} - The value of what the text object should be filled in with.
          * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
          */
-        fill: string;
+        fill: string|Gradient|Texture;
         /**
          * @name Two.Text#stroke
          * @property {(String|Gradient|Texture)} - The value of what the text object should be filled in with.
          * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
          */
-        stroke: string;
+        stroke: string|Gradient|Texture;
         /**
          * @name Two.Text#linewidth
          * @property {Number} - The thickness in pixels of the stroke.
@@ -3130,6 +3134,8 @@ declare module "two.js/src/text" {
         getBoundingClientRect(shallow?: boolean): any;
     }
     import { Shape } from "two.js/src/shape";
+    import { Gradient } from "two.js/src/effects/gradient";
+    import { Texture } from "two.js/src/effects/texture";
 }
 declare module "two.js/src/utils/interpret-svg" {
     /**
@@ -3386,26 +3392,26 @@ declare module "two.js/src/shapes/points" {
     export class Points extends Shape {
         static Properties: string[];
         constructor(vertices?: any[]);
-        _flagVertices: boolean;
-        _flagLength: boolean;
-        _flagFill: boolean;
-        _flagStroke: boolean;
-        _flagLinewidth: boolean;
-        _flagOpacity: boolean;
-        _flagVisible: boolean;
-        _flagSize: boolean;
-        _flagSizeAttenuation: boolean;
-        _length: number;
-        _fill: string;
-        _stroke: string;
-        _linewidth: number;
-        _opacity: number;
-        _visible: boolean;
-        _size: number;
-        _sizeAttenuation: boolean;
-        _beginning: number;
-        _ending: number;
-        _dashes: any;
+        private _flagVertices;
+        private _flagLength;
+        private _flagFill;
+        private _flagStroke;
+        private _flagLinewidth;
+        private _flagOpacity;
+        private _flagVisible;
+        private _flagSize;
+        private _flagSizeAttenuation;
+        private _length;
+        private _fill;
+        private _stroke;
+        private _linewidth;
+        private _opacity;
+        private _visible;
+        private _size;
+        private _sizeAttenuation;
+        private _beginning;
+        private _ending;
+        private _dashes;
         /**
          * @name Two.Points#sizeAttenuation
          * @property {Boolean} - Boolean dictating whether Two.js should scale the size of the points based on its matrix hierarcy.
@@ -3429,13 +3435,13 @@ declare module "two.js/src/shapes/points" {
          * @property {(String|Gradient|Texture)} - The value of what the path should be filled in with.
          * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
          */
-        fill: string;
+        fill: string|Gradient|Texture;
         /**
          * @name Two.Points#stroke
          * @property {(String|Gradient|Texture)} - The value of what the path should be outlined in with.
          * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
          */
-        stroke: string;
+        stroke: string|Gradient|Texture;
         /**
          * @name Two.Points#className
          * @property {String} - A class to be applied to the element to be compatible with CSS styling.
@@ -3519,7 +3525,8 @@ declare module "two.js/src/shapes/points" {
         private _updateLength;
     }
     import { Shape } from "two.js/src/shape";
-    import { Path } from "two.js/src/path";
+    import { Gradient } from "two.js/src/effects/gradient";
+    import { Texture } from "two.js/src/effects/texture";
 }
 declare module "two.js/src/shapes/polygon" {
     /**
