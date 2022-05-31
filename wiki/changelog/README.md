@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file. The format 
 
 + Added `Two.Arc` to `/extras` directory
 + Made `/extras/js/zui.js` ES6 compliant
++ Removed `/extras` modules from generated documentation
 
 ## May 9, 2022 v0.8.7
 

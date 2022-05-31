@@ -30,9 +30,7 @@ var sourceFiles = [
   'src/effects/texture.js',
   'src/effects/sprite.js',
   'src/effects/image-sequence.js',
-  'src/group.js',
-  'extras/jsm/arc.js',
-  'extras/jsm/zui.js'
+  'src/group.js'
 ];
 
 if (typeof module != 'undefined' && module.exports) {
