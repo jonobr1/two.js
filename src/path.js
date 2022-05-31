@@ -261,13 +261,13 @@ export class Path extends Shape {
      * @name Two.Path#closed
      * @property {Boolean} - Determines whether a final line is drawn between the final point in the `vertices` array and the first point.
      */
-    this._closed = !!closed;
+    this.closed = !!closed;
 
     /**
      * @name Two.Path#curved
      * @property {Boolean} - When the path is `automatic = true` this boolean determines whether the lines between the points are curved or not.
      */
-    this._curved = !!curved;
+    this.curved = !!curved;
 
     /**
      * @name Two.Path#beginning

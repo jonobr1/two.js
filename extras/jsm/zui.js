@@ -35,6 +35,7 @@ class Surface {
  * @class
  * @param {Two.Group} group - The scene or group to
  * @param {HTMLElement} [domElement=document.body] - The HTML Element to attach event listeners to.
+ * @description {@link Two.ZUI} is an extra class to turn your Two.js scene into a Google Maps or Adobe Illustrator style interface. See {@link https://codepen.io/jonobr1/pen/PobMKwb} for example usage.
  */
 export class ZUI {
 
@@ -104,15 +105,19 @@ export class ZUI {
     return this;
   }
 
-  addLimits(min, max, type) {
-
-    type = type || 'scale';
+  /**
+   * @name Two.ZUI#addLimits
+   * @function
+   * @param {Number} [min=-Infinity] - The minimum scale the ZUI can zoom out to.
+   * @param {Number} [max=Infinity] - The maximum scale teh ZUI can zoom in to.
+   */
+  addLimits(min, max) {
 
     if (typeof min !== 'undefined') {
-      if (this.limits[type].min) {
-        this.limits[type].min = Math.max(min, this.limits[type].min);
+      if (this.limits.scale.min) {
+        this.limits.scale.min = Math.max(min, this.limits.scale.min);
       } else {
-        this.limits[type].min = min;
+        this.limits.scale.min = min;
       }
     }
 
@@ -120,16 +125,24 @@ export class ZUI {
       return this;
     }
 
-    if (this.limits[type].max) {
-      this.limits[type].max = Math.min(max, this.limits[type].max);
+    if (this.limits.scale.max) {
+      this.limits.scale.max = Math.min(max, this.limits.scale.max);
     } else {
-      this.limits[type].max = max;
+      this.limits.scale.max = max;
     }
 
     return this;
 
   }
 
+  /**
+   * @name Two.ZUI#clientToSurface
+   * @function
+   * @param {Number} x - The x position of the user's input.
+   * @param {Number} y - The y position of the user's input.
+   * @returns {Two.Vector}
+   * @description Convert an x, y coordinate in user space into projected space.
+   */
   clientToSurface(x, y) {
     this.updateOffset();
     const m = this.surfaceMatrix.inverse();
@@ -137,6 +150,12 @@ export class ZUI {
     return m.multiply.apply(m, [n.x, n.y, n.z]);
   }
 
+  /**
+   * @name Two.ZUI#surfaceToClient
+   * @function
+   * @param {Two.Vector}
+   * @description Convert an x, y coordinate in projected space to the user's space.
+   */
   surfaceToClient(v) {
     this.updateOffset();
     const vo = this.viewportOffset.matrix.clone();
@@ -144,12 +163,28 @@ export class ZUI {
     return vo.multiply.apply(vo, [sm.x, sm.y, sm.z]);
   }
 
+  /**
+   * @name Two.ZUI#zoomBy
+   * @function
+   * @param {Number} byF - The factor to scale by.
+   * @param {Number} clientX - The x position of the user's input.
+   * @param {Number} clientY - The y position of the user's input.
+   * @description A function to zoom by an incremental amount and a position. Typically used for pinch-and-zoom or mousewheel effects.
+   */
   zoomBy(byF, clientX, clientY) {
     const s = ZUI.PositionToScale(this.zoom + byF);
     this.zoomSet(s, clientX, clientY);
     return this;
   }
 
+  /**
+   * @name Two.ZUI#zoomSet
+   * @function
+   * @param {Number} zoom - The level of the zoom.
+   * @param {Number} clientX - The x position of the user's input.
+   * @param {Number} clientY - The y position of the user's input.
+   * @description A function to set the zoom amount and the origin position. This is used internally by {@Two.ZUI#zoomBy}.
+   */
   zoomSet(zoom, clientX, clientY) {
 
     const newScale = this.fitToLimits(zoom);
@@ -174,6 +209,13 @@ export class ZUI {
 
   }
 
+  /**
+   * @name Two.ZUI#translateSurface
+   * @function
+   * @param {Number} x - The x amount to pan.
+   * @param {Number} y - The y amount to pan.
+   * @description Set the position of the ZUI by an incremental translation amount.
+   */
   translateSurface(x, y) {
     ZUI.TranslateMatrix(this.surfaceMatrix, x, y);
     this.updateSurface();
@@ -206,6 +248,11 @@ export class ZUI {
 
   }
 
+  /**
+   * @name Two.ZUI#reset
+   * @function
+   * @description Reset the zoom and scale factors to their original instantiated state.
+   */
   reset() {
     this.zoom = 0;
     this.scale = 1.0;

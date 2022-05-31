@@ -104,15 +104,13 @@
       return this;
     }
 
-    addLimits(min, max, type) {
-
-      type = type || 'scale';
+    addLimits(min, max) {
 
       if (typeof min !== 'undefined') {
-        if (this.limits[type].min) {
-          this.limits[type].min = Math.max(min, this.limits[type].min);
+        if (this.limits.scale.min) {
+          this.limits.scale.min = Math.max(min, this.limits.scale.min);
         } else {
-          this.limits[type].min = min;
+          this.limits.scale.min = min;
         }
       }
 
@@ -120,10 +118,10 @@
         return this;
       }
 
-      if (this.limits[type].max) {
-        this.limits[type].max = Math.min(max, this.limits[type].max);
+      if (this.limits.scale.max) {
+        this.limits.scale.max = Math.min(max, this.limits.scale.max);
       } else {
-        this.limits[type].max = max;
+        this.limits.scale.max = max;
       }
 
       return this;
