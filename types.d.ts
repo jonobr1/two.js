@@ -981,7 +981,7 @@ declare module "two.js/src/shape" {
 
      * @description The foundational transformation object for the Two.js scenegraph.
      */
-    export class Shape extends Element {
+    export class Shape extends TwoElement {
         /**
          * @name Two.Shape#_flagMatrix
          * @private
@@ -1123,7 +1123,7 @@ declare module "two.js/src/shape" {
          */
         private _update;
     }
-    import { Element } from "two.js/src/element";
+    import { Element as TwoElement } from "two.js/src/element";
     import { Matrix } from "two.js/src/matrix";
     import { Vector } from "two.js/src/vector";
     import { Group } from "two.js/src/group";
@@ -1163,8 +1163,8 @@ declare module "two.js/src/children" {
      * @description A children collection which is accesible both by index and by object `id`.
      */
     export class Children extends Collection {
-        constructor(children?: Element[]);
-        constructor(...args: Element[]);
+        constructor(children?: TwoElement[]);
+        constructor(...args: TwoElement[]);
         /**
          * @name Two.Group.Children#ids
          * @property {Object} - Map of all elements in the list keyed by `id`s.
@@ -1224,8 +1224,8 @@ declare module "two.js/src/group" {
          * @property {String[]} - A list of properties that are on every {@link Two.Group}.
          */
         static Properties: string[];
-        constructor(children?: Element[]);
-        constructor(...args: Element[]);
+        constructor(children?: TwoElement[]);
+        constructor(...args: TwoElement[]);
         /**
          * @name Two.Group#_flagAdditions
          * @private
@@ -1431,8 +1431,8 @@ declare module "two.js/src/group" {
          * @params {...Element} [args] - Alternatively pass shapes as each argument
          * @description Add objects to the group.
          */
-        add(objects: Element): Group;
-        add(...args: Element[]): Group;
+        add(objects: TwoElement): Group;
+        add(...args: TwoElement[]): Group;
         /**
          * @name Two.Group#getBoundingClientRect
          * @function
@@ -1472,6 +1472,7 @@ declare module "two.js/src/group" {
     import { Children } from "two.js/src/children";
     import { Gradient } from "two.js/src/effects/gradient";
     import { Texture } from "two.js/src/effects/texture";
+    import { Element as TwoElement } from "two.js/src/element";
 }
 declare module "two.js/src/renderers/canvas" {
     /**
@@ -1526,7 +1527,7 @@ declare module "two.js/src/renderers/canvas" {
          * @name Two.CanvasRenderer#domElement
          * @property {Element} - The `<canvas />` associated with the Two.js scene.
          */
-        domElement: any;
+        domElement: HTMLElement;
         /**
          * @name Two.CanvasRenderer#ctx
          * @property {Canvas2DContext} - Associated two dimensional context to render on the `<canvas />`.
@@ -1660,7 +1661,7 @@ declare module "two.js/src/effects/stop" {
      * @param {Number} [opacity] - The opacity value. Default value is 1, cannot be lower than 0.
      * @nota-bene Used specifically in conjunction with {@link Two.Gradient}s to control color graduation.
      */
-    export class Stop extends Element {
+    export class Stop extends TwoElement {
         /**
          * @name Two.Stop.Index
          * @property {Number} - The current index being referenced for calculating a stop's default offset value.
@@ -1739,7 +1740,7 @@ declare module "two.js/src/effects/stop" {
          */
         toObject(): any;
     }
-    import { Element } from "two.js/src/element";
+    import { Element as TwoElement } from "two.js/src/element";
     import { Gradient } from "two.js/src/effects/gradient";
 }
 declare module "two.js/src/effects/gradient" {
@@ -1750,7 +1751,7 @@ declare module "two.js/src/effects/gradient" {
      * @param {Stop[]} [stops] - A list of {@link Two.Stop}s that contain the gradient fill pattern for the gradient.
      * @description This is the base class for constructing different types of gradients with Two.js. The two common gradients are {@link Two.LinearGradient} and {@link Two.RadialGradient}.
      */
-    export class Gradient extends Element {
+    export class Gradient extends TwoElement {
         /**
          * @name Two.Gradient.Stop
          * @see {@link Two.Stop}
@@ -1817,7 +1818,7 @@ declare module "two.js/src/effects/gradient" {
          */
         private _update;
     }
-    import { Element } from "two.js/src/element";
+    import { Element as TwoElement } from "two.js/src/element";
     import { Stop } from "two.js/src/effects/stop";
     import { Group } from "two.js/src/group";
 }
@@ -1920,7 +1921,7 @@ declare module "two.js/src/effects/texture" {
      * @param {Function} [callback] - An optional callback function once the image has been loaded.
      * @description Fundamental to work with bitmap data, a.k.a. pregenerated imagery, in Two.js. Supported formats include jpg, png, gif, and tiff. See {@link Two.Texture.RegularExpressions} for a full list of supported formats.
      */
-    export class Texture extends Element {
+    export class Texture extends TwoElement {
         /**
          * @name Two.Texture.Properties
          * @property {String[]} - A list of properties that are on every {@link Two.Texture}.
@@ -2114,7 +2115,7 @@ declare module "two.js/src/effects/texture" {
          */
         private _update;
     }
-    import { Element } from "two.js/src/element";
+    import { Element as TwoElement } from "two.js/src/element";
     import { Vector } from "two.js/src/vector";
     import { Registry } from "two.js/src/registry";
 }
@@ -3662,7 +3663,7 @@ declare module "two.js/src/renderers/svg" {
                 center: string;
                 right: string;
             };
-            createElement: (name: any, attrs: any) => Element;
+            createElement: (name: any, attrs: any) => SVGElement;
             setAttributes: (elem: any, attrs: any) => any;
             removeAttributes: (elem: any, attrs: any) => any;
             toString: (points: any, closed: any) => string;
@@ -3709,7 +3710,7 @@ declare module "two.js/src/renderers/svg" {
          * @name Two.SVGRenderer#defs
          * @property {SvgDefintionsElement} - The `<defs />` to apply gradients, patterns, and bitmap imagery.
          */
-        defs: Element;
+        defs: SVGDefsElement;
         /**
          * @name Two.SVGRenderer#setSize
          * @function
@@ -3823,7 +3824,7 @@ declare module "two.js/src/renderers/webgl" {
          * @name Two.WebGLRenderer#domElement
          * @property {Element} - The `<canvas />` associated with the Two.js scene.
          */
-        domElement: any;
+        domElement: HTMLCanvasElement;
         /**
          * @name Two.WebGLRenderer#scene
          * @property {Group} - The root group of the scenegraph.
@@ -4063,7 +4064,7 @@ declare module "two.js" {
          * @param {Element} elem - The DOM element to append the Two.js stage to.
          * @description Shorthand method to append your instance of Two.js to the `document`.
          */
-        appendTo(elem: Element): Two;
+        appendTo(elem: HTMLElement): Two;
         /**
          * @name Two#play
          * @function
