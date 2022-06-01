@@ -1187,6 +1187,7 @@ declare module "two.js/src/children" {
     }
     import { Collection } from "two.js/src/collection";
     import { Shape } from "two.js/src/shape";
+    import { Element as TwoElement } from "two.js/src/element";
 }
 declare module "two.js/src/group" {
     /**
