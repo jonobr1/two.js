@@ -56,11 +56,11 @@ export class Star extends Path {
    */
   _sides = 0;
 
-  constructor(ox, oy, ir, or, sides) {
+  constructor(x, y, innerRadius, outerRadius, sides) {
 
     if (arguments.length <= 3) {
-      or = ir;
-      ir = or / 2;
+      outerRadius = innerRadius;
+      innerRadius = outerRadius / 2;
     }
 
     if (typeof sides !== 'number' || sides <= 0) {
@@ -80,16 +80,16 @@ export class Star extends Path {
      * @name Two.Star#innerRadius
      * @property {Number} - The size of the inner radius of the star.
      */
-    if (typeof ir === 'number') {
-      this.innerRadius = ir;
+    if (typeof innerRadius === 'number') {
+      this.innerRadius = innerRadius;
     }
 
     /**
      * @name Two.Star#outerRadius
      * @property {Number} - The size of the outer radius of the star.
      */
-    if (typeof or === 'number') {
-      this.outerRadius = or;
+    if (typeof outerRadius === 'number') {
+      this.outerRadius = outerRadius;
     }
 
     /**
@@ -102,11 +102,11 @@ export class Star extends Path {
 
     this._update();
 
-    if (typeof ox === 'number') {
-      this.translation.x = ox;
+    if (typeof x === 'number') {
+      this.translation.x = x;
     }
-    if (typeof oy === 'number') {
-      this.translation.y = oy;
+    if (typeof y === 'number') {
+      this.translation.y = y;
     }
 
   }
@@ -253,10 +253,10 @@ const proto = {
   outerRadius: {
     enumerable: true,
     get: function() {
-      return this._ourterRadius;
+      return this._outerRadius;
     },
     set: function(v) {
-      this._ourterRadius = v;
+      this._outerRadius = v;
       this._flagOuterRadius = true;
     }
   },
