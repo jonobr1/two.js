@@ -707,8 +707,8 @@ var Constants = {
     svg: "SVGRenderer",
     canvas: "CanvasRenderer"
   },
-  Version: "v0.8.9",
-  PublishDate: "2022-06-01T02:35:55.175Z",
+  Version: "v0.8.10",
+  PublishDate: "2022-06-04T04:53:21.949Z",
   Identifier: "two-",
   Resolution: 12,
   AutoCalculateImportedMatrices: true,
@@ -7745,10 +7745,10 @@ var proto22 = {
 var cos6 = Math.cos;
 var sin6 = Math.sin;
 var _Star = class extends Path {
-  constructor(ox, oy, ir, or, sides) {
+  constructor(x, y, innerRadius, outerRadius, sides) {
     if (arguments.length <= 3) {
-      or = ir;
-      ir = or / 2;
+      outerRadius = innerRadius;
+      innerRadius = outerRadius / 2;
     }
     if (typeof sides !== "number" || sides <= 0) {
       sides = 5;
@@ -7765,21 +7765,21 @@ var _Star = class extends Path {
     }
     this.closed = true;
     this.automatic = false;
-    if (typeof ir === "number") {
-      this.innerRadius = ir;
+    if (typeof innerRadius === "number") {
+      this.innerRadius = innerRadius;
     }
-    if (typeof or === "number") {
-      this.outerRadius = or;
+    if (typeof outerRadius === "number") {
+      this.outerRadius = outerRadius;
     }
     if (typeof sides === "number") {
       this.sides = sides;
     }
     this._update();
-    if (typeof ox === "number") {
-      this.translation.x = ox;
+    if (typeof x === "number") {
+      this.translation.x = x;
     }
-    if (typeof oy === "number") {
-      this.translation.y = oy;
+    if (typeof y === "number") {
+      this.translation.y = y;
     }
   }
   _update() {
@@ -7860,10 +7860,10 @@ var proto23 = {
   outerRadius: {
     enumerable: true,
     get: function() {
-      return this._ourterRadius;
+      return this._outerRadius;
     },
     set: function(v) {
-      this._ourterRadius = v;
+      this._outerRadius = v;
       this._flagOuterRadius = true;
     }
   },
