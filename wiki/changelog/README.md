@@ -11,15 +11,16 @@ All notable changes to this project will be documented in this file. The format 
 
 <carbon-ads />
 
-## May 31, 2022 v0.8.9
+## May 31, 2022 v0.8.10
 
-<h3 class="visible">May 31, 2022</h3><version-link v="v0.8.9" />
+<h3 class="visible">June 9, 2022</h3><version-link v="v0.8.10" />
 
 + Added `Two.Arc` to `/extras` directory
 + Made `/extras/js/zui.js` ES6 compliant
 + Removed `/extras` modules from generated documentation
 + Added method documentation to `Two.ZUI`
 + Improved `types.d.ts`
++ Fixed Commonjs imports from `package.json`
 
 ## May 9, 2022 v0.8.7
 

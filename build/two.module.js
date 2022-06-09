@@ -708,7 +708,7 @@ var Constants = {
     canvas: "CanvasRenderer"
   },
   Version: "v0.8.10",
-  PublishDate: "2022-06-04T04:53:21.949Z",
+  PublishDate: "2022-06-09T16:09:22.888Z",
   Identifier: "two-",
   Resolution: 12,
   AutoCalculateImportedMatrices: true,

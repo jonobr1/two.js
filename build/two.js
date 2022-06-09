@@ -732,7 +732,7 @@ var Two = (() => {
       canvas: "CanvasRenderer"
     },
     Version: "v0.8.10",
-    PublishDate: "2022-06-04T04:53:21.949Z",
+    PublishDate: "2022-06-09T16:09:22.888Z",
     Identifier: "two-",
     Resolution: 12,
     AutoCalculateImportedMatrices: true,
@@ -10304,3 +10304,5 @@ var Two = (() => {
   };
   return __toCommonJS(two_exports);
 })().default;
+
+(function(){if(typeof exports==='object'&&typeof module!=='undefined'){module.exports=Two}})()
