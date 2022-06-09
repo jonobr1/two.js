@@ -20,6 +20,7 @@ async function buildModules() {
     entryPoints: [paths.entry],
     outfile: paths.umd,
     bundle: true,
+    minify: false,
     format: 'iife',
     globalName: 'Two'
   });
@@ -48,10 +49,12 @@ async function buildModules() {
   const esmOutput = await fs.promises.readFile(paths.esm);
   const minOutput = await fs.promises.readFile(paths.min);
 
+  const moduleExports = `(function(){if(typeof exports==='object'&&typeof module!=='undefined'){module.exports=Two}})()`;
+
   return Promise.all([
-    fs.promises.writeFile(paths.umd, [licenseComment, template(umdOutput, true)].join('\n')),
+    fs.promises.writeFile(paths.umd, [licenseComment, template(umdOutput, true), moduleExports].join('\n')),
     fs.promises.writeFile(paths.esm, [licenseComment, template(esmOutput, false)].join('\n')),
-    fs.promises.writeFile(paths.min, [licenseComment, template(minOutput, true)].join('\n'))
+    fs.promises.writeFile(paths.min, [licenseComment, template(minOutput, true), moduleExports].join('\n'))
   ]);
 
 }
