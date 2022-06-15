@@ -74,6 +74,7 @@ export class Stop extends Element {
     /**
      * @name Two.Stop#opacity
      * @property {Number} - The alpha percentage of the stop represented as a zero-to-one value.
+     * @nota-bene This is only supported on the {@link Two.SVGRenderer}. You can get the same effect by encoding opacity into `rgba` strings in the color.
      */
     this.opacity = typeof opacity === 'number' ? opacity : 1;
 
