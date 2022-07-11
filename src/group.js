@@ -238,7 +238,7 @@ export class Group extends Shape {
 
       const child = children[i];
 
-      if (child.parent) {
+      if (child.parent && child.parent.id !== destination.id) {
         let j = 0;
         const { parent } = child;
         while (j < parent.children.length) {
@@ -258,7 +258,9 @@ export class Group extends Shape {
 
     }
 
-    destination._flagAdditions = true;
+    if (additions.length > 0) {
+      destination._flagAdditions = true;
+    }
 
   }
 
@@ -284,7 +286,9 @@ export class Group extends Shape {
 
     }
 
-    destination._flagSubtractions = true;
+    if (subtractions.length > 0) {
+      destination._flagSubtractions = true;
+    }
 
   }
 
@@ -532,6 +536,15 @@ export class Group extends Shape {
     for (let i = 0; i < objects.length; i++) {
       const child = objects[i];
       if (child && 'id' in child) {
+        let j = 0;
+        while (j < this.children.length) {
+          const ref = this.children[j];
+          if (ref.id === child.id) {
+            this.children.splice(j, 1);
+          } else {
+            j++;
+          }
+        }
         this.children.push(child);
       }
     }
