@@ -707,8 +707,8 @@ var Constants = {
     svg: "SVGRenderer",
     canvas: "CanvasRenderer"
   },
-  Version: "v0.8.10",
-  PublishDate: "2022-06-09T16:09:22.888Z",
+  Version: "v0.8.11",
+  PublishDate: "2022-07-11T02:02:22.199Z",
   Identifier: "two-",
   Resolution: 12,
   AutoCalculateImportedMatrices: true,
@@ -1638,6 +1638,14 @@ var Collection = class extends Array {
     this.trigger(Events.Types.order);
     return this;
   }
+  fill() {
+    console.warn("Two.Collection: fill operations do not propagate to the scenegraph.");
+    return super.fill.apply(this, arguments);
+  }
+  copyWithin() {
+    console.warn("Two.Collection: copyWithin operations do not propagate to the scenegraph.");
+    return super.copyWithin.apply(this, arguments);
+  }
   indexOf() {
     return super.indexOf.apply(this, arguments);
   }
@@ -1657,6 +1665,9 @@ var Children = class extends Collection {
     for (let i = 0; i < children.length; i++) {
       const child = children[i];
       if (child && child.id) {
+        if (child.id in this.ids) {
+          console.warn("Two.Children: overwriting", `#${child.id}`, "This can have undesired parenting conflicts.");
+        }
         this.ids[child.id] = child;
       }
     }
@@ -1664,7 +1675,10 @@ var Children = class extends Collection {
   }
   detach(children) {
     for (let i = 0; i < children.length; i++) {
-      delete this.ids[children[i].id];
+      const child = children[i];
+      if (child && child.id) {
+        delete this.ids[child.id];
+      }
     }
     return this;
   }
@@ -1708,13 +1722,41 @@ var _Group = class extends Shape {
     this.children = Array.isArray(children) ? children : Array.prototype.slice.call(arguments);
   }
   static InsertChildren(children) {
+    const destination = this;
+    const { additions, subtractions } = destination;
     for (let i = 0; i < children.length; i++) {
-      replaceParent.call(this, children[i], this);
+      const child = children[i];
+      if (child.parent && child.parent.id !== destination.id) {
+        let j = 0;
+        const { parent } = child;
+        while (j < parent.children.length) {
+          const ref = parent.children[j];
+          if (ref.id === child.id) {
+            parent.children.splice(j, 1);
+          } else {
+            j++;
+          }
+        }
+      }
+      reconcile(child, additions, subtractions);
+      child.parent = destination;
+      additions.push(child);
+    }
+    if (additions.length > 0) {
+      destination._flagAdditions = true;
     }
   }
   static RemoveChildren(children) {
+    const destination = this;
+    const { additions, subtractions } = destination;
     for (let i = 0; i < children.length; i++) {
-      replaceParent.call(this, children[i]);
+      const child = children[i];
+      reconcile(child, additions, subtractions);
+      child.parent = null;
+      subtractions.push(child);
+    }
+    if (subtractions.length > 0) {
+      destination._flagSubtractions = true;
     }
   }
   static OrderChildren(children) {
@@ -1847,14 +1889,18 @@ var _Group = class extends Shape {
     }
     for (let i = 0; i < objects.length; i++) {
       const child = objects[i];
-      if (!(child && child.id)) {
-        continue;
+      if (child && "id" in child) {
+        let j = 0;
+        while (j < this.children.length) {
+          const ref = this.children[j];
+          if (ref.id === child.id) {
+            this.children.splice(j, 1);
+          } else {
+            j++;
+          }
+        }
+        this.children.push(child);
       }
-      const index = Array.prototype.indexOf.call(this.children, child);
-      if (index >= 0) {
-        this.children.splice(index, 1);
-      }
-      this.children.push(child);
     }
     return this;
   }
@@ -1870,13 +1916,17 @@ var _Group = class extends Shape {
       objects = objects.slice();
     }
     for (let i = 0; i < objects.length; i++) {
-      const object = objects[i];
-      if (!object || !this.children.ids[object.id]) {
-        continue;
-      }
-      const index = this.children.indexOf(object);
-      if (index >= 0) {
-        this.children.splice(index, 1);
+      const child = objects[i];
+      if (child && "id" in child) {
+        let j = 0;
+        while (j < this.children.length) {
+          const ref = this.children[j];
+          if (ref.id === child.id) {
+            this.children.splice(j, 1);
+          } else {
+            j++;
+          }
+        }
       }
     }
     return this;
@@ -2215,56 +2265,24 @@ var proto5 = {
     }
   }
 };
-function replaceParent(child, newParent) {
-  const parent = child.parent;
-  let index;
-  if (parent === newParent) {
-    add();
-    return;
-  }
-  if (parent && parent.children.ids[child.id]) {
-    index = Array.prototype.indexOf.call(parent.children, child);
-    parent.children.splice(index, 1);
-    splice();
-  }
-  if (newParent) {
-    add();
-    return;
-  }
-  splice();
-  if (parent._flagAdditions && parent.additions.length === 0) {
-    parent._flagAdditions = false;
-  }
-  if (parent._flagSubtractions && parent.subtractions.length === 0) {
-    parent._flagSubtractions = false;
-  }
-  delete child.parent;
-  function add() {
-    if (newParent.subtractions.length > 0) {
-      index = Array.prototype.indexOf.call(newParent.subtractions, child);
-      if (index >= 0) {
-        newParent.subtractions.splice(index, 1);
-      }
+function reconcile(child, additions, subtractions) {
+  let j;
+  j = 0;
+  while (j < subtractions.length) {
+    const ref = subtractions[j];
+    if (ref.id === child.id) {
+      subtractions.splice(j, 1);
+    } else {
+      j++;
     }
-    if (newParent.additions.length > 0) {
-      index = Array.prototype.indexOf.call(newParent.additions, child);
-      if (index >= 0) {
-        newParent.additions.splice(index, 1);
-      }
-    }
-    child.parent = newParent;
-    newParent.additions.push(child);
-    newParent._flagAdditions = true;
   }
-  function splice() {
-    index = Array.prototype.indexOf.call(parent.additions, child);
-    if (index >= 0) {
-      parent.additions.splice(index, 1);
-    }
-    index = Array.prototype.indexOf.call(parent.subtractions, child);
-    if (index < 0) {
-      parent.subtractions.push(child);
-      parent._flagSubtractions = true;
+  j = 0;
+  while (j < additions.length) {
+    const ref = additions[j];
+    if (ref.id === child.id) {
+      additions.splice(j, 1);
+    } else {
+      j++;
     }
   }
 }
