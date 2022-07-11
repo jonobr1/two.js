@@ -115,6 +115,16 @@ export class Collection extends Array {
     return this;
   }
 
+  fill() {
+    console.warn('Two.Collection: fill operations do not propagate to the scenegraph.');
+    return super.fill.apply(this, arguments);
+  }
+
+  copyWithin() {
+    console.warn('Two.Collection: copyWithin operations do not propagate to the scenegraph.');
+    return super.copyWithin.apply(this, arguments);
+  }
+
   indexOf() {
     return super.indexOf.apply(this, arguments);
   }

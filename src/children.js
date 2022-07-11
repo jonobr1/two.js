@@ -39,6 +39,10 @@ export class Children extends Collection {
     for (let i = 0; i < children.length; i++) {
       const child = children[i];
       if (child && child.id) {
+        if (child.id in this.ids) {
+          console.warn('Two.Children: overwriting',
+            `#${child.id}`, 'This can have undesired parenting conflicts.');
+        }
         this.ids[child.id] = child;
       }
     }
@@ -53,7 +57,10 @@ export class Children extends Collection {
    */
   detach(children) {
     for (let i = 0; i < children.length; i++) {
-      delete this.ids[children[i].id];
+      const child = children[i];
+      if (child && child.id) {
+        delete this.ids[child.id];
+      }
     }
     return this;
   }

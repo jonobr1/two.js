@@ -230,9 +230,36 @@ export class Group extends Shape {
    * @description Cached method to let renderers know children have been added to a {@link Two.Group}.
    */
   static InsertChildren(children) {
+
+    const destination = this;
+    const { additions, subtractions } = destination;
+
     for (let i = 0; i < children.length; i++) {
-      replaceParent.call(this, children[i], this);
+
+      const child = children[i];
+
+      if (child.parent) {
+        let j = 0;
+        const { parent } = child;
+        while (j < parent.children.length) {
+          const ref = parent.children[j];
+          if (ref.id === child.id) {
+            parent.children.splice(j, 1);
+          } else {
+            j++;
+          }
+        }
+      }
+
+      reconcile(child, additions, subtractions);
+
+      child.parent = destination;
+      additions.push(child);
+
     }
+
+    destination._flagAdditions = true;
+
   }
 
   /**
@@ -242,9 +269,23 @@ export class Group extends Shape {
    * @description Cached method to let renderers know children have been removed from a {@link Two.Group}.
    */
   static RemoveChildren(children) {
+
+    const destination = this;
+    const { additions, subtractions } = destination;
+
     for (let i = 0; i < children.length; i++) {
-      replaceParent.call(this, children[i]);
+
+      const child = children[i];
+
+      reconcile(child, additions, subtractions);
+
+      child.parent = null;
+      subtractions.push(child);
+
     }
+
+    destination._flagSubtractions = true;
+
   }
 
   /**
@@ -490,14 +531,9 @@ export class Group extends Shape {
     // Add the objects
     for (let i = 0; i < objects.length; i++) {
       const child = objects[i];
-      if (!(child && child.id)) {
-        continue;
+      if (child && 'id' in child) {
+        this.children.push(child);
       }
-      const index = Array.prototype.indexOf.call(this.children, child);
-      if (index >= 0) {
-        this.children.splice(index, 1);
-      }
-      this.children.push(child);
     }
 
     return this;
@@ -533,13 +569,17 @@ export class Group extends Shape {
 
     // Remove the objects
     for (let i = 0; i < objects.length; i++) {
-      const object = objects[i];
-      if (!object || !this.children.ids[object.id]) {
-        continue;
-      }
-      const index = this.children.indexOf(object);
-      if (index >= 0) {
-        this.children.splice(index, 1);
+      const child = objects[i];
+      if (child && 'id' in child) {
+        let j = 0;
+        while (j < this.children.length) {
+          const ref = this.children[j];
+          if (ref.id === child.id) {
+            this.children.splice(j, 1);
+          } else {
+            j++;
+          }
+        }
       }
     }
 
@@ -965,80 +1005,30 @@ const proto = {
 //  * and updates parent-child relationships
 //  * Calling with one arguments will simply remove the parenting
 //  */
-function replaceParent(child, newParent) {
+function reconcile(child, additions, subtractions) {
 
-  const parent = child.parent;
-  let index;
+  let j;
 
-  if (parent === newParent) {
-    add();
-    return;
-  }
-
-  if (parent && parent.children.ids[child.id]) {
-
-    index = Array.prototype.indexOf.call(parent.children, child);
-    parent.children.splice(index, 1);
-
-    splice();
-
-  }
-
-  if (newParent) {
-    add();
-    return;
-  }
-
-  splice();
-
-  if (parent._flagAdditions && parent.additions.length === 0) {
-    parent._flagAdditions = false;
-  }
-  if (parent._flagSubtractions && parent.subtractions.length === 0) {
-    parent._flagSubtractions = false;
-  }
-
-  delete child.parent;
-
-  function add() {
-
-    if (newParent.subtractions.length > 0) {
-      index = Array.prototype.indexOf.call(newParent.subtractions, child);
-
-      if (index >= 0) {
-        newParent.subtractions.splice(index, 1);
-      }
+  // Remove all duplicate subtraction commands
+  j = 0;
+  while (j < subtractions.length) {
+    const ref = subtractions[j];
+    if (ref.id === child.id) {
+      subtractions.splice(j, 1);
+    } else {
+      j++;
     }
-
-    if (newParent.additions.length > 0) {
-      index = Array.prototype.indexOf.call(newParent.additions, child);
-
-      if (index >= 0) {
-        newParent.additions.splice(index, 1);
-      }
-    }
-
-    child.parent = newParent;
-    newParent.additions.push(child);
-    newParent._flagAdditions = true;
-
   }
 
-  function splice() {
-
-    index = Array.prototype.indexOf.call(parent.additions, child);
-
-    if (index >= 0) {
-      parent.additions.splice(index, 1);
+  // Remove all duplicate addition commands
+  j = 0;
+  while (j < additions.length) {
+    const ref = additions[j];
+    if (ref.id === child.id) {
+      additions.splice(j, 1);
+    } else {
+      j++;
     }
-
-    index = Array.prototype.indexOf.call(parent.subtractions, child);
-
-    if (index < 0) {
-      parent.subtractions.push(child);
-      parent._flagSubtractions = true;
-    }
-
   }
 
 }
