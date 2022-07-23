@@ -71,8 +71,8 @@ A list of properties that are on every [Two.Polygon](/docs/shapes/polygon/).
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/polygon.js#L114">
-    polygon.js:114
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/polygon.js#L117">
+    polygon.js:117
   </a>
 
 </div>
@@ -126,6 +126,16 @@ The radius value of the polygon.
 
 
 
+<div class="tags">
+
+
+::: tip nota-bene
+This property is tied to [Two.Polygon.width](/docs/shapes/polygon/#width) and [Two.Polygon.height](/docs/shapes/polygon/#height). When you set `radius`, it affects `width` and `height`. Likewise, if you set `width` or `height` it will change the `radius`.
+:::
+
+
+</div>
+
 
 </div>
 
@@ -165,13 +175,23 @@ The size of the width of the polygon.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/polygon.js#L85">
-    polygon.js:85
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/polygon.js#L86">
+    polygon.js:86
   </a>
 
 </div>
 
 
+
+<div class="tags">
+
+
+::: tip nota-bene
+This property is tied to [Two.Polygon.radius](/docs/shapes/polygon/#radius). When you set `radius`, it affects the `width`. Likewise, if you set `width` it will change the `radius`.
+:::
+
+
+</div>
 
 
 </div>
@@ -212,13 +232,23 @@ The size of the height of the polygon.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/polygon.js#L90">
-    polygon.js:90
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/polygon.js#L92">
+    polygon.js:92
   </a>
 
 </div>
 
 
+
+<div class="tags">
+
+
+::: tip nota-bene
+This property is tied to [Two.Polygon.radius](/docs/shapes/polygon/#radius). When you set `radius`, it affects the `height`. Likewise, if you set `height` it will change the `radius`.
+:::
+
+
+</div>
 
 
 </div>
@@ -259,8 +289,8 @@ The amount of sides the polyogn has.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/polygon.js#L95">
-    polygon.js:95
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/polygon.js#L98">
+    polygon.js:98
   </a>
 
 </div>
@@ -319,8 +349,8 @@ Create a new instance of [Two.Polygon](/docs/shapes/polygon/) with the same prop
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/polygon.js#L180">
-    polygon.js:180
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/polygon.js#L183">
+    polygon.js:183
   </a>
 
 </div>
@@ -372,8 +402,8 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/polygon.js#L216">
-    polygon.js:216
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/polygon.js#L219">
+    polygon.js:219
   </a>
 
 </div>
