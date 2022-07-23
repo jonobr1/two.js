@@ -77,6 +77,7 @@ export class Polygon extends Path {
     /**
      * @name Two.Polygon#radius
      * @property {Number} - The radius value of the polygon.
+     * @nota-bene This property is tied to {@link Two.Polygon#width} and {@link Two.Polygon#height}. When you set `radius`, it affects `width` and `height`. Likewise, if you set `width` or `height` it will change the `radius`.
      */
     if (typeof radius === 'number') {
       this.radius = radius;
@@ -85,11 +86,13 @@ export class Polygon extends Path {
     /**
      * @name Two.Polygon#width
      * @property {Number} - The size of the width of the polygon.
+     * @nota-bene This property is tied to {@link Two.Polygon#radius}. When you set `radius`, it affects the `width`. Likewise, if you set `width` it will change the `radius`.
      */
 
     /**
      * @name Two.Polygon#height
      * @property {Number} - The size of the height of the polygon.
+     * @nota-bene This property is tied to {@link Two.Polygon#radius}. When you set `radius`, it affects the `height`. Likewise, if you set `height` it will change the `radius`.
      */
 
     /**
