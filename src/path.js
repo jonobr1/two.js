@@ -669,7 +669,7 @@ export class Path extends Shape {
   /**
    * @name Two.Path#getPointAt
    * @function
-   * @param {Boolean} t - Percentage value describing where on the {@link Two.Path} to estimate and assign coordinate values.
+   * @param {Number} t - Percentage value describing where on the {@link Two.Path} to estimate and assign coordinate values.
    * @param {Two.Vector} [obj] - Object to apply calculated x, y to. If none available returns new `Object`.
    * @returns {Object}
    * @description Given a float `t` from 0 to 1, return a point or assign a passed `obj`'s coordinates to that percentage on this {@link Two.Path}'s curve.
