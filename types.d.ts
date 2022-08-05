@@ -1435,6 +1435,26 @@ declare module "two.js/src/group" {
         add(objects: TwoElement): Group;
         add(...args: TwoElement[]): Group;
         /**
+         * @name Two.Group#remove
+         * @function
+         * @description Remove self from the scene / parent.
+         */
+        remove(): Shape;
+        /**
+         * @name Two.Group#remove
+         * @function
+         * @param {Shape[]} objects - An array of objects to be removed. Can also be supplied as individual arguments.
+         * @description Remove objects from the group.
+         */
+        remove(objects: Array<Shape>): Shape;
+        /**
+         * @name Two.Group#remove
+         * @function
+         * @params {...Shape} [args] - Alternatively pass shapes as each argument
+         * @description Remove objects from the group.
+         */
+        remove(...args: Shape[]): Shape;
+        /**
          * @name Two.Group#getBoundingClientRect
          * @function
          * @param {Boolean} [shallow=false] - Describes whether to calculate off local matrix or world matrix.
