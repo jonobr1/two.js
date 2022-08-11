@@ -120,7 +120,7 @@ const canvas = {
 
       let matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter,
           closed, commands, length, last, prev, a, b, c, d, ux, uy, vx, vy,
-          ar, bl, br, cl, x, y, mask, clip, defaultMatrix, isOffset, dashes, po;
+          ar, bl, br, cl, x, y, mask, clip, defaultMatrix, dashes, po;
 
       po = (this.parent && this.parent._renderer)
         ? this.parent._renderer.opacity : 1;
@@ -313,30 +313,54 @@ const canvas = {
       }
 
       if (!clip && !parentClipped) {
+
+        if (!this._renderer.localBoundingBox || this._flagVertices) {
+          this._renderer.localBoundingBox = this.getBoundingClientRect(true);
+        }
+
+        const lbbw = this._renderer.localBoundingBox.width;
+        const lbbh = this._renderer.localBoundingBox.height;
+
         if (!canvas.isHidden.test(fill)) {
-          isOffset = fill._renderer && fill._renderer.offset;
-          if (isOffset) {
+          const isTexture = fill._renderer && /texture/i.test(fill._renderer.type);
+          if (isTexture) {
+            const ox = lbbw * fill.offset.x;
+            const oy = lbbh * fill.offset.y;
+            const ax = lbbw / fill.image.width;
+            const ay = lbbh / fill.image.height;
+            const aspect = Math.min(ax, ay); // 'contain'
+            const sx = aspect * fill._renderer.scale.x;
+            const sy = aspect * fill._renderer.scale.y;
+            const pw = fill.image.width * sx;
+            const ph = fill.image.height * sy;
             ctx.save();
-            ctx.translate(
-              - fill._renderer.offset.x, - fill._renderer.offset.y);
-            ctx.scale(fill._renderer.scale.x, fill._renderer.scale.y);
+            ctx.translate(- pw / 2 + ox, - ph / 2 + oy);
+            ctx.scale(sx, sy);
           }
           ctx.fill();
-          if (isOffset) {
+          if (isTexture) {
             ctx.restore();
           }
         }
         if (!canvas.isHidden.test(stroke)) {
-          isOffset = stroke._renderer && stroke._renderer.offset;
-          if (isOffset) {
+          const isTexture = stroke._renderer && /texture/i.test(stroke._renderer.type);
+          if (isTexture) {
+            const ox = lbbw * stroke.offset.x;
+            const oy = lbbh * stroke.offset.y;
+            const ax = lbbw / stroke.image.width;
+            const ay = lbbh / stroke.image.height;
+            const aspect = Math.min(ax, ay); // 'contain'
+            const sx = aspect * stroke._renderer.scale.x;
+            const sy = aspect * stroke._renderer.scale.y;
+            const pw = stroke.image.width * sx;
+            const ph = stroke.image.height * sy;
             ctx.save();
-            ctx.translate(
-              - stroke._renderer.offset.x, - stroke._renderer.offset.y);
-            ctx.scale(stroke._renderer.scale.x, stroke._renderer.scale.y);
-            ctx.lineWidth = linewidth / stroke._renderer.scale.x;
+            ctx.translate(- pw / 2 + ox, - ph / 2 + oy);
+            ctx.scale(sx, sy);
+            ctx.lineWidth = linewidth / Math.min(sx, sy);
           }
           ctx.stroke();
-          if (isOffset) {
+          if (isTexture) {
             ctx.restore();
           }
         }
@@ -515,8 +539,9 @@ const canvas = {
       const fill = this._fill;
       const decoration = this._decoration;
       const defaultMatrix = isDefaultMatrix(matrix);
-      const isOffset = fill._renderer && fill._renderer.offset
-        && stroke._renderer && stroke._renderer.offset;
+      const isFillTexture = fill._renderer && /texture/i.test(fill._renderer.type);
+      const isStrokeTexture = stroke._renderer && /texture/i.test(stroke._renderer.type);
+      const isTexture = isFillTexture || isStrokeTexture;
       const dashes = this.dashes;
       const alignment = canvas.alignments[this._alignment] || this._alignment;
       const baseline = this._baseline;
@@ -536,9 +561,9 @@ const canvas = {
         canvas[mask._renderer.type].render.call(mask, ctx, true);
       }
 
-      if (!isOffset) {
-        ctx.font = [this._style, this._weight, this._size + 'px/' +
-          this._leading + 'px', this._family].join(' ');
+      if (!isTexture) {
+        ctx.font = [this._style, this._weight, `${this._size}px/${this._leading}px`,
+        this._family].join(' ');
       }
 
       ctx.textAlign = alignment;
@@ -574,16 +599,25 @@ const canvas = {
 
       if (!clip && !parentClipped) {
 
+        if (!this._renderer.localBoundingBox || this._flagValue
+          || this._flagFamily || this._flagSize || this._flagLeading
+          || this._flagAlignment || this._flagBaseline || this._flagWeight) {
+            this._renderer.localBoundingBox = this.getBoundingClientRect(true);
+        }
+
+        // const lbbw = this._renderer.localBoundingBox.width;
+        // const lbbh = this._renderer.localBoundingBox.height;
+
         if (!canvas.isHidden.test(fill)) {
 
-          if (fill._renderer && fill._renderer.offset) {
+          if (isFillTexture) {
 
             sx = fill._renderer.scale.x;
             sy = fill._renderer.scale.y;
 
             ctx.save();
-            ctx.translate( - fill._renderer.offset.x,
-              - fill._renderer.offset.y);
+            ctx.translate( - fill.offset.x,
+              - fill.offset.y);
             ctx.scale(sx, sy);
 
             a = this._size / fill._renderer.scale.y;
@@ -591,8 +625,8 @@ const canvas = {
             ctx.font = [this._style, this._weight, a + 'px/',
               b + 'px', this._family].join(' ');
 
-            c = fill._renderer.offset.x / fill._renderer.scale.x;
-            d = fill._renderer.offset.y / fill._renderer.scale.y;
+            c = fill.offset.x / fill._renderer.scale.x;
+            d = fill.offset.y / fill._renderer.scale.y;
 
             ctx.fillText(this.value, c, d);
             ctx.restore();
@@ -605,14 +639,14 @@ const canvas = {
 
         if (!canvas.isHidden.test(stroke)) {
 
-          if (stroke._renderer && stroke._renderer.offset) {
+          if (isStrokeTexture) {
 
             sx = stroke._renderer.scale.x;
             sy = stroke._renderer.scale.y;
 
             ctx.save();
-            ctx.translate(- stroke._renderer.offset.x,
-              - stroke._renderer.offset.y);
+            ctx.translate(- stroke.offset.x,
+              - stroke.offset.y);
             ctx.scale(sx, sy);
 
             a = this._size / stroke._renderer.scale.y;
@@ -620,8 +654,8 @@ const canvas = {
             ctx.font = [this._style, this._weight, a + 'px/',
               b + 'px', this._family].join(' ');
 
-            c = stroke._renderer.offset.x / stroke._renderer.scale.x;
-            d = stroke._renderer.offset.y / stroke._renderer.scale.y;
+            c = stroke.offset.x / stroke._renderer.scale.x;
+            d = stroke.offset.y / stroke._renderer.scale.y;
             e = linewidth / stroke._renderer.scale.x;
 
             ctx.lineWidth = e;
@@ -631,6 +665,7 @@ const canvas = {
           } else {
             ctx.strokeText(this.value, 0, 0);
           }
+
         }
       }
 
@@ -804,35 +839,8 @@ const canvas = {
 
       this._update();
 
-      const image = this.image;
-
       if (!this._renderer.effect || ((this._flagLoaded || this._flagImage || this._flagVideo || this._flagRepeat) && this.loaded)) {
         this._renderer.effect = ctx.createPattern(this.image, this._repeat);
-      }
-
-      if (this._flagOffset || this._flagLoaded || this._flagScale) {
-
-        if (!(this._renderer.offset instanceof Vector)) {
-          this._renderer.offset = new Vector();
-        }
-
-        this._renderer.offset.x = - this._offset.x;
-        this._renderer.offset.y = - this._offset.y;
-
-        if (image) {
-
-          this._renderer.offset.x += image.width / 2;
-          this._renderer.offset.y += image.height / 2;
-
-          if (this._scale instanceof Vector) {
-            this._renderer.offset.x *= this._scale.x;
-            this._renderer.offset.y *= this._scale.y;
-          } else {
-            this._renderer.offset.x *= this._scale;
-            this._renderer.offset.y *= this._scale;
-          }
-        }
-
       }
 
       if (this._flagScale || this._flagLoaded) {

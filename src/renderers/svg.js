@@ -936,7 +936,7 @@ const svg = {
       }
 
       const changed = {};
-      const styles = { x: 0, y: 0 };
+      const styles = {};
       const image = this.image;
 
       if (this._flagId) {
@@ -957,6 +957,10 @@ const svg = {
 
         }
 
+        styles.width = image.width;
+        styles.height = image.height;
+        changed.viewBox = `0 0 ${styles.width} ${styles.height}`;
+
       }
 
       if (this._flagOffset || this._flagLoaded || this._flagScale) {
@@ -964,54 +968,16 @@ const svg = {
         changed.x = this._offset.x;
         changed.y = this._offset.y;
 
-        if (image) {
-
-          changed.x -= image.width / 2;
-          changed.y -= image.height / 2;
-
-          if (this._scale instanceof Vector) {
-            changed.x *= this._scale.x;
-            changed.y *= this._scale.y;
-          } else {
-            changed.x *= this._scale;
-            changed.y *= this._scale;
-          }
-        }
-
-        if (changed.x > 0) {
-          changed.x *= - 1;
-        }
-        if (changed.y > 0) {
-          changed.y *= - 1;
-        }
-
       }
 
       if (this._flagScale || this._flagLoaded || this._flagRepeat) {
 
-        changed.width = 0;
-        changed.height = 0;
-
-        if (image) {
-
-          styles.width = changed.width = image.width;
-          styles.height = changed.height = image.height;
-
-          // TODO: Hack / Band-aid
-          switch (this._repeat) {
-            case 'no-repeat':
-              changed.width += 1;
-              changed.height += 1;
-              break;
-          }
-
-          if (this._scale instanceof Vector) {
-            changed.width *= this._scale.x;
-            changed.height *= this._scale.y;
-          } else {
-            changed.width *= this._scale;
-            changed.height *= this._scale;
-          }
+        if (this._scale instanceof Vector) {
+          changed.width = this._scale.x;
+          changed.height = this._scale.y;
+        } else {
+          changed.width = this._scale;
+          changed.height = this._scale;
         }
 
       }
@@ -1027,7 +993,7 @@ const svg = {
       if (!this._renderer.elem) {
 
         changed.id = this._id;
-        changed.patternUnits = 'userSpaceOnUse';
+        changed.patternUnits = 'objectBoundingBox';
         this._renderer.elem = svg.createElement('pattern', changed);
         domElement.defs.appendChild(this._renderer.elem);
 
