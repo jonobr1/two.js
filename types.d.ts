@@ -1135,7 +1135,7 @@ declare module "two.js/src/collection" {
 
      * @description An `Array` like object with additional event propagation on actions. `pop`, `shift`, and `splice` trigger `removed` events. `push`, `unshift`, and `splice` with more than 2 arguments trigger 'inserted'. Finally, `sort` and `reverse` trigger `order` events.
      */
-    export class Collection extends Array<any> {
+    export class Collection<T = any> extends Array<T> {
         constructor(...args: any[]);
         /**
          * @private
@@ -1162,7 +1162,7 @@ declare module "two.js/src/children" {
 
      * @description A children collection which is accesible both by index and by object `id`.
      */
-    export class Children extends Collection {
+    export class Children extends Collection<TwoElement> {
         constructor(children?: TwoElement[]);
         constructor(...args: TwoElement[]);
         /**
@@ -1384,7 +1384,7 @@ declare module "two.js/src/group" {
          * @description A list of all the children in the scenegraph.
          * @nota-bene Ther order of this list indicates the order each element is rendered to the screen.
          */
-        children: any;
+        children: Children;
         /**
          * @name Two.Group#toObject
          * @function
