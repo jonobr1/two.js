@@ -128,7 +128,7 @@
         height: 400
       });
 
-      var answer = {"top":175.72990523278713,"left":157.11276014745235,"right":242.88723985254765,"bottom":224.27009476721287,"width":85.7744797050953,"height":48.540189534425735};
+      var answer = {"top":182.75222946912982,"left":167.23314124921308,"right":232.76685875078692,"bottom":217.24777053087018,"width":65.53371750157385,"height":34.49554106174037};
       var shape = two.makeText('Hello World', 200, 200);
       shape.rotation = Math.PI / 8;
       shape.noStroke().fill = 'rgb(60, 209, 201)';

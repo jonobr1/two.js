@@ -707,8 +707,8 @@ var Constants = {
     svg: "SVGRenderer",
     canvas: "CanvasRenderer"
   },
-  Version: "v0.8.10",
-  PublishDate: "2022-06-09T16:09:22.888Z",
+  Version: "v0.8.11",
+  PublishDate: "2022-08-15T20:06:30.856Z",
   Identifier: "two-",
   Resolution: 12,
   AutoCalculateImportedMatrices: true,
@@ -3020,13 +3020,13 @@ function isDefaultMatrix(m) {
 var CanvasShim = {
   Image: null,
   isHeadless: false,
-  shim: function(canvas2, Image) {
-    Renderer.Utils.shim(canvas2);
+  shim: function(canvas3, Image) {
+    Renderer.Utils.shim(canvas3);
     if (typeof Image !== "undefined") {
       CanvasShim.Image = Image;
     }
     CanvasShim.isHeadless = true;
-    return canvas2;
+    return canvas3;
   }
 };
 
@@ -5519,8 +5519,12 @@ function FlagRadius() {
 }
 
 // src/text.js
+var canvas2;
 var min4 = Math.min;
 var max4 = Math.max;
+if (root.document) {
+  canvas2 = document.createElement("canvas");
+}
 var _Text = class extends Shape {
   constructor(message, x, y, styles) {
     super();
@@ -5582,6 +5586,31 @@ var _Text = class extends Shape {
       }
     }
   }
+  static Measure(text) {
+    if (canvas2) {
+      const ctx = canvas2.getContext("2d");
+      ctx.font = [
+        text._style,
+        text._weight,
+        `${text._size}px/${text._leading}px`,
+        text._family
+      ].join(" ");
+      const metrics = ctx.measureText(text.value, 0, 0);
+      const height = metrics.actualBoundingBoxDescent + metrics.actualBoundingBoxAscent;
+      return {
+        width: metrics.width,
+        height
+      };
+    } else {
+      const width = this.value.length * this.size * _Text.Ratio;
+      const height = this.leading;
+      console.warn("Two.Text: unable to accurately measure text, so using an approximation.");
+      return {
+        width,
+        height
+      };
+    }
+  }
   clone(parent) {
     const clone = new _Text(this.value);
     clone.translation.copy(this.translation);
@@ -5628,8 +5657,7 @@ var _Text = class extends Shape {
     let left, right, top, bottom;
     this._update(true);
     matrix3 = shallow ? this._matrix : getComputedMatrix(this);
-    const height = this.leading;
-    const width = this.value.length * this.size * _Text.Ratio;
+    const { width, height } = _Text.Measure(this);
     const border = (this._linewidth || 0) / 2;
     switch (this.alignment) {
       case "left":
@@ -5645,17 +5673,13 @@ var _Text = class extends Shape {
         right = width / 2 + border;
     }
     switch (this.baseline) {
-      case "top":
-        top = -border;
-        bottom = height + border;
-        break;
-      case "bottom":
-        top = -(height + border);
-        bottom = border;
-        break;
-      default:
+      case "middle":
         top = -(height / 2 + border);
         bottom = height / 2 + border;
+        break;
+      default:
+        top = -(height + border);
+        bottom = border;
     }
     a = matrix3.multiply(left, top, 1);
     b = matrix3.multiply(left, bottom, 1);
@@ -8809,7 +8833,7 @@ var webgl = {
       let prev, a, c, ux, uy, vx, vy, ar, bl, br, cl, x, y;
       let isOffset;
       const commands = elem._renderer.vertices;
-      const canvas2 = this.canvas;
+      const canvas3 = this.canvas;
       const ctx = this.ctx;
       const scale = elem._renderer.scale;
       const stroke = elem._stroke;
@@ -8823,12 +8847,12 @@ var webgl = {
       const dashes = elem.dashes;
       const length = commands.length;
       const last = length - 1;
-      canvas2.width = Math.max(Math.ceil(elem._renderer.rect.width * scale.x), 1);
-      canvas2.height = Math.max(Math.ceil(elem._renderer.rect.height * scale.y), 1);
+      canvas3.width = Math.max(Math.ceil(elem._renderer.rect.width * scale.x), 1);
+      canvas3.height = Math.max(Math.ceil(elem._renderer.rect.height * scale.y), 1);
       const centroid = elem._renderer.rect.centroid;
       const cx = centroid.x;
       const cy = centroid.y;
-      ctx.clearRect(0, 0, canvas2.width, canvas2.height);
+      ctx.clearRect(0, 0, canvas3.width, canvas3.height);
       if (fill) {
         if (typeof fill === "string") {
           ctx.fillStyle = fill;
@@ -9108,7 +9132,7 @@ var webgl = {
   points: {
     updateCanvas: function(elem) {
       let isOffset;
-      const canvas2 = this.canvas;
+      const canvas3 = this.canvas;
       const ctx = this.ctx;
       const stroke = elem._stroke;
       const linewidth = elem._linewidth;
@@ -9120,12 +9144,12 @@ var webgl = {
       if (!webgl.isHidden.test(stroke)) {
         dimension += linewidth;
       }
-      canvas2.width = getPoT(dimension);
-      canvas2.height = canvas2.width;
-      const aspect = dimension / canvas2.width;
-      const cx = canvas2.width / 2;
-      const cy = canvas2.height / 2;
-      ctx.clearRect(0, 0, canvas2.width, canvas2.height);
+      canvas3.width = getPoT(dimension);
+      canvas3.height = canvas3.width;
+      const aspect = dimension / canvas3.width;
+      const cx = canvas3.width / 2;
+      const cy = canvas3.height / 2;
+      ctx.clearRect(0, 0, canvas3.width, canvas3.height);
       if (fill) {
         if (typeof fill === "string") {
           ctx.fillStyle = fill;
@@ -9276,7 +9300,7 @@ var webgl = {
   },
   text: {
     updateCanvas: function(elem) {
-      const canvas2 = this.canvas;
+      const canvas3 = this.canvas;
       const ctx = this.ctx;
       const scale = elem._renderer.scale;
       const stroke = elem._stroke;
@@ -9285,14 +9309,14 @@ var webgl = {
       const opacity = elem._renderer.opacity || elem._opacity;
       const dashes = elem.dashes;
       const decoration = elem._decoration;
-      canvas2.width = Math.max(Math.ceil(elem._renderer.rect.width * scale.x), 1);
-      canvas2.height = Math.max(Math.ceil(elem._renderer.rect.height * scale.y), 1);
+      canvas3.width = Math.max(Math.ceil(elem._renderer.rect.width * scale.x), 1);
+      canvas3.height = Math.max(Math.ceil(elem._renderer.rect.height * scale.y), 1);
       const centroid = elem._renderer.rect.centroid;
       const cx = centroid.x;
       const cy = centroid.y;
       let a, b, c, d, e, sx, sy, x1, y1, x2, y2;
       const isOffset = fill._renderer && fill._renderer.offset && stroke._renderer && stroke._renderer.offset;
-      ctx.clearRect(0, 0, canvas2.width, canvas2.height);
+      ctx.clearRect(0, 0, canvas3.width, canvas3.height);
       if (!isOffset) {
         ctx.font = [elem._style, elem._weight, elem._size + "px/" + elem._leading + "px", elem._family].join(" ");
       }
