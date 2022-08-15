@@ -330,7 +330,7 @@ export class Text extends Shape {
       ctx.font = [text._style, text._weight, `${text._size}px/${text._leading}px`,
         text._family].join(' ');
       const metrics = ctx.measureText(text.value, 0, 0);
-      const height = metrics.actualBoundingBoxDescent - metrics.actualBoundingBoxAscent;
+      const height = metrics.actualBoundingBoxDescent + metrics.actualBoundingBoxAscent;
       return {
         width: metrics.width,
         height
@@ -463,17 +463,13 @@ export class Text extends Shape {
     }
 
     switch (this.baseline) {
-      case 'top':
-        top = - border;
-        bottom = height + border;
-        break;
-      case 'bottom':
-        top = - (height + border);
-        bottom = border;
-        break;
-      default:
+      case 'middle':
         top = - (height / 2 + border);
         bottom = height / 2 + border;
+        break;
+      default:
+        top = - (height + border);
+        bottom = border;
     }
 
     a = matrix.multiply(left, top, 1);
