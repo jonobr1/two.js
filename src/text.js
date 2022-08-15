@@ -8,8 +8,14 @@ import { Gradient } from './effects/gradient.js';
 import { LinearGradient } from './effects/linear-gradient.js';
 import { RadialGradient } from './effects/radial-gradient.js';
 import { Texture } from './effects/texture.js';
+import { root } from './utils/root.js';
 
+let canvas;
 const min = Math.min, max = Math.max;
+
+if (root.document) {
+  canvas = document.createElement('canvas');
+}
 
 /**
  * @name Two.Text
@@ -312,6 +318,34 @@ export class Text extends Shape {
   ];
 
   /**
+   * 
+   * @name Two.Measure
+   * @function
+   * @param {Two.Text} [text] - The instance of {@link Two.Text} to measure.
+   * @returns {Object} - The width and height of the {@link Two.Text} instance.
+   */
+  static Measure(text) {
+    if (canvas) {
+      const ctx = canvas.getContext('2d');
+      ctx.font = [text._style, text._weight, `${text._size}px/${text._leading}px`,
+        text._family].join(' ');
+      const metrics = ctx.measureText(text.value, 0, 0);
+      const height = metrics.actualBoundingBoxDescent + metrics.actualBoundingBoxAscent;
+      return {
+        width: metrics.width,
+        height
+      };
+    } else {
+      const width = this.value.length * this.size * Text.Ratio;
+      const height = this.leading;
+      console.warn('Two.Text: unable to accurately measure text, so using an approximation.');
+      return {
+        width, height
+      };
+    }
+  }
+
+  /**
    * @name Two.Text#clone
    * @function
    * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
@@ -411,8 +445,7 @@ export class Text extends Shape {
 
     matrix = shallow ? this._matrix : getComputedMatrix(this);
 
-    const height = this.leading;
-    const width = this.value.length * this.size * Text.Ratio;
+    const { width, height } = Text.Measure(this);
     const border = (this._linewidth || 0) / 2;
 
     switch (this.alignment) {
@@ -430,17 +463,13 @@ export class Text extends Shape {
     }
 
     switch (this.baseline) {
-      case 'top':
-        top = - border;
-        bottom = height + border;
-        break;
-      case 'bottom':
-        top = - (height + border);
-        bottom = border;
-        break;
-      default:
+      case 'middle':
         top = - (height / 2 + border);
         bottom = height / 2 + border;
+        break;
+      default:
+        top = - (height + border);
+        bottom = border;
     }
 
     a = matrix.multiply(left, top, 1);
