@@ -128,18 +128,40 @@
 
     }
 
-    clientToSurface(x, y) {
+    clientToSurface(a, b, c) {
       this.updateOffset();
       const m = this.surfaceMatrix.inverse();
-      const n = this.viewportOffset.matrix.inverse().multiply(x, y, 1);
-      return m.multiply.apply(m, [n.x, n.y, n.z]);
+      let x, y, z;
+      if (arguments.length === 1) {
+        const v = a;
+        x = typeof v.x === 'number' ? v.x : 0;
+        y = typeof v.y === 'number' ? v.y : 0;
+        z = typeof v.z === 'number' ? v.z : 1;
+      } else {
+        x = typeof a === 'number' ? a : 0;
+        y = typeof b === 'number' ? b : 0;
+        z = typeof c === 'number' ? c : 1;
+      }
+      const n = this.viewportOffset.matrix.inverse().multiply(x, y, z);
+      return m.multiply(n.x, n.y, n.z);
     }
 
-    surfaceToClient(v) {
+    surfaceToClient(a, b, c) {
       this.updateOffset();
       const vo = this.viewportOffset.matrix.clone();
-      const sm = this.surfaceMatrix.multiply.apply(this.surfaceMatrix, [v.x, v.y, v.z]);
-      return vo.multiply.apply(vo, [sm.x, sm.y, sm.z]);
+      let x, y, z;
+      if (arguments.length === 1) {
+        const v = a;
+        x = typeof v.x === 'number' ? v.x : 0;
+        y = typeof v.y === 'number' ? v.y : 0;
+        z = typeof v.z === 'number' ? v.z : 1;
+      } else {
+        x = typeof a === 'number' ? a : 0;
+        y = typeof b === 'number' ? b : 0;
+        z = typeof c === 'number' ? c : 1;
+      }
+      const sm = this.surfaceMatrix.multiply(x, y, z);
+      return vo.multiply(sm.x, sm.y, sm.z);
     }
 
     zoomBy(byF, clientX, clientY) {

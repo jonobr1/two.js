@@ -1,4 +1,3 @@
-import Two from 'two.js';
 import { Matrix } from '../../src/matrix.js';
 
 class Surface {
@@ -159,6 +158,7 @@ export class ZUI {
     const m = this.surfaceMatrix.inverse();
     let x, y, z;
     if (arguments.length === 1) {
+      const v = a;
       x = typeof v.x === 'number' ? v.x : 0;
       y = typeof v.y === 'number' ? v.y : 0;
       z = typeof v.z === 'number' ? v.z : 1;
