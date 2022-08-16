@@ -4486,11 +4486,8 @@ declare module "two.js/extras/jsm/zui" {
         surfaces: any[];
         add(surface: any): ZUI;
         addLimits(min: number, max: number, type?: number): ZUI;
-        clientToSurface(): Matrix;
-        clientToSurface(x: number): Matrix;
-        clientToSurface(x: number, y: number): { x: number, y: number, z: number };
-        surfaceToClient(v: {}): Matrix;
-        surfaceToClient(v: { x?: number, y?: number, z?: number }): { x: number, y: number, z: number };
+        clientToSurface(v?: { x?: number, y?: number, z?: number }): { x: number, y: number, z: number };
+        surfaceToClient(v?: { x?: number, y?: number, z?: number }): { x: number, y: number, z: number };
         zoomBy(byF: any, clientX: any, clientY: any): ZUI;
         zoomSet(zoom: any, clientX: any, clientY: any): ZUI;
         zoom: number;
