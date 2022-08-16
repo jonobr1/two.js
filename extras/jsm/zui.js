@@ -1,3 +1,4 @@
+import Two from 'two.js';
 import { Matrix } from '../../src/matrix.js';
 
 class Surface {
@@ -138,29 +139,72 @@ export class ZUI {
   /**
    * @name Two.ZUI#clientToSurface
    * @function
-   * @param {Number} x - The x position of the user's input.
-   * @param {Number} y - The y position of the user's input.
-   * @returns {Two.Vector}
-   * @description Convert an x, y coordinate in user space into projected space.
+   * @param {Two.Vector} a
+   * @description Convert an x, y coordinate in the user’s space to the object's projected space. Optionally pass a z property on the object to apply depth.
+   * @returns {Object} - An object with x, y, and z components
+   * @overloaded
    */
-  clientToSurface(x, y) {
+
+  /**
+   * @name Two.ZUI#clientToSurface
+   * @param {Number} [a=0] - The x component of position to be transformed.
+   * @param {Number} [b=0] - The y component of position to be transformed.
+   * @param {Number} [c=1] - The optional z component of position to be transformed.
+   * @description Convert an x, y coordinate in the user’s space to the object's projected space. Optionally pass a z property on the object to apply depth.
+   * @returns {Object} - An object with x, y, and z components
+   * @overloaded
+   */
+  clientToSurface(a, b, c) {
     this.updateOffset();
     const m = this.surfaceMatrix.inverse();
-    const n = this.viewportOffset.matrix.inverse().multiply(x, y, 1);
-    return m.multiply.apply(m, [n.x, n.y, n.z]);
+    let x, y, z;
+    if (arguments.length === 1) {
+      x = typeof v.x === 'number' ? v.x : 0;
+      y = typeof v.y === 'number' ? v.y : 0;
+      z = typeof v.z === 'number' ? v.z : 1;
+    } else {
+      x = typeof a === 'number' ? a : 0;
+      y = typeof b === 'number' ? b : 0;
+      z = typeof c === 'number' ? c : 1;
+    }
+    const n = this.viewportOffset.matrix.inverse().multiply(x, y, z);
+    return m.multiply(n.x, n.y, n.z);
   }
 
   /**
    * @name Two.ZUI#surfaceToClient
    * @function
-   * @param {Two.Vector}
-   * @description Convert an x, y coordinate in projected space to the user's space.
+   * @param {Two.Vector} a
+   * @description Convert an x, y coordinate in projected space to the user’s space. Optionally pass a z property on the object to apply depth.
+   * @returns {Object} - An object with x, y, and z components
+   * @overloaded
    */
-  surfaceToClient(v) {
+
+  /**
+   * @name Two.ZUI#surfaceToClient
+   * @param {Number} [a=0] - The x component of position to be transformed.
+   * @param {Number} [b=0] - The y component of position to be transformed.
+   * @param {Number} [c=1] - The optional z component of position to be transformed.
+   * @description Convert an x, y coordinate in projected space to the user’s space. Optionally pass a z property on the object to apply depth.
+   * @returns {Object} - An object with x, y, and z components
+   * @overloaded
+   */
+  surfaceToClient(a, b, c) {
     this.updateOffset();
     const vo = this.viewportOffset.matrix.clone();
-    const sm = this.surfaceMatrix.multiply.apply(this.surfaceMatrix, [v.x, v.y, v.z]);
-    return vo.multiply.apply(vo, [sm.x, sm.y, sm.z]);
+    let x, y, z;
+    if (arguments.length === 1) {
+      const v = a;
+      x = typeof v.x === 'number' ? v.x : 0;
+      y = typeof v.y === 'number' ? v.y : 0;
+      z = typeof v.z === 'number' ? v.z : 1;
+    } else {
+      x = typeof a === 'number' ? a : 0;
+      y = typeof b === 'number' ? b : 0;
+      z = typeof c === 'number' ? c : 1;
+    }
+    const sm = this.surfaceMatrix.multiply(x, y, z);
+    return vo.multiply(sm.x, sm.y, sm.z);
   }
 
   /**
