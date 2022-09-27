@@ -177,6 +177,12 @@ Various examples of how to use different features of Two.js with associated tags
   tags="circle, animated, non-interactive, simple" />
 
 <example-card
+  title="Fake Camera"
+  href="https://codepen.io/jonobr1/pen/wvmYXXr"
+  src="https://assets.codepen.io/171564/internal/screenshots/pens/wvmYXXr.custom.png?version=1664319669"
+  tags="animated, group, position, non-interactive" />
+
+<example-card
   title="GM: Animated Sticker"
   href="https://codepen.io/jonobr1/pen/QWqdVLb"
   src="https://shots.codepen.io/jonobr1/pen/QWqdVLb-512.jpg"
