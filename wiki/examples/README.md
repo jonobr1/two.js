@@ -125,6 +125,12 @@ Various examples of how to use different features of Two.js with associated tags
 <div class="examples-wrapper">
 
 <example-card
+  title="Animated Spritesheet"
+  href="https://codepen.io/jonobr1/pen/ZEowwQR"
+  src="https://storage.googleapis.com/archive.jono.fyi/forums/codepen/ken-stance.png"
+  tags="sprite, animated, image, bitmap">
+
+<example-card
   title="Luniland"
   href="https://luniland.halabe.com/"
   src="https://user-images.githubusercontent.com/44894/151491608-bdfd3cf4-2a44-4ea7-b983-b2d9d9a033cd.png"
@@ -248,9 +254,9 @@ Various examples of how to use different features of Two.js with associated tags
 
 <example-card
   title="Sprite Sheet: Circle"
-  href="https://static.observableusercontent.com/thumbnail/d803971cbf312f3042824d68a6b1612fad4ac031bba1a50238503881f3729999.jpg"
+  href="https://observablehq.com/@jonobr1/two-js-circle-sprite-sheet"
   src="https://static.observableusercontent.com/thumbnail/d803971cbf312f3042824d68a6b1612fad4ac031bba1a50238503881f3729999.jpg"
-  tags="static, non-interactive, canvas, grid" />
+  tags="static, non-interactive, canvas, grid, sprite" />
 
 <example-card
   title="Starfield"
