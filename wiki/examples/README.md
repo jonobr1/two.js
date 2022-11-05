@@ -125,6 +125,12 @@ Various examples of how to use different features of Two.js with associated tags
 <div class="examples-wrapper">
 
 <example-card
+  title="Video Texture"
+  href="https://codepen.io/jonobr1/pen/PoazvEv"
+  src="https://assets.codepen.io/171564/internal/screenshots/pens/PoazvEv.custom.png"
+  tags="animated, video, texture" />
+
+<example-card
   title="Animated Spritesheet"
   href="https://codepen.io/jonobr1/pen/ZEowwQR"
   src="https://storage.googleapis.com/archive.jono.fyi/forums/codepen/ken-stance.png"
