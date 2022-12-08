@@ -4052,7 +4052,7 @@ declare module "two.js" {
          * @name Two#scene
          * @property {Group} - The base level {@link Two.Group} which houses all objects for the instance. Because it is a {@link Two.Group} transformations can be applied to it that will affect all objects in the instance. This is handy as a makeshift inverted camera.
          */
-        scene: any;
+        scene: Group;
         /**
          * @name Two#width
          * @property {Number} - The width of the instance's dom element.
