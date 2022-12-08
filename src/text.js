@@ -177,6 +177,7 @@ export class Text extends Shape {
   /**
    * @name Two.Text#baseline
    * @property {String} - The vertical aligment of the text in relation to {@link Two.Text#translation}'s coordinates. Possible values include `'top'`, `'middle'`, `'bottom'`, and `'baseline'`. Defaults to `'baseline'`.
+   * @nota-bene In headless environments where the canvas is based on {@link https://github.com/Automattic/node-canvas}, `baseline` seems to be the only valid property.
    */
   _baseline = 'middle';
 
