@@ -90,7 +90,7 @@ export class Shape extends Element {
      * @name Two.Shape#renderer
      * @property {Object}
      * @description Object access to store relevant renderer specific variables. Warning: manipulating this object can create unintended consequences.
-     * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `shape.renderer.elem`.
+     * @nota-bene With the {@link Two.SVGRenderer} you can access the underlying SVG element created via `shape.renderer.elem`.
      */
     this._renderer.flagMatrix = FlagMatrix.bind(this);
     this.isShape = true;
@@ -98,7 +98,7 @@ export class Shape extends Element {
     /**
      * @name Two.Shape#id
      * @property {String} - Session specific unique identifier.
-     * @nota-bene In the {@link Two.SvgRenderer} change this to change the underlying SVG element's id too.
+     * @nota-bene In the {@link Two.SVGRenderer} change this to change the underlying SVG element's id too.
      */
     this.id = Constants.Identifier + Constants.uniqueId();
 

@@ -178,7 +178,7 @@ Object access to store relevant renderer specific variables. Warning: manipulati
 
 
 ::: tip nota-bene
-With the [Two.SvgRenderer]() you can access the underlying SVG element created via `shape.renderer.elem`.
+With the [Two.SVGRenderer](/docs/renderers/svg/) you can access the underlying SVG element created via `shape.renderer.elem`.
 :::
 
 
@@ -235,7 +235,7 @@ Session specific unique identifier.
 
 
 ::: tip nota-bene
-In the [Two.SvgRenderer]() change this to change the underlying SVG element's id too.
+In the [Two.SVGRenderer](/docs/renderers/svg/) change this to change the underlying SVG element's id too.
 :::
 
 

@@ -36,7 +36,7 @@ An object that holds 3 [Two.Vector](/docs/vector/)s, the anchor point and its co
 |  ly  | The y position of the left handle point. |
 |  rx  | The x position of the right handle point. |
 |  ry  | The y position of the right handle point. |
-|  command  | The command to describe how to render. Applicable commands are [Two.Commands]() |
+|  command  | The command to describe how to render. Applicable commands are [Two.Commands](/docs/two/#commands) |
 
 
 

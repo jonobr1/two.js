@@ -25,14 +25,14 @@ export class Element extends Events {
   /**
    * @name Two.Element#renderer
    * @property {Object} - Object access to store relevant renderer specific variables. Warning: manipulating this object can create unintended consequences.
-   * @nota-bene With the {@link Two.SvgRenderer} you can access the underlying SVG element created via `shape.renderer.elem`.
+   * @nota-bene With the {@link Two.SVGRenderer} you can access the underlying SVG element created via `shape.renderer.elem`.
    */
   _renderer = {};
 
   /**
    * @name Two.Element#id
    * @property {String} - Session specific unique identifier.
-   * @nota-bene In the {@link Two.SvgRenderer} change this to change the underlying SVG element's id too.
+   * @nota-bene In the {@link Two.SVGRenderer} change this to change the underlying SVG element's id too.
    */
   _id = '';
 
