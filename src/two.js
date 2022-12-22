@@ -348,6 +348,10 @@ export default class Two {
   static SVGRenderer = SVGRenderer;
   static WebGLRenderer = WebGLRenderer;
 
+  /**
+   * @name Two.Commands
+   * @property {Object} - Map of possible path commands. Taken from the SVG specification. Commands include: `move`, `line`, `curve`, `arc`, and `close`.
+   */
   static Commands = Commands;
 
   /**
