@@ -3,7 +3,6 @@
 [![NPM Package][npm]][npm-url]
 [![Build Size][build-size]][build-size-url]
 [![NPM Downloads][npm-downloads]][npmtrends-url]
-[![Language Grade][lgtm]][lgtm-url]
 
 A two-dimensional drawing api meant for modern browsers. It is renderer agnostic enabling the same api to render in multiple contexts: webgl, canvas2d, and svg.
 
@@ -177,5 +176,3 @@ Two.js has been in operation since 2012. For a full list of changes from its fir
 [build-size-url]: https://bundlephobia.com/result?p=two.js
 [npm-downloads]: https://img.shields.io/npm/dm/two.js
 [npmtrends-url]: https://www.npmtrends.com/two.js
-[lgtm]: https://img.shields.io/lgtm/alerts/github/jonobr1/two.js
-[lgtm-url]: https://lgtm.com/projects/g/jonobr1/two.js/
