@@ -56,7 +56,7 @@ cd ~/path-to-repo/two.js
 npm install
 ```
 
-This will give you a number of libraries that the development of Two.js relies on. If for instance you only use the `SvgRenderer` then you can really cut down on the file size by excluding the other renderers. To do this, modify `/utils/build.js` to only add the files you'd like. Then run:
+This will give you a number of libraries that the development of Two.js relies on. If for instance you only use the `SVGRenderer` then you can really cut down on the file size by excluding the other renderers. To do this, modify `/utils/build.js` to only add the files you'd like. Then run:
 
 ```
 node ./utils/build

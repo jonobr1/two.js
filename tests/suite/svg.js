@@ -4,7 +4,7 @@
 
 (function() {
 
-  QUnit.module('SvgRenderer');
+  QUnit.module('SVGRenderer');
 
   QUnit.test('Two.makeLine', function(assert) {
 

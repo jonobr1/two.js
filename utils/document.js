@@ -239,6 +239,10 @@ function expandLink(object, property) {
 
         var dir = getDirectoryMatch(longname);
         var hash = fragments.length > 2 ? fragments.slice(2).join('-') : '';
+        if (dir === null && fragments.length === 2) {
+          dir = '/docs/two/';
+          hash = fragments[1];
+        }
         var href = [
           '[',
           fragments.join('.'),
