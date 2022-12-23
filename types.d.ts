@@ -4334,9 +4334,9 @@ declare module "two.js" {
          * @param {Number} y1
          * @param {Number} x2
          * @param {Number} y2
-         * @param {...Stop} args - Any number of color stops sometimes reffered to as ramp stops. If none are supplied then the default black-to-white two stop gradient is applied.
+         * @param {...Stop} args - Any number of color stops sometimes referred to as ramp stops. If none are supplied then the default black-to-white two stop gradient is applied.
          * @returns {LinearGradient}
-         * @description Creates a Two.js linear gradient and ads it to the scene. In the case of an effect it's added to an invisible "definitions" group.
+         * @description Creates a Two.js linear gradient and adds it to the scene. In the case of an effect it's added to an invisible "definitions" group.
          */
         makeLinearGradient(x1: number, y1: number, x2: number, y2: number, ...args: Stop[]): LinearGradient;
         /**
@@ -4345,9 +4345,9 @@ declare module "two.js" {
          * @param {Number} x1
          * @param {Number} y1
          * @param {Number} radius
-         * @param {...Stop} args - Any number of color stops sometimes reffered to as ramp stops. If none are supplied then the default black-to-white two stop gradient is applied.
+         * @param {...Stop} args - Any number of color stops sometimes referred to as ramp stops. If none are supplied then the default black-to-white two stop gradient is applied.
          * @returns {RadialGradient}
-         * @description Creates a Two.js linear-gradient object and ads it to the scene. In the case of an effect it's added to an invisible "definitions" group.
+         * @description Creates a Two.js linear-gradient object and adds it to the scene. In the case of an effect it's added to an invisible "definitions" group.
          */
         makeRadialGradient(x1: number, y1: number, radius: number, ...args: Stop[]): RadialGradient;
         /**

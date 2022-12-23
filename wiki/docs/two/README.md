@@ -2321,7 +2321,7 @@ __Returns__: Two.LinearGradient
 |  y1  |  |
 |  x2  |  |
 |  y2  |  |
-|  args  | Any number of color stops sometimes reffered to as ramp stops. If none are supplied then the default black-to-white two stop gradient is applied. |
+|  args  | Any number of color stops sometimes referred to as ramp stops. If none are supplied then the default black-to-white two stop gradient is applied. |
 </div>
 
 
@@ -2384,7 +2384,7 @@ __Returns__: Two.RadialGradient
 |  x1  |  |
 |  y1  |  |
 |  radius  |  |
-|  args  | Any number of color stops sometimes reffered to as ramp stops. If none are supplied then the default black-to-white two stop gradient is applied. |
+|  args  | Any number of color stops sometimes referred to as ramp stops. If none are supplied then the default black-to-white two stop gradient is applied. |
 </div>
 
 
