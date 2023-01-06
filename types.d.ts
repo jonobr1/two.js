@@ -4020,7 +4020,8 @@ declare module "two.js" {
           type?: string,
           domElement?: HTMLElement,
           overdraw?: boolean,
-          smoothing?: boolean
+          smoothing?: boolean,
+          ratio?: number
         });
         /**
          * @private
