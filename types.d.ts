@@ -4048,7 +4048,7 @@ declare module "two.js" {
          * @name Two#renderer
          * @property {(Two.SVGRenderer|CanvasRenderer|WebGLRenderer)} - The instantiated rendering class for the instance. For a list of possible rendering types check out Two.Types.
          */
-        renderer: any;
+        renderer: (SVGRenderer|CanvasRenderer|WebGLRenderer);
         /**
          * @name Two#scene
          * @property {Group} - The base level {@link Two.Group} which houses all objects for the instance. Because it is a {@link Two.Group} transformations can be applied to it that will affect all objects in the instance. This is handy as a makeshift inverted camera.
