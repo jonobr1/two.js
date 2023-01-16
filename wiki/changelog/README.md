@@ -11,6 +11,13 @@ All notable changes to this project will be documented in this file. The format 
 
 <carbon-ads />
 
+## Nightly
+
+<h3 class="visible">Nightly</h3>
+
++ Override `Two.Collection.map` method to be more explicit
++ Improved `types.d.ts` for renderers and base `Two` class
+
 ## June 9, 2022 v0.8.10
 
 <h3 class="visible">June 9, 2022</h3><version-link v="v0.8.10" />
