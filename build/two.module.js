@@ -105,7 +105,18 @@ function getComputedMatrix(object, matrix3) {
   for (let i = 0; i < matrices.length; i++) {
     const m = matrices[i];
     const e = m.elements;
-    matrix3.multiply(e[0], e[1], e[2], e[3], e[4], e[5], e[6], e[7], e[8], e[9]);
+    matrix3.multiply(
+      e[0],
+      e[1],
+      e[2],
+      e[3],
+      e[4],
+      e[5],
+      e[6],
+      e[7],
+      e[8],
+      e[9]
+    );
   }
   return matrix3;
 }
@@ -708,7 +719,7 @@ var Constants = {
     canvas: "CanvasRenderer"
   },
   Version: "v0.8.11",
-  PublishDate: "2022-08-15T20:06:30.856Z",
+  PublishDate: "2023-01-16T20:06:29.090Z",
   Identifier: "two-",
   Resolution: 12,
   AutoCalculateImportedMatrices: true,
@@ -793,7 +804,12 @@ function getCurveLength(x1, y1, x2, y2, x3, y3, x4, y4, limit) {
     const dx = (ax * t + bx) * t + cx, dy = (ay * t + by) * t + cy;
     return Math.sqrt(dx * dx + dy * dy);
   }
-  return integrate(integrand, 0, 1, limit || Curve.RecursionLimit);
+  return integrate(
+    integrand,
+    0,
+    1,
+    limit || Curve.RecursionLimit
+  );
 }
 function getCurveBoundingBox(x1, y1, x2, y2, x3, y3, x4, y4) {
   const tvalues = [];
@@ -907,7 +923,10 @@ function getControlPoints(a, b, c) {
   return b;
 }
 function getReflection(a, b, relative) {
-  return new Vector(2 * a.x - (b.x + a.x) - (relative ? a.x : 0), 2 * a.y - (b.y + a.y) - (relative ? a.y : 0));
+  return new Vector(
+    2 * a.x - (b.x + a.x) - (relative ? a.x : 0),
+    2 * a.y - (b.y + a.y) - (relative ? a.y : 0)
+  );
 }
 function getAnchorsFromArcData(center, xAxisRotation, rx, ry, ts, td, ccw) {
   const resolution = Constants.Resolution;
@@ -1641,6 +1660,20 @@ var Collection = class extends Array {
   indexOf() {
     return super.indexOf.apply(this, arguments);
   }
+  map(func, scope) {
+    const results = [];
+    for (let key = 0; key < this.length; key++) {
+      const value = this[key];
+      let result;
+      if (scope) {
+        result = func.call(scope, value, key);
+      } else {
+        result = func(value, key);
+      }
+      results.push(result);
+    }
+    return results;
+  }
 };
 
 // src/children.js
@@ -2320,7 +2353,14 @@ var canvas = {
       if (shouldIsolate) {
         ctx.save();
         if (!defaultMatrix) {
-          ctx.transform(matrix3[0], matrix3[3], matrix3[1], matrix3[4], matrix3[2], matrix3[5]);
+          ctx.transform(
+            matrix3[0],
+            matrix3[3],
+            matrix3[1],
+            matrix3[4],
+            matrix3[2],
+            matrix3[5]
+          );
         }
       }
       if (mask) {
@@ -2425,7 +2465,18 @@ var canvas = {
             a = commands[prev];
             ax = a.x;
             ay = a.y;
-            canvas.renderSvgArcCommand(ctx, ax, ay, rx, ry, largeArcFlag, sweepFlag, xAxisRotation, x, y);
+            canvas.renderSvgArcCommand(
+              ctx,
+              ax,
+              ay,
+              rx,
+              ry,
+              largeArcFlag,
+              sweepFlag,
+              xAxisRotation,
+              x,
+              y
+            );
             break;
           case Commands.curve:
             prev = closed2 ? mod(i - 1, length) : Math.max(i - 1, 0);
@@ -2487,7 +2538,10 @@ var canvas = {
           isOffset = fill._renderer && fill._renderer.offset;
           if (isOffset) {
             ctx.save();
-            ctx.translate(-fill._renderer.offset.x, -fill._renderer.offset.y);
+            ctx.translate(
+              -fill._renderer.offset.x,
+              -fill._renderer.offset.y
+            );
             ctx.scale(fill._renderer.scale.x, fill._renderer.scale.y);
           }
           ctx.fill();
@@ -2499,7 +2553,10 @@ var canvas = {
           isOffset = stroke._renderer && stroke._renderer.offset;
           if (isOffset) {
             ctx.save();
-            ctx.translate(-stroke._renderer.offset.x, -stroke._renderer.offset.y);
+            ctx.translate(
+              -stroke._renderer.offset.x,
+              -stroke._renderer.offset.y
+            );
             ctx.scale(stroke._renderer.scale.x, stroke._renderer.scale.y);
             ctx.lineWidth = linewidth / stroke._renderer.scale.x;
           }
@@ -2590,7 +2647,10 @@ var canvas = {
           isOffset = fill._renderer && fill._renderer.offset;
           if (isOffset) {
             ctx.save();
-            ctx.translate(-fill._renderer.offset.x, -fill._renderer.offset.y);
+            ctx.translate(
+              -fill._renderer.offset.x,
+              -fill._renderer.offset.y
+            );
             ctx.scale(fill._renderer.scale.x, fill._renderer.scale.y);
           }
           ctx.fill();
@@ -2602,7 +2662,10 @@ var canvas = {
           isOffset = stroke._renderer && stroke._renderer.offset;
           if (isOffset) {
             ctx.save();
-            ctx.translate(-stroke._renderer.offset.x, -stroke._renderer.offset.y);
+            ctx.translate(
+              -stroke._renderer.offset.x,
+              -stroke._renderer.offset.y
+            );
             ctx.scale(stroke._renderer.scale.x, stroke._renderer.scale.y);
             ctx.lineWidth = linewidth / stroke._renderer.scale.x;
           }
@@ -2687,7 +2750,10 @@ var canvas = {
             sx = fill._renderer.scale.x;
             sy = fill._renderer.scale.y;
             ctx.save();
-            ctx.translate(-fill._renderer.offset.x, -fill._renderer.offset.y);
+            ctx.translate(
+              -fill._renderer.offset.x,
+              -fill._renderer.offset.y
+            );
             ctx.scale(sx, sy);
             a = this._size / fill._renderer.scale.y;
             b = this._leading / fill._renderer.scale.y;
@@ -2711,7 +2777,10 @@ var canvas = {
             sx = stroke._renderer.scale.x;
             sy = stroke._renderer.scale.y;
             ctx.save();
-            ctx.translate(-stroke._renderer.offset.x, -stroke._renderer.offset.y);
+            ctx.translate(
+              -stroke._renderer.offset.x,
+              -stroke._renderer.offset.y
+            );
             ctx.scale(sx, sy);
             a = this._size / stroke._renderer.scale.y;
             b = this._leading / stroke._renderer.scale.y;
@@ -2841,7 +2910,14 @@ var canvas = {
           fy = fy * rect.height * 0.5;
           radius *= Math.min(rect.width, rect.height) * 0.5;
         }
-        this._renderer.effect = ctx.createRadialGradient(cx, cy, 0, fx, fy, radius);
+        this._renderer.effect = ctx.createRadialGradient(
+          cx,
+          cy,
+          0,
+          fx,
+          fy,
+          radius
+        );
         for (let i = 0; i < this.stops.length; i++) {
           const stop = this.stops[i];
           this._renderer.effect.addColorStop(stop._offset, stop._color);
@@ -2918,10 +2994,25 @@ var canvas = {
     const cx = cos2(xAxisRotation) * cxp - sin2(xAxisRotation) * cyp + (ax + x) / 2;
     const cy = sin2(xAxisRotation) * cxp + cos2(xAxisRotation) * cyp + (ay + y) / 2;
     const startAngle = svgAngle(1, 0, (x1p - cxp) / rx, (y1p - cyp) / ry);
-    const delta = svgAngle((x1p - cxp) / rx, (y1p - cyp) / ry, (-x1p - cxp) / rx, (-y1p - cyp) / ry) % TWO_PI;
+    const delta = svgAngle(
+      (x1p - cxp) / rx,
+      (y1p - cyp) / ry,
+      (-x1p - cxp) / rx,
+      (-y1p - cyp) / ry
+    ) % TWO_PI;
     const endAngle = startAngle + delta;
     const clockwise = sweepFlag === 0;
-    renderArcEstimate(ctx, cx, cy, rx, ry, startAngle, endAngle, clockwise, xAxisRotation);
+    renderArcEstimate(
+      ctx,
+      cx,
+      cy,
+      rx,
+      ry,
+      startAngle,
+      endAngle,
+      clockwise,
+      xAxisRotation
+    );
   }
 };
 var Renderer = class extends Events {
@@ -3433,7 +3524,13 @@ var _LinearGradient = class extends Gradient {
     const stops = this.stops.map(function(stop) {
       return stop.clone();
     });
-    const clone = new _LinearGradient(this.left._x, this.left._y, this.right._x, this.right._y, stops);
+    const clone = new _LinearGradient(
+      this.left._x,
+      this.left._y,
+      this.right._x,
+      this.right._y,
+      stops
+    );
     _.each(Gradient.Properties, function(k) {
       clone[k] = this[k];
     }, this);
@@ -3534,7 +3631,14 @@ var _RadialGradient = class extends Gradient {
     const stops = this.stops.map(function(stop) {
       return stop.clone();
     });
-    const clone = new _RadialGradient(this.center._x, this.center._y, this._radius, stops, this.focal._x, this.focal._y);
+    const clone = new _RadialGradient(
+      this.center._x,
+      this.center._y,
+      this._radius,
+      stops,
+      this.focal._x,
+      this.focal._y
+    );
     _.each(Gradient.Properties.concat(_RadialGradient.Properties), function(k) {
       clone[k] = this[k];
     }, this);
@@ -4134,7 +4238,16 @@ var _Path = class extends Shape {
           c1x += v1.x;
           c1y += v1.y;
         }
-        const bb = getCurveBoundingBox(v0.x, v0.y, c0x, c0y, c1x, c1y, v1.x, v1.y);
+        const bb = getCurveBoundingBox(
+          v0.x,
+          v0.y,
+          c0x,
+          c0y,
+          c1x,
+          c1y,
+          v1.x,
+          v1.y
+        );
         top = min3(bb.min.y - border, top);
         left = min3(bb.min.x - border, left);
         right = max3(bb.max.x + border, right);
@@ -4258,7 +4371,15 @@ var _Path = class extends Shape {
       obj.t = t;
       return obj;
     }
-    result = new Anchor(x, y, brx - x, bry - y, alx - x, aly - y, this._curved ? Commands.curve : Commands.line);
+    result = new Anchor(
+      x,
+      y,
+      brx - x,
+      bry - y,
+      alx - x,
+      aly - y,
+      this._curved ? Commands.curve : Commands.line
+    );
     result.t = t;
     return result;
   }
@@ -4902,7 +5023,14 @@ var _Sprite = class extends Rectangle {
     return this;
   }
   clone(parent) {
-    const clone = new _Sprite(this.texture, this.translation.x, this.translation.y, this.columns, this.rows, this.frameRate);
+    const clone = new _Sprite(
+      this.texture,
+      this.translation.x,
+      this.translation.y,
+      this.columns,
+      this.rows,
+      this.frameRate
+    );
     if (this.playing) {
       clone.play(this._firstFrame, this._lastFrame);
       clone._loop = this._loop;
@@ -5337,7 +5465,17 @@ var _RoundedRectangle = class extends Path {
     }
     const points = [];
     for (let i = 0; i < 10; i++) {
-      points.push(new Anchor(0, 0, 0, 0, 0, 0, i === 0 ? Commands.move : Commands.curve));
+      points.push(
+        new Anchor(
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          i === 0 ? Commands.move : Commands.curve
+        )
+      );
     }
     super(points);
     __publicField(this, "_flagWidth", false);
@@ -6223,7 +6361,9 @@ function applySvgAttributes(node, elem, parentStyles) {
           break;
         }
         if (value.match("[a-z%]$") && !value.endsWith("px")) {
-          error = new TwoError("only pixel values are supported with the " + key + " attribute.");
+          error = new TwoError(
+            "only pixel values are supported with the " + key + " attribute."
+          );
           console.warn(error.name, error.message);
         }
         elem.translation[key] = parseFloat(value);
@@ -6331,7 +6471,9 @@ var read = {
     }
     const id = href.slice(1);
     if (!read.defs.current.contains(id)) {
-      error = new TwoError("unable to find element for reference " + href + ".");
+      error = new TwoError(
+        "unable to find element for reference " + href + "."
+      );
       console.warn(error.name, error.message);
       return null;
     }
@@ -6480,7 +6622,15 @@ var read = {
             } else {
               x = coord.x;
               y = coord.y;
-              result = new Anchor(x, y, void 0, void 0, void 0, void 0, Commands.close);
+              result = new Anchor(
+                x,
+                y,
+                void 0,
+                void 0,
+                void 0,
+                void 0,
+                Commands.close
+              );
               for (let j = points.length - 1; j >= 0; j--) {
                 const point = points[j];
                 if (/m/i.test(point.command)) {
@@ -6495,7 +6645,15 @@ var read = {
             control = void 0;
             x = parseFloat(coords[0]);
             y = parseFloat(coords[1]);
-            result = new Anchor(x, y, void 0, void 0, void 0, void 0, /m/i.test(lower) ? Commands.move : Commands.line);
+            result = new Anchor(
+              x,
+              y,
+              void 0,
+              void 0,
+              void 0,
+              void 0,
+              /m/i.test(lower) ? Commands.move : Commands.line
+            );
             if (relative) {
               result.addSelf(coord);
             }
@@ -6505,7 +6663,15 @@ var read = {
           case "v":
             a = /h/i.test(lower) ? "x" : "y";
             b = /x/i.test(a) ? "y" : "x";
-            result = new Anchor(void 0, void 0, void 0, void 0, void 0, void 0, Commands.line);
+            result = new Anchor(
+              void 0,
+              void 0,
+              void 0,
+              void 0,
+              void 0,
+              void 0,
+              Commands.line
+            );
             result[a] = parseFloat(coords[0]);
             result[b] = coord[b];
             if (relative) {
@@ -6545,7 +6711,15 @@ var read = {
               y4 += y1;
             }
             coord.controls.right.set(x2 - coord.x, y2 - coord.y);
-            result = new Anchor(x4, y4, x3 - x4, y3 - y4, void 0, void 0, Commands.curve);
+            result = new Anchor(
+              x4,
+              y4,
+              x3 - x4,
+              y3 - y4,
+              void 0,
+              void 0,
+              Commands.curve
+            );
             coord = result;
             control = result.controls.left;
             break;
@@ -6580,8 +6754,19 @@ var read = {
               x4 += x1;
               y4 += y1;
             }
-            coord.controls.right.set((x2 - coord.x) * 0.33, (y2 - coord.y) * 0.33);
-            result = new Anchor(x4, y4, x3 - x4, y3 - y4, void 0, void 0, Commands.curve);
+            coord.controls.right.set(
+              (x2 - coord.x) * 0.33,
+              (y2 - coord.y) * 0.33
+            );
+            result = new Anchor(
+              x4,
+              y4,
+              x3 - x4,
+              y3 - y4,
+              void 0,
+              void 0,
+              Commands.curve
+            );
             coord = result;
             control = result.controls.left;
             break;
@@ -6931,7 +7116,12 @@ var _ImageSequence = class extends Rectangle {
     return this;
   }
   clone(parent) {
-    const clone = new _ImageSequence(this.textures, this.translation.x, this.translation.y, this.frameRate);
+    const clone = new _ImageSequence(
+      this.textures,
+      this.translation.x,
+      this.translation.y,
+      this.frameRate
+    );
     clone._loop = this._loop;
     if (this._playing) {
       clone.play();
@@ -8972,7 +9162,10 @@ var webgl = {
         isOffset = fill._renderer && fill._renderer.offset;
         if (isOffset) {
           ctx.save();
-          ctx.translate(-fill._renderer.offset.x, -fill._renderer.offset.y);
+          ctx.translate(
+            -fill._renderer.offset.x,
+            -fill._renderer.offset.y
+          );
           ctx.scale(fill._renderer.scale.x, fill._renderer.scale.y);
         }
         ctx.fill();
@@ -8984,7 +9177,10 @@ var webgl = {
         isOffset = stroke._renderer && stroke._renderer.offset;
         if (isOffset) {
           ctx.save();
-          ctx.translate(-stroke._renderer.offset.x, -stroke._renderer.offset.y);
+          ctx.translate(
+            -stroke._renderer.offset.x,
+            -stroke._renderer.offset.y
+          );
           ctx.scale(stroke._renderer.scale.x, stroke._renderer.scale.y);
           ctx.lineWidth = linewidth / stroke._renderer.scale.x;
         }
@@ -9091,7 +9287,11 @@ var webgl = {
           this._renderer.rect = {};
         }
         this._renderer.opacity = this._opacity * parent._renderer.opacity;
-        webgl.path.getBoundingClientRect(this._renderer.vertices, this._linewidth, this._renderer.rect);
+        webgl.path.getBoundingClientRect(
+          this._renderer.vertices,
+          this._linewidth,
+          this._renderer.rect
+        );
         webgl.updateTexture.call(webgl, gl, this);
       } else {
         if (this._fill && this._fill._update) {
@@ -9111,12 +9311,20 @@ var webgl = {
         gl.enableVertexAttribArray(program.position);
         gl.bufferData(gl.ARRAY_BUFFER, quad, gl.STATIC_DRAW);
         if (!programs.resolution.flagged) {
-          gl.uniform2f(gl.getUniformLocation(program, "u_resolution"), programs.resolution.width, programs.resolution.height);
+          gl.uniform2f(
+            gl.getUniformLocation(program, "u_resolution"),
+            programs.resolution.width,
+            programs.resolution.height
+          );
         }
         programs.current = program;
       }
       if (programs.resolution.flagged) {
-        gl.uniform2f(gl.getUniformLocation(program, "u_resolution"), programs.resolution.width, programs.resolution.height);
+        gl.uniform2f(
+          gl.getUniformLocation(program, "u_resolution"),
+          programs.resolution.width,
+          programs.resolution.height
+        );
       }
       gl.bindTexture(gl.TEXTURE_2D, this._renderer.texture);
       const rect = this._renderer.rect;
@@ -9189,7 +9397,10 @@ var webgl = {
         isOffset = fill._renderer && fill._renderer.offset;
         if (isOffset) {
           ctx.save();
-          ctx.translate(-fill._renderer.offset.x, -fill._renderer.offset.y);
+          ctx.translate(
+            -fill._renderer.offset.x,
+            -fill._renderer.offset.y
+          );
           ctx.scale(fill._renderer.scale.x, fill._renderer.scale.y);
         }
         ctx.fill();
@@ -9201,7 +9412,10 @@ var webgl = {
         isOffset = stroke._renderer && stroke._renderer.offset;
         if (isOffset) {
           ctx.save();
-          ctx.translate(-stroke._renderer.offset.x, -stroke._renderer.offset.y);
+          ctx.translate(
+            -stroke._renderer.offset.x,
+            -stroke._renderer.offset.y
+          );
           ctx.scale(stroke._renderer.scale.x, stroke._renderer.scale.y);
           ctx.lineWidth = linewidth / stroke._renderer.scale.x;
         }
@@ -9284,12 +9498,20 @@ var webgl = {
       if (programs.current !== program) {
         gl.useProgram(program);
         if (!programs.resolution.flagged) {
-          gl.uniform2f(gl.getUniformLocation(program, "u_resolution"), programs.resolution.width, programs.resolution.height);
+          gl.uniform2f(
+            gl.getUniformLocation(program, "u_resolution"),
+            programs.resolution.width,
+            programs.resolution.height
+          );
         }
         programs.current = program;
       }
       if (programs.resolution.flagged) {
-        gl.uniform2f(gl.getUniformLocation(program, "u_resolution"), programs.resolution.width, programs.resolution.height);
+        gl.uniform2f(
+          gl.getUniformLocation(program, "u_resolution"),
+          programs.resolution.width,
+          programs.resolution.height
+        );
       }
       gl.bindTexture(gl.TEXTURE_2D, this._renderer.texture);
       gl.uniformMatrix3fv(program.matrix, false, this._renderer.matrix);
@@ -9356,7 +9578,10 @@ var webgl = {
           sx = fill._renderer.scale.x;
           sy = fill._renderer.scale.y;
           ctx.save();
-          ctx.translate(-fill._renderer.offset.x, -fill._renderer.offset.y);
+          ctx.translate(
+            -fill._renderer.offset.x,
+            -fill._renderer.offset.y
+          );
           ctx.scale(sx, sy);
           a = elem._size / fill._renderer.scale.y;
           b = elem._leading / fill._renderer.scale.y;
@@ -9380,7 +9605,10 @@ var webgl = {
           sx = stroke._renderer.scale.x;
           sy = stroke._renderer.scale.y;
           ctx.save();
-          ctx.translate(-stroke._renderer.offset.x, -stroke._renderer.offset.y);
+          ctx.translate(
+            -stroke._renderer.offset.x,
+            -stroke._renderer.offset.y
+          );
           ctx.scale(sx, sy);
           a = elem._size / stroke._renderer.scale.y;
           b = elem._leading / stroke._renderer.scale.y;
@@ -9538,12 +9766,20 @@ var webgl = {
         gl.enableVertexAttribArray(program.position);
         gl.bufferData(gl.ARRAY_BUFFER, quad, gl.STATIC_DRAW);
         if (!programs.resolution.flagged) {
-          gl.uniform2f(gl.getUniformLocation(program, "u_resolution"), programs.resolution.width, programs.resolution.height);
+          gl.uniform2f(
+            gl.getUniformLocation(program, "u_resolution"),
+            programs.resolution.width,
+            programs.resolution.height
+          );
         }
         programs.current = program;
       }
       if (programs.resolution.flagged) {
-        gl.uniform2f(gl.getUniformLocation(program, "u_resolution"), programs.resolution.width, programs.resolution.height);
+        gl.uniform2f(
+          gl.getUniformLocation(program, "u_resolution"),
+          programs.resolution.width,
+          programs.resolution.height
+        );
       }
       gl.bindTexture(gl.TEXTURE_2D, this._renderer.texture);
       const rect = this._renderer.rect;
@@ -9605,7 +9841,14 @@ var webgl = {
           fy = fy * rect.height * 0.5;
           radius *= Math.min(rect.width, rect.height) * 0.5;
         }
-        this._renderer.effect = ctx.createRadialGradient(cx, cy, 0, fx, fy, radius);
+        this._renderer.effect = ctx.createRadialGradient(
+          cx,
+          cy,
+          0,
+          fx,
+          fy,
+          radius
+        );
         for (let i = 0; i < this.stops.length; i++) {
           const stop = this.stops[i];
           this._renderer.effect.addColorStop(stop._offset, stop._color);
@@ -9724,7 +9967,9 @@ var Renderer3 = class extends Events {
     this.overdraw = params.overdraw;
     gl = this.ctx = this.domElement.getContext("webgl", params) || this.domElement.getContext("experimental-webgl", params);
     if (!this.ctx) {
-      throw new TwoError("unable to create a webgl context. Try using another renderer.");
+      throw new TwoError(
+        "unable to create a webgl context. Try using another renderer."
+      );
     }
     vs = shaders.create(gl, shaders.path.vertex, shaders.types.vertex);
     fs = shaders.create(gl, shaders.path.fragment, shaders.types.fragment);
@@ -10032,9 +10277,25 @@ var _Two = class {
     const vertices = [
       new Anchor(x1, y1, void 0, void 0, void 0, void 0, Commands.move),
       new Anchor(x2, y2, void 0, void 0, void 0, void 0, Commands.line),
-      new Anchor(x2 - headlen * Math.cos(angle - Math.PI / 4), y2 - headlen * Math.sin(angle - Math.PI / 4), void 0, void 0, void 0, void 0, Commands.line),
+      new Anchor(
+        x2 - headlen * Math.cos(angle - Math.PI / 4),
+        y2 - headlen * Math.sin(angle - Math.PI / 4),
+        void 0,
+        void 0,
+        void 0,
+        void 0,
+        Commands.line
+      ),
       new Anchor(x2, y2, void 0, void 0, void 0, void 0, Commands.move),
-      new Anchor(x2 - headlen * Math.cos(angle + Math.PI / 4), y2 - headlen * Math.sin(angle + Math.PI / 4), void 0, void 0, void 0, void 0, Commands.line)
+      new Anchor(
+        x2 - headlen * Math.cos(angle + Math.PI / 4),
+        y2 - headlen * Math.sin(angle + Math.PI / 4),
+        void 0,
+        void 0,
+        void 0,
+        void 0,
+        Commands.line
+      )
     ];
     const path = new Path(vertices, false, false, true);
     path.noFill();
@@ -10094,7 +10355,15 @@ var _Two = class {
     return poly;
   }
   makeArcSegment(x, y, innerRadius, outerRadius, startAngle, endAngle, resolution) {
-    const arcSegment = new ArcSegment(x, y, innerRadius, outerRadius, startAngle, endAngle, resolution);
+    const arcSegment = new ArcSegment(
+      x,
+      y,
+      innerRadius,
+      outerRadius,
+      startAngle,
+      endAngle,
+      resolution
+    );
     this.scene.add(arcSegment);
     return arcSegment;
   }
