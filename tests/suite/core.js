@@ -346,7 +346,7 @@ QUnit.test('Two.Matrix', function(assert) {
 
 QUnit.test('Two.Collection', function(assert) {
 
-  assert.expect(14);
+  assert.expect(15);
 
   var poly = new Two.Path([new Two.Anchor(0, 0)]);
   var vector = new Two.Anchor(150, 150);
@@ -397,6 +397,14 @@ QUnit.test('Two.Collection', function(assert) {
   a.splice(0, 0, 'z');
 
   assert.equal(a[0], 'z', 'Two.Collection.splice correctly inserts properties.');
+
+  var children = new Two.Group.Children('a', 'b', 'c', 'd', 'e');
+
+  var result = children.map(function(v) {
+    return v;
+  });
+
+  assert.equal(result.length, 5, 'Two.Collection.map correctly iterates through the necessary items.');
 
 });
 

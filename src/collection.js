@@ -119,4 +119,19 @@ export class Collection extends Array {
     return super.indexOf.apply(this, arguments);
   }
 
+  map(func, scope) {
+    const results = [];
+    for (let key = 0; key < this.length; key++) {
+      const value = this[key];
+      let result;
+      if (scope) {
+        result = func.call(scope, value, key);
+      } else {
+        result = func(value, key);
+      }
+      results.push(result);
+    }
+    return results;
+  }
+
 }
