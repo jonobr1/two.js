@@ -660,7 +660,7 @@ export default class Two {
    * @param {Number} width
    * @param {Number} height
    * @param {Number} sides
-   * @returns {Two.Rectangle}
+   * @returns {Two.RoundedRectangle}
    * @description Creates a Two.js rounded rectangle and adds it to the scene.
    */
   makeRoundedRectangle(x, y, width, height, sides) {
