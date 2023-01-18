@@ -4201,11 +4201,11 @@ declare module "two.js" {
          * @param {Number} y
          * @param {Number} width
          * @param {Number} height
-         * @param {Number} sides
-         * @returns {Rectangle}
+         * @param {Number} radius
+         * @returns {RoundedRectangle}
          * @description Creates a Two.js rounded rectangle and adds it to the scene.
          */
-        makeRoundedRectangle(x: number, y: number, width: number, height: number, sides: number): Rectangle;
+        makeRoundedRectangle(x: number, y: number, width: number, height: number, radius: number): RoundedRectangle;
         /**
          * @name Two#makeCircle
          * @function
