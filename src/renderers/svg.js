@@ -747,7 +747,7 @@ const svg = {
         changed.id = this._id;
 
         this._renderer.elem = svg.createElement('text', changed);
-        domElement.defs.appendChild(this._renderer.elem);
+        domElement.appendChild(this._renderer.elem);
 
       } else {
 
