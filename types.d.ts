@@ -1162,9 +1162,9 @@ declare module "two.js/src/children" {
 
      * @description A children collection which is accesible both by index and by object `id`.
      */
-    export class Children extends Collection<TwoElement> {
-        constructor(children?: TwoElement[]);
-        constructor(...args: TwoElement[]);
+    export class Children extends Collection<Shape> {
+        constructor(children?: Shape[]);
+        constructor(...args: Shape[]);
         /**
          * @name Two.Group.Children#ids
          * @property {Object} - Map of all elements in the list keyed by `id`s.
@@ -1187,7 +1187,6 @@ declare module "two.js/src/children" {
     }
     import { Collection } from "two.js/src/collection";
     import { Shape } from "two.js/src/shape";
-    import { Element as TwoElement } from "two.js/src/element";
 }
 declare module "two.js/src/group" {
     /**
@@ -1219,14 +1218,14 @@ declare module "two.js/src/group" {
          * @function
          * @description Cached method to let renderers know order has been updated on a {@link Two.Group}.
          */
-        static OrderChildren(children: any): void;
+        static OrderChildren(children: Shape[]): void;
         /**
          * @name Two.Group.Properties
          * @property {String[]} - A list of properties that are on every {@link Two.Group}.
          */
         static Properties: string[];
-        constructor(children?: TwoElement[]);
-        constructor(...args: TwoElement[]);
+        constructor(children?: Shape[]);
+        constructor(...args: Shape[]);
         /**
          * @name Two.Group#_flagAdditions
          * @private
@@ -1365,19 +1364,19 @@ declare module "two.js/src/group" {
          * @name Two.Group#mask
          * @property {Shape} - The Two.js object to clip from a group's rendering.
          */
-        mask: any;
+        mask: Shape;
         /**
          * @name Two.Group#additions
          * @property {Shape[]}
          * @description An automatically updated list of children that need to be appended to the renderer's scenegraph.
          */
-        additions: any[];
+        additions: Shape[];
         /**
          * @name Two.Group#subtractions
          * @property {Shape[]}
          * @description An automatically updated list of children that need to be removed from the renderer's scenegraph.
          */
-        subtractions: any[];
+        subtractions: Shape[];
         /**
          * @name Two.Group#children
          * @property {Group.Children}
@@ -1391,7 +1390,7 @@ declare module "two.js/src/group" {
          * @returns {Object}
          * @description Return a JSON compatible plain object that represents the group.
          */
-        toObject(): any;
+        toObject(): Object;
         /**
          * @name Two.Group#corner
          * @function
@@ -1432,8 +1431,8 @@ declare module "two.js/src/group" {
          * @params {...Element} [args] - Alternatively pass shapes as each argument
          * @description Add objects to the group.
          */
-        add(objects: TwoElement): Group;
-        add(...args: TwoElement[]): Group;
+        add(objects: Shape): Group;
+        add(...args: Shape[]): Group;
         /**
          * @name Two.Group#remove
          * @function
@@ -1446,7 +1445,7 @@ declare module "two.js/src/group" {
          * @param {Shape[]} objects - An array of objects to be removed. Can also be supplied as individual arguments.
          * @description Remove objects from the group.
          */
-        remove(objects: Array<Shape>): Shape;
+        remove(objects: Shape[]): Shape[];
         /**
          * @name Two.Group#remove
          * @function
@@ -1493,7 +1492,6 @@ declare module "two.js/src/group" {
     import { Children } from "two.js/src/children";
     import { Gradient } from "two.js/src/effects/gradient";
     import { Texture } from "two.js/src/effects/texture";
-    import { Element as TwoElement } from "two.js/src/element";
 }
 declare module "two.js/src/renderers/canvas" {
     /**
@@ -4130,31 +4128,31 @@ declare module "two.js" {
         /**
          * @name Two#add
          * @function
-         * @param {TwoElement[]} [objects] - An array of Two.js objects. Alternatively can add objects as individual arguments.
+         * @param {Shape[]} [objects] - An array of Two.js objects. Alternatively can add objects as individual arguments.
          * @description A shorthand method to add specific Two.js objects to the scene.
          */
-        add(objects: TwoElement): Two;
+        add(objects: Shape[]): Two;
         /**
          * @name Two#add
          * @function
-         * @param {...TwoElement} [args] - Alternatively pass each shape as an argument
+         * @param {...Shape} [args] - Alternatively pass each shape as an argument
          * @description A shorthand method to add specific Two.js objects to the scene.
          */
-        add(...args: TwoElement[]): Two;
+        add(...args: Shape[]): Two;
         /**
          * @name Two#remove
          * @function
-         * @param {TwoElement[]} [objects] - An array of Two.js objects.
+         * @param {Shape[]} [objects] - An array of Two.js objects.
          * @description A shorthand method to remove specific Two.js objects from the scene.
          */
-        remove(objects: TwoElement): Two;
+        remove(objects: Shape): Two;
         /**
          * @name Two#remove
          * @function
-         * @param {...TwoElement} [args] - Alternatively pass each shape as an argument
+         * @param {...Shape} [args] - Alternatively pass each shape as an argument
          * @description A shorthand method to remove specific Two.js objects from the scene.
          */
-        remove(...args: TwoElement[]): Two;
+        remove(...args: Shape[]): Two;
         /**
          * @name Two#clear
          * @function
@@ -4389,19 +4387,19 @@ declare module "two.js" {
         /**
          * @name Two#makeGroup
          * @function
-         * @param {TwoElement[]} [objects] - Two.js objects to be added to the group in the form of an array or as individual arguments.
+         * @param {Shape[]} [objects] - Two.js objects to be added to the group in the form of an array or as individual arguments.
          * @returns {Group}
          * @description Creates a Two.js group object and adds it to the scene.
          */
-        makeGroup(objects?: TwoElement[]): Group;
+        makeGroup(objects?: Shape[]): Group;
         /**
          * @name Two#makeGroup
          * @function
-         * @param {...TwoElement} [args] - Alternatively pass each element as an argument
+         * @param {...Shape} [args] - Alternatively pass each element as an argument
          * @returns {Group}
          * @description Creates a Two.js group object and adds it to the scene.
          */
-        makeGroup(...args: TwoElement[]): Group;
+        makeGroup(...args: Shape[]): Group;
         /**
          * @name Two#interpret
          * @function
@@ -4451,7 +4449,6 @@ declare module "two.js" {
     import { Renderer as CanvasRenderer } from "two.js/src/renderers/canvas";
     import { Renderer as SVGRenderer } from "two.js/src/renderers/svg";
     import { Renderer as WebGLRenderer } from "two.js/src/renderers/webgl";
-    import { Element as TwoElement } from 'two.js/src/element'
 }
 declare module "two.js/extras/jsm/zui" {
     /**
