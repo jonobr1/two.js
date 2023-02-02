@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file. The format 
 
 <h3 class="visible">Nightly</h3>
 
++ Improved `types.d.ts` for `Two.Group`
 + `Two.Text` rendered to SVG directly instead of `<defs />`
 + `Two.SVGRenderer` disposes of unused effects from `<defs />`
 + Override `Two.Collection.map` method to be more explicit
