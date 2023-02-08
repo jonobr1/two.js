@@ -2476,7 +2476,7 @@ declare module "two.js/src/path" {
          * @returns {Object}
          * @description Given a float `t` from 0 to 1, return a point or assign a passed `obj`'s coordinates to that percentage on this {@link Two.Path}'s curve.
          */
-        getPointAt(t: number, obj: any): any;
+        getPointAt(t: number, obj?: Vector): Vector;
         /**
          * @name Two.Path#plot
          * @function
@@ -2502,6 +2502,7 @@ declare module "two.js/src/path" {
         private _updateLength;
         _lengths: any[];
     }
+    import { Vector } from "two.js/src/vector";
     import { Anchor } from "two.js/src/anchor";
     import { Shape } from "two.js/src/shape";
     import { Gradient } from "two.js/src/effects/gradient";
