@@ -233,6 +233,10 @@ function applySvgAttributes(node, elem, parentStyles) {
   let id, scene, ref, tagName;
   let ca, cb, cc, error;
 
+  if (node === null) {
+    return styles;
+  }
+
   // Not available in non browser environments
   if (root.getComputedStyle) {
     // Convert CSSStyleDeclaration to a normal object
@@ -704,6 +708,7 @@ export const read = {
 
     if (typeof node === 'string') {
       path = node;
+      node = null;
     } else {
       path = node.getAttribute('d');
     }
