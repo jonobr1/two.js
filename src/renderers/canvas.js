@@ -7,10 +7,7 @@ import { _ } from '../utils/underscore.js';
 
 import { Group } from '../group.js';
 import { Vector } from '../vector.js';
-import { Matrix } from '../matrix.js';
 import { Constants } from '../constants.js';
-
-const matrix =  new Matrix();
 
 // Constants
 const emptyArray = [];

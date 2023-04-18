@@ -286,8 +286,7 @@ export class Matrix extends Events {
       const y = e[3] * a + e[4] * b + e[5] * c;
       const z = e[6] * a + e[7] * b + e[8] * c;
 
-      // TODO: Convert to array for API consistency
-      return { x, y, z };
+      return [x, y, z];
 
     }
 

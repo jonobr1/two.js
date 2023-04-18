@@ -437,7 +437,7 @@ export class Text extends Shape {
    */
   getBoundingClientRect(shallow) {
 
-    let matrix, a, b, c, d;
+    let matrix;
     let left, right, top, bottom;
 
     // TODO: Update this to not __always__ update. Just when it needs to.
@@ -472,15 +472,15 @@ export class Text extends Shape {
         bottom = border;
     }
 
-    a = matrix.multiply(left, top, 1);
-    b = matrix.multiply(left, bottom, 1);
-    c = matrix.multiply(right, top, 1);
-    d = matrix.multiply(right, bottom, 1);
+    const [ax, ay] = matrix.multiply(left, top);
+    const [bx, by] = matrix.multiply(left, bottom);
+    const [cx, cy] = matrix.multiply(right, top);
+    const [dx, dy] = matrix.multiply(right, bottom);
 
-    top = min(a.y, b.y, c.y, d.y);
-    left = min(a.x, b.x, c.x, d.x);
-    right = max(a.x, b.x, c.x, d.x);
-    bottom = max(a.y, b.y, c.y, d.y);
+    top = min(ay, by, cy, dy);
+    left = min(ax, bx, cx, dx);
+    right = max(ax, bx, cx, dx);
+    bottom = max(ay, by, cy, dy);
 
     return {
       top: top,

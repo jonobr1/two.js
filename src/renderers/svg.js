@@ -5,9 +5,6 @@ import { _ } from '../utils/underscore.js';
 
 import { Group } from '../group.js';
 import { Vector } from '../vector.js';
-import { Matrix } from '../matrix.js';
-
-const matrix = new Matrix();
 
 const svg = {
 

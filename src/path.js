@@ -572,7 +572,7 @@ export class Path extends Shape {
    */
   getBoundingClientRect(shallow) {
 
-    let matrix, border, l, i, v0, v1, c0x, c0y, c1x, c1y, a, b, c, d;
+    let matrix, border, l, i, v0, v1;
 
     let left = Infinity, right = -Infinity,
         top = Infinity, bottom = -Infinity;
@@ -599,26 +599,37 @@ export class Path extends Shape {
       // This is important for handling cyclic paths.
       v0 = this._renderer.vertices[(i + l - 1) % l];
 
+      const [v0x, v0y] = matrix.multiply(v0.x, v0.y);
+      const [v1x, v1y] = matrix.multiply(v1.x, v1.y);
+
       if (v0.controls && v1.controls) {
 
-        c0x = v0.controls.right.x;
-        c0y = v0.controls.right.y;
+        let rx = v0.controls.right.x;
+        let ry = v0.controls.right.y;
 
         if (v0.relative) {
-          c0x += v0.x;
-          c0y += v0.y;
+          rx += v0.x;
+          ry += v0.y;
         }
 
-        c1x = v1.controls.left.x;
-        c1y = v1.controls.left.y;
+        let [c0x, c0y] = matrix.multiply(rx, ry);
+
+        let lx = v1.controls.left.x;
+        let ly = v1.controls.left.y;
 
         if (v1.relative) {
-          c1x += v1.x;
-          c1y += v1.y;
+          lx += v1.x;
+          ly += v1.y;
         }
 
-        const bb = getCurveBoundingBox(v0.x, v0.y,
-          c0x, c0y, c1x, c1y, v1.x, v1.y);
+        let [c1x, c1y] = matrix.multiply(lx, ly);
+
+        const bb = getCurveBoundingBox(
+          v0x, v0y,
+          c0x, c0y,
+          c1x, c1y,
+          v1x, v1y
+        );
 
         top = min(bb.min.y - border, top);
         left = min(bb.min.x - border, left);
@@ -629,31 +640,21 @@ export class Path extends Shape {
 
         if (i <= 1) {
 
-          top = min(v0.y - border, top);
-          left = min(v0.x - border, left);
-          right = max(v0.x + border, right);
-          bottom = max(v0.y + border, bottom);
+          top = min(v0y - border, top);
+          left = min(v0x - border, left);
+          right = max(v0x + border, right);
+          bottom = max(v0y + border, bottom);
 
         }
 
-        top = min(v1.y - border, top);
-        left = min(v1.x - border, left);
-        right = max(v1.x + border, right);
-        bottom = max(v1.y + border, bottom);
+        top = min(v1y - border, top);
+        left = min(v1x - border, left);
+        right = max(v1x + border, right);
+        bottom = max(v1y + border, bottom);
 
       }
 
     }
-
-    a = matrix.multiply(left, top, 1);
-    b = matrix.multiply(left, bottom, 1);
-    c = matrix.multiply(right, top, 1);
-    d = matrix.multiply(right, bottom, 1);
-
-    top = min(a.y, b.y, c.y, d.y);
-    left = min(a.x, b.x, c.x, d.x);
-    right = max(a.x, b.x, c.x, d.x);
-    bottom = max(a.y, b.y, c.y, d.y);
 
     return {
       top: top,
