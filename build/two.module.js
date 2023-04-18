@@ -70,17 +70,17 @@ if (typeof window !== "undefined") {
 var Matrix;
 var TWO_PI = Math.PI * 2;
 var HALF_PI = Math.PI * 0.5;
-function decomposeMatrix(matrix3, b, c, d, e, f) {
+function decomposeMatrix(matrix, b, c, d, e, f) {
   let a;
   if (arguments.length <= 1) {
-    a = matrix3.a;
-    b = matrix3.b;
-    c = matrix3.c;
-    d = matrix3.d;
-    e = matrix3.e;
-    f = matrix3.f;
+    a = matrix.a;
+    b = matrix.b;
+    c = matrix.c;
+    d = matrix.d;
+    e = matrix.e;
+    f = matrix.f;
   } else {
-    a = matrix3;
+    a = matrix;
   }
   return {
     translateX: e,
@@ -90,11 +90,11 @@ function decomposeMatrix(matrix3, b, c, d, e, f) {
     rotation: 180 * Math.atan2(b, a) / Math.PI
   };
 }
-function setMatrix(matrix3) {
-  Matrix = matrix3;
+function setMatrix(matrix) {
+  Matrix = matrix;
 }
-function getComputedMatrix(object, matrix3) {
-  matrix3 = matrix3 && matrix3.identity() || new Matrix();
+function getComputedMatrix(object, matrix) {
+  matrix = matrix && matrix.identity() || new Matrix();
   let parent = object;
   const matrices = [];
   while (parent && parent._matrix) {
@@ -105,7 +105,7 @@ function getComputedMatrix(object, matrix3) {
   for (let i = 0; i < matrices.length; i++) {
     const m = matrices[i];
     const e = m.elements;
-    matrix3.multiply(
+    matrix.multiply(
       e[0],
       e[1],
       e[2],
@@ -118,7 +118,7 @@ function getComputedMatrix(object, matrix3) {
       e[9]
     );
   }
-  return matrix3;
+  return matrix;
 }
 function lerp(a, b, t) {
   return t * (b - a) + a;
@@ -719,7 +719,7 @@ var Constants = {
     canvas: "CanvasRenderer"
   },
   Version: "v0.8.11",
-  PublishDate: "2023-04-18T06:31:29.559Z",
+  PublishDate: "2023-04-18T21:05:10.951Z",
   Identifier: "two-",
   Resolution: 12,
   AutoCalculateImportedMatrices: true,
@@ -1186,7 +1186,7 @@ var _Matrix = class extends Events {
       const x = e[0] * a + e[1] * b + e[2] * c;
       const y = e[3] * a + e[4] * b + e[5] * c;
       const z = e[6] * a + e[7] * b + e[8] * c;
-      return { x, y, z };
+      return [x, y, z];
     }
     const A = this.elements;
     const B = [a, b, c, d, e, f, g, h, i];
@@ -1918,11 +1918,11 @@ var _Group = class extends Shape {
     return this;
   }
   getBoundingClientRect(shallow) {
-    let rect, matrix3, a, b, c, d, tc, lc, rc, bc;
+    let rect, matrix, tc, lc, rc, bc;
     this._update(true);
     let left = Infinity, right = -Infinity, top = Infinity, bottom = -Infinity;
     const regex3 = /texture|gradient/i;
-    matrix3 = shallow ? this.matrix : this.worldMatrix;
+    matrix = shallow ? this.matrix : this.worldMatrix;
     for (let i = 0; i < this.children.length; i++) {
       const child = this.children[i];
       if (!child.visible || regex3.test(child._renderer.type)) {
@@ -1936,20 +1936,21 @@ var _Group = class extends Shape {
       if (tc || lc || rc || bc) {
         continue;
       }
-      top = min(rect.top, top);
-      left = min(rect.left, left);
-      right = max(rect.right, right);
-      bottom = max(rect.bottom, bottom);
-    }
-    if (shallow) {
-      a = matrix3.multiply(left, top, 1);
-      b = matrix3.multiply(left, bottom, 1);
-      c = matrix3.multiply(right, top, 1);
-      d = matrix3.multiply(right, bottom, 1);
-      top = min(a.y, b.y, c.y, d.y);
-      left = min(a.x, b.x, c.x, d.x);
-      right = max(a.x, b.x, c.x, d.x);
-      bottom = max(a.y, b.y, c.y, d.y);
+      if (shallow) {
+        const [ax, ay] = matrix.multiply(rect.left, rect.top);
+        const [bx, by] = matrix.multiply(rect.right, rect.top);
+        const [cx, cy] = matrix.multiply(rect.left, rect.bottom);
+        const [dx, dy] = matrix.multiply(rect.right, rect.bottom);
+        top = min(ay, by, cy, dy);
+        left = min(ax, bx, cx, dx);
+        right = max(ax, bx, cx, dx);
+        bottom = max(ay, by, cy, dy);
+      } else {
+        top = min(rect.top, top);
+        left = min(rect.left, left);
+        right = max(rect.right, right);
+        bottom = max(rect.bottom, bottom);
+      }
     }
     return {
       top,
@@ -2306,7 +2307,6 @@ function replaceParent(child, newParent) {
 }
 
 // src/renderers/canvas.js
-var matrix = new Matrix2();
 var emptyArray = [];
 var max2 = Math.max;
 var min2 = Math.min;
@@ -2343,11 +2343,11 @@ var canvas = {
         return this;
       }
       this._update();
-      const matrix3 = this._matrix.elements;
+      const matrix = this._matrix.elements;
       const parent = this.parent;
       this._renderer.opacity = this._opacity * (parent && parent._renderer ? parent._renderer.opacity : 1);
       const mask = this._mask;
-      const defaultMatrix = isDefaultMatrix(matrix3);
+      const defaultMatrix = isDefaultMatrix(matrix);
       const shouldIsolate = !defaultMatrix || !!mask;
       if (!this._renderer.context) {
         this._renderer.context = {};
@@ -2357,12 +2357,12 @@ var canvas = {
         ctx.save();
         if (!defaultMatrix) {
           ctx.transform(
-            matrix3[0],
-            matrix3[3],
-            matrix3[1],
-            matrix3[4],
-            matrix3[2],
-            matrix3[5]
+            matrix[0],
+            matrix[3],
+            matrix[1],
+            matrix[4],
+            matrix[2],
+            matrix[5]
           );
         }
       }
@@ -2383,7 +2383,7 @@ var canvas = {
   },
   path: {
     render: function(ctx, forced, parentClipped) {
-      let matrix3, stroke, linewidth, fill, opacity, visible, cap, join, miter, closed2, commands, length, last, prev, a, b, c, d, ux, uy, vx, vy, ar, bl, br, cl, x, y, mask, clip, defaultMatrix, isOffset, dashes, po;
+      let matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter, closed2, commands, length, last, prev, a, b, c, d, ux, uy, vx, vy, ar, bl, br, cl, x, y, mask, clip, defaultMatrix, isOffset, dashes, po;
       po = this.parent && this.parent._renderer ? this.parent._renderer.opacity : 1;
       mask = this._mask;
       clip = this._clip;
@@ -2393,7 +2393,7 @@ var canvas = {
         return this;
       }
       this._update();
-      matrix3 = this._matrix.elements;
+      matrix = this._matrix.elements;
       stroke = this._stroke;
       linewidth = this._linewidth;
       fill = this._fill;
@@ -2404,11 +2404,11 @@ var canvas = {
       commands = this._renderer.vertices;
       length = commands.length;
       last = length - 1;
-      defaultMatrix = isDefaultMatrix(matrix3);
+      defaultMatrix = isDefaultMatrix(matrix);
       dashes = this.dashes;
       if (!defaultMatrix) {
         ctx.save();
-        ctx.transform(matrix3[0], matrix3[3], matrix3[1], matrix3[4], matrix3[2], matrix3[5]);
+        ctx.transform(matrix[0], matrix[3], matrix[1], matrix[4], matrix[2], matrix[5]);
       }
       if (mask) {
         canvas[mask._renderer.type].render.call(mask, ctx, true);
@@ -2697,12 +2697,12 @@ var canvas = {
         return this;
       }
       this._update();
-      const matrix3 = this._matrix.elements;
+      const matrix = this._matrix.elements;
       const stroke = this._stroke;
       const linewidth = this._linewidth;
       const fill = this._fill;
       const decoration = this._decoration;
-      const defaultMatrix = isDefaultMatrix(matrix3);
+      const defaultMatrix = isDefaultMatrix(matrix);
       const isOffset = fill._renderer && fill._renderer.offset && stroke._renderer && stroke._renderer.offset;
       const dashes = this.dashes;
       const alignment = canvas.alignments[this._alignment] || this._alignment;
@@ -2710,7 +2710,7 @@ var canvas = {
       let a, b, c, d, e, sx, sy, x1, y1, x2, y2;
       if (!defaultMatrix) {
         ctx.save();
-        ctx.transform(matrix3[0], matrix3[3], matrix3[1], matrix3[4], matrix3[2], matrix3[5]);
+        ctx.transform(matrix[0], matrix[3], matrix[1], matrix[4], matrix[2], matrix[5]);
       }
       if (mask) {
         canvas[mask._renderer.type].render.call(mask, ctx, true);
@@ -4212,12 +4212,25 @@ var _Path = class extends Shape {
     return this;
   }
   getBoundingClientRect(shallow) {
-    let matrix3, border, l, i, v0, v1, c0x, c0y, c1x, c1y, a, b, c, d;
+    let matrix, border, l, i, v0, v1;
     let left = Infinity, right = -Infinity, top = Infinity, bottom = -Infinity;
     this._update(true);
-    matrix3 = shallow ? this.matrix : this.worldMatrix;
+    matrix = shallow ? this.matrix : this.worldMatrix;
     border = (this.linewidth || 0) / 2;
     l = this._renderer.vertices.length;
+    if (this.linewidth > 0 || this.stroke && this.stroke !== "transparent") {
+      const { scaleX, scaleY } = decomposeMatrix(
+        matrix.elements[0],
+        matrix.elements[3],
+        matrix.elements[1],
+        matrix.elements[4],
+        matrix.elements[2],
+        matrix.elements[5]
+      );
+      if (typeof scaleX === "number" && typeof scaleY === "number") {
+        border = Math.max(scaleX, scaleY) * (this.linewidth || 0) / 2;
+      }
+    }
     if (l <= 0) {
       return {
         width: 0,
@@ -4227,28 +4240,32 @@ var _Path = class extends Shape {
     for (i = 0; i < l; i++) {
       v1 = this._renderer.vertices[i];
       v0 = this._renderer.vertices[(i + l - 1) % l];
+      const [v0x, v0y] = matrix.multiply(v0.x, v0.y);
+      const [v1x, v1y] = matrix.multiply(v1.x, v1.y);
       if (v0.controls && v1.controls) {
-        c0x = v0.controls.right.x;
-        c0y = v0.controls.right.y;
+        let rx = v0.controls.right.x;
+        let ry = v0.controls.right.y;
         if (v0.relative) {
-          c0x += v0.x;
-          c0y += v0.y;
+          rx += v0.x;
+          ry += v0.y;
         }
-        c1x = v1.controls.left.x;
-        c1y = v1.controls.left.y;
+        let [c0x, c0y] = matrix.multiply(rx, ry);
+        let lx = v1.controls.left.x;
+        let ly = v1.controls.left.y;
         if (v1.relative) {
-          c1x += v1.x;
-          c1y += v1.y;
+          lx += v1.x;
+          ly += v1.y;
         }
+        let [c1x, c1y] = matrix.multiply(lx, ly);
         const bb = getCurveBoundingBox(
-          v0.x,
-          v0.y,
+          v0x,
+          v0y,
           c0x,
           c0y,
           c1x,
           c1y,
-          v1.x,
-          v1.y
+          v1x,
+          v1y
         );
         top = min3(bb.min.y - border, top);
         left = min3(bb.min.x - border, left);
@@ -4256,25 +4273,17 @@ var _Path = class extends Shape {
         bottom = max3(bb.max.y + border, bottom);
       } else {
         if (i <= 1) {
-          top = min3(v0.y - border, top);
-          left = min3(v0.x - border, left);
-          right = max3(v0.x + border, right);
-          bottom = max3(v0.y + border, bottom);
+          top = min3(v0y - border, top);
+          left = min3(v0x - border, left);
+          right = max3(v0x + border, right);
+          bottom = max3(v0y + border, bottom);
         }
-        top = min3(v1.y - border, top);
-        left = min3(v1.x - border, left);
-        right = max3(v1.x + border, right);
-        bottom = max3(v1.y + border, bottom);
+        top = min3(v1y - border, top);
+        left = min3(v1x - border, left);
+        right = max3(v1x + border, right);
+        bottom = max3(v1y + border, bottom);
       }
     }
-    a = matrix3.multiply(left, top, 1);
-    b = matrix3.multiply(left, bottom, 1);
-    c = matrix3.multiply(right, top, 1);
-    d = matrix3.multiply(right, bottom, 1);
-    top = min3(a.y, b.y, c.y, d.y);
-    left = min3(a.x, b.x, c.x, d.x);
-    right = max3(a.x, b.x, c.x, d.x);
-    bottom = max3(a.y, b.y, c.y, d.y);
     return {
       top,
       left,
@@ -5793,10 +5802,10 @@ var _Text = class extends Shape {
     return this;
   }
   getBoundingClientRect(shallow) {
-    let matrix3, a, b, c, d;
+    let matrix;
     let left, right, top, bottom;
     this._update(true);
-    matrix3 = shallow ? this.matrix : this.worldMatrix;
+    matrix = shallow ? this.matrix : this.worldMatrix;
     const { width, height } = _Text.Measure(this);
     const border = (this._linewidth || 0) / 2;
     switch (this.alignment) {
@@ -5821,14 +5830,14 @@ var _Text = class extends Shape {
         top = -(height + border);
         bottom = border;
     }
-    a = matrix3.multiply(left, top, 1);
-    b = matrix3.multiply(left, bottom, 1);
-    c = matrix3.multiply(right, top, 1);
-    d = matrix3.multiply(right, bottom, 1);
-    top = min4(a.y, b.y, c.y, d.y);
-    left = min4(a.x, b.x, c.x, d.x);
-    right = max4(a.x, b.x, c.x, d.x);
-    bottom = max4(a.y, b.y, c.y, d.y);
+    const [ax, ay] = matrix.multiply(left, top);
+    const [bx, by] = matrix.multiply(left, bottom);
+    const [cx, cy] = matrix.multiply(right, top);
+    const [dx, dy] = matrix.multiply(right, bottom);
+    top = min4(ay, by, cy, dy);
+    left = min4(ax, bx, cx, dx);
+    right = max4(ax, bx, cx, dx);
+    bottom = max4(ay, by, cy, dy);
     return {
       top,
       left,
@@ -8100,7 +8109,6 @@ var proto23 = {
 };
 
 // src/renderers/svg.js
-var matrix2 = new Matrix2();
 var svg = {
   version: 1.1,
   ns: "http://www.w3.org/2000/svg",

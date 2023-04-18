@@ -588,13 +588,13 @@ export class Group extends Shape {
 
       if (shallow) {
 
-        const [ax, ay] = matrix.multiply(left, top);
-        const [bx, by] = matrix.multiply(right, top);
-        const [cx, cy] = matrix.multiply(left, bottom);
-        const [dx, dy] = matrix.multiply(right, bottom);
+        const [ax, ay] = matrix.multiply(rect.left, rect.top);
+        const [bx, by] = matrix.multiply(rect.right, rect.top);
+        const [cx, cy] = matrix.multiply(rect.left, rect.bottom);
+        const [dx, dy] = matrix.multiply(rect.right, rect.bottom);
 
-        top = min(ax, bx, cx, dx);
-        left = min(ay, by, cy, dy);
+        top = min(ay, by, cy, dy);
+        left = min(ax, bx, cx, dx);
         right = max(ax, bx, cx, dx);
         bottom = max(ay, by, cy, dy);
 

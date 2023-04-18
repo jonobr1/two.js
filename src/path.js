@@ -1,6 +1,6 @@
 import { Commands } from './utils/path-commands.js';
 import { Collection } from './collection.js';
-import { lerp, mod } from './utils/math.js';
+import { lerp, mod, decomposeMatrix } from './utils/math.js';
 import { getComponentOnCubicBezier, getCurveBoundingBox, getCurveFromPoints } from './utils/curves.js';
 import { contains, getIdByLength, getCurveLength, getSubdivisions } from './utils/shape.js';
 import { _ } from './utils/underscore.js';
@@ -584,6 +584,16 @@ export class Path extends Shape {
 
     border = (this.linewidth || 0) / 2;
     l = this._renderer.vertices.length;
+
+    if (this.linewidth > 0 || (this.stroke && this.stroke !== 'transparent')) {
+      const { scaleX, scaleY } = decomposeMatrix(
+        matrix.elements[0], matrix.elements[3], matrix.elements[1],
+        matrix.elements[4], matrix.elements[2], matrix.elements[5]
+      );
+      if (typeof scaleX === 'number' && typeof scaleY === 'number') {
+        border = Math.max(scaleX, scaleY) * (this.linewidth || 0) / 2;
+      }
+    }
 
     if (l <= 0) {
       return {
