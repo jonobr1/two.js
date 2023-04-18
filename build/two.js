@@ -738,7 +738,7 @@ var Two = (() => {
       canvas: "CanvasRenderer"
     },
     Version: "v0.8.11",
-    PublishDate: "2023-01-30T20:34:45.639Z",
+    PublishDate: "2023-04-18T05:15:02.390Z",
     Identifier: "two-",
     Resolution: 12,
     AutoCalculateImportedMatrices: true,
@@ -6200,6 +6200,9 @@ var Two = (() => {
     let transforms, x, y;
     let id, scene, ref, tagName;
     let ca, cb, cc, error;
+    if (node === null) {
+      return styles;
+    }
     if (root.getComputedStyle) {
       const computedStyles = root.getComputedStyle(node);
       i = computedStyles.length;
@@ -6554,6 +6557,7 @@ var Two = (() => {
       let path;
       if (typeof node === "string") {
         path = node;
+        node = null;
       } else {
         path = node.getAttribute("d");
       }
