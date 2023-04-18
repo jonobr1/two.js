@@ -77,14 +77,16 @@ export class Matrix extends Events {
    */
   static Multiply(A, B, C) {
 
-    if (B.length <= 3) { // Multiply Vector
+    C = C || new Matrix();
 
-      const e = A;
+    if (B.elements.length <= 3) { // Multiply Vector
+
+      const e = A.elements;
       let x, y, z;
 
-      const a = B[0] || 0,
-            b = B[1] || 0,
-            c = B[2] || 0;
+      const a = B.elements[0] || 0,
+            b = B.elements[1] || 0,
+            c = B.elements[2] || 0;
 
       // Go down rows first
       // a, d, g, b, e, h, c, f, i
@@ -93,29 +95,32 @@ export class Matrix extends Events {
       y = e[3] * a + e[4] * b + e[5] * c;
       z = e[6] * a + e[7] * b + e[8] * c;
 
-      return { x: x, y: y, z: z };
+      C.elements[2] = x
+      C.elements[5] = y;
+      C.elements[8] = z;
+
+      return { x, y, z };
+
 
     }
 
-    const A0 = A[0], A1 = A[1], A2 = A[2];
-    const A3 = A[3], A4 = A[4], A5 = A[5];
-    const A6 = A[6], A7 = A[7], A8 = A[8];
+    const A0 = A.elements[0], A1 = A.elements[1], A2 = A.elements[2];
+    const A3 = A.elements[3], A4 = A.elements[4], A5 = A.elements[5];
+    const A6 = A.elements[6], A7 = A.elements[7], A8 = A.elements[8];
 
-    const B0 = B[0], B1 = B[1], B2 = B[2];
-    const B3 = B[3], B4 = B[4], B5 = B[5];
-    const B6 = B[6], B7 = B[7], B8 = B[8];
+    const B0 = B.elements[0], B1 = B.elements[1], B2 = B.elements[2];
+    const B3 = B.elements[3], B4 = B.elements[4], B5 = B.elements[5];
+    const B6 = B.elements[6], B7 = B.elements[7], B8 = B.elements[8];
 
-    C = C || new NumArray(9);
-
-    C[0] = A0 * B0 + A1 * B3 + A2 * B6;
-    C[1] = A0 * B1 + A1 * B4 + A2 * B7;
-    C[2] = A0 * B2 + A1 * B5 + A2 * B8;
-    C[3] = A3 * B0 + A4 * B3 + A5 * B6;
-    C[4] = A3 * B1 + A4 * B4 + A5 * B7;
-    C[5] = A3 * B2 + A4 * B5 + A5 * B8;
-    C[6] = A6 * B0 + A7 * B3 + A8 * B6;
-    C[7] = A6 * B1 + A7 * B4 + A8 * B7;
-    C[8] = A6 * B2 + A7 * B5 + A8 * B8;
+    C.elements[0] = A0 * B0 + A1 * B3 + A2 * B6;
+    C.elements[1] = A0 * B1 + A1 * B4 + A2 * B7;
+    C.elements[2] = A0 * B2 + A1 * B5 + A2 * B8;
+    C.elements[3] = A3 * B0 + A4 * B3 + A5 * B6;
+    C.elements[4] = A3 * B1 + A4 * B4 + A5 * B7;
+    C.elements[5] = A3 * B2 + A4 * B5 + A5 * B8;
+    C.elements[6] = A6 * B0 + A7 * B3 + A8 * B6;
+    C.elements[7] = A6 * B1 + A7 * B4 + A8 * B7;
+    C.elements[8] = A6 * B2 + A7 * B5 + A8 * B8;
 
     return C;
 
