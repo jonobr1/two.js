@@ -719,7 +719,7 @@ var Constants = {
     canvas: "CanvasRenderer"
   },
   Version: "v0.8.11",
-  PublishDate: "2023-04-18T05:15:02.390Z",
+  PublishDate: "2023-04-18T06:31:29.559Z",
   Identifier: "two-",
   Resolution: 12,
   AutoCalculateImportedMatrices: true,
@@ -1093,7 +1093,7 @@ var _Matrix = class extends Events {
       x = e[0] * a + e[1] * b + e[2] * c;
       y = e[3] * a + e[4] * b + e[5] * c;
       z = e[6] * a + e[7] * b + e[8] * c;
-      return { x, y, z };
+      return [x, y, z];
     }
     const A0 = A[0], A1 = A[1], A2 = A[2];
     const A3 = A[3], A4 = A[4], A5 = A[5];
@@ -1174,6 +1174,9 @@ var _Matrix = class extends Events {
       this.elements[7] *= a;
       this.elements[8] *= a;
       return this.trigger(Events.Types.change);
+    }
+    if (typeof c === "undefined") {
+      c = 1;
     }
     if (typeof d === "undefined") {
       a = a || 0;
@@ -1919,7 +1922,7 @@ var _Group = class extends Shape {
     this._update(true);
     let left = Infinity, right = -Infinity, top = Infinity, bottom = -Infinity;
     const regex3 = /texture|gradient/i;
-    matrix3 = shallow ? this._matrix : getComputedMatrix(this);
+    matrix3 = shallow ? this.matrix : this.worldMatrix;
     for (let i = 0; i < this.children.length; i++) {
       const child = this.children[i];
       if (!child.visible || regex3.test(child._renderer.type)) {
@@ -2630,8 +2633,7 @@ var canvas = {
       ctx.beginPath();
       let radius = size * 0.5, m;
       if (!this._sizeAttenuation) {
-        getComputedMatrix(this, matrix);
-        m = matrix.elements;
+        m = this.worldMatrix.elements;
         m = decomposeMatrix(m[0], m[3], m[1], m[4], m[2], m[5]);
         radius /= Math.max(m.scaleX, m.scaleY);
       }
@@ -4213,7 +4215,7 @@ var _Path = class extends Shape {
     let matrix3, border, l, i, v0, v1, c0x, c0y, c1x, c1y, a, b, c, d;
     let left = Infinity, right = -Infinity, top = Infinity, bottom = -Infinity;
     this._update(true);
-    matrix3 = shallow ? this._matrix : getComputedMatrix(this);
+    matrix3 = shallow ? this.matrix : this.worldMatrix;
     border = (this.linewidth || 0) / 2;
     l = this._renderer.vertices.length;
     if (l <= 0) {
@@ -5794,7 +5796,7 @@ var _Text = class extends Shape {
     let matrix3, a, b, c, d;
     let left, right, top, bottom;
     this._update(true);
-    matrix3 = shallow ? this._matrix : getComputedMatrix(this);
+    matrix3 = shallow ? this.matrix : this.worldMatrix;
     const { width, height } = _Text.Measure(this);
     const border = (this._linewidth || 0) / 2;
     switch (this.alignment) {
@@ -8468,8 +8470,7 @@ var svg = {
       if (this._flagVertices || this._flagSize || this._flagSizeAttenuation) {
         let size = this._size;
         if (!this._sizeAttenuation) {
-          getComputedMatrix(this, matrix2);
-          const me = matrix2.elements;
+          const me = this.worldMatrix.elements;
           const m = decomposeMatrix(me[0], me[3], me[1], me[4], me[2], me[5]);
           size /= Math.max(m.scaleX, m.scaleY);
         }
