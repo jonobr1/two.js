@@ -1,4 +1,3 @@
-import { getComputedMatrix } from './utils/math.js';
 import { Events } from './events.js';
 import { _ } from './utils/underscore.js';
 
@@ -444,7 +443,7 @@ export class Text extends Shape {
     // TODO: Update this to not __always__ update. Just when it needs to.
     this._update(true);
 
-    matrix = shallow ? this._matrix : getComputedMatrix(this);
+    matrix = shallow ? this.matrix : this.worldMatrix;
 
     const { width, height } = Text.Measure(this);
     const border = (this._linewidth || 0) / 2;

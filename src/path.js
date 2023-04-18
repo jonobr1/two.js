@@ -1,6 +1,6 @@
 import { Commands } from './utils/path-commands.js';
 import { Collection } from './collection.js';
-import { getComputedMatrix, lerp, mod } from './utils/math.js';
+import { lerp, mod } from './utils/math.js';
 import { getComponentOnCubicBezier, getCurveBoundingBox, getCurveFromPoints } from './utils/curves.js';
 import { contains, getIdByLength, getCurveLength, getSubdivisions } from './utils/shape.js';
 import { _ } from './utils/underscore.js';
@@ -580,7 +580,7 @@ export class Path extends Shape {
     // TODO: Update this to not __always__ update. Just when it needs to.
     this._update(true);
 
-    matrix = shallow ? this._matrix : getComputedMatrix(this);
+    matrix = shallow ? this.matrix : this.worldMatrix;
 
     border = (this.linewidth || 0) / 2;
     l = this._renderer.vertices.length;

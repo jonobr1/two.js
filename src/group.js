@@ -1,5 +1,4 @@
 import { Events } from './events.js';
-import { getComputedMatrix } from './utils/math.js';
 import { _ } from './utils/underscore.js';
 
 import { Vector } from './vector.js';
@@ -566,7 +565,7 @@ export class Group extends Shape {
 
     const regex = /texture|gradient/i;
 
-    matrix = shallow ? this._matrix : getComputedMatrix(this);
+    matrix = shallow ? this.matrix : this.worldMatrix;
 
     for (let i = 0; i < this.children.length; i++) {
 
