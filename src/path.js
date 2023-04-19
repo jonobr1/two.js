@@ -586,12 +586,17 @@ export class Path extends Shape {
     l = this._renderer.vertices.length;
 
     if (this.linewidth > 0 || (this.stroke && this.stroke !== 'transparent')) {
-      const { scaleX, scaleY } = decomposeMatrix(
-        matrix.elements[0], matrix.elements[3], matrix.elements[1],
-        matrix.elements[4], matrix.elements[2], matrix.elements[5]
-      );
-      if (typeof scaleX === 'number' && typeof scaleY === 'number') {
-        border = Math.max(scaleX, scaleY) * (this.linewidth || 0) / 2;
+      if (this.matrix.manual) {
+        const { scaleX, scaleY } = decomposeMatrix(
+          matrix.elements[0], matrix.elements[3], matrix.elements[1],
+          matrix.elements[4], matrix.elements[2], matrix.elements[5]
+        );
+        if (typeof scaleX === 'number' && typeof scaleY === 'number') {
+          border = Math.max(scaleX, scaleY) * (this.linewidth || 0) / 2;
+        }
+      } else {
+        border *= typeof this.scale === 'number'
+          ? this.scale : Math.max(this.scale.x, this.scale.y);
       }
     }
 
