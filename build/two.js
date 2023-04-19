@@ -738,7 +738,7 @@ var Two = (() => {
       canvas: "CanvasRenderer"
     },
     Version: "v0.8.11",
-    PublishDate: "2023-04-18T21:05:10.951Z",
+    PublishDate: "2023-04-19T04:36:56.682Z",
     Identifier: "two-",
     Resolution: 12,
     AutoCalculateImportedMatrices: true,
@@ -4238,16 +4238,20 @@ var Two = (() => {
       border = (this.linewidth || 0) / 2;
       l = this._renderer.vertices.length;
       if (this.linewidth > 0 || this.stroke && this.stroke !== "transparent") {
-        const { scaleX, scaleY } = decomposeMatrix(
-          matrix.elements[0],
-          matrix.elements[3],
-          matrix.elements[1],
-          matrix.elements[4],
-          matrix.elements[2],
-          matrix.elements[5]
-        );
-        if (typeof scaleX === "number" && typeof scaleY === "number") {
-          border = Math.max(scaleX, scaleY) * (this.linewidth || 0) / 2;
+        if (this.matrix.manual) {
+          const { scaleX, scaleY } = decomposeMatrix(
+            matrix.elements[0],
+            matrix.elements[3],
+            matrix.elements[1],
+            matrix.elements[4],
+            matrix.elements[2],
+            matrix.elements[5]
+          );
+          if (typeof scaleX === "number" && typeof scaleY === "number") {
+            border = Math.max(scaleX, scaleY) * (this.linewidth || 0) / 2;
+          }
+        } else {
+          border *= typeof this.scale === "number" ? this.scale : Math.max(this.scale.x, this.scale.y);
         }
       }
       if (l <= 0) {
