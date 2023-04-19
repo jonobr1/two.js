@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file. The format 
 
 <h3 class="visible">Nightly</h3>
 
++ Improved `Two.Path.getBoundingClientRect`, `Two.Group.getBoundingClientRect`, and `Two.Text.getBoundingClientRect` to correctly handle projected points that are rotated by matrices
 + Improved `types.d.ts` for `Two.Group`
 + `Two.Text` rendered to SVG directly instead of `<defs />`
 + `Two.SVGRenderer` disposes of unused effects from `<defs />`
