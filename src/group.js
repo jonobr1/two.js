@@ -1,5 +1,4 @@
 import { Events } from './events.js';
-import { getComputedMatrix } from './utils/math.js';
 import { _ } from './utils/underscore.js';
 
 import { Vector } from './vector.js';
@@ -555,7 +554,7 @@ export class Group extends Shape {
    * @description Return an object with top, left, right, bottom, width, and height parameters of the group.
    */
   getBoundingClientRect(shallow) {
-    let rect, matrix, a, b, c, d, tc, lc, rc, bc;
+    let rect, matrix, tc, lc, rc, bc;
 
     // TODO: Update this to not __always__ update. Just when it needs to.
     this._update(true);
@@ -566,7 +565,7 @@ export class Group extends Shape {
 
     const regex = /texture|gradient/i;
 
-    matrix = shallow ? this._matrix : getComputedMatrix(this);
+    matrix = shallow ? this.matrix : this.worldMatrix;
 
     for (let i = 0; i < this.children.length; i++) {
 
@@ -587,24 +586,26 @@ export class Group extends Shape {
         continue;
       }
 
-      top = min(rect.top, top);
-      left = min(rect.left, left);
-      right = max(rect.right, right);
-      bottom = max(rect.bottom, bottom);
+      if (shallow) {
 
-    }
+        const [ax, ay] = matrix.multiply(rect.left, rect.top);
+        const [bx, by] = matrix.multiply(rect.right, rect.top);
+        const [cx, cy] = matrix.multiply(rect.left, rect.bottom);
+        const [dx, dy] = matrix.multiply(rect.right, rect.bottom);
 
-    if (shallow) {
+        top = min(ay, by, cy, dy);
+        left = min(ax, bx, cx, dx);
+        right = max(ax, bx, cx, dx);
+        bottom = max(ay, by, cy, dy);
 
-      a = matrix.multiply(left, top, 1);
-      b = matrix.multiply(left, bottom, 1);
-      c = matrix.multiply(right, top, 1);
-      d = matrix.multiply(right, bottom, 1);
+      } else {
 
-      top = min(a.y, b.y, c.y, d.y);
-      left = min(a.x, b.x, c.x, d.x);
-      right = max(a.x, b.x, c.x, d.x);
-      bottom = max(a.y, b.y, c.y, d.y);
+        top = min(rect.top, top);
+        left = min(rect.left, left);
+        right = max(rect.right, right);
+        bottom = max(rect.bottom, bottom);
+
+      }
 
     }
 

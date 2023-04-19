@@ -309,7 +309,7 @@ QUnit.test('Two.Matrix', function(assert) {
   matrix.set(1, 2, 3, 4, 5, 6, 7, 8, 9);
   var vector = matrix.multiply(9, 8, 7);
 
-  result = { x: 46, y: 118, z: 190 };
+  result = [46, 118, 190];
 
   check = true;
 

@@ -1,5 +1,5 @@
 import { Commands } from '../utils/path-commands.js';
-import { decomposeMatrix, getComputedMatrix, mod, TWO_PI } from '../utils/math.js';
+import { decomposeMatrix, mod, TWO_PI } from '../utils/math.js';
 import { Curve } from '../utils/curves.js';
 import { Events } from '../events.js';
 import { getRatio } from '../utils/device-pixel-ratio.js';
@@ -7,10 +7,7 @@ import { _ } from '../utils/underscore.js';
 
 import { Group } from '../group.js';
 import { Vector } from '../vector.js';
-import { Matrix } from '../matrix.js';
 import { Constants } from '../constants.js';
-
-const matrix =  new Matrix();
 
 // Constants
 const emptyArray = [];
@@ -428,8 +425,7 @@ const canvas = {
       let radius = size * 0.5, m;
 
       if (!this._sizeAttenuation) {
-        getComputedMatrix(this, matrix);
-        m = matrix.elements;
+        m = this.worldMatrix.elements;
         m = decomposeMatrix(m[0], m[3], m[1], m[4], m[2], m[5]);
         radius /= Math.max(m.scaleX, m.scaleY);
       }

@@ -69,10 +69,10 @@ export class Matrix extends Events {
   /**
    * @name Two.Matrix.Multiply
    * @function
-   * @param {Two.Matrix} A
-   * @param {Two.Matrix} B
-   * @param {Two.Matrix} [C] - An optional matrix to apply the multiplication to.
-   * @returns {Two.Matrix} - If an optional `C` matrix isn't passed then a new one is created and returned.
+   * @param {Number[]} A
+   * @param {Number[]} B
+   * @param {Number[]} [C] - An optional matrix to apply the multiplication to.
+   * @returns {Number[]} - If an optional `C` matrix isn't passed then a new one is created and returned.
    * @description Multiply two matrices together and return the result.
    */
   static Multiply(A, B, C) {
@@ -93,7 +93,7 @@ export class Matrix extends Events {
       y = e[3] * a + e[4] * b + e[5] * c;
       z = e[6] * a + e[7] * b + e[8] * c;
 
-      return { x: x, y: y, z: z };
+      return [x, y, z];
 
     }
 
@@ -268,6 +268,10 @@ export class Matrix extends Events {
 
     }
 
+    if (typeof c === 'undefined') {
+      c = 1;
+    }
+
     if (typeof d === 'undefined') { // Multiply Vector
 
       a = a || 0;
@@ -282,7 +286,7 @@ export class Matrix extends Events {
       const y = e[3] * a + e[4] * b + e[5] * c;
       const z = e[6] * a + e[7] * b + e[8] * c;
 
-      return { x: x, y: y, z: z };
+      return [x, y, z];
 
     }
 

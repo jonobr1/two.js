@@ -1,13 +1,10 @@
 import { Commands } from '../utils/path-commands.js';
-import { decomposeMatrix, getComputedMatrix, mod, toFixed } from '../utils/math.js';
+import { decomposeMatrix, mod, toFixed } from '../utils/math.js';
 import { Events } from '../events.js';
 import { _ } from '../utils/underscore.js';
 
 import { Group } from '../group.js';
 import { Vector } from '../vector.js';
-import { Matrix } from '../matrix.js';
-
-const matrix = new Matrix();
 
 const svg = {
 
@@ -577,8 +574,7 @@ const svg = {
       if (this._flagVertices || this._flagSize || this._flagSizeAttenuation) {
         let size = this._size;
         if (!this._sizeAttenuation) {
-          getComputedMatrix(this, matrix);
-          const me = matrix.elements;
+          const me = this.worldMatrix.elements;
           const m = decomposeMatrix(me[0], me[3], me[1], me[4], me[2], me[5]);
           size /= Math.max(m.scaleX, m.scaleY);
         }
