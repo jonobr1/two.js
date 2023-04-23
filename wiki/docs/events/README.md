@@ -235,7 +235,7 @@ Alias for [Two.Events.addEventListener](/docs/events/#addeventlistener).
 | Argument | Description |
 | ---- | ----------- |
 |  name  | The name of the event intended to be removed. |
-|  handler  | The handler intended to be reomved. |
+|  handler  | The handler intended to be removed. |
 </div>
 
 

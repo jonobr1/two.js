@@ -48,7 +48,7 @@ export class Events {
    * @name Two.Events#removeEventListener
    * @function
    * @param {String} [name] - The name of the event intended to be removed.
-   * @param {Function} [handler] - The handler intended to be reomved.
+   * @param {Function} [handler] - The handler intended to be removed.
    * @description Call to remove listeners from a specific event. If only `name` is passed then all the handlers attached to that `name` will be removed. If no arguments are passed then all handlers for every event on the obejct are removed.
    */
   removeEventListener(name, handler) {

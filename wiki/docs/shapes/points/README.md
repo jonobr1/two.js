@@ -52,7 +52,7 @@ This is a primary primitive class for quickly and easily drawing points in Two.j
 <div class="properties">
 
 
-Boolean dictating whether Two.js should scale the size of the points based on its matrix hierarcy.
+Boolean dictating whether Two.js should scale the size of the points based on its matrix hierarchy.
 
 
 </div>
