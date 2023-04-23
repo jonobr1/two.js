@@ -252,7 +252,7 @@ The characters to be rendered to the the screen. Referred to in the documentatio
 <div class="properties">
 
 
-The font family Two.js should attempt to regsiter for rendering. The default value is `'sans-serif'`. Comma separated font names can be supplied as a "stack", similar to the CSS implementation of `font-family`.
+The font family Two.js should attempt to register for rendering. The default value is `'sans-serif'`. Comma separated font names can be supplied as a "stack", similar to the CSS implementation of `font-family`.
 
 
 </div>
@@ -933,7 +933,7 @@ The shape whose alpha property becomes a clipping area for the text.
 
 
 ::: tip nota-bene
-This property is currently not working becuase of SVG spec issues found here {@link https://code.google.com/p/chromium/issues/detail?id=370951}.
+This property is currently not working because of SVG spec issues found here {@link https://code.google.com/p/chromium/issues/detail?id=370951}.
 :::
 
 
@@ -990,7 +990,7 @@ Object to define clipping area.
 
 
 ::: tip nota-bene
-This property is currently not working becuase of SVG spec issues found here {@link https://code.google.com/p/chromium/issues/detail?id=370951}.
+This property is currently not working because of SVG spec issues found here {@link https://code.google.com/p/chromium/issues/detail?id=370951}.
 :::
 
 

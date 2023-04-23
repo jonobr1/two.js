@@ -152,7 +152,7 @@ export class Text extends Shape {
 
   /**
    * @name Two.Text#family
-   * @property {String} - The font family Two.js should attempt to regsiter for rendering. The default value is `'sans-serif'`. Comma separated font names can be supplied as a "stack", similar to the CSS implementation of `font-family`.
+   * @property {String} - The font family Two.js should attempt to register for rendering. The default value is `'sans-serif'`. Comma separated font names can be supplied as a "stack", similar to the CSS implementation of `font-family`.
    */
   _family = 'sans-serif';
 
@@ -236,14 +236,14 @@ export class Text extends Shape {
   /**
    * @name Two.Text#mask
    * @property {Two.Shape} - The shape whose alpha property becomes a clipping area for the text.
-   * @nota-bene This property is currently not working becuase of SVG spec issues found here {@link https://code.google.com/p/chromium/issues/detail?id=370951}.
+   * @nota-bene This property is currently not working because of SVG spec issues found here {@link https://code.google.com/p/chromium/issues/detail?id=370951}.
    */
   _mask = null;
 
   /**
    * @name Two.Text#clip
    * @property {Two.Shape} - Object to define clipping area.
-   * @nota-bene This property is currently not working becuase of SVG spec issues found here {@link https://code.google.com/p/chromium/issues/detail?id=370951}.
+   * @nota-bene This property is currently not working because of SVG spec issues found here {@link https://code.google.com/p/chromium/issues/detail?id=370951}.
    */
   _clip = false;
 

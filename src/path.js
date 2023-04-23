@@ -1367,7 +1367,7 @@ const proto = {
   /**
    * @name Two.Path#mask
    * @property {Two.Shape} - The shape whose alpha property becomes a clipping area for the path.
-   * @nota-bene This property is currently not working becuase of SVG spec issues found here {@link https://code.google.com/p/chromium/issues/detail?id=370951}.
+   * @nota-bene This property is currently not working because of SVG spec issues found here {@link https://code.google.com/p/chromium/issues/detail?id=370951}.
    */
   mask: {
 
