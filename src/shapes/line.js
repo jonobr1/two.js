@@ -55,7 +55,7 @@ const proto = {
   right: {
     enumerable: true,
     get: function() {
-      return this.vertices[0];
+      return this.vertices[1];
     },
     set: function(v) {
       if (_.isObject(v)) {

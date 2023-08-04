@@ -2843,6 +2843,18 @@ declare module "two.js/src/shapes/line" {
      */
     export class Line extends Path {
       constructor(x1?: number, y1?: number, x2?: number, y2?: number);
+
+    /**
+     * @name Two.Line#left
+     * @property {Anchor} - the first vertex on the line.
+     */
+      left: Anchor;
+
+    /**
+     * @name Two.Line#right
+     * @property {Anchor} - the second vertex on the line.
+     */
+      right: Anchor;
     }
     import { Path } from "two.js/src/path";
 }
