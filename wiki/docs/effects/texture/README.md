@@ -407,7 +407,7 @@ __Returns__: HTMLImageElement
 <div class="properties">
 
 
-Convenience function to set [Two.Texture.image](/docs/effects/texture/#image) properties with canonincal versions set in [Two.Texture.ImageRegistry](/docs/effects/texture/#imageregistry).
+Convenience function to set [Two.Texture.image](/docs/effects/texture/#image) properties with canonical versions set in [Two.Texture.ImageRegistry](/docs/effects/texture/#imageregistry).
 
 
 </div>

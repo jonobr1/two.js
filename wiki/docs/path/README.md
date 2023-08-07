@@ -1406,8 +1406,8 @@ Given a float `t` from 0 to 1, return a point or assign a passed `obj`'s coordin
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L669">
-    path.js:669
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L685">
+    path.js:685
   </a>
 
 </div>
@@ -1451,8 +1451,8 @@ Based on closed / curved and sorting of vertices plot where all points should be
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L808">
-    path.js:808
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L824">
+    path.js:824
   </a>
 
 </div>
@@ -1513,8 +1513,8 @@ Insert a [Two.Anchor](/docs/anchor/) at the midpoint between every item in [Two.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L829">
-    path.js:829
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L845">
+    path.js:845
   </a>
 
 </div>
@@ -1560,8 +1560,8 @@ The sum of distances between all [Two.Path.vertices](/docs/path/#vertices).
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L1253">
-    path.js:1253
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L1269">
+    path.js:1269
   </a>
 
 </div>
@@ -1607,8 +1607,8 @@ The shape whose alpha property becomes a clipping area for the path.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L1367">
-    path.js:1367
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L1383">
+    path.js:1383
   </a>
 
 </div>
@@ -1664,8 +1664,8 @@ Tells Two.js renderer if this object represents a mask for another object (or no
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L1390">
-    path.js:1390
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L1406">
+    path.js:1406
   </a>
 
 </div>

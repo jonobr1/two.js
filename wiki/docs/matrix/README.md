@@ -94,7 +94,7 @@ A stored reference to the default value of a 3 x 3 matrix.
 
 <div class="returns">
 
-__Returns__: Two.Matrix
+__Returns__: Array.<Number>
 
 
 - If an optional `C` matrix isn't passed then a new one is created and returned.
@@ -694,8 +694,8 @@ Return an inverted version of the matrix. If no optional one is passed a new mat
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L318">
-    matrix.js:318
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L322">
+    matrix.js:322
   </a>
 
 </div>
@@ -746,8 +746,8 @@ Uniformly scale the transformation matrix.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L360">
-    matrix.js:360
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L364">
+    matrix.js:364
   </a>
 
 </div>
@@ -799,8 +799,8 @@ Scale the transformation matrix in two dimensions.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L367">
-    matrix.js:367
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L371">
+    matrix.js:371
   </a>
 
 </div>
@@ -851,8 +851,8 @@ Rotate the matrix.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L385">
-    matrix.js:385
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L389">
+    matrix.js:389
   </a>
 
 </div>
@@ -904,8 +904,8 @@ Translate the matrix.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L400">
-    matrix.js:400
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L404">
+    matrix.js:404
   </a>
 
 </div>
@@ -956,8 +956,8 @@ Skew the matrix by an angle in the x axis direction.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L413">
-    matrix.js:413
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L417">
+    matrix.js:417
   </a>
 
 </div>
@@ -1008,8 +1008,8 @@ Skew the matrix by an angle in the y axis direction.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L427">
-    matrix.js:427
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L431">
+    matrix.js:431
   </a>
 
 </div>
@@ -1070,8 +1070,8 @@ Create a transform string. Used for the Two.js rendering APIs.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L441">
-    matrix.js:441
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L445">
+    matrix.js:445
   </a>
 
 </div>
@@ -1123,8 +1123,8 @@ Create a transform array. Used for the Two.js rendering APIs.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L457">
-    matrix.js:457
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L461">
+    matrix.js:461
   </a>
 
 </div>
@@ -1176,8 +1176,8 @@ Create a transform array. Used for the Two.js rendering APIs.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L516">
-    matrix.js:516
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L520">
+    matrix.js:520
   </a>
 
 </div>
@@ -1221,8 +1221,8 @@ Create a JSON compatible object that represents information of the matrix.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L575">
-    matrix.js:575
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L579">
+    matrix.js:579
   </a>
 
 </div>
@@ -1266,8 +1266,8 @@ Clone the current matrix.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L587">
-    matrix.js:587
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L591">
+    matrix.js:591
   </a>
 
 </div>

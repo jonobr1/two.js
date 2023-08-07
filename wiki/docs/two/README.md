@@ -106,7 +106,7 @@ The different rendering types available in the library.
 <div class="properties">
 
 
-The current working version of the library, `v0.8.10`.
+The current working version of the library, `v0.8.11`.
 
 
 </div>
@@ -1653,7 +1653,7 @@ Creates a Two.js rectangle and adds it to the scene.
 
 <div class="returns">
 
-__Returns__: Two.Rectangle
+__Returns__: Two.RoundedRectangle
 
 
 
@@ -2329,7 +2329,7 @@ __Returns__: Two.LinearGradient
 
 <div class="description">
 
-Creates a Two.js linear gradient and ads it to the scene. In the case of an effect it's added to an invisible "definitions" group.
+Creates a Two.js linear gradient and adds it to the scene. In the case of an effect it's added to an invisible "definitions" group.
 
 </div>
 
@@ -2392,7 +2392,7 @@ __Returns__: Two.RadialGradient
 
 <div class="description">
 
-Creates a Two.js linear-gradient object and ads it to the scene. In the case of an effect it's added to an invisible "definitions" group.
+Creates a Two.js linear-gradient object and adds it to the scene. In the case of an effect it's added to an invisible "definitions" group.
 
 </div>
 
