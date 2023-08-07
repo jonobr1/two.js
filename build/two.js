@@ -738,7 +738,7 @@ var Two = (() => {
       canvas: "CanvasRenderer"
     },
     Version: "v0.8.11",
-    PublishDate: "2023-04-19T04:39:57.664Z",
+    PublishDate: "2023-08-07T18:08:18.689Z",
     Identifier: "two-",
     Resolution: 12,
     AutoCalculateImportedMatrices: true,
@@ -5478,7 +5478,7 @@ var Two = (() => {
     right: {
       enumerable: true,
       get: function() {
-        return this.vertices[0];
+        return this.vertices[1];
       },
       set: function(v) {
         if (_.isObject(v)) {
