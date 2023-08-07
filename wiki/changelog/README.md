@@ -11,9 +11,9 @@ All notable changes to this project will be documented in this file. The format 
 
 <carbon-ads />
 
-## Nightly
+## August 7, 2023 v0.8.11
 
-<h3 class="visible">Nightly</h3>
+<h3 class="visible">August 7, 2023</h3><version-link v="v0.8.11" />
 
 + Fixed getters on `Two.Anchor.left` and `Two.Anchor.right`
 + Improved `Two.Path.getBoundingClientRect`, `Two.Group.getBoundingClientRect`, and `Two.Text.getBoundingClientRect` to correctly handle projected points that are rotated by matrices
