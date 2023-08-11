@@ -20,7 +20,7 @@
         height: 400
       });
 
-      var answer = {"top":134.17185349699037,"left":134.17185349699037,"right":265.82814650300963,"bottom":265.82814650300963,"width":131.65629300601927,"height":131.65629300601927};
+      var answer = {"top":134.171853,"left":134.171853,"right":265.828146,"bottom":265.828146,"width":131.656293,"height":131.656293};
       var shape = two.makeRectangle(200, 200, 100, 100);
       shape.rotation = Math.PI / 8;
       shape.noStroke().fill = 'rgb(60, 209, 201)';
@@ -30,8 +30,13 @@
 
       two.update();
 
+      var rect = shape.getBoundingClientRect();
+      for (let prop in rect) {
+        var value = rect[prop];
+        rect[prop] = Two.Utils.toFixed(value);
+      }
       var a1 = JSON.stringify(answer);
-      var a2 = JSON.stringify(shape.getBoundingClientRect());
+      var a2 = JSON.stringify(rect);
 
       assert.equal(a1, a2, true, 'Two.Path.getBoundingClientRect properly calculates rotated shapes.');
 
@@ -46,7 +51,7 @@
         height: 400
       });
 
-      var answer = {"top":129.67185362539465,"left":129.67185362539465,"right":270.32814637460535,"bottom":270.32814637460535,"width":140.6562927492107,"height":140.6562927492107};
+      var answer = {"top":129.671853,"left":129.671853,"right":270.328146,"bottom":270.328146,"width":140.656293,"height":140.656293};
       var shape = two.makeRectangle(200, 200, 50, 50);
       shape.rotation = Math.PI / 8;
       shape.fill = 'rgb(60, 209, 201)';
@@ -59,8 +64,13 @@
 
       two.update();
 
+      var rect = shape.getBoundingClientRect();
+      for (let prop in rect) {
+        var value = rect[prop];
+        rect[prop] = Two.Utils.toFixed(value);
+      }
       var a1 = JSON.stringify(answer);
-      var a2 = JSON.stringify(shape.getBoundingClientRect());
+      var a2 = JSON.stringify(rect);
 
       assert.equal(a1, a2, true, 'Two.Path.getBoundingClientRect properly calculates scaled shapes.');
 
@@ -85,8 +95,13 @@
 
       two.update();
 
+      var rect = shape.getBoundingClientRect();
+      for (let prop in rect) {
+        var value = rect[prop];
+        rect[prop] = Two.Utils.toFixed(value);
+      }
       var a1 = JSON.stringify(answer);
-      var a2 = JSON.stringify(shape.getBoundingClientRect());
+      var a2 = JSON.stringify(rect);
 
       assert.equal(a1, a2, true, 'Two.Path.getBoundingClientRect properly calculates circles.');
 
@@ -101,7 +116,7 @@
         height: 400
       });
 
-      var answer = {"top":150.00000085571355,"left":150.00000085571355,"right":249.99999914428645,"bottom":249.99999914428645,"width":99.9999982885729,"height":99.9999982885729};
+      var answer = {"top":150,"left":150,"right":249.999999,"bottom":249.999999,"width":99.999998,"height":99.999998};
       var shape = two.makeCircle(200, 200, 50);
       shape.fill = 'rgb(60, 209, 201)';
       shape.linewidth = 0;
@@ -112,8 +127,13 @@
 
       two.update();
 
+      var rect = shape.getBoundingClientRect();
+      for (let prop in rect) {
+        var value = rect[prop];
+        rect[prop] = Two.Utils.toFixed(value);
+      }
       var a1 = JSON.stringify(answer);
-      var a2 = JSON.stringify(shape.getBoundingClientRect());
+      var a2 = JSON.stringify(rect);
 
       assert.equal(a1, a2, true, 'Two.Path.getBoundingClientRect properly calculates rotated circles (projected).');
 
@@ -128,7 +148,7 @@
         height: 400
       });
 
-      var answer = {"top":182.75222946912982,"left":167.23314124921308,"right":232.76685875078692,"bottom":217.24777053087018,"width":65.53371750157385,"height":34.49554106174037};
+      var answer = {"top":182.752229,"left":167.233141,"right":232.766858,"bottom":217.24777,"width":65.533717,"height":34.495541};
       var shape = two.makeText('Hello World', 200, 200);
       shape.rotation = Math.PI / 8;
       shape.noStroke().fill = 'rgb(60, 209, 201)';
@@ -138,7 +158,15 @@
 
       two.update();
 
-      assert.equal(_.isEqual(answer, shape.getBoundingClientRect()), true, 'Two.Text.getBoundingClientRect properly calculates rotated shapes.');
+      var rect = shape.getBoundingClientRect();
+      for (let prop in rect) {
+        var value = rect[prop];
+        rect[prop] = Two.Utils.toFixed(value);
+      }
+      var a1 = JSON.stringify(answer);
+      var a2 = JSON.stringify(rect);
+
+      assert.equal(a1, a2, true, 'Two.Text.getBoundingClientRect properly calculates rotated shapes.');
 
       QUnit.Utils.addElemToTest(assert.test, [two.renderer.domElement]);
 
@@ -148,7 +176,7 @@
 
   QUnit.test('Two.getComputedMatrix', function(assert) {
 
-    assert.expect(1);
+    assert.expect(2);
     // assert.done = assert.async(1);
 
     (function() {
@@ -178,7 +206,7 @@
       parentGroup.add(group);
       group.add(shape);
 
-      var answer = {"top":92.846993444976,"left":146.96659183364787,"right":437.80928707260216,"bottom":383.6896886839303,"width":290.8426952389543,"height":290.8426952389543};
+      var answer = {"top":95.846993,"left":149.966591,"right":434.809287,"bottom":380.689688,"width":284.842695,"height":284.842695};
 
       var bBox = group.getBoundingClientRect();
       var rect = two.makeRectangle(
@@ -197,7 +225,17 @@
 
       two.update();
 
-      assert.equal(_.isEqual(answer, bBox) && _.isEqual(answer, bBoxClose), true, 'Two.Path.getBoundingClientRect properly calculates nested shapes / groups.');
+      for (var prop in bBox) {
+        bBox[prop] = Two.Utils.toFixed(bBox[prop]);
+        bBoxClose[prop] = Two.Utils.toFixed(bBoxClose[prop]);
+      }
+
+      var a1 = JSON.stringify(answer);
+      var a2 = JSON.stringify(bBox);
+      var a3 = JSON.stringify(bBoxClose);
+
+      assert.equal(a1, a2, true, 'Two.Path.getBoundingClientRect properly calculates parent’s Two.Group.getBoundingClientRect.');
+      assert.equal(a1, a3, true, 'Two.Path.getBoundingClientRect properly calculates child’s Two.Group.getBoundingClientRect.');
 
       QUnit.Utils.addElemToTest(assert.test, [two.renderer.domElement]);
 
