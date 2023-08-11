@@ -296,6 +296,7 @@ export class Texture extends Element {
     }
 
     image.crossOrigin = 'anonymous';
+    image.referrerPolicy = 'no-referrer';
 
     return image;
 
