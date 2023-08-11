@@ -718,8 +718,8 @@ var Constants = {
     svg: "SVGRenderer",
     canvas: "CanvasRenderer"
   },
-  Version: "v0.8.11",
-  PublishDate: "2023-08-07T18:08:18.689Z",
+  Version: "v0.8.12",
+  PublishDate: "2023-08-11T22:30:04.119Z",
   Identifier: "two-",
   Resolution: 12,
   AutoCalculateImportedMatrices: true,
@@ -3810,6 +3810,7 @@ var _Texture = class extends Element {
       console.warn("Two.js: no prototypical image defined for Two.Texture");
     }
     image.crossOrigin = "anonymous";
+    image.referrerPolicy = "no-referrer";
     return image;
   }
   static load(texture, callback) {
