@@ -174,5 +174,5 @@ Two.js has been in operation since 2012. For a full list of changes from its fir
 [npm-url]: https://www.npmjs.com/package/two.js
 [build-size]: https://badgen.net/bundlephobia/minzip/two.js
 [build-size-url]: https://bundlephobia.com/result?p=two.js
-[npm-downloads]: https://img.shields.io/npm/dm/two.js
+[npm-downloads]: https://img.shields.io/npm/dt/two.js
 [npmtrends-url]: https://www.npmtrends.com/two.js
