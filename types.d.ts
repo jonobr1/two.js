@@ -2857,6 +2857,7 @@ declare module "two.js/src/shapes/line" {
       right: Anchor;
     }
     import { Path } from "two.js/src/path";
+    import { Anchor } from "two.js/src/anchor";
 }
 declare module "two.js/src/shapes/rounded-rectangle" {
     /**
