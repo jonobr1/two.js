@@ -168,7 +168,8 @@ export class ZUI {
       z = typeof c === 'number' ? c : 1;
     }
     const n = this.viewportOffset.matrix.inverse().multiply(x, y, z);
-    return m.multiply(n.x, n.y, n.z);
+    const r = m.multiply(n[0], n[1], n[2]);
+    return { x: r[0], y: r[1], z: r[2] };
   }
 
   /**
@@ -204,7 +205,8 @@ export class ZUI {
       z = typeof c === 'number' ? c : 1;
     }
     const sm = this.surfaceMatrix.multiply(x, y, z);
-    return vo.multiply(sm.x, sm.y, sm.z);
+    const r = vo.multiply(sm[0], sm[1], sm[2]);
+    return { x: r[0], y: r[1], z: r[2] };
   }
 
   /**
