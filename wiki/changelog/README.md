@@ -11,9 +11,9 @@ All notable changes to this project will be documented in this file. The format 
 
 <carbon-ads />
 
-## Nightly
+## October 16, 2023 v0.8.12
 
-<h3 class="visible">Nightly</h3>
+<h3 class="visible">October 16, 2023</h3><version-link v="v0.8.12" />
 
 + Added "no-referrer" policy to image requests
 + Updated extras to be compatible with `Two.Matrix` API changes
