@@ -16,6 +16,13 @@ All notable changes to this project will be documented in this file. The format 
 <h3 class="visible">Nightly</h3>
 
 + Added "no-referrer" policy to image requests
++ Updated extras to be compatible with `Two.Matrix` API changes
++ Two.Path.noFill() yields `"none"` instead of `"transparent"`
++ Two.Path.noStroke() yields `"none"` instead of `"transparent"`
++ Two.Text.noFill() yields `"none"` instead of `"transparent"`
++ Two.Text.noStroke() yields `"none"` instead of `"transparent"`
++ Two.Points.noFill() yields `"none"` instead of `"transparent"`
++ Two.Points.noStroke() yields `"none"` instead of `"transparent"`
 
 ## August 7, 2023 v0.8.11
 
