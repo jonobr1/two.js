@@ -719,7 +719,7 @@ var Constants = {
     canvas: "CanvasRenderer"
   },
   Version: "v0.8.12",
-  PublishDate: "2023-08-11T22:30:04.119Z",
+  PublishDate: "2023-10-16T17:55:26.551Z",
   Identifier: "two-",
   Resolution: 12,
   AutoCalculateImportedMatrices: true,
@@ -4169,11 +4169,11 @@ var _Path = class extends Shape {
     return result;
   }
   noFill() {
-    this.fill = "transparent";
+    this.fill = "none";
     return this;
   }
   noStroke() {
-    this.stroke = void 0;
+    this.stroke = "none";
     return this;
   }
   corner() {
@@ -4219,7 +4219,7 @@ var _Path = class extends Shape {
     matrix = shallow ? this.matrix : this.worldMatrix;
     border = (this.linewidth || 0) / 2;
     l = this._renderer.vertices.length;
-    if (this.linewidth > 0 || this.stroke && this.stroke !== "transparent") {
+    if (this.linewidth > 0 || this.stroke && !/(transparent|none)/i.test(this.stroke)) {
       if (this.matrix.manual) {
         const { scaleX, scaleY } = decomposeMatrix(
           matrix.elements[0],
@@ -5708,7 +5708,7 @@ var _Text = class extends Shape {
     __publicField(this, "_weight", 500);
     __publicField(this, "_decoration", "none");
     __publicField(this, "_fill", "#000");
-    __publicField(this, "_stroke", "transparent");
+    __publicField(this, "_stroke", "none");
     __publicField(this, "_linewidth", 1);
     __publicField(this, "_opacity", 1);
     __publicField(this, "_visible", true);
@@ -5798,12 +5798,12 @@ var _Text = class extends Shape {
     return result;
   }
   noFill() {
-    this.fill = "transparent";
+    this.fill = "none";
     return this;
   }
   noStroke() {
-    this.stroke = void 0;
-    this.linewidth = void 0;
+    this.stroke = "none";
+    this.linewidth = 0;
     return this;
   }
   getBoundingClientRect(shallow) {
@@ -6360,7 +6360,7 @@ function applySvgAttributes(node, elem, parentStyles) {
           }
           elem[prop] = ref;
         } else {
-          elem[prop] = /none/i.test(value) ? "transparent" : value;
+          elem[prop] = value;
         }
         break;
       case "id":
