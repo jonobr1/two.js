@@ -2439,13 +2439,13 @@ declare module "two.js/src/path" {
         /**
          * @name Two.Path#noFill
          * @function
-         * @description Short hand method to set fill to `transparent`.
+         * @description Short hand method to set fill to `none`.
          */
         noFill(): Path;
         /**
          * @name Two.Path#noStroke
          * @function
-         * @description Short hand method to set stroke to `transparent`.
+         * @description Short hand method to set stroke to `none`.
          */
         noStroke(): Path;
         /**
@@ -3149,13 +3149,13 @@ declare module "two.js/src/text" {
         /**
          * @name Two.Text#noFill
          * @function
-         * @description Short hand method to set fill to `transparent`.
+         * @description Short hand method to set fill to `none`.
          */
         noFill(): Text;
         /**
          * @name Two.Text#noStroke
          * @function
-         * @description Short hand method to set stroke to `transparent`.
+         * @description Short hand method to set stroke to `none`.
          */
         noStroke(): Text;
         /**
@@ -3512,13 +3512,13 @@ declare module "two.js/src/shapes/points" {
         /**
          * @name Two.Points#noFill
          * @function
-         * @description Short hand method to set fill to `transparent`.
+         * @description Short hand method to set fill to `none`.
          */
         noFill: () => Points;
         /**
          * @name Two.Points#noStroke
          * @function
-         * @description Short hand method to set stroke to `transparent`.
+         * @description Short hand method to set stroke to `none`.
          */
         noStroke: () => Points;
         /**

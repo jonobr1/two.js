@@ -210,7 +210,7 @@ export class Text extends Shape {
    * @property {(String|Two.Gradient|Two.Texture)} - The value of what the text object should be filled in with.
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
    */
-  _stroke = 'transparent';
+  _stroke = 'none';
 
   /**
    * @name Two.Text#linewidth
@@ -406,21 +406,21 @@ export class Text extends Shape {
   /**
    * @name Two.Text#noFill
    * @function
-   * @description Short hand method to set fill to `transparent`.
+   * @description Short hand method to set fill to `none`.
    */
   noFill() {
-    this.fill = 'transparent';
+    this.fill = 'none';
     return this;
   }
 
   /**
    * @name Two.Text#noStroke
    * @function
-   * @description Short hand method to set stroke to `transparent`.
+   * @description Short hand method to set stroke to `none`.
    */
   noStroke() {
-    this.stroke = undefined;
-    this.linewidth = undefined;
+    this.stroke = 'none';
+    this.linewidth = 0;
     return this;
   }
 

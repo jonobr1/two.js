@@ -232,14 +232,14 @@ export class Points extends Shape {
   /**
    * @name Two.Points#noFill
    * @function
-   * @description Short hand method to set fill to `transparent`.
+   * @description Short hand method to set fill to `none`.
    */
   noFill = Path.prototype.noFill;
 
   /**
    * @name Two.Points#noStroke
    * @function
-   * @description Short hand method to set stroke to `transparent`.
+   * @description Short hand method to set stroke to `none`.
    */
   noStroke = Path.prototype.noStroke;
 

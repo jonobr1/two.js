@@ -738,7 +738,7 @@ var Two = (() => {
       canvas: "CanvasRenderer"
     },
     Version: "v0.8.12",
-    PublishDate: "2023-08-11T22:30:04.119Z",
+    PublishDate: "2023-10-16T17:55:26.551Z",
     Identifier: "two-",
     Resolution: 12,
     AutoCalculateImportedMatrices: true,
@@ -4188,11 +4188,11 @@ var Two = (() => {
       return result;
     }
     noFill() {
-      this.fill = "transparent";
+      this.fill = "none";
       return this;
     }
     noStroke() {
-      this.stroke = void 0;
+      this.stroke = "none";
       return this;
     }
     corner() {
@@ -4238,7 +4238,7 @@ var Two = (() => {
       matrix = shallow ? this.matrix : this.worldMatrix;
       border = (this.linewidth || 0) / 2;
       l = this._renderer.vertices.length;
-      if (this.linewidth > 0 || this.stroke && this.stroke !== "transparent") {
+      if (this.linewidth > 0 || this.stroke && !/(transparent|none)/i.test(this.stroke)) {
         if (this.matrix.manual) {
           const { scaleX, scaleY } = decomposeMatrix(
             matrix.elements[0],
@@ -5725,7 +5725,7 @@ var Two = (() => {
     _weight = 500;
     _decoration = "none";
     _fill = "#000";
-    _stroke = "transparent";
+    _stroke = "none";
     _linewidth = 1;
     _opacity = 1;
     _visible = true;
@@ -5817,12 +5817,12 @@ var Two = (() => {
       return result;
     }
     noFill() {
-      this.fill = "transparent";
+      this.fill = "none";
       return this;
     }
     noStroke() {
-      this.stroke = void 0;
-      this.linewidth = void 0;
+      this.stroke = "none";
+      this.linewidth = 0;
       return this;
     }
     getBoundingClientRect(shallow) {
@@ -6379,7 +6379,7 @@ var Two = (() => {
             }
             elem[prop] = ref;
           } else {
-            elem[prop] = /none/i.test(value) ? "transparent" : value;
+            elem[prop] = value;
           }
           break;
         case "id":

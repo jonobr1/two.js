@@ -447,7 +447,7 @@ function applySvgAttributes(node, elem, parentStyles) {
           }
           elem[prop] = ref;
         } else {
-          elem[prop] = (/none/i.test(value)) ? 'transparent' : value;
+          elem[prop] = value;
         }
         break;
       case 'id':

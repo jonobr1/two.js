@@ -487,20 +487,20 @@ export class Path extends Shape {
   /**
    * @name Two.Path#noFill
    * @function
-   * @description Short hand method to set fill to `transparent`.
+   * @description Short hand method to set fill to `none`.
    */
   noFill() {
-    this.fill = 'transparent';
+    this.fill = 'none';
     return this;
   }
 
   /**
    * @name Two.Path#noStroke
    * @function
-   * @description Short hand method to set stroke to `transparent`.
+   * @description Short hand method to set stroke to `none`.
    */
   noStroke() {
-    this.stroke = undefined;
+    this.stroke = 'none';
     return this;
   }
 
@@ -585,7 +585,7 @@ export class Path extends Shape {
     border = (this.linewidth || 0) / 2;
     l = this._renderer.vertices.length;
 
-    if (this.linewidth > 0 || (this.stroke && this.stroke !== 'transparent')) {
+    if (this.linewidth > 0 || (this.stroke && !(/(transparent|none)/i.test(this.stroke)))) {
       if (this.matrix.manual) {
         const { scaleX, scaleY } = decomposeMatrix(
           matrix.elements[0], matrix.elements[3], matrix.elements[1],
