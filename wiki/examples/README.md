@@ -133,7 +133,7 @@ Various examples of how to use different features of Two.js with associated tags
 <example-card
   title="Animated Spritesheet"
   href="https://codepen.io/jonobr1/pen/ZEowwQR"
-  src="https://storage.googleapis.com/archive.jono.fyi/forums/codepen/ken-stance.png"
+  src="https://archive.jono.fyi/forums/codepen/ken-stance.png"
   tags="sprite, animated, image, bitmap" />
 
 <example-card
