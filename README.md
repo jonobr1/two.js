@@ -162,6 +162,17 @@ process.exit();
 
 ```
 
+## Build Documentation
+The [Two.js](http://two.js.org/) website is bundled with this repository. Relying on [Vuepress](https://vuepress.vuejs.org/) the repository generates a website based on numerous `README.md` files housed in the `wiki` directory. Use the following the node commands as follows:
+
+```bash
+npm run docs:generate   // Generate README.md files for documentation from source code comments
+npm run docs:dev        // Creates a local server to generate all documentation
+npm run docs:build      // Builds out static site and associated files to wiki/.vuepress/dist
+```
+
+N.B: Vuepress is a legacy library and as such these commands rely on an older version of Node. Run `nvm use` if you get errors. If you don't use [Node Version Manager](https://github.com/nvm-sh/nvm) then see `.nvmrc` to install the correct version of node on your local machine.
+
 ## Change Log
 Two.js has been in operation since 2012. For a full list of changes from its first alpha version built with [Three.js](http://threejs.org/) to the most up-to-date tweaks. Check out the wiki [here](./wiki/changelog).
 
