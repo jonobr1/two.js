@@ -125,6 +125,11 @@ Various examples of how to use different features of Two.js with associated tags
 <div class="examples-wrapper">
 
 <example-card
+  title="Folded Corner"
+  href="https://codepen.io/jonobr1/pen/yLwMOmj"
+  src="https://assets.codepen.io/171564/internal/screenshots/pens/yLwMOmj.custom.png?version=1706554035"
+  tags="animated, interactive, geometry, mouse" />
+<example-card
   title="Video Texture"
   href="https://codepen.io/jonobr1/pen/PoazvEv"
   src="https://assets.codepen.io/171564/internal/screenshots/pens/PoazvEv.custom.png"
