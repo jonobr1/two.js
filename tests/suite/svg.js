@@ -406,7 +406,7 @@
 
   QUnit.test('Two.makeText', function(assert) {
 
-    assert.expect(17);
+    assert.expect(16);
 
     var two = new Two({
       width: 400,
@@ -430,7 +430,6 @@
     assert.equal(elem.getAttribute('line-height'), '17', 'The line-height attribute applied properly');
     assert.equal(elem.getAttribute('text-anchor'), 'middle', 'The text-anchor attribute applied properly.');
     assert.equal(elem.getAttribute('dominant-baseline'), 'middle', 'The dominant-baseline attribute applied properly.');
-    assert.equal(elem.getAttribute('alignment-baseline'), 'middle', 'The alignment-baseline attribute applied properly.');
     assert.equal(elem.getAttribute('font-style'), 'normal', 'The font-style attribute applied properly.');
     assert.equal(elem.getAttribute('font-weight'), '500', 'The font-weight attribute applied properly.');
     assert.equal(elem.getAttribute('text-decoration'), 'none', 'The text-decoration attribute applied properly.');

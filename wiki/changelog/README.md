@@ -13,18 +13,20 @@ All notable changes to this project will be documented in this file. The format 
 
 ## Nightly
 
++ Improved consistency of `Two.Text.baseline` rendering across all renderers
+
 ## October 16, 2023 v0.8.12
 
 <h3 class="visible">October 16, 2023</h3><version-link v="v0.8.12" />
 
-+ Added "no-referrer" policy to image requests
++ Added `"no-referrer"` policy to image requests
 + Updated extras to be compatible with `Two.Matrix` API changes
-+ Two.Path.noFill() yields `"none"` instead of `"transparent"`
-+ Two.Path.noStroke() yields `"none"` instead of `"transparent"`
-+ Two.Text.noFill() yields `"none"` instead of `"transparent"`
-+ Two.Text.noStroke() yields `"none"` instead of `"transparent"`
-+ Two.Points.noFill() yields `"none"` instead of `"transparent"`
-+ Two.Points.noStroke() yields `"none"` instead of `"transparent"`
++ `Two.Path.noFill()` yields `"none"` instead of `"transparent"`
++ `Two.Path.noStroke()` yields `"none"` instead of `"transparent"`
++ `Two.Text.noFill()` yields `"none"` instead of `"transparent"`
++ `Two.Text.noStroke()` yields `"none"` instead of `"transparent"`
++ `Two.Points.noFill()` yields `"none"` instead of `"transparent"`
++ `Two.Points.noStroke()` yields `"none"` instead of `"transparent"`
 
 ## August 7, 2023 v0.8.11
 

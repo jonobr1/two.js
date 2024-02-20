@@ -737,8 +737,8 @@ var Two = (() => {
       svg: "SVGRenderer",
       canvas: "CanvasRenderer"
     },
-    Version: "v0.8.12",
-    PublishDate: "2023-10-16T17:55:26.551Z",
+    Version: "v0.8.13",
+    PublishDate: "2024-02-20T20:04:05.976Z",
     Identifier: "two-",
     Resolution: 12,
     AutoCalculateImportedMatrices: true,
@@ -2341,6 +2341,12 @@ var Two = (() => {
       middle: "center",
       right: "end"
     },
+    baselines: {
+      top: "top",
+      middle: "middle",
+      bottom: "bottom",
+      baseline: "alphabetic"
+    },
     shim: function(elem, name) {
       elem.tagName = elem.nodeName = name || "canvas";
       elem.nodeType = 1;
@@ -2725,7 +2731,7 @@ var Two = (() => {
         const isOffset = fill._renderer && fill._renderer.offset && stroke._renderer && stroke._renderer.offset;
         const dashes = this.dashes;
         const alignment = canvas.alignments[this._alignment] || this._alignment;
-        const baseline = this._baseline;
+        const baseline = canvas.baselines[this._baseline] || this._baseline;
         let a, b, c, d, e, sx, sy, x1, y1, x2, y2;
         if (!defaultMatrix) {
           ctx.save();
@@ -2828,8 +2834,8 @@ var Two = (() => {
           let scalar = 1;
           switch (decoration) {
             case "underline":
-              y1 = metrics.actualBoundingBoxAscent;
-              y2 = metrics.actualBoundingBoxAscent;
+              y1 = metrics.actualBoundingBoxDescent;
+              y2 = metrics.actualBoundingBoxDescent;
               break;
             case "strikethrough":
               y1 = 0;
@@ -8142,6 +8148,12 @@ var Two = (() => {
       center: "middle",
       right: "end"
     },
+    baselines: {
+      top: "hanging",
+      middle: "middle",
+      bottom: "ideographic",
+      baseline: "alphabetic"
+    },
     createElement: function(name, attrs) {
       const tag = name;
       const elem = document.createElementNS(svg.ns, tag);
@@ -8584,7 +8596,7 @@ var Two = (() => {
           changed["text-anchor"] = svg.alignments[this._alignment] || this._alignment;
         }
         if (this._flagBaseline) {
-          changed["alignment-baseline"] = changed["dominant-baseline"] = this._baseline;
+          changed["dominant-baseline"] = svg.baselines[this._baseline] || this._baseline;
         }
         if (this._flagStyle) {
           changed["font-style"] = this._style;
@@ -9731,8 +9743,8 @@ var Two = (() => {
           const metrics = ctx.measureText(elem.value);
           switch (decoration) {
             case "underline":
-              y1 = metrics.actualBoundingBoxAscent;
-              y2 = metrics.actualBoundingBoxAscent;
+              y1 = metrics.actualBoundingBoxDescent;
+              y2 = metrics.actualBoundingBoxDescent;
               break;
             case "strikethrough":
               y1 = 0;
@@ -9754,9 +9766,10 @@ var Two = (() => {
         const ctx = webgl.ctx;
         ctx.font = [elem._style, elem._weight, elem._size + "px/" + elem._leading + "px", elem._family].join(" ");
         ctx.textAlign = "center";
-        ctx.textBaseline = elem._baseline;
-        let width = ctx.measureText(elem._value).width * 1.25;
-        let height = Math.max(elem._size, elem._leading) * 1.25;
+        ctx.textBaseline = Renderer.Utils.baselines[elem._baseline] || elem._baseline;
+        const metrics = ctx.measureText(elem._value);
+        let width = metrics.width;
+        let height = 1.15 * (metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent);
         if (this._linewidth && !webgl.isHidden.test(this._stroke)) {
           width += this._linewidth * 2;
           height += this._linewidth * 2;
@@ -9784,6 +9797,10 @@ var Two = (() => {
           case "top":
             rect.top = 0;
             rect.bottom = height;
+            break;
+          case "baseline":
+            rect.top = -h * 1.5;
+            rect.bottom = h * 0.5;
             break;
           default:
             rect.top = -h;

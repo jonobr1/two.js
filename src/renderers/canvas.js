@@ -29,6 +29,13 @@ const canvas = {
     right: 'end'
   },
 
+  baselines: {
+    top: 'top',
+    middle: 'middle',
+    bottom: 'bottom',
+    baseline: 'alphabetic'
+  },
+
   shim: function(elem, name) {
     elem.tagName = elem.nodeName = name || 'canvas';
     elem.nodeType = 1;
@@ -515,7 +522,7 @@ const canvas = {
         && stroke._renderer && stroke._renderer.offset;
       const dashes = this.dashes;
       const alignment = canvas.alignments[this._alignment] || this._alignment;
-      const baseline = this._baseline;
+      const baseline = canvas.baselines[this._baseline] || this._baseline;
 
       let a, b, c, d, e, sx, sy, x1, y1, x2, y2;
 
@@ -638,8 +645,8 @@ const canvas = {
 
         switch (decoration) {
           case 'underline':
-            y1 = metrics.actualBoundingBoxAscent;
-            y2 = metrics.actualBoundingBoxAscent;
+            y1 = metrics.actualBoundingBoxDescent;
+            y2 = metrics.actualBoundingBoxDescent;
             break;
           case 'strikethrough':
             y1 = 0;
