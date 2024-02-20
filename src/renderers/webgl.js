@@ -999,8 +999,8 @@ const webgl = {
 
         switch (decoration) {
           case 'underline':
-            y1 = metrics.actualBoundingBoxAscent;
-            y2 = metrics.actualBoundingBoxAscent;
+            y1 = metrics.actualBoundingBoxDescent;
+            y2 = metrics.actualBoundingBoxDescent;
             break;
           case 'strikethrough':
             y1 = 0;
@@ -1033,11 +1033,13 @@ const webgl = {
         elem._leading + 'px', elem._family].join(' ');
 
       ctx.textAlign = 'center';
-      ctx.textBaseline = elem._baseline;
+      ctx.textBaseline = CanvasRenderer.Utils.baselines[elem._baseline] || elem._baseline;
 
-      // TODO: Estimate this better
-      let width = ctx.measureText(elem._value).width * 1.25;
-      let height = Math.max(elem._size, elem._leading) * 1.25;
+      const metrics = ctx.measureText(elem._value);
+      let width = metrics.width;
+      // TODO: Why does the height need to be scaled by 15%
+      // in order to not cut off / mask the bitmap data.
+      let height = 1.15 * (metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent);
 
       if (this._linewidth && !webgl.isHidden.test(this._stroke)) {
         width += this._linewidth * 2;
@@ -1071,6 +1073,10 @@ const webgl = {
         case 'top':
           rect.top = 0;
           rect.bottom = height;
+          break;
+        case 'baseline':
+          rect.top = - h * 1.5; // TODO: Improve calculation based on text metrics
+          rect.bottom = h * 0.5;
           break;
         default:
           rect.top = - h;

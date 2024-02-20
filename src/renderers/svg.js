@@ -19,6 +19,13 @@ const svg = {
     right: 'end'
   },
 
+  baselines: {
+    top: 'hanging',
+    middle: 'middle',
+    bottom: 'ideographic',
+    baseline: 'alphabetic'
+  },
+
   // Create an svg namespaced element.
   createElement: function(name, attrs) {
     const tag = name;
@@ -684,7 +691,7 @@ const svg = {
         changed['text-anchor'] = svg.alignments[this._alignment] || this._alignment;
       }
       if (this._flagBaseline) {
-        changed['alignment-baseline'] = changed['dominant-baseline'] = this._baseline;
+        changed['dominant-baseline'] = svg.baselines[this._baseline] || this._baseline;
       }
       if (this._flagStyle) {
         changed['font-style'] = this._style;
