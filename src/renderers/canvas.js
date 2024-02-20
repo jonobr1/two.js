@@ -517,6 +517,7 @@ const canvas = {
       const linewidth = this._linewidth;
       const fill = this._fill;
       const decoration = this._decoration;
+      const direction = this._direction;
       const defaultMatrix = isDefaultMatrix(matrix);
       const isOffset = fill._renderer && fill._renderer.offset
         && stroke._renderer && stroke._renderer.offset;
@@ -546,6 +547,7 @@ const canvas = {
 
       ctx.textAlign = alignment;
       ctx.textBaseline = baseline;
+      ctx.direction = direction;
 
       // Styles
       if (fill) {

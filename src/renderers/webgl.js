@@ -878,6 +878,7 @@ const webgl = {
       const opacity = elem._renderer.opacity || elem._opacity;
       const dashes = elem.dashes;
       const decoration = elem._decoration;
+      const direction = elem._direction;
 
       canvas.width = Math.max(Math.ceil(elem._renderer.rect.width * scale.x), 1);
       canvas.height = Math.max(Math.ceil(elem._renderer.rect.height * scale.y), 1);
@@ -899,6 +900,7 @@ const webgl = {
 
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
+      ctx.textDirection = direction;
 
       // Styles
       if (fill) {

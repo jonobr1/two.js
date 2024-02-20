@@ -702,6 +702,9 @@ const svg = {
       if (this._flagDecoration) {
         changed['text-decoration'] = this._decoration;
       }
+      if (this._flagDirection) {
+        changed['direction'] = this._direction;
+      }
       if (this._fill && this._fill._renderer) {
         this._renderer.hasFillEffect = true;
         this._fill._update();
