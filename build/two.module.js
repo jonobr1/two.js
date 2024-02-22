@@ -719,7 +719,7 @@ var Constants = {
     canvas: "CanvasRenderer"
   },
   Version: "v0.8.13",
-  PublishDate: "2024-02-20T20:04:05.976Z",
+  PublishDate: "2024-02-22T06:23:43.441Z",
   Identifier: "two-",
   Resolution: 12,
   AutoCalculateImportedMatrices: true,
@@ -6102,15 +6102,15 @@ function getBaseline(node) {
 function getTagName(tag) {
   return tag.replace(/svg:/ig, "").toLowerCase();
 }
-function applyTransformsToVector(transforms, vector2) {
-  vector2.x += transforms.translateX;
-  vector2.y += transforms.translateY;
-  vector2.x *= transforms.scaleX;
-  vector2.y *= transforms.scaleY;
+function applyTransformsToVector(transforms, vector3) {
+  vector3.x += transforms.translateX;
+  vector3.y += transforms.translateY;
+  vector3.x *= transforms.scaleX;
+  vector3.y *= transforms.scaleY;
   if (transforms.rotation !== 0) {
-    const l = vector2.length();
-    vector2.x = l * Math.cos(transforms.rotation);
-    vector2.y = l * Math.sin(transforms.rotation);
+    const l = vector3.length();
+    vector3.x = l * Math.cos(transforms.rotation);
+    vector3.y = l * Math.sin(transforms.rotation);
   }
 }
 function extractCSSText(text, styles) {
@@ -9007,6 +9007,7 @@ var multiplyMatrix = Matrix2.Multiply;
 var identity = [1, 0, 0, 0, 1, 0, 0, 0, 1];
 var transformation = new NumArray(9);
 var CanvasUtils = Renderer.Utils;
+var vector2 = new Vector();
 var quad = new NumArray([
   0,
   0,
@@ -9110,13 +9111,14 @@ var webgl = {
     }
   },
   path: {
-    updateCanvas: function(elem) {
+    updateCanvas: function(gl, elem) {
       let prev, a, c, ux, uy, vx, vy, ar, bl, br, cl, x, y;
       let isOffset;
       const commands = elem._renderer.vertices;
       const canvas3 = this.canvas;
       const ctx = this.ctx;
-      const scale = elem._renderer.scale;
+      const ratio = gl.renderer.ratio;
+      const scale = vector2.copy(elem._renderer.scale).multiply(ratio);
       const stroke = elem._stroke;
       const linewidth = elem._linewidth;
       const fill = elem._fill;
@@ -9429,16 +9431,17 @@ var webgl = {
     }
   },
   points: {
-    updateCanvas: function(elem) {
+    updateCanvas: function(gl, elem) {
       let isOffset;
       const canvas3 = this.canvas;
       const ctx = this.ctx;
+      const ratio = gl.renderer.ratio;
       const stroke = elem._stroke;
       const linewidth = elem._linewidth;
       const fill = elem._fill;
       const opacity = elem._renderer.opacity || elem._opacity;
       const dashes = elem.dashes;
-      const size = elem._size;
+      const size = elem._size * ratio;
       let dimension = size;
       if (!webgl.isHidden.test(stroke)) {
         dimension += linewidth;
@@ -9612,12 +9615,13 @@ var webgl = {
     }
   },
   text: {
-    updateCanvas: function(elem) {
+    updateCanvas: function(gl, elem) {
       const canvas3 = this.canvas;
       const ctx = this.ctx;
-      const scale = elem._renderer.scale;
+      const ratio = gl.renderer.ratio;
+      const scale = vector2.copy(elem._renderer.scale).multiply(ratio);
       const stroke = elem._stroke;
-      const linewidth = elem._linewidth * scale;
+      const linewidth = elem._linewidth;
       const fill = elem._fill;
       const opacity = elem._renderer.opacity || elem._opacity;
       const dashes = elem.dashes;
@@ -9997,7 +10001,7 @@ var webgl = {
     }
   },
   updateTexture: function(gl, elem) {
-    this[elem._renderer.type].updateCanvas.call(webgl, elem);
+    this[elem._renderer.type].updateCanvas.call(webgl, gl, elem);
     if (this.canvas.width <= 0 || this.canvas.height <= 0) {
       if (elem._renderer.texture) {
         gl.deleteTexture(elem._renderer.texture);
@@ -10009,10 +10013,11 @@ var webgl = {
       elem._renderer.texture = gl.createTexture();
     }
     gl.bindTexture(gl.TEXTURE_2D, elem._renderer.texture);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.canvas);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.canvas);
   },
   program: {
     create: function(gl, shaders2) {
@@ -10029,6 +10034,25 @@ var webgl = {
         throw new TwoError("unable to link program: " + error);
       }
       return program;
+    }
+  },
+  extensions: {
+    init: function(gl) {
+      const extensions = {};
+      const names = [
+        "EXT_texture_filter_anisotropic",
+        "WEBGL_compressed_texture_s3tc",
+        "OES_texture_float_linear",
+        "WEBGL_multisampled_render_to_texture"
+      ];
+      for (let i = 0; i < names.length; i++) {
+        const name = names[i];
+        extensions[name] = webgl.extensions.get(gl, name);
+      }
+      return extensions;
+    },
+    get: function(gl, name) {
+      return gl.getExtension(name) || gl.getExtension(`MOZ_${name}`) || gl.getExtension(`WEBKIT_${name}`);
     }
   },
   TextureRegistry: new Registry()
@@ -10083,6 +10107,8 @@ var Renderer3 = class extends Events {
     };
     program = this.programs.path = webgl.program.create(gl, [vs, fs]);
     this.programs.text = this.programs.path;
+    gl.extensions = webgl.extensions.init(gl);
+    gl.renderer = this;
     program.position = gl.getAttribLocation(program, "a_position");
     program.matrix = gl.getUniformLocation(program, "u_matrix");
     program.rect = gl.getUniformLocation(program, "u_rect");

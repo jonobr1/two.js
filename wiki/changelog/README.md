@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file. The format 
 
 ## Nightly
 
++ Improved `Two.WebGLRenderer` texture crispness / aliasing
 + Improved consistency of `Two.Text.baseline` rendering across all renderers
 
 ## October 16, 2023 v0.8.12
