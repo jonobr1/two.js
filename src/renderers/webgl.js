@@ -1054,12 +1054,22 @@ const webgl = {
       switch (webgl.alignments[elem._alignment] || elem._alignment) {
 
         case webgl.alignments.left:
-          rect.left = 0;
-          rect.right = width;
+          if (elem.direction === 'ltr') {
+            rect.left = 0;
+            rect.right = width;
+          } else {
+            rect.left = - width;
+            rect.right = 0;
+          }
           break;
         case webgl.alignments.right:
-          rect.left = - width;
-          rect.right = 0;
+          if (elem.direction === 'ltr') {
+            rect.left = - width;
+            rect.right = 0;
+          } else {
+            rect.left = 0;
+            rect.right = width;
+          }
           break;
         default:
           rect.left = - w;
