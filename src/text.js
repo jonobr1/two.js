@@ -521,7 +521,7 @@ export class Text extends Shape {
       this._flagStroke = this._flagLinewidth = this._flagOpacity =
       this._flagVisible = this._flagClip = this._flagDecoration =
       this._flagClassName = this._flagBaseline = this._flagWeight =
-        this._flagStyle = false;
+        this._flagStyle = this._flagDirection = false;
 
     return this;
 
