@@ -24,7 +24,8 @@ import { Renderer as CanvasRenderer } from './canvas.js';
 const multiplyMatrix = Matrix.Multiply,
   identity = [1, 0, 0, 0, 1, 0, 0, 0, 1],
   transformation = new NumArray(9),
-  CanvasUtils = CanvasRenderer.Utils;
+  CanvasUtils = CanvasRenderer.Utils,
+  vector = new Vector();
 
 const quad = new NumArray([
   0, 0,
@@ -171,7 +172,7 @@ const webgl = {
 
   path: {
 
-    updateCanvas: function(elem) {
+    updateCanvas: function(gl, elem) {
 
       let prev, a, c, ux, uy, vx, vy, ar, bl, br, cl, x, y;
       let isOffset;
@@ -179,9 +180,10 @@ const webgl = {
       const commands = elem._renderer.vertices;
       const canvas = this.canvas;
       const ctx = this.ctx;
+      const ratio = gl.renderer.ratio;
 
       // Styles
-      const scale = elem._renderer.scale;
+      const scale = vector.copy(elem._renderer.scale).multiply(ratio);
       const stroke = elem._stroke;
       const linewidth = elem._linewidth;
       const fill = elem._fill;
@@ -617,12 +619,13 @@ const webgl = {
   points: {
 
     // The canvas is a texture that is a rendering of one vertex
-    updateCanvas: function(elem) {
+    updateCanvas: function(gl, elem) {
 
       let isOffset;
 
       const canvas = this.canvas;
       const ctx = this.ctx;
+      const ratio = gl.renderer.ratio;
 
       // Styles
       const stroke = elem._stroke;
@@ -630,7 +633,7 @@ const webgl = {
       const fill = elem._fill;
       const opacity = elem._renderer.opacity || elem._opacity;
       const dashes = elem.dashes;
-      const size = elem._size;
+      const size = elem._size * ratio;
       let dimension = size;
 
       if (!(webgl.isHidden.test(stroke))) {
@@ -865,15 +868,16 @@ const webgl = {
 
   text: {
 
-    updateCanvas: function(elem) {
+    updateCanvas: function(gl, elem) {
 
       const canvas = this.canvas;
       const ctx = this.ctx;
+      const ratio = gl.renderer.ratio;
 
       // Styles
-      const scale = elem._renderer.scale;
+      const scale = vector.copy(elem._renderer.scale).multiply(ratio);
       const stroke = elem._stroke;
-      const linewidth = elem._linewidth * scale;
+      const linewidth = elem._linewidth;
       const fill = elem._fill;
       const opacity = elem._renderer.opacity || elem._opacity;
       const dashes = elem.dashes;
@@ -1404,7 +1408,7 @@ const webgl = {
 
   updateTexture: function(gl, elem) {
 
-    this[elem._renderer.type].updateCanvas.call(webgl, elem);
+    this[elem._renderer.type].updateCanvas.call(webgl, gl, elem);
 
     if (this.canvas.width <= 0 || this.canvas.height <= 0) {
       if (elem._renderer.texture) {
@@ -1420,16 +1424,20 @@ const webgl = {
 
     gl.bindTexture(gl.TEXTURE_2D, elem._renderer.texture);
 
+    // Upload the image into the texture.
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.canvas);
+
     // Set the parameters so we can render any size image.
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-    // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-    // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
 
-    // Upload the image into the texture.
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.canvas);
+    // if ('EXT_texture_filter_anisotropic' in gl.extensions) {
+    //   const e = gl.extensions.EXT_texture_filter_anisotropic;
+    //   const maxAnisotropy = gl.getParameter(e.MAX_TEXTURE_MAX_ANISOTROPY_EXT);
+    //   gl.texParameterf(gl.TEXTURE_2D, e.TEXTURE_MAX_ANISOTROPY_EXT, maxAnisotropy);
+    // }
 
   },
 
@@ -1456,6 +1464,28 @@ const webgl = {
 
   },
 
+  extensions: {
+    init: function(gl) {
+      const extensions = {};
+      const names = [
+        'EXT_texture_filter_anisotropic',
+        'WEBGL_compressed_texture_s3tc',
+        'OES_texture_float_linear',
+        'WEBGL_multisampled_render_to_texture'
+      ];
+      for (let i = 0; i < names.length; i++) {
+        const name = names[i];
+        extensions[name] = webgl.extensions.get(gl, name);
+      }
+      return extensions;
+    },
+    get: function(gl, name) {
+      return gl.getExtension(name)
+        || gl.getExtension(`MOZ_${name}`)
+        || gl.getExtension(`WEBKIT_${name}`);
+    }
+  },
+ 
   TextureRegistry: new Registry()
 
 };
@@ -1555,11 +1585,14 @@ export class Renderer extends Events {
         height: 0,
         ratio: 1,
         flagged: false
-      }
+      },
     };
 
     program = this.programs.path = webgl.program.create(gl, [vs, fs]);
     this.programs.text = this.programs.path;
+
+    gl.extensions = webgl.extensions.init(gl);
+    gl.renderer = this;
 
     // Create and bind the drawing buffer
 
