@@ -762,7 +762,7 @@ declare module "two.js/src/element" {
          * @property {String[]}
          * @description A list of class strings stored if imported / interpreted  from an SVG element.
          */
-        classList: any[];
+        classList: string[];
         /**
          * @name Two.Element#flagReset
          * @function
@@ -1313,13 +1313,13 @@ declare module "two.js/src/group" {
          * @property {String}
          * @see {@link https://www.w3.org/TR/SVG11/painting.html#StrokeLinecapProperty}
          */
-        cap: string;
+        cap: 'butt' | 'round' | 'square';
         /**
          * @name Two.Group#join
          * @property {String}
          * @see {@link https://www.w3.org/TR/SVG11/painting.html#StrokeLinejoinProperty}
          */
-        join: string;
+        join: 'butt' | 'round' | 'square';
         /**
          * @name Two.Group#miter
          * @property {String}
@@ -1364,7 +1364,7 @@ declare module "two.js/src/group" {
          * @name Two.Group#mask
          * @property {Shape} - The Two.js object to clip from a group's rendering.
          */
-        mask: Shape;
+        mask: Shape | undefined;
         /**
          * @name Two.Group#additions
          * @property {Shape[]}
@@ -1804,13 +1804,13 @@ declare module "two.js/src/effects/gradient" {
          * @property {String} - Indicates what happens if the gradient starts or ends inside the bounds of the target rectangle. Possible values are `'pad'`, `'reflect'`, and `'repeat'`.
          * @see {@link https://www.w3.org/TR/SVG11/pservers.html#LinearGradientElementSpreadMethodAttribute} for more information
          */
-        spread: string;
+        spread: "pad" | "reflect" | "repeat";
         /**
          * @name Two.Gradient#units
          * @property {String} [units='objectBoundingBox'] - Indicates how coordinate values are interpreted by the renderer. Possible values are `'userSpaceOnUse'` and `'objectBoundingBox'`.
          * @see {@link https://www.w3.org/TR/SVG11/pservers.html#RadialGradientElementGradientUnitsAttribute} for more information
          */
-        units: string;
+        units: "userSpaceOnUse" | "objectBoundingBox";
         stops: any;
         /**
          * @name Two.Gradient#clone
@@ -2995,6 +2995,12 @@ declare module "two.js/src/text" {
          */
         private _flagDecoration;
         /**
+         * @name Two.Text#_flagDirection
+         * @private
+         * @property {Boolean} - Determines whether the {@link Two.Text#direction} needs updating.
+         */
+        private _flagDirection;
+        /**
          * @name Two.Text#_flagFill
          * @private
          * @property {Boolean} - Determines whether the {@link Two.Text#fill} need updating.
@@ -3070,27 +3076,32 @@ declare module "two.js/src/text" {
          * @name Two.Text#alignment
          * @property {String} - Alignment of text in relation to {@link Two.Text#translation}'s coordinates. Possible values include `'left'`, `'center'`, `'right'`. Defaults to `'center'`.
          */
-        alignment: string;
+        alignment: 'left' | 'center' | 'right';
         /**
          * @name Two.Text#baseline
          * @property {String} - The vertical aligment of the text in relation to {@link Two.Text#translation}'s coordinates. Possible values include `'top'`, `'middle'`, `'bottom'`, and `'baseline'`. Defaults to `'baseline'`.
          */
-        baseline: string;
+        baseline: 'top' | 'middle' | 'bottom' | 'baseline';
         /**
          * @name Two.Text#style
          * @property {String} - The font's style. Possible values include '`normal`', `'italic'`. Defaults to `'normal'`.
          */
-        style: string;
+        style: 'normal' | 'italic';
         /**
          * @name Two.Text#weight
-         * @property {Number} - A number at intervals of 100 to describe the font's weight. This compatibility varies with the typeface's variant weights. Larger values are bolder. Smaller values are thinner. Defaults to `'500'`.
+         * @property {Number} - A number at intervals of 100 to describe the font's weight. This compatibility varies with the typeface's variant weights. Larger values are bolder. Smaller values are thinner. Defaults to `500`.
          */
-        weight: number;
+        weight: number | string;
         /**
          * @name Two.Text#decoration
          * @property {String} - String to delineate whether text should be decorated with for instance an `'underline'`. Defaults to `'none'`.
          */
-        decoration: string;
+        decoration: 'underline' | 'strikethrough' | 'none';
+        /**
+         * @name Two.Text#direction
+         * @property {String} - String to determine what direction the text should run. Possibly values are `'ltr'` for left-to-right and `'rtl'` for right-to-left. Defaults to `'ltr'`.
+         */
+        _direction: 'ltr' | 'rtl';
         /**
          * @name Two.Text#fill
          * @property {(String|Gradient|Texture)} - The value of what the text object should be filled in with.
