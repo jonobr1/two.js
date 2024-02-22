@@ -137,9 +137,16 @@ export class Text extends Shape {
   /**
    * @name Two.Text#_flagClip
    * @private
-   * @property {Boolean} - Determines whether the {@link Two.Text#clip} need updating.
+   * @property {Boolean} - Determines whether the {@link Two.Text#clip} needs updating.
    */
   _flagClip = false;
+
+  /**
+   * @name Two.Text#_flagDirection
+   * @private
+   * @property {Boolean} - Determines whether the {@link Two.Text#direction} needs updating.
+   */
+  _flagDirection = false;
 
   // Underlying Properties
 
@@ -197,6 +204,12 @@ export class Text extends Shape {
    * @property {String} - String to delineate whether text should be decorated with for instance an `'underline'`. Defaults to `'none'`.
    */
   _decoration = 'none';
+
+  /**
+   * @name Two.Text#direction
+   * @property {String} - String to determine what direction the text should run. Possibly values are `'ltr'` for left-to-right and `'rtl'` for right-to-left. Defaults to `'ltr'`.
+   */
+  _direction = 'ltr';
 
   /**
    * @name Two.Text#fill
@@ -313,7 +326,7 @@ export class Text extends Shape {
    */
   static Properties = [
     'value', 'family', 'size', 'leading', 'alignment', 'linewidth', 'style',
-    'weight', 'decoration', 'baseline', 'opacity', 'visible',
+    'weight', 'decoration', 'direction', 'baseline', 'opacity', 'visible',
     'fill', 'stroke'
   ];
 
@@ -508,7 +521,7 @@ export class Text extends Shape {
       this._flagStroke = this._flagLinewidth = this._flagOpacity =
       this._flagVisible = this._flagClip = this._flagDecoration =
       this._flagClassName = this._flagBaseline = this._flagWeight =
-        this._flagStyle = false;
+        this._flagStyle = this._flagDirection = false;
 
     return this;
 
@@ -605,6 +618,16 @@ const proto = {
     set: function(v) {
       this._decoration = v;
       this._flagDecoration = true;
+    }
+  },
+  direction: {
+    enumerable: true,
+    get: function() {
+      return this._direction;
+    },
+    set: function(v) {
+      this._direction = v;
+      this._flagDirection = true;
     }
   },
   baseline: {

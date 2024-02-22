@@ -719,7 +719,7 @@ var Constants = {
     canvas: "CanvasRenderer"
   },
   Version: "v0.8.13",
-  PublishDate: "2024-02-22T06:23:43.441Z",
+  PublishDate: "2024-02-22T06:40:05.376Z",
   Identifier: "two-",
   Resolution: 12,
   AutoCalculateImportedMatrices: true,
@@ -2708,6 +2708,7 @@ var canvas = {
       const linewidth = this._linewidth;
       const fill = this._fill;
       const decoration = this._decoration;
+      const direction = this._direction;
       const defaultMatrix = isDefaultMatrix(matrix);
       const isOffset = fill._renderer && fill._renderer.offset && stroke._renderer && stroke._renderer.offset;
       const dashes = this.dashes;
@@ -2726,6 +2727,7 @@ var canvas = {
       }
       ctx.textAlign = alignment;
       ctx.textBaseline = baseline;
+      ctx.direction = direction;
       if (fill) {
         if (typeof fill === "string") {
           ctx.fillStyle = fill;
@@ -5713,6 +5715,7 @@ var _Text = class extends Shape {
     __publicField(this, "_style", "normal");
     __publicField(this, "_weight", 500);
     __publicField(this, "_decoration", "none");
+    __publicField(this, "_direction", "ltr");
     __publicField(this, "_fill", "#000");
     __publicField(this, "_stroke", "none");
     __publicField(this, "_linewidth", 1);
@@ -5876,6 +5879,7 @@ __publicField(Text, "Properties", [
   "style",
   "weight",
   "decoration",
+  "direction",
   "baseline",
   "opacity",
   "visible",
@@ -5971,6 +5975,16 @@ var proto18 = {
     set: function(v) {
       this._decoration = v;
       this._flagDecoration = true;
+    }
+  },
+  direction: {
+    enumerable: true,
+    get: function() {
+      return this._direction;
+    },
+    set: function(v) {
+      this._direction = v;
+      this._flagDirection = true;
     }
   },
   baseline: {
@@ -8588,6 +8602,9 @@ var svg = {
       if (this._flagDecoration) {
         changed["text-decoration"] = this._decoration;
       }
+      if (this._flagDirection) {
+        changed["direction"] = this._direction;
+      }
       if (this._fill && this._fill._renderer) {
         this._renderer.hasFillEffect = true;
         this._fill._update();
@@ -9626,6 +9643,7 @@ var webgl = {
       const opacity = elem._renderer.opacity || elem._opacity;
       const dashes = elem.dashes;
       const decoration = elem._decoration;
+      const direction = elem._direction;
       canvas3.width = Math.max(Math.ceil(elem._renderer.rect.width * scale.x), 1);
       canvas3.height = Math.max(Math.ceil(elem._renderer.rect.height * scale.y), 1);
       const centroid = elem._renderer.rect.centroid;
@@ -9639,6 +9657,7 @@ var webgl = {
       }
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
+      ctx.textDirection = direction;
       if (fill) {
         if (typeof fill === "string") {
           ctx.fillStyle = fill;
@@ -9763,12 +9782,22 @@ var webgl = {
       const h = height / 2;
       switch (webgl.alignments[elem._alignment] || elem._alignment) {
         case webgl.alignments.left:
-          rect.left = 0;
-          rect.right = width;
+          if (elem.direction === "ltr") {
+            rect.left = 0;
+            rect.right = width;
+          } else {
+            rect.left = -width;
+            rect.right = 0;
+          }
           break;
         case webgl.alignments.right:
-          rect.left = -width;
-          rect.right = 0;
+          if (elem.direction === "ltr") {
+            rect.left = -width;
+            rect.right = 0;
+          } else {
+            rect.left = 0;
+            rect.right = width;
+          }
           break;
         default:
           rect.left = -w;

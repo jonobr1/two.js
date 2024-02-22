@@ -882,6 +882,7 @@ const webgl = {
       const opacity = elem._renderer.opacity || elem._opacity;
       const dashes = elem.dashes;
       const decoration = elem._decoration;
+      const direction = elem._direction;
 
       canvas.width = Math.max(Math.ceil(elem._renderer.rect.width * scale.x), 1);
       canvas.height = Math.max(Math.ceil(elem._renderer.rect.height * scale.y), 1);
@@ -903,6 +904,7 @@ const webgl = {
 
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
+      ctx.textDirection = direction;
 
       // Styles
       if (fill) {
@@ -1056,12 +1058,22 @@ const webgl = {
       switch (webgl.alignments[elem._alignment] || elem._alignment) {
 
         case webgl.alignments.left:
-          rect.left = 0;
-          rect.right = width;
+          if (elem.direction === 'ltr') {
+            rect.left = 0;
+            rect.right = width;
+          } else {
+            rect.left = - width;
+            rect.right = 0;
+          }
           break;
         case webgl.alignments.right:
-          rect.left = - width;
-          rect.right = 0;
+          if (elem.direction === 'ltr') {
+            rect.left = - width;
+            rect.right = 0;
+          } else {
+            rect.left = 0;
+            rect.right = width;
+          }
           break;
         default:
           rect.left = - w;

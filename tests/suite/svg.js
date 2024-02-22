@@ -406,7 +406,7 @@
 
   QUnit.test('Two.makeText', function(assert) {
 
-    assert.expect(16);
+    assert.expect(17);
 
     var two = new Two({
       width: 400,
@@ -438,6 +438,7 @@
     assert.equal(elem.getAttribute('opacity'), '1', 'The opacity attribute applied properly.');
     assert.equal(elem.getAttribute('visibility'), 'visible', 'The visibility attribute applied properly.');
     assert.equal(elem.getAttribute('class'), 'hello world', 'The class attribute applied properly.');
+    assert.equal(elem.getAttribute('direction', 'ltr'), 'The direction attribute applied properly.');
     assert.equal(elem.innerHTML, text.value, 'The value attribute applied properly.');
 
     QUnit.Utils.addInstanceToTest(assert.test, two);
