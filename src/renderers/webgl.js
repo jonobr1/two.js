@@ -877,7 +877,7 @@ const webgl = {
       // Styles
       const scale = vector.copy(elem._renderer.scale).multiply(ratio);
       const stroke = elem._stroke;
-      const linewidth = elem._linewidth * scale;
+      const linewidth = elem._linewidth;
       const fill = elem._fill;
       const opacity = elem._renderer.opacity || elem._opacity;
       const dashes = elem.dashes;
