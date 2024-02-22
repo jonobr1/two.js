@@ -146,6 +146,7 @@ export class Text extends Shape {
    * @private
    * @property {Boolean} - Determines whether the {@link Two.Text#direction} needs updating.
    */
+  _flagDirection = false;
 
   // Underlying Properties
 
