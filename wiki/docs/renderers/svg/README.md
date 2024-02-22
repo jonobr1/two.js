@@ -69,8 +69,8 @@ A massive object filled with utility functions and properties to render Two.js o
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/renderers/svg.js#L1150">
-    svg.js:1150
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/renderers/svg.js#L1160">
+    svg.js:1160
   </a>
 
 </div>
@@ -116,8 +116,8 @@ The `<svg />` associated with the Two.js scene.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/renderers/svg.js#L1125">
-    svg.js:1125
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/renderers/svg.js#L1135">
+    svg.js:1135
   </a>
 
 </div>
@@ -163,8 +163,8 @@ The root group of the scenegraph.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/renderers/svg.js#L1131">
-    svg.js:1131
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/renderers/svg.js#L1141">
+    svg.js:1141
   </a>
 
 </div>
@@ -210,8 +210,8 @@ The `<defs />` to apply gradients, patterns, and bitmap imagery.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/renderers/svg.js#L1138">
-    svg.js:1138
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/renderers/svg.js#L1148">
+    svg.js:1148
   </a>
 
 </div>
@@ -263,8 +263,8 @@ Change the size of the renderer.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/renderers/svg.js#L1156">
-    svg.js:1156
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/renderers/svg.js#L1166">
+    svg.js:1166
   </a>
 
 </div>
@@ -318,8 +318,8 @@ Render the current scene to the `<svg />`.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/renderers/svg.js#L1178">
-    svg.js:1178
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/renderers/svg.js#L1188">
+    svg.js:1188
   </a>
 
 </div>

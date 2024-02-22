@@ -475,8 +475,8 @@ A collection of functions to register different types of textures. Used internal
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L304">
-    texture.js:304
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L305">
+    texture.js:305
   </a>
 
 </div>
@@ -522,8 +522,8 @@ A collection of functions to register different types of textures. Used internal
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L409">
-    texture.js:409
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L410">
+    texture.js:410
   </a>
 
 </div>
@@ -567,8 +567,8 @@ Cached method to let renderers know `offset` has been updated on a [Two.Texture]
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L625">
-    texture.js:625
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L626">
+    texture.js:626
   </a>
 
 </div>
@@ -612,8 +612,8 @@ Cached method to let renderers know `scale` has been updated on a [Two.Texture](
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L634">
-    texture.js:634
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L635">
+    texture.js:635
   </a>
 
 </div>
@@ -926,8 +926,8 @@ Create a new instance of [Two.Texture](/docs/effects/texture/) with the same pro
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L440">
-    texture.js:440
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L441">
+    texture.js:441
   </a>
 
 </div>
@@ -979,8 +979,8 @@ Return a JSON compatible plain object that represents the texture.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L454">
-    texture.js:454
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L455">
+    texture.js:455
   </a>
 
 </div>

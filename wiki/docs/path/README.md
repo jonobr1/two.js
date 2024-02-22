@@ -1138,7 +1138,7 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="description">
 
-Short hand method to set fill to `transparent`.
+Short hand method to set fill to `none`.
 
 </div>
 
@@ -1183,7 +1183,7 @@ Short hand method to set fill to `transparent`.
 
 <div class="description">
 
-Short hand method to set stroke to `transparent`.
+Short hand method to set stroke to `none`.
 
 </div>
 
