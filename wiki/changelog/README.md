@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file. The format 
 
 ## Nightly
 
++ Added `Two.Text.direction` for rendering text either left to right or right to left
 + Improved `Two.WebGLRenderer` texture crispness / aliasing
 + Improved consistency of `Two.Text.baseline` rendering across all renderers
 
