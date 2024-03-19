@@ -857,6 +857,7 @@ declare module "two.js/src/matrix" {
          * @description Multiply all components of the matrix against a single scalar value.
          * @overloaded
          */
+        multiply(a: number): any;
         /**
          * @name Two.Matrix#multiply
          * @function
@@ -866,6 +867,7 @@ declare module "two.js/src/matrix" {
          * @description Multiply all components of a matrix against a 3 component vector.
          * @overloaded
          */
+        multiply(a: number, b: number, c?: number): [x: number, y: number, z: number];
         /**
          * @name Two.Matrix#multiply
          * @function
