@@ -1462,7 +1462,7 @@ declare module "two.js/src/group" {
          * @returns {Object} - Returns object with top, left, right, bottom, width, height attributes.
          * @description Return an object with top, left, right, bottom, width, and height parameters of the group.
          */
-        getBoundingClientRect(shallow?: boolean): any;
+        getBoundingClientRect(shallow?: boolean): Two.BoundingBox;
         /**
          * @name Two.Group#noFill
          * @function
@@ -2469,7 +2469,7 @@ declare module "two.js/src/path" {
          * @returns {Object} - Returns object with top, left, right, bottom, width, height attributes.
          * @description Return an object with top, left, right, bottom, width, and height parameters of the path.
          */
-        getBoundingClientRect(shallow?: boolean): any;
+        getBoundingClientRect(shallow?: boolean): Two.BoundingBox;
         /**
          * @name Two.Path#getPointAt
          * @function
@@ -3178,7 +3178,7 @@ declare module "two.js/src/text" {
          * @returns {Object} - Returns object with top, left, right, bottom, width, height attributes.
          * @description Return an object with top, left, right, bottom, width, and height parameters of the text object.
          */
-        getBoundingClientRect(shallow?: boolean): any;
+        getBoundingClientRect(shallow?: boolean): Two.BoundingBox;
     }
     import { Shape } from "two.js/src/shape";
     import { Gradient } from "two.js/src/effects/gradient";
@@ -3553,7 +3553,7 @@ declare module "two.js/src/shapes/points" {
          * @returns {Object} - Returns object with top, left, right, bottom, width, height attributes.
          * @description Return an object with top, left, right, bottom, width, and height parameters of the path.
          */
-        getBoundingClientRect: (shallow?: boolean) => any;
+        getBoundingClientRect: (shallow?: boolean) => Two.BoundingBox;
         /**
          * @name Two.Points#subdivide
          * @function
@@ -4476,6 +4476,15 @@ declare module "two.js" {
     import { Renderer as CanvasRenderer } from "two.js/src/renderers/canvas";
     import { Renderer as SVGRenderer } from "two.js/src/renderers/svg";
     import { Renderer as WebGLRenderer } from "two.js/src/renderers/webgl";
+
+    export type BoundingBox = {
+        top: number, 
+        left: number, 
+        right: number, 
+        bottom: number, 
+        width: number, 
+        height: number
+    }
 }
 declare module "two.js/extras/jsm/zui" {
     /**
