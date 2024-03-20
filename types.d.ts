@@ -2943,6 +2943,14 @@ declare module "two.js/src/text" {
          * @property {String[]} - A list of properties that are on every {@link Two.Text}.
          */
         static Properties: string[];
+        /**
+         * @name Two.Measure
+         * @function
+         * @param {Two.Text} [text] - The instance of {@link Two.Text} to measure.
+         * @returns {Object} - The width and height of the {@link Two.Text} instance.
+         */
+        static Measure(text: Text): Dimensions;
+
         constructor(message?: string, x?: number, y?: number, styles?: any);
         /**
          * @name Two.Text#_flagValue
