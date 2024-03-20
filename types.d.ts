@@ -2943,6 +2943,14 @@ declare module "two.js/src/text" {
          * @property {String[]} - A list of properties that are on every {@link Two.Text}.
          */
         static Properties: string[];
+        /**
+         * @name Two.Measure
+        * @function
+        * @param {Two.Text} [text] - The instance of {@link Two.Text} to measure.
+        * @returns {Object} - The width and height of the {@link Two.Text} instance.
+         */
+        static Measure(text: Text): Dimensions;
+
         constructor(message?: string, x?: number, y?: number, styles?: any);
         /**
          * @name Two.Text#_flagValue
@@ -3185,7 +3193,7 @@ declare module "two.js/src/text" {
     import { Shape } from "two.js/src/shape";
     import { Gradient } from "two.js/src/effects/gradient";
     import { Texture } from "two.js/src/effects/texture";
-    import { BoundingBox } from "two.js";
+    import { BoundingBox, Dimensions } from "two.js";
 }
 declare module "two.js/src/utils/interpret-svg" {
     /**
@@ -4485,7 +4493,10 @@ declare module "two.js" {
         top: number, 
         left: number, 
         right: number, 
-        bottom: number, 
+        bottom: number
+    } & Dimensions;
+
+    export type Dimensions = {
         width: number, 
         height: number
     }
