@@ -4444,7 +4444,7 @@ declare module "two.js" {
          * @function
          * @param {SVGElement} svg - The SVG node to be parsed.
          * @param {Boolean} shallow - Don't create a top-most group but append all content directly.
-         * @param {Boolean} [add=true] â€“ Automatically add the reconstructed SVG node to scene.
+         * @param {Boolean} [add=true] – Automatically add the reconstructed SVG node to scene.
          * @returns {Group}
          * @description Interpret an SVG Node and add it to this instance's scene. The distinction should be made that this doesn't `import` svg's, it solely interprets them into something compatible for Two.js - this is slightly different than a direct transcription.
          */
