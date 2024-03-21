@@ -1462,7 +1462,7 @@ declare module "two.js/src/group" {
          * @returns {Object} - Returns object with top, left, right, bottom, width, height attributes.
          * @description Return an object with top, left, right, bottom, width, and height parameters of the group.
          */
-        getBoundingClientRect(shallow?: boolean): Two.BoundingBox;
+        getBoundingClientRect(shallow?: boolean): BoundingBox;
         /**
          * @name Two.Group#noFill
          * @function
@@ -1494,6 +1494,7 @@ declare module "two.js/src/group" {
     import { Children } from "two.js/src/children";
     import { Gradient } from "two.js/src/effects/gradient";
     import { Texture } from "two.js/src/effects/texture";
+    import { BoundingBox } from "two.js";
 }
 declare module "two.js/src/renderers/canvas" {
     /**
@@ -2469,7 +2470,7 @@ declare module "two.js/src/path" {
          * @returns {Object} - Returns object with top, left, right, bottom, width, height attributes.
          * @description Return an object with top, left, right, bottom, width, and height parameters of the path.
          */
-        getBoundingClientRect(shallow?: boolean): Two.BoundingBox;
+        getBoundingClientRect(shallow?: boolean): BoundingBox;
         /**
          * @name Two.Path#getPointAt
          * @function
@@ -2509,6 +2510,7 @@ declare module "two.js/src/path" {
     import { Shape } from "two.js/src/shape";
     import { Gradient } from "two.js/src/effects/gradient";
     import { Texture } from "two.js/src/effects/texture";
+    import { BoundingBox } from "two.js";
     /**
      * @name FlagVertices
      * @private
@@ -2941,6 +2943,14 @@ declare module "two.js/src/text" {
          * @property {String[]} - A list of properties that are on every {@link Two.Text}.
          */
         static Properties: string[];
+        /**
+         * @name Two.Measure
+         * @function
+         * @param {Two.Text} [text] - The instance of {@link Two.Text} to measure.
+         * @returns {Object} - The width and height of the {@link Two.Text} instance.
+         */
+        static Measure(text: Text): Dimensions;
+
         constructor(message?: string, x?: number, y?: number, styles?: any);
         /**
          * @name Two.Text#_flagValue
@@ -3178,11 +3188,12 @@ declare module "two.js/src/text" {
          * @returns {Object} - Returns object with top, left, right, bottom, width, height attributes.
          * @description Return an object with top, left, right, bottom, width, and height parameters of the text object.
          */
-        getBoundingClientRect(shallow?: boolean): Two.BoundingBox;
+        getBoundingClientRect(shallow?: boolean): BoundingBox;
     }
     import { Shape } from "two.js/src/shape";
     import { Gradient } from "two.js/src/effects/gradient";
     import { Texture } from "two.js/src/effects/texture";
+    import { BoundingBox, Dimensions } from "two.js";
 }
 declare module "two.js/src/utils/interpret-svg" {
     /**
@@ -3553,7 +3564,7 @@ declare module "two.js/src/shapes/points" {
          * @returns {Object} - Returns object with top, left, right, bottom, width, height attributes.
          * @description Return an object with top, left, right, bottom, width, and height parameters of the path.
          */
-        getBoundingClientRect: (shallow?: boolean) => Two.BoundingBox;
+        getBoundingClientRect: (shallow?: boolean) => BoundingBox;
         /**
          * @name Two.Points#subdivide
          * @function
@@ -3574,6 +3585,7 @@ declare module "two.js/src/shapes/points" {
     import { Shape } from "two.js/src/shape";
     import { Gradient } from "two.js/src/effects/gradient";
     import { Texture } from "two.js/src/effects/texture";
+    import { BoundingBox } from "two.js";
 }
 declare module "two.js/src/shapes/polygon" {
     /**
@@ -4432,7 +4444,7 @@ declare module "two.js" {
          * @function
          * @param {SVGElement} svg - The SVG node to be parsed.
          * @param {Boolean} shallow - Don't create a top-most group but append all content directly.
-         * @param {Boolean} [add=true] â€“ Automatically add the reconstructed SVG node to scene.
+         * @param {Boolean} [add=true] – Automatically add the reconstructed SVG node to scene.
          * @returns {Group}
          * @description Interpret an SVG Node and add it to this instance's scene. The distinction should be made that this doesn't `import` svg's, it solely interprets them into something compatible for Two.js - this is slightly different than a direct transcription.
          */
@@ -4481,7 +4493,10 @@ declare module "two.js" {
         top: number, 
         left: number, 
         right: number, 
-        bottom: number, 
+        bottom: number
+    } & Dimensions;
+
+    export type Dimensions = {
         width: number, 
         height: number
     }
