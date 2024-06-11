@@ -737,8 +737,8 @@ var Two = (() => {
       svg: "SVGRenderer",
       canvas: "CanvasRenderer"
     },
-    Version: "v0.8.13",
-    PublishDate: "2024-02-22T06:40:05.376Z",
+    Version: "v0.8.14",
+    PublishDate: "2024-06-11T01:53:02.940Z",
     Identifier: "two-",
     Resolution: 12,
     AutoCalculateImportedMatrices: true,
@@ -2361,7 +2361,12 @@ var Two = (() => {
     },
     group: {
       renderChild: function(child) {
-        canvas[child._renderer.type].render.call(child, this.ctx, true, this.clip);
+        canvas[child._renderer.type].render.call(
+          child,
+          this.ctx,
+          true,
+          this.clip
+        );
       },
       render: function(ctx) {
         if (!this._visible) {
@@ -2433,7 +2438,14 @@ var Two = (() => {
         dashes = this.dashes;
         if (!defaultMatrix) {
           ctx.save();
-          ctx.transform(matrix[0], matrix[3], matrix[1], matrix[4], matrix[2], matrix[5]);
+          ctx.transform(
+            matrix[0],
+            matrix[3],
+            matrix[1],
+            matrix[4],
+            matrix[2],
+            matrix[5]
+          );
         }
         if (mask) {
           canvas[mask._renderer.type].render.call(mask, ctx, true);
@@ -2566,10 +2578,7 @@ var Two = (() => {
             isOffset = fill._renderer && fill._renderer.offset;
             if (isOffset) {
               ctx.save();
-              ctx.translate(
-                -fill._renderer.offset.x,
-                -fill._renderer.offset.y
-              );
+              ctx.translate(-fill._renderer.offset.x, -fill._renderer.offset.y);
               ctx.scale(fill._renderer.scale.x, fill._renderer.scale.y);
             }
             ctx.fill();
@@ -2674,10 +2683,7 @@ var Two = (() => {
             isOffset = fill._renderer && fill._renderer.offset;
             if (isOffset) {
               ctx.save();
-              ctx.translate(
-                -fill._renderer.offset.x,
-                -fill._renderer.offset.y
-              );
+              ctx.translate(-fill._renderer.offset.x, -fill._renderer.offset.y);
               ctx.scale(fill._renderer.scale.x, fill._renderer.scale.y);
             }
             ctx.fill();
@@ -2736,13 +2742,25 @@ var Two = (() => {
         let a, b, c, d, e, sx, sy, x1, y1, x2, y2;
         if (!defaultMatrix) {
           ctx.save();
-          ctx.transform(matrix[0], matrix[3], matrix[1], matrix[4], matrix[2], matrix[5]);
+          ctx.transform(
+            matrix[0],
+            matrix[3],
+            matrix[1],
+            matrix[4],
+            matrix[2],
+            matrix[5]
+          );
         }
         if (mask) {
           canvas[mask._renderer.type].render.call(mask, ctx, true);
         }
         if (!isOffset) {
-          ctx.font = [this._style, this._weight, this._size + "px/" + this._leading + "px", this._family].join(" ");
+          ctx.font = [
+            this._style,
+            this._weight,
+            this._size + "px/" + this._leading + "px",
+            this._family
+          ].join(" ");
         }
         ctx.textAlign = alignment;
         ctx.textBaseline = baseline;
@@ -2779,10 +2797,7 @@ var Two = (() => {
               sx = fill._renderer.scale.x;
               sy = fill._renderer.scale.y;
               ctx.save();
-              ctx.translate(
-                -fill._renderer.offset.x,
-                -fill._renderer.offset.y
-              );
+              ctx.translate(-fill._renderer.offset.x, -fill._renderer.offset.y);
               ctx.scale(sx, sy);
               a = this._size / fill._renderer.scale.y;
               b = this._leading / fill._renderer.scale.y;
@@ -2933,11 +2948,11 @@ var Two = (() => {
           let radius = this._radius;
           if (/objectBoundingBox/i.test(this._units)) {
             rect = parent.getBoundingClientRect(true);
-            cx = cx * rect.width * 0.5;
-            cy = cy * rect.height * 0.5;
-            fx = fx * rect.width * 0.5;
-            fy = fy * rect.height * 0.5;
-            radius *= Math.min(rect.width, rect.height) * 0.5;
+            cx = (cx - 0.5) * rect.width * 0.5;
+            cy = (cy - 0.5) * rect.height * 0.5;
+            fx = (fx - 0.5) * rect.width * 0.5;
+            fy = (fy - 0.5) * rect.height * 0.5;
+            radius *= Math.min(rect.width, rect.height);
           }
           this._renderer.effect = ctx.createRadialGradient(
             cx,
@@ -5723,6 +5738,7 @@ var Two = (() => {
     _flagVisible = true;
     _flagMask = false;
     _flagClip = false;
+    _flagDirection = true;
     _value = "";
     _family = "sans-serif";
     _size = 13;
@@ -5786,7 +5802,9 @@ var Two = (() => {
       } else {
         const width = this.value.length * this.size * _Text.Ratio;
         const height = this.leading;
-        console.warn("Two.Text: unable to accurately measure text, so using an approximation.");
+        console.warn(
+          "Two.Text: unable to accurately measure text, so using an approximation."
+        );
         return {
           width,
           height
@@ -5882,7 +5900,7 @@ var Two = (() => {
     }
     flagReset() {
       super.flagReset.call(this);
-      this._flagValue = this._flagFamily = this._flagSize = this._flagLeading = this._flagAlignment = this._flagFill = this._flagStroke = this._flagLinewidth = this._flagOpacity = this._flagVisible = this._flagClip = this._flagDecoration = this._flagClassName = this._flagBaseline = this._flagWeight = this._flagStyle = false;
+      this._flagValue = this._flagFamily = this._flagSize = this._flagLeading = this._flagAlignment = this._flagFill = this._flagStroke = this._flagLinewidth = this._flagOpacity = this._flagVisible = this._flagClip = this._flagDecoration = this._flagClassName = this._flagBaseline = this._flagWeight = this._flagStyle = this._flagDirection = false;
       return this;
     }
   };
@@ -9044,20 +9062,7 @@ var Two = (() => {
   var transformation = new NumArray(9);
   var CanvasUtils = Renderer.Utils;
   var vector2 = new Vector();
-  var quad = new NumArray([
-    0,
-    0,
-    1,
-    0,
-    0,
-    1,
-    0,
-    1,
-    1,
-    0,
-    1,
-    1
-  ]);
+  var quad = new NumArray([0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1]);
   var webgl = {
     precision: 0.9,
     isHidden: /(undefined|none|transparent)/i,
@@ -9098,7 +9103,11 @@ var Two = (() => {
             this._renderer.matrix = new NumArray(9);
           }
           this._matrix.toTransformArray(true, transformation);
-          multiplyMatrix(transformation, parent._renderer.matrix, this._renderer.matrix);
+          multiplyMatrix(
+            transformation,
+            parent._renderer.matrix,
+            this._renderer.matrix
+          );
           if (!(this._renderer.scale instanceof Vector)) {
             this._renderer.scale = new Vector();
           }
@@ -9123,7 +9132,12 @@ var Two = (() => {
           gl.stencilFunc(gl.ALWAYS, 1, 0);
           gl.stencilOp(gl.KEEP, gl.KEEP, gl.REPLACE);
           gl.colorMask(false, false, false, false);
-          webgl[this._mask._renderer.type].render.call(this._mask, gl, programs, this);
+          webgl[this._mask._renderer.type].render.call(
+            this._mask,
+            gl,
+            programs,
+            this
+          );
           gl.stencilFunc(gl.EQUAL, 1, 255);
           gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
           gl.colorMask(true, true, true, true);
@@ -9166,8 +9180,14 @@ var Two = (() => {
         const dashes = elem.dashes;
         const length = commands.length;
         const last = length - 1;
-        canvas3.width = Math.max(Math.ceil(elem._renderer.rect.width * scale.x), 1);
-        canvas3.height = Math.max(Math.ceil(elem._renderer.rect.height * scale.y), 1);
+        canvas3.width = Math.max(
+          Math.ceil(elem._renderer.rect.width * scale.x),
+          1
+        );
+        canvas3.height = Math.max(
+          Math.ceil(elem._renderer.rect.height * scale.y),
+          1
+        );
         const centroid = elem._renderer.rect.centroid;
         const cx = centroid.x;
         const cy = centroid.y;
@@ -9230,7 +9250,18 @@ var Two = (() => {
               a = commands[prev];
               ax = a.x;
               ay = a.y;
-              CanvasUtils.renderSvgArcCommand(ctx, ax, ay, rx, ry, largeArcFlag, sweepFlag, xAxisRotation, x, y);
+              CanvasUtils.renderSvgArcCommand(
+                ctx,
+                ax,
+                ay,
+                rx,
+                ry,
+                largeArcFlag,
+                sweepFlag,
+                xAxisRotation,
+                x,
+                y
+              );
               break;
             case Commands.curve:
               prev = closed2 ? mod(i - 1, length) : Math.max(i - 1, 0);
@@ -9291,10 +9322,7 @@ var Two = (() => {
           isOffset = fill._renderer && fill._renderer.offset;
           if (isOffset) {
             ctx.save();
-            ctx.translate(
-              -fill._renderer.offset.x,
-              -fill._renderer.offset.y
-            );
+            ctx.translate(-fill._renderer.offset.x, -fill._renderer.offset.y);
             ctx.scale(fill._renderer.scale.x, fill._renderer.scale.y);
           }
           ctx.fill();
@@ -9306,10 +9334,7 @@ var Two = (() => {
           isOffset = stroke._renderer && stroke._renderer.offset;
           if (isOffset) {
             ctx.save();
-            ctx.translate(
-              -stroke._renderer.offset.x,
-              -stroke._renderer.offset.y
-            );
+            ctx.translate(-stroke._renderer.offset.x, -stroke._renderer.offset.y);
             ctx.scale(stroke._renderer.scale.x, stroke._renderer.scale.y);
             ctx.lineWidth = linewidth / stroke._renderer.scale.x;
           }
@@ -9385,7 +9410,11 @@ var Two = (() => {
             this._renderer.matrix = new NumArray(9);
           }
           this._matrix.toTransformArray(true, transformation);
-          multiplyMatrix(transformation, parent._renderer.matrix, this._renderer.matrix);
+          multiplyMatrix(
+            transformation,
+            parent._renderer.matrix,
+            this._renderer.matrix
+          );
           if (!(this._renderer.scale instanceof Vector)) {
             this._renderer.scale = new Vector();
           }
@@ -9406,7 +9435,12 @@ var Two = (() => {
           gl.stencilFunc(gl.ALWAYS, 1, 0);
           gl.stencilOp(gl.KEEP, gl.KEEP, gl.REPLACE);
           gl.colorMask(false, false, false, false);
-          webgl[this._mask._renderer.type].render.call(this._mask, gl, programs, this);
+          webgl[this._mask._renderer.type].render.call(
+            this._mask,
+            gl,
+            programs,
+            this
+          );
           gl.stencilFunc(gl.EQUAL, 1, 255);
           gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
           gl.colorMask(true, true, true, true);
@@ -9527,10 +9561,7 @@ var Two = (() => {
           isOffset = fill._renderer && fill._renderer.offset;
           if (isOffset) {
             ctx.save();
-            ctx.translate(
-              -fill._renderer.offset.x,
-              -fill._renderer.offset.y
-            );
+            ctx.translate(-fill._renderer.offset.x, -fill._renderer.offset.y);
             ctx.scale(fill._renderer.scale.x, fill._renderer.scale.y);
           }
           ctx.fill();
@@ -9542,10 +9573,7 @@ var Two = (() => {
           isOffset = stroke._renderer && stroke._renderer.offset;
           if (isOffset) {
             ctx.save();
-            ctx.translate(
-              -stroke._renderer.offset.x,
-              -stroke._renderer.offset.y
-            );
+            ctx.translate(-stroke._renderer.offset.x, -stroke._renderer.offset.y);
             ctx.scale(stroke._renderer.scale.x, stroke._renderer.scale.y);
             ctx.lineWidth = linewidth / stroke._renderer.scale.x;
           }
@@ -9578,7 +9606,11 @@ var Two = (() => {
             this._renderer.matrix = new NumArray(9);
           }
           this._matrix.toTransformArray(true, transformation);
-          multiplyMatrix(transformation, parent._renderer.matrix, this._renderer.matrix);
+          multiplyMatrix(
+            transformation,
+            parent._renderer.matrix,
+            this._renderer.matrix
+          );
           if (!(this._renderer.scale instanceof Vector)) {
             this._renderer.scale = new Vector();
           }
@@ -9663,8 +9695,14 @@ var Two = (() => {
         const dashes = elem.dashes;
         const decoration = elem._decoration;
         const direction = elem._direction;
-        canvas3.width = Math.max(Math.ceil(elem._renderer.rect.width * scale.x), 1);
-        canvas3.height = Math.max(Math.ceil(elem._renderer.rect.height * scale.y), 1);
+        canvas3.width = Math.max(
+          Math.ceil(elem._renderer.rect.width * scale.x),
+          1
+        );
+        canvas3.height = Math.max(
+          Math.ceil(elem._renderer.rect.height * scale.y),
+          1
+        );
         const centroid = elem._renderer.rect.centroid;
         const cx = centroid.x;
         const cy = centroid.y;
@@ -9672,7 +9710,12 @@ var Two = (() => {
         const isOffset = fill._renderer && fill._renderer.offset && stroke._renderer && stroke._renderer.offset;
         ctx.clearRect(0, 0, canvas3.width, canvas3.height);
         if (!isOffset) {
-          ctx.font = [elem._style, elem._weight, elem._size + "px/" + elem._leading + "px", elem._family].join(" ");
+          ctx.font = [
+            elem._style,
+            elem._weight,
+            elem._size + "px/" + elem._leading + "px",
+            elem._family
+          ].join(" ");
         }
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
@@ -9711,10 +9754,7 @@ var Two = (() => {
             sx = fill._renderer.scale.x;
             sy = fill._renderer.scale.y;
             ctx.save();
-            ctx.translate(
-              -fill._renderer.offset.x,
-              -fill._renderer.offset.y
-            );
+            ctx.translate(-fill._renderer.offset.x, -fill._renderer.offset.y);
             ctx.scale(sx, sy);
             a = elem._size / fill._renderer.scale.y;
             b = elem._leading / fill._renderer.scale.y;
@@ -9738,10 +9778,7 @@ var Two = (() => {
             sx = stroke._renderer.scale.x;
             sy = stroke._renderer.scale.y;
             ctx.save();
-            ctx.translate(
-              -stroke._renderer.offset.x,
-              -stroke._renderer.offset.y
-            );
+            ctx.translate(-stroke._renderer.offset.x, -stroke._renderer.offset.y);
             ctx.scale(sx, sy);
             a = elem._size / stroke._renderer.scale.y;
             b = elem._leading / stroke._renderer.scale.y;
@@ -9787,7 +9824,12 @@ var Two = (() => {
       },
       getBoundingClientRect: function(elem, rect) {
         const ctx = webgl.ctx;
-        ctx.font = [elem._style, elem._weight, elem._size + "px/" + elem._leading + "px", elem._family].join(" ");
+        ctx.font = [
+          elem._style,
+          elem._weight,
+          elem._size + "px/" + elem._leading + "px",
+          elem._family
+        ].join(" ");
         ctx.textAlign = "center";
         ctx.textBaseline = Renderer.Utils.baselines[elem._baseline] || elem._baseline;
         const metrics = ctx.measureText(elem._value);
@@ -9863,7 +9905,11 @@ var Two = (() => {
             this._renderer.matrix = new NumArray(9);
           }
           this._matrix.toTransformArray(true, transformation);
-          multiplyMatrix(transformation, parent._renderer.matrix, this._renderer.matrix);
+          multiplyMatrix(
+            transformation,
+            parent._renderer.matrix,
+            this._renderer.matrix
+          );
           if (!(this._renderer.scale instanceof Vector)) {
             this._renderer.scale = new Vector();
           }
@@ -9884,7 +9930,12 @@ var Two = (() => {
           gl.stencilFunc(gl.ALWAYS, 1, 0);
           gl.stencilOp(gl.KEEP, gl.KEEP, gl.REPLACE);
           gl.colorMask(false, false, false, false);
-          webgl[this._mask._renderer.type].render.call(this._mask, gl, programs, this);
+          webgl[this._mask._renderer.type].render.call(
+            this._mask,
+            gl,
+            programs,
+            this
+          );
           gl.stencilFunc(gl.EQUAL, 1, 255);
           gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
           gl.colorMask(true, true, true, true);
@@ -9983,11 +10034,11 @@ var Two = (() => {
           let radius = this._radius;
           if (/objectBoundingBox/i.test(this._units)) {
             rect = parent.getBoundingClientRect(true);
-            cx = cx * rect.width * 0.5;
-            cy = cy * rect.height * 0.5;
-            fx = fx * rect.width * 0.5;
-            fy = fy * rect.height * 0.5;
-            radius *= Math.min(rect.width, rect.height) * 0.5;
+            cx = (cx - 0.5) * rect.width * 0.5;
+            cy = (cy - 0.5) * rect.height * 0.5;
+            fx = (fx - 0.5) * rect.width * 0.5;
+            fy = (fy - 0.5) * rect.height * 0.5;
+            radius *= Math.min(rect.width, rect.height);
           }
           this._renderer.effect = ctx.createRadialGradient(
             cx,
@@ -10061,7 +10112,14 @@ var Two = (() => {
         elem._renderer.texture = gl.createTexture();
       }
       gl.bindTexture(gl.TEXTURE_2D, elem._renderer.texture);
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.canvas);
+      gl.texImage2D(
+        gl.TEXTURE_2D,
+        0,
+        gl.RGBA,
+        gl.RGBA,
+        gl.UNSIGNED_BYTE,
+        this.canvas
+      );
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
