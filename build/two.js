@@ -738,7 +738,7 @@ var Two = (() => {
       canvas: "CanvasRenderer"
     },
     Version: "v0.8.14",
-    PublishDate: "2024-06-11T01:53:02.940Z",
+    PublishDate: "2024-06-11T02:06:29.216Z",
     Identifier: "two-",
     Resolution: 12,
     AutoCalculateImportedMatrices: true,
@@ -8323,10 +8323,7 @@ var Two = (() => {
       update: function(domElement) {
         const { defs } = domElement;
         if (defs._flagUpdate) {
-          const children = Array.prototype.slice.call(
-            defs.children,
-            0
-          );
+          const children = Array.prototype.slice.call(defs.children, 0);
           for (let i = 0; i < children.length; i++) {
             const child = children[i];
             const id = child.id;
@@ -8389,7 +8386,10 @@ var Two = (() => {
           elem: this._renderer.elem
         };
         if (flagMatrix) {
-          this._renderer.elem.setAttribute("transform", "matrix(" + this._matrix.toString() + ")");
+          this._renderer.elem.setAttribute(
+            "transform",
+            "matrix(" + this._matrix.toString() + ")"
+          );
         }
         for (let i = 0; i < this.children.length; i++) {
           const child = this.children[i];
@@ -8402,7 +8402,10 @@ var Two = (() => {
           this._renderer.elem.setAttribute("opacity", this._opacity);
         }
         if (this._flagVisible) {
-          this._renderer.elem.setAttribute("display", this._visible ? "inline" : "none");
+          this._renderer.elem.setAttribute(
+            "display",
+            this._visible ? "inline" : "none"
+          );
         }
         if (this._flagClassName) {
           this._renderer.elem.setAttribute("class", this.classList.join(" "));
@@ -8419,7 +8422,10 @@ var Two = (() => {
         if (this._flagMask) {
           if (this._mask) {
             svg[this._mask._renderer.type].render.call(this._mask, domElement);
-            this._renderer.elem.setAttribute("clip-path", "url(#" + this._mask.id + ")");
+            this._renderer.elem.setAttribute(
+              "clip-path",
+              "url(#" + this._mask.id + ")"
+            );
           } else {
             this._renderer.elem.removeAttribute("clip-path");
           }
@@ -8451,7 +8457,11 @@ var Two = (() => {
         if (this._fill && this._fill._renderer) {
           this._renderer.hasFillEffect = true;
           this._fill._update();
-          svg[this._fill._renderer.type].render.call(this._fill, domElement, true);
+          svg[this._fill._renderer.type].render.call(
+            this._fill,
+            domElement,
+            true
+          );
         }
         if (this._flagFill) {
           changed.fill = this._fill && this._fill.id ? "url(#" + this._fill.id + ")" : this._fill;
@@ -8463,7 +8473,11 @@ var Two = (() => {
         if (this._stroke && this._stroke._renderer) {
           this._renderer.hasStrokeEffect = true;
           this._stroke._update();
-          svg[this._stroke._renderer.type].render.call(this._stroke, domElement, true);
+          svg[this._stroke._renderer.type].render.call(
+            this._stroke,
+            domElement,
+            true
+          );
         }
         if (this._flagStroke) {
           changed.stroke = this._stroke && this._stroke.id ? "url(#" + this._stroke.id + ")" : this._stroke;
@@ -8521,7 +8535,10 @@ var Two = (() => {
         if (this._flagMask) {
           if (this._mask) {
             svg[this._mask._renderer.type].render.call(this._mask, domElement);
-            this._renderer.elem.setAttribute("clip-path", "url(#" + this._mask.id + ")");
+            this._renderer.elem.setAttribute(
+              "clip-path",
+              "url(#" + this._mask.id + ")"
+            );
           } else {
             this._renderer.elem.removeAttribute("clip-path");
           }
@@ -8556,7 +8573,11 @@ var Two = (() => {
         if (this._fill && this._fill._renderer) {
           this._renderer.hasFillEffect = true;
           this._fill._update();
-          svg[this._fill._renderer.type].render.call(this._fill, domElement, true);
+          svg[this._fill._renderer.type].render.call(
+            this._fill,
+            domElement,
+            true
+          );
         }
         if (this._flagFill) {
           changed.fill = this._fill && this._fill.id ? "url(#" + this._fill.id + ")" : this._fill;
@@ -8568,7 +8589,11 @@ var Two = (() => {
         if (this._stroke && this._stroke._renderer) {
           this._renderer.hasStrokeEffect = true;
           this._stroke._update();
-          svg[this._stroke._renderer.type].render.call(this._stroke, domElement, true);
+          svg[this._stroke._renderer.type].render.call(
+            this._stroke,
+            domElement,
+            true
+          );
         }
         if (this._flagStroke) {
           changed.stroke = this._stroke && this._stroke.id ? "url(#" + this._stroke.id + ")" : this._stroke;
@@ -8645,7 +8670,11 @@ var Two = (() => {
         if (this._fill && this._fill._renderer) {
           this._renderer.hasFillEffect = true;
           this._fill._update();
-          svg[this._fill._renderer.type].render.call(this._fill, domElement, true);
+          svg[this._fill._renderer.type].render.call(
+            this._fill,
+            domElement,
+            true
+          );
         }
         if (this._flagFill) {
           changed.fill = this._fill && this._fill.id ? "url(#" + this._fill.id + ")" : this._fill;
@@ -8657,7 +8686,11 @@ var Two = (() => {
         if (this._stroke && this._stroke._renderer) {
           this._renderer.hasStrokeEffect = true;
           this._stroke._update();
-          svg[this._stroke._renderer.type].render.call(this._stroke, domElement, true);
+          svg[this._stroke._renderer.type].render.call(
+            this._stroke,
+            domElement,
+            true
+          );
         }
         if (this._flagStroke) {
           changed.stroke = this._stroke && this._stroke.id ? "url(#" + this._stroke.id + ")" : this._stroke;
@@ -8705,7 +8738,10 @@ var Two = (() => {
         if (this._flagMask) {
           if (this._mask) {
             svg[this._mask._renderer.type].render.call(this._mask, domElement);
-            this._renderer.elem.setAttribute("clip-path", "url(#" + this._mask.id + ")");
+            this._renderer.elem.setAttribute(
+              "clip-path",
+              "url(#" + this._mask.id + ")"
+            );
           } else {
             this._renderer.elem.removeAttribute("clip-path");
           }
@@ -8894,8 +8930,8 @@ var Two = (() => {
           changed.width = 0;
           changed.height = 0;
           if (image) {
-            styles.width = changed.width = image.width;
-            styles.height = changed.height = image.height;
+            changed.width = image.width;
+            changed.height = image.height;
             switch (this._repeat) {
               case "no-repeat":
                 changed.width += 1;
@@ -8909,6 +8945,8 @@ var Two = (() => {
               changed.width *= this._scale;
               changed.height *= this._scale;
             }
+            styles.width = changed.width;
+            styles.height = changed.height;
           }
         }
         if (this._flagScale || this._flagLoaded) {
