@@ -19,6 +19,7 @@ All notable changes to this project will be documented in this file. The format 
 
 + Made `objectBoundingBox` application consistent accross renderers
 + Patched texture scaling in `Two.SVGRenderer`
++ Updated Typescript definitions [@kevin-nano](https://github.com/kevin-nano)
 
 ## February 22, 2024 v0.8.13
 
