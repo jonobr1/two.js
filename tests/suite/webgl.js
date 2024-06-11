@@ -2,16 +2,16 @@
  * Tests Two.js WebGl Rendering Functionality:
  */
 
-(function() {
-
+(function () {
   QUnit.module('WebGLRenderer');
 
-  var getRatio = function(v) { return Math.round(window.devicePixelRatio); };
+  var getRatio = function (v) {
+    return Math.round(window.devicePixelRatio);
+  };
   var deviceRatio = getRatio(document.createElement('canvas').getContext('2d'));
   var suffix = '@' + deviceRatio + 'x.png';
 
-  QUnit.test('Two.makeLine', function(assert) {
-
+  QUnit.test('Two.makeLine', function (assert) {
     assert.expect(1);
     assert.done = assert.async(1);
 
@@ -19,19 +19,22 @@
       type: Two.Types.webgl,
       width: 400,
       height: 400,
-      ratio: deviceRatio
+      ratio: deviceRatio,
     }).appendTo(document.body);
 
     two.makeLine(0, 0, two.width, two.height);
 
     two.update();
 
-    QUnit.Utils.compare.call(assert, './images/canvas/line' + suffix, two.renderer, 'Two.makeLine renders properly.');
-
+    QUnit.Utils.compare.call(
+      assert,
+      './images/canvas/line' + suffix,
+      two.renderer,
+      'Two.makeLine renders properly.'
+    );
   });
 
-  QUnit.test('Two.makeRectangle', function(assert) {
-
+  QUnit.test('Two.makeRectangle', function (assert) {
     assert.expect(1);
     assert.done = assert.async(1);
 
@@ -39,19 +42,22 @@
       type: Two.Types.webgl,
       width: 400,
       height: 400,
-      ratio: deviceRatio
+      ratio: deviceRatio,
     });
 
     two.makeRectangle(two.width / 2, two.height / 2, 100, 100);
 
     two.update();
 
-    QUnit.Utils.compare.call(assert, './images/canvas/rectangle' + suffix, two.renderer, 'Two.makeRectangle renders properly.');
-
+    QUnit.Utils.compare.call(
+      assert,
+      './images/canvas/rectangle' + suffix,
+      two.renderer,
+      'Two.makeRectangle renders properly.'
+    );
   });
 
-  QUnit.test('Two.makeEllipse', function(assert) {
-
+  QUnit.test('Two.makeEllipse', function (assert) {
     assert.expect(1);
     assert.done = assert.async(1);
 
@@ -59,20 +65,22 @@
       type: Two.Types.webgl,
       width: 400,
       height: 400,
-      ratio: deviceRatio
+      ratio: deviceRatio,
     });
 
     two.makeEllipse(two.width / 2, two.height / 2, 100, 100);
 
     two.update();
 
-    QUnit.Utils.compare.call(assert, './images/canvas/ellipse' + suffix, two.renderer, 'Two.makeEllipse renders properly.');
-
+    QUnit.Utils.compare.call(
+      assert,
+      './images/canvas/ellipse' + suffix,
+      two.renderer,
+      'Two.makeEllipse renders properly.'
+    );
   });
 
-
-  QUnit.test('Two.makeCircle', function(assert) {
-
+  QUnit.test('Two.makeCircle', function (assert) {
     assert.expect(1);
     assert.done = assert.async(1);
 
@@ -80,19 +88,22 @@
       type: Two.Types.webgl,
       width: 400,
       height: 400,
-      ratio: deviceRatio
+      ratio: deviceRatio,
     });
 
     two.makeCircle(two.width / 2, two.height / 2, 50);
 
     two.update();
 
-    QUnit.Utils.compare.call(assert, './images/canvas/circle' + suffix, two.renderer, 'Two.makeCircle renders properly.');
-
+    QUnit.Utils.compare.call(
+      assert,
+      './images/canvas/circle' + suffix,
+      two.renderer,
+      'Two.makeCircle renders properly.'
+    );
   });
 
-  QUnit.test('Two.makePoints', function(assert) {
-
+  QUnit.test('Two.makePoints', function (assert) {
     assert.expect(1);
     assert.done = assert.async(1);
 
@@ -100,7 +111,7 @@
       type: Two.Types.webgl,
       width: 400,
       height: 400,
-      ratio: 1
+      ratio: 1,
     });
 
     var points = two.makePoints(200, 200, 220, 200, 180, 200);
@@ -110,12 +121,15 @@
 
     two.update();
 
-    QUnit.Utils.compare.call(assert, './images/canvas/points' + suffix, two.renderer, 'Two.makePoints renders properly.');
-
+    QUnit.Utils.compare.call(
+      assert,
+      './images/canvas/points' + suffix,
+      two.renderer,
+      'Two.makePoints renders properly.'
+    );
   });
 
-  QUnit.test('Two.makePath', function(assert) {
-
+  QUnit.test('Two.makePath', function (assert) {
     assert.expect(1);
     assert.done = assert.async(1);
 
@@ -123,7 +137,7 @@
       type: Two.Types.webgl,
       width: 400,
       height: 400,
-      ratio: deviceRatio
+      ratio: deviceRatio,
     });
 
     var amount = 20;
@@ -138,12 +152,15 @@
 
     two.update();
 
-    QUnit.Utils.compare.call(assert, './images/canvas/polygon' + suffix, two.renderer, 'Two.makePath renders properly.');
-
+    QUnit.Utils.compare.call(
+      assert,
+      './images/canvas/polygon' + suffix,
+      two.renderer,
+      'Two.makePath renders properly.'
+    );
   });
 
-  QUnit.test('Two.makeCurve', function(assert) {
-
+  QUnit.test('Two.makeCurve', function (assert) {
     assert.expect(1);
     assert.done = assert.async(1);
 
@@ -151,7 +168,7 @@
       type: Two.Types.webgl,
       width: 400,
       height: 400,
-      ratio: deviceRatio
+      ratio: deviceRatio,
     });
 
     var amount = 20;
@@ -166,12 +183,15 @@
 
     two.update();
 
-    QUnit.Utils.compare.call(assert, './images/canvas/curve' + suffix, two.renderer, 'Two.makeCurve renders properly.');
-
+    QUnit.Utils.compare.call(
+      assert,
+      './images/canvas/curve' + suffix,
+      two.renderer,
+      'Two.makeCurve renders properly.'
+    );
   });
 
-  QUnit.test('Two.makeLinearGradient', function(assert) {
-
+  QUnit.test('Two.makeLinearGradient', function (assert) {
     assert.expect(1);
     assert.done = assert.async(1);
 
@@ -179,23 +199,37 @@
       type: Two.Types.webgl,
       width: 400,
       height: 400,
-      ratio: deviceRatio
+      ratio: deviceRatio,
     });
 
-    var gradient = two.makeLinearGradient(0, - two.height / 2, 0, two.height / 2,
-      new Two.Gradient.Stop(0, 'rgb(255, 100, 100)'), new Two.Gradient.Stop(1, 'rgb(100, 100, 255)'));
+    var gradient = two.makeLinearGradient(
+      0,
+      -two.height / 2,
+      0,
+      two.height / 2,
+      new Two.Gradient.Stop(0, 'rgb(255, 100, 100)'),
+      new Two.Gradient.Stop(1, 'rgb(100, 100, 255)')
+    );
 
-    var rect = two.makeRectangle(two.width / 2, two.height / 2, two.width / 4, two.height / 4);
+    var rect = two.makeRectangle(
+      two.width / 2,
+      two.height / 2,
+      two.width / 4,
+      two.height / 4
+    );
     rect.fill = gradient;
 
     two.update();
 
-    QUnit.Utils.compare.call(assert, './images/canvas/linear-gradient' + suffix, two.renderer, 'Two.makeLinearGradient renders properly.');
-
+    QUnit.Utils.compare.call(
+      assert,
+      './images/canvas/linear-gradient' + suffix,
+      two.renderer,
+      'Two.makeLinearGradient renders properly.'
+    );
   });
 
-  QUnit.test('Two.makeRadialGradient', function(assert) {
-
+  QUnit.test('Two.makeRadialGradient', function (assert) {
     assert.expect(1);
     assert.done = assert.async(1);
 
@@ -203,23 +237,36 @@
       type: Two.Types.webgl,
       width: 400,
       height: 400,
-      ratio: deviceRatio
+      ratio: deviceRatio,
     });
 
-    var gradient = two.makeRadialGradient(0, 0, 4,
-      new Two.Gradient.Stop(0, 'rgb(255, 100, 100)'), new Two.Gradient.Stop(1, 'rgb(100, 100, 255)'));
+    var gradient = two.makeRadialGradient(
+      0.5,
+      0.5,
+      2,
+      new Two.Gradient.Stop(0, 'rgb(255, 100, 100)'),
+      new Two.Gradient.Stop(1, 'rgb(100, 100, 255)')
+    );
 
-    var rect = two.makeRectangle(two.width / 2, two.height / 2, two.width / 4, two.height / 4);
+    var rect = two.makeRectangle(
+      two.width / 2,
+      two.height / 2,
+      two.width / 4,
+      two.height / 4
+    );
     rect.fill = gradient;
 
     two.update();
 
-    QUnit.Utils.compare.call(assert, './images/canvas/radial-gradient' + suffix, two.renderer, 'Two.makeLinearGradient renders properly.');
-
+    QUnit.Utils.compare.call(
+      assert,
+      './images/canvas/radial-gradient' + suffix,
+      two.renderer,
+      'Two.makeLinearGradient renders properly.'
+    );
   });
 
-  QUnit.test('two.makeSprite (Simple)', function(assert) {
-
+  QUnit.test('two.makeSprite (Simple)', function (assert) {
     assert.expect(1);
     assert.done = assert.async(1);
 
@@ -227,29 +274,30 @@
       type: Two.Types.webgl,
       width: 400,
       height: 400,
-      ratio: deviceRatio
+      ratio: deviceRatio,
     });
 
     var path = '/tests/images/sequence/00000.png';
     var sprite = two.makeSprite(path, two.width / 2, two.height / 2);
     var texture = sprite.texture;
 
-    var loaded = function() {
-
+    var loaded = function () {
       texture.unbind(Two.Events.Types.load, loaded);
       two.update();
 
-      QUnit.Utils.compare.call(assert, './images/canvas/sprite-simple' + suffix, two.renderer, 'Two.makeSprite renders properly.');
-
+      QUnit.Utils.compare.call(
+        assert,
+        './images/canvas/sprite-simple' + suffix,
+        two.renderer,
+        'Two.makeSprite renders properly.'
+      );
     };
 
     texture.bind(Two.Events.Types.load, loaded);
     texture._update();
-
   });
 
-  QUnit.test('two.makeImageSequence', function(assert) {
-
+  QUnit.test('two.makeImageSequence', function (assert) {
     assert.expect(2);
     assert.done = assert.async(2);
 
@@ -257,63 +305,75 @@
       type: Two.Types.webgl,
       width: 400,
       height: 400,
-      ratio: deviceRatio
+      ratio: deviceRatio,
     });
 
     var paths = [];
     for (var i = 0; i < 30; i++) {
       paths.push('/tests/images/sequence/' + QUnit.Utils.digits(i, 5) + '.png');
     }
-    var sequence = two.makeImageSequence(paths, two.width / 2, two.height / 2, 2);
+    var sequence = two.makeImageSequence(
+      paths,
+      two.width / 2,
+      two.height / 2,
+      2
+    );
     sequence.index = 3;
     var texture = sequence.textures[sequence.index];
 
-    var loaded = function() {
-
+    var loaded = function () {
       texture.unbind(Two.Events.Types.load, loaded);
 
       two.update();
 
-      QUnit.Utils.compare.call(assert, './images/canvas/image-sequence-1' + suffix, two.renderer, 'Two.ImageSequence applied the correct texture properly.', function() {
+      QUnit.Utils.compare.call(
+        assert,
+        './images/canvas/image-sequence-1' + suffix,
+        two.renderer,
+        'Two.ImageSequence applied the correct texture properly.',
+        function () {
+          sequence.index = 7;
+          texture = sequence.textures[sequence.index];
+          texture._flagImage = true;
 
-        sequence.index = 7;
-        texture = sequence.textures[sequence.index];
-        texture._flagImage = true;
+          texture.bind(Two.Events.Types.load, function () {
+            texture.unbind(Two.Events.Types.load);
 
-        texture.bind(Two.Events.Types.load, function() {
+            two.update();
 
-          texture.unbind(Two.Events.Types.load);
+            QUnit.Utils.compare.call(
+              assert,
+              './images/canvas/image-sequence-2' + suffix,
+              two.renderer,
+              'Two.ImageSequence can change index properly.'
+            );
+          });
 
-          two.update();
-
-          QUnit.Utils.compare.call(assert, './images/canvas/image-sequence-2' + suffix, two.renderer, 'Two.ImageSequence can change index properly.');
-
-        });
-
-        texture._update();
-
-      });
-
+          texture._update();
+        }
+      );
     };
 
     texture.bind(Two.Events.Types.load, loaded);
     texture._update();
 
     two.renderer.domElement.style.cursor = 'pointer';
-    two.renderer.domElement.addEventListener('click', function() {
-      if (two.playing) {
-        two.pause();
-      } else {
-        sequence.loop = true;
-        sequence.play();
-        two.play();
-      }
-    }, false);
-
+    two.renderer.domElement.addEventListener(
+      'click',
+      function () {
+        if (two.playing) {
+          two.pause();
+        } else {
+          sequence.loop = true;
+          sequence.play();
+          two.play();
+        }
+      },
+      false
+    );
   });
 
-  QUnit.test('two.makeSprite', function(assert) {
-
+  QUnit.test('two.makeSprite', function (assert) {
     assert.expect(2);
     assert.done = assert.async(2);
 
@@ -321,48 +381,65 @@
       type: Two.Types.webgl,
       width: 400,
       height: 400,
-      ratio: deviceRatio
+      ratio: deviceRatio,
     });
 
     var path = '/tests/images/spritesheet.jpg';
-    var sprite = two.makeSprite(path, two.width / 2, two.height / 2, 4, 4, 2, false);
+    var sprite = two.makeSprite(
+      path,
+      two.width / 2,
+      two.height / 2,
+      4,
+      4,
+      2,
+      false
+    );
     var texture = sprite.texture;
     sprite.index = 3;
 
-    var loaded = function() {
-
+    var loaded = function () {
       texture.unbind(Two.Events.Types.load, loaded);
       two.update();
 
-      QUnit.Utils.compare.call(assert, './images/canvas/image-sequence-1' + suffix, two.renderer, 'Two.makeSprite renders properly.', function() {
+      QUnit.Utils.compare.call(
+        assert,
+        './images/canvas/image-sequence-1' + suffix,
+        two.renderer,
+        'Two.makeSprite renders properly.',
+        function () {
+          sprite.index = 7;
+          two.update();
 
-        sprite.index = 7;
-        two.update();
-
-        QUnit.Utils.compare.call(assert, './images/canvas/image-sequence-2' + suffix, two.renderer, 'Two.Sprite changed index properly.');
-
-      });
-
+          QUnit.Utils.compare.call(
+            assert,
+            './images/canvas/image-sequence-2' + suffix,
+            two.renderer,
+            'Two.Sprite changed index properly.'
+          );
+        }
+      );
     };
 
     texture.bind(Two.Events.Types.load, loaded);
     texture._update();
 
     two.renderer.domElement.style.cursor = 'pointer';
-    two.renderer.domElement.addEventListener('click', function() {
-      if (two.playing) {
-        two.pause();
-      } else {
-        sprite.loop = true;
-        sprite.play();
-        two.play();
-      }
-    }, false);
-
+    two.renderer.domElement.addEventListener(
+      'click',
+      function () {
+        if (two.playing) {
+          two.pause();
+        } else {
+          sprite.loop = true;
+          sprite.play();
+          two.play();
+        }
+      },
+      false
+    );
   });
 
-  QUnit.test('Two.makeText', function(assert) {
-
+  QUnit.test('Two.makeText', function (assert) {
     assert.expect(1);
     assert.done = assert.async(1);
 
@@ -370,7 +447,7 @@
       type: Two.Types.webgl,
       width: 400,
       height: 400,
-      ratio: deviceRatio
+      ratio: deviceRatio,
     });
 
     var text = two.makeText('Hello World', two.width / 2, two.height / 2);
@@ -379,12 +456,15 @@
 
     two.update();
 
-    QUnit.Utils.compare.call(assert, './images/canvas/text' + suffix, two.renderer, 'Two.makeText renders properly.');
-
+    QUnit.Utils.compare.call(
+      assert,
+      './images/canvas/text' + suffix,
+      two.renderer,
+      'Two.makeText renders properly.'
+    );
   });
 
-  QUnit.test('Styles', function(assert) {
-
+  QUnit.test('Styles', function (assert) {
     assert.expect(1);
     assert.done = assert.async(1);
 
@@ -392,7 +472,7 @@
       type: Two.Types.webgl,
       width: 400,
       height: 400,
-      ratio: deviceRatio
+      ratio: deviceRatio,
     });
 
     var shape = two.makeRectangle(two.width / 2, two.height / 2, 50, 50);
@@ -416,8 +496,11 @@
 
     two.update();
 
-    QUnit.Utils.compare.call(assert, './images/canvas/styles' + suffix, two.renderer, 'Styles render properly.');
-
+    QUnit.Utils.compare.call(
+      assert,
+      './images/canvas/styles' + suffix,
+      two.renderer,
+      'Styles render properly.'
+    );
   });
-
 })();

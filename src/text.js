@@ -10,7 +10,8 @@ import { Texture } from './effects/texture.js';
 import { root } from './utils/root.js';
 
 let canvas;
-const min = Math.min, max = Math.max;
+const min = Math.min,
+  max = Math.max;
 
 if (root.document) {
   canvas = document.createElement('canvas');
@@ -28,7 +29,6 @@ if (root.document) {
  * @returns {Two.Text}
  */
 export class Text extends Shape {
-
   /**
    * @name Two.Text#_flagValue
    * @private
@@ -146,7 +146,7 @@ export class Text extends Shape {
    * @private
    * @property {Boolean} - Determines whether the {@link Two.Text#direction} needs updating.
    */
-  _flagDirection = false;
+  _flagDirection = true;
 
   // Underlying Properties
 
@@ -267,7 +267,6 @@ export class Text extends Shape {
   _dashes = null;
 
   constructor(message, x, y, styles) {
-
     super();
 
     for (let prop in proto) {
@@ -311,7 +310,6 @@ export class Text extends Shape {
         this[property] = styles[property];
       }
     }
-
   }
 
   /**
@@ -325,13 +323,25 @@ export class Text extends Shape {
    * @property {String[]} - A list of properties that are on every {@link Two.Text}.
    */
   static Properties = [
-    'value', 'family', 'size', 'leading', 'alignment', 'linewidth', 'style',
-    'weight', 'decoration', 'direction', 'baseline', 'opacity', 'visible',
-    'fill', 'stroke'
+    'value',
+    'family',
+    'size',
+    'leading',
+    'alignment',
+    'linewidth',
+    'style',
+    'weight',
+    'decoration',
+    'direction',
+    'baseline',
+    'opacity',
+    'visible',
+    'fill',
+    'stroke',
   ];
 
   /**
-   * 
+   *
    * @name Two.Measure
    * @function
    * @param {Two.Text} [text] - The instance of {@link Two.Text} to measure.
@@ -340,20 +350,28 @@ export class Text extends Shape {
   static Measure(text) {
     if (canvas) {
       const ctx = canvas.getContext('2d');
-      ctx.font = [text._style, text._weight, `${text._size}px/${text._leading}px`,
-        text._family].join(' ');
+      ctx.font = [
+        text._style,
+        text._weight,
+        `${text._size}px/${text._leading}px`,
+        text._family,
+      ].join(' ');
       const metrics = ctx.measureText(text.value, 0, 0);
-      const height = metrics.actualBoundingBoxDescent + metrics.actualBoundingBoxAscent;
+      const height =
+        metrics.actualBoundingBoxDescent + metrics.actualBoundingBoxAscent;
       return {
         width: metrics.width,
-        height
+        height,
       };
     } else {
       const width = this.value.length * this.size * Text.Ratio;
       const height = this.leading;
-      console.warn('Two.Text: unable to accurately measure text, so using an approximation.');
+      console.warn(
+        'Two.Text: unable to accurately measure text, so using an approximation.'
+      );
       return {
-        width, height
+        width,
+        height,
       };
     }
   }
@@ -366,7 +384,6 @@ export class Text extends Shape {
    * @description Create a new instance of {@link Two.Text} with the same properties of the current text object.
    */
   clone(parent) {
-
     const clone = new Text(this.value);
     clone.translation.copy(this.translation);
     clone.rotation = this.rotation;
@@ -386,7 +403,6 @@ export class Text extends Shape {
     }
 
     return clone._update();
-
   }
 
   /**
@@ -396,11 +412,10 @@ export class Text extends Shape {
    * @description Return a JSON compatible plain object that represents the text object.
    */
   toObject() {
-
     const result = {
       translation: this.translation.toObject(),
       rotation: this.rotation,
-      scale: this.scale
+      scale: this.scale,
     };
 
     if (this.matrix.manual) {
@@ -413,7 +428,6 @@ export class Text extends Shape {
     }
 
     return result;
-
   }
 
   /**
@@ -449,7 +463,6 @@ export class Text extends Shape {
    * @description Return an object with top, left, right, bottom, width, and height parameters of the text object.
    */
   getBoundingClientRect(shallow) {
-
     let matrix;
     let left, right, top, bottom;
 
@@ -463,25 +476,25 @@ export class Text extends Shape {
 
     switch (this.alignment) {
       case 'left':
-        left = - border;
+        left = -border;
         right = width + border;
         break;
       case 'right':
-        left = - (width + border);
+        left = -(width + border);
         right = border;
         break;
       default:
-        left = - (width / 2 + border);
+        left = -(width / 2 + border);
         right = width / 2 + border;
     }
 
     switch (this.baseline) {
       case 'middle':
-        top = - (height / 2 + border);
+        top = -(height / 2 + border);
         bottom = height / 2 + border;
         break;
       default:
-        top = - (height + border);
+        top = -(height + border);
         bottom = border;
     }
 
@@ -501,9 +514,8 @@ export class Text extends Shape {
       right: right,
       bottom: bottom,
       width: right - left,
-      height: bottom - top
+      height: bottom - top,
     };
-
   }
 
   /**
@@ -513,241 +525,253 @@ export class Text extends Shape {
    * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
    */
   flagReset() {
-
     super.flagReset.call(this);
 
-    this._flagValue = this._flagFamily = this._flagSize =
-      this._flagLeading = this._flagAlignment = this._flagFill =
-      this._flagStroke = this._flagLinewidth = this._flagOpacity =
-      this._flagVisible = this._flagClip = this._flagDecoration =
-      this._flagClassName = this._flagBaseline = this._flagWeight =
-        this._flagStyle = this._flagDirection = false;
+    this._flagValue =
+      this._flagFamily =
+      this._flagSize =
+      this._flagLeading =
+      this._flagAlignment =
+      this._flagFill =
+      this._flagStroke =
+      this._flagLinewidth =
+      this._flagOpacity =
+      this._flagVisible =
+      this._flagClip =
+      this._flagDecoration =
+      this._flagClassName =
+      this._flagBaseline =
+      this._flagWeight =
+      this._flagStyle =
+      this._flagDirection =
+        false;
 
     return this;
-
   }
-
 }
 
 const proto = {
   value: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._value;
     },
-    set: function(v) {
+    set: function (v) {
       this._value = v;
       this._flagValue = true;
-    }
+    },
   },
   family: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._family;
     },
-    set: function(v) {
+    set: function (v) {
       this._family = v;
       this._flagFamily = true;
-    }
+    },
   },
   size: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._size;
     },
-    set: function(v) {
+    set: function (v) {
       this._size = v;
       this._flagSize = true;
-    }
+    },
   },
   leading: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._leading;
     },
-    set: function(v) {
+    set: function (v) {
       this._leading = v;
       this._flagLeading = true;
-    }
+    },
   },
   alignment: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._alignment;
     },
-    set: function(v) {
+    set: function (v) {
       this._alignment = v;
       this._flagAlignment = true;
-    }
+    },
   },
   linewidth: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._linewidth;
     },
-    set: function(v) {
+    set: function (v) {
       this._linewidth = v;
       this._flagLinewidth = true;
-    }
+    },
   },
   style: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._style;
     },
-    set: function(v) {
+    set: function (v) {
       this._style = v;
       this._flagStyle = true;
-    }
+    },
   },
   weight: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._weight;
     },
-    set: function(v) {
+    set: function (v) {
       this._weight = v;
       this._flagWeight = true;
-    }
+    },
   },
   decoration: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._decoration;
     },
-    set: function(v) {
+    set: function (v) {
       this._decoration = v;
       this._flagDecoration = true;
-    }
+    },
   },
   direction: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._direction;
     },
-    set: function(v) {
+    set: function (v) {
       this._direction = v;
       this._flagDirection = true;
-    }
+    },
   },
   baseline: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._baseline;
     },
-    set: function(v) {
+    set: function (v) {
       this._baseline = v;
       this._flagBaseline = true;
-    }
+    },
   },
   opacity: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._opacity;
     },
-    set: function(v) {
+    set: function (v) {
       this._opacity = v;
       this._flagOpacity = true;
-    }
+    },
   },
   visible: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._visible;
     },
-    set: function(v) {
+    set: function (v) {
       this._visible = v;
       this._flagVisible = true;
-    }
+    },
   },
   fill: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._fill;
     },
-    set: function(f) {
-
-      if (this._fill instanceof Gradient
-        || this._fill instanceof LinearGradient
-        || this._fill instanceof RadialGradient
-        || this._fill instanceof Texture) {
+    set: function (f) {
+      if (
+        this._fill instanceof Gradient ||
+        this._fill instanceof LinearGradient ||
+        this._fill instanceof RadialGradient ||
+        this._fill instanceof Texture
+      ) {
         this._fill.unbind(Events.Types.change, this._renderer.flagFill);
       }
 
       this._fill = f;
       this._flagFill = true;
 
-      if (this._fill instanceof Gradient
-        || this._fill instanceof LinearGradient
-        || this._fill instanceof RadialGradient
-        || this._fill instanceof Texture) {
+      if (
+        this._fill instanceof Gradient ||
+        this._fill instanceof LinearGradient ||
+        this._fill instanceof RadialGradient ||
+        this._fill instanceof Texture
+      ) {
         this._fill.bind(Events.Types.change, this._renderer.flagFill);
       }
-
-    }
+    },
   },
   stroke: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._stroke;
     },
-    set: function(f) {
-
-      if (this._stroke instanceof Gradient
-        || this._stroke instanceof LinearGradient
-        || this._stroke instanceof RadialGradient
-        || this._stroke instanceof Texture) {
+    set: function (f) {
+      if (
+        this._stroke instanceof Gradient ||
+        this._stroke instanceof LinearGradient ||
+        this._stroke instanceof RadialGradient ||
+        this._stroke instanceof Texture
+      ) {
         this._stroke.unbind(Events.Types.change, this._renderer.flagStroke);
       }
 
       this._stroke = f;
       this._flagStroke = true;
 
-      if (this._stroke instanceof Gradient
-        || this._stroke instanceof LinearGradient
-        || this._stroke instanceof RadialGradient
-        || this._stroke instanceof Texture) {
+      if (
+        this._stroke instanceof Gradient ||
+        this._stroke instanceof LinearGradient ||
+        this._stroke instanceof RadialGradient ||
+        this._stroke instanceof Texture
+      ) {
         this._stroke.bind(Events.Types.change, this._renderer.flagStroke);
       }
-
-    }
+    },
   },
   mask: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._mask;
     },
-    set: function(v) {
+    set: function (v) {
       this._mask = v;
       this._flagMask = true;
       if (_.isObject(v) && !v.clip) {
         v.clip = true;
       }
-    }
-
+    },
   },
   clip: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._clip;
     },
-    set: function(v) {
+    set: function (v) {
       this._clip = v;
       this._flagClip = true;
-    }
+    },
   },
   dashes: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._dashes;
     },
-    set: function(v) {
+    set: function (v) {
       if (typeof v.offset !== 'number') {
         v.offset = (this.dashes && this._dashes.offset) || 0;
       }
       this._dashes = v;
-    }
-  }
+    },
+  },
 };
 
 /**
