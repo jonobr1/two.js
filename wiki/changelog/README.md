@@ -13,7 +13,7 @@ All notable changes to this project will be documented in this file. The format 
 
 ## June 10, 2024 v0.8.14
 
-<h3 class="visible">June 10, 2024</h3><version-link v="v0.8.13" />
+<h3 class="visible">June 10, 2024</h3><version-link v="v0.8.14" />
 
 + Made `objectBoundingBox` application consistent accross renderers
 + Patched texture scaling in `Two.SVGRenderer`
