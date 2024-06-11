@@ -167,7 +167,7 @@ function update(frameCount) {
   if (group.scale > 0.9999) {
     group.scale = group.rotation = 0;
   }
-  var t = (1 - group.scale) * 0.125;
+  var t = (1 - group.scale) * 0.04;
   group.scale += t;
   group.rotation += t * 4 * Math.PI;
 }
