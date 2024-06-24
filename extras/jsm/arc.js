@@ -4,7 +4,8 @@ import { Constants } from '../../src/constants.js';
 import { Anchor } from '../../src/anchor.js';
 import { Path } from '../../src/path.js';
 
-const cos = Math.cos, sin = Math.sin;
+const cos = Math.cos,
+  sin = Math.sin;
 
 /**
  * @name Two.Arc
@@ -19,7 +20,6 @@ const cos = Math.cos, sin = Math.sin;
  * @param {Number} [resolution=4] - The number of vertices used to construct the circle.
  */
 export class Arc extends Path {
-
   _flagWidth = false;
   _flagHeight = false;
   _flagStartAngle = false;
@@ -31,7 +31,6 @@ export class Arc extends Path {
   _endAngle = TWO_PI;
 
   constructor(x, y, width, height, startAngle, endAngle, resolution) {
-
     if (typeof resolution !== 'number') {
       resolution = Constants.Resolution;
     }
@@ -90,7 +89,6 @@ export class Arc extends Path {
     if (typeof y === 'number') {
       this.position.y = y;
     }
-
   }
 
   /**
@@ -108,31 +106,31 @@ export class Arc extends Path {
    * @nota-bene Try not to call this method more than once a frame.
    */
   _update() {
-
-    if (this._flagVertices || this._flagRadius || this._flagStartAngle
-      || this._flagEndAngle) {
-
+    if (
+      this._flagVertices ||
+      this._flagRadius ||
+      this._flagWidth ||
+      this._flagHeight ||
+      this._flagStartAngle ||
+      this._flagEndAngle
+    ) {
       const { width, height, startAngle, endAngle, vertices } = this;
       const rx = width / 2;
       const ry = height / 2;
 
       for (let i = 0; i < vertices.length; i++) {
-
         const v = vertices[i];
         const pct = i / (vertices.length - 1);
         const theta = pct * (endAngle - startAngle) + startAngle;
 
         v.x = rx * cos(theta);
         v.y = ry * sin(theta);
-
       }
-
     }
 
     super._update.call(this);
 
     return this;
-
   }
 
   /**
@@ -142,14 +140,15 @@ export class Arc extends Path {
    * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
    */
   flagReset() {
-
     super.flagReset.call(this);
 
-    this._flagWidth = this._flagHeight = this._flagStartAngle
-      = this._flagEndAngle = false;
+    this._flagWidth =
+      this._flagHeight =
+      this._flagStartAngle =
+      this._flagEndAngle =
+        false;
 
     return this;
-
   }
 
   /**
@@ -160,11 +159,18 @@ export class Arc extends Path {
    * @description Create a new instance of {@link Two.ArcSegment} with the same properties of the current path.
    */
   clone() {
-
     const { width, height, startAngle, endAngle } = this;
     const resolution = this.vertices.length;
 
-    const clone = new Arc(0, 0, width, height, startAngle, endAngle, resolution);
+    const clone = new Arc(
+      0,
+      0,
+      width,
+      height,
+      startAngle,
+      endAngle,
+      resolution
+    );
 
     clone.position.copy(this.position);
     clone.rotation = this.rotation;
@@ -186,58 +192,56 @@ export class Arc extends Path {
     }
 
     return clone;
-
   }
-
 }
 
 const protos = {
   width: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._width;
     },
-    set: function(v) {
+    set: function (v) {
       if (v !== this._width) {
         this._width = v;
         this._flagWidth = true;
       }
-    }
+    },
   },
   height: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._height;
     },
-    set: function(v) {
+    set: function (v) {
       if (v !== this._height) {
         this._height = v;
         this._flagHeight = true;
       }
-    }
+    },
   },
   startAngle: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._startAngle;
     },
-    set: function(v) {
+    set: function (v) {
       if (v !== this._startAngle) {
         this._startAngle = v;
         this._flagStartAngle = true;
       }
-    }
+    },
   },
   endAngle: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._endAngle;
     },
-    set: function(v) {
+    set: function (v) {
       if (v !== this._endAngle) {
         this._endAngle = v;
         this._flagEndAngle = true;
       }
-    }
-  }
+    },
+  },
 };
