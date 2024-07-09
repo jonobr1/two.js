@@ -1,7 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2012 - 2021 @jonobr1 / http://jono.fyi
+Copyright (c) 2012 - 2024 @jonobr1 / http://jono.fyi
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -718,8 +718,8 @@ var Constants = {
     svg: "SVGRenderer",
     canvas: "CanvasRenderer"
   },
-  Version: "v0.8.14",
-  PublishDate: "2024-06-11T02:06:29.216Z",
+  Version: "v0.8.15",
+  PublishDate: "2024-07-09T17:21:48.285Z",
   Identifier: "two-",
   Resolution: 12,
   AutoCalculateImportedMatrices: true,
@@ -4171,15 +4171,19 @@ var _Path = class extends Shape {
         return v.toObject();
       })
     };
-    _.each(_Path.Properties, function(k) {
-      if (typeof this[k] !== "undefined") {
-        if (this[k].toObject) {
-          result[k] = this[k].toObject();
-        } else {
-          result[k] = this[k];
+    _.each(
+      _Path.Properties,
+      function(k) {
+        if (typeof this[k] !== "undefined") {
+          if (this[k].toObject) {
+            result[k] = this[k].toObject();
+          } else {
+            result[k] = this[k];
+          }
         }
-      }
-    }, this);
+      },
+      this
+    );
     result.className = this.className;
     result.translation = this.translation.toObject();
     result.rotation = this.rotation;
@@ -4197,6 +4201,7 @@ var _Path = class extends Shape {
   }
   noStroke() {
     this.stroke = "none";
+    this.linewidth = 0;
     return this;
   }
   corner() {
@@ -4285,16 +4290,7 @@ var _Path = class extends Shape {
           ly += v1.y;
         }
         let [c1x, c1y] = matrix.multiply(lx, ly);
-        const bb = getCurveBoundingBox(
-          v0x,
-          v0y,
-          c0x,
-          c0y,
-          c1x,
-          c1y,
-          v1x,
-          v1y
-        );
+        const bb = getCurveBoundingBox(v0x, v0y, c0x, c0y, c1x, c1y, v1x, v1y);
         top = min3(bb.min.y - border, top);
         left = min3(bb.min.x - border, left);
         right = max3(bb.max.x + border, right);
@@ -4438,47 +4434,51 @@ var _Path = class extends Shape {
     const closed2 = this._closed || this.vertices[last]._command === Commands.close;
     let b = this.vertices[last];
     let points = [], verts;
-    _.each(this.vertices, function(a, i) {
-      if (i <= 0 && !closed2) {
-        b = a;
-        return;
-      }
-      if (a.command === Commands.move) {
-        points.push(new Anchor(b.x, b.y));
-        if (i > 0) {
-          points[points.length - 1].command = Commands.line;
-        }
-        b = a;
-        return;
-      }
-      verts = getSubdivisions(a, b, limit);
-      points = points.concat(verts);
-      _.each(verts, function(v, i2) {
-        if (i2 <= 0 && b.command === Commands.move) {
-          v.command = Commands.move;
-        } else {
-          v.command = Commands.line;
-        }
-      });
-      if (i >= last) {
-        if (this._closed && this._automatic) {
+    _.each(
+      this.vertices,
+      function(a, i) {
+        if (i <= 0 && !closed2) {
           b = a;
-          verts = getSubdivisions(a, b, limit);
-          points = points.concat(verts);
-          _.each(verts, function(v, i2) {
-            if (i2 <= 0 && b.command === Commands.move) {
-              v.command = Commands.move;
-            } else {
-              v.command = Commands.line;
-            }
-          });
-        } else if (closed2) {
-          points.push(new Anchor(a.x, a.y));
+          return;
         }
-        points[points.length - 1].command = closed2 ? Commands.close : Commands.line;
-      }
-      b = a;
-    }, this);
+        if (a.command === Commands.move) {
+          points.push(new Anchor(b.x, b.y));
+          if (i > 0) {
+            points[points.length - 1].command = Commands.line;
+          }
+          b = a;
+          return;
+        }
+        verts = getSubdivisions(a, b, limit);
+        points = points.concat(verts);
+        _.each(verts, function(v, i2) {
+          if (i2 <= 0 && b.command === Commands.move) {
+            v.command = Commands.move;
+          } else {
+            v.command = Commands.line;
+          }
+        });
+        if (i >= last) {
+          if (this._closed && this._automatic) {
+            b = a;
+            verts = getSubdivisions(a, b, limit);
+            points = points.concat(verts);
+            _.each(verts, function(v, i2) {
+              if (i2 <= 0 && b.command === Commands.move) {
+                v.command = Commands.move;
+              } else {
+                v.command = Commands.line;
+              }
+            });
+          } else if (closed2) {
+            points.push(new Anchor(a.x, a.y));
+          }
+          points[points.length - 1].command = closed2 ? Commands.close : Commands.line;
+        }
+        b = a;
+      },
+      this
+    );
     this._automatic = false;
     this._curved = false;
     this.vertices = points;
@@ -4496,21 +4496,25 @@ var _Path = class extends Shape {
     if (typeof this._lengths === "undefined") {
       this._lengths = [];
     }
-    _.each(this.vertices, function(a, i) {
-      if (i <= 0 && !closed2 || a.command === Commands.move) {
+    _.each(
+      this.vertices,
+      function(a, i) {
+        if (i <= 0 && !closed2 || a.command === Commands.move) {
+          b = a;
+          this._lengths[i] = 0;
+          return;
+        }
+        this._lengths[i] = getCurveLength2(a, b, limit);
+        sum += this._lengths[i];
+        if (i >= last && closed2) {
+          b = this.vertices[(i + 1) % length];
+          this._lengths[i + 1] = getCurveLength2(a, b, limit);
+          sum += this._lengths[i + 1];
+        }
         b = a;
-        this._lengths[i] = 0;
-        return;
-      }
-      this._lengths[i] = getCurveLength2(a, b, limit);
-      sum += this._lengths[i];
-      if (i >= last && closed2) {
-        b = this.vertices[(i + 1) % length];
-        this._lengths[i + 1] = getCurveLength2(a, b, limit);
-        sum += this._lengths[i + 1];
-      }
-      b = a;
-    }, this);
+      },
+      this
+    );
     this._length = sum;
     this._flagLength = false;
     return this;
@@ -6121,7 +6125,13 @@ var alignments = {
   middle: "center",
   end: "right"
 };
-var reservedAttributesToRemove = ["id", "class", "transform", "xmlns", "viewBox"];
+var reservedAttributesToRemove = [
+  "id",
+  "class",
+  "transform",
+  "xmlns",
+  "viewBox"
+];
 var overwriteAttrs = ["x", "y", "width", "height", "href", "xlink:href"];
 function getAlignment(anchor2) {
   return alignments[anchor2];
@@ -6132,7 +6142,7 @@ function getBaseline(node) {
   return a || b;
 }
 function getTagName(tag) {
-  return tag.replace(/svg:/ig, "").toLowerCase();
+  return tag.replace(/svg:/gi, "").toLowerCase();
 }
 function applyTransformsToVector(transforms, vector3) {
   vector3.x += transforms.translateX;
@@ -6575,10 +6585,14 @@ var read = {
       points = node.getAttribute("points");
     }
     const verts = [];
-    points.replace(/(-?[\d.eE-]+)[,|\s](-?[\d.eE-]+)/g, function(match, p1, p2) {
-      verts.push(new Anchor(parseFloat(p1), parseFloat(p2)));
-    });
-    const poly = new Path(verts, true).noStroke();
+    points.replace(
+      /(-?[\d.eE-]+)[,|\s](-?[\d.eE-]+)/g,
+      function(match, p1, p2) {
+        verts.push(new Anchor(parseFloat(p1), parseFloat(p2)));
+      }
+    );
+    const poly = new Path(verts, true);
+    poly.stroke = "none";
     poly.fill = "black";
     applySvgAttributes.call(this, node, poly, parentStyles);
     return poly;
@@ -6601,7 +6615,7 @@ var read = {
     if (path) {
       let coord = new Anchor();
       let control, coords;
-      let commands = path.match(/[a-df-z][^a-df-z]*/ig);
+      let commands = path.match(/[a-df-z][^a-df-z]*/gi);
       const last = commands.length - 1;
       _.each(commands.slice(0), function(command, i) {
         const items = command.slice(1).trim().match(regex2.path);
@@ -6863,7 +6877,8 @@ var read = {
         }
       });
     }
-    path = new Path(points, closed2, void 0, true).noStroke();
+    path = new Path(points, closed2, void 0, true);
+    path.stroke = "none";
     path.fill = "black";
     const rect = path.getBoundingClientRect(true);
     rect.centroid = {
@@ -6881,7 +6896,8 @@ var read = {
     const x = parseFloat(node.getAttribute("cx"));
     const y = parseFloat(node.getAttribute("cy"));
     const r = parseFloat(node.getAttribute("r"));
-    const circle = new Circle(0, 0, r).noStroke();
+    const circle = new Circle(0, 0, r);
+    circle.stroke = "none";
     circle.fill = "black";
     applySvgAttributes.call(this, node, circle, parentStyles);
     circle.translation.x = x;
@@ -6893,7 +6909,8 @@ var read = {
     const y = parseFloat(node.getAttribute("cy"));
     const width = parseFloat(node.getAttribute("rx"));
     const height = parseFloat(node.getAttribute("ry"));
-    const ellipse = new Ellipse(0, 0, width, height).noStroke();
+    const ellipse = new Ellipse(0, 0, width, height);
+    ellipse.stroke = "none";
     ellipse.fill = "black";
     applySvgAttributes.call(this, node, ellipse, parentStyles);
     ellipse.translation.x = x;
@@ -6910,7 +6927,8 @@ var read = {
     const height = parseFloat(node.getAttribute("height"));
     const w2 = width / 2;
     const h2 = height / 2;
-    const rect = new Rectangle(0, 0, width, height).noStroke();
+    const rect = new Rectangle(0, 0, width, height);
+    rect.stroke = "none";
     rect.fill = "black";
     applySvgAttributes.call(this, node, rect, parentStyles);
     rect.translation.x += w2;
@@ -6925,7 +6943,8 @@ var read = {
     const w2 = width / 2;
     const h2 = height / 2;
     const radius = new Vector(rx, ry);
-    const rect = new RoundedRectangle(0, 0, width, height, radius).noStroke();
+    const rect = new RoundedRectangle(0, 0, width, height, radius);
+    rect.stroke = "none";
     rect.fill = "black";
     applySvgAttributes.call(this, node, rect, parentStyles);
     rect.translation.x += w2;
@@ -6966,8 +6985,8 @@ var read = {
     for (let i = 0; i < node.children.length; i++) {
       const child = node.children[i];
       let offset = child.getAttribute("offset");
-      if (/%/ig.test(offset)) {
-        offset = parseFloat(offset.replace(/%/ig, "")) / 100;
+      if (/%/gi.test(offset)) {
+        offset = parseFloat(offset.replace(/%/gi, "")) / 100;
       }
       offset = parseFloat(offset);
       let color = child.getAttribute("stop-color");
@@ -7024,8 +7043,8 @@ var read = {
     for (let i = 0; i < node.children.length; i++) {
       const child = node.children[i];
       let offset = child.getAttribute("offset");
-      if (/%/ig.test(offset)) {
-        offset = parseFloat(offset.replace(/%/ig, "")) / 100;
+      if (/%/gi.test(offset)) {
+        offset = parseFloat(offset.replace(/%/gi, "")) / 100;
       }
       offset = parseFloat(offset);
       let color = child.getAttribute("stop-color");

@@ -13,6 +13,9 @@ All notable changes to this project will be documented in this file. The format 
 
 ## Nightly
 
++ `Two.Path.noStroke`, `Two.Text.noStroke`, and derivative methods now include setting both the stroke color to `"none"` and the line width to 0
++ Fixed `Two.Arc` flag behavior for `Two.Arc.width` and `Two.Arc.height` properties
+
 ## June 10, 2024 v0.8.14
 
 <h3 class="visible">June 10, 2024</h3><version-link v="v0.8.14" />
