@@ -738,7 +738,7 @@ var Two = (() => {
       canvas: "CanvasRenderer"
     },
     Version: "v0.8.15",
-    PublishDate: "2024-07-09T17:21:48.285Z",
+    PublishDate: "2024-09-21T04:27:00.542Z",
     Identifier: "two-",
     Resolution: 12,
     AutoCalculateImportedMatrices: true,
@@ -9475,13 +9475,16 @@ var Two = (() => {
           if (!(this._renderer.scale instanceof Vector)) {
             this._renderer.scale = new Vector();
           }
+          let sx, sy;
           if (this._scale instanceof Vector) {
-            this._renderer.scale.x = this._scale.x * parent._renderer.scale.x;
-            this._renderer.scale.y = this._scale.y * parent._renderer.scale.y;
+            sx = this._scale.x * parent._renderer.scale.x;
+            sy = this._scale.y * parent._renderer.scale.y;
           } else {
-            this._renderer.scale.x = this._scale * parent._renderer.scale.x;
-            this._renderer.scale.y = this._scale * parent._renderer.scale.y;
+            sx = this._scale * parent._renderer.scale.x;
+            sy = this._scale * parent._renderer.scale.y;
           }
+          this._renderer.scale.x = sx < 0 ? -sx : sx;
+          this._renderer.scale.y = sy < 0 ? -sy : sy;
           if (parentChanged) {
             this._renderer.parent = parent;
           }
@@ -9671,13 +9674,16 @@ var Two = (() => {
           if (!(this._renderer.scale instanceof Vector)) {
             this._renderer.scale = new Vector();
           }
+          let sx, sy;
           if (this._scale instanceof Vector) {
-            this._renderer.scale.x = this._scale.x * parent._renderer.scale.x;
-            this._renderer.scale.y = this._scale.y * parent._renderer.scale.y;
+            sx = this._scale.x * parent._renderer.scale.x;
+            sy = this._scale.y * parent._renderer.scale.y;
           } else {
-            this._renderer.scale.x = this._scale * parent._renderer.scale.x;
-            this._renderer.scale.y = this._scale * parent._renderer.scale.y;
+            sx = this._scale * parent._renderer.scale.x;
+            sy = this._scale * parent._renderer.scale.y;
           }
+          this._renderer.scale.x = sx < 0 ? -sx : sx;
+          this._renderer.scale.y = sy < 0 ? -sy : sy;
           if (parentChanged) {
             this._renderer.parent = parent;
           }
@@ -9970,13 +9976,16 @@ var Two = (() => {
           if (!(this._renderer.scale instanceof Vector)) {
             this._renderer.scale = new Vector();
           }
+          let sx, sy;
           if (this._scale instanceof Vector) {
-            this._renderer.scale.x = this._scale.x * parent._renderer.scale.x;
-            this._renderer.scale.y = this._scale.y * parent._renderer.scale.y;
+            sx = this._scale.x * parent._renderer.scale.x;
+            sy = this._scale.y * parent._renderer.scale.y;
           } else {
-            this._renderer.scale.x = this._scale * parent._renderer.scale.x;
-            this._renderer.scale.y = this._scale * parent._renderer.scale.y;
+            sx = this._scale * parent._renderer.scale.x;
+            sy = this._scale * parent._renderer.scale.y;
           }
+          this._renderer.scale.x = sx < 0 ? -sx : sx;
+          this._renderer.scale.y = sy < 0 ? -sy : sy;
           if (parentChanged) {
             this._renderer.parent = parent;
           }
@@ -10147,11 +10156,16 @@ var Two = (() => {
           if (!(this._renderer.scale instanceof Vector)) {
             this._renderer.scale = new Vector();
           }
+          let sx, sy;
           if (this._scale instanceof Vector) {
-            this._renderer.scale.copy(this._scale);
+            sx = this._scale.x;
+            sy = this._scale.y;
           } else {
-            this._renderer.scale.set(this._scale, this._scale);
+            sx = this._scale;
+            sy = this._scale;
           }
+          this._renderer.scale.x = sx < 0 ? -sx : sx;
+          this._renderer.scale.y = sy < 0 ? -sy : sy;
         }
         return this.flagReset();
       }
