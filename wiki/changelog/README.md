@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file. The format 
 
 ## Nightly
 
++ Improved TypeScript types for argument relation
 + `Two.WebGLRenderer` correctly handles negative scale values
 + `Two.Path.noStroke`, `Two.Text.noStroke`, and derivative methods now include setting both the stroke color to `"none"` and the line width to 0
 + Fixed `Two.Arc` flag behavior for `Two.Arc.width` and `Two.Arc.height` properties
