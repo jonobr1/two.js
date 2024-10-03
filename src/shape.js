@@ -12,7 +12,6 @@ import { getComputedMatrix } from './utils/math.js';
  * @description The foundational transformation object for the Two.js scenegraph.
  */
 export class Shape extends Element {
-
   /**
    * @name Two.Shape#_flagMatrix
    * @private
@@ -79,7 +78,6 @@ export class Shape extends Element {
   _skewY = 0;
 
   constructor() {
-
     super();
 
     for (let prop in proto) {
@@ -149,7 +147,18 @@ export class Shape extends Element {
      * @description Skew the shape by an angle in the y axis direction.
      */
     this.skewY = 0;
+  }
 
+  /**
+   * @name Two.Shape.fromObject
+   * @function
+   * @param {Object} obj - Object notation of a {@link Two.Shape} to create a new instance
+   * @returns {Two.Shape}
+   * @description Create a new {@link Two.Shape} from an object notation of a {@link Two.Shape}.
+   * @nota-bene Works in conjunction with {@link Two.Shape#toObject}
+   */
+  static fromObject(obj) {
+    return new Shape().copy(obj);
   }
 
   get renderer() {
@@ -187,7 +196,6 @@ export class Shape extends Element {
    * @description Remove self from the scene / parent.
    */
   remove() {
-
     if (!this.parent) {
       return this;
     }
@@ -195,7 +203,27 @@ export class Shape extends Element {
     this.parent.remove(this);
 
     return this;
+  }
 
+  /**
+   * @name Two.Shape#copy
+   * @function
+   * @param {Two.Shape} shape
+   * @description Copy the properties of one {@link Two.Shape} onto another.
+   */
+  copy(shape) {
+    this.position.copy(shape.position);
+    this.rotation = shape.rotation;
+    this.scale = shape.scale;
+    this.skewX = shape.skewX;
+    this.skewY = shape.skewY;
+
+    if (shape.matrix.manual) {
+      this.matrix.copy(shape.matrix);
+      this.matrix.manual = true;
+    }
+
+    return this;
   }
 
   /**
@@ -206,7 +234,6 @@ export class Shape extends Element {
    * @description Create a new {@link Two.Shape} with the same values as the current shape.
    */
   clone(parent) {
-
     const clone = new Shape();
 
     clone.position.copy(this.position);
@@ -224,7 +251,26 @@ export class Shape extends Element {
     }
 
     return clone._update();
+  }
 
+  /**
+   * @name Two.Shape#toObject
+   * @function
+   * @description Create a JSON compatible object that represents information of the shape.
+   * @nota-bene Works in conjunction with {@link Two.Shape.fromObject}
+   */
+  toObject() {
+    const result = super.toObject.call(this);
+    result.renderer = { type: 'shape' };
+    result.isShape = true;
+    result.translation = this.translation.toObject();
+    result.rotation = this.translation.rotation;
+    result.scale =
+      this.scale instanceof Vector ? this.scale.toObject() : this.scale;
+    result.skewX = this.skewX;
+    result.skewY = this.skewY;
+    result.matrix = this.matrix.toObject();
+    return result;
   }
 
   /**
@@ -236,22 +282,18 @@ export class Shape extends Element {
    * @nota-bene Try not to call this method more than once a frame.
    */
   _update(bubbles) {
-
     if (!this._matrix.manual && this._flagMatrix) {
+      this._matrix.identity().translate(this.position.x, this.position.y);
 
-      this._matrix
-        .identity()
-        .translate(this.position.x, this.position.y);
+      if (this._scale instanceof Vector) {
+        this._matrix.scale(this._scale.x, this._scale.y);
+      } else {
+        this._matrix.scale(this._scale);
+      }
 
-        if (this._scale instanceof Vector) {
-          this._matrix.scale(this._scale.x, this._scale.y);
-        } else {
-          this._matrix.scale(this._scale);
-        }
-
-        this._matrix.rotate(this.rotation);
-        this._matrix.skewX(this.skewX);
-        this._matrix.skewY(this.skewY);
+      this._matrix.rotate(this.rotation);
+      this._matrix.skewX(this.skewX);
+      this._matrix.skewY(this.skewY);
     }
 
     if (bubbles) {
@@ -261,7 +303,6 @@ export class Shape extends Element {
     }
 
     return this;
-
   }
 
   /**
@@ -271,48 +312,45 @@ export class Shape extends Element {
    * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
    */
   flagReset() {
-
     this._flagMatrix = this._flagScale = false;
 
     super.flagReset.call(this);
 
     return this;
-
   }
-
 }
 
 const proto = {
   position: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._position;
     },
-    set: function(v) {
+    set: function (v) {
       if (this._position) {
         this._position.unbind(Events.Types.change, this._renderer.flagMatrix);
       }
       this._position = v;
       this._position.bind(Events.Types.change, this._renderer.flagMatrix);
       FlagMatrix.call(this);
-    }
+    },
   },
   rotation: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._rotation;
     },
-    set: function(v) {
+    set: function (v) {
       this._rotation = v;
       this._flagMatrix = true;
-    }
+    },
   },
   scale: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._scale;
     },
-    set: function(v) {
+    set: function (v) {
       if (this._scale instanceof Vector) {
         this._scale.unbind(Events.Types.change, this._renderer.flagMatrix);
       }
@@ -322,49 +360,49 @@ const proto = {
       }
       this._flagMatrix = true;
       this._flagScale = true;
-    }
+    },
   },
   skewX: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._skewX;
     },
-    set: function(v) {
+    set: function (v) {
       this._skewX = v;
       this._flagMatrix = true;
-    }
+    },
   },
   skewY: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._skewY;
     },
-    set: function(v) {
+    set: function (v) {
       this._skewY = v;
       this._flagMatrix = true;
-    }
+    },
   },
   matrix: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._matrix;
     },
-    set: function(v) {
+    set: function (v) {
       this._matrix = v;
       this._flagMatrix = true;
-    }
+    },
   },
   worldMatrix: {
     enumerable: true,
-    get: function() {
+    get: function () {
       // TODO: Make DRY
       getComputedMatrix(this, this._worldMatrix);
       return this._worldMatrix;
     },
-    set: function(v) {
+    set: function (v) {
       this._worldMatrix = v;
-    }
-  }
+    },
+  },
 };
 
 /**

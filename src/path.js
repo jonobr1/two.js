@@ -412,6 +412,43 @@ export class Path extends Shape {
   };
 
   /**
+   * @name Two.Path.fromObject
+   * @function
+   * @param {Object} obj - Object notation of a {@link Two.Path} to create a new instance
+   * @returns {Two.Path}
+   * @description Create a new {@link Two.Path} from an object notation of a {@link Two.Path}.
+   * @nota-bene Works in conjunction with {@link Two.Path#toObject}
+   */
+  static fromObject(obj) {
+    return new Path().copy(obj);
+  }
+
+  /**
+   * @name Two.Path#copy
+   * @function
+   * @param {Two.Path} path - The reference {@link Two.Path}
+   * @description Copy the properties of one {@link Two.Path} onto another.
+   */
+  copy(path) {
+    super.copy.call(this, path);
+
+    for (let j = 0; j < path.vertice.length; j++) {
+      this.vertices.push(path.vertices[j].clone());
+    }
+
+    for (let i = 0; i < Path.Properties.length; i++) {
+      const k = Path.Properties[i];
+      if (k in path) {
+        this[k] = path[k];
+      }
+    }
+
+    this.className = path.className;
+
+    return this;
+  }
+
+  /**
    * @name Two.Path#clone
    * @function
    * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
@@ -454,17 +491,17 @@ export class Path extends Shape {
    * @function
    * @returns {Object}
    * @description Return a JSON compatible plain object that represents the path.
+   * @nota-bene Works in conjunction with {@link Two.Path.fromObject}
    */
   toObject() {
-    const result = {
-      vertices: this.vertices.map(function (v) {
-        return v.toObject();
-      }),
-    };
+    const result = super.toObject.call(this);
+
+    result.renderer.type = 'path';
+    result.vertices = this.vertices.map((v) => v.toObject());
 
     _.each(
       Path.Properties,
-      function (k) {
+      (k) => {
         if (typeof this[k] !== 'undefined') {
           if (this[k].toObject) {
             result[k] = this[k].toObject();
@@ -475,19 +512,6 @@ export class Path extends Shape {
       },
       this
     );
-
-    result.className = this.className;
-
-    result.translation = this.translation.toObject();
-    result.rotation = this.rotation;
-    result.scale =
-      this.scale instanceof Vector ? this.scale.toObject() : this.scale;
-    result.skewX = this.skewX;
-    result.skewY = this.skewY;
-
-    if (this.matrix.manual) {
-      result.matrix = this.matrix.toObject();
-    }
 
     return result;
   }

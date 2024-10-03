@@ -377,6 +377,35 @@ export class Text extends Shape {
   }
 
   /**
+   * @name Two.Text.fromObject
+   * @function
+   * @param {Object} obj - Object notation of a {@link Two.Text} to create a new instance
+   * @returns {Two.Text}
+   * @description Create a new {@link Two.Text} from an object notation of a {@link Two.Text}.
+   * @nota-bene Works in conjunction with {@link Two.Text#toObject}
+   */
+  static fromObject(obj) {
+    return new Text().copy(obj);
+  }
+
+  /**
+   * @name Two.Text#copy
+   * @function
+   * @param {Two.Text} text
+   * @description Copy the properties of one {@link Two.Text} onto another.
+   */
+  copy(text) {
+    super.copy.call(this, text);
+
+    for (let i = 0; i < Text.Properties.length; i++) {
+      const prop = Text.Properties[i];
+      this[prop] = text[prop];
+    }
+
+    return this;
+  }
+
+  /**
    * @name Two.Text#clone
    * @function
    * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
@@ -410,17 +439,11 @@ export class Text extends Shape {
    * @function
    * @returns {Object}
    * @description Return a JSON compatible plain object that represents the text object.
+   * @nota-bene Works in conjunction with {@link Two.Text.fromObject}
    */
   toObject() {
-    const result = {
-      translation: this.translation.toObject(),
-      rotation: this.rotation,
-      scale: this.scale,
-    };
-
-    if (this.matrix.manual) {
-      result.matrix = this.matrix.toObject();
-    }
+    const result = super.toObject.call(this);
+    result.renderer.type = 'text';
 
     for (let i = 0; i < Text.Properties.length; i++) {
       const prop = Text.Properties[i];

@@ -7,7 +7,6 @@ import { Events } from './events.js';
  * @description The foundational object for the Two.js scenegraph.
  */
 export class Element extends Events {
-
   /**
    * @name Two.Element#_flagId
    * @private
@@ -51,13 +50,15 @@ export class Element extends Events {
   classList = [];
 
   constructor() {
-
     super();
 
     for (let prop in proto) {
       Object.defineProperty(this, prop, proto[prop]);
     }
+  }
 
+  static fromObject(obj) {
+    return new Element().copy(obj);
   }
 
   /**
@@ -69,21 +70,32 @@ export class Element extends Events {
     this._flagId = this._flagClassName = false;
   }
 
+  copy(element) {
+    this.renderer.type = element.renderer.type;
+    this.className = element.className;
+  }
+
+  toObject() {
+    return {
+      renderer: { type: 'element' },
+      className: this.className,
+    };
+  }
 }
 
 const proto = {
   renderer: {
     enumerable: false,
-    get: function() {
+    get: function () {
       return this._renderer;
-    }
+    },
   },
   id: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._id;
     },
-    set: function(v) {
+    set: function (v) {
       const id = this._id;
       if (v === this._id) {
         return;
@@ -94,19 +106,19 @@ const proto = {
         delete this.parent.children.ids[id];
         this.parent.children.ids[this._id] = this;
       }
-    }
+    },
   },
   className: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._className;
     },
-    set: function(v) {
+    set: function (v) {
       if (this._className !== v) {
         this._flagClassName = true;
         this.classList = v.split(/\s+?/);
         this._className = v;
       }
-    }
-  }
+    },
+  },
 };
