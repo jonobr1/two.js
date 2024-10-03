@@ -7,10 +7,10 @@ import { Vector } from './vector.js';
  * @name Two.Anchor
  * @param {Number} [x=0] - The x position of the root anchor point.
  * @param {Number} [y=0] - The y position of the root anchor point.
- * @param {Number} [lx=0] - The x position of the left handle point.
- * @param {Number} [ly=0] - The y position of the left handle point.
- * @param {Number} [rx=0] - The x position of the right handle point.
- * @param {Number} [ry=0] - The y position of the right handle point.
+ * @param {Number} [ax=0] - The x position of the left handle point.
+ * @param {Number} [ay=0] - The y position of the left handle point.
+ * @param {Number} [bx=0] - The x position of the right handle point.
+ * @param {Number} [by=0] - The y position of the right handle point.
  * @param {String} [command=Two.Commands.move] - The command to describe how to render. Applicable commands are {@link Two.Commands}
  * @extends Two.Vector
  * @description An object that holds 3 {@link Two.Vector}s, the anchor point and its corresponding handles: `left` and `right`. In order to properly describe the bezier curve about the point there is also a command property to describe what type of drawing should occur when Two.js renders the anchors.
