@@ -4,6 +4,14 @@ import { _ } from './utils/underscore.js';
 import { Shape } from './shape.js';
 import { Children } from './children.js';
 import { Path } from 'path.js';
+import { ArcSegment } from 'shapes/arc-segment.js';
+import { Circle } from 'shapes/circle.js';
+import { Ellipse } from 'shapes/ellipse.js';
+import { Points } from 'shapes/points.js';
+import { Polygon } from 'shapes/polygon.js';
+import { Rectangle } from 'shapes/rectangle.js';
+import { RoundedRectangle } from 'shapes/rounded-rectangle.js';
+import { Star } from 'shapes/star.js';
 import { Text } from 'text.js';
 import { Element } from 'element.js';
 
@@ -276,9 +284,41 @@ export class Group extends Shape {
 
   static fromObject(obj) {
     const group = new Group();
+
+    for (let i = 0; i < Group.Properties.length; i++) {
+      const k = Group.Properties[i];
+      if (k in obj) {
+        this[k] = obj[k];
+      }
+    }
+
     _.each(obj.children, (child) => {
       // All of the types of children Two.Group supports
       switch (child.renderer.type) {
+        case 'arc-segment':
+          group.add(ArcSegment.fromObject(child));
+          break;
+        case 'circle':
+          group.add(Circle.fromObject(child));
+          break;
+        case 'ellipse':
+          group.add(Ellipse.fromObject(child));
+          break;
+        case 'points':
+          group.add(Points.fromObject(child));
+          break;
+        case 'polygon':
+          group.add(Polygon.fromObject(child));
+          break;
+        case 'rectangle':
+          group.add(Rectangle.fromObject(child));
+          break;
+        case 'rounded-rectangle':
+          group.add(RoundedRectangle.fromObject(child));
+          break;
+        case 'star':
+          group.add(Star.fromObject(child));
+          break;
         case 'path':
           group.add(Path.fromObject(child));
           break;
