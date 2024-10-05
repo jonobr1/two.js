@@ -405,6 +405,7 @@ export class Path extends Shape {
     'automatic',
     'beginning',
     'ending',
+    'dashes',
   ];
 
   static Utils = {
@@ -420,6 +421,8 @@ export class Path extends Shape {
    * @nota-bene Works in conjunction with {@link Two.Path#toObject}
    */
   static fromObject(obj) {
+    // TODO: Handle fill and stroke situations
+    // where they are objects and not strings
     return new Path().copy(obj);
   }
 

@@ -94,13 +94,6 @@ export class Shape extends Element {
     this.isShape = true;
 
     /**
-     * @name Two.Shape#id
-     * @property {String} - Session specific unique identifier.
-     * @nota-bene In the {@link Two.SVGRenderer} change this to change the underlying SVG element's id too.
-     */
-    this.id = Constants.Identifier + Constants.uniqueId();
-
-    /**
      * @name Two.Shape#matrix
      * @property {Two.Matrix}
      * @description The transformation matrix of the shape.

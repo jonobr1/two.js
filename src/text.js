@@ -338,6 +338,7 @@ export class Text extends Shape {
     'visible',
     'fill',
     'stroke',
+    'dashes',
   ];
 
   /**

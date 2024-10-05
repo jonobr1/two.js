@@ -18,7 +18,6 @@ import { Texture } from './texture.js';
  * @description A convenient package to display still or animated images organized as a series of still images.
  */
 export class ImageSequence extends Rectangle {
-
   /**
    * @name Two.ImageSequence#_flagTextures
    * @private
@@ -122,7 +121,6 @@ export class ImageSequence extends Rectangle {
   _origin = null;
 
   constructor(paths, ox, oy, frameRate) {
-
     super(ox, oy, 0, 0);
 
     for (let prop in proto) {
@@ -166,18 +164,13 @@ export class ImageSequence extends Rectangle {
      * @property {Number} - The index of the current tile of the sprite to display. Defaults to `0`.
      */
     this.index = 0;
-
   }
 
   /**
    * @name Two.ImageSequence.Properties
    * @property {String[]} - A list of properties that are on every {@link Two.ImageSequence}.
    */
-  static Properties = [
-    'textures',
-    'frameRate',
-    'index'
-  ];
+  static Properties = ['textures', 'frameRate', 'index'];
 
   /**
    * @name Two.ImageSequence.DefaultFrameRate
@@ -194,7 +187,6 @@ export class ImageSequence extends Rectangle {
    * @description Initiate animation playback of a {@link Two.ImageSequence}.
    */
   play(firstFrame, lastFrame, onLastFrame) {
-
     this._playing = true;
     this._firstFrame = 0;
     this._lastFrame = this.amount - 1;
@@ -213,12 +205,11 @@ export class ImageSequence extends Rectangle {
     }
 
     if (this._index !== this._firstFrame) {
-      this._startTime -= 1000 * Math.abs(this._index - this._firstFrame)
-        / this._frameRate;
+      this._startTime -=
+        (1000 * Math.abs(this._index - this._firstFrame)) / this._frameRate;
     }
 
     return this;
-
   }
 
   /**
@@ -227,10 +218,8 @@ export class ImageSequence extends Rectangle {
    * @description Halt animation playback of a {@link Two.ImageSequence}.
    */
   pause() {
-
     this._playing = false;
     return this;
-
   }
 
   /**
@@ -239,12 +228,10 @@ export class ImageSequence extends Rectangle {
    * @description Halt animation playback of a {@link Two.ImageSequence} and set the current frame back to the first frame.
    */
   stop() {
-
     this._playing = false;
     this._index = this._firstFrame;
 
     return this;
-
   }
 
   /**
@@ -255,9 +242,12 @@ export class ImageSequence extends Rectangle {
    * @description Create a new instance of {@link Two.ImageSequence} with the same properties of the current image sequence.
    */
   clone(parent) {
-
-    const clone = new ImageSequence(this.textures, this.translation.x,
-      this.translation.y, this.frameRate);
+    const clone = new ImageSequence(
+      this.textures,
+      this.translation.x,
+      this.translation.y,
+      this.frameRate
+    );
 
     clone._loop = this._loop;
 
@@ -270,7 +260,6 @@ export class ImageSequence extends Rectangle {
     }
 
     return clone;
-
   }
 
   /**
@@ -281,7 +270,7 @@ export class ImageSequence extends Rectangle {
    */
   toObject() {
     const object = super.toObject.call(this);
-    object.textures = this.textures.map(function(texture) {
+    object.textures = this.textures.map(function (texture) {
       return texture.toObject();
     });
     object.frameRate = this.frameRate;
@@ -301,23 +290,20 @@ export class ImageSequence extends Rectangle {
    * @nota-bene Try not to call this method more than once a frame.
    */
   _update() {
-
     const effect = this._textures;
     let width, height, elapsed, amount, duration, texture;
     let index, frames;
 
     if (effect) {
-
       if (this._flagTextures) {
         this._amount = effect.length;
       }
 
       if (this._flagFrameRate) {
-        this._duration = 1000 * this._amount / this._frameRate;
+        this._duration = (1000 * this._amount) / this._frameRate;
       }
 
       if (this._playing && this._frameRate > 0) {
-
         amount = this._amount;
 
         if (_.isNaN(this._lastFrame)) {
@@ -327,7 +313,7 @@ export class ImageSequence extends Rectangle {
         // TODO: Offload perf logic to instance of `Two`.
         elapsed = _.performance.now() - this._startTime;
         frames = this._lastFrame + 1;
-        duration = 1000 * (frames - this._firstFrame) / this._frameRate;
+        duration = (1000 * (frames - this._firstFrame)) / this._frameRate;
 
         if (this._loop) {
           elapsed = elapsed % duration;
@@ -339,12 +325,10 @@ export class ImageSequence extends Rectangle {
         index = Math.floor(index);
 
         if (index !== this._index) {
-
           this._index = index;
           texture = effect[this._index];
 
           if (texture.loaded) {
-
             width = texture.image.width;
             height = texture.image.height;
 
@@ -358,19 +342,14 @@ export class ImageSequence extends Rectangle {
             this.fill = texture;
 
             if (index >= this._lastFrame - 1 && this._onLastFrame) {
-              this._onLastFrame();  // Shortcut for chainable sprite animations
+              this._onLastFrame(); // Shortcut for chainable sprite animations
             }
-
           }
-
         }
-
       } else if (this._flagIndex || !(this.fill instanceof Texture)) {
-
         texture = effect[this._index];
 
         if (texture.loaded) {
-
           width = texture.image.width;
           height = texture.image.height;
 
@@ -380,19 +359,15 @@ export class ImageSequence extends Rectangle {
           if (this.height !== height) {
             this.height = height;
           }
-
         }
 
         this.fill = texture;
-
       }
-
     }
 
     super._update.call(this);
 
     return this;
-
   }
 
   /**
@@ -402,44 +377,40 @@ export class ImageSequence extends Rectangle {
    * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
    */
   flagReset() {
-
     this._flagTextures = this._flagFrameRate = false;
     super.flagReset.call(this);
 
     return this;
-
   }
-
 }
 
 const proto = {
   frameRate: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._frameRate;
     },
-    set: function(v) {
+    set: function (v) {
       this._frameRate = v;
       this._flagFrameRate = true;
-    }
+    },
   },
   index: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._index;
     },
-    set: function(v) {
+    set: function (v) {
       this._index = v;
       this._flagIndex = true;
-    }
+    },
   },
   textures: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._textures;
     },
-    set: function(textures) {
-
+    set: function (textures) {
       const bindTextures = this._renderer.bindTextures;
       const unbindTextures = this._renderer.unbindTextures;
 
@@ -460,9 +431,8 @@ const proto = {
 
       // Bind Initial Textures
       bindTextures(this._textures);
-
-    }
-  }
+    },
+  },
 };
 
 /**
@@ -482,14 +452,12 @@ function FlagTextures() {
  * @description Cached method to let {@link Two.ImageSequence} know textures have been added to the instance.
  */
 function BindTextures(items) {
-
   let i = items.length;
   while (i--) {
     items[i].bind(Events.Types.change, this._renderer.flagTextures);
   }
 
   this._renderer.flagTextures();
-
 }
 
 /**
@@ -499,14 +467,12 @@ function BindTextures(items) {
  * @description Cached method to let {@link Two.ImageSequence} know textures have been removed from the instance.
  */
 function UnbindTextures(items) {
-
   let i = items.length;
   while (i--) {
     items[i].unbind(Events.Types.change, this._renderer.flagTextures);
   }
 
   this._renderer.flagTextures();
-
 }
 
 /**

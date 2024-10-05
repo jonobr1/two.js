@@ -18,7 +18,6 @@ import { Vector } from '../vector.js';
  * @nota-bene The radial gradient lives within the space of the parent object's matrix space.
  */
 export class RadialGradient extends Gradient {
-
   /**
    * @name Two.RadialGradient#_flagRadius
    * @private
@@ -39,11 +38,10 @@ export class RadialGradient extends Gradient {
   _flagFocal = false;
 
   _radius = 0;
-  _center = null
+  _center = null;
   _focal = null;
 
   constructor(cx, cy, r, stops, fx, fy) {
-
     super(stops);
 
     for (let prop in proto) {
@@ -84,7 +82,6 @@ export class RadialGradient extends Gradient {
     if (typeof fy === 'number') {
       this.focal.y = fy;
     }
-
   }
 
   /**
@@ -100,6 +97,45 @@ export class RadialGradient extends Gradient {
   static Properties = ['center', 'radius', 'focal'];
 
   /**
+   * @name Two.RadialGradient.fromObject
+   * @function
+   * @param {Object} obj - Object notation of a {@link Two.RadialGradient} to create a new instance
+   * @returns {Two.RadialGradient}
+   * @description Create a new {@link Two.RadialGradient} from an object notation of a {@link Two.RadialGradient}.
+   * @nota-bene Works in conjunction with {@link Two.RadialGradient#toObject}
+   */
+  static fromObject(obj) {
+    return new RadialGradient().copy(obj);
+  }
+
+  /**
+   * @name Two.RadialGradient#copy
+   * @function
+   * @param {Two.RadialGradient} gradient - The reference {@link Two.RadialGradient}
+   * @description Copy the properties of one {@link Two.RadialGradient} onto another.
+   */
+  copy(gradient) {
+    super.copy.call(gradient);
+
+    _.each(
+      RadialGradient.Properties,
+      (k) => {
+        if (k in gradient) {
+          const value = gradient[k];
+          if (_.isObject(value) && !(value instanceof Vector)) {
+            this[k] = new Vector().copy(value);
+          } else {
+            this[k] = gradient[k];
+          }
+        }
+      },
+      this
+    );
+
+    return this;
+  }
+
+  /**
    * @name Two.RadialGradient#clone
    * @function
    * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
@@ -107,24 +143,32 @@ export class RadialGradient extends Gradient {
    * @description Create a new instance of {@link Two.RadialGradient} with the same properties of the current path.
    */
   clone(parent) {
-
-    const stops = this.stops.map(function(stop) {
+    const stops = this.stops.map(function (stop) {
       return stop.clone();
     });
 
-    const clone = new RadialGradient(this.center._x, this.center._y,
-        this._radius, stops, this.focal._x, this.focal._y);
+    const clone = new RadialGradient(
+      this.center._x,
+      this.center._y,
+      this._radius,
+      stops,
+      this.focal._x,
+      this.focal._y
+    );
 
-    _.each(Gradient.Properties.concat(RadialGradient.Properties), function(k) {
-      clone[k] = this[k];
-    }, this);
+    _.each(
+      Gradient.Properties.concat(RadialGradient.Properties),
+      function (k) {
+        clone[k] = this[k];
+      },
+      this
+    );
 
     if (parent) {
       parent.add(clone);
     }
 
     return clone;
-
   }
 
   /**
@@ -134,18 +178,20 @@ export class RadialGradient extends Gradient {
    * @description Return a JSON compatible plain object that represents the path.
    */
   toObject() {
-
     const result = super.toObject.call(this);
 
-    _.each(RadialGradient.Properties, function(k) {
-      result[k] = this[k];
-    }, this);
+    _.each(
+      RadialGradient.Properties,
+      function (k) {
+        result[k] = this[k];
+      },
+      this
+    );
 
     result.center = this.center.toObject();
     result.focal = this.focal.toObject();
 
     return result;
-
   }
 
   /**
@@ -157,14 +203,17 @@ export class RadialGradient extends Gradient {
    * @nota-bene Try not to call this method more than once a frame.
    */
   _update() {
-
-    if (this._flagRadius || this._flatCenter || this._flagFocal
-      || this._flagSpread || this._flagStops) {
+    if (
+      this._flagRadius ||
+      this._flatCenter ||
+      this._flagFocal ||
+      this._flagSpread ||
+      this._flagStops
+    ) {
       this.trigger(Events.Types.change);
     }
 
     return this;
-
   }
 
   /**
@@ -174,56 +223,53 @@ export class RadialGradient extends Gradient {
    * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
    */
   flagReset() {
-
     this._flagRadius = this._flagCenter = this._flagFocal = false;
 
     super.flagReset.call(this);
 
     return this;
-
   }
-
 }
 
 const proto = {
   radius: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._radius;
     },
-    set: function(v) {
+    set: function (v) {
       this._radius = v;
       this._flagRadius = true;
-    }
+    },
   },
   center: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._center;
     },
-    set: function(v) {
+    set: function (v) {
       if (this._center) {
         this._center.unbind(Events.Types.change, this._renderer.flagCenter);
       }
       this._center = v;
       this._center.bind(Events.Types.change, this._renderer.flagCenter);
       this._flagCenter = true;
-    }
+    },
   },
   focal: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._focal;
     },
-    set: function(v) {
+    set: function (v) {
       if (this._focal) {
         this._focal.unbind(Events.Types.change, this._renderer.flagFocal);
       }
       this._focal = v;
       this._focal.bind(Events.Types.change, this._renderer.flagFocal);
       this._flagFocal = true;
-    }
-  }
+    },
+  },
 };
 
 function FlagCenter() {

@@ -153,6 +153,7 @@ export class Points extends Shape {
     'sizeAttenuation',
     'beginning',
     'ending',
+    'dashes',
   ];
 
   static fromObject(obj) {

@@ -1,5 +1,5 @@
 import { Events } from '../events.js';
-import { _ }  from '../utils/underscore.js';
+import { _ } from '../utils/underscore.js';
 
 import { Stop } from './stop.js';
 import { Gradient } from './gradient.js';
@@ -17,7 +17,6 @@ import { Vector } from '../vector.js';
  * @nota-bene The linear gradient lives within the space of the parent object's matrix space.
  */
 export class LinearGradient extends Gradient {
-
   /**
    * @name Two.LinearGradient#_flagEndPoints
    * @private
@@ -28,7 +27,6 @@ export class LinearGradient extends Gradient {
   _right = null;
 
   constructor(x1, y1, x2, y2, stops) {
-
     super(stops);
 
     for (let prop in proto) {
@@ -61,16 +59,52 @@ export class LinearGradient extends Gradient {
     if (typeof y2 === 'number') {
       this.right.y = y2;
     }
-
   }
-
-  static Properties = ['left', 'right'];
 
   /**
    * @name Two.LinearGradient.Stop
    * @see {@link Two.Stop}
    */
   static Stop = Stop;
+
+  static Properties = ['left', 'right'];
+
+  /**
+   * @name Two.LinearGradient.fromObject
+   * @function
+   * @param {Object} obj - Object notation of a {@link Two.LinearGradient} to create a new instance
+   * @returns {Two.LinearGradient}
+   * @description Create a new {@link Two.LinearGradient} from an object notation of a {@link Two.LinearGradient}.
+   * @nota-bene Works in conjunction with {@link Two.LinearGradient#toObject}
+   */
+  static fromObject(obj) {
+    return new LinearGradient().copy(obj);
+  }
+
+  /**
+   * @name Two.LinearGradient#copy
+   * @function
+   * @param {Two.LinearGradient} gradient - The reference {@link Two.LinearGradient}
+   * @description Copy the properties of one {@link Two.LinearGradient} onto another.
+   */
+  copy(gradient) {
+    super.copy.call(gradient);
+
+    _.each(
+      LinearGradient.Properties,
+      (k) => {
+        if (k in gradient) {
+          this[k] =
+            gradient[k] instanceof Vector
+              ? gradient[k]
+              : new Vector().copy(gradient[k]);
+        }
+      },
+      this
+    );
+
+    return this;
+  }
 
   /**
    * @name Two.LinearGradient#clone
@@ -80,24 +114,31 @@ export class LinearGradient extends Gradient {
    * @description Create a new instance of {@link Two.LinearGradient} with the same properties of the current path.
    */
   clone(parent) {
-
-    const stops = this.stops.map(function(stop) {
+    const stops = this.stops.map(function (stop) {
       return stop.clone();
     });
 
-    const clone = new LinearGradient(this.left._x, this.left._y,
-      this.right._x, this.right._y, stops);
+    const clone = new LinearGradient(
+      this.left._x,
+      this.left._y,
+      this.right._x,
+      this.right._y,
+      stops
+    );
 
-    _.each(Gradient.Properties, function(k) {
-      clone[k] = this[k];
-    }, this);
+    _.each(
+      Gradient.Properties,
+      function (k) {
+        clone[k] = this[k];
+      },
+      this
+    );
 
     if (parent) {
       parent.add(clone);
     }
 
     return clone;
-
   }
 
   /**
@@ -107,14 +148,12 @@ export class LinearGradient extends Gradient {
    * @description Return a JSON compatible plain object that represents the path.
    */
   toObject() {
-
     const result = super.toObject.call(this);
 
     result.left = this.left.toObject();
     result.right = this.right.toObject();
 
     return result;
-
   }
 
   /**
@@ -126,13 +165,11 @@ export class LinearGradient extends Gradient {
    * @nota-bene Try not to call this method more than once a frame.
    */
   _update() {
-
     if (this._flagEndPoints || this._flagSpread || this._flagStops) {
       this.trigger(Events.Types.change);
     }
 
     return this;
-
   }
 
   /**
@@ -142,46 +179,43 @@ export class LinearGradient extends Gradient {
    * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
    */
   flagReset() {
-
     this._flagEndPoints = false;
 
     super.flagReset.call(this);
 
     return this;
-
   }
-
 }
 
 const proto = {
   left: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._left;
     },
-    set: function(v) {
+    set: function (v) {
       if (this._left instanceof Vector) {
         this._left.unbind(Events.Types.change, this._renderer.flagEndPoints);
       }
       this._left = v;
       this._left.bind(Events.Types.change, this._renderer.flagEndPoints);
       this._flagEndPoints = true;
-    }
+    },
   },
   right: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._right;
     },
-    set: function(v) {
+    set: function (v) {
       if (this._right instanceof Vector) {
         this._right.unbind(Events.Types.change, this._renderer.flagEndPoints);
       }
       this._right = v;
       this._right.bind(Events.Types.change, this._renderer.flagEndPoints);
       this._flagEndPoints = true;
-    }
-  }
+    },
+  },
 };
 
 /**

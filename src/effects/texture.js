@@ -9,13 +9,11 @@ import { Registry } from '../registry.js';
 
 import { Renderer as CanvasRenderer } from '../renderers/canvas.js';
 
-import { Constants } from '../constants.js';
-
 let anchor;
 const regex = {
   video: /\.(mp4|webm|ogg)$/i,
   image: /\.(jpe?g|png|gif|tiff|webp)$/i,
-  effect: /texture|gradient/i
+  effect: /texture|gradient/i,
 };
 
 if (root.document) {
@@ -31,7 +29,6 @@ if (root.document) {
  * @description Fundamental to work with bitmap data, a.k.a. pregenerated imagery, in Two.js. Supported formats include jpg, png, gif, and tiff. See {@link Two.Texture.RegularExpressions} for a full list of supported formats.
  */
 export class Texture extends Element {
-
   /**
    * @name Two.Texture#_flagSrc
    * @private
@@ -124,10 +121,7 @@ export class Texture extends Element {
   _offset = null;
 
   constructor(src, callback) {
-
     super();
-
-    this._renderer = {};
 
     for (let prop in proto) {
       Object.defineProperty(this, prop, proto[prop]);
@@ -136,9 +130,6 @@ export class Texture extends Element {
     this._renderer.type = 'texture';
     this._renderer.flagOffset = FlagOffset.bind(this);
     this._renderer.flagScale = FlagScale.bind(this);
-
-    this.id = Constants.Identifier + Constants.uniqueId();
-    this.classList = [];
 
     /**
      * @name Two.Texture#loaded
@@ -160,12 +151,12 @@ export class Texture extends Element {
     this.offset = new Vector();
 
     if (typeof callback === 'function') {
-      const loaded = (function() {
+      const loaded = function () {
         this.unbind(Events.Types.load, loaded);
         if (typeof callback === 'function') {
           callback();
         }
-      }).bind(this);
+      }.bind(this);
       this.bind(Events.Types.load, loaded);
     }
 
@@ -194,16 +185,25 @@ export class Texture extends Element {
     }
 
     this._update();
-
   }
 
   /**
    * @name Two.Texture.Properties
    * @property {String[]} - A list of properties that are on every {@link Two.Texture}.
    */
-  static Properties = [
-    'src', 'loaded', 'repeat', 'scale', 'offset', 'image'
-  ];
+  static Properties = ['src', 'loaded', 'repeat', 'scale', 'offset', 'image'];
+
+  /**
+   * @name Two.Texture.fromObject
+   * @function
+   * @param {Object} obj - Object notation of a {@link Two.Texture} to create a new instance
+   * @returns {Two.Texture}
+   * @description Create a new {@link Two.Texture} from an object notation of a {@link Two.Texture}.
+   * @nota-bene Works in conjunction with {@link Two.Texture#toObject}
+   */
+  fromObject(obj) {
+    return new Texture().copy(obj);
+  }
 
   /**
    * @name Two.Texture.RegularExpressions
@@ -241,10 +241,8 @@ export class Texture extends Element {
    * @nota-bene - This function uses node's `fs.readFileSync` to spoof the `<img />` loading process in the browser.
    */
   static loadHeadlessBuffer(texture, loaded) {
-
     texture.image.onload = loaded;
     texture.image.src = texture.src;
-
   }
 
   /**
@@ -254,9 +252,11 @@ export class Texture extends Element {
    * @returns {String} - Returns the tag name of an image, video, or canvas node.
    */
   static getTag(image) {
-    return (image && image.nodeName && image.nodeName.toLowerCase())
+    return (
+      (image && image.nodeName && image.nodeName.toLowerCase()) ||
       // Headless environments
-      || 'img';
+      'img'
+    );
   }
 
   /**
@@ -266,7 +266,6 @@ export class Texture extends Element {
    * @returns {HTMLImageElement} - Returns either a cached version of the image or a new one that is registered in {@link Two.Texture.ImageRegistry}.
    */
   static getImage(src) {
-
     const absoluteSrc = Texture.getAbsoluteURL(src);
 
     if (Texture.ImageRegistry.contains(absoluteSrc)) {
@@ -276,30 +275,23 @@ export class Texture extends Element {
     let image;
 
     if (CanvasShim.Image) {
-
       // TODO: Fix for headless environments
       image = new CanvasShim.Image();
       CanvasRenderer.Utils.shim(image, 'img');
-
     } else if (root.document) {
-
       if (regex.video.test(absoluteSrc)) {
         image = document.createElement('video');
       } else {
         image = document.createElement('img');
       }
-
     } else {
-
       console.warn('Two.js: no prototypical image defined for Two.Texture');
-
     }
 
     image.crossOrigin = 'anonymous';
     image.referrerPolicy = 'no-referrer';
 
     return image;
-
   }
 
   /**
@@ -308,19 +300,22 @@ export class Texture extends Element {
    * @description A collection of functions to register different types of textures. Used internally by a {@link Two.Texture}.
    */
   static Register = {
-    canvas: function(texture, callback) {
+    canvas: function (texture, callback) {
       texture._src = '#' + texture.id;
       Texture.ImageRegistry.add(texture.src, texture.image);
       if (typeof callback === 'function') {
         callback();
       }
     },
-    img: function(texture, callback) {
-
+    img: function (texture, callback) {
       const image = texture.image;
 
-      const loaded = function(e) {
-        if (!CanvasShim.isHeadless && image.removeEventListener && typeof image.removeEventListener === 'function') {
+      const loaded = function (e) {
+        if (
+          !CanvasShim.isHeadless &&
+          image.removeEventListener &&
+          typeof image.removeEventListener === 'function'
+        ) {
           image.removeEventListener('load', loaded, false);
           image.removeEventListener('error', error, false);
         }
@@ -328,18 +323,28 @@ export class Texture extends Element {
           callback();
         }
       };
-      const error = function(e) {
-        if (!CanvasShim.isHeadless && typeof image.removeEventListener === 'function') {
+      const error = function (e) {
+        if (
+          !CanvasShim.isHeadless &&
+          typeof image.removeEventListener === 'function'
+        ) {
           image.removeEventListener('load', loaded, false);
           image.removeEventListener('error', error, false);
         }
         throw new TwoError('unable to load ' + texture.src);
       };
 
-      if (typeof image.width === 'number' && image.width > 0
-        && typeof image.height === 'number' && image.height > 0) {
-          loaded();
-      } else if (!CanvasShim.isHeadless && typeof image.addEventListener === 'function') {
+      if (
+        typeof image.width === 'number' &&
+        image.width > 0 &&
+        typeof image.height === 'number' &&
+        image.height > 0
+      ) {
+        loaded();
+      } else if (
+        !CanvasShim.isHeadless &&
+        typeof image.addEventListener === 'function'
+      ) {
         image.addEventListener('load', loaded, false);
         image.addEventListener('error', error, false);
       }
@@ -357,23 +362,19 @@ export class Texture extends Element {
       Texture.ImageRegistry.add(texture.src, image);
 
       if (CanvasShim.isHeadless) {
-
         Texture.loadHeadlessBuffer(texture, loaded);
-
       } else {
-
         texture.image.src = texture.src;
-
       }
-
     },
-    video: function(texture, callback) {
-
+    video: function (texture, callback) {
       if (CanvasShim.isHeadless) {
-        throw new TwoError('video textures are not implemented in headless environments.');
+        throw new TwoError(
+          'video textures are not implemented in headless environments.'
+        );
       }
 
-      const loaded = function(e) {
+      const loaded = function (e) {
         texture.image.removeEventListener('canplaythrough', loaded, false);
         texture.image.removeEventListener('error', error, false);
         texture.image.width = texture.image.videoWidth;
@@ -382,7 +383,7 @@ export class Texture extends Element {
           callback();
         }
       };
-      const error = function(e) {
+      const error = function (e) {
         texture.image.removeEventListener('canplaythrough', loaded, false);
         texture.image.removeEventListener('error', error, false);
         throw new TwoError('unable to load ' + texture.src);
@@ -403,8 +404,7 @@ export class Texture extends Element {
         texture.image.src = texture.src;
         texture.image.load();
       }
-
-    }
+    },
   };
 
   /**
@@ -414,7 +414,6 @@ export class Texture extends Element {
    * @param {Function} callback - The function to be called once the texture is loaded.
    */
   static load(texture, callback) {
-
     let image = texture.image;
     let tag = Texture.getTag(image);
 
@@ -422,7 +421,9 @@ export class Texture extends Element {
       if (/canvas/i.test(tag)) {
         Texture.Register.canvas(texture, callback);
       } else {
-        texture._src = (!CanvasShim.isHeadless && image.getAttribute('two-src')) || image.src;
+        texture._src =
+          (!CanvasShim.isHeadless && image.getAttribute('two-src')) ||
+          image.src;
         Texture.Register[tag](texture, callback);
       }
     }
@@ -435,7 +436,6 @@ export class Texture extends Element {
       tag = Texture.getTag(image);
       Texture.Register[tag](texture, callback);
     }
-
   }
 
   /**
@@ -447,9 +447,29 @@ export class Texture extends Element {
   clone() {
     const clone = new Texture(this.src);
     clone.repeat = this.repeat;
-    clone.offset.copy(this.origin);
+    clone.offset.copy(this.offset);
     clone.scale = this.scale;
     return clone;
+  }
+
+  /**
+   * @name Two.Texture#copy
+   * @function
+   * @param {Two.Texture} texture - The reference {@link Two.Texture}
+   * @description Copy the properties of one {@link Two.Texture} onto another.
+   */
+  copy(texture) {
+    this.src = texture.src;
+    this.repeat = texture.repeat;
+    this.offset =
+      typeof texture.offset === 'number' || texture.offset instanceof Vector
+        ? texture.offset
+        : new Vector().copy(texture.offset);
+    this.scale =
+      typeof texture.scale === 'number' || texture.scale instanceof Vector
+        ? texture.scale
+        : new Vector().copy(texture.scale);
+    return this;
   }
 
   /**
@@ -459,13 +479,16 @@ export class Texture extends Element {
    * @description Return a JSON compatible plain object that represents the texture.
    */
   toObject() {
-    return {
-      src: this.src,
-      // image: this.image,
-      repeat: this.repeat,
-      origin: this.origin.toObject(),
-      scale: typeof this.scale === 'number' ? this.scale : this.scale.toObject()
-    };
+    const result = super.toObject.call(this);
+
+    result.renderer.type = 'texture';
+    result.src = this.src;
+    result.repeat = this.repeat;
+    result.offset = this.offset.toObject();
+    result.scale =
+      typeof this.scale === 'number' ? this.scale : this.scale.toObject();
+
+    return result;
   }
 
   /**
@@ -477,21 +500,19 @@ export class Texture extends Element {
    * @nota-bene Try not to call this method more than once a frame.
    */
   _update() {
-
     if (this._flagSrc || this._flagImage) {
-
       this.trigger(Events.Types.change);
 
       if (this._flagSrc || this._flagImage) {
         this.loaded = false;
-        Texture.load(this, (function() {
-          this.loaded = true;
-          this
-            .trigger(Events.Types.change)
-            .trigger(Events.Types.load);
-        }).bind(this));
+        Texture.load(
+          this,
+          function () {
+            this.loaded = true;
+            this.trigger(Events.Types.change).trigger(Events.Types.load);
+          }.bind(this)
+        );
       }
-
     }
 
     if (this._image && this._image.readyState >= 4) {
@@ -499,7 +520,6 @@ export class Texture extends Element {
     }
 
     return this;
-
   }
 
   /**
@@ -509,58 +529,59 @@ export class Texture extends Element {
    * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
    */
   flagReset() {
-
-    this._flagSrc = this._flagImage = this._flagLoaded = this._flagRepeat
-      = this._flagVideo = this._flagScale = this._flagOffset = false;
+    this._flagSrc =
+      this._flagImage =
+      this._flagLoaded =
+      this._flagRepeat =
+      this._flagVideo =
+      this._flagScale =
+      this._flagOffset =
+        false;
 
     super.flagReset.call(this);
 
     return this;
-
   }
-
 }
 
 const proto = {
-
   src: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._src;
     },
-    set: function(v) {
+    set: function (v) {
       this._src = v;
       this._flagSrc = true;
-    }
+    },
   },
   loaded: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._loaded;
     },
-    set: function(v) {
+    set: function (v) {
       this._loaded = v;
       this._flagLoaded = true;
-    }
+    },
   },
   repeat: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._repeat;
     },
-    set: function(v) {
+    set: function (v) {
       this._repeat = v;
       this._flagRepeat = true;
-    }
+    },
   },
 
   image: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._image;
     },
-    set: function(image) {
-
+    set: function (image) {
       const tag = Texture.getTag(image);
       let index;
 
@@ -579,33 +600,30 @@ const proto = {
       }
 
       this._flagImage = true;
-
-    }
-
+    },
   },
 
   offset: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._offset;
     },
-    set: function(v) {
+    set: function (v) {
       if (this._offset) {
         this._offset.unbind(Events.Types.change, this._renderer.flagOffset);
       }
       this._offset = v;
       this._offset.bind(Events.Types.change, this._renderer.flagOffset);
       this._flagOffset = true;
-    }
+    },
   },
 
   scale: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._scale;
     },
-    set: function(v) {
-
+    set: function (v) {
       if (this._scale instanceof Vector) {
         this._scale.unbind(Events.Types.change, this._renderer.flagScale);
       }
@@ -617,10 +635,8 @@ const proto = {
       }
 
       this._flagScale = true;
-
-    }
-  }
-
+    },
+  },
 };
 
 /**

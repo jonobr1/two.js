@@ -1,4 +1,5 @@
 import { Events } from './events.js';
+import { Constants } from 'constants.js';
 
 /**
  * @name Two.Element
@@ -33,7 +34,7 @@ export class Element extends Events {
    * @property {String} - Session specific unique identifier.
    * @nota-bene In the {@link Two.SVGRenderer} change this to change the underlying SVG element's id too.
    */
-  _id = '';
+  _id = Constants.Identifier + Constants.uniqueId();
 
   /**
    * @name Two.Element#className
@@ -79,9 +80,8 @@ export class Element extends Events {
   }
 
   copy(element) {
-    if ('id' in element) {
-      this.id = element;
-    }
+    // Explicitly do not copy the id
+    // of an object to keep uniqueness
     this.renderer.type = element.renderer.type;
     this.className = element.className;
     return this;

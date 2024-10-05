@@ -11,7 +11,6 @@ import { Element } from '../element.js';
  * @nota-bene Used specifically in conjunction with {@link Two.Gradient}s to control color graduation.
  */
 export class Stop extends Element {
-
   /**
    * @name Two.Stop#_flagOffset
    * @private
@@ -55,7 +54,6 @@ export class Stop extends Element {
   _color = '#fff';
 
   constructor(offset, color, opacity) {
-
     super();
 
     for (let prop in proto) {
@@ -68,8 +66,7 @@ export class Stop extends Element {
      * @name Two.Stop#offset
      * @property {Number} - The offset percentage of the stop represented as a zero-to-one value.
      */
-    this.offset = typeof offset === 'number' ? offset
-      : Stop.Index <= 0 ? 0 : 1;
+    this.offset = typeof offset === 'number' ? offset : Stop.Index <= 0 ? 0 : 1;
 
     /**
      * @name Two.Stop#opacity
@@ -82,11 +79,10 @@ export class Stop extends Element {
      * @name Two.Stop#color
      * @property {String} - The color of the stop.
      */
-    this.color = (typeof color === 'string') ? color
-      : Stop.Index <= 0 ? '#fff' : '#000';
+    this.color =
+      typeof color === 'string' ? color : Stop.Index <= 0 ? '#fff' : '#000';
 
     Stop.Index = (Stop.Index + 1) % 2;
-
   }
 
   /**
@@ -102,6 +98,37 @@ export class Stop extends Element {
   static Properties = ['offset', 'opacity', 'color'];
 
   /**
+   * @name Two.Stop.fromObject
+   * @function
+   * @param {Object} obj - Object notation of a {@link Two.Stop} to create a new instance
+   * @returns {Two.Stop}
+   * @description Create a new {@link Two.Stop} from an object notation of a {@link Two.Stop}.
+   * @nota-bene Works in conjunction with {@link Two.Stop#toObject}
+   */
+  static fromObject(obj) {
+    return new Stop().copy(obj);
+  }
+
+  /**
+   * @name Two.Stop#copy
+   * @function
+   * @param {Two.Stop} stop - The reference {@link Two.Stop}
+   * @description Copy the properties of one {@link Two.Stop} onto another.
+   */
+  copy(stop) {
+    super.copy.call(this, stop);
+
+    for (let i = 0; i < Stop.Properties.length; i++) {
+      const k = Stop.Properties[i];
+      if (k in stop) {
+        this[k] = stop[k];
+      }
+    }
+
+    return this;
+  }
+
+  /**
    * @name Two.Stop#clone
    * @function
    * @param {Two.Gradient} [parent] - The parent gradient to add the clone to.
@@ -109,19 +136,21 @@ export class Stop extends Element {
    * @description Create a new instance of {@link Two.Stop} with the same properties of the current path.
    */
   clone(parent) {
-
     const clone = new Stop();
 
-    _.each(Stop.Properties, function(property) {
-      clone[property] = this[property];
-    }, this);
+    _.each(
+      Stop.Properties,
+      function (property) {
+        clone[property] = this[property];
+      },
+      this
+    );
 
     if (parent && parent.stops) {
       parent.stops.push(clone);
     }
 
     return clone;
-
   }
 
   /**
@@ -131,15 +160,18 @@ export class Stop extends Element {
    * @description Return a JSON compatible plain object that represents the path.
    */
   toObject() {
+    const result = super.toObject.call(this);
+    result.renderer.type = 'stop';
 
-    const result = {};
-
-    _.each(Stop.Properties, function(k) {
-      result[k] = this[k];
-    }, this);
+    _.each(
+      Stop.Properties,
+      (k) => {
+        result[k] = this[k];
+      },
+      this
+    );
 
     return result;
-
   }
 
   /**
@@ -149,55 +181,52 @@ export class Stop extends Element {
    * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
    */
   flagReset() {
-
     this._flagOffset = this._flagColor = this._flagOpacity = false;
 
     super.flagReset.call(this);
 
     return this;
-
   }
-
 }
 
 const proto = {
   offset: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._offset;
     },
-    set: function(v) {
+    set: function (v) {
       this._offset = v;
       this._flagOffset = true;
       if (this.parent) {
         this.parent._flagStops = true;
       }
-    }
+    },
   },
   opacity: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._opacity;
     },
-    set: function(v) {
+    set: function (v) {
       this._opacity = v;
       this._flagOpacity = true;
       if (this.parent) {
         this.parent._flagStops = true;
       }
-    }
+    },
   },
   color: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._color;
     },
-    set: function(v) {
+    set: function (v) {
       this._color = v;
       this._flagColor = true;
       if (this.parent) {
         this.parent._flagStops = true;
       }
-    }
-  }
+    },
+  },
 };
