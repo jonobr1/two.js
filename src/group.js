@@ -1,5 +1,6 @@
 import { Events } from './events.js';
 import { _ } from './utils/underscore.js';
+import { getEffectFromObject } from 'utils/shape.js';
 
 import { Shape } from './shape.js';
 import { Children } from './children.js';
@@ -288,9 +289,16 @@ export class Group extends Shape {
     for (let i = 0; i < Group.Properties.length; i++) {
       const k = Group.Properties[i];
       if (k in obj) {
-        this[k] = obj[k];
+        if (/(fill|stroke)/i.test(k)) {
+          this[k] =
+            typeof obj[k] === 'string' ? obj[k] : getEffectFromObject(obj[k]);
+        } else {
+          this[k] = obj[k];
+        }
       }
     }
+
+    // TODO: Handle masks
 
     _.each(obj.children, (child) => {
       // All of the types of children Two.Group supports

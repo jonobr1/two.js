@@ -18,6 +18,7 @@ import { Gradient } from '../effects/gradient.js';
 import { LinearGradient } from '../effects/linear-gradient.js';
 import { RadialGradient } from '../effects/radial-gradient.js';
 import { Texture } from '../effects/texture.js';
+import { getEffectFromObject } from '../utils/shape.js';
 
 const ceil = Math.ceil,
   floor = Math.floor;
@@ -157,7 +158,13 @@ export class Points extends Shape {
   ];
 
   static fromObject(obj) {
-    return new Points().copy(obj);
+    const fill =
+      typeof obj.fill === 'string' ? obj.fill : getEffectFromObject(obj.fill);
+    const stroke =
+      typeof obj.stroke === 'string'
+        ? obj.stroke
+        : getEffectFromObject(obj.stroke);
+    return new Points().copy({ ...obj, fill, stroke });
   }
 
   /**

@@ -11,6 +11,7 @@ import {
   getIdByLength,
   getCurveLength,
   getSubdivisions,
+  getEffectFromObject,
 } from './utils/shape.js';
 import { _ } from './utils/underscore.js';
 
@@ -421,9 +422,13 @@ export class Path extends Shape {
    * @nota-bene Works in conjunction with {@link Two.Path#toObject}
    */
   static fromObject(obj) {
-    // TODO: Handle fill and stroke situations
-    // where they are objects and not strings
-    return new Path().copy(obj);
+    const fill =
+      typeof obj.fill === 'string' ? obj.fill : getEffectFromObject(obj.fill);
+    const stroke =
+      typeof obj.stroke === 'string'
+        ? obj.stroke
+        : getEffectFromObject(obj.stroke);
+    return new Path().copy({ ...obj, fill, stroke });
   }
 
   /**

@@ -8,6 +8,7 @@ import { LinearGradient } from './effects/linear-gradient.js';
 import { RadialGradient } from './effects/radial-gradient.js';
 import { Texture } from './effects/texture.js';
 import { root } from './utils/root.js';
+import { getEffectFromObject } from 'utils/shape.js';
 
 let canvas;
 const min = Math.min,
@@ -386,7 +387,13 @@ export class Text extends Shape {
    * @nota-bene Works in conjunction with {@link Two.Text#toObject}
    */
   static fromObject(obj) {
-    return new Text().copy(obj);
+    const fill =
+      typeof obj.fill === 'string' ? obj.fill : getEffectFromObject(obj.fill);
+    const stroke =
+      typeof obj.stroke === 'string'
+        ? obj.stroke
+        : getEffectFromObject(obj.stroke);
+    return new Text().copy({ ...obj, fill, stroke });
   }
 
   /**
