@@ -1,4 +1,3 @@
-import { Constants } from './constants.js';
 import { Events } from './events.js';
 import { Element } from './element.js';
 import { Matrix } from './matrix.js';
