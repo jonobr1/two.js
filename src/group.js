@@ -298,53 +298,47 @@ export class Group extends Shape {
       }
     }
 
-    // TODO: Handle masks
+    if ('mask' in obj) {
+      this.mask = getShapeFromObject(obj.mask);
+    }
 
-    _.each(obj.children, (child) => {
+    group.children = obj.children.map(getShapeFromObject);
+
+    return group;
+
+    function getShapeFromObject(child) {
       // All of the types of children Two.Group supports
       switch (child.renderer.type) {
         case 'arc-segment':
-          group.add(ArcSegment.fromObject(child));
-          break;
+          return ArcSegment.fromObject(child);
         case 'circle':
-          group.add(Circle.fromObject(child));
-          break;
+          return Circle.fromObject(child);
         case 'ellipse':
-          group.add(Ellipse.fromObject(child));
-          break;
+          return Ellipse.fromObject(child);
         case 'points':
-          group.add(Points.fromObject(child));
-          break;
+          return Points.fromObject(child);
         case 'polygon':
-          group.add(Polygon.fromObject(child));
-          break;
+          return Polygon.fromObject(child);
         case 'rectangle':
-          group.add(Rectangle.fromObject(child));
-          break;
+          return Rectangle.fromObject(child);
         case 'rounded-rectangle':
-          group.add(RoundedRectangle.fromObject(child));
-          break;
+          return RoundedRectangle.fromObject(child);
         case 'star':
-          group.add(Star.fromObject(child));
-          break;
+          return Star.fromObject(child);
         case 'path':
-          group.add(Path.fromObject(child));
-          break;
+          return Path.fromObject(child);
         case 'text':
-          group.add(Text.fromObject(child));
-          break;
+          return Text.fromObject(child);
         case 'group':
-          group.add(Group.fromObject(child));
-          break;
+          return Group.fromObject(child);
         case 'shape':
-          group.add(Shape.fromObject(child));
-          break;
+          return Shape.fromObject(child);
         case 'element':
-          group.add(Element.fromObject(child));
-          break;
+          return Element.fromObject(child);
       }
-    });
-    return group;
+
+      return child;
+    }
   }
 
   /**
