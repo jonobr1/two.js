@@ -4,7 +4,8 @@ import { HALF_PI, TWO_PI } from '../utils/math.js';
 import { Path } from '../path.js';
 import { Anchor } from '../anchor.js';
 
-const cos = Math.cos, sin = Math.sin;
+const cos = Math.cos,
+  sin = Math.sin;
 
 /**
  * @name Two.Circle
@@ -16,7 +17,6 @@ const cos = Math.cos, sin = Math.sin;
  * @param {Number} [resolution=4] - The number of vertices used to construct the circle.
  */
 export class Circle extends Path {
-
   /**
    * @name Two.Circle#_flagRadius
    * @private
@@ -32,7 +32,6 @@ export class Circle extends Path {
   _radius = 0;
 
   constructor(ox, oy, r, resolution) {
-
     // At least 2 vertices are required for proper circlage
     const amount = resolution ? Math.max(resolution, 2) : 4;
     const points = [];
@@ -62,7 +61,6 @@ export class Circle extends Path {
     if (typeof oy === 'number') {
       this.translation.y = oy;
     }
-
   }
 
   /**
@@ -70,6 +68,37 @@ export class Circle extends Path {
    * @property {String[]} - A list of properties that are on every {@link Two.Circle}.
    */
   static Properties = ['radius'];
+
+  /**
+   * @name Two.Circle.fromObject
+   * @function
+   * @param {Object} obj - Object notation of a {@link Two.Circle} to create a new instance
+   * @returns {Two.Circle}
+   * @description Create a new {@link Two.Circle} from an object notation of a {@link Two.Circle}.
+   * @nota-bene Works in conjunction with {@link Two.Circle#toObject}
+   */
+  static fromObject(obj) {
+    return new Circle().copy(obj);
+  }
+
+  /**
+   * @name Two.Circle#copy
+   * @function
+   * @param {Two.Circle} circle - The reference {@link Two.Circle}
+   * @description Copy the properties of one {@link Two.Circle} onto another.
+   */
+  copy(circle) {
+    super.copy.call(circle);
+
+    for (let i = 0; i < Circle.Properties.length; i++) {
+      const k = Circle.Properties[i];
+      if (k in circle) {
+        this[k] = circle[k];
+      }
+    }
+
+    return this;
+  }
 
   /**
    * @name Two.Circle#_update
@@ -80,9 +109,7 @@ export class Circle extends Path {
    * @nota-bene Try not to call this method more than once a frame.
    */
   _update() {
-
     if (this._flagVertices || this._flagRadius) {
-
       let length = this.vertices.length;
 
       if (!this._closed && length > 2) {
@@ -118,7 +145,6 @@ export class Circle extends Path {
 
     super._update.call(this);
     return this;
-
   }
 
   /**
@@ -128,12 +154,10 @@ export class Circle extends Path {
    * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
    */
   flagReset() {
-
     this._flagRadius = false;
 
     super.flagReset.call(this);
     return this;
-
   }
 
   /**
@@ -144,7 +168,6 @@ export class Circle extends Path {
    * @description Create a new instance of {@link Two.Circle} with the same properties of the current path.
    */
   clone(parent) {
-
     const clone = new Circle(0, 0, this.radius, this.vertices.length);
 
     clone.translation.copy(this.translation);
@@ -167,7 +190,6 @@ export class Circle extends Path {
     }
 
     return clone;
-
   }
 
   /**
@@ -177,7 +199,6 @@ export class Circle extends Path {
    * @description Return a JSON compatible plain object that represents the path.
    */
   toObject() {
-
     const object = super.toObject.call(this);
 
     for (let i = 0; i < Circle.Properties.length; i++) {
@@ -186,20 +207,18 @@ export class Circle extends Path {
     }
 
     return object;
-
   }
-
 }
 
 const proto = {
   radius: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._radius;
     },
-    set: function(v) {
+    set: function (v) {
       this._radius = v;
       this._flagRadius = true;
-    }
-  }
+    },
+  },
 };

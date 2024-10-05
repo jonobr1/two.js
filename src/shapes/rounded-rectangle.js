@@ -17,7 +17,6 @@ import { Vector } from '../vector.js';
  * @param {Number} [resolution=12] - The number of vertices used to construct the rounded rectangle.
  */
 export class RoundedRectangle extends Path {
-
   /**
    * @name Two.RoundedRectangle#_flagWidth
    * @private
@@ -57,17 +56,18 @@ export class RoundedRectangle extends Path {
   _radius = 12;
 
   constructor(x, y, width, height, radius) {
-
-    if (typeof radius === 'undefined' &&
-      typeof width === 'number' && typeof height === 'number') {
+    if (
+      typeof radius === 'undefined' &&
+      typeof width === 'number' &&
+      typeof height === 'number'
+    ) {
       radius = Math.floor(Math.min(width, height) / 12);
     }
 
     const points = [];
     for (let i = 0; i < 10; i++) {
       points.push(
-        new Anchor(0, 0, 0, 0, 0, 0,
-          i === 0 ? Commands.move : Commands.curve)
+        new Anchor(0, 0, 0, 0, 0, 0, i === 0 ? Commands.move : Commands.curve)
       );
     }
 
@@ -116,7 +116,6 @@ export class RoundedRectangle extends Path {
     if (typeof y === 'number') {
       this.translation.y = y;
     }
-
   }
 
   /**
@@ -124,6 +123,38 @@ export class RoundedRectangle extends Path {
    * @property {String[]} - A list of properties that are on every {@link Two.RoundedRectangle}.
    */
   static Properties = ['width', 'height', 'radius'];
+
+  /**
+   * @name Two.RoundedRectangle.fromObject
+   * @function
+   * @param {Object} obj - Object notation of a {@link Two.RoundedRectangle} to create a new instance
+   * @returns {Two.RoundedRectangle}
+   * @description Create a new {@link Two.RoundedRectangle} from an object notation of a {@link Two.RoundedRectangle}.
+   * @nota-bene Works in conjunction with {@link Two.RoundedRectangle#toObject}
+   */
+  static fromObject(obj) {
+    return new RoundedRectangle().copy(obj);
+  }
+
+  /**
+   * @name Two.RoundedRectangle#copy
+   * @function
+   * @param {Two.RoundedRectangle} roundedRectangle - The reference {@link Two.RoundedRectangle}
+   * @description Copy the properties of one {@link Two.RoundedRectangle} onto another.
+   */
+  copy(roundedRectangle) {
+    super.copy.call(roundedRectangle);
+
+    for (let i = 0; i < RoundedRectangle.Properties.length; i++) {
+      const k = RoundedRectangle.Properties[i];
+      if (k in roundedRectangle) {
+        // TODO: How to handle radius if it's a vector
+        this[k] = roundedRectangle[k];
+      }
+    }
+
+    return this;
+  }
 
   /**
    * @name Two.RoundedRectangle#_update
@@ -134,9 +165,12 @@ export class RoundedRectangle extends Path {
    * @nota-bene Try not to call this method more than once a frame.
    */
   _update() {
-
-    if (this._flagVertices || this._flagWidth || this._flagHeight || this._flagRadius) {
-
+    if (
+      this._flagVertices ||
+      this._flagWidth ||
+      this._flagHeight ||
+      this._flagRadius
+    ) {
       const width = this._width;
       const height = this._height;
 
@@ -155,21 +189,21 @@ export class RoundedRectangle extends Path {
       let h = height / 2;
 
       v = this.vertices[0];
-      v.x = - (w - rx);
-      v.y = - h;
+      v.x = -(w - rx);
+      v.y = -h;
 
       // Upper Right Corner
 
       v = this.vertices[1];
-      v.x = (w - rx);
-      v.y = - h;
+      v.x = w - rx;
+      v.y = -h;
       v.controls.left.clear();
       v.controls.right.x = rx;
       v.controls.right.y = 0;
 
       v = this.vertices[2];
       v.x = w;
-      v.y = - (h - ry);
+      v.y = -(h - ry);
       v.controls.right.clear();
       v.controls.left.clear();
 
@@ -177,13 +211,13 @@ export class RoundedRectangle extends Path {
 
       v = this.vertices[3];
       v.x = w;
-      v.y = (h - ry);
+      v.y = h - ry;
       v.controls.left.clear();
       v.controls.right.x = 0;
       v.controls.right.y = ry;
 
       v = this.vertices[4];
-      v.x = (w - rx);
+      v.x = w - rx;
       v.y = h;
       v.controls.right.clear();
       v.controls.left.clear();
@@ -191,42 +225,40 @@ export class RoundedRectangle extends Path {
       // Bottom Left Corner
 
       v = this.vertices[5];
-      v.x = - (w - rx);
+      v.x = -(w - rx);
       v.y = h;
       v.controls.left.clear();
-      v.controls.right.x = - rx;
+      v.controls.right.x = -rx;
       v.controls.right.y = 0;
 
       v = this.vertices[6];
-      v.x = - w;
-      v.y = (h - ry);
+      v.x = -w;
+      v.y = h - ry;
       v.controls.left.clear();
       v.controls.right.clear();
 
       // Upper Left Corner
 
       v = this.vertices[7];
-      v.x = - w;
-      v.y = - (h - ry);
+      v.x = -w;
+      v.y = -(h - ry);
       v.controls.left.clear();
       v.controls.right.x = 0;
-      v.controls.right.y = - ry;
+      v.controls.right.y = -ry;
 
       v = this.vertices[8];
-      v.x = - (w - rx);
-      v.y = - h;
+      v.x = -(w - rx);
+      v.y = -h;
       v.controls.left.clear();
       v.controls.right.clear();
 
       v = this.vertices[9];
       v.copy(this.vertices[8]);
-
     }
 
     super._update.call(this);
 
     return this;
-
   }
 
   /**
@@ -236,12 +268,10 @@ export class RoundedRectangle extends Path {
    * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
    */
   flagReset() {
-
     this._flagWidth = this._flagHeight = this._flagRadius = false;
     super.flagReset.call(this);
 
     return this;
-
   }
 
   /**
@@ -252,7 +282,6 @@ export class RoundedRectangle extends Path {
    * @description Create a new instance of {@link Two.RoundedRectangle} with the same properties of the current path.
    */
   clone(parent) {
-
     const width = this.width;
     const height = this.height;
     const radius = this.radius;
@@ -279,7 +308,6 @@ export class RoundedRectangle extends Path {
     }
 
     return clone;
-
   }
 
   /**
@@ -289,7 +317,6 @@ export class RoundedRectangle extends Path {
    * @description Return a JSON compatible plain object that represents the path.
    */
   toObject() {
-
     const object = super.toObject.call(this);
 
     for (let i = 0; i < RoundedRectangle.Properties.length; i++) {
@@ -297,43 +324,40 @@ export class RoundedRectangle extends Path {
       object[k] = this[k];
     }
 
-    object.radius = typeof this.radius === 'number'
-      ? this.radius : this.radius.toObject();
+    object.radius =
+      typeof this.radius === 'number' ? this.radius : this.radius.toObject();
 
     return object;
-
   }
-
 }
 
 const proto = {
   width: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._width;
     },
-    set: function(v) {
+    set: function (v) {
       this._width = v;
       this._flagWidth = true;
-    }
+    },
   },
   height: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._height;
     },
-    set: function(v) {
+    set: function (v) {
       this._height = v;
       this._flagHeight = true;
-    }
+    },
   },
   radius: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._radius;
     },
-    set: function(v) {
-
+    set: function (v) {
       if (this._radius instanceof Vector) {
         this._radius.unbind(Events.Types.change, this._renderer.flagRadius);
       }
@@ -345,9 +369,8 @@ const proto = {
       }
 
       this._flagRadius = true;
-
-    }
-  }
+    },
+  },
 };
 
 /**

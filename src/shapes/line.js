@@ -15,13 +15,8 @@ import { Anchor } from '../anchor.js';
  * @param {Number} [y2=0] - The y position of the second vertex on the line.
  */
 export class Line extends Path {
-
   constructor(x1, y1, x2, y2) {
-
-    const points = [
-        new Anchor(x1, y1),
-        new Anchor(x2, y2)
-    ];
+    const points = [new Anchor(x1, y1), new Anchor(x2, y2)];
     super(points);
 
     for (let prop in proto) {
@@ -32,38 +27,36 @@ export class Line extends Path {
     this.vertices[1].command = Commands.line;
 
     this.automatic = false;
-
   }
-
 }
 
 const proto = {
   left: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this.vertices[0];
     },
-    set: function(v) {
+    set: function (v) {
       if (_.isObject(v)) {
         this.vertices.splice(0, 1, v);
       } else {
         const error = new TwoError('Two.Line.x argument is not an object.');
         console.warn(error.name, error.message);
       }
-    }
+    },
   },
   right: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this.vertices[1];
     },
-    set: function(v) {
+    set: function (v) {
       if (_.isObject(v)) {
         this.vertices.splice(1, 1, v);
       } else {
         const error = new TwoError('Two.Line.y argument is not an object.');
         console.warn(error.name, error.message);
       }
-    }
-  }
+    },
+  },
 };

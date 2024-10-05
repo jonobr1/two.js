@@ -57,6 +57,14 @@ export class Element extends Events {
     }
   }
 
+  /**
+   * @name Two.Element.fromObject
+   * @function
+   * @param {Object} obj - Object notation of a {@link Two.Element} to create a new instance
+   * @returns {Two.Element}
+   * @description Create a new {@link Two.Element} from an object notation of a {@link Two.Element}.
+   * @nota-bene Works in conjunction with {@link Two.Element#toObject}
+   */
   static fromObject(obj) {
     return new Element().copy(obj);
   }
@@ -71,13 +79,18 @@ export class Element extends Events {
   }
 
   copy(element) {
+    if ('id' in element) {
+      this.id = element;
+    }
     this.renderer.type = element.renderer.type;
     this.className = element.className;
+    return this;
   }
 
   toObject() {
     return {
       renderer: { type: 'element' },
+      id: this.id,
       className: this.className,
     };
   }

@@ -15,14 +15,12 @@ import { Vector } from '../vector.js';
  * @param {Number} [height=1] - The width value of the rectangle.
  */
 export class Rectangle extends Path {
-
   constructor(x, y, width, height) {
-
     const points = [
       new Anchor(),
       new Anchor(),
       new Anchor(),
-      new Anchor()
+      new Anchor(),
       // new Anchor() // TODO: Figure out how to handle this for `beginning` / `ending` animations
     ];
 
@@ -57,7 +55,6 @@ export class Rectangle extends Path {
     }
 
     this._update();
-
   }
 
   /**
@@ -65,6 +62,37 @@ export class Rectangle extends Path {
    * @property {String[]} - A list of properties that are on every {@link Two.Rectangle}.
    */
   static Properties = ['width', 'height'];
+
+  /**
+   * @name Two.Rectangle.fromObject
+   * @function
+   * @param {Object} obj - Object notation of a {@link Two.Rectangle} to create a new instance
+   * @returns {Two.Rectangle}
+   * @description Create a new {@link Two.Rectangle} from an object notation of a {@link Two.Rectangle}.
+   * @nota-bene Works in conjunction with {@link Two.Rectangle#toObject}
+   */
+  static fromObject(obj) {
+    return new Rectangle().copy(obj);
+  }
+
+  /**
+   * @name Two.Rectangle#copy
+   * @function
+   * @param {Two.Rectangle} rectangle - The reference {@link Two.Rectangle}
+   * @description Copy the properties of one {@link Two.Rectangle} onto another.
+   */
+  copy(rectangle) {
+    super.copy.call(rectangle);
+
+    for (let i = 0; i < Rectangle.Properties.length; i++) {
+      const k = Rectangle.Properties[i];
+      if (k in rectangle) {
+        this[k] = rectangle[k];
+      }
+    }
+
+    return this;
+  }
 
   /**
    * @name Two.Rectangle#_flagWidth
@@ -103,9 +131,7 @@ export class Rectangle extends Path {
    * @nota-bene Try not to call this method more than once a frame.
    */
   _update() {
-
     if (this._flagVertices || this._flagWidth || this._flagHeight) {
-
       const xr = this._width / 2;
       const yr = this._height / 2;
 
@@ -119,15 +145,14 @@ export class Rectangle extends Path {
       this.vertices[3].set(-xr, yr).sub(this._origin).command = Commands.line;
       // FYI: Two.Sprite and Two.ImageSequence have 4 verts
       if (this.vertices[4]) {
-        this.vertices[4].set(-xr, -yr).sub(this._origin).command = Commands.line;
+        this.vertices[4].set(-xr, -yr).sub(this._origin).command =
+          Commands.line;
       }
-
     }
 
     super._update.call(this);
 
     return this;
-
   }
 
   /**
@@ -137,12 +162,10 @@ export class Rectangle extends Path {
    * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
    */
   flagReset() {
-
     this._flagWidth = this._flagHeight = false;
     super.flagReset.call(this);
 
     return this;
-
   }
 
   /**
@@ -153,7 +176,6 @@ export class Rectangle extends Path {
    * @description Create a new instance of {@link Two.Rectangle} with the same properties of the current path.
    */
   clone(parent) {
-
     const clone = new Rectangle(0, 0, this.width, this.height);
 
     clone.translation.copy(this.translation);
@@ -176,7 +198,6 @@ export class Rectangle extends Path {
     }
 
     return clone;
-
   }
 
   /**
@@ -186,50 +207,47 @@ export class Rectangle extends Path {
    * @description Return a JSON compatible plain object that represents the path.
    */
   toObject() {
-
     const object = super.toObject.call(this);
     object.width = this.width;
     object.height = this.height;
     object.origin = this.origin.toObject();
     return object;
-
   }
-
 }
 
 const proto = {
   width: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._width;
     },
-    set: function(v) {
+    set: function (v) {
       this._width = v;
       this._flagWidth = true;
-    }
+    },
   },
   height: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._height;
     },
-    set: function(v) {
+    set: function (v) {
       this._height = v;
       this._flagHeight = true;
-    }
+    },
   },
   origin: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._origin;
     },
-    set: function(v) {
+    set: function (v) {
       if (this._origin) {
         this._origin.unbind(Events.Types.change, this._renderer.flagVertices);
       }
       this._origin = v;
       this._origin.bind(Events.Types.change, this._renderer.flagVertices);
       this._renderer.flagVertices();
-    }
-  }
+    },
+  },
 };

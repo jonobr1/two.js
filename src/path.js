@@ -432,7 +432,7 @@ export class Path extends Shape {
   copy(path) {
     super.copy.call(this, path);
 
-    for (let j = 0; j < path.vertice.length; j++) {
+    for (let j = 0; j < path.vertices.length; j++) {
       this.vertices.push(path.vertices[j].clone());
     }
 
@@ -442,8 +442,6 @@ export class Path extends Shape {
         this[k] = path[k];
       }
     }
-
-    this.className = path.className;
 
     return this;
   }

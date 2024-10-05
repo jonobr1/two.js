@@ -212,6 +212,8 @@ export class Shape extends Element {
    * @description Copy the properties of one {@link Two.Shape} onto another.
    */
   copy(shape) {
+    super.copy.call(this, shape);
+
     this.position.copy(shape.position);
     this.rotation = shape.rotation;
     this.scale = shape.scale;

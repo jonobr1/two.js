@@ -4,7 +4,8 @@ import { TWO_PI } from '../utils/math.js';
 import { Path } from '../path.js';
 import { Anchor } from '../anchor.js';
 
-const cos = Math.cos, sin = Math.sin;
+const cos = Math.cos,
+  sin = Math.sin;
 
 /**
  * @name Two.Polygon
@@ -16,7 +17,6 @@ const cos = Math.cos, sin = Math.sin;
  * @param {Number} [sides=12] - The number of vertices used to construct the polygon.
  */
 export class Polygon extends Path {
-
   /**
    * @name Two.Polygon#_flagWidth
    * @private
@@ -62,7 +62,6 @@ export class Polygon extends Path {
   _sides = 0;
 
   constructor(x, y, radius, sides) {
-
     sides = Math.max(sides || 0, 3);
 
     super();
@@ -111,7 +110,6 @@ export class Polygon extends Path {
     if (typeof y === 'number') {
       this.translation.y = y;
     }
-
   }
 
   /**
@@ -119,6 +117,37 @@ export class Polygon extends Path {
    * @property {String[]} - A list of properties that are on every {@link Two.Polygon}.
    */
   static Properties = ['width', 'height', 'sides'];
+
+  /**
+   * @name Two.Polygon.fromObject
+   * @function
+   * @param {Object} obj - Object notation of a {@link Two.Polygon} to create a new instance
+   * @returns {Two.Polygon}
+   * @description Create a new {@link Two.Polygon} from an object notation of a {@link Two.Polygon}.
+   * @nota-bene Works in conjunction with {@link Two.Polygon#toObject}
+   */
+  static fromObject(obj) {
+    return new Polygon().copy(obj);
+  }
+
+  /**
+   * @name Two.Polygon#copy
+   * @function
+   * @param {Two.Polygon} polygon - The reference {@link Two.Polygon}
+   * @description Copy the properties of one {@link Two.Polygon} onto another.
+   */
+  copy(polygon) {
+    super.copy.call(polygon);
+
+    for (let i = 0; i < Polygon.Properties.length; i++) {
+      const k = Polygon.Properties[i];
+      if (k in polygon) {
+        this[k] = polygon[k];
+      }
+    }
+
+    return this;
+  }
 
   /**
    * @name Two.Polygon#_update
@@ -129,9 +158,12 @@ export class Polygon extends Path {
    * @nota-bene Try not to call this method more than once a frame.
    */
   _update() {
-
-    if (this._flagVertices || this._flagWidth || this._flagHeight || this._flagSides) {
-
+    if (
+      this._flagVertices ||
+      this._flagWidth ||
+      this._flagHeight ||
+      this._flagSides
+    ) {
       const sides = this._sides;
       const amount = sides + 1;
       let length = this.vertices.length;
@@ -142,11 +174,10 @@ export class Polygon extends Path {
       }
 
       for (let i = 0; i < amount; i++) {
-
         const pct = (i + 0.5) / sides;
         const theta = TWO_PI * pct + Math.PI / 2;
-        const x = this._width * cos(theta) / 2;
-        const y = this._height * sin(theta) / 2;
+        const x = (this._width * cos(theta)) / 2;
+        const y = (this._height * sin(theta)) / 2;
 
         if (i >= length) {
           this.vertices.push(new Anchor(x, y));
@@ -155,14 +186,11 @@ export class Polygon extends Path {
         }
 
         this.vertices[i].command = i === 0 ? Commands.move : Commands.line;
-
       }
-
     }
 
     super._update.call(this);
     return this;
-
   }
 
   /**
@@ -172,12 +200,10 @@ export class Polygon extends Path {
    * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
    */
   flagReset() {
-
     this._flagWidth = this._flagHeight = this._flagSides = false;
     super.flagReset.call(this);
 
     return this;
-
   }
 
   /**
@@ -188,7 +214,6 @@ export class Polygon extends Path {
    * @description Create a new instance of {@link Two.Polygon} with the same properties of the current path.
    */
   clone(parent) {
-
     const clone = new Polygon(0, 0, 0, this.sides);
 
     clone.translation.copy(this.translation);
@@ -213,7 +238,6 @@ export class Polygon extends Path {
     }
 
     return clone;
-
   }
 
   /**
@@ -223,7 +247,6 @@ export class Polygon extends Path {
    * @description Return a JSON compatible plain object that represents the path.
    */
   toObject() {
-
     const object = super.toObject.call(this);
 
     for (let i = 0; i < Polygon.Properties.length; i++) {
@@ -232,53 +255,51 @@ export class Polygon extends Path {
     }
 
     return object;
-
   }
-
 }
 
 const proto = {
   radius: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._radius;
     },
-    set: function(v) {
+    set: function (v) {
       this._radius = v;
       this.width = v * 2;
       this.height = v * 2;
-    }
+    },
   },
   width: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._width;
     },
-    set: function(v) {
+    set: function (v) {
       this._width = v;
       this._flagWidth = true;
       this._radius = Math.max(this.width, this.height) / 2;
-    }
+    },
   },
   height: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._height;
     },
-    set: function(v) {
+    set: function (v) {
       this._height = v;
       this._flagHeight = true;
       this._radius = Math.max(this.width, this.height) / 2;
-    }
+    },
   },
   sides: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._sides;
     },
-    set: function(v) {
+    set: function (v) {
       this._sides = v;
       this._flagSides = true;
-    }
-  }
+    },
+  },
 };
