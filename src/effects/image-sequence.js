@@ -170,13 +170,49 @@ export class ImageSequence extends Rectangle {
    * @name Two.ImageSequence.Properties
    * @property {String[]} - A list of properties that are on every {@link Two.ImageSequence}.
    */
-  static Properties = ['textures', 'frameRate', 'index'];
+  static Properties = [
+    'textures',
+    'frameRate',
+    'index',
+    'firstFrame',
+    'lastFrame',
+    'loop',
+  ];
 
   /**
    * @name Two.ImageSequence.DefaultFrameRate
    * @property The default frame rate that {@link Two.ImageSequence#frameRate} is set to when instantiated.
    */
   static DefaultFrameRate = 30;
+
+  /**
+   * @name Two.ImageSequence.fromObject
+   * @function
+   * @param {Object} obj - Object notation of a {@link Two.ImageSequence} to create a new instance
+   * @returns {Two.ImageSequence}
+   * @description Create a new {@link Two.ImageSequence} from an object notation of a {@link Two.ImageSequence}.
+   * @nota-bene Works in conjunction with {@link Two.ImageSequence#toObject}
+   */
+  static fromObject(obj) {
+    return new ImageSequence().copy(obj);
+  }
+
+  /**
+   * @name Two.ImageSequence#copy
+   * @function
+   * @param {Two.ImageSequence} imageSequence - The reference {@link Two.ImageSequence}
+   * @description Copy the properties of one {@link Two.ImageSequence} onto another.
+   */
+  copy(imageSequence) {
+    super.copy.call(this, imageSequence);
+
+    for (let i = 0; i < ImageSequence.Properties.length; i++) {
+      const k = ImageSequence.Properties[i];
+      this[k] = imageSequence[k];
+    }
+
+    return this;
+  }
 
   /**
    * @name Two.ImageSequence#play
@@ -275,9 +311,9 @@ export class ImageSequence extends Rectangle {
     });
     object.frameRate = this.frameRate;
     object.index = this.index;
-    object._firstFrame = this._firstFrame;
-    object._lastFrame = this._lastFrame;
-    object._loop = this._loop;
+    object.firstFrame = this.firstFrame;
+    object.lastFrame = this.lastFrame;
+    object.loop = this.loop;
     return object;
   }
 
@@ -431,6 +467,33 @@ const proto = {
 
       // Bind Initial Textures
       bindTextures(this._textures);
+    },
+  },
+  firstFrame: {
+    enumerable: true,
+    get: function () {
+      return this._firstFrame;
+    },
+    set: function (v) {
+      this._firstFrame = v;
+    },
+  },
+  lastFrame: {
+    enumerable: true,
+    get: function () {
+      return this._lastFrame;
+    },
+    set: function (v) {
+      this._lastFrame = v;
+    },
+  },
+  loop: {
+    enumerable: true,
+    get: function () {
+      return this._loop;
+    },
+    set: function (v) {
+      this._loop = !!v;
     },
   },
 };
