@@ -98,7 +98,7 @@ export class Sprite extends Rectangle {
   _lastFrame = 0;
 
   /**
-   * @name Two.Sprite#_playing
+   * @name Two.Sprite#_loop
    * @private
    * @property {Boolean} - Dictates whether the {@link Two.Sprite} should loop or not.
    */
@@ -207,7 +207,45 @@ export class Sprite extends Rectangle {
    * @name Two.Sprite.Properties
    * @property {String[]} - A list of properties that are on every {@link Two.Sprite}.
    */
-  static Properties = ['texture', 'columns', 'rows', 'frameRate', 'index'];
+  static Properties = [
+    'texture',
+    'columns',
+    'rows',
+    'frameRate',
+    'index',
+    'firstFrame',
+    'lastFrame',
+    'loop',
+  ];
+
+  /**
+   * @name Two.Sprite.fromObject
+   * @function
+   * @param {Object} obj - Object notation of a {@link Two.Sprite} to create a new instance
+   * @returns {Two.Sprite}
+   * @description Create a new {@link Two.Sprite} from an object notation of a {@link Two.Sprite}.
+   * @nota-bene Works in conjunction with {@link Two.Sprite#toObject}
+   */
+  static fromObject(obj) {
+    return new Sprite().copy(obj);
+  }
+
+  /**
+   * @name Two.Sprite#copy
+   * @function
+   * @param {Two.Sprite} star - The reference {@link Two.Sprite}
+   * @description Copy the properties of one {@link Two.Sprite} onto another.
+   */
+  copy(sprite) {
+    super.copy.call(this, sprite);
+
+    for (let i = 0; i < Sprite.Properties.length; i++) {
+      const k = Sprite.Properties[i];
+      this[k] = sprite[k];
+    }
+
+    return this;
+  }
 
   /**
    * @name Two.Sprite#play
@@ -284,8 +322,11 @@ export class Sprite extends Rectangle {
 
     if (this.playing) {
       clone.play(this._firstFrame, this._lastFrame);
-      clone._loop = this._loop;
     }
+
+    clone.loop = this.loop;
+    clone.firstFrame = this.firstFrame;
+    clone.lastFrame = this.lastFrame;
 
     if (parent) {
       parent.add(clone);
@@ -307,9 +348,9 @@ export class Sprite extends Rectangle {
     object.rows = this.rows;
     object.frameRate = this.frameRate;
     object.index = this.index;
-    object._firstFrame = this._firstFrame;
-    object._lastFrame = this._lastFrame;
-    object._loop = this._loop;
+    object.firstFrame = this.firstFrame;
+    object.lastFrame = this.lastFrame;
+    object.loop = this.loop;
     return object;
   }
 
@@ -473,6 +514,33 @@ const proto = {
     set: function (v) {
       this._index = v;
       this._flagIndex = true;
+    },
+  },
+  firstFrame: {
+    enumerable: true,
+    get: function () {
+      return this._firstFrame;
+    },
+    set: function (v) {
+      this._firstFrame = v;
+    },
+  },
+  lastFrame: {
+    enumerable: true,
+    get: function () {
+      return this._lastFrame;
+    },
+    set: function (v) {
+      this._lastFrame = v;
+    },
+  },
+  loop: {
+    enumerable: true,
+    get: function () {
+      return this._loop;
+    },
+    set: function (v) {
+      this._loop = !!v;
     },
   },
 };
