@@ -233,7 +233,7 @@ export class Sprite extends Rectangle {
   /**
    * @name Two.Sprite#copy
    * @function
-   * @param {Two.Sprite} star - The reference {@link Two.Sprite}
+   * @param {Two.Sprite} sprite - The reference {@link Two.Sprite}
    * @description Copy the properties of one {@link Two.Sprite} onto another.
    */
   copy(sprite) {
