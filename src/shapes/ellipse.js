@@ -113,7 +113,7 @@ export class Ellipse extends Path {
    * @description Copy the properties of one {@link Two.Ellipse} onto another.
    */
   copy(ellipse) {
-    super.copy.call(ellipse);
+    super.copy.call(this, ellipse);
 
     for (let i = 0; i < Ellipse.Properties.length; i++) {
       const k = Ellipse.Properties[i];

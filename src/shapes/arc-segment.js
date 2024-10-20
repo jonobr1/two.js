@@ -148,7 +148,7 @@ export class ArcSegment extends Path {
    * @description Copy the properties of one {@link Two.ArcSegment} onto another.
    */
   copy(arcSegment) {
-    super.copy.call(arcSegment);
+    super.copy.call(this, arcSegment);
 
     for (let i = 0; i < ArcSegment.Properties.length; i++) {
       const k = ArcSegment.Properties[i];

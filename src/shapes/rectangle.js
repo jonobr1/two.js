@@ -82,7 +82,7 @@ export class Rectangle extends Path {
    * @description Copy the properties of one {@link Two.Rectangle} onto another.
    */
   copy(rectangle) {
-    super.copy.call(rectangle);
+    super.copy.call(this, rectangle);
 
     for (let i = 0; i < Rectangle.Properties.length; i++) {
       const k = Rectangle.Properties[i];

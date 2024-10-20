@@ -115,7 +115,7 @@ export class RadialGradient extends Gradient {
    * @description Copy the properties of one {@link Two.RadialGradient} onto another.
    */
   copy(gradient) {
-    super.copy.call(gradient);
+    super.copy.call(this, gradient);
 
     _.each(
       RadialGradient.Properties,

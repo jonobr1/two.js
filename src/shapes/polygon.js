@@ -137,7 +137,7 @@ export class Polygon extends Path {
    * @description Copy the properties of one {@link Two.Polygon} onto another.
    */
   copy(polygon) {
-    super.copy.call(polygon);
+    super.copy.call(this, polygon);
 
     for (let i = 0; i < Polygon.Properties.length; i++) {
       const k = Polygon.Properties[i];

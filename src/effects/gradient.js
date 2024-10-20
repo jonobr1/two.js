@@ -118,7 +118,7 @@ export class Gradient extends Element {
    * @description Copy the properties of one {@link Two.Gradient} onto another.
    */
   copy(gradient) {
-    super.copy.call(gradient);
+    super.copy.call(this, gradient);
 
     _.each(
       Gradient.Properties,

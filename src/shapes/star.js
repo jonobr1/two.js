@@ -134,7 +134,7 @@ export class Star extends Path {
    * @description Copy the properties of one {@link Two.Star} onto another.
    */
   copy(star) {
-    super.copy.call(star);
+    super.copy.call(this, star);
 
     for (let i = 0; i < Star.Properties.length; i++) {
       const k = Star.Properties[i];

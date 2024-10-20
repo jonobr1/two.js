@@ -88,7 +88,7 @@ export class Circle extends Path {
    * @description Copy the properties of one {@link Two.Circle} onto another.
    */
   copy(circle) {
-    super.copy.call(circle);
+    super.copy.call(this, circle);
 
     for (let i = 0; i < Circle.Properties.length; i++) {
       const k = Circle.Properties[i];

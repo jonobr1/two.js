@@ -88,7 +88,7 @@ export class LinearGradient extends Gradient {
    * @description Copy the properties of one {@link Two.LinearGradient} onto another.
    */
   copy(gradient) {
-    super.copy.call(gradient);
+    super.copy.call(this, gradient);
 
     _.each(
       LinearGradient.Properties,

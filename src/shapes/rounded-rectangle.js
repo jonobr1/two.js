@@ -143,7 +143,7 @@ export class RoundedRectangle extends Path {
    * @description Copy the properties of one {@link Two.RoundedRectangle} onto another.
    */
   copy(roundedRectangle) {
-    super.copy.call(roundedRectangle);
+    super.copy.call(this, roundedRectangle);
 
     for (let i = 0; i < RoundedRectangle.Properties.length; i++) {
       const k = RoundedRectangle.Properties[i];
