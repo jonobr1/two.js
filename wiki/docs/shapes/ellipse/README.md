@@ -72,13 +72,83 @@ A list of properties that are on every [Two.Ellipse](/docs/shapes/ellipse/).
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/ellipse.js#L93">
-    ellipse.js:93
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/ellipse.js#L91">
+    ellipse.js:91
   </a>
 
 </div>
 
 
+
+
+</div>
+
+
+
+<div class="static function ">
+
+## fromObject
+
+<h2 class="longname" aria-hidden="true"><a href="#fromObject"><span class="prefix">Two.Ellipse.</span><span class="shortname">fromObject</span></a></h2>
+
+
+
+
+<div class="returns">
+
+__Returns__: Two.Ellipse
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="params">
+
+| Argument | Description |
+| ---- | ----------- |
+|  obj  | Object notation of a [Two.Ellipse](/docs/shapes/ellipse/) to create a new instance |
+</div>
+
+
+
+
+<div class="description">
+
+Create a new [Two.Ellipse](/docs/shapes/ellipse/) from an object notation of a [Two.Ellipse](/docs/shapes/ellipse/).
+
+</div>
+
+
+
+
+
+<div class="meta">
+
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/ellipse.js#L97">
+    ellipse.js:97
+  </a>
+
+</div>
+
+
+
+<div class="tags">
+
+
+::: tip nota-bene
+Works in conjunction with [Two.Ellipse.toObject](/docs/shapes/ellipse/#toobject)
+:::
+
+
+</div>
 
 
 </div>
@@ -119,8 +189,8 @@ The width of the ellipse.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/ellipse.js#L66">
-    ellipse.js:66
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/ellipse.js#L65">
+    ellipse.js:65
   </a>
 
 </div>
@@ -166,8 +236,60 @@ The height of the ellipse.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/ellipse.js#L74">
-    ellipse.js:74
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/ellipse.js#L73">
+    ellipse.js:73
+  </a>
+
+</div>
+
+
+
+
+</div>
+
+
+
+<div class="instance function ">
+
+## copy
+
+<h2 class="longname" aria-hidden="true"><a href="#copy"><span class="prefix">Two.Ellipse.</span><span class="shortname">copy</span></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="params">
+
+| Argument | Description |
+| ---- | ----------- |
+|  ellipse  | The reference [Two.Ellipse](/docs/shapes/ellipse/) |
+</div>
+
+
+
+
+<div class="description">
+
+Copy the properties of one [Two.Ellipse](/docs/shapes/ellipse/) onto another.
+
+</div>
+
+
+
+
+
+<div class="meta">
+
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/ellipse.js#L109">
+    ellipse.js:109
   </a>
 
 </div>
@@ -226,8 +348,8 @@ Create a new instance of [Two.Ellipse](/docs/shapes/ellipse/) with the same prop
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/ellipse.js#L164">
-    ellipse.js:164
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/ellipse.js#L188">
+    ellipse.js:188
   </a>
 
 </div>
@@ -279,8 +401,8 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/ellipse.js#L201">
-    ellipse.js:201
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/ellipse.js#L223">
+    ellipse.js:223
   </a>
 
 </div>

@@ -71,8 +71,8 @@ A list of properties that are on every [Two.ImageSequence](/docs/effects/image-s
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/image-sequence.js#L172">
-    image-sequence.js:172
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/image-sequence.js#L169">
+    image-sequence.js:169
   </a>
 
 </div>
@@ -131,6 +131,76 @@ default frame rate that [Two.ImageSequence.frameRate](/docs/effects/image-sequen
 
 
 
+<div class="static function ">
+
+## fromObject
+
+<h2 class="longname" aria-hidden="true"><a href="#fromObject"><span class="prefix">Two.ImageSequence.</span><span class="shortname">fromObject</span></a></h2>
+
+
+
+
+<div class="returns">
+
+__Returns__: Two.ImageSequence
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="params">
+
+| Argument | Description |
+| ---- | ----------- |
+|  obj  | Object notation of a [Two.ImageSequence](/docs/effects/image-sequence/) to create a new instance |
+</div>
+
+
+
+
+<div class="description">
+
+Create a new [Two.ImageSequence](/docs/effects/image-sequence/) from an object notation of a [Two.ImageSequence](/docs/effects/image-sequence/).
+
+</div>
+
+
+
+
+
+<div class="meta">
+
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/image-sequence.js#L188">
+    image-sequence.js:188
+  </a>
+
+</div>
+
+
+
+<div class="tags">
+
+
+::: tip nota-bene
+Works in conjunction with [Two.ImageSequence.toObject](/docs/effects/image-sequence/#toobject)
+:::
+
+
+</div>
+
+
+</div>
+
+
+
 <div class="instance member ">
 
 ## textures
@@ -165,8 +235,8 @@ A list of textures to be used as frames for animating the [Two.ImageSequence](/d
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/image-sequence.js#L139">
-    image-sequence.js:139
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/image-sequence.js#L137">
+    image-sequence.js:137
   </a>
 
 </div>
@@ -212,8 +282,8 @@ The number of frames to animate against per second.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/image-sequence.js#L154">
-    image-sequence.js:154
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/image-sequence.js#L152">
+    image-sequence.js:152
   </a>
 
 </div>
@@ -259,8 +329,60 @@ The index of the current tile of the sprite to display. Defaults to `0`.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/image-sequence.js#L164">
-    image-sequence.js:164
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/image-sequence.js#L162">
+    image-sequence.js:162
+  </a>
+
+</div>
+
+
+
+
+</div>
+
+
+
+<div class="instance function ">
+
+## copy
+
+<h2 class="longname" aria-hidden="true"><a href="#copy"><span class="prefix">Two.ImageSequence.</span><span class="shortname">copy</span></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="params">
+
+| Argument | Description |
+| ---- | ----------- |
+|  imageSequence  | The reference [Two.ImageSequence](/docs/effects/image-sequence/) |
+</div>
+
+
+
+
+<div class="description">
+
+Copy the properties of one [Two.ImageSequence](/docs/effects/image-sequence/) onto another.
+
+</div>
+
+
+
+
+
+<div class="meta">
+
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/image-sequence.js#L200">
+    image-sequence.js:200
   </a>
 
 </div>
@@ -313,8 +435,8 @@ Initiate animation playback of a [Two.ImageSequence](/docs/effects/image-sequenc
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/image-sequence.js#L188">
-    image-sequence.js:188
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/image-sequence.js#L217">
+    image-sequence.js:217
   </a>
 
 </div>
@@ -358,8 +480,8 @@ Halt animation playback of a [Two.ImageSequence](/docs/effects/image-sequence/).
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/image-sequence.js#L224">
-    image-sequence.js:224
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/image-sequence.js#L251">
+    image-sequence.js:251
   </a>
 
 </div>
@@ -403,8 +525,8 @@ Halt animation playback of a [Two.ImageSequence](/docs/effects/image-sequence/) 
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/image-sequence.js#L236">
-    image-sequence.js:236
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/image-sequence.js#L261">
+    image-sequence.js:261
   </a>
 
 </div>
@@ -463,8 +585,8 @@ Create a new instance of [Two.ImageSequence](/docs/effects/image-sequence/) with
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/image-sequence.js#L250">
-    image-sequence.js:250
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/image-sequence.js#L273">
+    image-sequence.js:273
   </a>
 
 </div>
@@ -516,8 +638,8 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/image-sequence.js#L276">
-    image-sequence.js:276
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/image-sequence.js#L301">
+    image-sequence.js:301
   </a>
 
 </div>

@@ -29,6 +29,76 @@ The foundational transformation object for the Two.js scenegraph.
 
 
 
+<div class="static function ">
+
+## fromObject
+
+<h2 class="longname" aria-hidden="true"><a href="#fromObject"><span class="prefix">Two.Shape.</span><span class="shortname">fromObject</span></a></h2>
+
+
+
+
+<div class="returns">
+
+__Returns__: Two.Shape
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="params">
+
+| Argument | Description |
+| ---- | ----------- |
+|  obj  | Object notation of a [Two.Shape](/docs/shape/) to create a new instance |
+</div>
+
+
+
+
+<div class="description">
+
+Create a new [Two.Shape](/docs/shape/) from an object notation of a [Two.Shape](/docs/shape/).
+
+</div>
+
+
+
+
+
+<div class="meta">
+
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L144">
+    shape.js:144
+  </a>
+
+</div>
+
+
+
+<div class="tags">
+
+
+::: tip nota-bene
+Works in conjunction with [Two.Shape.toObject](/docs/shape/#toobject)
+:::
+
+
+</div>
+
+
+</div>
+
+
+
 <div class="instance member ">
 
 ## renderer
@@ -69,8 +139,8 @@ Object access to store relevant renderer specific variables. Warning: manipulati
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L89">
-    shape.js:89
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L86">
+    shape.js:86
   </a>
 
 </div>
@@ -82,63 +152,6 @@ Object access to store relevant renderer specific variables. Warning: manipulati
 
 ::: tip nota-bene
 With the [Two.SVGRenderer](/docs/renderers/svg/) you can access the underlying SVG element created via `shape.renderer.elem`.
-:::
-
-
-</div>
-
-
-</div>
-
-
-
-<div class="instance member ">
-
-## id
-
-<h2 class="longname" aria-hidden="true"><a href="#id"><span class="prefix">Two.Shape.</span><span class="shortname">id</span></a></h2>
-
-
-
-
-
-
-
-
-
-
-<div class="properties">
-
-
-Session specific unique identifier.
-
-
-</div>
-
-
-
-
-
-
-
-
-
-
-<div class="meta">
-
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L98">
-    shape.js:98
-  </a>
-
-</div>
-
-
-
-<div class="tags">
-
-
-::: tip nota-bene
-In the [Two.SVGRenderer](/docs/renderers/svg/) change this to change the underlying SVG element's id too.
 :::
 
 
@@ -189,8 +202,8 @@ The transformation matrix of the shape.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L105">
-    shape.js:105
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L95">
+    shape.js:95
   </a>
 
 </div>
@@ -252,8 +265,8 @@ The transformation matrix of the shape in the scene.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L113">
-    shape.js:113
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L103">
+    shape.js:103
   </a>
 
 </div>
@@ -299,8 +312,8 @@ The x and y value for where the shape is placed relative to its parent.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L120">
-    shape.js:120
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L110">
+    shape.js:110
   </a>
 
 </div>
@@ -346,8 +359,8 @@ The value in Number for how much the shape is rotated relative to its parent.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L126">
-    shape.js:126
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L116">
+    shape.js:116
   </a>
 
 </div>
@@ -393,8 +406,8 @@ The value for how much the shape is scaled relative to its parent.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L132">
-    shape.js:132
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L122">
+    shape.js:122
   </a>
 
 </div>
@@ -456,8 +469,8 @@ Skew the shape by an angle in the x axis direction.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L139">
-    shape.js:139
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L129">
+    shape.js:129
   </a>
 
 </div>
@@ -509,8 +522,8 @@ Skew the shape by an angle in the y axis direction.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L146">
-    shape.js:146
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L136">
+    shape.js:136
   </a>
 
 </div>
@@ -554,8 +567,8 @@ Alias for [Two.Shape.position](/docs/shape/#position).
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L162">
-    shape.js:162
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L163">
+    shape.js:163
   </a>
 
 </div>
@@ -606,8 +619,8 @@ Convenience method to add itself to the scenegraph.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L173">
-    shape.js:173
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L174">
+    shape.js:174
   </a>
 
 </div>
@@ -651,8 +664,60 @@ Remove self from the scene / parent.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L184">
-    shape.js:184
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L185">
+    shape.js:185
+  </a>
+
+</div>
+
+
+
+
+</div>
+
+
+
+<div class="instance function ">
+
+## copy
+
+<h2 class="longname" aria-hidden="true"><a href="#copy"><span class="prefix">Two.Shape.</span><span class="shortname">copy</span></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="params">
+
+| Argument | Description |
+| ---- | ----------- |
+|  shape  |  |
+</div>
+
+
+
+
+<div class="description">
+
+Copy the properties of one [Two.Shape](/docs/shape/) onto another.
+
+</div>
+
+
+
+
+
+<div class="meta">
+
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L200">
+    shape.js:200
   </a>
 
 </div>
@@ -711,13 +776,68 @@ Create a new [Two.Shape](/docs/shape/) with the same values as the current shape
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L201">
-    shape.js:201
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L223">
+    shape.js:223
   </a>
 
 </div>
 
 
+
+
+</div>
+
+
+
+<div class="instance function ">
+
+## toObject
+
+<h2 class="longname" aria-hidden="true"><a href="#toObject"><span class="prefix">Two.Shape.</span><span class="shortname">toObject</span></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="description">
+
+Create a JSON compatible object that represents information of the shape.
+
+</div>
+
+
+
+
+
+<div class="meta">
+
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L250">
+    shape.js:250
+  </a>
+
+</div>
+
+
+
+<div class="tags">
+
+
+::: tip nota-bene
+Works in conjunction with [Two.Shape.fromObject](/docs/shape/#fromobject)
+:::
+
+
+</div>
 
 
 </div>
