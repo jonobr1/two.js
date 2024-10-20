@@ -739,7 +739,7 @@ var Constants = {
     canvas: "CanvasRenderer"
   },
   Version: "v0.8.15",
-  PublishDate: "2024-10-05T06:44:01.472Z",
+  PublishDate: "2024-10-20T04:42:31.955Z",
   Identifier: "two-",
   Resolution: 12,
   AutoCalculateImportedMatrices: true,
@@ -1734,7 +1734,7 @@ var _Gradient = class extends Element {
     return clone;
   }
   copy(gradient) {
-    super.copy.call(gradient);
+    super.copy.call(this, gradient);
     _.each(
       _Gradient.Properties,
       (k) => {
@@ -1865,7 +1865,7 @@ var _LinearGradient = class extends Gradient {
     return new _LinearGradient().copy(obj);
   }
   copy(gradient) {
-    super.copy.call(gradient);
+    super.copy.call(this, gradient);
     _.each(
       _LinearGradient.Properties,
       (k) => {
@@ -1992,7 +1992,7 @@ var _RadialGradient = class extends Gradient {
     return new _RadialGradient().copy(obj);
   }
   copy(gradient) {
-    super.copy.call(gradient);
+    super.copy.call(this, gradient);
     _.each(
       _RadialGradient.Properties,
       (k) => {
@@ -3574,7 +3574,7 @@ var _ArcSegment = class extends Path {
     return new _ArcSegment().copy(obj);
   }
   copy(arcSegment) {
-    super.copy.call(arcSegment);
+    super.copy.call(this, arcSegment);
     for (let i = 0; i < _ArcSegment.Properties.length; i++) {
       const k = _ArcSegment.Properties[i];
       if (k in arcSegment) {
@@ -3801,7 +3801,7 @@ var _Circle = class extends Path {
     return new _Circle().copy(obj);
   }
   copy(circle) {
-    super.copy.call(circle);
+    super.copy.call(this, circle);
     for (let i = 0; i < _Circle.Properties.length; i++) {
       const k = _Circle.Properties[i];
       if (k in circle) {
@@ -3925,7 +3925,7 @@ var _Ellipse = class extends Path {
     return new _Ellipse().copy(obj);
   }
   copy(ellipse) {
-    super.copy.call(ellipse);
+    super.copy.call(this, ellipse);
     for (let i = 0; i < _Ellipse.Properties.length; i++) {
       const k = _Ellipse.Properties[i];
       if (k in ellipse) {
@@ -4384,7 +4384,7 @@ var _Polygon = class extends Path {
     return new _Polygon().copy(obj);
   }
   copy(polygon) {
-    super.copy.call(polygon);
+    super.copy.call(this, polygon);
     for (let i = 0; i < _Polygon.Properties.length; i++) {
       const k = _Polygon.Properties[i];
       if (k in polygon) {
@@ -4534,7 +4534,7 @@ var _Rectangle = class extends Path {
     return new _Rectangle().copy(obj);
   }
   copy(rectangle) {
-    super.copy.call(rectangle);
+    super.copy.call(this, rectangle);
     for (let i = 0; i < _Rectangle.Properties.length; i++) {
       const k = _Rectangle.Properties[i];
       if (k in rectangle) {
@@ -4678,7 +4678,7 @@ var _RoundedRectangle = class extends Path {
     return new _RoundedRectangle().copy(obj);
   }
   copy(roundedRectangle) {
-    super.copy.call(roundedRectangle);
+    super.copy.call(this, roundedRectangle);
     for (let i = 0; i < _RoundedRectangle.Properties.length; i++) {
       const k = _RoundedRectangle.Properties[i];
       if (k in roundedRectangle) {
@@ -4881,7 +4881,7 @@ var _Star = class extends Path {
     return new _Star().copy(obj);
   }
   copy(star) {
-    super.copy.call(star);
+    super.copy.call(this, star);
     for (let i = 0; i < _Star.Properties.length; i++) {
       const k = _Star.Properties[i];
       if (k in star) {
@@ -6997,6 +6997,17 @@ var _Sprite = class extends Rectangle {
     }
     this.index = 0;
   }
+  static fromObject(obj) {
+    return new _Sprite().copy(obj);
+  }
+  copy(sprite) {
+    super.copy.call(this, sprite);
+    for (let i = 0; i < _Sprite.Properties.length; i++) {
+      const k = _Sprite.Properties[i];
+      this[k] = sprite[k];
+    }
+    return this;
+  }
   play(firstFrame, lastFrame, onLastFrame) {
     this._playing = true;
     this._firstFrame = 0;
@@ -7038,8 +7049,10 @@ var _Sprite = class extends Rectangle {
     );
     if (this.playing) {
       clone.play(this._firstFrame, this._lastFrame);
-      clone._loop = this._loop;
     }
+    clone.loop = this.loop;
+    clone.firstFrame = this.firstFrame;
+    clone.lastFrame = this.lastFrame;
     if (parent) {
       parent.add(clone);
     }
@@ -7052,9 +7065,9 @@ var _Sprite = class extends Rectangle {
     object.rows = this.rows;
     object.frameRate = this.frameRate;
     object.index = this.index;
-    object._firstFrame = this._firstFrame;
-    object._lastFrame = this._lastFrame;
-    object._loop = this._loop;
+    object.firstFrame = this.firstFrame;
+    object.lastFrame = this.lastFrame;
+    object.loop = this.loop;
     return object;
   }
   _update() {
@@ -7128,7 +7141,16 @@ var _Sprite = class extends Rectangle {
   }
 };
 var Sprite = _Sprite;
-__publicField(Sprite, "Properties", ["texture", "columns", "rows", "frameRate", "index"]);
+__publicField(Sprite, "Properties", [
+  "texture",
+  "columns",
+  "rows",
+  "frameRate",
+  "index",
+  "firstFrame",
+  "lastFrame",
+  "loop"
+]);
 var proto21 = {
   texture: {
     enumerable: true,
@@ -7178,6 +7200,33 @@ var proto21 = {
     set: function(v) {
       this._index = v;
       this._flagIndex = true;
+    }
+  },
+  firstFrame: {
+    enumerable: true,
+    get: function() {
+      return this._firstFrame;
+    },
+    set: function(v) {
+      this._firstFrame = v;
+    }
+  },
+  lastFrame: {
+    enumerable: true,
+    get: function() {
+      return this._lastFrame;
+    },
+    set: function(v) {
+      this._lastFrame = v;
+    }
+  },
+  loop: {
+    enumerable: true,
+    get: function() {
+      return this._loop;
+    },
+    set: function(v) {
+      this._loop = !!v;
     }
   }
 };
@@ -8274,6 +8323,17 @@ var _ImageSequence = class extends Rectangle {
     }
     this.index = 0;
   }
+  static fromObject(obj) {
+    return new _ImageSequence().copy(obj);
+  }
+  copy(imageSequence) {
+    super.copy.call(this, imageSequence);
+    for (let i = 0; i < _ImageSequence.Properties.length; i++) {
+      const k = _ImageSequence.Properties[i];
+      this[k] = imageSequence[k];
+    }
+    return this;
+  }
   play(firstFrame, lastFrame, onLastFrame) {
     this._playing = true;
     this._firstFrame = 0;
@@ -8327,9 +8387,9 @@ var _ImageSequence = class extends Rectangle {
     });
     object.frameRate = this.frameRate;
     object.index = this.index;
-    object._firstFrame = this._firstFrame;
-    object._lastFrame = this._lastFrame;
-    object._loop = this._loop;
+    object.firstFrame = this.firstFrame;
+    object.lastFrame = this.lastFrame;
+    object.loop = this.loop;
     return object;
   }
   _update() {
@@ -8401,7 +8461,14 @@ var _ImageSequence = class extends Rectangle {
   }
 };
 var ImageSequence = _ImageSequence;
-__publicField(ImageSequence, "Properties", ["textures", "frameRate", "index"]);
+__publicField(ImageSequence, "Properties", [
+  "textures",
+  "frameRate",
+  "index",
+  "firstFrame",
+  "lastFrame",
+  "loop"
+]);
 __publicField(ImageSequence, "DefaultFrameRate", 30);
 var proto23 = {
   frameRate: {
@@ -8438,6 +8505,33 @@ var proto23 = {
       this._textures = new Collection((textures || []).slice(0));
       this._textures.bind(Events.Types.insert, bindTextures).bind(Events.Types.remove, unbindTextures);
       bindTextures(this._textures);
+    }
+  },
+  firstFrame: {
+    enumerable: true,
+    get: function() {
+      return this._firstFrame;
+    },
+    set: function(v) {
+      this._firstFrame = v;
+    }
+  },
+  lastFrame: {
+    enumerable: true,
+    get: function() {
+      return this._lastFrame;
+    },
+    set: function(v) {
+      this._lastFrame = v;
+    }
+  },
+  loop: {
+    enumerable: true,
+    get: function() {
+      return this._loop;
+    },
+    set: function(v) {
+      this._loop = !!v;
     }
   }
 };
