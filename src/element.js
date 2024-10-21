@@ -93,7 +93,7 @@ export class Element extends Events {
 
   toObject() {
     return {
-      renderer: { type: 'element' },
+      renderer: { type: this.renderer.type },
       id: this.id,
       className: this.className,
     };
