@@ -126,15 +126,12 @@ export class Gradient extends Element {
   copy(gradient) {
     super.copy.call(this, gradient);
 
-    _.each(
-      Gradient.Properties,
-      (k) => {
-        if (k in gradient) {
-          this[k] = gradient[k];
-        }
-      },
-      this
-    );
+    for (let i = 0; i < Gradient.Properties.length; i++) {
+      const k = Gradient.Properties[i];
+      if (k in gradient) {
+        this[k] = gradient[k];
+      }
+    }
 
     return this;
   }

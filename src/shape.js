@@ -212,13 +212,30 @@ export class Shape extends Element {
   copy(shape) {
     super.copy.call(this, shape);
 
-    this.position.copy(shape.position);
-    this.rotation = shape.rotation;
-    this.scale = shape.scale;
-    this.skewX = shape.skewX;
-    this.skewY = shape.skewY;
+    if ('position' in shape) {
+      if (shape.position instanceof Vector) {
+        this.position = shape.position;
+      } else {
+        this.position.copy(shape.position);
+      }
+    }
+    if ('rotation' in shape) {
+      this.rotation = shape.rotation;
+    }
+    if ('scale' in shape) {
+      this.scale =
+        typeof shape.scale === 'number' || shape.scale instanceof Vector
+          ? shape.scale
+          : new Vector(shape.scale.x, shape.scale.y);
+    }
+    if ('skewX' in shape) {
+      this.skewX = shape.skewX;
+    }
+    if ('skewY' in shape) {
+      this.skewY = shape.skewY;
+    }
 
-    if (shape.matrix.manual) {
+    if ('matrix' in shape && shape.matrix.manual) {
       this.matrix.copy(shape.matrix);
       this.matrix.manual = true;
     }

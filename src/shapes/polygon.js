@@ -147,7 +147,7 @@ export class Polygon extends Path {
 
     for (let i = 0; i < Polygon.Properties.length; i++) {
       const k = Polygon.Properties[i];
-      if (k in polygon) {
+      if (k in polygon && typeof polygon[k] === 'number') {
         this[k] = polygon[k];
       }
     }

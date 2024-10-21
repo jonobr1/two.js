@@ -214,7 +214,9 @@ export class ImageSequence extends Rectangle {
 
     for (let i = 0; i < ImageSequence.Properties.length; i++) {
       const k = ImageSequence.Properties[i];
-      this[k] = imageSequence[k];
+      if (k in imageSequence) {
+        this[k] = imageSequence[k];
+      }
     }
 
     return this;

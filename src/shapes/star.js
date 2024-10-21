@@ -144,7 +144,7 @@ export class Star extends Path {
 
     for (let i = 0; i < Star.Properties.length; i++) {
       const k = Star.Properties[i];
-      if (k in star) {
+      if (k in star && typeof star[k] === 'number') {
         this[k] = star[k];
       }
     }

@@ -412,8 +412,10 @@ export class Text extends Shape {
     super.copy.call(this, text);
 
     for (let i = 0; i < Text.Properties.length; i++) {
-      const prop = Text.Properties[i];
-      this[prop] = text[prop];
+      const k = Text.Properties[i];
+      if (k in text) {
+        this[k] = text[k];
+      }
     }
 
     return this;

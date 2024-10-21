@@ -92,7 +92,7 @@ export class Rectangle extends Path {
 
     for (let i = 0; i < Rectangle.Properties.length; i++) {
       const k = Rectangle.Properties[i];
-      if (k in rectangle) {
+      if (k in rectangle && typeof rectangle[k] === 'number') {
         this[k] = rectangle[k];
       }
     }

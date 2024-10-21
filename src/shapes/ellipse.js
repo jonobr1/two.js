@@ -123,7 +123,7 @@ export class Ellipse extends Path {
 
     for (let i = 0; i < Ellipse.Properties.length; i++) {
       const k = Ellipse.Properties[i];
-      if (k in ellipse) {
+      if (k in ellipse && typeof ellipse[k] === 'number') {
         this[k] = ellipse[k];
       }
     }

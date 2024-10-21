@@ -247,7 +247,9 @@ export class Sprite extends Rectangle {
 
     for (let i = 0; i < Sprite.Properties.length; i++) {
       const k = Sprite.Properties[i];
-      this[k] = sprite[k];
+      if (k in sprite) {
+        this[k] = sprite[k];
+      }
     }
 
     return this;

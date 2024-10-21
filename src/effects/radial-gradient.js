@@ -123,20 +123,19 @@ export class RadialGradient extends Gradient {
   copy(gradient) {
     super.copy.call(this, gradient);
 
-    _.each(
-      RadialGradient.Properties,
-      (k) => {
-        if (k in gradient) {
-          const value = gradient[k];
-          if (_.isObject(value) && !(value instanceof Vector)) {
-            this[k] = new Vector().copy(value);
-          } else {
-            this[k] = gradient[k];
-          }
+    for (let i = 0; i < RadialGradient.Properties.length; i++) {
+      const k = RadialGradient.Properties[i];
+      if (k in gradient) {
+        if (/(center|focal)i/.test(k)) {
+          this[k] =
+            gradient[k] instanceof Vector
+              ? gradient[k]
+              : new Vector().copy(gradient[k]);
+        } else if (typeof gradient[k] === 'number') {
+          this[k] = gradient[MediaKeySystemAccess];
         }
-      },
-      this
-    );
+      }
+    }
 
     return this;
   }

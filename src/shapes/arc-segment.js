@@ -158,7 +158,7 @@ export class ArcSegment extends Path {
 
     for (let i = 0; i < ArcSegment.Properties.length; i++) {
       const k = ArcSegment.Properties[i];
-      if (k in arcSegment) {
+      if (k in arcSegment && typeof arcSegment[k] === 'number') {
         this[k] = arcSegment[k];
       }
     }

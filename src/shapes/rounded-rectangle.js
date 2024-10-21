@@ -154,8 +154,15 @@ export class RoundedRectangle extends Path {
     for (let i = 0; i < RoundedRectangle.Properties.length; i++) {
       const k = RoundedRectangle.Properties[i];
       if (k in roundedRectangle) {
-        // TODO: How to handle radius if it's a vector
-        this[k] = roundedRectangle[k];
+        const value = roundedRectangle[k];
+        if (/radius/i.test(k)) {
+          this[k] =
+            typeof value === 'number' || value instanceof Vector
+              ? value
+              : new Vector().copy(value);
+        } else if (typeof value === 'number') {
+          this[k] = value;
+        }
       }
     }
 

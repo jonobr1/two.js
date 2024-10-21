@@ -98,7 +98,7 @@ export class Circle extends Path {
 
     for (let i = 0; i < Circle.Properties.length; i++) {
       const k = Circle.Properties[i];
-      if (k in circle) {
+      if (k in circle && typeof circle[k] === 'number') {
         this[k] = circle[k];
       }
     }

@@ -96,18 +96,15 @@ export class LinearGradient extends Gradient {
   copy(gradient) {
     super.copy.call(this, gradient);
 
-    _.each(
-      LinearGradient.Properties,
-      (k) => {
-        if (k in gradient) {
-          this[k] =
-            gradient[k] instanceof Vector
-              ? gradient[k]
-              : new Vector().copy(gradient[k]);
-        }
-      },
-      this
-    );
+    for (let i = 0; i < LinearGradient.Properties.length; i++) {
+      const k = LinearGradient.Properties[i];
+      if (k in gradient) {
+        this[k] =
+          gradient[k] instanceof Vector
+            ? gradient[k]
+            : new Vector().copy(gradient[k]);
+      }
+    }
 
     return this;
   }
