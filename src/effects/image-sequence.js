@@ -194,7 +194,13 @@ export class ImageSequence extends Rectangle {
    * @nota-bene Works in conjunction with {@link Two.ImageSequence#toObject}
    */
   static fromObject(obj) {
-    return new ImageSequence().copy(obj);
+    const sequence = new ImageSequence().copy(obj);
+
+    if ('id' in obj) {
+      sequence.id = obj.id;
+    }
+
+    return sequence;
   }
 
   /**

@@ -150,7 +150,13 @@ export class Shape extends Element {
    * @nota-bene Works in conjunction with {@link Two.Shape#toObject}
    */
   static fromObject(obj) {
-    return new Shape().copy(obj);
+    const shape = new Shape().copy(obj);
+
+    if ('id' in obj) {
+      shape.id = obj.id;
+    }
+
+    return shape;
   }
 
   get renderer() {

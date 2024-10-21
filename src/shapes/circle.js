@@ -78,7 +78,13 @@ export class Circle extends Path {
    * @nota-bene Works in conjunction with {@link Two.Circle#toObject}
    */
   static fromObject(obj) {
-    return new Circle().copy(obj);
+    const circle = new Circle().copy(obj);
+
+    if ('id' in obj) {
+      circle.id = obj.id;
+    }
+
+    return circle;
   }
 
   /**

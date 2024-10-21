@@ -393,7 +393,13 @@ export class Text extends Shape {
       typeof obj.stroke === 'string'
         ? obj.stroke
         : getEffectFromObject(obj.stroke);
-    return new Text().copy({ ...obj, fill, stroke });
+    const text = new Text().copy({ ...obj, fill, stroke });
+
+    if ('id' in obj) {
+      text.id = obj.id;
+    }
+
+    return text;
   }
 
   /**

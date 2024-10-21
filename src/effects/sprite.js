@@ -227,7 +227,13 @@ export class Sprite extends Rectangle {
    * @nota-bene Works in conjunction with {@link Two.Sprite#toObject}
    */
   static fromObject(obj) {
-    return new Sprite().copy(obj);
+    const sprite = new Sprite().copy(obj);
+
+    if ('id' in obj) {
+      sprite.id = obj.id;
+    }
+
+    return sprite;
   }
 
   /**

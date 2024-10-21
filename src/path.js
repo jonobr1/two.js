@@ -428,7 +428,13 @@ export class Path extends Shape {
       typeof obj.stroke === 'string'
         ? obj.stroke
         : getEffectFromObject(obj.stroke);
-    return new Path().copy({ ...obj, fill, stroke });
+    const path = new Path().copy({ ...obj, fill, stroke });
+
+    if ('id' in obj) {
+      path.id = obj.id;
+    }
+
+    return path;
   }
 
   /**

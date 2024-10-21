@@ -124,7 +124,13 @@ export class Star extends Path {
    * @nota-bene Works in conjunction with {@link Two.Star#toObject}
    */
   static fromObject(obj) {
-    return new Star().copy(obj);
+    const star = new Star().copy(obj);
+
+    if ('id' in obj) {
+      star.id = obj.id;
+    }
+
+    return star;
   }
 
   /**

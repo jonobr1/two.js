@@ -105,7 +105,13 @@ export class RadialGradient extends Gradient {
    * @nota-bene Works in conjunction with {@link Two.RadialGradient#toObject}
    */
   static fromObject(obj) {
-    return new RadialGradient().copy(obj);
+    const gradient = new RadialGradient().copy(obj);
+
+    if ('id' in obj) {
+      gradient.id = obj.id;
+    }
+
+    return gradient;
   }
 
   /**

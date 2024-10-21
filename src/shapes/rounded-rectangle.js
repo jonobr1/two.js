@@ -133,7 +133,13 @@ export class RoundedRectangle extends Path {
    * @nota-bene Works in conjunction with {@link Two.RoundedRectangle#toObject}
    */
   static fromObject(obj) {
-    return new RoundedRectangle().copy(obj);
+    const rectangle = new RoundedRectangle().copy(obj);
+
+    if ('id' in obj) {
+      rectangle.id = obj.id;
+    }
+
+    return rectangle;
   }
 
   /**

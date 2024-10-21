@@ -127,7 +127,13 @@ export class Polygon extends Path {
    * @nota-bene Works in conjunction with {@link Two.Polygon#toObject}
    */
   static fromObject(obj) {
-    return new Polygon().copy(obj);
+    const polygon = new Polygon().copy(obj);
+
+    if ('id' in obj) {
+      polygon.id = obj.id;
+    }
+
+    return polygon;
   }
 
   /**

@@ -164,7 +164,13 @@ export class Points extends Shape {
       typeof obj.stroke === 'string'
         ? obj.stroke
         : getEffectFromObject(obj.stroke);
-    return new Points().copy({ ...obj, fill, stroke });
+    const points = new Points().copy({ ...obj, fill, stroke });
+
+    if ('id' in obj) {
+      points.id = obj.id;
+    }
+
+    return points;
   }
 
   /**

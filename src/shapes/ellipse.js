@@ -103,7 +103,13 @@ export class Ellipse extends Path {
    * @nota-bene Works in conjunction with {@link Two.Ellipse#toObject}
    */
   static fromObject(obj) {
-    return new Ellipse().copy(obj);
+    const ellipse = new Ellipse().copy(obj);
+
+    if ('id' in obj) {
+      ellipse.id = obj.id;
+    }
+
+    return ellipse;
   }
 
   /**

@@ -106,7 +106,13 @@ export class Stop extends Element {
    * @nota-bene Works in conjunction with {@link Two.Stop#toObject}
    */
   static fromObject(obj) {
-    return new Stop().copy(obj);
+    const stop = new Stop().copy(obj);
+
+    if ('id' in obj) {
+      stop.id = obj.id;
+    }
+
+    return stop;
   }
 
   /**

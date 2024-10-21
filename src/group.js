@@ -290,16 +290,19 @@ export class Group extends Shape {
       const k = Group.Properties[i];
       if (k in obj) {
         if (/(fill|stroke)/i.test(k)) {
-          this[k] =
+          group[k] =
             typeof obj[k] === 'string' ? obj[k] : getEffectFromObject(obj[k]);
         } else {
-          this[k] = obj[k];
+          group[k] = obj[k];
         }
       }
     }
 
     if ('mask' in obj) {
-      this.mask = getShapeFromObject(obj.mask);
+      group.mask = getShapeFromObject(obj.mask);
+    }
+    if ('id' in obj) {
+      group.id = obj.id;
     }
 
     group.children = obj.children.map(getShapeFromObject);

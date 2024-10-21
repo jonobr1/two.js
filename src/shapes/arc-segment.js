@@ -138,7 +138,13 @@ export class ArcSegment extends Path {
    * @nota-bene Works in conjunction with {@link Two.ArcSegment#toObject}
    */
   static fromObject(obj) {
-    return new ArcSegment().copy(obj);
+    const segment = new ArcSegment().copy(obj);
+
+    if ('id' in obj) {
+      segment.id = obj.id;
+    }
+
+    return segment;
   }
 
   /**

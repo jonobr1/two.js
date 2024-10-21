@@ -72,7 +72,13 @@ export class Rectangle extends Path {
    * @nota-bene Works in conjunction with {@link Two.Rectangle#toObject}
    */
   static fromObject(obj) {
-    return new Rectangle().copy(obj);
+    const rectangle = new Rectangle().copy(obj);
+
+    if ('id' in obj) {
+      rectangle.id = obj.id;
+    }
+
+    return rectangle;
   }
 
   /**

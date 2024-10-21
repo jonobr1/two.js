@@ -78,7 +78,13 @@ export class LinearGradient extends Gradient {
    * @nota-bene Works in conjunction with {@link Two.LinearGradient#toObject}
    */
   static fromObject(obj) {
-    return new LinearGradient().copy(obj);
+    const gradient = new LinearGradient().copy(obj);
+
+    if ('id' in obj) {
+      gradient.id = obj.id;
+    }
+
+    return gradient;
   }
 
   /**

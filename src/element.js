@@ -67,7 +67,11 @@ export class Element extends Events {
    * @nota-bene Works in conjunction with {@link Two.Element#toObject}
    */
   static fromObject(obj) {
-    return new Element().copy(obj);
+    const elem = new Element().copy(obj);
+    if ('id' in obj) {
+      elem.id = obj.id;
+    }
+    return elem;
   }
 
   /**

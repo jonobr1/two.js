@@ -202,7 +202,13 @@ export class Texture extends Element {
    * @nota-bene Works in conjunction with {@link Two.Texture#toObject}
    */
   fromObject(obj) {
-    return new Texture().copy(obj);
+    const texture = new Texture().copy(obj);
+
+    if ('id' in obj) {
+      texture.id = obj.id;
+    }
+
+    return texture;
   }
 
   /**
