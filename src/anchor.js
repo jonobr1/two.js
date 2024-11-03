@@ -1,6 +1,7 @@
 import { Commands } from './utils/path-commands.js';
 import { Events } from './events.js';
 import { Vector } from './vector.js';
+import { toFixed } from './utils/math.js';
 
 /**
  * @class
@@ -143,19 +144,19 @@ export class Anchor extends Vector {
    */
   toObject() {
     return {
-      x: this.x,
-      y: this.y,
+      x: toFixed(this.x),
+      y: toFixed(this.y),
       command: this.command,
       relative: this.relative,
       controls: {
         left: this.controls.left.toObject(),
         right: this.controls.right.toObject(),
       },
-      rx: this.rx,
-      ry: this.ry,
-      xAxisRotation: this.xAxisRotation,
-      largeArcFlag: this.largeArcFlag,
-      sweepFlag: this.sweepFlag,
+      rx: toFixed(this.rx),
+      ry: toFixed(this.ry),
+      xAxisRotation: toFixed(this.xAxisRotation),
+      largeArcFlag: toFixed(this.largeArcFlag),
+      sweepFlag: toFixed(this.sweepFlag),
     };
   }
 

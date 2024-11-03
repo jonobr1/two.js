@@ -446,8 +446,15 @@ export class Path extends Shape {
   copy(path) {
     super.copy.call(this, path);
 
+    this.vertices = [];
+
     for (let j = 0; j < path.vertices.length; j++) {
-      this.vertices.push(path.vertices[j].clone());
+      const v = path.vertices[j];
+      if (v instanceof Anchor) {
+        this.vertices.push(path.vertices[j].clone());
+      } else {
+        this.vertices.push(new Anchor().copy(v));
+      }
     }
 
     for (let i = 0; i < Path.Properties.length; i++) {

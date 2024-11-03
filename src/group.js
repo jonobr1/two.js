@@ -311,37 +311,46 @@ export class Group extends Shape {
 
     function getShapeFromObject(child) {
       // All of the types of children Two.Group supports
-      switch (child.renderer.type) {
-        case 'arc-segment':
-          return ArcSegment.fromObject(child);
-        case 'circle':
-          return Circle.fromObject(child);
-        case 'ellipse':
-          return Ellipse.fromObject(child);
-        case 'points':
-          return Points.fromObject(child);
-        case 'polygon':
-          return Polygon.fromObject(child);
-        case 'rectangle':
-          return Rectangle.fromObject(child);
-        case 'rounded-rectangle':
-          return RoundedRectangle.fromObject(child);
-        case 'star':
-          return Star.fromObject(child);
-        case 'path':
-          return Path.fromObject(child);
-        case 'text':
-          return Text.fromObject(child);
-        case 'group':
-          return Group.fromObject(child);
-        case 'shape':
-          return Shape.fromObject(child);
-        case 'element':
-          return Element.fromObject(child);
+      if (child && child.renderer) {
+        switch (child.renderer.type) {
+          case 'arc-segment':
+            return ArcSegment.fromObject(child);
+          case 'circle':
+            return Circle.fromObject(child);
+          case 'ellipse':
+            return Ellipse.fromObject(child);
+          case 'points':
+            return Points.fromObject(child);
+          case 'polygon':
+            return Polygon.fromObject(child);
+          case 'rectangle':
+            return Rectangle.fromObject(child);
+          case 'rounded-rectangle':
+            return RoundedRectangle.fromObject(child);
+          case 'star':
+            return Star.fromObject(child);
+          case 'path':
+            return Path.fromObject(child);
+          case 'text':
+            return Text.fromObject(child);
+          case 'group':
+            return Group.fromObject(child);
+          case 'shape':
+            return Shape.fromObject(child);
+          case 'element':
+            return Element.fromObject(child);
+        }
       }
-
+      // Commonly null for empty set
+      // properties like fill and stroke
       return child;
     }
+  }
+
+  copy(group) {
+    super.copy.call(this, group);
+    console.warn('Two.Group.copy is not supported yet.');
+    return this;
   }
 
   /**

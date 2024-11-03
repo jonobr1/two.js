@@ -519,7 +519,7 @@ var Two = (() => {
       return this.x + ", " + this.y;
     }
     toObject() {
-      return { x: this.x, y: this.y };
+      return { x: toFixed(this.x), y: toFixed(this.y) };
     }
     rotate(radians) {
       const x = this.x;
@@ -612,19 +612,19 @@ var Two = (() => {
     }
     toObject() {
       return {
-        x: this.x,
-        y: this.y,
+        x: toFixed(this.x),
+        y: toFixed(this.y),
         command: this.command,
         relative: this.relative,
         controls: {
           left: this.controls.left.toObject(),
           right: this.controls.right.toObject()
         },
-        rx: this.rx,
-        ry: this.ry,
-        xAxisRotation: this.xAxisRotation,
-        largeArcFlag: this.largeArcFlag,
-        sweepFlag: this.sweepFlag
+        rx: toFixed(this.rx),
+        ry: toFixed(this.ry),
+        xAxisRotation: toFixed(this.xAxisRotation),
+        largeArcFlag: toFixed(this.largeArcFlag),
+        sweepFlag: toFixed(this.sweepFlag)
       };
     }
     toString() {
@@ -741,7 +741,7 @@ var Two = (() => {
       canvas: "CanvasRenderer"
     },
     Version: "v0.8.15",
-    PublishDate: "2024-10-20T04:42:31.955Z",
+    PublishDate: "2024-11-03T06:45:52.617Z",
     Identifier: "two-",
     Resolution: 12,
     AutoCalculateImportedMatrices: true,
@@ -1045,7 +1045,11 @@ var Two = (() => {
       }
     }
     static fromObject(obj) {
-      return new Element().copy(obj);
+      const elem = new Element().copy(obj);
+      if ("id" in obj) {
+        elem.id = obj.id;
+      }
+      return elem;
     }
     flagReset() {
       this._flagId = this._flagClassName = false;
@@ -1057,7 +1061,7 @@ var Two = (() => {
     }
     toObject() {
       return {
-        renderer: { type: "element" },
+        renderer: { type: this.renderer.type },
         id: this.id,
         className: this.className
       };
@@ -1189,7 +1193,11 @@ var Two = (() => {
       this._update();
     }
     fromObject(obj) {
-      return new _Texture().copy(obj);
+      const texture = new _Texture().copy(obj);
+      if ("id" in obj) {
+        texture.id = obj.id;
+      }
+      return texture;
     }
     static getAbsoluteURL(path) {
       if (!anchor) {
@@ -1600,7 +1608,11 @@ var Two = (() => {
       _Stop.Index = (_Stop.Index + 1) % 2;
     }
     static fromObject(obj) {
-      return new _Stop().copy(obj);
+      const stop = new _Stop().copy(obj);
+      if ("id" in obj) {
+        stop.id = obj.id;
+      }
+      return stop;
     }
     copy(stop) {
       super.copy.call(this, stop);
@@ -1716,7 +1728,11 @@ var Two = (() => {
       if (stops && stops.length > 0) {
         stops = stops.map((o) => o instanceof Stop ? o : new Stop().copy(o));
       }
-      return new _Gradient().copy(obj);
+      const gradient = new _Gradient().copy(obj);
+      if ("id" in obj) {
+        gradient.id = obj.id;
+      }
+      return gradient;
     }
     clone(parent) {
       const stops = this.stops.map((s) => {
@@ -1737,15 +1753,12 @@ var Two = (() => {
     }
     copy(gradient) {
       super.copy.call(this, gradient);
-      _.each(
-        _Gradient.Properties,
-        (k) => {
-          if (k in gradient) {
-            this[k] = gradient[k];
-          }
-        },
-        this
-      );
+      for (let i = 0; i < _Gradient.Properties.length; i++) {
+        const k = _Gradient.Properties[i];
+        if (k in gradient) {
+          this[k] = gradient[k];
+        }
+      }
       return this;
     }
     toObject() {
@@ -1864,19 +1877,20 @@ var Two = (() => {
       }
     }
     static fromObject(obj) {
-      return new _LinearGradient().copy(obj);
+      const gradient = new _LinearGradient().copy(obj);
+      if ("id" in obj) {
+        gradient.id = obj.id;
+      }
+      return gradient;
     }
     copy(gradient) {
       super.copy.call(this, gradient);
-      _.each(
-        _LinearGradient.Properties,
-        (k) => {
-          if (k in gradient) {
-            this[k] = gradient[k] instanceof Vector ? gradient[k] : new Vector().copy(gradient[k]);
-          }
-        },
-        this
-      );
+      for (let i = 0; i < _LinearGradient.Properties.length; i++) {
+        const k = _LinearGradient.Properties[i];
+        if (k in gradient) {
+          this[k] = gradient[k] instanceof Vector ? gradient[k] : new Vector().copy(gradient[k]);
+        }
+      }
       return this;
     }
     clone(parent) {
@@ -1991,24 +2005,24 @@ var Two = (() => {
       }
     }
     static fromObject(obj) {
-      return new _RadialGradient().copy(obj);
+      const gradient = new _RadialGradient().copy(obj);
+      if ("id" in obj) {
+        gradient.id = obj.id;
+      }
+      return gradient;
     }
     copy(gradient) {
       super.copy.call(this, gradient);
-      _.each(
-        _RadialGradient.Properties,
-        (k) => {
-          if (k in gradient) {
-            const value = gradient[k];
-            if (_.isObject(value) && !(value instanceof Vector)) {
-              this[k] = new Vector().copy(value);
-            } else {
-              this[k] = gradient[k];
-            }
+      for (let i = 0; i < _RadialGradient.Properties.length; i++) {
+        const k = _RadialGradient.Properties[i];
+        if (k in gradient) {
+          if (/(center|focal)i/.test(k)) {
+            this[k] = gradient[k] instanceof Vector ? gradient[k] : new Vector().copy(gradient[k]);
+          } else if (typeof gradient[k] === "number") {
+            this[k] = gradient[MediaKeySystemAccess];
           }
-        },
-        this
-      );
+        }
+      }
       return this;
     }
     clone(parent) {
@@ -2523,7 +2537,11 @@ var Two = (() => {
       this.skewY = 0;
     }
     static fromObject(obj) {
-      return new Shape().copy(obj);
+      const shape = new Shape().copy(obj);
+      if ("id" in obj) {
+        shape.id = obj.id;
+      }
+      return shape;
     }
     get renderer() {
       return this._renderer;
@@ -2550,12 +2568,26 @@ var Two = (() => {
     }
     copy(shape) {
       super.copy.call(this, shape);
-      this.position.copy(shape.position);
-      this.rotation = shape.rotation;
-      this.scale = shape.scale;
-      this.skewX = shape.skewX;
-      this.skewY = shape.skewY;
-      if (shape.matrix.manual) {
+      if ("position" in shape) {
+        if (shape.position instanceof Vector) {
+          this.position = shape.position;
+        } else {
+          this.position.copy(shape.position);
+        }
+      }
+      if ("rotation" in shape) {
+        this.rotation = shape.rotation;
+      }
+      if ("scale" in shape) {
+        this.scale = typeof shape.scale === "number" || shape.scale instanceof Vector ? shape.scale : new Vector(shape.scale.x, shape.scale.y);
+      }
+      if ("skewX" in shape) {
+        this.skewX = shape.skewX;
+      }
+      if ("skewY" in shape) {
+        this.skewY = shape.skewY;
+      }
+      if ("matrix" in shape && shape.matrix.manual) {
         this.matrix.copy(shape.matrix);
         this.matrix.manual = true;
       }
@@ -2797,12 +2829,22 @@ var Two = (() => {
     static fromObject(obj) {
       const fill = typeof obj.fill === "string" ? obj.fill : getEffectFromObject(obj.fill);
       const stroke = typeof obj.stroke === "string" ? obj.stroke : getEffectFromObject(obj.stroke);
-      return new _Path().copy({ ...obj, fill, stroke });
+      const path = new _Path().copy({ ...obj, fill, stroke });
+      if ("id" in obj) {
+        path.id = obj.id;
+      }
+      return path;
     }
     copy(path) {
       super.copy.call(this, path);
+      this.vertices = [];
       for (let j = 0; j < path.vertices.length; j++) {
-        this.vertices.push(path.vertices[j].clone());
+        const v = path.vertices[j];
+        if (v instanceof Anchor) {
+          this.vertices.push(path.vertices[j].clone());
+        } else {
+          this.vertices.push(new Anchor().copy(v));
+        }
       }
       for (let i = 0; i < _Path.Properties.length; i++) {
         const k = _Path.Properties[i];
@@ -3573,13 +3615,17 @@ var Two = (() => {
       }
     }
     static fromObject(obj) {
-      return new _ArcSegment().copy(obj);
+      const segment = new _ArcSegment().copy(obj);
+      if ("id" in obj) {
+        segment.id = obj.id;
+      }
+      return segment;
     }
     copy(arcSegment) {
       super.copy.call(this, arcSegment);
       for (let i = 0; i < _ArcSegment.Properties.length; i++) {
         const k = _ArcSegment.Properties[i];
-        if (k in arcSegment) {
+        if (k in arcSegment && typeof arcSegment[k] === "number") {
           this[k] = arcSegment[k];
         }
       }
@@ -3800,13 +3846,17 @@ var Two = (() => {
       }
     }
     static fromObject(obj) {
-      return new _Circle().copy(obj);
+      const circle = new _Circle().copy(obj);
+      if ("id" in obj) {
+        circle.id = obj.id;
+      }
+      return circle;
     }
     copy(circle) {
       super.copy.call(this, circle);
       for (let i = 0; i < _Circle.Properties.length; i++) {
         const k = _Circle.Properties[i];
-        if (k in circle) {
+        if (k in circle && typeof circle[k] === "number") {
           this[k] = circle[k];
         }
       }
@@ -3924,13 +3974,17 @@ var Two = (() => {
       }
     }
     static fromObject(obj) {
-      return new _Ellipse().copy(obj);
+      const ellipse = new _Ellipse().copy(obj);
+      if ("id" in obj) {
+        ellipse.id = obj.id;
+      }
+      return ellipse;
     }
     copy(ellipse) {
       super.copy.call(this, ellipse);
       for (let i = 0; i < _Ellipse.Properties.length; i++) {
         const k = _Ellipse.Properties[i];
-        if (k in ellipse) {
+        if (k in ellipse && typeof ellipse[k] === "number") {
           this[k] = ellipse[k];
         }
       }
@@ -4076,7 +4130,11 @@ var Two = (() => {
     static fromObject(obj) {
       const fill = typeof obj.fill === "string" ? obj.fill : getEffectFromObject(obj.fill);
       const stroke = typeof obj.stroke === "string" ? obj.stroke : getEffectFromObject(obj.stroke);
-      return new _Points().copy({ ...obj, fill, stroke });
+      const points = new _Points().copy({ ...obj, fill, stroke });
+      if ("id" in obj) {
+        points.id = obj.id;
+      }
+      return points;
     }
     copy(points) {
       super.copy.call(this, points);
@@ -4383,13 +4441,17 @@ var Two = (() => {
       }
     }
     static fromObject(obj) {
-      return new _Polygon().copy(obj);
+      const polygon = new _Polygon().copy(obj);
+      if ("id" in obj) {
+        polygon.id = obj.id;
+      }
+      return polygon;
     }
     copy(polygon) {
       super.copy.call(this, polygon);
       for (let i = 0; i < _Polygon.Properties.length; i++) {
         const k = _Polygon.Properties[i];
-        if (k in polygon) {
+        if (k in polygon && typeof polygon[k] === "number") {
           this[k] = polygon[k];
         }
       }
@@ -4528,13 +4590,17 @@ var Two = (() => {
       this._update();
     }
     static fromObject(obj) {
-      return new _Rectangle().copy(obj);
+      const rectangle = new _Rectangle().copy(obj);
+      if ("id" in obj) {
+        rectangle.id = obj.id;
+      }
+      return rectangle;
     }
     copy(rectangle) {
       super.copy.call(this, rectangle);
       for (let i = 0; i < _Rectangle.Properties.length; i++) {
         const k = _Rectangle.Properties[i];
-        if (k in rectangle) {
+        if (k in rectangle && typeof rectangle[k] === "number") {
           this[k] = rectangle[k];
         }
       }
@@ -4677,14 +4743,23 @@ var Two = (() => {
       }
     }
     static fromObject(obj) {
-      return new _RoundedRectangle().copy(obj);
+      const rectangle = new _RoundedRectangle().copy(obj);
+      if ("id" in obj) {
+        rectangle.id = obj.id;
+      }
+      return rectangle;
     }
     copy(roundedRectangle) {
       super.copy.call(this, roundedRectangle);
       for (let i = 0; i < _RoundedRectangle.Properties.length; i++) {
         const k = _RoundedRectangle.Properties[i];
         if (k in roundedRectangle) {
-          this[k] = roundedRectangle[k];
+          const value = roundedRectangle[k];
+          if (/radius/i.test(k)) {
+            this[k] = typeof value === "number" || value instanceof Vector ? value : new Vector().copy(value);
+          } else if (typeof value === "number") {
+            this[k] = value;
+          }
         }
       }
       return this;
@@ -4880,13 +4955,17 @@ var Two = (() => {
       }
     }
     static fromObject(obj) {
-      return new _Star().copy(obj);
+      const star = new _Star().copy(obj);
+      if ("id" in obj) {
+        star.id = obj.id;
+      }
+      return star;
     }
     copy(star) {
       super.copy.call(this, star);
       for (let i = 0; i < _Star.Properties.length; i++) {
         const k = _Star.Properties[i];
-        if (k in star) {
+        if (k in star && typeof star[k] === "number") {
           this[k] = star[k];
         }
       }
@@ -5089,13 +5168,19 @@ var Two = (() => {
     static fromObject(obj) {
       const fill = typeof obj.fill === "string" ? obj.fill : getEffectFromObject(obj.fill);
       const stroke = typeof obj.stroke === "string" ? obj.stroke : getEffectFromObject(obj.stroke);
-      return new _Text().copy({ ...obj, fill, stroke });
+      const text = new _Text().copy({ ...obj, fill, stroke });
+      if ("id" in obj) {
+        text.id = obj.id;
+      }
+      return text;
     }
     copy(text) {
       super.copy.call(this, text);
       for (let i = 0; i < _Text.Properties.length; i++) {
-        const prop = _Text.Properties[i];
-        this[prop] = text[prop];
+        const k = _Text.Properties[i];
+        if (k in text) {
+          this[k] = text[k];
+        }
       }
       return this;
     }
@@ -5468,48 +5553,58 @@ var Two = (() => {
         const k = _Group.Properties[i];
         if (k in obj) {
           if (/(fill|stroke)/i.test(k)) {
-            this[k] = typeof obj[k] === "string" ? obj[k] : getEffectFromObject(obj[k]);
+            group[k] = typeof obj[k] === "string" ? obj[k] : getEffectFromObject(obj[k]);
           } else {
-            this[k] = obj[k];
+            group[k] = obj[k];
           }
         }
       }
       if ("mask" in obj) {
-        this.mask = getShapeFromObject(obj.mask);
+        group.mask = getShapeFromObject(obj.mask);
+      }
+      if ("id" in obj) {
+        group.id = obj.id;
       }
       group.children = obj.children.map(getShapeFromObject);
       return group;
       function getShapeFromObject(child) {
-        switch (child.renderer.type) {
-          case "arc-segment":
-            return ArcSegment.fromObject(child);
-          case "circle":
-            return Circle.fromObject(child);
-          case "ellipse":
-            return Ellipse.fromObject(child);
-          case "points":
-            return Points.fromObject(child);
-          case "polygon":
-            return Polygon.fromObject(child);
-          case "rectangle":
-            return Rectangle.fromObject(child);
-          case "rounded-rectangle":
-            return RoundedRectangle.fromObject(child);
-          case "star":
-            return Star.fromObject(child);
-          case "path":
-            return Path.fromObject(child);
-          case "text":
-            return Text.fromObject(child);
-          case "group":
-            return _Group.fromObject(child);
-          case "shape":
-            return Shape.fromObject(child);
-          case "element":
-            return Element.fromObject(child);
+        if (child && child.renderer) {
+          switch (child.renderer.type) {
+            case "arc-segment":
+              return ArcSegment.fromObject(child);
+            case "circle":
+              return Circle.fromObject(child);
+            case "ellipse":
+              return Ellipse.fromObject(child);
+            case "points":
+              return Points.fromObject(child);
+            case "polygon":
+              return Polygon.fromObject(child);
+            case "rectangle":
+              return Rectangle.fromObject(child);
+            case "rounded-rectangle":
+              return RoundedRectangle.fromObject(child);
+            case "star":
+              return Star.fromObject(child);
+            case "path":
+              return Path.fromObject(child);
+            case "text":
+              return Text.fromObject(child);
+            case "group":
+              return _Group.fromObject(child);
+            case "shape":
+              return Shape.fromObject(child);
+            case "element":
+              return Element.fromObject(child);
+          }
         }
         return child;
       }
+    }
+    copy(group) {
+      super.copy.call(this, group);
+      console.warn("Two.Group.copy is not supported yet.");
+      return this;
     }
     clone(parent) {
       const clone = new _Group();
@@ -7000,13 +7095,19 @@ var Two = (() => {
       this.index = 0;
     }
     static fromObject(obj) {
-      return new _Sprite().copy(obj);
+      const sprite = new _Sprite().copy(obj);
+      if ("id" in obj) {
+        sprite.id = obj.id;
+      }
+      return sprite;
     }
     copy(sprite) {
       super.copy.call(this, sprite);
       for (let i = 0; i < _Sprite.Properties.length; i++) {
         const k = _Sprite.Properties[i];
-        this[k] = sprite[k];
+        if (k in sprite) {
+          this[k] = sprite[k];
+        }
       }
       return this;
     }
@@ -8326,13 +8427,19 @@ var Two = (() => {
       this.index = 0;
     }
     static fromObject(obj) {
-      return new _ImageSequence().copy(obj);
+      const sequence = new _ImageSequence().copy(obj);
+      if ("id" in obj) {
+        sequence.id = obj.id;
+      }
+      return sequence;
     }
     copy(imageSequence) {
       super.copy.call(this, imageSequence);
       for (let i = 0; i < _ImageSequence.Properties.length; i++) {
         const k = _ImageSequence.Properties[i];
-        this[k] = imageSequence[k];
+        if (k in imageSequence) {
+          this[k] = imageSequence[k];
+        }
       }
       return this;
     }

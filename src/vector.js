@@ -1,34 +1,35 @@
 import { Events } from './events.js';
+import { toFixed } from './utils/math.js';
 
 const proto = {
   x: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._x;
     },
-    set: function(v) {
+    set: function (v) {
       if (this._x !== v) {
         this._x = v;
         if (this._bound) {
           this.dispatchEvent(Events.Types.change);
         }
       }
-    }
+    },
   },
   y: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._y;
     },
-    set: function(v) {
+    set: function (v) {
       if (this._y !== v) {
         this._y = v;
         if (this._bound) {
           this.dispatchEvent(Events.Types.change);
         }
       }
-    }
-  }
+    },
+  },
 };
 
 /**
@@ -40,7 +41,6 @@ const proto = {
  * @description A class to store x / y component vector data. In addition to storing data `Two.Vector` has suped up methods for commonplace mathematical operations.
  */
 export class Vector extends Events {
-
   /**
    * @name Two.Vector#_x
    * @private
@@ -53,7 +53,6 @@ export class Vector extends Events {
   _y = 0;
 
   constructor(x = 0, y = 0) {
-
     super();
 
     for (let prop in proto) {
@@ -73,7 +72,6 @@ export class Vector extends Events {
      * @type {Number}
      */
     this.y = y;
-
   }
 
   /**
@@ -81,35 +79,35 @@ export class Vector extends Events {
    * @readonly
    * @property {Two.Vector} - Handy reference to a vector with component values 0, 0 at all times.
    */
-  static zero = new Vector()
+  static zero = new Vector();
 
   /**
    * @name Two.Vector.left
    * @readonly
    * @property {Two.Vector} - Handy reference to a vector with component values -1, 0 at all times.
    */
-  static left = new Vector(-1, 0)
+  static left = new Vector(-1, 0);
 
   /**
    * @name Two.Vector.right
    * @readonly
    * @property {Two.Vector} - Handy reference to a vector with component values 1, 0 at all times.
    */
-  static right = new Vector(1, 0)
+  static right = new Vector(1, 0);
 
   /**
    * @name Two.Vector.up
    * @readonly
    * @property {Two.Vector} - Handy reference to a vector with component values 0, -1 at all times.
    */
-  static up = new Vector(0, -1)
+  static up = new Vector(0, -1);
 
   /**
    * @name Two.Vector.down
    * @readonly
    * @property {Two.Vector} - Handy reference to a vector with component values 0, 1 at all times.
    */
-  static down = new Vector(0, 1)
+  static down = new Vector(0, 1);
 
   /**
    * @name Two.Vector.add
@@ -152,9 +150,7 @@ export class Vector extends Events {
    * @returns {Number} The ratio betwen two points `v1` and `v2`.
    */
   static ratioBetween(v1, v2) {
-
     return (v1.x * v2.x + v1.y * v2.y) / (v1.length() * v2.length());
-
   }
 
   /**
@@ -165,21 +161,17 @@ export class Vector extends Events {
    * @returns {Number} The angle between points `v1` and `v2`.
    */
   static angleBetween(v1, v2) {
-
     if (arguments.length >= 4) {
-
       const dx = arguments[0] - arguments[2];
       const dy = arguments[1] - arguments[3];
 
       return Math.atan2(dy, dx);
-
     }
 
     const dx = v1.x - v2.x;
     const dy = v1.y - v2.y;
 
     return Math.atan2(dy, dx);
-
   }
 
   /**
@@ -190,9 +182,7 @@ export class Vector extends Events {
    * @returns {Number} The distance between points `v1` and `v2`. Distance is always positive.
    */
   static distanceBetween(v1, v2) {
-
     return Math.sqrt(Vector.distanceBetweenSquared(v1, v2));
-
   }
 
   /**
@@ -203,12 +193,10 @@ export class Vector extends Events {
    * @returns {Number} The squared distance between points `v1` and `v2`.
    */
   static distanceBetweenSquared(v1, v2) {
-
     const dx = v1.x - v2.x;
     const dy = v1.y - v2.y;
 
     return dx * dx + dy * dy;
-
   }
 
   //
@@ -588,8 +576,8 @@ export class Vector extends Events {
    * @description Qualify if one vector roughly equal another. With a margin of error defined by epsilon.
    */
   equals(v, eps) {
-    eps = (typeof eps === 'undefined') ?  0.0001 : eps;
-    return (this.distanceTo(v) < eps);
+    eps = typeof eps === 'undefined' ? 0.0001 : eps;
+    return this.distanceTo(v) < eps;
   }
 
   /**
@@ -614,8 +602,8 @@ export class Vector extends Events {
    * @description Check to see if vector is roughly zero, based on the `epsilon` precision value.
    */
   isZero(eps) {
-    eps = (typeof eps === 'undefined') ?  0.0001 : eps;
-    return (this.length() < eps);
+    eps = typeof eps === 'undefined' ? 0.0001 : eps;
+    return this.length() < eps;
   }
 
   /**
@@ -635,7 +623,7 @@ export class Vector extends Events {
    * @description Return a JSON compatible plain object that represents the vector.
    */
   toObject() {
-    return { x: this.x, y: this.y };
+    return { x: toFixed(this.x), y: toFixed(this.y) };
   }
 
   /**
@@ -653,5 +641,4 @@ export class Vector extends Events {
     this.y = x * sin + y * cos;
     return this;
   }
-
 }
