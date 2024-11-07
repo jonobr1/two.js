@@ -418,6 +418,55 @@ QUnit.test('Two.Ellipse', function (assert) {
   );
 });
 
+QUnit.test('Two.Ellipse Object Conversion', function (assert) {
+  assert.expect(9);
+
+  // Create original ellipse
+  var ellipse = new Two.Ellipse(100, 100, 50, 75);
+  ellipse.fill = '#0000ff';
+  ellipse.stroke = '#ff00ff';
+  ellipse.linewidth = 3;
+  ellipse.id = 'my-ellipse';
+
+  // Convert to object
+  var obj = ellipse.toObject();
+
+  // Test object has expected properties
+  assert.equal(typeof obj, 'object', 'Two.Ellipse.toObject creates an object');
+  assert.equal(obj.width, 100, 'Two.Ellipse.toObject preserves width');
+  assert.equal(obj.height, 150, 'Two.Ellipse.toObject preserves height');
+  assert.equal(obj.fill, '#0000ff', 'Two.Ellipse.toObject preserves fill');
+  assert.equal(obj.id, 'my-ellipse', 'Two.Ellipse.toObject preserves id');
+
+  // Create new ellipse from object
+  var newEllipse = Two.Ellipse.fromObject(obj);
+
+  // Test new ellipse matches original
+  assert.equal(
+    newEllipse.width,
+    ellipse.width,
+    'Two.Ellipse.fromObject preserves width'
+  );
+  assert.equal(
+    newEllipse.height,
+    ellipse.height,
+    'Two.Ellipse.fromObject preserves height'
+  );
+  assert.equal(
+    newEllipse.fill,
+    ellipse.fill,
+    'Two.Ellipse.fromObject preserves fill'
+  );
+
+  // Test copy method
+  var copiedEllipse = new Two.Ellipse().copy(ellipse);
+  assert.deepEqual(
+    { ...copiedEllipse.toObject(), id: ellipse.id },
+    ellipse.toObject(),
+    'Two.Ellipse.copy creates identical ellipse'
+  );
+});
+
 QUnit.test('Two.Polygon', function (assert) {
   assert.expect(Two.Polygon.Properties.length * 4 + 1);
 
@@ -469,6 +518,51 @@ QUnit.test('Two.Polygon', function (assert) {
   );
 });
 
+QUnit.test('Two.Polygon Object Conversion', function (assert) {
+  assert.expect(9);
+
+  // Create original polygon
+  var polygon = new Two.Polygon(100, 100, 50, 5);
+  polygon.fill = '#0000ff';
+  polygon.stroke = '#ff00ff';
+  polygon.linewidth = 3;
+  polygon.id = 'my-polygon';
+
+  // Convert to object
+  var obj = polygon.toObject();
+
+  // Test object has expected properties
+  assert.equal(typeof obj, 'object', 'Two.Polygon.toObject creates an object');
+  assert.equal(obj.width, 100, 'Two.Polygon.toObject preserves width');
+  assert.equal(obj.height, 100, 'Two.Polygon.toObject preserves height');
+  assert.equal(obj.sides, 5, 'Two.Polygon.toObject preserves sides');
+  assert.equal(obj.fill, '#0000ff', 'Two.Polygon.toObject preserves fill');
+  assert.equal(obj.id, 'my-polygon', 'Two.Polygon.toObject preserves id');
+
+  // Create new polygon from object
+  var newPolygon = Two.Polygon.fromObject(obj);
+
+  // Test new polygon matches original
+  assert.equal(
+    newPolygon.width,
+    polygon.width,
+    'Two.Polygon.fromObject preserves width'
+  );
+  assert.equal(
+    newPolygon.sides,
+    polygon.sides,
+    'Two.Polygon.fromObject preserves sides'
+  );
+
+  // Test copy method
+  var copiedPolygon = new Two.Polygon().copy(polygon);
+  assert.deepEqual(
+    { ...copiedPolygon.toObject(), id: polygon.id },
+    polygon.toObject(),
+    'Two.Polygon.copy creates identical polygon'
+  );
+});
+
 QUnit.test('Two.Rectangle', function (assert) {
   assert.expect(Two.Rectangle.Properties.length * 4 + 1);
 
@@ -517,6 +611,60 @@ QUnit.test('Two.Rectangle', function (assert) {
     path.vertices[0].equals(path.vertices[path.vertices.length - 1]),
     true,
     'Rectangle has standardized vertex generation when shape is not closed'
+  );
+});
+
+QUnit.test('Two.Rectangle Object Conversion', function (assert) {
+  assert.expect(9);
+
+  // Create original rectangle
+  var rectangle = new Two.Rectangle(100, 100, 50, 75);
+  rectangle.fill = '#0000ff';
+  rectangle.stroke = '#ff00ff';
+  rectangle.linewidth = 3;
+  rectangle.id = 'my-rectangle';
+
+  // Convert to object
+  var obj = rectangle.toObject();
+
+  // Test object has expected properties
+  assert.equal(
+    typeof obj,
+    'object',
+    'Two.Rectangle.toObject creates an object'
+  );
+  assert.equal(obj.width, 50, 'Two.Rectangle.toObject preserves width');
+  assert.equal(obj.height, 75, 'Two.Rectangle.toObject preserves height');
+  assert.equal(obj.fill, '#0000ff', 'Two.Rectangle.toObject preserves fill');
+  assert.equal(obj.id, 'my-rectangle', 'Two.Rectangle.toObject preserves id');
+
+  // Create new rectangle from object
+  var newRectangle = Two.Rectangle.fromObject(obj);
+
+  // Test new rectangle matches original
+  assert.equal(
+    newRectangle.width,
+    rectangle.width,
+    'Two.Rectangle.fromObject preserves width'
+  );
+  assert.equal(
+    newRectangle.height,
+    rectangle.height,
+    'Two.Rectangle.fromObject preserves height'
+  );
+  assert.equal(
+    newRectangle.fill,
+    rectangle.fill,
+    'Two.Rectangle.fromObject preserves fill'
+  );
+
+  // Test copy method
+  var copiedRectangle = new Two.Rectangle().copy(rectangle);
+  copiedRectangle._update();
+  assert.deepEqual(
+    { ...copiedRectangle.toObject(), id: rectangle.id },
+    rectangle.toObject(),
+    'Two.Rectangle.copy creates identical rectangle'
   );
 });
 
@@ -582,6 +730,72 @@ QUnit.test('Two.RoundedRectangle', function (assert) {
   );
 });
 
+QUnit.test('Two.RoundedRectangle Object Conversion', function (assert) {
+  assert.expect(10);
+
+  // Create original rounded rectangle
+  var roundedRect = new Two.RoundedRectangle(100, 100, 50, 75, 8);
+  roundedRect.fill = '#0000ff';
+  roundedRect.stroke = '#ff00ff';
+  roundedRect.linewidth = 3;
+  roundedRect.id = 'my-rounded-rect';
+
+  // Convert to object
+  var obj = roundedRect.toObject();
+
+  // Test object has expected properties
+  assert.equal(
+    typeof obj,
+    'object',
+    'Two.RoundedRectangle.toObject creates an object'
+  );
+  assert.equal(obj.width, 50, 'Two.RoundedRectangle.toObject preserves width');
+  assert.equal(
+    obj.height,
+    75,
+    'Two.RoundedRectangle.toObject preserves height'
+  );
+  assert.equal(obj.radius, 8, 'Two.RoundedRectangle.toObject preserves radius');
+  assert.equal(
+    obj.fill,
+    '#0000ff',
+    'Two.RoundedRectangle.toObject preserves fill'
+  );
+  assert.equal(
+    obj.id,
+    'my-rounded-rect',
+    'Two.RoundedRectangle.toObject preserves id'
+  );
+
+  // Create new rounded rectangle from object
+  var newRoundedRect = Two.RoundedRectangle.fromObject(obj);
+
+  // Test new rounded rectangle matches original
+  assert.equal(
+    newRoundedRect.width,
+    roundedRect.width,
+    'Two.RoundedRectangle.fromObject preserves width'
+  );
+  assert.equal(
+    newRoundedRect.height,
+    roundedRect.height,
+    'Two.RoundedRectangle.fromObject preserves height'
+  );
+  assert.equal(
+    newRoundedRect.radius,
+    roundedRect.radius,
+    'Two.RoundedRectangle.fromObject preserves radius'
+  );
+
+  // Test copy method
+  var copiedRoundedRect = new Two.RoundedRectangle().copy(roundedRect);
+  assert.deepEqual(
+    { ...copiedRoundedRect.toObject(), id: roundedRect.id },
+    roundedRect.toObject(),
+    'Two.RoundedRectangle.copy creates identical rounded rectangle'
+  );
+});
+
 QUnit.test('Two.Star', function (assert) {
   assert.expect(Two.Star.Properties.length * 4 + 1);
 
@@ -631,5 +845,55 @@ QUnit.test('Two.Star', function (assert) {
     path.vertices[0].equals(path.vertices[path.vertices.length - 1]),
     true,
     'Star has standardized vertex generation when shape is not closed'
+  );
+});
+
+QUnit.test('Two.Star Object Conversion', function (assert) {
+  assert.expect(10);
+
+  // Create original star
+  var star = new Two.Star(100, 100, 50, 75, 5);
+  star.fill = '#0000ff';
+  star.stroke = '#ff00ff';
+  star.linewidth = 3;
+  star.id = 'my-star';
+
+  // Convert to object
+  var obj = star.toObject();
+
+  // Test object has expected properties
+  assert.equal(typeof obj, 'object', 'Two.Star.toObject creates an object');
+  assert.equal(obj.innerRadius, 50, 'Two.Star.toObject preserves innerRadius');
+  assert.equal(obj.outerRadius, 75, 'Two.Star.toObject preserves outerRadius');
+  assert.equal(obj.sides, 5, 'Two.Star.toObject preserves sides');
+  assert.equal(obj.fill, '#0000ff', 'Two.Star.toObject preserves fill');
+  assert.equal(obj.id, 'my-star', 'Two.Star.toObject preserves id');
+
+  // Create new star from object
+  var newStar = Two.Star.fromObject(obj);
+
+  // Test new star matches original
+  assert.equal(
+    newStar.innerRadius,
+    star.innerRadius,
+    'Two.Star.fromObject preserves innerRadius'
+  );
+  assert.equal(
+    newStar.outerRadius,
+    star.outerRadius,
+    'Two.Star.fromObject preserves outerRadius'
+  );
+  assert.equal(
+    newStar.sides,
+    star.sides,
+    'Two.Star.fromObject preserves sides'
+  );
+
+  // Test copy method
+  var copiedStar = new Two.Star().copy(star);
+  assert.deepEqual(
+    { ...copiedStar.toObject(), id: star.id },
+    star.toObject(),
+    'Two.Star.copy creates identical star'
   );
 });
