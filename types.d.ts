@@ -540,6 +540,15 @@ declare module 'two.js/src/anchor' {
      */
   export class Anchor extends Vector {
     static makeBroadcast(scope: any): () => void;
+    /**
+     * @name Two.Anchor.fromObject
+     * @function
+     * @param {Object} obj - Object notation of a {@link Two.Anchor} to create a new instance
+     * @returns {Two.Anchor}
+     * @description Create a new {@link Two.Anchor} from an object notation of a {@link Two.Anchor}.
+     * @nota-bene Works in conjunction with {@link Two.Anchor#toObject}
+     */
+    static fromObject(obj: object): () => Anchor;
     constructor(
       x?: number,
       y?: number,
@@ -547,36 +556,59 @@ declare module 'two.js/src/anchor' {
       ay?: number,
       bx?: number,
       by?: number,
-      command?: string
+      command?: Commands
     );
     controls: {
       left: Vector;
       right: Vector;
     };
-    _command: string;
-    _relative: boolean;
-    _rx: number;
-    _ry: number;
-    _xAxisRotation: number;
-    _largeArcFlag: number;
-    _sweepFlag: number;
-    command: string;
+    command: Commands;
     relative: boolean;
     rx: any;
     ry: any;
     xAxisRotation: any;
     largeArcFlag: any;
     sweepFlag: any;
+    /**
+     * @name Two.Anchor#copy
+     * @function
+     * @param {Two.Anchor} v - The anchor to apply values to.
+     * @description Copy the properties of one {@link Two.Anchor} onto another.
+     */
+    copy(anchor: Anchor): Anchor;
+    /**
+     * @name Two.Anchor#clone
+     * @function
+     * @returns {Two.Anchor}
+     * @description Create a new {@link Two.Anchor}, set all its values to the current instance and return it for use.
+     */
+    clone(): Anchor;
+    /**
+     * @name Two.Anchor#toObject
+     * @function
+     * @returns {Object} - An object with properties filled out to mirror {@link Two.Anchor}.
+     * @description Create a JSON compatible plain object of the current instance. Intended for use with storing values in a database.
+     * @nota-bene Works in conjunction with {@link Two.Anchor.fromObject}
+     */
+    toObject(): object;
+    /**
+     * @name Two.Anchor#toString
+     * @function
+     * @returns {String} - A String with comma-separated values reflecting the various values on the current instance.
+     * @description Create a string form of the current instance. Intended for use with storing values in a database. This is lighter to store than the JSON compatible {@link Two.Anchor#toObject}.
+     */
+    toString(): string;
   }
   import { Vector } from 'two.js/src/vector';
+  import { Commands } from 'two.js/src/utils/path-commands';
 }
 declare module 'two.js/src/constants' {
   export interface Constants {
     nextFrameID: number;
     Types: {
-      webgl: string;
-      svg: string;
-      canvas: string;
+      webgl: 'WebGLRenderer';
+      svg: 'SVGRenderer';
+      canvas: 'CanvasRenderer';
     };
     Version: string;
     PublishDate: string;
@@ -788,12 +820,12 @@ declare module 'two.js/src/utils/underscore' {
 }
 declare module 'two.js/src/element' {
   /**
-     * @name Two.Element
-     * @class
-
-     * @description The foundational object for the Two.js scenegraph.
-     */
+   * @name Two.Element
+   * @class
+   * @description The foundational object for the Two.js scenegraph.
+   */
   export class Element extends Events {
+    static fromObject(obj: object): Element;
     /**
      * @name Two.Element#_flagId
      * @private
@@ -811,19 +843,19 @@ declare module 'two.js/src/element' {
      * @property {Object} - Object access to store relevant renderer specific variables. Warning: manipulating this object can create unintended consequences.
      * @nota-bene With the {@link Two.SVGRenderer} you can access the underlying SVG element created via `shape.renderer.elem`.
      */
-    _renderer: {};
+    renderer: { type: 'string' };
     /**
      * @name Two.Element#id
      * @property {String} - Session specific unique identifier.
      * @nota-bene In the {@link Two.SVGRenderer} change this to change the underlying SVG element's id too.
      */
-    _id: string;
+    id: string;
     /**
      * @name Two.Element#className
      * @property {String} - A class to be applied to the element to be compatible with CSS styling.
      * @nota-bene Only available for the SVG renderer.
      */
-    _className: string;
+    className: string;
     /**
      * @name Two.Element#classList
      * @property {String[]}
@@ -835,7 +867,9 @@ declare module 'two.js/src/element' {
      * @function
      * @description Called internally by Two.js's renderer to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
      */
-    flagReset(): void;
+    flagReset(): Element;
+    copy(element: Element): Element;
+    toObject(): object;
   }
   import { Events } from 'two.js/src/events';
 }
@@ -860,7 +894,7 @@ declare module 'two.js/src/matrix' {
      * @name Two.Matrix.Identity
      * @property {Number[]} - A stored reference to the default value of a 3 x 3 matrix.
      */
-    static Identity: number[];
+    static Identity: [1, 0, 0, 0, 1, 0, 0, 0, 1];
     /**
      * @name Two.Matrix.Multiply
      * @function
@@ -871,6 +905,7 @@ declare module 'two.js/src/matrix' {
      * @description Multiply two matrices together and return the result.
      */
     static Multiply(A: Matrix, B: Matrix, C?: Matrix): Matrix;
+    static fromObject(obj: object): Matrix;
     constructor(elements: number[]);
     constructor(
       a?: number,
@@ -884,7 +919,17 @@ declare module 'two.js/src/matrix' {
      * @name Two.Matrix#elements
      * @property {Number[]} - The underlying data stored as an array.
      */
-    elements: number[];
+    elements: [
+      number,
+      number,
+      number,
+      number,
+      number,
+      number,
+      number,
+      number,
+      number
+    ];
     /**
      * @name Two.Matrix#manual
      * @property {Boolean} - Determines whether Two.js automatically calculates the values for the matrix or if the developer intends to manage the matrix.
@@ -1070,7 +1115,7 @@ declare module 'two.js/src/matrix' {
      * @function
      * @description Clone the current matrix.
      */
-    clone(): any;
+    clone(): Matrix;
   }
   import { Events } from 'two.js/src/events';
 }
@@ -1184,8 +1229,6 @@ declare module 'two.js/src/shape' {
      * @description Skew the shape by an angle in the y axis direction.
      */
     skewY: number;
-    set renderer(arg: any);
-    get renderer(): any;
     set translation(arg: Vector);
     /**
      * @name Two.Shape#translation
@@ -1206,6 +1249,13 @@ declare module 'two.js/src/shape' {
      */
     remove(): Shape;
     /**
+     * @name Two.Shape#copy
+     * @function
+     * @param {Two.Shape} shape
+     * @description Copy the properties of one {@link Two.Shape} onto another.
+     */
+    copy(shape: Shape): Shape;
+    /**
      * @name Two.Shape#clone
      * @function
      * @param {Group} [parent] - Optional argument to automatically add the shape to a scenegraph.
@@ -1213,6 +1263,13 @@ declare module 'two.js/src/shape' {
      * @description Create a new {@link Two.Shape} with the same values as the current shape.
      */
     clone(parent?: Group): Shape;
+    /**
+     * @name Two.Shape#toObject
+     * @function
+     * @description Create a JSON compatible object that represents information of the shape.
+     * @nota-bene Works in conjunction with {@link Two.Shape.fromObject}
+     */
+    toObject(): object;
     /**
      * @name Two.Shape#_update
      * @function

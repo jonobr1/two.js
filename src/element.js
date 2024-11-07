@@ -81,6 +81,7 @@ export class Element extends Events {
    */
   flagReset() {
     this._flagId = this._flagClassName = false;
+    return this;
   }
 
   copy(element) {
