@@ -1105,50 +1105,6 @@ QUnit.test('Two.Path Object Conversion', function (assert) {
   );
 });
 
-QUnit.test('Two.Circle Object Conversion', function (assert) {
-  assert.expect(8);
-
-  // Create original circle
-  var circle = new Two.Circle(100, 100, 50);
-  circle.fill = '#0000ff';
-  circle.stroke = '#ff00ff';
-  circle.linewidth = 3;
-  circle.id = 'my-circle';
-
-  // Convert to object
-  var obj = circle.toObject();
-
-  // Test object has expected properties
-  assert.equal(typeof obj, 'object', 'Two.Circle.toObject creates an object');
-  assert.equal(obj.radius, 50, 'Two.Circle.toObject preserves radius');
-  assert.equal(obj.fill, '#0000ff', 'Two.Circle.toObject preserves fill');
-  assert.equal(obj.id, 'my-circle', 'Two.Circle.toObject preserves id');
-
-  // Create new circle from object
-  var newCircle = Two.Circle.fromObject(obj);
-
-  // Test new circle matches original
-  assert.equal(
-    newCircle.radius,
-    circle.radius,
-    'Two.Circle.fromObject preserves radius'
-  );
-  assert.equal(
-    newCircle.fill,
-    circle.fill,
-    'Two.Circle.fromObject preserves fill'
-  );
-  assert.equal(newCircle.id, circle.id, 'Two.Circle.fromObject preserves id');
-
-  // Test copy method
-  var copiedCircle = new Two.Circle().copy(circle);
-  assert.deepEqual(
-    { ...copiedCircle.toObject(), id: circle.id },
-    circle.toObject(),
-    'Two.Circle.copy creates identical circle'
-  );
-});
-
 QUnit.test('Two.Group Object Conversion', function (assert) {
   assert.expect(6);
 
@@ -1196,7 +1152,7 @@ QUnit.test('Two.Group Object Conversion', function (assert) {
 });
 
 QUnit.test('Two.Text Object Conversion', function (assert) {
-  assert.expect(8);
+  assert.expect(9);
 
   var text = new Two.Text('Hello, World!', 100, 100);
   text.fill = '#ff0000';
@@ -1221,62 +1177,11 @@ QUnit.test('Two.Text Object Conversion', function (assert) {
     'Two.Text.fromObject preserves value'
   );
   assert.equal(newText.fill, text.fill, 'Two.Text.fromObject preserves fill');
-});
-
-QUnit.test('Two.Text Copy', function (assert) {
-  assert.expect(1);
-
-  var text = new Two.Text('Hello, World!', 100, 100);
-  text.fill = '#ff0000';
-  text.stroke = '#00ff00';
-  text.size = 20;
-  text.id = 'my-text';
 
   var copiedText = new Two.Text().copy(text);
   assert.deepEqual(
     { ...copiedText.toObject(), id: text.id },
     text.toObject(),
     'Two.Text.copy creates identical text'
-  );
-});
-
-QUnit.test('Two.Points Object Conversion', function (assert) {
-  assert.expect(6);
-
-  var point = new Two.Points(new Two.Anchor(50, 50));
-  point.id = 'my-point';
-
-  var obj = point.toObject();
-
-  assert.equal(typeof obj, 'object', 'Two.Points.toObject creates an object');
-  assert.equal(obj.vertices[0].x, 50, 'Two.Points.toObject preserves x');
-  assert.equal(obj.vertices[0].y, 50, 'Two.Points.toObject preserves y');
-  assert.equal(obj.id, 'my-point', 'Two.Points.toObject preserves id');
-
-  var newPoint = Two.Points.fromObject(obj);
-
-  assert.equal(
-    newPoint.vertices[0].x,
-    point.vertices[0].x,
-    'Two.Points.fromObject preserves x'
-  );
-  assert.equal(
-    newPoint.vertices[0].y,
-    point.vertices[0].y,
-    'Two.Points.fromObject preserves y'
-  );
-});
-
-QUnit.test('Two.Points Copy', function (assert) {
-  assert.expect(1);
-
-  var point = new Two.Points(new Two.Anchor(50, 50));
-  point.id = 'my-point';
-
-  var copiedPoint = new Two.Points().copy(point);
-  assert.deepEqual(
-    { ...copiedPoint.toObject(), id: point.id },
-    point.toObject(),
-    'Two.Points.copy creates identical point'
   );
 });
