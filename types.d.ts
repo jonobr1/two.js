@@ -1381,6 +1381,7 @@ declare module 'two.js/src/group' {
      * @property {String[]} - A list of properties that are on every {@link Two.Group}.
      */
     static Properties: string[];
+    static fromObject(obj: object): Group;
     constructor(children?: Shape[]);
     constructor(...args: Shape[]);
     /**
@@ -1541,6 +1542,7 @@ declare module 'two.js/src/group' {
      * @nota-bene Ther order of this list indicates the order each element is rendered to the screen.
      */
     children: Children;
+    copy(group: Group): Group;
     /**
      * @name Two.Group#toObject
      * @function
@@ -1644,6 +1646,15 @@ declare module 'two.js/src/group' {
      * @description Create a new instance of {@link Two.Group} with the same properties of the current group.
      */
     clone(parent?: Group): Group;
+    /**
+     * @name Two.Group#_update
+     * @function
+     * @private
+     * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+     * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
+     * @nota-bene Try not to call this method more than once a frame.
+     */
+    private _update(): Group;
   }
   import { Shape } from 'two.js/src/shape';
   import { Children } from 'two.js/src/children';
