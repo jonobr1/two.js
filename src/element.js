@@ -1,4 +1,5 @@
 import { Events } from './events.js';
+import { Constants } from 'constants.js';
 
 /**
  * @name Two.Element
@@ -7,7 +8,6 @@ import { Events } from './events.js';
  * @description The foundational object for the Two.js scenegraph.
  */
 export class Element extends Events {
-
   /**
    * @name Two.Element#_flagId
    * @private
@@ -34,7 +34,7 @@ export class Element extends Events {
    * @property {String} - Session specific unique identifier.
    * @nota-bene In the {@link Two.SVGRenderer} change this to change the underlying SVG element's id too.
    */
-  _id = '';
+  _id = Constants.Identifier + Constants.uniqueId();
 
   /**
    * @name Two.Element#className
@@ -51,13 +51,27 @@ export class Element extends Events {
   classList = [];
 
   constructor() {
-
     super();
 
     for (let prop in proto) {
       Object.defineProperty(this, prop, proto[prop]);
     }
+  }
 
+  /**
+   * @name Two.Element.fromObject
+   * @function
+   * @param {Object} obj - Object notation of a {@link Two.Element} to create a new instance
+   * @returns {Two.Element}
+   * @description Create a new {@link Two.Element} from an object notation of a {@link Two.Element}.
+   * @nota-bene Works in conjunction with {@link Two.Element#toObject}
+   */
+  static fromObject(obj) {
+    const elem = new Element().copy(obj);
+    if ('id' in obj) {
+      elem.id = obj.id;
+    }
+    return elem;
   }
 
   /**
@@ -69,21 +83,36 @@ export class Element extends Events {
     this._flagId = this._flagClassName = false;
   }
 
+  copy(element) {
+    // Explicitly do not copy the id
+    // of an object to keep uniqueness
+    this.renderer.type = element.renderer.type;
+    this.className = element.className;
+    return this;
+  }
+
+  toObject() {
+    return {
+      renderer: { type: this.renderer.type },
+      id: this.id,
+      className: this.className,
+    };
+  }
 }
 
 const proto = {
   renderer: {
     enumerable: false,
-    get: function() {
+    get: function () {
       return this._renderer;
-    }
+    },
   },
   id: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._id;
     },
-    set: function(v) {
+    set: function (v) {
       const id = this._id;
       if (v === this._id) {
         return;
@@ -94,19 +123,19 @@ const proto = {
         delete this.parent.children.ids[id];
         this.parent.children.ids[this._id] = this;
       }
-    }
+    },
   },
   className: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._className;
     },
-    set: function(v) {
+    set: function (v) {
       if (this._className !== v) {
         this._flagClassName = true;
         this.classList = v.split(/\s+?/);
         this._className = v;
       }
-    }
-  }
+    },
+  },
 };

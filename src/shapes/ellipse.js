@@ -4,7 +4,8 @@ import { HALF_PI, TWO_PI } from '../utils/math.js';
 import { Path } from '../path.js';
 import { Anchor } from '../anchor.js';
 
-const cos = Math.cos, sin = Math.sin;
+const cos = Math.cos,
+  sin = Math.sin;
 
 /**
  * @name Two.Ellipse
@@ -17,7 +18,6 @@ const cos = Math.cos, sin = Math.sin;
  * @param {Number} [resolution=4] - The number of vertices used to construct the ellipse.
  */
 export class Ellipse extends Path {
-
   /**
    * @name Two.Ellipse#_flagWidth
    * @private
@@ -45,7 +45,6 @@ export class Ellipse extends Path {
   _height = 0;
 
   constructor(x, y, rx, ry, resolution) {
-
     if (typeof ry !== 'number' && typeof rx === 'number') {
       ry = rx;
     }
@@ -58,6 +57,8 @@ export class Ellipse extends Path {
     }
 
     super(points, true, true, true);
+
+    this._renderer.type = 'ellipse';
 
     for (let prop in proto) {
       Object.defineProperty(this, prop, proto[prop]);
@@ -87,7 +88,6 @@ export class Ellipse extends Path {
     if (typeof y === 'number') {
       this.translation.y = y;
     }
-
   }
 
   /**
@@ -95,6 +95,43 @@ export class Ellipse extends Path {
    * @property {String[]} - A list of properties that are on every {@link Two.Ellipse}.
    */
   static Properties = ['width', 'height'];
+
+  /**
+   * @name Two.Ellipse.fromObject
+   * @function
+   * @param {Object} obj - Object notation of a {@link Two.Ellipse} to create a new instance
+   * @returns {Two.Ellipse}
+   * @description Create a new {@link Two.Ellipse} from an object notation of a {@link Two.Ellipse}.
+   * @nota-bene Works in conjunction with {@link Two.Ellipse#toObject}
+   */
+  static fromObject(obj) {
+    const ellipse = new Ellipse().copy(obj);
+
+    if ('id' in obj) {
+      ellipse.id = obj.id;
+    }
+
+    return ellipse;
+  }
+
+  /**
+   * @name Two.Ellipse#copy
+   * @function
+   * @param {Two.Ellipse} ellipse - The reference {@link Two.Ellipse}
+   * @description Copy the properties of one {@link Two.Ellipse} onto another.
+   */
+  copy(ellipse) {
+    super.copy.call(this, ellipse);
+
+    for (let i = 0; i < Ellipse.Properties.length; i++) {
+      const k = Ellipse.Properties[i];
+      if (k in ellipse && typeof ellipse[k] === 'number') {
+        this[k] = ellipse[k];
+      }
+    }
+
+    return this;
+  }
 
   /**
    * @name Two.Ellipse#_update
@@ -105,9 +142,7 @@ export class Ellipse extends Path {
    * @nota-bene Try not to call this method more than once a frame.
    */
   _update() {
-
     if (this._flagVertices || this._flagWidth || this._flagHeight) {
-
       let length = this.vertices.length;
 
       if (!this._closed && length > 2) {
@@ -143,7 +178,6 @@ export class Ellipse extends Path {
 
     super._update.call(this);
     return this;
-
   }
 
   /**
@@ -153,12 +187,10 @@ export class Ellipse extends Path {
    * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
    */
   flagReset() {
-
     this._flagWidth = this._flagHeight = false;
 
     super.flagReset.call(this);
     return this;
-
   }
 
   /**
@@ -169,7 +201,6 @@ export class Ellipse extends Path {
    * @description Create a new instance of {@link Two.Ellipse} with the same properties of the current path.
    */
   clone(parent) {
-
     const rx = this.width / 2;
     const ry = this.height / 2;
     const resolution = this.vertices.length;
@@ -195,7 +226,6 @@ export class Ellipse extends Path {
     }
 
     return clone;
-
   }
 
   /**
@@ -205,8 +235,9 @@ export class Ellipse extends Path {
    * @description Return a JSON compatible plain object that represents the path.
    */
   toObject() {
-
     const object = super.toObject.call(this);
+
+    object.renderer.type = 'ellipse';
 
     for (let i = 0; i < Ellipse.Properties.length; i++) {
       const k = Ellipse.Properties[i];
@@ -214,30 +245,28 @@ export class Ellipse extends Path {
     }
 
     return object;
-
   }
-
 }
 
 const proto = {
   width: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._width;
     },
-    set: function(v) {
+    set: function (v) {
       this._width = v;
       this._flagWidth = true;
-    }
+    },
   },
   height: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._height;
     },
-    set: function(v) {
+    set: function (v) {
       this._height = v;
       this._flagHeight = true;
-    }
-  }
+    },
+  },
 };

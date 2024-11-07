@@ -4,7 +4,8 @@ import { TWO_PI } from '../utils/math.js';
 import { Path } from '../path.js';
 import { Anchor } from '../anchor.js';
 
-const cos = Math.cos, sin = Math.sin;
+const cos = Math.cos,
+  sin = Math.sin;
 
 /**
  * @name Two.Star
@@ -17,7 +18,6 @@ const cos = Math.cos, sin = Math.sin;
  * @param {Number} [sides=5] - The number of sides used to construct the star.
  */
 export class Star extends Path {
-
   /**
    * @name Two.Star#_flagInnerRadius
    * @private
@@ -57,7 +57,6 @@ export class Star extends Path {
   _sides = 0;
 
   constructor(x, y, innerRadius, outerRadius, sides) {
-
     if (arguments.length <= 3) {
       outerRadius = innerRadius;
       innerRadius = outerRadius / 2;
@@ -68,6 +67,8 @@ export class Star extends Path {
     }
 
     super();
+
+    this._renderer.type = 'star';
 
     for (let prop in proto) {
       Object.defineProperty(this, prop, proto[prop]);
@@ -108,7 +109,6 @@ export class Star extends Path {
     if (typeof y === 'number') {
       this.translation.y = y;
     }
-
   }
 
   /**
@@ -117,6 +117,42 @@ export class Star extends Path {
    */
   static Properties = ['innerRadius', 'outerRadius', 'sides'];
 
+  /**
+   * @name Two.Star.fromObject
+   * @function
+   * @param {Object} obj - Object notation of a {@link Two.Star} to create a new instance
+   * @returns {Two.Star}
+   * @description Create a new {@link Two.Star} from an object notation of a {@link Two.Star}.
+   * @nota-bene Works in conjunction with {@link Two.Star#toObject}
+   */
+  static fromObject(obj) {
+    const star = new Star().copy(obj);
+
+    if ('id' in obj) {
+      star.id = obj.id;
+    }
+
+    return star;
+  }
+
+  /**
+   * @name Two.Star#copy
+   * @function
+   * @param {Two.Star} star - The reference {@link Two.Star}
+   * @description Copy the properties of one {@link Two.Star} onto another.
+   */
+  copy(star) {
+    super.copy.call(this, star);
+
+    for (let i = 0; i < Star.Properties.length; i++) {
+      const k = Star.Properties[i];
+      if (k in star && typeof star[k] === 'number') {
+        this[k] = star[k];
+      }
+    }
+
+    return this;
+  }
 
   /**
    * @name Two.Star#_update
@@ -127,9 +163,12 @@ export class Star extends Path {
    * @nota-bene Try not to call this method more than once a frame.
    */
   _update() {
-
-    if (this._flagVertices || this._flagInnerRadius || this._flagOuterRadius || this._flagSides) {
-
+    if (
+      this._flagVertices ||
+      this._flagInnerRadius ||
+      this._flagOuterRadius ||
+      this._flagSides
+    ) {
       const sides = this._sides * 2;
       const amount = sides + 1;
       let length = this.vertices.length;
@@ -140,7 +179,6 @@ export class Star extends Path {
       }
 
       for (let i = 0; i < amount; i++) {
-
         const pct = (i + 0.5) / sides;
         const theta = TWO_PI * pct;
         const r = (!(i % 2) ? this._innerRadius : this._outerRadius) / 2;
@@ -154,15 +192,12 @@ export class Star extends Path {
         }
 
         this.vertices[i].command = i === 0 ? Commands.move : Commands.line;
-
       }
-
     }
 
     super._update.call(this);
 
     return this;
-
   }
 
   /**
@@ -172,12 +207,10 @@ export class Star extends Path {
    * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
    */
   flagReset() {
-
     this._flagInnerRadius = this._flagOuterRadius = this._flagSides = false;
     super.flagReset.call(this);
 
     return this;
-
   }
 
   /**
@@ -188,7 +221,6 @@ export class Star extends Path {
    * @description Create a new instance of {@link Two.Star} with the same properties of the current path.
    */
   clone(parent) {
-
     const ir = this.innerRadius;
     const or = this.outerRadius;
     const sides = this.sides;
@@ -215,7 +247,6 @@ export class Star extends Path {
     }
 
     return clone;
-
   }
 
   /**
@@ -225,8 +256,9 @@ export class Star extends Path {
    * @description Return a JSON compatible plain object that represents the path.
    */
   toObject() {
-
     const object = super.toObject.call(this);
+
+    object.renderer.type = 'star';
 
     for (let i = 0; i < Star.Properties.length; i++) {
       const k = Star.Properties[i];
@@ -234,40 +266,38 @@ export class Star extends Path {
     }
 
     return object;
-
   }
-
 }
 
 const proto = {
   innerRadius: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._innerRadius;
     },
-    set: function(v) {
+    set: function (v) {
       this._innerRadius = v;
       this._flagInnerRadius = true;
-    }
+    },
   },
   outerRadius: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._outerRadius;
     },
-    set: function(v) {
+    set: function (v) {
       this._outerRadius = v;
       this._flagOuterRadius = true;
-    }
+    },
   },
   sides: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._sides;
     },
-    set: function(v) {
+    set: function (v) {
       this._sides = v;
       this._flagSides = true;
-    }
-  }
+    },
+  },
 };

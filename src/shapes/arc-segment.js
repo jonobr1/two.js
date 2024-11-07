@@ -18,7 +18,6 @@ import { Constants } from '../constants.js';
  * @param {Number} [resolution=24] - The number of vertices used to construct the arc segment.
  */
 export class ArcSegment extends Path {
-
   /**
    * @name Two.ArcSegment#_flagStartAngle
    * @private
@@ -70,14 +69,15 @@ export class ArcSegment extends Path {
   _outerRadius = 0;
 
   constructor(x, y, ir, or, sa, ea, res) {
-
-    const amount = res || (Constants.Resolution * 3);
+    const amount = res || Constants.Resolution * 3;
     const points = [];
     for (let i = 0; i < amount; i++) {
       points.push(new Anchor());
     }
 
     super(points, true, false, true);
+
+    this._renderer.type = 'arc-segment';
 
     for (let prop in proto) {
       Object.defineProperty(this, prop, proto[prop]);
@@ -123,7 +123,6 @@ export class ArcSegment extends Path {
     if (typeof y === 'number') {
       this.translation.y = y;
     }
-
   }
 
   /**
@@ -131,6 +130,43 @@ export class ArcSegment extends Path {
    * @property {String[]} - A list of properties that are on every {@link Two.ArcSegment}.
    */
   static Properties = ['startAngle', 'endAngle', 'innerRadius', 'outerRadius'];
+
+  /**
+   * @name Two.ArcSegment.fromObject
+   * @function
+   * @param {Object} obj - Object notation of a {@link Two.ArcSegment} to create a new instance
+   * @returns {Two.ArcSegment}
+   * @description Create a new {@link Two.ArcSegment} from an object notation of a {@link Two.ArcSegment}.
+   * @nota-bene Works in conjunction with {@link Two.ArcSegment#toObject}
+   */
+  static fromObject(obj) {
+    const segment = new ArcSegment().copy(obj);
+
+    if ('id' in obj) {
+      segment.id = obj.id;
+    }
+
+    return segment;
+  }
+
+  /**
+   * @name Two.ArcSegment#copy
+   * @function
+   * @param {Two.ArcSegment} arcSegment - The reference {@link Two.ArcSegment}
+   * @description Copy the properties of one {@link Two.ArcSegment} onto another.
+   */
+  copy(arcSegment) {
+    super.copy.call(this, arcSegment);
+
+    for (let i = 0; i < ArcSegment.Properties.length; i++) {
+      const k = ArcSegment.Properties[i];
+      if (k in arcSegment && typeof arcSegment[k] === 'number') {
+        this[k] = arcSegment[k];
+      }
+    }
+
+    return this;
+  }
 
   /**
    * @name Two.ArcSegment#_update
@@ -141,10 +177,13 @@ export class ArcSegment extends Path {
    * @nota-bene Try not to call this method more than once a frame.
    */
   _update() {
-
-    if (this._flagVertices || this._flagStartAngle || this._flagEndAngle
-      || this._flagInnerRadius || this._flagOuterRadius) {
-
+    if (
+      this._flagVertices ||
+      this._flagStartAngle ||
+      this._flagEndAngle ||
+      this._flagInnerRadius ||
+      this._flagOuterRadius
+    ) {
       const sa = this._startAngle;
       const ea = this._endAngle;
 
@@ -155,8 +194,9 @@ export class ArcSegment extends Path {
       const punctured = ir > 0;
 
       const vertices = this.vertices;
-      let length = (punctured ? vertices.length / 2 : vertices.length);
-      let command, id = 0;
+      let length = punctured ? vertices.length / 2 : vertices.length;
+      let command,
+        id = 0;
       let i, last, pct, v, theta, step, x, y, amp;
 
       if (connected) {
@@ -169,7 +209,6 @@ export class ArcSegment extends Path {
        * Outer Circle
        */
       for (i = 0, last = length - 1; i < length; i++) {
-
         pct = i / last;
         v = vertices[id];
         theta = pct * (ea - sa) + sa;
@@ -193,7 +232,7 @@ export class ArcSegment extends Path {
         v.controls.right.clear();
 
         if (v.command === Commands.curve) {
-          amp = or * step / Math.PI;
+          amp = (or * step) / Math.PI;
           v.controls.left.x = amp * Math.cos(theta - HALF_PI);
           v.controls.left.y = amp * Math.sin(theta - HALF_PI);
           v.controls.right.x = amp * Math.cos(theta + HALF_PI);
@@ -207,11 +246,9 @@ export class ArcSegment extends Path {
         }
 
         id++;
-
       }
 
       if (punctured) {
-
         if (connected) {
           vertices[id].command = Commands.close;
           id++;
@@ -224,7 +261,6 @@ export class ArcSegment extends Path {
          * Inner Circle
          */
         for (i = 0; i < length; i++) {
-
           pct = i / last;
           v = vertices[id];
           theta = (1 - pct) * (ea - sa) + sa;
@@ -244,7 +280,7 @@ export class ArcSegment extends Path {
           v.controls.right.clear();
 
           if (v.command === Commands.curve) {
-            amp = ir * step / Math.PI;
+            amp = (ir * step) / Math.PI;
             v.controls.left.x = amp * Math.cos(theta + HALF_PI);
             v.controls.left.y = amp * Math.sin(theta + HALF_PI);
             v.controls.right.x = amp * Math.cos(theta - HALF_PI);
@@ -258,15 +294,12 @@ export class ArcSegment extends Path {
           }
 
           id++;
-
         }
 
         // Final Point
         vertices[id].copy(vertices[0]);
         vertices[id].command = Commands.line;
-
       } else if (!connected) {
-
         vertices[id].command = Commands.line;
         vertices[id].x = 0;
         vertices[id].y = 0;
@@ -275,15 +308,12 @@ export class ArcSegment extends Path {
         // Final Point
         vertices[id].copy(vertices[0]);
         vertices[id].command = Commands.line;
-
       }
-
     }
 
     super._update.call(this);
 
     return this;
-
   }
 
   /**
@@ -293,14 +323,15 @@ export class ArcSegment extends Path {
    * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
    */
   flagReset() {
-
     super.flagReset.call(this);
 
-    this._flagStartAngle = this._flagEndAngle
-      = this._flagInnerRadius = this._flagOuterRadius = false;
+    this._flagStartAngle =
+      this._flagEndAngle =
+      this._flagInnerRadius =
+      this._flagOuterRadius =
+        false;
 
     return this;
-
   }
 
   /**
@@ -311,7 +342,6 @@ export class ArcSegment extends Path {
    * @description Create a new instance of {@link Two.ArcSegment} with the same properties of the current path.
    */
   clone(parent) {
-
     const ir = this.innerRadius;
     const or = this.outerRadius;
     const sa = this.startAngle;
@@ -340,7 +370,6 @@ export class ArcSegment extends Path {
     }
 
     return clone;
-
   }
 
   /**
@@ -350,8 +379,9 @@ export class ArcSegment extends Path {
    * @description Return a JSON compatible plain object that represents the path.
    */
   toObject() {
-
     const object = super.toObject.call(this);
+
+    object.renderer.type = 'arc-segment';
 
     for (let i = 0; i < ArcSegment.Properties.length; i++) {
       const k = ArcSegment.Properties[i];
@@ -359,50 +389,48 @@ export class ArcSegment extends Path {
     }
 
     return object;
-
   }
-
 }
 
 const proto = {
   startAngle: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._startAngle;
     },
-    set: function(v) {
+    set: function (v) {
       this._startAngle = v;
       this._flagStartAngle = true;
-    }
+    },
   },
   endAngle: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._endAngle;
     },
-    set: function(v) {
+    set: function (v) {
       this._endAngle = v;
       this._flagEndAngle = true;
-    }
+    },
   },
   innerRadius: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._innerRadius;
     },
-    set: function(v) {
+    set: function (v) {
       this._innerRadius = v;
       this._flagInnerRadius = true;
-    }
+    },
   },
   outerRadius: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._outerRadius;
     },
-    set: function(v) {
+    set: function (v) {
       this._outerRadius = v;
       this._flagOuterRadius = true;
-    }
-  }
+    },
+  },
 };

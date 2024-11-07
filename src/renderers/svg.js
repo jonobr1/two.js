@@ -236,6 +236,10 @@ const svg = {
     return clip;
   },
 
+  getRendererType: function (type) {
+    return type in svg ? type : 'path';
+  },
+
   defs: {
     update: function (domElement) {
       const { defs } = domElement;
@@ -300,7 +304,8 @@ const svg = {
     },
 
     renderChild: function (child) {
-      svg[child._renderer.type].render.call(child, this);
+      const prop = svg.getRendererType(child._renderer.type);
+      svg[prop].render.call(child, this);
     },
 
     render: function (domElement) {
@@ -339,7 +344,8 @@ const svg = {
 
       for (let i = 0; i < this.children.length; i++) {
         const child = this.children[i];
-        svg[child._renderer.type].render.call(child, domElement);
+        const prop = svg.getRendererType(child._renderer.type);
+        svg[prop].render.call(child, domElement);
       }
 
       if (this._flagId) {
@@ -396,7 +402,8 @@ const svg = {
 
       if (this._flagMask) {
         if (this._mask) {
-          svg[this._mask._renderer.type].render.call(this._mask, domElement);
+          const prop = svg.getRendererType(this._mask._renderer.type);
+          svg[prop].render.call(this._mask, domElement);
           this._renderer.elem.setAttribute(
             'clip-path',
             'url(#' + this._mask.id + ')'
@@ -446,11 +453,8 @@ const svg = {
       if (this._fill && this._fill._renderer) {
         this._renderer.hasFillEffect = true;
         this._fill._update();
-        svg[this._fill._renderer.type].render.call(
-          this._fill,
-          domElement,
-          true
-        );
+        const prop = svg.getRendererType(this._fill._renderer.type);
+        svg[prop].render.call(this._fill, domElement, true);
       }
 
       if (this._flagFill) {
@@ -470,11 +474,8 @@ const svg = {
       if (this._stroke && this._stroke._renderer) {
         this._renderer.hasStrokeEffect = true;
         this._stroke._update();
-        svg[this._stroke._renderer.type].render.call(
-          this._stroke,
-          domElement,
-          true
-        );
+        const prop = svg.getRendererType(this._stroke._renderer.type);
+        svg[prop].render.call(this._stroke, domElement, true);
       }
 
       if (this._flagStroke) {
@@ -558,7 +559,8 @@ const svg = {
 
       if (this._flagMask) {
         if (this._mask) {
-          svg[this._mask._renderer.type].render.call(this._mask, domElement);
+          const prop = svg.getRendererType(this._mask._renderer.type);
+          svg[prop].render.call(this._mask, domElement);
           this._renderer.elem.setAttribute(
             'clip-path',
             'url(#' + this._mask.id + ')'
@@ -610,11 +612,8 @@ const svg = {
       if (this._fill && this._fill._renderer) {
         this._renderer.hasFillEffect = true;
         this._fill._update();
-        svg[this._fill._renderer.type].render.call(
-          this._fill,
-          domElement,
-          true
-        );
+        const prop = svg.getRendererType(this._fill._renderer.type);
+        svg[prop].render.call(this._fill, domElement, true);
       }
 
       if (this._flagFill) {
@@ -634,11 +633,8 @@ const svg = {
       if (this._stroke && this._stroke._renderer) {
         this._renderer.hasStrokeEffect = true;
         this._stroke._update();
-        svg[this._stroke._renderer.type].render.call(
-          this._stroke,
-          domElement,
-          true
-        );
+        const prop = svg.getRendererType(this._stroke._renderer.type);
+        svg[prop].render.call(this._stroke, domElement, true);
       }
 
       if (this._flagStroke) {
@@ -741,11 +737,8 @@ const svg = {
       if (this._fill && this._fill._renderer) {
         this._renderer.hasFillEffect = true;
         this._fill._update();
-        svg[this._fill._renderer.type].render.call(
-          this._fill,
-          domElement,
-          true
-        );
+        const prop = svg.getRendererType(this._fill._renderer.type);
+        svg[prop].render.call(this._fill, domElement, true);
       }
       if (this._flagFill) {
         changed.fill =
@@ -763,11 +756,8 @@ const svg = {
       if (this._stroke && this._stroke._renderer) {
         this._renderer.hasStrokeEffect = true;
         this._stroke._update();
-        svg[this._stroke._renderer.type].render.call(
-          this._stroke,
-          domElement,
-          true
-        );
+        const prop = svg.getRendererType(this._stroke._renderer.type);
+        svg[prop].render.call(this._stroke, domElement, true);
       }
       if (this._flagStroke) {
         changed.stroke =
@@ -829,7 +819,8 @@ const svg = {
 
       if (this._flagMask) {
         if (this._mask) {
-          svg[this._mask._renderer.type].render.call(this._mask, domElement);
+          const prop = svg.getRendererType(this._mask._renderer.type);
+          svg[prop].render.call(this._mask, domElement);
           this._renderer.elem.setAttribute(
             'clip-path',
             'url(#' + this._mask.id + ')'

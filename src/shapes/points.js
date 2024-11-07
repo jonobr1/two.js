@@ -4,20 +4,25 @@ import { _ } from '../utils/underscore.js';
 
 import { Collection } from '../collection.js';
 import { Events } from '../events.js';
-import { Vector } from '../vector.js';
+import { Anchor } from '../anchor.js';
 import { Shape } from '../shape.js';
 import {
   Path,
-  FlagVertices, BindVertices, UnbindVertices, FlagFill, FlagStroke
+  FlagVertices,
+  BindVertices,
+  UnbindVertices,
+  FlagFill,
+  FlagStroke,
 } from '../path.js';
 
 import { Gradient } from '../effects/gradient.js';
 import { LinearGradient } from '../effects/linear-gradient.js';
 import { RadialGradient } from '../effects/radial-gradient.js';
 import { Texture } from '../effects/texture.js';
+import { getEffectFromObject } from '../utils/shape.js';
 
 const ceil = Math.ceil,
-      floor = Math.floor;
+  floor = Math.floor;
 
 /**
  * @name Two.Points
@@ -27,7 +32,6 @@ const ceil = Math.ceil,
  * @description This is a primary primitive class for quickly and easily drawing points in Two.js. Unless specified methods return their instance of `Two.Points` for the purpose of chaining.
  */
 export class Points extends Shape {
-
   _flagVertices = true;
   _flagLength = true;
   _flagFill = true;
@@ -51,7 +55,6 @@ export class Points extends Shape {
   _dashes = null;
 
   constructor(vertices) {
-
     super();
 
     for (let prop in proto) {
@@ -140,7 +143,6 @@ export class Points extends Shape {
      * @property {Number} - A number in pixels to offset {@link Two.Points#dashes} display.
      */
     this.dashes.offset = 0;
-
   }
 
   static Properties = [
@@ -152,8 +154,53 @@ export class Points extends Shape {
     'size',
     'sizeAttenuation',
     'beginning',
-    'ending'
+    'ending',
+    'dashes',
   ];
+
+  static fromObject(obj) {
+    const fill =
+      typeof obj.fill === 'string' ? obj.fill : getEffectFromObject(obj.fill);
+    const stroke =
+      typeof obj.stroke === 'string'
+        ? obj.stroke
+        : getEffectFromObject(obj.stroke);
+    const points = new Points().copy({ ...obj, fill, stroke });
+
+    if ('id' in obj) {
+      points.id = obj.id;
+    }
+
+    return points;
+  }
+
+  /**
+   * @name Two.Points#copy
+   * @function
+   * @param {Two.Points} points - The reference {@link Two.Points}
+   * @description Copy the properties of one {@link Two.Points} onto another.
+   */
+  copy(points) {
+    super.copy.call(this, points);
+
+    for (let j = 0; j < points.vertices.length; j++) {
+      const v = points.vertices[j];
+      if (v instanceof Anchor) {
+        this.vertices.push(points.vertices[j].clone());
+      } else {
+        this.vertices.push(new Anchor().copy(v));
+      }
+    }
+
+    for (let i = 0; i < Points.Properties.length; i++) {
+      const k = Points.Properties[i];
+      if (k in points) {
+        this[k] = points[k];
+      }
+    }
+
+    return this;
+  }
 
   /**
    * @name Two.Points#clone
@@ -163,7 +210,6 @@ export class Points extends Shape {
    * @description Create a new instance of {@link Two.Points} with the same properties of the current path.
    */
   clone(parent) {
-
     const clone = new Points();
 
     for (let j = 0; j < this.vertices.length; j++) {
@@ -192,7 +238,6 @@ export class Points extends Shape {
     }
 
     return clone._update();
-
   }
 
   /**
@@ -202,31 +247,26 @@ export class Points extends Shape {
    * @description Return a JSON compatible plain object that represents the points object.
    */
   toObject() {
+    const result = super.toObject.call(this);
 
-    const result = {
-      vertices: this.vertices.map(function(v) {
-        return v.toObject();
-      })
-    };
+    result.renderer.type = 'points';
+    result.vertices = this.vertices.map((v) => v.toObject());
 
-    _.each(Points.Properties, function(k) {
-      result[k] = this[k];
-    }, this);
-
-    result.className = this.className;
-
-    result.translation = this.translation.toObject();
-    result.rotation = this.rotation;
-    result.scale = this.scale instanceof Vector ? this.scale.toObject() : this.scale;
-    result.skewX = this.skewX;
-    result.skewY = this.skewY;
-
-    if (this.matrix.manual) {
-      result.matrix = this.matrix.toObject();
-    }
+    _.each(
+      Points.Properties,
+      function (k) {
+        if (typeof this[k] !== 'undefined') {
+          if (this[k].toObject) {
+            result[k] = this[k].toObject();
+          } else {
+            result[k] = this[k];
+          }
+        }
+      },
+      this
+    );
 
     return result;
-
   }
 
   /**
@@ -277,7 +317,6 @@ export class Points extends Shape {
     this._update();
     let points = [];
     for (let i = 0; i < this.vertices.length; i++) {
-
       const a = this.vertices[i];
       const b = this.vertices[i - 1];
 
@@ -292,12 +331,10 @@ export class Points extends Shape {
       const subdivisions = subdivide(x1, y1, x1, y1, x2, y2, x2, y2, limit);
 
       points = points.concat(subdivisions);
-
     }
 
     this.vertices = points;
     return this;
-
   }
 
   /**
@@ -319,9 +356,7 @@ export class Points extends Shape {
    * @nota-bene Try not to call this method more than once a frame.
    */
   _update() {
-
     if (this._flagVertices) {
-
       if (this._flagLength) {
         this._updateLength(undefined, true);
       }
@@ -335,13 +370,13 @@ export class Points extends Shape {
       const low = ceil(bid);
       const high = floor(eid);
 
-      let j = 0, v;
+      let j = 0,
+        v;
 
       this._renderer.vertices = [];
       this._renderer.collection = [];
 
       for (let i = 0; i < this._collection.length; i++) {
-
         if (i >= low && i <= high) {
           v = this._collection[i];
           this._renderer.collection.push(v);
@@ -349,15 +384,12 @@ export class Points extends Shape {
           this._renderer.vertices[j * 2 + 1] = v.y;
           j++;
         }
-
       }
-
     }
 
     super._update.apply(this, arguments);
 
     return this;
-
   }
 
   /**
@@ -367,124 +399,131 @@ export class Points extends Shape {
    * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
    */
   flagReset() {
-
-    this._flagVertices = this._flagLength = this._flagFill =  this._flagStroke =
-      this._flagLinewidth = this._flagOpacity = this._flagVisible =
-      this._flagSize = this._flagSizeAttenuation = false;
+    this._flagVertices =
+      this._flagLength =
+      this._flagFill =
+      this._flagStroke =
+      this._flagLinewidth =
+      this._flagOpacity =
+      this._flagVisible =
+      this._flagSize =
+      this._flagSizeAttenuation =
+        false;
 
     super.flagReset.call(this);
 
     return this;
-
   }
-
 }
 
 const proto = {
-
   linewidth: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._linewidth;
     },
-    set: function(v) {
+    set: function (v) {
       this._linewidth = v;
       this._flagLinewidth = true;
-    }
+    },
   },
   opacity: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._opacity;
     },
-    set: function(v) {
+    set: function (v) {
       this._opacity = v;
       this._flagOpacity = true;
-    }
+    },
   },
   visible: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._visible;
     },
-    set: function(v) {
+    set: function (v) {
       this._visible = v;
       this._flagVisible = true;
-    }
+    },
   },
   size: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._size;
     },
-    set: function(v) {
+    set: function (v) {
       this._size = v;
       this._flagSize = true;
-    }
+    },
   },
   sizeAttenuation: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._sizeAttenuation;
     },
-    set: function(v) {
+    set: function (v) {
       this._sizeAttenuation = v;
       this._flagSizeAttenuation = true;
-    }
+    },
   },
 
   fill: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._fill;
     },
-    set: function(f) {
-
-      if (this._fill instanceof Gradient
-        || this._fill instanceof LinearGradient
-        || this._fill instanceof RadialGradient
-        || this._fill instanceof Texture) {
+    set: function (f) {
+      if (
+        this._fill instanceof Gradient ||
+        this._fill instanceof LinearGradient ||
+        this._fill instanceof RadialGradient ||
+        this._fill instanceof Texture
+      ) {
         this._fill.unbind(Events.Types.change, this._renderer.flagFill);
       }
 
       this._fill = f;
       this._flagFill = true;
 
-      if (this._fill instanceof Gradient
-        || this._fill instanceof LinearGradient
-        || this._fill instanceof RadialGradient
-        || this._fill instanceof Texture) {
+      if (
+        this._fill instanceof Gradient ||
+        this._fill instanceof LinearGradient ||
+        this._fill instanceof RadialGradient ||
+        this._fill instanceof Texture
+      ) {
         this._fill.bind(Events.Types.change, this._renderer.flagFill);
       }
-
-    }
+    },
   },
 
   stroke: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._stroke;
     },
-    set: function(f) {
-
-      if (this._stroke instanceof Gradient
-        || this._stroke instanceof LinearGradient
-        || this._stroke instanceof RadialGradient
-        || this._stroke instanceof Texture) {
+    set: function (f) {
+      if (
+        this._stroke instanceof Gradient ||
+        this._stroke instanceof LinearGradient ||
+        this._stroke instanceof RadialGradient ||
+        this._stroke instanceof Texture
+      ) {
         this._stroke.unbind(Events.Types.change, this._renderer.flagStroke);
       }
 
       this._stroke = f;
       this._flagStroke = true;
 
-      if (this._stroke instanceof Gradient
-        || this._stroke instanceof LinearGradient
-        || this._stroke instanceof RadialGradient
-        || this._stroke instanceof Texture) {
+      if (
+        this._stroke instanceof Gradient ||
+        this._stroke instanceof LinearGradient ||
+        this._stroke instanceof RadialGradient ||
+        this._stroke instanceof Texture
+      ) {
         this._stroke.bind(Events.Types.change, this._renderer.flagStroke);
       }
-
-    }
+    },
   },
 
   /**
@@ -492,46 +531,44 @@ const proto = {
    * @property {Number} - The sum of distances between all {@link Two.Points#vertices}.
    */
   length: {
-    get: function() {
+    get: function () {
       if (this._flagLength) {
         this._updateLength();
       }
       return this._length;
-    }
+    },
   },
 
   beginning: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._beginning;
     },
-    set: function(v) {
+    set: function (v) {
       this._beginning = v;
       this._flagVertices = true;
-    }
+    },
   },
 
   ending: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._ending;
     },
-    set: function(v) {
+    set: function (v) {
       this._ending = v;
       this._flagVertices = true;
-    }
+    },
   },
 
   vertices: {
-
     enumerable: true,
 
-    get: function() {
+    get: function () {
       return this._collection;
     },
 
-    set: function(vertices) {
-
+    set: function (vertices) {
       const bindVertices = this._renderer.bindVertices;
       const unbindVertices = this._renderer.unbindVertices;
 
@@ -549,7 +586,6 @@ const proto = {
         this._collection = new Collection(vertices || []);
       }
 
-
       // Listen for Collection changes and bind / unbind
       this._collection
         .bind(Events.Types.insert, bindVertices)
@@ -557,22 +593,19 @@ const proto = {
 
       // Bind Initial Vertices
       bindVertices(this._collection);
-
-    }
-
+    },
   },
 
   dashes: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._dashes;
     },
-    set: function(v) {
-      if(typeof v.offset !== 'number') {
+    set: function (v) {
+      if (typeof v.offset !== 'number') {
         v.offset = (this.dashes && this._dashes.offset) || 0;
       }
       this._dashes = v;
-    }
-  }
-
+    },
+  },
 };

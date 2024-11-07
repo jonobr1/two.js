@@ -8,6 +8,7 @@ import { LinearGradient } from './effects/linear-gradient.js';
 import { RadialGradient } from './effects/radial-gradient.js';
 import { Texture } from './effects/texture.js';
 import { root } from './utils/root.js';
+import { getEffectFromObject } from 'utils/shape.js';
 
 let canvas;
 const min = Math.min,
@@ -338,6 +339,7 @@ export class Text extends Shape {
     'visible',
     'fill',
     'stroke',
+    'dashes',
   ];
 
   /**
@@ -377,6 +379,49 @@ export class Text extends Shape {
   }
 
   /**
+   * @name Two.Text.fromObject
+   * @function
+   * @param {Object} obj - Object notation of a {@link Two.Text} to create a new instance
+   * @returns {Two.Text}
+   * @description Create a new {@link Two.Text} from an object notation of a {@link Two.Text}.
+   * @nota-bene Works in conjunction with {@link Two.Text#toObject}
+   */
+  static fromObject(obj) {
+    const fill =
+      typeof obj.fill === 'string' ? obj.fill : getEffectFromObject(obj.fill);
+    const stroke =
+      typeof obj.stroke === 'string'
+        ? obj.stroke
+        : getEffectFromObject(obj.stroke);
+    const text = new Text().copy({ ...obj, fill, stroke });
+
+    if ('id' in obj) {
+      text.id = obj.id;
+    }
+
+    return text;
+  }
+
+  /**
+   * @name Two.Text#copy
+   * @function
+   * @param {Two.Text} text
+   * @description Copy the properties of one {@link Two.Text} onto another.
+   */
+  copy(text) {
+    super.copy.call(this, text);
+
+    for (let i = 0; i < Text.Properties.length; i++) {
+      const k = Text.Properties[i];
+      if (k in text) {
+        this[k] = text[k];
+      }
+    }
+
+    return this;
+  }
+
+  /**
    * @name Two.Text#clone
    * @function
    * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
@@ -410,17 +455,11 @@ export class Text extends Shape {
    * @function
    * @returns {Object}
    * @description Return a JSON compatible plain object that represents the text object.
+   * @nota-bene Works in conjunction with {@link Two.Text.fromObject}
    */
   toObject() {
-    const result = {
-      translation: this.translation.toObject(),
-      rotation: this.rotation,
-      scale: this.scale,
-    };
-
-    if (this.matrix.manual) {
-      result.matrix = this.matrix.toObject();
-    }
+    const result = super.toObject.call(this);
+    result.renderer.type = 'text';
 
     for (let i = 0; i < Text.Properties.length; i++) {
       const prop = Text.Properties[i];

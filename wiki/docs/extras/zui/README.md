@@ -8,7 +8,7 @@ lang: en-US
 
 
 
-[Two.ZUI]() is an extra class to turn your Two.js scene into a Google Maps or Adobe Illustrator style interface. See [https://codepen.io/jonobr1/pen/PobMKwb](https://codepen.io/jonobr1/pen/PobMKwb) for example usage.
+[Two.ZUI](/docs/two/#zui) is an extra class to turn your Two.js scene into a Google Maps or Adobe Illustrator style interface. See [https://codepen.io/jonobr1/pen/PobMKwb](https://codepen.io/jonobr1/pen/PobMKwb) for example usage.
 
 
 <div class="meta">
@@ -63,8 +63,8 @@ lang: en-US
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/extras/jsm/zui.js#L108">
-    zui.js:108
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/extras/jsm/zui.js#L101">
+    zui.js:101
   </a>
 
 </div>
@@ -76,19 +76,27 @@ lang: en-US
 
 
 
-<div class="instance function ">
+<div class="instance function overloaded">
 
 ## clientToSurface
 
 <h2 class="longname" aria-hidden="true"><a href="#clientToSurface"><span class="prefix">Two.ZUI.</span><span class="shortname">clientToSurface</span></a></h2>
 
 
+<div class="overloaded-label">
+
+_Overloaded_
+
+</div>
+
 
 
 <div class="returns">
 
-__Returns__: Two.Vector
+__Returns__: Object
 
+
+- An object with x, y, and z components
 
 
 </div>
@@ -105,8 +113,7 @@ __Returns__: Two.Vector
 
 | Argument | Description |
 | ---- | ----------- |
-|  x  | The x position of the user's input. |
-|  y  | The y position of the user's input. |
+|  a  |  |
 </div>
 
 
@@ -114,7 +121,83 @@ __Returns__: Two.Vector
 
 <div class="description">
 
-Convert an x, y coordinate in user space into projected space.
+Convert an x, y coordinate in the user’s space to the object's projected space. Optionally pass a z property on the object to apply depth.
+
+</div>
+
+
+
+
+
+<div class="meta">
+
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/extras/jsm/zui.js#L129">
+    zui.js:129
+  </a>
+
+</div>
+
+
+
+<div class="tags">
+
+
+
+</div>
+
+
+</div>
+
+
+
+<div class="instance member overloaded">
+
+## clientToSurface
+
+<h2 class="longname" aria-hidden="true"><a href="#clientToSurface"><span class="prefix">Two.ZUI.</span><span class="shortname">clientToSurface</span></a></h2>
+
+
+<div class="overloaded-label">
+
+_Overloaded_
+
+</div>
+
+
+
+<div class="returns">
+
+__Returns__: Object
+
+
+- An object with x, y, and z components
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="params">
+
+| Argument | Description |
+| ---- | ----------- |
+|  a  | The x component of position to be transformed. |
+|  b  | The y component of position to be transformed. |
+|  c  | The optional z component of position to be transformed. |
+</div>
+
+
+
+
+<div class="description">
+
+Convert an x, y coordinate in the user’s space to the object's projected space. Optionally pass a z property on the object to apply depth.
 
 </div>
 
@@ -132,19 +215,41 @@ Convert an x, y coordinate in user space into projected space.
 
 
 
+<div class="tags">
+
+
+
+</div>
+
 
 </div>
 
 
 
-<div class="instance function ">
+<div class="instance function overloaded">
 
 ## surfaceToClient
 
 <h2 class="longname" aria-hidden="true"><a href="#surfaceToClient"><span class="prefix">Two.ZUI.</span><span class="shortname">surfaceToClient</span></a></h2>
 
 
+<div class="overloaded-label">
 
+_Overloaded_
+
+</div>
+
+
+
+<div class="returns">
+
+__Returns__: Object
+
+
+- An object with x, y, and z components
+
+
+</div>
 
 
 
@@ -158,7 +263,7 @@ Convert an x, y coordinate in user space into projected space.
 
 | Argument | Description |
 | ---- | ----------- |
-|  |  |
+|  a  |  |
 </div>
 
 
@@ -166,7 +271,7 @@ Convert an x, y coordinate in user space into projected space.
 
 <div class="description">
 
-Convert an x, y coordinate in projected space to the user's space.
+Convert an x, y coordinate in projected space to the user’s space. Optionally pass a z property on the object to apply depth.
 
 </div>
 
@@ -176,13 +281,95 @@ Convert an x, y coordinate in projected space to the user's space.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/extras/jsm/zui.js#L153">
-    zui.js:153
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/extras/jsm/zui.js#L166">
+    zui.js:166
   </a>
 
 </div>
 
 
+
+<div class="tags">
+
+
+
+</div>
+
+
+</div>
+
+
+
+<div class="instance member overloaded">
+
+## surfaceToClient
+
+<h2 class="longname" aria-hidden="true"><a href="#surfaceToClient"><span class="prefix">Two.ZUI.</span><span class="shortname">surfaceToClient</span></a></h2>
+
+
+<div class="overloaded-label">
+
+_Overloaded_
+
+</div>
+
+
+
+<div class="returns">
+
+__Returns__: Object
+
+
+- An object with x, y, and z components
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="params">
+
+| Argument | Description |
+| ---- | ----------- |
+|  a  | The x component of position to be transformed. |
+|  b  | The y component of position to be transformed. |
+|  c  | The optional z component of position to be transformed. |
+</div>
+
+
+
+
+<div class="description">
+
+Convert an x, y coordinate in projected space to the user’s space. Optionally pass a z property on the object to apply depth.
+
+</div>
+
+
+
+
+
+<div class="meta">
+
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/extras/jsm/zui.js#L175">
+    zui.js:175
+  </a>
+
+</div>
+
+
+
+<div class="tags">
+
+
+
+</div>
 
 
 </div>
@@ -230,8 +417,8 @@ A function to zoom by an incremental amount and a position. Typically used for p
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/extras/jsm/zui.js#L166">
-    zui.js:166
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/extras/jsm/zui.js#L203">
+    zui.js:203
   </a>
 
 </div>
@@ -284,8 +471,8 @@ A function to set the zoom amount and the origin position. This is used internal
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/extras/jsm/zui.js#L180">
-    zui.js:180
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/extras/jsm/zui.js#L217">
+    zui.js:217
   </a>
 
 </div>
@@ -337,8 +524,8 @@ Set the position of the ZUI by an incremental translation amount.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/extras/jsm/zui.js#L212">
-    zui.js:212
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/extras/jsm/zui.js#L247">
+    zui.js:247
   </a>
 
 </div>
@@ -382,8 +569,8 @@ Reset the zoom and scale factors to their original instantiated state.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/extras/jsm/zui.js#L251">
-    zui.js:251
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/extras/jsm/zui.js#L282">
+    zui.js:282
   </a>
 
 </div>

@@ -18,7 +18,6 @@ import { Texture } from './texture.js';
  * @description A convenient package to display still or animated images through a tiled image source. For more information on the principals of animated imagery through tiling see [Texture Atlas](https://en.wikipedia.org/wiki/Texture_atlas) on Wikipedia.
  */
 export class Sprite extends Rectangle {
-
   /**
    * @name Two.Sprite#_flagTexture
    * @private
@@ -99,7 +98,7 @@ export class Sprite extends Rectangle {
   _lastFrame = 0;
 
   /**
-   * @name Two.Sprite#_playing
+   * @name Two.Sprite#_loop
    * @private
    * @property {Boolean} - Dictates whether the {@link Two.Sprite} should loop or not.
    */
@@ -150,7 +149,6 @@ export class Sprite extends Rectangle {
   _origin = null;
 
   constructor(path, ox, oy, cols, rows, frameRate) {
-
     super(ox, oy, 0, 0);
 
     for (let prop in proto) {
@@ -203,7 +201,6 @@ export class Sprite extends Rectangle {
      * @property {Number} - The index of the current tile of the sprite to display. Defaults to `0`.
      */
     this.index = 0;
-
   }
 
   /**
@@ -211,8 +208,52 @@ export class Sprite extends Rectangle {
    * @property {String[]} - A list of properties that are on every {@link Two.Sprite}.
    */
   static Properties = [
-    'texture', 'columns', 'rows', 'frameRate', 'index'
+    'texture',
+    'columns',
+    'rows',
+    'frameRate',
+    'index',
+    'firstFrame',
+    'lastFrame',
+    'loop',
   ];
+
+  /**
+   * @name Two.Sprite.fromObject
+   * @function
+   * @param {Object} obj - Object notation of a {@link Two.Sprite} to create a new instance
+   * @returns {Two.Sprite}
+   * @description Create a new {@link Two.Sprite} from an object notation of a {@link Two.Sprite}.
+   * @nota-bene Works in conjunction with {@link Two.Sprite#toObject}
+   */
+  static fromObject(obj) {
+    const sprite = new Sprite().copy(obj);
+
+    if ('id' in obj) {
+      sprite.id = obj.id;
+    }
+
+    return sprite;
+  }
+
+  /**
+   * @name Two.Sprite#copy
+   * @function
+   * @param {Two.Sprite} sprite - The reference {@link Two.Sprite}
+   * @description Copy the properties of one {@link Two.Sprite} onto another.
+   */
+  copy(sprite) {
+    super.copy.call(this, sprite);
+
+    for (let i = 0; i < Sprite.Properties.length; i++) {
+      const k = Sprite.Properties[i];
+      if (k in sprite) {
+        this[k] = sprite[k];
+      }
+    }
+
+    return this;
+  }
 
   /**
    * @name Two.Sprite#play
@@ -223,7 +264,6 @@ export class Sprite extends Rectangle {
    * @description Initiate animation playback of a {@link Two.Sprite}.
    */
   play(firstFrame, lastFrame, onLastFrame) {
-
     this._playing = true;
     this._firstFrame = 0;
     this._lastFrame = this.amount - 1;
@@ -242,12 +282,11 @@ export class Sprite extends Rectangle {
     }
 
     if (this._index !== this._firstFrame) {
-      this._startTime -= 1000 * Math.abs(this._index - this._firstFrame)
-        / this._frameRate;
+      this._startTime -=
+        (1000 * Math.abs(this._index - this._firstFrame)) / this._frameRate;
     }
 
     return this;
-
   }
 
   /**
@@ -256,10 +295,8 @@ export class Sprite extends Rectangle {
    * @description Halt animation playback of a {@link Two.Sprite}.
    */
   pause() {
-
     this._playing = false;
     return this;
-
   }
 
   /**
@@ -268,12 +305,10 @@ export class Sprite extends Rectangle {
    * @description Halt animation playback of a {@link Two.Sprite} and set the current frame back to the first frame.
    */
   stop() {
-
     this._playing = false;
     this._index = 0;
 
     return this;
-
   }
 
   /**
@@ -284,23 +319,28 @@ export class Sprite extends Rectangle {
    * @description Create a new instance of {@link Two.Sprite} with the same properties of the current sprite.
    */
   clone(parent) {
-
     const clone = new Sprite(
-      this.texture, this.translation.x, this.translation.y,
-      this.columns, this.rows, this.frameRate
+      this.texture,
+      this.translation.x,
+      this.translation.y,
+      this.columns,
+      this.rows,
+      this.frameRate
     );
 
     if (this.playing) {
       clone.play(this._firstFrame, this._lastFrame);
-      clone._loop = this._loop;
     }
+
+    clone.loop = this.loop;
+    clone.firstFrame = this.firstFrame;
+    clone.lastFrame = this.lastFrame;
 
     if (parent) {
       parent.add(clone);
     }
 
     return clone;
-
   }
 
   /**
@@ -316,9 +356,9 @@ export class Sprite extends Rectangle {
     object.rows = this.rows;
     object.frameRate = this.frameRate;
     object.index = this.index;
-    object._firstFrame = this._firstFrame;
-    object._lastFrame = this._lastFrame;
-    object._loop = this._loop;
+    object.firstFrame = this.firstFrame;
+    object.lastFrame = this.lastFrame;
+    object.loop = this.loop;
     return object;
   }
 
@@ -331,7 +371,6 @@ export class Sprite extends Rectangle {
    * @nota-bene Try not to call this method more than once a frame.
    */
   _update() {
-
     const effect = this._texture;
     const cols = this._columns;
     const rows = this._rows;
@@ -340,13 +379,12 @@ export class Sprite extends Rectangle {
     let index, iw, ih, frames;
 
     if (effect) {
-
       if (this._flagColumns || this._flagRows) {
         this._amount = this._columns * this._rows;
       }
 
       if (this._flagFrameRate) {
-        this._duration = 1000 * this._amount / this._frameRate;
+        this._duration = (1000 * this._amount) / this._frameRate;
       }
 
       if (this._flagTexture) {
@@ -354,7 +392,6 @@ export class Sprite extends Rectangle {
       }
 
       if (effect.loaded) {
-
         iw = effect.image.width;
         ih = effect.image.height;
 
@@ -370,7 +407,6 @@ export class Sprite extends Rectangle {
         }
 
         if (this._playing && this._frameRate > 0) {
-
           if (_.isNaN(this._lastFrame)) {
             this._lastFrame = amount - 1;
           }
@@ -378,7 +414,7 @@ export class Sprite extends Rectangle {
           // TODO: Offload perf logic to instance of `Two`.
           elapsed = _.performance.now() - this._startTime;
           frames = this._lastFrame + 1;
-          duration = 1000 * (frames - this._firstFrame) / this._frameRate;
+          duration = (1000 * (frames - this._firstFrame)) / this._frameRate;
 
           if (this._loop) {
             elapsed = elapsed % duration;
@@ -392,17 +428,16 @@ export class Sprite extends Rectangle {
           if (index !== this._index) {
             this._index = index;
             if (index >= this._lastFrame - 1 && this._onLastFrame) {
-              this._onLastFrame();  // Shortcut for chainable sprite animations
+              this._onLastFrame(); // Shortcut for chainable sprite animations
             }
           }
-
         }
 
         const col = this._index % cols;
         const row = Math.floor(this._index / cols);
 
-        const ox = - width * col + (iw - width) / 2;
-        const oy = - height * row + (ih - height) / 2;
+        const ox = -width * col + (iw - width) / 2;
+        const oy = -height * row + (ih - height) / 2;
 
         // TODO: Improve performance
         if (ox !== effect.offset.x) {
@@ -411,15 +446,12 @@ export class Sprite extends Rectangle {
         if (oy !== effect.offset.y) {
           effect.offset.y = oy;
         }
-
       }
-
     }
 
     super._update.call(this);
 
     return this;
-
   }
 
   /**
@@ -429,66 +461,94 @@ export class Sprite extends Rectangle {
    * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
    */
   flagReset() {
-
-    this._flagTexture = this._flagColumns = this._flagRows
-      = this._flagFrameRate = false;
+    this._flagTexture =
+      this._flagColumns =
+      this._flagRows =
+      this._flagFrameRate =
+        false;
 
     super.flagReset.call(this);
 
     return this;
   }
-
 }
 
 const proto = {
   texture: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._texture;
     },
-    set: function(v) {
+    set: function (v) {
       this._texture = v;
       this._flagTexture = true;
-    }
+    },
   },
   columns: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._columns;
     },
-    set: function(v) {
+    set: function (v) {
       this._columns = v;
       this._flagColumns = true;
-    }
+    },
   },
   rows: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._rows;
     },
-    set: function(v) {
+    set: function (v) {
       this._rows = v;
       this._flagRows = true;
-    }
+    },
   },
   frameRate: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._frameRate;
     },
-    set: function(v) {
+    set: function (v) {
       this._frameRate = v;
       this._flagFrameRate = true;
-    }
+    },
   },
   index: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._index;
     },
-    set: function(v) {
+    set: function (v) {
       this._index = v;
       this._flagIndex = true;
-    }
-  }
+    },
+  },
+  firstFrame: {
+    enumerable: true,
+    get: function () {
+      return this._firstFrame;
+    },
+    set: function (v) {
+      this._firstFrame = v;
+    },
+  },
+  lastFrame: {
+    enumerable: true,
+    get: function () {
+      return this._lastFrame;
+    },
+    set: function (v) {
+      this._lastFrame = v;
+    },
+  },
+  loop: {
+    enumerable: true,
+    get: function () {
+      return this._loop;
+    },
+    set: function (v) {
+      this._loop = !!v;
+    },
+  },
 };

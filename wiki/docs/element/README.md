@@ -29,6 +29,76 @@ The foundational object for the Two.js scenegraph.
 
 
 
+<div class="static function ">
+
+## fromObject
+
+<h2 class="longname" aria-hidden="true"><a href="#fromObject"><span class="prefix">Two.Element.</span><span class="shortname">fromObject</span></a></h2>
+
+
+
+
+<div class="returns">
+
+__Returns__: Two.Element
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="params">
+
+| Argument | Description |
+| ---- | ----------- |
+|  obj  | Object notation of a [Two.Element](/docs/element/) to create a new instance |
+</div>
+
+
+
+
+<div class="description">
+
+Create a new [Two.Element](/docs/element/) from an object notation of a [Two.Element](/docs/element/).
+
+</div>
+
+
+
+
+
+<div class="meta">
+
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/element.js#L61">
+    element.js:61
+  </a>
+
+</div>
+
+
+
+<div class="tags">
+
+
+::: tip nota-bene
+Works in conjunction with [Two.Element.toObject](/docs/element/#toobject)
+:::
+
+
+</div>
+
+
+</div>
+
+
+
 <div class="instance member ">
 
 ## renderer
@@ -285,8 +355,8 @@ Called internally by Two.js's renderer to reset all flags. Ensures that only pro
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/element.js#L63">
-    element.js:63
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/element.js#L73">
+    element.js:73
   </a>
 
 </div>
