@@ -739,7 +739,7 @@ var Constants = {
     canvas: "CanvasRenderer"
   },
   Version: "v0.8.15",
-  PublishDate: "2024-11-07T05:44:44.781Z",
+  PublishDate: "2024-11-07T05:56:16.788Z",
   Identifier: "two-",
   Resolution: 12,
   AutoCalculateImportedMatrices: true,
@@ -4149,7 +4149,12 @@ var _Points = class extends Shape {
   copy(points) {
     super.copy.call(this, points);
     for (let j = 0; j < points.vertices.length; j++) {
-      this.vertices.push(points.vertices[j].clone());
+      const v = points.vertices[j];
+      if (v instanceof Anchor) {
+        this.vertices.push(points.vertices[j].clone());
+      } else {
+        this.vertices.push(new Anchor().copy(v));
+      }
     }
     for (let i = 0; i < _Points.Properties.length; i++) {
       const k = _Points.Properties[i];

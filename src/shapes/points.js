@@ -4,6 +4,7 @@ import { _ } from '../utils/underscore.js';
 
 import { Collection } from '../collection.js';
 import { Events } from '../events.js';
+import { Anchor } from '../anchor.js';
 import { Shape } from '../shape.js';
 import {
   Path,
@@ -183,7 +184,12 @@ export class Points extends Shape {
     super.copy.call(this, points);
 
     for (let j = 0; j < points.vertices.length; j++) {
-      this.vertices.push(points.vertices[j].clone());
+      const v = points.vertices[j];
+      if (v instanceof Anchor) {
+        this.vertices.push(points.vertices[j].clone());
+      } else {
+        this.vertices.push(new Anchor().copy(v));
+      }
     }
 
     for (let i = 0; i < Points.Properties.length; i++) {
