@@ -58,6 +58,8 @@ export class Ellipse extends Path {
 
     super(points, true, true, true);
 
+    this._renderer.type = 'ellipse';
+
     for (let prop in proto) {
       Object.defineProperty(this, prop, proto[prop]);
     }
@@ -234,6 +236,8 @@ export class Ellipse extends Path {
    */
   toObject() {
     const object = super.toObject.call(this);
+
+    object.renderer.type = 'ellipse';
 
     for (let i = 0; i < Ellipse.Properties.length; i++) {
       const k = Ellipse.Properties[i];

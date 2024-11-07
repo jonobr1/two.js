@@ -77,6 +77,8 @@ export class ArcSegment extends Path {
 
     super(points, true, false, true);
 
+    this._renderer.type = 'arc-segment';
+
     for (let prop in proto) {
       Object.defineProperty(this, prop, proto[prop]);
     }
@@ -377,14 +379,16 @@ export class ArcSegment extends Path {
    * @description Return a JSON compatible plain object that represents the path.
    */
   toObject() {
-    const result = super.toObject.call(this);
+    const object = super.toObject.call(this);
+
+    object.renderer.type = 'arc-segment';
 
     for (let i = 0; i < ArcSegment.Properties.length; i++) {
       const k = ArcSegment.Properties[i];
-      result[k] = this[k];
+      object[k] = this[k];
     }
 
-    return result;
+    return object;
   }
 }
 

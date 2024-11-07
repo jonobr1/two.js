@@ -26,6 +26,8 @@ export class Rectangle extends Path {
 
     super(points, true, false, true);
 
+    this._renderer.type = 'rectangle';
+
     for (let prop in proto) {
       Object.defineProperty(this, prop, proto[prop]);
     }
@@ -214,6 +216,7 @@ export class Rectangle extends Path {
    */
   toObject() {
     const object = super.toObject.call(this);
+    object.renderer.type = 'rectangle';
     object.width = this.width;
     object.height = this.height;
     object.origin = this.origin.toObject();

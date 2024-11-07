@@ -75,6 +75,8 @@ export class RoundedRectangle extends Path {
 
     super(points);
 
+    this._renderer.type = 'rounded-rectangle';
+
     for (let prop in proto) {
       Object.defineProperty(this, prop, proto[prop]);
     }
@@ -331,6 +333,8 @@ export class RoundedRectangle extends Path {
    */
   toObject() {
     const object = super.toObject.call(this);
+
+    object.renderer.type = 'rounded-rectangle';
 
     for (let i = 0; i < RoundedRectangle.Properties.length; i++) {
       const k = RoundedRectangle.Properties[i];

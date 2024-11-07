@@ -66,6 +66,8 @@ export class Polygon extends Path {
 
     super();
 
+    this._renderer.type = 'polygon';
+
     for (let prop in proto) {
       Object.defineProperty(this, prop, proto[prop]);
     }
@@ -254,6 +256,8 @@ export class Polygon extends Path {
    */
   toObject() {
     const object = super.toObject.call(this);
+
+    object.renderer.type = 'polygon';
 
     for (let i = 0; i < Polygon.Properties.length; i++) {
       const k = Polygon.Properties[i];

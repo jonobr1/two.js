@@ -68,6 +68,8 @@ export class Star extends Path {
 
     super();
 
+    this._renderer.type = 'star';
+
     for (let prop in proto) {
       Object.defineProperty(this, prop, proto[prop]);
     }
@@ -255,6 +257,8 @@ export class Star extends Path {
    */
   toObject() {
     const object = super.toObject.call(this);
+
+    object.renderer.type = 'star';
 
     for (let i = 0; i < Star.Properties.length; i++) {
       const k = Star.Properties[i];

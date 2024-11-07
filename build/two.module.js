@@ -739,7 +739,7 @@ var Constants = {
     canvas: "CanvasRenderer"
   },
   Version: "v0.8.15",
-  PublishDate: "2024-11-03T06:45:52.617Z",
+  PublishDate: "2024-11-07T05:44:44.781Z",
   Identifier: "two-",
   Resolution: 12,
   AutoCalculateImportedMatrices: true,
@@ -3589,6 +3589,7 @@ var _ArcSegment = class extends Path {
     __publicField(this, "_endAngle", TWO_PI);
     __publicField(this, "_innerRadius", 0);
     __publicField(this, "_outerRadius", 0);
+    this._renderer.type = "arc-segment";
     for (let prop in proto11) {
       Object.defineProperty(this, prop, proto11[prop]);
     }
@@ -3763,12 +3764,13 @@ var _ArcSegment = class extends Path {
     return clone;
   }
   toObject() {
-    const result = super.toObject.call(this);
+    const object = super.toObject.call(this);
+    object.renderer.type = "arc-segment";
     for (let i = 0; i < _ArcSegment.Properties.length; i++) {
       const k = _ArcSegment.Properties[i];
-      result[k] = this[k];
+      object[k] = this[k];
     }
-    return result;
+    return object;
   }
 };
 var ArcSegment = _ArcSegment;
@@ -3829,6 +3831,7 @@ var _Circle = class extends Path {
     super(points, true, true, true);
     __publicField(this, "_flagRadius", false);
     __publicField(this, "_radius", 0);
+    this._renderer.type = "circle";
     for (let prop in proto12) {
       Object.defineProperty(this, prop, proto12[prop]);
     }
@@ -3914,6 +3917,7 @@ var _Circle = class extends Path {
   }
   toObject() {
     const object = super.toObject.call(this);
+    object.renderer.type = "circle";
     for (let i = 0; i < _Circle.Properties.length; i++) {
       const k = _Circle.Properties[i];
       object[k] = this[k];
@@ -3954,6 +3958,7 @@ var _Ellipse = class extends Path {
     __publicField(this, "_flagHeight", false);
     __publicField(this, "_width", 0);
     __publicField(this, "_height", 0);
+    this._renderer.type = "ellipse";
     for (let prop in proto13) {
       Object.defineProperty(this, prop, proto13[prop]);
     }
@@ -4045,6 +4050,7 @@ var _Ellipse = class extends Path {
   }
   toObject() {
     const object = super.toObject.call(this);
+    object.renderer.type = "ellipse";
     for (let i = 0; i < _Ellipse.Properties.length; i++) {
       const k = _Ellipse.Properties[i];
       object[k] = this[k];
@@ -4419,6 +4425,7 @@ var _Polygon = class extends Path {
     __publicField(this, "_width", 0);
     __publicField(this, "_height", 0);
     __publicField(this, "_sides", 0);
+    this._renderer.type = "polygon";
     for (let prop in proto15) {
       Object.defineProperty(this, prop, proto15[prop]);
     }
@@ -4508,6 +4515,7 @@ var _Polygon = class extends Path {
   }
   toObject() {
     const object = super.toObject.call(this);
+    object.renderer.type = "polygon";
     for (let i = 0; i < _Polygon.Properties.length; i++) {
       const k = _Polygon.Properties[i];
       object[k] = this[k];
@@ -4578,6 +4586,7 @@ var _Rectangle = class extends Path {
     __publicField(this, "_width", 0);
     __publicField(this, "_height", 0);
     __publicField(this, "_origin", null);
+    this._renderer.type = "rectangle";
     for (let prop in proto16) {
       Object.defineProperty(this, prop, proto16[prop]);
     }
@@ -4653,6 +4662,7 @@ var _Rectangle = class extends Path {
   }
   toObject() {
     const object = super.toObject.call(this);
+    object.renderer.type = "rectangle";
     object.width = this.width;
     object.height = this.height;
     object.origin = this.origin.toObject();
@@ -4717,6 +4727,7 @@ var _RoundedRectangle = class extends Path {
     __publicField(this, "_width", 0);
     __publicField(this, "_height", 0);
     __publicField(this, "_radius", 12);
+    this._renderer.type = "rounded-rectangle";
     for (let prop in proto17) {
       Object.defineProperty(this, prop, proto17[prop]);
     }
@@ -4859,6 +4870,7 @@ var _RoundedRectangle = class extends Path {
   }
   toObject() {
     const object = super.toObject.call(this);
+    object.renderer.type = "rounded-rectangle";
     for (let i = 0; i < _RoundedRectangle.Properties.length; i++) {
       const k = _RoundedRectangle.Properties[i];
       object[k] = this[k];
@@ -4930,6 +4942,7 @@ var _Star = class extends Path {
     __publicField(this, "_innerRadius", 0);
     __publicField(this, "_outerRadius", 0);
     __publicField(this, "_sides", 0);
+    this._renderer.type = "star";
     for (let prop in proto18) {
       Object.defineProperty(this, prop, proto18[prop]);
     }
@@ -5024,6 +5037,7 @@ var _Star = class extends Path {
   }
   toObject() {
     const object = super.toObject.call(this);
+    object.renderer.type = "star";
     for (let i = 0; i < _Star.Properties.length; i++) {
       const k = _Star.Properties[i];
       object[k] = this[k];
@@ -6186,14 +6200,13 @@ var canvas2 = {
     };
     return elem;
   },
+  getRendererType: function(type) {
+    return type in canvas2 ? type : "path";
+  },
   group: {
     renderChild: function(child) {
-      canvas2[child._renderer.type].render.call(
-        child,
-        this.ctx,
-        true,
-        this.clip
-      );
+      const prop = canvas2.getRendererType(child._renderer.type);
+      canvas2[prop].render.call(child, this.ctx, true, this.clip);
     },
     render: function(ctx) {
       if (!this._visible) {
@@ -6224,12 +6237,14 @@ var canvas2 = {
         }
       }
       if (mask) {
-        canvas2[mask._renderer.type].render.call(mask, ctx, true);
+        const prop = canvas2.getRendererType(mask._renderer.type);
+        canvas2[prop].render.call(mask, ctx, true);
       }
       if (this._opacity > 0 && this._scale !== 0) {
         for (let i = 0; i < this.children.length; i++) {
           const child = this.children[i];
-          canvas2[child._renderer.type].render.call(child, ctx);
+          const prop = canvas2.getRendererType(child._renderer.type);
+          canvas2[prop].render.call(child, ctx);
         }
       }
       if (shouldIsolate) {
@@ -6275,13 +6290,15 @@ var canvas2 = {
         );
       }
       if (mask) {
-        canvas2[mask._renderer.type].render.call(mask, ctx, true);
+        const prop = canvas2.getRendererType(mask._renderer.type);
+        canvas2[prop].render.call(mask, ctx, true);
       }
       if (fill) {
         if (typeof fill === "string") {
           ctx.fillStyle = fill;
         } else {
-          canvas2[fill._renderer.type].render.call(fill, ctx, this);
+          const prop = canvas2.getRendererType(fill._renderer.type);
+          canvas2[prop].render.call(fill, ctx, this);
           ctx.fillStyle = fill._renderer.effect;
         }
       }
@@ -6289,7 +6306,8 @@ var canvas2 = {
         if (typeof stroke === "string") {
           ctx.strokeStyle = stroke;
         } else {
-          canvas2[stroke._renderer.type].render.call(stroke, ctx, this);
+          const prop = canvas2.getRendererType(stroke._renderer.type);
+          canvas2[prop].render.call(stroke, ctx, this);
           ctx.strokeStyle = stroke._renderer.effect;
         }
         if (linewidth) {
@@ -6469,7 +6487,8 @@ var canvas2 = {
         if (typeof fill === "string") {
           ctx.fillStyle = fill;
         } else {
-          canvas2[fill._renderer.type].render.call(fill, ctx, this);
+          const prop = canvas2.getRendererType(fill._renderer.type);
+          canvas2[prop].render.call(fill, ctx, this);
           ctx.fillStyle = fill._renderer.effect;
         }
       }
@@ -6477,7 +6496,8 @@ var canvas2 = {
         if (typeof stroke === "string") {
           ctx.strokeStyle = stroke;
         } else {
-          canvas2[stroke._renderer.type].render.call(stroke, ctx, this);
+          const prop = canvas2.getRendererType(stroke._renderer.type);
+          canvas2[prop].render.call(stroke, ctx, this);
           ctx.strokeStyle = stroke._renderer.effect;
         }
         if (linewidth) {
@@ -6579,7 +6599,8 @@ var canvas2 = {
         );
       }
       if (mask) {
-        canvas2[mask._renderer.type].render.call(mask, ctx, true);
+        const prop = canvas2.getRendererType(mask._renderer.type);
+        canvas2[prop].render.call(mask, ctx, true);
       }
       if (!isOffset) {
         ctx.font = [
@@ -6596,7 +6617,8 @@ var canvas2 = {
         if (typeof fill === "string") {
           ctx.fillStyle = fill;
         } else {
-          canvas2[fill._renderer.type].render.call(fill, ctx, this);
+          const prop = canvas2.getRendererType(fill._renderer.type);
+          canvas2[prop].render.call(fill, ctx, this);
           ctx.fillStyle = fill._renderer.effect;
         }
       }
@@ -6604,7 +6626,8 @@ var canvas2 = {
         if (typeof stroke === "string") {
           ctx.strokeStyle = stroke;
         } else {
-          canvas2[stroke._renderer.type].render.call(stroke, ctx, this);
+          const prop = canvas2.getRendererType(stroke._renderer.type);
+          canvas2[prop].render.call(stroke, ctx, this);
           ctx.strokeStyle = stroke._renderer.effect;
         }
         if (linewidth) {
@@ -8816,6 +8839,9 @@ var svg = {
     }
     return clip;
   },
+  getRendererType: function(type) {
+    return type in svg ? type : "path";
+  },
   defs: {
     update: function(domElement) {
       const { defs } = domElement;
@@ -8864,7 +8890,8 @@ var svg = {
       this.elem.appendChild(object._renderer.elem);
     },
     renderChild: function(child) {
-      svg[child._renderer.type].render.call(child, this);
+      const prop = svg.getRendererType(child._renderer.type);
+      svg[prop].render.call(child, this);
     },
     render: function(domElement) {
       if (!this._visible && !this._flagVisible || this._opacity === 0 && !this._flagOpacity) {
@@ -8890,7 +8917,8 @@ var svg = {
       }
       for (let i = 0; i < this.children.length; i++) {
         const child = this.children[i];
-        svg[child._renderer.type].render.call(child, domElement);
+        const prop = svg.getRendererType(child._renderer.type);
+        svg[prop].render.call(child, domElement);
       }
       if (this._flagId) {
         this._renderer.elem.setAttribute("id", this._id);
@@ -8918,7 +8946,8 @@ var svg = {
       }
       if (this._flagMask) {
         if (this._mask) {
-          svg[this._mask._renderer.type].render.call(this._mask, domElement);
+          const prop = svg.getRendererType(this._mask._renderer.type);
+          svg[prop].render.call(this._mask, domElement);
           this._renderer.elem.setAttribute(
             "clip-path",
             "url(#" + this._mask.id + ")"
@@ -8954,11 +8983,8 @@ var svg = {
       if (this._fill && this._fill._renderer) {
         this._renderer.hasFillEffect = true;
         this._fill._update();
-        svg[this._fill._renderer.type].render.call(
-          this._fill,
-          domElement,
-          true
-        );
+        const prop = svg.getRendererType(this._fill._renderer.type);
+        svg[prop].render.call(this._fill, domElement, true);
       }
       if (this._flagFill) {
         changed.fill = this._fill && this._fill.id ? "url(#" + this._fill.id + ")" : this._fill;
@@ -8970,11 +8996,8 @@ var svg = {
       if (this._stroke && this._stroke._renderer) {
         this._renderer.hasStrokeEffect = true;
         this._stroke._update();
-        svg[this._stroke._renderer.type].render.call(
-          this._stroke,
-          domElement,
-          true
-        );
+        const prop = svg.getRendererType(this._stroke._renderer.type);
+        svg[prop].render.call(this._stroke, domElement, true);
       }
       if (this._flagStroke) {
         changed.stroke = this._stroke && this._stroke.id ? "url(#" + this._stroke.id + ")" : this._stroke;
@@ -9031,7 +9054,8 @@ var svg = {
       }
       if (this._flagMask) {
         if (this._mask) {
-          svg[this._mask._renderer.type].render.call(this._mask, domElement);
+          const prop = svg.getRendererType(this._mask._renderer.type);
+          svg[prop].render.call(this._mask, domElement);
           this._renderer.elem.setAttribute(
             "clip-path",
             "url(#" + this._mask.id + ")"
@@ -9070,11 +9094,8 @@ var svg = {
       if (this._fill && this._fill._renderer) {
         this._renderer.hasFillEffect = true;
         this._fill._update();
-        svg[this._fill._renderer.type].render.call(
-          this._fill,
-          domElement,
-          true
-        );
+        const prop = svg.getRendererType(this._fill._renderer.type);
+        svg[prop].render.call(this._fill, domElement, true);
       }
       if (this._flagFill) {
         changed.fill = this._fill && this._fill.id ? "url(#" + this._fill.id + ")" : this._fill;
@@ -9086,11 +9107,8 @@ var svg = {
       if (this._stroke && this._stroke._renderer) {
         this._renderer.hasStrokeEffect = true;
         this._stroke._update();
-        svg[this._stroke._renderer.type].render.call(
-          this._stroke,
-          domElement,
-          true
-        );
+        const prop = svg.getRendererType(this._stroke._renderer.type);
+        svg[prop].render.call(this._stroke, domElement, true);
       }
       if (this._flagStroke) {
         changed.stroke = this._stroke && this._stroke.id ? "url(#" + this._stroke.id + ")" : this._stroke;
@@ -9167,11 +9185,8 @@ var svg = {
       if (this._fill && this._fill._renderer) {
         this._renderer.hasFillEffect = true;
         this._fill._update();
-        svg[this._fill._renderer.type].render.call(
-          this._fill,
-          domElement,
-          true
-        );
+        const prop = svg.getRendererType(this._fill._renderer.type);
+        svg[prop].render.call(this._fill, domElement, true);
       }
       if (this._flagFill) {
         changed.fill = this._fill && this._fill.id ? "url(#" + this._fill.id + ")" : this._fill;
@@ -9183,11 +9198,8 @@ var svg = {
       if (this._stroke && this._stroke._renderer) {
         this._renderer.hasStrokeEffect = true;
         this._stroke._update();
-        svg[this._stroke._renderer.type].render.call(
-          this._stroke,
-          domElement,
-          true
-        );
+        const prop = svg.getRendererType(this._stroke._renderer.type);
+        svg[prop].render.call(this._stroke, domElement, true);
       }
       if (this._flagStroke) {
         changed.stroke = this._stroke && this._stroke.id ? "url(#" + this._stroke.id + ")" : this._stroke;
@@ -9234,7 +9246,8 @@ var svg = {
       }
       if (this._flagMask) {
         if (this._mask) {
-          svg[this._mask._renderer.type].render.call(this._mask, domElement);
+          const prop = svg.getRendererType(this._mask._renderer.type);
+          svg[prop].render.call(this._mask, domElement);
           this._renderer.elem.setAttribute(
             "clip-path",
             "url(#" + this._mask.id + ")"
@@ -9667,12 +9680,10 @@ var webgl = {
         gl.stencilFunc(gl.ALWAYS, 1, 0);
         gl.stencilOp(gl.KEEP, gl.KEEP, gl.REPLACE);
         gl.colorMask(false, false, false, false);
-        webgl[this._mask._renderer.type].render.call(
-          this._mask,
-          gl,
-          programs,
-          this
+        const prop = Renderer.Utils.getRendererType(
+          this._mask._renderer.type
         );
+        webgl[prop].render.call(this._mask, gl, programs, this);
         gl.stencilFunc(gl.EQUAL, 1, 255);
         gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
         gl.colorMask(true, true, true, true);
@@ -9687,7 +9698,8 @@ var webgl = {
       }
       for (i = 0; i < this.children.length; i++) {
         const child = this.children[i];
-        webgl[child._renderer.type].render.call(child, gl, programs);
+        const prop = Renderer.Utils.getRendererType(child._renderer.type);
+        webgl[prop].render.call(child, gl, programs);
       }
       if (this._mask) {
         gl.disable(gl.STENCIL_TEST);
@@ -9731,7 +9743,10 @@ var webgl = {
         if (typeof fill === "string") {
           ctx.fillStyle = fill;
         } else {
-          webgl[fill._renderer.type].render.call(fill, ctx, elem);
+          const prop = Renderer.Utils.getRendererType(
+            fill._renderer.type
+          );
+          webgl[prop].render.call(fill, ctx, elem);
           ctx.fillStyle = fill._renderer.effect;
         }
       }
@@ -9739,7 +9754,10 @@ var webgl = {
         if (typeof stroke === "string") {
           ctx.strokeStyle = stroke;
         } else {
-          webgl[stroke._renderer.type].render.call(stroke, ctx, elem);
+          const prop = Renderer.Utils.getRendererType(
+            stroke._renderer.type
+          );
+          webgl[prop].render.call(stroke, ctx, elem);
           ctx.strokeStyle = stroke._renderer.effect;
         }
         if (linewidth) {
@@ -9935,7 +9953,8 @@ var webgl = {
       }
       this._update();
       const parent = forcedParent || this.parent;
-      const program = programs[this._renderer.type];
+      const prop = Renderer.Utils.getRendererType(this._renderer.type);
+      const program = programs[prop];
       const flagParentMatrix = parent._matrix.manual || parent._flagMatrix;
       const flagMatrix = this._matrix.manual || this._flagMatrix;
       const parentChanged = this._renderer.parent !== parent;
@@ -9973,12 +9992,10 @@ var webgl = {
         gl.stencilFunc(gl.ALWAYS, 1, 0);
         gl.stencilOp(gl.KEEP, gl.KEEP, gl.REPLACE);
         gl.colorMask(false, false, false, false);
-        webgl[this._mask._renderer.type].render.call(
-          this._mask,
-          gl,
-          programs,
-          this
+        const prop2 = Renderer.Utils.getRendererType(
+          this._mask._renderer.type
         );
+        webgl[prop2].render.call(this._mask, gl, programs, this);
         gl.stencilFunc(gl.EQUAL, 1, 255);
         gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
         gl.colorMask(true, true, true, true);
@@ -10064,7 +10081,10 @@ var webgl = {
         if (typeof fill === "string") {
           ctx.fillStyle = fill;
         } else {
-          webgl[fill._renderer.type].render.call(fill, ctx, elem);
+          const prop = Renderer.Utils.getRendererType(
+            fill._renderer.type
+          );
+          webgl[prop].render.call(fill, ctx, elem);
           ctx.fillStyle = fill._renderer.effect;
         }
       }
@@ -10072,7 +10092,10 @@ var webgl = {
         if (typeof stroke === "string") {
           ctx.strokeStyle = stroke;
         } else {
-          webgl[stroke._renderer.type].render.call(stroke, ctx, elem);
+          const prop = Renderer.Utils.getRendererType(
+            stroke._renderer.type
+          );
+          webgl[prop].render.call(stroke, ctx, elem);
           ctx.strokeStyle = stroke._renderer.effect;
         }
         if (linewidth) {
@@ -10265,7 +10288,10 @@ var webgl = {
         if (typeof fill === "string") {
           ctx.fillStyle = fill;
         } else {
-          webgl[fill._renderer.type].render.call(fill, ctx, elem);
+          const prop = Renderer.Utils.getRendererType(
+            fill._renderer.type
+          );
+          webgl[prop].render.call(fill, ctx, elem);
           ctx.fillStyle = fill._renderer.effect;
         }
       }
@@ -10273,7 +10299,10 @@ var webgl = {
         if (typeof stroke === "string") {
           ctx.strokeStyle = stroke;
         } else {
-          webgl[stroke._renderer.type].render.call(stroke, ctx, elem);
+          const prop = Renderer.Utils.getRendererType(
+            stroke._renderer.type
+          );
+          webgl[prop].render.call(stroke, ctx, elem);
           ctx.strokeStyle = stroke._renderer.effect;
         }
         if (linewidth) {
@@ -10474,12 +10503,10 @@ var webgl = {
         gl.stencilFunc(gl.ALWAYS, 1, 0);
         gl.stencilOp(gl.KEEP, gl.KEEP, gl.REPLACE);
         gl.colorMask(false, false, false, false);
-        webgl[this._mask._renderer.type].render.call(
-          this._mask,
-          gl,
-          programs,
-          this
+        const prop = Renderer.Utils.getRendererType(
+          this._mask._renderer.type
         );
+        webgl[prop].render.call(this._mask, gl, programs, this);
         gl.stencilFunc(gl.EQUAL, 1, 255);
         gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
         gl.colorMask(true, true, true, true);
@@ -10649,7 +10676,8 @@ var webgl = {
     }
   },
   updateTexture: function(gl, elem) {
-    this[elem._renderer.type].updateCanvas.call(webgl, gl, elem);
+    const prop = Renderer.Utils.getRendererType(elem._renderer.type);
+    this[prop].updateCanvas.call(webgl, gl, elem);
     if (this.canvas.width <= 0 || this.canvas.height <= 0) {
       if (elem._renderer.texture) {
         gl.deleteTexture(elem._renderer.texture);

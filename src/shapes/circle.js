@@ -41,6 +41,8 @@ export class Circle extends Path {
 
     super(points, true, true, true);
 
+    this._renderer.type = 'circle';
+
     for (let prop in proto) {
       Object.defineProperty(this, prop, proto[prop]);
     }
@@ -206,6 +208,8 @@ export class Circle extends Path {
    */
   toObject() {
     const object = super.toObject.call(this);
+
+    object.renderer.type = 'circle';
 
     for (let i = 0; i < Circle.Properties.length; i++) {
       const k = Circle.Properties[i];
