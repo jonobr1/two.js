@@ -1150,7 +1150,7 @@ QUnit.test('Two.Circle Object Conversion', function (assert) {
 });
 
 QUnit.test('Two.Group Object Conversion', function (assert) {
-  assert.expect(5);
+  assert.expect(6);
 
   // Create original group with children
   var group = new Two.Group();
@@ -1178,14 +1178,13 @@ QUnit.test('Two.Group Object Conversion', function (assert) {
   );
   assert.equal(newGroup.id, group.id, 'Two.Group.fromObject preserves id');
 
-  // TODO: Implement this
-  // // Test child types are preserved
-  // assert.ok(
-  //   newGroup.children[0] instanceof Two.Circle,
-  //   'Two.Group.fromObject preserves child types'
-  // );
+  // Test child types are preserved
+  assert.ok(
+    newGroup.children[0] instanceof Two.Circle,
+    'Two.Group.fromObject preserves child types'
+  );
 
-  // TODO: Implement this
+  // TODO: Implement
   // // Test copy method
   // var copiedGroup = new Two.Group().copy(group);
   // copiedGroup._update();
