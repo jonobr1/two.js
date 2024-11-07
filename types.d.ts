@@ -1254,7 +1254,7 @@ declare module 'two.js/src/shape' {
      * @param {Two.Shape} shape
      * @description Copy the properties of one {@link Two.Shape} onto another.
      */
-    copy(shape: Shape): Shape;
+    copy(shape: any): any;
     /**
      * @name Two.Shape#clone
      * @function
@@ -1262,7 +1262,7 @@ declare module 'two.js/src/shape' {
      * @returns {Shape}
      * @description Create a new {@link Two.Shape} with the same values as the current shape.
      */
-    clone(parent?: Group): Shape;
+    clone(parent?: Group): any;
     /**
      * @name Two.Shape#toObject
      * @function
@@ -1278,7 +1278,7 @@ declare module 'two.js/src/shape' {
      * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
      * @nota-bene Try not to call this method more than once a frame.
      */
-    private _update;
+    _update(bubbles: boolean): any;
   }
   import { Element as TwoElement } from 'two.js/src/element';
   import { Matrix } from 'two.js/src/matrix';
@@ -1646,15 +1646,6 @@ declare module 'two.js/src/group' {
      * @description Create a new instance of {@link Two.Group} with the same properties of the current group.
      */
     clone(parent?: Group): Group;
-    /**
-     * @name Two.Group#_update
-     * @function
-     * @private
-     * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
-     * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
-     * @nota-bene Try not to call this method more than once a frame.
-     */
-    private _update(): Group;
   }
   import { Shape } from 'two.js/src/shape';
   import { Children } from 'two.js/src/children';
@@ -2022,7 +2013,7 @@ declare module 'two.js/src/effects/gradient' {
      * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
      * @nota-bene Try not to call this method more than once a frame.
      */
-    private _update;
+    _update(bubbles: boolean): Gradient;
   }
   import { Element as TwoElement } from 'two.js/src/element';
   import { Stop } from 'two.js/src/effects/stop';
@@ -2332,7 +2323,7 @@ declare module 'two.js/src/effects/texture' {
      * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
      * @nota-bene Try not to call this method more than once a frame.
      */
-    private _update;
+    _update(bubbles: boolean): Texture;
   }
   import { Element as TwoElement } from 'two.js/src/element';
   import { Vector } from 'two.js/src/vector';
