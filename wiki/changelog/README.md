@@ -13,6 +13,9 @@ All notable changes to this project will be documented in this file. The format 
 
 ## Nightly
 
++ Added static method `fromObject` to all `Two.Element` and descendant classes
++ Added method `copy` to all `Two.Element` and descendant classes
++ Added tests for `toObject` methods
 + Improved TypeScript types for argument relation
 + `Two.WebGLRenderer` correctly handles negative scale values
 + `Two.Path.noStroke`, `Two.Text.noStroke`, and derivative methods now include setting both the stroke color to `"none"` and the line width to 0
