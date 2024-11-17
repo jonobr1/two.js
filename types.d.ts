@@ -1960,7 +1960,7 @@ declare module 'two.js/src/effects/stop' {
      * @returns {Stop}
      * @description Create a new instance of {@link Two.Stop} with the same properties of the current path.
      */
-    clone(parent: Gradient): Stop;
+    clone(parent?: Gradient): Stop;
     /**
      * @name Two.Stop#toObject
      * @function
@@ -2232,7 +2232,7 @@ declare module 'two.js/src/effects/radial-gradient' {
      * @returns {Two.RadialGradient}
      * @description Create a new instance of {@link Two.RadialGradient} with the same properties of the current path.
      */
-    clone(parent: Group): RadialGradient;
+    clone(parent?: Group): RadialGradient;
     /**
      * @name Two.RadialGradient#toObject
      * @function
@@ -2471,15 +2471,15 @@ declare module 'two.js/src/effects/texture' {
 }
 declare module 'two.js/src/path' {
   /**
-     * @name Two.Path
-     * @class
-
-     * @param {Anchor[]} [vertices] - A list of {@link Two.Anchor}s that represent the order and coordinates to construct the rendered shape.
-     * @param {Boolean} [closed=false] - Describes whether the shape is closed or open.
-     * @param {Boolean} [curved=false] - Describes whether the shape automatically calculates bezier handles for each vertex.
-     * @param {Boolean} [manual=false] - Describes whether the developer controls how vertices are plotted or if Two.js automatically plots coordinates based on closed and curved booleans.
-     * @description This is the primary primitive class for creating all drawable shapes in Two.js. Unless specified methods return their instance of `Two.Path` for the purpose of chaining.
-     */
+   * @name Two.Path
+   * @class
+   * @extends Two.Shape
+   * @param {Two.Anchor[]} [vertices] - A list of {@link Two.Anchor}s that represent the order and coordinates to construct the rendered shape.
+   * @param {Boolean} [closed=false] - Describes whether the shape is closed or open.
+   * @param {Boolean} [curved=false] - Describes whether the shape automatically calculates bezier handles for each vertex.
+   * @param {Boolean} [manual=false] - Describes whether the developer controls how vertices are plotted or if Two.js automatically plots coordinates based on closed and curved booleans.
+   * @description This is the primary primitive class for creating all drawable shapes in Two.js. Unless specified methods return their instance of `Two.Path` for the purpose of chaining.
+   */
   export class Path extends Shape {
     /**
      * @name Two.Path.Properties
@@ -2487,8 +2487,21 @@ declare module 'two.js/src/path' {
      */
     static Properties: string[];
     static Utils: {
-      getCurveLength: Function;
+      getCurveLength: (
+        a: Anchor | Vector,
+        b: Anchor | Vector,
+        limit: number
+      ) => number;
     };
+    /**
+     * @name Two.Path.fromObject
+     * @function
+     * @param {Object} obj - Object notation of a {@link Two.Path} to create a new instance
+     * @returns {Two.Path}
+     * @description Create a new {@link Two.Path} from an object notation of a {@link Two.Path}.
+     * @nota-bene Works in conjunction with {@link Two.Path#toObject}
+     */
+    static fromObject(obj): Path;
     constructor(
       vertices?: Anchor[],
       closed?: boolean,
@@ -2766,6 +2779,21 @@ declare module 'two.js/src/path' {
      */
     dashes: number[];
     /**
+     * @name Two.Path#copy
+     * @function
+     * @param {Two.Path} path - The reference {@link Two.Path}
+     * @description Copy the properties of one {@link Two.Path} onto another.
+     */
+    copy(path: Path): Path;
+    /**
+     * @name Two.Path#clone
+     * @function
+     * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+     * @returns {Two.Path}
+     * @description Create a new instance of {@link Two.Path} with the same properties of the current path.
+     */
+    clone(parent?: Group): Path;
+    /**
      * @name Two.Path#toObject
      * @function
      * @returns {Object}
@@ -2836,12 +2864,22 @@ declare module 'two.js/src/path' {
      * @description Recalculate the {@link Two.Path#length} value.
      */
     private _updateLength;
-    _lengths: any[];
+    _lengths: number[];
+    /**
+     * @name Two.Path#_update
+     * @function
+     * @private
+     * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+     * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
+     * @nota-bene Try not to call this method more than once a frame.
+     */
+    _update(): Path;
   }
   import { Vector } from 'two.js/src/vector';
   import { Anchor } from 'two.js/src/anchor';
   import { Shape } from 'two.js/src/shape';
   import { Gradient } from 'two.js/src/effects/gradient';
+  import { Group } from 'two.js/src/group';
   import { Texture } from 'two.js/src/effects/texture';
   import { BoundingBox } from 'two.js';
   /**
