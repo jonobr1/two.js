@@ -2248,13 +2248,13 @@ declare module 'two.js/src/effects/radial-gradient' {
 }
 declare module 'two.js/src/effects/texture' {
   /**
-     * @name Two.Texture
-     * @class
-
-     * @param {String|HTMLImageElement} [src] - The URL path to an image file or an `<img />` element.
-     * @param {Function} [callback] - An optional callback function once the image has been loaded.
-     * @description Fundamental to work with bitmap data, a.k.a. pregenerated imagery, in Two.js. Supported formats include jpg, png, gif, and tiff. See {@link Two.Texture.RegularExpressions} for a full list of supported formats.
-     */
+   * @name Two.Texture
+   * @class
+   * @extends Two.Element
+   * @param {String|HTMLImageElement} [src] - The URL path to an image file or an `<img />` element.
+   * @param {Function} [callback] - An optional callback function once the image has been loaded.
+   * @description Fundamental to work with bitmap data, a.k.a. pregenerated imagery, in Two.js. Supported formats include jpg, png, gif, and tiff. See {@link Two.Texture.RegularExpressions} for a full list of supported formats.
+   */
   export class Texture extends TwoElement {
     /**
      * @name Two.Texture.Properties
@@ -2322,6 +2322,15 @@ declare module 'two.js/src/effects/texture' {
      * @param {Function} callback - The function to be called once the texture is loaded.
      */
     static load(texture: Texture, callback: Function): void;
+    /**
+     * @name Two.Texture.fromObject
+     * @function
+     * @param {Object} obj - Object notation of a {@link Two.Texture} to create a new instance
+     * @returns {Two.Texture}
+     * @description Create a new {@link Two.Texture} from an object notation of a {@link Two.Texture}.
+     * @nota-bene Works in conjunction with {@link Two.Texture#toObject}
+     */
+    static fromObject(obj: object): Texture;
     constructor(src?: any, callback?: Function);
     /**
      * @name Two.Texture#_flagSrc
@@ -2432,6 +2441,13 @@ declare module 'two.js/src/effects/texture' {
      * @description Create a new instance of {@link Two.Texture} with the same properties of the current texture.
      */
     clone(): Texture;
+    /**
+     * @name Two.Texture#copy
+     * @function
+     * @param {Two.Texture} texture - The reference {@link Two.Texture}
+     * @description Copy the properties of one {@link Two.Texture} onto another.
+     */
+    copy(texture: Texture): Texture;
     /**
      * @name Two.Texture#toObject
      * @function
