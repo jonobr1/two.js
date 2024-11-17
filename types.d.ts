@@ -2168,6 +2168,15 @@ declare module 'two.js/src/effects/radial-gradient' {
      * @nota-bene The radial gradient lives within the space of the parent object's matrix space.
      */
   export class RadialGradient extends Gradient {
+    /**
+     * @name Two.RadialGradient.fromObject
+     * @function
+     * @param {Object} obj - Object notation of a {@link Two.RadialGradient} to create a new instance
+     * @returns {Two.RadialGradient}
+     * @description Create a new {@link Two.RadialGradient} from an object notation of a {@link Two.RadialGradient}.
+     * @nota-bene Works in conjunction with {@link Two.RadialGradient#toObject}
+     */
+    static fromObject(obj: object): RadialGradient;
     constructor(
       cx?: number,
       cy?: number,
@@ -2209,8 +2218,31 @@ declare module 'two.js/src/effects/radial-gradient' {
      * @nota-bene This effects the spray or spread of the radial gradient.
      */
     focal: Vector;
+    /**
+     * @name Two.RadialGradient#copy
+     * @function
+     * @param {Two.RadialGradient} gradient - The reference {@link Two.RadialGradient}
+     * @description Copy the properties of one {@link Two.RadialGradient} onto another.
+     */
+    copy(gradient: RadialGradient): RadialGradient;
+    /**
+     * @name Two.RadialGradient#clone
+     * @function
+     * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+     * @returns {Two.RadialGradient}
+     * @description Create a new instance of {@link Two.RadialGradient} with the same properties of the current path.
+     */
+    clone(parent: Group): RadialGradient;
+    /**
+     * @name Two.RadialGradient#toObject
+     * @function
+     * @returns {Object}
+     * @description Return a JSON compatible plain object that represents the path.
+     */
+    toObject(): object;
   }
   import { Gradient } from 'two.js/src/effects/gradient';
+  import { Group } from 'two.js/src/group';
   import { Stop } from 'two.js/src/effects/stop';
   import { Vector } from 'two.js/src/vector';
 }
