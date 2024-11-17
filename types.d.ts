@@ -513,7 +513,7 @@ declare module 'two.js/src/vector' {
      * @returns {Object}
      * @description Return a JSON compatible plain object that represents the vector.
      */
-    toObject(): any;
+    toObject(): object;
     /**
      * @name Two.Vector#rotate
      * @function
@@ -825,6 +825,14 @@ declare module 'two.js/src/element' {
    * @description The foundational object for the Two.js scenegraph.
    */
   export class Element extends Events {
+    /**
+     * @name Two.Element.fromObject
+     * @function
+     * @param {Object} obj - Object notation of a {@link Two.Element} to create a new instance
+     * @returns {Two.Element}
+     * @description Create a new {@link Two.Element} from an object notation of a {@link Two.Element}.
+     * @nota-bene Works in conjunction with {@link Two.Element#toObject}
+     */
     static fromObject(obj: object): Element;
     /**
      * @name Two.Element#_flagId
@@ -905,6 +913,14 @@ declare module 'two.js/src/matrix' {
      * @description Multiply two matrices together and return the result.
      */
     static Multiply(A: Matrix, B: Matrix, C?: Matrix): Matrix;
+    /**
+     * @name Two.Matrix.fromObject
+     * @function
+     * @param {Object} obj - The object notation of a Two.Matrix to create a new instance
+     * @returns {Two.Matrix}
+     * @description Create a new {@link Two.Matrix} from an object notation of a {@link Two.Matrix}.
+     * @nota-bene Works in conjunction with {@link Two.Matrix#toObject}
+     */
     static fromObject(obj: object): Matrix;
     constructor(elements: number[]);
     constructor(
@@ -1326,7 +1342,7 @@ declare module 'two.js/src/children' {
      * @name Two.Group.Children#ids
      * @property {Object} - Map of all elements in the list keyed by `id`s.
      */
-    ids: {};
+    ids: { [id: string]: Shape };
     /**
      * @function
      * @name Two.Group.Children#attach
@@ -1869,6 +1885,15 @@ declare module 'two.js/src/effects/stop' {
      * @property {String[]} - A list of properties that are on every {@link Two.Stop}.
      */
     static Properties: string[];
+    /**
+     * @name Two.Stop.fromObject
+     * @function
+     * @param {Object} obj - Object notation of a {@link Two.Stop} to create a new instance
+     * @returns {Two.Stop}
+     * @description Create a new {@link Two.Stop} from an object notation of a {@link Two.Stop}.
+     * @nota-bene Works in conjunction with {@link Two.Stop#toObject}
+     */
+    static fromObject(obj: object): Stop;
     constructor(offset?: number, color?: string, opacity?: number);
     /**
      * @name Two.Stop#_flagOffset
@@ -1922,6 +1947,13 @@ declare module 'two.js/src/effects/stop' {
      */
     color: string;
     /**
+     * @name Two.Stop#copy
+     * @function
+     * @param {Two.Stop} stop - The reference {@link Two.Stop}
+     * @description Copy the properties of one {@link Two.Stop} onto another.
+     */
+    copy(stop: Stop): Stop;
+    /**
      * @name Two.Stop#clone
      * @function
      * @param {Gradient} [parent] - The parent group or scene to add the clone to.
@@ -1935,7 +1967,7 @@ declare module 'two.js/src/effects/stop' {
      * @returns {Object}
      * @description Return a JSON compatible plain object that represents the path.
      */
-    toObject(): any;
+    toObject(): object;
   }
   import { Element as TwoElement } from 'two.js/src/element';
   import { Gradient } from 'two.js/src/effects/gradient';
@@ -1959,6 +1991,15 @@ declare module 'two.js/src/effects/gradient' {
      * @property {String[]} - A list of properties that are on every {@link Two.Gradient}.
      */
     static Properties: string[];
+    /**
+     * @name Two.Gradient.fromObject
+     * @function
+     * @param {Object} obj - Object notation of a {@link Two.Gradient} to create a new instance
+     * @returns {Two.Gradient}
+     * @description Create a new {@link Two.Gradient} from an object notation of a {@link Two.Gradient}.
+     * @nota-bene Works in conjunction with {@link Two.Gradient#toObject}
+     */
+    static fromObject(obj: object): Gradient;
     constructor(stops?: Stop[]);
     _flagStops: boolean;
     _flagSpread: boolean;
@@ -1989,7 +2030,19 @@ declare module 'two.js/src/effects/gradient' {
      * @see {@link https://www.w3.org/TR/SVG11/pservers.html#RadialGradientElementGradientUnitsAttribute} for more information
      */
     units: 'userSpaceOnUse' | 'objectBoundingBox';
-    stops: any;
+    /**
+     * @name Two.Gradient#stops
+     * @property {Two.Stop[]} - An ordered list of {@link Two.Stop}s for rendering the gradient.
+     * @nota-bene Actually a {@link Two.Collection} polyfilled to act like an observable Array.
+     */
+    stops: Stop[];
+    /**
+     * @name Two.Gradient#copy
+     * @function
+     * @param {Two.Gradient} gradient - The reference {@link Two.Gradient}
+     * @description Copy the properties of one {@link Two.Gradient} onto another.
+     */
+    copy(gradient: Gradient): Gradient;
     /**
      * @name Two.Gradient#clone
      * @function
@@ -2004,7 +2057,7 @@ declare module 'two.js/src/effects/gradient' {
      * @returns {Object}
      * @description Return a JSON compatible plain object that represents the path.
      */
-    toObject(): any;
+    toObject(): object;
     /**
      * @name Two.Gradient#_update
      * @function
@@ -2014,6 +2067,13 @@ declare module 'two.js/src/effects/gradient' {
      * @nota-bene Try not to call this method more than once a frame.
      */
     _update(bubbles: boolean): Gradient;
+    /**
+     * @name Two.Gradient#flagReset
+     * @function
+     * @private
+     * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+     */
+    flagReset(): Gradient;
   }
   import { Element as TwoElement } from 'two.js/src/element';
   import { Stop } from 'two.js/src/effects/stop';
@@ -2032,6 +2092,15 @@ declare module 'two.js/src/effects/linear-gradient' {
      * @nota-bene The linear gradient lives within the space of the parent object's matrix space.
      */
   export class LinearGradient extends Gradient {
+    /**
+     * @name Two.LinearGradient.fromObject
+     * @function
+     * @param {Object} obj - Object notation of a {@link Two.LinearGradient} to create a new instance
+     * @returns {Two.LinearGradient}
+     * @description Create a new {@link Two.LinearGradient} from an object notation of a {@link Two.LinearGradient}.
+     * @nota-bene Works in conjunction with {@link Two.LinearGradient#toObject}
+     */
+    static fromObject(obj: object): LinearGradient;
     constructor(
       x1?: number,
       y1?: number,
@@ -2057,8 +2126,31 @@ declare module 'two.js/src/effects/linear-gradient' {
      * @property {Vector} - The x and y value for where the second end point is placed on the canvas.
      */
     right: Vector;
+    /**
+     * @name Two.LinearGradient#copy
+     * @function
+     * @param {Two.LinearGradient} gradient - The reference {@link Two.LinearGradient}
+     * @description Copy the properties of one {@link Two.LinearGradient} onto another.
+     */
+    copy(gradient: LinearGradient): LinearGradient;
+    /**
+     * @name Two.LinearGradient#clone
+     * @function
+     * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+     * @returns {Two.Gradient}
+     * @description Create a new instance of {@link Two.LinearGradient} with the same properties of the current path.
+     */
+    clone(parent?: Group): LinearGradient;
+    /**
+     * @name Two.LinearGradient#toObject
+     * @function
+     * @returns {Object}
+     * @description Return a JSON compatible plain object that represents the path.
+     */
+    toObject(): object;
   }
   import { Gradient } from 'two.js/src/effects/gradient';
+  import { Group } from 'two.js/src/group';
   import { Stop } from 'two.js/src/effects/stop';
   import { Vector } from 'two.js/src/vector';
 }
@@ -2314,7 +2406,7 @@ declare module 'two.js/src/effects/texture' {
      * @returns {Object}
      * @description Return a JSON compatible plain object that represents the texture.
      */
-    toObject(): any;
+    toObject(): object;
     /**
      * @name Two.Texture#_update
      * @function
@@ -2631,7 +2723,7 @@ declare module 'two.js/src/path' {
      * @returns {Object}
      * @description Return a JSON compatible plain object that represents the path.
      */
-    toObject(): any;
+    toObject(): object;
     /**
      * @name Two.Path#noFill
      * @function
@@ -3384,7 +3476,7 @@ declare module 'two.js/src/text' {
      * @returns {Object}
      * @description Return a JSON compatible plain object that represents the text object.
      */
-    toObject(): any;
+    toObject(): object;
     /**
      * @name Two.Text#noFill
      * @function
@@ -3746,7 +3838,7 @@ declare module 'two.js/src/shapes/points' {
      * @description A list of {@link Two.Vector} objects that consist of which coordinates to draw points at.
      * @nota-bene The array when manipulating is actually a {@link Two.Collection}.
      */
-    vertices: any;
+    vertices: Vector[];
     /**
      * @name Two.Points#dashes
      * @property {Number[]} - Array of numbers. Odd indices represent dash length. Even indices represent dash space.
@@ -3760,7 +3852,7 @@ declare module 'two.js/src/shapes/points' {
      * @returns {Object}
      * @description Return a JSON compatible plain object that represents the points object.
      */
-    toObject(): any;
+    toObject(): object;
     /**
      * @name Two.Points#noFill
      * @function
@@ -3814,6 +3906,7 @@ declare module 'two.js/src/shapes/points' {
   import { Gradient } from 'two.js/src/effects/gradient';
   import { Texture } from 'two.js/src/effects/texture';
   import { BoundingBox } from 'two.js';
+  import { Vector } from 'two.js/src/vector';
 }
 declare module 'two.js/src/shapes/polygon' {
   /**
