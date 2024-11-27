@@ -51,7 +51,7 @@ lang: en-US
 | Argument | Description |
 | ---- | ----------- |
 |  min  | The minimum scale the ZUI can zoom out to. |
-|  max  | The maximum scale teh ZUI can zoom in to. |
+|  max  | The maximum scale the ZUI can zoom in to. |
 </div>
 
 

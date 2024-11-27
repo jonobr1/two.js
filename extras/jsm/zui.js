@@ -102,7 +102,7 @@ export class ZUI {
    * @name Two.ZUI#addLimits
    * @function
    * @param {Number} [min=-Infinity] - The minimum scale the ZUI can zoom out to.
-   * @param {Number} [max=Infinity] - The maximum scale teh ZUI can zoom in to.
+   * @param {Number} [max=Infinity] - The maximum scale the ZUI can zoom in to.
    */
   addLimits(min, max) {
     if (typeof min !== 'undefined') {
