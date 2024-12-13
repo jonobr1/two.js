@@ -4464,7 +4464,7 @@ declare module 'two.js' {
       width?: number;
       height?: number;
       type?: string;
-      domElement?: HTMLElement;
+      domElement?: SVGElement | HTMLCanvasElement;
       overdraw?: boolean;
       smoothing?: boolean;
       ratio?: number;
