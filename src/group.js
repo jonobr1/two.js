@@ -1,20 +1,20 @@
 import { Events } from './events.js';
 import { _ } from './utils/underscore.js';
-import { getEffectFromObject } from 'utils/shape.js';
+import { getEffectFromObject } from './utils/shape.js';
 
 import { Shape } from './shape.js';
 import { Children } from './children.js';
-import { Path } from 'path.js';
-import { ArcSegment } from 'shapes/arc-segment.js';
-import { Circle } from 'shapes/circle.js';
-import { Ellipse } from 'shapes/ellipse.js';
-import { Points } from 'shapes/points.js';
-import { Polygon } from 'shapes/polygon.js';
-import { Rectangle } from 'shapes/rectangle.js';
-import { RoundedRectangle } from 'shapes/rounded-rectangle.js';
-import { Star } from 'shapes/star.js';
-import { Text } from 'text.js';
-import { Element } from 'element.js';
+import { Path } from './path.js';
+import { ArcSegment } from './shapes/arc-segment.js';
+import { Circle } from './shapes/circle.js';
+import { Ellipse } from './shapes/ellipse.js';
+import { Points } from './shapes/points.js';
+import { Polygon } from './shapes/polygon.js';
+import { Rectangle } from './shapes/rectangle.js';
+import { RoundedRectangle } from './shapes/rounded-rectangle.js';
+import { Star } from './shapes/star.js';
+import { Text } from './text.js';
+import { Element } from './element.js';
 
 // Constants
 

@@ -1,8 +1,8 @@
-import { Texture } from 'effects/texture.js';
+import { Texture } from '../effects/texture.js';
 import { subdivide, getCurveLength as gcl } from './curves.js';
-import { Gradient } from 'effects/gradient.js';
-import { LinearGradient } from 'effects/linear-gradient.js';
-import { RadialGradient } from 'effects/radial-gradient.js';
+import { Gradient } from '../effects/gradient.js';
+import { LinearGradient } from '../effects/linear-gradient.js';
+import { RadialGradient } from '../effects/radial-gradient.js';
 
 /**
  * @private
