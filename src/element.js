@@ -1,5 +1,5 @@
 import { Events } from './events.js';
-import { Constants } from 'constants.js';
+import { Constants } from './constants.js';
 
 /**
  * @name Two.Element

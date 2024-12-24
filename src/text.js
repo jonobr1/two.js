@@ -8,7 +8,7 @@ import { LinearGradient } from './effects/linear-gradient.js';
 import { RadialGradient } from './effects/radial-gradient.js';
 import { Texture } from './effects/texture.js';
 import { root } from './utils/root.js';
-import { getEffectFromObject } from 'utils/shape.js';
+import { getEffectFromObject } from './utils/shape.js';
 
 let canvas;
 const min = Math.min,
