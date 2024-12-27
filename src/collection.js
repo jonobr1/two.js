@@ -8,54 +8,52 @@ import { Events } from './events.js';
  */
 
 export class Collection extends Array {
-
   // Warning: Multiple inheritance hack
   /**
    * @private
    */
-  _events = new Events();
+  #events = new Events();
 
   // Getters and setters aren't enumerable
   get _bound() {
-    return this._events._bound;
+    return this.#events._bound;
   }
   set _bound(v) {
-    this._events._bound = v;
+    this.#events._bound = v;
   }
 
   addEventListener() {
-    return this._events.addEventListener.apply(this, arguments);
+    return this.#events.addEventListener.apply(this, arguments);
   }
   on() {
-    return this._events.on.apply(this, arguments);
+    return this.#events.on.apply(this, arguments);
   }
   bind() {
-    return this._events.bind.apply(this, arguments);
+    return this.#events.bind.apply(this, arguments);
   }
   removeEventListener() {
-    return this._events.removeEventListener.apply(this, arguments);
+    return this.#events.removeEventListener.apply(this, arguments);
   }
   off() {
-    return this._events.off.apply(this, arguments);
+    return this.#events.off.apply(this, arguments);
   }
   unbind() {
-    return this._events.unbind.apply(this, arguments);
+    return this.#events.unbind.apply(this, arguments);
   }
   dispatchEvent() {
-    return this._events.dispatchEvent.apply(this, arguments);
+    return this.#events.dispatchEvent.apply(this, arguments);
   }
   trigger() {
-    return this._events.trigger.apply(this, arguments);
+    return this.#events.trigger.apply(this, arguments);
   }
   listen() {
-    return this._events.listen.apply(this, arguments);
+    return this.#events.listen.apply(this, arguments);
   }
   ignore() {
-    return this._events.ignore.apply(this, arguments);
+    return this.#events.ignore.apply(this, arguments);
   }
 
   constructor() {
-
     super();
 
     if (arguments[0] && Array.isArray(arguments[0])) {
@@ -65,7 +63,6 @@ export class Collection extends Array {
     } else if (arguments.length > 0) {
       this.push.apply(this, arguments);
     }
-
   }
 
   pop() {
@@ -96,7 +93,10 @@ export class Collection extends Array {
     const spliced = super.splice.apply(this, arguments);
     this.trigger(Events.Types.remove, spliced);
     if (arguments.length > 2) {
-      const inserted = this.slice(arguments[0], arguments[0] + arguments.length - 2);
+      const inserted = this.slice(
+        arguments[0],
+        arguments[0] + arguments.length - 2
+      );
       this.trigger(Events.Types.insert, inserted);
       this.trigger(Events.Types.order);
     }
@@ -115,10 +115,6 @@ export class Collection extends Array {
     return this;
   }
 
-  indexOf() {
-    return super.indexOf.apply(this, arguments);
-  }
-
   map(func, scope) {
     const results = [];
     for (let key = 0; key < this.length; key++) {
@@ -133,5 +129,4 @@ export class Collection extends Array {
     }
     return results;
   }
-
 }
