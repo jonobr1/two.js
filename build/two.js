@@ -741,7 +741,7 @@ var Two = (() => {
       canvas: "CanvasRenderer"
     },
     Version: "v0.8.15",
-    PublishDate: "2024-11-07T05:56:16.788Z",
+    PublishDate: "2024-12-27T23:16:37.528Z",
     Identifier: "two-",
     Resolution: 12,
     AutoCalculateImportedMatrices: true,
@@ -1482,42 +1482,48 @@ var Two = (() => {
 
   // src/collection.js
   var Collection = class extends Array {
-    _events = new Events();
+    #events = new Events();
+    get _events() {
+      return this.#events;
+    }
+    set _events(e) {
+      this.#events = e;
+    }
     get _bound() {
-      return this._events._bound;
+      return this.#events._bound;
     }
     set _bound(v) {
-      this._events._bound = v;
+      this.#events._bound = v;
     }
     addEventListener() {
-      return this._events.addEventListener.apply(this, arguments);
+      return this.#events.addEventListener.apply(this, arguments);
     }
     on() {
-      return this._events.on.apply(this, arguments);
+      return this.#events.on.apply(this, arguments);
     }
     bind() {
-      return this._events.bind.apply(this, arguments);
+      return this.#events.bind.apply(this, arguments);
     }
     removeEventListener() {
-      return this._events.removeEventListener.apply(this, arguments);
+      return this.#events.removeEventListener.apply(this, arguments);
     }
     off() {
-      return this._events.off.apply(this, arguments);
+      return this.#events.off.apply(this, arguments);
     }
     unbind() {
-      return this._events.unbind.apply(this, arguments);
+      return this.#events.unbind.apply(this, arguments);
     }
     dispatchEvent() {
-      return this._events.dispatchEvent.apply(this, arguments);
+      return this.#events.dispatchEvent.apply(this, arguments);
     }
     trigger() {
-      return this._events.trigger.apply(this, arguments);
+      return this.#events.trigger.apply(this, arguments);
     }
     listen() {
-      return this._events.listen.apply(this, arguments);
+      return this.#events.listen.apply(this, arguments);
     }
     ignore() {
-      return this._events.ignore.apply(this, arguments);
+      return this.#events.ignore.apply(this, arguments);
     }
     constructor() {
       super();
@@ -1553,7 +1559,10 @@ var Two = (() => {
       const spliced = super.splice.apply(this, arguments);
       this.trigger(Events.Types.remove, spliced);
       if (arguments.length > 2) {
-        const inserted = this.slice(arguments[0], arguments[0] + arguments.length - 2);
+        const inserted = this.slice(
+          arguments[0],
+          arguments[0] + arguments.length - 2
+        );
         this.trigger(Events.Types.insert, inserted);
         this.trigger(Events.Types.order);
       }
@@ -2734,7 +2743,10 @@ var Two = (() => {
 
   // src/children.js
   var Children = class extends Collection {
-    ids = {};
+    #ids = {};
+    get ids() {
+      return this.#ids;
+    }
     constructor(children) {
       children = Array.isArray(children) ? children : Array.prototype.slice.call(arguments);
       super(children);

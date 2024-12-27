@@ -48,6 +48,24 @@ var __publicField = (obj, key, value) => {
   __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
   return value;
 };
+var __accessCheck = (obj, member, msg) => {
+  if (!member.has(obj))
+    throw TypeError("Cannot " + msg);
+};
+var __privateGet = (obj, member, getter) => {
+  __accessCheck(obj, member, "read from private field");
+  return getter ? getter.call(obj) : member.get(obj);
+};
+var __privateAdd = (obj, member, value) => {
+  if (member.has(obj))
+    throw TypeError("Cannot add the same private member more than once");
+  member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
+};
+var __privateSet = (obj, member, value, setter) => {
+  __accessCheck(obj, member, "write to private field");
+  setter ? setter.call(obj, value) : member.set(obj, value);
+  return value;
+};
 
 // src/utils/path-commands.js
 var Commands = {
@@ -739,7 +757,7 @@ var Constants = {
     canvas: "CanvasRenderer"
   },
   Version: "v0.8.15",
-  PublishDate: "2024-11-07T05:56:16.788Z",
+  PublishDate: "2024-12-27T23:16:37.528Z",
   Identifier: "two-",
   Resolution: 12,
   AutoCalculateImportedMatrices: true,
@@ -1479,10 +1497,11 @@ function FlagScale() {
 }
 
 // src/collection.js
+var _events;
 var Collection = class extends Array {
   constructor() {
     super();
-    __publicField(this, "_events", new Events());
+    __privateAdd(this, _events, new Events());
     if (arguments[0] && Array.isArray(arguments[0])) {
       if (arguments[0].length > 0) {
         this.push.apply(this, arguments[0]);
@@ -1491,41 +1510,47 @@ var Collection = class extends Array {
       this.push.apply(this, arguments);
     }
   }
+  get _events() {
+    return __privateGet(this, _events);
+  }
+  set _events(e) {
+    __privateSet(this, _events, e);
+  }
   get _bound() {
-    return this._events._bound;
+    return __privateGet(this, _events)._bound;
   }
   set _bound(v) {
-    this._events._bound = v;
+    __privateGet(this, _events)._bound = v;
   }
   addEventListener() {
-    return this._events.addEventListener.apply(this, arguments);
+    return __privateGet(this, _events).addEventListener.apply(this, arguments);
   }
   on() {
-    return this._events.on.apply(this, arguments);
+    return __privateGet(this, _events).on.apply(this, arguments);
   }
   bind() {
-    return this._events.bind.apply(this, arguments);
+    return __privateGet(this, _events).bind.apply(this, arguments);
   }
   removeEventListener() {
-    return this._events.removeEventListener.apply(this, arguments);
+    return __privateGet(this, _events).removeEventListener.apply(this, arguments);
   }
   off() {
-    return this._events.off.apply(this, arguments);
+    return __privateGet(this, _events).off.apply(this, arguments);
   }
   unbind() {
-    return this._events.unbind.apply(this, arguments);
+    return __privateGet(this, _events).unbind.apply(this, arguments);
   }
   dispatchEvent() {
-    return this._events.dispatchEvent.apply(this, arguments);
+    return __privateGet(this, _events).dispatchEvent.apply(this, arguments);
   }
   trigger() {
-    return this._events.trigger.apply(this, arguments);
+    return __privateGet(this, _events).trigger.apply(this, arguments);
   }
   listen() {
-    return this._events.listen.apply(this, arguments);
+    return __privateGet(this, _events).listen.apply(this, arguments);
   }
   ignore() {
-    return this._events.ignore.apply(this, arguments);
+    return __privateGet(this, _events).ignore.apply(this, arguments);
   }
   pop() {
     const popped = super.pop.apply(this, arguments);
@@ -1551,7 +1576,10 @@ var Collection = class extends Array {
     const spliced = super.splice.apply(this, arguments);
     this.trigger(Events.Types.remove, spliced);
     if (arguments.length > 2) {
-      const inserted = this.slice(arguments[0], arguments[0] + arguments.length - 2);
+      const inserted = this.slice(
+        arguments[0],
+        arguments[0] + arguments.length - 2
+      );
       this.trigger(Events.Types.insert, inserted);
       this.trigger(Events.Types.order);
     }
@@ -1585,6 +1613,7 @@ var Collection = class extends Array {
     return results;
   }
 };
+_events = new WeakMap();
 
 // src/effects/stop.js
 var _Stop = class extends Element {
@@ -2731,14 +2760,18 @@ function FlagMatrix() {
 }
 
 // src/children.js
+var _ids;
 var Children = class extends Collection {
   constructor(children) {
     children = Array.isArray(children) ? children : Array.prototype.slice.call(arguments);
     super(children);
-    __publicField(this, "ids", {});
+    __privateAdd(this, _ids, {});
     this.attach(children);
     this.on(Events.Types.insert, this.attach);
     this.on(Events.Types.remove, this.detach);
+  }
+  get ids() {
+    return __privateGet(this, _ids);
   }
   attach(children) {
     for (let i = 0; i < children.length; i++) {
@@ -2756,6 +2789,7 @@ var Children = class extends Collection {
     return this;
   }
 };
+_ids = new WeakMap();
 
 // src/path.js
 var min = Math.min;
