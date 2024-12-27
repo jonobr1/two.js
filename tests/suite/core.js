@@ -557,7 +557,7 @@ QUnit.test('Two.Matrix', function (assert) {
 });
 
 QUnit.test('Two.Collection', function (assert) {
-  assert.expect(15);
+  assert.expect(19);
 
   var poly = new Two.Path([new Two.Anchor(0, 0)]);
   var vector = new Two.Anchor(150, 150);
@@ -675,6 +675,41 @@ QUnit.test('Two.Collection', function (assert) {
     result.length,
     5,
     'Two.Collection.map correctly iterates through the necessary items.'
+  );
+
+  const emptyCollection = new Two.Collection();
+
+  assert.equal(
+    emptyCollection.length,
+    0,
+    'Two.Collection correctly enumerates properties.'
+  );
+
+  assert.equal(
+    Object.keys(emptyCollection).length,
+    0,
+    'Two.Collection correctly Object.keys an empty collection.'
+  );
+
+  const included = emptyCollection.filter(() => true);
+  console.log(
+    included.length,
+    0,
+    'Two.Collection.filter correctly iterates over items.'
+  );
+
+  emptyCollection.push(5, 10, 432, 90);
+
+  assert.equal(
+    Object.keys(emptyCollection).length,
+    4,
+    'Two.Collection correctly Object.keys a populated list collection.'
+  );
+
+  assert.equal(
+    emptyCollection.find((v) => v === 5),
+    5,
+    'Two.Collection.find correctly iterates over items.'
   );
 });
 
