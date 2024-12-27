@@ -8,17 +8,20 @@ import { Collection } from './collection.js';
  * @description A children collection which is accesible both by index and by object `id`.
  */
 export class Children extends Collection {
-
   /**
    * @name Two.Group.Children#ids
    * @property {Object} - Map of all elements in the list keyed by `id`s.
    */
-  ids = {};
+  // N.B: Technique to disable enumeration on object
+  #ids = {};
+  get ids() {
+    return this.#ids;
+  }
 
   constructor(children) {
-
     children = Array.isArray(children)
-      ? children : Array.prototype.slice.call(arguments);
+      ? children
+      : Array.prototype.slice.call(arguments);
 
     super(children);
 
@@ -26,7 +29,6 @@ export class Children extends Collection {
 
     this.on(Events.Types.insert, this.attach);
     this.on(Events.Types.remove, this.detach);
-
   }
 
   /**
@@ -57,5 +59,4 @@ export class Children extends Collection {
     }
     return this;
   }
-
 }
