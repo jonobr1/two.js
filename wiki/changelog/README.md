@@ -11,7 +11,7 @@ All notable changes to this project will be documented in this file. The format 
 
 <carbon-ads />
 
-## Nightly
+## December 31, 2024 v0.8.15
 
 + Made `CanvasPolyfill` object and merged it into `Two.Utils` to remove circular dependencies
 + Made `Two.Collection._events` and `Two.Children.ids` not enumerated for more seamless invocation of `Array` methods like `Array.filter` and `Object` methods like `Object.keys`
