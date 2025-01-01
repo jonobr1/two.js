@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file. The format 
 
 ## Nightly
 
++ Made `CanvasPolyfill` object and merged it into `Two.Utils` to remove circular dependencies
 + Made `Two.Collection._events` and `Two.Children.ids` not enumerated for more seamless invocation of `Array` methods like `Array.filter` and `Object` methods like `Object.keys`
 + Added static method `fromObject` to all `Two.Element` and descendant classes
 + Added method `copy` to all `Two.Element` and descendant classes
