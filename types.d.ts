@@ -1617,7 +1617,6 @@ declare module 'two.js/src/renderers/canvas' {
         middle: string;
         right: string;
       };
-      shim: (elem: any, name: any) => any;
       group: {
         renderChild: (child: any) => void;
         render: (ctx: any) => any;

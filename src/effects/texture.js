@@ -7,8 +7,6 @@ import { CanvasPolyfill } from '../utils/canvas-polyfill.js';
 import { Vector } from '../vector.js';
 import { Registry } from '../registry.js';
 
-import { Renderer as CanvasRenderer } from '../renderers/canvas.js';
-
 let anchor;
 const regex = {
   video: /\.(mp4|webm|ogg)$/i,
@@ -283,7 +281,7 @@ export class Texture extends Element {
     if (CanvasPolyfill.Image) {
       // TODO: Fix for headless environments
       image = new CanvasPolyfill.Image();
-      CanvasRenderer.Utils.shim(image, 'img');
+      CanvasPolyfill.shim(image, 'img');
     } else if (root.document) {
       if (regex.video.test(absoluteSrc)) {
         image = document.createElement('video');

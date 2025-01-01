@@ -4,7 +4,6 @@ import { Curve } from '../utils/curves.js';
 import { Events } from '../events.js';
 import { getRatio } from '../utils/device-pixel-ratio.js';
 import { _ } from '../utils/underscore.js';
-import { CanvasPolyfill } from '../utils/canvas-polyfill.js';
 
 import { Group } from '../group.js';
 import { Vector } from '../vector.js';
@@ -35,8 +34,6 @@ const canvas = {
     bottom: 'bottom',
     baseline: 'alphabetic',
   },
-
-  shim: CanvasPolyfill.shim,
 
   getRendererType: function (type) {
     return type in canvas ? type : 'path';
