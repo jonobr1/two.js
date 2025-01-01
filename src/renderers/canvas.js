@@ -4,6 +4,7 @@ import { Curve } from '../utils/curves.js';
 import { Events } from '../events.js';
 import { getRatio } from '../utils/device-pixel-ratio.js';
 import { _ } from '../utils/underscore.js';
+import { CanvasPolyfill } from '../utils/canvas-polyfill.js';
 
 import { Group } from '../group.js';
 import { Vector } from '../vector.js';
@@ -35,18 +36,7 @@ const canvas = {
     baseline: 'alphabetic',
   },
 
-  shim: function (elem, name) {
-    elem.tagName = elem.nodeName = name || 'canvas';
-    elem.nodeType = 1;
-    elem.getAttribute = function (prop) {
-      return this[prop];
-    };
-    elem.setAttribute = function (prop, val) {
-      this[prop] = val;
-      return this;
-    };
-    return elem;
-  },
+  shim: CanvasPolyfill.shim,
 
   getRendererType: function (type) {
     return type in canvas ? type : 'path';

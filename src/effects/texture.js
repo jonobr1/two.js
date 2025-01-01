@@ -2,7 +2,7 @@ import { root } from '../utils/root.js';
 import { Events } from '../events.js';
 import { Element } from '../element.js';
 import { TwoError } from '../utils/error.js';
-import { CanvasShim } from '../utils/canvas-shim.js';
+import { CanvasPolyfill } from '../utils/canvas-polyfill.js';
 
 import { Vector } from '../vector.js';
 import { Registry } from '../registry.js';
@@ -280,9 +280,9 @@ export class Texture extends Element {
 
     let image;
 
-    if (CanvasShim.Image) {
+    if (CanvasPolyfill.Image) {
       // TODO: Fix for headless environments
-      image = new CanvasShim.Image();
+      image = new CanvasPolyfill.Image();
       CanvasRenderer.Utils.shim(image, 'img');
     } else if (root.document) {
       if (regex.video.test(absoluteSrc)) {
@@ -318,7 +318,7 @@ export class Texture extends Element {
 
       const loaded = function (e) {
         if (
-          !CanvasShim.isHeadless &&
+          !CanvasPolyfill.isHeadless &&
           image.removeEventListener &&
           typeof image.removeEventListener === 'function'
         ) {
@@ -331,7 +331,7 @@ export class Texture extends Element {
       };
       const error = function (e) {
         if (
-          !CanvasShim.isHeadless &&
+          !CanvasPolyfill.isHeadless &&
           typeof image.removeEventListener === 'function'
         ) {
           image.removeEventListener('load', loaded, false);
@@ -348,7 +348,7 @@ export class Texture extends Element {
       ) {
         loaded();
       } else if (
-        !CanvasShim.isHeadless &&
+        !CanvasPolyfill.isHeadless &&
         typeof image.addEventListener === 'function'
       ) {
         image.addEventListener('load', loaded, false);
@@ -357,24 +357,28 @@ export class Texture extends Element {
 
       texture._src = Texture.getAbsoluteURL(texture._src);
 
-      if (!CanvasShim.isHeadless && image && image.getAttribute('two-src')) {
+      if (
+        !CanvasPolyfill.isHeadless &&
+        image &&
+        image.getAttribute('two-src')
+      ) {
         return;
       }
 
-      if (!CanvasShim.isHeadless) {
+      if (!CanvasPolyfill.isHeadless) {
         image.setAttribute('two-src', texture.src);
       }
 
       Texture.ImageRegistry.add(texture.src, image);
 
-      if (CanvasShim.isHeadless) {
+      if (CanvasPolyfill.isHeadless) {
         Texture.loadHeadlessBuffer(texture, loaded);
       } else {
         texture.image.src = texture.src;
       }
     },
     video: function (texture, callback) {
-      if (CanvasShim.isHeadless) {
+      if (CanvasPolyfill.isHeadless) {
         throw new TwoError(
           'video textures are not implemented in headless environments.'
         );
@@ -428,7 +432,7 @@ export class Texture extends Element {
         Texture.Register.canvas(texture, callback);
       } else {
         texture._src =
-          (!CanvasShim.isHeadless && image.getAttribute('two-src')) ||
+          (!CanvasPolyfill.isHeadless && image.getAttribute('two-src')) ||
           image.src;
         Texture.Register[tag](texture, callback);
       }
