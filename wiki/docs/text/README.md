@@ -1263,8 +1263,8 @@ Copy the properties of one [Two.Text](/docs/text/) onto another.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L399">
-    text.js:399
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L405">
+    text.js:405
   </a>
 
 </div>
@@ -1323,8 +1323,8 @@ Create a new instance of [Two.Text](/docs/text/) with the same properties of the
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L416">
-    text.js:416
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L424">
+    text.js:424
   </a>
 
 </div>
@@ -1376,8 +1376,8 @@ Return a JSON compatible plain object that represents the text object.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L445">
-    text.js:445
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L453">
+    text.js:453
   </a>
 
 </div>
@@ -1431,8 +1431,8 @@ Short hand method to set fill to `none`.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L464">
-    text.js:464
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L472">
+    text.js:472
   </a>
 
 </div>
@@ -1476,8 +1476,8 @@ Short hand method to set stroke to `none`.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L474">
-    text.js:474
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L482">
+    text.js:482
   </a>
 
 </div>
@@ -1538,8 +1538,8 @@ Return an object with top, left, right, bottom, width, and height parameters of 
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L489">
-    text.js:489
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L497">
+    text.js:497
   </a>
 
 </div>

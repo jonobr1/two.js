@@ -63,8 +63,8 @@ Map of all elements in the list keyed by `id`s.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/children.js#L12">
-    children.js:12
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/children.js#L11">
+    children.js:11
   </a>
 
 </div>
@@ -115,8 +115,8 @@ Adds elements to the `ids` map.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/children.js#L32">
-    children.js:32
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/children.js#L34">
+    children.js:34
   </a>
 
 </div>
@@ -167,8 +167,8 @@ Removes elements to the `ids` map.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/children.js#L48">
-    children.js:48
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/children.js#L50">
+    children.js:50
   </a>
 
 </div>

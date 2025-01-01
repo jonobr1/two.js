@@ -567,8 +567,8 @@ Alias for [Two.Shape.position](/docs/shape/#position).
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L163">
-    shape.js:163
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L169">
+    shape.js:169
   </a>
 
 </div>
@@ -619,8 +619,8 @@ Convenience method to add itself to the scenegraph.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L174">
-    shape.js:174
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L180">
+    shape.js:180
   </a>
 
 </div>
@@ -664,8 +664,8 @@ Remove self from the scene / parent.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L185">
-    shape.js:185
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L191">
+    shape.js:191
   </a>
 
 </div>
@@ -716,8 +716,8 @@ Copy the properties of one [Two.Shape](/docs/shape/) onto another.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L200">
-    shape.js:200
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L206">
+    shape.js:206
   </a>
 
 </div>
@@ -776,8 +776,8 @@ Create a new [Two.Shape](/docs/shape/) with the same values as the current shape
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L223">
-    shape.js:223
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L246">
+    shape.js:246
   </a>
 
 </div>
@@ -821,8 +821,8 @@ Create a JSON compatible object that represents information of the shape.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L250">
-    shape.js:250
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L273">
+    shape.js:273
   </a>
 
 </div>

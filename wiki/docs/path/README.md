@@ -1112,8 +1112,8 @@ Copy the properties of one [Two.Path](/docs/path/) onto another.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L434">
-    path.js:434
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L440">
+    path.js:440
   </a>
 
 </div>
@@ -1172,8 +1172,8 @@ Create a new instance of [Two.Path](/docs/path/) with the same properties of the
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L457">
-    path.js:457
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L470">
+    path.js:470
   </a>
 
 </div>
@@ -1225,8 +1225,8 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L495">
-    path.js:495
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L508">
+    path.js:508
   </a>
 
 </div>
@@ -1280,8 +1280,8 @@ Short hand method to set fill to `none`.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L525">
-    path.js:525
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L538">
+    path.js:538
   </a>
 
 </div>
@@ -1325,8 +1325,8 @@ Short hand method to set stroke to `none`.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L535">
-    path.js:535
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L548">
+    path.js:548
   </a>
 
 </div>
@@ -1370,8 +1370,8 @@ Orient the vertices of the shape to the upper left-hand corner of the path.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L546">
-    path.js:546
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L559">
+    path.js:559
   </a>
 
 </div>
@@ -1415,8 +1415,8 @@ Orient the vertices of the shape to the center of the path.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L576">
-    path.js:576
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L589">
+    path.js:589
   </a>
 
 </div>
@@ -1477,8 +1477,8 @@ Return an object with top, left, right, bottom, width, and height parameters of 
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L601">
-    path.js:601
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L614">
+    path.js:614
   </a>
 
 </div>
@@ -1538,8 +1538,8 @@ Given a float `t` from 0 to 1, return a point or assign a passed `obj`'s coordin
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L716">
-    path.js:716
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L729">
+    path.js:729
   </a>
 
 </div>
@@ -1583,8 +1583,8 @@ Based on closed / curved and sorting of vertices plot where all points should be
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L850">
-    path.js:850
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L863">
+    path.js:863
   </a>
 
 </div>
@@ -1645,8 +1645,8 @@ Insert a [Two.Anchor](/docs/anchor/) at the midpoint between every item in [Two.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L869">
-    path.js:869
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L882">
+    path.js:882
   </a>
 
 </div>
@@ -1692,8 +1692,8 @@ The sum of distances between all [Two.Path.vertices](/docs/path/#vertices).
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L1283">
-    path.js:1283
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L1296">
+    path.js:1296
   </a>
 
 </div>
@@ -1739,8 +1739,8 @@ The shape whose alpha property becomes a clipping area for the path.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L1392">
-    path.js:1392
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L1405">
+    path.js:1405
   </a>
 
 </div>
@@ -1796,8 +1796,8 @@ Tells Two.js renderer if this object represents a mask for another object (or no
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L1413">
-    path.js:1413
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L1426">
+    path.js:1426
   </a>
 
 </div>

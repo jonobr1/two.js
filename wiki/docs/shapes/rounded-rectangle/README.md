@@ -73,8 +73,8 @@ A list of properties that are on every [Two.RoundedRectangle](/docs/shapes/round
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/rounded-rectangle.js#L121">
-    rounded-rectangle.js:121
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/rounded-rectangle.js#L123">
+    rounded-rectangle.js:123
   </a>
 
 </div>
@@ -133,8 +133,8 @@ Create a new [Two.RoundedRectangle](/docs/shapes/rounded-rectangle/) from an obj
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/rounded-rectangle.js#L127">
-    rounded-rectangle.js:127
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/rounded-rectangle.js#L129">
+    rounded-rectangle.js:129
   </a>
 
 </div>
@@ -190,8 +190,8 @@ The width of the rounded rectangle.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/rounded-rectangle.js#L87">
-    rounded-rectangle.js:87
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/rounded-rectangle.js#L89">
+    rounded-rectangle.js:89
   </a>
 
 </div>
@@ -237,8 +237,8 @@ The height of the rounded rectangle.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/rounded-rectangle.js#L95">
-    rounded-rectangle.js:95
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/rounded-rectangle.js#L97">
+    rounded-rectangle.js:97
   </a>
 
 </div>
@@ -284,8 +284,8 @@ The size of the radius of the rounded rectangle.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/rounded-rectangle.js#L103">
-    rounded-rectangle.js:103
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/rounded-rectangle.js#L105">
+    rounded-rectangle.js:105
   </a>
 
 </div>
@@ -336,8 +336,8 @@ Copy the properties of one [Two.RoundedRectangle](/docs/shapes/rounded-rectangle
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/rounded-rectangle.js#L139">
-    rounded-rectangle.js:139
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/rounded-rectangle.js#L147">
+    rounded-rectangle.js:147
   </a>
 
 </div>
@@ -396,8 +396,8 @@ Create a new instance of [Two.RoundedRectangle](/docs/shapes/rounded-rectangle/)
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/rounded-rectangle.js#L277">
-    rounded-rectangle.js:277
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/rounded-rectangle.js#L292">
+    rounded-rectangle.js:292
   </a>
 
 </div>
@@ -449,8 +449,8 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/rounded-rectangle.js#L313">
-    rounded-rectangle.js:313
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/rounded-rectangle.js#L328">
+    rounded-rectangle.js:328
   </a>
 
 </div>

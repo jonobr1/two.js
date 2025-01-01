@@ -355,8 +355,8 @@ Called internally by Two.js's renderer to reset all flags. Ensures that only pro
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/element.js#L73">
-    element.js:73
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/element.js#L77">
+    element.js:77
   </a>
 
 </div>

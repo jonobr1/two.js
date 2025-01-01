@@ -396,8 +396,8 @@ Create a new instance of [Two.Gradient](/docs/effects/gradient/) with the same p
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L85">
-    gradient.js:85
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L91">
+    gradient.js:91
   </a>
 
 </div>
@@ -448,8 +448,8 @@ Copy the properties of one [Two.Gradient](/docs/effects/gradient/) onto another.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L114">
-    gradient.js:114
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L120">
+    gradient.js:120
   </a>
 
 </div>
@@ -501,8 +501,8 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L136">
-    gradient.js:136
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L139">
+    gradient.js:139
   </a>
 
 </div>

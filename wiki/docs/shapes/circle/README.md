@@ -71,8 +71,8 @@ A list of properties that are on every [Two.Circle](/docs/shapes/circle/).
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/circle.js#L66">
-    circle.js:66
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/circle.js#L68">
+    circle.js:68
   </a>
 
 </div>
@@ -131,8 +131,8 @@ Create a new [Two.Circle](/docs/shapes/circle/) from an object notation of a [Tw
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/circle.js#L72">
-    circle.js:72
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/circle.js#L74">
+    circle.js:74
   </a>
 
 </div>
@@ -188,8 +188,8 @@ The size of the radius of the circle.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/circle.js#L48">
-    circle.js:48
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/circle.js#L50">
+    circle.js:50
   </a>
 
 </div>
@@ -240,8 +240,8 @@ Copy the properties of one [Two.Circle](/docs/shapes/circle/) onto another.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/circle.js#L84">
-    circle.js:84
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/circle.js#L92">
+    circle.js:92
   </a>
 
 </div>
@@ -300,8 +300,8 @@ Create a new instance of [Two.Circle](/docs/shapes/circle/) with the same proper
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/circle.js#L163">
-    circle.js:163
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/circle.js#L171">
+    circle.js:171
   </a>
 
 </div>
@@ -353,8 +353,8 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/circle.js#L195">
-    circle.js:195
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/circle.js#L203">
+    circle.js:203
   </a>
 
 </div>
