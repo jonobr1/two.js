@@ -1,5 +1,5 @@
 {
-  "include": ["src/two.js", "extras/jsm/**/*"],
+  "include": ["src/**/*", "extras/jsm/**/*"],
   "compilerOptions": {
     "allowJs": true,
     "declaration": true,

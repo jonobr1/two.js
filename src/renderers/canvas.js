@@ -35,19 +35,6 @@ const canvas = {
     baseline: 'alphabetic',
   },
 
-  shim: function (elem, name) {
-    elem.tagName = elem.nodeName = name || 'canvas';
-    elem.nodeType = 1;
-    elem.getAttribute = function (prop) {
-      return this[prop];
-    };
-    elem.setAttribute = function (prop, val) {
-      this[prop] = val;
-      return this;
-    };
-    return elem;
-  },
-
   getRendererType: function (type) {
     return type in canvas ? type : 'path';
   },

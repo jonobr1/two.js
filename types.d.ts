@@ -1617,7 +1617,6 @@ declare module 'two.js/src/renderers/canvas' {
         middle: string;
         right: string;
       };
-      shim: (elem: any, name: any) => any;
       group: {
         renderChild: (child: any) => void;
         render: (ctx: any) => any;
@@ -1698,11 +1697,12 @@ declare module 'two.js/src/renderers/canvas' {
   import { Events } from 'two.js/src/events';
   import { Group } from 'two.js/src/group';
 }
-declare module 'two.js/src/utils/canvas-shim' {
-  export interface CanvasShim {
+declare module 'two.js/src/utils/canvas-polyfill' {
+  export interface CanvasPolyfill {
     Image: any;
     isHeadless: boolean;
-    shim(
+    shim(canvas: any, name?: string): any;
+    polyfill(
       canvas: any,
       Image?: new (width?: number, height?: number) => HTMLImageElement
     ): any;

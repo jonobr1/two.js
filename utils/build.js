@@ -4,25 +4,24 @@ const path = require('path');
 const _ = require('underscore');
 const gzip = require('gzip-size');
 
-const publishDateString = (new Date()).toISOString();
+const publishDateString = new Date().toISOString();
 const config = getJSON(path.resolve(__dirname, '../package.json'));
 const paths = {
   entry: path.resolve(__dirname, '../src/two.js'),
   umd: path.resolve(__dirname, '../build/two.js'),
   esm: path.resolve(__dirname, '../build/two.module.js'),
   min: path.resolve(__dirname, '../build/two.min.js'),
-  license: path.resolve(__dirname, '../LICENSE')
+  license: path.resolve(__dirname, '../LICENSE'),
 };
 
 async function buildModules() {
-
   esbuild.buildSync({
     entryPoints: [paths.entry],
     outfile: paths.umd,
     bundle: true,
     minify: false,
     format: 'iife',
-    globalName: 'Two'
+    globalName: 'Two',
   });
 
   esbuild.buildSync({
@@ -30,7 +29,7 @@ async function buildModules() {
     outfile: paths.esm,
     bundle: true,
     target: 'es6',
-    format: 'esm'
+    format: 'esm',
   });
 
   esbuild.buildSync({
@@ -39,10 +38,12 @@ async function buildModules() {
     bundle: true,
     minify: true,
     format: 'iife',
-    globalName: 'Two'
+    globalName: 'Two',
   });
 
-  const license = await fs.promises.readFile(paths.license, { encoding: 'utf-8' });
+  const license = await fs.promises.readFile(paths.license, {
+    encoding: 'utf-8',
+  });
   const licenseComment = ['/*', license.trim(), '*/'].join('\n');
 
   const umdOutput = await fs.promises.readFile(paths.umd);
@@ -52,11 +53,19 @@ async function buildModules() {
   const moduleExports = `(function(){if(typeof exports==='object'&&typeof module!=='undefined'){module.exports=Two}})()`;
 
   return Promise.all([
-    fs.promises.writeFile(paths.umd, [licenseComment, template(umdOutput, true), moduleExports].join('\n')),
-    fs.promises.writeFile(paths.esm, [licenseComment, template(esmOutput, false)].join('\n')),
-    fs.promises.writeFile(paths.min, [licenseComment, template(minOutput, true), moduleExports].join('\n'))
+    fs.promises.writeFile(
+      paths.umd,
+      [licenseComment, template(umdOutput, true), moduleExports].join('\n')
+    ),
+    fs.promises.writeFile(
+      paths.esm,
+      [licenseComment, template(esmOutput, false)].join('\n')
+    ),
+    fs.promises.writeFile(
+      paths.min,
+      [licenseComment, template(minOutput, true), moduleExports].join('\n')
+    ),
   ]);
-
 }
 
 function template(buffer, isExposed) {
@@ -64,7 +73,7 @@ function template(buffer, isExposed) {
   const generate = _.template(code);
   let result = generate({
     version: config.version,
-    publishDate: publishDateString
+    publishDate: publishDateString,
   });
   if (isExposed) {
     result = result.replace(/\}\)\(\);/, '})().default;');
@@ -73,7 +82,6 @@ function template(buffer, isExposed) {
 }
 
 function publishModule() {
-
   let size;
   const result = {};
 
@@ -87,7 +95,6 @@ function publishModule() {
   const outputPath = path.resolve(__dirname, './file-sizes.json');
 
   return fs.promises.writeFile(outputPath, contents);
-
 }
 
 function getFileSize(filepath) {
@@ -106,7 +113,6 @@ function formatFileSize(v) {
 }
 
 async function build() {
-
   let startTime, elapsed;
 
   startTime = Date.now();
@@ -124,8 +130,11 @@ async function build() {
   } catch (error) {
     console.log(error);
   }
-  console.log('Published additional statistics to wiki:', elapsed / 1000, 'seconds');
-
+  console.log(
+    'Published additional statistics to wiki:',
+    elapsed / 1000,
+    'seconds'
+  );
 }
 
 function getJSON(filepath) {
