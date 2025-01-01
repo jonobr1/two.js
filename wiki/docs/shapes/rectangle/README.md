@@ -71,13 +71,83 @@ A list of properties that are on every [Two.Rectangle](/docs/shapes/rectangle/).
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/rectangle.js#L63">
-    rectangle.js:63
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/rectangle.js#L62">
+    rectangle.js:62
   </a>
 
 </div>
 
 
+
+
+</div>
+
+
+
+<div class="static function ">
+
+## fromObject
+
+<h2 class="longname" aria-hidden="true"><a href="#fromObject"><span class="prefix">Two.Rectangle.</span><span class="shortname">fromObject</span></a></h2>
+
+
+
+
+<div class="returns">
+
+__Returns__: Two.Rectangle
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="params">
+
+| Argument | Description |
+| ---- | ----------- |
+|  obj  | Object notation of a [Two.Rectangle](/docs/shapes/rectangle/) to create a new instance |
+</div>
+
+
+
+
+<div class="description">
+
+Create a new [Two.Rectangle](/docs/shapes/rectangle/) from an object notation of a [Two.Rectangle](/docs/shapes/rectangle/).
+
+</div>
+
+
+
+
+
+<div class="meta">
+
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/rectangle.js#L68">
+    rectangle.js:68
+  </a>
+
+</div>
+
+
+
+<div class="tags">
+
+
+::: tip nota-bene
+Works in conjunction with [Two.Rectangle.toObject](/docs/shapes/rectangle/#toobject)
+:::
+
+
+</div>
 
 
 </div>
@@ -227,6 +297,58 @@ A two-component vector describing the origin offset to draw the rectangle. Defau
 
 <div class="instance function ">
 
+## copy
+
+<h2 class="longname" aria-hidden="true"><a href="#copy"><span class="prefix">Two.Rectangle.</span><span class="shortname">copy</span></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="params">
+
+| Argument | Description |
+| ---- | ----------- |
+|  rectangle  | The reference [Two.Rectangle](/docs/shapes/rectangle/) |
+</div>
+
+
+
+
+<div class="description">
+
+Copy the properties of one [Two.Rectangle](/docs/shapes/rectangle/) onto another.
+
+</div>
+
+
+
+
+
+<div class="meta">
+
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/rectangle.js#L86">
+    rectangle.js:86
+  </a>
+
+</div>
+
+
+
+
+</div>
+
+
+
+<div class="instance function ">
+
 ## clone
 
 <h2 class="longname" aria-hidden="true"><a href="#clone"><span class="prefix">Two.Rectangle.</span><span class="shortname">clone</span></a></h2>
@@ -272,8 +394,8 @@ Create a new instance of [Two.Rectangle](/docs/shapes/rectangle/) with the same 
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/rectangle.js#L148">
-    rectangle.js:148
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/rectangle.js#L179">
+    rectangle.js:179
   </a>
 
 </div>
@@ -325,8 +447,8 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/rectangle.js#L182">
-    rectangle.js:182
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/rectangle.js#L211">
+    rectangle.js:211
   </a>
 
 </div>

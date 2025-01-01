@@ -35,27 +35,14 @@ const canvas = {
     baseline: 'alphabetic',
   },
 
-  shim: function (elem, name) {
-    elem.tagName = elem.nodeName = name || 'canvas';
-    elem.nodeType = 1;
-    elem.getAttribute = function (prop) {
-      return this[prop];
-    };
-    elem.setAttribute = function (prop, val) {
-      this[prop] = val;
-      return this;
-    };
-    return elem;
+  getRendererType: function (type) {
+    return type in canvas ? type : 'path';
   },
 
   group: {
     renderChild: function (child) {
-      canvas[child._renderer.type].render.call(
-        child,
-        this.ctx,
-        true,
-        this.clip
-      );
+      const prop = canvas.getRendererType(child._renderer.type);
+      canvas[prop].render.call(child, this.ctx, true, this.clip);
     },
 
     render: function (ctx) {
@@ -99,13 +86,15 @@ const canvas = {
       }
 
       if (mask) {
-        canvas[mask._renderer.type].render.call(mask, ctx, true);
+        const prop = canvas.getRendererType(mask._renderer.type);
+        canvas[prop].render.call(mask, ctx, true);
       }
 
       if (this._opacity > 0 && this._scale !== 0) {
         for (let i = 0; i < this.children.length; i++) {
           const child = this.children[i];
-          canvas[child._renderer.type].render.call(child, ctx);
+          const prop = canvas.getRendererType(child._renderer.type);
+          canvas[prop].render.call(child, ctx);
         }
       }
 
@@ -208,7 +197,8 @@ const canvas = {
       // polygons. Uncomment when this bug is fixed:
       // https://code.google.com/p/chromium/issues/detail?id=370951
       if (mask) {
-        canvas[mask._renderer.type].render.call(mask, ctx, true);
+        const prop = canvas.getRendererType(mask._renderer.type);
+        canvas[prop].render.call(mask, ctx, true);
       }
 
       // Styles
@@ -216,7 +206,8 @@ const canvas = {
         if (typeof fill === 'string') {
           ctx.fillStyle = fill;
         } else {
-          canvas[fill._renderer.type].render.call(fill, ctx, this);
+          const prop = canvas.getRendererType(fill._renderer.type);
+          canvas[prop].render.call(fill, ctx, this);
           ctx.fillStyle = fill._renderer.effect;
         }
       }
@@ -224,7 +215,8 @@ const canvas = {
         if (typeof stroke === 'string') {
           ctx.strokeStyle = stroke;
         } else {
-          canvas[stroke._renderer.type].render.call(stroke, ctx, this);
+          const prop = canvas.getRendererType(stroke._renderer.type);
+          canvas[prop].render.call(stroke, ctx, this);
           ctx.strokeStyle = stroke._renderer.effect;
         }
         if (linewidth) {
@@ -464,7 +456,8 @@ const canvas = {
         if (typeof fill === 'string') {
           ctx.fillStyle = fill;
         } else {
-          canvas[fill._renderer.type].render.call(fill, ctx, this);
+          const prop = canvas.getRendererType(fill._renderer.type);
+          canvas[prop].render.call(fill, ctx, this);
           ctx.fillStyle = fill._renderer.effect;
         }
       }
@@ -472,7 +465,8 @@ const canvas = {
         if (typeof stroke === 'string') {
           ctx.strokeStyle = stroke;
         } else {
-          canvas[stroke._renderer.type].render.call(stroke, ctx, this);
+          const prop = canvas.getRendererType(stroke._renderer.type);
+          canvas[prop].render.call(stroke, ctx, this);
           ctx.strokeStyle = stroke._renderer.effect;
         }
         if (linewidth) {
@@ -606,7 +600,8 @@ const canvas = {
       // polygons. Uncomment when this bug is fixed:
       // https://code.google.com/p/chromium/issues/detail?id=370951
       if (mask) {
-        canvas[mask._renderer.type].render.call(mask, ctx, true);
+        const prop = canvas.getRendererType(mask._renderer.type);
+        canvas[prop].render.call(mask, ctx, true);
       }
 
       if (!isOffset) {
@@ -627,7 +622,8 @@ const canvas = {
         if (typeof fill === 'string') {
           ctx.fillStyle = fill;
         } else {
-          canvas[fill._renderer.type].render.call(fill, ctx, this);
+          const prop = canvas.getRendererType(fill._renderer.type);
+          canvas[prop].render.call(fill, ctx, this);
           ctx.fillStyle = fill._renderer.effect;
         }
       }
@@ -635,7 +631,8 @@ const canvas = {
         if (typeof stroke === 'string') {
           ctx.strokeStyle = stroke;
         } else {
-          canvas[stroke._renderer.type].render.call(stroke, ctx, this);
+          const prop = canvas.getRendererType(stroke._renderer.type);
+          canvas[prop].render.call(stroke, ctx, this);
           ctx.strokeStyle = stroke._renderer.effect;
         }
         if (linewidth) {

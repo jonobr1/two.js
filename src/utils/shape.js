@@ -1,4 +1,8 @@
+import { Texture } from '../effects/texture.js';
 import { subdivide, getCurveLength as gcl } from './curves.js';
+import { Gradient } from '../effects/gradient.js';
+import { LinearGradient } from '../effects/linear-gradient.js';
+import { RadialGradient } from '../effects/radial-gradient.js';
 
 /**
  * @private
@@ -8,7 +12,6 @@ import { subdivide, getCurveLength as gcl } from './curves.js';
  * @description
  */
 function contains(path, t) {
-
   if (t === 0 || t === 1) {
     return true;
   }
@@ -26,7 +29,6 @@ function contains(path, t) {
   }
 
   return false;
-
 }
 
 /**
@@ -37,7 +39,6 @@ function contains(path, t) {
  * @description Return the id of an anchor based on a target length.
  */
 function getIdByLength(path, target) {
-
   const total = path._length;
 
   if (target <= 0) {
@@ -47,18 +48,15 @@ function getIdByLength(path, target) {
   }
 
   for (let i = 0, sum = 0; i < path._lengths.length; i++) {
-
     if (sum + path._lengths[i] >= target) {
       target -= sum;
       return Math.max(i - 1, 0) + target / path._lengths[i];
     }
 
     sum += path._lengths[i];
-
   }
 
-  return - 1;
-
+  return -1;
 }
 
 function getCurveLength(a, b, limit) {
@@ -88,7 +86,6 @@ function getCurveLength(a, b, limit) {
   }
 
   return gcl(x1, y1, x2, y2, x3, y3, x4, y4, limit);
-
 }
 
 function getSubdivisions(a, b, limit) {
@@ -118,7 +115,26 @@ function getSubdivisions(a, b, limit) {
   }
 
   return subdivide(x1, y1, x2, y2, x3, y3, x4, y4, limit);
-
 }
 
-export { contains, getIdByLength, getCurveLength, getSubdivisions };
+function getEffectFromObject(obj) {
+  switch (obj.renderer.type) {
+    case 'texture':
+      return Texture.fromObject(obj);
+    case 'gradient':
+      return Gradient.fromObject(obj);
+    case 'linear-gradient':
+      return LinearGradient.fromObject(obj);
+    case 'radial-gradient':
+      return RadialGradient.fromObject(obj);
+  }
+  return obj;
+}
+
+export {
+  contains,
+  getEffectFromObject,
+  getIdByLength,
+  getCurveLength,
+  getSubdivisions,
+};

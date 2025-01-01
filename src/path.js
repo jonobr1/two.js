@@ -1,8 +1,18 @@
 import { Commands } from './utils/path-commands.js';
 import { Collection } from './collection.js';
 import { lerp, mod, decomposeMatrix } from './utils/math.js';
-import { getComponentOnCubicBezier, getCurveBoundingBox, getCurveFromPoints } from './utils/curves.js';
-import { contains, getIdByLength, getCurveLength, getSubdivisions } from './utils/shape.js';
+import {
+  getComponentOnCubicBezier,
+  getCurveBoundingBox,
+  getCurveFromPoints,
+} from './utils/curves.js';
+import {
+  contains,
+  getIdByLength,
+  getCurveLength,
+  getSubdivisions,
+  getEffectFromObject,
+} from './utils/shape.js';
 import { _ } from './utils/underscore.js';
 
 import { Shape } from './shape.js';
@@ -17,8 +27,10 @@ import { Texture } from './effects/texture.js';
 
 // Constants
 
-const min = Math.min, max = Math.max,
-  ceil = Math.ceil, floor = Math.floor;
+const min = Math.min,
+  max = Math.max,
+  ceil = Math.ceil,
+  floor = Math.floor;
 
 const vector = new Vector();
 
@@ -33,7 +45,6 @@ const vector = new Vector();
  * @description This is the primary primitive class for creating all drawable shapes in Two.js. Unless specified methods return their instance of `Two.Path` for the purpose of chaining.
  */
 export class Path extends Shape {
-
   /**
    * @name Two.Path#_flagVertices
    * @private
@@ -240,7 +251,6 @@ export class Path extends Shape {
   _dashes = null;
 
   constructor(vertices, closed, curved, manual) {
-
     super();
 
     for (let prop in proto) {
@@ -333,21 +343,21 @@ export class Path extends Shape {
      * @property {String}
      * @see {@link https://www.w3.org/TR/SVG11/painting.html#StrokeLinecapProperty}
      */
-    this.cap = 'butt';      // Default of Adobe Illustrator
+    this.cap = 'butt'; // Default of Adobe Illustrator
 
     /**
      * @name Two.Path#join
      * @property {String}
      * @see {@link https://www.w3.org/TR/SVG11/painting.html#StrokeLinejoinProperty}
      */
-    this.join = 'miter';    // Default of Adobe Illustrator
+    this.join = 'miter'; // Default of Adobe Illustrator
 
     /**
      * @name Two.Path#miter
      * @property {String}
      * @see {@link https://www.w3.org/TR/SVG11/painting.html#StrokeMiterlimitProperty}
      */
-    this.miter = 4;         // Default of Adobe Illustrator
+    this.miter = 4; // Default of Adobe Illustrator
 
     /**
      * @name Two.Path#vertices
@@ -376,8 +386,6 @@ export class Path extends Shape {
      * @property {Number} - A number in pixels to offset {@link Two.Path#dashes} display.
      */
     this.dashes.offset = 0;
-
-
   }
 
   /**
@@ -397,12 +405,67 @@ export class Path extends Shape {
     'curved',
     'automatic',
     'beginning',
-    'ending'
+    'ending',
+    'dashes',
   ];
 
   static Utils = {
-    getCurveLength
+    getCurveLength,
   };
+
+  /**
+   * @name Two.Path.fromObject
+   * @function
+   * @param {Object} obj - Object notation of a {@link Two.Path} to create a new instance
+   * @returns {Two.Path}
+   * @description Create a new {@link Two.Path} from an object notation of a {@link Two.Path}.
+   * @nota-bene Works in conjunction with {@link Two.Path#toObject}
+   */
+  static fromObject(obj) {
+    const fill =
+      typeof obj.fill === 'string' ? obj.fill : getEffectFromObject(obj.fill);
+    const stroke =
+      typeof obj.stroke === 'string'
+        ? obj.stroke
+        : getEffectFromObject(obj.stroke);
+    const path = new Path().copy({ ...obj, fill, stroke });
+
+    if ('id' in obj) {
+      path.id = obj.id;
+    }
+
+    return path;
+  }
+
+  /**
+   * @name Two.Path#copy
+   * @function
+   * @param {Two.Path} path - The reference {@link Two.Path}
+   * @description Copy the properties of one {@link Two.Path} onto another.
+   */
+  copy(path) {
+    super.copy.call(this, path);
+
+    this.vertices = [];
+
+    for (let j = 0; j < path.vertices.length; j++) {
+      const v = path.vertices[j];
+      if (v instanceof Anchor) {
+        this.vertices.push(path.vertices[j].clone());
+      } else {
+        this.vertices.push(new Anchor().copy(v));
+      }
+    }
+
+    for (let i = 0; i < Path.Properties.length; i++) {
+      const k = Path.Properties[i];
+      if (k in path) {
+        this[k] = path[k];
+      }
+    }
+
+    return this;
+  }
 
   /**
    * @name Two.Path#clone
@@ -412,7 +475,6 @@ export class Path extends Shape {
    * @description Create a new instance of {@link Two.Path} with the same properties of the current path.
    */
   clone(parent) {
-
     const clone = new Path();
 
     for (let j = 0; j < this.vertices.length; j++) {
@@ -441,7 +503,6 @@ export class Path extends Shape {
     }
 
     return clone._update();
-
   }
 
   /**
@@ -449,39 +510,29 @@ export class Path extends Shape {
    * @function
    * @returns {Object}
    * @description Return a JSON compatible plain object that represents the path.
+   * @nota-bene Works in conjunction with {@link Two.Path.fromObject}
    */
   toObject() {
+    const result = super.toObject.call(this);
 
-    const result = {
-      vertices: this.vertices.map(function(v) {
-        return v.toObject();
-      })
-    };
+    result.renderer.type = 'path';
+    result.vertices = this.vertices.map((v) => v.toObject());
 
-    _.each(Path.Properties, function(k) {
-      if (typeof this[k] !== 'undefined') {
-        if (this[k].toObject) {
-          result[k] = this[k].toObject();
-        } else {
-          result[k] = this[k];
+    _.each(
+      Path.Properties,
+      (k) => {
+        if (typeof this[k] !== 'undefined') {
+          if (this[k].toObject) {
+            result[k] = this[k].toObject();
+          } else {
+            result[k] = this[k];
+          }
         }
-      }
-    }, this);
-
-    result.className = this.className;
-
-    result.translation = this.translation.toObject();
-    result.rotation = this.rotation;
-    result.scale = this.scale instanceof Vector ? this.scale.toObject() : this.scale;
-    result.skewX = this.skewX;
-    result.skewY = this.skewY;
-
-    if (this.matrix.manual) {
-      result.matrix = this.matrix.toObject();
-    }
+      },
+      this
+    );
 
     return result;
-
   }
 
   /**
@@ -501,6 +552,7 @@ export class Path extends Shape {
    */
   noStroke() {
     this.stroke = 'none';
+    this.linewidth = 0;
     return this;
   }
 
@@ -510,7 +562,6 @@ export class Path extends Shape {
    * @description Orient the vertices of the shape to the upper left-hand corner of the path.
    */
   corner() {
-
     const rect = this.getBoundingClientRect(true);
     const hw = rect.width / 2;
     const hh = rect.height / 2;
@@ -533,7 +584,6 @@ export class Path extends Shape {
     }
 
     return this;
-
   }
 
   /**
@@ -542,7 +592,6 @@ export class Path extends Shape {
    * @description Orient the vertices of the shape to the center of the path.
    */
   center() {
-
     const rect = this.getBoundingClientRect(true);
 
     const cx = rect.left + rect.width / 2 - this.translation.x;
@@ -560,7 +609,6 @@ export class Path extends Shape {
     }
 
     return this;
-
   }
 
   /**
@@ -571,11 +619,12 @@ export class Path extends Shape {
    * @description Return an object with top, left, right, bottom, width, and height parameters of the path.
    */
   getBoundingClientRect(shallow) {
-
     let matrix, border, l, i, v0, v1;
 
-    let left = Infinity, right = -Infinity,
-        top = Infinity, bottom = -Infinity;
+    let left = Infinity,
+      right = -Infinity,
+      top = Infinity,
+      bottom = -Infinity;
 
     // TODO: Update this to not __always__ update. Just when it needs to.
     this._update(true);
@@ -585,30 +634,38 @@ export class Path extends Shape {
     border = (this.linewidth || 0) / 2;
     l = this._renderer.vertices.length;
 
-    if (this.linewidth > 0 || (this.stroke && !(/(transparent|none)/i.test(this.stroke)))) {
+    if (
+      this.linewidth > 0 ||
+      (this.stroke && !/(transparent|none)/i.test(this.stroke))
+    ) {
       if (this.matrix.manual) {
         const { scaleX, scaleY } = decomposeMatrix(
-          matrix.elements[0], matrix.elements[3], matrix.elements[1],
-          matrix.elements[4], matrix.elements[2], matrix.elements[5]
+          matrix.elements[0],
+          matrix.elements[3],
+          matrix.elements[1],
+          matrix.elements[4],
+          matrix.elements[2],
+          matrix.elements[5]
         );
         if (typeof scaleX === 'number' && typeof scaleY === 'number') {
-          border = Math.max(scaleX, scaleY) * (this.linewidth || 0) / 2;
+          border = (Math.max(scaleX, scaleY) * (this.linewidth || 0)) / 2;
         }
       } else {
-        border *= typeof this.scale === 'number'
-          ? this.scale : Math.max(this.scale.x, this.scale.y);
+        border *=
+          typeof this.scale === 'number'
+            ? this.scale
+            : Math.max(this.scale.x, this.scale.y);
       }
     }
 
     if (l <= 0) {
       return {
         width: 0,
-        height: 0
+        height: 0,
       };
     }
 
     for (i = 0; i < l; i++) {
-
       v1 = this._renderer.vertices[i];
       // If i = 0, then this "wraps around" to the last vertex. Otherwise, it's the previous vertex.
       // This is important for handling cyclic paths.
@@ -618,7 +675,6 @@ export class Path extends Shape {
       const [v1x, v1y] = matrix.multiply(v1.x, v1.y);
 
       if (v0.controls && v1.controls) {
-
         let rx = v0.controls.right.x;
         let ry = v0.controls.right.y;
 
@@ -639,36 +695,25 @@ export class Path extends Shape {
 
         let [c1x, c1y] = matrix.multiply(lx, ly);
 
-        const bb = getCurveBoundingBox(
-          v0x, v0y,
-          c0x, c0y,
-          c1x, c1y,
-          v1x, v1y
-        );
+        const bb = getCurveBoundingBox(v0x, v0y, c0x, c0y, c1x, c1y, v1x, v1y);
 
         top = min(bb.min.y - border, top);
         left = min(bb.min.x - border, left);
         right = max(bb.max.x + border, right);
         bottom = max(bb.max.y + border, bottom);
-
       } else {
-
         if (i <= 1) {
-
           top = min(v0y - border, top);
           left = min(v0x - border, left);
           right = max(v0x + border, right);
           bottom = max(v0y + border, bottom);
-
         }
 
         top = min(v1y - border, top);
         left = min(v1x - border, left);
         right = max(v1x + border, right);
         bottom = max(v1y + border, bottom);
-
       }
-
     }
 
     return {
@@ -677,9 +722,8 @@ export class Path extends Shape {
       right: right,
       bottom: bottom,
       width: right - left,
-      height: bottom - top
+      height: bottom - top,
     };
-
   }
 
   /**
@@ -691,7 +735,6 @@ export class Path extends Shape {
    * @description Given a float `t` from 0 to 1, return a point or assign a passed `obj`'s coordinates to that percentage on this {@link Two.Path}'s curve.
    */
   getPointAt(t, obj) {
-
     let ia, ib, result;
     let x, x1, x2, x3, x4, y, y1, y2, y3, y4, left, right;
     let target = this.length * Math.min(Math.max(t, 0), 1);
@@ -702,9 +745,7 @@ export class Path extends Shape {
     let b = null;
 
     for (let i = 0, l = this._lengths.length, sum = 0; i < l; i++) {
-
       if (sum + this._lengths[i] >= target) {
-
         if (this._closed) {
           ia = mod(i, length);
           ib = mod(i - 1, length);
@@ -727,11 +768,9 @@ export class Path extends Shape {
         }
 
         break;
-
       }
 
       sum += this._lengths[i];
-
     }
 
     if (a === null || b === null) {
@@ -784,12 +823,10 @@ export class Path extends Shape {
     const aly = lerp(t2y, t3y, t);
 
     if (_.isObject(obj)) {
-
       obj.x = x;
       obj.y = y;
 
       if (obj instanceof Anchor) {
-
         obj.controls.left.x = brx;
         obj.controls.left.y = bry;
         obj.controls.right.x = alx;
@@ -801,24 +838,26 @@ export class Path extends Shape {
           obj.controls.right.x -= x;
           obj.controls.right.y -= y;
         }
-
       }
 
       obj.t = t;
 
       return obj;
-
     }
 
     result = new Anchor(
-      x, y, brx - x, bry - y, alx - x, aly - y,
+      x,
+      y,
+      brx - x,
+      bry - y,
+      alx - x,
+      aly - y,
       this._curved ? Commands.curve : Commands.line
     );
 
     result.t = t;
 
     return result;
-
   }
 
   /**
@@ -828,7 +867,6 @@ export class Path extends Shape {
    * @nota-bene While this method is public it is internally called by {@link Two.Path#_update} when `automatic = true`.
    */
   plot() {
-
     if (this.curved) {
       getCurveFromPoints(this._collection, this.closed);
       return this;
@@ -839,7 +877,6 @@ export class Path extends Shape {
     }
 
     return this;
-
   }
 
   /**
@@ -853,76 +890,76 @@ export class Path extends Shape {
     this._update();
 
     const last = this.vertices.length - 1;
-    const closed = this._closed || this.vertices[last]._command === Commands.close;
+    const closed =
+      this._closed || this.vertices[last]._command === Commands.close;
     let b = this.vertices[last];
-    let points = [], verts;
+    let points = [],
+      verts;
 
-    _.each(this.vertices, function(a, i) {
-
-      if (i <= 0 && !closed) {
-        b = a;
-        return;
-      }
-
-      if (a.command === Commands.move) {
-        points.push(new Anchor(b.x, b.y));
-        if (i > 0) {
-          points[points.length - 1].command = Commands.line;
-        }
-        b = a;
-        return;
-      }
-
-      verts = getSubdivisions(a, b, limit);
-      points = points.concat(verts);
-
-      // Assign commands to all the verts
-      _.each(verts, function(v, i) {
-        if (i <= 0 && b.command === Commands.move) {
-          v.command = Commands.move;
-        } else {
-          v.command = Commands.line;
-        }
-      });
-
-      if (i >= last) {
-
-        // TODO: Add check if the two vectors in question are the same values.
-        if (this._closed && this._automatic) {
-
+    _.each(
+      this.vertices,
+      function (a, i) {
+        if (i <= 0 && !closed) {
           b = a;
-
-          verts = getSubdivisions(a, b, limit);
-          points = points.concat(verts);
-
-          // Assign commands to all the verts
-          _.each(verts, function(v, i) {
-            if (i <= 0 && b.command === Commands.move) {
-              v.command = Commands.move;
-            } else {
-              v.command = Commands.line;
-            }
-          });
-
-        } else if (closed) {
-          points.push(new Anchor(a.x, a.y));
+          return;
         }
 
-        points[points.length - 1].command = closed
-          ? Commands.close : Commands.line;
+        if (a.command === Commands.move) {
+          points.push(new Anchor(b.x, b.y));
+          if (i > 0) {
+            points[points.length - 1].command = Commands.line;
+          }
+          b = a;
+          return;
+        }
 
-      }
+        verts = getSubdivisions(a, b, limit);
+        points = points.concat(verts);
 
-      b = a;
+        // Assign commands to all the verts
+        _.each(verts, function (v, i) {
+          if (i <= 0 && b.command === Commands.move) {
+            v.command = Commands.move;
+          } else {
+            v.command = Commands.line;
+          }
+        });
 
-    }, this);
+        if (i >= last) {
+          // TODO: Add check if the two vectors in question are the same values.
+          if (this._closed && this._automatic) {
+            b = a;
+
+            verts = getSubdivisions(a, b, limit);
+            points = points.concat(verts);
+
+            // Assign commands to all the verts
+            _.each(verts, function (v, i) {
+              if (i <= 0 && b.command === Commands.move) {
+                v.command = Commands.move;
+              } else {
+                v.command = Commands.line;
+              }
+            });
+          } else if (closed) {
+            points.push(new Anchor(a.x, a.y));
+          }
+
+          points[points.length - 1].command = closed
+            ? Commands.close
+            : Commands.line;
+        }
+
+        b = a;
+      },
+      this
+    );
 
     this._automatic = false;
     this._curved = false;
     this.vertices = points;
 
     return this;
-
   }
 
   /**
@@ -941,7 +978,7 @@ export class Path extends Shape {
 
     const length = this.vertices.length;
     const last = length - 1;
-    const closed = false;//this._closed || this.vertices[last]._command === Commands.close;
+    const closed = false; //this._closed || this.vertices[last]._command === Commands.close;
 
     let b = this.vertices[last];
     let sum = 0;
@@ -950,35 +987,34 @@ export class Path extends Shape {
       this._lengths = [];
     }
 
-    _.each(this.vertices, function(a, i) {
+    _.each(
+      this.vertices,
+      function (a, i) {
+        if ((i <= 0 && !closed) || a.command === Commands.move) {
+          b = a;
+          this._lengths[i] = 0;
+          return;
+        }
 
-      if ((i <= 0 && !closed) || a.command === Commands.move) {
+        this._lengths[i] = getCurveLength(a, b, limit);
+        sum += this._lengths[i];
+
+        if (i >= last && closed) {
+          b = this.vertices[(i + 1) % length];
+
+          this._lengths[i + 1] = getCurveLength(a, b, limit);
+          sum += this._lengths[i + 1];
+        }
+
         b = a;
-        this._lengths[i] = 0;
-        return;
-      }
-
-      this._lengths[i] = getCurveLength(a, b, limit);
-      sum += this._lengths[i];
-
-      if (i >= last && closed) {
-
-        b = this.vertices[(i + 1) % length];
-
-        this._lengths[i + 1] = getCurveLength(a, b, limit);
-        sum += this._lengths[i + 1];
-
-      }
-
-      b = a;
-
-    }, this);
+      },
+      this
+    );
 
     this._length = sum;
     this._flagLength = false;
 
     return this;
-
   }
 
   /**
@@ -990,9 +1026,7 @@ export class Path extends Shape {
    * @nota-bene Try not to call this method more than once a frame.
    */
   _update() {
-
     if (this._flagVertices) {
-
       if (this._automatic) {
         this.plot();
       }
@@ -1018,14 +1052,12 @@ export class Path extends Shape {
       this._renderer.vertices.length = 0;
 
       for (i = 0; i < l; i++) {
-
         if (this._renderer.collection.length <= i) {
           // Expected to be `relative` anchor points.
           this._renderer.collection.push(new Anchor());
         }
 
         if (i > high && !right) {
-
           v = this._renderer.collection[i].copy(this._collection[i]);
           this.getPointAt(ending, v);
           v.command = this._renderer.collection[i].command;
@@ -1037,7 +1069,6 @@ export class Path extends Shape {
           // Project control over the percentage `t`
           // of the in-between point
           if (prev && prev.controls) {
-
             if (v.relative) {
               v.controls.right.clear();
             } else {
@@ -1053,13 +1084,9 @@ export class Path extends Shape {
                 .copy(prev.controls.right)
                 .lerp(prev, 1 - v.t);
             }
-
           }
-
         } else if (i >= low && i <= high) {
-
-          v = this._renderer.collection[i]
-            .copy(this._collection[i]);
+          v = this._renderer.collection[i].copy(this._collection[i]);
           this._renderer.vertices.push(v);
 
           if (i === high && contains(this, ending)) {
@@ -1082,14 +1109,11 @@ export class Path extends Shape {
               }
             }
           }
-
         }
-
       }
 
       // Prepend the trimmed point if necessary.
       if (low > 0 && !left) {
-
         i = low - 1;
 
         v = this._renderer.collection[i].copy(this._collection[i]);
@@ -1102,7 +1126,6 @@ export class Path extends Shape {
         // Project control over the percentage `t`
         // of the in-between point
         if (next && next.controls) {
-
           v.controls.left.clear();
 
           if (next.relative) {
@@ -1115,17 +1138,13 @@ export class Path extends Shape {
               .copy(next.controls.left)
               .lerp(next, v.t);
           }
-
         }
-
       }
-
     }
 
     Shape.prototype._update.apply(this, arguments);
 
     return this;
-
   }
 
   /**
@@ -1135,135 +1154,143 @@ export class Path extends Shape {
    * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
    */
   flagReset() {
-
-    this._flagVertices = this._flagLength = this._flagFill =  this._flagStroke =
-      this._flagLinewidth = this._flagOpacity = this._flagVisible =
-      this._flagCap = this._flagJoin = this._flagMiter =
-      this._flagClip = false;
+    this._flagVertices =
+      this._flagLength =
+      this._flagFill =
+      this._flagStroke =
+      this._flagLinewidth =
+      this._flagOpacity =
+      this._flagVisible =
+      this._flagCap =
+      this._flagJoin =
+      this._flagMiter =
+      this._flagClip =
+        false;
 
     Shape.prototype.flagReset.call(this);
 
     return this;
-
   }
-
 }
 
 const proto = {
-
   linewidth: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._linewidth;
     },
-    set: function(v) {
+    set: function (v) {
       this._linewidth = v;
       this._flagLinewidth = true;
-    }
+    },
   },
   opacity: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._opacity;
     },
-    set: function(v) {
+    set: function (v) {
       this._opacity = v;
       this._flagOpacity = true;
-    }
+    },
   },
   visible: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._visible;
     },
-    set: function(v) {
+    set: function (v) {
       this._visible = v;
       this._flagVisible = true;
-    }
+    },
   },
   cap: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._cap;
     },
-    set: function(v) {
+    set: function (v) {
       this._cap = v;
       this._flagCap = true;
-    }
+    },
   },
   join: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._join;
     },
-    set: function(v) {
+    set: function (v) {
       this._join = v;
       this._flagJoin = true;
-    }
+    },
   },
   miter: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._miter;
     },
-    set: function(v) {
+    set: function (v) {
       this._miter = v;
       this._flagMiter = true;
-    }
+    },
   },
 
   fill: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._fill;
     },
-    set: function(f) {
-
-      if (this._fill instanceof Gradient
-        || this._fill instanceof LinearGradient
-        || this._fill instanceof RadialGradient
-        || this._fill instanceof Texture) {
+    set: function (f) {
+      if (
+        this._fill instanceof Gradient ||
+        this._fill instanceof LinearGradient ||
+        this._fill instanceof RadialGradient ||
+        this._fill instanceof Texture
+      ) {
         this._fill.unbind(Events.Types.change, this._renderer.flagFill);
       }
 
       this._fill = f;
       this._flagFill = true;
 
-      if (this._fill instanceof Gradient
-        || this._fill instanceof LinearGradient
-        || this._fill instanceof RadialGradient
-        || this._fill instanceof Texture) {
+      if (
+        this._fill instanceof Gradient ||
+        this._fill instanceof LinearGradient ||
+        this._fill instanceof RadialGradient ||
+        this._fill instanceof Texture
+      ) {
         this._fill.bind(Events.Types.change, this._renderer.flagFill);
       }
-
-    }
+    },
   },
 
   stroke: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._stroke;
     },
-    set: function(f) {
-
-      if (this._stroke instanceof Gradient
-        || this._stroke instanceof LinearGradient
-        || this._stroke instanceof RadialGradient
-        || this._stroke instanceof Texture) {
+    set: function (f) {
+      if (
+        this._stroke instanceof Gradient ||
+        this._stroke instanceof LinearGradient ||
+        this._stroke instanceof RadialGradient ||
+        this._stroke instanceof Texture
+      ) {
         this._stroke.unbind(Events.Types.change, this._renderer.flagStroke);
       }
 
       this._stroke = f;
       this._flagStroke = true;
 
-      if (this._stroke instanceof Gradient
-        || this._stroke instanceof LinearGradient
-        || this._stroke instanceof RadialGradient
-        || this._stroke instanceof Texture) {
+      if (
+        this._stroke instanceof Gradient ||
+        this._stroke instanceof LinearGradient ||
+        this._stroke instanceof RadialGradient ||
+        this._stroke instanceof Texture
+      ) {
         this._stroke.bind(Events.Types.change, this._renderer.flagStroke);
       }
-
-    }
+    },
   },
 
   /**
@@ -1271,85 +1298,83 @@ const proto = {
    * @property {Number} - The sum of distances between all {@link Two.Path#vertices}.
    */
   length: {
-    get: function() {
+    get: function () {
       if (this._flagLength) {
         this._updateLength();
       }
       return this._length;
-    }
+    },
   },
 
   closed: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._closed;
     },
-    set: function(v) {
+    set: function (v) {
       this._closed = !!v;
       this._flagVertices = true;
-    }
+    },
   },
 
   curved: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._curved;
     },
-    set: function(v) {
+    set: function (v) {
       this._curved = !!v;
       this._flagVertices = true;
-    }
+    },
   },
 
   automatic: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._automatic;
     },
-    set: function(v) {
+    set: function (v) {
       if (v === this._automatic) {
         return;
       }
       this._automatic = !!v;
       const method = this._automatic ? 'ignore' : 'listen';
-      _.each(this.vertices, function(v) {
+      _.each(this.vertices, function (v) {
         v[method]();
       });
-    }
+    },
   },
 
   beginning: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._beginning;
     },
-    set: function(v) {
+    set: function (v) {
       this._beginning = v;
       this._flagVertices = true;
-    }
+    },
   },
 
   ending: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._ending;
     },
-    set: function(v) {
+    set: function (v) {
       this._ending = v;
       this._flagVertices = true;
-    }
+    },
   },
 
   vertices: {
-
     enumerable: true,
 
-    get: function() {
+    get: function () {
       return this._collection;
     },
 
-    set: function(vertices) {
-
+    set: function (vertices) {
       const bindVertices = this._renderer.bindVertices;
       const unbindVertices = this._renderer.unbindVertices;
 
@@ -1367,7 +1392,6 @@ const proto = {
         this._collection = new Collection(vertices || []);
       }
 
-
       // Listen for Collection changes and bind / unbind
       this._collection
         .bind(Events.Types.insert, bindVertices)
@@ -1375,9 +1399,7 @@ const proto = {
 
       // Bind Initial Vertices
       bindVertices(this._collection);
-
-    }
-
+    },
   },
 
   /**
@@ -1386,21 +1408,19 @@ const proto = {
    * @nota-bene This property is currently not working because of SVG spec issues found here {@link https://code.google.com/p/chromium/issues/detail?id=370951}.
    */
   mask: {
-
     enumerable: true,
 
-    get: function() {
+    get: function () {
       return this._mask;
     },
 
-    set: function(v) {
+    set: function (v) {
       this._mask = v;
       this._flagMask = true;
       if (_.isObject(v) && !v.clip) {
         v.clip = true;
       }
-    }
-
+    },
   },
 
   /**
@@ -1409,28 +1429,27 @@ const proto = {
    */
   clip: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._clip;
     },
-    set: function(v) {
+    set: function (v) {
       this._clip = v;
       this._flagClip = true;
-    }
+    },
   },
 
   dashes: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._dashes;
     },
-    set: function(v) {
+    set: function (v) {
       if (typeof v.offset !== 'number') {
         v.offset = (this.dashes && this._dashes.offset) || 0;
       }
       this._dashes = v;
-    }
-  }
-
+    },
+  },
 };
 
 // Utility functions
@@ -1456,7 +1475,6 @@ function FlagVertices() {
  * @description Cached method to let {@link Two.Path} know vertices have been added to the instance.
  */
 function BindVertices(items) {
-
   // This function is called a lot
   // when importing a large SVG
   let i = items.length;
@@ -1465,7 +1483,6 @@ function BindVertices(items) {
   }
 
   this._renderer.flagVertices();
-
 }
 
 /**
@@ -1475,14 +1492,12 @@ function BindVertices(items) {
  * @description Cached method to let {@link Two.Path} know vertices have been removed from the instance.
  */
 function UnbindVertices(items) {
-
   let i = items.length;
   while (i--) {
     items[i].unbind(Events.Types.change, this._renderer.flagVertices);
   }
 
   this._renderer.flagVertices();
-
 }
 
 /**
@@ -1505,10 +1520,4 @@ function FlagStroke() {
   this._flagStroke = true;
 }
 
-export {
-  FlagVertices,
-  BindVertices,
-  UnbindVertices,
-  FlagFill,
-  FlagStroke
-};
+export { FlagVertices, BindVertices, UnbindVertices, FlagFill, FlagStroke };

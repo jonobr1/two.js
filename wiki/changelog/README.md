@@ -11,12 +11,25 @@ All notable changes to this project will be documented in this file. The format 
 
 <carbon-ads />
 
+## December 31, 2024 v0.8.15
+
++ Made `CanvasPolyfill` object and merged it into `Two.Utils` to remove circular dependencies
++ Made `Two.Collection._events` and `Two.Children.ids` not enumerated for more seamless invocation of `Array` methods like `Array.filter` and `Object` methods like `Object.keys`
++ Added static method `fromObject` to all `Two.Element` and descendant classes
++ Added method `copy` to all `Two.Element` and descendant classes
++ Added tests for `toObject` methods
++ Improved TypeScript types for argument relation
++ `Two.WebGLRenderer` correctly handles negative scale values
++ `Two.Path.noStroke`, `Two.Text.noStroke`, and derivative methods now include setting both the stroke color to `"none"` and the line width to 0
++ Fixed `Two.Arc` flag behavior for `Two.Arc.width` and `Two.Arc.height` properties
+
 ## June 10, 2024 v0.8.14
 
 <h3 class="visible">June 10, 2024</h3><version-link v="v0.8.14" />
 
 + Made `objectBoundingBox` application consistent accross renderers
 + Patched texture scaling in `Two.SVGRenderer`
++ Updated Typescript definitions [@kevin-nano](https://github.com/kevin-nano)
 
 ## February 22, 2024 v0.8.13
 

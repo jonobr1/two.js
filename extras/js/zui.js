@@ -1,13 +1,10 @@
-(function() {
-
+(function () {
   class Surface {
-
     constructor(object) {
       this.object = object;
     }
 
     limits(min, max) {
-
       const min_exists = typeof min !== 'undefined';
       const max_exists = typeof max !== 'undefined';
 
@@ -19,7 +16,6 @@
       this.max = max_exists ? max : this.max;
 
       return this;
-
     }
 
     apply(px, py, s) {
@@ -27,7 +23,6 @@
       this.object.scale = s;
       return this;
     }
-
   }
 
   /**
@@ -37,20 +32,18 @@
    * @param {HTMLElement} [domElement=document.body] - The HTML Element to attach event listeners to.
    */
   class ZUI {
-
     constructor(group, domElement) {
-
       this.limits = {
         scale: ZUI.Limit.clone(),
         x: ZUI.Limit.clone(),
-        y: ZUI.Limit.clone()
+        y: ZUI.Limit.clone(),
       };
 
       this.viewport = domElement || document.body;
       this.viewportOffset = {
         top: 0,
         left: 0,
-        matrix: new Two.Matrix()
+        matrix: new Two.Matrix(),
       };
 
       this.surfaceMatrix = new Two.Matrix();
@@ -60,7 +53,6 @@
       this.updateSurface();
 
       this.add(new Surface(group));
-
     }
 
     static Surface = Surface;
@@ -72,14 +64,14 @@
     static Limit = {
       min: -Infinity,
       max: Infinity,
-      clone: function() {
+      clone: function () {
         const result = {};
         for (let k in this) {
           result[k] = this[k];
         }
         return result;
-      }
-    }
+      },
+    };
 
     static TranslateMatrix(m, x, y) {
       m.elements[2] += x;
@@ -105,7 +97,6 @@
     }
 
     addLimits(min, max) {
-
       if (typeof min !== 'undefined') {
         if (this.limits.scale.min) {
           this.limits.scale.min = Math.max(min, this.limits.scale.min);
@@ -125,7 +116,6 @@
       }
 
       return this;
-
     }
 
     clientToSurface(a, b, c) {
@@ -173,7 +163,6 @@
     }
 
     zoomSet(zoom, clientX, clientY) {
-
       const newScale = this.fitToLimits(zoom);
       this.zoom = ZUI.ScaleToPosition(newScale);
 
@@ -193,7 +182,6 @@
       this.translateSurface(dx, dy);
 
       return this;
-
     }
 
     translateSurface(x, y) {
@@ -203,7 +191,6 @@
     }
 
     updateOffset() {
-
       const rect = this.viewport.getBoundingClientRect();
 
       this.viewportOffset.left = rect.left - document.body.scrollLeft;
@@ -214,18 +201,15 @@
         .translate(this.viewportOffset.left, this.viewportOffset.top);
 
       return this;
-
     }
 
     updateSurface() {
-
       const e = this.surfaceMatrix.elements;
       for (let i = 0; i < this.surfaces.length; i++) {
         this.surfaces[i].apply(e[2], e[5], e[0]);
       }
 
       return this;
-
     }
 
     reset() {
@@ -238,9 +222,7 @@
     fitToLimits(s) {
       return ZUI.Clamp(s, this.limits.scale.min, this.limits.scale.max);
     }
-
   }
 
   Two.ZUI = ZUI;
-
 })();

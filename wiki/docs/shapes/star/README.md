@@ -85,6 +85,76 @@ A list of properties that are on every [Two.Star](/docs/shapes/star/).
 
 
 
+<div class="static function ">
+
+## fromObject
+
+<h2 class="longname" aria-hidden="true"><a href="#fromObject"><span class="prefix">Two.Star.</span><span class="shortname">fromObject</span></a></h2>
+
+
+
+
+<div class="returns">
+
+__Returns__: Two.Star
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="params">
+
+| Argument | Description |
+| ---- | ----------- |
+|  obj  | Object notation of a [Two.Star](/docs/shapes/star/) to create a new instance |
+</div>
+
+
+
+
+<div class="description">
+
+Create a new [Two.Star](/docs/shapes/star/) from an object notation of a [Two.Star](/docs/shapes/star/).
+
+</div>
+
+
+
+
+
+<div class="meta">
+
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/star.js#L120">
+    star.js:120
+  </a>
+
+</div>
+
+
+
+<div class="tags">
+
+
+::: tip nota-bene
+Works in conjunction with [Two.Star.toObject](/docs/shapes/star/#toobject)
+:::
+
+
+</div>
+
+
+</div>
+
+
+
 <div class="instance member ">
 
 ## innerRadius
@@ -119,8 +189,8 @@ The size of the inner radius of the star.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/star.js#L79">
-    star.js:79
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/star.js#L80">
+    star.js:80
   </a>
 
 </div>
@@ -166,8 +236,8 @@ The size of the outer radius of the star.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/star.js#L87">
-    star.js:87
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/star.js#L88">
+    star.js:88
   </a>
 
 </div>
@@ -213,8 +283,60 @@ The amount of sides the star has.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/star.js#L95">
-    star.js:95
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/star.js#L96">
+    star.js:96
+  </a>
+
+</div>
+
+
+
+
+</div>
+
+
+
+<div class="instance function ">
+
+## copy
+
+<h2 class="longname" aria-hidden="true"><a href="#copy"><span class="prefix">Two.Star.</span><span class="shortname">copy</span></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="params">
+
+| Argument | Description |
+| ---- | ----------- |
+|  star  | The reference [Two.Star](/docs/shapes/star/) |
+</div>
+
+
+
+
+<div class="description">
+
+Copy the properties of one [Two.Star](/docs/shapes/star/) onto another.
+
+</div>
+
+
+
+
+
+<div class="meta">
+
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/star.js#L138">
+    star.js:138
   </a>
 
 </div>
@@ -273,8 +395,8 @@ Create a new instance of [Two.Star](/docs/shapes/star/) with the same properties
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/star.js#L183">
-    star.js:183
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/star.js#L216">
+    star.js:216
   </a>
 
 </div>
@@ -326,8 +448,8 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/star.js#L221">
-    star.js:221
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/star.js#L252">
+    star.js:252
   </a>
 
 </div>

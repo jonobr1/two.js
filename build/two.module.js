@@ -1,7 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2012 - 2021 @jonobr1 / http://jono.fyi
+Copyright (c) 2012 - 2024 @jonobr1 / http://jono.fyi
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,7 +22,24 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 var __defProp = Object.defineProperty;
+var __defProps = Object.defineProperties;
+var __getOwnPropDescs = Object.getOwnPropertyDescriptors;
+var __getOwnPropSymbols = Object.getOwnPropertySymbols;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __propIsEnum = Object.prototype.propertyIsEnumerable;
 var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __spreadValues = (a, b) => {
+  for (var prop in b || (b = {}))
+    if (__hasOwnProp.call(b, prop))
+      __defNormalProp(a, prop, b[prop]);
+  if (__getOwnPropSymbols)
+    for (var prop of __getOwnPropSymbols(b)) {
+      if (__propIsEnum.call(b, prop))
+        __defNormalProp(a, prop, b[prop]);
+    }
+  return a;
+};
+var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
 var __export = (target, all) => {
   for (var name in all)
     __defProp(target, name, { get: all[name], enumerable: true });
@@ -31,15 +48,65 @@ var __publicField = (obj, key, value) => {
   __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
   return value;
 };
-
-// src/utils/path-commands.js
-var Commands = {
-  move: "M",
-  line: "L",
-  curve: "C",
-  arc: "A",
-  close: "Z"
+var __accessCheck = (obj, member, msg) => {
+  if (!member.has(obj))
+    throw TypeError("Cannot " + msg);
 };
+var __privateGet = (obj, member, getter) => {
+  __accessCheck(obj, member, "read from private field");
+  return getter ? getter.call(obj) : member.get(obj);
+};
+var __privateAdd = (obj, member, value) => {
+  if (member.has(obj))
+    throw TypeError("Cannot add the same private member more than once");
+  member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
+};
+var __privateSet = (obj, member, value, setter) => {
+  __accessCheck(obj, member, "write to private field");
+  setter ? setter.call(obj, value) : member.set(obj, value);
+  return value;
+};
+
+// src/utils/canvas-polyfill.js
+var CanvasPolyfill = {
+  Image: null,
+  isHeadless: false,
+  shim: function(elem, name) {
+    elem.tagName = elem.nodeName = name || "canvas";
+    elem.nodeType = 1;
+    elem.getAttribute = function(prop) {
+      return this[prop];
+    };
+    elem.setAttribute = function(prop, val) {
+      this[prop] = val;
+      return this;
+    };
+    return elem;
+  },
+  polyfill: function(canvas3, Image) {
+    CanvasPolyfill.shim(canvas3);
+    if (typeof Image !== "undefined") {
+      CanvasPolyfill.Image = Image;
+    }
+    CanvasPolyfill.isHeadless = true;
+    return canvas3;
+  }
+};
+
+// src/utils/curves.js
+var curves_exports = {};
+__export(curves_exports, {
+  Curve: () => Curve,
+  getAnchorsFromArcData: () => getAnchorsFromArcData,
+  getComponentOnCubicBezier: () => getComponentOnCubicBezier,
+  getControlPoints: () => getControlPoints,
+  getCurveBoundingBox: () => getCurveBoundingBox,
+  getCurveFromPoints: () => getCurveFromPoints,
+  getCurveLength: () => getCurveLength,
+  getReflection: () => getReflection,
+  integrate: () => integrate,
+  subdivide: () => subdivide
+});
 
 // src/utils/math.js
 var math_exports = {};
@@ -143,20 +210,14 @@ function toFixed(v) {
   return floor(v * 1e6) / 1e6;
 }
 
-// src/utils/curves.js
-var curves_exports = {};
-__export(curves_exports, {
-  Curve: () => Curve,
-  getAnchorsFromArcData: () => getAnchorsFromArcData,
-  getComponentOnCubicBezier: () => getComponentOnCubicBezier,
-  getControlPoints: () => getControlPoints,
-  getCurveBoundingBox: () => getCurveBoundingBox,
-  getCurveFromPoints: () => getCurveFromPoints,
-  getCurveLength: () => getCurveLength,
-  getReflection: () => getReflection,
-  integrate: () => integrate,
-  subdivide: () => subdivide
-});
+// src/utils/path-commands.js
+var Commands = {
+  move: "M",
+  line: "L",
+  curve: "C",
+  arc: "A",
+  close: "Z"
+};
 
 // src/events.js
 var Events = class {
@@ -500,7 +561,7 @@ var _Vector = class extends Events {
     return this.x + ", " + this.y;
   }
   toObject() {
-    return { x: this.x, y: this.y };
+    return { x: toFixed(this.x), y: toFixed(this.y) };
   }
   rotate(radians) {
     const x = this.x;
@@ -551,6 +612,9 @@ var Anchor = class extends Vector {
       }
     }
   }
+  static fromObject(obj) {
+    return new Anchor().copy(obj);
+  }
   copy(v) {
     this.x = v.x;
     this.y = v.y;
@@ -590,19 +654,19 @@ var Anchor = class extends Vector {
   }
   toObject() {
     return {
-      x: this.x,
-      y: this.y,
+      x: toFixed(this.x),
+      y: toFixed(this.y),
       command: this.command,
       relative: this.relative,
       controls: {
         left: this.controls.left.toObject(),
         right: this.controls.right.toObject()
       },
-      rx: this.rx,
-      ry: this.ry,
-      xAxisRotation: this.xAxisRotation,
-      largeArcFlag: this.largeArcFlag,
-      sweepFlag: this.sweepFlag
+      rx: toFixed(this.rx),
+      ry: toFixed(this.ry),
+      xAxisRotation: toFixed(this.xAxisRotation),
+      largeArcFlag: toFixed(this.largeArcFlag),
+      sweepFlag: toFixed(this.sweepFlag)
     };
   }
   toString() {
@@ -718,8 +782,8 @@ var Constants = {
     svg: "SVGRenderer",
     canvas: "CanvasRenderer"
   },
-  Version: "v0.8.14",
-  PublishDate: "2024-06-11T02:06:29.216Z",
+  Version: "v0.8.15",
+  PublishDate: "2025-01-01T01:30:08.872Z",
   Identifier: "two-",
   Resolution: 12,
   AutoCalculateImportedMatrices: true,
@@ -945,15 +1009,6 @@ function getAnchorsFromArcData(center, xAxisRotation, rx, ry, ts, td, ccw) {
   }
 }
 
-// src/utils/device-pixel-ratio.js
-var devicePixelRatio = root.devicePixelRatio || 1;
-function getBackingStoreRatio(ctx) {
-  return ctx.webkitBackingStorePixelRatio || ctx.mozBackingStorePixelRatio || ctx.msBackingStorePixelRatio || ctx.oBackingStorePixelRatio || ctx.backingStorePixelRatio || 1;
-}
-function getRatio(ctx) {
-  return devicePixelRatio / getBackingStoreRatio(ctx);
-}
-
 // src/utils/underscore.js
 var slice = Array.prototype.slice;
 function isArrayLike(collection) {
@@ -1008,6 +1063,220 @@ var _ = {
   performance: root.performance && root.performance.now ? root.performance : Date
 };
 
+// src/utils/dom.js
+var dom = {
+  hasEventListeners: typeof root.addEventListener === "function",
+  bind: function(elem, event, func, bool) {
+    if (this.hasEventListeners) {
+      elem.addEventListener(event, func, !!bool);
+    } else {
+      elem.attachEvent("on" + event, func);
+    }
+    return dom;
+  },
+  unbind: function(elem, event, func, bool) {
+    if (dom.hasEventListeners) {
+      elem.removeEventListeners(event, func, !!bool);
+    } else {
+      elem.detachEvent("on" + event, func);
+    }
+    return dom;
+  },
+  getRequestAnimationFrame: function() {
+    const vendors = ["ms", "moz", "webkit", "o"];
+    let lastTime = 0;
+    let request = root.requestAnimationFrame;
+    if (!request) {
+      for (let i = 0; i < vendors.length; i++) {
+        request = root[vendors[i] + "RequestAnimationFrame"] || request;
+      }
+      request = request || fallbackRequest;
+    }
+    function fallbackRequest(callback, element) {
+      const currTime = new Date().getTime();
+      const timeToCall = Math.max(0, 16 - (currTime - lastTime));
+      const id = root.setTimeout(nextRequest, timeToCall);
+      lastTime = currTime + timeToCall;
+      function nextRequest() {
+        callback(currTime + timeToCall);
+      }
+      return id;
+    }
+    return request;
+  }
+};
+var temp = root.document ? root.document.createElement("div") : {};
+temp.id = "help-two-load";
+Object.defineProperty(dom, "temp", {
+  enumerable: true,
+  get: function() {
+    if (_.isElement(temp) && !root.document.head.contains(temp)) {
+      temp.style.display = "none";
+      root.document.head.appendChild(temp);
+    }
+    return temp;
+  }
+});
+
+// src/utils/error.js
+var TwoError = class extends Error {
+  constructor(message) {
+    super();
+    __publicField(this, "name", "Two.js");
+    __publicField(this, "message");
+    this.message = message;
+  }
+};
+
+// src/utils/device-pixel-ratio.js
+var devicePixelRatio = root.devicePixelRatio || 1;
+function getBackingStoreRatio(ctx) {
+  return ctx.webkitBackingStorePixelRatio || ctx.mozBackingStorePixelRatio || ctx.msBackingStorePixelRatio || ctx.oBackingStorePixelRatio || ctx.backingStorePixelRatio || 1;
+}
+function getRatio(ctx) {
+  return devicePixelRatio / getBackingStoreRatio(ctx);
+}
+
+// src/registry.js
+var Registry = class {
+  constructor() {
+    __publicField(this, "map", {});
+  }
+  add(id, obj) {
+    this.map[id] = obj;
+    return this;
+  }
+  remove(id) {
+    delete this.map[id];
+    return this;
+  }
+  get(id) {
+    return this.map[id];
+  }
+  contains(id) {
+    return id in this.map;
+  }
+};
+
+// src/collection.js
+var _events;
+var Collection = class extends Array {
+  constructor() {
+    super();
+    __privateAdd(this, _events, new Events());
+    if (arguments[0] && Array.isArray(arguments[0])) {
+      if (arguments[0].length > 0) {
+        this.push.apply(this, arguments[0]);
+      }
+    } else if (arguments.length > 0) {
+      this.push.apply(this, arguments);
+    }
+  }
+  get _events() {
+    return __privateGet(this, _events);
+  }
+  set _events(e) {
+    __privateSet(this, _events, e);
+  }
+  get _bound() {
+    return __privateGet(this, _events)._bound;
+  }
+  set _bound(v) {
+    __privateGet(this, _events)._bound = v;
+  }
+  addEventListener() {
+    return __privateGet(this, _events).addEventListener.apply(this, arguments);
+  }
+  on() {
+    return __privateGet(this, _events).on.apply(this, arguments);
+  }
+  bind() {
+    return __privateGet(this, _events).bind.apply(this, arguments);
+  }
+  removeEventListener() {
+    return __privateGet(this, _events).removeEventListener.apply(this, arguments);
+  }
+  off() {
+    return __privateGet(this, _events).off.apply(this, arguments);
+  }
+  unbind() {
+    return __privateGet(this, _events).unbind.apply(this, arguments);
+  }
+  dispatchEvent() {
+    return __privateGet(this, _events).dispatchEvent.apply(this, arguments);
+  }
+  trigger() {
+    return __privateGet(this, _events).trigger.apply(this, arguments);
+  }
+  listen() {
+    return __privateGet(this, _events).listen.apply(this, arguments);
+  }
+  ignore() {
+    return __privateGet(this, _events).ignore.apply(this, arguments);
+  }
+  pop() {
+    const popped = super.pop.apply(this, arguments);
+    this.trigger(Events.Types.remove, [popped]);
+    return popped;
+  }
+  shift() {
+    const shifted = super.shift.apply(this, arguments);
+    this.trigger(Events.Types.remove, [shifted]);
+    return shifted;
+  }
+  push() {
+    const pushed = super.push.apply(this, arguments);
+    this.trigger(Events.Types.insert, arguments);
+    return pushed;
+  }
+  unshift() {
+    const unshifted = super.unshift.apply(this, arguments);
+    this.trigger(Events.Types.insert, arguments);
+    return unshifted;
+  }
+  splice() {
+    const spliced = super.splice.apply(this, arguments);
+    this.trigger(Events.Types.remove, spliced);
+    if (arguments.length > 2) {
+      const inserted = this.slice(
+        arguments[0],
+        arguments[0] + arguments.length - 2
+      );
+      this.trigger(Events.Types.insert, inserted);
+      this.trigger(Events.Types.order);
+    }
+    return spliced;
+  }
+  sort() {
+    super.sort.apply(this, arguments);
+    this.trigger(Events.Types.order);
+    return this;
+  }
+  reverse() {
+    super.reverse.apply(this, arguments);
+    this.trigger(Events.Types.order);
+    return this;
+  }
+  indexOf() {
+    return super.indexOf.apply(this, arguments);
+  }
+  map(func, scope) {
+    const results = [];
+    for (let key = 0; key < this.length; key++) {
+      const value = this[key];
+      let result;
+      if (scope) {
+        result = func.call(scope, value, key);
+      } else {
+        result = func(value, key);
+      }
+      results.push(result);
+    }
+    return results;
+  }
+};
+_events = new WeakMap();
+
 // src/element.js
 var Element = class extends Events {
   constructor() {
@@ -1015,15 +1284,34 @@ var Element = class extends Events {
     __publicField(this, "_flagId", false);
     __publicField(this, "_flagClassName", false);
     __publicField(this, "_renderer", {});
-    __publicField(this, "_id", "");
+    __publicField(this, "_id", Constants.Identifier + Constants.uniqueId());
     __publicField(this, "_className", "");
     __publicField(this, "classList", []);
     for (let prop in proto3) {
       Object.defineProperty(this, prop, proto3[prop]);
     }
   }
+  static fromObject(obj) {
+    const elem = new Element().copy(obj);
+    if ("id" in obj) {
+      elem.id = obj.id;
+    }
+    return elem;
+  }
   flagReset() {
     this._flagId = this._flagClassName = false;
+  }
+  copy(element) {
+    this.renderer.type = element.renderer.type;
+    this.className = element.className;
+    return this;
+  }
+  toObject() {
+    return {
+      renderer: { type: this.renderer.type },
+      id: this.id,
+      className: this.className
+    };
   }
 };
 var proto3 = {
@@ -1065,6 +1353,975 @@ var proto3 = {
     }
   }
 };
+
+// src/effects/texture.js
+var anchor;
+var regex = {
+  video: /\.(mp4|webm|ogg)$/i,
+  image: /\.(jpe?g|png|gif|tiff|webp)$/i,
+  effect: /texture|gradient/i
+};
+if (root.document) {
+  anchor = document.createElement("a");
+}
+var _Texture = class extends Element {
+  constructor(src, callback) {
+    super();
+    __publicField(this, "_flagSrc", false);
+    __publicField(this, "_flagImage", false);
+    __publicField(this, "_flagVideo", false);
+    __publicField(this, "_flagLoaded", false);
+    __publicField(this, "_flagRepeat", false);
+    __publicField(this, "_flagOffset", false);
+    __publicField(this, "_flagScale", false);
+    __publicField(this, "_src", "");
+    __publicField(this, "_image", null);
+    __publicField(this, "_loaded", false);
+    __publicField(this, "_repeat", "no-repeat");
+    __publicField(this, "_scale", 1);
+    __publicField(this, "_offset", null);
+    for (let prop in proto4) {
+      Object.defineProperty(this, prop, proto4[prop]);
+    }
+    this._renderer.type = "texture";
+    this._renderer.flagOffset = FlagOffset.bind(this);
+    this._renderer.flagScale = FlagScale.bind(this);
+    this.loaded = false;
+    this.repeat = "no-repeat";
+    this.offset = new Vector();
+    if (typeof callback === "function") {
+      const loaded = function() {
+        this.unbind(Events.Types.load, loaded);
+        if (typeof callback === "function") {
+          callback();
+        }
+      }.bind(this);
+      this.bind(Events.Types.load, loaded);
+    }
+    if (typeof src === "string") {
+      this.src = src;
+    } else if (typeof src === "object") {
+      const elemString = Object.prototype.toString.call(src);
+      if (elemString === "[object HTMLImageElement]" || elemString === "[object HTMLCanvasElement]" || elemString === "[object HTMLVideoElement]" || elemString === "[object Image]") {
+        this.image = src;
+      }
+    }
+    this._update();
+  }
+  fromObject(obj) {
+    const texture = new _Texture().copy(obj);
+    if ("id" in obj) {
+      texture.id = obj.id;
+    }
+    return texture;
+  }
+  static getAbsoluteURL(path) {
+    if (!anchor) {
+      return path;
+    }
+    anchor.href = path;
+    return anchor.href;
+  }
+  static loadHeadlessBuffer(texture, loaded) {
+    texture.image.onload = loaded;
+    texture.image.src = texture.src;
+  }
+  static getTag(image) {
+    return image && image.nodeName && image.nodeName.toLowerCase() || "img";
+  }
+  static getImage(src) {
+    const absoluteSrc = _Texture.getAbsoluteURL(src);
+    if (_Texture.ImageRegistry.contains(absoluteSrc)) {
+      return _Texture.ImageRegistry.get(absoluteSrc);
+    }
+    let image;
+    if (CanvasPolyfill.Image) {
+      image = new CanvasPolyfill.Image();
+      CanvasPolyfill.shim(image, "img");
+    } else if (root.document) {
+      if (regex.video.test(absoluteSrc)) {
+        image = document.createElement("video");
+      } else {
+        image = document.createElement("img");
+      }
+    } else {
+      console.warn("Two.js: no prototypical image defined for Two.Texture");
+    }
+    image.crossOrigin = "anonymous";
+    image.referrerPolicy = "no-referrer";
+    return image;
+  }
+  static load(texture, callback) {
+    let image = texture.image;
+    let tag = _Texture.getTag(image);
+    if (texture._flagImage) {
+      if (/canvas/i.test(tag)) {
+        _Texture.Register.canvas(texture, callback);
+      } else {
+        texture._src = !CanvasPolyfill.isHeadless && image.getAttribute("two-src") || image.src;
+        _Texture.Register[tag](texture, callback);
+      }
+    }
+    if (texture._flagSrc) {
+      if (!image) {
+        image = _Texture.getImage(texture.src);
+        texture.image = image;
+      }
+      tag = _Texture.getTag(image);
+      _Texture.Register[tag](texture, callback);
+    }
+  }
+  clone() {
+    const clone = new _Texture(this.src);
+    clone.repeat = this.repeat;
+    clone.offset.copy(this.offset);
+    clone.scale = this.scale;
+    return clone;
+  }
+  copy(texture) {
+    this.src = texture.src;
+    this.repeat = texture.repeat;
+    this.offset = typeof texture.offset === "number" || texture.offset instanceof Vector ? texture.offset : new Vector().copy(texture.offset);
+    this.scale = typeof texture.scale === "number" || texture.scale instanceof Vector ? texture.scale : new Vector().copy(texture.scale);
+    return this;
+  }
+  toObject() {
+    const result = super.toObject.call(this);
+    result.renderer.type = "texture";
+    result.src = this.src;
+    result.repeat = this.repeat;
+    result.offset = this.offset.toObject();
+    result.scale = typeof this.scale === "number" ? this.scale : this.scale.toObject();
+    return result;
+  }
+  _update() {
+    if (this._flagSrc || this._flagImage) {
+      this.trigger(Events.Types.change);
+      if (this._flagSrc || this._flagImage) {
+        this.loaded = false;
+        _Texture.load(
+          this,
+          function() {
+            this.loaded = true;
+            this.trigger(Events.Types.change).trigger(Events.Types.load);
+          }.bind(this)
+        );
+      }
+    }
+    if (this._image && this._image.readyState >= 4) {
+      this._flagVideo = true;
+    }
+    return this;
+  }
+  flagReset() {
+    this._flagSrc = this._flagImage = this._flagLoaded = this._flagRepeat = this._flagVideo = this._flagScale = this._flagOffset = false;
+    super.flagReset.call(this);
+    return this;
+  }
+};
+var Texture = _Texture;
+__publicField(Texture, "Properties", ["src", "loaded", "repeat", "scale", "offset", "image"]);
+__publicField(Texture, "RegularExpressions", regex);
+__publicField(Texture, "ImageRegistry", new Registry());
+__publicField(Texture, "Register", {
+  canvas: function(texture, callback) {
+    texture._src = "#" + texture.id;
+    _Texture.ImageRegistry.add(texture.src, texture.image);
+    if (typeof callback === "function") {
+      callback();
+    }
+  },
+  img: function(texture, callback) {
+    const image = texture.image;
+    const loaded = function(e) {
+      if (!CanvasPolyfill.isHeadless && image.removeEventListener && typeof image.removeEventListener === "function") {
+        image.removeEventListener("load", loaded, false);
+        image.removeEventListener("error", error, false);
+      }
+      if (typeof callback === "function") {
+        callback();
+      }
+    };
+    const error = function(e) {
+      if (!CanvasPolyfill.isHeadless && typeof image.removeEventListener === "function") {
+        image.removeEventListener("load", loaded, false);
+        image.removeEventListener("error", error, false);
+      }
+      throw new TwoError("unable to load " + texture.src);
+    };
+    if (typeof image.width === "number" && image.width > 0 && typeof image.height === "number" && image.height > 0) {
+      loaded();
+    } else if (!CanvasPolyfill.isHeadless && typeof image.addEventListener === "function") {
+      image.addEventListener("load", loaded, false);
+      image.addEventListener("error", error, false);
+    }
+    texture._src = _Texture.getAbsoluteURL(texture._src);
+    if (!CanvasPolyfill.isHeadless && image && image.getAttribute("two-src")) {
+      return;
+    }
+    if (!CanvasPolyfill.isHeadless) {
+      image.setAttribute("two-src", texture.src);
+    }
+    _Texture.ImageRegistry.add(texture.src, image);
+    if (CanvasPolyfill.isHeadless) {
+      _Texture.loadHeadlessBuffer(texture, loaded);
+    } else {
+      texture.image.src = texture.src;
+    }
+  },
+  video: function(texture, callback) {
+    if (CanvasPolyfill.isHeadless) {
+      throw new TwoError(
+        "video textures are not implemented in headless environments."
+      );
+    }
+    const loaded = function(e) {
+      texture.image.removeEventListener("canplaythrough", loaded, false);
+      texture.image.removeEventListener("error", error, false);
+      texture.image.width = texture.image.videoWidth;
+      texture.image.height = texture.image.videoHeight;
+      if (typeof callback === "function") {
+        callback();
+      }
+    };
+    const error = function(e) {
+      texture.image.removeEventListener("canplaythrough", loaded, false);
+      texture.image.removeEventListener("error", error, false);
+      throw new TwoError("unable to load " + texture.src);
+    };
+    texture._src = _Texture.getAbsoluteURL(texture._src);
+    if (!texture.image.getAttribute("two-src")) {
+      texture.image.setAttribute("two-src", texture.src);
+      _Texture.ImageRegistry.add(texture.src, texture.image);
+    }
+    if (texture.image.readyState >= 4) {
+      loaded();
+    } else {
+      texture.image.addEventListener("canplaythrough", loaded, false);
+      texture.image.addEventListener("error", error, false);
+      texture.image.src = texture.src;
+      texture.image.load();
+    }
+  }
+});
+var proto4 = {
+  src: {
+    enumerable: true,
+    get: function() {
+      return this._src;
+    },
+    set: function(v) {
+      this._src = v;
+      this._flagSrc = true;
+    }
+  },
+  loaded: {
+    enumerable: true,
+    get: function() {
+      return this._loaded;
+    },
+    set: function(v) {
+      this._loaded = v;
+      this._flagLoaded = true;
+    }
+  },
+  repeat: {
+    enumerable: true,
+    get: function() {
+      return this._repeat;
+    },
+    set: function(v) {
+      this._repeat = v;
+      this._flagRepeat = true;
+    }
+  },
+  image: {
+    enumerable: true,
+    get: function() {
+      return this._image;
+    },
+    set: function(image) {
+      const tag = Texture.getTag(image);
+      let index;
+      switch (tag) {
+        case "canvas":
+          index = "#" + image.id;
+          break;
+        default:
+          index = image.src;
+      }
+      if (Texture.ImageRegistry.contains(index)) {
+        this._image = Texture.ImageRegistry.get(image.src);
+      } else {
+        this._image = image;
+      }
+      this._flagImage = true;
+    }
+  },
+  offset: {
+    enumerable: true,
+    get: function() {
+      return this._offset;
+    },
+    set: function(v) {
+      if (this._offset) {
+        this._offset.unbind(Events.Types.change, this._renderer.flagOffset);
+      }
+      this._offset = v;
+      this._offset.bind(Events.Types.change, this._renderer.flagOffset);
+      this._flagOffset = true;
+    }
+  },
+  scale: {
+    enumerable: true,
+    get: function() {
+      return this._scale;
+    },
+    set: function(v) {
+      if (this._scale instanceof Vector) {
+        this._scale.unbind(Events.Types.change, this._renderer.flagScale);
+      }
+      this._scale = v;
+      if (this._scale instanceof Vector) {
+        this._scale.bind(Events.Types.change, this._renderer.flagScale);
+      }
+      this._flagScale = true;
+    }
+  }
+};
+function FlagOffset() {
+  this._flagOffset = true;
+}
+function FlagScale() {
+  this._flagScale = true;
+}
+
+// src/effects/stop.js
+var _Stop = class extends Element {
+  constructor(offset, color, opacity) {
+    super();
+    __publicField(this, "_flagOffset", true);
+    __publicField(this, "_flagOpacity", true);
+    __publicField(this, "_flagColor", true);
+    __publicField(this, "_offset", 0);
+    __publicField(this, "_opacity", 1);
+    __publicField(this, "_color", "#fff");
+    for (let prop in proto5) {
+      Object.defineProperty(this, prop, proto5[prop]);
+    }
+    this._renderer.type = "stop";
+    this.offset = typeof offset === "number" ? offset : _Stop.Index <= 0 ? 0 : 1;
+    this.opacity = typeof opacity === "number" ? opacity : 1;
+    this.color = typeof color === "string" ? color : _Stop.Index <= 0 ? "#fff" : "#000";
+    _Stop.Index = (_Stop.Index + 1) % 2;
+  }
+  static fromObject(obj) {
+    const stop = new _Stop().copy(obj);
+    if ("id" in obj) {
+      stop.id = obj.id;
+    }
+    return stop;
+  }
+  copy(stop) {
+    super.copy.call(this, stop);
+    for (let i = 0; i < _Stop.Properties.length; i++) {
+      const k = _Stop.Properties[i];
+      if (k in stop) {
+        this[k] = stop[k];
+      }
+    }
+    return this;
+  }
+  clone(parent) {
+    const clone = new _Stop();
+    _.each(
+      _Stop.Properties,
+      function(property) {
+        clone[property] = this[property];
+      },
+      this
+    );
+    if (parent && parent.stops) {
+      parent.stops.push(clone);
+    }
+    return clone;
+  }
+  toObject() {
+    const result = super.toObject.call(this);
+    result.renderer.type = "stop";
+    _.each(
+      _Stop.Properties,
+      (k) => {
+        result[k] = this[k];
+      },
+      this
+    );
+    return result;
+  }
+  flagReset() {
+    this._flagOffset = this._flagColor = this._flagOpacity = false;
+    super.flagReset.call(this);
+    return this;
+  }
+};
+var Stop = _Stop;
+__publicField(Stop, "Index", 0);
+__publicField(Stop, "Properties", ["offset", "opacity", "color"]);
+var proto5 = {
+  offset: {
+    enumerable: true,
+    get: function() {
+      return this._offset;
+    },
+    set: function(v) {
+      this._offset = v;
+      this._flagOffset = true;
+      if (this.parent) {
+        this.parent._flagStops = true;
+      }
+    }
+  },
+  opacity: {
+    enumerable: true,
+    get: function() {
+      return this._opacity;
+    },
+    set: function(v) {
+      this._opacity = v;
+      this._flagOpacity = true;
+      if (this.parent) {
+        this.parent._flagStops = true;
+      }
+    }
+  },
+  color: {
+    enumerable: true,
+    get: function() {
+      return this._color;
+    },
+    set: function(v) {
+      this._color = v;
+      this._flagColor = true;
+      if (this.parent) {
+        this.parent._flagStops = true;
+      }
+    }
+  }
+};
+
+// src/effects/gradient.js
+var _Gradient = class extends Element {
+  constructor(stops) {
+    super();
+    __publicField(this, "_flagStops", false);
+    __publicField(this, "_flagSpread", false);
+    __publicField(this, "_flagUnits", false);
+    __publicField(this, "_spread", "");
+    __publicField(this, "_units", "");
+    for (let prop in proto6) {
+      Object.defineProperty(this, prop, proto6[prop]);
+    }
+    this._renderer.type = "gradient";
+    this._renderer.flagStops = FlagStops.bind(this);
+    this._renderer.bindStops = BindStops.bind(this);
+    this._renderer.unbindStops = UnbindStops.bind(this);
+    this.spread = "pad";
+    this.units = "objectBoundingBox";
+    if (stops) {
+      this.stops = stops;
+    }
+  }
+  static fromObject(obj) {
+    let stops = obj.stops;
+    if (stops && stops.length > 0) {
+      stops = stops.map((o) => o instanceof Stop ? o : new Stop().copy(o));
+    }
+    const gradient = new _Gradient().copy(obj);
+    if ("id" in obj) {
+      gradient.id = obj.id;
+    }
+    return gradient;
+  }
+  clone(parent) {
+    const stops = this.stops.map((s) => {
+      return s.clone();
+    });
+    const clone = new _Gradient(stops);
+    _.each(
+      _Gradient.Properties,
+      (k) => {
+        clone[k] = this[k];
+      },
+      this
+    );
+    if (parent) {
+      parent.add(clone);
+    }
+    return clone;
+  }
+  copy(gradient) {
+    super.copy.call(this, gradient);
+    for (let i = 0; i < _Gradient.Properties.length; i++) {
+      const k = _Gradient.Properties[i];
+      if (k in gradient) {
+        this[k] = gradient[k];
+      }
+    }
+    return this;
+  }
+  toObject() {
+    const result = {
+      stops: this.stops.map((s) => {
+        return s.toObject();
+      })
+    };
+    _.each(
+      _Gradient.Properties,
+      (k) => {
+        result[k] = this[k];
+      },
+      this
+    );
+    return result;
+  }
+  _update() {
+    if (this._flagSpread || this._flagStops) {
+      this.trigger(Events.Types.change);
+    }
+    return this;
+  }
+  flagReset() {
+    this._flagSpread = this._flagUnits = this._flagStops = false;
+    super.flagReset.call(this);
+    return this;
+  }
+};
+var Gradient = _Gradient;
+__publicField(Gradient, "Stop", Stop);
+__publicField(Gradient, "Properties", ["spread", "stops", "units"]);
+var proto6 = {
+  spread: {
+    enumerable: true,
+    get: function() {
+      return this._spread;
+    },
+    set: function(v) {
+      this._spread = v;
+      this._flagSpread = true;
+    }
+  },
+  units: {
+    enumerable: true,
+    get: function() {
+      return this._units;
+    },
+    set: function(v) {
+      this._units = v;
+      this._flagUnits = true;
+    }
+  },
+  stops: {
+    enumerable: true,
+    get: function() {
+      return this._stops;
+    },
+    set: function(stops) {
+      const bindStops = this._renderer.bindStops;
+      const unbindStops = this._renderer.unbindStops;
+      if (this._stops) {
+        this._stops.unbind(Events.Types.insert, bindStops).unbind(Events.Types.remove, unbindStops);
+      }
+      this._stops = new Collection((stops || []).slice(0));
+      this._stops.bind(Events.Types.insert, bindStops).bind(Events.Types.remove, unbindStops);
+      bindStops(this._stops);
+    }
+  }
+};
+function FlagStops() {
+  this._flagStops = true;
+}
+function BindStops(items) {
+  let i = items.length;
+  while (i--) {
+    items[i].bind(Events.Types.change, this._renderer.flagStops);
+    items[i].parent = this;
+  }
+  this._renderer.flagStops();
+}
+function UnbindStops(items) {
+  let i = items.length;
+  while (i--) {
+    items[i].unbind(Events.Types.change, this._renderer.flagStops);
+    delete items[i].parent;
+  }
+  this._renderer.flagStops();
+}
+
+// src/effects/linear-gradient.js
+var _LinearGradient = class extends Gradient {
+  constructor(x1, y1, x2, y2, stops) {
+    super(stops);
+    __publicField(this, "_flagEndPoints", false);
+    __publicField(this, "_left", null);
+    __publicField(this, "_right", null);
+    for (let prop in proto7) {
+      Object.defineProperty(this, prop, proto7[prop]);
+    }
+    this._renderer.type = "linear-gradient";
+    this._renderer.flagEndPoints = FlagEndPoints.bind(this);
+    this.left = new Vector();
+    this.right = new Vector();
+    if (typeof x1 === "number") {
+      this.left.x = x1;
+    }
+    if (typeof y1 === "number") {
+      this.left.y = y1;
+    }
+    if (typeof x2 === "number") {
+      this.right.x = x2;
+    }
+    if (typeof y2 === "number") {
+      this.right.y = y2;
+    }
+  }
+  static fromObject(obj) {
+    const gradient = new _LinearGradient().copy(obj);
+    if ("id" in obj) {
+      gradient.id = obj.id;
+    }
+    return gradient;
+  }
+  copy(gradient) {
+    super.copy.call(this, gradient);
+    for (let i = 0; i < _LinearGradient.Properties.length; i++) {
+      const k = _LinearGradient.Properties[i];
+      if (k in gradient) {
+        this[k] = gradient[k] instanceof Vector ? gradient[k] : new Vector().copy(gradient[k]);
+      }
+    }
+    return this;
+  }
+  clone(parent) {
+    const stops = this.stops.map(function(stop) {
+      return stop.clone();
+    });
+    const clone = new _LinearGradient(
+      this.left._x,
+      this.left._y,
+      this.right._x,
+      this.right._y,
+      stops
+    );
+    _.each(
+      Gradient.Properties,
+      function(k) {
+        clone[k] = this[k];
+      },
+      this
+    );
+    if (parent) {
+      parent.add(clone);
+    }
+    return clone;
+  }
+  toObject() {
+    const result = super.toObject.call(this);
+    result.left = this.left.toObject();
+    result.right = this.right.toObject();
+    return result;
+  }
+  _update() {
+    if (this._flagEndPoints || this._flagSpread || this._flagStops) {
+      this.trigger(Events.Types.change);
+    }
+    return this;
+  }
+  flagReset() {
+    this._flagEndPoints = false;
+    super.flagReset.call(this);
+    return this;
+  }
+};
+var LinearGradient = _LinearGradient;
+__publicField(LinearGradient, "Stop", Stop);
+__publicField(LinearGradient, "Properties", ["left", "right"]);
+var proto7 = {
+  left: {
+    enumerable: true,
+    get: function() {
+      return this._left;
+    },
+    set: function(v) {
+      if (this._left instanceof Vector) {
+        this._left.unbind(Events.Types.change, this._renderer.flagEndPoints);
+      }
+      this._left = v;
+      this._left.bind(Events.Types.change, this._renderer.flagEndPoints);
+      this._flagEndPoints = true;
+    }
+  },
+  right: {
+    enumerable: true,
+    get: function() {
+      return this._right;
+    },
+    set: function(v) {
+      if (this._right instanceof Vector) {
+        this._right.unbind(Events.Types.change, this._renderer.flagEndPoints);
+      }
+      this._right = v;
+      this._right.bind(Events.Types.change, this._renderer.flagEndPoints);
+      this._flagEndPoints = true;
+    }
+  }
+};
+function FlagEndPoints() {
+  this._flagEndPoints = true;
+}
+
+// src/effects/radial-gradient.js
+var _RadialGradient = class extends Gradient {
+  constructor(cx, cy, r, stops, fx, fy) {
+    super(stops);
+    __publicField(this, "_flagRadius", false);
+    __publicField(this, "_flagCenter", false);
+    __publicField(this, "_flagFocal", false);
+    __publicField(this, "_radius", 0);
+    __publicField(this, "_center", null);
+    __publicField(this, "_focal", null);
+    for (let prop in proto8) {
+      Object.defineProperty(this, prop, proto8[prop]);
+    }
+    this._renderer.type = "radial-gradient";
+    this._renderer.flagCenter = FlagCenter.bind(this);
+    this._renderer.flagFocal = FlagFocal.bind(this);
+    this.center = new Vector();
+    this.radius = typeof r === "number" ? r : 1;
+    this.focal = new Vector();
+    if (typeof cx === "number") {
+      this.center.x = cx;
+    }
+    if (typeof cy === "number") {
+      this.center.y = cy;
+    }
+    this.focal.copy(this.center);
+    if (typeof fx === "number") {
+      this.focal.x = fx;
+    }
+    if (typeof fy === "number") {
+      this.focal.y = fy;
+    }
+  }
+  static fromObject(obj) {
+    const gradient = new _RadialGradient().copy(obj);
+    if ("id" in obj) {
+      gradient.id = obj.id;
+    }
+    return gradient;
+  }
+  copy(gradient) {
+    super.copy.call(this, gradient);
+    for (let i = 0; i < _RadialGradient.Properties.length; i++) {
+      const k = _RadialGradient.Properties[i];
+      if (k in gradient) {
+        if (/(center|focal)i/.test(k)) {
+          this[k] = gradient[k] instanceof Vector ? gradient[k] : new Vector().copy(gradient[k]);
+        } else if (typeof gradient[k] === "number") {
+          this[k] = gradient[MediaKeySystemAccess];
+        }
+      }
+    }
+    return this;
+  }
+  clone(parent) {
+    const stops = this.stops.map(function(stop) {
+      return stop.clone();
+    });
+    const clone = new _RadialGradient(
+      this.center._x,
+      this.center._y,
+      this._radius,
+      stops,
+      this.focal._x,
+      this.focal._y
+    );
+    _.each(
+      Gradient.Properties.concat(_RadialGradient.Properties),
+      function(k) {
+        clone[k] = this[k];
+      },
+      this
+    );
+    if (parent) {
+      parent.add(clone);
+    }
+    return clone;
+  }
+  toObject() {
+    const result = super.toObject.call(this);
+    _.each(
+      _RadialGradient.Properties,
+      function(k) {
+        result[k] = this[k];
+      },
+      this
+    );
+    result.center = this.center.toObject();
+    result.focal = this.focal.toObject();
+    return result;
+  }
+  _update() {
+    if (this._flagRadius || this._flatCenter || this._flagFocal || this._flagSpread || this._flagStops) {
+      this.trigger(Events.Types.change);
+    }
+    return this;
+  }
+  flagReset() {
+    this._flagRadius = this._flagCenter = this._flagFocal = false;
+    super.flagReset.call(this);
+    return this;
+  }
+};
+var RadialGradient = _RadialGradient;
+__publicField(RadialGradient, "Stop", Stop);
+__publicField(RadialGradient, "Properties", ["center", "radius", "focal"]);
+var proto8 = {
+  radius: {
+    enumerable: true,
+    get: function() {
+      return this._radius;
+    },
+    set: function(v) {
+      this._radius = v;
+      this._flagRadius = true;
+    }
+  },
+  center: {
+    enumerable: true,
+    get: function() {
+      return this._center;
+    },
+    set: function(v) {
+      if (this._center) {
+        this._center.unbind(Events.Types.change, this._renderer.flagCenter);
+      }
+      this._center = v;
+      this._center.bind(Events.Types.change, this._renderer.flagCenter);
+      this._flagCenter = true;
+    }
+  },
+  focal: {
+    enumerable: true,
+    get: function() {
+      return this._focal;
+    },
+    set: function(v) {
+      if (this._focal) {
+        this._focal.unbind(Events.Types.change, this._renderer.flagFocal);
+      }
+      this._focal = v;
+      this._focal.bind(Events.Types.change, this._renderer.flagFocal);
+      this._flagFocal = true;
+    }
+  }
+};
+function FlagCenter() {
+  this._flagCenter = true;
+}
+function FlagFocal() {
+  this._flagFocal = true;
+}
+
+// src/utils/shape.js
+function contains(path, t) {
+  if (t === 0 || t === 1) {
+    return true;
+  }
+  const length = path._length;
+  const target = length * t;
+  let elapsed = 0;
+  for (let i = 0; i < path._lengths.length; i++) {
+    const dist = path._lengths[i];
+    if (elapsed >= target) {
+      return target - elapsed >= 0;
+    }
+    elapsed += dist;
+  }
+  return false;
+}
+function getIdByLength(path, target) {
+  const total = path._length;
+  if (target <= 0) {
+    return 0;
+  } else if (target >= total) {
+    return path._lengths.length - 1;
+  }
+  for (let i = 0, sum = 0; i < path._lengths.length; i++) {
+    if (sum + path._lengths[i] >= target) {
+      target -= sum;
+      return Math.max(i - 1, 0) + target / path._lengths[i];
+    }
+    sum += path._lengths[i];
+  }
+  return -1;
+}
+function getCurveLength2(a, b, limit) {
+  let x1, x2, x3, x4, y1, y2, y3, y4;
+  const right = b.controls && b.controls.right;
+  const left = a.controls && a.controls.left;
+  x1 = b.x;
+  y1 = b.y;
+  x2 = (right || b).x;
+  y2 = (right || b).y;
+  x3 = (left || a).x;
+  y3 = (left || a).y;
+  x4 = a.x;
+  y4 = a.y;
+  if (right && b._relative) {
+    x2 += b.x;
+    y2 += b.y;
+  }
+  if (left && a._relative) {
+    x3 += a.x;
+    y3 += a.y;
+  }
+  return getCurveLength(x1, y1, x2, y2, x3, y3, x4, y4, limit);
+}
+function getSubdivisions(a, b, limit) {
+  let x1, x2, x3, x4, y1, y2, y3, y4;
+  const right = b.controls && b.controls.right;
+  const left = a.controls && a.controls.left;
+  x1 = b.x;
+  y1 = b.y;
+  x2 = (right || b).x;
+  y2 = (right || b).y;
+  x3 = (left || a).x;
+  y3 = (left || a).y;
+  x4 = a.x;
+  y4 = a.y;
+  if (right && b._relative) {
+    x2 += b.x;
+    y2 += b.y;
+  }
+  if (left && a._relative) {
+    x3 += a.x;
+    y3 += a.y;
+  }
+  return subdivide(x1, y1, x2, y2, x3, y3, x4, y4, limit);
+}
+function getEffectFromObject(obj) {
+  switch (obj.renderer.type) {
+    case "texture":
+      return Texture.fromObject(obj);
+    case "gradient":
+      return Gradient.fromObject(obj);
+    case "linear-gradient":
+      return LinearGradient.fromObject(obj);
+    case "radial-gradient":
+      return RadialGradient.fromObject(obj);
+  }
+  return obj;
+}
 
 // src/matrix.js
 var cos = Math.cos;
@@ -1112,6 +2369,9 @@ var _Matrix = class extends Events {
     C[7] = A6 * B1 + A7 * B4 + A8 * B7;
     C[8] = A6 * B2 + A7 * B5 + A8 * B8;
     return C;
+  }
+  static fromObject(obj) {
+    return new _Matrix().copy(obj);
   }
   set(a, b, c, d, e, f, g, h, i) {
     if (typeof b === "undefined") {
@@ -1285,17 +2545,7 @@ var _Matrix = class extends Events {
         output[8] = i;
         return;
       }
-      return [
-        a,
-        d,
-        g,
-        b,
-        e,
-        h,
-        c,
-        f,
-        i
-      ];
+      return [a, d, g, b, e, h, c, f, i];
     }
     if (hasOutput) {
       output[0] = a;
@@ -1340,17 +2590,7 @@ var _Matrix = class extends Events {
         output[8] = i;
         return;
       }
-      return [
-        a,
-        b,
-        c,
-        d,
-        e,
-        f,
-        g,
-        h,
-        i
-      ];
+      return [a, b, c, d, e, f, g, h, i];
     }
     if (hasOutput) {
       output[0] = a;
@@ -1361,17 +2601,11 @@ var _Matrix = class extends Events {
       output[5] = f;
       return;
     }
-    return [
-      a,
-      b,
-      c,
-      d,
-      e,
-      f
-    ];
+    return [a, b, c, d, e, f];
   }
   toObject() {
     return {
+      renderer: { type: "matrix" },
       elements: this.toArray(true),
       manual: !!this.manual
     };
@@ -1381,17 +2615,7 @@ var _Matrix = class extends Events {
   }
 };
 var Matrix2 = _Matrix;
-__publicField(Matrix2, "Identity", [
-  1,
-  0,
-  0,
-  0,
-  1,
-  0,
-  0,
-  0,
-  1
-]);
+__publicField(Matrix2, "Identity", [1, 0, 0, 0, 1, 0, 0, 0, 1]);
 setMatrix(Matrix2);
 
 // src/shape.js
@@ -1407,12 +2631,11 @@ var Shape = class extends Element {
     __publicField(this, "_scale", 1);
     __publicField(this, "_skewX", 0);
     __publicField(this, "_skewY", 0);
-    for (let prop in proto4) {
-      Object.defineProperty(this, prop, proto4[prop]);
+    for (let prop in proto9) {
+      Object.defineProperty(this, prop, proto9[prop]);
     }
     this._renderer.flagMatrix = FlagMatrix.bind(this);
     this.isShape = true;
-    this.id = Constants.Identifier + Constants.uniqueId();
     this.matrix = new Matrix2();
     this.worldMatrix = new Matrix2();
     this.position = new Vector();
@@ -1421,6 +2644,13 @@ var Shape = class extends Element {
     this.skewX = 0;
     this.skewY = 0;
   }
+  static fromObject(obj) {
+    const shape = new Shape().copy(obj);
+    if ("id" in obj) {
+      shape.id = obj.id;
+    }
+    return shape;
+  }
   get renderer() {
     return this._renderer;
   }
@@ -1428,10 +2658,10 @@ var Shape = class extends Element {
     this._renderer = v;
   }
   get translation() {
-    return proto4.position.get.apply(this, arguments);
+    return proto9.position.get.apply(this, arguments);
   }
   set translation(v) {
-    proto4.position.set.apply(this, arguments);
+    proto9.position.set.apply(this, arguments);
   }
   addTo(group) {
     group.add(this);
@@ -1442,6 +2672,33 @@ var Shape = class extends Element {
       return this;
     }
     this.parent.remove(this);
+    return this;
+  }
+  copy(shape) {
+    super.copy.call(this, shape);
+    if ("position" in shape) {
+      if (shape.position instanceof Vector) {
+        this.position = shape.position;
+      } else {
+        this.position.copy(shape.position);
+      }
+    }
+    if ("rotation" in shape) {
+      this.rotation = shape.rotation;
+    }
+    if ("scale" in shape) {
+      this.scale = typeof shape.scale === "number" || shape.scale instanceof Vector ? shape.scale : new Vector(shape.scale.x, shape.scale.y);
+    }
+    if ("skewX" in shape) {
+      this.skewX = shape.skewX;
+    }
+    if ("skewY" in shape) {
+      this.skewY = shape.skewY;
+    }
+    if ("matrix" in shape && shape.matrix.manual) {
+      this.matrix.copy(shape.matrix);
+      this.matrix.manual = true;
+    }
     return this;
   }
   clone(parent) {
@@ -1458,6 +2715,18 @@ var Shape = class extends Element {
       parent.add(clone);
     }
     return clone._update();
+  }
+  toObject() {
+    const result = super.toObject.call(this);
+    result.renderer = { type: "shape" };
+    result.isShape = true;
+    result.translation = this.translation.toObject();
+    result.rotation = this.translation.rotation;
+    result.scale = this.scale instanceof Vector ? this.scale.toObject() : this.scale;
+    result.skewX = this.skewX;
+    result.skewY = this.skewY;
+    result.matrix = this.matrix.toObject();
+    return result;
   }
   _update(bubbles) {
     if (!this._matrix.manual && this._flagMatrix) {
@@ -1484,7 +2753,7 @@ var Shape = class extends Element {
     return this;
   }
 };
-var proto4 = {
+var proto9 = {
   position: {
     enumerable: true,
     get: function() {
@@ -1571,123 +2840,1256 @@ function FlagMatrix() {
   this._flagMatrix = true;
 }
 
-// src/collection.js
-var Collection = class extends Array {
-  constructor() {
+// src/path.js
+var min = Math.min;
+var max = Math.max;
+var ceil = Math.ceil;
+var floor2 = Math.floor;
+var vector = new Vector();
+var _Path = class extends Shape {
+  constructor(vertices, closed2, curved, manual) {
     super();
-    __publicField(this, "_events", new Events());
-    if (arguments[0] && Array.isArray(arguments[0])) {
-      if (arguments[0].length > 0) {
-        this.push.apply(this, arguments[0]);
-      }
-    } else if (arguments.length > 0) {
-      this.push.apply(this, arguments);
+    __publicField(this, "_flagVertices", true);
+    __publicField(this, "_flagLength", true);
+    __publicField(this, "_flagFill", true);
+    __publicField(this, "_flagStroke", true);
+    __publicField(this, "_flagLinewidth", true);
+    __publicField(this, "_flagOpacity", true);
+    __publicField(this, "_flagVisible", true);
+    __publicField(this, "_flagCap", true);
+    __publicField(this, "_flagJoin", true);
+    __publicField(this, "_flagMiter", true);
+    __publicField(this, "_flagMask", false);
+    __publicField(this, "_flagClip", false);
+    __publicField(this, "_length", 0);
+    __publicField(this, "_fill", "#fff");
+    __publicField(this, "_stroke", "#000");
+    __publicField(this, "_linewidth", 1);
+    __publicField(this, "_opacity", 1);
+    __publicField(this, "_visible", true);
+    __publicField(this, "_cap", "round");
+    __publicField(this, "_join", "round");
+    __publicField(this, "_miter", 4);
+    __publicField(this, "_closed", true);
+    __publicField(this, "_curved", false);
+    __publicField(this, "_automatic", true);
+    __publicField(this, "_beginning", 0);
+    __publicField(this, "_ending", 1);
+    __publicField(this, "_mask", null);
+    __publicField(this, "_clip", false);
+    __publicField(this, "_dashes", null);
+    for (let prop in proto10) {
+      Object.defineProperty(this, prop, proto10[prop]);
     }
+    this._renderer.type = "path";
+    this._renderer.flagVertices = FlagVertices.bind(this);
+    this._renderer.bindVertices = BindVertices.bind(this);
+    this._renderer.unbindVertices = UnbindVertices.bind(this);
+    this._renderer.flagFill = FlagFill.bind(this);
+    this._renderer.flagStroke = FlagStroke.bind(this);
+    this._renderer.vertices = [];
+    this._renderer.collection = [];
+    this.closed = !!closed2;
+    this.curved = !!curved;
+    this.beginning = 0;
+    this.ending = 1;
+    this.fill = "#fff";
+    this.stroke = "#000";
+    this.linewidth = 1;
+    this.opacity = 1;
+    this.className = "";
+    this.visible = true;
+    this.cap = "butt";
+    this.join = "miter";
+    this.miter = 4;
+    this.vertices = vertices;
+    this.automatic = !manual;
+    this.dashes = [];
+    this.dashes.offset = 0;
   }
-  get _bound() {
-    return this._events._bound;
-  }
-  set _bound(v) {
-    this._events._bound = v;
-  }
-  addEventListener() {
-    return this._events.addEventListener.apply(this, arguments);
-  }
-  on() {
-    return this._events.on.apply(this, arguments);
-  }
-  bind() {
-    return this._events.bind.apply(this, arguments);
-  }
-  removeEventListener() {
-    return this._events.removeEventListener.apply(this, arguments);
-  }
-  off() {
-    return this._events.off.apply(this, arguments);
-  }
-  unbind() {
-    return this._events.unbind.apply(this, arguments);
-  }
-  dispatchEvent() {
-    return this._events.dispatchEvent.apply(this, arguments);
-  }
-  trigger() {
-    return this._events.trigger.apply(this, arguments);
-  }
-  listen() {
-    return this._events.listen.apply(this, arguments);
-  }
-  ignore() {
-    return this._events.ignore.apply(this, arguments);
-  }
-  pop() {
-    const popped = super.pop.apply(this, arguments);
-    this.trigger(Events.Types.remove, [popped]);
-    return popped;
-  }
-  shift() {
-    const shifted = super.shift.apply(this, arguments);
-    this.trigger(Events.Types.remove, [shifted]);
-    return shifted;
-  }
-  push() {
-    const pushed = super.push.apply(this, arguments);
-    this.trigger(Events.Types.insert, arguments);
-    return pushed;
-  }
-  unshift() {
-    const unshifted = super.unshift.apply(this, arguments);
-    this.trigger(Events.Types.insert, arguments);
-    return unshifted;
-  }
-  splice() {
-    const spliced = super.splice.apply(this, arguments);
-    this.trigger(Events.Types.remove, spliced);
-    if (arguments.length > 2) {
-      const inserted = this.slice(arguments[0], arguments[0] + arguments.length - 2);
-      this.trigger(Events.Types.insert, inserted);
-      this.trigger(Events.Types.order);
+  static fromObject(obj) {
+    const fill = typeof obj.fill === "string" ? obj.fill : getEffectFromObject(obj.fill);
+    const stroke = typeof obj.stroke === "string" ? obj.stroke : getEffectFromObject(obj.stroke);
+    const path = new _Path().copy(__spreadProps(__spreadValues({}, obj), { fill, stroke }));
+    if ("id" in obj) {
+      path.id = obj.id;
     }
-    return spliced;
+    return path;
   }
-  sort() {
-    super.sort.apply(this, arguments);
-    this.trigger(Events.Types.order);
-    return this;
-  }
-  reverse() {
-    super.reverse.apply(this, arguments);
-    this.trigger(Events.Types.order);
-    return this;
-  }
-  indexOf() {
-    return super.indexOf.apply(this, arguments);
-  }
-  map(func, scope) {
-    const results = [];
-    for (let key = 0; key < this.length; key++) {
-      const value = this[key];
-      let result;
-      if (scope) {
-        result = func.call(scope, value, key);
+  copy(path) {
+    super.copy.call(this, path);
+    this.vertices = [];
+    for (let j = 0; j < path.vertices.length; j++) {
+      const v = path.vertices[j];
+      if (v instanceof Anchor) {
+        this.vertices.push(path.vertices[j].clone());
       } else {
-        result = func(value, key);
+        this.vertices.push(new Anchor().copy(v));
       }
-      results.push(result);
     }
-    return results;
+    for (let i = 0; i < _Path.Properties.length; i++) {
+      const k = _Path.Properties[i];
+      if (k in path) {
+        this[k] = path[k];
+      }
+    }
+    return this;
+  }
+  clone(parent) {
+    const clone = new _Path();
+    for (let j = 0; j < this.vertices.length; j++) {
+      clone.vertices.push(this.vertices[j].clone());
+    }
+    for (let i = 0; i < _Path.Properties.length; i++) {
+      const k = _Path.Properties[i];
+      clone[k] = this[k];
+    }
+    clone.className = this.className;
+    clone.translation.copy(this.translation);
+    clone.rotation = this.rotation;
+    clone.scale = this.scale;
+    clone.skewX = this.skewX;
+    clone.skewY = this.skewY;
+    if (this.matrix.manual) {
+      clone.matrix.copy(this.matrix);
+    }
+    if (parent) {
+      parent.add(clone);
+    }
+    return clone._update();
+  }
+  toObject() {
+    const result = super.toObject.call(this);
+    result.renderer.type = "path";
+    result.vertices = this.vertices.map((v) => v.toObject());
+    _.each(
+      _Path.Properties,
+      (k) => {
+        if (typeof this[k] !== "undefined") {
+          if (this[k].toObject) {
+            result[k] = this[k].toObject();
+          } else {
+            result[k] = this[k];
+          }
+        }
+      },
+      this
+    );
+    return result;
+  }
+  noFill() {
+    this.fill = "none";
+    return this;
+  }
+  noStroke() {
+    this.stroke = "none";
+    this.linewidth = 0;
+    return this;
+  }
+  corner() {
+    const rect = this.getBoundingClientRect(true);
+    const hw = rect.width / 2;
+    const hh = rect.height / 2;
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    for (let i = 0; i < this.vertices.length; i++) {
+      const v = this.vertices[i];
+      v.x -= cx;
+      v.y -= cy;
+      v.x += hw;
+      v.y += hh;
+    }
+    if (this.mask) {
+      this.mask.translation.x -= cx;
+      this.mask.translation.x += hw;
+      this.mask.translation.y -= cy;
+      this.mask.translation.y += hh;
+    }
+    return this;
+  }
+  center() {
+    const rect = this.getBoundingClientRect(true);
+    const cx = rect.left + rect.width / 2 - this.translation.x;
+    const cy = rect.top + rect.height / 2 - this.translation.y;
+    for (let i = 0; i < this.vertices.length; i++) {
+      const v = this.vertices[i];
+      v.x -= cx;
+      v.y -= cy;
+    }
+    if (this.mask) {
+      this.mask.translation.x -= cx;
+      this.mask.translation.y -= cy;
+    }
+    return this;
+  }
+  getBoundingClientRect(shallow) {
+    let matrix, border, l, i, v0, v1;
+    let left = Infinity, right = -Infinity, top = Infinity, bottom = -Infinity;
+    this._update(true);
+    matrix = shallow ? this.matrix : this.worldMatrix;
+    border = (this.linewidth || 0) / 2;
+    l = this._renderer.vertices.length;
+    if (this.linewidth > 0 || this.stroke && !/(transparent|none)/i.test(this.stroke)) {
+      if (this.matrix.manual) {
+        const { scaleX, scaleY } = decomposeMatrix(
+          matrix.elements[0],
+          matrix.elements[3],
+          matrix.elements[1],
+          matrix.elements[4],
+          matrix.elements[2],
+          matrix.elements[5]
+        );
+        if (typeof scaleX === "number" && typeof scaleY === "number") {
+          border = Math.max(scaleX, scaleY) * (this.linewidth || 0) / 2;
+        }
+      } else {
+        border *= typeof this.scale === "number" ? this.scale : Math.max(this.scale.x, this.scale.y);
+      }
+    }
+    if (l <= 0) {
+      return {
+        width: 0,
+        height: 0
+      };
+    }
+    for (i = 0; i < l; i++) {
+      v1 = this._renderer.vertices[i];
+      v0 = this._renderer.vertices[(i + l - 1) % l];
+      const [v0x, v0y] = matrix.multiply(v0.x, v0.y);
+      const [v1x, v1y] = matrix.multiply(v1.x, v1.y);
+      if (v0.controls && v1.controls) {
+        let rx = v0.controls.right.x;
+        let ry = v0.controls.right.y;
+        if (v0.relative) {
+          rx += v0.x;
+          ry += v0.y;
+        }
+        let [c0x, c0y] = matrix.multiply(rx, ry);
+        let lx = v1.controls.left.x;
+        let ly = v1.controls.left.y;
+        if (v1.relative) {
+          lx += v1.x;
+          ly += v1.y;
+        }
+        let [c1x, c1y] = matrix.multiply(lx, ly);
+        const bb = getCurveBoundingBox(v0x, v0y, c0x, c0y, c1x, c1y, v1x, v1y);
+        top = min(bb.min.y - border, top);
+        left = min(bb.min.x - border, left);
+        right = max(bb.max.x + border, right);
+        bottom = max(bb.max.y + border, bottom);
+      } else {
+        if (i <= 1) {
+          top = min(v0y - border, top);
+          left = min(v0x - border, left);
+          right = max(v0x + border, right);
+          bottom = max(v0y + border, bottom);
+        }
+        top = min(v1y - border, top);
+        left = min(v1x - border, left);
+        right = max(v1x + border, right);
+        bottom = max(v1y + border, bottom);
+      }
+    }
+    return {
+      top,
+      left,
+      right,
+      bottom,
+      width: right - left,
+      height: bottom - top
+    };
+  }
+  getPointAt(t, obj) {
+    let ia, ib, result;
+    let x, x1, x2, x3, x4, y, y1, y2, y3, y4, left, right;
+    let target = this.length * Math.min(Math.max(t, 0), 1);
+    const length = this.vertices.length;
+    const last = length - 1;
+    let a = null;
+    let b = null;
+    for (let i = 0, l = this._lengths.length, sum = 0; i < l; i++) {
+      if (sum + this._lengths[i] >= target) {
+        if (this._closed) {
+          ia = mod(i, length);
+          ib = mod(i - 1, length);
+          if (i === 0) {
+            ia = ib;
+            ib = i;
+          }
+        } else {
+          ia = i;
+          ib = Math.min(Math.max(i - 1, 0), last);
+        }
+        a = this.vertices[ia];
+        b = this.vertices[ib];
+        target -= sum;
+        if (this._lengths[i] !== 0) {
+          t = target / this._lengths[i];
+        } else {
+          t = 0;
+        }
+        break;
+      }
+      sum += this._lengths[i];
+    }
+    if (a === null || b === null) {
+      return null;
+    }
+    if (!a) {
+      return b;
+    } else if (!b) {
+      return a;
+    }
+    right = b.controls && b.controls.right;
+    left = a.controls && a.controls.left;
+    x1 = b.x;
+    y1 = b.y;
+    x2 = (right || b).x;
+    y2 = (right || b).y;
+    x3 = (left || a).x;
+    y3 = (left || a).y;
+    x4 = a.x;
+    y4 = a.y;
+    if (right && b.relative) {
+      x2 += b.x;
+      y2 += b.y;
+    }
+    if (left && a.relative) {
+      x3 += a.x;
+      y3 += a.y;
+    }
+    x = getComponentOnCubicBezier(t, x1, x2, x3, x4);
+    y = getComponentOnCubicBezier(t, y1, y2, y3, y4);
+    const t1x = lerp(x1, x2, t);
+    const t1y = lerp(y1, y2, t);
+    const t2x = lerp(x2, x3, t);
+    const t2y = lerp(y2, y3, t);
+    const t3x = lerp(x3, x4, t);
+    const t3y = lerp(y3, y4, t);
+    const brx = lerp(t1x, t2x, t);
+    const bry = lerp(t1y, t2y, t);
+    const alx = lerp(t2x, t3x, t);
+    const aly = lerp(t2y, t3y, t);
+    if (_.isObject(obj)) {
+      obj.x = x;
+      obj.y = y;
+      if (obj instanceof Anchor) {
+        obj.controls.left.x = brx;
+        obj.controls.left.y = bry;
+        obj.controls.right.x = alx;
+        obj.controls.right.y = aly;
+        if (!(typeof obj.relative === "boolean") || obj.relative) {
+          obj.controls.left.x -= x;
+          obj.controls.left.y -= y;
+          obj.controls.right.x -= x;
+          obj.controls.right.y -= y;
+        }
+      }
+      obj.t = t;
+      return obj;
+    }
+    result = new Anchor(
+      x,
+      y,
+      brx - x,
+      bry - y,
+      alx - x,
+      aly - y,
+      this._curved ? Commands.curve : Commands.line
+    );
+    result.t = t;
+    return result;
+  }
+  plot() {
+    if (this.curved) {
+      getCurveFromPoints(this._collection, this.closed);
+      return this;
+    }
+    for (let i = 0; i < this._collection.length; i++) {
+      this._collection[i].command = i === 0 ? Commands.move : Commands.line;
+    }
+    return this;
+  }
+  subdivide(limit) {
+    this._update();
+    const last = this.vertices.length - 1;
+    const closed2 = this._closed || this.vertices[last]._command === Commands.close;
+    let b = this.vertices[last];
+    let points = [], verts;
+    _.each(
+      this.vertices,
+      function(a, i) {
+        if (i <= 0 && !closed2) {
+          b = a;
+          return;
+        }
+        if (a.command === Commands.move) {
+          points.push(new Anchor(b.x, b.y));
+          if (i > 0) {
+            points[points.length - 1].command = Commands.line;
+          }
+          b = a;
+          return;
+        }
+        verts = getSubdivisions(a, b, limit);
+        points = points.concat(verts);
+        _.each(verts, function(v, i2) {
+          if (i2 <= 0 && b.command === Commands.move) {
+            v.command = Commands.move;
+          } else {
+            v.command = Commands.line;
+          }
+        });
+        if (i >= last) {
+          if (this._closed && this._automatic) {
+            b = a;
+            verts = getSubdivisions(a, b, limit);
+            points = points.concat(verts);
+            _.each(verts, function(v, i2) {
+              if (i2 <= 0 && b.command === Commands.move) {
+                v.command = Commands.move;
+              } else {
+                v.command = Commands.line;
+              }
+            });
+          } else if (closed2) {
+            points.push(new Anchor(a.x, a.y));
+          }
+          points[points.length - 1].command = closed2 ? Commands.close : Commands.line;
+        }
+        b = a;
+      },
+      this
+    );
+    this._automatic = false;
+    this._curved = false;
+    this.vertices = points;
+    return this;
+  }
+  _updateLength(limit, silent) {
+    if (!silent) {
+      this._update();
+    }
+    const length = this.vertices.length;
+    const last = length - 1;
+    const closed2 = false;
+    let b = this.vertices[last];
+    let sum = 0;
+    if (typeof this._lengths === "undefined") {
+      this._lengths = [];
+    }
+    _.each(
+      this.vertices,
+      function(a, i) {
+        if (i <= 0 && !closed2 || a.command === Commands.move) {
+          b = a;
+          this._lengths[i] = 0;
+          return;
+        }
+        this._lengths[i] = getCurveLength2(a, b, limit);
+        sum += this._lengths[i];
+        if (i >= last && closed2) {
+          b = this.vertices[(i + 1) % length];
+          this._lengths[i + 1] = getCurveLength2(a, b, limit);
+          sum += this._lengths[i + 1];
+        }
+        b = a;
+      },
+      this
+    );
+    this._length = sum;
+    this._flagLength = false;
+    return this;
+  }
+  _update() {
+    if (this._flagVertices) {
+      if (this._automatic) {
+        this.plot();
+      }
+      if (this._flagLength) {
+        this._updateLength(void 0, true);
+      }
+      const l = this._collection.length;
+      const closed2 = this._closed;
+      const beginning = Math.min(this._beginning, this._ending);
+      const ending = Math.max(this._beginning, this._ending);
+      const bid = getIdByLength(this, beginning * this._length);
+      const eid = getIdByLength(this, ending * this._length);
+      const low = ceil(bid);
+      const high = floor2(eid);
+      let left, right, prev, next, v, i;
+      this._renderer.vertices.length = 0;
+      for (i = 0; i < l; i++) {
+        if (this._renderer.collection.length <= i) {
+          this._renderer.collection.push(new Anchor());
+        }
+        if (i > high && !right) {
+          v = this._renderer.collection[i].copy(this._collection[i]);
+          this.getPointAt(ending, v);
+          v.command = this._renderer.collection[i].command;
+          this._renderer.vertices.push(v);
+          right = v;
+          prev = this._collection[i - 1];
+          if (prev && prev.controls) {
+            if (v.relative) {
+              v.controls.right.clear();
+            } else {
+              v.controls.right.copy(v);
+            }
+            if (prev.relative) {
+              this._renderer.collection[i - 1].controls.right.copy(prev.controls.right).lerp(Vector.zero, 1 - v.t);
+            } else {
+              this._renderer.collection[i - 1].controls.right.copy(prev.controls.right).lerp(prev, 1 - v.t);
+            }
+          }
+        } else if (i >= low && i <= high) {
+          v = this._renderer.collection[i].copy(this._collection[i]);
+          this._renderer.vertices.push(v);
+          if (i === high && contains(this, ending)) {
+            right = v;
+            if (!closed2 && right.controls) {
+              if (right.relative) {
+                right.controls.right.clear();
+              } else {
+                right.controls.right.copy(right);
+              }
+            }
+          } else if (i === low && contains(this, beginning)) {
+            left = v;
+            left.command = Commands.move;
+            if (!closed2 && left.controls) {
+              if (left.relative) {
+                left.controls.left.clear();
+              } else {
+                left.controls.left.copy(left);
+              }
+            }
+          }
+        }
+      }
+      if (low > 0 && !left) {
+        i = low - 1;
+        v = this._renderer.collection[i].copy(this._collection[i]);
+        this.getPointAt(beginning, v);
+        v.command = Commands.move;
+        this._renderer.vertices.unshift(v);
+        next = this._collection[i + 1];
+        if (next && next.controls) {
+          v.controls.left.clear();
+          if (next.relative) {
+            this._renderer.collection[i + 1].controls.left.copy(next.controls.left).lerp(Vector.zero, v.t);
+          } else {
+            vector.copy(next);
+            this._renderer.collection[i + 1].controls.left.copy(next.controls.left).lerp(next, v.t);
+          }
+        }
+      }
+    }
+    Shape.prototype._update.apply(this, arguments);
+    return this;
+  }
+  flagReset() {
+    this._flagVertices = this._flagLength = this._flagFill = this._flagStroke = this._flagLinewidth = this._flagOpacity = this._flagVisible = this._flagCap = this._flagJoin = this._flagMiter = this._flagClip = false;
+    Shape.prototype.flagReset.call(this);
+    return this;
+  }
+};
+var Path = _Path;
+__publicField(Path, "Properties", [
+  "fill",
+  "stroke",
+  "linewidth",
+  "opacity",
+  "visible",
+  "cap",
+  "join",
+  "miter",
+  "closed",
+  "curved",
+  "automatic",
+  "beginning",
+  "ending",
+  "dashes"
+]);
+__publicField(Path, "Utils", {
+  getCurveLength: getCurveLength2
+});
+var proto10 = {
+  linewidth: {
+    enumerable: true,
+    get: function() {
+      return this._linewidth;
+    },
+    set: function(v) {
+      this._linewidth = v;
+      this._flagLinewidth = true;
+    }
+  },
+  opacity: {
+    enumerable: true,
+    get: function() {
+      return this._opacity;
+    },
+    set: function(v) {
+      this._opacity = v;
+      this._flagOpacity = true;
+    }
+  },
+  visible: {
+    enumerable: true,
+    get: function() {
+      return this._visible;
+    },
+    set: function(v) {
+      this._visible = v;
+      this._flagVisible = true;
+    }
+  },
+  cap: {
+    enumerable: true,
+    get: function() {
+      return this._cap;
+    },
+    set: function(v) {
+      this._cap = v;
+      this._flagCap = true;
+    }
+  },
+  join: {
+    enumerable: true,
+    get: function() {
+      return this._join;
+    },
+    set: function(v) {
+      this._join = v;
+      this._flagJoin = true;
+    }
+  },
+  miter: {
+    enumerable: true,
+    get: function() {
+      return this._miter;
+    },
+    set: function(v) {
+      this._miter = v;
+      this._flagMiter = true;
+    }
+  },
+  fill: {
+    enumerable: true,
+    get: function() {
+      return this._fill;
+    },
+    set: function(f) {
+      if (this._fill instanceof Gradient || this._fill instanceof LinearGradient || this._fill instanceof RadialGradient || this._fill instanceof Texture) {
+        this._fill.unbind(Events.Types.change, this._renderer.flagFill);
+      }
+      this._fill = f;
+      this._flagFill = true;
+      if (this._fill instanceof Gradient || this._fill instanceof LinearGradient || this._fill instanceof RadialGradient || this._fill instanceof Texture) {
+        this._fill.bind(Events.Types.change, this._renderer.flagFill);
+      }
+    }
+  },
+  stroke: {
+    enumerable: true,
+    get: function() {
+      return this._stroke;
+    },
+    set: function(f) {
+      if (this._stroke instanceof Gradient || this._stroke instanceof LinearGradient || this._stroke instanceof RadialGradient || this._stroke instanceof Texture) {
+        this._stroke.unbind(Events.Types.change, this._renderer.flagStroke);
+      }
+      this._stroke = f;
+      this._flagStroke = true;
+      if (this._stroke instanceof Gradient || this._stroke instanceof LinearGradient || this._stroke instanceof RadialGradient || this._stroke instanceof Texture) {
+        this._stroke.bind(Events.Types.change, this._renderer.flagStroke);
+      }
+    }
+  },
+  length: {
+    get: function() {
+      if (this._flagLength) {
+        this._updateLength();
+      }
+      return this._length;
+    }
+  },
+  closed: {
+    enumerable: true,
+    get: function() {
+      return this._closed;
+    },
+    set: function(v) {
+      this._closed = !!v;
+      this._flagVertices = true;
+    }
+  },
+  curved: {
+    enumerable: true,
+    get: function() {
+      return this._curved;
+    },
+    set: function(v) {
+      this._curved = !!v;
+      this._flagVertices = true;
+    }
+  },
+  automatic: {
+    enumerable: true,
+    get: function() {
+      return this._automatic;
+    },
+    set: function(v) {
+      if (v === this._automatic) {
+        return;
+      }
+      this._automatic = !!v;
+      const method = this._automatic ? "ignore" : "listen";
+      _.each(this.vertices, function(v2) {
+        v2[method]();
+      });
+    }
+  },
+  beginning: {
+    enumerable: true,
+    get: function() {
+      return this._beginning;
+    },
+    set: function(v) {
+      this._beginning = v;
+      this._flagVertices = true;
+    }
+  },
+  ending: {
+    enumerable: true,
+    get: function() {
+      return this._ending;
+    },
+    set: function(v) {
+      this._ending = v;
+      this._flagVertices = true;
+    }
+  },
+  vertices: {
+    enumerable: true,
+    get: function() {
+      return this._collection;
+    },
+    set: function(vertices) {
+      const bindVertices = this._renderer.bindVertices;
+      const unbindVertices = this._renderer.unbindVertices;
+      if (this._collection) {
+        this._collection.unbind(Events.Types.insert, bindVertices).unbind(Events.Types.remove, unbindVertices);
+      }
+      if (vertices instanceof Collection) {
+        this._collection = vertices;
+      } else {
+        this._collection = new Collection(vertices || []);
+      }
+      this._collection.bind(Events.Types.insert, bindVertices).bind(Events.Types.remove, unbindVertices);
+      bindVertices(this._collection);
+    }
+  },
+  mask: {
+    enumerable: true,
+    get: function() {
+      return this._mask;
+    },
+    set: function(v) {
+      this._mask = v;
+      this._flagMask = true;
+      if (_.isObject(v) && !v.clip) {
+        v.clip = true;
+      }
+    }
+  },
+  clip: {
+    enumerable: true,
+    get: function() {
+      return this._clip;
+    },
+    set: function(v) {
+      this._clip = v;
+      this._flagClip = true;
+    }
+  },
+  dashes: {
+    enumerable: true,
+    get: function() {
+      return this._dashes;
+    },
+    set: function(v) {
+      if (typeof v.offset !== "number") {
+        v.offset = this.dashes && this._dashes.offset || 0;
+      }
+      this._dashes = v;
+    }
+  }
+};
+function FlagVertices() {
+  this._flagVertices = true;
+  this._flagLength = true;
+  if (this.parent) {
+    this.parent._flagLength = true;
+  }
+}
+function BindVertices(items) {
+  let i = items.length;
+  while (i--) {
+    items[i].bind(Events.Types.change, this._renderer.flagVertices);
+  }
+  this._renderer.flagVertices();
+}
+function UnbindVertices(items) {
+  let i = items.length;
+  while (i--) {
+    items[i].unbind(Events.Types.change, this._renderer.flagVertices);
+  }
+  this._renderer.flagVertices();
+}
+function FlagFill() {
+  this._flagFill = true;
+}
+function FlagStroke() {
+  this._flagStroke = true;
+}
+
+// src/shapes/rectangle.js
+var _Rectangle = class extends Path {
+  constructor(x, y, width, height) {
+    const points = [
+      new Anchor(),
+      new Anchor(),
+      new Anchor(),
+      new Anchor()
+    ];
+    super(points, true, false, true);
+    __publicField(this, "_flagWidth", 0);
+    __publicField(this, "_flagHeight", 0);
+    __publicField(this, "_width", 0);
+    __publicField(this, "_height", 0);
+    __publicField(this, "_origin", null);
+    this._renderer.type = "rectangle";
+    for (let prop in proto11) {
+      Object.defineProperty(this, prop, proto11[prop]);
+    }
+    this.width = typeof width === "number" ? width : 1;
+    this.height = typeof height === "number" ? height : 1;
+    this.origin = new Vector();
+    if (typeof x === "number") {
+      this.translation.x = x;
+    }
+    if (typeof y === "number") {
+      this.translation.y = y;
+    }
+    this._update();
+  }
+  static fromObject(obj) {
+    const rectangle = new _Rectangle().copy(obj);
+    if ("id" in obj) {
+      rectangle.id = obj.id;
+    }
+    return rectangle;
+  }
+  copy(rectangle) {
+    super.copy.call(this, rectangle);
+    for (let i = 0; i < _Rectangle.Properties.length; i++) {
+      const k = _Rectangle.Properties[i];
+      if (k in rectangle && typeof rectangle[k] === "number") {
+        this[k] = rectangle[k];
+      }
+    }
+    return this;
+  }
+  _update() {
+    if (this._flagVertices || this._flagWidth || this._flagHeight) {
+      const xr = this._width / 2;
+      const yr = this._height / 2;
+      if (!this._closed && this.vertices.length === 4) {
+        this.vertices.push(new Anchor());
+      }
+      this.vertices[0].set(-xr, -yr).sub(this._origin).command = Commands.move;
+      this.vertices[1].set(xr, -yr).sub(this._origin).command = Commands.line;
+      this.vertices[2].set(xr, yr).sub(this._origin).command = Commands.line;
+      this.vertices[3].set(-xr, yr).sub(this._origin).command = Commands.line;
+      if (this.vertices[4]) {
+        this.vertices[4].set(-xr, -yr).sub(this._origin).command = Commands.line;
+      }
+    }
+    super._update.call(this);
+    return this;
+  }
+  flagReset() {
+    this._flagWidth = this._flagHeight = false;
+    super.flagReset.call(this);
+    return this;
+  }
+  clone(parent) {
+    const clone = new _Rectangle(0, 0, this.width, this.height);
+    clone.translation.copy(this.translation);
+    clone.rotation = this.rotation;
+    clone.scale = this.scale;
+    clone.skewX = this.skewX;
+    clone.skewY = this.skewY;
+    if (this.matrix.manual) {
+      clone.matrix.copy(this.matrix);
+    }
+    for (let i = 0; i < Path.Properties.length; i++) {
+      const k = Path.Properties[i];
+      clone[k] = this[k];
+    }
+    if (parent) {
+      parent.add(clone);
+    }
+    return clone;
+  }
+  toObject() {
+    const object = super.toObject.call(this);
+    object.renderer.type = "rectangle";
+    object.width = this.width;
+    object.height = this.height;
+    object.origin = this.origin.toObject();
+    return object;
+  }
+};
+var Rectangle = _Rectangle;
+__publicField(Rectangle, "Properties", ["width", "height"]);
+var proto11 = {
+  width: {
+    enumerable: true,
+    get: function() {
+      return this._width;
+    },
+    set: function(v) {
+      this._width = v;
+      this._flagWidth = true;
+    }
+  },
+  height: {
+    enumerable: true,
+    get: function() {
+      return this._height;
+    },
+    set: function(v) {
+      this._height = v;
+      this._flagHeight = true;
+    }
+  },
+  origin: {
+    enumerable: true,
+    get: function() {
+      return this._origin;
+    },
+    set: function(v) {
+      if (this._origin) {
+        this._origin.unbind(Events.Types.change, this._renderer.flagVertices);
+      }
+      this._origin = v;
+      this._origin.bind(Events.Types.change, this._renderer.flagVertices);
+      this._renderer.flagVertices();
+    }
+  }
+};
+
+// src/effects/sprite.js
+var _Sprite = class extends Rectangle {
+  constructor(path, ox, oy, cols, rows, frameRate) {
+    super(ox, oy, 0, 0);
+    __publicField(this, "_flagTexture", false);
+    __publicField(this, "_flagColumns", false);
+    __publicField(this, "_flagRows", false);
+    __publicField(this, "_flagFrameRate", false);
+    __publicField(this, "_flagIndex", false);
+    __publicField(this, "_amount", 1);
+    __publicField(this, "_duration", 0);
+    __publicField(this, "_startTime", 0);
+    __publicField(this, "_playing", false);
+    __publicField(this, "_firstFrame", 0);
+    __publicField(this, "_lastFrame", 0);
+    __publicField(this, "_loop", true);
+    __publicField(this, "_texture", null);
+    __publicField(this, "_columns", 1);
+    __publicField(this, "_rows", 1);
+    __publicField(this, "_frameRate", 0);
+    __publicField(this, "_index", 0);
+    __publicField(this, "_origin", null);
+    for (let prop in proto12) {
+      Object.defineProperty(this, prop, proto12[prop]);
+    }
+    this.noStroke();
+    this.noFill();
+    if (path instanceof Texture) {
+      this.texture = path;
+    } else if (typeof path === "string") {
+      this.texture = new Texture(path);
+    }
+    this.origin = new Vector();
+    this._update();
+    if (typeof cols === "number") {
+      this.columns = cols;
+    }
+    if (typeof rows === "number") {
+      this.rows = rows;
+    }
+    if (typeof frameRate === "number") {
+      this.frameRate = frameRate;
+    }
+    this.index = 0;
+  }
+  static fromObject(obj) {
+    const sprite = new _Sprite().copy(obj);
+    if ("id" in obj) {
+      sprite.id = obj.id;
+    }
+    return sprite;
+  }
+  copy(sprite) {
+    super.copy.call(this, sprite);
+    for (let i = 0; i < _Sprite.Properties.length; i++) {
+      const k = _Sprite.Properties[i];
+      if (k in sprite) {
+        this[k] = sprite[k];
+      }
+    }
+    return this;
+  }
+  play(firstFrame, lastFrame, onLastFrame) {
+    this._playing = true;
+    this._firstFrame = 0;
+    this._lastFrame = this.amount - 1;
+    this._startTime = _.performance.now();
+    if (typeof firstFrame === "number") {
+      this._firstFrame = firstFrame;
+    }
+    if (typeof lastFrame === "number") {
+      this._lastFrame = lastFrame;
+    }
+    if (typeof onLastFrame === "function") {
+      this._onLastFrame = onLastFrame;
+    } else {
+      delete this._onLastFrame;
+    }
+    if (this._index !== this._firstFrame) {
+      this._startTime -= 1e3 * Math.abs(this._index - this._firstFrame) / this._frameRate;
+    }
+    return this;
+  }
+  pause() {
+    this._playing = false;
+    return this;
+  }
+  stop() {
+    this._playing = false;
+    this._index = 0;
+    return this;
+  }
+  clone(parent) {
+    const clone = new _Sprite(
+      this.texture,
+      this.translation.x,
+      this.translation.y,
+      this.columns,
+      this.rows,
+      this.frameRate
+    );
+    if (this.playing) {
+      clone.play(this._firstFrame, this._lastFrame);
+    }
+    clone.loop = this.loop;
+    clone.firstFrame = this.firstFrame;
+    clone.lastFrame = this.lastFrame;
+    if (parent) {
+      parent.add(clone);
+    }
+    return clone;
+  }
+  toObject() {
+    const object = super.toObject.call(this);
+    object.texture = this.texture.toObject();
+    object.columns = this.columns;
+    object.rows = this.rows;
+    object.frameRate = this.frameRate;
+    object.index = this.index;
+    object.firstFrame = this.firstFrame;
+    object.lastFrame = this.lastFrame;
+    object.loop = this.loop;
+    return object;
+  }
+  _update() {
+    const effect = this._texture;
+    const cols = this._columns;
+    const rows = this._rows;
+    let width, height, elapsed, amount, duration;
+    let index, iw, ih, frames;
+    if (effect) {
+      if (this._flagColumns || this._flagRows) {
+        this._amount = this._columns * this._rows;
+      }
+      if (this._flagFrameRate) {
+        this._duration = 1e3 * this._amount / this._frameRate;
+      }
+      if (this._flagTexture) {
+        this.fill = effect;
+      }
+      if (effect.loaded) {
+        iw = effect.image.width;
+        ih = effect.image.height;
+        width = iw / cols;
+        height = ih / rows;
+        amount = this._amount;
+        if (this.width !== width) {
+          this.width = width;
+        }
+        if (this.height !== height) {
+          this.height = height;
+        }
+        if (this._playing && this._frameRate > 0) {
+          if (_.isNaN(this._lastFrame)) {
+            this._lastFrame = amount - 1;
+          }
+          elapsed = _.performance.now() - this._startTime;
+          frames = this._lastFrame + 1;
+          duration = 1e3 * (frames - this._firstFrame) / this._frameRate;
+          if (this._loop) {
+            elapsed = elapsed % duration;
+          } else {
+            elapsed = Math.min(elapsed, duration);
+          }
+          index = lerp(this._firstFrame, frames, elapsed / duration);
+          index = Math.floor(index);
+          if (index !== this._index) {
+            this._index = index;
+            if (index >= this._lastFrame - 1 && this._onLastFrame) {
+              this._onLastFrame();
+            }
+          }
+        }
+        const col = this._index % cols;
+        const row = Math.floor(this._index / cols);
+        const ox = -width * col + (iw - width) / 2;
+        const oy = -height * row + (ih - height) / 2;
+        if (ox !== effect.offset.x) {
+          effect.offset.x = ox;
+        }
+        if (oy !== effect.offset.y) {
+          effect.offset.y = oy;
+        }
+      }
+    }
+    super._update.call(this);
+    return this;
+  }
+  flagReset() {
+    this._flagTexture = this._flagColumns = this._flagRows = this._flagFrameRate = false;
+    super.flagReset.call(this);
+    return this;
+  }
+};
+var Sprite = _Sprite;
+__publicField(Sprite, "Properties", [
+  "texture",
+  "columns",
+  "rows",
+  "frameRate",
+  "index",
+  "firstFrame",
+  "lastFrame",
+  "loop"
+]);
+var proto12 = {
+  texture: {
+    enumerable: true,
+    get: function() {
+      return this._texture;
+    },
+    set: function(v) {
+      this._texture = v;
+      this._flagTexture = true;
+    }
+  },
+  columns: {
+    enumerable: true,
+    get: function() {
+      return this._columns;
+    },
+    set: function(v) {
+      this._columns = v;
+      this._flagColumns = true;
+    }
+  },
+  rows: {
+    enumerable: true,
+    get: function() {
+      return this._rows;
+    },
+    set: function(v) {
+      this._rows = v;
+      this._flagRows = true;
+    }
+  },
+  frameRate: {
+    enumerable: true,
+    get: function() {
+      return this._frameRate;
+    },
+    set: function(v) {
+      this._frameRate = v;
+      this._flagFrameRate = true;
+    }
+  },
+  index: {
+    enumerable: true,
+    get: function() {
+      return this._index;
+    },
+    set: function(v) {
+      this._index = v;
+      this._flagIndex = true;
+    }
+  },
+  firstFrame: {
+    enumerable: true,
+    get: function() {
+      return this._firstFrame;
+    },
+    set: function(v) {
+      this._firstFrame = v;
+    }
+  },
+  lastFrame: {
+    enumerable: true,
+    get: function() {
+      return this._lastFrame;
+    },
+    set: function(v) {
+      this._lastFrame = v;
+    }
+  },
+  loop: {
+    enumerable: true,
+    get: function() {
+      return this._loop;
+    },
+    set: function(v) {
+      this._loop = !!v;
+    }
   }
 };
 
 // src/children.js
+var _ids;
 var Children = class extends Collection {
   constructor(children) {
     children = Array.isArray(children) ? children : Array.prototype.slice.call(arguments);
     super(children);
-    __publicField(this, "ids", {});
+    __privateAdd(this, _ids, {});
     this.attach(children);
     this.on(Events.Types.insert, this.attach);
     this.on(Events.Types.remove, this.detach);
+  }
+  get ids() {
+    return __privateGet(this, _ids);
   }
   attach(children) {
     for (let i = 0; i < children.length; i++) {
@@ -1705,10 +4107,1816 @@ var Children = class extends Collection {
     return this;
   }
 };
+_ids = new WeakMap();
+
+// src/shapes/arc-segment.js
+var _ArcSegment = class extends Path {
+  constructor(x, y, ir, or, sa, ea, res) {
+    const amount = res || Constants.Resolution * 3;
+    const points = [];
+    for (let i = 0; i < amount; i++) {
+      points.push(new Anchor());
+    }
+    super(points, true, false, true);
+    __publicField(this, "_flagStartAngle", false);
+    __publicField(this, "_flagEndAngle", false);
+    __publicField(this, "_flagInnerRadius", false);
+    __publicField(this, "_flagOuterRadius", false);
+    __publicField(this, "_startAngle", 0);
+    __publicField(this, "_endAngle", TWO_PI);
+    __publicField(this, "_innerRadius", 0);
+    __publicField(this, "_outerRadius", 0);
+    this._renderer.type = "arc-segment";
+    for (let prop in proto13) {
+      Object.defineProperty(this, prop, proto13[prop]);
+    }
+    if (typeof ir === "number") {
+      this.innerRadius = ir;
+    }
+    if (typeof or === "number") {
+      this.outerRadius = or;
+    }
+    if (typeof sa === "number") {
+      this.startAngle = sa;
+    }
+    if (typeof ea === "number") {
+      this.endAngle = ea;
+    }
+    this._update();
+    if (typeof x === "number") {
+      this.translation.x = x;
+    }
+    if (typeof y === "number") {
+      this.translation.y = y;
+    }
+  }
+  static fromObject(obj) {
+    const segment = new _ArcSegment().copy(obj);
+    if ("id" in obj) {
+      segment.id = obj.id;
+    }
+    return segment;
+  }
+  copy(arcSegment) {
+    super.copy.call(this, arcSegment);
+    for (let i = 0; i < _ArcSegment.Properties.length; i++) {
+      const k = _ArcSegment.Properties[i];
+      if (k in arcSegment && typeof arcSegment[k] === "number") {
+        this[k] = arcSegment[k];
+      }
+    }
+    return this;
+  }
+  _update() {
+    if (this._flagVertices || this._flagStartAngle || this._flagEndAngle || this._flagInnerRadius || this._flagOuterRadius) {
+      const sa = this._startAngle;
+      const ea = this._endAngle;
+      const ir = this._innerRadius;
+      const or = this._outerRadius;
+      const connected = mod(sa, TWO_PI) === mod(ea, TWO_PI);
+      const punctured = ir > 0;
+      const vertices = this.vertices;
+      let length = punctured ? vertices.length / 2 : vertices.length;
+      let command, id = 0;
+      let i, last, pct, v, theta, step, x, y, amp;
+      if (connected) {
+        length--;
+      } else if (!punctured) {
+        length -= 2;
+      }
+      for (i = 0, last = length - 1; i < length; i++) {
+        pct = i / last;
+        v = vertices[id];
+        theta = pct * (ea - sa) + sa;
+        step = (ea - sa) / length;
+        x = or * Math.cos(theta);
+        y = or * Math.sin(theta);
+        switch (i) {
+          case 0:
+            command = Commands.move;
+            break;
+          default:
+            command = Commands.curve;
+        }
+        v.command = command;
+        v.x = x;
+        v.y = y;
+        v.controls.left.clear();
+        v.controls.right.clear();
+        if (v.command === Commands.curve) {
+          amp = or * step / Math.PI;
+          v.controls.left.x = amp * Math.cos(theta - HALF_PI);
+          v.controls.left.y = amp * Math.sin(theta - HALF_PI);
+          v.controls.right.x = amp * Math.cos(theta + HALF_PI);
+          v.controls.right.y = amp * Math.sin(theta + HALF_PI);
+          if (i === 1) {
+            v.controls.left.multiplyScalar(2);
+          }
+          if (i === last) {
+            v.controls.right.multiplyScalar(2);
+          }
+        }
+        id++;
+      }
+      if (punctured) {
+        if (connected) {
+          vertices[id].command = Commands.close;
+          id++;
+        } else {
+          length--;
+          last = length - 1;
+        }
+        for (i = 0; i < length; i++) {
+          pct = i / last;
+          v = vertices[id];
+          theta = (1 - pct) * (ea - sa) + sa;
+          step = (ea - sa) / length;
+          x = ir * Math.cos(theta);
+          y = ir * Math.sin(theta);
+          command = Commands.curve;
+          if (i <= 0) {
+            command = connected ? Commands.move : Commands.line;
+          }
+          v.command = command;
+          v.x = x;
+          v.y = y;
+          v.controls.left.clear();
+          v.controls.right.clear();
+          if (v.command === Commands.curve) {
+            amp = ir * step / Math.PI;
+            v.controls.left.x = amp * Math.cos(theta + HALF_PI);
+            v.controls.left.y = amp * Math.sin(theta + HALF_PI);
+            v.controls.right.x = amp * Math.cos(theta - HALF_PI);
+            v.controls.right.y = amp * Math.sin(theta - HALF_PI);
+            if (i === 1) {
+              v.controls.left.multiplyScalar(2);
+            }
+            if (i === last) {
+              v.controls.right.multiplyScalar(2);
+            }
+          }
+          id++;
+        }
+        vertices[id].copy(vertices[0]);
+        vertices[id].command = Commands.line;
+      } else if (!connected) {
+        vertices[id].command = Commands.line;
+        vertices[id].x = 0;
+        vertices[id].y = 0;
+        id++;
+        vertices[id].copy(vertices[0]);
+        vertices[id].command = Commands.line;
+      }
+    }
+    super._update.call(this);
+    return this;
+  }
+  flagReset() {
+    super.flagReset.call(this);
+    this._flagStartAngle = this._flagEndAngle = this._flagInnerRadius = this._flagOuterRadius = false;
+    return this;
+  }
+  clone(parent) {
+    const ir = this.innerRadius;
+    const or = this.outerRadius;
+    const sa = this.startAngle;
+    const ea = this.endAngle;
+    const resolution = this.vertices.length;
+    const clone = new _ArcSegment(0, 0, ir, or, sa, ea, resolution);
+    clone.translation.copy(this.translation);
+    clone.rotation = this.rotation;
+    clone.scale = this.scale;
+    clone.skewX = this.skewX;
+    clone.skewY = this.skewY;
+    if (this.matrix.manual) {
+      clone.matrix.copy(this.matrix);
+    }
+    for (let i = 0; i < Path.Properties.length; i++) {
+      const k = Path.Properties[i];
+      clone[k] = this[k];
+    }
+    if (parent) {
+      parent.add(clone);
+    }
+    return clone;
+  }
+  toObject() {
+    const object = super.toObject.call(this);
+    object.renderer.type = "arc-segment";
+    for (let i = 0; i < _ArcSegment.Properties.length; i++) {
+      const k = _ArcSegment.Properties[i];
+      object[k] = this[k];
+    }
+    return object;
+  }
+};
+var ArcSegment = _ArcSegment;
+__publicField(ArcSegment, "Properties", ["startAngle", "endAngle", "innerRadius", "outerRadius"]);
+var proto13 = {
+  startAngle: {
+    enumerable: true,
+    get: function() {
+      return this._startAngle;
+    },
+    set: function(v) {
+      this._startAngle = v;
+      this._flagStartAngle = true;
+    }
+  },
+  endAngle: {
+    enumerable: true,
+    get: function() {
+      return this._endAngle;
+    },
+    set: function(v) {
+      this._endAngle = v;
+      this._flagEndAngle = true;
+    }
+  },
+  innerRadius: {
+    enumerable: true,
+    get: function() {
+      return this._innerRadius;
+    },
+    set: function(v) {
+      this._innerRadius = v;
+      this._flagInnerRadius = true;
+    }
+  },
+  outerRadius: {
+    enumerable: true,
+    get: function() {
+      return this._outerRadius;
+    },
+    set: function(v) {
+      this._outerRadius = v;
+      this._flagOuterRadius = true;
+    }
+  }
+};
+
+// src/shapes/circle.js
+var cos2 = Math.cos;
+var sin2 = Math.sin;
+var _Circle = class extends Path {
+  constructor(ox, oy, r, resolution) {
+    const amount = resolution ? Math.max(resolution, 2) : 4;
+    const points = [];
+    for (let i = 0; i < amount; i++) {
+      points.push(new Anchor(0, 0, 0, 0, 0, 0));
+    }
+    super(points, true, true, true);
+    __publicField(this, "_flagRadius", false);
+    __publicField(this, "_radius", 0);
+    this._renderer.type = "circle";
+    for (let prop in proto14) {
+      Object.defineProperty(this, prop, proto14[prop]);
+    }
+    if (typeof r === "number") {
+      this.radius = r;
+    }
+    this._update();
+    if (typeof ox === "number") {
+      this.translation.x = ox;
+    }
+    if (typeof oy === "number") {
+      this.translation.y = oy;
+    }
+  }
+  static fromObject(obj) {
+    const circle = new _Circle().copy(obj);
+    if ("id" in obj) {
+      circle.id = obj.id;
+    }
+    return circle;
+  }
+  copy(circle) {
+    super.copy.call(this, circle);
+    for (let i = 0; i < _Circle.Properties.length; i++) {
+      const k = _Circle.Properties[i];
+      if (k in circle && typeof circle[k] === "number") {
+        this[k] = circle[k];
+      }
+    }
+    return this;
+  }
+  _update() {
+    if (this._flagVertices || this._flagRadius) {
+      let length = this.vertices.length;
+      if (!this._closed && length > 2) {
+        length -= 1;
+      }
+      const c = 4 / 3 * Math.tan(Math.PI / (length * 2));
+      const radius = this._radius;
+      const rc = radius * c;
+      for (let i = 0; i < this.vertices.length; i++) {
+        const pct = i / length;
+        const theta = pct * TWO_PI;
+        const x = radius * cos2(theta);
+        const y = radius * sin2(theta);
+        const lx = rc * cos2(theta - HALF_PI);
+        const ly = rc * sin2(theta - HALF_PI);
+        const rx = rc * cos2(theta + HALF_PI);
+        const ry = rc * sin2(theta + HALF_PI);
+        const v = this.vertices[i];
+        v.command = i === 0 ? Commands.move : Commands.curve;
+        v.set(x, y);
+        v.controls.left.set(lx, ly);
+        v.controls.right.set(rx, ry);
+      }
+    }
+    super._update.call(this);
+    return this;
+  }
+  flagReset() {
+    this._flagRadius = false;
+    super.flagReset.call(this);
+    return this;
+  }
+  clone(parent) {
+    const clone = new _Circle(0, 0, this.radius, this.vertices.length);
+    clone.translation.copy(this.translation);
+    clone.rotation = this.rotation;
+    clone.scale = this.scale;
+    clone.skewX = this.skewX;
+    clone.skewY = this.skewY;
+    if (this.matrix.manual) {
+      clone.matrix.copy(this.matrix);
+    }
+    for (let i = 0; i < Path.Properties.length; i++) {
+      const k = Path.Properties[i];
+      clone[k] = this[k];
+    }
+    if (parent) {
+      parent.add(clone);
+    }
+    return clone;
+  }
+  toObject() {
+    const object = super.toObject.call(this);
+    object.renderer.type = "circle";
+    for (let i = 0; i < _Circle.Properties.length; i++) {
+      const k = _Circle.Properties[i];
+      object[k] = this[k];
+    }
+    return object;
+  }
+};
+var Circle = _Circle;
+__publicField(Circle, "Properties", ["radius"]);
+var proto14 = {
+  radius: {
+    enumerable: true,
+    get: function() {
+      return this._radius;
+    },
+    set: function(v) {
+      this._radius = v;
+      this._flagRadius = true;
+    }
+  }
+};
+
+// src/shapes/ellipse.js
+var cos3 = Math.cos;
+var sin3 = Math.sin;
+var _Ellipse = class extends Path {
+  constructor(x, y, rx, ry, resolution) {
+    if (typeof ry !== "number" && typeof rx === "number") {
+      ry = rx;
+    }
+    const amount = resolution ? Math.max(resolution, 2) : 4;
+    const points = [];
+    for (let i = 0; i < amount; i++) {
+      points.push(new Anchor());
+    }
+    super(points, true, true, true);
+    __publicField(this, "_flagWidth", false);
+    __publicField(this, "_flagHeight", false);
+    __publicField(this, "_width", 0);
+    __publicField(this, "_height", 0);
+    this._renderer.type = "ellipse";
+    for (let prop in proto15) {
+      Object.defineProperty(this, prop, proto15[prop]);
+    }
+    if (typeof rx === "number") {
+      this.width = rx * 2;
+    }
+    if (typeof ry === "number") {
+      this.height = ry * 2;
+    }
+    this._update();
+    if (typeof x === "number") {
+      this.translation.x = x;
+    }
+    if (typeof y === "number") {
+      this.translation.y = y;
+    }
+  }
+  static fromObject(obj) {
+    const ellipse = new _Ellipse().copy(obj);
+    if ("id" in obj) {
+      ellipse.id = obj.id;
+    }
+    return ellipse;
+  }
+  copy(ellipse) {
+    super.copy.call(this, ellipse);
+    for (let i = 0; i < _Ellipse.Properties.length; i++) {
+      const k = _Ellipse.Properties[i];
+      if (k in ellipse && typeof ellipse[k] === "number") {
+        this[k] = ellipse[k];
+      }
+    }
+    return this;
+  }
+  _update() {
+    if (this._flagVertices || this._flagWidth || this._flagHeight) {
+      let length = this.vertices.length;
+      if (!this._closed && length > 2) {
+        length -= 1;
+      }
+      const c = 4 / 3 * Math.tan(Math.PI / (this.vertices.length * 2));
+      const radiusX = this._width / 2;
+      const radiusY = this._height / 2;
+      for (let i = 0; i < this.vertices.length; i++) {
+        const pct = i / length;
+        const theta = pct * TWO_PI;
+        const x = radiusX * cos3(theta);
+        const y = radiusY * sin3(theta);
+        const lx = radiusX * c * cos3(theta - HALF_PI);
+        const ly = radiusY * c * sin3(theta - HALF_PI);
+        const rx = radiusX * c * cos3(theta + HALF_PI);
+        const ry = radiusY * c * sin3(theta + HALF_PI);
+        const v = this.vertices[i];
+        v.command = i === 0 ? Commands.move : Commands.curve;
+        v.set(x, y);
+        v.controls.left.set(lx, ly);
+        v.controls.right.set(rx, ry);
+      }
+    }
+    super._update.call(this);
+    return this;
+  }
+  flagReset() {
+    this._flagWidth = this._flagHeight = false;
+    super.flagReset.call(this);
+    return this;
+  }
+  clone(parent) {
+    const rx = this.width / 2;
+    const ry = this.height / 2;
+    const resolution = this.vertices.length;
+    const clone = new _Ellipse(0, 0, rx, ry, resolution);
+    clone.translation.copy(this.translation);
+    clone.rotation = this.rotation;
+    clone.scale = this.scale;
+    clone.skewX = this.skewX;
+    clone.skewY = this.skewY;
+    if (this.matrix.manual) {
+      clone.matrix.copy(this.matrix);
+    }
+    for (let i = 0; i < Path.Properties.length; i++) {
+      const k = Path.Properties[i];
+      clone[k] = this[k];
+    }
+    if (parent) {
+      parent.add(clone);
+    }
+    return clone;
+  }
+  toObject() {
+    const object = super.toObject.call(this);
+    object.renderer.type = "ellipse";
+    for (let i = 0; i < _Ellipse.Properties.length; i++) {
+      const k = _Ellipse.Properties[i];
+      object[k] = this[k];
+    }
+    return object;
+  }
+};
+var Ellipse = _Ellipse;
+__publicField(Ellipse, "Properties", ["width", "height"]);
+var proto15 = {
+  width: {
+    enumerable: true,
+    get: function() {
+      return this._width;
+    },
+    set: function(v) {
+      this._width = v;
+      this._flagWidth = true;
+    }
+  },
+  height: {
+    enumerable: true,
+    get: function() {
+      return this._height;
+    },
+    set: function(v) {
+      this._height = v;
+      this._flagHeight = true;
+    }
+  }
+};
+
+// src/shapes/points.js
+var ceil2 = Math.ceil;
+var floor3 = Math.floor;
+var _Points = class extends Shape {
+  constructor(vertices) {
+    super();
+    __publicField(this, "_flagVertices", true);
+    __publicField(this, "_flagLength", true);
+    __publicField(this, "_flagFill", true);
+    __publicField(this, "_flagStroke", true);
+    __publicField(this, "_flagLinewidth", true);
+    __publicField(this, "_flagOpacity", true);
+    __publicField(this, "_flagVisible", true);
+    __publicField(this, "_flagSize", true);
+    __publicField(this, "_flagSizeAttenuation", true);
+    __publicField(this, "_length", 0);
+    __publicField(this, "_fill", "#fff");
+    __publicField(this, "_stroke", "#000");
+    __publicField(this, "_linewidth", 1);
+    __publicField(this, "_opacity", 1);
+    __publicField(this, "_visible", true);
+    __publicField(this, "_size", 1);
+    __publicField(this, "_sizeAttenuation", false);
+    __publicField(this, "_beginning", 0);
+    __publicField(this, "_ending", 1);
+    __publicField(this, "_dashes", null);
+    __publicField(this, "noFill", Path.prototype.noFill);
+    __publicField(this, "noStroke", Path.prototype.noStroke);
+    __publicField(this, "corner", Path.prototype.corner);
+    __publicField(this, "center", Path.prototype.center);
+    __publicField(this, "getBoundingClientRect", Path.prototype.getBoundingClientRect);
+    __publicField(this, "_updateLength", Path.prototype._updateLength);
+    for (let prop in proto16) {
+      Object.defineProperty(this, prop, proto16[prop]);
+    }
+    this._renderer.type = "points";
+    this._renderer.flagVertices = FlagVertices.bind(this);
+    this._renderer.bindVertices = BindVertices.bind(this);
+    this._renderer.unbindVertices = UnbindVertices.bind(this);
+    this._renderer.flagFill = FlagFill.bind(this);
+    this._renderer.flagStroke = FlagStroke.bind(this);
+    this._renderer.vertices = null;
+    this._renderer.collection = null;
+    this.sizeAttenuation = false;
+    this.beginning = 0;
+    this.ending = 1;
+    this.fill = "#fff";
+    this.stroke = "#000";
+    this.className = "";
+    this.visible = true;
+    this.vertices = vertices;
+    this.dashes = [];
+    this.dashes.offset = 0;
+  }
+  static fromObject(obj) {
+    const fill = typeof obj.fill === "string" ? obj.fill : getEffectFromObject(obj.fill);
+    const stroke = typeof obj.stroke === "string" ? obj.stroke : getEffectFromObject(obj.stroke);
+    const points = new _Points().copy(__spreadProps(__spreadValues({}, obj), { fill, stroke }));
+    if ("id" in obj) {
+      points.id = obj.id;
+    }
+    return points;
+  }
+  copy(points) {
+    super.copy.call(this, points);
+    for (let j = 0; j < points.vertices.length; j++) {
+      const v = points.vertices[j];
+      if (v instanceof Anchor) {
+        this.vertices.push(points.vertices[j].clone());
+      } else {
+        this.vertices.push(new Anchor().copy(v));
+      }
+    }
+    for (let i = 0; i < _Points.Properties.length; i++) {
+      const k = _Points.Properties[i];
+      if (k in points) {
+        this[k] = points[k];
+      }
+    }
+    return this;
+  }
+  clone(parent) {
+    const clone = new _Points();
+    for (let j = 0; j < this.vertices.length; j++) {
+      clone.vertices.push(this.vertices[j].clone());
+    }
+    for (let i = 0; i < _Points.Properties.length; i++) {
+      const k = _Points.Properties[i];
+      clone[k] = this[k];
+    }
+    clone.className = this.className;
+    clone.translation.copy(this.translation);
+    clone.rotation = this.rotation;
+    clone.scale = this.scale;
+    clone.skewX = this.skewX;
+    clone.skewY = this.skewY;
+    if (this.matrix.manual) {
+      clone.matrix.copy(this.matrix);
+    }
+    if (parent) {
+      parent.add(clone);
+    }
+    return clone._update();
+  }
+  toObject() {
+    const result = super.toObject.call(this);
+    result.renderer.type = "points";
+    result.vertices = this.vertices.map((v) => v.toObject());
+    _.each(
+      _Points.Properties,
+      function(k) {
+        if (typeof this[k] !== "undefined") {
+          if (this[k].toObject) {
+            result[k] = this[k].toObject();
+          } else {
+            result[k] = this[k];
+          }
+        }
+      },
+      this
+    );
+    return result;
+  }
+  subdivide(limit) {
+    this._update();
+    let points = [];
+    for (let i = 0; i < this.vertices.length; i++) {
+      const a = this.vertices[i];
+      const b = this.vertices[i - 1];
+      if (!b) {
+        continue;
+      }
+      const x1 = a.x;
+      const y1 = a.y;
+      const x2 = b.x;
+      const y2 = b.y;
+      const subdivisions = subdivide(x1, y1, x1, y1, x2, y2, x2, y2, limit);
+      points = points.concat(subdivisions);
+    }
+    this.vertices = points;
+    return this;
+  }
+  _update() {
+    if (this._flagVertices) {
+      if (this._flagLength) {
+        this._updateLength(void 0, true);
+      }
+      const beginning = Math.min(this._beginning, this._ending);
+      const ending = Math.max(this._beginning, this._ending);
+      const bid = getIdByLength(this, beginning * this._length);
+      const eid = getIdByLength(this, ending * this._length);
+      const low = ceil2(bid);
+      const high = floor3(eid);
+      let j = 0, v;
+      this._renderer.vertices = [];
+      this._renderer.collection = [];
+      for (let i = 0; i < this._collection.length; i++) {
+        if (i >= low && i <= high) {
+          v = this._collection[i];
+          this._renderer.collection.push(v);
+          this._renderer.vertices[j * 2 + 0] = v.x;
+          this._renderer.vertices[j * 2 + 1] = v.y;
+          j++;
+        }
+      }
+    }
+    super._update.apply(this, arguments);
+    return this;
+  }
+  flagReset() {
+    this._flagVertices = this._flagLength = this._flagFill = this._flagStroke = this._flagLinewidth = this._flagOpacity = this._flagVisible = this._flagSize = this._flagSizeAttenuation = false;
+    super.flagReset.call(this);
+    return this;
+  }
+};
+var Points = _Points;
+__publicField(Points, "Properties", [
+  "fill",
+  "stroke",
+  "linewidth",
+  "opacity",
+  "visible",
+  "size",
+  "sizeAttenuation",
+  "beginning",
+  "ending",
+  "dashes"
+]);
+var proto16 = {
+  linewidth: {
+    enumerable: true,
+    get: function() {
+      return this._linewidth;
+    },
+    set: function(v) {
+      this._linewidth = v;
+      this._flagLinewidth = true;
+    }
+  },
+  opacity: {
+    enumerable: true,
+    get: function() {
+      return this._opacity;
+    },
+    set: function(v) {
+      this._opacity = v;
+      this._flagOpacity = true;
+    }
+  },
+  visible: {
+    enumerable: true,
+    get: function() {
+      return this._visible;
+    },
+    set: function(v) {
+      this._visible = v;
+      this._flagVisible = true;
+    }
+  },
+  size: {
+    enumerable: true,
+    get: function() {
+      return this._size;
+    },
+    set: function(v) {
+      this._size = v;
+      this._flagSize = true;
+    }
+  },
+  sizeAttenuation: {
+    enumerable: true,
+    get: function() {
+      return this._sizeAttenuation;
+    },
+    set: function(v) {
+      this._sizeAttenuation = v;
+      this._flagSizeAttenuation = true;
+    }
+  },
+  fill: {
+    enumerable: true,
+    get: function() {
+      return this._fill;
+    },
+    set: function(f) {
+      if (this._fill instanceof Gradient || this._fill instanceof LinearGradient || this._fill instanceof RadialGradient || this._fill instanceof Texture) {
+        this._fill.unbind(Events.Types.change, this._renderer.flagFill);
+      }
+      this._fill = f;
+      this._flagFill = true;
+      if (this._fill instanceof Gradient || this._fill instanceof LinearGradient || this._fill instanceof RadialGradient || this._fill instanceof Texture) {
+        this._fill.bind(Events.Types.change, this._renderer.flagFill);
+      }
+    }
+  },
+  stroke: {
+    enumerable: true,
+    get: function() {
+      return this._stroke;
+    },
+    set: function(f) {
+      if (this._stroke instanceof Gradient || this._stroke instanceof LinearGradient || this._stroke instanceof RadialGradient || this._stroke instanceof Texture) {
+        this._stroke.unbind(Events.Types.change, this._renderer.flagStroke);
+      }
+      this._stroke = f;
+      this._flagStroke = true;
+      if (this._stroke instanceof Gradient || this._stroke instanceof LinearGradient || this._stroke instanceof RadialGradient || this._stroke instanceof Texture) {
+        this._stroke.bind(Events.Types.change, this._renderer.flagStroke);
+      }
+    }
+  },
+  length: {
+    get: function() {
+      if (this._flagLength) {
+        this._updateLength();
+      }
+      return this._length;
+    }
+  },
+  beginning: {
+    enumerable: true,
+    get: function() {
+      return this._beginning;
+    },
+    set: function(v) {
+      this._beginning = v;
+      this._flagVertices = true;
+    }
+  },
+  ending: {
+    enumerable: true,
+    get: function() {
+      return this._ending;
+    },
+    set: function(v) {
+      this._ending = v;
+      this._flagVertices = true;
+    }
+  },
+  vertices: {
+    enumerable: true,
+    get: function() {
+      return this._collection;
+    },
+    set: function(vertices) {
+      const bindVertices = this._renderer.bindVertices;
+      const unbindVertices = this._renderer.unbindVertices;
+      if (this._collection) {
+        this._collection.unbind(Events.Types.insert, bindVertices).unbind(Events.Types.remove, unbindVertices);
+      }
+      if (vertices instanceof Collection) {
+        this._collection = vertices;
+      } else {
+        this._collection = new Collection(vertices || []);
+      }
+      this._collection.bind(Events.Types.insert, bindVertices).bind(Events.Types.remove, unbindVertices);
+      bindVertices(this._collection);
+    }
+  },
+  dashes: {
+    enumerable: true,
+    get: function() {
+      return this._dashes;
+    },
+    set: function(v) {
+      if (typeof v.offset !== "number") {
+        v.offset = this.dashes && this._dashes.offset || 0;
+      }
+      this._dashes = v;
+    }
+  }
+};
+
+// src/shapes/polygon.js
+var cos4 = Math.cos;
+var sin4 = Math.sin;
+var _Polygon = class extends Path {
+  constructor(x, y, radius, sides) {
+    sides = Math.max(sides || 0, 3);
+    super();
+    __publicField(this, "_flagWidth", false);
+    __publicField(this, "_flagHeight", false);
+    __publicField(this, "_flagSides", false);
+    __publicField(this, "_radius", 0);
+    __publicField(this, "_width", 0);
+    __publicField(this, "_height", 0);
+    __publicField(this, "_sides", 0);
+    this._renderer.type = "polygon";
+    for (let prop in proto17) {
+      Object.defineProperty(this, prop, proto17[prop]);
+    }
+    this.closed = true;
+    this.automatic = false;
+    if (typeof radius === "number") {
+      this.radius = radius;
+    }
+    if (typeof sides === "number") {
+      this.sides = sides;
+    }
+    this._update();
+    if (typeof x === "number") {
+      this.translation.x = x;
+    }
+    if (typeof y === "number") {
+      this.translation.y = y;
+    }
+  }
+  static fromObject(obj) {
+    const polygon = new _Polygon().copy(obj);
+    if ("id" in obj) {
+      polygon.id = obj.id;
+    }
+    return polygon;
+  }
+  copy(polygon) {
+    super.copy.call(this, polygon);
+    for (let i = 0; i < _Polygon.Properties.length; i++) {
+      const k = _Polygon.Properties[i];
+      if (k in polygon && typeof polygon[k] === "number") {
+        this[k] = polygon[k];
+      }
+    }
+    return this;
+  }
+  _update() {
+    if (this._flagVertices || this._flagWidth || this._flagHeight || this._flagSides) {
+      const sides = this._sides;
+      const amount = sides + 1;
+      let length = this.vertices.length;
+      if (length > sides) {
+        this.vertices.splice(sides - 1, length - sides);
+        length = sides;
+      }
+      for (let i = 0; i < amount; i++) {
+        const pct = (i + 0.5) / sides;
+        const theta = TWO_PI * pct + Math.PI / 2;
+        const x = this._width * cos4(theta) / 2;
+        const y = this._height * sin4(theta) / 2;
+        if (i >= length) {
+          this.vertices.push(new Anchor(x, y));
+        } else {
+          this.vertices[i].set(x, y);
+        }
+        this.vertices[i].command = i === 0 ? Commands.move : Commands.line;
+      }
+    }
+    super._update.call(this);
+    return this;
+  }
+  flagReset() {
+    this._flagWidth = this._flagHeight = this._flagSides = false;
+    super.flagReset.call(this);
+    return this;
+  }
+  clone(parent) {
+    const clone = new _Polygon(0, 0, 0, this.sides);
+    clone.translation.copy(this.translation);
+    clone.rotation = this.rotation;
+    clone.scale = this.scale;
+    clone.skewX = this.skewX;
+    clone.skewY = this.skewY;
+    clone.width = this.width;
+    clone.height = this.height;
+    if (this.matrix.manual) {
+      clone.matrix.copy(this.matrix);
+    }
+    for (let i = 0; i < Path.Properties.length; i++) {
+      const k = Path.Properties[i];
+      clone[k] = this[k];
+    }
+    if (parent) {
+      parent.add(clone);
+    }
+    return clone;
+  }
+  toObject() {
+    const object = super.toObject.call(this);
+    object.renderer.type = "polygon";
+    for (let i = 0; i < _Polygon.Properties.length; i++) {
+      const k = _Polygon.Properties[i];
+      object[k] = this[k];
+    }
+    return object;
+  }
+};
+var Polygon = _Polygon;
+__publicField(Polygon, "Properties", ["width", "height", "sides"]);
+var proto17 = {
+  radius: {
+    enumerable: true,
+    get: function() {
+      return this._radius;
+    },
+    set: function(v) {
+      this._radius = v;
+      this.width = v * 2;
+      this.height = v * 2;
+    }
+  },
+  width: {
+    enumerable: true,
+    get: function() {
+      return this._width;
+    },
+    set: function(v) {
+      this._width = v;
+      this._flagWidth = true;
+      this._radius = Math.max(this.width, this.height) / 2;
+    }
+  },
+  height: {
+    enumerable: true,
+    get: function() {
+      return this._height;
+    },
+    set: function(v) {
+      this._height = v;
+      this._flagHeight = true;
+      this._radius = Math.max(this.width, this.height) / 2;
+    }
+  },
+  sides: {
+    enumerable: true,
+    get: function() {
+      return this._sides;
+    },
+    set: function(v) {
+      this._sides = v;
+      this._flagSides = true;
+    }
+  }
+};
+
+// src/shapes/rounded-rectangle.js
+var _RoundedRectangle = class extends Path {
+  constructor(x, y, width, height, radius) {
+    if (typeof radius === "undefined" && typeof width === "number" && typeof height === "number") {
+      radius = Math.floor(Math.min(width, height) / 12);
+    }
+    const points = [];
+    for (let i = 0; i < 10; i++) {
+      points.push(
+        new Anchor(0, 0, 0, 0, 0, 0, i === 0 ? Commands.move : Commands.curve)
+      );
+    }
+    super(points);
+    __publicField(this, "_flagWidth", false);
+    __publicField(this, "_flagHeight", false);
+    __publicField(this, "_flagRadius", false);
+    __publicField(this, "_width", 0);
+    __publicField(this, "_height", 0);
+    __publicField(this, "_radius", 12);
+    this._renderer.type = "rounded-rectangle";
+    for (let prop in proto18) {
+      Object.defineProperty(this, prop, proto18[prop]);
+    }
+    this.closed = true;
+    this.automatic = false;
+    this._renderer.flagRadius = FlagRadius.bind(this);
+    if (typeof width === "number") {
+      this.width = width;
+    }
+    if (typeof height === "number") {
+      this.height = height;
+    }
+    if (typeof radius === "number") {
+      this.radius = radius;
+    }
+    this._update();
+    if (typeof x === "number") {
+      this.translation.x = x;
+    }
+    if (typeof y === "number") {
+      this.translation.y = y;
+    }
+  }
+  static fromObject(obj) {
+    const rectangle = new _RoundedRectangle().copy(obj);
+    if ("id" in obj) {
+      rectangle.id = obj.id;
+    }
+    return rectangle;
+  }
+  copy(roundedRectangle) {
+    super.copy.call(this, roundedRectangle);
+    for (let i = 0; i < _RoundedRectangle.Properties.length; i++) {
+      const k = _RoundedRectangle.Properties[i];
+      if (k in roundedRectangle) {
+        const value = roundedRectangle[k];
+        if (/radius/i.test(k)) {
+          this[k] = typeof value === "number" || value instanceof Vector ? value : new Vector().copy(value);
+        } else if (typeof value === "number") {
+          this[k] = value;
+        }
+      }
+    }
+    return this;
+  }
+  _update() {
+    if (this._flagVertices || this._flagWidth || this._flagHeight || this._flagRadius) {
+      const width = this._width;
+      const height = this._height;
+      let rx, ry;
+      if (this._radius instanceof Vector) {
+        rx = this._radius.x;
+        ry = this._radius.y;
+      } else {
+        rx = this._radius;
+        ry = this._radius;
+      }
+      let v;
+      let w = width / 2;
+      let h = height / 2;
+      v = this.vertices[0];
+      v.x = -(w - rx);
+      v.y = -h;
+      v = this.vertices[1];
+      v.x = w - rx;
+      v.y = -h;
+      v.controls.left.clear();
+      v.controls.right.x = rx;
+      v.controls.right.y = 0;
+      v = this.vertices[2];
+      v.x = w;
+      v.y = -(h - ry);
+      v.controls.right.clear();
+      v.controls.left.clear();
+      v = this.vertices[3];
+      v.x = w;
+      v.y = h - ry;
+      v.controls.left.clear();
+      v.controls.right.x = 0;
+      v.controls.right.y = ry;
+      v = this.vertices[4];
+      v.x = w - rx;
+      v.y = h;
+      v.controls.right.clear();
+      v.controls.left.clear();
+      v = this.vertices[5];
+      v.x = -(w - rx);
+      v.y = h;
+      v.controls.left.clear();
+      v.controls.right.x = -rx;
+      v.controls.right.y = 0;
+      v = this.vertices[6];
+      v.x = -w;
+      v.y = h - ry;
+      v.controls.left.clear();
+      v.controls.right.clear();
+      v = this.vertices[7];
+      v.x = -w;
+      v.y = -(h - ry);
+      v.controls.left.clear();
+      v.controls.right.x = 0;
+      v.controls.right.y = -ry;
+      v = this.vertices[8];
+      v.x = -(w - rx);
+      v.y = -h;
+      v.controls.left.clear();
+      v.controls.right.clear();
+      v = this.vertices[9];
+      v.copy(this.vertices[8]);
+    }
+    super._update.call(this);
+    return this;
+  }
+  flagReset() {
+    this._flagWidth = this._flagHeight = this._flagRadius = false;
+    super.flagReset.call(this);
+    return this;
+  }
+  clone(parent) {
+    const width = this.width;
+    const height = this.height;
+    const radius = this.radius;
+    const clone = new _RoundedRectangle(0, 0, width, height, radius);
+    clone.translation.copy(this.translation);
+    clone.rotation = this.rotation;
+    clone.scale = this.scale;
+    clone.skewX = this.skewX;
+    clone.skewY = this.skewY;
+    if (this.matrix.manual) {
+      clone.matrix.copy(this.matrix);
+    }
+    for (let i = 0; i < Path.Properties.length; i++) {
+      const k = Path.Properties[i];
+      clone[k] = this[k];
+    }
+    if (parent) {
+      parent.add(clone);
+    }
+    return clone;
+  }
+  toObject() {
+    const object = super.toObject.call(this);
+    object.renderer.type = "rounded-rectangle";
+    for (let i = 0; i < _RoundedRectangle.Properties.length; i++) {
+      const k = _RoundedRectangle.Properties[i];
+      object[k] = this[k];
+    }
+    object.radius = typeof this.radius === "number" ? this.radius : this.radius.toObject();
+    return object;
+  }
+};
+var RoundedRectangle = _RoundedRectangle;
+__publicField(RoundedRectangle, "Properties", ["width", "height", "radius"]);
+var proto18 = {
+  width: {
+    enumerable: true,
+    get: function() {
+      return this._width;
+    },
+    set: function(v) {
+      this._width = v;
+      this._flagWidth = true;
+    }
+  },
+  height: {
+    enumerable: true,
+    get: function() {
+      return this._height;
+    },
+    set: function(v) {
+      this._height = v;
+      this._flagHeight = true;
+    }
+  },
+  radius: {
+    enumerable: true,
+    get: function() {
+      return this._radius;
+    },
+    set: function(v) {
+      if (this._radius instanceof Vector) {
+        this._radius.unbind(Events.Types.change, this._renderer.flagRadius);
+      }
+      this._radius = v;
+      if (this._radius instanceof Vector) {
+        this._radius.bind(Events.Types.change, this._renderer.flagRadius);
+      }
+      this._flagRadius = true;
+    }
+  }
+};
+function FlagRadius() {
+  this._flagRadius = true;
+}
+
+// src/shapes/star.js
+var cos5 = Math.cos;
+var sin5 = Math.sin;
+var _Star = class extends Path {
+  constructor(x, y, innerRadius, outerRadius, sides) {
+    if (arguments.length <= 3) {
+      outerRadius = innerRadius;
+      innerRadius = outerRadius / 2;
+    }
+    if (typeof sides !== "number" || sides <= 0) {
+      sides = 5;
+    }
+    super();
+    __publicField(this, "_flagInnerRadius", false);
+    __publicField(this, "_flagOuterRadius", false);
+    __publicField(this, "_flagSides", false);
+    __publicField(this, "_innerRadius", 0);
+    __publicField(this, "_outerRadius", 0);
+    __publicField(this, "_sides", 0);
+    this._renderer.type = "star";
+    for (let prop in proto19) {
+      Object.defineProperty(this, prop, proto19[prop]);
+    }
+    this.closed = true;
+    this.automatic = false;
+    if (typeof innerRadius === "number") {
+      this.innerRadius = innerRadius;
+    }
+    if (typeof outerRadius === "number") {
+      this.outerRadius = outerRadius;
+    }
+    if (typeof sides === "number") {
+      this.sides = sides;
+    }
+    this._update();
+    if (typeof x === "number") {
+      this.translation.x = x;
+    }
+    if (typeof y === "number") {
+      this.translation.y = y;
+    }
+  }
+  static fromObject(obj) {
+    const star = new _Star().copy(obj);
+    if ("id" in obj) {
+      star.id = obj.id;
+    }
+    return star;
+  }
+  copy(star) {
+    super.copy.call(this, star);
+    for (let i = 0; i < _Star.Properties.length; i++) {
+      const k = _Star.Properties[i];
+      if (k in star && typeof star[k] === "number") {
+        this[k] = star[k];
+      }
+    }
+    return this;
+  }
+  _update() {
+    if (this._flagVertices || this._flagInnerRadius || this._flagOuterRadius || this._flagSides) {
+      const sides = this._sides * 2;
+      const amount = sides + 1;
+      let length = this.vertices.length;
+      if (length > sides) {
+        this.vertices.splice(sides - 1, length - sides);
+        length = sides;
+      }
+      for (let i = 0; i < amount; i++) {
+        const pct = (i + 0.5) / sides;
+        const theta = TWO_PI * pct;
+        const r = (!(i % 2) ? this._innerRadius : this._outerRadius) / 2;
+        const x = r * cos5(theta);
+        const y = r * sin5(theta);
+        if (i >= length) {
+          this.vertices.push(new Anchor(x, y));
+        } else {
+          this.vertices[i].set(x, y);
+        }
+        this.vertices[i].command = i === 0 ? Commands.move : Commands.line;
+      }
+    }
+    super._update.call(this);
+    return this;
+  }
+  flagReset() {
+    this._flagInnerRadius = this._flagOuterRadius = this._flagSides = false;
+    super.flagReset.call(this);
+    return this;
+  }
+  clone(parent) {
+    const ir = this.innerRadius;
+    const or = this.outerRadius;
+    const sides = this.sides;
+    const clone = new _Star(0, 0, ir, or, sides);
+    clone.translation.copy(this.translation);
+    clone.rotation = this.rotation;
+    clone.scale = this.scale;
+    clone.skewX = this.skewX;
+    clone.skewY = this.skewY;
+    if (this.matrix.manual) {
+      clone.matrix.copy(this.matrix);
+    }
+    for (let i = 0; i < Path.Properties.length; i++) {
+      const k = Path.Properties[i];
+      clone[k] = this[k];
+    }
+    if (parent) {
+      parent.add(clone);
+    }
+    return clone;
+  }
+  toObject() {
+    const object = super.toObject.call(this);
+    object.renderer.type = "star";
+    for (let i = 0; i < _Star.Properties.length; i++) {
+      const k = _Star.Properties[i];
+      object[k] = this[k];
+    }
+    return object;
+  }
+};
+var Star = _Star;
+__publicField(Star, "Properties", ["innerRadius", "outerRadius", "sides"]);
+var proto19 = {
+  innerRadius: {
+    enumerable: true,
+    get: function() {
+      return this._innerRadius;
+    },
+    set: function(v) {
+      this._innerRadius = v;
+      this._flagInnerRadius = true;
+    }
+  },
+  outerRadius: {
+    enumerable: true,
+    get: function() {
+      return this._outerRadius;
+    },
+    set: function(v) {
+      this._outerRadius = v;
+      this._flagOuterRadius = true;
+    }
+  },
+  sides: {
+    enumerable: true,
+    get: function() {
+      return this._sides;
+    },
+    set: function(v) {
+      this._sides = v;
+      this._flagSides = true;
+    }
+  }
+};
+
+// src/text.js
+var canvas;
+var min2 = Math.min;
+var max2 = Math.max;
+if (root.document) {
+  canvas = document.createElement("canvas");
+}
+var _Text = class extends Shape {
+  constructor(message, x, y, styles) {
+    super();
+    __publicField(this, "_flagValue", true);
+    __publicField(this, "_flagFamily", true);
+    __publicField(this, "_flagSize", true);
+    __publicField(this, "_flagLeading", true);
+    __publicField(this, "_flagAlignment", true);
+    __publicField(this, "_flagBaseline", true);
+    __publicField(this, "_flagStyle", true);
+    __publicField(this, "_flagWeight", true);
+    __publicField(this, "_flagDecoration", true);
+    __publicField(this, "_flagFill", true);
+    __publicField(this, "_flagStroke", true);
+    __publicField(this, "_flagLinewidth", true);
+    __publicField(this, "_flagOpacity", true);
+    __publicField(this, "_flagVisible", true);
+    __publicField(this, "_flagMask", false);
+    __publicField(this, "_flagClip", false);
+    __publicField(this, "_flagDirection", true);
+    __publicField(this, "_value", "");
+    __publicField(this, "_family", "sans-serif");
+    __publicField(this, "_size", 13);
+    __publicField(this, "_leading", 17);
+    __publicField(this, "_alignment", "center");
+    __publicField(this, "_baseline", "middle");
+    __publicField(this, "_style", "normal");
+    __publicField(this, "_weight", 500);
+    __publicField(this, "_decoration", "none");
+    __publicField(this, "_direction", "ltr");
+    __publicField(this, "_fill", "#000");
+    __publicField(this, "_stroke", "none");
+    __publicField(this, "_linewidth", 1);
+    __publicField(this, "_opacity", 1);
+    __publicField(this, "_visible", true);
+    __publicField(this, "_mask", null);
+    __publicField(this, "_clip", false);
+    __publicField(this, "_dashes", null);
+    for (let prop in proto20) {
+      Object.defineProperty(this, prop, proto20[prop]);
+    }
+    this._renderer.type = "text";
+    this._renderer.flagFill = FlagFill2.bind(this);
+    this._renderer.flagStroke = FlagStroke2.bind(this);
+    this.value = message;
+    if (typeof x === "number") {
+      this.translation.x = x;
+    }
+    if (typeof y === "number") {
+      this.translation.y = y;
+    }
+    this.dashes = [];
+    this.dashes.offset = 0;
+    if (!_.isObject(styles)) {
+      return this;
+    }
+    for (let i = 0; i < _Text.Properties.length; i++) {
+      const property = _Text.Properties[i];
+      if (property in styles) {
+        this[property] = styles[property];
+      }
+    }
+  }
+  static Measure(text) {
+    if (canvas) {
+      const ctx = canvas.getContext("2d");
+      ctx.font = [
+        text._style,
+        text._weight,
+        `${text._size}px/${text._leading}px`,
+        text._family
+      ].join(" ");
+      const metrics = ctx.measureText(text.value, 0, 0);
+      const height = metrics.actualBoundingBoxDescent + metrics.actualBoundingBoxAscent;
+      return {
+        width: metrics.width,
+        height
+      };
+    } else {
+      const width = this.value.length * this.size * _Text.Ratio;
+      const height = this.leading;
+      console.warn(
+        "Two.Text: unable to accurately measure text, so using an approximation."
+      );
+      return {
+        width,
+        height
+      };
+    }
+  }
+  static fromObject(obj) {
+    const fill = typeof obj.fill === "string" ? obj.fill : getEffectFromObject(obj.fill);
+    const stroke = typeof obj.stroke === "string" ? obj.stroke : getEffectFromObject(obj.stroke);
+    const text = new _Text().copy(__spreadProps(__spreadValues({}, obj), { fill, stroke }));
+    if ("id" in obj) {
+      text.id = obj.id;
+    }
+    return text;
+  }
+  copy(text) {
+    super.copy.call(this, text);
+    for (let i = 0; i < _Text.Properties.length; i++) {
+      const k = _Text.Properties[i];
+      if (k in text) {
+        this[k] = text[k];
+      }
+    }
+    return this;
+  }
+  clone(parent) {
+    const clone = new _Text(this.value);
+    clone.translation.copy(this.translation);
+    clone.rotation = this.rotation;
+    clone.scale = this.scale;
+    for (let i = 0; i < _Text.Properties.length; i++) {
+      const prop = _Text.Properties[i];
+      clone[prop] = this[prop];
+    }
+    if (this.matrix.manual) {
+      clone.matrix.copy(this.matrix);
+    }
+    if (parent) {
+      parent.add(clone);
+    }
+    return clone._update();
+  }
+  toObject() {
+    const result = super.toObject.call(this);
+    result.renderer.type = "text";
+    for (let i = 0; i < _Text.Properties.length; i++) {
+      const prop = _Text.Properties[i];
+      result[prop] = this[prop];
+    }
+    return result;
+  }
+  noFill() {
+    this.fill = "none";
+    return this;
+  }
+  noStroke() {
+    this.stroke = "none";
+    this.linewidth = 0;
+    return this;
+  }
+  getBoundingClientRect(shallow) {
+    let matrix;
+    let left, right, top, bottom;
+    this._update(true);
+    matrix = shallow ? this.matrix : this.worldMatrix;
+    const { width, height } = _Text.Measure(this);
+    const border = (this._linewidth || 0) / 2;
+    switch (this.alignment) {
+      case "left":
+        left = -border;
+        right = width + border;
+        break;
+      case "right":
+        left = -(width + border);
+        right = border;
+        break;
+      default:
+        left = -(width / 2 + border);
+        right = width / 2 + border;
+    }
+    switch (this.baseline) {
+      case "middle":
+        top = -(height / 2 + border);
+        bottom = height / 2 + border;
+        break;
+      default:
+        top = -(height + border);
+        bottom = border;
+    }
+    const [ax, ay] = matrix.multiply(left, top);
+    const [bx, by] = matrix.multiply(left, bottom);
+    const [cx, cy] = matrix.multiply(right, top);
+    const [dx, dy] = matrix.multiply(right, bottom);
+    top = min2(ay, by, cy, dy);
+    left = min2(ax, bx, cx, dx);
+    right = max2(ax, bx, cx, dx);
+    bottom = max2(ay, by, cy, dy);
+    return {
+      top,
+      left,
+      right,
+      bottom,
+      width: right - left,
+      height: bottom - top
+    };
+  }
+  flagReset() {
+    super.flagReset.call(this);
+    this._flagValue = this._flagFamily = this._flagSize = this._flagLeading = this._flagAlignment = this._flagFill = this._flagStroke = this._flagLinewidth = this._flagOpacity = this._flagVisible = this._flagClip = this._flagDecoration = this._flagClassName = this._flagBaseline = this._flagWeight = this._flagStyle = this._flagDirection = false;
+    return this;
+  }
+};
+var Text = _Text;
+__publicField(Text, "Ratio", 0.6);
+__publicField(Text, "Properties", [
+  "value",
+  "family",
+  "size",
+  "leading",
+  "alignment",
+  "linewidth",
+  "style",
+  "weight",
+  "decoration",
+  "direction",
+  "baseline",
+  "opacity",
+  "visible",
+  "fill",
+  "stroke",
+  "dashes"
+]);
+var proto20 = {
+  value: {
+    enumerable: true,
+    get: function() {
+      return this._value;
+    },
+    set: function(v) {
+      this._value = v;
+      this._flagValue = true;
+    }
+  },
+  family: {
+    enumerable: true,
+    get: function() {
+      return this._family;
+    },
+    set: function(v) {
+      this._family = v;
+      this._flagFamily = true;
+    }
+  },
+  size: {
+    enumerable: true,
+    get: function() {
+      return this._size;
+    },
+    set: function(v) {
+      this._size = v;
+      this._flagSize = true;
+    }
+  },
+  leading: {
+    enumerable: true,
+    get: function() {
+      return this._leading;
+    },
+    set: function(v) {
+      this._leading = v;
+      this._flagLeading = true;
+    }
+  },
+  alignment: {
+    enumerable: true,
+    get: function() {
+      return this._alignment;
+    },
+    set: function(v) {
+      this._alignment = v;
+      this._flagAlignment = true;
+    }
+  },
+  linewidth: {
+    enumerable: true,
+    get: function() {
+      return this._linewidth;
+    },
+    set: function(v) {
+      this._linewidth = v;
+      this._flagLinewidth = true;
+    }
+  },
+  style: {
+    enumerable: true,
+    get: function() {
+      return this._style;
+    },
+    set: function(v) {
+      this._style = v;
+      this._flagStyle = true;
+    }
+  },
+  weight: {
+    enumerable: true,
+    get: function() {
+      return this._weight;
+    },
+    set: function(v) {
+      this._weight = v;
+      this._flagWeight = true;
+    }
+  },
+  decoration: {
+    enumerable: true,
+    get: function() {
+      return this._decoration;
+    },
+    set: function(v) {
+      this._decoration = v;
+      this._flagDecoration = true;
+    }
+  },
+  direction: {
+    enumerable: true,
+    get: function() {
+      return this._direction;
+    },
+    set: function(v) {
+      this._direction = v;
+      this._flagDirection = true;
+    }
+  },
+  baseline: {
+    enumerable: true,
+    get: function() {
+      return this._baseline;
+    },
+    set: function(v) {
+      this._baseline = v;
+      this._flagBaseline = true;
+    }
+  },
+  opacity: {
+    enumerable: true,
+    get: function() {
+      return this._opacity;
+    },
+    set: function(v) {
+      this._opacity = v;
+      this._flagOpacity = true;
+    }
+  },
+  visible: {
+    enumerable: true,
+    get: function() {
+      return this._visible;
+    },
+    set: function(v) {
+      this._visible = v;
+      this._flagVisible = true;
+    }
+  },
+  fill: {
+    enumerable: true,
+    get: function() {
+      return this._fill;
+    },
+    set: function(f) {
+      if (this._fill instanceof Gradient || this._fill instanceof LinearGradient || this._fill instanceof RadialGradient || this._fill instanceof Texture) {
+        this._fill.unbind(Events.Types.change, this._renderer.flagFill);
+      }
+      this._fill = f;
+      this._flagFill = true;
+      if (this._fill instanceof Gradient || this._fill instanceof LinearGradient || this._fill instanceof RadialGradient || this._fill instanceof Texture) {
+        this._fill.bind(Events.Types.change, this._renderer.flagFill);
+      }
+    }
+  },
+  stroke: {
+    enumerable: true,
+    get: function() {
+      return this._stroke;
+    },
+    set: function(f) {
+      if (this._stroke instanceof Gradient || this._stroke instanceof LinearGradient || this._stroke instanceof RadialGradient || this._stroke instanceof Texture) {
+        this._stroke.unbind(Events.Types.change, this._renderer.flagStroke);
+      }
+      this._stroke = f;
+      this._flagStroke = true;
+      if (this._stroke instanceof Gradient || this._stroke instanceof LinearGradient || this._stroke instanceof RadialGradient || this._stroke instanceof Texture) {
+        this._stroke.bind(Events.Types.change, this._renderer.flagStroke);
+      }
+    }
+  },
+  mask: {
+    enumerable: true,
+    get: function() {
+      return this._mask;
+    },
+    set: function(v) {
+      this._mask = v;
+      this._flagMask = true;
+      if (_.isObject(v) && !v.clip) {
+        v.clip = true;
+      }
+    }
+  },
+  clip: {
+    enumerable: true,
+    get: function() {
+      return this._clip;
+    },
+    set: function(v) {
+      this._clip = v;
+      this._flagClip = true;
+    }
+  },
+  dashes: {
+    enumerable: true,
+    get: function() {
+      return this._dashes;
+    },
+    set: function(v) {
+      if (typeof v.offset !== "number") {
+        v.offset = this.dashes && this._dashes.offset || 0;
+      }
+      this._dashes = v;
+    }
+  }
+};
+function FlagFill2() {
+  this._flagFill = true;
+}
+function FlagStroke2() {
+  this._flagStroke = true;
+}
 
 // src/group.js
-var min = Math.min;
-var max = Math.max;
+var min3 = Math.min;
+var max3 = Math.max;
 var _Group = class extends Shape {
   constructor(children) {
     super();
@@ -1735,8 +5943,8 @@ var _Group = class extends Shape {
     __publicField(this, "_ending", 1);
     __publicField(this, "_length", 0);
     __publicField(this, "_mask", null);
-    for (let prop in proto5) {
-      Object.defineProperty(this, prop, proto5[prop]);
+    for (let prop in proto21) {
+      Object.defineProperty(this, prop, proto21[prop]);
     }
     this._renderer.type = "group";
     this.additions = [];
@@ -1755,6 +5963,65 @@ var _Group = class extends Shape {
   }
   static OrderChildren(children) {
     this._flagOrder = true;
+  }
+  static fromObject(obj) {
+    const group = new _Group();
+    for (let i = 0; i < _Group.Properties.length; i++) {
+      const k = _Group.Properties[i];
+      if (k in obj) {
+        if (/(fill|stroke)/i.test(k)) {
+          group[k] = typeof obj[k] === "string" ? obj[k] : getEffectFromObject(obj[k]);
+        } else {
+          group[k] = obj[k];
+        }
+      }
+    }
+    if ("mask" in obj) {
+      group.mask = getShapeFromObject(obj.mask);
+    }
+    if ("id" in obj) {
+      group.id = obj.id;
+    }
+    group.children = obj.children.map(getShapeFromObject);
+    return group;
+    function getShapeFromObject(child) {
+      if (child && child.renderer) {
+        switch (child.renderer.type) {
+          case "arc-segment":
+            return ArcSegment.fromObject(child);
+          case "circle":
+            return Circle.fromObject(child);
+          case "ellipse":
+            return Ellipse.fromObject(child);
+          case "points":
+            return Points.fromObject(child);
+          case "polygon":
+            return Polygon.fromObject(child);
+          case "rectangle":
+            return Rectangle.fromObject(child);
+          case "rounded-rectangle":
+            return RoundedRectangle.fromObject(child);
+          case "star":
+            return Star.fromObject(child);
+          case "path":
+            return Path.fromObject(child);
+          case "text":
+            return Text.fromObject(child);
+          case "group":
+            return _Group.fromObject(child);
+          case "shape":
+            return Shape.fromObject(child);
+          case "element":
+            return Element.fromObject(child);
+        }
+      }
+      return child;
+    }
+  }
+  copy(group) {
+    super.copy.call(this, group);
+    console.warn("Two.Group.copy is not supported yet.");
+    return this;
   }
   clone(parent) {
     const clone = new _Group();
@@ -1779,21 +6046,19 @@ var _Group = class extends Shape {
     return clone._update();
   }
   toObject() {
-    const result = {
-      children: [],
-      translation: this.translation.toObject(),
-      rotation: this.rotation,
-      scale: this.scale instanceof Vector ? this.scale.toObject() : this.scale,
-      opacity: this.opacity,
-      className: this.className,
-      mask: this.mask ? this.mask.toObject() : null
-    };
-    if (this.matrix.manual) {
-      result.matrix = this.matrix.toObject();
-    }
-    _.each(this.children, function(child, i) {
-      result.children[i] = child.toObject();
-    }, this);
+    const result = super.toObject.call(this);
+    result.renderer.type = "group";
+    result.children = [];
+    result.opacity = this.opacity;
+    result.className = this.className;
+    result.mask = this.mask ? this.mask.toObject() : null;
+    _.each(
+      this.children,
+      (child, i) => {
+        result.children[i] = child.toObject();
+      },
+      this
+    );
     return result;
   }
   corner() {
@@ -1941,15 +6206,15 @@ var _Group = class extends Shape {
         const [bx, by] = matrix.multiply(rect.right, rect.top);
         const [cx, cy] = matrix.multiply(rect.left, rect.bottom);
         const [dx, dy] = matrix.multiply(rect.right, rect.bottom);
-        top = min(ay, by, cy, dy);
-        left = min(ax, bx, cx, dx);
-        right = max(ax, bx, cx, dx);
-        bottom = max(ay, by, cy, dy);
+        top = min3(ay, by, cy, dy);
+        left = min3(ax, bx, cx, dx);
+        right = max3(ax, bx, cx, dx);
+        bottom = max3(ay, by, cy, dy);
       } else {
-        top = min(rect.top, top);
-        left = min(rect.left, left);
-        right = max(rect.right, right);
-        bottom = max(rect.bottom, bottom);
+        top = min3(rect.top, top);
+        left = min3(rect.left, left);
+        right = max3(rect.right, right);
+        bottom = max3(rect.bottom, bottom);
       }
     }
     return {
@@ -2040,7 +6305,7 @@ __publicField(Group, "Properties", [
   "curved",
   "automatic"
 ]);
-var proto5 = {
+var proto21 = {
   visible: {
     enumerable: true,
     get: function() {
@@ -2306,3166 +6571,20 @@ function replaceParent(child, newParent) {
   }
 }
 
-// src/renderers/canvas.js
-var emptyArray = [];
-var max2 = Math.max;
-var min2 = Math.min;
-var abs = Math.abs;
-var sin2 = Math.sin;
-var cos2 = Math.cos;
-var acos = Math.acos;
-var sqrt = Math.sqrt;
-var canvas = {
-  isHidden: /(undefined|none|transparent)/i,
-  alignments: {
-    left: "start",
-    middle: "center",
-    right: "end"
-  },
-  baselines: {
-    top: "top",
-    middle: "middle",
-    bottom: "bottom",
-    baseline: "alphabetic"
-  },
-  shim: function(elem, name) {
-    elem.tagName = elem.nodeName = name || "canvas";
-    elem.nodeType = 1;
-    elem.getAttribute = function(prop) {
-      return this[prop];
-    };
-    elem.setAttribute = function(prop, val) {
-      this[prop] = val;
-      return this;
-    };
-    return elem;
-  },
-  group: {
-    renderChild: function(child) {
-      canvas[child._renderer.type].render.call(
-        child,
-        this.ctx,
-        true,
-        this.clip
-      );
-    },
-    render: function(ctx) {
-      if (!this._visible) {
-        return this;
-      }
-      this._update();
-      const matrix = this._matrix.elements;
-      const parent = this.parent;
-      this._renderer.opacity = this._opacity * (parent && parent._renderer ? parent._renderer.opacity : 1);
-      const mask = this._mask;
-      const defaultMatrix = isDefaultMatrix(matrix);
-      const shouldIsolate = !defaultMatrix || !!mask;
-      if (!this._renderer.context) {
-        this._renderer.context = {};
-      }
-      this._renderer.context.ctx = ctx;
-      if (shouldIsolate) {
-        ctx.save();
-        if (!defaultMatrix) {
-          ctx.transform(
-            matrix[0],
-            matrix[3],
-            matrix[1],
-            matrix[4],
-            matrix[2],
-            matrix[5]
-          );
-        }
-      }
-      if (mask) {
-        canvas[mask._renderer.type].render.call(mask, ctx, true);
-      }
-      if (this._opacity > 0 && this._scale !== 0) {
-        for (let i = 0; i < this.children.length; i++) {
-          const child = this.children[i];
-          canvas[child._renderer.type].render.call(child, ctx);
-        }
-      }
-      if (shouldIsolate) {
-        ctx.restore();
-      }
-      return this.flagReset();
-    }
-  },
-  path: {
-    render: function(ctx, forced, parentClipped) {
-      let matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter, closed2, commands, length, last, prev, a, b, c, d, ux, uy, vx, vy, ar, bl, br, cl, x, y, mask, clip, defaultMatrix, isOffset, dashes, po;
-      po = this.parent && this.parent._renderer ? this.parent._renderer.opacity : 1;
-      mask = this._mask;
-      clip = this._clip;
-      opacity = this._opacity * (po || 1);
-      visible = this._visible;
-      if (!forced && (!visible || clip || opacity === 0)) {
-        return this;
-      }
-      this._update();
-      matrix = this._matrix.elements;
-      stroke = this._stroke;
-      linewidth = this._linewidth;
-      fill = this._fill;
-      cap = this._cap;
-      join = this._join;
-      miter = this._miter;
-      closed2 = this._closed;
-      commands = this._renderer.vertices;
-      length = commands.length;
-      last = length - 1;
-      defaultMatrix = isDefaultMatrix(matrix);
-      dashes = this.dashes;
-      if (!defaultMatrix) {
-        ctx.save();
-        ctx.transform(
-          matrix[0],
-          matrix[3],
-          matrix[1],
-          matrix[4],
-          matrix[2],
-          matrix[5]
-        );
-      }
-      if (mask) {
-        canvas[mask._renderer.type].render.call(mask, ctx, true);
-      }
-      if (fill) {
-        if (typeof fill === "string") {
-          ctx.fillStyle = fill;
-        } else {
-          canvas[fill._renderer.type].render.call(fill, ctx, this);
-          ctx.fillStyle = fill._renderer.effect;
-        }
-      }
-      if (stroke) {
-        if (typeof stroke === "string") {
-          ctx.strokeStyle = stroke;
-        } else {
-          canvas[stroke._renderer.type].render.call(stroke, ctx, this);
-          ctx.strokeStyle = stroke._renderer.effect;
-        }
-        if (linewidth) {
-          ctx.lineWidth = linewidth;
-        }
-        if (miter) {
-          ctx.miterLimit = miter;
-        }
-        if (join) {
-          ctx.lineJoin = join;
-        }
-        if (!closed2 && cap) {
-          ctx.lineCap = cap;
-        }
-      }
-      if (typeof opacity === "number") {
-        ctx.globalAlpha = opacity;
-      }
-      if (dashes && dashes.length > 0) {
-        ctx.lineDashOffset = dashes.offset || 0;
-        ctx.setLineDash(dashes);
-      }
-      ctx.beginPath();
-      let rx, ry, xAxisRotation, largeArcFlag, sweepFlag, ax, ay;
-      for (let i = 0; i < length; i++) {
-        b = commands[i];
-        x = b.x;
-        y = b.y;
-        switch (b.command) {
-          case Commands.close:
-            ctx.closePath();
-            break;
-          case Commands.arc:
-            rx = b.rx;
-            ry = b.ry;
-            xAxisRotation = b.xAxisRotation;
-            largeArcFlag = b.largeArcFlag;
-            sweepFlag = b.sweepFlag;
-            prev = closed2 ? mod(i - 1, length) : max2(i - 1, 0);
-            a = commands[prev];
-            ax = a.x;
-            ay = a.y;
-            canvas.renderSvgArcCommand(
-              ctx,
-              ax,
-              ay,
-              rx,
-              ry,
-              largeArcFlag,
-              sweepFlag,
-              xAxisRotation,
-              x,
-              y
-            );
-            break;
-          case Commands.curve:
-            prev = closed2 ? mod(i - 1, length) : Math.max(i - 1, 0);
-            a = commands[prev];
-            ar = a.controls && a.controls.right || Vector.zero;
-            bl = b.controls && b.controls.left || Vector.zero;
-            if (a._relative) {
-              vx = ar.x + a.x;
-              vy = ar.y + a.y;
-            } else {
-              vx = ar.x;
-              vy = ar.y;
-            }
-            if (b._relative) {
-              ux = bl.x + b.x;
-              uy = bl.y + b.y;
-            } else {
-              ux = bl.x;
-              uy = bl.y;
-            }
-            ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
-            if (i >= last && closed2) {
-              c = d;
-              br = b.controls && b.controls.right || Vector.zero;
-              cl = c.controls && c.controls.left || Vector.zero;
-              if (b._relative) {
-                vx = br.x + b.x;
-                vy = br.y + b.y;
-              } else {
-                vx = br.x;
-                vy = br.y;
-              }
-              if (c._relative) {
-                ux = cl.x + c.x;
-                uy = cl.y + c.y;
-              } else {
-                ux = cl.x;
-                uy = cl.y;
-              }
-              x = c.x;
-              y = c.y;
-              ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
-            }
-            break;
-          case Commands.line:
-            ctx.lineTo(x, y);
-            break;
-          case Commands.move:
-            d = b;
-            ctx.moveTo(x, y);
-            break;
-        }
-      }
-      if (closed2) {
-        ctx.closePath();
-      }
-      if (!clip && !parentClipped) {
-        if (!canvas.isHidden.test(fill)) {
-          isOffset = fill._renderer && fill._renderer.offset;
-          if (isOffset) {
-            ctx.save();
-            ctx.translate(-fill._renderer.offset.x, -fill._renderer.offset.y);
-            ctx.scale(fill._renderer.scale.x, fill._renderer.scale.y);
-          }
-          ctx.fill();
-          if (isOffset) {
-            ctx.restore();
-          }
-        }
-        if (!canvas.isHidden.test(stroke)) {
-          isOffset = stroke._renderer && stroke._renderer.offset;
-          if (isOffset) {
-            ctx.save();
-            ctx.translate(
-              -stroke._renderer.offset.x,
-              -stroke._renderer.offset.y
-            );
-            ctx.scale(stroke._renderer.scale.x, stroke._renderer.scale.y);
-            ctx.lineWidth = linewidth / stroke._renderer.scale.x;
-          }
-          ctx.stroke();
-          if (isOffset) {
-            ctx.restore();
-          }
-        }
-      }
-      if (!defaultMatrix) {
-        ctx.restore();
-      }
-      if (clip && !parentClipped) {
-        ctx.clip();
-      }
-      if (dashes && dashes.length > 0) {
-        ctx.setLineDash(emptyArray);
-      }
-      return this.flagReset();
-    }
-  },
-  points: {
-    render: function(ctx, forced, parentClipped) {
-      let me, stroke, linewidth, fill, opacity, visible, size, commands, length, b, x, y, defaultMatrix, isOffset, dashes, po;
-      po = this.parent && this.parent._renderer ? this.parent._renderer.opacity : 1;
-      opacity = this._opacity * (po || 1);
-      visible = this._visible;
-      if (!forced && (!visible || opacity === 0)) {
-        return this;
-      }
-      this._update();
-      me = this._matrix.elements;
-      stroke = this._stroke;
-      linewidth = this._linewidth;
-      fill = this._fill;
-      commands = this._renderer.collection;
-      length = commands.length;
-      defaultMatrix = isDefaultMatrix(me);
-      dashes = this.dashes;
-      size = this._size;
-      if (!defaultMatrix) {
-        ctx.save();
-        ctx.transform(me[0], me[3], me[1], me[4], me[2], me[5]);
-      }
-      if (fill) {
-        if (typeof fill === "string") {
-          ctx.fillStyle = fill;
-        } else {
-          canvas[fill._renderer.type].render.call(fill, ctx, this);
-          ctx.fillStyle = fill._renderer.effect;
-        }
-      }
-      if (stroke) {
-        if (typeof stroke === "string") {
-          ctx.strokeStyle = stroke;
-        } else {
-          canvas[stroke._renderer.type].render.call(stroke, ctx, this);
-          ctx.strokeStyle = stroke._renderer.effect;
-        }
-        if (linewidth) {
-          ctx.lineWidth = linewidth;
-        }
-      }
-      if (typeof opacity === "number") {
-        ctx.globalAlpha = opacity;
-      }
-      if (dashes && dashes.length > 0) {
-        ctx.lineDashOffset = dashes.offset || 0;
-        ctx.setLineDash(dashes);
-      }
-      ctx.beginPath();
-      let radius = size * 0.5, m;
-      if (!this._sizeAttenuation) {
-        m = this.worldMatrix.elements;
-        m = decomposeMatrix(m[0], m[3], m[1], m[4], m[2], m[5]);
-        radius /= Math.max(m.scaleX, m.scaleY);
-      }
-      for (let i = 0; i < length; i++) {
-        b = commands[i];
-        x = b.x;
-        y = b.y;
-        ctx.moveTo(x + radius, y);
-        ctx.arc(x, y, radius, 0, TWO_PI);
-      }
-      if (!parentClipped) {
-        if (!canvas.isHidden.test(fill)) {
-          isOffset = fill._renderer && fill._renderer.offset;
-          if (isOffset) {
-            ctx.save();
-            ctx.translate(-fill._renderer.offset.x, -fill._renderer.offset.y);
-            ctx.scale(fill._renderer.scale.x, fill._renderer.scale.y);
-          }
-          ctx.fill();
-          if (isOffset) {
-            ctx.restore();
-          }
-        }
-        if (!canvas.isHidden.test(stroke)) {
-          isOffset = stroke._renderer && stroke._renderer.offset;
-          if (isOffset) {
-            ctx.save();
-            ctx.translate(
-              -stroke._renderer.offset.x,
-              -stroke._renderer.offset.y
-            );
-            ctx.scale(stroke._renderer.scale.x, stroke._renderer.scale.y);
-            ctx.lineWidth = linewidth / stroke._renderer.scale.x;
-          }
-          ctx.stroke();
-          if (isOffset) {
-            ctx.restore();
-          }
-        }
-      }
-      if (!defaultMatrix) {
-        ctx.restore();
-      }
-      if (dashes && dashes.length > 0) {
-        ctx.setLineDash(emptyArray);
-      }
-      return this.flagReset();
-    }
-  },
-  text: {
-    render: function(ctx, forced, parentClipped) {
-      const po = this.parent && this.parent._renderer ? this.parent._renderer.opacity : 1;
-      const opacity = this._opacity * po;
-      const visible = this._visible;
-      const mask = this._mask;
-      const clip = this._clip;
-      if (!forced && (!visible || clip || opacity === 0)) {
-        return this;
-      }
-      this._update();
-      const matrix = this._matrix.elements;
-      const stroke = this._stroke;
-      const linewidth = this._linewidth;
-      const fill = this._fill;
-      const decoration = this._decoration;
-      const direction = this._direction;
-      const defaultMatrix = isDefaultMatrix(matrix);
-      const isOffset = fill._renderer && fill._renderer.offset && stroke._renderer && stroke._renderer.offset;
-      const dashes = this.dashes;
-      const alignment = canvas.alignments[this._alignment] || this._alignment;
-      const baseline = canvas.baselines[this._baseline] || this._baseline;
-      let a, b, c, d, e, sx, sy, x1, y1, x2, y2;
-      if (!defaultMatrix) {
-        ctx.save();
-        ctx.transform(
-          matrix[0],
-          matrix[3],
-          matrix[1],
-          matrix[4],
-          matrix[2],
-          matrix[5]
-        );
-      }
-      if (mask) {
-        canvas[mask._renderer.type].render.call(mask, ctx, true);
-      }
-      if (!isOffset) {
-        ctx.font = [
-          this._style,
-          this._weight,
-          this._size + "px/" + this._leading + "px",
-          this._family
-        ].join(" ");
-      }
-      ctx.textAlign = alignment;
-      ctx.textBaseline = baseline;
-      ctx.direction = direction;
-      if (fill) {
-        if (typeof fill === "string") {
-          ctx.fillStyle = fill;
-        } else {
-          canvas[fill._renderer.type].render.call(fill, ctx, this);
-          ctx.fillStyle = fill._renderer.effect;
-        }
-      }
-      if (stroke) {
-        if (typeof stroke === "string") {
-          ctx.strokeStyle = stroke;
-        } else {
-          canvas[stroke._renderer.type].render.call(stroke, ctx, this);
-          ctx.strokeStyle = stroke._renderer.effect;
-        }
-        if (linewidth) {
-          ctx.lineWidth = linewidth;
-        }
-      }
-      if (typeof opacity === "number") {
-        ctx.globalAlpha = opacity;
-      }
-      if (dashes && dashes.length > 0) {
-        ctx.lineDashOffset = dashes.offset || 0;
-        ctx.setLineDash(dashes);
-      }
-      if (!clip && !parentClipped) {
-        if (!canvas.isHidden.test(fill)) {
-          if (fill._renderer && fill._renderer.offset) {
-            sx = fill._renderer.scale.x;
-            sy = fill._renderer.scale.y;
-            ctx.save();
-            ctx.translate(-fill._renderer.offset.x, -fill._renderer.offset.y);
-            ctx.scale(sx, sy);
-            a = this._size / fill._renderer.scale.y;
-            b = this._leading / fill._renderer.scale.y;
-            ctx.font = [
-              this._style,
-              this._weight,
-              a + "px/",
-              b + "px",
-              this._family
-            ].join(" ");
-            c = fill._renderer.offset.x / fill._renderer.scale.x;
-            d = fill._renderer.offset.y / fill._renderer.scale.y;
-            ctx.fillText(this.value, c, d);
-            ctx.restore();
-          } else {
-            ctx.fillText(this.value, 0, 0);
-          }
-        }
-        if (!canvas.isHidden.test(stroke)) {
-          if (stroke._renderer && stroke._renderer.offset) {
-            sx = stroke._renderer.scale.x;
-            sy = stroke._renderer.scale.y;
-            ctx.save();
-            ctx.translate(
-              -stroke._renderer.offset.x,
-              -stroke._renderer.offset.y
-            );
-            ctx.scale(sx, sy);
-            a = this._size / stroke._renderer.scale.y;
-            b = this._leading / stroke._renderer.scale.y;
-            ctx.font = [
-              this._style,
-              this._weight,
-              a + "px/",
-              b + "px",
-              this._family
-            ].join(" ");
-            c = stroke._renderer.offset.x / stroke._renderer.scale.x;
-            d = stroke._renderer.offset.y / stroke._renderer.scale.y;
-            e = linewidth / stroke._renderer.scale.x;
-            ctx.lineWidth = e;
-            ctx.strokeText(this.value, c, d);
-            ctx.restore();
-          } else {
-            ctx.strokeText(this.value, 0, 0);
-          }
-        }
-      }
-      if (/(underline|strikethrough)/i.test(decoration)) {
-        const metrics = ctx.measureText(this.value);
-        let scalar = 1;
-        switch (decoration) {
-          case "underline":
-            y1 = metrics.actualBoundingBoxDescent;
-            y2 = metrics.actualBoundingBoxDescent;
-            break;
-          case "strikethrough":
-            y1 = 0;
-            y2 = 0;
-            scalar = 0.5;
-            break;
-        }
-        switch (baseline) {
-          case "top":
-            y1 += this._size * scalar;
-            y2 += this._size * scalar;
-            break;
-          case "baseline":
-          case "bottom":
-            y1 -= this._size * scalar;
-            y2 -= this._size * scalar;
-            break;
-        }
-        switch (alignment) {
-          case "left":
-          case "start":
-            x1 = 0;
-            x2 = metrics.width;
-            break;
-          case "right":
-          case "end":
-            x1 = -metrics.width;
-            x2 = 0;
-            break;
-          default:
-            x1 = -metrics.width / 2;
-            x2 = metrics.width / 2;
-        }
-        ctx.lineWidth = Math.max(Math.floor(this._size / 15), 1);
-        ctx.strokeStyle = ctx.fillStyle;
-        ctx.beginPath();
-        ctx.moveTo(x1, y1);
-        ctx.lineTo(x2, y2);
-        ctx.stroke();
-      }
-      if (!defaultMatrix) {
-        ctx.restore();
-      }
-      if (clip && !parentClipped) {
-        ctx.clip();
-      }
-      if (dashes && dashes.length > 0) {
-        ctx.setLineDash(emptyArray);
-      }
-      return this.flagReset();
-    }
-  },
-  "linear-gradient": {
-    render: function(ctx, parent) {
-      if (!parent) {
-        return;
-      }
-      this._update();
-      if (!this._renderer.effect || this._flagEndPoints || this._flagStops || this._flagUnits) {
-        let rect;
-        let lx = this.left._x;
-        let ly = this.left._y;
-        let rx = this.right._x;
-        let ry = this.right._y;
-        if (/objectBoundingBox/i.test(this._units)) {
-          rect = parent.getBoundingClientRect(true);
-          lx = (lx - 0.5) * rect.width;
-          ly = (ly - 0.5) * rect.height;
-          rx = (rx - 0.5) * rect.width;
-          ry = (ry - 0.5) * rect.height;
-        }
-        this._renderer.effect = ctx.createLinearGradient(lx, ly, rx, ry);
-        for (let i = 0; i < this.stops.length; i++) {
-          const stop = this.stops[i];
-          this._renderer.effect.addColorStop(stop._offset, stop._color);
-        }
-      }
-      return this.flagReset();
-    }
-  },
-  "radial-gradient": {
-    render: function(ctx, parent) {
-      if (!parent) {
-        return;
-      }
-      this._update();
-      if (!this._renderer.effect || this._flagCenter || this._flagFocal || this._flagRadius || this._flagStops || this._flagUnits) {
-        let rect;
-        let cx = this.center._x;
-        let cy = this.center._y;
-        let fx = this.focal._x;
-        let fy = this.focal._y;
-        let radius = this._radius;
-        if (/objectBoundingBox/i.test(this._units)) {
-          rect = parent.getBoundingClientRect(true);
-          cx = (cx - 0.5) * rect.width * 0.5;
-          cy = (cy - 0.5) * rect.height * 0.5;
-          fx = (fx - 0.5) * rect.width * 0.5;
-          fy = (fy - 0.5) * rect.height * 0.5;
-          radius *= Math.min(rect.width, rect.height);
-        }
-        this._renderer.effect = ctx.createRadialGradient(
-          cx,
-          cy,
-          0,
-          fx,
-          fy,
-          radius
-        );
-        for (let i = 0; i < this.stops.length; i++) {
-          const stop = this.stops[i];
-          this._renderer.effect.addColorStop(stop._offset, stop._color);
-        }
-      }
-      return this.flagReset();
-    }
-  },
-  texture: {
-    render: function(ctx) {
-      this._update();
-      const image = this.image;
-      if (!this._renderer.effect || (this._flagLoaded || this._flagImage || this._flagVideo || this._flagRepeat) && this.loaded) {
-        this._renderer.effect = ctx.createPattern(this.image, this._repeat);
-      }
-      if (this._flagOffset || this._flagLoaded || this._flagScale) {
-        if (!(this._renderer.offset instanceof Vector)) {
-          this._renderer.offset = new Vector();
-        }
-        this._renderer.offset.x = -this._offset.x;
-        this._renderer.offset.y = -this._offset.y;
-        if (image) {
-          this._renderer.offset.x += image.width / 2;
-          this._renderer.offset.y += image.height / 2;
-          if (this._scale instanceof Vector) {
-            this._renderer.offset.x *= this._scale.x;
-            this._renderer.offset.y *= this._scale.y;
-          } else {
-            this._renderer.offset.x *= this._scale;
-            this._renderer.offset.y *= this._scale;
-          }
-        }
-      }
-      if (this._flagScale || this._flagLoaded) {
-        if (!(this._renderer.scale instanceof Vector)) {
-          this._renderer.scale = new Vector();
-        }
-        if (this._scale instanceof Vector) {
-          this._renderer.scale.copy(this._scale);
-        } else {
-          this._renderer.scale.set(this._scale, this._scale);
-        }
-      }
-      return this.flagReset();
-    }
-  },
-  renderSvgArcCommand: function(ctx, ax, ay, rx, ry, largeArcFlag, sweepFlag, xAxisRotation, x, y) {
-    xAxisRotation = xAxisRotation * Math.PI / 180;
-    rx = abs(rx);
-    ry = abs(ry);
-    const dx2 = (ax - x) / 2;
-    const dy2 = (ay - y) / 2;
-    const x1p = cos2(xAxisRotation) * dx2 + sin2(xAxisRotation) * dy2;
-    const y1p = -sin2(xAxisRotation) * dx2 + cos2(xAxisRotation) * dy2;
-    const x1ps = x1p * x1p;
-    const y1ps = y1p * y1p;
-    let rxs = rx * rx;
-    let rys = ry * ry;
-    const cr = x1ps / rxs + y1ps / rys;
-    if (cr > 1) {
-      const s = sqrt(cr);
-      rx = s * rx;
-      ry = s * ry;
-      rxs = rx * rx;
-      rys = ry * ry;
-    }
-    const dq = rxs * y1ps + rys * x1ps;
-    const pq = (rxs * rys - dq) / dq;
-    let q = sqrt(max2(0, pq));
-    if (largeArcFlag === sweepFlag)
-      q = -q;
-    const cxp = q * rx * y1p / ry;
-    const cyp = -q * ry * x1p / rx;
-    const cx = cos2(xAxisRotation) * cxp - sin2(xAxisRotation) * cyp + (ax + x) / 2;
-    const cy = sin2(xAxisRotation) * cxp + cos2(xAxisRotation) * cyp + (ay + y) / 2;
-    const startAngle = svgAngle(1, 0, (x1p - cxp) / rx, (y1p - cyp) / ry);
-    const delta = svgAngle(
-      (x1p - cxp) / rx,
-      (y1p - cyp) / ry,
-      (-x1p - cxp) / rx,
-      (-y1p - cyp) / ry
-    ) % TWO_PI;
-    const endAngle = startAngle + delta;
-    const clockwise = sweepFlag === 0;
-    renderArcEstimate(
-      ctx,
-      cx,
-      cy,
-      rx,
-      ry,
-      startAngle,
-      endAngle,
-      clockwise,
-      xAxisRotation
-    );
-  }
-};
-var Renderer = class extends Events {
-  constructor(params) {
-    super();
-    const smoothing = params.smoothing !== false;
-    this.domElement = params.domElement || document.createElement("canvas");
-    this.ctx = this.domElement.getContext("2d");
-    this.overdraw = params.overdraw || false;
-    if (typeof this.ctx.imageSmoothingEnabled !== "undefined") {
-      this.ctx.imageSmoothingEnabled = smoothing;
-    }
-    this.scene = new Group();
-    this.scene.parent = this;
-  }
-  setSize(width, height, ratio) {
-    this.width = width;
-    this.height = height;
-    this.ratio = typeof ratio === "undefined" ? getRatio(this.ctx) : ratio;
-    this.domElement.width = width * this.ratio;
-    this.domElement.height = height * this.ratio;
-    if (this.domElement.style) {
-      _.extend(this.domElement.style, {
-        width: width + "px",
-        height: height + "px"
-      });
-    }
-    return this.trigger(Events.Types.resize, width, height, ratio);
-  }
-  render() {
-    const isOne = this.ratio === 1;
-    if (!isOne) {
-      this.ctx.save();
-      this.ctx.scale(this.ratio, this.ratio);
-    }
-    if (!this.overdraw) {
-      this.ctx.clearRect(0, 0, this.width, this.height);
-    }
-    canvas.group.render.call(this.scene, this.ctx);
-    if (!isOne) {
-      this.ctx.restore();
-    }
-    return this;
-  }
-};
-__publicField(Renderer, "Utils", canvas);
-function renderArcEstimate(ctx, ox, oy, rx, ry, startAngle, endAngle, clockwise, xAxisRotation) {
-  const delta = endAngle - startAngle;
-  const epsilon = Curve.Tolerance.epsilon;
-  const samePoints = Math.abs(delta) < epsilon;
-  let deltaAngle = mod(delta, TWO_PI);
-  if (deltaAngle < epsilon) {
-    if (samePoints) {
-      deltaAngle = 0;
-    } else {
-      deltaAngle = TWO_PI;
-    }
-  }
-  if (clockwise === true && !samePoints) {
-    if (deltaAngle === TWO_PI) {
-      deltaAngle = -TWO_PI;
-    } else {
-      deltaAngle = deltaAngle - TWO_PI;
-    }
-  }
-  for (let i = 0; i < Constants.Resolution; i++) {
-    const t = i / (Constants.Resolution - 1);
-    const angle = startAngle + t * deltaAngle;
-    let x = ox + rx * Math.cos(angle);
-    let y = oy + ry * Math.sin(angle);
-    if (xAxisRotation !== 0) {
-      const cos7 = Math.cos(xAxisRotation);
-      const sin7 = Math.sin(xAxisRotation);
-      const tx = x - ox;
-      const ty = y - oy;
-      x = tx * cos7 - ty * sin7 + ox;
-      y = tx * sin7 + ty * cos7 + oy;
-    }
-    ctx.lineTo(x, y);
-  }
-}
-function svgAngle(ux, uy, vx, vy) {
-  const dot = ux * vx + uy * vy;
-  const len = sqrt(ux * ux + uy * uy) * sqrt(vx * vx + vy * vy);
-  let ang = acos(max2(-1, min2(1, dot / len)));
-  if (ux * vy - uy * vx < 0) {
-    ang = -ang;
-  }
-  return ang;
-}
-function isDefaultMatrix(m) {
-  return m[0] == 1 && m[3] == 0 && m[1] == 0 && m[4] == 1 && m[2] == 0 && m[5] == 0;
-}
-
-// src/utils/canvas-shim.js
-var CanvasShim = {
-  Image: null,
-  isHeadless: false,
-  shim: function(canvas3, Image) {
-    Renderer.Utils.shim(canvas3);
-    if (typeof Image !== "undefined") {
-      CanvasShim.Image = Image;
-    }
-    CanvasShim.isHeadless = true;
-    return canvas3;
-  }
-};
-
-// src/utils/dom.js
-var dom = {
-  hasEventListeners: typeof root.addEventListener === "function",
-  bind: function(elem, event, func, bool) {
-    if (this.hasEventListeners) {
-      elem.addEventListener(event, func, !!bool);
-    } else {
-      elem.attachEvent("on" + event, func);
-    }
-    return dom;
-  },
-  unbind: function(elem, event, func, bool) {
-    if (dom.hasEventListeners) {
-      elem.removeEventListeners(event, func, !!bool);
-    } else {
-      elem.detachEvent("on" + event, func);
-    }
-    return dom;
-  },
-  getRequestAnimationFrame: function() {
-    const vendors = ["ms", "moz", "webkit", "o"];
-    let lastTime = 0;
-    let request = root.requestAnimationFrame;
-    if (!request) {
-      for (let i = 0; i < vendors.length; i++) {
-        request = root[vendors[i] + "RequestAnimationFrame"] || request;
-      }
-      request = request || fallbackRequest;
-    }
-    function fallbackRequest(callback, element) {
-      const currTime = new Date().getTime();
-      const timeToCall = Math.max(0, 16 - (currTime - lastTime));
-      const id = root.setTimeout(nextRequest, timeToCall);
-      lastTime = currTime + timeToCall;
-      function nextRequest() {
-        callback(currTime + timeToCall);
-      }
-      return id;
-    }
-    return request;
-  }
-};
-var temp = root.document ? root.document.createElement("div") : {};
-temp.id = "help-two-load";
-Object.defineProperty(dom, "temp", {
-  enumerable: true,
-  get: function() {
-    if (_.isElement(temp) && !root.document.head.contains(temp)) {
-      temp.style.display = "none";
-      root.document.head.appendChild(temp);
-    }
-    return temp;
-  }
-});
-
-// src/utils/error.js
-var TwoError = class extends Error {
-  constructor(message) {
-    super();
-    __publicField(this, "name", "Two.js");
-    __publicField(this, "message");
-    this.message = message;
-  }
-};
-
-// src/registry.js
-var Registry = class {
-  constructor() {
-    __publicField(this, "map", {});
-  }
-  add(id, obj) {
-    this.map[id] = obj;
-    return this;
-  }
-  remove(id) {
-    delete this.map[id];
-    return this;
-  }
-  get(id) {
-    return this.map[id];
-  }
-  contains(id) {
-    return id in this.map;
-  }
-};
-
-// src/utils/shape.js
-function contains(path, t) {
-  if (t === 0 || t === 1) {
-    return true;
-  }
-  const length = path._length;
-  const target = length * t;
-  let elapsed = 0;
-  for (let i = 0; i < path._lengths.length; i++) {
-    const dist = path._lengths[i];
-    if (elapsed >= target) {
-      return target - elapsed >= 0;
-    }
-    elapsed += dist;
-  }
-  return false;
-}
-function getIdByLength(path, target) {
-  const total = path._length;
-  if (target <= 0) {
-    return 0;
-  } else if (target >= total) {
-    return path._lengths.length - 1;
-  }
-  for (let i = 0, sum = 0; i < path._lengths.length; i++) {
-    if (sum + path._lengths[i] >= target) {
-      target -= sum;
-      return Math.max(i - 1, 0) + target / path._lengths[i];
-    }
-    sum += path._lengths[i];
-  }
-  return -1;
-}
-function getCurveLength2(a, b, limit) {
-  let x1, x2, x3, x4, y1, y2, y3, y4;
-  const right = b.controls && b.controls.right;
-  const left = a.controls && a.controls.left;
-  x1 = b.x;
-  y1 = b.y;
-  x2 = (right || b).x;
-  y2 = (right || b).y;
-  x3 = (left || a).x;
-  y3 = (left || a).y;
-  x4 = a.x;
-  y4 = a.y;
-  if (right && b._relative) {
-    x2 += b.x;
-    y2 += b.y;
-  }
-  if (left && a._relative) {
-    x3 += a.x;
-    y3 += a.y;
-  }
-  return getCurveLength(x1, y1, x2, y2, x3, y3, x4, y4, limit);
-}
-function getSubdivisions(a, b, limit) {
-  let x1, x2, x3, x4, y1, y2, y3, y4;
-  const right = b.controls && b.controls.right;
-  const left = a.controls && a.controls.left;
-  x1 = b.x;
-  y1 = b.y;
-  x2 = (right || b).x;
-  y2 = (right || b).y;
-  x3 = (left || a).x;
-  y3 = (left || a).y;
-  x4 = a.x;
-  y4 = a.y;
-  if (right && b._relative) {
-    x2 += b.x;
-    y2 += b.y;
-  }
-  if (left && a._relative) {
-    x3 += a.x;
-    y3 += a.y;
-  }
-  return subdivide(x1, y1, x2, y2, x3, y3, x4, y4, limit);
-}
-
-// src/effects/stop.js
-var _Stop = class extends Element {
-  constructor(offset, color, opacity) {
-    super();
-    __publicField(this, "_flagOffset", true);
-    __publicField(this, "_flagOpacity", true);
-    __publicField(this, "_flagColor", true);
-    __publicField(this, "_offset", 0);
-    __publicField(this, "_opacity", 1);
-    __publicField(this, "_color", "#fff");
-    for (let prop in proto6) {
-      Object.defineProperty(this, prop, proto6[prop]);
-    }
-    this._renderer.type = "stop";
-    this.offset = typeof offset === "number" ? offset : _Stop.Index <= 0 ? 0 : 1;
-    this.opacity = typeof opacity === "number" ? opacity : 1;
-    this.color = typeof color === "string" ? color : _Stop.Index <= 0 ? "#fff" : "#000";
-    _Stop.Index = (_Stop.Index + 1) % 2;
-  }
-  clone(parent) {
-    const clone = new _Stop();
-    _.each(_Stop.Properties, function(property) {
-      clone[property] = this[property];
-    }, this);
-    if (parent && parent.stops) {
-      parent.stops.push(clone);
-    }
-    return clone;
-  }
-  toObject() {
-    const result = {};
-    _.each(_Stop.Properties, function(k) {
-      result[k] = this[k];
-    }, this);
-    return result;
-  }
-  flagReset() {
-    this._flagOffset = this._flagColor = this._flagOpacity = false;
-    super.flagReset.call(this);
-    return this;
-  }
-};
-var Stop = _Stop;
-__publicField(Stop, "Index", 0);
-__publicField(Stop, "Properties", ["offset", "opacity", "color"]);
-var proto6 = {
-  offset: {
-    enumerable: true,
-    get: function() {
-      return this._offset;
-    },
-    set: function(v) {
-      this._offset = v;
-      this._flagOffset = true;
-      if (this.parent) {
-        this.parent._flagStops = true;
-      }
-    }
-  },
-  opacity: {
-    enumerable: true,
-    get: function() {
-      return this._opacity;
-    },
-    set: function(v) {
-      this._opacity = v;
-      this._flagOpacity = true;
-      if (this.parent) {
-        this.parent._flagStops = true;
-      }
-    }
-  },
-  color: {
-    enumerable: true,
-    get: function() {
-      return this._color;
-    },
-    set: function(v) {
-      this._color = v;
-      this._flagColor = true;
-      if (this.parent) {
-        this.parent._flagStops = true;
-      }
-    }
-  }
-};
-
-// src/effects/gradient.js
-var _Gradient = class extends Element {
-  constructor(stops) {
-    super();
-    __publicField(this, "_flagStops", false);
-    __publicField(this, "_flagSpread", false);
-    __publicField(this, "_flagUnits", false);
-    __publicField(this, "_spread", "");
-    __publicField(this, "_units", "");
-    for (let prop in proto7) {
-      Object.defineProperty(this, prop, proto7[prop]);
-    }
-    this._renderer.type = "gradient";
-    this.id = Constants.Identifier + Constants.uniqueId();
-    this.classList = [];
-    this._renderer.flagStops = FlagStops.bind(this);
-    this._renderer.bindStops = BindStops.bind(this);
-    this._renderer.unbindStops = UnbindStops.bind(this);
-    this.spread = "pad";
-    this.units = "objectBoundingBox";
-    if (stops) {
-      this.stops = stops;
-    }
-  }
-  clone(parent) {
-    const stops = this.stops.map(function(s) {
-      return s.clone();
-    });
-    const clone = new _Gradient(stops);
-    _.each(_Gradient.Properties, function(k) {
-      clone[k] = this[k];
-    }, this);
-    if (parent) {
-      parent.add(clone);
-    }
-    return clone;
-  }
-  toObject() {
-    const result = {
-      stops: this.stops.map(function(s) {
-        return s.toObject();
-      })
-    };
-    _.each(_Gradient.Properties, function(k) {
-      result[k] = this[k];
-    }, this);
-    return result;
-  }
-  _update() {
-    if (this._flagSpread || this._flagStops) {
-      this.trigger(Events.Types.change);
-    }
-    return this;
-  }
-  flagReset() {
-    this._flagSpread = this._flagUnits = this._flagStops = false;
-    super.flagReset.call(this);
-    return this;
-  }
-};
-var Gradient = _Gradient;
-__publicField(Gradient, "Stop", Stop);
-__publicField(Gradient, "Properties", ["spread", "stops", "renderer", "units"]);
-var proto7 = {
-  spread: {
-    enumerable: true,
-    get: function() {
-      return this._spread;
-    },
-    set: function(v) {
-      this._spread = v;
-      this._flagSpread = true;
-    }
-  },
-  units: {
-    enumerable: true,
-    get: function() {
-      return this._units;
-    },
-    set: function(v) {
-      this._units = v;
-      this._flagUnits = true;
-    }
-  },
-  stops: {
-    enumerable: true,
-    get: function() {
-      return this._stops;
-    },
-    set: function(stops) {
-      const bindStops = this._renderer.bindStops;
-      const unbindStops = this._renderer.unbindStops;
-      if (this._stops) {
-        this._stops.unbind(Events.Types.insert, bindStops).unbind(Events.Types.remove, unbindStops);
-      }
-      this._stops = new Collection((stops || []).slice(0));
-      this._stops.bind(Events.Types.insert, bindStops).bind(Events.Types.remove, unbindStops);
-      bindStops(this._stops);
-    }
-  }
-};
-function FlagStops() {
-  this._flagStops = true;
-}
-function BindStops(items) {
-  let i = items.length;
-  while (i--) {
-    items[i].bind(Events.Types.change, this._renderer.flagStops);
-    items[i].parent = this;
-  }
-  this._renderer.flagStops();
-}
-function UnbindStops(items) {
-  let i = items.length;
-  while (i--) {
-    items[i].unbind(Events.Types.change, this._renderer.flagStops);
-    delete items[i].parent;
-  }
-  this._renderer.flagStops();
-}
-
-// src/effects/linear-gradient.js
-var _LinearGradient = class extends Gradient {
-  constructor(x1, y1, x2, y2, stops) {
-    super(stops);
-    __publicField(this, "_flagEndPoints", false);
-    __publicField(this, "_left", null);
-    __publicField(this, "_right", null);
-    for (let prop in proto8) {
-      Object.defineProperty(this, prop, proto8[prop]);
-    }
-    this._renderer.type = "linear-gradient";
-    this._renderer.flagEndPoints = FlagEndPoints.bind(this);
-    this.left = new Vector();
-    this.right = new Vector();
-    if (typeof x1 === "number") {
-      this.left.x = x1;
-    }
-    if (typeof y1 === "number") {
-      this.left.y = y1;
-    }
-    if (typeof x2 === "number") {
-      this.right.x = x2;
-    }
-    if (typeof y2 === "number") {
-      this.right.y = y2;
-    }
-  }
-  clone(parent) {
-    const stops = this.stops.map(function(stop) {
-      return stop.clone();
-    });
-    const clone = new _LinearGradient(
-      this.left._x,
-      this.left._y,
-      this.right._x,
-      this.right._y,
-      stops
-    );
-    _.each(Gradient.Properties, function(k) {
-      clone[k] = this[k];
-    }, this);
-    if (parent) {
-      parent.add(clone);
-    }
-    return clone;
-  }
-  toObject() {
-    const result = super.toObject.call(this);
-    result.left = this.left.toObject();
-    result.right = this.right.toObject();
-    return result;
-  }
-  _update() {
-    if (this._flagEndPoints || this._flagSpread || this._flagStops) {
-      this.trigger(Events.Types.change);
-    }
-    return this;
-  }
-  flagReset() {
-    this._flagEndPoints = false;
-    super.flagReset.call(this);
-    return this;
-  }
-};
-var LinearGradient = _LinearGradient;
-__publicField(LinearGradient, "Properties", ["left", "right"]);
-__publicField(LinearGradient, "Stop", Stop);
-var proto8 = {
-  left: {
-    enumerable: true,
-    get: function() {
-      return this._left;
-    },
-    set: function(v) {
-      if (this._left instanceof Vector) {
-        this._left.unbind(Events.Types.change, this._renderer.flagEndPoints);
-      }
-      this._left = v;
-      this._left.bind(Events.Types.change, this._renderer.flagEndPoints);
-      this._flagEndPoints = true;
-    }
-  },
-  right: {
-    enumerable: true,
-    get: function() {
-      return this._right;
-    },
-    set: function(v) {
-      if (this._right instanceof Vector) {
-        this._right.unbind(Events.Types.change, this._renderer.flagEndPoints);
-      }
-      this._right = v;
-      this._right.bind(Events.Types.change, this._renderer.flagEndPoints);
-      this._flagEndPoints = true;
-    }
-  }
-};
-function FlagEndPoints() {
-  this._flagEndPoints = true;
-}
-
-// src/effects/radial-gradient.js
-var _RadialGradient = class extends Gradient {
-  constructor(cx, cy, r, stops, fx, fy) {
-    super(stops);
-    __publicField(this, "_flagRadius", false);
-    __publicField(this, "_flagCenter", false);
-    __publicField(this, "_flagFocal", false);
-    __publicField(this, "_radius", 0);
-    __publicField(this, "_center", null);
-    __publicField(this, "_focal", null);
-    for (let prop in proto9) {
-      Object.defineProperty(this, prop, proto9[prop]);
-    }
-    this._renderer.type = "radial-gradient";
-    this._renderer.flagCenter = FlagCenter.bind(this);
-    this._renderer.flagFocal = FlagFocal.bind(this);
-    this.center = new Vector();
-    this.radius = typeof r === "number" ? r : 1;
-    this.focal = new Vector();
-    if (typeof cx === "number") {
-      this.center.x = cx;
-    }
-    if (typeof cy === "number") {
-      this.center.y = cy;
-    }
-    this.focal.copy(this.center);
-    if (typeof fx === "number") {
-      this.focal.x = fx;
-    }
-    if (typeof fy === "number") {
-      this.focal.y = fy;
-    }
-  }
-  clone(parent) {
-    const stops = this.stops.map(function(stop) {
-      return stop.clone();
-    });
-    const clone = new _RadialGradient(
-      this.center._x,
-      this.center._y,
-      this._radius,
-      stops,
-      this.focal._x,
-      this.focal._y
-    );
-    _.each(Gradient.Properties.concat(_RadialGradient.Properties), function(k) {
-      clone[k] = this[k];
-    }, this);
-    if (parent) {
-      parent.add(clone);
-    }
-    return clone;
-  }
-  toObject() {
-    const result = super.toObject.call(this);
-    _.each(_RadialGradient.Properties, function(k) {
-      result[k] = this[k];
-    }, this);
-    result.center = this.center.toObject();
-    result.focal = this.focal.toObject();
-    return result;
-  }
-  _update() {
-    if (this._flagRadius || this._flatCenter || this._flagFocal || this._flagSpread || this._flagStops) {
-      this.trigger(Events.Types.change);
-    }
-    return this;
-  }
-  flagReset() {
-    this._flagRadius = this._flagCenter = this._flagFocal = false;
-    super.flagReset.call(this);
-    return this;
-  }
-};
-var RadialGradient = _RadialGradient;
-__publicField(RadialGradient, "Stop", Stop);
-__publicField(RadialGradient, "Properties", ["center", "radius", "focal"]);
-var proto9 = {
-  radius: {
-    enumerable: true,
-    get: function() {
-      return this._radius;
-    },
-    set: function(v) {
-      this._radius = v;
-      this._flagRadius = true;
-    }
-  },
-  center: {
-    enumerable: true,
-    get: function() {
-      return this._center;
-    },
-    set: function(v) {
-      if (this._center) {
-        this._center.unbind(Events.Types.change, this._renderer.flagCenter);
-      }
-      this._center = v;
-      this._center.bind(Events.Types.change, this._renderer.flagCenter);
-      this._flagCenter = true;
-    }
-  },
-  focal: {
-    enumerable: true,
-    get: function() {
-      return this._focal;
-    },
-    set: function(v) {
-      if (this._focal) {
-        this._focal.unbind(Events.Types.change, this._renderer.flagFocal);
-      }
-      this._focal = v;
-      this._focal.bind(Events.Types.change, this._renderer.flagFocal);
-      this._flagFocal = true;
-    }
-  }
-};
-function FlagCenter() {
-  this._flagCenter = true;
-}
-function FlagFocal() {
-  this._flagFocal = true;
-}
-
-// src/effects/texture.js
-var anchor;
-var regex = {
-  video: /\.(mp4|webm|ogg)$/i,
-  image: /\.(jpe?g|png|gif|tiff|webp)$/i,
-  effect: /texture|gradient/i
-};
-if (root.document) {
-  anchor = document.createElement("a");
-}
-var _Texture = class extends Element {
-  constructor(src, callback) {
-    super();
-    __publicField(this, "_flagSrc", false);
-    __publicField(this, "_flagImage", false);
-    __publicField(this, "_flagVideo", false);
-    __publicField(this, "_flagLoaded", false);
-    __publicField(this, "_flagRepeat", false);
-    __publicField(this, "_flagOffset", false);
-    __publicField(this, "_flagScale", false);
-    __publicField(this, "_src", "");
-    __publicField(this, "_image", null);
-    __publicField(this, "_loaded", false);
-    __publicField(this, "_repeat", "no-repeat");
-    __publicField(this, "_scale", 1);
-    __publicField(this, "_offset", null);
-    this._renderer = {};
-    for (let prop in proto10) {
-      Object.defineProperty(this, prop, proto10[prop]);
-    }
-    this._renderer.type = "texture";
-    this._renderer.flagOffset = FlagOffset.bind(this);
-    this._renderer.flagScale = FlagScale.bind(this);
-    this.id = Constants.Identifier + Constants.uniqueId();
-    this.classList = [];
-    this.loaded = false;
-    this.repeat = "no-repeat";
-    this.offset = new Vector();
-    if (typeof callback === "function") {
-      const loaded = function() {
-        this.unbind(Events.Types.load, loaded);
-        if (typeof callback === "function") {
-          callback();
-        }
-      }.bind(this);
-      this.bind(Events.Types.load, loaded);
-    }
-    if (typeof src === "string") {
-      this.src = src;
-    } else if (typeof src === "object") {
-      const elemString = Object.prototype.toString.call(src);
-      if (elemString === "[object HTMLImageElement]" || elemString === "[object HTMLCanvasElement]" || elemString === "[object HTMLVideoElement]" || elemString === "[object Image]") {
-        this.image = src;
-      }
-    }
-    this._update();
-  }
-  static getAbsoluteURL(path) {
-    if (!anchor) {
-      return path;
-    }
-    anchor.href = path;
-    return anchor.href;
-  }
-  static loadHeadlessBuffer(texture, loaded) {
-    texture.image.onload = loaded;
-    texture.image.src = texture.src;
-  }
-  static getTag(image) {
-    return image && image.nodeName && image.nodeName.toLowerCase() || "img";
-  }
-  static getImage(src) {
-    const absoluteSrc = _Texture.getAbsoluteURL(src);
-    if (_Texture.ImageRegistry.contains(absoluteSrc)) {
-      return _Texture.ImageRegistry.get(absoluteSrc);
-    }
-    let image;
-    if (CanvasShim.Image) {
-      image = new CanvasShim.Image();
-      Renderer.Utils.shim(image, "img");
-    } else if (root.document) {
-      if (regex.video.test(absoluteSrc)) {
-        image = document.createElement("video");
-      } else {
-        image = document.createElement("img");
-      }
-    } else {
-      console.warn("Two.js: no prototypical image defined for Two.Texture");
-    }
-    image.crossOrigin = "anonymous";
-    image.referrerPolicy = "no-referrer";
-    return image;
-  }
-  static load(texture, callback) {
-    let image = texture.image;
-    let tag = _Texture.getTag(image);
-    if (texture._flagImage) {
-      if (/canvas/i.test(tag)) {
-        _Texture.Register.canvas(texture, callback);
-      } else {
-        texture._src = !CanvasShim.isHeadless && image.getAttribute("two-src") || image.src;
-        _Texture.Register[tag](texture, callback);
-      }
-    }
-    if (texture._flagSrc) {
-      if (!image) {
-        image = _Texture.getImage(texture.src);
-        texture.image = image;
-      }
-      tag = _Texture.getTag(image);
-      _Texture.Register[tag](texture, callback);
-    }
-  }
-  clone() {
-    const clone = new _Texture(this.src);
-    clone.repeat = this.repeat;
-    clone.offset.copy(this.origin);
-    clone.scale = this.scale;
-    return clone;
-  }
-  toObject() {
-    return {
-      src: this.src,
-      repeat: this.repeat,
-      origin: this.origin.toObject(),
-      scale: typeof this.scale === "number" ? this.scale : this.scale.toObject()
-    };
-  }
-  _update() {
-    if (this._flagSrc || this._flagImage) {
-      this.trigger(Events.Types.change);
-      if (this._flagSrc || this._flagImage) {
-        this.loaded = false;
-        _Texture.load(this, function() {
-          this.loaded = true;
-          this.trigger(Events.Types.change).trigger(Events.Types.load);
-        }.bind(this));
-      }
-    }
-    if (this._image && this._image.readyState >= 4) {
-      this._flagVideo = true;
-    }
-    return this;
-  }
-  flagReset() {
-    this._flagSrc = this._flagImage = this._flagLoaded = this._flagRepeat = this._flagVideo = this._flagScale = this._flagOffset = false;
-    super.flagReset.call(this);
-    return this;
-  }
-};
-var Texture = _Texture;
-__publicField(Texture, "Properties", [
-  "src",
-  "loaded",
-  "repeat",
-  "scale",
-  "offset",
-  "image"
-]);
-__publicField(Texture, "RegularExpressions", regex);
-__publicField(Texture, "ImageRegistry", new Registry());
-__publicField(Texture, "Register", {
-  canvas: function(texture, callback) {
-    texture._src = "#" + texture.id;
-    _Texture.ImageRegistry.add(texture.src, texture.image);
-    if (typeof callback === "function") {
-      callback();
-    }
-  },
-  img: function(texture, callback) {
-    const image = texture.image;
-    const loaded = function(e) {
-      if (!CanvasShim.isHeadless && image.removeEventListener && typeof image.removeEventListener === "function") {
-        image.removeEventListener("load", loaded, false);
-        image.removeEventListener("error", error, false);
-      }
-      if (typeof callback === "function") {
-        callback();
-      }
-    };
-    const error = function(e) {
-      if (!CanvasShim.isHeadless && typeof image.removeEventListener === "function") {
-        image.removeEventListener("load", loaded, false);
-        image.removeEventListener("error", error, false);
-      }
-      throw new TwoError("unable to load " + texture.src);
-    };
-    if (typeof image.width === "number" && image.width > 0 && typeof image.height === "number" && image.height > 0) {
-      loaded();
-    } else if (!CanvasShim.isHeadless && typeof image.addEventListener === "function") {
-      image.addEventListener("load", loaded, false);
-      image.addEventListener("error", error, false);
-    }
-    texture._src = _Texture.getAbsoluteURL(texture._src);
-    if (!CanvasShim.isHeadless && image && image.getAttribute("two-src")) {
-      return;
-    }
-    if (!CanvasShim.isHeadless) {
-      image.setAttribute("two-src", texture.src);
-    }
-    _Texture.ImageRegistry.add(texture.src, image);
-    if (CanvasShim.isHeadless) {
-      _Texture.loadHeadlessBuffer(texture, loaded);
-    } else {
-      texture.image.src = texture.src;
-    }
-  },
-  video: function(texture, callback) {
-    if (CanvasShim.isHeadless) {
-      throw new TwoError("video textures are not implemented in headless environments.");
-    }
-    const loaded = function(e) {
-      texture.image.removeEventListener("canplaythrough", loaded, false);
-      texture.image.removeEventListener("error", error, false);
-      texture.image.width = texture.image.videoWidth;
-      texture.image.height = texture.image.videoHeight;
-      if (typeof callback === "function") {
-        callback();
-      }
-    };
-    const error = function(e) {
-      texture.image.removeEventListener("canplaythrough", loaded, false);
-      texture.image.removeEventListener("error", error, false);
-      throw new TwoError("unable to load " + texture.src);
-    };
-    texture._src = _Texture.getAbsoluteURL(texture._src);
-    if (!texture.image.getAttribute("two-src")) {
-      texture.image.setAttribute("two-src", texture.src);
-      _Texture.ImageRegistry.add(texture.src, texture.image);
-    }
-    if (texture.image.readyState >= 4) {
-      loaded();
-    } else {
-      texture.image.addEventListener("canplaythrough", loaded, false);
-      texture.image.addEventListener("error", error, false);
-      texture.image.src = texture.src;
-      texture.image.load();
-    }
-  }
-});
-var proto10 = {
-  src: {
-    enumerable: true,
-    get: function() {
-      return this._src;
-    },
-    set: function(v) {
-      this._src = v;
-      this._flagSrc = true;
-    }
-  },
-  loaded: {
-    enumerable: true,
-    get: function() {
-      return this._loaded;
-    },
-    set: function(v) {
-      this._loaded = v;
-      this._flagLoaded = true;
-    }
-  },
-  repeat: {
-    enumerable: true,
-    get: function() {
-      return this._repeat;
-    },
-    set: function(v) {
-      this._repeat = v;
-      this._flagRepeat = true;
-    }
-  },
-  image: {
-    enumerable: true,
-    get: function() {
-      return this._image;
-    },
-    set: function(image) {
-      const tag = Texture.getTag(image);
-      let index;
-      switch (tag) {
-        case "canvas":
-          index = "#" + image.id;
-          break;
-        default:
-          index = image.src;
-      }
-      if (Texture.ImageRegistry.contains(index)) {
-        this._image = Texture.ImageRegistry.get(image.src);
-      } else {
-        this._image = image;
-      }
-      this._flagImage = true;
-    }
-  },
-  offset: {
-    enumerable: true,
-    get: function() {
-      return this._offset;
-    },
-    set: function(v) {
-      if (this._offset) {
-        this._offset.unbind(Events.Types.change, this._renderer.flagOffset);
-      }
-      this._offset = v;
-      this._offset.bind(Events.Types.change, this._renderer.flagOffset);
-      this._flagOffset = true;
-    }
-  },
-  scale: {
-    enumerable: true,
-    get: function() {
-      return this._scale;
-    },
-    set: function(v) {
-      if (this._scale instanceof Vector) {
-        this._scale.unbind(Events.Types.change, this._renderer.flagScale);
-      }
-      this._scale = v;
-      if (this._scale instanceof Vector) {
-        this._scale.bind(Events.Types.change, this._renderer.flagScale);
-      }
-      this._flagScale = true;
-    }
-  }
-};
-function FlagOffset() {
-  this._flagOffset = true;
-}
-function FlagScale() {
-  this._flagScale = true;
-}
-
-// src/path.js
-var min3 = Math.min;
-var max3 = Math.max;
-var ceil = Math.ceil;
-var floor2 = Math.floor;
-var vector = new Vector();
-var _Path = class extends Shape {
-  constructor(vertices, closed2, curved, manual) {
-    super();
-    __publicField(this, "_flagVertices", true);
-    __publicField(this, "_flagLength", true);
-    __publicField(this, "_flagFill", true);
-    __publicField(this, "_flagStroke", true);
-    __publicField(this, "_flagLinewidth", true);
-    __publicField(this, "_flagOpacity", true);
-    __publicField(this, "_flagVisible", true);
-    __publicField(this, "_flagCap", true);
-    __publicField(this, "_flagJoin", true);
-    __publicField(this, "_flagMiter", true);
-    __publicField(this, "_flagMask", false);
-    __publicField(this, "_flagClip", false);
-    __publicField(this, "_length", 0);
-    __publicField(this, "_fill", "#fff");
-    __publicField(this, "_stroke", "#000");
-    __publicField(this, "_linewidth", 1);
-    __publicField(this, "_opacity", 1);
-    __publicField(this, "_visible", true);
-    __publicField(this, "_cap", "round");
-    __publicField(this, "_join", "round");
-    __publicField(this, "_miter", 4);
-    __publicField(this, "_closed", true);
-    __publicField(this, "_curved", false);
-    __publicField(this, "_automatic", true);
-    __publicField(this, "_beginning", 0);
-    __publicField(this, "_ending", 1);
-    __publicField(this, "_mask", null);
-    __publicField(this, "_clip", false);
-    __publicField(this, "_dashes", null);
-    for (let prop in proto11) {
-      Object.defineProperty(this, prop, proto11[prop]);
-    }
-    this._renderer.type = "path";
-    this._renderer.flagVertices = FlagVertices.bind(this);
-    this._renderer.bindVertices = BindVertices.bind(this);
-    this._renderer.unbindVertices = UnbindVertices.bind(this);
-    this._renderer.flagFill = FlagFill.bind(this);
-    this._renderer.flagStroke = FlagStroke.bind(this);
-    this._renderer.vertices = [];
-    this._renderer.collection = [];
-    this.closed = !!closed2;
-    this.curved = !!curved;
-    this.beginning = 0;
-    this.ending = 1;
-    this.fill = "#fff";
-    this.stroke = "#000";
-    this.linewidth = 1;
-    this.opacity = 1;
-    this.className = "";
-    this.visible = true;
-    this.cap = "butt";
-    this.join = "miter";
-    this.miter = 4;
-    this.vertices = vertices;
-    this.automatic = !manual;
-    this.dashes = [];
-    this.dashes.offset = 0;
-  }
-  clone(parent) {
-    const clone = new _Path();
-    for (let j = 0; j < this.vertices.length; j++) {
-      clone.vertices.push(this.vertices[j].clone());
-    }
-    for (let i = 0; i < _Path.Properties.length; i++) {
-      const k = _Path.Properties[i];
-      clone[k] = this[k];
-    }
-    clone.className = this.className;
-    clone.translation.copy(this.translation);
-    clone.rotation = this.rotation;
-    clone.scale = this.scale;
-    clone.skewX = this.skewX;
-    clone.skewY = this.skewY;
-    if (this.matrix.manual) {
-      clone.matrix.copy(this.matrix);
-    }
-    if (parent) {
-      parent.add(clone);
-    }
-    return clone._update();
-  }
-  toObject() {
-    const result = {
-      vertices: this.vertices.map(function(v) {
-        return v.toObject();
-      })
-    };
-    _.each(_Path.Properties, function(k) {
-      if (typeof this[k] !== "undefined") {
-        if (this[k].toObject) {
-          result[k] = this[k].toObject();
-        } else {
-          result[k] = this[k];
-        }
-      }
-    }, this);
-    result.className = this.className;
-    result.translation = this.translation.toObject();
-    result.rotation = this.rotation;
-    result.scale = this.scale instanceof Vector ? this.scale.toObject() : this.scale;
-    result.skewX = this.skewX;
-    result.skewY = this.skewY;
-    if (this.matrix.manual) {
-      result.matrix = this.matrix.toObject();
-    }
-    return result;
-  }
-  noFill() {
-    this.fill = "none";
-    return this;
-  }
-  noStroke() {
-    this.stroke = "none";
-    return this;
-  }
-  corner() {
-    const rect = this.getBoundingClientRect(true);
-    const hw = rect.width / 2;
-    const hh = rect.height / 2;
-    const cx = rect.left + rect.width / 2;
-    const cy = rect.top + rect.height / 2;
-    for (let i = 0; i < this.vertices.length; i++) {
-      const v = this.vertices[i];
-      v.x -= cx;
-      v.y -= cy;
-      v.x += hw;
-      v.y += hh;
-    }
-    if (this.mask) {
-      this.mask.translation.x -= cx;
-      this.mask.translation.x += hw;
-      this.mask.translation.y -= cy;
-      this.mask.translation.y += hh;
-    }
-    return this;
-  }
-  center() {
-    const rect = this.getBoundingClientRect(true);
-    const cx = rect.left + rect.width / 2 - this.translation.x;
-    const cy = rect.top + rect.height / 2 - this.translation.y;
-    for (let i = 0; i < this.vertices.length; i++) {
-      const v = this.vertices[i];
-      v.x -= cx;
-      v.y -= cy;
-    }
-    if (this.mask) {
-      this.mask.translation.x -= cx;
-      this.mask.translation.y -= cy;
-    }
-    return this;
-  }
-  getBoundingClientRect(shallow) {
-    let matrix, border, l, i, v0, v1;
-    let left = Infinity, right = -Infinity, top = Infinity, bottom = -Infinity;
-    this._update(true);
-    matrix = shallow ? this.matrix : this.worldMatrix;
-    border = (this.linewidth || 0) / 2;
-    l = this._renderer.vertices.length;
-    if (this.linewidth > 0 || this.stroke && !/(transparent|none)/i.test(this.stroke)) {
-      if (this.matrix.manual) {
-        const { scaleX, scaleY } = decomposeMatrix(
-          matrix.elements[0],
-          matrix.elements[3],
-          matrix.elements[1],
-          matrix.elements[4],
-          matrix.elements[2],
-          matrix.elements[5]
-        );
-        if (typeof scaleX === "number" && typeof scaleY === "number") {
-          border = Math.max(scaleX, scaleY) * (this.linewidth || 0) / 2;
-        }
-      } else {
-        border *= typeof this.scale === "number" ? this.scale : Math.max(this.scale.x, this.scale.y);
-      }
-    }
-    if (l <= 0) {
-      return {
-        width: 0,
-        height: 0
-      };
-    }
-    for (i = 0; i < l; i++) {
-      v1 = this._renderer.vertices[i];
-      v0 = this._renderer.vertices[(i + l - 1) % l];
-      const [v0x, v0y] = matrix.multiply(v0.x, v0.y);
-      const [v1x, v1y] = matrix.multiply(v1.x, v1.y);
-      if (v0.controls && v1.controls) {
-        let rx = v0.controls.right.x;
-        let ry = v0.controls.right.y;
-        if (v0.relative) {
-          rx += v0.x;
-          ry += v0.y;
-        }
-        let [c0x, c0y] = matrix.multiply(rx, ry);
-        let lx = v1.controls.left.x;
-        let ly = v1.controls.left.y;
-        if (v1.relative) {
-          lx += v1.x;
-          ly += v1.y;
-        }
-        let [c1x, c1y] = matrix.multiply(lx, ly);
-        const bb = getCurveBoundingBox(
-          v0x,
-          v0y,
-          c0x,
-          c0y,
-          c1x,
-          c1y,
-          v1x,
-          v1y
-        );
-        top = min3(bb.min.y - border, top);
-        left = min3(bb.min.x - border, left);
-        right = max3(bb.max.x + border, right);
-        bottom = max3(bb.max.y + border, bottom);
-      } else {
-        if (i <= 1) {
-          top = min3(v0y - border, top);
-          left = min3(v0x - border, left);
-          right = max3(v0x + border, right);
-          bottom = max3(v0y + border, bottom);
-        }
-        top = min3(v1y - border, top);
-        left = min3(v1x - border, left);
-        right = max3(v1x + border, right);
-        bottom = max3(v1y + border, bottom);
-      }
-    }
-    return {
-      top,
-      left,
-      right,
-      bottom,
-      width: right - left,
-      height: bottom - top
-    };
-  }
-  getPointAt(t, obj) {
-    let ia, ib, result;
-    let x, x1, x2, x3, x4, y, y1, y2, y3, y4, left, right;
-    let target = this.length * Math.min(Math.max(t, 0), 1);
-    const length = this.vertices.length;
-    const last = length - 1;
-    let a = null;
-    let b = null;
-    for (let i = 0, l = this._lengths.length, sum = 0; i < l; i++) {
-      if (sum + this._lengths[i] >= target) {
-        if (this._closed) {
-          ia = mod(i, length);
-          ib = mod(i - 1, length);
-          if (i === 0) {
-            ia = ib;
-            ib = i;
-          }
-        } else {
-          ia = i;
-          ib = Math.min(Math.max(i - 1, 0), last);
-        }
-        a = this.vertices[ia];
-        b = this.vertices[ib];
-        target -= sum;
-        if (this._lengths[i] !== 0) {
-          t = target / this._lengths[i];
-        } else {
-          t = 0;
-        }
-        break;
-      }
-      sum += this._lengths[i];
-    }
-    if (a === null || b === null) {
-      return null;
-    }
-    if (!a) {
-      return b;
-    } else if (!b) {
-      return a;
-    }
-    right = b.controls && b.controls.right;
-    left = a.controls && a.controls.left;
-    x1 = b.x;
-    y1 = b.y;
-    x2 = (right || b).x;
-    y2 = (right || b).y;
-    x3 = (left || a).x;
-    y3 = (left || a).y;
-    x4 = a.x;
-    y4 = a.y;
-    if (right && b.relative) {
-      x2 += b.x;
-      y2 += b.y;
-    }
-    if (left && a.relative) {
-      x3 += a.x;
-      y3 += a.y;
-    }
-    x = getComponentOnCubicBezier(t, x1, x2, x3, x4);
-    y = getComponentOnCubicBezier(t, y1, y2, y3, y4);
-    const t1x = lerp(x1, x2, t);
-    const t1y = lerp(y1, y2, t);
-    const t2x = lerp(x2, x3, t);
-    const t2y = lerp(y2, y3, t);
-    const t3x = lerp(x3, x4, t);
-    const t3y = lerp(y3, y4, t);
-    const brx = lerp(t1x, t2x, t);
-    const bry = lerp(t1y, t2y, t);
-    const alx = lerp(t2x, t3x, t);
-    const aly = lerp(t2y, t3y, t);
-    if (_.isObject(obj)) {
-      obj.x = x;
-      obj.y = y;
-      if (obj instanceof Anchor) {
-        obj.controls.left.x = brx;
-        obj.controls.left.y = bry;
-        obj.controls.right.x = alx;
-        obj.controls.right.y = aly;
-        if (!(typeof obj.relative === "boolean") || obj.relative) {
-          obj.controls.left.x -= x;
-          obj.controls.left.y -= y;
-          obj.controls.right.x -= x;
-          obj.controls.right.y -= y;
-        }
-      }
-      obj.t = t;
-      return obj;
-    }
-    result = new Anchor(
-      x,
-      y,
-      brx - x,
-      bry - y,
-      alx - x,
-      aly - y,
-      this._curved ? Commands.curve : Commands.line
-    );
-    result.t = t;
-    return result;
-  }
-  plot() {
-    if (this.curved) {
-      getCurveFromPoints(this._collection, this.closed);
-      return this;
-    }
-    for (let i = 0; i < this._collection.length; i++) {
-      this._collection[i].command = i === 0 ? Commands.move : Commands.line;
-    }
-    return this;
-  }
-  subdivide(limit) {
-    this._update();
-    const last = this.vertices.length - 1;
-    const closed2 = this._closed || this.vertices[last]._command === Commands.close;
-    let b = this.vertices[last];
-    let points = [], verts;
-    _.each(this.vertices, function(a, i) {
-      if (i <= 0 && !closed2) {
-        b = a;
-        return;
-      }
-      if (a.command === Commands.move) {
-        points.push(new Anchor(b.x, b.y));
-        if (i > 0) {
-          points[points.length - 1].command = Commands.line;
-        }
-        b = a;
-        return;
-      }
-      verts = getSubdivisions(a, b, limit);
-      points = points.concat(verts);
-      _.each(verts, function(v, i2) {
-        if (i2 <= 0 && b.command === Commands.move) {
-          v.command = Commands.move;
-        } else {
-          v.command = Commands.line;
-        }
-      });
-      if (i >= last) {
-        if (this._closed && this._automatic) {
-          b = a;
-          verts = getSubdivisions(a, b, limit);
-          points = points.concat(verts);
-          _.each(verts, function(v, i2) {
-            if (i2 <= 0 && b.command === Commands.move) {
-              v.command = Commands.move;
-            } else {
-              v.command = Commands.line;
-            }
-          });
-        } else if (closed2) {
-          points.push(new Anchor(a.x, a.y));
-        }
-        points[points.length - 1].command = closed2 ? Commands.close : Commands.line;
-      }
-      b = a;
-    }, this);
-    this._automatic = false;
-    this._curved = false;
-    this.vertices = points;
-    return this;
-  }
-  _updateLength(limit, silent) {
-    if (!silent) {
-      this._update();
-    }
-    const length = this.vertices.length;
-    const last = length - 1;
-    const closed2 = false;
-    let b = this.vertices[last];
-    let sum = 0;
-    if (typeof this._lengths === "undefined") {
-      this._lengths = [];
-    }
-    _.each(this.vertices, function(a, i) {
-      if (i <= 0 && !closed2 || a.command === Commands.move) {
-        b = a;
-        this._lengths[i] = 0;
-        return;
-      }
-      this._lengths[i] = getCurveLength2(a, b, limit);
-      sum += this._lengths[i];
-      if (i >= last && closed2) {
-        b = this.vertices[(i + 1) % length];
-        this._lengths[i + 1] = getCurveLength2(a, b, limit);
-        sum += this._lengths[i + 1];
-      }
-      b = a;
-    }, this);
-    this._length = sum;
-    this._flagLength = false;
-    return this;
-  }
-  _update() {
-    if (this._flagVertices) {
-      if (this._automatic) {
-        this.plot();
-      }
-      if (this._flagLength) {
-        this._updateLength(void 0, true);
-      }
-      const l = this._collection.length;
-      const closed2 = this._closed;
-      const beginning = Math.min(this._beginning, this._ending);
-      const ending = Math.max(this._beginning, this._ending);
-      const bid = getIdByLength(this, beginning * this._length);
-      const eid = getIdByLength(this, ending * this._length);
-      const low = ceil(bid);
-      const high = floor2(eid);
-      let left, right, prev, next, v, i;
-      this._renderer.vertices.length = 0;
-      for (i = 0; i < l; i++) {
-        if (this._renderer.collection.length <= i) {
-          this._renderer.collection.push(new Anchor());
-        }
-        if (i > high && !right) {
-          v = this._renderer.collection[i].copy(this._collection[i]);
-          this.getPointAt(ending, v);
-          v.command = this._renderer.collection[i].command;
-          this._renderer.vertices.push(v);
-          right = v;
-          prev = this._collection[i - 1];
-          if (prev && prev.controls) {
-            if (v.relative) {
-              v.controls.right.clear();
-            } else {
-              v.controls.right.copy(v);
-            }
-            if (prev.relative) {
-              this._renderer.collection[i - 1].controls.right.copy(prev.controls.right).lerp(Vector.zero, 1 - v.t);
-            } else {
-              this._renderer.collection[i - 1].controls.right.copy(prev.controls.right).lerp(prev, 1 - v.t);
-            }
-          }
-        } else if (i >= low && i <= high) {
-          v = this._renderer.collection[i].copy(this._collection[i]);
-          this._renderer.vertices.push(v);
-          if (i === high && contains(this, ending)) {
-            right = v;
-            if (!closed2 && right.controls) {
-              if (right.relative) {
-                right.controls.right.clear();
-              } else {
-                right.controls.right.copy(right);
-              }
-            }
-          } else if (i === low && contains(this, beginning)) {
-            left = v;
-            left.command = Commands.move;
-            if (!closed2 && left.controls) {
-              if (left.relative) {
-                left.controls.left.clear();
-              } else {
-                left.controls.left.copy(left);
-              }
-            }
-          }
-        }
-      }
-      if (low > 0 && !left) {
-        i = low - 1;
-        v = this._renderer.collection[i].copy(this._collection[i]);
-        this.getPointAt(beginning, v);
-        v.command = Commands.move;
-        this._renderer.vertices.unshift(v);
-        next = this._collection[i + 1];
-        if (next && next.controls) {
-          v.controls.left.clear();
-          if (next.relative) {
-            this._renderer.collection[i + 1].controls.left.copy(next.controls.left).lerp(Vector.zero, v.t);
-          } else {
-            vector.copy(next);
-            this._renderer.collection[i + 1].controls.left.copy(next.controls.left).lerp(next, v.t);
-          }
-        }
-      }
-    }
-    Shape.prototype._update.apply(this, arguments);
-    return this;
-  }
-  flagReset() {
-    this._flagVertices = this._flagLength = this._flagFill = this._flagStroke = this._flagLinewidth = this._flagOpacity = this._flagVisible = this._flagCap = this._flagJoin = this._flagMiter = this._flagClip = false;
-    Shape.prototype.flagReset.call(this);
-    return this;
-  }
-};
-var Path = _Path;
-__publicField(Path, "Properties", [
-  "fill",
-  "stroke",
-  "linewidth",
-  "opacity",
-  "visible",
-  "cap",
-  "join",
-  "miter",
-  "closed",
-  "curved",
-  "automatic",
-  "beginning",
-  "ending"
-]);
-__publicField(Path, "Utils", {
-  getCurveLength: getCurveLength2
-});
-var proto11 = {
-  linewidth: {
-    enumerable: true,
-    get: function() {
-      return this._linewidth;
-    },
-    set: function(v) {
-      this._linewidth = v;
-      this._flagLinewidth = true;
-    }
-  },
-  opacity: {
-    enumerable: true,
-    get: function() {
-      return this._opacity;
-    },
-    set: function(v) {
-      this._opacity = v;
-      this._flagOpacity = true;
-    }
-  },
-  visible: {
-    enumerable: true,
-    get: function() {
-      return this._visible;
-    },
-    set: function(v) {
-      this._visible = v;
-      this._flagVisible = true;
-    }
-  },
-  cap: {
-    enumerable: true,
-    get: function() {
-      return this._cap;
-    },
-    set: function(v) {
-      this._cap = v;
-      this._flagCap = true;
-    }
-  },
-  join: {
-    enumerable: true,
-    get: function() {
-      return this._join;
-    },
-    set: function(v) {
-      this._join = v;
-      this._flagJoin = true;
-    }
-  },
-  miter: {
-    enumerable: true,
-    get: function() {
-      return this._miter;
-    },
-    set: function(v) {
-      this._miter = v;
-      this._flagMiter = true;
-    }
-  },
-  fill: {
-    enumerable: true,
-    get: function() {
-      return this._fill;
-    },
-    set: function(f) {
-      if (this._fill instanceof Gradient || this._fill instanceof LinearGradient || this._fill instanceof RadialGradient || this._fill instanceof Texture) {
-        this._fill.unbind(Events.Types.change, this._renderer.flagFill);
-      }
-      this._fill = f;
-      this._flagFill = true;
-      if (this._fill instanceof Gradient || this._fill instanceof LinearGradient || this._fill instanceof RadialGradient || this._fill instanceof Texture) {
-        this._fill.bind(Events.Types.change, this._renderer.flagFill);
-      }
-    }
-  },
-  stroke: {
-    enumerable: true,
-    get: function() {
-      return this._stroke;
-    },
-    set: function(f) {
-      if (this._stroke instanceof Gradient || this._stroke instanceof LinearGradient || this._stroke instanceof RadialGradient || this._stroke instanceof Texture) {
-        this._stroke.unbind(Events.Types.change, this._renderer.flagStroke);
-      }
-      this._stroke = f;
-      this._flagStroke = true;
-      if (this._stroke instanceof Gradient || this._stroke instanceof LinearGradient || this._stroke instanceof RadialGradient || this._stroke instanceof Texture) {
-        this._stroke.bind(Events.Types.change, this._renderer.flagStroke);
-      }
-    }
-  },
-  length: {
-    get: function() {
-      if (this._flagLength) {
-        this._updateLength();
-      }
-      return this._length;
-    }
-  },
-  closed: {
-    enumerable: true,
-    get: function() {
-      return this._closed;
-    },
-    set: function(v) {
-      this._closed = !!v;
-      this._flagVertices = true;
-    }
-  },
-  curved: {
-    enumerable: true,
-    get: function() {
-      return this._curved;
-    },
-    set: function(v) {
-      this._curved = !!v;
-      this._flagVertices = true;
-    }
-  },
-  automatic: {
-    enumerable: true,
-    get: function() {
-      return this._automatic;
-    },
-    set: function(v) {
-      if (v === this._automatic) {
-        return;
-      }
-      this._automatic = !!v;
-      const method = this._automatic ? "ignore" : "listen";
-      _.each(this.vertices, function(v2) {
-        v2[method]();
-      });
-    }
-  },
-  beginning: {
-    enumerable: true,
-    get: function() {
-      return this._beginning;
-    },
-    set: function(v) {
-      this._beginning = v;
-      this._flagVertices = true;
-    }
-  },
-  ending: {
-    enumerable: true,
-    get: function() {
-      return this._ending;
-    },
-    set: function(v) {
-      this._ending = v;
-      this._flagVertices = true;
-    }
-  },
-  vertices: {
-    enumerable: true,
-    get: function() {
-      return this._collection;
-    },
-    set: function(vertices) {
-      const bindVertices = this._renderer.bindVertices;
-      const unbindVertices = this._renderer.unbindVertices;
-      if (this._collection) {
-        this._collection.unbind(Events.Types.insert, bindVertices).unbind(Events.Types.remove, unbindVertices);
-      }
-      if (vertices instanceof Collection) {
-        this._collection = vertices;
-      } else {
-        this._collection = new Collection(vertices || []);
-      }
-      this._collection.bind(Events.Types.insert, bindVertices).bind(Events.Types.remove, unbindVertices);
-      bindVertices(this._collection);
-    }
-  },
-  mask: {
-    enumerable: true,
-    get: function() {
-      return this._mask;
-    },
-    set: function(v) {
-      this._mask = v;
-      this._flagMask = true;
-      if (_.isObject(v) && !v.clip) {
-        v.clip = true;
-      }
-    }
-  },
-  clip: {
-    enumerable: true,
-    get: function() {
-      return this._clip;
-    },
-    set: function(v) {
-      this._clip = v;
-      this._flagClip = true;
-    }
-  },
-  dashes: {
-    enumerable: true,
-    get: function() {
-      return this._dashes;
-    },
-    set: function(v) {
-      if (typeof v.offset !== "number") {
-        v.offset = this.dashes && this._dashes.offset || 0;
-      }
-      this._dashes = v;
-    }
-  }
-};
-function FlagVertices() {
-  this._flagVertices = true;
-  this._flagLength = true;
-  if (this.parent) {
-    this.parent._flagLength = true;
-  }
-}
-function BindVertices(items) {
-  let i = items.length;
-  while (i--) {
-    items[i].bind(Events.Types.change, this._renderer.flagVertices);
-  }
-  this._renderer.flagVertices();
-}
-function UnbindVertices(items) {
-  let i = items.length;
-  while (i--) {
-    items[i].unbind(Events.Types.change, this._renderer.flagVertices);
-  }
-  this._renderer.flagVertices();
-}
-function FlagFill() {
-  this._flagFill = true;
-}
-function FlagStroke() {
-  this._flagStroke = true;
-}
-
-// src/shapes/rectangle.js
-var _Rectangle = class extends Path {
-  constructor(x, y, width, height) {
-    const points = [
-      new Anchor(),
-      new Anchor(),
-      new Anchor(),
-      new Anchor()
-    ];
-    super(points, true, false, true);
-    __publicField(this, "_flagWidth", 0);
-    __publicField(this, "_flagHeight", 0);
-    __publicField(this, "_width", 0);
-    __publicField(this, "_height", 0);
-    __publicField(this, "_origin", null);
-    for (let prop in proto12) {
-      Object.defineProperty(this, prop, proto12[prop]);
-    }
-    this.width = typeof width === "number" ? width : 1;
-    this.height = typeof height === "number" ? height : 1;
-    this.origin = new Vector();
-    if (typeof x === "number") {
-      this.translation.x = x;
-    }
-    if (typeof y === "number") {
-      this.translation.y = y;
-    }
-    this._update();
-  }
-  _update() {
-    if (this._flagVertices || this._flagWidth || this._flagHeight) {
-      const xr = this._width / 2;
-      const yr = this._height / 2;
-      if (!this._closed && this.vertices.length === 4) {
-        this.vertices.push(new Anchor());
-      }
-      this.vertices[0].set(-xr, -yr).sub(this._origin).command = Commands.move;
-      this.vertices[1].set(xr, -yr).sub(this._origin).command = Commands.line;
-      this.vertices[2].set(xr, yr).sub(this._origin).command = Commands.line;
-      this.vertices[3].set(-xr, yr).sub(this._origin).command = Commands.line;
-      if (this.vertices[4]) {
-        this.vertices[4].set(-xr, -yr).sub(this._origin).command = Commands.line;
-      }
-    }
-    super._update.call(this);
-    return this;
-  }
-  flagReset() {
-    this._flagWidth = this._flagHeight = false;
-    super.flagReset.call(this);
-    return this;
-  }
-  clone(parent) {
-    const clone = new _Rectangle(0, 0, this.width, this.height);
-    clone.translation.copy(this.translation);
-    clone.rotation = this.rotation;
-    clone.scale = this.scale;
-    clone.skewX = this.skewX;
-    clone.skewY = this.skewY;
-    if (this.matrix.manual) {
-      clone.matrix.copy(this.matrix);
-    }
-    for (let i = 0; i < Path.Properties.length; i++) {
-      const k = Path.Properties[i];
-      clone[k] = this[k];
-    }
-    if (parent) {
-      parent.add(clone);
-    }
-    return clone;
-  }
-  toObject() {
-    const object = super.toObject.call(this);
-    object.width = this.width;
-    object.height = this.height;
-    object.origin = this.origin.toObject();
-    return object;
-  }
-};
-var Rectangle = _Rectangle;
-__publicField(Rectangle, "Properties", ["width", "height"]);
-var proto12 = {
-  width: {
-    enumerable: true,
-    get: function() {
-      return this._width;
-    },
-    set: function(v) {
-      this._width = v;
-      this._flagWidth = true;
-    }
-  },
-  height: {
-    enumerable: true,
-    get: function() {
-      return this._height;
-    },
-    set: function(v) {
-      this._height = v;
-      this._flagHeight = true;
-    }
-  },
-  origin: {
-    enumerable: true,
-    get: function() {
-      return this._origin;
-    },
-    set: function(v) {
-      if (this._origin) {
-        this._origin.unbind(Events.Types.change, this._renderer.flagVertices);
-      }
-      this._origin = v;
-      this._origin.bind(Events.Types.change, this._renderer.flagVertices);
-      this._renderer.flagVertices();
-    }
-  }
-};
-
-// src/effects/sprite.js
-var _Sprite = class extends Rectangle {
-  constructor(path, ox, oy, cols, rows, frameRate) {
-    super(ox, oy, 0, 0);
-    __publicField(this, "_flagTexture", false);
-    __publicField(this, "_flagColumns", false);
-    __publicField(this, "_flagRows", false);
-    __publicField(this, "_flagFrameRate", false);
-    __publicField(this, "_flagIndex", false);
-    __publicField(this, "_amount", 1);
-    __publicField(this, "_duration", 0);
-    __publicField(this, "_startTime", 0);
-    __publicField(this, "_playing", false);
-    __publicField(this, "_firstFrame", 0);
-    __publicField(this, "_lastFrame", 0);
-    __publicField(this, "_loop", true);
-    __publicField(this, "_texture", null);
-    __publicField(this, "_columns", 1);
-    __publicField(this, "_rows", 1);
-    __publicField(this, "_frameRate", 0);
-    __publicField(this, "_index", 0);
-    __publicField(this, "_origin", null);
-    for (let prop in proto13) {
-      Object.defineProperty(this, prop, proto13[prop]);
-    }
-    this.noStroke();
-    this.noFill();
-    if (path instanceof Texture) {
-      this.texture = path;
-    } else if (typeof path === "string") {
-      this.texture = new Texture(path);
-    }
-    this.origin = new Vector();
-    this._update();
-    if (typeof cols === "number") {
-      this.columns = cols;
-    }
-    if (typeof rows === "number") {
-      this.rows = rows;
-    }
-    if (typeof frameRate === "number") {
-      this.frameRate = frameRate;
-    }
-    this.index = 0;
-  }
-  play(firstFrame, lastFrame, onLastFrame) {
-    this._playing = true;
-    this._firstFrame = 0;
-    this._lastFrame = this.amount - 1;
-    this._startTime = _.performance.now();
-    if (typeof firstFrame === "number") {
-      this._firstFrame = firstFrame;
-    }
-    if (typeof lastFrame === "number") {
-      this._lastFrame = lastFrame;
-    }
-    if (typeof onLastFrame === "function") {
-      this._onLastFrame = onLastFrame;
-    } else {
-      delete this._onLastFrame;
-    }
-    if (this._index !== this._firstFrame) {
-      this._startTime -= 1e3 * Math.abs(this._index - this._firstFrame) / this._frameRate;
-    }
-    return this;
-  }
-  pause() {
-    this._playing = false;
-    return this;
-  }
-  stop() {
-    this._playing = false;
-    this._index = 0;
-    return this;
-  }
-  clone(parent) {
-    const clone = new _Sprite(
-      this.texture,
-      this.translation.x,
-      this.translation.y,
-      this.columns,
-      this.rows,
-      this.frameRate
-    );
-    if (this.playing) {
-      clone.play(this._firstFrame, this._lastFrame);
-      clone._loop = this._loop;
-    }
-    if (parent) {
-      parent.add(clone);
-    }
-    return clone;
-  }
-  toObject() {
-    const object = super.toObject.call(this);
-    object.texture = this.texture.toObject();
-    object.columns = this.columns;
-    object.rows = this.rows;
-    object.frameRate = this.frameRate;
-    object.index = this.index;
-    object._firstFrame = this._firstFrame;
-    object._lastFrame = this._lastFrame;
-    object._loop = this._loop;
-    return object;
-  }
-  _update() {
-    const effect = this._texture;
-    const cols = this._columns;
-    const rows = this._rows;
-    let width, height, elapsed, amount, duration;
-    let index, iw, ih, frames;
-    if (effect) {
-      if (this._flagColumns || this._flagRows) {
-        this._amount = this._columns * this._rows;
-      }
-      if (this._flagFrameRate) {
-        this._duration = 1e3 * this._amount / this._frameRate;
-      }
-      if (this._flagTexture) {
-        this.fill = effect;
-      }
-      if (effect.loaded) {
-        iw = effect.image.width;
-        ih = effect.image.height;
-        width = iw / cols;
-        height = ih / rows;
-        amount = this._amount;
-        if (this.width !== width) {
-          this.width = width;
-        }
-        if (this.height !== height) {
-          this.height = height;
-        }
-        if (this._playing && this._frameRate > 0) {
-          if (_.isNaN(this._lastFrame)) {
-            this._lastFrame = amount - 1;
-          }
-          elapsed = _.performance.now() - this._startTime;
-          frames = this._lastFrame + 1;
-          duration = 1e3 * (frames - this._firstFrame) / this._frameRate;
-          if (this._loop) {
-            elapsed = elapsed % duration;
-          } else {
-            elapsed = Math.min(elapsed, duration);
-          }
-          index = lerp(this._firstFrame, frames, elapsed / duration);
-          index = Math.floor(index);
-          if (index !== this._index) {
-            this._index = index;
-            if (index >= this._lastFrame - 1 && this._onLastFrame) {
-              this._onLastFrame();
-            }
-          }
-        }
-        const col = this._index % cols;
-        const row = Math.floor(this._index / cols);
-        const ox = -width * col + (iw - width) / 2;
-        const oy = -height * row + (ih - height) / 2;
-        if (ox !== effect.offset.x) {
-          effect.offset.x = ox;
-        }
-        if (oy !== effect.offset.y) {
-          effect.offset.y = oy;
-        }
-      }
-    }
-    super._update.call(this);
-    return this;
-  }
-  flagReset() {
-    this._flagTexture = this._flagColumns = this._flagRows = this._flagFrameRate = false;
-    super.flagReset.call(this);
-    return this;
-  }
-};
-var Sprite = _Sprite;
-__publicField(Sprite, "Properties", [
-  "texture",
-  "columns",
-  "rows",
-  "frameRate",
-  "index"
-]);
-var proto13 = {
-  texture: {
-    enumerable: true,
-    get: function() {
-      return this._texture;
-    },
-    set: function(v) {
-      this._texture = v;
-      this._flagTexture = true;
-    }
-  },
-  columns: {
-    enumerable: true,
-    get: function() {
-      return this._columns;
-    },
-    set: function(v) {
-      this._columns = v;
-      this._flagColumns = true;
-    }
-  },
-  rows: {
-    enumerable: true,
-    get: function() {
-      return this._rows;
-    },
-    set: function(v) {
-      this._rows = v;
-      this._flagRows = true;
-    }
-  },
-  frameRate: {
-    enumerable: true,
-    get: function() {
-      return this._frameRate;
-    },
-    set: function(v) {
-      this._frameRate = v;
-      this._flagFrameRate = true;
-    }
-  },
-  index: {
-    enumerable: true,
-    get: function() {
-      return this._index;
-    },
-    set: function(v) {
-      this._index = v;
-      this._flagIndex = true;
-    }
-  }
-};
-
-// src/shapes/circle.js
-var cos3 = Math.cos;
-var sin3 = Math.sin;
-var _Circle = class extends Path {
-  constructor(ox, oy, r, resolution) {
-    const amount = resolution ? Math.max(resolution, 2) : 4;
-    const points = [];
-    for (let i = 0; i < amount; i++) {
-      points.push(new Anchor(0, 0, 0, 0, 0, 0));
-    }
-    super(points, true, true, true);
-    __publicField(this, "_flagRadius", false);
-    __publicField(this, "_radius", 0);
-    for (let prop in proto14) {
-      Object.defineProperty(this, prop, proto14[prop]);
-    }
-    if (typeof r === "number") {
-      this.radius = r;
-    }
-    this._update();
-    if (typeof ox === "number") {
-      this.translation.x = ox;
-    }
-    if (typeof oy === "number") {
-      this.translation.y = oy;
-    }
-  }
-  _update() {
-    if (this._flagVertices || this._flagRadius) {
-      let length = this.vertices.length;
-      if (!this._closed && length > 2) {
-        length -= 1;
-      }
-      const c = 4 / 3 * Math.tan(Math.PI / (length * 2));
-      const radius = this._radius;
-      const rc = radius * c;
-      for (let i = 0; i < this.vertices.length; i++) {
-        const pct = i / length;
-        const theta = pct * TWO_PI;
-        const x = radius * cos3(theta);
-        const y = radius * sin3(theta);
-        const lx = rc * cos3(theta - HALF_PI);
-        const ly = rc * sin3(theta - HALF_PI);
-        const rx = rc * cos3(theta + HALF_PI);
-        const ry = rc * sin3(theta + HALF_PI);
-        const v = this.vertices[i];
-        v.command = i === 0 ? Commands.move : Commands.curve;
-        v.set(x, y);
-        v.controls.left.set(lx, ly);
-        v.controls.right.set(rx, ry);
-      }
-    }
-    super._update.call(this);
-    return this;
-  }
-  flagReset() {
-    this._flagRadius = false;
-    super.flagReset.call(this);
-    return this;
-  }
-  clone(parent) {
-    const clone = new _Circle(0, 0, this.radius, this.vertices.length);
-    clone.translation.copy(this.translation);
-    clone.rotation = this.rotation;
-    clone.scale = this.scale;
-    clone.skewX = this.skewX;
-    clone.skewY = this.skewY;
-    if (this.matrix.manual) {
-      clone.matrix.copy(this.matrix);
-    }
-    for (let i = 0; i < Path.Properties.length; i++) {
-      const k = Path.Properties[i];
-      clone[k] = this[k];
-    }
-    if (parent) {
-      parent.add(clone);
-    }
-    return clone;
-  }
-  toObject() {
-    const object = super.toObject.call(this);
-    for (let i = 0; i < _Circle.Properties.length; i++) {
-      const k = _Circle.Properties[i];
-      object[k] = this[k];
-    }
-    return object;
-  }
-};
-var Circle = _Circle;
-__publicField(Circle, "Properties", ["radius"]);
-var proto14 = {
-  radius: {
-    enumerable: true,
-    get: function() {
-      return this._radius;
-    },
-    set: function(v) {
-      this._radius = v;
-      this._flagRadius = true;
-    }
-  }
-};
-
-// src/shapes/ellipse.js
-var cos4 = Math.cos;
-var sin4 = Math.sin;
-var _Ellipse = class extends Path {
-  constructor(x, y, rx, ry, resolution) {
-    if (typeof ry !== "number" && typeof rx === "number") {
-      ry = rx;
-    }
-    const amount = resolution ? Math.max(resolution, 2) : 4;
-    const points = [];
-    for (let i = 0; i < amount; i++) {
-      points.push(new Anchor());
-    }
-    super(points, true, true, true);
-    __publicField(this, "_flagWidth", false);
-    __publicField(this, "_flagHeight", false);
-    __publicField(this, "_width", 0);
-    __publicField(this, "_height", 0);
-    for (let prop in proto15) {
-      Object.defineProperty(this, prop, proto15[prop]);
-    }
-    if (typeof rx === "number") {
-      this.width = rx * 2;
-    }
-    if (typeof ry === "number") {
-      this.height = ry * 2;
-    }
-    this._update();
-    if (typeof x === "number") {
-      this.translation.x = x;
-    }
-    if (typeof y === "number") {
-      this.translation.y = y;
-    }
-  }
-  _update() {
-    if (this._flagVertices || this._flagWidth || this._flagHeight) {
-      let length = this.vertices.length;
-      if (!this._closed && length > 2) {
-        length -= 1;
-      }
-      const c = 4 / 3 * Math.tan(Math.PI / (this.vertices.length * 2));
-      const radiusX = this._width / 2;
-      const radiusY = this._height / 2;
-      for (let i = 0; i < this.vertices.length; i++) {
-        const pct = i / length;
-        const theta = pct * TWO_PI;
-        const x = radiusX * cos4(theta);
-        const y = radiusY * sin4(theta);
-        const lx = radiusX * c * cos4(theta - HALF_PI);
-        const ly = radiusY * c * sin4(theta - HALF_PI);
-        const rx = radiusX * c * cos4(theta + HALF_PI);
-        const ry = radiusY * c * sin4(theta + HALF_PI);
-        const v = this.vertices[i];
-        v.command = i === 0 ? Commands.move : Commands.curve;
-        v.set(x, y);
-        v.controls.left.set(lx, ly);
-        v.controls.right.set(rx, ry);
-      }
-    }
-    super._update.call(this);
-    return this;
-  }
-  flagReset() {
-    this._flagWidth = this._flagHeight = false;
-    super.flagReset.call(this);
-    return this;
-  }
-  clone(parent) {
-    const rx = this.width / 2;
-    const ry = this.height / 2;
-    const resolution = this.vertices.length;
-    const clone = new _Ellipse(0, 0, rx, ry, resolution);
-    clone.translation.copy(this.translation);
-    clone.rotation = this.rotation;
-    clone.scale = this.scale;
-    clone.skewX = this.skewX;
-    clone.skewY = this.skewY;
-    if (this.matrix.manual) {
-      clone.matrix.copy(this.matrix);
-    }
-    for (let i = 0; i < Path.Properties.length; i++) {
-      const k = Path.Properties[i];
-      clone[k] = this[k];
-    }
-    if (parent) {
-      parent.add(clone);
-    }
-    return clone;
-  }
-  toObject() {
-    const object = super.toObject.call(this);
-    for (let i = 0; i < _Ellipse.Properties.length; i++) {
-      const k = _Ellipse.Properties[i];
-      object[k] = this[k];
-    }
-    return object;
-  }
-};
-var Ellipse = _Ellipse;
-__publicField(Ellipse, "Properties", ["width", "height"]);
-var proto15 = {
-  width: {
-    enumerable: true,
-    get: function() {
-      return this._width;
-    },
-    set: function(v) {
-      this._width = v;
-      this._flagWidth = true;
-    }
-  },
-  height: {
-    enumerable: true,
-    get: function() {
-      return this._height;
-    },
-    set: function(v) {
-      this._height = v;
-      this._flagHeight = true;
-    }
-  }
-};
-
 // src/shapes/line.js
 var Line = class extends Path {
   constructor(x1, y1, x2, y2) {
-    const points = [
-      new Anchor(x1, y1),
-      new Anchor(x2, y2)
-    ];
+    const points = [new Anchor(x1, y1), new Anchor(x2, y2)];
     super(points);
-    for (let prop in proto16) {
-      Object.defineProperty(this, prop, proto16[prop]);
+    for (let prop in proto22) {
+      Object.defineProperty(this, prop, proto22[prop]);
     }
     this.vertices[0].command = Commands.move;
     this.vertices[1].command = Commands.line;
     this.automatic = false;
   }
 };
-var proto16 = {
+var proto22 = {
   left: {
     enumerable: true,
     get: function() {
@@ -5496,620 +6615,6 @@ var proto16 = {
   }
 };
 
-// src/shapes/rounded-rectangle.js
-var _RoundedRectangle = class extends Path {
-  constructor(x, y, width, height, radius) {
-    if (typeof radius === "undefined" && typeof width === "number" && typeof height === "number") {
-      radius = Math.floor(Math.min(width, height) / 12);
-    }
-    const points = [];
-    for (let i = 0; i < 10; i++) {
-      points.push(
-        new Anchor(
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          i === 0 ? Commands.move : Commands.curve
-        )
-      );
-    }
-    super(points);
-    __publicField(this, "_flagWidth", false);
-    __publicField(this, "_flagHeight", false);
-    __publicField(this, "_flagRadius", false);
-    __publicField(this, "_width", 0);
-    __publicField(this, "_height", 0);
-    __publicField(this, "_radius", 12);
-    for (let prop in proto17) {
-      Object.defineProperty(this, prop, proto17[prop]);
-    }
-    this.closed = true;
-    this.automatic = false;
-    this._renderer.flagRadius = FlagRadius.bind(this);
-    if (typeof width === "number") {
-      this.width = width;
-    }
-    if (typeof height === "number") {
-      this.height = height;
-    }
-    if (typeof radius === "number") {
-      this.radius = radius;
-    }
-    this._update();
-    if (typeof x === "number") {
-      this.translation.x = x;
-    }
-    if (typeof y === "number") {
-      this.translation.y = y;
-    }
-  }
-  _update() {
-    if (this._flagVertices || this._flagWidth || this._flagHeight || this._flagRadius) {
-      const width = this._width;
-      const height = this._height;
-      let rx, ry;
-      if (this._radius instanceof Vector) {
-        rx = this._radius.x;
-        ry = this._radius.y;
-      } else {
-        rx = this._radius;
-        ry = this._radius;
-      }
-      let v;
-      let w = width / 2;
-      let h = height / 2;
-      v = this.vertices[0];
-      v.x = -(w - rx);
-      v.y = -h;
-      v = this.vertices[1];
-      v.x = w - rx;
-      v.y = -h;
-      v.controls.left.clear();
-      v.controls.right.x = rx;
-      v.controls.right.y = 0;
-      v = this.vertices[2];
-      v.x = w;
-      v.y = -(h - ry);
-      v.controls.right.clear();
-      v.controls.left.clear();
-      v = this.vertices[3];
-      v.x = w;
-      v.y = h - ry;
-      v.controls.left.clear();
-      v.controls.right.x = 0;
-      v.controls.right.y = ry;
-      v = this.vertices[4];
-      v.x = w - rx;
-      v.y = h;
-      v.controls.right.clear();
-      v.controls.left.clear();
-      v = this.vertices[5];
-      v.x = -(w - rx);
-      v.y = h;
-      v.controls.left.clear();
-      v.controls.right.x = -rx;
-      v.controls.right.y = 0;
-      v = this.vertices[6];
-      v.x = -w;
-      v.y = h - ry;
-      v.controls.left.clear();
-      v.controls.right.clear();
-      v = this.vertices[7];
-      v.x = -w;
-      v.y = -(h - ry);
-      v.controls.left.clear();
-      v.controls.right.x = 0;
-      v.controls.right.y = -ry;
-      v = this.vertices[8];
-      v.x = -(w - rx);
-      v.y = -h;
-      v.controls.left.clear();
-      v.controls.right.clear();
-      v = this.vertices[9];
-      v.copy(this.vertices[8]);
-    }
-    super._update.call(this);
-    return this;
-  }
-  flagReset() {
-    this._flagWidth = this._flagHeight = this._flagRadius = false;
-    super.flagReset.call(this);
-    return this;
-  }
-  clone(parent) {
-    const width = this.width;
-    const height = this.height;
-    const radius = this.radius;
-    const clone = new _RoundedRectangle(0, 0, width, height, radius);
-    clone.translation.copy(this.translation);
-    clone.rotation = this.rotation;
-    clone.scale = this.scale;
-    clone.skewX = this.skewX;
-    clone.skewY = this.skewY;
-    if (this.matrix.manual) {
-      clone.matrix.copy(this.matrix);
-    }
-    for (let i = 0; i < Path.Properties.length; i++) {
-      const k = Path.Properties[i];
-      clone[k] = this[k];
-    }
-    if (parent) {
-      parent.add(clone);
-    }
-    return clone;
-  }
-  toObject() {
-    const object = super.toObject.call(this);
-    for (let i = 0; i < _RoundedRectangle.Properties.length; i++) {
-      const k = _RoundedRectangle.Properties[i];
-      object[k] = this[k];
-    }
-    object.radius = typeof this.radius === "number" ? this.radius : this.radius.toObject();
-    return object;
-  }
-};
-var RoundedRectangle = _RoundedRectangle;
-__publicField(RoundedRectangle, "Properties", ["width", "height", "radius"]);
-var proto17 = {
-  width: {
-    enumerable: true,
-    get: function() {
-      return this._width;
-    },
-    set: function(v) {
-      this._width = v;
-      this._flagWidth = true;
-    }
-  },
-  height: {
-    enumerable: true,
-    get: function() {
-      return this._height;
-    },
-    set: function(v) {
-      this._height = v;
-      this._flagHeight = true;
-    }
-  },
-  radius: {
-    enumerable: true,
-    get: function() {
-      return this._radius;
-    },
-    set: function(v) {
-      if (this._radius instanceof Vector) {
-        this._radius.unbind(Events.Types.change, this._renderer.flagRadius);
-      }
-      this._radius = v;
-      if (this._radius instanceof Vector) {
-        this._radius.bind(Events.Types.change, this._renderer.flagRadius);
-      }
-      this._flagRadius = true;
-    }
-  }
-};
-function FlagRadius() {
-  this._flagRadius = true;
-}
-
-// src/text.js
-var canvas2;
-var min4 = Math.min;
-var max4 = Math.max;
-if (root.document) {
-  canvas2 = document.createElement("canvas");
-}
-var _Text = class extends Shape {
-  constructor(message, x, y, styles) {
-    super();
-    __publicField(this, "_flagValue", true);
-    __publicField(this, "_flagFamily", true);
-    __publicField(this, "_flagSize", true);
-    __publicField(this, "_flagLeading", true);
-    __publicField(this, "_flagAlignment", true);
-    __publicField(this, "_flagBaseline", true);
-    __publicField(this, "_flagStyle", true);
-    __publicField(this, "_flagWeight", true);
-    __publicField(this, "_flagDecoration", true);
-    __publicField(this, "_flagFill", true);
-    __publicField(this, "_flagStroke", true);
-    __publicField(this, "_flagLinewidth", true);
-    __publicField(this, "_flagOpacity", true);
-    __publicField(this, "_flagVisible", true);
-    __publicField(this, "_flagMask", false);
-    __publicField(this, "_flagClip", false);
-    __publicField(this, "_flagDirection", true);
-    __publicField(this, "_value", "");
-    __publicField(this, "_family", "sans-serif");
-    __publicField(this, "_size", 13);
-    __publicField(this, "_leading", 17);
-    __publicField(this, "_alignment", "center");
-    __publicField(this, "_baseline", "middle");
-    __publicField(this, "_style", "normal");
-    __publicField(this, "_weight", 500);
-    __publicField(this, "_decoration", "none");
-    __publicField(this, "_direction", "ltr");
-    __publicField(this, "_fill", "#000");
-    __publicField(this, "_stroke", "none");
-    __publicField(this, "_linewidth", 1);
-    __publicField(this, "_opacity", 1);
-    __publicField(this, "_visible", true);
-    __publicField(this, "_mask", null);
-    __publicField(this, "_clip", false);
-    __publicField(this, "_dashes", null);
-    for (let prop in proto18) {
-      Object.defineProperty(this, prop, proto18[prop]);
-    }
-    this._renderer.type = "text";
-    this._renderer.flagFill = FlagFill2.bind(this);
-    this._renderer.flagStroke = FlagStroke2.bind(this);
-    this.value = message;
-    if (typeof x === "number") {
-      this.translation.x = x;
-    }
-    if (typeof y === "number") {
-      this.translation.y = y;
-    }
-    this.dashes = [];
-    this.dashes.offset = 0;
-    if (!_.isObject(styles)) {
-      return this;
-    }
-    for (let i = 0; i < _Text.Properties.length; i++) {
-      const property = _Text.Properties[i];
-      if (property in styles) {
-        this[property] = styles[property];
-      }
-    }
-  }
-  static Measure(text) {
-    if (canvas2) {
-      const ctx = canvas2.getContext("2d");
-      ctx.font = [
-        text._style,
-        text._weight,
-        `${text._size}px/${text._leading}px`,
-        text._family
-      ].join(" ");
-      const metrics = ctx.measureText(text.value, 0, 0);
-      const height = metrics.actualBoundingBoxDescent + metrics.actualBoundingBoxAscent;
-      return {
-        width: metrics.width,
-        height
-      };
-    } else {
-      const width = this.value.length * this.size * _Text.Ratio;
-      const height = this.leading;
-      console.warn(
-        "Two.Text: unable to accurately measure text, so using an approximation."
-      );
-      return {
-        width,
-        height
-      };
-    }
-  }
-  clone(parent) {
-    const clone = new _Text(this.value);
-    clone.translation.copy(this.translation);
-    clone.rotation = this.rotation;
-    clone.scale = this.scale;
-    for (let i = 0; i < _Text.Properties.length; i++) {
-      const prop = _Text.Properties[i];
-      clone[prop] = this[prop];
-    }
-    if (this.matrix.manual) {
-      clone.matrix.copy(this.matrix);
-    }
-    if (parent) {
-      parent.add(clone);
-    }
-    return clone._update();
-  }
-  toObject() {
-    const result = {
-      translation: this.translation.toObject(),
-      rotation: this.rotation,
-      scale: this.scale
-    };
-    if (this.matrix.manual) {
-      result.matrix = this.matrix.toObject();
-    }
-    for (let i = 0; i < _Text.Properties.length; i++) {
-      const prop = _Text.Properties[i];
-      result[prop] = this[prop];
-    }
-    return result;
-  }
-  noFill() {
-    this.fill = "none";
-    return this;
-  }
-  noStroke() {
-    this.stroke = "none";
-    this.linewidth = 0;
-    return this;
-  }
-  getBoundingClientRect(shallow) {
-    let matrix;
-    let left, right, top, bottom;
-    this._update(true);
-    matrix = shallow ? this.matrix : this.worldMatrix;
-    const { width, height } = _Text.Measure(this);
-    const border = (this._linewidth || 0) / 2;
-    switch (this.alignment) {
-      case "left":
-        left = -border;
-        right = width + border;
-        break;
-      case "right":
-        left = -(width + border);
-        right = border;
-        break;
-      default:
-        left = -(width / 2 + border);
-        right = width / 2 + border;
-    }
-    switch (this.baseline) {
-      case "middle":
-        top = -(height / 2 + border);
-        bottom = height / 2 + border;
-        break;
-      default:
-        top = -(height + border);
-        bottom = border;
-    }
-    const [ax, ay] = matrix.multiply(left, top);
-    const [bx, by] = matrix.multiply(left, bottom);
-    const [cx, cy] = matrix.multiply(right, top);
-    const [dx, dy] = matrix.multiply(right, bottom);
-    top = min4(ay, by, cy, dy);
-    left = min4(ax, bx, cx, dx);
-    right = max4(ax, bx, cx, dx);
-    bottom = max4(ay, by, cy, dy);
-    return {
-      top,
-      left,
-      right,
-      bottom,
-      width: right - left,
-      height: bottom - top
-    };
-  }
-  flagReset() {
-    super.flagReset.call(this);
-    this._flagValue = this._flagFamily = this._flagSize = this._flagLeading = this._flagAlignment = this._flagFill = this._flagStroke = this._flagLinewidth = this._flagOpacity = this._flagVisible = this._flagClip = this._flagDecoration = this._flagClassName = this._flagBaseline = this._flagWeight = this._flagStyle = this._flagDirection = false;
-    return this;
-  }
-};
-var Text = _Text;
-__publicField(Text, "Ratio", 0.6);
-__publicField(Text, "Properties", [
-  "value",
-  "family",
-  "size",
-  "leading",
-  "alignment",
-  "linewidth",
-  "style",
-  "weight",
-  "decoration",
-  "direction",
-  "baseline",
-  "opacity",
-  "visible",
-  "fill",
-  "stroke"
-]);
-var proto18 = {
-  value: {
-    enumerable: true,
-    get: function() {
-      return this._value;
-    },
-    set: function(v) {
-      this._value = v;
-      this._flagValue = true;
-    }
-  },
-  family: {
-    enumerable: true,
-    get: function() {
-      return this._family;
-    },
-    set: function(v) {
-      this._family = v;
-      this._flagFamily = true;
-    }
-  },
-  size: {
-    enumerable: true,
-    get: function() {
-      return this._size;
-    },
-    set: function(v) {
-      this._size = v;
-      this._flagSize = true;
-    }
-  },
-  leading: {
-    enumerable: true,
-    get: function() {
-      return this._leading;
-    },
-    set: function(v) {
-      this._leading = v;
-      this._flagLeading = true;
-    }
-  },
-  alignment: {
-    enumerable: true,
-    get: function() {
-      return this._alignment;
-    },
-    set: function(v) {
-      this._alignment = v;
-      this._flagAlignment = true;
-    }
-  },
-  linewidth: {
-    enumerable: true,
-    get: function() {
-      return this._linewidth;
-    },
-    set: function(v) {
-      this._linewidth = v;
-      this._flagLinewidth = true;
-    }
-  },
-  style: {
-    enumerable: true,
-    get: function() {
-      return this._style;
-    },
-    set: function(v) {
-      this._style = v;
-      this._flagStyle = true;
-    }
-  },
-  weight: {
-    enumerable: true,
-    get: function() {
-      return this._weight;
-    },
-    set: function(v) {
-      this._weight = v;
-      this._flagWeight = true;
-    }
-  },
-  decoration: {
-    enumerable: true,
-    get: function() {
-      return this._decoration;
-    },
-    set: function(v) {
-      this._decoration = v;
-      this._flagDecoration = true;
-    }
-  },
-  direction: {
-    enumerable: true,
-    get: function() {
-      return this._direction;
-    },
-    set: function(v) {
-      this._direction = v;
-      this._flagDirection = true;
-    }
-  },
-  baseline: {
-    enumerable: true,
-    get: function() {
-      return this._baseline;
-    },
-    set: function(v) {
-      this._baseline = v;
-      this._flagBaseline = true;
-    }
-  },
-  opacity: {
-    enumerable: true,
-    get: function() {
-      return this._opacity;
-    },
-    set: function(v) {
-      this._opacity = v;
-      this._flagOpacity = true;
-    }
-  },
-  visible: {
-    enumerable: true,
-    get: function() {
-      return this._visible;
-    },
-    set: function(v) {
-      this._visible = v;
-      this._flagVisible = true;
-    }
-  },
-  fill: {
-    enumerable: true,
-    get: function() {
-      return this._fill;
-    },
-    set: function(f) {
-      if (this._fill instanceof Gradient || this._fill instanceof LinearGradient || this._fill instanceof RadialGradient || this._fill instanceof Texture) {
-        this._fill.unbind(Events.Types.change, this._renderer.flagFill);
-      }
-      this._fill = f;
-      this._flagFill = true;
-      if (this._fill instanceof Gradient || this._fill instanceof LinearGradient || this._fill instanceof RadialGradient || this._fill instanceof Texture) {
-        this._fill.bind(Events.Types.change, this._renderer.flagFill);
-      }
-    }
-  },
-  stroke: {
-    enumerable: true,
-    get: function() {
-      return this._stroke;
-    },
-    set: function(f) {
-      if (this._stroke instanceof Gradient || this._stroke instanceof LinearGradient || this._stroke instanceof RadialGradient || this._stroke instanceof Texture) {
-        this._stroke.unbind(Events.Types.change, this._renderer.flagStroke);
-      }
-      this._stroke = f;
-      this._flagStroke = true;
-      if (this._stroke instanceof Gradient || this._stroke instanceof LinearGradient || this._stroke instanceof RadialGradient || this._stroke instanceof Texture) {
-        this._stroke.bind(Events.Types.change, this._renderer.flagStroke);
-      }
-    }
-  },
-  mask: {
-    enumerable: true,
-    get: function() {
-      return this._mask;
-    },
-    set: function(v) {
-      this._mask = v;
-      this._flagMask = true;
-      if (_.isObject(v) && !v.clip) {
-        v.clip = true;
-      }
-    }
-  },
-  clip: {
-    enumerable: true,
-    get: function() {
-      return this._clip;
-    },
-    set: function(v) {
-      this._clip = v;
-      this._flagClip = true;
-    }
-  },
-  dashes: {
-    enumerable: true,
-    get: function() {
-      return this._dashes;
-    },
-    set: function(v) {
-      if (typeof v.offset !== "number") {
-        v.offset = this.dashes && this._dashes.offset || 0;
-      }
-      this._dashes = v;
-    }
-  }
-};
-function FlagFill2() {
-  this._flagFill = true;
-}
-function FlagStroke2() {
-  this._flagStroke = true;
-}
-
 // src/utils/interpret-svg.js
 var regex2 = {
   path: /[+-]?(?:\d*\.\d+|\d+)(?:[eE][+-]\d+)?/g,
@@ -6121,7 +6626,13 @@ var alignments = {
   middle: "center",
   end: "right"
 };
-var reservedAttributesToRemove = ["id", "class", "transform", "xmlns", "viewBox"];
+var reservedAttributesToRemove = [
+  "id",
+  "class",
+  "transform",
+  "xmlns",
+  "viewBox"
+];
 var overwriteAttrs = ["x", "y", "width", "height", "href", "xlink:href"];
 function getAlignment(anchor2) {
   return alignments[anchor2];
@@ -6132,7 +6643,7 @@ function getBaseline(node) {
   return a || b;
 }
 function getTagName(tag) {
-  return tag.replace(/svg:/ig, "").toLowerCase();
+  return tag.replace(/svg:/gi, "").toLowerCase();
 }
 function applyTransformsToVector(transforms, vector3) {
   vector3.x += transforms.translateX;
@@ -6575,10 +7086,14 @@ var read = {
       points = node.getAttribute("points");
     }
     const verts = [];
-    points.replace(/(-?[\d.eE-]+)[,|\s](-?[\d.eE-]+)/g, function(match, p1, p2) {
-      verts.push(new Anchor(parseFloat(p1), parseFloat(p2)));
-    });
-    const poly = new Path(verts, true).noStroke();
+    points.replace(
+      /(-?[\d.eE-]+)[,|\s](-?[\d.eE-]+)/g,
+      function(match, p1, p2) {
+        verts.push(new Anchor(parseFloat(p1), parseFloat(p2)));
+      }
+    );
+    const poly = new Path(verts, true);
+    poly.stroke = "none";
     poly.fill = "black";
     applySvgAttributes.call(this, node, poly, parentStyles);
     return poly;
@@ -6601,7 +7116,7 @@ var read = {
     if (path) {
       let coord = new Anchor();
       let control, coords;
-      let commands = path.match(/[a-df-z][^a-df-z]*/ig);
+      let commands = path.match(/[a-df-z][^a-df-z]*/gi);
       const last = commands.length - 1;
       _.each(commands.slice(0), function(command, i) {
         const items = command.slice(1).trim().match(regex2.path);
@@ -6863,7 +7378,8 @@ var read = {
         }
       });
     }
-    path = new Path(points, closed2, void 0, true).noStroke();
+    path = new Path(points, closed2, void 0, true);
+    path.stroke = "none";
     path.fill = "black";
     const rect = path.getBoundingClientRect(true);
     rect.centroid = {
@@ -6881,7 +7397,8 @@ var read = {
     const x = parseFloat(node.getAttribute("cx"));
     const y = parseFloat(node.getAttribute("cy"));
     const r = parseFloat(node.getAttribute("r"));
-    const circle = new Circle(0, 0, r).noStroke();
+    const circle = new Circle(0, 0, r);
+    circle.stroke = "none";
     circle.fill = "black";
     applySvgAttributes.call(this, node, circle, parentStyles);
     circle.translation.x = x;
@@ -6893,7 +7410,8 @@ var read = {
     const y = parseFloat(node.getAttribute("cy"));
     const width = parseFloat(node.getAttribute("rx"));
     const height = parseFloat(node.getAttribute("ry"));
-    const ellipse = new Ellipse(0, 0, width, height).noStroke();
+    const ellipse = new Ellipse(0, 0, width, height);
+    ellipse.stroke = "none";
     ellipse.fill = "black";
     applySvgAttributes.call(this, node, ellipse, parentStyles);
     ellipse.translation.x = x;
@@ -6910,7 +7428,8 @@ var read = {
     const height = parseFloat(node.getAttribute("height"));
     const w2 = width / 2;
     const h2 = height / 2;
-    const rect = new Rectangle(0, 0, width, height).noStroke();
+    const rect = new Rectangle(0, 0, width, height);
+    rect.stroke = "none";
     rect.fill = "black";
     applySvgAttributes.call(this, node, rect, parentStyles);
     rect.translation.x += w2;
@@ -6925,7 +7444,8 @@ var read = {
     const w2 = width / 2;
     const h2 = height / 2;
     const radius = new Vector(rx, ry);
-    const rect = new RoundedRectangle(0, 0, width, height, radius).noStroke();
+    const rect = new RoundedRectangle(0, 0, width, height, radius);
+    rect.stroke = "none";
     rect.fill = "black";
     applySvgAttributes.call(this, node, rect, parentStyles);
     rect.translation.x += w2;
@@ -6966,8 +7486,8 @@ var read = {
     for (let i = 0; i < node.children.length; i++) {
       const child = node.children[i];
       let offset = child.getAttribute("offset");
-      if (/%/ig.test(offset)) {
-        offset = parseFloat(offset.replace(/%/ig, "")) / 100;
+      if (/%/gi.test(offset)) {
+        offset = parseFloat(offset.replace(/%/gi, "")) / 100;
       }
       offset = parseFloat(offset);
       let color = child.getAttribute("stop-color");
@@ -7024,8 +7544,8 @@ var read = {
     for (let i = 0; i < node.children.length; i++) {
       const child = node.children[i];
       let offset = child.getAttribute("offset");
-      if (/%/ig.test(offset)) {
-        offset = parseFloat(offset.replace(/%/ig, "")) / 100;
+      if (/%/gi.test(offset)) {
+        offset = parseFloat(offset.replace(/%/gi, "")) / 100;
       }
       offset = parseFloat(offset);
       let color = child.getAttribute("stop-color");
@@ -7121,8 +7641,8 @@ var _ImageSequence = class extends Rectangle {
     __publicField(this, "_textures", null);
     __publicField(this, "_frameRate", 0);
     __publicField(this, "_origin", null);
-    for (let prop in proto19) {
-      Object.defineProperty(this, prop, proto19[prop]);
+    for (let prop in proto23) {
+      Object.defineProperty(this, prop, proto23[prop]);
     }
     this._renderer.flagTextures = FlagTextures.bind(this);
     this._renderer.bindTextures = BindTextures.bind(this);
@@ -7142,6 +7662,23 @@ var _ImageSequence = class extends Rectangle {
       this.frameRate = _ImageSequence.DefaultFrameRate;
     }
     this.index = 0;
+  }
+  static fromObject(obj) {
+    const sequence = new _ImageSequence().copy(obj);
+    if ("id" in obj) {
+      sequence.id = obj.id;
+    }
+    return sequence;
+  }
+  copy(imageSequence) {
+    super.copy.call(this, imageSequence);
+    for (let i = 0; i < _ImageSequence.Properties.length; i++) {
+      const k = _ImageSequence.Properties[i];
+      if (k in imageSequence) {
+        this[k] = imageSequence[k];
+      }
+    }
+    return this;
   }
   play(firstFrame, lastFrame, onLastFrame) {
     this._playing = true;
@@ -7196,9 +7733,9 @@ var _ImageSequence = class extends Rectangle {
     });
     object.frameRate = this.frameRate;
     object.index = this.index;
-    object._firstFrame = this._firstFrame;
-    object._lastFrame = this._lastFrame;
-    object._loop = this._loop;
+    object.firstFrame = this.firstFrame;
+    object.lastFrame = this.lastFrame;
+    object.loop = this.loop;
     return object;
   }
   _update() {
@@ -7273,10 +7810,13 @@ var ImageSequence = _ImageSequence;
 __publicField(ImageSequence, "Properties", [
   "textures",
   "frameRate",
-  "index"
+  "index",
+  "firstFrame",
+  "lastFrame",
+  "loop"
 ]);
 __publicField(ImageSequence, "DefaultFrameRate", 30);
-var proto19 = {
+var proto23 = {
   frameRate: {
     enumerable: true,
     get: function() {
@@ -7312,6 +7852,33 @@ var proto19 = {
       this._textures.bind(Events.Types.insert, bindTextures).bind(Events.Types.remove, unbindTextures);
       bindTextures(this._textures);
     }
+  },
+  firstFrame: {
+    enumerable: true,
+    get: function() {
+      return this._firstFrame;
+    },
+    set: function(v) {
+      this._firstFrame = v;
+    }
+  },
+  lastFrame: {
+    enumerable: true,
+    get: function() {
+      return this._lastFrame;
+    },
+    set: function(v) {
+      this._lastFrame = v;
+    }
+  },
+  loop: {
+    enumerable: true,
+    get: function() {
+      return this._loop;
+    },
+    set: function(v) {
+      this._loop = !!v;
+    }
   }
 };
 function FlagTextures() {
@@ -7339,817 +7906,828 @@ function GenerateTexture(obj) {
   }
 }
 
-// src/shapes/arc-segment.js
-var _ArcSegment = class extends Path {
-  constructor(x, y, ir, or, sa, ea, res) {
-    const amount = res || Constants.Resolution * 3;
-    const points = [];
-    for (let i = 0; i < amount; i++) {
-      points.push(new Anchor());
-    }
-    super(points, true, false, true);
-    __publicField(this, "_flagStartAngle", false);
-    __publicField(this, "_flagEndAngle", false);
-    __publicField(this, "_flagInnerRadius", false);
-    __publicField(this, "_flagOuterRadius", false);
-    __publicField(this, "_startAngle", 0);
-    __publicField(this, "_endAngle", TWO_PI);
-    __publicField(this, "_innerRadius", 0);
-    __publicField(this, "_outerRadius", 0);
-    for (let prop in proto20) {
-      Object.defineProperty(this, prop, proto20[prop]);
-    }
-    if (typeof ir === "number") {
-      this.innerRadius = ir;
-    }
-    if (typeof or === "number") {
-      this.outerRadius = or;
-    }
-    if (typeof sa === "number") {
-      this.startAngle = sa;
-    }
-    if (typeof ea === "number") {
-      this.endAngle = ea;
-    }
-    this._update();
-    if (typeof x === "number") {
-      this.translation.x = x;
-    }
-    if (typeof y === "number") {
-      this.translation.y = y;
-    }
-  }
-  _update() {
-    if (this._flagVertices || this._flagStartAngle || this._flagEndAngle || this._flagInnerRadius || this._flagOuterRadius) {
-      const sa = this._startAngle;
-      const ea = this._endAngle;
-      const ir = this._innerRadius;
-      const or = this._outerRadius;
-      const connected = mod(sa, TWO_PI) === mod(ea, TWO_PI);
-      const punctured = ir > 0;
-      const vertices = this.vertices;
-      let length = punctured ? vertices.length / 2 : vertices.length;
-      let command, id = 0;
-      let i, last, pct, v, theta, step, x, y, amp;
-      if (connected) {
-        length--;
-      } else if (!punctured) {
-        length -= 2;
+// src/renderers/canvas.js
+var emptyArray = [];
+var max4 = Math.max;
+var min4 = Math.min;
+var abs = Math.abs;
+var sin6 = Math.sin;
+var cos6 = Math.cos;
+var acos = Math.acos;
+var sqrt = Math.sqrt;
+var canvas2 = {
+  isHidden: /(undefined|none|transparent)/i,
+  alignments: {
+    left: "start",
+    middle: "center",
+    right: "end"
+  },
+  baselines: {
+    top: "top",
+    middle: "middle",
+    bottom: "bottom",
+    baseline: "alphabetic"
+  },
+  getRendererType: function(type) {
+    return type in canvas2 ? type : "path";
+  },
+  group: {
+    renderChild: function(child) {
+      const prop = canvas2.getRendererType(child._renderer.type);
+      canvas2[prop].render.call(child, this.ctx, true, this.clip);
+    },
+    render: function(ctx) {
+      if (!this._visible) {
+        return this;
       }
-      for (i = 0, last = length - 1; i < length; i++) {
-        pct = i / last;
-        v = vertices[id];
-        theta = pct * (ea - sa) + sa;
-        step = (ea - sa) / length;
-        x = or * Math.cos(theta);
-        y = or * Math.sin(theta);
-        switch (i) {
-          case 0:
-            command = Commands.move;
+      this._update();
+      const matrix = this._matrix.elements;
+      const parent = this.parent;
+      this._renderer.opacity = this._opacity * (parent && parent._renderer ? parent._renderer.opacity : 1);
+      const mask = this._mask;
+      const defaultMatrix = isDefaultMatrix(matrix);
+      const shouldIsolate = !defaultMatrix || !!mask;
+      if (!this._renderer.context) {
+        this._renderer.context = {};
+      }
+      this._renderer.context.ctx = ctx;
+      if (shouldIsolate) {
+        ctx.save();
+        if (!defaultMatrix) {
+          ctx.transform(
+            matrix[0],
+            matrix[3],
+            matrix[1],
+            matrix[4],
+            matrix[2],
+            matrix[5]
+          );
+        }
+      }
+      if (mask) {
+        const prop = canvas2.getRendererType(mask._renderer.type);
+        canvas2[prop].render.call(mask, ctx, true);
+      }
+      if (this._opacity > 0 && this._scale !== 0) {
+        for (let i = 0; i < this.children.length; i++) {
+          const child = this.children[i];
+          const prop = canvas2.getRendererType(child._renderer.type);
+          canvas2[prop].render.call(child, ctx);
+        }
+      }
+      if (shouldIsolate) {
+        ctx.restore();
+      }
+      return this.flagReset();
+    }
+  },
+  path: {
+    render: function(ctx, forced, parentClipped) {
+      let matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter, closed2, commands, length, last, prev, a, b, c, d, ux, uy, vx, vy, ar, bl, br, cl, x, y, mask, clip, defaultMatrix, isOffset, dashes, po;
+      po = this.parent && this.parent._renderer ? this.parent._renderer.opacity : 1;
+      mask = this._mask;
+      clip = this._clip;
+      opacity = this._opacity * (po || 1);
+      visible = this._visible;
+      if (!forced && (!visible || clip || opacity === 0)) {
+        return this;
+      }
+      this._update();
+      matrix = this._matrix.elements;
+      stroke = this._stroke;
+      linewidth = this._linewidth;
+      fill = this._fill;
+      cap = this._cap;
+      join = this._join;
+      miter = this._miter;
+      closed2 = this._closed;
+      commands = this._renderer.vertices;
+      length = commands.length;
+      last = length - 1;
+      defaultMatrix = isDefaultMatrix(matrix);
+      dashes = this.dashes;
+      if (!defaultMatrix) {
+        ctx.save();
+        ctx.transform(
+          matrix[0],
+          matrix[3],
+          matrix[1],
+          matrix[4],
+          matrix[2],
+          matrix[5]
+        );
+      }
+      if (mask) {
+        const prop = canvas2.getRendererType(mask._renderer.type);
+        canvas2[prop].render.call(mask, ctx, true);
+      }
+      if (fill) {
+        if (typeof fill === "string") {
+          ctx.fillStyle = fill;
+        } else {
+          const prop = canvas2.getRendererType(fill._renderer.type);
+          canvas2[prop].render.call(fill, ctx, this);
+          ctx.fillStyle = fill._renderer.effect;
+        }
+      }
+      if (stroke) {
+        if (typeof stroke === "string") {
+          ctx.strokeStyle = stroke;
+        } else {
+          const prop = canvas2.getRendererType(stroke._renderer.type);
+          canvas2[prop].render.call(stroke, ctx, this);
+          ctx.strokeStyle = stroke._renderer.effect;
+        }
+        if (linewidth) {
+          ctx.lineWidth = linewidth;
+        }
+        if (miter) {
+          ctx.miterLimit = miter;
+        }
+        if (join) {
+          ctx.lineJoin = join;
+        }
+        if (!closed2 && cap) {
+          ctx.lineCap = cap;
+        }
+      }
+      if (typeof opacity === "number") {
+        ctx.globalAlpha = opacity;
+      }
+      if (dashes && dashes.length > 0) {
+        ctx.lineDashOffset = dashes.offset || 0;
+        ctx.setLineDash(dashes);
+      }
+      ctx.beginPath();
+      let rx, ry, xAxisRotation, largeArcFlag, sweepFlag, ax, ay;
+      for (let i = 0; i < length; i++) {
+        b = commands[i];
+        x = b.x;
+        y = b.y;
+        switch (b.command) {
+          case Commands.close:
+            ctx.closePath();
+            break;
+          case Commands.arc:
+            rx = b.rx;
+            ry = b.ry;
+            xAxisRotation = b.xAxisRotation;
+            largeArcFlag = b.largeArcFlag;
+            sweepFlag = b.sweepFlag;
+            prev = closed2 ? mod(i - 1, length) : max4(i - 1, 0);
+            a = commands[prev];
+            ax = a.x;
+            ay = a.y;
+            canvas2.renderSvgArcCommand(
+              ctx,
+              ax,
+              ay,
+              rx,
+              ry,
+              largeArcFlag,
+              sweepFlag,
+              xAxisRotation,
+              x,
+              y
+            );
+            break;
+          case Commands.curve:
+            prev = closed2 ? mod(i - 1, length) : Math.max(i - 1, 0);
+            a = commands[prev];
+            ar = a.controls && a.controls.right || Vector.zero;
+            bl = b.controls && b.controls.left || Vector.zero;
+            if (a._relative) {
+              vx = ar.x + a.x;
+              vy = ar.y + a.y;
+            } else {
+              vx = ar.x;
+              vy = ar.y;
+            }
+            if (b._relative) {
+              ux = bl.x + b.x;
+              uy = bl.y + b.y;
+            } else {
+              ux = bl.x;
+              uy = bl.y;
+            }
+            ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
+            if (i >= last && closed2) {
+              c = d;
+              br = b.controls && b.controls.right || Vector.zero;
+              cl = c.controls && c.controls.left || Vector.zero;
+              if (b._relative) {
+                vx = br.x + b.x;
+                vy = br.y + b.y;
+              } else {
+                vx = br.x;
+                vy = br.y;
+              }
+              if (c._relative) {
+                ux = cl.x + c.x;
+                uy = cl.y + c.y;
+              } else {
+                ux = cl.x;
+                uy = cl.y;
+              }
+              x = c.x;
+              y = c.y;
+              ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
+            }
+            break;
+          case Commands.line:
+            ctx.lineTo(x, y);
+            break;
+          case Commands.move:
+            d = b;
+            ctx.moveTo(x, y);
+            break;
+        }
+      }
+      if (closed2) {
+        ctx.closePath();
+      }
+      if (!clip && !parentClipped) {
+        if (!canvas2.isHidden.test(fill)) {
+          isOffset = fill._renderer && fill._renderer.offset;
+          if (isOffset) {
+            ctx.save();
+            ctx.translate(-fill._renderer.offset.x, -fill._renderer.offset.y);
+            ctx.scale(fill._renderer.scale.x, fill._renderer.scale.y);
+          }
+          ctx.fill();
+          if (isOffset) {
+            ctx.restore();
+          }
+        }
+        if (!canvas2.isHidden.test(stroke)) {
+          isOffset = stroke._renderer && stroke._renderer.offset;
+          if (isOffset) {
+            ctx.save();
+            ctx.translate(
+              -stroke._renderer.offset.x,
+              -stroke._renderer.offset.y
+            );
+            ctx.scale(stroke._renderer.scale.x, stroke._renderer.scale.y);
+            ctx.lineWidth = linewidth / stroke._renderer.scale.x;
+          }
+          ctx.stroke();
+          if (isOffset) {
+            ctx.restore();
+          }
+        }
+      }
+      if (!defaultMatrix) {
+        ctx.restore();
+      }
+      if (clip && !parentClipped) {
+        ctx.clip();
+      }
+      if (dashes && dashes.length > 0) {
+        ctx.setLineDash(emptyArray);
+      }
+      return this.flagReset();
+    }
+  },
+  points: {
+    render: function(ctx, forced, parentClipped) {
+      let me, stroke, linewidth, fill, opacity, visible, size, commands, length, b, x, y, defaultMatrix, isOffset, dashes, po;
+      po = this.parent && this.parent._renderer ? this.parent._renderer.opacity : 1;
+      opacity = this._opacity * (po || 1);
+      visible = this._visible;
+      if (!forced && (!visible || opacity === 0)) {
+        return this;
+      }
+      this._update();
+      me = this._matrix.elements;
+      stroke = this._stroke;
+      linewidth = this._linewidth;
+      fill = this._fill;
+      commands = this._renderer.collection;
+      length = commands.length;
+      defaultMatrix = isDefaultMatrix(me);
+      dashes = this.dashes;
+      size = this._size;
+      if (!defaultMatrix) {
+        ctx.save();
+        ctx.transform(me[0], me[3], me[1], me[4], me[2], me[5]);
+      }
+      if (fill) {
+        if (typeof fill === "string") {
+          ctx.fillStyle = fill;
+        } else {
+          const prop = canvas2.getRendererType(fill._renderer.type);
+          canvas2[prop].render.call(fill, ctx, this);
+          ctx.fillStyle = fill._renderer.effect;
+        }
+      }
+      if (stroke) {
+        if (typeof stroke === "string") {
+          ctx.strokeStyle = stroke;
+        } else {
+          const prop = canvas2.getRendererType(stroke._renderer.type);
+          canvas2[prop].render.call(stroke, ctx, this);
+          ctx.strokeStyle = stroke._renderer.effect;
+        }
+        if (linewidth) {
+          ctx.lineWidth = linewidth;
+        }
+      }
+      if (typeof opacity === "number") {
+        ctx.globalAlpha = opacity;
+      }
+      if (dashes && dashes.length > 0) {
+        ctx.lineDashOffset = dashes.offset || 0;
+        ctx.setLineDash(dashes);
+      }
+      ctx.beginPath();
+      let radius = size * 0.5, m;
+      if (!this._sizeAttenuation) {
+        m = this.worldMatrix.elements;
+        m = decomposeMatrix(m[0], m[3], m[1], m[4], m[2], m[5]);
+        radius /= Math.max(m.scaleX, m.scaleY);
+      }
+      for (let i = 0; i < length; i++) {
+        b = commands[i];
+        x = b.x;
+        y = b.y;
+        ctx.moveTo(x + radius, y);
+        ctx.arc(x, y, radius, 0, TWO_PI);
+      }
+      if (!parentClipped) {
+        if (!canvas2.isHidden.test(fill)) {
+          isOffset = fill._renderer && fill._renderer.offset;
+          if (isOffset) {
+            ctx.save();
+            ctx.translate(-fill._renderer.offset.x, -fill._renderer.offset.y);
+            ctx.scale(fill._renderer.scale.x, fill._renderer.scale.y);
+          }
+          ctx.fill();
+          if (isOffset) {
+            ctx.restore();
+          }
+        }
+        if (!canvas2.isHidden.test(stroke)) {
+          isOffset = stroke._renderer && stroke._renderer.offset;
+          if (isOffset) {
+            ctx.save();
+            ctx.translate(
+              -stroke._renderer.offset.x,
+              -stroke._renderer.offset.y
+            );
+            ctx.scale(stroke._renderer.scale.x, stroke._renderer.scale.y);
+            ctx.lineWidth = linewidth / stroke._renderer.scale.x;
+          }
+          ctx.stroke();
+          if (isOffset) {
+            ctx.restore();
+          }
+        }
+      }
+      if (!defaultMatrix) {
+        ctx.restore();
+      }
+      if (dashes && dashes.length > 0) {
+        ctx.setLineDash(emptyArray);
+      }
+      return this.flagReset();
+    }
+  },
+  text: {
+    render: function(ctx, forced, parentClipped) {
+      const po = this.parent && this.parent._renderer ? this.parent._renderer.opacity : 1;
+      const opacity = this._opacity * po;
+      const visible = this._visible;
+      const mask = this._mask;
+      const clip = this._clip;
+      if (!forced && (!visible || clip || opacity === 0)) {
+        return this;
+      }
+      this._update();
+      const matrix = this._matrix.elements;
+      const stroke = this._stroke;
+      const linewidth = this._linewidth;
+      const fill = this._fill;
+      const decoration = this._decoration;
+      const direction = this._direction;
+      const defaultMatrix = isDefaultMatrix(matrix);
+      const isOffset = fill._renderer && fill._renderer.offset && stroke._renderer && stroke._renderer.offset;
+      const dashes = this.dashes;
+      const alignment = canvas2.alignments[this._alignment] || this._alignment;
+      const baseline = canvas2.baselines[this._baseline] || this._baseline;
+      let a, b, c, d, e, sx, sy, x1, y1, x2, y2;
+      if (!defaultMatrix) {
+        ctx.save();
+        ctx.transform(
+          matrix[0],
+          matrix[3],
+          matrix[1],
+          matrix[4],
+          matrix[2],
+          matrix[5]
+        );
+      }
+      if (mask) {
+        const prop = canvas2.getRendererType(mask._renderer.type);
+        canvas2[prop].render.call(mask, ctx, true);
+      }
+      if (!isOffset) {
+        ctx.font = [
+          this._style,
+          this._weight,
+          this._size + "px/" + this._leading + "px",
+          this._family
+        ].join(" ");
+      }
+      ctx.textAlign = alignment;
+      ctx.textBaseline = baseline;
+      ctx.direction = direction;
+      if (fill) {
+        if (typeof fill === "string") {
+          ctx.fillStyle = fill;
+        } else {
+          const prop = canvas2.getRendererType(fill._renderer.type);
+          canvas2[prop].render.call(fill, ctx, this);
+          ctx.fillStyle = fill._renderer.effect;
+        }
+      }
+      if (stroke) {
+        if (typeof stroke === "string") {
+          ctx.strokeStyle = stroke;
+        } else {
+          const prop = canvas2.getRendererType(stroke._renderer.type);
+          canvas2[prop].render.call(stroke, ctx, this);
+          ctx.strokeStyle = stroke._renderer.effect;
+        }
+        if (linewidth) {
+          ctx.lineWidth = linewidth;
+        }
+      }
+      if (typeof opacity === "number") {
+        ctx.globalAlpha = opacity;
+      }
+      if (dashes && dashes.length > 0) {
+        ctx.lineDashOffset = dashes.offset || 0;
+        ctx.setLineDash(dashes);
+      }
+      if (!clip && !parentClipped) {
+        if (!canvas2.isHidden.test(fill)) {
+          if (fill._renderer && fill._renderer.offset) {
+            sx = fill._renderer.scale.x;
+            sy = fill._renderer.scale.y;
+            ctx.save();
+            ctx.translate(-fill._renderer.offset.x, -fill._renderer.offset.y);
+            ctx.scale(sx, sy);
+            a = this._size / fill._renderer.scale.y;
+            b = this._leading / fill._renderer.scale.y;
+            ctx.font = [
+              this._style,
+              this._weight,
+              a + "px/",
+              b + "px",
+              this._family
+            ].join(" ");
+            c = fill._renderer.offset.x / fill._renderer.scale.x;
+            d = fill._renderer.offset.y / fill._renderer.scale.y;
+            ctx.fillText(this.value, c, d);
+            ctx.restore();
+          } else {
+            ctx.fillText(this.value, 0, 0);
+          }
+        }
+        if (!canvas2.isHidden.test(stroke)) {
+          if (stroke._renderer && stroke._renderer.offset) {
+            sx = stroke._renderer.scale.x;
+            sy = stroke._renderer.scale.y;
+            ctx.save();
+            ctx.translate(
+              -stroke._renderer.offset.x,
+              -stroke._renderer.offset.y
+            );
+            ctx.scale(sx, sy);
+            a = this._size / stroke._renderer.scale.y;
+            b = this._leading / stroke._renderer.scale.y;
+            ctx.font = [
+              this._style,
+              this._weight,
+              a + "px/",
+              b + "px",
+              this._family
+            ].join(" ");
+            c = stroke._renderer.offset.x / stroke._renderer.scale.x;
+            d = stroke._renderer.offset.y / stroke._renderer.scale.y;
+            e = linewidth / stroke._renderer.scale.x;
+            ctx.lineWidth = e;
+            ctx.strokeText(this.value, c, d);
+            ctx.restore();
+          } else {
+            ctx.strokeText(this.value, 0, 0);
+          }
+        }
+      }
+      if (/(underline|strikethrough)/i.test(decoration)) {
+        const metrics = ctx.measureText(this.value);
+        let scalar = 1;
+        switch (decoration) {
+          case "underline":
+            y1 = metrics.actualBoundingBoxDescent;
+            y2 = metrics.actualBoundingBoxDescent;
+            break;
+          case "strikethrough":
+            y1 = 0;
+            y2 = 0;
+            scalar = 0.5;
+            break;
+        }
+        switch (baseline) {
+          case "top":
+            y1 += this._size * scalar;
+            y2 += this._size * scalar;
+            break;
+          case "baseline":
+          case "bottom":
+            y1 -= this._size * scalar;
+            y2 -= this._size * scalar;
+            break;
+        }
+        switch (alignment) {
+          case "left":
+          case "start":
+            x1 = 0;
+            x2 = metrics.width;
+            break;
+          case "right":
+          case "end":
+            x1 = -metrics.width;
+            x2 = 0;
             break;
           default:
-            command = Commands.curve;
+            x1 = -metrics.width / 2;
+            x2 = metrics.width / 2;
         }
-        v.command = command;
-        v.x = x;
-        v.y = y;
-        v.controls.left.clear();
-        v.controls.right.clear();
-        if (v.command === Commands.curve) {
-          amp = or * step / Math.PI;
-          v.controls.left.x = amp * Math.cos(theta - HALF_PI);
-          v.controls.left.y = amp * Math.sin(theta - HALF_PI);
-          v.controls.right.x = amp * Math.cos(theta + HALF_PI);
-          v.controls.right.y = amp * Math.sin(theta + HALF_PI);
-          if (i === 1) {
-            v.controls.left.multiplyScalar(2);
-          }
-          if (i === last) {
-            v.controls.right.multiplyScalar(2);
-          }
-        }
-        id++;
+        ctx.lineWidth = Math.max(Math.floor(this._size / 15), 1);
+        ctx.strokeStyle = ctx.fillStyle;
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
       }
-      if (punctured) {
-        if (connected) {
-          vertices[id].command = Commands.close;
-          id++;
+      if (!defaultMatrix) {
+        ctx.restore();
+      }
+      if (clip && !parentClipped) {
+        ctx.clip();
+      }
+      if (dashes && dashes.length > 0) {
+        ctx.setLineDash(emptyArray);
+      }
+      return this.flagReset();
+    }
+  },
+  "linear-gradient": {
+    render: function(ctx, parent) {
+      if (!parent) {
+        return;
+      }
+      this._update();
+      if (!this._renderer.effect || this._flagEndPoints || this._flagStops || this._flagUnits) {
+        let rect;
+        let lx = this.left._x;
+        let ly = this.left._y;
+        let rx = this.right._x;
+        let ry = this.right._y;
+        if (/objectBoundingBox/i.test(this._units)) {
+          rect = parent.getBoundingClientRect(true);
+          lx = (lx - 0.5) * rect.width;
+          ly = (ly - 0.5) * rect.height;
+          rx = (rx - 0.5) * rect.width;
+          ry = (ry - 0.5) * rect.height;
+        }
+        this._renderer.effect = ctx.createLinearGradient(lx, ly, rx, ry);
+        for (let i = 0; i < this.stops.length; i++) {
+          const stop = this.stops[i];
+          this._renderer.effect.addColorStop(stop._offset, stop._color);
+        }
+      }
+      return this.flagReset();
+    }
+  },
+  "radial-gradient": {
+    render: function(ctx, parent) {
+      if (!parent) {
+        return;
+      }
+      this._update();
+      if (!this._renderer.effect || this._flagCenter || this._flagFocal || this._flagRadius || this._flagStops || this._flagUnits) {
+        let rect;
+        let cx = this.center._x;
+        let cy = this.center._y;
+        let fx = this.focal._x;
+        let fy = this.focal._y;
+        let radius = this._radius;
+        if (/objectBoundingBox/i.test(this._units)) {
+          rect = parent.getBoundingClientRect(true);
+          cx = (cx - 0.5) * rect.width * 0.5;
+          cy = (cy - 0.5) * rect.height * 0.5;
+          fx = (fx - 0.5) * rect.width * 0.5;
+          fy = (fy - 0.5) * rect.height * 0.5;
+          radius *= Math.min(rect.width, rect.height);
+        }
+        this._renderer.effect = ctx.createRadialGradient(
+          cx,
+          cy,
+          0,
+          fx,
+          fy,
+          radius
+        );
+        for (let i = 0; i < this.stops.length; i++) {
+          const stop = this.stops[i];
+          this._renderer.effect.addColorStop(stop._offset, stop._color);
+        }
+      }
+      return this.flagReset();
+    }
+  },
+  texture: {
+    render: function(ctx) {
+      this._update();
+      const image = this.image;
+      if (!this._renderer.effect || (this._flagLoaded || this._flagImage || this._flagVideo || this._flagRepeat) && this.loaded) {
+        this._renderer.effect = ctx.createPattern(this.image, this._repeat);
+      }
+      if (this._flagOffset || this._flagLoaded || this._flagScale) {
+        if (!(this._renderer.offset instanceof Vector)) {
+          this._renderer.offset = new Vector();
+        }
+        this._renderer.offset.x = -this._offset.x;
+        this._renderer.offset.y = -this._offset.y;
+        if (image) {
+          this._renderer.offset.x += image.width / 2;
+          this._renderer.offset.y += image.height / 2;
+          if (this._scale instanceof Vector) {
+            this._renderer.offset.x *= this._scale.x;
+            this._renderer.offset.y *= this._scale.y;
+          } else {
+            this._renderer.offset.x *= this._scale;
+            this._renderer.offset.y *= this._scale;
+          }
+        }
+      }
+      if (this._flagScale || this._flagLoaded) {
+        if (!(this._renderer.scale instanceof Vector)) {
+          this._renderer.scale = new Vector();
+        }
+        if (this._scale instanceof Vector) {
+          this._renderer.scale.copy(this._scale);
         } else {
-          length--;
-          last = length - 1;
+          this._renderer.scale.set(this._scale, this._scale);
         }
-        for (i = 0; i < length; i++) {
-          pct = i / last;
-          v = vertices[id];
-          theta = (1 - pct) * (ea - sa) + sa;
-          step = (ea - sa) / length;
-          x = ir * Math.cos(theta);
-          y = ir * Math.sin(theta);
-          command = Commands.curve;
-          if (i <= 0) {
-            command = connected ? Commands.move : Commands.line;
-          }
-          v.command = command;
-          v.x = x;
-          v.y = y;
-          v.controls.left.clear();
-          v.controls.right.clear();
-          if (v.command === Commands.curve) {
-            amp = ir * step / Math.PI;
-            v.controls.left.x = amp * Math.cos(theta + HALF_PI);
-            v.controls.left.y = amp * Math.sin(theta + HALF_PI);
-            v.controls.right.x = amp * Math.cos(theta - HALF_PI);
-            v.controls.right.y = amp * Math.sin(theta - HALF_PI);
-            if (i === 1) {
-              v.controls.left.multiplyScalar(2);
-            }
-            if (i === last) {
-              v.controls.right.multiplyScalar(2);
-            }
-          }
-          id++;
-        }
-        vertices[id].copy(vertices[0]);
-        vertices[id].command = Commands.line;
-      } else if (!connected) {
-        vertices[id].command = Commands.line;
-        vertices[id].x = 0;
-        vertices[id].y = 0;
-        id++;
-        vertices[id].copy(vertices[0]);
-        vertices[id].command = Commands.line;
       }
+      return this.flagReset();
     }
-    super._update.call(this);
-    return this;
-  }
-  flagReset() {
-    super.flagReset.call(this);
-    this._flagStartAngle = this._flagEndAngle = this._flagInnerRadius = this._flagOuterRadius = false;
-    return this;
-  }
-  clone(parent) {
-    const ir = this.innerRadius;
-    const or = this.outerRadius;
-    const sa = this.startAngle;
-    const ea = this.endAngle;
-    const resolution = this.vertices.length;
-    const clone = new _ArcSegment(0, 0, ir, or, sa, ea, resolution);
-    clone.translation.copy(this.translation);
-    clone.rotation = this.rotation;
-    clone.scale = this.scale;
-    clone.skewX = this.skewX;
-    clone.skewY = this.skewY;
-    if (this.matrix.manual) {
-      clone.matrix.copy(this.matrix);
+  },
+  renderSvgArcCommand: function(ctx, ax, ay, rx, ry, largeArcFlag, sweepFlag, xAxisRotation, x, y) {
+    xAxisRotation = xAxisRotation * Math.PI / 180;
+    rx = abs(rx);
+    ry = abs(ry);
+    const dx2 = (ax - x) / 2;
+    const dy2 = (ay - y) / 2;
+    const x1p = cos6(xAxisRotation) * dx2 + sin6(xAxisRotation) * dy2;
+    const y1p = -sin6(xAxisRotation) * dx2 + cos6(xAxisRotation) * dy2;
+    const x1ps = x1p * x1p;
+    const y1ps = y1p * y1p;
+    let rxs = rx * rx;
+    let rys = ry * ry;
+    const cr = x1ps / rxs + y1ps / rys;
+    if (cr > 1) {
+      const s = sqrt(cr);
+      rx = s * rx;
+      ry = s * ry;
+      rxs = rx * rx;
+      rys = ry * ry;
     }
-    for (let i = 0; i < Path.Properties.length; i++) {
-      const k = Path.Properties[i];
-      clone[k] = this[k];
-    }
-    if (parent) {
-      parent.add(clone);
-    }
-    return clone;
-  }
-  toObject() {
-    const object = super.toObject.call(this);
-    for (let i = 0; i < _ArcSegment.Properties.length; i++) {
-      const k = _ArcSegment.Properties[i];
-      object[k] = this[k];
-    }
-    return object;
+    const dq = rxs * y1ps + rys * x1ps;
+    const pq = (rxs * rys - dq) / dq;
+    let q = sqrt(max4(0, pq));
+    if (largeArcFlag === sweepFlag)
+      q = -q;
+    const cxp = q * rx * y1p / ry;
+    const cyp = -q * ry * x1p / rx;
+    const cx = cos6(xAxisRotation) * cxp - sin6(xAxisRotation) * cyp + (ax + x) / 2;
+    const cy = sin6(xAxisRotation) * cxp + cos6(xAxisRotation) * cyp + (ay + y) / 2;
+    const startAngle = svgAngle(1, 0, (x1p - cxp) / rx, (y1p - cyp) / ry);
+    const delta = svgAngle(
+      (x1p - cxp) / rx,
+      (y1p - cyp) / ry,
+      (-x1p - cxp) / rx,
+      (-y1p - cyp) / ry
+    ) % TWO_PI;
+    const endAngle = startAngle + delta;
+    const clockwise = sweepFlag === 0;
+    renderArcEstimate(
+      ctx,
+      cx,
+      cy,
+      rx,
+      ry,
+      startAngle,
+      endAngle,
+      clockwise,
+      xAxisRotation
+    );
   }
 };
-var ArcSegment = _ArcSegment;
-__publicField(ArcSegment, "Properties", ["startAngle", "endAngle", "innerRadius", "outerRadius"]);
-var proto20 = {
-  startAngle: {
-    enumerable: true,
-    get: function() {
-      return this._startAngle;
-    },
-    set: function(v) {
-      this._startAngle = v;
-      this._flagStartAngle = true;
-    }
-  },
-  endAngle: {
-    enumerable: true,
-    get: function() {
-      return this._endAngle;
-    },
-    set: function(v) {
-      this._endAngle = v;
-      this._flagEndAngle = true;
-    }
-  },
-  innerRadius: {
-    enumerable: true,
-    get: function() {
-      return this._innerRadius;
-    },
-    set: function(v) {
-      this._innerRadius = v;
-      this._flagInnerRadius = true;
-    }
-  },
-  outerRadius: {
-    enumerable: true,
-    get: function() {
-      return this._outerRadius;
-    },
-    set: function(v) {
-      this._outerRadius = v;
-      this._flagOuterRadius = true;
-    }
-  }
-};
-
-// src/shapes/points.js
-var ceil2 = Math.ceil;
-var floor3 = Math.floor;
-var _Points = class extends Shape {
-  constructor(vertices) {
+var Renderer = class extends Events {
+  constructor(params) {
     super();
-    __publicField(this, "_flagVertices", true);
-    __publicField(this, "_flagLength", true);
-    __publicField(this, "_flagFill", true);
-    __publicField(this, "_flagStroke", true);
-    __publicField(this, "_flagLinewidth", true);
-    __publicField(this, "_flagOpacity", true);
-    __publicField(this, "_flagVisible", true);
-    __publicField(this, "_flagSize", true);
-    __publicField(this, "_flagSizeAttenuation", true);
-    __publicField(this, "_length", 0);
-    __publicField(this, "_fill", "#fff");
-    __publicField(this, "_stroke", "#000");
-    __publicField(this, "_linewidth", 1);
-    __publicField(this, "_opacity", 1);
-    __publicField(this, "_visible", true);
-    __publicField(this, "_size", 1);
-    __publicField(this, "_sizeAttenuation", false);
-    __publicField(this, "_beginning", 0);
-    __publicField(this, "_ending", 1);
-    __publicField(this, "_dashes", null);
-    __publicField(this, "noFill", Path.prototype.noFill);
-    __publicField(this, "noStroke", Path.prototype.noStroke);
-    __publicField(this, "corner", Path.prototype.corner);
-    __publicField(this, "center", Path.prototype.center);
-    __publicField(this, "getBoundingClientRect", Path.prototype.getBoundingClientRect);
-    __publicField(this, "_updateLength", Path.prototype._updateLength);
-    for (let prop in proto21) {
-      Object.defineProperty(this, prop, proto21[prop]);
+    const smoothing = params.smoothing !== false;
+    this.domElement = params.domElement || document.createElement("canvas");
+    this.ctx = this.domElement.getContext("2d");
+    this.overdraw = params.overdraw || false;
+    if (typeof this.ctx.imageSmoothingEnabled !== "undefined") {
+      this.ctx.imageSmoothingEnabled = smoothing;
     }
-    this._renderer.type = "points";
-    this._renderer.flagVertices = FlagVertices.bind(this);
-    this._renderer.bindVertices = BindVertices.bind(this);
-    this._renderer.unbindVertices = UnbindVertices.bind(this);
-    this._renderer.flagFill = FlagFill.bind(this);
-    this._renderer.flagStroke = FlagStroke.bind(this);
-    this._renderer.vertices = null;
-    this._renderer.collection = null;
-    this.sizeAttenuation = false;
-    this.beginning = 0;
-    this.ending = 1;
-    this.fill = "#fff";
-    this.stroke = "#000";
-    this.className = "";
-    this.visible = true;
-    this.vertices = vertices;
-    this.dashes = [];
-    this.dashes.offset = 0;
+    this.scene = new Group();
+    this.scene.parent = this;
   }
-  clone(parent) {
-    const clone = new _Points();
-    for (let j = 0; j < this.vertices.length; j++) {
-      clone.vertices.push(this.vertices[j].clone());
+  setSize(width, height, ratio) {
+    this.width = width;
+    this.height = height;
+    this.ratio = typeof ratio === "undefined" ? getRatio(this.ctx) : ratio;
+    this.domElement.width = width * this.ratio;
+    this.domElement.height = height * this.ratio;
+    if (this.domElement.style) {
+      _.extend(this.domElement.style, {
+        width: width + "px",
+        height: height + "px"
+      });
     }
-    for (let i = 0; i < _Points.Properties.length; i++) {
-      const k = _Points.Properties[i];
-      clone[k] = this[k];
-    }
-    clone.className = this.className;
-    clone.translation.copy(this.translation);
-    clone.rotation = this.rotation;
-    clone.scale = this.scale;
-    clone.skewX = this.skewX;
-    clone.skewY = this.skewY;
-    if (this.matrix.manual) {
-      clone.matrix.copy(this.matrix);
-    }
-    if (parent) {
-      parent.add(clone);
-    }
-    return clone._update();
+    return this.trigger(Events.Types.resize, width, height, ratio);
   }
-  toObject() {
-    const result = {
-      vertices: this.vertices.map(function(v) {
-        return v.toObject();
-      })
-    };
-    _.each(_Points.Properties, function(k) {
-      result[k] = this[k];
-    }, this);
-    result.className = this.className;
-    result.translation = this.translation.toObject();
-    result.rotation = this.rotation;
-    result.scale = this.scale instanceof Vector ? this.scale.toObject() : this.scale;
-    result.skewX = this.skewX;
-    result.skewY = this.skewY;
-    if (this.matrix.manual) {
-      result.matrix = this.matrix.toObject();
+  render() {
+    const isOne = this.ratio === 1;
+    if (!isOne) {
+      this.ctx.save();
+      this.ctx.scale(this.ratio, this.ratio);
     }
-    return result;
-  }
-  subdivide(limit) {
-    this._update();
-    let points = [];
-    for (let i = 0; i < this.vertices.length; i++) {
-      const a = this.vertices[i];
-      const b = this.vertices[i - 1];
-      if (!b) {
-        continue;
-      }
-      const x1 = a.x;
-      const y1 = a.y;
-      const x2 = b.x;
-      const y2 = b.y;
-      const subdivisions = subdivide(x1, y1, x1, y1, x2, y2, x2, y2, limit);
-      points = points.concat(subdivisions);
+    if (!this.overdraw) {
+      this.ctx.clearRect(0, 0, this.width, this.height);
     }
-    this.vertices = points;
-    return this;
-  }
-  _update() {
-    if (this._flagVertices) {
-      if (this._flagLength) {
-        this._updateLength(void 0, true);
-      }
-      const beginning = Math.min(this._beginning, this._ending);
-      const ending = Math.max(this._beginning, this._ending);
-      const bid = getIdByLength(this, beginning * this._length);
-      const eid = getIdByLength(this, ending * this._length);
-      const low = ceil2(bid);
-      const high = floor3(eid);
-      let j = 0, v;
-      this._renderer.vertices = [];
-      this._renderer.collection = [];
-      for (let i = 0; i < this._collection.length; i++) {
-        if (i >= low && i <= high) {
-          v = this._collection[i];
-          this._renderer.collection.push(v);
-          this._renderer.vertices[j * 2 + 0] = v.x;
-          this._renderer.vertices[j * 2 + 1] = v.y;
-          j++;
-        }
-      }
+    canvas2.group.render.call(this.scene, this.ctx);
+    if (!isOne) {
+      this.ctx.restore();
     }
-    super._update.apply(this, arguments);
-    return this;
-  }
-  flagReset() {
-    this._flagVertices = this._flagLength = this._flagFill = this._flagStroke = this._flagLinewidth = this._flagOpacity = this._flagVisible = this._flagSize = this._flagSizeAttenuation = false;
-    super.flagReset.call(this);
     return this;
   }
 };
-var Points = _Points;
-__publicField(Points, "Properties", [
-  "fill",
-  "stroke",
-  "linewidth",
-  "opacity",
-  "visible",
-  "size",
-  "sizeAttenuation",
-  "beginning",
-  "ending"
-]);
-var proto21 = {
-  linewidth: {
-    enumerable: true,
-    get: function() {
-      return this._linewidth;
-    },
-    set: function(v) {
-      this._linewidth = v;
-      this._flagLinewidth = true;
-    }
-  },
-  opacity: {
-    enumerable: true,
-    get: function() {
-      return this._opacity;
-    },
-    set: function(v) {
-      this._opacity = v;
-      this._flagOpacity = true;
-    }
-  },
-  visible: {
-    enumerable: true,
-    get: function() {
-      return this._visible;
-    },
-    set: function(v) {
-      this._visible = v;
-      this._flagVisible = true;
-    }
-  },
-  size: {
-    enumerable: true,
-    get: function() {
-      return this._size;
-    },
-    set: function(v) {
-      this._size = v;
-      this._flagSize = true;
-    }
-  },
-  sizeAttenuation: {
-    enumerable: true,
-    get: function() {
-      return this._sizeAttenuation;
-    },
-    set: function(v) {
-      this._sizeAttenuation = v;
-      this._flagSizeAttenuation = true;
-    }
-  },
-  fill: {
-    enumerable: true,
-    get: function() {
-      return this._fill;
-    },
-    set: function(f) {
-      if (this._fill instanceof Gradient || this._fill instanceof LinearGradient || this._fill instanceof RadialGradient || this._fill instanceof Texture) {
-        this._fill.unbind(Events.Types.change, this._renderer.flagFill);
-      }
-      this._fill = f;
-      this._flagFill = true;
-      if (this._fill instanceof Gradient || this._fill instanceof LinearGradient || this._fill instanceof RadialGradient || this._fill instanceof Texture) {
-        this._fill.bind(Events.Types.change, this._renderer.flagFill);
-      }
-    }
-  },
-  stroke: {
-    enumerable: true,
-    get: function() {
-      return this._stroke;
-    },
-    set: function(f) {
-      if (this._stroke instanceof Gradient || this._stroke instanceof LinearGradient || this._stroke instanceof RadialGradient || this._stroke instanceof Texture) {
-        this._stroke.unbind(Events.Types.change, this._renderer.flagStroke);
-      }
-      this._stroke = f;
-      this._flagStroke = true;
-      if (this._stroke instanceof Gradient || this._stroke instanceof LinearGradient || this._stroke instanceof RadialGradient || this._stroke instanceof Texture) {
-        this._stroke.bind(Events.Types.change, this._renderer.flagStroke);
-      }
-    }
-  },
-  length: {
-    get: function() {
-      if (this._flagLength) {
-        this._updateLength();
-      }
-      return this._length;
-    }
-  },
-  beginning: {
-    enumerable: true,
-    get: function() {
-      return this._beginning;
-    },
-    set: function(v) {
-      this._beginning = v;
-      this._flagVertices = true;
-    }
-  },
-  ending: {
-    enumerable: true,
-    get: function() {
-      return this._ending;
-    },
-    set: function(v) {
-      this._ending = v;
-      this._flagVertices = true;
-    }
-  },
-  vertices: {
-    enumerable: true,
-    get: function() {
-      return this._collection;
-    },
-    set: function(vertices) {
-      const bindVertices = this._renderer.bindVertices;
-      const unbindVertices = this._renderer.unbindVertices;
-      if (this._collection) {
-        this._collection.unbind(Events.Types.insert, bindVertices).unbind(Events.Types.remove, unbindVertices);
-      }
-      if (vertices instanceof Collection) {
-        this._collection = vertices;
-      } else {
-        this._collection = new Collection(vertices || []);
-      }
-      this._collection.bind(Events.Types.insert, bindVertices).bind(Events.Types.remove, unbindVertices);
-      bindVertices(this._collection);
-    }
-  },
-  dashes: {
-    enumerable: true,
-    get: function() {
-      return this._dashes;
-    },
-    set: function(v) {
-      if (typeof v.offset !== "number") {
-        v.offset = this.dashes && this._dashes.offset || 0;
-      }
-      this._dashes = v;
+__publicField(Renderer, "Utils", canvas2);
+function renderArcEstimate(ctx, ox, oy, rx, ry, startAngle, endAngle, clockwise, xAxisRotation) {
+  const delta = endAngle - startAngle;
+  const epsilon = Curve.Tolerance.epsilon;
+  const samePoints = Math.abs(delta) < epsilon;
+  let deltaAngle = mod(delta, TWO_PI);
+  if (deltaAngle < epsilon) {
+    if (samePoints) {
+      deltaAngle = 0;
+    } else {
+      deltaAngle = TWO_PI;
     }
   }
-};
-
-// src/shapes/polygon.js
-var cos5 = Math.cos;
-var sin5 = Math.sin;
-var _Polygon = class extends Path {
-  constructor(x, y, radius, sides) {
-    sides = Math.max(sides || 0, 3);
-    super();
-    __publicField(this, "_flagWidth", false);
-    __publicField(this, "_flagHeight", false);
-    __publicField(this, "_flagSides", false);
-    __publicField(this, "_radius", 0);
-    __publicField(this, "_width", 0);
-    __publicField(this, "_height", 0);
-    __publicField(this, "_sides", 0);
-    for (let prop in proto22) {
-      Object.defineProperty(this, prop, proto22[prop]);
-    }
-    this.closed = true;
-    this.automatic = false;
-    if (typeof radius === "number") {
-      this.radius = radius;
-    }
-    if (typeof sides === "number") {
-      this.sides = sides;
-    }
-    this._update();
-    if (typeof x === "number") {
-      this.translation.x = x;
-    }
-    if (typeof y === "number") {
-      this.translation.y = y;
+  if (clockwise === true && !samePoints) {
+    if (deltaAngle === TWO_PI) {
+      deltaAngle = -TWO_PI;
+    } else {
+      deltaAngle = deltaAngle - TWO_PI;
     }
   }
-  _update() {
-    if (this._flagVertices || this._flagWidth || this._flagHeight || this._flagSides) {
-      const sides = this._sides;
-      const amount = sides + 1;
-      let length = this.vertices.length;
-      if (length > sides) {
-        this.vertices.splice(sides - 1, length - sides);
-        length = sides;
-      }
-      for (let i = 0; i < amount; i++) {
-        const pct = (i + 0.5) / sides;
-        const theta = TWO_PI * pct + Math.PI / 2;
-        const x = this._width * cos5(theta) / 2;
-        const y = this._height * sin5(theta) / 2;
-        if (i >= length) {
-          this.vertices.push(new Anchor(x, y));
-        } else {
-          this.vertices[i].set(x, y);
-        }
-        this.vertices[i].command = i === 0 ? Commands.move : Commands.line;
-      }
+  for (let i = 0; i < Constants.Resolution; i++) {
+    const t = i / (Constants.Resolution - 1);
+    const angle = startAngle + t * deltaAngle;
+    let x = ox + rx * Math.cos(angle);
+    let y = oy + ry * Math.sin(angle);
+    if (xAxisRotation !== 0) {
+      const cos7 = Math.cos(xAxisRotation);
+      const sin7 = Math.sin(xAxisRotation);
+      const tx = x - ox;
+      const ty = y - oy;
+      x = tx * cos7 - ty * sin7 + ox;
+      y = tx * sin7 + ty * cos7 + oy;
     }
-    super._update.call(this);
-    return this;
+    ctx.lineTo(x, y);
   }
-  flagReset() {
-    this._flagWidth = this._flagHeight = this._flagSides = false;
-    super.flagReset.call(this);
-    return this;
+}
+function svgAngle(ux, uy, vx, vy) {
+  const dot = ux * vx + uy * vy;
+  const len = sqrt(ux * ux + uy * uy) * sqrt(vx * vx + vy * vy);
+  let ang = acos(max4(-1, min4(1, dot / len)));
+  if (ux * vy - uy * vx < 0) {
+    ang = -ang;
   }
-  clone(parent) {
-    const clone = new _Polygon(0, 0, 0, this.sides);
-    clone.translation.copy(this.translation);
-    clone.rotation = this.rotation;
-    clone.scale = this.scale;
-    clone.skewX = this.skewX;
-    clone.skewY = this.skewY;
-    clone.width = this.width;
-    clone.height = this.height;
-    if (this.matrix.manual) {
-      clone.matrix.copy(this.matrix);
-    }
-    for (let i = 0; i < Path.Properties.length; i++) {
-      const k = Path.Properties[i];
-      clone[k] = this[k];
-    }
-    if (parent) {
-      parent.add(clone);
-    }
-    return clone;
-  }
-  toObject() {
-    const object = super.toObject.call(this);
-    for (let i = 0; i < _Polygon.Properties.length; i++) {
-      const k = _Polygon.Properties[i];
-      object[k] = this[k];
-    }
-    return object;
-  }
-};
-var Polygon = _Polygon;
-__publicField(Polygon, "Properties", ["width", "height", "sides"]);
-var proto22 = {
-  radius: {
-    enumerable: true,
-    get: function() {
-      return this._radius;
-    },
-    set: function(v) {
-      this._radius = v;
-      this.width = v * 2;
-      this.height = v * 2;
-    }
-  },
-  width: {
-    enumerable: true,
-    get: function() {
-      return this._width;
-    },
-    set: function(v) {
-      this._width = v;
-      this._flagWidth = true;
-      this._radius = Math.max(this.width, this.height) / 2;
-    }
-  },
-  height: {
-    enumerable: true,
-    get: function() {
-      return this._height;
-    },
-    set: function(v) {
-      this._height = v;
-      this._flagHeight = true;
-      this._radius = Math.max(this.width, this.height) / 2;
-    }
-  },
-  sides: {
-    enumerable: true,
-    get: function() {
-      return this._sides;
-    },
-    set: function(v) {
-      this._sides = v;
-      this._flagSides = true;
-    }
-  }
-};
-
-// src/shapes/star.js
-var cos6 = Math.cos;
-var sin6 = Math.sin;
-var _Star = class extends Path {
-  constructor(x, y, innerRadius, outerRadius, sides) {
-    if (arguments.length <= 3) {
-      outerRadius = innerRadius;
-      innerRadius = outerRadius / 2;
-    }
-    if (typeof sides !== "number" || sides <= 0) {
-      sides = 5;
-    }
-    super();
-    __publicField(this, "_flagInnerRadius", false);
-    __publicField(this, "_flagOuterRadius", false);
-    __publicField(this, "_flagSides", false);
-    __publicField(this, "_innerRadius", 0);
-    __publicField(this, "_outerRadius", 0);
-    __publicField(this, "_sides", 0);
-    for (let prop in proto23) {
-      Object.defineProperty(this, prop, proto23[prop]);
-    }
-    this.closed = true;
-    this.automatic = false;
-    if (typeof innerRadius === "number") {
-      this.innerRadius = innerRadius;
-    }
-    if (typeof outerRadius === "number") {
-      this.outerRadius = outerRadius;
-    }
-    if (typeof sides === "number") {
-      this.sides = sides;
-    }
-    this._update();
-    if (typeof x === "number") {
-      this.translation.x = x;
-    }
-    if (typeof y === "number") {
-      this.translation.y = y;
-    }
-  }
-  _update() {
-    if (this._flagVertices || this._flagInnerRadius || this._flagOuterRadius || this._flagSides) {
-      const sides = this._sides * 2;
-      const amount = sides + 1;
-      let length = this.vertices.length;
-      if (length > sides) {
-        this.vertices.splice(sides - 1, length - sides);
-        length = sides;
-      }
-      for (let i = 0; i < amount; i++) {
-        const pct = (i + 0.5) / sides;
-        const theta = TWO_PI * pct;
-        const r = (!(i % 2) ? this._innerRadius : this._outerRadius) / 2;
-        const x = r * cos6(theta);
-        const y = r * sin6(theta);
-        if (i >= length) {
-          this.vertices.push(new Anchor(x, y));
-        } else {
-          this.vertices[i].set(x, y);
-        }
-        this.vertices[i].command = i === 0 ? Commands.move : Commands.line;
-      }
-    }
-    super._update.call(this);
-    return this;
-  }
-  flagReset() {
-    this._flagInnerRadius = this._flagOuterRadius = this._flagSides = false;
-    super.flagReset.call(this);
-    return this;
-  }
-  clone(parent) {
-    const ir = this.innerRadius;
-    const or = this.outerRadius;
-    const sides = this.sides;
-    const clone = new _Star(0, 0, ir, or, sides);
-    clone.translation.copy(this.translation);
-    clone.rotation = this.rotation;
-    clone.scale = this.scale;
-    clone.skewX = this.skewX;
-    clone.skewY = this.skewY;
-    if (this.matrix.manual) {
-      clone.matrix.copy(this.matrix);
-    }
-    for (let i = 0; i < Path.Properties.length; i++) {
-      const k = Path.Properties[i];
-      clone[k] = this[k];
-    }
-    if (parent) {
-      parent.add(clone);
-    }
-    return clone;
-  }
-  toObject() {
-    const object = super.toObject.call(this);
-    for (let i = 0; i < _Star.Properties.length; i++) {
-      const k = _Star.Properties[i];
-      object[k] = this[k];
-    }
-    return object;
-  }
-};
-var Star = _Star;
-__publicField(Star, "Properties", ["innerRadius", "outerRadius", "sides"]);
-var proto23 = {
-  innerRadius: {
-    enumerable: true,
-    get: function() {
-      return this._innerRadius;
-    },
-    set: function(v) {
-      this._innerRadius = v;
-      this._flagInnerRadius = true;
-    }
-  },
-  outerRadius: {
-    enumerable: true,
-    get: function() {
-      return this._outerRadius;
-    },
-    set: function(v) {
-      this._outerRadius = v;
-      this._flagOuterRadius = true;
-    }
-  },
-  sides: {
-    enumerable: true,
-    get: function() {
-      return this._sides;
-    },
-    set: function(v) {
-      this._sides = v;
-      this._flagSides = true;
-    }
-  }
-};
+  return ang;
+}
+function isDefaultMatrix(m) {
+  return m[0] == 1 && m[3] == 0 && m[1] == 0 && m[4] == 1 && m[2] == 0 && m[5] == 0;
+}
 
 // src/renderers/svg.js
 var svg = {
@@ -8300,6 +8878,9 @@ var svg = {
     }
     return clip;
   },
+  getRendererType: function(type) {
+    return type in svg ? type : "path";
+  },
   defs: {
     update: function(domElement) {
       const { defs } = domElement;
@@ -8348,7 +8929,8 @@ var svg = {
       this.elem.appendChild(object._renderer.elem);
     },
     renderChild: function(child) {
-      svg[child._renderer.type].render.call(child, this);
+      const prop = svg.getRendererType(child._renderer.type);
+      svg[prop].render.call(child, this);
     },
     render: function(domElement) {
       if (!this._visible && !this._flagVisible || this._opacity === 0 && !this._flagOpacity) {
@@ -8374,7 +8956,8 @@ var svg = {
       }
       for (let i = 0; i < this.children.length; i++) {
         const child = this.children[i];
-        svg[child._renderer.type].render.call(child, domElement);
+        const prop = svg.getRendererType(child._renderer.type);
+        svg[prop].render.call(child, domElement);
       }
       if (this._flagId) {
         this._renderer.elem.setAttribute("id", this._id);
@@ -8402,7 +8985,8 @@ var svg = {
       }
       if (this._flagMask) {
         if (this._mask) {
-          svg[this._mask._renderer.type].render.call(this._mask, domElement);
+          const prop = svg.getRendererType(this._mask._renderer.type);
+          svg[prop].render.call(this._mask, domElement);
           this._renderer.elem.setAttribute(
             "clip-path",
             "url(#" + this._mask.id + ")"
@@ -8438,11 +9022,8 @@ var svg = {
       if (this._fill && this._fill._renderer) {
         this._renderer.hasFillEffect = true;
         this._fill._update();
-        svg[this._fill._renderer.type].render.call(
-          this._fill,
-          domElement,
-          true
-        );
+        const prop = svg.getRendererType(this._fill._renderer.type);
+        svg[prop].render.call(this._fill, domElement, true);
       }
       if (this._flagFill) {
         changed.fill = this._fill && this._fill.id ? "url(#" + this._fill.id + ")" : this._fill;
@@ -8454,11 +9035,8 @@ var svg = {
       if (this._stroke && this._stroke._renderer) {
         this._renderer.hasStrokeEffect = true;
         this._stroke._update();
-        svg[this._stroke._renderer.type].render.call(
-          this._stroke,
-          domElement,
-          true
-        );
+        const prop = svg.getRendererType(this._stroke._renderer.type);
+        svg[prop].render.call(this._stroke, domElement, true);
       }
       if (this._flagStroke) {
         changed.stroke = this._stroke && this._stroke.id ? "url(#" + this._stroke.id + ")" : this._stroke;
@@ -8515,7 +9093,8 @@ var svg = {
       }
       if (this._flagMask) {
         if (this._mask) {
-          svg[this._mask._renderer.type].render.call(this._mask, domElement);
+          const prop = svg.getRendererType(this._mask._renderer.type);
+          svg[prop].render.call(this._mask, domElement);
           this._renderer.elem.setAttribute(
             "clip-path",
             "url(#" + this._mask.id + ")"
@@ -8554,11 +9133,8 @@ var svg = {
       if (this._fill && this._fill._renderer) {
         this._renderer.hasFillEffect = true;
         this._fill._update();
-        svg[this._fill._renderer.type].render.call(
-          this._fill,
-          domElement,
-          true
-        );
+        const prop = svg.getRendererType(this._fill._renderer.type);
+        svg[prop].render.call(this._fill, domElement, true);
       }
       if (this._flagFill) {
         changed.fill = this._fill && this._fill.id ? "url(#" + this._fill.id + ")" : this._fill;
@@ -8570,11 +9146,8 @@ var svg = {
       if (this._stroke && this._stroke._renderer) {
         this._renderer.hasStrokeEffect = true;
         this._stroke._update();
-        svg[this._stroke._renderer.type].render.call(
-          this._stroke,
-          domElement,
-          true
-        );
+        const prop = svg.getRendererType(this._stroke._renderer.type);
+        svg[prop].render.call(this._stroke, domElement, true);
       }
       if (this._flagStroke) {
         changed.stroke = this._stroke && this._stroke.id ? "url(#" + this._stroke.id + ")" : this._stroke;
@@ -8651,11 +9224,8 @@ var svg = {
       if (this._fill && this._fill._renderer) {
         this._renderer.hasFillEffect = true;
         this._fill._update();
-        svg[this._fill._renderer.type].render.call(
-          this._fill,
-          domElement,
-          true
-        );
+        const prop = svg.getRendererType(this._fill._renderer.type);
+        svg[prop].render.call(this._fill, domElement, true);
       }
       if (this._flagFill) {
         changed.fill = this._fill && this._fill.id ? "url(#" + this._fill.id + ")" : this._fill;
@@ -8667,11 +9237,8 @@ var svg = {
       if (this._stroke && this._stroke._renderer) {
         this._renderer.hasStrokeEffect = true;
         this._stroke._update();
-        svg[this._stroke._renderer.type].render.call(
-          this._stroke,
-          domElement,
-          true
-        );
+        const prop = svg.getRendererType(this._stroke._renderer.type);
+        svg[prop].render.call(this._stroke, domElement, true);
       }
       if (this._flagStroke) {
         changed.stroke = this._stroke && this._stroke.id ? "url(#" + this._stroke.id + ")" : this._stroke;
@@ -8718,7 +9285,8 @@ var svg = {
       }
       if (this._flagMask) {
         if (this._mask) {
-          svg[this._mask._renderer.type].render.call(this._mask, domElement);
+          const prop = svg.getRendererType(this._mask._renderer.type);
+          svg[prop].render.call(this._mask, domElement);
           this._renderer.elem.setAttribute(
             "clip-path",
             "url(#" + this._mask.id + ")"
@@ -9151,12 +9719,10 @@ var webgl = {
         gl.stencilFunc(gl.ALWAYS, 1, 0);
         gl.stencilOp(gl.KEEP, gl.KEEP, gl.REPLACE);
         gl.colorMask(false, false, false, false);
-        webgl[this._mask._renderer.type].render.call(
-          this._mask,
-          gl,
-          programs,
-          this
+        const prop = Renderer.Utils.getRendererType(
+          this._mask._renderer.type
         );
+        webgl[prop].render.call(this._mask, gl, programs, this);
         gl.stencilFunc(gl.EQUAL, 1, 255);
         gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
         gl.colorMask(true, true, true, true);
@@ -9171,7 +9737,8 @@ var webgl = {
       }
       for (i = 0; i < this.children.length; i++) {
         const child = this.children[i];
-        webgl[child._renderer.type].render.call(child, gl, programs);
+        const prop = Renderer.Utils.getRendererType(child._renderer.type);
+        webgl[prop].render.call(child, gl, programs);
       }
       if (this._mask) {
         gl.disable(gl.STENCIL_TEST);
@@ -9215,7 +9782,10 @@ var webgl = {
         if (typeof fill === "string") {
           ctx.fillStyle = fill;
         } else {
-          webgl[fill._renderer.type].render.call(fill, ctx, elem);
+          const prop = Renderer.Utils.getRendererType(
+            fill._renderer.type
+          );
+          webgl[prop].render.call(fill, ctx, elem);
           ctx.fillStyle = fill._renderer.effect;
         }
       }
@@ -9223,7 +9793,10 @@ var webgl = {
         if (typeof stroke === "string") {
           ctx.strokeStyle = stroke;
         } else {
-          webgl[stroke._renderer.type].render.call(stroke, ctx, elem);
+          const prop = Renderer.Utils.getRendererType(
+            stroke._renderer.type
+          );
+          webgl[prop].render.call(stroke, ctx, elem);
           ctx.strokeStyle = stroke._renderer.effect;
         }
         if (linewidth) {
@@ -9419,7 +9992,8 @@ var webgl = {
       }
       this._update();
       const parent = forcedParent || this.parent;
-      const program = programs[this._renderer.type];
+      const prop = Renderer.Utils.getRendererType(this._renderer.type);
+      const program = programs[prop];
       const flagParentMatrix = parent._matrix.manual || parent._flagMatrix;
       const flagMatrix = this._matrix.manual || this._flagMatrix;
       const parentChanged = this._renderer.parent !== parent;
@@ -9437,13 +10011,16 @@ var webgl = {
         if (!(this._renderer.scale instanceof Vector)) {
           this._renderer.scale = new Vector();
         }
+        let sx, sy;
         if (this._scale instanceof Vector) {
-          this._renderer.scale.x = this._scale.x * parent._renderer.scale.x;
-          this._renderer.scale.y = this._scale.y * parent._renderer.scale.y;
+          sx = this._scale.x * parent._renderer.scale.x;
+          sy = this._scale.y * parent._renderer.scale.y;
         } else {
-          this._renderer.scale.x = this._scale * parent._renderer.scale.x;
-          this._renderer.scale.y = this._scale * parent._renderer.scale.y;
+          sx = this._scale * parent._renderer.scale.x;
+          sy = this._scale * parent._renderer.scale.y;
         }
+        this._renderer.scale.x = sx < 0 ? -sx : sx;
+        this._renderer.scale.y = sy < 0 ? -sy : sy;
         if (parentChanged) {
           this._renderer.parent = parent;
         }
@@ -9454,12 +10031,10 @@ var webgl = {
         gl.stencilFunc(gl.ALWAYS, 1, 0);
         gl.stencilOp(gl.KEEP, gl.KEEP, gl.REPLACE);
         gl.colorMask(false, false, false, false);
-        webgl[this._mask._renderer.type].render.call(
-          this._mask,
-          gl,
-          programs,
-          this
+        const prop2 = Renderer.Utils.getRendererType(
+          this._mask._renderer.type
         );
+        webgl[prop2].render.call(this._mask, gl, programs, this);
         gl.stencilFunc(gl.EQUAL, 1, 255);
         gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
         gl.colorMask(true, true, true, true);
@@ -9545,7 +10120,10 @@ var webgl = {
         if (typeof fill === "string") {
           ctx.fillStyle = fill;
         } else {
-          webgl[fill._renderer.type].render.call(fill, ctx, elem);
+          const prop = Renderer.Utils.getRendererType(
+            fill._renderer.type
+          );
+          webgl[prop].render.call(fill, ctx, elem);
           ctx.fillStyle = fill._renderer.effect;
         }
       }
@@ -9553,7 +10131,10 @@ var webgl = {
         if (typeof stroke === "string") {
           ctx.strokeStyle = stroke;
         } else {
-          webgl[stroke._renderer.type].render.call(stroke, ctx, elem);
+          const prop = Renderer.Utils.getRendererType(
+            stroke._renderer.type
+          );
+          webgl[prop].render.call(stroke, ctx, elem);
           ctx.strokeStyle = stroke._renderer.effect;
         }
         if (linewidth) {
@@ -9633,13 +10214,16 @@ var webgl = {
         if (!(this._renderer.scale instanceof Vector)) {
           this._renderer.scale = new Vector();
         }
+        let sx, sy;
         if (this._scale instanceof Vector) {
-          this._renderer.scale.x = this._scale.x * parent._renderer.scale.x;
-          this._renderer.scale.y = this._scale.y * parent._renderer.scale.y;
+          sx = this._scale.x * parent._renderer.scale.x;
+          sy = this._scale.y * parent._renderer.scale.y;
         } else {
-          this._renderer.scale.x = this._scale * parent._renderer.scale.x;
-          this._renderer.scale.y = this._scale * parent._renderer.scale.y;
+          sx = this._scale * parent._renderer.scale.x;
+          sy = this._scale * parent._renderer.scale.y;
         }
+        this._renderer.scale.x = sx < 0 ? -sx : sx;
+        this._renderer.scale.y = sy < 0 ? -sy : sy;
         if (parentChanged) {
           this._renderer.parent = parent;
         }
@@ -9743,7 +10327,10 @@ var webgl = {
         if (typeof fill === "string") {
           ctx.fillStyle = fill;
         } else {
-          webgl[fill._renderer.type].render.call(fill, ctx, elem);
+          const prop = Renderer.Utils.getRendererType(
+            fill._renderer.type
+          );
+          webgl[prop].render.call(fill, ctx, elem);
           ctx.fillStyle = fill._renderer.effect;
         }
       }
@@ -9751,7 +10338,10 @@ var webgl = {
         if (typeof stroke === "string") {
           ctx.strokeStyle = stroke;
         } else {
-          webgl[stroke._renderer.type].render.call(stroke, ctx, elem);
+          const prop = Renderer.Utils.getRendererType(
+            stroke._renderer.type
+          );
+          webgl[prop].render.call(stroke, ctx, elem);
           ctx.strokeStyle = stroke._renderer.effect;
         }
         if (linewidth) {
@@ -9932,13 +10522,16 @@ var webgl = {
         if (!(this._renderer.scale instanceof Vector)) {
           this._renderer.scale = new Vector();
         }
+        let sx, sy;
         if (this._scale instanceof Vector) {
-          this._renderer.scale.x = this._scale.x * parent._renderer.scale.x;
-          this._renderer.scale.y = this._scale.y * parent._renderer.scale.y;
+          sx = this._scale.x * parent._renderer.scale.x;
+          sy = this._scale.y * parent._renderer.scale.y;
         } else {
-          this._renderer.scale.x = this._scale * parent._renderer.scale.x;
-          this._renderer.scale.y = this._scale * parent._renderer.scale.y;
+          sx = this._scale * parent._renderer.scale.x;
+          sy = this._scale * parent._renderer.scale.y;
         }
+        this._renderer.scale.x = sx < 0 ? -sx : sx;
+        this._renderer.scale.y = sy < 0 ? -sy : sy;
         if (parentChanged) {
           this._renderer.parent = parent;
         }
@@ -9949,12 +10542,10 @@ var webgl = {
         gl.stencilFunc(gl.ALWAYS, 1, 0);
         gl.stencilOp(gl.KEEP, gl.KEEP, gl.REPLACE);
         gl.colorMask(false, false, false, false);
-        webgl[this._mask._renderer.type].render.call(
-          this._mask,
-          gl,
-          programs,
-          this
+        const prop = Renderer.Utils.getRendererType(
+          this._mask._renderer.type
         );
+        webgl[prop].render.call(this._mask, gl, programs, this);
         gl.stencilFunc(gl.EQUAL, 1, 255);
         gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
         gl.colorMask(true, true, true, true);
@@ -10109,17 +10700,23 @@ var webgl = {
         if (!(this._renderer.scale instanceof Vector)) {
           this._renderer.scale = new Vector();
         }
+        let sx, sy;
         if (this._scale instanceof Vector) {
-          this._renderer.scale.copy(this._scale);
+          sx = this._scale.x;
+          sy = this._scale.y;
         } else {
-          this._renderer.scale.set(this._scale, this._scale);
+          sx = this._scale;
+          sy = this._scale;
         }
+        this._renderer.scale.x = sx < 0 ? -sx : sx;
+        this._renderer.scale.y = sy < 0 ? -sy : sy;
       }
       return this.flagReset();
     }
   },
   updateTexture: function(gl, elem) {
-    this[elem._renderer.type].updateCanvas.call(webgl, gl, elem);
+    const prop = Renderer.Utils.getRendererType(elem._renderer.type);
+    this[prop].updateCanvas.call(webgl, gl, elem);
     if (this.canvas.width <= 0 || this.canvas.height <= 0) {
       if (elem._renderer.texture) {
         gl.deleteTexture(elem._renderer.texture);
@@ -10292,12 +10889,18 @@ var Renderer3 = class extends Events {
 __publicField(Renderer3, "Utils", webgl);
 
 // src/two.js
-var Utils = _.extend({
-  Error: TwoError,
-  getRatio,
-  read,
-  xhr
-}, _, CanvasShim, curves_exports, math_exports);
+var Utils = _.extend(
+  {
+    Error: TwoError,
+    getRatio,
+    read,
+    xhr
+  },
+  _,
+  CanvasPolyfill,
+  curves_exports,
+  math_exports
+);
 var _Two = class {
   constructor(options) {
     __publicField(this, "_events", new Events());
@@ -10317,15 +10920,21 @@ var _Two = class {
       type: _Two.Types.svg,
       autostart: false
     });
-    _.each(params, function(v, k) {
-      if (/fullscreen/i.test(k) || /autostart/i.test(k)) {
-        return;
-      }
-      this[k] = v;
-    }, this);
+    _.each(
+      params,
+      function(v, k) {
+        if (/fullscreen/i.test(k) || /autostart/i.test(k)) {
+          return;
+        }
+        this[k] = v;
+      },
+      this
+    );
     if (_.isElement(params.domElement)) {
       const tagName = params.domElement.tagName.toLowerCase();
-      if (!/^(CanvasRenderer-canvas|WebGLRenderer-canvas|SVGRenderer-svg)$/.test(this.type + "-" + tagName)) {
+      if (!/^(CanvasRenderer-canvas|WebGLRenderer-canvas|SVGRenderer-svg)$/.test(
+        this.type + "-" + tagName
+      )) {
         this.type = _Two.Types[tagName];
       }
     }
@@ -10522,8 +11131,24 @@ var _Two = class {
     const headlen = typeof size === "number" ? size : 10;
     const angle = Math.atan2(y2 - y1, x2 - x1);
     const vertices = [
-      new Anchor(x1, y1, void 0, void 0, void 0, void 0, Commands.move),
-      new Anchor(x2, y2, void 0, void 0, void 0, void 0, Commands.line),
+      new Anchor(
+        x1,
+        y1,
+        void 0,
+        void 0,
+        void 0,
+        void 0,
+        Commands.move
+      ),
+      new Anchor(
+        x2,
+        y2,
+        void 0,
+        void 0,
+        void 0,
+        void 0,
+        Commands.line
+      ),
       new Anchor(
         x2 - headlen * Math.cos(angle - Math.PI / 4),
         y2 - headlen * Math.sin(angle - Math.PI / 4),
@@ -10533,7 +11158,15 @@ var _Two = class {
         void 0,
         Commands.line
       ),
-      new Anchor(x2, y2, void 0, void 0, void 0, void 0, Commands.move),
+      new Anchor(
+        x2,
+        y2,
+        void 0,
+        void 0,
+        void 0,
+        void 0,
+        Commands.move
+      ),
       new Anchor(
         x2 - headlen * Math.cos(angle + Math.PI / 4),
         y2 - headlen * Math.sin(angle + Math.PI / 4),
@@ -10590,7 +11223,11 @@ var _Two = class {
       }
     }
     const last = arguments[l - 1];
-    const curve = new Path(points, !(typeof last === "boolean" ? last : void 0), true);
+    const curve = new Path(
+      points,
+      !(typeof last === "boolean" ? last : void 0),
+      true
+    );
     const rect = curve.getBoundingClientRect();
     curve.center().translation.set(rect.left + rect.width / 2, rect.top + rect.height / 2);
     this.scene.add(curve);
@@ -10647,10 +11284,16 @@ var _Two = class {
       }
     }
     const last = arguments[l - 1];
-    const path = new Path(points, !(typeof last === "boolean" ? last : void 0));
+    const path = new Path(
+      points,
+      !(typeof last === "boolean" ? last : void 0)
+    );
     const rect = path.getBoundingClientRect();
     if (typeof rect.top === "number" && typeof rect.left === "number" && typeof rect.right === "number" && typeof rect.bottom === "number") {
-      path.center().translation.set(rect.left + rect.width / 2, rect.top + rect.height / 2);
+      path.center().translation.set(
+        rect.left + rect.width / 2,
+        rect.top + rect.height / 2
+      );
     }
     this.scene.add(path);
     return path;

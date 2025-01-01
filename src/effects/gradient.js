@@ -2,8 +2,6 @@ import { Collection } from '../collection.js';
 import { Events } from '../events.js';
 import { Element } from '../element.js';
 import { _ } from '../utils/underscore.js';
-
-import { Constants } from '../constants.js';
 import { Stop } from './stop.js';
 
 /**
@@ -14,7 +12,6 @@ import { Stop } from './stop.js';
  * @description This is the base class for constructing different types of gradients with Two.js. The two common gradients are {@link Two.LinearGradient} and {@link Two.RadialGradient}.
  */
 export class Gradient extends Element {
-
   _flagStops = false;
   _flagSpread = false;
   _flagUnits = false;
@@ -23,7 +20,6 @@ export class Gradient extends Element {
   _units = '';
 
   constructor(stops) {
-
     super();
 
     for (let prop in proto) {
@@ -31,22 +27,6 @@ export class Gradient extends Element {
     }
 
     this._renderer.type = 'gradient';
-
-    /**
-     * @name Two.Gradient#renderer
-     * @property {Object}
-     * @description Object access to store relevant renderer specific variables. Warning: manipulating this object can create unintended consequences.
-     * @nota-bene With the {@link Two.SVGRenderer} you can access the underlying SVG element created via `shape.renderer.elem`.
-     */
-
-    /**
-     * @name Two.Gradient#id
-     * @property {String} - Session specific unique identifier.
-     * @nota-bene In the {@link Two.SVGRenderer} change this to change the underlying SVG element's id too.
-     */
-    this.id = Constants.Identifier + Constants.uniqueId();
-    this.classList = [];
-
     this._renderer.flagStops = FlagStops.bind(this);
     this._renderer.bindStops = BindStops.bind(this);
     this._renderer.unbindStops = UnbindStops.bind(this);
@@ -72,7 +52,6 @@ export class Gradient extends Element {
     if (stops) {
       this.stops = stops;
     }
-
   }
 
   /**
@@ -85,7 +64,29 @@ export class Gradient extends Element {
    * @name Two.Gradient.Properties
    * @property {String[]} - A list of properties that are on every {@link Two.Gradient}.
    */
-  static Properties = ['spread', 'stops', 'renderer', 'units'];
+  static Properties = ['spread', 'stops', 'units'];
+
+  /**
+   * @name Two.Gradient.fromObject
+   * @function
+   * @param {Object} obj - Object notation of a {@link Two.Gradient} to create a new instance
+   * @returns {Two.Gradient}
+   * @description Create a new {@link Two.Gradient} from an object notation of a {@link Two.Gradient}.
+   * @nota-bene Works in conjunction with {@link Two.Gradient#toObject}
+   */
+  static fromObject(obj) {
+    let stops = obj.stops;
+    if (stops && stops.length > 0) {
+      stops = stops.map((o) => (o instanceof Stop ? o : new Stop().copy(o)));
+    }
+    const gradient = new Gradient().copy(obj);
+
+    if ('id' in obj) {
+      gradient.id = obj.id;
+    }
+
+    return gradient;
+  }
 
   /**
    * @name Two.Gradient#clone
@@ -95,23 +96,44 @@ export class Gradient extends Element {
    * @description Create a new instance of {@link Two.Gradient} with the same properties of the current path.
    */
   clone(parent) {
-
-    const stops = this.stops.map(function(s) {
+    const stops = this.stops.map((s) => {
       return s.clone();
     });
 
     const clone = new Gradient(stops);
 
-    _.each(Gradient.Properties, function(k) {
-      clone[k] = this[k];
-    }, this);
+    _.each(
+      Gradient.Properties,
+      (k) => {
+        clone[k] = this[k];
+      },
+      this
+    );
 
     if (parent) {
       parent.add(clone);
     }
 
     return clone;
+  }
 
+  /**
+   * @name Two.Gradient#copy
+   * @function
+   * @param {Two.Gradient} gradient - The reference {@link Two.Gradient}
+   * @description Copy the properties of one {@link Two.Gradient} onto another.
+   */
+  copy(gradient) {
+    super.copy.call(this, gradient);
+
+    for (let i = 0; i < Gradient.Properties.length; i++) {
+      const k = Gradient.Properties[i];
+      if (k in gradient) {
+        this[k] = gradient[k];
+      }
+    }
+
+    return this;
   }
 
   /**
@@ -121,19 +143,21 @@ export class Gradient extends Element {
    * @description Return a JSON compatible plain object that represents the path.
    */
   toObject() {
-
     const result = {
-      stops: this.stops.map(function(s) {
+      stops: this.stops.map((s) => {
         return s.toObject();
-      })
+      }),
     };
 
-    _.each(Gradient.Properties, function(k) {
-      result[k] = this[k];
-    }, this);
+    _.each(
+      Gradient.Properties,
+      (k) => {
+        result[k] = this[k];
+      },
+      this
+    );
 
     return result;
-
   }
 
   /**
@@ -145,13 +169,11 @@ export class Gradient extends Element {
    * @nota-bene Try not to call this method more than once a frame.
    */
   _update() {
-
     if (this._flagSpread || this._flagStops) {
       this.trigger(Events.Types.change);
     }
 
     return this;
-
   }
 
   /**
@@ -161,48 +183,43 @@ export class Gradient extends Element {
    * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
    */
   flagReset() {
-
     this._flagSpread = this._flagUnits = this._flagStops = false;
 
     super.flagReset.call(this);
 
     return this;
-
   }
-
 }
 
 const proto = {
   spread: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._spread;
     },
-    set: function(v) {
+    set: function (v) {
       this._spread = v;
       this._flagSpread = true;
-    }
+    },
   },
   units: {
     enumerable: true,
-    get: function() {
+    get: function () {
       return this._units;
     },
-    set: function(v) {
+    set: function (v) {
       this._units = v;
       this._flagUnits = true;
-    }
+    },
   },
   stops: {
-
     enumerable: true,
 
-    get: function() {
+    get: function () {
       return this._stops;
     },
 
-    set: function(stops) {
-
+    set: function (stops) {
       const bindStops = this._renderer.bindStops;
       const unbindStops = this._renderer.unbindStops;
 
@@ -223,10 +240,8 @@ const proto = {
 
       // Bind Initial Stops
       bindStops(this._stops);
-
-    }
-
-  }
+    },
+  },
 };
 
 /**
@@ -246,17 +261,15 @@ function FlagStops() {
  * @description Cached method to let {@link Two.Gradient} know vertices have been added to the instance.
  */
 function BindStops(items) {
-
   // This function is called a lot
   // when importing a large SVG
   let i = items.length;
-  while(i--) {
+  while (i--) {
     items[i].bind(Events.Types.change, this._renderer.flagStops);
     items[i].parent = this;
   }
 
   this._renderer.flagStops();
-
 }
 
 /**
@@ -266,13 +279,11 @@ function BindStops(items) {
  * @description Cached method to let {@link Two.Gradient} know vertices have been removed from the instance.
  */
 function UnbindStops(items) {
-
   let i = items.length;
-  while(i--) {
+  while (i--) {
     items[i].unbind(Events.Types.change, this._renderer.flagStops);
     delete items[i].parent;
   }
 
   this._renderer.flagStops();
-
 }

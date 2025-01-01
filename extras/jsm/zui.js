@@ -1,13 +1,11 @@
 import { Matrix } from '../../src/matrix.js';
 
 class Surface {
-
   constructor(object) {
     this.object = object;
   }
 
   limits(min, max) {
-
     const min_exists = typeof min !== 'undefined';
     const max_exists = typeof max !== 'undefined';
 
@@ -19,7 +17,6 @@ class Surface {
     this.max = max_exists ? max : this.max;
 
     return this;
-
   }
 
   apply(px, py, s) {
@@ -27,7 +24,6 @@ class Surface {
     this.object.scale = s;
     return this;
   }
-
 }
 
 /**
@@ -38,20 +34,18 @@ class Surface {
  * @description {@link Two.ZUI} is an extra class to turn your Two.js scene into a Google Maps or Adobe Illustrator style interface. See {@link https://codepen.io/jonobr1/pen/PobMKwb} for example usage.
  */
 export class ZUI {
-
   constructor(group, domElement) {
-
     this.limits = {
       scale: ZUI.Limit.clone(),
       x: ZUI.Limit.clone(),
-      y: ZUI.Limit.clone()
+      y: ZUI.Limit.clone(),
     };
 
     this.viewport = domElement || document.body;
     this.viewportOffset = {
       top: 0,
       left: 0,
-      matrix: new Matrix()
+      matrix: new Matrix(),
     };
 
     this.surfaceMatrix = new Matrix();
@@ -61,7 +55,6 @@ export class ZUI {
     this.updateSurface();
 
     this.add(new Surface(group));
-
   }
 
   static Surface = Surface;
@@ -73,14 +66,14 @@ export class ZUI {
   static Limit = {
     min: -Infinity,
     max: Infinity,
-    clone: function() {
+    clone: function () {
       const result = {};
       for (let k in this) {
         result[k] = this[k];
       }
       return result;
-    }
-  }
+    },
+  };
 
   static TranslateMatrix(m, x, y) {
     m.elements[2] += x;
@@ -109,10 +102,9 @@ export class ZUI {
    * @name Two.ZUI#addLimits
    * @function
    * @param {Number} [min=-Infinity] - The minimum scale the ZUI can zoom out to.
-   * @param {Number} [max=Infinity] - The maximum scale teh ZUI can zoom in to.
+   * @param {Number} [max=Infinity] - The maximum scale the ZUI can zoom in to.
    */
   addLimits(min, max) {
-
     if (typeof min !== 'undefined') {
       if (this.limits.scale.min) {
         this.limits.scale.min = Math.max(min, this.limits.scale.min);
@@ -132,7 +124,6 @@ export class ZUI {
     }
 
     return this;
-
   }
 
   /**
@@ -232,7 +223,6 @@ export class ZUI {
    * @description A function to set the zoom amount and the origin position. This is used internally by {@Two.ZUI#zoomBy}.
    */
   zoomSet(zoom, clientX, clientY) {
-
     const newScale = this.fitToLimits(zoom);
     this.zoom = ZUI.ScaleToPosition(newScale);
 
@@ -252,7 +242,6 @@ export class ZUI {
     this.translateSurface(dx, dy);
 
     return this;
-
   }
 
   /**
@@ -269,7 +258,6 @@ export class ZUI {
   }
 
   updateOffset() {
-
     const rect = this.viewport.getBoundingClientRect();
 
     this.viewportOffset.left = rect.left - document.body.scrollLeft;
@@ -280,18 +268,15 @@ export class ZUI {
       .translate(this.viewportOffset.left, this.viewportOffset.top);
 
     return this;
-
   }
 
   updateSurface() {
-
     const e = this.surfaceMatrix.elements;
     for (let i = 0; i < this.surfaces.length; i++) {
       this.surfaces[i].apply(e[2], e[5], e[0]);
     }
 
     return this;
-
   }
 
   /**
@@ -309,5 +294,4 @@ export class ZUI {
   fitToLimits(s) {
     return ZUI.Clamp(s, this.limits.scale.min, this.limits.scale.max);
   }
-
 }

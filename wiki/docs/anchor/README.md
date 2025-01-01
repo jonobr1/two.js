@@ -32,11 +32,81 @@ An object that holds 3 [Two.Vector](/docs/vector/)s, the anchor point and its co
 | ---- | ----------- |
 |  x  | The x position of the root anchor point. |
 |  y  | The y position of the root anchor point. |
-|  lx  | The x position of the left handle point. |
-|  ly  | The y position of the left handle point. |
-|  rx  | The x position of the right handle point. |
-|  ry  | The y position of the right handle point. |
+|  ax  | The x position of the left handle point. |
+|  ay  | The y position of the left handle point. |
+|  bx  | The x position of the right handle point. |
+|  by  | The y position of the right handle point. |
 |  command  | The command to describe how to render. Applicable commands are [Two.Commands](/docs/two/#commands) |
+
+
+
+<div class="static function ">
+
+## fromObject
+
+<h2 class="longname" aria-hidden="true"><a href="#fromObject"><span class="prefix">Two.Anchor.</span><span class="shortname">fromObject</span></a></h2>
+
+
+
+
+<div class="returns">
+
+__Returns__: Two.Anchor
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="params">
+
+| Argument | Description |
+| ---- | ----------- |
+|  obj  | Object notation of a [Two.Anchor](/docs/anchor/) to create a new instance |
+</div>
+
+
+
+
+<div class="description">
+
+Create a new [Two.Anchor](/docs/anchor/) from an object notation of a [Two.Anchor](/docs/anchor/).
+
+</div>
+
+
+
+
+
+<div class="meta">
+
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/anchor.js#L70">
+    anchor.js:70
+  </a>
+
+</div>
+
+
+
+<div class="tags">
+
+
+::: tip nota-bene
+Works in conjunction with [Two.Anchor.toObject](/docs/anchor/#toobject)
+:::
+
+
+</div>
+
+
+</div>
 
 
 
@@ -79,8 +149,8 @@ Copy the properties of one [Two.Anchor](/docs/anchor/) onto another.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/anchor.js#L62">
-    anchor.js:62
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/anchor.js#L82">
+    anchor.js:82
   </a>
 
 </div>
@@ -132,8 +202,8 @@ Create a new [Two.Anchor](/docs/anchor/), set all its values to the current inst
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/anchor.js#L110">
-    anchor.js:110
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/anchor.js#L128">
+    anchor.js:128
   </a>
 
 </div>
@@ -187,13 +257,23 @@ Create a JSON compatible plain object of the current instance. Intended for use 
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/anchor.js#L120">
-    anchor.js:120
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/anchor.js#L138">
+    anchor.js:138
   </a>
 
 </div>
 
 
+
+<div class="tags">
+
+
+::: tip nota-bene
+Works in conjunction with [Two.Anchor.fromObject](/docs/anchor/#fromobject)
+:::
+
+
+</div>
 
 
 </div>
@@ -242,8 +322,8 @@ Create a string form of the current instance. Intended for use with storing valu
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/anchor.js#L144">
-    anchor.js:144
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/anchor.js#L163">
+    anchor.js:163
   </a>
 
 </div>

@@ -66,8 +66,8 @@ See: [Two.Stop](/docs/effects/stop/)
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L78">
-    gradient.js:78
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L57">
+    gradient.js:57
   </a>
 
 </div>
@@ -113,8 +113,8 @@ A list of properties that are on every [Two.Gradient](/docs/effects/gradient/).
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L84">
-    gradient.js:84
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L63">
+    gradient.js:63
   </a>
 
 </div>
@@ -126,37 +126,44 @@ A list of properties that are on every [Two.Gradient](/docs/effects/gradient/).
 
 
 
-<div class="instance member ">
+<div class="static function ">
 
-## renderer
+## fromObject
 
-<h2 class="longname" aria-hidden="true"><a href="#renderer"><span class="prefix">Two.Gradient.</span><span class="shortname">renderer</span></a></h2>
-
-
+<h2 class="longname" aria-hidden="true"><a href="#fromObject"><span class="prefix">Two.Gradient.</span><span class="shortname">fromObject</span></a></h2>
 
 
 
 
+<div class="returns">
 
-
-
-
-<div class="properties">
-
-
+__Returns__: Two.Gradient
 
 
 
 </div>
 
 
+
+
+
+
+
+
+
+<div class="params">
+
+| Argument | Description |
+| ---- | ----------- |
+|  obj  | Object notation of a [Two.Gradient](/docs/effects/gradient/) to create a new instance |
+</div>
 
 
 
 
 <div class="description">
 
-Object access to store relevant renderer specific variables. Warning: manipulating this object can create unintended consequences.
+Create a new [Two.Gradient](/docs/effects/gradient/) from an object notation of a [Two.Gradient](/docs/effects/gradient/).
 
 </div>
 
@@ -166,8 +173,8 @@ Object access to store relevant renderer specific variables. Warning: manipulati
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L35">
-    gradient.js:35
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L69">
+    gradient.js:69
   </a>
 
 </div>
@@ -178,64 +185,7 @@ Object access to store relevant renderer specific variables. Warning: manipulati
 
 
 ::: tip nota-bene
-With the [Two.SVGRenderer](/docs/renderers/svg/) you can access the underlying SVG element created via `shape.renderer.elem`.
-:::
-
-
-</div>
-
-
-</div>
-
-
-
-<div class="instance member ">
-
-## id
-
-<h2 class="longname" aria-hidden="true"><a href="#id"><span class="prefix">Two.Gradient.</span><span class="shortname">id</span></a></h2>
-
-
-
-
-
-
-
-
-
-
-<div class="properties">
-
-
-Session specific unique identifier.
-
-
-</div>
-
-
-
-
-
-
-
-
-
-
-<div class="meta">
-
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L42">
-    gradient.js:42
-  </a>
-
-</div>
-
-
-
-<div class="tags">
-
-
-::: tip nota-bene
-In the [Two.SVGRenderer](/docs/renderers/svg/) change this to change the underlying SVG element's id too.
+Works in conjunction with [Two.Gradient.toObject](/docs/effects/gradient/#toobject)
 :::
 
 
@@ -286,8 +236,8 @@ See: [https://www.w3.org/TR/SVG11/pservers.html#LinearGradientElementSpreadMetho
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L54">
-    gradient.js:54
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L34">
+    gradient.js:34
   </a>
 
 </div>
@@ -339,8 +289,8 @@ See: [https://www.w3.org/TR/SVG11/pservers.html#RadialGradientElementGradientUni
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L61">
-    gradient.js:61
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L41">
+    gradient.js:41
   </a>
 
 </div>
@@ -386,8 +336,8 @@ An ordered list of [Two.Stop](/docs/effects/stop/)s for rendering the gradient.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L68">
-    gradient.js:68
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L48">
+    gradient.js:48
   </a>
 
 </div>
@@ -446,8 +396,60 @@ Create a new instance of [Two.Gradient](/docs/effects/gradient/) with the same p
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L90">
-    gradient.js:90
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L91">
+    gradient.js:91
+  </a>
+
+</div>
+
+
+
+
+</div>
+
+
+
+<div class="instance function ">
+
+## copy
+
+<h2 class="longname" aria-hidden="true"><a href="#copy"><span class="prefix">Two.Gradient.</span><span class="shortname">copy</span></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="params">
+
+| Argument | Description |
+| ---- | ----------- |
+|  gradient  | The reference [Two.Gradient](/docs/effects/gradient/) |
+</div>
+
+
+
+
+<div class="description">
+
+Copy the properties of one [Two.Gradient](/docs/effects/gradient/) onto another.
+
+</div>
+
+
+
+
+
+<div class="meta">
+
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L120">
+    gradient.js:120
   </a>
 
 </div>
@@ -499,8 +501,8 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L117">
-    gradient.js:117
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L139">
+    gradient.js:139
   </a>
 
 </div>

@@ -129,12 +129,10 @@ const webgl = {
         // Don't draw the element onto the canvas, only onto the stencil buffer
         gl.colorMask(false, false, false, false);
 
-        webgl[this._mask._renderer.type].render.call(
-          this._mask,
-          gl,
-          programs,
-          this
+        const prop = CanvasRenderer.Utils.getRendererType(
+          this._mask._renderer.type
         );
+        webgl[prop].render.call(this._mask, gl, programs, this);
 
         gl.stencilFunc(gl.EQUAL, 1, 0xff);
         gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
@@ -156,7 +154,8 @@ const webgl = {
 
       for (i = 0; i < this.children.length; i++) {
         const child = this.children[i];
-        webgl[child._renderer.type].render.call(child, gl, programs);
+        const prop = CanvasRenderer.Utils.getRendererType(child._renderer.type);
+        webgl[prop].render.call(child, gl, programs);
       }
 
       if (this._mask) {
@@ -210,7 +209,10 @@ const webgl = {
         if (typeof fill === 'string') {
           ctx.fillStyle = fill;
         } else {
-          webgl[fill._renderer.type].render.call(fill, ctx, elem);
+          const prop = CanvasRenderer.Utils.getRendererType(
+            fill._renderer.type
+          );
+          webgl[prop].render.call(fill, ctx, elem);
           ctx.fillStyle = fill._renderer.effect;
         }
       }
@@ -218,7 +220,10 @@ const webgl = {
         if (typeof stroke === 'string') {
           ctx.strokeStyle = stroke;
         } else {
-          webgl[stroke._renderer.type].render.call(stroke, ctx, elem);
+          const prop = CanvasRenderer.Utils.getRendererType(
+            stroke._renderer.type
+          );
+          webgl[prop].render.call(stroke, ctx, elem);
           ctx.strokeStyle = stroke._renderer.effect;
         }
         if (linewidth) {
@@ -475,7 +480,8 @@ const webgl = {
       // Calculate what changed
 
       const parent = forcedParent || this.parent;
-      const program = programs[this._renderer.type];
+      const prop = CanvasRenderer.Utils.getRendererType(this._renderer.type);
+      const program = programs[prop];
       const flagParentMatrix = parent._matrix.manual || parent._flagMatrix;
       const flagMatrix = this._matrix.manual || this._flagMatrix;
       const parentChanged = this._renderer.parent !== parent;
@@ -546,13 +552,16 @@ const webgl = {
         if (!(this._renderer.scale instanceof Vector)) {
           this._renderer.scale = new Vector();
         }
+        let sx, sy;
         if (this._scale instanceof Vector) {
-          this._renderer.scale.x = this._scale.x * parent._renderer.scale.x;
-          this._renderer.scale.y = this._scale.y * parent._renderer.scale.y;
+          sx = this._scale.x * parent._renderer.scale.x;
+          sy = this._scale.y * parent._renderer.scale.y;
         } else {
-          this._renderer.scale.x = this._scale * parent._renderer.scale.x;
-          this._renderer.scale.y = this._scale * parent._renderer.scale.y;
+          sx = this._scale * parent._renderer.scale.x;
+          sy = this._scale * parent._renderer.scale.y;
         }
+        this._renderer.scale.x = sx < 0 ? -sx : sx;
+        this._renderer.scale.y = sy < 0 ? -sy : sy;
 
         if (parentChanged) {
           this._renderer.parent = parent;
@@ -569,12 +578,10 @@ const webgl = {
         // Don't draw the element onto the canvas, only onto the stencil buffer
         gl.colorMask(false, false, false, false);
 
-        webgl[this._mask._renderer.type].render.call(
-          this._mask,
-          gl,
-          programs,
-          this
+        const prop = CanvasRenderer.Utils.getRendererType(
+          this._mask._renderer.type
         );
+        webgl[prop].render.call(this._mask, gl, programs, this);
 
         gl.stencilFunc(gl.EQUAL, 1, 0xff);
         gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
@@ -690,7 +697,10 @@ const webgl = {
         if (typeof fill === 'string') {
           ctx.fillStyle = fill;
         } else {
-          webgl[fill._renderer.type].render.call(fill, ctx, elem);
+          const prop = CanvasRenderer.Utils.getRendererType(
+            fill._renderer.type
+          );
+          webgl[prop].render.call(fill, ctx, elem);
           ctx.fillStyle = fill._renderer.effect;
         }
       }
@@ -698,7 +708,10 @@ const webgl = {
         if (typeof stroke === 'string') {
           ctx.strokeStyle = stroke;
         } else {
-          webgl[stroke._renderer.type].render.call(stroke, ctx, elem);
+          const prop = CanvasRenderer.Utils.getRendererType(
+            stroke._renderer.type
+          );
+          webgl[prop].render.call(stroke, ctx, elem);
           ctx.strokeStyle = stroke._renderer.effect;
         }
         if (linewidth) {
@@ -839,13 +852,16 @@ const webgl = {
         if (!(this._renderer.scale instanceof Vector)) {
           this._renderer.scale = new Vector();
         }
+        let sx, sy;
         if (this._scale instanceof Vector) {
-          this._renderer.scale.x = this._scale.x * parent._renderer.scale.x;
-          this._renderer.scale.y = this._scale.y * parent._renderer.scale.y;
+          sx = this._scale.x * parent._renderer.scale.x;
+          sy = this._scale.y * parent._renderer.scale.y;
         } else {
-          this._renderer.scale.x = this._scale * parent._renderer.scale.x;
-          this._renderer.scale.y = this._scale * parent._renderer.scale.y;
+          sx = this._scale * parent._renderer.scale.x;
+          sy = this._scale * parent._renderer.scale.y;
         }
+        this._renderer.scale.x = sx < 0 ? -sx : sx;
+        this._renderer.scale.y = sy < 0 ? -sy : sy;
 
         if (parentChanged) {
           this._renderer.parent = parent;
@@ -981,7 +997,10 @@ const webgl = {
         if (typeof fill === 'string') {
           ctx.fillStyle = fill;
         } else {
-          webgl[fill._renderer.type].render.call(fill, ctx, elem);
+          const prop = CanvasRenderer.Utils.getRendererType(
+            fill._renderer.type
+          );
+          webgl[prop].render.call(fill, ctx, elem);
           ctx.fillStyle = fill._renderer.effect;
         }
       }
@@ -989,7 +1008,10 @@ const webgl = {
         if (typeof stroke === 'string') {
           ctx.strokeStyle = stroke;
         } else {
-          webgl[stroke._renderer.type].render.call(stroke, ctx, elem);
+          const prop = CanvasRenderer.Utils.getRendererType(
+            stroke._renderer.type
+          );
+          webgl[prop].render.call(stroke, ctx, elem);
           ctx.strokeStyle = stroke._renderer.effect;
         }
         if (linewidth) {
@@ -1270,13 +1292,16 @@ const webgl = {
         if (!(this._renderer.scale instanceof Vector)) {
           this._renderer.scale = new Vector();
         }
+        let sx, sy;
         if (this._scale instanceof Vector) {
-          this._renderer.scale.x = this._scale.x * parent._renderer.scale.x;
-          this._renderer.scale.y = this._scale.y * parent._renderer.scale.y;
+          sx = this._scale.x * parent._renderer.scale.x;
+          sy = this._scale.y * parent._renderer.scale.y;
         } else {
-          this._renderer.scale.x = this._scale * parent._renderer.scale.x;
-          this._renderer.scale.y = this._scale * parent._renderer.scale.y;
+          sx = this._scale * parent._renderer.scale.x;
+          sy = this._scale * parent._renderer.scale.y;
         }
+        this._renderer.scale.x = sx < 0 ? -sx : sx;
+        this._renderer.scale.y = sy < 0 ? -sy : sy;
 
         if (parentChanged) {
           this._renderer.parent = parent;
@@ -1293,12 +1318,10 @@ const webgl = {
         // Don't draw the element onto the canvas, only onto the stencil buffer
         gl.colorMask(false, false, false, false);
 
-        webgl[this._mask._renderer.type].render.call(
-          this._mask,
-          gl,
-          programs,
-          this
+        const prop = CanvasRenderer.Utils.getRendererType(
+          this._mask._renderer.type
         );
+        webgl[prop].render.call(this._mask, gl, programs, this);
 
         gl.stencilFunc(gl.EQUAL, 1, 0xff);
         gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
@@ -1516,11 +1539,16 @@ const webgl = {
           this._renderer.scale = new Vector();
         }
 
+        let sx, sy;
         if (this._scale instanceof Vector) {
-          this._renderer.scale.copy(this._scale);
+          sx = this._scale.x;
+          sy = this._scale.y;
         } else {
-          this._renderer.scale.set(this._scale, this._scale);
+          sx = this._scale;
+          sy = this._scale;
         }
+        this._renderer.scale.x = sx < 0 ? -sx : sx;
+        this._renderer.scale.y = sy < 0 ? -sy : sy;
       }
 
       return this.flagReset();
@@ -1528,7 +1556,8 @@ const webgl = {
   },
 
   updateTexture: function (gl, elem) {
-    this[elem._renderer.type].updateCanvas.call(webgl, gl, elem);
+    const prop = CanvasRenderer.Utils.getRendererType(elem._renderer.type);
+    this[prop].updateCanvas.call(webgl, gl, elem);
 
     if (this.canvas.width <= 0 || this.canvas.height <= 0) {
       if (elem._renderer.texture) {
