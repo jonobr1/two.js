@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file. The format 
 ## Nightly
 
 + `Two.ZUI.reset` updates the surfaces to be reflect reset orientation
++ `Two.Group.getBoundingClientRect(shallow)` correctly infers min and max values to calculate dimensions correctly
 
 ## Dec 31, 2024 v0.8.15
 
