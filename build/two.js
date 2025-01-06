@@ -766,8 +766,8 @@ var Two = (() => {
       svg: "SVGRenderer",
       canvas: "CanvasRenderer"
     },
-    Version: "v0.8.15",
-    PublishDate: "2025-01-01T01:30:08.872Z",
+    Version: "v0.8.16",
+    PublishDate: "2025-01-06T21:30:44.526Z",
     Identifier: "two-",
     Resolution: 12,
     AutoCalculateImportedMatrices: true,
@@ -6186,10 +6186,10 @@ var Two = (() => {
           const [bx, by] = matrix.multiply(rect.right, rect.top);
           const [cx, cy] = matrix.multiply(rect.left, rect.bottom);
           const [dx, dy] = matrix.multiply(rect.right, rect.bottom);
-          top = min3(ay, by, cy, dy);
-          left = min3(ax, bx, cx, dx);
-          right = max3(ax, bx, cx, dx);
-          bottom = max3(ay, by, cy, dy);
+          top = min3(ay, by, cy, dy, top);
+          left = min3(ax, bx, cx, dx, left);
+          right = max3(ax, bx, cx, dx, right);
+          bottom = max3(ay, by, cy, dy, bottom);
         } else {
           top = min3(rect.top, top);
           left = min3(rect.left, left);
