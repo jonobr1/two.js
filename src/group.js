@@ -672,10 +672,10 @@ export class Group extends Shape {
         const [cx, cy] = matrix.multiply(rect.left, rect.bottom);
         const [dx, dy] = matrix.multiply(rect.right, rect.bottom);
 
-        top = min(ay, by, cy, dy);
-        left = min(ax, bx, cx, dx);
-        right = max(ax, bx, cx, dx);
-        bottom = max(ay, by, cy, dy);
+        top = min(ay, by, cy, dy, top);
+        left = min(ax, bx, cx, dx, left);
+        right = max(ax, bx, cx, dx, right);
+        bottom = max(ay, by, cy, dy, bottom);
       } else {
         top = min(rect.top, top);
         left = min(rect.left, left);
