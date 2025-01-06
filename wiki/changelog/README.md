@@ -15,9 +15,9 @@ All notable changes to this project will be documented in this file. The format 
 
 + `Two.ZUI.reset` updates the surfaces to be reflect reset orientation
 
-## December 31, 2024 v0.8.15
+## Dec 31, 2024 v0.8.15
 
-<h3 class="visible">December 31, 2024</h3><version-link v="v0.8.15" />
+<h3 class="visible">Dec 31, 2024</h3><version-link v="v0.8.15" />
 
 + Made `CanvasPolyfill` object and merged it into `Two.Utils` to remove circular dependencies
 + Made `Two.Collection._events` and `Two.Children.ids` not enumerated for more seamless invocation of `Array` methods like `Array.filter` and `Object` methods like `Object.keys`
@@ -29,25 +29,25 @@ All notable changes to this project will be documented in this file. The format 
 + `Two.Path.noStroke`, `Two.Text.noStroke`, and derivative methods now include setting both the stroke color to `"none"` and the line width to 0
 + Fixed `Two.Arc` flag behavior for `Two.Arc.width` and `Two.Arc.height` properties
 
-## June 10, 2024 v0.8.14
+## Jun 10, 2024 v0.8.14
 
-<h3 class="visible">June 10, 2024</h3><version-link v="v0.8.14" />
+<h3 class="visible">Jun 10, 2024</h3><version-link v="v0.8.14" />
 
 + Made `objectBoundingBox` application consistent accross renderers
 + Patched texture scaling in `Two.SVGRenderer`
 + Updated Typescript definitions [@kevin-nano](https://github.com/kevin-nano)
 
-## February 22, 2024 v0.8.13
+## Feb 22, 2024 v0.8.13
 
-<h3 class="visible">February 22, 2024</h3><version-link v="v0.8.13" />
+<h3 class="visible">Feb 22, 2024</h3><version-link v="v0.8.13" />
 
 + Added `Two.Text.direction` for rendering text either left to right or right to left
 + Improved `Two.WebGLRenderer` texture crispness / aliasing
 + Improved consistency of `Two.Text.baseline` rendering across all renderers
 
-## October 16, 2023 v0.8.12
+## Oct 16, 2023 v0.8.12
 
-<h3 class="visible">October 16, 2023</h3><version-link v="v0.8.12" />
+<h3 class="visible">Oct 16, 2023</h3><version-link v="v0.8.12" />
 
 + Added `"no-referrer"` policy to image requests
 + Updated extras to be compatible with `Two.Matrix` API changes
@@ -58,9 +58,9 @@ All notable changes to this project will be documented in this file. The format 
 + `Two.Points.noFill()` yields `"none"` instead of `"transparent"`
 + `Two.Points.noStroke()` yields `"none"` instead of `"transparent"`
 
-## August 7, 2023 v0.8.11
+## Aug 7, 2023 v0.8.11
 
-<h3 class="visible">August 7, 2023</h3><version-link v="v0.8.11" />
+<h3 class="visible">Aug 7, 2023</h3><version-link v="v0.8.11" />
 
 + Fixed getters on `Two.Anchor.left` and `Two.Anchor.right` [@eatgrass](https://github.com/eatgrass)
 + Improved `Two.Path.getBoundingClientRect`, `Two.Group.getBoundingClientRect`, and `Two.Text.getBoundingClientRect` to correctly handle projected points that are rotated by matrices
@@ -70,9 +70,9 @@ All notable changes to this project will be documented in this file. The format 
 + Override `Two.Collection.map` method to be more explicit
 + Improved `types.d.ts` for renderers and base `Two` class
 
-## June 9, 2022 v0.8.10
+## Jun 9, 2022 v0.8.10
 
-<h3 class="visible">June 9, 2022</h3><version-link v="v0.8.10" />
+<h3 class="visible">Jun 9, 2022</h3><version-link v="v0.8.10" />
 
 + Added `Two.Arc` to `/extras` directory
 + Made `/extras/js/zui.js` ES6 compliant
