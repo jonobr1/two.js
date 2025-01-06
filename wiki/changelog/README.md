@@ -11,7 +11,13 @@ All notable changes to this project will be documented in this file. The format 
 
 <carbon-ads />
 
+## Nightly
+
++ `Two.ZUI.reset` updates the surfaces to be reflect reset orientation
+
 ## December 31, 2024 v0.8.15
+
+<h3 class="visible">December 31, 2024</h3><version-link v="v0.8.15" />
 
 + Made `CanvasPolyfill` object and merged it into `Two.Utils` to remove circular dependencies
 + Made `Two.Collection._events` and `Two.Children.ids` not enumerated for more seamless invocation of `Array` methods like `Array.filter` and `Object` methods like `Object.keys`
