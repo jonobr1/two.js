@@ -1396,7 +1396,17 @@ declare module 'two.js/src/group' {
      * @name Two.Group.Properties
      * @property {String[]} - A list of properties that are on every {@link Two.Group}.
      */
-    static Properties: string[];
+    static Properties: (
+      | 'fill'
+      | 'stroke'
+      | 'linewidth'
+      | 'cap'
+      | 'join'
+      | 'miter'
+      | 'closed'
+      | 'curved'
+      | 'automatic'
+    )[];
     static fromObject(obj: object): Group;
     constructor(children?: Shape[]);
     constructor(...args: Shape[]);
@@ -1884,7 +1894,7 @@ declare module 'two.js/src/effects/stop' {
      * @name Two.Stop.Properties
      * @property {String[]} - A list of properties that are on every {@link Two.Stop}.
      */
-    static Properties: string[];
+    static Properties: ('offset' | 'opacity' | 'color')[];
     /**
      * @name Two.Stop.fromObject
      * @function
@@ -1990,7 +2000,7 @@ declare module 'two.js/src/effects/gradient' {
      * @name Two.Gradient.Properties
      * @property {String[]} - A list of properties that are on every {@link Two.Gradient}.
      */
-    static Properties: string[];
+    static Properties: ('spread' | 'stops' | 'units')[];
     /**
      * @name Two.Gradient.fromObject
      * @function
@@ -2260,7 +2270,14 @@ declare module 'two.js/src/effects/texture' {
      * @name Two.Texture.Properties
      * @property {String[]} - A list of properties that are on every {@link Two.Texture}.
      */
-    static Properties: string[];
+    static Properties: (
+      | 'src'
+      | 'loaded'
+      | 'repeat'
+      | 'scale'
+      | 'offset'
+      | 'image'
+    )[];
     /**
      * @name Two.Texture.RegularExpressions
      * @property {Object} - A map of compatible DOM Elements categorized by media format.
@@ -2485,7 +2502,22 @@ declare module 'two.js/src/path' {
      * @name Two.Path.Properties
      * @property {String[]} - A list of properties that are on every {@link Two.Path}.
      */
-    static Properties: string[];
+    static Properties: (
+      | 'fill'
+      | 'stroke'
+      | 'linewidth'
+      | 'opacity'
+      | 'visible'
+      | 'cap'
+      | 'join'
+      | 'miter'
+      | 'closed'
+      | 'curved'
+      | 'automatic'
+      | 'beginning'
+      | 'ending'
+      | 'dashes'
+    )[];
     static Utils: {
       getCurveLength: (
         a: Anchor | Vector,
@@ -3336,7 +3368,24 @@ declare module 'two.js/src/text' {
      * @name Two.Text.Properties
      * @property {String[]} - A list of properties that are on every {@link Two.Text}.
      */
-    static Properties: string[];
+    static Properties: (
+      | 'value'
+      | 'family'
+      | 'size'
+      | 'leading'
+      | 'alignment'
+      | 'linewidth'
+      | 'style'
+      | 'weight'
+      | 'decoration'
+      | 'direction'
+      | 'baseline'
+      | 'opacity'
+      | 'visible'
+      | 'fill'
+      | 'stroke'
+      | 'dashes'
+    )[];
     /**
      * @name Two.Measure
      * @function
@@ -3854,7 +3903,18 @@ declare module 'two.js/src/shapes/points' {
      * @description This is a primary primitive class for quickly and easily drawing points in Two.js. Unless specified methods return their instance of `Two.Points` for the purpose of chaining.
      */
   export class Points extends Shape {
-    static Properties: string[];
+    static Properties: (
+      | 'fill'
+      | 'stroke'
+      | 'linewidth'
+      | 'opacity'
+      | 'visible'
+      | 'size'
+      | 'sizeAttenuation'
+      | 'beginning'
+      | 'ending'
+      | 'dashes'
+    )[];
     constructor(vertices?: any[]);
     private _flagVertices;
     private _flagLength;
