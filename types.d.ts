@@ -4554,7 +4554,7 @@ declare module 'two.js' {
       autostart?: boolean;
       width?: number;
       height?: number;
-      type?: string;
+      type?: (typeof Two.Types)[keyof typeof Two.Types];
       domElement?: SVGElement | HTMLCanvasElement;
       overdraw?: boolean;
       smoothing?: boolean;
