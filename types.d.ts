@@ -4502,6 +4502,7 @@ declare module 'two.js' {
     static Matrix: typeof Matrix;
     static Path: typeof Path;
     static Registry: typeof Registry;
+    static Element: typeof TwoElement;
     static Shape: typeof Shape;
     static Text: typeof Text;
     static Vector: typeof Vector;
@@ -5035,6 +5036,7 @@ declare module 'two.js' {
   import { Events } from 'two.js/src/events';
   import { Matrix } from 'two.js/src/matrix';
   import { Registry } from 'two.js/src/registry';
+  import { Element as TwoElement } from 'two.js/src/element';
   import { Shape } from 'two.js/src/shape';
   import { Vector } from 'two.js/src/vector';
   import { Gradient } from 'two.js/src/effects/gradient';
