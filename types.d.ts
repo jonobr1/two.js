@@ -2816,7 +2816,7 @@ declare module 'two.js/src/path' {
      * @description A list of {@link Two.Anchor} objects that consist of what form the path takes.
      * @nota-bene The array when manipulating is actually a {@link Two.Collection}.
      */
-    vertices: any;
+    vertices: Anchor[];
     /**
      * @name Two.Path#automatic
      * @property {Boolean} - Determines whether or not Two.js should calculate curves, lines, and commands automatically for you or to let the developer manipulate them for themselves.
@@ -4003,7 +4003,7 @@ declare module 'two.js/src/shapes/points' {
      * @description A list of {@link Two.Vector} objects that consist of which coordinates to draw points at.
      * @nota-bene The array when manipulating is actually a {@link Two.Collection}.
      */
-    vertices: Vector[];
+    vertices: (Anchor | Vector)[];
     /**
      * @name Two.Points#dashes
      * @property {Number[]} - Array of numbers. Odd indices represent dash length. Even indices represent dash space.
