@@ -58,6 +58,8 @@ export class Element extends Events {
     }
   }
 
+  static Properties = ['renderer', 'id', 'className'];
+
   /**
    * @name Two.Element.fromObject
    * @function

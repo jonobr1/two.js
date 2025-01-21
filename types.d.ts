@@ -825,6 +825,7 @@ declare module 'two.js/src/element' {
    * @description The foundational object for the Two.js scenegraph.
    */
   export class Element extends Events {
+    static Properties: ('renderer' | 'id' | 'className')[];
     /**
      * @name Two.Element.fromObject
      * @function
@@ -1143,6 +1144,24 @@ declare module 'two.js/src/shape' {
      * @description The foundational transformation object for the Two.js scenegraph.
      */
   export class Shape extends TwoElement {
+    static Properties: (
+      | 'position'
+      | 'rotation'
+      | 'scale'
+      | 'skewX'
+      | 'skewY'
+      | 'matrix'
+      | 'worldMatrix'
+    )[];
+    /**
+     * @name Two.Shape.fromObject
+     * @function
+     * @param {Object} obj - Object notation of a {@link Two.Shape} to create a new instance
+     * @returns {Two.Shape}
+     * @description Create a new {@link Two.Shape} from an object notation of a {@link Two.Shape}.
+     * @nota-bene Works in conjunction with {@link Two.Shape#toObject}
+     */
+    static fromObject(obj: object): Shape;
     /**
      * @name Two.Shape#_flagMatrix
      * @private
