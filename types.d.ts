@@ -84,18 +84,28 @@ declare module 'two.js/src/events' {
      * @property {Object} - Object of different types of Two.js specific events.
      */
     static Types: {
-      play: string;
-      pause: string;
-      update: string;
-      render: string;
-      resize: string;
-      change: string;
-      remove: string;
-      insert: string;
-      order: string;
-      load: string;
+      play: 'play';
+      pause: 'pause';
+      update: 'update';
+      render: 'render';
+      resize: 'resize';
+      change: 'change';
+      remove: 'remove';
+      insert: 'insert';
+      order: 'order';
+      load: 'load';
     };
-    static Methods: string[];
+    static Methods: (
+      | 'addEventListener'
+      | 'on'
+      | 'removeEventListener'
+      | 'off'
+      | 'unbind'
+      | 'dispatchEvent'
+      | 'trigger'
+      | 'listen'
+      | 'ignore'
+    )[];
     _events: {};
     _bound: boolean;
     /**
@@ -615,9 +625,10 @@ declare module 'two.js/src/constants' {
     Identifier: string;
     Resolution: number;
     AutoCalculateImportedMatrices: boolean;
-    Instances: any[];
+    Instances: Two[];
     uniqueId(): number;
   }
+  import Two from 'two.js';
 }
 declare module 'two.js/src/utils/curves' {
   export interface Curve {
@@ -4454,9 +4465,9 @@ declare module 'two.js' {
      * @property {Object} - The different rendering types available in the library.
      */
     static Types: {
-      webgl: string;
-      svg: string;
-      canvas: string;
+      webgl: 'WebGLRenderer';
+      svg: 'SVGRenderer';
+      canvas: 'CanvasRenderer';
     };
     /**
      * @name Two.Version
@@ -4488,7 +4499,7 @@ declare module 'two.js' {
      * @name Two.Instances
      * @property {Two[]} - Registered list of all Two.js instances in the current session.
      */
-    static Instances: any[];
+    static Instances: Two[];
     /**
      * @function Two.uniqueId
      * @description Simple method to access an incrementing value. Used for `id` allocation on all Two.js objects.
@@ -4569,7 +4580,7 @@ declare module 'two.js' {
      * @name Two#type
      * @property {String} - A string representing which type of renderer the instance has instantiated.
      */
-    type: string;
+    type: (typeof Two.Types)[keyof typeof Two.Types];
     /**
      * @name Two#renderer
      * @property {(Two.SVGRenderer|CanvasRenderer|WebGLRenderer)} - The instantiated rendering class for the instance. For a list of possible rendering types check out Two.Types.
