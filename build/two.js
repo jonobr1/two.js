@@ -1,7 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2012 - 2024 @jonobr1 / http://jono.fyi
+Copyright (c) 2012 - 2025 @jonobr1 / http://jono.fyi
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -741,7 +741,7 @@ var Two = (() => {
       canvas: "CanvasRenderer"
     },
     Version: "v0.8.15",
-    PublishDate: "2024-11-07T05:56:16.788Z",
+    PublishDate: "2025-01-21T04:11:58.101Z",
     Identifier: "two-",
     Resolution: 12,
     AutoCalculateImportedMatrices: true,
@@ -1031,7 +1031,7 @@ var Two = (() => {
   };
 
   // src/element.js
-  var Element = class extends Events {
+  var _Element = class extends Events {
     _flagId = false;
     _flagClassName = false;
     _renderer = {};
@@ -1045,7 +1045,7 @@ var Two = (() => {
       }
     }
     static fromObject(obj) {
-      const elem = new Element().copy(obj);
+      const elem = new _Element().copy(obj);
       if ("id" in obj) {
         elem.id = obj.id;
       }
@@ -1053,6 +1053,7 @@ var Two = (() => {
     }
     flagReset() {
       this._flagId = this._flagClassName = false;
+      return this;
     }
     copy(element) {
       this.renderer.type = element.renderer.type;
@@ -1067,6 +1068,8 @@ var Two = (() => {
       };
     }
   };
+  var Element = _Element;
+  __publicField(Element, "Properties", ["renderer", "id", "className"]);
   var proto3 = {
     renderer: {
       enumerable: false,
@@ -2511,7 +2514,7 @@ var Two = (() => {
   setMatrix(Matrix2);
 
   // src/shape.js
-  var Shape = class extends Element {
+  var _Shape = class extends Element {
     _flagMatrix = true;
     _flagScale = false;
     _matrix = null;
@@ -2537,7 +2540,7 @@ var Two = (() => {
       this.skewY = 0;
     }
     static fromObject(obj) {
-      const shape = new Shape().copy(obj);
+      const shape = new _Shape().copy(obj);
       if ("id" in obj) {
         shape.id = obj.id;
       }
@@ -2594,7 +2597,7 @@ var Two = (() => {
       return this;
     }
     clone(parent) {
-      const clone = new Shape();
+      const clone = new _Shape();
       clone.position.copy(this.position);
       clone.rotation = this.rotation;
       clone.scale = this.scale;
@@ -2645,6 +2648,16 @@ var Two = (() => {
       return this;
     }
   };
+  var Shape = _Shape;
+  __publicField(Shape, "Properties", [
+    "position",
+    "rotation",
+    "scale",
+    "skewX",
+    "skewY",
+    "matrix",
+    "worldMatrix"
+  ]);
   var proto9 = {
     position: {
       enumerable: true,
@@ -10857,12 +10870,18 @@ var Two = (() => {
   __publicField(Renderer3, "Utils", webgl);
 
   // src/two.js
-  var Utils = _.extend({
-    Error: TwoError,
-    getRatio,
-    read,
-    xhr
-  }, _, CanvasShim, curves_exports, math_exports);
+  var Utils = _.extend(
+    {
+      Error: TwoError,
+      getRatio,
+      read,
+      xhr
+    },
+    _,
+    CanvasShim,
+    curves_exports,
+    math_exports
+  );
   var _Two = class {
     _events = new Events();
     get _bound() {
@@ -10918,15 +10937,21 @@ var Two = (() => {
         type: _Two.Types.svg,
         autostart: false
       });
-      _.each(params, function(v, k) {
-        if (/fullscreen/i.test(k) || /autostart/i.test(k)) {
-          return;
-        }
-        this[k] = v;
-      }, this);
+      _.each(
+        params,
+        function(v, k) {
+          if (/fullscreen/i.test(k) || /autostart/i.test(k)) {
+            return;
+          }
+          this[k] = v;
+        },
+        this
+      );
       if (_.isElement(params.domElement)) {
         const tagName = params.domElement.tagName.toLowerCase();
-        if (!/^(CanvasRenderer-canvas|WebGLRenderer-canvas|SVGRenderer-svg)$/.test(this.type + "-" + tagName)) {
+        if (!/^(CanvasRenderer-canvas|WebGLRenderer-canvas|SVGRenderer-svg)$/.test(
+          this.type + "-" + tagName
+        )) {
           this.type = _Two.Types[tagName];
         }
       }
@@ -11087,8 +11112,24 @@ var Two = (() => {
       const headlen = typeof size === "number" ? size : 10;
       const angle = Math.atan2(y2 - y1, x2 - x1);
       const vertices = [
-        new Anchor(x1, y1, void 0, void 0, void 0, void 0, Commands.move),
-        new Anchor(x2, y2, void 0, void 0, void 0, void 0, Commands.line),
+        new Anchor(
+          x1,
+          y1,
+          void 0,
+          void 0,
+          void 0,
+          void 0,
+          Commands.move
+        ),
+        new Anchor(
+          x2,
+          y2,
+          void 0,
+          void 0,
+          void 0,
+          void 0,
+          Commands.line
+        ),
         new Anchor(
           x2 - headlen * Math.cos(angle - Math.PI / 4),
           y2 - headlen * Math.sin(angle - Math.PI / 4),
@@ -11098,7 +11139,15 @@ var Two = (() => {
           void 0,
           Commands.line
         ),
-        new Anchor(x2, y2, void 0, void 0, void 0, void 0, Commands.move),
+        new Anchor(
+          x2,
+          y2,
+          void 0,
+          void 0,
+          void 0,
+          void 0,
+          Commands.move
+        ),
         new Anchor(
           x2 - headlen * Math.cos(angle + Math.PI / 4),
           y2 - headlen * Math.sin(angle + Math.PI / 4),
@@ -11155,7 +11204,11 @@ var Two = (() => {
         }
       }
       const last = arguments[l - 1];
-      const curve = new Path(points, !(typeof last === "boolean" ? last : void 0), true);
+      const curve = new Path(
+        points,
+        !(typeof last === "boolean" ? last : void 0),
+        true
+      );
       const rect = curve.getBoundingClientRect();
       curve.center().translation.set(rect.left + rect.width / 2, rect.top + rect.height / 2);
       this.scene.add(curve);
@@ -11212,10 +11265,16 @@ var Two = (() => {
         }
       }
       const last = arguments[l - 1];
-      const path = new Path(points, !(typeof last === "boolean" ? last : void 0));
+      const path = new Path(
+        points,
+        !(typeof last === "boolean" ? last : void 0)
+      );
       const rect = path.getBoundingClientRect();
       if (typeof rect.top === "number" && typeof rect.left === "number" && typeof rect.right === "number" && typeof rect.bottom === "number") {
-        path.center().translation.set(rect.left + rect.width / 2, rect.top + rect.height / 2);
+        path.center().translation.set(
+          rect.left + rect.width / 2,
+          rect.top + rect.height / 2
+        );
       }
       this.scene.add(path);
       return path;
@@ -11322,6 +11381,7 @@ var Two = (() => {
   __publicField(Two, "Matrix", Matrix2);
   __publicField(Two, "Path", Path);
   __publicField(Two, "Registry", Registry);
+  __publicField(Two, "Element", Element);
   __publicField(Two, "Shape", Shape);
   __publicField(Two, "Text", Text);
   __publicField(Two, "Vector", Vector);
