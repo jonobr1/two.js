@@ -4083,6 +4083,7 @@ declare module 'two.js/src/shapes/points' {
   import { Texture } from 'two.js/src/effects/texture';
   import { BoundingBox } from 'two.js';
   import { Vector } from 'two.js/src/vector';
+  import { Anchor } from 'two.js/src/anchor';
 }
 declare module 'two.js/src/shapes/polygon' {
   /**
@@ -4616,7 +4617,7 @@ declare module 'two.js' {
      * @property {Boolean} - A boolean representing whether or not the instance is being updated through the automatic `requestAnimationFrame`.
      */
     playing: boolean;
-    fit: any;
+    fit(): void;
     /**
      * @name Two#appendTo
      * @function
