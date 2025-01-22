@@ -8,7 +8,7 @@ declare module 'two.js/src/utils/path-commands' {
   }
 }
 declare module 'two.js/src/utils/root' {
-  export let root: any;
+  export let root: typeof globalThis;
 }
 declare module 'two.js/src/utils/math' {
   /**
@@ -389,7 +389,7 @@ declare module 'two.js/src/vector' {
      * @function
      * @description Alias for {@link Two.Vector.multiply}.
      */
-    multiplySelf(v: any, ...args: any[]): any;
+    multiplySelf(v: Vector, ...args: Vector[]): Vector;
     /**
      * @name Two.Vector#multiplyScalar
      * @function
@@ -476,7 +476,7 @@ declare module 'two.js/src/vector' {
      * @returns {Number}
      * @description Get the distance between two vectors.
      */
-    distanceTo(v: any): number;
+    distanceTo(v: Vector): number;
     /**
      * @name Two.Vector#distanceToSquared
      * @function
@@ -549,7 +549,7 @@ declare module 'two.js/src/anchor' {
      * @description An object that holds 3 {@link Two.Vector}s, the anchor point and its corresponding handles: `left` and `right`. In order to properly describe the bezier curve about the point there is also a command property to describe what type of drawing should occur when Two.js renders the anchors.
      */
   export class Anchor extends Vector {
-    static makeBroadcast(scope: any): () => void;
+    static makeBroadcast(scope: Anchor): () => void;
     /**
      * @name Two.Anchor.fromObject
      * @function
@@ -574,11 +574,11 @@ declare module 'two.js/src/anchor' {
     };
     command: Commands;
     relative: boolean;
-    rx: any;
-    ry: any;
-    xAxisRotation: any;
-    largeArcFlag: any;
-    sweepFlag: any;
+    rx?: number;
+    ry?: number;
+    xAxisRotation?: number;
+    largeArcFlag?: number;
+    sweepFlag?: number;
     /**
      * @name Two.Anchor#copy
      * @function
@@ -1000,13 +1000,13 @@ declare module 'two.js/src/matrix' {
      * @function
      * @description Copy the matrix of one to the current instance.
      */
-    copy(m: any): any;
+    copy(m: any): Matrix;
     /**
      * @name Two.Matrix#identity
      * @function
      * @description Turn matrix to the identity, like resetting.
      */
-    identity(): any;
+    identity(): Matrix;
     /**
      * @name Two.Matrix#multiply
      * @function
@@ -1014,7 +1014,7 @@ declare module 'two.js/src/matrix' {
      * @description Multiply all components of the matrix against a single scalar value.
      * @overloaded
      */
-    multiply(a: number): any;
+    multiply(a: number): Matrix;
     /**
      * @name Two.Matrix#multiply
      * @function
@@ -1054,14 +1054,14 @@ declare module 'two.js/src/matrix' {
       g: number,
       h: number,
       i: number
-    ): any;
+    ): Matrix;
     /**
      * @name Two.Matrix#inverse
      * @function
      * @param {Matrix} [out] - The optional matrix to apply the inversion to.
      * @description Return an inverted version of the matrix. If no optional one is passed a new matrix is created and returned.
      */
-    inverse(out?: Matrix): any;
+    inverse(out?: Matrix): Matrix;
     /**
      * @name Two.Matrix#scale
      * @function
@@ -1075,14 +1075,14 @@ declare module 'two.js/src/matrix' {
      * @param {Number} sy - The vertical scale factor
      * @description Scale the transformation matrix in two dimensions.
      */
-    scale(sx: number, sy: number, ...args: any[]): any;
+    scale(sx: number, sy: number, ...args: any[]): Matrix;
     /**
      * @name Two.Matrix#rotate
      * @function
      * @param {Number} Number - The amount to rotate in Number.
      * @description Rotate the matrix.
      */
-    rotate(Number: number): any;
+    rotate(Number: number): Matrix;
     /**
      * @name Two.Matrix#translate
      * @function
@@ -1090,21 +1090,21 @@ declare module 'two.js/src/matrix' {
      * @param {Number} y - The vertical translation value to apply.
      * @description Translate the matrix.
      */
-    translate(x: number, y: number): any;
+    translate(x: number, y: number): Matrix;
     /**
      * @name Two.Matrix#skewX
      * @function
      * @param {Number} Number - The amount to skew in Number.
      * @description Skew the matrix by an angle in the x axis direction.
      */
-    skewX(Number: number): any;
+    skewX(Number: number): Matrix;
     /**
      * @name Two.Matrix#skewY
      * @function
      * @param {Number} Number - The amount to skew in Number.
      * @description Skew the matrix by an angle in the y axis direction.
      */
-    skewY(Number: number): any;
+    skewY(Number: number): Matrix;
     /**
      * @name Two.Matrix#toString
      * @function
@@ -1120,7 +1120,7 @@ declare module 'two.js/src/matrix' {
      * @param {Number[]} [output] - An array empty or otherwise to apply the values to.
      * @description Create a transform array. Used for the Two.js rendering APIs.
      */
-    toTransformArray(fullMatrix?: boolean, output?: number[]): any[];
+    toTransformArray(fullMatrix?: boolean, output?: number[]): number[];
     /**
      * @name Two.Matrix#toArray
      * @function
@@ -1128,14 +1128,14 @@ declare module 'two.js/src/matrix' {
      * @param {Number[]} [output] - An array empty or otherwise to apply the values to.
      * @description Create a transform array. Used for the Two.js rendering APIs.
      */
-    toArray(fullMatrix?: boolean, output?: number[]): any[];
+    toArray(fullMatrix?: boolean, output?: number[]): number[];
     /**
      * @name Two.Matrix#toObject
      * @function
      * @description Create a JSON compatible object that represents information of the matrix.
      */
     toObject(): {
-      elements: any[];
+      elements: number[];
       manual: boolean;
     };
     /**
@@ -1300,7 +1300,7 @@ declare module 'two.js/src/shape' {
      * @param {Two.Shape} shape
      * @description Copy the properties of one {@link Two.Shape} onto another.
      */
-    copy(shape: any): any;
+    copy(shape: any): Shape;
     /**
      * @name Two.Shape#clone
      * @function
@@ -1308,7 +1308,7 @@ declare module 'two.js/src/shape' {
      * @returns {Shape}
      * @description Create a new {@link Two.Shape} with the same values as the current shape.
      */
-    clone(parent?: Group): any;
+    clone(parent?: Group): Shape;
     /**
      * @name Two.Shape#toObject
      * @function
@@ -1324,7 +1324,7 @@ declare module 'two.js/src/shape' {
      * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
      * @nota-bene Try not to call this method more than once a frame.
      */
-    _update(bubbles: boolean): any;
+    _update(bubbles: boolean): Shape;
   }
   import { Element as TwoElement } from 'two.js/src/element';
   import { Matrix } from 'two.js/src/matrix';
@@ -1624,21 +1624,21 @@ declare module 'two.js/src/group' {
      * @description Recursively search for id. Returns the first element found.
      * @returns {Shape} - Or `null` if nothing is found.
      */
-    getById(id: any): Shape;
+    getById(id: string): Shape;
     /**
      * @name Two.Group#getByClassName
      * @function
      * @description Recursively search for classes. Returns an array of matching elements.
      * @returns {Shape[]} - Or empty array if nothing is found.
      */
-    getByClassName(className: any): Shape[];
+    getByClassName(className: string): Shape[];
     /**
      * @name Two.Group#getByType
      * @function
      * @description Recursively search for children of a specific type, e.g. {@link Two.Path}. Pass a reference to this type as the param. Returns an array of matching elements.
      * @returns {Shape[]} - Empty array if nothing is found.
      */
-    getByType(type: any): Shape[];
+    getByType(type: Shape): Shape[];
     /**
      * @name Two.Group#add
      * @function
@@ -1778,13 +1778,13 @@ declare module 'two.js/src/renderers/canvas' {
      * @name Two.CanvasRenderer#ctx
      * @property {Canvas2DContext} - Associated two dimensional context to render on the `<canvas />`.
      */
-    ctx: any;
+    ctx: CanvasRenderingContext2D;
     /**
      * @name Two.CanvasRenderer#overdraw
      * @property {Boolean} - Determines whether the canvas clears the background each draw call.
      * @default true
      */
-    overdraw: any;
+    overdraw: boolean;
     /**
      * @name Two.CanvasRenderer#scene
      * @property {Group} - The root group of the scenegraph.
@@ -1799,7 +1799,7 @@ declare module 'two.js/src/renderers/canvas' {
      * @param {Number} [ratio] - The new pixel ratio (pixel density) of the renderer. Defaults to calculate the pixel density of the user's screen.
      * @description Change the size of the renderer.
      */
-    setSize(width: number, height: number, ratio?: number): any;
+    setSize(width: number, height: number, ratio?: number): Renderer;
     width: number;
     height: number;
     ratio: number;
@@ -1835,7 +1835,7 @@ declare module 'two.js/src/utils/error' {
    * @description Custom error throwing for Two.js specific identification.
    */
   export class TwoError extends Error {
-    constructor(message: any);
+    constructor(message: string);
   }
 }
 declare module 'two.js/src/registry' {
@@ -2154,8 +2154,8 @@ declare module 'two.js/src/effects/linear-gradient' {
      * @property {Boolean} - Determines whether the {@link Two.LinearGradient#left} or {@link Two.LinearGradient#right} changed and needs to update.
      */
     private _flagEndPoints;
-    _left: any;
-    _right: any;
+    _left: Vector;
+    _right: Vector;
     /**
      * @name Two.LinearGradient#left
      * @property {Vector} - The x and y value for where the first end point is placed on the canvas.
@@ -2244,8 +2244,8 @@ declare module 'two.js/src/effects/radial-gradient' {
      */
     private _flagFocal;
     _radius: number;
-    _center: any;
-    _focal: any;
+    _center: Vector;
+    _focal: Vector;
     /**
      * @name Two.RadialGradient#center
      * @property {Vector} - The x and y value for where the origin of the radial gradient is.
@@ -2344,7 +2344,7 @@ declare module 'two.js/src/effects/texture' {
      * @param {HTMLImageElement} image - The image to infer the tag name from.
      * @returns {String} - Returns the tag name of an image, video, or canvas node.
      */
-    static getTag(image: any): string;
+    static getTag(image: HTMLImageElement): string;
     /**
      * @name Two.Texture.getImage
      * @property {Function} - Convenience function to set {@link Two.Texture#image} properties with canonincal versions set in {@link Two.Texture.ImageRegistry}.
@@ -2378,7 +2378,7 @@ declare module 'two.js/src/effects/texture' {
      * @nota-bene Works in conjunction with {@link Two.Texture#toObject}
      */
     static fromObject(obj: object): Texture;
-    constructor(src?: any, callback?: Function);
+    constructor(src?: string | HTMLImageElement | HTMLCanvasElement | HTMLVideoElement, callback?: Function);
     /**
      * @name Two.Texture#_flagSrc
      * @private
@@ -2480,7 +2480,7 @@ declare module 'two.js/src/effects/texture' {
      * @property {Element} - The corresponding DOM Element of the texture. Can be a `<img />`, `<canvas />`, or `<video />` element. See {@link Two.Texture.RegularExpressions} for a full list of supported elements.
      * @nota-bene In headless environments this is a `Canvas.Image` object. See {@link https://github.com/Automattic/node-canvas} for more information on headless image objects.
      */
-    image: any;
+    image: HTMLImageElement | HTMLCanvasElement | HTMLVideoElement;
     /**
      * @name Two.Texture#clone
      * @function
@@ -2961,14 +2961,14 @@ declare module 'two.js/src/path' {
    * @function
    * @description Cached method to let {@link Two.Path} know vertices have been added to the instance.
    */
-  export function BindVertices(items: any): void;
+  export function BindVertices(items: Anchor[]): void;
   /**
    * @name UnbindVertices
    * @private
    * @function
    * @description Cached method to let {@link Two.Path} know vertices have been removed from the instance.
    */
-  export function UnbindVertices(items: any): void;
+  export function UnbindVertices(items: Anchor[]): void;
   /**
    * @name FlagFill
    * @private
@@ -4538,11 +4538,11 @@ declare module 'two.js' {
     static SVGRenderer: typeof SVGRenderer;
     static WebGLRenderer: typeof WebGLRenderer;
     static Commands: {
-      move: string;
-      line: string;
-      curve: string;
-      arc: string;
-      close: string;
+      move: 'M';
+      line: 'L';
+      curve: 'C';
+      arc: 'A';
+      close: 'Z';
     };
     /**
      * @name Two.Utils
@@ -4632,15 +4632,15 @@ declare module 'two.js' {
      * @description Call to start an internal animation loop.
      * @nota-bene This function initiates a `requestAnimationFrame` loop.
      */
-    play(): any;
+    play(): Two;
     /**
      * @name Two#pause
      * @function
      * @fires Two.Events.Types.pause event
      * @description Call to stop the internal animation loop for a specific instance of Two.js.
      */
-    pause(): any;
-    setPlaying(p: any): void;
+    pause(): Two;
+    setPlaying(p: boolean): Two;
     /**
      * @name Two#release
      * @function
@@ -4648,7 +4648,7 @@ declare module 'two.js' {
      * @returns {Object} The object passed for event deallocation.
      * @description Release an arbitrary class' events from the Two.js corpus and recurse through its children and or vertices.
      */
-    release(obj?: TwoElement): any;
+    release<T>(obj?: TwoElement): T;
     /**
      * @name Two#update
      * @function
@@ -4656,15 +4656,15 @@ declare module 'two.js' {
      * @description Update positions and calculations in one pass before rendering. Then render to the canvas.
      * @nota-bene This function is called automatically if using {@link Two#play} or the `autostart` parameter in construction.
      */
-    update(): any;
-    _lastFrame: any;
+    update(): Two;
+    _lastFrame: number;
     /**
      * @name Two#render
      * @function
      * @fires render
      * @description Render all drawable and visible objects of the scene.
      */
-    render(): any;
+    render(): Two;
     /**
      * @name Two#add
      * @function
