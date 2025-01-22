@@ -4647,7 +4647,7 @@ declare module 'two.js' {
      * @returns {Object} The object passed for event deallocation.
      * @description Release an arbitrary class' events from the Two.js corpus and recurse through its children and or vertices.
      */
-    release(obj: any): any;
+    release(obj?: TwoElement): any;
     /**
      * @name Two#update
      * @function
