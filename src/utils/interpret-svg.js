@@ -107,9 +107,13 @@ function extractCSSText(text, styles) {
     if (typeof name === 'undefined' || typeof value === 'undefined') {
       continue;
     }
-    styles[name] = value.replace(/\s/, '');
-  }
 
+    //Delete whitespace and line breaks from name and value
+    const trimmedName = name.replace(/\s/g, '');
+    const trimmedValue = value.replace(/\s/g, '');
+
+    styles[trimmedName] = trimmedValue;
+  }
   return styles;
 }
 
@@ -487,7 +491,13 @@ function applySvgAttributes(node, elem, parentStyles) {
         break;
       case 'font-size':
         if (elem instanceof Text) {
-          elem.size = value;
+          if (value.match('[a-z%]$') && !value.endsWith('px')) {
+            error = new TwoError(
+            'only pixel values are supported with the ' + key + ' attribute.'
+            );
+            console.warn(error.name, error.message);
+          }
+          elem.size = parseFloat(value);
         }
         break;
       case 'font-weight':
@@ -1310,7 +1320,15 @@ export const read = {
   text: function (node, parentStyles) {
     const alignment = getAlignment(node.getAttribute('text-anchor')) || 'left';
     const baseline = getBaseline(node) || 'baseline';
-    const message = node.textContent;
+    let message = '';
+
+    //Detect tspan for getting text content.
+    //If not, svg indentation apears in text content
+    if(node.childNodes.length > 0 && node.childNodes[0].tagName === 'TSPAN') {
+      message = node.childNodes[0].textContent;
+    }else{
+      message = node.textContent;
+    }
 
     const text = new Text(message);
 

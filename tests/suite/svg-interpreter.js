@@ -40,8 +40,8 @@
 
   QUnit.test('Two.interpret', function(assert) {
 
-    assert.expect(9);
-    assert.done = assert.async(9);
+    assert.expect(10);
+    assert.done = assert.async(10);
 
     (function() {
 
@@ -255,6 +255,28 @@
 
         QUnit.Utils.addElemToTest(assert.test, [two.renderer.domElement, svg]);
 
+      });
+
+    })();
+
+    (function () {
+
+      var two = new Two({
+        width: 400,
+        height: 400,
+        type: Two.Types.canvas //The font-size problem only occurs in canvas renderer
+      });
+  
+      QUnit.Utils.get('./images/interpretation/text.svg', function(resp) {
+        var svg = QUnit.Utils.textToDOM(resp)[0];
+        const shape = two.interpret(svg);
+        two.update();
+        
+        assert.equal(shape.children[1].size, 144, 'Font size is extracted correctly');
+      
+        assert.done();
+  
+        QUnit.Utils.addElemToTest(assert.test, [two.renderer.domElement, svg]);
       });
 
     })();

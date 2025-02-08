@@ -783,7 +783,7 @@ var Constants = {
     canvas: "CanvasRenderer"
   },
   Version: "v0.8.16",
-  PublishDate: "2025-01-06T21:30:44.526Z",
+  PublishDate: "2025-02-08T12:38:14.021Z",
   Identifier: "two-",
   Resolution: 12,
   AutoCalculateImportedMatrices: true,
@@ -6668,7 +6668,9 @@ function extractCSSText(text, styles) {
     if (typeof name === "undefined" || typeof value === "undefined") {
       continue;
     }
-    styles[name] = value.replace(/\s/, "");
+    const trimmedName = name.replace(/\s/g, "");
+    const trimmedValue = value.replace(/\s/g, "");
+    styles[trimmedName] = trimmedValue;
   }
   return styles;
 }
@@ -6943,7 +6945,13 @@ function applySvgAttributes(node, elem, parentStyles) {
         break;
       case "font-size":
         if (elem instanceof Text) {
-          elem.size = value;
+          if (value.match("[a-z%]$") && !value.endsWith("px")) {
+            error = new TwoError(
+              "only pixel values are supported with the " + key + " attribute."
+            );
+            console.warn(error.name, error.message);
+          }
+          elem.size = parseFloat(value);
         }
         break;
       case "font-weight":
@@ -7573,7 +7581,12 @@ var read = {
   text: function(node, parentStyles) {
     const alignment = getAlignment(node.getAttribute("text-anchor")) || "left";
     const baseline = getBaseline(node) || "baseline";
-    const message = node.textContent;
+    let message = "";
+    if (node.childNodes.length > 0 && node.childNodes[0].tagName === "TSPAN") {
+      message = node.childNodes[0].textContent;
+    } else {
+      message = node.textContent;
+    }
     const text = new Text(message);
     applySvgAttributes.call(this, node, text, parentStyles);
     text.alignment = alignment;
