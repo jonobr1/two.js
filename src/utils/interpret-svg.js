@@ -493,7 +493,7 @@ function applySvgAttributes(node, elem, parentStyles) {
         if (elem instanceof Text) {
           if (value.match('[a-z%]$') && !value.endsWith('px')) {
             error = new TwoError(
-            'only pixel values are supported with the ' + key + ' attribute.'
+              'only pixel values are supported with the ' + key + ' attribute.'
             );
             console.warn(error.name, error.message);
           }
@@ -1322,11 +1322,11 @@ export const read = {
     const baseline = getBaseline(node) || 'baseline';
     let message = '';
 
-    //Detect tspan for getting text content.
-    //If not, svg indentation apears in text content
-    if(node.childNodes.length > 0 && node.childNodes[0].tagName === 'TSPAN') {
+    // Detect tspan for getting text content.
+    // If not, svg indentation apears in text content
+    if (node.childNodes.length > 0 && node.childNodes[0].tagName === 'TSPAN') {
       message = node.childNodes[0].textContent;
-    }else{
+    } else {
       message = node.textContent;
     }
 
