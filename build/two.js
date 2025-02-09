@@ -767,7 +767,7 @@ var Two = (() => {
       canvas: "CanvasRenderer"
     },
     Version: "v0.8.16",
-    PublishDate: "2025-02-08T12:38:14.021Z",
+    PublishDate: "2025-02-09T13:18:20.525Z",
     Identifier: "two-",
     Resolution: 12,
     AutoCalculateImportedMatrices: true,
