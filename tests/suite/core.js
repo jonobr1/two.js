@@ -557,7 +557,7 @@ QUnit.test('Two.Matrix', function (assert) {
 });
 
 QUnit.test('Two.Collection', function (assert) {
-  assert.expect(15);
+  assert.expect(19);
 
   var poly = new Two.Path([new Two.Anchor(0, 0)]);
   var vector = new Two.Anchor(150, 150);
@@ -675,6 +675,41 @@ QUnit.test('Two.Collection', function (assert) {
     result.length,
     5,
     'Two.Collection.map correctly iterates through the necessary items.'
+  );
+
+  const emptyCollection = new Two.Collection();
+
+  assert.equal(
+    emptyCollection.length,
+    0,
+    'Two.Collection correctly enumerates properties.'
+  );
+
+  assert.equal(
+    Object.keys(emptyCollection).length,
+    0,
+    'Two.Collection correctly Object.keys an empty collection.'
+  );
+
+  const included = emptyCollection.filter(() => true);
+  console.log(
+    included.length,
+    0,
+    'Two.Collection.filter correctly iterates over items.'
+  );
+
+  emptyCollection.push(5, 10, 432, 90);
+
+  assert.equal(
+    Object.keys(emptyCollection).length,
+    4,
+    'Two.Collection correctly Object.keys a populated list collection.'
+  );
+
+  assert.equal(
+    emptyCollection.find((v) => v === 5),
+    5,
+    'Two.Collection.find correctly iterates over items.'
   );
 });
 
@@ -1149,6 +1184,52 @@ QUnit.test('Two.Group Object Conversion', function (assert) {
   //   group.toObject(),
   //   'Two.Group.copy creates identical group'
   // );
+});
+
+QUnit.test('Two.Group.getBoundingClientRect(shallow)', function (assert) {
+  assert.expect(6);
+
+  const group = new Two.Group();
+
+  for (let i = 0; i < 3; i++) {
+    const x = i * 100;
+    const width = 100;
+    const height = 50;
+    const child = new Two.Rectangle(x, 0, width, height);
+    group.add(child);
+  }
+
+  const rect = group.getBoundingClientRect(true);
+  assert.equal(
+    rect.top,
+    -25.5,
+    'Two.Group.getBoundingClientRect(shallow) correctly calculates top property.'
+  );
+  assert.equal(
+    rect.bottom,
+    25.5,
+    'Two.Group.getBoundingClientRect(shallow) correctly calculates bottom property.'
+  );
+  assert.equal(
+    rect.left,
+    -50.5,
+    'Two.Group.getBoundingClientRect(shallow) correctly calculates left property.'
+  );
+  assert.equal(
+    rect.right,
+    250.5,
+    'Two.Group.getBoundingClientRect(shallow) correctly calculates right property.'
+  );
+  assert.equal(
+    rect.width,
+    301,
+    'Two.Group.getBoundingClientRect(shallow) correctly calculates width property.'
+  );
+  assert.equal(
+    rect.height,
+    51,
+    'Two.Group.getBoundingClientRect(shallow) correctly calculates height property.'
+  );
 });
 
 QUnit.test('Two.Text Object Conversion', function (assert) {

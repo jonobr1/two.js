@@ -48,15 +48,65 @@ var __publicField = (obj, key, value) => {
   __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
   return value;
 };
-
-// src/utils/path-commands.js
-var Commands = {
-  move: "M",
-  line: "L",
-  curve: "C",
-  arc: "A",
-  close: "Z"
+var __accessCheck = (obj, member, msg) => {
+  if (!member.has(obj))
+    throw TypeError("Cannot " + msg);
 };
+var __privateGet = (obj, member, getter) => {
+  __accessCheck(obj, member, "read from private field");
+  return getter ? getter.call(obj) : member.get(obj);
+};
+var __privateAdd = (obj, member, value) => {
+  if (member.has(obj))
+    throw TypeError("Cannot add the same private member more than once");
+  member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
+};
+var __privateSet = (obj, member, value, setter) => {
+  __accessCheck(obj, member, "write to private field");
+  setter ? setter.call(obj, value) : member.set(obj, value);
+  return value;
+};
+
+// src/utils/canvas-polyfill.js
+var CanvasPolyfill = {
+  Image: null,
+  isHeadless: false,
+  shim: function(elem, name) {
+    elem.tagName = elem.nodeName = name || "canvas";
+    elem.nodeType = 1;
+    elem.getAttribute = function(prop) {
+      return this[prop];
+    };
+    elem.setAttribute = function(prop, val) {
+      this[prop] = val;
+      return this;
+    };
+    return elem;
+  },
+  polyfill: function(canvas3, Image) {
+    CanvasPolyfill.shim(canvas3);
+    if (typeof Image !== "undefined") {
+      CanvasPolyfill.Image = Image;
+    }
+    CanvasPolyfill.isHeadless = true;
+    return canvas3;
+  }
+};
+
+// src/utils/curves.js
+var curves_exports = {};
+__export(curves_exports, {
+  Curve: () => Curve,
+  getAnchorsFromArcData: () => getAnchorsFromArcData,
+  getComponentOnCubicBezier: () => getComponentOnCubicBezier,
+  getControlPoints: () => getControlPoints,
+  getCurveBoundingBox: () => getCurveBoundingBox,
+  getCurveFromPoints: () => getCurveFromPoints,
+  getCurveLength: () => getCurveLength,
+  getReflection: () => getReflection,
+  integrate: () => integrate,
+  subdivide: () => subdivide
+});
 
 // src/utils/math.js
 var math_exports = {};
@@ -160,20 +210,14 @@ function toFixed(v) {
   return floor(v * 1e6) / 1e6;
 }
 
-// src/utils/curves.js
-var curves_exports = {};
-__export(curves_exports, {
-  Curve: () => Curve,
-  getAnchorsFromArcData: () => getAnchorsFromArcData,
-  getComponentOnCubicBezier: () => getComponentOnCubicBezier,
-  getControlPoints: () => getControlPoints,
-  getCurveBoundingBox: () => getCurveBoundingBox,
-  getCurveFromPoints: () => getCurveFromPoints,
-  getCurveLength: () => getCurveLength,
-  getReflection: () => getReflection,
-  integrate: () => integrate,
-  subdivide: () => subdivide
-});
+// src/utils/path-commands.js
+var Commands = {
+  move: "M",
+  line: "L",
+  curve: "C",
+  arc: "A",
+  close: "Z"
+};
 
 // src/events.js
 var Events = class {
@@ -738,8 +782,8 @@ var Constants = {
     svg: "SVGRenderer",
     canvas: "CanvasRenderer"
   },
-  Version: "v0.8.15",
-  PublishDate: "2025-01-21T04:11:58.101Z",
+  Version: "v0.8.16",
+  PublishDate: "2025-02-09T06:10:17.722Z",
   Identifier: "two-",
   Resolution: 12,
   AutoCalculateImportedMatrices: true,
@@ -764,34 +808,186 @@ var Curve = {
     [0, 0.7745966692414834],
     [0.33998104358485626, 0.8611363115940526],
     [0, 0.5384693101056831, 0.906179845938664],
-    [0.2386191860831969, 0.6612093864662645, 0.932469514203152],
-    [0, 0.4058451513773972, 0.7415311855993945, 0.9491079123427585],
-    [0.1834346424956498, 0.525532409916329, 0.7966664774136267, 0.9602898564975363],
-    [0, 0.3242534234038089, 0.6133714327005904, 0.8360311073266358, 0.9681602395076261],
-    [0.14887433898163122, 0.4333953941292472, 0.6794095682990244, 0.8650633666889845, 0.9739065285171717],
-    [0, 0.26954315595234496, 0.5190961292068118, 0.7301520055740494, 0.8870625997680953, 0.978228658146057],
-    [0.1252334085114689, 0.3678314989981802, 0.5873179542866175, 0.7699026741943047, 0.9041172563704749, 0.9815606342467192],
-    [0, 0.2304583159551348, 0.44849275103644687, 0.6423493394403402, 0.8015780907333099, 0.9175983992229779, 0.9841830547185881],
-    [0.10805494870734367, 0.31911236892788974, 0.5152486363581541, 0.6872929048116855, 0.827201315069765, 0.9284348836635735, 0.9862838086968123],
-    [0, 0.20119409399743451, 0.3941513470775634, 0.5709721726085388, 0.7244177313601701, 0.8482065834104272, 0.937273392400706, 0.9879925180204854],
-    [0.09501250983763744, 0.2816035507792589, 0.45801677765722737, 0.6178762444026438, 0.755404408355003, 0.8656312023878318, 0.9445750230732326, 0.9894009349916499]
+    [
+      0.2386191860831969,
+      0.6612093864662645,
+      0.932469514203152
+    ],
+    [
+      0,
+      0.4058451513773972,
+      0.7415311855993945,
+      0.9491079123427585
+    ],
+    [
+      0.1834346424956498,
+      0.525532409916329,
+      0.7966664774136267,
+      0.9602898564975363
+    ],
+    [
+      0,
+      0.3242534234038089,
+      0.6133714327005904,
+      0.8360311073266358,
+      0.9681602395076261
+    ],
+    [
+      0.14887433898163122,
+      0.4333953941292472,
+      0.6794095682990244,
+      0.8650633666889845,
+      0.9739065285171717
+    ],
+    [
+      0,
+      0.26954315595234496,
+      0.5190961292068118,
+      0.7301520055740494,
+      0.8870625997680953,
+      0.978228658146057
+    ],
+    [
+      0.1252334085114689,
+      0.3678314989981802,
+      0.5873179542866175,
+      0.7699026741943047,
+      0.9041172563704749,
+      0.9815606342467192
+    ],
+    [
+      0,
+      0.2304583159551348,
+      0.44849275103644687,
+      0.6423493394403402,
+      0.8015780907333099,
+      0.9175983992229779,
+      0.9841830547185881
+    ],
+    [
+      0.10805494870734367,
+      0.31911236892788974,
+      0.5152486363581541,
+      0.6872929048116855,
+      0.827201315069765,
+      0.9284348836635735,
+      0.9862838086968123
+    ],
+    [
+      0,
+      0.20119409399743451,
+      0.3941513470775634,
+      0.5709721726085388,
+      0.7244177313601701,
+      0.8482065834104272,
+      0.937273392400706,
+      0.9879925180204854
+    ],
+    [
+      0.09501250983763744,
+      0.2816035507792589,
+      0.45801677765722737,
+      0.6178762444026438,
+      0.755404408355003,
+      0.8656312023878318,
+      0.9445750230732326,
+      0.9894009349916499
+    ]
   ],
   weights: [
     [1],
     [0.8888888888888888, 0.5555555555555556],
     [0.6521451548625461, 0.34785484513745385],
-    [0.5688888888888889, 0.47862867049936647, 0.23692688505618908],
-    [0.46791393457269104, 0.3607615730481386, 0.17132449237917036],
-    [0.4179591836734694, 0.3818300505051189, 0.27970539148927664, 0.1294849661688697],
-    [0.362683783378362, 0.31370664587788727, 0.22238103445337448, 0.10122853629037626],
-    [0.3302393550012598, 0.31234707704000286, 0.26061069640293544, 0.1806481606948574, 0.08127438836157441],
-    [0.29552422471475287, 0.26926671930999635, 0.21908636251598204, 0.1494513491505806, 0.06667134430868814],
-    [0.2729250867779006, 0.26280454451024665, 0.23319376459199048, 0.18629021092773426, 0.1255803694649046, 0.05566856711617366],
-    [0.24914704581340277, 0.2334925365383548, 0.20316742672306592, 0.16007832854334622, 0.10693932599531843, 0.04717533638651183],
-    [0.2325515532308739, 0.22628318026289723, 0.2078160475368885, 0.17814598076194574, 0.13887351021978725, 0.09212149983772845, 0.04048400476531588],
-    [0.2152638534631578, 0.2051984637212956, 0.18553839747793782, 0.15720316715819355, 0.12151857068790319, 0.08015808715976021, 0.03511946033175186],
-    [0.2025782419255613, 0.19843148532711158, 0.1861610000155622, 0.16626920581699392, 0.13957067792615432, 0.10715922046717194, 0.07036604748810812, 0.03075324199611727],
-    [0.1894506104550685, 0.18260341504492358, 0.16915651939500254, 0.14959598881657674, 0.12462897125553388, 0.09515851168249279, 0.062253523938647894, 0.027152459411754096]
+    [
+      0.5688888888888889,
+      0.47862867049936647,
+      0.23692688505618908
+    ],
+    [
+      0.46791393457269104,
+      0.3607615730481386,
+      0.17132449237917036
+    ],
+    [
+      0.4179591836734694,
+      0.3818300505051189,
+      0.27970539148927664,
+      0.1294849661688697
+    ],
+    [
+      0.362683783378362,
+      0.31370664587788727,
+      0.22238103445337448,
+      0.10122853629037626
+    ],
+    [
+      0.3302393550012598,
+      0.31234707704000286,
+      0.26061069640293544,
+      0.1806481606948574,
+      0.08127438836157441
+    ],
+    [
+      0.29552422471475287,
+      0.26926671930999635,
+      0.21908636251598204,
+      0.1494513491505806,
+      0.06667134430868814
+    ],
+    [
+      0.2729250867779006,
+      0.26280454451024665,
+      0.23319376459199048,
+      0.18629021092773426,
+      0.1255803694649046,
+      0.05566856711617366
+    ],
+    [
+      0.24914704581340277,
+      0.2334925365383548,
+      0.20316742672306592,
+      0.16007832854334622,
+      0.10693932599531843,
+      0.04717533638651183
+    ],
+    [
+      0.2325515532308739,
+      0.22628318026289723,
+      0.2078160475368885,
+      0.17814598076194574,
+      0.13887351021978725,
+      0.09212149983772845,
+      0.04048400476531588
+    ],
+    [
+      0.2152638534631578,
+      0.2051984637212956,
+      0.18553839747793782,
+      0.15720316715819355,
+      0.12151857068790319,
+      0.08015808715976021,
+      0.03511946033175186
+    ],
+    [
+      0.2025782419255613,
+      0.19843148532711158,
+      0.1861610000155622,
+      0.16626920581699392,
+      0.13957067792615432,
+      0.10715922046717194,
+      0.07036604748810812,
+      0.03075324199611727
+    ],
+    [
+      0.1894506104550685,
+      0.18260341504492358,
+      0.16915651939500254,
+      0.14959598881657674,
+      0.12462897125553388,
+      0.09515851168249279,
+      0.062253523938647894,
+      0.027152459411754096
+    ]
   ]
 };
 function getComponentOnCubicBezier(t, a, b, c, d) {
@@ -824,12 +1020,7 @@ function getCurveLength(x1, y1, x2, y2, x3, y3, x4, y4, limit) {
     const dx = (ax * t + bx) * t + cx, dy = (ay * t + by) * t + cy;
     return Math.sqrt(dx * dx + dy * dy);
   }
-  return integrate(
-    integrand,
-    0,
-    1,
-    limit || Curve.RecursionLimit
-  );
+  return integrate(integrand, 0, 1, limit || Curve.RecursionLimit);
 }
 function getCurveBoundingBox(x1, y1, x2, y2, x3, y3, x4, y4) {
   const tvalues = [];
@@ -965,15 +1156,6 @@ function getAnchorsFromArcData(center, xAxisRotation, rx, ry, ts, td, ccw) {
   }
 }
 
-// src/utils/device-pixel-ratio.js
-var devicePixelRatio = root.devicePixelRatio || 1;
-function getBackingStoreRatio(ctx) {
-  return ctx.webkitBackingStorePixelRatio || ctx.mozBackingStorePixelRatio || ctx.msBackingStorePixelRatio || ctx.oBackingStorePixelRatio || ctx.backingStorePixelRatio || 1;
-}
-function getRatio(ctx) {
-  return devicePixelRatio / getBackingStoreRatio(ctx);
-}
-
 // src/utils/underscore.js
 var slice = Array.prototype.slice;
 function isArrayLike(collection) {
@@ -1027,6 +1209,220 @@ var _ = {
   },
   performance: root.performance && root.performance.now ? root.performance : Date
 };
+
+// src/utils/dom.js
+var dom = {
+  hasEventListeners: typeof root.addEventListener === "function",
+  bind: function(elem, event, func, bool) {
+    if (this.hasEventListeners) {
+      elem.addEventListener(event, func, !!bool);
+    } else {
+      elem.attachEvent("on" + event, func);
+    }
+    return dom;
+  },
+  unbind: function(elem, event, func, bool) {
+    if (dom.hasEventListeners) {
+      elem.removeEventListeners(event, func, !!bool);
+    } else {
+      elem.detachEvent("on" + event, func);
+    }
+    return dom;
+  },
+  getRequestAnimationFrame: function() {
+    const vendors = ["ms", "moz", "webkit", "o"];
+    let lastTime = 0;
+    let request = root.requestAnimationFrame;
+    if (!request) {
+      for (let i = 0; i < vendors.length; i++) {
+        request = root[vendors[i] + "RequestAnimationFrame"] || request;
+      }
+      request = request || fallbackRequest;
+    }
+    function fallbackRequest(callback, element) {
+      const currTime = new Date().getTime();
+      const timeToCall = Math.max(0, 16 - (currTime - lastTime));
+      const id = root.setTimeout(nextRequest, timeToCall);
+      lastTime = currTime + timeToCall;
+      function nextRequest() {
+        callback(currTime + timeToCall);
+      }
+      return id;
+    }
+    return request;
+  }
+};
+var temp = root.document ? root.document.createElement("div") : {};
+temp.id = "help-two-load";
+Object.defineProperty(dom, "temp", {
+  enumerable: true,
+  get: function() {
+    if (_.isElement(temp) && !root.document.head.contains(temp)) {
+      temp.style.display = "none";
+      root.document.head.appendChild(temp);
+    }
+    return temp;
+  }
+});
+
+// src/utils/error.js
+var TwoError = class extends Error {
+  constructor(message) {
+    super();
+    __publicField(this, "name", "Two.js");
+    __publicField(this, "message");
+    this.message = message;
+  }
+};
+
+// src/utils/device-pixel-ratio.js
+var devicePixelRatio = root.devicePixelRatio || 1;
+function getBackingStoreRatio(ctx) {
+  return ctx.webkitBackingStorePixelRatio || ctx.mozBackingStorePixelRatio || ctx.msBackingStorePixelRatio || ctx.oBackingStorePixelRatio || ctx.backingStorePixelRatio || 1;
+}
+function getRatio(ctx) {
+  return devicePixelRatio / getBackingStoreRatio(ctx);
+}
+
+// src/registry.js
+var Registry = class {
+  constructor() {
+    __publicField(this, "map", {});
+  }
+  add(id, obj) {
+    this.map[id] = obj;
+    return this;
+  }
+  remove(id) {
+    delete this.map[id];
+    return this;
+  }
+  get(id) {
+    return this.map[id];
+  }
+  contains(id) {
+    return id in this.map;
+  }
+};
+
+// src/collection.js
+var _events;
+var Collection = class extends Array {
+  constructor() {
+    super();
+    __privateAdd(this, _events, new Events());
+    if (arguments[0] && Array.isArray(arguments[0])) {
+      if (arguments[0].length > 0) {
+        this.push.apply(this, arguments[0]);
+      }
+    } else if (arguments.length > 0) {
+      this.push.apply(this, arguments);
+    }
+  }
+  get _events() {
+    return __privateGet(this, _events);
+  }
+  set _events(e) {
+    __privateSet(this, _events, e);
+  }
+  get _bound() {
+    return __privateGet(this, _events)._bound;
+  }
+  set _bound(v) {
+    __privateGet(this, _events)._bound = v;
+  }
+  addEventListener() {
+    return __privateGet(this, _events).addEventListener.apply(this, arguments);
+  }
+  on() {
+    return __privateGet(this, _events).on.apply(this, arguments);
+  }
+  bind() {
+    return __privateGet(this, _events).bind.apply(this, arguments);
+  }
+  removeEventListener() {
+    return __privateGet(this, _events).removeEventListener.apply(this, arguments);
+  }
+  off() {
+    return __privateGet(this, _events).off.apply(this, arguments);
+  }
+  unbind() {
+    return __privateGet(this, _events).unbind.apply(this, arguments);
+  }
+  dispatchEvent() {
+    return __privateGet(this, _events).dispatchEvent.apply(this, arguments);
+  }
+  trigger() {
+    return __privateGet(this, _events).trigger.apply(this, arguments);
+  }
+  listen() {
+    return __privateGet(this, _events).listen.apply(this, arguments);
+  }
+  ignore() {
+    return __privateGet(this, _events).ignore.apply(this, arguments);
+  }
+  pop() {
+    const popped = super.pop.apply(this, arguments);
+    this.trigger(Events.Types.remove, [popped]);
+    return popped;
+  }
+  shift() {
+    const shifted = super.shift.apply(this, arguments);
+    this.trigger(Events.Types.remove, [shifted]);
+    return shifted;
+  }
+  push() {
+    const pushed = super.push.apply(this, arguments);
+    this.trigger(Events.Types.insert, arguments);
+    return pushed;
+  }
+  unshift() {
+    const unshifted = super.unshift.apply(this, arguments);
+    this.trigger(Events.Types.insert, arguments);
+    return unshifted;
+  }
+  splice() {
+    const spliced = super.splice.apply(this, arguments);
+    this.trigger(Events.Types.remove, spliced);
+    if (arguments.length > 2) {
+      const inserted = this.slice(
+        arguments[0],
+        arguments[0] + arguments.length - 2
+      );
+      this.trigger(Events.Types.insert, inserted);
+      this.trigger(Events.Types.order);
+    }
+    return spliced;
+  }
+  sort() {
+    super.sort.apply(this, arguments);
+    this.trigger(Events.Types.order);
+    return this;
+  }
+  reverse() {
+    super.reverse.apply(this, arguments);
+    this.trigger(Events.Types.order);
+    return this;
+  }
+  indexOf() {
+    return super.indexOf.apply(this, arguments);
+  }
+  map(func, scope) {
+    const results = [];
+    for (let key = 0; key < this.length; key++) {
+      const value = this[key];
+      let result;
+      if (scope) {
+        result = func.call(scope, value, key);
+      } else {
+        result = func(value, key);
+      }
+      results.push(result);
+    }
+    return results;
+  }
+};
+_events = new WeakMap();
 
 // src/element.js
 var _Element = class extends Events {
@@ -1105,37 +1501,6 @@ var proto3 = {
         this._className = v;
       }
     }
-  }
-};
-
-// src/utils/error.js
-var TwoError = class extends Error {
-  constructor(message) {
-    super();
-    __publicField(this, "name", "Two.js");
-    __publicField(this, "message");
-    this.message = message;
-  }
-};
-
-// src/registry.js
-var Registry = class {
-  constructor() {
-    __publicField(this, "map", {});
-  }
-  add(id, obj) {
-    this.map[id] = obj;
-    return this;
-  }
-  remove(id) {
-    delete this.map[id];
-    return this;
-  }
-  get(id) {
-    return this.map[id];
-  }
-  contains(id) {
-    return id in this.map;
   }
 };
 
@@ -1220,9 +1585,9 @@ var _Texture = class extends Element {
       return _Texture.ImageRegistry.get(absoluteSrc);
     }
     let image;
-    if (CanvasShim.Image) {
-      image = new CanvasShim.Image();
-      Renderer.Utils.shim(image, "img");
+    if (CanvasPolyfill.Image) {
+      image = new CanvasPolyfill.Image();
+      CanvasPolyfill.shim(image, "img");
     } else if (root.document) {
       if (regex.video.test(absoluteSrc)) {
         image = document.createElement("video");
@@ -1243,7 +1608,7 @@ var _Texture = class extends Element {
       if (/canvas/i.test(tag)) {
         _Texture.Register.canvas(texture, callback);
       } else {
-        texture._src = !CanvasShim.isHeadless && image.getAttribute("two-src") || image.src;
+        texture._src = !CanvasPolyfill.isHeadless && image.getAttribute("two-src") || image.src;
         _Texture.Register[tag](texture, callback);
       }
     }
@@ -1319,7 +1684,7 @@ __publicField(Texture, "Register", {
   img: function(texture, callback) {
     const image = texture.image;
     const loaded = function(e) {
-      if (!CanvasShim.isHeadless && image.removeEventListener && typeof image.removeEventListener === "function") {
+      if (!CanvasPolyfill.isHeadless && image.removeEventListener && typeof image.removeEventListener === "function") {
         image.removeEventListener("load", loaded, false);
         image.removeEventListener("error", error, false);
       }
@@ -1328,7 +1693,7 @@ __publicField(Texture, "Register", {
       }
     };
     const error = function(e) {
-      if (!CanvasShim.isHeadless && typeof image.removeEventListener === "function") {
+      if (!CanvasPolyfill.isHeadless && typeof image.removeEventListener === "function") {
         image.removeEventListener("load", loaded, false);
         image.removeEventListener("error", error, false);
       }
@@ -1336,26 +1701,26 @@ __publicField(Texture, "Register", {
     };
     if (typeof image.width === "number" && image.width > 0 && typeof image.height === "number" && image.height > 0) {
       loaded();
-    } else if (!CanvasShim.isHeadless && typeof image.addEventListener === "function") {
+    } else if (!CanvasPolyfill.isHeadless && typeof image.addEventListener === "function") {
       image.addEventListener("load", loaded, false);
       image.addEventListener("error", error, false);
     }
     texture._src = _Texture.getAbsoluteURL(texture._src);
-    if (!CanvasShim.isHeadless && image && image.getAttribute("two-src")) {
+    if (!CanvasPolyfill.isHeadless && image && image.getAttribute("two-src")) {
       return;
     }
-    if (!CanvasShim.isHeadless) {
+    if (!CanvasPolyfill.isHeadless) {
       image.setAttribute("two-src", texture.src);
     }
     _Texture.ImageRegistry.add(texture.src, image);
-    if (CanvasShim.isHeadless) {
+    if (CanvasPolyfill.isHeadless) {
       _Texture.loadHeadlessBuffer(texture, loaded);
     } else {
       texture.image.src = texture.src;
     }
   },
   video: function(texture, callback) {
-    if (CanvasShim.isHeadless) {
+    if (CanvasPolyfill.isHeadless) {
       throw new TwoError(
         "video textures are not implemented in headless environments."
       );
@@ -1480,114 +1845,6 @@ function FlagOffset() {
 function FlagScale() {
   this._flagScale = true;
 }
-
-// src/collection.js
-var Collection = class extends Array {
-  constructor() {
-    super();
-    __publicField(this, "_events", new Events());
-    if (arguments[0] && Array.isArray(arguments[0])) {
-      if (arguments[0].length > 0) {
-        this.push.apply(this, arguments[0]);
-      }
-    } else if (arguments.length > 0) {
-      this.push.apply(this, arguments);
-    }
-  }
-  get _bound() {
-    return this._events._bound;
-  }
-  set _bound(v) {
-    this._events._bound = v;
-  }
-  addEventListener() {
-    return this._events.addEventListener.apply(this, arguments);
-  }
-  on() {
-    return this._events.on.apply(this, arguments);
-  }
-  bind() {
-    return this._events.bind.apply(this, arguments);
-  }
-  removeEventListener() {
-    return this._events.removeEventListener.apply(this, arguments);
-  }
-  off() {
-    return this._events.off.apply(this, arguments);
-  }
-  unbind() {
-    return this._events.unbind.apply(this, arguments);
-  }
-  dispatchEvent() {
-    return this._events.dispatchEvent.apply(this, arguments);
-  }
-  trigger() {
-    return this._events.trigger.apply(this, arguments);
-  }
-  listen() {
-    return this._events.listen.apply(this, arguments);
-  }
-  ignore() {
-    return this._events.ignore.apply(this, arguments);
-  }
-  pop() {
-    const popped = super.pop.apply(this, arguments);
-    this.trigger(Events.Types.remove, [popped]);
-    return popped;
-  }
-  shift() {
-    const shifted = super.shift.apply(this, arguments);
-    this.trigger(Events.Types.remove, [shifted]);
-    return shifted;
-  }
-  push() {
-    const pushed = super.push.apply(this, arguments);
-    this.trigger(Events.Types.insert, arguments);
-    return pushed;
-  }
-  unshift() {
-    const unshifted = super.unshift.apply(this, arguments);
-    this.trigger(Events.Types.insert, arguments);
-    return unshifted;
-  }
-  splice() {
-    const spliced = super.splice.apply(this, arguments);
-    this.trigger(Events.Types.remove, spliced);
-    if (arguments.length > 2) {
-      const inserted = this.slice(arguments[0], arguments[0] + arguments.length - 2);
-      this.trigger(Events.Types.insert, inserted);
-      this.trigger(Events.Types.order);
-    }
-    return spliced;
-  }
-  sort() {
-    super.sort.apply(this, arguments);
-    this.trigger(Events.Types.order);
-    return this;
-  }
-  reverse() {
-    super.reverse.apply(this, arguments);
-    this.trigger(Events.Types.order);
-    return this;
-  }
-  indexOf() {
-    return super.indexOf.apply(this, arguments);
-  }
-  map(func, scope) {
-    const results = [];
-    for (let key = 0; key < this.length; key++) {
-      const value = this[key];
-      let result;
-      if (scope) {
-        result = func.call(scope, value, key);
-      } else {
-        result = func(value, key);
-      }
-      results.push(result);
-    }
-    return results;
-  }
-};
 
 // src/effects/stop.js
 var _Stop = class extends Element {
@@ -2743,33 +3000,6 @@ function FlagMatrix() {
   this._flagMatrix = true;
 }
 
-// src/children.js
-var Children = class extends Collection {
-  constructor(children) {
-    children = Array.isArray(children) ? children : Array.prototype.slice.call(arguments);
-    super(children);
-    __publicField(this, "ids", {});
-    this.attach(children);
-    this.on(Events.Types.insert, this.attach);
-    this.on(Events.Types.remove, this.detach);
-  }
-  attach(children) {
-    for (let i = 0; i < children.length; i++) {
-      const child = children[i];
-      if (child && child.id) {
-        this.ids[child.id] = child;
-      }
-    }
-    return this;
-  }
-  detach(children) {
-    for (let i = 0; i < children.length; i++) {
-      delete this.ids[children[i].id];
-    }
-    return this;
-  }
-};
-
 // src/path.js
 var min = Math.min;
 var max = Math.max;
@@ -3182,9 +3412,8 @@ var _Path = class extends Shape {
                 v.command = Commands.line;
               }
             });
-          } else if (closed2) {
-            points.push(new Anchor(a.x, a.y));
           }
+          points.push(new Anchor(a.x, a.y));
           points[points.length - 1].command = closed2 ? Commands.close : Commands.line;
         }
         b = a;
@@ -3585,6 +3814,460 @@ function FlagStroke() {
   this._flagStroke = true;
 }
 
+// src/shapes/rectangle.js
+var _Rectangle = class extends Path {
+  constructor(x, y, width, height) {
+    const points = [
+      new Anchor(),
+      new Anchor(),
+      new Anchor(),
+      new Anchor()
+    ];
+    super(points, true, false, true);
+    __publicField(this, "_flagWidth", 0);
+    __publicField(this, "_flagHeight", 0);
+    __publicField(this, "_width", 0);
+    __publicField(this, "_height", 0);
+    __publicField(this, "_origin", null);
+    this._renderer.type = "rectangle";
+    for (let prop in proto11) {
+      Object.defineProperty(this, prop, proto11[prop]);
+    }
+    this.width = typeof width === "number" ? width : 1;
+    this.height = typeof height === "number" ? height : 1;
+    this.origin = new Vector();
+    if (typeof x === "number") {
+      this.translation.x = x;
+    }
+    if (typeof y === "number") {
+      this.translation.y = y;
+    }
+    this._update();
+  }
+  static fromObject(obj) {
+    const rectangle = new _Rectangle().copy(obj);
+    if ("id" in obj) {
+      rectangle.id = obj.id;
+    }
+    return rectangle;
+  }
+  copy(rectangle) {
+    super.copy.call(this, rectangle);
+    for (let i = 0; i < _Rectangle.Properties.length; i++) {
+      const k = _Rectangle.Properties[i];
+      if (k in rectangle && typeof rectangle[k] === "number") {
+        this[k] = rectangle[k];
+      }
+    }
+    return this;
+  }
+  _update() {
+    if (this._flagVertices || this._flagWidth || this._flagHeight) {
+      const xr = this._width / 2;
+      const yr = this._height / 2;
+      if (!this._closed && this.vertices.length === 4) {
+        this.vertices.push(new Anchor());
+      }
+      this.vertices[0].set(-xr, -yr).sub(this._origin).command = Commands.move;
+      this.vertices[1].set(xr, -yr).sub(this._origin).command = Commands.line;
+      this.vertices[2].set(xr, yr).sub(this._origin).command = Commands.line;
+      this.vertices[3].set(-xr, yr).sub(this._origin).command = Commands.line;
+      if (this.vertices[4]) {
+        this.vertices[4].set(-xr, -yr).sub(this._origin).command = Commands.line;
+      }
+    }
+    super._update.call(this);
+    return this;
+  }
+  flagReset() {
+    this._flagWidth = this._flagHeight = false;
+    super.flagReset.call(this);
+    return this;
+  }
+  clone(parent) {
+    const clone = new _Rectangle(0, 0, this.width, this.height);
+    clone.translation.copy(this.translation);
+    clone.rotation = this.rotation;
+    clone.scale = this.scale;
+    clone.skewX = this.skewX;
+    clone.skewY = this.skewY;
+    if (this.matrix.manual) {
+      clone.matrix.copy(this.matrix);
+    }
+    for (let i = 0; i < Path.Properties.length; i++) {
+      const k = Path.Properties[i];
+      clone[k] = this[k];
+    }
+    if (parent) {
+      parent.add(clone);
+    }
+    return clone;
+  }
+  toObject() {
+    const object = super.toObject.call(this);
+    object.renderer.type = "rectangle";
+    object.width = this.width;
+    object.height = this.height;
+    object.origin = this.origin.toObject();
+    return object;
+  }
+};
+var Rectangle = _Rectangle;
+__publicField(Rectangle, "Properties", ["width", "height"]);
+var proto11 = {
+  width: {
+    enumerable: true,
+    get: function() {
+      return this._width;
+    },
+    set: function(v) {
+      this._width = v;
+      this._flagWidth = true;
+    }
+  },
+  height: {
+    enumerable: true,
+    get: function() {
+      return this._height;
+    },
+    set: function(v) {
+      this._height = v;
+      this._flagHeight = true;
+    }
+  },
+  origin: {
+    enumerable: true,
+    get: function() {
+      return this._origin;
+    },
+    set: function(v) {
+      if (this._origin) {
+        this._origin.unbind(Events.Types.change, this._renderer.flagVertices);
+      }
+      this._origin = v;
+      this._origin.bind(Events.Types.change, this._renderer.flagVertices);
+      this._renderer.flagVertices();
+    }
+  }
+};
+
+// src/effects/sprite.js
+var _Sprite = class extends Rectangle {
+  constructor(path, ox, oy, cols, rows, frameRate) {
+    super(ox, oy, 0, 0);
+    __publicField(this, "_flagTexture", false);
+    __publicField(this, "_flagColumns", false);
+    __publicField(this, "_flagRows", false);
+    __publicField(this, "_flagFrameRate", false);
+    __publicField(this, "_flagIndex", false);
+    __publicField(this, "_amount", 1);
+    __publicField(this, "_duration", 0);
+    __publicField(this, "_startTime", 0);
+    __publicField(this, "_playing", false);
+    __publicField(this, "_firstFrame", 0);
+    __publicField(this, "_lastFrame", 0);
+    __publicField(this, "_loop", true);
+    __publicField(this, "_texture", null);
+    __publicField(this, "_columns", 1);
+    __publicField(this, "_rows", 1);
+    __publicField(this, "_frameRate", 0);
+    __publicField(this, "_index", 0);
+    __publicField(this, "_origin", null);
+    for (let prop in proto12) {
+      Object.defineProperty(this, prop, proto12[prop]);
+    }
+    this.noStroke();
+    this.noFill();
+    if (path instanceof Texture) {
+      this.texture = path;
+    } else if (typeof path === "string") {
+      this.texture = new Texture(path);
+    }
+    this.origin = new Vector();
+    this._update();
+    if (typeof cols === "number") {
+      this.columns = cols;
+    }
+    if (typeof rows === "number") {
+      this.rows = rows;
+    }
+    if (typeof frameRate === "number") {
+      this.frameRate = frameRate;
+    }
+    this.index = 0;
+  }
+  static fromObject(obj) {
+    const sprite = new _Sprite().copy(obj);
+    if ("id" in obj) {
+      sprite.id = obj.id;
+    }
+    return sprite;
+  }
+  copy(sprite) {
+    super.copy.call(this, sprite);
+    for (let i = 0; i < _Sprite.Properties.length; i++) {
+      const k = _Sprite.Properties[i];
+      if (k in sprite) {
+        this[k] = sprite[k];
+      }
+    }
+    return this;
+  }
+  play(firstFrame, lastFrame, onLastFrame) {
+    this._playing = true;
+    this._firstFrame = 0;
+    this._lastFrame = this.amount - 1;
+    this._startTime = _.performance.now();
+    if (typeof firstFrame === "number") {
+      this._firstFrame = firstFrame;
+    }
+    if (typeof lastFrame === "number") {
+      this._lastFrame = lastFrame;
+    }
+    if (typeof onLastFrame === "function") {
+      this._onLastFrame = onLastFrame;
+    } else {
+      delete this._onLastFrame;
+    }
+    if (this._index !== this._firstFrame) {
+      this._startTime -= 1e3 * Math.abs(this._index - this._firstFrame) / this._frameRate;
+    }
+    return this;
+  }
+  pause() {
+    this._playing = false;
+    return this;
+  }
+  stop() {
+    this._playing = false;
+    this._index = 0;
+    return this;
+  }
+  clone(parent) {
+    const clone = new _Sprite(
+      this.texture,
+      this.translation.x,
+      this.translation.y,
+      this.columns,
+      this.rows,
+      this.frameRate
+    );
+    if (this.playing) {
+      clone.play(this._firstFrame, this._lastFrame);
+    }
+    clone.loop = this.loop;
+    clone.firstFrame = this.firstFrame;
+    clone.lastFrame = this.lastFrame;
+    if (parent) {
+      parent.add(clone);
+    }
+    return clone;
+  }
+  toObject() {
+    const object = super.toObject.call(this);
+    object.texture = this.texture.toObject();
+    object.columns = this.columns;
+    object.rows = this.rows;
+    object.frameRate = this.frameRate;
+    object.index = this.index;
+    object.firstFrame = this.firstFrame;
+    object.lastFrame = this.lastFrame;
+    object.loop = this.loop;
+    return object;
+  }
+  _update() {
+    const effect = this._texture;
+    const cols = this._columns;
+    const rows = this._rows;
+    let width, height, elapsed, amount, duration;
+    let index, iw, ih, frames;
+    if (effect) {
+      if (this._flagColumns || this._flagRows) {
+        this._amount = this._columns * this._rows;
+      }
+      if (this._flagFrameRate) {
+        this._duration = 1e3 * this._amount / this._frameRate;
+      }
+      if (this._flagTexture) {
+        this.fill = effect;
+      }
+      if (effect.loaded) {
+        iw = effect.image.width;
+        ih = effect.image.height;
+        width = iw / cols;
+        height = ih / rows;
+        amount = this._amount;
+        if (this.width !== width) {
+          this.width = width;
+        }
+        if (this.height !== height) {
+          this.height = height;
+        }
+        if (this._playing && this._frameRate > 0) {
+          if (_.isNaN(this._lastFrame)) {
+            this._lastFrame = amount - 1;
+          }
+          elapsed = _.performance.now() - this._startTime;
+          frames = this._lastFrame + 1;
+          duration = 1e3 * (frames - this._firstFrame) / this._frameRate;
+          if (this._loop) {
+            elapsed = elapsed % duration;
+          } else {
+            elapsed = Math.min(elapsed, duration);
+          }
+          index = lerp(this._firstFrame, frames, elapsed / duration);
+          index = Math.floor(index);
+          if (index !== this._index) {
+            this._index = index;
+            if (index >= this._lastFrame - 1 && this._onLastFrame) {
+              this._onLastFrame();
+            }
+          }
+        }
+        const col = this._index % cols;
+        const row = Math.floor(this._index / cols);
+        const ox = -width * col + (iw - width) / 2;
+        const oy = -height * row + (ih - height) / 2;
+        if (ox !== effect.offset.x) {
+          effect.offset.x = ox;
+        }
+        if (oy !== effect.offset.y) {
+          effect.offset.y = oy;
+        }
+      }
+    }
+    super._update.call(this);
+    return this;
+  }
+  flagReset() {
+    this._flagTexture = this._flagColumns = this._flagRows = this._flagFrameRate = false;
+    super.flagReset.call(this);
+    return this;
+  }
+};
+var Sprite = _Sprite;
+__publicField(Sprite, "Properties", [
+  "texture",
+  "columns",
+  "rows",
+  "frameRate",
+  "index",
+  "firstFrame",
+  "lastFrame",
+  "loop"
+]);
+var proto12 = {
+  texture: {
+    enumerable: true,
+    get: function() {
+      return this._texture;
+    },
+    set: function(v) {
+      this._texture = v;
+      this._flagTexture = true;
+    }
+  },
+  columns: {
+    enumerable: true,
+    get: function() {
+      return this._columns;
+    },
+    set: function(v) {
+      this._columns = v;
+      this._flagColumns = true;
+    }
+  },
+  rows: {
+    enumerable: true,
+    get: function() {
+      return this._rows;
+    },
+    set: function(v) {
+      this._rows = v;
+      this._flagRows = true;
+    }
+  },
+  frameRate: {
+    enumerable: true,
+    get: function() {
+      return this._frameRate;
+    },
+    set: function(v) {
+      this._frameRate = v;
+      this._flagFrameRate = true;
+    }
+  },
+  index: {
+    enumerable: true,
+    get: function() {
+      return this._index;
+    },
+    set: function(v) {
+      this._index = v;
+      this._flagIndex = true;
+    }
+  },
+  firstFrame: {
+    enumerable: true,
+    get: function() {
+      return this._firstFrame;
+    },
+    set: function(v) {
+      this._firstFrame = v;
+    }
+  },
+  lastFrame: {
+    enumerable: true,
+    get: function() {
+      return this._lastFrame;
+    },
+    set: function(v) {
+      this._lastFrame = v;
+    }
+  },
+  loop: {
+    enumerable: true,
+    get: function() {
+      return this._loop;
+    },
+    set: function(v) {
+      this._loop = !!v;
+    }
+  }
+};
+
+// src/children.js
+var _ids;
+var Children = class extends Collection {
+  constructor(children) {
+    children = Array.isArray(children) ? children : Array.prototype.slice.call(arguments);
+    super(children);
+    __privateAdd(this, _ids, {});
+    this.attach(children);
+    this.on(Events.Types.insert, this.attach);
+    this.on(Events.Types.remove, this.detach);
+  }
+  get ids() {
+    return __privateGet(this, _ids);
+  }
+  attach(children) {
+    for (let i = 0; i < children.length; i++) {
+      const child = children[i];
+      if (child && child.id) {
+        this.ids[child.id] = child;
+      }
+    }
+    return this;
+  }
+  detach(children) {
+    for (let i = 0; i < children.length; i++) {
+      delete this.ids[children[i].id];
+    }
+    return this;
+  }
+};
+_ids = new WeakMap();
+
 // src/shapes/arc-segment.js
 var _ArcSegment = class extends Path {
   constructor(x, y, ir, or, sa, ea, res) {
@@ -3603,8 +4286,8 @@ var _ArcSegment = class extends Path {
     __publicField(this, "_innerRadius", 0);
     __publicField(this, "_outerRadius", 0);
     this._renderer.type = "arc-segment";
-    for (let prop in proto11) {
-      Object.defineProperty(this, prop, proto11[prop]);
+    for (let prop in proto13) {
+      Object.defineProperty(this, prop, proto13[prop]);
     }
     if (typeof ir === "number") {
       this.innerRadius = ir;
@@ -3788,7 +4471,7 @@ var _ArcSegment = class extends Path {
 };
 var ArcSegment = _ArcSegment;
 __publicField(ArcSegment, "Properties", ["startAngle", "endAngle", "innerRadius", "outerRadius"]);
-var proto11 = {
+var proto13 = {
   startAngle: {
     enumerable: true,
     get: function() {
@@ -3845,8 +4528,8 @@ var _Circle = class extends Path {
     __publicField(this, "_flagRadius", false);
     __publicField(this, "_radius", 0);
     this._renderer.type = "circle";
-    for (let prop in proto12) {
-      Object.defineProperty(this, prop, proto12[prop]);
+    for (let prop in proto14) {
+      Object.defineProperty(this, prop, proto14[prop]);
     }
     if (typeof r === "number") {
       this.radius = r;
@@ -3940,7 +4623,7 @@ var _Circle = class extends Path {
 };
 var Circle = _Circle;
 __publicField(Circle, "Properties", ["radius"]);
-var proto12 = {
+var proto14 = {
   radius: {
     enumerable: true,
     get: function() {
@@ -3972,8 +4655,8 @@ var _Ellipse = class extends Path {
     __publicField(this, "_width", 0);
     __publicField(this, "_height", 0);
     this._renderer.type = "ellipse";
-    for (let prop in proto13) {
-      Object.defineProperty(this, prop, proto13[prop]);
+    for (let prop in proto15) {
+      Object.defineProperty(this, prop, proto15[prop]);
     }
     if (typeof rx === "number") {
       this.width = rx * 2;
@@ -4073,7 +4756,7 @@ var _Ellipse = class extends Path {
 };
 var Ellipse = _Ellipse;
 __publicField(Ellipse, "Properties", ["width", "height"]);
-var proto13 = {
+var proto15 = {
   width: {
     enumerable: true,
     get: function() {
@@ -4128,8 +4811,8 @@ var _Points = class extends Shape {
     __publicField(this, "center", Path.prototype.center);
     __publicField(this, "getBoundingClientRect", Path.prototype.getBoundingClientRect);
     __publicField(this, "_updateLength", Path.prototype._updateLength);
-    for (let prop in proto14) {
-      Object.defineProperty(this, prop, proto14[prop]);
+    for (let prop in proto16) {
+      Object.defineProperty(this, prop, proto16[prop]);
     }
     this._renderer.type = "points";
     this._renderer.flagVertices = FlagVertices.bind(this);
@@ -4284,7 +4967,7 @@ __publicField(Points, "Properties", [
   "ending",
   "dashes"
 ]);
-var proto14 = {
+var proto16 = {
   linewidth: {
     enumerable: true,
     get: function() {
@@ -4444,8 +5127,8 @@ var _Polygon = class extends Path {
     __publicField(this, "_height", 0);
     __publicField(this, "_sides", 0);
     this._renderer.type = "polygon";
-    for (let prop in proto15) {
-      Object.defineProperty(this, prop, proto15[prop]);
+    for (let prop in proto17) {
+      Object.defineProperty(this, prop, proto17[prop]);
     }
     this.closed = true;
     this.automatic = false;
@@ -4543,7 +5226,7 @@ var _Polygon = class extends Path {
 };
 var Polygon = _Polygon;
 __publicField(Polygon, "Properties", ["width", "height", "sides"]);
-var proto15 = {
+var proto17 = {
   radius: {
     enumerable: true,
     get: function() {
@@ -4589,143 +5272,6 @@ var proto15 = {
   }
 };
 
-// src/shapes/rectangle.js
-var _Rectangle = class extends Path {
-  constructor(x, y, width, height) {
-    const points = [
-      new Anchor(),
-      new Anchor(),
-      new Anchor(),
-      new Anchor()
-    ];
-    super(points, true, false, true);
-    __publicField(this, "_flagWidth", 0);
-    __publicField(this, "_flagHeight", 0);
-    __publicField(this, "_width", 0);
-    __publicField(this, "_height", 0);
-    __publicField(this, "_origin", null);
-    this._renderer.type = "rectangle";
-    for (let prop in proto16) {
-      Object.defineProperty(this, prop, proto16[prop]);
-    }
-    this.width = typeof width === "number" ? width : 1;
-    this.height = typeof height === "number" ? height : 1;
-    this.origin = new Vector();
-    if (typeof x === "number") {
-      this.translation.x = x;
-    }
-    if (typeof y === "number") {
-      this.translation.y = y;
-    }
-    this._update();
-  }
-  static fromObject(obj) {
-    const rectangle = new _Rectangle().copy(obj);
-    if ("id" in obj) {
-      rectangle.id = obj.id;
-    }
-    return rectangle;
-  }
-  copy(rectangle) {
-    super.copy.call(this, rectangle);
-    for (let i = 0; i < _Rectangle.Properties.length; i++) {
-      const k = _Rectangle.Properties[i];
-      if (k in rectangle && typeof rectangle[k] === "number") {
-        this[k] = rectangle[k];
-      }
-    }
-    return this;
-  }
-  _update() {
-    if (this._flagVertices || this._flagWidth || this._flagHeight) {
-      const xr = this._width / 2;
-      const yr = this._height / 2;
-      if (!this._closed && this.vertices.length === 4) {
-        this.vertices.push(new Anchor());
-      }
-      this.vertices[0].set(-xr, -yr).sub(this._origin).command = Commands.move;
-      this.vertices[1].set(xr, -yr).sub(this._origin).command = Commands.line;
-      this.vertices[2].set(xr, yr).sub(this._origin).command = Commands.line;
-      this.vertices[3].set(-xr, yr).sub(this._origin).command = Commands.line;
-      if (this.vertices[4]) {
-        this.vertices[4].set(-xr, -yr).sub(this._origin).command = Commands.line;
-      }
-    }
-    super._update.call(this);
-    return this;
-  }
-  flagReset() {
-    this._flagWidth = this._flagHeight = false;
-    super.flagReset.call(this);
-    return this;
-  }
-  clone(parent) {
-    const clone = new _Rectangle(0, 0, this.width, this.height);
-    clone.translation.copy(this.translation);
-    clone.rotation = this.rotation;
-    clone.scale = this.scale;
-    clone.skewX = this.skewX;
-    clone.skewY = this.skewY;
-    if (this.matrix.manual) {
-      clone.matrix.copy(this.matrix);
-    }
-    for (let i = 0; i < Path.Properties.length; i++) {
-      const k = Path.Properties[i];
-      clone[k] = this[k];
-    }
-    if (parent) {
-      parent.add(clone);
-    }
-    return clone;
-  }
-  toObject() {
-    const object = super.toObject.call(this);
-    object.renderer.type = "rectangle";
-    object.width = this.width;
-    object.height = this.height;
-    object.origin = this.origin.toObject();
-    return object;
-  }
-};
-var Rectangle = _Rectangle;
-__publicField(Rectangle, "Properties", ["width", "height"]);
-var proto16 = {
-  width: {
-    enumerable: true,
-    get: function() {
-      return this._width;
-    },
-    set: function(v) {
-      this._width = v;
-      this._flagWidth = true;
-    }
-  },
-  height: {
-    enumerable: true,
-    get: function() {
-      return this._height;
-    },
-    set: function(v) {
-      this._height = v;
-      this._flagHeight = true;
-    }
-  },
-  origin: {
-    enumerable: true,
-    get: function() {
-      return this._origin;
-    },
-    set: function(v) {
-      if (this._origin) {
-        this._origin.unbind(Events.Types.change, this._renderer.flagVertices);
-      }
-      this._origin = v;
-      this._origin.bind(Events.Types.change, this._renderer.flagVertices);
-      this._renderer.flagVertices();
-    }
-  }
-};
-
 // src/shapes/rounded-rectangle.js
 var _RoundedRectangle = class extends Path {
   constructor(x, y, width, height, radius) {
@@ -4746,8 +5292,8 @@ var _RoundedRectangle = class extends Path {
     __publicField(this, "_height", 0);
     __publicField(this, "_radius", 12);
     this._renderer.type = "rounded-rectangle";
-    for (let prop in proto17) {
-      Object.defineProperty(this, prop, proto17[prop]);
+    for (let prop in proto18) {
+      Object.defineProperty(this, prop, proto18[prop]);
     }
     this.closed = true;
     this.automatic = false;
@@ -4899,7 +5445,7 @@ var _RoundedRectangle = class extends Path {
 };
 var RoundedRectangle = _RoundedRectangle;
 __publicField(RoundedRectangle, "Properties", ["width", "height", "radius"]);
-var proto17 = {
+var proto18 = {
   width: {
     enumerable: true,
     get: function() {
@@ -4961,8 +5507,8 @@ var _Star = class extends Path {
     __publicField(this, "_outerRadius", 0);
     __publicField(this, "_sides", 0);
     this._renderer.type = "star";
-    for (let prop in proto18) {
-      Object.defineProperty(this, prop, proto18[prop]);
+    for (let prop in proto19) {
+      Object.defineProperty(this, prop, proto19[prop]);
     }
     this.closed = true;
     this.automatic = false;
@@ -5065,7 +5611,7 @@ var _Star = class extends Path {
 };
 var Star = _Star;
 __publicField(Star, "Properties", ["innerRadius", "outerRadius", "sides"]);
-var proto18 = {
+var proto19 = {
   innerRadius: {
     enumerable: true,
     get: function() {
@@ -5143,8 +5689,8 @@ var _Text = class extends Shape {
     __publicField(this, "_mask", null);
     __publicField(this, "_clip", false);
     __publicField(this, "_dashes", null);
-    for (let prop in proto19) {
-      Object.defineProperty(this, prop, proto19[prop]);
+    for (let prop in proto20) {
+      Object.defineProperty(this, prop, proto20[prop]);
     }
     this._renderer.type = "text";
     this._renderer.flagFill = FlagFill2.bind(this);
@@ -5321,7 +5867,7 @@ __publicField(Text, "Properties", [
   "stroke",
   "dashes"
 ]);
-var proto19 = {
+var proto20 = {
   value: {
     enumerable: true,
     get: function() {
@@ -5556,8 +6102,8 @@ var _Group = class extends Shape {
     __publicField(this, "_ending", 1);
     __publicField(this, "_length", 0);
     __publicField(this, "_mask", null);
-    for (let prop in proto20) {
-      Object.defineProperty(this, prop, proto20[prop]);
+    for (let prop in proto21) {
+      Object.defineProperty(this, prop, proto21[prop]);
     }
     this._renderer.type = "group";
     this.additions = [];
@@ -5819,10 +6365,10 @@ var _Group = class extends Shape {
         const [bx, by] = matrix.multiply(rect.right, rect.top);
         const [cx, cy] = matrix.multiply(rect.left, rect.bottom);
         const [dx, dy] = matrix.multiply(rect.right, rect.bottom);
-        top = min3(ay, by, cy, dy);
-        left = min3(ax, bx, cx, dx);
-        right = max3(ax, bx, cx, dx);
-        bottom = max3(ay, by, cy, dy);
+        top = min3(ay, by, cy, dy, top);
+        left = min3(ax, bx, cx, dx, left);
+        right = max3(ax, bx, cx, dx, right);
+        bottom = max3(ay, by, cy, dy, bottom);
       } else {
         top = min3(rect.top, top);
         left = min3(rect.left, left);
@@ -5918,7 +6464,7 @@ __publicField(Group, "Properties", [
   "curved",
   "automatic"
 ]);
-var proto20 = {
+var proto21 = {
   visible: {
     enumerable: true,
     get: function() {
@@ -6183,1195 +6729,6 @@ function replaceParent(child, newParent) {
     }
   }
 }
-
-// src/renderers/canvas.js
-var emptyArray = [];
-var max4 = Math.max;
-var min4 = Math.min;
-var abs = Math.abs;
-var sin6 = Math.sin;
-var cos6 = Math.cos;
-var acos = Math.acos;
-var sqrt = Math.sqrt;
-var canvas2 = {
-  isHidden: /(undefined|none|transparent)/i,
-  alignments: {
-    left: "start",
-    middle: "center",
-    right: "end"
-  },
-  baselines: {
-    top: "top",
-    middle: "middle",
-    bottom: "bottom",
-    baseline: "alphabetic"
-  },
-  shim: function(elem, name) {
-    elem.tagName = elem.nodeName = name || "canvas";
-    elem.nodeType = 1;
-    elem.getAttribute = function(prop) {
-      return this[prop];
-    };
-    elem.setAttribute = function(prop, val) {
-      this[prop] = val;
-      return this;
-    };
-    return elem;
-  },
-  getRendererType: function(type) {
-    return type in canvas2 ? type : "path";
-  },
-  group: {
-    renderChild: function(child) {
-      const prop = canvas2.getRendererType(child._renderer.type);
-      canvas2[prop].render.call(child, this.ctx, true, this.clip);
-    },
-    render: function(ctx) {
-      if (!this._visible) {
-        return this;
-      }
-      this._update();
-      const matrix = this._matrix.elements;
-      const parent = this.parent;
-      this._renderer.opacity = this._opacity * (parent && parent._renderer ? parent._renderer.opacity : 1);
-      const mask = this._mask;
-      const defaultMatrix = isDefaultMatrix(matrix);
-      const shouldIsolate = !defaultMatrix || !!mask;
-      if (!this._renderer.context) {
-        this._renderer.context = {};
-      }
-      this._renderer.context.ctx = ctx;
-      if (shouldIsolate) {
-        ctx.save();
-        if (!defaultMatrix) {
-          ctx.transform(
-            matrix[0],
-            matrix[3],
-            matrix[1],
-            matrix[4],
-            matrix[2],
-            matrix[5]
-          );
-        }
-      }
-      if (mask) {
-        const prop = canvas2.getRendererType(mask._renderer.type);
-        canvas2[prop].render.call(mask, ctx, true);
-      }
-      if (this._opacity > 0 && this._scale !== 0) {
-        for (let i = 0; i < this.children.length; i++) {
-          const child = this.children[i];
-          const prop = canvas2.getRendererType(child._renderer.type);
-          canvas2[prop].render.call(child, ctx);
-        }
-      }
-      if (shouldIsolate) {
-        ctx.restore();
-      }
-      return this.flagReset();
-    }
-  },
-  path: {
-    render: function(ctx, forced, parentClipped) {
-      let matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter, closed2, commands, length, last, prev, a, b, c, d, ux, uy, vx, vy, ar, bl, br, cl, x, y, mask, clip, defaultMatrix, isOffset, dashes, po;
-      po = this.parent && this.parent._renderer ? this.parent._renderer.opacity : 1;
-      mask = this._mask;
-      clip = this._clip;
-      opacity = this._opacity * (po || 1);
-      visible = this._visible;
-      if (!forced && (!visible || clip || opacity === 0)) {
-        return this;
-      }
-      this._update();
-      matrix = this._matrix.elements;
-      stroke = this._stroke;
-      linewidth = this._linewidth;
-      fill = this._fill;
-      cap = this._cap;
-      join = this._join;
-      miter = this._miter;
-      closed2 = this._closed;
-      commands = this._renderer.vertices;
-      length = commands.length;
-      last = length - 1;
-      defaultMatrix = isDefaultMatrix(matrix);
-      dashes = this.dashes;
-      if (!defaultMatrix) {
-        ctx.save();
-        ctx.transform(
-          matrix[0],
-          matrix[3],
-          matrix[1],
-          matrix[4],
-          matrix[2],
-          matrix[5]
-        );
-      }
-      if (mask) {
-        const prop = canvas2.getRendererType(mask._renderer.type);
-        canvas2[prop].render.call(mask, ctx, true);
-      }
-      if (fill) {
-        if (typeof fill === "string") {
-          ctx.fillStyle = fill;
-        } else {
-          const prop = canvas2.getRendererType(fill._renderer.type);
-          canvas2[prop].render.call(fill, ctx, this);
-          ctx.fillStyle = fill._renderer.effect;
-        }
-      }
-      if (stroke) {
-        if (typeof stroke === "string") {
-          ctx.strokeStyle = stroke;
-        } else {
-          const prop = canvas2.getRendererType(stroke._renderer.type);
-          canvas2[prop].render.call(stroke, ctx, this);
-          ctx.strokeStyle = stroke._renderer.effect;
-        }
-        if (linewidth) {
-          ctx.lineWidth = linewidth;
-        }
-        if (miter) {
-          ctx.miterLimit = miter;
-        }
-        if (join) {
-          ctx.lineJoin = join;
-        }
-        if (!closed2 && cap) {
-          ctx.lineCap = cap;
-        }
-      }
-      if (typeof opacity === "number") {
-        ctx.globalAlpha = opacity;
-      }
-      if (dashes && dashes.length > 0) {
-        ctx.lineDashOffset = dashes.offset || 0;
-        ctx.setLineDash(dashes);
-      }
-      ctx.beginPath();
-      let rx, ry, xAxisRotation, largeArcFlag, sweepFlag, ax, ay;
-      for (let i = 0; i < length; i++) {
-        b = commands[i];
-        x = b.x;
-        y = b.y;
-        switch (b.command) {
-          case Commands.close:
-            ctx.closePath();
-            break;
-          case Commands.arc:
-            rx = b.rx;
-            ry = b.ry;
-            xAxisRotation = b.xAxisRotation;
-            largeArcFlag = b.largeArcFlag;
-            sweepFlag = b.sweepFlag;
-            prev = closed2 ? mod(i - 1, length) : max4(i - 1, 0);
-            a = commands[prev];
-            ax = a.x;
-            ay = a.y;
-            canvas2.renderSvgArcCommand(
-              ctx,
-              ax,
-              ay,
-              rx,
-              ry,
-              largeArcFlag,
-              sweepFlag,
-              xAxisRotation,
-              x,
-              y
-            );
-            break;
-          case Commands.curve:
-            prev = closed2 ? mod(i - 1, length) : Math.max(i - 1, 0);
-            a = commands[prev];
-            ar = a.controls && a.controls.right || Vector.zero;
-            bl = b.controls && b.controls.left || Vector.zero;
-            if (a._relative) {
-              vx = ar.x + a.x;
-              vy = ar.y + a.y;
-            } else {
-              vx = ar.x;
-              vy = ar.y;
-            }
-            if (b._relative) {
-              ux = bl.x + b.x;
-              uy = bl.y + b.y;
-            } else {
-              ux = bl.x;
-              uy = bl.y;
-            }
-            ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
-            if (i >= last && closed2) {
-              c = d;
-              br = b.controls && b.controls.right || Vector.zero;
-              cl = c.controls && c.controls.left || Vector.zero;
-              if (b._relative) {
-                vx = br.x + b.x;
-                vy = br.y + b.y;
-              } else {
-                vx = br.x;
-                vy = br.y;
-              }
-              if (c._relative) {
-                ux = cl.x + c.x;
-                uy = cl.y + c.y;
-              } else {
-                ux = cl.x;
-                uy = cl.y;
-              }
-              x = c.x;
-              y = c.y;
-              ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
-            }
-            break;
-          case Commands.line:
-            ctx.lineTo(x, y);
-            break;
-          case Commands.move:
-            d = b;
-            ctx.moveTo(x, y);
-            break;
-        }
-      }
-      if (closed2) {
-        ctx.closePath();
-      }
-      if (!clip && !parentClipped) {
-        if (!canvas2.isHidden.test(fill)) {
-          isOffset = fill._renderer && fill._renderer.offset;
-          if (isOffset) {
-            ctx.save();
-            ctx.translate(-fill._renderer.offset.x, -fill._renderer.offset.y);
-            ctx.scale(fill._renderer.scale.x, fill._renderer.scale.y);
-          }
-          ctx.fill();
-          if (isOffset) {
-            ctx.restore();
-          }
-        }
-        if (!canvas2.isHidden.test(stroke)) {
-          isOffset = stroke._renderer && stroke._renderer.offset;
-          if (isOffset) {
-            ctx.save();
-            ctx.translate(
-              -stroke._renderer.offset.x,
-              -stroke._renderer.offset.y
-            );
-            ctx.scale(stroke._renderer.scale.x, stroke._renderer.scale.y);
-            ctx.lineWidth = linewidth / stroke._renderer.scale.x;
-          }
-          ctx.stroke();
-          if (isOffset) {
-            ctx.restore();
-          }
-        }
-      }
-      if (!defaultMatrix) {
-        ctx.restore();
-      }
-      if (clip && !parentClipped) {
-        ctx.clip();
-      }
-      if (dashes && dashes.length > 0) {
-        ctx.setLineDash(emptyArray);
-      }
-      return this.flagReset();
-    }
-  },
-  points: {
-    render: function(ctx, forced, parentClipped) {
-      let me, stroke, linewidth, fill, opacity, visible, size, commands, length, b, x, y, defaultMatrix, isOffset, dashes, po;
-      po = this.parent && this.parent._renderer ? this.parent._renderer.opacity : 1;
-      opacity = this._opacity * (po || 1);
-      visible = this._visible;
-      if (!forced && (!visible || opacity === 0)) {
-        return this;
-      }
-      this._update();
-      me = this._matrix.elements;
-      stroke = this._stroke;
-      linewidth = this._linewidth;
-      fill = this._fill;
-      commands = this._renderer.collection;
-      length = commands.length;
-      defaultMatrix = isDefaultMatrix(me);
-      dashes = this.dashes;
-      size = this._size;
-      if (!defaultMatrix) {
-        ctx.save();
-        ctx.transform(me[0], me[3], me[1], me[4], me[2], me[5]);
-      }
-      if (fill) {
-        if (typeof fill === "string") {
-          ctx.fillStyle = fill;
-        } else {
-          const prop = canvas2.getRendererType(fill._renderer.type);
-          canvas2[prop].render.call(fill, ctx, this);
-          ctx.fillStyle = fill._renderer.effect;
-        }
-      }
-      if (stroke) {
-        if (typeof stroke === "string") {
-          ctx.strokeStyle = stroke;
-        } else {
-          const prop = canvas2.getRendererType(stroke._renderer.type);
-          canvas2[prop].render.call(stroke, ctx, this);
-          ctx.strokeStyle = stroke._renderer.effect;
-        }
-        if (linewidth) {
-          ctx.lineWidth = linewidth;
-        }
-      }
-      if (typeof opacity === "number") {
-        ctx.globalAlpha = opacity;
-      }
-      if (dashes && dashes.length > 0) {
-        ctx.lineDashOffset = dashes.offset || 0;
-        ctx.setLineDash(dashes);
-      }
-      ctx.beginPath();
-      let radius = size * 0.5, m;
-      if (!this._sizeAttenuation) {
-        m = this.worldMatrix.elements;
-        m = decomposeMatrix(m[0], m[3], m[1], m[4], m[2], m[5]);
-        radius /= Math.max(m.scaleX, m.scaleY);
-      }
-      for (let i = 0; i < length; i++) {
-        b = commands[i];
-        x = b.x;
-        y = b.y;
-        ctx.moveTo(x + radius, y);
-        ctx.arc(x, y, radius, 0, TWO_PI);
-      }
-      if (!parentClipped) {
-        if (!canvas2.isHidden.test(fill)) {
-          isOffset = fill._renderer && fill._renderer.offset;
-          if (isOffset) {
-            ctx.save();
-            ctx.translate(-fill._renderer.offset.x, -fill._renderer.offset.y);
-            ctx.scale(fill._renderer.scale.x, fill._renderer.scale.y);
-          }
-          ctx.fill();
-          if (isOffset) {
-            ctx.restore();
-          }
-        }
-        if (!canvas2.isHidden.test(stroke)) {
-          isOffset = stroke._renderer && stroke._renderer.offset;
-          if (isOffset) {
-            ctx.save();
-            ctx.translate(
-              -stroke._renderer.offset.x,
-              -stroke._renderer.offset.y
-            );
-            ctx.scale(stroke._renderer.scale.x, stroke._renderer.scale.y);
-            ctx.lineWidth = linewidth / stroke._renderer.scale.x;
-          }
-          ctx.stroke();
-          if (isOffset) {
-            ctx.restore();
-          }
-        }
-      }
-      if (!defaultMatrix) {
-        ctx.restore();
-      }
-      if (dashes && dashes.length > 0) {
-        ctx.setLineDash(emptyArray);
-      }
-      return this.flagReset();
-    }
-  },
-  text: {
-    render: function(ctx, forced, parentClipped) {
-      const po = this.parent && this.parent._renderer ? this.parent._renderer.opacity : 1;
-      const opacity = this._opacity * po;
-      const visible = this._visible;
-      const mask = this._mask;
-      const clip = this._clip;
-      if (!forced && (!visible || clip || opacity === 0)) {
-        return this;
-      }
-      this._update();
-      const matrix = this._matrix.elements;
-      const stroke = this._stroke;
-      const linewidth = this._linewidth;
-      const fill = this._fill;
-      const decoration = this._decoration;
-      const direction = this._direction;
-      const defaultMatrix = isDefaultMatrix(matrix);
-      const isOffset = fill._renderer && fill._renderer.offset && stroke._renderer && stroke._renderer.offset;
-      const dashes = this.dashes;
-      const alignment = canvas2.alignments[this._alignment] || this._alignment;
-      const baseline = canvas2.baselines[this._baseline] || this._baseline;
-      let a, b, c, d, e, sx, sy, x1, y1, x2, y2;
-      if (!defaultMatrix) {
-        ctx.save();
-        ctx.transform(
-          matrix[0],
-          matrix[3],
-          matrix[1],
-          matrix[4],
-          matrix[2],
-          matrix[5]
-        );
-      }
-      if (mask) {
-        const prop = canvas2.getRendererType(mask._renderer.type);
-        canvas2[prop].render.call(mask, ctx, true);
-      }
-      if (!isOffset) {
-        ctx.font = [
-          this._style,
-          this._weight,
-          this._size + "px/" + this._leading + "px",
-          this._family
-        ].join(" ");
-      }
-      ctx.textAlign = alignment;
-      ctx.textBaseline = baseline;
-      ctx.direction = direction;
-      if (fill) {
-        if (typeof fill === "string") {
-          ctx.fillStyle = fill;
-        } else {
-          const prop = canvas2.getRendererType(fill._renderer.type);
-          canvas2[prop].render.call(fill, ctx, this);
-          ctx.fillStyle = fill._renderer.effect;
-        }
-      }
-      if (stroke) {
-        if (typeof stroke === "string") {
-          ctx.strokeStyle = stroke;
-        } else {
-          const prop = canvas2.getRendererType(stroke._renderer.type);
-          canvas2[prop].render.call(stroke, ctx, this);
-          ctx.strokeStyle = stroke._renderer.effect;
-        }
-        if (linewidth) {
-          ctx.lineWidth = linewidth;
-        }
-      }
-      if (typeof opacity === "number") {
-        ctx.globalAlpha = opacity;
-      }
-      if (dashes && dashes.length > 0) {
-        ctx.lineDashOffset = dashes.offset || 0;
-        ctx.setLineDash(dashes);
-      }
-      if (!clip && !parentClipped) {
-        if (!canvas2.isHidden.test(fill)) {
-          if (fill._renderer && fill._renderer.offset) {
-            sx = fill._renderer.scale.x;
-            sy = fill._renderer.scale.y;
-            ctx.save();
-            ctx.translate(-fill._renderer.offset.x, -fill._renderer.offset.y);
-            ctx.scale(sx, sy);
-            a = this._size / fill._renderer.scale.y;
-            b = this._leading / fill._renderer.scale.y;
-            ctx.font = [
-              this._style,
-              this._weight,
-              a + "px/",
-              b + "px",
-              this._family
-            ].join(" ");
-            c = fill._renderer.offset.x / fill._renderer.scale.x;
-            d = fill._renderer.offset.y / fill._renderer.scale.y;
-            ctx.fillText(this.value, c, d);
-            ctx.restore();
-          } else {
-            ctx.fillText(this.value, 0, 0);
-          }
-        }
-        if (!canvas2.isHidden.test(stroke)) {
-          if (stroke._renderer && stroke._renderer.offset) {
-            sx = stroke._renderer.scale.x;
-            sy = stroke._renderer.scale.y;
-            ctx.save();
-            ctx.translate(
-              -stroke._renderer.offset.x,
-              -stroke._renderer.offset.y
-            );
-            ctx.scale(sx, sy);
-            a = this._size / stroke._renderer.scale.y;
-            b = this._leading / stroke._renderer.scale.y;
-            ctx.font = [
-              this._style,
-              this._weight,
-              a + "px/",
-              b + "px",
-              this._family
-            ].join(" ");
-            c = stroke._renderer.offset.x / stroke._renderer.scale.x;
-            d = stroke._renderer.offset.y / stroke._renderer.scale.y;
-            e = linewidth / stroke._renderer.scale.x;
-            ctx.lineWidth = e;
-            ctx.strokeText(this.value, c, d);
-            ctx.restore();
-          } else {
-            ctx.strokeText(this.value, 0, 0);
-          }
-        }
-      }
-      if (/(underline|strikethrough)/i.test(decoration)) {
-        const metrics = ctx.measureText(this.value);
-        let scalar = 1;
-        switch (decoration) {
-          case "underline":
-            y1 = metrics.actualBoundingBoxDescent;
-            y2 = metrics.actualBoundingBoxDescent;
-            break;
-          case "strikethrough":
-            y1 = 0;
-            y2 = 0;
-            scalar = 0.5;
-            break;
-        }
-        switch (baseline) {
-          case "top":
-            y1 += this._size * scalar;
-            y2 += this._size * scalar;
-            break;
-          case "baseline":
-          case "bottom":
-            y1 -= this._size * scalar;
-            y2 -= this._size * scalar;
-            break;
-        }
-        switch (alignment) {
-          case "left":
-          case "start":
-            x1 = 0;
-            x2 = metrics.width;
-            break;
-          case "right":
-          case "end":
-            x1 = -metrics.width;
-            x2 = 0;
-            break;
-          default:
-            x1 = -metrics.width / 2;
-            x2 = metrics.width / 2;
-        }
-        ctx.lineWidth = Math.max(Math.floor(this._size / 15), 1);
-        ctx.strokeStyle = ctx.fillStyle;
-        ctx.beginPath();
-        ctx.moveTo(x1, y1);
-        ctx.lineTo(x2, y2);
-        ctx.stroke();
-      }
-      if (!defaultMatrix) {
-        ctx.restore();
-      }
-      if (clip && !parentClipped) {
-        ctx.clip();
-      }
-      if (dashes && dashes.length > 0) {
-        ctx.setLineDash(emptyArray);
-      }
-      return this.flagReset();
-    }
-  },
-  "linear-gradient": {
-    render: function(ctx, parent) {
-      if (!parent) {
-        return;
-      }
-      this._update();
-      if (!this._renderer.effect || this._flagEndPoints || this._flagStops || this._flagUnits) {
-        let rect;
-        let lx = this.left._x;
-        let ly = this.left._y;
-        let rx = this.right._x;
-        let ry = this.right._y;
-        if (/objectBoundingBox/i.test(this._units)) {
-          rect = parent.getBoundingClientRect(true);
-          lx = (lx - 0.5) * rect.width;
-          ly = (ly - 0.5) * rect.height;
-          rx = (rx - 0.5) * rect.width;
-          ry = (ry - 0.5) * rect.height;
-        }
-        this._renderer.effect = ctx.createLinearGradient(lx, ly, rx, ry);
-        for (let i = 0; i < this.stops.length; i++) {
-          const stop = this.stops[i];
-          this._renderer.effect.addColorStop(stop._offset, stop._color);
-        }
-      }
-      return this.flagReset();
-    }
-  },
-  "radial-gradient": {
-    render: function(ctx, parent) {
-      if (!parent) {
-        return;
-      }
-      this._update();
-      if (!this._renderer.effect || this._flagCenter || this._flagFocal || this._flagRadius || this._flagStops || this._flagUnits) {
-        let rect;
-        let cx = this.center._x;
-        let cy = this.center._y;
-        let fx = this.focal._x;
-        let fy = this.focal._y;
-        let radius = this._radius;
-        if (/objectBoundingBox/i.test(this._units)) {
-          rect = parent.getBoundingClientRect(true);
-          cx = (cx - 0.5) * rect.width * 0.5;
-          cy = (cy - 0.5) * rect.height * 0.5;
-          fx = (fx - 0.5) * rect.width * 0.5;
-          fy = (fy - 0.5) * rect.height * 0.5;
-          radius *= Math.min(rect.width, rect.height);
-        }
-        this._renderer.effect = ctx.createRadialGradient(
-          cx,
-          cy,
-          0,
-          fx,
-          fy,
-          radius
-        );
-        for (let i = 0; i < this.stops.length; i++) {
-          const stop = this.stops[i];
-          this._renderer.effect.addColorStop(stop._offset, stop._color);
-        }
-      }
-      return this.flagReset();
-    }
-  },
-  texture: {
-    render: function(ctx) {
-      this._update();
-      const image = this.image;
-      if (!this._renderer.effect || (this._flagLoaded || this._flagImage || this._flagVideo || this._flagRepeat) && this.loaded) {
-        this._renderer.effect = ctx.createPattern(this.image, this._repeat);
-      }
-      if (this._flagOffset || this._flagLoaded || this._flagScale) {
-        if (!(this._renderer.offset instanceof Vector)) {
-          this._renderer.offset = new Vector();
-        }
-        this._renderer.offset.x = -this._offset.x;
-        this._renderer.offset.y = -this._offset.y;
-        if (image) {
-          this._renderer.offset.x += image.width / 2;
-          this._renderer.offset.y += image.height / 2;
-          if (this._scale instanceof Vector) {
-            this._renderer.offset.x *= this._scale.x;
-            this._renderer.offset.y *= this._scale.y;
-          } else {
-            this._renderer.offset.x *= this._scale;
-            this._renderer.offset.y *= this._scale;
-          }
-        }
-      }
-      if (this._flagScale || this._flagLoaded) {
-        if (!(this._renderer.scale instanceof Vector)) {
-          this._renderer.scale = new Vector();
-        }
-        if (this._scale instanceof Vector) {
-          this._renderer.scale.copy(this._scale);
-        } else {
-          this._renderer.scale.set(this._scale, this._scale);
-        }
-      }
-      return this.flagReset();
-    }
-  },
-  renderSvgArcCommand: function(ctx, ax, ay, rx, ry, largeArcFlag, sweepFlag, xAxisRotation, x, y) {
-    xAxisRotation = xAxisRotation * Math.PI / 180;
-    rx = abs(rx);
-    ry = abs(ry);
-    const dx2 = (ax - x) / 2;
-    const dy2 = (ay - y) / 2;
-    const x1p = cos6(xAxisRotation) * dx2 + sin6(xAxisRotation) * dy2;
-    const y1p = -sin6(xAxisRotation) * dx2 + cos6(xAxisRotation) * dy2;
-    const x1ps = x1p * x1p;
-    const y1ps = y1p * y1p;
-    let rxs = rx * rx;
-    let rys = ry * ry;
-    const cr = x1ps / rxs + y1ps / rys;
-    if (cr > 1) {
-      const s = sqrt(cr);
-      rx = s * rx;
-      ry = s * ry;
-      rxs = rx * rx;
-      rys = ry * ry;
-    }
-    const dq = rxs * y1ps + rys * x1ps;
-    const pq = (rxs * rys - dq) / dq;
-    let q = sqrt(max4(0, pq));
-    if (largeArcFlag === sweepFlag)
-      q = -q;
-    const cxp = q * rx * y1p / ry;
-    const cyp = -q * ry * x1p / rx;
-    const cx = cos6(xAxisRotation) * cxp - sin6(xAxisRotation) * cyp + (ax + x) / 2;
-    const cy = sin6(xAxisRotation) * cxp + cos6(xAxisRotation) * cyp + (ay + y) / 2;
-    const startAngle = svgAngle(1, 0, (x1p - cxp) / rx, (y1p - cyp) / ry);
-    const delta = svgAngle(
-      (x1p - cxp) / rx,
-      (y1p - cyp) / ry,
-      (-x1p - cxp) / rx,
-      (-y1p - cyp) / ry
-    ) % TWO_PI;
-    const endAngle = startAngle + delta;
-    const clockwise = sweepFlag === 0;
-    renderArcEstimate(
-      ctx,
-      cx,
-      cy,
-      rx,
-      ry,
-      startAngle,
-      endAngle,
-      clockwise,
-      xAxisRotation
-    );
-  }
-};
-var Renderer = class extends Events {
-  constructor(params) {
-    super();
-    const smoothing = params.smoothing !== false;
-    this.domElement = params.domElement || document.createElement("canvas");
-    this.ctx = this.domElement.getContext("2d");
-    this.overdraw = params.overdraw || false;
-    if (typeof this.ctx.imageSmoothingEnabled !== "undefined") {
-      this.ctx.imageSmoothingEnabled = smoothing;
-    }
-    this.scene = new Group();
-    this.scene.parent = this;
-  }
-  setSize(width, height, ratio) {
-    this.width = width;
-    this.height = height;
-    this.ratio = typeof ratio === "undefined" ? getRatio(this.ctx) : ratio;
-    this.domElement.width = width * this.ratio;
-    this.domElement.height = height * this.ratio;
-    if (this.domElement.style) {
-      _.extend(this.domElement.style, {
-        width: width + "px",
-        height: height + "px"
-      });
-    }
-    return this.trigger(Events.Types.resize, width, height, ratio);
-  }
-  render() {
-    const isOne = this.ratio === 1;
-    if (!isOne) {
-      this.ctx.save();
-      this.ctx.scale(this.ratio, this.ratio);
-    }
-    if (!this.overdraw) {
-      this.ctx.clearRect(0, 0, this.width, this.height);
-    }
-    canvas2.group.render.call(this.scene, this.ctx);
-    if (!isOne) {
-      this.ctx.restore();
-    }
-    return this;
-  }
-};
-__publicField(Renderer, "Utils", canvas2);
-function renderArcEstimate(ctx, ox, oy, rx, ry, startAngle, endAngle, clockwise, xAxisRotation) {
-  const delta = endAngle - startAngle;
-  const epsilon = Curve.Tolerance.epsilon;
-  const samePoints = Math.abs(delta) < epsilon;
-  let deltaAngle = mod(delta, TWO_PI);
-  if (deltaAngle < epsilon) {
-    if (samePoints) {
-      deltaAngle = 0;
-    } else {
-      deltaAngle = TWO_PI;
-    }
-  }
-  if (clockwise === true && !samePoints) {
-    if (deltaAngle === TWO_PI) {
-      deltaAngle = -TWO_PI;
-    } else {
-      deltaAngle = deltaAngle - TWO_PI;
-    }
-  }
-  for (let i = 0; i < Constants.Resolution; i++) {
-    const t = i / (Constants.Resolution - 1);
-    const angle = startAngle + t * deltaAngle;
-    let x = ox + rx * Math.cos(angle);
-    let y = oy + ry * Math.sin(angle);
-    if (xAxisRotation !== 0) {
-      const cos7 = Math.cos(xAxisRotation);
-      const sin7 = Math.sin(xAxisRotation);
-      const tx = x - ox;
-      const ty = y - oy;
-      x = tx * cos7 - ty * sin7 + ox;
-      y = tx * sin7 + ty * cos7 + oy;
-    }
-    ctx.lineTo(x, y);
-  }
-}
-function svgAngle(ux, uy, vx, vy) {
-  const dot = ux * vx + uy * vy;
-  const len = sqrt(ux * ux + uy * uy) * sqrt(vx * vx + vy * vy);
-  let ang = acos(max4(-1, min4(1, dot / len)));
-  if (ux * vy - uy * vx < 0) {
-    ang = -ang;
-  }
-  return ang;
-}
-function isDefaultMatrix(m) {
-  return m[0] == 1 && m[3] == 0 && m[1] == 0 && m[4] == 1 && m[2] == 0 && m[5] == 0;
-}
-
-// src/utils/canvas-shim.js
-var CanvasShim = {
-  Image: null,
-  isHeadless: false,
-  shim: function(canvas3, Image) {
-    Renderer.Utils.shim(canvas3);
-    if (typeof Image !== "undefined") {
-      CanvasShim.Image = Image;
-    }
-    CanvasShim.isHeadless = true;
-    return canvas3;
-  }
-};
-
-// src/utils/dom.js
-var dom = {
-  hasEventListeners: typeof root.addEventListener === "function",
-  bind: function(elem, event, func, bool) {
-    if (this.hasEventListeners) {
-      elem.addEventListener(event, func, !!bool);
-    } else {
-      elem.attachEvent("on" + event, func);
-    }
-    return dom;
-  },
-  unbind: function(elem, event, func, bool) {
-    if (dom.hasEventListeners) {
-      elem.removeEventListeners(event, func, !!bool);
-    } else {
-      elem.detachEvent("on" + event, func);
-    }
-    return dom;
-  },
-  getRequestAnimationFrame: function() {
-    const vendors = ["ms", "moz", "webkit", "o"];
-    let lastTime = 0;
-    let request = root.requestAnimationFrame;
-    if (!request) {
-      for (let i = 0; i < vendors.length; i++) {
-        request = root[vendors[i] + "RequestAnimationFrame"] || request;
-      }
-      request = request || fallbackRequest;
-    }
-    function fallbackRequest(callback, element) {
-      const currTime = new Date().getTime();
-      const timeToCall = Math.max(0, 16 - (currTime - lastTime));
-      const id = root.setTimeout(nextRequest, timeToCall);
-      lastTime = currTime + timeToCall;
-      function nextRequest() {
-        callback(currTime + timeToCall);
-      }
-      return id;
-    }
-    return request;
-  }
-};
-var temp = root.document ? root.document.createElement("div") : {};
-temp.id = "help-two-load";
-Object.defineProperty(dom, "temp", {
-  enumerable: true,
-  get: function() {
-    if (_.isElement(temp) && !root.document.head.contains(temp)) {
-      temp.style.display = "none";
-      root.document.head.appendChild(temp);
-    }
-    return temp;
-  }
-});
-
-// src/effects/sprite.js
-var _Sprite = class extends Rectangle {
-  constructor(path, ox, oy, cols, rows, frameRate) {
-    super(ox, oy, 0, 0);
-    __publicField(this, "_flagTexture", false);
-    __publicField(this, "_flagColumns", false);
-    __publicField(this, "_flagRows", false);
-    __publicField(this, "_flagFrameRate", false);
-    __publicField(this, "_flagIndex", false);
-    __publicField(this, "_amount", 1);
-    __publicField(this, "_duration", 0);
-    __publicField(this, "_startTime", 0);
-    __publicField(this, "_playing", false);
-    __publicField(this, "_firstFrame", 0);
-    __publicField(this, "_lastFrame", 0);
-    __publicField(this, "_loop", true);
-    __publicField(this, "_texture", null);
-    __publicField(this, "_columns", 1);
-    __publicField(this, "_rows", 1);
-    __publicField(this, "_frameRate", 0);
-    __publicField(this, "_index", 0);
-    __publicField(this, "_origin", null);
-    for (let prop in proto21) {
-      Object.defineProperty(this, prop, proto21[prop]);
-    }
-    this.noStroke();
-    this.noFill();
-    if (path instanceof Texture) {
-      this.texture = path;
-    } else if (typeof path === "string") {
-      this.texture = new Texture(path);
-    }
-    this.origin = new Vector();
-    this._update();
-    if (typeof cols === "number") {
-      this.columns = cols;
-    }
-    if (typeof rows === "number") {
-      this.rows = rows;
-    }
-    if (typeof frameRate === "number") {
-      this.frameRate = frameRate;
-    }
-    this.index = 0;
-  }
-  static fromObject(obj) {
-    const sprite = new _Sprite().copy(obj);
-    if ("id" in obj) {
-      sprite.id = obj.id;
-    }
-    return sprite;
-  }
-  copy(sprite) {
-    super.copy.call(this, sprite);
-    for (let i = 0; i < _Sprite.Properties.length; i++) {
-      const k = _Sprite.Properties[i];
-      if (k in sprite) {
-        this[k] = sprite[k];
-      }
-    }
-    return this;
-  }
-  play(firstFrame, lastFrame, onLastFrame) {
-    this._playing = true;
-    this._firstFrame = 0;
-    this._lastFrame = this.amount - 1;
-    this._startTime = _.performance.now();
-    if (typeof firstFrame === "number") {
-      this._firstFrame = firstFrame;
-    }
-    if (typeof lastFrame === "number") {
-      this._lastFrame = lastFrame;
-    }
-    if (typeof onLastFrame === "function") {
-      this._onLastFrame = onLastFrame;
-    } else {
-      delete this._onLastFrame;
-    }
-    if (this._index !== this._firstFrame) {
-      this._startTime -= 1e3 * Math.abs(this._index - this._firstFrame) / this._frameRate;
-    }
-    return this;
-  }
-  pause() {
-    this._playing = false;
-    return this;
-  }
-  stop() {
-    this._playing = false;
-    this._index = 0;
-    return this;
-  }
-  clone(parent) {
-    const clone = new _Sprite(
-      this.texture,
-      this.translation.x,
-      this.translation.y,
-      this.columns,
-      this.rows,
-      this.frameRate
-    );
-    if (this.playing) {
-      clone.play(this._firstFrame, this._lastFrame);
-    }
-    clone.loop = this.loop;
-    clone.firstFrame = this.firstFrame;
-    clone.lastFrame = this.lastFrame;
-    if (parent) {
-      parent.add(clone);
-    }
-    return clone;
-  }
-  toObject() {
-    const object = super.toObject.call(this);
-    object.texture = this.texture.toObject();
-    object.columns = this.columns;
-    object.rows = this.rows;
-    object.frameRate = this.frameRate;
-    object.index = this.index;
-    object.firstFrame = this.firstFrame;
-    object.lastFrame = this.lastFrame;
-    object.loop = this.loop;
-    return object;
-  }
-  _update() {
-    const effect = this._texture;
-    const cols = this._columns;
-    const rows = this._rows;
-    let width, height, elapsed, amount, duration;
-    let index, iw, ih, frames;
-    if (effect) {
-      if (this._flagColumns || this._flagRows) {
-        this._amount = this._columns * this._rows;
-      }
-      if (this._flagFrameRate) {
-        this._duration = 1e3 * this._amount / this._frameRate;
-      }
-      if (this._flagTexture) {
-        this.fill = effect;
-      }
-      if (effect.loaded) {
-        iw = effect.image.width;
-        ih = effect.image.height;
-        width = iw / cols;
-        height = ih / rows;
-        amount = this._amount;
-        if (this.width !== width) {
-          this.width = width;
-        }
-        if (this.height !== height) {
-          this.height = height;
-        }
-        if (this._playing && this._frameRate > 0) {
-          if (_.isNaN(this._lastFrame)) {
-            this._lastFrame = amount - 1;
-          }
-          elapsed = _.performance.now() - this._startTime;
-          frames = this._lastFrame + 1;
-          duration = 1e3 * (frames - this._firstFrame) / this._frameRate;
-          if (this._loop) {
-            elapsed = elapsed % duration;
-          } else {
-            elapsed = Math.min(elapsed, duration);
-          }
-          index = lerp(this._firstFrame, frames, elapsed / duration);
-          index = Math.floor(index);
-          if (index !== this._index) {
-            this._index = index;
-            if (index >= this._lastFrame - 1 && this._onLastFrame) {
-              this._onLastFrame();
-            }
-          }
-        }
-        const col = this._index % cols;
-        const row = Math.floor(this._index / cols);
-        const ox = -width * col + (iw - width) / 2;
-        const oy = -height * row + (ih - height) / 2;
-        if (ox !== effect.offset.x) {
-          effect.offset.x = ox;
-        }
-        if (oy !== effect.offset.y) {
-          effect.offset.y = oy;
-        }
-      }
-    }
-    super._update.call(this);
-    return this;
-  }
-  flagReset() {
-    this._flagTexture = this._flagColumns = this._flagRows = this._flagFrameRate = false;
-    super.flagReset.call(this);
-    return this;
-  }
-};
-var Sprite = _Sprite;
-__publicField(Sprite, "Properties", [
-  "texture",
-  "columns",
-  "rows",
-  "frameRate",
-  "index",
-  "firstFrame",
-  "lastFrame",
-  "loop"
-]);
-var proto21 = {
-  texture: {
-    enumerable: true,
-    get: function() {
-      return this._texture;
-    },
-    set: function(v) {
-      this._texture = v;
-      this._flagTexture = true;
-    }
-  },
-  columns: {
-    enumerable: true,
-    get: function() {
-      return this._columns;
-    },
-    set: function(v) {
-      this._columns = v;
-      this._flagColumns = true;
-    }
-  },
-  rows: {
-    enumerable: true,
-    get: function() {
-      return this._rows;
-    },
-    set: function(v) {
-      this._rows = v;
-      this._flagRows = true;
-    }
-  },
-  frameRate: {
-    enumerable: true,
-    get: function() {
-      return this._frameRate;
-    },
-    set: function(v) {
-      this._frameRate = v;
-      this._flagFrameRate = true;
-    }
-  },
-  index: {
-    enumerable: true,
-    get: function() {
-      return this._index;
-    },
-    set: function(v) {
-      this._index = v;
-      this._flagIndex = true;
-    }
-  },
-  firstFrame: {
-    enumerable: true,
-    get: function() {
-      return this._firstFrame;
-    },
-    set: function(v) {
-      this._firstFrame = v;
-    }
-  },
-  lastFrame: {
-    enumerable: true,
-    get: function() {
-      return this._lastFrame;
-    },
-    set: function(v) {
-      this._lastFrame = v;
-    }
-  },
-  loop: {
-    enumerable: true,
-    get: function() {
-      return this._loop;
-    },
-    set: function(v) {
-      this._loop = !!v;
-    }
-  }
-};
 
 // src/shapes/line.js
 var Line = class extends Path {
@@ -8706,6 +8063,829 @@ function GenerateTexture(obj) {
   } else if (typeof obj === "string") {
     return new Texture(obj);
   }
+}
+
+// src/renderers/canvas.js
+var emptyArray = [];
+var max4 = Math.max;
+var min4 = Math.min;
+var abs = Math.abs;
+var sin6 = Math.sin;
+var cos6 = Math.cos;
+var acos = Math.acos;
+var sqrt = Math.sqrt;
+var canvas2 = {
+  isHidden: /(undefined|none|transparent)/i,
+  alignments: {
+    left: "start",
+    middle: "center",
+    right: "end"
+  },
+  baselines: {
+    top: "top",
+    middle: "middle",
+    bottom: "bottom",
+    baseline: "alphabetic"
+  },
+  getRendererType: function(type) {
+    return type in canvas2 ? type : "path";
+  },
+  group: {
+    renderChild: function(child) {
+      const prop = canvas2.getRendererType(child._renderer.type);
+      canvas2[prop].render.call(child, this.ctx, true, this.clip);
+    },
+    render: function(ctx) {
+      if (!this._visible) {
+        return this;
+      }
+      this._update();
+      const matrix = this._matrix.elements;
+      const parent = this.parent;
+      this._renderer.opacity = this._opacity * (parent && parent._renderer ? parent._renderer.opacity : 1);
+      const mask = this._mask;
+      const defaultMatrix = isDefaultMatrix(matrix);
+      const shouldIsolate = !defaultMatrix || !!mask;
+      if (!this._renderer.context) {
+        this._renderer.context = {};
+      }
+      this._renderer.context.ctx = ctx;
+      if (shouldIsolate) {
+        ctx.save();
+        if (!defaultMatrix) {
+          ctx.transform(
+            matrix[0],
+            matrix[3],
+            matrix[1],
+            matrix[4],
+            matrix[2],
+            matrix[5]
+          );
+        }
+      }
+      if (mask) {
+        const prop = canvas2.getRendererType(mask._renderer.type);
+        canvas2[prop].render.call(mask, ctx, true);
+      }
+      if (this._opacity > 0 && this._scale !== 0) {
+        for (let i = 0; i < this.children.length; i++) {
+          const child = this.children[i];
+          const prop = canvas2.getRendererType(child._renderer.type);
+          canvas2[prop].render.call(child, ctx);
+        }
+      }
+      if (shouldIsolate) {
+        ctx.restore();
+      }
+      return this.flagReset();
+    }
+  },
+  path: {
+    render: function(ctx, forced, parentClipped) {
+      let matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter, closed2, commands, length, last, prev, a, b, c, d, ux, uy, vx, vy, ar, bl, br, cl, x, y, mask, clip, defaultMatrix, isOffset, dashes, po;
+      po = this.parent && this.parent._renderer ? this.parent._renderer.opacity : 1;
+      mask = this._mask;
+      clip = this._clip;
+      opacity = this._opacity * (po || 1);
+      visible = this._visible;
+      if (!forced && (!visible || clip || opacity === 0)) {
+        return this;
+      }
+      this._update();
+      matrix = this._matrix.elements;
+      stroke = this._stroke;
+      linewidth = this._linewidth;
+      fill = this._fill;
+      cap = this._cap;
+      join = this._join;
+      miter = this._miter;
+      closed2 = this._closed;
+      commands = this._renderer.vertices;
+      length = commands.length;
+      last = length - 1;
+      defaultMatrix = isDefaultMatrix(matrix);
+      dashes = this.dashes;
+      if (!defaultMatrix) {
+        ctx.save();
+        ctx.transform(
+          matrix[0],
+          matrix[3],
+          matrix[1],
+          matrix[4],
+          matrix[2],
+          matrix[5]
+        );
+      }
+      if (mask) {
+        const prop = canvas2.getRendererType(mask._renderer.type);
+        canvas2[prop].render.call(mask, ctx, true);
+      }
+      if (fill) {
+        if (typeof fill === "string") {
+          ctx.fillStyle = fill;
+        } else {
+          const prop = canvas2.getRendererType(fill._renderer.type);
+          canvas2[prop].render.call(fill, ctx, this);
+          ctx.fillStyle = fill._renderer.effect;
+        }
+      }
+      if (stroke) {
+        if (typeof stroke === "string") {
+          ctx.strokeStyle = stroke;
+        } else {
+          const prop = canvas2.getRendererType(stroke._renderer.type);
+          canvas2[prop].render.call(stroke, ctx, this);
+          ctx.strokeStyle = stroke._renderer.effect;
+        }
+        if (linewidth) {
+          ctx.lineWidth = linewidth;
+        }
+        if (miter) {
+          ctx.miterLimit = miter;
+        }
+        if (join) {
+          ctx.lineJoin = join;
+        }
+        if (!closed2 && cap) {
+          ctx.lineCap = cap;
+        }
+      }
+      if (typeof opacity === "number") {
+        ctx.globalAlpha = opacity;
+      }
+      if (dashes && dashes.length > 0) {
+        ctx.lineDashOffset = dashes.offset || 0;
+        ctx.setLineDash(dashes);
+      }
+      ctx.beginPath();
+      let rx, ry, xAxisRotation, largeArcFlag, sweepFlag, ax, ay;
+      for (let i = 0; i < length; i++) {
+        b = commands[i];
+        x = b.x;
+        y = b.y;
+        switch (b.command) {
+          case Commands.close:
+            ctx.closePath();
+            break;
+          case Commands.arc:
+            rx = b.rx;
+            ry = b.ry;
+            xAxisRotation = b.xAxisRotation;
+            largeArcFlag = b.largeArcFlag;
+            sweepFlag = b.sweepFlag;
+            prev = closed2 ? mod(i - 1, length) : max4(i - 1, 0);
+            a = commands[prev];
+            ax = a.x;
+            ay = a.y;
+            canvas2.renderSvgArcCommand(
+              ctx,
+              ax,
+              ay,
+              rx,
+              ry,
+              largeArcFlag,
+              sweepFlag,
+              xAxisRotation,
+              x,
+              y
+            );
+            break;
+          case Commands.curve:
+            prev = closed2 ? mod(i - 1, length) : Math.max(i - 1, 0);
+            a = commands[prev];
+            ar = a.controls && a.controls.right || Vector.zero;
+            bl = b.controls && b.controls.left || Vector.zero;
+            if (a._relative) {
+              vx = ar.x + a.x;
+              vy = ar.y + a.y;
+            } else {
+              vx = ar.x;
+              vy = ar.y;
+            }
+            if (b._relative) {
+              ux = bl.x + b.x;
+              uy = bl.y + b.y;
+            } else {
+              ux = bl.x;
+              uy = bl.y;
+            }
+            ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
+            if (i >= last && closed2) {
+              c = d;
+              br = b.controls && b.controls.right || Vector.zero;
+              cl = c.controls && c.controls.left || Vector.zero;
+              if (b._relative) {
+                vx = br.x + b.x;
+                vy = br.y + b.y;
+              } else {
+                vx = br.x;
+                vy = br.y;
+              }
+              if (c._relative) {
+                ux = cl.x + c.x;
+                uy = cl.y + c.y;
+              } else {
+                ux = cl.x;
+                uy = cl.y;
+              }
+              x = c.x;
+              y = c.y;
+              ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
+            }
+            break;
+          case Commands.line:
+            ctx.lineTo(x, y);
+            break;
+          case Commands.move:
+            d = b;
+            ctx.moveTo(x, y);
+            break;
+        }
+      }
+      if (closed2) {
+        ctx.closePath();
+      }
+      if (!clip && !parentClipped) {
+        if (!canvas2.isHidden.test(fill)) {
+          isOffset = fill._renderer && fill._renderer.offset;
+          if (isOffset) {
+            ctx.save();
+            ctx.translate(-fill._renderer.offset.x, -fill._renderer.offset.y);
+            ctx.scale(fill._renderer.scale.x, fill._renderer.scale.y);
+          }
+          ctx.fill();
+          if (isOffset) {
+            ctx.restore();
+          }
+        }
+        if (!canvas2.isHidden.test(stroke)) {
+          isOffset = stroke._renderer && stroke._renderer.offset;
+          if (isOffset) {
+            ctx.save();
+            ctx.translate(
+              -stroke._renderer.offset.x,
+              -stroke._renderer.offset.y
+            );
+            ctx.scale(stroke._renderer.scale.x, stroke._renderer.scale.y);
+            ctx.lineWidth = linewidth / stroke._renderer.scale.x;
+          }
+          ctx.stroke();
+          if (isOffset) {
+            ctx.restore();
+          }
+        }
+      }
+      if (!defaultMatrix) {
+        ctx.restore();
+      }
+      if (clip && !parentClipped) {
+        ctx.clip();
+      }
+      if (dashes && dashes.length > 0) {
+        ctx.setLineDash(emptyArray);
+      }
+      return this.flagReset();
+    }
+  },
+  points: {
+    render: function(ctx, forced, parentClipped) {
+      let me, stroke, linewidth, fill, opacity, visible, size, commands, length, b, x, y, defaultMatrix, isOffset, dashes, po;
+      po = this.parent && this.parent._renderer ? this.parent._renderer.opacity : 1;
+      opacity = this._opacity * (po || 1);
+      visible = this._visible;
+      if (!forced && (!visible || opacity === 0)) {
+        return this;
+      }
+      this._update();
+      me = this._matrix.elements;
+      stroke = this._stroke;
+      linewidth = this._linewidth;
+      fill = this._fill;
+      commands = this._renderer.collection;
+      length = commands.length;
+      defaultMatrix = isDefaultMatrix(me);
+      dashes = this.dashes;
+      size = this._size;
+      if (!defaultMatrix) {
+        ctx.save();
+        ctx.transform(me[0], me[3], me[1], me[4], me[2], me[5]);
+      }
+      if (fill) {
+        if (typeof fill === "string") {
+          ctx.fillStyle = fill;
+        } else {
+          const prop = canvas2.getRendererType(fill._renderer.type);
+          canvas2[prop].render.call(fill, ctx, this);
+          ctx.fillStyle = fill._renderer.effect;
+        }
+      }
+      if (stroke) {
+        if (typeof stroke === "string") {
+          ctx.strokeStyle = stroke;
+        } else {
+          const prop = canvas2.getRendererType(stroke._renderer.type);
+          canvas2[prop].render.call(stroke, ctx, this);
+          ctx.strokeStyle = stroke._renderer.effect;
+        }
+        if (linewidth) {
+          ctx.lineWidth = linewidth;
+        }
+      }
+      if (typeof opacity === "number") {
+        ctx.globalAlpha = opacity;
+      }
+      if (dashes && dashes.length > 0) {
+        ctx.lineDashOffset = dashes.offset || 0;
+        ctx.setLineDash(dashes);
+      }
+      ctx.beginPath();
+      let radius = size * 0.5, m;
+      if (!this._sizeAttenuation) {
+        m = this.worldMatrix.elements;
+        m = decomposeMatrix(m[0], m[3], m[1], m[4], m[2], m[5]);
+        radius /= Math.max(m.scaleX, m.scaleY);
+      }
+      for (let i = 0; i < length; i++) {
+        b = commands[i];
+        x = b.x;
+        y = b.y;
+        ctx.moveTo(x + radius, y);
+        ctx.arc(x, y, radius, 0, TWO_PI);
+      }
+      if (!parentClipped) {
+        if (!canvas2.isHidden.test(fill)) {
+          isOffset = fill._renderer && fill._renderer.offset;
+          if (isOffset) {
+            ctx.save();
+            ctx.translate(-fill._renderer.offset.x, -fill._renderer.offset.y);
+            ctx.scale(fill._renderer.scale.x, fill._renderer.scale.y);
+          }
+          ctx.fill();
+          if (isOffset) {
+            ctx.restore();
+          }
+        }
+        if (!canvas2.isHidden.test(stroke)) {
+          isOffset = stroke._renderer && stroke._renderer.offset;
+          if (isOffset) {
+            ctx.save();
+            ctx.translate(
+              -stroke._renderer.offset.x,
+              -stroke._renderer.offset.y
+            );
+            ctx.scale(stroke._renderer.scale.x, stroke._renderer.scale.y);
+            ctx.lineWidth = linewidth / stroke._renderer.scale.x;
+          }
+          ctx.stroke();
+          if (isOffset) {
+            ctx.restore();
+          }
+        }
+      }
+      if (!defaultMatrix) {
+        ctx.restore();
+      }
+      if (dashes && dashes.length > 0) {
+        ctx.setLineDash(emptyArray);
+      }
+      return this.flagReset();
+    }
+  },
+  text: {
+    render: function(ctx, forced, parentClipped) {
+      const po = this.parent && this.parent._renderer ? this.parent._renderer.opacity : 1;
+      const opacity = this._opacity * po;
+      const visible = this._visible;
+      const mask = this._mask;
+      const clip = this._clip;
+      if (!forced && (!visible || clip || opacity === 0)) {
+        return this;
+      }
+      this._update();
+      const matrix = this._matrix.elements;
+      const stroke = this._stroke;
+      const linewidth = this._linewidth;
+      const fill = this._fill;
+      const decoration = this._decoration;
+      const direction = this._direction;
+      const defaultMatrix = isDefaultMatrix(matrix);
+      const isOffset = fill._renderer && fill._renderer.offset && stroke._renderer && stroke._renderer.offset;
+      const dashes = this.dashes;
+      const alignment = canvas2.alignments[this._alignment] || this._alignment;
+      const baseline = canvas2.baselines[this._baseline] || this._baseline;
+      let a, b, c, d, e, sx, sy, x1, y1, x2, y2;
+      if (!defaultMatrix) {
+        ctx.save();
+        ctx.transform(
+          matrix[0],
+          matrix[3],
+          matrix[1],
+          matrix[4],
+          matrix[2],
+          matrix[5]
+        );
+      }
+      if (mask) {
+        const prop = canvas2.getRendererType(mask._renderer.type);
+        canvas2[prop].render.call(mask, ctx, true);
+      }
+      if (!isOffset) {
+        ctx.font = [
+          this._style,
+          this._weight,
+          this._size + "px/" + this._leading + "px",
+          this._family
+        ].join(" ");
+      }
+      ctx.textAlign = alignment;
+      ctx.textBaseline = baseline;
+      ctx.direction = direction;
+      if (fill) {
+        if (typeof fill === "string") {
+          ctx.fillStyle = fill;
+        } else {
+          const prop = canvas2.getRendererType(fill._renderer.type);
+          canvas2[prop].render.call(fill, ctx, this);
+          ctx.fillStyle = fill._renderer.effect;
+        }
+      }
+      if (stroke) {
+        if (typeof stroke === "string") {
+          ctx.strokeStyle = stroke;
+        } else {
+          const prop = canvas2.getRendererType(stroke._renderer.type);
+          canvas2[prop].render.call(stroke, ctx, this);
+          ctx.strokeStyle = stroke._renderer.effect;
+        }
+        if (linewidth) {
+          ctx.lineWidth = linewidth;
+        }
+      }
+      if (typeof opacity === "number") {
+        ctx.globalAlpha = opacity;
+      }
+      if (dashes && dashes.length > 0) {
+        ctx.lineDashOffset = dashes.offset || 0;
+        ctx.setLineDash(dashes);
+      }
+      if (!clip && !parentClipped) {
+        if (!canvas2.isHidden.test(fill)) {
+          if (fill._renderer && fill._renderer.offset) {
+            sx = fill._renderer.scale.x;
+            sy = fill._renderer.scale.y;
+            ctx.save();
+            ctx.translate(-fill._renderer.offset.x, -fill._renderer.offset.y);
+            ctx.scale(sx, sy);
+            a = this._size / fill._renderer.scale.y;
+            b = this._leading / fill._renderer.scale.y;
+            ctx.font = [
+              this._style,
+              this._weight,
+              a + "px/",
+              b + "px",
+              this._family
+            ].join(" ");
+            c = fill._renderer.offset.x / fill._renderer.scale.x;
+            d = fill._renderer.offset.y / fill._renderer.scale.y;
+            ctx.fillText(this.value, c, d);
+            ctx.restore();
+          } else {
+            ctx.fillText(this.value, 0, 0);
+          }
+        }
+        if (!canvas2.isHidden.test(stroke)) {
+          if (stroke._renderer && stroke._renderer.offset) {
+            sx = stroke._renderer.scale.x;
+            sy = stroke._renderer.scale.y;
+            ctx.save();
+            ctx.translate(
+              -stroke._renderer.offset.x,
+              -stroke._renderer.offset.y
+            );
+            ctx.scale(sx, sy);
+            a = this._size / stroke._renderer.scale.y;
+            b = this._leading / stroke._renderer.scale.y;
+            ctx.font = [
+              this._style,
+              this._weight,
+              a + "px/",
+              b + "px",
+              this._family
+            ].join(" ");
+            c = stroke._renderer.offset.x / stroke._renderer.scale.x;
+            d = stroke._renderer.offset.y / stroke._renderer.scale.y;
+            e = linewidth / stroke._renderer.scale.x;
+            ctx.lineWidth = e;
+            ctx.strokeText(this.value, c, d);
+            ctx.restore();
+          } else {
+            ctx.strokeText(this.value, 0, 0);
+          }
+        }
+      }
+      if (/(underline|strikethrough)/i.test(decoration)) {
+        const metrics = ctx.measureText(this.value);
+        let scalar = 1;
+        switch (decoration) {
+          case "underline":
+            y1 = metrics.actualBoundingBoxDescent;
+            y2 = metrics.actualBoundingBoxDescent;
+            break;
+          case "strikethrough":
+            y1 = 0;
+            y2 = 0;
+            scalar = 0.5;
+            break;
+        }
+        switch (baseline) {
+          case "top":
+            y1 += this._size * scalar;
+            y2 += this._size * scalar;
+            break;
+          case "baseline":
+          case "bottom":
+            y1 -= this._size * scalar;
+            y2 -= this._size * scalar;
+            break;
+        }
+        switch (alignment) {
+          case "left":
+          case "start":
+            x1 = 0;
+            x2 = metrics.width;
+            break;
+          case "right":
+          case "end":
+            x1 = -metrics.width;
+            x2 = 0;
+            break;
+          default:
+            x1 = -metrics.width / 2;
+            x2 = metrics.width / 2;
+        }
+        ctx.lineWidth = Math.max(Math.floor(this._size / 15), 1);
+        ctx.strokeStyle = ctx.fillStyle;
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+      }
+      if (!defaultMatrix) {
+        ctx.restore();
+      }
+      if (clip && !parentClipped) {
+        ctx.clip();
+      }
+      if (dashes && dashes.length > 0) {
+        ctx.setLineDash(emptyArray);
+      }
+      return this.flagReset();
+    }
+  },
+  "linear-gradient": {
+    render: function(ctx, parent) {
+      if (!parent) {
+        return;
+      }
+      this._update();
+      if (!this._renderer.effect || this._flagEndPoints || this._flagStops || this._flagUnits) {
+        let rect;
+        let lx = this.left._x;
+        let ly = this.left._y;
+        let rx = this.right._x;
+        let ry = this.right._y;
+        if (/objectBoundingBox/i.test(this._units)) {
+          rect = parent.getBoundingClientRect(true);
+          lx = (lx - 0.5) * rect.width;
+          ly = (ly - 0.5) * rect.height;
+          rx = (rx - 0.5) * rect.width;
+          ry = (ry - 0.5) * rect.height;
+        }
+        this._renderer.effect = ctx.createLinearGradient(lx, ly, rx, ry);
+        for (let i = 0; i < this.stops.length; i++) {
+          const stop = this.stops[i];
+          this._renderer.effect.addColorStop(stop._offset, stop._color);
+        }
+      }
+      return this.flagReset();
+    }
+  },
+  "radial-gradient": {
+    render: function(ctx, parent) {
+      if (!parent) {
+        return;
+      }
+      this._update();
+      if (!this._renderer.effect || this._flagCenter || this._flagFocal || this._flagRadius || this._flagStops || this._flagUnits) {
+        let rect;
+        let cx = this.center._x;
+        let cy = this.center._y;
+        let fx = this.focal._x;
+        let fy = this.focal._y;
+        let radius = this._radius;
+        if (/objectBoundingBox/i.test(this._units)) {
+          rect = parent.getBoundingClientRect(true);
+          cx = (cx - 0.5) * rect.width * 0.5;
+          cy = (cy - 0.5) * rect.height * 0.5;
+          fx = (fx - 0.5) * rect.width * 0.5;
+          fy = (fy - 0.5) * rect.height * 0.5;
+          radius *= Math.min(rect.width, rect.height);
+        }
+        this._renderer.effect = ctx.createRadialGradient(
+          cx,
+          cy,
+          0,
+          fx,
+          fy,
+          radius
+        );
+        for (let i = 0; i < this.stops.length; i++) {
+          const stop = this.stops[i];
+          this._renderer.effect.addColorStop(stop._offset, stop._color);
+        }
+      }
+      return this.flagReset();
+    }
+  },
+  texture: {
+    render: function(ctx) {
+      this._update();
+      const image = this.image;
+      if (!this._renderer.effect || (this._flagLoaded || this._flagImage || this._flagVideo || this._flagRepeat) && this.loaded) {
+        this._renderer.effect = ctx.createPattern(this.image, this._repeat);
+      }
+      if (this._flagOffset || this._flagLoaded || this._flagScale) {
+        if (!(this._renderer.offset instanceof Vector)) {
+          this._renderer.offset = new Vector();
+        }
+        this._renderer.offset.x = -this._offset.x;
+        this._renderer.offset.y = -this._offset.y;
+        if (image) {
+          this._renderer.offset.x += image.width / 2;
+          this._renderer.offset.y += image.height / 2;
+          if (this._scale instanceof Vector) {
+            this._renderer.offset.x *= this._scale.x;
+            this._renderer.offset.y *= this._scale.y;
+          } else {
+            this._renderer.offset.x *= this._scale;
+            this._renderer.offset.y *= this._scale;
+          }
+        }
+      }
+      if (this._flagScale || this._flagLoaded) {
+        if (!(this._renderer.scale instanceof Vector)) {
+          this._renderer.scale = new Vector();
+        }
+        if (this._scale instanceof Vector) {
+          this._renderer.scale.copy(this._scale);
+        } else {
+          this._renderer.scale.set(this._scale, this._scale);
+        }
+      }
+      return this.flagReset();
+    }
+  },
+  renderSvgArcCommand: function(ctx, ax, ay, rx, ry, largeArcFlag, sweepFlag, xAxisRotation, x, y) {
+    xAxisRotation = xAxisRotation * Math.PI / 180;
+    rx = abs(rx);
+    ry = abs(ry);
+    const dx2 = (ax - x) / 2;
+    const dy2 = (ay - y) / 2;
+    const x1p = cos6(xAxisRotation) * dx2 + sin6(xAxisRotation) * dy2;
+    const y1p = -sin6(xAxisRotation) * dx2 + cos6(xAxisRotation) * dy2;
+    const x1ps = x1p * x1p;
+    const y1ps = y1p * y1p;
+    let rxs = rx * rx;
+    let rys = ry * ry;
+    const cr = x1ps / rxs + y1ps / rys;
+    if (cr > 1) {
+      const s = sqrt(cr);
+      rx = s * rx;
+      ry = s * ry;
+      rxs = rx * rx;
+      rys = ry * ry;
+    }
+    const dq = rxs * y1ps + rys * x1ps;
+    const pq = (rxs * rys - dq) / dq;
+    let q = sqrt(max4(0, pq));
+    if (largeArcFlag === sweepFlag)
+      q = -q;
+    const cxp = q * rx * y1p / ry;
+    const cyp = -q * ry * x1p / rx;
+    const cx = cos6(xAxisRotation) * cxp - sin6(xAxisRotation) * cyp + (ax + x) / 2;
+    const cy = sin6(xAxisRotation) * cxp + cos6(xAxisRotation) * cyp + (ay + y) / 2;
+    const startAngle = svgAngle(1, 0, (x1p - cxp) / rx, (y1p - cyp) / ry);
+    const delta = svgAngle(
+      (x1p - cxp) / rx,
+      (y1p - cyp) / ry,
+      (-x1p - cxp) / rx,
+      (-y1p - cyp) / ry
+    ) % TWO_PI;
+    const endAngle = startAngle + delta;
+    const clockwise = sweepFlag === 0;
+    renderArcEstimate(
+      ctx,
+      cx,
+      cy,
+      rx,
+      ry,
+      startAngle,
+      endAngle,
+      clockwise,
+      xAxisRotation
+    );
+  }
+};
+var Renderer = class extends Events {
+  constructor(params) {
+    super();
+    const smoothing = params.smoothing !== false;
+    this.domElement = params.domElement || document.createElement("canvas");
+    this.ctx = this.domElement.getContext("2d");
+    this.overdraw = params.overdraw || false;
+    if (typeof this.ctx.imageSmoothingEnabled !== "undefined") {
+      this.ctx.imageSmoothingEnabled = smoothing;
+    }
+    this.scene = new Group();
+    this.scene.parent = this;
+  }
+  setSize(width, height, ratio) {
+    this.width = width;
+    this.height = height;
+    this.ratio = typeof ratio === "undefined" ? getRatio(this.ctx) : ratio;
+    this.domElement.width = width * this.ratio;
+    this.domElement.height = height * this.ratio;
+    if (this.domElement.style) {
+      _.extend(this.domElement.style, {
+        width: width + "px",
+        height: height + "px"
+      });
+    }
+    return this.trigger(Events.Types.resize, width, height, ratio);
+  }
+  render() {
+    const isOne = this.ratio === 1;
+    if (!isOne) {
+      this.ctx.save();
+      this.ctx.scale(this.ratio, this.ratio);
+    }
+    if (!this.overdraw) {
+      this.ctx.clearRect(0, 0, this.width, this.height);
+    }
+    canvas2.group.render.call(this.scene, this.ctx);
+    if (!isOne) {
+      this.ctx.restore();
+    }
+    return this;
+  }
+};
+__publicField(Renderer, "Utils", canvas2);
+function renderArcEstimate(ctx, ox, oy, rx, ry, startAngle, endAngle, clockwise, xAxisRotation) {
+  const delta = endAngle - startAngle;
+  const epsilon = Curve.Tolerance.epsilon;
+  const samePoints = Math.abs(delta) < epsilon;
+  let deltaAngle = mod(delta, TWO_PI);
+  if (deltaAngle < epsilon) {
+    if (samePoints) {
+      deltaAngle = 0;
+    } else {
+      deltaAngle = TWO_PI;
+    }
+  }
+  if (clockwise === true && !samePoints) {
+    if (deltaAngle === TWO_PI) {
+      deltaAngle = -TWO_PI;
+    } else {
+      deltaAngle = deltaAngle - TWO_PI;
+    }
+  }
+  for (let i = 0; i < Constants.Resolution; i++) {
+    const t = i / (Constants.Resolution - 1);
+    const angle = startAngle + t * deltaAngle;
+    let x = ox + rx * Math.cos(angle);
+    let y = oy + ry * Math.sin(angle);
+    if (xAxisRotation !== 0) {
+      const cos7 = Math.cos(xAxisRotation);
+      const sin7 = Math.sin(xAxisRotation);
+      const tx = x - ox;
+      const ty = y - oy;
+      x = tx * cos7 - ty * sin7 + ox;
+      y = tx * sin7 + ty * cos7 + oy;
+    }
+    ctx.lineTo(x, y);
+  }
+}
+function svgAngle(ux, uy, vx, vy) {
+  const dot = ux * vx + uy * vy;
+  const len = sqrt(ux * ux + uy * uy) * sqrt(vx * vx + vy * vy);
+  let ang = acos(max4(-1, min4(1, dot / len)));
+  if (ux * vy - uy * vx < 0) {
+    ang = -ang;
+  }
+  return ang;
+}
+function isDefaultMatrix(m) {
+  return m[0] == 1 && m[3] == 0 && m[1] == 0 && m[4] == 1 && m[2] == 0 && m[5] == 0;
 }
 
 // src/renderers/svg.js
@@ -10876,7 +11056,7 @@ var Utils = _.extend(
     xhr
   },
   _,
-  CanvasShim,
+  CanvasPolyfill,
   curves_exports,
   math_exports
 );

@@ -390,8 +390,8 @@ Copy the properties of one [Two.Stop](/docs/effects/stop/) onto another.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/stop.js#L112">
-    stop.js:112
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/stop.js#L118">
+    stop.js:118
   </a>
 
 </div>
@@ -450,8 +450,8 @@ Create a new instance of [Two.Stop](/docs/effects/stop/) with the same propertie
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/stop.js#L131">
-    stop.js:131
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/stop.js#L137">
+    stop.js:137
   </a>
 
 </div>
@@ -503,8 +503,8 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/stop.js#L156">
-    stop.js:156
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/stop.js#L162">
+    stop.js:162
   </a>
 
 </div>

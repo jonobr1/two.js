@@ -941,10 +941,9 @@ export class Path extends Shape {
                 v.command = Commands.line;
               }
             });
-          } else if (closed) {
-            points.push(new Anchor(a.x, a.y));
           }
 
+          points.push(new Anchor(a.x, a.y));
           points[points.length - 1].command = closed
             ? Commands.close
             : Commands.line;

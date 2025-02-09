@@ -286,8 +286,8 @@ Copy the properties of one [Two.LinearGradient](/docs/effects/linear-gradient/) 
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/linear-gradient.js#L84">
-    linear-gradient.js:84
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/linear-gradient.js#L90">
+    linear-gradient.js:90
   </a>
 
 </div>
@@ -346,8 +346,8 @@ Create a new instance of [Two.LinearGradient](/docs/effects/linear-gradient/) wi
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/linear-gradient.js#L109">
-    linear-gradient.js:109
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/linear-gradient.js#L112">
+    linear-gradient.js:112
   </a>
 
 </div>
@@ -399,8 +399,8 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/linear-gradient.js#L144">
-    linear-gradient.js:144
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/linear-gradient.js#L147">
+    linear-gradient.js:147
   </a>
 
 </div>

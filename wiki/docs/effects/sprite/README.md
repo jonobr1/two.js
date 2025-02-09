@@ -430,8 +430,8 @@ Copy the properties of one [Two.Sprite](/docs/effects/sprite/) onto another.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/sprite.js#L233">
-    sprite.js:233
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/sprite.js#L239">
+    sprite.js:239
   </a>
 
 </div>
@@ -484,8 +484,8 @@ Initiate animation playback of a [Two.Sprite](/docs/effects/sprite/).
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/sprite.js#L250">
-    sprite.js:250
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/sprite.js#L258">
+    sprite.js:258
   </a>
 
 </div>
@@ -529,8 +529,8 @@ Halt animation playback of a [Two.Sprite](/docs/effects/sprite/).
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/sprite.js#L284">
-    sprite.js:284
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/sprite.js#L292">
+    sprite.js:292
   </a>
 
 </div>
@@ -574,8 +574,8 @@ Halt animation playback of a [Two.Sprite](/docs/effects/sprite/) and set the cur
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/sprite.js#L294">
-    sprite.js:294
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/sprite.js#L302">
+    sprite.js:302
   </a>
 
 </div>
@@ -634,8 +634,8 @@ Create a new instance of [Two.Sprite](/docs/effects/sprite/) with the same prope
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/sprite.js#L306">
-    sprite.js:306
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/sprite.js#L314">
+    sprite.js:314
   </a>
 
 </div>
@@ -687,8 +687,8 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/sprite.js#L338">
-    sprite.js:338
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/sprite.js#L346">
+    sprite.js:346
   </a>
 
 </div>

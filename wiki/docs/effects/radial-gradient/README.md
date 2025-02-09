@@ -344,8 +344,8 @@ Copy the properties of one [Two.RadialGradient](/docs/effects/radial-gradient/) 
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/radial-gradient.js#L111">
-    radial-gradient.js:111
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/radial-gradient.js#L117">
+    radial-gradient.js:117
   </a>
 
 </div>
@@ -404,8 +404,8 @@ Create a new instance of [Two.RadialGradient](/docs/effects/radial-gradient/) wi
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/radial-gradient.js#L138">
-    radial-gradient.js:138
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/radial-gradient.js#L143">
+    radial-gradient.js:143
   </a>
 
 </div>
@@ -457,8 +457,8 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/radial-gradient.js#L174">
-    radial-gradient.js:174
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/radial-gradient.js#L179">
+    radial-gradient.js:179
   </a>
 
 </div>

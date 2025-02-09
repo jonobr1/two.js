@@ -74,8 +74,8 @@ A list of properties that are on every [Two.ArcSegment](/docs/shapes/arc-segment
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/arc-segment.js#L126">
-    arc-segment.js:126
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/arc-segment.js#L128">
+    arc-segment.js:128
   </a>
 
 </div>
@@ -134,8 +134,8 @@ Create a new [Two.ArcSegment](/docs/shapes/arc-segment/) from an object notation
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/arc-segment.js#L132">
-    arc-segment.js:132
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/arc-segment.js#L134">
+    arc-segment.js:134
   </a>
 
 </div>
@@ -191,8 +191,8 @@ The size of the inner radius of the arc segment.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/arc-segment.js#L84">
-    arc-segment.js:84
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/arc-segment.js#L86">
+    arc-segment.js:86
   </a>
 
 </div>
@@ -238,8 +238,8 @@ The size of the outer radius of the arc segment.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/arc-segment.js#L92">
-    arc-segment.js:92
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/arc-segment.js#L94">
+    arc-segment.js:94
   </a>
 
 </div>
@@ -285,8 +285,8 @@ The angle of one side for the arc segment.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/arc-segment.js#L100">
-    arc-segment.js:100
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/arc-segment.js#L102">
+    arc-segment.js:102
   </a>
 
 </div>
@@ -332,8 +332,8 @@ The angle of the other side for the arc segment.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/arc-segment.js#L108">
-    arc-segment.js:108
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/arc-segment.js#L110">
+    arc-segment.js:110
   </a>
 
 </div>
@@ -384,8 +384,8 @@ Copy the properties of one [Two.ArcSegment](/docs/shapes/arc-segment/) onto anot
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/arc-segment.js#L144">
-    arc-segment.js:144
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/arc-segment.js#L152">
+    arc-segment.js:152
   </a>
 
 </div>
@@ -444,8 +444,8 @@ Create a new instance of [Two.ArcSegment](/docs/shapes/arc-segment/) with the sa
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/arc-segment.js#L329">
-    arc-segment.js:329
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/arc-segment.js#L337">
+    arc-segment.js:337
   </a>
 
 </div>
@@ -497,8 +497,8 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/arc-segment.js#L367">
-    arc-segment.js:367
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/arc-segment.js#L375">
+    arc-segment.js:375
   </a>
 
 </div>

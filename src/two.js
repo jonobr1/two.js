@@ -1,6 +1,6 @@
 // Utils
 
-import { CanvasShim } from './utils/canvas-shim.js';
+import { CanvasPolyfill } from './utils/canvas-polyfill.js';
 import * as Curves from './utils/curves.js';
 import { dom } from './utils/dom.js';
 import { TwoError } from './utils/error.js';
@@ -63,7 +63,7 @@ const Utils = _.extend(
     xhr,
   },
   _,
-  CanvasShim,
+  CanvasPolyfill,
   Curves,
   math
 );
