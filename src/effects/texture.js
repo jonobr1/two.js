@@ -299,7 +299,7 @@ export class Texture extends Element {
   }
 
   /**
-   * @name Two.Text.Register
+   * @name Two.Texture.Register
    * @interface
    * @description A collection of functions to register different types of textures. Used internally by a {@link Two.Texture}.
    */

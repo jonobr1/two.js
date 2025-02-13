@@ -141,6 +141,16 @@ export class Shape extends Element {
     this.skewY = 0;
   }
 
+  static Properties = [
+    'position',
+    'rotation',
+    'scale',
+    'skewX',
+    'skewY',
+    'matrix',
+    'worldMatrix',
+  ];
+
   /**
    * @name Two.Shape.fromObject
    * @function

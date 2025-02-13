@@ -144,7 +144,7 @@ export class RadialGradient extends Gradient {
    * @name Two.RadialGradient#clone
    * @function
    * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
-   * @returns {Two.Gradient}
+   * @returns {Two.RadialGradient}
    * @description Create a new instance of {@link Two.RadialGradient} with the same properties of the current path.
    */
   clone(parent) {

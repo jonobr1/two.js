@@ -1,7 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2012 - 2024 @jonobr1 / http://jono.fyi
+Copyright (c) 2012 - 2025 @jonobr1 / http://jono.fyi
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -767,7 +767,7 @@ var Two = (() => {
       canvas: "CanvasRenderer"
     },
     Version: "v0.8.16",
-    PublishDate: "2025-02-13T20:00:23.550Z",
+    PublishDate: "2025-02-13T20:00:59.976Z",
     Identifier: "two-",
     Resolution: 12,
     AutoCalculateImportedMatrices: true,
@@ -1407,7 +1407,7 @@ var Two = (() => {
   };
 
   // src/element.js
-  var Element = class extends Events {
+  var _Element = class extends Events {
     _flagId = false;
     _flagClassName = false;
     _renderer = {};
@@ -1421,7 +1421,7 @@ var Two = (() => {
       }
     }
     static fromObject(obj) {
-      const elem = new Element().copy(obj);
+      const elem = new _Element().copy(obj);
       if ("id" in obj) {
         elem.id = obj.id;
       }
@@ -1429,6 +1429,7 @@ var Two = (() => {
     }
     flagReset() {
       this._flagId = this._flagClassName = false;
+      return this;
     }
     copy(element) {
       this.renderer.type = element.renderer.type;
@@ -1443,6 +1444,8 @@ var Two = (() => {
       };
     }
   };
+  var Element = _Element;
+  __publicField(Element, "Properties", ["renderer", "id", "className"]);
   var proto3 = {
     renderer: {
       enumerable: false,
@@ -2748,7 +2751,7 @@ var Two = (() => {
   setMatrix(Matrix2);
 
   // src/shape.js
-  var Shape = class extends Element {
+  var _Shape = class extends Element {
     _flagMatrix = true;
     _flagScale = false;
     _matrix = null;
@@ -2774,7 +2777,7 @@ var Two = (() => {
       this.skewY = 0;
     }
     static fromObject(obj) {
-      const shape = new Shape().copy(obj);
+      const shape = new _Shape().copy(obj);
       if ("id" in obj) {
         shape.id = obj.id;
       }
@@ -2831,7 +2834,7 @@ var Two = (() => {
       return this;
     }
     clone(parent) {
-      const clone = new Shape();
+      const clone = new _Shape();
       clone.position.copy(this.position);
       clone.rotation = this.rotation;
       clone.scale = this.scale;
@@ -2882,6 +2885,16 @@ var Two = (() => {
       return this;
     }
   };
+  var Shape = _Shape;
+  __publicField(Shape, "Properties", [
+    "position",
+    "rotation",
+    "scale",
+    "skewX",
+    "skewY",
+    "matrix",
+    "worldMatrix"
+  ]);
   var proto9 = {
     position: {
       enumerable: true,
@@ -11526,6 +11539,7 @@ var Two = (() => {
   __publicField(Two, "Matrix", Matrix2);
   __publicField(Two, "Path", Path);
   __publicField(Two, "Registry", Registry);
+  __publicField(Two, "Element", Element);
   __publicField(Two, "Shape", Shape);
   __publicField(Two, "Text", Text);
   __publicField(Two, "Vector", Vector);
