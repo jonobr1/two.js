@@ -58,6 +58,8 @@ export class Element extends Events {
     }
   }
 
+  static Properties = ['renderer', 'id', 'className'];
+
   /**
    * @name Two.Element.fromObject
    * @function
@@ -81,6 +83,7 @@ export class Element extends Events {
    */
   flagReset() {
     this._flagId = this._flagClassName = false;
+    return this;
   }
 
   copy(element) {

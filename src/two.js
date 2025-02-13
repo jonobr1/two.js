@@ -20,6 +20,7 @@ import { Group } from './group.js';
 import { Matrix } from './matrix.js';
 import { Path } from './path.js';
 import { Registry } from './registry.js';
+import { Element } from 'element.js';
 import { Shape } from './shape.js';
 import { Text } from './text.js';
 import { Vector } from './vector.js';
@@ -250,7 +251,10 @@ export default class Two {
       _.extend(this.renderer.domElement.style, {
         display: 'block',
       });
-    } else if (!_.isElement(params.domElement)) {
+    } else if (
+      typeof params.width === 'number' &&
+      typeof params.height === 'number'
+    ) {
       this.renderer.setSize(params.width, params.height, this.ratio);
       this.width = params.width;
       this.height = params.height;
@@ -327,6 +331,7 @@ export default class Two {
   static Matrix = Matrix;
   static Path = Path;
   static Registry = Registry;
+  static Element = Element;
   static Shape = Shape;
   static Text = Text;
   static Vector = Vector;
