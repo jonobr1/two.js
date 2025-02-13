@@ -783,7 +783,7 @@ var Constants = {
     canvas: "CanvasRenderer"
   },
   Version: "v0.8.16",
-  PublishDate: "2025-02-09T06:10:17.722Z",
+  PublishDate: "2025-02-13T20:00:59.976Z",
   Identifier: "two-",
   Resolution: 12,
   AutoCalculateImportedMatrices: true,
@@ -11129,7 +11129,7 @@ var _Two = class {
       _.extend(this.renderer.domElement.style, {
         display: "block"
       });
-    } else if (!_.isElement(params.domElement)) {
+    } else if (typeof params.width === "number" && typeof params.height === "number") {
       this.renderer.setSize(params.width, params.height, this.ratio);
       this.width = params.width;
       this.height = params.height;

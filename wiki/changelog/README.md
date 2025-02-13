@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file. The format 
 
 ## Nightly
 
+- Add `Two.CanvasRenderer` compatiblity with [skia-canvas](https://skia-canvas.org/)
 - `Two.Path.subdivide` accurately amends the final vertices in the updated list
 - `Two.ZUI.reset` updates the surfaces to be reflect reset orientation
 - `Two.Group.getBoundingClientRect(shallow)` correctly infers min and max values to calculate dimensions correctly
