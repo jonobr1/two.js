@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file. The format 
 
 ## Nightly
 
+- Improved TypeScript types (albeit raising errors because of how expressive Two.js / JavaScript is)
 - Add `Two.CanvasRenderer` compatiblity with [skia-canvas](https://skia-canvas.org/)
 - `Two.Path.subdivide` accurately amends the final vertices in the updated list
 - `Two.ZUI.reset` updates the surfaces to be reflect reset orientation
