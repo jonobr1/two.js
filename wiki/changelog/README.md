@@ -11,7 +11,9 @@ All notable changes to this project will be documented in this file. The format 
 
 <carbon-ads />
 
-## Nightly
+## Feb 13, 2025 v0.8.16
+
+<h3 class="visible">Feb 13, 2025</h3><version-link v="v0.8.16" />
 
 - Improved TypeScript types (albeit raising errors because of how expressive Two.js / JavaScript is)
 - Add `Two.CanvasRenderer` compatiblity with [skia-canvas](https://skia-canvas.org/)
