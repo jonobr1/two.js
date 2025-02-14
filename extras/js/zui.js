@@ -216,6 +216,7 @@
       this.zoom = 0;
       this.scale = 1.0;
       this.surfaceMatrix.identity();
+      this.updateSurface();
       return this;
     }
 

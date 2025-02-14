@@ -1,7 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2012 - 2024 @jonobr1 / http://jono.fyi
+Copyright (c) 2012 - 2025 @jonobr1 / http://jono.fyi
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -766,8 +766,8 @@ var Two = (() => {
       svg: "SVGRenderer",
       canvas: "CanvasRenderer"
     },
-    Version: "v0.8.15",
-    PublishDate: "2025-01-01T01:30:08.872Z",
+    Version: "v0.8.16",
+    PublishDate: "2025-02-13T23:13:24.615Z",
     Identifier: "two-",
     Resolution: 12,
     AutoCalculateImportedMatrices: true,
@@ -792,34 +792,186 @@ var Two = (() => {
       [0, 0.7745966692414834],
       [0.33998104358485626, 0.8611363115940526],
       [0, 0.5384693101056831, 0.906179845938664],
-      [0.2386191860831969, 0.6612093864662645, 0.932469514203152],
-      [0, 0.4058451513773972, 0.7415311855993945, 0.9491079123427585],
-      [0.1834346424956498, 0.525532409916329, 0.7966664774136267, 0.9602898564975363],
-      [0, 0.3242534234038089, 0.6133714327005904, 0.8360311073266358, 0.9681602395076261],
-      [0.14887433898163122, 0.4333953941292472, 0.6794095682990244, 0.8650633666889845, 0.9739065285171717],
-      [0, 0.26954315595234496, 0.5190961292068118, 0.7301520055740494, 0.8870625997680953, 0.978228658146057],
-      [0.1252334085114689, 0.3678314989981802, 0.5873179542866175, 0.7699026741943047, 0.9041172563704749, 0.9815606342467192],
-      [0, 0.2304583159551348, 0.44849275103644687, 0.6423493394403402, 0.8015780907333099, 0.9175983992229779, 0.9841830547185881],
-      [0.10805494870734367, 0.31911236892788974, 0.5152486363581541, 0.6872929048116855, 0.827201315069765, 0.9284348836635735, 0.9862838086968123],
-      [0, 0.20119409399743451, 0.3941513470775634, 0.5709721726085388, 0.7244177313601701, 0.8482065834104272, 0.937273392400706, 0.9879925180204854],
-      [0.09501250983763744, 0.2816035507792589, 0.45801677765722737, 0.6178762444026438, 0.755404408355003, 0.8656312023878318, 0.9445750230732326, 0.9894009349916499]
+      [
+        0.2386191860831969,
+        0.6612093864662645,
+        0.932469514203152
+      ],
+      [
+        0,
+        0.4058451513773972,
+        0.7415311855993945,
+        0.9491079123427585
+      ],
+      [
+        0.1834346424956498,
+        0.525532409916329,
+        0.7966664774136267,
+        0.9602898564975363
+      ],
+      [
+        0,
+        0.3242534234038089,
+        0.6133714327005904,
+        0.8360311073266358,
+        0.9681602395076261
+      ],
+      [
+        0.14887433898163122,
+        0.4333953941292472,
+        0.6794095682990244,
+        0.8650633666889845,
+        0.9739065285171717
+      ],
+      [
+        0,
+        0.26954315595234496,
+        0.5190961292068118,
+        0.7301520055740494,
+        0.8870625997680953,
+        0.978228658146057
+      ],
+      [
+        0.1252334085114689,
+        0.3678314989981802,
+        0.5873179542866175,
+        0.7699026741943047,
+        0.9041172563704749,
+        0.9815606342467192
+      ],
+      [
+        0,
+        0.2304583159551348,
+        0.44849275103644687,
+        0.6423493394403402,
+        0.8015780907333099,
+        0.9175983992229779,
+        0.9841830547185881
+      ],
+      [
+        0.10805494870734367,
+        0.31911236892788974,
+        0.5152486363581541,
+        0.6872929048116855,
+        0.827201315069765,
+        0.9284348836635735,
+        0.9862838086968123
+      ],
+      [
+        0,
+        0.20119409399743451,
+        0.3941513470775634,
+        0.5709721726085388,
+        0.7244177313601701,
+        0.8482065834104272,
+        0.937273392400706,
+        0.9879925180204854
+      ],
+      [
+        0.09501250983763744,
+        0.2816035507792589,
+        0.45801677765722737,
+        0.6178762444026438,
+        0.755404408355003,
+        0.8656312023878318,
+        0.9445750230732326,
+        0.9894009349916499
+      ]
     ],
     weights: [
       [1],
       [0.8888888888888888, 0.5555555555555556],
       [0.6521451548625461, 0.34785484513745385],
-      [0.5688888888888889, 0.47862867049936647, 0.23692688505618908],
-      [0.46791393457269104, 0.3607615730481386, 0.17132449237917036],
-      [0.4179591836734694, 0.3818300505051189, 0.27970539148927664, 0.1294849661688697],
-      [0.362683783378362, 0.31370664587788727, 0.22238103445337448, 0.10122853629037626],
-      [0.3302393550012598, 0.31234707704000286, 0.26061069640293544, 0.1806481606948574, 0.08127438836157441],
-      [0.29552422471475287, 0.26926671930999635, 0.21908636251598204, 0.1494513491505806, 0.06667134430868814],
-      [0.2729250867779006, 0.26280454451024665, 0.23319376459199048, 0.18629021092773426, 0.1255803694649046, 0.05566856711617366],
-      [0.24914704581340277, 0.2334925365383548, 0.20316742672306592, 0.16007832854334622, 0.10693932599531843, 0.04717533638651183],
-      [0.2325515532308739, 0.22628318026289723, 0.2078160475368885, 0.17814598076194574, 0.13887351021978725, 0.09212149983772845, 0.04048400476531588],
-      [0.2152638534631578, 0.2051984637212956, 0.18553839747793782, 0.15720316715819355, 0.12151857068790319, 0.08015808715976021, 0.03511946033175186],
-      [0.2025782419255613, 0.19843148532711158, 0.1861610000155622, 0.16626920581699392, 0.13957067792615432, 0.10715922046717194, 0.07036604748810812, 0.03075324199611727],
-      [0.1894506104550685, 0.18260341504492358, 0.16915651939500254, 0.14959598881657674, 0.12462897125553388, 0.09515851168249279, 0.062253523938647894, 0.027152459411754096]
+      [
+        0.5688888888888889,
+        0.47862867049936647,
+        0.23692688505618908
+      ],
+      [
+        0.46791393457269104,
+        0.3607615730481386,
+        0.17132449237917036
+      ],
+      [
+        0.4179591836734694,
+        0.3818300505051189,
+        0.27970539148927664,
+        0.1294849661688697
+      ],
+      [
+        0.362683783378362,
+        0.31370664587788727,
+        0.22238103445337448,
+        0.10122853629037626
+      ],
+      [
+        0.3302393550012598,
+        0.31234707704000286,
+        0.26061069640293544,
+        0.1806481606948574,
+        0.08127438836157441
+      ],
+      [
+        0.29552422471475287,
+        0.26926671930999635,
+        0.21908636251598204,
+        0.1494513491505806,
+        0.06667134430868814
+      ],
+      [
+        0.2729250867779006,
+        0.26280454451024665,
+        0.23319376459199048,
+        0.18629021092773426,
+        0.1255803694649046,
+        0.05566856711617366
+      ],
+      [
+        0.24914704581340277,
+        0.2334925365383548,
+        0.20316742672306592,
+        0.16007832854334622,
+        0.10693932599531843,
+        0.04717533638651183
+      ],
+      [
+        0.2325515532308739,
+        0.22628318026289723,
+        0.2078160475368885,
+        0.17814598076194574,
+        0.13887351021978725,
+        0.09212149983772845,
+        0.04048400476531588
+      ],
+      [
+        0.2152638534631578,
+        0.2051984637212956,
+        0.18553839747793782,
+        0.15720316715819355,
+        0.12151857068790319,
+        0.08015808715976021,
+        0.03511946033175186
+      ],
+      [
+        0.2025782419255613,
+        0.19843148532711158,
+        0.1861610000155622,
+        0.16626920581699392,
+        0.13957067792615432,
+        0.10715922046717194,
+        0.07036604748810812,
+        0.03075324199611727
+      ],
+      [
+        0.1894506104550685,
+        0.18260341504492358,
+        0.16915651939500254,
+        0.14959598881657674,
+        0.12462897125553388,
+        0.09515851168249279,
+        0.062253523938647894,
+        0.027152459411754096
+      ]
     ]
   };
   function getComponentOnCubicBezier(t, a, b, c, d) {
@@ -852,12 +1004,7 @@ var Two = (() => {
       const dx = (ax * t + bx) * t + cx, dy = (ay * t + by) * t + cy;
       return Math.sqrt(dx * dx + dy * dy);
     }
-    return integrate(
-      integrand,
-      0,
-      1,
-      limit || Curve.RecursionLimit
-    );
+    return integrate(integrand, 0, 1, limit || Curve.RecursionLimit);
   }
   function getCurveBoundingBox(x1, y1, x2, y2, x3, y3, x4, y4) {
     const tvalues = [];
@@ -1260,7 +1407,7 @@ var Two = (() => {
   };
 
   // src/element.js
-  var Element = class extends Events {
+  var _Element = class extends Events {
     _flagId = false;
     _flagClassName = false;
     _renderer = {};
@@ -1274,7 +1421,7 @@ var Two = (() => {
       }
     }
     static fromObject(obj) {
-      const elem = new Element().copy(obj);
+      const elem = new _Element().copy(obj);
       if ("id" in obj) {
         elem.id = obj.id;
       }
@@ -1282,6 +1429,7 @@ var Two = (() => {
     }
     flagReset() {
       this._flagId = this._flagClassName = false;
+      return this;
     }
     copy(element) {
       this.renderer.type = element.renderer.type;
@@ -1296,6 +1444,8 @@ var Two = (() => {
       };
     }
   };
+  var Element = _Element;
+  __publicField(Element, "Properties", ["renderer", "id", "className"]);
   var proto3 = {
     renderer: {
       enumerable: false,
@@ -2601,7 +2751,7 @@ var Two = (() => {
   setMatrix(Matrix2);
 
   // src/shape.js
-  var Shape = class extends Element {
+  var _Shape = class extends Element {
     _flagMatrix = true;
     _flagScale = false;
     _matrix = null;
@@ -2627,7 +2777,7 @@ var Two = (() => {
       this.skewY = 0;
     }
     static fromObject(obj) {
-      const shape = new Shape().copy(obj);
+      const shape = new _Shape().copy(obj);
       if ("id" in obj) {
         shape.id = obj.id;
       }
@@ -2684,7 +2834,7 @@ var Two = (() => {
       return this;
     }
     clone(parent) {
-      const clone = new Shape();
+      const clone = new _Shape();
       clone.position.copy(this.position);
       clone.rotation = this.rotation;
       clone.scale = this.scale;
@@ -2735,6 +2885,16 @@ var Two = (() => {
       return this;
     }
   };
+  var Shape = _Shape;
+  __publicField(Shape, "Properties", [
+    "position",
+    "rotation",
+    "scale",
+    "skewX",
+    "skewY",
+    "matrix",
+    "worldMatrix"
+  ]);
   var proto9 = {
     position: {
       enumerable: true,
@@ -3234,9 +3394,8 @@ var Two = (() => {
                   v.command = Commands.line;
                 }
               });
-            } else if (closed2) {
-              points.push(new Anchor(a.x, a.y));
             }
+            points.push(new Anchor(a.x, a.y));
             points[points.length - 1].command = closed2 ? Commands.close : Commands.line;
           }
           b = a;
@@ -6186,10 +6345,10 @@ var Two = (() => {
           const [bx, by] = matrix.multiply(rect.right, rect.top);
           const [cx, cy] = matrix.multiply(rect.left, rect.bottom);
           const [dx, dy] = matrix.multiply(rect.right, rect.bottom);
-          top = min3(ay, by, cy, dy);
-          left = min3(ax, bx, cx, dx);
-          right = max3(ax, bx, cx, dx);
-          bottom = max3(ay, by, cy, dy);
+          top = min3(ay, by, cy, dy, top);
+          left = min3(ax, bx, cx, dx, left);
+          right = max3(ax, bx, cx, dx, right);
+          bottom = max3(ay, by, cy, dy, bottom);
         } else {
           top = min3(rect.top, top);
           left = min3(rect.left, left);
@@ -6648,7 +6807,9 @@ var Two = (() => {
       if (typeof name === "undefined" || typeof value === "undefined") {
         continue;
       }
-      styles[name] = value.replace(/\s/, "");
+      const trimmedName = name.replace(/\s/g, "");
+      const trimmedValue = value.replace(/\s/g, "");
+      styles[trimmedName] = trimmedValue;
     }
     return styles;
   }
@@ -6923,7 +7084,13 @@ var Two = (() => {
           break;
         case "font-size":
           if (elem instanceof Text) {
-            elem.size = value;
+            if (value.match("[a-z%]$") && !value.endsWith("px")) {
+              error = new TwoError(
+                "only pixel values are supported with the " + key + " attribute."
+              );
+              console.warn(error.name, error.message);
+            }
+            elem.size = parseFloat(value);
           }
           break;
         case "font-weight":
@@ -7553,7 +7720,12 @@ var Two = (() => {
     text: function(node, parentStyles) {
       const alignment = getAlignment(node.getAttribute("text-anchor")) || "left";
       const baseline = getBaseline(node) || "baseline";
-      const message = node.textContent;
+      let message = "";
+      if (node.childNodes.length > 0 && node.childNodes[0].tagName === "TSPAN") {
+        message = node.childNodes[0].textContent;
+      } else {
+        message = node.textContent;
+      }
       const text = new Text(message);
       applySvgAttributes.call(this, node, text, parentStyles);
       text.alignment = alignment;
@@ -10986,7 +11158,7 @@ var Two = (() => {
         _.extend(this.renderer.domElement.style, {
           display: "block"
         });
-      } else if (!_.isElement(params.domElement)) {
+      } else if (typeof params.width === "number" && typeof params.height === "number") {
         this.renderer.setSize(params.width, params.height, this.ratio);
         this.width = params.width;
         this.height = params.height;
@@ -11380,6 +11552,7 @@ var Two = (() => {
   __publicField(Two, "Matrix", Matrix2);
   __publicField(Two, "Path", Path);
   __publicField(Two, "Registry", Registry);
+  __publicField(Two, "Element", Element);
   __publicField(Two, "Shape", Shape);
   __publicField(Two, "Text", Text);
   __publicField(Two, "Vector", Vector);
