@@ -138,7 +138,7 @@ var width = 800;
 var height = 600;
 
 var canvas = createCanvas(width, height);
-Two.Utils.shim(canvas, Image);
+Two.Utils.polyfill(canvas, Image);
 
 var time = Date.now();
 

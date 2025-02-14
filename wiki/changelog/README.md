@@ -16,6 +16,7 @@ All notable changes to this project will be documented in this file. The format 
 <h3 class="visible">Feb 13, 2025</h3><version-link v="v0.8.16" />
 
 - Improved TypeScript types (albeit raising errors because of how expressive Two.js / JavaScript is)
+- Move `Two.Utils.shim` to `Two.Utils.polyfill`. Shim exists but is internal specific to remove circular dependencies
 - Add `Two.CanvasRenderer` compatiblity with [skia-canvas](https://skia-canvas.org/)
 - `Two.Path.subdivide` accurately amends the final vertices in the updated list
 - `Two.ZUI.reset` updates the surfaces to be reflect reset orientation
