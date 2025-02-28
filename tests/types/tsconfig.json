@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ES2018",
+    "module": "commonjs",
+    "lib": ["DOM", "ESNext"],
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "baseUrl": "../../",
+    "paths": {
+      "two.js": ["./types.d.ts"]
+    },
+    "types": ["jest", "node"]
+  },
+  "include": [
+    "./**/*.ts"
+  ]
+}
