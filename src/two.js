@@ -20,7 +20,7 @@ import { Group } from './group.js';
 import { Matrix } from './matrix.js';
 import { Path } from './path.js';
 import { Registry } from './registry.js';
-import { Element } from 'element.js';
+import { Element } from './element.js';
 import { Shape } from './shape.js';
 import { Text } from './text.js';
 import { Vector } from './vector.js';
