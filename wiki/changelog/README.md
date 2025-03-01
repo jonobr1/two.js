@@ -11,6 +11,10 @@ All notable changes to this project will be documented in this file. The format 
 
 <carbon-ads />
 
+## Nightly
+
+- Fixed order of operations on `Two.Shape` transformations
+
 ## Feb 13, 2025 v0.8.16
 
 <h3 class="visible">Feb 13, 2025</h3><version-link v="v0.8.16" />
