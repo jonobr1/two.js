@@ -783,7 +783,7 @@ var Constants = {
     canvas: "CanvasRenderer"
   },
   Version: "v0.8.16",
-  PublishDate: "2025-02-13T23:13:24.615Z",
+  PublishDate: "2025-03-01T01:02:12.823Z",
   Identifier: "two-",
   Resolution: 12,
   AutoCalculateImportedMatrices: true,
@@ -2881,12 +2881,12 @@ var _Shape = class extends Element {
   _update(bubbles) {
     if (!this._matrix.manual && this._flagMatrix) {
       this._matrix.identity().translate(this.position.x, this.position.y);
+      this._matrix.rotate(this.rotation);
       if (this._scale instanceof Vector) {
         this._matrix.scale(this._scale.x, this._scale.y);
       } else {
         this._matrix.scale(this._scale);
       }
-      this._matrix.rotate(this.rotation);
       this._matrix.skewX(this.skewX);
       this._matrix.skewY(this.skewY);
     }
