@@ -13,6 +13,8 @@ All notable changes to this project will be documented in this file. The format 
 
 ## Nightly
 
+- Changed name `Two.nextFrameID` to `Two.NextFrameId`
+- Improved `Two.release` method to include detaching an object's effects (e.g: `Two.Texture`, `Two.Gradient`)
 - Fixed order of operations on `Two.Shape` transformations
 
 ## Feb 13, 2025 v0.8.16
