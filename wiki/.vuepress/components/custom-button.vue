@@ -87,6 +87,10 @@
         mask-image: url(/images/source.svg);
         -webkit-mask-image: url(/images/source.svg);
       }
+      &.npm {
+        mask-image: url(/images/npm.svg);
+        -webkit-mask-image: url(/images/npm.svg);
+      }
     }
 
     .label {
