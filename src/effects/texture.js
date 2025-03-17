@@ -550,6 +550,24 @@ export class Texture extends Element {
 
     return this;
   }
+
+  /**
+   * @name Two.Gradient#dispose
+   * @function
+   * @description Detach instance from renderer including any `<defs />` or textures stored in memory.
+   */
+  dispose() {
+    // Remove gradient from SVG document
+    if ('elem' in this._renderer) {
+      const elem = this._renderer.elem;
+      elem.parentNode.removeChild(elem);
+    }
+    // Deallocate textures from the graphics card
+    if ('effect' in this._renderer) {
+      this._renderer.effect = null;
+    }
+    return this;
+  }
 }
 
 const proto = {
