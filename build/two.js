@@ -760,14 +760,14 @@ var Two = (() => {
   // src/constants.js
   var count = 0;
   var Constants = {
-    nextFrameID: null,
+    NextFrameId: null,
     Types: {
       webgl: "WebGLRenderer",
       svg: "SVGRenderer",
       canvas: "CanvasRenderer"
     },
     Version: "v0.8.16",
-    PublishDate: "2025-03-01T01:02:12.823Z",
+    PublishDate: "2025-03-17T22:04:06.522Z",
     Identifier: "two-",
     Resolution: 12,
     AutoCalculateImportedMatrices: true,
@@ -1650,6 +1650,16 @@ var Two = (() => {
       super.flagReset.call(this);
       return this;
     }
+    dispose() {
+      if ("elem" in this._renderer) {
+        const elem = this._renderer.elem;
+        elem.parentNode.removeChild(elem);
+      }
+      if ("effect" in this._renderer) {
+        this._renderer.effect = null;
+      }
+      return this;
+    }
   };
   var Texture = _Texture;
   __publicField(Texture, "Properties", ["src", "loaded", "repeat", "scale", "offset", "image"]);
@@ -2025,6 +2035,16 @@ var Two = (() => {
     flagReset() {
       this._flagSpread = this._flagUnits = this._flagStops = false;
       super.flagReset.call(this);
+      return this;
+    }
+    dispose() {
+      if ("elem" in this._renderer) {
+        const elem = this._renderer.elem;
+        elem.parentNode.removeChild(elem);
+      }
+      if ("effect" in this._renderer) {
+        this._renderer.effect = null;
+      }
       return this;
     }
   };
@@ -11195,11 +11215,17 @@ var Two = (() => {
     }
     release(obj) {
       let i, v, child;
-      if (!_.isObject(obj)) {
+      if (typeof obj === "undefined") {
         return this.release(this.scene);
       }
       if (typeof obj.unbind === "function") {
         obj.unbind();
+      }
+      if ("unbind" in obj.fill) {
+        obj.fill.unbind();
+      }
+      if ("unbind" in obj.stroke) {
+        obj.stroke.unbind();
       }
       if (obj.vertices) {
         if (typeof obj.vertices.unbind === "function") {
@@ -11536,7 +11562,7 @@ var Two = (() => {
     }
   };
   var Two = _Two;
-  __publicField(Two, "nextFrameID", Constants.nextFrameID);
+  __publicField(Two, "NextFrameId", Constants.NextFrameId);
   __publicField(Two, "Types", Constants.Types);
   __publicField(Two, "Version", Constants.Version);
   __publicField(Two, "PublishDate", Constants.PublishDate);
@@ -11607,7 +11633,7 @@ var Two = (() => {
         t.update();
       }
     }
-    Two.nextFrameID = raf(loop);
+    Two.NextFrameId = raf(loop);
   }
   raf.init = function() {
     loop();
