@@ -11,7 +11,9 @@ All notable changes to this project will be documented in this file. The format 
 
 <carbon-ads />
 
-## Nightly
+## Mar 17, 2025 v0.8.17
+
+<h3 class="visible">Mar 17, 2025</h3><version-link v="v0.8.17" />
 
 - Improved and updated TypeScript types based on public / private properties and new latest Two.js features
 - Added `Two.Gradient.dispose` and `Two.Texture.dispose` to properly remove effects from scenegraphs
