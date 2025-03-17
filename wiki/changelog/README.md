@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file. The format 
 
 ## Nightly
 
+- Added `Two.Gradient.dispose` and `Two.Texture.dispose` to properly remove effects from scenegraphs
 - Changed name `Two.nextFrameID` to `Two.NextFrameId`
 - Improved `Two.release` method to include detaching an object's effects (e.g: `Two.Texture`, `Two.Gradient`)
 - Fixed order of operations on `Two.Shape` transformations
