@@ -368,7 +368,7 @@ Copy the properties of one [Two.RadialGradient](/docs/effects/radial-gradient/) 
 
 <div class="returns">
 
-__Returns__: Two.Gradient
+__Returns__: Two.RadialGradient
 
 
 

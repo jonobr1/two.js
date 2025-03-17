@@ -99,6 +99,12 @@ Various examples of how to use different features of Two.js with associated tags
   tags="import, vector, mouse, ui, vertices, points, layers, group" />
 
 <example-card
+  title="Transform Shape"
+  href="https://codepen.io/jonobr1/pen/QWqMmma"
+  src="https://shots.codepen.io/username/pen/QWqMmma-1280.webp"
+  tags="helper, drag, ui, mouse, translate, rotate, scale" />
+
+<example-card
   title="Watch Face"
   href="https://codepen.io/jonobr1/pen/MWEzMGv"
   src="https://shots.codepen.io/jonobr1/pen/MWEzMGv-512.jpg"

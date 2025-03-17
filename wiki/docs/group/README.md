@@ -1455,7 +1455,7 @@ Recursively search for id. Returns the first element found.
 
 <div class="returns">
 
-__Returns__: Array.<Two.Shape>
+__Returns__: Array.\<Two.Shape\>
 
 
 - Or empty array if nothing is found.
@@ -1510,7 +1510,7 @@ Recursively search for classes. Returns an array of matching elements.
 
 <div class="returns">
 
-__Returns__: Array.<Two.Shape>
+__Returns__: Array.\<Two.Shape\>
 
 
 - Empty array if nothing is found.

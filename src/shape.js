@@ -311,6 +311,7 @@ export class Shape extends Element {
   _update(bubbles) {
     if (!this._matrix.manual && this._flagMatrix) {
       this._matrix.identity().translate(this.position.x, this.position.y);
+      this._matrix.rotate(this.rotation);
 
       if (this._scale instanceof Vector) {
         this._matrix.scale(this._scale.x, this._scale.y);
@@ -318,7 +319,6 @@ export class Shape extends Element {
         this._matrix.scale(this._scale);
       }
 
-      this._matrix.rotate(this.rotation);
       this._matrix.skewX(this.skewX);
       this._matrix.skewY(this.skewY);
     }

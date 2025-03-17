@@ -517,7 +517,7 @@ Convenience function to set [Two.Texture.image](/docs/effects/texture/#image) pr
 
 ## Register
 
-<h2 class="longname" aria-hidden="true"><a href="#Register"><span class="prefix">Two.Text.</span><span class="shortname">Register</span></a></h2>
+<h2 class="longname" aria-hidden="true"><a href="#Register"><span class="prefix">Two.Texture.</span><span class="shortname">Register</span></a></h2>
 
 
 
@@ -637,8 +637,8 @@ Cached method to let renderers know `offset` has been updated on a [Two.Texture]
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L650">
-    texture.js:650
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L668">
+    texture.js:668
   </a>
 
 </div>
@@ -682,8 +682,8 @@ Cached method to let renderers know `scale` has been updated on a [Two.Texture](
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L659">
-    texture.js:659
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L677">
+    texture.js:677
   </a>
 
 </div>
@@ -1103,6 +1103,51 @@ Return a JSON compatible plain object that represents the texture.
 
   <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L483">
     texture.js:483
+  </a>
+
+</div>
+
+
+
+
+</div>
+
+
+
+<div class="instance function ">
+
+## dispose
+
+<h2 class="longname" aria-hidden="true"><a href="#dispose"><span class="prefix">Two.Gradient.</span><span class="shortname">dispose</span></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="description">
+
+Detach instance from renderer including any `<defs />` or textures stored in memory.
+
+</div>
+
+
+
+
+
+<div class="meta">
+
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L554">
+    texture.js:554
   </a>
 
 </div>

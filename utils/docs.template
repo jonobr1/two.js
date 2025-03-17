@@ -52,7 +52,7 @@ _Overloaded_
 <% if (item.returns && item.returns.length == 1) { %>
 <div class="returns">
 
-__Returns__: <% _.each(item.returns, function(result) { %><% if (result.type) { %><% _.each(result.type.names, function(name) { %><%= name %><% }); %>
+__Returns__: <% _.each(item.returns, function(result) { %><% if (result.type) { %><% _.each(result.type.names, function(name) { %><%= name.replace(/([<>])/ig, '\\$1') %><% }); %>
 <% } %>
 <% if (result.description) { %>
 <%= result.description %>
@@ -68,7 +68,7 @@ __Returns__:
 <% _.each(item.returns, function(result) { %>
 <% if (result.type) { %>
 <% _.each(result.type.names, function(name) { %>
-+ `<%= name %>`
++ `<%= name.replace(/([<>])/ig, '\\$1') %>`
 <% }); %>
 <% } %>
 <% if (result.description) { %>

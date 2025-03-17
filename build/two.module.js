@@ -776,14 +776,14 @@ var proto2 = {
 // src/constants.js
 var count = 0;
 var Constants = {
-  nextFrameID: null,
+  NextFrameId: null,
   Types: {
     webgl: "WebGLRenderer",
     svg: "SVGRenderer",
     canvas: "CanvasRenderer"
   },
   Version: "v0.8.16",
-  PublishDate: "2025-02-13T23:13:24.615Z",
+  PublishDate: "2025-03-17T22:04:06.522Z",
   Identifier: "two-",
   Resolution: 12,
   AutoCalculateImportedMatrices: true,
@@ -1668,6 +1668,16 @@ var _Texture = class extends Element {
     super.flagReset.call(this);
     return this;
   }
+  dispose() {
+    if ("elem" in this._renderer) {
+      const elem = this._renderer.elem;
+      elem.parentNode.removeChild(elem);
+    }
+    if ("effect" in this._renderer) {
+      this._renderer.effect = null;
+    }
+    return this;
+  }
 };
 var Texture = _Texture;
 __publicField(Texture, "Properties", ["src", "loaded", "repeat", "scale", "offset", "image"]);
@@ -2043,6 +2053,16 @@ var _Gradient = class extends Element {
   flagReset() {
     this._flagSpread = this._flagUnits = this._flagStops = false;
     super.flagReset.call(this);
+    return this;
+  }
+  dispose() {
+    if ("elem" in this._renderer) {
+      const elem = this._renderer.elem;
+      elem.parentNode.removeChild(elem);
+    }
+    if ("effect" in this._renderer) {
+      this._renderer.effect = null;
+    }
     return this;
   }
 };
@@ -2881,12 +2901,12 @@ var _Shape = class extends Element {
   _update(bubbles) {
     if (!this._matrix.manual && this._flagMatrix) {
       this._matrix.identity().translate(this.position.x, this.position.y);
+      this._matrix.rotate(this.rotation);
       if (this._scale instanceof Vector) {
         this._matrix.scale(this._scale.x, this._scale.y);
       } else {
         this._matrix.scale(this._scale);
       }
-      this._matrix.rotate(this.rotation);
       this._matrix.skewX(this.skewX);
       this._matrix.skewY(this.skewY);
     }
@@ -11215,11 +11235,17 @@ var _Two = class {
   }
   release(obj) {
     let i, v, child;
-    if (!_.isObject(obj)) {
+    if (typeof obj === "undefined") {
       return this.release(this.scene);
     }
     if (typeof obj.unbind === "function") {
       obj.unbind();
+    }
+    if ("unbind" in obj.fill) {
+      obj.fill.unbind();
+    }
+    if ("unbind" in obj.stroke) {
+      obj.stroke.unbind();
     }
     if (obj.vertices) {
       if (typeof obj.vertices.unbind === "function") {
@@ -11556,7 +11582,7 @@ var _Two = class {
   }
 };
 var Two = _Two;
-__publicField(Two, "nextFrameID", Constants.nextFrameID);
+__publicField(Two, "NextFrameId", Constants.NextFrameId);
 __publicField(Two, "Types", Constants.Types);
 __publicField(Two, "Version", Constants.Version);
 __publicField(Two, "PublishDate", Constants.PublishDate);
@@ -11627,7 +11653,7 @@ function loop() {
       t.update();
     }
   }
-  Two.nextFrameID = raf(loop);
+  Two.NextFrameId = raf(loop);
 }
 raf.init = function() {
   loop();

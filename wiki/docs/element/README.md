@@ -76,8 +76,8 @@ Create a new [Two.Element](/docs/element/) from an object notation of a [Two.Ele
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/element.js#L61">
-    element.js:61
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/element.js#L63">
+    element.js:63
   </a>
 
 </div>
@@ -355,8 +355,8 @@ Called internally by Two.js's renderer to reset all flags. Ensures that only pro
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/element.js#L77">
-    element.js:77
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/element.js#L79">
+    element.js:79
   </a>
 
 </div>

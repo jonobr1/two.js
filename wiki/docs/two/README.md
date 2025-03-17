@@ -75,8 +75,8 @@ The different rendering types available in the library.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L272">
-    two.js:272
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L276">
+    two.js:276
   </a>
 
 </div>
@@ -106,7 +106,7 @@ The different rendering types available in the library.
 <div class="properties">
 
 
-The current working version of the library, `v0.8.15`.
+The current working version of the library, `v0.8.17`.
 
 
 </div>
@@ -122,8 +122,8 @@ The current working version of the library, `v0.8.15`.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L278">
-    two.js:278
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L282">
+    two.js:282
   </a>
 
 </div>
@@ -169,8 +169,8 @@ The automatically generated publish date in the build process to verify version 
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L284">
-    two.js:284
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L288">
+    two.js:288
   </a>
 
 </div>
@@ -216,8 +216,8 @@ String prefix for all Two.js object's ids. This trickles down to SVG ids.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L290">
-    two.js:290
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L294">
+    two.js:294
   </a>
 
 </div>
@@ -263,8 +263,8 @@ Default amount of vertices to be used for interpreting Arcs and ArcSegments.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L296">
-    two.js:296
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L300">
+    two.js:300
   </a>
 
 </div>
@@ -310,8 +310,8 @@ When importing SVGs through the [Two.interpret](/docs/two/#interpret) and [Two.l
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L302">
-    two.js:302
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L306">
+    two.js:306
   </a>
 
 </div>
@@ -367,8 +367,8 @@ Registered list of all Two.js instances in the current session.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L310">
-    two.js:310
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L314">
+    two.js:314
   </a>
 
 </div>
@@ -422,8 +422,8 @@ Simple method to access an incrementing value. Used for `id` allocation on all T
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L316">
-    two.js:316
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L320">
+    two.js:320
   </a>
 
 </div>
@@ -469,8 +469,8 @@ Map of possible path commands. Taken from the SVG specification. Commands includ
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L356">
-    two.js:356
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L361">
+    two.js:361
   </a>
 
 </div>
@@ -524,8 +524,8 @@ __Two.Utils.read.path__: Parse SVG path element or `d` attribute string.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L362">
-    two.js:362
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L367">
+    two.js:367
   </a>
 
 </div>
@@ -571,8 +571,8 @@ A string representing which type of renderer the instance has instantiated.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L131">
-    two.js:131
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L132">
+    two.js:132
   </a>
 
 </div>
@@ -618,8 +618,8 @@ The instantiated rendering class for the instance. For a list of possible render
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L137">
-    two.js:137
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L138">
+    two.js:138
   </a>
 
 </div>
@@ -665,8 +665,8 @@ The base level [Two.Group](/docs/group/) which houses all objects for the instan
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L143">
-    two.js:143
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L144">
+    two.js:144
   </a>
 
 </div>
@@ -712,8 +712,8 @@ The width of the instance's dom element.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L149">
-    two.js:149
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L150">
+    two.js:150
   </a>
 
 </div>
@@ -759,8 +759,8 @@ The height of the instance's dom element.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L155">
-    two.js:155
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L156">
+    two.js:156
   </a>
 
 </div>
@@ -806,8 +806,8 @@ An integer representing how many frames have elapsed.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L161">
-    two.js:161
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L162">
+    two.js:162
   </a>
 
 </div>
@@ -853,8 +853,8 @@ A number representing how much time has elapsed since the last frame in millisec
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L167">
-    two.js:167
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L168">
+    two.js:168
   </a>
 
 </div>
@@ -900,8 +900,8 @@ A boolean representing whether or not the instance is being updated through the 
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L173">
-    two.js:173
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L174">
+    two.js:174
   </a>
 
 </div>
@@ -945,8 +945,8 @@ If `options.fullscreen` or `options.fitted` in construction create this function
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L219">
-    two.js:219
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L220">
+    two.js:220
   </a>
 
 </div>
@@ -997,8 +997,8 @@ Shorthand method to append your instance of Two.js to the `document`.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L370">
-    two.js:370
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L375">
+    two.js:375
   </a>
 
 </div>
@@ -1050,8 +1050,8 @@ Call to start an internal animation loop.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L390">
-    two.js:390
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L395">
+    two.js:395
   </a>
 
 </div>
@@ -1113,8 +1113,8 @@ Call to stop the internal animation loop for a specific instance of Two.js.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L403">
-    two.js:403
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L408">
+    two.js:408
   </a>
 
 </div>
@@ -1137,7 +1137,7 @@ Call to stop the internal animation loop for a specific instance of Two.js.
 
 <div class="returns">
 
-__Returns__: Object
+__Returns__: Two.Element
 
 
 The object passed for event deallocation.
@@ -1157,7 +1157,7 @@ The object passed for event deallocation.
 
 | Argument | Description |
 | ---- | ----------- |
-|  obj  |  |
+|  obj  | Object to release from event listening. If none provided then the root [Two.Group](/docs/group/) will be used. |
 </div>
 
 
@@ -1165,7 +1165,7 @@ The object passed for event deallocation.
 
 <div class="description">
 
-Release an arbitrary class' events from the Two.js corpus and recurse through its children and or vertices.
+Release a [Two.Element](/docs/element/)’s events from memory and recurse through its children, effects, and/or vertices.
 
 </div>
 
@@ -1175,8 +1175,8 @@ Release an arbitrary class' events from the Two.js corpus and recurse through it
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L418">
-    two.js:418
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L423">
+    two.js:423
   </a>
 
 </div>
@@ -1228,8 +1228,8 @@ Update positions and calculations in one pass before rendering. Then render to t
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L472">
-    two.js:472
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L488">
+    two.js:488
   </a>
 
 </div>
@@ -1291,8 +1291,8 @@ Render all drawable and visible objects of the scene.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L508">
-    two.js:508
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L524">
+    two.js:524
   </a>
 
 </div>
@@ -1343,8 +1343,8 @@ A shorthand method to add specific Two.js objects to the scene.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L521">
-    two.js:521
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L537">
+    two.js:537
   </a>
 
 </div>
@@ -1395,8 +1395,8 @@ A shorthand method to remove specific Two.js objects from the scene.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L536">
-    two.js:536
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L552">
+    two.js:552
   </a>
 
 </div>
@@ -1440,8 +1440,8 @@ Removes all objects from the instance's scene. If you intend to have the browser
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L552">
-    two.js:552
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L568">
+    two.js:568
   </a>
 
 </div>
@@ -1503,8 +1503,8 @@ Creates a Two.js line and adds it to the scene.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L562">
-    two.js:562
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L578">
+    two.js:578
   </a>
 
 </div>
@@ -1566,8 +1566,8 @@ Creates a Two.js arrow and adds it to the scene.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L579">
-    two.js:579
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L595">
+    two.js:595
   </a>
 
 </div>
@@ -1629,8 +1629,8 @@ Creates a Two.js rectangle and adds it to the scene.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L653">
-    two.js:653
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L669">
+    two.js:669
   </a>
 
 </div>
@@ -1693,8 +1693,8 @@ Creates a Two.js rounded rectangle and adds it to the scene.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L670">
-    two.js:670
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L686">
+    two.js:686
   </a>
 
 </div>
@@ -1756,8 +1756,8 @@ Creates a Two.js circle and adds it to the scene.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L688">
-    two.js:688
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L704">
+    two.js:704
   </a>
 
 </div>
@@ -1820,8 +1820,8 @@ Creates a Two.js ellipse and adds it to the scene.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L705">
-    two.js:705
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L721">
+    two.js:721
   </a>
 
 </div>
@@ -1884,8 +1884,8 @@ Creates a Two.js star and adds it to the scene.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L723">
-    two.js:723
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L739">
+    two.js:739
   </a>
 
 </div>
@@ -1947,8 +1947,8 @@ Creates a Two.js path that is curved and adds it to the scene.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L741">
-    two.js:741
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L757">
+    two.js:757
   </a>
 
 </div>
@@ -2020,8 +2020,8 @@ Creates a Two.js polygon and adds it to the scene.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L781">
-    two.js:781
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L797">
+    two.js:797
   </a>
 
 </div>
@@ -2080,8 +2080,8 @@ __Returns__: Two.ArcSegment
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L798">
-    two.js:798
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L814">
+    two.js:814
   </a>
 
 </div>
@@ -2141,8 +2141,8 @@ Creates a Two.js points object and adds it to the current scene.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L832">
-    two.js:832
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L848">
+    two.js:848
   </a>
 
 </div>
@@ -2202,8 +2202,8 @@ Creates a Two.js path and adds it to the scene.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L863">
-    two.js:863
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L879">
+    two.js:879
   </a>
 
 </div>
@@ -2275,8 +2275,8 @@ Creates a Two.js text object and adds it to the scene.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L913">
-    two.js:913
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L929">
+    two.js:929
   </a>
 
 </div>
@@ -2339,8 +2339,8 @@ Creates a Two.js linear gradient and adds it to the scene. In the case of an eff
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L929">
-    two.js:929
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L945">
+    two.js:945
   </a>
 
 </div>
@@ -2402,8 +2402,8 @@ Creates a Two.js linear-gradient object and adds it to the scene. In the case of
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L949">
-    two.js:949
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L965">
+    two.js:965
   </a>
 
 </div>
@@ -2468,8 +2468,8 @@ Creates a Two.js sprite object and adds it to the scene. Sprites can be used for
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L968">
-    two.js:968
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L984">
+    two.js:984
   </a>
 
 </div>
@@ -2532,8 +2532,8 @@ Creates a Two.js image sequence object and adds it to the scene.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L991">
-    two.js:991
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L1007">
+    two.js:1007
   </a>
 
 </div>
@@ -2593,8 +2593,8 @@ Creates a Two.js texture object.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L1012">
-    two.js:1012
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L1028">
+    two.js:1028
   </a>
 
 </div>
@@ -2653,8 +2653,8 @@ Creates a Two.js group object and adds it to the scene.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L1025">
-    two.js:1025
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L1041">
+    two.js:1041
   </a>
 
 </div>
@@ -2715,8 +2715,8 @@ Interpret an SVG Node and add it to this instance's scene. The distinction shoul
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L1044">
-    two.js:1044
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L1060">
+    two.js:1060
   </a>
 
 </div>
@@ -2776,8 +2776,8 @@ Load an SVG file or SVG text and interpret it into Two.js legible objects.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L1075">
-    two.js:1075
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L1091">
+    two.js:1091
   </a>
 
 </div>

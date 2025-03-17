@@ -56,11 +56,11 @@ export default {
     font-size 1rem
     transition color .2s
     &:hover
-      color $orange
+      color $green
     &.open
-      color $orange
+      color $green
       &:hover
-        color $red
+        color $orange
   a
     display inline-block
   .nav-links
@@ -91,15 +91,15 @@ export default {
     color $sidebarText
     transition color .2s
     &:hover
-      color $orange
+      color $green
       border-bottom none
     &.active
-      color $orange
+      color $green
       border-left-color transparent
       border-bottom none
       font-weight 600
       &:hover
-        color: $red
+        color: $orange
 .sidebar-mask
   transition opacity 0.35s ease-in-out
   background-color rgba(0,0,0,.5)
