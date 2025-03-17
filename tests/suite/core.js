@@ -1071,7 +1071,7 @@ QUnit.test('Two', function (assert) {
   two.play();
   assert.ok(two.playing, 'Two.Utils.setPlaying applied correctly.');
   assert.ok(
-    typeof Two.nextFrameID === 'number',
+    typeof Two.NextFrameId === 'number',
     'requestAnimationFrame runs correctly.'
   );
 
