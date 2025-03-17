@@ -6,7 +6,7 @@ export const Constants = {
    * @property {Number}
    * @description The id of the next `requestAnimationFrame` function. Used to control the (or cancel) the default behavior of Two.js animation loops.
    */
-  nextFrameID: null,
+  NextFrameId: null,
 
   // Primitive
 

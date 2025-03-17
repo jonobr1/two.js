@@ -614,7 +614,7 @@ declare module 'two.js/src/anchor' {
 }
 declare module 'two.js/src/constants' {
   export interface Constants {
-    nextFrameID: number;
+    NextFrameId: number;
     Types: {
       webgl: 'WebGLRenderer';
       svg: 'SVGRenderer';
@@ -2378,7 +2378,10 @@ declare module 'two.js/src/effects/texture' {
      * @nota-bene Works in conjunction with {@link Two.Texture#toObject}
      */
     static fromObject(obj: object): Texture;
-    constructor(src?: string | HTMLImageElement | HTMLCanvasElement | HTMLVideoElement, callback?: Function);
+    constructor(
+      src?: string | HTMLImageElement | HTMLCanvasElement | HTMLVideoElement,
+      callback?: Function
+    );
     /**
      * @name Two.Texture#_flagSrc
      * @private
@@ -4460,7 +4463,7 @@ declare module 'two.js' {
      * @description The entrypoint for Two.js. Instantiate a `new Two` in order to setup a scene to render to. `Two` is also the publicly accessible interface that all other sub-classes, functions, and utilities attach to.
      */
   export default class Two {
-    static nextFrameID: any;
+    static NextFrameId: any;
     /**
      * @name Two.Types
      * @property {Object} - The different rendering types available in the library.
