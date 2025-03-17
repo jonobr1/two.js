@@ -94,7 +94,7 @@ A stored reference to the default value of a 3 x 3 matrix.
 
 <div class="returns">
 
-__Returns__: Array.<Number>
+__Returns__: Array.\<Number\>
 
 
 - If an optional `C` matrix isn't passed then a new one is created and returned.
@@ -114,9 +114,9 @@ __Returns__: Array.<Number>
 
 | Argument | Description |
 | ---- | ----------- |
-|  A  |  |
-|  B  |  |
-|  C  | An optional matrix to apply the multiplication to. |
+|  A  | The first [Two.Matrix](/docs/matrix/) to multiply |
+|  B  | The second [Two.Matrix](/docs/matrix/) to multiply |
+|  C  | An optional [Two.Matrix](/docs/matrix/) to apply the result to |
 </div>
 
 
@@ -342,15 +342,15 @@ Determines whether Two.js automatically calculates the values for the matrix or 
 
 | Argument | Description |
 | ---- | ----------- |
-|  a  | The value for element at the first column and first row. |
-|  b  | The value for element at the second column and first row. |
-|  c  | The value for element at the third column and first row. |
-|  d  | The value for element at the first column and second row. |
-|  e  | The value for element at the second column and second row. |
-|  f  | The value for element at the third column and second row. |
-|  g  | The value for element at the first column and third row. |
-|  h  | The value for element at the second column and third row. |
-|  i  | The value for element at the third column and third row. |
+|  a  | The value for element at the first column and first row |
+|  b  | The value for element at the second column and first row |
+|  c  | The value for element at the third column and first row |
+|  d  | The value for element at the first column and second row |
+|  e  | The value for element at the second column and second row |
+|  f  | The value for element at the third column and second row |
+|  g  | The value for element at the first column and third row |
+|  h  | The value for element at the second column and third row |
+|  i  | The value for element at the third column and third row |
 </div>
 
 
@@ -402,7 +402,7 @@ Set an array of values onto the matrix. Order described in [Two.Matrix](/docs/ma
 
 | Argument | Description |
 | ---- | ----------- |
-|  a  | The array of elements to apply. |
+|  a  | The array of elements to apply |
 </div>
 
 
@@ -449,6 +449,13 @@ Set an array of values onto the matrix. Order described in [Two.Matrix](/docs/ma
 
 
 
+
+<div class="params">
+
+| Argument | Description |
+| ---- | ----------- |
+|  m  | The matrix to copy |
+</div>
 
 
 
@@ -510,8 +517,8 @@ Turn matrix to the identity, like resetting.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L210">
-    matrix.js:210
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L211">
+    matrix.js:211
   </a>
 
 </div>
@@ -550,7 +557,7 @@ _Overloaded_
 
 | Argument | Description |
 | ---- | ----------- |
-|  a  | The scalar to be multiplied. |
+|  s  | The scalar to be multiplied. |
 </div>
 
 
@@ -568,8 +575,8 @@ Multiply all components of the matrix against a single scalar value.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L229">
-    matrix.js:229
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L230">
+    matrix.js:230
   </a>
 
 </div>
@@ -614,9 +621,9 @@ _Overloaded_
 
 | Argument | Description |
 | ---- | ----------- |
-|  a  | The x component to be multiplied. |
-|  b  | The y component to be multiplied. |
-|  c  | The z component to be multiplied. |
+|  x  | The `x` component to be multiplied. |
+|  y  | The `y` component to be multiplied. |
+|  z  | The `z` component to be multiplied. |
 </div>
 
 
@@ -634,8 +641,8 @@ Multiply all components of a matrix against a 3 component vector.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L237">
-    matrix.js:237
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L238">
+    matrix.js:238
   </a>
 
 </div>
@@ -706,8 +713,8 @@ Multiply all components of a matrix against another matrix.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L247">
-    matrix.js:247
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L248">
+    matrix.js:248
   </a>
 
 </div>
@@ -746,7 +753,7 @@ Multiply all components of a matrix against another matrix.
 
 | Argument | Description |
 | ---- | ----------- |
-|  out  | The optional matrix to apply the inversion to. |
+|  output  | The optional matrix to apply the inversion to. |
 </div>
 
 
@@ -764,8 +771,8 @@ Return an inverted version of the matrix. If no optional one is passed a new mat
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L341">
-    matrix.js:341
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L342">
+    matrix.js:342
   </a>
 
 </div>
@@ -798,7 +805,7 @@ Return an inverted version of the matrix. If no optional one is passed a new mat
 
 | Argument | Description |
 | ---- | ----------- |
-|  scale  | The one dimensional scale to apply to the matrix. |
+|  s  | The one dimensional scale to apply to the matrix. |
 </div>
 
 
@@ -816,8 +823,8 @@ Uniformly scale the transformation matrix.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L387">
-    matrix.js:387
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L388">
+    matrix.js:388
   </a>
 
 </div>
@@ -869,8 +876,8 @@ Scale the transformation matrix in two dimensions.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L394">
-    matrix.js:394
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L395">
+    matrix.js:395
   </a>
 
 </div>
@@ -903,7 +910,7 @@ Scale the transformation matrix in two dimensions.
 
 | Argument | Description |
 | ---- | ----------- |
-|  Number  | The amount to rotate in Number. |
+|  n  | The amount to rotate in Number. |
 </div>
 
 
@@ -921,8 +928,8 @@ Rotate the matrix.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L410">
-    matrix.js:410
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L411">
+    matrix.js:411
   </a>
 
 </div>
@@ -955,8 +962,8 @@ Rotate the matrix.
 
 | Argument | Description |
 | ---- | ----------- |
-|  x  | The horizontal translation value to apply. |
-|  y  | The vertical translation value to apply. |
+|  x  | The horizontal translation value to apply |
+|  y  | The vertical translation value to apply |
 </div>
 
 
@@ -964,7 +971,7 @@ Rotate the matrix.
 
 <div class="description">
 
-Translate the matrix.
+Translate the matrix to specific `x` / `y` values.
 
 </div>
 
@@ -974,8 +981,8 @@ Translate the matrix.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L423">
-    matrix.js:423
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L424">
+    matrix.js:424
   </a>
 
 </div>
@@ -1008,7 +1015,7 @@ Translate the matrix.
 
 | Argument | Description |
 | ---- | ----------- |
-|  Number  | The amount to skew in Number. |
+|  n  | The amount to skew |
 </div>
 
 
@@ -1026,8 +1033,8 @@ Skew the matrix by an angle in the x axis direction.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L434">
-    matrix.js:434
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L435">
+    matrix.js:435
   </a>
 
 </div>
@@ -1060,7 +1067,7 @@ Skew the matrix by an angle in the x axis direction.
 
 | Argument | Description |
 | ---- | ----------- |
-|  Number  | The amount to skew in Number. |
+|  n  | The amount to skew |
 </div>
 
 
@@ -1078,8 +1085,8 @@ Skew the matrix by an angle in the y axis direction.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L446">
-    matrix.js:446
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L447">
+    matrix.js:447
   </a>
 
 </div>
@@ -1140,8 +1147,8 @@ Create a transform string. Used for the Two.js rendering APIs.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L458">
-    matrix.js:458
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L459">
+    matrix.js:459
   </a>
 
 </div>
@@ -1193,8 +1200,8 @@ Create a transform array. Used for the Two.js rendering APIs.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L472">
-    matrix.js:472
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L473">
+    matrix.js:473
   </a>
 
 </div>
@@ -1246,8 +1253,8 @@ Create a transform array. Used for the Two.js rendering APIs.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L531">
-    matrix.js:531
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L532">
+    matrix.js:532
   </a>
 
 </div>
@@ -1291,8 +1298,8 @@ Create a JSON compatible object that represents information of the matrix.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L583">
-    matrix.js:583
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L584">
+    matrix.js:584
   </a>
 
 </div>
@@ -1346,8 +1353,8 @@ Clone the current matrix.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L597">
-    matrix.js:597
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/matrix.js#L598">
+    matrix.js:598
   </a>
 
 </div>

@@ -64,9 +64,9 @@ export class Matrix extends Events {
   /**
    * @name Two.Matrix.Multiply
    * @function
-   * @param {Number[]} A
-   * @param {Number[]} B
-   * @param {Number[]} [C] - An optional matrix to apply the multiplication to.
+   * @param {Number[]} A - The first {@link Two.Matrix} to multiply
+   * @param {Number[]} B - The second {@link Two.Matrix} to multiply
+   * @param {Number[]} [C] - An optional {@link Two.Matrix} to apply the result to
    * @returns {Number[]} - If an optional `C` matrix isn't passed then a new one is created and returned.
    * @description Multiply two matrices together and return the result.
    */
@@ -141,22 +141,22 @@ export class Matrix extends Events {
   /**
    * @name Two.Matrix#set
    * @function
-   * @param {Number} a - The value for element at the first column and first row.
-   * @param {Number} b - The value for element at the second column and first row.
-   * @param {Number} c - The value for element at the third column and first row.
-   * @param {Number} d - The value for element at the first column and second row.
-   * @param {Number} e - The value for element at the second column and second row.
-   * @param {Number} f - The value for element at the third column and second row.
-   * @param {Number} g - The value for element at the first column and third row.
-   * @param {Number} h - The value for element at the second column and third row.
-   * @param {Number} i - The value for element at the third column and third row.
+   * @param {Number} a - The value for element at the first column and first row
+   * @param {Number} b - The value for element at the second column and first row
+   * @param {Number} c - The value for element at the third column and first row
+   * @param {Number} d - The value for element at the first column and second row
+   * @param {Number} e - The value for element at the second column and second row
+   * @param {Number} f - The value for element at the third column and second row
+   * @param {Number} g - The value for element at the first column and third row
+   * @param {Number} h - The value for element at the second column and third row
+   * @param {Number} i - The value for element at the third column and third row
    * @description Set an array of values onto the matrix. Order described in {@link Two.Matrix}.
    */
 
   /**
    * @name Two.Matrix#set
    * @function
-   * @param {Number[]} a - The array of elements to apply.
+   * @param {Number[]} a - The array of elements to apply
    * @description Set an array of values onto the matrix. Order described in {@link Two.Matrix}.
    */
   set(a, b, c, d, e, f, g, h, i) {
@@ -189,6 +189,7 @@ export class Matrix extends Events {
   /**
    * @name Two.Matrix#copy
    * @function
+   * @param {Two.Matrix} m - The matrix to copy
    * @description Copy the matrix of one to the current instance.
    */
   copy(m) {
@@ -229,7 +230,7 @@ export class Matrix extends Events {
   /**
    * @name Two.Matrix#multiply
    * @function
-   * @param {Number} a - The scalar to be multiplied.
+   * @param {Number} s - The scalar to be multiplied.
    * @description Multiply all components of the matrix against a single scalar value.
    * @overloaded
    */
@@ -237,9 +238,9 @@ export class Matrix extends Events {
   /**
    * @name Two.Matrix#multiply
    * @function
-   * @param {Number} a - The x component to be multiplied.
-   * @param {Number} b - The y component to be multiplied.
-   * @param {Number} c - The z component to be multiplied.
+   * @param {Number} x - The `x` component to be multiplied.
+   * @param {Number} y - The `y` component to be multiplied.
+   * @param {Number} z - The `z` component to be multiplied.
    * @description Multiply all components of a matrix against a 3 component vector.
    * @overloaded
    */
@@ -341,12 +342,12 @@ export class Matrix extends Events {
   /**
    * @name Two.Matrix#inverse
    * @function
-   * @param {Two.Matrix} [out] - The optional matrix to apply the inversion to.
+   * @param {Two.Matrix} [output] - The optional matrix to apply the inversion to.
    * @description Return an inverted version of the matrix. If no optional one is passed a new matrix is created and returned.
    */
-  inverse(out) {
+  inverse(output) {
     const a = this.elements;
-    out = out || new Matrix();
+    output = output || new Matrix();
 
     const a00 = a[0],
       a01 = a[1],
@@ -371,23 +372,23 @@ export class Matrix extends Events {
 
     det = 1.0 / det;
 
-    out.elements[0] = b01 * det;
-    out.elements[1] = (-a22 * a01 + a02 * a21) * det;
-    out.elements[2] = (a12 * a01 - a02 * a11) * det;
-    out.elements[3] = b11 * det;
-    out.elements[4] = (a22 * a00 - a02 * a20) * det;
-    out.elements[5] = (-a12 * a00 + a02 * a10) * det;
-    out.elements[6] = b21 * det;
-    out.elements[7] = (-a21 * a00 + a01 * a20) * det;
-    out.elements[8] = (a11 * a00 - a01 * a10) * det;
+    output.elements[0] = b01 * det;
+    output.elements[1] = (-a22 * a01 + a02 * a21) * det;
+    output.elements[2] = (a12 * a01 - a02 * a11) * det;
+    output.elements[3] = b11 * det;
+    output.elements[4] = (a22 * a00 - a02 * a20) * det;
+    output.elements[5] = (-a12 * a00 + a02 * a10) * det;
+    output.elements[6] = b21 * det;
+    output.elements[7] = (-a21 * a00 + a01 * a20) * det;
+    output.elements[8] = (a11 * a00 - a01 * a10) * det;
 
-    return out;
+    return output;
   }
 
   /**
    * @name Two.Matrix#scale
    * @function
-   * @param {Number} scale - The one dimensional scale to apply to the matrix.
+   * @param {Number} s - The one dimensional scale to apply to the matrix.
    * @description Uniformly scale the transformation matrix.
    */
 
@@ -410,12 +411,12 @@ export class Matrix extends Events {
   /**
    * @name Two.Matrix#rotate
    * @function
-   * @param {Number} Number - The amount to rotate in Number.
+   * @param {Number} n - The amount to rotate in Number.
    * @description Rotate the matrix.
    */
-  rotate(Number) {
-    const c = cos(Number);
-    const s = sin(Number);
+  rotate(n) {
+    const c = cos(n);
+    const s = sin(n);
 
     return this.multiply(c, -s, 0, s, c, 0, 0, 0, 1);
   }
@@ -423,9 +424,9 @@ export class Matrix extends Events {
   /**
    * @name Two.Matrix#translate
    * @function
-   * @param {Number} x - The horizontal translation value to apply.
-   * @param {Number} y - The vertical translation value to apply.
-   * @description Translate the matrix.
+   * @param {Number} x - The horizontal translation value to apply
+   * @param {Number} y - The vertical translation value to apply
+   * @description Translate the matrix to specific `x` / `y` values.
    */
   translate(x, y) {
     return this.multiply(1, 0, x, 0, 1, y, 0, 0, 1);
@@ -434,11 +435,11 @@ export class Matrix extends Events {
   /**
    * @name Two.Matrix#skewX
    * @function
-   * @param {Number} Number - The amount to skew in Number.
+   * @param {Number} n - The amount to skew
    * @description Skew the matrix by an angle in the x axis direction.
    */
-  skewX(Number) {
-    const a = tan(Number);
+  skewX(n) {
+    const a = tan(n);
 
     return this.multiply(1, a, 0, 0, 1, 0, 0, 0, 1);
   }
@@ -446,11 +447,11 @@ export class Matrix extends Events {
   /**
    * @name Two.Matrix#skewY
    * @function
-   * @param {Number} Number - The amount to skew in Number.
+   * @param {Number} n - The amount to skew
    * @description Skew the matrix by an angle in the y axis direction.
    */
-  skewY(Number) {
-    const a = tan(Number);
+  skewY(n) {
+    const a = tan(n);
 
     return this.multiply(1, 0, 0, a, 1, 0, 0, 0, 1);
   }

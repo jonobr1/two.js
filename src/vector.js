@@ -36,9 +36,9 @@ const proto = {
  * @name Two.Vector
  * @class
  * @extends Two.Events
- * @param {Number} [x=0] - Any number to represent the horizontal x-component of the vector.
- * @param {Number} [y=0] - Any number to represent the vertical y-component of the vector.
- * @description A class to store x / y component vector data. In addition to storing data `Two.Vector` has suped up methods for commonplace mathematical operations.
+ * @param {Number} [x=0] - Any number to represent the horizontal `x` component of the vector.
+ * @param {Number} [y=0] - Any number to represent the vertical `y` component of the vector.
+ * @description A class to store `x` / `y` component vector data. In addition to storing data `Two.Vector` has suped up methods for commonplace mathematical operations.
  */
 export class Vector extends Events {
   /**
@@ -112,8 +112,8 @@ export class Vector extends Events {
   /**
    * @name Two.Vector.add
    * @function
-   * @param {Two.Vector} v1
-   * @param {Two.Vector} v2
+   * @param {Two.Vector} v1 - First {@link Two.Vector}
+   * @param {Two.Vector} v2 - Second {@link Two.Vector}
    * @returns {Two.Vector}
    * @description Add two vectors together.
    */
@@ -124,8 +124,8 @@ export class Vector extends Events {
   /**
    * @name Two.Vector.sub
    * @function
-   * @param {Two.Vector} v1
-   * @param {Two.Vector} v2
+   * @param {Two.Vector} v1 - First {@link Two.Vector}
+   * @param {Two.Vector} v2 - Second {@link Two.Vector}
    * @returns {Two.Vector}
    * @description Subtract two vectors: `v2` from `v1`.
    */
@@ -145,8 +145,8 @@ export class Vector extends Events {
   /**
    * @name Two.Vector.ratioBetween
    * @function
-   * @param {Two.Vector} v1
-   * @param {Two.Vector} v2
+   * @param {Two.Vector} v1 - First {@link Two.Vector}
+   * @param {Two.Vector} v2 - Second {@link Two.Vector}
    * @returns {Number} The ratio betwen two points `v1` and `v2`.
    */
   static ratioBetween(v1, v2) {
@@ -156,8 +156,8 @@ export class Vector extends Events {
   /**
    * @name Two.Vector.angleBetween
    * @function
-   * @param {Two.Vector} v1
-   * @param {Two.Vector} v2
+   * @param {Two.Vector} v1 - First {@link Two.Vector}
+   * @param {Two.Vector} v2 - Second {@link Two.Vector}
    * @returns {Number} The angle between points `v1` and `v2`.
    */
   static angleBetween(v1, v2) {
@@ -177,8 +177,8 @@ export class Vector extends Events {
   /**
    * @name Two.Vector.distanceBetween
    * @function
-   * @param {Two.Vector} v1
-   * @param {Two.Vector} v2
+   * @param {Two.Vector} v1 - First {@link Two.Vector}
+   * @param {Two.Vector} v2 - Second {@link Two.Vector}
    * @returns {Number} The distance between points `v1` and `v2`. Distance is always positive.
    */
   static distanceBetween(v1, v2) {
@@ -188,8 +188,8 @@ export class Vector extends Events {
   /**
    * @name Two.Vector.distanceBetweenSquared
    * @function
-   * @param {Two.Vector} v1
-   * @param {Two.Vector} v2
+   * @param {Two.Vector} v1 - First {@link Two.Vector}
+   * @param {Two.Vector} v2 - Second {@link Two.Vector}
    * @returns {Number} The squared distance between points `v1` and `v2`.
    */
   static distanceBetweenSquared(v1, v2) {
@@ -201,6 +201,12 @@ export class Vector extends Events {
 
   //
 
+  /**
+   * @name Two.Vector#set
+   * @function
+   * @param {number} x - Value of `x` component
+   * @param {number} y - Value of `y` component
+   */
   set(x, y) {
     this.x = x;
     this.y = y;
@@ -210,8 +216,8 @@ export class Vector extends Events {
   /**
    * @name Two.Vector#copy
    * @function
-   * @param {Two.Vector} v
-   * @description Copy the x / y components of another object `v`.
+   * @param {Two.Vector} v - The {@link Two.Vector} to copy
+   * @description Copy the `x` / `y` components of another object {@link Two.Vector}.
    */
   copy(v) {
     this.x = v.x;
@@ -222,7 +228,7 @@ export class Vector extends Events {
   /**
    * @name Two.Vector#clear
    * @function
-   * @description Set the x / y component values of the vector to zero.
+   * @description Set the `x` / `y` component values of the vector to zero.
    */
   clear() {
     this.x = 0;
@@ -234,6 +240,7 @@ export class Vector extends Events {
    * @name Two.Vector#clone
    * @function
    * @description Create a new vector and copy the existing values onto the newly created instance.
+   * @return {Two.Vector}
    */
   clone() {
     return new Vector(this.x, this.y);
@@ -242,24 +249,24 @@ export class Vector extends Events {
   /**
    * @name Two.Vector#add
    * @function
-   * @param {Two.Vector} v
-   * @description Add an object with x / y component values to the instance.
+   * @param {Two.Vector} v - The {@link Two.Vector} to add
+   * @description Add an object with `x` / `y` component values to the instance.
    * @overloaded
    */
 
   /**
    * @name Two.Vector#add
    * @function
-   * @param {Number} v
-   * @description Add the **same** number to both x / y component values of the instance.
+   * @param {Number} n - Number to add
+   * @description Add the **same** number to both `x` / `y` component values of the instance.
    * @overloaded
    */
 
   /**
    * @name Two.Vector#add
    * @function
-   * @param {Number} x
-   * @param {Number} y
+   * @param {Number} x - Number to add to `x` component
+   * @param {Number} y - Number to add to `y` component
    * @description Add `x` / `y` values to their respective component value on the instance.
    * @overloaded
    */
@@ -293,24 +300,24 @@ export class Vector extends Events {
   /**
    * @name Two.Vector#sub
    * @function
-   * @param {Two.Vector} v
-   * @description Subtract an object with x / y component values to the instance.
+   * @param {Two.Vector} v - The amount as a {@link Two.Vector} to subtract
+   * @description Subtract an object with `x` / `y` component values to the instance.
    * @overloaded
    */
 
   /**
    * @name Two.Vector#sub
    * @function
-   * @param {Number} v
-   * @description Subtract the **same** number to both x / y component values of the instance.
+   * @param {Number} n - Number to subtract
+   * @description Subtract the **same** number to both `x` / `y` component values of the instance.
    * @overloaded
    */
 
   /**
    * @name Two.Vector#sub
    * @function
-   * @param {Number} x
-   * @param {Number} y
+   * @param {Number} x - Number to subtract from `x` component
+   * @param {Number} y - Number to subtract from `y` component
    * @description Subtract `x` / `y` values to their respective component value on the instance.
    * @overloaded
    */
@@ -362,15 +369,15 @@ export class Vector extends Events {
   /**
    * @name Two.Vector#multiply
    * @function
-   * @param {Two.Vector} v
-   * @description Multiply an object with x / y component values to the instance.
+   * @param {Two.Vector} v - The {@link Two.Vector} to multiply
+   * @description Multiply an object with `x` / `y` component values to the instance.
    * @overloaded
    */
 
   /**
    * @name Two.Vector#multiply
    * @function
-   * @param {Number} v
+   * @param {Number} n - The number to multiply
    * @description Multiply the **same** number to both x / y component values of the instance.
    * @overloaded
    */
@@ -378,8 +385,8 @@ export class Vector extends Events {
   /**
    * @name Two.Vector#multiply
    * @function
-   * @param {Number} x
-   * @param {Number} y
+   * @param {Number} x - The number to multiply to `x` component
+   * @param {Number} y - The number to multiply to `y` component
    * @description Multiply `x` / `y` values to their respective component value on the instance.
    * @overloaded
    */
@@ -423,15 +430,15 @@ export class Vector extends Events {
   /**
    * @name Two.Vector#divide
    * @function
-   * @param {Two.Vector} v
-   * @description Divide an object with x / y component values to the instance.
+   * @param {Two.Vector} v - The {@link Two.Vector} to divide
+   * @description Divide an object with `x` / `y` component values to the instance.
    * @overloaded
    */
 
   /**
    * @name Two.Vector#divide
    * @function
-   * @param {Number} v
+   * @param {Number} n - The number to divide
    * @description Divide the **same** number to both x / y component values of the instance.
    * @overloaded
    */
@@ -439,8 +446,8 @@ export class Vector extends Events {
   /**
    * @name Two.Vector#divide
    * @function
-   * @param {Number} x
-   * @param {Number} y
+   * @param {Number} x - The number to divide on the `x` component
+   * @param {Number} y - The number to divide on the `y` component
    * @description Divide `x` / `y` values to their respective component value on the instance.
    * @overloaded
    */

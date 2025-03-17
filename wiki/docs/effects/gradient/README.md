@@ -513,3 +513,48 @@ Return a JSON compatible plain object that represents the path.
 </div>
 
 
+
+<div class="instance function ">
+
+## dispose
+
+<h2 class="longname" aria-hidden="true"><a href="#dispose"><span class="prefix">Two.Gradient.</span><span class="shortname">dispose</span></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="description">
+
+Detach instance from renderer including any `<defs />` or textures stored in memory.
+
+</div>
+
+
+
+
+
+<div class="meta">
+
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/gradient.js#L193">
+    gradient.js:193
+  </a>
+
+</div>
+
+
+
+
+</div>
+
+

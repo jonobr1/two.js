@@ -411,31 +411,61 @@ body {
 
 
 .docs {
-  div.fires {
+  .sidebar {
+    .sidebar-sub-headers {
+      margin-left: 2.4rem;
+      padding-left: 0px;
+      font-size: 1rem;
+
+      a.sidebar-link {
+        padding-left: 0.75rem;
+        color: $green;
+        border-left: 2px solid tint($green, 20%);
+        padding-top: 0.125rem;
+        padding-bottom: 0.125rem;
+
+        &:hover {
+          color: $orange;
+          border-left: 2px solid tint($orange, 20%);
+        }
+
+        &:.active {
+          color: $green;
+        }
+      }
+    }
+  }
+    div.fires {
     padding-bottom: 1rem;
     & > p {
       margin-bottom: 0.5rem;
     }
   }
-  .sidebar {
-    .sidebar-sub-headers {
-      margin-left: calc(2em + 5px);
-      padding-left: 0px;
-      font-size: 1rem;
-
-      a.sidebar-link {
-        padding-left: 1rem;
-        color: $orange;
-        border-left: 2px solid tint($orange, 20%);
-        padding-top: 0.125rem;
-        padding-bottom: 0.125rem;
-
-        &:hover {
-          color: $red;
+  .page {
+    table {
+      tr {
+        th:first-child,
+        td:first-child {
+          text-align: center;
         }
-
-        &:.active {
+        td:first-child {
+          font-family: $codeFamily;
+        }
+      }
+    }
+    div.member {
+      h2.longname {
+        a {
+          color: $blue;
+          border-left: 2px solid $blue;
+        }
+      }
+    }
+    div.function {
+      h2.longname {
+        a {
           color: $orange;
+          border-left: 2px solid $orange;
         }
       }
     }
