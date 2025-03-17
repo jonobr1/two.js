@@ -106,8 +106,8 @@ declare module 'two.js/src/events' {
       | 'listen'
       | 'ignore'
     )[];
-    _events: {};
-    _bound: boolean;
+    private _events: {};
+    private _bound: boolean;
     /**
      * @name Two.Events#addEventListener
      * @function
@@ -1324,7 +1324,14 @@ declare module 'two.js/src/shape' {
      * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
      * @nota-bene Try not to call this method more than once a frame.
      */
-    _update(bubbles: boolean): Shape;
+    private _update(bubbles: boolean): Shape;
+    /**
+     * @name Two.Shape#flagReset
+     * @function
+     * @private
+     * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+     */
+    private flagReset(): Shape;
   }
   import { Element as TwoElement } from 'two.js/src/element';
   import { Matrix } from 'two.js/src/matrix';
@@ -1344,8 +1351,8 @@ declare module 'two.js/src/collection' {
      * @private
      */
     private _events;
-    set _bound(arg: boolean);
-    get _bound(): boolean;
+    private set _bound(arg: boolean);
+    private get _bound(): boolean;
     addEventListener(...args: any[]): any;
     on(...args: any[]): any;
     bind(...args: any[]): any;
@@ -1646,7 +1653,7 @@ declare module 'two.js/src/group' {
      * @params {...Element} [args] - Alternatively pass shapes as each argument
      * @description Add objects to the group.
      */
-    add(objects: Shape): Group;
+    add(objects: Shape | Shape[]): Group;
     add(...args: Shape[]): Group;
     /**
      * @name Two.Group#remove
@@ -1702,6 +1709,22 @@ declare module 'two.js/src/group' {
      * @description Create a new instance of {@link Two.Group} with the same properties of the current group.
      */
     clone(parent?: Group): Group;
+    /**
+     * @name Two.Group#_update
+     * @function
+     * @private
+     * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+     * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
+     * @nota-bene Try not to call this method more than once a frame.
+     */
+    private _update(): Group;
+    /**
+     * @name Two.Group#flagReset
+     * @function
+     * @private
+     * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+     */
+    private flagReset(): Group;
   }
   import { Shape } from 'two.js/src/shape';
   import { Children } from 'two.js/src/children';
@@ -1825,7 +1848,7 @@ declare module 'two.js/src/utils/canvas-polyfill' {
 }
 declare module 'two.js/src/utils/dom' {
   export interface dom {
-    temp: any;
+    temp: HTMLDivElement;
   }
 }
 declare module 'two.js/src/utils/error' {
@@ -2008,6 +2031,13 @@ declare module 'two.js/src/effects/stop' {
      * @description Return a JSON compatible plain object that represents the path.
      */
     toObject(): object;
+    /**
+     * @name Two.Stop#flagReset
+     * @function
+     * @private
+     * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+     */
+    flagReset(): Stop;
   }
   import { Element as TwoElement } from 'two.js/src/element';
   import { Gradient } from 'two.js/src/effects/gradient';
@@ -2041,11 +2071,11 @@ declare module 'two.js/src/effects/gradient' {
      */
     static fromObject(obj: object): Gradient;
     constructor(stops?: Stop[]);
-    _flagStops: boolean;
-    _flagSpread: boolean;
-    _flagUnits: boolean;
-    _spread: string;
-    _units: string;
+    private _flagStops: boolean;
+    private _flagSpread: boolean;
+    private _flagUnits: boolean;
+    private _spread: string;
+    private _units: string;
     /**
      * @name Two.Gradient#renderer
      * @property {Object}
@@ -2106,14 +2136,20 @@ declare module 'two.js/src/effects/gradient' {
      * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
      * @nota-bene Try not to call this method more than once a frame.
      */
-    _update(bubbles: boolean): Gradient;
+    private _update(bubbles: boolean): Gradient;
     /**
      * @name Two.Gradient#flagReset
      * @function
      * @private
      * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
      */
-    flagReset(): Gradient;
+    private flagReset(): Gradient;
+    /**
+     * @name Two.Gradient#dispose
+     * @function
+     * @description Detach instance from renderer including any `<defs />` or textures stored in memory.
+     */
+    dispose(): Gradient;
   }
   import { Element as TwoElement } from 'two.js/src/element';
   import { Stop } from 'two.js/src/effects/stop';
@@ -2154,8 +2190,8 @@ declare module 'two.js/src/effects/linear-gradient' {
      * @property {Boolean} - Determines whether the {@link Two.LinearGradient#left} or {@link Two.LinearGradient#right} changed and needs to update.
      */
     private _flagEndPoints;
-    _left: Vector;
-    _right: Vector;
+    private _left: Vector;
+    private _right: Vector;
     /**
      * @name Two.LinearGradient#left
      * @property {Vector} - The x and y value for where the first end point is placed on the canvas.
@@ -2188,6 +2224,22 @@ declare module 'two.js/src/effects/linear-gradient' {
      * @description Return a JSON compatible plain object that represents the path.
      */
     toObject(): object;
+    /**
+     * @name Two.LinearGradient#_update
+     * @function
+     * @private
+     * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+     * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
+     * @nota-bene Try not to call this method more than once a frame.
+     */
+    private _update(): LinearGradient;
+    /**
+     * @name Two.LinearGradient#flagReset
+     * @function
+     * @private
+     * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+     */
+    private flagReset(): Group;
   }
   import { Gradient } from 'two.js/src/effects/gradient';
   import { Group } from 'two.js/src/group';
@@ -2243,9 +2295,9 @@ declare module 'two.js/src/effects/radial-gradient' {
      * @property {Boolean} - Determines whether the {@link Two.RadialGradient#focal} changed and needs to update.
      */
     private _flagFocal;
-    _radius: number;
-    _center: Vector;
-    _focal: Vector;
+    private _radius: number;
+    private _center: Vector;
+    private _focal: Vector;
     /**
      * @name Two.RadialGradient#center
      * @property {Vector} - The x and y value for where the origin of the radial gradient is.
@@ -2280,6 +2332,22 @@ declare module 'two.js/src/effects/radial-gradient' {
      * @description Return a JSON compatible plain object that represents the path.
      */
     toObject(): object;
+    /**
+     * @name Two.RadialGradient#_update
+     * @function
+     * @private
+     * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+     * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
+     * @nota-bene Try not to call this method more than once a frame.
+     */
+    private _update(): RadialGradient;
+    /**
+     * @name Two.RadialGradient#flagReset
+     * @function
+     * @private
+     * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+     */
+    private flagReset(): RadialGradient;
   }
   import { Gradient } from 'two.js/src/effects/gradient';
   import { Group } from 'two.js/src/group';
@@ -2513,7 +2581,20 @@ declare module 'two.js/src/effects/texture' {
      * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
      * @nota-bene Try not to call this method more than once a frame.
      */
-    _update(bubbles: boolean): Texture;
+    private _update(bubbles: boolean): Texture;
+    /**
+     * @name Two.Texture#flagReset
+     * @function
+     * @private
+     * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+     */
+    private _flagReset(): Texture;
+    /**
+     * @name Two.Gradient#dispose
+     * @function
+     * @description Detach instance from renderer including any `<defs />` or textures stored in memory.
+     */
+    private dispose(): Texture;
   }
   import { Element as TwoElement } from 'two.js/src/element';
   import { Vector } from 'two.js/src/vector';
@@ -2928,8 +3009,8 @@ declare module 'two.js/src/path' {
      * @param {Boolean} [silent=false] - If set to `true` then the path isn't updated before calculation. Useful for internal use.
      * @description Recalculate the {@link Two.Path#length} value.
      */
-    private _updateLength;
-    _lengths: number[];
+    private _updateLength(limit = 16, silent: boolean): Path;
+    private _lengths: number[];
     /**
      * @name Two.Path#_update
      * @function
@@ -2938,7 +3019,14 @@ declare module 'two.js/src/path' {
      * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
      * @nota-bene Try not to call this method more than once a frame.
      */
-    _update(): Path;
+    private _update(): Path;
+    /**
+     * @name Two.Path#flagReset
+     * @function
+     * @private
+     * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+     */
+    private flagReset(): Path;
   }
   import { Vector } from 'two.js/src/vector';
   import { Anchor } from 'two.js/src/anchor';
@@ -3193,9 +3281,8 @@ declare module 'two.js/src/effects/sprite' {
     play(
       firstFrame?: number,
       lastFrame?: number,
-      onLastFrame?: Function
+      onLastFrame?: () => void
     ): Sprite;
-    _onLastFrame: Function;
     /**
      * @name Two.Sprite#pause
      * @function
@@ -3589,7 +3676,7 @@ declare module 'two.js/src/text' {
      * @name Two.Text#direction
      * @property {String} - String to determine what direction the text should run. Possibly values are `'ltr'` for left-to-right and `'rtl'` for right-to-left. Defaults to `'ltr'`.
      */
-    _direction: 'ltr' | 'rtl';
+    direction: 'ltr' | 'rtl';
     /**
      * @name Two.Text#fill
      * @property {(String|Gradient|Texture)} - The value of what the text object should be filled in with.
@@ -3665,6 +3752,13 @@ declare module 'two.js/src/text' {
      * @description Return an object with top, left, right, bottom, width, and height parameters of the text object.
      */
     getBoundingClientRect(shallow?: boolean): BoundingBox;
+    /**
+     * @name Two.Text#flagReset
+     * @function
+     * @private
+     * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+     */
+    private flagReset(): Text;
   }
   import { Shape } from 'two.js/src/shape';
   import { Gradient } from 'two.js/src/effects/gradient';
@@ -3831,9 +3925,8 @@ declare module 'two.js/src/effects/image-sequence' {
     play(
       firstFrame?: number,
       lastFrame?: number,
-      onLastFrame?: Function
+      onLastFrame?: () => void
     ): ImageSequence;
-    _onLastFrame: Function;
     /**
      * @name Two.ImageSequence#pause
      * @function
@@ -4079,7 +4172,23 @@ declare module 'two.js/src/shapes/points' {
      * @param {Boolean} [silent=false] - If set to `true` then the points object isn't updated before calculation. Useful for internal use.
      * @description Recalculate the {@link Two.Points#length} value.
      */
-    private _updateLength;
+    private _updateLength(limit = 16, silent: boolean): Points;
+    /**
+     * @name Two.Points#_update
+     * @function
+     * @private
+     * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+     * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
+     * @nota-bene Try not to call this method more than once a frame.
+     */
+    private _update(): Points;
+    /**
+     * @name Two.Points#flagReset
+     * @function
+     * @private
+     * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+     */
+    flagReset(): Points;
   }
   import { Shape } from 'two.js/src/shape';
   import { Gradient } from 'two.js/src/effects/gradient';
@@ -4647,9 +4756,9 @@ declare module 'two.js' {
     /**
      * @name Two#release
      * @function
-     * @param {Object} obj
-     * @returns {Object} The object passed for event deallocation.
-     * @description Release an arbitrary class' events from the Two.js corpus and recurse through its children and or vertices.
+     * @param {Two.Element} [obj] - Object to release from event listening. If none provided then the root {@link Two.Group} will be used.
+     * @returns {Two.Element} The object passed for event deallocation.
+     * @description Release a {@link Two.Element}’s events from memory and recurse through its children, effects, and/or vertices.
      */
     release<T>(obj?: TwoElement): T;
     /**
