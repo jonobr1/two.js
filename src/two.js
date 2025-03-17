@@ -423,14 +423,15 @@ export default class Two {
   /**
    * @name Two#release
    * @function
-   * @param {Object} obj
-   * @returns {Object} The object passed for event deallocation.
-   * @description Release an arbitrary class' events from the Two.js corpus and recurse through its children and or vertices.
+   * @param {Two.Element} [obj] - Object to release from event listening. If none provided then the root {@link Two.Group} will be used.
+   * @returns {Two.Element} The object passed for event deallocation.
+   * @description Release a {@link Two.Element}’s events from memory and recurse through its children, effects, and/or vertices.
    */
   release(obj) {
     let i, v, child;
 
-    if (!_.isObject(obj)) {
+    // Release this instance of Two.js if nothing passed
+    if (typeof obj === 'undefined') {
       return this.release(this.scene);
     }
 
@@ -438,6 +439,15 @@ export default class Two {
       obj.unbind();
     }
 
+    // Unbind effects applied to an object
+    if ('unbind' in obj.fill) {
+      obj.fill.unbind();
+    }
+    if ('unbind' in obj.stroke) {
+      obj.stroke.unbind();
+    }
+
+    // Unbind vertices on an object
     if (obj.vertices) {
       if (typeof obj.vertices.unbind === 'function') {
         obj.vertices.unbind();
@@ -461,6 +471,7 @@ export default class Two {
       }
     }
 
+    // Unbind any children of the object
     if (obj.children) {
       for (i = 0; i < obj.children.length; i++) {
         child = obj.children[i];
