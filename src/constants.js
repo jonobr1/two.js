@@ -1,11 +1,10 @@
 let count = 0;
 
 export const Constants = {
-
   /**
-   * @name Two.nextFrameID
+   * @name Two.NextFrameId
    * @property {Number}
-   * @description The id of the next requestAnimationFrame function.
+   * @description The id of the next `requestAnimationFrame` function. Used to control the (or cancel) the default behavior of Two.js animation loops.
    */
   nextFrameID: null,
 
@@ -18,7 +17,7 @@ export const Constants = {
   Types: {
     webgl: 'WebGLRenderer',
     svg: 'SVGRenderer',
-    canvas: 'CanvasRenderer'
+    canvas: 'CanvasRenderer',
   },
 
   /**
@@ -63,8 +62,7 @@ export const Constants = {
    * @description Simple method to access an incrementing value. Used for `id` allocation on all Two.js objects.
    * @returns {Number} Ever increasing Number.
    */
-  uniqueId: function() {
+  uniqueId: function () {
     return count++;
-  }
-
+  },
 };

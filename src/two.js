@@ -269,7 +269,7 @@ export default class Two {
     }
   }
 
-  static nextFrameID = Constants.nextFrameID;
+  static NextFrameId = Constants.NextFrameId;
 
   // Primitive
 
@@ -1173,7 +1173,7 @@ function loop() {
     }
   }
 
-  Two.nextFrameID = raf(loop);
+  Two.NextFrameId = raf(loop);
 }
 
 raf.init = function () {
