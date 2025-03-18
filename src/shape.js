@@ -51,7 +51,7 @@ export class Shape extends Element {
   /**
    * @name Two.Shape#_rotation
    * @private
-   * @property {Number} - The rotation value in Number.
+   * @property {Number} - The rotation value in radians.
    */
   _rotation = 0;
 
