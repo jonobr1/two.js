@@ -482,6 +482,9 @@ export class Group extends Shape {
       if (node.id === id) {
         return node;
       } else if (node.children) {
+        if (node.children.ids[id]) {
+          return node.children.ids[id];
+        }
         for (let i = 0; i < node.children.length; i++) {
           found = search(node.children[i]);
           if (found) {
