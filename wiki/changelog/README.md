@@ -13,6 +13,8 @@ All notable changes to this project will be documented in this file. The format 
 
 ## Nightly
 
+- Fix `Two.release` in order to check for object existence on `fill` and `stroke` properties
+
 ## Mar 17, 2025 v0.8.17
 
 <h3 class="visible">Mar 17, 2025</h3><version-link v="v0.8.17" />
