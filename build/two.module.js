@@ -782,8 +782,8 @@ var Constants = {
     svg: "SVGRenderer",
     canvas: "CanvasRenderer"
   },
-  Version: "v0.8.16",
-  PublishDate: "2025-03-17T22:04:06.522Z",
+  Version: "v0.8.18",
+  PublishDate: "2025-04-07T18:03:28.745Z",
   Identifier: "two-",
   Resolution: 12,
   AutoCalculateImportedMatrices: true,
@@ -2637,9 +2637,9 @@ var _Matrix = class extends Events {
     this.elements[8] = A6 * B2 + A7 * B5 + A8 * B8;
     return this.trigger(Events.Types.change);
   }
-  inverse(out) {
+  inverse(output) {
     const a = this.elements;
-    out = out || new _Matrix();
+    output = output || new _Matrix();
     const a00 = a[0], a01 = a[1], a02 = a[2];
     const a10 = a[3], a11 = a[4], a12 = a[5];
     const a20 = a[6], a21 = a[7], a22 = a[8];
@@ -2651,16 +2651,16 @@ var _Matrix = class extends Events {
       return null;
     }
     det = 1 / det;
-    out.elements[0] = b01 * det;
-    out.elements[1] = (-a22 * a01 + a02 * a21) * det;
-    out.elements[2] = (a12 * a01 - a02 * a11) * det;
-    out.elements[3] = b11 * det;
-    out.elements[4] = (a22 * a00 - a02 * a20) * det;
-    out.elements[5] = (-a12 * a00 + a02 * a10) * det;
-    out.elements[6] = b21 * det;
-    out.elements[7] = (-a21 * a00 + a01 * a20) * det;
-    out.elements[8] = (a11 * a00 - a01 * a10) * det;
-    return out;
+    output.elements[0] = b01 * det;
+    output.elements[1] = (-a22 * a01 + a02 * a21) * det;
+    output.elements[2] = (a12 * a01 - a02 * a11) * det;
+    output.elements[3] = b11 * det;
+    output.elements[4] = (a22 * a00 - a02 * a20) * det;
+    output.elements[5] = (-a12 * a00 + a02 * a10) * det;
+    output.elements[6] = b21 * det;
+    output.elements[7] = (-a21 * a00 + a01 * a20) * det;
+    output.elements[8] = (a11 * a00 - a01 * a10) * det;
+    return output;
   }
   scale(sx, sy) {
     const l = arguments.length;
@@ -2669,20 +2669,20 @@ var _Matrix = class extends Events {
     }
     return this.multiply(sx, 0, 0, 0, sy, 0, 0, 0, 1);
   }
-  rotate(Number2) {
-    const c = cos(Number2);
-    const s = sin(Number2);
+  rotate(n) {
+    const c = cos(n);
+    const s = sin(n);
     return this.multiply(c, -s, 0, s, c, 0, 0, 0, 1);
   }
   translate(x, y) {
     return this.multiply(1, 0, x, 0, 1, y, 0, 0, 1);
   }
-  skewX(Number2) {
-    const a = tan(Number2);
+  skewX(n) {
+    const a = tan(n);
     return this.multiply(1, a, 0, 0, 1, 0, 0, 0, 1);
   }
-  skewY(Number2) {
-    const a = tan(Number2);
+  skewY(n) {
+    const a = tan(n);
     return this.multiply(1, 0, 0, a, 1, 0, 0, 0, 1);
   }
   toString(fullMatrix) {
@@ -6276,6 +6276,9 @@ var _Group = class extends Shape {
       if (node.id === id) {
         return node;
       } else if (node.children) {
+        if (node.children.ids[id]) {
+          return node.children.ids[id];
+        }
         for (let i = 0; i < node.children.length; i++) {
           found = search(node.children[i]);
           if (found) {
@@ -11241,10 +11244,10 @@ var _Two = class {
     if (typeof obj.unbind === "function") {
       obj.unbind();
     }
-    if ("unbind" in obj.fill) {
+    if (typeof obj.fill === "object" && "unbind" in obj.fill) {
       obj.fill.unbind();
     }
-    if ("unbind" in obj.stroke) {
+    if (typeof obj.stroke === "object" && "unbind" in obj.stroke) {
       obj.stroke.unbind();
     }
     if (obj.vertices) {
