@@ -783,7 +783,7 @@ var Constants = {
     canvas: "CanvasRenderer"
   },
   Version: "v0.8.18",
-  PublishDate: "2025-04-07T18:03:28.745Z",
+  PublishDate: "2025-04-07T22:33:48.746Z",
   Identifier: "two-",
   Resolution: 12,
   AutoCalculateImportedMatrices: true,
@@ -4842,11 +4842,14 @@ var _Points = class extends Shape {
     this._renderer.flagStroke = FlagStroke.bind(this);
     this._renderer.vertices = null;
     this._renderer.collection = null;
+    this.size = 1;
     this.sizeAttenuation = false;
     this.beginning = 0;
     this.ending = 1;
     this.fill = "#fff";
     this.stroke = "#000";
+    this.linewidth = 1;
+    this.opacity = 1;
     this.className = "";
     this.visible = true;
     this.vertices = vertices;
