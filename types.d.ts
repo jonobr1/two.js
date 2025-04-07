@@ -836,7 +836,7 @@ declare module 'two.js/src/element' {
    * @description The foundational object for the Two.js scenegraph.
    */
   export class Element extends Events {
-    static Properties: ('renderer' | 'id' | 'className' | string)[];
+    static Properties: ('renderer' | 'id' | 'className')[];
     /**
      * @name Two.Element.fromObject
      * @function
@@ -1163,7 +1163,6 @@ declare module 'two.js/src/shape' {
       | 'skewY'
       | 'matrix'
       | 'worldMatrix'
-      | string
     )[];
     /**
      * @name Two.Shape.fromObject
@@ -1444,7 +1443,6 @@ declare module 'two.js/src/group' {
       | 'closed'
       | 'curved'
       | 'automatic'
-      | string
     )[];
     static fromObject(obj: object): Group;
     constructor(children?: Shape[]);
@@ -2062,7 +2060,7 @@ declare module 'two.js/src/effects/gradient' {
      * @name Two.Gradient.Properties
      * @property {String[]} - A list of properties that are on every {@link Two.Gradient}.
      */
-    static Properties: ('spread' | 'stops' | 'units' | string)[];
+    static Properties: ('spread' | 'stops' | 'units')[];
     /**
      * @name Two.Gradient.fromObject
      * @function
@@ -2377,7 +2375,6 @@ declare module 'two.js/src/effects/texture' {
       | 'scale'
       | 'offset'
       | 'image'
-      | string
     )[];
     /**
      * @name Two.Texture.RegularExpressions
@@ -2634,7 +2631,6 @@ declare module 'two.js/src/path' {
       | 'beginning'
       | 'ending'
       | 'dashes'
-      | string
     )[];
     static Utils: {
       getCurveLength: (
@@ -3509,7 +3505,6 @@ declare module 'two.js/src/text' {
       | 'fill'
       | 'stroke'
       | 'dashes'
-      | string
     )[];
     /**
      * @name Two.Measure
@@ -4045,7 +4040,6 @@ declare module 'two.js/src/shapes/points' {
       | 'beginning'
       | 'ending'
       | 'dashes'
-      | string
     )[];
     constructor(vertices?: any[]);
     private _flagVertices;
