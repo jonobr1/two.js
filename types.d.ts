@@ -2923,7 +2923,7 @@ declare module 'two.js/src/path' {
      * @description A list of numbers that represent the repeated dash length and dash space applied to the stroke of the text.
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray} for more information on the SVG stroke-dasharray attribute.
      */
-    dashes: number[];
+    dashes: { [key: number]: number; offset: number };
     /**
      * @name Two.Path#copy
      * @function
@@ -3724,7 +3724,7 @@ declare module 'two.js/src/text' {
      * @description A list of numbers that represent the repeated dash length and dash space applied to the stroke of the text.
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray} for more information on the SVG stroke-dasharray attribute.
      */
-    dashes: number[];
+    dashes: { [key: number]: number; offset: number };
     /**
      * @name Two.Text#toObject
      * @function
@@ -4063,6 +4063,12 @@ declare module 'two.js/src/shapes/points' {
     private _ending;
     private _dashes;
     /**
+     * @name Two.Points#size
+     * @property {Number} - Number describing the diameter each point should have
+     * @description Set the size of each point in the collection of {@link Two.Points}
+     */
+    size: number;
+    /**
      * @name Two.Points#sizeAttenuation
      * @property {Boolean} - Boolean dictating whether Two.js should scale the size of the points based on its matrix hierarcy.
      * @description Set to `true` if you'd like the size of the points to be relative to the scale of its parents; `false` to disregard. Default is `false`.
@@ -4097,6 +4103,18 @@ declare module 'two.js/src/shapes/points' {
      * @property {String} - A class to be applied to the element to be compatible with CSS styling.
      * @nota-bene Only available for the SVG renderer.
      */
+    /**
+     * @name Two.Points#linewidth
+     * @property {Number} - The thickness in pixels of the stroke.
+     */
+    linewidth: number;
+
+    /**
+     * @name Two.Points#opacity
+     * @property {Number} - The opaqueness of the path.
+     * @nota-bene Can be used in conjunction with CSS Colors that have an alpha value.
+     */
+    opacity: number;
     className: string;
     /**
      * @name Two.Points#visible
@@ -4117,7 +4135,7 @@ declare module 'two.js/src/shapes/points' {
      * @description A list of numbers that represent the repeated dash length and dash space applied to the stroke of the text.
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray} for more information on the SVG stroke-dasharray attribute.
      */
-    dashes: number[];
+    dashes: { [key: number]: number; offset: number };
     /**
      * @name Two.Points#toObject
      * @function

@@ -72,6 +72,13 @@ export class Points extends Shape {
     this._renderer.collection = null;
 
     /**
+     * @name Two.Points#size
+     * @property {Number} - Number describing the diameter each point should have
+     * @description Set the size of each point in the collection of {@link Two.Points}
+     */
+    this.size = 1;
+
+    /**
      * @name Two.Points#sizeAttenuation
      * @property {Boolean} - Boolean dictating whether Two.js should scale the size of the points based on its matrix hierarchy.
      * @description Set to `true` if you'd like the size of the points to be relative to the scale of its parents; `false` to disregard. Default is `false`.
@@ -107,6 +114,19 @@ export class Points extends Shape {
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
      */
     this.stroke = '#000';
+
+    /**
+     * @name Two.Points#linewidth
+     * @property {Number} - The thickness in pixels of the stroke.
+     */
+    this.linewidth = 1;
+
+    /**
+     * @name Two.Points#opacity
+     * @property {Number} - The opaqueness of the path.
+     * @nota-bene Can be used in conjunction with CSS Colors that have an alpha value.
+     */
+    this.opacity = 1;
 
     /**
      * @name Two.Points#className

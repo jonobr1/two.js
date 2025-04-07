@@ -315,14 +315,14 @@ export class Path extends Shape {
      * @name Two.Path#linewidth
      * @property {Number} - The thickness in pixels of the stroke.
      */
-    this.linewidth = 1.0;
+    this.linewidth = 1;
 
     /**
      * @name Two.Path#opacity
      * @property {Number} - The opaqueness of the path.
      * @nota-bene Can be used in conjunction with CSS Colors that have an alpha value.
      */
-    this.opacity = 1.0;
+    this.opacity = 1;
 
     /**
      * @name Two.Path#className
