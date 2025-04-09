@@ -11,8 +11,11 @@ All notable changes to this project will be documented in this file. The format 
 
 <carbon-ads />
 
-## Nightly
+## April 8, 2025 v0.8.18
 
+<h3 class="visible">Apr 8, 2025</h3><version-link v="v0.8.18" />
+
+- Improve TypeScript types with correct inheritance and no errors
 - Fix `Two.release` in order to check for object existence on `fill` and `stroke` properties
 
 ## Mar 17, 2025 v0.8.17
