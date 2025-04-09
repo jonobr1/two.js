@@ -11,6 +11,15 @@ declare module 'two.js/src/utils/root' {
   export let root: typeof globalThis;
 }
 declare module 'two.js/src/utils/math' {
+  export interface DecomposedMatrix {
+    translateX: number;
+    translateY: number;
+    scaleX: number;
+    scaleY: number;
+    skewX: number;
+    skewY: number;
+    rotation: number;
+  }
   /**
    * @name Two.Utils.decomposeMatrix
    * @function
@@ -18,7 +27,7 @@ declare module 'two.js/src/utils/math' {
    * @returns {Object} An object containing relevant skew values.
    * @description Decompose a 2D 3x3 Matrix to find the skew.
    */
-  export function decomposeMatrix(matrix: Matrix): any;
+  export function decomposeMatrix(matrix: Matrix): DecomposedMatrix;
   export function decomposeMatrix(
     a: number,
     b: number,
@@ -26,7 +35,7 @@ declare module 'two.js/src/utils/math' {
     d: number,
     e: number,
     f: number
-  ): any;
+  ): DecomposedMatrix;
   /**
    * @name Two.Utils.getComputedMatrix
    * @function
@@ -36,8 +45,8 @@ declare module 'two.js/src/utils/math' {
    * @description Method to get the world space transformation of a given object in a Two.js scene.
    */
   export function getComputedMatrix(object: Shape, matrix?: Matrix): Matrix;
-  export function getPoT(value: any): number;
-  export function setMatrix(matrix: any): void;
+  export function getPoT(value: number | string): number;
+  export function setMatrix(matrix: Matrix): void;
   /**
    * @name Two.Utils.lerp
    * @function
@@ -57,7 +66,7 @@ declare module 'two.js/src/utils/math' {
    * @description Modulo with added functionality to handle negative values in a positive manner.
    */
   export function mod(v: number, l: number): number;
-  export const NumArray: any;
+  export const NumArray: Float32Array | number[];
   /**
    * @name Two.Utils.toFixed
    * @function
@@ -836,7 +845,7 @@ declare module 'two.js/src/element' {
    * @description The foundational object for the Two.js scenegraph.
    */
   export class Element extends Events {
-    static Properties: ('renderer' | 'id' | 'className')[];
+    static Properties: string[];
     /**
      * @name Two.Element.fromObject
      * @function
@@ -1155,15 +1164,7 @@ declare module 'two.js/src/shape' {
      * @description The foundational transformation object for the Two.js scenegraph.
      */
   export class Shape extends TwoElement {
-    static Properties: (
-      | 'position'
-      | 'rotation'
-      | 'scale'
-      | 'skewX'
-      | 'skewY'
-      | 'matrix'
-      | 'worldMatrix'
-    )[];
+    static Properties: string[];
     /**
      * @name Two.Shape.fromObject
      * @function
@@ -1324,7 +1325,7 @@ declare module 'two.js/src/shape' {
      * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
      * @nota-bene Try not to call this method more than once a frame.
      */
-    _update(bubbles: boolean): Shape;
+    protected _update(bubbles?: boolean): Shape;
     /**
      * @name Two.Shape#flagReset
      * @function
@@ -1433,17 +1434,7 @@ declare module 'two.js/src/group' {
      * @name Two.Group.Properties
      * @property {String[]} - A list of properties that are on every {@link Two.Group}.
      */
-    static Properties: (
-      | 'fill'
-      | 'stroke'
-      | 'linewidth'
-      | 'cap'
-      | 'join'
-      | 'miter'
-      | 'closed'
-      | 'curved'
-      | 'automatic'
-    )[];
+    static Properties: string[];
     static fromObject(obj: object): Group;
     constructor(children?: Shape[]);
     constructor(...args: Shape[]);
@@ -1717,7 +1708,7 @@ declare module 'two.js/src/group' {
      * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
      * @nota-bene Try not to call this method more than once a frame.
      */
-    _update(bubbles?: boolean): Group;
+    protected _update(bubbles?: boolean): Group;
     /**
      * @name Two.Group#flagReset
      * @function
@@ -2060,7 +2051,7 @@ declare module 'two.js/src/effects/gradient' {
      * @name Two.Gradient.Properties
      * @property {String[]} - A list of properties that are on every {@link Two.Gradient}.
      */
-    static Properties: ('spread' | 'stops' | 'units')[];
+    static Properties: string[];
     /**
      * @name Two.Gradient.fromObject
      * @function
@@ -2136,7 +2127,7 @@ declare module 'two.js/src/effects/gradient' {
      * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
      * @nota-bene Try not to call this method more than once a frame.
      */
-    _update(bubbles: boolean): Gradient;
+    protected _update(bubbles?: boolean): Gradient;
     /**
      * @name Two.Gradient#flagReset
      * @function
@@ -2232,7 +2223,7 @@ declare module 'two.js/src/effects/linear-gradient' {
      * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
      * @nota-bene Try not to call this method more than once a frame.
      */
-    _update(bubbles?: boolean): LinearGradient;
+    protected _update(bubbles?: boolean): LinearGradient;
     /**
      * @name Two.LinearGradient#flagReset
      * @function
@@ -2368,14 +2359,7 @@ declare module 'two.js/src/effects/texture' {
      * @name Two.Texture.Properties
      * @property {String[]} - A list of properties that are on every {@link Two.Texture}.
      */
-    static Properties: (
-      | 'src'
-      | 'loaded'
-      | 'repeat'
-      | 'scale'
-      | 'offset'
-      | 'image'
-    )[];
+    static Properties: string[];
     /**
      * @name Two.Texture.RegularExpressions
      * @property {Object} - A map of compatible DOM Elements categorized by media format.
@@ -2581,7 +2565,7 @@ declare module 'two.js/src/effects/texture' {
      * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
      * @nota-bene Try not to call this method more than once a frame.
      */
-    _update(bubbles?: boolean): Texture;
+    protected _update(bubbles?: boolean): Texture;
     /**
      * @name Two.Texture#flagReset
      * @function
@@ -2616,22 +2600,7 @@ declare module 'two.js/src/path' {
      * @name Two.Path.Properties
      * @property {String[]} - A list of properties that are on every {@link Two.Path}.
      */
-    static Properties: (
-      | 'fill'
-      | 'stroke'
-      | 'linewidth'
-      | 'opacity'
-      | 'visible'
-      | 'cap'
-      | 'join'
-      | 'miter'
-      | 'closed'
-      | 'curved'
-      | 'automatic'
-      | 'beginning'
-      | 'ending'
-      | 'dashes'
-    )[];
+    static Properties: string[];
     static Utils: {
       getCurveLength: (
         a: Anchor | Vector,
@@ -3019,7 +2988,7 @@ declare module 'two.js/src/path' {
      * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
      * @nota-bene Try not to call this method more than once a frame.
      */
-    _update(bubbles?: boolean): Path;
+    protected _update(bubbles?: boolean): Path;
     /**
      * @name Two.Path#flagReset
      * @function
@@ -3488,24 +3457,7 @@ declare module 'two.js/src/text' {
      * @name Two.Text.Properties
      * @property {String[]} - A list of properties that are on every {@link Two.Text}.
      */
-    static Properties: (
-      | 'value'
-      | 'family'
-      | 'size'
-      | 'leading'
-      | 'alignment'
-      | 'linewidth'
-      | 'style'
-      | 'weight'
-      | 'decoration'
-      | 'direction'
-      | 'baseline'
-      | 'opacity'
-      | 'visible'
-      | 'fill'
-      | 'stroke'
-      | 'dashes'
-    )[];
+    static Properties: string[];
     /**
      * @name Two.Measure
      * @function
@@ -4029,18 +3981,7 @@ declare module 'two.js/src/shapes/points' {
      * @description This is a primary primitive class for quickly and easily drawing points in Two.js. Unless specified methods return their instance of `Two.Points` for the purpose of chaining.
      */
   export class Points extends Shape {
-    static Properties: (
-      | 'fill'
-      | 'stroke'
-      | 'linewidth'
-      | 'opacity'
-      | 'visible'
-      | 'size'
-      | 'sizeAttenuation'
-      | 'beginning'
-      | 'ending'
-      | 'dashes'
-    )[];
+    static Properties: string[];
     constructor(vertices?: any[]);
     private _flagVertices;
     private _flagLength;
@@ -4199,7 +4140,7 @@ declare module 'two.js/src/shapes/points' {
      * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
      * @nota-bene Try not to call this method more than once a frame.
      */
-    _update(bubbles?: boolean): Points;
+    protected _update(bubbles?: boolean): Points;
     /**
      * @name Two.Points#flagReset
      * @function
