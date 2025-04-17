@@ -1665,7 +1665,7 @@ declare module 'two.js/src/group' {
      * @params {...Shape} [args] - Alternatively pass shapes as each argument
      * @description Remove objects from the group.
      */
-    remove(...args: Shape[]): Shape;
+    remove(...args: Shape[]): Shape | Shape[];
     /**
      * @name Two.Group#getBoundingClientRect
      * @function
@@ -4739,7 +4739,7 @@ declare module 'two.js' {
     /**
      * @name Two#add
      * @function
-     * @param {Shape[]} [objects] - An array of Two.js objects. Alternatively can add objects as individual arguments.
+     * @param {Shape | Shape[]} [objects] - An array of Two.js objects. Alternatively can add objects as individual arguments.
      * @description A shorthand method to add specific Two.js objects to the scene.
      */
     add(objects: Shape[]): Two;
@@ -4753,10 +4753,10 @@ declare module 'two.js' {
     /**
      * @name Two#remove
      * @function
-     * @param {Shape[]} [objects] - An array of Two.js objects.
+     * @param {Shape | Shape[]} [objects] - An array of Two.js objects.
      * @description A shorthand method to remove specific Two.js objects from the scene.
      */
-    remove(objects: Shape): Two;
+    remove(objects: Shape[]): Two;
     /**
      * @name Two#remove
      * @function
