@@ -575,13 +575,13 @@ declare module 'two.js/src/anchor' {
       ay?: number,
       bx?: number,
       by?: number,
-      command?: Commands
+      command?: 'M' | 'L' | 'A' | 'C' | 'Z'
     );
     controls: {
       left: Vector;
       right: Vector;
     };
-    command: Commands;
+    command: 'M' | 'L' | 'A' | 'C' | 'Z';
     relative: boolean;
     rx?: number;
     ry?: number;
