@@ -28,6 +28,8 @@ export class Line extends Path {
 
     this.automatic = false;
   }
+
+  static Properties = ['left', 'right'];
 }
 
 const proto = {

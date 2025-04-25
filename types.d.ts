@@ -3061,6 +3061,7 @@ declare module 'two.js/src/shapes/rectangle' {
      * @param {Number} [height=1] - The width value of the rectangle.
      */
   export class Rectangle extends Path {
+    static Properties: string[];
     constructor(x?: number, y?: number, width?: number, height?: number);
     /**
      * @name Two.Rectangle#width
@@ -3291,6 +3292,7 @@ declare module 'two.js/src/shapes/circle' {
      * @see {@link Two.Circle#radius}
      */
     private _radius;
+    static Properties: string[];
     constructor(x?: number, y?: number, radius?: number, resolution?: number);
     radius: number;
   }
@@ -3308,6 +3310,7 @@ declare module 'two.js/src/shapes/ellipse' {
      * @param {Number} [resolution=4] - The number of vertices used to construct the ellipse.
      */
   export class Ellipse extends Path {
+    static Properties: string[];
     constructor(
       x?: number,
       y?: number,
@@ -3355,6 +3358,7 @@ declare module 'two.js/src/shapes/line' {
      * @param {Number} [y2=0] - The y position of the second vertex on the line.
      */
   export class Line extends Path {
+    static Properties: string[];
     constructor(x1?: number, y1?: number, x2?: number, y2?: number);
 
     /**
@@ -3385,6 +3389,7 @@ declare module 'two.js/src/shapes/rounded-rectangle' {
      * @param {Number} [resolution=12] - The number of vertices used to construct the rounded rectangle.
      */
   export class RoundedRectangle extends Path {
+    static Properties: string[];
     constructor(
       x?: number,
       y?: number,
@@ -3908,6 +3913,7 @@ declare module 'two.js/src/shapes/arc-segment' {
      * @param {Number} [resolution=24] - The number of vertices used to construct the arc segment.
      */
   export class ArcSegment extends Path {
+    static Properties: string[];
     constructor(
       ox?: number,
       oy?: number,
@@ -4223,6 +4229,7 @@ declare module 'two.js/src/shapes/star' {
      * @param {Number} [sides=5] - The number of sides used to construct the star.
      */
   export class Star extends Path {
+    static Properties: string[];
     constructor(
       ox?: number,
       oy?: number,
