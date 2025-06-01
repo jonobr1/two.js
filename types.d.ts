@@ -2888,13 +2888,13 @@ declare module 'two.js/src/path' {
     automatic: boolean;
     /**
      * @name Two.Path#dashes
-     * @type {number[] & { offset: number }}
+     * @type {number[] & { offset?: number }}
      * @property {Number[]} - Array of numbers. Odd indices represent dash length. Even indices represent dash space.
      * @description A list of numbers that represent the repeated dash length and dash space applied to the stroke of the text.
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray} for more information on the SVG stroke-dasharray attribute.
      */
     dashes: number[] & {
-      offset: number;
+      offset?: number;
     };
     /**
      * @name Two.Path#copy
@@ -3680,13 +3680,13 @@ declare module 'two.js/src/text' {
     clip: boolean;
     /**
      * @name Two.Text#dashes
-     * @type {number[] & { offset: number }}
+     * @type {number[] & { offset?: number }}
      * @property {Number[]} - Array of numbers. Odd indices represent dash length. Even indices represent dash space.
      * @description A list of numbers that represent the repeated dash length and dash space applied to the stroke of the text.
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray} for more information on the SVG stroke-dasharray attribute.
      */
     dashes: number[] & {
-      offset: number;
+      offset?: number;
     };
     /**
      * @name Two.Text#toObject
@@ -4084,13 +4084,13 @@ declare module 'two.js/src/shapes/points' {
     vertices: (Anchor | Vector)[];
     /**
      * @name Two.Points#dashes
-     * @type {number[] & { offset: number }}
+     * @type {number[] & { offset?: number }}
      * @property {Number[]} - Array of numbers. Odd indices represent dash length. Even indices represent dash space.
      * @description A list of numbers that represent the repeated dash length and dash space applied to the stroke of the text.
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray} for more information on the SVG stroke-dasharray attribute.
      */
     dashes: number[] & {
-      offset: number;
+      offset?: number;
     };
     /**
      * @name Two.Points#toObject
