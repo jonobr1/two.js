@@ -61,7 +61,7 @@ export class Points extends Shape {
       Object.defineProperty(this, prop, proto[prop]);
     }
 
-    this._renderer.type = 'points';
+    this._renderer.type = "points";
     this._renderer.flagVertices = FlagVertices.bind(this);
     this._renderer.bindVertices = BindVertices.bind(this);
     this._renderer.unbindVertices = UnbindVertices.bind(this);
@@ -106,14 +106,14 @@ export class Points extends Shape {
      * @property {(String|Two.Gradient|Two.Texture)} - The value of what the path should be filled in with.
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
      */
-    this.fill = '#fff';
+    this.fill = "#fff";
 
     /**
      * @name Two.Points#stroke
      * @property {(String|Two.Gradient|Two.Texture)} - The value of what the path should be outlined in with.
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
      */
-    this.stroke = '#000';
+    this.stroke = "#000";
 
     /**
      * @name Two.Points#linewidth
@@ -133,7 +133,7 @@ export class Points extends Shape {
      * @property {String} - A class to be applied to the element to be compatible with CSS styling.
      * @nota-bene Only available for the SVG renderer.
      */
-    this.className = '';
+    this.className = "";
 
     /**
      * @name Two.Points#visible
@@ -152,6 +152,7 @@ export class Points extends Shape {
 
     /**
      * @name Two.Points#dashes
+     * @type {number[] & { offset: number }}
      * @property {Number[]} - Array of numbers. Odd indices represent dash length. Even indices represent dash space.
      * @description A list of numbers that represent the repeated dash length and dash space applied to the stroke of the text.
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray} for more information on the SVG stroke-dasharray attribute.
