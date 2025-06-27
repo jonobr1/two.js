@@ -11,6 +11,11 @@ All notable changes to this project will be documented in this file. The format 
 
 <carbon-ads />
 
+## Nightly
+- Improved TypeScript types for `Two.Path.dashes`, `Two.Points.dashes`, `Two.Text.dashes`
+- Improved TypeScript types for the `Two.Element.renderer` property
+- Added `Two.Element.renderer.onBeforeRender` and `Two.Element.renderer.onAfterRender` for higher context manipulation
+
 ## April 8, 2025 v0.8.18
 
 <h3 class="visible">Apr 8, 2025</h3><version-link v="v0.8.18" />
