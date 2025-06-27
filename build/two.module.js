@@ -782,8 +782,8 @@ var Constants = {
     svg: "SVGRenderer",
     canvas: "CanvasRenderer"
   },
-  Version: "v0.8.18",
-  PublishDate: "2025-04-07T22:33:48.746Z",
+  Version: "v0.8.19",
+  PublishDate: "2025-06-27T18:00:39.187Z",
   Identifier: "two-",
   Resolution: 12,
   AutoCalculateImportedMatrices: true,
@@ -1174,6 +1174,9 @@ var _ = {
   isObject: function(obj) {
     const type = typeof obj;
     return type === "function" || type === "object" && !!obj;
+  },
+  isFunction: function(obj) {
+    return typeof obj === "function";
   },
   extend: function(base) {
     const sources = slice.call(arguments, 1);
@@ -1572,8 +1575,8 @@ var _Texture = class extends Element {
     anchor.href = path;
     return anchor.href;
   }
-  static loadHeadlessBuffer(texture, loaded) {
-    texture.image.onload = loaded;
+  static loadHeadlessBuffer(texture, onLoad) {
+    texture.image.onload = onLoad;
     texture.image.src = texture.src;
   }
   static getTag(image) {
@@ -6769,6 +6772,7 @@ var Line = class extends Path {
     this.automatic = false;
   }
 };
+__publicField(Line, "Properties", ["left", "right"]);
 var proto22 = {
   left: {
     enumerable: true,
@@ -8138,6 +8142,9 @@ var canvas2 = {
       if (!this._visible) {
         return this;
       }
+      if (_.isFunction(this._renderer.onBeforeRender)) {
+        this._renderer.onBeforeRender();
+      }
       this._update();
       const matrix = this._matrix.elements;
       const parent = this.parent;
@@ -8176,6 +8183,9 @@ var canvas2 = {
       if (shouldIsolate) {
         ctx.restore();
       }
+      if (_.isFunction(this._renderer.onAfterRender)) {
+        this._renderer.onAfterRender();
+      }
       return this.flagReset();
     }
   },
@@ -8189,6 +8199,9 @@ var canvas2 = {
       visible = this._visible;
       if (!forced && (!visible || clip || opacity === 0)) {
         return this;
+      }
+      if (_.isFunction(this._renderer.onBeforeRender)) {
+        this._renderer.onBeforeRender();
       }
       this._update();
       matrix = this._matrix.elements;
@@ -8383,6 +8396,9 @@ var canvas2 = {
       if (dashes && dashes.length > 0) {
         ctx.setLineDash(emptyArray);
       }
+      if (_.isFunction(this._renderer.onAfterRender)) {
+        this._renderer.onAfterRender();
+      }
       return this.flagReset();
     }
   },
@@ -8394,6 +8410,9 @@ var canvas2 = {
       visible = this._visible;
       if (!forced && (!visible || opacity === 0)) {
         return this;
+      }
+      if (_.isFunction(this._renderer.onBeforeRender)) {
+        this._renderer.onBeforeRender();
       }
       this._update();
       me = this._matrix.elements;
@@ -8487,6 +8506,9 @@ var canvas2 = {
       if (dashes && dashes.length > 0) {
         ctx.setLineDash(emptyArray);
       }
+      if (_.isFunction(this._renderer.onAfterRender)) {
+        this._renderer.onAfterRender();
+      }
       return this.flagReset();
     }
   },
@@ -8499,6 +8521,9 @@ var canvas2 = {
       const clip = this._clip;
       if (!forced && (!visible || clip || opacity === 0)) {
         return this;
+      }
+      if (_.isFunction(this._renderer.onBeforeRender)) {
+        this._renderer.onBeforeRender();
       }
       this._update();
       const matrix = this._matrix.elements;
@@ -8678,6 +8703,9 @@ var canvas2 = {
       if (dashes && dashes.length > 0) {
         ctx.setLineDash(emptyArray);
       }
+      if (_.isFunction(this._renderer.onAfterRender)) {
+        this._renderer.onAfterRender();
+      }
       return this.flagReset();
     }
   },
@@ -8685,6 +8713,9 @@ var canvas2 = {
     render: function(ctx, parent) {
       if (!parent) {
         return;
+      }
+      if (_.isFunction(this._renderer.onBeforeRender)) {
+        this._renderer.onBeforeRender();
       }
       this._update();
       if (!this._renderer.effect || this._flagEndPoints || this._flagStops || this._flagUnits) {
@@ -8706,6 +8737,9 @@ var canvas2 = {
           this._renderer.effect.addColorStop(stop._offset, stop._color);
         }
       }
+      if (_.isFunction(this._renderer.onAfterRender)) {
+        this._renderer.onAfterRender();
+      }
       return this.flagReset();
     }
   },
@@ -8713,6 +8747,9 @@ var canvas2 = {
     render: function(ctx, parent) {
       if (!parent) {
         return;
+      }
+      if (_.isFunction(this._renderer.onBeforeRender)) {
+        this._renderer.onBeforeRender();
       }
       this._update();
       if (!this._renderer.effect || this._flagCenter || this._flagFocal || this._flagRadius || this._flagStops || this._flagUnits) {
@@ -8743,11 +8780,17 @@ var canvas2 = {
           this._renderer.effect.addColorStop(stop._offset, stop._color);
         }
       }
+      if (_.isFunction(this._renderer.onAfterRender)) {
+        this._renderer.onAfterRender();
+      }
       return this.flagReset();
     }
   },
   texture: {
     render: function(ctx) {
+      if (_.isFunction(this._renderer.onBeforeRender)) {
+        this._renderer.onBeforeRender();
+      }
       this._update();
       const image = this.image;
       if (!this._renderer.effect || (this._flagLoaded || this._flagImage || this._flagVideo || this._flagRepeat) && this.loaded) {
@@ -8780,6 +8823,9 @@ var canvas2 = {
         } else {
           this._renderer.scale.set(this._scale, this._scale);
         }
+      }
+      if (_.isFunction(this._renderer.onAfterRender)) {
+        this._renderer.onAfterRender();
       }
       return this.flagReset();
     }
@@ -9134,6 +9180,9 @@ var svg = {
       if (!this._visible && !this._flagVisible || this._opacity === 0 && !this._flagOpacity) {
         return this;
       }
+      if (_.isFunction(this._renderer.onBeforeRender)) {
+        this._renderer.onBeforeRender();
+      }
       this._update();
       if (!this._renderer.elem) {
         this._renderer.elem = svg.createElement("g", {
@@ -9196,6 +9245,9 @@ var svg = {
       if (this.dataset) {
         Object.assign(this._renderer.elem.dataset, this.dataset);
       }
+      if (_.isFunction(this._renderer.onAfterRender)) {
+        this._renderer.onAfterRender();
+      }
       return this.flagReset();
     }
   },
@@ -9203,6 +9255,9 @@ var svg = {
     render: function(domElement) {
       if (this._opacity === 0 && !this._flagOpacity) {
         return this;
+      }
+      if (_.isFunction(this._renderer.onBeforeRender)) {
+        this._renderer.onBeforeRender();
       }
       this._update();
       const changed = {};
@@ -9301,6 +9356,9 @@ var svg = {
           this._renderer.elem.removeAttribute("clip-path");
         }
       }
+      if (_.isFunction(this._renderer.onAfterRender)) {
+        this._renderer.onAfterRender();
+      }
       return this.flagReset();
     }
   },
@@ -9308,6 +9366,9 @@ var svg = {
     render: function(domElement) {
       if (this._opacity === 0 && !this._flagOpacity) {
         return this;
+      }
+      if (_.isFunction(this._renderer.onBeforeRender)) {
+        this._renderer.onBeforeRender();
       }
       this._update();
       const changed = {};
@@ -9377,6 +9438,9 @@ var svg = {
         domElement.appendChild(this._renderer.elem);
       } else {
         svg.setAttributes(this._renderer.elem, changed);
+      }
+      if (_.isFunction(this._renderer.onAfterRender)) {
+        this._renderer.onAfterRender();
       }
       return this.flagReset();
     }
@@ -9501,6 +9565,9 @@ var svg = {
   },
   "linear-gradient": {
     render: function(domElement, silent) {
+      if (_.isFunction(this._renderer.onBeforeRender)) {
+        this._renderer.onBeforeRender();
+      }
       if (!silent) {
         this._update();
       }
@@ -9559,11 +9626,17 @@ var svg = {
           stop.flagReset();
         }
       }
+      if (_.isFunction(this._renderer.onAfterRender)) {
+        this._renderer.onAfterRender();
+      }
       return this.flagReset();
     }
   },
   "radial-gradient": {
     render: function(domElement, silent) {
+      if (_.isFunction(this._renderer.onBeforeRender)) {
+        this._renderer.onBeforeRender();
+      }
       if (!silent) {
         this._update();
       }
@@ -9627,11 +9700,17 @@ var svg = {
           stop.flagReset();
         }
       }
+      if (_.isFunction(this._renderer.onAfterRender)) {
+        this._renderer.onAfterRender();
+      }
       return this.flagReset();
     }
   },
   texture: {
     render: function(domElement, silent) {
+      if (_.isFunction(this._renderer.onBeforeRender)) {
+        this._renderer.onBeforeRender();
+      }
       if (!silent) {
         this._update();
       }
@@ -9716,6 +9795,9 @@ var svg = {
       if (this._renderer.elem && this._renderer.image && !this._renderer.appended) {
         this._renderer.elem.appendChild(this._renderer.image);
         this._renderer.appended = true;
+      }
+      if (_.isFunction(this._renderer.onAfterRender)) {
+        this._renderer.onAfterRender();
       }
       return this.flagReset();
     }
@@ -9879,6 +9961,9 @@ var webgl = {
       if (!this._visible) {
         return;
       }
+      if (_.isFunction(this._renderer.onBeforeRender)) {
+        this._renderer.onBeforeRender();
+      }
       this._update();
       const parent = this.parent;
       const flagParentMatrix = parent._matrix && parent._matrix.manual || parent._flagMatrix;
@@ -9940,6 +10025,9 @@ var webgl = {
       }
       if (this._mask) {
         gl.disable(gl.STENCIL_TEST);
+      }
+      if (_.isFunction(this._renderer.onAfterRender)) {
+        this._renderer.onAfterRender();
       }
       return this.flagReset();
     }
@@ -10188,6 +10276,9 @@ var webgl = {
       if (!this._visible || !this._opacity) {
         return this;
       }
+      if (_.isFunction(this._renderer.onBeforeRender)) {
+        this._renderer.onBeforeRender();
+      }
       this._update();
       const parent = forcedParent || this.parent;
       const prop = Renderer.Utils.getRendererType(this._renderer.type);
@@ -10289,6 +10380,9 @@ var webgl = {
       if (this._mask) {
         gl.disable(gl.STENCIL_TEST);
       }
+      if (_.isFunction(this._renderer.onAfterRender)) {
+        this._renderer.onAfterRender();
+      }
       return this.flagReset();
     }
   },
@@ -10385,6 +10479,9 @@ var webgl = {
       if (!this._visible || !this._opacity) {
         return this;
       }
+      if (_.isFunction(this._renderer.onBeforeRender)) {
+        this._renderer.onBeforeRender();
+      }
       this._update();
       let size = this._size;
       const parent = forcedParent || this.parent;
@@ -10480,6 +10577,9 @@ var webgl = {
       gl.uniformMatrix3fv(program.matrix, false, this._renderer.matrix);
       gl.uniform1f(program.size, size * programs.resolution.ratio);
       gl.drawArrays(gl.POINTS, 0, length);
+      if (_.isFunction(this._renderer.onAfterRender)) {
+        this._renderer.onAfterRender();
+      }
       return this.flagReset();
     }
   },
@@ -10700,6 +10800,9 @@ var webgl = {
       if (!this._visible || !this._opacity) {
         return this;
       }
+      if (_.isFunction(this._renderer.onBeforeRender)) {
+        this._renderer.onBeforeRender();
+      }
       this._update();
       const parent = forcedParent || this.parent;
       const program = programs[this._renderer.type];
@@ -10796,6 +10899,9 @@ var webgl = {
       if (this._mask) {
         gl.disable(gl.STENCIL_TEST);
       }
+      if (_.isFunction(this._renderer.onAfterRender)) {
+        this._renderer.onAfterRender();
+      }
       return this.flagReset();
     }
   },
@@ -10803,6 +10909,9 @@ var webgl = {
     render: function(ctx, parent) {
       if (!ctx.canvas.getContext("2d") || !parent) {
         return;
+      }
+      if (_.isFunction(this._renderer.onBeforeRender)) {
+        this._renderer.onBeforeRender();
       }
       this._update();
       if (!this._renderer.effect || this._flagEndPoints || this._flagStops || this._flagUnits) {
@@ -10824,6 +10933,9 @@ var webgl = {
           this._renderer.effect.addColorStop(stop._offset, stop._color);
         }
       }
+      if (_.isFunction(this._renderer.onAfterRender)) {
+        this._renderer.onAfterRender();
+      }
       return this.flagReset();
     }
   },
@@ -10831,6 +10943,9 @@ var webgl = {
     render: function(ctx, parent) {
       if (!ctx.canvas.getContext("2d") || !parent) {
         return;
+      }
+      if (_.isFunction(this._renderer.onBeforeRender)) {
+        this._renderer.onBeforeRender();
       }
       this._update();
       if (!this._renderer.effect || this._flagCenter || this._flagFocal || this._flagRadius || this._flagStops || this._flagUnits) {
@@ -10861,6 +10976,9 @@ var webgl = {
           this._renderer.effect.addColorStop(stop._offset, stop._color);
         }
       }
+      if (_.isFunction(this._renderer.onAfterRender)) {
+        this._renderer.onAfterRender();
+      }
       return this.flagReset();
     }
   },
@@ -10868,6 +10986,9 @@ var webgl = {
     render: function(ctx, elem) {
       if (!ctx.canvas.getContext("2d")) {
         return;
+      }
+      if (_.isFunction(this._renderer.onBeforeRender)) {
+        this._renderer.onBeforeRender();
       }
       this._update();
       const image = this.image;
@@ -10908,6 +11029,9 @@ var webgl = {
         }
         this._renderer.scale.x = sx < 0 ? -sx : sx;
         this._renderer.scale.y = sy < 0 ? -sy : sy;
+      }
+      if (_.isFunction(this._renderer.onAfterRender)) {
+        this._renderer.onAfterRender();
       }
       return this.flagReset();
     }
