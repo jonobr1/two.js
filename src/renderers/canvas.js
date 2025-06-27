@@ -50,6 +50,10 @@ const canvas = {
         return this;
       }
 
+      if (_.isFunction(this._renderer.onBeforeRender)) {
+        this._renderer.onBeforeRender();
+      }
+
       this._update();
 
       const matrix = this._matrix.elements;
@@ -110,6 +114,10 @@ const canvas = {
       //   ctx.clip();
       // }
 
+      if (_.isFunction(this._renderer.onAfterRender)) {
+        this._renderer.onAfterRender();
+      }
+
       return this.flagReset();
     },
   },
@@ -162,6 +170,10 @@ const canvas = {
 
       if (!forced && (!visible || clip || opacity === 0)) {
         return this;
+      }
+
+      if (_.isFunction(this._renderer.onBeforeRender)) {
+        this._renderer.onBeforeRender();
       }
 
       this._update();
@@ -399,6 +411,10 @@ const canvas = {
         ctx.setLineDash(emptyArray);
       }
 
+      if (_.isFunction(this._renderer.onAfterRender)) {
+        this._renderer.onAfterRender();
+      }
+
       return this.flagReset();
     },
   },
@@ -431,6 +447,10 @@ const canvas = {
 
       if (!forced && (!visible || opacity === 0)) {
         return this;
+      }
+
+      if (_.isFunction(this._renderer.onBeforeRender)) {
+        this._renderer.onBeforeRender();
       }
 
       this._update();
@@ -544,6 +564,10 @@ const canvas = {
         ctx.setLineDash(emptyArray);
       }
 
+      if (_.isFunction(this._renderer.onAfterRender)) {
+        this._renderer.onAfterRender();
+      }
+
       return this.flagReset();
     },
   },
@@ -561,6 +585,10 @@ const canvas = {
 
       if (!forced && (!visible || clip || opacity === 0)) {
         return this;
+      }
+
+      if (_.isFunction(this._renderer.onBeforeRender)) {
+        this._renderer.onBeforeRender();
       }
 
       this._update();
@@ -779,6 +807,10 @@ const canvas = {
         ctx.setLineDash(emptyArray);
       }
 
+      if (_.isFunction(this._renderer.onAfterRender)) {
+        this._renderer.onAfterRender();
+      }
+
       return this.flagReset();
     },
   },
@@ -787,6 +819,10 @@ const canvas = {
     render: function (ctx, parent) {
       if (!parent) {
         return;
+      }
+
+      if (_.isFunction(this._renderer.onBeforeRender)) {
+        this._renderer.onBeforeRender();
       }
 
       this._update();
@@ -820,6 +856,10 @@ const canvas = {
         }
       }
 
+      if (_.isFunction(this._renderer.onAfterRender)) {
+        this._renderer.onAfterRender();
+      }
+
       return this.flagReset();
     },
   },
@@ -828,6 +868,10 @@ const canvas = {
     render: function (ctx, parent) {
       if (!parent) {
         return;
+      }
+
+      if (_.isFunction(this._renderer.onBeforeRender)) {
+        this._renderer.onBeforeRender();
       }
 
       this._update();
@@ -872,12 +916,20 @@ const canvas = {
         }
       }
 
+      if (_.isFunction(this._renderer.onAfterRender)) {
+        this._renderer.onAfterRender();
+      }
+
       return this.flagReset();
     },
   },
 
   texture: {
     render: function (ctx) {
+      if (_.isFunction(this._renderer.onBeforeRender)) {
+        this._renderer.onBeforeRender();
+      }
+
       this._update();
 
       const image = this.image;
@@ -925,6 +977,10 @@ const canvas = {
         } else {
           this._renderer.scale.set(this._scale, this._scale);
         }
+      }
+
+      if (_.isFunction(this._renderer.onAfterRender)) {
+        this._renderer.onAfterRender();
       }
 
       return this.flagReset();

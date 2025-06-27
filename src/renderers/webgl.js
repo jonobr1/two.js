@@ -76,6 +76,10 @@ const webgl = {
         return;
       }
 
+      if (_.isFunction(this._renderer.onBeforeRender)) {
+        this._renderer.onBeforeRender();
+      }
+
       this._update();
 
       const parent = this.parent;
@@ -160,6 +164,10 @@ const webgl = {
 
       if (this._mask) {
         gl.disable(gl.STENCIL_TEST);
+      }
+
+      if (_.isFunction(this._renderer.onAfterRender)) {
+        this._renderer.onAfterRender();
       }
 
       return this.flagReset();
@@ -475,6 +483,10 @@ const webgl = {
         return this;
       }
 
+      if (_.isFunction(this._renderer.onBeforeRender)) {
+        this._renderer.onBeforeRender();
+      }
+
       this._update();
 
       // Calculate what changed
@@ -657,6 +669,10 @@ const webgl = {
         gl.disable(gl.STENCIL_TEST);
       }
 
+      if (_.isFunction(this._renderer.onAfterRender)) {
+        this._renderer.onAfterRender();
+      }
+
       return this.flagReset();
     },
   },
@@ -771,6 +787,10 @@ const webgl = {
     render: function (gl, programs, forcedParent) {
       if (!this._visible || !this._opacity) {
         return this;
+      }
+
+      if (_.isFunction(this._renderer.onBeforeRender)) {
+        this._renderer.onBeforeRender();
       }
 
       this._update();
@@ -936,6 +956,10 @@ const webgl = {
       gl.uniformMatrix3fv(program.matrix, false, this._renderer.matrix);
       gl.uniform1f(program.size, size * programs.resolution.ratio);
       gl.drawArrays(gl.POINTS, 0, length);
+
+      if (_.isFunction(this._renderer.onAfterRender)) {
+        this._renderer.onAfterRender();
+      }
 
       return this.flagReset();
     },
@@ -1210,6 +1234,10 @@ const webgl = {
         return this;
       }
 
+      if (_.isFunction(this._renderer.onBeforeRender)) {
+        this._renderer.onBeforeRender();
+      }
+
       this._update();
 
       // Calculate what changed
@@ -1393,6 +1421,10 @@ const webgl = {
         gl.disable(gl.STENCIL_TEST);
       }
 
+      if (_.isFunction(this._renderer.onAfterRender)) {
+        this._renderer.onAfterRender();
+      }
+
       return this.flagReset();
     },
   },
@@ -1401,6 +1433,10 @@ const webgl = {
     render: function (ctx, parent) {
       if (!ctx.canvas.getContext('2d') || !parent) {
         return;
+      }
+
+      if (_.isFunction(this._renderer.onBeforeRender)) {
+        this._renderer.onBeforeRender();
       }
 
       this._update();
@@ -1434,6 +1470,10 @@ const webgl = {
         }
       }
 
+      if (_.isFunction(this._renderer.onAfterRender)) {
+        this._renderer.onAfterRender();
+      }
+
       return this.flagReset();
     },
   },
@@ -1442,6 +1482,10 @@ const webgl = {
     render: function (ctx, parent) {
       if (!ctx.canvas.getContext('2d') || !parent) {
         return;
+      }
+
+      if (_.isFunction(this._renderer.onBeforeRender)) {
+        this._renderer.onBeforeRender();
       }
 
       this._update();
@@ -1486,6 +1530,10 @@ const webgl = {
         }
       }
 
+      if (_.isFunction(this._renderer.onAfterRender)) {
+        this._renderer.onAfterRender();
+      }
+
       return this.flagReset();
     },
   },
@@ -1494,6 +1542,10 @@ const webgl = {
     render: function (ctx, elem) {
       if (!ctx.canvas.getContext('2d')) {
         return;
+      }
+
+      if (_.isFunction(this._renderer.onBeforeRender)) {
+        this._renderer.onBeforeRender();
       }
 
       this._update();
@@ -1549,6 +1601,10 @@ const webgl = {
         }
         this._renderer.scale.x = sx < 0 ? -sx : sx;
         this._renderer.scale.y = sy < 0 ? -sy : sy;
+      }
+
+      if (_.isFunction(this._renderer.onAfterRender)) {
+        this._renderer.onAfterRender();
       }
 
       return this.flagReset();
