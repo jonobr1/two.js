@@ -241,11 +241,11 @@ export class Texture extends Element {
    * @name Two.Texture.loadHeadlessBuffer
    * @property {Function} - Loads an image as a buffer in headless environments.
    * @param {Two.Texture} texture - The {@link Two.Texture} to be loaded.
-   * @param {Function} loaded - The callback function to be triggered once the image is loaded.
+   * @param {Function} onLoad - The callback function to be triggered once the image is loaded.
    * @nota-bene - This function uses node's `fs.readFileSync` to spoof the `<img />` loading process in the browser.
    */
-  static loadHeadlessBuffer(texture, loaded) {
-    texture.image.onload = loaded;
+  static loadHeadlessBuffer(texture, onLoad) {
+    texture.image.onload = onLoad;
     texture.image.src = texture.src;
   }
 

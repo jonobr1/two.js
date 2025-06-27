@@ -130,13 +130,13 @@ declare module 'two.js/src/events' {
      * @function
      * @description Alias for {@link Two.Events#addEventListener}.
      */
-    on(...args: any[]): any;
+    on(name?: string, handler?: Function): Events;
     /**
      * @name Two.Events#bind
      * @function
      * @description Alias for {@link Two.Events#addEventListener}.
      */
-    bind(...args: any[]): any;
+    bind(name?: string, handler?: Function): Events;
     /**
      * @name Two.Events#removeEventListener
      * @function
@@ -150,13 +150,13 @@ declare module 'two.js/src/events' {
      * @function
      * @description Alias for {@link Two.Events#removeEventListener}.
      */
-    off(...args: any[]): any;
+    off(name?: string, handler?: Function): Events;
     /**
      * @name Two.Events#unbind
      * @function
      * @description Alias for {@link Two.Events#removeEventListener}.
      */
-    unbind(...args: any[]): any;
+    unbind(name?: string, handler?: Function): Events;
     /**
      * @name Two.Events#dispatchEvent
      * @function
@@ -166,8 +166,8 @@ declare module 'two.js/src/events' {
      */
     dispatchEvent(name: string, ...args: any[]): Events;
     trigger(...args: any[]): any;
-    listen(obj: any, name: any, handler: any): Events;
-    ignore(obj: any, name: any, handler: any): Events;
+    listen(obj: any, name: string, handler: Function): Events;
+    ignore(obj: any, name: string, handler: Function): Events;
   }
 }
 declare module 'two.js/src/vector' {
@@ -872,7 +872,23 @@ declare module 'two.js/src/element' {
      * @property {Object} - Object access to store relevant renderer specific variables. Warning: manipulating this object can create unintended consequences.
      * @nota-bene With the {@link Two.SVGRenderer} you can access the underlying SVG element created via `shape.renderer.elem`.
      */
-    renderer: { type: 'element' | string };
+    renderer: {
+      type: 'element' | string;
+      elem?:
+        | SVGGElement
+        | SVGPathElement
+        | SVGTextElement
+        | SVGPatternElement
+        | SVGDefsElement
+        | SVGGradientElement
+        | SVGLinearGradientElement
+        | SVGRadialGradientElement
+        | SVGImageElement
+        | SVGClipPathElement
+        | SVGStopElement;
+      onBeforeRender?: () => void;
+      onAfterRender?: () => void;
+    };
     /**
      * @name Two.Element#id
      * @property {String} - Session specific unique identifier.
@@ -2386,10 +2402,10 @@ declare module 'two.js/src/effects/texture' {
      * @name Two.Texture.loadHeadlessBuffer
      * @property {Function} - Loads an image as a buffer in headless environments.
      * @param {Texture} texture - The {@link Two.Texture} to be loaded.
-     * @param {Function} loaded - The callback function to be triggered once the image is loaded.
+     * @param {Function} onLoad - The callback function to be triggered once the image is loaded.
      * @nota-bene - This function uses node's `fs.readFileSync` to spoof the `<img />` loading process in the browser.
      */
-    static loadHeadlessBuffer(texture: Texture, loaded: Function): void;
+    static loadHeadlessBuffer(texture: Texture, onLoad: Function): void;
     /**
      * @name Two.Texture.getTag
      * @property {Function} - Retrieves the tag name of an image, video, or canvas node.
@@ -2410,9 +2426,9 @@ declare module 'two.js/src/effects/texture' {
      * @description A collection of functions to register different types of textures. Used internally by a {@link Two.Texture}.
      */
     static Register: {
-      canvas: (texture: any, callback: any) => void;
-      img: (texture: any, callback: any) => void;
-      video: (texture: any, callback: any) => void;
+      canvas: (texture: Texture, callback: Function) => void;
+      img: (texture: Texture, callback: Function) => void;
+      video: (texture: Texture, callback: Function) => void;
     };
     /**
      * @name Two.Texture.load
@@ -3773,7 +3789,10 @@ declare module 'two.js/src/utils/xhr' {
    * @returns {XMLHttpRequest} The constructed and called XHR request.
    * @description Canonical method to initiate `GET` requests in the browser. Mainly used by {@link Two#load} method.
    */
-  export function xhr(path: string, callback: Function): XMLHttpRequest;
+  export function xhr(
+    path: string,
+    callback: (resp: XMLHttpRequestResponseType) => void
+  ): XMLHttpRequest;
 }
 declare module 'two.js/src/effects/image-sequence' {
   /**
@@ -4477,7 +4496,7 @@ declare module 'two.js/src/renderers/webgl' {
     scene: Group;
     _renderer: {
       type: string;
-      matrix: any;
+      matrix: number[];
       scale: number;
       opacity: number;
     };
@@ -5077,7 +5096,7 @@ declare module 'two.js' {
      * @returns {Texture}
      * @description Creates a Two.js texture object.
      */
-    makeTexture(pathOrSource: any, callback?: Function): Texture;
+    makeTexture(pathOrSource: any, callback?: () => void): Texture;
     /**
      * @name Two#makeGroup
      * @function
@@ -5108,11 +5127,43 @@ declare module 'two.js' {
      * @name Two#load
      * @function
      * @param {String|SVGElement} pathOrSVGContent - The URL path of an SVG file or an SVG document as text.
-     * @param {Function} callback - Function to call once loading has completed.
+     * @param {Function} [callback] - Function to call once loading has completed.
      * @returns {Group}
      * @description Load an SVG file or SVG text and interpret it into Two.js legible objects.
      */
-    load(pathOrSVGContent: any, callback: Function): Group;
+    load(
+      pathOrSVGContent: any,
+      callback?: (
+        group: Group,
+        svg:
+          | SVGElement
+          | SVGGElement
+          | SVGPathElement
+          | SVGTextElement
+          | SVGPatternElement
+          | SVGDefsElement
+          | SVGGradientElement
+          | SVGLinearGradientElement
+          | SVGRadialGradientElement
+          | SVGImageElement
+          | SVGClipPathElement
+          | SVGStopElement
+          | (
+              | SVGElement
+              | SVGGElement
+              | SVGPathElement
+              | SVGTextElement
+              | SVGPatternElement
+              | SVGDefsElement
+              | SVGGradientElement
+              | SVGLinearGradientElement
+              | SVGRadialGradientElement
+              | SVGImageElement
+              | SVGClipPathElement
+              | SVGStopElement
+            )[]
+      ) => void
+    ): Group;
   }
   import { Line } from 'two.js/src/shapes/line';
   import { Path } from 'two.js/src/path';
