@@ -350,7 +350,7 @@ Loads an image as a buffer in headless environments.
 | Argument | Description |
 | ---- | ----------- |
 |  texture  | The [Two.Texture](/docs/effects/texture/) to be loaded. |
-|  loaded  | The callback function to be triggered once the image is loaded. |
+|  onLoad  | The callback function to be triggered once the image is loaded. |
 </div>
 
 

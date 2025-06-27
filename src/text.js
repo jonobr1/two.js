@@ -289,7 +289,6 @@ export class Text extends Shape {
 
     /**
      * @name Two.Text#dashes
-     * @type {number[] & { offset?: number }}
      * @property {Number[]} - Array of numbers. Odd indices represent dash length. Even indices represent dash space.
      * @description A list of numbers that represent the repeated dash length and dash space applied to the stroke of the text.
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray} for more information on the SVG stroke-dasharray attribute.
