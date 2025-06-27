@@ -6,21 +6,24 @@ function isArrayLike(collection) {
   if (collection === null || collection === undefined) return false;
   const length = collection.length;
   // Arrays cannot hold more than 2^32 - 1 items
-  return (typeof length == 'number' && length >= 0 && length < 4294967296);
+  return typeof length == 'number' && length >= 0 && length < 4294967296;
 }
 
 export const _ = {
-  isNaN: function(obj) {
+  isNaN: function (obj) {
     return typeof obj === 'number' && obj !== +obj;
   },
-  isElement: function(obj) {
+  isElement: function (obj) {
     return !!(obj && obj.nodeType === 1);
   },
-  isObject: function(obj) {
+  isObject: function (obj) {
     const type = typeof obj;
-    return type === 'function' || type === 'object' && !!obj;
+    return type === 'function' || (type === 'object' && !!obj);
   },
-  extend: function(base) {
+  isFunction: function (obj) {
+    return typeof obj === 'function';
+  },
+  extend: function (base) {
     const sources = slice.call(arguments, 1);
     for (let i = 0; i < sources.length; i++) {
       const obj = sources[i];
@@ -30,7 +33,7 @@ export const _ = {
     }
     return base;
   },
-  defaults: function(base) {
+  defaults: function (base) {
     const sources = slice.call(arguments, 1);
     for (let i = 0; i < sources.length; i++) {
       const obj = sources[i];
@@ -42,7 +45,7 @@ export const _ = {
     }
     return base;
   },
-  each: function(obj, iteratee, context) {
+  each: function (obj, iteratee, context) {
     const ctx = context || this;
     const keys = !isArrayLike(obj) && Object.keys(obj);
     const length = (keys || obj).length;
@@ -57,5 +60,6 @@ export const _ = {
    * @property {Date} - A special `Date` like object to get the current millis of the session. Used internally to calculate time between frames.
    * e.g: `Utils.performance.now() // milliseconds since epoch`
    */
-  performance: ((root.performance && root.performance.now) ? root.performance : Date)
+  performance:
+    root.performance && root.performance.now ? root.performance : Date,
 };

@@ -319,6 +319,10 @@ const svg = {
         return this;
       }
 
+      if (_.isFunction(this._renderer.onBeforeRender)) {
+        this._renderer.onBeforeRender();
+      }
+
       this._update();
 
       if (!this._renderer.elem) {
@@ -417,6 +421,10 @@ const svg = {
         Object.assign(this._renderer.elem.dataset, this.dataset);
       }
 
+      if (_.isFunction(this._renderer.onAfterRender)) {
+        this._renderer.onAfterRender();
+      }
+
       return this.flagReset();
     },
   },
@@ -428,6 +436,10 @@ const svg = {
       // applied once the object is visible again
       if (this._opacity === 0 && !this._flagOpacity) {
         return this;
+      }
+
+      if (_.isFunction(this._renderer.onBeforeRender)) {
+        this._renderer.onBeforeRender();
       }
 
       this._update();
@@ -570,6 +582,10 @@ const svg = {
         }
       }
 
+      if (_.isFunction(this._renderer.onAfterRender)) {
+        this._renderer.onAfterRender();
+      }
+
       return this.flagReset();
     },
   },
@@ -581,6 +597,10 @@ const svg = {
       // applied once the object is visible again
       if (this._opacity === 0 && !this._flagOpacity) {
         return this;
+      }
+
+      if (_.isFunction(this._renderer.onBeforeRender)) {
+        this._renderer.onBeforeRender();
       }
 
       this._update();
@@ -683,6 +703,10 @@ const svg = {
         // Otherwise apply all pending attributes
       } else {
         svg.setAttributes(this._renderer.elem, changed);
+      }
+
+      if (_.isFunction(this._renderer.onAfterRender)) {
+        this._renderer.onAfterRender();
       }
 
       return this.flagReset();
@@ -840,6 +864,10 @@ const svg = {
 
   'linear-gradient': {
     render: function (domElement, silent) {
+      if (_.isFunction(this._renderer.onBeforeRender)) {
+        this._renderer.onBeforeRender();
+      }
+
       if (!silent) {
         this._update();
       }
@@ -917,12 +945,20 @@ const svg = {
         }
       }
 
+      if (_.isFunction(this._renderer.onAfterRender)) {
+        this._renderer.onAfterRender();
+      }
+
       return this.flagReset();
     },
   },
 
   'radial-gradient': {
     render: function (domElement, silent) {
+      if (_.isFunction(this._renderer.onBeforeRender)) {
+        this._renderer.onBeforeRender();
+      }
+
       if (!silent) {
         this._update();
       }
@@ -1003,12 +1039,20 @@ const svg = {
         }
       }
 
+      if (_.isFunction(this._renderer.onAfterRender)) {
+        this._renderer.onAfterRender();
+      }
+
       return this.flagReset();
     },
   },
 
   texture: {
     render: function (domElement, silent) {
+      if (_.isFunction(this._renderer.onBeforeRender)) {
+        this._renderer.onBeforeRender();
+      }
+
       if (!silent) {
         this._update();
       }
@@ -1114,6 +1158,10 @@ const svg = {
       ) {
         this._renderer.elem.appendChild(this._renderer.image);
         this._renderer.appended = true;
+      }
+
+      if (_.isFunction(this._renderer.onAfterRender)) {
+        this._renderer.onAfterRender();
       }
 
       return this.flagReset();
