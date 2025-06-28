@@ -43,7 +43,7 @@ const proto = {
         this.vertices.splice(0, 1, v);
         this.vertices[0].command = Commands.move;
       } else {
-        const error = new TwoError('Two.Line.x argument is not an object.');
+        const error = new TwoError('Two.Line.left argument is not an object.');
         console.warn(error.name, error.message);
       }
     },
@@ -58,7 +58,7 @@ const proto = {
         this.vertices.splice(1, 1, v);
         this.vertices[1].command = Commands.line;
       } else {
-        const error = new TwoError('Two.Line.y argument is not an object.');
+        const error = new TwoError('Two.Line.right argument is not an object.');
         console.warn(error.name, error.message);
       }
     },
