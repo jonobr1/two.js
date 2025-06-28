@@ -782,8 +782,8 @@ var Constants = {
     svg: "SVGRenderer",
     canvas: "CanvasRenderer"
   },
-  Version: "v0.8.19",
-  PublishDate: "2025-06-27T18:00:39.187Z",
+  Version: "v0.8.20",
+  PublishDate: "2025-06-28T16:50:54.796Z",
   Identifier: "two-",
   Resolution: 12,
   AutoCalculateImportedMatrices: true,
@@ -6782,6 +6782,7 @@ var proto22 = {
     set: function(v) {
       if (_.isObject(v)) {
         this.vertices.splice(0, 1, v);
+        this.vertices[0].command = Commands.move;
       } else {
         const error = new TwoError("Two.Line.x argument is not an object.");
         console.warn(error.name, error.message);
@@ -6796,6 +6797,7 @@ var proto22 = {
     set: function(v) {
       if (_.isObject(v)) {
         this.vertices.splice(1, 1, v);
+        this.vertices[1].command = Commands.line;
       } else {
         const error = new TwoError("Two.Line.y argument is not an object.");
         console.warn(error.name, error.message);
