@@ -11,6 +11,10 @@ All notable changes to this project will be documented in this file. The format 
 
 <carbon-ads />
 
+## Nightly
+
+- Fixed command setting on `Two.Line.left` and `Two.Line.right`
+
 ## June 27, 2025 v0.8.19
 
 <h3 class="visible">Jun 27, 2025</h3><version-link v="v0.8.19" />
