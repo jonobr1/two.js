@@ -3490,7 +3490,29 @@ declare module 'two.js/src/text' {
      */
     static Measure(text: Text): Dimensions;
 
-    constructor(message?: string, x?: number, y?: number, styles?: any);
+    constructor(
+      message?: string,
+      x?: number,
+      y?: number,
+      styles?: {
+        value?: string;
+        family?: string;
+        size?: number;
+        leading?: number;
+        alignment?: 'left' | 'center' | 'right';
+        linewidth?: number;
+        style?: 'normal' | 'italic';
+        weight?: number | string;
+        decoration?: 'underline' | 'strikethrough' | 'none';
+        direction?: 'ltr' | 'rtl';
+        baseline?: 'top' | 'middle' | 'bottom' | 'baseline';
+        opacity?: number;
+        visible?: boolean;
+        fill?: string | Gradient | Texture;
+        stroke?: string | Gradient | Texture;
+        dashes?: number[] & { offset?: number };
+      }
+    );
     /**
      * @name Two.Text#_flagValue
      * @private
@@ -5020,7 +5042,29 @@ declare module 'two.js' {
      * @returns {Text}
      * @description Creates a Two.js text object and adds it to the scene.
      */
-    makeText(message: string, x: number, y: number, styles?: any): Text;
+    makeText(
+      message: string,
+      x: number,
+      y: number,
+      styles?: {
+        value?: string;
+        family?: string;
+        size?: number;
+        leading?: number;
+        alignment?: 'left' | 'center' | 'right';
+        linewidth?: number;
+        style?: 'normal' | 'italic';
+        weight?: number | string;
+        decoration?: 'underline' | 'strikethrough' | 'none';
+        direction?: 'ltr' | 'rtl';
+        baseline?: 'top' | 'middle' | 'bottom' | 'baseline';
+        opacity?: number;
+        visible?: boolean;
+        fill?: string | Gradient | Texture;
+        stroke?: string | Gradient | Texture;
+        dashes?: number[] & { offset?: number };
+      }
+    ): Text;
     /**
      * @name Two#makeLinearGradient
      * @function
