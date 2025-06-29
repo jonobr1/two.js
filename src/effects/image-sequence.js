@@ -11,7 +11,7 @@ import { Texture } from './texture.js';
  * @name Two.ImageSequence
  * @class
  * @extends Two.Rectangle
- * @param {String|String[]|Two.Texture|Two.Texture[]} paths - A list of URLs or {@link Two.Texture}s.
+ * @param {String|String[]|Two.Texture|Two.Texture[]} [paths] - A list of URLs or {@link Two.Texture}s.
  * @param {Number} [ox=0] - The initial `x` position of the Two.ImageSequence.
  * @param {Number} [oy=0] - The initial `y` position of the Two.ImageSequence.
  * @param {Number} [frameRate=30] - The frame rate at which the images should playback at.
@@ -140,7 +140,7 @@ export class ImageSequence extends Rectangle {
      */
     if (Array.isArray(paths)) {
       this.textures = paths.map(GenerateTexture.bind(this));
-    } else {
+    } else if (typeof paths === 'string') {
       // If just a single path convert into a single Two.Texture
       this.textures = [GenerateTexture(paths)];
     }
