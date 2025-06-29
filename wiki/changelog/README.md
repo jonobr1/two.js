@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file. The format 
 
 ## Nightly
 
+- Improved `Two.ImageSequence` to take all optional arguments on instantiation
 - Fixed command setting on `Two.Line.left` and `Two.Line.right`
 
 ## June 27, 2025 v0.8.19
