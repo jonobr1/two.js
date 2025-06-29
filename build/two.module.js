@@ -783,7 +783,7 @@ var Constants = {
     canvas: "CanvasRenderer"
   },
   Version: "v0.8.20",
-  PublishDate: "2025-06-28T16:50:54.796Z",
+  PublishDate: "2025-06-29T04:04:23.654Z",
   Identifier: "two-",
   Resolution: 12,
   AutoCalculateImportedMatrices: true,
@@ -6784,7 +6784,7 @@ var proto22 = {
         this.vertices.splice(0, 1, v);
         this.vertices[0].command = Commands.move;
       } else {
-        const error = new TwoError("Two.Line.x argument is not an object.");
+        const error = new TwoError("Two.Line.left argument is not an object.");
         console.warn(error.name, error.message);
       }
     }
@@ -6799,7 +6799,7 @@ var proto22 = {
         this.vertices.splice(1, 1, v);
         this.vertices[1].command = Commands.line;
       } else {
-        const error = new TwoError("Two.Line.y argument is not an object.");
+        const error = new TwoError("Two.Line.right argument is not an object.");
         console.warn(error.name, error.message);
       }
     }
@@ -7855,7 +7855,7 @@ var _ImageSequence = class extends Rectangle {
     this.noFill();
     if (Array.isArray(paths)) {
       this.textures = paths.map(GenerateTexture.bind(this));
-    } else {
+    } else if (typeof paths === "string") {
       this.textures = [GenerateTexture(paths)];
     }
     this.origin = new Vector();
