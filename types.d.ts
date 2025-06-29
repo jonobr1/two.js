@@ -3141,7 +3141,7 @@ declare module 'two.js/src/effects/sprite' {
      */
   export class Sprite extends Rectangle {
     constructor(
-      path?: any,
+      path?: string | Texture,
       ox?: number,
       oy?: number,
       cols?: number,
@@ -3799,7 +3799,7 @@ declare module 'two.js/src/effects/image-sequence' {
      * @name Two.ImageSequence
      * @class
 
-     * @param {String|String[]|Texture|Texture[]} paths - A list of URLs or {@link Two.Texture}s.
+     * @param {String|String[]|Texture|Texture[]} [paths] - A list of URLs or {@link Two.Texture}s.
      * @param {Number} [ox=0] - The initial `x` position of the Two.ImageSequence.
      * @param {Number} [oy=0] - The initial `y` position of the Two.ImageSequence.
      * @param {Number} [frameRate=30] - The frame rate at which the images should playback at.
@@ -3811,6 +3811,12 @@ declare module 'two.js/src/effects/image-sequence' {
      * @property The default frame rate that {@link Two.ImageSequence#frameRate} is set to when instantiated.
      */
     static DefaultFrameRate: number;
+    constructor(
+      paths?: string | string[] | Texture | Texture[],
+      ox?: number,
+      oy?: number,
+      frameRate?: number
+    );
     /**
      * @name Two.ImageSequence#_flagTextures
      * @private
@@ -3923,6 +3929,7 @@ declare module 'two.js/src/effects/image-sequence' {
     stop(): ImageSequence;
   }
   import { Rectangle } from 'two.js/src/shapes/rectangle';
+  import { Texture } from 'two.js/src/effects/texture';
 }
 declare module 'two.js/src/shapes/arc-segment' {
   /**
@@ -5082,7 +5089,7 @@ declare module 'two.js' {
      * @description Creates a Two.js image sequence object and adds it to the scene.
      */
     makeImageSequence(
-      pathsOrTextures: any,
+      pathsOrTextures: string[] | Texture[] | string | Texture,
       x: number,
       y: number,
       frameRate?: number,
