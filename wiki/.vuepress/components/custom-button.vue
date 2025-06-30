@@ -91,6 +91,10 @@
         mask-image: url(/images/npm.svg);
         -webkit-mask-image: url(/images/npm.svg);
       }
+      &.gpt {
+        mask-image: url(/images/gpt.svg);
+        -webkit-mask-image: url(/images/gpt.svg);
+      }
     }
 
     .label {

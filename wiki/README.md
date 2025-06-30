@@ -11,6 +11,7 @@ A two-dimensional drawing api geared towards modern web browsers. It is renderer
 <custom-button text="Github" type="github" href="https://github.com/jonobr1/two.js" />
 <custom-button text="Package" type="npm" href="https://www.npmjs.com/package/two.js" />
 <custom-button text="Sponsor" type="sponsor" href="https://github.com/sponsors/jonobr1" />
+<custom-button text="ChatGPT" type="gpt" href="https://chatgpt.com/g/g-hkcTX8uPm-two-js-tutor" />
 </div>
 
 <carbon-ads />
