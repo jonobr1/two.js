@@ -165,8 +165,7 @@ var Two = (() => {
         e[5],
         e[6],
         e[7],
-        e[8],
-        e[9]
+        e[8]
       );
     }
     return matrix;
