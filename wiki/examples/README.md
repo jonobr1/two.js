@@ -335,3 +335,4 @@ There are many more examples that exist out on the internet. Some starting point
 - [Two.js Collection on Codepen](https://codepen.io/collection/DRdLJk)
 - [A Beginner's Guide to Drawing 2D Graphics With Two.js](https://code.tutsplus.com/tutorials/a-beginners-guide-to-drawing-2d-graphics-using-twojs--cms-31681)
 - [Drawing and Animating with Two.js and Illustrator](https://modernweb.com/drawing-and-animating-with-two-js-and-illustrator/)
+- [Two.js tutor as a ChatGPT bot](https://chatgpt.com/g/g-hkcTX8uPm-two-js-tutor)
