@@ -70,7 +70,7 @@ function getComputedMatrix(object, matrix) {
     const m = matrices[i];
     const e = m.elements;
     matrix.multiply(
-      e[0], e[1], e[2], e[3], e[4], e[5], e[6], e[7], e[8], e[9]);
+      e[0], e[1], e[2], e[3], e[4], e[5], e[6], e[7], e[8]);
 
   }
 
