@@ -1,6 +1,6 @@
 {
   "name": "two.js",
-  "version": "v0.8.19",
+  "version": "v0.8.20",
   "description": "A renderer agnostic two-dimensional drawing api for the web.",
   "module": "build/two.module.js",
   "types": "types.d.ts",
