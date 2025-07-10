@@ -4860,7 +4860,7 @@ declare module 'two.js' {
       y1: number,
       x2: number,
       y2: number,
-      size: number
+      size?: number
     ): Path;
     /**
      * @name Two#makeRectangle
