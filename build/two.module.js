@@ -782,7 +782,7 @@ var Constants = {
     canvas: "CanvasRenderer"
   },
   Version: "v0.8.20",
-  PublishDate: "2025-07-10T22:18:15.411Z",
+  PublishDate: "2025-07-10T22:38:40.103Z",
   Identifier: "two-",
   Resolution: 12,
   AutoCalculateImportedMatrices: true,
@@ -11380,7 +11380,10 @@ var _Two = class {
     }
     if (obj.vertices) {
       if (typeof obj.vertices.unbind === "function") {
-        obj.vertices.unbind();
+        try {
+          obj.vertices.unbind();
+        } catch (e) {
+        }
       }
       for (i = 0; i < obj.vertices.length; i++) {
         v = obj.vertices[i];
@@ -11403,7 +11406,10 @@ var _Two = class {
         this.release(child);
       }
       if (typeof obj.children.unbind === "function") {
-        obj.children.unbind();
+        try {
+          obj.children.unbind();
+        } catch (e) {
+        }
       }
     }
     if (obj._renderer) {
@@ -11411,7 +11417,7 @@ var _Two = class {
         obj._renderer.elem.parentNode.removeChild(obj._renderer.elem);
         delete obj._renderer.elem;
       }
-      if (this.type === "webgl" && this.renderer.ctx) {
+      if (this.type === "WebGLRenderer" && this.renderer.ctx) {
         const gl = this.renderer.ctx;
         if (obj._renderer.texture) {
           gl.deleteTexture(obj._renderer.texture);
@@ -11425,7 +11431,7 @@ var _Two = class {
           obj._renderer.effect = null;
         }
       }
-      if (this.type === "canvas" && obj._renderer.context) {
+      if (this.type === "CanvasRenderer" && obj._renderer.context) {
         delete obj._renderer.context;
       }
     }

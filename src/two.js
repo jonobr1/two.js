@@ -450,7 +450,11 @@ export default class Two {
     // Unbind vertices on an object
     if (obj.vertices) {
       if (typeof obj.vertices.unbind === 'function') {
-        obj.vertices.unbind();
+        try {
+          obj.vertices.unbind();
+        } catch (e) {
+          // Ignore unbind errors for incomplete Collection objects
+        }
       }
       for (i = 0; i < obj.vertices.length; i++) {
         v = obj.vertices[i];
@@ -478,7 +482,11 @@ export default class Two {
         this.release(child);
       }
       if (typeof obj.children.unbind === 'function') {
-        obj.children.unbind();
+        try {
+          obj.children.unbind();
+        } catch (e) {
+          // Ignore unbind errors for incomplete Collection objects
+        }
       }
     }
 
@@ -491,7 +499,7 @@ export default class Two {
       }
 
       // WebGL resource cleanup
-      if (this.type === 'webgl' && this.renderer.ctx) {
+      if (this.type === 'WebGLRenderer' && this.renderer.ctx) {
         const gl = this.renderer.ctx;
         
         // Clean up textures
@@ -513,7 +521,7 @@ export default class Two {
       }
 
       // Canvas renderer cleanup - clear cached contexts and data
-      if (this.type === 'canvas' && obj._renderer.context) {
+      if (this.type === 'CanvasRenderer' && obj._renderer.context) {
         delete obj._renderer.context;
       }
     }
