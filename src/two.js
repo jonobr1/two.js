@@ -482,6 +482,42 @@ export default class Two {
       }
     }
 
+    // Clean up renderer-specific resources
+    if (obj._renderer) {
+      // SVG DOM element cleanup
+      if (obj._renderer.elem && obj._renderer.elem.parentNode) {
+        obj._renderer.elem.parentNode.removeChild(obj._renderer.elem);
+        delete obj._renderer.elem;
+      }
+
+      // WebGL resource cleanup
+      if (this.type === 'webgl' && this.renderer.ctx) {
+        const gl = this.renderer.ctx;
+        
+        // Clean up textures
+        if (obj._renderer.texture) {
+          gl.deleteTexture(obj._renderer.texture);
+          delete obj._renderer.texture;
+        }
+        
+        // Clean up buffers
+        if (obj._renderer.positionBuffer) {
+          gl.deleteBuffer(obj._renderer.positionBuffer);
+          delete obj._renderer.positionBuffer;
+        }
+        
+        // Clean up any other WebGL effects
+        if (obj._renderer.effect) {
+          obj._renderer.effect = null;
+        }
+      }
+
+      // Canvas renderer cleanup - clear cached contexts and data
+      if (this.type === 'canvas' && obj._renderer.context) {
+        delete obj._renderer.context;
+      }
+    }
+
     return obj;
   }
 

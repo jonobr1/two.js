@@ -766,7 +766,7 @@ var Two = (() => {
       canvas: "CanvasRenderer"
     },
     Version: "v0.8.20",
-    PublishDate: "2025-06-29T04:04:23.654Z",
+    PublishDate: "2025-07-10T22:18:15.411Z",
     Identifier: "two-",
     Resolution: 12,
     AutoCalculateImportedMatrices: true,
@@ -11384,6 +11384,29 @@ var Two = (() => {
         }
         if (typeof obj.children.unbind === "function") {
           obj.children.unbind();
+        }
+      }
+      if (obj._renderer) {
+        if (obj._renderer.elem && obj._renderer.elem.parentNode) {
+          obj._renderer.elem.parentNode.removeChild(obj._renderer.elem);
+          delete obj._renderer.elem;
+        }
+        if (this.type === "webgl" && this.renderer.ctx) {
+          const gl = this.renderer.ctx;
+          if (obj._renderer.texture) {
+            gl.deleteTexture(obj._renderer.texture);
+            delete obj._renderer.texture;
+          }
+          if (obj._renderer.positionBuffer) {
+            gl.deleteBuffer(obj._renderer.positionBuffer);
+            delete obj._renderer.positionBuffer;
+          }
+          if (obj._renderer.effect) {
+            obj._renderer.effect = null;
+          }
+        }
+        if (this.type === "canvas" && obj._renderer.context) {
+          delete obj._renderer.context;
         }
       }
       return obj;
