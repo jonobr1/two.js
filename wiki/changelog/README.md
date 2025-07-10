@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file. The format 
 
 ## Nightly
 
+- Improved `Two.release` to account for renderer specific deallocations
 - Improved `Two.ImageSequence` to take all optional arguments on instantiation
 - Fixed command setting on `Two.Line.left` and `Two.Line.right`
 
