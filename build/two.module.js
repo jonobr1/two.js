@@ -782,7 +782,7 @@ var Constants = {
     canvas: "CanvasRenderer"
   },
   Version: "v0.8.20",
-  PublishDate: "2025-07-15T21:47:46.297Z",
+  PublishDate: "2025-07-15T21:59:45.980Z",
   Identifier: "two-",
   Resolution: 12,
   AutoCalculateImportedMatrices: true,
@@ -4136,6 +4136,18 @@ var _Sprite = class extends Rectangle {
     object.lastFrame = this.lastFrame;
     object.loop = this.loop;
     return object;
+  }
+  dispose() {
+    super.dispose();
+    if (this._playing) {
+      this._playing = false;
+    }
+    this._onLastFrame = null;
+    this._startTime = 0;
+    if (this._texture && typeof this._texture.unbind === "function") {
+      this._texture.unbind();
+    }
+    return this;
   }
   _update() {
     const effect = this._texture;

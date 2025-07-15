@@ -3309,6 +3309,15 @@ declare module 'two.js/src/effects/sprite' {
      * @description Halt animation playback of a {@link Two.Sprite} and set the current frame back to the first frame.
      */
     stop(): Sprite;
+    /**
+     * @name Two.Sprite#dispose
+     * @function
+     * @description Release the sprite's renderer resources and detach all events.
+     * This method stops any running animation, clears animation callbacks, unbinds
+     * texture events, and inherits comprehensive cleanup from the Rectangle/Path
+     * hierarchy while preserving the renderer type for potential re-attachment.
+     */
+    dispose(): Sprite;
   }
   import { Rectangle } from 'two.js/src/shapes/rectangle';
   import { Texture } from 'two.js/src/effects/texture';

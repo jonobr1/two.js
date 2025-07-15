@@ -363,6 +363,38 @@ export class Sprite extends Rectangle {
   }
 
   /**
+   * @name Two.Sprite#dispose
+   * @function
+   * @returns {Two.Sprite}
+   * @description Release the sprite's renderer resources and detach all events.
+   * This method stops any running animation, clears animation callbacks, unbinds
+   * texture events, and inherits comprehensive cleanup from the Rectangle/Path
+   * hierarchy while preserving the renderer type for potential re-attachment.
+   */
+  dispose() {
+    // Call parent dispose for inherited cleanup (vertices, fill/stroke effects)
+    super.dispose();
+    
+    // Stop animation if playing
+    if (this._playing) {
+      this._playing = false;
+    }
+    
+    // Clear animation callbacks
+    this._onLastFrame = null;
+    
+    // Reset timing properties
+    this._startTime = 0;
+    
+    // Unbind texture events if texture exists
+    if (this._texture && typeof this._texture.unbind === 'function') {
+      this._texture.unbind();
+    }
+    
+    return this;
+  }
+
+  /**
    * @name Two.Sprite#_update
    * @function
    * @private
