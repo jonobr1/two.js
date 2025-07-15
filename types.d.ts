@@ -915,6 +915,13 @@ declare module 'two.js/src/element' {
     flagReset(): Element;
     copy(element: Element): Element;
     toObject(): object;
+    /**
+     * @name Two.Element#dispose
+     * @function
+     * @description Release the element's renderer object and detach any events.
+     * This cleans up renderer-specific resources and unbinds all event listeners.
+     */
+    dispose(): Element;
   }
   import { Events } from 'two.js/src/events';
 }
@@ -1620,6 +1627,15 @@ declare module 'two.js/src/group' {
      * @description Return a JSON compatible plain object that represents the group.
      */
     toObject(): Object;
+    /**
+     * @name Two.Group#dispose
+     * @function
+     * @description Release the group's renderer resources and detach all events.
+     * This method recursively disposes all child objects, unbinds the children
+     * collection events, and preserves the renderer type for potential re-attachment
+     * to a new renderer.
+     */
+    dispose(): Group;
     /**
      * @name Two.Group#corner
      * @function
@@ -2935,6 +2951,15 @@ declare module 'two.js/src/path' {
      */
     toObject(): object;
     /**
+     * @name Two.Path#dispose
+     * @function
+     * @description Release the path's renderer resources and detach all events.
+     * This method cleans up vertices collection events, individual vertex events,
+     * control point events, and fill/stroke effect events while preserving the
+     * renderer type for potential re-attachment to a new renderer.
+     */
+    dispose(): Path;
+    /**
      * @name Two.Path#noFill
      * @function
      * @description Short hand method to set fill to `none`.
@@ -3734,6 +3759,14 @@ declare module 'two.js/src/text' {
      */
     toObject(): object;
     /**
+     * @name Two.Text#dispose
+     * @function
+     * @description Release the text's renderer resources and detach all events.
+     * This method unbinds fill and stroke effect events while preserving the
+     * renderer type for potential re-attachment to a new renderer.
+     */
+    dispose(): Text;
+    /**
      * @name Two.Text#noFill
      * @function
      * @description Short hand method to set fill to `none`.
@@ -3949,6 +3982,15 @@ declare module 'two.js/src/effects/image-sequence' {
      * @description Halt animation playback of a {@link Two.ImageSequence} and set the current frame back to the first frame.
      */
     stop(): ImageSequence;
+    /**
+     * @name Two.ImageSequence#dispose
+     * @function
+     * @description Release the image sequence's renderer resources and detach all events.
+     * This method stops any running animation, clears animation callbacks, unbinds
+     * textures collection events, and unbinds individual texture events while
+     * preserving the renderer type for potential re-attachment to a new renderer.
+     */
+    dispose(): ImageSequence;
   }
   import { Rectangle } from 'two.js/src/shapes/rectangle';
   import { Texture } from 'two.js/src/effects/texture';
@@ -4147,6 +4189,15 @@ declare module 'two.js/src/shapes/points' {
      * @description Return a JSON compatible plain object that represents the points object.
      */
     toObject(): object;
+    /**
+     * @name Two.Points#dispose
+     * @function
+     * @description Release the points' renderer resources and detach all events.
+     * This method cleans up vertices collection events, individual vertex events,
+     * and fill/stroke effect events while preserving the renderer type for
+     * potential re-attachment to a new renderer.
+     */
+    dispose(): Points;
     /**
      * @name Two.Points#noFill
      * @function

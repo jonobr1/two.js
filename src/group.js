@@ -423,6 +423,41 @@ export class Group extends Shape {
   }
 
   /**
+   * @name Two.Group#dispose
+   * @function
+   * @returns {Two.Group}
+   * @description Release the group's renderer resources and detach all events.
+   * This method recursively disposes all child objects, unbinds the children
+   * collection events, and preserves the renderer type for potential re-attachment
+   * to a new renderer.
+   */
+  dispose() {
+    // Call parent dispose to preserve renderer type and unbind events
+    super.dispose();
+    
+    // Recursively dispose all children
+    if (this.children) {
+      for (let i = 0; i < this.children.length; i++) {
+        const child = this.children[i];
+        if (typeof child.dispose === 'function') {
+          child.dispose();
+        }
+      }
+    }
+    
+    // Unbind children collection events
+    if (this.children && typeof this.children.unbind === 'function') {
+      try {
+        this.children.unbind();
+      } catch (e) {
+        // Ignore unbind errors for incomplete Collection objects
+      }
+    }
+    
+    return this;
+  }
+
+  /**
    * @name Two.Group#corner
    * @function
    * @description Orient the children of the group to the upper left-hand corner of that group.
