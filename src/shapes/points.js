@@ -290,6 +290,51 @@ export class Points extends Shape {
   }
 
   /**
+   * @name Two.Points#dispose
+   * @function
+   * @returns {Two.Points}
+   * @description Release the points' renderer resources and detach all events.
+   * This method cleans up vertices collection events, individual vertex events,
+   * and fill/stroke effect events while preserving the renderer type for
+   * potential re-attachment to a new renderer.
+   */
+  dispose() {
+    // Call parent dispose to preserve renderer type and unbind events
+    super.dispose();
+    
+    // Unbind vertices collection events
+    if (this.vertices && typeof this.vertices.unbind === 'function') {
+      try {
+        this.vertices.unbind();
+      } catch (e) {
+        // Ignore unbind errors for incomplete Collection objects
+      }
+    }
+    
+    // Unbind individual vertex events
+    if (this.vertices) {
+      for (let i = 0; i < this.vertices.length; i++) {
+        const v = this.vertices[i];
+        if (typeof v.unbind === 'function') {
+          v.unbind();
+        }
+      }
+    }
+    
+    // Unbind fill effect events
+    if (typeof this.fill === 'object' && this.fill && 'unbind' in this.fill) {
+      this.fill.unbind();
+    }
+    
+    // Unbind stroke effect events
+    if (typeof this.stroke === 'object' && this.stroke && 'unbind' in this.stroke) {
+      this.stroke.unbind();
+    }
+    
+    return this;
+  }
+
+  /**
    * @name Two.Points#noFill
    * @function
    * @description Short hand method to set fill to `none`.

@@ -766,7 +766,7 @@ var Two = (() => {
       canvas: "CanvasRenderer"
     },
     Version: "v0.8.20",
-    PublishDate: "2025-07-10T22:38:40.103Z",
+    PublishDate: "2025-07-15T21:47:46.297Z",
     Identifier: "two-",
     Resolution: 12,
     AutoCalculateImportedMatrices: true,
@@ -1444,6 +1444,14 @@ var Two = (() => {
         id: this.id,
         className: this.className
       };
+    }
+    dispose() {
+      const rendererType = this._renderer.type;
+      this._renderer = { type: rendererType };
+      if (typeof this.unbind === "function") {
+        this.unbind();
+      }
+      return this;
     }
   };
   var Element = _Element;
@@ -3140,6 +3148,38 @@ var Two = (() => {
         this
       );
       return result;
+    }
+    dispose() {
+      super.dispose();
+      if (this.vertices && typeof this.vertices.unbind === "function") {
+        try {
+          this.vertices.unbind();
+        } catch (e) {
+        }
+      }
+      if (this.vertices) {
+        for (let i = 0; i < this.vertices.length; i++) {
+          const v = this.vertices[i];
+          if (typeof v.unbind === "function") {
+            v.unbind();
+          }
+          if (v.controls) {
+            if (v.controls.left && typeof v.controls.left.unbind === "function") {
+              v.controls.left.unbind();
+            }
+            if (v.controls.right && typeof v.controls.right.unbind === "function") {
+              v.controls.right.unbind();
+            }
+          }
+        }
+      }
+      if (typeof this.fill === "object" && this.fill && "unbind" in this.fill) {
+        this.fill.unbind();
+      }
+      if (typeof this.stroke === "object" && this.stroke && "unbind" in this.stroke) {
+        this.stroke.unbind();
+      }
+      return this;
     }
     noFill() {
       this.fill = "none";
@@ -4901,6 +4941,30 @@ var Two = (() => {
       );
       return result;
     }
+    dispose() {
+      super.dispose();
+      if (this.vertices && typeof this.vertices.unbind === "function") {
+        try {
+          this.vertices.unbind();
+        } catch (e) {
+        }
+      }
+      if (this.vertices) {
+        for (let i = 0; i < this.vertices.length; i++) {
+          const v = this.vertices[i];
+          if (typeof v.unbind === "function") {
+            v.unbind();
+          }
+        }
+      }
+      if (typeof this.fill === "object" && this.fill && "unbind" in this.fill) {
+        this.fill.unbind();
+      }
+      if (typeof this.stroke === "object" && this.stroke && "unbind" in this.stroke) {
+        this.stroke.unbind();
+      }
+      return this;
+    }
     noFill = Path.prototype.noFill;
     noStroke = Path.prototype.noStroke;
     corner = Path.prototype.corner;
@@ -5791,6 +5855,16 @@ var Two = (() => {
       }
       return result;
     }
+    dispose() {
+      super.dispose();
+      if (typeof this.fill === "object" && this.fill && "unbind" in this.fill) {
+        this.fill.unbind();
+      }
+      if (typeof this.stroke === "object" && this.stroke && "unbind" in this.stroke) {
+        this.stroke.unbind();
+      }
+      return this;
+    }
     noFill() {
       this.fill = "none";
       return this;
@@ -6224,6 +6298,24 @@ var Two = (() => {
         this
       );
       return result;
+    }
+    dispose() {
+      super.dispose();
+      if (this.children) {
+        for (let i = 0; i < this.children.length; i++) {
+          const child = this.children[i];
+          if (typeof child.dispose === "function") {
+            child.dispose();
+          }
+        }
+      }
+      if (this.children && typeof this.children.unbind === "function") {
+        try {
+          this.children.unbind();
+        } catch (e) {
+        }
+      }
+      return this;
     }
     corner() {
       const rect = this.getBoundingClientRect(true);
@@ -7920,6 +8012,28 @@ var Two = (() => {
       object.lastFrame = this.lastFrame;
       object.loop = this.loop;
       return object;
+    }
+    dispose() {
+      super.dispose();
+      if (this._playing) {
+        this._playing = false;
+      }
+      this._onLastFrame = null;
+      if (this.textures && typeof this.textures.unbind === "function") {
+        try {
+          this.textures.unbind();
+        } catch (e) {
+        }
+      }
+      if (this.textures) {
+        for (let i = 0; i < this.textures.length; i++) {
+          const texture = this.textures[i];
+          if (typeof texture.unbind === "function") {
+            texture.unbind();
+          }
+        }
+      }
+      return this;
     }
     _update() {
       const effect = this._textures;

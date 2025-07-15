@@ -101,6 +101,27 @@ export class Element extends Events {
       className: this.className,
     };
   }
+
+  /**
+   * @name Two.Element#dispose
+   * @function
+   * @description Release the element's renderer object and detach any events.
+   * This cleans up renderer-specific resources and unbinds all event listeners.
+   */
+  dispose() {
+    // Preserve the renderer type for potential re-attachment
+    const rendererType = this._renderer.type;
+    
+    // Clear renderer object but preserve type
+    this._renderer = { type: rendererType };
+    
+    // Unbind all events
+    if (typeof this.unbind === 'function') {
+      this.unbind();
+    }
+    
+    return this;
+  }
 }
 
 const proto = {

@@ -326,6 +326,49 @@ export class ImageSequence extends Rectangle {
   }
 
   /**
+   * @name Two.ImageSequence#dispose
+   * @function
+   * @returns {Two.ImageSequence}
+   * @description Release the image sequence's renderer resources and detach all events.
+   * This method stops any running animation, clears animation callbacks, unbinds
+   * textures collection events, and unbinds individual texture events while
+   * preserving the renderer type for potential re-attachment to a new renderer.
+   */
+  dispose() {
+    // Call parent dispose to preserve renderer type and unbind events
+    super.dispose();
+    
+    // Stop animation if playing
+    if (this._playing) {
+      this._playing = false;
+    }
+    
+    // Clear animation callbacks
+    this._onLastFrame = null;
+    
+    // Unbind textures collection events
+    if (this.textures && typeof this.textures.unbind === 'function') {
+      try {
+        this.textures.unbind();
+      } catch (e) {
+        // Ignore unbind errors for incomplete Collection objects
+      }
+    }
+    
+    // Unbind individual texture events
+    if (this.textures) {
+      for (let i = 0; i < this.textures.length; i++) {
+        const texture = this.textures[i];
+        if (typeof texture.unbind === 'function') {
+          texture.unbind();
+        }
+      }
+    }
+    
+    return this;
+  }
+
+  /**
    * @name Two.ImageSequence#_update
    * @function
    * @private
