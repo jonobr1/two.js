@@ -766,7 +766,7 @@ var Two = (() => {
       canvas: "CanvasRenderer"
     },
     Version: "v0.8.20",
-    PublishDate: "2025-07-15T21:59:45.980Z",
+    PublishDate: "2025-07-15T22:07:05.739Z",
     Identifier: "two-",
     Resolution: 12,
     AutoCalculateImportedMatrices: true,
@@ -1661,6 +1661,7 @@ var Two = (() => {
       return this;
     }
     dispose() {
+      super.dispose();
       if ("elem" in this._renderer) {
         const elem = this._renderer.elem;
         elem.parentNode.removeChild(elem);
@@ -3173,10 +3174,14 @@ var Two = (() => {
           }
         }
       }
-      if (typeof this.fill === "object" && this.fill && "unbind" in this.fill) {
+      if (typeof this.fill === "object" && this.fill && "dispose" in this.fill) {
+        this.fill.dispose();
+      } else if (typeof this.fill === "object" && this.fill && "unbind" in this.fill) {
         this.fill.unbind();
       }
-      if (typeof this.stroke === "object" && this.stroke && "unbind" in this.stroke) {
+      if (typeof this.stroke === "object" && this.stroke && "dispose" in this.stroke) {
+        this.stroke.dispose();
+      } else if (typeof this.stroke === "object" && this.stroke && "unbind" in this.stroke) {
         this.stroke.unbind();
       }
       return this;
@@ -4126,7 +4131,9 @@ var Two = (() => {
       }
       this._onLastFrame = null;
       this._startTime = 0;
-      if (this._texture && typeof this._texture.unbind === "function") {
+      if (this._texture && typeof this._texture.dispose === "function") {
+        this._texture.dispose();
+      } else if (this._texture && typeof this._texture.unbind === "function") {
         this._texture.unbind();
       }
       return this;
@@ -4969,10 +4976,14 @@ var Two = (() => {
           }
         }
       }
-      if (typeof this.fill === "object" && this.fill && "unbind" in this.fill) {
+      if (typeof this.fill === "object" && this.fill && "dispose" in this.fill) {
+        this.fill.dispose();
+      } else if (typeof this.fill === "object" && this.fill && "unbind" in this.fill) {
         this.fill.unbind();
       }
-      if (typeof this.stroke === "object" && this.stroke && "unbind" in this.stroke) {
+      if (typeof this.stroke === "object" && this.stroke && "dispose" in this.stroke) {
+        this.stroke.dispose();
+      } else if (typeof this.stroke === "object" && this.stroke && "unbind" in this.stroke) {
         this.stroke.unbind();
       }
       return this;
@@ -5869,10 +5880,14 @@ var Two = (() => {
     }
     dispose() {
       super.dispose();
-      if (typeof this.fill === "object" && this.fill && "unbind" in this.fill) {
+      if (typeof this.fill === "object" && this.fill && "dispose" in this.fill) {
+        this.fill.dispose();
+      } else if (typeof this.fill === "object" && this.fill && "unbind" in this.fill) {
         this.fill.unbind();
       }
-      if (typeof this.stroke === "object" && this.stroke && "unbind" in this.stroke) {
+      if (typeof this.stroke === "object" && this.stroke && "dispose" in this.stroke) {
+        this.stroke.dispose();
+      } else if (typeof this.stroke === "object" && this.stroke && "unbind" in this.stroke) {
         this.stroke.unbind();
       }
       return this;
@@ -8040,7 +8055,9 @@ var Two = (() => {
       if (this.textures) {
         for (let i = 0; i < this.textures.length; i++) {
           const texture = this.textures[i];
-          if (typeof texture.unbind === "function") {
+          if (typeof texture.dispose === "function") {
+            texture.dispose();
+          } else if (typeof texture.unbind === "function") {
             texture.unbind();
           }
         }

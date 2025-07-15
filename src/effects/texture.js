@@ -552,11 +552,13 @@ export class Texture extends Element {
   }
 
   /**
-   * @name Two.Gradient#dispose
+   * @name Two.Texture#dispose
    * @function
    * @description Detach instance from renderer including any `<defs />` or textures stored in memory.
    */
   dispose() {
+    super.dispose();
+
     // Remove gradient from SVG document
     if ('elem' in this._renderer) {
       const elem = this._renderer.elem;

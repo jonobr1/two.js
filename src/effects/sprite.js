@@ -367,9 +367,10 @@ export class Sprite extends Rectangle {
    * @function
    * @returns {Two.Sprite}
    * @description Release the sprite's renderer resources and detach all events.
-   * This method stops any running animation, clears animation callbacks, unbinds
-   * texture events, and inherits comprehensive cleanup from the Rectangle/Path
-   * hierarchy while preserving the renderer type for potential re-attachment.
+   * This method stops any running animation, clears animation callbacks, disposes
+   * the texture (calling dispose() for thorough cleanup), and inherits comprehensive
+   * cleanup from the Rectangle/Path hierarchy while preserving the renderer type
+   * for potential re-attachment.
    */
   dispose() {
     // Call parent dispose for inherited cleanup (vertices, fill/stroke effects)
@@ -386,8 +387,10 @@ export class Sprite extends Rectangle {
     // Reset timing properties
     this._startTime = 0;
     
-    // Unbind texture events if texture exists
-    if (this._texture && typeof this._texture.unbind === 'function') {
+    // Dispose texture (more thorough than unbind)
+    if (this._texture && typeof this._texture.dispose === 'function') {
+      this._texture.dispose();
+    } else if (this._texture && typeof this._texture.unbind === 'function') {
       this._texture.unbind();
     }
     

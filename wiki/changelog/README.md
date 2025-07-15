@@ -13,7 +13,7 @@ All notable changes to this project will be documented in this file. The format 
 
 ## Nightly
 
-- Added `Two.Element.dispose`, `Two.Path.dispose`, `Two.Group.dispose`, `Two.Text.dispose`, `Two.Points.dispose`, `Two.ImageSequence.dispose`
+- Added `Two.Element.dispose`, `Two.Path.dispose`, `Two.Group.dispose`, `Two.Text.dispose`, `Two.Points.dispose`, `Two.ImageSequence.dispose`, `Two.Sprite.dispose`
 - Improved `Two.release` to account for renderer specific deallocations
 - Improved `Two.ImageSequence` to take all optional arguments on instantiation
 - Fixed command setting on `Two.Line.left` and `Two.Line.right`

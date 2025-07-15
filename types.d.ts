@@ -2955,7 +2955,8 @@ declare module 'two.js/src/path' {
      * @function
      * @description Release the path's renderer resources and detach all events.
      * This method cleans up vertices collection events, individual vertex events,
-     * control point events, and fill/stroke effect events while preserving the
+     * control point events, and disposes fill/stroke effects (calling dispose() 
+     * on Gradients and Textures for thorough cleanup) while preserving the
      * renderer type for potential re-attachment to a new renderer.
      */
     dispose(): Path;
@@ -3313,9 +3314,10 @@ declare module 'two.js/src/effects/sprite' {
      * @name Two.Sprite#dispose
      * @function
      * @description Release the sprite's renderer resources and detach all events.
-     * This method stops any running animation, clears animation callbacks, unbinds
-     * texture events, and inherits comprehensive cleanup from the Rectangle/Path
-     * hierarchy while preserving the renderer type for potential re-attachment.
+     * This method stops any running animation, clears animation callbacks, disposes
+     * the texture (calling dispose() for thorough cleanup), and inherits comprehensive
+     * cleanup from the Rectangle/Path hierarchy while preserving the renderer type
+     * for potential re-attachment.
      */
     dispose(): Sprite;
   }
@@ -3771,7 +3773,8 @@ declare module 'two.js/src/text' {
      * @name Two.Text#dispose
      * @function
      * @description Release the text's renderer resources and detach all events.
-     * This method unbinds fill and stroke effect events while preserving the
+     * This method disposes fill and stroke effects (calling dispose() on 
+     * Gradients and Textures for thorough cleanup) while preserving the
      * renderer type for potential re-attachment to a new renderer.
      */
     dispose(): Text;
@@ -3996,8 +3999,9 @@ declare module 'two.js/src/effects/image-sequence' {
      * @function
      * @description Release the image sequence's renderer resources and detach all events.
      * This method stops any running animation, clears animation callbacks, unbinds
-     * textures collection events, and unbinds individual texture events while
-     * preserving the renderer type for potential re-attachment to a new renderer.
+     * textures collection events, and disposes individual textures (calling dispose()
+     * for thorough cleanup) while preserving the renderer type for potential
+     * re-attachment to a new renderer.
      */
     dispose(): ImageSequence;
   }
@@ -4203,7 +4207,8 @@ declare module 'two.js/src/shapes/points' {
      * @function
      * @description Release the points' renderer resources and detach all events.
      * This method cleans up vertices collection events, individual vertex events,
-     * and fill/stroke effect events while preserving the renderer type for
+     * and disposes fill/stroke effects (calling dispose() on Gradients and 
+     * Textures for thorough cleanup) while preserving the renderer type for
      * potential re-attachment to a new renderer.
      */
     dispose(): Points;
