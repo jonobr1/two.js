@@ -106,7 +106,7 @@ export class RoundedRectangle extends Path {
      * @name Two.RoundedRectangle#radius
      * @property {Number} - The size of the radius of the rounded rectangle.
      */
-    if (typeof radius === 'number') {
+    if (typeof radius === 'number' || radius instanceof Vector) {
       this.radius = radius;
     }
 
