@@ -13,7 +13,7 @@ import { Vector } from '../vector.js';
  * @param {Number} [y=0] - The y position of the rounded rectangle.
  * @param {Number} [width=0] - The width value of the rounded rectangle.
  * @param {Number} [height=0] - The width value of the rounded rectangle.
- * @param {Number} [radius=0] - The radius value of the rounded rectangle.
+ * @param {Number|Two.Vector} [radius=0] - The radius value of the rounded rectangle.
  * @param {Number} [resolution=12] - The number of vertices used to construct the rounded rectangle.
  */
 export class RoundedRectangle extends Path {

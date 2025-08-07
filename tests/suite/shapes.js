@@ -796,6 +796,34 @@ QUnit.test('Two.RoundedRectangle Object Conversion', function (assert) {
   );
 });
 
+QUnit.test('Two.RoundedRectangle Vector Radius Construction', function (assert) {
+  assert.expect(6);
+
+  var width = 100;
+  var height = 80;
+  var rx = 10;
+  var ry = 15;
+  var vectorRadius = new Two.Vector(rx, ry);
+
+  var rect = new Two.RoundedRectangle(0, 0, width, height, vectorRadius);
+
+  assert.equal(rect.width, width, 'Width set correctly with Vector radius');
+  assert.equal(rect.height, height, 'Height set correctly with Vector radius');
+  assert.equal(rect.radius instanceof Two.Vector, true, 'Radius is Vector instance');
+  assert.equal(rect.radius.x, rx, 'Vector radius x value set correctly');
+  assert.equal(rect.radius.y, ry, 'Vector radius y value set correctly');
+
+  rect._update();
+
+  var expectedX1 = width / 2 - rx;
+  var expectedY1 = -height / 2;
+  assert.equal(
+    rect.vertices[1].x === expectedX1 && rect.vertices[1].y === expectedY1,
+    true,
+    'Vertices calculated correctly with Vector radius'
+  );
+});
+
 QUnit.test('Two.Star', function (assert) {
   assert.expect(Two.Star.Properties.length * 4 + 1);
 

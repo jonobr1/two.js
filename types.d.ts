@@ -2610,7 +2610,7 @@ declare module 'two.js/src/effects/texture' {
      * @function
      * @description Detach instance from renderer including any `<defs />` or textures stored in memory.
      */
-    private dispose(): Texture;
+    dispose(): Texture;
   }
   import { Element as TwoElement } from 'two.js/src/element';
   import { Vector } from 'two.js/src/vector';
@@ -2955,7 +2955,7 @@ declare module 'two.js/src/path' {
      * @function
      * @description Release the path's renderer resources and detach all events.
      * This method cleans up vertices collection events, individual vertex events,
-     * control point events, and disposes fill/stroke effects (calling dispose() 
+     * control point events, and disposes fill/stroke effects (calling dispose()
      * on Gradients and Textures for thorough cleanup) while preserving the
      * renderer type for potential re-attachment to a new renderer.
      */
@@ -3450,7 +3450,7 @@ declare module 'two.js/src/shapes/rounded-rectangle' {
       y?: number,
       width?: number,
       height?: number,
-      radius?: number
+      radius?: number | Vector
     );
     /**
      * @name Two.RoundedRectangle#_flagWidth
@@ -3491,9 +3491,10 @@ declare module 'two.js/src/shapes/rounded-rectangle' {
     closed: boolean;
     width: number;
     height: number;
-    radius: number;
+    radius: number | Vector;
   }
   import { Path } from 'two.js/src/path';
+  import { Vector } from 'two.js/src/vector';
 }
 declare module 'two.js/src/text' {
   /**
@@ -3773,7 +3774,7 @@ declare module 'two.js/src/text' {
      * @name Two.Text#dispose
      * @function
      * @description Release the text's renderer resources and detach all events.
-     * This method disposes fill and stroke effects (calling dispose() on 
+     * This method disposes fill and stroke effects (calling dispose() on
      * Gradients and Textures for thorough cleanup) while preserving the
      * renderer type for potential re-attachment to a new renderer.
      */
@@ -4207,7 +4208,7 @@ declare module 'two.js/src/shapes/points' {
      * @function
      * @description Release the points' renderer resources and detach all events.
      * This method cleans up vertices collection events, individual vertex events,
-     * and disposes fill/stroke effects (calling dispose() on Gradients and 
+     * and disposes fill/stroke effects (calling dispose() on Gradients and
      * Textures for thorough cleanup) while preserving the renderer type for
      * potential re-attachment to a new renderer.
      */
@@ -4959,7 +4960,7 @@ declare module 'two.js' {
       y: number,
       width: number,
       height: number,
-      radius: number
+      radius: number | Vector
     ): RoundedRectangle;
     /**
      * @name Two#makeCircle
