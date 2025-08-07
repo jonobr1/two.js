@@ -172,3 +172,9 @@ Designed for modern browsers with ES6+ support. Uses feature detection for rende
 - TypeScript: Import specific modules for tree-shaking
 - Bundlers: ESM build recommended for modern bundlers
 - Browser: UMD build for direct script inclusion
+
+### Nota Bene
+- There aren't any linting commands
+- All the tests run in the browser
+- There are no TypeScript tests
+- Let the developer check these manually instead of trying to run commands
