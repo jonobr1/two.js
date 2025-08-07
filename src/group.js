@@ -195,6 +195,13 @@ export class Group extends Shape {
    */
   _mask = null;
 
+  /**
+   * @name Two.Group#_strokeUniform
+   * @private
+   * @see {@link Two.Group#strokeUniform}
+   */
+  _strokeUniform = false;
+
   constructor(children) {
     super();
 
@@ -1058,6 +1065,27 @@ const proto = {
       this._flagMask = true;
       if (_.isObject(v) && !v.clip) {
         v.clip = true;
+      }
+    },
+  },
+
+  /**
+   * @name Two.Group#strokeUniform
+   * @property {Boolean} - When set to `true`, stroke width remains constant in screen space regardless of scale transformations for all child shapes.
+   * @description When `strokeUniform` is `true`, this property is applied to all child shapes, making their stroke widths automatically adjust to compensate for the group's world transform scale, maintaining constant visual thickness regardless of zoom level.
+   */
+  strokeUniform: {
+    enumerable: true,
+    get: function () {
+      return this._strokeUniform;
+    },
+    set: function (v) {
+      this._strokeUniform = !!v;
+      for (let i = 0; i < this.children.length; i++) {
+        const child = this.children[i];
+        if (child.strokeUniform !== undefined) {
+          child.strokeUniform = v;
+        }
       }
     },
   },

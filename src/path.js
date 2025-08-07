@@ -116,6 +116,13 @@ export class Path extends Shape {
   _flagMiter = true;
 
   /**
+   * @name Two.Path#_flagStrokeUniform
+   * @private
+   * @property {Boolean} - Determines whether the {@link Two.Path#strokeUniform} needs updating.
+   */
+  _flagStrokeUniform = true;
+
+  /**
    * @name Two.Path#_flagMask
    * @private
    * @property {Boolean} - Determines whether the {@link Two.Path#mask} needs updating.
@@ -249,6 +256,13 @@ export class Path extends Shape {
    * @see {@link Two.Path#dashes}
    */
   _dashes = null;
+
+  /**
+   * @name Two.Path#_strokeUniform
+   * @private
+   * @see {@link Two.Path#strokeUniform}
+   */
+  _strokeUniform = false;
 
   constructor(vertices, closed, curved, manual) {
     super();
@@ -407,6 +421,7 @@ export class Path extends Shape {
     'beginning',
     'ending',
     'dashes',
+    'strokeUniform',
   ];
 
   static Utils = {
@@ -1222,6 +1237,7 @@ export class Path extends Shape {
       this._flagJoin =
       this._flagMiter =
       this._flagClip =
+      this._flagStrokeUniform =
         false;
 
     Shape.prototype.flagReset.call(this);
@@ -1505,6 +1521,23 @@ const proto = {
         v.offset = (this.dashes && this._dashes.offset) || 0;
       }
       this._dashes = v;
+    },
+  },
+
+  /**
+   * @name Two.Path#strokeUniform
+   * @property {Boolean} - When set to `true`, stroke width remains constant in screen space regardless of scale transformations.
+   * @description When `strokeUniform` is `true`, the stroke width is automatically adjusted to compensate for the object's world transform scale, maintaining constant visual thickness regardless of zoom level.
+   */
+  strokeUniform: {
+    enumerable: true,
+    get: function () {
+      return this._strokeUniform;
+    },
+    set: function (v) {
+      this._strokeUniform = !!v;
+      this._flagStrokeUniform = true;
+      this._flagLinewidth = true;
     },
   },
 };

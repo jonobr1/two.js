@@ -140,8 +140,46 @@ function toFixed(v) {
   return floor(v * 1000000) / 1000000;
 }
 
+/**
+ * @name Two.Utils.getEffectiveStrokeWidth
+ * @function
+ * @param {Two.Path|Two.Group} object - The object to calculate effective stroke width for
+ * @param {Two.Matrix} [worldMatrix] - The world transformation matrix. If not provided, will be calculated.
+ * @returns {Number} The effective stroke width adjusted for strokeUniform setting
+ * @description Calculate effective stroke width, compensating for world scale if strokeUniform is true
+ */
+function getEffectiveStrokeWidth(object, worldMatrix) {
+  const linewidth = object._linewidth;
+  
+  // If strokeUniform is false or not set, return original linewidth
+  if (!object.strokeUniform) {
+    return linewidth;
+  }
+  
+  // Calculate world matrix if not provided
+  if (!worldMatrix) {
+    worldMatrix = object.worldMatrix || getComputedMatrix(object);
+  }
+  
+  // Decompose matrix to get scale
+  const decomposed = decomposeMatrix(
+    worldMatrix.elements[0],
+    worldMatrix.elements[3], 
+    worldMatrix.elements[1],
+    worldMatrix.elements[4],
+    worldMatrix.elements[2],
+    worldMatrix.elements[5]
+  );
+  
+  // Use the larger of the two scale factors to maintain uniform appearance
+  const scale = Math.max(Math.abs(decomposed.scaleX), Math.abs(decomposed.scaleY));
+  
+  // Compensate for scale to maintain constant screen-space width
+  return scale > 0 ? linewidth / scale : linewidth;
+}
+
 
 export {
   decomposeMatrix, getComputedMatrix, getPoT, setMatrix, lerp, mod, NumArray,
-  toFixed, TWO_PI, HALF_PI
+  toFixed, getEffectiveStrokeWidth, TWO_PI, HALF_PI
 };

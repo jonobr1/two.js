@@ -1,5 +1,5 @@
 import { Commands } from '../utils/path-commands.js';
-import { decomposeMatrix, mod, toFixed } from '../utils/math.js';
+import { decomposeMatrix, mod, toFixed, getEffectiveStrokeWidth } from '../utils/math.js';
 import { Events } from '../events.js';
 import { _ } from '../utils/underscore.js';
 
@@ -505,7 +505,7 @@ const svg = {
       }
 
       if (this._flagLinewidth) {
-        changed['stroke-width'] = this._linewidth;
+        changed['stroke-width'] = getEffectiveStrokeWidth(this);
       }
 
       if (this._flagOpacity) {
@@ -672,7 +672,7 @@ const svg = {
       }
 
       if (this._flagLinewidth) {
-        changed['stroke-width'] = this._linewidth;
+        changed['stroke-width'] = getEffectiveStrokeWidth(this);
       }
 
       if (this._flagOpacity) {
@@ -797,7 +797,7 @@ const svg = {
         }
       }
       if (this._flagLinewidth) {
-        changed['stroke-width'] = this._linewidth;
+        changed['stroke-width'] = getEffectiveStrokeWidth(this);
       }
       if (this._flagOpacity) {
         changed.opacity = this._opacity;

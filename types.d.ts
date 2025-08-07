@@ -78,8 +78,19 @@ declare module 'two.js/src/utils/math' {
   export function toFixed(v: number): number;
   export const TWO_PI: number;
   export const HALF_PI: number;
+  /**
+   * @name Two.Utils.getEffectiveStrokeWidth
+   * @function
+   * @param {Path|Group} object - The object to calculate effective stroke width for
+   * @param {Matrix} [worldMatrix] - The world transformation matrix. If not provided, will be calculated.
+   * @returns {Number} The effective stroke width adjusted for strokeUniform setting
+   * @description Calculate effective stroke width, compensating for world scale if strokeUniform is true
+   */
+  export function getEffectiveStrokeWidth(object: Path | Group, worldMatrix?: Matrix): number;
   import { Matrix } from 'two.js/src/matrix';
   import { Shape } from 'two.js/src/shape';
+  import { Path } from 'two.js/src/path';
+  import { Group } from 'two.js/src/group';
 }
 declare module 'two.js/src/events' {
   /**
@@ -1601,6 +1612,12 @@ declare module 'two.js/src/group' {
      */
     mask: Shape | undefined;
     /**
+     * @name Two.Group#strokeUniform
+     * @property {Boolean} - When set to `true`, stroke width remains constant in screen space regardless of scale transformations for all child shapes.
+     * @description When `strokeUniform` is `true`, this property is applied to all child shapes, making their stroke widths automatically adjust to compensate for the group's world transform scale, maintaining constant visual thickness regardless of zoom level.
+     */
+    strokeUniform: boolean;
+    /**
      * @name Two.Group#additions
      * @property {Shape[]}
      * @description An automatically updated list of children that need to be appended to the renderer's scenegraph.
@@ -2830,6 +2847,12 @@ declare module 'two.js/src/path' {
      */
     private _dashes;
     /**
+     * @name Two.Path#_strokeUniform
+     * @private
+     * @see {@link Two.Path#strokeUniform}
+     */
+    private _strokeUniform;
+    /**
      * @name Two.Path#closed
      * @property {Boolean} - Determines whether a final line is drawn between the final point in the `vertices` array and the first point.
      */
@@ -2928,6 +2951,12 @@ declare module 'two.js/src/path' {
     dashes: number[] & {
       offset?: number;
     };
+    /**
+     * @name Two.Path#strokeUniform
+     * @property {Boolean} - When set to `true`, stroke width remains constant in screen space regardless of scale transformations.
+     * @description When `strokeUniform` is `true`, the stroke width is automatically adjusted to compensate for the object's world transform scale, maintaining constant visual thickness regardless of zoom level.
+     */
+    strokeUniform: boolean;
     /**
      * @name Two.Path#copy
      * @function
