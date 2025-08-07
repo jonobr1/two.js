@@ -29,6 +29,7 @@ import { Vector } from './vector.js';
 
 import { Stop } from './effects/stop.js';
 import { Gradient } from './effects/gradient.js';
+import { Image } from './effects/image.js';
 import { ImageSequence } from './effects/image-sequence.js';
 import { LinearGradient } from './effects/linear-gradient.js';
 import { RadialGradient } from './effects/radial-gradient.js';
@@ -337,6 +338,7 @@ export default class Two {
   static Vector = Vector;
 
   static Gradient = Gradient;
+  static Image = Image;
   static ImageSequence = ImageSequence;
   static LinearGradient = LinearGradient;
   static RadialGradient = RadialGradient;
@@ -1046,6 +1048,24 @@ export default class Two {
     this.add(sprite);
 
     return sprite;
+  }
+
+  /**
+   * @name Two#makeImage
+   * @function
+   * @param {(String|Two.Texture)} pathOrTexture - The URL path to an image or an already created {@link Two.Texture}.
+   * @param {Number} x
+   * @param {Number} y
+   * @param {Number} width
+   * @param {Number} height
+   * @returns {Two.Image}
+   * @description Creates a Two.js image object and adds it to the scene. Images are scaled to fit the provided width and height.
+   */
+  makeImage(pathOrTexture, x, y, width, height) {
+    const image = new Image(pathOrTexture, x, y, width, height);
+    this.add(image);
+
+    return image;
   }
 
   /**
