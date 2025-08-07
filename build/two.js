@@ -766,7 +766,7 @@ var Two = (() => {
       canvas: "CanvasRenderer"
     },
     Version: "v0.8.20",
-    PublishDate: "2025-07-15T22:07:05.739Z",
+    PublishDate: "2025-08-07T03:41:10.194Z",
     Identifier: "two-",
     Resolution: 12,
     AutoCalculateImportedMatrices: true,
@@ -5396,7 +5396,7 @@ var Two = (() => {
       if (typeof height === "number") {
         this.height = height;
       }
-      if (typeof radius === "number") {
+      if (typeof radius === "number" || radius instanceof Vector) {
         this.radius = radius;
       }
       this._update();
